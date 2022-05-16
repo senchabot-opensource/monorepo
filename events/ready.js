@@ -1,3 +1,5 @@
+const { giveRole } = require("../utils/memberFunctions");
+
 module.exports = {
   name: "ready",
   once: true,
@@ -8,14 +10,13 @@ module.exports = {
     const roleName = process.env.ROLE;
     const memberRole = guild.roles.cache.find((role) => role.name === roleName);
 
-    guild.members.cache.forEach((member) => {
-      const hasRole = member.roles.cache.some(
+    guild.members.cache.map((member) => {
+      const hasRole = member.roles.cache.find(
         (role) => role.id === memberRole.id
       );
 
       if (!hasRole) {
-        console.log('GIVE "' + roleName + '" ROLE -> ' + member.displayName);
-        member.roles.add(memberRole).catch(console.error);
+        giveRole(member, memberRole);
       }
     });
   },
