@@ -10,8 +10,8 @@ module.exports = {
     const roleName = process.env.ROLE;
     const memberRole = guild.roles.cache.find((role) => role.name === roleName);
 
-    guild.members.cache.map((member) => {
-      const hasRole = member.roles.cache.find(
+    guild.members.cache.forEach((member) => {
+      const hasRole = member.roles.cache.some(
         (role) => role.id === memberRole.id
       );
 
