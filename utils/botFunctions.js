@@ -1,5 +1,5 @@
-function checkBotRole(guild, permissionFlag) {
+function checkBotPermission(guild, permissionFlag) {
   return guild.me.permissions.has(permissionFlag);
 }
 
-module.exports = { checkBotRole };
+module.exports = { checkBotPermission };
