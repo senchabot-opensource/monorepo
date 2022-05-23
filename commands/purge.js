@@ -1,4 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
+const { Permissions } = require("discord.js");
+const { checkBotPermission } = require("../utils/botFunctions");
 const { wait } = require("../utils/helpers");
 
 module.exports = {
@@ -25,6 +27,8 @@ module.exports = {
     ),
   async execute(interaction) {
     const guild = interaction.member.guild;
+
+    if (!checkBotPermission(guild, Permissions.FLAGS.MANAGE_MESSAGES)) return;
 
     const channelMessages = guild.channels.cache.get(
       interaction.channel.id
