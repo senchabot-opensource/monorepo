@@ -10,4 +10,8 @@ function giveRole(member, memberRole) {
   }
 }
 
-module.exports = { giveRole };
+function checkMemberPermission(memberPermissions, permissionFlag) {
+  return memberPermissions.has(permissionFlag);
+}
+
+module.exports = { giveRole, checkMemberPermission };

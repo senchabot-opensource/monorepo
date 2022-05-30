@@ -2,6 +2,9 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 const { Permissions } = require("discord.js");
 const { checkBotPermission } = require("../utils/botFunctions");
 const { wait } = require("../utils/helpers");
+const { checkMemberPermission } = require("../utils/memberFunctions");
+
+const manageMessagesPermFlag = Permissions.FLAGS.MANAGE_MESSAGES;
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -26,9 +29,17 @@ module.exports = {
         .setRequired(false)
     ),
   async execute(interaction) {
+    //console.log(interaction);
     const guild = interaction.member.guild;
 
-    if (!checkBotPermission(guild, Permissions.FLAGS.MANAGE_MESSAGES)) return;
+    if (
+      !checkMemberPermission(
+        interaction.memberPermissions,
+        manageMessagesPermFlag
+      ) ||
+      !checkBotPermission(guild, manageMessagesPermFlag)
+    )
+      return;
 
     const channelMessages = guild.channels.cache.get(
       interaction.channel.id
