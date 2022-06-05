@@ -36,10 +36,18 @@ module.exports = {
       !checkMemberPermission(
         interaction.memberPermissions,
         manageMessagesPermFlag
-      ) ||
-      !checkBotPermission(guild, manageMessagesPermFlag)
-    )
+      )
+    ) {
+      console.log(
+        `MEMBER "${interaction.member.username}" DOES NOT HAVE "MANAGE MESSAGES" PERMISSION.`
+      );
       return;
+    }
+
+    if (!checkBotPermission(guild, manageMessagesPermFlag)) {
+      console.log('BOT DOES NOT HAVE "MANAGE MESSAGES" PERMISSION.');
+      return;
+    }
 
     const channelMessages = guild.channels.cache.get(
       interaction.channel.id

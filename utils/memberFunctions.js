@@ -6,7 +6,7 @@ function giveRole(member, memberRole) {
     console.log(`GIVE "${memberRole.name}" ROLE -> "${member.displayName}".`);
     member.roles.add(memberRole).catch(console.error);
   } else {
-    console.log(`THE BOT DOES NOT HAVE PERMISSIONS TO "MANAGE ROLES".`);
+    console.log(`BOT DOES NOT HAVE PERMISSIONS TO "MANAGE ROLES".`);
   }
 }
 
