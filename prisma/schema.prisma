@@ -1,0 +1,134 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider        = "prisma-client-js"
+    previewFeatures = ["referentialIntegrity"]
+}
+
+datasource db {
+    provider             = "mysql"
+    // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.text annotations in model Account below
+    // Further reading: 
+    // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
+    // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
+    //url      = "file:dev.db"
+    url                  = env("DATABASE_URL")
+    referentialIntegrity = "prisma"
+}
+
+model SignActivities {
+    id    Int      @id @default(autoincrement())
+    email String
+    date  DateTime @default(now())
+}
+
+model BotJoinActivities {
+    id                Int      @id @default(autoincrement())
+    botPlatformType   String
+    discordServerId   String
+    discordServerName String
+    twitchChannelId   String
+    twitchChannelName String
+    date              DateTime @default(now())
+}
+
+model BotActionActivities {
+    id              Int      @id @default(autoincrement())
+    botPlatformType String
+    botActivity     String
+    activityDate    DateTime @default(now())
+    discordServerId String
+    twitchChannelId String
+}
+
+model DiscordServer {
+    id          String  @id @default(cuid())
+    serverId    String  @unique
+    serverName  String
+    serverOwner String
+    userId      String?
+    user        User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model TwitchChannel {
+    id          String @id @default(cuid())
+    channelId   String
+    channelName String
+    userId      String
+    user        User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model TwitchConfig {
+    id              String  @id @default(cuid())
+    chatOrientation Int     @default(0)
+    background      String?
+    foreground      String?
+    userId          String
+    user            User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model SenchaConfig {
+    id         String  @id @default(cuid())
+    bootScene  Int?    @default(0)
+    background String?
+    foreground String?
+    userId     String
+    user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ColorTheme {
+    id              Int    @id @default(autoincrement())
+    themeName       String
+    backgroundColor String
+    foregroundColor String
+}
+
+// Necessary for Next auth
+model Account {
+    id                String  @id @default(cuid())
+    userId            String
+    type              String
+    provider          String
+    providerAccountId String
+    refresh_token     String? @db.Text
+    access_token      String? @db.Text
+    expires_at        Int?
+    token_type        String?
+    scope             String?
+    id_token          String? @db.Text
+    session_state     String?
+    user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@unique([provider, providerAccountId])
+}
+
+model Session {
+    id           String   @id @default(cuid())
+    sessionToken String   @unique
+    userId       String
+    expires      DateTime
+    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+    id            String          @id @default(cuid())
+    name          String?
+    email         String?         @unique
+    emailVerified DateTime?
+    image         String?
+    accounts      Account[]
+    sessions      Session[]
+    SenchaConfig  SenchaConfig[]
+    TwitchConfig  TwitchConfig[]
+    DiscordServer DiscordServer[]
+    TwitchChannel TwitchChannel[]
+}
+
+model VerificationToken {
+    identifier String
+    token      String   @unique
+    expires    DateTime
+
+    @@unique([identifier, token])
+}
