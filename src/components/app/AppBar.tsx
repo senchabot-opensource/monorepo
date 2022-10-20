@@ -23,6 +23,7 @@ import { AccountMenu } from "./AccountMenu";
 import { BootstrapTooltip } from "../Tooltip";
 import { trpc } from "../../utils/trpc";
 import AppSnackbar from "./AppSnackbar";
+import { env } from "../../env/client.mjs";
 
 /*const pages = ["Get Discord bot", "Get Twitch bot"];
 const settings = ["Settings"];*/
@@ -161,7 +162,7 @@ const ResponsiveAppBar = ({
                 //...(isDrawerOpen && { display: "none" }),
               }}
             >
-              <Link href="/">APP_NAME</Link>
+              <Link href="/">{env.NEXT_PUBLIC_APP_NAME}</Link>
             </Typography>
             <Typography
               variant="h6"
@@ -179,7 +180,7 @@ const ResponsiveAppBar = ({
                 //...(isDrawerOpen && { display: "none" }),
               }}
             >
-              <Link href="/">APP_NAME</Link>
+              <Link href="/">{env.NEXT_PUBLIC_APP_NAME}</Link>
             </Typography>
             {/*<IconButton
       aria-label="open drawer"

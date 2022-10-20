@@ -12,6 +12,7 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import { useSession } from "next-auth/react";
 import { Offset } from "../Offset";
+import { env } from "../../env/client.mjs";
 
 const LandingAppBar = () => {
   const { data: session } = useSession();
@@ -49,7 +50,7 @@ const LandingAppBar = () => {
                 textDecoration: "none",
               }}
             >
-              <Link href="/">APP_NAME</Link>
+              <Link href="/">{env.NEXT_PUBLIC_APP_NAME}</Link>
             </Typography>
             <Typography
               variant="h6"
@@ -67,7 +68,7 @@ const LandingAppBar = () => {
                 textDecoration: "none",
               }}
             >
-              <Link href="/">APP_NAME</Link>
+              <Link href="/">{env.NEXT_PUBLIC_APP_NAME}</Link>
             </Typography>
 
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>

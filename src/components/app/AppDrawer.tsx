@@ -2,6 +2,7 @@ import { styled, useTheme } from "@mui/material/styles";
 import { Drawer, IconButton, Divider, Typography } from "@mui/material";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import { env } from "../../env/client.mjs";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -47,7 +48,7 @@ const AppDrawer = ({ isDrawerOpen, drawerHandler }: IAppDrawer) => {
             textDecoration: "none",
           }}
         >
-          APP_NAME
+          {env.NEXT_PUBLIC_APP_NAME}
         </Typography>
         <IconButton onClick={drawerHandler}>
           {theme.direction === "ltr" ? (
