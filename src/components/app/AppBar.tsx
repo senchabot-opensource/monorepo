@@ -193,7 +193,7 @@ const ResponsiveAppBar = ({
     >
       <MenuIcon />
     </IconButton>*/}
-            <BootstrapTooltip title="Sencha UI">
+            <BootstrapTooltip title="Open Sencha UI">
               <Typography>
                 <Link href="/sencha">
                   <IconButton
@@ -210,7 +210,7 @@ const ResponsiveAppBar = ({
                 </Link>
               </Typography>
             </BootstrapTooltip>
-            <BootstrapTooltip title="Twitch Widgets">
+            {/*<BootstrapTooltip title="Twitch Widgets">
               <Typography>
                 <Link href="/twitchchatrtl" passHref>
                   <a target="_blank">
@@ -228,7 +228,7 @@ const ResponsiveAppBar = ({
                   </a>
                 </Link>
               </Typography>
-            </BootstrapTooltip>
+                    </BootstrapTooltip>*/}
             <BootstrapTooltip title="Get Twitch Bot">
               <Typography
                 onClick={() =>
