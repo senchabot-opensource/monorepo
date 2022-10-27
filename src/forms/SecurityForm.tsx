@@ -8,6 +8,7 @@ import LinkAccount from "../components/auth/LinkAccount";
 import { trpc } from "../utils/trpc";
 import { capitalizeWord } from "../utils/functions";
 import { useSession } from "next-auth/react";
+import FormTitle from "../components/FormTitle";
 
 /*const _Button = styled(Button)<ButtonProps>(({ theme }) => ({
   color: theme.palette.getContrastText(blue[500]),
@@ -31,9 +32,7 @@ const SecurityForm = () => {
 
   return (
     <>
-      <Typography variant="h6" sx={{ mb: 2 }}>
-        Link Account
-      </Typography>
+      <FormTitle titleText="Link Account" />
 
       <Stack
         spacing={2}

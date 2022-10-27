@@ -1,12 +1,11 @@
 import { Stack, Typography } from "@mui/material";
 import DeleteAccount from "../components/button/DeleteAccount";
+import FormTitle from "../components/FormTitle";
 
 const PrivacyForm = () => {
   return (
     <>
-      <Typography variant="h6" sx={{ mb: 2 }}>
-        Delete Account
-      </Typography>
+      <FormTitle titleText="Delete Account" />
       <Stack
         spacing={2}
         direction="row"
