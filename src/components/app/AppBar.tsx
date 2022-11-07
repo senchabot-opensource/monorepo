@@ -24,6 +24,7 @@ import { BootstrapTooltip } from "../Tooltip";
 import { trpc } from "../../utils/trpc";
 import AppSnackbar from "./AppSnackbar";
 import { env } from "../../env/client.mjs";
+import AppBarTitle from "./AppBarTitle";
 
 /*const pages = ["Get Discord bot", "Get Twitch bot"];
 const settings = ["Settings"];*/
@@ -147,41 +148,7 @@ const ResponsiveAppBar = ({
         <Container>
           {/* <Container maxWidth="xl">*/}
           <Toolbar disableGutters>
-            <Typography
-              variant="h5"
-              noWrap
-              sx={{
-                mr: 2,
-                display: { xs: "none", md: "flex" },
-                fontFamily: "Source Code Pro",
-                fontStyle: "italic",
-                fontWeight: 700,
-                letterSpacing: ".3rem",
-                color: "inherit",
-                textDecoration: "none",
-                //...(isDrawerOpen && { display: "none" }),
-              }}
-            >
-              <Link href="/">{env.NEXT_PUBLIC_APP_NAME}</Link>
-            </Typography>
-            <Typography
-              variant="h6"
-              noWrap
-              sx={{
-                mr: 2,
-                display: { xs: "flex", md: "none" },
-                flexGrow: 1,
-                fontFamily: "Source Code Pro",
-                fontStyle: "italic",
-                fontWeight: 700,
-                letterSpacing: ".1rem",
-                color: "inherit",
-                textDecoration: "none",
-                //...(isDrawerOpen && { display: "none" }),
-              }}
-            >
-              <Link href="/">{env.NEXT_PUBLIC_APP_NAME}</Link>
-            </Typography>
+            <AppBarTitle />
             {/*<IconButton
       aria-label="open drawer"
       onClick={drawerHandler}

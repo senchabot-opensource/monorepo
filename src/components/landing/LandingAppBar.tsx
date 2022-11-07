@@ -45,7 +45,7 @@ const LandingAppBar = () => {
                 fontFamily: "Source Code Pro",
                 fontStyle: "italic",
                 fontWeight: 700,
-                letterSpacing: ".3rem",
+                letterSpacing: ".1rem",
                 color: "inherit",
                 textDecoration: "none",
               }}
