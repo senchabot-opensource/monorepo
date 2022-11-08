@@ -1,5 +1,15 @@
+import { ReactElement } from "react";
+
 type AnyContextType = {
-    [key: string]: any;
+  [key: string]: any;
+};
+
+interface IAppBarButton {
+  title: string;
+  pathHref: string;
+  ariaLabel: string;
+  drawerHandler: () => void;
+  children: ReactElement;
 }
 
-export type { AnyContextType };
+export type { AnyContextType, IAppBarButton };

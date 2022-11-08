@@ -25,6 +25,7 @@ import { trpc } from "../../utils/trpc";
 import AppSnackbar from "./AppSnackbar";
 import { env } from "../../env/client.mjs";
 import AppBarTitle from "./AppBarTitle";
+import AppBarButton from "./AppBarButton";
 
 /*const pages = ["Get Discord bot", "Get Twitch bot"];
 const settings = ["Settings"];*/
@@ -160,48 +161,30 @@ const ResponsiveAppBar = ({
     >
       <MenuIcon />
     </IconButton>*/}
-            <BootstrapTooltip title="Open Sencha UI">
-              <Typography>
-                <Link href="/sencha">
-                  <IconButton
-                    aria-label="open sencha ui"
-                    onClick={drawerHandler}
-                    sx={{
-                      display: { xs: "none", md: "flex" },
-                      //mr: 1,
-                      //...(isDrawerOpen && { display: "none" }),
-                    }}
-                  >
-                    <MinimizeIcon />
-                  </IconButton>
-                </Link>
-              </Typography>
-            </BootstrapTooltip>
-            {/*<BootstrapTooltip title="Twitch Widgets">
-              <Typography>
-                <Link href="/twitchchatrtl" passHref>
-                  <a target="_blank">
-                    <IconButton
-                      aria-label="open drawer"
-                      onClick={drawerHandler}
-                      sx={{
-                        display: { xs: "none", md: "flex" },
-                        //mr: 1,
-                        //...(isDrawerOpen && { display: "none" }),
-                      }}
-                    >
-                      <WidgetsIcon />
-                    </IconButton>
-                  </a>
-                </Link>
-              </Typography>
-                    </BootstrapTooltip>*/}
+
+            <AppBarButton
+              title="Open Sencha UI"
+              pathHref="/sencha"
+              ariaLabel="open sencha ui"
+              drawerHandler={drawerHandler}
+            >
+              <MinimizeIcon />
+            </AppBarButton>
+
+            {/*<AppBarButton
+              title="Twitch Widgets"
+              pathHref="/twitchchatrtl"
+              ariaLabel="twitch overlay widgets"
+              drawerHandler={drawerHandler}
+            >
+              <WidgetsIcon />
+            </AppBarButton>*/}
             <BootstrapTooltip title="Get Twitch Bot">
               <Typography
                 onClick={() =>
                   !twitchAcc
                     ? snackbarMsg(
-                        "Before you can add the Twitch bot, you need to link your Twitch account in Settings/Security."
+                        "Before you can add the Twitch bot, you need to link your Twitch account in Settings/Security section."
                       )
                     : twitchBotMutate.mutate()
                 }
