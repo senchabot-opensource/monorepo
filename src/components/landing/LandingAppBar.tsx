@@ -13,6 +13,7 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import { useSession } from "next-auth/react";
 import { Offset } from "../Offset";
 import { env } from "../../env/client.mjs";
+import AppBarTitle from "../common/AppBarTitle";
 
 const LandingAppBar = () => {
   const { data: session } = useSession();
@@ -35,41 +36,7 @@ const LandingAppBar = () => {
               userSelect: "none",
             }}
           >
-            <Typography
-              variant="h5"
-              noWrap
-              sx={{
-                flexGrow: 1,
-                mr: 2,
-                display: { xs: "none", md: "flex" },
-                fontFamily: "Source Code Pro",
-                fontStyle: "italic",
-                fontWeight: 700,
-                letterSpacing: ".1rem",
-                color: "inherit",
-                textDecoration: "none",
-              }}
-            >
-              <Link href="/">{env.NEXT_PUBLIC_APP_NAME}</Link>
-            </Typography>
-            <Typography
-              variant="h6"
-              noWrap
-              sx={{
-                flowGrow: 1,
-                mr: 2,
-                display: { xs: "flex", md: "none" },
-                flexGrow: 1,
-                fontFamily: "Source Code Pro",
-                fontStyle: "italic",
-                fontWeight: 700,
-                letterSpacing: ".1rem",
-                color: "inherit",
-                textDecoration: "none",
-              }}
-            >
-              <Link href="/">{env.NEXT_PUBLIC_APP_NAME}</Link>
-            </Typography>
+            <AppBarTitle />
 
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
               {/*<Link href="/cookie-policy">

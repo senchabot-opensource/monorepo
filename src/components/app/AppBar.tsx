@@ -24,7 +24,7 @@ import { BootstrapTooltip } from "../Tooltip";
 import { trpc } from "../../utils/trpc";
 import AppSnackbar from "./AppSnackbar";
 import { env } from "../../env/client.mjs";
-import AppBarTitle from "./AppBarTitle";
+import AppBarTitle from "../common/AppBarTitle";
 import AppBarButton from "./AppBarButton";
 
 /*const pages = ["Get Discord bot", "Get Twitch bot"];
