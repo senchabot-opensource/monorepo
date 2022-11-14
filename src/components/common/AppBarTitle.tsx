@@ -10,7 +10,6 @@ const AppBarTitle = () => {
         variant="h5"
         noWrap
         sx={{
-          flexGrow: 1,
           mr: 2,
           display: { xs: "none", md: "flex" },
           fontFamily: "Source Code Pro",
