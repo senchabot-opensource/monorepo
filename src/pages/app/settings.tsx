@@ -104,9 +104,9 @@ const Settings: NextPage = () => {
               scrollButtons
               allowScrollButtonsMobile
             >
-              <Tab label="Display" {...tabPanelProps(0)} />
-              <Tab label="Security" {...tabPanelProps(1)} />
-              <Tab label="Privacy" {...tabPanelProps(2)} />
+              <Tab label="Display" {...tabPanelProps(0)} disableRipple />
+              <Tab label="Security" {...tabPanelProps(1)} disableRipple />
+              <Tab label="Privacy" {...tabPanelProps(2)} disableRipple />
             </Tabs>
           </Box>
           <TabPanel value={value} index={0}>
@@ -130,8 +130,16 @@ const Settings: NextPage = () => {
                   display: { xs: "none", md: "flex" },
                 }}
               >
-                <Tab label="Twitch UI" {...verticalTabPanelProps(0)} />
-                <Tab label="Sencha UI" {...verticalTabPanelProps(1)} />
+                <Tab
+                  label="Twitch UI"
+                  {...verticalTabPanelProps(0)}
+                  disableRipple
+                />
+                <Tab
+                  label="Sencha UI"
+                  {...verticalTabPanelProps(1)}
+                  disableRipple
+                />
               </Tabs>
 
               <VerticalTabPanel value={vTPValue} index={0}>
