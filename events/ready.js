@@ -1,4 +1,4 @@
-const { giveRole } = require("../utils/memberFunctions");
+const { addRole } = require("../utils/memberFunctions");
 
 module.exports = {
   name: "ready",
@@ -19,7 +19,7 @@ module.exports = {
       );
 
       if (!hasRole) {
-        giveRole(member, memberRole);
+        addRole(member, memberRole);
       }
     });
   },

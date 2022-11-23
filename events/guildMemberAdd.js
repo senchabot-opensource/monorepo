@@ -1,4 +1,4 @@
-const { giveRole } = require("../utils/memberFunctions");
+const { addRole } = require("../utils/memberFunctions");
 
 module.exports = {
   name: "guildMemberAdd",
@@ -10,6 +10,6 @@ module.exports = {
 
     let memberRole = member.guild.roles.cache.find((r) => r.name === roleName);
 
-    giveRole(member, memberRole);
+    addRole(member, memberRole);
   },
 };
