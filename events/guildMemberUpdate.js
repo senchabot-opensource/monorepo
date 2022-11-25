@@ -1,4 +1,4 @@
-const { addRole } = require("../utils/memberFunctions");
+const { addRole, removeRole } = require("../utils/memberFunctions");
 
 module.exports = {
   name: "guildMemberUpdate",
@@ -18,12 +18,12 @@ module.exports = {
         if (_member.user.username === userName) {
           hasSubRoles = subRoles.some((role) => _member._roles.includes(role));
 
-          console.log(
-            `${member.user.username} HAS ONE OF SUB ROLES? "${hasSubRoles}"`
-          );
+          console.log(`${userName} HAS ONE OF SUB ROLES? "${hasSubRoles}"`);
 
           if (hasSubRoles) {
             addRole(member, exclusiveRole);
+          } else {
+            removeRole(member, exclusiveRole);
           }
         }
       })

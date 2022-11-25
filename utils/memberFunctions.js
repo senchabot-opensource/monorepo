@@ -10,8 +10,19 @@ function addRole(member, memberRole) {
   }
 }
 
+function removeRole(member, memberRole) {
+  if (checkBotPermission(member.guild, Permissions.FLAGS.MANAGE_ROLES)) {
+    console.log(
+      `REMOVE "${memberRole.name}" ROLE FROM "${member.displayName}".`
+    );
+    member.roles.remove(memberRole).catch(console.error);
+  } else {
+    console.log(`BOT DOES NOT HAVE PERMISSIONS TO "MANAGE ROLES".`);
+  }
+}
+
 function checkMemberPermission(memberPermissions, permissionFlag) {
   return memberPermissions.has(permissionFlag);
 }
 
-module.exports = { addRole, checkMemberPermission };
+module.exports = { addRole, removeRole, checkMemberPermission };
