@@ -12,20 +12,22 @@ const client = new Client({
     // "GUILD_PRESENCES",
     // "GUILD_VOICE_STATES",
     "GUILD_MESSAGES",
-    // "GUILD_MESSAGE_REACTIONS",
+    "GUILD_MESSAGE_REACTIONS",
     // "GUILD_MESSAGE_TYPING",
     // "DIRECT_MESSAGES",
     // "DIRECT_MESSAGE_REACTIONS",
     // "DIRECT_MESSAGE_TYPING",
   ],
-  // partials: [
-  //   "MESSAGE",
-  //   "CHANNEL", // Required to receive DMs
-  //   "REACTION", // Required to receive Reactions
-  // ],
+  partials: [
+    "MESSAGE",
+    //   "CHANNEL", // Required to receive DMs
+    "REACTION", // Required to receive Reactions
+  ],
 });
 
 client.commands = new Collection();
+
+module.exports = { client };
 
 const handlersPath = path.join(__dirname, "handlers");
 ["commandHandler", "eventHandler"].forEach((handlerFile) => {

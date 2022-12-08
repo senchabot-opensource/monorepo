@@ -2,6 +2,7 @@ const { Permissions } = require("discord.js");
 const { checkBotPermission } = require("./botFunctions");
 
 function addRole(member, memberRole) {
+  // Check if the bot has the Manage Roles permission.
   if (checkBotPermission(member.guild, Permissions.FLAGS.MANAGE_ROLES)) {
     console.log(`ADD "${memberRole.name}" ROLE -> "${member.displayName}".`);
     member.roles.add(memberRole).catch(console.error);
@@ -11,6 +12,7 @@ function addRole(member, memberRole) {
 }
 
 function removeRole(member, memberRole) {
+  // Check if the bot has the Manage Roles permission.
   if (checkBotPermission(member.guild, Permissions.FLAGS.MANAGE_ROLES)) {
     console.log(
       `REMOVE "${memberRole.name}" ROLE FROM "${member.displayName}".`
