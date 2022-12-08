@@ -1,9 +1,8 @@
-const { client } = require("..");
 const { addRole } = require("../utils/memberFunctions");
 
 module.exports = {
   name: "messageReactionAdd",
-  async execute(reaction, user) {
+  async execute(reaction, user, client) {
     // Fetch the message content.
     if (reaction.message.partial) await reaction.message.fetch();
 

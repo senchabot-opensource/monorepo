@@ -1,9 +1,8 @@
-const { client } = require("..");
 const { removeRole } = require("../utils/memberFunctions");
 
 module.exports = {
   name: "messageReactionRemove",
-  async execute(reaction, user) {
+  async execute(reaction, user, client) {
     // Fetch the message content.
     if (reaction.message.partial) await reaction.message.fetch();
 

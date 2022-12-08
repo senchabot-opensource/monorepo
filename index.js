@@ -27,8 +27,6 @@ const client = new Client({
 
 client.commands = new Collection();
 
-module.exports = { client };
-
 const handlersPath = path.join(__dirname, "handlers");
 ["commandHandler", "eventHandler"].forEach((handlerFile) => {
   const filePath = path.join(handlersPath, handlerFile);

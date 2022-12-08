@@ -18,7 +18,7 @@ module.exports = {
         (role) => role.id === memberRole.id
       );
 
-      if (!hasRole) {
+      if (!hasRole && !member.user.bot) {
         addRole(member, memberRole);
       }
     });
