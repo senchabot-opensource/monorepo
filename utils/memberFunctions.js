@@ -23,8 +23,20 @@ function removeRole(member, memberRole) {
   }
 }
 
+function addRoleAll(guild, memberRole) {
+  guild.members.cache.forEach((member) => {
+    const hasRole = member.roles.cache.some(
+      (role) => role.id === memberRole.id
+    );
+
+    if (!hasRole && !member.user.bot) {
+      addRole(member, memberRole);
+    }
+  });
+}
+
 function checkMemberPermission(memberPermissions, permissionFlag) {
   return memberPermissions.has(permissionFlag);
 }
 
-module.exports = { addRole, removeRole, checkMemberPermission };
+module.exports = { addRole, removeRole, addRoleAll, checkMemberPermission };

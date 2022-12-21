@@ -1,4 +1,4 @@
-const { addRole } = require("../utils/memberFunctions");
+const { addRoleAll } = require("../utils/memberFunctions");
 
 module.exports = {
   name: "ready",
@@ -13,14 +13,6 @@ module.exports = {
     const guild = client.guilds.cache.first();
     const memberRole = guild.roles.cache.find((role) => role.name === roleName);
 
-    guild.members.cache.forEach((member) => {
-      const hasRole = member.roles.cache.some(
-        (role) => role.id === memberRole.id
-      );
-
-      if (!hasRole && !member.user.bot) {
-        addRole(member, memberRole);
-      }
-    });
+    addRoleAll(guild, memberRole);
   },
 };
