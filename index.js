@@ -10,7 +10,7 @@ const client = new Client({
     // "GUILD_SCHEDULED_EVENTS",
     // "GUILD_INVITES",
     // "GUILD_PRESENCES",
-    // "GUILD_VOICE_STATES",
+    "GUILD_VOICE_STATES",
     "GUILD_MESSAGES",
     "GUILD_MESSAGE_REACTIONS",
     // "GUILD_MESSAGE_TYPING",
