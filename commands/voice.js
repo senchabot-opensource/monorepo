@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
+const { dynamicVoice } = require("../utils/dynamicVoice");
 
 const CHANNEL_NAME_OPTION = "channel-name";
 
@@ -15,9 +16,30 @@ module.exports = {
   execute(interaction) {
     const channelName = interaction.options.getString(CHANNEL_NAME_OPTION);
 
-    interaction.reply({
-      content: `Channel name: ${channelName}`,
-      ephemeral: true,
-    });
+    const guild = interaction.guild;
+    const userId = interaction.user.id;
+
+    guild.channels
+      .create(channelName, {
+        type: "GUILD_VOICE",
+      })
+      .then((channel) => {
+        dynamicVoice.addChannel({
+          channelId: channel.id,
+          channelName: channelName,
+          ownerId: userId,
+        });
+
+        interaction.reply({
+          content: `Channel name: ${channelName}`,
+          ephemeral: true,
+        });
+      })
+      .catch((e) => {
+        interaction.reply({
+          content: `There was an error while creating voice channel "${channelName}". Error: ${e}`,
+          ephemeral: true,
+        });
+      });
   },
 };
