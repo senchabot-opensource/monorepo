@@ -13,6 +13,8 @@ module.exports = {
     const guild = client.guilds.cache.first();
     const memberRole = guild.roles.cache.find((role) => role.name === roleName);
 
+    if (!memberRole) return;
+
     addRoleAll(guild, memberRole);
 
     const exclusiveRoleName = process.env.EXCLUSIVE_ROLE;
@@ -24,6 +26,8 @@ module.exports = {
     const exclusiveRole = guild.roles.cache.find(
       (role) => role.name === exclusiveRoleName
     );
+
+    if (!exclusiveRole) return;
 
     const guildMembers = await guild.members.fetch();
 
