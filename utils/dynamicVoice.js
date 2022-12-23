@@ -16,6 +16,15 @@ class DynamicVoice {
   addChannel(channel) {
     this.channels.push({ ...channel, createdAt: Date.now() });
   }
+
+  /**
+   * Check if the user has any channels in the list
+   * @param {*} userId The ID of the user
+   * @returns `true` if the user has at least one channel, `false` otherwise
+   */
+  userHasChannels(userId) {
+    return this.channels.some((channel) => channel.ownerId === userId);
+  }
 }
 
 const dynamicVoice = new DynamicVoice();

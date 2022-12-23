@@ -16,8 +16,17 @@ module.exports = {
   execute(interaction) {
     const channelName = interaction.options.getString(CHANNEL_NAME_OPTION);
 
-    const guild = interaction.guild;
     const userId = interaction.user.id;
+
+    if (dynamicVoice.userHasChannels(userId)) {
+      interaction.reply({
+        content: "You have already created a channel.",
+        ephemeral: true,
+      });
+      return;
+    }
+
+    const guild = interaction.guild;
 
     guild.channels
       .create(channelName, {
