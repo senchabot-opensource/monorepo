@@ -14,13 +14,21 @@ module.exports = {
         .setRequired(true)
     ),
   execute(interaction) {
-    const channelName = interaction.options.getString(CHANNEL_NAME_OPTION);
-
     const userId = interaction.user.id;
 
     if (dynamicVoice.userHasChannels(userId)) {
       interaction.reply({
         content: "You have already created a channel.",
+        ephemeral: true,
+      });
+      return;
+    }
+
+    const channelName = interaction.options.getString(CHANNEL_NAME_OPTION);
+
+    if (dynamicVoice.channelNameInUse(channelName)) {
+      interaction.reply({
+        content: "This channel name is aldready in use.",
         ephemeral: true,
       });
       return;

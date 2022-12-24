@@ -25,6 +25,15 @@ class DynamicVoice {
   userHasChannels(userId) {
     return this.channels.some((channel) => channel.ownerId === userId);
   }
+
+  /**
+   * Check if there is a channel with the given name in the list
+   * @param {*} channelName The name of the channel
+   * @returns `true` if there is a channel with the given name, `false` otherwise
+   */
+  channelNameInUse(channelName) {
+    return this.channels.some((channel) => channel.channelName === channelName);
+  }
 }
 
 const dynamicVoice = new DynamicVoice();
