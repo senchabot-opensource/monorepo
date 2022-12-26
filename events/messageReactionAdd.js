@@ -1,3 +1,4 @@
+const { selectByNameCallback } = require("../utils/helpers");
 const { addRole } = require("../utils/memberFunctions");
 
 module.exports = {
@@ -23,7 +24,7 @@ module.exports = {
 
     // Find the rules channel with the Name REACTION_RULES_CHANNEL_NAME.
     const rulesChannel = client.channels.cache.find(
-      (ch) => ch.name === process.env.REACTION_RULES_CHANNEL_NAME
+      selectByNameCallback(process.env.REACTION_RULES_CHANNEL_NAME)
     );
 
     // Check if the rulesChannel exists and if the ID of the rulesChannel is the same as the channel ID of the reacted message, and emojiName is the same as REACTION_EMOJI_NAME.
@@ -35,7 +36,7 @@ module.exports = {
 
     // Find the role with the name REACTION_ROLE_NAME.
     const role = guild.roles.cache.find(
-      (role) => role.name === process.env.REACTION_ROLE_NAME
+      selectByNameCallback(process.env.REACTION_ROLE_NAME)
     );
 
     // Check if the role exists. If not, it will return.

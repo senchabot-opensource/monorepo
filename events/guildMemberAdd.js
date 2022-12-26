@@ -1,3 +1,4 @@
+const { selectByNameCallBack } = require("../utils/helpers");
 const { addRole } = require("../utils/memberFunctions");
 
 module.exports = {
@@ -8,7 +9,7 @@ module.exports = {
 
     if (!roleName) return;
 
-    let memberRole = member.guild.roles.cache.find((r) => r.name === roleName);
+    let memberRole = member.guild.roles.cache.find(selectByNameCallBack(roleName));
 
     addRole(member, memberRole);
   },

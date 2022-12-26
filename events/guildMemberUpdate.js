@@ -1,3 +1,4 @@
+const { selectByNameCallback } = require("../utils/helpers");
 const { addRole, removeRole } = require("../utils/memberFunctions");
 
 module.exports = {
@@ -8,7 +9,7 @@ module.exports = {
     const subRoles = process.env.SUB_ROLES.split(",");
 
     const exclusiveRole = member.guild.roles.cache.find(
-      (r) => r.name === process.env.EXCLUSIVE_ROLE
+      selectByNameCallback(process.env.EXCLUSIVE_ROLE)
     );
 
     let hasSubRoles = false;

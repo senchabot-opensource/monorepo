@@ -1,8 +1,9 @@
+const { selectByIdCallback } = require("./helpers");
 const { Permissions } = require("discord.js");
 const { checkBotPermission } = require("./botFunctions");
 
 function checkMemberRole(member, role) {
-  return member.roles.cache.some((_role) => _role.id === role.id);
+  return member.roles.cache.some(selectByIdCallback(role.id));
 }
 
 function addRole(member, memberRole) {

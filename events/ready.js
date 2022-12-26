@@ -1,3 +1,4 @@
+const { selectByNameCallback } = require("../utils/helpers");
 const { addRoleAll, addRole, removeRole } = require("../utils/memberFunctions");
 
 module.exports = {
@@ -11,7 +12,7 @@ module.exports = {
     if (!roleName) return;
 
     const guild = client.guilds.cache.first();
-    const memberRole = guild.roles.cache.find((role) => role.name === roleName);
+    const memberRole = guild.roles.cache.find(selectByNameCallback(roleName));
 
     if (!memberRole) return;
 
@@ -24,7 +25,7 @@ module.exports = {
     const subRoles = process.env.SUB_ROLES.split(",");
 
     const exclusiveRole = guild.roles.cache.find(
-      (role) => role.name === exclusiveRoleName
+      selectByNameCallback(exclusiveRoleName)
     );
 
     if (!exclusiveRole) return;
