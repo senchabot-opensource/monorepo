@@ -12,10 +12,9 @@ module.exports = {
       selectByNameCallback(process.env.EXCLUSIVE_ROLE)
     );
 
-    let hasSubRoles = false;
-
     member.guild.members.fetch().then((members) =>
       members.some((_member) => {
+        let hasSubRoles = false;
         if (_member.user.username === userName) {
           hasSubRoles = subRoles.some((role) => _member._roles.includes(role));
 

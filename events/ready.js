@@ -20,7 +20,7 @@ module.exports = {
       addRoleAll(guild, memberRole);
     }
 
-    if (exclusiveRoleName && false) {
+    if (exclusiveRoleName) {
       const subRoles = process.env.SUB_ROLES.split(",");
 
       const exclusiveRole = guild.roles.cache.find(

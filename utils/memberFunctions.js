@@ -36,8 +36,10 @@ function removeRole(member, memberRole) {
   }
 }
 
-function addRoleAll(guild, memberRole) {
-  guild.members.cache.forEach((member) => {
+async function addRoleAll(guild, memberRole) {
+  const guildMembers = await guild.members.fetch();
+
+  guildMembers.forEach((member) => {
     const hasRole = checkMemberRole(member, memberRole);
 
     if (!hasRole && !member.user.bot) {
