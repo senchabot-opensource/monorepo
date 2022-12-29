@@ -7,10 +7,12 @@ module.exports = {
     // console.log("guildMemberAdd event", member.displayName);
     const roleName = process.env.ROLE;
 
-    if (!roleName) return;
+    if (roleName) {
+      let memberRole = member.guild.roles.cache.find(
+        selectByNameCallBack(roleName)
+      );
 
-    let memberRole = member.guild.roles.cache.find(selectByNameCallBack(roleName));
-
-    addRole(member, memberRole);
+      addRole(member, memberRole);
+    }
   },
 };

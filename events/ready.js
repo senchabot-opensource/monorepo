@@ -8,42 +8,44 @@ module.exports = {
     console.log(`Ready! Logged in as ${client.user.tag}`);
 
     const roleName = process.env.ROLE;
-
-    if (!roleName) return;
-
-    const guild = client.guilds.cache.first();
-    const memberRole = guild.roles.cache.find(selectByNameCallback(roleName));
-
-    if (!memberRole) return;
-
-    addRoleAll(guild, memberRole);
-
     const exclusiveRoleName = process.env.EXCLUSIVE_ROLE;
 
-    if (!exclusiveRoleName) return;
+    const guild = client.guilds.cache.get(process.env.GUILDID); // first()
 
-    const subRoles = process.env.SUB_ROLES.split(",");
+    if (roleName) {
+      const memberRole = guild.roles.cache.find(selectByNameCallback(roleName));
 
-    const exclusiveRole = guild.roles.cache.find(
-      selectByNameCallback(exclusiveRoleName)
-    );
+      if (!memberRole) return;
 
-    if (!exclusiveRole) return;
+      addRoleAll(guild, memberRole);
+    }
 
-    const guildMembers = await guild.members.fetch();
+    if (exclusiveRoleName && false) {
+      const subRoles = process.env.SUB_ROLES.split(",");
 
-    guildMembers.forEach((_member) => {
-      const hasSubRoles = subRoles.some((role) =>
-        _member._roles.includes(role)
+      const exclusiveRole = guild.roles.cache.find(
+        selectByNameCallback(exclusiveRoleName)
       );
 
-      console.log(`${_member.user.tag} HAS ONE OF SUB ROLES? "${hasSubRoles}"`);
+      if (!exclusiveRole) return;
 
-      if (hasSubRoles) {
-        addRole(_member, exclusiveRole);
-      } else {
-        removeRole(_member, exclusiveRole);
-      }
-    });
+      const guildMembers = await guild.members.fetch();
+
+      guildMembers.forEach((_member) => {
+        const hasSubRoles = subRoles.some((role) =>
+          _member._roles.includes(role)
+        );
+
+        console.log(
+          `${_member.user.tag} HAS ONE OF SUB ROLES? "${hasSubRoles}"`
+        );
+
+        if (hasSubRoles) {
+          addRole(_member, exclusiveRole);
+        } else {
+          removeRole(_member, exclusiveRole);
+        }
+      });
+    }
   },
 };
