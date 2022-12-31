@@ -1,7 +1,11 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
+const { Permissions } = require("discord.js");
+const { checkBotPermission } = require("../utils/botFunctions");
 const { dynamicVoice } = require("../utils/dynamicVoice");
 
 const CHANNEL_NAME_OPTION = "channel-name";
+
+const manageChannelsPermFlag = Permissions.FLAGS.MANAGE_CHANNELS;
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -14,6 +18,13 @@ module.exports = {
         .setRequired(true)
     ),
   execute(interaction) {
+    const guild = interaction.guild;
+
+    if (!checkBotPermission(guild, manageChannelsPermFlag)) {
+      console.log('BOT DOES NOT HAVE "MANAGE CHANNELS" PERMISSION.');
+      return;
+    }
+
     const userId = interaction.user.id;
 
     if (dynamicVoice.userHasChannels(userId)) {
@@ -28,13 +39,11 @@ module.exports = {
 
     if (dynamicVoice.channelNameInUse(channelName)) {
       interaction.reply({
-        content: "This channel name is aldready in use.",
+        content: "This channel name is already in use.",
         ephemeral: true,
       });
       return;
     }
-
-    const guild = interaction.guild;
 
     guild.channels
       .create(channelName, {
@@ -48,7 +57,7 @@ module.exports = {
         });
 
         interaction.reply({
-          content: `Channel name: ${channelName}`,
+          content: `You have created a dynamic voice channel called "${channelName}".`,
           ephemeral: true,
         });
       })
