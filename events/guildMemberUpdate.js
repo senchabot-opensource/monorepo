@@ -9,7 +9,7 @@ module.exports = {
     const subRoles = process.env.SUB_ROLES.split(",");
 
     const exclusiveRole = member.guild.roles.cache.find(
-      selectByNameCallback(process.env.EXCLUSIVE_ROLE)
+      selectByNameCallback(process.env.EXCLUSIVE_ROLE_NAME)
     );
 
     member.guild.members.fetch().then((members) =>

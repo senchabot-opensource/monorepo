@@ -5,7 +5,7 @@ module.exports = {
   name: "guildMemberAdd",
   execute(member) {
     // console.log("guildMemberAdd event", member.displayName);
-    const roleName = process.env.ROLE;
+    const roleName = process.env.ROLE_NAME;
 
     if (roleName) {
       let memberRole = member.guild.roles.cache.find(

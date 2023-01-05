@@ -7,8 +7,8 @@ module.exports = {
   async execute(client) {
     console.log(`Ready! Logged in as ${client.user.tag}`);
 
-    const roleName = process.env.ROLE;
-    const exclusiveRoleName = process.env.EXCLUSIVE_ROLE;
+    const roleName = process.env.ROLE_NAME;
+    const exclusiveRoleName = process.env.EXCLUSIVE_ROLE_NAME;
 
     const guild = client.guilds.cache.get(process.env.GUILDID); // first()
 
