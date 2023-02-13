@@ -1,11 +1,11 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { Permissions } = require("discord.js");
+const { PermissionFlagsBits, ChannelType } = require("discord-api-types/v10");
 const { checkBotPermission } = require("../utils/botFunctions");
 const { dynamicVoice } = require("../utils/dynamicVoice");
 
 const CHANNEL_NAME_OPTION = "channel-name";
 
-const manageChannelsPermFlag = Permissions.FLAGS.MANAGE_CHANNELS;
+const manageChannelsPermFlag = PermissionFlagsBits.ManageChannels;
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -46,8 +46,9 @@ module.exports = {
     }
 
     guild.channels
-      .create(channelName, {
-        type: "GUILD_VOICE",
+      .create({
+        name: channelName,
+        type: ChannelType.GuildVoice,
       })
       .then((channel) => {
         dynamicVoice.addChannel({
