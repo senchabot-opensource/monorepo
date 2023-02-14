@@ -1,10 +1,10 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { Permissions } = require("discord.js");
+const { PermissionFlagsBits } = require("discord-api-types/v10");
 const { checkBotPermission } = require("../utils/botFunctions");
 const { wait } = require("../utils/helpers");
 const { checkMemberPermission } = require("../utils/memberFunctions");
 
-const manageMessagesPermFlag = Permissions.FLAGS.MANAGE_MESSAGES;
+const manageMessagesPermFlag = PermissionFlagsBits.ManageMessages;
 
 module.exports = {
   data: new SlashCommandBuilder()

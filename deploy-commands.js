@@ -4,7 +4,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 
 const { REST } = require("@discordjs/rest");
-const { Routes } = require("discord-api-types/v9");
+const { Routes } = require("discord-api-types/v10");
 
 const commands = [];
 const commandsPath = path.join(__dirname, "commands");
@@ -19,7 +19,7 @@ for (const file of commandFiles) {
   commands.push(command.data.toJSON());
 }
 
-const rest = new REST({ version: "9" }).setToken(process.env.TOKEN);
+const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);
 
 rest
   .put(

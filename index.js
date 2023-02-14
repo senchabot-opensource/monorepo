@@ -1,27 +1,28 @@
 require("dotenv").config();
 
 const path = require("node:path");
-const { Client, Collection } = require("discord.js");
+const { Client, Collection, Partials } = require("discord.js");
+const { GatewayIntentBits } = require("discord-api-types/v10");
 
 const client = new Client({
   intents: [
-    "GUILDS",
-    "GUILD_MEMBERS",
-    // "GUILD_SCHEDULED_EVENTS",
-    // "GUILD_INVITES",
-    // "GUILD_PRESENCES",
-    "GUILD_VOICE_STATES",
-    "GUILD_MESSAGES",
-    "GUILD_MESSAGE_REACTIONS",
-    // "GUILD_MESSAGE_TYPING",
-    // "DIRECT_MESSAGES",
-    // "DIRECT_MESSAGE_REACTIONS",
-    // "DIRECT_MESSAGE_TYPING",
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMembers,
+    // GatewayIntentBits.GuildScheduledEvents,
+    // GatewayIntentBits.GuildInvites,
+    // GatewayIntentBits.GuildPresences,
+    GatewayIntentBits.GuildVoiceStates,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.GuildMessageReactions,
+    // GatewayIntentBits.GuildMessageTyping,
+    // GatewayIntentBits.DirectMessages,
+    // GatewayIntentBits.DirectMessageReactions,
+    // GatewayIntentBits.DirectMessageTyping,
   ],
   partials: [
-    "MESSAGE",
-    //   "CHANNEL", // Required to receive DMs
-    "REACTION", // Required to receive Reactions
+    Partials.Message,
+    //   Partials.Channel, // Required to receive DMs
+    Partials.Reaction, // Required to receive Reactions
   ],
 });
 

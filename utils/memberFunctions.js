@@ -1,5 +1,5 @@
 const { selectByIdCallback } = require("./helpers");
-const { Permissions } = require("discord.js");
+const { PermissionFlagsBits } = require("discord-api-types/v10");
 const { checkBotPermission } = require("./botFunctions");
 
 function checkMemberRole(member, role) {
@@ -8,7 +8,7 @@ function checkMemberRole(member, role) {
 
 function addRole(member, memberRole) {
   // Check if the bot has the Manage Roles permission.
-  if (checkBotPermission(member.guild, Permissions.FLAGS.MANAGE_ROLES)) {
+  if (checkBotPermission(member.guild, PermissionFlagsBits.ManageRoles)) {
     const hasRole = checkMemberRole(member, memberRole);
 
     if (!hasRole) {
@@ -22,7 +22,7 @@ function addRole(member, memberRole) {
 
 function removeRole(member, memberRole) {
   // Check if the bot has the Manage Roles permission.
-  if (checkBotPermission(member.guild, Permissions.FLAGS.MANAGE_ROLES)) {
+  if (checkBotPermission(member.guild, PermissionFlagsBits.ManageRoles)) {
     const hasRole = checkMemberRole(member, memberRole);
 
     if (hasRole) {
