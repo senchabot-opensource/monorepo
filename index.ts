@@ -1,4 +1,5 @@
-require("dotenv").config();
+import dotenv from "dotenv";
+dotenv.config();
 
 const path = require("node:path");
 const { Client, Collection, Partials } = require("discord.js");
