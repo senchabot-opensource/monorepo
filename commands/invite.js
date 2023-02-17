@@ -6,7 +6,7 @@ module.exports = {
     .setDescription("Senchabot invite url."),
   execute(interaction) {
     const client_id = process.env.CLIENTID;
-    const permissions = 302058496;
+    const permissions = 2199022698327;
     const url = `https://discord.com/api/oauth2/authorize?client_id=${client_id}&permissions=${permissions}&scope=bot%20applications.commands`;
 
     interaction.reply({ content: url, ephemeral: true });
