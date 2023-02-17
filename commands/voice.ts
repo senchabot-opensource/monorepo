@@ -1,23 +1,29 @@
-const { SlashCommandBuilder } = require("@discordjs/builders");
-const { PermissionFlagsBits, ChannelType } = require("discord-api-types/v10");
-const { checkBotPermission } = require("../utils/botFunctions");
-const { dynamicVoice } = require("../utils/dynamicVoice");
+import {
+  ChannelType,
+  GuildChannel,
+  PermissionFlagsBits,
+  SlashCommandBuilder,
+  SlashCommandStringOption,
+} from "discord.js";
+import { CatchClause } from "typescript";
+import { dynamicVoice, IChannel } from "../utils/dynamicVoice";
+import checkBotPermission from "../utils/botFunctions";
 
 const CHANNEL_NAME_OPTION = "channel-name";
 
 const manageChannelsPermFlag = PermissionFlagsBits.ManageChannels;
 
-module.exports = {
+export default {
   data: new SlashCommandBuilder()
     .setName("voice")
     .setDescription("Create dynamic voice channels.")
-    .addStringOption((option) =>
+    .addStringOption((option: SlashCommandStringOption) =>
       option
         .setName(CHANNEL_NAME_OPTION)
         .setDescription("A proper channel name")
         .setRequired(true)
     ),
-  execute(interaction) {
+  execute(interaction: any) {
     const guild = interaction.guild;
 
     if (!checkBotPermission(guild, manageChannelsPermFlag)) {
@@ -50,19 +56,21 @@ module.exports = {
         name: channelName,
         type: ChannelType.GuildVoice,
       })
-      .then((channel) => {
-        dynamicVoice.addChannel({
+      .then((channel: GuildChannel) => {
+        const channelData: IChannel = {
           channelId: channel.id,
           channelName: channelName,
           ownerId: userId,
-        });
+          createdAt: Date.now(),
+        };
+        dynamicVoice.addChannel(channelData);
 
         interaction.reply({
           content: `You have created a dynamic voice channel called "${channelName}".`,
           ephemeral: true,
         });
       })
-      .catch((e) => {
+      .catch((e: CatchClause) => {
         interaction.reply({
           content: `There was an error while creating voice channel "${channelName}". Error: ${e}`,
           ephemeral: true,

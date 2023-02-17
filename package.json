@@ -12,7 +12,7 @@
   },
   "name": "sencha-discord-bot",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "deploy-cmds": "ts-node deploy-commands.ts",
     "start": "ts-node index.ts",

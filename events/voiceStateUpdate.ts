@@ -1,14 +1,17 @@
-const { dynamicVoice } = require("../utils/dynamicVoice");
+import { NonThreadGuildBasedChannel, VoiceState } from "discord.js";
+import { dynamicVoice } from "../utils/dynamicVoice";
 
-module.exports = {
+export default {
   name: "voiceStateUpdate",
-  async execute(oldState, newState) {
+  async execute(oldState: VoiceState, newState: VoiceState) {
     try {
       // Fetch all channels in the guild
       const channels = await newState.guild.channels.fetch();
 
       // Iterate through channels
-      channels.some((_channel) => {
+      channels.some((_channel: NonThreadGuildBasedChannel | null) => {
+        if (!_channel) return;
+
         // Get the number of members in the channel
         const memberCount = [..._channel.members].length;
 

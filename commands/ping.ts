@@ -1,8 +1,10 @@
+import { CommandInteraction } from "discord.js";
+
 const { SlashCommandBuilder } = require("@discordjs/builders");
 
-module.exports = {
+export default {
   data: new SlashCommandBuilder().setName("ping").setDescription("Pongs."),
-  async execute(interaction) {
+  async execute(interaction: CommandInteraction) {
     await interaction.reply({
       content: "pong",
       ephemeral: true, // Geçici mesaj. Mesajı sadece komutu çalıştıran kullanıcıya gösterir

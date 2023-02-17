@@ -1,18 +1,22 @@
-const { SlashCommandBuilder } = require("@discordjs/builders");
-const { PermissionFlagsBits } = require("discord-api-types/v10");
-const { checkBotPermission } = require("../utils/botFunctions");
-const { wait } = require("../utils/helpers");
-const { checkMemberPermission } = require("../utils/memberFunctions");
+import {
+  Message,
+  PermissionFlagsBits,
+  SlashCommandBuilder,
+  SlashCommandStringOption,
+} from "discord.js";
+import checkBotPermission from "../utils/botFunctions";
+import { wait } from "../utils/helpers";
+import checkMemberPermission from "../utils/memberFunctions";
 
 const manageMessagesPermFlag = PermissionFlagsBits.ManageMessages;
 
-module.exports = {
+export default {
   data: new SlashCommandBuilder()
     .setName("purge")
     .setDescription(
       "Find and delete the last 100 messages that contain the specified character string."
     )
-    .addStringOption((option) =>
+    .addStringOption((option: SlashCommandStringOption) =>
       option
         .setName("content")
         .setDescription(
@@ -20,7 +24,7 @@ module.exports = {
         )
         .setRequired(false)
     )
-    .addStringOption((option) =>
+    .addStringOption((option: SlashCommandStringOption) =>
       option
         .setName("username")
         .setDescription(
@@ -28,7 +32,7 @@ module.exports = {
         )
         .setRequired(false)
     ),
-  async execute(interaction) {
+  async execute(interaction: any) {
     //console.log(interaction);
     const guild = interaction.member.guild;
 
@@ -66,8 +70,8 @@ module.exports = {
 
     channelMessages
       .fetch({ limit: 100 })
-      .then((messages) => {
-        messages.map((message) => {
+      .then((messages: any) => {
+        messages.map((message: Message) => {
           if (wordString) {
             if (message.content.toLowerCase().includes(wordString)) {
               channelMessages.delete(message);

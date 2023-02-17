@@ -1,5 +1,12 @@
+export interface IChannel {
+  channelId: string;
+  channelName: string;
+  ownerId: string;
+  createdAt: number;
+}
+
 class DynamicVoice {
-  channels = [];
+  private channels: IChannel[] = [];
 
   /**
    * Get the list of channels
@@ -13,7 +20,7 @@ class DynamicVoice {
    * Add a new channel to the list of channels
    * @param {Object} channel The channel data to be saved
    */
-  addChannel(channel) {
+  addChannel(channel: IChannel) {
     if (!channel || !channel.channelId) {
       throw new Error("Invalid channel data");
     }
@@ -25,7 +32,7 @@ class DynamicVoice {
    * @param {String} channelId
    * @returns The channel object, or undefined if not found
    */
-  getChannel(channelId) {
+  getChannel(channelId: string) {
     const channelIndex = this.getChannelIndex(channelId);
 
     return this.channels[channelIndex];
@@ -36,7 +43,7 @@ class DynamicVoice {
    * @param {String} userId The ID of the user
    * @return {Boolean} `true` if the user has at least one channel, `false` otherwise
    */
-  userHasChannels(userId) {
+  userHasChannels(userId: string) {
     return this.channels.some((channel) => channel.ownerId === userId);
   }
 
@@ -45,7 +52,7 @@ class DynamicVoice {
    * @param {String} channelName The name of the channel
    * @return {Boolean} `true` if there is a channel with the given name, `false` otherwise
    */
-  channelNameInUse(channelName) {
+  channelNameInUse(channelName: string) {
     return this.channels.some((channel) => channel.channelName === channelName);
   }
 
@@ -54,7 +61,7 @@ class DynamicVoice {
    * @param {String} channelId
    * @return {Number} The index of the channel, or -1 if it is not found
    */
-  getChannelIndex(channelId) {
+  getChannelIndex(channelId: string) {
     return this.channels.findIndex(
       (channel) => channel.channelId === channelId
     );
@@ -64,7 +71,7 @@ class DynamicVoice {
    * Remove the channel with the given ID from the list
    * @param {String} channelId The ID of the channel to be removed
    */
-  removeChannel(channelId) {
+  removeChannel(channelId: string) {
     const channelIndex = this.getChannelIndex(channelId);
 
     if (channelIndex === -1) {
@@ -76,6 +83,4 @@ class DynamicVoice {
   }
 }
 
-const dynamicVoice = new DynamicVoice();
-
-module.exports = { dynamicVoice };
+export const dynamicVoice = new DynamicVoice();
