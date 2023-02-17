@@ -1,6 +1,6 @@
-import { Client, GuildMember, Role } from "discord.js";
+import { Client } from "discord.js";
 import { selectByNameCallback } from "../utils/helpers";
-import { addRole, addRoleAll, removeRole } from "../utils/memberFunctions";
+import { checkExclusiveRole, addRoleAll } from "../utils/memberFunctions";
 
 export default {
   name: "ready",
@@ -10,7 +10,6 @@ export default {
 
     const roleName = process.env.ROLE_NAME as string;
     const exclusiveRoleName = process.env.EXCLUSIVE_ROLE_NAME as string;
-    const subRoles = process.env.SUB_ROLES as string;
     const guildId = process.env.GUILDID as string;
 
     const guild = client.guilds.cache.get(guildId); // first()
@@ -26,35 +25,10 @@ export default {
     }
 
     if (exclusiveRoleName) {
-      const splitSubRoles = subRoles.split(",");
-
-      if (!splitSubRoles.length) return;
-
-      const exclusiveRole = guild.roles.cache.find(
-        selectByNameCallback(exclusiveRoleName)
-      );
-
-      if (!exclusiveRole) {
-        console.log("EXCLUSIVE ROLE NOT FOUND.");
-        return;
-      }
-
       const guildMembers = await guild.members.fetch();
 
       guildMembers.forEach((_member: any) => {
-        const hasSubRoles = splitSubRoles.some((role) =>
-          _member._roles.includes(role)
-        );
-
-        console.log(
-          `${_member.user.tag} HAS ONE OF SUB ROLES? "${hasSubRoles}"`
-        );
-
-        if (hasSubRoles) {
-          addRole(_member, exclusiveRole);
-        } else {
-          removeRole(_member, exclusiveRole);
-        }
+        checkExclusiveRole(guild, _member);
       });
     }
   },

@@ -6,7 +6,7 @@ import {
 } from "discord.js";
 import checkBotPermission from "../utils/botFunctions";
 import { wait } from "../utils/helpers";
-import checkMemberPermission from "../utils/memberFunctions";
+import { checkMemberPermission } from "../utils/memberFunctions";
 
 const manageMessagesPermFlag = PermissionFlagsBits.ManageMessages;
 

@@ -1,17 +1,6 @@
-import {
-  Guild,
-  GuildMember,
-  GuildMemberManager,
-  GuildMemberRoleManager,
-  PermissionFlags,
-  PermissionFlagsBits,
-  PermissionResolvable,
-  PermissionsBitField,
-  PermissionsString,
-  Role,
-} from "discord.js";
+import { Guild, GuildMember, PermissionFlagsBits, Role } from "discord.js";
 import checkBotPermission from "./botFunctions";
-import { selectByIdCallback } from "./helpers";
+import { selectByIdCallback, selectByNameCallback } from "./helpers";
 
 function checkMemberRole(member: GuildMember, role: Role | undefined) {
   return role && member.roles.cache.some(selectByIdCallback(role.id));
@@ -59,7 +48,7 @@ export async function addRoleAll(guild: Guild, memberRole: Role) {
   });
 }
 
-export default function checkMemberPermission(
+export function checkMemberPermission(
   memberPermissions: any,
   permissionFlag: bigint
 ) {
@@ -68,4 +57,35 @@ export default function checkMemberPermission(
     memberPermissions.has(permissionFlag)
   );
   return memberPermissions.has(permissionFlag);
+}
+
+export function checkExclusiveRole(guild: any, _member: any) {
+  const subRoles = process.env.SUB_ROLES as string;
+
+  const splitSubRoles = subRoles.split(",");
+
+  if (!splitSubRoles.length) return;
+
+  const exclusiveRoleName = process.env.EXCLUSIVE_ROLE_NAME as string;
+
+  const exclusiveRole = guild.roles.cache.find(
+    selectByNameCallback(exclusiveRoleName)
+  );
+
+  if (!exclusiveRole) {
+    console.log("EXCLUSIVE ROLE NOT FOUND.");
+    return;
+  }
+
+  const hasSubRoles = splitSubRoles.some((role) =>
+    _member._roles.includes(role)
+  );
+
+  console.log(`${_member.user.tag} HAS ONE OF SUB ROLES? "${hasSubRoles}"`);
+
+  if (hasSubRoles) {
+    addRole(_member, exclusiveRole);
+  } else {
+    removeRole(_member, exclusiveRole);
+  }
 }
