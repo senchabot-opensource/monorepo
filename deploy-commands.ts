@@ -6,12 +6,13 @@ import { join } from "path";
 
 import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/v10";
+import { CommandInteraction } from "discord.js";
 
 const TOKEN = process.env.TOKEN as string;
 const CLIENTID = process.env.CLIENTID as string;
 const GUILDID = process.env.GUILDID as string;
 
-const commands: any[] = [];
+const commands: CommandInteraction[] = [];
 const commandsPath = join(__dirname, "commands");
 const commandFiles = readdirSync(commandsPath).filter((file) =>
   file.endsWith(".ts")

@@ -70,7 +70,7 @@ export default {
 
     channelMessages
       .fetch({ limit: 100 })
-      .then((messages: any) => {
+      .then((messages: Message[]) => {
         messages.map((message: Message) => {
           if (wordString) {
             if (message.content.toLowerCase().includes(wordString)) {
