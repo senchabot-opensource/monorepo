@@ -1,10 +1,11 @@
-require("dotenv").config();
+import { GatewayIntentBits, Partials } from "discord.js";
+import { join } from "path";
+import { readdirSync } from "fs";
 
-const path = require("node:path");
-const { Client, Collection, Partials } = require("discord.js");
-const { GatewayIntentBits } = require("discord-api-types/v10");
+import DiscordClient from "./client";
+import { env } from "./utils/env";
 
-const client = new Client({
+const client = new DiscordClient({
   intents: [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMembers,
@@ -26,12 +27,13 @@ const client = new Client({
   ],
 });
 
-client.commands = new Collection();
-
-const handlersPath = path.join(__dirname, "handlers");
-["commandHandler", "eventHandler"].forEach((handlerFile) => {
-  const filePath = path.join(handlersPath, handlerFile);
-  require(filePath)(client);
+const handlersPath = join(__dirname, "handlers");
+const handlerFiles = readdirSync(handlersPath).filter((file) =>
+  file.endsWith("Handler.ts")
+);
+handlerFiles.forEach((handlerFile: any) => {
+  const filePath = join(handlersPath, handlerFile);
+  import(filePath).then((handler) => handler.default(client));
 });
 
-client.login(process.env.TOKEN);
+client.login(env.TOKEN);

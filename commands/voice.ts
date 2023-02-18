@@ -1,24 +1,32 @@
-const { SlashCommandBuilder } = require("@discordjs/builders");
-const { PermissionFlagsBits, ChannelType } = require("discord-api-types/v10");
-const { checkBotPermission } = require("../utils/botFunctions");
-const { dynamicVoice } = require("../utils/dynamicVoice");
+import {
+  ChannelType,
+  ChatInputCommandInteraction,
+  Guild,
+  GuildChannel,
+  PermissionFlagsBits,
+  SlashCommandBuilder,
+  SlashCommandStringOption,
+} from "discord.js";
+import { CatchClause } from "typescript";
+import { dynamicVoice, IChannel } from "../utils/dynamicVoice";
+import checkBotPermission from "../utils/botFunctions";
 
 const CHANNEL_NAME_OPTION = "channel-name";
 
 const manageChannelsPermFlag = PermissionFlagsBits.ManageChannels;
 
-module.exports = {
+export default {
   data: new SlashCommandBuilder()
     .setName("voice")
     .setDescription("Create dynamic voice channels.")
-    .addStringOption((option) =>
+    .addStringOption((option: SlashCommandStringOption) =>
       option
         .setName(CHANNEL_NAME_OPTION)
         .setDescription("A proper channel name")
         .setRequired(true)
     ),
-  execute(interaction) {
-    const guild = interaction.guild;
+  execute(interaction: ChatInputCommandInteraction) {
+    const guild = interaction.guild as Guild;
 
     if (!checkBotPermission(guild, manageChannelsPermFlag)) {
       console.log('BOT DOES NOT HAVE "MANAGE CHANNELS" PERMISSION.');
@@ -35,7 +43,9 @@ module.exports = {
       return;
     }
 
-    const channelName = interaction.options.getString(CHANNEL_NAME_OPTION);
+    const channelName = interaction.options.getString(
+      CHANNEL_NAME_OPTION
+    ) as string;
 
     if (dynamicVoice.channelNameInUse(channelName)) {
       interaction.reply({
@@ -50,19 +60,21 @@ module.exports = {
         name: channelName,
         type: ChannelType.GuildVoice,
       })
-      .then((channel) => {
-        dynamicVoice.addChannel({
+      .then((channel: GuildChannel) => {
+        const channelData: IChannel = {
           channelId: channel.id,
           channelName: channelName,
           ownerId: userId,
-        });
+          createdAt: Date.now(),
+        };
+        dynamicVoice.addChannel(channelData);
 
         interaction.reply({
           content: `You have created a dynamic voice channel called "${channelName}".`,
           ephemeral: true,
         });
       })
-      .catch((e) => {
+      .catch((e: CatchClause) => {
         interaction.reply({
           content: `There was an error while creating voice channel "${channelName}". Error: ${e}`,
           ephemeral: true,
