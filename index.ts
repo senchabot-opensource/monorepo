@@ -1,5 +1,4 @@
-import dotenv from "dotenv";
-dotenv.config();
+import "dotenv/config";
 
 import { GatewayIntentBits, Partials } from "discord.js";
 import { join } from "path";
