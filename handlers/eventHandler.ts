@@ -2,7 +2,7 @@ import { Client } from "discord.js";
 import { readdirSync } from "fs";
 import { join } from "path";
 
-export default (client: Client) => {
+export default async (client: Client) => {
   console.log("INITIALIZING EVENT HANDLER");
 
   const eventsPath = join(__dirname, "../events");
@@ -12,7 +12,7 @@ export default (client: Client) => {
 
   for (const file of eventFiles) {
     const filePath = join(eventsPath, file);
-    const event = require(filePath);
+    const event = await import(filePath);
 
     if (event.default) {
       if (event.default.once) {
