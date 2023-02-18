@@ -1,4 +1,5 @@
 import { Client } from "discord.js";
+import { env } from "../utils/env";
 import { selectByNameCallback } from "../utils/helpers";
 import { checkExclusiveRole, addRoleAll } from "../utils/memberFunctions";
 
@@ -8,9 +9,9 @@ export default {
   async execute(client: Client) {
     console.log(`Ready! Logged in as ${client.user?.tag}`);
 
-    const roleName = process.env.ROLE_NAME as string;
-    const exclusiveRoleName = process.env.EXCLUSIVE_ROLE_NAME as string;
-    const guildId = process.env.GUILDID as string;
+    const roleName = env.ROLE_NAME;
+    const exclusiveRoleName = env.EXCLUSIVE_ROLE_NAME;
+    const guildId = env.GUILDID as string;
 
     const guild = client.guilds.cache.get(guildId); // first()
 

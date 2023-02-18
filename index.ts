@@ -1,10 +1,9 @@
-import "dotenv/config";
-
 import { GatewayIntentBits, Partials } from "discord.js";
 import { join } from "path";
 import { readdirSync } from "fs";
 
 import DiscordClient from "./client";
+import { env } from "./utils/env";
 
 const client = new DiscordClient({
   intents: [
@@ -37,4 +36,4 @@ handlerFiles.forEach((handlerFile: any) => {
   import(filePath).then((handler) => handler.default(client));
 });
 
-client.login(process.env.TOKEN);
+client.login(env.TOKEN);

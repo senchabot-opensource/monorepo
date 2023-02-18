@@ -1,5 +1,6 @@
 import { Guild, GuildMember, PermissionFlagsBits, Role } from "discord.js";
 import checkBotPermission from "./botFunctions";
+import { env } from "./env";
 import { selectByIdCallback, selectByNameCallback } from "./helpers";
 
 function checkMemberRole(member: GuildMember, role: Role | undefined) {
@@ -60,13 +61,13 @@ export function checkMemberPermission(
 }
 
 export function checkExclusiveRole(guild: any, _member: any) {
-  const subRoles = process.env.SUB_ROLES as string;
+  const subRoles = env.SUB_ROLES as string;
 
   const splitSubRoles = subRoles.split(",");
 
   if (!splitSubRoles.length) return;
 
-  const exclusiveRoleName = process.env.EXCLUSIVE_ROLE_NAME as string;
+  const exclusiveRoleName = env.EXCLUSIVE_ROLE_NAME;
 
   const exclusiveRole = guild.roles.cache.find(
     selectByNameCallback(exclusiveRoleName)
