@@ -1,18 +1,16 @@
-import dotenv from "dotenv";
-dotenv.config();
-
 import { readdirSync } from "fs";
 import { join } from "path";
 
 import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/v10";
+import { env } from "../utils/env";
 
-const TOKEN = process.env.TOKEN as string;
-const CLIENTID = process.env.CLIENTID as string;
-const GUILDID = process.env.GUILDID as string;
+const TOKEN = env.TOKEN as string;
+const CLIENTID = env.CLIENTID as string;
+const GUILDID = env.GUILDID as string;
 
 const commands: any[] = [];
-const commandsPath = join(__dirname, "commands");
+const commandsPath = join(__dirname, "../commands");
 const commandFiles = readdirSync(commandsPath).filter((file) =>
   file.endsWith(".ts")
 );
