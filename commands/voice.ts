@@ -1,5 +1,7 @@
 import {
   ChannelType,
+  ChatInputCommandInteraction,
+  Guild,
   GuildChannel,
   PermissionFlagsBits,
   SlashCommandBuilder,
@@ -23,8 +25,8 @@ export default {
         .setDescription("A proper channel name")
         .setRequired(true)
     ),
-  execute(interaction: any) {
-    const guild = interaction.guild;
+  execute(interaction: ChatInputCommandInteraction) {
+    const guild = interaction.guild as Guild;
 
     if (!checkBotPermission(guild, manageChannelsPermFlag)) {
       console.log('BOT DOES NOT HAVE "MANAGE CHANNELS" PERMISSION.');
@@ -41,7 +43,9 @@ export default {
       return;
     }
 
-    const channelName = interaction.options.getString(CHANNEL_NAME_OPTION);
+    const channelName = interaction.options.getString(
+      CHANNEL_NAME_OPTION
+    ) as string;
 
     if (dynamicVoice.channelNameInUse(channelName)) {
       interaction.reply({

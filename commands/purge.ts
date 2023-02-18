@@ -1,5 +1,9 @@
 import {
+  ChatInputCommandInteraction,
+  Collection,
+  Guild,
   Message,
+  MessageManager,
   PermissionFlagsBits,
   SlashCommandBuilder,
   SlashCommandStringOption,
@@ -32,9 +36,8 @@ export default {
         )
         .setRequired(false)
     ),
-  async execute(interaction: any) {
-    //console.log(interaction);
-    const guild = interaction.member.guild;
+  async execute(interaction: ChatInputCommandInteraction) {
+    const guild = interaction.guild as Guild;
 
     if (
       !checkMemberPermission(
@@ -43,7 +46,7 @@ export default {
       )
     ) {
       console.log(
-        `MEMBER "${interaction.member.username}" DOES NOT HAVE "MANAGE MESSAGES" PERMISSION.`
+        `MEMBER "${interaction.member?.user.username}" DOES NOT HAVE "MANAGE MESSAGES" PERMISSION.`
       );
       return;
     }
@@ -53,9 +56,7 @@ export default {
       return;
     }
 
-    const channelMessages = guild.channels.cache.get(
-      interaction.channel.id
-    ).messages;
+    const channelMessages = interaction.channel?.messages as MessageManager;
 
     const wordString = interaction.options.getString("content");
     const usernameString = interaction.options.getString("username");
@@ -70,7 +71,7 @@ export default {
 
     channelMessages
       .fetch({ limit: 100 })
-      .then((messages: Message[]) => {
+      .then((messages: Collection<string, Message>) => {
         messages.map((message: Message) => {
           if (wordString) {
             if (message.content.toLowerCase().includes(wordString)) {
@@ -115,7 +116,6 @@ export default {
             "`` character string will be deleted."
           : ""
       } `,
-      ephemeral: true,
     });
   },
 };
