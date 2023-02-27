@@ -14,9 +14,11 @@
   "version": "1.0.0",
   "main": "index.ts",
   "scripts": {
-    "deploy-cmds": "ts-node deploy-commands.ts",
-    "start": "ts-node index.ts",
+    "deploy-cmds": "ts-node ./scripts/deploy-commands.ts",
+    "start": "node ./build/index.js",
     "dev": "nodemon index.ts",
+    "build": "tsc",
+    "start:ts": "ts-node index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
