@@ -10,6 +10,8 @@ import {
 import { CatchClause } from "typescript";
 import { dynamicVoice, IChannel } from "../utils/dynamicVoice";
 import checkBotPermission from "../utils/botFunctions";
+import { selectByIdCallback } from "../utils/helpers";
+import { env } from "../utils/env";
 
 const CHANNEL_NAME_OPTION = "channel-name";
 
@@ -55,10 +57,23 @@ export default {
       return;
     }
 
+    const dynamicVoiceChannelCategoryCh = guild.channels.cache.find(
+      selectByIdCallback(env.DYNAMIC_VOICE_CATEGORY_ID)
+    );
+
+    if (!dynamicVoiceChannelCategoryCh) {
+      interaction.reply({
+        content: `Dynamic voice channels' category not found.`,
+        ephemeral: true,
+      });
+      return;
+    }
+
     guild.channels
       .create({
         name: channelName,
         type: ChannelType.GuildVoice,
+        parent: dynamicVoiceChannelCategoryCh.id,
       })
       .then((channel: GuildChannel) => {
         const channelData: IChannel = {
@@ -75,8 +90,11 @@ export default {
         });
       })
       .catch((e: CatchClause) => {
+        console.log(
+          `There was an error while creating dynamic voice channel "${channelName}". Error: ${e}`
+        );
         interaction.reply({
-          content: `There was an error while creating voice channel "${channelName}". Error: ${e}`,
+          content: `There was an error while creating dynamic voice channel "${channelName}".`,
           ephemeral: true,
         });
       });
