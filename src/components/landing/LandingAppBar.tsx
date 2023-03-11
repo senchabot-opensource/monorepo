@@ -23,9 +23,9 @@ import React from "react";
 
 const appBarMenuList = [
   { title: "Cookie Policy", path: "/cookie-policy" },
-  { title: "Privacy Policy", path: "/privacy-policy" },
+  /*{ title: "Privacy Policy", path: "/privacy-policy" },
   { title: "Terms of Service", path: "/terms" },
-  { title: "Open Source Licenses", path: "/licenses" },
+  { title: "Open Source Licenses", path: "/licenses" },*/
 ];
 
 const LandingAppBar = () => {
@@ -80,7 +80,7 @@ const LandingAppBar = () => {
               PaperProps={MenuPaperPropsStyles}
             >
               {appBarMenuList.map((item, index) => (
-                <Link href={item.path}>
+                <Link key={index} href={item.path}>
                   <MenuItem key={index}>
                     <Typography textAlign="center">{item.title}</Typography>
                   </MenuItem>
@@ -96,7 +96,7 @@ const LandingAppBar = () => {
               }}
             >
               {appBarMenuList.map((item, index) => (
-                <Link href={item.path}>
+                <Link key={index} href={item.path}>
                   <LandingButton sx={{ mr: 2, color: "#646464" }} disableRipple>
                     {item.title}
                   </LandingButton>
@@ -104,7 +104,7 @@ const LandingAppBar = () => {
               ))}
             </Box>
 
-            <Link href="/app">
+            {/*<Link href="/app">
               {session ? (
                 <DashboardIcon
                   sx={{
@@ -116,7 +116,7 @@ const LandingAppBar = () => {
               ) : (
                 <AccountCircle sx={{ "&:hover": { cursor: "pointer" } }} />
               )}
-            </Link>
+              </Link>*/}
           </Toolbar>
         </Box>
       </AppBar>

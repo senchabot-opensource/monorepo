@@ -1,7 +1,7 @@
 import { alpha } from "@mui/material";
 
 export const AppBarStyles = {
-  backdropFilter: "blur(1px)",
+  backdropFilter: "blur(20px)",
   backgroundColor: alpha("#000", 0.75),
 };
 

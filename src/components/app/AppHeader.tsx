@@ -1,4 +1,5 @@
 import Head from "next/head";
+import { env } from "../../env/client.mjs";
 
 export interface IAppHeader {
   title: string;
@@ -8,19 +9,49 @@ export interface IAppHeader {
 const AppHeader = ({ title, index }: IAppHeader) => {
   return (
     <Head>
-      <title>{title + " - DOMAIN"}</title>
-      <meta name="description" content="" />
+      <title>{title + " - " + env.NEXT_PUBLIC_APP_DOMAIN_STRING}</title>
+      <meta
+        name="description"
+        content={`${env.NEXT_PUBLIC_APP_DOMAIN_STRING}`}
+      />
       {index && (
         <>
-          <meta name="keywords" content="" />
-          <meta name="twitter:title" content="DOMAIN" />
-          <meta name="twitter:description" content="Twitter desc content" />
-          <meta name="twitter:site" content="@" />
-          <meta name="twitter:creator" content="@" />
-          <meta name="og:title" content="DOMAIN" />
-          <meta name="og:description" content="" />
-          <meta property="og:url" content="DOMAIN" />
-          <meta property="og:site_name" content="DOMAIN" />
+          <meta
+            name="keywords"
+            content={`${env.NEXT_PUBLIC_APP_DOMAIN_STRING}`}
+          />
+          <meta
+            name="twitter:title"
+            content={`${env.NEXT_PUBLIC_APP_DOMAIN_STRING}`}
+          />
+          <meta
+            name="twitter:description"
+            content={`${env.NEXT_PUBLIC_APP_DOMAIN_STRING}`}
+          />
+          <meta
+            name="twitter:site"
+            content={`${env.NEXT_PUBLIC_APP_DOMAIN_STRING}`}
+          />
+          <meta
+            name="twitter:creator"
+            content={`${env.NEXT_PUBLIC_APP_DOMAIN_STRING}`}
+          />
+          <meta
+            name="og:title"
+            content={`${env.NEXT_PUBLIC_APP_DOMAIN_STRING}`}
+          />
+          <meta
+            name="og:description"
+            content={`${env.NEXT_PUBLIC_APP_DOMAIN_STRING}`}
+          />
+          <meta
+            property="og:url"
+            content={`${env.NEXT_PUBLIC_APP_DOMAIN_STRING}`}
+          />
+          <meta
+            property="og:site_name"
+            content={`${env.NEXT_PUBLIC_APP_DOMAIN_STRING}`}
+          />
         </>
       )}
       <meta name="robots" content={index ? "index, follow" : "noindex"} />

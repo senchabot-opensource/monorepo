@@ -8,7 +8,7 @@ const LandingTexts = () => {
       direction="column"
       justifyContent="flex-end"
       alignItems="center"
-      sx={{ pt: "10vh", userSelect: "none" }}
+      sx={{ pt: { xs: "none", md: "10vh" }, userSelect: "none" }}
     >
       <Typography
         variant="h1"
@@ -50,6 +50,31 @@ const LandingTexts = () => {
         }}
       >
         Work in progress
+      </Typography>
+
+      <Typography variant="h5" sx={{ paddingTop: "64px", textAlign: "center" }}>
+        WE USE VERCEL. VERCEL USES ANALYTICS SERVICES. WE DO NOT KNOW MUCH ABOUT
+        IT. IF YOU ARE STILL HERE AND/OR USING THIS WEB APP, YOU ACCEPT COOKIES
+        AND OTHER POLICIES OF VERCEL.
+      </Typography>
+      <Typography
+        variant="h4"
+        sx={{
+          paddingTop: "32px",
+          textAlign: "center",
+          display: { xs: "none", md: "block" },
+        }}
+      >
+        TAKE IT OR LEAVE IT.
+      </Typography>
+      <Typography
+        variant="h4"
+        sx={{
+          textAlign: "center",
+          display: { xs: "block", md: "none" },
+        }}
+      >
+        TAKE IT OR LEAVE IT.
       </Typography>
     </Grid>
   );
