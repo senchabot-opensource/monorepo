@@ -25,14 +25,30 @@ const LandingTexts = () => {
         component="div"
         sx={{
           fontFamily: "monospace",
-          fontSize: 50,
+          fontSize: 64,
           display: { xs: "block", md: "none" },
         }}
       >
         {env.NEXT_PUBLIC_APP_NAME}
       </Typography>
 
-      <Typography variant="h1" sx={{ fontFamily: "Source Code Pro" }}>
+      <Typography
+        variant="h3"
+        sx={{
+          fontFamily: "Source Code Pro",
+          display: { xs: "none", md: "block" },
+        }}
+      >
+        Work in progress
+      </Typography>
+
+      <Typography
+        variant="h5"
+        sx={{
+          fontFamily: "Source Code Pro",
+          display: { xs: "block", md: "none" },
+        }}
+      >
         Work in progress
       </Typography>
     </Grid>
