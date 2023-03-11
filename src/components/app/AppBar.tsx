@@ -212,7 +212,7 @@ const ResponsiveAppBar = ({
             <BootstrapTooltip title="Get Discord bot">
               <Typography>
                 <Link
-                  href="https://discord.com/oauth2/authorize?client_id=985666091411984416&permissions=0&scope=bot%20applications.commands"
+                  href="https://discord.com/oauth2/authorize?client_id=&permissions=0&scope=bot%20applications.commands"
                   passHref
                 >
                   <a target="_blank">
