@@ -40,7 +40,7 @@ const LandingFooter = () => {
             <Box
               component="a"
               target="_blank"
-              href="https://twitter.com/"
+              href={env.NEXT_PUBLIC_APP_TWITTER_PROFILE}
               sx={iconStyle}
             >
               <TwitterIcon />
@@ -48,7 +48,7 @@ const LandingFooter = () => {
             <Box
               component="a"
               target="_blank"
-              href="https://github.com/"
+              href={env.NEXT_PUBLIC_APP_GITHUB_PROFILE}
               sx={iconStyle}
             >
               <GitHubIcon />
