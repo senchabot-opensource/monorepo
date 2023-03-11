@@ -13,7 +13,7 @@ import {
   //Tooltip,
   //Button,
 } from "@mui/material";
-import TabPanel from "../../components/tabpanel/TabPanel";
+import HorizontalTabPanel from "../../components/tabpanel/HorizontalTabPanel";
 import VerticalTabPanel from "../../components/tabpanel/VerticalTabPanel";
 //import { trpc } from "../../utils/trpc";
 //import { blueGrey } from "@mui/material/colors";
@@ -31,10 +31,10 @@ import PrivacyForm from "../../forms/PrivacyForm";
   open: boolean;
 }*/
 
-function tabPanelProps(index: number) {
+function horizontalTabPanelProps(index: number) {
   return {
-    id: `tabpanel-${index}`,
-    "aria-controls": `tabpanel-${index}`,
+    id: `horizontal-tabpanel-${index}`,
+    "aria-controls": `horizontal-tabpanel-${index}`,
   };
 }
 
@@ -104,12 +104,24 @@ const Settings: NextPage = () => {
               scrollButtons
               allowScrollButtonsMobile
             >
-              <Tab label="Display" {...tabPanelProps(0)} disableRipple />
-              <Tab label="Security" {...tabPanelProps(1)} disableRipple />
-              <Tab label="Privacy" {...tabPanelProps(2)} disableRipple />
+              <Tab
+                label="Display"
+                {...horizontalTabPanelProps(0)}
+                disableRipple
+              />
+              <Tab
+                label="Security"
+                {...horizontalTabPanelProps(1)}
+                disableRipple
+              />
+              <Tab
+                label="Privacy"
+                {...horizontalTabPanelProps(2)}
+                disableRipple
+              />
             </Tabs>
           </Box>
-          <TabPanel value={value} index={0}>
+          <HorizontalTabPanel value={value} index={0}>
             <Box
               sx={{
                 flexGrow: 1,
@@ -158,13 +170,13 @@ const Settings: NextPage = () => {
                 <SenchaDisplayForm />
               </VerticalTabPanel>
             </Box>
-          </TabPanel>
-          <TabPanel value={value} index={1}>
+          </HorizontalTabPanel>
+          <HorizontalTabPanel value={value} index={1}>
             <SecurityForm />
-          </TabPanel>
-          <TabPanel value={value} index={2}>
+          </HorizontalTabPanel>
+          <HorizontalTabPanel value={value} index={2}>
             <PrivacyForm />
-          </TabPanel>
+          </HorizontalTabPanel>
         </Paper>
       </AppContainer>
     </>
