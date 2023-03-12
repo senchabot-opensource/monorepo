@@ -215,19 +215,17 @@ const ResponsiveAppBar = ({
                   href="https://discord.com/oauth2/authorize?client_id=&permissions=0&scope=bot%20applications.commands"
                   passHref
                 >
-                  <a target="_blank">
-                    <IconButton
-                      aria-label="open drawer"
-                      onClick={drawerHandler}
-                      sx={{
-                        display: "flex",
-                        //mr: 1,
-                        //...(isDrawerOpen && { display: "none" }),
-                      }}
-                    >
-                      <SiDiscord />
-                    </IconButton>
-                  </a>
+                  <IconButton
+                    aria-label="open drawer"
+                    onClick={drawerHandler}
+                    sx={{
+                      display: "flex",
+                      //mr: 1,
+                      //...(isDrawerOpen && { display: "none" }),
+                    }}
+                  >
+                    <SiDiscord />
+                  </IconButton>
                 </Link>
               </Typography>
             </BootstrapTooltip>
