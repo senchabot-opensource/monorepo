@@ -23,9 +23,10 @@ import React from "react";
 
 const appBarMenuList = [
   { title: "Cookie Policy", path: "/cookie-policy" },
-  /*{ title: "Privacy Policy", path: "/privacy-policy" },
+  { title: "Privacy Policy", path: "/privacy-policy" },
   { title: "Terms of Service", path: "/terms" },
-  { title: "Open Source Licenses", path: "/licenses" },*/
+  { title: "EULA", path: "/eula" },
+  { title: "Libraries", path: "/libraries" },
 ];
 
 const LandingAppBar = () => {
@@ -66,7 +67,7 @@ const LandingAppBar = () => {
               onClick={handleOpenNavMenu}
               disableRipple
             >
-              <MenuIcon sx={{ backgroundColor: "#000" }} />
+              <MenuIcon />
             </LandingButton>
             <Menu
               id="landing-menu-appbar"
@@ -82,7 +83,9 @@ const LandingAppBar = () => {
               {appBarMenuList.map((item, index) => (
                 <Link key={index} href={item.path}>
                   <MenuItem key={index}>
-                    <Typography textAlign="center">{item.title}</Typography>
+                    <Typography textAlign="center" fontStyle="italic">
+                      {item.title}
+                    </Typography>
                   </MenuItem>
                 </Link>
               ))}
@@ -95,28 +98,36 @@ const LandingAppBar = () => {
                 display: { xs: "none", sm: "none", md: "flex" },
               }}
             >
-              {appBarMenuList.map((item, index) => (
+              {/*appBarMenuList.map((item, index) => (
                 <Link key={index} href={item.path}>
                   <LandingButton sx={{ mr: 2, color: "#646464" }} disableRipple>
                     {item.title}
                   </LandingButton>
                 </Link>
-              ))}
+              ))*/}
             </Box>
 
-            {/*<Link href="/app">
-              {session ? (
-                <DashboardIcon
-                  sx={{
-                    backgroundColor: "#000",
-                    color: "#fff",
-                    "&:hover": { cursor: "pointer" },
-                  }}
-                />
-              ) : (
-                <AccountCircle sx={{ "&:hover": { cursor: "pointer" } }} />
-              )}
-              </Link>*/}
+            <Link href="/app">
+              <LandingButton
+                sx={{
+                  pl: 4,
+                  color: "#646464",
+                }}
+                disableRipple
+              >
+                {session ? (
+                  <DashboardIcon
+                    sx={{
+                      backgroundColor: "#000",
+                      color: "#fff",
+                      "&:hover": { cursor: "pointer" },
+                    }}
+                  />
+                ) : (
+                  <AccountCircle sx={{ "&:hover": { cursor: "pointer" } }} />
+                )}
+              </LandingButton>
+            </Link>
           </Toolbar>
         </Box>
       </AppBar>

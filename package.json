@@ -23,7 +23,6 @@
     "@trpc/react": "^9.27.4",
     "@trpc/react-query": "^10.15.0",
     "@trpc/server": "^10.15.0",
-    "axios": "^1.1.2",
     "firebase": "^9.11.0",
     "install": "^0.13.0",
     "next": "13.2.4",

@@ -3,6 +3,7 @@ import React from "react";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import { env } from "../../env/client.mjs";
+import LandingButton from "./LandingButton";
 
 function Copyright() {
   return (
@@ -11,6 +12,26 @@ function Copyright() {
         {`${env.NEXT_PUBLIC_APP_NAME}`}
       </Link>{" "}
       {new Date().getFullYear()}
+    </React.Fragment>
+  );
+}
+const appBarMenuList = [
+  { title: "Cookie Policy", path: "/cookie-policy" },
+  { title: "Privacy Policy", path: "/privacy-policy" },
+  { title: "Terms of Service", path: "/terms" },
+  { title: "EULA", path: "/eula" },
+  { title: "Libraries", path: "/libraries" },
+];
+function Links() {
+  return (
+    <React.Fragment>
+      {appBarMenuList.map((item, index) => (
+        <Link key={index} href={item.path} style={{ textDecoration: "none" }}>
+          <LandingButton sx={{ mr: 2, color: "#646464" }} disableRipple>
+            {item.title}
+          </LandingButton>
+        </Link>
+      ))}
     </React.Fragment>
   );
 }
@@ -54,8 +75,8 @@ const LandingFooter = () => {
               <GitHubIcon />
             </Box>
           </Grid>
-          <Grid item>
-            <Copyright />
+          <Grid item sx={{ display: { xs: "none", md: "block" } }}>
+            <Links />
           </Grid>
         </Grid>
       </Typography>

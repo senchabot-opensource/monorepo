@@ -6,6 +6,7 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
+  Typography,
 } from "@mui/material";
 
 //import KeyIcon from "@mui/icons-material/Key";
@@ -13,6 +14,7 @@ import {
 import GitHubIcon from "@mui/icons-material/GitHub";
 import { SiDiscord, SiTwitch } from "react-icons/si";
 import { signIn } from "next-auth/react";
+import Link from "next/link";
 
 export const AuthContainer = () => {
   return (
@@ -82,6 +84,27 @@ export const AuthContainer = () => {
             </Avatar>
           </ListItemAvatar>
           <ListItemText primary="with Twitch Account" />
+        </ListItem>
+        <ListItem>
+          <ListItemText>
+            By continuing you agree to{" "}
+            <Link href="/cookie-policy" style={{ color: "#ffff00" }}>
+              Cookie Policy
+            </Link>
+            ,{" "}
+            <Link href="/privacy-policy" style={{ color: "#ffff00" }}>
+              Privacy Policy
+            </Link>
+            ,{" "}
+            <Link href="/terms" style={{ color: "#ffff00" }}>
+              Terms of Use
+            </Link>
+            , and{" "}
+            <Link href="/eula" style={{ color: "#ffff00" }}>
+              EULA
+            </Link>
+            .
+          </ListItemText>
         </ListItem>
       </List>
     </Container>

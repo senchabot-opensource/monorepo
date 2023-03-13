@@ -1,6 +1,8 @@
 import { Grid, Typography } from "@mui/material";
 import { env } from "../../env/client.mjs";
 
+const ALT_TEXT = "All Bots and Stream overlays, Manage from one place!";
+
 const LandingTexts = () => {
   return (
     <Grid
@@ -33,26 +35,28 @@ const LandingTexts = () => {
       </Typography>
 
       <Typography
-        variant="h3"
+        variant="h6"
         sx={{
           fontFamily: "Source Code Pro",
           display: { xs: "none", md: "block" },
         }}
+        textAlign="center"
       >
-        Work in progress
+        {ALT_TEXT}
       </Typography>
 
       <Typography
-        variant="h5"
+        variant="h6"
         sx={{
           fontFamily: "Source Code Pro",
           display: { xs: "block", md: "none" },
         }}
+        textAlign="center"
       >
-        Work in progress
+        {ALT_TEXT}
       </Typography>
 
-      <Typography variant="h5" sx={{ paddingTop: "64px", textAlign: "center" }}>
+      {/*<Typography variant="h5" sx={{ paddingTop: "64px", textAlign: "center" }}>
         WE USE VERCEL. VERCEL USES ANALYTICS SERVICES. WE DO NOT KNOW MUCH ABOUT
         IT. IF YOU ARE STILL HERE AND/OR USING THIS WEB APP, YOU ACCEPT COOKIES
         AND OTHER POLICIES OF VERCEL.
@@ -75,7 +79,7 @@ const LandingTexts = () => {
         }}
       >
         TAKE IT OR LEAVE IT.
-      </Typography>
+      </Typography>*/}
     </Grid>
   );
 };
