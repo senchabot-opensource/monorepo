@@ -20,7 +20,7 @@ const appBarMenuList = [
   { title: "Privacy Policy", path: "/privacy-policy" },
   { title: "Terms of Service", path: "/terms" },
   { title: "EULA", path: "/eula" },
-  { title: "Libraries", path: "/libraries" },
+  { title: "Credits", path: "/credits" },
 ];
 function Links() {
   return (

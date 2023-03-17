@@ -6,7 +6,8 @@ interface ILibraryTextParams {
   libraryName: string;
   repoLink: string;
   copyrightText: string;
-  library: string;
+  licenseText: string;
+  licenseLink: string;
 }
 
 const LibraryText = (params: ILibraryTextParams) => {
@@ -14,7 +15,11 @@ const LibraryText = (params: ILibraryTextParams) => {
     <>
       <Offset />
       <Typography variant="h5">
-        {params.libraryName} ({params.library}) - {params.copyrightText}{" "}
+        {params.libraryName} (
+        <Link href={`${params.licenseLink}`} style={{ color: "#53bdff" }}>
+          {params.licenseText}
+        </Link>
+        ) - {params.copyrightText}{" "}
         <Link href={`https://${params.repoLink}`} style={{ color: "#ffff00" }}>
           {params.repoLink}
         </Link>
