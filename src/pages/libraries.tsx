@@ -88,6 +88,12 @@ const CookiePolicy = () => {
             copyrightText="Copyright (c) 2020 Simon Knott and superjson contributors"
             library="MIT License"
           />
+          <LibraryText
+            libraryName="jotai"
+            repoLink="github.com/pmndrs/jotai"
+            copyrightText="Copyright (c) 2020-2023 Poimandres"
+            library="MIT License"
+          />
         </Grid>
         <Typography sx={{ position: "fixed", bottom: 16, right: 16 }}>
           pre-alpha

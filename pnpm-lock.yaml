@@ -24,6 +24,7 @@ specifiers:
   eslint-config-next: 13.2.4
   firebase: ^9.11.0
   install: ^0.13.0
+  jotai: ^2.0.3
   next: 13.2.4
   next-auth: ~4.10.3
   npm: ^8.19.2
@@ -57,6 +58,7 @@ dependencies:
   '@trpc/server': 10.15.0
   firebase: 9.17.2
   install: 0.13.0
+  jotai: 2.0.3_react@18.2.0
   next: 13.2.4_biqbaboplfbrettd7655fr4n2y
   next-auth: 4.10.3_biqbaboplfbrettd7655fr4n2y
   npm: 8.19.4
@@ -2975,6 +2977,18 @@ packages:
 
   /jose/4.13.1:
     resolution: {integrity: sha512-MSJQC5vXco5Br38mzaQKiq9mwt7lwj2eXpgpRyQYNHYt2lq1PjkWa7DLXX0WVcQLE9HhMh3jPiufS7fhJf+CLQ==}
+    dev: false
+
+  /jotai/2.0.3_react@18.2.0:
+    resolution: {integrity: sha512-MMjhSPAL3RoeZD9WbObufRT2quThEAEknHHridf2ma8Ml7ZVQmUiHk0ssdbR3F0h3kcwhYqSGJ59OjhPge7RRg==}
+    engines: {node: '>=12.20.0'}
+    peerDependencies:
+      react: '>=17.0.0'
+    peerDependenciesMeta:
+      react:
+        optional: true
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /js-sha3/0.8.0:
