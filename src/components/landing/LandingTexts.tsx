@@ -2,7 +2,7 @@ import { Grid, Typography } from "@mui/material";
 import { env } from "../../env/client.mjs";
 
 const ALT_TEXT = "All Bots and Stream overlays, Manage from one place!";
-
+// Stream overlays: #8b5cf6
 const LandingTexts = () => {
   return (
     <Grid
@@ -20,7 +20,13 @@ const LandingTexts = () => {
           display: { xs: "none", md: "block" },
         }}
       >
-        {env.NEXT_PUBLIC_APP_NAME}
+        <span style={{ color: "#1FAB89" }}>
+          {env.NEXT_PUBLIC_APP_NAME.substring(0, 6)}
+        </span>
+        <span>
+          {env.NEXT_PUBLIC_APP_NAME.substring(6, 9).charAt(0).toUpperCase() +
+            env.NEXT_PUBLIC_APP_NAME.substring(7, 9)}
+        </span>
       </Typography>
       <Typography
         variant="h1"
@@ -31,7 +37,13 @@ const LandingTexts = () => {
           display: { xs: "block", md: "none" },
         }}
       >
-        {env.NEXT_PUBLIC_APP_NAME}
+        <span style={{ color: "#1FAB89" }}>
+          {env.NEXT_PUBLIC_APP_NAME.substring(0, 6)}
+        </span>
+        <span>
+          {env.NEXT_PUBLIC_APP_NAME.substring(6, 9).charAt(0).toUpperCase() +
+            env.NEXT_PUBLIC_APP_NAME.substring(7, 9)}
+        </span>
       </Typography>
 
       <Typography
@@ -55,31 +67,6 @@ const LandingTexts = () => {
       >
         {ALT_TEXT}
       </Typography>
-
-      {/*<Typography variant="h5" sx={{ paddingTop: "64px", textAlign: "center" }}>
-        WE USE VERCEL. VERCEL USES ANALYTICS SERVICES. WE DO NOT KNOW MUCH ABOUT
-        IT. IF YOU ARE STILL HERE AND/OR USING THIS WEB APP, YOU ACCEPT COOKIES
-        AND OTHER POLICIES OF VERCEL.
-      </Typography>
-      <Typography
-        variant="h4"
-        sx={{
-          paddingTop: "32px",
-          textAlign: "center",
-          display: { xs: "none", md: "block" },
-        }}
-      >
-        TAKE IT OR LEAVE IT.
-      </Typography>
-      <Typography
-        variant="h4"
-        sx={{
-          textAlign: "center",
-          display: { xs: "block", md: "none" },
-        }}
-      >
-        TAKE IT OR LEAVE IT.
-      </Typography>*/}
     </Grid>
   );
 };
