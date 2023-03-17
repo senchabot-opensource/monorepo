@@ -12,7 +12,7 @@ const AppHeader = ({ title, index }: IAppHeader) => {
       <title>{title + " - " + env.NEXT_PUBLIC_APP_DOMAIN_STRING}</title>
       <meta
         name="description"
-        content={`${env.NEXT_PUBLIC_APP_DOMAIN_STRING}`}
+        content={`${env.NEXT_PUBLIC_APP_CONTENT_STRING}`}
       />
       {index && (
         <>
@@ -26,7 +26,7 @@ const AppHeader = ({ title, index }: IAppHeader) => {
           />
           <meta
             name="twitter:description"
-            content={`${env.NEXT_PUBLIC_APP_DOMAIN_STRING}`}
+            content={`${env.NEXT_PUBLIC_APP_CONTENT_STRING}`}
           />
           <meta
             name="twitter:site"
@@ -42,7 +42,7 @@ const AppHeader = ({ title, index }: IAppHeader) => {
           />
           <meta
             name="og:description"
-            content={`${env.NEXT_PUBLIC_APP_DOMAIN_STRING}`}
+            content={`${env.NEXT_PUBLIC_APP_CONTENT_STRING}`}
           />
           <meta
             property="og:url"
