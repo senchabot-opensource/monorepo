@@ -28,10 +28,16 @@ npm install
 yarn install
 ```
 
-Create a `.env` file based on the example file `.env.example`:
+Create a `.env` file based on the example file `env.example`:
 
 ```bash
-cp .env.example .env
+cp env.example .env
+```
+
+Run the `Prisma` migration to create the tables:
+
+```bash
+npx prisma db push
 ```
 
 ## Docker
