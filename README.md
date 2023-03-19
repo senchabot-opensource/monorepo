@@ -34,6 +34,12 @@ Create a `.env` file based on the example file `.env.example`:
 cp .env.example .env
 ```
 
+Run the `Prisma` migration to create the tables:
+
+```bash
+npx prisma db push
+```
+
 ## Docker
 
 To run the app in a Docker container, run:
