@@ -11,7 +11,7 @@ import LandingFooter from "../components/landing/LandingFooter";
 const Landing: NextPage = () => {
   return (
     <>
-      <AppHeader title="Web App" index={true} />
+      <AppHeader title="SenchaBot Landing" index={true} />
       <ThemeProvider theme={landingDarkTheme}>
         <CssBaseline />
         <LandingAppBar />
