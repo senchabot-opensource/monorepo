@@ -14,16 +14,12 @@ import { AppContainer, AppHeader, AppSnackbar } from "../../components/app";
 import { Offset } from "../../components/Offset";
 import LoadingBox from "../../components/loading/LoadingBox";
 
-//import GitHubIcon from "@mui/icons-material/GitHub";
 import { SiDiscord, SiTwitch } from "react-icons/si";
 
 import { trpc } from "../../utils/trpc";
 
 const Dashboard: NextPage = () => {
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
-  /*const [value, setValue] = React.useState<{ id?: string; name: string }>(
-    valueInitialState
-  )*/
 
   const [snackbarOpen, setSnackbarOpen] = React.useState(false);
   const [snackbarMessage, setSnackbarMessage] = React.useState("");
@@ -31,43 +27,9 @@ const Dashboard: NextPage = () => {
   const example = trpc.example.getDcServerCount.useQuery();
   const twitchChannelCount = trpc.example.getTwServercount.useQuery();
   const botActivities = trpc.bot.getActivities.useQuery();
-  //const { data: twitchAcc } = trpc.check.checkTwitchAcc.useQuery();
 
   const twitchChannels = trpc.bot.getTwitchChannels.useQuery();
   const discordServers = trpc.bot.getDiscordServers.useQuery();
-
-  /*const twitchBotMutate = trpc.twitchBot.add.useMutation({
-    onSuccess() {
-      setSnackbarOpen(true);
-      setSnackbarMessage("Twitch bot added");
-    },
-
-    onError(error) {
-      if (!error.shape) return;
-      setSnackbarOpen(true);
-      setSnackbarMessage(error.shape.message);
-    },
-  });*/
-
-  /*const abc = async () => {
-    await axios
-      .get("http://localhost:8080/xyz")
-      .then((res) => {
-        const data = res.data;
-        setIsLoading(false);
-        setValue(data);
-      })
-      .catch((err) => {
-        setValue(valueInitialState);
-        setIsLoading(true);
-      });
-  };*/
-
-  /*const getTwitchBot = async() => {
-    await axios.post("/api/get-twitch-bot", {
-
-    })
-  }*/
 
   React.useEffect(() => {
     const interval = setInterval(() => setIsLoading(false), 500);

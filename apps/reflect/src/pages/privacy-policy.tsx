@@ -24,10 +24,6 @@ const CookiePolicy = () => {
             whiteSpace: "pre-line",
           }}
         >
-          {/*<Typography variant="h6">
-            Uygulamayı kullanırken tüm sorumluluk kullanıcıya aittir. Hiç bir
-            sorumluluk kabul etmiyoruz
-        </Typography>*/}
           <Typography variant="h4">Privacy Policy for Senchabot</Typography>
           <Typography variant="h5">
             At Senchabot, we take your privacy seriously. This policy outlines

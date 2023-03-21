@@ -24,15 +24,6 @@ const CookiePolicy = () => {
             whiteSpace: "pre-line",
           }}
         >
-          {" "}
-          {/*<Typography variant="h6">
-            Uygulamayı kullanırken tüm sorumluluk kullanıcıya aittir. Hiç bir
-            sorumluluk kabul edilmez.
-          </Typography>
-          <Typography variant="h6">
-            Senchabot&lsquo;un kullanımından doğan tüm sonuçlar ve sorumluluklar
-            size aittir.
-        </Typography>*/}
           <Typography variant="h4">Terms of Service for Senchabot</Typography>
           <Typography variant="h5">
             By using Senchabot, you agree to these terms of service.
@@ -64,20 +55,6 @@ const CookiePolicy = () => {
             time. Your continued use of Senchabot after any modifications to the
             terms indicates your acceptance of the modified terms.
           </Typography>
-          <Typography variant="h6" sx={{ paddingTop: "10px" }}>
-            7.
-          </Typography>
-          {/*<Typography variant="h2">Terms of Service for Senchabot</Typography>
-          <Typography variant="h5">
-            WE USE VERCEL. VERCEL USES ANALYTICS SERVICES. WE DO NOT KNOW MUCH
-            ABOUT IT. IF YOU ARE STILL HERE AND/OR USING THIS WEB APP, YOU
-            ACCEPT COOKIES AND OTHER POLICIES OF VERCEL.
-          </Typography>
-          <Typography variant="h1">TAKE IT OR LEAVE IT.</Typography>
-          <Typography variant="h1">TAKE IT OR LEAVE IT.</Typography>
-          <Typography variant="h1">TAKE IT OR LEAVE IT.</Typography>
-          <Typography variant="h1">TAKE IT OR LEAVE IT.</Typography>
-          */}
         </Grid>
         <Typography sx={{ position: "fixed", bottom: 16, right: 16 }}>
           pre-alpha

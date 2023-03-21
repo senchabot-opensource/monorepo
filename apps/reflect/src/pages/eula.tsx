@@ -25,15 +25,6 @@ const EULA = () => {
             whiteSpace: "pre-line",
           }}
         >
-          {/*<Typography variant="h6">
-            Uygulamayı kullanırken tüm sorumluluk kullanıcıya aittir. Hiç bir
-            sorumluluk kabul etmiyoruz
-          </Typography>
-          <Typography variant="h6">
-            Ustam uygulama kaynaklı yaşanan hiç bir problemde, uygulama veya
-            geliştiriciler sorumluluk taşımaz. Tüm sorumluluk kullanıcıya
-            aittir.
-        </Typography>*/}
           <Typography variant="h4">
             END-USER LICENSE AGREEMENT (EULA) for Senchabot
           </Typography>

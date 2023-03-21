@@ -22,21 +22,6 @@ const CookiePolicy = () => {
             whiteSpace: "pre-line",
           }}
         >
-          {/*<Typography variant="h2">Cookie Policy for Senchabot</Typography>
-
-          <Typography variant="h5">
-            WE USE VERCEL. VERCEL USES ANALYTICS SERVICES. WE DO NOT KNOW MUCH
-            ABOUT IT. IF YOU ARE STILL HERE AND/OR USING THIS WEB APP, YOU
-            ACCEPT COOKIES AND OTHER POLICIES OF VERCEL.
-          </Typography>
-          <Typography variant="h1">TAKE IT OR LEAVE IT.</Typography>
-          <Typography variant="h1">TAKE IT OR LEAVE IT.</Typography>
-          <Typography variant="h1">TAKE IT OR LEAVE IT.</Typography>
-          <Typography variant="h1">TAKE IT OR LEAVE IT.</Typography>
-          <Typography variant="h6">
-            Uygulamayı kullanırken tüm sorumluluk kullanıcıya aittir. Hiç bir
-            sorumluluk kabul etmiyoruz
-          </Typography>*/}
           <Typography variant="h4">Cookie Policy for Senchabot</Typography>
           <Typography variant="h6" sx={{ paddingTop: "10px" }}>
             Senchabot uses cookies to enhance the user experience and improve

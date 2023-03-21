@@ -7,7 +7,6 @@ import HorizontalTabPanel from "../../components/tabpanel/HorizontalTabPanel";
 
 import { useSession } from "next-auth/react";
 
-import { SnackbarOrigin } from "@mui/material/Snackbar";
 import SecurityForm from "../../forms/SecurityForm";
 import PrivacyForm from "../../forms/PrivacyForm";
 import { atom, useAtom } from "jotai";
@@ -25,23 +24,6 @@ const Settings: NextPage = () => {
   React.useEffect(() => {
     setTimeout(() => setIsLoading(false), 500);
   }, []);
-
-  const [snackbarState, setSnackbarState] = React.useState<SnackbarOrigin>({
-    vertical: "bottom",
-    horizontal: "left",
-  });
-
-  const [snackbarOpen, setSnackBarOpen] = React.useState(false);
-
-  const handleSnackbarClose = (
-    event: React.SyntheticEvent | Event,
-    reason?: string
-  ) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setSnackBarOpen(false);
-  };
 
   return (
     <>
