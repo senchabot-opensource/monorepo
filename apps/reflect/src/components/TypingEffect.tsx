@@ -1,5 +1,5 @@
 import React from "react";
-import { keyframes } from "@mui/system";
+import { keyframes } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { Paper } from "@mui/material";
