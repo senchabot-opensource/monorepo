@@ -10,7 +10,7 @@ func GetCommands() map[string]func(client *twitch.Client, message twitch.Private
 		"ping":         PingCommand,
 		"kampus":       KampusCommand,
 		"frontendship": FrontendshipCommand,
-		"fs":           FrontendshipCommand,
+		"fs":           FullstackCommand,
 		"lurk":         LurkCommand,
 		"invite":       InviteCommand,
 	}
