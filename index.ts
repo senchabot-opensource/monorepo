@@ -9,7 +9,7 @@ const client = new DiscordClient({
   intents: [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMembers,
-    // GatewayIntentBits.GuildScheduledEvents,
+    GatewayIntentBits.GuildScheduledEvents,
     // GatewayIntentBits.GuildInvites,
     // GatewayIntentBits.GuildPresences,
     GatewayIntentBits.GuildVoiceStates,
@@ -19,6 +19,7 @@ const client = new DiscordClient({
     // GatewayIntentBits.DirectMessages,
     // GatewayIntentBits.DirectMessageReactions,
     // GatewayIntentBits.DirectMessageTyping,
+    GatewayIntentBits.MessageContent,
   ],
   partials: [
     Partials.Message,
