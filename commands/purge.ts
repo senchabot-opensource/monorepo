@@ -35,7 +35,8 @@ export default {
           "Find and delete messages sent by the username or nickname that contain this character string."
         )
         .setRequired(false)
-    ),
+    )
+    .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
   async execute(interaction: ChatInputCommandInteraction) {
     const guild = interaction.guild as Guild;
 
