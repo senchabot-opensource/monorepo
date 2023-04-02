@@ -4,9 +4,6 @@ import { createLiveStreamEventFromMessage } from "../utils/scheduledEventFunctio
 export default {
   name: "messageCreate",
   execute(message: Message) {
-    const guild = message.guild as Guild;
-    const msgContent = message.content;
-
     createLiveStreamEventFromMessage(message, {
       platformDomain: "twitch.tv",
     });
