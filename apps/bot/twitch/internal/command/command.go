@@ -2,17 +2,25 @@ package command
 
 import (
 	"github.com/gempir/go-twitch-irc/v3"
+	"github.com/senchabot-dev/monorepo/apps/bot/twitch/client"
+	"github.com/senchabot-dev/monorepo/apps/bot/twitch/server"
 )
 
-func GetCommands() map[string]func(client *twitch.Client, message twitch.PrivateMessage, commandName string, params []string) {
+func GetCommands() map[string]func(client *client.Clients, server *server.SenchabotAPIServer, message twitch.PrivateMessage, commandName string, params []string) {
 	// TODO: command aliases
-	var commands = map[string]func(client *twitch.Client, message twitch.PrivateMessage, commandName string, params []string){
-		"ping":         PingCommand,
+	var commands = map[string]func(client *client.Clients, server *server.SenchabotAPIServer, message twitch.PrivateMessage, commandName string, params []string){
+		"ping":      PingCommand,
+		"invite":    InviteCommand,
+		"senchabot": SenchabotCommand,
+
+		"acmd": AddCommandCommand,
+		"ucmd": UpdateCommandCommand,
+		"dcmd": DeleteCommandCommand,
+		//"info": InfoCommandCommand,
+		//"cmds": CmdsCommandCommand,
+
 		"kampus":       KampusCommand,
 		"frontendship": FrontendshipCommand,
-		"fs":           FullstackCommand,
-		"lurk":         LurkCommand,
-		"invite":       InviteCommand,
 	}
 
 	return commands

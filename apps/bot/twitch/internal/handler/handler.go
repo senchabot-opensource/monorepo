@@ -1,10 +1,11 @@
 package handler
 
-import "github.com/gempir/go-twitch-irc/v3"
+import (
+	"github.com/senchabot-dev/monorepo/apps/bot/twitch/client"
+	"github.com/senchabot-dev/monorepo/apps/bot/twitch/server"
+)
 
-func InitHandlers(twitchClient *twitch.Client) {
-
-	PrivateMessage(twitchClient)
-
-	BotJoin(twitchClient)
+func InitHandlers(client *client.Clients, server *server.SenchabotAPIServer) {
+	PrivateMessage(client, server)
+	BotJoin(client, server)
 }

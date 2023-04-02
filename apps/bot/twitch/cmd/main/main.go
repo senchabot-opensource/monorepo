@@ -7,8 +7,11 @@ import (
 
 	"github.com/gempir/go-twitch-irc/v3"
 	"github.com/joho/godotenv"
-	"github.com/senchabot-dev/monorepo/apps/bot/twitch/internal"
+	"github.com/senchabot-dev/monorepo/apps/bot/twitch/client"
+	"github.com/senchabot-dev/monorepo/apps/bot/twitch/internal/backend/mysql"
+	"github.com/senchabot-dev/monorepo/apps/bot/twitch/internal/db"
 	"github.com/senchabot-dev/monorepo/apps/bot/twitch/internal/handler"
+	"github.com/senchabot-dev/monorepo/apps/bot/twitch/server"
 )
 
 func main() {
@@ -19,9 +22,12 @@ func main() {
 
 	twitchClient := twitch.NewClient("senchabot", os.Getenv("OAUTH"))
 
-	client := internal.NewClient(twitchClient)
+	mySQLBackend := mysql.NewMySQLBackend(db.NewMySQL())
+	server := server.NewSenchabotAPIServer(mySQLBackend)
 
-	handler.InitHandlers(client.Twitch)
+	clients := client.NewClients(twitchClient)
+
+	handler.InitHandlers(clients, server)
 
 	fmt.Println("CLIENT_CONNECT")
 	error := twitchClient.Connect()

@@ -42,6 +42,17 @@ model BotActionActivities {
     twitchChannelId String
 }
 
+model BotCommands {
+    id              Int      @id @default(autoincrement())
+    commandName     String   @map("command_name")
+    commandContent  String   @map("command_content") @db.Text
+    twitchChannelId String?  @map("twitch_channel_id")
+    discordServerId String?  @map("discord_server_id")
+    createdAt       DateTime @default(now()) @map("created_at")
+
+    @@map("bot_commands")
+}
+
 model DiscordServer {
     id          String  @id @default(cuid())
     serverId    String  @unique
@@ -52,11 +63,13 @@ model DiscordServer {
 }
 
 model TwitchChannel {
-    id          String @id @default(cuid())
-    channelId   String
-    channelName String
-    userId      String
-    user        User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+    id          String  @id @default(cuid())
+    channelId   String  @unique @map("channel_id")
+    channelName String  @map("channel_name")
+    userId      String? @map("user_id")
+    user        User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@map("twitch_channels")
 }
 
 model TwitchConfig {
