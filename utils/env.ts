@@ -8,6 +8,8 @@ export const env: IEnvType = {
   TOKEN: process.env.TOKEN,
   CLIENTID: process.env.CLIENTID,
   GUILDID: process.env.GUILDID,
+  TWITCH_CLIENT_ID: process.env.TWITCH_CLIENT_ID,
+  TWITCH_CLIENT_SECRET: process.env.TWITCH_CLIENT_SECRET,
   ROLE_NAME: process.env.ROLE_NAME,
   SUB_ROLES: process.env.SUB_ROLES,
   EXCLUSIVE_ROLE_NAME: process.env.EXCLUSIVE_ROLE_NAME,
