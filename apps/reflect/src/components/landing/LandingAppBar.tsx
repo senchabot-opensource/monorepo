@@ -26,7 +26,7 @@ const appBarMenuList = [
   { title: "Privacy Policy", path: "/privacy-policy" },
   { title: "Terms of Service", path: "/terms" },
   { title: "EULA", path: "/eula" },
-  { title: "Libraries", path: "/libraries" },
+  { title: "Credits", path: "/credits" },
 ];
 
 const LandingAppBar = () => {
@@ -97,15 +97,7 @@ const LandingAppBar = () => {
                 flexGrow: 1,
                 display: { xs: "none", sm: "none", md: "flex" },
               }}
-            >
-              {/*appBarMenuList.map((item, index) => (
-                <Link key={index} href={item.path}>
-                  <LandingButton sx={{ mr: 2, color: "#646464" }} disableRipple>
-                    {item.title}
-                  </LandingButton>
-                </Link>
-              ))*/}
-            </Box>
+            ></Box>
 
             <Link href="/app">
               <LandingButton
