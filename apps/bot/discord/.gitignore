@@ -1,0 +1,5 @@
+/build
+/node_modules
+.env
+fly.toml
+package-lock.json
