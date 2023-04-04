@@ -1,4 +1,5 @@
 import { CssBaseline, Grid, ThemeProvider, Typography } from "@mui/material";
+import { LandingGrid } from "src/components/landing/LandingGrid";
 import { AppHeader } from "../components/app";
 import LandingAppBar from "../components/landing/LandingAppBar";
 import { landingDarkTheme } from "../utils/theme";
@@ -12,19 +13,9 @@ const EULA = () => {
       ></AppHeader>
       <ThemeProvider theme={landingDarkTheme}>
         <CssBaseline />
+
         <LandingAppBar />
-        <Grid
-          container
-          direction="column"
-          justifyContent="flex-end"
-          sx={{
-            pl: { xs: "10px", md: "16vh" },
-            pr: { xs: "none", md: "16vh" },
-            pb: { xs: "4px", md: "128px" },
-            overflowWrap: "break-word",
-            whiteSpace: "pre-line",
-          }}
-        >
+        <LandingGrid>
           <Typography variant="h4">
             END-USER LICENSE AGREEMENT (EULA) for Senchabot
           </Typography>
@@ -126,7 +117,7 @@ const EULA = () => {
             If you have any questions about this EULA or Senchabot, please
             contact the Senchabot team at <strong>hello@senchabot.dev</strong>
           </Typography>
-        </Grid>
+        </LandingGrid>
         <Typography sx={{ position: "fixed", bottom: 16, right: 16 }}>
           pre-alpha
         </Typography>

@@ -1,4 +1,5 @@
 import { CssBaseline, Grid, ThemeProvider, Typography } from "@mui/material";
+import { LandingGrid } from "src/components/landing/LandingGrid";
 import { AppHeader } from "../components/app";
 import LandingAppBar from "../components/landing/LandingAppBar";
 import LibraryText from "../components/LibraryText";
@@ -12,21 +13,8 @@ const CookiePolicy = () => {
         <CssBaseline />
 
         <LandingAppBar />
-
-        <Grid
-          container
-          direction="column"
-          justifyContent="flex-end"
-          sx={{
-            pl: { xs: "10px", md: "16vh" },
-            pr: { xs: "none", md: "16vh" },
-            pb: { xs: "4px", md: "128px" },
-            overflowWrap: "break-word",
-            whiteSpace: "pre-line",
-          }}
-        >
-          {" "}
-          <Typography variant="h4">Open Source Libraries</Typography>
+        <LandingGrid>
+          <Typography variant="h4">Credits</Typography>
           <LibraryText
             libraryName="React"
             repoLink="github.com/facebook/react"
@@ -105,7 +93,7 @@ const CookiePolicy = () => {
             licenseText="MIT License"
             licenseLink="https://github.com/pmndrs/jotai/blob/main/LICENSE"
           />
-        </Grid>
+        </LandingGrid>
         <Typography sx={{ position: "fixed", bottom: 16, right: 16 }}>
           pre-alpha
         </Typography>
