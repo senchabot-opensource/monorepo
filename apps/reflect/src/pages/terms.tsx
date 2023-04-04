@@ -1,4 +1,5 @@
 import { CssBaseline, Grid, ThemeProvider, Typography } from "@mui/material";
+import { LandingGrid } from "src/components/landing/LandingGrid";
 import { AppHeader } from "../components/app";
 import LandingAppBar from "../components/landing/LandingAppBar";
 import { landingDarkTheme } from "../utils/theme";
@@ -11,19 +12,7 @@ const CookiePolicy = () => {
         <CssBaseline />
 
         <LandingAppBar />
-
-        <Grid
-          container
-          direction="column"
-          justifyContent="flex-end"
-          sx={{
-            pl: { xs: "10px", md: "16vh" },
-            pr: { xs: "none", md: "16vh" },
-            pb: { xs: "4px", md: "128px" },
-            overflowWrap: "break-word",
-            whiteSpace: "pre-line",
-          }}
-        >
+        <LandingGrid>
           <Typography variant="h4">Terms of Service for Senchabot</Typography>
           <Typography variant="h5">
             By using Senchabot, you agree to these terms of service.
@@ -55,7 +44,7 @@ const CookiePolicy = () => {
             time. Your continued use of Senchabot after any modifications to the
             terms indicates your acceptance of the modified terms.
           </Typography>
-        </Grid>
+        </LandingGrid>
         <Typography sx={{ position: "fixed", bottom: 16, right: 16 }}>
           pre-alpha
         </Typography>
