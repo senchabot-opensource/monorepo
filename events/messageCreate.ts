@@ -1,9 +1,11 @@
-import { Message } from "discord.js";
+import { Guild, Message } from "discord.js";
+import { createLiveStreamEventFromMessage } from "../utils/scheduledEventFunctions";
 
 export default {
   name: "messageCreate",
   execute(message: Message) {
-    const msgContent = message.content;
-    console.log(msgContent);
+    createLiveStreamEventFromMessage(message, {
+      platformDomain: "twitch.tv",
+    });
   },
 };

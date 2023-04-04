@@ -4,12 +4,13 @@ import { readdirSync } from "fs";
 
 import DiscordClient from "./client";
 import { env } from "./utils/env";
+import { checkScheduledEvents } from "./utils/scheduledEventFunctions";
 
 const client = new DiscordClient({
   intents: [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMembers,
-    // GatewayIntentBits.GuildScheduledEvents,
+    GatewayIntentBits.GuildScheduledEvents,
     // GatewayIntentBits.GuildInvites,
     // GatewayIntentBits.GuildPresences,
     GatewayIntentBits.GuildVoiceStates,
@@ -19,6 +20,7 @@ const client = new DiscordClient({
     // GatewayIntentBits.DirectMessages,
     // GatewayIntentBits.DirectMessageReactions,
     // GatewayIntentBits.DirectMessageTyping,
+    GatewayIntentBits.MessageContent,
   ],
   partials: [
     Partials.Message,
@@ -35,5 +37,7 @@ handlerFiles.forEach((handlerFile: any) => {
   const filePath = join(handlersPath, handlerFile);
   import(filePath).then((handler) => handler.default(client));
 });
+
+checkScheduledEvents(client.guilds);
 
 client.login(env.TOKEN);
