@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"github.com/senchabot-dev/monorepo/apps/bot/twitch/client"
-	"github.com/senchabot-dev/monorepo/apps/bot/twitch/server"
+	"github.com/senchabot-dev/monorepo/apps/twitch-bot/client"
+	"github.com/senchabot-dev/monorepo/apps/twitch-bot/server"
 )
 
 func InitHandlers(client *client.Clients, server *server.SenchabotAPIServer) {

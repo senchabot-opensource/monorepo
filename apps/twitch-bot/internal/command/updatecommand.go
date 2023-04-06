@@ -6,8 +6,8 @@ import (
 	"strings"
 
 	"github.com/gempir/go-twitch-irc/v3"
-	"github.com/senchabot-dev/monorepo/apps/bot/twitch/client"
-	"github.com/senchabot-dev/monorepo/apps/bot/twitch/server"
+	"github.com/senchabot-dev/monorepo/apps/twitch-bot/client"
+	"github.com/senchabot-dev/monorepo/apps/twitch-bot/server"
 )
 
 const UPDATE_COMMAND_INFO = "!ucmd [command_name] [new_command_content]"

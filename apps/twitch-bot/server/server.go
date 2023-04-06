@@ -3,8 +3,8 @@ package server
 import (
 	"context"
 
-	"github.com/senchabot-dev/monorepo/apps/bot/twitch/internal/backend"
-	"github.com/senchabot-dev/monorepo/apps/bot/twitch/internal/models"
+	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/backend"
+	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/models"
 )
 
 type SenchabotAPIServer struct {
