@@ -44,8 +44,7 @@ export const AuthContainer = () => {
               callbackUrl: `${window.location.origin}/app`,
             })
           }
-          sx={{ "&:hover": { borderRadius: 1 } }}
-        >
+          sx={{ "&:hover": { borderRadius: 1 } }}>
           <ListItemAvatar>
             <Avatar>
               <SiDiscord />
@@ -60,8 +59,7 @@ export const AuthContainer = () => {
               callbackUrl: `${window.location.origin}/app`,
             })
           }
-          sx={{ "&:hover": { borderRadius: 1 } }}
-        >
+          sx={{ "&:hover": { borderRadius: 1 } }}>
           <ListItemAvatar>
             <Avatar>
               <GitHubIcon />
@@ -76,8 +74,7 @@ export const AuthContainer = () => {
               callbackUrl: `${window.location.origin}/app`,
             })
           }
-          sx={{ "&:hover": { borderRadius: 1 } }}
-        >
+          sx={{ "&:hover": { borderRadius: 1 } }}>
           <ListItemAvatar>
             <Avatar>
               <SiTwitch />
@@ -86,7 +83,7 @@ export const AuthContainer = () => {
           <ListItemText primary="with Twitch Account" />
         </ListItem>
         <ListItem>
-          <ListItemText>
+          <ListItemText sx={{ maxWidth: "200px", textAlign: "justify" }}>
             By continuing you agree to{" "}
             <Link href="/cookie-policy" style={{ color: "#ffff00" }}>
               Cookie Policy
