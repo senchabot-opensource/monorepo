@@ -3,7 +3,7 @@ package backend
 import (
 	"context"
 
-	"github.com/senchabot-dev/monorepo/apps/bot/twitch/internal/models"
+	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/models"
 )
 
 type Backend interface {

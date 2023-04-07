@@ -6,8 +6,8 @@ import (
 	"strings"
 
 	"github.com/gempir/go-twitch-irc/v3"
-	"github.com/senchabot-dev/monorepo/apps/bot/twitch/client"
-	"github.com/senchabot-dev/monorepo/apps/bot/twitch/server"
+	"github.com/senchabot-dev/monorepo/apps/twitch-bot/client"
+	"github.com/senchabot-dev/monorepo/apps/twitch-bot/server"
 )
 
 const ADD_COMMAND_INFO = "!acmd [command_name] [command_content]"

@@ -6,10 +6,10 @@ import (
 	"strings"
 
 	"github.com/gempir/go-twitch-irc/v3"
-	"github.com/senchabot-dev/monorepo/apps/bot/twitch/client"
-	"github.com/senchabot-dev/monorepo/apps/bot/twitch/internal/command"
-	"github.com/senchabot-dev/monorepo/apps/bot/twitch/internal/command/helpers"
-	"github.com/senchabot-dev/monorepo/apps/bot/twitch/server"
+	"github.com/senchabot-dev/monorepo/apps/twitch-bot/client"
+	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/command"
+	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/command/helpers"
+	"github.com/senchabot-dev/monorepo/apps/twitch-bot/server"
 )
 
 func PrivateMessage(client *client.Clients, server *server.SenchabotAPIServer) {

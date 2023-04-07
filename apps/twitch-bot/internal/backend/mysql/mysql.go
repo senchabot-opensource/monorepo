@@ -5,8 +5,8 @@ import (
 	"errors"
 
 	"github.com/google/uuid"
-	"github.com/senchabot-dev/monorepo/apps/bot/twitch/internal/backend"
-	"github.com/senchabot-dev/monorepo/apps/bot/twitch/internal/models"
+	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/backend"
+	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/models"
 	"gorm.io/gorm"
 )
 

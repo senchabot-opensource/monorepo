@@ -7,11 +7,11 @@ import (
 
 	"github.com/gempir/go-twitch-irc/v3"
 	"github.com/joho/godotenv"
-	"github.com/senchabot-dev/monorepo/apps/bot/twitch/client"
-	"github.com/senchabot-dev/monorepo/apps/bot/twitch/internal/backend/mysql"
-	"github.com/senchabot-dev/monorepo/apps/bot/twitch/internal/db"
-	"github.com/senchabot-dev/monorepo/apps/bot/twitch/internal/handler"
-	"github.com/senchabot-dev/monorepo/apps/bot/twitch/server"
+	"github.com/senchabot-dev/monorepo/apps/twitch-bot/client"
+	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/backend/mysql"
+	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/db"
+	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/handler"
+	"github.com/senchabot-dev/monorepo/apps/twitch-bot/server"
 )
 
 func main() {

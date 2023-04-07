@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/senchabot-dev/monorepo/apps/bot/twitch/client"
-	"github.com/senchabot-dev/monorepo/apps/bot/twitch/internal/models"
-	"github.com/senchabot-dev/monorepo/apps/bot/twitch/server"
+	"github.com/senchabot-dev/monorepo/apps/twitch-bot/client"
+	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/models"
+	"github.com/senchabot-dev/monorepo/apps/twitch-bot/server"
 )
 
 func BotJoin(client *client.Clients, server *server.SenchabotAPIServer) {
