@@ -1,7 +1,7 @@
 import React from "react";
 /*import { styled } from "@mui/material/styles";
 import Button, { ButtonProps } from "@mui/material/Button";*/
-import { Stack, Typography, Divider, alpha } from "@mui/material";
+import { Stack, Typography, Divider, alpha, Button } from "@mui/material";
 //import { blue } from "@mui/material/colors";
 
 import LinkAccount from "../components/auth/LinkAccount";
@@ -37,8 +37,7 @@ const SecurityForm = () => {
       <Stack
         spacing={2}
         direction="row"
-        sx={{ display: { xs: "none", md: "flex" } }}
-      >
+        sx={{ display: { xs: "none", md: "flex" } }}>
         <LinkAccount />
       </Stack>
 
@@ -58,18 +57,29 @@ const SecurityForm = () => {
                     ? (index > 2 ? "and " : "") +
                       capitalizeWord(account.provider)
                     : capitalizeWord(account.provider) +
-                      (index < 2 ? " and " : ", "))
+                      (index < 2 ? " and " : ", ")),
               )}
         </Typography>
         <Typography>
           Your e-mail address:
           {showEmailAddress && email
             ? email.substring(email?.length / 2, email?.length)
-            : "***"}{" "}
-          <button onClick={() => setShowEmailAddress(!showEmailAddress)}>
-            Show/Hide
-          </button>
+            : email
+                .substring(email?.length / 2, email?.length)
+                .replace(/./g, "*")}
         </Typography>
+        <Button
+          sx={{
+            mt: 1,
+            width: "fit-content",
+            "@media (max-width: 600px)": {
+              width: "100%",
+            },
+          }}
+          onClick={() => setShowEmailAddress(!showEmailAddress)}
+          variant="outlined">
+          Show/Hide
+        </Button>
       </Stack>
 
       <Divider
