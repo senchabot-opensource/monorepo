@@ -62,11 +62,11 @@ const SecurityForm = () => {
         </Typography>
         <Typography>
           Your e-mail address:
-          {showEmailAddress && email
-            ? email.substring(email?.length / 2, email?.length)
-            : email
-                .substring(email?.length / 2, email?.length)
-                .replace(/./g, "*")}
+          {showEmailAddress &&
+            email &&
+            email
+              .substring(email?.length / 2, email?.length)
+              .replace(/./g, "*")}
         </Typography>
         <Button
           sx={{
