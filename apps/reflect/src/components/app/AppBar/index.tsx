@@ -5,17 +5,16 @@ import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 
-import { SiDiscord, SiTwitch } from "react-icons/si";
-import { AccountMenu } from "./AccountMenu";
-import { BootstrapTooltip } from "../Tooltip";
-import { trpc } from "../../utils/trpc";
-import AppSnackbar from "./AppSnackbar";
-import { env } from "../../env/client.mjs";
-import AppBarTitle from "../common/AppBarTitle";
+import { AccountMenu } from "../AccountMenu";
+import AppSnackbar from "../AppSnackbar";
+
+import AppBarTitle from "../../common/AppBarTitle";
 import AppBarButton from "./AppBarButton";
 
 import MinimizeIcon from "@mui/icons-material/Minimize";
-import AppSearch from "./AppSearch";
+import AppSearch from "../AppSearch";
+import GetDiscordBotButton from "./buttons/GetDiscordBotButton";
+import GetTwitchBotButton from "./buttons/GetTwitchBotButton";
 
 interface IResponsiveAppBar {
   isDrawerOpen: boolean;
@@ -29,7 +28,7 @@ interface AppBarProps extends MuiAppBarProps {
 const drawerWidth = 240;
 
 const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== "open",
+  shouldForwardProp: prop => prop !== "open",
 })<AppBarProps>(({ theme, open }) => ({
   transition: theme.transitions.create(["margin", "width"], {
     easing: theme.transitions.easing.sharp,
@@ -55,23 +54,10 @@ const ResponsiveAppBar = ({
   const [snackbarOpen, setSnackbarOpen] = React.useState(false);
   const [snackbarMessage, setSnackbarMessage] = React.useState("");
 
-  const { data: twitchAcc } = trpc.check.checkTwitchAcc.useQuery();
-
   const snackbarMsg = (message: string) => {
     setSnackbarOpen(!snackbarOpen);
     setSnackbarMessage(message);
   };
-
-  const twitchBotMutate = trpc.twitchBot.add.useMutation({
-    onSuccess() {
-      snackbarMsg("Twitch bot added");
-    },
-
-    onError(error) {
-      if (!error.shape) return;
-      snackbarMsg(error.shape.message);
-    },
-  });
 
   return (
     <>
@@ -86,8 +72,7 @@ const ResponsiveAppBar = ({
           backdropFilter: "blur(1px)",
           backgroundColor: alpha(theme.palette.background.paper, 0.85),
         }}
-        elevation={2}
-      >
+        elevation={2}>
         {/*open={isDrawerOpen} */}
         <Container>
           {/* <Container maxWidth="xl">*/}
@@ -95,69 +80,26 @@ const ResponsiveAppBar = ({
             <AppBarTitle />
 
             <AppBarButton
-              title="Open Sencha UI"
-              pathHref="/sencha"
-              ariaLabel="open sencha ui"
-              drawerHandler={drawerHandler}
-            >
+              title="Go to Sencha Web App"
+              pathHref="https://sencha.senchabot.dev"
+              ariaLabel="go to sencha web app"
+              drawerHandler={drawerHandler}>
               <MinimizeIcon />
             </AppBarButton>
 
-            <BootstrapTooltip title="Get Twitch Bot">
-              <Typography
-                onClick={() =>
-                  !twitchAcc
-                    ? snackbarMsg(
-                        "Before you can add the Twitch bot, you need to link your Twitch account in Settings/Security section."
-                      )
-                    : twitchBotMutate.mutate()
-                }
-              >
-                <IconButton
-                  aria-label="open drawer"
-                  onClick={drawerHandler}
-                  sx={{
-                    display: "flex",
-                    //mr: 1,
-                    //...(isDrawerOpen && { display: "none" }),
-                  }}
-                >
-                  <SiTwitch />
-                </IconButton>
-              </Typography>
-            </BootstrapTooltip>
-            <BootstrapTooltip title="Get Discord bot">
-              <Typography>
-                <Link
-                  href={`${env.NEXT_PUBLIC_APP_DISCORD_BOT_INVITE_URL}`}
-                  passHref
-                >
-                  <IconButton
-                    aria-label="open drawer"
-                    onClick={drawerHandler}
-                    sx={{
-                      display: "flex",
-                      //mr: 1,
-                      //...(isDrawerOpen && { display: "none" }),
-                    }}
-                  >
-                    <SiDiscord />
-                  </IconButton>
-                </Link>
-              </Typography>
-            </BootstrapTooltip>
+            <GetTwitchBotButton />
+            <GetDiscordBotButton />
 
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }} />
 
-            <Link href="/sencha">
+            <Link href="https://sencha.senchabot.dev">
               <IconButton
-                aria-label="open drawer"
+                aria-label="go to sencha web app"
                 sx={{
                   display: { xs: "flex", md: "none" },
                   mr: 1,
                   ...(isDrawerOpen && { display: "none" }),
-                }}
-              >
+                }}>
                 <MinimizeIcon />
               </IconButton>
             </Link>

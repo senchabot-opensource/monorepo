@@ -1,7 +1,7 @@
 import { IconButton, Typography } from "@mui/material";
 import Link from "next/link";
-import { BootstrapTooltip } from "../Tooltip";
-import { IAppBarButton } from "../../types";
+import { BootstrapTooltip } from "../../Tooltip";
+import { IAppBarButton } from "../../../types";
 
 const AppBarButton = ({
   title,
@@ -19,10 +19,7 @@ const AppBarButton = ({
             onClick={drawerHandler}
             sx={{
               display: { xs: "none", md: "flex" },
-              //mr: 1,
-              //...(isDrawerOpen && { display: "none" }),
-            }}
-          >
+            }}>
             {children}
           </IconButton>
         </Link>
