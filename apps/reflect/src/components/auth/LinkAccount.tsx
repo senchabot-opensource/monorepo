@@ -12,16 +12,6 @@ import { signIn } from "next-auth/react";
 const LinkAccount = () => {
   return (
     <>
-      {/*<_Button variant="contained" onClick={() => signIn("discord")}>
-      Discord account
-    </_Button>
-    <_Button variant="contained" onClick={() => signIn("github")}>
-      GitHub account
-    </_Button>
-    <_Button variant="contained" onClick={() => signIn("twitch")}>
-      Twitch account
-</_Button>*/}
-
       <ListItem
         button
         onClick={() => signIn("discord")}
