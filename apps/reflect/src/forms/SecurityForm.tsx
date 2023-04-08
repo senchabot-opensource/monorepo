@@ -1,22 +1,10 @@
 import React from "react";
-/*import { styled } from "@mui/material/styles";
-import Button, { ButtonProps } from "@mui/material/Button";*/
-import { Stack, Typography, Divider, alpha, Button } from "@mui/material";
-//import { blue } from "@mui/material/colors";
-
-import LinkAccount from "../components/auth/LinkAccount";
-import { trpc } from "../utils/trpc";
-import { capitalizeWord } from "../utils/functions";
 import { useSession } from "next-auth/react";
+import { Stack, Typography, Divider, Button } from "@mui/material";
+import LinkAccount from "../components/auth/LinkAccount";
 import FormTitle from "../components/FormTitle";
-
-/*const _Button = styled(Button)<ButtonProps>(({ theme }) => ({
-  color: theme.palette.getContrastText(blue[500]),
-  backgroundColor: alpha("#000", 0.8),
-  "&:hover": {
-    backgroundColor: alpha("#fff", 0.1),
-  },
-}));*/
+import { capitalizeWord } from "../utils/functions";
+import { trpc } from "../utils/trpc";
 
 const SecurityForm = () => {
   const { data: session } = useSession();
@@ -61,10 +49,11 @@ const SecurityForm = () => {
               )}
         </Typography>
         <Typography>
-          Your e-mail address:
-          {showEmailAddress && email
-            ? email.substring(email?.length / 2, email?.length)
-            : email
+          Your e-mail address:{" "}
+          {showEmailAddress
+            ? email && email.substring(email?.length / 2, email?.length)
+            : email &&
+              email
                 .substring(email?.length / 2, email?.length)
                 .replace(/./g, "*")}
         </Typography>
