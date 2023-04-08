@@ -1,8 +1,8 @@
 import React from "react";
 import { useSession } from "next-auth/react";
 import { Stack, Typography, Divider, Button } from "@mui/material";
-import LinkAccount from "../components/auth/LinkAccount";
 import FormTitle from "../components/FormTitle";
+import LinkAccountStack from "../components/auth/LinkAccount";
 import { capitalizeWord } from "../utils/functions";
 import { trpc } from "../utils/trpc";
 
@@ -22,16 +22,7 @@ const SecurityForm = () => {
     <>
       <FormTitle titleText="Link Account" />
 
-      <Stack
-        spacing={2}
-        direction="row"
-        sx={{ display: { xs: "none", md: "flex" } }}>
-        <LinkAccount />
-      </Stack>
-
-      <Stack direction="column" sx={{ display: { xs: "flex", md: "none" } }}>
-        <LinkAccount />
-      </Stack>
+      <LinkAccountStack />
 
       <Stack spacing={0.5} direction="column" sx={{ mt: 2 }}>
         <Typography>
