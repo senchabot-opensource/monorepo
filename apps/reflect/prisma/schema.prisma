@@ -25,21 +25,25 @@ model SignActivities {
 
 model BotJoinActivities {
     id                Int      @id @default(autoincrement())
-    botPlatformType   String
-    discordServerId   String
-    discordServerName String
-    twitchChannelId   String
-    twitchChannelName String
+    botPlatformType   String   @map("bot_platform_type")
+    discordServerId   String   @map("discord_server_id")
+    discordServerName String   @map("discord_server_name")
+    twitchChannelId   String   @map("twitch_channel_id")
+    twitchChannelName String   @map("twitch_channel_name")
     date              DateTime @default(now())
+
+    @@map("bot_join_activities")
 }
 
 model BotActionActivities {
     id              Int      @id @default(autoincrement())
-    botPlatformType String
-    botActivity     String
-    activityDate    DateTime @default(now())
-    discordServerId String
-    twitchChannelId String
+    botPlatformType String   @map("bot_platform_type")
+    botActivity     String   @map("bot_activity")
+    activityDate    DateTime @default(now()) @map("activity_date")
+    discordServerId String?  @map("discord_server_id")
+    twitchChannelId String?  @map("twitch_channel_id")
+
+    @@map("bot_action_activities")
 }
 
 model BotCommands {
@@ -55,11 +59,13 @@ model BotCommands {
 
 model DiscordServer {
     id          String  @id @default(cuid())
-    serverId    String  @unique
-    serverName  String
-    serverOwner String
-    userId      String?
+    serverId    String  @unique @map("server_id")
+    serverName  String  @map("server_name")
+    serverOwner String  @map("server_owner")
+    userId      String? @map("user_id")
     user        User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@map("discord_servers")
 }
 
 model TwitchChannel {
@@ -70,31 +76,6 @@ model TwitchChannel {
     user        User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     @@map("twitch_channels")
-}
-
-model TwitchConfig {
-    id              String  @id @default(cuid())
-    chatOrientation Int     @default(0)
-    background      String?
-    foreground      String?
-    userId          String
-    user            User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model SenchaConfig {
-    id         String  @id @default(cuid())
-    bootScene  Int?    @default(0)
-    background String?
-    foreground String?
-    userId     String
-    user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model ColorTheme {
-    id              Int    @id @default(autoincrement())
-    themeName       String
-    backgroundColor String
-    foregroundColor String
 }
 
 // Necessary for Next auth
@@ -132,8 +113,6 @@ model User {
     image         String?
     accounts      Account[]
     sessions      Session[]
-    SenchaConfig  SenchaConfig[]
-    TwitchConfig  TwitchConfig[]
     DiscordServer DiscordServer[]
     TwitchChannel TwitchChannel[]
 }
