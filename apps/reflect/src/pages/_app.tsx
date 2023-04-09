@@ -1,9 +1,6 @@
 // src/pages/_app.tsx
-//import { withTRPC } from "@trpc/next";
 import { SessionProvider } from "next-auth/react";
-//import superjson from "superjson";
 import type { AppType } from "next/app";
-//import type { AppRouter } from "../server/router";
 import type { Session } from "next-auth";
 import "../styles/globals.css";
 import "./App.css";
@@ -32,8 +29,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
       <SessionProvider
         session={session}
         refetchInterval={60 * 60}
-        refetchOnWindowFocus={false}
-      >
+        refetchOnWindowFocus={false}>
         <Component {...pageProps} />
       </SessionProvider>
     </>
