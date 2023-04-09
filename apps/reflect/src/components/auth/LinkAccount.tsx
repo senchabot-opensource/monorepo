@@ -6,21 +6,10 @@ import { signIn } from "next-auth/react";
 const LinkAccount = () => {
   return (
     <>
-      {/*<_Button variant="contained" onClick={() => signIn("discord")}>
-      Discord account
-    </_Button>
-    <_Button variant="contained" onClick={() => signIn("github")}>
-      GitHub account
-    </_Button>
-    <_Button variant="contained" onClick={() => signIn("twitch")}>
-      Twitch account
-</_Button>*/}
-
       <ListItem
         button
         onClick={() => signIn("discord")}
-        sx={{ "&:hover": { borderRadius: 1 } }}
-      >
+        sx={{ "&:hover": { borderRadius: 1 } }}>
         <ListItemAvatar>
           <Avatar>
             <SiDiscord />
@@ -31,8 +20,7 @@ const LinkAccount = () => {
       <ListItem
         button
         onClick={() => signIn("github")}
-        sx={{ "&:hover": { borderRadius: 1 } }}
-      >
+        sx={{ "&:hover": { borderRadius: 1 } }}>
         <ListItemAvatar>
           <Avatar>
             <GitHubIcon />
@@ -43,8 +31,7 @@ const LinkAccount = () => {
       <ListItem
         button
         onClick={() => signIn("twitch")}
-        sx={{ "&:hover": { borderRadius: 1 } }}
-      >
+        sx={{ "&:hover": { borderRadius: 1 } }}>
         <ListItemAvatar>
           <Avatar>
             <SiTwitch />
