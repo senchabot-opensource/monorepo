@@ -32,6 +32,6 @@ func main() {
 	fmt.Println("CLIENT_CONNECT")
 	error := twitchClient.Connect()
 	if error != nil {
-		panic("error")
+		panic("error" + error.Error())
 	}
 }
