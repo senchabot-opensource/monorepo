@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  //InputAdornment,
   Container,
   CssBaseline,
   Paper,
@@ -11,8 +10,6 @@ import { ThemeProvider } from "@mui/material/styles";
 import ResponsiveAppBar from "./AppBar";
 
 import { darkTheme } from "../../utils/theme";
-//import Link from "next/link";
-//import AppDrawer from "./AppDrawer";
 import Breadcrumb from "./Breadcrumb";
 import { useSession } from "next-auth/react";
 import { AuthContainer } from "../auth/AuthContainer";
@@ -28,11 +25,6 @@ export default function AppContainer({ isLoading, children }: IAppContainer) {
   const { data: session, status: isAuthLoading } = useSession();
   const [isDrawerOpen, setDrawerOpen] = React.useState(false);
   const [snackbarData, setSnackbarData] = React.useState(undefined);
-
-  /*const snackbarContext = React.useMemo(
-    () => ({ snackbarData, setSnackbarData }),
-    [snackbarData]
-  );*/
 
   const handleDrawer = () => {
     setDrawerOpen(!isDrawerOpen);
@@ -54,7 +46,6 @@ export default function AppContainer({ isLoading, children }: IAppContainer) {
           <Container>
             {/*<AppDrawer isDrawerOpen={isDrawerOpen} drawerHandler={handleDrawer} />*/}
 
-            {/*<Paper sx={{ mt: 10, backgroundColor: "#000", p: 1 }} elevation={1}></Paper>*/}
             <Paper sx={{ mt: 10, backgroundColor: "#000", p: 1 }} elevation={1}>
               <Breadcrumb />
             </Paper>
