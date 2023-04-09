@@ -3,7 +3,6 @@ import { SessionProvider } from "next-auth/react";
 import type { AppType } from "next/app";
 import type { Session } from "next-auth";
 import "../styles/globals.css";
-import "./App.css";
 import { trpc } from "../utils/trpc";
 import Script from "next/script";
 
