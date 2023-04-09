@@ -2,7 +2,6 @@ import React from "react";
 import { trpc } from "../utils/trpc";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import {
   Box,
   TextField,
@@ -12,14 +11,9 @@ import {
   FormControl,
   FormHelperText,
 } from "@mui/material";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
-
+import Select from "@mui/material/Select";
 import { SenchaConfigInputValidation } from "../validation/senchaconfig";
 import AppSnackbar from "../components/app/AppSnackbar";
-
-/*export interface SnackbarState extends SnackbarOrigin {
-  open: boolean;
-}*/
 
 const SenchaDisplayForm = () => {
   const [snackbarOpen, setSnackBarOpen] = React.useState(false);
@@ -41,7 +35,6 @@ const SenchaDisplayForm = () => {
   const configsMutate = trpc.sencha.mutateConfig.useMutation({
     onSuccess() {
       setSnackBarOpen(true);
-      //handleSnackBarOpen({ vertical: "top", horizontal: "left" });
     },
   });
 
@@ -52,16 +45,6 @@ const SenchaDisplayForm = () => {
       return <React.Fragment>{errorMsg.message}</React.Fragment>;
     }
   };
-
-  //const [bootScene, setBootScene] = React.useState("");
-
-  /*const handleSnackBarOpen = (newState: SnackbarOrigin) => () => {
-    setSnackbarState({ open: true, ...newState });
-  };*/
-
-  /*const handleSelectChange = (event: SelectChangeEvent) => {
-    setBootScene(event.target.value);
-  };*/
 
   return (
     <>
@@ -75,8 +58,7 @@ const SenchaDisplayForm = () => {
             "& > :not(style)": {
               m: 1,
             },
-          }}
-        >
+          }}>
           <InputLabel>Sencha Boot Scene</InputLabel>
           <Controller
             name="bootScene"
@@ -86,16 +68,14 @@ const SenchaDisplayForm = () => {
                 sx={{ m: 2 }}
                 size="small"
                 fullWidth
-                error={!!errors.bootScene}
-              >
+                error={!!errors.bootScene}>
                 <InputLabel id="select-bootscene">Boot Scene</InputLabel>
 
                 <Select
                   {...field}
                   labelId="select-bootscene"
                   id="select-bootscene"
-                  label="Boot Scene"
-                >
+                  label="Boot Scene">
                   <MenuItem value="0">Console</MenuItem>
                   <MenuItem value="1">Vertical Line</MenuItem>
                 </Select>

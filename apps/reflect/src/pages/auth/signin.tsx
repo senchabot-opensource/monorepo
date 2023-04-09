@@ -2,7 +2,6 @@ import React from "react";
 import { useSession } from "next-auth/react";
 import AppContainer from "../../components/app/AppContainer";
 import AppHeader from "../../components/app/AppHeader";
-//import { Paper } from "@mui/material";
 import Router from "next/router";
 
 const SignIn = () => {

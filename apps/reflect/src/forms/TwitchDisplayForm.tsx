@@ -9,10 +9,6 @@ import LoadingBox from "../components/loading/LoadingBox";
 
 const TwitchDisplayForm = (): JSX.Element => {
   const [isLoading, setIsLoading] = React.useState(true);
-  /* const [colors, setColors] = React.useState({
-    background: "",
-    foreground: "",
-  });*/
   const [snackbarOpen, setSnackBarOpen] = React.useState(false);
   const twitchColors = trpc.twitch.get.useQuery();
 
@@ -29,14 +25,8 @@ const TwitchDisplayForm = (): JSX.Element => {
     },
   });
 
-  //const { append, insert } = useFieldArray({control, background: "#000000", foreground: "#FFFFFF"})
-
   React.useEffect(() => {
     if (!twitchColors.isLoading) {
-      /*setColors({
-        background: twitchColors.data?.background || "#000000",
-        foreground: twitchColors.data?.foreground || "#FFFFFF",
-      });*/
       setValue("background", twitchColors.data?.background);
       setValue("foreground", twitchColors.data?.foreground);
 
@@ -72,8 +62,7 @@ const TwitchDisplayForm = (): JSX.Element => {
               "& > :not(style)": {
                 m: 1,
               },
-            }}
-          >
+            }}>
             <InputLabel>Change Twitch Chat Colors</InputLabel>
             <Controller
               name="background"

@@ -19,9 +19,7 @@ const AppBarTitle = () => {
           letterSpacing: ".1rem",
           color: "inherit",
           textDecoration: "none",
-          //...(isDrawerOpen && { display: "none" }),
-        }}
-      >
+        }}>
         <Link href="/">{env.NEXT_PUBLIC_APP_NAME}</Link>
       </Typography>
       {/* Mobile view */}
@@ -38,9 +36,7 @@ const AppBarTitle = () => {
           letterSpacing: ".1rem",
           color: "inherit",
           textDecoration: "none",
-          //...(isDrawerOpen && { display: "none" }),
-        }}
-      >
+        }}>
         <Link href="/">{env.NEXT_PUBLIC_APP_NAME}</Link>
       </Typography>
     </>
