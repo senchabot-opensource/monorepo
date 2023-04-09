@@ -9,8 +9,6 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 import { SiDiscord, SiTwitch } from "react-icons/si";
 import { signIn } from "next-auth/react";
 import { trpc } from "../../utils/trpc";
-import React, { useEffect, useState } from "react";
-import { capitalizeWord } from "../../utils/functions";
 
 const LinkAccount = () => {
   const accounts = trpc.security.getAccounts.useQuery();
