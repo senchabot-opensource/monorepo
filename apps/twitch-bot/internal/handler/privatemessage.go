@@ -23,6 +23,9 @@ func PrivateMessage(client *client.Clients, server *server.SenchabotAPIServer) {
 			cmd = strings.TrimPrefix(cmd, "!")
 			if c, ok := commands[cmd]; ok {
 				c(client, server, message, cmd, params)
+				if err := server.CreateBotActionActivity(context.Background(), "twitch", cmd, message.RoomID); err != nil {
+					fmt.Println(err.Error())
+				}
 				return
 			}
 
@@ -37,6 +40,9 @@ func PrivateMessage(client *client.Clients, server *server.SenchabotAPIServer) {
 				if message.RoomID == cmdData.TwitchChannelID {
 					formattedCommandContent := helpers.FormatCommandContent(cmdData.CommandContent, message)
 					client.Twitch.Say(message.Channel, formattedCommandContent)
+					if err := server.CreateBotActionActivity(context.Background(), "twitch", cmd, message.RoomID); err != nil {
+						fmt.Println(err.Error())
+					}
 				}
 			}
 			// HANDLE CUSTOM COMMANDS

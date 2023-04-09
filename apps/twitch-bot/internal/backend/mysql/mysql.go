@@ -126,3 +126,19 @@ func (b *MySQLBackend) DeleteBotCommand(ctx context.Context, commandName string,
 
 	return nil
 }
+
+func (b *MySQLBackend) CreateBotActionActivity(ctx context.Context, botPlatformType string, botActivity string, twitchChannelId string) error {
+	botActionActivity := models.BotActionActivity{
+		BotPlatformType: botPlatformType,
+		BotActivity:     botActivity,
+		TwitchChannelID: &twitchChannelId,
+	}
+
+	result := b.DB.Create(&botActionActivity)
+
+	if result.Error != nil {
+		return errors.New("(CreateBotActionActivity) db.Create Error:" + result.Error.Error())
+	}
+
+	return nil
+}
