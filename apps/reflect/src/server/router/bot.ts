@@ -36,8 +36,8 @@ export const twitchBotRouter = t.router({
             headers: {
               "Content-Type": "application/x-www-form-urlencoded",
             },
-          }
-        ).then((resp) => resp.json());
+          },
+        ).then(resp => resp.json());
 
         const getChannel = await fetch(
           "https://api.twitch.tv/helix/channels?broadcaster_id=" + twitchAccId,
@@ -46,10 +46,10 @@ export const twitchBotRouter = t.router({
               "Client-ID": env.TWITCH_CLIENT_ID,
               Authorization: "Bearer " + getClientCredentials["access_token"],
             },
-          }
+          },
         )
-          .then((resp) => resp.json())
-          .then((data) => data);
+          .then(resp => resp.json())
+          .then(data => data);
 
         return await ctx.prisma.twitchChannel.create({
           data: {
@@ -59,6 +59,14 @@ export const twitchBotRouter = t.router({
           },
         });
       } else {
+        await ctx.prisma.twitchChannel.update({
+          where: {
+            id: twitchChannel.id,
+          },
+          data: {
+            userId,
+          },
+        });
         throw new TRPCError({
           message: "Twitch channel already added",
           code: "CONFLICT",
