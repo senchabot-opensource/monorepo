@@ -7,7 +7,7 @@ import { landingDarkTheme } from "../utils/theme";
 const CookiePolicy = () => {
   return (
     <>
-      <AppHeader title="Policy Policy" index={false}></AppHeader>
+      <AppHeader title="Privacy Policy" index={false}></AppHeader>
       <ThemeProvider theme={landingDarkTheme}>
         <CssBaseline />
 
@@ -22,7 +22,7 @@ const CookiePolicy = () => {
             Information We Collect:
           </Typography>
           <Typography variant="h6" sx={{ paddingTop: "10px" }}>
-            - User IDs and names on Discord and Twitch
+            - User IDs, names and emails on Discord and Twitch
           </Typography>
           <Typography variant="h6">
             - Messages and commands sent to Senchabot
