@@ -8,12 +8,17 @@ import {
 import GitHubIcon from "@mui/icons-material/GitHub";
 import { SiDiscord, SiTwitch } from "react-icons/si";
 import { signIn } from "next-auth/react";
+import { trpc } from "../../utils/trpc";
 
 const LinkAccount = () => {
+  const accounts = trpc.security.getAccounts.useQuery();
+  const currentProviders = accounts.data?.map(account => account.provider);
+
   return (
     <>
       <ListItem
         button
+        disabled={currentProviders?.includes("discord")}
         onClick={() => signIn("discord")}
         sx={{ "&:hover": { borderRadius: 1 } }}>
         <ListItemAvatar>
@@ -25,6 +30,7 @@ const LinkAccount = () => {
       </ListItem>
       <ListItem
         button
+        disabled={currentProviders?.includes("github")}
         onClick={() => signIn("github")}
         sx={{ "&:hover": { borderRadius: 1 } }}>
         <ListItemAvatar>
@@ -36,6 +42,7 @@ const LinkAccount = () => {
       </ListItem>
       <ListItem
         button
+        disabled={currentProviders?.includes("twitch")}
         onClick={() => signIn("twitch")}
         sx={{ "&:hover": { borderRadius: 1 } }}>
         <ListItemAvatar>
