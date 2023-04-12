@@ -1,6 +1,6 @@
 // src/server/router/index.ts
 import { t } from "../trpc";
-import { twitchBotRouter } from "./bot";
+import { twitchBotRouter } from "./twitchbot";
 import { botRouter } from "./botactivities";
 import { checkRouter } from "./check";
 import { exampleRouter } from "./example";
