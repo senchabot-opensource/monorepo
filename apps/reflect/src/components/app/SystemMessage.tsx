@@ -13,8 +13,8 @@ const SystemMessage = () => {
   const discordServerCount = trpc.example.getDcServerCount.useQuery();
   const twitchChannelCount = trpc.example.getTwServercount.useQuery();
 
-  const twitchChannels = trpc.bot.getTwitchChannels.useQuery();
-  const discordServers = trpc.bot.getDiscordServers.useQuery();
+  const twitchChannels = trpc.bot.getUserTwitchChannels.useQuery();
+  const discordServers = trpc.bot.getUserDiscordServers.useQuery();
 
   return (
     <Paper

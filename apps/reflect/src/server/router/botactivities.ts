@@ -2,7 +2,7 @@ import { t } from "../trpc";
 import { authedProcedure } from "./protected-router";
 
 export const botRouter = t.router({
-  getTwitchChannels: authedProcedure.query(async ({ ctx }) => {
+  getUserTwitchChannels: authedProcedure.query(async ({ ctx }) => {
     const userId = ctx.session.user.id;
 
     const twitchAccount = ctx.prisma.account.findMany({
@@ -11,7 +11,7 @@ export const botRouter = t.router({
     });
 
     const twitchAccs: string[] = [];
-    (await twitchAccount).map((acc) => twitchAccs.push(acc.providerAccountId));
+    (await twitchAccount).map(acc => twitchAccs.push(acc.providerAccountId));
 
     const twitchChannels = ctx.prisma.twitchChannel.findMany({
       where: {
@@ -21,7 +21,7 @@ export const botRouter = t.router({
 
     if ((await twitchChannels).length) return twitchChannels;
   }),
-  getDiscordServers: authedProcedure.query(async ({ ctx }) => {
+  getUserDiscordServers: authedProcedure.query(async ({ ctx }) => {
     const userId = ctx.session.user.id;
 
     const discordAccount = await ctx.prisma.account.findFirst({
@@ -39,7 +39,7 @@ export const botRouter = t.router({
       return discordServers;
     }
   }),
-  getActivities: authedProcedure.query(async ({ ctx }) => {
+  getBotActivities: authedProcedure.query(async ({ ctx }) => {
     const userId = ctx.session.user.id;
 
     if (!userId) return;
@@ -73,7 +73,7 @@ export const botRouter = t.router({
         },
       });
 
-      discordServer.forEach((server) => dcServersArray.push(server.serverId));
+      discordServer.forEach(server => dcServersArray.push(server.serverId));
     }
 
     const botActivities = await ctx.prisma.botActionActivities.findMany({
