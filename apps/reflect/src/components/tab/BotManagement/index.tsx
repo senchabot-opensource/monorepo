@@ -9,7 +9,7 @@ function verticalTabPanelProps(index: number) {
   };
 }
 
-const DisplayTab = () => {
+const BotManagementTab = () => {
   const [vTPValue, setVTPValue] = React.useState(0);
 
   const handleVTPChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -35,7 +35,7 @@ const DisplayTab = () => {
           borderColor: "divider",
           display: { xs: "none", md: "flex" },
         }}>
-        <Tab label="Twitch UI" {...verticalTabPanelProps(0)} disableRipple />
+        <Tab label="Twitch Bot" {...verticalTabPanelProps(0)} disableRipple />
       </Tabs>
 
       <VerticalTabPanel value={vTPValue} index={0}></VerticalTabPanel>
@@ -43,4 +43,4 @@ const DisplayTab = () => {
   );
 };
 
-export default DisplayTab;
+export default BotManagementTab;

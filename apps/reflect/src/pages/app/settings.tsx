@@ -11,7 +11,7 @@ import SecurityForm from "../../forms/SecurityForm";
 import PrivacyForm from "../../forms/PrivacyForm";
 import { atom, useAtom } from "jotai";
 import SettingTopTab from "../../components/tab/SettingTopTab";
-import DisplayTab from "../../components/tab/Display";
+import BotManagementTab from "src/components/tab/BotManagement";
 
 export const SettingTopTabAtom = atom<number>(0);
 
@@ -34,7 +34,7 @@ const Settings: NextPage = () => {
           elevation={1}>
           <SettingTopTab />
           <HorizontalTabPanel value={value} index={0}>
-            <DisplayTab />
+            <BotManagementTab />
           </HorizontalTabPanel>
           <HorizontalTabPanel value={value} index={1}>
             <SecurityForm />
