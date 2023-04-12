@@ -31,8 +31,7 @@ const Settings: NextPage = () => {
       <AppContainer isLoading={isLoading}>
         <Paper
           sx={{ mt: "10px", backgroundColor: "#000", padding: "10px" }}
-          elevation={1}
-        >
+          elevation={1}>
           <SettingTopTab />
           <HorizontalTabPanel value={value} index={0}>
             <DisplayTab />

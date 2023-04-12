@@ -26,8 +26,7 @@ const SettingTopTab = () => {
         textColor="inherit"
         variant="scrollable"
         scrollButtons
-        allowScrollButtonsMobile
-      >
+        allowScrollButtonsMobile>
         <Tab label="Display" {...horizontalTabPanelProps(0)} disableRipple />
         <Tab label="Security" {...horizontalTabPanelProps(1)} disableRipple />
         <Tab label="Privacy" {...horizontalTabPanelProps(2)} disableRipple />
