@@ -12,7 +12,7 @@ import LoadingBox from "../loading/LoadingBox";
 import { trpc } from "../../utils/trpc";
 
 const BotActivity = () => {
-  const botActivities = trpc.bot.getActivities.useQuery();
+  const botActivities = trpc.bot.getBotActivities.useQuery();
 
   return (
     <Paper
