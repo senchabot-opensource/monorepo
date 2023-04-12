@@ -1,6 +1,6 @@
 import * as React from "react";
 import { styled, alpha, useTheme } from "@mui/material/styles";
-import { Container, Toolbar, Typography, Box, IconButton } from "@mui/material";
+import { Container, Toolbar, Box, IconButton } from "@mui/material";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
@@ -12,7 +12,6 @@ import AppBarTitle from "../../common/AppBarTitle";
 import AppBarButton from "./AppBarButton";
 
 import MinimizeIcon from "@mui/icons-material/Minimize";
-import AppSearch from "../AppSearch";
 import GetDiscordBotButton from "./buttons/GetDiscordBotButton";
 import GetTwitchBotButton from "./buttons/GetTwitchBotButton";
 
@@ -104,8 +103,6 @@ const ResponsiveAppBar = ({
               </IconButton>
             </Link>
 
-            <AppSearch />
-
             <AccountMenu />
           </Toolbar>
         </Container>
@@ -113,7 +110,5 @@ const ResponsiveAppBar = ({
     </>
   );
 };
-
-const commands = [{ name: "/", func: 0 }];
 
 export default ResponsiveAppBar;
