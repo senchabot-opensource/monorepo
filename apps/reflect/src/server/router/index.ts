@@ -6,16 +6,10 @@ import { checkRouter } from "./check";
 import { exampleRouter } from "./example";
 import { protectedExampleRouter } from "./protected-example-router";
 import { securityRouter } from "./security";
-import { senchaRouter } from "./sencha";
-import { themeRouter } from "./theme";
-import { twitchRouter } from "./twitch";
 
 // Update tRPC to 10: Removed the createRouter and superjson import above, Add the t import in ../trpc
 export const appRouter = t.router({
   example: exampleRouter,
-  theme: themeRouter,
-  sencha: senchaRouter,
-  twitch: twitchRouter,
   bot: botRouter,
   twitchBot: twitchBotRouter,
   check: checkRouter,
