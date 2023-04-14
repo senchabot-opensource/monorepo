@@ -1,6 +1,7 @@
 import { Box, Divider, Tab, Tabs } from "@mui/material";
 import React from "react";
 import VerticalTabPanel from "../../tabpanel/VerticalTabPanel";
+import TwitchBotForm from "src/forms/TwitchBotForm";
 
 function verticalTabPanelProps(index: number) {
   return {
@@ -38,7 +39,9 @@ const BotManagementTab = () => {
         <Tab label="Twitch Bot" {...verticalTabPanelProps(0)} disableRipple />
       </Tabs>
 
-      <VerticalTabPanel value={vTPValue} index={0}></VerticalTabPanel>
+      <VerticalTabPanel value={vTPValue} index={0}>
+        <TwitchBotForm />
+      </VerticalTabPanel>
     </Box>
   );
 };
