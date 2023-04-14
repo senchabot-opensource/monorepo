@@ -57,6 +57,17 @@ func (b *MySQLBackend) CreateTwitchChannel(ctx context.Context, channelId string
 	return false, nil
 }
 
+func (b *MySQLBackend) GetTwitchBotConfig(ctx context.Context, twitchChannelId string, configName string) (*models.TwitchBotConfig, error) {
+	var twitchBotConfig models.TwitchBotConfig
+	result := b.DB.Where("twitch_channel_id = ?", twitchChannelId).Where("config_name = ?", configName).First(&twitchBotConfig)
+
+	if result.Error != nil {
+		return nil, errors.New("(GetTwitchBotConfig) db.First Error:" + result.Error.Error())
+	}
+
+	return &twitchBotConfig, nil
+}
+
 func (b *MySQLBackend) GetBotCommand(ctx context.Context, commandName string, twitchChannelId string) (*models.BotCommand, error) {
 	var botCommand models.BotCommand
 
