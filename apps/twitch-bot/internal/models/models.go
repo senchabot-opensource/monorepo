@@ -9,6 +9,13 @@ type TwitchChannel struct {
 	UserId      *string   `gorm:"column:user_id"`
 }
 
+type TwitchBotConfig struct {
+	ID              int
+	ConfigName      string `gorm:"column:config_name"`
+	ConfigValue     string `gorm:"column:config_value"`
+	TwitchChannelID string `gorm:"column:twitch_channel_id"`
+}
+
 type BotActionActivity struct {
 	ID              int
 	BotPlatformType string  `gorm:"column:bot_platform_type"`

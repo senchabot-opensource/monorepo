@@ -78,6 +78,19 @@ model TwitchChannel {
     @@map("twitch_channels")
 }
 
+model TwitchBotConfigs {
+    id              Int      @id @default(autoincrement())
+    configName      String   @map("config_name")
+    configValue     String   @map("config_value")
+    twitchChannelId String   @map("twitch_channel_id")
+    userId          String?  @map("user_id")
+    user            User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+    createdAt       DateTime @default(now()) @map("created_at")
+
+    @@unique([configName, twitchChannelId])
+    @@map("twitch_bot_configs")
+}
+
 // Necessary for Next auth
 model Account {
     id                String  @id @default(cuid())
@@ -106,15 +119,16 @@ model Session {
 }
 
 model User {
-    id            String          @id @default(cuid())
-    name          String?
-    email         String?         @unique
-    emailVerified DateTime?
-    image         String?
-    accounts      Account[]
-    sessions      Session[]
-    DiscordServer DiscordServer[]
-    TwitchChannel TwitchChannel[]
+    id               String             @id @default(cuid())
+    name             String?
+    email            String?            @unique
+    emailVerified    DateTime?
+    image            String?
+    accounts         Account[]
+    sessions         Session[]
+    DiscordServer    DiscordServer[]
+    TwitchChannel    TwitchChannel[]
+    TwitchBotConfigs TwitchBotConfigs[]
 }
 
 model VerificationToken {

@@ -33,6 +33,15 @@ func (s *SenchabotAPIServer) CreateTwitchChannel(ctx context.Context, channelId 
 	return alreadyJoined, nil
 }
 
+func (s *SenchabotAPIServer) GetTwitchBotConfig(ctx context.Context, twitchChannelId string, configName string) (*models.TwitchBotConfig, error) {
+	configData, err := s.backend.GetTwitchBotConfig(ctx, twitchChannelId, configName)
+	if err != nil {
+		return nil, err
+	}
+
+	return configData, nil
+}
+
 func (s *SenchabotAPIServer) GetBotCommand(ctx context.Context, commandName string, twitchChannelId string) (*models.BotCommand, error) {
 	commandData, err := s.backend.GetBotCommand(ctx, commandName, twitchChannelId)
 	if err != nil {

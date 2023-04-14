@@ -1,6 +1,10 @@
 import { TRPCError } from "@trpc/server";
 import { env } from "../../env/server.mjs";
 import { t } from "../trpc";
+import {
+  TwitchBotConfigMutationInputValidation,
+  TwitchBotConfigQueryInputValidation,
+} from "../../validation/twitchbotconfig";
 
 export const twitchBotRouter = t.router({
   add: t.procedure.mutation(async ({ ctx }) => {
@@ -74,4 +78,72 @@ export const twitchBotRouter = t.router({
       }
     }
   }),
+
+  setConfig: t.procedure
+    .input(TwitchBotConfigMutationInputValidation)
+    .mutation(async ({ input, ctx }) => {
+      const userId = ctx.session?.user?.id;
+
+      if (!userId) return;
+
+      const { configName, configValue } = input;
+
+      const twitchAccount = await ctx.prisma.account.findFirst({
+        where: {
+          userId: userId,
+          provider: "twitch",
+        },
+        select: { providerAccountId: true },
+      });
+
+      const twitchAccId = twitchAccount?.providerAccountId;
+      if (!twitchAccId) return;
+
+      const findConfig = await ctx.prisma.twitchBotConfigs.findFirst({
+        where: { configName: configName, twitchChannelId: twitchAccId },
+      });
+
+      if (findConfig) {
+        return await ctx.prisma.twitchBotConfigs.update({
+          where: {
+            id: findConfig.id,
+          },
+          data: {
+            configName,
+            configValue,
+          },
+        });
+      }
+
+      return await ctx.prisma.twitchBotConfigs.create({
+        data: {
+          configName: configName,
+          configValue: configValue,
+          twitchChannelId: twitchAccId,
+          userId: userId,
+        },
+      });
+    }),
+
+  getConfig: t.procedure
+    .input(TwitchBotConfigQueryInputValidation)
+    .query(async ({ input, ctx }) => {
+      const userId = ctx.session?.user?.id;
+
+      if (!userId) return;
+
+      const { configName } = input;
+
+      const twitchAccount = await ctx.prisma.account.findFirst({
+        where: { userId: userId, provider: "twitch" },
+        select: { providerAccountId: true },
+      });
+
+      const twitchAccId = twitchAccount?.providerAccountId;
+      if (!twitchAccId) return;
+
+      return await prisma?.twitchBotConfigs.findFirst({
+        where: { configName: configName, twitchChannelId: twitchAccId },
+      });
+    }),
 });
