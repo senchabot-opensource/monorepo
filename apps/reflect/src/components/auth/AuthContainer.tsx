@@ -36,21 +36,6 @@ export const AuthContainer = () => {
         <ListItem
           button
           onClick={() =>
-            signIn("github", {
-              callbackUrl: `${window.location.origin}/app`,
-            })
-          }
-          sx={{ "&:hover": { borderRadius: 1 } }}>
-          <ListItemAvatar>
-            <Avatar>
-              <GitHubIcon />
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText primary="with GitHub Account" />
-        </ListItem>
-        <ListItem
-          button
-          onClick={() =>
             signIn("twitch", {
               callbackUrl: `${window.location.origin}/app`,
             })

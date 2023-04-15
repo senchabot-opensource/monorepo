@@ -30,18 +30,6 @@ const LinkAccount = () => {
       </ListItem>
       <ListItem
         button
-        disabled={currentProviders?.includes("github")}
-        onClick={() => signIn("github")}
-        sx={{ "&:hover": { borderRadius: 1 } }}>
-        <ListItemAvatar>
-          <Avatar>
-            <GitHubIcon />
-          </Avatar>
-        </ListItemAvatar>
-        <ListItemText primary="with GitHub Account" />
-      </ListItem>
-      <ListItem
-        button
         disabled={currentProviders?.includes("twitch")}
         onClick={() => signIn("twitch")}
         sx={{ "&:hover": { borderRadius: 1 } }}>
