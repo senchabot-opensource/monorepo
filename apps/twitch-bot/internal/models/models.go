@@ -1,12 +1,10 @@
 package models
 
-import "github.com/google/uuid"
-
 type TwitchChannel struct {
-	ID          uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4()"`
-	ChannelId   string    `gorm:"column:channel_id"`
-	ChannelName string    `gorm:"column:channel_name"`
-	UserId      *string   `gorm:"column:user_id"`
+	ID          int
+	ChannelId   string  `gorm:"column:channel_id"`
+	ChannelName string  `gorm:"column:channel_name"`
+	UserId      *string `gorm:"column:user_id"`
 }
 
 type TwitchBotConfig struct {

@@ -70,7 +70,7 @@ model DiscordServer {
 }
 
 model TwitchChannel {
-    id          String  @id @default(cuid())
+    id          Int     @id @default(autoincrement())
     channelId   String  @unique @map("channel_id")
     channelName String  @map("channel_name")
     userId      String? @map("user_id")
