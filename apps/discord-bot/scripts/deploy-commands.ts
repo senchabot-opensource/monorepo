@@ -11,9 +11,7 @@ const GUILDID = env.GUILDID as string;
 
 const commands: any[] = [];
 const commandsPath = join(__dirname, "../commands");
-const commandFiles = readdirSync(commandsPath).filter((file) =>
-  file.endsWith(".ts")
-);
+const commandFiles = readdirSync(commandsPath);
 
 (async () => {
   for (const file of commandFiles) {

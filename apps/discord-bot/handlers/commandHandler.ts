@@ -6,9 +6,7 @@ export default async (client: IDiscordClient) => {
   console.log("INITIALIZING COMMAND HANDLER");
 
   const commandsPath = join(__dirname, "../commands");
-  const commandFiles = readdirSync(commandsPath).filter((file: any) =>
-    file.endsWith(".ts")
-  );
+  const commandFiles = readdirSync(commandsPath);
 
   for (const file of commandFiles) {
     const filePath = join(commandsPath, file);
