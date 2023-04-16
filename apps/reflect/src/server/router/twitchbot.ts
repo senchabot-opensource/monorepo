@@ -142,7 +142,7 @@ export const twitchBotRouter = t.router({
       const twitchAccId = twitchAccount?.providerAccountId;
       if (!twitchAccId) return;
 
-      return await prisma?.twitchBotConfigs.findFirst({
+      return await ctx.prisma.twitchBotConfigs.findFirst({
         where: { configName: configName, twitchChannelId: twitchAccId },
       });
     }),
