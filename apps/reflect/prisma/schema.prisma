@@ -54,6 +54,7 @@ model BotCommands {
     discordServerId String?  @map("discord_server_id")
     createdAt       DateTime @default(now()) @map("created_at")
 
+    @@unique([commandName, twitchChannelId])
     @@map("bot_commands")
 }
 
