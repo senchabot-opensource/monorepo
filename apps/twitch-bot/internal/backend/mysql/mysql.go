@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 
-	"github.com/google/uuid"
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/backend"
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/models"
 	"gorm.io/gorm"
@@ -43,7 +42,6 @@ func (b *MySQLBackend) CreateTwitchChannel(ctx context.Context, channelId string
 	}
 
 	twitchChannel = append(twitchChannel, models.TwitchChannel{
-		ID:          uuid.New(),
 		ChannelId:   channelId,
 		ChannelName: channelName,
 		UserId:      nil,
