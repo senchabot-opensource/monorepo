@@ -30,12 +30,10 @@ const client = new DiscordClient({
 });
 
 const handlersPath = join(__dirname, "handlers");
-const handlerFiles = readdirSync(handlersPath).filter((file) =>
-  file.endsWith("Handler.ts")
-);
+const handlerFiles = readdirSync(handlersPath);
 handlerFiles.forEach((handlerFile: any) => {
   const filePath = join(handlersPath, handlerFile);
-  import(filePath).then((handler) => handler.default(client));
+  import(filePath).then(handler => handler.default(client));
 });
 
 checkScheduledEvents(client.guilds);
