@@ -55,11 +55,21 @@ export const twitchBotRouter = t.router({
           .then(resp => resp.json())
           .then(data => data);
 
-        return await ctx.prisma.twitchChannel.create({
+        const createChannel = await ctx.prisma.twitchChannel.create({
           data: {
             channelId: twitchAccId,
             channelName: getChannel.data[0].broadcaster_login,
             userId: userId,
+          },
+        });
+
+        if (!createChannel) return;
+
+        await ctx.prisma.botCommands.create({
+          data: {
+            commandName: "lurk",
+            commandContent: "Teşekkürler! {user_name}",
+            twitchChannelId: twitchAccId,
           },
         });
       } else {
