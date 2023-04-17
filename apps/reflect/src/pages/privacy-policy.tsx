@@ -79,7 +79,7 @@ const CookiePolicy = () => {
           </Typography>
         </LandingGrid>
         <Typography sx={{ position: "fixed", bottom: 16, right: 16 }}>
-          pre-alpha
+          pre-alpha v0.1
         </Typography>
       </ThemeProvider>
     </>

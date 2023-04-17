@@ -9,8 +9,7 @@ const EULA = () => {
     <>
       <AppHeader
         title="End-User License Agreement (EULA)"
-        index={false}
-      ></AppHeader>
+        index={false}></AppHeader>
       <ThemeProvider theme={landingDarkTheme}>
         <CssBaseline />
 
@@ -119,7 +118,7 @@ const EULA = () => {
           </Typography>
         </LandingGrid>
         <Typography sx={{ position: "fixed", bottom: 16, right: 16 }}>
-          pre-alpha
+          pre-alpha v0.1
         </Typography>
       </ThemeProvider>
     </>

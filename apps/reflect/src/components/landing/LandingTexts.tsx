@@ -10,16 +10,14 @@ const LandingTexts = () => {
       direction="column"
       justifyContent="flex-end"
       alignItems="center"
-      sx={{ pt: { xs: "none", md: "10vh" }, userSelect: "none" }}
-    >
+      sx={{ pt: { xs: "none", md: "10vh" }, userSelect: "none" }}>
       <Typography
         variant="h1"
         component="div"
         sx={{
           fontFamily: "monospace",
           display: { xs: "none", md: "block" },
-        }}
-      >
+        }}>
         <span style={{ color: "#1FAB89" }}>
           {env.NEXT_PUBLIC_APP_NAME.substring(0, 6)}
         </span>
@@ -35,8 +33,7 @@ const LandingTexts = () => {
           fontFamily: "monospace",
           fontSize: 64,
           display: { xs: "block", md: "none" },
-        }}
-      >
+        }}>
         <span style={{ color: "#1FAB89" }}>
           {env.NEXT_PUBLIC_APP_NAME.substring(0, 6)}
         </span>
@@ -52,8 +49,7 @@ const LandingTexts = () => {
           fontFamily: "Source Code Pro",
           display: { xs: "none", md: "block" },
         }}
-        textAlign="center"
-      >
+        textAlign="center">
         {ALT_TEXT}
       </Typography>
 
@@ -63,8 +59,7 @@ const LandingTexts = () => {
           fontFamily: "Source Code Pro",
           display: { xs: "block", md: "none" },
         }}
-        textAlign="center"
-      >
+        textAlign="center">
         {ALT_TEXT}
       </Typography>
     </Grid>

@@ -54,24 +54,21 @@ const LandingFooter = () => {
     <>
       <Typography
         component="div"
-        sx={{ position: "fixed", bottom: 16, left: 16 }}
-      >
+        sx={{ position: "fixed", bottom: 16, left: 16 }}>
         <Grid item xs={6} sm={4} md={2}>
           <Grid item sx={{ display: "flex" }}>
             <Box
               component="a"
               target="_blank"
               href={env.NEXT_PUBLIC_APP_TWITTER_PROFILE}
-              sx={iconStyle}
-            >
+              sx={iconStyle}>
               <TwitterIcon />
             </Box>
             <Box
               component="a"
               target="_blank"
               href={env.NEXT_PUBLIC_APP_GITHUB_PROFILE}
-              sx={iconStyle}
-            >
+              sx={iconStyle}>
               <GitHubIcon />
             </Box>
           </Grid>
