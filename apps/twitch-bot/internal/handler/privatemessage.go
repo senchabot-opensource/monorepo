@@ -47,7 +47,7 @@ func PrivateMessage(client *client.Clients, server *server.SenchabotAPIServer) {
 
 			if cmdData != nil {
 				if message.RoomID == cmdData.TwitchChannelID {
-					formattedCommandContent := helpers.FormatCommandContent(cmdData.CommandContent, message)
+					formattedCommandContent := helpers.FormatCommandContent(cmdData, message)
 					client.Twitch.Say(message.Channel, formattedCommandContent)
 					configData, err := server.GetTwitchBotConfig(context.Background(), message.RoomID, "bot_activity_enabled")
 					if err != nil {
