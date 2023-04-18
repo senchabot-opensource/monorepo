@@ -4,3 +4,10 @@ export const getDefaultCmdList = async () => {
   });
   return response.json();
 };
+
+export const getFeatureList = async () => {
+  const response = await fetch("/api/features", {
+    method: "GET",
+  });
+  return response.json();
+}
