@@ -1,26 +1,26 @@
 import {
+  Box,
   Button,
   Grid,
+  Link,
   List,
   ListItem,
   Stack,
   Typography,
-  Box,
-  Link,
 } from "@mui/material";
 import { env } from "../../env/client.mjs";
 import { FaDiscord, FaTwitch } from "react-icons/fa";
 import { useEffect, useState } from "react";
-import { getDefaultCmdList } from "../../api";
+import { getDefaultCmdList, getFeatureList } from "../../api";
 import { randomInt } from "next/dist/shared/lib/bloom-filter/utils";
-import { useSession } from "next-auth/react";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { trpc } from "../../utils/trpc";
 
 const ALT_TEXT = "All Bots and Stream overlays, Manage from one place!";
 // Stream overlays: #8b5cf6
 const LandingTexts = () => {
   const [defaultCmdList, setDefaultCmdList] = useState<string[]>([]);
+  const [featureList, setFeatureList] = useState<string[]>([]);
   const { data: session } = useSession();
   const { data: twitchAcc } = trpc.check.checkTwitchAcc.useQuery();
 
@@ -38,6 +38,9 @@ const LandingTexts = () => {
   useEffect(() => {
     getDefaultCmdList().then(res => {
       setDefaultCmdList(res.defaultCmd);
+    });
+    getFeatureList().then(res => {
+      setFeatureList(res.featureList);
     });
   }, []);
 
@@ -168,38 +171,17 @@ const LandingTexts = () => {
         }}>
         {/* TODO: can be edited from the admin panel in the future  */}
         <List>
-          <ListItem>
-            <Typography
-              variant="h6"
-              sx={{ fontFamily: "Source Code Pro", color: "#fff" }}>
-              1) Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-              Fugiat, sequi.
-            </Typography>
-          </ListItem>
-          <ListItem>
-            <Typography
-              variant="h6"
-              sx={{ fontFamily: "Source Code Pro", color: "#fff" }}>
-              2) Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-              Fugiat, sequi.
-            </Typography>
-          </ListItem>
-          <ListItem>
-            <Typography
-              variant="h6"
-              sx={{ fontFamily: "Source Code Pro", color: "#fff" }}>
-              3) Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-              Fugiat, sequi.
-            </Typography>
-          </ListItem>
-          <ListItem>
-            <Typography
-              variant="h6"
-              sx={{ fontFamily: "Source Code Pro", color: "#fff" }}>
-              4) Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-              Fugiat, sequi.
-            </Typography>
-          </ListItem>
+          {featureList.map((feature, index) => {
+            return (
+              <ListItem key={index}>
+                <Typography
+                  variant="h6"
+                  sx={{ fontFamily: "Source Code Pro", color: "#fff" }}>
+                  {index + 1}) {feature}
+                </Typography>
+              </ListItem>
+            );
+          })}
         </List>
       </Stack>
     </Grid>
