@@ -12,6 +12,7 @@ func GetCommands() map[string]func(client *client.Clients, server *server.Sencha
 		"ping":      PingCommand,
 		"invite":    InviteCommand,
 		"senchabot": SenchabotCommand,
+		"sukru":     SukruCommand,
 
 		"acmd": AddCommandCommand,
 		"ucmd": UpdateCommandCommand,
