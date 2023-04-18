@@ -15,12 +15,25 @@ import { getDefaultCmdList } from "../../api";
 import { randomInt } from "next/dist/shared/lib/bloom-filter/utils";
 import { useSession } from "next-auth/react";
 import { signIn } from "next-auth/react";
+import { trpc } from "../../utils/trpc";
 
 const ALT_TEXT = "All Bots and Stream overlays, Manage from one place!";
 // Stream overlays: #8b5cf6
 const LandingTexts = () => {
   const [defaultCmdList, setDefaultCmdList] = useState<string[]>([]);
   const { data: session } = useSession();
+  const { data: twitchAcc } = trpc.check.checkTwitchAcc.useQuery();
+
+  const twitchBotMutate = trpc.twitchBot.add.useMutation({
+    onSuccess() {
+      alert("Twitch bot added");
+    },
+
+    onError(error) {
+      if (!error.shape) return;
+      alert(error.shape.message);
+    },
+  });
 
   useEffect(() => {
     getDefaultCmdList().then(res => {
@@ -124,11 +137,12 @@ const LandingTexts = () => {
         </Button>
         <Button
           onClick={() => {
-            {
-              /*  TODO: get twitch bot if user is logged in  */
-            }
-            if (!session) {
-              signIn("twitch");
+            if (!session || !twitchAcc) {
+              signIn("twitch", {
+                callbackUrl: `${window.location.origin}/api/twitch/get-bot`,
+              });
+            } else {
+              twitchBotMutate.mutate();
             }
           }}
           variant="contained"
@@ -146,6 +160,7 @@ const LandingTexts = () => {
         bgcolor="rgba(50,50,50,0.3)"
         borderRadius="1px"
         marginTop="5%"
+        marginBottom={{ xs: "20%", md: "10%" }}
         marginLeft={{ xs: "2.5%" }}
         marginRight={{ xs: "2.5%" }}
         sx={{
