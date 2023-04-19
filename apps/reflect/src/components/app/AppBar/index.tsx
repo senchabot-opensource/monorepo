@@ -24,6 +24,8 @@ interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
 }
 
+const interfaceURL = "https://interface.senchabot.app";
+  
 const drawerWidth = 240;
 
 const AppBar = styled(MuiAppBar, {
@@ -79,9 +81,9 @@ const ResponsiveAppBar = ({
             <AppBarTitle />
 
             <AppBarButton
-              title="Go to Sencha Web App"
-              pathHref="https://sencha.senchabot.dev"
-              ariaLabel="go to sencha web app"
+              title="Go to Interface"
+              pathHref={interfaceURL}
+              ariaLabel="go to interface"
               drawerHandler={drawerHandler}>
               <MinimizeIcon />
             </AppBarButton>
@@ -91,9 +93,9 @@ const ResponsiveAppBar = ({
 
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }} />
 
-            <Link href="https://sencha.senchabot.dev">
+            <Link href={interfaceURL}
               <IconButton
-                aria-label="go to sencha web app"
+                aria-label="go to interface"
                 sx={{
                   display: { xs: "flex", md: "none" },
                   mr: 1,
