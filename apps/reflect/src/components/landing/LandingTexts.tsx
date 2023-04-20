@@ -126,8 +126,11 @@ const LandingTexts = () => {
         marginLeft={{ xs: "2.5%" }}
         marginRight={{ xs: "2.5%" }}>
         <Button
-          href={`${env.NEXT_PUBLIC_APP_DISCORD_BOT_INVITE_URL}`}
-          component={Link}
+          onClick={() => {
+            signIn("discord", {
+              callbackUrl: `${window.location.origin}/app`,
+            });
+          }}
           variant="contained"
           startIcon={<FaDiscord />}
           sx={{

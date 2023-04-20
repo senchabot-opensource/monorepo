@@ -28,6 +28,7 @@ export const authOptions: NextAuthOptions = {
     DiscordProvider({
       clientId: env.DISCORD_CLIENT_ID,
       clientSecret: env.DISCORD_CLIENT_SECRET,
+      authorization: env.NEXT_PUBLIC_APP_DISCORD_BOT_INVITE_AND_AUTH_URL,
     }),
     GitHubProvider({
       clientId: env.GITHUB_CLIENT_ID,
