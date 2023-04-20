@@ -1,12 +1,8 @@
 import Head from "next/head";
 import { env } from "../../env/client.mjs";
+import { IHeader } from "../../types";
 
-export interface IAppHeader {
-  title: string;
-  index: boolean;
-}
-
-const AppHeader = ({ title, index }: IAppHeader) => {
+const Header = ({ title, index }: IHeader) => {
   return (
     <Head>
       <title>{title + " - " + env.NEXT_PUBLIC_APP_DOMAIN_STRING}</title>
@@ -157,4 +153,4 @@ const AppHeader = ({ title, index }: IAppHeader) => {
   );
 };
 
-export default AppHeader;
+export default Header;

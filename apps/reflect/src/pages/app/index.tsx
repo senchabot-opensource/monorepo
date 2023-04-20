@@ -1,9 +1,10 @@
 import React from "react";
 import { NextPage } from "next";
-import { AppContainer, AppHeader, AppSnackbar } from "../../components/app";
+import { AppContainer, AppSnackbar } from "../../components/app";
 import { Offset } from "../../components/Offset";
-import SystemMessage from "src/components/app/SystemMessage";
-import BotActivity from "src/components/app/BotActivity";
+import SystemMessage from "../../components/app/SystemMessage";
+import BotActivity from "../../components/app/BotActivity";
+import Header from "../../components/common/Header";
 
 const Dashboard: NextPage = () => {
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
@@ -18,7 +19,7 @@ const Dashboard: NextPage = () => {
 
   return (
     <>
-      <AppHeader title="App" index={true} />
+      <Header title="App" index={true} />
       <AppContainer isLoading={isLoading}>
         <AppSnackbar
           isSnackbarOpen={snackbarOpen}

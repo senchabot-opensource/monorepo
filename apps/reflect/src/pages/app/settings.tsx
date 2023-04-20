@@ -1,7 +1,7 @@
 import * as React from "react";
 import { NextPage } from "next";
 import AppContainer from "../../components/app/AppContainer";
-import AppHeader from "../../components/app/AppHeader";
+import Header from "../../components/common/Header";
 import { Paper } from "@mui/material";
 import HorizontalTabPanel from "../../components/tabpanel/HorizontalTabPanel";
 
@@ -27,7 +27,7 @@ const Settings: NextPage = () => {
 
   return (
     <>
-      <AppHeader title="App Settings" index={false} />
+      <Header title="App Settings" index={false} />
       <AppContainer isLoading={isLoading}>
         <Paper
           sx={{ mt: "10px", backgroundColor: "#000", padding: "10px" }}
