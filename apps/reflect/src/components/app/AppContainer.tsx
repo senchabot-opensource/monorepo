@@ -15,6 +15,7 @@ import { useSession } from "next-auth/react";
 import { AuthContainer } from "../auth/AuthContainer";
 import Loading from "../loading/Loading";
 import AppSnackbar from "./AppSnackbar";
+import VersionText from "../common/VersionText";
 
 export interface IAppContainer {
   isLoading: boolean;
@@ -61,9 +62,7 @@ export default function AppContainer({ isLoading, children }: IAppContainer) {
         )
       )}
 
-      <Typography sx={{ position: "fixed", bottom: 16, right: 16 }}>
-        pre-alpha v0.1
-      </Typography>
+      <VersionText />
     </ThemeProvider>
   );
 }

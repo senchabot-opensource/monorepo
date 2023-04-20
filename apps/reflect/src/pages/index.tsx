@@ -7,6 +7,7 @@ import Header from "../components/common/Header";
 import LandingAppBar from "../components/landing/LandingAppBar";
 import LandingTexts from "../components/landing/LandingTexts";
 import LandingFooter from "../components/landing/LandingFooter";
+import VersionText from "src/components/common/VersionText";
 
 const Landing: NextPage = () => {
   return (
@@ -17,9 +18,7 @@ const Landing: NextPage = () => {
         <LandingAppBar />
         <LandingTexts />
 
-        <Typography sx={{ position: "fixed", bottom: 16, right: 16 }}>
-          pre-alpha v0.1
-        </Typography>
+        <VersionText />
 
         <LandingFooter />
       </ThemeProvider>
