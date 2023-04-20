@@ -12,4 +12,8 @@ interface IAppBarButton {
   children: ReactElement;
 }
 
-export type { AnyContextType, IAppBarButton };
+interface ILandingContainer {
+  children: React.ReactNode;
+}
+
+export type { AnyContextType, IAppBarButton, ILandingContainer };
