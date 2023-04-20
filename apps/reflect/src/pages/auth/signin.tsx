@@ -1,7 +1,7 @@
 import React from "react";
 import { useSession } from "next-auth/react";
 import AppContainer from "../../components/app/AppContainer";
-import AppHeader from "../../components/app/AppHeader";
+import Header from "../../components/common/Header";
 import Router from "next/router";
 
 const SignIn = () => {
@@ -11,7 +11,7 @@ const SignIn = () => {
 
   return (
     <>
-      <AppHeader title="Sign In" index={true} />
+      <Header title="Sign In" index={true} />
       <AppContainer isLoading={false}>
         <></>
       </AppContainer>

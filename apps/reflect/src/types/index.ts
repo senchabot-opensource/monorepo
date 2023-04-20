@@ -16,4 +16,9 @@ interface ILandingContainer {
   children: React.ReactNode;
 }
 
-export type { AnyContextType, IAppBarButton, ILandingContainer };
+interface IHeader {
+  title: string;
+  index: boolean;
+}
+
+export type { AnyContextType, IAppBarButton, ILandingContainer, IHeader };
