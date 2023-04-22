@@ -14,8 +14,12 @@ Senchabot apps and packages
 >
 > [`apps/twitch-bot`](./apps/twitch-bot)
 
-## Installation
+## Getting Started
+### Prerequisites
+* Node 18 or later for Reflect, Interface & Discord bot
+* Go 1.19 or later for Twitch bot
 
+### Installation
 1. Clone the repo
    ```sh
    git clone https://github.com/senchabot-dev/monorepo.git
@@ -37,4 +41,6 @@ Senchabot apps and packages
    * [discord-bot](./apps/discord-bot/README.md)
    * [twitch-bot](./apps/twitch-bot/README.md)
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+## Contributing
+Contributions are welcome! If you have a feature request or find a bug, please open an issue on GitHub.
+If you'd like to contribute code, please fork the repository and submit a pull request.
