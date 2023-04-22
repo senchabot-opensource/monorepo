@@ -26,7 +26,6 @@ export default async (client: Client) => {
       console.log("[SUCCESS]", file, "event file loaded.");
     } else {
       console.log("[ERROR]", file, "event file is not loaded.");
-      continue;
     }
   }
 

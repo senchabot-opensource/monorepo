@@ -18,7 +18,6 @@ export default async (client: IDiscordClient) => {
       console.log("[SUCCESS]", file, "command file loaded.");
     } else {
       console.log("[ERROR]", file, "command file is not loaded.");
-      continue;
     }
   }
 
