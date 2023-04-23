@@ -197,4 +197,4 @@ yarn dev
 ```
 
 ## Contributing
-Contributions are always welcome! Please read the [contribution guidelines](./CONTRIBUTING.md) first.
+Contributions are always welcome! Please read the [contribution guidelines](../../CONTRIBUTING.md) first.
