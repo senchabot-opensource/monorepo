@@ -1,15 +1,20 @@
 # Reflect Web App
 
-Reflect is a web app to manage your bots and stream overlays.
+Web application for managing Senchabot, its commands and configuring the bot.
 
 ## Reflect uses
 
+- [React](https://react.dev/)
 - [Next.js](https://nextjs.org)
 - [Next-Auth.js](https://next-auth.js.org)
 - [Prisma](https://prisma.io)
 - [Material UI](https://mui.com)
 - [tRPC](https://trpc.io)
 - [Zod](https://zod.dev)
+- [React Hook Form](https://react-hook-form.com/)
+- [emotion](https://emotion.sh/)
+- [superjson](https://github.com/blitz-js/superjson)
+- [Jotai](https://jotai.org/)
 
 ## Getting Started
 
@@ -59,126 +64,137 @@ yarn dev
 ## Folder Tree
 
 ```bash
-.
-├── README.md
+├── docker-compose.yml
 ├── env.example
-├── next-env.d.ts
 ├── next.config.mjs
-├── package-lock.json
+├── next-env.d.ts
 ├── package.json
-├── pnpm-lock.yaml
 ├── prisma
-│   └── schema.prisma
+│   └── schema.prisma
 ├── public
-│   └── favicon.png
+│   └── favicon.png
+├── README.md
 ├── src
-│   ├── components
-│   │   ├── FormTitle.tsx
-│   │   ├── LibraryText.tsx
-│   │   ├── Offset.tsx
-│   │   ├── Tooltip.tsx
-│   │   ├── TypingEffect.tsx
-│   │   ├── app
-│   │   │   ├── AccountMenu.tsx
-│   │   │   ├── AppBar.tsx
-│   │   │   ├── AppBarButton.tsx
-│   │   │   ├── AppContainer.tsx
-│   │   │   ├── AppDrawer.tsx
-│   │   │   ├── AppHeader.tsx
-│   │   │   ├── AppSearch.tsx
-│   │   │   ├── AppSnackbar.tsx
-│   │   │   ├── Breadcrumb.tsx
-│   │   │   └── index.tsx
-│   │   ├── auth
-│   │   │   ├── AuthContainer.tsx
-│   │   │   ├── AuthDialog.tsx
-│   │   │   └── LinkAccount.tsx
-│   │   ├── button
-│   │   │   └── DeleteAccount.tsx
-│   │   ├── common
-│   │   │   └── AppBarTitle.tsx
-│   │   ├── landing
-│   │   │   ├── LandingAppBar.tsx
-│   │   │   ├── LandingButton.tsx
-│   │   │   ├── LandingFooter.tsx
-│   │   │   └── LandingTexts.tsx
-│   │   ├── loading
-│   │   │   ├── Loading.tsx
-│   │   │   └── LoadingBox.tsx
-│   │   ├── tab
-│   │   │   ├── Display
-│   │   │   │   └── index.tsx
-│   │   │   └── SettingTopTab.tsx
-│   │   └── tabpanel
-│   │       ├── HorizontalTabPanel.tsx
-│   │       └── VerticalTabPanel.tsx
-│   ├── env
-│   │   ├── client.mjs
-│   │   ├── schema.mjs
-│   │   └── server.mjs
-│   ├── forms
-│   │   ├── PrivacyForm.tsx
-│   │   ├── SecurityForm.tsx
-│   │   ├── SenchaDisplayForm.tsx
-│   │   └── TwitchDisplayForm.tsx
-│   ├── pages
-│   │   ├── App.css
-│   │   ├── _app.tsx
-│   │   ├── api
-│   │   │   ├── auth
-│   │   │   │   └── [...nextauth].ts
-│   │   │   ├── restricted.ts
-│   │   │   └── trpc
-│   │   │       └── [trpc].ts
-│   │   ├── app
-│   │   │   ├── index.tsx
-│   │   │   └── settings.tsx
-│   │   ├── auth
-│   │   │   ├── index.tsx
-│   │   │   └── signin.tsx
-│   │   ├── cookie-policy.tsx
-│   │   ├── credits.tsx
-│   │   ├── eula.tsx
-│   │   ├── index.css
-│   │   ├── index.tsx
-│   │   ├── privacy-policy.tsx
-│   │   └── terms.tsx
-│   ├── server
-│   │   ├── common
-│   │   │   └── get-server-auth-session.ts
-│   │   ├── db
-│   │   │   └── client.ts
-│   │   ├── router
-│   │   │   ├── bot.ts
-│   │   │   ├── botactivities.ts
-│   │   │   ├── check.ts
-│   │   │   ├── context.ts
-│   │   │   ├── example.ts
-│   │   │   ├── index.ts
-│   │   │   ├── protected-example-router.ts
-│   │   │   ├── protected-router.ts
-│   │   │   ├── security.ts
-│   │   │   ├── sencha.ts
-│   │   │   ├── theme.ts
-│   │   │   └── twitch.ts
-│   │   └── trpc.ts
-│   ├── styles
-│   │   ├── globals.css
-│   │   └── index.ts
-│   ├── types
-│   │   ├── index.ts
-│   │   └── next-auth.d.ts
-│   ├── utils
-│   │   ├── functions.ts
-│   │   ├── session.ts
-│   │   ├── theme.ts
-│   │   └── trpc.ts
-│   └── validation
-│       ├── color.ts
-│       └── senchaconfig.ts
-└── tsconfig.json
+│   ├── api
+│   │   └── index.ts
+│   ├── components
+│   │   ├── app
+│   │   │   ├── AccountMenu.tsx
+│   │   │   ├── AppBar
+│   │   │   │   ├── AppBarButton.tsx
+│   │   │   │   ├── buttons
+│   │   │   │   │   ├── GetDiscordBotButton.tsx
+│   │   │   │   │   └── GetTwitchBotButton.tsx
+│   │   │   │   └── index.tsx
+│   │   │   ├── AppContainer.tsx
+│   │   │   ├── AppDrawer.tsx
+│   │   │   ├── AppSearch.tsx
+│   │   │   ├── AppSnackbar.tsx
+│   │   │   ├── BotActivity.tsx
+│   │   │   ├── Breadcrumb.tsx
+│   │   │   ├── index.tsx
+│   │   │   └── SystemMessage.tsx
+│   │   ├── auth
+│   │   │   ├── AuthContainer.tsx
+│   │   │   ├── AuthDialog.tsx
+│   │   │   └── LinkAccount.tsx
+│   │   ├── button
+│   │   │   └── DeleteAccount.tsx
+│   │   ├── common
+│   │   │   ├── AppBarTitle.tsx
+│   │   │   ├── Header.tsx
+│   │   │   └── VersionText.tsx
+│   │   ├── FormTitle.tsx
+│   │   ├── landing
+│   │   │   ├── LandingAppBar.tsx
+│   │   │   ├── LandingButton.tsx
+│   │   │   ├── LandingContainer.tsx
+│   │   │   ├── LandingFooter.tsx
+│   │   │   ├── LandingGrid.tsx
+│   │   │   └── LandingTexts.tsx
+│   │   ├── LibraryText.tsx
+│   │   ├── loading
+│   │   │   ├── LoadingBox.tsx
+│   │   │   └── Loading.tsx
+│   │   ├── Offset.tsx
+│   │   ├── tab
+│   │   │   ├── BotManagement
+│   │   │   │   └── index.tsx
+│   │   │   └── SettingTopTab.tsx
+│   │   ├── tabpanel
+│   │   │   ├── HorizontalTabPanel.tsx
+│   │   │   └── VerticalTabPanel.tsx
+│   │   ├── Tooltip.tsx
+│   │   └── TypingEffect.tsx
+│   ├── env
+│   │   ├── client.mjs
+│   │   ├── schema.mjs
+│   │   └── server.mjs
+│   ├── forms
+│   │   ├── PrivacyForm.tsx
+│   │   ├── SecurityForm.tsx
+│   │   └── TwitchBotForm.tsx
+│   ├── pages
+│   │   ├── api
+│   │   │   ├── auth
+│   │   │   │   └── [...nextauth].ts
+│   │   │   ├── cmd
+│   │   │   │   └── index.ts
+│   │   │   ├── discord
+│   │   │   ├── features.ts
+│   │   │   ├── restricted.ts
+│   │   │   ├── trpc
+│   │   │   │   └── [trpc].ts
+│   │   │   └── twitch
+│   │   │       └── get-bot.ts
+│   │   ├── app
+│   │   │   ├── index.tsx
+│   │   │   └── settings.tsx
+│   │   ├── _app.tsx
+│   │   ├── auth
+│   │   │   ├── index.tsx
+│   │   │   └── signin.tsx
+│   │   ├── cookie-policy.tsx
+│   │   ├── credits.tsx
+│   │   ├── eula.tsx
+│   │   ├── index.css
+│   │   ├── index.tsx
+│   │   ├── privacy-policy.tsx
+│   │   └── terms.tsx
+│   ├── server
+│   │   ├── common
+│   │   │   └── get-server-auth-session.ts
+│   │   ├── db
+│   │   │   └── client.ts
+│   │   ├── router
+│   │   │   ├── botactivities.ts
+│   │   │   ├── check.ts
+│   │   │   ├── context.ts
+│   │   │   ├── example.ts
+│   │   │   ├── index.ts
+│   │   │   ├── protected-example-router.ts
+│   │   │   ├── protected-router.ts
+│   │   │   ├── security.ts
+│   │   │   └── twitchbot.ts
+│   │   └── trpc.ts
+│   ├── styles
+│   │   ├── globals.css
+│   │   └── index.ts
+│   ├── types
+│   │   ├── index.ts
+│   │   └── next-auth.d.ts
+│   ├── utils
+│   │   ├── functions.ts
+│   │   ├── session.ts
+│   │   ├── theme.ts
+│   │   └── trpc.ts
+│   └── validation
+│       ├── color.ts
+│       ├── senchaconfig.ts
+│       └── twitchbotconfig.ts
+├── tsconfig.json
+└── vercel.json
 ```
 
 ## Contributing
-
-Feel free to contribute to this project. Just create a pull request with your changes.
+Contributions are always welcome! Please read the [contribution guidelines](./CONTRIBUTING.md) first.
