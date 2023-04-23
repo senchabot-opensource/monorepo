@@ -16,8 +16,8 @@ Senchabot apps and packages
 
 ## Getting Started
 ### Prerequisites
-* Node 18 or later for Reflect, Interface & Discord bot
-* Go 1.19 or later for Twitch bot
+* Git
+* Node.js 18 or higher
 
 ### Installation
 1. Clone the repo
@@ -42,5 +42,4 @@ Senchabot apps and packages
    * [twitch-bot](./apps/twitch-bot/README.md)
 
 ## Contributing
-Contributions are welcome! If you have a feature request or find a bug, please open an issue on GitHub.
-If you'd like to contribute code, please fork the repository and submit a pull request.
+Contributions are always welcome! Please read the [contribution guidelines](./CONTRIBUTING.md) first.
