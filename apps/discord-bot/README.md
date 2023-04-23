@@ -88,3 +88,6 @@
 ├── package.json
 ├── tsconfig.json
 ```
+
+## Contributing
+Contributions are always welcome! Please read the [contribution guidelines](../../CONTRIBUTING.md) first.
