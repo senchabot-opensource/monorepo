@@ -8,7 +8,7 @@ import { env } from "../utils/env";
 
 import dayjs from "dayjs";
 
-export const createLiveStreamEventFromMessage = (
+export const createLiveStreamEventFromMessage = async (
   message: Message,
   params: ICreateLiveStreamEventParams,
 ) => {
@@ -41,6 +41,14 @@ export const createLiveStreamEventFromMessage = (
   } else {
     eventName = processedMsgContent;
   }
+
+  const scheduledEvents = await message.guild.scheduledEvents.fetch();
+
+  const sameEventFound = scheduledEvents.find(event =>
+    event.entityMetadata?.location?.includes(url),
+  );
+
+  if (sameEventFound) return;
 
   eventName = eventName.substring(0, 99);
 
