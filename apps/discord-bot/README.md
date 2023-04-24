@@ -39,6 +39,11 @@
 * `/purge` - "This command will delete the most recent 100 messages containing a specified character string in the text channel where the command was run, or messages sent by a user whose username or nickname contains the specified character string"
 * `/event purge` - "This command will delete any scheduled events in the guild where the command was run"
 * `/voice` - "Create dynamic voice channels"
+* `/invite` - "Prints Senchabot invite url"
+* `/ping` - "Pongs : D"
+
+## Features
+* [Live Stream Scheduled Events](./docs/features/live-stream-scheduled-events.md)
 
 ## Structure
 
