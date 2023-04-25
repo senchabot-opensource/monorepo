@@ -1,5 +1,7 @@
 package models
 
+import "time"
+
 type TwitchChannel struct {
 	ID          int
 	ChannelId   string  `gorm:"column:channel_id"`
@@ -24,10 +26,11 @@ type BotActionActivity struct {
 
 type BotCommand struct {
 	ID              int
-	CommandName     string `gorm:"column:command_name"`
-	CommandContent  string `gorm:"column:command_content"`
-	TwitchChannelID string `gorm:"column:twitch_channel_id"`
-	DiscordServerID string `gorm:"column:discord_server_id"`
+	CommandName     string     `gorm:"column:command_name"`
+	CommandContent  string     `gorm:"column:command_content"`
+	TwitchChannelID string     `gorm:"column:twitch_channel_id"`
+	DiscordServerID string     `gorm:"column:discord_server_id"`
+	CreatedAt       *time.Time `gorm:"column:created_at"`
 }
 
 func GetOptionalCommands() []BotCommand {
