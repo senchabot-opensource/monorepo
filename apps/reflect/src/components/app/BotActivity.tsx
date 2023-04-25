@@ -40,8 +40,18 @@ const BotActivity = () => {
                     )}
                   </ListItemIcon>
                   <ListItemText
-                    primary={activity.botActivity}
-                    secondary={activity.activityDate.toDateString()}
+                    primary={
+                      (activity.botActivity.startsWith("!")
+                        ? "Command executed: "
+                        : "") + activity.botActivity
+                    }
+                    secondary={
+                      activity.activityDate.toDateString() +
+                      " / " +
+                      (activity.commandAuthor
+                        ? activity.commandAuthor
+                        : "Senchabot")
+                    }
                   />
                 </ListItem>
               ))
