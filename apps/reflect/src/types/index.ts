@@ -21,4 +21,13 @@ interface IHeader {
   index: boolean;
 }
 
-export type { AnyContextType, IAppBarButton, ILandingContainer, IHeader };
+interface IBotCommand {
+  id: number;
+  commandName: string;
+  commandContent: string;
+  twitchChannelId: string | null;
+  discordServerId: string | null;
+  createdAt: Date;
+}
+
+export type { AnyContextType, IAppBarButton, ILandingContainer, IBotCommand };
