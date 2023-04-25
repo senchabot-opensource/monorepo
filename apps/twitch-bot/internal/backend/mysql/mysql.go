@@ -77,7 +77,7 @@ func (b *MySQLBackend) GetBotCommand(ctx context.Context, commandName string, tw
 	return &botCommand, nil
 }
 
-func (b *MySQLBackend) CreateBotCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string) (bool, error) {
+func (b *MySQLBackend) CreateBotCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string, createdBy string) (bool, error) {
 	var botCommand []models.BotCommand
 
 	result := b.DB.Where("command_name = ?", commandName).Where("twitch_channel_id", twitchChannelId).Find(&botCommand)
@@ -92,6 +92,7 @@ func (b *MySQLBackend) CreateBotCommand(ctx context.Context, commandName string,
 		CommandName:     commandName,
 		CommandContent:  commandContent,
 		TwitchChannelID: twitchChannelId,
+		CreatedBy:       &createdBy,
 	})
 
 	result = b.DB.Create(&botCommand)
@@ -102,7 +103,7 @@ func (b *MySQLBackend) CreateBotCommand(ctx context.Context, commandName string,
 	return false, nil
 }
 
-func (b *MySQLBackend) UpdateBotCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string) error {
+func (b *MySQLBackend) UpdateBotCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string, updatedBy string) error {
 	var botCommand *models.BotCommand
 
 	result := b.DB.Where("command_name = ?", commandName).Where("twitch_channel_id = ?", twitchChannelId).First(&botCommand)
@@ -112,6 +113,7 @@ func (b *MySQLBackend) UpdateBotCommand(ctx context.Context, commandName string,
 
 	result = b.DB.Model(&botCommand).Updates(models.BotCommand{
 		CommandContent: commandContent,
+		UpdatedBy:      &updatedBy,
 	})
 	if result.Error != nil {
 		return errors.New("(UpdateBotCommand) db.Update Error:" + result.Error.Error())
