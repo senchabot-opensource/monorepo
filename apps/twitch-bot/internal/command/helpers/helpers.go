@@ -16,10 +16,21 @@ var (
 
 func FormatCommandContent(commandData *models.BotCommand, message twitch.PrivateMessage) string {
 	msgContent := commandData.CommandContent
-	msgContent = strings.ReplaceAll(msgContent, "{user_name}", message.User.DisplayName)
-	msgContent = strings.ReplaceAll(msgContent, "{random_number}", strconv.Itoa(rand.Intn(max-min)+min))
-	msgContent = strings.ReplaceAll(msgContent, "{date}", message.Time.Format("2006-01-02"))
-	msgContent = strings.ReplaceAll(msgContent, "{cmd_date}", commandData.CreatedAt.Format("2006-01-02"))
+
+	userName := message.User.DisplayName
+	dateTemplate := "02/01/2006"
+
+	stringTemplates := map[string]string{
+		"{user_name}":      userName,
+		"{command_author}": userName,
+		"{random_number}":  strconv.Itoa(rand.Intn(max-min) + min),
+		"{date}":           message.Time.Format(dateTemplate),
+		"{cmd_date}":       commandData.CreatedAt.Format(dateTemplate),
+	}
+
+	for k, v := range stringTemplates {
+		msgContent = strings.ReplaceAll(msgContent, k, v)
+	}
 
 	return msgContent
 }
