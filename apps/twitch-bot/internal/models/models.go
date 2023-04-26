@@ -33,6 +33,15 @@ type BotCommand struct {
 	CreatedAt       *time.Time `gorm:"column:created_at"`
 }
 
+type BotCommandAlias struct {
+	ID              int
+	CommandAlias    string     `gorm:"column:command_alias"`
+	CommandName     string     `gorm:"column:command_name"`
+	TwitchChannelID *string    `gorm:"column:twitch_channel_id"`
+	DiscordServerID *string    `gorm:"column:discord_server_id"`
+	CreatedAt       *time.Time `gorm:"column:created_at"`
+}
+
 func GetOptionalCommands() []BotCommand {
 	var commands []BotCommand
 

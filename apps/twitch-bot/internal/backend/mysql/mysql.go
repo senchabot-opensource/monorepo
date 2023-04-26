@@ -102,6 +102,20 @@ func (b *MySQLBackend) CreateBotCommand(ctx context.Context, commandName string,
 	return false, nil
 }
 
+func (b *MySQLBackend) CheckCommandExists(ctx context.Context, commandName string, twitchChannelId string) (bool, error) {
+	var botCommand []models.BotCommand
+
+	result := b.DB.Where("command_name = ?", commandName).Where("twitch_channel_id", twitchChannelId).Find(&botCommand)
+	if result.Error != nil {
+		return false, errors.New("(CheckCommandExists) db.Find Error:" + result.Error.Error())
+	}
+	if len(botCommand) > 0 {
+		return true, nil
+	}
+
+	return false, nil
+}
+
 func (b *MySQLBackend) UpdateBotCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string) error {
 	var botCommand *models.BotCommand
 
@@ -147,6 +161,77 @@ func (b *MySQLBackend) CreateBotActionActivity(ctx context.Context, botPlatformT
 
 	if result.Error != nil {
 		return errors.New("(CreateBotActionActivity) db.Create Error:" + result.Error.Error())
+	}
+
+	return nil
+}
+
+func (b *MySQLBackend) CreateCommandAliases(ctx context.Context, commandName string, aliases []string, twitchChannelId string) (*string, error) {
+	commandAliases := []models.BotCommandAlias{}
+
+	for _, commandAlias := range aliases {
+		existAlias, err := b.CheckCommandAlias(ctx, commandAlias, twitchChannelId)
+		if err != nil {
+			return nil, err
+		}
+
+		if existAlias != nil {
+			return existAlias, nil
+		}
+
+		commandAlias := models.BotCommandAlias{
+			CommandAlias:    commandAlias,
+			CommandName:     commandName,
+			TwitchChannelID: &twitchChannelId,
+		}
+		commandAliases = append(commandAliases, commandAlias)
+	}
+
+	err := b.DB.Save(&commandAliases).Error
+	if err != nil {
+		return nil, errors.New("(CreateCommandAliases) db.Save Error:" + err.Error())
+	}
+
+	return nil, nil
+}
+
+func (b *MySQLBackend) GetCommandAlias(ctx context.Context, command string, twitchChannelId string) (*string, error) {
+	var commandAlias models.BotCommandAlias
+
+	err := b.DB.Where("command_alias = ?", command).Where("twitch_channel_id = ?", twitchChannelId).First(&commandAlias).Error
+	if err != nil {
+		return nil, errors.New("(GetCommandAlias) db.Find Error:" + err.Error())
+	}
+
+	return &commandAlias.CommandName, nil
+}
+
+func (b *MySQLBackend) CheckCommandAlias(ctx context.Context, commandAlias string, twitchChannelId string) (*string, error) {
+	var commandAliasModel []models.BotCommandAlias
+
+	result := b.DB.Where("command_alias = ?", commandAlias).Where("twitch_channel_id", twitchChannelId).Find(&commandAliasModel)
+	if result.Error != nil {
+		return nil, errors.New("(CheckCommandAlias) db.Find Error:" + result.Error.Error())
+	}
+
+	if len(commandAliasModel) > 0 {
+		return &commandAliasModel[0].CommandAlias, nil
+	}
+
+	return nil, nil
+}
+
+func (b *MySQLBackend) DeleteCommandAlias(ctx context.Context, commandAlias string, twitchChannelId string) error {
+	var commandAliasModel *models.BotCommandAlias
+
+	result := b.DB.Where("command_alias = ?", commandAlias).Where("twitch_channel_id = ?", twitchChannelId).First(&commandAliasModel)
+	if result.Error != nil {
+		return errors.New("(DeleteCommandAlias) db.First Error:" + result.Error.Error())
+	}
+
+	result = b.DB.Delete(&commandAliasModel)
+	if result.Error != nil {
+		return errors.New("(DeleteCommandAlias) db.Delete Error:" + result.Error.Error())
 	}
 
 	return nil
