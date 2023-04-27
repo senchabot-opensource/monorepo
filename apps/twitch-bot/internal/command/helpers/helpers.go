@@ -21,11 +21,11 @@ func FormatCommandContent(commandData *models.BotCommand, message twitch.Private
 	dateTemplate := "02/01/2006"
 
 	stringTemplates := map[string]string{
-		"{user_name}":      userName,
-		"{command_author}": userName,
-		"{random_number}":  strconv.Itoa(rand.Intn(max-min) + min),
-		"{date}":           message.Time.Format(dateTemplate),
-		"{cmd_date}":       commandData.CreatedAt.Format(dateTemplate),
+		"{user.name}":     userName,
+		"{cmd.author}":    userName,
+		"{random_number}": strconv.Itoa(rand.Intn(max-min) + min),
+		"{date}":          message.Time.Format(dateTemplate),
+		"{cmd.date}":      commandData.CreatedAt.Format(dateTemplate),
 	}
 
 	for k, v := range stringTemplates {
