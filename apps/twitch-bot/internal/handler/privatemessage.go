@@ -30,7 +30,7 @@ func PrivateMessage(client *client.Clients, server *server.SenchabotAPIServer) {
 
 				if configData != nil {
 					if configData.ConfigValue == "1" {
-						if err := server.CreateBotActionActivity(context.Background(), "twitch", cmd, message.RoomID); err != nil {
+						if err := server.CreateBotActionActivity(context.Background(), "twitch", cmd, message.RoomID, message.User.DisplayName); err != nil {
 							fmt.Println(err.Error())
 						}
 					}
@@ -65,7 +65,7 @@ func PrivateMessage(client *client.Clients, server *server.SenchabotAPIServer) {
 
 					if configData != nil {
 						if configData.ConfigValue == "1" {
-							if err := server.CreateBotActionActivity(context.Background(), "twitch", cmd, message.RoomID); err != nil {
+							if err := server.CreateBotActionActivity(context.Background(), "twitch", cmd, message.RoomID, message.User.DisplayName); err != nil {
 								fmt.Println(err.Error())
 							}
 						}

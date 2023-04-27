@@ -51,8 +51,8 @@ func (s *SenchabotAPIServer) GetBotCommand(ctx context.Context, commandName stri
 	return commandData, nil
 }
 
-func (s *SenchabotAPIServer) CreateBotCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string) (bool, error) {
-	commandExists, err := s.backend.CreateBotCommand(ctx, commandName, commandContent, twitchChannelId)
+func (s *SenchabotAPIServer) CreateBotCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string, createdBy string) (bool, error) {
+	commandExists, err := s.backend.CreateBotCommand(ctx, commandName, commandContent, twitchChannelId, createdBy)
 	if err != nil {
 		return false, err
 	}
@@ -69,8 +69,8 @@ func (s *SenchabotAPIServer) CheckCommandExists(ctx context.Context, commandName
 	return check, nil
 }
 
-func (s *SenchabotAPIServer) UpdateBotCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string) error {
-	err := s.backend.UpdateBotCommand(ctx, commandName, commandContent, twitchChannelId)
+func (s *SenchabotAPIServer) UpdateBotCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string, updatedBy string) error {
+	err := s.backend.UpdateBotCommand(ctx, commandName, commandContent, twitchChannelId, updatedBy)
 	if err != nil {
 		return err
 	}
@@ -87,8 +87,8 @@ func (s *SenchabotAPIServer) DeleteBotCommand(ctx context.Context, commandName s
 	return nil
 }
 
-func (s *SenchabotAPIServer) CreateBotActionActivity(ctx context.Context, botPlatformType string, botActivity string, twitchChannelId string) error {
-	err := s.backend.CreateBotActionActivity(ctx, botPlatformType, botActivity, twitchChannelId)
+func (s *SenchabotAPIServer) CreateBotActionActivity(ctx context.Context, botPlatformType string, botActivity string, twitchChannelId string, commandAuthor string) error {
+	err := s.backend.CreateBotActionActivity(ctx, botPlatformType, "!"+botActivity, twitchChannelId, commandAuthor)
 
 	if err != nil {
 		return err

@@ -18,40 +18,40 @@ Web application for managing Senchabot, its commands and configuring the bot.
 
 ## Getting Started
 
-First, clone the repository:
+1. Clone the repository
 
-```bash
-git clone https://github.com/your-username/monorepo.git
-cd monorepo
-```
+   ```sh
+   git clone https://github.com/senchabot-dev/monorepo.git
+   cd monorepo
+   ```
 
-Next, install the dependencies:
+2. Install the dependencies
 
-```bash
-npm install
-# or
-yarn install
-```
+   ```sh
+   npm install
+   # or
+   yarn install
+   ```
 
-Create a `.env` file based on the example file `env.example`:
+3. Create a `.env` file based on the example file `env.example`
 
-```bash
-cp env.example .env
-```
+   ```sh
+   cp env.example .env
+   ```
 
-Run the `Prisma` migration to create the tables:
+4. Let's build up a Docker container for Postgres database
 
-```bash
-npx prisma db push
-```
+   ```sh
+   docker-compose up --build
+   # If you want to run the Docker container in the background, run this command instead of the command above:
+   docker-compose up -d
+   ```
 
-## Docker
+5. Run the `Prisma` migration to create the tables
 
-To run the app in a Docker container, run:
-
-```bash
-docker-compose up --build
-```
+   ```sh
+   npx prisma db push
+   ```
 
 Finally, start the development server:
 
@@ -197,4 +197,5 @@ yarn dev
 ```
 
 ## Contributing
+
 Contributions are always welcome! Please read the [contribution guidelines](../../CONTRIBUTING.md) first.

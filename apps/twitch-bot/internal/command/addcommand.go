@@ -39,7 +39,7 @@ func AddCommandCommand(client *client.Clients, server *server.SenchabotAPIServer
 		client.Twitch.Say(message.Channel, message.User.DisplayName+", Command Content length must be no more than 400 chars")
 		return
 	}
-	commandExists, err := server.CreateBotCommand(context.Background(), newCommandName, newCommandContent, message.RoomID)
+	commandExists, err := server.CreateBotCommand(context.Background(), newCommandName, newCommandContent, message.RoomID, message.User.DisplayName)
 	if err != nil {
 		fmt.Println(err.Error())
 		return
