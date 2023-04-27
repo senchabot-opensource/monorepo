@@ -17,5 +17,5 @@ type Backend interface {
 	UpdateBotCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string) error
 	DeleteBotCommand(ctx context.Context, commandName string, twitchChannelId string) error
 
-	CreateBotActionActivity(ctx context.Context, botPlatformType string, botActivity string, twitchChannelId string) error
+	CreateBotActionActivity(ctx context.Context, botPlatformType string, botActivity string, twitchChannelId string, commandAuthor string) error
 }

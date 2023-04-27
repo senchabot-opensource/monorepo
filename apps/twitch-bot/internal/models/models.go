@@ -22,6 +22,7 @@ type BotActionActivity struct {
 	BotActivity     string  `gorm:"column:bot_activity"`
 	DiscordServerID *string `gorm:"column:discord_server_id"`
 	TwitchChannelID *string `gorm:"column:twitch_channel_id"`
+	CommandAuthor   *string `gorm:"column:command_author"`
 }
 
 type BotCommand struct {

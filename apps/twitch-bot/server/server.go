@@ -78,8 +78,8 @@ func (s *SenchabotAPIServer) DeleteBotCommand(ctx context.Context, commandName s
 	return nil
 }
 
-func (s *SenchabotAPIServer) CreateBotActionActivity(ctx context.Context, botPlatformType string, botActivity string, twitchChannelId string) error {
-	err := s.backend.CreateBotActionActivity(ctx, botPlatformType, botActivity, twitchChannelId)
+func (s *SenchabotAPIServer) CreateBotActionActivity(ctx context.Context, botPlatformType string, botActivity string, twitchChannelId string, commandAuthor string) error {
+	err := s.backend.CreateBotActionActivity(ctx, botPlatformType, "!"+botActivity, twitchChannelId, commandAuthor)
 
 	if err != nil {
 		return err
