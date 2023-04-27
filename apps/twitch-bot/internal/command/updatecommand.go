@@ -35,7 +35,7 @@ func UpdateCommandCommand(client *client.Clients, server *server.SenchabotAPISer
 		client.Twitch.Say(message.Channel, message.User.DisplayName+", Command Content length must be no more than 400 chars")
 		return
 	}
-	err := server.UpdateBotCommand(context.Background(), command_name, newCommandContent, message.RoomID)
+	err := server.UpdateBotCommand(context.Background(), command_name, newCommandContent, message.RoomID, message.User.DisplayName)
 	if err != nil {
 		fmt.Println(err.Error())
 		return

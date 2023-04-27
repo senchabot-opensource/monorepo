@@ -51,8 +51,8 @@ func (s *SenchabotAPIServer) GetBotCommand(ctx context.Context, commandName stri
 	return commandData, nil
 }
 
-func (s *SenchabotAPIServer) CreateBotCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string) (bool, error) {
-	commandExists, err := s.backend.CreateBotCommand(ctx, commandName, commandContent, twitchChannelId)
+func (s *SenchabotAPIServer) CreateBotCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string, createdBy string) (bool, error) {
+	commandExists, err := s.backend.CreateBotCommand(ctx, commandName, commandContent, twitchChannelId, createdBy)
 	if err != nil {
 		return false, err
 	}
@@ -60,8 +60,8 @@ func (s *SenchabotAPIServer) CreateBotCommand(ctx context.Context, commandName s
 	return commandExists, nil
 }
 
-func (s *SenchabotAPIServer) UpdateBotCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string) error {
-	err := s.backend.UpdateBotCommand(ctx, commandName, commandContent, twitchChannelId)
+func (s *SenchabotAPIServer) UpdateBotCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string, updatedBy string) error {
+	err := s.backend.UpdateBotCommand(ctx, commandName, commandContent, twitchChannelId, updatedBy)
 	if err != nil {
 		return err
 	}
