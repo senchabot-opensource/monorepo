@@ -80,11 +80,11 @@ func (b *MySQLBackend) GetBotCommand(ctx context.Context, commandName string, tw
 func (b *MySQLBackend) CreateBotCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string, createdBy string) (bool, error) {
 	var botCommand []models.BotCommand
 
-	result := b.DB.Where("command_name = ?", commandName).Where("twitch_channel_id", twitchChannelId).Find(&botCommand)
-	if result.Error != nil {
-		return false, errors.New("(CreateBotCommand) db.Find Error:" + result.Error.Error())
+	commandExist, err := b.CheckCommandExists(ctx, commandName, twitchChannelId)
+	if err != nil {
+		return false, err
 	}
-	if len(botCommand) > 0 {
+	if commandExist {
 		return true, nil
 	}
 
@@ -95,7 +95,7 @@ func (b *MySQLBackend) CreateBotCommand(ctx context.Context, commandName string,
 		CreatedBy:       &createdBy,
 	})
 
-	result = b.DB.Create(&botCommand)
+	result := b.DB.Create(&botCommand)
 	if result.Error != nil {
 		return false, errors.New("(CreateBotCommand) db.Create Error:" + result.Error.Error())
 	}
