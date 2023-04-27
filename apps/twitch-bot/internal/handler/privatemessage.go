@@ -39,6 +39,15 @@ func PrivateMessage(client *client.Clients, server *server.SenchabotAPIServer) {
 			}
 
 			// HANDLE CUSTOM COMMANDS
+			commandAlias, cmdAliasErr := server.GetCommandAlias(context.Background(), cmd, message.RoomID)
+			if cmdAliasErr != nil {
+				fmt.Println(cmdAliasErr.Error())
+			}
+
+			if commandAlias != nil {
+				cmd = *commandAlias
+			}
+
 			cmdData, err := server.GetBotCommand(context.Background(), cmd, message.RoomID)
 			if err != nil {
 				fmt.Println(err.Error())
