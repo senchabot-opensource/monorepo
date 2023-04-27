@@ -5,7 +5,9 @@ import (
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/server"
 )
 
-func InitHandlers(client *client.Clients, server *server.SenchabotAPIServer) {
+func InitHandlers(client *client.Clients, server *server.SenchabotAPIServer) []string {
 	PrivateMessage(client, server)
-	BotJoin(client, server)
+	joinedChannelList := BotJoin(client, server)
+
+	return joinedChannelList
 }
