@@ -21,7 +21,7 @@ type Backend interface {
 	CreateBotActionActivity(ctx context.Context, botPlatformType string, botActivity string, twitchChannelId string, commandAuthor string) error
 
 	GetCommandAlias(ctx context.Context, commandAlias string, twitchChannelId string) (*string, error)
-	CreateCommandAliases(ctx context.Context, commandName string, aliases []string, twitchChannelId string) (*string, error)
+	CreateCommandAliases(ctx context.Context, commandName string, aliases []string, twitchChannelId string, createdBy string) (*string, error)
 	CheckCommandAlias(ctx context.Context, commandAlias string, twitchChannelId string) (*string, error)
 	DeleteCommandAlias(ctx context.Context, commandAlias string, twitchChannelId string) error
 }

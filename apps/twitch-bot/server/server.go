@@ -97,8 +97,8 @@ func (s *SenchabotAPIServer) CreateBotActionActivity(ctx context.Context, botPla
 	return nil
 }
 
-func (s *SenchabotAPIServer) CreateCommandAliases(ctx context.Context, commandName string, aliases []string, twitchChannelId string) (*string, error) {
-	existAlias, err := s.backend.CreateCommandAliases(ctx, commandName, aliases, twitchChannelId)
+func (s *SenchabotAPIServer) CreateCommandAliases(ctx context.Context, commandName string, aliases []string, twitchChannelId string, createdBy string) (*string, error) {
+	existAlias, err := s.backend.CreateCommandAliases(ctx, commandName, aliases, twitchChannelId, createdBy)
 	if err != nil {
 		return nil, err
 	}

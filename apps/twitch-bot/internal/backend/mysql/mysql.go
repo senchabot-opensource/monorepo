@@ -169,7 +169,7 @@ func (b *MySQLBackend) CreateBotActionActivity(ctx context.Context, botPlatformT
 	return nil
 }
 
-func (b *MySQLBackend) CreateCommandAliases(ctx context.Context, commandName string, aliases []string, twitchChannelId string) (*string, error) {
+func (b *MySQLBackend) CreateCommandAliases(ctx context.Context, commandName string, aliases []string, twitchChannelId string, createdBy string) (*string, error) {
 	commandAliases := []models.BotCommandAlias{}
 
 	for _, commandAlias := range aliases {
@@ -186,6 +186,7 @@ func (b *MySQLBackend) CreateCommandAliases(ctx context.Context, commandName str
 			CommandAlias:    commandAlias,
 			CommandName:     commandName,
 			TwitchChannelID: &twitchChannelId,
+			CreatedBy:       createdBy,
 		}
 		commandAliases = append(commandAliases, commandAlias)
 	}

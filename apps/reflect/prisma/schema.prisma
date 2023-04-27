@@ -67,6 +67,7 @@ model BotCommandAliases {
     commandName     String   @map("command_name") @db.Text
     twitchChannelId String?  @map("twitch_channel_id")
     discordServerId String?  @map("discord_server_id")
+    createdBy       String   @map("created_by")
     createdAt       DateTime @default(now()) @map("created_at")
 
     @@map("bot_command_aliases")

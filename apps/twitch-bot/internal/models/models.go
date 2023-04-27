@@ -42,6 +42,7 @@ type BotCommandAlias struct {
 	CommandName     string     `gorm:"column:command_name"`
 	TwitchChannelID *string    `gorm:"column:twitch_channel_id"`
 	DiscordServerID *string    `gorm:"column:discord_server_id"`
+	CreatedBy       string     `gorm:"column:created_by"`
 	CreatedAt       *time.Time `gorm:"column:created_at"`
 }
 
