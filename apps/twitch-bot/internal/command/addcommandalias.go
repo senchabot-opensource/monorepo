@@ -18,7 +18,7 @@ func AddCommandAliasCommand(client *client.Clients, server *server.SenchabotAPIS
 		return
 	}
 	if len(params) < 2 {
-		client.Twitch.Say(message.Channel, ADD_COMMAND_INFO)
+		client.Twitch.Say(message.Channel, ADD_COMMAND_ALIAS_INFO)
 		return
 	}
 	var command = strings.ToLower(params[0])
