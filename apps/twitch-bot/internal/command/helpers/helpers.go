@@ -23,3 +23,26 @@ func FormatCommandContent(commandData *models.BotCommand, message twitch.Private
 
 	return msgContent
 }
+
+func CanExecuteCommand(message twitch.PrivateMessage) bool {
+	// broadcaster can run the command
+	if isBroadcaster(message.Tags["badges"]) {
+		return true
+	}
+
+	// moderator can run the command
+	if isModerator(message.Tags["badges"]) {
+		return true
+	}
+
+	// everyone else can't run the command
+	return false
+}
+
+func isBroadcaster(badgeTags string) bool {
+	return strings.Contains(badgeTags, "broadcaster")
+}
+
+func isModerator(badgeTags string) bool {
+	return strings.Contains(badgeTags, "moderator")
+}
