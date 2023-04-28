@@ -1,20 +1,45 @@
 import React from "react";
 import {
+  AccordionDetails,
+  AccordionSummary,
   IconButton,
   List,
   ListItem,
-  ListItemButton,
   ListItemIcon,
   ListItemText,
   ListSubheader,
   Paper,
   Stack,
   Switch,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  styled,
 } from "@mui/material";
+import MuiAccordion, { AccordionProps } from "@mui/material/Accordion";
 import ClearIcon from "@mui/icons-material/Clear";
 import { trpc } from "../../utils/trpc";
 import LoadingBox from "../loading/LoadingBox";
 import { IBotCommand } from "../../types";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+
+const Accordion = styled((props: AccordionProps) => (
+  <MuiAccordion
+    elevation={0}
+    square={false}
+    disableGutters={false}
+    {...props}
+  />
+))(({ theme }) => ({
+  "&:not(:last-child)": {
+    borderBottom: 0,
+  },
+  "&:before": {
+    display: "none",
+  },
+}));
 
 const CommandList = () => {
   const commandList = trpc.command.getCommandList.useQuery();
@@ -76,37 +101,79 @@ const CommandList = () => {
                 const labelId = `switch-list-label-${command.id}`;
 
                 return (
-                  <ListItem
-                    key={index}
-                    secondaryAction={
-                      <ListItemIcon>
-                        <Switch
-                          edge="end"
-                          onChange={handleToggle(command.id)}
-                          checked={checked.indexOf(command.id) !== -1}
-                          inputProps={{
-                            "aria-labelledby": labelId,
-                          }}
-                        />
-                      </ListItemIcon>
-                    }
-                    disablePadding>
-                    <ListItemButton dense>
-                      {
-                        <ListItemIcon onClick={() => handleDelete(command.id)}>
-                          <IconButton
-                            edge="end"
-                            aria-label="delele the command">
-                            <ClearIcon />
-                          </IconButton>
-                        </ListItemIcon>
-                      }
-                      <ListItemText
-                        primary={command.commandName}
-                        secondary={command.commandContent}
-                      />
-                    </ListItemButton>
-                  </ListItem>
+                  <>
+                    <Accordion sx={{ backgroundColor: "#000" }}>
+                      <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="panel1a-content"
+                        id="panel1a-header"
+                        sx={{ backgroundColor: "#000" }}>
+                        <ListItem
+                          dense
+                          key={index}
+                          secondaryAction={
+                            <ListItemIcon>
+                              <Switch
+                                edge="end"
+                                onChange={handleToggle(command.id)}
+                                checked={checked.indexOf(command.id) !== -1}
+                                inputProps={{
+                                  "aria-labelledby": labelId,
+                                }}
+                              />
+                            </ListItemIcon>
+                          }
+                          disablePadding>
+                          {
+                            <ListItemIcon
+                              onClick={() => handleDelete(command.id)}>
+                              <IconButton
+                                edge="end"
+                                aria-label="delele the command">
+                                <ClearIcon />
+                              </IconButton>
+                            </ListItemIcon>
+                          }
+                          <ListItemText
+                            primary={command.commandName}
+                            secondary="Aliases: No data."
+                          />
+                        </ListItem>
+                      </AccordionSummary>
+                      <AccordionDetails sx={{ backgroundColor: "#000" }}>
+                        <Table aria-label="simple table">
+                          <TableHead>
+                            <TableRow>
+                              <TableCell align="left">
+                                Created&nbsp;At
+                              </TableCell>
+                              <TableCell align="left">
+                                Created&nbsp;By
+                              </TableCell>
+                              <TableCell align="left">
+                                Updated&nbsp;By
+                              </TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            <TableRow
+                              key={index}
+                              sx={{
+                                "&:last-child td, &:last-child th": {
+                                  border: 0,
+                                },
+                              }}>
+                              <TableCell align="left">
+                                {command.createdAt.toDateString()}
+                              </TableCell>
+                              <TableCell align="left">corefun</TableCell>
+                              <TableCell align="left">corefun</TableCell>
+                            </TableRow>
+                          </TableBody>
+                        </Table>
+                      </AccordionDetails>
+                    </Accordion>
+                  </>
                 );
               })
             ) : (
