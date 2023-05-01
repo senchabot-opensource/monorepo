@@ -30,7 +30,7 @@ func PrivateMessage(client *client.Clients, server *server.SenchabotAPIServer) {
 
 				if configData != nil {
 					if configData.ConfigValue == "1" {
-						if err := server.CreateBotActionActivity(context.Background(), "twitch", cmd, message.RoomID); err != nil {
+						if err := server.CreateBotActionActivity(context.Background(), "twitch", cmd, message.RoomID, message.User.DisplayName); err != nil {
 							fmt.Println(err.Error())
 						}
 					}
@@ -39,6 +39,15 @@ func PrivateMessage(client *client.Clients, server *server.SenchabotAPIServer) {
 			}
 
 			// HANDLE CUSTOM COMMANDS
+			commandAlias, cmdAliasErr := server.GetCommandAlias(context.Background(), cmd, message.RoomID)
+			if cmdAliasErr != nil {
+				fmt.Println(cmdAliasErr.Error())
+			}
+
+			if commandAlias != nil {
+				cmd = *commandAlias
+			}
+
 			cmdData, err := server.GetBotCommand(context.Background(), cmd, message.RoomID)
 			if err != nil {
 				fmt.Println(err.Error())
@@ -47,7 +56,7 @@ func PrivateMessage(client *client.Clients, server *server.SenchabotAPIServer) {
 
 			if cmdData != nil {
 				if message.RoomID == cmdData.TwitchChannelID {
-					formattedCommandContent := helpers.FormatCommandContent(cmdData.CommandContent, message)
+					formattedCommandContent := helpers.FormatCommandContent(cmdData, message)
 					client.Twitch.Say(message.Channel, formattedCommandContent)
 					configData, err := server.GetTwitchBotConfig(context.Background(), message.RoomID, "bot_activity_enabled")
 					if err != nil {
@@ -56,7 +65,7 @@ func PrivateMessage(client *client.Clients, server *server.SenchabotAPIServer) {
 
 					if configData != nil {
 						if configData.ConfigValue == "1" {
-							if err := server.CreateBotActionActivity(context.Background(), "twitch", cmd, message.RoomID); err != nil {
+							if err := server.CreateBotActionActivity(context.Background(), "twitch", cmd, message.RoomID, message.User.DisplayName); err != nil {
 								fmt.Println(err.Error())
 							}
 						}

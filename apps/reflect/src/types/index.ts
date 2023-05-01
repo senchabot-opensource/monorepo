@@ -1,4 +1,5 @@
 import { ReactElement } from "react";
+import { string } from "zod";
 
 type AnyContextType = {
   [key: string]: any;
@@ -27,7 +28,25 @@ interface IBotCommand {
   commandContent: string;
   twitchChannelId: string | null;
   discordServerId: string | null;
+  createdBy: string | null;
+  updatedBy: string | null;
   createdAt: Date;
 }
 
-export type { AnyContextType, IAppBarButton, ILandingContainer, IBotCommand };
+interface IBotActionActivity {
+  botPlatformType: string;
+  botActivity: string;
+  activityDate: Date;
+  discordServerId: string;
+  twitchChannelId: string;
+  commandAuthor: string;
+}
+
+export type {
+  AnyContextType,
+  IAppBarButton,
+  ILandingContainer,
+  IHeader,
+  IBotCommand,
+  IBotActionActivity
+};
