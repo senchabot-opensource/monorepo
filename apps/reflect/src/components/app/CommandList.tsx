@@ -1,29 +1,28 @@
 import React from "react";
 import {
-  AccordionDetails,
-  AccordionSummary,
-  IconButton,
   List,
   ListItem,
-  ListItemIcon,
   ListItemText,
   ListSubheader,
   Paper,
   Stack,
-  Switch,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
+  Typography,
   styled,
 } from "@mui/material";
 import MuiAccordion, { AccordionProps } from "@mui/material/Accordion";
-import ClearIcon from "@mui/icons-material/Clear";
 import { trpc } from "../../utils/trpc";
 import LoadingBox from "../loading/LoadingBox";
 import { IBotCommand } from "../../types";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import MuiAccordionSummary, {
+  AccordionSummaryProps,
+} from "@mui/material/AccordionSummary";
+import MuiAccordionDetails from "@mui/material/AccordionDetails";
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion
@@ -41,37 +40,32 @@ const Accordion = styled((props: AccordionProps) => (
   },
 }));
 
+const AccordionSummary = styled((props: AccordionSummaryProps) => (
+  <MuiAccordionSummary expandIcon={<ExpandMoreIcon />} {...props} />
+))(({ theme }) => ({
+  "& .MuiAccordionSummary-expandIconWrapper.Mui-expanded": {
+    transform: "rotate(90deg)",
+  },
+  "& .MuiAccordionSummary-content": {
+    marginLeft: theme.spacing(0),
+  },
+}));
+
+const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
+  padding: theme.spacing(0),
+}));
+
 const CommandList = () => {
   const commandList = trpc.command.getCommandList.useQuery();
-  const commandDelete = trpc.command.deleteCommand.useMutation();
   const [isLoading, setIsLoading] = React.useState(true);
-  const [checked, setChecked] = React.useState<number[]>([]);
   const [botCommands, setBotCommands] = React.useState<IBotCommand[]>();
 
-  const handleToggle = (value: number) => () => {
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
+  const [expanded, setExpanded] = React.useState<string | false>(false);
 
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
-
-    setChecked(newChecked);
-  };
-
-  const handleDelete = React.useCallback(
-    (commandId: number) => {
-      if (!botCommands) return;
-      const filteredCommands = botCommands.filter(
-        (command: IBotCommand) => command.id !== commandId,
-      );
-      setBotCommands(filteredCommands);
-      commandDelete.mutate({ id: commandId });
-    },
-    [botCommands],
-  );
+  const handleChange =
+    (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
+      setExpanded(isExpanded ? panel : false);
+    };
 
   React.useEffect(() => {
     if (!commandList.isLoading) {
@@ -102,45 +96,30 @@ const CommandList = () => {
 
                 return (
                   <>
-                    <Accordion sx={{ backgroundColor: "#000" }}>
+                    <Accordion
+                      expanded={expanded === "panel" + index.toString()}
+                      onChange={handleChange("panel" + index.toString())}
+                      sx={{ backgroundColor: "#000" }}>
                       <AccordionSummary
                         expandIcon={<ExpandMoreIcon />}
                         aria-controls="panel1a-content"
                         id="panel1a-header"
-                        sx={{ backgroundColor: "#000" }}>
-                        <ListItem
-                          dense
-                          key={index}
-                          secondaryAction={
-                            <ListItemIcon>
-                              <Switch
-                                edge="end"
-                                onChange={handleToggle(command.id)}
-                                checked={checked.indexOf(command.id) !== -1}
-                                inputProps={{
-                                  "aria-labelledby": labelId,
-                                }}
-                              />
-                            </ListItemIcon>
-                          }
-                          disablePadding>
-                          {
-                            <ListItemIcon
-                              onClick={() => handleDelete(command.id)}>
-                              <IconButton
-                                edge="end"
-                                aria-label="delele the command">
-                                <ClearIcon />
-                              </IconButton>
-                            </ListItemIcon>
-                          }
-                          <ListItemText
-                            primary={command.commandName}
-                            secondary="Aliases: No data."
-                          />
+                        sx={{
+                          backgroundColor: "#000",
+                        }}>
+                        <ListItem dense key={index} disablePadding>
+                          <ListItemText primary={command.commandName} />
                         </ListItem>
                       </AccordionSummary>
-                      <AccordionDetails sx={{ backgroundColor: "#000" }}>
+                      <AccordionDetails
+                        sx={{
+                          backgroundColor: "#000",
+                          borderTopColor: "#000",
+                          borderStyle: "solid",
+                        }}>
+                        <Typography paddingLeft={2}>
+                          {command.commandContent}
+                        </Typography>
                         <Table aria-label="simple table">
                           <TableHead>
                             <TableRow>
@@ -150,7 +129,11 @@ const CommandList = () => {
                               <TableCell align="left">
                                 Created&nbsp;By
                               </TableCell>
-                              <TableCell align="left">
+                              <TableCell
+                                align="right"
+                                sx={{
+                                  display: { xs: "none", md: "block" },
+                                }}>
                                 Updated&nbsp;By
                               </TableCell>
                             </TableRow>
@@ -163,11 +146,24 @@ const CommandList = () => {
                                   border: 0,
                                 },
                               }}>
-                              <TableCell align="left">
+                              <TableCell
+                                align="left"
+                                sx={{ wordWrap: "inherit" }}>
                                 {command.createdAt.toDateString()}
                               </TableCell>
-                              <TableCell align="left">corefun</TableCell>
-                              <TableCell align="left">corefun</TableCell>
+                              <TableCell
+                                align="left"
+                                sx={{ wordWrap: "inherit" }}>
+                                {command.createdBy}
+                              </TableCell>
+                              <TableCell
+                                align="right"
+                                sx={{
+                                  wordWrap: "inherit",
+                                  display: { xs: "none", md: "block" },
+                                }}>
+                                {command.updatedBy}
+                              </TableCell>
                             </TableRow>
                           </TableBody>
                         </Table>
