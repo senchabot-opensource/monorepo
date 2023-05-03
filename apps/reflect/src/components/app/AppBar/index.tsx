@@ -6,7 +6,6 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 
 import { AccountMenu } from "../AccountMenu";
-import AppSnackbar from "../AppSnackbar";
 
 import AppBarTitle from "../../common/AppBarTitle";
 import AppBarButton from "./AppBarButton";
@@ -53,20 +52,8 @@ const ResponsiveAppBar = ({
   useSession({ required: true });
   const theme = useTheme();
 
-  const [snackbarOpen, setSnackbarOpen] = React.useState(false);
-  const [snackbarMessage, setSnackbarMessage] = React.useState("");
-
-  const snackbarMsg = (message: string) => {
-    setSnackbarOpen(!snackbarOpen);
-    setSnackbarMessage(message);
-  };
-
   return (
     <>
-      <AppSnackbar
-        isSnackbarOpen={snackbarOpen}
-        snackbarMessage={snackbarMessage}
-      />
       <AppBar
         position="fixed"
         color="transparent"
