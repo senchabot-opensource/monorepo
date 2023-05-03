@@ -1,5 +1,4 @@
 import { ReactElement } from "react";
-import { string } from "zod";
 
 type AnyContextType = {
   [key: string]: any;
@@ -37,9 +36,9 @@ interface IBotActionActivity {
   botPlatformType: string;
   botActivity: string;
   activityDate: Date;
-  discordServerId: string;
-  twitchChannelId: string;
-  commandAuthor: string;
+  discordServerId: string | null;
+  twitchChannelId: string | null;
+  commandAuthor: string | null;
 }
 
 export type {
@@ -48,5 +47,5 @@ export type {
   ILandingContainer,
   IHeader,
   IBotCommand,
-  IBotActionActivity
+  IBotActionActivity,
 };
