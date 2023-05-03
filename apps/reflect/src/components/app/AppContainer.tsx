@@ -14,7 +14,6 @@ import Breadcrumb from "./Breadcrumb";
 import { useSession } from "next-auth/react";
 import { AuthContainer } from "../auth/AuthContainer";
 import Loading from "../loading/Loading";
-import AppSnackbar from "./AppSnackbar";
 import VersionText from "../common/VersionText";
 
 export interface IAppContainer {
@@ -25,7 +24,6 @@ export interface IAppContainer {
 export default function AppContainer({ isLoading, children }: IAppContainer) {
   const { data: session, status: isAuthLoading } = useSession();
   const [isDrawerOpen, setDrawerOpen] = React.useState(false);
-  const [snackbarData, setSnackbarData] = React.useState(undefined);
 
   const handleDrawer = () => {
     setDrawerOpen(!isDrawerOpen);
@@ -36,7 +34,6 @@ export default function AppContainer({ isLoading, children }: IAppContainer) {
       <CssBaseline />
       <Loading isLoading={isLoading} isAuthLoading={isAuthLoading} />
 
-      <AppSnackbar isSnackbarOpen={false} snackbarMessage={"a"} />
       {session ? (
         <>
           <ResponsiveAppBar
