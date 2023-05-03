@@ -8,11 +8,7 @@ const CommandListButton = () => {
     <BootstrapTooltip title="Bot Command List">
       <Typography>
         <Link href="/app/command-list" passHref>
-          <IconButton
-            aria-label="bot command list"
-            sx={{
-              display: "flex",
-            }}>
+          <IconButton aria-label="bot command list">
             <FormatListBulletedIcon />
           </IconButton>
         </Link>
