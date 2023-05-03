@@ -40,6 +40,10 @@ const TwitchBotForm = () => {
 
   const configsMutate = trpc.twitchBot.setConfig.useMutation({
     onSuccess() {
+      // TODO: add success snackbar
+      null;
+    },
+    onError() {
       setAlertIsOpen(true);
     },
   });
@@ -63,7 +67,7 @@ const TwitchBotForm = () => {
       <CustomAlert
         isOpen={alertIsOpen}
         closeHandler={() => setAlertIsOpen(!alertIsOpen)}
-        content="Twitch Bot configurations successfully saved."
+        content="Something went wrong. Please try again later."
       />
       <form onSubmit={handleSubmit(onSubmit)}>
         <Box
