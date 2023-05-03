@@ -19,10 +19,11 @@ import { trpc } from "../../utils/trpc";
 const ALT_TEXT = "All Bots and Stream overlays, Manage from one place!";
 // Stream overlays: #8b5cf6
 const LandingTexts = () => {
-  const [defaultCmdList, setDefaultCmdList] = useState<string[]>([]);
+  const [cmdList, setCmdList] = useState<string[]>([]);
   const [featureList, setFeatureList] = useState<string[]>([]);
   const { data: session } = useSession();
   const { data: twitchAcc } = trpc.check.checkTwitchAcc.useQuery();
+  const commandList = trpc.command.getCommandList.useQuery();
 
   const twitchBotMutate = trpc.twitchBot.add.useMutation({
     onSuccess() {
@@ -37,12 +38,21 @@ const LandingTexts = () => {
 
   useEffect(() => {
     getDefaultCmdList().then(res => {
-      setDefaultCmdList(res.defaultCmd);
+      if (!commandList.isLoading && session) {
+        const cmds = commandList.data?.map(cmd => "!" + cmd.commandName);
+        if (cmds) {
+          const tocmds = [...res.defaultCmd, ...cmds];
+          setCmdList(tocmds);
+        }
+      } else {
+        setCmdList(res.defaultCmd);
+      }
     });
+
     getFeatureList().then(res => {
       setFeatureList(res.featureList);
     });
-  }, []);
+  }, [commandList.isLoading]);
 
   return (
     <Grid
@@ -59,7 +69,7 @@ const LandingTexts = () => {
         width="inherit"
         top={0}
         zIndex={-1}>
-        {defaultCmdList.map(cmd => {
+        {cmdList.map(cmd => {
           return (
             <Typography
               position="absolute"

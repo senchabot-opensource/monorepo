@@ -6,6 +6,7 @@ import { checkRouter } from "./check";
 import { exampleRouter } from "./example";
 import { protectedExampleRouter } from "./protected-example-router";
 import { securityRouter } from "./security";
+import { commandRouter } from "./command";
 
 // Update tRPC to 10: Removed the createRouter and superjson import above, Add the t import in ../trpc
 export const appRouter = t.router({
@@ -15,6 +16,7 @@ export const appRouter = t.router({
   check: checkRouter,
   security: securityRouter,
   auth: protectedExampleRouter,
+  command: commandRouter,
 });
 
 /*.merge("example.", exampleRouter)

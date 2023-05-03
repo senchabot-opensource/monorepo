@@ -1,5 +1,4 @@
 import { ReactElement } from "react";
-import { string } from "zod";
 
 type AnyContextType = {
   [key: string]: any;
@@ -22,13 +21,24 @@ interface IHeader {
   index: boolean;
 }
 
+interface IBotCommand {
+  id: number;
+  commandName: string;
+  commandContent: string;
+  twitchChannelId: string | null;
+  discordServerId: string | null;
+  createdBy: string | null;
+  updatedBy: string | null;
+  createdAt: Date;
+}
+
 interface IBotActionActivity {
   botPlatformType: string;
   botActivity: string;
   activityDate: Date;
-  discordServerId: string;
-  twitchChannelId: string;
-  commandAuthor: string;
+  discordServerId: string | null;
+  twitchChannelId: string | null;
+  commandAuthor: string | null;
 }
 
 export type {
@@ -36,5 +46,6 @@ export type {
   IAppBarButton,
   ILandingContainer,
   IHeader,
+  IBotCommand,
   IBotActionActivity,
 };

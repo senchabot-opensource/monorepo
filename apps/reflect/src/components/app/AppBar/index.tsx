@@ -14,6 +14,7 @@ import AppBarButton from "./AppBarButton";
 import MinimizeIcon from "@mui/icons-material/Minimize";
 import GetDiscordBotButton from "./buttons/GetDiscordBotButton";
 import GetTwitchBotButton from "./buttons/GetTwitchBotButton";
+import CommandListButton from "./buttons/CommandListButton";
 
 interface IResponsiveAppBar {
   isDrawerOpen: boolean;
@@ -90,6 +91,7 @@ const ResponsiveAppBar = ({
 
             <GetTwitchBotButton />
             <GetDiscordBotButton />
+            <CommandListButton />
 
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }} />
 
