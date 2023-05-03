@@ -40,8 +40,7 @@ const TwitchBotForm = () => {
 
   const configsMutate = trpc.twitchBot.setConfig.useMutation({
     onSuccess() {
-      // TODO: add success snackbar
-      null;
+      alert("Twitch Bot configurations successfully saved.");
     },
     onError() {
       setAlertIsOpen(true);
