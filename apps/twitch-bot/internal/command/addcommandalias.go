@@ -40,6 +40,7 @@ func AddCommandAliasCommand(client *client.Clients, server *server.SenchabotAPIS
 	}
 	if !commandExist {
 		client.Twitch.Say(message.Channel, "the command \""+command+"\" does not exist")
+		return
 	}
 
 	if len(params) > 4 {
