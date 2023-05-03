@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { trpc } from "../utils/trpc";
 import { Controller, useForm } from "react-hook-form";
 import {
@@ -10,8 +10,11 @@ import {
   FormHelperText,
 } from "@mui/material";
 import Select from "@mui/material/Select";
+import CustomAlert from "../components/CustomAlert";
 
 const TwitchBotForm = () => {
+  const [alertIsOpen, setAlertIsOpen] = useState<boolean>(false);
+
   const { data: botActivityEnabledConfig, isLoading } =
     trpc.twitchBot.getConfig.useQuery({
       configName: "bot_activity_enabled",
@@ -39,6 +42,9 @@ const TwitchBotForm = () => {
     onSuccess() {
       alert("Twitch Bot configurations successfully saved.");
     },
+    onError() {
+      setAlertIsOpen(true);
+    },
   });
 
   const onSubmit = (data: any) => {
@@ -57,6 +63,11 @@ const TwitchBotForm = () => {
 
   return (
     <>
+      <CustomAlert
+        isOpen={alertIsOpen}
+        closeHandler={() => setAlertIsOpen(!alertIsOpen)}
+        content="Something went wrong. Please try again later."
+      />
       <form onSubmit={handleSubmit(onSubmit)}>
         <Box
           sx={{
