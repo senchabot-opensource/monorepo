@@ -3,17 +3,20 @@ import { trpc } from "../utils/trpc";
 import { Controller, useForm } from "react-hook-form";
 import {
   Box,
-  InputLabel,
   Button,
-  MenuItem,
   FormControl,
   FormHelperText,
+  InputLabel,
+  MenuItem,
 } from "@mui/material";
 import Select from "@mui/material/Select";
 import CustomAlert from "../components/CustomAlert";
+import AppSnackbar from "../components/app/AppSnackbar";
+import { SneacbarSeverity } from "../enums";
 
 const TwitchBotForm = () => {
   const [alertIsOpen, setAlertIsOpen] = useState<boolean>(false);
+  const [snackbarIsOpen, setSnackbarIsOpen] = useState<boolean>(false);
 
   const { data: botActivityEnabledConfig, isLoading } =
     trpc.twitchBot.getConfig.useQuery({
@@ -40,7 +43,7 @@ const TwitchBotForm = () => {
 
   const configsMutate = trpc.twitchBot.setConfig.useMutation({
     onSuccess() {
-      alert("Twitch Bot configurations successfully saved.");
+      setSnackbarIsOpen(true);
     },
     onError() {
       setAlertIsOpen(true);
@@ -63,6 +66,12 @@ const TwitchBotForm = () => {
 
   return (
     <>
+      <AppSnackbar
+        severity={SneacbarSeverity.Success}
+        isSnackbarOpen={snackbarIsOpen}
+        snackbarClose={() => setSnackbarIsOpen(!snackbarIsOpen)}
+        snackbarMessage="Twitch Bot configurations successfully saved."
+      />
       <CustomAlert
         isOpen={alertIsOpen}
         closeHandler={() => setAlertIsOpen(!alertIsOpen)}
