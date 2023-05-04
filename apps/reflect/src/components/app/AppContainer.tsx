@@ -5,6 +5,7 @@ import {
   Paper,
   Dialog,
   Typography,
+  DialogContent,
 } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import ResponsiveAppBar from "./AppBar";
@@ -15,6 +16,7 @@ import { useSession } from "next-auth/react";
 import { AuthContainer } from "../auth/AuthContainer";
 import Loading from "../loading/Loading";
 import VersionText from "../common/VersionText";
+import { DialogBody } from "next/dist/client/components/react-dev-overlay/internal/components/Dialog";
 
 export interface IAppContainer {
   isLoading: boolean;
@@ -53,8 +55,26 @@ export default function AppContainer({ isLoading, children }: IAppContainer) {
       ) : (
         !isLoading &&
         isAuthLoading !== "loading" && (
-          <Dialog open={true}>
-            <AuthContainer />
+          <Dialog
+            fullScreen={true}
+            open={true}
+            PaperProps={{
+              elevation: 0,
+              style: {
+                backgroundColor: "black",
+                boxShadow: "none",
+                borderRadius: "0px",
+                overflow: "hidden",
+                height: "fit-content",
+                width: "300px",
+              },
+            }}>
+            <DialogContent
+              sx={{
+                padding: 0,
+              }}>
+              <AuthContainer />
+            </DialogContent>
           </Dialog>
         )
       )}
