@@ -12,9 +12,7 @@ export const LandingGrid = ({ children }: { children: React.ReactNode }) => (
       pb: { xs: "64px", md: "128px" },
       overflowWrap: "break-word",
       whiteSpace: "pre-line",
-      margin: "10px",
-    }}
-  >
+    }}>
     {children}
   </Grid>
 );

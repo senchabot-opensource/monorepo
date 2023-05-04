@@ -6,9 +6,7 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
-import { useState } from "react";
 import { FC } from "react";
-import DialogContext from "@mui/material/Dialog/DialogContext";
 
 type IProps = {
   title?: string;

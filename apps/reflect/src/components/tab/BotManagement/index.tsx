@@ -1,4 +1,4 @@
-import { Box, Divider, Tab, Tabs } from "@mui/material";
+import { Box, Tab, Tabs } from "@mui/material";
 import React from "react";
 import VerticalTabPanel from "../../tabpanel/VerticalTabPanel";
 import TwitchBotForm from "src/forms/TwitchBotForm";

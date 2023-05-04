@@ -31,7 +31,7 @@ const Accordion = styled((props: AccordionProps) => (
     disableGutters={false}
     {...props}
   />
-))(({ theme }) => ({
+))(() => ({
   "&:not(:last-child)": {
     borderBottom: 0,
   },
@@ -92,8 +92,6 @@ const CommandList = () => {
           {!isLoading ? (
             botCommands?.length ? (
               botCommands.map((command: IBotCommand, index: number) => {
-                const labelId = `switch-list-label-${command.id}`;
-
                 return (
                   <>
                     <Accordion
