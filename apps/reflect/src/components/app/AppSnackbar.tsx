@@ -1,5 +1,5 @@
 import React from "react";
-import Snackbar, { SnackbarOrigin } from "@mui/material/Snackbar";
+import Snackbar from "@mui/material/Snackbar";
 import { Alert, Slide, SlideProps } from "@mui/material";
 import { FC } from "react";
 import { SneacbarSeverity } from "../../enums";

@@ -2,7 +2,7 @@ import React from "react";
 import type { NextPage } from "next";
 import { ThemeProvider } from "@mui/material/styles";
 import { landingDarkTheme } from "../utils/theme";
-import { CssBaseline, Typography } from "@mui/material";
+import { CssBaseline } from "@mui/material";
 import Header from "../components/common/Header";
 import LandingAppBar from "../components/landing/LandingAppBar";
 import LandingTexts from "../components/landing/LandingTexts";

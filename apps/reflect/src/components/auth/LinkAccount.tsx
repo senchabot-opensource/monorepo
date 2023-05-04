@@ -5,7 +5,6 @@ import {
   ListItemText,
   Stack,
 } from "@mui/material";
-import GitHubIcon from "@mui/icons-material/GitHub";
 import { SiDiscord, SiTwitch } from "react-icons/si";
 import { signIn } from "next-auth/react";
 import { trpc } from "../../utils/trpc";

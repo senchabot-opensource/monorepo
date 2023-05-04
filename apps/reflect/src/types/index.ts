@@ -41,6 +41,10 @@ interface IBotActionActivity {
   commandAuthor: string | null;
 }
 
+interface ITwitchBotFormSubmitData {
+  botActivityEnabled: string;
+}
+
 export type {
   AnyContextType,
   IAppBarButton,
@@ -48,4 +52,5 @@ export type {
   IHeader,
   IBotCommand,
   IBotActionActivity,
+  ITwitchBotFormSubmitData,
 };

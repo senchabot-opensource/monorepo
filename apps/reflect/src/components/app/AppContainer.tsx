@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  Container,
-  CssBaseline,
-  Paper,
-  Dialog,
-  Typography,
-} from "@mui/material";
+import { Container, CssBaseline, Paper, Dialog } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import ResponsiveAppBar from "./AppBar";
 
@@ -42,8 +36,6 @@ export default function AppContainer({ isLoading, children }: IAppContainer) {
           />
 
           <Container>
-            {/*<AppDrawer isDrawerOpen={isDrawerOpen} drawerHandler={handleDrawer} />*/}
-
             <Paper sx={{ mt: 10, backgroundColor: "#000", p: 1 }} elevation={1}>
               <Breadcrumb />
             </Paper>
