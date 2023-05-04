@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { trpc } from "../utils/trpc";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, FieldError, useForm } from "react-hook-form";
 import {
   Box,
   Button,
@@ -13,6 +13,7 @@ import Select from "@mui/material/Select";
 import CustomAlert from "../components/CustomAlert";
 import AppSnackbar from "../components/app/AppSnackbar";
 import { SneacbarSeverity } from "../enums";
+import { ITwitchBotFormSubmitData } from "src/types";
 
 const TwitchBotForm = () => {
   const [alertIsOpen, setAlertIsOpen] = useState<boolean>(false);
@@ -50,18 +51,18 @@ const TwitchBotForm = () => {
     },
   });
 
-  const onSubmit = (data: any) => {
-    console.log("data", data);
+  const onSubmit = (data: ITwitchBotFormSubmitData) => {
     configsMutate.mutate({
       configName: "bot_activity_enabled",
       configValue: data.botActivityEnabled,
     });
   };
 
-  const handleError = (errorMsg: any) => {
-    if (errorMsg) {
-      return <React.Fragment>{errorMsg.message}</React.Fragment>;
+  const handleError = (error: FieldError | undefined) => {
+    if (error) {
+      return <React.Fragment>{error.message}</React.Fragment>;
     }
+    return null;
   };
 
   return (

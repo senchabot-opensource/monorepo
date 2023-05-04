@@ -69,9 +69,10 @@ const LandingTexts = () => {
         width="inherit"
         top={0}
         zIndex={-1}>
-        {cmdList.map(cmd => {
+        {cmdList.map((cmd, index) => {
           return (
             <Typography
+              key={index}
               position="absolute"
               color={cmd[0] === "!" ? "#6034b2" : "#7289da"}
               top={randomInt(1, 75) + "vh"}

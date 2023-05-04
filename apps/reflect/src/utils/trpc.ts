@@ -13,7 +13,7 @@ const getBaseUrl = () => {
 
 // Update tRPC to v10: createReactQueryHooks has been replaced by createTRPCNext
 export const trpc = createTRPCNext<AppRouter>({
-  config({ ctx }) {
+  config() {
     /**
      * If you want to use SSR, you need to use the server's full URL
      * @link https://trpc.io/docs/ssr
@@ -23,7 +23,7 @@ export const trpc = createTRPCNext<AppRouter>({
     return {
       links: [
         loggerLink({
-          enabled: (opts) =>
+          enabled: opts =>
             process.env.NODE_ENV === "development" ||
             (opts.direction === "down" && opts.result instanceof Error),
         }),
@@ -61,17 +61,17 @@ export const trpc = createTRPCNext<AppRouter>({
  * @example type HelloOutput = inferQueryOutput<'hello'>
  */
 export type inferQueryOutput<
-  TRouteKey extends keyof AppRouter["_def"]["queries"]
+  TRouteKey extends keyof AppRouter["_def"]["queries"],
 > = inferProcedureOutput<AppRouter["_def"]["queries"][TRouteKey]>;
 
 export type inferQueryInput<
-  TRouteKey extends keyof AppRouter["_def"]["queries"]
+  TRouteKey extends keyof AppRouter["_def"]["queries"],
 > = inferProcedureInput<AppRouter["_def"]["queries"][TRouteKey]>;
 
 export type inferMutationOutput<
-  TRouteKey extends keyof AppRouter["_def"]["mutations"]
+  TRouteKey extends keyof AppRouter["_def"]["mutations"],
 > = inferProcedureOutput<AppRouter["_def"]["mutations"][TRouteKey]>;
 
 export type inferMutationInput<
-  TRouteKey extends keyof AppRouter["_def"]["mutations"]
+  TRouteKey extends keyof AppRouter["_def"]["mutations"],
 > = inferProcedureInput<AppRouter["_def"]["mutations"][TRouteKey]>;
