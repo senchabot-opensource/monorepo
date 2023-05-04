@@ -19,7 +19,7 @@ export const AuthContainer = () => {
             callbackUrl: `${window.location.origin}/app`,
           })
         }
-        icon={<SiTwitch color="#815fc0" />}
+        icon={<SiTwitch color="#815fc0" fontSize="x-large" />}
         content="with Twitch Account"
       />
       <AuthLoginButton
@@ -29,7 +29,7 @@ export const AuthContainer = () => {
             callbackUrl: `${window.location.origin}/app`,
           })
         }
-        icon={<SiDiscord color="#7289d9" />}
+        icon={<SiDiscord color="#7289d9" fontSize="x-large" />}
         content="with Discord Account"
       />
       <Typography>
