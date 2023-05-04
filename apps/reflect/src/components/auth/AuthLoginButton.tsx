@@ -12,7 +12,7 @@ const AuthLoginButton: FC<IProps> = ({ content, icon, onClick, fullWidth }) => {
   return (
     <Stack
       onClick={onClick}
-      padding={1}
+      padding={1.5}
       spacing={2}
       direction="row"
       alignItems="center"
