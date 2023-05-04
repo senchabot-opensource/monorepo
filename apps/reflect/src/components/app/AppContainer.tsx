@@ -63,15 +63,15 @@ export default function AppContainer({ isLoading, children }: IAppContainer) {
               style: {
                 backgroundColor: "black",
                 boxShadow: "none",
-                borderRadius: "0px",
+                borderRadius: "8px",
                 overflow: "hidden",
                 height: "fit-content",
-                width: "300px",
+                width: "325px",
               },
             }}>
             <DialogContent
               sx={{
-                padding: 0,
+                padding: 2,
               }}>
               <AuthContainer />
             </DialogContent>
