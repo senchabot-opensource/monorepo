@@ -1,5 +1,5 @@
 import { FC, ReactNode } from "react";
-import { Button } from "@mui/material";
+import { Button, Stack, Typography } from "@mui/material";
 
 type IProps = {
   content: string;
@@ -10,20 +10,29 @@ type IProps = {
 
 const AuthLoginButton: FC<IProps> = ({ content, icon, onClick, fullWidth }) => {
   return (
-    <Button
+    <Stack
       onClick={onClick}
-      startIcon={icon}
-      size="large"
+      padding={1}
+      spacing={2}
+      direction="row"
+      alignItems="center"
       sx={{
-        color: "white",
-        width: fullWidth ? "100%" : "fit-content",
-        textAlign: "left",
+        cursor: "pointer",
         "&:hover": {
           backgroundColor: "#202020",
+          borderRadius: "4px",
         },
       }}>
-      {content}
-    </Button>
+      {icon}
+      <Typography
+        sx={{
+          color: "white",
+          width: fullWidth ? "100%" : "fit-content",
+          textAlign: "left",
+        }}>
+        {content}
+      </Typography>
+    </Stack>
   );
 };
 
