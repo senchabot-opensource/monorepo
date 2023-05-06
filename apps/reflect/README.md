@@ -47,7 +47,7 @@ Web application for managing Senchabot, its commands and configuring the bot.
    docker-compose up -d
    ```
 
-5. For `Prisma` create a `.env` file based on the example file `env.example`
+5. Create a `.env` file based on the example file `env.example`
 
    ```sh
    cp env.example .env
