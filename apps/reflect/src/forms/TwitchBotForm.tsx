@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { trpc } from "../utils/trpc";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, FieldError, useForm } from "react-hook-form";
 import {
   Box,
   Button,
@@ -13,10 +13,12 @@ import Select from "@mui/material/Select";
 import CustomAlert from "../components/CustomAlert";
 import AppSnackbar from "../components/app/AppSnackbar";
 import { SneacbarSeverity } from "../enums";
+import { ITwitchBotFormSubmitData } from "src/types";
 
 const TwitchBotForm = () => {
   const [alertIsOpen, setAlertIsOpen] = useState<boolean>(false);
   const [snackbarIsOpen, setSnackbarIsOpen] = useState<boolean>(false);
+  const [buttonEnabled, setButtonEnabled] = useState<boolean>(false);
 
   const { data: botActivityEnabledConfig, isLoading } =
     trpc.twitchBot.getConfig.useQuery({
@@ -44,24 +46,25 @@ const TwitchBotForm = () => {
   const configsMutate = trpc.twitchBot.setConfig.useMutation({
     onSuccess() {
       setSnackbarIsOpen(true);
+      setButtonEnabled(false);
     },
     onError() {
       setAlertIsOpen(true);
     },
   });
 
-  const onSubmit = (data: any) => {
-    console.log("data", data);
+  const onSubmit = (data: ITwitchBotFormSubmitData) => {
     configsMutate.mutate({
       configName: "bot_activity_enabled",
       configValue: data.botActivityEnabled,
     });
   };
 
-  const handleError = (errorMsg: any) => {
-    if (errorMsg) {
-      return <React.Fragment>{errorMsg.message}</React.Fragment>;
+  const handleError = (error: FieldError | undefined) => {
+    if (error) {
+      return <React.Fragment>{error.message}</React.Fragment>;
     }
+    return null;
   };
 
   return (
@@ -88,7 +91,7 @@ const TwitchBotForm = () => {
           <Controller
             name="botActivityEnabled"
             control={control}
-            render={({ field }) => (
+            render={({ field: { onChange, value }, fieldState: { error } }) => (
               <FormControl
                 sx={{ m: 2 }}
                 size="small"
@@ -99,20 +102,27 @@ const TwitchBotForm = () => {
                 </InputLabel>
 
                 <Select
-                  {...field}
+                  onChange={field => {
+                    onChange(field.target.value);
+                    setButtonEnabled(true);
+                  }}
+                  value={value}
                   labelId="select-botActivityEnabled"
                   id="select-botActivityEnabled"
                   label="Twitch Bot Activities">
                   <MenuItem value="0">Disabled</MenuItem>
                   <MenuItem value="1">Enabled</MenuItem>
                 </Select>
-                <FormHelperText>
-                  {handleError(errors.botActivityEnabled)}
-                </FormHelperText>
+                <FormHelperText>{handleError(error)}</FormHelperText>
               </FormControl>
             )}
           />
-          <Button fullWidth variant="outlined" sx={{ m: 1 }} type="submit">
+          <Button
+            disabled={!buttonEnabled}
+            fullWidth
+            variant="outlined"
+            sx={{ m: 1 }}
+            type="submit">
             Save
           </Button>
         </Box>

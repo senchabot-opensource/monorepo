@@ -11,12 +11,28 @@ Prerequisites
 Installing
 
 1. Clone the repo and navigate to the monorepo directory
+
    ```sh
    git clone https://github.com/senchabot-dev/monorepo.git
    cd monorepo
    ```
 
-2. Navigate to the project directory and install the required packages
+2. If you hadn't done for main directory,  please change into main directory and create a `.env` file based on the example file `env.example`
+
+   ```sh
+   cp env.example .env
+   ```
+
+3. If you hadn't done for main directory, please change into main directory and build up a Docker container for Postgres database
+
+   ```sh
+   docker-compose up --build
+   # If you want to run the Docker container in the background, run this command instead of the command above:
+   docker-compose up -d
+   ```
+
+4. Navigate to the project directory and install the required packages
+
    ```sh
    cd apps/twitch-bot
    go mod install
@@ -24,13 +40,14 @@ Installing
 
 ## Usage
 
-1. Set enviroment variables
+1. For setting enviorment variables create a `.env` file based on the example file `env.example`
+
    ```sh
-   echo 'MYSQL_DATABASE_URL="mysql_database_connection_uri"' >> .env
-   echo 'OAUTH="twitch_oauth_token"' >> .env
+   cp env.example .env
    ```
 
 2. Once you have set these enviroment variables, you can start the bot by running:
+
    ```sh
    go run ./cmd/main
    ```
@@ -75,4 +92,5 @@ Installing
 ```
 
 ## Contributing
+
 Contributions are always welcome! Please read the [contribution guidelines](../../CONTRIBUTING.md) first.

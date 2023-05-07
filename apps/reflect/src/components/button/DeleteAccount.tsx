@@ -19,7 +19,7 @@ const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement<any, any>;
   },
-  ref: React.Ref<unknown>
+  ref: React.Ref<unknown>,
 ) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -62,8 +62,7 @@ const DeleteAccount = () => {
         TransitionComponent={Transition}
         keepMounted
         onClose={handleClose}
-        aria-describedby="delete-account-dialog"
-      >
+        aria-describedby="delete-account-dialog">
         <DialogTitle>{"Delete Account"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="delete-account-dialog">

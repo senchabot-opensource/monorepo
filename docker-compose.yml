@@ -1,7 +1,7 @@
 version: "3"
 services:
   postgres:
-    container_name: my_postgres
+    container_name: senchabot_db
     image: postgres:latest
     environment:
       POSTGRES_USER: $POSTGRES_USER
