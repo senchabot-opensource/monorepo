@@ -1,18 +1,20 @@
-import { IconButton, Typography } from "@mui/material";
+import { Drawer, IconButton, Box } from "@mui/material";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
-import Link from "next/link";
 import { BootstrapTooltip } from "../../../Tooltip";
+import { FC } from "react";
 
-const CommandListButton = () => {
+type IProps = {
+  onClick: () => void;
+};
+
+const CommandListButton: FC<IProps> = ({ onClick }) => {
   return (
     <BootstrapTooltip title="Bot Command List">
-      <Typography>
-        <Link href="/app/command-list" passHref>
-          <IconButton aria-label="bot command list">
-            <FormatListBulletedIcon />
-          </IconButton>
-        </Link>
-      </Typography>
+      <Box>
+        <IconButton onClick={onClick}>
+          <FormatListBulletedIcon />
+        </IconButton>
+      </Box>
     </BootstrapTooltip>
   );
 };
