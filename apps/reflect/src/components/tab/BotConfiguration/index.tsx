@@ -10,7 +10,7 @@ function verticalTabPanelProps(index: number) {
   };
 }
 
-const BotManagementTab = () => {
+const BotConfigurationTab = () => {
   const [vTPValue, setVTPValue] = React.useState(0);
 
   const handleVTPChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -46,4 +46,4 @@ const BotManagementTab = () => {
   );
 };
 
-export default BotManagementTab;
+export default BotConfigurationTab;
