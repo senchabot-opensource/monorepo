@@ -8,13 +8,13 @@ import {
   MenuItem,
   ListItemIcon,
   ListItemText,
-  Link,
   Stack,
 } from "@mui/material";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { env } from "../../env/client.mjs";
 import { RiGlobalFill } from "react-icons/ri";
+import Link from "next/link";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
