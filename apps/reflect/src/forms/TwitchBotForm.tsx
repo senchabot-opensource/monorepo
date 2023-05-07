@@ -46,7 +46,6 @@ const TwitchBotForm = () => {
   const configsMutate = trpc.twitchBot.setConfig.useMutation({
     onSuccess() {
       setSnackbarIsOpen(true);
-      setButtonEnabled(false);
     },
     onError() {
       setAlertIsOpen(true);
@@ -54,6 +53,7 @@ const TwitchBotForm = () => {
   });
 
   const onSubmit = (data: ITwitchBotFormSubmitData) => {
+    setButtonEnabled(false);
     configsMutate.mutate({
       configName: "bot_activity_enabled",
       configValue: data.botActivityEnabled,
