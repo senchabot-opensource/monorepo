@@ -4,16 +4,13 @@ import { Container, Toolbar, Box, IconButton } from "@mui/material";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-
 import { AccountMenu } from "../AccountMenu";
-
 import AppBarTitle from "../../common/AppBarTitle";
 import AppBarButton from "./AppBarButton";
-
 import MinimizeIcon from "@mui/icons-material/Minimize";
-import GetDiscordBotButton from "./buttons/GetDiscordBotButton";
-import GetTwitchBotButton from "./buttons/GetTwitchBotButton";
-import CommandListButton from "./buttons/CommandListButton";
+import DrawerButton from "./buttons/DrawerButton";
+import { useState } from "react";
+import AppDrawer from "../AppDrawer";
 
 interface IResponsiveAppBar {
   isDrawerOpen: boolean;
@@ -26,22 +23,12 @@ interface AppBarProps extends MuiAppBarProps {
 
 const interfaceURL = "https://interface.senchabot.app";
 
-const drawerWidth = 240;
-
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: prop => prop !== "open",
 })<AppBarProps>(({ theme, open }) => ({
   transition: theme.transitions.create(["margin", "width"], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    width: `calc(100% - ${drawerWidth}px)`,
-    marginLeft: `${drawerWidth}px`,
-    transition: theme.transitions.create(["margin", "width"], {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
   }),
 }));
 
@@ -51,9 +38,14 @@ const ResponsiveAppBar = ({
 }: IResponsiveAppBar) => {
   useSession({ required: true });
   const theme = useTheme();
+  const [drawerIsOpen, setDrawerIsOpen] = useState<boolean>(false);
 
   return (
     <>
+      <AppDrawer
+        isDrawerOpen={drawerIsOpen}
+        drawerHandler={() => setDrawerIsOpen(!drawerIsOpen)}
+      />
       <AppBar
         position="fixed"
         color="transparent"
@@ -62,12 +54,10 @@ const ResponsiveAppBar = ({
           backgroundColor: alpha(theme.palette.background.paper, 0.85),
         }}
         elevation={2}>
-        {/*open={isDrawerOpen} */}
         <Container>
           {/* <Container maxWidth="xl">*/}
           <Toolbar disableGutters>
             <AppBarTitle />
-
             <AppBarButton
               title="Go to Interface"
               pathHref={interfaceURL}
@@ -75,13 +65,8 @@ const ResponsiveAppBar = ({
               drawerHandler={drawerHandler}>
               <MinimizeIcon />
             </AppBarButton>
-
-            <GetTwitchBotButton />
-            <GetDiscordBotButton />
-            <CommandListButton />
-
+            <DrawerButton onClick={() => setDrawerIsOpen(!drawerIsOpen)} />
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }} />
-
             <Link href={interfaceURL}>
               <IconButton
                 aria-label="go to interface"
@@ -93,7 +78,6 @@ const ResponsiveAppBar = ({
                 <MinimizeIcon />
               </IconButton>
             </Link>
-
             <AccountMenu />
           </Toolbar>
         </Container>
