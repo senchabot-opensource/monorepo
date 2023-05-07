@@ -89,27 +89,25 @@ const LandingAppBar = () => {
                 flexGrow: 1,
                 display: { xs: "none", sm: "none", md: "flex" },
               }}></Box>
-
-            <Link href="/app">
-              <LandingButton
-                sx={{
-                  pl: 4,
-                  color: "#646464",
-                }}
-                disableRipple>
-                {session ? (
-                  <DashboardIcon
-                    sx={{
-                      backgroundColor: "#000",
-                      color: "#fff",
-                      "&:hover": { cursor: "pointer" },
-                    }}
-                  />
-                ) : (
-                  <AccountCircle sx={{ "&:hover": { cursor: "pointer" } }} />
-                )}
-              </LandingButton>
-            </Link>
+            <LandingButton
+              href="/app"
+              sx={{
+                pl: 4,
+                color: "#646464",
+              }}
+              disableRipple>
+              {session ? (
+                <DashboardIcon
+                  sx={{
+                    backgroundColor: "#000",
+                    color: "#fff",
+                    "&:hover": { cursor: "pointer" },
+                  }}
+                />
+              ) : (
+                <AccountCircle sx={{ "&:hover": { cursor: "pointer" } }} />
+              )}
+            </LandingButton>
           </Toolbar>
         </Box>
       </AppBar>
