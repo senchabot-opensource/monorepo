@@ -8,7 +8,7 @@ import { AccountMenu } from "../AccountMenu";
 import AppBarTitle from "../../common/AppBarTitle";
 import AppBarButton from "./AppBarButton";
 import MinimizeIcon from "@mui/icons-material/Minimize";
-import CommandListButton from "./buttons/CommandListButton";
+import DrawerButton from "./buttons/DrawerButton";
 import { useState } from "react";
 import AppDrawer from "../AppDrawer";
 
@@ -65,7 +65,7 @@ const ResponsiveAppBar = ({
               drawerHandler={drawerHandler}>
               <MinimizeIcon />
             </AppBarButton>
-            <CommandListButton onClick={() => setDrawerIsOpen(!drawerIsOpen)} />
+            <DrawerButton onClick={() => setDrawerIsOpen(!drawerIsOpen)} />
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }} />
             <Link href={interfaceURL}>
               <IconButton

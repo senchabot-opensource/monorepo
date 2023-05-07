@@ -7,7 +7,7 @@ type IProps = {
   onClick: () => void;
 };
 
-const CommandListButton: FC<IProps> = ({ onClick }) => {
+const DrawerButton: FC<IProps> = ({ onClick }) => {
   return (
     <BootstrapTooltip title="Bot Command List">
       <Box>
@@ -19,4 +19,4 @@ const CommandListButton: FC<IProps> = ({ onClick }) => {
   );
 };
 
-export default CommandListButton;
+export default DrawerButton;
