@@ -99,7 +99,7 @@ const LandingTexts = () => {
       <Stack
         direction="column"
         textAlign="center"
-        width={{ xs: "100vw", md: "37vw" }}>
+        width={{ xs: "100vw", sm: "75vw", lg: "37vw" }}>
         <Typography
           variant="h1"
           component="div"
