@@ -51,10 +51,10 @@ func (s *SenchabotAPIServer) GetBotCommand(ctx context.Context, commandName stri
 	return commandData, nil
 }
 
-func (s *SenchabotAPIServer) CreateBotCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string, createdBy string) (bool, error) {
+func (s *SenchabotAPIServer) CreateBotCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string, createdBy string) (*string, error) {
 	commandExists, err := s.backend.CreateBotCommand(ctx, commandName, commandContent, twitchChannelId, createdBy)
 	if err != nil {
-		return false, err
+		return nil, err
 	}
 
 	return commandExists, nil

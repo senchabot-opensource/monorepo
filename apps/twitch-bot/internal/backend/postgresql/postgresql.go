@@ -77,15 +77,25 @@ func (b *PostgreSQLBackend) GetBotCommand(ctx context.Context, commandName strin
 	return &botCommand, nil
 }
 
-func (b *PostgreSQLBackend) CreateBotCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string, createdBy string) (bool, error) {
+func (b *PostgreSQLBackend) CreateBotCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string, createdBy string) (*string, error) {
 	var botCommand []models.BotCommand
+	var commandExistString string = "command_exists"
 
 	commandExist, err := b.CheckCommandExists(ctx, commandName, twitchChannelId)
 	if err != nil {
-		return false, err
+		return nil, err
 	}
 	if commandExist {
-		return true, nil
+		return &commandExistString, nil
+	}
+
+	existAlias, err := b.CheckCommandAlias(ctx, commandName, twitchChannelId)
+	if err != nil {
+		return nil, err
+	}
+
+	if existAlias != nil {
+		return existAlias, nil
 	}
 
 	botCommand = append(botCommand, models.BotCommand{
@@ -97,10 +107,10 @@ func (b *PostgreSQLBackend) CreateBotCommand(ctx context.Context, commandName st
 
 	result := b.DB.Create(&botCommand)
 	if result.Error != nil {
-		return false, errors.New("(CreateBotCommand) db.Create Error:" + result.Error.Error())
+		return nil, errors.New("(CreateBotCommand) db.Create Error:" + result.Error.Error())
 	}
 
-	return false, nil
+	return nil, nil
 }
 
 func (b *PostgreSQLBackend) CheckCommandExists(ctx context.Context, commandName string, twitchChannelId string) (bool, error) {
