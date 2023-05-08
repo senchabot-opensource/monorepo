@@ -12,7 +12,7 @@ import (
 )
 
 func DeleteCommandCommand(client *client.Clients, server *server.SenchabotAPIServer, message twitch.PrivateMessage, commandName string, params []string) {
-	if !helpers.CanExecuteCommand(message) {
+	if !helpers.CanExecuteCommand(context.Background(), server, message) {
 		return
 	}
 	if len(params) < 1 {

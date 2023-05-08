@@ -1,12 +1,15 @@
 package helpers
 
 import (
+	"context"
+	"fmt"
 	"math/rand"
 	"strconv"
 	"strings"
 
 	"github.com/gempir/go-twitch-irc/v3"
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/models"
+	"github.com/senchabot-dev/monorepo/apps/twitch-bot/server"
 )
 
 var (
@@ -39,7 +42,7 @@ func FormatCommandContent(commandData *models.BotCommand, message twitch.Private
 	return msgContent
 }
 
-func CanExecuteCommand(message twitch.PrivateMessage) bool {
+func CanExecuteCommand(context context.Context, server *server.SenchabotAPIServer, message twitch.PrivateMessage) bool {
 	// broadcaster can run the command
 	if isBroadcaster(message.Tags["badges"]) {
 		return true
@@ -47,7 +50,12 @@ func CanExecuteCommand(message twitch.PrivateMessage) bool {
 
 	// moderator can run the command
 	if isModerator(message.Tags["badges"]) {
-		return true
+		check, err := checkModsCanManageCmds(context, message.RoomID, server)
+		if err != nil {
+			fmt.Println("Error on CanExecuteCommand checkModsCanManageCmds: " + err.Error())
+			return false
+		}
+		return check
 	}
 
 	// everyone else can't run the command
@@ -60,4 +68,19 @@ func isBroadcaster(badgeTags string) bool {
 
 func isModerator(badgeTags string) bool {
 	return strings.Contains(badgeTags, "moderator")
+}
+
+func checkModsCanManageCmds(context context.Context, twitchChannelId string, server *server.SenchabotAPIServer) (bool, error) {
+	configData, err := server.GetTwitchBotConfig(context, twitchChannelId, "mods_manage_cmds_enabled")
+	if err != nil {
+		return false, err
+	}
+
+	if configData != nil {
+		if configData.ConfigValue == "1" {
+			return true, nil
+		}
+	}
+
+	return false, nil
 }

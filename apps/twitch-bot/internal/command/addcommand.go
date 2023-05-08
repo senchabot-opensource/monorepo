@@ -14,7 +14,7 @@ import (
 const ADD_COMMAND_INFO = "!acmd [command_name] [command_content]"
 
 func AddCommandCommand(client *client.Clients, server *server.SenchabotAPIServer, message twitch.PrivateMessage, commandName string, params []string) {
-	if !helpers.CanExecuteCommand(message) {
+	if !helpers.CanExecuteCommand(context.Background(), server, message) {
 		return
 	}
 	if len(params) < 2 {
