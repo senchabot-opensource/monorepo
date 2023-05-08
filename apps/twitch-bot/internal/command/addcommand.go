@@ -43,8 +43,13 @@ func AddCommandCommand(client *client.Clients, server *server.SenchabotAPIServer
 		fmt.Println(err.Error())
 		return
 	}
-	if commandExists {
-		client.Twitch.Say(message.Channel, message.User.DisplayName+", this command already exists")
+	if commandExists != nil {
+		if *commandExists == "command_exists" {
+			client.Twitch.Say(message.Channel, message.User.DisplayName+", this command is already in use")
+			return
+		}
+
+		client.Twitch.Say(message.Channel, message.User.DisplayName+", this command is already being used as command alias")
 		return
 	}
 	fmt.Println("COMMAND_ADD: command_name:", newCommandName, "command_content:", newCommandContent)
