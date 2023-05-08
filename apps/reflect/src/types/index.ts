@@ -41,8 +41,14 @@ interface IBotActionActivity {
   commandAuthor: string | null;
 }
 
+interface ITwitchBotConfig {
+  configName: any;
+  configValue: any;
+}
+
 interface ITwitchBotFormSubmitData {
-  botActivityEnabled: string;
+  bot_activity_enabled: string;
+  mods_manage_cmds_enabled: string;
 }
 
 export type {
@@ -53,4 +59,5 @@ export type {
   IBotCommand,
   IBotActionActivity,
   ITwitchBotFormSubmitData,
+  ITwitchBotConfig,
 };
