@@ -162,4 +162,21 @@ export const twitchBotRouter = t.router({
         where: { configName: configName, twitchChannelId: twitchAccId },
       });
     }),
+  getAllConfigs: t.procedure.query(async ({ ctx }) => {
+    const userId = ctx.session?.user?.id;
+
+    if (!userId) return;
+
+    const twitchAccount = await ctx.prisma.account.findFirst({
+      where: { userId: userId, provider: "twitch" },
+      select: { providerAccountId: true },
+    });
+
+    const twitchAccId = twitchAccount?.providerAccountId;
+    if (!twitchAccId) return;
+
+    return await ctx.prisma.twitchBotConfigs.findMany({
+      where: { twitchChannelId: twitchAccId },
+    });
+  }),
 });
