@@ -13,35 +13,14 @@ import Select from "@mui/material/Select";
 import CustomAlert from "../components/CustomAlert";
 import AppSnackbar from "../components/app/AppSnackbar";
 import { SneacbarSeverity } from "../enums";
-import { ITwitchBotFormSubmitData } from "src/types";
+import { ITwitchBotConfig, ITwitchBotFormSubmitData } from "src/types";
 
 const TwitchBotForm = () => {
   const [alertIsOpen, setAlertIsOpen] = useState<boolean>(false);
   const [snackbarIsOpen, setSnackbarIsOpen] = useState<boolean>(false);
   const [buttonEnabled, setButtonEnabled] = useState<boolean>(false);
 
-  const { data: botActivityEnabledConfig, isLoading } =
-    trpc.twitchBot.getConfig.useQuery({
-      configName: "bot_activity_enabled",
-    });
-
-  const {
-    control,
-    handleSubmit,
-    setValue,
-    formState: { errors },
-  } = useForm({
-    defaultValues: {
-      botActivityEnabled: botActivityEnabledConfig?.configValue ?? "0",
-    },
-  });
-
-  useEffect(() => {
-    if (!isLoading) {
-      if (!botActivityEnabledConfig) return;
-      setValue("botActivityEnabled", botActivityEnabledConfig.configValue);
-    }
-  }, [isLoading]);
+  const { data: configs, isLoading } = trpc.twitchBot.getAllConfigs.useQuery();
 
   const configsMutate = trpc.twitchBot.setConfig.useMutation({
     onSuccess() {
@@ -52,13 +31,27 @@ const TwitchBotForm = () => {
     },
   });
 
-  const onSubmit = (data: ITwitchBotFormSubmitData) => {
-    setButtonEnabled(false);
-    configsMutate.mutate({
-      configName: "bot_activity_enabled",
-      configValue: data.botActivityEnabled,
-    });
-  };
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      bot_activity_enabled: "0",
+      mods_manage_cmds_enabled: "0",
+    },
+  });
+
+  useEffect(() => {
+    if (!isLoading) {
+      if (!configs) return;
+
+      configs.forEach((config: ITwitchBotConfig) =>
+        setValue(config.configName, config.configValue),
+      );
+    }
+  }, [isLoading, configs]);
 
   const handleError = (error: FieldError | undefined) => {
     if (error) {
@@ -66,6 +59,22 @@ const TwitchBotForm = () => {
     }
     return null;
   };
+
+  const onSubmit = React.useCallback((data: ITwitchBotFormSubmitData) => {
+    setButtonEnabled(false);
+    configsMutate.mutate({
+      configs: [
+        {
+          configName: "bot_activity_enabled",
+          configValue: data.bot_activity_enabled,
+        },
+        {
+          configName: "mods_manage_cmds_enabled",
+          configValue: data.mods_manage_cmds_enabled,
+        },
+      ],
+    });
+  }, []);
 
   return (
     <>
@@ -87,17 +96,17 @@ const TwitchBotForm = () => {
               m: 1,
             },
           }}>
-          <InputLabel>Twitch Bot Activities</InputLabel>
+          <InputLabel>Twitch Bot Configuration</InputLabel>
           <Controller
-            name="botActivityEnabled"
+            name="bot_activity_enabled"
             control={control}
             render={({ field: { onChange, value }, fieldState: { error } }) => (
               <FormControl
                 sx={{ m: 2 }}
                 size="small"
                 fullWidth
-                error={!!errors.botActivityEnabled}>
-                <InputLabel id="select-botActivityEnabled">
+                error={!!errors.bot_activity_enabled}>
+                <InputLabel id="select-bot_activity_enabled">
                   Twitch Bot Activities
                 </InputLabel>
 
@@ -107,9 +116,46 @@ const TwitchBotForm = () => {
                     setButtonEnabled(true);
                   }}
                   value={value}
-                  labelId="select-botActivityEnabled"
-                  id="select-botActivityEnabled"
+                  labelId="select-bot_activity_enabled"
+                  id="select-bot_activity_enabled"
                   label="Twitch Bot Activities">
+                  <MenuItem value="0">Disabled</MenuItem>
+                  <MenuItem value="1">Enabled</MenuItem>
+                </Select>
+                <FormHelperText>{handleError(error)}</FormHelperText>
+              </FormControl>
+            )}
+          />
+        </Box>
+        <Box
+          sx={{
+            "& > :not(style)": {
+              m: 1,
+            },
+          }}>
+          <InputLabel>Mods can create/update/delete custom commands</InputLabel>
+          <Controller
+            name="mods_manage_cmds_enabled"
+            control={control}
+            render={({ field: { onChange, value }, fieldState: { error } }) => (
+              <FormControl
+                sx={{ m: 2 }}
+                size="small"
+                fullWidth
+                error={!!errors.mods_manage_cmds_enabled}>
+                <InputLabel id="select-mods_manage_cmds_enabled">
+                  Mods can create/update/delete commands
+                </InputLabel>
+
+                <Select
+                  onChange={field => {
+                    onChange(field.target.value);
+                    setButtonEnabled(true);
+                  }}
+                  value={value}
+                  labelId="select-mods_manage_cmds_enabled"
+                  id="select-mods_manage_cmds_enabled"
+                  label="Mods can create/update/delete commands">
                   <MenuItem value="0">Disabled</MenuItem>
                   <MenuItem value="1">Enabled</MenuItem>
                 </Select>

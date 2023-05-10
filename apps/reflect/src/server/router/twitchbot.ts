@@ -96,7 +96,7 @@ export const twitchBotRouter = t.router({
 
       if (!userId) return;
 
-      const { configName, configValue } = input;
+      const { configs } = input;
 
       const twitchAccount = await ctx.prisma.account.findFirst({
         where: {
@@ -109,29 +109,35 @@ export const twitchBotRouter = t.router({
       const twitchAccId = twitchAccount?.providerAccountId;
       if (!twitchAccId) return;
 
-      const findConfig = await ctx.prisma.twitchBotConfigs.findFirst({
-        where: { configName: configName, twitchChannelId: twitchAccId },
-      });
-
-      if (findConfig) {
-        return await ctx.prisma.twitchBotConfigs.update({
+      configs.forEach(async config => {
+        const findConfig = await ctx.prisma.twitchBotConfigs.findFirst({
           where: {
-            id: findConfig.id,
-          },
-          data: {
-            configName,
-            configValue,
+            configName: config.configName,
+            twitchChannelId: twitchAccId,
           },
         });
-      }
 
-      return await ctx.prisma.twitchBotConfigs.create({
-        data: {
-          configName: configName,
-          configValue: configValue,
-          twitchChannelId: twitchAccId,
-          userId: userId,
-        },
+        if (findConfig) {
+          await ctx.prisma.twitchBotConfigs.update({
+            where: {
+              id: findConfig.id,
+            },
+            data: {
+              configName: config.configName,
+              configValue: config.configValue,
+            },
+          });
+          return;
+        }
+
+        await ctx.prisma.twitchBotConfigs.create({
+          data: {
+            configName: config.configName,
+            configValue: config.configValue,
+            twitchChannelId: twitchAccId,
+            userId: userId,
+          },
+        });
       });
     }),
 
@@ -156,4 +162,21 @@ export const twitchBotRouter = t.router({
         where: { configName: configName, twitchChannelId: twitchAccId },
       });
     }),
+  getAllConfigs: t.procedure.query(async ({ ctx }) => {
+    const userId = ctx.session?.user?.id;
+
+    if (!userId) return;
+
+    const twitchAccount = await ctx.prisma.account.findFirst({
+      where: { userId: userId, provider: "twitch" },
+      select: { providerAccountId: true },
+    });
+
+    const twitchAccId = twitchAccount?.providerAccountId;
+    if (!twitchAccId) return;
+
+    return await ctx.prisma.twitchBotConfigs.findMany({
+      where: { twitchChannelId: twitchAccId },
+    });
+  }),
 });

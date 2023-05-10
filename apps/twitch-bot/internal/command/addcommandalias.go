@@ -14,7 +14,7 @@ import (
 const ADD_COMMAND_ALIAS_INFO = "!acmda [command_name] [command_alias(es) separated by space]"
 
 func AddCommandAliasCommand(client *client.Clients, server *server.SenchabotAPIServer, message twitch.PrivateMessage, commandName string, params []string) {
-	if !helpers.CanExecuteCommand(message) {
+	if !helpers.CanExecuteCommand(context.Background(), server, message) {
 		return
 	}
 	if len(params) < 2 {
