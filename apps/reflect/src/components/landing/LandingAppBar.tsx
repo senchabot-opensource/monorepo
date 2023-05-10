@@ -25,6 +25,11 @@ const appBarMenuList = [
   { title: "Credits", path: "/credits" },
 ];
 
+const toolBarStyles = {
+  justifyContent: "space-between",
+  alignItems: "center",
+};
+
 const LandingAppBar = () => {
   const { data: session } = useSession();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -48,6 +53,7 @@ const LandingAppBar = () => {
         elevation={0}>
         <Box sx={{ flexGrow: 1 }}>
           <Toolbar
+            style={toolBarStyles}
             variant="regular"
             sx={{
               userSelect: "none",
@@ -84,11 +90,6 @@ const LandingAppBar = () => {
             </Menu>
             <AppBarTitle />
 
-            <Box
-              sx={{
-                flexGrow: 1,
-                display: { xs: "none", sm: "none", md: "flex" },
-              }}></Box>
             <LandingButton
               href="/app"
               sx={{
