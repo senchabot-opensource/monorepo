@@ -3,9 +3,6 @@ import {
   Avatar,
   ListItemAvatar,
   ListItemText,
-  Stack,
-  Icon,
-  Container,
   Grid,
 } from "@mui/material";
 import { SiDiscord, SiTwitch } from "react-icons/si";
