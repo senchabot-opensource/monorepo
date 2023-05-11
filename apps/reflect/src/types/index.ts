@@ -42,8 +42,8 @@ interface IBotActionActivity {
 }
 
 interface ITwitchBotConfig {
-  configName: any;
-  configValue: any;
+  key: any;
+  value: any;
 }
 
 interface ITwitchBotFormSubmitData {
