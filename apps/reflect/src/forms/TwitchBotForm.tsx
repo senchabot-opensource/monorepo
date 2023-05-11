@@ -48,7 +48,7 @@ const TwitchBotForm = () => {
       if (!configs) return;
 
       configs.forEach((config: ITwitchBotConfig) =>
-        setValue(config.configName, config.configValue),
+        setValue(config.key, config.value),
       );
     }
   }, [isLoading, configs]);
@@ -65,12 +65,12 @@ const TwitchBotForm = () => {
     configsMutate.mutate({
       configs: [
         {
-          configName: "bot_activity_enabled",
-          configValue: data.bot_activity_enabled,
+          key: "bot_activity_enabled",
+          value: data.bot_activity_enabled,
         },
         {
-          configName: "mods_manage_cmds_enabled",
-          configValue: data.mods_manage_cmds_enabled,
+          key: "mods_manage_cmds_enabled",
+          value: data.mods_manage_cmds_enabled,
         },
       ],
     });

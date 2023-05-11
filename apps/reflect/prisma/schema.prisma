@@ -96,14 +96,14 @@ model TwitchChannel {
 
 model TwitchBotConfigs {
     id              Int      @id @default(autoincrement())
-    configName      String   @map("config_name")
-    configValue     String   @map("config_value")
+    key             String   @map("key")
+    value           String   @map("value")
     twitchChannelId String   @map("twitch_channel_id")
     userId          String?  @map("user_id")
     user            User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
     createdAt       DateTime @default(now()) @map("created_at")
 
-    @@unique([configName, twitchChannelId])
+    @@unique([key, twitchChannelId])
     @@map("twitch_bot_configs")
 }
 

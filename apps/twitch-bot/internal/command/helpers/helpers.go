@@ -77,7 +77,7 @@ func checkModsCanManageCmds(context context.Context, twitchChannelId string, ser
 	}
 
 	if configData != nil {
-		if configData.ConfigValue == "1" {
+		if configData.Value == "1" {
 			return true, nil
 		}
 	}

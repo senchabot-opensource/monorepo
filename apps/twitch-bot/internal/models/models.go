@@ -11,8 +11,8 @@ type TwitchChannel struct {
 
 type TwitchBotConfig struct {
 	ID              int
-	ConfigName      string `gorm:"column:config_name"`
-	ConfigValue     string `gorm:"column:config_value"`
+	Key             string `gorm:"column:key"`
+	Value           string `gorm:"column:value"`
 	TwitchChannelID string `gorm:"column:twitch_channel_id"`
 }
 

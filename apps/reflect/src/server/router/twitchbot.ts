@@ -112,7 +112,7 @@ export const twitchBotRouter = t.router({
       configs.forEach(async config => {
         const findConfig = await ctx.prisma.twitchBotConfigs.findFirst({
           where: {
-            configName: config.configName,
+            key: config.key,
             twitchChannelId: twitchAccId,
           },
         });
@@ -123,8 +123,8 @@ export const twitchBotRouter = t.router({
               id: findConfig.id,
             },
             data: {
-              configName: config.configName,
-              configValue: config.configValue,
+              key: config.key,
+              value: config.value,
             },
           });
           return;
@@ -132,8 +132,8 @@ export const twitchBotRouter = t.router({
 
         await ctx.prisma.twitchBotConfigs.create({
           data: {
-            configName: config.configName,
-            configValue: config.configValue,
+            key: config.key,
+            value: config.value,
             twitchChannelId: twitchAccId,
             userId: userId,
           },
@@ -148,7 +148,7 @@ export const twitchBotRouter = t.router({
 
       if (!userId) return;
 
-      const { configName } = input;
+      const { key } = input;
 
       const twitchAccount = await ctx.prisma.account.findFirst({
         where: { userId: userId, provider: "twitch" },
@@ -159,7 +159,7 @@ export const twitchBotRouter = t.router({
       if (!twitchAccId) return;
 
       return await ctx.prisma.twitchBotConfigs.findFirst({
-        where: { configName: configName, twitchChannelId: twitchAccId },
+        where: { key: key, twitchChannelId: twitchAccId },
       });
     }),
   getAllConfigs: t.procedure.query(async ({ ctx }) => {
