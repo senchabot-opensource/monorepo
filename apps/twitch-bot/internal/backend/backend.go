@@ -10,7 +10,7 @@ type Backend interface {
 	GetTwitchChannels(ctx context.Context) ([]*models.TwitchChannel, error)
 	CreateTwitchChannel(ctx context.Context, channelId string, channelName string, userId *string) (bool, error)
 
-	GetTwitchBotConfig(ctx context.Context, twitchChannelId string, configName string) (*models.TwitchBotConfig, error)
+	GetTwitchBotConfig(ctx context.Context, twitchChannelId string, configKey string) (*models.TwitchBotConfig, error)
 
 	GetBotCommand(ctx context.Context, commandName string, twitchChannelId string) (*models.BotCommand, error)
 	CreateBotCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string, createdBy string) (*string, error)
