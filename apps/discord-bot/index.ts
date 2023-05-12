@@ -5,6 +5,7 @@ import { readdirSync } from "fs";
 import DiscordClient from "./client";
 import { env } from "./utils/env";
 import { checkScheduledEvents } from "./utils/scheduledEventFunctions";
+import { IHandler } from "./types";
 
 const client = new DiscordClient({
   intents: [
@@ -31,9 +32,9 @@ const client = new DiscordClient({
 
 const handlersPath = join(__dirname, "handlers");
 const handlerFiles = readdirSync(handlersPath);
-handlerFiles.forEach((handlerFile: any) => {
+handlerFiles.forEach((handlerFile: string) => {
   const filePath = join(handlersPath, handlerFile);
-  import(filePath).then(handler => handler.default(client));
+  import(filePath).then(handler => (handler as { default: IHandler }).default(client));
 });
 
 checkScheduledEvents(client.guilds);

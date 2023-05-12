@@ -1,6 +1,7 @@
 import { readdirSync } from "fs";
 import { IDiscordClient } from "../client";
 import { join } from "path";
+import { ICommand } from "../types";
 
 export default async (client: IDiscordClient) => {
   console.log("INITIALIZING COMMAND HANDLER");
@@ -10,14 +11,13 @@ export default async (client: IDiscordClient) => {
 
   for (const file of commandFiles) {
     const filePath = join(commandsPath, file);
-    const command = await import(filePath);
+    const command = await import(filePath) as { default: ICommand };
 
     if (command.default.data) {
       client.commands.set(command.default.data.name, command.default);
       console.log("[SUCCESS]", file, "command file loaded.");
     } else {
       console.log("[ERROR]", file, "command file is not loaded.");
-      continue;
     }
   }
 
