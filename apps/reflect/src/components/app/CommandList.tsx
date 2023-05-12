@@ -125,11 +125,17 @@ const CommandList = () => {
                               )
                               .map((alias: IBotCommandAlias, index: number) => (
                                 <>
-                                  Alias:{alias.commandAlias}
-                                  {alias.commandAlias.length > 0 &&
-                                  alias.commandAlias.length - 1 !== index
-                                    ? ","
-                                    : null}
+                                  {/* if alias is first element add "Alias:" 
+                                  before element else write alias directly it's best way because we can not have any 
+                                  relation outside the array we have one alternative of this usage and that is run one
+                                   more filter method so we already have 2 maping method  */}
+                                  {index == 0
+                                    ? "Alias: " + alias.commandAlias
+                                    : " " + alias.commandAlias}
+                                  {/* this is add comma if alias is not last item */}
+                                  {aliasCommands.length > 1 &&
+                                    index < aliasCommands.length - 1 &&
+                                    ","}
                                 </>
                               ))}
                           />
