@@ -116,23 +116,23 @@ const CommandList = () => {
                                 display: "flex",
                                 alignItems: "center",
                               },
-                            }}>
-                            {command.commandName}
-                            {aliasCommands
+                            }}
+                            primary={command.commandName}
+                            secondary={aliasCommands
                               ?.filter(
                                 (item: IBotCommand) =>
                                   item.commandName === command.commandName,
                               )
-                              .map((alias: IBotCommandAlias) => (
-                                <ListItemText
-                                  sx={{
-                                    marginLeft: "0.5rem",
-                                    color: "red",
-                                  }}>
-                                  {alias.commandAlias}
-                                </ListItemText>
+                              .map((alias: IBotCommandAlias, index: number) => (
+                                <>
+                                  Alias:{alias.commandAlias}
+                                  {alias.commandAlias.length > 0 &&
+                                  alias.commandAlias.length - 1 !== index
+                                    ? ","
+                                    : null}
+                                </>
                               ))}
-                          </ListItemText>
+                          />
                         </ListItem>
                       </AccordionSummary>
                       <AccordionDetails
