@@ -12,12 +12,16 @@ func GetCommands() map[string]func(client *client.Clients, server *server.Sencha
 		"ping":      PingCommand,
 		"invite":    InviteCommand,
 		"senchabot": SenchabotCommand,
+		"sukru":     SukruCommand,
 
 		"acmd": AddCommandCommand,
 		"ucmd": UpdateCommandCommand,
 		"dcmd": DeleteCommandCommand,
 		//"info": InfoCommandCommand,
 		//"cmds": CmdsCommandCommand,
+
+		"acmda": AddCommandAliasCommand,
+		"dcmda": DeleteCommandAliasCommand,
 
 		"kampus":       KampusCommand,
 		"frontendship": FrontendshipCommand,

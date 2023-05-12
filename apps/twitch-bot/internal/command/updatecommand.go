@@ -7,16 +7,15 @@ import (
 
 	"github.com/gempir/go-twitch-irc/v3"
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/client"
+	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/command/helpers"
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/server"
 )
 
 const UPDATE_COMMAND_INFO = "!ucmd [command_name] [new_command_content]"
 
 func UpdateCommandCommand(client *client.Clients, server *server.SenchabotAPIServer, message twitch.PrivateMessage, commandName string, params []string) {
-	if !strings.Contains(message.Tags["badges"], "moderator") {
-		if !strings.Contains(message.Tags["badges"], "broadcaster") {
-			return
-		}
+	if !helpers.CanExecuteCommand(context.Background(), server, message) {
+		return
 	}
 	if len(params) < 2 {
 		client.Twitch.Say(message.Channel, UPDATE_COMMAND_INFO)
@@ -35,7 +34,7 @@ func UpdateCommandCommand(client *client.Clients, server *server.SenchabotAPISer
 		client.Twitch.Say(message.Channel, message.User.DisplayName+", Command Content length must be no more than 400 chars")
 		return
 	}
-	err := server.UpdateBotCommand(context.Background(), command_name, newCommandContent, message.RoomID)
+	err := server.UpdateBotCommand(context.Background(), command_name, newCommandContent, message.RoomID, message.User.DisplayName)
 	if err != nil {
 		fmt.Println(err.Error())
 		return

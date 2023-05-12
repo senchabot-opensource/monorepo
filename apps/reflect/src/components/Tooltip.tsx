@@ -1,11 +1,10 @@
 import { styled } from "@mui/material/styles";
 import Tooltip, { TooltipProps, tooltipClasses } from "@mui/material/Tooltip";
-import Button from "@mui/material/Button";
 
 export const BootstrapTooltip = styled(
   ({ className, ...props }: TooltipProps) => (
     <Tooltip {...props} arrow classes={{ popper: className }} sx={{ mr: 1 }} />
-  )
+  ),
 )(({ theme }) => ({
   [`& .${tooltipClasses.arrow}`]: {
     color: theme.palette.common.black,

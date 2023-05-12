@@ -33,8 +33,8 @@ func (s *SenchabotAPIServer) CreateTwitchChannel(ctx context.Context, channelId 
 	return alreadyJoined, nil
 }
 
-func (s *SenchabotAPIServer) GetTwitchBotConfig(ctx context.Context, twitchChannelId string, configName string) (*models.TwitchBotConfig, error) {
-	configData, err := s.backend.GetTwitchBotConfig(ctx, twitchChannelId, configName)
+func (s *SenchabotAPIServer) GetTwitchBotConfig(ctx context.Context, twitchChannelId string, configKey string) (*models.TwitchBotConfig, error) {
+	configData, err := s.backend.GetTwitchBotConfig(ctx, twitchChannelId, configKey)
 	if err != nil {
 		return nil, err
 	}
@@ -51,17 +51,26 @@ func (s *SenchabotAPIServer) GetBotCommand(ctx context.Context, commandName stri
 	return commandData, nil
 }
 
-func (s *SenchabotAPIServer) CreateBotCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string) (bool, error) {
-	commandExists, err := s.backend.CreateBotCommand(ctx, commandName, commandContent, twitchChannelId)
+func (s *SenchabotAPIServer) CreateBotCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string, createdBy string) (*string, error) {
+	commandExists, err := s.backend.CreateBotCommand(ctx, commandName, commandContent, twitchChannelId, createdBy)
 	if err != nil {
-		return false, err
+		return nil, err
 	}
 
 	return commandExists, nil
 }
 
-func (s *SenchabotAPIServer) UpdateBotCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string) error {
-	err := s.backend.UpdateBotCommand(ctx, commandName, commandContent, twitchChannelId)
+func (s *SenchabotAPIServer) CheckCommandExists(ctx context.Context, commandName string, twitchChannelId string) (bool, error) {
+	check, err := s.backend.CheckCommandExists(ctx, commandName, twitchChannelId)
+	if err != nil {
+		return false, err
+	}
+
+	return check, nil
+}
+
+func (s *SenchabotAPIServer) UpdateBotCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string, updatedBy string) error {
+	err := s.backend.UpdateBotCommand(ctx, commandName, commandContent, twitchChannelId, updatedBy)
 	if err != nil {
 		return err
 	}
@@ -78,9 +87,36 @@ func (s *SenchabotAPIServer) DeleteBotCommand(ctx context.Context, commandName s
 	return nil
 }
 
-func (s *SenchabotAPIServer) CreateBotActionActivity(ctx context.Context, botPlatformType string, botActivity string, twitchChannelId string) error {
-	err := s.backend.CreateBotActionActivity(ctx, botPlatformType, botActivity, twitchChannelId)
+func (s *SenchabotAPIServer) CreateBotActionActivity(ctx context.Context, botPlatformType string, botActivity string, twitchChannelId string, commandAuthor string) error {
+	err := s.backend.CreateBotActionActivity(ctx, botPlatformType, "!"+botActivity, twitchChannelId, commandAuthor)
 
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *SenchabotAPIServer) CreateCommandAliases(ctx context.Context, commandName string, aliases []string, twitchChannelId string, createdBy string) (*string, error) {
+	existAlias, err := s.backend.CreateCommandAliases(ctx, commandName, aliases, twitchChannelId, createdBy)
+	if err != nil {
+		return nil, err
+	}
+
+	return existAlias, nil
+}
+
+func (s *SenchabotAPIServer) GetCommandAlias(ctx context.Context, commandAlias string, twitchChannelId string) (*string, error) {
+	command, err := s.backend.GetCommandAlias(ctx, commandAlias, twitchChannelId)
+	if err != nil {
+		return nil, err
+	}
+
+	return command, nil
+}
+
+func (s *SenchabotAPIServer) DeleteCommandAlias(ctx context.Context, commandAlias string, twitchChannelId string) error {
+	err := s.backend.DeleteCommandAlias(ctx, commandAlias, twitchChannelId)
 	if err != nil {
 		return err
 	}

@@ -1,6 +1,6 @@
-# Sencha Web App
+# Senchabot Web Interface
 
-Open-Source Web UI App for AI / Assistant
+Web application to use Senchabot through a web interface similar to the sci-fi themes.
 
 **Current Stage: `pre-alpha`**
 
@@ -8,6 +8,39 @@ Open-Source Web UI App for AI / Assistant
 
 - [React](https://reactjs.org/)
 - [Material UI](https://mui.com)
+
+## Getting Started
+
+### Prerequisites
+* Node.js (v18 or higher)
+
+### Installation
+1. Clone the repo and navigate to the monorepo directory
+   ```sh
+   git clone https://github.com/senchabot-dev/monorepo.git
+   cd monorepo
+   ```
+
+2. Navigate to the project directory and install dependencies
+   ```sh
+   cd apps/interface
+   npm install
+   ```
+
+## Usage
+
+1. Now you can start the Senchabot web interface app by running:
+   ```sh
+   npm run start
+   ```
+   
+2. Once the Senchabot web interface app is running, you can interact with it using these commands:
+   * `/color` - "changes color with the given color code and `bg` (background) or `fg` (foreground) parameters"
+
+      * for example: `/color fg #00FF00`
+   * `/theme` - "Changes the background and foreground colors from the theme name given as a parameter"
+
+      * for example: `/theme blue`
 
 ## Credits
 
@@ -27,7 +60,7 @@ Thanks to [Emre Ergül](https://github.com/emredevsalot) for the code and UX con
 
 ## License
 
-This project is licensed under the terms of the [MIT license](/LICENSE).
+This project is licensed under the terms of the [MIT license](./LICENSE).
 
 ---
 
