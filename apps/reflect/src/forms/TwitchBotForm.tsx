@@ -15,12 +15,13 @@ import AppSnackbar from "../components/app/AppSnackbar";
 import { SneacbarSeverity } from "../enums";
 import { ITwitchBotConfig, ITwitchBotFormSubmitData } from "src/types";
 
-type twitchBotActivityType = {
+type configBooleanState = {
   key: string;
   value: string;
 };
 
-const twitchBotActivityStatus: twitchBotActivityType[] = [
+// config values for boolean state and using it on select
+const configBooleanState: configBooleanState[] = [
   { key: "0", value: "Disabled" },
   { key: "1", value: "Enabled" },
 ];
@@ -123,11 +124,9 @@ const TwitchBotForm = () => {
                 labelId="select-bot_activity_enabled"
                 id="select-bot_activity_enabled"
                 label="Twitch Bot Activities">
-                {twitchBotActivityStatus.map(
-                  (status: twitchBotActivityType) => (
-                    <MenuItem value={status.key}>{status.value}</MenuItem>
-                  ),
-                )}
+                {configBooleanState.map((status: configBooleanState) => (
+                  <MenuItem value={status.key}>{status.value}</MenuItem>
+                ))}
               </Select>
               <FormHelperText>{handleError(error)}</FormHelperText>
             </FormControl>
@@ -162,11 +161,9 @@ const TwitchBotForm = () => {
                 labelId="select-mods_manage_cmds_enabled"
                 id="select-mods_manage_cmds_enabled"
                 label="Mods can create/update/delete commands">
-                {twitchBotActivityStatus.map(
-                  (status: twitchBotActivityType) => (
-                    <MenuItem value={status.key}>{status.value}</MenuItem>
-                  ),
-                )}
+                {configBooleanState.map((status: configBooleanState) => (
+                  <MenuItem value={status.key}>{status.value}</MenuItem>
+                ))}
               </Select>
               <FormHelperText>{handleError(error)}</FormHelperText>
             </FormControl>
