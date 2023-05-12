@@ -15,16 +15,6 @@ import AppSnackbar from "../components/app/AppSnackbar";
 import { SneacbarSeverity } from "../enums";
 import { ITwitchBotConfig, ITwitchBotFormSubmitData } from "src/types";
 
-type twitchBotActivityType = {
-  key: string;
-  value: string;
-};
-
-const twitchBotActivityStatus: twitchBotActivityType[] = [
-  { key: "0", value: "Disabled" },
-  { key: "1", value: "Enabled" },
-];
-
 const TwitchBotForm = () => {
   const [alertIsOpen, setAlertIsOpen] = useState<boolean>(false);
   const [snackbarIsOpen, setSnackbarIsOpen] = useState<boolean>(false);
@@ -100,78 +90,88 @@ const TwitchBotForm = () => {
         content="Something went wrong. Please try again later."
       />
       <form onSubmit={handleSubmit(onSubmit)}>
-        <InputLabel>Twitch Bot Configuration</InputLabel>
-        <Controller
-          name="bot_activity_enabled"
-          control={control}
-          render={({ field: { onChange, value }, fieldState: { error } }) => (
-            <FormControl
-              sx={{ mt: 2 }}
-              size="small"
-              fullWidth
-              error={!!errors.bot_activity_enabled}>
-              <InputLabel id="select-bot_activity_enabled">
-                Twitch Bot Activities
-              </InputLabel>
+        <Box
+          sx={{
+            "& > :not(style)": {
+              m: 1,
+            },
+          }}>
+          <InputLabel>Twitch Bot Configuration</InputLabel>
+          <Controller
+            name="bot_activity_enabled"
+            control={control}
+            render={({ field: { onChange, value }, fieldState: { error } }) => (
+              <FormControl
+                sx={{ m: 2 }}
+                size="small"
+                fullWidth
+                error={!!errors.bot_activity_enabled}>
+                <InputLabel id="select-bot_activity_enabled">
+                  Twitch Bot Activities
+                </InputLabel>
 
-              <Select
-                onChange={field => {
-                  onChange(field.target.value);
-                  setButtonEnabled(true);
-                }}
-                value={value}
-                labelId="select-bot_activity_enabled"
-                id="select-bot_activity_enabled"
-                label="Twitch Bot Activities">
-                {twitchBotActivityStatus.map(status => (
-                  <MenuItem value={status.key}>{status.value}</MenuItem>
-                ))}
-              </Select>
-              <FormHelperText>{handleError(error)}</FormHelperText>
-            </FormControl>
-          )}
-        />
-        <InputLabel sx={{ mt: 4 }}>
-          Mods can create/update/delete custom commands
-        </InputLabel>
-        <Controller
-          name="mods_manage_cmds_enabled"
-          control={control}
-          render={({ field: { onChange, value }, fieldState: { error } }) => (
-            <FormControl
-              sx={{ mt: 2 }}
-              size="small"
-              fullWidth
-              error={!!errors.mods_manage_cmds_enabled}>
-              <InputLabel id="select-mods_manage_cmds_enabled">
-                Mods can create/update/delete commands
-              </InputLabel>
+                <Select
+                  onChange={field => {
+                    onChange(field.target.value);
+                    setButtonEnabled(true);
+                  }}
+                  value={value}
+                  labelId="select-bot_activity_enabled"
+                  id="select-bot_activity_enabled"
+                  label="Twitch Bot Activities">
+                  <MenuItem value="0">Disabled</MenuItem>
+                  <MenuItem value="1">Enabled</MenuItem>
+                </Select>
+                <FormHelperText>{handleError(error)}</FormHelperText>
+              </FormControl>
+            )}
+          />
+        </Box>
+        <Box
+          sx={{
+            "& > :not(style)": {
+              m: 1,
+            },
+          }}>
+          <InputLabel>Mods can create/update/delete custom commands</InputLabel>
+          <Controller
+            name="mods_manage_cmds_enabled"
+            control={control}
+            render={({ field: { onChange, value }, fieldState: { error } }) => (
+              <FormControl
+                sx={{ m: 2 }}
+                size="small"
+                fullWidth
+                error={!!errors.mods_manage_cmds_enabled}>
+                <InputLabel id="select-mods_manage_cmds_enabled">
+                  Mods can create/update/delete commands
+                </InputLabel>
 
-              <Select
-                onChange={field => {
-                  onChange(field.target.value);
-                  setButtonEnabled(true);
-                }}
-                value={value}
-                labelId="select-mods_manage_cmds_enabled"
-                id="select-mods_manage_cmds_enabled"
-                label="Mods can create/update/delete commands">
-                {twitchBotActivityStatus.map(status => (
-                  <MenuItem value={status.key}>{status.value}</MenuItem>
-                ))}
-              </Select>
-              <FormHelperText>{handleError(error)}</FormHelperText>
-            </FormControl>
-          )}
-        />
-        <Button
-          disabled={!buttonEnabled}
-          fullWidth
-          variant="outlined"
-          sx={{ mt: 2 }}
-          type="submit">
-          Save
-        </Button>
+                <Select
+                  onChange={field => {
+                    onChange(field.target.value);
+                    setButtonEnabled(true);
+                  }}
+                  value={value}
+                  labelId="select-mods_manage_cmds_enabled"
+                  id="select-mods_manage_cmds_enabled"
+                  label="Mods can create/update/delete commands">
+                  <MenuItem value="0">Disabled</MenuItem>
+                  <MenuItem value="1">Enabled</MenuItem>
+                </Select>
+                <FormHelperText>{handleError(error)}</FormHelperText>
+              </FormControl>
+            )}
+          />
+          <Button
+            disabled={!buttonEnabled}
+            fullWidth
+            variant="outlined"
+            sx={{ m: 1 }}
+            type="submit">
+            Save
+          </Button>
+        </Box>
       </form>
     </>
   );
