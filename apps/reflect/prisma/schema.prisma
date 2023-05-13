@@ -42,7 +42,7 @@ model BotActionActivities {
     activityDate    DateTime @default(now()) @map("activity_date")
     discordServerId String?  @map("discord_server_id")
     twitchChannelId String?  @map("twitch_channel_id")
-    commandAuthor   String?  @map("command_author")
+    activityAuthor  String?  @map("activity_author")
 
     @@map("bot_action_activities")
 }

@@ -162,12 +162,12 @@ func (b *PostgreSQLBackend) DeleteBotCommand(ctx context.Context, commandName st
 	return nil
 }
 
-func (b *PostgreSQLBackend) CreateBotActionActivity(ctx context.Context, botPlatformType string, botActivity string, twitchChannelId string, commandAuthor string) error {
+func (b *PostgreSQLBackend) CreateBotActionActivity(ctx context.Context, botPlatformType string, botActivity string, twitchChannelId string, activityAuthor string) error {
 	botActionActivity := models.BotActionActivity{
 		BotPlatformType: botPlatformType,
 		BotActivity:     botActivity,
 		TwitchChannelID: &twitchChannelId,
-		CommandAuthor:   &commandAuthor,
+		ActivityAuthor:  &activityAuthor,
 	}
 
 	result := b.DB.Create(&botActionActivity)
