@@ -1,8 +1,20 @@
 import { styled, useTheme } from "@mui/material/styles";
-import { Drawer, IconButton, Divider, Typography } from "@mui/material";
+import {
+  Drawer,
+  IconButton,
+  Divider,
+  Typography,
+  MenuList,
+  MenuItem,
+  ListItemIcon,
+  ListItemText,
+  Stack,
+} from "@mui/material";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { env } from "../../env/client.mjs";
+import { RiGlobalFill } from "react-icons/ri";
+import Link from "next/link";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -32,8 +44,7 @@ const AppDrawer = ({ isDrawerOpen, drawerHandler }: IAppDrawer) => {
       }}
       variant="persistent"
       anchor="left"
-      open={isDrawerOpen}
-    >
+      open={isDrawerOpen}>
       <DrawerHeader>
         <Typography
           variant="h5"
@@ -46,8 +57,7 @@ const AppDrawer = ({ isDrawerOpen, drawerHandler }: IAppDrawer) => {
             letterSpacing: ".3rem",
             color: "inherit",
             textDecoration: "none",
-          }}
-        >
+          }}>
           {env.NEXT_PUBLIC_APP_NAME}
         </Typography>
         <IconButton onClick={drawerHandler}>
@@ -59,6 +69,17 @@ const AppDrawer = ({ isDrawerOpen, drawerHandler }: IAppDrawer) => {
         </IconButton>
       </DrawerHeader>
       <Divider />
+      <Stack direction="column" padding="20px 20px 0px 20px">
+        <Typography fontSize="large">Common</Typography>
+        <MenuList>
+          <MenuItem href="/app/command-list" component={Link}>
+            <ListItemIcon>
+              <RiGlobalFill />
+            </ListItemIcon>
+            <ListItemText>All Command List</ListItemText>
+          </MenuItem>
+        </MenuList>
+      </Stack>
     </Drawer>
   );
 };

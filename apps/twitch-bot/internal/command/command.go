@@ -20,6 +20,9 @@ func GetCommands() map[string]func(client *client.Clients, server *server.Sencha
 		//"info": InfoCommandCommand,
 		//"cmds": CmdsCommandCommand,
 
+		"acmda": AddCommandAliasCommand,
+		"dcmda": DeleteCommandAliasCommand,
+
 		"kampus":       KampusCommand,
 		"frontendship": FrontendshipCommand,
 	}

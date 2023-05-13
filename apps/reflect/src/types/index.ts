@@ -21,4 +21,43 @@ interface IHeader {
   index: boolean;
 }
 
-export type { AnyContextType, IAppBarButton, ILandingContainer, IHeader };
+interface IBotCommand {
+  id: number;
+  commandName: string;
+  commandContent: string;
+  twitchChannelId: string | null;
+  discordServerId: string | null;
+  createdBy: string | null;
+  updatedBy: string | null;
+  createdAt: Date;
+}
+
+interface IBotActionActivity {
+  botPlatformType: string;
+  botActivity: string;
+  activityDate: Date;
+  discordServerId: string | null;
+  twitchChannelId: string | null;
+  commandAuthor: string | null;
+}
+
+interface ITwitchBotConfig {
+  key: any;
+  value: any;
+}
+
+interface ITwitchBotFormSubmitData {
+  bot_activity_enabled: string;
+  mods_manage_cmds_enabled: string;
+}
+
+export type {
+  AnyContextType,
+  IAppBarButton,
+  ILandingContainer,
+  IHeader,
+  IBotCommand,
+  IBotActionActivity,
+  ITwitchBotFormSubmitData,
+  ITwitchBotConfig,
+};

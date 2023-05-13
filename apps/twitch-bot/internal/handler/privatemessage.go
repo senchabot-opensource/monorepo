@@ -29,8 +29,8 @@ func PrivateMessage(client *client.Clients, server *server.SenchabotAPIServer) {
 				}
 
 				if configData != nil {
-					if configData.ConfigValue == "1" {
-						if err := server.CreateBotActionActivity(context.Background(), "twitch", cmd, message.RoomID); err != nil {
+					if configData.Value == "1" {
+						if err := server.CreateBotActionActivity(context.Background(), "twitch", cmd, message.RoomID, message.User.DisplayName); err != nil {
 							fmt.Println(err.Error())
 						}
 					}
@@ -39,6 +39,15 @@ func PrivateMessage(client *client.Clients, server *server.SenchabotAPIServer) {
 			}
 
 			// HANDLE CUSTOM COMMANDS
+			commandAlias, cmdAliasErr := server.GetCommandAlias(context.Background(), cmd, message.RoomID)
+			if cmdAliasErr != nil {
+				fmt.Println(cmdAliasErr.Error())
+			}
+
+			if commandAlias != nil {
+				cmd = *commandAlias
+			}
+
 			cmdData, err := server.GetBotCommand(context.Background(), cmd, message.RoomID)
 			if err != nil {
 				fmt.Println(err.Error())
@@ -55,8 +64,8 @@ func PrivateMessage(client *client.Clients, server *server.SenchabotAPIServer) {
 					}
 
 					if configData != nil {
-						if configData.ConfigValue == "1" {
-							if err := server.CreateBotActionActivity(context.Background(), "twitch", cmd, message.RoomID); err != nil {
+						if configData.Value == "1" {
+							if err := server.CreateBotActionActivity(context.Background(), "twitch", cmd, message.RoomID, message.User.DisplayName); err != nil {
 								fmt.Println(err.Error())
 							}
 						}

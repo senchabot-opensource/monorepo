@@ -42,7 +42,7 @@ func InviteCommand(client *client.Clients, server *server.SenchabotAPIServer, me
 	client.Twitch.Join(channelName)
 	optionalCommands := models.GetOptionalCommands()
 	for _, command := range optionalCommands {
-		_, err := server.CreateBotCommand(context.Background(), command.CommandName, command.CommandContent, twitchChannelId)
+		_, err := server.CreateBotCommand(context.Background(), command.CommandName, command.CommandContent, twitchChannelId, "Senchabot")
 		if err != nil {
 			fmt.Println(err.Error())
 		}

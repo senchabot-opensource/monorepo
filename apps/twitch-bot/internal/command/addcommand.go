@@ -7,16 +7,15 @@ import (
 
 	"github.com/gempir/go-twitch-irc/v3"
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/client"
+	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/command/helpers"
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/server"
 )
 
 const ADD_COMMAND_INFO = "!acmd [command_name] [command_content]"
 
 func AddCommandCommand(client *client.Clients, server *server.SenchabotAPIServer, message twitch.PrivateMessage, commandName string, params []string) {
-	if !strings.Contains(message.Tags["badges"], "moderator") {
-		if !strings.Contains(message.Tags["badges"], "broadcaster") {
-			return
-		}
+	if !helpers.CanExecuteCommand(context.Background(), server, message) {
+		return
 	}
 	if len(params) < 2 {
 		client.Twitch.Say(message.Channel, ADD_COMMAND_INFO)
@@ -39,13 +38,18 @@ func AddCommandCommand(client *client.Clients, server *server.SenchabotAPIServer
 		client.Twitch.Say(message.Channel, message.User.DisplayName+", Command Content length must be no more than 400 chars")
 		return
 	}
-	commandExists, err := server.CreateBotCommand(context.Background(), newCommandName, newCommandContent, message.RoomID)
+	commandExists, err := server.CreateBotCommand(context.Background(), newCommandName, newCommandContent, message.RoomID, message.User.DisplayName)
 	if err != nil {
 		fmt.Println(err.Error())
 		return
 	}
-	if commandExists {
-		client.Twitch.Say(message.Channel, message.User.DisplayName+", this command already exists")
+	if commandExists != nil {
+		if *commandExists == "command_exists" {
+			client.Twitch.Say(message.Channel, message.User.DisplayName+", this command is already in use")
+			return
+		}
+
+		client.Twitch.Say(message.Channel, message.User.DisplayName+", this command is already being used as command alias")
 		return
 	}
 	fmt.Println("COMMAND_ADD: command_name:", newCommandName, "command_content:", newCommandContent)
