@@ -106,7 +106,7 @@ const EULA = () => {
         <Typography variant="h5" sx={{ paddingTop: "20px" }}>
           By using Senchabot, you agree to be bound by the terms of this EULA.
           If you have any questions about this EULA or Senchabot, please contact
-          the Senchabot team at <strong>hello@senchabot.dev</strong>
+          the Senchabot team at <strong>hello@senchabot.app</strong>
         </Typography>
       </LandingContainer>
     </>
