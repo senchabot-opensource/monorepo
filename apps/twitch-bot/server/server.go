@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/backend"
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/models"
@@ -40,6 +41,22 @@ func (s *SenchabotAPIServer) GetTwitchBotConfig(ctx context.Context, twitchChann
 	}
 
 	return configData, nil
+}
+
+func (s *SenchabotAPIServer) CheckConfig(ctx context.Context, twitchChannelId string, configKey string, configValue string) bool {
+	configData, err := s.backend.GetTwitchBotConfig(ctx, twitchChannelId, configKey)
+	if err != nil {
+		fmt.Println(err.Error())
+		return false
+	}
+
+	if configData != nil {
+		if configData.Value == configValue {
+			return true
+		}
+	}
+
+	return false
 }
 
 func (s *SenchabotAPIServer) GetBotCommand(ctx context.Context, commandName string, twitchChannelId string) (*models.BotCommand, error) {

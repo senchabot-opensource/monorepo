@@ -2,7 +2,6 @@ package helpers
 
 import (
 	"context"
-	"fmt"
 	"math/rand"
 	"strconv"
 	"strings"
@@ -50,11 +49,7 @@ func CanExecuteCommand(context context.Context, server *server.SenchabotAPIServe
 
 	// moderator can run the command
 	if isModerator(message.Tags["badges"]) {
-		check, err := checkModsCanManageCmds(context, message.RoomID, server)
-		if err != nil {
-			fmt.Println("Error on CanExecuteCommand checkModsCanManageCmds: " + err.Error())
-			return false
-		}
+		check := server.CheckConfig(context, message.RoomID, "mods_manage_cmds_enabled", "1")
 		return check
 	}
 
@@ -68,19 +63,4 @@ func isBroadcaster(badgeTags string) bool {
 
 func isModerator(badgeTags string) bool {
 	return strings.Contains(badgeTags, "moderator")
-}
-
-func checkModsCanManageCmds(context context.Context, twitchChannelId string, server *server.SenchabotAPIServer) (bool, error) {
-	configData, err := server.GetTwitchBotConfig(context, twitchChannelId, "mods_manage_cmds_enabled")
-	if err != nil {
-		return false, err
-	}
-
-	if configData != nil {
-		if configData.Value == "1" {
-			return true, nil
-		}
-	}
-
-	return false, nil
 }
