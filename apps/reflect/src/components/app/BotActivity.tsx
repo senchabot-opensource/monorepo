@@ -50,7 +50,7 @@ const BotActivity = () => {
                       secondary={`${activity.activityDate.toDateString()} ${activity.activityDate
                         .toTimeString()
                         .slice(0, 8)} / ${
-                        activity.commandAuthor ?? "Senchabot"
+                        activity.activityAuthor ?? "Senchabot"
                       }`}
                     />
                   </ListItem>
