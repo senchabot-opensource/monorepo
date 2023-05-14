@@ -112,6 +112,19 @@ func (s *SenchabotAPIServer) CreateBotActionActivity(ctx context.Context, botPla
 	return nil
 }
 
+func (s *SenchabotAPIServer) SaveBotCommandActivity(context context.Context, commandName string, twitchChannelId string, commandAuthor string) {
+	check := s.CheckConfig(context, twitchChannelId, "bot_activity_enabled", "1")
+	if !check {
+		return
+	}
+
+	commandName = "!" + commandName
+
+	if err := s.CreateBotActionActivity(context, "twitch", commandName, twitchChannelId, commandAuthor); err != nil {
+		fmt.Println(err.Error())
+	}
+}
+
 func (s *SenchabotAPIServer) CreateCommandAliases(ctx context.Context, commandName string, aliases []string, twitchChannelId string, createdBy string) (*string, error) {
 	existAlias, err := s.backend.CreateCommandAliases(ctx, commandName, aliases, twitchChannelId, createdBy)
 	if err != nil {
