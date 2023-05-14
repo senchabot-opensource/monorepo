@@ -57,24 +57,15 @@ func RunCommand(context context.Context, client *client.Clients, server *server.
 		return
 	}
 
-	if c, ok := commands[cmdName]; ok {
-		c(client, server, message, cmdName, params)
-		configData, err := server.GetTwitchBotConfig(context, message.RoomID, "bot_activity_enabled")
-		if err != nil {
-			fmt.Println(err.Error())
-		}
-
-		if configData != nil {
-			if configData.Value == "1" {
-				if err := server.CreateBotActionActivity(context, "twitch", cmdName, message.RoomID, message.User.DisplayName); err != nil {
-					fmt.Println(err.Error())
-				}
-			}
-		}
+	if cmd, ok := commands[cmdName]; ok {
+		cmd(client, server, message, cmdName, params)
+		server.SaveBotCommandActivity(context, cmdName, message.RoomID, message.User.DisplayName)
 		return
 	}
 
 	// HANDLE CUSTOM COMMANDS
+
+	// HANDLE COMMAND ALIASES
 	commandAlias, cmdAliasErr := server.GetCommandAlias(context, cmdName, message.RoomID)
 	if cmdAliasErr != nil {
 		fmt.Println(cmdAliasErr.Error())
@@ -83,6 +74,7 @@ func RunCommand(context context.Context, client *client.Clients, server *server.
 	if commandAlias != nil {
 		cmdName = *commandAlias
 	}
+	// HANDLE COMMAND ALIASES
 
 	cmdData, err := server.GetBotCommand(context, cmdName, message.RoomID)
 	if err != nil {
@@ -90,23 +82,12 @@ func RunCommand(context context.Context, client *client.Clients, server *server.
 		return
 	}
 
-	if cmdData != nil {
-		if message.RoomID == cmdData.TwitchChannelID {
-			formattedCommandContent := helpers.FormatCommandContent(cmdData, message)
-			client.Twitch.Say(message.Channel, formattedCommandContent)
-			configData, err := server.GetTwitchBotConfig(context, message.RoomID, "bot_activity_enabled")
-			if err != nil {
-				fmt.Println(err.Error())
-			}
-
-			if configData != nil {
-				if configData.Value == "1" {
-					if err := server.CreateBotActionActivity(context, "twitch", cmdName, message.RoomID, message.User.DisplayName); err != nil {
-						fmt.Println(err.Error())
-					}
-				}
-			}
-		}
-		// HANDLE CUSTOM COMMANDS
+	if cmdData == nil || message.RoomID != cmdData.TwitchChannelID {
+		return
 	}
+
+	formattedCommandContent := helpers.FormatCommandContent(cmdData, message)
+	client.Twitch.Say(message.Channel, formattedCommandContent)
+	server.SaveBotCommandActivity(context, cmdName, message.RoomID, message.User.DisplayName)
+	// HANDLE CUSTOM COMMANDS
 }
