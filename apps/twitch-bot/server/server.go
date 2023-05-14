@@ -50,10 +50,8 @@ func (s *SenchabotAPIServer) CheckConfig(ctx context.Context, twitchChannelId st
 		return false
 	}
 
-	if configData != nil {
-		if configData.Value == configValue {
-			return true
-		}
+	if configData != nil && configData.Value == configValue {
+		return true
 	}
 
 	return false
