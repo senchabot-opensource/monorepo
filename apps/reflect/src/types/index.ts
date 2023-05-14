@@ -38,7 +38,7 @@ interface IBotActionActivity {
   activityDate: Date;
   discordServerId: string | null;
   twitchChannelId: string | null;
-  commandAuthor: string | null;
+  activityAuthor: string | null;
 }
 
 interface ITwitchBotConfig {
