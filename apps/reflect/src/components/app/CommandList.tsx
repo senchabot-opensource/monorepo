@@ -60,7 +60,7 @@ const CommandList = () => {
   const commandAlias = trpc.command.getAliasList.useQuery();
   const [isLoading, setIsLoading] = useState(true);
   const [botCommands, setBotCommands] = useState<IBotCommand[]>();
-  const [aliasCommands, setAliasCommands] = useState<any>();
+  const [aliasCommands, setAliasCommands] = useState<IBotCommandAlias[]>();
   const [expanded, setExpanded] = useState<string | false>(false);
 
   const handleChange =
@@ -120,7 +120,7 @@ const CommandList = () => {
                             primary={command.commandName}
                             secondary={aliasCommands
                               ?.filter(
-                                (item: IBotCommand) =>
+                                (item: IBotCommandAlias) =>
                                   item.commandName === command.commandName,
                               )
                               .map((alias: IBotCommandAlias, index: number) => (

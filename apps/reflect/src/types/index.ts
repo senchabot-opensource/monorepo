@@ -33,13 +33,13 @@ interface IBotCommand {
 }
 //TODO: this interface need refactor when bot command table relation will be done
 interface IBotCommandAlias {
-  id: string;
+  id: number;
   commandAlias: string;
   commandName: string;
   createdAt: Date;
-  createdBy?: string;
-  discordServerId?: string;
-  twitchChannelId?: string;
+  createdBy: string | null;
+  discordServerId: string | null;
+  twitchChannelId: string | null;
 }
 
 interface IBotActionActivity {
