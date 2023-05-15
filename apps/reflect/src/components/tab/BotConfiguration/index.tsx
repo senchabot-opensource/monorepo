@@ -1,4 +1,4 @@
-import { Box, Tab, Tabs } from "@mui/material";
+import { Box, Grid, Tab, Tabs } from "@mui/material";
 import React from "react";
 import VerticalTabPanel from "../../tabpanel/VerticalTabPanel";
 import TwitchBotForm from "src/forms/TwitchBotForm";
@@ -18,31 +18,29 @@ const BotConfigurationTab = () => {
   };
 
   return (
-    <Box
-      sx={{
-        flexGrow: 1,
-        display: "flex",
-        //height: 224,
-      }}>
-      <Tabs
-        orientation="vertical"
-        variant="scrollable"
-        value={vTPValue}
-        onChange={handleVTPChange}
-        aria-label="Vertical tab"
-        textColor="inherit"
-        sx={{
-          borderRight: 1,
-          borderColor: "divider",
-          display: { xs: "none", md: "flex" },
-        }}>
-        <Tab label="Twitch Bot" {...verticalTabPanelProps(0)} disableRipple />
-      </Tabs>
-
-      <VerticalTabPanel value={vTPValue} index={0}>
-        <TwitchBotForm />
-      </VerticalTabPanel>
-    </Box>
+    <Grid container spacing={2}>
+      <Grid item xs={0} sm={0} md={2}>
+        <Tabs
+          orientation="vertical"
+          variant="scrollable"
+          value={vTPValue}
+          onChange={handleVTPChange}
+          aria-label="Vertical tab"
+          textColor="inherit"
+          sx={{
+            borderRight: 1,
+            borderColor: "divider",
+            display: { xs: "none", md: "flex" },
+          }}>
+          <Tab label="Twitch Bot" {...verticalTabPanelProps(0)} disableRipple />
+        </Tabs>
+      </Grid>
+      <Grid item xs={12} sm={12} md={4}>
+        <VerticalTabPanel value={vTPValue} index={0}>
+          <TwitchBotForm />
+        </VerticalTabPanel>
+      </Grid>
+    </Grid>
   );
 };
 
