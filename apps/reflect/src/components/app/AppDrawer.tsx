@@ -13,12 +13,12 @@ import {
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { env } from "../../env/client.mjs";
-import { RiGlobalFill } from "react-icons/ri";
 import Link from "next/link";
 import { SiDiscord, SiTwitch } from "react-icons/si";
 import { trpc } from "../../utils/trpc";
 import CustomAlert from "../CustomAlert";
 import { useState } from "react";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -118,7 +118,7 @@ const AppDrawer = ({ isDrawerOpen, drawerHandler }: IAppDrawer) => {
         <MenuList>
           <MenuItem href="/app/command-list" component={Link}>
             <ListItemIcon>
-              <RiGlobalFill />
+              <FormatListBulletedIcon />
             </ListItemIcon>
             <ListItemText>All Command List</ListItemText>
           </MenuItem>

@@ -1,7 +1,7 @@
 import { Drawer, IconButton, Box } from "@mui/material";
-import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import { BootstrapTooltip } from "../../../Tooltip";
 import { FC } from "react";
+import MenuIcon from "@mui/icons-material/Menu";
 
 type IProps = {
   onClick: () => void;
@@ -9,10 +9,10 @@ type IProps = {
 
 const DrawerButton: FC<IProps> = ({ onClick }) => {
   return (
-    <BootstrapTooltip title="Bot Command List">
+    <BootstrapTooltip title="Open the menu">
       <Box>
         <IconButton onClick={onClick}>
-          <FormatListBulletedIcon />
+          <MenuIcon />
         </IconButton>
       </Box>
     </BootstrapTooltip>
