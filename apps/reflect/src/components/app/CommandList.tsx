@@ -130,11 +130,9 @@ const CommandList = () => {
                                    more filter method so we already have 2 maping method  */}
                                   {index == 0
                                     ? "Alias: " + alias.commandAlias
-                                    : " " + alias.commandAlias}
+                                    : ", " + alias.commandAlias}
                                   {/* this is add comma if alias is not last item */}
-                                  {aliasCommands.length > 1 &&
-                                    index < aliasCommands.length - 1 &&
-                                    ","}
+                                  {index == aliasCommands.length - 1 && ""}
                                 </>
                               ))}
                           />
