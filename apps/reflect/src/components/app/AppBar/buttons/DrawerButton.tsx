@@ -9,7 +9,7 @@ type IProps = {
 
 const DrawerButton: FC<IProps> = ({ onClick }) => {
   return (
-    <BootstrapTooltip title="Bot Command List">
+    <BootstrapTooltip title="Open the menu">
       <Box>
         <IconButton onClick={onClick}>
           <FormatListBulletedIcon />
