@@ -96,7 +96,6 @@ const CommandList = () => {
               botCommands.map((command: IBotCommand, index: number) => {
                 return (
                   <>
-                    {console.log(aliasCommands)}
                     <Accordion
                       expanded={expanded === "panel" + index.toString()}
                       onChange={handleChange("panel" + index.toString())}
