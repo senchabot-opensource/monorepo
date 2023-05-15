@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+
 const prisma = new PrismaClient();
 
 async function main() {
@@ -24,11 +25,31 @@ async function addCommandsAndAliases(twitchChannelId: string) {
       commandContent: "help command",
       twitchChannelId: twitchChannelId,
     },
+    {
+      commandName: "hello",
+      commandContent: "hello",
+      twitchChannelId: twitchChannelId,
+    },
   ];
   const commandAliases = [
     {
       commandAlias: "h",
       commandName: "help",
+      twitchChannelId: twitchChannelId,
+    },
+    {
+      commandAlias: "l",
+      commandName: "lurk",
+      twitchChannelId: twitchChannelId,
+    },
+    {
+      commandAlias: "lurking",
+      commandName: "lurk",
+      twitchChannelId: twitchChannelId,
+    },
+    {
+      commandAlias: "hi",
+      commandName: "hello",
       twitchChannelId: twitchChannelId,
     },
   ];
@@ -43,7 +64,7 @@ async function addCommandsAndAliases(twitchChannelId: string) {
 
     if (findCommand) return;
 
-    const createdCommand = await prisma.botCommands.create({
+    await prisma.botCommands.create({
       data: {
         commandName: command.commandName,
         commandContent: command.commandContent,
@@ -51,16 +72,57 @@ async function addCommandsAndAliases(twitchChannelId: string) {
         createdBy: "Senchabot",
       },
     });
+  }
 
-    for (const alias of commandAliases) {
-      await prisma.botCommandAliases.create({
-        data: {
-          commandAlias: alias.commandAlias,
-          commandName: createdCommand.commandName,
-          twitchChannelId: createdCommand.twitchChannelId,
-          createdBy: "Senchabot",
-        },
-      });
-    }
+  for (const alias of commandAliases) {
+    const findAlias = await prisma.botCommandAliases.findFirst({
+      where: {
+        commandAlias: alias.commandAlias,
+        twitchChannelId: alias.twitchChannelId,
+      },
+    });
+
+    if (findAlias) return;
+
+    await prisma.botCommandAliases.create({
+      data: {
+        commandAlias: alias.commandAlias,
+        commandName: alias.commandName,
+        twitchChannelId: twitchChannelId,
+        createdBy: "Senchabot",
+      },
+    });
+  }
+
+  const botActionActivities = [
+    {
+      botPlatformType: "twitch",
+      botActivity: "!lurk",
+      twitchChannelId: twitchChannelId,
+      activityAuthor: "Senchabot",
+    },
+    {
+      botPlatformType: "twitch",
+      botActivity: "Clear chat",
+      twitchChannelId: twitchChannelId,
+      activityAuthor: "Senchabot",
+    },
+    {
+      botPlatformType: "twitch",
+      botActivity: "Scheduled message: blabla",
+      twitchChannelId: twitchChannelId,
+      activityAuthor: "Senchabot",
+    },
+  ];
+
+  for (const activity of botActionActivities) {
+    await prisma.botActionActivities.create({
+      data: {
+        botPlatformType: activity.botPlatformType,
+        botActivity: activity.botActivity,
+        twitchChannelId: twitchChannelId,
+        activityAuthor: activity.activityAuthor,
+      },
+    });
   }
 }
