@@ -45,7 +45,8 @@ const SecurityForm = () => {
         <Typography style={typographyStyle}>
           Your e-mail address:{" "}
           {showEmailAddress
-            ? email && email.substring(email?.length / 2, email?.length)
+            ? email &&
+              email.replace(/(?<=.)[^@](?=[^@]*?@)|(?<=@.)[^@](?=.*@)/g, "*")
             : email &&
               email
                 .substring(email?.length / 2, email?.length)
