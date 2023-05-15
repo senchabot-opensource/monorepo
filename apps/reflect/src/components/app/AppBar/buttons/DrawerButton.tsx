@@ -1,7 +1,7 @@
 import { Drawer, IconButton, Box } from "@mui/material";
-import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import { BootstrapTooltip } from "../../../Tooltip";
 import { FC } from "react";
+import MenuIcon from "@mui/icons-material/Menu";
 
 type IProps = {
   onClick: () => void;
@@ -12,7 +12,7 @@ const DrawerButton: FC<IProps> = ({ onClick }) => {
     <BootstrapTooltip title="Open the menu">
       <Box>
         <IconButton onClick={onClick}>
-          <FormatListBulletedIcon />
+          <MenuIcon />
         </IconButton>
       </Box>
     </BootstrapTooltip>
