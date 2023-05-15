@@ -1,4 +1,3 @@
-import React from "react";
 import {
   List,
   ListItem,
@@ -17,12 +16,13 @@ import {
 import MuiAccordion, { AccordionProps } from "@mui/material/Accordion";
 import { trpc } from "../../utils/trpc";
 import LoadingBox from "../loading/LoadingBox";
-import { IBotCommand } from "../../types";
+import { IBotCommand, IBotCommandAlias } from "../../types";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MuiAccordionSummary, {
   AccordionSummaryProps,
 } from "@mui/material/AccordionSummary";
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
+import { useEffect, useState } from "react";
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion
@@ -57,23 +57,25 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
 
 const CommandList = () => {
   const commandList = trpc.command.getCommandList.useQuery();
-  const [isLoading, setIsLoading] = React.useState(true);
-  const [botCommands, setBotCommands] = React.useState<IBotCommand[]>();
-
-  const [expanded, setExpanded] = React.useState<string | false>(false);
+  const commandAlias = trpc.command.getAliasList.useQuery();
+  const [isLoading, setIsLoading] = useState(true);
+  const [botCommands, setBotCommands] = useState<IBotCommand[]>();
+  const [aliasCommands, setAliasCommands] = useState<IBotCommandAlias[]>();
+  const [expanded, setExpanded] = useState<string | false>(false);
 
   const handleChange =
     (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
       setExpanded(isExpanded ? panel : false);
     };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!commandList.isLoading) {
       if (!commandList.data) return;
       setBotCommands(commandList.data);
+      setAliasCommands(commandAlias.data);
       setIsLoading(false);
     }
-  }, [commandList]);
+  }, [commandList, commandAlias]);
 
   return (
     <Paper
@@ -105,8 +107,35 @@ const CommandList = () => {
                         sx={{
                           backgroundColor: "#000",
                         }}>
+                        {/*// TODO: need to refactor this on bot command table relation done  */}
                         <ListItem dense key={index} disablePadding>
-                          <ListItemText primary={command.commandName} />
+                          <ListItemText
+                            sx={{
+                              span: {
+                                display: "flex",
+                                alignItems: "center",
+                              },
+                            }}
+                            primary={command.commandName}
+                            secondary={aliasCommands
+                              ?.filter(
+                                (item: IBotCommandAlias) =>
+                                  item.commandName === command.commandName,
+                              )
+                              .map((alias: IBotCommandAlias, index: number) => (
+                                <>
+                                  {/* if alias is first element add "Alias:" 
+                                  before element else write alias directly it's best way because we can not have any 
+                                  relation outside the array we have one alternative of this usage and that is run one
+                                   more filter method so we already have 2 maping method  */}
+                                  {index == 0
+                                    ? "Alias: " + alias.commandAlias
+                                    : ", " + alias.commandAlias}
+                                  {/* this is add comma if alias is not last item */}
+                                  {index == aliasCommands.length - 1 && ""}
+                                </>
+                              ))}
+                          />
                         </ListItem>
                       </AccordionSummary>
                       <AccordionDetails

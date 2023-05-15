@@ -31,6 +31,16 @@ interface IBotCommand {
   updatedBy: string | null;
   createdAt: Date;
 }
+//TODO: this interface need refactor when bot command table relation will be done
+interface IBotCommandAlias {
+  id: number;
+  commandAlias: string;
+  commandName: string;
+  createdAt: Date;
+  createdBy: string | null;
+  discordServerId: string | null;
+  twitchChannelId: string | null;
+}
 
 interface IBotActionActivity {
   botPlatformType: string;
@@ -60,4 +70,5 @@ export type {
   IBotActionActivity,
   ITwitchBotFormSubmitData,
   ITwitchBotConfig,
+  IBotCommandAlias,
 };
