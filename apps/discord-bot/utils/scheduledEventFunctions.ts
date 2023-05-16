@@ -13,7 +13,6 @@ export const createLiveStreamEventFromMessage = (
   params: ICreateLiveStreamEventParams,
 ) => {
   if (!message.guild) return;
-  // @ts-ignore
   if (!TWITCH_EVENTS_CHANNELS.includes(message.channelId)) return;
 
   const msgContent = message.content;
