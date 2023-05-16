@@ -10,9 +10,10 @@ import dayjs from "dayjs";
 
 export const createLiveStreamEventFromMessage = (
   message: Message,
-  params: ICreateLiveStreamEventParams
+  params: ICreateLiveStreamEventParams,
 ) => {
   if (!message.guild) return;
+  // @ts-ignore
   if (!TWITCH_EVENTS_CHANNELS.includes(message.channelId)) return;
 
   const msgContent = message.content;
@@ -47,20 +48,20 @@ export const createLiveStreamEventFromMessage = (
     entityMetadata: { location: url },
   };
   const event = message.guild.scheduledEvents.create(eventOptions);
-  event.then((e) => e.setLocation(url));
+  event.then(e => e.setLocation(url));
 };
 
 export async function checkScheduledEvents(guilds: GuildManager) {
   const authProvider = new AppTokenAuthProvider(
     env.TWITCH_CLIENT_ID || "",
-    env.TWITCH_CLIENT_SECRET || ""
+    env.TWITCH_CLIENT_SECRET || "",
   );
 
   setInterval(async () => {
-    guilds.cache.forEach(async (guild) => {
+    guilds.cache.forEach(async guild => {
       const scheduledEvents = await guild.scheduledEvents.fetch();
 
-      scheduledEvents.forEach(async (event) => {
+      scheduledEvents.forEach(async event => {
         const location = event.entityMetadata?.location;
         const twitchUsernameRegex = /twitch\.tv\/(\w+)/;
         const twitchUsernameFromLocation =
@@ -75,12 +76,12 @@ export async function checkScheduledEvents(guilds: GuildManager) {
 
         if (!stream && event) {
           console.log(
-            `Twitch stream is offline (${streamer}), deleting Discord scheduled event`
+            `Twitch stream is offline (${streamer}), deleting Discord scheduled event`,
           );
           event.delete();
         } else {
           console.log(
-            `Twitch stream is live (${stream?.userName}: ${stream?.title})`
+            `Twitch stream is live (${stream?.userName}: ${stream?.title})`,
           );
           if (stream?.title && !event.name.includes(stream.title)) {
             event.setName(stream.title.substring(0, 99));

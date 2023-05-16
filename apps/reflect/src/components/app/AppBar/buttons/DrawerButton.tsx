@@ -1,4 +1,4 @@
-import { Drawer, IconButton, Box } from "@mui/material";
+import { IconButton, Box } from "@mui/material";
 import { BootstrapTooltip } from "../../../Tooltip";
 import { FC } from "react";
 import MenuIcon from "@mui/icons-material/Menu";

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { trpc } from "../utils/trpc";
 import { Controller, FieldError, useForm } from "react-hook-form";
 import {
-  Box,
   Button,
   FormControl,
   FormHelperText,
@@ -124,9 +123,13 @@ const TwitchBotForm = () => {
                 labelId="select-bot_activity_enabled"
                 id="select-bot_activity_enabled"
                 label="Twitch Bot Activities">
-                {configBooleanState.map((status: configBooleanState) => (
-                  <MenuItem value={status.key}>{status.value}</MenuItem>
-                ))}
+                {configBooleanState.map(
+                  (status: configBooleanState, index: number) => (
+                    <MenuItem key={index} value={status.key}>
+                      {status.value}
+                    </MenuItem>
+                  ),
+                )}
               </Select>
               <FormHelperText>{handleError(error)}</FormHelperText>
             </FormControl>
@@ -161,9 +164,13 @@ const TwitchBotForm = () => {
                 labelId="select-mods_manage_cmds_enabled"
                 id="select-mods_manage_cmds_enabled"
                 label="Mods can create/update/delete commands">
-                {configBooleanState.map((status: configBooleanState) => (
-                  <MenuItem value={status.key}>{status.value}</MenuItem>
-                ))}
+                {configBooleanState.map(
+                  (status: configBooleanState, index: number) => (
+                    <MenuItem key={index} value={status.key}>
+                      {status.value}
+                    </MenuItem>
+                  ),
+                )}
               </Select>
               <FormHelperText>{handleError(error)}</FormHelperText>
             </FormControl>
