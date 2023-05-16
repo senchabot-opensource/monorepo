@@ -1,5 +1,11 @@
 import React from "react";
-import { Container, CssBaseline, Paper, Dialog, DialogContent } from "@mui/material";
+import {
+  Container,
+  CssBaseline,
+  Paper,
+  Dialog,
+  DialogContent,
+} from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import ResponsiveAppBar from "./AppBar";
 
@@ -9,7 +15,6 @@ import { useSession } from "next-auth/react";
 import { AuthContainer } from "../auth/AuthContainer";
 import Loading from "../loading/Loading";
 import VersionText from "../common/VersionText";
-import { DialogBody } from "next/dist/client/components/react-dev-overlay/internal/components/Dialog";
 
 export interface IAppContainer {
   isLoading: boolean;

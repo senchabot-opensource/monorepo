@@ -25,7 +25,7 @@ const interfaceURL = "https://interface.senchabot.app";
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: prop => prop !== "open",
-})<AppBarProps>(({ theme, open }) => ({
+})<AppBarProps>(({ theme }) => ({
   transition: theme.transitions.create(["margin", "width"], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
