@@ -11,7 +11,7 @@ import (
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/server"
 )
 
-const ADD_COMMAND_INFO = "!acmd [command_name] [command_content]"
+const ADD_COMMAND_INFO = "For example: !acmd [command_name] [command_content]"
 
 func AddCommandCommand(client *client.Clients, server *server.SenchabotAPIServer, message twitch.PrivateMessage, commandName string, params []string) {
 	if !helpers.CanExecuteCommand(context.Background(), server, message) {

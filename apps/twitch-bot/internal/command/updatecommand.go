@@ -11,7 +11,7 @@ import (
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/server"
 )
 
-const UPDATE_COMMAND_INFO = "!ucmd [command_name] [new_command_content]"
+const UPDATE_COMMAND_INFO = "For example: !ucmd [command_name] [new_command_content]"
 
 func UpdateCommandCommand(client *client.Clients, server *server.SenchabotAPIServer, message twitch.PrivateMessage, commandName string, params []string) {
 	if !helpers.CanExecuteCommand(context.Background(), server, message) {

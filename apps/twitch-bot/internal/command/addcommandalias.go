@@ -11,7 +11,7 @@ import (
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/server"
 )
 
-const ADD_COMMAND_ALIAS_INFO = "!acmda [command_name] [command_alias(es) separated by space]"
+const ADD_COMMAND_ALIAS_INFO = "For example: !acmda [command_name] [command_alias(es) separated by space]"
 
 func AddCommandAliasCommand(client *client.Clients, server *server.SenchabotAPIServer, message twitch.PrivateMessage, commandName string, params []string) {
 	if !helpers.CanExecuteCommand(context.Background(), server, message) {
