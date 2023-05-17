@@ -148,6 +148,12 @@ func (b *PostgreSQLBackend) UpdateBotCommand(ctx context.Context, commandName st
 
 func (b *PostgreSQLBackend) DeleteBotCommand(ctx context.Context, commandName string, twitchChannelId string) error {
 	var botCommand *models.BotCommand
+	var botCommandAlias *models.BotCommandAlias
+
+	aliasDelete := b.DB.Where("command_name = ?", commandName).Where("twitch_channel_id = ?", twitchChannelId).Delete(&botCommandAlias)
+	if aliasDelete.Error != nil {
+		return errors.New("(DeleteBotCommand) db.AliasDelete Error: " + aliasDelete.Error.Error())
+	}
 
 	result := b.DB.Where("command_name = ?", commandName).Where("twitch_channel_id = ?", twitchChannelId).First(&botCommand)
 	if result.Error != nil {
