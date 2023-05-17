@@ -96,8 +96,8 @@ model TwitchChannel {
 
 model TwitchBotConfigs {
     id              Int      @id @default(autoincrement())
-    key             String   @map("key")
-    value           String   @map("value")
+    key             String   @map("config_key")
+    value           String   @map("config_value")
     twitchChannelId String   @map("twitch_channel_id")
     userId          String?  @map("user_id")
     user            User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
