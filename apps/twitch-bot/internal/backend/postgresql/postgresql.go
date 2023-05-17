@@ -57,7 +57,7 @@ func (b *PostgreSQLBackend) CreateTwitchChannel(ctx context.Context, channelId s
 
 func (b *PostgreSQLBackend) GetTwitchBotConfig(ctx context.Context, twitchChannelId string, configKey string) (*models.TwitchBotConfig, error) {
 	var twitchBotConfig models.TwitchBotConfig
-	result := b.DB.Where("twitch_channel_id = ?", twitchChannelId).Where("key = ?", configKey).First(&twitchBotConfig)
+	result := b.DB.Where("twitch_channel_id = ?", twitchChannelId).Where("config_key = ?", configKey).First(&twitchBotConfig)
 
 	if result.Error != nil {
 		return nil, errors.New("(GetTwitchBotConfig) db.First Error:" + result.Error.Error())
