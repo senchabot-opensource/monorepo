@@ -127,12 +127,17 @@ func (b *PostgreSQLBackend) CheckCommandExists(ctx context.Context, commandName 
 	return false, nil
 }
 
-func (b *PostgreSQLBackend) UpdateBotCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string, updatedBy string) error {
+func (b *PostgreSQLBackend) UpdateBotCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string, updatedBy string) (*string, error) {
 	var botCommand *models.BotCommand
+
+	command, _ := b.GetCommandAlias(ctx, commandName, twitchChannelId)
+	if command != nil {
+		commandName = *command
+	}
 
 	result := b.DB.Where("command_name = ?", commandName).Where("twitch_channel_id = ?", twitchChannelId).First(&botCommand)
 	if result.Error != nil {
-		return errors.New("(UpdateBotCommand) db.Find Error:" + result.Error.Error())
+		return nil, errors.New("(UpdateBotCommand) db.Find Error:" + result.Error.Error())
 	}
 
 	result = b.DB.Model(&botCommand).Updates(models.BotCommand{
@@ -140,32 +145,37 @@ func (b *PostgreSQLBackend) UpdateBotCommand(ctx context.Context, commandName st
 		UpdatedBy:      &updatedBy,
 	})
 	if result.Error != nil {
-		return errors.New("(UpdateBotCommand) db.Update Error:" + result.Error.Error())
+		return nil, errors.New("(UpdateBotCommand) db.Update Error:" + result.Error.Error())
 	}
 
-	return nil
+	return &commandName, nil
 }
 
-func (b *PostgreSQLBackend) DeleteBotCommand(ctx context.Context, commandName string, twitchChannelId string) error {
+func (b *PostgreSQLBackend) DeleteBotCommand(ctx context.Context, commandName string, twitchChannelId string) (*string, error) {
 	var botCommand *models.BotCommand
 	var botCommandAlias *models.BotCommandAlias
 
+	command, _ := b.GetCommandAlias(ctx, commandName, twitchChannelId)
+	if command != nil {
+		commandName = *command
+	}
+
 	aliasDelete := b.DB.Where("command_name = ?", commandName).Where("twitch_channel_id = ?", twitchChannelId).Delete(&botCommandAlias)
 	if aliasDelete.Error != nil {
-		return errors.New("(DeleteBotCommand) db.AliasDelete Error: " + aliasDelete.Error.Error())
+		return nil, errors.New("(DeleteBotCommand) db.AliasDelete Error: " + aliasDelete.Error.Error())
 	}
 
 	result := b.DB.Where("command_name = ?", commandName).Where("twitch_channel_id = ?", twitchChannelId).First(&botCommand)
 	if result.Error != nil {
-		return errors.New("(DeleteBotCommand) db.First Error:" + result.Error.Error())
+		return nil, errors.New("(DeleteBotCommand) db.First Error:" + result.Error.Error())
 	}
 
 	result = b.DB.Delete(&botCommand)
 	if result.Error != nil {
-		return errors.New("(DeleteBotCommand) db.Delete Error:" + result.Error.Error())
+		return nil, errors.New("(DeleteBotCommand) db.Delete Error:" + result.Error.Error())
 	}
 
-	return nil
+	return &commandName, nil
 }
 
 func (b *PostgreSQLBackend) CreateBotActionActivity(ctx context.Context, botPlatformType string, botActivity string, twitchChannelId string, activityAuthor string) error {

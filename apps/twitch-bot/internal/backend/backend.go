@@ -15,8 +15,8 @@ type Backend interface {
 	GetBotCommand(ctx context.Context, commandName string, twitchChannelId string) (*models.BotCommand, error)
 	CreateBotCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string, createdBy string) (*string, error)
 	CheckCommandExists(ctx context.Context, commandName string, twitchChannelId string) (bool, error)
-	UpdateBotCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string, updatedBy string) error
-	DeleteBotCommand(ctx context.Context, commandName string, twitchChannelId string) error
+	UpdateBotCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string, updatedBy string) (*string, error)
+	DeleteBotCommand(ctx context.Context, commandName string, twitchChannelId string) (*string, error)
 
 	CreateBotActionActivity(ctx context.Context, botPlatformType string, botActivity string, twitchChannelId string, commandAuthor string) error
 
