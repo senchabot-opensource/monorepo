@@ -84,22 +84,22 @@ func (s *SenchabotAPIServer) CheckCommandExists(ctx context.Context, commandName
 	return check, nil
 }
 
-func (s *SenchabotAPIServer) UpdateBotCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string, updatedBy string) error {
-	err := s.backend.UpdateBotCommand(ctx, commandName, commandContent, twitchChannelId, updatedBy)
+func (s *SenchabotAPIServer) UpdateBotCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string, updatedBy string) (*string, error) {
+	updatedCommandName, err := s.backend.UpdateBotCommand(ctx, commandName, commandContent, twitchChannelId, updatedBy)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return updatedCommandName, nil
 }
 
-func (s *SenchabotAPIServer) DeleteBotCommand(ctx context.Context, commandName string, twitchChannelId string) error {
-	err := s.backend.DeleteBotCommand(ctx, commandName, twitchChannelId)
+func (s *SenchabotAPIServer) DeleteBotCommand(ctx context.Context, commandName string, twitchChannelId string) (*string, error) {
+	deletedCommandName, err := s.backend.DeleteBotCommand(ctx, commandName, twitchChannelId)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return deletedCommandName, nil
 }
 
 func (s *SenchabotAPIServer) CreateBotActionActivity(ctx context.Context, botPlatformType string, botActivity string, twitchChannelId string, activityAuthor string) error {

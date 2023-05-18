@@ -23,13 +23,13 @@ func DeleteCommandCommand(client *client.Clients, server *server.SenchabotAPISer
 	}
 	var command_name = strings.ToLower(params[0])
 	if commandName != "" {
-		err := server.DeleteBotCommand(context.Background(), command_name, message.RoomID)
+		deletedCommandName, err := server.DeleteBotCommand(context.Background(), command_name, message.RoomID)
 		if err != nil {
 			fmt.Println(err.Error())
 			return
 		}
-		fmt.Println("COMMAND_DELETE: command_name:", command_name)
+		fmt.Println("COMMAND_DELETE: command_name:", deletedCommandName)
 
-		client.Twitch.Say(message.Channel, "Command Deleted: "+command_name)
+		client.Twitch.Say(message.Channel, "Command Deleted: "+*deletedCommandName)
 	}
 }
