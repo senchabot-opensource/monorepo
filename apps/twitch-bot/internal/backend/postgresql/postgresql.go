@@ -222,6 +222,11 @@ func (b *PostgreSQLBackend) CreateCommandAliases(ctx context.Context, commandNam
 			return &infoText, nil
 		}
 
+		if commandAlias == commandName {
+			infoText = "you cannot use the same name in command and command alias"
+			return &infoText, nil
+		}
+
 		commandAlias := models.BotCommandAlias{
 			CommandAlias:    commandAlias,
 			CommandName:     commandName,
