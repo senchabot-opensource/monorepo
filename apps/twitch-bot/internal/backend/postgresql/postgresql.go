@@ -187,6 +187,19 @@ func (b *PostgreSQLBackend) CreateBotActionActivity(ctx context.Context, botPlat
 
 func (b *PostgreSQLBackend) CreateCommandAliases(ctx context.Context, commandName string, aliases []string, twitchChannelId string, createdBy string) (*string, error) {
 	commandAliases := []models.BotCommandAlias{}
+	var infoText string
+
+	command, _ := b.GetCommandAlias(ctx, commandName, twitchChannelId)
+	if command != nil {
+		commandName = *command
+	}
+
+	// Check command exists
+	commandExist, _ := b.CheckCommandExists(ctx, commandName, twitchChannelId)
+	if !commandExist {
+		infoText = "the command " + commandName + " does not exist"
+		return &infoText, nil
+	}
 
 	for _, commandAlias := range aliases {
 		existAlias, err := b.CheckCommandAlias(ctx, commandAlias, twitchChannelId)
@@ -195,7 +208,8 @@ func (b *PostgreSQLBackend) CreateCommandAliases(ctx context.Context, commandNam
 		}
 
 		if existAlias != nil {
-			return existAlias, nil
+			infoText = "the command alias " + *existAlias + " already exists"
+			return &infoText, nil
 		}
 
 		commandAlias := models.BotCommandAlias{

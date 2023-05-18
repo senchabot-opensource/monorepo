@@ -126,12 +126,12 @@ func (s *SenchabotAPIServer) SaveBotCommandActivity(context context.Context, com
 }
 
 func (s *SenchabotAPIServer) CreateCommandAliases(ctx context.Context, commandName string, aliases []string, twitchChannelId string, createdBy string) (*string, error) {
-	existAlias, err := s.backend.CreateCommandAliases(ctx, commandName, aliases, twitchChannelId, createdBy)
+	infoText, err := s.backend.CreateCommandAliases(ctx, commandName, aliases, twitchChannelId, createdBy)
 	if err != nil {
 		return nil, err
 	}
 
-	return existAlias, nil
+	return infoText, nil
 }
 
 func (s *SenchabotAPIServer) GetCommandAlias(ctx context.Context, commandAlias string, twitchChannelId string) (*string, error) {
