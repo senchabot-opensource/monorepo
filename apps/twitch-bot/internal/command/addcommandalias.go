@@ -29,16 +29,18 @@ func AddCommandAliasCommand(client *client.Clients, server *server.SenchabotAPIS
 		return
 	}
 
-	commandAliasesList := strings.Join(params, ", ")
+	aliasCommands := helpers.MakeUniqueArray(params)
+
+	commandAliasesList := strings.Join(aliasCommands, ", ")
 
 	twitchChannelId := message.RoomID
 
-	if len(params) > 4 {
+	if len(aliasCommands) > 4 {
 		client.Twitch.Say(message.Channel, message.User.DisplayName+", Command Aliases length must be no more than 4")
 		return
 	}
 
-	infoText, err := server.CreateCommandAliases(context.Background(), command, params, twitchChannelId, message.User.DisplayName)
+	infoText, err := server.CreateCommandAliases(context.Background(), command, aliasCommands, twitchChannelId, message.User.DisplayName)
 	if err != nil {
 		fmt.Println("AddCommandAlias Error: " + err.Error())
 		return
