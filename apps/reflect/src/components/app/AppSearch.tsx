@@ -47,4 +47,4 @@ const AppSearch = () => {
   );
 };
 
-export default AppSearch
+export default AppSearch;

@@ -1,4 +1,4 @@
-import {useState} from "react";
+import { useState } from "react";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -33,6 +33,6 @@ const AuthDialog = () => {
       </Dialog>
     </>
   );
-}
+};
 
-export default AuthDialog
+export default AuthDialog;

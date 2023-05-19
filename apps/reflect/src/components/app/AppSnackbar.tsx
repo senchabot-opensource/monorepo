@@ -43,4 +43,4 @@ const AppSnackbar: FC<IProps> = ({
   );
 };
 
-export default AppSnackbar
+export default AppSnackbar;

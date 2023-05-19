@@ -1,13 +1,13 @@
 import Head from "next/head";
 import { env } from "../../env/client.mjs";
-import {FC} from "react";
+import { FC } from "react";
 
 type IProps = {
-    title: string;
-    index: boolean;
-}
+  title: string;
+  index: boolean;
+};
 
-const Header:FC<IProps> = ({ title, index }) => {
+const Header: FC<IProps> = ({ title, index }) => {
   return (
     <Head>
       <title>{title + " - " + env.NEXT_PUBLIC_APP_DOMAIN_STRING}</title>

@@ -53,4 +53,4 @@ const AuthContainer = () => {
   );
 };
 
-export default AuthContainer
+export default AuthContainer;

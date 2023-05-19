@@ -3,19 +3,19 @@ import { Container, Toolbar, Box, IconButton } from "@mui/material";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import AccountMenu  from "../AccountMenu";
+import AccountMenu from "../AccountMenu";
 import AppBarTitle from "../../common/AppBarTitle";
 import AppBarButton from "./AppBarButton";
 import MinimizeIcon from "@mui/icons-material/Minimize";
 import DrawerButton from "./buttons/DrawerButton";
 import { useState } from "react";
 import AppDrawer from "../AppDrawer";
-import {FC} from 'react'
+import { FC } from "react";
 
 type IResponsiveAppBarProps = {
   isDrawerOpen: boolean;
   drawerHandler: () => void;
-}
+};
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -32,7 +32,7 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
-const ResponsiveAppBar:FC<IResponsiveAppBarProps> = ({
+const ResponsiveAppBar: FC<IResponsiveAppBarProps> = ({
   isDrawerOpen,
   drawerHandler,
 }) => {

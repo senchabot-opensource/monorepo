@@ -31,9 +31,9 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 type IProps = {
   isDrawerOpen: boolean;
   drawerHandler: () => void;
-}
+};
 
-const AppDrawer:FC<IProps> = ({ isDrawerOpen, drawerHandler }) => {
+const AppDrawer: FC<IProps> = ({ isDrawerOpen, drawerHandler }) => {
   const theme = useTheme();
   const { data: twitchAcc } = trpc.check.checkTwitchAcc.useQuery();
 
@@ -128,4 +128,4 @@ const AppDrawer:FC<IProps> = ({ isDrawerOpen, drawerHandler }) => {
   );
 };
 
-export default AppDrawer
+export default AppDrawer;

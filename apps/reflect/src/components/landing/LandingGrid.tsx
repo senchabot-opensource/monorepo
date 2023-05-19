@@ -1,11 +1,11 @@
 import { Grid } from "@mui/material";
-import {FC, ReactNode} from "react";
+import { FC, ReactNode } from "react";
 
 type IProps = {
-    children: ReactNode
-}
+  children: ReactNode;
+};
 
-const LandingGrid:FC<IProps> = ({ children }) => (
+const LandingGrid: FC<IProps> = ({ children }) => (
   <Grid
     container
     direction="column"
@@ -21,4 +21,4 @@ const LandingGrid:FC<IProps> = ({ children }) => (
   </Grid>
 );
 
-export default LandingGrid
+export default LandingGrid;

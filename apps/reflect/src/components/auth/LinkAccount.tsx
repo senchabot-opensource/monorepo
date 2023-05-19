@@ -8,7 +8,7 @@ import {
 import { SiDiscord, SiTwitch } from "react-icons/si";
 import { signIn } from "next-auth/react";
 import { trpc } from "../../utils/trpc";
-import {FC, ReactNode} from "react";
+import { FC, ReactNode } from "react";
 
 type IProps = {
   accountType: "discord" | "twitch";
@@ -16,7 +16,7 @@ type IProps = {
   icon: ReactNode;
 };
 
-const LinkAccount:FC<IProps> = ({ accountType, accountTitle, icon }) => {
+const LinkAccount: FC<IProps> = ({ accountType, accountTitle, icon }) => {
   const accounts = trpc.security.getAccounts.useQuery();
   const currentProviders = accounts.data?.map(account => account.provider);
 

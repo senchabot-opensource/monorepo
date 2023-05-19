@@ -15,7 +15,7 @@ import { Offset } from "../Offset";
 import AppBarTitle from "../common/AppBarTitle";
 import LandingButton from "./LandingButton";
 import { AppBarStyles, MenuPaperPropsStyles } from "../../styles";
-import React, {useState} from "react";
+import React, { useState } from "react";
 
 const appBarMenuList = [
   { title: "Cookie Policy", path: "/cookie-policy" },
@@ -32,9 +32,7 @@ const toolBarStyles = {
 
 const LandingAppBar = () => {
   const { data: session } = useSession();
-  const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(
-    null,
-  );
+  const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);

@@ -1,4 +1,4 @@
-import React, {FC} from "react";
+import React, { FC } from "react";
 import {
   Container,
   CssBaseline,
@@ -18,9 +18,9 @@ import AuthContainer from "../auth/AuthContainer";
 type IProps = {
   isLoading: boolean;
   children: React.ReactNode;
-}
+};
 
-const AppContainer:FC<IProps> = ({ isLoading, children }) => {
+const AppContainer: FC<IProps> = ({ isLoading, children }) => {
   const { data: session, status: isAuthLoading } = useSession();
   const [isDrawerOpen, setDrawerOpen] = React.useState(false);
 
@@ -77,6 +77,6 @@ const AppContainer:FC<IProps> = ({ isLoading, children }) => {
       <VersionText />
     </ThemeProvider>
   );
-}
+};
 
-export default AppContainer
+export default AppContainer;
