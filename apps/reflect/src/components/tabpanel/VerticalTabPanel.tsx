@@ -1,23 +1,22 @@
 import React from "react";
 import { Box } from "@mui/material";
+import { FC, ReactNode } from "react";
 
-interface VerticalTabPanelProps {
-  children?: React.ReactNode;
+type IProps = {
+  children?: ReactNode;
   index: number;
   value: number;
-}
+  other?: any;
+};
 
-export default function VerticalTabPanel(props: VerticalTabPanelProps) {
-  const { children, value, index, ...other } = props;
-
+const VerticalTabPanel: FC<IProps> = ({ children, index, value, other }) => {
   return (
     <div
       role="tabpanel"
       hidden={value !== index}
       id={`vertical-tabpanel-${index}`}
       aria-labelledby={`vertical-tab-${index}`}
-      {...other}
-    >
+      {...other}>
       {value === index && (
         <>
           <Box sx={{ pl: 3, display: { xs: "none", md: "block" } }}>
@@ -30,4 +29,6 @@ export default function VerticalTabPanel(props: VerticalTabPanelProps) {
       )}
     </div>
   );
-}
+};
+
+export default VerticalTabPanel;

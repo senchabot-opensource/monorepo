@@ -1,18 +1,18 @@
-import * as React from "react";
 import { styled, alpha, useTheme } from "@mui/material/styles";
 import { Container, Toolbar, Box, IconButton } from "@mui/material";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { AccountMenu } from "../AccountMenu";
+import AccountMenu  from "../AccountMenu";
 import AppBarTitle from "../../common/AppBarTitle";
 import AppBarButton from "./AppBarButton";
 import MinimizeIcon from "@mui/icons-material/Minimize";
 import DrawerButton from "./buttons/DrawerButton";
 import { useState } from "react";
 import AppDrawer from "../AppDrawer";
+import {FC} from 'react'
 
-interface IResponsiveAppBar {
+type IResponsiveAppBarProps = {
   isDrawerOpen: boolean;
   drawerHandler: () => void;
 }
@@ -32,10 +32,10 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
-const ResponsiveAppBar = ({
+const ResponsiveAppBar:FC<IResponsiveAppBarProps> = ({
   isDrawerOpen,
   drawerHandler,
-}: IResponsiveAppBar) => {
+}) => {
   useSession({ required: true });
   const theme = useTheme();
   const [drawerIsOpen, setDrawerIsOpen] = useState<boolean>(false);

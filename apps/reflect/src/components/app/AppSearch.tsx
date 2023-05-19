@@ -34,7 +34,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
   },
 }));
-
 const AppSearch = () => {
   return (
     <Search sx={{ display: { xs: "none", md: "flex" } }}>
@@ -48,4 +47,4 @@ const AppSearch = () => {
   );
 };
 
-export default AppSearch;
+export default AppSearch

@@ -17,7 +17,7 @@ import Link from "next/link";
 import { SiDiscord, SiTwitch } from "react-icons/si";
 import { trpc } from "../../utils/trpc";
 import CustomAlert from "../CustomAlert";
-import { useState } from "react";
+import { useState, FC } from "react";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
@@ -28,12 +28,12 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   justifyContent: "flex-end",
 }));
 
-interface IAppDrawer {
+type IProps = {
   isDrawerOpen: boolean;
   drawerHandler: () => void;
 }
 
-const AppDrawer = ({ isDrawerOpen, drawerHandler }: IAppDrawer) => {
+const AppDrawer:FC<IProps> = ({ isDrawerOpen, drawerHandler }) => {
   const theme = useTheme();
   const { data: twitchAcc } = trpc.check.checkTwitchAcc.useQuery();
 
@@ -128,4 +128,4 @@ const AppDrawer = ({ isDrawerOpen, drawerHandler }: IAppDrawer) => {
   );
 };
 
-export default AppDrawer;
+export default AppDrawer

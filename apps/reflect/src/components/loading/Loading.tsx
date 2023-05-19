@@ -1,12 +1,12 @@
 import { Backdrop, CircularProgress } from "@mui/material";
+import {FC} from 'react'
 
-const Loading = ({
-  isLoading,
-  isAuthLoading,
-}: {
+type IProps = {
   isLoading: boolean;
   isAuthLoading: string;
-}) => {
+}
+
+const Loading:FC<IProps> = ({ isLoading, isAuthLoading}) => {
   return (
     <Backdrop
       sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
