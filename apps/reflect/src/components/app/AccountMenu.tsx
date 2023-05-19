@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Tooltip,
@@ -14,10 +14,9 @@ import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { MenuPaperPropsStyles } from "../../styles";
 
-export const AccountMenu = () => {
+const AccountMenu = () => {
   const { data: session } = useSession();
-
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const open = Boolean(anchorEl);
 
@@ -81,3 +80,5 @@ export const AccountMenu = () => {
     </>
   );
 };
+
+export default AccountMenu;

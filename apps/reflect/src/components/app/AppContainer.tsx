@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 import {
   Container,
   CssBaseline,
@@ -8,20 +8,19 @@ import {
 } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import ResponsiveAppBar from "./AppBar";
-
 import { darkTheme } from "../../utils/theme";
 import Breadcrumb from "./Breadcrumb";
 import { useSession } from "next-auth/react";
-import { AuthContainer } from "../auth/AuthContainer";
 import Loading from "../loading/Loading";
 import VersionText from "../common/VersionText";
+import AuthContainer from "../auth/AuthContainer";
 
-export interface IAppContainer {
+type IProps = {
   isLoading: boolean;
   children: React.ReactNode;
-}
+};
 
-export default function AppContainer({ isLoading, children }: IAppContainer) {
+const AppContainer: FC<IProps> = ({ isLoading, children }) => {
   const { data: session, status: isAuthLoading } = useSession();
   const [isDrawerOpen, setDrawerOpen] = React.useState(false);
 
@@ -78,4 +77,6 @@ export default function AppContainer({ isLoading, children }: IAppContainer) {
       <VersionText />
     </ThemeProvider>
   );
-}
+};
+
+export default AppContainer;

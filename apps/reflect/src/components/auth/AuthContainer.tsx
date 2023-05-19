@@ -1,11 +1,10 @@
 import { Stack, Typography } from "@mui/material";
-
 import { SiDiscord, SiTwitch } from "react-icons/si";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import AuthLoginButton from "./AuthLoginButton";
 
-export const AuthContainer = () => {
+const AuthContainer = () => {
   return (
     <Stack
       direction="column"
@@ -53,3 +52,5 @@ export const AuthContainer = () => {
     </Stack>
   );
 };
+
+export default AuthContainer;
