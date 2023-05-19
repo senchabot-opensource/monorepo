@@ -1,9 +1,9 @@
 import { NextPage } from "next";
 import React from "react";
 import { Offset } from "src/components/Offset";
-import { AppContainer } from "src/components/app";
 import CommandList from "src/components/app/CommandList";
 import Header from "src/components/common/Header";
+import AppContainer from "../../components/app/AppContainer";
 
 const CommandListPage: NextPage = () => {
   const [isLoading, setIsLoading] = React.useState<boolean>(true);

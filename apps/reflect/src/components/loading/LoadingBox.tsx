@@ -12,8 +12,7 @@ const LoadingBox = () => {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-      }}
-    >
+      }}>
       <CircularProgress color="inherit" />
     </Box>
   );

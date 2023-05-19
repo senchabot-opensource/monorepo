@@ -1,4 +1,4 @@
-import React from "react";
+import React, { forwardRef, useState } from "react";
 import { TransitionProps } from "@mui/material/transitions";
 import { Slide } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -15,7 +15,7 @@ import { red } from "@mui/material/colors";
 import { trpc } from "../../utils/trpc";
 import { signOut } from "next-auth/react";
 
-const Transition = React.forwardRef(function Transition(
+const Transition = forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement<any, any>;
   },
@@ -33,7 +33,7 @@ const RedButton = styled(Button)<ButtonProps>(({ theme }) => ({
 }));
 
 const DeleteAccount = () => {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
     setOpen(true);

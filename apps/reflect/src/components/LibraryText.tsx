@@ -1,27 +1,34 @@
 import { Typography } from "@mui/material";
 import Link from "next/link";
 import { Offset } from "./Offset";
+import { FC } from "react";
 
-interface ILibraryTextParams {
+type IProps = {
   libraryName: string;
   repoLink: string;
   copyrightText: string;
   licenseText: string;
   licenseLink: string;
-}
+};
 
-const LibraryText = (params: ILibraryTextParams) => {
+const LibraryText: FC<IProps> = ({
+  libraryName,
+  licenseText,
+  copyrightText,
+  licenseLink,
+  repoLink,
+}) => {
   return (
     <>
       <Offset />
       <Typography variant="h5">
-        {params.libraryName} (
-        <Link href={`${params.licenseLink}`} style={{ color: "#53bdff" }}>
-          {params.licenseText}
+        {libraryName} (
+        <Link href={`${licenseLink}`} style={{ color: "#53bdff" }}>
+          {licenseText}
         </Link>
-        ) - {params.copyrightText}{" "}
-        <Link href={`https://${params.repoLink}`} style={{ color: "#ffff00" }}>
-          {params.repoLink}
+        ) - {copyrightText}{" "}
+        <Link href={`https://${repoLink}`} style={{ color: "#ffff00" }}>
+          {repoLink}
         </Link>
       </Typography>
     </>

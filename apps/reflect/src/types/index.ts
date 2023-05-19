@@ -1,27 +1,8 @@
-import { ReactElement } from "react";
-
-type AnyContextType = {
+export type AnyContextType = {
   [key: string]: any;
 };
 
-interface IAppBarButton {
-  title: string;
-  pathHref: string;
-  ariaLabel: string;
-  drawerHandler: () => void;
-  children: ReactElement;
-}
-
-interface ILandingContainer {
-  children: React.ReactNode;
-}
-
-interface IHeader {
-  title: string;
-  index: boolean;
-}
-
-interface IBotCommand {
+export interface IBotCommand {
   id: number;
   commandName: string;
   commandContent: string;
@@ -32,7 +13,7 @@ interface IBotCommand {
   createdAt: Date;
 }
 //TODO: this interface need refactor when bot command table relation will be done
-interface IBotCommandAlias {
+export interface IBotCommandAlias {
   id: number;
   commandAlias: string;
   commandName: string;
@@ -42,7 +23,7 @@ interface IBotCommandAlias {
   twitchChannelId: string | null;
 }
 
-interface IBotActionActivity {
+export interface IBotActionActivity {
   botPlatformType: string;
   botActivity: string;
   activityDate: Date;
@@ -51,24 +32,12 @@ interface IBotActionActivity {
   activityAuthor: string | null;
 }
 
-interface ITwitchBotConfig {
+export interface ITwitchBotConfig {
   key: any;
   value: any;
 }
 
-interface ITwitchBotFormSubmitData {
+export interface ITwitchBotFormSubmitData {
   bot_activity_enabled: string;
   mods_manage_cmds_enabled: string;
 }
-
-export type {
-  AnyContextType,
-  IAppBarButton,
-  ILandingContainer,
-  IHeader,
-  IBotCommand,
-  IBotActionActivity,
-  ITwitchBotFormSubmitData,
-  ITwitchBotConfig,
-  IBotCommandAlias,
-};

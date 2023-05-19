@@ -1,17 +1,17 @@
 import { Grid, Tab, Tabs } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import VerticalTabPanel from "../../tabpanel/VerticalTabPanel";
 import TwitchBotForm from "src/forms/TwitchBotForm";
 
-function verticalTabPanelProps(index: number) {
+const verticalTabPanelProps = (index: number) => {
   return {
     id: `vertical-tabpanel-${index}`,
     "aria-controls": `vertical-tabpanel-${index}`,
   };
-}
+};
 
 const BotConfigurationTab = () => {
-  const [vTPValue, setVTPValue] = React.useState(0);
+  const [vTPValue, setVTPValue] = useState(0);
 
   const handleVTPChange = (event: React.SyntheticEvent, newValue: number) => {
     setVTPValue(newValue);
