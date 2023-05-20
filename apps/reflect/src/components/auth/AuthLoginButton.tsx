@@ -23,8 +23,8 @@ const AuthLoginButton: FC<IProps> = ({
       spacing={2}
       direction="row"
       alignItems="center"
-      sx={
-        !disabled
+      sx={{
+        ...(!disabled
           ? {
               cursor: "pointer",
               "&:hover": {
@@ -32,14 +32,16 @@ const AuthLoginButton: FC<IProps> = ({
                 borderRadius: "4px",
               },
             }
-          : {
-              cursor: "not-allowed",
-            }
-      }>
+          : { cursor: "not-allowed" }),
+      }}>
       {icon}
       <Typography
         sx={{
-          color: "white",
+          ...(!disabled
+            ? {
+                color: "white",
+              }
+            : { color: "gray" }),
           width: fullWidth ? "100%" : "fit-content",
           textAlign: "left",
         }}>
