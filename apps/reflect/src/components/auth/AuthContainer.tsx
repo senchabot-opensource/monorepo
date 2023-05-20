@@ -75,7 +75,15 @@ const AuthContainer = () => {
           sx={{
             alignItems: "flex-start",
           }}
-          control={<Checkbox checked={acceptTos} onChange={handleAcceptTos} />}
+          control={
+            <Checkbox
+              checked={acceptTos}
+              onChange={handleAcceptTos}
+              sx={{
+                marginTop: -1,
+              }}
+            />
+          }
           label={
             <Typography>
               I agree to{" "}
