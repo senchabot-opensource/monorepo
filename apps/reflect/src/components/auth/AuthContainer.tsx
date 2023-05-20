@@ -1,12 +1,5 @@
 import { ChangeEvent, useState } from "react";
-import {
-  Alert,
-  Checkbox,
-  FormControlLabel,
-  Snackbar,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Checkbox, FormControlLabel, Stack, Typography } from "@mui/material";
 import { SiDiscord, SiTwitch } from "react-icons/si";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
