@@ -1,9 +1,11 @@
-import { FC, ReactNode } from "react";
+import { FC } from "react";
 import { Stack, Typography } from "@mui/material";
+import { IconBaseProps, IconType } from "react-icons";
 
 type IProps = {
   content: string;
-  icon: ReactNode;
+  icon: IconType;
+  iconProps?: IconBaseProps;
   onClick: () => void;
   fullWidth?: boolean;
   disabled?: boolean;
@@ -11,7 +13,8 @@ type IProps = {
 
 const AuthLoginButton: FC<IProps> = ({
   content,
-  icon,
+  icon: Icon,
+  iconProps,
   onClick,
   fullWidth,
   disabled,
@@ -32,16 +35,11 @@ const AuthLoginButton: FC<IProps> = ({
                 borderRadius: "4px",
               },
             }
-          : { cursor: "not-allowed" }),
+          : { cursor: "not-allowed", color: "gray" }),
       }}>
-      {icon}
+      {<Icon {...iconProps} {...(disabled && { color: "gray" })} />}
       <Typography
         sx={{
-          ...(!disabled
-            ? {
-                color: "white",
-              }
-            : { color: "gray" }),
           width: fullWidth ? "100%" : "fit-content",
           textAlign: "left",
         }}>
