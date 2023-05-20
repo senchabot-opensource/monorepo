@@ -1,3 +1,4 @@
+import { ChangeEvent, useState } from "react";
 import {
   Alert,
   Checkbox,
@@ -10,11 +11,13 @@ import { SiDiscord, SiTwitch } from "react-icons/si";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import AuthLoginButton from "./AuthLoginButton";
-import { ChangeEvent, useState } from "react";
+import AppSnackbar from "../app/AppSnackbar";
+import { SneacbarSeverity } from "../../enums";
 
 const AuthContainer = () => {
-  const [acceptTos, setAcceptTos] = useState(false);
-  const [showNotAcceptedWarning, setShowNotAcceptedWarning] = useState(false);
+  const [acceptTos, setAcceptTos] = useState<boolean>(false);
+  const [showNotAcceptedWarning, setShowNotAcceptedWarning] =
+    useState<boolean>(false);
 
   const handleAcceptTos = (e: ChangeEvent<HTMLInputElement>) => {
     setAcceptTos(e.target.checked);
@@ -33,19 +36,12 @@ const AuthContainer = () => {
 
   return (
     <>
-      <Snackbar
-        open={showNotAcceptedWarning}
-        autoHideDuration={6000}
-        onClose={handleWarningClose}
-        anchorOrigin={{ horizontal: "center", vertical: "bottom" }}>
-        <Alert
-          variant="filled"
-          onClose={handleWarningClose}
-          severity="error"
-          sx={{ width: "100%" }}>
-          You must accept policies first!
-        </Alert>
-      </Snackbar>
+      <AppSnackbar
+        severity={SneacbarSeverity.Info}
+        isSnackbarOpen={showNotAcceptedWarning}
+        snackbarClose={handleWarningClose}
+        snackbarMessage="You must accept policies first!"
+      />
 
       <Stack
         direction="column"
