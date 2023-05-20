@@ -6,23 +6,36 @@ type IProps = {
   icon: ReactNode;
   onClick: () => void;
   fullWidth?: boolean;
+  disabled?: boolean;
 };
 
-const AuthLoginButton: FC<IProps> = ({ content, icon, onClick, fullWidth }) => {
+const AuthLoginButton: FC<IProps> = ({
+  content,
+  icon,
+  onClick,
+  fullWidth,
+  disabled,
+}) => {
   return (
     <Stack
-      onClick={onClick}
+      onClick={!disabled ? onClick : undefined}
       padding={1.5}
       spacing={2}
       direction="row"
       alignItems="center"
-      sx={{
-        cursor: "pointer",
-        "&:hover": {
-          backgroundColor: "#202020",
-          borderRadius: "4px",
-        },
-      }}>
+      sx={
+        !disabled
+          ? {
+              cursor: "pointer",
+              "&:hover": {
+                backgroundColor: "#202020",
+                borderRadius: "4px",
+              },
+            }
+          : {
+              cursor: "not-allowed",
+            }
+      }>
       {icon}
       <Typography
         sx={{

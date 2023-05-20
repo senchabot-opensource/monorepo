@@ -42,6 +42,7 @@ const AuthContainer = () => {
         sx={{ p: 2, backgroundColor: "#000" }}>
         <Typography fontSize="x-large">Sign in/up</Typography>
         <AuthLoginButton
+          disabled={!acceptTos}
           fullWidth={true}
           onClick={() => {
             if (!acceptTos) {
@@ -56,6 +57,7 @@ const AuthContainer = () => {
           content="with Twitch Account"
         />
         <AuthLoginButton
+          disabled={!acceptTos}
           fullWidth={true}
           onClick={() => {
             if (!acceptTos) {
@@ -70,6 +72,9 @@ const AuthContainer = () => {
           content="with Discord Account"
         />
         <FormControlLabel
+          sx={{
+            alignItems: "flex-start",
+          }}
           control={<Checkbox checked={acceptTos} onChange={handleAcceptTos} />}
           label={
             <Typography>
