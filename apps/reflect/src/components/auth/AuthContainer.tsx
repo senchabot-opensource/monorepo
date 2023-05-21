@@ -4,38 +4,16 @@ import { SiDiscord, SiTwitch } from "react-icons/si";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import AuthLoginButton from "./AuthLoginButton";
-import AppSnackbar from "../app/AppSnackbar";
-import { SneacbarSeverity } from "../../enums";
 
 const AuthContainer = () => {
   const [acceptTos, setAcceptTos] = useState<boolean>(false);
-  const [showNotAcceptedWarning, setShowNotAcceptedWarning] =
-    useState<boolean>(false);
 
   const handleAcceptTos = (e: ChangeEvent<HTMLInputElement>) => {
     setAcceptTos(e.target.checked);
   };
 
-  const handleWarningClose = (
-    event?: React.SyntheticEvent | Event,
-    reason?: string,
-  ) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setShowNotAcceptedWarning(false);
-  };
-
   return (
     <>
-      <AppSnackbar
-        severity={SneacbarSeverity.Info}
-        isSnackbarOpen={showNotAcceptedWarning}
-        snackbarClose={handleWarningClose}
-        snackbarMessage="You must accept policies first!"
-      />
-
       <Stack
         direction="column"
         spacing={2}
@@ -45,10 +23,7 @@ const AuthContainer = () => {
           disabled={!acceptTos}
           fullWidth={true}
           onClick={() => {
-            if (!acceptTos) {
-              setShowNotAcceptedWarning(true);
-              return;
-            }
+            if (!acceptTos) return;
             signIn("twitch", {
               callbackUrl: `${window.location.origin}/app`,
             });
@@ -65,10 +40,8 @@ const AuthContainer = () => {
           disabled={!acceptTos}
           fullWidth={true}
           onClick={() => {
-            if (!acceptTos) {
-              setShowNotAcceptedWarning(true);
-              return;
-            }
+            if (!acceptTos) return;
+
             signIn("discord", {
               callbackUrl: `${window.location.origin}/app`,
             });
