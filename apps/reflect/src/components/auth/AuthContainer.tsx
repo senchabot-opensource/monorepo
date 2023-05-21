@@ -53,11 +53,12 @@ const AuthContainer = () => {
               callbackUrl: `${window.location.origin}/app`,
             });
           }}
-          icon={SiTwitch}
-          iconProps={{
-            color: "#815fc0",
-            fontSize: "x-large",
-          }}
+          icon={
+            <SiTwitch
+              color={acceptTos ? "#815fc0" : "gray"}
+              fontSize="x-large"
+            />
+          }
           content="with Twitch Account"
         />
         <AuthLoginButton
@@ -72,11 +73,12 @@ const AuthContainer = () => {
               callbackUrl: `${window.location.origin}/app`,
             });
           }}
-          icon={SiDiscord}
-          iconProps={{
-            color: "#7289d9",
-            fontSize: "x-large",
-          }}
+          icon={
+            <SiDiscord
+              color={acceptTos ? "#7289d9" : "gray"}
+              fontSize="x-large"
+            />
+          }
           content="with Discord Account"
         />
         <FormControlLabel
