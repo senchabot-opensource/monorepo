@@ -3,7 +3,6 @@ package command
 import (
 	"context"
 	"fmt"
-	"strings"
 
 	"github.com/gempir/go-twitch-irc/v3"
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/client"
@@ -17,28 +16,28 @@ func UpdateCommandCommand(client *client.Clients, server *server.SenchabotAPISer
 	if !helpers.CanExecuteCommand(context.Background(), server, message) {
 		return
 	}
-	if len(params) < 2 {
-		client.Twitch.Say(message.Channel, UPDATE_COMMAND_INFO)
-		return
-	}
-	var command_name = strings.ToLower(params[0])
-	params = params[1:]
-	var newCommandContent = strings.Join(params, " ")
-
-	if command_name == "" && newCommandContent == "" {
+	command_name, newCommandContent, check := helpers.GetCommandCreateUpdateParams(params)
+	if !check {
 		client.Twitch.Say(message.Channel, UPDATE_COMMAND_INFO)
 		return
 	}
 	// Check command content length
-	if len(newCommandContent) > 400 {
-		client.Twitch.Say(message.Channel, message.User.DisplayName+", Command Content length must be no more than 400 chars")
+	if infoText, check := helpers.ValidateCommandContentLength(newCommandContent); !check {
+		client.Twitch.Say(message.Channel, message.User.DisplayName+", "+infoText)
 		return
 	}
-	updatedCommandName, err := server.UpdateBotCommand(context.Background(), command_name, newCommandContent, message.RoomID, message.User.DisplayName)
+
+	updatedCommandName, infoText, err := server.UpdateBotCommand(context.Background(), command_name, newCommandContent, message.RoomID, message.User.DisplayName)
 	if err != nil {
 		fmt.Println(err.Error())
 		return
 	}
+
+	if infoText != nil {
+		client.Twitch.Say(message.Channel, message.User.DisplayName+", "+*infoText)
+		return
+	}
+
 	fmt.Println("COMMAND_UPDATE: command_name:", updatedCommandName, "new_command_content:", newCommandContent)
 
 	client.Twitch.Say(message.Channel, "Command Updated: "+*updatedCommandName)

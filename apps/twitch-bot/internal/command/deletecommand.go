@@ -17,19 +17,23 @@ func DeleteCommandCommand(client *client.Clients, server *server.SenchabotAPISer
 	if !helpers.CanExecuteCommand(context.Background(), server, message) {
 		return
 	}
-	if len(params) < 1 {
+	if check := helpers.ValidateCommandDeleteParamsLength(params); !check {
 		client.Twitch.Say(message.Channel, DELETE_COMMAND_INFO)
 		return
 	}
 	var command_name = strings.ToLower(params[0])
-	if commandName != "" {
-		deletedCommandName, err := server.DeleteBotCommand(context.Background(), command_name, message.RoomID)
-		if err != nil {
-			fmt.Println(err.Error())
-			return
-		}
-		fmt.Println("COMMAND_DELETE: command_name:", deletedCommandName)
-
-		client.Twitch.Say(message.Channel, "Command Deleted: "+*deletedCommandName)
+	deletedCommandName, infoText, err := server.DeleteBotCommand(context.Background(), command_name, message.RoomID)
+	if err != nil {
+		fmt.Println(err.Error())
+		return
 	}
+
+	if infoText != nil {
+		client.Twitch.Say(message.Channel, message.User.DisplayName+", "+*infoText)
+		return
+	}
+
+	fmt.Println("COMMAND_DELETE: command_name:", *deletedCommandName)
+
+	client.Twitch.Say(message.Channel, "Command Deleted: "+*deletedCommandName)
 }

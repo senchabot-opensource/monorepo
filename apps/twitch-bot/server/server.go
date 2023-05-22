@@ -67,39 +67,39 @@ func (s *SenchabotAPIServer) GetBotCommand(ctx context.Context, commandName stri
 }
 
 func (s *SenchabotAPIServer) CreateBotCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string, createdBy string) (*string, error) {
-	commandExists, err := s.backend.CreateBotCommand(ctx, commandName, commandContent, twitchChannelId, createdBy)
+	infoText, err := s.backend.CreateBotCommand(ctx, commandName, commandContent, twitchChannelId, createdBy)
 	if err != nil {
 		return nil, err
 	}
 
-	return commandExists, nil
+	return infoText, nil
 }
 
-func (s *SenchabotAPIServer) CheckCommandExists(ctx context.Context, commandName string, twitchChannelId string) (bool, error) {
-	check, err := s.backend.CheckCommandExists(ctx, commandName, twitchChannelId)
-	if err != nil {
-		return false, err
-	}
-
-	return check, nil
-}
-
-func (s *SenchabotAPIServer) UpdateBotCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string, updatedBy string) (*string, error) {
-	updatedCommandName, err := s.backend.UpdateBotCommand(ctx, commandName, commandContent, twitchChannelId, updatedBy)
+func (s *SenchabotAPIServer) CheckCommandExists(ctx context.Context, commandName string, twitchChannelId string) (*string, error) {
+	existCommandName, err := s.backend.CheckCommandExists(ctx, commandName, twitchChannelId)
 	if err != nil {
 		return nil, err
 	}
 
-	return updatedCommandName, nil
+	return existCommandName, nil
 }
 
-func (s *SenchabotAPIServer) DeleteBotCommand(ctx context.Context, commandName string, twitchChannelId string) (*string, error) {
-	deletedCommandName, err := s.backend.DeleteBotCommand(ctx, commandName, twitchChannelId)
+func (s *SenchabotAPIServer) UpdateBotCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string, updatedBy string) (*string, *string, error) {
+	updatedCommandName, infoText, err := s.backend.UpdateBotCommand(ctx, commandName, commandContent, twitchChannelId, updatedBy)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	return deletedCommandName, nil
+	return updatedCommandName, infoText, nil
+}
+
+func (s *SenchabotAPIServer) DeleteBotCommand(ctx context.Context, commandName string, twitchChannelId string) (*string, *string, error) {
+	deletedCommandName, infoText, err := s.backend.DeleteBotCommand(ctx, commandName, twitchChannelId)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return deletedCommandName, infoText, nil
 }
 
 func (s *SenchabotAPIServer) CreateBotActionActivity(ctx context.Context, botPlatformType string, botActivity string, twitchChannelId string, activityAuthor string) error {
@@ -143,11 +143,11 @@ func (s *SenchabotAPIServer) GetCommandAlias(ctx context.Context, commandAlias s
 	return command, nil
 }
 
-func (s *SenchabotAPIServer) DeleteCommandAlias(ctx context.Context, commandAlias string, twitchChannelId string) error {
-	err := s.backend.DeleteCommandAlias(ctx, commandAlias, twitchChannelId)
+func (s *SenchabotAPIServer) DeleteCommandAlias(ctx context.Context, commandAlias string, twitchChannelId string) (*string, error) {
+	infoText, err := s.backend.DeleteCommandAlias(ctx, commandAlias, twitchChannelId)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return infoText, nil
 }
