@@ -6,6 +6,9 @@ import LinkAccountStack from "../components/auth/LinkAccount";
 import { capitalizeWord } from "../utils/functions";
 import { trpc } from "../utils/trpc";
 
+const typographyStyle = {
+  marginBottom: "0.5rem",
+};
 const SecurityForm = () => {
   const { data: session } = useSession();
   const email = session?.user?.email || null || undefined;
@@ -39,10 +42,11 @@ const SecurityForm = () => {
                       (index < 2 ? " and " : ", ")),
               )}
         </Typography>
-        <Typography>
+        <Typography style={typographyStyle}>
           Your e-mail address:{" "}
           {showEmailAddress
-            ? email && email.substring(email?.length / 2, email?.length)
+            ? email &&
+              email.replace(/(?<=.)[^@](?=[^@]*?@)|(?<=@.)[^@](?=.*@)/g, "*")
             : email &&
               email
                 .substring(email?.length / 2, email?.length)

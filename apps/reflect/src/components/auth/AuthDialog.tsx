@@ -1,9 +1,9 @@
-import * as React from "react";
+import { useState } from "react";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { Dialog } from "@mui/material";
-import { AuthContainer } from "./AuthContainer";
+import AuthContainer from "./AuthContainer";
 
 export interface DialogProps {
   open: boolean;
@@ -11,8 +11,8 @@ export interface DialogProps {
   onClose: (value: string) => void;
 }
 
-export default function AuthDialog() {
-  const [open, setOpen] = React.useState(false);
+const AuthDialog = () => {
+  const [open, setOpen] = useState(false);
 
   const handleToggleAuthMenu = () => {
     setOpen(prev => !prev);
@@ -33,4 +33,6 @@ export default function AuthDialog() {
       </Dialog>
     </>
   );
-}
+};
+
+export default AuthDialog;

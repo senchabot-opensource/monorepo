@@ -42,6 +42,7 @@ model BotActionActivities {
     activityDate    DateTime @default(now()) @map("activity_date")
     discordServerId String?  @map("discord_server_id")
     twitchChannelId String?  @map("twitch_channel_id")
+    activityAuthor  String?  @map("activity_author")
 
     @@map("bot_action_activities")
 }
@@ -52,10 +53,24 @@ model BotCommands {
     commandContent  String   @map("command_content") @db.Text
     twitchChannelId String?  @map("twitch_channel_id")
     discordServerId String?  @map("discord_server_id")
+    createdBy       String?  @map("created_by")
+    updatedBy       String?  @map("updated_by")
     createdAt       DateTime @default(now()) @map("created_at")
 
     @@unique([commandName, twitchChannelId])
     @@map("bot_commands")
+}
+
+model BotCommandAliases {
+    id              Int      @id @default(autoincrement())
+    commandAlias    String   @map("command_alias")
+    commandName     String   @map("command_name")
+    twitchChannelId String?  @map("twitch_channel_id")
+    discordServerId String?  @map("discord_server_id")
+    createdBy       String   @map("created_by")
+    createdAt       DateTime @default(now()) @map("created_at")
+
+    @@map("bot_command_aliases")
 }
 
 model DiscordServer {
@@ -81,14 +96,14 @@ model TwitchChannel {
 
 model TwitchBotConfigs {
     id              Int      @id @default(autoincrement())
-    configName      String   @map("config_name")
-    configValue     String   @map("config_value")
+    key             String   @map("config_key")
+    value           String   @map("config_value")
     twitchChannelId String   @map("twitch_channel_id")
     userId          String?  @map("user_id")
     user            User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
     createdAt       DateTime @default(now()) @map("created_at")
 
-    @@unique([configName, twitchChannelId])
+    @@unique([key, twitchChannelId])
     @@map("twitch_bot_configs")
 }
 

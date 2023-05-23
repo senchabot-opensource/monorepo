@@ -33,13 +33,13 @@ Web application for managing Senchabot, its commands and configuring the bot.
    yarn install
    ```
 
-3. Create a `.env` file based on the example file `env.example`
+3. If you hadn't done for main directory,  please change into main directory and create a `.env` file based on the example file `env.example`
 
    ```sh
    cp env.example .env
    ```
 
-4. Let's build up a Docker container for Postgres database
+4. If you hadn't done for main directory, please change into main directory and build up a Docker container for Postgres database
 
    ```sh
    docker-compose up --build
@@ -47,7 +47,13 @@ Web application for managing Senchabot, its commands and configuring the bot.
    docker-compose up -d
    ```
 
-5. Run the `Prisma` migration to create the tables
+5. Create a `.env` file based on the example file `env.example`
+
+   ```sh
+   cp env.example .env
+   ```
+
+6. Run the `Prisma` migration to create the tables
 
    ```sh
    npx prisma db push

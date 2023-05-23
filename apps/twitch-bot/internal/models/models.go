@@ -17,8 +17,8 @@ type WebhookData struct {
 
 type TwitchBotConfig struct {
 	ID              int
-	ConfigName      string `gorm:"column:config_name"`
-	ConfigValue     string `gorm:"column:config_value"`
+	Key             string `gorm:"column:config_key"`
+	Value           string `gorm:"column:config_value"`
 	TwitchChannelID string `gorm:"column:twitch_channel_id"`
 }
 
@@ -28,6 +28,7 @@ type BotActionActivity struct {
 	BotActivity     string  `gorm:"column:bot_activity"`
 	DiscordServerID *string `gorm:"column:discord_server_id"`
 	TwitchChannelID *string `gorm:"column:twitch_channel_id"`
+	ActivityAuthor  *string `gorm:"column:activity_author"`
 }
 
 type BotCommand struct {
@@ -36,6 +37,18 @@ type BotCommand struct {
 	CommandContent  string     `gorm:"column:command_content"`
 	TwitchChannelID string     `gorm:"column:twitch_channel_id"`
 	DiscordServerID string     `gorm:"column:discord_server_id"`
+	CreatedBy       *string    `gorm:"column:created_by"`
+	UpdatedBy       *string    `gorm:"column:updated_by"`
+	CreatedAt       *time.Time `gorm:"column:created_at"`
+}
+
+type BotCommandAlias struct {
+	ID              int
+	CommandAlias    string     `gorm:"column:command_alias"`
+	CommandName     string     `gorm:"column:command_name"`
+	TwitchChannelID *string    `gorm:"column:twitch_channel_id"`
+	DiscordServerID *string    `gorm:"column:discord_server_id"`
+	CreatedBy       string     `gorm:"column:created_by"`
 	CreatedAt       *time.Time `gorm:"column:created_at"`
 }
 

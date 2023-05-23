@@ -5,16 +5,6 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 import { env } from "../../env/client.mjs";
 import LandingButton from "./LandingButton";
 
-function Copyright() {
-  return (
-    <React.Fragment>
-      <Link color="inherit" href={env.NEXT_PUBLIC_APP_URL} underline="none">
-        {`${env.NEXT_PUBLIC_APP_NAME}`}
-      </Link>{" "}
-      {new Date().getFullYear()}
-    </React.Fragment>
-  );
-}
 const appBarMenuList = [
   { title: "Cookie Policy", path: "/cookie-policy" },
   { title: "Privacy Policy", path: "/privacy-policy" },

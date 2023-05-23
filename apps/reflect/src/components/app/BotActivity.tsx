@@ -10,6 +10,7 @@ import {
 import { SiDiscord, SiTwitch } from "react-icons/si";
 import LoadingBox from "../loading/LoadingBox";
 import { trpc } from "../../utils/trpc";
+import { IBotActionActivity } from "../../types";
 
 const BotActivity = () => {
   const botActivities = trpc.bot.getBotActivities.useQuery();
@@ -30,21 +31,31 @@ const BotActivity = () => {
           disablePadding>
           {!botActivities.isLoading ? (
             botActivities.data?.length ? (
-              botActivities.data?.map((activity, index) => (
-                <ListItem key={index}>
-                  <ListItemIcon>
-                    {activity.botPlatformType === "twitch" ? (
-                      <SiTwitch />
-                    ) : (
-                      <SiDiscord />
-                    )}
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={activity.botActivity}
-                    secondary={activity.activityDate.toDateString()}
-                  />
-                </ListItem>
-              ))
+              botActivities.data?.map(
+                (activity: IBotActionActivity, index: number) => (
+                  <ListItem key={index}>
+                    <ListItemIcon>
+                      {activity.botPlatformType === "twitch" ? (
+                        <SiTwitch />
+                      ) : (
+                        <SiDiscord />
+                      )}
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={
+                        activity.botActivity.startsWith("!")
+                          ? `Command executed: ${activity.botActivity}`
+                          : activity.botActivity
+                      }
+                      secondary={`${activity.activityDate.toDateString()} ${activity.activityDate
+                        .toTimeString()
+                        .slice(0, 8)} / ${
+                        activity.activityAuthor ?? "Senchabot"
+                      }`}
+                    />
+                  </ListItem>
+                ),
+              )
             ) : (
               <ListItem>
                 <ListItemText primary="No data." />

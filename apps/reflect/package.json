@@ -9,6 +9,9 @@
     "lint": "next lint",
     "postinstall": "prisma generate"
   },
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+  },
   "dependencies": {
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
@@ -23,6 +26,7 @@
     "@trpc/react": "^9.27.4",
     "@trpc/react-query": "^10.20.0",
     "@trpc/server": "^10.20.0",
+    "@vercel/analytics": "^1.0.1",
     "firebase": "^9.19.1",
     "install": "^0.13.0",
     "jotai": "^2.0.4",

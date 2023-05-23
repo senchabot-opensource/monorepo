@@ -1,19 +1,20 @@
 import { CssBaseline, ThemeProvider } from "@mui/material";
-import { LandingGrid } from "../../components/landing/LandingGrid";
 import LandingAppBar from "../../components/landing/LandingAppBar";
 import { landingDarkTheme } from "../../utils/theme";
 import VersionText from "../common/VersionText";
-import { ILandingContainer } from "src/types";
+import { FC, ReactNode } from "react";
+import LandingGrid from "./LandingGrid";
 
-const LandingContainer = ({ children }: ILandingContainer) => {
+type IProps = {
+  children: ReactNode;
+};
+
+const LandingContainer: FC<IProps> = ({ children }) => {
   return (
     <ThemeProvider theme={landingDarkTheme}>
       <CssBaseline />
-
       <LandingAppBar />
-
       <LandingGrid>{children}</LandingGrid>
-
       <VersionText />
     </ThemeProvider>
   );
