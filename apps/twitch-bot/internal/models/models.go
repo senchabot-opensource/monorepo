@@ -9,6 +9,12 @@ type TwitchChannel struct {
 	UserId      *string `gorm:"column:user_id"`
 }
 
+type WebhookData struct {
+	Token    string `json:"token"`
+	Event    string `json:"event"`
+	UserName string `json:"user_name"`
+}
+
 type TwitchBotConfig struct {
 	ID              int
 	ConfigName      string `gorm:"column:config_name"`

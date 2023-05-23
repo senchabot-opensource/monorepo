@@ -15,6 +15,7 @@ import (
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/backend/mysql"
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/db"
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/handler"
+	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/models"
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/server"
 )
 
@@ -30,28 +31,31 @@ func HandleBotJoinWebhook(twitch *twitch.Client, joinedChannelList []string, w h
 		return
 	}
 
-	var data struct {
-		Event string `json:"event"`
-		User  string `json:"user_name"`
-	}
+	var data models.WebhookData
 	err = json.Unmarshal(body, &data)
 	if err != nil {
 		http.Error(w, "Error parsing request body", http.StatusBadRequest)
 		return
 	}
-	fmt.Println("data", data)
+
+	if data.Token != os.Getenv("WEBHOOK_TOKEN") {
+		return
+	}
+
 	channel := strings.TrimPrefix(data.Event, "channel.join.")
+
+	if channel == "" {
+		return
+	}
 
 	// check if channel is not in joinedChannelList
 	for _, v := range joinedChannelList {
 		if v == channel {
 			return
-			// http.Error(w, "Already joined", http.StatusBadRequest)
-			// return
 		}
 	}
 
-	joinedChannelList = append(joinedChannelList, channel)
+	_ = append(joinedChannelList, channel)
 	twitch.Join(channel)
 
 	w.WriteHeader(http.StatusOK)
