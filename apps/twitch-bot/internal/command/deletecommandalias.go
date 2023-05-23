@@ -17,19 +17,23 @@ func DeleteCommandAliasCommand(client *client.Clients, server *server.SenchabotA
 	if !helpers.CanExecuteCommand(context.Background(), server, message) {
 		return
 	}
-	if len(params) < 1 {
+	if check := helpers.ValidateCommandDeleteParamsLength(params); !check {
 		client.Twitch.Say(message.Channel, DELETE_COMMAND_ALIAS_INFO)
 		return
 	}
 	var command_alias = strings.ToLower(params[0])
-	if command_alias != "" {
-		err := server.DeleteCommandAlias(context.Background(), command_alias, message.RoomID)
-		if err != nil {
-			fmt.Println(err.Error())
-			return
-		}
-		fmt.Println("COMMAND_ALIAS_DELETE: command_alias:", command_alias)
-
-		client.Twitch.Say(message.Channel, "Command Alias Deleted: "+command_alias)
+	infoText, err := server.DeleteCommandAlias(context.Background(), command_alias, message.RoomID)
+	if err != nil {
+		fmt.Println(err.Error())
+		return
 	}
+
+	if infoText != nil {
+		client.Twitch.Say(message.Channel, message.User.DisplayName+", "+*infoText)
+		return
+	}
+
+	fmt.Println("COMMAND_ALIAS_DELETE: command_alias:", command_alias)
+
+	client.Twitch.Say(message.Channel, "Command Alias Deleted: "+command_alias)
 }

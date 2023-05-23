@@ -17,26 +17,15 @@ func AddCommandAliasCommand(client *client.Clients, server *server.SenchabotAPIS
 	if !helpers.CanExecuteCommand(context.Background(), server, message) {
 		return
 	}
-	if len(params) < 2 {
+	command, aliasCommands, check := helpers.GetAliasCommandCreateParams(params)
+	if !check {
 		client.Twitch.Say(message.Channel, ADD_COMMAND_ALIAS_INFO)
 		return
 	}
-	var command = strings.ToLower(params[0])
-	params = params[1:]
-
-	if command == "" && len(params) == 0 {
-		client.Twitch.Say(message.Channel, ADD_COMMAND_ALIAS_INFO)
-		return
-	}
-
-	aliasCommands := helpers.MakeUniqueArray(params)
-
-	commandAliasesList := strings.Join(aliasCommands, ", ")
-
 	twitchChannelId := message.RoomID
 
-	if len(aliasCommands) > 4 {
-		client.Twitch.Say(message.Channel, message.User.DisplayName+", Command Aliases length must be no more than 4")
+	if infoText, check := helpers.ValidateAliasCommandsLength(aliasCommands); !check {
+		client.Twitch.Say(message.Channel, message.User.DisplayName+", "+infoText)
 		return
 	}
 
@@ -49,6 +38,8 @@ func AddCommandAliasCommand(client *client.Clients, server *server.SenchabotAPIS
 		client.Twitch.Say(message.Channel, message.User.DisplayName+", "+*infoText)
 		return
 	}
+
+	commandAliasesList := strings.Join(aliasCommands, ", ")
 	fmt.Println("COMMAND_ALIAS_ADD: command_aliases:", commandAliasesList, "command_name:", command)
 
 	client.Twitch.Say(message.Channel, "New Command Aliases Added: "+commandAliasesList)

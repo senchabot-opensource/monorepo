@@ -2,6 +2,7 @@ package helpers
 
 import (
 	"context"
+	"fmt"
 	"math/rand"
 	"strconv"
 	"strings"
@@ -75,4 +76,64 @@ func MakeUniqueArray(stringSlice []string) []string {
 		}
 	}
 	return list
+}
+
+func GetCommandCreateUpdateParams(params []string) (string, string, bool) {
+	if check := ValidateCommandCreateParamsLength(params); !check {
+		return "", "", false
+	}
+
+	var commandName = strings.ToLower(params[0])
+	var commandContent = strings.Join(params[1:], " ")
+
+	return commandName, commandContent, true
+}
+
+func GetAliasCommandCreateParams(params []string) (string, []string, bool) {
+	if check := ValidateCommandCreateParamsLength(params); !check {
+		return "", nil, false
+	}
+
+	command := strings.ToLower(params[0])
+	params = params[1:]
+
+	aliasCommands := MakeUniqueArray(params)
+
+	return command, aliasCommands, true
+}
+
+func ValidateCommandCreateParamsLength(params []string) bool {
+	fmt.Println("ValidateCommandCreateParamsLength", params)
+	return len(params) >= 2
+}
+
+func ValidateAliasCommandsLength(aliasCommands []string) (string, bool) {
+	if len(aliasCommands) > 4 {
+		return "Command Aliases length must be no more than 4", false
+	}
+
+	return "", true
+}
+
+func ValidateCommandCreateParams(commandName string, commandContent string) (string, bool) {
+	if len(commandName) > 50 {
+		return "Command Name length must be no more than 50 chars", false
+	}
+	if infoText, check := ValidateCommandContentLength(commandContent); !check {
+		return infoText, check
+	}
+
+	return "", true
+}
+
+func ValidateCommandContentLength(commandContent string) (string, bool) {
+	if len(commandContent) > 400 {
+		return "Command Content length must be no more than 400 chars", false
+	}
+
+	return "", true
+}
+
+func ValidateCommandDeleteParamsLength(params []string) bool {
+	return len(params) == 1
 }

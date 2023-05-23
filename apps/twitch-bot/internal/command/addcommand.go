@@ -3,7 +3,6 @@ package command
 import (
 	"context"
 	"fmt"
-	"strings"
 
 	"github.com/gempir/go-twitch-irc/v3"
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/client"
@@ -17,42 +16,29 @@ func AddCommandCommand(client *client.Clients, server *server.SenchabotAPIServer
 	if !helpers.CanExecuteCommand(context.Background(), server, message) {
 		return
 	}
-	if len(params) < 2 {
-		client.Twitch.Say(message.Channel, ADD_COMMAND_INFO)
-		return
-	}
-	var newCommandName = strings.ToLower(params[0])
-	params = params[1:]
-	var newCommandContent = strings.Join(params, " ")
-
-	if newCommandName == "" && newCommandContent == "" {
-		client.Twitch.Say(message.Channel, ADD_COMMAND_INFO)
+	command_name, command_content, check := helpers.GetCommandCreateUpdateParams(params)
+	if !check {
+		client.Twitch.Say(message.Channel, ADD_COMMAND_INFO) // "Birleşmiş Milletler 21 Mayıs'ı Uluslararası Çay Günü olarak belirlemiştir." (Bu yorum satırı Twitch chatinde Harami tarafından redeem yoluyla yazdırılmıştır. Arz ederim.)
 		return
 	}
 	// Check command name and content length
-	if len(newCommandName) > 50 {
-		client.Twitch.Say(message.Channel, message.User.DisplayName+", Command Name length must be no more than 50 chars")
+	if infoText, check := helpers.ValidateCommandCreateParams(command_name, command_content); !check {
+		client.Twitch.Say(message.Channel, message.User.DisplayName+", "+infoText)
 		return
 	}
-	if len(newCommandContent) > 400 {
-		client.Twitch.Say(message.Channel, message.User.DisplayName+", Command Content length must be no more than 400 chars")
-		return
-	}
-	commandExists, err := server.CreateBotCommand(context.Background(), newCommandName, newCommandContent, message.RoomID, message.User.DisplayName)
+
+	infoText, err := server.CreateBotCommand(context.Background(), command_name, command_content, message.RoomID, message.User.DisplayName)
 	if err != nil {
 		fmt.Println(err.Error())
 		return
 	}
-	if commandExists != nil {
-		if *commandExists == "command_exists" {
-			client.Twitch.Say(message.Channel, message.User.DisplayName+", this command is already in use")
-			return
-		}
 
-		client.Twitch.Say(message.Channel, message.User.DisplayName+", this command is already being used as command alias")
+	if infoText != nil {
+		client.Twitch.Say(message.Channel, message.User.DisplayName+", "+*infoText)
 		return
 	}
-	fmt.Println("COMMAND_ADD: command_name:", newCommandName, "command_content:", newCommandContent)
 
-	client.Twitch.Say(message.Channel, "New Command Added: "+newCommandName)
+	fmt.Println("COMMAND_ADD: command_name:", command_name, ", command_content:", command_content)
+
+	client.Twitch.Say(message.Channel, "New Command Added: "+command_name)
 }
