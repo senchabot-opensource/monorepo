@@ -5,10 +5,12 @@ import {
   TwitchBotConfigMutationInputValidation,
   TwitchBotConfigQueryInputValidation,
 } from "../../validation/twitchbotconfig";
+import { getTwitchBotWebhookFetchOptions } from "../../utils/functions";
 
 export const twitchBotRouter = t.router({
   add: t.procedure.mutation(async ({ ctx }) => {
     const userId = ctx.session?.user?.id;
+    const userName = ctx.session?.user?.name;
 
     if (userId) {
       const twitchAccount = await ctx.prisma.account.findFirst({
@@ -55,10 +57,23 @@ export const twitchBotRouter = t.router({
           .then(resp => resp.json())
           .then(data => data);
 
+        const channelName = getChannel.data[0].broadcaster_login;
+
+        const webhookData = {
+          token: env.WEBHOOK_TOKEN,
+          event: "channel.join." + channelName,
+          user_name: userName,
+        };
+
+        await fetch(
+          env.TWITCH_BOT_HOST + "/webhook",
+          getTwitchBotWebhookFetchOptions(webhookData),
+        ).catch(e => console.log("WEBHOOK_ERROR"));
+
         const createChannel = await ctx.prisma.twitchChannel.create({
           data: {
             channelId: twitchAccId,
-            channelName: getChannel.data[0].broadcaster_login,
+            channelName: channelName,
             userId: userId,
           },
         });

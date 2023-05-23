@@ -21,4 +21,10 @@ interface IHeader {
   index: boolean;
 }
 
+export interface ITwitchBotWebhookData {
+  token: string;
+  event: string;
+  user_name: string | null | undefined;
+}
+
 export type { AnyContextType, IAppBarButton, ILandingContainer, IHeader };

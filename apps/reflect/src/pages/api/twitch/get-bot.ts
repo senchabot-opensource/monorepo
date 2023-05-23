@@ -2,12 +2,14 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { getServerAuthSession } from "../../../server/common/get-server-auth-session";
 import { prisma } from "../../../server/db/client";
 import { env } from "../../../env/server.mjs";
+import { getTwitchBotWebhookFetchOptions } from "../../../utils/functions";
 
 const getTwitchBot = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getServerAuthSession({ req, res });
 
   if (session) {
     const userId = session.user?.id;
+    const userName = session.user?.name;
 
     if (userId) {
       const twitchAccount = await prisma.account.findFirst({
@@ -54,10 +56,23 @@ const getTwitchBot = async (req: NextApiRequest, res: NextApiResponse) => {
           .then(resp => resp.json())
           .then(data => data);
 
+        const channelName = getChannel.data[0].broadcaster_login;
+
+        const webhookData = {
+          token: env.WEBHOOK_TOKEN,
+          event: "channel.join." + channelName,
+          user_name: userName,
+        };
+
+        await fetch(
+          env.TWITCH_BOT_HOST + "/webhook",
+          getTwitchBotWebhookFetchOptions(webhookData),
+        ).catch(e => console.log("WEBHOOK_ERROR"));
+
         const createChannel = await prisma.twitchChannel.create({
           data: {
             channelId: twitchAccId,
-            channelName: getChannel.data[0].broadcaster_login,
+            channelName: channelName,
             userId: userId,
           },
         });
