@@ -18,7 +18,8 @@ func AddCommandCommand(client *client.Clients, server *server.SenchabotAPIServer
 	}
 	command_name, command_content, check := helpers.GetCommandCreateUpdateParams(params)
 	if !check {
-		client.Twitch.Say(message.Channel, ADD_COMMAND_INFO) // "Birleşmiş Milletler 21 Mayıs'ı Uluslararası Çay Günü olarak belirlemiştir." (Bu yorum satırı Twitch chatinde Harami tarafından redeem yoluyla yazdırılmıştır. Arz ederim.)
+		// "Birleşmiş Milletler 21 Mayıs'ı Uluslararası Çay Günü olarak belirlemiştir." (Bu yorum satırı Twitch chatinde Harami tarafından redeem yoluyla yazdırılmıştır. Arz ederim.)
+		client.Twitch.Say(message.Channel, ADD_COMMAND_INFO) 
 		return
 	}
 	// Check command name and content length
