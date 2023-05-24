@@ -3,6 +3,7 @@ import { getServerAuthSession } from "../../../server/common/get-server-auth-ses
 import { prisma } from "../../../server/db/client";
 import { env } from "../../../env/server.mjs";
 import { getTwitchBotWebhookFetchOptions } from "../../../utils/functions";
+import { ITwitchBotWebhookData } from "../../../types";
 
 const getTwitchBot = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getServerAuthSession({ req, res });
@@ -58,7 +59,7 @@ const getTwitchBot = async (req: NextApiRequest, res: NextApiResponse) => {
 
         const channelName = getChannel.data[0].broadcaster_login;
 
-        const webhookData = {
+        const webhookData: ITwitchBotWebhookData = {
           token: env.WEBHOOK_TOKEN,
           event: "channel.join." + channelName,
           user_name: userName,

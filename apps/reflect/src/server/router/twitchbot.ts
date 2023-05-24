@@ -6,6 +6,7 @@ import {
   TwitchBotConfigQueryInputValidation,
 } from "../../validation/twitchbotconfig";
 import { getTwitchBotWebhookFetchOptions } from "../../utils/functions";
+import { ITwitchBotWebhookData } from "../../types/index.js";
 
 export const twitchBotRouter = t.router({
   add: t.procedure.mutation(async ({ ctx }) => {
@@ -59,7 +60,7 @@ export const twitchBotRouter = t.router({
 
         const channelName = getChannel.data[0].broadcaster_login;
 
-        const webhookData = {
+        const webhookData: ITwitchBotWebhookData = {
           token: env.WEBHOOK_TOKEN,
           event: "channel.join." + channelName,
           user_name: userName,
