@@ -18,6 +18,8 @@ export const serverSchema = z.object({
   TWITCH_CLIENT_SECRET: z.string(),
   GOOGLE_CLIENT_ID: z.string(),
   GOOGLE_CLIENT_SECRET: z.string(),
+  TWITCH_BOT_HOST: z.string(),
+  WEBHOOK_TOKEN: z.string(),
 });
 
 /**

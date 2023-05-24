@@ -37,6 +37,12 @@ export interface ITwitchBotConfig {
   value: any;
 }
 
+export interface ITwitchBotWebhookData {
+  token: string;
+  event: string;
+  user_name: string | null | undefined;
+}
+
 export interface ITwitchBotFormSubmitData {
   bot_activity_enabled: string;
   mods_manage_cmds_enabled: string;

@@ -10,7 +10,7 @@ import (
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/server"
 )
 
-func BotJoin(client *client.Clients, server *server.SenchabotAPIServer) {
+func BotJoin(client *client.Clients, server *server.SenchabotAPIServer) []string {
 	channels, err := server.GetTwitchChannels(context.Background())
 	if err != nil {
 		log.Fatalf("(GetTwitchChannels) Error:" + err.Error())
@@ -20,11 +20,16 @@ func BotJoin(client *client.Clients, server *server.SenchabotAPIServer) {
 		ChannelName: "senchabot",
 	})
 
+	channelList := make([]string, 0, len(channels))
+
 	fmt.Println("JOINING TO CHANNELS")
 	if len(channels) > 0 {
-		for i := 0; i < len(channels); i++ {
-			fmt.Println("TRYING TO JOIN TWITCH CHANNEL `" + channels[i].ChannelName + "`")
-			client.Twitch.Join(channels[i].ChannelName)
+		for _, channel := range channels {
+			fmt.Println("TRYING TO JOIN TWITCH CHANNEL `" + channel.ChannelName + "`")
+			client.Twitch.Join(channel.ChannelName)
+			channelList = append(channelList, channel.ChannelName)
 		}
 	}
+
+	return channelList
 }
