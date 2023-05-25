@@ -7,19 +7,19 @@ import (
 	"github.com/gempir/go-twitch-irc/v3"
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/client"
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/command/helpers"
-	"github.com/senchabot-dev/monorepo/apps/twitch-bot/server"
+	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/services/database"
 )
 
 const ADD_COMMAND_INFO = "For example: !acmd [command_name] [command_content]"
 
-func AddCommandCommand(client *client.Clients, server *server.SenchabotAPIServer, message twitch.PrivateMessage, commandName string, params []string) {
-	if !helpers.CanExecuteCommand(context.Background(), server, message) {
+func AddCommandCommand(client *client.Clients, db database.Database, message twitch.PrivateMessage, commandName string, params []string) {
+	if !helpers.CanExecuteCommand(context.Background(), db, message) {
 		return
 	}
 	command_name, command_content, check := helpers.GetCommandCreateUpdateParams(params)
 	if !check {
 		// "Birleşmiş Milletler 21 Mayıs'ı Uluslararası Çay Günü olarak belirlemiştir." (Bu yorum satırı Twitch chatinde Harami tarafından redeem yoluyla yazdırılmıştır. Arz ederim.)
-		client.Twitch.Say(message.Channel, ADD_COMMAND_INFO) 
+		client.Twitch.Say(message.Channel, ADD_COMMAND_INFO)
 		return
 	}
 	// Check command name and content length
@@ -28,7 +28,7 @@ func AddCommandCommand(client *client.Clients, server *server.SenchabotAPIServer
 		return
 	}
 
-	infoText, err := server.CreateBotCommand(context.Background(), command_name, command_content, message.RoomID, message.User.DisplayName)
+	infoText, err := db.CreateBotCommand(context.Background(), command_name, command_content, message.RoomID, message.User.DisplayName)
 	if err != nil {
 		fmt.Println(err.Error())
 		return

@@ -3,23 +3,33 @@ package postgresql
 import (
 	"context"
 	"errors"
+	"fmt"
+	"os"
 
-	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/backend"
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/models"
+	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/services/database"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
-type PostgreSQLBackend struct {
+type PostgreSQL struct {
 	DB *gorm.DB
 }
 
-func NewPostgreSQLBackend(db *gorm.DB) backend.Backend {
-	return &PostgreSQLBackend{
+func NewPostgreSQL() database.Database {
+	dsn := os.Getenv("DATABASE_URL")
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{Logger: logger.Default.LogMode(logger.Info)})
+
+	if err != nil {
+		panic("failed to connect database")
+	}
+	return &PostgreSQL{
 		DB: db,
 	}
 }
 
-func (b *PostgreSQLBackend) GetTwitchChannels(ctx context.Context) ([]*models.TwitchChannel, error) {
+func (b *PostgreSQL) GetTwitchChannels(ctx context.Context) ([]*models.TwitchChannel, error) {
 	var twitchChannels []*models.TwitchChannel
 
 	result := b.DB.Find(&twitchChannels)
@@ -30,7 +40,7 @@ func (b *PostgreSQLBackend) GetTwitchChannels(ctx context.Context) ([]*models.Tw
 	return twitchChannels, nil
 }
 
-func (b *PostgreSQLBackend) CreateTwitchChannel(ctx context.Context, channelId string, channelName string, userId *string) (bool, error) {
+func (b *PostgreSQL) CreateTwitchChannel(ctx context.Context, channelId string, channelName string, userId *string) (bool, error) {
 	var twitchChannel []models.TwitchChannel
 
 	result := b.DB.Where("channel_id = ?", channelId).Where("channel_name = ?", channelName).Find(&twitchChannel)
@@ -55,7 +65,7 @@ func (b *PostgreSQLBackend) CreateTwitchChannel(ctx context.Context, channelId s
 	return false, nil
 }
 
-func (b *PostgreSQLBackend) GetTwitchBotConfig(ctx context.Context, twitchChannelId string, configKey string) (*models.TwitchBotConfig, error) {
+func (b *PostgreSQL) GetTwitchBotConfig(ctx context.Context, twitchChannelId string, configKey string) (*models.TwitchBotConfig, error) {
 	var twitchBotConfig models.TwitchBotConfig
 	result := b.DB.Where("twitch_channel_id = ?", twitchChannelId).Where("config_key = ?", configKey).First(&twitchBotConfig)
 
@@ -66,7 +76,21 @@ func (b *PostgreSQLBackend) GetTwitchBotConfig(ctx context.Context, twitchChanne
 	return &twitchBotConfig, nil
 }
 
-func (b *PostgreSQLBackend) GetBotCommand(ctx context.Context, commandName string, twitchChannelId string) (*models.BotCommand, error) {
+func (b *PostgreSQL) CheckConfig(ctx context.Context, twitchChannelId string, configKey string, configValue string) bool {
+	configData, err := b.GetTwitchBotConfig(ctx, twitchChannelId, configKey)
+	if err != nil {
+		fmt.Println(err.Error())
+		return false
+	}
+
+	if configData != nil && configData.Value == configValue {
+		return true
+	}
+
+	return false
+}
+
+func (b *PostgreSQL) GetBotCommand(ctx context.Context, commandName string, twitchChannelId string) (*models.BotCommand, error) {
 	var botCommand models.BotCommand
 
 	result := b.DB.Where("command_name = ?", commandName).Where("twitch_channel_id = ?", twitchChannelId).First(&botCommand)
@@ -77,7 +101,7 @@ func (b *PostgreSQLBackend) GetBotCommand(ctx context.Context, commandName strin
 	return &botCommand, nil
 }
 
-func (b *PostgreSQLBackend) CreateBotCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string, createdBy string) (*string, error) {
+func (b *PostgreSQL) CreateBotCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string, createdBy string) (*string, error) {
 	var botCommand []models.BotCommand
 	var infoText string
 
@@ -114,7 +138,7 @@ func (b *PostgreSQLBackend) CreateBotCommand(ctx context.Context, commandName st
 	return nil, nil
 }
 
-func (b *PostgreSQLBackend) CheckCommandExists(ctx context.Context, commandName string, twitchChannelId string) (*string, error) {
+func (b *PostgreSQL) CheckCommandExists(ctx context.Context, commandName string, twitchChannelId string) (*string, error) {
 	var botCommand []models.BotCommand
 
 	result := b.DB.Where("command_name = ?", commandName).Where("twitch_channel_id", twitchChannelId).Find(&botCommand)
@@ -128,7 +152,7 @@ func (b *PostgreSQLBackend) CheckCommandExists(ctx context.Context, commandName 
 	return nil, nil
 }
 
-func (b *PostgreSQLBackend) UpdateBotCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string, updatedBy string) (*string, *string, error) {
+func (b *PostgreSQL) UpdateBotCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string, updatedBy string) (*string, *string, error) {
 	var botCommand *models.BotCommand
 
 	command, _ := b.GetCommandAlias(ctx, commandName, twitchChannelId)
@@ -161,7 +185,7 @@ func (b *PostgreSQLBackend) UpdateBotCommand(ctx context.Context, commandName st
 	return &commandName, nil, nil
 }
 
-func (b *PostgreSQLBackend) DeleteBotCommand(ctx context.Context, commandName string, twitchChannelId string) (*string, *string, error) {
+func (b *PostgreSQL) DeleteBotCommand(ctx context.Context, commandName string, twitchChannelId string) (*string, *string, error) {
 	var botCommand *models.BotCommand
 	var botCommandAlias *models.BotCommandAlias
 
@@ -197,7 +221,7 @@ func (b *PostgreSQLBackend) DeleteBotCommand(ctx context.Context, commandName st
 	return &commandName, nil, nil
 }
 
-func (b *PostgreSQLBackend) CreateBotActionActivity(ctx context.Context, botPlatformType string, botActivity string, twitchChannelId string, activityAuthor string) error {
+func (b *PostgreSQL) CreateBotActionActivity(ctx context.Context, botPlatformType string, botActivity string, twitchChannelId string, activityAuthor string) error {
 	botActionActivity := models.BotActionActivity{
 		BotPlatformType: botPlatformType,
 		BotActivity:     botActivity,
@@ -214,7 +238,20 @@ func (b *PostgreSQLBackend) CreateBotActionActivity(ctx context.Context, botPlat
 	return nil
 }
 
-func (b *PostgreSQLBackend) CreateCommandAliases(ctx context.Context, commandName string, aliases []string, twitchChannelId string, createdBy string) (*string, error) {
+func (b *PostgreSQL) SaveBotCommandActivity(context context.Context, commandName string, twitchChannelId string, commandAuthor string) {
+	check := b.CheckConfig(context, twitchChannelId, "bot_activity_enabled", "1")
+	if !check {
+		return
+	}
+
+	commandName = "!" + commandName
+
+	if err := b.CreateBotActionActivity(context, "twitch", commandName, twitchChannelId, commandAuthor); err != nil {
+		fmt.Println(err.Error())
+	}
+}
+
+func (b *PostgreSQL) CreateCommandAliases(ctx context.Context, commandName string, aliases []string, twitchChannelId string, createdBy string) (*string, error) {
 	commandAliases := []models.BotCommandAlias{}
 	var infoText string
 
@@ -268,7 +305,7 @@ func (b *PostgreSQLBackend) CreateCommandAliases(ctx context.Context, commandNam
 	return nil, nil
 }
 
-func (b *PostgreSQLBackend) GetCommandAlias(ctx context.Context, command string, twitchChannelId string) (*string, error) {
+func (b *PostgreSQL) GetCommandAlias(ctx context.Context, command string, twitchChannelId string) (*string, error) {
 	var commandAlias models.BotCommandAlias
 
 	err := b.DB.Where("command_alias = ?", command).Where("twitch_channel_id = ?", twitchChannelId).First(&commandAlias).Error
@@ -279,7 +316,7 @@ func (b *PostgreSQLBackend) GetCommandAlias(ctx context.Context, command string,
 	return &commandAlias.CommandName, nil
 }
 
-func (b *PostgreSQLBackend) CheckCommandAliasExist(ctx context.Context, commandAlias string, twitchChannelId string) (*string, error) {
+func (b *PostgreSQL) CheckCommandAliasExist(ctx context.Context, commandAlias string, twitchChannelId string) (*string, error) {
 	var commandAliasModel []models.BotCommandAlias
 
 	result := b.DB.Where("command_alias = ?", commandAlias).Where("twitch_channel_id", twitchChannelId).Find(&commandAliasModel)
@@ -294,7 +331,7 @@ func (b *PostgreSQLBackend) CheckCommandAliasExist(ctx context.Context, commandA
 	return nil, nil
 }
 
-func (b *PostgreSQLBackend) DeleteCommandAlias(ctx context.Context, commandAlias string, twitchChannelId string) (*string, error) {
+func (b *PostgreSQL) DeleteCommandAlias(ctx context.Context, commandAlias string, twitchChannelId string) (*string, error) {
 	var commandAliasModel *models.BotCommandAlias
 
 	existAlias, err := b.CheckCommandAliasExist(ctx, commandAlias, twitchChannelId)

@@ -8,12 +8,12 @@ import (
 	"github.com/gempir/go-twitch-irc/v3"
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/client"
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/command/helpers"
-	"github.com/senchabot-dev/monorepo/apps/twitch-bot/server"
+	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/services/database"
 )
 
-func GetCommands() map[string]func(client *client.Clients, server *server.SenchabotAPIServer, message twitch.PrivateMessage, commandName string, params []string) {
+func GetCommands() map[string]func(client *client.Clients, db database.Database, message twitch.PrivateMessage, commandName string, params []string) {
 	// TODO: command aliases
-	var commands = map[string]func(client *client.Clients, server *server.SenchabotAPIServer, message twitch.PrivateMessage, commandName string, params []string){
+	var commands = map[string]func(client *client.Clients, db database.Database, message twitch.PrivateMessage, commandName string, params []string){
 		"ping":      PingCommand,
 		"invite":    InviteCommand,
 		"senchabot": SenchabotCommand,
@@ -49,7 +49,7 @@ func splitMessage(message string) (string, []string) {
 	return cmdName, params
 }
 
-func RunCommand(context context.Context, client *client.Clients, server *server.SenchabotAPIServer, message twitch.PrivateMessage) {
+func RunCommand(context context.Context, client *client.Clients, db database.Database, message twitch.PrivateMessage) {
 	commands := GetCommands()
 
 	cmdName, params := splitMessage(message.Message)
@@ -58,15 +58,15 @@ func RunCommand(context context.Context, client *client.Clients, server *server.
 	}
 
 	if cmd, ok := commands[cmdName]; ok {
-		cmd(client, server, message, cmdName, params)
-		server.SaveBotCommandActivity(context, cmdName, message.RoomID, message.User.DisplayName)
+		cmd(client, db, message, cmdName, params)
+		db.SaveBotCommandActivity(context, cmdName, message.RoomID, message.User.DisplayName)
 		return
 	}
 
 	// HANDLE CUSTOM COMMANDS
 
 	// HANDLE COMMAND ALIASES
-	commandAlias, cmdAliasErr := server.GetCommandAlias(context, cmdName, message.RoomID)
+	commandAlias, cmdAliasErr := db.GetCommandAlias(context, cmdName, message.RoomID)
 	if cmdAliasErr != nil {
 		fmt.Println(cmdAliasErr.Error())
 	}
@@ -76,7 +76,7 @@ func RunCommand(context context.Context, client *client.Clients, server *server.
 	}
 	// HANDLE COMMAND ALIASES
 
-	cmdData, err := server.GetBotCommand(context, cmdName, message.RoomID)
+	cmdData, err := db.GetBotCommand(context, cmdName, message.RoomID)
 	if err != nil {
 		fmt.Println(err.Error())
 		return
@@ -88,6 +88,6 @@ func RunCommand(context context.Context, client *client.Clients, server *server.
 
 	formattedCommandContent := helpers.FormatCommandContent(cmdData, message)
 	client.Twitch.Say(message.Channel, formattedCommandContent)
-	server.SaveBotCommandActivity(context, cmdName, message.RoomID, message.User.DisplayName)
+	db.SaveBotCommandActivity(context, cmdName, message.RoomID, message.User.DisplayName)
 	// HANDLE CUSTOM COMMANDS
 }

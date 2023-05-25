@@ -7,13 +7,13 @@ import (
 	"github.com/gempir/go-twitch-irc/v3"
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/client"
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/command/helpers"
-	"github.com/senchabot-dev/monorepo/apps/twitch-bot/server"
+	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/services/database"
 )
 
 const UPDATE_COMMAND_INFO = "For example: !ucmd [command_name] [new_command_content]"
 
-func UpdateCommandCommand(client *client.Clients, server *server.SenchabotAPIServer, message twitch.PrivateMessage, commandName string, params []string) {
-	if !helpers.CanExecuteCommand(context.Background(), server, message) {
+func UpdateCommandCommand(client *client.Clients, db database.Database, message twitch.PrivateMessage, commandName string, params []string) {
+	if !helpers.CanExecuteCommand(context.Background(), db, message) {
 		return
 	}
 	command_name, newCommandContent, check := helpers.GetCommandCreateUpdateParams(params)
@@ -27,7 +27,7 @@ func UpdateCommandCommand(client *client.Clients, server *server.SenchabotAPISer
 		return
 	}
 
-	updatedCommandName, infoText, err := server.UpdateBotCommand(context.Background(), command_name, newCommandContent, message.RoomID, message.User.DisplayName)
+	updatedCommandName, infoText, err := db.UpdateBotCommand(context.Background(), command_name, newCommandContent, message.RoomID, message.User.DisplayName)
 	if err != nil {
 		fmt.Println(err.Error())
 		return
