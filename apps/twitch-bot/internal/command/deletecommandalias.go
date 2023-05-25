@@ -8,13 +8,13 @@ import (
 	"github.com/gempir/go-twitch-irc/v3"
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/client"
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/command/helpers"
-	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/services/database"
+	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/service"
 )
 
 const DELETE_COMMAND_ALIAS_INFO = "For example: !dcmda [command_alias]"
 
-func DeleteCommandAliasCommand(client *client.Clients, db database.Database, message twitch.PrivateMessage, commandName string, params []string) {
-	if !helpers.CanExecuteCommand(context.Background(), db, message) {
+func DeleteCommandAliasCommand(client *client.Clients, service service.Services, message twitch.PrivateMessage, commandName string, params []string) {
+	if !helpers.CanExecuteCommand(context.Background(), service, message) {
 		return
 	}
 	if check := helpers.ValidateCommandDeleteParamsLength(params); !check {
@@ -22,7 +22,7 @@ func DeleteCommandAliasCommand(client *client.Clients, db database.Database, mes
 		return
 	}
 	var command_alias = strings.ToLower(params[0])
-	infoText, err := db.DeleteCommandAlias(context.Background(), command_alias, message.RoomID)
+	infoText, err := service.DB.DeleteCommandAlias(context.Background(), command_alias, message.RoomID)
 	if err != nil {
 		fmt.Println(err.Error())
 		return

@@ -8,13 +8,13 @@ import (
 	"github.com/gempir/go-twitch-irc/v3"
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/client"
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/command/helpers"
-	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/services/database"
+	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/service"
 )
 
 const DELETE_COMMAND_INFO = "For example: !dcmd [command_name]"
 
-func DeleteCommandCommand(client *client.Clients, db database.Database, message twitch.PrivateMessage, commandName string, params []string) {
-	if !helpers.CanExecuteCommand(context.Background(), db, message) {
+func DeleteCommandCommand(client *client.Clients, service service.Services, message twitch.PrivateMessage, commandName string, params []string) {
+	if !helpers.CanExecuteCommand(context.Background(), service, message) {
 		return
 	}
 	if check := helpers.ValidateCommandDeleteParamsLength(params); !check {
@@ -22,7 +22,7 @@ func DeleteCommandCommand(client *client.Clients, db database.Database, message 
 		return
 	}
 	var command_name = strings.ToLower(params[0])
-	deletedCommandName, infoText, err := db.DeleteBotCommand(context.Background(), command_name, message.RoomID)
+	deletedCommandName, infoText, err := service.DB.DeleteBotCommand(context.Background(), command_name, message.RoomID)
 	if err != nil {
 		fmt.Println(err.Error())
 		return

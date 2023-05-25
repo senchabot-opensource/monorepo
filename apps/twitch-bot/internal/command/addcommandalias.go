@@ -8,13 +8,13 @@ import (
 	"github.com/gempir/go-twitch-irc/v3"
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/client"
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/command/helpers"
-	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/services/database"
+	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/service"
 )
 
 const ADD_COMMAND_ALIAS_INFO = "For example: !acmda [command_name] [command_alias(es) separated by space]"
 
-func AddCommandAliasCommand(client *client.Clients, db database.Database, message twitch.PrivateMessage, commandName string, params []string) {
-	if !helpers.CanExecuteCommand(context.Background(), db, message) {
+func AddCommandAliasCommand(client *client.Clients, service service.Services, message twitch.PrivateMessage, commandName string, params []string) {
+	if !helpers.CanExecuteCommand(context.Background(), service, message) {
 		return
 	}
 	command, aliasCommands, check := helpers.GetAliasCommandCreateParams(params)
@@ -29,7 +29,7 @@ func AddCommandAliasCommand(client *client.Clients, db database.Database, messag
 		return
 	}
 
-	infoText, err := db.CreateCommandAliases(context.Background(), command, aliasCommands, twitchChannelId, message.User.DisplayName)
+	infoText, err := service.DB.CreateCommandAliases(context.Background(), command, aliasCommands, twitchChannelId, message.User.DisplayName)
 	if err != nil {
 		fmt.Println("AddCommandAlias Error: " + err.Error())
 		return

@@ -9,7 +9,7 @@ import (
 
 	"github.com/gempir/go-twitch-irc/v3"
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/models"
-	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/services/database"
+	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/service"
 )
 
 var (
@@ -42,7 +42,7 @@ func FormatCommandContent(commandData *models.BotCommand, message twitch.Private
 	return msgContent
 }
 
-func CanExecuteCommand(context context.Context, db database.Database, message twitch.PrivateMessage) bool {
+func CanExecuteCommand(context context.Context, service service.Services, message twitch.PrivateMessage) bool {
 	// broadcaster can run the command
 	if isBroadcaster(message.Tags["badges"]) {
 		return true
@@ -50,7 +50,7 @@ func CanExecuteCommand(context context.Context, db database.Database, message tw
 
 	// moderator can run the command
 	if isModerator(message.Tags["badges"]) {
-		check := db.CheckConfig(context, message.RoomID, "mods_manage_cmds_enabled", "1")
+		check := service.DB.CheckConfig(context, message.RoomID, "mods_manage_cmds_enabled", "1")
 		return check
 	}
 

@@ -7,7 +7,7 @@ import (
 	"os"
 
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/models"
-	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/services/database"
+	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/service/database"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"

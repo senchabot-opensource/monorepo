@@ -8,10 +8,10 @@ import (
 	"github.com/gempir/go-twitch-irc/v3"
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/client"
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/models"
-	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/services/database"
+	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/service"
 )
 
-func InviteCommand(client *client.Clients, db database.Database, message twitch.PrivateMessage, commandName string, params []string) {
+func InviteCommand(client *client.Clients, service service.Services, message twitch.PrivateMessage, commandName string, params []string) {
 	if message.Channel != "senchabot" {
 		return
 	}
@@ -28,7 +28,7 @@ func InviteCommand(client *client.Clients, db database.Database, message twitch.
 	}
 
 	var twitchChannelId = message.User.ID
-	alreadyJoined, err := db.CreateTwitchChannel(context.Background(), twitchChannelId, channelName, nil)
+	alreadyJoined, err := service.DB.CreateTwitchChannel(context.Background(), twitchChannelId, channelName, nil)
 	if err != nil {
 		fmt.Println("(CreateTwitchChannel) Error:", err)
 		return
@@ -42,7 +42,7 @@ func InviteCommand(client *client.Clients, db database.Database, message twitch.
 	client.Twitch.Join(channelName)
 	optionalCommands := models.GetOptionalCommands()
 	for _, command := range optionalCommands {
-		_, err := db.CreateBotCommand(context.Background(), command.CommandName, command.CommandContent, twitchChannelId, "Senchabot")
+		_, err := service.DB.CreateBotCommand(context.Background(), command.CommandName, command.CommandContent, twitchChannelId, "Senchabot")
 		if err != nil {
 			fmt.Println(err.Error())
 		}

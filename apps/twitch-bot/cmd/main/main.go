@@ -10,8 +10,8 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/client"
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/handler"
-	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/services/database/postgresql"
-	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/services/webhook"
+	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/service"
+	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/service/webhook"
 )
 
 func main() {
@@ -22,11 +22,10 @@ func main() {
 
 	twitchClient := twitch.NewClient("senchabot", os.Getenv("OAUTH"))
 
-	dbService := postgresql.NewPostgreSQL()
-
 	clients := client.NewClients(twitchClient)
+	services := service.NewServices()
 
-	joinedChannelList := handler.InitHandlers(clients, dbService)
+	joinedChannelList := handler.InitHandlers(clients, services)
 
 	go func() {
 		fmt.Println("Connecting to Twitch...")

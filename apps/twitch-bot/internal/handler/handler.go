@@ -2,12 +2,12 @@ package handler
 
 import (
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/client"
-	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/services/database"
+	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/service"
 )
 
-func InitHandlers(client *client.Clients, db database.Database) []string {
-	PrivateMessage(client, db)
-	joinedChannelList := BotJoin(client, db)
+func InitHandlers(client *client.Clients, service service.Services) []string {
+	PrivateMessage(client, service)
+	joinedChannelList := BotJoin(client, service)
 
 	return joinedChannelList
 }

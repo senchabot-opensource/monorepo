@@ -7,13 +7,13 @@ import (
 	"github.com/gempir/go-twitch-irc/v3"
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/client"
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/command/helpers"
-	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/services/database"
+	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/service"
 )
 
 const ADD_COMMAND_INFO = "For example: !acmd [command_name] [command_content]"
 
-func AddCommandCommand(client *client.Clients, db database.Database, message twitch.PrivateMessage, commandName string, params []string) {
-	if !helpers.CanExecuteCommand(context.Background(), db, message) {
+func AddCommandCommand(client *client.Clients, service service.Services, message twitch.PrivateMessage, commandName string, params []string) {
+	if !helpers.CanExecuteCommand(context.Background(), service, message) {
 		return
 	}
 	command_name, command_content, check := helpers.GetCommandCreateUpdateParams(params)
@@ -28,7 +28,7 @@ func AddCommandCommand(client *client.Clients, db database.Database, message twi
 		return
 	}
 
-	infoText, err := db.CreateBotCommand(context.Background(), command_name, command_content, message.RoomID, message.User.DisplayName)
+	infoText, err := service.DB.CreateBotCommand(context.Background(), command_name, command_content, message.RoomID, message.User.DisplayName)
 	if err != nil {
 		fmt.Println(err.Error())
 		return
