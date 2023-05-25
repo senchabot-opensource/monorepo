@@ -111,7 +111,7 @@ const TwitchBotForm = () => {
               fullWidth
               error={!!errors.bot_activity_enabled}>
               <InputLabel id="select-bot_activity_enabled">
-                Twitch Bot Activities
+                Twitch Bot Activity Logs
               </InputLabel>
 
               <Select
@@ -122,7 +122,7 @@ const TwitchBotForm = () => {
                 value={value}
                 labelId="select-bot_activity_enabled"
                 id="select-bot_activity_enabled"
-                label="Twitch Bot Activities">
+                label="Twitch Bot Activity Logs">
                 {configBooleanState.map(
                   (status: configBooleanState, index: number) => (
                     <MenuItem key={index} value={status.key}>
