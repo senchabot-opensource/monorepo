@@ -11,7 +11,6 @@ import (
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/client"
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/handler"
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/service"
-	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/service/webhook"
 )
 
 func main() {
@@ -24,8 +23,9 @@ func main() {
 
 	clients := client.NewClients(twitchClient)
 	services := service.NewServices()
+	handlers := handler.NewHandlers()
 
-	joinedChannelList := handler.InitHandlers(clients, services)
+	handlers.InitBotEventHandlers(clients, services)
 
 	go func() {
 		fmt.Println("Connecting to Twitch...")
@@ -38,9 +38,8 @@ func main() {
 	go func() {
 		fmt.Println("Starting HTTP server...")
 		mux := http.NewServeMux()
-		mux.HandleFunc("/webhook", func(w http.ResponseWriter, r *http.Request) {
-			webhook.HandleBotJoinWebhook(clients, joinedChannelList, w, r)
-		})
+		handlers.InitHttpHandlers(clients, services, mux)
+
 		error := http.ListenAndServe(":8080", mux)
 		if error != nil {
 			log.Fatal("ListenAndServe Error:", error)

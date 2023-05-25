@@ -2,7 +2,7 @@ package webhook
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"os"
 	"strings"
@@ -11,13 +11,13 @@ import (
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/models"
 )
 
-func HandleBotJoinWebhook(client *client.Clients, joinedChannelList []string, w http.ResponseWriter, r *http.Request) {
+func (*Webhooks) BotJoin(client *client.Clients, joinedChannelList []string, w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 		return
 	}
 
-	body, err := ioutil.ReadAll(r.Body)
+	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		http.Error(w, "Error reading request body", http.StatusBadRequest)
 		return
