@@ -17,7 +17,7 @@ func BotJoin(client *client.Clients, service service.Services) []string {
 	}
 
 	channels = append(channels, &models.TwitchChannel{
-		ChannelName: "corefninitiated_bot",
+		ChannelName: "senchabot",
 	})
 
 	channelList := make([]string, 0, len(channels))
