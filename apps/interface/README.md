@@ -12,7 +12,7 @@ Web application to use Senchabot through a web interface similar to the sci-fi t
 ## Getting Started
 
 ### Prerequisites
-* Node.js (v18 or higher)
+* Node.js (v18 or higher) and pnpm
 
 ### Installation
 1. Clone the repo and navigate to the monorepo directory
@@ -24,14 +24,14 @@ Web application to use Senchabot through a web interface similar to the sci-fi t
 2. Navigate to the project directory and install dependencies
    ```sh
    cd apps/interface
-   npm install
+   pnpm install
    ```
 
 ## Usage
 
 1. Now you can start the Senchabot web interface app by running:
    ```sh
-   npm run start
+   pnpm run start
    ```
    
 2. Once the Senchabot web interface app is running, you can interact with it using these commands:
