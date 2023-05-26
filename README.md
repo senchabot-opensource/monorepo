@@ -12,6 +12,7 @@ Senchabot apps and packages
 ### Prerequisites
 * Git
 * Node.js 18 or higher
+* pnpm
 
 ### Installation
 
@@ -22,10 +23,10 @@ Senchabot apps and packages
    cd monorepo
    ```
 
-2. Install NPM packages
+2. Install the dependencies
 
    ```sh
-   npm install
+   pnpm install
    ```
 
 3. Run turbo build

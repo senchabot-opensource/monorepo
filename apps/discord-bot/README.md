@@ -3,7 +3,7 @@
 ## Getting Started
 
 ### Prerequisites
-* Node.js (v18 or higher)
+* Node.js (v18 or higher) and pnpm
 
 ### Installation
 1. Clone the repo and navigate to the monorepo directory
@@ -15,7 +15,7 @@
 2. Navigate to the project directory and install dependencies
    ```sh
    cd apps/discord-bot
-   npm install
+   pnpm install
    ```
 
 3. Copy env.example and set the variables in it
@@ -27,12 +27,12 @@
 
 1. Once you have set enviroment variables, you need to deploy slash commands before start the bot:
    ```sh
-   npm run deploy-cmds
+   pnpm run deploy-cmds
    ```
 
 2. Now you can start the bot by running:
    ```sh
-   npm run dev
+   pnpm run dev
    ```
 
 ### Once the bot is running, you can interact with it using commands.
