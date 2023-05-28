@@ -29,6 +29,7 @@ const TwitchBotForm = () => {
   const [alertIsOpen, setAlertIsOpen] = useState<boolean>(false);
   const [snackbarIsOpen, setSnackbarIsOpen] = useState<boolean>(false);
   const [buttonEnabled, setButtonEnabled] = useState<boolean>(false);
+  const [configData, setConfigData] = useState<ITwitchBotConfig[]>([]);
 
   const { data: configs, isLoading } = trpc.twitchBot.getAllConfigs.useQuery();
 
@@ -57,9 +58,10 @@ const TwitchBotForm = () => {
     if (!isLoading) {
       if (!configs) return;
 
-      configs.forEach((config: ITwitchBotConfig) =>
-        setValue(config.key, config.value),
-      );
+      configs.forEach((config: ITwitchBotConfig) => {
+        setValue(config.key, config.value);
+        setConfigData(configData => [...configData, config]);
+      });
     }
   }, [isLoading, configs]);
 
@@ -71,18 +73,21 @@ const TwitchBotForm = () => {
   };
 
   const onSubmit = React.useCallback((data: ITwitchBotFormSubmitData) => {
+    const config = [
+      {
+        key: "bot_activity_enabled",
+        value: data.bot_activity_enabled,
+      },
+      {
+        key: "mods_manage_cmds_enabled",
+        value: data.mods_manage_cmds_enabled,
+      },
+    ];
+
+    setConfigData(config);
     setButtonEnabled(false);
     configsMutate.mutate({
-      configs: [
-        {
-          key: "bot_activity_enabled",
-          value: data.bot_activity_enabled,
-        },
-        {
-          key: "mods_manage_cmds_enabled",
-          value: data.mods_manage_cmds_enabled,
-        },
-      ],
+      configs: config,
     });
   }, []);
 
@@ -117,7 +122,14 @@ const TwitchBotForm = () => {
               <Select
                 onChange={field => {
                   onChange(field.target.value);
-                  setButtonEnabled(true);
+                  if (
+                    configData[0]?.key === "bot_activity_enabled" &&
+                    configData[0].value === field.target.value
+                  ) {
+                    setButtonEnabled(false);
+                  } else {
+                    setButtonEnabled(true);
+                  }
                 }}
                 value={value}
                 labelId="select-bot_activity_enabled"
@@ -158,7 +170,14 @@ const TwitchBotForm = () => {
               <Select
                 onChange={field => {
                   onChange(field.target.value);
-                  setButtonEnabled(true);
+                  if (
+                    configData[1]?.key === "mods_manage_cmds_enabled" &&
+                    configData[1].value === field.target.value
+                  ) {
+                    setButtonEnabled(false);
+                  } else {
+                    setButtonEnabled(true);
+                  }
                 }}
                 value={value}
                 labelId="select-mods_manage_cmds_enabled"
