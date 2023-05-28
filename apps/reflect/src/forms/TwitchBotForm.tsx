@@ -122,14 +122,10 @@ const TwitchBotForm = () => {
               <Select
                 onChange={field => {
                   onChange(field.target.value);
-                  if (
+                  setButtonEnabled(
                     configData[0]?.key === "bot_activity_enabled" &&
-                    configData[0].value === field.target.value
-                  ) {
-                    setButtonEnabled(false);
-                  } else {
-                    setButtonEnabled(true);
-                  }
+                      configData[0]?.value !== field.target.value,
+                  );
                 }}
                 value={value}
                 labelId="select-bot_activity_enabled"
@@ -170,14 +166,10 @@ const TwitchBotForm = () => {
               <Select
                 onChange={field => {
                   onChange(field.target.value);
-                  if (
+                  setButtonEnabled(
                     configData[1]?.key === "mods_manage_cmds_enabled" &&
-                    configData[1].value === field.target.value
-                  ) {
-                    setButtonEnabled(false);
-                  } else {
-                    setButtonEnabled(true);
-                  }
+                      configData[1]?.value !== field.target.value,
+                  );
                 }}
                 value={value}
                 labelId="select-mods_manage_cmds_enabled"
