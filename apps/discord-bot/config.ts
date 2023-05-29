@@ -5,5 +5,6 @@ export const GOOD_MORNING_STRINGS = [
   "gunaydi",
   "günaydi",
   "gunaydi",
+  "gunaydı",
 ];
 export const SUN_WITH_FACE_EMOJI = "🌞";
