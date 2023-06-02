@@ -11,11 +11,11 @@ type Services struct {
 	Webhook webhook.Webhook
 }
 
-func NewServices() Services {
+func NewServices() *Services {
 	dbService := postgresql.NewPostgreSQL()
 	whService := webhook.NewWebhooks()
 
-	return Services{
+	return &Services{
 		DB:      dbService,
 		Webhook: whService,
 	}

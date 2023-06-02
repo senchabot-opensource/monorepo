@@ -8,25 +8,30 @@ import (
 )
 
 type Handler interface {
-	InitBotEventHandlers(client *client.Clients, service service.Services)
-	InitHttpHandlers(client *client.Clients, service service.Services, mux *http.ServeMux)
+	InitBotEventHandlers()
+	InitHttpHandlers(mux *http.ServeMux)
 }
 
-type Handlers struct {
+type handlers struct {
 	joinedChannelList []string
+	client            *client.Clients
+	service           *service.Services
 }
 
-func (b *Handlers) InitBotEventHandlers(client *client.Clients, service service.Services) {
-	PrivateMessage(client, service)
-	b.joinedChannelList = BotJoin(client, service)
+func (s *handlers) InitBotEventHandlers() {
+	PrivateMessage(s.client, s.service)
+	s.joinedChannelList = BotJoin(s.client, s.service)
 }
 
-func (b *Handlers) InitHttpHandlers(client *client.Clients, service service.Services, mux *http.ServeMux) {
+func (s *handlers) InitHttpHandlers(mux *http.ServeMux) {
 	mux.HandleFunc("/webhook", func(w http.ResponseWriter, r *http.Request) {
-		service.Webhook.BotJoin(client, b.joinedChannelList, w, r)
+		s.service.Webhook.BotJoin(s.client, s.joinedChannelList, w, r)
 	})
 }
 
-func NewHandlers() Handler {
-	return &Handlers{}
+func NewHandlers(client *client.Clients, service *service.Services) Handler {
+	return &handlers{
+		client:  client,
+		service: service,
+	}
 }

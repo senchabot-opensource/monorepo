@@ -11,25 +11,41 @@ import (
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/service"
 )
 
-func GetCommands() map[string]func(client *client.Clients, service service.Services, message twitch.PrivateMessage, commandName string, params []string) {
-	// TODO: command aliases
-	var commands = map[string]func(client *client.Clients, service service.Services, message twitch.PrivateMessage, commandName string, params []string){
-		"ping":      PingCommand,
-		"invite":    InviteCommand,
-		"senchabot": SenchabotCommand,
-		"sukru":     SukruCommand,
+type Command interface {
+	RunCommand(context context.Context, message twitch.PrivateMessage)
+}
 
-		"acmd": AddCommandCommand,
-		"ucmd": UpdateCommandCommand,
-		"dcmd": DeleteCommandCommand,
+type commands struct {
+	client  *client.Clients
+	service *service.Services
+}
+
+func NewCommands(client *client.Clients, service *service.Services) Command {
+	return &commands{
+		client:  client,
+		service: service,
+	}
+}
+
+func (s *commands) GetCommands() map[string]func(message twitch.PrivateMessage, commandName string, params []string) {
+	// TODO: command aliases
+	var commands = map[string]func(message twitch.PrivateMessage, commandName string, params []string){
+		"ping":      s.PingCommand,
+		"invite":    s.InviteCommand,
+		"senchabot": s.SenchabotCommand,
+		"sukru":     s.SukruCommand,
+
+		"acmd": s.AddCommandCommand,
+		"ucmd": s.UpdateCommandCommand,
+		"dcmd": s.DeleteCommandCommand,
 		//"info": InfoCommandCommand,
 		//"cmds": CmdsCommandCommand,
 
-		"acmda": AddCommandAliasCommand,
-		"dcmda": DeleteCommandAliasCommand,
+		"acmda": s.AddCommandAliasCommand,
+		"dcmda": s.DeleteCommandAliasCommand,
 
-		"kampus":       KampusCommand,
-		"frontendship": FrontendshipCommand,
+		"kampus":       s.KampusCommand,
+		"frontendship": s.FrontendshipCommand,
 	}
 
 	return commands
@@ -49,8 +65,8 @@ func splitMessage(message string) (string, []string) {
 	return cmdName, params
 }
 
-func RunCommand(context context.Context, client *client.Clients, service service.Services, message twitch.PrivateMessage) {
-	commands := GetCommands()
+func (s *commands) RunCommand(context context.Context, message twitch.PrivateMessage) {
+	commands := s.GetCommands()
 
 	cmdName, params := splitMessage(message.Message)
 	if cmdName == "" {
@@ -58,15 +74,15 @@ func RunCommand(context context.Context, client *client.Clients, service service
 	}
 
 	if cmd, ok := commands[cmdName]; ok {
-		cmd(client, service, message, cmdName, params)
-		service.DB.SaveBotCommandActivity(context, cmdName, message.RoomID, message.User.DisplayName)
+		cmd(message, cmdName, params)
+		s.service.DB.SaveBotCommandActivity(context, cmdName, message.RoomID, message.User.DisplayName)
 		return
 	}
 
 	// HANDLE CUSTOM COMMANDS
 
 	// HANDLE COMMAND ALIASES
-	commandAlias, cmdAliasErr := service.DB.GetCommandAlias(context, cmdName, message.RoomID)
+	commandAlias, cmdAliasErr := s.service.DB.GetCommandAlias(context, cmdName, message.RoomID)
 	if cmdAliasErr != nil {
 		fmt.Println(cmdAliasErr.Error())
 	}
@@ -76,7 +92,7 @@ func RunCommand(context context.Context, client *client.Clients, service service
 	}
 	// HANDLE COMMAND ALIASES
 
-	cmdData, err := service.DB.GetBotCommand(context, cmdName, message.RoomID)
+	cmdData, err := s.service.DB.GetBotCommand(context, cmdName, message.RoomID)
 	if err != nil {
 		fmt.Println(err.Error())
 		return
@@ -87,7 +103,7 @@ func RunCommand(context context.Context, client *client.Clients, service service
 	}
 
 	formattedCommandContent := helpers.FormatCommandContent(cmdData, message)
-	client.Twitch.Say(message.Channel, formattedCommandContent)
-	service.DB.SaveBotCommandActivity(context, cmdName, message.RoomID, message.User.DisplayName)
+	s.client.Twitch.Say(message.Channel, formattedCommandContent)
+	s.service.DB.SaveBotCommandActivity(context, cmdName, message.RoomID, message.User.DisplayName)
 	// HANDLE CUSTOM COMMANDS
 }

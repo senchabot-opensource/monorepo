@@ -10,9 +10,9 @@ type Webhook interface {
 	BotJoin(client *client.Clients, joinedChannelList []string, w http.ResponseWriter, r *http.Request)
 }
 
-type Webhooks struct {
+type webhooks struct {
 }
 
 func NewWebhooks() Webhook {
-	return &Webhooks{}
+	return &webhooks{}
 }

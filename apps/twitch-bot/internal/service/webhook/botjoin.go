@@ -11,7 +11,7 @@ import (
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/models"
 )
 
-func (*Webhooks) BotJoin(client *client.Clients, joinedChannelList []string, w http.ResponseWriter, r *http.Request) {
+func (*webhooks) BotJoin(client *client.Clients, joinedChannelList []string, w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 		return

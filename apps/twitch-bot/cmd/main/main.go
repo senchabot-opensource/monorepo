@@ -23,9 +23,9 @@ func main() {
 
 	clients := client.NewClients(twitchClient)
 	services := service.NewServices()
-	handlers := handler.NewHandlers()
+	handlers := handler.NewHandlers(clients, services)
 
-	handlers.InitBotEventHandlers(clients, services)
+	handlers.InitBotEventHandlers()
 
 	go func() {
 		fmt.Println("Connecting to Twitch...")
@@ -38,7 +38,7 @@ func main() {
 	go func() {
 		fmt.Println("Starting HTTP server...")
 		mux := http.NewServeMux()
-		handlers.InitHttpHandlers(clients, services, mux)
+		handlers.InitHttpHandlers(mux)
 
 		error := http.ListenAndServe(":8080", mux)
 		if error != nil {

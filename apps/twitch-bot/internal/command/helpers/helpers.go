@@ -42,7 +42,7 @@ func FormatCommandContent(commandData *models.BotCommand, message twitch.Private
 	return msgContent
 }
 
-func CanExecuteCommand(context context.Context, service service.Services, message twitch.PrivateMessage) bool {
+func CanExecuteCommand(context context.Context, service *service.Services, message twitch.PrivateMessage) bool {
 	// broadcaster can run the command
 	if isBroadcaster(message.Tags["badges"]) {
 		return true

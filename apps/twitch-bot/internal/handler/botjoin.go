@@ -10,7 +10,7 @@ import (
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/service"
 )
 
-func BotJoin(client *client.Clients, service service.Services) []string {
+func BotJoin(client *client.Clients, service *service.Services) []string {
 	channels, err := service.DB.GetTwitchChannels(context.Background())
 	if err != nil {
 		log.Fatalf("(GetTwitchChannels) Error:" + err.Error())

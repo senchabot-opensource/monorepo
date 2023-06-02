@@ -9,8 +9,10 @@ import (
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/service"
 )
 
-func PrivateMessage(client *client.Clients, service service.Services) {
+func PrivateMessage(client *client.Clients, service *service.Services) {
+	commands := command.NewCommands(client, service)
+
 	client.Twitch.OnPrivateMessage(func(message twitch.PrivateMessage) {
-		command.RunCommand(context.Background(), client, service, message)
+		commands.RunCommand(context.Background(), message)
 	})
 }
