@@ -86,5 +86,5 @@ export async function checkScheduledEvents(guilds: GuildManager) {
         }
       });
     });
-  }, 1000); // check every minute
+  }, 60000); // check every minute
 }
