@@ -6,13 +6,14 @@ import {
 } from "discord.js";
 import { selectByNameCallback } from "../utils/helpers";
 import { addRole } from "../utils/memberFunctions";
+import { isGoodMorningMessage, reactWithSun } from "../utils/reactionHelpers";
 
 export default {
   name: "messageReactionAdd",
   async execute(
     reaction: MessageReaction | PartialMessageReaction,
     user: GuildMember,
-    client: Client
+    client: Client,
   ) {
     // Fetch the message content.
     if (reaction.message.partial) await reaction.message.fetch();
@@ -21,6 +22,11 @@ export default {
       .REACTION_RULES_MESSAGE_STARTSWITH as string;
 
     const messageContent = reaction.message.content as string;
+
+    if (isGoodMorningMessage(messageContent)) {
+      reactWithSun(reaction);
+    }
+
     // Check if the message content starts with the string in the REACTION_RULES_MESSAGE_STARTSWITH variable.
     if (!messageContent.startsWith(rulesMessageStartsWith)) return;
 
@@ -38,7 +44,7 @@ export default {
 
     // Find the rules channel with the Name REACTION_RULES_CHANNEL_NAME.
     const rulesChannel = client.channels.cache.find(
-      selectByNameCallback(reactionRulesChannelName)
+      selectByNameCallback(reactionRulesChannelName),
     );
 
     if (!rulesChannel) return;
