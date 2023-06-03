@@ -61,6 +61,8 @@ export async function checkScheduledEvents(guilds: GuildManager) {
       const scheduledEvents = await guild.scheduledEvents.fetch();
 
       scheduledEvents.forEach(async event => {
+        if (!event.creator?.bot) return;
+
         const location = event.entityMetadata?.location;
         const twitchUsernameRegex = /twitch\.tv\/(\w+)/;
         const twitchUsernameFromLocation =
@@ -88,5 +90,5 @@ export async function checkScheduledEvents(guilds: GuildManager) {
         }
       });
     });
-  }, 60000); // check every minute
+  }, 1000); // check every minute
 }
