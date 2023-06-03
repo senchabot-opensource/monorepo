@@ -1,6 +1,14 @@
 import { MessageReaction, PartialMessageReaction } from "discord.js";
+import { GOOD_MORNING_REGEXP, SUN_WITH_FACE_EMOJI } from "../config";
 
-export function reactMessageWithEmoji(
+export const isGoodMorningMessage = (msg: string): boolean =>
+  GOOD_MORNING_REGEXP.test(msg);
+
+export const reactWithSun = (
+  reaction: MessageReaction | PartialMessageReaction,
+) => reactMessageWithEmoji(reaction, SUN_WITH_FACE_EMOJI);
+
+function reactMessageWithEmoji(
   reaction: MessageReaction | PartialMessageReaction,
   emojiName: string,
 ) {

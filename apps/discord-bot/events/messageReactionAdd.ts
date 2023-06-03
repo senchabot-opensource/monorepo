@@ -6,8 +6,7 @@ import {
 } from "discord.js";
 import { selectByNameCallback } from "../utils/helpers";
 import { addRole } from "../utils/memberFunctions";
-import { GOOD_MORNING_STRINGS, SUN_WITH_FACE_EMOJI } from "../config";
-import { reactMessageWithEmoji } from "../utils/reactionHelpers";
+import { isGoodMorningMessage, reactWithSun } from "../utils/reactionHelpers";
 
 export default {
   name: "messageReactionAdd",
@@ -24,10 +23,8 @@ export default {
 
     const messageContent = reaction.message.content as string;
 
-    for (const gmString of GOOD_MORNING_STRINGS) {
-      if (messageContent.startsWith(gmString)) {
-        reactMessageWithEmoji(reaction, SUN_WITH_FACE_EMOJI);
-      }
+    if (isGoodMorningMessage(messageContent)) {
+      reactWithSun(reaction);
     }
 
     // Check if the message content starts with the string in the REACTION_RULES_MESSAGE_STARTSWITH variable.
