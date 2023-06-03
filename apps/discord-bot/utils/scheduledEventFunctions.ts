@@ -12,7 +12,7 @@ export const createLiveStreamEventFromMessage = (
   message: Message,
   params: ICreateLiveStreamEventParams,
 ) => {
-  if (!message.guild) return;
+  if (!message.guild || !message.author.bot) return;
   if (!TWITCH_EVENTS_CHANNELS.includes(message.channelId)) return;
 
   const msgContent = message.content;
@@ -25,15 +25,11 @@ export const createLiveStreamEventFromMessage = (
   const url = getURL(params.platformDomain, msgContent);
 
   const firstMsgEmbedTitle = message.embeds[0]?.title;
-  const urlAndMentionRegex = /@(everyone|here)|\bhttps?:\/\/\S+/g;
-  const processedMsgContent = msgContent.replace(urlAndMentionRegex, "").trim();
 
-  let eventName = "";
+  let eventName = msgContent.substring(0, 20);
 
-  if (message.author.bot && firstMsgEmbedTitle) {
+  if (firstMsgEmbedTitle) {
     eventName = firstMsgEmbedTitle;
-  } else {
-    eventName = processedMsgContent;
   }
 
   eventName = eventName.substring(0, 99);
@@ -61,6 +57,8 @@ export async function checkScheduledEvents(guilds: GuildManager) {
       const scheduledEvents = await guild.scheduledEvents.fetch();
 
       scheduledEvents.forEach(async event => {
+        if (!event.creator?.bot) return;
+
         const location = event.entityMetadata?.location;
         const twitchUsernameRegex = /twitch\.tv\/(\w+)/;
         const twitchUsernameFromLocation =
