@@ -149,13 +149,6 @@ const TwitchBotForm = () => {
               </FormControl>
             )}
           />
-
-          <InputLabel
-            sx={{
-              mt: 2,
-            }}>
-            Mods can create/update/delete custom commands
-          </InputLabel>
           <Controller
             name="mods_manage_cmds_enabled"
             control={control}
