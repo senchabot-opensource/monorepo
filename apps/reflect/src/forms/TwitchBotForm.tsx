@@ -153,6 +153,7 @@ const TwitchBotForm = () => {
           <InputLabel
             sx={{
               mt: 2,
+              whiteSpace: "break-spaces",
             }}>
             Mods can create/update/delete custom commands
           </InputLabel>
