@@ -26,7 +26,7 @@ func (s *commands) InviteCommand(message twitch.PrivateMessage, commandName stri
 	}
 
 	var twitchChannelId = message.User.ID
-	alreadyJoined, err := s.service.DB.CreateTwitchChannel(context.Background(), twitchChannelId, channelName, nil)
+	alreadyJoined, err := s.service.CreateTwitchChannel(context.Background(), twitchChannelId, channelName, nil)
 	if err != nil {
 		fmt.Println("(CreateTwitchChannel) Error:", err)
 		return
@@ -40,7 +40,7 @@ func (s *commands) InviteCommand(message twitch.PrivateMessage, commandName stri
 	s.client.Twitch.Join(channelName)
 	optionalCommands := models.GetOptionalCommands()
 	for _, command := range optionalCommands {
-		_, err := s.service.DB.CreateBotCommand(context.Background(), command.CommandName, command.CommandContent, twitchChannelId, "Senchabot")
+		_, err := s.service.CreateBotCommand(context.Background(), command.CommandName, command.CommandContent, twitchChannelId, "Senchabot")
 		if err != nil {
 			fmt.Println(err.Error())
 		}

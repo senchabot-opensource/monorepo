@@ -20,7 +20,7 @@ func (s *commands) DeleteCommandAliasCommand(message twitch.PrivateMessage, comm
 		return
 	}
 	var command_alias = strings.ToLower(params[0])
-	infoText, err := s.service.DB.DeleteCommandAlias(context.Background(), command_alias, message.RoomID)
+	infoText, err := s.service.DeleteCommandAlias(context.Background(), command_alias, message.RoomID)
 	if err != nil {
 		fmt.Println(err.Error())
 		return
