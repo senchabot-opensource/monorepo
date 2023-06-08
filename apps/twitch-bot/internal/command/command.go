@@ -39,7 +39,7 @@ func (s *commands) GetCommands() map[string]func(message twitch.PrivateMessage, 
 		"ucmd": s.UpdateCommandCommand,
 		"dcmd": s.DeleteCommandCommand,
 		//"info": InfoCommandCommand,
-		//"cmds": CmdsCommandCommand,
+		"cmds": s.CmdsCommand,
 
 		"acmda": s.AddCommandAliasCommand,
 		"dcmda": s.DeleteCommandAliasCommand,
