@@ -26,7 +26,7 @@ func (s *commands) AddCommandCommand(message twitch.PrivateMessage, commandName 
 		return
 	}
 
-	infoText, err := s.service.DB.CreateBotCommand(context.Background(), command_name, command_content, message.RoomID, message.User.DisplayName)
+	infoText, err := s.service.CreateBotCommand(context.Background(), command_name, command_content, message.RoomID, message.User.DisplayName)
 	if err != nil {
 		fmt.Println(err.Error())
 		return

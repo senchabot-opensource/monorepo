@@ -17,10 +17,10 @@ type Command interface {
 
 type commands struct {
 	client  *client.Clients
-	service *service.Services
+	service service.Service
 }
 
-func NewCommands(client *client.Clients, service *service.Services) Command {
+func NewCommands(client *client.Clients, service service.Service) Command {
 	return &commands{
 		client:  client,
 		service: service,
@@ -75,14 +75,14 @@ func (s *commands) RunCommand(context context.Context, message twitch.PrivateMes
 
 	if cmd, ok := commands[cmdName]; ok {
 		cmd(message, cmdName, params)
-		s.service.DB.SaveBotCommandActivity(context, cmdName, message.RoomID, message.User.DisplayName)
+		s.service.SaveBotCommandActivity(context, cmdName, message.RoomID, message.User.DisplayName)
 		return
 	}
 
 	// HANDLE CUSTOM COMMANDS
 
 	// HANDLE COMMAND ALIASES
-	commandAlias, cmdAliasErr := s.service.DB.GetCommandAlias(context, cmdName, message.RoomID)
+	commandAlias, cmdAliasErr := s.service.GetCommandAlias(context, cmdName, message.RoomID)
 	if cmdAliasErr != nil {
 		fmt.Println(cmdAliasErr.Error())
 	}
@@ -92,7 +92,7 @@ func (s *commands) RunCommand(context context.Context, message twitch.PrivateMes
 	}
 	// HANDLE COMMAND ALIASES
 
-	cmdData, err := s.service.DB.GetBotCommand(context, cmdName, message.RoomID)
+	cmdData, err := s.service.GetBotCommand(context, cmdName, message.RoomID)
 	if err != nil {
 		fmt.Println(err.Error())
 		return
@@ -104,6 +104,6 @@ func (s *commands) RunCommand(context context.Context, message twitch.PrivateMes
 
 	formattedCommandContent := helpers.FormatCommandContent(cmdData, message)
 	s.client.Twitch.Say(message.Channel, formattedCommandContent)
-	s.service.DB.SaveBotCommandActivity(context, cmdName, message.RoomID, message.User.DisplayName)
+	s.service.SaveBotCommandActivity(context, cmdName, message.RoomID, message.User.DisplayName)
 	// HANDLE CUSTOM COMMANDS
 }
