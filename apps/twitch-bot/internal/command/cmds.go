@@ -12,7 +12,7 @@ func (s *commands) CmdsCommand(message twitch.PrivateMessage, commandName string
 	var commandListArr []string
 	var commandListString string
 
-	commandList, err := s.service.DB.GetCommandList(context.Background(), message.RoomID)
+	commandList, err := s.service.GetCommandList(context.Background(), message.RoomID)
 	if err != nil {
 		fmt.Println(err.Error())
 		return
@@ -24,5 +24,5 @@ func (s *commands) CmdsCommand(message twitch.PrivateMessage, commandName string
 
 	commandListString = strings.Join(commandListArr, ", ")
 
-	s.client.Twitch.Say(message.Channel, "Commands List: "+commandListString)
+	s.client.Twitch.Say(message.Channel, message.User.DisplayName+"'s Channel Commands: "+commandListString)
 }
