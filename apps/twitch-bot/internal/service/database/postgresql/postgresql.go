@@ -221,6 +221,17 @@ func (b *PostgreSQL) DeleteBotCommand(ctx context.Context, commandName string, t
 	return &commandName, nil, nil
 }
 
+func (b *PostgreSQL) GetCommandList(ctx context.Context, twitchChannelId string) ([]*models.BotCommand, error) {
+	var botCommandList []*models.BotCommand
+
+	result := b.DB.Where("twitch_channel_id = ?", twitchChannelId).Find(&botCommandList)
+	if result.Error != nil {
+		return nil, errors.New("(GetTwitchChannels) db.Find Error:" + result.Error.Error())
+	}
+
+	return botCommandList, nil
+}
+
 func (b *PostgreSQL) CreateBotActionActivity(ctx context.Context, botPlatformType string, botActivity string, twitchChannelId string, activityAuthor string) error {
 	botActionActivity := models.BotActionActivity{
 		BotPlatformType: botPlatformType,

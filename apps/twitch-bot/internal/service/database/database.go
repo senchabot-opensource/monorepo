@@ -18,6 +18,7 @@ type Database interface {
 	CheckCommandExists(ctx context.Context, commandName string, twitchChannelId string) (*string, error)
 	UpdateBotCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string, updatedBy string) (*string, *string, error)
 	DeleteBotCommand(ctx context.Context, commandName string, twitchChannelId string) (*string, *string, error)
+	GetCommandList(ctx context.Context, twitchChannelId string) ([]*models.BotCommand, error)
 
 	CreateBotActionActivity(ctx context.Context, botPlatformType string, botActivity string, twitchChannelId string, commandAuthor string) error
 	SaveBotCommandActivity(context context.Context, commandName string, twitchChannelId string, commandAuthor string)
