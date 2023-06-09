@@ -15,7 +15,7 @@ type Handler interface {
 type handlers struct {
 	joinedChannelList []string
 	client            *client.Clients
-	service           service.Services
+	service           service.Service
 }
 
 func (s *handlers) InitBotEventHandlers() {
@@ -29,7 +29,7 @@ func (s *handlers) InitHttpHandlers(mux *http.ServeMux) {
 	})
 }
 
-func NewHandlers(client *client.Clients, service service.Services) Handler {
+func NewHandlers(client *client.Clients, service service.Service) Handler {
 	return &handlers{
 		client:  client,
 		service: service,

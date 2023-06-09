@@ -17,10 +17,10 @@ type Command interface {
 
 type commands struct {
 	client  *client.Clients
-	service service.Services
+	service service.Service
 }
 
-func NewCommands(client *client.Clients, service service.Services) Command {
+func NewCommands(client *client.Clients, service service.Service) Command {
 	return &commands{
 		client:  client,
 		service: service,

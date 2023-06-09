@@ -12,7 +12,7 @@ import (
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/service/webhook"
 )
 
-type Services interface {
+type Service interface {
 	BotJoinWebhook(client *client.Clients, joinedChannelList []string, w http.ResponseWriter, r *http.Request)
 
 	GetTwitchChannels(ctx context.Context) ([]*models.TwitchChannel, error)
@@ -41,7 +41,7 @@ type services struct {
 	Webhook webhook.Webhook
 }
 
-func NewServices() Services {
+func NewServices() Service {
 	dbService := postgresql.NewPostgreSQL()
 	whService := webhook.NewWebhooks()
 
