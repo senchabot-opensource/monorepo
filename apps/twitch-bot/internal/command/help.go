@@ -16,5 +16,5 @@ func (s *commands) HelpCommand(message twitch.PrivateMessage, commandName string
 
 	commandListString := strings.Join(commmandList, ", ")
 
-	s.client.Twitch.Say(message.Channel, "Available Commands: "+commandListString)
+	s.client.Twitch.Say(message.Channel, "Senchabot's Commands: "+commandListString)
 }
