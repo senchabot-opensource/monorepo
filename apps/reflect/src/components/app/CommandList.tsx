@@ -1,4 +1,6 @@
 import {
+  Input,
+  InputAdornment,
   List,
   ListItem,
   ListItemText,
@@ -22,7 +24,8 @@ import MuiAccordionSummary, {
   AccordionSummaryProps,
 } from "@mui/material/AccordionSummary";
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { BiSearchAlt } from "react-icons/bi";
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion
@@ -62,6 +65,7 @@ const CommandList = () => {
   const [botCommands, setBotCommands] = useState<IBotCommand[]>();
   const [aliasCommands, setAliasCommands] = useState<IBotCommandAlias[]>();
   const [expanded, setExpanded] = useState<string | false>(false);
+  const [searchValue, setSearchValue] = useState<string>("");
 
   const handleChange =
     (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
@@ -77,11 +81,33 @@ const CommandList = () => {
     }
   }, [commandList, commandAlias]);
 
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(e.target.value);
+  };
+
+  const filteredCommands = useMemo(() => {
+    if (!searchValue) return botCommands;
+    return botCommands?.filter((command: IBotCommand) =>
+      command.commandName.toLowerCase().includes(searchValue.toLowerCase()),
+    );
+  }, [botCommands, searchValue]);
+
   return (
     <Paper
       sx={{ mt: "10px", backgroundColor: "#000", padding: "10px" }}
       elevation={1}>
       <Stack>
+        <Input
+          fullWidth
+          onChange={handleSearch}
+          value={searchValue}
+          placeholder="Search"
+          startAdornment={
+            <InputAdornment position="start">
+              <BiSearchAlt />
+            </InputAdornment>
+          }
+        />
         <List
           dense={false}
           sx={{ width: "100%", backgroundColor: "#000" }}
@@ -92,11 +118,12 @@ const CommandList = () => {
           }
           disablePadding>
           {!isLoading ? (
-            botCommands?.length ? (
-              botCommands.map((command: IBotCommand, index: number) => {
+            filteredCommands?.length ? (
+              filteredCommands.map((command: IBotCommand, index: number) => {
                 return (
                   <>
                     <Accordion
+                      key={index}
                       expanded={expanded === "panel" + index.toString()}
                       onChange={handleChange("panel" + index.toString())}
                       sx={{ backgroundColor: "#000" }}>
