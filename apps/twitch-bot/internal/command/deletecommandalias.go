@@ -23,7 +23,7 @@ func (s *commands) DeleteCommandAliasCommand(message twitch.PrivateMessage, comm
 
 	command_alias = helpers.TrimExclamationPrefix(command_alias)
 
-	infoText, err := s.service.DB.DeleteCommandAlias(context.Background(), command_alias, message.RoomID)
+	infoText, err := s.service.DeleteCommandAlias(context.Background(), command_alias, message.RoomID)
 	if err != nil {
 		fmt.Println(err.Error())
 		return

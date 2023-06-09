@@ -29,7 +29,7 @@ func (s *commands) AddCommandAliasCommand(message twitch.PrivateMessage, command
 
 	command = helpers.TrimExclamationPrefix(command)
 
-	infoText, err := s.service.DB.CreateCommandAliases(context.Background(), command, aliasCommands, twitchChannelId, message.User.DisplayName)
+	infoText, err := s.service.CreateCommandAliases(context.Background(), command, aliasCommands, twitchChannelId, message.User.DisplayName)
 	if err != nil {
 		fmt.Println("AddCommandAlias Error: " + err.Error())
 		return

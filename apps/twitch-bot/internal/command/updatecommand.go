@@ -27,7 +27,7 @@ func (s *commands) UpdateCommandCommand(message twitch.PrivateMessage, commandNa
 
 	command_name = helpers.TrimExclamationPrefix(command_name)
 
-	updatedCommandName, infoText, err := s.service.DB.UpdateBotCommand(context.Background(), command_name, newCommandContent, message.RoomID, message.User.DisplayName)
+	updatedCommandName, infoText, err := s.service.UpdateBotCommand(context.Background(), command_name, newCommandContent, message.RoomID, message.User.DisplayName)
 	if err != nil {
 		fmt.Println(err.Error())
 		return
