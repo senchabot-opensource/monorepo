@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/models"
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/service/database"
@@ -268,6 +269,8 @@ func (b *PostgreSQL) CreateCommandAliases(ctx context.Context, commandName strin
 	}
 
 	for _, aliasCommandName := range aliases {
+		aliasCommandName = strings.TrimPrefix(aliasCommandName, "!")
+
 		existAlias, err := b.CheckCommandAliasExist(ctx, aliasCommandName, twitchChannelId)
 		if err != nil {
 			return nil, err

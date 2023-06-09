@@ -137,3 +137,7 @@ func ValidateCommandContentLength(commandContent string) (string, bool) {
 func ValidateCommandDeleteParamsLength(params []string) bool {
 	return len(params) == 1
 }
+
+func TrimExclamationPrefix(commandName string) string {
+	return strings.TrimPrefix(commandName, "!")
+}
