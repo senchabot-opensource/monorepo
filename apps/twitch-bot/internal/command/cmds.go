@@ -24,5 +24,5 @@ func (s *commands) CmdsCommand(message twitch.PrivateMessage, commandName string
 
 	commandListString = strings.Join(commandListArr, ", ")
 
-	s.client.Twitch.Say(message.Channel, message.User.DisplayName+"'s Channel Commands: "+commandListString)
+	s.client.Twitch.Say(message.Channel, message.Channel+"'s Channel Commands: "+commandListString)
 }
