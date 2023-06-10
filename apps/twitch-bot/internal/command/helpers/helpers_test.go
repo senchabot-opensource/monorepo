@@ -2,6 +2,8 @@ package helpers
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestMakeUniqueArray(t *testing.T) {
@@ -35,22 +37,7 @@ func TestMakeUniqueArray(t *testing.T) {
 		t.Run(testCase.description, func(t *testing.T) {
 			uniqueArr := MakeUniqueArray(testCase.input)
 
-			if !elementsEqual(uniqueArr, testCase.expected) {
-				t.Errorf("Array elements are not equal: uniqueArray: %s, expected: %s", uniqueArr, testCase.expected)
-			}
+			assert.Equal(t, testCase.expected, uniqueArr, "they should be equal")
 		})
 	}
-}
-
-func elementsEqual(arr []string, arr2 []string) bool {
-	if len(arr) != len(arr2) {
-		return false
-	}
-
-	for i := range arr {
-		if arr[i] != arr2[i] {
-			return false
-		}
-	}
-	return true
 }
