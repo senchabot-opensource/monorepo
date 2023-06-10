@@ -5,5 +5,5 @@ import (
 )
 
 func (s *commands) KampusCommand(message twitch.PrivateMessage, commandName string, params []string) {
-	s.client.Twitch.Say(message.Channel, "https://discord.kamp.us")
+	s.client.Twitch.Say(message.Channel, "https://discord.gg/kampus")
 }
