@@ -8,11 +8,11 @@ import (
 	"github.com/gempir/go-twitch-irc/v3"
 )
 
-func (s *commands) CmdsCommand(message twitch.PrivateMessage, commandName string, params []string) {
+func (s *commands) CmdsCommand(context context.Context, message twitch.PrivateMessage, commandName string, params []string) {
 	var commandListArr []string
 	var commandListString string
 
-	commandList, err := s.service.GetCommandList(context.Background(), message.RoomID)
+	commandList, err := s.service.GetCommandList(context, message.RoomID)
 	if err != nil {
 		fmt.Println(err.Error())
 		return

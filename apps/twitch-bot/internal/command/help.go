@@ -1,12 +1,13 @@
 package command
 
 import (
+	"context"
 	"strings"
 
 	"github.com/gempir/go-twitch-irc/v3"
 )
 
-func (s *commands) HelpCommand(message twitch.PrivateMessage, commandName string, params []string) {
+func (s *commands) HelpCommand(context context.Context, message twitch.PrivateMessage, commandName string, params []string) {
 	commandListMap := s.GetCommands()
 	var commmandList []string
 

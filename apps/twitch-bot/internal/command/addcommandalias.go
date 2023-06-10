@@ -11,8 +11,8 @@ import (
 
 const ADD_COMMAND_ALIAS_INFO = "For example: !acmda [command_name] [command_alias(es) separated by space]"
 
-func (s *commands) AddCommandAliasCommand(message twitch.PrivateMessage, commandName string, params []string) {
-	if !helpers.CanExecuteCommand(context.Background(), s.service, message) {
+func (s *commands) AddCommandAliasCommand(context context.Context, message twitch.PrivateMessage, commandName string, params []string) {
+	if !helpers.CanExecuteCommand(context, s.service, message) {
 		return
 	}
 	command, aliasCommands, check := helpers.GetAliasCommandCreateParams(params)
@@ -27,7 +27,7 @@ func (s *commands) AddCommandAliasCommand(message twitch.PrivateMessage, command
 		return
 	}
 
-	infoText, err := s.service.CreateCommandAliases(context.Background(), command, aliasCommands, twitchChannelId, message.User.DisplayName)
+	infoText, err := s.service.CreateCommandAliases(context, command, aliasCommands, twitchChannelId, message.User.DisplayName)
 	if err != nil {
 		fmt.Println("AddCommandAlias Error: " + err.Error())
 		return

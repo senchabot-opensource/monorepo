@@ -11,8 +11,8 @@ import (
 
 const DELETE_COMMAND_ALIAS_INFO = "For example: !dcmda [command_alias]"
 
-func (s *commands) DeleteCommandAliasCommand(message twitch.PrivateMessage, commandName string, params []string) {
-	if !helpers.CanExecuteCommand(context.Background(), s.service, message) {
+func (s *commands) DeleteCommandAliasCommand(context context.Context, message twitch.PrivateMessage, commandName string, params []string) {
+	if !helpers.CanExecuteCommand(context, s.service, message) {
 		return
 	}
 	if check := helpers.ValidateCommandDeleteParamsLength(params); !check {
@@ -20,7 +20,7 @@ func (s *commands) DeleteCommandAliasCommand(message twitch.PrivateMessage, comm
 		return
 	}
 	var command_alias = strings.ToLower(params[0])
-	infoText, err := s.service.DeleteCommandAlias(context.Background(), command_alias, message.RoomID)
+	infoText, err := s.service.DeleteCommandAlias(context, command_alias, message.RoomID)
 	if err != nil {
 		fmt.Println(err.Error())
 		return
