@@ -42,6 +42,20 @@ func FormatCommandContent(commandData *models.BotCommand, message twitch.Private
 	return msgContent
 }
 
+func SplitMessage(message string) (string, []string) {
+	var splitMsg = strings.Split(message, " ")
+	var cmdName = strings.Trim(splitMsg[0], " ")
+	var params = splitMsg[1:]
+
+	if !strings.HasPrefix(cmdName, "!") {
+		return "", nil
+	}
+
+	cmdName = strings.TrimPrefix(cmdName, "!")
+
+	return cmdName, params
+}
+
 func CanExecuteCommand(context context.Context, service service.Service, message twitch.PrivateMessage) bool {
 	// broadcaster can run the command
 	if isBroadcaster(message.Tags["badges"]) {
