@@ -3,7 +3,6 @@ package command
 import (
 	"context"
 	"fmt"
-	"strings"
 
 	"github.com/gempir/go-twitch-irc/v3"
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/client"
@@ -12,7 +11,8 @@ import (
 )
 
 type Command interface {
-	RunCommand(context context.Context, message twitch.PrivateMessage)
+	RunCommand(context context.Context, cmdName string, message twitch.PrivateMessage)
+	GetCommands() map[string]func(message twitch.PrivateMessage, commandName string, params []string)
 }
 
 type commands struct {
@@ -52,34 +52,7 @@ func (s *commands) GetCommands() map[string]func(message twitch.PrivateMessage, 
 	return commands
 }
 
-func splitMessage(message string) (string, []string) {
-	var splitMsg = strings.Split(message, " ")
-	var cmdName = strings.Trim(splitMsg[0], " ")
-	var params = splitMsg[1:]
-
-	if !strings.HasPrefix(cmdName, "!") {
-		return "", nil
-	}
-
-	cmdName = strings.TrimPrefix(cmdName, "!")
-
-	return cmdName, params
-}
-
-func (s *commands) RunCommand(context context.Context, message twitch.PrivateMessage) {
-	commands := s.GetCommands()
-
-	cmdName, params := splitMessage(message.Message)
-	if cmdName == "" {
-		return
-	}
-
-	if cmd, ok := commands[cmdName]; ok {
-		cmd(message, cmdName, params)
-		s.service.SaveBotCommandActivity(context, cmdName, message.RoomID, message.User.DisplayName)
-		return
-	}
-
+func (s *commands) RunCommand(context context.Context, cmdName string, message twitch.PrivateMessage) {
 	// HANDLE CUSTOM COMMANDS
 
 	// HANDLE COMMAND ALIASES
