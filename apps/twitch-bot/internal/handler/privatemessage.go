@@ -23,7 +23,7 @@ func PrivateMessage(client *client.Clients, service service.Service) {
 		cmds := commands.GetCommands()
 
 		if cmd, ok := cmds[cmdName]; ok {
-			cmd(message, cmdName, params)
+			cmd(ctx, message, cmdName, params)
 			service.SaveBotCommandActivity(ctx, cmdName, message.RoomID, message.User.DisplayName)
 			return
 		}

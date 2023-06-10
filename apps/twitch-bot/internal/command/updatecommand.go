@@ -10,8 +10,8 @@ import (
 
 const UPDATE_COMMAND_INFO = "For example: !ucmd [command_name] [new_command_content]"
 
-func (s *commands) UpdateCommandCommand(message twitch.PrivateMessage, commandName string, params []string) {
-	if !helpers.CanExecuteCommand(context.Background(), s.service, message) {
+func (s *commands) UpdateCommandCommand(context context.Context, message twitch.PrivateMessage, commandName string, params []string) {
+	if !helpers.CanExecuteCommand(context, s.service, message) {
 		return
 	}
 	command_name, newCommandContent, check := helpers.GetCommandCreateUpdateParams(params)
@@ -25,7 +25,7 @@ func (s *commands) UpdateCommandCommand(message twitch.PrivateMessage, commandNa
 		return
 	}
 
-	updatedCommandName, infoText, err := s.service.UpdateBotCommand(context.Background(), command_name, newCommandContent, message.RoomID, message.User.DisplayName)
+	updatedCommandName, infoText, err := s.service.UpdateBotCommand(context, command_name, newCommandContent, message.RoomID, message.User.DisplayName)
 	if err != nil {
 		fmt.Println(err.Error())
 		return

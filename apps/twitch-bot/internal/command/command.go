@@ -12,7 +12,7 @@ import (
 
 type Command interface {
 	RunCommand(context context.Context, cmdName string, message twitch.PrivateMessage)
-	GetCommands() map[string]func(message twitch.PrivateMessage, commandName string, params []string)
+	GetCommands() map[string]func(context context.Context, message twitch.PrivateMessage, commandName string, params []string)
 }
 
 type commands struct {
@@ -27,9 +27,9 @@ func NewCommands(client *client.Clients, service service.Service) Command {
 	}
 }
 
-func (s *commands) GetCommands() map[string]func(message twitch.PrivateMessage, commandName string, params []string) {
+func (s *commands) GetCommands() map[string]func(context context.Context, message twitch.PrivateMessage, commandName string, params []string) {
 	// TODO: command aliases
-	var commands = map[string]func(message twitch.PrivateMessage, commandName string, params []string){
+	var commands = map[string]func(context context.Context, message twitch.PrivateMessage, commandName string, params []string){
 		"ping":      s.PingCommand,
 		"invite":    s.InviteCommand,
 		"senchabot": s.SenchabotCommand,
