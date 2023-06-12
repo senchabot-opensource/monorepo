@@ -11,30 +11,30 @@ import (
 
 const DELETE_COMMAND_ALIAS_INFO = "For example: !dcmda [command_alias]"
 
-func (s *commands) DeleteCommandAliasCommand(message twitch.PrivateMessage, commandName string, params []string) {
-	if !helpers.CanExecuteCommand(context.Background(), s.service, message) {
+func (c *commands) DeleteCommandAliasCommand(context context.Context, message twitch.PrivateMessage, commandName string, params []string) {
+	if !helpers.CanExecuteCommand(context, c.service, message) {
 		return
 	}
 	if check := helpers.ValidateCommandDeleteParamsLength(params); !check {
-		s.client.Twitch.Say(message.Channel, DELETE_COMMAND_ALIAS_INFO)
+		c.client.Twitch.Say(message.Channel, DELETE_COMMAND_ALIAS_INFO)
 		return
 	}
 	var command_alias = strings.ToLower(params[0])
 
 	command_alias = helpers.TrimExclamationPrefix(command_alias)
 
-	infoText, err := s.service.DeleteCommandAlias(context.Background(), command_alias, message.RoomID)
+	infoText, err := c.service.DeleteCommandAlias(context, command_alias, message.RoomID)
 	if err != nil {
 		fmt.Println(err.Error())
 		return
 	}
 
 	if infoText != nil {
-		s.client.Twitch.Say(message.Channel, message.User.DisplayName+", "+*infoText)
+		c.client.Twitch.Say(message.Channel, message.User.DisplayName+", "+*infoText)
 		return
 	}
 
 	fmt.Println("COMMAND_ALIAS_DELETE: command_alias:", command_alias)
 
-	s.client.Twitch.Say(message.Channel, "Command Alias Deleted: "+command_alias)
+	c.client.Twitch.Say(message.Channel, "Command Alias Deleted: "+command_alias)
 }

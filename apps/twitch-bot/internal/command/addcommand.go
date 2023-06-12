@@ -10,36 +10,36 @@ import (
 
 const ADD_COMMAND_INFO = "For example: !acmd [command_name] [command_content]"
 
-func (s *commands) AddCommandCommand(message twitch.PrivateMessage, commandName string, params []string) {
-	if !helpers.CanExecuteCommand(context.Background(), s.service, message) {
+func (c *commands) AddCommandCommand(context context.Context, message twitch.PrivateMessage, commandName string, params []string) {
+	if !helpers.CanExecuteCommand(context, c.service, message) {
 		return
 	}
 	command_name, command_content, check := helpers.GetCommandCreateUpdateParams(params)
 	if !check {
 		// "Birleşmiş Milletler 21 Mayıs'ı Uluslararası Çay Günü olarak belirlemiştir." (Bu yorum satırı Twitch chatinde Harami tarafından redeem yoluyla yazdırılmıştır. Arz ederim.)
-		s.client.Twitch.Say(message.Channel, ADD_COMMAND_INFO)
+		c.client.Twitch.Say(message.Channel, ADD_COMMAND_INFO)
 		return
 	}
 	// Check command name and content length
 	if infoText, check := helpers.ValidateCommandCreateParams(command_name, command_content); !check {
-		s.client.Twitch.Say(message.Channel, message.User.DisplayName+", "+infoText)
+		c.client.Twitch.Say(message.Channel, message.User.DisplayName+", "+infoText)
 		return
 	}
 
 	command_name = helpers.TrimExclamationPrefix(command_name)
 
-	infoText, err := s.service.CreateBotCommand(context.Background(), command_name, command_content, message.RoomID, message.User.DisplayName)
+	infoText, err := c.service.CreateBotCommand(context, command_name, command_content, message.RoomID, message.User.DisplayName)
 	if err != nil {
 		fmt.Println(err.Error())
 		return
 	}
 
 	if infoText != nil {
-		s.client.Twitch.Say(message.Channel, message.User.DisplayName+", "+*infoText)
+		c.client.Twitch.Say(message.Channel, message.User.DisplayName+", "+*infoText)
 		return
 	}
 
 	fmt.Println("COMMAND_ADD: command_name:", command_name, ", command_content:", command_content)
 
-	s.client.Twitch.Say(message.Channel, "New Command Added: "+command_name)
+	c.client.Twitch.Say(message.Channel, "New Command Added: "+command_name)
 }

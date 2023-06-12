@@ -1,7 +1,11 @@
 package command
 
-import "github.com/gempir/go-twitch-irc/v3"
+import (
+	"context"
 
-func (s *commands) AstraCommand(message twitch.PrivateMessage, commandName string, params []string) {
-	s.client.Twitch.Say(message.Channel, "[We did it!] Astra UI Kit: https://docs.astraui.com")
+	"github.com/gempir/go-twitch-irc/v3"
+)
+
+func (c *commands) AstraCommand(context context.Context, message twitch.PrivateMessage, commandName string, params []string) {
+	c.client.Twitch.Say(message.Channel, "[We did it!] Astra UI Kit: https://docs.astraui.com")
 }

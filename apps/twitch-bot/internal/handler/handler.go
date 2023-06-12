@@ -18,14 +18,14 @@ type handlers struct {
 	service           service.Service
 }
 
-func (s *handlers) InitBotEventHandlers() {
-	PrivateMessage(s.client, s.service)
-	s.joinedChannelList = BotJoin(s.client, s.service)
+func (h *handlers) InitBotEventHandlers() {
+	PrivateMessage(h.client, h.service)
+	h.joinedChannelList = BotJoin(h.client, h.service)
 }
 
-func (s *handlers) InitHttpHandlers(mux *http.ServeMux) {
+func (h *handlers) InitHttpHandlers(mux *http.ServeMux) {
 	mux.HandleFunc("/webhook", func(w http.ResponseWriter, r *http.Request) {
-		s.service.BotJoinWebhook(s.client, s.joinedChannelList, w, r)
+		h.service.BotJoinWebhook(h.client, h.joinedChannelList, w, r)
 	})
 }
 
