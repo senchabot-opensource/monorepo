@@ -86,6 +86,7 @@ func MakeUniqueArray(stringSlice []string) []string {
 	for _, entry := range stringSlice {
 		if _, value := keys[entry]; !value {
 			keys[entry] = true
+			entry = strings.TrimPrefix(entry, "!")
 			list = append(list, entry)
 		}
 	}
