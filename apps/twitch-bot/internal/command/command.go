@@ -11,7 +11,8 @@ import (
 )
 
 type Command interface {
-	RunCommand(context context.Context, cmdName string, message twitch.PrivateMessage)
+	RunStaticCommand(context context.Context, cmdName string, params []string, message twitch.PrivateMessage)
+	RunDynamicCommand(context context.Context, cmdName string, message twitch.PrivateMessage)
 	GetCommands() map[string]func(context context.Context, message twitch.PrivateMessage, commandName string, params []string)
 }
 
@@ -52,7 +53,16 @@ func (s *commands) GetCommands() map[string]func(context context.Context, messag
 	return commands
 }
 
-func (s *commands) RunCommand(context context.Context, cmdName string, message twitch.PrivateMessage) {
+func (s *commands) RunStaticCommand(context context.Context, cmdName string, params []string, message twitch.PrivateMessage) {
+	cmds := s.GetCommands()
+
+	if cmd, ok := cmds[cmdName]; ok {
+		cmd(context, message, cmdName, params)
+		s.service.SaveBotCommandActivity(context, cmdName, message.RoomID, message.User.DisplayName)
+	}
+}
+
+func (s *commands) RunDynamicCommand(context context.Context, cmdName string, message twitch.PrivateMessage) {
 	// HANDLE CUSTOM COMMANDS
 
 	// HANDLE COMMAND ALIASES
