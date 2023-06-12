@@ -20,14 +20,8 @@ func PrivateMessage(client *client.Clients, service service.Service) {
 		if cmdName == "" {
 			return
 		}
-		cmds := commands.GetCommands()
 
-		if cmd, ok := cmds[cmdName]; ok {
-			cmd(ctx, message, cmdName, params)
-			service.SaveBotCommandActivity(ctx, cmdName, message.RoomID, message.User.DisplayName)
-			return
-		}
-
-		commands.RunCommand(ctx, cmdName, message)
+		commands.RunStaticCommand(ctx, cmdName, params, message)
+		commands.RunDynamicCommand(ctx, cmdName, message)
 	})
 }
