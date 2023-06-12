@@ -7,8 +7,8 @@ import (
 	"github.com/gempir/go-twitch-irc/v3"
 )
 
-func (s *commands) HelpCommand(context context.Context, message twitch.PrivateMessage, commandName string, params []string) {
-	commandListMap := s.GetCommands()
+func (c *commands) HelpCommand(context context.Context, message twitch.PrivateMessage, commandName string, params []string) {
+	commandListMap := c.GetCommands()
 	var commmandList []string
 
 	for k := range commandListMap {
@@ -17,5 +17,5 @@ func (s *commands) HelpCommand(context context.Context, message twitch.PrivateMe
 
 	commandListString := strings.Join(commmandList, ", ")
 
-	s.client.Twitch.Say(message.Channel, "Senchabot's Commands: "+commandListString)
+	c.client.Twitch.Say(message.Channel, "Senchabot's Commands: "+commandListString)
 }
