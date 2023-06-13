@@ -29,6 +29,7 @@ func FormatCommandContent(commandData *models.BotCommand, message twitch.Private
 		"{random_number}": strconv.Itoa(rand.Intn(max-min) + min),
 		"{date}":          message.Time.Format(dateTemplate),
 		"{cmd.date}":      commandData.CreatedAt.Format(dateTemplate),
+		"{channel.name}":  message.Channel,
 
 		// we will keep these old string templates used in commands for a while for backward compatibility.
 		"{user_name}": userName,
