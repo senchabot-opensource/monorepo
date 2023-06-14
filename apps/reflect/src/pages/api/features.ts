@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 const get = (req: NextApiRequest, res: NextApiResponse) => {
   const featureList = [
     "Discord bot moderation commands (/purge, /event purge)",
-    "String templates: {user.name} {cmd.author} {random_number} {date} {cmd.date}",
+    "String templates: {user.name} {cmd.author} {random_number} {date} {cmd.date} {channel.name}",
     "Twitch bot custom commands: (!acmd (Add command), !ucmd (Update command), !dcmd (Delete command))",
     "Bot activity log (Command execution logs, Senchabot activity, Author of executed command)",
   ];
