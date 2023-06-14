@@ -129,8 +129,9 @@ const TwitchBotForm = () => {
                   onChange={field => {
                     onChange(field.target.value);
                     setButtonEnabled(
-                      configData[0]?.key === "bot_activity_enabled" &&
-                        configData[0]?.value !== field.target.value,
+                      (configData[0]?.key === "bot_activity_enabled" &&
+                        configData[0]?.value !== field.target.value) ||
+                        !configData[0]?.value,
                     );
                   }}
                   value={value}
@@ -166,8 +167,9 @@ const TwitchBotForm = () => {
                   onChange={field => {
                     onChange(field.target.value);
                     setButtonEnabled(
-                      configData[1]?.key === "mods_manage_cmds_enabled" &&
-                        configData[1]?.value !== field.target.value,
+                      (configData[1]?.key === "mods_manage_cmds_enabled" &&
+                        configData[1]?.value !== field.target.value) ||
+                        !configData[1]?.value,
                     );
                   }}
                   value={value}
