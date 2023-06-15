@@ -98,6 +98,7 @@ func MakeUniqueArray(stringSlice []string) []string {
 	for _, entry := range stringSlice {
 		if _, value := keys[entry]; !value {
 			keys[entry] = true
+			entry = strings.TrimPrefix(entry, "!")
 			list = append(list, entry)
 		}
 	}
@@ -112,6 +113,8 @@ func GetCommandCreateUpdateParams(params []string) (string, string, bool) {
 	var commandName = strings.ToLower(params[0])
 	var commandContent = strings.Join(params[1:], " ")
 
+	commandName = TrimExclamationPrefix(commandName)
+
 	return commandName, commandContent, true
 }
 
@@ -123,6 +126,7 @@ func GetAliasCommandCreateParams(params []string) (string, []string, bool) {
 	command := strings.ToLower(params[0])
 	params = params[1:]
 
+	command = TrimExclamationPrefix(command)
 	aliasCommands := MakeUniqueArray(params)
 
 	return command, aliasCommands, true
@@ -162,4 +166,8 @@ func ValidateCommandContentLength(commandContent string) (string, bool) {
 
 func ValidateCommandDeleteParamsLength(params []string) bool {
 	return len(params) == 1
+}
+
+func TrimExclamationPrefix(commandName string) string {
+	return strings.TrimPrefix(commandName, "!")
 }

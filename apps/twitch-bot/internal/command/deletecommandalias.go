@@ -20,6 +20,9 @@ func (c *commands) DeleteCommandAliasCommand(context context.Context, message tw
 		return
 	}
 	var command_alias = strings.ToLower(params[0])
+
+	command_alias = helpers.TrimExclamationPrefix(command_alias)
+
 	infoText, err := c.service.DeleteCommandAlias(context, command_alias, message.RoomID)
 	if err != nil {
 		fmt.Println(err.Error())

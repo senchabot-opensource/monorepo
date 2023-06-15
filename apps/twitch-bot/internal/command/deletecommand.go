@@ -20,6 +20,9 @@ func (c *commands) DeleteCommandCommand(context context.Context, message twitch.
 		return
 	}
 	var command_name = strings.ToLower(params[0])
+
+	command_name = helpers.TrimExclamationPrefix(command_name)
+
 	deletedCommandName, infoText, err := c.service.DeleteBotCommand(context, command_name, message.RoomID)
 	if err != nil {
 		fmt.Println(err.Error())
