@@ -101,6 +101,8 @@ func GetCommandCreateUpdateParams(params []string) (string, string, bool) {
 	var commandName = strings.ToLower(params[0])
 	var commandContent = strings.Join(params[1:], " ")
 
+	commandName = TrimExclamationPrefix(commandName)
+
 	return commandName, commandContent, true
 }
 
@@ -112,6 +114,7 @@ func GetAliasCommandCreateParams(params []string) (string, []string, bool) {
 	command := strings.ToLower(params[0])
 	params = params[1:]
 
+	command = TrimExclamationPrefix(command)
 	aliasCommands := MakeUniqueArray(params)
 
 	return command, aliasCommands, true

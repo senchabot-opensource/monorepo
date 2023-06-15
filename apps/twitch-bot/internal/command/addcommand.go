@@ -26,8 +26,6 @@ func (c *commands) AddCommandCommand(context context.Context, message twitch.Pri
 		return
 	}
 
-	command_name = helpers.TrimExclamationPrefix(command_name)
-
 	infoText, err := c.service.CreateBotCommand(context, command_name, command_content, message.RoomID, message.User.DisplayName)
 	if err != nil {
 		fmt.Println(err.Error())

@@ -27,8 +27,6 @@ func (c *commands) AddCommandAliasCommand(context context.Context, message twitc
 		return
 	}
 
-	command = helpers.TrimExclamationPrefix(command)
-
 	infoText, err := c.service.CreateCommandAliases(context, command, aliasCommands, twitchChannelId, message.User.DisplayName)
 	if err != nil {
 		fmt.Println("AddCommandAlias Error: " + err.Error())
