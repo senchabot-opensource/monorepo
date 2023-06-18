@@ -9,6 +9,7 @@ import (
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/models"
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/service/database"
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/service/database/postgresql"
+	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/service/timer"
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/service/webhook"
 )
 
@@ -35,21 +36,45 @@ type Service interface {
 	CreateCommandAliases(ctx context.Context, commandName string, aliases []string, twitchChannelId string, createdBy string) (*string, error)
 	CheckCommandAliasExist(ctx context.Context, commandAlias string, twitchChannelId string) (*string, error)
 	DeleteCommandAlias(ctx context.Context, commandAlias string, twitchChannelId string) (*string, error)
+
+	SetTimer(client *client.Clients, channel string, message string, interval int)
+	SetTimerEnabled(client *client.Clients, channel string)
+	SetTimerDisabled(channel string)
+	GetTimerStatus(channel string) bool
 }
 
 type services struct {
 	DB      database.Database
 	Webhook webhook.Webhook
+	Timer   timer.Timer
 }
 
 func NewServices() Service {
 	dbService := postgresql.NewPostgreSQL()
 	whService := webhook.NewWebhooks()
+	timerService := timer.NewTimer()
 
 	return &services{
 		DB:      dbService,
 		Webhook: whService,
+		Timer:   timerService,
 	}
+}
+
+func (s *services) SetTimer(client *client.Clients, channel string, message string, interval int) {
+	s.Timer.SetTimer(client, channel, message, interval)
+}
+
+func (s *services) SetTimerEnabled(client *client.Clients, channel string) {
+	s.Timer.SetTimerEnabled(client, channel)
+}
+
+func (s *services) SetTimerDisabled(channel string) {
+	s.Timer.SetTimerDisabled(channel)
+}
+
+func (s *services) GetTimerStatus(channel string) bool {
+	return s.Timer.GetTimerStatus(channel)
 }
 
 func (s *services) BotJoinWebhook(client *client.Clients, joinedChannelList []string, w http.ResponseWriter, r *http.Request) {
