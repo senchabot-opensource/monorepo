@@ -37,10 +37,10 @@ type Service interface {
 	CheckCommandAliasExist(ctx context.Context, commandAlias string, twitchChannelId string) (*string, error)
 	DeleteCommandAlias(ctx context.Context, commandAlias string, twitchChannelId string) (*string, error)
 
-	SetTimer(client *client.Clients, channel string, message string, interval int)
-	SetTimerEnabled(client *client.Clients, channel string)
-	SetTimerDisabled(channel string)
-	GetTimerStatus(channel string) bool
+	SetTimer(client *client.Clients, channelName string, commandData *models.BotCommand, interval int)
+	SetTimerEnabled(client *client.Clients, commandId int)
+	SetTimerDisabled(commandId int)
+	GetTimerStatus(commandId int) bool
 }
 
 type services struct {
@@ -61,20 +61,21 @@ func NewServices() Service {
 	}
 }
 
-func (s *services) SetTimer(client *client.Clients, channel string, message string, interval int) {
-	s.Timer.SetTimer(client, channel, message, interval)
+func (s *services) SetTimer(client *client.Clients, channelName string, commandData *models.BotCommand, interval int) {
+	// platform, channelId, commandData, interval, status
+	s.Timer.SetTimer(client, channelName, commandData, interval)
 }
 
-func (s *services) SetTimerEnabled(client *client.Clients, channel string) {
-	s.Timer.SetTimerEnabled(client, channel)
+func (s *services) SetTimerEnabled(client *client.Clients, commandId int) {
+	s.Timer.SetTimerEnabled(client, commandId)
 }
 
-func (s *services) SetTimerDisabled(channel string) {
-	s.Timer.SetTimerDisabled(channel)
+func (s *services) SetTimerDisabled(commandId int) {
+	s.Timer.SetTimerDisabled(commandId)
 }
 
-func (s *services) GetTimerStatus(channel string) bool {
-	return s.Timer.GetTimerStatus(channel)
+func (s *services) GetTimerStatus(commandId int) bool {
+	return s.Timer.GetTimerStatus(commandId)
 }
 
 func (s *services) BotJoinWebhook(client *client.Clients, joinedChannelList []string, w http.ResponseWriter, r *http.Request) {
