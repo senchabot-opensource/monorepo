@@ -3,7 +3,9 @@ package helpers
 import (
 	"context"
 	"fmt"
+	"io"
 	"math/rand"
+	"net/http"
 	"strconv"
 	"strings"
 
@@ -22,6 +24,7 @@ func FormatCommandContent(commandData *models.BotCommand, message twitch.Private
 
 	userName := message.User.DisplayName
 	dateTemplate := "02/01/2006"
+	//curlyBracesPattern := regexp.MustCompile(`{(.*?)}`)
 
 	stringTemplates := map[string]string{
 		"{user.name}":     userName,
@@ -40,7 +43,48 @@ func FormatCommandContent(commandData *models.BotCommand, message twitch.Private
 		msgContent = strings.ReplaceAll(msgContent, k, v)
 	}
 
+	url, startIndex, endIndex, ok := parseCustomAPIURLFromMessage(msgContent)
+	if ok {
+		template := msgContent[startIndex : endIndex+1]
+		response, err := sendGetRequest(url)
+		if err != nil {
+			fmt.Println("parseCustomAPIURLFromMessage url, sendGetRequest Error:", err)
+			msgContent = message.User.DisplayName + ", there was an error while sending get request"
+		}
+
+		msgContent = strings.Replace(msgContent, template, response, 1)
+	}
+
+	//msgContent = curlyBracesPattern.ReplaceAllString(msgContent, "$1")
+
 	return msgContent
+}
+
+func parseCustomAPIURLFromMessage(message string) (string, int, int, bool) {
+	startIndex := strings.Index(message, "{customapi.") // Curly braces start index
+	endIndex := strings.LastIndex(message, "}")         // Curly braces end index
+	if startIndex == -1 || endIndex == -1 || endIndex <= startIndex {
+		return message, 0, 0, false
+	}
+
+	url := message[startIndex+1 : endIndex]
+	url = strings.TrimPrefix(url, "customapi.")
+
+	return url, startIndex, endIndex, true
+}
+
+func sendGetRequest(url string) (string, error) {
+	response, err := http.Get(url)
+	if err != nil {
+		return "", err
+	}
+	defer response.Body.Close()
+
+	body, err := io.ReadAll(response.Body)
+	if err != nil {
+		return "", err
+	}
+	return string(body), nil
 }
 
 func ParseMessage(message string) (string, []string) {
