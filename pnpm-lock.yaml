@@ -59,6 +59,9 @@ importers:
       nodemon:
         specifier: ^2.0.15
         version: 2.0.15
+      senchabot-prisma:
+        specifier: '*'
+        version: link:../../packages/senchabot-prisma
       ts-node:
         specifier: ^10.9.1
         version: 10.9.1(@types/node@18.13.0)(typescript@4.9.5)
