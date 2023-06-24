@@ -23,6 +23,18 @@
     },
     "clean": {
       "cache": false
+    }, 
+    "db:generate": {
+      "cache": false
+    },
+    "db:push": {
+      "cache": false
+    },
+    "db:seed": {
+      "cache": false
+    },
+    "db:studio": {
+      "cache": false
     }
   }
 }
