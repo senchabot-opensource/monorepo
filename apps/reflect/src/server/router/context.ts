@@ -3,7 +3,7 @@ import * as trpc from "@trpc/server";
 import * as trpcNext from "@trpc/server/adapters/next";
 import { Session } from "next-auth";
 import { getServerAuthSession } from "../../server/common/get-server-auth-session";
-import { prisma } from "senchabot-prisma";
+import { prisma } from "../db/client";
 //import { t } from "../trpc";
 
 type CreateContextOptions = {
@@ -26,7 +26,7 @@ export const createContextInner = async (opts: CreateContextOptions) => {
  * @link https://trpc.io/docs/context
  **/
 export const createContext = async (
-  opts: trpcNext.CreateNextContextOptions
+  opts: trpcNext.CreateNextContextOptions,
 ) => {
   const { req, res } = opts;
 
