@@ -1,5 +1,5 @@
 import { Guild } from "discord.js";
-import { addDiscordServerToDB } from "../utils/dbFunctions";
+import { addDiscordServerToDB } from "../db/functions";
 
 export default {
   name: "guildCreate",
