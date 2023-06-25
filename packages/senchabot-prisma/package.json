@@ -1,8 +1,9 @@
 {
   "name": "senchabot-prisma",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "",
-  "main": "index.ts",
+  "main": "./index.ts",
+  "types": "./index.ts",
   "scripts": {
     "db:generate": "prisma generate",
     "db:push": "prisma db push --skip-generate",
