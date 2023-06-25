@@ -2,7 +2,7 @@ import { Client } from "discord.js";
 import { env } from "../utils/env";
 import { selectByNameCallback } from "../utils/helpers";
 import { checkExclusiveRole, addRoleAll } from "../utils/memberFunctions";
-import { addDiscordServerToDB } from "../utils/dbFunctions";
+import { addDiscordServerToDB } from "../db/functions";
 
 export default {
   name: "ready",

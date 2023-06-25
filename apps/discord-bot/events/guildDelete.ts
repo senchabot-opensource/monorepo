@@ -1,5 +1,5 @@
 import { Guild } from "discord.js";
-import { deleteDiscordServerFromDB } from "../utils/dbFunctions";
+import { deleteDiscordServerFromDB } from "../db/functions";
 
 export default {
   name: "guildDelete",

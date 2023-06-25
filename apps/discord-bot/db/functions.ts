@@ -1,5 +1,5 @@
 import { Guild } from "discord.js";
-import { prisma } from "senchabot-prisma";
+import { prisma } from "./client";
 
 export const addDiscordServerToDB = async (guild: Guild) => {
   const findServer = await findDiscordServer(guild);
