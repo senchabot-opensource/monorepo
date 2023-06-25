@@ -5,17 +5,21 @@ import {
   Typography,
   Menu,
   MenuItem,
+  useTheme,
 } from "@mui/material";
 import Link from "next/link";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MenuIcon from "@mui/icons-material/Menu";
+import { LightMode } from "@mui/icons-material";
+import { DarkMode } from "@mui/icons-material";
 import { useSession } from "next-auth/react";
 import { Offset } from "../Offset";
 import AppBarTitle from "../common/AppBarTitle";
 import LandingButton from "./LandingButton";
 import { AppBarStyles, MenuPaperPropsStyles } from "../../styles";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { ColorModeContext } from "src/Context/ColorModeContext";
 
 const appBarMenuList = [
   { title: "Cookie Policy", path: "/cookie-policy" },
@@ -33,7 +37,9 @@ const toolBarStyles = {
 const LandingAppBar = () => {
   const { data: session } = useSession();
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
+  const { colorMode, toggleColorMode } = useContext(ColorModeContext);
 
+  console.log({ colorMode });
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -60,7 +66,7 @@ const LandingAppBar = () => {
               sx={{
                 pr: 4,
                 display: { xs: "flex", md: "none" },
-                color: "#646464",
+                color: "landingButton.default",
               }}
               onClick={handleOpenNavMenu}
               disableRipple>
@@ -87,26 +93,48 @@ const LandingAppBar = () => {
               ))}
             </Menu>
             <AppBarTitle />
-
-            <LandingButton
-              href="/app"
-              sx={{
-                pl: 4,
-                color: "#646464",
-              }}
-              disableRipple>
-              {session ? (
-                <DashboardIcon
-                  sx={{
-                    backgroundColor: "#000",
-                    color: "#fff",
-                    "&:hover": { cursor: "pointer" },
-                  }}
-                />
-              ) : (
-                <AccountCircle sx={{ "&:hover": { cursor: "pointer" } }} />
-              )}
-            </LandingButton>
+            <Box>
+              <LandingButton
+                onClick={toggleColorMode}
+                sx={{
+                  color: "landingButton.default",
+                }}>
+                {colorMode === "dark" ? (
+                  <LightMode
+                    sx={{
+                      backgroundColor: "landingDashboardIcon.background",
+                      color: "landingDashboardIcon.default",
+                    }}
+                  />
+                ) : (
+                  <DarkMode
+                    sx={{
+                      backgroundColor: "landingDashboardIcon.background",
+                      color: "landingDashboardIcon.default",
+                    }}
+                  />
+                )}
+              </LandingButton>
+              <LandingButton
+                href="/app"
+                sx={{
+                  pl: 4,
+                  color: "landingButton.default",
+                }}
+                disableRipple>
+                {session ? (
+                  <DashboardIcon
+                    sx={{
+                      backgroundColor: "landingDashboardIcon.background",
+                      color: "landingDashboardIcon.default",
+                      "&:hover": { cursor: "pointer" },
+                    }}
+                  />
+                ) : (
+                  <AccountCircle sx={{ "&:hover": { cursor: "pointer" } }} />
+                )}
+              </LandingButton>
+            </Box>
           </Toolbar>
         </Box>
       </AppBar>
