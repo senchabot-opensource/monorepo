@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getServerAuthSession } from "../../../server/common/get-server-auth-session";
-import { prisma } from "../../../server/db/client";
+import { prisma } from "senchabot-prisma";
 import { env } from "../../../env/server.mjs";
 import { getTwitchBotWebhookFetchOptions } from "../../../utils/functions";
 import { ITwitchBotWebhookData } from "../../../types";
