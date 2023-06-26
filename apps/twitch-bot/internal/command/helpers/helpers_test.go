@@ -1,3 +1,4 @@
+// https://www.youtube.com/watch?v=dQw4w9WgXcQ
 package helpers
 
 import (
@@ -8,68 +9,81 @@ import (
 
 func TestParseMessage(t *testing.T) {
 	type TestCase struct {
-		description string
-		input       string
-		expected    string
+		description    string
+		input          string
+		expectedCmd    string
+		expectedParams []string
 	}
 
-	testCases := []TestCase{
+	testCase := []TestCase{
 		{
-			description: "with just message",
-			input:       "abc",
-			expected:    "",
+			description:    "with just message",
+			input:          "abc",
+			expectedCmd:    "",
+			expectedParams: nil,
 		},
 		{
-			description: "with a command",
-
-			input:    "!kampus",
-			expected: "discord.gg/kampus • github.com/kamp-us",
+			description:    "with a command",
+			input:          "!kampus",
+			expectedCmd:    "kampus",
+			expectedParams: []string{},
 		},
 		{
-
-			description: "with a mention and a command",
-			input:       "@senchabot !kampus",
-			expected:    "discord.gg/kampus • github.com/kamp-us",
+			description:    "with wrong mention",
+			input:          "@s",
+			expectedCmd:    "",
+			expectedParams: nil,
 		},
 		{
-
-			description: "with a command and a mention",
-			input:       "!kampus @senchabot",
-			expected:    "discord.gg/kampus • github.com/kamp-us @senchabot",
+			description:    "with just mention",
+			input:          "@senchabot",
+			expectedCmd:    "",
+			expectedParams: nil,
 		},
 		{
-
-			description: "with wrong mention",
-			input:       "@s",
-			expected:    "",
+			description:    "a command and its params",
+			input:          "!acmd acommand a command content",
+			expectedCmd:    "acmd",
+			expectedParams: []string{"acommand", "a", "command", "content"},
 		},
 		{
-
-			description: "with just mention",
-			input:       "@senchabot",
-			expected:    "",
+			description:    "if there is space in params, do not include the space in the params",
+			input:          "!acmd a couple of  params",
+			expectedCmd:    "acmd",
+			expectedParams: []string{"a", "couple", "of", "params"},
 		},
-		//{
-
-		//	description: "with a command and its params",
-		//	input:       "!acmd acommand a command content",
-		//	expected:    "",
-		//},
-
-		//{
-
-		//	description: "with a command and params but some of params are just space",
-		//	input:       "!acmd  a couple of params",
-		//	expected:    "",
-		//},
+		{
+			description:    "if the command with its params are in the wrong position, return nothing",
+			input:          "blabla !acmd acommand a command content",
+			expectedCmd:    "",
+			expectedParams: []string(nil),
+		},
+		{
+			description:    "if there is more than one mention, only the first mention is used",
+			input:          "!lurk @senchabot and @whimsicallymade",
+			expectedCmd:    "lurk",
+			expectedParams: []string{"@senchabot"},
+		},
+		{
+			description:    "if there is a mention after the command, the command name should be at index 0, and the remaning words should be treated as params",
+			input:          "!acmd @senchabot",
+			expectedCmd:    "acmd",
+			expectedParams: []string{"@senchabot"},
+		},
+		{
+			description:    "with a mention and a command",
+			input:          "@senchabot !acmd",
+			expectedCmd:    "acmd",
+			expectedParams: []string{"@senchabot"},
+		},
 	}
 
-	for _, testCase := range testCases {
-		t.Run(testCase.description, func(t *testing.T) {
+	for _, tc := range testCase {
+		t.Run(tc.description, func(t *testing.T) {
+			cmd, params := ParseMessage(tc.input)
 
-			// test params cannot be a space or empty value
-			// expectedCmd, expectedParams = ParseMessage(testCase.input)
-			ParseMessage(testCase.input)
+			assert.Equal(t, tc.expectedCmd, cmd, "cmd should be equal")
+			assert.Equal(t, tc.expectedParams, params, "params should equal")
 		})
 	}
 }
@@ -89,9 +103,8 @@ func TestMakeUniqueArray(t *testing.T) {
 		},
 		{
 			description: "with the same elements",
-
-			input:    []string{"abc", "def", "abc"},
-			expected: []string{"abc", "def"},
+			input:       []string{"abc", "def", "abc"},
+			expected:    []string{"abc", "def"},
 		},
 		{
 

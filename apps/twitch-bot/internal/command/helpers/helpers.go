@@ -44,24 +44,45 @@ func FormatCommandContent(commandData *models.BotCommand, message twitch.Private
 }
 
 func ParseMessage(message string) (string, []string) {
-	var splitMsg = strings.Split(message, " ")
-	var cmdName = splitMsg[0]
-	var params []string
+	words := strings.Fields(message)
+	cmdIndex, mentionIndex := FindCommandAndMentionIndices(words)
 
-	// Check if first word is a @mention
-	if strings.HasPrefix(cmdName, "@") && len(params) > 2 {
-		cmdName = splitMsg[1]
-	} else {
-		params = splitMsg[1:]
-	}
-
-	if !CheckIfCommand(cmdName) {
+	if cmdIndex < 0 || cmdIndex > 1 || mentionIndex > 1 {
 		return "", nil
 	}
 
+	if cmdIndex+1 != mentionIndex && mentionIndex+1 != cmdIndex {
+		return "", nil
+	}
+
+	cmdName := words[cmdIndex]
+	params := words[cmdIndex+1:]
+
+	// wykonos
 	cmdName = strings.TrimPrefix(cmdName, "!")
 
-	return cmdName, params
+	if mentionIndex < 0 {
+		return cmdName, params
+	}
+
+	mention := words[mentionIndex]
+
+	return cmdName, []string{mention}
+}
+
+func FindCommandAndMentionIndices(words []string) (int, int) {
+	cmdIndex := -1
+	mentionIndex := -1
+	for i, v := range words {
+		if strings.HasPrefix(v, "!") && cmdIndex < 0 {
+			cmdIndex = i
+		}
+		if strings.HasPrefix(v, "@") && mentionIndex < 0 {
+			mentionIndex = i
+		}
+	}
+
+	return cmdIndex, mentionIndex
 }
 
 func CheckIfCommand(param string) bool {
