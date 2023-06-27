@@ -43,15 +43,24 @@ func FormatCommandContent(commandData *models.BotCommand, message twitch.Private
 	return msgContent
 }
 
+func AreCommandAndMentionIndicesInvalid(cmdIndex int, mentionIndex int) bool {
+	return cmdIndex < 0 || cmdIndex > 1 || mentionIndex > 1
+}
+
+func AreCommandAndMentionIndicesMismatched(cmdIndex int, mentionIndex int) bool {
+	return cmdIndex+1 != mentionIndex && mentionIndex+1 != cmdIndex
+}
+
 func ParseMessage(message string) (string, []string) {
 	words := strings.Fields(message)
 	cmdIndex, mentionIndex := FindCommandAndMentionIndices(words)
 
-	if cmdIndex < 0 || cmdIndex > 1 || mentionIndex > 1 {
+	if AreCommandAndMentionIndicesInvalid(cmdIndex, mentionIndex) {
 		return "", nil
 	}
 
-	if cmdIndex+1 != mentionIndex && mentionIndex+1 != cmdIndex {
+	// 0 and 1 indexes, if there is no mention, the command cannot be placed in any index other than 0.
+	if AreCommandAndMentionIndicesMismatched(cmdIndex, mentionIndex) {
 		return "", nil
 	}
 
