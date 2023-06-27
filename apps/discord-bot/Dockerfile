@@ -13,7 +13,7 @@ FROM node:18.14.2 AS runner
 WORKDIR /app
 COPY .gitignore .gitignore
 COPY --from=builder /app/out/json .
-COPY --from=builder /app/out/package-lock.json ./package-lock.json
+#COPY --from=builder /app/out/package-lock.json ./package-lock.json
 RUN npm install --global turbo
 RUN npm ci
 COPY --from=builder /app/out/full/ .
