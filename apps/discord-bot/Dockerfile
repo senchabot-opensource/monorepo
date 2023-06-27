@@ -1,36 +1,31 @@
-FROM debian:bullseye as builder
+FROM node:18.16.0 AS builder
 
-ARG NODE_VERSION=18.12.1
-
-RUN apt-get update; apt install -y curl
-RUN curl https://get.volta.sh | bash
-ENV VOLTA_HOME /root/.volta
-ENV PATH /root/.volta/bin:$PATH
-RUN volta install node@${NODE_VERSION}
-
-#######################################################################
-
-RUN mkdir /app
-WORKDIR /app
-
-# NPM will not install any package listed in "devDependencies" when NODE_ENV is set to "production",
-# to install all modules: "npm install --production=false".
-# Ref: https://docs.npmjs.com/cli/v9/commands/npm-install#description
-
+# set for base and all layer that inherit from it
 ENV NODE_ENV production
 
+WORKDIR /app
+RUN npm install --global turbo
 COPY . .
+RUN turbo prune --scope=senchabot-discord-bot --docker
 
-RUN npm install
-FROM debian:bullseye
 
-LABEL fly_launch_runtime="nodejs"
-
-COPY --from=builder /root/.volta /root/.volta
-COPY --from=builder /app /app
-
+FROM node:18.14.2 AS runner
 WORKDIR /app
-ENV NODE_ENV production
-ENV PATH /root/.volta/bin:$PATH
+COPY .gitignore .gitignore
+COPY --from=builder /app/out/json .
+COPY --from=builder /app/out/package-lock.json ./package-lock.json
+RUN npm install --global turbo
+RUN npm ci
+COPY --from=builder /app/out/full/ .
+COPY turbo.json turbo.json
+RUN npx turbo build
 
-CMD [ "npm", "run", "start" ]
+RUN ls -la .
+
+ENV NODE_ENV production
+
+RUN npm --workspace=senchabot-discord-bot run build
+
+EXPOSE 8080
+
+ENTRYPOINT ["npm", "run","--workspace=senchabot-discord-bot", "start"]
