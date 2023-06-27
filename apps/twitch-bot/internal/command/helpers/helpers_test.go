@@ -72,6 +72,13 @@ func TestParseMessage(t *testing.T) {
 		assert.Equal(t, []string{"commandname", "!acommandalias"}, params, "params should equal")
 	})
 
+	t.Run("if there is a command name with exclamation prefix when creating a command", func(t *testing.T) {
+		cmd, params := ParseMessage("!acmd !commandname this is the command content")
+
+		assert.Equal(t, "acmd", cmd, "cmd should be equal")
+		assert.Equal(t, []string{"!commandname", "this", "is", "the", "command", "content"}, params, "params should equal")
+	})
+
 	t.Run("if the command with its params are in the wrong position, return nothing", func(t *testing.T) {
 		cmd, params := ParseMessage("blabla !acmd acommand a command content")
 
