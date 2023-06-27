@@ -8,84 +8,61 @@ import (
 )
 
 func TestParseMessage(t *testing.T) {
-	type TestCase struct {
-		description    string
-		input          string
-		expectedCmd    string
-		expectedParams []string
-	}
+	t.Run("with just message", func(t *testing.T) {
+		cmd, params := ParseMessage("abc")
 
-	testCase := []TestCase{
-		{
-			description:    "with just message",
-			input:          "abc",
-			expectedCmd:    "",
-			expectedParams: nil,
-		},
-		{
-			description:    "with a command",
-			input:          "!kampus",
-			expectedCmd:    "kampus",
-			expectedParams: []string{},
-		},
-		{
-			description:    "with wrong mention",
-			input:          "@s",
-			expectedCmd:    "",
-			expectedParams: nil,
-		},
-		{
-			description:    "with just mention",
-			input:          "@senchabot",
-			expectedCmd:    "",
-			expectedParams: nil,
-		},
-		{
-			description:    "a command and its params",
-			input:          "!acmd acommand a command content",
-			expectedCmd:    "acmd",
-			expectedParams: []string{"acommand", "a", "command", "content"},
-		},
-		{
-			description:    "if there is space in params, do not include the space in the params",
-			input:          "!acmd a couple of  params",
-			expectedCmd:    "acmd",
-			expectedParams: []string{"a", "couple", "of", "params"},
-		},
-		{
-			description:    "if the command with its params are in the wrong position, return nothing",
-			input:          "blabla !acmd acommand a command content",
-			expectedCmd:    "",
-			expectedParams: []string(nil),
-		},
-		{
-			description:    "if there is more than one mention, only the first mention is used",
-			input:          "!lurk @senchabot and @whimsicallymade",
-			expectedCmd:    "lurk",
-			expectedParams: []string{"@senchabot"},
-		},
-		{
-			description:    "if there is a mention after the command, the command name should be at index 0, and the remaning words should be treated as params",
-			input:          "!acmd @senchabot",
-			expectedCmd:    "acmd",
-			expectedParams: []string{"@senchabot"},
-		},
-		{
-			description:    "with a mention and a command",
-			input:          "@senchabot !acmd",
-			expectedCmd:    "acmd",
-			expectedParams: []string{"@senchabot"},
-		},
-	}
+		assert.Equal(t, "", cmd, "cmd should be equal")
+		assert.Equal(t, []string(nil), params, "params should equal")
+	})
 
-	for _, tc := range testCase {
-		t.Run(tc.description, func(t *testing.T) {
-			cmd, params := ParseMessage(tc.input)
+	t.Run("with a command", func(t *testing.T) {
+		cmd, params := ParseMessage("!kampus")
 
-			assert.Equal(t, tc.expectedCmd, cmd, "cmd should be equal")
-			assert.Equal(t, tc.expectedParams, params, "params should equal")
-		})
-	}
+		assert.Equal(t, "kampus", cmd, "cmd should be equal")
+		assert.Equal(t, []string{}, params, "params should equal")
+	})
+
+	t.Run("with just mention", func(t *testing.T) {
+		cmd, params := ParseMessage("@senchabot")
+
+		assert.Equal(t, "", cmd, "cmd should be equal")
+		assert.Equal(t, []string(nil), params, "params should equal")
+	})
+
+	t.Run("if there is space in params, do not include the space in the params", func(t *testing.T) {
+		cmd, params := ParseMessage("!acmd  commandname the command content")
+
+		assert.Equal(t, "acmd", cmd, "cmd should be equal")
+		assert.Equal(t, []string{"commandname", "the", "command", "content"}, params, "params should equal")
+	})
+
+	t.Run("if the command with its params are in the wrong position, return nothing", func(t *testing.T) {
+		cmd, params := ParseMessage("blabla !acmd acommand a command content")
+
+		assert.Equal(t, "", cmd, "cmd should be equal")
+		assert.Equal(t, []string(nil), params, "params should equal")
+	})
+
+	t.Run("if there is more than one mention, only the first mention is used", func(t *testing.T) {
+		cmd, params := ParseMessage("!lurk @senchabot and @whimsicallymade")
+
+		assert.Equal(t, "lurk", cmd, "cmd should be equal")
+		assert.Equal(t, []string{"@senchabot"}, params, "params should equal")
+	})
+
+	t.Run("if there is a mention after the command, the command name should be at index 0, and the remaning words should be treated as params", func(t *testing.T) {
+		cmd, params := ParseMessage("!acmd @senchabot")
+
+		assert.Equal(t, "acmd", cmd, "cmd should be equal")
+		assert.Equal(t, []string{"@senchabot"}, params, "params should equal")
+	})
+
+	t.Run("with a mention and a command", func(t *testing.T) {
+		cmd, params := ParseMessage("@senchabot !acmd")
+
+		assert.Equal(t, "acmd", cmd, "cmd should be equal")
+		assert.Equal(t, []string{"@senchabot"}, params, "params should equal")
+	})
 }
 
 func TestMakeUniqueArray(t *testing.T) {
