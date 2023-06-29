@@ -47,6 +47,17 @@ model BotActionActivities {
     @@map("bot_action_activities")
 }
 
+model DiscordAnnouncementChannels {
+    id            Int            @id @default(autoincrement())
+    channelId     String         @unique @map("channel_id")
+    serverId      String         @map("server_id")
+    createdBy     String         @map("created_by")
+    createdAt     DateTime       @default(now()) @map("created_at")
+    discordServer DiscordServer? @relation(fields: [serverId], references: [serverId], onDelete: Cascade)
+
+    @@map("discord_announcement_channels")
+}
+
 model BotCommands {
     id              Int      @id @default(autoincrement())
     commandName     String   @map("command_name")
@@ -74,12 +85,13 @@ model BotCommandAliases {
 }
 
 model DiscordServer {
-    id          String  @id @default(cuid())
-    serverId    String  @unique @map("server_id")
-    serverName  String  @map("server_name")
-    serverOwner String  @map("server_owner")
-    userId      String? @map("user_id")
-    user        User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+    id                          String                        @id @default(cuid())
+    serverId                    String                        @unique @map("server_id")
+    serverName                  String                        @map("server_name")
+    serverOwner                 String                        @map("server_owner")
+    userId                      String?                       @map("user_id")
+    user                        User?                         @relation(fields: [userId], references: [id], onDelete: Cascade)
+    DiscordAnnouncementChannels DiscordAnnouncementChannels[]
 
     @@map("discord_servers")
 }

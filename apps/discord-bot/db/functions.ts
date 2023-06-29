@@ -32,6 +32,41 @@ const findDiscordServer = async (guild: Guild) => {
   return foundServer;
 };
 
+interface IFindAnnouncementChannelParams {
+  channelId: string;
+  serverId: string;
+}
+
+export const findAnnouncementChannel = async (
+  params: IFindAnnouncementChannelParams,
+) => {
+  const foundAnnouncementChannel =
+    await prisma.discordAnnouncementChannels.findFirst({
+      where: params,
+    });
+
+  return foundAnnouncementChannel;
+};
+
+interface IAddAnnouncementChannelParams {
+  channelId: string;
+  serverId: string;
+  createdBy: string;
+}
+
+export const addAnnouncementChannel = async (
+  params: IAddAnnouncementChannelParams,
+) => {
+  await prisma.discordAnnouncementChannels.create({
+    data: params,
+  });
+};
+
+export const getAnnouncementChannels = async () => {
+  const annChannels = await prisma.discordAnnouncementChannels.findMany();
+  return annChannels;
+};
+
 interface IAddBotActivityParams {
   botPlatformType: string;
   botActivity: string;
