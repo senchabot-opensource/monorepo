@@ -7,13 +7,14 @@ import { getURL } from "../utils/helpers";
 import { env } from "../utils/env";
 
 import dayjs from "dayjs";
+import { announcementChannels } from "..";
 
 export const createLiveStreamEventFromMessage = (
   message: Message,
   params: ICreateLiveStreamEventParams,
 ) => {
   if (!message.guild || !message.author.bot) return;
-  if (!TWITCH_EVENTS_CHANNELS.includes(message.channelId)) return;
+  if (!announcementChannels.includes(message.channelId)) return;
 
   const msgContent = message.content;
 
