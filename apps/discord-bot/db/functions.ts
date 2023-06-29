@@ -31,3 +31,16 @@ const findDiscordServer = async (guild: Guild) => {
 
   return foundServer;
 };
+
+interface IAddBotActivityParams {
+  botPlatformType: string;
+  botActivity: string;
+  discordServerId: string | null;
+  activityAuthor: string | null;
+}
+
+export const addBotActivity = async (params: IAddBotActivityParams) => {
+  await prisma.botActionActivities.create({
+    data: params,
+  });
+};
