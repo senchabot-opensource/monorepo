@@ -66,3 +66,16 @@ export const getAnnouncementChannels = async () => {
   const annChannels = await prisma.discordAnnouncementChannels.findMany();
   return annChannels;
 };
+
+interface IAddBotActivityParams {
+  botPlatformType: string;
+  botActivity: string;
+  discordServerId: string | null;
+  activityAuthor: string | null;
+}
+
+export const addBotActivity = async (params: IAddBotActivityParams) => {
+  await prisma.botActionActivities.create({
+    data: params,
+  });
+};
