@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Box,
   Tooltip,
@@ -13,10 +13,13 @@ import Logout from "@mui/icons-material/Logout";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { MenuPaperPropsStyles } from "../../styles";
+import { DarkMode, LightMode } from "@mui/icons-material";
+import { ColorModeContext } from "src/Context/ColorModeContext";
 
 const AccountMenu = () => {
   const { data: session } = useSession();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const { colorMode, toggleColorMode } = useContext(ColorModeContext);
 
   const open = Boolean(anchorEl);
 
@@ -31,6 +34,27 @@ const AccountMenu = () => {
   return (
     <>
       <Box>
+        <IconButton
+          onClick={toggleColorMode}
+          sx={{
+            color: "landingButton.default",
+          }}>
+          {colorMode === "dark" ? (
+            <LightMode
+              sx={{
+                backgroundColor: "landingDashboardIcon.background",
+                color: "landingDashboardIcon.default",
+              }}
+            />
+          ) : (
+            <DarkMode
+              sx={{
+                backgroundColor: "landingDashboardIcon.background",
+                color: "landingDashboardIcon.default",
+              }}
+            />
+          )}
+        </IconButton>
         <Tooltip title="Account settings">
           <IconButton
             onClick={handleClick}

@@ -25,7 +25,7 @@ const AuthDialog = () => {
           aria-label="account of current user"
           onClick={handleToggleAuthMenu}
           sx={{ p: 0 }}>
-          <AccountCircleIcon sx={{ color: "#b2b2b2" }} />
+          <AccountCircleIcon sx={{ color: "#fff" }} />
         </IconButton>
       </Tooltip>
       <Dialog onClose={handleToggleAuthMenu} open={open}>

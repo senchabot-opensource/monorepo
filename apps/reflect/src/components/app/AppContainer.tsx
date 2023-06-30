@@ -6,9 +6,7 @@ import {
   Dialog,
   DialogContent,
 } from "@mui/material";
-import { ThemeProvider } from "@mui/material/styles";
 import ResponsiveAppBar from "./AppBar";
-import { darkTheme } from "../../utils/theme";
 import Breadcrumb from "./Breadcrumb";
 import { useSession } from "next-auth/react";
 import Loading from "../loading/Loading";
@@ -29,7 +27,7 @@ const AppContainer: FC<IProps> = ({ isLoading, children }) => {
   };
 
   return (
-    <ThemeProvider theme={darkTheme}>
+    <>
       <CssBaseline />
       <Loading isLoading={isLoading} isAuthLoading={isAuthLoading} />
 
@@ -41,7 +39,14 @@ const AppContainer: FC<IProps> = ({ isLoading, children }) => {
           />
 
           <Container>
-            <Paper sx={{ mt: 10, backgroundColor: "#000", p: 1 }} elevation={1}>
+            <Paper
+              sx={{
+                mt: 10,
+                backgroundImage: "none",
+                backgroundColor: "appBreadcrumb.background",
+                p: 1,
+              }}
+              elevation={1}>
               <Breadcrumb />
             </Paper>
             {children}
@@ -56,7 +61,6 @@ const AppContainer: FC<IProps> = ({ isLoading, children }) => {
             PaperProps={{
               elevation: 0,
               style: {
-                backgroundColor: "black",
                 boxShadow: "none",
                 borderRadius: "8px",
                 overflow: "hidden",
@@ -67,6 +71,7 @@ const AppContainer: FC<IProps> = ({ isLoading, children }) => {
             <DialogContent
               sx={{
                 padding: 2,
+                backgroundColor: "appLoginForm.border",
               }}>
               <AuthContainer />
             </DialogContent>
@@ -75,7 +80,7 @@ const AppContainer: FC<IProps> = ({ isLoading, children }) => {
       )}
 
       <VersionText />
-    </ThemeProvider>
+    </>
   );
 };
 

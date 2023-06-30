@@ -1,5 +1,11 @@
 import { ChangeEvent, useState } from "react";
-import { Checkbox, FormControlLabel, Stack, Typography } from "@mui/material";
+import {
+  Checkbox,
+  FormControlLabel,
+  Stack,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import { SiDiscord, SiTwitch } from "react-icons/si";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
@@ -7,7 +13,7 @@ import AuthLoginButton from "./AuthLoginButton";
 
 const AuthContainer = () => {
   const [acceptTos, setAcceptTos] = useState<boolean>(false);
-
+  const theme = useTheme();
   const handleAcceptTos = (e: ChangeEvent<HTMLInputElement>) => {
     setAcceptTos(e.target.checked);
   };
@@ -17,7 +23,7 @@ const AuthContainer = () => {
       <Stack
         direction="column"
         spacing={2}
-        sx={{ p: 2, backgroundColor: "#000" }}>
+        sx={{ p: 2, backgroundColor: "appLoginForm.background" }}>
         <Typography fontSize="x-large">Sign in/up</Typography>
         <AuthLoginButton
           disabled={!acceptTos}
@@ -70,19 +76,27 @@ const AuthContainer = () => {
           label={
             <Typography>
               I agree to{" "}
-              <Link href="/cookie-policy" style={{ color: "#ffff00" }}>
+              <Link
+                href="/cookie-policy"
+                style={{ color: theme.palette.appLoginForm.policyText }}>
                 Cookie Policy
               </Link>
               ,{" "}
-              <Link href="/privacy-policy" style={{ color: "#ffff00" }}>
+              <Link
+                href="/privacy-policy"
+                style={{ color: theme.palette.appLoginForm.policyText }}>
                 Privacy Policy
               </Link>
               ,{" "}
-              <Link href="/terms" style={{ color: "#ffff00" }}>
+              <Link
+                href="/terms"
+                style={{ color: theme.palette.appLoginForm.policyText }}>
                 Terms of Use
               </Link>
               , and{" "}
-              <Link href="/eula" style={{ color: "#ffff00" }}>
+              <Link
+                href="/eula"
+                style={{ color: theme.palette.appLoginForm.policyText }}>
                 EULA
               </Link>
             </Typography>

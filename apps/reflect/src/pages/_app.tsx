@@ -5,25 +5,12 @@ import "../styles/globals.css";
 import { trpc } from "../utils/trpc";
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/react";
-import {
-  ColorModeProvider,
-  ColorModeContext,
-} from "src/Context/ColorModeContext";
-import { useContext, useMemo } from "react";
-import { ThemeProvider, createTheme } from "@mui/material";
-import { getDesignTokens, getThemedComponents } from "src/utils/theme";
+import { ColorModeProvider } from "src/Context/ColorModeContext";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
-  const { colorMode } = useContext(ColorModeContext);
-
-  const theme = useMemo(
-    () =>
-      createTheme(getDesignTokens(colorMode), getThemedComponents(colorMode)),
-    [colorMode],
-  );
   return (
     <>
       <ColorModeProvider>

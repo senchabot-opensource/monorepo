@@ -7,6 +7,9 @@ const palette = {
     background: {
       default: "#000",
     },
+    landingAppBar: {
+      background: alpha("#000", 0.75),
+    },
     landingButton: {
       default: "#fff",
       hover: "#646464",
@@ -39,10 +42,27 @@ const palette = {
     primary: {
       main: "#1976d2",
     },
+    appBreadcrumb: {
+      background: "#121212",
+    },
+    appContainer: {
+      background: "#000",
+      border: "#121212",
+    },
+    appLoginForm: {
+      background: "#000",
+      border: "#121212",
+      policyText: "#ffff00",
+      buttonBackground: "#202020",
+    },
+    libraryText: "#ffff00",
   },
   light: {
     background: {
-      default: "#fff",
+      default: "#ffffff",
+    },
+    landingAppBar: {
+      background: alpha("#fff", 0.75),
     },
     landingButton: {
       default: "#000",
@@ -76,6 +96,20 @@ const palette = {
     primary: {
       main: "#1976d2",
     },
+    appBreadcrumb: {
+      background: "#c7c7c7",
+    },
+    appContainer: {
+      background: "#fff",
+      border: "#cfcfcf",
+    },
+    appLoginForm: {
+      background: "#fff",
+      border: "#cfcfcf",
+      policyText: "#1976d2",
+      buttonBackground: "#cfcfcf",
+    },
+    libraryText: "#ff8400",
   },
 };
 
@@ -119,26 +153,26 @@ export const getThemedComponents = (mode: PaletteMode) => ({
               body: {
                 "&::-webkit-scrollbar, & *::-webkit-scrollbar": {
                   width: 10,
-                  backgroundColor: "#0c0c0c",
+                  backgroundColor: "#959595",
                 },
                 "&::-webkit-scrollbar-thumb, & *::-webkit-scrollbar-thumb": {
-                  backgroundColor: "#0c0c0c",
+                  backgroundColor: "#959595",
                   minHeight: 24,
                 },
                 "&::-webkit-scrollbar-focus, & *::-webkit-scrollbar-thumb:focus":
                   {
-                    backgroundColor: "#ff0000",
+                    backgroundColor: "#2b2b2b",
                   },
                 "&::-webkit-scrollbar-active, & *::-webkit-scrollbar-thumb:active":
                   {
-                    backgroundColor: "#ff0000",
+                    backgroundColor: "#2b2b2b",
                   },
                 "&::-webkit-scrollbar-thumb, & *::-webkit-scrollbar-thumb:hover":
                   {
-                    backgroundColor: "#959595",
+                    backgroundColor: "#0c0c0c",
                   },
                 "&::-webkit-scrollbar-corner, & *::-webkit-scrollbar-corner": {
-                  backgroundColor: "#2b2b2b",
+                  backgroundColor: "#ff0000",
                 },
               },
             },
@@ -154,6 +188,9 @@ export const getDesignTokens = (mode: PaletteMode) => ({
       ? {
           background: {
             default: palette.dark.background.default,
+          },
+          landingAppBar: {
+            background: palette.dark.landingAppBar.background,
           },
           landingButton: {
             default: palette.dark.landingButton.default,
@@ -187,10 +224,27 @@ export const getDesignTokens = (mode: PaletteMode) => ({
           primary: {
             main: palette.dark.primary.main,
           },
+          appBreadcrumb: {
+            background: palette.dark.appBreadcrumb.background,
+          },
+          appContainer: {
+            background: palette.dark.appContainer.background,
+            border: palette.dark.appContainer.border,
+          },
+          appLoginForm: {
+            background: palette.dark.appLoginForm.background,
+            border: palette.dark.appLoginForm.border,
+            policyText: palette.dark.appLoginForm.policyText,
+            buttonBackground: palette.dark.appLoginForm.buttonBackground,
+          },
+          libraryText: palette.dark.libraryText,
         }
       : {
           background: {
             default: palette.light.background.default,
+          },
+          landingAppBar: {
+            background: palette.light.landingAppBar.background,
           },
           landingButton: {
             default: palette.light.landingButton.default,
@@ -224,23 +278,40 @@ export const getDesignTokens = (mode: PaletteMode) => ({
           primary: {
             main: palette.light.primary.main,
           },
+          appBreadcrumb: {
+            background: palette.light.appBreadcrumb.background,
+          },
+          appContainer: {
+            background: palette.light.appContainer.background,
+            border: palette.light.appContainer.border,
+          },
+          appLoginForm: {
+            background: palette.light.appLoginForm.background,
+            border: palette.light.appLoginForm.border,
+            policyText: palette.light.appLoginForm.policyText,
+            buttonBackground: palette.light.appLoginForm.buttonBackground,
+          },
+          libraryText: palette.light.libraryText,
         }),
   },
 });
 
 declare module "@mui/material/styles" {
   interface Palette {
+    landingAppBar: {
+      background: string;
+    };
     landingButton: {
       default: string;
       hover: string;
     };
-    landingDashboardIcon: {
-      background: string;
-      default: string;
-    };
     landingIcon: {
       background: string;
       backgroundHover: string;
+    };
+    landingDashboardIcon: {
+      background: string;
+      default: string;
     };
     landingCmd: {
       primary: string;
@@ -259,19 +330,37 @@ declare module "@mui/material/styles" {
       backgroundHover: string;
     };
     landingTextBackground: string;
+    appBreadcrumb: {
+      background: string;
+    };
+    appContainer: {
+      background: string;
+      border: string;
+    };
+    appLoginForm: {
+      background: string;
+      border: string;
+      policyText: string;
+      buttonBackground: string;
+    };
+    libraryText: string;
   }
+
   interface PaletteOptions {
+    landingAppBar: {
+      background: string;
+    };
     landingButton: {
       default: string;
       hover: string;
     };
-    landingDashboardIcon: {
-      background: string;
-      default: string;
-    };
     landingIcon: {
       background: string;
       backgroundHover: string;
+    };
+    landingDashboardIcon: {
+      background: string;
+      default: string;
     };
     landingCmd: {
       primary: string;
@@ -290,102 +379,19 @@ declare module "@mui/material/styles" {
       backgroundHover: string;
     };
     landingTextBackground: string;
+    appBreadcrumb: {
+      background: string;
+    };
+    appContainer: {
+      background: string;
+      border: string;
+    };
+    appLoginForm: {
+      background: string;
+      border: string;
+      policyText: string;
+      buttonBackground: string;
+    };
+    libraryText: string;
   }
 }
-
-export const darkTheme = createTheme({
-  components: {
-    MuiCssBaseline: {
-      styleOverrides: {
-        body: {
-          "&::-webkit-scrollbar, & *::-webkit-scrollbar": {
-            width: 10,
-            backgroundColor: "#0c0c0c",
-          },
-          "&::-webkit-scrollbar-thumb, & *::-webkit-scrollbar-thumb": {
-            backgroundColor: "#0c0c0c",
-            minHeight: 24,
-          },
-          "&::-webkit-scrollbar-focus, & *::-webkit-scrollbar-thumb:focus": {
-            backgroundColor: "#ff0000",
-          },
-          "&::-webkit-scrollbar-active, & *::-webkit-scrollbar-thumb:active": {
-            backgroundColor: "#ff0000",
-          },
-          "&::-webkit-scrollbar-thumb, & *::-webkit-scrollbar-thumb:hover": {
-            backgroundColor: "#959595",
-          },
-          "&::-webkit-scrollbar-corner, & *::-webkit-scrollbar-corner": {
-            backgroundColor: "#2b2b2b",
-          },
-        },
-      },
-    },
-  },
-  palette: {
-    mode: "dark",
-    primary: {
-      main: "#1976d2",
-    },
-  },
-  // components: {
-  //     MuiCssBaseline: {
-  //         styleOverrides: {
-  //             root: {
-  //                 backgroundColor: '#000'
-  //             },
-  //         },
-  //     },
-  // },
-});
-
-export const landingDarkTheme = createTheme({
-  components: {
-    MuiCssBaseline: {
-      styleOverrides: {
-        body: {
-          "&::-webkit-scrollbar, & *::-webkit-scrollbar": {
-            width: 10,
-            backgroundColor: "#0c0c0c",
-          },
-          "&::-webkit-scrollbar-thumb, & *::-webkit-scrollbar-thumb": {
-            backgroundColor: "#0c0c0c",
-            minHeight: 24,
-          },
-          "&::-webkit-scrollbar-focus, & *::-webkit-scrollbar-thumb:focus": {
-            backgroundColor: "#ff0000",
-          },
-          "&::-webkit-scrollbar-active, & *::-webkit-scrollbar-thumb:active": {
-            backgroundColor: "#ff0000",
-          },
-          "&::-webkit-scrollbar-thumb, & *::-webkit-scrollbar-thumb:hover": {
-            backgroundColor: "#959595",
-          },
-          "&::-webkit-scrollbar-corner, & *::-webkit-scrollbar-corner": {
-            backgroundColor: "#2b2b2b",
-          },
-        },
-      },
-    },
-  },
-  palette: {
-    mode: "dark",
-    background: {
-      //paper: "#FFF",
-      default: "#000",
-    },
-    primary: {
-      main: "#1976d2",
-    },
-  },
-});
-
-// console.log(landingDarkTheme.palette.background.default);
-
-// landingDarkTheme.palette.background.default = "#ffff00";
-
-// console.log(landingDarkTheme.palette.background.default);
-
-// setTimeout(() => {
-//   landingDarkTheme.palette.background.default = "#ff0000";
-// }, 500);

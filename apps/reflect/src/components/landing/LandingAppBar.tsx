@@ -5,7 +5,7 @@ import {
   Typography,
   Menu,
   MenuItem,
-  useTheme,
+  IconButton,
 } from "@mui/material";
 import Link from "next/link";
 import DashboardIcon from "@mui/icons-material/Dashboard";
@@ -17,7 +17,7 @@ import { useSession } from "next-auth/react";
 import { Offset } from "../Offset";
 import AppBarTitle from "../common/AppBarTitle";
 import LandingButton from "./LandingButton";
-import { AppBarStyles, MenuPaperPropsStyles } from "../../styles";
+import { MenuPaperPropsStyles } from "../../styles";
 import React, { useContext, useState } from "react";
 import { ColorModeContext } from "src/Context/ColorModeContext";
 
@@ -39,7 +39,6 @@ const LandingAppBar = () => {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const { colorMode, toggleColorMode } = useContext(ColorModeContext);
 
-  console.log({ colorMode });
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -53,13 +52,14 @@ const LandingAppBar = () => {
       <AppBar
         position="sticky" // adds pb: 8
         color="transparent"
-        sx={AppBarStyles}
         elevation={0}>
         <Box sx={{ flexGrow: 1 }}>
           <Toolbar
             style={toolBarStyles}
             variant="regular"
             sx={{
+              backgroundColor: "landingAppBar.background",
+              backdropFilter: "blur(4px)",
               userSelect: "none",
             }}>
             <LandingButton
@@ -94,7 +94,7 @@ const LandingAppBar = () => {
             </Menu>
             <AppBarTitle />
             <Box>
-              <LandingButton
+              <IconButton
                 onClick={toggleColorMode}
                 sx={{
                   color: "landingButton.default",
@@ -114,11 +114,11 @@ const LandingAppBar = () => {
                     }}
                   />
                 )}
-              </LandingButton>
-              <LandingButton
+              </IconButton>
+              <IconButton
                 href="/app"
                 sx={{
-                  pl: 4,
+                  ml: 1,
                   color: "landingButton.default",
                 }}
                 disableRipple>
@@ -133,7 +133,7 @@ const LandingAppBar = () => {
                 ) : (
                   <AccountCircle sx={{ "&:hover": { cursor: "pointer" } }} />
                 )}
-              </LandingButton>
+              </IconButton>
             </Box>
           </Toolbar>
         </Box>

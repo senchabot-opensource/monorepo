@@ -1,4 +1,4 @@
-import { CssBaseline, ThemeProvider } from "@mui/material";
+import { CssBaseline } from "@mui/material";
 import LandingAppBar from "../../components/landing/LandingAppBar";
 import VersionText from "../common/VersionText";
 import { FC, ReactNode } from "react";
