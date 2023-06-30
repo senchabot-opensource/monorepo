@@ -21,6 +21,7 @@ type handlers struct {
 func (h *handlers) InitBotEventHandlers() {
 	PrivateMessage(h.client, h.service)
 	h.joinedChannelList = BotJoin(h.client, h.service)
+	UserNoticeMessage(h.client, h.service)
 }
 
 func (h *handlers) InitHttpHandlers(mux *http.ServeMux) {
