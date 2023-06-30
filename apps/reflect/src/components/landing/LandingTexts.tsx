@@ -17,7 +17,7 @@ import { randomInt } from "next/dist/shared/lib/bloom-filter/utils";
 import { signIn, useSession } from "next-auth/react";
 import { trpc } from "../../utils/trpc";
 
-const ALT_TEXT = "All Bots and Stream overlays, Manage from one place!";
+const ALT_TEXT = "Open-source multi-platform bot development project, which works on Twitch and Discord.";
 // Stream overlays: #8b5cf6
 const LandingTexts = () => {
   const [cmdList, setCmdList] = useState<string[]>([]);

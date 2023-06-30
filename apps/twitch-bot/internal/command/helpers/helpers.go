@@ -49,7 +49,7 @@ func ParseMessage(message string) (string, []string) {
 	var params []string
 
 	// Check if first word is a @mention
-	if strings.HasPrefix(cmdName, "@") {
+	if strings.HasPrefix(cmdName, "@") && len(params) > 2 {
 		cmdName = splitMsg[1]
 	} else {
 		params = splitMsg[1:]

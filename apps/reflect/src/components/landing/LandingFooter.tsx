@@ -1,7 +1,6 @@
 import { Typography, Grid, Box, Link } from "@mui/material";
 import React from "react";
-import TwitterIcon from "@mui/icons-material/Twitter";
-import GitHubIcon from "@mui/icons-material/GitHub";
+import { LinkedIn, GitHub, Twitter } from "@mui/icons-material";
 import { env } from "../../env/client.mjs";
 import LandingButton from "./LandingButton";
 
@@ -55,14 +54,21 @@ const LandingFooter = () => {
               target="_blank"
               href={env.NEXT_PUBLIC_APP_TWITTER_PROFILE}
               sx={iconStyle}>
-              <TwitterIcon />
+              <Twitter />
             </Box>
             <Box
               component="a"
               target="_blank"
               href={env.NEXT_PUBLIC_APP_GITHUB_PROFILE}
               sx={iconStyle}>
-              <GitHubIcon />
+              <GitHub />
+            </Box>
+            <Box
+              component="a"
+              target="_blank"
+              href={env.NEXT_PUBLIC_APP_LINKEDIN_PROFILE}
+              sx={iconStyle}>
+              <LinkedIn />
             </Box>
           </Grid>
           <Grid item sx={{ display: { xs: "none", md: "block" } }}>
