@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSession } from "next-auth/react";
 import { Stack, Typography, Divider, Button } from "@mui/material";
 import FormTitle from "../components/FormTitle";
 import LinkAccountStack from "../components/auth/LinkAccount";
 import { capitalizeWord } from "../utils/functions";
-import { trpc } from "../utils/trpc";
+import { getAccount } from "src/api";
 
 const typographyStyle = {
   marginBottom: "0.5rem",
@@ -13,13 +13,15 @@ const SecurityForm = () => {
   const { data: session } = useSession();
   const email = session?.user?.email || null || undefined;
   const [isLoading, setIsLoading] = React.useState(true);
-  const accounts = trpc.security.getAccounts.useQuery();
-
+  const [accounts, setAccounts] = React.useState<any>([]);
   const [showEmailAddress, setShowEmailAddress] = React.useState(false);
 
   React.useEffect(() => {
-    if (!accounts.isLoading) setIsLoading(false);
-  }, [accounts.isLoading]);
+    getAccount().then(res => {
+      setAccounts(res.data);
+      setIsLoading(false);
+    });
+  }, [isLoading]);
 
   return (
     <>
@@ -33,7 +35,7 @@ const SecurityForm = () => {
           {isLoading
             ? "Loading..."
             : accounts.data?.map(
-                (account, index) =>
+                (account: any, index: number) =>
                   accounts &&
                   (accounts.data && accounts.data.length - 1 === index
                     ? (index > 2 ? "and " : "") +

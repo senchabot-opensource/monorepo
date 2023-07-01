@@ -9,11 +9,22 @@ import {
 } from "@mui/material";
 import { SiDiscord, SiTwitch } from "react-icons/si";
 import LoadingBox from "../loading/LoadingBox";
-import { trpc } from "../../utils/trpc";
 import { IBotActionActivity } from "../../types";
+import { useEffect, useState } from "react";
+import { getBotActivites } from "src/api";
 
 const BotActivity = () => {
-  const botActivities = trpc.bot.getBotActivities.useQuery();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [botActivities, setBotactivites] = useState<IBotActionActivity[]>([]);
+
+  useEffect(() => {
+    getBotActivites().then(res => {
+      setBotactivites(res.data);
+      setIsLoading(false);
+    });
+  }, [isLoading]);
+
+  console.log(botActivities);
 
   return (
     <Paper
@@ -29,9 +40,9 @@ const BotActivity = () => {
             </ListSubheader>
           }
           disablePadding>
-          {!botActivities.isLoading ? (
-            botActivities.data?.length ? (
-              botActivities.data?.map(
+          {!isLoading ? (
+            botActivities?.length ? (
+              botActivities?.map(
                 (activity: IBotActionActivity, index: number) => (
                   <ListItem key={index}>
                     <ListItemIcon>

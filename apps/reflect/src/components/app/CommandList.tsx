@@ -16,7 +16,6 @@ import {
   styled,
 } from "@mui/material";
 import MuiAccordion, { AccordionProps } from "@mui/material/Accordion";
-import { trpc } from "../../utils/trpc";
 import LoadingBox from "../loading/LoadingBox";
 import { IBotCommand, IBotCommandAlias } from "../../types";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -26,6 +25,7 @@ import MuiAccordionSummary, {
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
 import { useEffect, useMemo, useState } from "react";
 import { BiSearchAlt } from "react-icons/bi";
+import { getAliasList, getCommandList } from "src/api";
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion
@@ -59,8 +59,6 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
 }));
 
 const CommandList = () => {
-  const commandList = trpc.command.getCommandList.useQuery();
-  const commandAlias = trpc.command.getAliasList.useQuery();
   const [isLoading, setIsLoading] = useState(true);
   const [botCommands, setBotCommands] = useState<IBotCommand[]>();
   const [aliasCommands, setAliasCommands] = useState<IBotCommandAlias[]>();
@@ -73,13 +71,15 @@ const CommandList = () => {
     };
 
   useEffect(() => {
-    if (!commandList.isLoading) {
-      if (!commandList.data) return;
-      setBotCommands(commandList.data);
-      setAliasCommands(commandAlias.data);
+    getCommandList().then(res => {
+      if (!res.data) return;
+      setBotCommands(res.data);
+      getAliasList().then(res => {
+        setAliasCommands(res.data);
+      });
       setIsLoading(false);
-    }
-  }, [commandList, commandAlias]);
+    });
+  }, [isLoading]);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value);

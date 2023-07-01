@@ -11,48 +11,52 @@ import {
 import { env } from "../../env/client.mjs";
 import { FaDiscord, FaTwitch } from "react-icons/fa";
 import { useEffect, useState } from "react";
-import { getDefaultCmdList, getFeatureList } from "../../api";
+import {
+  checkTwitchAccount,
+  getCommandList,
+  getDefaultCmdList,
+  getFeatureList,
+} from "../../api";
 import { randomInt } from "next/dist/shared/lib/bloom-filter/utils";
 import { signIn, useSession } from "next-auth/react";
-import { trpc } from "../../utils/trpc";
+import { useRouter } from "next/router";
 
-const ALT_TEXT = "Open-source multi-platform bot development project, which works on Twitch and Discord.";
+const ALT_TEXT =
+  "Open-source multi-platform bot development project, which works on Twitch and Discord.";
 // Stream overlays: #8b5cf6
 const LandingTexts = () => {
+  const router = useRouter();
   const [cmdList, setCmdList] = useState<string[]>([]);
   const [featureList, setFeatureList] = useState<string[]>([]);
+  const [twitchAccountAvailable, setTwitchAccountAvailable] =
+    useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const { data: session } = useSession();
-  const { data: twitchAcc } = trpc.check.checkTwitchAcc.useQuery();
-  const commandList = trpc.command.getCommandList.useQuery();
-
-  const twitchBotMutate = trpc.twitchBot.add.useMutation({
-    onSuccess() {
-      alert("Twitch bot added");
-    },
-
-    onError(error) {
-      if (!error.shape) return;
-      alert(error.shape.message);
-    },
-  });
 
   useEffect(() => {
     getDefaultCmdList().then(res => {
-      if (!commandList.isLoading && session) {
-        const cmds = commandList.data?.map(cmd => "!" + cmd.commandName);
-        if (cmds) {
-          const tocmds = [...res.defaultCmd, ...cmds];
-          setCmdList(tocmds);
-        }
+      if (session) {
+        getCommandList().then(res => {
+          const cmds = res.data.map((cmd: any) => "!" + cmd.commandName);
+          if (cmds) {
+            const tocmds = [...res.defaultCmd, ...cmds];
+            setCmdList(tocmds);
+          }
+        });
       } else {
         setCmdList(res.defaultCmd);
       }
+      setIsLoading(false);
+    });
+
+    checkTwitchAccount().then(res => {
+      setTwitchAccountAvailable(res.data);
     });
 
     getFeatureList().then(res => {
       setFeatureList(res.featureList);
     });
-  }, [commandList.isLoading]);
+  }, [isLoading]);
 
   return (
     <Grid
@@ -156,12 +160,12 @@ const LandingTexts = () => {
           </Button>
           <Button
             onClick={() => {
-              if (!session || !twitchAcc) {
+              if (!session || !twitchAccountAvailable) {
                 signIn("twitch", {
                   callbackUrl: `${window.location.origin}/api/twitch/get-bot`,
                 });
               } else {
-                twitchBotMutate.mutate();
+                router.push("/api/twitch/get-bot");
               }
             }}
             variant="contained"
