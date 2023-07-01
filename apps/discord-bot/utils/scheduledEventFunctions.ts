@@ -1,7 +1,6 @@
 import { GuildManager, Message } from "discord.js";
 import { ApiClient } from "@twurple/api";
 import { AppTokenAuthProvider } from "@twurple/auth";
-import { TWITCH_EVENTS_CHANNELS } from "../config";
 import { ICreateLiveStreamEventParams } from "../types";
 import { getURL } from "../utils/helpers";
 import { env } from "../utils/env";
