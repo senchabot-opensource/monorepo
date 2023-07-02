@@ -203,7 +203,7 @@ const CommandList = () => {
                               <TableCell
                                 align="left"
                                 sx={{ wordWrap: "inherit" }}>
-                                {command.createdAt.toDateString()}
+                                {new Date(command.createdAt).toDateString()}
                               </TableCell>
                               <TableCell
                                 align="left"

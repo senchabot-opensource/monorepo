@@ -27,6 +27,8 @@ const ALT_TEXT =
 const LandingTexts = () => {
   const router = useRouter();
   const [cmdList, setCmdList] = useState<string[]>([]);
+  const [defaultCmdList, setDefaultCmdList] = useState<string[]>([]);
+  const [userCmdList, setUserCmdList] = useState<string[]>([]);
   const [featureList, setFeatureList] = useState<string[]>([]);
   const [twitchAccountAvailable, setTwitchAccountAvailable] =
     useState<boolean>(false);
@@ -34,20 +36,23 @@ const LandingTexts = () => {
   const { data: session } = useSession();
 
   useEffect(() => {
-    getDefaultCmdList().then(res => {
-      if (session) {
-        getCommandList().then(res => {
-          const cmds = res.data.map((cmd: any) => "!" + cmd.commandName);
-          if (cmds) {
-            const tocmds = [...res.defaultCmd, ...cmds];
-            setCmdList(tocmds);
-          }
-        });
-      } else {
-        setCmdList(res.defaultCmd);
-      }
-      setIsLoading(false);
+    getDefaultCmdList().then(res0 => {
+      setDefaultCmdList(res0.defaultCmd);
     });
+
+    getCommandList().then(res1 => {
+      const cmds = res1.data.map((cmd: any) => "!" + cmd.commandName);
+      setUserCmdList(cmds);
+    });
+
+    if (session) {
+      const tocmds = [...defaultCmdList, ...userCmdList];
+      setCmdList(tocmds);
+    } else {
+      setCmdList(defaultCmdList);
+    }
+
+    setIsLoading(false);
 
     checkTwitchAccount().then(res => {
       setTwitchAccountAvailable(res.data);
@@ -56,7 +61,7 @@ const LandingTexts = () => {
     getFeatureList().then(res => {
       setFeatureList(res.featureList);
     });
-  }, [isLoading]);
+  }, [isLoading, session]);
 
   return (
     <Grid
