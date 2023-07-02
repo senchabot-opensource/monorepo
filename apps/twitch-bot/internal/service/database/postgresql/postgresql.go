@@ -8,7 +8,7 @@ import (
 
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/models"
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/service/database"
-	"gorm.io/driver/postgres"
+	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )
@@ -19,7 +19,7 @@ type PostgreSQL struct {
 
 func NewPostgreSQL() database.Database {
 	dsn := os.Getenv("DATABASE_URL")
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{Logger: logger.Default.LogMode(logger.Info)})
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{Logger: logger.Default.LogMode(logger.Info)})
 
 	if err != nil {
 		panic("failed to connect database")
