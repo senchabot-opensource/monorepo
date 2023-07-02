@@ -1,4 +1,4 @@
-module github.com/senchabot-dev/monorepo/apps/twitch-bot
+module github.com/senchabot-dev/monorepo
 
 go 1.19
 
