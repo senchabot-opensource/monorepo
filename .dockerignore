@@ -1,0 +1,56 @@
+# flyctl launch added from .gitignore
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+**/node_modules
+**/.pnp
+**/.pnp.js
+
+# testing
+**/coverage
+
+# database
+**/prisma/db.sqlite
+**/prisma/db.sqlite-journal
+
+# next.js
+**/.next
+**/out
+
+# production
+**/build
+
+# misc
+**/.DS_Store
+**/*.pem
+
+# debug
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+**/.pnpm-debug.log*
+
+# local env files
+**/.env
+**/.env*.local
+
+# vercel
+**/.vercel
+
+# typescript
+**/*.tsbuildinfo
+**/pgdata
+
+**/.turbo
+
+# flyctl launch added from apps/discord-bot/.gitignore
+apps/discord-bot/build
+apps/discord-bot/node_modules
+apps/discord-bot/**/.env
+apps/discord-bot/**/package-lock.json
+
+# flyctl launch added from packages/senchabot-prisma/.gitignore
+packages/senchabot-prisma/**/node_modules
+# Keep environment variables out of version control
+packages/senchabot-prisma/**/.env
+fly.toml
