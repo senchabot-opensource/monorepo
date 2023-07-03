@@ -12,9 +12,14 @@ import (
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/service"
 )
 
-var (
+const (
 	max = 70
 	min = 18
+
+	maxCommandNameLength    = 50
+	maxCommandContentLength = 400
+
+	maxAliasParamLength = 4
 )
 
 func FormatCommandContent(commandData *models.BotCommand, message twitch.PrivateMessage) string {
@@ -138,16 +143,16 @@ func ValidateCommandCreateParamsLength(params []string) bool {
 }
 
 func ValidateAliasCommandsLength(aliasCommands []string) (string, bool) {
-	if len(aliasCommands) > 4 {
-		return "Command Aliases length must be no more than 4", false
+	if len(aliasCommands) > maxAliasParamLength {
+		return fmt.Sprintf("Command Aliases length must be no more than %d", maxAliasParamLength), false
 	}
 
 	return "", true
 }
 
 func ValidateCommandCreateParams(commandName string, commandContent string) (string, bool) {
-	if len(commandName) > 50 {
-		return "Command Name length must be no more than 50 chars", false
+	if len(commandName) > maxCommandNameLength {
+		return fmt.Sprintf("Command Name length must be no more than %d chars", maxCommandNameLength), false
 	}
 	if infoText, check := ValidateCommandContentLength(commandContent); !check {
 		return infoText, check
@@ -157,14 +162,18 @@ func ValidateCommandCreateParams(commandName string, commandContent string) (str
 }
 
 func ValidateCommandContentLength(commandContent string) (string, bool) {
-	if len(commandContent) > 400 {
-		return "Command Content length must be no more than 400 chars", false
+	if len(commandContent) > maxCommandContentLength {
+		return fmt.Sprintf("Command Content length must be no more than %d chars", maxCommandContentLength), false
 	}
 
 	return "", true
 }
 
 func ValidateCommandDeleteParamsLength(params []string) bool {
+	return len(params) == 1
+}
+
+func IsCommandParamsLengthEqualToOne(params []string) bool {
 	return len(params) == 1
 }
 
