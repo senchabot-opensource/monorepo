@@ -84,6 +84,7 @@ func (c *commands) SozlukCommand(context context.Context, message twitch.Private
 		return
 	}
 
+	termTitle := strings.TrimSpace(gqlResponse.Data.Sozluk.Term.Title)
 	termDesc := strings.TrimSpace(gqlResponse.Data.Sozluk.Term.Body.Raw)
 
 	if termDesc == "" {
@@ -94,9 +95,9 @@ func (c *commands) SozlukCommand(context context.Context, message twitch.Private
 	if len(termDesc) > config.TwitchCharacterLimit {
 		termDesc = termDesc[:250]
 
-		c.client.Twitch.Say(message.Channel, termDesc+"... "+sozlukUrl+"/"+sozlukTerm)
+		c.client.Twitch.Reply(message.Channel, message.ID, termTitle+": "+termDesc+"... "+sozlukUrl+"/"+sozlukTerm)
 		return
 	}
 
-	c.client.Twitch.Say(message.Channel, termDesc)
+	c.client.Twitch.Reply(message.Channel, message.ID, termTitle+": "+termDesc)
 }
