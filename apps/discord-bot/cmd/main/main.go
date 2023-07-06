@@ -19,26 +19,68 @@ import (
 )
 
 var (
-	commands = []*discordgo.ApplicationCommand{
+	defaultMemberPermissions int64 = discordgo.PermissionManageEvents
+	commands                       = []*discordgo.ApplicationCommand{
 		{
-			Name:        "eventpurge",
-			Description: "Purge scheduled events",
+			Name:                     "event",
+			Description:              "Manage and configure scheduled events",
+			DefaultMemberPermissions: &defaultMemberPermissions,
+			Options: []*discordgo.ApplicationCommandOption{
+				{
+					Name:        "configure-live-stream-events",
+					Description: "Configure Twitch Live Stream Scheduled Events",
+					Type:        discordgo.ApplicationCommandOptionSubCommand,
+					Options: []*discordgo.ApplicationCommandOption{
+						{
+							Type:        discordgo.ApplicationCommandOptionChannel,
+							Name:        "announcement-channel-name",
+							Description: "Add an announcement channel to be monitored to create Discord scheduled events",
+							ChannelTypes: []discordgo.ChannelType{
+								discordgo.ChannelTypeGuildText,
+							},
+							Required: true,
+						},
+					},
+				},
+				{
+					Name:        "purge",
+					Description: "Purge Scheduled Events",
+					Type:        discordgo.ApplicationCommandOptionSubCommand,
+				},
+			},
 		},
 	}
 
 	commandHandlers = map[string]func(s *discordgo.Session, i *discordgo.InteractionCreate){
-		"eventpurge": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
-			events, err := s.GuildScheduledEvents(i.GuildID, false)
-			if err != nil {
-				fmt.Println("s.GuildScheduledEvents")
+		"event": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+			options := i.ApplicationCommandData().Options
+			content := ""
+
+			switch options[0].Name {
+			case "configure-auto-events":
+				options = options[0].Options
+
+				content = "Selected channel: " + options[0].ChannelValue(s).Name
+			case "purge":
+				events, err := s.GuildScheduledEvents(i.GuildID, false)
+				if err != nil {
+					fmt.Println("s.GuildScheduledEvents")
+				}
+
+				for _, e := range events {
+					s.GuildScheduledEventDelete(i.GuildID, e.ID)
+				}
+
+				content = "All scheduled events deleted."
 			}
 
-			for _, e := range events {
-				s.GuildScheduledEventDelete(i.GuildID, e.ID)
-			}
-
-			content := "hehe"
-			interactionRespond(s, i, content)
+			s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+				Type: discordgo.InteractionResponseChannelMessageWithSource,
+				Data: &discordgo.InteractionResponseData{
+					Content: content,
+					Flags:   discordgo.MessageFlagsEphemeral,
+				},
+			})
 		},
 	}
 
@@ -61,16 +103,6 @@ func initTwitchOAuth2Token() {
 	fmt.Println(token.Expiry)
 
 	twitchAccessToken = token.AccessToken
-}
-
-func interactionRespond(s *discordgo.Session, i *discordgo.InteractionCreate, content string) {
-	s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-		Type: discordgo.InteractionResponseChannelMessageWithSource,
-		Data: &discordgo.InteractionResponseData{
-			Flags:   discordgo.MessageFlagsEphemeral,
-			Content: content,
-		},
-	})
 }
 
 func getURL(domain, messageContent string) string {
