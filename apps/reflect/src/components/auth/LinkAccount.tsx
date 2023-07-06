@@ -7,8 +7,8 @@ import {
 } from "@mui/material";
 import { SiDiscord, SiTwitch } from "react-icons/si";
 import { signIn } from "next-auth/react";
-import { trpc } from "../../utils/trpc";
-import { FC, ReactNode } from "react";
+import { FC, ReactNode, useEffect, useState } from "react";
+import { getAccount } from "src/api";
 
 type IProps = {
   accountType: "discord" | "twitch";
@@ -17,8 +17,17 @@ type IProps = {
 };
 
 const LinkAccount: FC<IProps> = ({ accountType, accountTitle, icon }) => {
-  const accounts = trpc.security.getAccounts.useQuery();
-  const currentProviders = accounts.data?.map(account => account.provider);
+  const [accounts, setAccounts] = useState<any>([]);
+
+  useEffect(() => {
+    getAccount().then(res => {
+      setAccounts(res.data);
+    });
+  }, []);
+
+  const currentProviders = accounts.data?.map(
+    (account: any) => account.provider,
+  );
 
   return (
     <>

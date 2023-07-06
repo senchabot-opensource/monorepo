@@ -15,10 +15,11 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { env } from "../../env/client.mjs";
 import Link from "next/link";
 import { SiDiscord, SiTwitch } from "react-icons/si";
-import { trpc } from "../../utils/trpc";
 import CustomAlert from "../CustomAlert";
-import { useState, FC } from "react";
+import { useState, FC, useEffect } from "react";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+import { checkTwitchAccount } from "src/api";
+import { useRouter } from "next/router";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -34,21 +35,27 @@ type IProps = {
 };
 
 const AppDrawer: FC<IProps> = ({ isDrawerOpen, drawerHandler }) => {
+  const router = useRouter();
   const theme = useTheme();
-  const { data: twitchAcc } = trpc.check.checkTwitchAcc.useQuery();
-
   const [isOpenAlert, setIsOpenAlert] = useState<boolean>(false);
+  const [twitchAccountAvailable, setTwitchAccountAvailable] =
+    useState<boolean>(false);
 
-  const twitchBotMutate = trpc.twitchBot.add.useMutation({
-    onSuccess() {
-      alert("Twitch bot added");
-    },
-
-    onError(error) {
-      if (!error.shape) return;
-      alert(error.shape.message);
-    },
+  useEffect(() => {
+    checkTwitchAccount().then(res => {
+      setTwitchAccountAvailable(res.data);
+    });
   });
+  //const twitchBotMutate = trpc.twitchBot.add.useMutation({
+  //  onSuccess() {
+  //    alert("Twitch bot added");
+  //  },
+
+  //  onError(error) {
+  //    if (!error.shape) return;
+  //    alert(error.shape.message);
+  //  },
+  //});
 
   return (
     <Drawer
@@ -106,7 +113,9 @@ const AppDrawer: FC<IProps> = ({ isDrawerOpen, drawerHandler }) => {
           </MenuItem>
           <MenuItem
             onClick={() =>
-              !twitchAcc ? setIsOpenAlert(true) : twitchBotMutate.mutate()
+              !twitchAccountAvailable
+                ? setIsOpenAlert(true)
+                : router.push("/api/twitch/get-bot")
             }>
             <ListItemIcon>
               <SiTwitch />

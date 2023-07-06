@@ -108,3 +108,85 @@ const getTwitchBot = async (req: NextApiRequest, res: NextApiResponse) => {
 };
 
 export default getTwitchBot;
+//const userId = ctx.session?.user?.id;
+//const userName = ctx.session?.user?.name;
+//if (userId) {
+//  const twitchAccount = await ctx.prisma.account.findFirst({
+//    where: {
+//      userId: userId,
+//      provider: "twitch",
+//    },
+//    select: { providerAccountId: true },
+//  });
+//  const twitchAccId = twitchAccount?.providerAccountId;
+//  if (!twitchAccId) return;
+//  const twitchChannel = await ctx.prisma.twitchChannel.findFirst({
+//    where: {
+//      channelId: twitchAccId,
+//    },
+//  });
+//  if (!twitchChannel) {
+//    const getClientCredentials = await fetch(
+//      "https://id.twitch.tv/oauth2/token?client_id=" +
+//        env.TWITCH_CLIENT_ID +
+//        "&client_secret=" +
+//        env.TWITCH_CLIENT_SECRET +
+//        "&grant_type=client_credentials",
+//      {
+//        method: "POST",
+//        headers: {
+//          "Content-Type": "application/x-www-form-urlencoded",
+//        },
+//      },
+//    ).then(resp => resp.json());
+//    const getChannel = await fetch(
+//      "https://api.twitch.tv/helix/channels?broadcaster_id=" + twitchAccId,
+//      {
+//        headers: {
+//          "Client-ID": env.TWITCH_CLIENT_ID,
+//          Authorization: "Bearer " + getClientCredentials["access_token"],
+//        },
+//      },
+//    )
+//      .then(resp => resp.json())
+//      .then(data => data);
+//    const channelName = getChannel.data[0].broadcaster_login;
+//    const webhookData: ITwitchBotWebhookData = {
+//      token: env.WEBHOOK_TOKEN,
+//      event: "channel.join." + channelName,
+//      user_name: userName,
+//    };
+//    await fetch(
+//      env.TWITCH_BOT_HOST + "/webhook",
+//      getTwitchBotWebhookFetchOptions(webhookData),
+//    ).catch(e => console.log("WEBHOOK_ERROR"));
+//    const createChannel = await ctx.prisma.twitchChannel.create({
+//      data: {
+//        channelId: twitchAccId,
+//        channelName: channelName,
+//        userId: userId,
+//      },
+//    });
+//    if (!createChannel) return;
+//    await ctx.prisma.botCommands.create({
+//      data: {
+//        commandName: "lurk",
+//        commandContent: "Teşekkürler! {user_name}",
+//        twitchChannelId: twitchAccId,
+//      },
+//    });
+//  } else {
+//    await ctx.prisma.twitchChannel.update({
+//      where: {
+//        id: twitchChannel.id,
+//      },
+//      data: {
+//        userId,
+//      },
+//    });
+//    throw new TRPCError({
+//      message: "Twitch channel already added",
+//      code: "CONFLICT",
+//    });
+//  }
+//}

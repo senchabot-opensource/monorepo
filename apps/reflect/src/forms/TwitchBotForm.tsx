@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { trpc } from "../utils/trpc";
 import { Controller, FieldError, useForm } from "react-hook-form";
 import {
   Button,
@@ -14,6 +13,7 @@ import AppSnackbar from "../components/app/AppSnackbar";
 import { SneacbarSeverity } from "../enums";
 import { ITwitchBotConfig, ITwitchBotFormSubmitData } from "src/types";
 import LoadingBox from "src/components/loading/LoadingBox";
+import { getAllConfig, setConfig } from "src/api";
 
 type configBooleanState = {
   key: string;
@@ -33,17 +33,6 @@ const TwitchBotForm = () => {
   const [isFormLoading, setIsFormLoading] = useState<boolean>(true);
   const [configData, setConfigData] = useState<ITwitchBotConfig[]>([]);
 
-  const { data: configs, isLoading } = trpc.twitchBot.getAllConfigs.useQuery();
-
-  const configsMutate = trpc.twitchBot.setConfig.useMutation({
-    onSuccess() {
-      setSnackbarIsOpen(true);
-    },
-    onError() {
-      setAlertIsOpen(true);
-    },
-  });
-
   const {
     control,
     handleSubmit,
@@ -57,16 +46,16 @@ const TwitchBotForm = () => {
   });
 
   useEffect(() => {
-    if (!isLoading) {
-      if (!configs) return;
+    getAllConfig().then(res => {
+      const configs = res.data;
 
       configs.forEach((config: ITwitchBotConfig) => {
         setValue(config.key, config.value);
         setConfigData(configData => [...configData, config]);
       });
       setIsFormLoading(false);
-    }
-  }, [isLoading, configs]);
+    });
+  }, [isFormLoading]);
 
   const handleError = (error: FieldError | undefined) => {
     if (error) {
@@ -89,8 +78,12 @@ const TwitchBotForm = () => {
 
     setConfigData(config);
     setButtonEnabled(false);
-    configsMutate.mutate({
-      configs: config,
+    setConfig({ configs: data }).then(res => {
+      if (res.success) {
+        setSnackbarIsOpen(true);
+      } else {
+        setAlertIsOpen(true);
+      }
     });
   }, []);
 

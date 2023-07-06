@@ -2,7 +2,6 @@ import { SessionProvider } from "next-auth/react";
 import type { AppType } from "next/app";
 import type { Session } from "next-auth";
 import "../styles/globals.css";
-import { trpc } from "../utils/trpc";
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/react";
 import { ColorModeProvider } from "src/Context/ColorModeContext";
@@ -39,4 +38,4 @@ const MyApp: AppType<{ session: Session | null }> = ({
   );
 };
 
-export default trpc.withTRPC(MyApp);
+export default MyApp;
