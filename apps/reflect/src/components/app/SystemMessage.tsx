@@ -45,6 +45,7 @@ const SystemMessage = () => {
     <Paper
       sx={{
         mt: "10px",
+        backgroundImage: "none",
         backgroundColor: "appContainer.border",
         padding: "10px",
       }}

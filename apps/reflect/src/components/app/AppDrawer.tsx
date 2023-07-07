@@ -63,6 +63,7 @@ const AppDrawer: FC<IProps> = ({ isDrawerOpen, drawerHandler }) => {
         width: 240,
         flexShrink: 0,
         "& .MuiDrawer-paper": {
+          backgroundColor: "background.default",
           width: 240,
           boxSizing: "border-box",
         },

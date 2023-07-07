@@ -32,6 +32,7 @@ const Settings: NextPage = () => {
         <Paper
           sx={{
             mt: "10px",
+            backgroundImage: "none",
             backgroundColor: "appContainer.background",
             padding: "10px",
           }}

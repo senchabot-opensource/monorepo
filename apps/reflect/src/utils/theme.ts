@@ -1,5 +1,4 @@
 import { PaletteMode } from "@mui/material";
-import { createTheme } from "@mui/material/styles";
 import { alpha } from "@mui/material";
 
 const palette = {
@@ -43,15 +42,15 @@ const palette = {
       main: "#1976d2",
     },
     appBreadcrumb: {
-      background: "#121212",
+      background: "#0c0c0c",
     },
     appContainer: {
-      background: "#000",
-      border: "#121212",
+      background: "#060606",
+      border: "#060606",
     },
     appLoginForm: {
-      background: "#000",
-      border: "#121212",
+      background: "#060606",
+      border: "#060606",
       policyText: "#ffff00",
       buttonBackground: "#202020",
     },
@@ -92,20 +91,20 @@ const palette = {
       background: "#6034b2",
       backgroundHover: "rgba(96,52,178,0.74)",
     },
-    landingTextBackground: "rgba(50,50,50,0.3)",
+    landingTextBackground: "rgba(50,50,50,0.05)",
     primary: {
       main: "#1976d2",
     },
     appBreadcrumb: {
-      background: "#c7c7c7",
+      background: "#e9e9e9",
     },
     appContainer: {
       background: "#fff",
-      border: "#cfcfcf",
+      border: "#fff",
     },
     appLoginForm: {
       background: "#fff",
-      border: "#cfcfcf",
+      border: "#fff",
       policyText: "#1976d2",
       buttonBackground: "#cfcfcf",
     },

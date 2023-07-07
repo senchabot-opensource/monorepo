@@ -1,10 +1,18 @@
-import React, { ReactNode, createContext, useEffect, useState } from "react";
+import React, {
+  FC,
+  ReactNode,
+  createContext,
+  useEffect,
+  useState,
+} from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { getDesignTokens, getThemedComponents } from "src/utils/theme";
 
+type ColorMode = "light" | "dark";
+
 interface ColorModeContextType {
   toggleColorMode: () => void;
-  colorMode: "dark" | "light";
+  colorMode: ColorMode;
 }
 
 export const ColorModeContext = createContext<ColorModeContextType>({
@@ -12,19 +20,21 @@ export const ColorModeContext = createContext<ColorModeContextType>({
   colorMode: "dark",
 });
 
-export const ColorModeProvider = ({ children }: { children: ReactNode }) => {
-  const [colorMode, setColorMode] = useState<"light" | "dark">("dark");
+export const ColorModeProvider: FC<{ children: ReactNode }> = ({
+  children,
+}) => {
+  const [colorMode, setColorMode] = useState<ColorMode>("dark");
 
   useEffect(() => {
-    const localColorMode = localStorage.getItem("theme");
+    const localColorMode = localStorage.getItem("theme") as ColorMode;
     if (localColorMode) {
-      setColorMode(localColorMode as "light" | "dark");
+      setColorMode(localColorMode);
     }
   }, []);
 
   const toggleColorMode = () => {
-    const newColorMode = colorMode === "light" ? "dark" : "light";
-    setColorMode(colorMode === "light" ? "dark" : "light");
+    const newColorMode: ColorMode = colorMode === "light" ? "dark" : "light";
+    setColorMode(newColorMode);
     localStorage.setItem("theme", newColorMode);
   };
 

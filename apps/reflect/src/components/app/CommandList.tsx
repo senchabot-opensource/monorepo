@@ -96,6 +96,7 @@ const CommandList = () => {
     <Paper
       sx={{
         mt: "10px",
+        backgroundImage: "none",
         backgroundColor: "appContainer.border",
         padding: "10px",
       }}
@@ -117,7 +118,9 @@ const CommandList = () => {
           sx={{ width: "100%", backgroundColor: "appContainer.background" }}
           subheader={
             <ListSubheader
-              sx={{ backgroundColor: "appContainer.background" }}
+              sx={{
+                backgroundColor: "appContainer.background",
+              }}
               disableSticky>
               Command List:
             </ListSubheader>
