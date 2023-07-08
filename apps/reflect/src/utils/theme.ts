@@ -55,6 +55,10 @@ const palette = {
       buttonBackground: "#202020",
     },
     libraryText: "#ffff00",
+    deleteAccountBtn: {
+      default: alpha("#ff0000", 0.4),
+      hover: "#b71c1c",
+    },
   },
   light: {
     background: {
@@ -109,6 +113,10 @@ const palette = {
       buttonBackground: "#cfcfcf",
     },
     libraryText: "#ff8400",
+    deleteAccountBtn: {
+      default: alpha("#ff0000", 0.8),
+      hover: "#D91F1F",
+    },
   },
 };
 
@@ -237,6 +245,10 @@ export const getDesignTokens = (mode: PaletteMode) => ({
             buttonBackground: palette.dark.appLoginForm.buttonBackground,
           },
           libraryText: palette.dark.libraryText,
+          deleteAccountBtn: {
+            default: palette.dark.deleteAccountBtn.default,
+            hover: palette.dark.deleteAccountBtn.hover,
+          },
         }
       : {
           background: {
@@ -291,6 +303,10 @@ export const getDesignTokens = (mode: PaletteMode) => ({
             buttonBackground: palette.light.appLoginForm.buttonBackground,
           },
           libraryText: palette.light.libraryText,
+          deleteAccountBtn: {
+            default: palette.light.deleteAccountBtn.default,
+            hover: palette.light.deleteAccountBtn.hover,
+          },
         }),
   },
 });
@@ -343,6 +359,10 @@ declare module "@mui/material/styles" {
       buttonBackground: string;
     };
     libraryText: string;
+    deleteAccountBtn: {
+      default: string;
+      hover: string;
+    };
   }
 
   interface PaletteOptions {
@@ -392,5 +412,9 @@ declare module "@mui/material/styles" {
       buttonBackground: string;
     };
     libraryText: string;
+    deleteAccountBtn: {
+      default: string;
+      hover: string;
+    };
   }
 }
