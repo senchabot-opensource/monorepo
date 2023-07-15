@@ -2,39 +2,38 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"log"
-	"net/http"
 	"os"
 	"os/signal"
-	"regexp"
 	"sync"
-	"time"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/joho/godotenv"
-	"golang.org/x/oauth2/clientcredentials"
-	"golang.org/x/oauth2/twitch"
+	"github.com/senchabot-dev/monorepo/apps/discord-bot/client"
+	"github.com/senchabot-dev/monorepo/apps/discord-bot/internal/db"
+	"github.com/senchabot-dev/monorepo/apps/discord-bot/internal/helpers"
+	"github.com/senchabot-dev/monorepo/apps/discord-bot/internal/service/event"
+	"github.com/senchabot-dev/monorepo/apps/discord-bot/internal/service/streamer"
 )
 
 var (
 	defaultMemberPermissions int64 = discordgo.PermissionManageEvents
 	commands                       = []*discordgo.ApplicationCommand{
 		{
-			Name:                     "event",
-			Description:              "Manage and configure scheduled events",
+			Name:                     "set",
+			Description:              "Discord botunu yapılandırma ayarları",
 			DefaultMemberPermissions: &defaultMemberPermissions,
 			Options: []*discordgo.ApplicationCommandOption{
 				{
-					Name:        "configure-live-stream-events",
-					Description: "Configure Twitch Live Stream Scheduled Events",
+					Name:        "stream-default-anno-channel",
+					Description: "Twitch canlı yayın duyuruları için varsayılan bir yazı kanalı ekle",
 					Type:        discordgo.ApplicationCommandOptionSubCommand,
 					Options: []*discordgo.ApplicationCommandOption{
 						{
 							Type:        discordgo.ApplicationCommandOptionChannel,
-							Name:        "announcement-channel-name",
-							Description: "Add an announcement channel to be monitored to create Discord scheduled events",
+							Name:        "channel-name",
+							Description: "Yazı kanalı",
 							ChannelTypes: []discordgo.ChannelType{
 								discordgo.ChannelTypeGuildText,
 							},
@@ -43,233 +42,363 @@ var (
 					},
 				},
 				{
-					Name:        "purge",
-					Description: "Purge Scheduled Events",
+					Name:        "stream-announcement-text",
+					Description: "Twitch canlı yayın duyuruları için duyuru metni ekle",
 					Type:        discordgo.ApplicationCommandOptionSubCommand,
+					Options: []*discordgo.ApplicationCommandOption{
+						{
+							Type:        discordgo.ApplicationCommandOptionString,
+							Name:        "announcement-text",
+							Description: "Twitch yayini duyuru metni",
+							Required:    true,
+						},
+					},
+				},
+				{
+					Name:        "streamer",
+					Description: "Canlı yayın duyuruları için Twitch yayıncısı ekle",
+					Type:        discordgo.ApplicationCommandOptionSubCommand,
+					Options: []*discordgo.ApplicationCommandOption{
+						{
+							Type:        discordgo.ApplicationCommandOptionString,
+							Name:        "twitch-user-name-or-url",
+							Description: "Twitch kullanıcı profil linki veya kullanıcı adı",
+							Required:    true,
+						},
+						{
+							Type:        discordgo.ApplicationCommandOptionChannel,
+							Name:        "channel-name",
+							Description: "Duyuruların yapılacağı yazı kanalı adı",
+							ChannelTypes: []discordgo.ChannelType{
+								discordgo.ChannelTypeGuildText,
+							},
+							Required: false,
+						},
+					},
+				},
+				{
+					Name:        "stream-event-channel",
+					Description: "Zamanlanmış etkinliklerin oluşturulması için yazı kanalı ekle",
+					Type:        discordgo.ApplicationCommandOptionSubCommand,
+					Options: []*discordgo.ApplicationCommandOption{
+						{
+							Type:        discordgo.ApplicationCommandOptionChannel,
+							Name:        "channel-name",
+							Description: "Twitch yayın duyurularının takip edileceği yazı kanalı",
+							ChannelTypes: []discordgo.ChannelType{
+								discordgo.ChannelTypeGuildText,
+							},
+							Required: true,
+						},
+					},
+				},
+			},
+		},
+		{
+			Name:                     "purge",
+			Description:              "Purge",
+			DefaultMemberPermissions: &defaultMemberPermissions,
+			Options: []*discordgo.ApplicationCommandOption{
+				{
+					Name:        "events",
+					Description: "Tüm zamanlanmış etkinlikleri iptal et",
+					Type:        discordgo.ApplicationCommandOptionSubCommand,
+				},
+			},
+		},
+		{
+			Name:                     "delete",
+			Description:              "Yapılandırma ayarlarını kaldır",
+			DefaultMemberPermissions: &defaultMemberPermissions,
+			Options: []*discordgo.ApplicationCommandOption{
+				{
+					Name:        "stream-default-anno-channel",
+					Description: "Twitch canlı yayın duyuruları için varsayılan yazı kanalı kanalı ayarını kaldır",
+					Type:        discordgo.ApplicationCommandOptionSubCommand,
+				},
+				{
+					Name:        "streamer",
+					Description: "Twitch yayıncısı için canlı yayın duyurularını iptal et",
+					Type:        discordgo.ApplicationCommandOptionSubCommand,
+					Options: []*discordgo.ApplicationCommandOption{
+						{
+							Type:        discordgo.ApplicationCommandOptionString,
+							Name:        "twitch-user-name-or-url",
+							Description: "Twitch kullanıcı profil linki veya kullanıcı adı",
+							Required:    true,
+						},
+					},
+				},
+				{
+					Name:        "stream-event-channel",
+					Description: "Zamanlanmış etkinliklerin oluşturulmasını iptal et",
+					Type:        discordgo.ApplicationCommandOptionSubCommand,
+					Options: []*discordgo.ApplicationCommandOption{
+						{
+							Type:        discordgo.ApplicationCommandOptionChannel,
+							Name:        "channel-name",
+							Description: "Twitch yayın duyurularının takipten çıkarılacağı yazı kanalı",
+							ChannelTypes: []discordgo.ChannelType{
+								discordgo.ChannelTypeGuildText,
+							},
+							Required: true,
+						},
+					},
 				},
 			},
 		},
 	}
 
-	commandHandlers = map[string]func(s *discordgo.Session, i *discordgo.InteractionCreate){
-		"event": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+	errorMessage = "İşlem gerçekleştirilirken hata oluştu. Hata kodu: "
+
+	commandHandlers = map[string]func(ctx context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, db db.MySQL){
+		"set": func(ctx context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, db db.MySQL) {
 			options := i.ApplicationCommandData().Options
-			content := ""
 
 			switch options[0].Name {
-			case "configure-auto-events":
+			case "stream-default-anno-channel":
 				options = options[0].Options
+				channelId := options[0].ChannelValue(s).ID
+				channelName := options[0].ChannelValue(s).Name
 
-				content = "Selected channel: " + options[0].ChannelValue(s).Name
-			case "purge":
+				_, err := db.SetDiscordBotConfig(ctx, i.GuildID, "stream_default_anno_channel", channelId)
+				if err != nil {
+					log.Printf("Error while setting Discord bot config: %v", err)
+					ephemeralRespond(s, i, errorMessage+"#0001")
+					return
+				}
+
+				ephemeralRespond(s, i, "`"+channelName+"` isimli kanal varsayılan duyuru kanalı olarak ayarlandı.")
+
+			case "stream-announcement-text":
+				options = options[0].Options
+				annoText := options[0].StringValue()
+
+				_, err := db.SetDiscordBotConfig(ctx, i.GuildID, "stream_anno_text", annoText)
+				if err != nil {
+					log.Printf("Error while setting Discord bot config: %v", err)
+					ephemeralRespond(s, i, errorMessage+"#0001")
+					return
+				}
+
+				ephemeralRespond(s, i, "Yayin duyuru metni ayarlandi: "+annoText)
+
+			case "stream-event-channel":
+				options = options[0].Options
+				channelId := options[0].ChannelValue(s).ID
+				channelName := options[0].ChannelValue(s).Name
+
+				ok, err := db.AddAnnouncementChannel(ctx, channelId, i.GuildID, i.Member.User.Username)
+				if err != nil {
+					log.Println(err)
+					ephemeralRespond(s, i, errorMessage+"#0002")
+					return
+				}
+				if !ok {
+					ephemeralRespond(s, i, fmt.Sprintf("`%v` isimli kanal Twitch yayın duyurusu etkinlikleri için daha önce eklenmiş.", channelName))
+					return
+				}
+
+				ephemeralRespond(s, i, fmt.Sprintf("`%v` isimli kanal Twitch yayın duyurusu etkinlikleri için listeye eklendi.", channelName))
+
+			case "streamer":
+				options = options[0].Options
+				twitchUsername := options[0].StringValue()
+				commandUsername := i.Member.User.Username
+				twitchUsername = helpers.ParseTwitchUsernameURLParam(twitchUsername)
+
+				response0, uInfo := GetTwitchUserInfo(twitchUsername)
+				if response0 != "" {
+					ephemeralRespond(s, i, response0)
+					return
+				}
+
+				response1, ok := CheckIfTwitchStreamerExist(ctx, twitchUsername, uInfo, s, i, db)
+				if IsChannelNameGiven(len(options)) && ok {
+					ephemeralRespond(s, i, response1)
+					return
+				}
+
+				if IsChannelNameGiven(len(options)) {
+					channelData, err := db.GetDiscordBotConfig(ctx, i.GuildID, "stream_default_anno_channel")
+					if err != nil {
+						log.Printf("Error while getting Discord bot config: %v", err)
+						ephemeralRespond(s, i, errorMessage+"#0000")
+						return
+					}
+					if channelData == nil {
+						ephemeralRespond(s, i, "Twitch yayıncısı eklerken daha önce `/set stream-default-anno-channel channel-name` komutuyla varsayılan duyuru kanalı eklemiş olmalı veya isteğe bağlı kanal adını belirtmelisiniz.")
+						return
+					}
+
+					ch, err := s.Channel(channelData.Value)
+					if err != nil {
+						ephemeralRespond(s, i, errorMessage+"#XXXY")
+						return
+					}
+
+					resp := SetTwitchStreamer(ctx, uInfo, channelData.Value, ch.Name, i.GuildID, commandUsername, db)
+					ephemeralRespond(s, i, resp)
+					return
+				}
+
+				channelId := options[1].ChannelValue(s).ID
+				channelName := options[1].ChannelValue(s).Name
+
+				streamerData, err := db.GetDiscordTwitchLiveAnno(ctx, uInfo.ID, i.GuildID)
+				if err != nil {
+					fmt.Println("streamerData, err:", err)
+					return
+				}
+
+				if streamerData != nil && channelId == streamerData.AnnoChannelID {
+					ephemeralRespond(s, i, fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısı `%v` kanalına canlı yayın duyuruları daha önce için eklenmiş.", twitchUsername, channelName))
+					return
+				}
+
+				resp := SetTwitchStreamer(ctx, uInfo, channelId, channelName, i.GuildID, commandUsername, db)
+				ephemeralRespond(s, i, resp)
+			}
+		},
+		"delete": func(ctx context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, db db.MySQL) {
+			options := i.ApplicationCommandData().Options
+
+			switch options[0].Name {
+			case "stream-default-notif-channel":
+				_, err := db.DeleteDiscordBotConfig(ctx, i.GuildID, "stream_default_anno_channel")
+				if err != nil {
+					log.Printf("Error while deleting Discord bot config: %v", err)
+					ephemeralRespond(s, i, errorMessage+"#0001")
+					return
+				}
+
+				ephemeralRespond(s, i, "Varsayılan Twitch canlı yayın duyuru kanalı ayarı kaldırıldı.")
+
+			case "streamer":
+				options = options[0].Options
+				twitchUsername := options[0].StringValue()
+				twitchUsername = helpers.ParseTwitchUsernameURLParam(twitchUsername)
+
+				response0, uInfo := GetTwitchUserInfo(twitchUsername)
+				if response0 != "" {
+					ephemeralRespond(s, i, response0)
+					return
+				}
+
+				ok, err := db.DeleteDiscordTwitchLiveAnno(ctx, uInfo.ID, i.GuildID)
+				if err != nil {
+					ephemeralRespond(s, i, errorMessage+"#XXXX")
+					return
+				}
+
+				if !ok {
+					ephemeralRespond(s, i, "`"+twitchUsername+"` kullanıcı adlı Twitch yayıncısı veritabanında bulunamadı.")
+					return
+				}
+
+				streamers := streamer.GetStreamersData(i.GuildID)
+				delete(streamers, uInfo.Login)
+				ephemeralRespond(s, i, "`"+uInfo.Login+"` kullanıcı adlı Twitch streamer veritabanından silindi.")
+
+			case "stream-event-channel":
+				options = options[0].Options
+				channelId := options[0].ChannelValue(s).ID
+				channelName := options[0].ChannelValue(s).Name
+
+				ok, err := db.DeleteAnnouncementChannel(ctx, channelId)
+				if err != nil {
+					ephemeralRespond(s, i, errorMessage+"#XXYX")
+					log.Println("Error while deleting announcement channel:", err)
+					return
+				}
+				if !ok {
+					ephemeralRespond(s, i, "`"+channelName+"` isimli yazı kanalı yayın etkinlik yazı kanalları listesinde bulunamadı.")
+					return
+				}
+				ephemeralRespond(s, i, "`"+channelName+"` isimli yazı kanalı yayın etkinlik yazı kanalları listesinden kaldırıldı.")
+			}
+		},
+		"purge": func(ctx context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, db db.MySQL) {
+			options := i.ApplicationCommandData().Options
+
+			switch options[0].Name {
+			case "events":
 				events, err := s.GuildScheduledEvents(i.GuildID, false)
 				if err != nil {
-					fmt.Println("s.GuildScheduledEvents")
+					log.Println(err)
+					ephemeralRespond(s, i, errorMessage+"#1011")
 				}
 
 				for _, e := range events {
 					s.GuildScheduledEventDelete(i.GuildID, e.ID)
 				}
 
-				content = "All scheduled events deleted."
+				ephemeralRespond(s, i, "Tüm planlanmış etkinlikler silindi.")
 			}
-
-			s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-				Type: discordgo.InteractionResponseChannelMessageWithSource,
-				Data: &discordgo.InteractionResponseData{
-					Content: content,
-					Flags:   discordgo.MessageFlagsEphemeral,
-				},
-			})
 		},
 	}
-
-	twitchAPI         = "https://api.twitch.tv/helix"
-	oauth2Config      *clientcredentials.Config
-	twitchAccessToken string
 )
 
-func initTwitchOAuth2Token() {
-	oauth2Config = &clientcredentials.Config{
-		ClientID:     os.Getenv("TWITCH_CLIENT_ID"),
-		ClientSecret: os.Getenv("TWITCH_CLIENT_SECRET"),
-		TokenURL:     twitch.Endpoint.TokenURL,
-	}
-
-	token, err := oauth2Config.Token(context.Background())
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println(token.Expiry)
-
-	twitchAccessToken = token.AccessToken
+func IsChannelNameGiven(optionsLen int) bool {
+	return optionsLen < 2
 }
 
-func getURL(domain, messageContent string) string {
-	pattern := fmt.Sprintf(`%s\S*`, domain)
-	re := regexp.MustCompile(pattern)
-	match := re.FindString(messageContent)
-
-	if match != "" {
-		return "https://" + match
+func GetTwitchUserInfo(twitchUsername string) (string, *client.TwitchUserInfo) {
+	userInfo, err := client.GetTwitchUserInfo(twitchUsername)
+	if err != nil {
+		log.Printf("Error while getting Twitch user info: %v", err)
+		return fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısı Twitch'te bulunamadı.", twitchUsername), nil
 	}
 
-	return ""
+	return "", userInfo
 }
 
-func getTwitchUsernameFromURL(url string) string {
-	pattern := `https?:\/\/(?:www\.)?twitch\.tv\/([a-zA-Z0-9_]+)`
-	re := regexp.MustCompile(pattern)
-	matches := re.FindStringSubmatch(url)
-
-	fmt.Println("matches", matches)
-
-	if len(matches) > 1 {
-		return matches[1]
-	}
-
-	return ""
-}
-
-func createLiveStreamScheduledEvent(s *discordgo.Session, msgContent, guildId string, wg *sync.WaitGroup) {
-	defer wg.Done()
-
-	url := getURL("twitch.tv", msgContent)
-
-	username := getTwitchUsernameFromURL(url)
-
-	if url == "" || username == "" {
-		return
-	}
-
-	wg.Add(1)
-
-	events, err := s.GuildScheduledEvents(guildId, false)
+func CheckIfTwitchStreamerExist(ctx context.Context, twitchUsername string, uInfo *client.TwitchUserInfo, s *discordgo.Session, i *discordgo.InteractionCreate, db db.MySQL) (string, bool) {
+	liveAnnoData, err := db.GetDiscordTwitchLiveAnno(ctx, uInfo.ID, i.GuildID)
 	if err != nil {
-		fmt.Println("s.GuildScheduledEvents")
+		log.Printf("There was an error while checking the Discord Twitch live announcements: %v", err)
+		return errorMessage + "#XYXX", false
 	}
-
-	for _, e := range events {
-		if e.Creator.Bot && e.EntityMetadata.Location == url {
-			return
-		}
-	}
-
-	startingTime := time.Now().Add(1 * time.Minute)
-	endingTime := startingTime.Add(16 * time.Hour)
-
-	scheduledEvent, err := s.GuildScheduledEventCreate(guildId, &discordgo.GuildScheduledEventParams{
-		Name:               username + " is live!",
-		ScheduledStartTime: &startingTime,
-		ScheduledEndTime:   &endingTime,
-		EntityType:         discordgo.GuildScheduledEventEntityTypeExternal,
-		EntityMetadata: &discordgo.GuildScheduledEventEntityMetadata{
-			Location: url,
-		},
-		PrivacyLevel: discordgo.GuildScheduledEventPrivacyLevelGuildOnly,
-	})
-	if err != nil {
-		log.Printf("Error while creating scheduled event: %v", err)
-		wg.Done()
-		return
-	}
-
-	fmt.Println("Created scheduled event: ", scheduledEvent.Name)
-	wg.Done()
-}
-
-func checkTwitchStreamStatus(username string) (bool, string) {
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/streams?user_login=%s", twitchAPI, username), nil)
-	if err != nil {
-		log.Printf("Error while creating Twitch API request: %v", err)
-		return false, ""
-	}
-
-	req.Header.Set("Client-ID", os.Getenv("TWITCH_CLIENT_ID"))
-	req.Header.Set("Authorization", "Bearer "+twitchAccessToken)
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		log.Printf("Error while checking stream status: %v", err)
-		return false, ""
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		log.Printf("Twitch API request failed with status code: %d", resp.StatusCode)
-		return false, ""
-	}
-
-	var data struct {
-		Data []struct {
-			Type      string `json:"type"`
-			Title     string `json:"title"`
-			StartedAt string `json:"started_at"`
-		} `json:"data"`
-	}
-
-	err = json.NewDecoder(resp.Body).Decode(&data)
-	if err != nil {
-		log.Printf("Error while parsing TwitchAPI response: %v", err)
-		return false, ""
-	}
-
-	if len(data.Data) == 0 {
-		return false, ""
-	}
-
-	return data.Data[0].Type == "live", data.Data[0].Title
-}
-
-func checkLiveStreamScheduledEvents(s *discordgo.Session) {
-	ticker := time.NewTicker(1 * time.Minute)
-	defer ticker.Stop()
-
-	var twitchUsername string
-
-	for range ticker.C {
-		guilds, err := s.UserGuilds(100, "", "")
+	if liveAnnoData != nil {
+		channel, err := s.Channel(liveAnnoData.AnnoChannelID)
 		if err != nil {
-			log.Printf("Error while getting guilds: %v", err)
-			return
+			log.Printf("Error while fetching the channel data from Discord API: %v", err)
+			return errorMessage + "#YXXX", false
 		}
-		for _, guild := range guilds {
-			events, err := s.GuildScheduledEvents(guild.ID, false)
-			if err != nil {
-				fmt.Println("s.GuildScheduledEvents")
-			}
-
-			for _, e := range events {
-				if !e.Creator.Bot {
-					return
-				}
-
-				twitchUsername = getTwitchUsernameFromURL(e.EntityMetadata.Location)
-				isLive, streamTitle := checkTwitchStreamStatus(twitchUsername)
-				if len(streamTitle) > 100 {
-					streamTitle = streamTitle[0:90]
-				}
-				if isLive {
-					if e.Name != streamTitle {
-						_, err = s.GuildScheduledEventEdit(e.GuildID, e.ID, &discordgo.GuildScheduledEventParams{
-							Name: streamTitle,
-						})
-						if err != nil {
-							log.Printf("Error while updating scheduledevent: %v", err)
-						}
-					}
-				}
-
-				if !isLive {
-					err := s.GuildScheduledEventDelete(e.GuildID, e.ID)
-					if err != nil {
-						log.Printf("Error deleting scheduled event: %v", err)
-					}
-				}
-			}
-		}
+		return fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısının duyuları `%v` isimli yazı kanalı için ekli.", twitchUsername, channel.Name), true
 	}
+	return "", false
+}
+
+func SetTwitchStreamer(ctx context.Context, uInfo *client.TwitchUserInfo, channelId, channelName, guildId, creatorUsername string, db db.MySQL) string {
+	added, err := db.AddDiscordTwitchLiveAnnos(ctx, uInfo.Login, uInfo.ID, channelId, guildId, creatorUsername)
+	if err != nil {
+		log.Printf("Error while adding Discord Twitch live announcement: %v", err)
+
+		return fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısı veritabanı hatasından dolayı eklenemedi.", uInfo.Login)
+	}
+
+	if !added && err == nil {
+		streamer.SetStreamerData(guildId, uInfo.Login, channelId)
+		return fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısı varitabanında bulunmakta. Ancak... Twitch yayıncısının yayın duyurularının yapılacağı kanalı `%v` yazı kanalı olarak güncellendi.", uInfo.Login, channelName)
+	}
+
+	if added {
+		streamer.SetStreamerData(guildId, uInfo.Login, channelId)
+		return fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısının yayın duyuruları `%v` isimli yazı kanalı için aktif edildi.", uInfo.Login, channelName)
+	}
+
+	return "Twitch yayıncısı eklenirken bir sorun oluştu."
+}
+
+func ephemeralRespond(s *discordgo.Session, i *discordgo.InteractionCreate, msgContent string) {
+	s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+		Type: discordgo.InteractionResponseChannelMessageWithSource,
+		Data: &discordgo.InteractionResponseData{
+			Content: msgContent,
+			Flags:   discordgo.MessageFlagsEphemeral,
+		},
+	})
 }
 
 func main() {
@@ -278,26 +407,55 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	initTwitchOAuth2Token()
+	client.InitTwitchOAuth2Token()
 
 	discordClient, _ := discordgo.New("Bot " + os.Getenv("TOKEN"))
+
+	var wg sync.WaitGroup
+
+	db := db.NewMySQL()
+	ctx := context.Background()
+
 	discordClient.AddHandler(func(s *discordgo.Session, r *discordgo.Ready) {
-		go checkLiveStreamScheduledEvents(s)
+		guilds := s.State.Guilds
+		for _, g := range guilds {
+			go event.CheckLiveStreams(s, ctx, db, g.ID)
+		}
+
+		go event.CheckLiveStreamScheduledEvents(s)
 		fmt.Println("Bot is ready. Logged in as:", s.State.User.Username)
 	})
 
-	var wg sync.WaitGroup
+	appCmds, _ := discordClient.ApplicationCommands(os.Getenv("CLIENT_ID"), "1051582387433254993")
+	for _, name := range appCmds {
+		fmt.Println("name", name.Name)
+		err := discordClient.ApplicationCommandDelete(name.ApplicationID, name.GuildID, name.ID)
+		if err != nil {
+			log.Fatalf("Cannot delete slash command %v: %q", name, err)
+		}
+	}
 
 	discordClient.AddHandler(func(s *discordgo.Session, m *discordgo.MessageCreate) {
 		//if m.Author.Bot {
 		wg.Add(1)
-		createLiveStreamScheduledEvent(s, m.Content, m.GuildID, &wg)
+		announcementChs, err := db.GetAnnouncementChannels(ctx)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		for _, ch := range announcementChs {
+			if ch.ChannelID == m.ChannelID {
+				event.CreateLiveStreamScheduledEvent(s, m.Content, m.GuildID, &wg)
+			}
+		}
 		//}
 	})
 
 	discordClient.AddHandler(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+		ctx := context.Background()
 		if h, ok := commandHandlers[i.ApplicationCommandData().Name]; ok {
-			h(s, i)
+			h(ctx, s, i, *db)
 		}
 	})
 
