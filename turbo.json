@@ -2,7 +2,7 @@
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
     "build": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build", "^db:generate"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"],
       "env": [
         "VERCEL_URL", "PORT", "NODE_ENV"
@@ -16,6 +16,7 @@
       "outputs": []
     },
     "dev": {
+      "dependsOn": ["^db:generate"],
       "cache": false
     },
     "start": {
@@ -23,6 +24,28 @@
     },
     "clean": {
       "cache": false
+    }, 
+    "db:generate": {
+      "cache": false
+    },
+    "db:push": {
+      "cache": false
+    },
+    "db:seed": {
+      "cache": false
+    },
+    "db:studio": {
+      "cache": false
     }
-  }
+  },
+  "globalEnv": [
+    "NEXT_PUBLIC_APP_NAME",
+    "NEXT_PUBLIC_APP_URL",
+    "NEXT_PUBLIC_APP_VERSION",
+    "NEXT_PUBLIC_APP_GITHUB_PROFILE",
+    "NEXT_PUBLIC_APP_TWITTER_PROFILE",
+    "NEXT_PUBLIC_APP_DOMAIN_STRING",
+    "NEXT_PUBLIC_APP_CONTENT_STRING",
+    "NEXT_PUBLIC_APP_DISCORD_BOT_INVITE_URL"
+  ]
 }

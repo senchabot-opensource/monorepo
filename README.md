@@ -12,7 +12,7 @@ Senchabot apps and packages
 ### Prerequisites
 * Git
 * Node.js 18 or higher
-* pnpm
+* npm
 
 ### Installation
 
@@ -26,7 +26,7 @@ Senchabot apps and packages
 2. Install the dependencies
 
    ```sh
-   pnpm install
+   npm install
    ```
 
 3. Run turbo build

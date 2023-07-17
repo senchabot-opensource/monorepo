@@ -24,5 +24,14 @@ func (c *commands) CmdsCommand(context context.Context, message twitch.PrivateMe
 
 	commandListString = strings.Join(commandListArr, ", ")
 
+	if len(commandListString) > 300 {
+		first := commandListString[:300]
+		c.client.Twitch.Say(message.Channel, message.Channel+"'s Channel Commands: "+first)
+
+		second := commandListString[300:]
+		c.client.Twitch.Say(message.Channel, second)
+		return
+	}
+
 	c.client.Twitch.Say(message.Channel, message.Channel+"'s Channel Commands: "+commandListString)
 }
