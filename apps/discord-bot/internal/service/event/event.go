@@ -65,7 +65,6 @@ func CheckLiveStreams(s *discordgo.Session, ctx context.Context, db *db.MySQL, g
 	streamer.InitStreamersData(ctx, db, guildId)
 
 	for range ticker.C {
-
 		streamers := streamer.GetStreamersData(guildId)
 		keys := make([]string, 0, len(streamers))
 		for k := range streamers {
@@ -77,27 +76,35 @@ func CheckLiveStreams(s *discordgo.Session, ctx context.Context, db *db.MySQL, g
 			return
 		}
 
-		fmt.Println("keys", keys)
-
 		liveStreams := client.CheckMultipleTwitchStreamer(keys)
-		annoText := ""
-
+		annoContent := ""
 		for _, sd := range liveStreams {
 			if sd.Type == "live" {
 				ch, prs := streamers[sd.UserLogin]
 				if prs {
+					annoContent = "{twitch.user.name}, {twitch.category} yayınına başladı! {twitch.url}"
 
-					cfg, err := db.GetDiscordBotConfig(ctx, guildId, "stream_anno_text")
+					streamerAnnoContent, err := db.GetTwitchStreamerAnnoContent(ctx, sd.UserLogin, guildId)
+					if err != nil {
+						log.Printf("There was an error while getting Twitch streamer announcement content in CheckLiveStreams: %v", err)
+					}
+
+					if streamerAnnoContent != nil {
+						annoContent = *streamerAnnoContent
+					}
+
+					cfg, err := db.GetDiscordBotConfig(ctx, guildId, "stream_anno_content")
 					if err != nil {
 						log.Printf("There was an error while getting Discord bot config in CheckLiveStreams: %v", err)
 					}
 
-					annoText = "{stream.user}, {stream.category} yayınına başladı! {stream.url}"
-					if cfg != nil {
-						annoText = cfg.Value
+					if cfg != nil && streamerAnnoContent == nil {
+						if cfg.Value != "" {
+							annoContent = cfg.Value
+						}
 					}
 
-					formattedString := helpers.FormatContent(annoText, sd)
+					formattedString := helpers.FormatContent(annoContent, sd)
 					s.ChannelMessageSend(ch.ChannelID, formattedString)
 					delete(streamers, sd.UserLogin)
 				}

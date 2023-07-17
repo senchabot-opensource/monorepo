@@ -23,6 +23,8 @@ type DiscordTwitchLiveAnnos struct {
 	TwitchUserID   string     `gorm:"column:twitch_user_id"`
 	AnnoChannelID  string     `gorm:"column:anno_channel_id"`
 	AnnoServerID   string     `gorm:"column:anno_server_id"`
+	AnnoContent    *string    `gorm:"column:anno_content"`
+	LastAnnoDate   *time.Time `gorm:"column:last_anno_date"`
 	Type           int        `gorm:"column:type"`
 	CreatedBy      string     `gorm:"column:created_by"`
 	CreatedAt      *time.Time `gorm:"column:created_at"`

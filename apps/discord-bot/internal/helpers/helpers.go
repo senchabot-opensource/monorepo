@@ -38,12 +38,11 @@ func ParseTwitchUsernameURLParam(str string) string {
 }
 
 func FormatContent(str string, sd client.StreamerData) string {
-
 	stringTemplates := map[string]string{
-		"{stream.user}":     sd.UserLogin,
-		"{stream.title}":    sd.Title,
-		"{stream.url}":      "https://www.twitch.tv/" + sd.UserLogin,
-		"{stream.category}": sd.StreamGame,
+		"{twitch.user.name}": sd.UserLogin,
+		"{twitch.title}":     sd.Title,
+		"{twitch.url}":       "https://www.twitch.tv/" + sd.UserLogin,
+		"{twitch.category}":  sd.StreamGame,
 	}
 
 	for k, v := range stringTemplates {
