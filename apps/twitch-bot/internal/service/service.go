@@ -8,7 +8,7 @@ import (
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/client"
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/models"
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/service/database"
-	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/service/database/postgresql"
+	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/service/database/mysql"
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/service/timer"
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/service/webhook"
 )
@@ -50,7 +50,7 @@ type services struct {
 }
 
 func NewServices() Service {
-	dbService := postgresql.NewPostgreSQL()
+	dbService := mysql.NewMySQL()
 	whService := webhook.NewWebhooks()
 	timerService := timer.NewTimer()
 

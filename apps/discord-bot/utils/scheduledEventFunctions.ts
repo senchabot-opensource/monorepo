@@ -1,36 +1,40 @@
 import { GuildManager, Message } from "discord.js";
 import { ApiClient } from "@twurple/api";
 import { AppTokenAuthProvider } from "@twurple/auth";
-import { TWITCH_EVENTS_CHANNELS } from "../config";
 import { ICreateLiveStreamEventParams } from "../types";
 import { getURL } from "../utils/helpers";
 import { env } from "../utils/env";
 
 import dayjs from "dayjs";
+import { announcementChannels } from "..";
 
 export const createLiveStreamEventFromMessage = (
   message: Message,
   params: ICreateLiveStreamEventParams,
 ) => {
   if (!message.guild || !message.author.bot) return;
-  if (!TWITCH_EVENTS_CHANNELS.includes(message.channelId)) return;
+  if (!announcementChannels.includes(message.channelId)) return;
 
   const msgContent = message.content;
-
-  if (!msgContent.includes(params.platformDomain)) return;
 
   const eventStartTime = dayjs().add(30, "seconds").toISOString();
   const eventEndTime = dayjs().add(8, "hour").toISOString();
 
-  const url = getURL(params.platformDomain, msgContent);
+  let url = getURL(params.platformDomain, msgContent);
 
   const firstMsgEmbedTitle = message.embeds[0]?.title;
+  const firstMsgEmbedUrl = message.embeds[0]?.url;
 
   let eventName = msgContent.substring(0, 20);
 
   if (firstMsgEmbedTitle) {
     eventName = firstMsgEmbedTitle;
+    if (firstMsgEmbedUrl) {
+      url = firstMsgEmbedUrl;
+    }
   }
+
+  if (url == "" || !url.includes(params.platformDomain)) return; // TODO: Check the url is correct if url is not empty
 
   eventName = eventName.substring(0, 99);
 

@@ -5,6 +5,7 @@ import { readdirSync } from "fs";
 import DiscordClient from "./client";
 import { env } from "./utils/env";
 import { checkScheduledEvents } from "./utils/scheduledEventFunctions";
+import { getAnnouncementChannels } from "./db/functions";
 
 const client = new DiscordClient({
   intents: [
@@ -35,6 +36,14 @@ handlerFiles.forEach((handlerFile: any) => {
   const filePath = join(handlersPath, handlerFile);
   import(filePath).then(handler => handler.default(client));
 });
+
+// Init Scheduled Event Announcement Channels
+export const announcementChannels: string[] = [];
+
+const channels = getAnnouncementChannels();
+channels.then(chs =>
+  chs.forEach(channel => announcementChannels.push(channel.channelId)),
+);
 
 checkScheduledEvents(client.guilds);
 
