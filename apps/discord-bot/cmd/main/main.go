@@ -44,14 +44,33 @@ var (
 					},
 				},
 				{
-					Name:        "stream-announcement-text",
-					Description: "Twitch canlı yayın duyuruları için duyuru metni ekle",
+					Name:        "stream-announcement-content",
+					Description: "Twitch canlı yayın duyuruları için özel duyuru mesajı içeriği ekle",
 					Type:        discordgo.ApplicationCommandOptionSubCommand,
 					Options: []*discordgo.ApplicationCommandOption{
 						{
 							Type:        discordgo.ApplicationCommandOptionString,
-							Name:        "announcement-text",
-							Description: "Twitch yayini duyuru metni",
+							Name:        "announcement-content",
+							Description: "Twitch yayını mesaj duyuru içeriği",
+							Required:    true,
+						},
+					},
+				},
+				{
+					Name:        "streamer-anno-content",
+					Description: "Twitch yayıncısı için özel duyuru mesajı içeriği ayarla",
+					Type:        discordgo.ApplicationCommandOptionSubCommand,
+					Options: []*discordgo.ApplicationCommandOption{
+						{
+							Type:        discordgo.ApplicationCommandOptionString,
+							Name:        "twitch-username-or-url",
+							Description: "Twitch kullanıcı profil linki veya kullanıcı adı",
+							Required:    true,
+						},
+						{
+							Type:        discordgo.ApplicationCommandOptionString,
+							Name:        "announcement-content",
+							Description: "Twitch yayını mesaj duyuru içeriği",
 							Required:    true,
 						},
 					},
@@ -63,7 +82,7 @@ var (
 					Options: []*discordgo.ApplicationCommandOption{
 						{
 							Type:        discordgo.ApplicationCommandOptionString,
-							Name:        "twitch-user-name-or-url",
+							Name:        "twitch-username-or-url",
 							Description: "Twitch kullanıcı profil linki veya kullanıcı adı",
 							Required:    true,
 						},
@@ -116,6 +135,11 @@ var (
 				{
 					Name:        "stream-default-anno-channel",
 					Description: "Twitch canlı yayın duyuruları için varsayılan yazı kanalı kanalı ayarını kaldır",
+					Type:        discordgo.ApplicationCommandOptionSubCommand,
+				},
+				{
+					Name:        "stream-announcement-content",
+					Description: "Twitch canlı yayın duyuruları için duyuru metnini varsayılan olarak ayarla",
 					Type:        discordgo.ApplicationCommandOptionSubCommand,
 				},
 				{
@@ -172,18 +196,18 @@ var (
 
 				ephemeralRespond(s, i, "`"+channelName+"` isimli kanal varsayılan duyuru kanalı olarak ayarlandı.")
 
-			case "stream-announcement-text":
+			case "stream-announcement-content":
 				options = options[0].Options
 				annoText := options[0].StringValue()
 
-				_, err := db.SetDiscordBotConfig(ctx, i.GuildID, "stream_anno_text", annoText)
+				_, err := db.SetDiscordBotConfig(ctx, i.GuildID, "stream_anno_content", annoText)
 				if err != nil {
 					log.Printf("Error while setting Discord bot config: %v", err)
 					ephemeralRespond(s, i, errorMessage+"#0001")
 					return
 				}
 
-				ephemeralRespond(s, i, "Yayin duyuru metni ayarlandi: "+annoText)
+				ephemeralRespond(s, i, "Yayın duyuru mesajı içeriği ayarlandı: `"+annoText+"`")
 
 			case "stream-event-channel":
 				options = options[0].Options
@@ -202,6 +226,40 @@ var (
 				}
 
 				ephemeralRespond(s, i, fmt.Sprintf("`%v` isimli kanal Twitch yayın duyurusu etkinlikleri için listeye eklendi.", channelName))
+			case "streamer-anno-content":
+				options = options[0].Options
+				twitchUsername := options[0].StringValue()
+				twitchUsername = helpers.ParseTwitchUsernameURLParam(twitchUsername)
+				annoContent := options[1].StringValue()
+
+				ok, err := db.UpdateTwitchStreamerAnnoContent(ctx, twitchUsername, i.GuildID, &annoContent)
+				if err != nil {
+					log.Printf("Error while setting Discord bot config: %v", err)
+					ephemeralRespond(s, i, errorMessage+"#0001")
+					return
+				}
+
+				if !ok {
+					ephemeralRespond(s, i, errorMessage+"#0001")
+					return
+				}
+
+				if annoContent == "" {
+					cfg, err := db.GetDiscordBotConfig(ctx, i.GuildID, "stream_anno_content")
+					if err != nil {
+						log.Printf("There was an error while getting Discord bot config in CheckLiveStreams: %v", err)
+					}
+
+					if cfg != nil {
+						ephemeralRespond(s, i, twitchUsername+" kullanıcı adlı Twitch yayıncısı için özelleştirilmiş duyuru mesajı içeriği kaldırıldı. `/set stream-announcement-content komutuyla ayarladığız mesaj içeriği kullanılacak: `"+cfg.Value+"`")
+						return
+					}
+
+					ephemeralRespond(s, i, twitchUsername+" kullanıcı adlı Twitch yayıncısı için özelleştirilmiş duyuru mesajı içeriği kaldırıldı. Varsayılan duyuru mesajı içeriği kullanılacak: `{stream.user}, {stream.category} yayınına başladı! {stream.url}`.")
+					return
+				}
+
+				ephemeralRespond(s, i, twitchUsername+" kullanıcı adlı Twitch yayıncısı için duyuru mesajı içeriği ayarlandı: `"+annoContent+"`")
 
 			case "streamer":
 				options = options[0].Options
@@ -275,6 +333,18 @@ var (
 				}
 
 				ephemeralRespond(s, i, "Varsayılan Twitch canlı yayın duyuru kanalı ayarı kaldırıldı.")
+
+			case "stream-announcement-content":
+				options = options[0].Options
+
+				_, err := db.SetDiscordBotConfig(ctx, i.GuildID, "stream_anno_content", "")
+				if err != nil {
+					log.Printf("Error while setting Discord bot config: %v", err)
+					ephemeralRespond(s, i, errorMessage+"#0001")
+					return
+				}
+
+				ephemeralRespond(s, i, "Yayın duyuru mesajı içeriği varsayılan olarak ayarlandı: `{stream.user}, {stream.category} yayınına başladı! {stream.url}`")
 
 			case "streamer":
 				options = options[0].Options
