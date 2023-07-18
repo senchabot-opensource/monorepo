@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"os"
+	"time"
 
 	"github.com/senchabot-dev/monorepo/apps/discord-bot/internal/models"
 	"gorm.io/driver/mysql"
@@ -232,6 +233,39 @@ func (m *MySQL) UpdateTwitchStreamerAnnoContent(ctx context.Context, twitchUsern
 	}
 
 	return false, nil
+}
+
+func (m *MySQL) UpdateTwitchStreamerLastAnnoDate(ctx context.Context, twitchUsername, annoServerId string, lastAnnoDate time.Time) (bool, error) {
+
+	twitchLiveAnno, err := m.GetDiscordTwitchLiveAnnoByUsername(ctx, twitchUsername, annoServerId)
+	if err != nil {
+		return false, errors.New("(UpdateTwitchStreamerLastAnnoDate) GetDiscordTwitchLiveAnnoByUsername Error:" + err.Error())
+	}
+	if twitchLiveAnno != nil {
+		result := m.DB.Model(&twitchLiveAnno).Updates(models.DiscordTwitchLiveAnnos{
+			LastAnnoDate: &lastAnnoDate,
+		})
+		if result.Error != nil {
+			return false, errors.New("(UpdateTwitchStreamerLastAnnoDate) db.Updates Error:" + result.Error.Error())
+		}
+
+		return true, nil
+	}
+
+	return false, nil
+}
+
+func (m *MySQL) GetTwitchStreamerLastAnnoDate(ctx context.Context, twitchUsername, annoServerId string) (*time.Time, error) {
+
+	twitchLiveAnno, err := m.GetDiscordTwitchLiveAnnoByUsername(ctx, twitchUsername, annoServerId)
+	if err != nil {
+		return nil, errors.New("(CheckTwitchStreamerLastAnnoDate) GetDiscordTwitchLiveAnnoByUsername Error:" + err.Error())
+	}
+	if twitchLiveAnno != nil {
+		return twitchLiveAnno.LastAnnoDate, nil
+	}
+
+	return nil, nil
 }
 
 func (m *MySQL) GetTwitchStreamerAnnoContent(ctx context.Context, twitchUsername, annoServerId string) (*string, error) {

@@ -82,6 +82,16 @@ func CheckLiveStreams(s *discordgo.Session, ctx context.Context, db *db.MySQL, g
 			if sd.Type == "live" {
 				ch, prs := streamers[sd.UserLogin]
 				if prs {
+					date, err := db.GetTwitchStreamerLastAnnoDate(ctx, sd.UserLogin, guildId)
+					if err != nil {
+						log.Printf("There was an error while checking Twitch streamer last anno date: %v", err)
+					}
+					if date != nil {
+						if int(time.Until(*date).Hours()) == 0 {
+							return
+						}
+					}
+
 					annoContent = "{twitch.user.name}, {twitch.category} yayınına başladı! {twitch.url}"
 
 					streamerAnnoContent, err := db.GetTwitchStreamerAnnoContent(ctx, sd.UserLogin, guildId)
@@ -106,6 +116,11 @@ func CheckLiveStreams(s *discordgo.Session, ctx context.Context, db *db.MySQL, g
 
 					formattedString := helpers.FormatContent(annoContent, sd)
 					s.ChannelMessageSend(ch.ChannelID, formattedString)
+
+					_, err = db.UpdateTwitchStreamerLastAnnoDate(ctx, sd.UserLogin, guildId, time.Now())
+					if err != nil {
+						log.Printf("There was an error while getting updating Twitch streamer last anno date in CheckLiveStreams: %v", err)
+					}
 					delete(streamers, sd.UserLogin)
 				}
 			}
