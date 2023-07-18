@@ -58,6 +58,22 @@ model DiscordAnnouncementChannels {
     @@map("discord_announcement_channels")
 }
 
+model DiscordTwitchLiveAnnos {
+    id             Int       @id @default(autoincrement())
+    twitchUsername String    @map("twitch_username")
+    twitchUserId   String    @map("twitch_user_id")
+    annoChannelId  String    @map("anno_channel_id")
+    annoServerId   String    @map("anno_server_id")
+    annoContent    String?   @map("anno_content")
+    lastAnnoDate   DateTime? @map("last_anno_date")
+    type           Int       @map("type")
+    createdBy      String    @map("created_by")
+    createdAt      DateTime  @default(now()) @map("created_at")
+
+    @@unique([twitchUserId, annoServerId])
+    @@map("discord_twitch_live_annos")
+}
+
 model BotCommands {
     id              Int      @id @default(autoincrement())
     commandName     String   @map("command_name")
@@ -94,6 +110,19 @@ model DiscordServer {
     DiscordAnnouncementChannels DiscordAnnouncementChannels[]
 
     @@map("discord_servers")
+}
+
+model DiscordBotConfigs {
+    id        Int      @id @default(autoincrement())
+    key       String   @map("config_key")
+    value     String   @map("config_value")
+    serverId  String   @map("server_id")
+    userId    String?  @map("user_id")
+    user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+    createdAt DateTime @default(now()) @map("created_at")
+
+    @@unique([key, serverId])
+    @@map("discord_bot_configs")
 }
 
 model TwitchChannel {
@@ -147,16 +176,17 @@ model Session {
 }
 
 model User {
-    id               String             @id @default(cuid())
-    name             String?
-    email            String?            @unique
-    emailVerified    DateTime?
-    image            String?
-    accounts         Account[]
-    sessions         Session[]
-    DiscordServer    DiscordServer[]
-    TwitchChannel    TwitchChannel[]
-    TwitchBotConfigs TwitchBotConfigs[]
+    id                String              @id @default(cuid())
+    name              String?
+    email             String?             @unique
+    emailVerified     DateTime?
+    image             String?
+    accounts          Account[]
+    sessions          Session[]
+    DiscordServer     DiscordServer[]
+    TwitchChannel     TwitchChannel[]
+    TwitchBotConfigs  TwitchBotConfigs[]
+    DiscordBotConfigs DiscordBotConfigs[]
 }
 
 model VerificationToken {
