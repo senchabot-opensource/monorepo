@@ -125,6 +125,23 @@ var (
 					Description: "Tüm zamanlanmış etkinlikleri iptal et",
 					Type:        discordgo.ApplicationCommandOptionSubCommand,
 				},
+				{
+					Name:        "last-100-channel-messages",
+					Description: "Purge messages containing certain characters or sent by centain user",
+					Type:        discordgo.ApplicationCommandOptionSubCommand,
+					Options: []*discordgo.ApplicationCommandOption{
+						{
+							Name:        "message-content-contains",
+							Description: "certain characters that contain in messages",
+							Type:        discordgo.ApplicationCommandOptionString,
+						},
+						{
+							Name:        "user-name-contains",
+							Description: "certain characters that contain in user's name or nickname",
+							Type:        discordgo.ApplicationCommandOptionString,
+						},
+					},
+				},
 			},
 		},
 		{
@@ -335,8 +352,6 @@ var (
 				ephemeralRespond(s, i, "Varsayılan Twitch canlı yayın duyuru kanalı ayarı kaldırıldı.")
 
 			case "stream-announcement-content":
-				options = options[0].Options
-
 				_, err := db.SetDiscordBotConfig(ctx, i.GuildID, "stream_anno_content", "")
 				if err != nil {
 					log.Printf("Error while setting Discord bot config: %v", err)
@@ -406,6 +421,56 @@ var (
 				}
 
 				ephemeralRespond(s, i, "Tüm planlanmış etkinlikler silindi.")
+
+			case "last-100-channel-messages":
+				options = options[0].Options
+				content := ""
+
+				if options == nil {
+					content = "Either \"characters\" or \"user\" must be given for this command to be processed."
+					ephemeralRespond(s, i, content)
+					return
+				}
+
+				optionValue := options[0].StringValue()
+				channelID := i.ChannelID
+				var messageIDs []string
+
+				messages, err := s.ChannelMessages(channelID, 100, "", "", "")
+
+				if err != nil {
+					fmt.Println("Error while fetching messages", err.Error())
+				}
+
+				content = "Reviewed the last 100 messages in this message channel. "
+
+				switch options[0].Name {
+				case "message-content-contains":
+					for _, v := range messages {
+						if strings.Contains(v.Content, optionValue) {
+							messageIDs = append(messageIDs, v.ID)
+							fmt.Println(v.ID, v.Content)
+						}
+					}
+					content += "Messages containing the characters \"" + optionValue + "\" were deleted"
+				case "user-name-contains":
+					for _, v := range messages {
+						if strings.Contains(v.Author.Username, optionValue) {
+							messageIDs = append(messageIDs, v.ID)
+						}
+					}
+					content += "Messages from users containing \"" + optionValue + "\" characters in their username were deleted"
+				default:
+					content = "something went wrong."
+				}
+
+				err = s.ChannelMessagesBulkDelete(channelID, messageIDs)
+
+				if err != nil {
+					fmt.Println("Error ChannelMessagesBulkDelete", err.Error())
+				}
+
+				ephemeralRespond(s, i, content)
 			}
 		},
 	}
