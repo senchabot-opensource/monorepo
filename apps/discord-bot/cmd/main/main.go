@@ -9,6 +9,7 @@ import (
 	"os/signal"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/joho/godotenv"
@@ -18,6 +19,16 @@ import (
 	"github.com/senchabot-dev/monorepo/apps/discord-bot/internal/service/event"
 	"github.com/senchabot-dev/monorepo/apps/discord-bot/internal/service/streamer"
 )
+
+const FOURTEEN_DAYS = 24 * 14
+
+func checkTimeOlderThan(msgTimestamp time.Time, tNumber int) bool {
+	return int(time.Until(msgTimestamp).Abs().Hours()) < tNumber
+}
+
+func containsLowerCase(s string, substr string) bool {
+	return strings.Contains(strings.ToLower(s), substr)
+}
 
 var (
 	purgePermissions     int64 = discordgo.PermissionManageEvents + discordgo.PermissionManageMessages
@@ -128,7 +139,7 @@ var (
 				},
 				{
 					Name:        "last-100-channel-messages",
-					Description: "Purge messages containing certain characters or sent by centain user",
+					Description: "Purge messages older than 14 days containing certain characters or sent by centain username",
 					Type:        discordgo.ApplicationCommandOptionSubCommand,
 					Options: []*discordgo.ApplicationCommandOption{
 						{
@@ -427,9 +438,8 @@ var (
 				options = options[0].Options
 				content := ""
 
-				if options == nil {
-					content = "Either \"characters\" or \"user\" must be given for this command to be processed."
-					ephemeralRespond(s, i, content)
+				if options == nil || len(options) < 1 {
+					ephemeralRespond(s, i, "One of the `message-content-contains` or `user-name-contains` options must be filled.")
 					return
 				}
 
@@ -441,37 +451,39 @@ var (
 
 				if err != nil {
 					fmt.Println("Error while fetching messages", err.Error())
+					ephemeralRespond(s, i, "Something went wrong while fetching messages.")
+					return
 				}
-
-				content = "Reviewed the last 100 messages in this message channel. "
 
 				switch options[0].Name {
 				case "message-content-contains":
-					for _, v := range messages {
-						if strings.Contains(v.Content, optionValue) {
-							messageIDs = append(messageIDs, v.ID)
-							fmt.Println(v.ID, v.Content)
+					for _, m := range messages {
+						if checkTimeOlderThan(m.Timestamp, FOURTEEN_DAYS) && containsLowerCase(m.Content, optionValue) {
+							messageIDs = append(messageIDs, m.ID)
 						}
 					}
-					content += "Messages containing the characters \"" + optionValue + "\" were deleted"
+					content = "containing the characters `" + optionValue + "`"
 				case "user-name-contains":
-					for _, v := range messages {
-						if strings.Contains(v.Author.Username, optionValue) {
-							messageIDs = append(messageIDs, v.ID)
+					for _, m := range messages {
+						if checkTimeOlderThan(m.Timestamp, FOURTEEN_DAYS) && containsLowerCase(m.Author.Username, optionValue) {
+							messageIDs = append(messageIDs, m.ID)
 						}
 					}
-					content += "Messages from users containing \"" + optionValue + "\" characters in their username were deleted"
+					content = "sent by the username containing the characters `" + optionValue + "`"
 				default:
-					content = "something went wrong."
+					ephemeralRespond(s, i, "Something went wrong.")
+					return
 				}
 
 				err = s.ChannelMessagesBulkDelete(channelID, messageIDs)
 
 				if err != nil {
 					fmt.Println("Error ChannelMessagesBulkDelete", err.Error())
+					ephemeralRespond(s, i, "Something went wrong while deleting messages.")
+					return
 				}
 
-				ephemeralRespond(s, i, content)
+				ephemeralRespond(s, i, "Messages "+content+" were deleted.")
 			}
 		},
 	}
