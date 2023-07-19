@@ -20,12 +20,13 @@ import (
 )
 
 var (
-	defaultMemberPermissions int64 = discordgo.PermissionManageEvents
-	commands                       = []*discordgo.ApplicationCommand{
+	purgePermissions     int64 = discordgo.PermissionManageEvents + discordgo.PermissionManageMessages
+	setdeletePermissions int64 = discordgo.PermissionManageChannels
+	commands                   = []*discordgo.ApplicationCommand{
 		{
 			Name:                     "set",
 			Description:              "Discord botunu yapılandırma ayarları",
-			DefaultMemberPermissions: &defaultMemberPermissions,
+			DefaultMemberPermissions: &setdeletePermissions,
 			Options: []*discordgo.ApplicationCommandOption{
 				{
 					Name:        "stream-default-anno-channel",
@@ -118,7 +119,7 @@ var (
 		{
 			Name:                     "purge",
 			Description:              "Purge",
-			DefaultMemberPermissions: &defaultMemberPermissions,
+			DefaultMemberPermissions: &purgePermissions,
 			Options: []*discordgo.ApplicationCommandOption{
 				{
 					Name:        "events",
@@ -147,7 +148,7 @@ var (
 		{
 			Name:                     "delete",
 			Description:              "Yapılandırma ayarlarını kaldır",
-			DefaultMemberPermissions: &defaultMemberPermissions,
+			DefaultMemberPermissions: &setdeletePermissions,
 			Options: []*discordgo.ApplicationCommandOption{
 				{
 					Name:        "stream-default-anno-channel",
