@@ -15,7 +15,7 @@ func (c *commands) DeleteCommandCommand(context context.Context, message twitch.
 	if !helpers.CanExecuteCommand(context, c.service, message) {
 		return
 	}
-	if check := helpers.ValidateCommandDeleteParamsLength(params); !check {
+	if check := helpers.IsCommandParamsLengthEqualToOne(params); !check {
 		c.client.Twitch.Say(message.Channel, DELETE_COMMAND_INFO)
 		return
 	}

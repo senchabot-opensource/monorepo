@@ -199,10 +199,6 @@ func ValidateCommandContentLength(commandContent string) (string, bool) {
 	return "", true
 }
 
-func ValidateCommandDeleteParamsLength(params []string) bool {
-	return len(params) == 1
-}
-
 func IsCommandParamsLengthEqualToOne(params []string) bool {
 	return len(params) == 1
 }
