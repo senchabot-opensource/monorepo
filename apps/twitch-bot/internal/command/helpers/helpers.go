@@ -147,15 +147,15 @@ func CheckIfCommand(param string) bool {
 	return strings.HasPrefix(param, "!")
 }
 
-func CanExecuteCommand(context context.Context, service service.Service, message twitch.PrivateMessage) bool {
+func CanExecuteCommand(context context.Context, service service.Service, badges string, twitchChannelId string) bool {
 	// broadcaster can run the command
-	if isBroadcaster(message.Tags["badges"]) {
+	if isBroadcaster(badges) {
 		return true
 	}
 
 	// moderator can run the command
-	if isModerator(message.Tags["badges"]) {
-		check := service.CheckConfig(context, message.RoomID, "mods_manage_cmds_enabled", "1")
+	if isModerator(badges) {
+		check := service.CheckConfig(context, twitchChannelId, "mods_manage_cmds_enabled", "1")
 		return check
 	}
 
