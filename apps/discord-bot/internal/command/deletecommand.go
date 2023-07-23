@@ -33,6 +33,24 @@ func (c *commands) DeleteCommand(ctx context.Context, s *discordgo.Session, i *d
 		}
 
 		ephemeralRespond(s, i, "Yayın duyuru mesajı içeriği varsayılan olarak ayarlandı: `{stream.user}, {stream.category} yayınına başladı! {stream.url}`")
+	case "stream-anno-custom-content":
+		options = options[0].Options
+		twitchUsername := options[0].StringValue()
+		twitchUsername = helpers.ParseTwitchUsernameURLParam(twitchUsername)
+
+		ok, err := db.UpdateTwitchStreamerAnnoContent(ctx, twitchUsername, i.GuildID, nil)
+		if err != nil {
+			log.Printf("Error while deleting streamer announcement custom content: %v", err)
+			ephemeralRespond(s, i, errorMessage+"#0001")
+			return
+		}
+
+		if !ok {
+			ephemeralRespond(s, i, errorMessage+"#0001")
+			return
+		}
+
+		ephemeralRespond(s, i, twitchUsername+" kullanıcı adlı Twitch yayıncısına özgü yayın duyuru mesajı silindi.")
 
 	case "streamer":
 		options = options[0].Options

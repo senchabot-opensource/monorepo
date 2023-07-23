@@ -206,6 +206,19 @@ var (
 					},
 				},
 				{
+					Name:        "stream-anno-custom-content",
+					Description: "Yayıncıya özgü yayın duyuru mesajını sil.",
+					Type:        discordgo.ApplicationCommandOptionSubCommand,
+					Options: []*discordgo.ApplicationCommandOption{
+						{
+							Type:        discordgo.ApplicationCommandOptionString,
+							Name:        "twitch-username-or-url",
+							Description: "Twitch kullanıcı profil linki veya kullanıcı adı",
+							Required:    true,
+						},
+					},
+				},
+				{
 					Name:        "stream-event-channel",
 					Description: "Etkinlik oluşturulacak yayın duyuruları kanalı ayarını kaldır.",
 					Type:        discordgo.ApplicationCommandOptionSubCommand,
