@@ -160,6 +160,21 @@ func main() {
 		commandHandlers := command.GetCommands()
 		if h, ok := commandHandlers[i.ApplicationCommandData().Name]; ok {
 			h(ctx, s, i, *db)
+			options := []string{}
+			for _, v := range i.ApplicationCommandData().Options {
+				options = append(options, v.Name)
+				if len(v.Options) > 0 {
+					for _, vj := range v.Options {
+						switch vj.Type.String() {
+						case "String":
+							options = append(options, vj.Name+": "+vj.StringValue())
+						case "Channel":
+							options = append(options, vj.Name+": "+vj.ChannelValue(s).Name)
+						}
+					}
+				}
+			}
+			db.SaveBotCommandActivity(ctx, "/"+i.ApplicationCommandData().Name+" "+strings.Join(options, " "), i.GuildID, i.Member.User.Username)
 		}
 	})
 
