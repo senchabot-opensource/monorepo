@@ -92,7 +92,7 @@ export const getAccount = async () => {
 
 export const deleteAccount = async () => {
   const response = await fetch("/api/deleteAccount", {
-    method: "GET",
+    method: "POST",
   });
   return response.json();
 };

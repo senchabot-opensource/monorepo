@@ -14,16 +14,20 @@ const deleteAccount = async (
   const userId = session.user.id; //getUserId(ctx);
 
   if (userId) {
-    await prisma.user.delete({
+    const deleted = await prisma.user.delete({
       where: {
         id: userId,
       },
     });
 
-    res.json({ data: true, success: true });
+    if (deleted) {
+      return res.json({ data: true, success: true });
+    }
   }
 
-  res.status(404).json({ success: false, errorMessage: "User not found" });
+  return res
+    .status(404)
+    .json({ success: false, errorMessage: "User not found" });
 };
 
 export default deleteAccount;
