@@ -61,8 +61,8 @@ var (
 			DefaultMemberPermissions: &setdeletePermissions,
 			Options: []*discordgo.ApplicationCommandOption{
 				{
-					Name:        "stream-default-anno-channel",
-					Description: "Twitch canlı yayın duyuruları için varsayılan bir yazı kanalı ekle",
+					Name:        "stream-anno-default-channel",
+					Description: "Yayın duyuru mesajlarının atılacağı varsayılan kanalı ayarla.",
 					Type:        discordgo.ApplicationCommandOptionSubCommand,
 					Options: []*discordgo.ApplicationCommandOption{
 						{
@@ -77,21 +77,21 @@ var (
 					},
 				},
 				{
-					Name:        "stream-announcement-content",
-					Description: "Twitch canlı yayın duyuruları için özel duyuru mesajı içeriği ekle",
+					Name:        "stream-anno-default-content",
+					Description: "Varsayılan yayın duyuru mesajı ayarla.",
 					Type:        discordgo.ApplicationCommandOptionSubCommand,
 					Options: []*discordgo.ApplicationCommandOption{
 						{
 							Type:        discordgo.ApplicationCommandOptionString,
 							Name:        "announcement-content",
-							Description: "Twitch yayını mesaj duyuru içeriği",
+							Description: "Twitch yayını mesaj duyuru içeriği ({twitch.username} {twitch.url} {stream.category} {stream.title})",
 							Required:    true,
 						},
 					},
 				},
 				{
-					Name:        "streamer-anno-content",
-					Description: "Twitch yayıncısı için özel duyuru mesajı içeriği ayarla",
+					Name:        "stream-anno-custom-content",
+					Description: "Yayıncıya özgü yayın duyuru mesajı ayarla.",
 					Type:        discordgo.ApplicationCommandOptionSubCommand,
 					Options: []*discordgo.ApplicationCommandOption{
 						{
@@ -103,14 +103,14 @@ var (
 						{
 							Type:        discordgo.ApplicationCommandOptionString,
 							Name:        "announcement-content",
-							Description: "Twitch yayını mesaj duyuru içeriği",
+							Description: "Twitch yayını mesaj duyuru içeriği ({twitch.username} {twitch.url} {stream.category} {stream.title})",
 							Required:    true,
 						},
 					},
 				},
 				{
 					Name:        "streamer",
-					Description: "Canlı yayın duyuruları için Twitch yayıncısı ekle",
+					Description: "Yayın duyuru mesajı atılacak yayıncıyı ekle. Özel kanal atayabilirsin.",
 					Type:        discordgo.ApplicationCommandOptionSubCommand,
 					Options: []*discordgo.ApplicationCommandOption{
 						{
@@ -132,7 +132,7 @@ var (
 				},
 				{
 					Name:        "stream-event-channel",
-					Description: "Zamanlanmış etkinliklerin oluşturulması için yazı kanalı ekle",
+					Description: "Etkinlik oluşturulacak yayın duyurularının kanalını seç.",
 					Type:        discordgo.ApplicationCommandOptionSubCommand,
 					Options: []*discordgo.ApplicationCommandOption{
 						{
@@ -183,23 +183,23 @@ var (
 			DefaultMemberPermissions: &setdeletePermissions,
 			Options: []*discordgo.ApplicationCommandOption{
 				{
-					Name:        "stream-default-anno-channel",
-					Description: "Twitch canlı yayın duyuruları için varsayılan yazı kanalı kanalı ayarını kaldır",
+					Name:        "stream-anno-default-channel",
+					Description: "Yayın duyuru mesajlarının atılacağı varsayılan kanal ayarını kaldır.",
 					Type:        discordgo.ApplicationCommandOptionSubCommand,
 				},
 				{
-					Name:        "stream-announcement-content",
-					Description: "Twitch canlı yayın duyuruları için duyuru metnini varsayılan olarak ayarla",
+					Name:        "stream-anno-default-content",
+					Description: "Varsayılan yayın duyuru mesajını sil.",
 					Type:        discordgo.ApplicationCommandOptionSubCommand,
 				},
 				{
 					Name:        "streamer",
-					Description: "Twitch yayıncısı için canlı yayın duyurularını iptal et",
+					Description: "Yayın duyuru mesajı atılan yayıncıyı sil.",
 					Type:        discordgo.ApplicationCommandOptionSubCommand,
 					Options: []*discordgo.ApplicationCommandOption{
 						{
 							Type:        discordgo.ApplicationCommandOptionString,
-							Name:        "twitch-user-name-or-url",
+							Name:        "twitch-username-or-url",
 							Description: "Twitch kullanıcı profil linki veya kullanıcı adı",
 							Required:    true,
 						},
@@ -207,7 +207,7 @@ var (
 				},
 				{
 					Name:        "stream-event-channel",
-					Description: "Zamanlanmış etkinliklerin oluşturulmasını iptal et",
+					Description: "Etkinlik oluşturulacak yayın duyuruları kanalı ayarını kaldır.",
 					Type:        discordgo.ApplicationCommandOptionSubCommand,
 					Options: []*discordgo.ApplicationCommandOption{
 						{
@@ -236,7 +236,7 @@ func containsLowerCase(s string, substr string) bool {
 	return strings.Contains(strings.ToLower(s), substr)
 }
 
-func IsChannelNameGiven(optionsLen int) bool {
+func IsChannelNameNotGiven(optionsLen int) bool {
 	return optionsLen < 2
 }
 
