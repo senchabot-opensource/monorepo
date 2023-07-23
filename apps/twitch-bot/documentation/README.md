@@ -17,14 +17,15 @@ Then, give moderation role to [Senchabot](https://twitch.tv/senchabot/).
 
 These commands can be edited as described in the [Custom Commands](#custom-commands) topic.
 
-| Command            | Description or Response                |
-| :----------------- | -------------------------------------- |
-| !cmds or !commands | {channel.name}'s Channel Commands: ... |
-| !frontendship      | https://discord.gg/frontendship                                       |
-| !kampus            | https://discord.gg/kampus                                       |
-| !lurk              | Teşekkürler! {user.name}               |
-| !ping              | pong! VoHiYo                           |
-
+| Command             | Description or Response                                                                                                                    |
+| :------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| !cmds or !commands  | {channel.name}'s Channel Commands: ...                                                                                                     |
+| !frontendship       | https://discord.gg/frontendship                                                                                                            |
+| !kampus             | discord.gg/kampus • github.com/kamp-us                                                                                                     |
+| !lurk               | Teşekkürler! {user.name}                                                                                                                   |
+| !ping               | pong! VoHiYo                                                                                                                               |
+| !senchabot          | Open source multi-platform bot development project, which works on Twitch and Discord. • senchabot.app • github.com/senchabot-dev/monorepo |
+| !sozluk [term-name] | (Reply to user) Term: Description                                                                                              |
 
 ### Custom Commands
 

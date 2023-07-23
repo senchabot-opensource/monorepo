@@ -28,7 +28,7 @@ Web application for managing Senchabot, its commands and configuring the bot.
 2. Install the dependencies
 
    ```sh
-   pnpm install
+   npm install
    ```
 
 3. If you hadn't done for main directory,  please change into main directory and create a `.env` file based on the example file `env.example`
@@ -60,7 +60,7 @@ Web application for managing Senchabot, its commands and configuring the bot.
 Finally, start the development server:
 
 ```bash
-pnpm run dev
+npm run dev
 ```
 
 ## Folder Tree
