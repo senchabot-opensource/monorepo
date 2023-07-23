@@ -35,9 +35,8 @@ type IProps = {
 };
 
 const AppDrawer: FC<IProps> = ({ isDrawerOpen, drawerHandler }) => {
-  const router = useRouter();
   const theme = useTheme();
-  const [isOpenAlert, setIsOpenAlert] = useState<boolean>(false);
+  const [isOpenAlert, setIsAlertOpen] = useState<boolean>(false);
   const [twitchAccountAvailable, setTwitchAccountAvailable] =
     useState<boolean>(false);
   const [alertText, setAlertText] = useState<string>("");
@@ -51,16 +50,19 @@ const AppDrawer: FC<IProps> = ({ isDrawerOpen, drawerHandler }) => {
   const addTwitchBot = useCallback(() => {
     addTwitchAccount().then(res => {
       if (!res || !res.success) {
-        setAlertText("Something went wrong. Please try again later.");
-        setIsOpenAlert(true);
+        setAlertBox("Something went wrong. Please try again later.");
       }
 
       if (res.success) {
-        setAlertText(res.message);
-        setIsOpenAlert(true);
+        setAlertBox(res.message);
       }
     });
   }, []);
+
+  const setAlertBox = (text: string) => {
+    setAlertText(text);
+    setIsAlertOpen(true);
+  };
 
   return (
     <Drawer
@@ -78,7 +80,7 @@ const AppDrawer: FC<IProps> = ({ isDrawerOpen, drawerHandler }) => {
       <CustomAlert
         content={alertText}
         isOpen={isOpenAlert}
-        closeHandler={() => setIsOpenAlert(!isOpenAlert)}
+        closeHandler={() => setIsAlertOpen(!isOpenAlert)}
       />
       <DrawerHeader>
         <Typography
@@ -119,10 +121,9 @@ const AppDrawer: FC<IProps> = ({ isDrawerOpen, drawerHandler }) => {
           <MenuItem
             onClick={() => {
               if (!twitchAccountAvailable) {
-                setAlertText(
+                setAlertBox(
                   "Before you can add the Twitch bot, you need to link your Twitch account in Settings/Security section.",
                 );
-                setIsOpenAlert(true);
               } else {
                 addTwitchBot();
               }

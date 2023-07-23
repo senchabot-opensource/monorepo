@@ -1,39 +1,68 @@
 import { IconButton, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { SiTwitch } from "react-icons/si";
-import { checkTwitchAccount } from "src/api";
+import { addTwitchAccount, checkTwitchAccount } from "src/api";
+import CustomAlert from "src/components/CustomAlert";
 import { BootstrapTooltip } from "src/components/Tooltip";
 
 const GetTwitchBotButton = () => {
-  const [twitchAcc, setTwitchAcc] = useState("");
+  const [twitchAccountAvailable, setTwitchAccountAvailable] =
+    useState<boolean>(false);
+  const [alertIsOpen, setAlertIsOpen] = useState<boolean>(false);
+  const [alertText, setAlertText] = useState<string>("");
 
   useEffect(() => {
     checkTwitchAccount().then(res => {
-      if (!res.data) return;
-      console.log(res.data);
-      setTwitchAcc(res.data);
+      setTwitchAccountAvailable(res.data);
     });
   }, []);
 
+  const addTwitchBot = useCallback(() => {
+    addTwitchAccount().then(res => {
+      if (!res || !res.success) {
+        setAlertBox("Something went wrong. Please try again later.");
+      }
+
+      if (res.success) {
+        setAlertBox(res.message);
+      }
+    });
+  }, []);
+
+  const setAlertBox = (text: string) => {
+    setAlertText(text);
+    setAlertIsOpen(true);
+  };
+
   return (
-    <BootstrapTooltip title="Get Twitch Bot">
-      <Typography
-        onClick={() =>
-          !twitchAcc
-            ? alert(
+    <>
+      <CustomAlert
+        isOpen={alertIsOpen}
+        closeHandler={() => setAlertIsOpen(!alertIsOpen)}
+        content={alertText}
+      />
+
+      <BootstrapTooltip title="Get Twitch Bot">
+        <Typography
+          onClick={() => {
+            if (!twitchAccountAvailable) {
+              setAlertBox(
                 "Before you can add the Twitch bot, you need to link your Twitch account in Settings/Security section.",
-              )
-            : alert("okay")
-        }>
-        <IconButton
-          aria-label="get twitch bot"
-          sx={{
-            display: "flex",
+              );
+            } else {
+              addTwitchBot();
+            }
           }}>
-          <SiTwitch />
-        </IconButton>
-      </Typography>
-    </BootstrapTooltip>
+          <IconButton
+            aria-label="get twitch bot"
+            sx={{
+              display: "flex",
+            }}>
+            <SiTwitch />
+          </IconButton>
+        </Typography>
+      </BootstrapTooltip>
+    </>
   );
 };
 
