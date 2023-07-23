@@ -82,7 +82,7 @@ const SystemMessage = () => {
                   Connected Twitch channels: {twitchChannelCount?.toString()}
                 </ListItemText>
               </ListItem>
-              {twitchChannels.length && (
+              {twitchChannels.length ? (
                 <ListItem>
                   <ListItemText>
                     Twitch Channels:{" "}
@@ -95,7 +95,7 @@ const SystemMessage = () => {
                     )}
                   </ListItemText>
                 </ListItem>
-              )}
+              ) : null}
             </>
           ) : (
             <LoadingBox />
