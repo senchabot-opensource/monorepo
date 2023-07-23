@@ -34,10 +34,10 @@ const SecurityForm = () => {
           Linked accounts:{" "}
           {isLoading
             ? "Loading..."
-            : accounts.data?.map(
+            : accounts?.map(
                 (account: any, index: number) =>
                   accounts &&
-                  (accounts.data && accounts.data.length - 1 === index
+                  (accounts && accounts.length - 1 === index
                     ? (index > 2 ? "and " : "") +
                       capitalizeWord(account.provider)
                     : capitalizeWord(account.provider) +

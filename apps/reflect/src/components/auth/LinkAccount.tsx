@@ -17,17 +17,18 @@ type IProps = {
 };
 
 const LinkAccount: FC<IProps> = ({ accountType, accountTitle, icon }) => {
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [accounts, setAccounts] = useState<any>([]);
 
   useEffect(() => {
     getAccount().then(res => {
+      if (!res.data) return;
       setAccounts(res.data);
+      setIsLoading(false);
     });
-  }, []);
+  }, [isLoading]);
 
-  const currentProviders = accounts.data?.map(
-    (account: any) => account.provider,
-  );
+  const currentProviders = accounts?.map((account: any) => account.provider);
 
   return (
     <>
