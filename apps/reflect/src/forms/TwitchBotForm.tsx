@@ -61,7 +61,6 @@ const TwitchBotForm = () => {
     });
 
     checkTwitchAccount().then(res => {
-      console.log(res);
       if (!res) {
         setIsTwitchAccAvailable(false);
       }
@@ -197,12 +196,7 @@ const TwitchBotForm = () => {
               </FormControl>
             )}
           />
-          <Button
-            disabled={!buttonEnabled}
-            fullWidth
-            variant="outlined"
-            sx={{ mt: 1 }}
-            type="submit">
+          <Button fullWidth variant="outlined" sx={{ mt: 1 }} type="submit">
             Save
           </Button>
         </form>

@@ -1,8 +1,13 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getServerAuthSession } from "src/server/common/get-server-auth-session";
 import { prisma } from "../../../server/db/client";
+import { IConfig, ISetConfigInput } from "src/types";
 
-const setConfig = async (req: NextApiRequest, res: NextApiResponse) => {
+interface SetConfigApiRequest extends NextApiRequest {
+  body: ISetConfigInput;
+}
+
+const setConfig = async (req: SetConfigApiRequest, res: NextApiResponse) => {
   const session = await getServerAuthSession({ req, res });
 
   if (!session || !session.user) return;
@@ -24,7 +29,7 @@ const setConfig = async (req: NextApiRequest, res: NextApiResponse) => {
   const twitchAccId = twitchAccount?.providerAccountId;
   if (!twitchAccId) return;
 
-  configs.forEach(async (config: any) => {
+  configs.forEach(async (config: IConfig) => {
     const findConfig = await prisma.twitchBotConfigs.findFirst({
       where: {
         key: config.key,
@@ -50,8 +55,8 @@ const setConfig = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const created = await prisma.twitchBotConfigs.create({
       data: {
-        key: config.key,
-        value: config.value,
+        key: config.key!,
+        value: config.value!,
         twitchChannelId: twitchAccId,
         userId: userId,
       },

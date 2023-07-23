@@ -22,6 +22,7 @@ import { randomInt } from "next/dist/shared/lib/bloom-filter/utils";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import CustomAlert from "../CustomAlert";
+import { IBotCommand } from "src/types";
 
 const ALT_TEXT =
   "Open-source multi-platform bot development project, which works on Twitch and Discord.";
@@ -45,7 +46,7 @@ const LandingTexts = () => {
     });
 
     getCommandList().then(res1 => {
-      const cmds = res1.data.map((cmd: any) => "!" + cmd.commandName);
+      const cmds = res1.data.map((cmd: IBotCommand) => "!" + cmd.commandName);
       setUserCmdList(cmds);
     });
 

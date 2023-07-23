@@ -14,13 +14,14 @@ import {
   getTwitchChannelCount,
   getTwitchChannels,
 } from "src/api";
+import { IDiscordServer, ITwitchChannel } from "src/types";
 
 const SystemMessage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [discordServerCount, setDiscordServerCount] = useState<number>(0);
   const [twitchChannelCount, setTwitchChannelCount] = useState<number>(0);
-  const [discordServers, setDiscordServers] = useState<any>([]);
-  const [twitchChannels, setTwitchChannels] = useState<any>([]);
+  const [discordServers, setDiscordServers] = useState<IDiscordServer[]>([]);
+  const [twitchChannels, setTwitchChannels] = useState<ITwitchChannel[]>([]);
 
   useEffect(() => {
     getDiscordServerCount().then(res => {
@@ -65,7 +66,7 @@ const SystemMessage = () => {
                   <ListItemText>
                     Discord Servers:{" "}
                     {discordServers?.map(
-                      (sv: any, index: number) =>
+                      (sv: IDiscordServer, index: number) =>
                         sv.serverName +
                         (index !==
                         (discordServers && discordServers?.length - 1)
@@ -85,7 +86,7 @@ const SystemMessage = () => {
                   <ListItemText>
                     Twitch Channels:{" "}
                     {twitchChannels?.map(
-                      (ch: any, index: number) =>
+                      (ch: ITwitchChannel, index: number) =>
                         ch.channelName +
                         (index !== (twitchChannels && twitchChannels.length - 1)
                           ? ", "

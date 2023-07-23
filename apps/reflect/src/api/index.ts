@@ -1,3 +1,5 @@
+import { ISetConfigInput } from "src/types";
+
 export const getDefaultCmdList = async () => {
   const response = await fetch("/api/cmd", {
     method: "GET",
@@ -97,7 +99,7 @@ export const deleteAccount = async () => {
   return response.json();
 };
 
-export const setConfig = async (input: any) => {
+export const setConfig = async (input: ISetConfigInput) => {
   const response = await fetch("/api/config/setConfig", {
     method: "POST",
     body: JSON.stringify(input),
