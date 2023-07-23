@@ -15,10 +15,11 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { env } from "../../env/client.mjs";
 import Link from "next/link";
 import { SiDiscord, SiTwitch } from "react-icons/si";
-import { trpc } from "../../utils/trpc";
 import CustomAlert from "../CustomAlert";
-import { useState, FC } from "react";
+import { useState, FC, useEffect, useCallback } from "react";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+import { addTwitchAccount, checkTwitchAccount } from "src/api";
+import { useRouter } from "next/router";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -35,20 +36,33 @@ type IProps = {
 
 const AppDrawer: FC<IProps> = ({ isDrawerOpen, drawerHandler }) => {
   const theme = useTheme();
-  const { data: twitchAcc } = trpc.check.checkTwitchAcc.useQuery();
+  const [isOpenAlert, setIsAlertOpen] = useState<boolean>(false);
+  const [twitchAccountAvailable, setTwitchAccountAvailable] =
+    useState<boolean>(false);
+  const [alertText, setAlertText] = useState<string>("");
 
-  const [isOpenAlert, setIsOpenAlert] = useState<boolean>(false);
-
-  const twitchBotMutate = trpc.twitchBot.add.useMutation({
-    onSuccess() {
-      alert("Twitch bot added");
-    },
-
-    onError(error) {
-      if (!error.shape) return;
-      alert(error.shape.message);
-    },
+  useEffect(() => {
+    checkTwitchAccount().then(res => {
+      setTwitchAccountAvailable(res.data);
+    });
   });
+
+  const addTwitchBot = useCallback(() => {
+    addTwitchAccount().then(res => {
+      if (!res || !res.success) {
+        setAlertBox("Something went wrong. Please try again later.");
+      }
+
+      if (res.success) {
+        setAlertBox(res.message);
+      }
+    });
+  }, []);
+
+  const setAlertBox = (text: string) => {
+    setAlertText(text);
+    setIsAlertOpen(true);
+  };
 
   return (
     <Drawer
@@ -64,9 +78,9 @@ const AppDrawer: FC<IProps> = ({ isDrawerOpen, drawerHandler }) => {
       anchor="left"
       open={isDrawerOpen}>
       <CustomAlert
-        content="Before you can add the Twitch bot, you need to link your Twitch account in Settings/Security section."
+        content={alertText}
         isOpen={isOpenAlert}
-        closeHandler={() => setIsOpenAlert(!isOpenAlert)}
+        closeHandler={() => setIsAlertOpen(!isOpenAlert)}
       />
       <DrawerHeader>
         <Typography
@@ -105,9 +119,15 @@ const AppDrawer: FC<IProps> = ({ isDrawerOpen, drawerHandler }) => {
             <Typography>Get Discord Bot</Typography>
           </MenuItem>
           <MenuItem
-            onClick={() =>
-              !twitchAcc ? setIsOpenAlert(true) : twitchBotMutate.mutate()
-            }>
+            onClick={() => {
+              if (!twitchAccountAvailable) {
+                setAlertBox(
+                  "Before you can add the Twitch bot, you need to link your Twitch account in Settings/Security section.",
+                );
+              } else {
+                addTwitchBot();
+              }
+            }}>
             <ListItemIcon>
               <SiTwitch />
             </ListItemIcon>

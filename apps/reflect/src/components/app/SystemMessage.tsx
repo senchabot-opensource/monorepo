@@ -7,14 +7,38 @@ import {
   Stack,
 } from "@mui/material";
 import LoadingBox from "../loading/LoadingBox";
-import { trpc } from "../../utils/trpc";
+import { useEffect, useState } from "react";
+import {
+  getDiscordServerCount,
+  getDiscordServers,
+  getTwitchChannelCount,
+  getTwitchChannels,
+} from "src/api";
+import { IDiscordServer, ITwitchChannel } from "src/types";
 
 const SystemMessage = () => {
-  const discordServerCount = trpc.example.getDcServerCount.useQuery();
-  const twitchChannelCount = trpc.example.getTwServercount.useQuery();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [discordServerCount, setDiscordServerCount] = useState<number>(0);
+  const [twitchChannelCount, setTwitchChannelCount] = useState<number>(0);
+  const [discordServers, setDiscordServers] = useState<IDiscordServer[]>([]);
+  const [twitchChannels, setTwitchChannels] = useState<ITwitchChannel[]>([]);
 
-  const twitchChannels = trpc.bot.getUserTwitchChannels.useQuery();
-  const discordServers = trpc.bot.getUserDiscordServers.useQuery();
+  useEffect(() => {
+    getDiscordServerCount().then(res => {
+      setDiscordServerCount(res.data);
+    });
+    getTwitchChannelCount().then(res => {
+      setTwitchChannelCount(res.data);
+    });
+    getDiscordServers().then(res => {
+      setDiscordServers(res.data);
+    });
+    getTwitchChannels().then(res => {
+      setTwitchChannels(res.data);
+    });
+
+    setIsLoading(false);
+  }, [isLoading]);
 
   return (
     <Paper
@@ -30,23 +54,22 @@ const SystemMessage = () => {
             </ListSubheader>
           }
           disablePadding>
-          {!discordServerCount.isLoading && !twitchChannelCount.isLoading ? (
+          {!isLoading ? (
             <>
               <ListItem>
                 <ListItemText>
-                  Connected Discord servers:{" "}
-                  {discordServerCount.data?.toString()}
+                  Connected Discord servers: {discordServerCount?.toString()}
                 </ListItemText>
               </ListItem>
-              {discordServers.data?.length ? (
+              {discordServers?.length ? (
                 <ListItem>
                   <ListItemText>
                     Discord Servers:{" "}
-                    {discordServers.data?.map(
-                      (sv, index) =>
+                    {discordServers?.map(
+                      (sv: IDiscordServer, index: number) =>
                         sv.serverName +
                         (index !==
-                        (discordServers.data && discordServers.data?.length - 1)
+                        (discordServers && discordServers?.length - 1)
                           ? ", "
                           : ""),
                     )}
@@ -55,25 +78,23 @@ const SystemMessage = () => {
               ) : null}
               <ListItem>
                 <ListItemText>
-                  Connected Twitch channels:{" "}
-                  {twitchChannelCount.data?.toString()}
+                  Connected Twitch channels: {twitchChannelCount?.toString()}
                 </ListItemText>
               </ListItem>
-              {twitchChannels.data && (
+              {twitchChannels.length ? (
                 <ListItem>
                   <ListItemText>
                     Twitch Channels:{" "}
-                    {twitchChannels.data?.map(
-                      (ch, index) =>
+                    {twitchChannels?.map(
+                      (ch: ITwitchChannel, index: number) =>
                         ch.channelName +
-                        (index !==
-                        (twitchChannels.data && twitchChannels.data.length - 1)
+                        (index !== (twitchChannels && twitchChannels.length - 1)
                           ? ", "
                           : ""),
                     )}
                   </ListItemText>
                 </ListItem>
-              )}
+              ) : null}
             </>
           ) : (
             <LoadingBox />

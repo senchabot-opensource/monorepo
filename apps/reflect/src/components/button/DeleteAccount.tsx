@@ -1,4 +1,4 @@
-import React, { forwardRef, useState } from "react";
+import React, { forwardRef, useCallback, useState } from "react";
 import { TransitionProps } from "@mui/material/transitions";
 import { Slide } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -12,8 +12,8 @@ import {
   alpha,
 } from "@mui/material";
 import { red } from "@mui/material/colors";
-import { trpc } from "../../utils/trpc";
 import { signOut } from "next-auth/react";
+import { deleteAccount } from "src/api";
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -43,14 +43,20 @@ const DeleteAccount = () => {
     setOpen(false);
   };
 
-  const deleteAccountMutation = trpc.security.deleteMyAccount.useMutation({
-    onSuccess() {
-      signOut();
-      alert("Account(s) deleted. You will be redirected.");
-    },
-  });
+  const handleDeleteButton = useCallback(() => {
+    deleteAccount().then(res => {
+      if (!res) {
+        alert("There was an error while deleting accounts");
+      }
 
-  const handleDeleteButton = () => deleteAccountMutation.mutate();
+      if (!res.success) {
+        alert(res.errorMessage);
+      }
+
+      alert("Account(s) deleted. You will be redirected.");
+      signOut();
+    });
+  }, []);
 
   return (
     <>

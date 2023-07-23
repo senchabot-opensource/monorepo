@@ -9,11 +9,41 @@ import {
 } from "@mui/material";
 import { SiDiscord, SiTwitch } from "react-icons/si";
 import LoadingBox from "../loading/LoadingBox";
-import { trpc } from "../../utils/trpc";
 import { IBotActionActivity } from "../../types";
+import { useEffect, useState } from "react";
+import { getBotActivites } from "src/api";
+
+const activityText = (activity: IBotActionActivity) =>
+  activity.botActivity.startsWith("!") || activity.botActivity.startsWith("/")
+    ? `Command executed: ${activity.botActivity}`
+    : activity.botActivity;
+
+const activityDate = (activity: IBotActionActivity) => {
+  const date = new Date(activity.activityDate).toDateString();
+  const time = new Date(activity.activityDate).toTimeString().slice(0, 8);
+
+  return date + " " + time;
+};
+
+const platformLogo = (activity: IBotActionActivity) =>
+  activity.botPlatformType === "twitch" ? <SiTwitch /> : <SiDiscord />;
+
+const activityAuthor = (activity: IBotActionActivity) =>
+  activity.activityAuthor ?? "Senchabot";
+
+const activityDateAndAuthor = (activity: IBotActionActivity) =>
+  activityDate(activity) + " / " + activityAuthor(activity);
 
 const BotActivity = () => {
-  const botActivities = trpc.bot.getBotActivities.useQuery();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [botActivities, setBotactivites] = useState<IBotActionActivity[]>([]);
+
+  useEffect(() => {
+    getBotActivites().then(res => {
+      setBotactivites(res.data);
+      setIsLoading(false);
+    });
+  }, [isLoading]);
 
   return (
     <Paper
@@ -29,29 +59,15 @@ const BotActivity = () => {
             </ListSubheader>
           }
           disablePadding>
-          {!botActivities.isLoading ? (
-            botActivities.data?.length ? (
-              botActivities.data?.map(
+          {!isLoading ? (
+            botActivities?.length ? (
+              botActivities.map(
                 (activity: IBotActionActivity, index: number) => (
                   <ListItem key={index}>
-                    <ListItemIcon>
-                      {activity.botPlatformType === "twitch" ? (
-                        <SiTwitch />
-                      ) : (
-                        <SiDiscord />
-                      )}
-                    </ListItemIcon>
+                    <ListItemIcon>{platformLogo(activity)}</ListItemIcon>
                     <ListItemText
-                      primary={
-                        activity.botActivity.startsWith("!")
-                          ? `Command executed: ${activity.botActivity}`
-                          : activity.botActivity
-                      }
-                      secondary={`${activity.activityDate.toDateString()} ${activity.activityDate
-                        .toTimeString()
-                        .slice(0, 8)} / ${
-                        activity.activityAuthor ?? "Senchabot"
-                      }`}
+                      primary={activityText(activity)}
+                      secondary={activityDateAndAuthor(activity)}
                     />
                   </ListItem>
                 ),
