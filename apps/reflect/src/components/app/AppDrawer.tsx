@@ -16,9 +16,9 @@ import { env } from "../../env/client.mjs";
 import Link from "next/link";
 import { SiDiscord, SiTwitch } from "react-icons/si";
 import CustomAlert from "../CustomAlert";
-import { useState, FC, useEffect } from "react";
+import { useState, FC, useEffect, useCallback } from "react";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
-import { checkTwitchAccount } from "src/api";
+import { addTwitchAccount, checkTwitchAccount } from "src/api";
 import { useRouter } from "next/router";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
@@ -40,22 +40,27 @@ const AppDrawer: FC<IProps> = ({ isDrawerOpen, drawerHandler }) => {
   const [isOpenAlert, setIsOpenAlert] = useState<boolean>(false);
   const [twitchAccountAvailable, setTwitchAccountAvailable] =
     useState<boolean>(false);
+  const [alertText, setAlertText] = useState<string>("");
 
   useEffect(() => {
     checkTwitchAccount().then(res => {
       setTwitchAccountAvailable(res.data);
     });
   });
-  //const twitchBotMutate = trpc.twitchBot.add.useMutation({
-  //  onSuccess() {
-  //    alert("Twitch bot added");
-  //  },
 
-  //  onError(error) {
-  //    if (!error.shape) return;
-  //    alert(error.shape.message);
-  //  },
-  //});
+  const addTwitchBot = useCallback(() => {
+    addTwitchAccount().then(res => {
+      if (!res || !res.success) {
+        setAlertText("Something went wrong. Please try again later.");
+        setIsOpenAlert(true);
+      }
+
+      if (res.success) {
+        setAlertText(res.message);
+        setIsOpenAlert(true);
+      }
+    });
+  }, []);
 
   return (
     <Drawer
@@ -71,7 +76,7 @@ const AppDrawer: FC<IProps> = ({ isDrawerOpen, drawerHandler }) => {
       anchor="left"
       open={isDrawerOpen}>
       <CustomAlert
-        content="Before you can add the Twitch bot, you need to link your Twitch account in Settings/Security section."
+        content={alertText}
         isOpen={isOpenAlert}
         closeHandler={() => setIsOpenAlert(!isOpenAlert)}
       />
@@ -112,11 +117,16 @@ const AppDrawer: FC<IProps> = ({ isDrawerOpen, drawerHandler }) => {
             <Typography>Get Discord Bot</Typography>
           </MenuItem>
           <MenuItem
-            onClick={() =>
-              !twitchAccountAvailable
-                ? setIsOpenAlert(true)
-                : router.push("/api/twitch/get-bot")
-            }>
+            onClick={() => {
+              if (!twitchAccountAvailable) {
+                setAlertText(
+                  "Before you can add the Twitch bot, you need to link your Twitch account in Settings/Security section.",
+                );
+                setIsOpenAlert(true);
+              } else {
+                addTwitchBot();
+              }
+            }}>
             <ListItemIcon>
               <SiTwitch />
             </ListItemIcon>

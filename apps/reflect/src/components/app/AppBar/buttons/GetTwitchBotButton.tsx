@@ -1,31 +1,29 @@
 import { IconButton, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
 import { SiTwitch } from "react-icons/si";
+import { checkTwitchAccount } from "src/api";
 import { BootstrapTooltip } from "src/components/Tooltip";
 
 const GetTwitchBotButton = () => {
-  //const { data: twitchAcc } = trpc.check.checkTwitchAcc.useQuery();
+  const [twitchAcc, setTwitchAcc] = useState("");
 
-  //const twitchBotMutate = trpc.twitchBot.add.useMutation({
-  //  onSuccess() {
-  //    alert("Twitch bot added");
-  //  },
-
-  //  onError(error) {
-  //    if (!error.shape) return;
-  //    alert(error.shape.message);
-  //  },
-  //});
+  useEffect(() => {
+    checkTwitchAccount().then(res => {
+      if (!res.data) return;
+      console.log(res.data);
+      setTwitchAcc(res.data);
+    });
+  }, []);
 
   return (
     <BootstrapTooltip title="Get Twitch Bot">
       <Typography
-        onClick={
-          () => null
-          //        !twitchAcc
-          //          ? alert(
-          //              "Before you can add the Twitch bot, you need to link your Twitch account in Settings/Security section.",
-          //            )
-          //          : twitchBotMutate.mutate()
+        onClick={() =>
+          !twitchAcc
+            ? alert(
+                "Before you can add the Twitch bot, you need to link your Twitch account in Settings/Security section.",
+              )
+            : alert("okay")
         }>
         <IconButton
           aria-label="get twitch bot"
