@@ -3,6 +3,7 @@ package db
 import (
 	"context"
 	"errors"
+	"fmt"
 	"os"
 	"time"
 
@@ -340,4 +341,46 @@ func (m *MySQL) DeleteDiscordTwitchLiveAnno(ctx context.Context, twitchUserId st
 	}
 
 	return true, nil
+}
+
+func (m *MySQL) CheckConfig(ctx context.Context, discordServerId string, configKey string, configValue string) bool {
+	configData, err := m.GetDiscordBotConfig(ctx, discordServerId, configKey)
+	if err != nil {
+		fmt.Println(err.Error())
+		return false
+	}
+
+	if configData != nil && configData.Value == configValue {
+		return true
+	}
+
+	return false
+}
+
+func (m *MySQL) CreateBotActionActivity(ctx context.Context, botPlatformType, botActivity, discordServerId, activityAuthor string) error {
+	botActionActivity := models.BotActionActivity{
+		BotPlatformType: botPlatformType,
+		BotActivity:     botActivity,
+		DiscordServerID: &discordServerId,
+		ActivityAuthor:  &activityAuthor,
+	}
+
+	result := m.DB.Create(&botActionActivity)
+
+	if result.Error != nil {
+		return errors.New("(CreateBotActionActivity) db.Create Error:" + result.Error.Error())
+	}
+
+	return nil
+}
+
+func (m *MySQL) SaveBotCommandActivity(context context.Context, activity, discordServerId, commandAuthor string) {
+	check := m.CheckConfig(context, discordServerId, "bot_activity_enabled", "1")
+	if !check {
+		return
+	}
+
+	if err := m.CreateBotActionActivity(context, "discord", activity, discordServerId, commandAuthor); err != nil {
+		fmt.Println(err.Error())
+	}
 }
