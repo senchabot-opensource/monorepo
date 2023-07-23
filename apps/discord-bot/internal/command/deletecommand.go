@@ -14,8 +14,8 @@ func (c *commands) DeleteCommand(ctx context.Context, s *discordgo.Session, i *d
 	options := i.ApplicationCommandData().Options
 
 	switch options[0].Name {
-	case "stream-default-notif-channel":
-		_, err := db.DeleteDiscordBotConfig(ctx, i.GuildID, "stream_default_anno_channel")
+	case "stream-anno-default-channel":
+		_, err := db.DeleteDiscordBotConfig(ctx, i.GuildID, "stream_anno_default_channel")
 		if err != nil {
 			log.Printf("Error while deleting Discord bot config: %v", err)
 			ephemeralRespond(s, i, errorMessage+"#0001")
@@ -24,8 +24,8 @@ func (c *commands) DeleteCommand(ctx context.Context, s *discordgo.Session, i *d
 
 		ephemeralRespond(s, i, "Varsayılan Twitch canlı yayın duyuru kanalı ayarı kaldırıldı.")
 
-	case "stream-announcement-content":
-		_, err := db.SetDiscordBotConfig(ctx, i.GuildID, "stream_anno_content", "")
+	case "stream-anno-default-content":
+		_, err := db.SetDiscordBotConfig(ctx, i.GuildID, "stream_anno_default_content", "")
 		if err != nil {
 			log.Printf("Error while setting Discord bot config: %v", err)
 			ephemeralRespond(s, i, errorMessage+"#0001")

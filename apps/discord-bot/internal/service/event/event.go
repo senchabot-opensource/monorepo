@@ -92,7 +92,7 @@ func CheckLiveStreams(s *discordgo.Session, ctx context.Context, db *db.MySQL, g
 						}
 					}
 
-					annoContent = "{twitch.user.name}, {twitch.category} yayınına başladı! {twitch.url}"
+					annoContent = "{twitch.username}, {stream.category} yayınına başladı! {twitch.url}"
 
 					streamerAnnoContent, err := db.GetTwitchStreamerAnnoContent(ctx, sd.UserLogin, guildId)
 					if err != nil {
@@ -103,7 +103,7 @@ func CheckLiveStreams(s *discordgo.Session, ctx context.Context, db *db.MySQL, g
 						annoContent = *streamerAnnoContent
 					}
 
-					cfg, err := db.GetDiscordBotConfig(ctx, guildId, "stream_anno_content")
+					cfg, err := db.GetDiscordBotConfig(ctx, guildId, "stream_anno_default_content")
 					if err != nil {
 						log.Printf("There was an error while getting Discord bot config in CheckLiveStreams: %v", err)
 					}
