@@ -1,7 +1,11 @@
 import { Typography } from "@mui/material";
-import { ReactElement } from "react";
+import { FC } from "react";
 
-const FormTitle = ({ titleText }: { titleText: string }) => {
+type IProps = {
+  titleText: string;
+};
+
+const FormTitle: FC<IProps> = ({ titleText }) => {
   return (
     <Typography variant="h6" sx={{ mb: 2 }}>
       {titleText}

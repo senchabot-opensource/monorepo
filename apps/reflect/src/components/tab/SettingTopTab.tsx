@@ -28,7 +28,7 @@ const SettingTopTab = () => {
         scrollButtons
         allowScrollButtonsMobile>
         <Tab
-          label="Bot Management"
+          label="Bot Configuration"
           {...horizontalTabPanelProps(0)}
           disableRipple
         />

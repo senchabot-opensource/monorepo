@@ -3,42 +3,47 @@ import {
   Avatar,
   ListItemAvatar,
   ListItemText,
-  Stack,
+  Grid,
 } from "@mui/material";
-import GitHubIcon from "@mui/icons-material/GitHub";
 import { SiDiscord, SiTwitch } from "react-icons/si";
 import { signIn } from "next-auth/react";
-import { trpc } from "../../utils/trpc";
+import { FC, ReactNode, useEffect, useState } from "react";
+import { getAccount } from "src/api";
+import { IAccount } from "src/types";
 
-const LinkAccount = () => {
-  const accounts = trpc.security.getAccounts.useQuery();
-  const currentProviders = accounts.data?.map(account => account.provider);
+type IProps = {
+  accountType: "discord" | "twitch";
+  accountTitle: "Discord Account" | "Twitch Account";
+  icon: ReactNode;
+};
+
+const LinkAccount: FC<IProps> = ({ accountType, accountTitle, icon }) => {
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [accounts, setAccounts] = useState<IAccount[]>([]);
+
+  useEffect(() => {
+    getAccount().then(res => {
+      if (!res.data) return;
+      setAccounts(res.data);
+      setIsLoading(false);
+    });
+  }, [isLoading]);
+
+  const currentProviders = accounts?.map(
+    (account: IAccount) => account.provider,
+  );
 
   return (
     <>
       <ListItem
         button
-        disabled={currentProviders?.includes("discord")}
-        onClick={() => signIn("discord")}
+        disabled={currentProviders?.includes(accountType)}
+        onClick={() => signIn(accountType)}
         sx={{ "&:hover": { borderRadius: 1 } }}>
         <ListItemAvatar>
-          <Avatar>
-            <SiDiscord />
-          </Avatar>
+          <Avatar>{icon}</Avatar>
         </ListItemAvatar>
-        <ListItemText primary="with Discord Account" />
-      </ListItem>
-      <ListItem
-        button
-        disabled={currentProviders?.includes("twitch")}
-        onClick={() => signIn("twitch")}
-        sx={{ "&:hover": { borderRadius: 1 } }}>
-        <ListItemAvatar>
-          <Avatar>
-            <SiTwitch />
-          </Avatar>
-        </ListItemAvatar>
-        <ListItemText primary="with Twitch Account" />
+        <ListItemText primary={`with ${accountTitle}`} />
       </ListItem>
     </>
   );
@@ -46,18 +51,23 @@ const LinkAccount = () => {
 
 const LinkAccountStack = () => {
   return (
-    <>
-      <Stack
-        spacing={2}
-        direction="row"
-        sx={{ display: { xs: "none", md: "flex" } }}>
-        <LinkAccount />
-      </Stack>
+    <Grid container direction={{ xs: "column", md: "row" }} spacing={2}>
+      <Grid item xs={12} md={4}>
+        <LinkAccount
+          accountType="discord"
+          accountTitle="Discord Account"
+          icon={<SiDiscord />}
+        />
+      </Grid>
 
-      <Stack direction="column" sx={{ display: { xs: "flex", md: "none" } }}>
-        <LinkAccount />
-      </Stack>
-    </>
+      <Grid item xs={12} md={4}>
+        <LinkAccount
+          accountType="twitch"
+          accountTitle="Twitch Account"
+          icon={<SiTwitch />}
+        />
+      </Grid>
+    </Grid>
   );
 };
 

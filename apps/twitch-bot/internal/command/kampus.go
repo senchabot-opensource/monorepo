@@ -1,11 +1,11 @@
 package command
 
 import (
+	"context"
+
 	"github.com/gempir/go-twitch-irc/v3"
-	"github.com/senchabot-dev/monorepo/apps/twitch-bot/client"
-	"github.com/senchabot-dev/monorepo/apps/twitch-bot/server"
 )
 
-func KampusCommand(client *client.Clients, server *server.SenchabotAPIServer, message twitch.PrivateMessage, commandName string, params []string) {
-	client.Twitch.Say(message.Channel, "https://discord.kamp.us")
+func (c *commands) KampusCommand(context context.Context, message twitch.PrivateMessage, commandName string, params []string) {
+	c.client.Twitch.Say(message.Channel, "discord.gg/kampus • github.com/kamp-us")
 }

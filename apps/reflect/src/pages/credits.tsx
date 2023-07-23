@@ -38,13 +38,6 @@ const CookiePolicy = () => {
           licenseLink="https://github.com/prisma/prisma/blob/main/LICENSE"
         />
         <LibraryText
-          libraryName="tRPC"
-          repoLink="github.com/trpc/trpc"
-          copyrightText="Copyright (c) 2023 Alex Johansson"
-          licenseText="MIT License"
-          licenseLink="https://github.com/trpc/trpc/blob/main/LICENSE"
-        />
-        <LibraryText
           libraryName="Zod"
           repoLink="github.com/colinhacks/zod"
           copyrightText="Copyright (c) 2020 Colin McDonnell"

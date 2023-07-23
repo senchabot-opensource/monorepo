@@ -1,10 +1,14 @@
 import { z } from "zod";
 
 export const TwitchBotConfigMutationInputValidation = z.object({
-  configName: z.string(),
-  configValue: z.string(),
+  configs: z
+    .object({
+      key: z.string(),
+      value: z.string(),
+    })
+    .array(),
 });
 
 export const TwitchBotConfigQueryInputValidation = z.object({
-  configName: z.string(),
+  key: z.string(),
 });

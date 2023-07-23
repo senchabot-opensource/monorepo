@@ -3,23 +3,19 @@ import {
   Box,
   Toolbar,
   Typography,
-  alpha,
-  IconButton,
   Menu,
   MenuItem,
 } from "@mui/material";
 import Link from "next/link";
-//import LandingButton from "./LandingButton";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useSession } from "next-auth/react";
 import { Offset } from "../Offset";
-import { env } from "../../env/client.mjs";
 import AppBarTitle from "../common/AppBarTitle";
 import LandingButton from "./LandingButton";
 import { AppBarStyles, MenuPaperPropsStyles } from "../../styles";
-import React from "react";
+import React, { useState } from "react";
 
 const appBarMenuList = [
   { title: "Cookie Policy", path: "/cookie-policy" },
@@ -29,11 +25,14 @@ const appBarMenuList = [
   { title: "Credits", path: "/credits" },
 ];
 
+const toolBarStyles = {
+  justifyContent: "space-between",
+  alignItems: "center",
+};
+
 const LandingAppBar = () => {
   const { data: session } = useSession();
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
-    null
-  );
+  const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -49,15 +48,14 @@ const LandingAppBar = () => {
         position="sticky" // adds pb: 8
         color="transparent"
         sx={AppBarStyles}
-        elevation={0}
-      >
+        elevation={0}>
         <Box sx={{ flexGrow: 1 }}>
           <Toolbar
+            style={toolBarStyles}
             variant="regular"
             sx={{
               userSelect: "none",
-            }}
-          >
+            }}>
             <LandingButton
               sx={{
                 pr: 4,
@@ -65,8 +63,7 @@ const LandingAppBar = () => {
                 color: "#646464",
               }}
               onClick={handleOpenNavMenu}
-              disableRipple
-            >
+              disableRipple>
               <MenuIcon />
             </LandingButton>
             <Menu
@@ -78,8 +75,7 @@ const LandingAppBar = () => {
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
               sx={{ display: { xs: "block", md: "none" } }}
-              PaperProps={MenuPaperPropsStyles}
-            >
+              PaperProps={MenuPaperPropsStyles}>
               {appBarMenuList.map((item, index) => (
                 <Link key={index} href={item.path}>
                   <MenuItem key={index}>
@@ -92,34 +88,25 @@ const LandingAppBar = () => {
             </Menu>
             <AppBarTitle />
 
-            <Box
+            <LandingButton
+              href="/app"
               sx={{
-                flexGrow: 1,
-                display: { xs: "none", sm: "none", md: "flex" },
+                pl: 4,
+                color: "#646464",
               }}
-            ></Box>
-
-            <Link href="/app">
-              <LandingButton
-                sx={{
-                  pl: 4,
-                  color: "#646464",
-                }}
-                disableRipple
-              >
-                {session ? (
-                  <DashboardIcon
-                    sx={{
-                      backgroundColor: "#000",
-                      color: "#fff",
-                      "&:hover": { cursor: "pointer" },
-                    }}
-                  />
-                ) : (
-                  <AccountCircle sx={{ "&:hover": { cursor: "pointer" } }} />
-                )}
-              </LandingButton>
-            </Link>
+              disableRipple>
+              {session ? (
+                <DashboardIcon
+                  sx={{
+                    backgroundColor: "#000",
+                    color: "#fff",
+                    "&:hover": { cursor: "pointer" },
+                  }}
+                />
+              ) : (
+                <AccountCircle sx={{ "&:hover": { cursor: "pointer" } }} />
+              )}
+            </LandingButton>
           </Toolbar>
         </Box>
       </AppBar>

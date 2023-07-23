@@ -3,8 +3,8 @@ import { SessionProvider } from "next-auth/react";
 import type { AppType } from "next/app";
 import type { Session } from "next-auth";
 import "../styles/globals.css";
-import { trpc } from "../utils/trpc";
 import Script from "next/script";
+import { Analytics } from "@vercel/analytics/react";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -31,11 +31,9 @@ const MyApp: AppType<{ session: Session | null }> = ({
         refetchOnWindowFocus={false}>
         <Component {...pageProps} />
       </SessionProvider>
+      <Analytics />
     </>
   );
 };
 
-// Update tRPC to v10: config() moved into createTRPCNext in utils/trpc
-// and withTRPC<AppRouter>({...}) has been replaced by withTRPC(MyApp)
-// Removed the withTRPC import above, used trpc.*
-export default trpc.withTRPC(MyApp);
+export default MyApp;

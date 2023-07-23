@@ -18,6 +18,8 @@ export const serverSchema = z.object({
   TWITCH_CLIENT_SECRET: z.string(),
   GOOGLE_CLIENT_ID: z.string(),
   GOOGLE_CLIENT_SECRET: z.string(),
+  TWITCH_BOT_HOST: z.string(),
+  WEBHOOK_TOKEN: z.string(),
 });
 
 /**
@@ -36,6 +38,7 @@ export const clientSchema = z.object({
   NEXT_PUBLIC_APP_CONTENT_STRING: z.string(),
   NEXT_PUBLIC_APP_DISCORD_BOT_INVITE_URL: z.string(),
   NEXT_PUBLIC_APP_DISCORD_BOT_INVITE_AND_AUTH_URL: z.string(),
+  NEXT_PUBLIC_APP_LINKEDIN_PROFILE: z.string(),
 });
 
 /**
@@ -57,4 +60,6 @@ export const clientEnv = {
     process.env.NEXT_PUBLIC_APP_DISCORD_BOT_INVITE_URL,
   NEXT_PUBLIC_APP_DISCORD_BOT_INVITE_AND_AUTH_URL:
     process.env.NEXT_PUBLIC_APP_DISCORD_BOT_INVITE_AND_AUTH_URL,
+  NEXT_PUBLIC_APP_LINKEDIN_PROFILE:
+    process.env.NEXT_PUBLIC_APP_LINKEDIN_PROFILE,
 };

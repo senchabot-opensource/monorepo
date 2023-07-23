@@ -3,44 +3,40 @@ package command
 import (
 	"context"
 	"fmt"
-	"strings"
 
 	"github.com/gempir/go-twitch-irc/v3"
-	"github.com/senchabot-dev/monorepo/apps/twitch-bot/client"
-	"github.com/senchabot-dev/monorepo/apps/twitch-bot/server"
+	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/command/helpers"
 )
 
-const UPDATE_COMMAND_INFO = "!ucmd [command_name] [new_command_content]"
+const UPDATE_COMMAND_INFO = "For example: !ucmd [command_name] [new_command_content]"
 
-func UpdateCommandCommand(client *client.Clients, server *server.SenchabotAPIServer, message twitch.PrivateMessage, commandName string, params []string) {
-	if !strings.Contains(message.Tags["badges"], "moderator") {
-		if !strings.Contains(message.Tags["badges"], "broadcaster") {
-			return
-		}
-	}
-	if len(params) < 2 {
-		client.Twitch.Say(message.Channel, UPDATE_COMMAND_INFO)
+func (c *commands) UpdateCommandCommand(context context.Context, message twitch.PrivateMessage, commandName string, params []string) {
+	if !helpers.CanExecuteCommand(context, c.service, message.Tags["badges"], message.RoomID) {
 		return
 	}
-	var command_name = strings.ToLower(params[0])
-	params = params[1:]
-	var newCommandContent = strings.Join(params, " ")
-
-	if command_name == "" && newCommandContent == "" {
-		client.Twitch.Say(message.Channel, UPDATE_COMMAND_INFO)
+	command_name, newCommandContent, check := helpers.GetCommandCreateUpdateParams(params)
+	if !check {
+		c.client.Twitch.Say(message.Channel, UPDATE_COMMAND_INFO)
 		return
 	}
 	// Check command content length
-	if len(newCommandContent) > 400 {
-		client.Twitch.Say(message.Channel, message.User.DisplayName+", Command Content length must be no more than 400 chars")
+	if infoText, check := helpers.ValidateCommandContentLength(newCommandContent); !check {
+		c.client.Twitch.Say(message.Channel, message.User.DisplayName+", "+infoText)
 		return
 	}
-	err := server.UpdateBotCommand(context.Background(), command_name, newCommandContent, message.RoomID)
+
+	updatedCommandName, infoText, err := c.service.UpdateBotCommand(context, command_name, newCommandContent, message.RoomID, message.User.DisplayName)
 	if err != nil {
 		fmt.Println(err.Error())
 		return
 	}
-	fmt.Println("COMMAND_UPDATE: command_name:", command_name, "new_command_content:", newCommandContent)
 
-	client.Twitch.Say(message.Channel, "Command Updated: "+command_name)
+	if infoText != nil {
+		c.client.Twitch.Say(message.Channel, message.User.DisplayName+", "+*infoText)
+		return
+	}
+
+	fmt.Println("COMMAND_UPDATE: command_name:", updatedCommandName, "new_command_content:", newCommandContent)
+
+	c.client.Twitch.Say(message.Channel, "Command Updated: "+*updatedCommandName)
 }

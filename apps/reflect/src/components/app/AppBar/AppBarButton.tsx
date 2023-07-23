@@ -1,15 +1,24 @@
 import { IconButton, Typography } from "@mui/material";
 import Link from "next/link";
 import { BootstrapTooltip } from "../../Tooltip";
-import { IAppBarButton } from "../../../types";
+import React from "react";
+import { FC, ReactNode } from "react";
 
-const AppBarButton = ({
+type IProps = {
+  title: string;
+  pathHref: string;
+  ariaLabel: string;
+  drawerHandler: () => void;
+  children: ReactNode;
+};
+
+const AppBarButton: FC<IProps> = ({
   title,
   pathHref,
   ariaLabel,
   drawerHandler,
   children,
-}: IAppBarButton) => {
+}) => {
   return (
     <BootstrapTooltip title={title}>
       <Typography>

@@ -1,7 +1,11 @@
 import { Grid } from "@mui/material";
-import React from "react";
+import { FC, ReactNode } from "react";
 
-export const LandingGrid = ({ children }: { children: React.ReactNode }) => (
+type IProps = {
+  children: ReactNode;
+};
+
+const LandingGrid: FC<IProps> = ({ children }) => (
   <Grid
     container
     direction="column"
@@ -12,9 +16,9 @@ export const LandingGrid = ({ children }: { children: React.ReactNode }) => (
       pb: { xs: "64px", md: "128px" },
       overflowWrap: "break-word",
       whiteSpace: "pre-line",
-      margin: "10px",
-    }}
-  >
+    }}>
     {children}
   </Grid>
 );
+
+export default LandingGrid;
