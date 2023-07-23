@@ -78,7 +78,7 @@ const TwitchBotForm = () => {
 
     setConfigData(config);
     setButtonEnabled(false);
-    setConfig({ configs: data }).then(res => {
+    setConfig({ configs: config }).then(res => {
       if (res.success) {
         setSnackbarIsOpen(true);
       } else {

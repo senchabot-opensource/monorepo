@@ -27,13 +27,14 @@ const getAllConfig = async (
     where: { twitchChannelId: twitchAccId },
   });
 
-  if (configs) {
-    return res.json({ data: configs, success: true });
+  if (!configs) {
+    return res.status(404).json({
+      success: false,
+      errorMessage: "Error while getting all configs",
+    });
   }
 
-  return res
-    .status(404)
-    .json({ success: false, errorMessage: "Error while getting all configs" });
+  return res.json({ data: configs, success: true });
 };
 
 export default getAllConfig;

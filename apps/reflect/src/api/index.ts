@@ -100,7 +100,8 @@ export const deleteAccount = async () => {
 export const setConfig = async (input: any) => {
   const response = await fetch("/api/config/setConfig", {
     method: "POST",
-    body: input,
+    body: JSON.stringify(input),
+    headers: { "Content-Type": "application/json" },
   });
   return response.json();
 };

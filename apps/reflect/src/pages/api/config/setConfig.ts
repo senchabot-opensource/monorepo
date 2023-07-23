@@ -33,7 +33,7 @@ const setConfig = async (req: NextApiRequest, res: NextApiResponse) => {
     });
 
     if (findConfig) {
-      await prisma.twitchBotConfigs.update({
+      const updated = await prisma.twitchBotConfigs.update({
         where: {
           id: findConfig.id,
         },
@@ -42,10 +42,13 @@ const setConfig = async (req: NextApiRequest, res: NextApiResponse) => {
           value: config.value,
         },
       });
-      return;
+      if (!updated) {
+        return res.send({ success: false });
+      }
+      return res.send({ success: true });
     }
 
-    await prisma.twitchBotConfigs.create({
+    const created = await prisma.twitchBotConfigs.create({
       data: {
         key: config.key,
         value: config.value,
@@ -53,6 +56,11 @@ const setConfig = async (req: NextApiRequest, res: NextApiResponse) => {
         userId: userId,
       },
     });
+    if (!created) {
+      return res.send({ success: false });
+    }
+
+    return res.send({ success: true });
   });
 };
 
