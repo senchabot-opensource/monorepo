@@ -31,11 +31,9 @@ const SystemMessage = () => {
     });
     getDiscordServers().then(res => {
       setDiscordServers(res.data);
-      console.log("getDiscordServers", res);
     });
     getTwitchChannels().then(res => {
       setTwitchChannels(res.data);
-      console.log("getTwitchChannels", res);
     });
 
     setIsLoading(false);
