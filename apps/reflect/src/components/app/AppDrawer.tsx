@@ -19,7 +19,6 @@ import CustomAlert from "../CustomAlert";
 import { useState, FC, useEffect, useCallback } from "react";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import { addTwitchAccount, checkTwitchAccount } from "src/api";
-import { useRouter } from "next/router";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -70,6 +69,7 @@ const AppDrawer: FC<IProps> = ({ isDrawerOpen, drawerHandler }) => {
         width: 240,
         flexShrink: 0,
         "& .MuiDrawer-paper": {
+          backgroundColor: "background.default",
           width: 240,
           boxSizing: "border-box",
         },

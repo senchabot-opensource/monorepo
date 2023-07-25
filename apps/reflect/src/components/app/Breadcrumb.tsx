@@ -9,7 +9,9 @@ const Breadcrumb = () => {
   const pathLength = pathNames.length;
 
   return (
-    <Breadcrumbs aria-label="breadcrumb" sx={{ ml: 1 }}>
+    <Breadcrumbs
+      aria-label="breadcrumb"
+      sx={{ ml: 1, backgroundColor: "appBreadcrumb.background" }}>
       {pathNames.map((path, index) => (
         <Link
           key={index}

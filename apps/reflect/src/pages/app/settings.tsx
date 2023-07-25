@@ -30,7 +30,12 @@ const Settings: NextPage = () => {
       <Header title="App Settings" index={false} />
       <AppContainer isLoading={isLoading}>
         <Paper
-          sx={{ mt: "10px", backgroundColor: "#000", padding: "10px" }}
+          sx={{
+            mt: "10px",
+            backgroundImage: "none",
+            backgroundColor: "appContainer.background",
+            padding: "10px",
+          }}
           elevation={1}>
           <SettingTopTab />
           <HorizontalTabPanel value={value} index={0}>

@@ -1,4 +1,4 @@
-import { styled, alpha, useTheme } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import { Container, Toolbar, Box, IconButton } from "@mui/material";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import { useSession } from "next-auth/react";
@@ -37,7 +37,6 @@ const ResponsiveAppBar: FC<IResponsiveAppBarProps> = ({
   drawerHandler,
 }) => {
   useSession({ required: true });
-  const theme = useTheme();
   const [drawerIsOpen, setDrawerIsOpen] = useState<boolean>(false);
 
   return (
@@ -51,7 +50,7 @@ const ResponsiveAppBar: FC<IResponsiveAppBarProps> = ({
         color="transparent"
         sx={{
           backdropFilter: "blur(4px)",
-          backgroundColor: alpha(theme.palette.background.paper, 0.85),
+          backgroundColor: "background.default",
         }}
         elevation={2}>
         <Container>

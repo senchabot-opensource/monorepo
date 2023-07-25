@@ -1,4 +1,4 @@
-import { Typography } from "@mui/material";
+import { Typography, useTheme } from "@mui/material";
 import Link from "next/link";
 import { Offset } from "./Offset";
 import { FC } from "react";
@@ -18,6 +18,8 @@ const LibraryText: FC<IProps> = ({
   licenseLink,
   repoLink,
 }) => {
+  const theme = useTheme();
+
   return (
     <>
       <Offset />
@@ -27,7 +29,9 @@ const LibraryText: FC<IProps> = ({
           {licenseText}
         </Link>
         ) - {copyrightText}{" "}
-        <Link href={`https://${repoLink}`} style={{ color: "#ffff00" }}>
+        <Link
+          href={`https://${repoLink}`}
+          style={{ color: theme.palette.libraryText }}>
           {repoLink}
         </Link>
       </Typography>

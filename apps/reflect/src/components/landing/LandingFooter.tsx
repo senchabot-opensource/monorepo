@@ -11,12 +11,15 @@ const appBarMenuList = [
   { title: "EULA", path: "/eula" },
   { title: "Credits", path: "/credits" },
 ];
+
 function Links() {
   return (
     <React.Fragment>
       {appBarMenuList.map((item, index) => (
         <Link key={index} href={item.path} style={{ textDecoration: "none" }}>
-          <LandingButton sx={{ mr: 2, color: "#646464" }} disableRipple>
+          <LandingButton
+            sx={{ mr: 2, color: "landingButton.default" }}
+            disableRipple>
             {item.title}
           </LandingButton>
         </Link>
@@ -31,10 +34,10 @@ const iconStyle = {
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
-  bgcolor: "#000000",
+  bgcolor: "landingIcon.background",
   mr: 1,
   "&:hover": {
-    backgroundColor: "#0c0c0c",
+    backgroundColor: "landingIcon.backgroundHover",
   },
 };
 

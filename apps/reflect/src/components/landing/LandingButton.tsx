@@ -11,7 +11,7 @@ const LandingButton = styled(Button)<ButtonProps>(({ theme }) => ({
     backgroundColor: alpha("#000000", 0),
     border: "none",
     boxShadow: "none",
-    color: "#fff",
+    color: "landingButton.hover",
   },
 }));
 

@@ -1,7 +1,5 @@
 import React from "react";
 import type { NextPage } from "next";
-import { ThemeProvider } from "@mui/material/styles";
-import { landingDarkTheme } from "../utils/theme";
 import { CssBaseline } from "@mui/material";
 import Header from "../components/common/Header";
 import LandingAppBar from "../components/landing/LandingAppBar";
@@ -13,15 +11,11 @@ const Landing: NextPage = () => {
   return (
     <>
       <Header title="Landing" index={true} />
-      <ThemeProvider theme={landingDarkTheme}>
-        <CssBaseline />
-        <LandingAppBar />
-        <LandingTexts />
-
-        <VersionText />
-
-        <LandingFooter />
-      </ThemeProvider>
+      <CssBaseline />
+      <LandingAppBar />
+      <LandingTexts />
+      <VersionText />
+      <LandingFooter />
     </>
   );
 };

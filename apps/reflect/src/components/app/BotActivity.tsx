@@ -47,14 +47,21 @@ const BotActivity = () => {
 
   return (
     <Paper
-      sx={{ mt: "10px", backgroundColor: "#000", padding: "10px" }}
+      sx={{
+        mt: "10px",
+        backgroundImage: "none",
+        backgroundColor: "appContainer.border",
+        padding: "10px",
+      }}
       elevation={1}>
       <Stack>
         <List
           dense={false}
-          sx={{ width: "100%", backgroundColor: "#000" }}
+          sx={{ width: "100%", backgroundColor: "appContainer.background" }}
           subheader={
-            <ListSubheader sx={{ backgroundColor: "#000" }} disableSticky>
+            <ListSubheader
+              sx={{ backgroundColor: "appContainer.background" }}
+              disableSticky>
               Recent bot activities:
             </ListSubheader>
           }

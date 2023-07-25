@@ -1,17 +1,14 @@
 import React, { forwardRef, useCallback, useState } from "react";
 import { TransitionProps } from "@mui/material/transitions";
 import { Slide } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import Button, { ButtonProps } from "@mui/material/Button";
+import Button from "@mui/material/Button";
 import {
   Dialog,
   DialogTitle,
   DialogContent,
   DialogContentText,
   DialogActions,
-  alpha,
 } from "@mui/material";
-import { red } from "@mui/material/colors";
 import { signOut } from "next-auth/react";
 import { deleteAccount } from "src/api";
 
@@ -23,14 +20,6 @@ const Transition = forwardRef(function Transition(
 ) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
-
-const RedButton = styled(Button)<ButtonProps>(({ theme }) => ({
-  color: theme.palette.getContrastText(red[500]),
-  backgroundColor: alpha("#ff0000", 0.4),
-  "&:hover": {
-    backgroundColor: red[900],
-  },
-}));
 
 const DeleteAccount = () => {
   const [open, setOpen] = useState(false);
@@ -60,9 +49,18 @@ const DeleteAccount = () => {
 
   return (
     <>
-      <RedButton variant="contained" onClick={handleOpen} disableElevation>
+      <Button
+        sx={{
+          backgroundColor: "deleteAccountBtn.default",
+          "&:hover": {
+            backgroundColor: "deleteAccountBtn.hover",
+          },
+        }}
+        variant="contained"
+        onClick={handleOpen}
+        disableElevation>
         Delete my account
-      </RedButton>
+      </Button>
       <Dialog
         open={open}
         TransitionComponent={Transition}

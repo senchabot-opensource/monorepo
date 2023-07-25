@@ -7,6 +7,7 @@ import {
   ListItem,
   Stack,
   Typography,
+  useTheme,
 } from "@mui/material";
 import { env } from "../../env/client.mjs";
 import { FaDiscord, FaTwitch } from "react-icons/fa";
@@ -20,7 +21,6 @@ import {
 } from "../../api";
 import { randomInt } from "next/dist/shared/lib/bloom-filter/utils";
 import { signIn, useSession } from "next-auth/react";
-import { useRouter } from "next/router";
 import CustomAlert from "../CustomAlert";
 import { IBotCommand } from "src/types";
 
@@ -28,7 +28,6 @@ const ALT_TEXT =
   "Open-source multi-platform bot development project, which works on Twitch and Discord.";
 // Stream overlays: #8b5cf6
 const LandingTexts = () => {
-  const router = useRouter();
   const [cmdList, setCmdList] = useState<string[]>([]);
   const [defaultCmdList, setDefaultCmdList] = useState<string[]>([]);
   const [userCmdList, setUserCmdList] = useState<string[]>([]);
@@ -39,6 +38,7 @@ const LandingTexts = () => {
   const { data: session } = useSession();
   const [alertIsOpen, setAlertIsOpen] = useState<boolean>(false);
   const [alertText, setAlertText] = useState<string>("");
+  const theme = useTheme();
 
   useEffect(() => {
     getDefaultCmdList().then(res0 => {
@@ -108,7 +108,9 @@ const LandingTexts = () => {
               <Typography
                 key={index}
                 position="absolute"
-                color={cmd[0] === "!" ? "#6034b2" : "#7289da"}
+                color={
+                  cmd[0] === "!" ? "landingCmd.primary" : "landingCmd.secondary"
+                }
                 top={randomInt(1, 75) + "vh"}
                 left={randomInt(1, 90) + "vw"}
                 sx={{
@@ -141,10 +143,10 @@ const LandingTexts = () => {
               fontFamily: "monospace",
               fontSize: { xs: "4rem", md: "5rem" },
             }}>
-            <span style={{ color: "#6034b2" }}>
+            <span style={{ color: theme.palette.landingTitle.primary }}>
               {env.NEXT_PUBLIC_APP_NAME.substring(0, 6)}
             </span>
-            <span style={{ color: "#7289da" }}>
+            <span style={{ color: theme.palette.landingTitle.secondary }}>
               {env.NEXT_PUBLIC_APP_NAME.substring(6, 9)
                 .charAt(0)
                 .toUpperCase() + env.NEXT_PUBLIC_APP_NAME.substring(7, 9)}
@@ -182,9 +184,9 @@ const LandingTexts = () => {
               variant="contained"
               startIcon={<FaDiscord />}
               sx={{
-                backgroundColor: "#7289da",
+                backgroundColor: "landingDiscordBtn.background",
                 "&:hover": {
-                  backgroundColor: "rgba(114,137,218,0.74)",
+                  backgroundColor: "landingDiscordBtn.backgroundHover",
                 },
               }}>
               Get Discord Bot
@@ -202,16 +204,16 @@ const LandingTexts = () => {
               variant="contained"
               startIcon={<FaTwitch />}
               sx={{
-                backgroundColor: "#6034b2",
+                backgroundColor: "landingTwitchBtn.background",
                 "&:hover": {
-                  backgroundColor: "rgba(96,52,178,0.74)",
+                  backgroundColor: "landingTwitchBtn.backgroundHover",
                 },
               }}>
               Get Twitch Bot
             </Button>
           </Stack>
           <Stack
-            bgcolor="rgba(50,50,50,0.3)"
+            bgcolor="landingTextBackground"
             borderRadius="1px"
             marginTop="5%"
             marginBottom={{ xs: "20%", md: "10%" }}
@@ -227,7 +229,9 @@ const LandingTexts = () => {
                   <ListItem key={index}>
                     <Typography
                       variant="h6"
-                      sx={{ fontFamily: "Source Code Pro", color: "#fff" }}>
+                      sx={{
+                        fontFamily: "Source Code Pro",
+                      }}>
                       {index + 1}) {feature}
                     </Typography>
                   </ListItem>

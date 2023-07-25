@@ -28,7 +28,7 @@ const AuthLoginButton: FC<IProps> = ({
           ? {
               cursor: "pointer",
               "&:hover": {
-                backgroundColor: "#202020",
+                backgroundColor: "appLoginForm.buttonBackground",
                 borderRadius: "4px",
               },
             }
