@@ -6,6 +6,7 @@ import {
   FormHelperText,
   InputLabel,
   MenuItem,
+  Typography,
 } from "@mui/material";
 import Select from "@mui/material/Select";
 import CustomAlert from "../components/CustomAlert";
@@ -13,7 +14,7 @@ import AppSnackbar from "../components/app/AppSnackbar";
 import { SneacbarSeverity } from "../enums";
 import { ITwitchBotConfig, ITwitchBotFormSubmitData } from "src/types";
 import LoadingBox from "src/components/loading/LoadingBox";
-import { getAllConfig, setConfig } from "src/api";
+import { checkTwitchAccount, getAllConfig, setConfig } from "src/api";
 
 type configBooleanState = {
   key: string;
@@ -31,7 +32,10 @@ const TwitchBotForm = () => {
   const [snackbarIsOpen, setSnackbarIsOpen] = useState<boolean>(false);
   const [buttonEnabled, setButtonEnabled] = useState<boolean>(false);
   const [isFormLoading, setIsFormLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [configData, setConfigData] = useState<ITwitchBotConfig[]>([]);
+  const [isTwitchAccAvailable, setIsTwitchAccAvailable] =
+    useState<boolean>(false);
 
   const {
     control,
@@ -55,7 +59,16 @@ const TwitchBotForm = () => {
       });
       setIsFormLoading(false);
     });
-  }, [isFormLoading]);
+
+    checkTwitchAccount().then(res => {
+      if (!res) {
+        setIsTwitchAccAvailable(false);
+      }
+
+      setIsTwitchAccAvailable(res.success);
+      setIsLoading(false);
+    });
+  }, [isFormLoading, isLoading]);
 
   const handleError = (error: FieldError | undefined) => {
     if (error) {
@@ -78,7 +91,7 @@ const TwitchBotForm = () => {
 
     setConfigData(config);
     setButtonEnabled(false);
-    setConfig({ configs: data }).then(res => {
+    setConfig({ configs: config }).then(res => {
       if (res.success) {
         setSnackbarIsOpen(true);
       } else {
@@ -100,7 +113,9 @@ const TwitchBotForm = () => {
         closeHandler={() => setAlertIsOpen(!alertIsOpen)}
         content="Something went wrong. Please try again later."
       />
-      {isFormLoading ? (
+      {!isTwitchAccAvailable ? (
+        <Typography>Twitch account not found</Typography>
+      ) : isFormLoading ? (
         <LoadingBox />
       ) : (
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -181,12 +196,7 @@ const TwitchBotForm = () => {
               </FormControl>
             )}
           />
-          <Button
-            disabled={!buttonEnabled}
-            fullWidth
-            variant="outlined"
-            sx={{ mt: 1 }}
-            type="submit">
+          <Button fullWidth variant="outlined" sx={{ mt: 1 }} type="submit">
             Save
           </Button>
         </form>

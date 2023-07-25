@@ -9,9 +9,11 @@ const getDiscordServers = async (
 ) => {
   const session = await getServerAuthSession({ req, res });
 
-  if (!session) return;
+  if (!session || !session.user) return;
 
-  const userId = session.user?.id;
+  const userId = session.user.id;
+
+  if (!userId) return;
 
   const discordAccount = await prisma.account.findFirst({
     where: { userId: userId, provider: "discord" },
@@ -24,14 +26,14 @@ const getDiscordServers = async (
     where: { serverOwner: discordAccount.providerAccountId },
   });
 
-  if (discordServers) {
-    return res.send({ data: discordServers, success: true });
-  } else {
+  if (!discordServers) {
     return res.status(404).json({
       success: false,
       errorMessage: "Error while getting Discord servers",
     });
   }
+
+  return res.send({ data: discordServers, success: true });
 };
 
 export default getDiscordServers;

@@ -11,7 +11,7 @@ import (
 const UPDATE_COMMAND_INFO = "For example: !ucmd [command_name] [new_command_content]"
 
 func (c *commands) UpdateCommandCommand(context context.Context, message twitch.PrivateMessage, commandName string, params []string) {
-	if !helpers.CanExecuteCommand(context, c.service, message) {
+	if !helpers.CanExecuteCommand(context, c.service, message.Tags["badges"], message.RoomID) {
 		return
 	}
 	command_name, newCommandContent, check := helpers.GetCommandCreateUpdateParams(params)

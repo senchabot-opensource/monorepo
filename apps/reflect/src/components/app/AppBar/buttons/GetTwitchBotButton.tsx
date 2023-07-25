@@ -1,41 +1,68 @@
 import { IconButton, Typography } from "@mui/material";
+import { useCallback, useEffect, useState } from "react";
 import { SiTwitch } from "react-icons/si";
+import { addTwitchAccount, checkTwitchAccount } from "src/api";
+import CustomAlert from "src/components/CustomAlert";
 import { BootstrapTooltip } from "src/components/Tooltip";
 
 const GetTwitchBotButton = () => {
-  //const { data: twitchAcc } = trpc.check.checkTwitchAcc.useQuery();
+  const [twitchAccountAvailable, setTwitchAccountAvailable] =
+    useState<boolean>(false);
+  const [alertIsOpen, setAlertIsOpen] = useState<boolean>(false);
+  const [alertText, setAlertText] = useState<string>("");
 
-  //const twitchBotMutate = trpc.twitchBot.add.useMutation({
-  //  onSuccess() {
-  //    alert("Twitch bot added");
-  //  },
+  useEffect(() => {
+    checkTwitchAccount().then(res => {
+      setTwitchAccountAvailable(res.data);
+    });
+  }, []);
 
-  //  onError(error) {
-  //    if (!error.shape) return;
-  //    alert(error.shape.message);
-  //  },
-  //});
+  const addTwitchBot = useCallback(() => {
+    addTwitchAccount().then(res => {
+      if (!res || !res.success) {
+        setAlertBox("Something went wrong. Please try again later.");
+      }
+
+      if (res.success) {
+        setAlertBox(res.message);
+      }
+    });
+  }, []);
+
+  const setAlertBox = (text: string) => {
+    setAlertText(text);
+    setAlertIsOpen(true);
+  };
 
   return (
-    <BootstrapTooltip title="Get Twitch Bot">
-      <Typography
-        onClick={
-          () => null
-          //        !twitchAcc
-          //          ? alert(
-          //              "Before you can add the Twitch bot, you need to link your Twitch account in Settings/Security section.",
-          //            )
-          //          : twitchBotMutate.mutate()
-        }>
-        <IconButton
-          aria-label="get twitch bot"
-          sx={{
-            display: "flex",
+    <>
+      <CustomAlert
+        isOpen={alertIsOpen}
+        closeHandler={() => setAlertIsOpen(!alertIsOpen)}
+        content={alertText}
+      />
+
+      <BootstrapTooltip title="Get Twitch Bot">
+        <Typography
+          onClick={() => {
+            if (!twitchAccountAvailable) {
+              setAlertBox(
+                "Before you can add the Twitch bot, you need to link your Twitch account in Settings/Security section.",
+              );
+            } else {
+              addTwitchBot();
+            }
           }}>
-          <SiTwitch />
-        </IconButton>
-      </Typography>
-    </BootstrapTooltip>
+          <IconButton
+            aria-label="get twitch bot"
+            sx={{
+              display: "flex",
+            }}>
+            <SiTwitch />
+          </IconButton>
+        </Typography>
+      </BootstrapTooltip>
+    </>
   );
 };
 

@@ -47,3 +47,27 @@ export interface ITwitchBotFormSubmitData {
   bot_activity_enabled: string;
   mods_manage_cmds_enabled: string;
 }
+
+export interface IConfig {
+  [key: string]: string;
+}
+
+export interface ISetConfigInput {
+  configs: IConfig[];
+}
+
+export interface IDiscordServer {
+  serverId: string;
+  serverName: string;
+  serverOwner: string;
+}
+
+export interface ITwitchChannel {
+  channelId: string;
+  channelName: string;
+}
+
+export interface IAccount {
+  provider: string;
+  providerAccountId: string;
+}
