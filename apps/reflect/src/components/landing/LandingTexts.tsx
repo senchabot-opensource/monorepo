@@ -21,7 +21,6 @@ import {
 } from "../../api";
 import { randomInt } from "next/dist/shared/lib/bloom-filter/utils";
 import { signIn, useSession } from "next-auth/react";
-import { useRouter } from "next/router";
 import CustomAlert from "../CustomAlert";
 import { IBotCommand } from "src/types";
 
@@ -29,7 +28,6 @@ const ALT_TEXT =
   "Open-source multi-platform bot development project, which works on Twitch and Discord.";
 // Stream overlays: #8b5cf6
 const LandingTexts = () => {
-  const router = useRouter();
   const [cmdList, setCmdList] = useState<string[]>([]);
   const [defaultCmdList, setDefaultCmdList] = useState<string[]>([]);
   const [userCmdList, setUserCmdList] = useState<string[]>([]);
@@ -116,9 +114,17 @@ const LandingTexts = () => {
                 top={randomInt(1, 75) + "vh"}
                 left={randomInt(1, 90) + "vw"}
                 sx={{
-                  backgroundColor: "#7289da",
-                  "&:hover": {
-                    backgroundColor: "rgba(114,137,218,0.74)",
+                  fontFamily: "monospace",
+                  animation: "move 20s linear infinite",
+                  textAlign: "center",
+                  "@keyframes move": {
+                    "50%": {
+                      opacity: 0.5,
+                      top: randomInt(1, 75) + "vh",
+                    },
+                    "100%": {
+                      opacity: 1,
+                    },
                   },
                 }}>
                 {cmd}
