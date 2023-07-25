@@ -1,8 +1,8 @@
-# Reflect Web App
+# Senchabot Web App
 
 Web application for managing Senchabot, its commands and configuring the bot.
 
-## Reflect uses
+## Senchabot Web App uses
 
 - [React](https://react.dev/)
 - [Next.js](https://nextjs.org)
@@ -31,7 +31,7 @@ Web application for managing Senchabot, its commands and configuring the bot.
    npm install
    ```
 
-3. If you hadn't done for main directory,  please change into main directory and create a `.env` file based on the example file `env.example`
+3. If you hadn't done for main directory, please change into main directory and create a `.env` file based on the example file `env.example`
 
    ```sh
    cp env.example .env
