@@ -232,12 +232,13 @@ func (m *MySQL) GetCommandList(ctx context.Context, twitchChannelId string) ([]*
 	return botCommandList, nil
 }
 
-func (m *MySQL) CreateBotActionActivity(ctx context.Context, botPlatformType string, botActivity string, twitchChannelId string, activityAuthor string) error {
+func (m *MySQL) CreateBotActionActivity(ctx context.Context, botPlatformType string, botActivity string, twitchChannelId string, activityAuthor, activityAuthorId string) error {
 	botActionActivity := models.BotActionActivity{
-		BotPlatformType: botPlatformType,
-		BotActivity:     botActivity,
-		TwitchChannelID: &twitchChannelId,
-		ActivityAuthor:  &activityAuthor,
+		BotPlatformType:  botPlatformType,
+		BotActivity:      botActivity,
+		TwitchChannelID:  &twitchChannelId,
+		ActivityAuthor:   &activityAuthor,
+		ActivityAuthorID: &activityAuthorId,
 	}
 
 	result := m.DB.Create(&botActionActivity)
@@ -249,7 +250,7 @@ func (m *MySQL) CreateBotActionActivity(ctx context.Context, botPlatformType str
 	return nil
 }
 
-func (m *MySQL) SaveBotCommandActivity(context context.Context, commandName string, twitchChannelId string, commandAuthor string) {
+func (m *MySQL) SaveBotCommandActivity(context context.Context, commandName string, twitchChannelId string, commandAuthor, commandAuthorId string) {
 	check := m.CheckConfig(context, twitchChannelId, "bot_activity_enabled", "1")
 	if !check {
 		return
@@ -257,7 +258,7 @@ func (m *MySQL) SaveBotCommandActivity(context context.Context, commandName stri
 
 	commandName = "!" + commandName
 
-	if err := m.CreateBotActionActivity(context, "twitch", commandName, twitchChannelId, commandAuthor); err != nil {
+	if err := m.CreateBotActionActivity(context, "twitch", commandName, twitchChannelId, commandAuthor, commandAuthorId); err != nil {
 		fmt.Println(err.Error())
 	}
 }

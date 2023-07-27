@@ -368,12 +368,13 @@ func (m *MySQL) CheckConfig(ctx context.Context, discordServerId string, configK
 	return false
 }
 
-func (m *MySQL) CreateBotActionActivity(ctx context.Context, botPlatformType, botActivity, discordServerId, activityAuthor string) error {
+func (m *MySQL) CreateBotActionActivity(ctx context.Context, botPlatformType, botActivity, discordServerId, activityAuthor, activityAuthorId string) error {
 	botActionActivity := models.BotActionActivity{
-		BotPlatformType: botPlatformType,
-		BotActivity:     botActivity,
-		DiscordServerID: &discordServerId,
-		ActivityAuthor:  &activityAuthor,
+		BotPlatformType:  botPlatformType,
+		BotActivity:      botActivity,
+		DiscordServerID:  &discordServerId,
+		ActivityAuthor:   &activityAuthor,
+		ActivityAuthorID: &activityAuthorId,
 	}
 
 	result := m.DB.Create(&botActionActivity)
@@ -385,13 +386,13 @@ func (m *MySQL) CreateBotActionActivity(ctx context.Context, botPlatformType, bo
 	return nil
 }
 
-func (m *MySQL) SaveBotCommandActivity(context context.Context, activity, discordServerId, commandAuthor string) {
+func (m *MySQL) SaveBotCommandActivity(context context.Context, activity, discordServerId, commandAuthor, commandAuthorId string) {
 	check := m.CheckConfig(context, discordServerId, "bot_activity_enabled", "1")
 	if !check {
 		return
 	}
 
-	if err := m.CreateBotActionActivity(context, "discord", activity, discordServerId, commandAuthor); err != nil {
+	if err := m.CreateBotActionActivity(context, "discord", activity, discordServerId, commandAuthor, commandAuthorId); err != nil {
 		fmt.Println(err.Error())
 	}
 }
