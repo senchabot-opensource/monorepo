@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -19,13 +18,7 @@ import (
 	"github.com/senchabot-dev/monorepo/apps/discord-bot/internal/helpers"
 	"github.com/senchabot-dev/monorepo/apps/discord-bot/internal/service/event"
 	"github.com/senchabot-dev/monorepo/apps/discord-bot/internal/service/streamer"
-)
-
-const (
-	gqlUrl    = "https://gql.dev.kamp.us/graphql"
-	sozlukUrl = "https://sozluk.dev.kamp.us"
-
-	SOZLUK_COMMAND_INFO = "For example: !sozluk [term-name]"
+	"github.com/senchabot-dev/monorepo/packages/common/commands"
 )
 
 func main() {
@@ -97,53 +90,12 @@ func main() {
 		}
 
 		if cmdName == "sozluk" {
-			if check := helpers.IsCommandParamsLengthEqualToOne(params); !check {
-				s.ChannelMessageSend(m.ChannelID, SOZLUK_COMMAND_INFO)
-				return
-			}
-
-			var sozlukTerm = strings.ToLower(strings.TrimSpace(params[0]))
-
-			query := fmt.Sprintf(`{
-				sozluk {
-					term(input: {id: "%s"}) {
-						title,
-						body {
-							raw
-						}
-					}
-				}
-			}`, sozlukTerm)
-
-			response, err := helpers.FetchGraphQL(gqlUrl, query)
+			sozlukResp, err := commands.SozlukCommand(params)
 			if err != nil {
-				fmt.Println("Error:", err)
+				log.Println(err)
 				return
 			}
-
-			var gqlResponse helpers.SozlukGraphQLResponse
-			err = json.Unmarshal(response, &gqlResponse)
-			if err != nil {
-				fmt.Println("json.Unmarshal error:", err)
-				return
-			}
-
-			termTitle := strings.TrimSpace(gqlResponse.Data.Sozluk.Term.Title)
-			termDesc := strings.TrimSpace(gqlResponse.Data.Sozluk.Term.Body.Raw)
-
-			if termDesc == "" {
-				s.ChannelMessageSend(m.ChannelID, fmt.Sprintf(`the term "%s" not found`, sozlukTerm))
-				return
-			}
-
-			if len(termDesc) > 400 {
-				termDesc = termDesc[:250]
-
-				s.ChannelMessageSend(m.ChannelID, termTitle+": "+termDesc+"... "+sozlukUrl+"/"+sozlukTerm)
-				return
-			}
-
-			s.ChannelMessageSend(m.ChannelID, termTitle+": "+termDesc)
+			s.ChannelMessageSend(m.ChannelID, sozlukResp)
 		}
 	})
 
