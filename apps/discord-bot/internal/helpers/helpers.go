@@ -28,8 +28,6 @@ func ParseTwitchUsernameURLParam(str string) string {
 	re := regexp.MustCompile(pattern)
 	matches := re.FindStringSubmatch(str)
 
-	fmt.Println("matches", matches)
-
 	if len(matches) > 1 {
 		return matches[1]
 	}

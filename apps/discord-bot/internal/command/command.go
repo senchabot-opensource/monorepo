@@ -256,7 +256,6 @@ func IsChannelNameNotGiven(optionsLen int) bool {
 func GetTwitchUserInfo(twitchUsername string) (string, *client.TwitchUserInfo) {
 	userInfo, err := client.GetTwitchUserInfo(twitchUsername)
 	if err != nil {
-		log.Printf("Error while getting Twitch user info: %v", err)
 		return fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısı Twitch'te bulunamadı.", twitchUsername), nil
 	}
 
