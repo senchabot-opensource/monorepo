@@ -348,7 +348,7 @@ func (m *MySQL) DeleteDiscordTwitchLiveAnnosByGuildId(ctx context.Context, serve
 
 	result := m.DB.Where("anno_server_id = ?", serverId).Delete(twitchLiveAnnos)
 	if result.Error != nil {
-		return false, errors.New("(DeleteDiscordTwitchLiveAnno) db.Delete Error:" + result.Error.Error())
+		return false, errors.New("(DeleteDiscordTwitchLiveAnnosByGuildId) db.Delete Error:" + result.Error.Error())
 	}
 
 	return true, nil
