@@ -177,9 +177,9 @@ func main() {
 					for _, vj := range v.Options {
 						switch vj.Type.String() {
 						case "String":
-							options = append(options, vj.Name+": "+vj.StringValue())
+							options = append(options, fmt.Sprintf(`"%v: %v"`, vj.Name, vj.StringValue()))
 						case "Channel":
-							options = append(options, vj.Name+": "+vj.ChannelValue(s).Name)
+							options = append(options, fmt.Sprintf(`"%v: %v"`, vj.Name, vj.ChannelValue(s).Name))
 						}
 					}
 				}
