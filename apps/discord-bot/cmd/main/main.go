@@ -18,6 +18,7 @@ import (
 	"github.com/senchabot-dev/monorepo/apps/discord-bot/internal/db"
 	"github.com/senchabot-dev/monorepo/apps/discord-bot/internal/helpers"
 	"github.com/senchabot-dev/monorepo/apps/discord-bot/internal/service/event"
+	"github.com/senchabot-dev/monorepo/apps/discord-bot/internal/service/streamer"
 )
 
 const (
@@ -43,13 +44,22 @@ func main() {
 	ctx := context.Background()
 
 	discordClient.AddHandler(func(s *discordgo.Session, r *discordgo.Ready) {
-		guilds := s.State.Guilds
-		for _, g := range guilds {
-			go event.CheckLiveStreams(s, ctx, db, g.ID)
-		}
-
 		go event.CheckLiveStreamScheduledEvents(s)
+
 		fmt.Println("Bot is ready. Logged in as:", s.State.User.Username)
+	})
+
+	discordClient.AddHandler(func(s *discordgo.Session, g *discordgo.GuildCreate) {
+		streamer.StartCheckLiveStreams(s, ctx, db, g.ID)
+	})
+
+	discordClient.AddHandler(func(s *discordgo.Session, g *discordgo.GuildDelete) {
+		streamer.StopCheckLiveStreams(g.ID)
+		streamer.DeleteServerFromData(g.ID)
+		_, err := db.DeleteDiscordTwitchLiveAnnosByGuildId(ctx, g.ID)
+		if err != nil {
+			fmt.Println("[GuildDelete] db.DeleteDiscordTwitchLiveAnnosByGuildId: ", err.Error())
+		}
 	})
 
 	appCmds, _ := discordClient.ApplicationCommands(os.Getenv("CLIENT_ID"), "1051582387433254993")

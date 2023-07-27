@@ -1,7 +1,6 @@
 package event
 
 import (
-	"context"
 	"fmt"
 	"log"
 	"sync"
@@ -9,9 +8,7 @@ import (
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/senchabot-dev/monorepo/apps/discord-bot/client"
-	"github.com/senchabot-dev/monorepo/apps/discord-bot/internal/db"
 	"github.com/senchabot-dev/monorepo/apps/discord-bot/internal/helpers"
-	"github.com/senchabot-dev/monorepo/apps/discord-bot/internal/service/streamer"
 )
 
 func CreateLiveStreamScheduledEvent(s *discordgo.Session, msgContent, guildId string, wg *sync.WaitGroup) {
@@ -56,76 +53,6 @@ func CreateLiveStreamScheduledEvent(s *discordgo.Session, msgContent, guildId st
 
 	fmt.Println("Created scheduled event: ", scheduledEvent.Name)
 	wg.Done()
-}
-
-func CheckLiveStreams(s *discordgo.Session, ctx context.Context, db *db.MySQL, guildId string) {
-	ticker := time.NewTicker(1 * time.Minute)
-	defer ticker.Stop()
-
-	streamer.InitStreamersData(ctx, db, guildId)
-
-	for range ticker.C {
-		streamers := streamer.GetStreamersData(guildId)
-		keys := make([]string, 0, len(streamers))
-		for k := range streamers {
-			//streamers[dtla.TwitchUsername] = dtla.AnnoChannelID
-			keys = append(keys, k)
-		}
-
-		if len(keys) == 0 {
-			return
-		}
-
-		liveStreams := client.CheckMultipleTwitchStreamer(keys)
-		annoContent := ""
-		for _, sd := range liveStreams {
-			if sd.Type == "live" {
-				ch, prs := streamers[sd.UserLogin]
-				if prs {
-					date, err := db.GetTwitchStreamerLastAnnoDate(ctx, sd.UserLogin, guildId)
-					if err != nil {
-						log.Printf("There was an error while checking Twitch streamer last anno date: %v", err)
-					}
-					if date != nil {
-						if int(time.Until(*date).Hours()) == 0 {
-							return
-						}
-					}
-
-					annoContent = "{twitch.username}, {stream.category} yayınına başladı! {twitch.url}"
-
-					streamerAnnoContent, err := db.GetTwitchStreamerAnnoContent(ctx, sd.UserLogin, guildId)
-					if err != nil {
-						log.Printf("There was an error while getting Twitch streamer announcement content in CheckLiveStreams: %v", err)
-					}
-
-					if streamerAnnoContent != nil {
-						annoContent = *streamerAnnoContent
-					}
-
-					cfg, err := db.GetDiscordBotConfig(ctx, guildId, "stream_anno_default_content")
-					if err != nil {
-						log.Printf("There was an error while getting Discord bot config in CheckLiveStreams: %v", err)
-					}
-
-					if cfg != nil && streamerAnnoContent == nil {
-						if cfg.Value != "" {
-							annoContent = cfg.Value
-						}
-					}
-
-					formattedString := helpers.FormatContent(annoContent, sd)
-					s.ChannelMessageSend(ch.ChannelID, formattedString)
-
-					_, err = db.UpdateTwitchStreamerLastAnnoDate(ctx, sd.UserLogin, guildId, time.Now())
-					if err != nil {
-						log.Printf("There was an error while getting updating Twitch streamer last anno date in CheckLiveStreams: %v", err)
-					}
-					delete(streamers, sd.UserLogin)
-				}
-			}
-		}
-	}
 }
 
 func CheckLiveStreamScheduledEvents(s *discordgo.Session) {

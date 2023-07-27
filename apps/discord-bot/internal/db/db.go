@@ -343,6 +343,17 @@ func (m *MySQL) DeleteDiscordTwitchLiveAnno(ctx context.Context, twitchUserId st
 	return true, nil
 }
 
+func (m *MySQL) DeleteDiscordTwitchLiveAnnosByGuildId(ctx context.Context, serverId string) (bool, error) {
+	var twitchLiveAnnos models.DiscordTwitchLiveAnnos
+
+	result := m.DB.Where("anno_server_id = ?", serverId).Delete(twitchLiveAnnos)
+	if result.Error != nil {
+		return false, errors.New("(DeleteDiscordTwitchLiveAnno) db.Delete Error:" + result.Error.Error())
+	}
+
+	return true, nil
+}
+
 func (m *MySQL) CheckConfig(ctx context.Context, discordServerId string, configKey string, configValue string) bool {
 	configData, err := m.GetDiscordBotConfig(ctx, discordServerId, configKey)
 	if err != nil {
