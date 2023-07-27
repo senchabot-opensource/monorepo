@@ -3,6 +3,7 @@ package command
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/gempir/go-twitch-irc/v3"
 	"github.com/senchabot-dev/monorepo/apps/twitch-bot/client"
@@ -59,7 +60,7 @@ func (c *commands) RunStaticCommand(context context.Context, cmdName string, par
 
 	if cmd, ok := cmds[cmdName]; ok {
 		cmd(context, message, cmdName, params)
-		c.service.SaveBotCommandActivity(context, cmdName, message.RoomID, message.User.DisplayName, message.User.ID)
+		c.service.SaveBotCommandActivity(context, cmdName+" "+strings.Join(params, " "), message.RoomID, message.User.DisplayName, message.User.ID)
 	}
 }
 
