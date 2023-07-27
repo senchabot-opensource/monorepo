@@ -52,8 +52,8 @@ func (c *commands) DeployCommands(discordClient *discordgo.Session) {
 }
 
 var (
-	purgePermissions     int64 = discordgo.PermissionManageEvents + discordgo.PermissionManageMessages
-	setdeletePermissions int64 = discordgo.PermissionManageChannels
+	purgePermissions     int64 = discordgo.PermissionManageServer
+	setdeletePermissions int64 = discordgo.PermissionAdministrator
 	commandMetadatas           = []*discordgo.ApplicationCommand{
 		{
 			Name:                     "set",
