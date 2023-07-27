@@ -23,12 +23,13 @@ type TwitchBotConfig struct {
 }
 
 type BotActionActivity struct {
-	ID              int
-	BotPlatformType string  `gorm:"column:bot_platform_type"`
-	BotActivity     string  `gorm:"column:bot_activity"`
-	DiscordServerID *string `gorm:"column:discord_server_id"`
-	TwitchChannelID *string `gorm:"column:twitch_channel_id"`
-	ActivityAuthor  *string `gorm:"column:activity_author"`
+	ID               int
+	BotPlatformType  string  `gorm:"column:bot_platform_type"`
+	BotActivity      string  `gorm:"column:bot_activity"`
+	DiscordServerID  *string `gorm:"column:discord_server_id"`
+	TwitchChannelID  *string `gorm:"column:twitch_channel_id"`
+	ActivityAuthor   *string `gorm:"column:activity_author"`
+	ActivityAuthorID *string `gorm:"column:activity_author_id"`
 }
 
 type BotCommand struct {

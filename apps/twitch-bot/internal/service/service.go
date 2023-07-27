@@ -28,8 +28,8 @@ type Service interface {
 	DeleteBotCommand(ctx context.Context, commandName string, twitchChannelId string) (*string, *string, error)
 	GetCommandList(ctx context.Context, twitchChannelId string) ([]*models.BotCommand, error)
 
-	CreateBotActionActivity(ctx context.Context, botPlatformType string, botActivity string, twitchChannelId string, commandAuthor string) error
-	SaveBotCommandActivity(context context.Context, commandName string, twitchChannelId string, commandAuthor string)
+	CreateBotActionActivity(ctx context.Context, botPlatformType string, botActivity string, twitchChannelId string, commandAuthor, commandAuthorId string) error
+	SaveBotCommandActivity(context context.Context, commandName string, twitchChannelId string, commandAuthor, commandAuthorId string)
 
 	GetCommandAlias(ctx context.Context, commandAlias string, twitchChannelId string) (*string, error)
 	CreateCommandAliases(ctx context.Context, commandName string, aliases []string, twitchChannelId string, createdBy string) (*string, error)
@@ -151,8 +151,8 @@ func (s *services) GetCommandList(ctx context.Context, twitchChannelId string) (
 	return cmdList, nil
 }
 
-func (s *services) CreateBotActionActivity(ctx context.Context, botPlatformType string, botActivity string, twitchChannelId string, activityAuthor string) error {
-	err := s.DB.CreateBotActionActivity(ctx, botPlatformType, botActivity, twitchChannelId, activityAuthor)
+func (s *services) CreateBotActionActivity(ctx context.Context, botPlatformType string, botActivity string, twitchChannelId string, activityAuthor, commandAuthorId string) error {
+	err := s.DB.CreateBotActionActivity(ctx, botPlatformType, botActivity, twitchChannelId, activityAuthor, commandAuthorId)
 
 	if err != nil {
 		return err
@@ -161,7 +161,7 @@ func (s *services) CreateBotActionActivity(ctx context.Context, botPlatformType 
 	return nil
 }
 
-func (s *services) SaveBotCommandActivity(context context.Context, commandName string, twitchChannelId string, commandAuthor string) {
+func (s *services) SaveBotCommandActivity(context context.Context, commandName string, twitchChannelId string, commandAuthor, commandAuthorId string) {
 	check := s.CheckConfig(context, twitchChannelId, "bot_activity_enabled", "1")
 	if !check {
 		return
@@ -169,7 +169,7 @@ func (s *services) SaveBotCommandActivity(context context.Context, commandName s
 
 	commandName = "!" + commandName
 
-	if err := s.CreateBotActionActivity(context, "twitch", commandName, twitchChannelId, commandAuthor); err != nil {
+	if err := s.CreateBotActionActivity(context, "twitch", commandName, twitchChannelId, commandAuthor, commandAuthorId); err != nil {
 		fmt.Println(err.Error())
 	}
 }

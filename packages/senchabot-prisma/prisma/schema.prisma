@@ -36,13 +36,14 @@ model BotJoinActivities {
 }
 
 model BotActionActivities {
-    id              Int      @id @default(autoincrement())
-    botPlatformType String   @map("bot_platform_type")
-    botActivity     String   @map("bot_activity")
-    activityDate    DateTime @default(now()) @map("activity_date")
-    discordServerId String?  @map("discord_server_id")
-    twitchChannelId String?  @map("twitch_channel_id")
-    activityAuthor  String?  @map("activity_author")
+    id               Int      @id @default(autoincrement())
+    botPlatformType  String   @map("bot_platform_type")
+    botActivity      String   @map("bot_activity")
+    activityDate     DateTime @default(now()) @map("activity_date")
+    discordServerId  String?  @map("discord_server_id")
+    twitchChannelId  String?  @map("twitch_channel_id")
+    activityAuthor   String?  @map("activity_author")
+    activityAuthorId String?  @map("activity_author_id")
 
     @@map("bot_action_activities")
 }

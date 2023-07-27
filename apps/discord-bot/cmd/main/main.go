@@ -136,7 +136,7 @@ func main() {
 					}
 				}
 			}
-			db.SaveBotCommandActivity(ctx, "/"+i.ApplicationCommandData().Name+" "+strings.Join(options, " "), i.GuildID, i.Member.User.Username)
+			db.SaveBotCommandActivity(ctx, "/"+i.ApplicationCommandData().Name+" "+strings.Join(options, " "), i.GuildID, i.Member.User.Username, i.Member.User.ID)
 		}
 	})
 
