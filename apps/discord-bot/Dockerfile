@@ -1,32 +1,20 @@
-FROM node:18.16.0 AS builder
-
-# set for base and all layer that inherit from it
-ENV NODE_ENV production
+FROM golang:1.20-alpine AS builder
 
 WORKDIR /app
-RUN npm install --global turbo
 COPY . .
-RUN turbo prune --scope=senchabot-discord-bot --docker
 
+ARG SERVICE_NAME
 
-FROM node:18.14.2 AS runner
-WORKDIR /app
-COPY .gitignore .gitignore
-COPY --from=builder /app/out/json .
-#COPY --from=builder /app/out/package-lock.json ./package-lock.json
-RUN npm install --global turbo
-RUN npm install
-#RUN npm ci
-COPY --from=builder /app/out/full/ .
-COPY turbo.json turbo.json
-RUN npx turbo build
+# Install CA certificates
+RUN apk update && apk add --no-cache ca-certificates && update-ca-certificates
 
-RUN ls -la .
+RUN CGO_ENABLED=0 GOOS=linux go build -ldflags "-s -w" -o /app/bin ./apps/discord-bot/cmd/main/*.go
 
-ENV NODE_ENV production
-
-RUN npm --workspace=senchabot-discord-bot run build
+FROM scratch AS prod
+COPY --from=builder /app/bin bin
+# Copy CA certificates from the builder stage
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
 EXPOSE 8080
 
-ENTRYPOINT ["npm", "run","--workspace=senchabot-discord-bot", "start"]
+ENTRYPOINT ["./bin"]

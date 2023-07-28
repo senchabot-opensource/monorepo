@@ -36,13 +36,14 @@ model BotJoinActivities {
 }
 
 model BotActionActivities {
-    id              Int      @id @default(autoincrement())
-    botPlatformType String   @map("bot_platform_type")
-    botActivity     String   @map("bot_activity")
-    activityDate    DateTime @default(now()) @map("activity_date")
-    discordServerId String?  @map("discord_server_id")
-    twitchChannelId String?  @map("twitch_channel_id")
-    activityAuthor  String?  @map("activity_author")
+    id               Int      @id @default(autoincrement())
+    botPlatformType  String   @map("bot_platform_type")
+    botActivity      String   @map("bot_activity")
+    activityDate     DateTime @default(now()) @map("activity_date")
+    discordServerId  String?  @map("discord_server_id")
+    twitchChannelId  String?  @map("twitch_channel_id")
+    activityAuthor   String?  @map("activity_author")
+    activityAuthorId String?  @map("activity_author_id")
 
     @@map("bot_action_activities")
 }
@@ -56,6 +57,22 @@ model DiscordAnnouncementChannels {
     discordServer DiscordServer? @relation(fields: [serverId], references: [serverId], onDelete: Cascade)
 
     @@map("discord_announcement_channels")
+}
+
+model DiscordTwitchLiveAnnos {
+    id             Int       @id @default(autoincrement())
+    twitchUsername String    @map("twitch_username")
+    twitchUserId   String    @map("twitch_user_id")
+    annoChannelId  String    @map("anno_channel_id")
+    annoServerId   String    @map("anno_server_id")
+    annoContent    String?   @map("anno_content")
+    lastAnnoDate   DateTime? @map("last_anno_date")
+    type           Int       @map("type")
+    createdBy      String    @map("created_by")
+    createdAt      DateTime  @default(now()) @map("created_at")
+
+    @@unique([twitchUserId, annoServerId])
+    @@map("discord_twitch_live_annos")
 }
 
 model BotCommands {
@@ -94,6 +111,19 @@ model DiscordServer {
     DiscordAnnouncementChannels DiscordAnnouncementChannels[]
 
     @@map("discord_servers")
+}
+
+model DiscordBotConfigs {
+    id        Int      @id @default(autoincrement())
+    key       String   @map("config_key")
+    value     String   @map("config_value")
+    serverId  String   @map("server_id")
+    userId    String?  @map("user_id")
+    user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+    createdAt DateTime @default(now()) @map("created_at")
+
+    @@unique([key, serverId])
+    @@map("discord_bot_configs")
 }
 
 model TwitchChannel {
@@ -147,16 +177,17 @@ model Session {
 }
 
 model User {
-    id               String             @id @default(cuid())
-    name             String?
-    email            String?            @unique
-    emailVerified    DateTime?
-    image            String?
-    accounts         Account[]
-    sessions         Session[]
-    DiscordServer    DiscordServer[]
-    TwitchChannel    TwitchChannel[]
-    TwitchBotConfigs TwitchBotConfigs[]
+    id                String              @id @default(cuid())
+    name              String?
+    email             String?             @unique
+    emailVerified     DateTime?
+    image             String?
+    accounts          Account[]
+    sessions          Session[]
+    DiscordServer     DiscordServer[]
+    TwitchChannel     TwitchChannel[]
+    TwitchBotConfigs  TwitchBotConfigs[]
+    DiscordBotConfigs DiscordBotConfigs[]
 }
 
 model VerificationToken {

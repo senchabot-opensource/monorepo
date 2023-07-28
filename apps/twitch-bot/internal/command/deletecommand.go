@@ -12,10 +12,10 @@ import (
 const DELETE_COMMAND_INFO = "For example: !dcmd [command_name]"
 
 func (c *commands) DeleteCommandCommand(context context.Context, message twitch.PrivateMessage, commandName string, params []string) {
-	if !helpers.CanExecuteCommand(context, c.service, message) {
+	if !helpers.CanExecuteCommand(context, c.service, message.Tags["badges"], message.RoomID) {
 		return
 	}
-	if check := helpers.ValidateCommandDeleteParamsLength(params); !check {
+	if check := helpers.IsCommandParamsLengthEqualToOne(params); !check {
 		c.client.Twitch.Say(message.Channel, DELETE_COMMAND_INFO)
 		return
 	}

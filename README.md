@@ -1,18 +1,22 @@
 # Senchabot Monorepo
+
 Senchabot apps and packages
 
-#### [apps/reflect](./apps/reflect) - The web app: [senchabot.app](https://senchabot.app/)
-> _Web application for managing Senchabot, its commands and configuring the bot._ 
-#### [apps/interface](./apps/interface) - Senchabot web interface app: [interface.senchabot.app](https://interface.senchabot.app/)
-> _Web application to use Senchabot through a web interface similar to the sci-fi themes._
+#### [apps/web](./apps/web) - The web app: [senchabot.app](https://senchabot.app/)
+
+> _Web application for managing Senchabot, its commands and configuring the bot._
+
 #### [apps/discord-bot](./apps/discord-bot)
+
 #### [apps/twitch-bot](./apps/twitch-bot)
 
 ## Getting Started
+
 ### Prerequisites
-* Git
-* Node.js 18 or higher
-* npm
+
+- Git
+- Node.js 18 or higher
+- npm
 
 ### Installation
 
@@ -50,11 +54,12 @@ Senchabot apps and packages
    ```
 
 ## Documentations
+
 - ### Apps
-   * [reflect](./apps/reflect/README.md)
-   * [interface](./apps/interface/README.md)
-   * [discord-bot](./apps/discord-bot/README.md)
-   * [twitch-bot](./apps/twitch-bot/README.md)
+  - [web](./apps/web/README.md)
+  - [discord-bot](./apps/discord-bot/README.md)
+  - [twitch-bot](./apps/twitch-bot/README.md)
 
 ## Contributing
+
 Contributions are always welcome! Please read the [contribution guidelines](./CONTRIBUTING.md) first.
