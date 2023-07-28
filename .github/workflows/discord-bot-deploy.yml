@@ -3,7 +3,6 @@ on:
   push:
     paths:
       - apps/discord-bot/**
-      - packages/senchabot-prisma/**
     branches:
       - main
   pull_request: {}
@@ -50,7 +49,7 @@ jobs:
           context: .
           file: ./apps/discord-bot/Dockerfile
           push: true
-          tags: registry.fly.io/senchabot0612dc:${{ github.ref_name }}-${{ github.sha }}
+          tags: registry.fly.io/senchabot0728dc:${{ github.ref_name }}-${{ github.sha }}
           build-args: |
             COMMIT_SHA=${{ github.sha }}
           cache-from: type=local,src=/tmp/.buildx-cache
@@ -84,7 +83,7 @@ jobs:
         if: ${{ github.ref == 'refs/heads/main' }}
         uses: superfly/flyctl-actions@1.3
         with:
-          args: "deploy --app senchabot0612dc --image registry.fly.io/senchabot0612dc:${{ github.ref_name }}-${{ github.sha }} --config ./apps/discord-bot/fly.toml"
+          args: "deploy --app senchabot0728dc --image registry.fly.io/senchabot0728dc:${{ github.ref_name }}-${{ github.sha }} --config ./apps/discord-bot/fly.toml"
         env:
           FLY_API_TOKEN: ${{ secrets.DISCORD_BOT_FLY_API }}
 

@@ -11,7 +11,6 @@ import (
 	"sync"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/joho/godotenv"
 	"github.com/senchabot-dev/monorepo/apps/discord-bot/client"
 	"github.com/senchabot-dev/monorepo/apps/discord-bot/internal/command"
 	"github.com/senchabot-dev/monorepo/apps/discord-bot/internal/db"
@@ -22,10 +21,10 @@ import (
 )
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
+	//err := godotenv.Load()
+	//if err != nil {
+	//	log.Fatal("Error loading .env file")
+	//}
 
 	client.InitTwitchOAuth2Token()
 
@@ -142,7 +141,7 @@ func main() {
 
 	command.DeployCommands(discordClient)
 
-	err = discordClient.Open()
+	err := discordClient.Open()
 	if err != nil {
 		log.Fatal("Cannot open the session: ", err)
 	}
