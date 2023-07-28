@@ -88,6 +88,7 @@ var (
 								discordgo.Turkish: "Yazı kanalı",
 							},
 							ChannelTypes: []discordgo.ChannelType{
+								discordgo.ChannelTypeGuildNews,
 								discordgo.ChannelTypeGuildText,
 							},
 							Required: true,
@@ -166,6 +167,7 @@ var (
 								discordgo.Turkish: "Duyuruların yapılacağı yazı kanalı adı",
 							},
 							ChannelTypes: []discordgo.ChannelType{
+								discordgo.ChannelTypeGuildNews,
 								discordgo.ChannelTypeGuildText,
 							},
 							Required: false,
@@ -188,6 +190,7 @@ var (
 								discordgo.Turkish: "Twitch yayın duyurularının takip edileceği yazı kanalı",
 							},
 							ChannelTypes: []discordgo.ChannelType{
+								discordgo.ChannelTypeGuildNews,
 								discordgo.ChannelTypeGuildText,
 							},
 							Required: true,
@@ -318,6 +321,7 @@ var (
 								discordgo.Turkish: "Twitch yayın duyurularının takipten çıkarılacağı yazı kanalı",
 							},
 							ChannelTypes: []discordgo.ChannelType{
+								discordgo.ChannelTypeGuildNews,
 								discordgo.ChannelTypeGuildText,
 							},
 							Required: true,
