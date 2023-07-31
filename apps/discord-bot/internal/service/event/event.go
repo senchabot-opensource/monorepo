@@ -11,10 +11,14 @@ import (
 	"github.com/senchabot-dev/monorepo/apps/discord-bot/internal/helpers"
 )
 
-func CreateLiveStreamScheduledEvent(s *discordgo.Session, msgContent, guildId string, wg *sync.WaitGroup) {
+func CreateLiveStreamScheduledEvent(s *discordgo.Session, msgContent string, msgEmbeds []*discordgo.MessageEmbed, guildId string, wg *sync.WaitGroup) {
 	defer wg.Done()
 
 	url := helpers.GetURL("twitch.tv", msgContent)
+	if url == "" && len(msgEmbeds) > 0 {
+		url = msgEmbeds[0].URL
+	}
+
 	username := helpers.ParseTwitchUsernameURLParam(url)
 	if url == "" || username == "" {
 		return
@@ -36,7 +40,7 @@ func CreateLiveStreamScheduledEvent(s *discordgo.Session, msgContent, guildId st
 	endingTime := startingTime.Add(16 * time.Hour)
 
 	scheduledEvent, err := s.GuildScheduledEventCreate(guildId, &discordgo.GuildScheduledEventParams{
-		Name:               username + " is about to go live!",
+		Name:               username + " is live on Twitch!",
 		ScheduledStartTime: &startingTime,
 		ScheduledEndTime:   &endingTime,
 		EntityType:         discordgo.GuildScheduledEventEntityTypeExternal,
