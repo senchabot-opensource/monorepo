@@ -21,7 +21,7 @@ Web application for managing Senchabot, its commands and configuring the bot.
 1. Clone the repository
 
    ```sh
-   git clone https://github.com/senchabot-dev/monorepo.git
+   git clone https://github.com/senchabot-opensource/monorepo.git
    cd monorepo
    ```
 

@@ -6,7 +6,7 @@ import (
 	"log"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/senchabot-dev/monorepo/apps/discord-bot/internal/db"
+	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/db"
 )
 
 func (c *commands) PurgeCommand(ctx context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, db db.MySQL) {

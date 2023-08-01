@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/senchabot-dev/monorepo/apps/discord-bot/client"
-	"github.com/senchabot-dev/monorepo/apps/discord-bot/internal/helpers"
+	"github.com/senchabot-opensource/monorepo/apps/discord-bot/client"
+	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/helpers"
 )
 
 func CreateLiveStreamScheduledEvent(s *discordgo.Session, msgContent string, msgEmbeds []*discordgo.MessageEmbed, guildId string, wg *sync.WaitGroup) {

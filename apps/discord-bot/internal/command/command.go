@@ -9,9 +9,9 @@ import (
 	"time"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/senchabot-dev/monorepo/apps/discord-bot/client"
-	"github.com/senchabot-dev/monorepo/apps/discord-bot/internal/db"
-	"github.com/senchabot-dev/monorepo/apps/discord-bot/internal/service/streamer"
+	"github.com/senchabot-opensource/monorepo/apps/discord-bot/client"
+	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/db"
+	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service/streamer"
 )
 
 const errorMessage = "İşlem gerçekleştirilirken hata oluştu. Hata kodu: "
@@ -34,6 +34,7 @@ func (c *commands) GetCommands() map[string]func(context context.Context, s *dis
 		"set":    c.SetCommand,
 		"delete": c.DeleteCommand,
 		"purge":  c.PurgeCommand,
+		"invite": c.InviteCommand,
 	}
 
 	return commands
@@ -329,6 +330,10 @@ var (
 					},
 				},
 			},
+		},
+		{
+			Name:        "invite",
+			Description: "Senchabot Discord bot invite url.",
 		},
 	}
 )

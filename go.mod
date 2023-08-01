@@ -1,4 +1,4 @@
-module github.com/senchabot-dev/monorepo
+module github.com/senchabot-opensource/monorepo
 
 go 1.19
 

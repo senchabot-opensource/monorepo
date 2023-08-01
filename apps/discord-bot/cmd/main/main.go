@@ -11,13 +11,13 @@ import (
 	"sync"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/senchabot-dev/monorepo/apps/discord-bot/client"
-	"github.com/senchabot-dev/monorepo/apps/discord-bot/internal/command"
-	"github.com/senchabot-dev/monorepo/apps/discord-bot/internal/db"
-	"github.com/senchabot-dev/monorepo/apps/discord-bot/internal/helpers"
-	"github.com/senchabot-dev/monorepo/apps/discord-bot/internal/service/event"
-	"github.com/senchabot-dev/monorepo/apps/discord-bot/internal/service/streamer"
-	"github.com/senchabot-dev/monorepo/packages/common/commands"
+	"github.com/senchabot-opensource/monorepo/apps/discord-bot/client"
+	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/command"
+	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/db"
+	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/helpers"
+	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service/event"
+	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service/streamer"
+	"github.com/senchabot-opensource/monorepo/packages/common/commands"
 )
 
 func main() {
@@ -42,13 +42,21 @@ func main() {
 	})
 
 	discordClient.AddHandler(func(s *discordgo.Session, g *discordgo.GuildCreate) {
+		err := db.AddServerToDB(ctx, g.ID, g.Name, g.OwnerID)
+		if err != nil {
+			fmt.Println(err)
+		}
 		streamer.StartCheckLiveStreams(s, ctx, db, g.ID)
 	})
 
 	discordClient.AddHandler(func(s *discordgo.Session, g *discordgo.GuildDelete) {
+		err := db.DeleteServerFromDB(ctx, g.ID)
+		if err != nil {
+			fmt.Println(err)
+		}
 		streamer.StopCheckLiveStreams(g.ID)
 		streamer.DeleteServerFromData(g.ID)
-		_, err := db.DeleteDiscordTwitchLiveAnnosByGuildId(ctx, g.ID)
+		_, err = db.DeleteDiscordTwitchLiveAnnosByGuildId(ctx, g.ID)
 		if err != nil {
 			fmt.Println("[GuildDelete] db.DeleteDiscordTwitchLiveAnnosByGuildId: ", err.Error())
 		}

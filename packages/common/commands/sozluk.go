@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/senchabot-dev/monorepo/packages/common/helpers"
+	"github.com/senchabot-opensource/monorepo/packages/common/helpers"
 )
 
 const (
