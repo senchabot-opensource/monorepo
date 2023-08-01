@@ -3,8 +3,8 @@ package handler
 import (
 	"net/http"
 
-	"github.com/senchabot-dev/monorepo/apps/twitch-bot/client"
-	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/service"
+	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/client"
+	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/service"
 )
 
 type Handler interface {

@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/gempir/go-twitch-irc/v3"
-	common_cmd "github.com/senchabot-dev/monorepo/packages/common/commands"
+	common_cmd "github.com/senchabot-opensource/monorepo/packages/common/commands"
 )
 
 func (c *commands) SozlukCommand(context context.Context, message twitch.PrivateMessage, commandName string, params []string) {

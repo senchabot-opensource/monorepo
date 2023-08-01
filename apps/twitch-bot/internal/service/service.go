@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/senchabot-dev/monorepo/apps/twitch-bot/client"
-	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/models"
-	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/service/database"
-	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/service/database/mysql"
-	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/service/webhook"
+	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/client"
+	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/models"
+	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/service/database"
+	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/service/database/mysql"
+	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/service/webhook"
 )
 
 type Service interface {

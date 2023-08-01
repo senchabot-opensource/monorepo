@@ -5,7 +5,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/senchabot-dev/monorepo/apps/discord-bot/client"
+	"github.com/senchabot-opensource/monorepo/apps/discord-bot/client"
 )
 
 func GetURL(domain, messageContent string) string {

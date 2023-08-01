@@ -5,9 +5,9 @@ import (
 	"log"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/senchabot-dev/monorepo/apps/discord-bot/internal/db"
-	"github.com/senchabot-dev/monorepo/apps/discord-bot/internal/helpers"
-	"github.com/senchabot-dev/monorepo/apps/discord-bot/internal/service/streamer"
+	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/db"
+	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/helpers"
+	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service/streamer"
 )
 
 func (c *commands) DeleteCommand(ctx context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, db db.MySQL) {
