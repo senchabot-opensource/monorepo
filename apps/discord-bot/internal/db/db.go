@@ -428,18 +428,9 @@ func (m *MySQL) AddServerToDB(ctx context.Context, serverId string, serverName s
 }
 
 func (m *MySQL) DeleteServerFromDB(ctx context.Context, serverId string) error {
-	var dcServer []models.DiscordServer
+	var dcServer *models.DiscordServer
 
-	result := m.DB.Where("server_id = ?", serverId).Find(&dcServer)
-	if result.Error != nil {
-		return errors.New("(DeleteServerFromDB) db.Find Error:" + result.Error.Error())
-	}
-
-	if len(dcServer) == 0 {
-		return nil
-	}
-
-	result = m.DB.Delete(&dcServer)
+	result := m.DB.Where("server_id = ?", serverId).Delete(&dcServer)
 	if result.Error != nil {
 		return errors.New("(DeleteServerFromDB) db.Delete Error:" + result.Error.Error())
 	}
