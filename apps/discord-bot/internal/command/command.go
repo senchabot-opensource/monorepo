@@ -34,6 +34,7 @@ func (c *commands) GetCommands() map[string]func(context context.Context, s *dis
 		"set":    c.SetCommand,
 		"delete": c.DeleteCommand,
 		"purge":  c.PurgeCommand,
+		"invite": c.InviteCommand,
 	}
 
 	return commands
@@ -329,6 +330,10 @@ var (
 					},
 				},
 			},
+		},
+		{
+			Name:        "invite",
+			Description: "Senchabot Discord bot invite url.",
 		},
 	}
 )
