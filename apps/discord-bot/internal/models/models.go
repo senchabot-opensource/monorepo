@@ -39,3 +39,9 @@ type BotActionActivity struct {
 	ActivityAuthor   *string `gorm:"column:activity_author"`
 	ActivityAuthorID *string `gorm:"column:activity_author_id"`
 }
+
+type DiscordServer struct {
+	ServerID    string `gorm:"column:server_id"`
+	ServerName  string `gorm:"column:server_name"`
+	ServerOwner string `gorm:"column:server_owner"`
+}

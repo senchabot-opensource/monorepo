@@ -42,13 +42,21 @@ func main() {
 	})
 
 	discordClient.AddHandler(func(s *discordgo.Session, g *discordgo.GuildCreate) {
+		err := db.AddServerToDB(ctx, g.ID, g.Name, g.OwnerID)
+		if err != nil {
+			fmt.Println(err)
+		}
 		streamer.StartCheckLiveStreams(s, ctx, db, g.ID)
 	})
 
 	discordClient.AddHandler(func(s *discordgo.Session, g *discordgo.GuildDelete) {
+		err := db.DeleteServerFromDB(ctx, g.ID)
+		if err != nil {
+			fmt.Println(err)
+		}
 		streamer.StopCheckLiveStreams(g.ID)
 		streamer.DeleteServerFromData(g.ID)
-		_, err := db.DeleteDiscordTwitchLiveAnnosByGuildId(ctx, g.ID)
+		_, err = db.DeleteDiscordTwitchLiveAnnosByGuildId(ctx, g.ID)
 		if err != nil {
 			fmt.Println("[GuildDelete] db.DeleteDiscordTwitchLiveAnnosByGuildId: ", err.Error())
 		}
