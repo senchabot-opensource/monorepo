@@ -23,7 +23,7 @@ Senchabot apps and packages
 1. Clone the repo
 
    ```sh
-   git clone https://github.com/senchabot-dev/monorepo.git
+   git clone https://github.com/senchabot-opensource/monorepo.git
    cd monorepo
    ```
 

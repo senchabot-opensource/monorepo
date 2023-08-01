@@ -13,7 +13,7 @@ Installing
 1. Clone the repo and navigate to the monorepo directory
 
    ```sh
-   git clone https://github.com/senchabot-dev/monorepo.git
+   git clone https://github.com/senchabot-opensource/monorepo.git
    cd monorepo
    ```
 

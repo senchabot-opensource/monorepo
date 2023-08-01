@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/gempir/go-twitch-irc/v3"
-	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/command/helpers"
+	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/command/helpers"
 )
 
 const UPDATE_COMMAND_INFO = "For example: !ucmd [command_name] [new_command_content]"

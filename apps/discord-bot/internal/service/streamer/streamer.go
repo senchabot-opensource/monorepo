@@ -8,9 +8,9 @@ import (
 	"time"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/senchabot-dev/monorepo/apps/discord-bot/client"
-	"github.com/senchabot-dev/monorepo/apps/discord-bot/internal/db"
-	"github.com/senchabot-dev/monorepo/apps/discord-bot/internal/helpers"
+	"github.com/senchabot-opensource/monorepo/apps/discord-bot/client"
+	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/db"
+	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/helpers"
 )
 
 type GuildStreamers struct {

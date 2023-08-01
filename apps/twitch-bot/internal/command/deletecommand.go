@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/gempir/go-twitch-irc/v3"
-	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/command/helpers"
+	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/command/helpers"
 )
 
 const DELETE_COMMAND_INFO = "For example: !dcmd [command_name]"
