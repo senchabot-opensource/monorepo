@@ -102,7 +102,7 @@ model BotCommandAliases {
 }
 
 model DiscordServer {
-    id                          String                        @id @default(cuid())
+    id                          Int                           @id @default(autoincrement())
     serverId                    String                        @unique @map("server_id")
     serverName                  String                        @map("server_name")
     serverOwner                 String                        @map("server_owner")

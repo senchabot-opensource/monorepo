@@ -396,3 +396,44 @@ func (m *MySQL) SaveBotCommandActivity(context context.Context, activity, discor
 		fmt.Println(err.Error())
 	}
 }
+
+func (m *MySQL) AddServerToDB(ctx context.Context, serverId string, serverName string, serverOwner string) error {
+	var dcServer []models.DiscordServer
+
+	result := m.DB.Where("server_id = ?", serverId).Find(&dcServer)
+	if result.Error != nil {
+		return errors.New("(AddServerToDB) db.Find Error:" + result.Error.Error())
+	}
+
+	if len(dcServer) > 0 {
+		result = m.DB.Where("server_id = ?", serverId).Updates(&models.DiscordServer{ServerName: serverName, ServerOwner: serverOwner})
+		if result.Error != nil {
+			return errors.New("(AddServerToDB) db.Updates Error:" + result.Error.Error())
+		}
+		return nil
+	}
+
+	dcServer = append(dcServer, models.DiscordServer{
+		ServerID:    serverId,
+		ServerName:  serverName,
+		ServerOwner: serverOwner,
+	})
+
+	result = m.DB.Create(&dcServer)
+	if result.Error != nil {
+		return errors.New("(AddServerToDB) db.Create Error:" + result.Error.Error())
+	}
+
+	return nil
+}
+
+func (m *MySQL) DeleteServerFromDB(ctx context.Context, serverId string) error {
+	var dcServer *models.DiscordServer
+
+	result := m.DB.Where("server_id = ?", serverId).Delete(&dcServer)
+	if result.Error != nil {
+		return errors.New("(DeleteServerFromDB) db.Delete Error:" + result.Error.Error())
+	}
+
+	return nil
+}
