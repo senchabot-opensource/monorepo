@@ -21,9 +21,9 @@ import (
 )
 
 func main() {
-	//err := godotenv.Load()
-	//if err != nil {
-	//	log.Fatal("Error loading .env file")
+	//dotErr := godotenv.Load()
+	//if dotErr != nil {
+	//	log.Fatal("Error loading .env file", dotErr.Error())
 	//}
 
 	client.InitTwitchOAuth2Token()
