@@ -63,43 +63,44 @@ func CheckLiveStreamScheduledEvents(s *discordgo.Session) {
 	ticker := time.NewTicker(1 * time.Minute)
 	defer ticker.Stop()
 
-	var twitchUsername string
-
 	for range ticker.C {
 		for _, guild := range s.State.Guilds {
 			events, err := s.GuildScheduledEvents(guild.ID, false)
 			if err != nil {
 				fmt.Println("s.GuildScheduledEvents")
+				continue
 			}
 
-			for _, e := range events {
-				if !e.Creator.Bot {
-					return
-				}
+			go func(guildID string, events []*discordgo.GuildScheduledEvent) {
+				for _, e := range events {
+					if !e.Creator.Bot {
+						continue
+					}
 
-				twitchUsername = helpers.ParseTwitchUsernameURLParam(e.EntityMetadata.Location)
-				isLive, streamTitle := client.CheckTwitchStreamStatus(twitchUsername)
-				if len(streamTitle) > 100 {
-					streamTitle = streamTitle[0:90]
-				}
-				if isLive {
-					if e.Name != streamTitle {
-						_, err = s.GuildScheduledEventEdit(e.GuildID, e.ID, &discordgo.GuildScheduledEventParams{
-							Name: streamTitle,
-						})
+					twitchUsername := helpers.ParseTwitchUsernameURLParam(e.EntityMetadata.Location)
+					isLive, streamTitle := client.CheckTwitchStreamStatus(twitchUsername)
+					if len(streamTitle) > 100 {
+						streamTitle = streamTitle[0:90]
+					}
+					if isLive {
+						if e.Name != streamTitle {
+							_, err = s.GuildScheduledEventEdit(e.GuildID, e.ID, &discordgo.GuildScheduledEventParams{
+								Name: streamTitle,
+							})
+							if err != nil {
+								log.Printf("Error while updating scheduledevent: %v", err)
+							}
+						}
+					}
+
+					if !isLive {
+						err := s.GuildScheduledEventDelete(e.GuildID, e.ID)
 						if err != nil {
-							log.Printf("Error while updating scheduledevent: %v", err)
+							log.Printf("Error deleting scheduled event: %v", err)
 						}
 					}
 				}
-
-				if !isLive {
-					err := s.GuildScheduledEventDelete(e.GuildID, e.ID)
-					if err != nil {
-						log.Printf("Error deleting scheduled event: %v", err)
-					}
-				}
-			}
+			}(guild.ID, events)
 		}
 	}
 }

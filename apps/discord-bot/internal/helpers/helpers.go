@@ -38,7 +38,7 @@ func FormatContent(str string, sd client.StreamerData) string {
 	}
 
 	stringTemplates := map[string]string{
-		"{twitch.username}": sd.UserLogin,
+		"{twitch.username}": sd.UserName,
 		"{twitch.url}":      "https://www.twitch.tv/" + sd.UserLogin,
 		"{stream.title}":    sd.Title,
 		"{stream.category}": sd.StreamGame,
