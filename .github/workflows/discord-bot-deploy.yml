@@ -62,26 +62,12 @@ jobs:
           password: ${{ secrets.DISCORD_BOT_TEST_FLY_API }}
 
       - name: Docker build
-        if: matrix.branch == 'main'
         uses: docker/build-push-action@v3
         with:
           context: .
           file: ./apps/discord-bot/Dockerfile
           push: true
-          tags: registry.fly.io/senchabot0728dc:${{ github.ref_name }}-${{ github.sha }}
-          build-args: |
-            COMMIT_SHA=${{ github.sha }}
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
-
-      - name: Docker build dev
-        if: matrix.branch == 'dev'
-        uses: docker/build-push-action@v3
-        with:
-          context: .
-          file: ./apps/discord-bot/Dockerfile
-          push: true
-          tags: registry.fly.io/senchabotdctest:${{ github.ref_name }}-${{ github.sha }}
+          tags: ${{ env.REGISTRY }}/${{ matrix.branch == 'main' && env.MAIN_APP_NAME || env.DEV_APP_NAME }}:latest-${{ github.sha }}
           build-args: |
             COMMIT_SHA=${{ github.sha }}
           cache-from: type=local,src=/tmp/.buildx-cache
