@@ -73,7 +73,6 @@ func main() {
 
 	discordClient.AddHandler(func(s *discordgo.Session, m *discordgo.MessageCreate) {
 		if m.Author.Bot {
-			wg.Add(1)
 			announcementChs, err := db.GetAnnouncementChannels(ctx) // redis or memory db?
 			if err != nil {
 				log.Println(err)
@@ -82,7 +81,7 @@ func main() {
 
 			for _, ch := range announcementChs {
 				if ch.ChannelID == m.ChannelID {
-					event.CreateLiveStreamScheduledEvent(s, m.Content, m.Embeds, m.GuildID, &wg)
+					event.CreateLiveStreamScheduledEvent(s, m.Content, m.Embeds, m.GuildID)
 				}
 			}
 		}
