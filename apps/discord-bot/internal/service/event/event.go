@@ -3,7 +3,6 @@ package event
 import (
 	"fmt"
 	"log"
-	"sync"
 	"time"
 
 	"github.com/bwmarrin/discordgo"
@@ -11,9 +10,7 @@ import (
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/helpers"
 )
 
-func CreateLiveStreamScheduledEvent(s *discordgo.Session, msgContent string, msgEmbeds []*discordgo.MessageEmbed, guildId string, wg *sync.WaitGroup) {
-	defer wg.Done()
-
+func CreateLiveStreamScheduledEvent(s *discordgo.Session, msgContent string, msgEmbeds []*discordgo.MessageEmbed, guildId string) {
 	url := helpers.GetURL("twitch.tv", msgContent)
 	if url == "" && len(msgEmbeds) > 0 {
 		url = msgEmbeds[0].URL
@@ -22,18 +19,6 @@ func CreateLiveStreamScheduledEvent(s *discordgo.Session, msgContent string, msg
 	username := helpers.ParseTwitchUsernameURLParam(url)
 	if url == "" || username == "" {
 		return
-	}
-
-	wg.Add(1)
-
-	events, err := s.GuildScheduledEvents(guildId, false)
-	if err != nil {
-		fmt.Println("s.GuildScheduledEvents")
-	}
-	for _, e := range events {
-		if e.Creator.Bot && e.EntityMetadata.Location == url {
-			return
-		}
 	}
 
 	startingTime := time.Now().Add(2 * time.Minute)
@@ -51,12 +36,10 @@ func CreateLiveStreamScheduledEvent(s *discordgo.Session, msgContent string, msg
 	})
 	if err != nil {
 		log.Printf("Error while creating scheduled event: %v", err)
-		wg.Done()
 		return
 	}
 
 	fmt.Println("Created scheduled event: ", scheduledEvent.Name)
-	wg.Done()
 }
 
 func CheckLiveStreamScheduledEvents(s *discordgo.Session) {
