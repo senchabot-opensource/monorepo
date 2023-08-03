@@ -21,6 +21,7 @@ jobs:
     # only build/deploy main branch on pushes
     if: ${{ (github.ref == 'refs/heads/main') && github.event_name == 'push' }}
     runs-on: ubuntu-latest
+
     steps:
       - name: Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.11.0
