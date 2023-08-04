@@ -48,7 +48,7 @@ func SozlukCommand(params []string) (string, error) {
 	termDesc := strings.TrimSpace(gqlResponse.Data.Sozluk.Term.Body.Raw)
 
 	if termDesc == "" {
-		return fmt.Sprintf(`the term "%s" not found`, sozlukTerm), nil
+		return fmt.Sprintf(`the term "%s" not found :( it is so easy to open a pr: https://github.com/kamp-us/monorepo/new/dev/packages/sozluk-content/terms`, sozlukTerm), nil
 	}
 
 	if len(termDesc) > 400 {
