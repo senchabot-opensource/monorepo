@@ -5,7 +5,6 @@ go 1.19
 require (
 	github.com/bwmarrin/discordgo v0.27.1
 	github.com/gempir/go-twitch-irc/v3 v3.3.0
-	github.com/joho/godotenv v1.5.1
 	github.com/stretchr/testify v1.8.4
 	golang.org/x/oauth2 v0.9.0
 	gorm.io/driver/mysql v1.5.1
