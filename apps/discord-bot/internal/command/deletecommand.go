@@ -2,6 +2,7 @@ package command
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/bwmarrin/discordgo"
@@ -14,6 +15,22 @@ func (c *commands) DeleteCommand(ctx context.Context, s *discordgo.Session, i *d
 	options := i.ApplicationCommandData().Options
 
 	switch options[0].Name {
+	case "command":
+		options = options[0].Options
+		cmdName := options[0].StringValue()
+
+		deletedCmdName, resp, err := db.DeleteBotCommand(ctx, cmdName, i.GuildID)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+
+		if resp != nil {
+			ephemeralRespond(s, i, *resp)
+			return
+		}
+
+		ephemeralRespond(s, i, "Command Deleted: "+*deletedCmdName)
 	case "stream-anno-default-channel":
 		_, err := db.DeleteDiscordBotConfig(ctx, i.GuildID, "stream_anno_default_channel")
 		if err != nil {
