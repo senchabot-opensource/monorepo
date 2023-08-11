@@ -21,7 +21,6 @@ func PrivateMessage(client *client.Clients, service service.Service) {
 			return
 		}
 
-		commands.RunStaticCommand(ctx, cmdName, params, message)
-		commands.RunDynamicCommand(ctx, cmdName, message)
+		commands.RunCommand(ctx, cmdName, params, message)
 	})
 }

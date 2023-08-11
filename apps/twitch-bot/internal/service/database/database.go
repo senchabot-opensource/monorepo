@@ -13,9 +13,12 @@ type Database interface {
 	GetTwitchBotConfig(ctx context.Context, twitchChannelId string, configKey string) (*models.TwitchBotConfig, error)
 	CheckConfig(ctx context.Context, twitchChannelId string, configKey string, configValue string) bool
 
-	GetBotCommand(ctx context.Context, commandName string, twitchChannelId string) (*models.BotCommand, error)
+	GetGlobalBotCommand(ctx context.Context, commandName string) (*models.BotCommand, error)
+	GetUserBotCommand(ctx context.Context, commandName string, twitchChannelId string) (*models.BotCommand, error)
 	CreateBotCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string, createdBy string) (*string, error)
 	CheckCommandExists(ctx context.Context, commandName string, twitchChannelId string) (*string, error)
+	CheckGlobalCommandExists(ctx context.Context, commandName string) (*string, error)
+	CheckUserCommandExists(ctx context.Context, commandName string, twitchChannelId string) (*string, error)
 	UpdateBotCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string, updatedBy string) (*string, *string, error)
 	DeleteBotCommand(ctx context.Context, commandName string, twitchChannelId string) (*string, *string, error)
 	GetCommandList(ctx context.Context, twitchChannelId string) ([]*models.BotCommand, error)

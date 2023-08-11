@@ -12,8 +12,7 @@ import (
 )
 
 type Command interface {
-	RunStaticCommand(context context.Context, cmdName string, params []string, message twitch.PrivateMessage)
-	RunDynamicCommand(context context.Context, cmdName string, message twitch.PrivateMessage)
+	RunCommand(context context.Context, cmdName string, params []string, message twitch.PrivateMessage)
 	GetCommands() map[string]func(context context.Context, message twitch.PrivateMessage, commandName string, params []string)
 }
 
@@ -32,41 +31,40 @@ func NewCommands(client *client.Clients, service service.Service) Command {
 func (c *commands) GetCommands() map[string]func(context context.Context, message twitch.PrivateMessage, commandName string, params []string) {
 	// TODO: command aliases
 	var commands = map[string]func(context context.Context, message twitch.PrivateMessage, commandName string, params []string){
-		"ping":      c.PingCommand,
-		"invite":    c.InviteCommand,
-		"senchabot": c.SenchabotCommand,
-		"sukru":     c.SukruCommand,
-		"sozluk":    c.SozlukCommand,
+		"ping":   c.PingCommand,
+		"invite": c.InviteCommand,
+		"sozluk": c.SozlukCommand,
 
 		"acmd": c.AddCommandCommand,
 		"ucmd": c.UpdateCommandCommand,
 		"dcmd": c.DeleteCommandCommand,
-		//"info": InfoCommandCommand,
 		"cmds": c.CmdsCommand,
 
 		"acmda": c.AddCommandAliasCommand,
 		"dcmda": c.DeleteCommandAliasCommand,
-		"help":  c.HelpCommand,
 
-		"kampus":       c.KampusCommand,
-		"frontendship": c.FrontendshipCommand,
+		"help": c.HelpCommand,
+
+		"astra":     c.AstraCommand,
+		"kampus":    c.KampusCommand,
+		"senchabot": c.SenchabotCommand,
 	}
 
 	return commands
 }
 
-func (c *commands) RunStaticCommand(context context.Context, cmdName string, params []string, message twitch.PrivateMessage) {
-	cmds := c.GetCommands()
-
-	if cmd, ok := cmds[cmdName]; ok {
-		cmd(context, message, cmdName, params)
-		c.service.SaveBotCommandActivity(context, cmdName+" "+strings.Join(params, " "), message.RoomID, message.User.DisplayName, message.User.ID)
+func (c *commands) IsSystemCommand(commandName string) bool {
+	commandListMap := c.GetCommands()
+	for k := range commandListMap {
+		if k == commandName {
+			return true
+		}
 	}
+
+	return false
 }
 
-func (c *commands) RunDynamicCommand(context context.Context, cmdName string, message twitch.PrivateMessage) {
-	// HANDLE CUSTOM COMMANDS
-
+func (c *commands) RunCommand(context context.Context, cmdName string, params []string, message twitch.PrivateMessage) {
 	// HANDLE COMMAND ALIASES
 	commandAlias, cmdAliasErr := c.service.GetCommandAlias(context, cmdName, message.RoomID)
 	if cmdAliasErr != nil {
@@ -78,18 +76,40 @@ func (c *commands) RunDynamicCommand(context context.Context, cmdName string, me
 	}
 	// HANDLE COMMAND ALIASES
 
-	cmdData, err := c.service.GetBotCommand(context, cmdName, message.RoomID)
+	// SYSTEM COMMANDS
+	cmds := c.GetCommands()
+	if cmd, ok := cmds[cmdName]; ok {
+		cmd(context, message, cmdName, params)
+		c.service.SaveBotCommandActivity(context, cmdName+" "+strings.Join(params, " "), message.RoomID, message.User.DisplayName, message.User.ID)
+		return
+	}
+	// SYSTEM COMMANDS
+
+	// GLOBAL COMMANDS
+	cmdData, err := c.service.GetGlobalBotCommand(context, cmdName)
 	if err != nil {
 		fmt.Println(err.Error())
 		return
 	}
-
-	if cmdData == nil || message.RoomID != cmdData.TwitchChannelID {
+	if cmdData != nil || cmdData.Status == 1 {
+		formattedCommandContent := helpers.FormatCommandContent(cmdData, message)
+		c.client.Twitch.Say(message.Channel, formattedCommandContent)
+		c.service.SaveBotCommandActivity(context, cmdName, message.RoomID, message.User.DisplayName, message.User.ID)
 		return
 	}
+	// GLOBAL COMMANDS
 
+	// USER COMMANDS
+	cmdData, err = c.service.GetUserBotCommand(context, cmdName, message.RoomID)
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+	if cmdData == nil || message.RoomID != cmdData.TwitchChannelID && cmdData.Status == 0 {
+		return
+	}
 	formattedCommandContent := helpers.FormatCommandContent(cmdData, message)
 	c.client.Twitch.Say(message.Channel, formattedCommandContent)
 	c.service.SaveBotCommandActivity(context, cmdName, message.RoomID, message.User.DisplayName, message.User.ID)
-	// HANDLE CUSTOM COMMANDS
+	// USER COMMANDS
 }
