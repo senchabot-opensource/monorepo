@@ -3,18 +3,25 @@ package helpers
 import (
 	"context"
 	"fmt"
+	"io"
 	"math/rand"
+	"net/http"
 	"strconv"
 	"strings"
 
 	"github.com/gempir/go-twitch-irc/v3"
-	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/models"
-	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/service"
+	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/models"
+	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/service"
 )
 
-var (
+const (
 	max = 70
 	min = 18
+
+	maxCommandNameLength    = 50
+	maxCommandContentLength = 400
+
+	maxAliasParamLength = 4
 )
 
 func FormatCommandContent(commandData *models.BotCommand, message twitch.PrivateMessage) string {
@@ -22,6 +29,7 @@ func FormatCommandContent(commandData *models.BotCommand, message twitch.Private
 
 	userName := message.User.DisplayName
 	dateTemplate := "02/01/2006"
+	//curlyBracesPattern := regexp.MustCompile(`{(.*?)}`)
 
 	stringTemplates := map[string]string{
 		"{user.name}":     userName,
@@ -40,43 +48,114 @@ func FormatCommandContent(commandData *models.BotCommand, message twitch.Private
 		msgContent = strings.ReplaceAll(msgContent, k, v)
 	}
 
+	url, startIndex, endIndex, ok := parseCustomAPIURLFromMessage(msgContent)
+	if ok {
+		template := msgContent[startIndex : endIndex+1]
+		response, err := sendGetRequest(url)
+		if err != nil {
+			fmt.Println("parseCustomAPIURLFromMessage url, sendGetRequest Error:", err)
+			msgContent = message.User.DisplayName + ", there was an error while sending get request"
+		}
+
+		msgContent = strings.Replace(msgContent, template, response, 1)
+	}
+
+	//msgContent = curlyBracesPattern.ReplaceAllString(msgContent, "$1")
+
 	return msgContent
 }
 
-func ParseMessage(message string) (string, []string) {
-	var splitMsg = strings.Split(message, " ")
-	var cmdName = splitMsg[0]
-	var params []string
-
-	// Check if first word is a @mention
-	if strings.HasPrefix(cmdName, "@") {
-		cmdName = splitMsg[1]
-	} else {
-		params = splitMsg[1:]
+func parseCustomAPIURLFromMessage(message string) (string, int, int, bool) {
+	startIndex := strings.Index(message, "{customapi.") // Curly braces start index
+	endIndex := strings.LastIndex(message, "}")         // Curly braces end index
+	if startIndex == -1 || endIndex == -1 || endIndex <= startIndex {
+		return message, 0, 0, false
 	}
 
-	if !CheckIfCommand(cmdName) {
+	url := message[startIndex+1 : endIndex]
+	url = strings.TrimPrefix(url, "customapi.")
+
+	return url, startIndex, endIndex, true
+}
+
+func sendGetRequest(url string) (string, error) {
+	response, err := http.Get(url)
+	if err != nil {
+		return "", err
+	}
+	defer response.Body.Close()
+
+	body, err := io.ReadAll(response.Body)
+	if err != nil {
+		return "", err
+	}
+	return string(body), nil
+}
+
+func AreCommandAndMentionIndicesInvalid(cmdIndex int, mentionIndex int) bool {
+	return cmdIndex < 0 || cmdIndex > 1 || mentionIndex > 1
+}
+
+func AreCommandAndMentionIndicesMismatched(cmdIndex int, mentionIndex int) bool {
+	return cmdIndex+1 != mentionIndex && mentionIndex+1 != cmdIndex
+}
+
+func ParseMessage(message string) (string, []string) {
+	words := strings.Fields(message)
+	cmdIndex, mentionIndex := FindCommandAndMentionIndices(words)
+
+	if AreCommandAndMentionIndicesInvalid(cmdIndex, mentionIndex) {
 		return "", nil
 	}
 
+	// 0 and 1 indexes, if there is no mention, the command cannot be placed in any index other than 0.
+	if AreCommandAndMentionIndicesMismatched(cmdIndex, mentionIndex) {
+		return "", nil
+	}
+
+	cmdName := words[cmdIndex]
+	params := words[cmdIndex+1:]
+
+	// wykonos
 	cmdName = strings.TrimPrefix(cmdName, "!")
 
-	return cmdName, params
+	if mentionIndex < 0 {
+		return cmdName, params
+	}
+
+	mention := words[mentionIndex]
+
+	return cmdName, []string{mention}
+}
+
+func FindCommandAndMentionIndices(words []string) (int, int) {
+	cmdIndex := -1
+	mentionIndex := -1
+	for i, v := range words {
+		if strings.HasPrefix(v, "!") && cmdIndex < 0 {
+			cmdIndex = i
+		}
+		if strings.HasPrefix(v, "@") && mentionIndex < 0 {
+			mentionIndex = i
+		}
+	}
+
+	return cmdIndex, mentionIndex
 }
 
 func CheckIfCommand(param string) bool {
 	return strings.HasPrefix(param, "!")
 }
 
-func CanExecuteCommand(context context.Context, service service.Service, message twitch.PrivateMessage) bool {
+func CanExecuteCommand(context context.Context, service service.Service, badges string, twitchChannelId string) bool {
 	// broadcaster can run the command
-	if isBroadcaster(message.Tags["badges"]) {
+	if isBroadcaster(badges) {
 		return true
 	}
 
 	// moderator can run the command
-	if isModerator(message.Tags["badges"]) {
-		check := service.CheckConfig(context, message.RoomID, "mods_manage_cmds_enabled", "1")
+	if isModerator(badges) {
+		check := service.CheckConfig(context, twitchChannelId, "mods_manage_cmds_enabled", "1")
 		return check
 	}
 
@@ -138,16 +217,16 @@ func ValidateCommandCreateParamsLength(params []string) bool {
 }
 
 func ValidateAliasCommandsLength(aliasCommands []string) (string, bool) {
-	if len(aliasCommands) > 4 {
-		return "Command Aliases length must be no more than 4", false
+	if len(aliasCommands) > maxAliasParamLength {
+		return fmt.Sprintf("Command Aliases length must be no more than %d", maxAliasParamLength), false
 	}
 
 	return "", true
 }
 
 func ValidateCommandCreateParams(commandName string, commandContent string) (string, bool) {
-	if len(commandName) > 50 {
-		return "Command Name length must be no more than 50 chars", false
+	if len(commandName) > maxCommandNameLength {
+		return fmt.Sprintf("Command Name length must be no more than %d chars", maxCommandNameLength), false
 	}
 	if infoText, check := ValidateCommandContentLength(commandContent); !check {
 		return infoText, check
@@ -157,14 +236,14 @@ func ValidateCommandCreateParams(commandName string, commandContent string) (str
 }
 
 func ValidateCommandContentLength(commandContent string) (string, bool) {
-	if len(commandContent) > 400 {
-		return "Command Content length must be no more than 400 chars", false
+	if len(commandContent) > maxCommandContentLength {
+		return fmt.Sprintf("Command Content length must be no more than %d chars", maxCommandContentLength), false
 	}
 
 	return "", true
 }
 
-func ValidateCommandDeleteParamsLength(params []string) bool {
+func IsCommandParamsLengthEqualToOne(params []string) bool {
 	return len(params) == 1
 }
 

@@ -3,7 +3,7 @@ package database
 import (
 	"context"
 
-	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/models"
+	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/models"
 )
 
 type Database interface {
@@ -20,8 +20,8 @@ type Database interface {
 	DeleteBotCommand(ctx context.Context, commandName string, twitchChannelId string) (*string, *string, error)
 	GetCommandList(ctx context.Context, twitchChannelId string) ([]*models.BotCommand, error)
 
-	CreateBotActionActivity(ctx context.Context, botPlatformType string, botActivity string, twitchChannelId string, commandAuthor string) error
-	SaveBotCommandActivity(context context.Context, commandName string, twitchChannelId string, commandAuthor string)
+	CreateBotActionActivity(ctx context.Context, botPlatformType string, botActivity string, twitchChannelId string, commandAuthor, commandAuthorId string) error
+	SaveBotCommandActivity(context context.Context, commandName string, twitchChannelId string, commandAuthor, commandAuthorId string)
 
 	GetCommandAlias(ctx context.Context, commandAlias string, twitchChannelId string) (*string, error)
 	CreateCommandAliases(ctx context.Context, commandName string, aliases []string, twitchChannelId string, createdBy string) (*string, error)

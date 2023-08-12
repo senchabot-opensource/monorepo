@@ -1,0 +1,14 @@
+# fly.toml app configuration file generated for senchabot0728dc on 2023-07-28T16:41:27+03:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = "senchabot0728dc"
+primary_region = "ams"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = false
+  auto_start_machines = false
+  min_machines_running = 1

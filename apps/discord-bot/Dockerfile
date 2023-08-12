@@ -1,36 +1,20 @@
-FROM debian:bullseye as builder
+FROM golang:1.20-alpine AS builder
 
-ARG NODE_VERSION=18.12.1
-
-RUN apt-get update; apt install -y curl
-RUN curl https://get.volta.sh | bash
-ENV VOLTA_HOME /root/.volta
-ENV PATH /root/.volta/bin:$PATH
-RUN volta install node@${NODE_VERSION}
-
-#######################################################################
-
-RUN mkdir /app
 WORKDIR /app
-
-# NPM will not install any package listed in "devDependencies" when NODE_ENV is set to "production",
-# to install all modules: "npm install --production=false".
-# Ref: https://docs.npmjs.com/cli/v9/commands/npm-install#description
-
-ENV NODE_ENV production
-
 COPY . .
 
-RUN npm install
-FROM debian:bullseye
+ARG SERVICE_NAME
 
-LABEL fly_launch_runtime="nodejs"
+# Install CA certificates
+RUN apk update && apk add --no-cache ca-certificates && update-ca-certificates
 
-COPY --from=builder /root/.volta /root/.volta
-COPY --from=builder /app /app
+RUN CGO_ENABLED=0 GOOS=linux go build -ldflags "-s -w" -o /app/bin ./apps/discord-bot/cmd/main/*.go
 
-WORKDIR /app
-ENV NODE_ENV production
-ENV PATH /root/.volta/bin:$PATH
+FROM scratch AS prod
+COPY --from=builder /app/bin bin
+# Copy CA certificates from the builder stage
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
-CMD [ "npm", "run", "start" ]
+EXPOSE 8080
+
+ENTRYPOINT ["./bin"]

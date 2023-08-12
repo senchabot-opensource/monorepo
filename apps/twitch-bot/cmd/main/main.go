@@ -7,17 +7,16 @@ import (
 	"os"
 
 	"github.com/gempir/go-twitch-irc/v3"
-	"github.com/joho/godotenv"
-	"github.com/senchabot-dev/monorepo/apps/twitch-bot/client"
-	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/handler"
-	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/service"
+	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/client"
+	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/handler"
+	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/service"
 )
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
+	//err := godotenv.Load()
+	//if err != nil {
+	//	log.Fatal("Error loading .env file")
+	//}
 
 	twitchClient := twitch.NewClient("senchabot", os.Getenv("OAUTH"))
 

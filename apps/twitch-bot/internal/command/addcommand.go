@@ -5,13 +5,13 @@ import (
 	"fmt"
 
 	"github.com/gempir/go-twitch-irc/v3"
-	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/command/helpers"
+	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/command/helpers"
 )
 
 const ADD_COMMAND_INFO = "For example: !acmd [command_name] [command_content]"
 
 func (c *commands) AddCommandCommand(context context.Context, message twitch.PrivateMessage, commandName string, params []string) {
-	if !helpers.CanExecuteCommand(context, c.service, message) {
+	if !helpers.CanExecuteCommand(context, c.service, message.Tags["badges"], message.RoomID) {
 		return
 	}
 	command_name, command_content, check := helpers.GetCommandCreateUpdateParams(params)
