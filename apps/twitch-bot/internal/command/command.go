@@ -3,8 +3,8 @@ package command
 import (
 	"context"
 	"fmt"
-	"time"
 	"strings"
+	"time"
 
 	"github.com/gempir/go-twitch-irc/v3"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/client"
@@ -65,8 +65,6 @@ func (c *commands) RunStaticCommand(context context.Context, cmdName string, par
 
 	if cmd, ok := cmds[cmdName]; ok {
 		if c.isCommandOnCooldown(cmdName) {
-			//TODO: send cooldown info message via whisper
-			//c.client.Twitch.Say(message.Channel, message.User.DisplayName+", the command \""+cmdName+"\" is on cooldown.")
 			return
 		}
 		cmd(context, message, cmdName, params)
@@ -100,8 +98,6 @@ func (c *commands) RunDynamicCommand(context context.Context, cmdName string, me
 	}
 
 	if c.isCommandOnCooldown(cmdName) {
-		//TODO: send cooldown info message via whisper
-		//c.client.Twitch.Say(message.Channel, message.User.DisplayName+", the command \""+cmdName+"\" is on cooldown.")
 		return
 	}
 
