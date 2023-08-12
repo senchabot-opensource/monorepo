@@ -31,8 +31,9 @@ func NewCommands() Command {
 func (c *commands) GetCommands() map[string]func(context context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, db db.MySQL) {
 	// TODO: command aliases
 	var commands = map[string]func(context context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, db db.MySQL){
-		"add":    c.AddCommand,
-		"update": c.UpdateCommand,
+		"acmd":   c.AddCmdCommand,
+		"ucmd":   c.UpdateCmdCommand,
+		"dcmd":   c.DeleteCmdCommand,
 		"set":    c.SetCommand,
 		"delete": c.DeleteCommand,
 		"purge":  c.PurgeCommand,
@@ -68,78 +69,53 @@ var (
 	setdeletePermissions int64 = discordgo.PermissionAdministrator
 	commandMetadatas           = []*discordgo.ApplicationCommand{
 		{
-			Name:        "add",
-			Description: "Add something",
-			DescriptionLocalizations: &map[discordgo.Locale]string{
-				discordgo.Turkish: "blabla",
-			},
+			Name:                     "acmd",
+			Description:              "Add a new custom command.",
 			DefaultMemberPermissions: &setdeletePermissions,
 			Options: []*discordgo.ApplicationCommandOption{
 				{
-					Name:        "command",
-					Description: "Add a new command.",
-					DescriptionLocalizations: map[discordgo.Locale]string{
-						discordgo.Turkish: "Bu komutla yeni bir komut ekleyebilirsiniz.",
-					},
-					Type: discordgo.ApplicationCommandOptionSubCommand,
-					Options: []*discordgo.ApplicationCommandOption{
-						{
-							Type:        discordgo.ApplicationCommandOptionString,
-							Name:        "command-name",
-							Description: "Command Name",
-							DescriptionLocalizations: map[discordgo.Locale]string{
-								discordgo.Turkish: "Olusturulacak yeni komutun ismi",
-							},
-							Required: true,
-						},
-						{
-							Type:        discordgo.ApplicationCommandOptionString,
-							Name:        "command-content",
-							Description: "Command Content",
-							DescriptionLocalizations: map[discordgo.Locale]string{
-								discordgo.Turkish: "Olusturulacak yeni komutun mesaj icerigi",
-							},
-							Required: true,
-						},
-					},
+					Type:        discordgo.ApplicationCommandOptionString,
+					Name:        "command-name",
+					Description: "Command Name",
+					Required:    true,
+				},
+				{
+					Type:        discordgo.ApplicationCommandOptionString,
+					Name:        "command-content",
+					Description: "Command Content",
+					Required:    true,
 				},
 			},
 		},
 		{
-			Name:        "update",
-			Description: "Update something",
-			DescriptionLocalizations: &map[discordgo.Locale]string{
-				discordgo.Turkish: "blabla",
-			},
+			Name:                     "ucmd",
+			Description:              "Update a custom command.",
 			DefaultMemberPermissions: &setdeletePermissions,
 			Options: []*discordgo.ApplicationCommandOption{
 				{
-					Name:        "command",
-					Description: "Update a command.",
-					DescriptionLocalizations: map[discordgo.Locale]string{
-						discordgo.Turkish: "Bu komutla bir komutun komut icerigini guncelleyebilirsiniz.",
-					},
-					Type: discordgo.ApplicationCommandOptionSubCommand,
-					Options: []*discordgo.ApplicationCommandOption{
-						{
-							Type:        discordgo.ApplicationCommandOptionString,
-							Name:        "command-name",
-							Description: "Command Name",
-							DescriptionLocalizations: map[discordgo.Locale]string{
-								discordgo.Turkish: "Guncellenecek komutun ismi",
-							},
-							Required: true,
-						},
-						{
-							Type:        discordgo.ApplicationCommandOptionString,
-							Name:        "command-content",
-							Description: "Command Content",
-							DescriptionLocalizations: map[discordgo.Locale]string{
-								discordgo.Turkish: "Guncellenecek komutun yeni mesaj icerigi",
-							},
-							Required: true,
-						},
-					},
+					Type:        discordgo.ApplicationCommandOptionString,
+					Name:        "command-name",
+					Description: "Command Name",
+					Required:    true,
+				},
+				{
+					Type:        discordgo.ApplicationCommandOptionString,
+					Name:        "command-content",
+					Description: "New Command Content",
+					Required:    true,
+				},
+			},
+		},
+		{
+			Name:                     "dcmd",
+			Description:              "Delete a custom command.",
+			DefaultMemberPermissions: &setdeletePermissions,
+			Options: []*discordgo.ApplicationCommandOption{
+				{
+					Type:        discordgo.ApplicationCommandOptionString,
+					Name:        "command-name",
+					Description: "Command Name",
+					Required:    true,
 				},
 			},
 		},
@@ -330,25 +306,6 @@ var (
 			},
 			DefaultMemberPermissions: &setdeletePermissions,
 			Options: []*discordgo.ApplicationCommandOption{
-				{
-					Name:        "command",
-					Description: "Delete a command.",
-					DescriptionLocalizations: map[discordgo.Locale]string{
-						discordgo.Turkish: "Bir komut sil.",
-					},
-					Type: discordgo.ApplicationCommandOptionSubCommand,
-					Options: []*discordgo.ApplicationCommandOption{
-						{
-							Type:        discordgo.ApplicationCommandOptionString,
-							Name:        "command-name",
-							Description: "blabla",
-							DescriptionLocalizations: map[discordgo.Locale]string{
-								discordgo.Turkish: "Silinecek komutun ismi",
-							},
-							Required: true,
-						},
-					},
-				},
 				{
 					Name:        "stream-anno-default-channel",
 					Description: "Delete the default channel configuration for live stream announcements.",
