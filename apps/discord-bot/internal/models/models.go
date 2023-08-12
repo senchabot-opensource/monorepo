@@ -45,3 +45,14 @@ type DiscordServer struct {
 	ServerName  string `gorm:"column:server_name"`
 	ServerOwner string `gorm:"column:server_owner"`
 }
+
+type BotCommand struct {
+	ID              int
+	CommandName     string     `gorm:"column:command_name"`
+	CommandContent  string     `gorm:"column:command_content"`
+	TwitchChannelID string     `gorm:"column:twitch_channel_id"`
+	DiscordServerID string     `gorm:"column:discord_server_id"`
+	CreatedBy       *string    `gorm:"column:created_by"`
+	UpdatedBy       *string    `gorm:"column:updated_by"`
+	CreatedAt       *time.Time `gorm:"column:created_at"`
+}
