@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/gempir/go-twitch-irc/v3"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/client"
@@ -18,14 +19,18 @@ type Command interface {
 }
 
 type commands struct {
-	client  *client.Clients
-	service service.Service
+	client           *client.Clients
+	service          service.Service
+	commandCooldowns map[string]time.Time
+	cooldownPeriod   time.Duration
 }
 
-func NewCommands(client *client.Clients, service service.Service) Command {
+func NewCommands(client *client.Clients, service service.Service, cooldownPeriod time.Duration) Command {
 	return &commands{
-		client:  client,
-		service: service,
+		client:           client,
+		service:          service,
+		commandCooldowns: make(map[string]time.Time),
+		cooldownPeriod:   cooldownPeriod,
 	}
 }
 
@@ -59,7 +64,11 @@ func (c *commands) RunStaticCommand(context context.Context, cmdName string, par
 	cmds := c.GetCommands()
 
 	if cmd, ok := cmds[cmdName]; ok {
+		if c.isCommandOnCooldown(cmdName) {
+			return
+		}
 		cmd(context, message, cmdName, params)
+		c.setCommandCooldown(cmdName)
 		c.service.SaveBotCommandActivity(context, cmdName+" "+strings.Join(params, " "), message.RoomID, message.User.DisplayName, message.User.ID)
 	}
 }
@@ -88,8 +97,26 @@ func (c *commands) RunDynamicCommand(context context.Context, cmdName string, me
 		return
 	}
 
+	if c.isCommandOnCooldown(cmdName) {
+		return
+	}
+
 	formattedCommandContent := helpers.FormatCommandContent(cmdData, message)
 	c.client.Twitch.Say(message.Channel, formattedCommandContent)
+	c.setCommandCooldown(cmdName)
 	c.service.SaveBotCommandActivity(context, cmdName, message.RoomID, message.User.DisplayName, message.User.ID)
 	// HANDLE CUSTOM COMMANDS
+}
+
+func (c *commands) isCommandOnCooldown(cmdName string) bool {
+	cooldownTime, exists := c.commandCooldowns[cmdName]
+	if !exists {
+		return false
+	}
+
+	return time.Now().Before(cooldownTime.Add(c.cooldownPeriod))
+}
+
+func (c *commands) setCommandCooldown(cmdName string) {
+	c.commandCooldowns[cmdName] = time.Now()
 }

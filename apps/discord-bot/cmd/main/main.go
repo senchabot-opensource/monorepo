@@ -18,12 +18,14 @@ import (
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service/event"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service/streamer"
 	"github.com/senchabot-opensource/monorepo/packages/common/commands"
+
+	cmdsrvc "github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service/command"
 )
 
 func main() {
-	//err := godotenv.Load()
-	//if err != nil {
-	//	log.Fatal("Error loading .env file")
+	//dotErr := godotenv.Load()
+	//if dotErr != nil {
+	//	log.Fatal("Error loading .env file", dotErr.Error())
 	//}
 
 	client.InitTwitchOAuth2Token()
@@ -94,6 +96,8 @@ func main() {
 		if cmdName == "" {
 			return
 		}
+
+		cmdsrvc.RunCommand(s, ctx, db, cmdName, m)
 
 		if cmdName == "sozluk" {
 			sozlukResp, err := commands.SozlukCommand(params)

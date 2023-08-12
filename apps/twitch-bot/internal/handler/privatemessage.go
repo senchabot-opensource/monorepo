@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"time"
 
 	"github.com/gempir/go-twitch-irc/v3"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/client"
@@ -12,7 +13,7 @@ import (
 )
 
 func PrivateMessage(client *client.Clients, service service.Service) {
-	commands := command.NewCommands(client, service)
+	commands := command.NewCommands(client, service, time.Minute)
 	ctx := context.Background()
 
 	client.Twitch.OnPrivateMessage(func(message twitch.PrivateMessage) {
