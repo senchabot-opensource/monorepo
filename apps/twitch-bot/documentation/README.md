@@ -24,7 +24,7 @@ These commands can be edited as described in the [Custom Commands](#custom-comma
 | !kampus             | discord.gg/kampus • github.com/kamp-us                                                                                                     |
 | !lurk               | Teşekkürler! {user.name}                                                                                                                   |
 | !ping               | pong! VoHiYo                                                                                                                               |
-| !senchabot          | Open source multi-platform bot development project, which works on Twitch and Discord. • senchabot.app • github.com/senchabot-dev/monorepo |
+| !senchabot          | Open source multi-platform bot development project, which works on Twitch and Discord. • senchabot.app • github.com/senchabot-opensource/monorepo |
 | !sozluk [term-name] | (Reply to user) Term: Description                                                                                              |
 
 ### Custom Commands

@@ -1,5 +1,5 @@
 {
-  "repository": "https://github.com/senchabot-dev/monorepo.git",
+  "repository": "https://github.com/senchabot-opensource/monorepo.git",
   "private": true,
   "workspaces": [
     "apps/*",

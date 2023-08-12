@@ -3,13 +3,15 @@ package helpers
 import (
 	"context"
 	"fmt"
+	"io"
 	"math/rand"
+	"net/http"
 	"strconv"
 	"strings"
 
 	"github.com/gempir/go-twitch-irc/v3"
-	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/models"
-	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/service"
+	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/models"
+	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/service"
 )
 
 const (
@@ -27,6 +29,7 @@ func FormatCommandContent(commandData *models.BotCommand, message twitch.Private
 
 	userName := message.User.DisplayName
 	dateTemplate := "02/01/2006"
+	//curlyBracesPattern := regexp.MustCompile(`{(.*?)}`)
 
 	stringTemplates := map[string]string{
 		"{user.name}":     userName,
@@ -45,7 +48,48 @@ func FormatCommandContent(commandData *models.BotCommand, message twitch.Private
 		msgContent = strings.ReplaceAll(msgContent, k, v)
 	}
 
+	url, startIndex, endIndex, ok := parseCustomAPIURLFromMessage(msgContent)
+	if ok {
+		template := msgContent[startIndex : endIndex+1]
+		response, err := sendGetRequest(url)
+		if err != nil {
+			fmt.Println("parseCustomAPIURLFromMessage url, sendGetRequest Error:", err)
+			msgContent = message.User.DisplayName + ", there was an error while sending get request"
+		}
+
+		msgContent = strings.Replace(msgContent, template, response, 1)
+	}
+
+	//msgContent = curlyBracesPattern.ReplaceAllString(msgContent, "$1")
+
 	return msgContent
+}
+
+func parseCustomAPIURLFromMessage(message string) (string, int, int, bool) {
+	startIndex := strings.Index(message, "{customapi.") // Curly braces start index
+	endIndex := strings.LastIndex(message, "}")         // Curly braces end index
+	if startIndex == -1 || endIndex == -1 || endIndex <= startIndex {
+		return message, 0, 0, false
+	}
+
+	url := message[startIndex+1 : endIndex]
+	url = strings.TrimPrefix(url, "customapi.")
+
+	return url, startIndex, endIndex, true
+}
+
+func sendGetRequest(url string) (string, error) {
+	response, err := http.Get(url)
+	if err != nil {
+		return "", err
+	}
+	defer response.Body.Close()
+
+	body, err := io.ReadAll(response.Body)
+	if err != nil {
+		return "", err
+	}
+	return string(body), nil
 }
 
 func AreCommandAndMentionIndicesInvalid(cmdIndex int, mentionIndex int) bool {
@@ -103,15 +147,15 @@ func CheckIfCommand(param string) bool {
 	return strings.HasPrefix(param, "!")
 }
 
-func CanExecuteCommand(context context.Context, service service.Service, message twitch.PrivateMessage) bool {
+func CanExecuteCommand(context context.Context, service service.Service, badges string, twitchChannelId string) bool {
 	// broadcaster can run the command
-	if isBroadcaster(message.Tags["badges"]) {
+	if isBroadcaster(badges) {
 		return true
 	}
 
 	// moderator can run the command
-	if isModerator(message.Tags["badges"]) {
-		check := service.CheckConfig(context, message.RoomID, "mods_manage_cmds_enabled", "1")
+	if isModerator(badges) {
+		check := service.CheckConfig(context, twitchChannelId, "mods_manage_cmds_enabled", "1")
 		return check
 	}
 
@@ -197,10 +241,6 @@ func ValidateCommandContentLength(commandContent string) (string, bool) {
 	}
 
 	return "", true
-}
-
-func ValidateCommandDeleteParamsLength(params []string) bool {
-	return len(params) == 1
 }
 
 func IsCommandParamsLengthEqualToOne(params []string) bool {

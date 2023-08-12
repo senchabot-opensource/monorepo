@@ -3,11 +3,12 @@ package command
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/gempir/go-twitch-irc/v3"
-	"github.com/senchabot-dev/monorepo/apps/twitch-bot/client"
-	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/command/helpers"
-	"github.com/senchabot-dev/monorepo/apps/twitch-bot/internal/service"
+	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/client"
+	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/command/helpers"
+	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/service"
 )
 
 type Command interface {
@@ -61,7 +62,7 @@ func (c *commands) RunStaticCommand(context context.Context, cmdName string, par
 
 	if cmd, ok := cmds[cmdName]; ok {
 		cmd(context, message, cmdName, params)
-		c.service.SaveBotCommandActivity(context, cmdName, message.RoomID, message.User.DisplayName)
+		c.service.SaveBotCommandActivity(context, cmdName+" "+strings.Join(params, " "), message.RoomID, message.User.DisplayName, message.User.ID)
 	}
 }
 
@@ -91,6 +92,6 @@ func (c *commands) RunDynamicCommand(context context.Context, cmdName string, me
 
 	formattedCommandContent := helpers.FormatCommandContent(cmdData, message)
 	c.client.Twitch.Say(message.Channel, formattedCommandContent)
-	c.service.SaveBotCommandActivity(context, cmdName, message.RoomID, message.User.DisplayName)
+	c.service.SaveBotCommandActivity(context, cmdName, message.RoomID, message.User.DisplayName, message.User.ID)
 	// HANDLE CUSTOM COMMANDS
 }
