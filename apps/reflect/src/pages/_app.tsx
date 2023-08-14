@@ -5,11 +5,20 @@ import type { Session } from "next-auth";
 import "../styles/globals.css";
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useState } from "react";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: { queries: { refetchOnWindowFocus: false } },
+      }),
+  );
+
   return (
     <>
       <Script
@@ -25,12 +34,14 @@ const MyApp: AppType<{ session: Session | null }> = ({
           gtag('config', 'G-0N948SR48C');
       `}
       </Script>
-      <SessionProvider
-        session={session}
-        refetchInterval={60 * 60}
-        refetchOnWindowFocus={false}>
-        <Component {...pageProps} />
-      </SessionProvider>
+      <QueryClientProvider client={queryClient}>
+        <SessionProvider
+          session={session}
+          refetchInterval={60 * 60}
+          refetchOnWindowFocus={false}>
+          <Component {...pageProps} />
+        </SessionProvider>
+      </QueryClientProvider>
       <Analytics />
     </>
   );
