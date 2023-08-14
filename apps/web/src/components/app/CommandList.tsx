@@ -23,9 +23,9 @@ import MuiAccordionSummary, {
   AccordionSummaryProps,
 } from "@mui/material/AccordionSummary";
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { BiSearchAlt } from "react-icons/bi";
-import { getAliasList, getCommandList } from "src/api";
+import { useQuery } from "@tanstack/react-query";
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion
@@ -59,38 +59,43 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
 }));
 
 const CommandList = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [botCommands, setBotCommands] = useState<IBotCommand[]>();
-  const [aliasCommands, setAliasCommands] = useState<IBotCommandAlias[]>();
   const [expanded, setExpanded] = useState<string | false>(false);
   const [searchValue, setSearchValue] = useState<string>("");
+
+  const botCommands = useQuery({
+    queryKey: ["getCommandList"],
+    queryFn: async () => {
+      const res = await fetch("/api/cmd/list");
+      const { data } = await res.json();
+      return data;
+    },
+  });
+
+  const aliasCommands = useQuery({
+    queryKey: ["getAliasList"],
+    queryFn: async () => {
+      const res = await fetch("/api/cmd/aliasList");
+      const { data } = await res.json();
+      return data;
+    },
+    enabled: botCommands.isSuccess,
+  });
 
   const handleChange =
     (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
       setExpanded(isExpanded ? panel : false);
     };
 
-  useEffect(() => {
-    getCommandList().then(res => {
-      if (!res.data) return;
-      setBotCommands(res.data);
-      getAliasList().then(res => {
-        setAliasCommands(res.data);
-      });
-      setIsLoading(false);
-    });
-  }, [isLoading]);
-
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value);
   };
 
   const filteredCommands = useMemo(() => {
-    if (!searchValue) return botCommands;
-    return botCommands?.filter((command: IBotCommand) =>
+    if (!searchValue) return botCommands.data;
+    return botCommands.data.filter((command: IBotCommand) =>
       command.commandName.toLowerCase().includes(searchValue.toLowerCase()),
     );
-  }, [botCommands, searchValue]);
+  }, [botCommands.isSuccess, searchValue]);
 
   return (
     <Paper
@@ -126,7 +131,7 @@ const CommandList = () => {
             </ListSubheader>
           }
           disablePadding>
-          {!isLoading ? (
+          {!botCommands.isLoading ? (
             filteredCommands?.length ? (
               filteredCommands.map((command: IBotCommand, index: number) => {
                 return (
@@ -153,7 +158,7 @@ const CommandList = () => {
                               },
                             }}
                             primary={command.commandName}
-                            secondary={aliasCommands
+                            secondary={aliasCommands.data
                               ?.filter(
                                 (item: IBotCommandAlias) =>
                                   item.commandName === command.commandName,
@@ -168,7 +173,7 @@ const CommandList = () => {
                                     ? "Alias: " + alias.commandAlias
                                     : ", " + alias.commandAlias}
                                   {/* this is add comma if alias is not last item */}
-                                  {index == aliasCommands.length - 1 && ""}
+                                  {index == aliasCommands.data.length - 1 && ""}
                                 </>
                               ))}
                           />
