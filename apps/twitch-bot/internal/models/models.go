@@ -32,6 +32,15 @@ type BotActionActivity struct {
 	ActivityAuthorID *string `gorm:"column:activity_author_id"`
 }
 
+type CommandTimer struct {
+	ID          int
+	Platform    string `gorm:"column:platform"`
+	ChannelID   string `gorm:"column:channel_id"`
+	CommandName string `gorm:"column:command_name"`
+	Interval    int    `gorm:"column:interval"`
+	Status      int    `gorm:"column:status"`
+}
+
 type BotCommand struct {
 	ID              int
 	CommandName     string     `gorm:"column:command_name"`
