@@ -7,7 +7,6 @@ import {
   Stack,
 } from "@mui/material";
 import LoadingBox from "../loading/LoadingBox";
-import { useEffect, useState } from "react";
 import {
   getDiscordServerCount,
   getDiscordServers,
@@ -15,30 +14,40 @@ import {
   getTwitchChannels,
 } from "src/api";
 import { IDiscordServer, ITwitchChannel } from "src/types";
+import { useQuery } from "@tanstack/react-query";
 
 const SystemMessage = () => {
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [discordServerCount, setDiscordServerCount] = useState<number>(0);
-  const [twitchChannelCount, setTwitchChannelCount] = useState<number>(0);
-  const [discordServers, setDiscordServers] = useState<IDiscordServer[]>([]);
-  const [twitchChannels, setTwitchChannels] = useState<ITwitchChannel[]>([]);
+  const discordServerCount = useQuery({
+    queryKey: ["discordServerCount"],
+    queryFn: async () => {
+      const { data } = await getDiscordServerCount();
+      return data;
+    },
+  });
 
-  useEffect(() => {
-    getDiscordServerCount().then(res => {
-      setDiscordServerCount(res.data);
-    });
-    getTwitchChannelCount().then(res => {
-      setTwitchChannelCount(res.data);
-    });
-    getDiscordServers().then(res => {
-      setDiscordServers(res.data);
-    });
-    getTwitchChannels().then(res => {
-      setTwitchChannels(res.data);
-    });
+  const twitchChannelCount = useQuery({
+    queryKey: ["twitchChannelCount"],
+    queryFn: async () => {
+      const { data } = await getTwitchChannelCount();
+      return data;
+    },
+  });
 
-    setIsLoading(false);
-  }, [isLoading]);
+  const discordServers = useQuery({
+    queryKey: ["discordServers"],
+    queryFn: async () => {
+      const { data } = await getDiscordServers();
+      return data;
+    },
+  });
+
+  const twitchChannels = useQuery({
+    queryKey: ["twitchChannels"],
+    queryFn: async () => {
+      const { data } = await getTwitchChannels();
+      return data;
+    },
+  });
 
   return (
     <Paper
@@ -61,22 +70,26 @@ const SystemMessage = () => {
             </ListSubheader>
           }
           disablePadding>
-          {!isLoading ? (
+          {!discordServerCount.isLoading ||
+          !twitchChannelCount.isLoading ||
+          !discordServers.isLoading ||
+          !twitchChannels.isLoading ? (
             <>
               <ListItem>
                 <ListItemText>
-                  Connected Discord servers: {discordServerCount?.toString()}
+                  Connected Discord servers:{" "}
+                  {discordServerCount.data.toString()}
                 </ListItemText>
               </ListItem>
-              {discordServers?.length ? (
+              {discordServers.data.length ? (
                 <ListItem>
                   <ListItemText>
                     Discord Servers:{" "}
-                    {discordServers?.map(
+                    {discordServers.data.map(
                       (sv: IDiscordServer, index: number) =>
                         sv.serverName +
                         (index !==
-                        (discordServers && discordServers?.length - 1)
+                        (discordServers.data && discordServers.data.length - 1)
                           ? ", "
                           : ""),
                     )}
@@ -85,17 +98,19 @@ const SystemMessage = () => {
               ) : null}
               <ListItem>
                 <ListItemText>
-                  Connected Twitch channels: {twitchChannelCount?.toString()}
+                  Connected Twitch channels:{" "}
+                  {twitchChannelCount.data.toString()}
                 </ListItemText>
               </ListItem>
-              {twitchChannels.length ? (
+              {twitchChannels.data.length ? (
                 <ListItem>
                   <ListItemText>
                     Twitch Channels:{" "}
-                    {twitchChannels?.map(
+                    {twitchChannels.data.map(
                       (ch: ITwitchChannel, index: number) =>
                         ch.channelName +
-                        (index !== (twitchChannels && twitchChannels.length - 1)
+                        (index !==
+                        (twitchChannels.data && twitchChannels.data.length - 1)
                           ? ", "
                           : ""),
                     )}
