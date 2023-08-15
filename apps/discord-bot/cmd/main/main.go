@@ -17,7 +17,7 @@ import (
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/helpers"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service/event"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service/streamer"
-	"github.com/senchabot-opensource/monorepo/packages/common/commands"
+	commoncmd "github.com/senchabot-opensource/monorepo/packages/gosenchabot/commands"
 
 	cmdsrvc "github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service/command"
 )
@@ -100,7 +100,7 @@ func main() {
 		cmdsrvc.RunCommand(s, ctx, db, cmdName, m)
 
 		if cmdName == "sozluk" {
-			sozlukResp, err := commands.SozlukCommand(params)
+			sozlukResp, err := commoncmd.SozlukCommand(params)
 			if err != nil {
 				log.Println(err)
 				return
