@@ -149,6 +149,18 @@ model TwitchBotConfigs {
     @@map("twitch_bot_configs")
 }
 
+model CommandTimer {
+    id          Int    @id @default(autoincrement())
+    platform    String @map("platform")
+    channelId   String @map("channel_id")
+    commandName String @map("command_name")
+    interval    Int    @map("interval")
+    status      Int    @map("status")
+
+    @@unique([channelId, commandName])
+    @@map("command_timers")
+}
+
 // Necessary for Next auth
 model Account {
     id                String  @id @default(cuid())
