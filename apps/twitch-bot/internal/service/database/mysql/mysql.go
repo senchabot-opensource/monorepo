@@ -368,3 +368,72 @@ func (m *MySQL) DeleteCommandAlias(ctx context.Context, commandAlias string, twi
 
 	return nil, nil
 }
+
+func (m *MySQL) CreateCommandTimer(ctx context.Context, botPlatformType string, channelId string, commandName string, interval int) error {
+	exist := m.CheckCommandTimerExist(ctx, botPlatformType, channelId, commandName)
+	if exist {
+		return errors.New("the command " + commandName + " is already in use for timer")
+	}
+
+	result := m.DB.Create(&models.CommandTimer{
+		Platform:    botPlatformType,
+		ChannelID:   channelId,
+		CommandName: commandName,
+		Interval:    interval,
+		Status:      1,
+	})
+	if result.Error != nil {
+		return fmt.Errorf("(CreateCommandTimer) db.Create error: %v", result.Error)
+	}
+
+	return nil
+}
+
+func (m *MySQL) CheckCommandTimerExist(ctx context.Context, botPlatformType string, channelId string, commandName string) bool {
+	var commandTimer []models.CommandTimer
+
+	result := m.DB.Where("platform = ?", botPlatformType).Where("channel_id = ?", channelId).Where("command_name = ?", commandName).Find(&commandTimer)
+	if result.Error != nil {
+		fmt.Println("err", result.Error)
+	}
+	if len(commandTimer) == 0 {
+		return false
+	}
+
+	return true
+}
+
+func (m *MySQL) UpdateCommandTimer(ctx context.Context, botPlatformType string, channelId string, commandName string, interval int, status int) error {
+	var commandTimer *models.CommandTimer
+
+	result := m.DB.Where("platform = ?", botPlatformType).Where("channel_id = ?", channelId).Where("command_name = ?", commandName).First(&commandTimer)
+	if result.Error != nil {
+		return fmt.Errorf("(UpdateCommandTimer) db.First error: %v", result.Error)
+	}
+
+	result = m.DB.Model(&commandTimer).Updates(models.CommandTimer{
+		Interval: interval,
+		Status:   status,
+	})
+	if result.Error != nil {
+		return fmt.Errorf("(UpdateCommandTimer) db.Updates error: %v", result.Error)
+	}
+
+	return nil
+}
+
+func (m *MySQL) DeleteCommandTimer(ctx context.Context, botPlatformType string, channelId string, commandName string) error {
+	var commandTimer *models.CommandTimer
+
+	result := m.DB.Where("platform = ?", botPlatformType).Where("channel_id = ?", channelId).Where("command_name = ?", commandName).First(&commandTimer)
+	if result.Error != nil {
+		return fmt.Errorf("(DeleteCommandTimer) db.First error: %v", result.Error)
+	}
+
+	result = m.DB.Delete(&commandTimer)
+	if result.Error != nil {
+		return fmt.Errorf("(DeleteCommandTimer) db.Delete error: %v", result.Error)
+	}
+
+	return nil
+}

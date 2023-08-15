@@ -23,6 +23,11 @@ type Database interface {
 	CreateBotActionActivity(ctx context.Context, botPlatformType string, botActivity string, twitchChannelId string, commandAuthor, commandAuthorId string) error
 	SaveBotCommandActivity(context context.Context, commandName string, twitchChannelId string, commandAuthor, commandAuthorId string)
 
+	CreateCommandTimer(ctx context.Context, botPlatformType string, channelId string, commandName string, interval int) error
+	CheckCommandTimerExist(ctx context.Context, botPlatformType string, channelId string, commandName string) bool
+	UpdateCommandTimer(ctx context.Context, botPlatformType string, channelId string, commandName string, interval int, status int) error
+	DeleteCommandTimer(ctx context.Context, botPlatformType string, channelId string, commandName string) error
+
 	GetCommandAlias(ctx context.Context, commandAlias string, twitchChannelId string) (*string, error)
 	CreateCommandAliases(ctx context.Context, commandName string, aliases []string, twitchChannelId string, createdBy string) (*string, error)
 	CheckCommandAliasExist(ctx context.Context, commandAlias string, twitchChannelId string) (*string, error)
