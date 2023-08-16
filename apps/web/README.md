@@ -17,11 +17,7 @@ Web application for managing Senchabot, its commands and configuring the bot.
 
 ## Getting Started
 
-1. If you have not configured the settings in the monorepo home directory, please navigate to the home directory and please configure the settings
-
-   ```sh
-   cd ../..
-   ```
+1. If you have not configured the settings in the monorepo home directory, please navigate to the home directory and read the instructions in the readme file.
 
 2. Start the development server
 
