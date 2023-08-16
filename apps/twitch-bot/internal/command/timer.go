@@ -3,6 +3,7 @@ package command
 import (
 	"context"
 	"fmt"
+	"log"
 	"strconv"
 
 	"github.com/gempir/go-twitch-irc/v3"
@@ -58,6 +59,12 @@ func (c *commands) TimerCommand(context context.Context, message twitch.PrivateM
 	// should be >= 25
 	if interval > 2 {
 		c.service.SetTimer(c.client, channelName, commandData, interval*60000)
-		c.client.Twitch.Say(channelName, "Set Timer")
+		err := c.service.CreateCommandTimer(context, "twitch", message.RoomID, commandData.CommandName, interval)
+		if err != nil {
+			log.Println(err.Error())
+			c.client.Twitch.Say(channelName, fmt.Sprintf("Command Timer Enabled: %v. There was an error in db. This timer is not saved to the db.", commandData.CommandName))
+			return
+		}
+		c.client.Twitch.Say(channelName, fmt.Sprintf("Command Timer Enabled: %v.", commandData.CommandName))
 	}
 }

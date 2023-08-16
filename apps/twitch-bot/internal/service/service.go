@@ -9,7 +9,7 @@ import (
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/models"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/service/database"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/service/database/mysql"
-  "github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/service/timer"
+	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/service/timer"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/service/webhook"
 )
 
@@ -41,6 +41,11 @@ type Service interface {
 	SetTimerEnabled(client *client.Clients, commandId int)
 	SetTimerDisabled(commandId int)
 	GetTimerStatus(commandId int) bool
+
+	CreateCommandTimer(ctx context.Context, botPlatformType string, channelId string, commandName string, interval int) error
+	CheckCommandTimerExist(ctx context.Context, botPlatformType string, channelId string, commandName string) bool
+	UpdateCommandTimer(ctx context.Context, botPlatformType string, channelId string, commandName string, interval int, status int) error
+	DeleteCommandTimer(ctx context.Context, botPlatformType string, channelId string, commandName string) error
 }
 
 type services struct {
@@ -235,4 +240,17 @@ func (s *services) DeleteCommandAlias(ctx context.Context, commandAlias string, 
 	}
 
 	return infoText, nil
+}
+
+func (s *services) CreateCommandTimer(ctx context.Context, botPlatformType string, channelId string, commandName string, interval int) error {
+	return s.DB.CreateCommandTimer(ctx, botPlatformType, channelId, commandName, interval)
+}
+func (s *services) CheckCommandTimerExist(ctx context.Context, botPlatformType string, channelId string, commandName string) bool {
+	return s.DB.CheckCommandTimerExist(ctx, botPlatformType, channelId, commandName)
+}
+func (s *services) UpdateCommandTimer(ctx context.Context, botPlatformType string, channelId string, commandName string, interval int, status int) error {
+	return s.DB.UpdateCommandTimer(ctx, botPlatformType, channelId, commandName, interval, status)
+}
+func (s *services) DeleteCommandTimer(ctx context.Context, botPlatformType string, channelId string, commandName string) error {
+	return s.DB.DeleteCommandTimer(ctx, botPlatformType, channelId, commandName)
 }
