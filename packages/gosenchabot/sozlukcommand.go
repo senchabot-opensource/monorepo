@@ -1,12 +1,10 @@
-package commands
+package gosenchabot
 
 import (
 	"encoding/json"
 	"errors"
 	"fmt"
 	"strings"
-
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/helpers"
 )
 
 const (
@@ -17,7 +15,7 @@ const (
 )
 
 func SozlukCommand(params []string) (string, error) {
-	if check := helpers.IsCommandParamsLengthEqualToOne(params); !check {
+	if check := IsCommandParamsLengthEqualToOne(params); !check {
 		return SOZLUK_COMMAND_INFO, nil
 	}
 	var sozlukTerm = strings.ToLower(strings.TrimSpace(params[0]))
@@ -33,12 +31,12 @@ func SozlukCommand(params []string) (string, error) {
 				}
 			}`, sozlukTerm)
 
-	response, err := helpers.FetchGraphQL(gqlUrl, query)
+	response, err := FetchGraphQL(gqlUrl, query)
 	if err != nil {
 		return "", errors.New("Error:" + err.Error())
 	}
 
-	var gqlResponse helpers.SozlukGraphQLResponse
+	var gqlResponse SozlukGraphQLResponse
 	err = json.Unmarshal(response, &gqlResponse)
 	if err != nil {
 		return "", errors.New("json.Unmarshal error:" + err.Error())
