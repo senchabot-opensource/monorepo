@@ -5,11 +5,11 @@ import (
 	"log"
 
 	"github.com/gempir/go-twitch-irc/v3"
-	commoncmd "github.com/senchabot-opensource/monorepo/packages/gosenchabot/commands"
+	"github.com/senchabot-opensource/monorepo/packages/gosenchabot"
 )
 
 func (c *commands) SozlukCommand(context context.Context, message twitch.PrivateMessage, commandName string, params []string) {
-	sozlukResp, err := commoncmd.SozlukCommand(params)
+	sozlukResp, err := gosenchabot.SozlukCommand(params)
 	if err != nil {
 		log.Println(err.Error())
 		return

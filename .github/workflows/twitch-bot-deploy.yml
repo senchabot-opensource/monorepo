@@ -3,6 +3,7 @@ on:
   push:
     paths:
       - apps/twitch-bot/**
+      - packages/gosenchabot/**
     branches:
       - main
   pull_request: {}
