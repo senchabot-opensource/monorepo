@@ -39,20 +39,21 @@ Open source Discord & Twitch bot
    npx turbo build
    ```
 
-5. Let's generate Prisma files and database
-
-   ```sh
-   npx turbo db:generate
-   npx turbo db:push
-   ```
-
-6. Let's build up a Docker container for MySQL database
+5. Let's build up a Docker container for MySQL database
 
    ```sh
    docker-compose up --build
    # If you want to run the Docker container in the background, run this command instead of the command above:
    docker-compose up -d
    ```
+   
+6. Let's generate Prisma files and database
+
+   ```sh
+   npx turbo db:generate
+   npx turbo db:push
+   ```
+
 
 ## Documentations
 
