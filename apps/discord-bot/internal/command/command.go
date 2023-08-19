@@ -31,6 +31,11 @@ func NewCommands() Command {
 func (c *commands) GetCommands() map[string]func(context context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, db db.MySQL) {
 	// TODO: command aliases
 	var commands = map[string]func(context context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, db db.MySQL){
+		"acmd":   c.AddCmdCommand,
+		"ucmd":   c.UpdateCmdCommand,
+		"dcmd":   c.DeleteCmdCommand,
+		"acmda":  c.AddCmdAliasCommand,
+		"dcmda":  c.DeleteCmdAliasCommand,
 		"set":    c.SetCommand,
 		"delete": c.DeleteCommand,
 		"purge":  c.PurgeCommand,
@@ -65,6 +70,89 @@ var (
 	purgePermissions     int64 = discordgo.PermissionManageServer
 	setdeletePermissions int64 = discordgo.PermissionAdministrator
 	commandMetadatas           = []*discordgo.ApplicationCommand{
+		{
+			Name:                     "acmd",
+			Description:              "Add a new custom command.",
+			DefaultMemberPermissions: &setdeletePermissions,
+			Options: []*discordgo.ApplicationCommandOption{
+				{
+					Type:        discordgo.ApplicationCommandOptionString,
+					Name:        "command-name",
+					Description: "Command Name",
+					Required:    true,
+				},
+				{
+					Type:        discordgo.ApplicationCommandOptionString,
+					Name:        "command-content",
+					Description: "Command Content",
+					Required:    true,
+				},
+			},
+		},
+		{
+			Name:                     "ucmd",
+			Description:              "Update a custom command.",
+			DefaultMemberPermissions: &setdeletePermissions,
+			Options: []*discordgo.ApplicationCommandOption{
+				{
+					Type:        discordgo.ApplicationCommandOptionString,
+					Name:        "command-name",
+					Description: "Command Name",
+					Required:    true,
+				},
+				{
+					Type:        discordgo.ApplicationCommandOptionString,
+					Name:        "command-content",
+					Description: "New Command Content",
+					Required:    true,
+				},
+			},
+		},
+		{
+			Name:                     "dcmd",
+			Description:              "Delete a custom command.",
+			DefaultMemberPermissions: &setdeletePermissions,
+			Options: []*discordgo.ApplicationCommandOption{
+				{
+					Type:        discordgo.ApplicationCommandOptionString,
+					Name:        "command-name",
+					Description: "Command Name",
+					Required:    true,
+				},
+			},
+		},
+		{
+			Name:                     "acmda",
+			Description:              "Add command aliases to a command.",
+			DefaultMemberPermissions: &setdeletePermissions,
+			Options: []*discordgo.ApplicationCommandOption{
+				{
+					Type:        discordgo.ApplicationCommandOptionString,
+					Name:        "command-name",
+					Description: "Command Name",
+					Required:    true,
+				},
+				{
+					Type:        discordgo.ApplicationCommandOptionString,
+					Name:        "command-aliases",
+					Description: "Command alias(es) separated by space",
+					Required:    true,
+				},
+			},
+		},
+		{
+			Name:                     "dcmda",
+			Description:              "Delete a command alias.",
+			DefaultMemberPermissions: &setdeletePermissions,
+			Options: []*discordgo.ApplicationCommandOption{
+				{
+					Type:        discordgo.ApplicationCommandOptionString,
+					Name:        "command-alias",
+					Description: "Command Alias",
+					Required:    true,
+				},
+			},
+		},
 		{
 			Name:        "set",
 			Description: "Discord bot configuration",

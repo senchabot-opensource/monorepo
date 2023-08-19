@@ -7,6 +7,7 @@ import (
 
 	"github.com/gempir/go-twitch-irc/v3"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/command/helpers"
+	"github.com/senchabot-opensource/monorepo/packages/gosenchabot"
 )
 
 const ADD_COMMAND_ALIAS_INFO = "For example: !acmda [command_name] [command_alias(es) separated by space]"
@@ -15,14 +16,14 @@ func (c *commands) AddCommandAliasCommand(context context.Context, message twitc
 	if !helpers.CanExecuteCommand(context, c.service, message.Tags["badges"], message.RoomID) {
 		return
 	}
-	command, aliasCommands, check := helpers.GetAliasCommandCreateParams(params)
+	command, aliasCommands, check := gosenchabot.GetAliasCommandCreateParams(params)
 	if !check {
 		c.client.Twitch.Say(message.Channel, ADD_COMMAND_ALIAS_INFO)
 		return
 	}
 	twitchChannelId := message.RoomID
 
-	if infoText, check := helpers.ValidateAliasCommandsLength(aliasCommands); !check {
+	if infoText, check := gosenchabot.ValidateAliasCommandsLength(aliasCommands); !check {
 		c.client.Twitch.Say(message.Channel, message.User.DisplayName+", "+infoText)
 		return
 	}

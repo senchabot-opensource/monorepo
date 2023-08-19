@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/gempir/go-twitch-irc/v3"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/client"
@@ -17,14 +18,18 @@ type Command interface {
 }
 
 type commands struct {
-	client  *client.Clients
-	service service.Service
+	client         *client.Clients
+	service        service.Service
+	userCooldowns  map[string]time.Time
+	cooldownPeriod time.Duration
 }
 
-func NewCommands(client *client.Clients, service service.Service) Command {
+func NewCommands(client *client.Clients, service service.Service, cooldownPeriod time.Duration) Command {
 	return &commands{
-		client:  client,
-		service: service,
+		client:         client,
+		service:        service,
+		userCooldowns:  make(map[string]time.Time),
+		cooldownPeriod: cooldownPeriod,
 	}
 }
 
@@ -108,8 +113,26 @@ func (c *commands) RunCommand(context context.Context, cmdName string, params []
 	if cmdData == nil || message.RoomID != cmdData.TwitchChannelID && cmdData.Status == 0 {
 		return
 	}
+	if c.isUserOnCooldown(message.User.Name) {
+		return
+	}
+
 	formattedCommandContent := helpers.FormatCommandContent(cmdData, message)
 	c.client.Twitch.Say(message.Channel, formattedCommandContent)
+	c.setCommandCooldown(message.User.Name)
 	c.service.SaveBotCommandActivity(context, cmdName, message.RoomID, message.User.DisplayName, message.User.ID)
 	// USER COMMANDS
+}
+
+func (c *commands) isUserOnCooldown(username string) bool {
+	cooldownTime, exists := c.userCooldowns[username]
+	if !exists {
+		return false
+	}
+
+	return time.Now().Before(cooldownTime.Add(c.cooldownPeriod))
+}
+
+func (c *commands) setCommandCooldown(username string) {
+	c.userCooldowns[username] = time.Now()
 }

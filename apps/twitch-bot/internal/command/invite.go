@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/gempir/go-twitch-irc/v3"
-	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/models"
+	"github.com/senchabot-opensource/monorepo/packages/gosenchabot"
 )
 
 func (c *commands) InviteCommand(context context.Context, message twitch.PrivateMessage, commandName string, params []string) {
@@ -38,7 +38,7 @@ func (c *commands) InviteCommand(context context.Context, message twitch.Private
 
 	fmt.Println("TRYING TO JOIN TWITCH CHANNEL `" + channelName + "`")
 	c.client.Twitch.Join(channelName)
-	optionalCommands := models.GetOptionalCommands()
+	optionalCommands := gosenchabot.GetOptionalCommands()
 	for _, command := range optionalCommands {
 		_, err := c.service.CreateBotCommand(context, command.CommandName, command.CommandContent, twitchChannelId, "Senchabot")
 		if err != nil {

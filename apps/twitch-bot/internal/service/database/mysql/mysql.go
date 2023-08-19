@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/models"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/service/database"
+	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"

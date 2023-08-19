@@ -6,10 +6,10 @@ import (
 	"net/http"
 
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/client"
-	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/models"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/service/database"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/service/database/mysql"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/service/webhook"
+	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
 )
 
 type Service interface {

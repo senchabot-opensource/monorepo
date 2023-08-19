@@ -3,7 +3,7 @@ package database
 import (
 	"context"
 
-	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/models"
+	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
 )
 
 type Database interface {
