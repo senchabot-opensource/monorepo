@@ -15,5 +15,45 @@
     - feature list (?)
     - ...
 
-## 
+## Sunucuya Davet
 
+  - Dış davet: tarayıcıdan linkle
+  - İç davet: discord içinde botun üstüne tıklayarak yapılan
+
+## Feature List
+
+### Twitch: Yayın Duyuru Mesajı ve Etkinliği
+
+#### Yayın Duyuru Mesajları
+
+  1. 
+  2. 
+
+#### Yayın Etkinlikleri
+
+  1. 
+  2. 
+
+### Purge komutu (başlık türkçeleşip değişebilir -> Temizlik İşlemleri)
+
+## Command List (özelliğe göre table yapılacak)
+
+### Twitch: Yayın Duyuru Mesajı ve Etkinliği
+
+##### Yayın Duyuru Mesajları
+
+| command | description |
+| ------- | ----------- |
+|         |             |
+
+#### Yayın Etkinlikleri
+
+| command | description |
+| ------- | ----------- |
+|         |             |
+
+### Purge komutu (başlık türkçeleşip değişebilir -> Temizlik İşlemleri)
+
+| command | description |
+| ------- | ----------- |
+|         |             |
