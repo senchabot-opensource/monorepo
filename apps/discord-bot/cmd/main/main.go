@@ -17,7 +17,7 @@ import (
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/helpers"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service/event"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service/streamer"
-	commoncmd "github.com/senchabot-opensource/monorepo/packages/gosenchabot/commands"
+	"github.com/senchabot-opensource/monorepo/packages/gosenchabot"
 
 	cmdsrvc "github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service/command"
 )
@@ -25,7 +25,7 @@ import (
 func main() {
 	//dotErr := godotenv.Load()
 	//if dotErr != nil {
-	//	log.Fatal("Error loading .env file", dotErr.Error())
+	//log.Fatal("Error loading .env file", dotErr.Error())
 	//}
 
 	client.InitTwitchOAuth2Token()
@@ -97,10 +97,21 @@ func main() {
 			return
 		}
 
+		// HANDLE COMMAND ALIASES
+		commandAlias, cmdAliasErr := db.GetCommandAlias(ctx, cmdName, m.GuildID)
+		if cmdAliasErr != nil {
+			fmt.Println(cmdAliasErr.Error())
+		}
+
+		if commandAlias != nil {
+			cmdName = *commandAlias
+		}
+		// HANDLE COMMAND ALIASES
+
 		cmdsrvc.RunCommand(s, ctx, db, cmdName, m)
 
 		if cmdName == "sozluk" {
-			sozlukResp, err := commoncmd.SozlukCommand(params)
+			sozlukResp, err := gosenchabot.SozlukCommand(params)
 			if err != nil {
 				log.Println(err)
 				return
