@@ -7,6 +7,7 @@ import (
 
 	"github.com/gempir/go-twitch-irc/v3"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/command/helpers"
+	"github.com/senchabot-opensource/monorepo/packages/gosenchabot"
 )
 
 const DELETE_COMMAND_ALIAS_INFO = "For example: !dcmda [command_alias]"
@@ -21,7 +22,7 @@ func (c *commands) DeleteCommandAliasCommand(context context.Context, message tw
 	}
 	var command_alias = strings.ToLower(params[0])
 
-	command_alias = helpers.TrimExclamationPrefix(command_alias)
+	command_alias = gosenchabot.TrimExclamationPrefix(command_alias)
 
 	infoText, err := c.service.DeleteCommandAlias(context, command_alias, message.RoomID)
 	if err != nil {
