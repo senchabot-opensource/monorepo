@@ -7,7 +7,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/models"
+	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
