@@ -1,0 +1,51 @@
+# GraphQL schema example
+#
+# https://gqlgen.com/getting-started/
+
+scalar Time
+
+type TwitchChannel {
+  id: ID!
+  channelID: String!
+  channelName: String!
+  userID: String
+}
+
+type BotActionActivity {
+  id: ID!
+  botPlatformType: String!
+  botActivity: String!
+  discordServerID: String
+  twitchChannelID: String
+  activityAuthor: String
+  activityAuthorID: String
+  activityDate: Time
+}
+
+type BotCommand {
+  id: ID!
+  commandName: String!
+  commandContent: String!
+  twitchChannelID: String
+  discordServerID: String
+  createdBy: String
+  updatedBy: String
+  createdAt: Time
+}
+
+type BotCommandAlias {
+  id: ID!
+  commandAlias: String!
+  commandName: String!
+  twitchChannelID: String
+  discordServerID: String
+  createdBy: String
+  createdAt: Time
+}
+
+type Query {
+  twitchChannels: [TwitchChannel!]!
+  botActionActivies: [BotActionActivity!]!
+  botCommands: [BotCommand!]!
+  botCommandAliases: [BotCommandAlias!]!
+}
