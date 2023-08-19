@@ -53,6 +53,12 @@ func IsCommandParamsLengthEqualToOne(params []string) bool {
 	return len(params) == 1
 }
 
+func GetProcessedCommandName(cmdName string) string {
+	cmdName = strings.ToLower(cmdName)
+	cmdName = TrimExclamationPrefix(cmdName)
+	return cmdName
+}
+
 type SozlukGraphQLResponse struct {
 	Data struct {
 		Sozluk struct {

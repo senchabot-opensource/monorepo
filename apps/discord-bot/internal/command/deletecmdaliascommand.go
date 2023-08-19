@@ -3,7 +3,6 @@ package command
 import (
 	"context"
 	"fmt"
-	"strings"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/db"
@@ -14,12 +13,9 @@ func (c *commands) DeleteCmdAliasCommand(ctx context.Context, s *discordgo.Sessi
 	options := i.ApplicationCommandData().Options
 
 	cmdName := options[0].StringValue()
+	cmdName = gosenchabot.GetProcessedCommandName(cmdName)
 
-	var command_alias = strings.ToLower(cmdName)
-
-	command_alias = gosenchabot.TrimExclamationPrefix(command_alias)
-
-	infoText, err := db.DeleteCommandAlias(ctx, command_alias, i.GuildID)
+	infoText, err := db.DeleteCommandAlias(ctx, cmdName, i.GuildID)
 	if err != nil {
 		fmt.Println(err.Error())
 		return
@@ -30,7 +26,7 @@ func (c *commands) DeleteCmdAliasCommand(ctx context.Context, s *discordgo.Sessi
 		return
 	}
 
-	fmt.Println("COMMAND_ALIAS_DELETE: command_alias:", command_alias)
+	fmt.Println("COMMAND_ALIAS_DELETE: command_alias:", cmdName)
 
-	ephemeralRespond(s, i, "Command Alias Deleted: "+command_alias)
+	ephemeralRespond(s, i, "Command Alias Deleted: "+cmdName)
 }

@@ -16,8 +16,7 @@ func (c *commands) AddCmdAliasCommand(ctx context.Context, s *discordgo.Session,
 	cmdName := options[0].StringValue()
 	params := strings.Split(options[1].StringValue(), " ")
 
-	cmdName = strings.ToLower(cmdName)
-	cmdName = gosenchabot.TrimExclamationPrefix(cmdName)
+	cmdName = gosenchabot.GetProcessedCommandName(cmdName)
 	aliasCommands := gosenchabot.MakeUniqueArray(params)
 
 	if infoText, check := gosenchabot.ValidateAliasCommandsLength(aliasCommands); !check {
