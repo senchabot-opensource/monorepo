@@ -3,7 +3,7 @@ package service
 import (
 	"errors"
 
-	"github.com/senchabot-opensource/monorepo/apps/gql/app/models"
+	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
 	"gorm.io/gorm"
 )
 
