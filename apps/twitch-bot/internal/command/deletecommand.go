@@ -7,6 +7,7 @@ import (
 
 	"github.com/gempir/go-twitch-irc/v3"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/command/helpers"
+	"github.com/senchabot-opensource/monorepo/packages/gosenchabot"
 )
 
 const DELETE_COMMAND_INFO = "For example: !dcmd [command_name]"
@@ -21,7 +22,7 @@ func (c *commands) DeleteCommandCommand(context context.Context, message twitch.
 	}
 	var command_name = strings.ToLower(params[0])
 
-	command_name = helpers.TrimExclamationPrefix(command_name)
+	command_name = gosenchabot.TrimExclamationPrefix(command_name)
 
 	deletedCommandName, infoText, err := c.service.DeleteBotCommand(context, command_name, message.RoomID)
 	if err != nil {
