@@ -81,7 +81,7 @@ const SystemMessage = () => {
                   {discordServerCount.data.toString()}
                 </ListItemText>
               </ListItem>
-              {discordServers.data.length ? (
+              {discordServers.data?.length ? (
                 <ListItem>
                   <ListItemText>
                     Discord Servers:{" "}
@@ -102,7 +102,7 @@ const SystemMessage = () => {
                   {twitchChannelCount.data.toString()}
                 </ListItemText>
               </ListItem>
-              {twitchChannels.data.length ? (
+              {twitchChannels.data?.length ? (
                 <ListItem>
                   <ListItemText>
                     Twitch Channels:{" "}
