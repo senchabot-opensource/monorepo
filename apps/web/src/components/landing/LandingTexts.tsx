@@ -23,52 +23,65 @@ import { randomInt } from "next/dist/shared/lib/bloom-filter/utils";
 import { signIn, useSession } from "next-auth/react";
 import CustomAlert from "../CustomAlert";
 import { IBotCommand } from "src/types";
+import { useQuery } from "@tanstack/react-query";
 
 const ALT_TEXT =
   "Open-source multi-platform bot development project, which works on Twitch and Discord.";
 // Stream overlays: #8b5cf6
 const LandingTexts = () => {
+  const { data: session } = useSession();
+  const theme = useTheme();
+
   const [cmdList, setCmdList] = useState<string[]>([]);
   const [defaultCmdList, setDefaultCmdList] = useState<string[]>([]);
   const [userCmdList, setUserCmdList] = useState<string[]>([]);
   const [featureList, setFeatureList] = useState<string[]>([]);
-  const [twitchAccountAvailable, setTwitchAccountAvailable] =
-    useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const { data: session } = useSession();
   const [alertIsOpen, setAlertIsOpen] = useState<boolean>(false);
   const [alertText, setAlertText] = useState<string>("");
-  const theme = useTheme();
+
+  useQuery({
+    queryKey: ["userCmdList"],
+    queryFn: async () => {
+      const res = await getCommandList();
+      const cmds = res.data.map((cmd: IBotCommand) => "!" + cmd.commandName);
+      setUserCmdList(cmds);
+      return res;
+    },
+  });
+
+  const isTwitchAccAvailable = useQuery({
+    queryKey: ["isTwitchAccAvaiable"],
+    queryFn: () => {
+      return checkTwitchAccount();
+    },
+  });
+
+  useQuery({
+    queryKey: ["defaultCmdList"],
+    queryFn: async () => {
+      const res = await getDefaultCmdList();
+      setDefaultCmdList(res.defaultCmd);
+    },
+  });
+
+  useQuery({
+    queryKey: ["featureList"],
+    queryFn: async () => {
+      const res = await getFeatureList();
+      setFeatureList(res.featureList);
+    },
+  });
 
   useEffect(() => {
-    getDefaultCmdList().then(res0 => {
-      setDefaultCmdList(res0.defaultCmd);
-    });
-
-    getCommandList().then(res1 => {
-      const cmds = res1.data.map((cmd: IBotCommand) => "!" + cmd.commandName);
-      setUserCmdList(cmds);
-    });
-
     if (session) {
       const tocmds = [...defaultCmdList, ...userCmdList];
       setCmdList(tocmds);
     } else {
       setCmdList(defaultCmdList);
     }
+  }, [session]);
 
-    setIsLoading(false);
-
-    checkTwitchAccount().then(res => {
-      setTwitchAccountAvailable(res.data);
-    });
-
-    getFeatureList().then(res => {
-      setFeatureList(res.featureList);
-    });
-  }, [isLoading, session]);
-
-  const addTwitchBotOrAccount = useCallback(() => {
+  const addTwitchBotOrAccount = () => {
     addTwitchAccount().then(res => {
       if (!res || !res.success) {
         setAlertText("Something went wrong. Please try again later.");
@@ -80,7 +93,7 @@ const LandingTexts = () => {
         setAlertIsOpen(true);
       }
     });
-  }, []);
+  };
 
   return (
     <>
@@ -193,7 +206,7 @@ const LandingTexts = () => {
             </Button>
             <Button
               onClick={() => {
-                if (!session || !twitchAccountAvailable) {
+                if (!session || !isTwitchAccAvailable.data?.data) {
                   signIn("twitch", {
                     callbackUrl: `${window.location.origin}/api/twitch/get-bot`,
                   });

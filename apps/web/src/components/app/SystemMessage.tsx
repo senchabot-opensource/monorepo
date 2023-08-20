@@ -99,7 +99,7 @@ const SystemMessage = () => {
               <ListItem>
                 <ListItemText>
                   Connected Twitch channels:{" "}
-                  {twitchChannelCount.data.toString()}
+                  {twitchChannelCount.data?.toString()}
                 </ListItemText>
               </ListItem>
               {twitchChannels.data?.length ? (

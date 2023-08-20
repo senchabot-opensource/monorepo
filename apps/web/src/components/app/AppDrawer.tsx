@@ -14,11 +14,9 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { env } from "../../env/client.mjs";
 import Link from "next/link";
-import { SiDiscord, SiTwitch } from "react-icons/si";
-import CustomAlert from "../CustomAlert";
-import { useState, FC, useEffect, useCallback } from "react";
+import { SiDiscord } from "react-icons/si";
+import { FC } from "react";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
-import { addTwitchAccount, checkTwitchAccount } from "src/api";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -35,33 +33,6 @@ type IProps = {
 
 const AppDrawer: FC<IProps> = ({ isDrawerOpen, drawerHandler }) => {
   const theme = useTheme();
-  const [isOpenAlert, setIsAlertOpen] = useState<boolean>(false);
-  const [twitchAccountAvailable, setTwitchAccountAvailable] =
-    useState<boolean>(false);
-  const [alertText, setAlertText] = useState<string>("");
-
-  useEffect(() => {
-    checkTwitchAccount().then(res => {
-      setTwitchAccountAvailable(res.data);
-    });
-  });
-
-  const addTwitchBot = useCallback(() => {
-    addTwitchAccount().then(res => {
-      if (!res || !res.success) {
-        setAlertBox("Something went wrong. Please try again later.");
-      }
-
-      if (res.success) {
-        setAlertBox(res.message);
-      }
-    });
-  }, []);
-
-  const setAlertBox = (text: string) => {
-    setAlertText(text);
-    setIsAlertOpen(true);
-  };
 
   return (
     <Drawer
@@ -77,11 +48,6 @@ const AppDrawer: FC<IProps> = ({ isDrawerOpen, drawerHandler }) => {
       variant="persistent"
       anchor="left"
       open={isDrawerOpen}>
-      <CustomAlert
-        content={alertText}
-        isOpen={isOpenAlert}
-        closeHandler={() => setIsAlertOpen(!isOpenAlert)}
-      />
       <DrawerHeader>
         <Typography
           variant="h5"
@@ -117,21 +83,6 @@ const AppDrawer: FC<IProps> = ({ isDrawerOpen, drawerHandler }) => {
               <SiDiscord />
             </ListItemIcon>
             <Typography>Get Discord Bot</Typography>
-          </MenuItem>
-          <MenuItem
-            onClick={() => {
-              if (!twitchAccountAvailable) {
-                setAlertBox(
-                  "Before you can add the Twitch bot, you need to link your Twitch account in Settings/Security section.",
-                );
-              } else {
-                addTwitchBot();
-              }
-            }}>
-            <ListItemIcon>
-              <SiTwitch />
-            </ListItemIcon>
-            <Typography>Get Twitch Bot</Typography>
           </MenuItem>
         </MenuList>
         <Typography fontSize="large">Common</Typography>

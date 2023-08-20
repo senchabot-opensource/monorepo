@@ -32,7 +32,8 @@ const DeleteAccount = () => {
     setOpen(false);
   };
 
-  const handleDeleteButton = useCallback(() => {
+  // TODO: use reacy-query mutation for improvement
+  const handleDeleteButton = () => {
     deleteAccount().then(res => {
       if (!res) {
         alert("There was an error while deleting accounts");
@@ -45,7 +46,7 @@ const DeleteAccount = () => {
       alert("Account(s) deleted. You will be redirected.");
       signOut();
     });
-  }, []);
+  };
 
   return (
     <>
