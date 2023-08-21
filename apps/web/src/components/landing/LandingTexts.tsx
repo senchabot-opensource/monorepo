@@ -79,7 +79,7 @@ const LandingTexts = () => {
     } else {
       setCmdList(defaultCmdList);
     }
-  }, [session]);
+  }, [session, defaultCmdList, userCmdList]);
 
   const addTwitchBotOrAccount = () => {
     addTwitchAccount().then(res => {
