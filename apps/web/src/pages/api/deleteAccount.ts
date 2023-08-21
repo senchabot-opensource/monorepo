@@ -14,13 +14,13 @@ const deleteAccount = async (
   const userId = session.user.id; //getUserId(ctx);
 
   if (userId) {
-    const deleted = await prisma.user.delete({
-      where: {
-        id: userId,
+    const addToTheDeletionList = await prisma.accountDeletionRequest.create({
+      data: {
+        userId,
       },
     });
 
-    if (deleted) {
+    if (addToTheDeletionList) {
       return res.json({ data: true, success: true });
     }
   }
