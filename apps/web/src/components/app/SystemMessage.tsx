@@ -78,7 +78,7 @@ const SystemMessage = () => {
               <ListItem>
                 <ListItemText>
                   Connected Discord servers:{" "}
-                  {discordServerCount.data.toString()}
+                  {discordServerCount.data?.toString()}
                 </ListItemText>
               </ListItem>
               {discordServers.data?.length ? (
