@@ -6,7 +6,7 @@ import { IGetAllConfig } from "src/types";
 
 const getAllConfig = async (
   req: NextApiRequest,
-  res: NextApiResponse<Response<IGetAllConfig>>,
+  res: NextApiResponse<Response<any>>,
 ) => {
   const session = await getServerAuthSession({ req, res });
 
