@@ -10,8 +10,8 @@ import {
 import { SiDiscord, SiTwitch } from "react-icons/si";
 import LoadingBox from "../loading/LoadingBox";
 import { IBotActionActivity } from "../../types";
-import { useEffect, useState } from "react";
 import { getBotActivites } from "src/api";
+import { useQuery } from "@tanstack/react-query";
 
 const activityText = (activity: IBotActionActivity) =>
   activity.botActivity.startsWith("!") || activity.botActivity.startsWith("/")
@@ -35,15 +35,13 @@ const activityDateAndAuthor = (activity: IBotActionActivity) =>
   activityDate(activity) + " / " + activityAuthor(activity);
 
 const BotActivity = () => {
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [botActivities, setBotactivites] = useState<IBotActionActivity[]>([]);
-
-  useEffect(() => {
-    getBotActivites().then(res => {
-      setBotactivites(res.data);
-      setIsLoading(false);
-    });
-  }, [isLoading]);
+  const botActivities = useQuery({
+    queryKey: ["botActivities"],
+    queryFn: async () => {
+      const { data } = await getBotActivites();
+      return data;
+    },
+  });
 
   return (
     <Paper
@@ -66,9 +64,9 @@ const BotActivity = () => {
             </ListSubheader>
           }
           disablePadding>
-          {!isLoading ? (
-            botActivities?.length ? (
-              botActivities.map(
+          {!botActivities.isLoading ? (
+            botActivities.data.length ? (
+              botActivities.data.map(
                 (activity: IBotActionActivity, index: number) => (
                   <ListItem key={index}>
                     <ListItemIcon>{platformLogo(activity)}</ListItemIcon>

@@ -32,20 +32,23 @@ const DeleteAccount = () => {
     setOpen(false);
   };
 
-  const handleDeleteButton = useCallback(() => {
+  // TODO: use reacy-query mutation for improvement
+  const handleDeleteButton = () => {
     deleteAccount().then(res => {
       if (!res) {
-        alert("There was an error while deleting accounts");
+        alert("There was an error while sending delete account request.");
       }
 
       if (!res.success) {
         alert(res.errorMessage);
       }
 
-      alert("Account(s) deleted. You will be redirected.");
+      alert(
+        "Your account(s) will be deleted within 1 month. You will be logged out of your account and redirected.",
+      );
       signOut();
     });
-  }, []);
+  };
 
   return (
     <>

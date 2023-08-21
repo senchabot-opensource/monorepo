@@ -18,6 +18,8 @@ const getTwitchChannels = async (
     select: { providerAccountId: true },
   });
 
+  if (!twitchAccount) return;
+
   const twitchAccs: string[] = [];
   (await twitchAccount).map(acc => twitchAccs.push(acc.providerAccountId));
 
@@ -27,14 +29,14 @@ const getTwitchChannels = async (
     },
   });
 
-  if (twitchChannels) {
-    return res.send({ data: twitchChannels, success: true });
-  } else {
+  if (!twitchChannels) {
     return res.status(404).json({
       success: false,
       errorMessage: "Error while getting Twitch channels",
     });
   }
+
+  return res.send({ data: twitchChannels, success: true });
 };
 
 export default getTwitchChannels;

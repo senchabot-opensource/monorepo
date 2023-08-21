@@ -11,6 +11,7 @@ import DrawerButton from "./buttons/DrawerButton";
 import { useState } from "react";
 import AppDrawer from "../AppDrawer";
 import { FC } from "react";
+import GetTwitchBotButton from "./buttons/GetTwitchBotButton";
 
 type IResponsiveAppBarProps = {
   isDrawerOpen: boolean;
@@ -65,6 +66,7 @@ const ResponsiveAppBar: FC<IResponsiveAppBarProps> = ({
               <MinimizeIcon />
             </AppBarButton>
             <DrawerButton onClick={() => setDrawerIsOpen(!drawerIsOpen)} />
+            <GetTwitchBotButton />
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }} />
             <Link href={interfaceURL}>
               <IconButton

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Controller, FieldError, useForm } from "react-hook-form";
 import {
   Button,
@@ -15,6 +15,7 @@ import { SneacbarSeverity } from "../enums";
 import { ITwitchBotConfig, ITwitchBotFormSubmitData } from "src/types";
 import LoadingBox from "src/components/loading/LoadingBox";
 import { checkTwitchAccount, getAllConfig, setConfig } from "src/api";
+import { useQuery } from "@tanstack/react-query";
 
 type configBooleanState = {
   key: string;
@@ -31,11 +32,7 @@ const TwitchBotForm = () => {
   const [alertIsOpen, setAlertIsOpen] = useState<boolean>(false);
   const [snackbarIsOpen, setSnackbarIsOpen] = useState<boolean>(false);
   const [buttonEnabled, setButtonEnabled] = useState<boolean>(false);
-  const [isFormLoading, setIsFormLoading] = useState<boolean>(true);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [configData, setConfigData] = useState<ITwitchBotConfig[]>([]);
-  const [isTwitchAccAvailable, setIsTwitchAccAvailable] =
-    useState<boolean>(false);
 
   const {
     control,
@@ -49,26 +46,28 @@ const TwitchBotForm = () => {
     },
   });
 
-  useEffect(() => {
-    getAllConfig().then(res => {
-      const configs = res.data;
-
-      configs.forEach((config: ITwitchBotConfig) => {
-        setValue(config.key, config.value);
-        setConfigData(configData => [...configData, config]);
-      });
-      setIsFormLoading(false);
-    });
-
-    checkTwitchAccount().then(res => {
-      if (!res) {
-        setIsTwitchAccAvailable(false);
+  const cfgData = useQuery({
+    queryKey: ["configData"],
+    queryFn: async () => {
+      const res = await getAllConfig();
+      if (res.success) {
+        res.data.forEach((config: ITwitchBotConfig) => {
+          setValue(config.key, config.value);
+          setConfigData(configData => [...configData, config]);
+        });
       }
+      // TODO: error handling?
+      return res.success;
+    },
+  });
 
-      setIsTwitchAccAvailable(res.success);
-      setIsLoading(false);
-    });
-  }, [isFormLoading, isLoading]);
+  const isTwitchAccAvailable = useQuery({
+    queryKey: ["isTwitchAccAvailable"],
+    queryFn: async () => {
+      const res = await checkTwitchAccount();
+      return res;
+    },
+  });
 
   const handleError = (error: FieldError | undefined) => {
     if (error) {
@@ -77,7 +76,8 @@ const TwitchBotForm = () => {
     return null;
   };
 
-  const onSubmit = React.useCallback((data: ITwitchBotFormSubmitData) => {
+  // TODO: use reacy-query mutation for improvement
+  const onSubmit = (data: ITwitchBotFormSubmitData) => {
     const config = [
       {
         key: "bot_activity_enabled",
@@ -98,7 +98,7 @@ const TwitchBotForm = () => {
         setAlertIsOpen(true);
       }
     });
-  }, []);
+  };
 
   return (
     <>
@@ -113,9 +113,9 @@ const TwitchBotForm = () => {
         closeHandler={() => setAlertIsOpen(!alertIsOpen)}
         content="Something went wrong. Please try again later."
       />
-      {!isTwitchAccAvailable ? (
+      {!isTwitchAccAvailable.data?.data ? (
         <Typography>Twitch account not found</Typography>
-      ) : isFormLoading ? (
+      ) : cfgData.isLoading ? (
         <LoadingBox />
       ) : (
         <form onSubmit={handleSubmit(onSubmit)}>

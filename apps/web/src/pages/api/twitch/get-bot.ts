@@ -85,8 +85,17 @@ const getTwitchBot = async (req: NextApiRequest, res: NextApiResponse) => {
 
       if (!createChannel) return;
 
-      await prisma.botCommands.create({
-        data: {
+      await prisma.botCommands.upsert({
+        where: {
+          commandName_twitchChannelId: {
+            commandName: "lurk",
+            twitchChannelId: twitchAccId,
+          },
+        },
+        update: {
+          commandContent: "Teşekkürler! {user_name}",
+        },
+        create: {
           commandName: "lurk",
           commandContent: "Teşekkürler! {user_name}",
           twitchChannelId: twitchAccId,
