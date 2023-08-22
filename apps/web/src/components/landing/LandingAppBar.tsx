@@ -6,6 +6,7 @@ import {
   Menu,
   MenuItem,
   IconButton,
+  Button,
 } from "@mui/material";
 import Link from "next/link";
 import DashboardIcon from "@mui/icons-material/Dashboard";
@@ -115,7 +116,15 @@ const LandingAppBar = () => {
                   />
                 )}
               </IconButton>
-              <IconButton
+              <Button
+                href="/app"
+                sx={{
+                  ml: 1,
+                  color: "gray",
+                }}>
+                join now
+              </Button>
+              {/* <IconButton
                 href="/app"
                 sx={{
                   ml: 1,
@@ -123,7 +132,7 @@ const LandingAppBar = () => {
                 }}
                 disableRipple>
                 {session ? (
-                  <DashboardIcon
+                  <Button
                     sx={{
                       backgroundColor: "landingDashboardIcon.background",
                       color: "landingDashboardIcon.default",
@@ -133,7 +142,7 @@ const LandingAppBar = () => {
                 ) : (
                   <AccountCircle sx={{ "&:hover": { cursor: "pointer" } }} />
                 )}
-              </IconButton>
+              </IconButton> */}
             </Box>
           </Toolbar>
         </Box>
