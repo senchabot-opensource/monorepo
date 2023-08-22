@@ -138,6 +138,7 @@ func (m *MySQL) CreateBotCommand(ctx context.Context, commandName string, comman
 		CommandContent:  commandContent,
 		TwitchChannelID: twitchChannelId,
 		CommandType:     1,
+		Status:          1,
 		CreatedBy:       &createdBy,
 	})
 
@@ -355,6 +356,7 @@ func (m *MySQL) CreateCommandAliases(ctx context.Context, commandName string, al
 			CommandAlias:    aliasCommandName,
 			CommandName:     commandName,
 			TwitchChannelID: &twitchChannelId,
+			Status:          1,
 			CreatedBy:       createdBy,
 		}
 		commandAliases = append(commandAliases, commandAlias)
