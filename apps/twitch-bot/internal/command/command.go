@@ -15,6 +15,7 @@ import (
 type Command interface {
 	RunCommand(context context.Context, cmdName string, params []string, message twitch.PrivateMessage)
 	GetCommands() map[string]func(context context.Context, message twitch.PrivateMessage, commandName string, params []string)
+	Say(ctx context.Context, message twitch.PrivateMessage, cmdName string, messageContent string)
 }
 
 type commands struct {
@@ -69,7 +70,17 @@ func (c *commands) IsSystemCommand(commandName string) bool {
 	return false
 }
 
+func (c *commands) Say(ctx context.Context, message twitch.PrivateMessage, cmdName string, messageContent string) {
+	c.client.Twitch.Say(message.Channel, messageContent)
+	c.setCommandCooldown(message.User.Name)
+	c.service.SaveBotCommandActivity(ctx, cmdName, message.RoomID, message.User.DisplayName, message.User.ID)
+}
+
 func (c *commands) RunCommand(context context.Context, cmdName string, params []string, message twitch.PrivateMessage) {
+	if c.isUserOnCooldown(message.User.Name) {
+		return
+	}
+
 	// HANDLE COMMAND ALIASES
 	commandAlias, cmdAliasErr := c.service.GetCommandAlias(context, cmdName, message.RoomID)
 	if cmdAliasErr != nil {
@@ -81,46 +92,44 @@ func (c *commands) RunCommand(context context.Context, cmdName string, params []
 	}
 	// HANDLE COMMAND ALIASES
 
+	// USER COMMANDS
+	cmdData, err := c.service.GetUserBotCommand(context, cmdName, message.RoomID)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	if cmdData != nil {
+		if message.RoomID != cmdData.TwitchChannelID {
+			return
+		}
+		formattedCommandContent := helpers.FormatCommandContent(cmdData, message)
+		c.Say(context, message, cmdName, formattedCommandContent)
+		return
+	}
+	// USER COMMANDS
+
 	// SYSTEM COMMANDS
 	cmds := c.GetCommands()
 	if cmd, ok := cmds[cmdName]; ok {
 		cmd(context, message, cmdName, params)
+		c.setCommandCooldown(message.User.Name)
 		c.service.SaveBotCommandActivity(context, cmdName+" "+strings.Join(params, " "), message.RoomID, message.User.DisplayName, message.User.ID)
 		return
 	}
 	// SYSTEM COMMANDS
 
 	// GLOBAL COMMANDS
-	cmdData, err := c.service.GetGlobalBotCommand(context, cmdName)
-	if err != nil {
-		fmt.Println(err.Error())
-	}
-	if cmdData != nil {
-		formattedCommandContent := helpers.FormatCommandContent(cmdData, message)
-		c.client.Twitch.Say(message.Channel, formattedCommandContent)
-		c.service.SaveBotCommandActivity(context, cmdName, message.RoomID, message.User.DisplayName, message.User.ID)
-		return
-	}
-	// GLOBAL COMMANDS
-
-	// USER COMMANDS
-	cmdData, err = c.service.GetUserBotCommand(context, cmdName, message.RoomID)
+	cmdData, err = c.service.GetGlobalBotCommand(context, cmdName)
 	if err != nil {
 		fmt.Println(err.Error())
 		return
 	}
-	if cmdData == nil || message.RoomID != cmdData.TwitchChannelID && cmdData.Status == 0 {
-		return
-	}
-	if c.isUserOnCooldown(message.User.Name) {
+	if cmdData == nil {
 		return
 	}
 
 	formattedCommandContent := helpers.FormatCommandContent(cmdData, message)
-	c.client.Twitch.Say(message.Channel, formattedCommandContent)
-	c.setCommandCooldown(message.User.Name)
-	c.service.SaveBotCommandActivity(context, cmdName, message.RoomID, message.User.DisplayName, message.User.ID)
-	// USER COMMANDS
+	c.Say(context, message, cmdName, formattedCommandContent)
+	// GLOBAL COMMANDS
 }
 
 func (c *commands) isUserOnCooldown(username string) bool {
