@@ -15,6 +15,7 @@
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.12.0",
     "@next-auth/prisma-adapter": "^1.0.5",
+    "@tanstack/react-query": "^4.32.6",
     "@vercel/analytics": "^1.0.1",
     "install": "^0.13.0",
     "jotai": "^2.0.4",
@@ -33,6 +34,7 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
+    "@tanstack/eslint-plugin-query": "^4.29.25",
     "@types/node": "18.0.0",
     "@types/react": "18.0.14",
     "@types/react-dom": "18.0.5",

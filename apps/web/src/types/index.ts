@@ -48,6 +48,11 @@ export interface ITwitchBotFormSubmitData {
   mods_manage_cmds_enabled: string;
 }
 
+export interface IGetAllConfig {
+  data: IConfig[];
+  success: boolean;
+}
+
 export interface IConfig {
   [key: string]: string;
 }
