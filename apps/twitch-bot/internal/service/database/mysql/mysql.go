@@ -95,7 +95,7 @@ func (m *MySQL) GetGlobalBotCommand(ctx context.Context, commandName string) (*m
 
 	result := m.DB.Where("command_name = ?", commandName).Where("command_type = ?", 0).Where("status = ?", 1).First(&botCommand)
 	if result.Error != nil {
-		return nil, errors.New("(GetBotCommand) db.First Error:" + result.Error.Error())
+		return nil, errors.New("(GetGlobalBotCommand) db.First Error:" + result.Error.Error())
 	}
 
 	return &botCommand, nil

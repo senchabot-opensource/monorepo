@@ -94,9 +94,8 @@ func (c *commands) RunCommand(context context.Context, cmdName string, params []
 	cmdData, err := c.service.GetGlobalBotCommand(context, cmdName)
 	if err != nil {
 		fmt.Println(err.Error())
-		return
 	}
-	if cmdData != nil || cmdData.Status == 1 {
+	if cmdData != nil {
 		formattedCommandContent := helpers.FormatCommandContent(cmdData, message)
 		c.client.Twitch.Say(message.Channel, formattedCommandContent)
 		c.service.SaveBotCommandActivity(context, cmdName, message.RoomID, message.User.DisplayName, message.User.ID)
