@@ -341,9 +341,8 @@ func (m *MySQL) CreateCommandAliases(ctx context.Context, commandName string, al
 			return &infoText, nil
 		}
 
-		infoTextResp, _ := m.CheckCommandExists(ctx, commandName, twitchChannelId)
+		infoTextResp, _ := m.CheckCommandExists(ctx, aliasCommandName, twitchChannelId)
 		if infoTextResp != nil {
-			fmt.Println("rr:w")
 			return infoTextResp, nil
 		}
 
