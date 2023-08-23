@@ -4,7 +4,7 @@ import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import AccountMenu from "../AccountMenu";
-import AppBarTitle from "../../common/AppBarTitle";
+import AppBarTitle from "../../common/Logo";
 import AppBarButton from "./AppBarButton";
 import MinimizeIcon from "@mui/icons-material/Minimize";
 import DrawerButton from "./buttons/DrawerButton";
