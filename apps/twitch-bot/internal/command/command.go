@@ -97,9 +97,6 @@ func (c *commands) RunCommand(context context.Context, cmdName string, params []
 		fmt.Println("[USER COMMAND ERROR]:", err.Error())
 	}
 	if cmdData != nil {
-		if message.RoomID != cmdData.TwitchChannelID {
-			return
-		}
 		formattedCommandContent := helpers.FormatCommandContent(cmdData, message)
 		c.Say(context, message, cmdName, formattedCommandContent)
 		return
