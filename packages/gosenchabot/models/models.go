@@ -32,6 +32,10 @@ type BotActionActivity struct {
 	ActivityAuthorID *string `gorm:"column:activity_author_id"`
 }
 
+type CommandResponse struct {
+	Message string
+}
+
 type BotCommand struct {
 	ID              int
 	CommandName     string     `gorm:"column:command_name"`
