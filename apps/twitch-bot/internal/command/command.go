@@ -83,7 +83,7 @@ func (c *commands) RunCommand(context context.Context, cmdName string, params []
 	// HANDLE COMMAND ALIASES
 	commandAlias, cmdAliasErr := c.service.GetCommandAlias(context, cmdName, message.RoomID)
 	if cmdAliasErr != nil {
-		fmt.Println(cmdAliasErr.Error())
+		fmt.Println("[COMMAND ALIAS ERROR]:", cmdAliasErr.Error())
 	}
 
 	if commandAlias != nil {
@@ -94,7 +94,7 @@ func (c *commands) RunCommand(context context.Context, cmdName string, params []
 	// USER COMMANDS
 	cmdData, err := c.service.GetUserBotCommand(context, cmdName, message.RoomID)
 	if err != nil {
-		fmt.Println(err.Error())
+		fmt.Println("[USER COMMAND ERROR]:", err.Error())
 	}
 	if cmdData != nil {
 		if message.RoomID != cmdData.TwitchChannelID {
@@ -111,7 +111,7 @@ func (c *commands) RunCommand(context context.Context, cmdName string, params []
 	if cmd, ok := cmds[cmdName]; ok {
 		cmdResp, err := cmd(context, message, cmdName, params)
 		if err != nil {
-			fmt.Println("RunCommand Error:", err.Error())
+			fmt.Println("[SYSTEM COMMAND ERROR]:", err.Error())
 			return
 		}
 		c.Say(context, message, cmdName+" "+strings.Join(params, " "), cmdResp.Message)
@@ -122,7 +122,7 @@ func (c *commands) RunCommand(context context.Context, cmdName string, params []
 	// GLOBAL COMMANDS
 	cmdData, err = c.service.GetGlobalBotCommand(context, cmdName)
 	if err != nil {
-		fmt.Println(err.Error())
+		fmt.Println("[GLOBAL COMMAND ERROR]:", err.Error())
 		return
 	}
 	if cmdData == nil {
