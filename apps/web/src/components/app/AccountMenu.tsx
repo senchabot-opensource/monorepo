@@ -42,14 +42,14 @@ const AccountMenu = () => {
           {colorMode === "dark" ? (
             <LightMode
               sx={{
-                backgroundColor: "landingDashboardIcon.background",
+                backgroundColor: "transparent",
                 color: "landingDashboardIcon.default",
               }}
             />
           ) : (
             <DarkMode
               sx={{
-                backgroundColor: "landingDashboardIcon.background",
+                backgroundColor: "transparent",
                 color: "landingDashboardIcon.default",
               }}
             />

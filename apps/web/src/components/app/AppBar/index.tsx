@@ -51,7 +51,7 @@ const ResponsiveAppBar: FC<IResponsiveAppBarProps> = ({
         color="transparent"
         sx={{
           backdropFilter: "blur(4px)",
-          backgroundColor: "background.default",
+          backgroundColor: "appBar.background",
         }}
         elevation={2}>
         <Container>

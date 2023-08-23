@@ -18,7 +18,13 @@ function Links() {
       {appBarMenuList.map((item, index) => (
         <Link key={index} href={item.path} style={{ textDecoration: "none" }}>
           <LandingButton
-            sx={{ mr: 2, color: "landingButton.default" }}
+            sx={{
+              mr: 2,
+              color: "landingButton.default",
+              "&:hover": {
+                color: "landingButton.hover",
+              },
+            }}
             disableRipple>
             {item.title}
           </LandingButton>
