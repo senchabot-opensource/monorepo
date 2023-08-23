@@ -13,11 +13,13 @@ import (
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
 )
 
-type commandFuncReturn map[string]func(context context.Context, message twitch.PrivateMessage, commandName string, params []string) (*models.CommandResponse, error)
+type CommandFunc func(context context.Context, message twitch.PrivateMessage, commandName string, params []string) (*models.CommandResponse, error)
+
+type CommandMap map[string]CommandFunc
 
 type Command interface {
 	RunCommand(context context.Context, cmdName string, params []string, message twitch.PrivateMessage)
-	GetCommands() commandFuncReturn
+	GetCommands() CommandMap
 	Say(ctx context.Context, message twitch.PrivateMessage, cmdName string, messageContent string)
 }
 
@@ -37,9 +39,9 @@ func NewCommands(client *client.Clients, service service.Service, cooldownPeriod
 	}
 }
 
-func (c *commands) GetCommands() commandFuncReturn {
+func (c *commands) GetCommands() CommandMap {
 	// TODO: command aliases
-	var commands = commandFuncReturn{
+	var commands = CommandMap{
 		"ping":   c.PingCommand,
 		"invite": c.InviteCommand,
 		"sozluk": c.SozlukCommand,
