@@ -324,13 +324,6 @@ func (m *MySQL) CreateCommandAliases(ctx context.Context, commandName string, al
 		commandName = *command
 	}
 
-	// Check command exists
-	infoTextResp, _ := m.CheckUserCommandExists(ctx, commandName, twitchChannelId)
-	if infoTextResp == nil {
-		infoText = "the command \"" + commandName + "\" does not exist"
-		return &infoText, nil
-	}
-
 	for _, aliasCommandName := range aliases {
 		existAlias, err := m.CheckCommandAliasExist(ctx, aliasCommandName, twitchChannelId)
 		if err != nil {

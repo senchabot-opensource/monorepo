@@ -33,6 +33,13 @@ func (c *commands) AddCommandAliasCommand(context context.Context, message twitc
 		return &cmdResp, nil
 	}
 
+	// Check command exists
+	infoTextResp, _ := c.service.CheckCommandExists(context, command, twitchChannelId)
+	if infoTextResp == nil && !c.IsSystemCommand(command) {
+		cmdResp.Message = "the command \"" + command + "\" does not exist"
+		return &cmdResp, nil
+	}
+
 	for _, k := range aliasCommands {
 		if c.IsSystemCommand(k) {
 			cmdResp.Message = fmt.Sprintf("%v, the command \"%v\" is used as system command", message.User.DisplayName, k)
