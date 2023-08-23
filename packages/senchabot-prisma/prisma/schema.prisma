@@ -82,6 +82,8 @@ model BotCommands {
     commandContent  String   @map("command_content") @db.Text
     twitchChannelId String?  @map("twitch_channel_id")
     discordServerId String?  @map("discord_server_id")
+    commandType     Int      @default(1) @map("command_type")
+    status          Int      @default(1) @map("status")
     createdBy       String?  @map("created_by")
     updatedBy       String?  @map("updated_by")
     createdAt       DateTime @default(now()) @map("created_at")
@@ -96,6 +98,7 @@ model BotCommandAliases {
     commandName     String   @map("command_name")
     twitchChannelId String?  @map("twitch_channel_id")
     discordServerId String?  @map("discord_server_id")
+    status          Int      @default(1) @map("status")
     createdBy       String   @map("created_by")
     createdAt       DateTime @default(now()) @map("created_at")
 
