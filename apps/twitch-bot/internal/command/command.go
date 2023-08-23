@@ -62,13 +62,8 @@ func (c *commands) GetCommands() CommandMap {
 
 func (c *commands) IsSystemCommand(commandName string) bool {
 	commandListMap := c.GetCommands()
-	for k := range commandListMap {
-		if k == commandName {
-			return true
-		}
-	}
-
-	return false
+	_, ok := commandListMap[commandName]
+	return ok
 }
 
 func (c *commands) Say(ctx context.Context, message twitch.PrivateMessage, cmdName string, messageContent string) {
