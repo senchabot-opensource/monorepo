@@ -15,7 +15,7 @@ import { LightMode } from "@mui/icons-material";
 import { DarkMode } from "@mui/icons-material";
 import { useSession } from "next-auth/react";
 import { Offset } from "../Offset";
-import AppBarTitle from "../common/AppBarTitle";
+import Logo from "../common/Logo";
 import LandingButton from "./LandingButton";
 import { MenuPaperPropsStyles } from "../../styles";
 import React, { useContext, useState } from "react";
@@ -92,7 +92,7 @@ const LandingAppBar = () => {
                 </Link>
               ))}
             </Menu>
-            <AppBarTitle />
+            <Logo />
             <Box>
               <IconButton
                 onClick={toggleColorMode}
