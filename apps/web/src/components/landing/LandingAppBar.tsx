@@ -116,33 +116,26 @@ const LandingAppBar = () => {
                   />
                 )}
               </IconButton>
-              <Button
-                href="/app"
-                sx={{
-                  ml: 1,
-                  color: "gray",
-                }}>
-                join now
-              </Button>
-              {/* <IconButton
-                href="/app"
-                sx={{
-                  ml: 1,
-                  color: "landingButton.default",
-                }}
-                disableRipple>
-                {session ? (
-                  <Button
-                    sx={{
-                      backgroundColor: "landingDashboardIcon.background",
-                      color: "landingDashboardIcon.default",
-                      "&:hover": { cursor: "pointer" },
-                    }}
-                  />
-                ) : (
-                  <AccountCircle sx={{ "&:hover": { cursor: "pointer" } }} />
-                )}
-              </IconButton> */}
+              {session ? (
+                <Button
+                  href="/app"
+                  sx={{
+                    backgroundColor: "landingDashboardIcon.background",
+                    color: "landingDashboardIcon.default",
+                    "&:hover": { cursor: "pointer" },
+                  }}>
+                  Dashboard
+                </Button>
+              ) : (
+                <Button
+                  href="/app"
+                  sx={{
+                    ml: 1,
+                    color: "gray",
+                  }}>
+                  join now
+                </Button>
+              )}
             </Box>
           </Toolbar>
         </Box>
