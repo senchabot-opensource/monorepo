@@ -4,7 +4,7 @@ import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import AccountMenu from "../AccountMenu";
-import AppBarTitle from "../../common/Logo";
+import Logo from "../../common/Logo";
 import AppBarButton from "./AppBarButton";
 import MinimizeIcon from "@mui/icons-material/Minimize";
 import DrawerButton from "./buttons/DrawerButton";
@@ -57,7 +57,7 @@ const ResponsiveAppBar: FC<IResponsiveAppBarProps> = ({
         <Container>
           {/* <Container maxWidth="xl">*/}
           <Toolbar disableGutters>
-            <AppBarTitle />
+            <Logo />
             <AppBarButton
               title="Go to Interface"
               pathHref={interfaceURL}
