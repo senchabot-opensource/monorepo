@@ -7,11 +7,14 @@ import AccountMenu from "../AccountMenu";
 import Logo from "../../common/Logo";
 import AppBarButton from "./AppBarButton";
 import MinimizeIcon from "@mui/icons-material/Minimize";
-import DrawerButton from "./buttons/DrawerButton";
+
 import { useState } from "react";
-import AppDrawer from "../AppDrawer";
+
 import { FC } from "react";
 import GetTwitchBotButton from "./buttons/GetTwitchBotButton";
+
+import GetDiscordBotButton from "./buttons/GetDiscordBotButton";
+import CommandListButton from "./buttons/CommandListButton";
 
 type IResponsiveAppBarProps = {
   isDrawerOpen: boolean;
@@ -42,10 +45,6 @@ const ResponsiveAppBar: FC<IResponsiveAppBarProps> = ({
 
   return (
     <>
-      <AppDrawer
-        isDrawerOpen={drawerIsOpen}
-        drawerHandler={() => setDrawerIsOpen(!drawerIsOpen)}
-      />
       <AppBar
         position="fixed"
         color="transparent"
@@ -65,8 +64,10 @@ const ResponsiveAppBar: FC<IResponsiveAppBarProps> = ({
               drawerHandler={drawerHandler}>
               <MinimizeIcon />
             </AppBarButton>
-            <DrawerButton onClick={() => setDrawerIsOpen(!drawerIsOpen)} />
+
             <GetTwitchBotButton />
+            <GetDiscordBotButton />
+            <CommandListButton />
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }} />
             <Link href={interfaceURL}>
               <IconButton
