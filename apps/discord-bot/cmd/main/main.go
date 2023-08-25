@@ -11,7 +11,6 @@ import (
 	"sync"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/senchabot-opensource/monorepo/apps/discord-bot/client"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/command"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/db"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/helpers"
@@ -20,6 +19,7 @@ import (
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot"
 
 	cmdsrvc "github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service/command"
+	twsrvc "github.com/senchabot-opensource/monorepo/packages/gosenchabot/service/twitch"
 )
 
 func main() {
@@ -28,7 +28,7 @@ func main() {
 	//log.Fatal("Error loading .env file", dotErr.Error())
 	//}
 
-	client.InitTwitchOAuth2Token()
+	token := twsrvc.InitTwitchOAuth2Token()
 
 	discordClient, _ := discordgo.New("Bot " + os.Getenv("TOKEN"))
 
@@ -38,7 +38,7 @@ func main() {
 	ctx := context.Background()
 
 	discordClient.AddHandler(func(s *discordgo.Session, r *discordgo.Ready) {
-		go event.CheckLiveStreamScheduledEvents(s)
+		go event.CheckLiveStreamScheduledEvents(s, token)
 
 		fmt.Println("Bot is ready. Logged in as:", s.State.User.Username)
 	})
@@ -136,7 +136,7 @@ func main() {
 		}
 	})
 
-	command := command.NewCommands()
+	command := command.NewCommands(token)
 
 	discordClient.AddHandler(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		ctx := context.Background()

@@ -97,3 +97,12 @@ type TwitchUserInfo struct {
 	ID    string `json:"id"`
 	Login string `json:"login"`
 }
+
+type TwitchStreamerData struct {
+	Type       string `json:"type"`
+	Title      string `json:"title"`
+	UserLogin  string `json:"user_login"`
+	UserName   string `json:"user_name"`
+	StreamGame string `json:"game_name"`
+	StartedAt  string `json:"started_at"`
+}

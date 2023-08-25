@@ -9,9 +9,10 @@ import (
 	"time"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/senchabot-opensource/monorepo/apps/discord-bot/client"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/db"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service/streamer"
+	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
+	twsrvc "github.com/senchabot-opensource/monorepo/packages/gosenchabot/service/twitch"
 )
 
 const errorMessage = "İşlem gerçekleştirilirken hata oluştu. Hata kodu: "
@@ -22,10 +23,13 @@ type Command interface {
 }
 
 type commands struct {
+	twitchAccessToken string
 }
 
-func NewCommands() Command {
-	return &commands{}
+func NewCommands(token string) Command {
+	return &commands{
+		twitchAccessToken: token,
+	}
 }
 
 func (c *commands) GetCommands() map[string]func(context context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, db db.MySQL) {
@@ -440,8 +444,8 @@ func IsChannelNameNotGiven(optionsLen int) bool {
 	return optionsLen < 2
 }
 
-func GetTwitchUserInfo(twitchUsername string) (string, *client.TwitchUserInfo) {
-	userInfo, err := client.GetTwitchUserInfo(twitchUsername)
+func GetTwitchUserInfo(twitchUsername string, token string) (string, *models.TwitchUserInfo) {
+	userInfo, err := twsrvc.GetTwitchUserInfo(twitchUsername, token)
 	if err != nil {
 		return fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısı Twitch'te bulunamadı.", twitchUsername), nil
 	}
@@ -449,7 +453,7 @@ func GetTwitchUserInfo(twitchUsername string) (string, *client.TwitchUserInfo) {
 	return "", userInfo
 }
 
-func CheckIfTwitchStreamerExist(ctx context.Context, twitchUsername string, uInfo *client.TwitchUserInfo, s *discordgo.Session, i *discordgo.InteractionCreate, db db.MySQL) (string, bool) {
+func CheckIfTwitchStreamerExist(ctx context.Context, twitchUsername string, uInfo *models.TwitchUserInfo, s *discordgo.Session, i *discordgo.InteractionCreate, db db.MySQL) (string, bool) {
 	liveAnnoData, err := db.GetDiscordTwitchLiveAnno(ctx, uInfo.ID, i.GuildID)
 	if err != nil {
 		log.Printf("There was an error while checking the Discord Twitch live announcements: %v", err)
@@ -466,7 +470,7 @@ func CheckIfTwitchStreamerExist(ctx context.Context, twitchUsername string, uInf
 	return "", false
 }
 
-func SetTwitchStreamer(ctx context.Context, uInfo *client.TwitchUserInfo, channelId, channelName, guildId, creatorUsername string, db db.MySQL) string {
+func SetTwitchStreamer(ctx context.Context, uInfo *models.TwitchUserInfo, channelId, channelName, guildId, creatorUsername string, db db.MySQL) string {
 	added, err := db.AddDiscordTwitchLiveAnnos(ctx, uInfo.Login, uInfo.ID, channelId, guildId, creatorUsername)
 	if err != nil {
 		log.Printf("Error while adding Discord Twitch live announcement: %v", err)
