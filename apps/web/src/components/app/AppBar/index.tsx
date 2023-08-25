@@ -2,15 +2,15 @@ import { styled } from "@mui/material/styles";
 import { Container, Toolbar, Box, IconButton } from "@mui/material";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import { useSession } from "next-auth/react";
-import Link from "next/link";
 import AccountMenu from "../AccountMenu";
-import AppBarTitle from "../../common/AppBarTitle";
-import AppBarButton from "./AppBarButton";
-import MinimizeIcon from "@mui/icons-material/Minimize";
-import DrawerButton from "./buttons/DrawerButton";
-import { useState } from "react";
-import AppDrawer from "../AppDrawer";
-import { FC } from "react";
+import Logo from "../../common/Logo";
+import { DarkMode, LightMode } from "@mui/icons-material";
+import { ColorModeContext } from "src/Context/ColorModeContext";
+
+import { FC, useContext } from "react";
+import GetTwitchBotButton from "./buttons/GetTwitchBotButton";
+import GetDiscordBotButton from "./buttons/GetDiscordBotButton";
+import CommandListButton from "./buttons/CommandListButton";
 
 type IResponsiveAppBarProps = {
   isDrawerOpen: boolean;
@@ -20,8 +20,6 @@ type IResponsiveAppBarProps = {
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
 }
-
-const interfaceURL = "https://interface.senchabot.app";
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: prop => prop !== "open",
@@ -37,46 +35,51 @@ const ResponsiveAppBar: FC<IResponsiveAppBarProps> = ({
   drawerHandler,
 }) => {
   useSession({ required: true });
-  const [drawerIsOpen, setDrawerIsOpen] = useState<boolean>(false);
+  const { colorMode, toggleColorMode } = useContext(ColorModeContext);
 
   return (
     <>
-      <AppDrawer
-        isDrawerOpen={drawerIsOpen}
-        drawerHandler={() => setDrawerIsOpen(!drawerIsOpen)}
-      />
       <AppBar
         position="fixed"
         color="transparent"
         sx={{
           backdropFilter: "blur(4px)",
-          backgroundColor: "background.default",
+          backgroundColor: "appBar.background",
         }}
         elevation={2}>
         <Container>
           {/* <Container maxWidth="xl">*/}
           <Toolbar disableGutters>
-            <AppBarTitle />
-            <AppBarButton
-              title="Go to Interface"
-              pathHref={interfaceURL}
-              ariaLabel="go to interface"
-              drawerHandler={drawerHandler}>
-              <MinimizeIcon />
-            </AppBarButton>
-            <DrawerButton onClick={() => setDrawerIsOpen(!drawerIsOpen)} />
+            <Logo />
+
+            <GetTwitchBotButton />
+            <GetDiscordBotButton />
+            <CommandListButton />
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }} />
-            <Link href={interfaceURL}>
+
+            <Box>
               <IconButton
-                aria-label="go to interface"
+                onClick={toggleColorMode}
                 sx={{
-                  display: { xs: "flex", md: "none" },
-                  mr: 1,
-                  ...(isDrawerOpen && { display: "none" }),
+                  color: "landingButton.default",
                 }}>
-                <MinimizeIcon />
+                {colorMode === "dark" ? (
+                  <LightMode
+                    sx={{
+                      backgroundColor: "transparent",
+                      color: "landingDashboardIcon.default",
+                    }}
+                  />
+                ) : (
+                  <DarkMode
+                    sx={{
+                      backgroundColor: "transparent",
+                      color: "landingDashboardIcon.default",
+                    }}
+                  />
+                )}
               </IconButton>
-            </Link>
+            </Box>
             <AccountMenu />
           </Toolbar>
         </Container>

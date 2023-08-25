@@ -64,7 +64,7 @@ Web application for managing Senchabot, its commands and configuring the bot.
 │   │   ├── button
 │   │   │   └── DeleteAccount.tsx
 │   │   ├── common
-│   │   │   ├── AppBarTitle.tsx
+│   │   │   ├── Logo.tsx
 │   │   │   ├── Header.tsx
 │   │   │   └── VersionText.tsx
 │   │   ├── CustomAlert.tsx

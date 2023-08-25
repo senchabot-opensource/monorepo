@@ -2,7 +2,7 @@ import { Typography } from "@mui/material";
 import Link from "next/link";
 import { env } from "../../env/client.mjs";
 
-const AppBarTitle = () => {
+const Logo = () => {
   return (
     <>
       {/* Desktop and Tablet view */}
@@ -43,4 +43,4 @@ const AppBarTitle = () => {
   );
 };
 
-export default AppBarTitle;
+export default Logo;

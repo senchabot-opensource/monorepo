@@ -21,7 +21,8 @@ type Service interface {
 	GetTwitchBotConfig(ctx context.Context, twitchChannelId string, configKey string) (*models.TwitchBotConfig, error)
 	CheckConfig(ctx context.Context, twitchChannelId string, configKey string, configValue string) bool
 
-	GetBotCommand(ctx context.Context, commandName string, twitchChannelId string) (*models.BotCommand, error)
+	GetGlobalBotCommand(ctx context.Context, commandName string) (*models.BotCommand, error)
+	GetUserBotCommand(ctx context.Context, commandName string, twitchChannelId string) (*models.BotCommand, error)
 	CreateBotCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string, createdBy string) (*string, error)
 	CheckCommandExists(ctx context.Context, commandName string, twitchChannelId string) (*string, error)
 	UpdateBotCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string, updatedBy string) (*string, *string, error)
@@ -97,8 +98,17 @@ func (s *services) CheckConfig(ctx context.Context, twitchChannelId string, conf
 	return false
 }
 
-func (s *services) GetBotCommand(ctx context.Context, commandName string, twitchChannelId string) (*models.BotCommand, error) {
-	commandData, err := s.DB.GetBotCommand(ctx, commandName, twitchChannelId)
+func (s *services) GetGlobalBotCommand(ctx context.Context, commandName string) (*models.BotCommand, error) {
+	commandData, err := s.DB.GetGlobalBotCommand(ctx, commandName)
+	if err != nil {
+		return nil, err
+	}
+
+	return commandData, nil
+}
+
+func (s *services) GetUserBotCommand(ctx context.Context, commandName string, twitchChannelId string) (*models.BotCommand, error) {
+	commandData, err := s.DB.GetUserBotCommand(ctx, commandName, twitchChannelId)
 	if err != nil {
 		return nil, err
 	}
