@@ -57,7 +57,7 @@ func (c *commands) DeleteCommand(ctx context.Context, s *discordgo.Session, i *d
 		twitchUsername := options[0].StringValue()
 		twitchUsername = helpers.ParseTwitchUsernameURLParam(twitchUsername)
 
-		response0, uInfo := GetTwitchUserInfo(twitchUsername)
+		response0, uInfo := GetTwitchUserInfo(twitchUsername, c.twitchAccessToken)
 		if response0 != "" {
 			ephemeralRespond(s, i, response0)
 			return
