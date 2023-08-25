@@ -2,18 +2,19 @@ package command
 
 import (
 	"context"
-	"log"
 
 	"github.com/gempir/go-twitch-irc/v3"
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot"
+	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
 )
 
-func (c *commands) SozlukCommand(context context.Context, message twitch.PrivateMessage, commandName string, params []string) {
+func (c *commands) SozlukCommand(context context.Context, message twitch.PrivateMessage, commandName string, params []string) (*models.CommandResponse, error) {
+	var cmdResp models.CommandResponse
 	sozlukResp, err := gosenchabot.SozlukCommand(params)
 	if err != nil {
-		log.Println(err.Error())
-		return
+		return nil, err
 	}
 
-	c.client.Twitch.Say(message.Channel, sozlukResp)
+	cmdResp.Message = sozlukResp
+	return &cmdResp, nil
 }

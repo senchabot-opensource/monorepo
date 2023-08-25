@@ -19,7 +19,7 @@ type MySQL struct {
 
 func NewMySQL() database.Database {
 	dsn := os.Getenv("DATABASE_URL")
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{Logger: logger.Default.LogMode(logger.Info)})
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{Logger: logger.Default.LogMode(logger.Silent)})
 
 	if err != nil {
 		panic("failed to connect database")
@@ -90,10 +90,21 @@ func (m *MySQL) CheckConfig(ctx context.Context, twitchChannelId string, configK
 	return false
 }
 
-func (m *MySQL) GetBotCommand(ctx context.Context, commandName string, twitchChannelId string) (*models.BotCommand, error) {
+func (m *MySQL) GetGlobalBotCommand(ctx context.Context, commandName string) (*models.BotCommand, error) {
 	var botCommand models.BotCommand
 
-	result := m.DB.Where("command_name = ?", commandName).Where("twitch_channel_id = ?", twitchChannelId).First(&botCommand)
+	result := m.DB.Where("command_name = ?", commandName).Where("command_type = ?", 0).Where("status = ?", 1).First(&botCommand)
+	if result.Error != nil {
+		return nil, errors.New("(GetGlobalBotCommand) db.First Error:" + result.Error.Error())
+	}
+
+	return &botCommand, nil
+}
+
+func (m *MySQL) GetUserBotCommand(ctx context.Context, commandName string, twitchChannelId string) (*models.BotCommand, error) {
+	var botCommand models.BotCommand
+
+	result := m.DB.Where("command_name = ?", commandName).Where("twitch_channel_id = ?", twitchChannelId).Where("command_type = ?", 1).Where("status = ?", 1).First(&botCommand)
 	if result.Error != nil {
 		return nil, errors.New("(GetBotCommand) db.First Error:" + result.Error.Error())
 	}
@@ -105,13 +116,12 @@ func (m *MySQL) CreateBotCommand(ctx context.Context, commandName string, comman
 	var botCommand []models.BotCommand
 	var infoText string
 
-	existCommandName, err := m.CheckCommandExists(ctx, commandName, twitchChannelId)
+	infoTextResp, err := m.CheckCommandExists(ctx, commandName, twitchChannelId)
 	if err != nil {
 		return nil, err
 	}
-	if existCommandName != nil {
-		infoText = "the command \"" + *existCommandName + "\" is already in use"
-		return &infoText, nil
+	if infoTextResp != nil {
+		return infoTextResp, nil
 	}
 
 	existAliasName, err := m.CheckCommandAliasExist(ctx, commandName, twitchChannelId)
@@ -127,6 +137,8 @@ func (m *MySQL) CreateBotCommand(ctx context.Context, commandName string, comman
 		CommandName:     commandName,
 		CommandContent:  commandContent,
 		TwitchChannelID: twitchChannelId,
+		CommandType:     1,
+		Status:          1,
 		CreatedBy:       &createdBy,
 	})
 
@@ -139,11 +151,51 @@ func (m *MySQL) CreateBotCommand(ctx context.Context, commandName string, comman
 }
 
 func (m *MySQL) CheckCommandExists(ctx context.Context, commandName string, twitchChannelId string) (*string, error) {
+	var infoText string
+	existGlobalCommandName, err := m.CheckGlobalCommandExists(ctx, commandName)
+	if err != nil {
+		return nil, err
+	}
+
+	existUserCommandName, err := m.CheckUserCommandExists(ctx, commandName, twitchChannelId)
+	if err != nil {
+		return nil, err
+	}
+
+	if existUserCommandName != nil || existGlobalCommandName != nil {
+		if existUserCommandName != nil {
+			infoText = "the command \"" + *existUserCommandName + "\" is already in use"
+			return &infoText, nil
+		}
+		if existGlobalCommandName != nil {
+			infoText = "the command \"" + *existGlobalCommandName + "\" is used as a global command"
+			return &infoText, nil
+		}
+	}
+
+	return nil, nil
+}
+
+func (m *MySQL) CheckGlobalCommandExists(ctx context.Context, commandName string) (*string, error) {
 	var botCommand []models.BotCommand
 
-	result := m.DB.Where("command_name = ?", commandName).Where("twitch_channel_id", twitchChannelId).Find(&botCommand)
+	result := m.DB.Where("command_name = ?", commandName).Where("command_type", 0).Find(&botCommand)
 	if result.Error != nil {
-		return nil, errors.New("(CheckCommandExists) db.Find Error:" + result.Error.Error())
+		return nil, errors.New("(CheckGlobalCommandExists) db.Find Error:" + result.Error.Error())
+	}
+	if len(botCommand) > 0 {
+		return &botCommand[0].CommandName, nil
+	}
+
+	return nil, nil
+}
+
+func (m *MySQL) CheckUserCommandExists(ctx context.Context, commandName string, twitchChannelId string) (*string, error) {
+	var botCommand []models.BotCommand
+
+	result := m.DB.Where("command_name = ?", commandName).Where("twitch_channel_id", twitchChannelId).Where("command_type = ?", 1).Find(&botCommand)
+	if result.Error != nil {
+		return nil, errors.New("(CheckUserCommandExists) db.Find Error:" + result.Error.Error())
 	}
 	if len(botCommand) > 0 {
 		return &botCommand[0].CommandName, nil
@@ -160,11 +212,11 @@ func (m *MySQL) UpdateBotCommand(ctx context.Context, commandName string, comman
 		commandName = *command
 	}
 
-	existCommandName, err := m.CheckCommandExists(ctx, commandName, twitchChannelId)
+	infoTextResp, err := m.CheckUserCommandExists(ctx, commandName, twitchChannelId)
 	if err != nil {
 		return nil, nil, err
 	}
-	if existCommandName == nil {
+	if infoTextResp == nil {
 		var infoText = "the command \"" + commandName + "\" does not exist"
 		return nil, &infoText, nil
 	}
@@ -194,11 +246,11 @@ func (m *MySQL) DeleteBotCommand(ctx context.Context, commandName string, twitch
 		commandName = *command
 	}
 
-	existCommandName, err := m.CheckCommandExists(ctx, commandName, twitchChannelId)
+	infoTextResp, err := m.CheckUserCommandExists(ctx, commandName, twitchChannelId)
 	if err != nil {
 		return nil, nil, err
 	}
-	if existCommandName == nil {
+	if infoTextResp == nil {
 		var infoText = "the command \"" + commandName + "\" does not exist"
 		return nil, &infoText, nil
 	}
@@ -224,7 +276,7 @@ func (m *MySQL) DeleteBotCommand(ctx context.Context, commandName string, twitch
 func (m *MySQL) GetCommandList(ctx context.Context, twitchChannelId string) ([]*models.BotCommand, error) {
 	var botCommandList []*models.BotCommand
 
-	result := m.DB.Where("twitch_channel_id = ?", twitchChannelId).Find(&botCommandList)
+	result := m.DB.Where("twitch_channel_id = ?", twitchChannelId).Where("command_type = ?", 1).Find(&botCommandList)
 	if result.Error != nil {
 		return nil, errors.New("(GetTwitchChannels) db.Find Error:" + result.Error.Error())
 	}
@@ -272,13 +324,6 @@ func (m *MySQL) CreateCommandAliases(ctx context.Context, commandName string, al
 		commandName = *command
 	}
 
-	// Check command exists
-	commandExist, _ := m.CheckCommandExists(ctx, commandName, twitchChannelId)
-	if commandExist == nil {
-		infoText = "the command \"" + commandName + "\" does not exist"
-		return &infoText, nil
-	}
-
 	for _, aliasCommandName := range aliases {
 		existAlias, err := m.CheckCommandAliasExist(ctx, aliasCommandName, twitchChannelId)
 		if err != nil {
@@ -289,10 +334,9 @@ func (m *MySQL) CreateCommandAliases(ctx context.Context, commandName string, al
 			return &infoText, nil
 		}
 
-		commandExist, _ := m.CheckCommandExists(ctx, aliasCommandName, twitchChannelId)
-		if commandExist != nil {
-			infoText = "the command \"" + aliasCommandName + "\" is already being used as command"
-			return &infoText, nil
+		infoTextResp, _ := m.CheckCommandExists(ctx, aliasCommandName, twitchChannelId)
+		if infoTextResp != nil {
+			return infoTextResp, nil
 		}
 
 		if aliasCommandName == commandName {
@@ -304,6 +348,7 @@ func (m *MySQL) CreateCommandAliases(ctx context.Context, commandName string, al
 			CommandAlias:    aliasCommandName,
 			CommandName:     commandName,
 			TwitchChannelID: &twitchChannelId,
+			Status:          1,
 			CreatedBy:       createdBy,
 		}
 		commandAliases = append(commandAliases, commandAlias)
@@ -320,7 +365,7 @@ func (m *MySQL) CreateCommandAliases(ctx context.Context, commandName string, al
 func (m *MySQL) GetCommandAlias(ctx context.Context, command string, twitchChannelId string) (*string, error) {
 	var commandAlias models.BotCommandAlias
 
-	err := m.DB.Where("command_alias = ?", command).Where("twitch_channel_id = ?", twitchChannelId).First(&commandAlias).Error
+	err := m.DB.Where("command_alias = ?", command).Where("twitch_channel_id = ?", twitchChannelId).Where("status = ?", 1).First(&commandAlias).Error
 	if err != nil {
 		return nil, errors.New("(GetCommandAlias) db.Find Error:" + err.Error())
 	}
