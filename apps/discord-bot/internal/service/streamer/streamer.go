@@ -8,9 +8,10 @@ import (
 	"time"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/senchabot-opensource/monorepo/apps/discord-bot/client"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/db"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/helpers"
+	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
+	twsrvc "github.com/senchabot-opensource/monorepo/packages/gosenchabot/service/twitch"
 )
 
 type GuildStreamers struct {
@@ -128,7 +129,7 @@ func CheckDatesAnnounceable(ctx context.Context, db *db.MySQL, guildId, streamer
 
 var streamersMutex sync.Mutex
 
-func getStreamersAndLiveData(ctx context.Context, db *db.MySQL, guildId string) ([]client.StreamerData, map[string]GuildStreamers) {
+func getStreamersAndLiveData(ctx context.Context, db *db.MySQL, guildId string) ([]models.TwitchStreamerData, map[string]GuildStreamers) {
 	streamers := GetStreamersData(guildId)
 
 	keys := make([]string, 0, len(streamers))
@@ -140,12 +141,12 @@ func getStreamersAndLiveData(ctx context.Context, db *db.MySQL, guildId string) 
 		return nil, nil
 	}
 
-	liveStreams := client.CheckMultipleTwitchStreamer(keys)
+	liveStreams := twsrvc.CheckMultipleTwitchStreamer(keys)
 
 	return liveStreams, streamers
 }
 
-func handleAnnouncement(ctx context.Context, s *discordgo.Session, db *db.MySQL, guildId string, streamers map[string]GuildStreamers, sd client.StreamerData) {
+func handleAnnouncement(ctx context.Context, s *discordgo.Session, db *db.MySQL, guildId string, streamers map[string]GuildStreamers, sd models.TwitchStreamerData) {
 	streamersMutex.Lock()
 	defer streamersMutex.Unlock()
 

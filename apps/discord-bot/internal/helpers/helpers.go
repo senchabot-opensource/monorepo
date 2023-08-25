@@ -5,7 +5,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/senchabot-opensource/monorepo/apps/discord-bot/client"
+	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
 )
 
 func GetURL(domain, messageContent string) string {
@@ -32,7 +32,7 @@ func ParseTwitchUsernameURLParam(str string) string {
 	return str
 }
 
-func FormatContent(str string, sd client.StreamerData) string {
+func FormatContent(str string, sd models.TwitchStreamerData) string {
 	if sd.StreamGame == "" {
 		sd.StreamGame = "Just Chatting"
 	}

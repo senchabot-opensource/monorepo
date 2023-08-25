@@ -99,7 +99,7 @@ func (c *commands) SetCommand(ctx context.Context, s *discordgo.Session, i *disc
 		commandUsername := i.Member.User.Username
 		twitchUsername = helpers.ParseTwitchUsernameURLParam(twitchUsername)
 
-		response0, uInfo := GetTwitchUserInfo(twitchUsername)
+		response0, uInfo := GetTwitchUserInfo(twitchUsername, c.twitchAccessToken)
 		if response0 != "" {
 			ephemeralRespond(s, i, response0)
 			return

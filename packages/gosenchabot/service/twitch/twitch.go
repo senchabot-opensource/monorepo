@@ -10,6 +10,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
 	"golang.org/x/oauth2/clientcredentials"
 	"golang.org/x/oauth2/twitch"
 )
@@ -20,7 +21,7 @@ var (
 	twitchAccessToken string
 )
 
-func InitTwitchOAuth2Token() {
+func InitTwitchOAuth2Token() string {
 	oauth2Config = &clientcredentials.Config{
 		ClientID:     os.Getenv("TWITCH_CLIENT_ID"),
 		ClientSecret: os.Getenv("TWITCH_CLIENT_SECRET"),
@@ -34,29 +35,15 @@ func InitTwitchOAuth2Token() {
 	fmt.Println(token.Expiry)
 
 	twitchAccessToken = token.AccessToken
+	return twitchAccessToken
 }
 
-type TwitchUserInfo struct {
-	ID    string `json:"id"`
-	Login string `json:"login"`
-}
-
-func GetTwitchUserInfo(username string) (*TwitchUserInfo, error) {
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/users?login=%s", twitchAPI, username), nil)
+func GetTwitchUserInfo(username string, token string) (*models.TwitchUserInfo, error) {
+	resp, err := DoTwitchHttpReq("GET", fmt.Sprintf("/users?login=%s", username), token)
 	if err != nil {
-		return nil, errors.New("Error while creating Twitch API request:" + err.Error())
-	}
-
-	req.Header.Set("Client-ID", os.Getenv("TWITCH_CLIENT_ID"))
-	req.Header.Set("Authorization", "Bearer "+twitchAccessToken)
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		return nil, errors.New("Error while checking stream status: " + err.Error())
+		return nil, errors.New("(GetTwitchUserInfo) Error:" + err.Error())
 	}
 	defer resp.Body.Close()
-
 	if resp.StatusCode != http.StatusOK {
 		return nil, errors.New("Twitch API request failed with status code: " + string(rune(resp.StatusCode)))
 	}
@@ -78,23 +65,13 @@ func GetTwitchUserInfo(username string) (*TwitchUserInfo, error) {
 		return nil, errors.New("len(data.Data) == 0")
 	}
 
-	return (*TwitchUserInfo)(&data.Data[0]), nil
+	return (*models.TwitchUserInfo)(&data.Data[0]), nil
 }
 
-func CheckTwitchStreamStatus(username string) (bool, string) {
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/streams?user_login=%s", twitchAPI, username), nil)
+func CheckTwitchStreamStatus(username string, token string) (bool, string) {
+	resp, err := DoTwitchHttpReq("GET", fmt.Sprintf("/streams?user_login=%s", username), token)
 	if err != nil {
-		log.Printf("Error while creating Twitch API request: %v", err)
-		return false, ""
-	}
-
-	req.Header.Set("Client-ID", os.Getenv("TWITCH_CLIENT_ID"))
-	req.Header.Set("Authorization", "Bearer "+twitchAccessToken)
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		log.Printf("Error while checking stream status: %v", err)
+		log.Printf("(CheckTwitchStreamStatus) Error: %v", err)
 		return false, ""
 	}
 	defer resp.Body.Close()
@@ -134,7 +111,7 @@ type StreamerData struct {
 	StartedAt  string `json:"started_at"`
 }
 
-func CheckMultipleTwitchStreamer(usernames []string) []StreamerData {
+func CheckMultipleTwitchStreamer(usernames []string) []models.TwitchStreamerData {
 	params := usernames[0]
 	if len(usernames) > 1 {
 		params = usernames[0] + "&user_login="
@@ -142,17 +119,9 @@ func CheckMultipleTwitchStreamer(usernames []string) []StreamerData {
 		params += strings.Join(usernames, "&user_login=")
 	}
 
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/streams?user_login=%s", twitchAPI, params), nil)
+	resp, err := DoTwitchHttpReq("GET", fmt.Sprintf("/streams?user_login=%s", params), twitchAccessToken)
 	if err != nil {
-		log.Printf("Error while creating Twitch API request: %v", err)
-		return nil
-	}
-	req.Header.Set("Client-ID", os.Getenv("TWITCH_CLIENT_ID"))
-	req.Header.Set("Authorization", "Bearer "+twitchAccessToken)
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		log.Printf("Error while checking stream status: %v", err)
+		log.Printf("(CheckMultipleTwitchStreamer) Error: %v", err)
 		return nil
 	}
 	defer resp.Body.Close()
@@ -162,7 +131,7 @@ func CheckMultipleTwitchStreamer(usernames []string) []StreamerData {
 	}
 
 	var data struct {
-		Data []StreamerData `json:"data"`
+		Data []models.TwitchStreamerData `json:"data"`
 	}
 	err = json.NewDecoder(resp.Body).Decode(&data)
 	if err != nil {
@@ -171,4 +140,21 @@ func CheckMultipleTwitchStreamer(usernames []string) []StreamerData {
 	}
 
 	return data.Data
+}
+
+func DoTwitchHttpReq(method string, url string, token string) (*http.Response, error) {
+	req, err := http.NewRequest(method, twitchAPI+url, nil)
+	if err != nil {
+		return nil, errors.New("Error while creating Twitch API request:" + err.Error())
+	}
+	req.Header.Set("Client-ID", os.Getenv("TWITCH_CLIENT_ID"))
+	req.Header.Set("Authorization", "Bearer "+token)
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Printf("Error while checking stream status: %v", err)
+		return nil, err
+	}
+
+	return resp, nil
 }
