@@ -102,15 +102,6 @@ func CheckTwitchStreamStatus(username string, token string) (bool, string) {
 	return data.Data[0].Type == "live", data.Data[0].Title
 }
 
-type StreamerData struct {
-	Type       string `json:"type"`
-	Title      string `json:"title"`
-	UserLogin  string `json:"user_login"`
-	UserName   string `json:"user_name"`
-	StreamGame string `json:"game_name"`
-	StartedAt  string `json:"started_at"`
-}
-
 func CheckMultipleTwitchStreamer(usernames []string) []models.TwitchStreamerData {
 	params := usernames[0]
 	if len(usernames) > 1 {
