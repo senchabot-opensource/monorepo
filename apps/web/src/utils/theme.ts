@@ -4,14 +4,17 @@ import { alpha } from "@mui/material";
 const palette = {
   dark: {
     background: {
-      default: "#000",
+      default: "#121212",
+    },
+    appBar: {
+      background: alpha("#FFF", 0.85),
     },
     landingAppBar: {
       background: alpha("#000", 0.75),
     },
     landingButton: {
-      default: "#fff",
-      hover: "#646464",
+      default: "#646464",
+      hover: "#FFF",
     },
     landingIcon: {
       background: "#000000",
@@ -45,8 +48,8 @@ const palette = {
       background: "#0c0c0c",
     },
     appContainer: {
-      background: "#060606",
-      border: "#060606",
+      background: "#000",
+      border: "#0c0c0c",
     },
     appLoginForm: {
       background: "#060606",
@@ -62,14 +65,17 @@ const palette = {
   },
   light: {
     background: {
-      default: "#ffffff",
+      default: "#fff",
+    },
+    appBar: {
+      background: alpha("#FFF", 0.85),
     },
     landingAppBar: {
       background: alpha("#fff", 0.75),
     },
     landingButton: {
       default: "#000",
-      hover: "#fff",
+      hover: "#c1c1c1",
     },
     landingIcon: {
       background: "#fff",
