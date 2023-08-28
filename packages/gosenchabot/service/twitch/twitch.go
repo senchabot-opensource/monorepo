@@ -1,4 +1,4 @@
-package client
+package twitch
 
 import (
 	"context"
@@ -66,6 +66,37 @@ func GetTwitchUserInfo(username string, token string) (*models.TwitchUserInfo, e
 	}
 
 	return (*models.TwitchUserInfo)(&data.Data[0]), nil
+}
+
+func GiveShoutout(streamerUsername string, broadcasterId string, token string) (*string, error) {
+	var responseText string
+	fromBroadcasterId := broadcasterId
+	toBroadcaster, err := GetTwitchUserInfo(streamerUsername, token)
+	if err != nil {
+		fmt.Println("(SoCommand) Error:", err.Error())
+		return nil, err
+	}
+	moderatorId := os.Getenv("BOT_USER_ID")
+
+	url := fmt.Sprintf("/chat/shoutouts?from_broadcaster_id=%s&to_broadcaster_id=%s&moderator_id=%s", fromBroadcasterId, toBroadcaster.ID, moderatorId)
+	resp, err := DoTwitchHttpReq("POST", url, token)
+	if err != nil {
+		fmt.Printf("Twitch API request failed with status code: %s", string(rune(resp.StatusCode)))
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusNoContent && resp.StatusCode != http.StatusTooManyRequests {
+		responseText = "There was an error while giving shoutout"
+	}
+	if resp.StatusCode == http.StatusTooManyRequests {
+		responseText = "Shoutout limit for this streamer has been exceeded or wait a bit to give another Shoutout."
+	}
+	if resp.StatusCode == http.StatusNoContent {
+		responseText = "Follow @" + streamerUsername + " over at twitch.tv/" + streamerUsername + " <3"
+	}
+
+	return &responseText, nil
 }
 
 func CheckTwitchStreamStatus(username string, token string) (bool, string) {

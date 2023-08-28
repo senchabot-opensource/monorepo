@@ -45,6 +45,7 @@ func (c *commands) GetCommands() CommandMap {
 		"ping":   c.PingCommand,
 		"invite": c.InviteCommand,
 		"sozluk": c.SozlukCommand,
+		"so":     c.SoCommand,
 
 		"acmd": c.AddCommandCommand,
 		"ucmd": c.UpdateCommandCommand,
