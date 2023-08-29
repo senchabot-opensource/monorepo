@@ -2,7 +2,7 @@ import { Typography } from "@mui/material";
 import Header from "../components/common/Header";
 import LandingContainer from "../components/landing/LandingContainer";
 
-const PrivacyPolicy = () => {
+const CookiePolicy = () => {
   return (
     <>
       <Header title="Privacy Policy" index={false}></Header>
@@ -76,4 +76,4 @@ const PrivacyPolicy = () => {
   );
 };
 
-export default PrivacyPolicy;
+export default CookiePolicy;

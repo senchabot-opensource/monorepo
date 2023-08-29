@@ -10,7 +10,6 @@ import { SiDiscord, SiTwitch } from "react-icons/si";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import AuthLoginButton from "./AuthLoginButton";
-import AppBarTitle from "../common/AppBarTitle";
 
 const AuthContainer = () => {
   const [acceptTos, setAcceptTos] = useState<boolean>(false);
@@ -25,7 +24,6 @@ const AuthContainer = () => {
         direction="column"
         spacing={2}
         sx={{ p: 2, backgroundColor: "appLoginForm.background" }}>
-        <AppBarTitle />
         <Typography fontSize="x-large">Sign in/up</Typography>
         <AuthLoginButton
           disabled={!acceptTos}
