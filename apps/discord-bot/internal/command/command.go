@@ -15,10 +15,14 @@ import (
 	twsrvc "github.com/senchabot-opensource/monorepo/packages/gosenchabot/service/twitch"
 )
 
+type CommandFunc func(context context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, service service.Service)
+
+type CommandMap map[string]CommandFunc
+
 const errorMessage = "İşlem gerçekleştirilirken hata oluştu. Hata kodu: "
 
 type Command interface {
-	GetCommands() map[string]func(context context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, service service.Service)
+	GetCommands() CommandMap
 	DeployCommands(discordClient *discordgo.Session)
 }
 
@@ -32,9 +36,9 @@ func NewCommands(token string) Command {
 	}
 }
 
-func (c *commands) GetCommands() map[string]func(context context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, service service.Service) {
+func (c *commands) GetCommands() CommandMap {
 	// TODO: command aliases
-	var commands = map[string]func(context context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, service service.Service){
+	var commands = CommandMap{
 		"acmd":   c.AddCmdCommand,
 		"ucmd":   c.UpdateCmdCommand,
 		"dcmd":   c.DeleteCmdCommand,
