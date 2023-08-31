@@ -6,10 +6,10 @@ import (
 	"log"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/db"
+	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
 )
 
-func (c *commands) PurgeCommand(ctx context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, db db.MySQL) {
+func (c *commands) PurgeCommand(ctx context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, service service.Service) {
 	options := i.ApplicationCommandData().Options
 
 	switch options[0].Name {

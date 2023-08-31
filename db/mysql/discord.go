@@ -1,42 +1,20 @@
-package db
+package mysql
 
 import (
 	"context"
 	"errors"
 	"fmt"
-	"os"
 	"time"
 
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 )
 
-// DB
-
-type MySQL struct {
-	DB *gorm.DB
-}
-
-func NewMySQL() *MySQL {
-	dsn := os.Getenv("DATABASE_URL")
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{Logger: logger.Default.LogMode(logger.Silent)})
-
-	if err != nil {
-		panic("failed to connect database")
-	}
-	return &MySQL{
-		DB: db,
-	}
-}
-
-func (m *MySQL) CheckCommandExists(ctx context.Context, commandName string, discordServerId string) (*string, error) {
+func (m *MySQL) CheckDiscordBotCommandExists(ctx context.Context, commandName string, discordServerId string) (*string, error) {
 	var botCommand []models.BotCommand
 
 	result := m.DB.Where("command_name = ?", commandName).Where("discord_server_id", discordServerId).Find(&botCommand)
 	if result.Error != nil {
-		return nil, errors.New("(CheckCommandExists) db.Find Error:" + result.Error.Error())
+		return nil, errors.New("(CheckDiscordBotCommandExists) db.Find Error:" + result.Error.Error())
 	}
 	if len(botCommand) > 0 {
 		return &botCommand[0].CommandName, nil
@@ -45,11 +23,11 @@ func (m *MySQL) CheckCommandExists(ctx context.Context, commandName string, disc
 	return nil, nil
 }
 
-func (m *MySQL) CreateBotCommand(ctx context.Context, commandName string, commandContent string, discordServerId string, createdBy string) (*string, error) {
+func (m *MySQL) CreateDiscordBotCommand(ctx context.Context, commandName string, commandContent string, discordServerId string, createdBy string) (*string, error) {
 	var botCommand []models.BotCommand
 	var infoText string
 
-	existCommandName, err := m.CheckCommandExists(ctx, commandName, discordServerId)
+	existCommandName, err := m.CheckDiscordBotCommandExists(ctx, commandName, discordServerId)
 	if err != nil {
 		return nil, err
 	}
@@ -73,10 +51,10 @@ func (m *MySQL) CreateBotCommand(ctx context.Context, commandName string, comman
 	return nil, nil
 }
 
-func (m *MySQL) UpdateBotCommand(ctx context.Context, commandName string, commandContent string, discordServerId string, updatedBy string) (*string, *string, error) {
+func (m *MySQL) UpdateDiscordBotCommand(ctx context.Context, commandName string, commandContent string, discordServerId string, updatedBy string) (*string, *string, error) {
 	var botCommand *models.BotCommand
 
-	existCommandName, err := m.CheckCommandExists(ctx, commandName, discordServerId)
+	existCommandName, err := m.CheckDiscordBotCommandExists(ctx, commandName, discordServerId)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -101,10 +79,10 @@ func (m *MySQL) UpdateBotCommand(ctx context.Context, commandName string, comman
 	return &commandName, nil, nil
 }
 
-func (m *MySQL) DeleteBotCommand(ctx context.Context, commandName string, discordServerId string) (*string, *string, error) {
+func (m *MySQL) DeleteDiscordBotCommand(ctx context.Context, commandName string, discordServerId string) (*string, *string, error) {
 	var botCommand *models.BotCommand
 
-	existCommandName, err := m.CheckCommandExists(ctx, commandName, discordServerId)
+	existCommandName, err := m.CheckDiscordBotCommandExists(ctx, commandName, discordServerId)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -121,7 +99,7 @@ func (m *MySQL) DeleteBotCommand(ctx context.Context, commandName string, discor
 	return &commandName, nil, nil
 }
 
-func (m *MySQL) GetBotCommand(ctx context.Context, commandName string, discordServerId string) (*models.BotCommand, error) {
+func (m *MySQL) GetDiscordBotCommand(ctx context.Context, commandName string, discordServerId string) (*models.BotCommand, error) {
 	var botCommand models.BotCommand
 
 	result := m.DB.Where("command_name = ?", commandName).Where("discord_server_id = ?", discordServerId).First(&botCommand)
@@ -188,12 +166,9 @@ func (m *MySQL) DeleteDiscordBotConfig(ctx context.Context, serverId, key string
 		return false, nil
 	}
 
-	result := m.DB.Model(&existConfig).Updates(models.DiscordBotConfigs{
-		Key:   key,
-		Value: "",
-	})
+	result := m.DB.Model(&existConfig).Updates(map[string]interface{}{"config_value": nil})
 	if result.Error != nil {
-		return false, errors.New("(SetDiscordBotConfig) db.Updates Error:" + result.Error.Error())
+		return false, errors.New("(DeleteDicordBotConfig) db.Updates Error:" + result.Error.Error())
 	}
 
 	return true, nil
@@ -455,7 +430,7 @@ func (m *MySQL) DeleteDiscordTwitchLiveAnnosByGuildId(ctx context.Context, serve
 	return true, nil
 }
 
-func (m *MySQL) CheckConfig(ctx context.Context, discordServerId string, configKey string, configValue string) bool {
+func (m *MySQL) CheckDiscordBotConfig(ctx context.Context, discordServerId string, configKey string, configValue string) bool {
 	configData, err := m.GetDiscordBotConfig(ctx, discordServerId, configKey)
 	if err != nil {
 		fmt.Println(err.Error())
@@ -469,7 +444,7 @@ func (m *MySQL) CheckConfig(ctx context.Context, discordServerId string, configK
 	return false
 }
 
-func (m *MySQL) CreateBotActionActivity(ctx context.Context, botPlatformType, botActivity, discordServerId, activityAuthor, activityAuthorId string) error {
+func (m *MySQL) CreateDiscordBotActionActivity(ctx context.Context, botPlatformType, botActivity, discordServerId, activityAuthor, activityAuthorId string) error {
 	botActionActivity := models.BotActionActivity{
 		BotPlatformType:  botPlatformType,
 		BotActivity:      botActivity,
@@ -487,13 +462,13 @@ func (m *MySQL) CreateBotActionActivity(ctx context.Context, botPlatformType, bo
 	return nil
 }
 
-func (m *MySQL) SaveBotCommandActivity(context context.Context, activity, discordServerId, commandAuthor, commandAuthorId string) {
-	check := m.CheckConfig(context, discordServerId, "bot_activity_enabled", "1")
+func (m *MySQL) SaveDiscordBotCommandActivity(context context.Context, activity, discordServerId, commandAuthor, commandAuthorId string) {
+	check := m.CheckDiscordBotConfig(context, discordServerId, "bot_activity_enabled", "1")
 	if !check {
 		return
 	}
 
-	if err := m.CreateBotActionActivity(context, "discord", activity, discordServerId, commandAuthor, commandAuthorId); err != nil {
+	if err := m.CreateDiscordBotActionActivity(context, "discord", activity, discordServerId, commandAuthor, commandAuthorId); err != nil {
 		fmt.Println(err.Error())
 	}
 }
@@ -540,24 +515,24 @@ func (m *MySQL) DeleteServerFromDB(ctx context.Context, serverId string) error {
 }
 
 // COMMAND ALIAS
-func (m *MySQL) CreateCommandAlias(ctx context.Context, commandName string, aliases []string, discordServerId string, createdBy string) (*string, error) {
+func (m *MySQL) CreateDiscordBotCommandAlias(ctx context.Context, commandName string, aliases []string, discordServerId string, createdBy string) (*string, error) {
 	commandAliases := []models.BotCommandAlias{}
 	var infoText string
 
-	command, _ := m.GetCommandAlias(ctx, commandName, discordServerId)
+	command, _ := m.GetDiscordBotCommandAlias(ctx, commandName, discordServerId)
 	if command != nil {
 		commandName = *command
 	}
 
 	// Check command exists
-	commandExist, _ := m.CheckCommandExists(ctx, commandName, discordServerId)
+	commandExist, _ := m.CheckDiscordBotCommandExists(ctx, commandName, discordServerId)
 	if commandExist == nil {
 		infoText = "the command \"" + commandName + "\" does not exist"
 		return &infoText, nil
 	}
 
 	for _, aliasCommandName := range aliases {
-		existAlias, err := m.CheckCommandAliasExist(ctx, aliasCommandName, discordServerId)
+		existAlias, err := m.CheckDiscordBotCommandAliasExist(ctx, aliasCommandName, discordServerId)
 		if err != nil {
 			return nil, err
 		}
@@ -566,7 +541,7 @@ func (m *MySQL) CreateCommandAlias(ctx context.Context, commandName string, alia
 			return &infoText, nil
 		}
 
-		commandExist, _ := m.CheckCommandExists(ctx, aliasCommandName, discordServerId)
+		commandExist, _ := m.CheckDiscordBotCommandExists(ctx, aliasCommandName, discordServerId)
 		if commandExist != nil {
 			infoText = "the command \"" + aliasCommandName + "\" is already being used as command"
 			return &infoText, nil
@@ -594,7 +569,7 @@ func (m *MySQL) CreateCommandAlias(ctx context.Context, commandName string, alia
 	return nil, nil
 }
 
-func (m *MySQL) GetCommandAlias(ctx context.Context, command string, discordServerId string) (*string, error) {
+func (m *MySQL) GetDiscordBotCommandAlias(ctx context.Context, command string, discordServerId string) (*string, error) {
 	var commandAlias models.BotCommandAlias
 
 	err := m.DB.Where("command_alias = ?", command).Where("discord_server_id = ?", discordServerId).First(&commandAlias).Error
@@ -605,7 +580,7 @@ func (m *MySQL) GetCommandAlias(ctx context.Context, command string, discordServ
 	return &commandAlias.CommandName, nil
 }
 
-func (m *MySQL) CheckCommandAliasExist(ctx context.Context, commandAlias string, discordServerId string) (*string, error) {
+func (m *MySQL) CheckDiscordBotCommandAliasExist(ctx context.Context, commandAlias string, discordServerId string) (*string, error) {
 	var commandAliasModel []models.BotCommandAlias
 
 	result := m.DB.Where("command_alias = ?", commandAlias).Where("discord_server_id", discordServerId).Find(&commandAliasModel)
@@ -620,10 +595,10 @@ func (m *MySQL) CheckCommandAliasExist(ctx context.Context, commandAlias string,
 	return nil, nil
 }
 
-func (m *MySQL) DeleteCommandAlias(ctx context.Context, commandAlias string, discordServerId string) (*string, error) {
+func (m *MySQL) DeleteDiscordBotCommandAlias(ctx context.Context, commandAlias string, discordServerId string) (*string, error) {
 	var commandAliasModel *models.BotCommandAlias
 
-	existAlias, err := m.CheckCommandAliasExist(ctx, commandAlias, discordServerId)
+	existAlias, err := m.CheckDiscordBotCommandAliasExist(ctx, commandAlias, discordServerId)
 	if err != nil {
 		return nil, err
 	}
@@ -647,3 +622,14 @@ func (m *MySQL) DeleteCommandAlias(ctx context.Context, commandAlias string, dis
 }
 
 // COMMAND ALIAS
+
+func (m *MySQL) GetDiscordBotCommandList(ctx context.Context, discordServerId string) ([]*models.BotCommand, error) {
+	var botCommandList []*models.BotCommand
+
+	result := m.DB.Where("discord_server_id = ?", discordServerId).Where("command_type = ?", 1).Find(&botCommandList)
+	if result.Error != nil {
+		return nil, errors.New("(GetDiscordCommandList) db.Find Error:" + result.Error.Error())
+	}
+
+	return botCommandList, nil
+}

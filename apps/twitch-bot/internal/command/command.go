@@ -70,7 +70,7 @@ func (c *commands) IsSystemCommand(commandName string) bool {
 func (c *commands) Say(ctx context.Context, message twitch.PrivateMessage, cmdName string, messageContent string) {
 	c.client.Twitch.Say(message.Channel, messageContent)
 	c.setCommandCooldown(message.User.Name)
-	c.service.SaveBotCommandActivity(ctx, cmdName, message.RoomID, message.User.DisplayName, message.User.ID)
+	c.service.SaveTwitchBotCommandActivity(ctx, cmdName, message.RoomID, message.User.DisplayName, message.User.ID)
 }
 
 func (c *commands) RunCommand(context context.Context, cmdName string, params []string, message twitch.PrivateMessage) {

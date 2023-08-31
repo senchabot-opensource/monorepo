@@ -12,8 +12,8 @@ import (
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/command"
-	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/db"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/helpers"
+	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service/event"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service/streamer"
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot"
@@ -34,7 +34,7 @@ func main() {
 
 	var wg sync.WaitGroup
 
-	db := db.NewMySQL()
+	service := service.New()
 	ctx := context.Background()
 
 	discordClient.AddHandler(func(s *discordgo.Session, r *discordgo.Ready) {
@@ -44,23 +44,23 @@ func main() {
 	})
 
 	discordClient.AddHandler(func(s *discordgo.Session, g *discordgo.GuildCreate) {
-		err := db.AddServerToDB(ctx, g.ID, g.Name, g.OwnerID)
+		err := service.AddServerToDB(ctx, g.ID, g.Name, g.OwnerID)
 		if err != nil {
 			fmt.Println(err)
 		}
-		streamer.StartCheckLiveStreams(s, ctx, db, g.ID)
+		streamer.StartCheckLiveStreams(s, ctx, service, g.ID)
 	})
 
 	discordClient.AddHandler(func(s *discordgo.Session, g *discordgo.GuildDelete) {
-		err := db.DeleteServerFromDB(ctx, g.ID)
+		err := service.DeleteServerFromDB(ctx, g.ID)
 		if err != nil {
 			fmt.Println(err)
 		}
 		streamer.StopCheckLiveStreams(g.ID)
 		streamer.DeleteServerFromData(g.ID)
-		_, err = db.DeleteDiscordTwitchLiveAnnosByGuildId(ctx, g.ID)
+		_, err = service.DeleteDiscordTwitchLiveAnnosByGuildId(ctx, g.ID)
 		if err != nil {
-			fmt.Println("[GuildDelete] db.DeleteDiscordTwitchLiveAnnosByGuildId: ", err.Error())
+			fmt.Println("[GuildDelete] service.DeleteDiscordTwitchLiveAnnosByGuildId: ", err.Error())
 		}
 	})
 
@@ -75,7 +75,7 @@ func main() {
 
 	discordClient.AddHandler(func(s *discordgo.Session, m *discordgo.MessageCreate) {
 		if m.Author.Bot {
-			announcementChs, err := db.GetAnnouncementChannels(ctx) // redis or memory db?
+			announcementChs, err := service.GetAnnouncementChannels(ctx) // redis or memory db?
 			if err != nil {
 				log.Println(err)
 				return
@@ -98,7 +98,7 @@ func main() {
 		}
 
 		// HANDLE COMMAND ALIASES
-		commandAlias, cmdAliasErr := db.GetCommandAlias(ctx, cmdName, m.GuildID)
+		commandAlias, cmdAliasErr := service.GetDiscordBotCommandAlias(ctx, cmdName, m.GuildID)
 		if cmdAliasErr != nil {
 			fmt.Println(cmdAliasErr.Error())
 		}
@@ -108,7 +108,7 @@ func main() {
 		}
 		// HANDLE COMMAND ALIASES
 
-		cmdsrvc.RunCommand(s, ctx, db, cmdName, m)
+		cmdsrvc.RunCommand(s, ctx, service, cmdName, m)
 
 		if cmdName == "sozluk" {
 			sozlukResp, err := gosenchabot.SozlukCommand(params)
@@ -142,7 +142,7 @@ func main() {
 		ctx := context.Background()
 		commandHandlers := command.GetCommands()
 		if h, ok := commandHandlers[i.ApplicationCommandData().Name]; ok {
-			h(ctx, s, i, *db)
+			h(ctx, s, i, service)
 			options := []string{}
 			for _, v := range i.ApplicationCommandData().Options {
 				options = append(options, v.Name)
@@ -157,7 +157,7 @@ func main() {
 					}
 				}
 			}
-			db.SaveBotCommandActivity(ctx, "/"+i.ApplicationCommandData().Name+" "+strings.Join(options, " "), i.GuildID, i.Member.User.Username, i.Member.User.ID)
+			service.SaveDiscordBotCommandActivity(ctx, "/"+i.ApplicationCommandData().Name+" "+strings.Join(options, " "), i.GuildID, i.Member.User.Username, i.Member.User.ID)
 		}
 	})
 

@@ -6,11 +6,11 @@ import (
 	"log"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/db"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/helpers"
+	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
 )
 
-func (c *commands) SetCommand(ctx context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, db db.MySQL) {
+func (c *commands) SetCommand(ctx context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, service service.Service) {
 	options := i.ApplicationCommandData().Options
 
 	switch options[0].Name {
@@ -19,7 +19,7 @@ func (c *commands) SetCommand(ctx context.Context, s *discordgo.Session, i *disc
 		channelId := options[0].ChannelValue(s).ID
 		channelName := options[0].ChannelValue(s).Name
 
-		_, err := db.SetDiscordBotConfig(ctx, i.GuildID, "stream_anno_default_channel", channelId)
+		_, err := service.SetDiscordBotConfig(ctx, i.GuildID, "stream_anno_default_channel", channelId)
 		if err != nil {
 			log.Printf("Error while setting Discord bot config: %v", err)
 			ephemeralRespond(s, i, errorMessage+"#0001")
@@ -32,7 +32,7 @@ func (c *commands) SetCommand(ctx context.Context, s *discordgo.Session, i *disc
 		options = options[0].Options
 		annoText := options[0].StringValue()
 
-		_, err := db.SetDiscordBotConfig(ctx, i.GuildID, "stream_anno_default_content", annoText)
+		_, err := service.SetDiscordBotConfig(ctx, i.GuildID, "stream_anno_default_content", annoText)
 		if err != nil {
 			log.Printf("Error while setting Discord bot config: %v", err)
 			ephemeralRespond(s, i, errorMessage+"#0001")
@@ -46,7 +46,7 @@ func (c *commands) SetCommand(ctx context.Context, s *discordgo.Session, i *disc
 		channelId := options[0].ChannelValue(s).ID
 		channelName := options[0].ChannelValue(s).Name
 
-		ok, err := db.AddAnnouncementChannel(ctx, channelId, i.GuildID, i.Member.User.Username)
+		ok, err := service.AddAnnouncementChannel(ctx, channelId, i.GuildID, i.Member.User.Username)
 		if err != nil {
 			log.Println(err)
 			ephemeralRespond(s, i, errorMessage+"#0002")
@@ -64,7 +64,7 @@ func (c *commands) SetCommand(ctx context.Context, s *discordgo.Session, i *disc
 		twitchUsername = helpers.ParseTwitchUsernameURLParam(twitchUsername)
 		annoContent := options[1].StringValue()
 
-		ok, err := db.UpdateTwitchStreamerAnnoContent(ctx, twitchUsername, i.GuildID, &annoContent)
+		ok, err := service.UpdateTwitchStreamerAnnoContent(ctx, twitchUsername, i.GuildID, &annoContent)
 		if err != nil {
 			log.Printf("Error while setting Discord bot config: %v", err)
 			ephemeralRespond(s, i, errorMessage+"#0001")
@@ -77,7 +77,7 @@ func (c *commands) SetCommand(ctx context.Context, s *discordgo.Session, i *disc
 		}
 
 		if annoContent == "" {
-			cfg, err := db.GetDiscordBotConfig(ctx, i.GuildID, "stream_anno_default_content")
+			cfg, err := service.GetDiscordBotConfig(ctx, i.GuildID, "stream_anno_default_content")
 			if err != nil {
 				log.Printf("There was an error while getting Discord bot config in CheckLiveStreams: %v", err)
 			}
@@ -105,14 +105,14 @@ func (c *commands) SetCommand(ctx context.Context, s *discordgo.Session, i *disc
 			return
 		}
 
-		response1, ok := CheckIfTwitchStreamerExist(ctx, twitchUsername, uInfo, s, i, db)
+		response1, ok := CheckIfTwitchStreamerExist(ctx, twitchUsername, uInfo, s, i, service)
 		if IsChannelNameNotGiven(len(options)) && ok {
 			ephemeralRespond(s, i, response1)
 			return
 		}
 
 		if IsChannelNameNotGiven(len(options)) {
-			channelData, err := db.GetDiscordBotConfig(ctx, i.GuildID, "stream_anno_default_channel")
+			channelData, err := service.GetDiscordBotConfig(ctx, i.GuildID, "stream_anno_default_channel")
 			if err != nil {
 				log.Printf("Error while getting Discord bot config: %v", err)
 				ephemeralRespond(s, i, errorMessage+"#0000")
@@ -129,7 +129,7 @@ func (c *commands) SetCommand(ctx context.Context, s *discordgo.Session, i *disc
 				return
 			}
 
-			resp := SetTwitchStreamer(ctx, uInfo, channelData.Value, ch.Name, i.GuildID, commandUsername, db)
+			resp := SetTwitchStreamer(ctx, uInfo, channelData.Value, ch.Name, i.GuildID, commandUsername, service)
 			ephemeralRespond(s, i, resp)
 			return
 		}
@@ -137,7 +137,7 @@ func (c *commands) SetCommand(ctx context.Context, s *discordgo.Session, i *disc
 		channelId := options[1].ChannelValue(s).ID
 		channelName := options[1].ChannelValue(s).Name
 
-		streamerData, err := db.GetDiscordTwitchLiveAnno(ctx, uInfo.ID, i.GuildID)
+		streamerData, err := service.GetDiscordTwitchLiveAnno(ctx, uInfo.ID, i.GuildID)
 		if err != nil {
 			fmt.Println("streamerData, err:", err)
 			return
@@ -148,7 +148,7 @@ func (c *commands) SetCommand(ctx context.Context, s *discordgo.Session, i *disc
 			return
 		}
 
-		resp := SetTwitchStreamer(ctx, uInfo, channelId, channelName, i.GuildID, commandUsername, db)
+		resp := SetTwitchStreamer(ctx, uInfo, channelId, channelName, i.GuildID, commandUsername, service)
 		ephemeralRespond(s, i, resp)
 	}
 }

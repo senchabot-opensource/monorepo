@@ -5,17 +5,17 @@ import (
 	"fmt"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/db"
+	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot"
 )
 
-func (c *commands) DeleteCmdAliasCommand(ctx context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, db db.MySQL) {
+func (c *commands) DeleteCmdAliasCommand(ctx context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, service service.Service) {
 	options := i.ApplicationCommandData().Options
 
 	cmdName := options[0].StringValue()
 	cmdName = gosenchabot.GetProcessedCommandName(cmdName)
 
-	infoText, err := db.DeleteCommandAlias(ctx, cmdName, i.GuildID)
+	infoText, err := service.DeleteDiscordBotCommandAlias(ctx, cmdName, i.GuildID)
 	if err != nil {
 		fmt.Println(err.Error())
 		return

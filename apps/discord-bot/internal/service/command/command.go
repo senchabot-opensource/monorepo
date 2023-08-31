@@ -5,11 +5,11 @@ import (
 	"fmt"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/db"
+	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
 )
 
-func RunCommand(s *discordgo.Session, ctx context.Context, db *db.MySQL, cmdName string, m *discordgo.MessageCreate) {
-	cmdData, err := db.GetBotCommand(ctx, cmdName, m.GuildID)
+func RunCommand(s *discordgo.Session, ctx context.Context, service service.Service, cmdName string, m *discordgo.MessageCreate) {
+	cmdData, err := service.GetDiscordBotCommand(ctx, cmdName, m.GuildID)
 	if err != nil {
 		fmt.Println(err.Error())
 		return
@@ -20,5 +20,5 @@ func RunCommand(s *discordgo.Session, ctx context.Context, db *db.MySQL, cmdName
 	}
 
 	s.ChannelMessageSend(m.ChannelID, cmdData.CommandContent)
-	db.SaveBotCommandActivity(ctx, cmdName, m.GuildID, m.Author.Username, m.Author.ID)
+	service.SaveDiscordBotCommandActivity(ctx, cmdName, m.GuildID, m.Author.Username, m.Author.ID)
 }

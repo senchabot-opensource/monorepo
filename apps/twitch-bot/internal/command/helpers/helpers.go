@@ -156,7 +156,7 @@ func CanExecuteCommand(context context.Context, service service.Service, badges 
 
 	// moderator can run the command
 	if isModerator(badges) {
-		check := service.CheckConfig(context, twitchChannelId, "mods_manage_cmds_enabled", "1")
+		check := service.CheckTwitchBotConfig(context, twitchChannelId, "mods_manage_cmds_enabled", "1")
 		return check
 	}
 
