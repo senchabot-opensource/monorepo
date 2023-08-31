@@ -9,16 +9,20 @@ import (
 	"time"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/db"
+	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service/streamer"
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
 	twsrvc "github.com/senchabot-opensource/monorepo/packages/gosenchabot/service/twitch"
 )
 
+type CommandFunc func(context context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, service service.Service)
+
+type CommandMap map[string]CommandFunc
+
 const errorMessage = "İşlem gerçekleştirilirken hata oluştu. Hata kodu: "
 
 type Command interface {
-	GetCommands() map[string]func(context context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, db db.MySQL)
+	GetCommands() CommandMap
 	DeployCommands(discordClient *discordgo.Session)
 }
 
@@ -32,9 +36,9 @@ func NewCommands(token string) Command {
 	}
 }
 
-func (c *commands) GetCommands() map[string]func(context context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, db db.MySQL) {
+func (c *commands) GetCommands() CommandMap {
 	// TODO: command aliases
-	var commands = map[string]func(context context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, db db.MySQL){
+	var commands = CommandMap{
 		"acmd":   c.AddCmdCommand,
 		"ucmd":   c.UpdateCmdCommand,
 		"dcmd":   c.DeleteCmdCommand,
@@ -453,8 +457,8 @@ func GetTwitchUserInfo(twitchUsername string, token string) (string, *models.Twi
 	return "", userInfo
 }
 
-func CheckIfTwitchStreamerExist(ctx context.Context, twitchUsername string, uInfo *models.TwitchUserInfo, s *discordgo.Session, i *discordgo.InteractionCreate, db db.MySQL) (string, bool) {
-	liveAnnoData, err := db.GetDiscordTwitchLiveAnno(ctx, uInfo.ID, i.GuildID)
+func CheckIfTwitchStreamerExist(ctx context.Context, twitchUsername string, uInfo *models.TwitchUserInfo, s *discordgo.Session, i *discordgo.InteractionCreate, service service.Service) (string, bool) {
+	liveAnnoData, err := service.GetDiscordTwitchLiveAnno(ctx, uInfo.ID, i.GuildID)
 	if err != nil {
 		log.Printf("There was an error while checking the Discord Twitch live announcements: %v", err)
 		return errorMessage + "#XYXX", false
@@ -470,8 +474,8 @@ func CheckIfTwitchStreamerExist(ctx context.Context, twitchUsername string, uInf
 	return "", false
 }
 
-func SetTwitchStreamer(ctx context.Context, uInfo *models.TwitchUserInfo, channelId, channelName, guildId, creatorUsername string, db db.MySQL) string {
-	added, err := db.AddDiscordTwitchLiveAnnos(ctx, uInfo.Login, uInfo.ID, channelId, guildId, creatorUsername)
+func SetTwitchStreamer(ctx context.Context, uInfo *models.TwitchUserInfo, channelId, channelName, guildId, creatorUsername string, service service.Service) string {
+	added, err := service.AddDiscordTwitchLiveAnnos(ctx, uInfo.Login, uInfo.ID, channelId, guildId, creatorUsername)
 	if err != nil {
 		log.Printf("Error while adding Discord Twitch live announcement: %v", err)
 

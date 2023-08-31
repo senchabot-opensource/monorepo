@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/db"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/helpers"
+	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
 	twsrvc "github.com/senchabot-opensource/monorepo/packages/gosenchabot/service/twitch"
 )
@@ -22,10 +22,10 @@ type GuildStreamers struct {
 
 var streamers map[string]map[string]GuildStreamers = make(map[string]map[string]GuildStreamers)
 
-func InitStreamersData(ctx context.Context, db *db.MySQL, guildId string) {
-	liveAnnos, err := db.GetDiscordTwitchLiveAnnos(ctx, guildId)
+func InitStreamersData(ctx context.Context, service service.Service, guildId string) {
+	liveAnnos, err := service.GetDiscordTwitchLiveAnnos(ctx, guildId)
 	if err != nil {
-		log.Printf("CheckLiveStreams db.GetDiscordTwitchLiveAnnos Error: %v", err)
+		log.Printf("CheckLiveStreams service.GetDiscordTwitchLiveAnnos Error: %v", err)
 	}
 	for _, dtla := range liveAnnos {
 		serverStreamers, ok := streamers[dtla.AnnoServerID]
@@ -81,10 +81,10 @@ func DeleteServerFromData(serverId string) bool {
 	return true
 }
 
-func GetStreamAnnoContent(ctx context.Context, db *db.MySQL, guildId, streamerUsername string) string {
+func GetStreamAnnoContent(ctx context.Context, service service.Service, guildId, streamerUsername string) string {
 	annoContent := "{twitch.username}, {stream.category} yayınına başladı! {twitch.url}"
 
-	streamerAnnoContent, err := db.GetTwitchStreamerAnnoContent(ctx, streamerUsername, guildId)
+	streamerAnnoContent, err := service.GetTwitchStreamerAnnoContent(ctx, streamerUsername, guildId)
 	if err != nil {
 		log.Printf("There was an error while getting Twitch streamer announcement content in CheckLiveStreams: %v", err)
 	}
@@ -93,7 +93,7 @@ func GetStreamAnnoContent(ctx context.Context, db *db.MySQL, guildId, streamerUs
 		annoContent = *streamerAnnoContent
 	}
 
-	cfg, err := db.GetDiscordBotConfig(ctx, guildId, "stream_anno_default_content")
+	cfg, err := service.GetDiscordBotConfig(ctx, guildId, "stream_anno_default_content")
 	if err != nil {
 		log.Printf("There was an error while getting Discord bot config in CheckLiveStreams: %v", err)
 	}
@@ -107,8 +107,8 @@ func GetStreamAnnoContent(ctx context.Context, db *db.MySQL, guildId, streamerUs
 	return annoContent
 }
 
-func CheckDatesAnnounceable(ctx context.Context, db *db.MySQL, guildId, streamerUsername, startedAt string) bool {
-	date, err := db.GetTwitchStreamerLastAnnoDate(ctx, streamerUsername, guildId)
+func CheckDatesAnnounceable(ctx context.Context, service service.Service, guildId, streamerUsername, startedAt string) bool {
+	date, err := service.GetTwitchStreamerLastAnnoDate(ctx, streamerUsername, guildId)
 	if err != nil {
 		log.Printf("There was an error while checking Twitch streamer last anno date: %v", err)
 		return false
@@ -129,7 +129,7 @@ func CheckDatesAnnounceable(ctx context.Context, db *db.MySQL, guildId, streamer
 
 var streamersMutex sync.Mutex
 
-func getStreamersAndLiveData(ctx context.Context, db *db.MySQL, guildId string) ([]models.TwitchStreamerData, map[string]GuildStreamers) {
+func getStreamersAndLiveData(ctx context.Context, service service.Service, guildId string) ([]models.TwitchStreamerData, map[string]GuildStreamers) {
 	streamers := GetStreamersData(guildId)
 
 	keys := make([]string, 0, len(streamers))
@@ -146,21 +146,21 @@ func getStreamersAndLiveData(ctx context.Context, db *db.MySQL, guildId string) 
 	return liveStreams, streamers
 }
 
-func handleAnnouncement(ctx context.Context, s *discordgo.Session, db *db.MySQL, guildId string, streamers map[string]GuildStreamers, sd models.TwitchStreamerData) {
+func handleAnnouncement(ctx context.Context, s *discordgo.Session, service service.Service, guildId string, streamers map[string]GuildStreamers, sd models.TwitchStreamerData) {
 	streamersMutex.Lock()
 	defer streamersMutex.Unlock()
 
 	gs, ok := streamers[sd.UserLogin]
-	announceable := CheckDatesAnnounceable(ctx, db, guildId, sd.UserLogin, sd.StartedAt)
+	announceable := CheckDatesAnnounceable(ctx, service, guildId, sd.UserLogin, sd.StartedAt)
 	if !ok || !announceable {
 		return
 	}
 
-	annoContent := GetStreamAnnoContent(ctx, db, guildId, sd.UserLogin)
+	annoContent := GetStreamAnnoContent(ctx, service, guildId, sd.UserLogin)
 	formattedString := helpers.FormatContent(annoContent, sd)
 	s.ChannelMessageSend(gs.ChannelID, formattedString)
 
-	_, err := db.UpdateTwitchStreamerLastAnnoDate(ctx, sd.UserLogin, guildId, time.Now().UTC())
+	_, err := service.UpdateTwitchStreamerLastAnnoDate(ctx, sd.UserLogin, guildId, time.Now().UTC())
 	if err != nil {
 		log.Printf("There was an error while getting updating Twitch streamer last anno date in CheckLiveStreams: %v", err)
 	}
@@ -168,7 +168,7 @@ func handleAnnouncement(ctx context.Context, s *discordgo.Session, db *db.MySQL,
 
 var liveStreamChannels = make(map[string]chan struct{})
 
-func StartCheckLiveStreams(s *discordgo.Session, ctx context.Context, db *db.MySQL, guildId string) {
+func StartCheckLiveStreams(s *discordgo.Session, ctx context.Context, service service.Service, guildId string) {
 	if _, ok := liveStreamChannels[guildId]; ok {
 		return
 	}
@@ -176,7 +176,7 @@ func StartCheckLiveStreams(s *discordgo.Session, ctx context.Context, db *db.MyS
 	stop := make(chan struct{})
 	liveStreamChannels[guildId] = stop
 
-	go CheckLiveStreams(s, ctx, db, guildId, stop)
+	go CheckLiveStreams(s, ctx, service, guildId, stop)
 }
 
 func StopCheckLiveStreams(guildId string) {
@@ -186,22 +186,22 @@ func StopCheckLiveStreams(guildId string) {
 	}
 }
 
-func CheckLiveStreams(s *discordgo.Session, ctx context.Context, db *db.MySQL, guildId string, stop <-chan struct{}) {
+func CheckLiveStreams(s *discordgo.Session, ctx context.Context, service service.Service, guildId string, stop <-chan struct{}) {
 	ticker := time.NewTicker(1 * time.Minute)
 	defer ticker.Stop()
 
-	InitStreamersData(ctx, db, guildId)
+	InitStreamersData(ctx, service, guildId)
 
 	for {
 		select {
 		case <-ticker.C:
 			streamersMutex.Lock()
-			liveStreams, streamers := getStreamersAndLiveData(ctx, db, guildId)
+			liveStreams, streamers := getStreamersAndLiveData(ctx, service, guildId)
 			streamersMutex.Unlock()
 
 			for _, sd := range liveStreams {
 				if sd.Type == "live" {
-					handleAnnouncement(ctx, s, db, guildId, streamers, sd)
+					handleAnnouncement(ctx, s, service, guildId, streamers, sd)
 				}
 			}
 		case <-stop:

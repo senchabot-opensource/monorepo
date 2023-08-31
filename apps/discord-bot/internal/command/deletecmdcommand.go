@@ -5,15 +5,15 @@ import (
 	"fmt"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/db"
+	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
 )
 
-func (c *commands) DeleteCmdCommand(ctx context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, db db.MySQL) {
+func (c *commands) DeleteCmdCommand(ctx context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, service service.Service) {
 	options := i.ApplicationCommandData().Options
 
 	cmdName := options[0].StringValue()
 
-	deletedCmdName, resp, err := db.DeleteBotCommand(ctx, cmdName, i.GuildID)
+	deletedCmdName, resp, err := service.DeleteDiscordBotCommand(ctx, cmdName, i.GuildID)
 	if err != nil {
 		fmt.Println(err)
 		return

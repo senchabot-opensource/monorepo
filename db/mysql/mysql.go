@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/service/database"
+	"github.com/senchabot-opensource/monorepo/db"
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -17,7 +17,7 @@ type MySQL struct {
 	DB *gorm.DB
 }
 
-func NewMySQL() database.Database {
+func NewMySQL() db.Database {
 	dsn := os.Getenv("DATABASE_URL")
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{Logger: logger.Default.LogMode(logger.Silent)})
 
@@ -76,7 +76,7 @@ func (m *MySQL) GetTwitchBotConfig(ctx context.Context, twitchChannelId string, 
 	return &twitchBotConfig, nil
 }
 
-func (m *MySQL) CheckConfig(ctx context.Context, twitchChannelId string, configKey string, configValue string) bool {
+func (m *MySQL) CheckTwitchBotConfig(ctx context.Context, twitchChannelId string, configKey string, configValue string) bool {
 	configData, err := m.GetTwitchBotConfig(ctx, twitchChannelId, configKey)
 	if err != nil {
 		fmt.Println(err.Error())
@@ -284,7 +284,7 @@ func (m *MySQL) GetCommandList(ctx context.Context, twitchChannelId string) ([]*
 	return botCommandList, nil
 }
 
-func (m *MySQL) CreateBotActionActivity(ctx context.Context, botPlatformType string, botActivity string, twitchChannelId string, activityAuthor, activityAuthorId string) error {
+func (m *MySQL) CreateTwitchBotActionActivity(ctx context.Context, botPlatformType string, botActivity string, twitchChannelId string, activityAuthor, activityAuthorId string) error {
 	botActionActivity := models.BotActionActivity{
 		BotPlatformType:  botPlatformType,
 		BotActivity:      botActivity,
@@ -302,15 +302,15 @@ func (m *MySQL) CreateBotActionActivity(ctx context.Context, botPlatformType str
 	return nil
 }
 
-func (m *MySQL) SaveBotCommandActivity(context context.Context, commandName string, twitchChannelId string, commandAuthor, commandAuthorId string) {
-	check := m.CheckConfig(context, twitchChannelId, "bot_activity_enabled", "1")
+func (m *MySQL) SaveTwitchBotCommandActivity(context context.Context, commandName string, twitchChannelId string, commandAuthor, commandAuthorId string) {
+	check := m.CheckTwitchBotConfig(context, twitchChannelId, "bot_activity_enabled", "1")
 	if !check {
 		return
 	}
 
 	commandName = "!" + commandName
 
-	if err := m.CreateBotActionActivity(context, "twitch", commandName, twitchChannelId, commandAuthor, commandAuthorId); err != nil {
+	if err := m.CreateTwitchBotActionActivity(context, "twitch", commandName, twitchChannelId, commandAuthor, commandAuthorId); err != nil {
 		fmt.Println(err.Error())
 	}
 }

@@ -5,27 +5,31 @@ import (
 	"log"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/db"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/helpers"
+	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service/streamer"
 )
 
-func (c *commands) DeleteCommand(ctx context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, db db.MySQL) {
+func (c *commands) DeleteCommand(ctx context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, service service.Service) {
 	options := i.ApplicationCommandData().Options
 
 	switch options[0].Name {
 	case "stream-anno-default-channel":
-		_, err := db.DeleteDiscordBotConfig(ctx, i.GuildID, "stream_anno_default_channel")
+		ok, err := service.DeleteDiscordBotConfig(ctx, i.GuildID, "stream_anno_default_channel")
 		if err != nil {
 			log.Printf("Error while deleting Discord bot config: %v", err)
 			ephemeralRespond(s, i, errorMessage+"#0001")
 			return
 		}
 
+		if !ok {
+			ephemeralRespond(s, i, errorMessage+"#0002")
+			return
+		}
 		ephemeralRespond(s, i, "Varsayılan Twitch canlı yayın duyuru kanalı ayarı kaldırıldı.")
 
 	case "stream-anno-default-content":
-		_, err := db.SetDiscordBotConfig(ctx, i.GuildID, "stream_anno_default_content", "")
+		_, err := service.SetDiscordBotConfig(ctx, i.GuildID, "stream_anno_default_content", "")
 		if err != nil {
 			log.Printf("Error while setting Discord bot config: %v", err)
 			ephemeralRespond(s, i, errorMessage+"#0001")
@@ -38,7 +42,7 @@ func (c *commands) DeleteCommand(ctx context.Context, s *discordgo.Session, i *d
 		twitchUsername := options[0].StringValue()
 		twitchUsername = helpers.ParseTwitchUsernameURLParam(twitchUsername)
 
-		ok, err := db.UpdateTwitchStreamerAnnoContent(ctx, twitchUsername, i.GuildID, nil)
+		ok, err := service.UpdateTwitchStreamerAnnoContent(ctx, twitchUsername, i.GuildID, nil)
 		if err != nil {
 			log.Printf("Error while deleting streamer announcement custom content: %v", err)
 			ephemeralRespond(s, i, errorMessage+"#0001")
@@ -63,7 +67,7 @@ func (c *commands) DeleteCommand(ctx context.Context, s *discordgo.Session, i *d
 			return
 		}
 
-		ok, err := db.DeleteDiscordTwitchLiveAnno(ctx, uInfo.ID, i.GuildID)
+		ok, err := service.DeleteDiscordTwitchLiveAnno(ctx, uInfo.ID, i.GuildID)
 		if err != nil {
 			ephemeralRespond(s, i, errorMessage+"#XXXX")
 			return
@@ -83,7 +87,7 @@ func (c *commands) DeleteCommand(ctx context.Context, s *discordgo.Session, i *d
 		channelId := options[0].ChannelValue(s).ID
 		channelName := options[0].ChannelValue(s).Name
 
-		ok, err := db.DeleteAnnouncementChannel(ctx, channelId)
+		ok, err := service.DeleteAnnouncementChannel(ctx, channelId)
 		if err != nil {
 			ephemeralRespond(s, i, errorMessage+"#XXYX")
 			log.Println("Error while deleting announcement channel:", err)

@@ -6,11 +6,11 @@ import (
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/db"
+	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot"
 )
 
-func (c *commands) AddCmdAliasCommand(ctx context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, db db.MySQL) {
+func (c *commands) AddCmdAliasCommand(ctx context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, service service.Service) {
 	options := i.ApplicationCommandData().Options
 
 	cmdName := options[0].StringValue()
@@ -24,7 +24,7 @@ func (c *commands) AddCmdAliasCommand(ctx context.Context, s *discordgo.Session,
 		return
 	}
 
-	infoText, err := db.CreateCommandAlias(ctx, cmdName, aliasCommands, i.GuildID, i.Member.User.Username)
+	infoText, err := service.CreateDiscordBotCommandAlias(ctx, cmdName, aliasCommands, i.GuildID, i.Member.User.Username)
 	if err != nil {
 		fmt.Println("AddCommandAlias Error: " + err.Error())
 		return
