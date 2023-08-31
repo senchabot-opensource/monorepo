@@ -3,6 +3,7 @@ package command
 import (
 	"context"
 	"fmt"
+	"log"
 	"strings"
 	"time"
 
@@ -71,6 +72,10 @@ func (c *commands) Say(ctx context.Context, message twitch.PrivateMessage, cmdNa
 	c.client.Twitch.Say(message.Channel, messageContent)
 	c.setCommandCooldown(message.User.Name)
 	c.service.SaveTwitchBotCommandActivity(ctx, cmdName, message.RoomID, message.User.DisplayName, message.User.ID)
+	err := c.service.AddBotCommandStatistic(ctx, cmdName)
+	if err != nil {
+		log.Println(err)
+	}
 }
 
 func (c *commands) RunCommand(context context.Context, cmdName string, params []string, message twitch.PrivateMessage) {

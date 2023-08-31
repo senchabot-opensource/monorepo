@@ -36,6 +36,8 @@ type Service interface {
 	CreateCommandAliases(ctx context.Context, commandName string, aliases []string, twitchChannelId string, createdBy string) (*string, error)
 	CheckCommandAliasExist(ctx context.Context, commandAlias string, twitchChannelId string) (*string, error)
 	DeleteCommandAlias(ctx context.Context, commandAlias string, twitchChannelId string) (*string, error)
+
+	AddBotCommandStatistic(ctx context.Context, commandName string) error
 }
 
 type services struct {
@@ -219,4 +221,8 @@ func (s *services) DeleteCommandAlias(ctx context.Context, commandAlias string, 
 	}
 
 	return infoText, nil
+}
+
+func (s *services) AddBotCommandStatistic(ctx context.Context, commandName string) error {
+	return s.AddBotCommandStatistic(ctx, commandName)
 }

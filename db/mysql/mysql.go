@@ -4,12 +4,14 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/senchabot-opensource/monorepo/db"
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	"gorm.io/gorm/logger"
 )
 
@@ -412,4 +414,23 @@ func (m *MySQL) DeleteCommandAlias(ctx context.Context, commandAlias string, twi
 	}
 
 	return nil, nil
+}
+
+func (m *MySQL) AddBotCommandStatistic(ctx context.Context, commandName string) error {
+	botCommandStatistic := models.BotCommandStatistic{
+		CommandName: commandName,
+		Count:       1,
+	}
+
+	result := m.DB.Clauses(clause.OnConflict{
+		Columns:   []clause.Column{{Table: "bot_command_statistics", Name: "id"}},
+		DoUpdates: clause.Assignments(map[string]interface{}{"count": gorm.Expr("GREATEST(count, VALUES(count))")}),
+	}).Create(&botCommandStatistic)
+
+	if result.Error != nil {
+		log.Println("(AddBotcommandStatistic): db.Clauses.Create Error: ", result.Error.Error())
+		return result.Error
+	}
+
+	return nil
 }

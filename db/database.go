@@ -73,4 +73,6 @@ type Database interface {
 	DeleteServerFromDB(ctx context.Context, serverId string) error
 
 	// DISCORD
+
+	AddBotCommandStatistic(ctx context.Context, commandName string) error
 }
