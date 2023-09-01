@@ -14,7 +14,7 @@ func (c *commands) AddCmdCommand(ctx context.Context, s *discordgo.Session, i *d
 	cmdName := options[0].StringValue()
 	cmdContent := options[1].StringValue()
 
-	resp, err := service.CreateDiscordBotCommand(ctx, cmdName, cmdContent, i.GuildID, i.Member.User.Username)
+	resp, err := service.CreateCommand(ctx, cmdName, cmdContent, i.GuildID, i.Member.User.Username)
 	if err != nil {
 		fmt.Println(err)
 		return

@@ -24,7 +24,7 @@ func (c *commands) AddCmdAliasCommand(ctx context.Context, s *discordgo.Session,
 		return
 	}
 
-	infoText, err := service.CreateDiscordBotCommandAlias(ctx, cmdName, aliasCommands, i.GuildID, i.Member.User.Username)
+	infoText, err := service.CreateCommandAlias(ctx, cmdName, aliasCommands, i.GuildID, i.Member.User.Username)
 	if err != nil {
 		fmt.Println("AddCommandAlias Error: " + err.Error())
 		return

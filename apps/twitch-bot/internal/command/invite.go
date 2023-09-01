@@ -43,7 +43,7 @@ func (c *commands) InviteCommand(context context.Context, message twitch.Private
 	c.client.Twitch.Join(channelName)
 	optionalCommands := gosenchabot.GetOptionalCommands()
 	for _, command := range optionalCommands {
-		_, err := c.service.CreateBotCommand(context, command.CommandName, command.CommandContent, twitchChannelId, "Senchabot")
+		_, err := c.service.CreateCommand(context, command.CommandName, command.CommandContent, twitchChannelId, "Senchabot")
 		if err != nil {
 			fmt.Println(err.Error())
 		}

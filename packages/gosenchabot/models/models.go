@@ -26,8 +26,7 @@ type BotActionActivity struct {
 	ID               int
 	BotPlatformType  string  `gorm:"column:bot_platform_type"`
 	BotActivity      string  `gorm:"column:bot_activity"`
-	DiscordServerID  *string `gorm:"column:discord_server_id"`
-	TwitchChannelID  *string `gorm:"column:twitch_channel_id"`
+	BotPlatformID    *string `gorm:"column:bot_platform_id"`
 	ActivityAuthor   *string `gorm:"column:activity_author"`
 	ActivityAuthorID *string `gorm:"column:activity_author_id"`
 }
@@ -40,8 +39,8 @@ type BotCommand struct {
 	ID              int
 	CommandName     string     `gorm:"column:command_name"`
 	CommandContent  string     `gorm:"column:command_content"`
-	TwitchChannelID string     `gorm:"column:twitch_channel_id"`
-	DiscordServerID string     `gorm:"column:discord_server_id"`
+	TwitchChannelID *string    `gorm:"column:twitch_channel_id"`
+	DiscordServerID *string    `gorm:"column:discord_server_id"`
 	CommandType     int        `gorm:"column:command_type"`
 	Status          int        `gorm:"column:status"`
 	CreatedBy       *string    `gorm:"column:created_by"`

@@ -11,21 +11,21 @@ import (
 )
 
 type Service interface {
-	GetDiscordBotCommand(ctx context.Context, commandName string, discordServerId string) (*models.BotCommand, error)
+	GetUserBotCommand(ctx context.Context, commandName string, discordServerId string) (*models.BotCommand, error)
+	GetGlobalBotCommand(ctx context.Context, commandName string) (*models.BotCommand, error)
 
-	CreateDiscordBotCommand(ctx context.Context, commandName string, commandContent string, discordServerId string, createdBy string) (*string, error)
-	CheckDiscordBotCommandExists(ctx context.Context, commandName string, discordServerId string) (*string, error)
-	UpdateDiscordBotCommand(ctx context.Context, commandName string, commandContent string, discordServerId string, updatedBy string) (*string, *string, error)
-	DeleteDiscordBotCommand(ctx context.Context, commandName string, discordServerId string) (*string, *string, error)
-	GetDiscordBotCommandList(ctx context.Context, discordServerId string) ([]*models.BotCommand, error)
+	CreateCommand(ctx context.Context, commandName string, commandContent string, discordServerId string, createdBy string) (*string, error)
+	CheckCommandExists(ctx context.Context, commandName string, discordServerId string) (*string, error)
+	UpdateCommand(ctx context.Context, commandName string, commandContent string, discordServerId string, updatedBy string) (*string, *string, error)
+	DeleteCommand(ctx context.Context, commandName string, discordServerId string) (*string, *string, error)
+	GetCommandList(ctx context.Context, discordServerId string) ([]*models.BotCommand, error)
 
-	CreateDiscordBotActionActivity(ctx context.Context, botPlatformType string, botActivity string, discordServerId string, commandAuthor, commandAuthorId string) error
-	SaveDiscordBotCommandActivity(context context.Context, commandName string, discordServerId string, commandAuthor, commandAuthorId string)
+	SaveCommandActivity(context context.Context, commandName string, discordServerId string, commandAuthor, commandAuthorId string)
 
-	GetDiscordBotCommandAlias(ctx context.Context, commandAlias string, discordServerId string) (*string, error)
-	CreateDiscordBotCommandAlias(ctx context.Context, commandName string, aliases []string, discordServerId string, createdBy string) (*string, error)
-	CheckDiscordBotCommandAliasExist(ctx context.Context, commandAlias string, discordServerId string) (*string, error)
-	DeleteDiscordBotCommandAlias(ctx context.Context, commandAlias string, discordServerId string) (*string, error)
+	GetCommandAlias(ctx context.Context, commandAlias string, discordServerId string) (*string, error)
+	CreateCommandAlias(ctx context.Context, commandName string, aliases []string, discordServerId string, createdBy string) (*string, error)
+	CheckCommandAliasExist(ctx context.Context, commandAlias string, discordServerId string) (*string, error)
+	DeleteCommandAlias(ctx context.Context, commandAlias string, discordServerId string) (*string, error)
 
 	AddAnnouncementChannel(ctx context.Context, channelId, serverId, createdBy string) (bool, error)
 	GetAnnouncementChannels(ctx context.Context) ([]*models.DiscordAnnouncementChannels, error)
@@ -63,12 +63,16 @@ func New() Service {
 	}
 }
 
-func (s *service) GetDiscordBotCommand(ctx context.Context, commandName string, discordServerId string) (*models.BotCommand, error) {
-	return s.DB.GetDiscordBotCommand(ctx, commandName, discordServerId)
+func (s *service) GetUserBotCommand(ctx context.Context, commandName string, discordServerId string) (*models.BotCommand, error) {
+	return s.DB.GetUserBotCommand(ctx, "discord", commandName, discordServerId)
 }
 
-func (s *service) CreateDiscordBotCommand(ctx context.Context, commandName string, commandContent string, discordServerId string, createdBy string) (*string, error) {
-	infoText, err := s.DB.CreateDiscordBotCommand(ctx, commandName, commandContent, discordServerId, createdBy)
+func (s *service) GetGlobalBotCommand(ctx context.Context, commandName string) (*models.BotCommand, error) {
+	return s.DB.GetGlobalBotCommand(ctx, commandName)
+}
+
+func (s *service) CreateCommand(ctx context.Context, commandName string, commandContent string, discordServerId string, createdBy string) (*string, error) {
+	infoText, err := s.DB.CreateBotCommand(ctx, "discord", commandName, commandContent, discordServerId, createdBy)
 	if err != nil {
 		return nil, err
 	}
@@ -76,8 +80,8 @@ func (s *service) CreateDiscordBotCommand(ctx context.Context, commandName strin
 	return infoText, nil
 }
 
-func (s *service) CheckDiscordBotCommandExists(ctx context.Context, commandName string, discordServerId string) (*string, error) {
-	existCommandName, err := s.DB.CheckDiscordBotCommandExists(ctx, commandName, discordServerId)
+func (s *service) CheckCommandExists(ctx context.Context, commandName string, discordServerId string) (*string, error) {
+	existCommandName, err := s.DB.CheckCommandExists(ctx, "discord", commandName, discordServerId)
 	if err != nil {
 		return nil, err
 	}
@@ -85,8 +89,8 @@ func (s *service) CheckDiscordBotCommandExists(ctx context.Context, commandName 
 	return existCommandName, nil
 }
 
-func (s *service) UpdateDiscordBotCommand(ctx context.Context, commandName string, commandContent string, discordServerId string, updatedBy string) (*string, *string, error) {
-	updatedCommandName, infoText, err := s.DB.UpdateDiscordBotCommand(ctx, commandName, commandContent, discordServerId, updatedBy)
+func (s *service) UpdateCommand(ctx context.Context, commandName string, commandContent string, discordServerId string, updatedBy string) (*string, *string, error) {
+	updatedCommandName, infoText, err := s.DB.UpdateBotCommand(ctx, "discord", commandName, commandContent, discordServerId, updatedBy)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -94,8 +98,8 @@ func (s *service) UpdateDiscordBotCommand(ctx context.Context, commandName strin
 	return updatedCommandName, infoText, nil
 }
 
-func (s *service) DeleteDiscordBotCommand(ctx context.Context, commandName string, discordServerId string) (*string, *string, error) {
-	deletedCommandName, infoText, err := s.DB.DeleteDiscordBotCommand(ctx, commandName, discordServerId)
+func (s *service) DeleteCommand(ctx context.Context, commandName string, discordServerId string) (*string, *string, error) {
+	deletedCommandName, infoText, err := s.DB.DeleteBotCommand(ctx, "discord", commandName, discordServerId)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -103,8 +107,8 @@ func (s *service) DeleteDiscordBotCommand(ctx context.Context, commandName strin
 	return deletedCommandName, infoText, nil
 }
 
-func (s *service) GetDiscordBotCommandList(ctx context.Context, discordServerId string) ([]*models.BotCommand, error) {
-	cmdList, err := s.DB.GetDiscordBotCommandList(ctx, discordServerId)
+func (s *service) GetCommandList(ctx context.Context, discordServerId string) ([]*models.BotCommand, error) {
+	cmdList, err := s.DB.GetCommandList(ctx, "discord", discordServerId)
 	if err != nil {
 		return nil, err
 	}
@@ -112,40 +116,30 @@ func (s *service) GetDiscordBotCommandList(ctx context.Context, discordServerId 
 	return cmdList, nil
 }
 
-func (s *service) CreateDiscordBotActionActivity(ctx context.Context, botPlatformType string, botActivity string, discordServerId string, activityAuthor, commandAuthorId string) error {
-	err := s.DB.CreateDiscordBotActionActivity(ctx, botPlatformType, botActivity, discordServerId, activityAuthor, commandAuthorId)
-
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (s *service) SaveDiscordBotCommandActivity(context context.Context, commandName string, discordServerId string, commandAuthor, commandAuthorId string) {
+func (s *service) SaveCommandActivity(context context.Context, commandName string, discordServerId string, commandAuthor, commandAuthorId string) {
 	check := s.CheckDiscordBotConfig(context, discordServerId, "bot_activity_enabled", "1")
 	if !check {
 		return
 	}
 
-	commandName = "!" + commandName
+	commandName = "/" + commandName
 
-	if err := s.CreateDiscordBotActionActivity(context, "twitch", commandName, discordServerId, commandAuthor, commandAuthorId); err != nil {
+	if err := s.DB.CreateBotActionActivity(context, "discord", commandName, discordServerId, commandAuthor, commandAuthorId); err != nil {
 		fmt.Println(err.Error())
 	}
 }
 
-func (s *service) CreateDiscordBotCommandAlias(ctx context.Context, commandName string, aliases []string, discordServerId string, createdBy string) (*string, error) {
-	return s.DB.CreateDiscordBotCommandAlias(ctx, commandName, aliases, discordServerId, createdBy)
+func (s *service) CreateCommandAlias(ctx context.Context, commandName string, aliases []string, discordServerId string, createdBy string) (*string, error) {
+	return s.DB.CreateCommandAlias(ctx, "discord", commandName, aliases, discordServerId, createdBy)
 }
-func (s *service) GetDiscordBotCommandAlias(ctx context.Context, commandAlias string, discordServerId string) (*string, error) {
-	return s.DB.GetDiscordBotCommandAlias(ctx, commandAlias, discordServerId)
+func (s *service) GetCommandAlias(ctx context.Context, commandAlias string, discordServerId string) (*string, error) {
+	return s.DB.GetCommandAlias(ctx, "discord", commandAlias, discordServerId)
 }
-func (s *service) CheckDiscordBotCommandAliasExist(ctx context.Context, commandAlias string, discordServerId string) (*string, error) {
-	return s.DB.CheckDiscordBotCommandAliasExist(ctx, commandAlias, discordServerId)
+func (s *service) CheckCommandAliasExist(ctx context.Context, commandAlias string, discordServerId string) (*string, error) {
+	return s.DB.CheckCommandAliasExist(ctx, "discord", commandAlias, discordServerId)
 }
-func (s *service) DeleteDiscordBotCommandAlias(ctx context.Context, commandAlias string, discordServerId string) (*string, error) {
-	return s.DB.DeleteDiscordBotCommandAlias(ctx, commandAlias, discordServerId)
+func (s *service) DeleteCommandAlias(ctx context.Context, commandAlias string, discordServerId string) (*string, error) {
+	return s.DB.DeleteCommandAlias(ctx, "discord", commandAlias, discordServerId)
 }
 
 // Discord

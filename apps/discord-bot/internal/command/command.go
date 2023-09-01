@@ -23,21 +23,30 @@ const errorMessage = "İşlem gerçekleştirilirken hata oluştu. Hata kodu: "
 
 type Command interface {
 	GetCommands() CommandMap
+	RunCommand(context context.Context, cmdName string, params []string, m *discordgo.MessageCreate)
+	Say(ctx context.Context, m *discordgo.MessageCreate, cmdName string, messageContent string)
 	DeployCommands(discordClient *discordgo.Session)
 }
 
 type commands struct {
 	twitchAccessToken string
+	dS                *discordgo.Session
+	service           service.Service
+	userCooldowns     map[string]time.Time
+	cooldownPeriod    time.Duration
 }
 
-func NewCommands(token string) Command {
+func NewCommands(dS *discordgo.Session, token string, service service.Service, cooldownPeriod time.Duration) Command {
 	return &commands{
 		twitchAccessToken: token,
+		dS:                dS,
+		service:           service,
+		userCooldowns:     make(map[string]time.Time),
+		cooldownPeriod:    cooldownPeriod,
 	}
 }
 
 func (c *commands) GetCommands() CommandMap {
-	// TODO: command aliases
 	var commands = CommandMap{
 		"acmd":   c.AddCmdCommand,
 		"ucmd":   c.UpdateCmdCommand,
@@ -51,6 +60,74 @@ func (c *commands) GetCommands() CommandMap {
 	}
 
 	return commands
+}
+
+func (c *commands) IsSystemCommand(commandName string) bool {
+	commandListMap := c.GetCommands()
+	_, ok := commandListMap[commandName]
+	return ok
+}
+
+func (c *commands) Say(ctx context.Context, m *discordgo.MessageCreate, cmdName string, messageContent string) {
+	c.dS.ChannelMessageSend(m.ChannelID, messageContent)
+	c.setCommandCooldown(m.Author.Username)
+	c.service.SaveCommandActivity(ctx, cmdName, m.GuildID, m.Author.Username, m.Author.ID)
+}
+
+func (c *commands) RunCommand(ctx context.Context, cmdName string, params []string, m *discordgo.MessageCreate) {
+	if c.isUserOnCooldown(m.Author.Username) {
+		return
+	}
+
+	// HANDLE COMMAND ALIASES
+	commandAlias, cmdAliasErr := c.service.GetCommandAlias(ctx, cmdName, m.GuildID)
+	if cmdAliasErr != nil {
+		fmt.Println("[COMMAND ALIAS ERROR]:", cmdAliasErr.Error())
+	}
+
+	if commandAlias != nil {
+		cmdName = *commandAlias
+	}
+	// HANDLE COMMAND ALIASES
+
+	// USER COMMANDS
+	cmdData, err := c.service.GetUserBotCommand(ctx, cmdName, m.GuildID)
+	if err != nil {
+		fmt.Println("[USER COMMAND ERROR]:", err.Error())
+	}
+	if cmdData != nil {
+		//formattedCommandContent := helpers.FormatCommandContent(cmdData, m)
+		c.Say(ctx, m, cmdName, cmdData.CommandContent)
+		return
+	}
+	// USER COMMANDS
+
+	// GLOBAL COMMANDS
+	cmdData, err = c.service.GetGlobalBotCommand(ctx, cmdName)
+	if err != nil {
+		fmt.Println("[GLOBAL COMMAND ERROR]:", err.Error())
+		return
+	}
+	if cmdData == nil {
+		return
+	}
+
+	//formattedCommandContent := helpers.FormatCommandContent(cmdData, m)
+	c.Say(ctx, m, cmdName, cmdData.CommandContent)
+	// GLOBAL COMMANDS
+}
+
+func (c *commands) isUserOnCooldown(username string) bool {
+	cooldownTime, exists := c.userCooldowns[username]
+	if !exists {
+		return false
+	}
+
+	return time.Now().Before(cooldownTime.Add(c.cooldownPeriod))
+}
+
+func (c *commands) setCommandCooldown(username string) {
+	c.userCooldowns[username] = time.Now()
 }
 
 func (c *commands) DeployCommands(discordClient *discordgo.Session) {
