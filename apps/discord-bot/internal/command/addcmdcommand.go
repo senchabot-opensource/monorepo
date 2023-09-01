@@ -14,6 +14,11 @@ func (c *commands) AddCmdCommand(ctx context.Context, s *discordgo.Session, i *d
 	cmdName := options[0].StringValue()
 	cmdContent := options[1].StringValue()
 
+	if c.IsSystemCommand(cmdName) {
+		ephemeralRespond(s, i, fmt.Sprintf("%v, the command \"%v\" is used as system command", i.Member.User.Username, cmdName))
+		return
+	}
+
 	resp, err := service.CreateCommand(ctx, cmdName, cmdContent, i.GuildID, i.Member.User.Username)
 	if err != nil {
 		fmt.Println(err)

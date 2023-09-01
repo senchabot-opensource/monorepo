@@ -24,6 +24,20 @@ func (c *commands) AddCmdAliasCommand(ctx context.Context, s *discordgo.Session,
 		return
 	}
 
+	// Check command exists
+	infoTextResp, _ := c.service.CheckCommandExists(ctx, cmdName, i.GuildID)
+	if infoTextResp == nil && !c.IsSystemCommand(cmdName) {
+		ephemeralRespond(s, i, i.Member.User.Username+", the command \""+cmdName+"\" does not exist")
+		return
+	}
+
+	for _, k := range aliasCommands {
+		if c.IsSystemCommand(k) {
+			ephemeralRespond(s, i, fmt.Sprintf("%v, the command \"%v\" is used as system command", i.Member.User.Username, cmdName))
+			return
+		}
+	}
+
 	infoText, err := service.CreateCommandAlias(ctx, cmdName, aliasCommands, i.GuildID, i.Member.User.Username)
 	if err != nil {
 		fmt.Println("AddCommandAlias Error: " + err.Error())

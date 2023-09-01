@@ -254,6 +254,14 @@ func (m *MySQL) CheckCommandAliasExist(ctx context.Context, botPlatformName stri
 func (m *MySQL) CreateCommandAlias(ctx context.Context, botPlatformName string, commandName string, aliases []string, botPlatformId string, createdBy string) (*string, error) {
 	commandAliases := []models.BotCommandAlias{}
 	var infoText string
+	var twitchChannelId, discordServerId string
+
+	switch botPlatformName {
+	case "twitch":
+		twitchChannelId = botPlatformId
+	case "discord":
+		discordServerId = botPlatformId
+	}
 
 	command, _ := m.GetCommandAlias(ctx, botPlatformName, commandName, botPlatformId)
 	if command != nil {
@@ -283,7 +291,8 @@ func (m *MySQL) CreateCommandAlias(ctx context.Context, botPlatformName string, 
 		commandAlias := models.BotCommandAlias{
 			CommandAlias:    aliasCommandName,
 			CommandName:     commandName,
-			TwitchChannelID: &botPlatformId,
+			TwitchChannelID: &twitchChannelId,
+			DiscordServerID: &discordServerId,
 			Status:          1,
 			CreatedBy:       createdBy,
 		}
