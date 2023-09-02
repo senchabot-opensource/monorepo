@@ -6,6 +6,7 @@ import (
 	"fmt"
 
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
+	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/platform"
 )
 
 func (m *MySQL) GetTwitchChannels(ctx context.Context) ([]*models.TwitchChannel, error) {
@@ -77,7 +78,7 @@ func (m *MySQL) SaveTwitchBotCommandActivity(context context.Context, commandNam
 
 	commandName = "!" + commandName
 
-	if err := m.CreateBotActionActivity(context, "twitch", commandName, twitchChannelId, commandAuthor, commandAuthorId); err != nil {
+	if err := m.CreateBotActionActivity(context, platform.TWITCH, commandName, twitchChannelId, commandAuthor, commandAuthorId); err != nil {
 		fmt.Println(err.Error())
 	}
 }

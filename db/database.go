@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
+	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/platform"
 )
 
 type Database interface {
@@ -15,22 +16,22 @@ type Database interface {
 	CheckTwitchBotConfig(ctx context.Context, twitchChannelId string, configKey string, configValue string) bool
 
 	GetGlobalBotCommand(ctx context.Context, commandName string) (*models.BotCommand, error)
-	GetUserBotCommand(ctx context.Context, botPlatformName string, commandName string, botPlatformId string) (*models.BotCommand, error)
-	CreateBotCommand(ctx context.Context, botPlatformName string, commandName string, commandContent string, botPlatformId string, createdBy string) (*string, error)
-	CheckCommandExists(ctx context.Context, botPlatformName string, commandName string, botPlatformId string) (*string, error)
+	GetUserBotCommand(ctx context.Context, botPlatform platform.Platform, commandName string, botPlatformId string) (*models.BotCommand, error)
+	CreateBotCommand(ctx context.Context, botPlatform platform.Platform, commandName string, commandContent string, botPlatformId string, createdBy string) (*string, error)
+	CheckCommandExists(ctx context.Context, botPlatform platform.Platform, commandName string, botPlatformId string) (*string, error)
 	CheckGlobalCommandExists(ctx context.Context, commandName string) (*string, error)
-	CheckUserCommandExists(ctx context.Context, botPlatformName string, commandName string, botPlatformId string) (*string, error)
-	UpdateBotCommand(ctx context.Context, botPlatformName string, commandName string, commandContent string, botPlatformId string, updatedBy string) (*string, *string, error)
-	DeleteBotCommand(ctx context.Context, botPlatformName string, commandName string, botPlatformId string) (*string, *string, error)
-	GetCommandList(ctx context.Context, botPlatformName string, botPlatformId string) ([]*models.BotCommand, error)
+	CheckUserCommandExists(ctx context.Context, botPlatform platform.Platform, commandName string, botPlatformId string) (*string, error)
+	UpdateBotCommand(ctx context.Context, botPlatform platform.Platform, commandName string, commandContent string, botPlatformId string, updatedBy string) (*string, *string, error)
+	DeleteBotCommand(ctx context.Context, botPlatform platform.Platform, commandName string, botPlatformId string) (*string, *string, error)
+	GetCommandList(ctx context.Context, botPlatform platform.Platform, botPlatformId string) ([]*models.BotCommand, error)
 
-	CreateBotActionActivity(ctx context.Context, botPlatformType string, botActivity string, botPlatformId string, commandAuthor, commandAuthorId string) error
+	CreateBotActionActivity(ctx context.Context, botPlatform platform.Platform, botActivity string, botPlatformId string, commandAuthor, commandAuthorId string) error
 	SaveTwitchBotCommandActivity(context context.Context, commandName string, twitchChannelId string, commandAuthor, commandAuthorId string)
 
-	GetCommandAlias(ctx context.Context, botPlatformName string, commandAlias string, botPlatformId string) (*string, error)
-	CreateCommandAlias(ctx context.Context, botPlatformName string, commandName string, aliases []string, botPlatformId string, createdBy string) (*string, error)
-	CheckCommandAliasExist(ctx context.Context, botPlatformName string, commandAlias string, botPlatformId string) (*string, error)
-	DeleteCommandAlias(ctx context.Context, botPlatformName string, commandAlias string, botPlatformId string) (*string, error)
+	GetCommandAlias(ctx context.Context, botPlatform platform.Platform, commandAlias string, botPlatformId string) (*string, error)
+	CreateCommandAlias(ctx context.Context, botPlatform platform.Platform, commandName string, aliases []string, botPlatformId string, createdBy string) (*string, error)
+	CheckCommandAliasExist(ctx context.Context, botPlatform platform.Platform, commandAlias string, botPlatformId string) (*string, error)
+	DeleteCommandAlias(ctx context.Context, botPlatform platform.Platform, commandAlias string, botPlatformId string) (*string, error)
 
 	// DISCORD
 	GetDiscordBotConfig(ctx context.Context, discordServerId string, configKey string) (*models.DiscordBotConfigs, error)

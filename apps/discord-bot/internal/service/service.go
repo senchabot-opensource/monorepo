@@ -8,6 +8,7 @@ import (
 	"github.com/senchabot-opensource/monorepo/db"
 	"github.com/senchabot-opensource/monorepo/db/mysql"
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
+	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/platform"
 )
 
 type Service interface {
@@ -64,7 +65,7 @@ func New() Service {
 }
 
 func (s *service) GetUserBotCommand(ctx context.Context, commandName string, discordServerId string) (*models.BotCommand, error) {
-	return s.DB.GetUserBotCommand(ctx, "discord", commandName, discordServerId)
+	return s.DB.GetUserBotCommand(ctx, platform.DISCORD, commandName, discordServerId)
 }
 
 func (s *service) GetGlobalBotCommand(ctx context.Context, commandName string) (*models.BotCommand, error) {
@@ -72,7 +73,7 @@ func (s *service) GetGlobalBotCommand(ctx context.Context, commandName string) (
 }
 
 func (s *service) CreateCommand(ctx context.Context, commandName string, commandContent string, discordServerId string, createdBy string) (*string, error) {
-	infoText, err := s.DB.CreateBotCommand(ctx, "discord", commandName, commandContent, discordServerId, createdBy)
+	infoText, err := s.DB.CreateBotCommand(ctx, platform.DISCORD, commandName, commandContent, discordServerId, createdBy)
 	if err != nil {
 		return nil, err
 	}
@@ -81,7 +82,7 @@ func (s *service) CreateCommand(ctx context.Context, commandName string, command
 }
 
 func (s *service) CheckCommandExists(ctx context.Context, commandName string, discordServerId string) (*string, error) {
-	existCommandName, err := s.DB.CheckCommandExists(ctx, "discord", commandName, discordServerId)
+	existCommandName, err := s.DB.CheckCommandExists(ctx, platform.DISCORD, commandName, discordServerId)
 	if err != nil {
 		return nil, err
 	}
@@ -90,7 +91,7 @@ func (s *service) CheckCommandExists(ctx context.Context, commandName string, di
 }
 
 func (s *service) UpdateCommand(ctx context.Context, commandName string, commandContent string, discordServerId string, updatedBy string) (*string, *string, error) {
-	updatedCommandName, infoText, err := s.DB.UpdateBotCommand(ctx, "discord", commandName, commandContent, discordServerId, updatedBy)
+	updatedCommandName, infoText, err := s.DB.UpdateBotCommand(ctx, platform.DISCORD, commandName, commandContent, discordServerId, updatedBy)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -99,7 +100,7 @@ func (s *service) UpdateCommand(ctx context.Context, commandName string, command
 }
 
 func (s *service) DeleteCommand(ctx context.Context, commandName string, discordServerId string) (*string, *string, error) {
-	deletedCommandName, infoText, err := s.DB.DeleteBotCommand(ctx, "discord", commandName, discordServerId)
+	deletedCommandName, infoText, err := s.DB.DeleteBotCommand(ctx, platform.DISCORD, commandName, discordServerId)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -108,7 +109,7 @@ func (s *service) DeleteCommand(ctx context.Context, commandName string, discord
 }
 
 func (s *service) GetCommandList(ctx context.Context, discordServerId string) ([]*models.BotCommand, error) {
-	cmdList, err := s.DB.GetCommandList(ctx, "discord", discordServerId)
+	cmdList, err := s.DB.GetCommandList(ctx, platform.DISCORD, discordServerId)
 	if err != nil {
 		return nil, err
 	}
@@ -124,22 +125,22 @@ func (s *service) SaveCommandActivity(context context.Context, commandName strin
 
 	commandName = "/" + commandName
 
-	if err := s.DB.CreateBotActionActivity(context, "discord", commandName, discordServerId, commandAuthor, commandAuthorId); err != nil {
+	if err := s.DB.CreateBotActionActivity(context, platform.DISCORD, commandName, discordServerId, commandAuthor, commandAuthorId); err != nil {
 		fmt.Println(err.Error())
 	}
 }
 
 func (s *service) CreateCommandAlias(ctx context.Context, commandName string, aliases []string, discordServerId string, createdBy string) (*string, error) {
-	return s.DB.CreateCommandAlias(ctx, "discord", commandName, aliases, discordServerId, createdBy)
+	return s.DB.CreateCommandAlias(ctx, platform.DISCORD, commandName, aliases, discordServerId, createdBy)
 }
 func (s *service) GetCommandAlias(ctx context.Context, commandAlias string, discordServerId string) (*string, error) {
-	return s.DB.GetCommandAlias(ctx, "discord", commandAlias, discordServerId)
+	return s.DB.GetCommandAlias(ctx, platform.DISCORD, commandAlias, discordServerId)
 }
 func (s *service) CheckCommandAliasExist(ctx context.Context, commandAlias string, discordServerId string) (*string, error) {
-	return s.DB.CheckCommandAliasExist(ctx, "discord", commandAlias, discordServerId)
+	return s.DB.CheckCommandAliasExist(ctx, platform.DISCORD, commandAlias, discordServerId)
 }
 func (s *service) DeleteCommandAlias(ctx context.Context, commandAlias string, discordServerId string) (*string, error) {
-	return s.DB.DeleteCommandAlias(ctx, "discord", commandAlias, discordServerId)
+	return s.DB.DeleteCommandAlias(ctx, platform.DISCORD, commandAlias, discordServerId)
 }
 
 // Discord

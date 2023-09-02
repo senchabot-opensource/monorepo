@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
+	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/platform"
 )
 
 func (m *MySQL) SetDiscordBotConfig(ctx context.Context, serverId, key, value string) (bool, error) {
@@ -349,7 +350,7 @@ func (m *MySQL) SaveDiscordBotCommandActivity(context context.Context, activity,
 		return
 	}
 
-	if err := m.CreateBotActionActivity(context, "discord", activity, discordServerId, commandAuthor, commandAuthorId); err != nil {
+	if err := m.CreateBotActionActivity(context, platform.DISCORD, activity, discordServerId, commandAuthor, commandAuthorId); err != nil {
 		fmt.Println(err.Error())
 	}
 }
