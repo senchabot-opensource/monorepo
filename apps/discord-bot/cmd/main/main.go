@@ -73,7 +73,7 @@ func main() {
 		}
 	}
 
-	command := command.NewCommands(discordClient, token, service, 2*time.Second)
+	command := command.New(discordClient, token, service, 2*time.Second)
 
 	discordClient.AddHandler(func(s *discordgo.Session, m *discordgo.MessageCreate) {
 		if m.Author.Bot {

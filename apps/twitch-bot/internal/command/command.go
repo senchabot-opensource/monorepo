@@ -30,7 +30,7 @@ type commands struct {
 	cooldownPeriod time.Duration
 }
 
-func NewCommands(client *client.Clients, service service.Service, cooldownPeriod time.Duration) Command {
+func New(client *client.Clients, service service.Service, cooldownPeriod time.Duration) Command {
 	return &commands{
 		client:         client,
 		service:        service,

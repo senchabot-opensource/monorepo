@@ -36,7 +36,7 @@ type commands struct {
 	cooldownPeriod    time.Duration
 }
 
-func NewCommands(dS *discordgo.Session, token string, service service.Service, cooldownPeriod time.Duration) Command {
+func New(dS *discordgo.Session, token string, service service.Service, cooldownPeriod time.Duration) Command {
 	return &commands{
 		twitchAccessToken: token,
 		dS:                dS,
