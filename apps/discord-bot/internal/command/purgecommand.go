@@ -7,7 +7,11 @@ import (
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
+	"github.com/senchabot-opensource/monorepo/config"
+	"github.com/senchabot-opensource/monorepo/packages/gosenchabot"
 )
+
+const FOURTEEN_DAYS = 24 * 14
 
 func (c *commands) PurgeCommand(ctx context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, service service.Service) {
 	options := i.ApplicationCommandData().Options
@@ -17,7 +21,7 @@ func (c *commands) PurgeCommand(ctx context.Context, s *discordgo.Session, i *di
 		events, err := s.GuildScheduledEvents(i.GuildID, false)
 		if err != nil {
 			log.Println(err)
-			ephemeralRespond(s, i, errorMessage+"#1011")
+			ephemeralRespond(s, i, config.ErrorMessage+"#1011")
 		}
 
 		for _, e := range events {
@@ -50,14 +54,14 @@ func (c *commands) PurgeCommand(ctx context.Context, s *discordgo.Session, i *di
 		switch options[0].Name {
 		case "message-content-contains":
 			for _, m := range messages {
-				if checkTimeOlderThan(m.Timestamp, FOURTEEN_DAYS) && containsLowerCase(m.Content, optionValue) {
+				if gosenchabot.CheckTimeOlderThan(m.Timestamp, FOURTEEN_DAYS) && gosenchabot.ContainsLowerCase(m.Content, optionValue) {
 					messageIDs = append(messageIDs, m.ID)
 				}
 			}
 			content = "containing the characters `" + optionValue + "`"
 		case "user-name-contains":
 			for _, m := range messages {
-				if checkTimeOlderThan(m.Timestamp, FOURTEEN_DAYS) && containsLowerCase(m.Author.Username, optionValue) {
+				if gosenchabot.CheckTimeOlderThan(m.Timestamp, FOURTEEN_DAYS) && gosenchabot.ContainsLowerCase(m.Author.Username, optionValue) {
 					messageIDs = append(messageIDs, m.ID)
 				}
 			}

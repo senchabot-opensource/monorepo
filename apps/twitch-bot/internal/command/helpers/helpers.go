@@ -144,10 +144,6 @@ func FindCommandAndMentionIndices(words []string) (int, int) {
 	return cmdIndex, mentionIndex
 }
 
-func CheckIfCommand(param string) bool {
-	return strings.HasPrefix(param, "!")
-}
-
 func CanExecuteCommand(context context.Context, service service.Service, badges string, twitchChannelId string) bool {
 	// broadcaster can run the command
 	if isBroadcaster(badges) {
@@ -202,8 +198,4 @@ func ValidateCommandContentLength(commandContent string) (string, bool) {
 	}
 
 	return "", true
-}
-
-func IsCommandParamsLengthEqualToOne(params []string) bool {
-	return len(params) == 1
 }
