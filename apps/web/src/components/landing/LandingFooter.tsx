@@ -3,6 +3,7 @@ import React from "react";
 import { LinkedIn, GitHub, Twitter } from "@mui/icons-material";
 import { env } from "../../env/client.mjs";
 import LandingButton from "./LandingButton";
+import AppCookie from "../app/AppCookie"
 
 const appBarMenuList = [
   { title: "Cookie Policy", path: "/cookie-policy" },
@@ -18,7 +19,13 @@ function Links() {
       {appBarMenuList.map((item, index) => (
         <Link key={index} href={item.path} style={{ textDecoration: "none" }}>
           <LandingButton
-            sx={{ mr: 2, color: "landingButton.default" }}
+            sx={{
+              mr: 2,
+              color: "landingButton.default",
+              "&:hover": {
+                color: "landingButton.hover",
+              },
+            }}
             disableRipple>
             {item.title}
           </LandingButton>
@@ -75,6 +82,16 @@ const LandingFooter = () => {
             <Links />
           </Grid>
         </Grid>
+      </Typography>
+
+      <Typography
+        component="div"
+        sx={{
+          position: "fixed",
+          bottom: { xs: 64, md: 64, lg: 64},
+          left: { xs: 0, sm: 104, md: 224, lg: 448},
+        }}>
+        <AppCookie />
       </Typography>
     </>
   );

@@ -5,21 +5,16 @@ import {
   Typography,
   Menu,
   MenuItem,
-  IconButton,
+  Button,
 } from "@mui/material";
 import Link from "next/link";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import AccountCircle from "@mui/icons-material/AccountCircle";
 import MenuIcon from "@mui/icons-material/Menu";
-import { LightMode } from "@mui/icons-material";
-import { DarkMode } from "@mui/icons-material";
 import { useSession } from "next-auth/react";
 import { Offset } from "../Offset";
-import AppBarTitle from "../common/AppBarTitle";
+import Logo from "../common/Logo";
 import LandingButton from "./LandingButton";
 import { MenuPaperPropsStyles } from "../../styles";
-import React, { useContext, useState } from "react";
-import { ColorModeContext } from "src/Context/ColorModeContext";
+import React, { useState } from "react";
 
 const appBarMenuList = [
   { title: "Cookie Policy", path: "/cookie-policy" },
@@ -37,7 +32,6 @@ const toolBarStyles = {
 const LandingAppBar = () => {
   const { data: session } = useSession();
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
-  const { colorMode, toggleColorMode } = useContext(ColorModeContext);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -92,48 +86,28 @@ const LandingAppBar = () => {
                 </Link>
               ))}
             </Menu>
-            <AppBarTitle />
+            <Logo />
             <Box>
-              <IconButton
-                onClick={toggleColorMode}
-                sx={{
-                  color: "landingButton.default",
-                }}>
-                {colorMode === "dark" ? (
-                  <LightMode
-                    sx={{
-                      backgroundColor: "landingDashboardIcon.background",
-                      color: "landingDashboardIcon.default",
-                    }}
-                  />
-                ) : (
-                  <DarkMode
-                    sx={{
-                      backgroundColor: "landingDashboardIcon.background",
-                      color: "landingDashboardIcon.default",
-                    }}
-                  />
-                )}
-              </IconButton>
-              <IconButton
-                href="/app"
-                sx={{
-                  ml: 1,
-                  color: "landingButton.default",
-                }}
-                disableRipple>
+              <Link href="/app">
                 {session ? (
-                  <DashboardIcon
+                  <Button
                     sx={{
                       backgroundColor: "landingDashboardIcon.background",
                       color: "landingDashboardIcon.default",
                       "&:hover": { cursor: "pointer" },
-                    }}
-                  />
+                    }}>
+                    Dashboard
+                  </Button>
                 ) : (
-                  <AccountCircle sx={{ "&:hover": { cursor: "pointer" } }} />
+                  <Button
+                    sx={{
+                      ml: 1,
+                      color: "gray",
+                    }}>
+                    join now
+                  </Button>
                 )}
-              </IconButton>
+              </Link>
             </Box>
           </Toolbar>
         </Box>

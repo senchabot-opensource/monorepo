@@ -25,7 +25,7 @@ func (c *commands) TimerCommand(context context.Context, message twitch.PrivateM
 	command := params[0]
 	intervalStr := params[1]
 
-	commandData, err := c.service.GetBotCommand(context, command, message.RoomID)
+	commandData, err := c.service.GetUserBotCommand(context, command, message.RoomID)
 	if err != nil {
 		c.client.Twitch.Say(channelName, message.User.DisplayName+", the command \""+command+"\" not found")
 		fmt.Println("> (TimerCommand) " + err.Error())

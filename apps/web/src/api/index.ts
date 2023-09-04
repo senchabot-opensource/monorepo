@@ -1,4 +1,4 @@
-import { ISetConfigInput } from "src/types";
+import { IConfig, IGetAllConfig, ISetConfigInput } from "src/types";
 
 export const getDefaultCmdList = async () => {
   const response = await fetch("/api/cmd", {

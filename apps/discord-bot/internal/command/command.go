@@ -3,34 +3,50 @@ package command
 import (
 	"context"
 	"fmt"
-	"log"
 	"os"
 	"strings"
 	"time"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/senchabot-opensource/monorepo/apps/discord-bot/client"
-	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/db"
-	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service/streamer"
+	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
 )
 
-const errorMessage = "İşlem gerçekleştirilirken hata oluştu. Hata kodu: "
+type CommandFunc func(context context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, service service.Service)
+
+type CommandMap map[string]CommandFunc
 
 type Command interface {
-	GetCommands() map[string]func(context context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, db db.MySQL)
+	GetCommands() CommandMap
+	Run(context context.Context, cmdName string, params []string, m *discordgo.MessageCreate)
+	Respond(ctx context.Context, m *discordgo.MessageCreate, cmdName string, messageContent string)
 	DeployCommands(discordClient *discordgo.Session)
 }
 
 type commands struct {
+	twitchAccessToken string
+	dS                *discordgo.Session
+	service           service.Service
+	userCooldowns     map[string]time.Time
+	cooldownPeriod    time.Duration
 }
 
-func NewCommands() Command {
-	return &commands{}
+func New(dS *discordgo.Session, token string, service service.Service, cooldownPeriod time.Duration) Command {
+	return &commands{
+		twitchAccessToken: token,
+		dS:                dS,
+		service:           service,
+		userCooldowns:     make(map[string]time.Time),
+		cooldownPeriod:    cooldownPeriod,
+	}
 }
 
-func (c *commands) GetCommands() map[string]func(context context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, db db.MySQL) {
-	// TODO: command aliases
-	var commands = map[string]func(context context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, db db.MySQL){
+func (c *commands) GetCommands() CommandMap {
+	var commands = CommandMap{
+		"acmd":   c.AddCmdCommand,
+		"ucmd":   c.UpdateCmdCommand,
+		"dcmd":   c.DeleteCmdCommand,
+		"acmda":  c.AddCmdAliasCommand,
+		"dcmda":  c.DeleteCmdAliasCommand,
 		"set":    c.SetCommand,
 		"delete": c.DeleteCommand,
 		"purge":  c.PurgeCommand,
@@ -38,6 +54,74 @@ func (c *commands) GetCommands() map[string]func(context context.Context, s *dis
 	}
 
 	return commands
+}
+
+func (c *commands) IsSystemCommand(commandName string) bool {
+	commandListMap := c.GetCommands()
+	_, ok := commandListMap[commandName]
+	return ok
+}
+
+func (c *commands) Respond(ctx context.Context, m *discordgo.MessageCreate, cmdName string, messageContent string) {
+	c.dS.ChannelMessageSend(m.ChannelID, messageContent)
+	c.setCommandCooldown(m.Author.Username)
+	c.service.SaveCommandActivity(ctx, cmdName, m.GuildID, m.Author.Username, m.Author.ID)
+}
+
+func (c *commands) Run(ctx context.Context, cmdName string, params []string, m *discordgo.MessageCreate) {
+	if c.isUserOnCooldown(m.Author.Username) {
+		return
+	}
+
+	// HANDLE COMMAND ALIASES
+	commandAlias, cmdAliasErr := c.service.GetCommandAlias(ctx, cmdName, m.GuildID)
+	if cmdAliasErr != nil {
+		fmt.Println("[COMMAND ALIAS ERROR]:", cmdAliasErr.Error())
+	}
+
+	if commandAlias != nil {
+		cmdName = *commandAlias
+	}
+	// HANDLE COMMAND ALIASES
+
+	// USER COMMANDS
+	cmdData, err := c.service.GetUserBotCommand(ctx, cmdName, m.GuildID)
+	if err != nil {
+		fmt.Println("[USER COMMAND ERROR]:", err.Error())
+	}
+	if cmdData != nil {
+		//formattedCommandContent := helpers.FormatCommandContent(cmdData, m)
+		c.Respond(ctx, m, cmdName, cmdData.CommandContent)
+		return
+	}
+	// USER COMMANDS
+
+	// GLOBAL COMMANDS
+	cmdData, err = c.service.GetGlobalBotCommand(ctx, cmdName)
+	if err != nil {
+		fmt.Println("[GLOBAL COMMAND ERROR]:", err.Error())
+		return
+	}
+	if cmdData == nil {
+		return
+	}
+
+	//formattedCommandContent := helpers.FormatCommandContent(cmdData, m)
+	c.Respond(ctx, m, cmdName, cmdData.CommandContent)
+	// GLOBAL COMMANDS
+}
+
+func (c *commands) isUserOnCooldown(username string) bool {
+	cooldownTime, exists := c.userCooldowns[username]
+	if !exists {
+		return false
+	}
+
+	return time.Now().Before(cooldownTime.Add(c.cooldownPeriod))
+}
+
+func (c *commands) setCommandCooldown(username string) {
+	c.userCooldowns[username] = time.Now()
 }
 
 func (c *commands) DeployCommands(discordClient *discordgo.Session) {
@@ -65,6 +149,89 @@ var (
 	purgePermissions     int64 = discordgo.PermissionManageServer
 	setdeletePermissions int64 = discordgo.PermissionAdministrator
 	commandMetadatas           = []*discordgo.ApplicationCommand{
+		{
+			Name:                     "acmd",
+			Description:              "Add a new custom command.",
+			DefaultMemberPermissions: &setdeletePermissions,
+			Options: []*discordgo.ApplicationCommandOption{
+				{
+					Type:        discordgo.ApplicationCommandOptionString,
+					Name:        "command-name",
+					Description: "Command Name",
+					Required:    true,
+				},
+				{
+					Type:        discordgo.ApplicationCommandOptionString,
+					Name:        "command-content",
+					Description: "Command Content",
+					Required:    true,
+				},
+			},
+		},
+		{
+			Name:                     "ucmd",
+			Description:              "Update a custom command.",
+			DefaultMemberPermissions: &setdeletePermissions,
+			Options: []*discordgo.ApplicationCommandOption{
+				{
+					Type:        discordgo.ApplicationCommandOptionString,
+					Name:        "command-name",
+					Description: "Command Name",
+					Required:    true,
+				},
+				{
+					Type:        discordgo.ApplicationCommandOptionString,
+					Name:        "command-content",
+					Description: "New Command Content",
+					Required:    true,
+				},
+			},
+		},
+		{
+			Name:                     "dcmd",
+			Description:              "Delete a custom command.",
+			DefaultMemberPermissions: &setdeletePermissions,
+			Options: []*discordgo.ApplicationCommandOption{
+				{
+					Type:        discordgo.ApplicationCommandOptionString,
+					Name:        "command-name",
+					Description: "Command Name",
+					Required:    true,
+				},
+			},
+		},
+		{
+			Name:                     "acmda",
+			Description:              "Add command aliases to a command.",
+			DefaultMemberPermissions: &setdeletePermissions,
+			Options: []*discordgo.ApplicationCommandOption{
+				{
+					Type:        discordgo.ApplicationCommandOptionString,
+					Name:        "command-name",
+					Description: "Command Name",
+					Required:    true,
+				},
+				{
+					Type:        discordgo.ApplicationCommandOptionString,
+					Name:        "command-aliases",
+					Description: "Command alias(es) separated by space",
+					Required:    true,
+				},
+			},
+		},
+		{
+			Name:                     "dcmda",
+			Description:              "Delete a command alias.",
+			DefaultMemberPermissions: &setdeletePermissions,
+			Options: []*discordgo.ApplicationCommandOption{
+				{
+					Type:        discordgo.ApplicationCommandOptionString,
+					Name:        "command-alias",
+					Description: "Command Alias",
+					Required:    true,
+				},
+			},
+		},
 		{
 			Name:        "set",
 			Description: "Discord bot configuration",
@@ -337,67 +504,6 @@ var (
 		},
 	}
 )
-
-const FOURTEEN_DAYS = 24 * 14
-
-func checkTimeOlderThan(msgTimestamp time.Time, tNumber int) bool {
-	return int(time.Until(msgTimestamp).Abs().Hours()) < tNumber
-}
-
-func containsLowerCase(s string, substr string) bool {
-	return strings.Contains(strings.ToLower(s), substr)
-}
-
-func IsChannelNameNotGiven(optionsLen int) bool {
-	return optionsLen < 2
-}
-
-func GetTwitchUserInfo(twitchUsername string) (string, *client.TwitchUserInfo) {
-	userInfo, err := client.GetTwitchUserInfo(twitchUsername)
-	if err != nil {
-		return fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısı Twitch'te bulunamadı.", twitchUsername), nil
-	}
-
-	return "", userInfo
-}
-
-func CheckIfTwitchStreamerExist(ctx context.Context, twitchUsername string, uInfo *client.TwitchUserInfo, s *discordgo.Session, i *discordgo.InteractionCreate, db db.MySQL) (string, bool) {
-	liveAnnoData, err := db.GetDiscordTwitchLiveAnno(ctx, uInfo.ID, i.GuildID)
-	if err != nil {
-		log.Printf("There was an error while checking the Discord Twitch live announcements: %v", err)
-		return errorMessage + "#XYXX", false
-	}
-	if liveAnnoData != nil {
-		channel, err := s.Channel(liveAnnoData.AnnoChannelID)
-		if err != nil {
-			log.Printf("Error while fetching the channel data from Discord API: %v", err)
-			return errorMessage + "#YXXX", false
-		}
-		return fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısının duyuları `%v` isimli yazı kanalı için ekli.", twitchUsername, channel.Name), true
-	}
-	return "", false
-}
-
-func SetTwitchStreamer(ctx context.Context, uInfo *client.TwitchUserInfo, channelId, channelName, guildId, creatorUsername string, db db.MySQL) string {
-	added, err := db.AddDiscordTwitchLiveAnnos(ctx, uInfo.Login, uInfo.ID, channelId, guildId, creatorUsername)
-	if err != nil {
-		log.Printf("Error while adding Discord Twitch live announcement: %v", err)
-
-		return fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısı veritabanı hatasından dolayı eklenemedi.", uInfo.Login)
-	}
-
-	if !added && err == nil {
-		streamer.SetStreamerData(guildId, uInfo.Login, channelId)
-		return fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısı varitabanında bulunmakta. Ancak... Twitch yayıncısının yayın duyurularının yapılacağı kanalı `%v` yazı kanalı olarak güncellendi.", uInfo.Login, channelName)
-	}
-
-	if added {
-		streamer.SetStreamerData(guildId, uInfo.Login, channelId)
-		return fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısının yayın duyuruları `%v` isimli yazı kanalı için aktif edildi.", uInfo.Login, channelName)
-	}
-
-	return "Twitch yayıncısı eklenirken bir sorun oluştu."
-}
 
 func ephemeralRespond(s *discordgo.Session, i *discordgo.InteractionCreate, msgContent string) {
 	s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{

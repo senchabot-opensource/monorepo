@@ -1,33 +1,33 @@
 import { IconButton, Typography } from "@mui/material";
-import { useCallback, useEffect, useState } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { SiTwitch } from "react-icons/si";
 import { addTwitchAccount, checkTwitchAccount } from "src/api";
 import CustomAlert from "src/components/CustomAlert";
 import { BootstrapTooltip } from "src/components/Tooltip";
 
 const GetTwitchBotButton = () => {
-  const [twitchAccountAvailable, setTwitchAccountAvailable] =
-    useState<boolean>(false);
   const [alertIsOpen, setAlertIsOpen] = useState<boolean>(false);
   const [alertText, setAlertText] = useState<string>("");
 
-  useEffect(() => {
-    checkTwitchAccount().then(res => {
-      setTwitchAccountAvailable(res.data);
-    });
-  }, []);
+  const isTwitchAccAvailable = useQuery({
+    queryKey: ["isTwitchAccAvaiable"],
+    queryFn: () => {
+      return checkTwitchAccount();
+    },
+  });
 
-  const addTwitchBot = useCallback(() => {
-    addTwitchAccount().then(res => {
-      if (!res || !res.success) {
+  const addTwitchBot = useMutation({
+    mutationFn: async () => {
+      const res = await addTwitchAccount();
+      if (!res.success) {
         setAlertBox("Something went wrong. Please try again later.");
       }
+      setAlertBox(res.message);
 
-      if (res.success) {
-        setAlertBox(res.message);
-      }
-    });
-  }, []);
+      return res.success;
+    },
+  });
 
   const setAlertBox = (text: string) => {
     setAlertText(text);
@@ -45,13 +45,12 @@ const GetTwitchBotButton = () => {
       <BootstrapTooltip title="Get Twitch Bot">
         <Typography
           onClick={() => {
-            if (!twitchAccountAvailable) {
+            if (!isTwitchAccAvailable.data?.data) {
               setAlertBox(
                 "Before you can add the Twitch bot, you need to link your Twitch account in Settings/Security section.",
               );
-            } else {
-              addTwitchBot();
             }
+            addTwitchBot.mutate();
           }}>
           <IconButton
             aria-label="get twitch bot"

@@ -9,56 +9,58 @@ import (
 	"regexp"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/senchabot-opensource/monorepo/apps/discord-bot/client"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/command"
-	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/db"
-	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/helpers"
+	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/command/helpers"
+	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service/event"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service/streamer"
-	"github.com/senchabot-opensource/monorepo/packages/common/commands"
+	"github.com/senchabot-opensource/monorepo/packages/gosenchabot"
+
+	twsrvc "github.com/senchabot-opensource/monorepo/packages/gosenchabot/service/twitch"
 )
 
 func main() {
 	//dotErr := godotenv.Load()
 	//if dotErr != nil {
-	//	log.Fatal("Error loading .env file", dotErr.Error())
+	//log.Fatal("Error loading .env file", dotErr.Error())
 	//}
 
-	client.InitTwitchOAuth2Token()
+	token := twsrvc.InitTwitchOAuth2Token()
 
 	discordClient, _ := discordgo.New("Bot " + os.Getenv("TOKEN"))
 
 	var wg sync.WaitGroup
 
-	db := db.NewMySQL()
+	service := service.New()
 	ctx := context.Background()
 
 	discordClient.AddHandler(func(s *discordgo.Session, r *discordgo.Ready) {
-		go event.CheckLiveStreamScheduledEvents(s)
+		go event.CheckLiveStreamScheduledEvents(s, token)
 
 		fmt.Println("Bot is ready. Logged in as:", s.State.User.Username)
 	})
 
 	discordClient.AddHandler(func(s *discordgo.Session, g *discordgo.GuildCreate) {
-		err := db.AddServerToDB(ctx, g.ID, g.Name, g.OwnerID)
+		err := service.AddServerToDB(ctx, g.ID, g.Name, g.OwnerID)
 		if err != nil {
 			fmt.Println(err)
 		}
-		streamer.StartCheckLiveStreams(s, ctx, db, g.ID)
+		streamer.StartCheckLiveStreams(s, ctx, service, g.ID)
 	})
 
 	discordClient.AddHandler(func(s *discordgo.Session, g *discordgo.GuildDelete) {
-		err := db.DeleteServerFromDB(ctx, g.ID)
+		err := service.DeleteServerFromDB(ctx, g.ID)
 		if err != nil {
 			fmt.Println(err)
 		}
 		streamer.StopCheckLiveStreams(g.ID)
 		streamer.DeleteServerFromData(g.ID)
-		_, err = db.DeleteDiscordTwitchLiveAnnosByGuildId(ctx, g.ID)
+		_, err = service.DeleteDiscordTwitchLiveAnnosByGuildId(ctx, g.ID)
 		if err != nil {
-			fmt.Println("[GuildDelete] db.DeleteDiscordTwitchLiveAnnosByGuildId: ", err.Error())
+			fmt.Println("[GuildDelete] service.DeleteDiscordTwitchLiveAnnosByGuildId: ", err.Error())
 		}
 	})
 
@@ -71,9 +73,11 @@ func main() {
 		}
 	}
 
+	command := command.New(discordClient, token, service, 2*time.Second)
+
 	discordClient.AddHandler(func(s *discordgo.Session, m *discordgo.MessageCreate) {
 		if m.Author.Bot {
-			announcementChs, err := db.GetAnnouncementChannels(ctx) // redis or memory db?
+			announcementChs, err := service.GetAnnouncementChannels(ctx) // redis or memory db?
 			if err != nil {
 				log.Println(err)
 				return
@@ -95,8 +99,10 @@ func main() {
 			return
 		}
 
+		command.Run(ctx, cmdName, params, m)
+
 		if cmdName == "sozluk" {
-			sozlukResp, err := commands.SozlukCommand(params)
+			sozlukResp, err := gosenchabot.SozlukCommand(params)
 			if err != nil {
 				log.Println(err)
 				return
@@ -121,13 +127,11 @@ func main() {
 		}
 	})
 
-	command := command.NewCommands()
-
 	discordClient.AddHandler(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		ctx := context.Background()
 		commandHandlers := command.GetCommands()
 		if h, ok := commandHandlers[i.ApplicationCommandData().Name]; ok {
-			h(ctx, s, i, *db)
+			h(ctx, s, i, service)
 			options := []string{}
 			for _, v := range i.ApplicationCommandData().Options {
 				options = append(options, v.Name)
@@ -142,7 +146,8 @@ func main() {
 					}
 				}
 			}
-			db.SaveBotCommandActivity(ctx, "/"+i.ApplicationCommandData().Name+" "+strings.Join(options, " "), i.GuildID, i.Member.User.Username, i.Member.User.ID)
+			command := i.ApplicationCommandData().Name + " " + strings.Join(options, " ")
+			service.SaveCommandActivity(ctx, command, i.GuildID, i.Member.User.Username, i.Member.User.ID)
 		}
 	})
 

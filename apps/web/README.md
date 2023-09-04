@@ -9,7 +9,6 @@ Web application for managing Senchabot, its commands and configuring the bot.
 - [Next-Auth.js](https://next-auth.js.org)
 - [Prisma](https://prisma.io)
 - [Material UI](https://mui.com)
-- [tRPC](https://trpc.io)
 - [Zod](https://zod.dev)
 - [React Hook Form](https://react-hook-form.com/)
 - [emotion](https://emotion.sh/)
@@ -18,182 +17,153 @@ Web application for managing Senchabot, its commands and configuring the bot.
 
 ## Getting Started
 
-1. Clone the repository
+1. If you have not configured the settings in the monorepo home directory, please navigate to the home directory and read the instructions in the readme file.
+
+2. Start the development server
 
    ```sh
-   git clone https://github.com/senchabot-opensource/monorepo.git
-   cd monorepo
+   npm run dev
    ```
-
-2. Install the dependencies
-
-   ```sh
-   npm install
-   ```
-
-3. If you hadn't done for main directory, please change into main directory and create a `.env` file based on the example file `env.example`
-
-   ```sh
-   cp env.example .env
-   ```
-
-4. If you hadn't done for main directory, please change into main directory and build up a Docker container for Postgres database
-
-   ```sh
-   docker-compose up --build
-   # If you want to run the Docker container in the background, run this command instead of the command above:
-   docker-compose up -d
-   ```
-
-5. Create a `.env` file based on the example file `env.example`
-
-   ```sh
-   cp env.example .env
-   ```
-
-6. Run the `Prisma` migration to create the tables
-
-   ```sh
-   npx prisma db push
-   ```
-
-Finally, start the development server:
-
-```bash
-npm run dev
-```
 
 ## Folder Tree
 
 ```bash
-├── docker-compose.yml
 ├── env.example
 ├── next.config.mjs
 ├── next-env.d.ts
 ├── package.json
-├── prisma
-│   └── schema.prisma
 ├── public
-│   └── favicon.png
+│   └── favicon.png
 ├── README.md
 ├── src
-│   ├── api
-│   │   └── index.ts
-│   ├── components
-│   │   ├── app
-│   │   │   ├── AccountMenu.tsx
-│   │   │   ├── AppBar
-│   │   │   │   ├── AppBarButton.tsx
-│   │   │   │   ├── buttons
-│   │   │   │   │   ├── GetDiscordBotButton.tsx
-│   │   │   │   │   └── GetTwitchBotButton.tsx
-│   │   │   │   └── index.tsx
-│   │   │   ├── AppContainer.tsx
-│   │   │   ├── AppDrawer.tsx
-│   │   │   ├── AppSearch.tsx
-│   │   │   ├── AppSnackbar.tsx
-│   │   │   ├── BotActivity.tsx
-│   │   │   ├── Breadcrumb.tsx
-│   │   │   ├── index.tsx
-│   │   │   └── SystemMessage.tsx
-│   │   ├── auth
-│   │   │   ├── AuthContainer.tsx
-│   │   │   ├── AuthDialog.tsx
-│   │   │   └── LinkAccount.tsx
-│   │   ├── button
-│   │   │   └── DeleteAccount.tsx
-│   │   ├── common
-│   │   │   ├── AppBarTitle.tsx
-│   │   │   ├── Header.tsx
-│   │   │   └── VersionText.tsx
-│   │   ├── FormTitle.tsx
-│   │   ├── landing
-│   │   │   ├── LandingAppBar.tsx
-│   │   │   ├── LandingButton.tsx
-│   │   │   ├── LandingContainer.tsx
-│   │   │   ├── LandingFooter.tsx
-│   │   │   ├── LandingGrid.tsx
-│   │   │   └── LandingTexts.tsx
-│   │   ├── LibraryText.tsx
-│   │   ├── loading
-│   │   │   ├── LoadingBox.tsx
-│   │   │   └── Loading.tsx
-│   │   ├── Offset.tsx
-│   │   ├── tab
-│   │   │   ├── BotManagement
-│   │   │   │   └── index.tsx
-│   │   │   └── SettingTopTab.tsx
-│   │   ├── tabpanel
-│   │   │   ├── HorizontalTabPanel.tsx
-│   │   │   └── VerticalTabPanel.tsx
-│   │   ├── Tooltip.tsx
-│   │   └── TypingEffect.tsx
-│   ├── env
-│   │   ├── client.mjs
-│   │   ├── schema.mjs
-│   │   └── server.mjs
-│   ├── forms
-│   │   ├── PrivacyForm.tsx
-│   │   ├── SecurityForm.tsx
-│   │   └── TwitchBotForm.tsx
-│   ├── pages
-│   │   ├── api
-│   │   │   ├── auth
-│   │   │   │   └── [...nextauth].ts
-│   │   │   ├── cmd
-│   │   │   │   └── index.ts
-│   │   │   ├── discord
-│   │   │   ├── features.ts
-│   │   │   ├── restricted.ts
-│   │   │   ├── trpc
-│   │   │   │   └── [trpc].ts
-│   │   │   └── twitch
-│   │   │       └── get-bot.ts
-│   │   ├── app
-│   │   │   ├── index.tsx
-│   │   │   └── settings.tsx
-│   │   ├── _app.tsx
-│   │   ├── auth
-│   │   │   ├── index.tsx
-│   │   │   └── signin.tsx
-│   │   ├── cookie-policy.tsx
-│   │   ├── credits.tsx
-│   │   ├── eula.tsx
-│   │   ├── index.css
-│   │   ├── index.tsx
-│   │   ├── privacy-policy.tsx
-│   │   └── terms.tsx
-│   ├── server
-│   │   ├── common
-│   │   │   └── get-server-auth-session.ts
-│   │   ├── db
-│   │   │   └── client.ts
-│   │   ├── router
-│   │   │   ├── botactivities.ts
-│   │   │   ├── check.ts
-│   │   │   ├── context.ts
-│   │   │   ├── example.ts
-│   │   │   ├── index.ts
-│   │   │   ├── protected-example-router.ts
-│   │   │   ├── protected-router.ts
-│   │   │   ├── security.ts
-│   │   │   └── twitchbot.ts
-│   │   └── trpc.ts
-│   ├── styles
-│   │   ├── globals.css
-│   │   └── index.ts
-│   ├── types
-│   │   ├── index.ts
-│   │   └── next-auth.d.ts
-│   ├── utils
-│   │   ├── functions.ts
-│   │   ├── session.ts
-│   │   ├── theme.ts
-│   │   └── trpc.ts
-│   └── validation
-│       ├── color.ts
-│       ├── senchaconfig.ts
-│       └── twitchbotconfig.ts
+│   ├── api
+│   │   └── index.ts
+│   ├── components
+│   │   ├── app
+│   │   │   ├── AccountMenu.tsx
+│   │   │   ├── AppBar
+│   │   │   │   ├── AppBarButton.tsx
+│   │   │   │   ├── buttons
+│   │   │   │   │   ├── DrawerButton.tsx
+│   │   │   │   │   ├── GetDiscordBotButton.tsx
+│   │   │   │   │   └── GetTwitchBotButton.tsx
+│   │   │   │   └── index.tsx
+│   │   │   ├── AppContainer.tsx
+│   │   │   ├── AppDrawer.tsx
+│   │   │   ├── AppSearch.tsx
+│   │   │   ├── AppSnackbar.tsx
+│   │   │   ├── BotActivity.tsx
+│   │   │   ├── Breadcrumb.tsx
+│   │   │   ├── CommandList.tsx
+│   │   │   └── SystemMessage.tsx
+│   │   ├── auth
+│   │   │   ├── AuthContainer.tsx
+│   │   │   ├── AuthDialog.tsx
+│   │   │   ├── AuthLoginButton.tsx
+│   │   │   └── LinkAccount.tsx
+│   │   ├── button
+│   │   │   └── DeleteAccount.tsx
+│   │   ├── common
+│   │   │   ├── Logo.tsx
+│   │   │   ├── Header.tsx
+│   │   │   └── VersionText.tsx
+│   │   ├── CustomAlert.tsx
+│   │   ├── FormTitle.tsx
+│   │   ├── landing
+│   │   │   ├── LandingAppBar.tsx
+│   │   │   ├── LandingButton.tsx
+│   │   │   ├── LandingContainer.tsx
+│   │   │   ├── LandingFooter.tsx
+│   │   │   ├── LandingGrid.tsx
+│   │   │   └── LandingTexts.tsx
+│   │   ├── LibraryText.tsx
+│   │   ├── loading
+│   │   │   ├── LoadingBox.tsx
+│   │   │   └── Loading.tsx
+│   │   ├── Offset.tsx
+│   │   ├── tab
+│   │   │   ├── BotConfiguration
+│   │   │   │   └── index.tsx
+│   │   │   └── SettingTopTab.tsx
+│   │   ├── tabpanel
+│   │   │   ├── HorizontalTabPanel.tsx
+│   │   │   └── VerticalTabPanel.tsx
+│   │   ├── Tooltip.tsx
+│   │   └── TypingEffect.tsx
+│   ├── Context
+│   │   └── ColorModeContext.tsx
+│   ├── enums
+│   │   └── index.ts
+│   ├── env
+│   │   ├── client.mjs
+│   │   ├── schema.mjs
+│   │   └── server.mjs
+│   ├── forms
+│   │   ├── PrivacyForm.tsx
+│   │   ├── SecurityForm.tsx
+│   │   └── TwitchBotForm.tsx
+│   ├── pages
+│   │   ├── api
+│   │   │   ├── auth
+│   │   │   │   └── [...nextauth].ts
+│   │   │   ├── bot
+│   │   │   │   └── activity.ts
+│   │   │   ├── cmd
+│   │   │   │   ├── aliasList.ts
+│   │   │   │   ├── delete.ts
+│   │   │   │   ├── index.ts
+│   │   │   │   └── list.ts
+│   │   │   ├── config
+│   │   │   │   ├── getAllConfig.ts
+│   │   │   │   ├── getConfig.ts
+│   │   │   │   └── setConfig.ts
+│   │   │   ├── deleteAccount.ts
+│   │   │   ├── discord
+│   │   │   │   ├── getCount.ts
+│   │   │   │   └── getServerList.ts
+│   │   │   ├── features.ts
+│   │   │   ├── getAccount.ts
+│   │   │   ├── restricted.ts
+│   │   │   └── twitch
+│   │   │       ├── findAccount.ts
+│   │   │       ├── get-bot.ts
+│   │   │       ├── getChannelList.ts
+│   │   │       └── getCount.ts
+│   │   ├── app
+│   │   │   ├── command-list.tsx
+│   │   │   ├── index.tsx
+│   │   │   └── settings.tsx
+│   │   ├── _app.tsx
+│   │   ├── auth
+│   │   │   ├── index.tsx
+│   │   │   └── signin.tsx
+│   │   ├── cookie-policy.tsx
+│   │   ├── credits.tsx
+│   │   ├── eula.tsx
+│   │   ├── index.css
+│   │   ├── index.tsx
+│   │   ├── privacy-policy.tsx
+│   │   └── terms.tsx
+│   ├── server
+│   │   ├── common
+│   │   │   └── get-server-auth-session.ts
+│   │   └── db
+│   │       └── client.ts
+│   ├── styles
+│   │   ├── globals.css
+│   │   └── index.ts
+│   ├── types
+│   │   ├── index.ts
+│   │   ├── next-auth.d.ts
+│   │   └── response.ts
+│   ├── utils
+│   │   ├── functions.ts
+│   │   ├── session.ts
+│   │   └── theme.ts
+│   └── validation
+│       ├── color.ts
+│       ├── senchaconfig.ts
+│       └── twitchbotconfig.ts
 ├── tsconfig.json
 └── vercel.json
 ```

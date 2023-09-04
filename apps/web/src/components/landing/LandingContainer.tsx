@@ -1,8 +1,10 @@
-import { CssBaseline } from "@mui/material";
+import { CssBaseline, ThemeProvider } from "@mui/material";
 import LandingAppBar from "../../components/landing/LandingAppBar";
 import VersionText from "../common/VersionText";
 import { FC, ReactNode } from "react";
 import LandingGrid from "./LandingGrid";
+import { landingTheme } from "../../utils/landingTheme";
+import LandingFooter from "./LandingFooter";
 
 type IProps = {
   children: ReactNode;
@@ -11,10 +13,13 @@ type IProps = {
 const LandingContainer: FC<IProps> = ({ children }) => {
   return (
     <>
-      <CssBaseline />
-      <LandingAppBar />
-      <LandingGrid>{children}</LandingGrid>
-      <VersionText />
+      <ThemeProvider theme={landingTheme}>
+        <CssBaseline />
+        <LandingAppBar />
+        <LandingGrid>{children}</LandingGrid>
+        <VersionText />
+        <LandingFooter />
+      </ThemeProvider>
     </>
   );
 };

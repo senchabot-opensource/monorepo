@@ -5,17 +5,20 @@ import (
 	"strings"
 
 	"github.com/gempir/go-twitch-irc/v3"
+	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
 )
 
-func (c *commands) HelpCommand(context context.Context, message twitch.PrivateMessage, commandName string, params []string) {
-	commandListMap := c.GetCommands()
+func (c *commands) HelpCommand(context context.Context, message twitch.PrivateMessage, commandName string, params []string) (*models.CommandResponse, error) {
+	var cmdResp models.CommandResponse
 	var commmandList []string
 
+	commandListMap := c.GetCommands()
 	for k := range commandListMap {
 		commmandList = append(commmandList, k)
 	}
 
 	commandListString := strings.Join(commmandList, ", ")
 
-	c.client.Twitch.Say(message.Channel, "Senchabot's Commands: "+commandListString)
+	cmdResp.Message = "Senchabot's Commands: " + commandListString
+	return &cmdResp, nil
 }

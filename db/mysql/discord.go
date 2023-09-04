@@ -1,35 +1,14 @@
-package db
+package mysql
 
 import (
 	"context"
 	"errors"
 	"fmt"
-	"os"
 	"time"
 
-	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/models"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
+	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
+	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/platform"
 )
-
-// DB
-
-type MySQL struct {
-	DB *gorm.DB
-}
-
-func NewMySQL() *MySQL {
-	dsn := os.Getenv("DATABASE_URL")
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{Logger: logger.Default.LogMode(logger.Silent)})
-
-	if err != nil {
-		panic("failed to connect database")
-	}
-	return &MySQL{
-		DB: db,
-	}
-}
 
 func (m *MySQL) SetDiscordBotConfig(ctx context.Context, serverId, key, value string) (bool, error) {
 	var discordBotConfig []models.DiscordBotConfigs
@@ -87,12 +66,9 @@ func (m *MySQL) DeleteDiscordBotConfig(ctx context.Context, serverId, key string
 		return false, nil
 	}
 
-	result := m.DB.Model(&existConfig).Updates(models.DiscordBotConfigs{
-		Key:   key,
-		Value: "",
-	})
+	result := m.DB.Model(&existConfig).Updates(map[string]interface{}{"config_value": nil})
 	if result.Error != nil {
-		return false, errors.New("(SetDiscordBotConfig) db.Updates Error:" + result.Error.Error())
+		return false, errors.New("(DeleteDicordBotConfig) db.Updates Error:" + result.Error.Error())
 	}
 
 	return true, nil
@@ -354,7 +330,7 @@ func (m *MySQL) DeleteDiscordTwitchLiveAnnosByGuildId(ctx context.Context, serve
 	return true, nil
 }
 
-func (m *MySQL) CheckConfig(ctx context.Context, discordServerId string, configKey string, configValue string) bool {
+func (m *MySQL) CheckDiscordBotConfig(ctx context.Context, discordServerId string, configKey string, configValue string) bool {
 	configData, err := m.GetDiscordBotConfig(ctx, discordServerId, configKey)
 	if err != nil {
 		fmt.Println(err.Error())
@@ -368,31 +344,13 @@ func (m *MySQL) CheckConfig(ctx context.Context, discordServerId string, configK
 	return false
 }
 
-func (m *MySQL) CreateBotActionActivity(ctx context.Context, botPlatformType, botActivity, discordServerId, activityAuthor, activityAuthorId string) error {
-	botActionActivity := models.BotActionActivity{
-		BotPlatformType:  botPlatformType,
-		BotActivity:      botActivity,
-		DiscordServerID:  &discordServerId,
-		ActivityAuthor:   &activityAuthor,
-		ActivityAuthorID: &activityAuthorId,
-	}
-
-	result := m.DB.Create(&botActionActivity)
-
-	if result.Error != nil {
-		return errors.New("(CreateBotActionActivity) db.Create Error:" + result.Error.Error())
-	}
-
-	return nil
-}
-
-func (m *MySQL) SaveBotCommandActivity(context context.Context, activity, discordServerId, commandAuthor, commandAuthorId string) {
-	check := m.CheckConfig(context, discordServerId, "bot_activity_enabled", "1")
+func (m *MySQL) SaveDiscordBotCommandActivity(context context.Context, activity, discordServerId, commandAuthor, commandAuthorId string) {
+	check := m.CheckDiscordBotConfig(context, discordServerId, "bot_activity_enabled", "1")
 	if !check {
 		return
 	}
 
-	if err := m.CreateBotActionActivity(context, "discord", activity, discordServerId, commandAuthor, commandAuthorId); err != nil {
+	if err := m.CreateBotActionActivity(context, platform.DISCORD, activity, discordServerId, commandAuthor, commandAuthorId); err != nil {
 		fmt.Println(err.Error())
 	}
 }

@@ -17,10 +17,11 @@ datasource db {
     referentialIntegrity = "prisma"
 }
 
-model SignActivities {
-    id    Int      @id @default(autoincrement())
-    email String
-    date  DateTime @default(now())
+model AccountDeletionRequest {
+    id     Int      @id @default(autoincrement())
+    userId String?  @map("user_id")
+    user   User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+    date   DateTime @default(now())
 }
 
 model BotJoinActivities {
@@ -40,8 +41,7 @@ model BotActionActivities {
     botPlatformType  String   @map("bot_platform_type")
     botActivity      String   @map("bot_activity")
     activityDate     DateTime @default(now()) @map("activity_date")
-    discordServerId  String?  @map("discord_server_id")
-    twitchChannelId  String?  @map("twitch_channel_id")
+    botPlatformId    String   @map("bot_platform_id")
     activityAuthor   String?  @map("activity_author")
     activityAuthorId String?  @map("activity_author_id")
 
@@ -81,6 +81,8 @@ model BotCommands {
     commandContent  String   @map("command_content") @db.Text
     twitchChannelId String?  @map("twitch_channel_id")
     discordServerId String?  @map("discord_server_id")
+    commandType     Int      @default(1) @map("command_type")
+    status          Int      @default(1) @map("status")
     createdBy       String?  @map("created_by")
     updatedBy       String?  @map("updated_by")
     createdAt       DateTime @default(now()) @map("created_at")
@@ -95,6 +97,7 @@ model BotCommandAliases {
     commandName     String   @map("command_name")
     twitchChannelId String?  @map("twitch_channel_id")
     discordServerId String?  @map("discord_server_id")
+    status          Int      @default(1) @map("status")
     createdBy       String   @map("created_by")
     createdAt       DateTime @default(now()) @map("created_at")
 
@@ -189,17 +192,18 @@ model Session {
 }
 
 model User {
-    id                String              @id @default(cuid())
-    name              String?
-    email             String?             @unique
-    emailVerified     DateTime?
-    image             String?
-    accounts          Account[]
-    sessions          Session[]
-    DiscordServer     DiscordServer[]
-    TwitchChannel     TwitchChannel[]
-    TwitchBotConfigs  TwitchBotConfigs[]
-    DiscordBotConfigs DiscordBotConfigs[]
+    id                     String                   @id @default(cuid())
+    name                   String?
+    email                  String?                  @unique
+    emailVerified          DateTime?
+    image                  String?
+    accounts               Account[]
+    sessions               Session[]
+    DiscordServer          DiscordServer[]
+    TwitchChannel          TwitchChannel[]
+    TwitchBotConfigs       TwitchBotConfigs[]
+    DiscordBotConfigs      DiscordBotConfigs[]
+    AccountDeletionRequest AccountDeletionRequest[]
 }
 
 model VerificationToken {
