@@ -4,12 +4,13 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 	"sync"
 	"time"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/helpers"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
+	"github.com/senchabot-opensource/monorepo/config"
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
 	twsrvc "github.com/senchabot-opensource/monorepo/packages/gosenchabot/service/twitch"
 )
@@ -79,6 +80,53 @@ func DeleteServerFromData(serverId string) bool {
 
 	delete(streamers, serverId)
 	return true
+}
+
+func GetTwitchUserInfo(twitchUsername string, token string) (string, *models.TwitchUserInfo) {
+	userInfo, err := twsrvc.GetTwitchUserInfo(twitchUsername, token)
+	if err != nil {
+		return fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısı Twitch'te bulunamadı.", twitchUsername), nil
+	}
+
+	return "", userInfo
+}
+
+func CheckIfTwitchStreamerExist(ctx context.Context, twitchUsername string, uInfo *models.TwitchUserInfo, s *discordgo.Session, i *discordgo.InteractionCreate, service service.Service) (string, bool) {
+	liveAnnoData, err := service.GetDiscordTwitchLiveAnno(ctx, uInfo.ID, i.GuildID)
+	if err != nil {
+		log.Printf("There was an error while checking the Discord Twitch live announcements: %v", err)
+		return config.ErrorMessage + "#XYXX", false
+	}
+	if liveAnnoData != nil {
+		channel, err := s.Channel(liveAnnoData.AnnoChannelID)
+		if err != nil {
+			log.Printf("Error while fetching the channel data from Discord API: %v", err)
+			return config.ErrorMessage + "#YXXX", false
+		}
+		return fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısının duyuları `%v` isimli yazı kanalı için ekli.", twitchUsername, channel.Name), true
+	}
+	return "", false
+}
+
+func SetTwitchStreamer(ctx context.Context, uInfo *models.TwitchUserInfo, channelId, channelName, guildId, creatorUsername string, service service.Service) string {
+	added, err := service.AddDiscordTwitchLiveAnnos(ctx, uInfo.Login, uInfo.ID, channelId, guildId, creatorUsername)
+	if err != nil {
+		log.Printf("Error while adding Discord Twitch live announcement: %v", err)
+
+		return fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısı veritabanı hatasından dolayı eklenemedi.", uInfo.Login)
+	}
+
+	if !added && err == nil {
+		SetStreamerData(guildId, uInfo.Login, channelId)
+		return fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısı varitabanında bulunmakta. Ancak... Twitch yayıncısının yayın duyurularının yapılacağı kanalı `%v` yazı kanalı olarak güncellendi.", uInfo.Login, channelName)
+	}
+
+	if added {
+		SetStreamerData(guildId, uInfo.Login, channelId)
+		return fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısının yayın duyuruları `%v` isimli yazı kanalı için aktif edildi.", uInfo.Login, channelName)
+	}
+
+	return "Twitch yayıncısı eklenirken bir sorun oluştu."
 }
 
 func GetStreamAnnoContent(ctx context.Context, service service.Service, guildId, streamerUsername string) string {
@@ -157,7 +205,7 @@ func handleAnnouncement(ctx context.Context, s *discordgo.Session, service servi
 	}
 
 	annoContent := GetStreamAnnoContent(ctx, service, guildId, sd.UserLogin)
-	formattedString := helpers.FormatContent(annoContent, sd)
+	formattedString := FormatContent(annoContent, sd)
 	s.ChannelMessageSend(gs.ChannelID, formattedString)
 
 	_, err := service.UpdateTwitchStreamerLastAnnoDate(ctx, sd.UserLogin, guildId, time.Now().UTC())
@@ -208,4 +256,23 @@ func CheckLiveStreams(s *discordgo.Session, ctx context.Context, service service
 			return
 		}
 	}
+}
+
+func FormatContent(str string, sd models.TwitchStreamerData) string {
+	if sd.StreamGame == "" {
+		sd.StreamGame = "Just Chatting"
+	}
+
+	stringTemplates := map[string]string{
+		"{twitch.username}": sd.UserName,
+		"{twitch.url}":      "https://www.twitch.tv/" + sd.UserLogin,
+		"{stream.title}":    sd.Title,
+		"{stream.category}": sd.StreamGame,
+	}
+
+	for k, v := range stringTemplates {
+		str = strings.ReplaceAll(str, k, v)
+	}
+
+	return str
 }

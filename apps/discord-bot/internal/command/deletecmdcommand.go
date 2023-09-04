@@ -13,7 +13,7 @@ func (c *commands) DeleteCmdCommand(ctx context.Context, s *discordgo.Session, i
 
 	cmdName := options[0].StringValue()
 
-	deletedCmdName, resp, err := service.DeleteDiscordBotCommand(ctx, cmdName, i.GuildID)
+	deletedCmdName, resp, err := service.DeleteCommand(ctx, cmdName, i.GuildID)
 	if err != nil {
 		fmt.Println(err)
 		return

@@ -9,16 +9,16 @@ import (
 	"regexp"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/command"
-	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/helpers"
+	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/command/helpers"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service/event"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service/streamer"
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot"
 
-	cmdsrvc "github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service/command"
 	twsrvc "github.com/senchabot-opensource/monorepo/packages/gosenchabot/service/twitch"
 )
 
@@ -73,6 +73,8 @@ func main() {
 		}
 	}
 
+	command := command.New(discordClient, token, service, 2*time.Second)
+
 	discordClient.AddHandler(func(s *discordgo.Session, m *discordgo.MessageCreate) {
 		if m.Author.Bot {
 			announcementChs, err := service.GetAnnouncementChannels(ctx) // redis or memory db?
@@ -97,18 +99,7 @@ func main() {
 			return
 		}
 
-		// HANDLE COMMAND ALIASES
-		commandAlias, cmdAliasErr := service.GetDiscordBotCommandAlias(ctx, cmdName, m.GuildID)
-		if cmdAliasErr != nil {
-			fmt.Println(cmdAliasErr.Error())
-		}
-
-		if commandAlias != nil {
-			cmdName = *commandAlias
-		}
-		// HANDLE COMMAND ALIASES
-
-		cmdsrvc.RunCommand(s, ctx, service, cmdName, m)
+		command.Run(ctx, cmdName, params, m)
 
 		if cmdName == "sozluk" {
 			sozlukResp, err := gosenchabot.SozlukCommand(params)
@@ -136,8 +127,6 @@ func main() {
 		}
 	})
 
-	command := command.NewCommands(token)
-
 	discordClient.AddHandler(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		ctx := context.Background()
 		commandHandlers := command.GetCommands()
@@ -157,7 +146,8 @@ func main() {
 					}
 				}
 			}
-			service.SaveDiscordBotCommandActivity(ctx, "/"+i.ApplicationCommandData().Name+" "+strings.Join(options, " "), i.GuildID, i.Member.User.Username, i.Member.User.ID)
+			command := i.ApplicationCommandData().Name + " " + strings.Join(options, " ")
+			service.SaveCommandActivity(ctx, command, i.GuildID, i.Member.User.Username, i.Member.User.ID)
 		}
 	})
 

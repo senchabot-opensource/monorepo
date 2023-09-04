@@ -30,7 +30,7 @@ func (c *commands) UpdateCommandCommand(context context.Context, message twitch.
 		return &cmdResp, nil
 	}
 
-	updatedCommandName, infoText, err := c.service.UpdateBotCommand(context, command_name, newCommandContent, message.RoomID, message.User.DisplayName)
+	updatedCommandName, infoText, err := c.service.UpdateCommand(context, command_name, newCommandContent, message.RoomID, message.User.DisplayName)
 	if err != nil {
 		return nil, err
 	}
