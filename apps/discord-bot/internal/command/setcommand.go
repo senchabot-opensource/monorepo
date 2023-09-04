@@ -6,8 +6,11 @@ import (
 	"log"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/helpers"
+	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/command/helpers"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
+	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service/streamer"
+	"github.com/senchabot-opensource/monorepo/config"
+	"github.com/senchabot-opensource/monorepo/packages/gosenchabot"
 )
 
 func (c *commands) SetCommand(ctx context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, service service.Service) {
@@ -22,7 +25,7 @@ func (c *commands) SetCommand(ctx context.Context, s *discordgo.Session, i *disc
 		_, err := service.SetDiscordBotConfig(ctx, i.GuildID, "stream_anno_default_channel", channelId)
 		if err != nil {
 			log.Printf("Error while setting Discord bot config: %v", err)
-			ephemeralRespond(s, i, errorMessage+"#0001")
+			ephemeralRespond(s, i, config.ErrorMessage+"#0001")
 			return
 		}
 
@@ -35,7 +38,7 @@ func (c *commands) SetCommand(ctx context.Context, s *discordgo.Session, i *disc
 		_, err := service.SetDiscordBotConfig(ctx, i.GuildID, "stream_anno_default_content", annoText)
 		if err != nil {
 			log.Printf("Error while setting Discord bot config: %v", err)
-			ephemeralRespond(s, i, errorMessage+"#0001")
+			ephemeralRespond(s, i, config.ErrorMessage+"#0001")
 			return
 		}
 
@@ -49,7 +52,7 @@ func (c *commands) SetCommand(ctx context.Context, s *discordgo.Session, i *disc
 		ok, err := service.AddAnnouncementChannel(ctx, channelId, i.GuildID, i.Member.User.Username)
 		if err != nil {
 			log.Println(err)
-			ephemeralRespond(s, i, errorMessage+"#0002")
+			ephemeralRespond(s, i, config.ErrorMessage+"#0002")
 			return
 		}
 		if !ok {
@@ -61,18 +64,18 @@ func (c *commands) SetCommand(ctx context.Context, s *discordgo.Session, i *disc
 	case "stream-anno-custom-content":
 		options = options[0].Options
 		twitchUsername := options[0].StringValue()
-		twitchUsername = helpers.ParseTwitchUsernameURLParam(twitchUsername)
+		twitchUsername = gosenchabot.ParseTwitchUsernameURLParam(twitchUsername)
 		annoContent := options[1].StringValue()
 
 		ok, err := service.UpdateTwitchStreamerAnnoContent(ctx, twitchUsername, i.GuildID, &annoContent)
 		if err != nil {
 			log.Printf("Error while setting Discord bot config: %v", err)
-			ephemeralRespond(s, i, errorMessage+"#0001")
+			ephemeralRespond(s, i, config.ErrorMessage+"#0001")
 			return
 		}
 
 		if !ok {
-			ephemeralRespond(s, i, errorMessage+"#0001")
+			ephemeralRespond(s, i, config.ErrorMessage+"#0001")
 			return
 		}
 
@@ -97,25 +100,25 @@ func (c *commands) SetCommand(ctx context.Context, s *discordgo.Session, i *disc
 		options = options[0].Options
 		twitchUsername := options[0].StringValue()
 		commandUsername := i.Member.User.Username
-		twitchUsername = helpers.ParseTwitchUsernameURLParam(twitchUsername)
+		twitchUsername = gosenchabot.ParseTwitchUsernameURLParam(twitchUsername)
 
-		response0, uInfo := GetTwitchUserInfo(twitchUsername, c.twitchAccessToken)
+		response0, uInfo := streamer.GetTwitchUserInfo(twitchUsername, c.twitchAccessToken)
 		if response0 != "" {
 			ephemeralRespond(s, i, response0)
 			return
 		}
 
-		response1, ok := CheckIfTwitchStreamerExist(ctx, twitchUsername, uInfo, s, i, service)
-		if IsChannelNameNotGiven(len(options)) && ok {
+		response1, ok := streamer.CheckIfTwitchStreamerExist(ctx, twitchUsername, uInfo, s, i, service)
+		if helpers.IsChannelNameNotGiven(len(options)) && ok {
 			ephemeralRespond(s, i, response1)
 			return
 		}
 
-		if IsChannelNameNotGiven(len(options)) {
+		if helpers.IsChannelNameNotGiven(len(options)) {
 			channelData, err := service.GetDiscordBotConfig(ctx, i.GuildID, "stream_anno_default_channel")
 			if err != nil {
 				log.Printf("Error while getting Discord bot config: %v", err)
-				ephemeralRespond(s, i, errorMessage+"#0000")
+				ephemeralRespond(s, i, config.ErrorMessage+"#0000")
 				return
 			}
 			if channelData == nil {
@@ -125,11 +128,11 @@ func (c *commands) SetCommand(ctx context.Context, s *discordgo.Session, i *disc
 
 			ch, err := s.Channel(channelData.Value)
 			if err != nil {
-				ephemeralRespond(s, i, errorMessage+"#XXXY")
+				ephemeralRespond(s, i, config.ErrorMessage+"#XXXY")
 				return
 			}
 
-			resp := SetTwitchStreamer(ctx, uInfo, channelData.Value, ch.Name, i.GuildID, commandUsername, service)
+			resp := streamer.SetTwitchStreamer(ctx, uInfo, channelData.Value, ch.Name, i.GuildID, commandUsername, service)
 			ephemeralRespond(s, i, resp)
 			return
 		}
@@ -148,7 +151,7 @@ func (c *commands) SetCommand(ctx context.Context, s *discordgo.Session, i *disc
 			return
 		}
 
-		resp := SetTwitchStreamer(ctx, uInfo, channelId, channelName, i.GuildID, commandUsername, service)
+		resp := streamer.SetTwitchStreamer(ctx, uInfo, channelId, channelName, i.GuildID, commandUsername, service)
 		ephemeralRespond(s, i, resp)
 	}
 }

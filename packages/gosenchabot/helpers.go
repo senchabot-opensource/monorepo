@@ -5,7 +5,9 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"regexp"
 	"strings"
+	"time"
 )
 
 const maxAliasParamLength = 4
@@ -92,4 +94,40 @@ func FetchGraphQL(apiUrl string, query string) ([]byte, error) {
 
 func TrimExclamationPrefix(commandName string) string {
 	return strings.TrimPrefix(commandName, "!")
+}
+
+func CheckIfCommand(param string) bool {
+	return strings.HasPrefix(param, "!")
+}
+
+func CheckTimeOlderThan(msgTimestamp time.Time, tNumber int) bool {
+	return int(time.Until(msgTimestamp).Abs().Hours()) < tNumber
+}
+
+func ContainsLowerCase(s string, substr string) bool {
+	return strings.Contains(strings.ToLower(s), substr)
+}
+
+func GetURL(domain, messageContent string) string {
+	pattern := fmt.Sprintf(`%s\S*`, domain)
+	re := regexp.MustCompile(pattern)
+	match := re.FindString(messageContent)
+
+	if match != "" {
+		return "https://" + match
+	}
+
+	return ""
+}
+
+func ParseTwitchUsernameURLParam(str string) string {
+	pattern := `^(?:https?:\/\/)?(?:www\.)?twitch\.tv\/([a-zA-Z0-9_]+)$`
+	re := regexp.MustCompile(pattern)
+	matches := re.FindStringSubmatch(str)
+
+	if len(matches) > 1 {
+		return matches[1]
+	}
+
+	return str
 }

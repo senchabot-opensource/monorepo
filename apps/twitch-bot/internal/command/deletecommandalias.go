@@ -21,7 +21,7 @@ func (c *commands) DeleteCommandAliasCommand(context context.Context, message tw
 		return nil, errors.New(message.User.DisplayName + " cannot execute the command")
 	}
 
-	if check := helpers.IsCommandParamsLengthEqualToOne(params); !check {
+	if check := gosenchabot.IsCommandParamsLengthEqualToOne(params); !check {
 		cmdResp.Message = DELETE_COMMAND_ALIAS_INFO
 		return &cmdResp, nil
 	}

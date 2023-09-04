@@ -9,6 +9,7 @@ import (
 
 	"github.com/gempir/go-twitch-irc/v3"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/command/helpers"
+	"github.com/senchabot-opensource/monorepo/packages/gosenchabot"
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
 	twsrvc "github.com/senchabot-opensource/monorepo/packages/gosenchabot/service/twitch"
 )
@@ -24,7 +25,7 @@ func (c *commands) SoCommand(context context.Context, message twitch.PrivateMess
 		return nil, errors.New(message.User.DisplayName + " cannot execute the command")
 	}
 
-	if check := helpers.IsCommandParamsLengthEqualToOne(params); !check {
+	if check := gosenchabot.IsCommandParamsLengthEqualToOne(params); !check {
 		cmdResp.Message = SO_COMMAND_INFO
 		return &cmdResp, nil
 	}
