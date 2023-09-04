@@ -47,7 +47,7 @@ func (c *commands) AddCommandAliasCommand(context context.Context, message twitc
 		}
 	}
 
-	infoText, err := c.service.CreateCommandAliases(context, command, aliasCommands, twitchChannelId, message.User.DisplayName)
+	infoText, err := c.service.CreateCommandAlias(context, command, aliasCommands, twitchChannelId, message.User.DisplayName)
 	if err != nil {
 		return nil, errors.New("AddCommandAlias Error: " + err.Error())
 	}

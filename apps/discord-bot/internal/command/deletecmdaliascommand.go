@@ -15,7 +15,7 @@ func (c *commands) DeleteCmdAliasCommand(ctx context.Context, s *discordgo.Sessi
 	cmdName := options[0].StringValue()
 	cmdName = gosenchabot.GetProcessedCommandName(cmdName)
 
-	infoText, err := service.DeleteDiscordBotCommandAlias(ctx, cmdName, i.GuildID)
+	infoText, err := service.DeleteCommandAlias(ctx, cmdName, i.GuildID)
 	if err != nil {
 		fmt.Println(err.Error())
 		return

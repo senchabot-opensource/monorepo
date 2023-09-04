@@ -29,7 +29,7 @@ func (c *commands) DeleteCommandCommand(context context.Context, message twitch.
 
 	command_name = gosenchabot.TrimExclamationPrefix(command_name)
 
-	deletedCommandName, infoText, err := c.service.DeleteBotCommand(context, command_name, message.RoomID)
+	deletedCommandName, infoText, err := c.service.DeleteCommand(context, command_name, message.RoomID)
 	if err != nil {
 		return nil, err
 	}

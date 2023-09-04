@@ -13,7 +13,7 @@ import (
 )
 
 func PrivateMessage(client *client.Clients, service service.Service) {
-	commands := command.NewCommands(client, service, 2*time.Second)
+	commands := command.New(client, service, 2*time.Second)
 	ctx := context.Background()
 
 	client.Twitch.OnPrivateMessage(func(message twitch.PrivateMessage) {

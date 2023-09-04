@@ -36,7 +36,7 @@ func (c *commands) AddCommandCommand(context context.Context, message twitch.Pri
 		return &cmdResp, nil
 	}
 
-	infoText, err := c.service.CreateBotCommand(context, command_name, command_content, message.RoomID, message.User.DisplayName)
+	infoText, err := c.service.CreateCommand(context, command_name, command_content, message.RoomID, message.User.DisplayName)
 	if err != nil {
 		return nil, err
 	}
