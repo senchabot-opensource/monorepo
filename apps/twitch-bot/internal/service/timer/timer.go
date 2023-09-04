@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/client"
-	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/models"
+	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
 )
 
 type Timer interface {
