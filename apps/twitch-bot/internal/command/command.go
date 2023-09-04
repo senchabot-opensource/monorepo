@@ -18,9 +18,9 @@ type CommandFunc func(context context.Context, message twitch.PrivateMessage, co
 type CommandMap map[string]CommandFunc
 
 type Command interface {
-	RunCommand(context context.Context, cmdName string, params []string, message twitch.PrivateMessage)
 	GetCommands() CommandMap
-	Say(ctx context.Context, message twitch.PrivateMessage, cmdName string, messageContent string)
+	Run(context context.Context, cmdName string, params []string, message twitch.PrivateMessage)
+	Respond(ctx context.Context, message twitch.PrivateMessage, cmdName string, messageContent string)
 }
 
 type commands struct {
@@ -66,13 +66,13 @@ func (c *commands) IsSystemCommand(commandName string) bool {
 	return ok
 }
 
-func (c *commands) Say(ctx context.Context, message twitch.PrivateMessage, cmdName string, messageContent string) {
+func (c *commands) Respond(ctx context.Context, message twitch.PrivateMessage, cmdName string, messageContent string) {
 	c.client.Twitch.Say(message.Channel, messageContent)
 	c.setCommandCooldown(message.User.Name)
 	c.service.SaveCommandActivity(ctx, cmdName, message.RoomID, message.User.DisplayName, message.User.ID)
 }
 
-func (c *commands) RunCommand(context context.Context, cmdName string, params []string, message twitch.PrivateMessage) {
+func (c *commands) Run(context context.Context, cmdName string, params []string, message twitch.PrivateMessage) {
 	if c.isUserOnCooldown(message.User.Name) {
 		return
 	}
@@ -95,7 +95,7 @@ func (c *commands) RunCommand(context context.Context, cmdName string, params []
 	}
 	if cmdData != nil {
 		formattedCommandContent := helpers.FormatCommandContent(cmdData, message)
-		c.Say(context, message, cmdName, formattedCommandContent)
+		c.Respond(context, message, cmdName, formattedCommandContent)
 		return
 	}
 	// USER COMMANDS
@@ -108,7 +108,7 @@ func (c *commands) RunCommand(context context.Context, cmdName string, params []
 			fmt.Println("[SYSTEM COMMAND ERROR]:", err.Error())
 			return
 		}
-		c.Say(context, message, cmdName+" "+strings.Join(params, " "), cmdResp.Message)
+		c.Respond(context, message, cmdName+" "+strings.Join(params, " "), cmdResp.Message)
 		return
 	}
 	// SYSTEM COMMANDS
@@ -124,7 +124,7 @@ func (c *commands) RunCommand(context context.Context, cmdName string, params []
 	}
 
 	formattedCommandContent := helpers.FormatCommandContent(cmdData, message)
-	c.Say(context, message, cmdName, formattedCommandContent)
+	c.Respond(context, message, cmdName, formattedCommandContent)
 	// GLOBAL COMMANDS
 }
 

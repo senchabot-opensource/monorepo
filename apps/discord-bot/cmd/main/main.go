@@ -99,7 +99,7 @@ func main() {
 			return
 		}
 
-		command.RunCommand(ctx, cmdName, params, m)
+		command.Run(ctx, cmdName, params, m)
 
 		if cmdName == "sozluk" {
 			sozlukResp, err := gosenchabot.SozlukCommand(params)

@@ -22,6 +22,6 @@ func PrivateMessage(client *client.Clients, service service.Service) {
 			return
 		}
 
-		commands.RunCommand(ctx, cmdName, params, message)
+		commands.Run(ctx, cmdName, params, message)
 	})
 }

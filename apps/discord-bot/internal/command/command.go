@@ -23,8 +23,8 @@ const errorMessage = "İşlem gerçekleştirilirken hata oluştu. Hata kodu: "
 
 type Command interface {
 	GetCommands() CommandMap
-	RunCommand(context context.Context, cmdName string, params []string, m *discordgo.MessageCreate)
-	Say(ctx context.Context, m *discordgo.MessageCreate, cmdName string, messageContent string)
+	Run(context context.Context, cmdName string, params []string, m *discordgo.MessageCreate)
+	Respond(ctx context.Context, m *discordgo.MessageCreate, cmdName string, messageContent string)
 	DeployCommands(discordClient *discordgo.Session)
 }
 
@@ -68,13 +68,13 @@ func (c *commands) IsSystemCommand(commandName string) bool {
 	return ok
 }
 
-func (c *commands) Say(ctx context.Context, m *discordgo.MessageCreate, cmdName string, messageContent string) {
+func (c *commands) Respond(ctx context.Context, m *discordgo.MessageCreate, cmdName string, messageContent string) {
 	c.dS.ChannelMessageSend(m.ChannelID, messageContent)
 	c.setCommandCooldown(m.Author.Username)
 	c.service.SaveCommandActivity(ctx, cmdName, m.GuildID, m.Author.Username, m.Author.ID)
 }
 
-func (c *commands) RunCommand(ctx context.Context, cmdName string, params []string, m *discordgo.MessageCreate) {
+func (c *commands) Run(ctx context.Context, cmdName string, params []string, m *discordgo.MessageCreate) {
 	if c.isUserOnCooldown(m.Author.Username) {
 		return
 	}
@@ -97,7 +97,7 @@ func (c *commands) RunCommand(ctx context.Context, cmdName string, params []stri
 	}
 	if cmdData != nil {
 		//formattedCommandContent := helpers.FormatCommandContent(cmdData, m)
-		c.Say(ctx, m, cmdName, cmdData.CommandContent)
+		c.Respond(ctx, m, cmdName, cmdData.CommandContent)
 		return
 	}
 	// USER COMMANDS
@@ -113,7 +113,7 @@ func (c *commands) RunCommand(ctx context.Context, cmdName string, params []stri
 	}
 
 	//formattedCommandContent := helpers.FormatCommandContent(cmdData, m)
-	c.Say(ctx, m, cmdName, cmdData.CommandContent)
+	c.Respond(ctx, m, cmdName, cmdData.CommandContent)
 	// GLOBAL COMMANDS
 }
 
