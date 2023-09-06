@@ -406,18 +406,15 @@ func (m *MySQL) GetCommandList(ctx context.Context, botPlatform platform.Platfor
 }
 
 func (m *MySQL) AddBotCommandStatistic(ctx context.Context, commandName string) error {
-	botCommandStatistic := models.BotCommandStatistic{
-		CommandName: commandName,
-		Count:       1,
-	}
+	botCommandStatistic := models.BotCommandStatistic{CommandName: commandName, Count: 1}
 
 	result := m.DB.Clauses(clause.OnConflict{
-		Columns:   []clause.Column{{Table: "bot_command_statistics", Name: "id"}},
-		DoUpdates: clause.Assignments(map[string]interface{}{"count": gorm.Expr("GREATEST(count, VALUES(count))")}),
-	}).Create(&botCommandStatistic)
+		Columns:   []clause.Column{{Name: "id"}},
+		DoUpdates: clause.Assignments(map[string]interface{}{"count": gorm.Expr("count + 1")}),
+	}).Where("command_name = ?", commandName).Create(&botCommandStatistic)
 
 	if result.Error != nil {
-		log.Println("(AddBotcommandStatistic): db.Clauses.Create Error: ", result.Error.Error())
+		log.Println("(AddBotcommandStatistic): db.Update Error: ", result.Error.Error())
 		return result.Error
 	}
 

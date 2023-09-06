@@ -3,7 +3,6 @@ package command
 import (
 	"context"
 	"fmt"
-	"log"
 	"strings"
 	"time"
 
@@ -70,10 +69,7 @@ func (c *commands) IsSystemCommand(commandName string) bool {
 func (c *commands) Respond(ctx context.Context, message twitch.PrivateMessage, cmdName string, messageContent string) {
 	c.client.Twitch.Say(message.Channel, messageContent)
 	c.setCommandCooldown(message.User.Name)
-	err := c.service.AddBotCommandStatistic(ctx, cmdName)
-	if err != nil {
-		log.Println(err)
-	}
+	c.service.AddBotCommandStatistic(ctx, cmdName)
 	c.service.SaveCommandActivity(ctx, cmdName, message.RoomID, message.User.DisplayName, message.User.ID)
 }
 
