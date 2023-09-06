@@ -111,11 +111,7 @@ type TwitchStreamerData struct {
 }
 
 type BotCommandStatistic struct {
-	CommandName string `gorm:"column:command_name"`
-	Count       int    `gorm:"column:count"`
-}
-
-type MessageProcessStatistic struct {
-	Content string `gorm:"column:content"`
-	Count   int    `gorm:"column:count"`
+	BotPlatformType platform.Platform `gorm:"column:bot_platform_type"`
+	CommandName     string            `gorm:"column:command_name"`
+	Count           int               `gorm:"column:count"`
 }

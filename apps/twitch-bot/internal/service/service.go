@@ -214,7 +214,7 @@ func (s *services) DeleteCommandAlias(ctx context.Context, commandAlias string, 
 }
 
 func (s *services) AddBotCommandStatistic(ctx context.Context, commandName string) {
-	if err := s.DB.AddBotCommandStatistic(ctx, commandName); err != nil {
+	if err := s.DB.AddBotCommandStatistic(ctx, platform.TWITCH, commandName); err != nil {
 		fmt.Println(err.Error())
 	}
 }

@@ -62,5 +62,5 @@ type Database interface {
 
 	// DISCORD
 
-	AddBotCommandStatistic(ctx context.Context, commandName string) error
+	AddBotCommandStatistic(ctx context.Context, botPlatform platform.Platform, commandName string) error
 }
