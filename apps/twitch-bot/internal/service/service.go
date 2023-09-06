@@ -43,6 +43,7 @@ type Service interface {
 	SetTimerDisabled(commandId int)
 	GetTimerStatus(commandId int) bool
 
+	GetCommandTimers(ctx context.Context, botPlatformId string) ([]*models.CommandTimer, error)
 	CreateCommandTimer(ctx context.Context, channelId string, commandName string, interval int) (bool, error)
 	CheckCommandTimerExist(ctx context.Context, channelId string, commandName string) bool
 	UpdateCommandTimer(ctx context.Context, channelId string, commandName string, interval int, status int) error
@@ -240,6 +241,10 @@ func (s *services) DeleteCommandAlias(ctx context.Context, commandAlias string, 
 	}
 
 	return infoText, nil
+}
+
+func (s *services) GetCommandTimers(ctx context.Context, channelId string) ([]*models.CommandTimer, error) {
+	return s.DB.GetCommandTimers(ctx, platform.TWITCH, channelId)
 }
 
 func (s *services) CreateCommandTimer(ctx context.Context, channelId string, commandName string, interval int) (bool, error) {

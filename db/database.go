@@ -33,6 +33,7 @@ type Database interface {
 	CheckCommandAliasExist(ctx context.Context, botPlatform platform.Platform, commandAlias string, botPlatformId string) (*string, error)
 	DeleteCommandAlias(ctx context.Context, botPlatform platform.Platform, commandAlias string, botPlatformId string) (*string, error)
 
+	GetCommandTimers(ctx context.Context, botPlatform platform.Platform, botPlatformId string) ([]*models.CommandTimer, error)
 	CreateCommandTimer(ctx context.Context, botPlatform platform.Platform, botPlatformId string, commandName string, interval int) (bool, error)
 	UpdateCommandTimer(ctx context.Context, botPlatform platform.Platform, botPlatformId string, commandName string, interval int, status int) error
 	CheckCommandTimerExist(ctx context.Context, botPlatform platform.Platform, botPlatformId string, commandName string) bool

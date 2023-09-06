@@ -404,6 +404,18 @@ func (m *MySQL) GetCommandList(ctx context.Context, botPlatform platform.Platfor
 	return botCommandList, nil
 }
 
+func (m *MySQL) GetCommandTimers(ctx context.Context, botPlatform platform.Platform, botPlatformId string) ([]*models.CommandTimer, error) {
+	var commandTimers []*models.CommandTimer
+	fmt.Println(botPlatform, botPlatformId)
+	result := m.DB.Where("bot_platform = ?", botPlatform).Where("bot_platform_id = ?", botPlatformId).Find(&commandTimers)
+
+	if result.Error != nil {
+		return nil, fmt.Errorf("(GetCommandTimers) db.Find error: %v", result.Error)
+	}
+
+	return commandTimers, nil
+}
+
 func (m *MySQL) CreateCommandTimer(ctx context.Context, botPlatform platform.Platform, botPlatformId string, commandName string, interval int) (bool, error) {
 	exist := m.CheckCommandTimerExist(ctx, botPlatform, botPlatformId, commandName)
 	if exist {
