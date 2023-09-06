@@ -65,6 +65,7 @@ func (c *commands) IsSystemCommand(commandName string) bool {
 func (c *commands) Respond(ctx context.Context, m *discordgo.MessageCreate, cmdName string, messageContent string) {
 	c.dS.ChannelMessageSend(m.ChannelID, messageContent)
 	c.setCommandCooldown(m.Author.Username)
+	c.service.AddBotCommandStatistic(ctx, cmdName)
 	c.service.SaveCommandActivity(ctx, cmdName, m.GuildID, m.Author.Username, m.Author.ID)
 }
 
