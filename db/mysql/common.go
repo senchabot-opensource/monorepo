@@ -343,8 +343,8 @@ func (m *MySQL) DeleteCommandAlias(ctx context.Context, botPlatform platform.Pla
 func (m *MySQL) CreateBotActionActivity(ctx context.Context, botPlatform platform.Platform, botActivity string, botPlatformId string, activityAuthor, activityAuthorId string) error {
 	botActionActivity := models.BotActionActivity{
 		BotPlatformType:  botPlatform,
-		BotActivity:      botActivity,
 		BotPlatformID:    &botPlatformId,
+		BotActivity:      botActivity,
 		ActivityAuthor:   &activityAuthor,
 		ActivityAuthorID: &activityAuthorId,
 	}
