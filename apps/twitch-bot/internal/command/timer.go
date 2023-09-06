@@ -65,9 +65,14 @@ func (c *commands) TimerCommand(context context.Context, message twitch.PrivateM
 	// should be >= 25
 	if interval > 2 {
 		c.service.SetTimer(c.client, channelName, commandData, interval*60000)
-		err := c.service.CreateCommandTimer(context, "twitch", message.RoomID, commandData.CommandName, interval)
+		ok, err := c.service.CreateCommandTimer(context, message.RoomID, commandData.CommandName, interval)
+
 		if err != nil {
 			log.Println(err.Error())
+			if ok {
+				cmdResp.Message = err.Error()
+				return &cmdResp, nil
+			}
 			cmdResp.Message = fmt.Sprintf("Command Timer Enabled: %v. There was an error in db. This timer is not saved to the db.", commandData.CommandName)
 			return &cmdResp, nil
 		}

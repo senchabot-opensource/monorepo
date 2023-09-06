@@ -404,30 +404,30 @@ func (m *MySQL) GetCommandList(ctx context.Context, botPlatform platform.Platfor
 	return botCommandList, nil
 }
 
-func (m *MySQL) CreateCommandTimer(ctx context.Context, botPlatformType string, channelId string, commandName string, interval int) error {
-	exist := m.CheckCommandTimerExist(ctx, botPlatformType, channelId, commandName)
+func (m *MySQL) CreateCommandTimer(ctx context.Context, botPlatform platform.Platform, botPlatformId string, commandName string, interval int) (bool, error) {
+	exist := m.CheckCommandTimerExist(ctx, botPlatform, botPlatformId, commandName)
 	if exist {
-		return errors.New("the command " + commandName + " is already in use for timer")
+		return true, fmt.Errorf("the command '%v' is already in use for timer", commandName)
 	}
 
 	result := m.DB.Create(&models.CommandTimer{
-		Platform:    botPlatformType,
-		ChannelID:   channelId,
-		CommandName: commandName,
-		Interval:    interval,
-		Status:      1,
+		BotPlatform:   botPlatform,
+		BotPlatformID: botPlatformId,
+		CommandName:   commandName,
+		Interval:      interval,
+		Status:        1,
 	})
 	if result.Error != nil {
-		return fmt.Errorf("(CreateCommandTimer) db.Create error: %v", result.Error)
+		return false, fmt.Errorf("(CreateCommandTimer) db.Create error: %v", result.Error)
 	}
 
-	return nil
+	return true, nil
 }
 
-func (m *MySQL) CheckCommandTimerExist(ctx context.Context, botPlatformType string, channelId string, commandName string) bool {
+func (m *MySQL) CheckCommandTimerExist(ctx context.Context, botPlatform platform.Platform, botPlatformId string, commandName string) bool {
 	var commandTimer []models.CommandTimer
 
-	result := m.DB.Where("platform = ?", botPlatformType).Where("channel_id = ?", channelId).Where("command_name = ?", commandName).Find(&commandTimer)
+	result := m.DB.Where("bot_platform = ?", botPlatform).Where("bot_platform_id = ?", botPlatformId).Where("command_name = ?", commandName).Find(&commandTimer)
 	if result.Error != nil {
 		fmt.Println("err", result.Error)
 	}
@@ -438,10 +438,10 @@ func (m *MySQL) CheckCommandTimerExist(ctx context.Context, botPlatformType stri
 	return true
 }
 
-func (m *MySQL) UpdateCommandTimer(ctx context.Context, botPlatformType string, channelId string, commandName string, interval int, status int) error {
+func (m *MySQL) UpdateCommandTimer(ctx context.Context, botPlatform platform.Platform, botPlatformId string, commandName string, interval int, status int) error {
 	var commandTimer *models.CommandTimer
 
-	result := m.DB.Where("platform = ?", botPlatformType).Where("channel_id = ?", channelId).Where("command_name = ?", commandName).First(&commandTimer)
+	result := m.DB.Where("bot_platform = ?", botPlatform).Where("bot_platform_id = ?", botPlatformId).Where("command_name = ?", commandName).First(&commandTimer)
 	if result.Error != nil {
 		return fmt.Errorf("(UpdateCommandTimer) db.First error: %v", result.Error)
 	}
@@ -457,10 +457,10 @@ func (m *MySQL) UpdateCommandTimer(ctx context.Context, botPlatformType string, 
 	return nil
 }
 
-func (m *MySQL) DeleteCommandTimer(ctx context.Context, botPlatformType string, channelId string, commandName string) error {
+func (m *MySQL) DeleteCommandTimer(ctx context.Context, botPlatform platform.Platform, botPlatformId string, commandName string) error {
 	var commandTimer *models.CommandTimer
 
-	result := m.DB.Where("platform = ?", botPlatformType).Where("channel_id = ?", channelId).Where("command_name = ?", commandName).First(&commandTimer)
+	result := m.DB.Where("bot_platform = ?", botPlatform).Where("bot_platform_id = ?", botPlatformId).Where("command_name = ?", commandName).First(&commandTimer)
 	if result.Error != nil {
 		return fmt.Errorf("(DeleteCommandTimer) db.First error: %v", result.Error)
 	}

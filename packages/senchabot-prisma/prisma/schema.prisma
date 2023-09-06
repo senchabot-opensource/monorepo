@@ -153,14 +153,14 @@ model TwitchBotConfigs {
 }
 
 model CommandTimer {
-    id          Int    @id @default(autoincrement())
-    platform    String @map("platform")
-    channelId   String @map("channel_id")
-    commandName String @map("command_name")
-    interval    Int    @map("interval")
-    status      Int    @map("status")
+    id            Int    @id @default(autoincrement())
+    botPlatform   String @map("bot_platform")
+    botPlatformId String @map("bot_platform_id")
+    commandName   String @map("command_name")
+    interval      Int    @map("interval")
+    status        Int    @map("status")
 
-    @@unique([channelId, commandName])
+    @@unique([botPlatformId, commandName])
     @@map("command_timers")
 }
 

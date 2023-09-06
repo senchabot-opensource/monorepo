@@ -33,10 +33,10 @@ type Database interface {
 	CheckCommandAliasExist(ctx context.Context, botPlatform platform.Platform, commandAlias string, botPlatformId string) (*string, error)
 	DeleteCommandAlias(ctx context.Context, botPlatform platform.Platform, commandAlias string, botPlatformId string) (*string, error)
 
-	CreateCommandTimer(ctx context.Context, botPlatformType string, channelId string, commandName string, interval int) error
-	CheckCommandTimerExist(ctx context.Context, botPlatformType string, channelId string, commandName string) bool
-	UpdateCommandTimer(ctx context.Context, botPlatformType string, channelId string, commandName string, interval int, status int) error
-	DeleteCommandTimer(ctx context.Context, botPlatformType string, channelId string, commandName string) error
+	CreateCommandTimer(ctx context.Context, botPlatform platform.Platform, botPlatformId string, commandName string, interval int) (bool, error)
+	UpdateCommandTimer(ctx context.Context, botPlatform platform.Platform, botPlatformId string, commandName string, interval int, status int) error
+	CheckCommandTimerExist(ctx context.Context, botPlatform platform.Platform, botPlatformId string, commandName string) bool
+	DeleteCommandTimer(ctx context.Context, botPlatform platform.Platform, botPlatformId string, commandName string) error
 
 	// DISCORD
 	GetDiscordBotConfig(ctx context.Context, discordServerId string, configKey string) (*models.DiscordBotConfigs, error)
