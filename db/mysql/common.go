@@ -3,10 +3,12 @@ package mysql
 import (
 	"context"
 	"errors"
+	"log"
 
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/platform"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 func (m *MySQL) CreateBotCommand(ctx context.Context, botPlatform platform.Platform, commandName string, commandContent string, botPlatformId string, createdBy string) (*string, error) {
@@ -401,4 +403,20 @@ func (m *MySQL) GetCommandList(ctx context.Context, botPlatform platform.Platfor
 	}
 
 	return botCommandList, nil
+}
+
+func (m *MySQL) AddBotCommandStatistic(ctx context.Context, botPlatform platform.Platform, commandName string) error {
+	botCommandStatistic := models.BotCommandStatistic{CommandName: commandName, BotPlatformType: botPlatform, Count: 1}
+
+	result := m.DB.Clauses(clause.OnConflict{
+		Columns:   []clause.Column{{Name: "id"}},
+		DoUpdates: clause.Assignments(map[string]interface{}{"count": gorm.Expr("count + 1")}),
+	}).Where("bot_platform_type = ?", botPlatform).Where("command_name = ?", commandName).Create(&botCommandStatistic)
+
+	if result.Error != nil {
+		log.Println("(AddBotcommandStatistic): db.Update Error: ", result.Error.Error())
+		return result.Error
+	}
+
+	return nil
 }

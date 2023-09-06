@@ -109,3 +109,9 @@ type TwitchStreamerData struct {
 	StreamGame string `json:"game_name"`
 	StartedAt  string `json:"started_at"`
 }
+
+type BotCommandStatistic struct {
+	BotPlatformType platform.Platform `gorm:"column:bot_platform_type"`
+	CommandName     string            `gorm:"column:command_name"`
+	Count           int               `gorm:"column:count"`
+}

@@ -50,6 +50,8 @@ type Service interface {
 	DeleteDiscordBotConfig(ctx context.Context, serverId, key string) (bool, error)
 	GetDiscordBotConfig(ctx context.Context, discordServerId string, configKey string) (*models.DiscordBotConfigs, error)
 	CheckDiscordBotConfig(ctx context.Context, discordServerId string, configKey string, configValue string) bool
+
+	AddBotCommandStatistic(ctx context.Context, commandName string)
 }
 
 type service struct {
@@ -223,3 +225,9 @@ func (s *service) CheckDiscordBotConfig(ctx context.Context, discordServerId str
 }
 
 // DISCORD BOT CONFIG
+
+func (s *service) AddBotCommandStatistic(ctx context.Context, commandName string) {
+	if err := s.DB.AddBotCommandStatistic(ctx, platform.DISCORD, commandName); err != nil {
+		fmt.Println(err.Error())
+	}
+}

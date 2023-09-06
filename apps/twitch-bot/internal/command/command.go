@@ -69,6 +69,7 @@ func (c *commands) IsSystemCommand(commandName string) bool {
 func (c *commands) Respond(ctx context.Context, message twitch.PrivateMessage, cmdName string, messageContent string) {
 	c.client.Twitch.Say(message.Channel, messageContent)
 	c.setCommandCooldown(message.User.Name)
+	c.service.AddBotCommandStatistic(ctx, cmdName)
 	c.service.SaveCommandActivity(ctx, cmdName, message.RoomID, message.User.DisplayName, message.User.ID)
 }
 

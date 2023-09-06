@@ -104,6 +104,16 @@ model BotCommandAliases {
     @@map("bot_command_aliases")
 }
 
+model BotCommandStatistic {
+    id              Int     @id @default(autoincrement())
+    botPlatformType String? @map("bot_platform_type")
+    commandName     String  @map("command_name")
+    count           Int     @default(0) @map("count")
+
+    @@unique([botPlatformType, commandName])
+    @@map("bot_command_statistics")
+}
+
 model DiscordServer {
     id                          Int                           @id @default(autoincrement())
     serverId                    String                        @unique @map("server_id")
