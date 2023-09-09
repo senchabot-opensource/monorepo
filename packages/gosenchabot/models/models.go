@@ -115,3 +115,11 @@ type BotCommandStatistic struct {
 	CommandName     string            `gorm:"column:command_name"`
 	Count           int               `gorm:"column:count"`
 }
+
+type CommandVariable struct {
+	CommandContent   string
+	UserName         string
+	CurrentDate      *time.Time
+	CommandCreatedAt *time.Time
+	ChannelName      string
+}

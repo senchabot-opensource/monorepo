@@ -8,7 +8,9 @@ import (
 	"time"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/command/helpers"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
+	"github.com/senchabot-opensource/monorepo/packages/gosenchabot"
 )
 
 type CommandFunc func(context context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, service service.Service)
@@ -92,8 +94,9 @@ func (c *commands) Run(ctx context.Context, cmdName string, params []string, m *
 		fmt.Println("[USER COMMAND ERROR]:", err.Error())
 	}
 	if cmdData != nil {
-		//formattedCommandContent := helpers.FormatCommandContent(cmdData, m)
-		c.Respond(ctx, m, cmdName, cmdData.CommandContent)
+		cmdVar := helpers.GetCommandVariables(c.dS, cmdData, m)
+		formattedCommandContent := gosenchabot.FormatCommandContent(cmdVar)
+		c.Respond(ctx, m, cmdName, formattedCommandContent)
 		return
 	}
 	// USER COMMANDS
@@ -108,8 +111,9 @@ func (c *commands) Run(ctx context.Context, cmdName string, params []string, m *
 		return
 	}
 
-	//formattedCommandContent := helpers.FormatCommandContent(cmdData, m)
-	c.Respond(ctx, m, cmdName, cmdData.CommandContent)
+	cmdVar := helpers.GetCommandVariables(c.dS, cmdData, m)
+	formattedCommandContent := gosenchabot.FormatCommandContent(cmdVar)
+	c.Respond(ctx, m, cmdName, formattedCommandContent)
 	// GLOBAL COMMANDS
 }
 

@@ -3,14 +3,60 @@ package gosenchabot
 import (
 	"fmt"
 	"io"
+	"math/rand"
 	"net/http"
 	"net/url"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
+
+	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
 )
 
-const maxAliasParamLength = 4
+const (
+	max = 70
+	min = 18
+
+	maxAliasParamLength = 4
+)
+
+func FormatCommandContent(cv *models.CommandVariable) string {
+	msgContent := cv.CommandContent
+	username := cv.UserName
+	dateTemplate := "02/01/2006"
+
+	stringTemplates := map[string]string{
+		"{user.name}":     username,
+		"{cmd.author}":    username,
+		"{random_number}": strconv.Itoa(rand.Intn(max-min) + min),
+		"{date}":          cv.CurrentDate.Format(dateTemplate),
+		"{cmd.date}":      cv.CommandCreatedAt.Format(dateTemplate),
+		"{channel.name}":  cv.ChannelName,
+
+		// we will keep these old string templates used in commands for a while for backward compatibility.
+		"{user_name}": username,
+		"{cmd_date}":  cv.CommandCreatedAt.Format(dateTemplate),
+	}
+
+	for k, v := range stringTemplates {
+		msgContent = strings.ReplaceAll(msgContent, k, v)
+	}
+
+	url, startIndex, endIndex, ok := ParseCustomAPIURLFromMessage(msgContent)
+	if ok {
+		template := msgContent[startIndex : endIndex+1]
+		response, err := SendGetRequest(url)
+		if err != nil {
+			fmt.Println("parseCustomAPIURLFromMessage url, sendGetRequest Error:", err)
+			msgContent = username + ", there was an error while sending get request"
+		}
+
+		msgContent = strings.Replace(msgContent, template, response, 1)
+	}
+
+	return msgContent
+}
 
 func GetAliasCommandCreateParams(params []string) (string, []string, bool) {
 	if check := ValidateCommandCreateParamsLength(params); !check {
@@ -130,4 +176,31 @@ func ParseTwitchUsernameURLParam(str string) string {
 	}
 
 	return str
+}
+
+func ParseCustomAPIURLFromMessage(message string) (string, int, int, bool) {
+	startIndex := strings.Index(message, "{customapi.") // Curly braces start index
+	endIndex := strings.LastIndex(message, "}")         // Curly braces end index
+	if startIndex == -1 || endIndex == -1 || endIndex <= startIndex {
+		return message, 0, 0, false
+	}
+
+	url := message[startIndex+1 : endIndex]
+	url = strings.TrimPrefix(url, "customapi.")
+
+	return url, startIndex, endIndex, true
+}
+
+func SendGetRequest(url string) (string, error) {
+	response, err := http.Get(url)
+	if err != nil {
+		return "", err
+	}
+	defer response.Body.Close()
+
+	body, err := io.ReadAll(response.Body)
+	if err != nil {
+		return "", err
+	}
+	return string(body), nil
 }
