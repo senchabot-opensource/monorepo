@@ -26,7 +26,7 @@ Open source Discord & Twitch bot
    cp env.example .env
    cp packages/senchabot-prisma/env.example packages/senchabot-prisma/.env
    cp apps/web/env.example apps/web/.env
-```
+   ```
 
 3. Install the dependencies
 
