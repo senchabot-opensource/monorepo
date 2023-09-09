@@ -4,10 +4,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
 
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/platform"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 func (m *MySQL) CreateBotCommand(ctx context.Context, botPlatform platform.Platform, commandName string, commandContent string, botPlatformId string, createdBy string) (*string, error) {
@@ -344,8 +346,8 @@ func (m *MySQL) DeleteCommandAlias(ctx context.Context, botPlatform platform.Pla
 func (m *MySQL) CreateBotActionActivity(ctx context.Context, botPlatform platform.Platform, botActivity string, botPlatformId string, activityAuthor, activityAuthorId string) error {
 	botActionActivity := models.BotActionActivity{
 		BotPlatformType:  botPlatform,
-		BotActivity:      botActivity,
 		BotPlatformID:    &botPlatformId,
+		BotActivity:      botActivity,
 		ActivityAuthor:   &activityAuthor,
 		ActivityAuthorID: &activityAuthorId,
 	}
@@ -473,7 +475,6 @@ func (m *MySQL) UpdateCommandTimer(ctx context.Context, botPlatform platform.Pla
 
 	return nil
 }
-
 func (m *MySQL) DeleteCommandTimer(ctx context.Context, botPlatform platform.Platform, botPlatformId string, commandName string) error {
 	var commandTimer *models.CommandTimer
 
@@ -485,6 +486,21 @@ func (m *MySQL) DeleteCommandTimer(ctx context.Context, botPlatform platform.Pla
 	result = m.DB.Delete(&commandTimer)
 	if result.Error != nil {
 		return fmt.Errorf("(DeleteCommandTimer) db.Delete error: %v", result.Error)
+  }
+  
+  return nil
+}
+func (m *MySQL) AddBotCommandStatistic(ctx context.Context, botPlatform platform.Platform, commandName string) error {
+	botCommandStatistic := models.BotCommandStatistic{CommandName: commandName, BotPlatformType: botPlatform, Count: 1}
+
+	result := m.DB.Clauses(clause.OnConflict{
+		Columns:   []clause.Column{{Name: "id"}},
+		DoUpdates: clause.Assignments(map[string]interface{}{"count": gorm.Expr("count + 1")}),
+	}).Where("bot_platform_type = ?", botPlatform).Where("command_name = ?", commandName).Create(&botCommandStatistic)
+
+	if result.Error != nil {
+		log.Println("(AddBotcommandStatistic): db.Update Error: ", result.Error.Error())
+		return result.Error
 	}
 
 	return nil

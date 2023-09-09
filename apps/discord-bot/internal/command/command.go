@@ -42,6 +42,7 @@ func New(dS *discordgo.Session, token string, service service.Service, cooldownP
 
 func (c *commands) GetCommands() CommandMap {
 	var commands = CommandMap{
+		"cmds":   c.CmdsCommand,
 		"acmd":   c.AddCmdCommand,
 		"ucmd":   c.UpdateCmdCommand,
 		"dcmd":   c.DeleteCmdCommand,
@@ -65,6 +66,7 @@ func (c *commands) IsSystemCommand(commandName string) bool {
 func (c *commands) Respond(ctx context.Context, m *discordgo.MessageCreate, cmdName string, messageContent string) {
 	c.dS.ChannelMessageSend(m.ChannelID, messageContent)
 	c.setCommandCooldown(m.Author.Username)
+	c.service.AddBotCommandStatistic(ctx, cmdName)
 	c.service.SaveCommandActivity(ctx, cmdName, m.GuildID, m.Author.Username, m.Author.ID)
 }
 
@@ -149,6 +151,11 @@ var (
 	purgePermissions     int64 = discordgo.PermissionManageServer
 	setdeletePermissions int64 = discordgo.PermissionAdministrator
 	commandMetadatas           = []*discordgo.ApplicationCommand{
+		{
+			Name:                     "cmds",
+			Description:              "Command list.",
+			DefaultMemberPermissions: &setdeletePermissions,
+		},
 		{
 			Name:                     "acmd",
 			Description:              "Add a new custom command.",

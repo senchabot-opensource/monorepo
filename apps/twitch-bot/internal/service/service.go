@@ -38,6 +38,7 @@ type Service interface {
 	CheckCommandAliasExist(ctx context.Context, commandAlias string, twitchChannelId string) (*string, error)
 	DeleteCommandAlias(ctx context.Context, commandAlias string, twitchChannelId string) (*string, error)
 
+
 	SetTimer(client *client.Clients, channelName string, commandData *models.BotCommand, interval int)
 	SetTimerEnabled(client *client.Clients, commandId int)
 	SetTimerDisabled(commandId int)
@@ -50,6 +51,8 @@ type Service interface {
 	GetCommandTimer(ctx context.Context, channelId string, commandName string) *models.CommandTimer
 	UpdateCommandTimer(ctx context.Context, channelId string, commandName string, interval int, status int) error
 	DeleteCommandTimer(ctx context.Context, channelId string, commandName string) error
+
+	AddBotCommandStatistic(ctx context.Context, commandName string)
 }
 
 type services struct {
@@ -256,7 +259,6 @@ func (s *services) DeleteCommandAlias(ctx context.Context, commandAlias string, 
 func (s *services) GetCommandTimers(ctx context.Context, channelId string) ([]*models.CommandTimer, error) {
 	return s.DB.GetCommandTimers(ctx, platform.TWITCH, channelId)
 }
-
 func (s *services) CreateCommandTimer(ctx context.Context, channelId string, commandName string, interval int) (bool, error) {
 	return s.DB.CreateCommandTimer(ctx, platform.TWITCH, channelId, commandName, interval)
 }
@@ -268,4 +270,9 @@ func (s *services) UpdateCommandTimer(ctx context.Context, channelId string, com
 }
 func (s *services) DeleteCommandTimer(ctx context.Context, channelId string, commandName string) error {
 	return s.DB.DeleteCommandTimer(ctx, platform.TWITCH, channelId, commandName)
+}
+func (s *services) AddBotCommandStatistic(ctx context.Context, commandName string) {
+	if err := s.DB.AddBotCommandStatistic(ctx, platform.TWITCH, commandName); err != nil {
+		fmt.Println(err.Error())
+	}
 }

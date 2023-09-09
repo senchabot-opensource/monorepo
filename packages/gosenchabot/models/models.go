@@ -29,8 +29,8 @@ type TwitchBotConfig struct {
 type BotActionActivity struct {
 	ID               int
 	BotPlatformType  platform.Platform `gorm:"column:bot_platform_type"`
-	BotActivity      string            `gorm:"column:bot_activity"`
 	BotPlatformID    *string           `gorm:"column:bot_platform_id"`
+	BotActivity      string            `gorm:"column:bot_activity"`
 	ActivityAuthor   *string           `gorm:"column:activity_author"`
 	ActivityAuthorID *string           `gorm:"column:activity_author_id"`
 }
@@ -117,4 +117,10 @@ type CommandTimer struct {
 	CommandName   string            `gorm:"column:command_name"`
 	Interval      int               `gorm:"column:interval"`
 	Status        int               `gorm:"column:status"`
+}
+
+type BotCommandStatistic struct {
+	BotPlatformType platform.Platform `gorm:"column:bot_platform_type"`
+	CommandName     string            `gorm:"column:command_name"`
+	Count           int               `gorm:"column:count"`
 }
