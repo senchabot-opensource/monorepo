@@ -21,7 +21,7 @@ type Database interface {
 	CheckCommandExists(ctx context.Context, botPlatform platform.Platform, commandName string, botPlatformId string) (*string, error)
 	CheckGlobalCommandExists(ctx context.Context, commandName string) (*string, error)
 	CheckUserCommandExists(ctx context.Context, botPlatform platform.Platform, commandName string, botPlatformId string) (*string, error)
-	UpdateBotCommand(ctx context.Context, botPlatform platform.Platform, commandName string, commandContent string, botPlatformId string, updatedBy string) (*string, *string, error)
+	UpdateBotCommand(ctx context.Context, botPlatform platform.Platform, commandName string, commandContent string, botPlatformId string, updatedBy string) (*models.BotCommand, *string, error)
 	DeleteBotCommand(ctx context.Context, botPlatform platform.Platform, commandName string, botPlatformId string) (*string, *string, error)
 	GetCommandList(ctx context.Context, botPlatform platform.Platform, botPlatformId string) ([]*models.BotCommand, error)
 
@@ -36,7 +36,7 @@ type Database interface {
 	GetCommandTimers(ctx context.Context, botPlatform platform.Platform, botPlatformId string) ([]*models.CommandTimer, error)
 	CreateCommandTimer(ctx context.Context, botPlatform platform.Platform, botPlatformId string, commandName string, interval int) (bool, error)
 	UpdateCommandTimer(ctx context.Context, botPlatform platform.Platform, botPlatformId string, commandName string, interval int, status int) error
-	CheckCommandTimerExist(ctx context.Context, botPlatform platform.Platform, botPlatformId string, commandName string) bool
+	GetCommandTimer(ctx context.Context, botPlatform platform.Platform, botPlatformId string, commandName string) *models.CommandTimer
 	DeleteCommandTimer(ctx context.Context, botPlatform platform.Platform, botPlatformId string, commandName string) error
 
 	// DISCORD

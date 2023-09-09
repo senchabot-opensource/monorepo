@@ -30,7 +30,7 @@ func (c *commands) UpdateCommandCommand(context context.Context, message twitch.
 		return &cmdResp, nil
 	}
 
-	updatedCommandName, infoText, err := c.service.UpdateCommand(context, command_name, newCommandContent, message.RoomID, message.User.DisplayName)
+	updatedCommand, infoText, err := c.service.UpdateCommand(context, command_name, newCommandContent, message.RoomID, message.User.DisplayName)
 	if err != nil {
 		return nil, err
 	}
@@ -40,8 +40,10 @@ func (c *commands) UpdateCommandCommand(context context.Context, message twitch.
 		return &cmdResp, nil
 	}
 
-	fmt.Println("COMMAND_UPDATE: command_name:", updatedCommandName, "new_command_content:", newCommandContent)
+	c.service.UpdateTimerContent(updatedCommand.ID, updatedCommand.CommandContent)
 
-	cmdResp.Message = "Command Updated: " + *updatedCommandName
+	fmt.Println("COMMAND_UPDATE: command_name:", updatedCommand.CommandName, "new_command_content:", newCommandContent)
+
+	cmdResp.Message = "Command Updated: " + updatedCommand.CommandName
 	return &cmdResp, nil
 }

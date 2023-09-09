@@ -14,7 +14,7 @@ func (c *commands) UpdateCmdCommand(ctx context.Context, s *discordgo.Session, i
 	cmdName := options[0].StringValue()
 	cmdContent := options[1].StringValue()
 
-	updatedCmdName, resp, err := service.UpdateCommand(ctx, cmdName, cmdContent, i.GuildID, i.Member.User.Username)
+	updatedCmd, resp, err := service.UpdateCommand(ctx, cmdName, cmdContent, i.GuildID, i.Member.User.Username)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -25,5 +25,5 @@ func (c *commands) UpdateCmdCommand(ctx context.Context, s *discordgo.Session, i
 		return
 	}
 
-	ephemeralRespond(s, i, "Command Updated: "+*updatedCmdName)
+	ephemeralRespond(s, i, "Command Updated: "+updatedCmd.CommandName)
 }

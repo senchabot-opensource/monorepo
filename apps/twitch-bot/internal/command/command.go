@@ -46,7 +46,10 @@ func (c *commands) GetCommands() CommandMap {
 		"sozluk": c.SozlukCommand,
 		"so":     c.SoCommand,
 
-		"timer": c.TimerCommand,
+		"timer":  c.CommandTimerCommand,
+		"atimer": c.AddTimerCommand,
+		"utimer": c.UpdateTimerCommand,
+		"dtimer": c.DeleteTimerCommand,
 
 		"acmd": c.AddCommandCommand,
 		"ucmd": c.UpdateCommandCommand,

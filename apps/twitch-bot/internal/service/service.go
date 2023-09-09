@@ -27,7 +27,7 @@ type Service interface {
 	GetUserBotCommand(ctx context.Context, commandName string, twitchChannelId string) (*models.BotCommand, error)
 	CreateCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string, createdBy string) (*string, error)
 	CheckCommandExists(ctx context.Context, commandName string, twitchChannelId string) (*string, error)
-	UpdateCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string, updatedBy string) (*string, *string, error)
+	UpdateCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string, updatedBy string) (*models.BotCommand, *string, error)
 	DeleteCommand(ctx context.Context, commandName string, twitchChannelId string) (*string, *string, error)
 	GetCommandList(ctx context.Context, twitchChannelId string) ([]*models.BotCommand, error)
 
@@ -42,10 +42,12 @@ type Service interface {
 	SetTimerEnabled(client *client.Clients, commandId int)
 	SetTimerDisabled(commandId int)
 	GetTimerStatus(commandId int) bool
+	DeleteTimer(commandId int)
+	UpdateTimerContent(commandId int, commandContent string)
 
 	GetCommandTimers(ctx context.Context, botPlatformId string) ([]*models.CommandTimer, error)
 	CreateCommandTimer(ctx context.Context, channelId string, commandName string, interval int) (bool, error)
-	CheckCommandTimerExist(ctx context.Context, channelId string, commandName string) bool
+	GetCommandTimer(ctx context.Context, channelId string, commandName string) *models.CommandTimer
 	UpdateCommandTimer(ctx context.Context, channelId string, commandName string, interval int, status int) error
 	DeleteCommandTimer(ctx context.Context, channelId string, commandName string) error
 }
@@ -83,6 +85,14 @@ func (s *services) SetTimerDisabled(commandId int) {
 
 func (s *services) GetTimerStatus(commandId int) bool {
 	return s.Timer.GetTimerStatus(commandId)
+}
+
+func (s *services) DeleteTimer(commandId int) {
+	s.Timer.DeleteTimer(commandId)
+}
+
+func (s *services) UpdateTimerContent(commandId int, commandContent string) {
+	s.Timer.UpdateTimerContent(commandId, commandContent)
 }
 
 func (s *services) BotJoinWebhook(client *client.Clients, joinedChannelList []string, w http.ResponseWriter, r *http.Request) {
@@ -166,13 +176,13 @@ func (s *services) CheckCommandExists(ctx context.Context, commandName string, t
 	return existCommandName, nil
 }
 
-func (s *services) UpdateCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string, updatedBy string) (*string, *string, error) {
-	updatedCommandName, infoText, err := s.DB.UpdateBotCommand(ctx, platform.TWITCH, commandName, commandContent, twitchChannelId, updatedBy)
+func (s *services) UpdateCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string, updatedBy string) (*models.BotCommand, *string, error) {
+	updatedCommand, infoText, err := s.DB.UpdateBotCommand(ctx, platform.TWITCH, commandName, commandContent, twitchChannelId, updatedBy)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	return updatedCommandName, infoText, nil
+	return updatedCommand, infoText, nil
 }
 
 func (s *services) DeleteCommand(ctx context.Context, commandName string, twitchChannelId string) (*string, *string, error) {
@@ -250,8 +260,8 @@ func (s *services) GetCommandTimers(ctx context.Context, channelId string) ([]*m
 func (s *services) CreateCommandTimer(ctx context.Context, channelId string, commandName string, interval int) (bool, error) {
 	return s.DB.CreateCommandTimer(ctx, platform.TWITCH, channelId, commandName, interval)
 }
-func (s *services) CheckCommandTimerExist(ctx context.Context, channelId string, commandName string) bool {
-	return s.DB.CheckCommandTimerExist(ctx, platform.TWITCH, channelId, commandName)
+func (s *services) GetCommandTimer(ctx context.Context, channelId string, commandName string) *models.CommandTimer {
+	return s.DB.GetCommandTimer(ctx, platform.TWITCH, channelId, commandName)
 }
 func (s *services) UpdateCommandTimer(ctx context.Context, channelId string, commandName string, interval int, status int) error {
 	return s.DB.UpdateCommandTimer(ctx, platform.TWITCH, channelId, commandName, interval, status)

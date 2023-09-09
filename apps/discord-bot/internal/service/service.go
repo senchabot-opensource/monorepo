@@ -17,7 +17,7 @@ type Service interface {
 
 	CreateCommand(ctx context.Context, commandName string, commandContent string, discordServerId string, createdBy string) (*string, error)
 	CheckCommandExists(ctx context.Context, commandName string, discordServerId string) (*string, error)
-	UpdateCommand(ctx context.Context, commandName string, commandContent string, discordServerId string, updatedBy string) (*string, *string, error)
+	UpdateCommand(ctx context.Context, commandName string, commandContent string, discordServerId string, updatedBy string) (*models.BotCommand, *string, error)
 	DeleteCommand(ctx context.Context, commandName string, discordServerId string) (*string, *string, error)
 	GetCommandList(ctx context.Context, discordServerId string) ([]*models.BotCommand, error)
 
@@ -90,13 +90,13 @@ func (s *service) CheckCommandExists(ctx context.Context, commandName string, di
 	return existCommandName, nil
 }
 
-func (s *service) UpdateCommand(ctx context.Context, commandName string, commandContent string, discordServerId string, updatedBy string) (*string, *string, error) {
-	updatedCommandName, infoText, err := s.DB.UpdateBotCommand(ctx, platform.DISCORD, commandName, commandContent, discordServerId, updatedBy)
+func (s *service) UpdateCommand(ctx context.Context, commandName string, commandContent string, discordServerId string, updatedBy string) (*models.BotCommand, *string, error) {
+	updatedCommand, infoText, err := s.DB.UpdateBotCommand(ctx, platform.DISCORD, commandName, commandContent, discordServerId, updatedBy)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	return updatedCommandName, infoText, nil
+	return updatedCommand, infoText, nil
 }
 
 func (s *service) DeleteCommand(ctx context.Context, commandName string, discordServerId string) (*string, *string, error) {
