@@ -150,16 +150,16 @@ func (c *commands) DeployCommands(discordClient *discordgo.Session) {
 var (
 	purgePermissions     int64 = discordgo.PermissionManageServer
 	setdeletePermissions int64 = discordgo.PermissionAdministrator
+	manageCmdPermissions int64 = discordgo.PermissionManageChannels
 	commandMetadatas           = []*discordgo.ApplicationCommand{
 		{
-			Name:                     "cmds",
-			Description:              "Command list.",
-			DefaultMemberPermissions: &setdeletePermissions,
+			Name:        "cmds",
+			Description: "Command list.",
 		},
 		{
 			Name:                     "acmd",
 			Description:              "Add a new custom command.",
-			DefaultMemberPermissions: &setdeletePermissions,
+			DefaultMemberPermissions: &manageCmdPermissions,
 			Options: []*discordgo.ApplicationCommandOption{
 				{
 					Type:        discordgo.ApplicationCommandOptionString,
@@ -178,7 +178,7 @@ var (
 		{
 			Name:                     "ucmd",
 			Description:              "Update a custom command.",
-			DefaultMemberPermissions: &setdeletePermissions,
+			DefaultMemberPermissions: &manageCmdPermissions,
 			Options: []*discordgo.ApplicationCommandOption{
 				{
 					Type:        discordgo.ApplicationCommandOptionString,
@@ -197,7 +197,7 @@ var (
 		{
 			Name:                     "dcmd",
 			Description:              "Delete a custom command.",
-			DefaultMemberPermissions: &setdeletePermissions,
+			DefaultMemberPermissions: &manageCmdPermissions,
 			Options: []*discordgo.ApplicationCommandOption{
 				{
 					Type:        discordgo.ApplicationCommandOptionString,
@@ -210,7 +210,7 @@ var (
 		{
 			Name:                     "acmda",
 			Description:              "Add command aliases to a command.",
-			DefaultMemberPermissions: &setdeletePermissions,
+			DefaultMemberPermissions: &manageCmdPermissions,
 			Options: []*discordgo.ApplicationCommandOption{
 				{
 					Type:        discordgo.ApplicationCommandOptionString,
@@ -229,7 +229,7 @@ var (
 		{
 			Name:                     "dcmda",
 			Description:              "Delete a command alias.",
-			DefaultMemberPermissions: &setdeletePermissions,
+			DefaultMemberPermissions: &manageCmdPermissions,
 			Options: []*discordgo.ApplicationCommandOption{
 				{
 					Type:        discordgo.ApplicationCommandOptionString,
