@@ -1,6 +1,6 @@
-# Senchabot Twitch Bot
+# Senchabot Discord Bot
 
-Twitch bot written in Go!
+Discord bot written in Go!
 
 ## Getting Started
 
@@ -42,13 +42,12 @@ Prerequisites
 
 ```bash
 .
-├── client
-│   └── client.go
 ├── cmd
 │   └── main
 │       └── main.go
 ├── Dockerfile
 ├── documentation
+│   ├── feature-list.md
 │   ├── README.md
 │   └── TR
 │       └── README.md
@@ -56,30 +55,25 @@ Prerequisites
 ├── fly.toml
 ├── internal
 │   ├── command
-│   │   ├── addcommandalias.go
-│   │   ├── addcommand.go
-│   │   ├── cmds.go
+│   │   ├── addcmdaliascommand.go
+│   │   ├── addcmdcommand.go
+│   │   ├── cmdscommand.go
 │   │   ├── command.go
-│   │   ├── deletecommandalias.go
+│   │   ├── deletecmdaliascommand.go
+│   │   ├── deletecmdcommand.go
 │   │   ├── deletecommand.go
 │   │   ├── helpers
-│   │   │   ├── helpers.go
-│   │   │   └── helpers_test.go
-│   │   ├── help.go
-│   │   ├── invite.go
-│   │   ├── ping.go
-│   │   ├── so.go
-│   │   ├── sozluk.go
-│   │   └── updatecommand.go
-│   ├── handler
-│   │   ├── botjoin.go
-│   │   ├── handler.go
-│   │   └── privatemessage.go
+│   │   │   └── helpers.go
+│   │   ├── invitecommand.go
+│   │   ├── purgecommand.go
+│   │   ├── setcommand.go
+│   │   └── updatecmdcommand.go
 │   └── service
+│       ├── event
+│       │   └── event.go
 │       ├── service.go
-│       └── webhook
-│           ├── botjoin.go
-│           └── webhook.go
+│       └── streamer
+│           └── streamer.go
 └── README.md
 ```
 
