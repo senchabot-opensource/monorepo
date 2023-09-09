@@ -46,8 +46,11 @@ const getBotActivities = async (req: NextApiRequest, res: NextApiResponse) => {
   const botActivities = await prisma.botActionActivities.findMany({
     where: {
       OR: [
-        { discordServerId: { in: dcServersArray } },
-        { twitchChannelId: twitchAccount?.providerAccountId },
+        { botPlatformId: { in: dcServersArray }, botPlatformType: "discord" },
+        {
+          botPlatformId: twitchAccount?.providerAccountId,
+          botPlatformType: "twitch",
+        },
       ],
     },
     take: 10,
