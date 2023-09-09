@@ -9,6 +9,7 @@ Open source Discord & Twitch bot
 - Git
 - Node.js 18 or higher
 - npm
+- Docker & Docker Compose
 
 ### Installation
 
@@ -23,9 +24,9 @@ Open source Discord & Twitch bot
 
    ```sh
    cp env.example .env
-   cd packages/senchabot-prisma/env.example packages/senchabot-prisma/.env
+   cp packages/senchabot-prisma/env.example packages/senchabot-prisma/.env
    cp apps/web/env.example apps/web/.env
-   ```
+```
 
 3. Install the dependencies
 
