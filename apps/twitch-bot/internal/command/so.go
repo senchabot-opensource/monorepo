@@ -30,6 +30,7 @@ func (c *commands) SoCommand(context context.Context, message twitch.PrivateMess
 		return &cmdResp, nil
 	}
 	var streamerUsername = strings.ToLower(params[0])
+	streamerUsername = strings.TrimPrefix(streamerUsername, "@")
 
 	token := strings.TrimPrefix(os.Getenv("OAUTH"), "oauth:")
 
