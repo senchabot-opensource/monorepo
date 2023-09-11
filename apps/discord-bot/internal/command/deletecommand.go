@@ -43,7 +43,13 @@ func (c *commands) DeleteCommand(ctx context.Context, s *discordgo.Session, i *d
 		twitchUsername := options[0].StringValue()
 		twitchUsername = gosenchabot.ParseTwitchUsernameURLParam(twitchUsername)
 
-		ok, err := service.UpdateTwitchStreamerAnnoContent(ctx, twitchUsername, i.GuildID, nil)
+		response0, uInfo := streamer.GetTwitchUserInfo(twitchUsername, c.twitchAccessToken)
+		if response0 != "" {
+			ephemeralRespond(s, i, response0)
+			return
+		}
+
+		ok, err := service.UpdateTwitchStreamerAnnoContent(ctx, uInfo.ID, i.GuildID, nil)
 		if err != nil {
 			log.Printf("Error while deleting streamer announcement custom content: %v", err)
 			ephemeralRespond(s, i, config.ErrorMessage+"#0001")
@@ -80,7 +86,7 @@ func (c *commands) DeleteCommand(ctx context.Context, s *discordgo.Session, i *d
 		}
 
 		streamers := streamer.GetStreamersData(i.GuildID)
-		delete(streamers, uInfo.Login)
+		delete(streamers, uInfo.ID)
 		ephemeralRespond(s, i, "`"+uInfo.Login+"` kullanıcı adlı Twitch streamer veritabanından silindi.")
 
 	case "stream-event-channel":

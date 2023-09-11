@@ -192,12 +192,12 @@ func (m *MySQL) AddDiscordTwitchLiveAnnos(ctx context.Context, twitchUsername, t
 	return true, nil
 }
 
-func (m *MySQL) UpdateTwitchStreamerAnnoContent(ctx context.Context, twitchUsername, annoServerId string, annoContent *string) (bool, error) {
-
-	twitchLiveAnno, err := m.GetDiscordTwitchLiveAnnoByUsername(ctx, twitchUsername, annoServerId)
+func (m *MySQL) UpdateTwitchStreamerAnnoContent(ctx context.Context, twitchUserId, annoServerId string, annoContent *string) (bool, error) {
+	twitchLiveAnno, err := m.GetDiscordTwitchLiveAnnoByUserId(ctx, twitchUserId, annoServerId)
 	if err != nil {
-		return false, errors.New("(UpdateTwitchStreamerAnnoContent) GetDiscordTwitchLiveAnnoByUsername Error:" + err.Error())
+		return false, errors.New("(UpdateTwitchStreamerAnnoContent) Error:" + err.Error())
 	}
+
 	if twitchLiveAnno != nil {
 		result := m.DB.Model(&twitchLiveAnno).Updates(models.DiscordTwitchLiveAnnos{
 			AnnoContent: annoContent,
@@ -212,11 +212,11 @@ func (m *MySQL) UpdateTwitchStreamerAnnoContent(ctx context.Context, twitchUsern
 	return false, nil
 }
 
-func (m *MySQL) UpdateTwitchStreamerLastAnnoDate(ctx context.Context, twitchUsername, annoServerId string, lastAnnoDate time.Time) (bool, error) {
+func (m *MySQL) UpdateTwitchStreamerLastAnnoDate(ctx context.Context, twitchUserId, annoServerId string, lastAnnoDate time.Time) (bool, error) {
 
-	twitchLiveAnno, err := m.GetDiscordTwitchLiveAnnoByUsername(ctx, twitchUsername, annoServerId)
+	twitchLiveAnno, err := m.GetDiscordTwitchLiveAnnoByUserId(ctx, twitchUserId, annoServerId)
 	if err != nil {
-		return false, errors.New("(UpdateTwitchStreamerLastAnnoDate) GetDiscordTwitchLiveAnnoByUsername Error:" + err.Error())
+		return false, errors.New("(UpdateTwitchStreamerLastAnnoDate) Error:" + err.Error())
 	}
 	if twitchLiveAnno != nil {
 		result := m.DB.Model(&twitchLiveAnno).Updates(models.DiscordTwitchLiveAnnos{
@@ -232,11 +232,11 @@ func (m *MySQL) UpdateTwitchStreamerLastAnnoDate(ctx context.Context, twitchUser
 	return false, nil
 }
 
-func (m *MySQL) GetTwitchStreamerLastAnnoDate(ctx context.Context, twitchUsername, annoServerId string) (*time.Time, error) {
+func (m *MySQL) GetTwitchStreamerLastAnnoDate(ctx context.Context, twitchUserId, annoServerId string) (*time.Time, error) {
 
-	twitchLiveAnno, err := m.GetDiscordTwitchLiveAnnoByUsername(ctx, twitchUsername, annoServerId)
+	twitchLiveAnno, err := m.GetDiscordTwitchLiveAnnoByUserId(ctx, twitchUserId, annoServerId)
 	if err != nil {
-		return nil, errors.New("(CheckTwitchStreamerLastAnnoDate) GetDiscordTwitchLiveAnnoByUsername Error:" + err.Error())
+		return nil, errors.New("(CheckTwitchStreamerLastAnnoDate) Error:" + err.Error())
 	}
 	if twitchLiveAnno != nil {
 		return twitchLiveAnno.LastAnnoDate, nil
@@ -245,10 +245,10 @@ func (m *MySQL) GetTwitchStreamerLastAnnoDate(ctx context.Context, twitchUsernam
 	return nil, nil
 }
 
-func (m *MySQL) GetTwitchStreamerAnnoContent(ctx context.Context, twitchUsername, annoServerId string) (*string, error) {
+func (m *MySQL) GetTwitchStreamerAnnoContent(ctx context.Context, twitchUserId, annoServerId string) (*string, error) {
 	var twitchLiveAnnos []models.DiscordTwitchLiveAnnos
 
-	result := m.DB.Where("twitch_username = ?", twitchUsername).Where("anno_server_id = ?", annoServerId).Find(&twitchLiveAnnos)
+	result := m.DB.Select("anno_content").Where("twitch_user_id = ?", twitchUserId).Where("anno_server_id = ?", annoServerId).Find(&twitchLiveAnnos)
 	if result.Error != nil {
 		return nil, errors.New("(GetTwitchStreamerAnnoContent) db.Find Error:" + result.Error.Error())
 	}
@@ -281,6 +281,21 @@ func (m *MySQL) GetDiscordTwitchLiveAnnoByUsername(ctx context.Context, twitchUs
 	result := m.DB.Where("twitch_username = ?", twitchUsername).Where("anno_server_id = ?", annoServerId).Find(&twitchLiveAnnos)
 	if result.Error != nil {
 		return nil, errors.New("(GetDiscordTwitchLiveAnnoByUsername) db.Find Error:" + result.Error.Error())
+	}
+
+	if len(twitchLiveAnnos) == 0 {
+		return nil, nil
+	}
+
+	return &twitchLiveAnnos[0], nil
+}
+
+func (m *MySQL) GetDiscordTwitchLiveAnnoByUserId(ctx context.Context, twitchUserId, annoServerId string) (*models.DiscordTwitchLiveAnnos, error) {
+	var twitchLiveAnnos []models.DiscordTwitchLiveAnnos
+
+	result := m.DB.Where("twitch_user_id = ?", twitchUserId).Where("anno_server_id = ?", annoServerId).Find(&twitchLiveAnnos)
+	if result.Error != nil {
+		return nil, errors.New("(GetDiscordTwitchLiveAnnoByUserId) db.Find Error:" + result.Error.Error())
 	}
 
 	if len(twitchLiveAnnos) == 0 {
