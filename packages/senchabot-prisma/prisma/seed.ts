@@ -120,7 +120,7 @@ async function addCommandsAndAliases(twitchChannelId: string) {
       data: {
         botPlatformType: activity.botPlatformType,
         botActivity: activity.botActivity,
-        twitchChannelId: twitchChannelId,
+        botPlatformId: twitchChannelId,
         activityAuthor: activity.activityAuthor,
       },
     });

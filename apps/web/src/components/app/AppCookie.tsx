@@ -37,8 +37,8 @@ export default function LongTextSnackbar() {
   };
 
   return (
-    isVisible && (
-      <Stack spacing={2} sx={{ maxWidth: 600 }}>
+    <Stack spacing={2} sx={{ maxWidth: 600 }}>
+      {isVisible && (
         <SnackbarContent
           message={
             <>
@@ -59,16 +59,15 @@ export default function LongTextSnackbar() {
                   color: "#1aa3ff",
                   paddingX: ".8rem",
                   paddingY: ".4rem",
-                  marginLeft: "1rem"
-                }} onClick={handleButtonClick}>
+                  marginLeft: "1rem",
+                }}
+                onClick={handleButtonClick}>
                 ACCEPT
               </Button>
             </>
           }
-
-
         />
-      </Stack>
-    )
+      )}
+    </Stack>
   );
 }

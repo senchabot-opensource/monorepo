@@ -2,13 +2,16 @@ package webhook
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"os"
 	"strings"
 
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/client"
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
+	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/service/twitch"
 )
 
 func (*webhooks) BotJoin(client *client.Clients, joinedChannelList []string, w http.ResponseWriter, r *http.Request) {
@@ -34,21 +37,30 @@ func (*webhooks) BotJoin(client *client.Clients, joinedChannelList []string, w h
 		return
 	}
 
-	channel := strings.TrimPrefix(data.Event, "channel.join.")
+	channelId := strings.TrimPrefix(data.Event, "channel.join.")
 
-	if channel == "" {
+	if channelId == "" {
 		return
 	}
 
 	// check if channel is not in joinedChannelList
 	for _, v := range joinedChannelList {
-		if v == channel {
+		if v == channelId {
 			return
 		}
 	}
 
-	_ = append(joinedChannelList, channel)
-	client.Twitch.Join(channel)
+	fmt.Println("JOINING TO THE CHANNEL WITH WEBHOOK")
+
+	token := strings.TrimPrefix(os.Getenv("OAUTH"), "oauth:")
+	twitchChannel, err := twitch.GetTwitchUserInfo("id", channelId, token)
+	if err != nil {
+		log.Println("(BotJoin.Webhook): Error: ", err.Error())
+		return
+	}
+
+	_ = append(joinedChannelList, channelId)
+	client.Twitch.Join(twitchChannel.Login)
 
 	w.WriteHeader(http.StatusOK)
 }
