@@ -8,11 +8,10 @@ import (
 
 	"github.com/gempir/go-twitch-irc/v3"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/command/helpers"
+	"github.com/senchabot-opensource/monorepo/config"
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot"
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
 )
-
-const ADD_COMMAND_ALIAS_INFO = "For example: !acmda [command_name] [command_alias(es) separated by space]"
 
 func (c *commands) AddCommandAliasCommand(context context.Context, message twitch.PrivateMessage, commandName string, params []string) (*models.CommandResponse, error) {
 	var cmdResp models.CommandResponse
@@ -23,7 +22,7 @@ func (c *commands) AddCommandAliasCommand(context context.Context, message twitc
 
 	command, aliasCommands, check := gosenchabot.GetAliasCommandCreateParams(params)
 	if !check {
-		cmdResp.Message = ADD_COMMAND_ALIAS_INFO
+		cmdResp.Message = config.AddCommandAliasInfo
 		return &cmdResp, nil
 	}
 	twitchChannelId := message.RoomID

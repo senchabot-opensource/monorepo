@@ -9,13 +9,10 @@ import (
 
 	"github.com/gempir/go-twitch-irc/v3"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/command/helpers"
+	"github.com/senchabot-opensource/monorepo/config"
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot"
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
 	twsrvc "github.com/senchabot-opensource/monorepo/packages/gosenchabot/service/twitch"
-)
-
-var (
-	SO_COMMAND_INFO = "For example: !so [username]"
 )
 
 func (c *commands) SoCommand(context context.Context, message twitch.PrivateMessage, commandName string, params []string) (*models.CommandResponse, error) {
@@ -26,7 +23,7 @@ func (c *commands) SoCommand(context context.Context, message twitch.PrivateMess
 	}
 
 	if check := gosenchabot.IsCommandParamsLengthEqualToOne(params); !check {
-		cmdResp.Message = SO_COMMAND_INFO
+		cmdResp.Message = config.SoCommandInfo
 		return &cmdResp, nil
 	}
 	var streamerUsername = strings.ToLower(params[0])

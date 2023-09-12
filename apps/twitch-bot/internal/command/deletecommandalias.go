@@ -8,11 +8,10 @@ import (
 
 	"github.com/gempir/go-twitch-irc/v3"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/command/helpers"
+	"github.com/senchabot-opensource/monorepo/config"
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot"
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
 )
-
-const DELETE_COMMAND_ALIAS_INFO = "For example: !dcmda [command_alias]"
 
 func (c *commands) DeleteCommandAliasCommand(context context.Context, message twitch.PrivateMessage, commandName string, params []string) (*models.CommandResponse, error) {
 	var cmdResp models.CommandResponse
@@ -22,7 +21,7 @@ func (c *commands) DeleteCommandAliasCommand(context context.Context, message tw
 	}
 
 	if check := gosenchabot.IsCommandParamsLengthEqualToOne(params); !check {
-		cmdResp.Message = DELETE_COMMAND_ALIAS_INFO
+		cmdResp.Message = config.DeleteCommandAliasInfo
 		return &cmdResp, nil
 	}
 	var command_alias = strings.ToLower(params[0])
