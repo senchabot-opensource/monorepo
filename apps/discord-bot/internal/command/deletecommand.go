@@ -8,7 +8,7 @@ import (
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
 )
 
-func (c *commands) DeleteCmdCommand(ctx context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, service service.Service) {
+func (c *commands) DeleteCommandCommand(ctx context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, service service.Service) {
 	options := i.ApplicationCommandData().Options
 
 	cmdName := options[0].StringValue()
