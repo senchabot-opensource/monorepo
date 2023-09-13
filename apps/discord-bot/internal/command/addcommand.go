@@ -21,7 +21,7 @@ func (c *commands) AddCommandCommand(ctx context.Context, s *discordgo.Session, 
 
 	resp, err := service.CreateCommand(ctx, cmdName, cmdContent, i.GuildID, i.Member.User.Username)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("[AddCommandCommand] Error:", err.Error())
 		return
 	}
 

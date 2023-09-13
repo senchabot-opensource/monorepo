@@ -13,7 +13,7 @@ import (
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot"
 )
 
-func (c *commands) SetCommand(ctx context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, service service.Service) {
+func (c *commands) SetStreamCommand(ctx context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, service service.Service) {
 	options := i.ApplicationCommandData().Options
 
 	switch options[0].Name {
