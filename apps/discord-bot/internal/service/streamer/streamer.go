@@ -16,9 +16,9 @@ import (
 )
 
 type GuildStreamers struct {
-	StreamUser string
-	ChannelID  string
-	ServerID   string
+	StreamUser       string
+	DiscordChannelID string
+	DiscordServerID  string
 }
 
 var streamers map[string]map[string]GuildStreamers = make(map[string]map[string]GuildStreamers)
@@ -34,24 +34,24 @@ func InitStreamersData(ctx context.Context, service service.Service, guildId str
 			serverStreamers = make(map[string]GuildStreamers)
 			streamers[dtla.AnnoServerID] = serverStreamers
 		}
-		serverStreamers[dtla.TwitchUsername] = GuildStreamers{
-			StreamUser: dtla.TwitchUsername,
-			ChannelID:  dtla.AnnoChannelID,
-			ServerID:   dtla.AnnoServerID,
+		serverStreamers[dtla.TwitchUserID] = GuildStreamers{
+			StreamUser:       dtla.TwitchUsername,
+			DiscordChannelID: dtla.AnnoChannelID,
+			DiscordServerID:  dtla.AnnoServerID,
 		}
 	}
 }
 
-func SetStreamerData(serverId, username, channelId string) {
+func SetStreamerData(serverId, twitchUserId, twitchUserName, discordChannelId string) {
 	serverStreamers, ok := streamers[serverId]
 	if !ok {
 		serverStreamers = make(map[string]GuildStreamers)
 		streamers[serverId] = serverStreamers
 	}
-	serverStreamers[username] = GuildStreamers{
-		StreamUser: username,
-		ChannelID:  channelId,
-		ServerID:   serverId,
+	serverStreamers[twitchUserId] = GuildStreamers{
+		StreamUser:       twitchUserName,
+		DiscordChannelID: discordChannelId,
+		DiscordServerID:  serverId,
 	}
 }
 
@@ -117,22 +117,22 @@ func SetTwitchStreamer(ctx context.Context, uInfo *models.TwitchUserInfo, channe
 	}
 
 	if !added && err == nil {
-		SetStreamerData(guildId, uInfo.Login, channelId)
+		SetStreamerData(guildId, uInfo.ID, uInfo.Login, channelId)
 		return fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısı varitabanında bulunmakta. Ancak... Twitch yayıncısının yayın duyurularının yapılacağı kanalı `%v` yazı kanalı olarak güncellendi.", uInfo.Login, channelName)
 	}
 
 	if added {
-		SetStreamerData(guildId, uInfo.Login, channelId)
+		SetStreamerData(guildId, uInfo.ID, uInfo.Login, channelId)
 		return fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısının yayın duyuruları `%v` isimli yazı kanalı için aktif edildi.", uInfo.Login, channelName)
 	}
 
 	return "Twitch yayıncısı eklenirken bir sorun oluştu."
 }
 
-func GetStreamAnnoContent(ctx context.Context, service service.Service, guildId, streamerUsername string) string {
+func GetStreamAnnoContent(ctx context.Context, service service.Service, guildId, streamerUserId string) string {
 	annoContent := "{twitch.username}, {stream.category} yayınına başladı! {twitch.url}"
 
-	streamerAnnoContent, err := service.GetTwitchStreamerAnnoContent(ctx, streamerUsername, guildId)
+	streamerAnnoContent, err := service.GetTwitchStreamerAnnoContent(ctx, streamerUserId, guildId)
 	if err != nil {
 		log.Printf("There was an error while getting Twitch streamer announcement content in CheckLiveStreams: %v", err)
 	}
@@ -155,8 +155,8 @@ func GetStreamAnnoContent(ctx context.Context, service service.Service, guildId,
 	return annoContent
 }
 
-func CheckDatesAnnounceable(ctx context.Context, service service.Service, guildId, streamerUsername, startedAt string) bool {
-	date, err := service.GetTwitchStreamerLastAnnoDate(ctx, streamerUsername, guildId)
+func CheckDatesAnnounceable(ctx context.Context, service service.Service, guildId, streamerUserId, startedAt string) bool {
+	date, err := service.GetTwitchStreamerLastAnnoDate(ctx, streamerUserId, guildId)
 	if err != nil {
 		log.Printf("There was an error while checking Twitch streamer last anno date: %v", err)
 		return false
@@ -198,17 +198,17 @@ func handleAnnouncement(ctx context.Context, s *discordgo.Session, service servi
 	streamersMutex.Lock()
 	defer streamersMutex.Unlock()
 
-	gs, ok := streamers[sd.UserLogin]
-	announceable := CheckDatesAnnounceable(ctx, service, guildId, sd.UserLogin, sd.StartedAt)
+	gs, ok := streamers[sd.UserID]
+	announceable := CheckDatesAnnounceable(ctx, service, guildId, sd.UserID, sd.StartedAt)
 	if !ok || !announceable {
 		return
 	}
 
-	annoContent := GetStreamAnnoContent(ctx, service, guildId, sd.UserLogin)
+	annoContent := GetStreamAnnoContent(ctx, service, guildId, sd.UserID)
 	formattedString := FormatContent(annoContent, sd)
-	s.ChannelMessageSend(gs.ChannelID, formattedString)
+	s.ChannelMessageSend(gs.DiscordChannelID, formattedString)
 
-	_, err := service.UpdateTwitchStreamerLastAnnoDate(ctx, sd.UserLogin, guildId, time.Now().UTC())
+	_, err := service.UpdateTwitchStreamerLastAnnoDate(ctx, sd.UserID, guildId, time.Now().UTC())
 	if err != nil {
 		log.Printf("There was an error while getting updating Twitch streamer last anno date in CheckLiveStreams: %v", err)
 	}
@@ -246,6 +246,10 @@ func CheckLiveStreams(s *discordgo.Session, ctx context.Context, service service
 			streamersMutex.Lock()
 			liveStreams, streamers := getStreamersAndLiveData(ctx, service, guildId)
 			streamersMutex.Unlock()
+
+			if len(liveStreams) == 0 {
+				continue
+			}
 
 			for _, sd := range liveStreams {
 				if sd.Type == "live" {

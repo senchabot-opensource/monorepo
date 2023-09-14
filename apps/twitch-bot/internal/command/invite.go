@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/gempir/go-twitch-irc/v3"
+	"github.com/senchabot-opensource/monorepo/config"
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot"
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
 )
@@ -14,12 +15,12 @@ import (
 func (c *commands) InviteCommand(context context.Context, message twitch.PrivateMessage, commandName string, params []string) (*models.CommandResponse, error) {
 	var cmdResp models.CommandResponse
 
-	if message.Channel != "senchabot" {
+	if message.Channel != config.BotUsername {
 		return nil, errors.New("command did not executed in senchabot")
 	}
 
 	if len(params) < 1 {
-		cmdResp.Message = "!invite [your_channel_name]"
+		cmdResp.Message = config.InviteCommandInfo
 		return &cmdResp, nil
 	}
 

@@ -67,15 +67,21 @@ func (c *commands) SetStreamCommand(ctx context.Context, s *discordgo.Session, i
 		twitchUsername = gosenchabot.ParseTwitchUsernameURLParam(twitchUsername)
 		annoContent := options[1].StringValue()
 
-		ok, err := service.UpdateTwitchStreamerAnnoContent(ctx, twitchUsername, i.GuildID, &annoContent)
+		response0, uInfo := streamer.GetTwitchUserInfo(twitchUsername, c.twitchAccessToken)
+		if response0 != "" {
+			ephemeralRespond(s, i, response0)
+			return
+		}
+
+		ok, err := service.UpdateTwitchStreamerAnnoContent(ctx, uInfo.ID, i.GuildID, &annoContent)
 		if err != nil {
 			log.Printf("Error while setting Discord bot config: %v", err)
-			ephemeralRespond(s, i, config.ErrorMessage+"#0001")
+			ephemeralRespond(s, i, config.ErrorMessage+"#001TEKNOBARBISI")
 			return
 		}
 
 		if !ok {
-			ephemeralRespond(s, i, config.ErrorMessage+"#0001")
+			ephemeralRespond(s, i, "`"+twitchUsername+"` kullanıcı adlı Twitch yayıncısı veritabanında bulunamadı.")
 			return
 		}
 

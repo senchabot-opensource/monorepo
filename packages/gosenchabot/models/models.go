@@ -102,12 +102,17 @@ type TwitchUserInfo struct {
 }
 
 type TwitchStreamerData struct {
-	Type       string `json:"type"`
-	Title      string `json:"title"`
-	UserLogin  string `json:"user_login"`
-	UserName   string `json:"user_name"`
-	StreamGame string `json:"game_name"`
-	StartedAt  string `json:"started_at"`
+	UserID       string   `json:"user_id"`
+	UserLogin    string   `json:"user_login"`
+	UserName     string   `json:"user_name"`
+	StreamGame   string   `json:"game_name"`
+	Type         string   `json:"type"`
+	Title        string   `json:"title"`
+	Tags         []string `json:"tags"`
+	ViewerCount  int      `json:"viewer_count"`
+	StartedAt    string   `json:"started_at"`
+	Language     string   `json:"language"`
+	ThumbnailURL string   `json:"thumbnail_url"`
 }
 
 type BotCommandStatistic struct {

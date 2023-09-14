@@ -34,10 +34,10 @@ type Service interface {
 	GetAnnouncementChannelById(ctx context.Context, id int) (*models.DiscordAnnouncementChannels, error)
 	DeleteAnnouncementChannel(ctx context.Context, channelId string) (bool, error)
 	AddDiscordTwitchLiveAnnos(ctx context.Context, twitchUsername, twitchUserId, annoChannelId, annoServerId, createdBy string) (bool, error)
-	UpdateTwitchStreamerAnnoContent(ctx context.Context, twitchUsername, annoServerId string, annoContent *string) (bool, error)
-	UpdateTwitchStreamerLastAnnoDate(ctx context.Context, twitchUsername, annoServerId string, lastAnnoDate time.Time) (bool, error)
-	GetTwitchStreamerLastAnnoDate(ctx context.Context, twitchUsername, annoServerId string) (*time.Time, error)
-	GetTwitchStreamerAnnoContent(ctx context.Context, twitchUsername, annoServerId string) (*string, error)
+	UpdateTwitchStreamerAnnoContent(ctx context.Context, twitchUserId, annoServerId string, annoContent *string) (bool, error)
+	UpdateTwitchStreamerLastAnnoDate(ctx context.Context, twitchUserId, annoServerId string, lastAnnoDate time.Time) (bool, error)
+	GetTwitchStreamerLastAnnoDate(ctx context.Context, twitchUserId, annoServerId string) (*time.Time, error)
+	GetTwitchStreamerAnnoContent(ctx context.Context, twitchUserId, annoServerId string) (*string, error)
 	GetDiscordTwitchLiveAnno(ctx context.Context, twitchUserId, annoServerId string) (*models.DiscordTwitchLiveAnnos, error)
 	GetDiscordTwitchLiveAnnoByUsername(ctx context.Context, twitchUsername, annoServerId string) (*models.DiscordTwitchLiveAnnos, error)
 	GetDiscordTwitchLiveAnnos(ctx context.Context, serverId string) ([]*models.DiscordTwitchLiveAnnos, error)
@@ -165,17 +165,17 @@ func (s *service) DeleteAnnouncementChannel(ctx context.Context, channelId strin
 func (s *service) AddDiscordTwitchLiveAnnos(ctx context.Context, twitchUsername, twitchUserId, annoChannelId, annoServerId, createdBy string) (bool, error) {
 	return s.DB.AddDiscordTwitchLiveAnnos(ctx, twitchUsername, twitchUserId, annoChannelId, annoServerId, createdBy)
 }
-func (s *service) UpdateTwitchStreamerAnnoContent(ctx context.Context, twitchUsername, annoServerId string, annoContent *string) (bool, error) {
-	return s.DB.UpdateTwitchStreamerAnnoContent(ctx, twitchUsername, annoServerId, annoContent)
+func (s *service) UpdateTwitchStreamerAnnoContent(ctx context.Context, twitchUserId, annoServerId string, annoContent *string) (bool, error) {
+	return s.DB.UpdateTwitchStreamerAnnoContent(ctx, twitchUserId, annoServerId, annoContent)
 }
-func (s *service) UpdateTwitchStreamerLastAnnoDate(ctx context.Context, twitchUsername, annoServerId string, lastAnnoDate time.Time) (bool, error) {
-	return s.DB.UpdateTwitchStreamerLastAnnoDate(ctx, twitchUsername, annoServerId, lastAnnoDate)
+func (s *service) UpdateTwitchStreamerLastAnnoDate(ctx context.Context, twitchUserId, annoServerId string, lastAnnoDate time.Time) (bool, error) {
+	return s.DB.UpdateTwitchStreamerLastAnnoDate(ctx, twitchUserId, annoServerId, lastAnnoDate)
 }
-func (s *service) GetTwitchStreamerLastAnnoDate(ctx context.Context, twitchUsername, annoServerId string) (*time.Time, error) {
-	return s.DB.GetTwitchStreamerLastAnnoDate(ctx, twitchUsername, annoServerId)
+func (s *service) GetTwitchStreamerLastAnnoDate(ctx context.Context, twitchUserId, annoServerId string) (*time.Time, error) {
+	return s.DB.GetTwitchStreamerLastAnnoDate(ctx, twitchUserId, annoServerId)
 }
-func (s *service) GetTwitchStreamerAnnoContent(ctx context.Context, twitchUsername, annoServerId string) (*string, error) {
-	return s.DB.GetTwitchStreamerAnnoContent(ctx, twitchUsername, annoServerId)
+func (s *service) GetTwitchStreamerAnnoContent(ctx context.Context, twitchUserId, annoServerId string) (*string, error) {
+	return s.DB.GetTwitchStreamerAnnoContent(ctx, twitchUserId, annoServerId)
 }
 func (s *service) GetDiscordTwitchLiveAnno(ctx context.Context, twitchUserId, annoServerId string) (*models.DiscordTwitchLiveAnnos, error) {
 	return s.DB.GetDiscordTwitchLiveAnno(ctx, twitchUserId, annoServerId)
