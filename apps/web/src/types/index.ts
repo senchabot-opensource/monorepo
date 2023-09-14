@@ -40,7 +40,7 @@ export interface ITwitchBotConfig {
 export interface ITwitchBotWebhookData {
   token: string;
   event: string;
-  user_name: string | null | undefined;
+  user_id: string | null | undefined;
 }
 
 export interface ITwitchBotFormSubmitData {
