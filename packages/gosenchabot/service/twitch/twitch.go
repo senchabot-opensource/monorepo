@@ -57,6 +57,10 @@ func GetTwitchUserInfo(query string, userIdOrName string, token string) (*models
 		return nil, errors.New("Error while parsing TwitchAPI response: " + err.Error())
 	}
 
+	if len(data.Data) == 0 {
+		return nil, errors.New("no data.")
+	}
+
 	return &data.Data[0], nil
 }
 
@@ -128,12 +132,12 @@ func CheckTwitchStreamStatus(username string, token string) (bool, string) {
 func CheckMultipleTwitchStreamer(usernames []string) []models.TwitchStreamerData {
 	params := usernames[0]
 	if len(usernames) > 1 {
-		params = usernames[0] + "&user_login="
+		params = usernames[0] + "&user_id="
 		usernames = usernames[1:]
-		params += strings.Join(usernames, "&user_login=")
+		params += strings.Join(usernames, "&user_id=")
 	}
 
-	resp, err := DoTwitchHttpReq("GET", fmt.Sprintf("/streams?user_login=%s", params), twitchAccessToken)
+	resp, err := DoTwitchHttpReq("GET", fmt.Sprintf("/streams?user_id=%s", params), twitchAccessToken)
 	if err != nil {
 		log.Printf("(CheckMultipleTwitchStreamer) Error: %v", err)
 		return nil
