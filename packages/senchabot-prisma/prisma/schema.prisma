@@ -87,7 +87,7 @@ model BotCommands {
     updatedBy       String?  @map("updated_by")
     createdAt       DateTime @default(now()) @map("created_at")
 
-    @@unique([commandName, twitchChannelId])
+    @@unique([commandName, twitchChannelId, discordServerId])
     @@map("bot_commands")
 }
 

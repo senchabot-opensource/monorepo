@@ -9,7 +9,7 @@ import (
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot"
 )
 
-func (c *commands) DeleteCmdAliasCommand(ctx context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, service service.Service) {
+func (c *commands) DeleteCommandAliasCommand(ctx context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, service service.Service) {
 	options := i.ApplicationCommandData().Options
 
 	cmdName := options[0].StringValue()
