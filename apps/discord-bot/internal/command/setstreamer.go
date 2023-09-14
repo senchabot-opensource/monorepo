@@ -17,12 +17,9 @@ func (c *commands) SetStreamerCommand(ctx context.Context, s *discordgo.Session,
 	options := i.ApplicationCommandData().Options
 
 	twitchUsername := options[0].StringValue()
-	fmt.Println(twitchUsername)
 
 	commandUsername := i.Member.User.Username
 	twitchUsername = gosenchabot.ParseTwitchUsernameURLParam(twitchUsername)
-
-	fmt.Println(twitchUsername, len(options))
 
 	response0, uInfo := streamer.GetTwitchUserInfo(twitchUsername, c.twitchAccessToken)
 	if response0 != "" {
