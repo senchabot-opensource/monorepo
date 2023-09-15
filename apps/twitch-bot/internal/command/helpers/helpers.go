@@ -3,10 +3,6 @@ package helpers
 import (
 	"context"
 	"fmt"
-	"io"
-	"math/rand"
-	"net/http"
-	"strconv"
 	"strings"
 
 	"github.com/gempir/go-twitch-irc/v3"
@@ -16,81 +12,18 @@ import (
 )
 
 const (
-	max = 70
-	min = 18
-
 	maxCommandNameLength    = 50
 	maxCommandContentLength = 400
-
-	maxAliasParamLength = 4
 )
 
-func FormatCommandContent(commandData *models.BotCommand, message twitch.PrivateMessage) string {
-	msgContent := commandData.CommandContent
-
-	userName := message.User.DisplayName
-	dateTemplate := "02/01/2006"
-	//curlyBracesPattern := regexp.MustCompile(`{(.*?)}`)
-
-	stringTemplates := map[string]string{
-		"{user.name}":     userName,
-		"{cmd.author}":    userName,
-		"{random_number}": strconv.Itoa(rand.Intn(max-min) + min),
-		"{date}":          message.Time.Format(dateTemplate),
-		"{cmd.date}":      commandData.CreatedAt.Format(dateTemplate),
-		"{channel.name}":  message.Channel,
-
-		// we will keep these old string templates used in commands for a while for backward compatibility.
-		"{user_name}": userName,
-		"{cmd_date}":  commandData.CreatedAt.Format(dateTemplate),
+func GetCommandVariables(cmdData *models.BotCommand, message twitch.PrivateMessage) *models.CommandVariable {
+	return &models.CommandVariable{
+		CommandContent:   cmdData.CommandContent,
+		UserName:         message.User.DisplayName,
+		CurrentDate:      &message.Time,
+		CommandCreatedAt: cmdData.CreatedAt,
+		ChannelName:      message.Channel,
 	}
-
-	for k, v := range stringTemplates {
-		msgContent = strings.ReplaceAll(msgContent, k, v)
-	}
-
-	url, startIndex, endIndex, ok := parseCustomAPIURLFromMessage(msgContent)
-	if ok {
-		template := msgContent[startIndex : endIndex+1]
-		response, err := sendGetRequest(url)
-		if err != nil {
-			fmt.Println("parseCustomAPIURLFromMessage url, sendGetRequest Error:", err)
-			msgContent = message.User.DisplayName + ", there was an error while sending get request"
-		}
-
-		msgContent = strings.Replace(msgContent, template, response, 1)
-	}
-
-	//msgContent = curlyBracesPattern.ReplaceAllString(msgContent, "$1")
-
-	return msgContent
-}
-
-func parseCustomAPIURLFromMessage(message string) (string, int, int, bool) {
-	startIndex := strings.Index(message, "{customapi.") // Curly braces start index
-	endIndex := strings.LastIndex(message, "}")         // Curly braces end index
-	if startIndex == -1 || endIndex == -1 || endIndex <= startIndex {
-		return message, 0, 0, false
-	}
-
-	url := message[startIndex+1 : endIndex]
-	url = strings.TrimPrefix(url, "customapi.")
-
-	return url, startIndex, endIndex, true
-}
-
-func sendGetRequest(url string) (string, error) {
-	response, err := http.Get(url)
-	if err != nil {
-		return "", err
-	}
-	defer response.Body.Close()
-
-	body, err := io.ReadAll(response.Body)
-	if err != nil {
-		return "", err
-	}
-	return string(body), nil
 }
 
 func AreCommandAndMentionIndicesInvalid(cmdIndex int, mentionIndex int) bool {
