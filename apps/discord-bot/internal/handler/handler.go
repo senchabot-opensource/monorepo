@@ -12,12 +12,12 @@ type Handler interface {
 	InitBotEventHandlers(token string)
 }
 
-type handlers struct {
+type handler struct {
 	discordClient *discordgo.Session
 	service       service.Service
 }
 
-func (h *handlers) InitBotEventHandlers(token string) {
+func (h *handler) InitBotEventHandlers(token string) {
 	command := command.New(h.discordClient, token, h.service, 2*time.Second)
 
 	h.Ready(token)
@@ -30,8 +30,8 @@ func (h *handlers) InitBotEventHandlers(token string) {
 	command.DeployCommands(h.discordClient)
 }
 
-func NewHandlers(discordClient *discordgo.Session, service service.Service) Handler {
-	return &handlers{
+func New(discordClient *discordgo.Session, service service.Service) Handler {
+	return &handler{
 		discordClient: discordClient,
 		service:       service,
 	}

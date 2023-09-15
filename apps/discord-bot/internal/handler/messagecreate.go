@@ -11,7 +11,7 @@ import (
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot"
 )
 
-func (h *handlers) MessageCreate(command command.Command) {
+func (h *handler) MessageCreate(command command.Command) {
 	ctx := context.Background()
 	h.discordClient.AddHandler(func(s *discordgo.Session, m *discordgo.MessageCreate) {
 		if m.Author.Bot {

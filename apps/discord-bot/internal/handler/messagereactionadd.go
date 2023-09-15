@@ -7,7 +7,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-func (h *handlers) MessageReactionAdd() {
+func (h *handler) MessageReactionAdd() {
 	h.discordClient.AddHandler(func(s *discordgo.Session, i *discordgo.MessageReactionAdd) {
 		msg, err := s.ChannelMessage(i.ChannelID, i.MessageID)
 		if err != nil {

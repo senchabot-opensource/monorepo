@@ -9,7 +9,7 @@ import (
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/command"
 )
 
-func (h *handlers) InteractionCreate(command command.Command) {
+func (h *handler) InteractionCreate(command command.Command) {
 	h.discordClient.AddHandler(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		ctx := context.Background()
 		commandHandlers := command.GetCommands()

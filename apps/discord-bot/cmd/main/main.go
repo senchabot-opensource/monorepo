@@ -26,7 +26,7 @@ func main() {
 	var wg sync.WaitGroup
 
 	service := service.New()
-	handler := handler.NewHandlers(discordClient, service)
+	handler := handler.New(discordClient, service)
 
 	handler.InitBotEventHandlers(token)
 

@@ -7,7 +7,7 @@ import (
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service/event"
 )
 
-func (h *handlers) Ready(token string) {
+func (h *handler) Ready(token string) {
 	h.discordClient.AddHandler(func(s *discordgo.Session, r *discordgo.Ready) {
 		//	guilds := s.State.Guilds
 

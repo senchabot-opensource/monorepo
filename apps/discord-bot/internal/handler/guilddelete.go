@@ -8,7 +8,7 @@ import (
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service/streamer"
 )
 
-func (h *handlers) GuildDelete() {
+func (h *handler) GuildDelete() {
 	ctx := context.Background()
 	h.discordClient.AddHandler(func(s *discordgo.Session, g *discordgo.GuildDelete) {
 		err := h.service.DeleteServerFromDB(ctx, g.ID)

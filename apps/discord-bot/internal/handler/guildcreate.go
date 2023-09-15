@@ -8,7 +8,7 @@ import (
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service/streamer"
 )
 
-func (h *handlers) GuildCreate() {
+func (h *handler) GuildCreate() {
 	ctx := context.Background()
 	h.discordClient.AddHandler(func(s *discordgo.Session, g *discordgo.GuildCreate) {
 		err := h.service.AddServerToDB(ctx, g.ID, g.Name, g.OwnerID)
