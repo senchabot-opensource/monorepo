@@ -66,8 +66,8 @@ const getTwitchBot = async (req: NextApiRequest, res: NextApiResponse) => {
 
       const webhookData: ITwitchBotWebhookData = {
         token: env.WEBHOOK_TOKEN,
-        event: "channel.join." + channelName,
-        user_name: userName,
+        event: "channel.join." + twitchAccId,
+        user_id: userId,
       };
 
       await fetch(
