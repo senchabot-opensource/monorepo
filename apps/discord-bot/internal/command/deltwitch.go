@@ -81,7 +81,7 @@ func (c *commands) DelTwitchCommand(ctx context.Context, s *discordgo.Session, i
 
 			// del-twitch announcement default-content
 		case "default-content":
-			_, err := service.SetDiscordBotConfig(ctx, i.GuildID, "stream_anno_default_content", "")
+			_, err := service.DeleteDiscordBotConfig(ctx, i.GuildID, "stream_anno_default_content")
 			if err != nil {
 				log.Printf("Error while setting Discord bot config: %v", err)
 				ephemeralRespond(s, i, config.ErrorMessage+"#0001")
@@ -96,15 +96,21 @@ func (c *commands) DelTwitchCommand(ctx context.Context, s *discordgo.Session, i
 			twitchUsername := options[0].StringValue()
 			twitchUsername = gosenchabot.ParseTwitchUsernameURLParam(twitchUsername)
 
-			ok, err := service.UpdateTwitchStreamerAnnoContent(ctx, twitchUsername, i.GuildID, nil)
+			response0, uInfo := streamer.GetTwitchUserInfo(twitchUsername, c.twitchAccessToken)
+			if response0 != "" {
+				ephemeralRespond(s, i, response0)
+				return
+			}
+
+			ok, err := service.UpdateTwitchStreamerAnnoContent(ctx, uInfo.ID, i.GuildID, nil)
 			if err != nil {
 				log.Printf("Error while deleting streamer announcement custom content: %v", err)
-				ephemeralRespond(s, i, config.ErrorMessage+"#0001")
+				ephemeralRespond(s, i, config.ErrorMessage+"del-twitch:custom-content#0001")
 				return
 			}
 
 			if !ok {
-				ephemeralRespond(s, i, config.ErrorMessage+"#0001")
+				ephemeralRespond(s, i, config.ErrorMessage+"del-twitch:custom-content#0002")
 				return
 			}
 
