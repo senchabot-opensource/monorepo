@@ -44,7 +44,7 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 				return
 			}
 			if channelData == nil {
-				ephemeralRespond(s, i, "Twitch yayıncısı eklerken daha önce `/set stream-default-anno-channel channel-name` komutuyla varsayılan duyuru kanalı eklemiş olmalı veya isteğe bağlı kanal adını belirtmelisiniz.")
+				ephemeralRespond(s, i, "Twitch yayıncısı eklerken daha önce `/set-twitch announcement default-channel` komutuyla varsayılan duyuru kanalı eklemiş olmalı veya isteğe bağlı kanal adını belirtmelisiniz.")
 				return
 			}
 
@@ -155,7 +155,7 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 				}
 
 				if cfg != nil {
-					ephemeralRespond(s, i, twitchUsername+" kullanıcı adlı Twitch yayıncısı için özelleştirilmiş duyuru mesajı içeriği kaldırıldı. `/set stream-announcement-content komutuyla ayarladığız mesaj içeriği kullanılacak: `"+cfg.Value+"`")
+					ephemeralRespond(s, i, twitchUsername+" kullanıcı adlı Twitch yayıncısı için özelleştirilmiş duyuru mesajı içeriği kaldırıldı. `/set-twitch announcement default-content komutuyla ayarladığız mesaj içeriği kullanılacak: `"+cfg.Value+"`")
 					return
 				}
 
