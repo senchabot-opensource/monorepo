@@ -425,7 +425,7 @@ var (
 					Type: discordgo.ApplicationCommandOptionSubCommand,
 					Options: []*discordgo.ApplicationCommandOption{
 						{
-							Name:        "message-content-contains",
+							Name:        "message-content",
 							Description: "certain characters that contain in messages",
 							DescriptionLocalizations: map[discordgo.Locale]string{
 								discordgo.Turkish: "silinecek mesajların içerdiği karakterler",
@@ -433,7 +433,7 @@ var (
 							Type: discordgo.ApplicationCommandOptionString,
 						},
 						{
-							Name:        "user-name-contains",
+							Name:        "user-name",
 							Description: "certain characters that contain in user's name or nickname",
 							DescriptionLocalizations: map[discordgo.Locale]string{
 								discordgo.Turkish: "kullanıcı adı veya takma adının içerdiği karakterler",
