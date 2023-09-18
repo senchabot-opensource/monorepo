@@ -8,12 +8,13 @@ import (
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
 )
 
-func (c *commands) DeleteCmdCommand(ctx context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, service service.Service) {
+func (c *commands) UpdateCommandCommand(ctx context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, service service.Service) {
 	options := i.ApplicationCommandData().Options
 
 	cmdName := options[0].StringValue()
+	cmdContent := options[1].StringValue()
 
-	deletedCmdName, resp, err := service.DeleteCommand(ctx, cmdName, i.GuildID)
+	updatedCmdName, resp, err := service.UpdateCommand(ctx, cmdName, cmdContent, i.GuildID, i.Member.User.Username)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -24,5 +25,5 @@ func (c *commands) DeleteCmdCommand(ctx context.Context, s *discordgo.Session, i
 		return
 	}
 
-	ephemeralRespond(s, i, "Command Deleted: "+*deletedCmdName)
+	ephemeralRespond(s, i, "Command Updated: "+*updatedCmdName)
 }

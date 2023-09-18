@@ -66,7 +66,7 @@ func (m *MySQL) DeleteDiscordBotConfig(ctx context.Context, serverId, key string
 		return false, nil
 	}
 
-	result := m.DB.Model(&existConfig).Updates(map[string]interface{}{"config_value": nil})
+	result := m.DB.Model(&existConfig).Updates(map[string]interface{}{"config_value": ""})
 	if result.Error != nil {
 		return false, errors.New("(DeleteDicordBotConfig) db.Updates Error:" + result.Error.Error())
 	}
@@ -199,7 +199,7 @@ func (m *MySQL) UpdateTwitchStreamerAnnoContent(ctx context.Context, twitchUserI
 	}
 
 	if twitchLiveAnno != nil {
-		result := m.DB.Model(&twitchLiveAnno).Updates(models.DiscordTwitchLiveAnnos{
+		result := m.DB.Model(&twitchLiveAnno).Select("anno_content").Updates(models.DiscordTwitchLiveAnnos{
 			AnnoContent: annoContent,
 		})
 		if result.Error != nil {
