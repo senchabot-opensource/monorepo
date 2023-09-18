@@ -7,10 +7,9 @@ import (
 
 	"github.com/gempir/go-twitch-irc/v3"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/command/helpers"
+	"github.com/senchabot-opensource/monorepo/config"
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
 )
-
-const ADD_COMMAND_INFO = "For example: !acmd [command_name] [command_content]"
 
 func (c *commands) AddCommandCommand(context context.Context, message twitch.PrivateMessage, commandName string, params []string) (*models.CommandResponse, error) {
 	var cmdResp models.CommandResponse
@@ -22,7 +21,7 @@ func (c *commands) AddCommandCommand(context context.Context, message twitch.Pri
 	command_name, command_content, check := helpers.GetCommandCreateUpdateParams(params)
 	if !check {
 		// "Birleşmiş Milletler 21 Mayıs'ı Uluslararası Çay Günü olarak belirlemiştir." (Bu yorum satırı Twitch chatinde Harami tarafından redeem yoluyla yazdırılmıştır. Arz ederim.)
-		cmdResp.Message = ADD_COMMAND_INFO
+		cmdResp.Message = config.AddCommandInfo
 		return &cmdResp, nil
 	}
 	// Check command name and content length
@@ -36,7 +35,7 @@ func (c *commands) AddCommandCommand(context context.Context, message twitch.Pri
 		return &cmdResp, nil
 	}
 
-	infoText, err := c.service.CreateBotCommand(context, command_name, command_content, message.RoomID, message.User.DisplayName)
+	infoText, err := c.service.CreateCommand(context, command_name, command_content, message.RoomID, message.User.DisplayName)
 	if err != nil {
 		return nil, err
 	}

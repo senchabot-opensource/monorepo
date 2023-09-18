@@ -7,10 +7,9 @@ import (
 
 	"github.com/gempir/go-twitch-irc/v3"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/command/helpers"
+	"github.com/senchabot-opensource/monorepo/config"
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
 )
-
-const UPDATE_COMMAND_INFO = "For example: !ucmd [command_name] [new_command_content]"
 
 func (c *commands) UpdateCommandCommand(context context.Context, message twitch.PrivateMessage, commandName string, params []string) (*models.CommandResponse, error) {
 	var cmdResp models.CommandResponse
@@ -21,7 +20,7 @@ func (c *commands) UpdateCommandCommand(context context.Context, message twitch.
 
 	command_name, newCommandContent, check := helpers.GetCommandCreateUpdateParams(params)
 	if !check {
-		cmdResp.Message = UPDATE_COMMAND_INFO
+		cmdResp.Message = config.UpdateCommandInfo
 		return &cmdResp, nil
 	}
 	// Check command content length
@@ -30,7 +29,7 @@ func (c *commands) UpdateCommandCommand(context context.Context, message twitch.
 		return &cmdResp, nil
 	}
 
-	updatedCommandName, infoText, err := c.service.UpdateBotCommand(context, command_name, newCommandContent, message.RoomID, message.User.DisplayName)
+	updatedCommandName, infoText, err := c.service.UpdateCommand(context, command_name, newCommandContent, message.RoomID, message.User.DisplayName)
 	if err != nil {
 		return nil, err
 	}

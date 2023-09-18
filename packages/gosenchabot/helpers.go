@@ -3,12 +3,60 @@ package gosenchabot
 import (
 	"fmt"
 	"io"
+	"math/rand"
 	"net/http"
 	"net/url"
+	"regexp"
+	"strconv"
 	"strings"
+	"time"
+
+	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
 )
 
-const maxAliasParamLength = 4
+const (
+	max = 70
+	min = 18
+
+	maxAliasParamLength = 4
+)
+
+func FormatCommandContent(cv *models.CommandVariable) string {
+	msgContent := cv.CommandContent
+	username := cv.UserName
+	dateTemplate := "02/01/2006"
+
+	stringTemplates := map[string]string{
+		"{user.name}":     username,
+		"{cmd.author}":    username,
+		"{random_number}": strconv.Itoa(rand.Intn(max-min) + min),
+		"{date}":          cv.CurrentDate.Format(dateTemplate),
+		"{cmd.date}":      cv.CommandCreatedAt.Format(dateTemplate),
+		"{channel.name}":  cv.ChannelName,
+
+		// we will keep these old string templates used in commands for a while for backward compatibility.
+		"{user_name}": username,
+		"{cmd_date}":  cv.CommandCreatedAt.Format(dateTemplate),
+	}
+
+	for k, v := range stringTemplates {
+		msgContent = strings.ReplaceAll(msgContent, k, v)
+	}
+
+	url, startIndex, endIndex, ok := ParseCustomAPIURLFromMessage(msgContent)
+	if ok {
+		template := msgContent[startIndex : endIndex+1]
+		response, err := SendGetRequest(url)
+		if err != nil {
+			fmt.Println("parseCustomAPIURLFromMessage url, sendGetRequest Error:", err)
+			msgContent = username + ", there was an error while sending get request"
+		}
+
+		msgContent = strings.Replace(msgContent, template, response, 1)
+	}
+
+	return msgContent
+}
 
 func GetAliasCommandCreateParams(params []string) (string, []string, bool) {
 	if check := ValidateCommandCreateParamsLength(params); !check {
@@ -92,4 +140,67 @@ func FetchGraphQL(apiUrl string, query string) ([]byte, error) {
 
 func TrimExclamationPrefix(commandName string) string {
 	return strings.TrimPrefix(commandName, "!")
+}
+
+func CheckIfCommand(param string) bool {
+	return strings.HasPrefix(param, "!")
+}
+
+func CheckTimeOlderThan(msgTimestamp time.Time, tNumber int) bool {
+	return int(time.Until(msgTimestamp).Abs().Hours()) < tNumber
+}
+
+func ContainsLowerCase(s string, substr string) bool {
+	return strings.Contains(strings.ToLower(s), substr)
+}
+
+func GetURL(domain, messageContent string) string {
+	pattern := fmt.Sprintf(`%s\S*`, domain)
+	re := regexp.MustCompile(pattern)
+	match := re.FindString(messageContent)
+
+	if match != "" {
+		return "https://" + match
+	}
+
+	return ""
+}
+
+func ParseTwitchUsernameURLParam(str string) string {
+	pattern := `^(?:https?:\/\/)?(?:www\.)?twitch\.tv\/([a-zA-Z0-9_]+)$`
+	re := regexp.MustCompile(pattern)
+	matches := re.FindStringSubmatch(str)
+
+	if len(matches) > 1 {
+		return matches[1]
+	}
+
+	return str
+}
+
+func ParseCustomAPIURLFromMessage(message string) (string, int, int, bool) {
+	startIndex := strings.Index(message, "{customapi.") // Curly braces start index
+	endIndex := strings.LastIndex(message, "}")         // Curly braces end index
+	if startIndex == -1 || endIndex == -1 || endIndex <= startIndex {
+		return message, 0, 0, false
+	}
+
+	url := message[startIndex+1 : endIndex]
+	url = strings.TrimPrefix(url, "customapi.")
+
+	return url, startIndex, endIndex, true
+}
+
+func SendGetRequest(url string) (string, error) {
+	response, err := http.Get(url)
+	if err != nil {
+		return "", err
+	}
+	defer response.Body.Close()
+
+	body, err := io.ReadAll(response.Body)
+	if err != nil {
+		return "", err
+	}
+	return string(body), nil
 }

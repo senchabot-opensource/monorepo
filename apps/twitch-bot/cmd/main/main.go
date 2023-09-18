@@ -10,15 +10,16 @@ import (
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/client"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/handler"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/service"
+	"github.com/senchabot-opensource/monorepo/config"
 )
 
 func main() {
 	//err := godotenv.Load()
 	//if err != nil {
-	//	log.Fatal("Error loading .env file")
+	//log.Fatal("Error loading .env file")
 	//}
 
-	twitchClient := twitch.NewClient("senchabot", os.Getenv("OAUTH"))
+	twitchClient := twitch.NewClient(config.BotUsername, os.Getenv("OAUTH"))
 
 	clients := client.NewClients(twitchClient)
 	services := service.NewServices()

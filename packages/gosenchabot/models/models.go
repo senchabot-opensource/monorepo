@@ -1,6 +1,10 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/platform"
+)
 
 type TwitchChannel struct {
 	ID          int
@@ -24,12 +28,11 @@ type TwitchBotConfig struct {
 
 type BotActionActivity struct {
 	ID               int
-	BotPlatformType  string  `gorm:"column:bot_platform_type"`
-	BotActivity      string  `gorm:"column:bot_activity"`
-	DiscordServerID  *string `gorm:"column:discord_server_id"`
-	TwitchChannelID  *string `gorm:"column:twitch_channel_id"`
-	ActivityAuthor   *string `gorm:"column:activity_author"`
-	ActivityAuthorID *string `gorm:"column:activity_author_id"`
+	BotPlatformType  platform.Platform `gorm:"column:bot_platform_type"`
+	BotPlatformID    *string           `gorm:"column:bot_platform_id"`
+	BotActivity      string            `gorm:"column:bot_activity"`
+	ActivityAuthor   *string           `gorm:"column:activity_author"`
+	ActivityAuthorID *string           `gorm:"column:activity_author_id"`
 }
 
 type CommandResponse struct {
@@ -40,8 +43,8 @@ type BotCommand struct {
 	ID              int
 	CommandName     string     `gorm:"column:command_name"`
 	CommandContent  string     `gorm:"column:command_content"`
-	TwitchChannelID string     `gorm:"column:twitch_channel_id"`
-	DiscordServerID string     `gorm:"column:discord_server_id"`
+	TwitchChannelID *string    `gorm:"column:twitch_channel_id"`
+	DiscordServerID *string    `gorm:"column:discord_server_id"`
 	CommandType     int        `gorm:"column:command_type"`
 	Status          int        `gorm:"column:status"`
 	CreatedBy       *string    `gorm:"column:created_by"`
@@ -91,4 +94,37 @@ type DiscordServer struct {
 	ServerID    string `gorm:"column:server_id"`
 	ServerName  string `gorm:"column:server_name"`
 	ServerOwner string `gorm:"column:server_owner"`
+}
+
+type TwitchUserInfo struct {
+	ID    string `json:"id"`
+	Login string `json:"login"`
+}
+
+type TwitchStreamerData struct {
+	UserID       string   `json:"user_id"`
+	UserLogin    string   `json:"user_login"`
+	UserName     string   `json:"user_name"`
+	StreamGame   string   `json:"game_name"`
+	Type         string   `json:"type"`
+	Title        string   `json:"title"`
+	Tags         []string `json:"tags"`
+	ViewerCount  int      `json:"viewer_count"`
+	StartedAt    string   `json:"started_at"`
+	Language     string   `json:"language"`
+	ThumbnailURL string   `json:"thumbnail_url"`
+}
+
+type BotCommandStatistic struct {
+	BotPlatformType platform.Platform `gorm:"column:bot_platform_type"`
+	CommandName     string            `gorm:"column:command_name"`
+	Count           int               `gorm:"column:count"`
+}
+
+type CommandVariable struct {
+	CommandContent   string
+	UserName         string
+	CurrentDate      *time.Time
+	CommandCreatedAt *time.Time
+	ChannelName      string
 }

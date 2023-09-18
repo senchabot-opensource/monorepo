@@ -39,10 +39,9 @@ model BotJoinActivities {
 model BotActionActivities {
     id               Int      @id @default(autoincrement())
     botPlatformType  String   @map("bot_platform_type")
+    botPlatformId    String?  @map("bot_platform_id")
     botActivity      String   @map("bot_activity")
     activityDate     DateTime @default(now()) @map("activity_date")
-    discordServerId  String?  @map("discord_server_id")
-    twitchChannelId  String?  @map("twitch_channel_id")
     activityAuthor   String?  @map("activity_author")
     activityAuthorId String?  @map("activity_author_id")
 
@@ -88,7 +87,7 @@ model BotCommands {
     updatedBy       String?  @map("updated_by")
     createdAt       DateTime @default(now()) @map("created_at")
 
-    @@unique([commandName, twitchChannelId])
+    @@unique([commandName, twitchChannelId, discordServerId])
     @@map("bot_commands")
 }
 
@@ -103,6 +102,16 @@ model BotCommandAliases {
     createdAt       DateTime @default(now()) @map("created_at")
 
     @@map("bot_command_aliases")
+}
+
+model BotCommandStatistic {
+    id              Int     @id @default(autoincrement())
+    botPlatformType String? @map("bot_platform_type")
+    commandName     String  @map("command_name")
+    count           Int     @default(0) @map("count")
+
+    @@unique([botPlatformType, commandName])
+    @@map("bot_command_statistics")
 }
 
 model DiscordServer {

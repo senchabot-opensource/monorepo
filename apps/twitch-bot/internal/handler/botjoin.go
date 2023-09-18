@@ -4,32 +4,50 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
+	"strings"
 
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/client"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/service"
+	"github.com/senchabot-opensource/monorepo/config"
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
+	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/service/twitch"
 )
 
 func BotJoin(client *client.Clients, service service.Service) []string {
 	channels, err := service.GetTwitchChannels(context.Background())
 	if err != nil {
-		log.Fatalf("(GetTwitchChannels) Error:" + err.Error())
+		log.Fatalf("[BotJoin Handler] Error:" + err.Error())
 	}
 
 	channels = append(channels, &models.TwitchChannel{
-		ChannelName: "senchabot",
+		ChannelName: config.BotUsername,
 	})
 
-	channelList := make([]string, 0, len(channels))
-
-	fmt.Println("JOINING TO CHANNELS")
-	if len(channels) > 0 {
-		for _, channel := range channels {
-			fmt.Println("TRYING TO JOIN TWITCH CHANNEL `" + channel.ChannelName + "`")
-			client.Twitch.Join(channel.ChannelName)
-			channelList = append(channelList, channel.ChannelName)
-		}
+	channelIds := make([]string, 0, len(channels))
+	if len(channels) < 2 {
+		client.Twitch.Join(config.BotUsername)
+		return nil
 	}
 
-	return channelList
+	token := strings.TrimPrefix(os.Getenv("OAUTH"), "oauth:")
+	fmt.Println("JOINING TO THE TWITCH CHANNELS")
+	for _, channel := range channels {
+		if channel.ChannelId == "" {
+			client.Twitch.Join(config.BotUsername)
+			continue
+		}
+
+		twitchUser, err := twitch.GetTwitchUserInfo("id", channel.ChannelId, token)
+		if err != nil {
+			log.Printf("[BotJoin Handler] ChannelId: %v, ChannelName: %v, Error: %v", channel.ChannelId, channel.ChannelName, err)
+			continue
+		}
+
+		fmt.Println("TRYING TO JOIN THE TWITCH CHANNEL `" + twitchUser.Login + "`")
+		client.Twitch.Join(twitchUser.Login)
+		channelIds = append(channelIds, channel.ChannelId)
+	}
+
+	return channelIds
 }
