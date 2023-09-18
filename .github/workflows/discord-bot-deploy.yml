@@ -3,6 +3,8 @@ on:
   push:
     paths:
       - apps/discord-bot/**
+      - config/**
+      - db/**
       - packages/gosenchabot/**
     branches:
       - main

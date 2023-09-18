@@ -3,6 +3,8 @@ on:
   push:
     paths:
       - apps/twitch-bot/**
+      - config/**
+      - db/**
       - packages/gosenchabot/**
     branches:
       - main
