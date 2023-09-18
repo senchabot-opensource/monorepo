@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getServerAuthSession } from "src/server/common/get-server-auth-session";
-import { prisma } from "../../../server/db/client";
+import { prisma } from "src/server/db/client";
 import { IConfig, ISetConfigInput } from "src/types";
 
 interface SetConfigApiRequest extends NextApiRequest {

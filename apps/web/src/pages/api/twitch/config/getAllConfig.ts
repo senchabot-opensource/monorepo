@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { prisma } from "../../../server/db/client";
+import { prisma } from "src/server/db/client";
 import { getServerAuthSession } from "src/server/common/get-server-auth-session";
 import { Response } from "src/types/response";
 import { IGetAllConfig } from "src/types";
