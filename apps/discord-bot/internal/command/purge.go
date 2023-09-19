@@ -52,14 +52,14 @@ func (c *commands) PurgeCommand(ctx context.Context, s *discordgo.Session, i *di
 		}
 
 		switch options[0].Name {
-		case "message-content-contains":
+		case "message-content":
 			for _, m := range messages {
 				if gosenchabot.CheckTimeOlderThan(m.Timestamp, FOURTEEN_DAYS) && gosenchabot.ContainsLowerCase(m.Content, optionValue) {
 					messageIDs = append(messageIDs, m.ID)
 				}
 			}
 			content = "containing the characters `" + optionValue + "`"
-		case "user-name-contains":
+		case "username":
 			for _, m := range messages {
 				if gosenchabot.CheckTimeOlderThan(m.Timestamp, FOURTEEN_DAYS) && gosenchabot.ContainsLowerCase(m.Author.Username, optionValue) {
 					messageIDs = append(messageIDs, m.ID)

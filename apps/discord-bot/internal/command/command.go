@@ -433,7 +433,7 @@ var (
 							Type: discordgo.ApplicationCommandOptionString,
 						},
 						{
-							Name:        "user-name",
+							Name:        "username",
 							Description: "certain characters that contain in user's name or nickname",
 							DescriptionLocalizations: map[discordgo.Locale]string{
 								discordgo.Turkish: "kullanıcı adı veya takma adının içerdiği karakterler",
