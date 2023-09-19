@@ -15,7 +15,6 @@ const getTwitchBot = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   const userId = session.user.id;
-  const userName = session.user.name;
 
   if (userId) {
     const twitchAccount = await prisma.account.findFirst({
@@ -87,9 +86,10 @@ const getTwitchBot = async (req: NextApiRequest, res: NextApiResponse) => {
 
       await prisma.botCommands.upsert({
         where: {
-          commandName_twitchChannelId: {
+          commandName_twitchChannelId_discordServerId: {
             commandName: "lurk",
             twitchChannelId: twitchAccId,
+            discordServerId: "",
           },
         },
         update: {

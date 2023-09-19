@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getServerAuthSession } from "src/server/common/get-server-auth-session";
-import { prisma } from "../../../server/db/client";
+import { prisma } from "src/server/db/client";
 import { IConfig, ISetConfigInput } from "src/types";
 
 interface SetConfigApiRequest extends NextApiRequest {
@@ -18,27 +18,24 @@ const setConfig = async (req: SetConfigApiRequest, res: NextApiResponse) => {
 
   const { configs } = req.body;
 
-  const twitchAccount = await prisma.account.findFirst({
-    where: {
-      userId: userId,
-      provider: "twitch",
-    },
+  const discordAccount = await prisma.account.findFirst({
+    where: { userId: userId, provider: "discord" },
     select: { providerAccountId: true },
   });
 
-  const twitchAccId = twitchAccount?.providerAccountId;
-  if (!twitchAccId) return;
+  const discordAccId = discordAccount?.providerAccountId;
+  if (!discordAccId) return;
 
   configs.forEach(async (config: IConfig) => {
-    const findConfig = await prisma.twitchBotConfigs.findFirst({
+    const findConfig = await prisma.discordBotConfigs.findFirst({
       where: {
         key: config.key,
-        twitchChannelId: twitchAccId,
+        serverId: discordAccId,
       },
     });
 
     if (findConfig) {
-      const updated = await prisma.twitchBotConfigs.update({
+      const updated = await prisma.discordBotConfigs.update({
         where: {
           id: findConfig.id,
         },
@@ -53,11 +50,11 @@ const setConfig = async (req: SetConfigApiRequest, res: NextApiResponse) => {
       return res.send({ success: true });
     }
 
-    const created = await prisma.twitchBotConfigs.create({
+    const created = await prisma.discordBotConfigs.create({
       data: {
         key: config.key!,
         value: config.value!,
-        twitchChannelId: twitchAccId,
+        serverId: discordAccId,
         userId: userId,
       },
     });

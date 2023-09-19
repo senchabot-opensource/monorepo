@@ -2,6 +2,7 @@ import { Grid, Tab, Tabs } from "@mui/material";
 import React, { useState } from "react";
 import VerticalTabPanel from "../../tabpanel/VerticalTabPanel";
 import TwitchBotForm from "src/forms/TwitchBotForm";
+import DiscordBotForm from "src/forms/DiscordBotForm";
 
 const verticalTabPanelProps = (index: number) => {
   return {
@@ -33,11 +34,19 @@ const BotConfigurationTab = () => {
             display: { xs: "none", md: "flex" },
           }}>
           <Tab label="Twitch Bot" {...verticalTabPanelProps(0)} disableRipple />
+          <Tab
+            label="Discord Bot"
+            {...verticalTabPanelProps(1)}
+            disableRipple
+          />
         </Tabs>
       </Grid>
       <Grid item xs={12} sm={12} md={4}>
         <VerticalTabPanel value={vTPValue} index={0}>
           <TwitchBotForm />
+        </VerticalTabPanel>
+        <VerticalTabPanel value={vTPValue} index={1}>
+          <DiscordBotForm />
         </VerticalTabPanel>
       </Grid>
     </Grid>

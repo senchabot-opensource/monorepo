@@ -100,7 +100,7 @@ export const deleteAccount = async () => {
 };
 
 export const setConfig = async (input: ISetConfigInput) => {
-  const response = await fetch("/api/config/setConfig", {
+  const response = await fetch("/api/twitch/config/setConfig", {
     method: "POST",
     body: JSON.stringify(input),
     headers: { "Content-Type": "application/json" },
@@ -109,14 +109,48 @@ export const setConfig = async (input: ISetConfigInput) => {
 };
 
 export const getConfig = async () => {
-  const response = await fetch("/api/config/getConfig", {
+  const response = await fetch("/api/twitch/config/getConfig", {
     method: "GET",
   });
   return response.json();
 };
 
 export const getAllConfig = async () => {
-  const response = await fetch("/api/config/getAllConfig", {
+  const response = await fetch("/api/twitch/config/getAllConfig", {
+    method: "GET",
+  });
+  return response.json();
+};
+
+// DISCORD BOT ACCOUNT
+
+export const checkDiscordAccount = async () => {
+  const response = await fetch("/api/discord/findAccount", {
+    method: "GET",
+  });
+  return response.json();
+};
+
+// DISCORD BOT CONFIGURATION
+
+export const setDiscordBotConfig = async (input: ISetConfigInput) => {
+  const response = await fetch("/api/discord/config/setConfig", {
+    method: "POST",
+    body: JSON.stringify(input),
+    headers: { "Content-Type": "application/json" },
+  });
+  return response.json();
+};
+
+export const getDiscordBotConfig = async () => {
+  const response = await fetch("/api/discord/config/getConfig", {
+    method: "GET",
+  });
+  return response.json();
+};
+
+export const getAllDiscordBotConfig = async () => {
+  const response = await fetch("/api/discord/config/getAllConfig", {
     method: "GET",
   });
   return response.json();
