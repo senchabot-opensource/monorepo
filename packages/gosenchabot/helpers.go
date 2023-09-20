@@ -110,19 +110,6 @@ func GetProcessedCommandName(cmdName string) string {
 	return cmdName
 }
 
-type SozlukGraphQLResponse struct {
-	Data struct {
-		Sozluk struct {
-			Term struct {
-				Title string `json:"title"`
-				Body  struct {
-					Raw string `json:"raw"`
-				} `json:"body"`
-			} `json:"term"`
-		} `json:"sozluk"`
-	} `json:"data"`
-}
-
 func FetchGraphQL(apiUrl string, query string) ([]byte, error) {
 	queryParams := url.QueryEscape(query)
 	fullURL := fmt.Sprintf("%s?query=%s", apiUrl, queryParams)

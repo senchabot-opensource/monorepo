@@ -14,4 +14,5 @@ var (
 
 	InviteCommandInfo = "!invite [your_channel_name]"
 	SoCommandInfo     = "For example: !so [username]"
+	SozlukCommandInfo = "For example: !sozluk [term-name]"
 )
