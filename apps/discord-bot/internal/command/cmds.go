@@ -32,3 +32,10 @@ func (c *commands) CmdsCommand(ctx context.Context, s *discordgo.Session, i *dis
 
 	ephemeralRespond(s, i, "Commands: "+commandListString)
 }
+
+func CmdsCommandMetadata() *discordgo.ApplicationCommand {
+	return &discordgo.ApplicationCommand{
+		Name:        "cmds",
+		Description: "Command list.",
+	}
+}

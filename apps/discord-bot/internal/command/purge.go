@@ -82,3 +82,53 @@ func (c *commands) PurgeCommand(ctx context.Context, s *discordgo.Session, i *di
 		ephemeralRespond(s, i, "Messages "+content+" were deleted.")
 	}
 }
+
+func PurgeCommandMetadata() *discordgo.ApplicationCommand {
+	return &discordgo.ApplicationCommand{
+		Name:        "purge",
+		Description: "Purge commands",
+		DescriptionLocalizations: &map[discordgo.Locale]string{
+			discordgo.Turkish: "Temizleme komutları",
+		},
+		DefaultMemberPermissions: &purgePermissions,
+		Options: []*discordgo.ApplicationCommandOption{
+			// purge events
+			{
+				Name:        "events",
+				Description: "Cancel all scheduled events.",
+				DescriptionLocalizations: map[discordgo.Locale]string{
+					discordgo.Turkish: "Tüm zamanlanmış etkinlikleri iptal et.",
+				},
+				Type: discordgo.ApplicationCommandOptionSubCommand,
+			},
+			// purge last-100-channel-messages
+			{
+				Name:        "last-100-channel-messages",
+				Description: "Purge messages not older than 14 days containing certain characters or sent by centain username.",
+				DescriptionLocalizations: map[discordgo.Locale]string{
+					discordgo.Turkish: "14 günden eski olmayan mesajları kullanıcı adı veya mesaj iceriğindeki karakterlere göre siler.",
+				},
+				Type: discordgo.ApplicationCommandOptionSubCommand,
+				Options: []*discordgo.ApplicationCommandOption{
+					{
+						Name:        "message-content",
+						Description: "certain characters that contain in messages",
+						DescriptionLocalizations: map[discordgo.Locale]string{
+							discordgo.Turkish: "silinecek mesajların içerdiği karakterler",
+						},
+						Type: discordgo.ApplicationCommandOptionString,
+					},
+					{
+						Name:        "username",
+						Description: "certain characters that contain in user's name or nickname",
+						DescriptionLocalizations: map[discordgo.Locale]string{
+							discordgo.Turkish: "kullanıcı adı veya takma adının içerdiği karakterler",
+						},
+						Type: discordgo.ApplicationCommandOptionString,
+					},
+				},
+			},
+		},
+	}
+
+}

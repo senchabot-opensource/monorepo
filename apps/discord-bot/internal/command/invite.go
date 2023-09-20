@@ -10,3 +10,10 @@ import (
 func (c *commands) InviteCommand(ctx context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, service service.Service) {
 	ephemeralRespond(s, i, "https://discord.com/oauth2/authorize?client_id=1039550209274945587&permissions=681697203976878&scope=bot")
 }
+
+func InviteCommandMetadata() *discordgo.ApplicationCommand {
+	return &discordgo.ApplicationCommand{
+		Name:        "invite",
+		Description: "Senchabot Discord bot invite url.",
+	}
+}

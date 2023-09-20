@@ -32,3 +32,25 @@ func (c *commands) AddCommandCommand(ctx context.Context, s *discordgo.Session, 
 
 	ephemeralRespond(s, i, "New Command Added: "+cmdName)
 }
+
+func AddCommandCommandMetadata() *discordgo.ApplicationCommand {
+	return &discordgo.ApplicationCommand{
+		Name:                     "acmd",
+		Description:              "Add a new custom command.",
+		DefaultMemberPermissions: &manageCmdPermissions,
+		Options: []*discordgo.ApplicationCommandOption{
+			{
+				Type:        discordgo.ApplicationCommandOptionString,
+				Name:        "command-name",
+				Description: "Command Name",
+				Required:    true,
+			},
+			{
+				Type:        discordgo.ApplicationCommandOptionString,
+				Name:        "command-content",
+				Description: "Command Content",
+				Required:    true,
+			},
+		},
+	}
+}

@@ -118,3 +118,106 @@ func (c *commands) DelTwitchCommand(ctx context.Context, s *discordgo.Session, i
 		}
 	}
 }
+
+func DelTwitchCommandMetadata() *discordgo.ApplicationCommand {
+	return &discordgo.ApplicationCommand{
+		Name:        "del-twitch",
+		Description: "Delete configuration setting.",
+		DescriptionLocalizations: &map[discordgo.Locale]string{
+			discordgo.Turkish: "Yapılandırma ayarlarını kaldır.",
+		},
+		DefaultMemberPermissions: &setdeletePermissions,
+		Options: []*discordgo.ApplicationCommandOption{
+			// del-twitch streamer
+			{
+				Name:        "streamer",
+				Description: "Delete the stream from live stream announcements.",
+				DescriptionLocalizations: map[discordgo.Locale]string{
+					discordgo.Turkish: "Yayın duyuru mesajı atılan yayıncıyı sil.",
+				},
+				Type: discordgo.ApplicationCommandOptionSubCommand,
+				Options: []*discordgo.ApplicationCommandOption{
+					{
+						Type:        discordgo.ApplicationCommandOptionString,
+						Name:        "twitch-username-or-url",
+						Description: "Twitch profile url or username",
+						DescriptionLocalizations: map[discordgo.Locale]string{
+							discordgo.Turkish: "Twitch kullanıcı profil linki veya kullanıcı adı",
+						},
+						Required: true,
+					},
+				},
+			},
+			// del-twitch announcement
+			{
+				Name:        "announcement",
+				Description: "Annoucement group",
+				Options: []*discordgo.ApplicationCommandOption{
+					// del-twitch announcement default-channel
+					{
+						Name:        "default-channel",
+						Description: "Delete the default channel configuration for live stream announcements.",
+						DescriptionLocalizations: map[discordgo.Locale]string{
+							discordgo.Turkish: "Yayın duyuru mesajlarının atılacağı varsayılan kanal ayarını kaldır.",
+						},
+						Type: discordgo.ApplicationCommandOptionSubCommand,
+					},
+					// del-twitch announcement default-content
+					{
+						Name:        "default-content",
+						Description: "Delete the default announcement message content configuration.",
+						DescriptionLocalizations: map[discordgo.Locale]string{
+							discordgo.Turkish: "Varsayılan yayın duyuru mesajını sil.",
+						},
+						Type: discordgo.ApplicationCommandOptionSubCommand,
+					},
+					// del-twitch announcement custom-content
+					{
+						Name:        "custom-content",
+						Description: "Delete the streamer specific custom live stream announcement message content.",
+						DescriptionLocalizations: map[discordgo.Locale]string{
+							discordgo.Turkish: "Yayıncıya özgü yayın duyuru mesajını sil.",
+						},
+						Type: discordgo.ApplicationCommandOptionSubCommand,
+						Options: []*discordgo.ApplicationCommandOption{
+							{
+								Type:        discordgo.ApplicationCommandOptionString,
+								Name:        "twitch-username-or-url",
+								Description: "Twitch profile url or username",
+								DescriptionLocalizations: map[discordgo.Locale]string{
+									discordgo.Turkish: "Twitch kullanıcı profil linki veya kullanıcı adı",
+								},
+								Required: true,
+							},
+						},
+					},
+				},
+				Type: discordgo.ApplicationCommandOptionSubCommandGroup,
+			},
+			// del-twitch event-channel
+			{
+				Name:        "event-channel",
+				Description: "Delete the live stream announcements channel setting to create Discord events for live streams.",
+				DescriptionLocalizations: map[discordgo.Locale]string{
+					discordgo.Turkish: "Canlı yayınların Discord etkinliklerini oluşturmak için canlı yayın duyuruları kanalını seç.",
+				},
+				Type: discordgo.ApplicationCommandOptionSubCommand,
+				Options: []*discordgo.ApplicationCommandOption{
+					{
+						Type:        discordgo.ApplicationCommandOptionChannel,
+						Name:        "channel",
+						Description: "The text channel where Twitch live stream announcements will be unfollowed",
+						DescriptionLocalizations: map[discordgo.Locale]string{
+							discordgo.Turkish: "Twitch yayın duyurularının takipten çıkarılacağı yazı kanalı",
+						},
+						ChannelTypes: []discordgo.ChannelType{
+							discordgo.ChannelTypeGuildNews,
+							discordgo.ChannelTypeGuildText,
+						},
+						Required: true,
+					},
+				},
+			},
+		},
+	}
+}
