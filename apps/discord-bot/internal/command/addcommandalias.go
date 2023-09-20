@@ -53,3 +53,25 @@ func (c *commands) AddCommandAliasCommand(ctx context.Context, s *discordgo.Sess
 
 	ephemeralRespond(s, i, "New Command Aliases Added: "+commandAliasesList)
 }
+
+func AddCommandAliasCommandMetadata() *discordgo.ApplicationCommand {
+	return &discordgo.ApplicationCommand{
+		Name:                     "acmda",
+		Description:              "Add command aliases to a command.",
+		DefaultMemberPermissions: &manageCmdPermissions,
+		Options: []*discordgo.ApplicationCommandOption{
+			{
+				Type:        discordgo.ApplicationCommandOptionString,
+				Name:        "command-name",
+				Description: "Command Name",
+				Required:    true,
+			},
+			{
+				Type:        discordgo.ApplicationCommandOptionString,
+				Name:        "command-aliases",
+				Description: "Command alias(es) separated by space",
+				Required:    true,
+			},
+		},
+	}
+}

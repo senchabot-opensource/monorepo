@@ -162,53 +162,11 @@ var (
 		// ucmd
 		UpdateCommandCommandMetadata(),
 		// dcmd
-		{
-			Name:                     "dcmd",
-			Description:              "Delete a custom command.",
-			DefaultMemberPermissions: &manageCmdPermissions,
-			Options: []*discordgo.ApplicationCommandOption{
-				{
-					Type:        discordgo.ApplicationCommandOptionString,
-					Name:        "command-name",
-					Description: "Command Name",
-					Required:    true,
-				},
-			},
-		},
+		DeleteCommandCommandMetadata(),
 		// acmda
-		{
-			Name:                     "acmda",
-			Description:              "Add command aliases to a command.",
-			DefaultMemberPermissions: &manageCmdPermissions,
-			Options: []*discordgo.ApplicationCommandOption{
-				{
-					Type:        discordgo.ApplicationCommandOptionString,
-					Name:        "command-name",
-					Description: "Command Name",
-					Required:    true,
-				},
-				{
-					Type:        discordgo.ApplicationCommandOptionString,
-					Name:        "command-aliases",
-					Description: "Command alias(es) separated by space",
-					Required:    true,
-				},
-			},
-		},
+		AddCommandAliasCommandMetadata(),
 		// dcmda
-		{
-			Name:                     "dcmda",
-			Description:              "Delete a command alias.",
-			DefaultMemberPermissions: &manageCmdPermissions,
-			Options: []*discordgo.ApplicationCommandOption{
-				{
-					Type:        discordgo.ApplicationCommandOptionString,
-					Name:        "command-alias",
-					Description: "Command Alias",
-					Required:    true,
-				},
-			},
-		},
+		DeleteCommandAliasCommandMetadata(),
 		// SET-TWITCH
 		SetTwitchCommandMetadata(),
 		// PURGE
