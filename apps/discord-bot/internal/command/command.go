@@ -11,14 +11,20 @@ import (
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/command/helpers"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot"
+	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
 )
 
 type CommandFunc func(context context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, service service.Service)
 
 type CommandMap map[string]CommandFunc
 
+type SysCommandFunc func(context context.Context, m *discordgo.MessageCreate, commandName string, params []string) (*models.CommandResponse, error)
+
+type SysCommandMap map[string]SysCommandFunc
+
 type Command interface {
 	GetCommands() CommandMap
+	GetSystemCommands() SysCommandMap
 	Run(context context.Context, cmdName string, params []string, m *discordgo.MessageCreate)
 	Respond(ctx context.Context, m *discordgo.MessageCreate, cmdName string, messageContent string)
 	DeployCommands(discordClient *discordgo.Session)
@@ -44,12 +50,6 @@ func New(dS *discordgo.Session, token string, service service.Service, cooldownP
 
 func (c *commands) GetCommands() CommandMap {
 	var commands = CommandMap{
-		"cmds":       c.CmdsCommand,
-		"acmd":       c.AddCommandCommand,
-		"ucmd":       c.UpdateCommandCommand,
-		"dcmd":       c.DeleteCommandCommand,
-		"acmda":      c.AddCommandAliasCommand,
-		"dcmda":      c.DeleteCommandAliasCommand,
 		"set-twitch": c.SetTwitchCommand,
 		"del-twitch": c.DelTwitchCommand,
 		"purge":      c.PurgeCommand,
@@ -59,9 +59,33 @@ func (c *commands) GetCommands() CommandMap {
 	return commands
 }
 
+// SYSTEM COMMANDS
+
+func (c *commands) GetSystemCommands() SysCommandMap {
+	var commands = SysCommandMap{
+		"cmds":  c.CmdsCommand,
+		"acmd":  c.AddCommandCommand,
+		"ucmd":  c.UpdateCommandCommand,
+		"dcmd":  c.DeleteCommandCommand,
+		"acmda": c.AddCommandAliasCommand,
+		"dcmda": c.DeleteCommandAliasCommand,
+	}
+
+	return commands
+}
+
+// SYSTEM COMMANDS
+
 func (c *commands) IsSystemCommand(commandName string) bool {
+	sysCommandListMap := c.GetSystemCommands()
 	commandListMap := c.GetCommands()
-	_, ok := commandListMap[commandName]
+
+	_, ok := sysCommandListMap[commandName]
+	if ok {
+		return ok
+	}
+
+	_, ok = commandListMap[commandName]
 	return ok
 }
 
@@ -100,6 +124,19 @@ func (c *commands) Run(ctx context.Context, cmdName string, params []string, m *
 		return
 	}
 	// USER COMMANDS
+
+	// SYSTEM COMMMANDS
+	cmds := c.GetSystemCommands()
+	if cmd, ok := cmds[cmdName]; ok {
+		cmdResp, err := cmd(ctx, m, cmdName, params)
+		if err != nil {
+			fmt.Println("[SYSTEM COMMAND ERROR]:", err.Error())
+			return
+		}
+		c.Respond(ctx, m, cmdName+" "+strings.Join(params, " "), cmdResp.Message)
+		return
+	}
+	// SYSTEM COMMANDS
 
 	// GLOBAL COMMANDS
 	cmdData, err = c.service.GetGlobalBotCommand(ctx, cmdName)
@@ -154,19 +191,8 @@ func (c *commands) DeployCommands(discordClient *discordgo.Session) {
 var (
 	purgePermissions     int64 = discordgo.PermissionManageServer
 	setdeletePermissions int64 = discordgo.PermissionAdministrator
-	manageCmdPermissions int64 = discordgo.PermissionManageChannels
-	commandMetadatas           = []*discordgo.ApplicationCommand{
-		CmdsCommandMetadata(),
-		// acmd
-		AddCommandCommandMetadata(),
-		// ucmd
-		UpdateCommandCommandMetadata(),
-		// dcmd
-		DeleteCommandCommandMetadata(),
-		// acmda
-		AddCommandAliasCommandMetadata(),
-		// dcmda
-		DeleteCommandAliasCommandMetadata(),
+	//manageCmdPermissions int64 = discordgo.PermissionManageChannels
+	commandMetadatas = []*discordgo.ApplicationCommand{
 		// SET-TWITCH
 		SetTwitchCommandMetadata(),
 		// PURGE
