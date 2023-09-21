@@ -84,23 +84,99 @@ const discordDataCreate = async (discordUserId: string | null) => {
     },
   });
 
+  const commands = [
+    {
+      commandName: "repo",
+      commandContent: "https://github.com/senchabot-opensource",
+      discordServerId: discordServerId,
+    },
+    {
+      commandName: "docs",
+      commandContent: "senchabot documentation https://docs.senchabot.app/",
+      discordServerId: discordServerId,
+    },
+    {
+      commandName: "issue",
+      commandContent:
+        "start here --> https://github.com/senchabot-opensource/monorepo/issues",
+      discordServerId: discordServerId,
+    },
+    {
+      commandName: "go+",
+      commandContent: "LETS GOOOOOOOOOOOOOO",
+      discordServerId: discordServerId,
+    },
+  ];
+  const commandAliases = [
+    {
+      commandAlias: "r",
+      commandName: "repo",
+      discordServerId: discordServerId,
+    },
+    {
+      commandAlias: "d",
+      commandName: "docs",
+      discordServerId: discordServerId,
+    },
+  ];
+
+  for (const command of commands) {
+    const findCommand = await prisma.botCommands.findFirst({
+      where: {
+        commandName: command.commandName,
+        discordServerId: discordServerId?.serverId,
+      },
+    });
+
+    if (findCommand) return;
+
+    await prisma.botCommands.create({
+      data: {
+        commandName: command.commandName,
+        commandContent: command.commandContent,
+        discordServerId: discordServerId?.serverId,
+        createdBy: "Senchabot",
+      },
+    });
+  }
+
+  for (const alias of commandAliases) {
+    const findAlias = await prisma.botCommandAliases.findFirst({
+      where: {
+        commandAlias: alias.commandAlias,
+        discordServerId: discordServerId?.serverId,
+      },
+    });
+
+    if (findAlias) return;
+
+    await prisma.botCommandAliases.create({
+      data: {
+        commandAlias: alias.commandAlias,
+        commandName: alias.commandName,
+        discordServerId: discordServerId?.serverId,
+        createdBy: "Senchabot",
+      },
+    });
+  }
+
   const botActionActivities = [
     {
       botPlatformType: "discord",
       botActivity: "/sukru",
-      discordServerId: discordServerId?.serverId,
+      discordServerId: discordServerId,
       activityAuthor: "Senchabot",
     },
     {
       botPlatformType: "discord",
       botActivity: "/help",
-      discordServerId: discordServerId?.serverId,
+      discordServerId: discordServerId,
       activityAuthor: "Senchabot",
     },
     {
       botPlatformType: "discord",
       botActivity: "Streamer deleted",
-      discordServerId: discordServerId?.serverId,
+      discordServerId: discordServerId,
       activityAuthor: "Senchabot",
     },
   ];
@@ -110,7 +186,7 @@ const discordDataCreate = async (discordUserId: string | null) => {
       data: {
         botPlatformType: activity.botPlatformType,
         botActivity: activity.botActivity,
-        botPlatformId: activity.discordServerId,
+        botPlatformId: activity.discordServerId?.serverId,
         activityAuthor: activity.activityAuthor,
       },
     });
