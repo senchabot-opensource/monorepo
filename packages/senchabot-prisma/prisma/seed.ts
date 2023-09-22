@@ -38,17 +38,17 @@ async function main() {
   });
 
   if (twitchAccount && !twitchChannelId && discordAccount && !discordServerId) {
-    const twitchAccountId = twitchAccount?.providerAccountId || null;
-    const discordUserId = discordAccount?.providerAccountId || null;
+    const twitchAccountId = twitchAccount.providerAccountId;
+    const discordUserId = discordAccount.providerAccountId;
 
     twitchDataCreate(twitchAccountId);
     discordDataCreate(discordUserId);
   } else if (discordAccount && !discordServerId) {
-    const discordUserId = discordAccount?.providerAccountId || null;
+    const discordUserId = discordAccount.providerAccountId;
 
     discordDataCreate(discordUserId);
   } else if (twitchAccount && !twitchChannelId) {
-    const twitchAccountId = twitchAccount?.providerAccountId || null;
+    const twitchAccountId = twitchAccount.providerAccountId;
 
     twitchDataCreate(twitchAccountId);
   } else if (!twitchAccount && !discordAccount) {
@@ -67,20 +67,12 @@ main()
     process.exit(1);
   });
 
-const discordDataCreate = async (discordUserId: string | null) => {
-  if (discordUserId) {
-    await prisma.discordServer.create({
-      data: {
-        serverId: "12345",
-        serverName: "Senchabot",
-        serverOwner: discordUserId,
-      },
-    });
-  }
-
-  const discordServerId = await prisma.discordServer.findFirst({
-    select: {
-      serverId: true,
+const discordDataCreate = async (discordUserId: string) => {
+  const discordServer = await prisma.discordServer.create({
+    data: {
+      serverId: "12345",
+      serverName: "Senchabot",
+      serverOwner: discordUserId,
     },
   });
 
@@ -88,35 +80,35 @@ const discordDataCreate = async (discordUserId: string | null) => {
     {
       commandName: "repo",
       commandContent: "https://github.com/senchabot-opensource",
-      discordServerId: discordServerId,
+      discordServerId: discordServer.serverId,
     },
     {
       commandName: "docs",
       commandContent: "senchabot documentation https://docs.senchabot.app/",
-      discordServerId: discordServerId,
+      discordServerId: discordServer.serverId,
     },
     {
       commandName: "issue",
       commandContent:
         "start here --> https://github.com/senchabot-opensource/monorepo/issues",
-      discordServerId: discordServerId,
+      discordServerId: discordServer.serverId,
     },
     {
       commandName: "go+",
       commandContent: "LETS GOOOOOOOOOOOOOO",
-      discordServerId: discordServerId,
+      discordServerId: discordServer.serverId,
     },
   ];
   const commandAliases = [
     {
       commandAlias: "r",
       commandName: "repo",
-      discordServerId: discordServerId,
+      discordServerId: discordServer.serverId,
     },
     {
       commandAlias: "d",
       commandName: "docs",
-      discordServerId: discordServerId,
+      discordServerId: discordServer.serverId,
     },
   ];
 
@@ -124,7 +116,7 @@ const discordDataCreate = async (discordUserId: string | null) => {
     const findCommand = await prisma.botCommands.findFirst({
       where: {
         commandName: command.commandName,
-        discordServerId: discordServerId?.serverId,
+        discordServerId: discordServer.serverId,
       },
     });
 
@@ -134,7 +126,7 @@ const discordDataCreate = async (discordUserId: string | null) => {
       data: {
         commandName: command.commandName,
         commandContent: command.commandContent,
-        discordServerId: discordServerId?.serverId,
+        discordServerId: discordServer.serverId,
         createdBy: "Senchabot",
       },
     });
@@ -144,7 +136,7 @@ const discordDataCreate = async (discordUserId: string | null) => {
     const findAlias = await prisma.botCommandAliases.findFirst({
       where: {
         commandAlias: alias.commandAlias,
-        discordServerId: discordServerId?.serverId,
+        discordServerId: discordServer.serverId,
       },
     });
 
@@ -154,7 +146,7 @@ const discordDataCreate = async (discordUserId: string | null) => {
       data: {
         commandAlias: alias.commandAlias,
         commandName: alias.commandName,
-        discordServerId: discordServerId?.serverId,
+        discordServerId: discordServer.serverId,
         createdBy: "Senchabot",
       },
     });
@@ -164,19 +156,19 @@ const discordDataCreate = async (discordUserId: string | null) => {
     {
       botPlatformType: "discord",
       botActivity: "/sukru",
-      discordServerId: discordServerId,
+      discordServerId: discordServer.serverId,
       activityAuthor: "Senchabot",
     },
     {
       botPlatformType: "discord",
       botActivity: "/help",
-      discordServerId: discordServerId,
+      discordServerId: discordServer.serverId,
       activityAuthor: "Senchabot",
     },
     {
       botPlatformType: "discord",
       botActivity: "Streamer deleted",
-      discordServerId: discordServerId,
+      discordServerId: discordServer.serverId,
       activityAuthor: "Senchabot",
     },
   ];
@@ -186,22 +178,20 @@ const discordDataCreate = async (discordUserId: string | null) => {
       data: {
         botPlatformType: activity.botPlatformType,
         botActivity: activity.botActivity,
-        botPlatformId: activity.discordServerId?.serverId,
+        botPlatformId: activity.discordServerId,
         activityAuthor: activity.activityAuthor,
       },
     });
   }
 };
 
-const twitchDataCreate = async (twitchAccountId: string | null) => {
-  if (twitchAccountId) {
-    await prisma.twitchChannel.create({
-      data: {
-        channelId: twitchAccountId,
-        channelName: "Senchabot",
-      },
-    });
-  }
+const twitchDataCreate = async (twitchAccountId: string) => {
+  await prisma.twitchChannel.create({
+    data: {
+      channelId: twitchAccountId,
+      channelName: "Senchabot",
+    },
+  });
 
   const commands = [
     {
