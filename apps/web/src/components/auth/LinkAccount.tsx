@@ -11,7 +11,6 @@ import { FC, ReactNode } from "react";
 import { getAccount } from "src/api";
 import { IAccount } from "src/types";
 import { useQuery } from "@tanstack/react-query";
-import { log } from "console";
 
 type IProps = {
   accountType: "discord" | "twitch";
