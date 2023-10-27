@@ -31,7 +31,7 @@
     "react-timer-hook": "^3.0.5",
     "senchabot-prisma": "*",
     "superjson": "^1.12.2",
-    "zod": "^3.21.4"
+    "zod": "^3.22.3"
   },
   "devDependencies": {
     "@tanstack/eslint-plugin-query": "^4.29.25",

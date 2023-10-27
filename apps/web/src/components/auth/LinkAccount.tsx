@@ -7,9 +7,10 @@ import {
 } from "@mui/material";
 import { SiDiscord, SiTwitch } from "react-icons/si";
 import { signIn } from "next-auth/react";
-import { FC, ReactNode, useEffect, useState } from "react";
+import { FC, ReactNode } from "react";
 import { getAccount } from "src/api";
 import { IAccount } from "src/types";
+import { useQuery } from "@tanstack/react-query";
 
 type IProps = {
   accountType: "discord" | "twitch";
@@ -18,18 +19,13 @@ type IProps = {
 };
 
 const LinkAccount: FC<IProps> = ({ accountType, accountTitle, icon }) => {
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [accounts, setAccounts] = useState<IAccount[]>([]);
-
-  useEffect(() => {
-    getAccount().then(res => {
-      if (!res.data) return;
-      setAccounts(res.data);
-      setIsLoading(false);
-    });
-  }, [isLoading]);
-
-  const currentProviders = accounts?.map(
+  const { data: accounts, isLoading } = useQuery({
+    queryKey: ["accounts"],
+    queryFn: () => {
+      return getAccount();
+    },
+  });
+  const currentProviders = accounts?.data?.map(
     (account: IAccount) => account.provider,
   );
 

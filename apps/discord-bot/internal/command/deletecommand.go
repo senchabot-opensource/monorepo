@@ -26,3 +26,19 @@ func (c *commands) DeleteCommandCommand(ctx context.Context, s *discordgo.Sessio
 
 	ephemeralRespond(s, i, "Command Deleted: "+*deletedCmdName)
 }
+
+func DeleteCommandCommandMetadata() *discordgo.ApplicationCommand {
+	return &discordgo.ApplicationCommand{
+		Name:                     "dcmd",
+		Description:              "Delete a custom command.",
+		DefaultMemberPermissions: &manageCmdPermissions,
+		Options: []*discordgo.ApplicationCommandOption{
+			{
+				Type:        discordgo.ApplicationCommandOptionString,
+				Name:        "command-name",
+				Description: "Command Name",
+				Required:    true,
+			},
+		},
+	}
+}

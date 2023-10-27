@@ -27,3 +27,25 @@ func (c *commands) UpdateCommandCommand(ctx context.Context, s *discordgo.Sessio
 
 	ephemeralRespond(s, i, "Command Updated: "+*updatedCmdName)
 }
+
+func UpdateCommandCommandMetadata() *discordgo.ApplicationCommand {
+	return &discordgo.ApplicationCommand{
+		Name:                     "ucmd",
+		Description:              "Update a custom command.",
+		DefaultMemberPermissions: &manageCmdPermissions,
+		Options: []*discordgo.ApplicationCommandOption{
+			{
+				Type:        discordgo.ApplicationCommandOptionString,
+				Name:        "command-name",
+				Description: "Command Name",
+				Required:    true,
+			},
+			{
+				Type:        discordgo.ApplicationCommandOptionString,
+				Name:        "command-content",
+				Description: "New Command Content",
+				Required:    true,
+			},
+		},
+	}
+}

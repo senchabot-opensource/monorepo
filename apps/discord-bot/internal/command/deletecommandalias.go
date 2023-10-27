@@ -30,3 +30,19 @@ func (c *commands) DeleteCommandAliasCommand(ctx context.Context, s *discordgo.S
 
 	ephemeralRespond(s, i, "Command Alias Deleted: "+cmdName)
 }
+
+func DeleteCommandAliasCommandMetadata() *discordgo.ApplicationCommand {
+	return &discordgo.ApplicationCommand{
+		Name:                     "dcmda",
+		Description:              "Delete a command alias.",
+		DefaultMemberPermissions: &manageCmdPermissions,
+		Options: []*discordgo.ApplicationCommandOption{
+			{
+				Type:        discordgo.ApplicationCommandOptionString,
+				Name:        "command-alias",
+				Description: "Command Alias",
+				Required:    true,
+			},
+		},
+	}
+}
