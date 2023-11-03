@@ -1,4 +1,4 @@
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, Grid, Stack, Typography } from "@mui/material";
 import SectionLayout from "../layout/SectionLayout";
 import { array } from "zod";
 
@@ -7,10 +7,10 @@ const Trusted = () => {
   return (
     <SectionLayout>
       <Stack
-        direction="row"
+        direction={{ xs: "column", md: "row" }}
         alignItems="center"
         bgcolor="#003B43"
-        height="152px"
+        height={{ xs: "auto", md: "152px" }}
         width="100%"
         mt="90px"
         justifyContent="center">
@@ -18,7 +18,8 @@ const Trusted = () => {
           direction={{ xs: "column", md: "row" }}
           width="100%"
           maxWidth="1440px"
-          justifyContent="space-between">
+          justifyContent="space-between"
+          alignItems="center">
           <Typography
             width="345px"
             color="#ECFFFA"
@@ -27,17 +28,19 @@ const Trusted = () => {
             lineHeight="46.2px">
             Trusted and used by the best
           </Typography>
-          <Stack direction="row" spacing={3}>
+          <Grid container justifyContent={{ xs: "center", md: "end" }}>
             {data.map(item => {
               return (
-                <Box
-                  height={60}
-                  width={60}
-                  bgcolor="#ECFFFA"
-                  borderRadius="100%"></Box>
+                <Grid item xs={2} md={1} m={1}>
+                  <Box
+                    height={60}
+                    width={60}
+                    bgcolor="#ECFFFA"
+                    borderRadius="100%"></Box>
+                </Grid>
               );
             })}
-          </Stack>
+          </Grid>
         </Stack>
       </Stack>
     </SectionLayout>
