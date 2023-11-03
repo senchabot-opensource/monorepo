@@ -18,7 +18,8 @@ const Footer = () => {
           justifyContent="space-between"
           width="100%"
           maxWidth="1440px"
-          color="#0B0E15">
+          color="#0B0E15"
+          spacing={2}>
           <Typography>© 2023 Senchabot | All Rights Reserved.</Typography>
           <img
             height={36}
