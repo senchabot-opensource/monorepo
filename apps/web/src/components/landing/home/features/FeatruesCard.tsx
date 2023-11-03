@@ -25,12 +25,15 @@ const FeaturesCard: FC<FeaturesCardProps> = ({
       maxWidth="1440px"
       width="100%">
       <Stack width="50%" color="#0B0E15">
-        <Typography fontSize="50px" fontWeight={500} lineHeight="55px">
+        <Typography
+          fontSize={{ xs: "25px", md: "50px" }}
+          fontWeight={500}
+          lineHeight={{ xs: "normal", md: "55px" }}>
           {title}
         </Typography>
         <Typography
           mt="30px"
-          fontSize="25px"
+          fontSize={{ xs: "16px", md: "20px" }}
           fontWeight={300}
           lineHeight="27.5px">
           {description}
