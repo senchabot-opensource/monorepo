@@ -13,32 +13,37 @@ const Hero = () => {
         direction={{ xs: "column", md: "row" }}
         alignItems="center">
         <Stack color="#0B0E15" width={{ xs: "100%", md: "50%" }}>
-          <Typography fontSize="55px" fontWeight="780" lineHeight="60.5px">
+          <Typography fontSize="55px" fontWeight="780" lineHeight="60.50px">
             All Bots and Stream overlays, Manage from one place!
           </Typography>
           <Stack
             direction={{ xs: "column", md: "row" }}
             alignItems="center"
             mt="30px"
-            spacing={3}>
+            spacing={3}
+            p={{ xs: "8px", md: "0px" }}>
             <Button
+              fullWidth
               variant="contained"
               sx={{
                 color: "#ECFFFA",
                 fontWeight: "600",
                 backgroundColor: "#003B43",
                 borderRadius: "20px",
+                fontSize: { xs: "24px", md: "16px" },
                 padding: "7px 37px",
               }}>
               GET DISCORD BOT
             </Button>
             <Button
+              fullWidth
               variant="contained"
               sx={{
                 color: "#ECFFFA",
                 fontWeight: "600",
                 backgroundColor: "#003B43",
                 borderRadius: "20px",
+                fontSize: { xs: "24px", md: "16px" },
                 padding: "7px 37px",
               }}>
               GET TWITCH BOT
