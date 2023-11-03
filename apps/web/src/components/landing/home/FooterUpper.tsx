@@ -8,11 +8,11 @@ const FooterUpper = () => {
       <Stack
         direction="row"
         bgcolor="#003B43"
-        height="155px"
+        height={{ xs: "auto", md: "155px" }}
         width="100%"
         justifyContent="center">
         <Stack
-          direction="row"
+          direction={{ xs: "column", md: "row" }}
           maxWidth="1440px"
           width="100%"
           alignItems="center"
