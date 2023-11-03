@@ -5,6 +5,7 @@ const Footer = () => {
   return (
     <SectionLayout>
       <Stack
+        p={2}
         direction="row"
         alignItems="center"
         justifyContent="center"

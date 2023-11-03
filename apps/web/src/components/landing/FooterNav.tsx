@@ -13,6 +13,7 @@ const FooterNav = () => {
   return (
     <SectionLayout>
       <Stack
+        p={2}
         pt="103px"
         pb="103px"
         width="100%"

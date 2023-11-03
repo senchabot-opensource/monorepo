@@ -12,6 +12,7 @@ const FooterUpper = () => {
         width="100%"
         justifyContent="center">
         <Stack
+          p={2}
           direction={{ xs: "column", md: "row" }}
           maxWidth="1440px"
           width="100%"

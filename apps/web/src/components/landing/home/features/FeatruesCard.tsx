@@ -19,6 +19,7 @@ const FeaturesCard: FC<FeaturesCardProps> = ({
 }) => {
   return (
     <Stack
+      p={2}
       direction={{ xs: "column", md: reverse ? "row-reverse" : "row" }}
       alignItems="center"
       maxWidth="1440px"

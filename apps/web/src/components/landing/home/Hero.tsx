@@ -7,6 +7,7 @@ const Hero = () => {
   return (
     <SectionLayout>
       <Stack
+        p={2}
         maxWidth="1440px"
         width="100%"
         mt="240px"
