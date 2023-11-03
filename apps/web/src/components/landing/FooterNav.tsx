@@ -49,24 +49,31 @@ const FooterNav = () => {
               </Link>
             </Stack>
           </Stack>
-          <Stack spacing={1.5}>
-            <Typography fontWeight="bold">PRODUCT</Typography>
-            <Link href="#">Dashboard</Link>
-            <Link href="#">Documentation</Link>
-          </Stack>
-          <Stack spacing={1.5}>
-            <Typography fontWeight="bold">COMMUNITY</Typography>
-            <Link href="#">Branding</Link>
-            <Link href="#">Streamkit</Link>
-            <Link href="#">Credits</Link>
-            <Link href="#">We ❤️ Developers </Link>
-          </Stack>
-          <Stack spacing={1.5}>
-            <Typography fontWeight="bold">LEGAL</Typography>
-            <Link href="#">Terms of Service</Link>
-            <Link href="#">Privacy Policy</Link>
-            <Link href="#">Cookie Settings</Link>
-            <Link href="#">EULA</Link>
+          <Stack
+            direction={"row"}
+            spacing={4}
+            alignItems="start"
+            justifyItems="center"
+            mt={4}>
+            <Stack>
+              <Typography fontWeight="bold">PRODUCT</Typography>
+              <Link href="#">Dashboard</Link>
+              <Link href="#">Documentation</Link>
+            </Stack>
+            <Stack spacing={1.5}>
+              <Typography fontWeight="bold">COMMUNITY</Typography>
+              <Link href="#">Branding</Link>
+              <Link href="#">Streamkit</Link>
+              <Link href="#">Credits</Link>
+              <Link href="#">We ❤️ Developers </Link>
+            </Stack>
+            <Stack spacing={1.5}>
+              <Typography fontWeight="bold">LEGAL</Typography>
+              <Link href="#">Terms of Service</Link>
+              <Link href="#">Privacy Policy</Link>
+              <Link href="#">Cookie Settings</Link>
+              <Link href="#">EULA</Link>
+            </Stack>
           </Stack>
         </Stack>
       </Stack>
