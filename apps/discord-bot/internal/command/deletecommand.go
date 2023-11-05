@@ -2,43 +2,17 @@ package command
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
+	"github.com/senchabot-opensource/monorepo/command"
+	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
 )
 
-func (c *commands) DeleteCommandCommand(ctx context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, service service.Service) {
-	options := i.ApplicationCommandData().Options
-
-	cmdName := options[0].StringValue()
-
-	deletedCmdName, resp, err := service.DeleteCommand(ctx, cmdName, i.GuildID)
-	if err != nil {
-		fmt.Println(err)
-		return
+func (c *commands) DeleteCommandCommand(context context.Context, m *discordgo.MessageCreate, commandName string, params []string) (*models.CommandResponse, error) {
+	msgData := &models.MessageData{
+		PlatformEntityID: m.GuildID,
+		UserName:         m.Author.Username,
 	}
 
-	if resp != nil {
-		ephemeralRespond(s, i, *resp)
-		return
-	}
-
-	ephemeralRespond(s, i, "Command Deleted: "+*deletedCmdName)
-}
-
-func DeleteCommandCommandMetadata() *discordgo.ApplicationCommand {
-	return &discordgo.ApplicationCommand{
-		Name:                     "dcmd",
-		Description:              "Delete a custom command.",
-		DefaultMemberPermissions: &manageCmdPermissions,
-		Options: []*discordgo.ApplicationCommandOption{
-			{
-				Type:        discordgo.ApplicationCommandOptionString,
-				Name:        "command-name",
-				Description: "Command Name",
-				Required:    true,
-			},
-		},
-	}
+	return command.DcmdCommand(context, c.service.DeleteCommand, c.IsSystemCommand, *msgData, commandName, params)
 }

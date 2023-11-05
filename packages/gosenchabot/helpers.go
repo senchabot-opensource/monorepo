@@ -19,6 +19,9 @@ const (
 	min = 18
 
 	maxAliasParamLength = 4
+
+	maxCommandNameLength    = 50
+	maxCommandContentLength = 400
 )
 
 func FormatCommandContent(cv *models.CommandVariable) string {
@@ -107,19 +110,6 @@ func GetProcessedCommandName(cmdName string) string {
 	return cmdName
 }
 
-type SozlukGraphQLResponse struct {
-	Data struct {
-		Sozluk struct {
-			Term struct {
-				Title string `json:"title"`
-				Body  struct {
-					Raw string `json:"raw"`
-				} `json:"body"`
-			} `json:"term"`
-		} `json:"sozluk"`
-	} `json:"data"`
-}
-
 func FetchGraphQL(apiUrl string, query string) ([]byte, error) {
 	queryParams := url.QueryEscape(query)
 	fullURL := fmt.Sprintf("%s?query=%s", apiUrl, queryParams)
@@ -203,4 +193,36 @@ func SendGetRequest(url string) (string, error) {
 		return "", err
 	}
 	return string(body), nil
+}
+
+func GetCommandCreateUpdateParams(params []string) (string, string, bool) {
+	if check := ValidateCommandCreateParamsLength(params); !check {
+		return "", "", false
+	}
+
+	var commandName = strings.ToLower(params[0])
+	var commandContent = strings.Join(params[1:], " ")
+
+	commandName = TrimExclamationPrefix(commandName)
+
+	return commandName, commandContent, true
+}
+
+func ValidateCommandCreateParams(commandName string, commandContent string) (string, bool) {
+	if len(commandName) > maxCommandNameLength {
+		return fmt.Sprintf("Command Name length must be no more than %d chars", maxCommandNameLength), false
+	}
+	if infoText, check := ValidateCommandContentLength(commandContent); !check {
+		return infoText, check
+	}
+
+	return "", true
+}
+
+func ValidateCommandContentLength(commandContent string) (string, bool) {
+	if len(commandContent) > maxCommandContentLength {
+		return fmt.Sprintf("Command Content length must be no more than %d chars", maxCommandContentLength), false
+	}
+
+	return "", true
 }

@@ -128,3 +128,9 @@ type CommandVariable struct {
 	CommandCreatedAt *time.Time
 	ChannelName      string
 }
+
+type MessageData struct {
+	PlatformEntityID string
+	UserName         string
+	ChannelName      string
+}
