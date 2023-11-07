@@ -104,7 +104,7 @@ func PurgeCommandMetadata() *discordgo.ApplicationCommand {
 			// purge last-100-channel-messages
 			{
 				Name:        "last-100-channel-messages",
-				Description: "Purge messages not older than 14 days containing certain characters or sent by centain username.",
+				Description: "Purge messages not older than 14 days containing certain characters or sent by certain username.",
 				DescriptionLocalizations: map[discordgo.Locale]string{
 					discordgo.Turkish: "14 günden eski olmayan mesajları kullanıcı adı veya mesaj iceriğindeki karakterlere göre siler.",
 				},
