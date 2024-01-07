@@ -63,12 +63,13 @@ func (c *commands) GetCommands() CommandMap {
 
 func (c *commands) GetSystemCommands() SysCommandMap {
 	var commands = SysCommandMap{
-		"cmds": c.CmdsCommand,
-		//"acmd":  c.AddCommandCommand,
-		//"ucmd":  c.UpdateCommandCommand,
-		//"dcmd":  c.DeleteCommandCommand,
-		//"acmda": c.AddCommandAliasCommand,
-		//"dcmda": c.DeleteCommandAliasCommand,
+		"cmds":   c.CmdsCommand,
+		"acmd":   c.AddCommandCommand,
+		"ucmd":   c.UpdateCommandCommand,
+		"dcmd":   c.DeleteCommandCommand,
+		"acmda":  c.AddCommandAliasCommand,
+		"dcmda":  c.DeleteCommandAliasCommand,
+		"sozluk": c.SozlukCommand,
 	}
 
 	return commands
