@@ -16,3 +16,10 @@ func (c *commands) CmdsCommand(context context.Context, m *discordgo.MessageCrea
 	return command.CmdsCommand(context, c.service.GetCommandList, c.IsSystemCommand, *msgData, commandName, params)
 
 }
+
+func CmdsCommandMetadata() *discordgo.ApplicationCommand {
+	return &discordgo.ApplicationCommand{
+		Name:        "cmds",
+		Description: "Command list.",
+	}
+}

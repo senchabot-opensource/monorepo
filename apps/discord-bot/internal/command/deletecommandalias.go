@@ -16,3 +16,19 @@ func (c *commands) DeleteCommandAliasCommand(context context.Context, m *discord
 
 	return command.DcmdaCommand(context, c.service.DeleteCommandAlias, c.IsSystemCommand, *msgData, commandName, params)
 }
+
+func DeleteCommandAliasCommandMetadata() *discordgo.ApplicationCommand {
+	return &discordgo.ApplicationCommand{
+		Name:                     "dcmda",
+		Description:              "Delete a command alias.",
+		DefaultMemberPermissions: &manageCmdPermissions,
+		Options: []*discordgo.ApplicationCommandOption{
+			{
+				Type:        discordgo.ApplicationCommandOptionString,
+				Name:        "command-alias",
+				Description: "Command Alias",
+				Required:    true,
+			},
+		},
+	}
+}

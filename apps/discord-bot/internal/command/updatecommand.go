@@ -16,3 +16,25 @@ func (c *commands) UpdateCommandCommand(context context.Context, m *discordgo.Me
 
 	return command.UcmdCommand(context, c.service.UpdateCommand, c.IsSystemCommand, *msgData, commandName, params)
 }
+
+func UpdateCommandCommandMetadata() *discordgo.ApplicationCommand {
+	return &discordgo.ApplicationCommand{
+		Name:                     "ucmd",
+		Description:              "Update a custom command.",
+		DefaultMemberPermissions: &manageCmdPermissions,
+		Options: []*discordgo.ApplicationCommandOption{
+			{
+				Type:        discordgo.ApplicationCommandOptionString,
+				Name:        "command-name",
+				Description: "Command Name",
+				Required:    true,
+			},
+			{
+				Type:        discordgo.ApplicationCommandOptionString,
+				Name:        "command-content",
+				Description: "New Command Content",
+				Required:    true,
+			},
+		},
+	}
+}

@@ -16,3 +16,25 @@ func (c *commands) AddCommandAliasCommand(context context.Context, m *discordgo.
 
 	return command.AcmdaCommand(context, c.service.CheckCommandExists, c.service.CreateCommandAlias, c.IsSystemCommand, *msgData, commandName, params)
 }
+
+func AddCommandAliasCommandMetadata() *discordgo.ApplicationCommand {
+	return &discordgo.ApplicationCommand{
+		Name:                     "acmda",
+		Description:              "Add command aliases to a command.",
+		DefaultMemberPermissions: &manageCmdPermissions,
+		Options: []*discordgo.ApplicationCommandOption{
+			{
+				Type:        discordgo.ApplicationCommandOptionString,
+				Name:        "command-name",
+				Description: "Command Name",
+				Required:    true,
+			},
+			{
+				Type:        discordgo.ApplicationCommandOptionString,
+				Name:        "command-aliases",
+				Description: "Command alias(es) separated by space",
+				Required:    true,
+			},
+		},
+	}
+}
