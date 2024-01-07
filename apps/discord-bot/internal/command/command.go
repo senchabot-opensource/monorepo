@@ -191,8 +191,8 @@ func (c *commands) DeployCommands(discordClient *discordgo.Session) {
 var (
 	purgePermissions     int64 = discordgo.PermissionManageServer
 	setdeletePermissions int64 = discordgo.PermissionAdministrator
-	//manageCmdPermissions int64 = discordgo.PermissionManageChannels
-	commandMetadatas = []*discordgo.ApplicationCommand{
+	manageCmdPermissions int64 = discordgo.PermissionManageChannels
+	commandMetadatas           = []*discordgo.ApplicationCommand{
 		// SET-TWITCH
 		SetTwitchCommandMetadata(),
 		// PURGE
