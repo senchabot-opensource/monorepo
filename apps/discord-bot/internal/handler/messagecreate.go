@@ -8,7 +8,6 @@ import (
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/command"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/command/helpers"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service/event"
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot"
 )
 
 func (h *handler) MessageCreate(command command.Command) {
@@ -38,14 +37,5 @@ func (h *handler) MessageCreate(command command.Command) {
 		}
 
 		command.Run(ctx, cmdName, params, m)
-
-		if cmdName == "sozluk" {
-			sozlukResp, err := gosenchabot.SozlukCommand(params)
-			if err != nil {
-				log.Println(err)
-				return
-			}
-			s.ChannelMessageSend(m.ChannelID, sozlukResp)
-		}
 	})
 }

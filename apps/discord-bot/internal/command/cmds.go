@@ -2,35 +2,19 @@ package command
 
 import (
 	"context"
-	"log"
-	"strings"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
+	"github.com/senchabot-opensource/monorepo/command"
+	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
 )
 
-func (c *commands) CmdsCommand(ctx context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, service service.Service) {
-	var commandListArr []string
-	var commandListString string
-
-	commandList, err := c.service.GetCommandList(ctx, i.GuildID)
-	if err != nil {
-		log.Printf("CmdsCommand Error: %v", err)
-		return
+func (c *commands) CmdsCommand(context context.Context, m *discordgo.MessageCreate, commandName string, params []string) (*models.CommandResponse, error) {
+	msgData := &models.MessageData{
+		PlatformEntityID: m.GuildID,
+		UserName:         m.Author.Username,
 	}
+	return command.CmdsCommand(context, c.service.GetCommandList, c.IsSystemCommand, *msgData, commandName, params)
 
-	if len(commandList) < 1 {
-		ephemeralRespond(s, i, "No data.")
-		return
-	}
-
-	for _, v := range commandList {
-		commandListArr = append(commandListArr, v.CommandName)
-	}
-
-	commandListString = strings.Join(commandListArr, ", ")
-
-	ephemeralRespond(s, i, "Commands: "+commandListString)
 }
 
 func CmdsCommandMetadata() *discordgo.ApplicationCommand {

@@ -20,5 +20,19 @@ export default defineNextConfig({
     locales: ["en"],
     defaultLocale: "en",
   },
+  async redirects() {
+    return [
+      {
+        source: "/discord",
+        destination: "https://discord.com/invite/qUxwcjRzND",
+        permanent: true,
+      },
+      {
+        source: "/docs",
+        destination: "https://docs.senchabot.app",
+        permanent: true,
+      },
+    ];
+  },
   //experimental: { newNextLinkBehavior: false, },
 });

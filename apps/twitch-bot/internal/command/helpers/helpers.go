@@ -2,18 +2,11 @@ package helpers
 
 import (
 	"context"
-	"fmt"
 	"strings"
 
 	"github.com/gempir/go-twitch-irc/v3"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/service"
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot"
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
-)
-
-const (
-	maxCommandNameLength    = 50
-	maxCommandContentLength = 400
 )
 
 func GetCommandVariables(cmdData *models.BotCommand, message twitch.PrivateMessage) *models.CommandVariable {
@@ -99,36 +92,4 @@ func isBroadcaster(badgeTags string) bool {
 
 func isModerator(badgeTags string) bool {
 	return strings.Contains(badgeTags, "moderator")
-}
-
-func GetCommandCreateUpdateParams(params []string) (string, string, bool) {
-	if check := gosenchabot.ValidateCommandCreateParamsLength(params); !check {
-		return "", "", false
-	}
-
-	var commandName = strings.ToLower(params[0])
-	var commandContent = strings.Join(params[1:], " ")
-
-	commandName = gosenchabot.TrimExclamationPrefix(commandName)
-
-	return commandName, commandContent, true
-}
-
-func ValidateCommandCreateParams(commandName string, commandContent string) (string, bool) {
-	if len(commandName) > maxCommandNameLength {
-		return fmt.Sprintf("Command Name length must be no more than %d chars", maxCommandNameLength), false
-	}
-	if infoText, check := ValidateCommandContentLength(commandContent); !check {
-		return infoText, check
-	}
-
-	return "", true
-}
-
-func ValidateCommandContentLength(commandContent string) (string, bool) {
-	if len(commandContent) > maxCommandContentLength {
-		return fmt.Sprintf("Command Content length must be no more than %d chars", maxCommandContentLength), false
-	}
-
-	return "", true
 }
