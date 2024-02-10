@@ -19,7 +19,7 @@ func (c *commands) SoCommand(context context.Context, message twitch.PrivateMess
 	var cmdResp models.CommandResponse
 
 	if !helpers.CanExecuteCommand(context, c.service, message.Tags["badges"], message.RoomID) {
-		return nil, errors.New(message.User.DisplayName + " cannot execute the command")
+		return nil, errors.New(message.User.DisplayName + config.CannotExecuteCommand)
 	}
 
 	if check := gosenchabot.IsCommandParamsLengthEqualToOne(params); !check {

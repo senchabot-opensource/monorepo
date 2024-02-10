@@ -40,6 +40,7 @@ func (c *commands) DelTwitchCommand(ctx context.Context, s *discordgo.Session, i
 
 		streamers := streamer.GetStreamersData(i.GuildID)
 		delete(streamers, uInfo.Login)
+		ok = streamer.DeleteStreamerFromData(i.GuildID, uInfo.Login)
 		ephemeralRespond(s, i, "`"+uInfo.Login+"` kullanıcı adlı Twitch streamer veritabanından silindi.")
 
 		// del-twitch event-channel
