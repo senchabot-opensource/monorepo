@@ -5,9 +5,8 @@ COPY . .
 
 ARG SERVICE_NAME
 
-# Install CA certificates
-RUN apk update && apk add --no-cache ca-certificates && update-ca-certificates
-RUN apk --no-cache add tzdata
+# Install CA certificates and tzdata
+RUN apk update && apk add --no-cache ca-certificates && update-ca-certificates && apk add --no-cache tzdata
 
 RUN CGO_ENABLED=0 GOOS=linux go build -ldflags "-s -w" -o /app/bin ./apps/discord-bot/cmd/main/*.go
 

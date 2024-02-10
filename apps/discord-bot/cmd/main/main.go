@@ -10,6 +10,8 @@ import (
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/handler"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
 
+	_ "time/tzdata"
+
 	twsrvc "github.com/senchabot-opensource/monorepo/packages/gosenchabot/service/twitch"
 )
 
