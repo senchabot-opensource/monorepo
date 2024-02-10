@@ -170,7 +170,11 @@ func CheckDatesAnnounceable(ctx context.Context, service service.Service, guildI
 	var annoDate = *lastAnnoDate
 
 	// Parse dates and apply location
-	loc, _ := time.LoadLocation("Europe/Amsterdam")
+	loc, loadLocationErr := time.LoadLocation("Europe/Amsterdam")
+	if loadLocationErr != nil {
+		log.Println("loadLocationErr", loadLocationErr)
+		return false
+	}
 	startDate, err := time.ParseInLocation(time.RFC3339, startedAt, loc)
 	if err != nil {
 		log.Println("Error parsing startedAt time:", err)
