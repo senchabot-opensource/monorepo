@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -156,23 +157,67 @@ func GetStreamAnnoContent(ctx context.Context, service service.Service, guildId,
 }
 
 func CheckDatesAnnounceable(ctx context.Context, service service.Service, guildId, streamerUserId, startedAt string) bool {
-	date, err := service.GetTwitchStreamerLastAnnoDate(ctx, streamerUserId, guildId)
+	lastAnnoDate, err := service.GetTwitchStreamerLastAnnoDate(ctx, streamerUserId, guildId)
 	if err != nil {
-		log.Printf("There was an error while checking Twitch streamer last anno date: %v", err)
+		log.Printf("Error getting Twitch streamer last anno date: %v", err)
 		return false
 	}
-	if date != nil {
-		tt, err := time.Parse(time.RFC3339, startedAt)
-		if err != nil {
-			fmt.Println("TIME PARSE ERROR", err)
-			return false
-		}
-		if int(time.Until(tt).Abs().Minutes()) >= int(time.Until(*date).Abs().Minutes()) || int(time.Until(*date).Abs().Minutes()) <= 5 || time.Now().Before(tt) {
-			return false
-		}
+
+	if lastAnnoDate == nil {
+		return true // No previous announcement, so announceable
 	}
 
-	return true
+	var annoDate = *lastAnnoDate
+
+	// Parse dates and apply location
+	loc, _ := time.LoadLocation("Europe/Amsterdam")
+	startDate, err := time.ParseInLocation(time.RFC3339, startedAt, loc)
+	if err != nil {
+		log.Println("Error parsing startedAt time:", err)
+		return false
+	}
+	annoDate = annoDate.In(loc)
+
+	startDateHigherOrEqualToAnnoDate := int(time.Since(startDate.In(loc)).Abs().Minutes()) >= int(time.Since(annoDate).Abs().Minutes())
+	annoDateLowerOrEqual5 := int(time.Since(annoDate).Abs().Minutes()) <= 5
+	startDateBeforeNow := time.Now().In(loc).Before(startDate.In(loc))
+
+	// Check conditions for non-announceable scenarios
+	if startDateHigherOrEqualToAnnoDate || annoDateLowerOrEqual5 || startDateBeforeNow {
+		return false
+	}
+
+	// Apply cooldown if configured
+	cooldownDuration, err := getCooldownDuration(ctx, service, guildId)
+	if err != nil {
+		log.Printf("Error getting cooldown duration: %v", err)
+		return false
+	}
+	if cooldownDuration > 0 && int(time.Since(annoDate).Abs().Minutes()) < cooldownDuration {
+		return false
+	}
+
+	return true // All conditions met, announceable
+}
+
+func getCooldownDuration(ctx context.Context, service service.Service, guildId string) (int, error) {
+	cfg, err := service.GetDiscordBotConfig(ctx, guildId, "stream_anno_cooldown")
+	if err != nil {
+		log.Printf("Error getting Discord bot config: %v", err)
+		return 0, err
+	}
+
+	if cfg == nil {
+		return 0, nil // No cooldown configured
+	}
+
+	cooldownDuration, err := strconv.Atoi(cfg.Value)
+	if err != nil {
+		log.Println("Error parsing cooldown duration:", err)
+		return 0, err
+	}
+
+	return cooldownDuration, nil
 }
 
 var streamersMutex sync.Mutex
@@ -252,8 +297,15 @@ func CheckLiveStreams(s *discordgo.Session, ctx context.Context, service service
 			}
 
 			for _, sd := range liveStreams {
-				if sd.Type == "live" {
+				liveAnnoData, err := service.GetDiscordTwitchLiveAnno(ctx, sd.UserID, guildId)
+				if err != nil {
+					log.Printf("There was an error while checking the Discord Twitch live announcements: %v", err)
+					break
+				}
+				if sd.Type == "live" && liveAnnoData != nil {
 					handleAnnouncement(ctx, s, service, guildId, streamers, sd)
+				} else {
+					continue
 				}
 			}
 		case <-stop:
