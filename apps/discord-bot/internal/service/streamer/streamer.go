@@ -319,15 +319,16 @@ func CheckLiveStreams(s *discordgo.Session, ctx context.Context, service service
 }
 
 func FormatContent(str string, sd models.TwitchStreamerData) string {
-	if sd.StreamGame == "" {
-		sd.StreamGame = "Just Chatting"
+	if sd.GameName == "" {
+		sd.GameName = "Just Chatting"
 	}
 
 	stringTemplates := map[string]string{
 		"{twitch.username}": sd.UserName,
 		"{twitch.url}":      "https://www.twitch.tv/" + sd.UserLogin,
 		"{stream.title}":    sd.Title,
-		"{stream.category}": sd.StreamGame,
+		"{stream.category}": sd.GameName,
+		"{stream.game}":     sd.GameName,
 	}
 
 	for k, v := range stringTemplates {

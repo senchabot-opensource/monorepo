@@ -17,7 +17,14 @@ func PrivateMessage(client *client.Clients, service service.Service) {
 	ctx := context.Background()
 
 	client.Twitch.OnPrivateMessage(func(message twitch.PrivateMessage) {
-		cmdName, params := helpers.ParseMessage(message.Message)
+		cmdName, params := helpers.ParseSysCmdMessage(message.Message)
+
+		sysCommand := commands.GetCommands()
+		_, ok := sysCommand[cmdName]
+		if !ok {
+			cmdName, params = helpers.ParseMessage(message.Message)
+		}
+
 		if cmdName == "" {
 			return
 		}

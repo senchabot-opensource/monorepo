@@ -105,7 +105,7 @@ type TwitchStreamerData struct {
 	UserID       string   `json:"user_id"`
 	UserLogin    string   `json:"user_login"`
 	UserName     string   `json:"user_name"`
-	StreamGame   string   `json:"game_name"`
+	GameName     string   `json:"game_name"`
 	Type         string   `json:"type"`
 	Title        string   `json:"title"`
 	Tags         []string `json:"tags"`
