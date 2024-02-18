@@ -70,6 +70,34 @@ func FindCommandAndMentionIndices(words []string) (int, int) {
 	return cmdIndex, mentionIndex
 }
 
+func ParseSysCmdMessage(message string) (string, []string) {
+	var cmdName string
+
+	splitMsg := strings.Split(message, " ")
+	if !strings.HasPrefix(splitMsg[0], "!") {
+		return "", nil
+	}
+
+	cmdName = splitMsg[0]
+	params := splitMsg[1:]
+
+	// wykonos
+	cmdName = strings.TrimPrefix(cmdName, "!")
+
+	return cmdName, params
+}
+
+func FindCommandIndices(words []string) int {
+	cmdIndex := -1
+	for i, v := range words {
+		if strings.HasPrefix(v, "!") && cmdIndex < 0 {
+			cmdIndex = i
+		}
+	}
+
+	return cmdIndex
+}
+
 func CanExecuteCommand(context context.Context, service service.Service, badges string, twitchChannelId string) bool {
 	// broadcaster can run the command
 	if isBroadcaster(badges) {
