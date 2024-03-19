@@ -37,7 +37,7 @@ func (c *commands) InviteCommand(context context.Context, message twitch.Private
 	}
 
 	if alreadyJoined {
-		return nil, errors.New("already joined")
+		return nil, errors.New("i have already joined this channel!")
 	}
 
 	fmt.Println("TRYING TO JOIN TWITCH CHANNEL `" + channelName + "`")
