@@ -4,7 +4,7 @@ var (
 	BotID       = "845116372"
 	BotUsername = "senchabot"
 
-	ErrorMessage = "İşlem gerçekleştirilirken hata oluştu. Hata kodu: "
+	ErrorMessage = "An error occurred. Error code: "
 
 	AddCommandInfo         = "For example: !acmd [command_name] [command_content]"
 	AddCommandAliasInfo    = "For example: !acmda [command_name] [command_alias(es) separated by space]"
