@@ -11,9 +11,12 @@ import { signIn } from "next-auth/react";
 import Link from "next/link";
 import AuthLoginButton from "./AuthLoginButton";
 import Logo from "../common/Logo";
+import Loading from "../loading/Loading";
 
 const AuthContainer = () => {
   const [acceptTos, setAcceptTos] = useState<boolean>(false);
+  const [isloading, setIsLoading] = useState<boolean>(false);
+
   const theme = useTheme();
   const handleAcceptTos = (e: ChangeEvent<HTMLInputElement>) => {
     setAcceptTos(e.target.checked);
@@ -21,16 +24,20 @@ const AuthContainer = () => {
 
   return (
     <>
+      <Loading isLoading={isloading} isAuthLoading={""} />
       <Stack
         direction="column"
         spacing={2}
         sx={{ p: 2, backgroundColor: "appLoginForm.background" }}>
-        <Link href={"/"}><Logo /></Link>
+        <Link href={"/"}>
+          <Logo />
+        </Link>
         <Typography fontSize="x-large">Sign in/up</Typography>
         <AuthLoginButton
           disabled={!acceptTos}
           fullWidth={true}
           onClick={() => {
+            setIsLoading(true);
             if (!acceptTos) return;
             signIn("twitch", {
               callbackUrl: `${window.location.origin}/app`,
@@ -48,6 +55,7 @@ const AuthContainer = () => {
           disabled={!acceptTos}
           fullWidth={true}
           onClick={() => {
+            setIsLoading(true);
             if (!acceptTos) return;
 
             signIn("discord", {
