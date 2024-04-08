@@ -81,7 +81,7 @@ func ValidateCommandCreateParamsLength(params []string) bool {
 
 func ValidateAliasCommandsLength(aliasCommands []string) (string, bool) {
 	if len(aliasCommands) > maxAliasParamLength {
-		return fmt.Sprintf("Command Aliases length must be no more than %d", maxAliasParamLength), false
+		return fmt.Sprintf("Command Aliases length must be no longer than %d", maxAliasParamLength), false
 	}
 
 	return "", true
@@ -210,7 +210,7 @@ func GetCommandCreateUpdateParams(params []string) (string, string, bool) {
 
 func ValidateCommandCreateParams(commandName string, commandContent string) (string, bool) {
 	if len(commandName) > maxCommandNameLength {
-		return fmt.Sprintf("Command Name length must be no more than %d chars", maxCommandNameLength), false
+		return fmt.Sprintf("Command Name length must be no longer than %d chars", maxCommandNameLength), false
 	}
 	if infoText, check := ValidateCommandContentLength(commandContent); !check {
 		return infoText, check
@@ -221,7 +221,7 @@ func ValidateCommandCreateParams(commandName string, commandContent string) (str
 
 func ValidateCommandContentLength(commandContent string) (string, bool) {
 	if len(commandContent) > maxCommandContentLength {
-		return fmt.Sprintf("Command Content length must be no more than %d chars", maxCommandContentLength), false
+		return fmt.Sprintf("Command Content length must be no longer than %d chars", maxCommandContentLength), false
 	}
 
 	return "", true
