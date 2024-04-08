@@ -26,6 +26,7 @@ func BotJoin(client *client.Clients, service service.Service) []string {
 
 	channelIds := make([]string, 0, len(channels))
 	if len(channels) < 2 {
+		fmt.Println("TRYING TO JOIN THE TWITCH CHANNEL `" + config.BotUsername + "`")
 		client.Twitch.Join(config.BotUsername)
 		return nil
 	}
@@ -34,6 +35,7 @@ func BotJoin(client *client.Clients, service service.Service) []string {
 	fmt.Println("JOINING TO THE TWITCH CHANNELS")
 	for _, channel := range channels {
 		if channel.ChannelId == "" {
+			fmt.Println("TRYING TO JOIN THE TWITCH CHANNEL `" + config.BotUsername + "`")
 			client.Twitch.Join(config.BotUsername)
 			continue
 		}
