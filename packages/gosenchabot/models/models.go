@@ -134,3 +134,12 @@ type MessageData struct {
 	UserName         string
 	ChannelName      string
 }
+
+type CommandTimer struct {
+	ID            int
+	BotPlatform   platform.Platform `gorm:"column:bot_platform"`
+	BotPlatformID string            `gorm:"column:bot_platform_id"`
+	CommandName   string            `gorm:"column:command_name"`
+	Interval      int               `gorm:"column:interval"`
+	Status        int               `gorm:"column:status"`
+}

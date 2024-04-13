@@ -3,6 +3,7 @@ package mysql
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
 
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
@@ -416,6 +417,90 @@ func (m *MySQL) AddBotCommandStatistic(ctx context.Context, botPlatform platform
 	if result.Error != nil {
 		log.Println("(AddBotcommandStatistic): db.Update Error: ", result.Error.Error())
 		return result.Error
+	}
+
+	return nil
+}
+
+func (m *MySQL) GetCommandTimers(ctx context.Context, botPlatform platform.Platform, botPlatformId string) ([]*models.CommandTimer, error) {
+	var commandTimers []*models.CommandTimer
+	result := m.DB.Where("bot_platform = ?", botPlatform).Where("bot_platform_id = ?", botPlatformId).Find(&commandTimers)
+
+	if result.Error != nil {
+		return nil, fmt.Errorf("(GetCommandTimers) db.Find error: %v", result.Error)
+	}
+
+	return commandTimers, nil
+}
+
+func (m *MySQL) CreateCommandTimer(ctx context.Context, botPlatform platform.Platform, botPlatformId string, commandName string, interval int) (bool, error) {
+	exist := m.GetCommandTimer(ctx, botPlatform, botPlatformId, commandName)
+	if exist != nil {
+		return true, fmt.Errorf("the command '%v' is already in use for timer", commandName)
+	}
+
+	result := m.DB.Create(&models.CommandTimer{
+		BotPlatform:   botPlatform,
+		BotPlatformID: botPlatformId,
+		CommandName:   commandName,
+		Interval:      interval,
+		Status:        1,
+	})
+	if result.Error != nil {
+		return false, fmt.Errorf("(CreateCommandTimer) db.Create error: %v", result.Error)
+	}
+
+	return true, nil
+}
+
+func (m *MySQL) GetCommandTimer(ctx context.Context, botPlatform platform.Platform, botPlatformId string, commandName string) *models.CommandTimer {
+	var commandTimer []models.CommandTimer
+
+	result := m.DB.Where("bot_platform = ?", botPlatform).Where("bot_platform_id = ?", botPlatformId).Where("command_name = ?", commandName).Find(&commandTimer)
+	if result.Error != nil {
+		fmt.Println("(GetCommandTimer) db.Find error:", result.Error)
+	}
+	if len(commandTimer) == 0 {
+		return nil
+	}
+
+	return &commandTimer[0]
+}
+
+func (m *MySQL) UpdateCommandTimer(ctx context.Context, botPlatform platform.Platform, botPlatformId string, commandName string, interval int, status int) error {
+	var commandTimer *models.CommandTimer
+
+	result := m.DB.Where("bot_platform = ?", botPlatform).Where("bot_platform_id = ?", botPlatformId).Where("command_name = ?", commandName).First(&commandTimer)
+	if result.Error != nil {
+		return fmt.Errorf("(UpdateCommandTimer) db.First error: %v", result.Error)
+	}
+
+	result = m.DB.Model(&commandTimer).Updates(models.CommandTimer{
+		Interval: interval,
+		Status:   status,
+	})
+	if interval == 0 {
+		result = m.DB.Model(&commandTimer).Select("status").Updates(models.CommandTimer{
+			Status: status,
+		})
+	}
+	if result.Error != nil {
+		return fmt.Errorf("(UpdateCommandTimer) db.Updates error: %v", result.Error)
+	}
+
+	return nil
+}
+func (m *MySQL) DeleteCommandTimer(ctx context.Context, botPlatform platform.Platform, botPlatformId string, commandName string) error {
+	var commandTimer *models.CommandTimer
+
+	result := m.DB.Where("bot_platform = ?", botPlatform).Where("bot_platform_id = ?", botPlatformId).Where("command_name = ?", commandName).First(&commandTimer)
+	if result.Error != nil {
+		return fmt.Errorf("(DeleteCommandTimer) db.First error: %v", result.Error)
+	}
+
+	result = m.DB.Delete(&commandTimer)
+	if result.Error != nil {
+		return fmt.Errorf("(DeleteCommandTimer) db.Delete error: %v", result.Error)
 	}
 
 	return nil
