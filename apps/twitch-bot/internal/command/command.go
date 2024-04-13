@@ -55,6 +55,10 @@ func (c *commands) GetCommands() CommandMap {
 		"acmda": c.AddCommandAliasCommand,
 		"dcmda": c.DeleteCommandAliasCommand,
 
+		"acmdtimer": c.AddCommandTimerCommand,
+		"dcmdtimer": c.DeleteCommandTimerCommand,
+		"cmdtimers": c.CmdTimersCommand,
+
 		"help": c.HelpCommand,
 	}
 

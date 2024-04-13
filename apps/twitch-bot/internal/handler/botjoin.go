@@ -15,7 +15,8 @@ import (
 )
 
 func BotJoin(client *client.Clients, service service.Service) []string {
-	channels, err := service.GetTwitchChannels(context.Background())
+	ctx := context.Background()
+	channels, err := service.GetTwitchChannels(ctx)
 	if err != nil {
 		log.Fatalf("[BotJoin Handler] Error:" + err.Error())
 	}
@@ -28,6 +29,7 @@ func BotJoin(client *client.Clients, service service.Service) []string {
 	if len(channels) < 2 {
 		fmt.Println("TRYING TO JOIN THE TWITCH CHANNEL `" + config.BotUsername + "`")
 		client.Twitch.Join(config.BotUsername)
+		Timer(ctx, client, service, config.BotID, config.BotUsername)
 		return nil
 	}
 
@@ -37,6 +39,7 @@ func BotJoin(client *client.Clients, service service.Service) []string {
 		if channel.ChannelId == "" {
 			fmt.Println("TRYING TO JOIN THE TWITCH CHANNEL `" + config.BotUsername + "`")
 			client.Twitch.Join(config.BotUsername)
+			Timer(ctx, client, service, config.BotID, config.BotUsername)
 			continue
 		}
 
@@ -49,6 +52,7 @@ func BotJoin(client *client.Clients, service service.Service) []string {
 		fmt.Println("TRYING TO JOIN THE TWITCH CHANNEL `" + twitchUser.Login + "`")
 		client.Twitch.Join(twitchUser.Login)
 		channelIds = append(channelIds, channel.ChannelId)
+		Timer(ctx, client, service, channel.ChannelId, channel.ChannelName)
 	}
 
 	return channelIds

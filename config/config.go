@@ -17,4 +17,6 @@ var (
 	SozlukCommandInfo = "For example: !sozluk [term-name]"
 
 	CannotExecuteCommand = " cannot execute the command"
+
+	MIN_CMD_TIMER_INTERVAL = 25
 )

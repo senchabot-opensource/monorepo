@@ -25,6 +25,14 @@ type Database interface {
 	DeleteBotCommand(ctx context.Context, botPlatform platform.Platform, commandName string, botPlatformId string) (*string, *string, error)
 	GetCommandList(ctx context.Context, botPlatform platform.Platform, botPlatformId string) ([]*models.BotCommand, error)
 
+	// TIMER SYSTEM
+	GetCommandTimers(ctx context.Context, botPlatform platform.Platform, botPlatformId string) ([]*models.CommandTimer, error)
+	CreateCommandTimer(ctx context.Context, botPlatform platform.Platform, botPlatformId string, commandName string, interval int) (bool, error)
+	UpdateCommandTimer(ctx context.Context, botPlatform platform.Platform, botPlatformId string, commandName string, interval int, status int) error
+	GetCommandTimer(ctx context.Context, botPlatform platform.Platform, botPlatformId string, commandName string) *models.CommandTimer
+	DeleteCommandTimer(ctx context.Context, botPlatform platform.Platform, botPlatformId string, commandName string) error
+	// TIMER SYSTEM
+
 	CreateBotActionActivity(ctx context.Context, botPlatform platform.Platform, botActivity string, botPlatformId string, commandAuthor, commandAuthorId string) error
 	SaveTwitchBotCommandActivity(context context.Context, commandName string, twitchChannelId string, commandAuthor, commandAuthorId string)
 

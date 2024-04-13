@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/client"
+	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/service/timer"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/service/webhook"
 	"github.com/senchabot-opensource/monorepo/db"
 	"github.com/senchabot-opensource/monorepo/db/mysql"
@@ -38,20 +39,37 @@ type Service interface {
 	DeleteCommandAlias(ctx context.Context, commandAlias string, twitchChannelId string) (*string, error)
 
 	AddBotCommandStatistic(ctx context.Context, commandName string)
+
+	SetTimer(client *client.Clients, channelName string, commandData *models.BotCommand, interval int)
+	SetTimerEnabled(client *client.Clients, commandId int)
+	SetTimerDisabled(commandId int)
+	GetTimerStatus(commandId int) bool
+	DeleteTimer(commandId int)
+	UpdateTimerContent(commandId int, commandContent string)
+
+	GetCommandTimers(ctx context.Context, botPlatformId string) ([]*models.CommandTimer, error)
+	CreateCommandTimer(ctx context.Context, channelId string, commandName string, interval int) (bool, error)
+	GetCommandTimer(ctx context.Context, channelId string, commandName string) *models.CommandTimer
+	UpdateCommandTimer(ctx context.Context, channelId string, commandName string, interval int, status int) error
+	UpdateCommandTimerInterval(commandId, interval int)
+	DeleteCommandTimer(ctx context.Context, channelId string, commandName string) error
 }
 
 type services struct {
 	DB      db.Database
 	Webhook webhook.Webhook
+	Timer   timer.Timer
 }
 
 func NewServices() Service {
 	dbService := mysql.NewMySQL()
 	whService := webhook.NewWebhooks()
+	timerService := timer.NewTimer()
 
 	return &services{
 		DB:      dbService,
 		Webhook: whService,
+		Timer:   timerService,
 	}
 }
 
@@ -217,4 +235,53 @@ func (s *services) AddBotCommandStatistic(ctx context.Context, commandName strin
 	if err := s.DB.AddBotCommandStatistic(ctx, platform.TWITCH, commandName); err != nil {
 		fmt.Println(err.Error())
 	}
+}
+
+func (s *services) SetTimer(client *client.Clients, channelName string, commandData *models.BotCommand, interval int) {
+	// platform, channelId, commandData, interval, status
+	s.Timer.SetTimer(client, channelName, commandData, interval)
+}
+
+func (s *services) SetTimerEnabled(client *client.Clients, commandId int) {
+	s.Timer.SetTimerEnabled(client, commandId)
+}
+
+func (s *services) SetTimerDisabled(commandId int) {
+	s.Timer.SetTimerDisabled(commandId)
+}
+
+func (s *services) GetTimerStatus(commandId int) bool {
+	return s.Timer.GetTimerStatus(commandId)
+}
+
+func (s *services) DeleteTimer(commandId int) {
+	s.Timer.DeleteTimer(commandId)
+}
+
+func (s *services) UpdateTimerContent(commandId int, commandContent string) {
+	s.Timer.UpdateTimerContent(commandId, commandContent)
+}
+
+func (s *services) GetCommandTimers(ctx context.Context, channelId string) ([]*models.CommandTimer, error) {
+	return s.DB.GetCommandTimers(ctx, platform.TWITCH, channelId)
+}
+
+func (s *services) CreateCommandTimer(ctx context.Context, channelId string, commandName string, interval int) (bool, error) {
+	return s.DB.CreateCommandTimer(ctx, platform.TWITCH, channelId, commandName, interval)
+}
+
+func (s *services) GetCommandTimer(ctx context.Context, channelId string, commandName string) *models.CommandTimer {
+	return s.DB.GetCommandTimer(ctx, platform.TWITCH, channelId, commandName)
+}
+
+func (s *services) UpdateCommandTimer(ctx context.Context, channelId string, commandName string, interval int, status int) error {
+	return s.DB.UpdateCommandTimer(ctx, platform.TWITCH, channelId, commandName, interval, status)
+}
+
+func (s *services) DeleteCommandTimer(ctx context.Context, channelId string, commandName string) error {
+	return s.DB.DeleteCommandTimer(ctx, platform.TWITCH, channelId, commandName)
+}
+
+func (s *services) UpdateCommandTimerInterval(commandId, interval int) {
+	s.Timer.UpdateCommandTimerInterval(commandId, interval)
 }
