@@ -1,8 +1,10 @@
 package gosenchabot
 
 import (
+	"errors"
 	"fmt"
 	"io"
+	"log"
 	"math/rand"
 	"net/http"
 	"net/url"
@@ -225,4 +227,14 @@ func ValidateCommandContentLength(commandContent string) (string, bool) {
 	}
 
 	return "", true
+}
+
+func StrToInt(intervalStr string) (int, error) {
+	interval, err := strconv.Atoi(intervalStr)
+	if err != nil {
+		log.Println("strconv.Atoi err", err)
+		return 0, errors.New("the interval value must be integer")
+	}
+
+	return interval, nil
 }
