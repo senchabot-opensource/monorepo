@@ -13,9 +13,9 @@ import (
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
 )
 
-const ADD_TIMER_COMMAND_INFO = "!acmdtimer [command_name] [interval (integer)]"
+const ADD_TIMER_COMMAND_INFO = "!atimer [command_name] [interval (integer, minute)]"
 
-func (c *commands) AddCommandTimerCommand(context context.Context, message twitch.PrivateMessage, _ string, params []string) (*models.CommandResponse, error) {
+func (c *commands) AddTimerCommand(context context.Context, message twitch.PrivateMessage, _ string, params []string) (*models.CommandResponse, error) {
 	var cmdResp models.CommandResponse
 	channelId := message.RoomID
 
@@ -59,7 +59,7 @@ func (c *commands) AddCommandTimerCommand(context context.Context, message twitc
 	}
 
 	if len(cmdTimers) == 3 {
-		cmdResp.Message = "You have created 3 command timers. You can create up to 3 command timers."
+		cmdResp.Message = "You have created 3 command timers. You can list the command timers you added with the !timers command. You can create up to 3 command timers."
 		return &cmdResp, nil
 	}
 
