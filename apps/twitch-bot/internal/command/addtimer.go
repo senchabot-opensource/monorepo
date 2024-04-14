@@ -59,7 +59,7 @@ func (c *commands) AddTimerCommand(context context.Context, message twitch.Priva
 	}
 
 	if len(cmdTimers) == 3 {
-		cmdResp.Message = "You have created 3 command timers. You can list the command timers you added with the !cmdtimers command. You can create up to 3 command timers."
+		cmdResp.Message = "You have created 3 command timers. You can list the command timers you added with the !timers command. You can create up to 3 command timers."
 		return &cmdResp, nil
 	}
 
