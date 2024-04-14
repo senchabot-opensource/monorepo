@@ -12,9 +12,9 @@ import (
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
 )
 
-const DELETE_TIMER_COMMAND_INFO = "!dcmdtimer [command_name]"
+const DELETE_TIMER_COMMAND_INFO = "!dtimer [command_name]"
 
-func (c *commands) DeleteCommandTimerCommand(context context.Context, message twitch.PrivateMessage, _ string, params []string) (*models.CommandResponse, error) {
+func (c *commands) DeleteTimerCommand(context context.Context, message twitch.PrivateMessage, _ string, params []string) (*models.CommandResponse, error) {
 	var cmdResp models.CommandResponse
 	channelId := message.RoomID
 

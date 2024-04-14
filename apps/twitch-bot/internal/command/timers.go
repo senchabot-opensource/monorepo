@@ -12,7 +12,7 @@ import (
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
 )
 
-func (c *commands) CmdTimersCommand(context context.Context, message twitch.PrivateMessage, _ string, _ []string) (*models.CommandResponse, error) {
+func (c *commands) TimersCommand(context context.Context, message twitch.PrivateMessage, _ string, _ []string) (*models.CommandResponse, error) {
 	var cmdResp models.CommandResponse
 	channelId := message.RoomID
 
