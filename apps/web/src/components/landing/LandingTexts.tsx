@@ -11,7 +11,8 @@ import {
 } from "@mui/material";
 import { env } from "../../env/client.mjs";
 import { FaDiscord, FaTwitch } from "react-icons/fa";
-import { useCallback, useEffect, useState } from "react";
+import Loading from "../loading/Loading";
+import { useEffect, useState } from "react";
 import {
   addTwitchAccount,
   checkTwitchAccount,
@@ -36,6 +37,7 @@ const LandingTexts = () => {
   const [defaultCmdList, setDefaultCmdList] = useState<string[]>([]);
   const [userCmdList, setUserCmdList] = useState<string[]>([]);
   const [featureList, setFeatureList] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [alertIsOpen, setAlertIsOpen] = useState<boolean>(false);
   const [alertText, setAlertText] = useState<string>("");
 
@@ -83,6 +85,7 @@ const LandingTexts = () => {
 
   const addTwitchBotOrAccount = () => {
     addTwitchAccount().then(res => {
+      setIsLoading(false);
       if (!res || !res.success) {
         setAlertText("Something went wrong. Please try again later.");
         setAlertIsOpen(true);
@@ -97,6 +100,7 @@ const LandingTexts = () => {
 
   return (
     <>
+      <Loading isLoading={isLoading} isAuthLoading={""} />
       <CustomAlert
         isOpen={alertIsOpen}
         closeHandler={() => setAlertIsOpen(!alertIsOpen)}
@@ -195,6 +199,7 @@ const LandingTexts = () => {
               href={`${env.NEXT_PUBLIC_APP_DISCORD_BOT_INVITE_URL}`}
               component={Link}
               variant="contained"
+              onClick={() => setIsLoading(true)}
               startIcon={<FaDiscord />}
               sx={{
                 backgroundColor: "landingDiscordBtn.background",
@@ -206,6 +211,7 @@ const LandingTexts = () => {
             </Button>
             <Button
               onClick={() => {
+                setIsLoading(true);
                 if (!session || !isTwitchAccAvailable.data?.data) {
                   signIn("twitch", {
                     callbackUrl: `${window.location.origin}/api/twitch/get-bot`,
