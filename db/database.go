@@ -11,6 +11,7 @@ import (
 type Database interface {
 	GetTwitchChannels(ctx context.Context) ([]*models.TwitchChannel, error)
 	CreateTwitchChannel(ctx context.Context, channelId string, channelName string, userId *string) (bool, error)
+	DeleteTwitchChannel(ctx context.Context, channelId string, userId *string) (bool, error)
 
 	GetTwitchBotConfig(ctx context.Context, twitchChannelId string, configKey string) (*models.TwitchBotConfig, error)
 	CheckTwitchBotConfig(ctx context.Context, twitchChannelId string, configKey string, configValue string) bool
