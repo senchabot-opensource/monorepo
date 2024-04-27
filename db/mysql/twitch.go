@@ -7,6 +7,7 @@ import (
 
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/platform"
+	"gorm.io/gorm"
 )
 
 func (m *MySQL) GetTwitchChannels(ctx context.Context) ([]*models.TwitchChannel, error) {
@@ -43,6 +44,20 @@ func (m *MySQL) CreateTwitchChannel(ctx context.Context, channelId string, chann
 	}
 
 	return false, nil
+}
+
+func (m *MySQL) DeleteTwitchChannel(ctx context.Context, channelId string, userId *string) (bool, error) {
+	var twitchChannel *models.TwitchChannel
+
+	result := m.DB.Where("channel_id = ?", channelId).Delete(&twitchChannel)
+	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			return false, gorm.ErrRecordNotFound
+		}
+		return false, errors.New("(DeleteTwitchChannel) db.Delete Error:" + result.Error.Error())
+	}
+
+	return true, nil
 }
 
 func (m *MySQL) GetTwitchBotConfig(ctx context.Context, twitchChannelId string, configKey string) (*models.TwitchBotConfig, error) {

@@ -28,6 +28,9 @@ func (h *handlers) InitHttpHandlers(mux *http.ServeMux) {
 	mux.HandleFunc("/webhook", func(w http.ResponseWriter, r *http.Request) {
 		h.service.BotJoinWebhook(h.client, h.joinedChannelList, w, r)
 	})
+	mux.HandleFunc("/webhook/depart", func(w http.ResponseWriter, r *http.Request) {
+		h.service.BotDepartWebhook(h.client, h.joinedChannelList, w, r)
+	})
 }
 
 func NewHandlers(client *client.Clients, service service.Service) Handler {
