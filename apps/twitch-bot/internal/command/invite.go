@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/gempir/go-twitch-irc/v3"
@@ -15,7 +16,7 @@ import (
 func (c *commands) InviteCommand(context context.Context, message twitch.PrivateMessage, commandName string, params []string) (*models.CommandResponse, error) {
 	var cmdResp models.CommandResponse
 
-	if message.Channel != config.BotUsername {
+	if message.Channel != os.Getenv("BOT_USER_NAME") {
 		return nil, errors.New("command did not executed in senchabot")
 	}
 

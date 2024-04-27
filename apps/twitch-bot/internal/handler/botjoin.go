@@ -9,12 +9,14 @@ import (
 
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/client"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/service"
-	"github.com/senchabot-opensource/monorepo/config"
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/service/twitch"
 )
 
 func BotJoin(client *client.Clients, service service.Service) []string {
+	botId := os.Getenv("BOT_USER_ID")
+	botUsername := os.Getenv("BOT_USER_NAME")
+
 	ctx := context.Background()
 	channels, err := service.GetTwitchChannels(ctx)
 	if err != nil {
@@ -22,14 +24,14 @@ func BotJoin(client *client.Clients, service service.Service) []string {
 	}
 
 	channels = append(channels, &models.TwitchChannel{
-		ChannelName: config.BotUsername,
+		ChannelName: botUsername,
 	})
 
 	channelIds := make([]string, 0, len(channels))
 	if len(channels) < 2 {
-		fmt.Println("TRYING TO JOIN THE TWITCH CHANNEL `" + config.BotUsername + "`")
-		client.Twitch.Join(config.BotUsername)
-		Timer(ctx, client, service, config.BotID, config.BotUsername)
+		fmt.Println("TRYING TO JOIN THE TWITCH CHANNEL `" + botUsername + "`")
+		client.Twitch.Join(botUsername)
+		Timer(ctx, client, service, botId, botUsername)
 		return nil
 	}
 
@@ -37,9 +39,9 @@ func BotJoin(client *client.Clients, service service.Service) []string {
 	fmt.Println("JOINING TO THE TWITCH CHANNELS")
 	for _, channel := range channels {
 		if channel.ChannelId == "" {
-			fmt.Println("TRYING TO JOIN THE TWITCH CHANNEL `" + config.BotUsername + "`")
-			client.Twitch.Join(config.BotUsername)
-			Timer(ctx, client, service, config.BotID, config.BotUsername)
+			fmt.Println("TRYING TO JOIN THE TWITCH CHANNEL `" + botUsername + "`")
+			client.Twitch.Join(botUsername)
+			Timer(ctx, client, service, botId, botUsername)
 			continue
 		}
 
