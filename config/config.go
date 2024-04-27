@@ -1,9 +1,6 @@
 package config
 
 var (
-	BotID       = "845116372"
-	BotUsername = "senchabot"
-
 	ErrorMessage = "An error occurred. Error code: "
 
 	AddCommandInfo         = "For example: !acmd [command_name] [command_content]"

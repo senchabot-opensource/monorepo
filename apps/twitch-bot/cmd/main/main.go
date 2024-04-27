@@ -11,7 +11,6 @@ import (
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/client"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/handler"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/service"
-	"github.com/senchabot-opensource/monorepo/config"
 )
 
 func clearDailyCounts() {
@@ -23,12 +22,7 @@ func clearDailyCounts() {
 }
 
 func main() {
-	//err := godotenv.Load()
-	//if err != nil {
-	//log.Fatal("Error loading .env file")
-	//}
-
-	twitchClient := twitch.NewClient(config.BotUsername, os.Getenv("OAUTH"))
+	twitchClient := twitch.NewClient(os.Getenv("BOT_USER_NAME"), os.Getenv("OAUTH"))
 
 	clients := client.NewClients(twitchClient)
 	services := service.NewServices()

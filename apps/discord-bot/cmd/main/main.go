@@ -17,11 +17,6 @@ import (
 )
 
 func main() {
-	//dotErr := godotenv.Load()
-	//if dotErr != nil {
-	//log.Fatal("Error loading .env file", dotErr.Error())
-	//}
-
 	token := twsrvc.InitTwitchOAuth2Token()
 
 	discordClient, _ := discordgo.New("Bot " + os.Getenv("TOKEN"))
@@ -60,6 +55,4 @@ func main() {
 	}()
 
 	select {}
-
-	//wg.Wait()
 }
