@@ -53,7 +53,7 @@ func main() {
 		mux := http.NewServeMux()
 		handler.InitHttpHandlers(mux)
 
-		error := http.ListenAndServe(":8081", mux)
+		error := http.ListenAndServe(":8080", mux)
 		if error != nil {
 			log.Fatal("ListenAndServe Error:", error)
 		}
