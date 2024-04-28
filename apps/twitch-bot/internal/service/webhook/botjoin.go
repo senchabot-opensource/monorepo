@@ -1,6 +1,7 @@
 package webhook
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -14,7 +15,7 @@ import (
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/service/twitch"
 )
 
-func (*webhook) BotJoin(client *client.Clients, joinedChannelList []string, w http.ResponseWriter, r *http.Request) {
+func (s *webhook) BotJoin(client *client.Clients, joinedChannelList []string, w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 		return
@@ -56,6 +57,17 @@ func (*webhook) BotJoin(client *client.Clients, joinedChannelList []string, w ht
 	twitchChannel, err := twitch.GetTwitchUserInfo("id", channelId, token)
 	if err != nil {
 		log.Println("(BotJoin.Webhook): Error: ", err.Error())
+		return
+	}
+
+	alreadyJoined, err := s.DB.CreateTwitchChannel(context.Background(), channelId, twitchChannel.Login, nil)
+	if err != nil {
+		log.Println("[BotJoin.Webhook] (CreateTwitchChannel) Error: " + err.Error())
+		return
+	}
+
+	if alreadyJoined {
+		log.Println("[BotJoin.Webhook] i have already joined this channel!")
 		return
 	}
 
