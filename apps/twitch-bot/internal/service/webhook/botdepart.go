@@ -44,19 +44,18 @@ func (s *webhook) BotDepart(client *client.Clients, joinedChannelList []string, 
 	channelId := strings.TrimPrefix(data.Event, "channel.depart.")
 
 	if channelId == "" {
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-
-	fmt.Println("DEPART THE CHANNEL WITH WEBHOOK")
 
 	token := strings.TrimPrefix(os.Getenv("OAUTH"), "oauth:")
 	twitchChannel, err := twitch.GetTwitchUserInfo("id", channelId, token)
 	if err != nil {
 		log.Println("(BotDepart.Webhook): Error: ", err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	client.Twitch.Depart(twitchChannel.Login)
 	deleted, err := s.DB.DeleteTwitchChannel(context.Background(), channelId, nil)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -64,12 +63,17 @@ func (s *webhook) BotDepart(client *client.Clients, joinedChannelList []string, 
 			return
 		}
 		log.Println("(BotDepart.Webhook) (DeleteTwitchChannel) Error: " + err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
 	if !deleted {
 		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
+
+	fmt.Println("DEPART THE CHANNEL " + twitchChannel.Login + " WITH WEBHOOK")
+	client.Twitch.Depart(twitchChannel.Login)
 
 	w.WriteHeader(http.StatusOK)
 }
