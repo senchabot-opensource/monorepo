@@ -36,7 +36,12 @@ interface Props {
 export default function RootLayout({ children }: Props) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={cn('font-sans antialiased', GeistSans.variable)}>
+      <body
+        className={cn(
+          'min-h-full scroll-smooth font-sans antialiased',
+          GeistSans.variable,
+        )}
+      >
         <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
