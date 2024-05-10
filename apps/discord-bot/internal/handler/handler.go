@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"net/http"
 	"time"
 
 	"github.com/bwmarrin/discordgo"
@@ -10,6 +11,7 @@ import (
 
 type Handler interface {
 	InitBotEventHandlers(token string)
+	InitHttpHandlers(mux *http.ServeMux)
 }
 
 type handler struct {
@@ -28,6 +30,12 @@ func (h *handler) InitBotEventHandlers(token string) {
 	h.MessageReactionAdd()
 
 	command.DeployCommands(h.discordClient)
+}
+
+func (h *handler) InitHttpHandlers(mux *http.ServeMux) {
+	mux.HandleFunc("/webhook/leave", func(w http.ResponseWriter, r *http.Request) {
+		h.service.BotLeaveWebhook(h.discordClient, w, r)
+	})
 }
 
 func New(discordClient *discordgo.Session, service service.Service) Handler {

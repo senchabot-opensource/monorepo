@@ -16,9 +16,11 @@ import (
 
 type Service interface {
 	BotJoinWebhook(client *client.Clients, joinedChannelList []string, w http.ResponseWriter, r *http.Request)
+	BotDepartWebhook(client *client.Clients, joinedChannelList []string, w http.ResponseWriter, r *http.Request)
 
 	GetTwitchChannels(ctx context.Context) ([]*models.TwitchChannel, error)
 	CreateTwitchChannel(ctx context.Context, channelId string, channelName string, userId *string) (bool, error)
+	DeleteTwitchChannel(ctx context.Context, channelId string, userId *string) (bool, error)
 
 	GetTwitchBotConfig(ctx context.Context, twitchChannelId string, configKey string) (*models.TwitchBotConfig, error)
 	CheckTwitchBotConfig(ctx context.Context, twitchChannelId string, configKey string, configValue string) bool
@@ -63,7 +65,7 @@ type services struct {
 
 func NewServices() Service {
 	dbService := mysql.NewMySQL()
-	whService := webhook.NewWebhooks()
+	whService := webhook.NewWebhook(dbService)
 	timerService := timer.NewTimer()
 
 	return &services{
@@ -75,6 +77,10 @@ func NewServices() Service {
 
 func (s *services) BotJoinWebhook(client *client.Clients, joinedChannelList []string, w http.ResponseWriter, r *http.Request) {
 	s.Webhook.BotJoin(client, joinedChannelList, w, r)
+}
+
+func (s *services) BotDepartWebhook(client *client.Clients, joinedChannelList []string, w http.ResponseWriter, r *http.Request) {
+	s.Webhook.BotDepart(client, joinedChannelList, w, r)
 }
 
 func (s *services) GetTwitchChannels(ctx context.Context) ([]*models.TwitchChannel, error) {
@@ -93,6 +99,15 @@ func (s *services) CreateTwitchChannel(ctx context.Context, channelId string, ch
 	}
 
 	return alreadyJoined, nil
+}
+
+func (s *services) DeleteTwitchChannel(ctx context.Context, channelId string, userId *string) (bool, error) {
+	deleted, err := s.DB.DeleteTwitchChannel(ctx, channelId, userId)
+	if err != nil {
+		return false, err
+	}
+
+	return deleted, nil
 }
 
 func (s *services) GetTwitchBotConfig(ctx context.Context, twitchChannelId string, configKey string) (*models.TwitchBotConfig, error) {

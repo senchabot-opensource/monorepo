@@ -3,8 +3,11 @@ package service
 import (
 	"context"
 	"fmt"
+	"net/http"
 	"time"
 
+	"github.com/bwmarrin/discordgo"
+	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service/webhook"
 	"github.com/senchabot-opensource/monorepo/db"
 	"github.com/senchabot-opensource/monorepo/db/mysql"
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
@@ -12,6 +15,8 @@ import (
 )
 
 type Service interface {
+	BotLeaveWebhook(client *discordgo.Session, w http.ResponseWriter, r *http.Request)
+
 	GetUserBotCommand(ctx context.Context, commandName string, discordServerId string) (*models.BotCommand, error)
 	GetGlobalBotCommand(ctx context.Context, commandName string) (*models.BotCommand, error)
 
@@ -55,15 +60,22 @@ type Service interface {
 }
 
 type service struct {
-	DB db.Database
+	DB      db.Database
+	Webhook webhook.Webhook
 }
 
 func New() Service {
 	dbService := mysql.NewMySQL()
+	whService := webhook.NewWebhook(dbService)
 
 	return &service{
-		DB: dbService,
+		DB:      dbService,
+		Webhook: whService,
 	}
+}
+
+func (s *service) BotLeaveWebhook(client *discordgo.Session, w http.ResponseWriter, r *http.Request) {
+	s.Webhook.BotLeave(client, w, r)
 }
 
 func (s *service) GetUserBotCommand(ctx context.Context, commandName string, discordServerId string) (*models.BotCommand, error) {
