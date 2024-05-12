@@ -13,6 +13,8 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 
+import { CreateCommandForm } from './create-command-form'
+
 interface Props {
   platform: Platform
 }
@@ -32,7 +34,10 @@ export function CreateCommand({ platform }: Props) {
         <DialogHeader>
           <DialogTitle>Create Command</DialogTitle>
         </DialogHeader>
-        <div>{/* form here */}</div>
+        <CreateCommandForm
+          platform={platform}
+          afterSubmission={() => setOpen(false)}
+        />
       </DialogContent>
     </Dialog>
   )

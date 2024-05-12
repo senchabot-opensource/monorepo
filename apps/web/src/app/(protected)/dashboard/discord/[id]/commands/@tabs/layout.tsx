@@ -9,6 +9,8 @@ interface Props {
 
 export default function TabsLayout({ params, children }: Props) {
   return (
-    <CommandsTabsLayout platform="discord" id={params.id} children={children} />
+    <CommandsTabsLayout platform="discord" id={params.id}>
+      {children}
+    </CommandsTabsLayout>
   )
 }

@@ -9,6 +9,8 @@ interface Props {
 
 export default function TabsLayout({ params, children }: Props) {
   return (
-    <CommandsTabsLayout platform="twitch" id={params.id} children={children} />
+    <CommandsTabsLayout platform="twitch" id={params.id}>
+      {children}
+    </CommandsTabsLayout>
   )
 }
