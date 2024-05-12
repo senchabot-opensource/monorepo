@@ -1,9 +1,13 @@
+import { Suspense } from 'react'
+
 import Image from 'next/image'
 import Link from 'next/link'
 
 import { ThemeToggle } from '@/components/theme-toggle'
 
 import { BottomNav } from './bottom-nav'
+import { EntitiesDropdownPlaceholder } from './entities-dropdown'
+import { EntitiesDropdownWrapper } from './entities-dropdown-wrapper'
 import { MainNav } from './main-nav'
 
 export function Sidebar() {
@@ -11,6 +15,9 @@ export function Sidebar() {
     <section className="fixed inset-y-0 flex w-full max-w-64 shrink-0 grow flex-col space-y-8 overflow-y-auto border-r px-4 py-6">
       <Brand />
       <div className="flex grow flex-col gap-y-4">
+        <Suspense fallback={<EntitiesDropdownPlaceholder />}>
+          <EntitiesDropdownWrapper />
+        </Suspense>
         <MainNav />
         <BottomNav />
       </div>
