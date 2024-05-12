@@ -3,31 +3,32 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String    @id @default(uuid())
   name          String?
-  username      String?   @unique
   email         String?   @unique
-  emailVerified DateTime?
+  emailVerified DateTime? @map("email_verified")
   image         String?
 
-  Session Session[]
-  Account Account[]
+  sessions Session[]
+  accounts Account[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
 }
 
 model Account {
-  id                       String  @id @default(cuid())
-  userId                   String
+  id                       String  @id @default(uuid())
+  userId                   String  @map("user_id")
   type                     String
   provider                 String
-  providerAccountId        String
+  providerAccountId        String  @map("provider_account_id")
   refresh_token            String? @db.Text
   access_token             String? @db.Text
   expires_at               Int?
@@ -39,25 +40,27 @@ model Account {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@unique([provider, providerAccountId])
   @@index([userId])
+  @@map("accounts")
 }
 
 model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
+  id           String   @id @default(uuid())
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
   expires      DateTime
 
   user User @relation(fields: [userId], references: [id])
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@index([userId])
+  @@map("sessions")
 }
 
 model VerificationToken {
@@ -66,4 +69,5 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+  @@map("verification_tokens")
 }
