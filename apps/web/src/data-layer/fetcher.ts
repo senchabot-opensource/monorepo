@@ -1,4 +1,5 @@
 import { cookies } from 'next/headers'
+import { notFound } from 'next/navigation'
 
 import { env } from '@/env'
 
@@ -26,6 +27,10 @@ export async function fetcher<JSON = any>(
   })
 
   if (!response.ok) {
+    if (response.status === 401) {
+      notFound()
+    }
+
     const json = await response.json()
     if (json.message) {
       const error = new Error(json.message) as Error & {
