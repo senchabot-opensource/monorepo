@@ -64,7 +64,7 @@ type services struct {
 }
 
 func NewServices() Service {
-	dbService := mysql.NewMySQL()
+	dbService := mysql.NewPostgreSQL()
 	whService := webhook.NewWebhook(dbService)
 	timerService := timer.NewTimer()
 
