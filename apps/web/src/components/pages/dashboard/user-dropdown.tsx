@@ -31,7 +31,7 @@ export async function UserDropdown() {
                 <AvatarImage src={session.user.image ?? ''} />
                 <AvatarFallback>{session.user.name?.charAt(0)}</AvatarFallback>
               </Avatar>
-              <span className="max-w-40 truncate">eckoln</span>
+              <span className="max-w-40 truncate">{session.user.name}</span>
             </div>
           </div>
           <ChevronsUpDownIcon className="size-4" />
@@ -64,7 +64,7 @@ export async function UserDropdown() {
           }}
         >
           <DropdownMenuItem asChild>
-            <button type="submit" className="w-full">
+            <button type="submit" className="size-full">
               Sign out
             </button>
           </DropdownMenuItem>
