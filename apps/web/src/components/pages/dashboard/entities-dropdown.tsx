@@ -2,7 +2,8 @@
 
 import { useMemo, useState } from 'react'
 
-import { useParams, useRouter } from 'next/navigation'
+import Link from 'next/link'
+import { useParams } from 'next/navigation'
 
 import { CheckIcon, ChevronsUpDownIcon, PlusIcon } from 'lucide-react'
 
@@ -34,7 +35,6 @@ export function EntitiesDropdown({ entities }: Props) {
   const [open, setOpen] = useState<boolean>(false)
 
   const params = useParams<{ id: string }>()
-  const router = useRouter()
 
   const selectedEntity = useMemo(() => {
     return entities.find((item) => item.platform_entity_id === params.id)
@@ -74,51 +74,49 @@ export function EntitiesDropdown({ entities }: Props) {
           <CommandList>
             <CommandGroup>
               {entities?.map((item) => (
-                <CommandItem
-                  className="justify-between space-x-2"
+                <Link
+                  href={`/dashboard/${item.platform}/${item.platform_entity_id}`}
                   key={item.platform_entity_id}
-                  value={item.platform_entity_id}
-                  onSelect={(value) => {
-                    setOpen(false)
-                    router.push(`/dashboard/${item.platform}/${value}`)
-                  }}
                 >
-                  <div className="flex items-center space-x-2">
-                    <Avatar className="size-4 rounded">
-                      <AvatarImage src={item.entity_icon} />
-                      <AvatarFallback>
-                        {item.entity_name.charAt(0)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <span className="max-w-40 truncate">
-                      {item.entity_name}
-                    </span>
-                  </div>
-                  <CheckIcon
-                    className={cn(
-                      'size-4',
-                      item.platform_entity_id ===
-                        selectedEntity?.platform_entity_id
-                        ? 'opacity-100'
-                        : 'opacity-0',
-                    )}
-                  />
-                </CommandItem>
+                  <CommandItem
+                    className="justify-between space-x-2"
+                    value={item.platform_entity_id}
+                    onSelect={() => setOpen(false)}
+                  >
+                    <div className="flex items-center space-x-2">
+                      <Avatar className="size-4 rounded">
+                        <AvatarImage src={item.entity_icon} />
+                        <AvatarFallback>
+                          {item.entity_name.charAt(0)}
+                        </AvatarFallback>
+                      </Avatar>
+                      <span className="max-w-40 truncate">
+                        {item.entity_name}
+                      </span>
+                    </div>
+                    <CheckIcon
+                      className={cn(
+                        'size-4',
+                        item.platform_entity_id ===
+                          selectedEntity?.platform_entity_id
+                          ? 'opacity-100'
+                          : 'opacity-0',
+                      )}
+                    />
+                  </CommandItem>
+                </Link>
               ))}
             </CommandGroup>
             <CommandSeparator />
             <CommandGroup>
-              <CommandItem
-                onSelect={() => {
-                  setOpen(false)
-                  router.push(`/dashboard/settings/servers`)
-                }}
-              >
-                <div className="flex items-center space-x-2">
-                  <PlusIcon className="size-4" />
-                  <span>Get Senchabot</span>
-                </div>
-              </CommandItem>
+              <Link href="/dashboard/settings/servers">
+                <CommandItem onSelect={() => setOpen(false)}>
+                  <div className="flex items-center space-x-2">
+                    <PlusIcon className="size-4" />
+                    <span>Get Senchabot</span>
+                  </div>
+                </CommandItem>
+              </Link>
             </CommandGroup>
           </CommandList>
         </Command>
