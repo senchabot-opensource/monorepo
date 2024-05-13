@@ -1,3 +1,7 @@
+'use client'
+
+import { useState } from 'react'
+
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -14,8 +18,10 @@ interface Props {
 }
 
 export function UpdateCommand({ command }: Props) {
+  const [open, setOpen] = useState<boolean>(false)
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button type="submit" variant="secondary" size="sm">
           Edit
@@ -25,7 +31,10 @@ export function UpdateCommand({ command }: Props) {
         <DialogHeader>
           <DialogTitle>Update Command</DialogTitle>
         </DialogHeader>
-        <UpdateCommandForm command={command} />
+        <UpdateCommandForm
+          command={command}
+          afterSubmission={() => setOpen(false)}
+        />
       </DialogContent>
     </Dialog>
   )

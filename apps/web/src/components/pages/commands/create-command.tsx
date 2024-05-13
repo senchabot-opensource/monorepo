@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 
+import { useParams, useRouter, useSelectedLayoutSegment } from 'next/navigation'
+
 import { PlusIcon } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
@@ -22,6 +24,10 @@ interface Props {
 export function CreateCommand({ platform }: Props) {
   const [open, setOpen] = useState<boolean>(false)
 
+  const segment = useSelectedLayoutSegment()
+  const params = useParams<{ id: string }>()
+  const router = useRouter()
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -36,7 +42,13 @@ export function CreateCommand({ platform }: Props) {
         </DialogHeader>
         <CreateCommandForm
           platform={platform}
-          afterSubmission={() => setOpen(false)}
+          platformEntityId={params.id}
+          afterSubmission={() => {
+            setOpen(false)
+            if (segment !== 'custom') {
+              router.push(`/dashboard/${platform}/${params.id}/commands`)
+            }
+          }}
         />
       </DialogContent>
     </Dialog>
