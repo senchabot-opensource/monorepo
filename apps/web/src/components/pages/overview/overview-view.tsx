@@ -1,9 +1,19 @@
+import { redirect } from 'next/navigation'
+
+import { auth } from '@/lib/auth'
+
 interface Props {
   platform: Platform
   id: string
 }
 
-export function OverviewView({ platform, id }: Props) {
+export async function OverviewView({ platform, id }: Props) {
+  const session = await auth()
+
+  if (!session) {
+    redirect('/signin')
+  }
+
   console.log('OverviewView => ', { platform, id })
 
   return (

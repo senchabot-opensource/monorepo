@@ -1,13 +1,22 @@
 import type { Metadata } from 'next'
+import { redirect } from 'next/navigation'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+
+import { auth } from '@/lib/auth'
 
 export const metadata: Metadata = {
   title: 'Privacy',
 }
 
-export default function Page() {
+export default async function Page() {
+  const session = await auth()
+
+  if (!session) {
+    redirect('/signin')
+  }
+
   return (
     <Card>
       <CardHeader>
