@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 
 import { env } from '@/env'
 
-const BASE_URL = 'https://api.senchabot.dev/v1'
+const BASE_URL = env.API_URL
 
 function getUserSessionToken() {
   const cookieStore = cookies()
