@@ -5,6 +5,7 @@ export const env = createEnv({
   server: {
     // Database
     DATABASE_URL: z.string().url(),
+    DATABASE_DIRECT_URL: z.string().url(),
     // Auth
     AUTH_SECRET: z.string(),
     AUTH_URL: z.preprocess(
@@ -26,6 +27,7 @@ export const env = createEnv({
   },
   runtimeEnv: {
     DATABASE_URL: process.env.DATABASE_URL,
+    DATABASE_DIRECT_URL: process.env.DATABASE_DIRECT_URL,
     AUTH_SECRET: process.env.AUTH_SECRET,
     AUTH_URL: process.env.AUTH_URL,
     AUTH_TWITCH_ID: process.env.AUTH_TWITCH_ID,
