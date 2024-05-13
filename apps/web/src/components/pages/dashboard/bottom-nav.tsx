@@ -20,7 +20,12 @@ export function BottomNav() {
       ].map((item) => {
         const ItemIcon = item.icon
         return (
-          <NavLinkItem href={item.href} target="_blank" key={item.href}>
+          <NavLinkItem
+            href={item.href}
+            target="_blank"
+            prefetch={false}
+            key={item.href}
+          >
             <ItemIcon className="size-4" />
             <span>{item.label}</span>
           </NavLinkItem>

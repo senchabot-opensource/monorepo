@@ -64,7 +64,7 @@ export function UpdateCommandForm({ command }: Props) {
             />
             <p className="text-sm text-muted-foreground">
               See our{' '}
-              <Link href="/docs" target="_blank">
+              <Link href="/docs" target="_blank" prefetch={false}>
                 docs
               </Link>{' '}
               for more variables.
