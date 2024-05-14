@@ -2,7 +2,7 @@
 
 import { revalidateTag } from 'next/cache'
 
-import { fetcher } from '../fetcher'
+import { ApiError, fetcher } from '../fetcher'
 import {
   createCommandSchema,
   updateCommandSchema,
@@ -15,15 +15,17 @@ import {
  */
 export async function createEntityCommand(
   formData: FormData,
-): Promise<{ message: string }> {
-  const parsed = createCommandSchema.safeParse(Object.fromEntries(formData))
-
-  if (!parsed.success) {
-    console.log('createEntityCommand =>', parsed.error.flatten().fieldErrors)
-    throw new Error('Invalid submission!')
-  }
-
+): Promise<{ success: boolean; message: string }> {
   try {
+    const parsed = createCommandSchema.safeParse(Object.fromEntries(formData))
+
+    if (!parsed.success) {
+      return {
+        success: false,
+        message: 'Invalid submission!',
+      }
+    }
+
     const { platform, platformEntityId, ...input } = parsed.data
 
     const params = new URLSearchParams({ platform, platformEntityId })
@@ -35,11 +37,29 @@ export async function createEntityCommand(
     revalidateTag(`getEntityCommands-${platformEntityId}-custom`)
 
     return {
+      success: true,
       message: 'Successfully!',
     }
   } catch (error) {
     console.log('createEntityCommand =>', error)
-    throw new Error('Something went wrong!')
+    if (error instanceof ApiError) {
+      if (error.status === 409) {
+        return {
+          success: false,
+          message: 'This command already exists.',
+        }
+      } else {
+        return {
+          success: false,
+          message: 'Something went wrong!',
+        }
+      }
+    } else {
+      return {
+        success: false,
+        message: 'Something went wrong!',
+      }
+    }
   }
 }
 
@@ -50,15 +70,17 @@ export async function createEntityCommand(
  */
 export async function updateEntityCommand(
   formData: FormData,
-): Promise<{ message: string }> {
-  const parsed = updateCommandSchema.safeParse(Object.fromEntries(formData))
-
-  if (!parsed.success) {
-    console.log('updateEntityCommand =>', parsed.error.flatten().fieldErrors)
-    throw new Error('Invalid submission!')
-  }
-
+): Promise<{ success: boolean; message: string }> {
   try {
+    const parsed = updateCommandSchema.safeParse(Object.fromEntries(formData))
+
+    if (!parsed.success) {
+      return {
+        success: false,
+        message: 'Invalid submission!',
+      }
+    }
+
     const { id, platform, platformEntityId, ...input } = parsed.data
 
     const params = new URLSearchParams({ platform, platformEntityId })
@@ -70,11 +92,15 @@ export async function updateEntityCommand(
     revalidateTag(`getEntityCommands-${platformEntityId}-custom`)
 
     return {
+      success: true,
       message: 'Successfully!',
     }
   } catch (error) {
     console.log('updateEntityCommand =>', error)
-    throw new Error('Something went wrong!')
+    return {
+      success: false,
+      message: 'Something went wrong!',
+    }
   }
 }
 
@@ -91,7 +117,7 @@ export async function updateEntityCommandStatus(
   platform: Platform,
   platformEntityId: string,
   status: boolean,
-): Promise<{ message: string }> {
+): Promise<{ success: boolean; message: string }> {
   try {
     const params = new URLSearchParams({ platform, platformEntityId })
     await fetcher(`/me/commands/${id}?` + params, {
@@ -100,11 +126,15 @@ export async function updateEntityCommandStatus(
     })
 
     return {
+      success: true,
       message: 'Successfully!',
     }
   } catch (error) {
     console.log('updateEntityCommandStatus =>', error)
-    throw new Error('Something went wrong!')
+    return {
+      success: false,
+      message: 'Something went wrong!',
+    }
   }
 }
 
@@ -119,7 +149,7 @@ export async function deleteEntityCommand(
   id: number,
   platform: Platform,
   platformEntityId: string,
-): Promise<{ message: string }> {
+): Promise<{ success: boolean; message: string }> {
   try {
     const params = new URLSearchParams({ platform, platformEntityId })
     await fetcher(`/me/commands/${id}?` + params, {
@@ -129,10 +159,14 @@ export async function deleteEntityCommand(
     revalidateTag(`getEntityCommands-${platformEntityId}-custom`)
 
     return {
+      success: true,
       message: 'Successfully!',
     }
   } catch (error) {
     console.log('deleteEntityCommand =>', error)
-    throw new Error('Something went wrong!')
+    return {
+      success: false,
+      message: 'Something went wrong!',
+    }
   }
 }

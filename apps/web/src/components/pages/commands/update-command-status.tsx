@@ -32,7 +32,10 @@ export function UpdateCommandStatus({ command }: Props) {
 
             toast.promise(dispatch, {
               loading: 'Loading...',
-              success: ({ message }) => {
+              success: ({ success, message }) => {
+                if (!success) {
+                  throw new Error(message)
+                }
                 return message
               },
               error: ({ message }) => {

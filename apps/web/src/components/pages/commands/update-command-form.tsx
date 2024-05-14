@@ -31,7 +31,10 @@ export function UpdateCommandForm({ command, afterSubmission }: Props) {
 
         toast.promise(dispatch, {
           loading: 'Loading...',
-          success: ({ message }) => {
+          success: ({ success, message }) => {
+            if (!success) {
+              throw new Error(message)
+            }
             afterSubmission()
             return message
           },

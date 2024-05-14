@@ -31,7 +31,10 @@ export function DeleteCommand({ id, platform, platformEntityId }: Props) {
 
           toast.promise(dispatch, {
             loading: 'Loading...',
-            success: ({ message }) => {
+            success: ({ success, message }) => {
+              if (!success) {
+                throw new Error(message)
+              }
               return message
             },
             error: ({ message }) => {

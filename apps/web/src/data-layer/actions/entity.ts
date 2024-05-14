@@ -15,10 +15,9 @@ export async function executeEntityAction(
   action: 'join' | 'depart',
   platform: Platform,
   platformEntityId: string,
-): Promise<{ message: string }> {
-  const params = new URLSearchParams({ platform, platformEntityId })
-
+): Promise<{ success: boolean; message: string }> {
   try {
+    const params = new URLSearchParams({ platform, platformEntityId })
     await fetcher(`/me/platforms/actions/${action}?` + params, {
       method: 'POST',
     })
@@ -26,10 +25,14 @@ export async function executeEntityAction(
     revalidateTag('getUserEntities')
 
     return {
+      success: false,
       message: 'Successfully!',
     }
   } catch (error) {
     console.log('executeEntityAction =>', error)
-    throw new Error('Something went wrong!')
+    return {
+      success: false,
+      message: 'Something went wrong!',
+    }
   }
 }
