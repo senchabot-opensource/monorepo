@@ -1,4 +1,4 @@
-package mysql
+package postgresql
 
 import (
 	"context"
@@ -10,7 +10,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func (m *MySQL) GetTwitchChannels(ctx context.Context) ([]*models.TwitchChannel, error) {
+func (m *postgresql) GetTwitchChannels(ctx context.Context) ([]*models.TwitchChannel, error) {
 	var twitchChannels []*models.TwitchChannel
 
 	result := m.DB.Find(&twitchChannels)
@@ -21,7 +21,7 @@ func (m *MySQL) GetTwitchChannels(ctx context.Context) ([]*models.TwitchChannel,
 	return twitchChannels, nil
 }
 
-func (m *MySQL) CreateTwitchChannel(ctx context.Context, channelId string, channelName string, userId *string) (bool, error) {
+func (m *postgresql) CreateTwitchChannel(ctx context.Context, channelId string, channelName string, userId *string) (bool, error) {
 	var twitchChannel []models.TwitchChannel
 
 	result := m.DB.Where("channel_id = ?", channelId).Where("channel_name = ?", channelName).Find(&twitchChannel)
@@ -46,7 +46,7 @@ func (m *MySQL) CreateTwitchChannel(ctx context.Context, channelId string, chann
 	return false, nil
 }
 
-func (m *MySQL) DeleteTwitchChannel(ctx context.Context, channelId string, userId *string) (bool, error) {
+func (m *postgresql) DeleteTwitchChannel(ctx context.Context, channelId string, userId *string) (bool, error) {
 	var twitchChannel *models.TwitchChannel
 
 	result := m.DB.Where("channel_id = ?", channelId).Delete(&twitchChannel)
@@ -60,7 +60,7 @@ func (m *MySQL) DeleteTwitchChannel(ctx context.Context, channelId string, userI
 	return true, nil
 }
 
-func (m *MySQL) GetTwitchBotConfig(ctx context.Context, twitchChannelId string, configKey string) (*models.TwitchBotConfig, error) {
+func (m *postgresql) GetTwitchBotConfig(ctx context.Context, twitchChannelId string, configKey string) (*models.TwitchBotConfig, error) {
 	var twitchBotConfig models.TwitchBotConfig
 	result := m.DB.Where("twitch_channel_id = ?", twitchChannelId).Where("config_key = ?", configKey).First(&twitchBotConfig)
 
@@ -71,7 +71,7 @@ func (m *MySQL) GetTwitchBotConfig(ctx context.Context, twitchChannelId string, 
 	return &twitchBotConfig, nil
 }
 
-func (m *MySQL) CheckTwitchBotConfig(ctx context.Context, twitchChannelId string, configKey string, configValue string) bool {
+func (m *postgresql) CheckTwitchBotConfig(ctx context.Context, twitchChannelId string, configKey string, configValue string) bool {
 	configData, err := m.GetTwitchBotConfig(ctx, twitchChannelId, configKey)
 	if err != nil {
 		fmt.Println(err.Error())
@@ -85,7 +85,7 @@ func (m *MySQL) CheckTwitchBotConfig(ctx context.Context, twitchChannelId string
 	return false
 }
 
-func (m *MySQL) SaveTwitchBotCommandActivity(context context.Context, commandName string, twitchChannelId string, commandAuthor, commandAuthorId string) {
+func (m *postgresql) SaveTwitchBotCommandActivity(context context.Context, commandName string, twitchChannelId string, commandAuthor, commandAuthorId string) {
 	check := m.CheckTwitchBotConfig(context, twitchChannelId, "bot_activity_enabled", "1")
 	if !check {
 		return
