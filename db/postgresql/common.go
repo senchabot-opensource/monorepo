@@ -1,4 +1,4 @@
-package mysql
+package postgresql
 
 import (
 	"context"
@@ -12,7 +12,7 @@ import (
 	"gorm.io/gorm/clause"
 )
 
-func (m *MySQL) CreateBotCommand(ctx context.Context, botPlatform platform.Platform, commandName string, commandContent string, botPlatformId string, createdBy string) (*string, error) {
+func (m *postgresql) CreateBotCommand(ctx context.Context, botPlatform platform.Platform, commandName string, commandContent string, botPlatformId string, createdBy string) (*string, error) {
 	var botCommand []models.BotCommand
 	var infoText string
 	var twitchChannelId, discordServerId string
@@ -59,7 +59,7 @@ func (m *MySQL) CreateBotCommand(ctx context.Context, botPlatform platform.Platf
 	return nil, nil
 }
 
-func (m *MySQL) UpdateBotCommand(ctx context.Context, botPlatform platform.Platform, commandName string, commandContent string, botPlatformId string, updatedBy string) (*string, *string, error) {
+func (m *postgresql) UpdateBotCommand(ctx context.Context, botPlatform platform.Platform, commandName string, commandContent string, botPlatformId string, updatedBy string) (*string, *string, error) {
 	var botCommand *models.BotCommand
 	var result *gorm.DB
 
@@ -98,7 +98,7 @@ func (m *MySQL) UpdateBotCommand(ctx context.Context, botPlatform platform.Platf
 	return &commandName, nil, nil
 }
 
-func (m *MySQL) DeleteBotCommand(ctx context.Context, botPlatform platform.Platform, commandName string, botPlatformId string) (*string, *string, error) {
+func (m *postgresql) DeleteBotCommand(ctx context.Context, botPlatform platform.Platform, commandName string, botPlatformId string) (*string, *string, error) {
 	var botCommand *models.BotCommand
 	var botCommandAlias *models.BotCommandAlias
 	var result *gorm.DB
@@ -148,7 +148,7 @@ func (m *MySQL) DeleteBotCommand(ctx context.Context, botPlatform platform.Platf
 	return &commandName, nil, nil
 }
 
-func (m *MySQL) CheckCommandExists(ctx context.Context, botPlatform platform.Platform, commandName string, botPlatformId string) (*string, error) {
+func (m *postgresql) CheckCommandExists(ctx context.Context, botPlatform platform.Platform, commandName string, botPlatformId string) (*string, error) {
 	var infoText string
 	existGlobalCommandName, err := m.CheckGlobalCommandExists(ctx, commandName)
 	if err != nil {
@@ -183,7 +183,7 @@ func (m *MySQL) CheckCommandExists(ctx context.Context, botPlatform platform.Pla
 	return nil, nil
 }
 
-func (m *MySQL) CheckGlobalCommandExists(ctx context.Context, commandName string) (*string, error) {
+func (m *postgresql) CheckGlobalCommandExists(ctx context.Context, commandName string) (*string, error) {
 	var botCommand []models.BotCommand
 
 	result := m.DB.Where("command_name = ?", commandName).Where("command_type", 0).Find(&botCommand)
@@ -197,7 +197,7 @@ func (m *MySQL) CheckGlobalCommandExists(ctx context.Context, commandName string
 	return nil, nil
 }
 
-func (m *MySQL) CheckUserCommandExists(ctx context.Context, botPlatform platform.Platform, commandName string, botPlatformId string) (*string, error) {
+func (m *postgresql) CheckUserCommandExists(ctx context.Context, botPlatform platform.Platform, commandName string, botPlatformId string) (*string, error) {
 	var botCommand []models.BotCommand
 	var result *gorm.DB
 
@@ -217,7 +217,7 @@ func (m *MySQL) CheckUserCommandExists(ctx context.Context, botPlatform platform
 	return nil, nil
 }
 
-func (m *MySQL) GetCommandAlias(ctx context.Context, botPlatform platform.Platform, command string, botPlatformId string) (*string, error) {
+func (m *postgresql) GetCommandAlias(ctx context.Context, botPlatform platform.Platform, command string, botPlatformId string) (*string, error) {
 	var commandAlias models.BotCommandAlias
 	var err error
 
@@ -234,7 +234,7 @@ func (m *MySQL) GetCommandAlias(ctx context.Context, botPlatform platform.Platfo
 	return &commandAlias.CommandName, nil
 }
 
-func (m *MySQL) CheckCommandAliasExist(ctx context.Context, botPlatform platform.Platform, commandAlias string, botPlatformId string) (*string, error) {
+func (m *postgresql) CheckCommandAliasExist(ctx context.Context, botPlatform platform.Platform, commandAlias string, botPlatformId string) (*string, error) {
 	var commandAliasModel []models.BotCommandAlias
 	var result *gorm.DB
 
@@ -255,7 +255,7 @@ func (m *MySQL) CheckCommandAliasExist(ctx context.Context, botPlatform platform
 	return nil, nil
 }
 
-func (m *MySQL) CreateCommandAlias(ctx context.Context, botPlatform platform.Platform, commandName string, aliases []string, botPlatformId string, createdBy string) (*string, error) {
+func (m *postgresql) CreateCommandAlias(ctx context.Context, botPlatform platform.Platform, commandName string, aliases []string, botPlatformId string, createdBy string) (*string, error) {
 	commandAliases := []models.BotCommandAlias{}
 	var infoText string
 	var twitchChannelId, discordServerId string
@@ -311,7 +311,7 @@ func (m *MySQL) CreateCommandAlias(ctx context.Context, botPlatform platform.Pla
 	return nil, nil
 }
 
-func (m *MySQL) DeleteCommandAlias(ctx context.Context, botPlatform platform.Platform, commandAlias string, botPlatformId string) (*string, error) {
+func (m *postgresql) DeleteCommandAlias(ctx context.Context, botPlatform platform.Platform, commandAlias string, botPlatformId string) (*string, error) {
 	var commandAliasModel *models.BotCommandAlias
 	var result *gorm.DB
 
@@ -343,7 +343,7 @@ func (m *MySQL) DeleteCommandAlias(ctx context.Context, botPlatform platform.Pla
 	return nil, nil
 }
 
-func (m *MySQL) CreateBotActionActivity(ctx context.Context, botPlatform platform.Platform, botActivity string, botPlatformId string, activityAuthor, activityAuthorId string) error {
+func (m *postgresql) CreateBotActionActivity(ctx context.Context, botPlatform platform.Platform, botActivity string, botPlatformId string, activityAuthor, activityAuthorId string) error {
 	botActionActivity := models.BotActionActivity{
 		BotPlatformType:  botPlatform,
 		BotPlatformID:    &botPlatformId,
@@ -361,7 +361,7 @@ func (m *MySQL) CreateBotActionActivity(ctx context.Context, botPlatform platfor
 	return nil
 }
 
-func (m *MySQL) GetGlobalBotCommand(ctx context.Context, commandName string) (*models.BotCommand, error) {
+func (m *postgresql) GetGlobalBotCommand(ctx context.Context, commandName string) (*models.BotCommand, error) {
 	var botCommand models.BotCommand
 
 	result := m.DB.Where("command_name = ?", commandName).Where("command_type = ?", 0).Where("status = ?", 1).First(&botCommand)
@@ -372,7 +372,7 @@ func (m *MySQL) GetGlobalBotCommand(ctx context.Context, commandName string) (*m
 	return &botCommand, nil
 }
 
-func (m *MySQL) GetUserBotCommand(ctx context.Context, botPlatform platform.Platform, commandName string, botPlatformId string) (*models.BotCommand, error) {
+func (m *postgresql) GetUserBotCommand(ctx context.Context, botPlatform platform.Platform, commandName string, botPlatformId string) (*models.BotCommand, error) {
 	var botCommand models.BotCommand
 	var result *gorm.DB
 
@@ -389,7 +389,7 @@ func (m *MySQL) GetUserBotCommand(ctx context.Context, botPlatform platform.Plat
 	return &botCommand, nil
 }
 
-func (m *MySQL) GetCommandList(ctx context.Context, botPlatform platform.Platform, botPlatformId string) ([]*models.BotCommand, error) {
+func (m *postgresql) GetCommandList(ctx context.Context, botPlatform platform.Platform, botPlatformId string) ([]*models.BotCommand, error) {
 	var botCommandList []*models.BotCommand
 	var result *gorm.DB
 
@@ -406,7 +406,7 @@ func (m *MySQL) GetCommandList(ctx context.Context, botPlatform platform.Platfor
 	return botCommandList, nil
 }
 
-func (m *MySQL) AddBotCommandStatistic(ctx context.Context, botPlatform platform.Platform, commandName string) error {
+func (m *postgresql) AddBotCommandStatistic(ctx context.Context, botPlatform platform.Platform, commandName string) error {
 	botCommandStatistic := models.BotCommandStatistic{CommandName: commandName, BotPlatformType: botPlatform, Count: 1}
 
 	result := m.DB.Clauses(clause.OnConflict{
@@ -422,7 +422,7 @@ func (m *MySQL) AddBotCommandStatistic(ctx context.Context, botPlatform platform
 	return nil
 }
 
-func (m *MySQL) GetCommandTimers(ctx context.Context, botPlatform platform.Platform, botPlatformId string) ([]*models.CommandTimer, error) {
+func (m *postgresql) GetCommandTimers(ctx context.Context, botPlatform platform.Platform, botPlatformId string) ([]*models.CommandTimer, error) {
 	var commandTimers []*models.CommandTimer
 	result := m.DB.Where("bot_platform = ?", botPlatform).Where("bot_platform_id = ?", botPlatformId).Find(&commandTimers)
 
@@ -433,7 +433,7 @@ func (m *MySQL) GetCommandTimers(ctx context.Context, botPlatform platform.Platf
 	return commandTimers, nil
 }
 
-func (m *MySQL) CreateCommandTimer(ctx context.Context, botPlatform platform.Platform, botPlatformId string, commandName string, interval int) (bool, error) {
+func (m *postgresql) CreateCommandTimer(ctx context.Context, botPlatform platform.Platform, botPlatformId string, commandName string, interval int) (bool, error) {
 	exist := m.GetCommandTimer(ctx, botPlatform, botPlatformId, commandName)
 	if exist != nil {
 		return true, fmt.Errorf("the command '%v' is already in use for timer", commandName)
@@ -453,7 +453,7 @@ func (m *MySQL) CreateCommandTimer(ctx context.Context, botPlatform platform.Pla
 	return true, nil
 }
 
-func (m *MySQL) GetCommandTimer(ctx context.Context, botPlatform platform.Platform, botPlatformId string, commandName string) *models.CommandTimer {
+func (m *postgresql) GetCommandTimer(ctx context.Context, botPlatform platform.Platform, botPlatformId string, commandName string) *models.CommandTimer {
 	var commandTimer []models.CommandTimer
 
 	result := m.DB.Where("bot_platform = ?", botPlatform).Where("bot_platform_id = ?", botPlatformId).Where("command_name = ?", commandName).Find(&commandTimer)
@@ -467,7 +467,7 @@ func (m *MySQL) GetCommandTimer(ctx context.Context, botPlatform platform.Platfo
 	return &commandTimer[0]
 }
 
-func (m *MySQL) UpdateCommandTimer(ctx context.Context, botPlatform platform.Platform, botPlatformId string, commandName string, interval int, status int) error {
+func (m *postgresql) UpdateCommandTimer(ctx context.Context, botPlatform platform.Platform, botPlatformId string, commandName string, interval int, status int) error {
 	var commandTimer *models.CommandTimer
 
 	result := m.DB.Where("bot_platform = ?", botPlatform).Where("bot_platform_id = ?", botPlatformId).Where("command_name = ?", commandName).First(&commandTimer)
@@ -490,7 +490,7 @@ func (m *MySQL) UpdateCommandTimer(ctx context.Context, botPlatform platform.Pla
 
 	return nil
 }
-func (m *MySQL) DeleteCommandTimer(ctx context.Context, botPlatform platform.Platform, botPlatformId string, commandName string) error {
+func (m *postgresql) DeleteCommandTimer(ctx context.Context, botPlatform platform.Platform, botPlatformId string, commandName string) error {
 	var commandTimer *models.CommandTimer
 
 	result := m.DB.Where("bot_platform = ?", botPlatform).Where("bot_platform_id = ?", botPlatformId).Where("command_name = ?", commandName).First(&commandTimer)
