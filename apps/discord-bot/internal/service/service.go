@@ -9,7 +9,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service/webhook"
 	"github.com/senchabot-opensource/monorepo/db"
-	"github.com/senchabot-opensource/monorepo/db/mysql"
+	"github.com/senchabot-opensource/monorepo/db/postgresql"
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/platform"
 )
@@ -65,7 +65,7 @@ type service struct {
 }
 
 func New() Service {
-	dbService := mysql.NewPostgreSQL()
+	dbService := postgresql.New()
 	whService := webhook.NewWebhook(dbService)
 
 	return &service{
