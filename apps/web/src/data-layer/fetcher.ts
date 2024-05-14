@@ -5,6 +5,14 @@ import { env } from '@/env'
 
 const BASE_URL = env.API_URL
 
+export class ApiError extends Error {
+  readonly status: number
+  constructor(status: number, message: string) {
+    super(message)
+    this.status = status
+  }
+}
+
 function getUserSessionToken() {
   const cookieStore = cookies()
   const token = cookieStore.get('authjs.session-token')
@@ -33,11 +41,7 @@ export async function fetcher<JSON = any>(
 
     const json = await response.json()
     if (json.message) {
-      const error = new Error(json.message) as Error & {
-        status: number
-      }
-      error.status = response.status
-      throw error
+      throw new ApiError(response.status, json.message)
     } else {
       throw new Error('An unexpected error occurred.')
     }
