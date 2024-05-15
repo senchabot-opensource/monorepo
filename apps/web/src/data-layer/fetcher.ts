@@ -15,10 +15,17 @@ export class ApiError extends Error {
 
 function getUserSessionToken() {
   const cookieStore = cookies()
-  const token = cookieStore.get('authjs.session-token')
+  const cookieName = 'authjs.session-token'
+
+  const getSecureToken = cookieStore.get(`__Secure-${cookieName}`)
+  const getNotSecureToken = cookieStore.get(cookieName)
+
+  const token = getSecureToken ?? getNotSecureToken
+
   if (!token) {
     return ''
   }
+
   return token.value
 }
 
