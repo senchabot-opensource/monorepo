@@ -12,3 +12,13 @@ export function formatDate(value: string | number | Date): string {
     year: 'numeric',
   })
 }
+
+export function maskEmail(email: string) {
+  const indexOfAt = email.indexOf('@')
+
+  if (indexOfAt < 2) {
+    return email
+  }
+
+  return email.slice(0, 2) + '*'.repeat(indexOfAt - 2) + email.slice(indexOfAt)
+}
