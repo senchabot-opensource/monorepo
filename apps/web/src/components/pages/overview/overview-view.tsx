@@ -1,6 +1,13 @@
+import { Suspense } from 'react'
+
 import { redirect } from 'next/navigation'
 
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { LoaderIcon } from '@/components/ui/icons'
+
 import { auth } from '@/lib/auth'
+
+import { EntityLogs } from './entity-logs'
 
 interface Props {
   platform: Platform
@@ -14,8 +21,6 @@ export async function OverviewView({ platform, id }: Props) {
     redirect('/signin')
   }
 
-  console.log('OverviewView => ', { platform, id })
-
   return (
     <div className="max-w-screen-lg space-y-8">
       <div className="space-y-1">
@@ -24,7 +29,18 @@ export async function OverviewView({ platform, id }: Props) {
           Lorem ipsum dolor sit amet consectetur adipisicing elit.
         </p>
       </div>
-      <div></div>
+      <div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Audit Logs</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Suspense fallback={<LoaderIcon />}>
+              <EntityLogs platform={platform} platformEntityId={id} />
+            </Suspense>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   )
 }
