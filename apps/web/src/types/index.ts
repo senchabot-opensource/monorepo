@@ -2,9 +2,12 @@ type Platform = 'twitch' | 'discord'
 type CommandType = 'custom' | 'global'
 
 type UserAccount = {
+  user_id: string
+  account_username: string
   provider: Platform
   provider_account_id: string
-  user_id: string
+  created_at: Date
+  updated_at: Date
 }
 
 type UserEntity = {
