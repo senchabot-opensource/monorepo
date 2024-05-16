@@ -24,7 +24,7 @@ function TabGroupItem({
       className={cn(
         'relative inline-flex h-9 select-none flex-nowrap items-center pb-2 text-sm font-medium text-muted-foreground transition-all hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
         isActive &&
-          'text-foreground after:absolute after:-bottom-0.5 after:w-full after:border-b-2',
+          'text-foreground after:absolute after:-bottom-0.5 after:w-full after:border-b-2 after:border-foreground',
       )}
       {...props}
     />
