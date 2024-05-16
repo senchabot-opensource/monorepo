@@ -6,6 +6,28 @@ import { fetcher } from '../fetcher'
 
 /**
  *
+ * @param provider
+ * @param providerAccountId
+ * @param userId
+ * @returns
+ */
+export async function linkEntity(
+  provider: string,
+  providerAccountId: string,
+  userId: string,
+) {
+  return fetcher('/platforms/link', {
+    method: 'POST',
+    body: JSON.stringify({
+      provider: provider,
+      provider_account_id: providerAccountId,
+      user_id: userId,
+    }),
+  })
+}
+
+/**
+ *
  * @param action
  * @param platform
  * @param platformEntityId
