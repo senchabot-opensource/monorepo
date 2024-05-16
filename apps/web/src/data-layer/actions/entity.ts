@@ -47,7 +47,7 @@ export async function executeEntityAction(
     revalidateTag('getUserEntities')
 
     return {
-      success: false,
+      success: true,
       message: 'Successfully!',
     }
   } catch (error) {
