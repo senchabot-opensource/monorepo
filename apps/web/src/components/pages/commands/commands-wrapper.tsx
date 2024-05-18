@@ -27,6 +27,7 @@ export default async function CommandsWrapper({ platform, id, type }: Props) {
           <LoaderIcon />
         </div>
       }
+      key={Math.random()}
     >
       <Commands platform={platform} id={id} type={type} />
     </Suspense>
