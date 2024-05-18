@@ -1,9 +1,12 @@
-import { SignInButton } from '@/components/pages/signin/signin-button'
+import { CheckCircle } from 'lucide-react'
+
 import { DiscordIcon, TwitchIcon } from '@/components/ui/icons'
 
 import { formatDate } from '@/lib/utils'
 
 import { getUserAccounts } from '@/data-layer/queries/user'
+
+import { LinkAccount } from './link-account'
 
 export async function LinkedAccounts() {
   const accounts = await getUserAccounts()
@@ -12,41 +15,65 @@ export async function LinkedAccounts() {
   const findDiscordAcc = accounts.find((item) => item.provider === 'discord')
 
   return (
-    <ul className="flex flex-col space-y-2">
-      {findTwitchAcc ? (
-        <li className="flex select-none items-center justify-between space-x-2 text-sm text-muted-foreground">
+    <div className="grid grid-cols-2 gap-4">
+      <div className="flex flex-col space-y-4 rounded-md border bg-secondary/25 p-4">
+        <div className="flex h-8 items-center justify-between">
           <div className="flex items-center space-x-2">
             <TwitchIcon className="size-4" />
-            <span>{findTwitchAcc.account_username}</span>
+            <span className="text-sm font-medium">Twitch</span>
           </div>
-          <span>Linked at {formatDate(findTwitchAcc.created_at)}</span>
-        </li>
-      ) : (
-        <li className="max-w-52">
-          <SignInButton
-            platform="twitch"
-            label="Link Twitch Account"
-            callbackUrl="/dashboard/settings"
-          />
-        </li>
-      )}
-      {findDiscordAcc ? (
-        <li className="flex select-none items-center justify-between space-x-2 text-sm text-muted-foreground">
+          {findTwitchAcc ? (
+            <span className="text-sm text-muted-foreground">
+              {formatDate(findTwitchAcc.created_at)}
+            </span>
+          ) : (
+            <LinkAccount platform="twitch" />
+          )}
+        </div>
+        <div className="flex items-center space-x-2">
+          {findTwitchAcc ? (
+            <>
+              <CheckCircle className="size-4 text-green-600" />
+              <span className="text-sm">
+                Connected as {findTwitchAcc.account_username}
+              </span>
+            </>
+          ) : (
+            <p className="text-sm text-muted-foreground">
+              Recusandae blanditiis incidunt saepe amet facilis optio odit nam.
+            </p>
+          )}
+        </div>
+      </div>
+      <div className="flex flex-col space-y-4 rounded-md border bg-secondary/25 p-4">
+        <div className="flex h-8 items-center justify-between">
           <div className="flex items-center space-x-2">
             <DiscordIcon className="size-4" />
-            <span>{findDiscordAcc.account_username}</span>
+            <span className="text-sm font-medium">Discord</span>
           </div>
-          <span>Linked at {formatDate(findDiscordAcc.created_at)}</span>
-        </li>
-      ) : (
-        <li className="max-w-52">
-          <SignInButton
-            platform="discord"
-            label="Link Discord Account"
-            callbackUrl="/dashboard/settings"
-          />
-        </li>
-      )}
-    </ul>
+          {findTwitchAcc ? (
+            <span className="text-sm text-muted-foreground">
+              {formatDate(findTwitchAcc.created_at)}
+            </span>
+          ) : (
+            <LinkAccount platform="discord" />
+          )}
+        </div>
+        <div className="flex items-center space-x-2">
+          {findDiscordAcc ? (
+            <>
+              <CheckCircle className="size-4 text-green-600" />
+              <span className="text-sm">
+                Connected as {findDiscordAcc.account_username}
+              </span>
+            </>
+          ) : (
+            <p className="text-sm text-muted-foreground">
+              Recusandae blanditiis incidunt saepe amet facilis optio odit nam.
+            </p>
+          )}
+        </div>
+      </div>
+    </div>
   )
 }
