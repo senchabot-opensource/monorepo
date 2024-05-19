@@ -1,16 +1,49 @@
-version: "3"
 services:
-  mysql:
-    container_name: senchabot_mysqldb
-    image: mysql:latest
-    environment:
-      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
-      MYSQL_DATABASE: $MYSQL_DATABASE
-      MYSQL_USER: $MYSQL_USER
-      MYSQL_PASSWORD: $MYSQL_PASSWORD
+  postgres:
+    image: postgres:latest
+    container_name: senchabot_postgres_db
     ports:
-      - "3306:3306"
+      - "${POSTGRES_DB_PORT:-5432}:5432"
     volumes:
-      - mysql-data:/var/lib/mysql
+      - senchabot-postgres-data:/var/lib/postgresql/data
+    env_file:
+      - ./.env
+  pgAdmin:
+    image: dpage/pgadmin4
+    container_name: pgAdmin
+    env_file:
+      - ./.env
+    ports:
+      - "${PGADMIN_PORT:-5050}:80"
+  twitch-bot:
+    container_name: senchabot_twitch_bot
+    build:
+      dockerfile: ./apps/twitch-bot/Dockerfile.dev
+      context: .
+    ports:
+      - "${TWITCH_BOT_PORT:-8084}:8080"
+    volumes:
+      - ./:/app
+    env_file:
+      - ./apps/twitch-bot/.env
+    depends_on:
+      - postgres
+  discord-bot:
+    container_name: senchabot_discord_bot
+    build:
+      dockerfile: ./apps/discord-bot/Dockerfile.dev
+      context: .
+    ports:
+      - "${DISCORD_BOT_PORT:-8088}:8080"
+    volumes:
+      - ./:/app
+    env_file:
+      - ./apps/discord-bot/.env
+    depends_on:
+      - postgres
+
 volumes:
-  mysql-data:
+  senchabot-postgres-data:
+
+networks:
+  default:
