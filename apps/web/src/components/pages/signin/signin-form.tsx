@@ -51,19 +51,39 @@ export function SignInForm() {
           <Label htmlFor="terms">Accept terms and conditions</Label>
           <p className="text-sm text-muted-foreground">
             You agree to our{' '}
-            <Link href="/privacy-policy" target="_blank" rel="noreferrer">
+            <Link
+              className="hover:text-foreground"
+              href="/privacy-policy"
+              target="_blank"
+              rel="noreferrer"
+            >
               Privacy Policy
             </Link>
             ,{' '}
-            <Link href="/terms-of-service" target="_blank" rel="noreferrer">
+            <Link
+              className="hover:text-foreground"
+              href="/terms-of-service"
+              target="_blank"
+              rel="noreferrer"
+            >
               Terms of Service
             </Link>
             ,{' '}
-            <Link href="/cookie-policy" target="_blank" rel="noreferrer">
+            <Link
+              className="hover:text-foreground"
+              href="/cookie-policy"
+              target="_blank"
+              rel="noreferrer"
+            >
               Cookie Policy
             </Link>{' '}
             and{' '}
-            <Link href="/eula" target="_blank" rel="noreferrer">
+            <Link
+              className="hover:text-foreground"
+              href="/eula"
+              target="_blank"
+              rel="noreferrer"
+            >
               EULA
             </Link>
             .

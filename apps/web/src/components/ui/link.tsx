@@ -9,7 +9,7 @@ function Link({
   return (
     <NextLink
       className={cn(
-        'font-semibold transition-all hover:text-foreground',
+        'font-medium underline-offset-4 transition-all hover:text-muted-foreground',
         className,
       )}
       {...props}
