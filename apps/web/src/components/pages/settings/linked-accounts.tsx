@@ -51,9 +51,9 @@ export async function LinkedAccounts() {
             <DiscordIcon className="size-4" />
             <span className="text-sm font-medium">Discord</span>
           </div>
-          {findTwitchAcc ? (
+          {findDiscordAcc ? (
             <span className="text-sm text-muted-foreground">
-              {formatDate(findTwitchAcc.created_at)}
+              {formatDate(findDiscordAcc.created_at)}
             </span>
           ) : (
             <LinkAccount platform="discord" />
