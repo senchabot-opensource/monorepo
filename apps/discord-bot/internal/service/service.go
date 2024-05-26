@@ -2,7 +2,7 @@ package service
 
 import (
 	"context"
-	"fmt"
+	"log"
 	"net/http"
 	"time"
 
@@ -48,8 +48,10 @@ type Service interface {
 	GetDiscordTwitchLiveAnnos(ctx context.Context, serverId string) ([]*models.DiscordTwitchLiveAnnos, error)
 	DeleteDiscordTwitchLiveAnno(ctx context.Context, twitchUserId string, serverId string) (bool, error)
 	DeleteDiscordTwitchLiveAnnosByGuildId(ctx context.Context, serverId string) (bool, error)
+	DeleteDiscordTwitchLiveAnnosByChannelId(ctx context.Context, channelId string) (bool, error)
 	AddServerToDB(ctx context.Context, serverId string, serverName string, serverOwner string) error
 	DeleteServerFromDB(ctx context.Context, serverId string) error
+	GetServers(ctx context.Context) ([]*models.DiscordServer, error)
 
 	SetDiscordBotConfig(ctx context.Context, serverId, key, value string) (bool, error)
 	DeleteDiscordBotConfig(ctx context.Context, serverId, key string) (bool, error)
@@ -140,7 +142,7 @@ func (s *service) SaveCommandActivity(context context.Context, commandName strin
 	commandName = "/" + commandName
 
 	if err := s.DB.CreateBotActionActivity(context, platform.DISCORD, commandName, discordServerId, commandAuthor, commandAuthorId); err != nil {
-		fmt.Println(err.Error())
+		log.Println("[service.SaveCommandActivity] CreateBotActionActivity error:", err.Error())
 	}
 }
 
@@ -204,11 +206,17 @@ func (s *service) DeleteDiscordTwitchLiveAnno(ctx context.Context, twitchUserId 
 func (s *service) DeleteDiscordTwitchLiveAnnosByGuildId(ctx context.Context, serverId string) (bool, error) {
 	return s.DB.DeleteDiscordTwitchLiveAnnosByGuildId(ctx, serverId)
 }
+func (s *service) DeleteDiscordTwitchLiveAnnosByChannelId(ctx context.Context, channelId string) (bool, error) {
+	return s.DB.DeleteDiscordTwitchLiveAnnosByChannelId(ctx, channelId)
+}
 func (s *service) AddServerToDB(ctx context.Context, serverId string, serverName string, serverOwner string) error {
 	return s.DB.AddServerToDB(ctx, serverId, serverName, serverOwner)
 }
 func (s *service) DeleteServerFromDB(ctx context.Context, serverId string) error {
 	return s.DB.DeleteServerFromDB(ctx, serverId)
+}
+func (s *service) GetServers(ctx context.Context) ([]*models.DiscordServer, error) {
+	return s.DB.GetServers(ctx)
 }
 
 // DISCORD BOT CONFIG
@@ -216,7 +224,6 @@ func (s *service) SetDiscordBotConfig(ctx context.Context, serverId, key, value 
 	return s.DB.SetDiscordBotConfig(ctx, serverId, key, value)
 }
 func (s *service) DeleteDiscordBotConfig(ctx context.Context, serverId string, key string) (bool, error) {
-	fmt.Println("test")
 	return s.DB.DeleteDiscordBotConfig(ctx, serverId, key)
 }
 func (s *service) GetDiscordBotConfig(ctx context.Context, discordServerId string, configKey string) (*models.DiscordBotConfigs, error) {
@@ -225,7 +232,7 @@ func (s *service) GetDiscordBotConfig(ctx context.Context, discordServerId strin
 func (s *service) CheckDiscordBotConfig(ctx context.Context, discordServerId string, configKey string, configValue string) bool {
 	configData, err := s.DB.GetDiscordBotConfig(ctx, discordServerId, configKey)
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Println("[service.CheckDiscordBotConfig] GetDiscordBotConfig error:", err.Error())
 		return false
 	}
 
@@ -240,6 +247,6 @@ func (s *service) CheckDiscordBotConfig(ctx context.Context, discordServerId str
 
 func (s *service) AddBotCommandStatistic(ctx context.Context, commandName string) {
 	if err := s.DB.AddBotCommandStatistic(ctx, platform.DISCORD, commandName); err != nil {
-		fmt.Println(err.Error())
+		log.Println("[service.AddBotCommandStatistic] AddBotCommandStatistic error:", err.Error())
 	}
 }

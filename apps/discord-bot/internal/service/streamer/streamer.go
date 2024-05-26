@@ -27,7 +27,7 @@ var streamers map[string]map[string]GuildStreamers = make(map[string]map[string]
 func InitStreamersData(ctx context.Context, service service.Service, guildId string) {
 	liveAnnos, err := service.GetDiscordTwitchLiveAnnos(ctx, guildId)
 	if err != nil {
-		log.Printf("CheckLiveStreams service.GetDiscordTwitchLiveAnnos Error: %v", err)
+		log.Println("[InitStreamersData] GetDiscordTwitchLiveAnnos error:", err.Error())
 	}
 	for _, dtla := range liveAnnos {
 		serverStreamers, ok := streamers[dtla.AnnoServerID]
@@ -95,13 +95,13 @@ func GetTwitchUserInfo(twitchUsername string, token string) (string, *models.Twi
 func CheckIfTwitchStreamerExist(ctx context.Context, twitchUsername string, uInfo *models.TwitchUserInfo, s *discordgo.Session, i *discordgo.InteractionCreate, service service.Service) (string, bool) {
 	liveAnnoData, err := service.GetDiscordTwitchLiveAnno(ctx, uInfo.ID, i.GuildID)
 	if err != nil {
-		log.Printf("There was an error while checking the Discord Twitch live announcements: %v", err)
+		log.Println("[CheckIfTwitchStreamerExist] GetDiscordTwitchLiveAnno error:", err.Error())
 		return config.ErrorMessage + "#XYXX", false
 	}
 	if liveAnnoData != nil {
 		channel, err := s.Channel(liveAnnoData.AnnoChannelID)
 		if err != nil {
-			log.Printf("Error while fetching the channel data from Discord API: %v", err)
+			log.Println("[CheckIfTwitchStreamerExist] s.Channel error:", err.Error())
 			return config.ErrorMessage + "#YXXX", false
 		}
 		return fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısının duyuları `%v` isimli yazı kanalı için ekli.", twitchUsername, channel.Name), true
@@ -112,7 +112,7 @@ func CheckIfTwitchStreamerExist(ctx context.Context, twitchUsername string, uInf
 func SetTwitchStreamer(ctx context.Context, uInfo *models.TwitchUserInfo, channelId, channelName, guildId, creatorUsername string, service service.Service) string {
 	added, err := service.AddDiscordTwitchLiveAnnos(ctx, uInfo.Login, uInfo.ID, channelId, guildId, creatorUsername)
 	if err != nil {
-		log.Printf("Error while adding Discord Twitch live announcement: %v", err)
+		log.Println("[SetTwitchStreamer] AddDiscordTwitchLiveAnnos error:", err.Error())
 
 		return fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısı veritabanı hatasından dolayı eklenemedi.", uInfo.Login)
 	}
@@ -135,7 +135,7 @@ func GetStreamAnnoContent(ctx context.Context, service service.Service, guildId,
 
 	streamerAnnoContent, err := service.GetTwitchStreamerAnnoContent(ctx, streamerUserId, guildId)
 	if err != nil {
-		log.Printf("There was an error while getting Twitch streamer announcement content in CheckLiveStreams: %v", err)
+		log.Println("[GetStreamAnnoContent] GetTwitchStreamerAnnoContent error:", err.Error())
 	}
 
 	if streamerAnnoContent != nil {
@@ -144,7 +144,7 @@ func GetStreamAnnoContent(ctx context.Context, service service.Service, guildId,
 
 	cfg, err := service.GetDiscordBotConfig(ctx, guildId, "stream_anno_default_content")
 	if err != nil {
-		log.Printf("There was an error while getting Discord bot config in CheckLiveStreams: %v", err)
+		log.Println("[GetStreamAnnoContent] GetDiscordBotConfig error:", err.Error())
 	}
 
 	if cfg != nil && streamerAnnoContent == nil {
@@ -159,7 +159,7 @@ func GetStreamAnnoContent(ctx context.Context, service service.Service, guildId,
 func CheckDatesAnnounceable(ctx context.Context, service service.Service, guildId, streamerUserId, startedAt string) bool {
 	lastAnnoDate, err := service.GetTwitchStreamerLastAnnoDate(ctx, streamerUserId, guildId)
 	if err != nil {
-		log.Printf("Error getting Twitch streamer last anno date: %v", err)
+		log.Println("[CheckDatesAnnounceable] GetTwitchStreamerLastAnnoDate error:", err.Error())
 		return false
 	}
 
@@ -172,12 +172,12 @@ func CheckDatesAnnounceable(ctx context.Context, service service.Service, guildI
 	// Parse dates and apply location
 	loc, loadLocationErr := time.LoadLocation("Europe/Amsterdam")
 	if loadLocationErr != nil {
-		log.Println("loadLocationErr", loadLocationErr)
+		log.Println("[CheckDatesAnnounceable] time.LoadLocation error:", loadLocationErr.Error())
 		return false
 	}
 	startDate, err := time.ParseInLocation(time.RFC3339, startedAt, loc)
 	if err != nil {
-		log.Println("Error parsing startedAt time:", err)
+		log.Println("[CheckDatesAnnounceable] time.ParseInLocation error:", err.Error())
 		return false
 	}
 	annoDate = annoDate.In(loc)
@@ -194,7 +194,7 @@ func CheckDatesAnnounceable(ctx context.Context, service service.Service, guildI
 	// Apply cooldown if configured
 	cooldownDuration, err := getCooldownDuration(ctx, service, guildId)
 	if err != nil {
-		log.Printf("Error getting cooldown duration: %v", err)
+		log.Println("[CheckDatesAnnounceable] getCooldownDuration error:", err.Error())
 		return false
 	}
 	if cooldownDuration > 0 && int(time.Since(annoDate).Abs().Minutes()) < cooldownDuration {
@@ -207,7 +207,7 @@ func CheckDatesAnnounceable(ctx context.Context, service service.Service, guildI
 func getCooldownDuration(ctx context.Context, service service.Service, guildId string) (int, error) {
 	cfg, err := service.GetDiscordBotConfig(ctx, guildId, "stream_anno_cooldown")
 	if err != nil {
-		log.Printf("Error getting Discord bot config: %v", err)
+		log.Println("Error getting Discord bot config:", err.Error())
 		return 0, err
 	}
 
@@ -217,7 +217,7 @@ func getCooldownDuration(ctx context.Context, service service.Service, guildId s
 
 	cooldownDuration, err := strconv.Atoi(cfg.Value)
 	if err != nil {
-		log.Println("Error parsing cooldown duration:", err)
+		log.Println("Error parsing cooldown duration:", err.Error())
 		return 0, err
 	}
 
@@ -226,7 +226,7 @@ func getCooldownDuration(ctx context.Context, service service.Service, guildId s
 
 var streamersMutex sync.Mutex
 
-func getStreamersAndLiveData(ctx context.Context, service service.Service, guildId string) ([]models.TwitchStreamerData, map[string]GuildStreamers) {
+func getStreamersAndLiveData(_ context.Context, _ service.Service, guildId string) ([]models.TwitchStreamerData, map[string]GuildStreamers) {
 	streamers := GetStreamersData(guildId)
 
 	keys := make([]string, 0, len(streamers))
@@ -259,7 +259,7 @@ func handleAnnouncement(ctx context.Context, s *discordgo.Session, service servi
 
 	_, err := service.UpdateTwitchStreamerLastAnnoDate(ctx, sd.UserID, guildId, time.Now().UTC())
 	if err != nil {
-		log.Printf("There was an error while getting updating Twitch streamer last anno date in CheckLiveStreams: %v", err)
+		log.Println("[handleAnnouncement] UpdateTwitchStreamerLastAnnoDate error:", err.Error())
 	}
 }
 
@@ -303,7 +303,7 @@ func CheckLiveStreams(s *discordgo.Session, ctx context.Context, service service
 			for _, sd := range liveStreams {
 				liveAnnoData, err := service.GetDiscordTwitchLiveAnno(ctx, sd.UserID, guildId)
 				if err != nil {
-					log.Printf("There was an error while checking the Discord Twitch live announcements: %v", err)
+					log.Println("[CheckLiveStreams] GetDiscordTwitchLiveAnno error:", err.Error())
 					break
 				}
 				if sd.Type == "live" && liveAnnoData != nil {

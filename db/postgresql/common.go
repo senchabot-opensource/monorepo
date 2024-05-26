@@ -409,9 +409,11 @@ func (m *postgresql) GetCommandList(ctx context.Context, botPlatform platform.Pl
 func (m *postgresql) AddBotCommandStatistic(ctx context.Context, botPlatform platform.Platform, commandName string) error {
 	botCommandStatistic := models.BotCommandStatistic{CommandName: commandName, BotPlatformType: botPlatform, Count: 1}
 
+	updateExpr := gorm.Expr("coalesce(bot_command_statistics.count, 0) + 1")
+
 	result := m.DB.Clauses(clause.OnConflict{
 		Columns:   []clause.Column{{Name: "id"}},
-		DoUpdates: clause.Assignments(map[string]interface{}{"count": gorm.Expr("count + 1")}),
+		DoUpdates: clause.Assignments(map[string]interface{}{"count": updateExpr}),
 	}).Where("bot_platform_type = ?", botPlatform).Where("command_name = ?", commandName).Create(&botCommandStatistic)
 
 	if result.Error != nil {
@@ -458,7 +460,7 @@ func (m *postgresql) GetCommandTimer(ctx context.Context, botPlatform platform.P
 
 	result := m.DB.Where("bot_platform = ?", botPlatform).Where("bot_platform_id = ?", botPlatformId).Where("command_name = ?", commandName).Find(&commandTimer)
 	if result.Error != nil {
-		fmt.Println("(GetCommandTimer) db.Find error:", result.Error)
+		log.Println("[postgresql.GetCommandTimer] db.Find error:", result.Error)
 	}
 	if len(commandTimer) == 0 {
 		return nil

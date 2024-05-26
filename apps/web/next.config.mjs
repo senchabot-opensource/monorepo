@@ -1,38 +1,43 @@
-import { env } from "./src/env/server.mjs";
+import createJiti from 'jiti'
+import { fileURLToPath } from 'node:url'
 
-/**
- * Don't be scared of the generics here.
- * All they do is to give us autocompletion when using this.
- *
- * @template {import('next').NextConfig} T
- * @param {T} config - A generic parameter that flows through to the return type
- * @constraint {{import('next').NextConfig}}
- */
-function defineNextConfig(config) {
-  return config;
-}
+const jiti = createJiti(fileURLToPath(import.meta.url))
 
-export default defineNextConfig({
-  reactStrictMode: true,
-  swcMinify: true,
-  // Next.js i18n docs: https://nextjs.org/docs/advanced-features/i18n-routing
-  i18n: {
-    locales: ["en"],
-    defaultLocale: "en",
-  },
+// Validate env during build.
+jiti('./src/env')
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   async redirects() {
     return [
       {
-        source: "/discord",
-        destination: "https://discord.com/invite/qUxwcjRzND",
+        source: '/docs',
+        destination: 'https://docs.senchabot.app',
         permanent: true,
       },
       {
-        source: "/docs",
-        destination: "https://docs.senchabot.app",
+        source: '/discord',
+        destination: 'https://discord.gg/h3NqsbHW4a',
         permanent: true,
       },
-    ];
+      {
+        source: '/github',
+        destination: 'https://github.com/senchabot-opensource',
+        permanent: true,
+      },
+      // Dashboard
+      {
+        source: '/dashboard/settings',
+        destination: '/dashboard/settings/profile',
+        permanent: true,
+      },
+      {
+        source: '/dashboard/:platform/:id/commands',
+        destination: '/dashboard/:platform/:id/commands/custom',
+        permanent: true,
+      },
+    ]
   },
-  //experimental: { newNextLinkBehavior: false, },
-});
+}
+
+export default nextConfig

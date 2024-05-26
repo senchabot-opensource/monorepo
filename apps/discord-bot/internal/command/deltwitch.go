@@ -41,6 +41,10 @@ func (c *commands) DelTwitchCommand(ctx context.Context, s *discordgo.Session, i
 		streamers := streamer.GetStreamersData(i.GuildID)
 		delete(streamers, uInfo.Login)
 		ok = streamer.DeleteStreamerFromData(i.GuildID, uInfo.Login)
+		if !ok {
+			ephemeralRespond(s, i, "There was a problem when deleting Twitch streamer `"+uInfo.Login+"`")
+			return
+		}
 		ephemeralRespond(s, i, "`"+uInfo.Login+"` kullanıcı adlı Twitch streamer veritabanından silindi.")
 
 		// del-twitch event-channel
@@ -52,7 +56,7 @@ func (c *commands) DelTwitchCommand(ctx context.Context, s *discordgo.Session, i
 		ok, err := service.DeleteAnnouncementChannel(ctx, channelId)
 		if err != nil {
 			ephemeralRespond(s, i, config.ErrorMessage+"#XXYX")
-			log.Println("Error while deleting announcement channel:", err)
+			log.Println("[command.DelTwitchCommand.event-channel] DeleteAnnouncementChannel error:", err.Error())
 			return
 		}
 		if !ok {
@@ -69,7 +73,7 @@ func (c *commands) DelTwitchCommand(ctx context.Context, s *discordgo.Session, i
 		case "default-channel":
 			ok, err := service.DeleteDiscordBotConfig(ctx, i.GuildID, "stream_anno_default_channel")
 			if err != nil {
-				log.Printf("Error while deleting Discord bot config: %v", err)
+				log.Println("[command.DelTwitchCommand.announcement.default-channel] DeleteDiscordBotConfig error:", err.Error())
 				ephemeralRespond(s, i, config.ErrorMessage+"#0001")
 				return
 			}
@@ -84,7 +88,7 @@ func (c *commands) DelTwitchCommand(ctx context.Context, s *discordgo.Session, i
 		case "default-content":
 			_, err := service.DeleteDiscordBotConfig(ctx, i.GuildID, "stream_anno_default_content")
 			if err != nil {
-				log.Printf("Error while setting Discord bot config: %v", err)
+				log.Println("[command.DelTwitchCommand.announcement.default-content] DeleteDiscordBotConfig error:", err.Error())
 				ephemeralRespond(s, i, config.ErrorMessage+"#0001")
 				return
 			}
@@ -105,7 +109,7 @@ func (c *commands) DelTwitchCommand(ctx context.Context, s *discordgo.Session, i
 
 			ok, err := service.UpdateTwitchStreamerAnnoContent(ctx, uInfo.ID, i.GuildID, nil)
 			if err != nil {
-				log.Printf("Error while deleting streamer announcement custom content: %v", err)
+				log.Println("[command.DelTwitchCommand.announcement.custom-content] UpdateTwitchStreamerAnnoContent error:", err.Error())
 				ephemeralRespond(s, i, config.ErrorMessage+"del-twitch:custom-content#0001")
 				return
 			}

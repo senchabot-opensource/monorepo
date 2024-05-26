@@ -1,173 +1,36 @@
-# Senchabot Web App
-
-Web application for managing Senchabot, its commands and configuring the bot.
-
-## Senchabot Web App uses
-
-- [React](https://react.dev/)
-- [Next.js](https://nextjs.org)
-- [Next-Auth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Material UI](https://mui.com)
-- [Zod](https://zod.dev)
-- [React Hook Form](https://react-hook-form.com/)
-- [emotion](https://emotion.sh/)
-- [superjson](https://github.com/blitz-js/superjson)
-- [Jotai](https://jotai.org/)
+This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
 
-1. If you have not configured the settings in the monorepo home directory, please navigate to the home directory and read the instructions in the readme file.
-
-2. Start the development server
-
-   ```sh
-   npm run dev
-   ```
-
-## Folder Tree
+First, run the development server:
 
 ```bash
-├── env.example
-├── next.config.mjs
-├── next-env.d.ts
-├── package.json
-├── public
-│   └── favicon.png
-├── README.md
-├── src
-│   ├── api
-│   │   └── index.ts
-│   ├── components
-│   │   ├── app
-│   │   │   ├── AccountMenu.tsx
-│   │   │   ├── AppBar
-│   │   │   │   ├── AppBarButton.tsx
-│   │   │   │   ├── buttons
-│   │   │   │   │   ├── DrawerButton.tsx
-│   │   │   │   │   ├── GetDiscordBotButton.tsx
-│   │   │   │   │   └── GetTwitchBotButton.tsx
-│   │   │   │   └── index.tsx
-│   │   │   ├── AppContainer.tsx
-│   │   │   ├── AppDrawer.tsx
-│   │   │   ├── AppSearch.tsx
-│   │   │   ├── AppSnackbar.tsx
-│   │   │   ├── BotActivity.tsx
-│   │   │   ├── Breadcrumb.tsx
-│   │   │   ├── CommandList.tsx
-│   │   │   └── SystemMessage.tsx
-│   │   ├── auth
-│   │   │   ├── AuthContainer.tsx
-│   │   │   ├── AuthDialog.tsx
-│   │   │   ├── AuthLoginButton.tsx
-│   │   │   └── LinkAccount.tsx
-│   │   ├── button
-│   │   │   └── DeleteAccount.tsx
-│   │   ├── common
-│   │   │   ├── Logo.tsx
-│   │   │   ├── Header.tsx
-│   │   │   └── VersionText.tsx
-│   │   ├── CustomAlert.tsx
-│   │   ├── FormTitle.tsx
-│   │   ├── landing
-│   │   │   ├── LandingAppBar.tsx
-│   │   │   ├── LandingButton.tsx
-│   │   │   ├── LandingContainer.tsx
-│   │   │   ├── LandingFooter.tsx
-│   │   │   ├── LandingGrid.tsx
-│   │   │   └── LandingTexts.tsx
-│   │   ├── LibraryText.tsx
-│   │   ├── loading
-│   │   │   ├── LoadingBox.tsx
-│   │   │   └── Loading.tsx
-│   │   ├── Offset.tsx
-│   │   ├── tab
-│   │   │   ├── BotConfiguration
-│   │   │   │   └── index.tsx
-│   │   │   └── SettingTopTab.tsx
-│   │   ├── tabpanel
-│   │   │   ├── HorizontalTabPanel.tsx
-│   │   │   └── VerticalTabPanel.tsx
-│   │   ├── Tooltip.tsx
-│   │   └── TypingEffect.tsx
-│   ├── Context
-│   │   └── ColorModeContext.tsx
-│   ├── enums
-│   │   └── index.ts
-│   ├── env
-│   │   ├── client.mjs
-│   │   ├── schema.mjs
-│   │   └── server.mjs
-│   ├── forms
-│   │   ├── PrivacyForm.tsx
-│   │   ├── SecurityForm.tsx
-│   │   └── TwitchBotForm.tsx
-│   ├── pages
-│   │   ├── api
-│   │   │   ├── auth
-│   │   │   │   └── [...nextauth].ts
-│   │   │   ├── bot
-│   │   │   │   └── activity.ts
-│   │   │   ├── cmd
-│   │   │   │   ├── aliasList.ts
-│   │   │   │   ├── delete.ts
-│   │   │   │   ├── index.ts
-│   │   │   │   └── list.ts
-│   │   │   ├── config
-│   │   │   │   ├── getAllConfig.ts
-│   │   │   │   ├── getConfig.ts
-│   │   │   │   └── setConfig.ts
-│   │   │   ├── deleteAccount.ts
-│   │   │   ├── discord
-│   │   │   │   ├── getCount.ts
-│   │   │   │   └── getServerList.ts
-│   │   │   ├── features.ts
-│   │   │   ├── getAccount.ts
-│   │   │   ├── restricted.ts
-│   │   │   └── twitch
-│   │   │       ├── findAccount.ts
-│   │   │       ├── get-bot.ts
-│   │   │       ├── getChannelList.ts
-│   │   │       └── getCount.ts
-│   │   ├── app
-│   │   │   ├── command-list.tsx
-│   │   │   ├── index.tsx
-│   │   │   └── settings.tsx
-│   │   ├── _app.tsx
-│   │   ├── auth
-│   │   │   ├── index.tsx
-│   │   │   └── signin.tsx
-│   │   ├── cookie-policy.tsx
-│   │   ├── credits.tsx
-│   │   ├── eula.tsx
-│   │   ├── index.css
-│   │   ├── index.tsx
-│   │   ├── privacy-policy.tsx
-│   │   └── terms.tsx
-│   ├── server
-│   │   ├── common
-│   │   │   └── get-server-auth-session.ts
-│   │   └── db
-│   │       └── client.ts
-│   ├── styles
-│   │   ├── globals.css
-│   │   └── index.ts
-│   ├── types
-│   │   ├── index.ts
-│   │   ├── next-auth.d.ts
-│   │   └── response.ts
-│   ├── utils
-│   │   ├── functions.ts
-│   │   ├── session.ts
-│   │   └── theme.ts
-│   └── validation
-│       ├── color.ts
-│       ├── senchaconfig.ts
-│       └── twitchbotconfig.ts
-├── tsconfig.json
-└── vercel.json
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
 ```
 
-## Contributing
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-Contributions are always welcome! Please read the [contribution guidelines](../../CONTRIBUTING.md) first.
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+
+This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+
+## Learn More
+
+To learn more about Next.js, take a look at the following resources:
+
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+
+## Deploy on Vercel
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.

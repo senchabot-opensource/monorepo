@@ -53,7 +53,7 @@ func FormatCommandContent(cv *models.CommandVariable) string {
 		template := msgContent[startIndex : endIndex+1]
 		response, err := SendGetRequest(url)
 		if err != nil {
-			fmt.Println("parseCustomAPIURLFromMessage url, sendGetRequest Error:", err)
+			log.Println("[FormatCommandContent] SendGetRequest error:", err.Error())
 			msgContent = username + ", there was an error while sending get request"
 		}
 

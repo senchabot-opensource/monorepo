@@ -2,7 +2,7 @@ package service
 
 import (
 	"context"
-	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/client"
@@ -122,7 +122,7 @@ func (s *services) GetTwitchBotConfig(ctx context.Context, twitchChannelId strin
 func (s *services) CheckTwitchBotConfig(ctx context.Context, twitchChannelId string, configKey string, configValue string) bool {
 	configData, err := s.DB.GetTwitchBotConfig(ctx, twitchChannelId, configKey)
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Println("[service.CheckTwitchBotConfig] GetTwitchBotConfig Error:", err.Error())
 		return false
 	}
 
@@ -205,7 +205,7 @@ func (s *services) SaveCommandActivity(context context.Context, commandName stri
 	commandName = "!" + commandName
 
 	if err := s.DB.CreateBotActionActivity(context, platform.TWITCH, commandName, twitchChannelId, commandAuthor, commandAuthorId); err != nil {
-		fmt.Println(err.Error())
+		log.Println("[service.SaveCommandActivity] CreateBotActionActivity Error:", err.Error())
 	}
 }
 
@@ -248,7 +248,7 @@ func (s *services) DeleteCommandAlias(ctx context.Context, commandAlias string, 
 
 func (s *services) AddBotCommandStatistic(ctx context.Context, commandName string) {
 	if err := s.DB.AddBotCommandStatistic(ctx, platform.TWITCH, commandName); err != nil {
-		fmt.Println(err.Error())
+		log.Println("[service.AddBotCommandStatistic] AddBotCommandStatistic error:", err.Error())
 	}
 }
 

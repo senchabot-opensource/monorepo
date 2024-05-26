@@ -33,7 +33,7 @@ func (c *commands) SoCommand(context context.Context, message twitch.PrivateMess
 
 	respMsg, err := twsrvc.GiveShoutout(streamerUsername, message.RoomID, token)
 	if err != nil {
-		log.Printf("[SoCommand] Error: %v", err)
+		log.Println("[command.SoCommand] GiveShoutout error:", err.Error())
 		return nil, err
 	}
 

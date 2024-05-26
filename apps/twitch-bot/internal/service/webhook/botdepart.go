@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -51,7 +50,7 @@ func (s *webhook) BotDepart(client *client.Clients, joinedChannelList []string, 
 	token := strings.TrimPrefix(os.Getenv("OAUTH"), "oauth:")
 	twitchChannel, err := twitch.GetTwitchUserInfo("id", channelId, token)
 	if err != nil {
-		log.Println("(BotDepart.Webhook): Error: ", err.Error())
+		log.Println("[webhook.BotDepart] GetTwitchUserInfo error:", err.Error())
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -62,7 +61,7 @@ func (s *webhook) BotDepart(client *client.Clients, joinedChannelList []string, 
 			w.WriteHeader(http.StatusNotFound)
 			return
 		}
-		log.Println("(BotDepart.Webhook) (DeleteTwitchChannel) Error: " + err.Error())
+		log.Println("[webhook.BotDepart] DeleteTwitchChannel error:", err.Error())
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -72,7 +71,7 @@ func (s *webhook) BotDepart(client *client.Clients, joinedChannelList []string, 
 		return
 	}
 
-	fmt.Println("DEPART THE CHANNEL " + twitchChannel.Login + " WITH WEBHOOK")
+	log.Println("DEPART THE CHANNEL `" + twitchChannel.Login + "` WITH WEBHOOK")
 	client.Twitch.Depart(twitchChannel.Login)
 
 	w.WriteHeader(http.StatusOK)

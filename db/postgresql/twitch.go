@@ -3,7 +3,7 @@ package postgresql
 import (
 	"context"
 	"errors"
-	"fmt"
+	"log"
 
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/platform"
@@ -74,7 +74,7 @@ func (m *postgresql) GetTwitchBotConfig(ctx context.Context, twitchChannelId str
 func (m *postgresql) CheckTwitchBotConfig(ctx context.Context, twitchChannelId string, configKey string, configValue string) bool {
 	configData, err := m.GetTwitchBotConfig(ctx, twitchChannelId, configKey)
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Println("[postgresql.CheckTwitchBotConfig] GetTwitchBotConfig error:", err.Error())
 		return false
 	}
 
@@ -94,6 +94,6 @@ func (m *postgresql) SaveTwitchBotCommandActivity(context context.Context, comma
 	commandName = "!" + commandName
 
 	if err := m.CreateBotActionActivity(context, platform.TWITCH, commandName, twitchChannelId, commandAuthor, commandAuthorId); err != nil {
-		fmt.Println(err.Error())
+		log.Println("[postgresql.SaveTwitchBotCommandActivity] CreateBotActionActivity error:", err.Error())
 	}
 }

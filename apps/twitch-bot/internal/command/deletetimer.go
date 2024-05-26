@@ -32,7 +32,7 @@ func (c *commands) DeleteTimerCommand(context context.Context, message twitch.Pr
 	commandData, err := c.service.GetUserBotCommand(context, command, message.RoomID)
 	if err != nil {
 		cmdResp.Message = message.User.DisplayName + ", the command \"" + command + "\" not found"
-		fmt.Println("> (TimerCommand) " + err.Error())
+		log.Println("[command.DeleteTimerCommand] GetUserBotCommand error:" + err.Error())
 		return &cmdResp, nil
 	}
 

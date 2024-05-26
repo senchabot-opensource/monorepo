@@ -66,8 +66,10 @@ type Database interface {
 	GetDiscordTwitchLiveAnnos(ctx context.Context, serverId string) ([]*models.DiscordTwitchLiveAnnos, error)
 	DeleteDiscordTwitchLiveAnno(ctx context.Context, twitchUserId string, serverId string) (bool, error)
 	DeleteDiscordTwitchLiveAnnosByGuildId(ctx context.Context, serverId string) (bool, error)
+	DeleteDiscordTwitchLiveAnnosByChannelId(ctx context.Context, channelId string) (bool, error)
 	AddServerToDB(ctx context.Context, serverId string, serverName string, serverOwner string) error
 	DeleteServerFromDB(ctx context.Context, serverId string) error
+	GetServers(ctx context.Context) ([]*models.DiscordServer, error)
 
 	// DISCORD
 
