@@ -9,12 +9,13 @@ import { cn } from '@/lib/utils'
 import '@/styles/globals.css'
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://localhost:3000'),
+  metadataBase: new URL(`https://${process.env.VERCEL_URL}`),
   title: {
     default: 'Senchabot',
     template: `%s - Senchabot`,
   },
-  description: '',
+  description:
+    'All chatbots and stream overlays, manage from one place! 100% Open source Discord and Twitch bot.',
   icons: {
     icon: '/favicon.ico',
     apple: '/apple-touch-icon.png',
