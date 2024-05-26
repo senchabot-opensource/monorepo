@@ -3,7 +3,7 @@ package postgresql
 import (
 	"context"
 	"errors"
-	"fmt"
+	"log"
 	"time"
 
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
@@ -348,7 +348,7 @@ func (m *postgresql) DeleteDiscordTwitchLiveAnnosByGuildId(ctx context.Context, 
 func (m *postgresql) CheckDiscordBotConfig(ctx context.Context, discordServerId string, configKey string, configValue string) bool {
 	configData, err := m.GetDiscordBotConfig(ctx, discordServerId, configKey)
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Println("[postgresql.CheckDiscordBotConfig] GetDiscordBotConfig error:", err.Error())
 		return false
 	}
 
@@ -366,7 +366,7 @@ func (m *postgresql) SaveDiscordBotCommandActivity(context context.Context, acti
 	}
 
 	if err := m.CreateBotActionActivity(context, platform.DISCORD, activity, discordServerId, commandAuthor, commandAuthorId); err != nil {
-		fmt.Println(err.Error())
+		log.Println("[postgresql.SaveDiscordBotCommandActivity] CreateBotActionActivity error:", err.Error())
 	}
 }
 

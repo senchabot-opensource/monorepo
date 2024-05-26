@@ -458,7 +458,7 @@ func (m *postgresql) GetCommandTimer(ctx context.Context, botPlatform platform.P
 
 	result := m.DB.Where("bot_platform = ?", botPlatform).Where("bot_platform_id = ?", botPlatformId).Where("command_name = ?", commandName).Find(&commandTimer)
 	if result.Error != nil {
-		fmt.Println("(GetCommandTimer) db.Find error:", result.Error)
+		log.Println("[postgresql.GetCommandTimer] db.Find error:", result.Error)
 	}
 	if len(commandTimer) == 0 {
 		return nil

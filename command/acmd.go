@@ -3,6 +3,7 @@ package command
 import (
 	"context"
 	"fmt"
+	"log"
 
 	"github.com/senchabot-opensource/monorepo/config"
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot"
@@ -42,7 +43,7 @@ func AcmdCommand(context context.Context, service createCommandServiceType, isSy
 		return &cmdResp, nil
 	}
 
-	fmt.Println("COMMAND_ADD: command_name:", command_name, ", command_content:", command_content)
+	log.Println("COMMAND_ADD: command_name:", command_name, ", command_content:", command_content)
 	cmdResp.Message = "New Command Added: " + command_name
 	return &cmdResp, nil
 }

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -34,7 +33,7 @@ func main() {
 	time.AfterFunc(endOfDay.Sub(time.Now()), clearDailyCounts)
 
 	go func() {
-		fmt.Println("Connecting to Twitch...")
+		log.Println("Connecting to Twitch...")
 		error := twitchClient.Connect()
 		if error != nil {
 			panic("Connecting to Twitch Error" + error.Error())
@@ -42,7 +41,7 @@ func main() {
 	}()
 
 	go func() {
-		fmt.Println("Starting HTTP server...")
+		log.Println("Starting HTTP server...")
 		mux := http.NewServeMux()
 		handlers.InitHttpHandlers(mux)
 

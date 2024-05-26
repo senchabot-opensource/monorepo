@@ -2,7 +2,7 @@ package command
 
 import (
 	"context"
-	"fmt"
+	"log"
 
 	"github.com/senchabot-opensource/monorepo/config"
 	"github.com/senchabot-opensource/monorepo/packages/gosenchabot"
@@ -35,7 +35,7 @@ func UcmdCommand(context context.Context, service updateCommandServiceType, isSy
 		return &cmdResp, nil
 	}
 
-	fmt.Println("COMMAND_UPDATE: command_name:", updatedCommandName, "new_command_content:", newCommandContent)
+	log.Println("COMMAND_UPDATE: command_name:", updatedCommandName, "new_command_content:", newCommandContent)
 
 	cmdResp.Message = "Command Updated: " + *updatedCommandName
 	return &cmdResp, nil

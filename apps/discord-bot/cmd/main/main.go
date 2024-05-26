@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -44,7 +43,7 @@ func main() {
 	}()
 
 	go func() {
-		fmt.Println("Starting HTTP server...")
+		log.Println("Starting HTTP server...")
 		mux := http.NewServeMux()
 		handler.InitHttpHandlers(mux)
 

@@ -2,7 +2,6 @@ package handler
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"os"
 	"strings"
@@ -29,17 +28,17 @@ func BotJoin(client *client.Clients, service service.Service) []string {
 
 	channelIds := make([]string, 0, len(channels))
 	if len(channels) < 2 {
-		fmt.Println("TRYING TO JOIN THE TWITCH CHANNEL `" + botUsername + "`")
+		log.Println("TRYING TO JOIN THE TWITCH CHANNEL `" + botUsername + "`")
 		client.Twitch.Join(botUsername)
 		Timer(ctx, client, service, botId, botUsername)
 		return nil
 	}
 
 	token := strings.TrimPrefix(os.Getenv("OAUTH"), "oauth:")
-	fmt.Println("JOINING TO THE TWITCH CHANNELS")
+	log.Println("JOINING TO THE TWITCH CHANNELS")
 	for _, channel := range channels {
 		if channel.ChannelId == "" {
-			fmt.Println("TRYING TO JOIN THE TWITCH CHANNEL `" + botUsername + "`")
+			log.Println("TRYING TO JOIN THE TWITCH CHANNEL `" + botUsername + "`")
 			client.Twitch.Join(botUsername)
 			Timer(ctx, client, service, botId, botUsername)
 			continue
@@ -47,11 +46,11 @@ func BotJoin(client *client.Clients, service service.Service) []string {
 
 		twitchUser, err := twitch.GetTwitchUserInfo("id", channel.ChannelId, token)
 		if err != nil {
-			log.Printf("[BotJoin Handler] ChannelId: %v, ChannelName: %v, Error: %v", channel.ChannelId, channel.ChannelName, err)
+			log.Printf("[handler.BotJoin] (GetTwitchUserInfo) ChannelId: %v, ChannelName: %v, Error: %v", channel.ChannelId, channel.ChannelName, err.Error())
 			continue
 		}
 
-		fmt.Println("TRYING TO JOIN THE TWITCH CHANNEL `" + twitchUser.Login + "`")
+		log.Println("TRYING TO JOIN THE TWITCH CHANNEL `" + twitchUser.Login + "`")
 		client.Twitch.Join(twitchUser.Login)
 		channelIds = append(channelIds, channel.ChannelId)
 		Timer(ctx, client, service, channel.ChannelId, channel.ChannelName)

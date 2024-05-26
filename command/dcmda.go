@@ -2,7 +2,7 @@ package command
 
 import (
 	"context"
-	"fmt"
+	"log"
 	"strings"
 
 	"github.com/senchabot-opensource/monorepo/config"
@@ -33,7 +33,7 @@ func DcmdaCommand(context context.Context, deleteCommandAlias dcmdaCommandComman
 		return &cmdResp, nil
 	}
 
-	fmt.Println("COMMAND_ALIAS_DELETE: command_alias:", command_alias)
+	log.Println("COMMAND_ALIAS_DELETE: command_alias:", command_alias)
 
 	cmdResp.Message = "Command Alias Deleted: " + command_alias
 	return &cmdResp, nil

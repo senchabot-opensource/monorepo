@@ -13,7 +13,7 @@ func GetCommandVariables(dS *discordgo.Session, cmdData *models.BotCommand, m *d
 	var channelName string
 	chData, err := dS.Channel(m.ChannelID)
 	if err != nil {
-		log.Println("chData Channel Error", err.Error())
+		log.Println("[helpers.GetCommandVariables] dS.Channel error:", err.Error())
 		channelName = "None"
 	}
 	if chData != nil {

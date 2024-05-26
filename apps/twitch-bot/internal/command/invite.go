@@ -3,7 +3,7 @@ package command
 import (
 	"context"
 	"errors"
-	"fmt"
+	"log"
 	"os"
 	"strings"
 
@@ -38,16 +38,16 @@ func (c *commands) InviteCommand(context context.Context, message twitch.Private
 	}
 
 	if alreadyJoined {
-		return nil, errors.New("i have already joined this channel!")
+		return nil, errors.New("i have already joined this channel")
 	}
 
-	fmt.Println("TRYING TO JOIN TWITCH CHANNEL `" + channelName + "`")
+	log.Println("TRYING TO JOIN TWITCH CHANNEL `" + channelName + "`")
 	c.client.Twitch.Join(channelName)
 	optionalCommands := gosenchabot.GetOptionalCommands()
 	for _, command := range optionalCommands {
 		_, err := c.service.CreateCommand(context, command.CommandName, command.CommandContent, twitchChannelId, "Senchabot")
 		if err != nil {
-			fmt.Println(err.Error())
+			log.Println("[command.InviteCommand] CreateCommand error:", err.Error())
 		}
 	}
 

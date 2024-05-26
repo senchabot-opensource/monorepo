@@ -2,7 +2,7 @@ package command
 
 import (
 	"context"
-	"fmt"
+	"log"
 	"strings"
 	"time"
 
@@ -86,7 +86,7 @@ func (c *commands) Run(context context.Context, cmdName string, params []string,
 	// HANDLE COMMAND ALIASES
 	commandAlias, cmdAliasErr := c.service.GetCommandAlias(context, cmdName, message.RoomID)
 	if cmdAliasErr != nil {
-		fmt.Println("[COMMAND ALIAS ERROR]:", cmdAliasErr.Error())
+		log.Println("[COMMAND ALIAS ERROR]:", cmdAliasErr.Error())
 	}
 
 	if commandAlias != nil {
@@ -97,7 +97,7 @@ func (c *commands) Run(context context.Context, cmdName string, params []string,
 	// USER COMMANDS
 	cmdData, err := c.service.GetUserBotCommand(context, cmdName, message.RoomID)
 	if err != nil {
-		fmt.Println("[USER COMMAND ERROR]:", err.Error())
+		log.Println("[USER COMMAND ERROR]:", err.Error())
 	}
 	if cmdData != nil {
 		cmdVar := helpers.GetCommandVariables(cmdData, message)
@@ -112,7 +112,7 @@ func (c *commands) Run(context context.Context, cmdName string, params []string,
 	if cmd, ok := cmds[cmdName]; ok {
 		cmdResp, err := cmd(context, message, cmdName, params)
 		if err != nil {
-			fmt.Println("[SYSTEM COMMAND ERROR]:", err.Error())
+			log.Println("[SYSTEM COMMAND ERROR]:", err.Error())
 			return
 		}
 		c.Respond(context, message, cmdName+" "+strings.Join(params, " "), cmdResp.Message)
@@ -123,7 +123,7 @@ func (c *commands) Run(context context.Context, cmdName string, params []string,
 	// GLOBAL COMMANDS
 	cmdData, err = c.service.GetGlobalBotCommand(context, cmdName)
 	if err != nil {
-		fmt.Println("[GLOBAL COMMAND ERROR]:", err.Error())
+		log.Println("[GLOBAL COMMAND ERROR]:", err.Error())
 		return
 	}
 	if cmdData == nil {
