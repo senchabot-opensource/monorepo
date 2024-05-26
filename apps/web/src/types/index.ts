@@ -1,78 +1,43 @@
-export type AnyContextType = {
-  [key: string]: any;
-};
+type Platform = 'twitch' | 'discord'
+type CommandType = 'custom' | 'global'
 
-export interface IBotCommand {
-  id: number;
-  commandName: string;
-  commandContent: string;
-  twitchChannelId: string | null;
-  discordServerId: string | null;
-  createdBy: string | null;
-  updatedBy: string | null;
-  createdAt: Date;
-}
-//TODO: this interface need refactor when bot command table relation will be done
-export interface IBotCommandAlias {
-  id: number;
-  commandAlias: string;
-  commandName: string;
-  createdAt: Date;
-  createdBy: string | null;
-  discordServerId: string | null;
-  twitchChannelId: string | null;
+type UserAccount = {
+  user_id: string
+  account_username: string
+  provider: Platform
+  provider_account_id: string
+  created_at: Date
+  updated_at: Date
 }
 
-export interface IBotActionActivity {
-  botPlatformType: string;
-  botActivity: string;
-  activityDate: Date;
-  discordServerId: string | null;
-  twitchChannelId: string | null;
-  activityAuthor: string | null;
+type UserEntity = {
+  entity_name: string
+  entity_icon: string
+  entity_owner_id: string
+  entity_bot_joined: boolean
+  platform: Platform
+  platform_entity_id: string
 }
 
-export interface ITwitchBotConfig {
-  key: any;
-  value: any;
+type EntityLog = {
+  id: string
+  author: string
+  author_id: string
+  activity: string
+  activity_date: Date
+  platform: Platform
+  platform_entity_id: string
 }
 
-export interface ITwitchBotWebhookData {
-  token: string;
-  event: string;
-  user_id: string | null | undefined;
-}
-
-export interface ITwitchBotFormSubmitData {
-  bot_activity_enabled: string;
-  mods_manage_cmds_enabled: string;
-}
-
-export interface IGetAllConfig {
-  data: IConfig[];
-  success: boolean;
-}
-
-export interface IConfig {
-  [key: string]: string;
-}
-
-export interface ISetConfigInput {
-  configs: IConfig[];
-}
-
-export interface IDiscordServer {
-  serverId: string;
-  serverName: string;
-  serverOwner: string;
-}
-
-export interface ITwitchChannel {
-  channelId: string;
-  channelName: string;
-}
-
-export interface IAccount {
-  provider: string;
-  providerAccountId: string;
+type EntityCommand = {
+  id: number
+  name: string
+  content: string
+  status: boolean
+  platform: Platform
+  platform_entity_id: string
+  type: number
+  created_by: string
+  updated_by: string
+  created_at: string
 }
