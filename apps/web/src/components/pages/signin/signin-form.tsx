@@ -50,9 +50,23 @@ export function SignInForm() {
         <div className="space-y-1 leading-none">
           <Label htmlFor="terms">Accept terms and conditions</Label>
           <p className="text-sm text-muted-foreground">
-            You agree to our <Link href="/">Privacy Policy</Link>,{' '}
-            <Link href="/">Terms of Service</Link>,{' '}
-            <Link href="/">Cookie Policy</Link> and <Link href="/">EULA</Link>.
+            You agree to our{' '}
+            <Link href="/privacy-policy" target="_blank" rel="noreferrer">
+              Privacy Policy
+            </Link>
+            ,{' '}
+            <Link href="/terms-of-service" target="_blank" rel="noreferrer">
+              Terms of Service
+            </Link>
+            ,{' '}
+            <Link href="/cookie-policy" target="_blank" rel="noreferrer">
+              Cookie Policy
+            </Link>{' '}
+            and{' '}
+            <Link href="/eula" target="_blank" rel="noreferrer">
+              EULA
+            </Link>
+            .
           </p>
         </div>
       </div>
