@@ -17,7 +17,12 @@ const nextConfig = {
       },
       {
         source: '/discord',
-        destination: 'https://discord.gg/senchabot',
+        destination: 'https://discord.gg/h3NqsbHW4a',
+        permanent: true,
+      },
+      {
+        source: '/github',
+        destination: 'https://github.com/senchabot-opensource',
         permanent: true,
       },
       // Dashboard
