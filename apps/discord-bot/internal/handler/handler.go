@@ -28,6 +28,7 @@ func (h *handler) InitBotEventHandlers(token string) {
 	h.MessageCreate(command)
 	h.InteractionCreate(command)
 	h.MessageReactionAdd()
+	h.ChannelDelete()
 
 	command.DeployCommands(h.discordClient)
 }

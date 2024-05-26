@@ -345,6 +345,17 @@ func (m *postgresql) DeleteDiscordTwitchLiveAnnosByGuildId(ctx context.Context, 
 	return true, nil
 }
 
+func (m *postgresql) DeleteDiscordTwitchLiveAnnosByChannelId(ctx context.Context, channelId string) (bool, error) {
+	var twitchLiveAnnos models.DiscordTwitchLiveAnnos
+
+	result := m.DB.Where("anno_channel_id = ?", channelId).Delete(twitchLiveAnnos)
+	if result.Error != nil {
+		return false, errors.New("(DeleteDiscordTwitchLiveAnnosByChannelId) db.Delete Error:" + result.Error.Error())
+	}
+
+	return true, nil
+}
+
 func (m *postgresql) CheckDiscordBotConfig(ctx context.Context, discordServerId string, configKey string, configValue string) bool {
 	configData, err := m.GetDiscordBotConfig(ctx, discordServerId, configKey)
 	if err != nil {
@@ -398,6 +409,17 @@ func (m *postgresql) AddServerToDB(ctx context.Context, serverId string, serverN
 	}
 
 	return nil
+}
+
+func (m *postgresql) GetServers(ctx context.Context) ([]*models.DiscordServer, error) {
+	var dcServer []*models.DiscordServer
+
+	result := m.DB.Find(&dcServer)
+	if result.Error != nil {
+		return nil, errors.New("(GetServers) db.Find Error:" + result.Error.Error())
+	}
+
+	return dcServer, nil
 }
 
 func (m *postgresql) DeleteServerFromDB(ctx context.Context, serverId string) error {
