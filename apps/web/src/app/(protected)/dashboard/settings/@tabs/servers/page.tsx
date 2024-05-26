@@ -31,19 +31,6 @@ export default async function Page() {
     <Card className="divide-y divide-border">
       <section>
         <CardHeader>
-          <CardTitle>Senchabot joined</CardTitle>
-          <CardDescription>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Suspense fallback={<LoaderIcon />}>
-            <JoinedEntities />
-          </Suspense>
-        </CardContent>
-      </section>
-      <section>
-        <CardHeader>
           <CardTitle>Get Senchabot</CardTitle>
           <CardDescription>
             Lorem ipsum dolor sit amet consectetur adipisicing elit.
@@ -52,6 +39,19 @@ export default async function Page() {
         <CardContent>
           <Suspense fallback={<LoaderIcon />}>
             <JoinableEntities />
+          </Suspense>
+        </CardContent>
+      </section>
+      <section>
+        <CardHeader>
+          <CardTitle>Senchabot joined</CardTitle>
+          <CardDescription>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Suspense fallback={<LoaderIcon />}>
+            <JoinedEntities />
           </Suspense>
         </CardContent>
       </section>
