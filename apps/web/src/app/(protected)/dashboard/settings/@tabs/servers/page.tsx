@@ -33,7 +33,7 @@ export default async function Page() {
         <CardHeader>
           <CardTitle>Get Senchabot</CardTitle>
           <CardDescription>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+            Select a server or channel where you want to add Senchabot.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -46,7 +46,7 @@ export default async function Page() {
         <CardHeader>
           <CardTitle>Senchabot joined</CardTitle>
           <CardDescription>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+            Manage the server or channel where you use Senchabot.
           </CardDescription>
         </CardHeader>
         <CardContent>

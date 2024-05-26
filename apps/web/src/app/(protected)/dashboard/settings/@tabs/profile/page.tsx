@@ -32,9 +32,7 @@ export default async function Page() {
       <section>
         <CardHeader>
           <CardTitle>Personal information</CardTitle>
-          <CardDescription>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-          </CardDescription>
+          <CardDescription>View your personal information.</CardDescription>
         </CardHeader>
         <CardContent>
           <Suspense fallback={<LoaderIcon />}>
@@ -46,7 +44,8 @@ export default async function Page() {
         <CardHeader>
           <CardTitle>Linked accounts</CardTitle>
           <CardDescription>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+            Link a Twitch.tv or Discord.com account to your Senchabot account to
+            log in and manage your servers or channels.
           </CardDescription>
         </CardHeader>
         <CardContent>

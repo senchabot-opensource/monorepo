@@ -24,7 +24,7 @@ export default async function Page() {
       <div className="space-y-1">
         <h1 className="text-2xl font-medium tracking-tight">Dashboard</h1>
         <p className="text-sm text-muted-foreground">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit.
+          Manage your servers and channels from your dashboard.
         </p>
       </div>
       <div className="space-y-4">

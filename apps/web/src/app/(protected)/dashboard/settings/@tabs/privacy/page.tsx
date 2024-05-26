@@ -24,10 +24,10 @@ export default async function Page() {
       </CardHeader>
       <CardContent className="space-y-4">
         <p className="text-sm text-muted-foreground">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias,
-          alias. Facere temporibus excepturi nostrum dignissimos numquam
-          nesciunt accusamus, voluptas id beatae nihil molestiae maxime facilis
-          iure quod magni. Minus, quod!
+          Deleting your account is a permanent action that cannot be undone. All
+          your data, settings, and any content you have created will be deleted.
+          If you have any concerns, please contact our support team for
+          assistance.
         </p>
         <form>
           <Button type="submit" variant="destructive" disabled>

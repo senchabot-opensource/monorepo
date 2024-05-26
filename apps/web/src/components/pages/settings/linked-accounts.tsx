@@ -40,7 +40,7 @@ export async function LinkedAccounts() {
             </>
           ) : (
             <p className="text-sm text-muted-foreground">
-              Recusandae blanditiis incidunt saepe amet facilis optio odit nam.
+              Connect a Twitch.tv account.
             </p>
           )}
         </div>
@@ -69,7 +69,7 @@ export async function LinkedAccounts() {
             </>
           ) : (
             <p className="text-sm text-muted-foreground">
-              Recusandae blanditiis incidunt saepe amet facilis optio odit nam.
+              Connect a Discord.com account.
             </p>
           )}
         </div>

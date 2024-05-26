@@ -26,7 +26,7 @@ export async function OverviewView({ platform, id }: Props) {
       <div className="space-y-1">
         <h1 className="text-2xl font-medium tracking-tight">Overview</h1>
         <p className="text-sm text-muted-foreground">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit.
+          Overview of your server or channel.
         </p>
       </div>
       <div>

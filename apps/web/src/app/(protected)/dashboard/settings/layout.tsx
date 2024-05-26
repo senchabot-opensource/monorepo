@@ -10,7 +10,7 @@ export default function SettingsLayout({ tabs }: Props) {
           Account Settings
         </h1>
         <p className="text-sm text-muted-foreground">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit.
+          Manage your account settings and preferences.
         </p>
       </div>
       {tabs}

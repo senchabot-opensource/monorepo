@@ -15,9 +15,7 @@ export function CommandsLayout({ tabs, platform }: Props) {
           <CreateCommand platform={platform} />
           <ShareCommands />
         </div>
-        <p className="text-sm text-muted-foreground">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit.
-        </p>
+        <p className="text-sm text-muted-foreground">Manage your commands.</p>
       </div>
       {tabs}
     </div>
