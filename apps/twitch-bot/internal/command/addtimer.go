@@ -36,7 +36,7 @@ func (c *commands) AddTimerCommand(context context.Context, message twitch.Priva
 	commandData, err := c.service.GetUserBotCommand(context, command, channelId)
 	if err != nil {
 		cmdResp.Message = message.User.DisplayName + ", the command \"" + command + "\" not found"
-		fmt.Println("> (TimerCommand) " + err.Error())
+		log.Println("[command.AddTimerCommand] GetUserBotCommand error:" + err.Error())
 		return &cmdResp, nil
 	}
 

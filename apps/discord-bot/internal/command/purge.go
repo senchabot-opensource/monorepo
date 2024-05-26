@@ -2,7 +2,6 @@ package command
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	"github.com/bwmarrin/discordgo"
@@ -20,7 +19,7 @@ func (c *commands) PurgeCommand(ctx context.Context, s *discordgo.Session, i *di
 	case "events":
 		events, err := s.GuildScheduledEvents(i.GuildID, false)
 		if err != nil {
-			log.Println(err)
+			log.Println("[command.PurgeCommand.events] GuildScheduledEvents error:", err.Error())
 			ephemeralRespond(s, i, config.ErrorMessage+"#1011")
 		}
 
@@ -44,9 +43,8 @@ func (c *commands) PurgeCommand(ctx context.Context, s *discordgo.Session, i *di
 		var messageIDs []string
 
 		messages, err := s.ChannelMessages(channelID, 100, "", "", "")
-
 		if err != nil {
-			fmt.Println("Error while fetching messages", err.Error())
+			log.Println("[command.PurgeCommand.last-100-channel-messages] ChannelMessages error:", err.Error())
 			ephemeralRespond(s, i, "Something went wrong while fetching messages.")
 			return
 		}
@@ -74,7 +72,7 @@ func (c *commands) PurgeCommand(ctx context.Context, s *discordgo.Session, i *di
 		err = s.ChannelMessagesBulkDelete(channelID, messageIDs)
 
 		if err != nil {
-			fmt.Println("Error ChannelMessagesBulkDelete", err.Error())
+			log.Println("[command.PurgeCommand.last-100-channel-messages] ChannelMessagesBulkDelete error:", err.Error())
 			ephemeralRespond(s, i, "Something went wrong while deleting messages.")
 			return
 		}

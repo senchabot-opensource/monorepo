@@ -16,7 +16,7 @@ func (h *handler) MessageCreate(command command.Command) {
 		if m.Author.Bot {
 			announcementChs, err := h.service.GetAnnouncementChannels(ctx) // redis or memory db?
 			if err != nil {
-				log.Println(err)
+				log.Println("[handler.MessageCreate] GetAnnouncementChannels error:", err.Error())
 				return
 			}
 

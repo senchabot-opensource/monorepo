@@ -39,7 +39,7 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 		if helpers.IsChannelNameNotGiven(len(options)) {
 			channelData, err := service.GetDiscordBotConfig(ctx, i.GuildID, "stream_anno_default_channel")
 			if err != nil {
-				log.Printf("Error while getting Discord bot config: %v", err)
+				log.Println("[command.SetTwitchCommand.streamer] GetDiscordBotConfig error:", err.Error())
 				ephemeralRespond(s, i, config.ErrorMessage+"#0000")
 				return
 			}
@@ -64,7 +64,7 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 
 		streamerData, err := service.GetDiscordTwitchLiveAnno(ctx, uInfo.ID, i.GuildID)
 		if err != nil {
-			fmt.Println("streamerData, err:", err)
+			log.Println("[command.SetTwitchCommand.streamer] GetDiscordTwitchLiveAnno error:", err.Error())
 			return
 		}
 
@@ -83,7 +83,7 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 
 		ok, err := service.AddAnnouncementChannel(ctx, channelId, i.GuildID, i.Member.User.Username)
 		if err != nil {
-			log.Println(err)
+			log.Println("[command.SetTwitchCommand.event-channel] AddAnnouncementChannel error:", err.Error())
 			ephemeralRespond(s, i, config.ErrorMessage+"#0002")
 			return
 		}
@@ -104,7 +104,7 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 
 			_, err := service.SetDiscordBotConfig(ctx, i.GuildID, "stream_anno_default_channel", channelId)
 			if err != nil {
-				log.Printf("Error while setting Discord bot config: %v", err)
+				log.Println("[command.SetTwitchCommand.announcement] SetDiscordBotConfig error:", err.Error())
 				ephemeralRespond(s, i, config.ErrorMessage+"#0001")
 				return
 			}
@@ -117,7 +117,7 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 
 			_, err := service.SetDiscordBotConfig(ctx, i.GuildID, "stream_anno_default_content", annoText)
 			if err != nil {
-				log.Printf("Error while setting Discord bot config: %v", err)
+				log.Println("[command.SetTwitchCommand.default-content] SetDiscordBotConfig error:", err.Error())
 				ephemeralRespond(s, i, config.ErrorMessage+"#0001")
 				return
 			}
@@ -138,7 +138,7 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 
 			ok, err := service.UpdateTwitchStreamerAnnoContent(ctx, uInfo.ID, i.GuildID, &annoContent)
 			if err != nil {
-				log.Printf("Error while setting Discord bot config: %v", err)
+				log.Println("[command.SetTwitchCommand.custom-content] UpdateTwitchStreamerAnnoContent error:", err.Error())
 				ephemeralRespond(s, i, config.ErrorMessage+"#001TEKNOBARBISI")
 				return
 			}
@@ -151,7 +151,7 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 			if annoContent == "" {
 				cfg, err := service.GetDiscordBotConfig(ctx, i.GuildID, "stream_anno_default_content")
 				if err != nil {
-					log.Printf("There was an error while getting Discord bot config in CheckLiveStreams: %v", err)
+					log.Println("[command.SetTwitchCommand.custom-content] GetDiscordBotConfig error:", err.Error())
 				}
 
 				if cfg != nil {

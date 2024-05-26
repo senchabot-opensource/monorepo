@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
 	"strings"
 
 	"github.com/senchabot-opensource/monorepo/config"
@@ -54,7 +55,7 @@ func AcmdaCommand(context context.Context, checkCommandExists checkCommandExistC
 	}
 
 	commandAliasesList := strings.Join(aliasCommands, ", ")
-	fmt.Println("COMMAND_ALIAS_ADD: command_aliases:", commandAliasesList, "command_name:", command)
+	log.Println("COMMAND_ALIAS_ADD: command_aliases:", commandAliasesList, "command_name:", command)
 
 	cmdResp.Message = "New Command Aliases Added: " + commandAliasesList
 	return &cmdResp, nil

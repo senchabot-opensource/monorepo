@@ -2,7 +2,7 @@ package command
 
 import (
 	"context"
-	"fmt"
+	"log"
 	"strings"
 
 	"github.com/senchabot-opensource/monorepo/config"
@@ -33,7 +33,7 @@ func DcmdCommand(context context.Context, service deleteCommandServiceType, isSy
 		return &cmdResp, nil
 	}
 
-	fmt.Println("COMMAND_DELETE: command_name:", *deletedCommandName)
+	log.Println("COMMAND_DELETE: command_name:", *deletedCommandName)
 
 	cmdResp.Message = "Command Deleted: " + *deletedCommandName
 	return &cmdResp, nil

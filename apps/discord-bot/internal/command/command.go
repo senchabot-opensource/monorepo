@@ -3,6 +3,7 @@ package command
 import (
 	"context"
 	"fmt"
+	"log"
 	"os"
 	"strings"
 	"time"
@@ -105,7 +106,7 @@ func (c *commands) Run(ctx context.Context, cmdName string, params []string, m *
 	// HANDLE COMMAND ALIASES
 	commandAlias, cmdAliasErr := c.service.GetCommandAlias(ctx, cmdName, m.GuildID)
 	if cmdAliasErr != nil {
-		fmt.Println("[COMMAND ALIAS ERROR]:", cmdAliasErr.Error())
+		log.Println("[COMMAND ALIAS ERROR]:", cmdAliasErr.Error())
 	}
 
 	if commandAlias != nil {
@@ -116,7 +117,7 @@ func (c *commands) Run(ctx context.Context, cmdName string, params []string, m *
 	// USER COMMANDS
 	cmdData, err := c.service.GetUserBotCommand(ctx, cmdName, m.GuildID)
 	if err != nil {
-		fmt.Println("[USER COMMAND ERROR]:", err.Error())
+		log.Println("[USER COMMAND ERROR]:", err.Error())
 	}
 	if cmdData != nil {
 		cmdVar := helpers.GetCommandVariables(c.dS, cmdData, m)
@@ -131,7 +132,7 @@ func (c *commands) Run(ctx context.Context, cmdName string, params []string, m *
 	if cmd, ok := cmds[cmdName]; ok {
 		cmdResp, err := cmd(ctx, m, cmdName, params)
 		if err != nil {
-			fmt.Println("[SYSTEM COMMAND ERROR]:", err.Error())
+			log.Println("[SYSTEM COMMAND ERROR]:", err.Error())
 			return
 		}
 		c.Respond(ctx, m, cmdName+" "+strings.Join(params, " "), cmdResp.Message)
@@ -142,7 +143,7 @@ func (c *commands) Run(ctx context.Context, cmdName string, params []string, m *
 	// GLOBAL COMMANDS
 	cmdData, err = c.service.GetGlobalBotCommand(ctx, cmdName)
 	if err != nil {
-		fmt.Println("[GLOBAL COMMAND ERROR]:", err.Error())
+		log.Println("[GLOBAL COMMAND ERROR]:", err.Error())
 		return
 	}
 	if cmdData == nil {
@@ -169,7 +170,7 @@ func (c *commands) setCommandCooldown(username string) {
 }
 
 func (c *commands) DeployCommands(discordClient *discordgo.Session) {
-	fmt.Println("DEPLOYING SLASH COMMANDS...")
+	log.Println("DEPLOYING SLASH COMMANDS...")
 	registeredCommands := make([]*discordgo.ApplicationCommand, len(commandMetadatas))
 	for i, v := range commandMetadatas {
 		cmd, err := discordClient.ApplicationCommandCreate(os.Getenv("CLIENT_ID"), "", v)
@@ -183,7 +184,7 @@ func (c *commands) DeployCommands(discordClient *discordgo.Session) {
 					}
 				}
 			}
-			fmt.Printf("Slash command '%v' cannot created. Command's options: '%v'\nError: '%v'\n", v.Name, strings.Join(options, " "), err)
+			log.Printf("[DeployCommands] Slash command '%v' cannot created. Command's options: '%v'\nError: '%v'\n", v.Name, strings.Join(options, " "), err)
 		}
 		registeredCommands[i] = cmd
 	}
@@ -192,8 +193,8 @@ func (c *commands) DeployCommands(discordClient *discordgo.Session) {
 var (
 	purgePermissions     int64 = discordgo.PermissionManageServer
 	setdeletePermissions int64 = discordgo.PermissionAdministrator
-	manageCmdPermissions int64 = discordgo.PermissionManageChannels
-	commandMetadatas           = []*discordgo.ApplicationCommand{
+	//manageCmdPermissions int64 = discordgo.PermissionManageChannels
+	commandMetadatas = []*discordgo.ApplicationCommand{
 		// SET-TWITCH
 		SetTwitchCommandMetadata(),
 		// PURGE

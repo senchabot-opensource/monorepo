@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"fmt"
+	"log"
 
 	"github.com/gempir/go-twitch-irc/v3"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/client"
@@ -30,6 +30,6 @@ func UserNoticeMessage(client *client.Clients, service service.Service) {
 			}
 		}
 
-		fmt.Println("Subtype count for channel", channel, ":", countSubTypes)
+		log.Println("Subtype count for channel", channel, ":", countSubTypes)
 	})
 }

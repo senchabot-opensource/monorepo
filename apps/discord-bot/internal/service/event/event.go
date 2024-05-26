@@ -1,7 +1,6 @@
 package event
 
 import (
-	"fmt"
 	"log"
 	"time"
 
@@ -35,11 +34,11 @@ func CreateLiveStreamScheduledEvent(s *discordgo.Session, msgContent string, msg
 		PrivacyLevel: discordgo.GuildScheduledEventPrivacyLevelGuildOnly,
 	})
 	if err != nil {
-		log.Printf("Error while creating scheduled event: %v", err)
+		log.Println("[CreateLiveStreamScheduledEvent] GuildScheduledEventCreate error:", err.Error())
 		return
 	}
 
-	fmt.Println("Created scheduled event: ", scheduledEvent.Name)
+	log.Println("Created scheduled event: ", scheduledEvent.Name)
 }
 
 func CheckLiveStreamScheduledEvents(s *discordgo.Session, token string) {
@@ -50,7 +49,7 @@ func CheckLiveStreamScheduledEvents(s *discordgo.Session, token string) {
 		for _, guild := range s.State.Guilds {
 			events, err := s.GuildScheduledEvents(guild.ID, false)
 			if err != nil {
-				fmt.Println("s.GuildScheduledEvents")
+				log.Println("[CheckLiveStreamScheduledEvents] GuildScheduledEvents error:", err.Error())
 				continue
 			}
 
@@ -71,7 +70,7 @@ func CheckLiveStreamScheduledEvents(s *discordgo.Session, token string) {
 								Name: streamTitle,
 							})
 							if err != nil {
-								log.Printf("Error while updating scheduledevent: %v", err)
+								log.Println("[CheckLiveStreamScheduledEvents] GuildScheduledEventEdit error:", err.Error())
 							}
 						}
 					}
@@ -79,7 +78,7 @@ func CheckLiveStreamScheduledEvents(s *discordgo.Session, token string) {
 					if !isLive {
 						err := s.GuildScheduledEventDelete(e.GuildID, e.ID)
 						if err != nil {
-							log.Printf("Error deleting scheduled event: %v", err)
+							log.Println("[CheckLiveStreamScheduledEvents] GuildScheduledEventDelete error:", err.Error())
 						}
 					}
 				}

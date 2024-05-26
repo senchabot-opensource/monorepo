@@ -32,7 +32,6 @@ func InitTwitchOAuth2Token() string {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(token.Expiry)
 
 	twitchAccessToken = token.AccessToken
 	return twitchAccessToken
@@ -41,11 +40,11 @@ func InitTwitchOAuth2Token() string {
 func GetTwitchUserInfo(query string, userIdOrName string, token string) (*models.TwitchUserInfo, error) {
 	resp, err := DoTwitchHttpReq("GET", fmt.Sprintf("/users?%s=%s", query, userIdOrName), token)
 	if err != nil {
-		return nil, errors.New("(GetTwitchUserInfo) Error:" + err.Error())
+		return nil, errors.New("[GetTwitchUserInfo] DoTwitchHttpReq error:" + err.Error())
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusOK {
-		return nil, errors.New("Twitch API request failed with status code: " + string(rune(resp.StatusCode)))
+		return nil, errors.New("[GetTwitchUserInfo] Twitch API request failed with status code: " + string(rune(resp.StatusCode)))
 	}
 
 	var data struct {
@@ -53,12 +52,12 @@ func GetTwitchUserInfo(query string, userIdOrName string, token string) (*models
 	}
 	err = json.NewDecoder(resp.Body).Decode(&data)
 	if err != nil {
-		log.Printf("Error while parsing TwitchAPI response: %v", err)
-		return nil, errors.New("Error while parsing TwitchAPI response: " + err.Error())
+		log.Println("[GetTwitchUserInfo] Error while parsing TwitchAPI response:", err.Error())
+		return nil, errors.New("[GetTwitchUserInfo] Error while parsing TwitchAPI response: " + err.Error())
 	}
 
 	if len(data.Data) == 0 {
-		return nil, errors.New("no data.")
+		return nil, errors.New("no data")
 	}
 
 	return &data.Data[0], nil
@@ -69,7 +68,7 @@ func GiveShoutout(streamerUsername string, broadcasterId string, token string) (
 	fromBroadcasterId := broadcasterId
 	toBroadcaster, err := GetTwitchUserInfo("login", streamerUsername, token)
 	if err != nil {
-		fmt.Println("(SoCommand) Error:", err.Error())
+		log.Println("[GiveShoutout] GetTwitchUserInfo error:", err.Error())
 		return nil, err
 	}
 	moderatorId := os.Getenv("BOT_USER_ID")
@@ -77,7 +76,7 @@ func GiveShoutout(streamerUsername string, broadcasterId string, token string) (
 	url := fmt.Sprintf("/chat/shoutouts?from_broadcaster_id=%s&to_broadcaster_id=%s&moderator_id=%s", fromBroadcasterId, toBroadcaster.ID, moderatorId)
 	resp, err := DoTwitchHttpReq("POST", url, token)
 	if err != nil {
-		fmt.Printf("Twitch API request failed with status code: %s", string(rune(resp.StatusCode)))
+		log.Println("[GiveShoutout] Twitch API request failed with status code:", string(rune(resp.StatusCode)))
 		return nil, err
 	}
 	defer resp.Body.Close()
@@ -98,13 +97,13 @@ func GiveShoutout(streamerUsername string, broadcasterId string, token string) (
 func CheckTwitchStreamStatus(username string, token string) (bool, string) {
 	resp, err := DoTwitchHttpReq("GET", fmt.Sprintf("/streams?user_login=%s", username), token)
 	if err != nil {
-		log.Printf("(CheckTwitchStreamStatus) Error: %v", err)
+		log.Println("[CheckTwitchStreamStatus] DoTwitchHttpReq error", err.Error())
 		return false, ""
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		log.Printf("Twitch API request failed with status code: %d", resp.StatusCode)
+		log.Println("[CheckTwitchStreamStatus] Twitch API request failed with status code:", resp.StatusCode)
 		return false, ""
 	}
 
@@ -118,7 +117,7 @@ func CheckTwitchStreamStatus(username string, token string) (bool, string) {
 
 	err = json.NewDecoder(resp.Body).Decode(&data)
 	if err != nil {
-		log.Printf("Error while parsing TwitchAPI response: %v", err)
+		log.Println("[CheckTwitchStreamStatus] Error while parsing TwitchAPI response:", err.Error())
 		return false, ""
 	}
 
@@ -139,12 +138,12 @@ func CheckMultipleTwitchStreamer(usernames []string) []models.TwitchStreamerData
 
 	resp, err := DoTwitchHttpReq("GET", fmt.Sprintf("/streams?user_id=%s", params), twitchAccessToken)
 	if err != nil {
-		log.Printf("(CheckMultipleTwitchStreamer) Error: %v", err)
+		log.Println("[CheckMultipleTwitchStreamer] DoTwitchHttpReq error: ", err.Error())
 		return nil
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusOK {
-		log.Printf("Twitch API request failed with status code: %d", resp.StatusCode)
+		log.Println("[CheckMultipleTwitchStreamer] Twitch API request failed with status code:", resp.StatusCode)
 		return nil
 	}
 
@@ -153,7 +152,7 @@ func CheckMultipleTwitchStreamer(usernames []string) []models.TwitchStreamerData
 	}
 	err = json.NewDecoder(resp.Body).Decode(&data)
 	if err != nil {
-		log.Printf("Error while parsing TwitchAPI response: %v", err)
+		log.Println("[CheckMultipleTwitchStreamer] Error while parsing TwitchAPI response:", err.Error())
 		return nil
 	}
 
@@ -170,7 +169,7 @@ func DoTwitchHttpReq(method string, url string, token string) (*http.Response, e
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Printf("Error while checking stream status: %v", err)
+		log.Println("Error while sending http req:", err.Error())
 		return nil, err
 	}
 

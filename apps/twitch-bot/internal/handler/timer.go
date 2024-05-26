@@ -2,7 +2,6 @@ package handler
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/client"
@@ -16,7 +15,7 @@ func Timer(ctx context.Context, client *client.Clients, service service.Service,
 
 	cmdTimers, err := service.GetCommandTimers(ctx, channelId)
 	if err != nil {
-		log.Println("There was an error while getting command timers errors: " + err.Error())
+		log.Println("[handler.Timer] GetCommandTimers error:", err.Error())
 		return
 	}
 
@@ -27,7 +26,7 @@ func Timer(ctx context.Context, client *client.Clients, service service.Service,
 
 		commandData, err := service.GetUserBotCommand(ctx, v.CommandName, v.BotPlatformID)
 		if err != nil {
-			fmt.Printf("There was an error while getting user bot command. Command Name: %v, Error: %v", v.CommandName, err.Error())
+			log.Printf("[handler.Timer] GetUserBotCommand command_name: %v, error: %v", v.CommandName, err.Error())
 			return
 		}
 

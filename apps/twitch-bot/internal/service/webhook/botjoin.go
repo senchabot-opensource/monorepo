@@ -3,7 +3,6 @@ package webhook
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -49,26 +48,26 @@ func (s *webhook) BotJoin(client *client.Clients, joinedChannelList []string, w 
 	token := strings.TrimPrefix(os.Getenv("OAUTH"), "oauth:")
 	twitchChannel, err := twitch.GetTwitchUserInfo("id", channelId, token)
 	if err != nil {
-		log.Println("(BotJoin.Webhook): Error: ", err.Error())
+		log.Println("[webhook.BotJoin] GetTwitchUserInfo error:", err.Error())
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
 	alreadyJoined, err := s.DB.CreateTwitchChannel(context.Background(), channelId, twitchChannel.Login, nil)
 	if err != nil {
-		log.Println("[BotJoin.Webhook] (CreateTwitchChannel) Error: " + err.Error())
+		log.Printf("[webhook.BotJoin] CreateTwitchChannel channelId: %v, twitchChannel.Login: %v, error: %v", channelId, twitchChannel.Login, err.Error())
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
 	if alreadyJoined {
-		log.Println("[BotJoin.Webhook] i have already joined this channel!")
+		log.Printf("[webhook.BotJoin] i have already joined this channel: %v", twitchChannel.Login)
 		w.WriteHeader(http.StatusConflict)
 		return
 	}
 
 	_ = append(joinedChannelList, channelId)
-	fmt.Println("JOINING TO THE CHANNEL " + twitchChannel.Login + " WITH WEBHOOK")
+	log.Println("JOINING TO THE CHANNEL `" + twitchChannel.Login + "` WITH WEBHOOK")
 	client.Twitch.Join(twitchChannel.Login)
 
 	w.WriteHeader(http.StatusOK)

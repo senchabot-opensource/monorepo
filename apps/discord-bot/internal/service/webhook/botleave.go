@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -46,7 +45,7 @@ func (ss *webhook) BotLeave(s *discordgo.Session, w http.ResponseWriter, r *http
 		return
 	}
 
-	fmt.Println("LEAVING THE SERVER WITH WEBHOOK")
+	log.Println("LEAVING THE SERVER `" + serverId + "` WITH WEBHOOK")
 
 	err = s.GuildLeave(serverId)
 	if err != nil {
