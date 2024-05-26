@@ -38,8 +38,8 @@ export function Hero() {
         </div>
         <div className="rounded-2xl border-[1rem] bg-secondary shadow">
           <ThemedImage
-            darkSrc="/dashboard-dark.png"
-            lightSrc="/dashboard-light.png"
+            darkSrc="/images/dashboard-dark.png"
+            lightSrc="/images/dashboard-light.png"
             alt="Dashboard"
             width={960}
             height={460}
