@@ -57,7 +57,7 @@ export function EntitiesDropdown({ entities }: Props) {
                   {selectedEntity.entity_name.charAt(0)}
                 </AvatarFallback>
               </Avatar>
-              <span className="max-w-40 truncate">
+              <span className="max-w-36 truncate">
                 {selectedEntity.entity_name}
               </span>
             </div>
@@ -90,7 +90,7 @@ export function EntitiesDropdown({ entities }: Props) {
                           {item.entity_name.charAt(0)}
                         </AvatarFallback>
                       </Avatar>
-                      <span className="max-w-40 truncate">
+                      <span className="max-w-36 truncate">
                         {item.entity_name}
                       </span>
                     </div>
