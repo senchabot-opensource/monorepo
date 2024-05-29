@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 
+import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google'
 import { GeistSans } from 'geist/font/sans'
 
 import { ThemeProvider } from '@/components/theme-provider'
@@ -45,6 +46,8 @@ export default function RootLayout({ children }: Props) {
         )}
       >
         <ThemeProvider>{children}</ThemeProvider>
+        <GoogleAnalytics gaId="G-0N948SR48C" />
+        <GoogleTagManager gtmId="G-0N948SR48C" />
       </body>
     </html>
   )
