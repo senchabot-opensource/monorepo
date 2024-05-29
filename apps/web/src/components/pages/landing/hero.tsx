@@ -12,11 +12,11 @@ export function Hero() {
       <div className="mx-auto flex max-w-screen-lg flex-col space-y-8 px-4 py-8 lg:space-y-12 lg:py-16">
         <div className="flex flex-col items-center justify-center space-y-6 text-center">
           <h1 className="text-4xl font-semibold md:max-w-md lg:max-w-3xl lg:text-6xl lg:leading-tight">
-            Manage Your Community in One Place
+            Manage Your Community from One Place
           </h1>
           <p className="md:max-w-sm md:text-lg">
-            Open-source multi-platform bot development project, which works on
-            Twitch and Discord.
+            Multi-platform bot designed for seamless integration with Twitch and
+            Discord.
           </p>
           <div className="space-y-4">
             <Button asChild>

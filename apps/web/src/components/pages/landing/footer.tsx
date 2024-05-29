@@ -73,7 +73,8 @@ export function Footer() {
             <span>Senchabot</span>
           </div>
           <p className="text-balance text-sm text-muted-foreground">
-            All Bots and Stream overlays, Manage from one place!
+            Manage your Discord and Twitch community with an open-source
+            multi-platform bot.
           </p>
         </div>
         <div className="grid auto-cols-max grid-flow-col justify-between gap-4">

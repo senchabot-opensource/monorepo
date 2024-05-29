@@ -11,11 +11,12 @@ import '@/styles/globals.css'
 export const metadata: Metadata = {
   metadataBase: new URL(`https://${process.env.VERCEL_URL}`),
   title: {
-    default: 'Senchabot',
+    default:
+      'Senchabot - Free, Community Management Bot for Twitch and Discord ',
     template: `%s - Senchabot`,
   },
   description:
-    'All chatbots and stream overlays, manage from one place! 100% Open source Discord and Twitch bot.',
+    'One bot, two platforms! Manage your Discord and Twitch community with an open-source multi-platform bot.',
   icons: {
     icon: '/favicon.ico',
     apple: '/apple-touch-icon.png',
