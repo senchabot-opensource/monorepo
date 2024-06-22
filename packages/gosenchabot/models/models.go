@@ -97,8 +97,13 @@ type DiscordServer struct {
 }
 
 type TwitchUserInfo struct {
-	ID    string `json:"id"`
-	Login string `json:"login"`
+	ID              string `json:"id"`
+	Login           string `json:"login"`
+	DisplayName     string `json:"display_name"`
+	BroadcasterType string `json:"broadcaster_type"`
+	Description     string `json:"description"`
+	ProfileImageURL string `json:"profile_image_url"`
+	CreatedAt       string `json:"created_at"`
 }
 
 type TwitchStreamerData struct {
