@@ -16,7 +16,7 @@ import (
 )
 
 func main() {
-	token := twsrvc.InitTwitchOAuth2Token()
+	twsrvc.InitTwitchOAuth2Token()
 
 	discordClient, _ := discordgo.New("Bot " + os.Getenv("TOKEN"))
 
@@ -25,7 +25,7 @@ func main() {
 	service := service.New()
 	handler := handler.New(discordClient, service)
 
-	handler.InitBotEventHandlers(token)
+	handler.InitBotEventHandlers()
 
 	go func() {
 		err := discordClient.Open()

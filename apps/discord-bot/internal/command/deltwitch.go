@@ -21,7 +21,7 @@ func (c *commands) DelTwitchCommand(ctx context.Context, s *discordgo.Session, i
 		twitchUsername := options[0].StringValue()
 		twitchUsername = gosenchabot.ParseTwitchUsernameURLParam(twitchUsername)
 
-		response0, uInfo := streamer.GetTwitchUserInfo(twitchUsername, c.twitchAccessToken)
+		response0, uInfo := streamer.GetTwitchUserInfo(twitchUsername)
 		if response0 != "" {
 			ephemeralRespond(s, i, response0)
 			return
@@ -101,7 +101,7 @@ func (c *commands) DelTwitchCommand(ctx context.Context, s *discordgo.Session, i
 			twitchUsername := options[0].StringValue()
 			twitchUsername = gosenchabot.ParseTwitchUsernameURLParam(twitchUsername)
 
-			response0, uInfo := streamer.GetTwitchUserInfo(twitchUsername, c.twitchAccessToken)
+			response0, uInfo := streamer.GetTwitchUserInfo(twitchUsername)
 			if response0 != "" {
 				ephemeralRespond(s, i, response0)
 				return

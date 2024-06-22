@@ -4,7 +4,6 @@ import (
 	"context"
 	"log"
 	"os"
-	"strings"
 
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/client"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/service"
@@ -34,7 +33,6 @@ func BotJoin(client *client.Clients, service service.Service) []string {
 		return nil
 	}
 
-	token := strings.TrimPrefix(os.Getenv("OAUTH"), "oauth:")
 	log.Println("JOINING TO THE TWITCH CHANNELS")
 	for _, channel := range channels {
 		if channel.ChannelId == "" {
@@ -44,7 +42,7 @@ func BotJoin(client *client.Clients, service service.Service) []string {
 			continue
 		}
 
-		twitchUser, err := twitch.GetTwitchUserInfo("id", channel.ChannelId, token)
+		twitchUser, err := twitch.GetTwitchUserInfo("id", channel.ChannelId)
 		if err != nil {
 			log.Printf("[handler.BotJoin] (GetTwitchUserInfo) ChannelId: %v, ChannelName: %v, Error: %v", channel.ChannelId, channel.ChannelName, err.Error())
 			continue
