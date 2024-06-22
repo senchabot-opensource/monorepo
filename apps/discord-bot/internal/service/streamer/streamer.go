@@ -255,7 +255,15 @@ func handleAnnouncement(ctx context.Context, s *discordgo.Session, service servi
 
 	annoContent := GetStreamAnnoContent(ctx, service, guildId, sd.UserID)
 	formattedString := FormatContent(annoContent, sd)
-	s.ChannelMessageSend(gs.DiscordChannelID, formattedString)
+	_, userInfo := GetTwitchUserInfo(sd.UserLogin)
+	s.ChannelMessageSendComplex(gs.DiscordChannelID, &discordgo.MessageSend{Content: formattedString, Embeds: []*discordgo.MessageEmbed{
+		{
+			Title:       fmt.Sprintf("%s - Twitch", sd.UserName),
+			Description: sd.Title,
+			URL:         fmt.Sprintf("https://twitch.tv/%s", sd.UserLogin),
+			Thumbnail:   &discordgo.MessageEmbedThumbnail{URL: userInfo.ProfileImageURL},
+		},
+	}})
 
 	_, err := service.UpdateTwitchStreamerLastAnnoDate(ctx, sd.UserID, guildId, time.Now().UTC())
 	if err != nil {
