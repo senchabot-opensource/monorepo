@@ -32,20 +32,18 @@ type Command interface {
 }
 
 type commands struct {
-	twitchAccessToken string
-	dS                *discordgo.Session
-	service           service.Service
-	userCooldowns     map[string]time.Time
-	cooldownPeriod    time.Duration
+	dS             *discordgo.Session
+	service        service.Service
+	userCooldowns  map[string]time.Time
+	cooldownPeriod time.Duration
 }
 
-func New(dS *discordgo.Session, token string, service service.Service, cooldownPeriod time.Duration) Command {
+func New(dS *discordgo.Session, service service.Service, cooldownPeriod time.Duration) Command {
 	return &commands{
-		twitchAccessToken: token,
-		dS:                dS,
-		service:           service,
-		userCooldowns:     make(map[string]time.Time),
-		cooldownPeriod:    cooldownPeriod,
+		dS:             dS,
+		service:        service,
+		userCooldowns:  make(map[string]time.Time),
+		cooldownPeriod: cooldownPeriod,
 	}
 }
 

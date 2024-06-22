@@ -8,7 +8,7 @@ import (
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service/event"
 )
 
-func (h *handler) Ready(token string) {
+func (h *handler) Ready() {
 	ctx := context.Background()
 	h.discordClient.AddHandler(func(s *discordgo.Session, r *discordgo.Ready) {
 		servers, err := h.service.GetServers(ctx)
@@ -31,7 +31,7 @@ func (h *handler) Ready(token string) {
 			}
 		}
 
-		go event.CheckLiveStreamScheduledEvents(s, token)
+		go event.CheckLiveStreamScheduledEvents(s)
 
 		log.Println("Bot is ready. Logged in as:", s.State.User.Username)
 	})

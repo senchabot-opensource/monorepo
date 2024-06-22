@@ -24,7 +24,7 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 		commandUsername := i.Member.User.Username
 		twitchUsername = gosenchabot.ParseTwitchUsernameURLParam(twitchUsername)
 
-		response0, uInfo := streamer.GetTwitchUserInfo(twitchUsername, c.twitchAccessToken)
+		response0, uInfo := streamer.GetTwitchUserInfo(twitchUsername)
 		if response0 != "" {
 			ephemeralRespond(s, i, response0)
 			return
@@ -130,7 +130,7 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 			twitchUsername = gosenchabot.ParseTwitchUsernameURLParam(twitchUsername)
 			annoContent := options[1].StringValue()
 
-			response0, uInfo := streamer.GetTwitchUserInfo(twitchUsername, c.twitchAccessToken)
+			response0, uInfo := streamer.GetTwitchUserInfo(twitchUsername)
 			if response0 != "" {
 				ephemeralRespond(s, i, response0)
 				return

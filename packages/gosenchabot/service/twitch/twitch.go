@@ -37,8 +37,8 @@ func InitTwitchOAuth2Token() string {
 	return twitchAccessToken
 }
 
-func GetTwitchUserInfo(query string, userIdOrName string, token string) (*models.TwitchUserInfo, error) {
-	resp, err := DoTwitchHttpReq("GET", fmt.Sprintf("/users?%s=%s", query, userIdOrName), token)
+func GetTwitchUserInfo(query string, userIdOrName string) (*models.TwitchUserInfo, error) {
+	resp, err := DoTwitchHttpReq("GET", fmt.Sprintf("/users?%s=%s", query, userIdOrName), twitchAccessToken)
 	if err != nil {
 		return nil, errors.New("[GetTwitchUserInfo] DoTwitchHttpReq error:" + err.Error())
 	}
@@ -66,7 +66,7 @@ func GetTwitchUserInfo(query string, userIdOrName string, token string) (*models
 func GiveShoutout(streamerUsername string, broadcasterId string, token string) (*string, error) {
 	var responseText string
 	fromBroadcasterId := broadcasterId
-	toBroadcaster, err := GetTwitchUserInfo("login", streamerUsername, token)
+	toBroadcaster, err := GetTwitchUserInfo("login", streamerUsername)
 	if err != nil {
 		log.Println("[GiveShoutout] GetTwitchUserInfo error:", err.Error())
 		return nil, err
@@ -94,8 +94,8 @@ func GiveShoutout(streamerUsername string, broadcasterId string, token string) (
 	return &responseText, nil
 }
 
-func CheckTwitchStreamStatus(username string, token string) (bool, string) {
-	resp, err := DoTwitchHttpReq("GET", fmt.Sprintf("/streams?user_login=%s", username), token)
+func CheckTwitchStreamStatus(username string) (bool, string) {
+	resp, err := DoTwitchHttpReq("GET", fmt.Sprintf("/streams?user_login=%s", username), twitchAccessToken)
 	if err != nil {
 		log.Println("[CheckTwitchStreamStatus] DoTwitchHttpReq error", err.Error())
 		return false, ""
