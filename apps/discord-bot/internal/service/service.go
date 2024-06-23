@@ -50,7 +50,7 @@ type Service interface {
 	DeleteDiscordTwitchLiveAnnosByGuildId(ctx context.Context, serverId string) (bool, error)
 	DeleteDiscordTwitchLiveAnnosByChannelId(ctx context.Context, channelId string) (bool, error)
 	GetDiscordChannelTwitchCategoryFilter(ctx context.Context, serverId string, channelId string) ([]*models.DiscordChannelTwitchCategoryFilter, error)
-	SetDiscordChannelTwitchCategoryFilter(ctx context.Context, annoServerId, annoChannelId, categoryFilterRegex, createdBy string) (bool, error)
+	SetDiscordChannelTwitchCategoryFilter(ctx context.Context, annoServerId, annoChannelId, categoryFilterRegex string, conditionType uint, createdBy string) (bool, error)
 	DeleteDiscordChannelTwitchCategoryFilter(ctx context.Context, serverId string, channelId string) (bool, error)
 	AddServerToDB(ctx context.Context, serverId string, serverName string, serverOwner string) error
 	DeleteServerFromDB(ctx context.Context, serverId string) error
@@ -215,8 +215,8 @@ func (s *service) DeleteDiscordTwitchLiveAnnosByChannelId(ctx context.Context, c
 func (s *service) GetDiscordChannelTwitchCategoryFilter(ctx context.Context, serverId string, channelId string) ([]*models.DiscordChannelTwitchCategoryFilter, error) {
 	return s.DB.GetDiscordChannelTwitchCategoryFilter(ctx, serverId, channelId)
 }
-func (s *service) SetDiscordChannelTwitchCategoryFilter(ctx context.Context, annoServerId, annoChannelId, categoryFilterRegex, createdBy string) (bool, error) {
-	return s.DB.SetDiscordChannelTwitchCategoryFilter(ctx, annoServerId, annoChannelId, categoryFilterRegex, createdBy)
+func (s *service) SetDiscordChannelTwitchCategoryFilter(ctx context.Context, annoServerId, annoChannelId, categoryFilterRegex string, conditionType uint, createdBy string) (bool, error) {
+	return s.DB.SetDiscordChannelTwitchCategoryFilter(ctx, annoServerId, annoChannelId, categoryFilterRegex, conditionType, createdBy)
 }
 func (s *service) DeleteDiscordChannelTwitchCategoryFilter(ctx context.Context, serverId string, channelId string) (bool, error) {
 	return s.DB.DeleteDiscordChannelTwitchCategoryFilter(ctx, serverId, channelId)
