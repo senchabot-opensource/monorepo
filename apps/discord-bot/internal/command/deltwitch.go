@@ -120,6 +120,23 @@ func (c *commands) DelTwitchCommand(ctx context.Context, s *discordgo.Session, i
 			}
 
 			ephemeralRespond(s, i, twitchUsername+" kullanıcı adlı Twitch yayıncısına özgü yayın duyuru mesajı silindi.")
+			// del-twitch announcement category-filter
+		case "category-filter":
+			options = options[0].Options
+			channelId := options[0].ChannelValue(s).ID
+			channelName := options[0].ChannelValue(s).Name
+
+			ok, err := service.DeleteDiscordChannelTwitchCategoryFilter(ctx, i.GuildID, channelId)
+			if err != nil {
+				ephemeralRespond(s, i, config.ErrorMessage+"#XXYX")
+				log.Println("[command.DelTwitchCommand.announcement.category-filter] DeleteDiscordChannelTwitchCategoryFilter error:", err.Error())
+				return
+			}
+			if !ok {
+				ephemeralRespond(s, i, "`"+channelName+"` isimli yazı kanalı Twitch yayın duyurusu kategori filtrelemesi bulunamadı.")
+				return
+			}
+			ephemeralRespond(s, i, "`"+channelName+"` isimli yazı kanalı Twitch yayın duyurusu kategori filtrelemesi kaldırıldı.")
 		}
 	}
 }
@@ -191,6 +208,30 @@ func DelTwitchCommandMetadata() *discordgo.ApplicationCommand {
 								Description: "Twitch profile url or username",
 								DescriptionLocalizations: map[discordgo.Locale]string{
 									discordgo.Turkish: "Twitch kullanıcı profil linki veya kullanıcı adı",
+								},
+								Required: true,
+							},
+						},
+					},
+					// del-twitch announcement category-filter
+					{
+						Name:        "category-filter",
+						Description: "Delete the Discord channel-specific Twitch stream category filtering for announcements.",
+						DescriptionLocalizations: map[discordgo.Locale]string{
+							discordgo.Turkish: "Twitch duyuruları için Discord kanalına özel Twitch yayın kategorisi filtrelemesini sil.",
+						},
+						Type: discordgo.ApplicationCommandOptionSubCommand,
+						Options: []*discordgo.ApplicationCommandOption{
+							{
+								Type:        discordgo.ApplicationCommandOptionChannel,
+								Name:        "channel",
+								Description: "Text channel",
+								DescriptionLocalizations: map[discordgo.Locale]string{
+									discordgo.Turkish: "Yazı kanalı",
+								},
+								ChannelTypes: []discordgo.ChannelType{
+									discordgo.ChannelTypeGuildNews,
+									discordgo.ChannelTypeGuildText,
 								},
 								Required: true,
 							},
