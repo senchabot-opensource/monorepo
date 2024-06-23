@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"regexp"
 	"strconv"
 	"strings"
 	"sync"
@@ -315,6 +316,21 @@ func CheckLiveStreams(s *discordgo.Session, ctx context.Context, service service
 					break
 				}
 				if sd.Type == "live" && liveAnnoData != nil {
+					categoryFilter, err := service.GetDiscordChannelTwitchCategoryFilter(ctx, guildId, liveAnnoData.AnnoChannelID)
+					if err != nil {
+						log.Println("[CheckLiveStreams] GetDiscordChannelTwitchCategoryFilter error:", err.Error())
+						break
+					}
+
+					if len(categoryFilter) > 0 {
+						regEx := categoryFilter[0].CategoryFilterRegex
+						pattern := regexp.MustCompile(regEx)
+
+						if !pattern.MatchString(sd.GameName) {
+							continue
+						}
+					}
+
 					handleAnnouncement(ctx, s, service, guildId, streamers, sd)
 				} else {
 					continue

@@ -356,6 +356,63 @@ func (m *postgresql) DeleteDiscordTwitchLiveAnnosByChannelId(ctx context.Context
 	return true, nil
 }
 
+func (m *postgresql) GetDiscordChannelTwitchCategoryFilter(ctx context.Context, serverId string, channelId string) ([]*models.DiscordChannelTwitchCategoryFilter, error) {
+	var dcTwitchCF []*models.DiscordChannelTwitchCategoryFilter
+
+	result := m.DB.Where("anno_server_id = ?", serverId).Where("anno_channel_id = ?", channelId).Find(&dcTwitchCF)
+	if result.Error != nil {
+		return nil, errors.New("(GetDiscordChannelTwitchCategoryFilter) db.Find Error:" + result.Error.Error())
+	}
+
+	return dcTwitchCF, nil
+}
+
+func (m *postgresql) SetDiscordChannelTwitchCategoryFilter(ctx context.Context, annoServerId, annoChannelId, categoryFilterRegex, createdBy string) (bool, error) {
+	var discordChTwitchCategoryFilter []models.DiscordChannelTwitchCategoryFilter
+
+	dcTwitchCF, err := m.GetDiscordChannelTwitchCategoryFilter(ctx, annoServerId, annoChannelId)
+	if err != nil {
+		return false, errors.New("(SetDiscordChannelTwitchCategoryFilter) GetDiscordChannelTwitchCategoryFilter Error:" + err.Error())
+	}
+	if len(dcTwitchCF) > 0 {
+		result := m.DB.Model(&dcTwitchCF).Updates(models.DiscordChannelTwitchCategoryFilter{
+			AnnoChannelID:       annoChannelId,
+			AnnoServerID:        annoServerId,
+			CategoryFilterRegex: categoryFilterRegex,
+		})
+		if result.Error != nil {
+			return false, errors.New("(SetDiscordChannelTwitchCategoryFilter) db.Updates Error:" + result.Error.Error())
+		}
+
+		return true, nil
+	}
+
+	discordChTwitchCategoryFilter = append(discordChTwitchCategoryFilter, models.DiscordChannelTwitchCategoryFilter{
+		AnnoChannelID:       annoChannelId,
+		AnnoServerID:        annoServerId,
+		CategoryFilterRegex: categoryFilterRegex,
+		CreatedBy:           createdBy,
+	})
+
+	result := m.DB.Create(&discordChTwitchCategoryFilter)
+	if result.Error != nil {
+		return false, errors.New("(SetDiscordChannelTwitchCategoryFilter) db.Create Error:" + result.Error.Error())
+	}
+
+	return true, nil
+}
+
+func (m *postgresql) DeleteDiscordChannelTwitchCategoryFilter(ctx context.Context, serverId string, channelId string) (bool, error) {
+	var discordChTwitchCategoryFilter models.DiscordChannelTwitchCategoryFilter
+
+	result := m.DB.Where("anno_server_id = ?", serverId).Where("anno_channel_id = ?", channelId).Delete(discordChTwitchCategoryFilter)
+	if result.Error != nil {
+		return false, errors.New("(DeleteDiscordChannelTwitchCategoryFilter) db.Delete Error:" + result.Error.Error())
+	}
+
+	return true, nil
+}
+
 func (m *postgresql) CheckDiscordBotConfig(ctx context.Context, discordServerId string, configKey string, configValue string) bool {
 	configData, err := m.GetDiscordBotConfig(ctx, discordServerId, configKey)
 	if err != nil {

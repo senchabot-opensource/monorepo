@@ -90,6 +90,15 @@ type DiscordTwitchLiveAnnos struct {
 	CreatedAt      *time.Time `gorm:"column:created_at"`
 }
 
+type DiscordChannelTwitchCategoryFilter struct {
+	ID                  int
+	AnnoServerID        string     `gorm:"column:anno_server_id"`
+	AnnoChannelID       string     `gorm:"column:anno_channel_id"`
+	CategoryFilterRegex string     `gorm:"column:category_filter_regex"`
+	CreatedBy           string     `gorm:"column:created_by"`
+	CreatedAt           *time.Time `gorm:"column:created_at"`
+}
+
 type DiscordServer struct {
 	ServerID    string `gorm:"column:server_id"`
 	ServerName  string `gorm:"column:server_name"`

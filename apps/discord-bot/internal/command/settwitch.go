@@ -165,6 +165,26 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 
 			ephemeralRespond(s, i, twitchUsername+" kullanıcı adlı Twitch yayıncısı için duyuru mesajı içeriği ayarlandı: `"+annoContent+"`")
 
+		case "category-filter":
+			options = options[0].Options
+			channelId := options[0].ChannelValue(s).ID
+			channelName := options[0].ChannelValue(s).Name
+
+			categoryFilterRegex := options[1].StringValue()
+
+			ok, err := service.SetDiscordChannelTwitchCategoryFilter(ctx, i.GuildID, channelId, categoryFilterRegex, i.Member.User.ID)
+
+			if err != nil {
+				log.Println(err)
+				ephemeralRespond(s, i, config.ErrorMessage+"#0001")
+				return
+			}
+
+			if !ok {
+				ephemeralRespond(s, i, config.ErrorMessage+"#0002")
+				return
+			}
+			ephemeralRespond(s, i, fmt.Sprintf("`%s` isimli duyuru kanalına atılacak Twitch yayın duyurularının kategori filtresi `%s` olarak ayarlandı.", channelName, categoryFilterRegex))
 		}
 	}
 }
@@ -284,6 +304,39 @@ func SetTwitchCommandMetadata() *discordgo.ApplicationCommand {
 								Description: "Stream announcement content ({twitch.username} {twitch.url} {stream.category} {stream.title})",
 								DescriptionLocalizations: map[discordgo.Locale]string{
 									discordgo.Turkish: "Yayın mesaj duyuru içeriği ({twitch.username} {twitch.url} {stream.category} {stream.title})",
+								},
+								Required: true,
+							},
+						},
+					},
+					// set-twitch announcement category-filter
+					{
+						Name:        "category-filter",
+						Description: "Filtering Discord channel-specific Twitch stream category for announcement. (?i)Just Chatting",
+						DescriptionLocalizations: map[discordgo.Locale]string{
+							discordgo.Turkish: "Discord kanalına özgü yayın duyurularının filtrelenmesi. (?i)Just Chatting",
+						},
+						Type: discordgo.ApplicationCommandOptionSubCommand,
+						Options: []*discordgo.ApplicationCommandOption{
+							{
+								Type:        discordgo.ApplicationCommandOptionChannel,
+								Name:        "channel",
+								Description: "Text channel",
+								DescriptionLocalizations: map[discordgo.Locale]string{
+									discordgo.Turkish: "Yazı kanalı",
+								},
+								ChannelTypes: []discordgo.ChannelType{
+									discordgo.ChannelTypeGuildNews,
+									discordgo.ChannelTypeGuildText,
+								},
+								Required: true,
+							},
+							{
+								Type:        discordgo.ApplicationCommandOptionString,
+								Name:        "regex",
+								Description: "RegEx string. For example: (?i)Just Chatting",
+								DescriptionLocalizations: map[discordgo.Locale]string{
+									discordgo.Turkish: "RegEx dizesi. Örneğin: (?i)Just Chatting",
 								},
 								Required: true,
 							},
