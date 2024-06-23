@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"regexp"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/command/helpers"
@@ -104,7 +105,7 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 
 			_, err := service.SetDiscordBotConfig(ctx, i.GuildID, "stream_anno_default_channel", channelId)
 			if err != nil {
-				log.Println("[command.SetTwitchCommand.announcement] SetDiscordBotConfig error:", err.Error())
+				log.Println("[command.SetTwitchCommand.announcement.default-channel] SetDiscordBotConfig error:", err.Error())
 				ephemeralRespond(s, i, config.ErrorMessage+"#0001")
 				return
 			}
@@ -117,7 +118,7 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 
 			_, err := service.SetDiscordBotConfig(ctx, i.GuildID, "stream_anno_default_content", annoText)
 			if err != nil {
-				log.Println("[command.SetTwitchCommand.default-content] SetDiscordBotConfig error:", err.Error())
+				log.Println("[command.SetTwitchCommand.announcement.default-content] SetDiscordBotConfig error:", err.Error())
 				ephemeralRespond(s, i, config.ErrorMessage+"#0001")
 				return
 			}
@@ -138,7 +139,7 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 
 			ok, err := service.UpdateTwitchStreamerAnnoContent(ctx, uInfo.ID, i.GuildID, &annoContent)
 			if err != nil {
-				log.Println("[command.SetTwitchCommand.custom-content] UpdateTwitchStreamerAnnoContent error:", err.Error())
+				log.Println("[command.SetTwitchCommand.announcement.custom-content] UpdateTwitchStreamerAnnoContent error:", err.Error())
 				ephemeralRespond(s, i, config.ErrorMessage+"#001TEKNOBARBISI")
 				return
 			}
@@ -151,7 +152,7 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 			if annoContent == "" {
 				cfg, err := service.GetDiscordBotConfig(ctx, i.GuildID, "stream_anno_default_content")
 				if err != nil {
-					log.Println("[command.SetTwitchCommand.custom-content] GetDiscordBotConfig error:", err.Error())
+					log.Println("[command.SetTwitchCommand.announcement.custom-content] GetDiscordBotConfig error:", err.Error())
 				}
 
 				if cfg != nil {
@@ -171,6 +172,13 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 			channelName := options[0].ChannelValue(s).Name
 
 			categoryFilterRegex := options[1].StringValue()
+
+			_, err := regexp.Compile(categoryFilterRegex)
+			if err != nil {
+				log.Printf("[command.SetTwitchCommand.announcement.category-filter] regexp.Compile error: %s, Expr: %s", err.Error(), categoryFilterRegex)
+				ephemeralRespond(s, i, fmt.Sprintf("Error while parsing regular expression. (RegEx): `%s`", categoryFilterRegex))
+				return
+			}
 
 			ok, err := service.SetDiscordChannelTwitchCategoryFilter(ctx, i.GuildID, channelId, categoryFilterRegex, i.Member.User.ID)
 

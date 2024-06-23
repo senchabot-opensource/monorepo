@@ -323,8 +323,12 @@ func CheckLiveStreams(s *discordgo.Session, ctx context.Context, service service
 					}
 
 					if len(categoryFilter) > 0 {
-						regEx := categoryFilter[0].CategoryFilterRegex
-						pattern := regexp.MustCompile(regEx)
+						expr := categoryFilter[0].CategoryFilterRegex
+						pattern, err := regexp.Compile(expr)
+						if err != nil {
+							log.Printf("[CheckLiveStreams] regexp.Compile error: %s, Expr: %s, Streamer: %s", err.Error(), expr, liveAnnoData.TwitchUsername)
+							continue
+						}
 
 						if !pattern.MatchString(sd.GameName) {
 							continue
