@@ -367,7 +367,7 @@ func (m *postgresql) GetDiscordChannelTwitchCategoryFilter(ctx context.Context, 
 	return dcTwitchCF, nil
 }
 
-func (m *postgresql) SetDiscordChannelTwitchCategoryFilter(ctx context.Context, annoServerId, annoChannelId, categoryFilterRegex, createdBy string) (bool, error) {
+func (m *postgresql) SetDiscordChannelTwitchCategoryFilter(ctx context.Context, annoServerId, annoChannelId, categoryFilterRegex string, conditionType uint, createdBy string) (bool, error) {
 	var discordChTwitchCategoryFilter []models.DiscordChannelTwitchCategoryFilter
 
 	dcTwitchCF, err := m.GetDiscordChannelTwitchCategoryFilter(ctx, annoServerId, annoChannelId)
@@ -379,6 +379,7 @@ func (m *postgresql) SetDiscordChannelTwitchCategoryFilter(ctx context.Context, 
 			AnnoChannelID:       annoChannelId,
 			AnnoServerID:        annoServerId,
 			CategoryFilterRegex: categoryFilterRegex,
+			ConditionType:       conditionType,
 		})
 		if result.Error != nil {
 			return false, errors.New("(SetDiscordChannelTwitchCategoryFilter) db.Updates Error:" + result.Error.Error())
@@ -391,6 +392,7 @@ func (m *postgresql) SetDiscordChannelTwitchCategoryFilter(ctx context.Context, 
 		AnnoChannelID:       annoChannelId,
 		AnnoServerID:        annoServerId,
 		CategoryFilterRegex: categoryFilterRegex,
+		ConditionType:       conditionType,
 		CreatedBy:           createdBy,
 	})
 

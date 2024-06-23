@@ -95,6 +95,7 @@ type DiscordChannelTwitchCategoryFilter struct {
 	AnnoServerID        string     `gorm:"column:anno_server_id"`
 	AnnoChannelID       string     `gorm:"column:anno_channel_id"`
 	CategoryFilterRegex string     `gorm:"column:category_filter_regex"`
+	ConditionType       uint       `gorm:"column:condition_type"`
 	CreatedBy           string     `gorm:"column:created_by"`
 	CreatedAt           *time.Time `gorm:"column:created_at"`
 }

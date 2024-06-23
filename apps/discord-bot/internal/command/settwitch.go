@@ -173,6 +173,8 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 
 			categoryFilterRegex := options[1].StringValue()
 
+			conditionType := uint(options[2].UintValue())
+
 			_, err := regexp.Compile(categoryFilterRegex)
 			if err != nil {
 				log.Printf("[command.SetTwitchCommand.announcement.category-filter] regexp.Compile error: %s, Expr: %s", err.Error(), categoryFilterRegex)
@@ -180,7 +182,7 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 				return
 			}
 
-			ok, err := service.SetDiscordChannelTwitchCategoryFilter(ctx, i.GuildID, channelId, categoryFilterRegex, i.Member.User.ID)
+			ok, err := service.SetDiscordChannelTwitchCategoryFilter(ctx, i.GuildID, channelId, categoryFilterRegex, conditionType, i.Member.User.ID)
 
 			if err != nil {
 				log.Println(err)
@@ -192,7 +194,16 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 				ephemeralRespond(s, i, config.ErrorMessage+"#0002")
 				return
 			}
-			ephemeralRespond(s, i, fmt.Sprintf("`%s` isimli duyuru kanalına atılacak Twitch yayın duyurularının kategori filtresi `%s` olarak ayarlandı.", channelName, categoryFilterRegex))
+
+			var conditionText string
+			switch conditionType {
+			case 0:
+				conditionText = "eşleşmeyecek"
+			case 1:
+				conditionText = "eşleşecek"
+			}
+
+			ephemeralRespond(s, i, fmt.Sprintf("`%s` isimli duyuru kanalına atılacak Twitch yayın duyurularının kategori filtresi `%s` şekilde `%s` olarak ayarlandı.", channelName, conditionText, categoryFilterRegex))
 		}
 	}
 }
@@ -345,6 +356,27 @@ func SetTwitchCommandMetadata() *discordgo.ApplicationCommand {
 								Description: "RegEx string. For example: (?i)Just Chatting",
 								DescriptionLocalizations: map[discordgo.Locale]string{
 									discordgo.Turkish: "RegEx dizesi. Örneğin: (?i)Just Chatting",
+								},
+								Required: true,
+							},
+							{
+								Type:        discordgo.ApplicationCommandOptionInteger,
+								Name:        "condition",
+								Description: "Condition",
+								DescriptionLocalizations: map[discordgo.Locale]string{
+									discordgo.Turkish: "Koşul",
+								},
+								Choices: []*discordgo.ApplicationCommandOptionChoice{
+									{Name: "matches",
+										NameLocalizations: map[discordgo.Locale]string{
+											discordgo.Turkish: "eşleşir",
+										},
+										Value: 1},
+									{Name: "does not match",
+										NameLocalizations: map[discordgo.Locale]string{
+											discordgo.Turkish: "eşleşmez",
+										},
+										Value: 0},
 								},
 								Required: true,
 							},
