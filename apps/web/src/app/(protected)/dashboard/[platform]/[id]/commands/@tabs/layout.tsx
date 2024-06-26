@@ -1,24 +1,32 @@
 import { TabGroup, TabGroupItem } from '@/components/ui/tab-group'
 
+const tabs = [
+  {
+    label: 'Custom Commands',
+    slug: 'custom',
+  },
+  {
+    label: 'Global Commands',
+    slug: 'global',
+  },
+]
+
 interface Props {
-  platform: Platform
-  id: string
+  params: {
+    platform: Platform
+    id: string
+  }
   children: React.ReactNode
 }
 
-const tabs = [
-  { label: 'Custom Commands', slug: 'custom' },
-  { label: 'Global Commands', slug: 'global' },
-]
-
-export function CommandsTabsLayout({ platform, id, children }: Props) {
+export default function TabsLayout({ params, children }: Props) {
   return (
     <div className="space-y-4">
       <TabGroup>
         {tabs.map((item) => {
           return (
             <TabGroupItem
-              href={`/dashboard/${platform}/${id}/commands/${item.slug}`}
+              href={`/dashboard/${params.platform}/${params.id}/commands/${item.slug}`}
               slug={item.slug}
               key={item.slug}
             >

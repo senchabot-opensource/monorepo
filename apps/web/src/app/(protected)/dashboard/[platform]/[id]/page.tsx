@@ -1,20 +1,25 @@
 import { Suspense } from 'react'
 
+import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { EntityLogsCard } from '@/components/pages/overview/entity-logs-card'
 import { LoaderIcon } from '@/components/ui/icons'
 
 import { auth } from '@/lib/auth'
 
-import { EntityLogs } from './entity-logs'
-
-interface Props {
-  platform: Platform
-  id: string
+export const metadata: Metadata = {
+  title: 'Overview',
 }
 
-export async function OverviewView({ platform, id }: Props) {
+interface Props {
+  params: {
+    platform: Platform
+    id: string
+  }
+}
+
+export default async function Page({ params }: Props) {
   const session = await auth()
 
   if (!session) {
@@ -30,16 +35,15 @@ export async function OverviewView({ platform, id }: Props) {
         </p>
       </div>
       <div>
-        <Card>
-          <CardHeader>
-            <CardTitle>Audit Logs</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Suspense fallback={<LoaderIcon />}>
-              <EntityLogs platform={platform} platformEntityId={id} />
-            </Suspense>
-          </CardContent>
-        </Card>
+        <Suspense
+          fallback={
+            <div className="flex justify-center">
+              <LoaderIcon />
+            </div>
+          }
+        >
+          <EntityLogsCard platform={params.platform} id={params.id} />
+        </Suspense>
       </div>
     </div>
   )

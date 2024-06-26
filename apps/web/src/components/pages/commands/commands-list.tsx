@@ -19,7 +19,7 @@ interface Props {
   type: CommandType
 }
 
-export async function Commands({ platform, id, type }: Props) {
+export async function CommandsList({ platform, id, type }: Props) {
   const commands = await getEntityCommands(platform, id, type)
 
   if (!commands.length) {
