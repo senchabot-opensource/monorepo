@@ -90,6 +90,16 @@ type DiscordTwitchLiveAnnos struct {
 	CreatedAt      *time.Time `gorm:"column:created_at"`
 }
 
+type DiscordChannelTwitchCategoryFilter struct {
+	ID                  int
+	AnnoServerID        string     `gorm:"column:anno_server_id"`
+	AnnoChannelID       string     `gorm:"column:anno_channel_id"`
+	CategoryFilterRegex string     `gorm:"column:category_filter_regex"`
+	ConditionType       uint       `gorm:"column:condition_type"`
+	CreatedBy           string     `gorm:"column:created_by"`
+	CreatedAt           *time.Time `gorm:"column:created_at"`
+}
+
 type DiscordServer struct {
 	ServerID    string `gorm:"column:server_id"`
 	ServerName  string `gorm:"column:server_name"`
@@ -97,8 +107,13 @@ type DiscordServer struct {
 }
 
 type TwitchUserInfo struct {
-	ID    string `json:"id"`
-	Login string `json:"login"`
+	ID              string `json:"id"`
+	Login           string `json:"login"`
+	DisplayName     string `json:"display_name"`
+	BroadcasterType string `json:"broadcaster_type"`
+	Description     string `json:"description"`
+	ProfileImageURL string `json:"profile_image_url"`
+	CreatedAt       string `json:"created_at"`
 }
 
 type TwitchStreamerData struct {

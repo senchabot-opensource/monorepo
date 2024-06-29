@@ -10,7 +10,7 @@ import (
 )
 
 type Handler interface {
-	InitBotEventHandlers(token string)
+	InitBotEventHandlers()
 	InitHttpHandlers(mux *http.ServeMux)
 }
 
@@ -19,10 +19,10 @@ type handler struct {
 	service       service.Service
 }
 
-func (h *handler) InitBotEventHandlers(token string) {
-	command := command.New(h.discordClient, token, h.service, 2*time.Second)
+func (h *handler) InitBotEventHandlers() {
+	command := command.New(h.discordClient, h.service, 2*time.Second)
 
-	h.Ready(token)
+	h.Ready()
 	h.GuildCreate()
 	h.GuildDelete()
 	h.MessageCreate(command)

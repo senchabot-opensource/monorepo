@@ -41,7 +41,7 @@ func CreateLiveStreamScheduledEvent(s *discordgo.Session, msgContent string, msg
 	log.Println("Created scheduled event: ", scheduledEvent.Name)
 }
 
-func CheckLiveStreamScheduledEvents(s *discordgo.Session, token string) {
+func CheckLiveStreamScheduledEvents(s *discordgo.Session) {
 	ticker := time.NewTicker(1 * time.Minute)
 	defer ticker.Stop()
 
@@ -60,7 +60,7 @@ func CheckLiveStreamScheduledEvents(s *discordgo.Session, token string) {
 					}
 
 					twitchUsername := gosenchabot.ParseTwitchUsernameURLParam(e.EntityMetadata.Location)
-					isLive, streamTitle := twsrvc.CheckTwitchStreamStatus(twitchUsername, token)
+					isLive, streamTitle := twsrvc.CheckTwitchStreamStatus(twitchUsername)
 					if len(streamTitle) > 100 {
 						streamTitle = streamTitle[0:90]
 					}

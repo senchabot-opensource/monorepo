@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 
+import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google'
 import { GeistSans } from 'geist/font/sans'
 
 import { ThemeProvider } from '@/components/theme-provider'
@@ -11,11 +12,12 @@ import '@/styles/globals.css'
 export const metadata: Metadata = {
   metadataBase: new URL(`https://${process.env.VERCEL_URL}`),
   title: {
-    default: 'Senchabot',
+    default:
+      'Senchabot - Free, Community Management Bot for Twitch and Discord ',
     template: `%s - Senchabot`,
   },
   description:
-    'All chatbots and stream overlays, manage from one place! 100% Open source Discord and Twitch bot.',
+    'One bot, two platforms! Manage your Discord and Twitch community with an open-source multi-platform bot.',
   icons: {
     icon: '/favicon.ico',
     apple: '/apple-touch-icon.png',
@@ -44,6 +46,8 @@ export default function RootLayout({ children }: Props) {
         )}
       >
         <ThemeProvider>{children}</ThemeProvider>
+        <GoogleAnalytics gaId="G-0N948SR48C" />
+        <GoogleTagManager gtmId="G-0N948SR48C" />
       </body>
     </html>
   )

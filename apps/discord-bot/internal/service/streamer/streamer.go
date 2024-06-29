@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"regexp"
 	"strconv"
 	"strings"
 	"sync"
@@ -83,8 +84,8 @@ func DeleteServerFromData(serverId string) bool {
 	return true
 }
 
-func GetTwitchUserInfo(twitchUsername string, token string) (string, *models.TwitchUserInfo) {
-	userInfo, err := twsrvc.GetTwitchUserInfo("login", twitchUsername, token)
+func GetTwitchUserInfo(twitchUsername string) (string, *models.TwitchUserInfo) {
+	userInfo, err := twsrvc.GetTwitchUserInfo("login", twitchUsername)
 	if err != nil {
 		return fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısı Twitch'te bulunamadı.", twitchUsername), nil
 	}
@@ -255,7 +256,15 @@ func handleAnnouncement(ctx context.Context, s *discordgo.Session, service servi
 
 	annoContent := GetStreamAnnoContent(ctx, service, guildId, sd.UserID)
 	formattedString := FormatContent(annoContent, sd)
-	s.ChannelMessageSend(gs.DiscordChannelID, formattedString)
+	_, userInfo := GetTwitchUserInfo(sd.UserLogin)
+	s.ChannelMessageSendComplex(gs.DiscordChannelID, &discordgo.MessageSend{Content: formattedString, Embeds: []*discordgo.MessageEmbed{
+		{
+			Title:       fmt.Sprintf("%s - Twitch", sd.UserName),
+			Description: sd.Title,
+			URL:         fmt.Sprintf("https://twitch.tv/%s", sd.UserLogin),
+			Thumbnail:   &discordgo.MessageEmbedThumbnail{URL: userInfo.ProfileImageURL},
+		},
+	}})
 
 	_, err := service.UpdateTwitchStreamerLastAnnoDate(ctx, sd.UserID, guildId, time.Now().UTC())
 	if err != nil {
@@ -307,6 +316,34 @@ func CheckLiveStreams(s *discordgo.Session, ctx context.Context, service service
 					break
 				}
 				if sd.Type == "live" && liveAnnoData != nil {
+					categoryFilter, err := service.GetDiscordChannelTwitchCategoryFilter(ctx, guildId, liveAnnoData.AnnoChannelID)
+					if err != nil {
+						log.Println("[CheckLiveStreams] GetDiscordChannelTwitchCategoryFilter error:", err.Error())
+						break
+					}
+
+					if len(categoryFilter) > 0 {
+						cgrFilter := categoryFilter[0]
+						expr := cgrFilter.CategoryFilterRegex
+						pattern, err := regexp.Compile(expr)
+						if err != nil {
+							log.Printf("[CheckLiveStreams] regexp.Compile error: %s, Expr: %s, Streamer: %s", err.Error(), expr, liveAnnoData.TwitchUsername)
+							continue
+						}
+
+						var matchCondition bool
+						switch cgrFilter.ConditionType {
+						case 0:
+							matchCondition = pattern.MatchString(sd.GameName)
+						case 1:
+							matchCondition = !pattern.MatchString(sd.GameName)
+						}
+
+						if matchCondition {
+							continue
+						}
+					}
+
 					handleAnnouncement(ctx, s, service, guildId, streamers, sd)
 				} else {
 					continue

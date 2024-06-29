@@ -47,8 +47,7 @@ func (s *webhook) BotDepart(client *client.Clients, joinedChannelList []string, 
 		return
 	}
 
-	token := strings.TrimPrefix(os.Getenv("OAUTH"), "oauth:")
-	twitchChannel, err := twitch.GetTwitchUserInfo("id", channelId, token)
+	twitchChannel, err := twitch.GetTwitchUserInfo("id", channelId)
 	if err != nil {
 		log.Println("[webhook.BotDepart] GetTwitchUserInfo error:", err.Error())
 		w.WriteHeader(http.StatusInternalServerError)

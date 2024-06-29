@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"regexp"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/command/helpers"
@@ -24,7 +25,7 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 		commandUsername := i.Member.User.Username
 		twitchUsername = gosenchabot.ParseTwitchUsernameURLParam(twitchUsername)
 
-		response0, uInfo := streamer.GetTwitchUserInfo(twitchUsername, c.twitchAccessToken)
+		response0, uInfo := streamer.GetTwitchUserInfo(twitchUsername)
 		if response0 != "" {
 			ephemeralRespond(s, i, response0)
 			return
@@ -104,7 +105,7 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 
 			_, err := service.SetDiscordBotConfig(ctx, i.GuildID, "stream_anno_default_channel", channelId)
 			if err != nil {
-				log.Println("[command.SetTwitchCommand.announcement] SetDiscordBotConfig error:", err.Error())
+				log.Println("[command.SetTwitchCommand.announcement.default-channel] SetDiscordBotConfig error:", err.Error())
 				ephemeralRespond(s, i, config.ErrorMessage+"#0001")
 				return
 			}
@@ -117,7 +118,7 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 
 			_, err := service.SetDiscordBotConfig(ctx, i.GuildID, "stream_anno_default_content", annoText)
 			if err != nil {
-				log.Println("[command.SetTwitchCommand.default-content] SetDiscordBotConfig error:", err.Error())
+				log.Println("[command.SetTwitchCommand.announcement.default-content] SetDiscordBotConfig error:", err.Error())
 				ephemeralRespond(s, i, config.ErrorMessage+"#0001")
 				return
 			}
@@ -130,7 +131,7 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 			twitchUsername = gosenchabot.ParseTwitchUsernameURLParam(twitchUsername)
 			annoContent := options[1].StringValue()
 
-			response0, uInfo := streamer.GetTwitchUserInfo(twitchUsername, c.twitchAccessToken)
+			response0, uInfo := streamer.GetTwitchUserInfo(twitchUsername)
 			if response0 != "" {
 				ephemeralRespond(s, i, response0)
 				return
@@ -138,7 +139,7 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 
 			ok, err := service.UpdateTwitchStreamerAnnoContent(ctx, uInfo.ID, i.GuildID, &annoContent)
 			if err != nil {
-				log.Println("[command.SetTwitchCommand.custom-content] UpdateTwitchStreamerAnnoContent error:", err.Error())
+				log.Println("[command.SetTwitchCommand.announcement.custom-content] UpdateTwitchStreamerAnnoContent error:", err.Error())
 				ephemeralRespond(s, i, config.ErrorMessage+"#001TEKNOBARBISI")
 				return
 			}
@@ -151,7 +152,7 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 			if annoContent == "" {
 				cfg, err := service.GetDiscordBotConfig(ctx, i.GuildID, "stream_anno_default_content")
 				if err != nil {
-					log.Println("[command.SetTwitchCommand.custom-content] GetDiscordBotConfig error:", err.Error())
+					log.Println("[command.SetTwitchCommand.announcement.custom-content] GetDiscordBotConfig error:", err.Error())
 				}
 
 				if cfg != nil {
@@ -165,6 +166,44 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 
 			ephemeralRespond(s, i, twitchUsername+" kullanıcı adlı Twitch yayıncısı için duyuru mesajı içeriği ayarlandı: `"+annoContent+"`")
 
+		case "category-filter":
+			options = options[0].Options
+			channelId := options[0].ChannelValue(s).ID
+			channelName := options[0].ChannelValue(s).Name
+
+			categoryFilterRegex := options[1].StringValue()
+
+			conditionType := uint(options[2].UintValue())
+
+			_, err := regexp.Compile(categoryFilterRegex)
+			if err != nil {
+				log.Printf("[command.SetTwitchCommand.announcement.category-filter] regexp.Compile error: %s, Expr: %s", err.Error(), categoryFilterRegex)
+				ephemeralRespond(s, i, fmt.Sprintf("Error while parsing regular expression. (RegEx): `%s`", categoryFilterRegex))
+				return
+			}
+
+			ok, err := service.SetDiscordChannelTwitchCategoryFilter(ctx, i.GuildID, channelId, categoryFilterRegex, conditionType, i.Member.User.ID)
+
+			if err != nil {
+				log.Println(err)
+				ephemeralRespond(s, i, config.ErrorMessage+"#0001")
+				return
+			}
+
+			if !ok {
+				ephemeralRespond(s, i, config.ErrorMessage+"#0002")
+				return
+			}
+
+			var conditionText string
+			switch conditionType {
+			case 0:
+				conditionText = "eşleşmeyecek"
+			case 1:
+				conditionText = "eşleşecek"
+			}
+
+			ephemeralRespond(s, i, fmt.Sprintf("`%s` isimli duyuru kanalına atılacak Twitch yayın duyurularının kategori filtresi `%s` şekilde `%s` olarak ayarlandı.", channelName, conditionText, categoryFilterRegex))
 		}
 	}
 }
@@ -284,6 +323,60 @@ func SetTwitchCommandMetadata() *discordgo.ApplicationCommand {
 								Description: "Stream announcement content ({twitch.username} {twitch.url} {stream.category} {stream.title})",
 								DescriptionLocalizations: map[discordgo.Locale]string{
 									discordgo.Turkish: "Yayın mesaj duyuru içeriği ({twitch.username} {twitch.url} {stream.category} {stream.title})",
+								},
+								Required: true,
+							},
+						},
+					},
+					// set-twitch announcement category-filter
+					{
+						Name:        "category-filter",
+						Description: "Filtering Discord channel-specific Twitch stream category for announcement. (?i)Just Chatting",
+						DescriptionLocalizations: map[discordgo.Locale]string{
+							discordgo.Turkish: "Discord kanalına özgü yayın duyurularının filtrelenmesi. (?i)Just Chatting",
+						},
+						Type: discordgo.ApplicationCommandOptionSubCommand,
+						Options: []*discordgo.ApplicationCommandOption{
+							{
+								Type:        discordgo.ApplicationCommandOptionChannel,
+								Name:        "channel",
+								Description: "Text channel",
+								DescriptionLocalizations: map[discordgo.Locale]string{
+									discordgo.Turkish: "Yazı kanalı",
+								},
+								ChannelTypes: []discordgo.ChannelType{
+									discordgo.ChannelTypeGuildNews,
+									discordgo.ChannelTypeGuildText,
+								},
+								Required: true,
+							},
+							{
+								Type:        discordgo.ApplicationCommandOptionString,
+								Name:        "regex",
+								Description: "RegEx string. For example: (?i)Just Chatting",
+								DescriptionLocalizations: map[discordgo.Locale]string{
+									discordgo.Turkish: "RegEx dizesi. Örneğin: (?i)Just Chatting",
+								},
+								Required: true,
+							},
+							{
+								Type:        discordgo.ApplicationCommandOptionInteger,
+								Name:        "condition",
+								Description: "Condition",
+								DescriptionLocalizations: map[discordgo.Locale]string{
+									discordgo.Turkish: "Koşul",
+								},
+								Choices: []*discordgo.ApplicationCommandOptionChoice{
+									{Name: "matches",
+										NameLocalizations: map[discordgo.Locale]string{
+											discordgo.Turkish: "eşleşir",
+										},
+										Value: 1},
+									{Name: "does not match",
+										NameLocalizations: map[discordgo.Locale]string{
+											discordgo.Turkish: "eşleşmez",
+										},
+										Value: 0},
 								},
 								Required: true,
 							},
