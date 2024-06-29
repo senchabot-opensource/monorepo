@@ -10,6 +10,7 @@ import (
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/client"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/handler"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/service"
+	twsrvc "github.com/senchabot-opensource/monorepo/packages/gosenchabot/service/twitch"
 )
 
 func clearDailyCounts() {
@@ -21,6 +22,8 @@ func clearDailyCounts() {
 }
 
 func main() {
+	twsrvc.InitTwitchOAuth2Token()
+
 	twitchClient := twitch.NewClient(os.Getenv("BOT_USER_NAME"), os.Getenv("OAUTH"))
 
 	clients := client.NewClients(twitchClient)
