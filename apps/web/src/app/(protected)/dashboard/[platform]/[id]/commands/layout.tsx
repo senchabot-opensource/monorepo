@@ -1,9 +1,12 @@
-import { CreateCommand } from '@/components/pages/commands/create-command'
-import { ShareCommands } from '@/components/pages/commands/share-commands'
+import type { Platform } from '@/services/shared/type'
+
+import { CreateCommand } from './create-command-dialog'
+import { ShareCommands } from './share-commands-button'
 
 interface Props {
   params: {
     platform: Platform
+    id: string
   }
   tabs: React.ReactNode
 }
@@ -14,7 +17,7 @@ export default function Layout({ params, tabs }: Props) {
       <div className="space-y-1">
         <div className="flex items-center space-x-2">
           <h1 className="text-2xl font-medium tracking-tight">Commands</h1>
-          <CreateCommand platform={params.platform} />
+          <CreateCommand platform={params.platform} entityId={params.id} />
           <ShareCommands />
         </div>
         <p className="text-sm text-muted-foreground">Manage your commands.</p>

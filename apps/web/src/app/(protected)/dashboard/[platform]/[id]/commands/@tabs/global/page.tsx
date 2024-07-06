@@ -1,9 +1,11 @@
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 
-import { CommandsList } from '@/components/pages/commands/commands-list'
-
 import { auth } from '@/lib/auth'
+
+import type { Platform } from '@/services/shared/type'
+
+import { CommandsList } from '../commands-list'
 
 export const metadata: Metadata = {
   title: 'Global Commands',

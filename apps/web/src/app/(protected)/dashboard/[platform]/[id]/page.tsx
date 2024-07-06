@@ -3,10 +3,13 @@ import { Suspense } from 'react'
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 
-import { EntityLogsCard } from '@/components/pages/overview/entity-logs-card'
 import { LoaderIcon } from '@/components/ui/icons'
 
 import { auth } from '@/lib/auth'
+
+import type { Platform } from '@/services/shared/type'
+
+import { EntityLogsCard } from './entity-logs-card'
 
 export const metadata: Metadata = {
   title: 'Overview',
@@ -34,7 +37,7 @@ export default async function Page({ params }: Props) {
           Overview of your server or channel.
         </p>
       </div>
-      <div>
+      <div className="grid grid-cols-1 gap-8">
         <Suspense
           fallback={
             <div className="flex justify-center">

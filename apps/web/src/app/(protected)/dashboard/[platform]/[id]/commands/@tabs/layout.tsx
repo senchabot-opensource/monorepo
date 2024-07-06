@@ -1,5 +1,7 @@
 import { TabGroup, TabGroupItem } from '@/components/ui/tab-group'
 
+import type { Platform } from '@/services/shared/type'
+
 const tabs = [
   {
     label: 'Custom Commands',
