@@ -87,6 +87,7 @@ func DeleteServerFromData(serverId string) bool {
 func GetTwitchUserInfo(twitchUsername string) (string, *models.TwitchUserInfo) {
 	userInfo, err := twsrvc.GetTwitchUserInfo("login", twitchUsername)
 	if err != nil {
+		log.Println("[GetTwitchUserInfo] twsrvc.GetTwitchUserInfo error:", err.Error())
 		return fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısı Twitch'te bulunamadı.", twitchUsername), nil
 	}
 
