@@ -44,7 +44,7 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 				ephemeralRespond(s, i, config.ErrorMessage+"#0000")
 				return
 			}
-			if channelData == nil {
+			if channelData == nil || channelData.Value == "" {
 				ephemeralRespond(s, i, "Twitch yayıncısı eklerken daha önce `/set-twitch announcement default-channel` komutuyla varsayılan duyuru kanalı eklemiş olmalı veya isteğe bağlı kanal adını belirtmelisiniz.")
 				return
 			}
