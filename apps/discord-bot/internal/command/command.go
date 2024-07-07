@@ -49,10 +49,11 @@ func New(dS *discordgo.Session, service service.Service, cooldownPeriod time.Dur
 
 func (c *commands) GetCommands() CommandMap {
 	var commands = CommandMap{
-		"set-twitch": c.SetTwitchCommand,
-		"del-twitch": c.DelTwitchCommand,
-		"purge":      c.PurgeCommand,
-		"invite":     c.InviteCommand,
+		"set-twitch":    c.SetTwitchCommand,
+		"del-twitch":    c.DelTwitchCommand,
+		"streamer-list": c.StreamerListCommand,
+		"purge":         c.PurgeCommand,
+		"invite":        c.InviteCommand,
 	}
 
 	return commands
@@ -190,15 +191,17 @@ func (c *commands) DeployCommands(discordClient *discordgo.Session) {
 
 var (
 	purgePermissions     int64 = discordgo.PermissionManageServer
-	setdeletePermissions int64 = discordgo.PermissionAdministrator
+	setdeletePermissions int64 = discordgo.PermissionManageServer
 	//manageCmdPermissions int64 = discordgo.PermissionManageChannels
 	commandMetadatas = []*discordgo.ApplicationCommand{
 		// SET-TWITCH
 		SetTwitchCommandMetadata(),
-		// PURGE
-		PurgeCommandMetadata(),
 		// DEL-TWITCH
 		DelTwitchCommandMetadata(),
+		// STREAMER-LIST
+		StreamerListCommandMetadata(),
+		// PURGE
+		PurgeCommandMetadata(),
 		// INVITE
 		InviteCommandMetadata(),
 	}

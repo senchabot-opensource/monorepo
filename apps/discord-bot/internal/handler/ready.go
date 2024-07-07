@@ -11,13 +11,21 @@ import (
 func (h *handler) Ready() {
 	ctx := context.Background()
 	h.discordClient.AddHandler(func(s *discordgo.Session, r *discordgo.Ready) {
+		guilds := s.State.Guilds
+		log.Println("[handler.Ready] ADD MISSING GUILDS TO DATABASE")
+		for _, g := range guilds {
+			err := h.service.AddServerToDB(ctx, g.ID, g.Name, g.OwnerID)
+			if err != nil {
+				log.Println("[handler.Ready] AddServerToDB error:", err.Error(), "Guild:", g.ID, g.Name)
+			}
+		}
 		servers, err := h.service.GetServers(ctx)
 		if err != nil {
 			log.Println("[handler.Ready] GetServers error:", err.Error())
 		}
 		if err == nil {
 			for _, server := range servers {
-				if checkGuildExist(s.State.Guilds, server.ServerID) {
+				if checkGuildExist(guilds, server.ServerID) {
 					continue
 				}
 				_, err = h.service.DeleteDiscordTwitchLiveAnnosByGuildId(ctx, server.ServerID)
@@ -33,6 +41,6 @@ func (h *handler) Ready() {
 
 		go event.CheckLiveStreamScheduledEvents(s)
 
-		log.Println("Bot is ready. Logged in as:", s.State.User.Username)
+		log.Println("[handler.Ready] Bot is ready. Logged in as:", s.State.User.Username)
 	})
 }
