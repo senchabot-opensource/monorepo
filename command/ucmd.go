@@ -35,7 +35,7 @@ func UcmdCommand(context context.Context, service updateCommandServiceType, isSy
 		return &cmdResp, nil
 	}
 
-	log.Println("COMMAND_UPDATE: command_name:", updatedCommandName, "new_command_content:", newCommandContent)
+	log.Println("COMMAND_UPDATE: command_name:", *updatedCommandName, "new_command_content:", newCommandContent)
 
 	cmdResp.Message = "Command Updated: " + *updatedCommandName
 	return &cmdResp, nil
