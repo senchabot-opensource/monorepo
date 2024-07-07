@@ -71,10 +71,24 @@ func (c *commands) DelTwitchCommand(ctx context.Context, s *discordgo.Session, i
 		switch options[0].Name {
 		// del-twitch announcement default-channel
 		case "default-channel":
+			liveAnnosLength, err := service.GetCountDiscordTwitchLiveAnnosWithoutContent(ctx, i.GuildID)
+			if err != nil {
+				log.Println("[command.DelTwitchCommand.announcement.default-channel] GetCountDiscordTwitchLiveAnnosWithoutContent error:", err.Error())
+				ephemeralRespond(s, i, config.ErrorMessage+"del-twitch:announcement:default-channel#0001")
+				return
+			}
+
+			log.Println("liveAnnosLength", liveAnnosLength)
+			if liveAnnosLength > 0 {
+				ephemeralRespond(s, i, "Twitch yayıncısına özgü yayın duyuru mesajı olmayan yayıncılar veritabanında bulunduğu için varsayılan Twitch canlı yayın duyuru kanalı ayarını silemezsiniz.")
+				// EN: You cannot delete the default channel setting as there are streamers without a custom channel setting
+				return
+			}
+
 			ok, err := service.DeleteDiscordBotConfig(ctx, i.GuildID, "stream_anno_default_channel")
 			if err != nil {
 				log.Println("[command.DelTwitchCommand.announcement.default-channel] DeleteDiscordBotConfig error:", err.Error())
-				ephemeralRespond(s, i, config.ErrorMessage+"#0001")
+				ephemeralRespond(s, i, config.ErrorMessage+"del-twitch:announcement:default-channel#0011")
 				return
 			}
 
