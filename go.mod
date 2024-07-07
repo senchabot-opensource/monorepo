@@ -1,6 +1,6 @@
 module github.com/senchabot-opensource/monorepo
 
-go 1.22
+go 1.22.5
 
 require (
 	github.com/bwmarrin/discordgo v0.28.1
