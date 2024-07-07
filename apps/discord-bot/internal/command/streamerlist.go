@@ -33,7 +33,8 @@ func (c *commands) StreamerListCommand(ctx context.Context, s *discordgo.Session
 
 func StreamerListCommandMetadata() *discordgo.ApplicationCommand {
 	return &discordgo.ApplicationCommand{
-		Name:        "streamer-list",
-		Description: "Show list of Twitch streamers added for live stream announcements",
+		Name:                     "streamer-list",
+		Description:              "Show list of Twitch streamers added for live stream announcements",
+		DefaultMemberPermissions: &setdeletePermissions,
 	}
 }
