@@ -7,8 +7,8 @@ import (
 
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/client"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/service"
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/service/twitch"
+	"github.com/senchabot-opensource/monorepo/model"
+	"github.com/senchabot-opensource/monorepo/service/twitch"
 )
 
 func BotJoin(client *client.Clients, service service.Service) []string {
@@ -21,7 +21,7 @@ func BotJoin(client *client.Clients, service service.Service) []string {
 		log.Fatalf("[BotJoin Handler] Error:" + err.Error())
 	}
 
-	channels = append(channels, &models.TwitchChannel{
+	channels = append(channels, &model.TwitchChannel{
 		ChannelName: botUsername,
 	})
 

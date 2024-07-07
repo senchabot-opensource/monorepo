@@ -6,19 +6,19 @@ import (
 	"log"
 	"time"
 
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/platform"
+	"github.com/senchabot-opensource/monorepo/model"
+	"github.com/senchabot-opensource/monorepo/platform"
 )
 
 func (m *postgresql) SetDiscordBotConfig(ctx context.Context, serverId, key, value string) (bool, error) {
-	var discordBotConfig []models.DiscordBotConfigs
+	var discordBotConfig []model.DiscordBotConfigs
 	existConfig, err := m.GetDiscordBotConfig(ctx, serverId, key)
 	if err != nil {
 		return false, err
 	}
 
 	if existConfig != nil {
-		result := m.DB.Model(&existConfig).Updates(models.DiscordBotConfigs{
+		result := m.DB.Model(&existConfig).Updates(model.DiscordBotConfigs{
 			Key:   key,
 			Value: value,
 		})
@@ -29,7 +29,7 @@ func (m *postgresql) SetDiscordBotConfig(ctx context.Context, serverId, key, val
 		return true, nil
 	}
 
-	discordBotConfig = append(discordBotConfig, models.DiscordBotConfigs{
+	discordBotConfig = append(discordBotConfig, model.DiscordBotConfigs{
 		Key:      key,
 		Value:    value,
 		ServerID: serverId,
@@ -42,8 +42,8 @@ func (m *postgresql) SetDiscordBotConfig(ctx context.Context, serverId, key, val
 	return true, nil
 }
 
-func (m *postgresql) GetDiscordBotConfig(ctx context.Context, serverId, key string) (*models.DiscordBotConfigs, error) {
-	var discordBotConfig []models.DiscordBotConfigs
+func (m *postgresql) GetDiscordBotConfig(ctx context.Context, serverId, key string) (*model.DiscordBotConfigs, error) {
+	var discordBotConfig []model.DiscordBotConfigs
 	result := m.DB.Where("server_id = ?", serverId).Where("config_key = ?", key).Find(&discordBotConfig)
 	if result.Error != nil {
 		return nil, errors.New("(GetDiscordBotConfig) db.First Error:" + result.Error.Error())
@@ -75,7 +75,7 @@ func (m *postgresql) DeleteDiscordBotConfig(ctx context.Context, serverId, key s
 }
 
 func (m *postgresql) AddAnnouncementChannel(ctx context.Context, channelId, serverId, createdBy string) (bool, error) {
-	var announcementChs []*models.DiscordAnnouncementChannels
+	var announcementChs []*model.DiscordAnnouncementChannels
 
 	foundChannel, err := m.GetAnnouncementChannelByChannelId(ctx, channelId)
 	if err != nil {
@@ -86,7 +86,7 @@ func (m *postgresql) AddAnnouncementChannel(ctx context.Context, channelId, serv
 		return false, nil
 	}
 
-	announcementChs = append(announcementChs, &models.DiscordAnnouncementChannels{
+	announcementChs = append(announcementChs, &model.DiscordAnnouncementChannels{
 		ChannelID: channelId,
 		ServerID:  serverId,
 		CreatedBy: createdBy,
@@ -100,8 +100,8 @@ func (m *postgresql) AddAnnouncementChannel(ctx context.Context, channelId, serv
 	return true, nil
 }
 
-func (m *postgresql) GetAnnouncementChannels(ctx context.Context) ([]*models.DiscordAnnouncementChannels, error) {
-	var announcementChs []*models.DiscordAnnouncementChannels
+func (m *postgresql) GetAnnouncementChannels(ctx context.Context) ([]*model.DiscordAnnouncementChannels, error) {
+	var announcementChs []*model.DiscordAnnouncementChannels
 
 	result := m.DB.Find(&announcementChs)
 	if result.Error != nil {
@@ -111,8 +111,8 @@ func (m *postgresql) GetAnnouncementChannels(ctx context.Context) ([]*models.Dis
 	return announcementChs, nil
 }
 
-func (m *postgresql) GetAnnouncementChannelByChannelId(ctx context.Context, channelId string) (*models.DiscordAnnouncementChannels, error) {
-	var announcementChs []models.DiscordAnnouncementChannels
+func (m *postgresql) GetAnnouncementChannelByChannelId(ctx context.Context, channelId string) (*model.DiscordAnnouncementChannels, error) {
+	var announcementChs []model.DiscordAnnouncementChannels
 	result := m.DB.Where("channel_id = ?", channelId).Find(&announcementChs)
 	if result.Error != nil {
 		return nil, errors.New("(AddAnnouncementChannel) db.Find Error:" + result.Error.Error())
@@ -125,8 +125,8 @@ func (m *postgresql) GetAnnouncementChannelByChannelId(ctx context.Context, chan
 	return &announcementChs[0], nil
 }
 
-func (m *postgresql) GetAnnouncementChannelById(ctx context.Context, id int) (*models.DiscordAnnouncementChannels, error) {
-	var announcementChs models.DiscordAnnouncementChannels
+func (m *postgresql) GetAnnouncementChannelById(ctx context.Context, id int) (*model.DiscordAnnouncementChannels, error) {
+	var announcementChs model.DiscordAnnouncementChannels
 
 	result := m.DB.Where("id = ?", id).First(&announcementChs)
 	if result.Error != nil {
@@ -154,14 +154,14 @@ func (m *postgresql) DeleteAnnouncementChannel(ctx context.Context, channelId st
 }
 
 func (m *postgresql) AddDiscordTwitchLiveAnnos(ctx context.Context, twitchUsername, twitchUserId, annoChannelId, annoServerId, createdBy string) (bool, error) {
-	var twitchLiveAnnos []models.DiscordTwitchLiveAnnos
+	var twitchLiveAnnos []model.DiscordTwitchLiveAnnos
 
 	twitchLiveAnno, err := m.GetDiscordTwitchLiveAnno(ctx, twitchUserId, annoServerId)
 	if err != nil {
 		return false, errors.New("(AddDiscordTwitchLiveAnnos) CheckDiscordTwitchLiveAnnos Error:" + err.Error())
 	}
 	if twitchLiveAnno != nil {
-		result := m.DB.Model(&twitchLiveAnno).Updates(models.DiscordTwitchLiveAnnos{
+		result := m.DB.Model(&twitchLiveAnno).Updates(model.DiscordTwitchLiveAnnos{
 			TwitchUsername: twitchUsername,
 			TwitchUserID:   twitchUserId,
 			AnnoChannelID:  annoChannelId,
@@ -175,7 +175,7 @@ func (m *postgresql) AddDiscordTwitchLiveAnnos(ctx context.Context, twitchUserna
 		return false, nil
 	}
 
-	twitchLiveAnnos = append(twitchLiveAnnos, models.DiscordTwitchLiveAnnos{
+	twitchLiveAnnos = append(twitchLiveAnnos, model.DiscordTwitchLiveAnnos{
 		TwitchUsername: twitchUsername,
 		TwitchUserID:   twitchUserId,
 		AnnoChannelID:  annoChannelId,
@@ -199,7 +199,7 @@ func (m *postgresql) UpdateTwitchStreamerAnnoContent(ctx context.Context, twitch
 	}
 
 	if twitchLiveAnno != nil {
-		result := m.DB.Model(&twitchLiveAnno).Select("anno_content").Updates(models.DiscordTwitchLiveAnnos{
+		result := m.DB.Model(&twitchLiveAnno).Select("anno_content").Updates(model.DiscordTwitchLiveAnnos{
 			AnnoContent: annoContent,
 		})
 		if result.Error != nil {
@@ -219,7 +219,7 @@ func (m *postgresql) UpdateTwitchStreamerLastAnnoDate(ctx context.Context, twitc
 		return false, errors.New("(UpdateTwitchStreamerLastAnnoDate) Error:" + err.Error())
 	}
 	if twitchLiveAnno != nil {
-		result := m.DB.Model(&twitchLiveAnno).Updates(models.DiscordTwitchLiveAnnos{
+		result := m.DB.Model(&twitchLiveAnno).Updates(model.DiscordTwitchLiveAnnos{
 			LastAnnoDate: &lastAnnoDate,
 		})
 		if result.Error != nil {
@@ -246,7 +246,7 @@ func (m *postgresql) GetTwitchStreamerLastAnnoDate(ctx context.Context, twitchUs
 }
 
 func (m *postgresql) GetTwitchStreamerAnnoContent(ctx context.Context, twitchUserId, annoServerId string) (*string, error) {
-	var twitchLiveAnnos []models.DiscordTwitchLiveAnnos
+	var twitchLiveAnnos []model.DiscordTwitchLiveAnnos
 
 	result := m.DB.Select("anno_content").Where("twitch_user_id = ?", twitchUserId).Where("anno_server_id = ?", annoServerId).Find(&twitchLiveAnnos)
 	if result.Error != nil {
@@ -260,8 +260,8 @@ func (m *postgresql) GetTwitchStreamerAnnoContent(ctx context.Context, twitchUse
 	return twitchLiveAnnos[0].AnnoContent, nil
 }
 
-func (m *postgresql) GetDiscordTwitchLiveAnno(ctx context.Context, twitchUserId, annoServerId string) (*models.DiscordTwitchLiveAnnos, error) {
-	var twitchLiveAnnos []models.DiscordTwitchLiveAnnos
+func (m *postgresql) GetDiscordTwitchLiveAnno(ctx context.Context, twitchUserId, annoServerId string) (*model.DiscordTwitchLiveAnnos, error) {
+	var twitchLiveAnnos []model.DiscordTwitchLiveAnnos
 
 	result := m.DB.Where("twitch_user_id = ?", twitchUserId).Where("anno_server_id = ?", annoServerId).Find(&twitchLiveAnnos)
 	if result.Error != nil {
@@ -275,8 +275,8 @@ func (m *postgresql) GetDiscordTwitchLiveAnno(ctx context.Context, twitchUserId,
 	return &twitchLiveAnnos[0], nil
 }
 
-func (m *postgresql) GetDiscordTwitchLiveAnnoByUsername(ctx context.Context, twitchUsername, annoServerId string) (*models.DiscordTwitchLiveAnnos, error) {
-	var twitchLiveAnnos []models.DiscordTwitchLiveAnnos
+func (m *postgresql) GetDiscordTwitchLiveAnnoByUsername(ctx context.Context, twitchUsername, annoServerId string) (*model.DiscordTwitchLiveAnnos, error) {
+	var twitchLiveAnnos []model.DiscordTwitchLiveAnnos
 
 	result := m.DB.Where("twitch_username = ?", twitchUsername).Where("anno_server_id = ?", annoServerId).Find(&twitchLiveAnnos)
 	if result.Error != nil {
@@ -290,8 +290,8 @@ func (m *postgresql) GetDiscordTwitchLiveAnnoByUsername(ctx context.Context, twi
 	return &twitchLiveAnnos[0], nil
 }
 
-func (m *postgresql) GetDiscordTwitchLiveAnnoByUserId(ctx context.Context, twitchUserId, annoServerId string) (*models.DiscordTwitchLiveAnnos, error) {
-	var twitchLiveAnnos []models.DiscordTwitchLiveAnnos
+func (m *postgresql) GetDiscordTwitchLiveAnnoByUserId(ctx context.Context, twitchUserId, annoServerId string) (*model.DiscordTwitchLiveAnnos, error) {
+	var twitchLiveAnnos []model.DiscordTwitchLiveAnnos
 
 	result := m.DB.Where("twitch_user_id = ?", twitchUserId).Where("anno_server_id = ?", annoServerId).Find(&twitchLiveAnnos)
 	if result.Error != nil {
@@ -305,8 +305,8 @@ func (m *postgresql) GetDiscordTwitchLiveAnnoByUserId(ctx context.Context, twitc
 	return &twitchLiveAnnos[0], nil
 }
 
-func (m *postgresql) GetDiscordTwitchLiveAnnos(ctx context.Context, serverId string) ([]*models.DiscordTwitchLiveAnnos, error) {
-	var twitchLiveAnnos []*models.DiscordTwitchLiveAnnos
+func (m *postgresql) GetDiscordTwitchLiveAnnos(ctx context.Context, serverId string) ([]*model.DiscordTwitchLiveAnnos, error) {
+	var twitchLiveAnnos []*model.DiscordTwitchLiveAnnos
 
 	result := m.DB.Where("anno_server_id = ?", serverId).Find(&twitchLiveAnnos)
 	if result.Error != nil {
@@ -319,7 +319,7 @@ func (m *postgresql) GetDiscordTwitchLiveAnnos(ctx context.Context, serverId str
 func (m *postgresql) GetCountDiscordTwitchLiveAnnosWithoutContent(ctx context.Context, serverId string) (int64, error) {
 	var twitchLiveAnnosCount int64
 
-	result := m.DB.Model(&models.DiscordTwitchLiveAnnos{}).Where("anno_server_id = ?", serverId).Where("anno_content IS NULL OR anno_content = ''").Count(&twitchLiveAnnosCount)
+	result := m.DB.Model(&model.DiscordTwitchLiveAnnos{}).Where("anno_server_id = ?", serverId).Where("anno_content IS NULL OR anno_content = ''").Count(&twitchLiveAnnosCount)
 	if result.Error != nil {
 		return 0, errors.New("(GetCountDiscordTwitchLiveAnnosWithoutContent) db.Count Error:" + result.Error.Error())
 	}
@@ -346,7 +346,7 @@ func (m *postgresql) DeleteDiscordTwitchLiveAnno(ctx context.Context, twitchUser
 }
 
 func (m *postgresql) DeleteDiscordTwitchLiveAnnosByGuildId(ctx context.Context, serverId string) (bool, error) {
-	var twitchLiveAnnos models.DiscordTwitchLiveAnnos
+	var twitchLiveAnnos model.DiscordTwitchLiveAnnos
 
 	result := m.DB.Where("anno_server_id = ?", serverId).Delete(twitchLiveAnnos)
 	if result.Error != nil {
@@ -357,7 +357,7 @@ func (m *postgresql) DeleteDiscordTwitchLiveAnnosByGuildId(ctx context.Context, 
 }
 
 func (m *postgresql) DeleteDiscordTwitchLiveAnnosByChannelId(ctx context.Context, channelId string) (bool, error) {
-	var twitchLiveAnnos models.DiscordTwitchLiveAnnos
+	var twitchLiveAnnos model.DiscordTwitchLiveAnnos
 
 	result := m.DB.Where("anno_channel_id = ?", channelId).Delete(twitchLiveAnnos)
 	if result.Error != nil {
@@ -367,8 +367,8 @@ func (m *postgresql) DeleteDiscordTwitchLiveAnnosByChannelId(ctx context.Context
 	return true, nil
 }
 
-func (m *postgresql) GetDiscordChannelTwitchCategoryFilter(ctx context.Context, serverId string, channelId string) ([]*models.DiscordChannelTwitchCategoryFilter, error) {
-	var dcTwitchCF []*models.DiscordChannelTwitchCategoryFilter
+func (m *postgresql) GetDiscordChannelTwitchCategoryFilter(ctx context.Context, serverId string, channelId string) ([]*model.DiscordChannelTwitchCategoryFilter, error) {
+	var dcTwitchCF []*model.DiscordChannelTwitchCategoryFilter
 
 	result := m.DB.Where("anno_server_id = ?", serverId).Where("anno_channel_id = ?", channelId).Find(&dcTwitchCF)
 	if result.Error != nil {
@@ -379,14 +379,14 @@ func (m *postgresql) GetDiscordChannelTwitchCategoryFilter(ctx context.Context, 
 }
 
 func (m *postgresql) SetDiscordChannelTwitchCategoryFilter(ctx context.Context, annoServerId, annoChannelId, categoryFilterRegex string, conditionType uint, createdBy string) (bool, error) {
-	var discordChTwitchCategoryFilter []models.DiscordChannelTwitchCategoryFilter
+	var discordChTwitchCategoryFilter []model.DiscordChannelTwitchCategoryFilter
 
 	dcTwitchCF, err := m.GetDiscordChannelTwitchCategoryFilter(ctx, annoServerId, annoChannelId)
 	if err != nil {
 		return false, errors.New("(SetDiscordChannelTwitchCategoryFilter) GetDiscordChannelTwitchCategoryFilter Error:" + err.Error())
 	}
 	if len(dcTwitchCF) > 0 {
-		result := m.DB.Model(&dcTwitchCF).Updates(models.DiscordChannelTwitchCategoryFilter{
+		result := m.DB.Model(&dcTwitchCF).Updates(model.DiscordChannelTwitchCategoryFilter{
 			AnnoChannelID:       annoChannelId,
 			AnnoServerID:        annoServerId,
 			CategoryFilterRegex: categoryFilterRegex,
@@ -399,7 +399,7 @@ func (m *postgresql) SetDiscordChannelTwitchCategoryFilter(ctx context.Context, 
 		return true, nil
 	}
 
-	discordChTwitchCategoryFilter = append(discordChTwitchCategoryFilter, models.DiscordChannelTwitchCategoryFilter{
+	discordChTwitchCategoryFilter = append(discordChTwitchCategoryFilter, model.DiscordChannelTwitchCategoryFilter{
 		AnnoChannelID:       annoChannelId,
 		AnnoServerID:        annoServerId,
 		CategoryFilterRegex: categoryFilterRegex,
@@ -416,7 +416,7 @@ func (m *postgresql) SetDiscordChannelTwitchCategoryFilter(ctx context.Context, 
 }
 
 func (m *postgresql) DeleteDiscordChannelTwitchCategoryFilter(ctx context.Context, serverId string, channelId string) (bool, error) {
-	var discordChTwitchCategoryFilter models.DiscordChannelTwitchCategoryFilter
+	var discordChTwitchCategoryFilter model.DiscordChannelTwitchCategoryFilter
 
 	result := m.DB.Where("anno_server_id = ?", serverId).Where("anno_channel_id = ?", channelId).Delete(discordChTwitchCategoryFilter)
 	if result.Error != nil {
@@ -452,7 +452,7 @@ func (m *postgresql) SaveDiscordBotCommandActivity(context context.Context, acti
 }
 
 func (m *postgresql) AddServerToDB(ctx context.Context, serverId string, serverName string, serverOwner string) error {
-	var dcServer []models.DiscordServer
+	var dcServer []model.DiscordServer
 
 	result := m.DB.Where("server_id = ?", serverId).Find(&dcServer)
 	if result.Error != nil {
@@ -460,14 +460,14 @@ func (m *postgresql) AddServerToDB(ctx context.Context, serverId string, serverN
 	}
 
 	if len(dcServer) > 0 {
-		result = m.DB.Where("server_id = ?", serverId).Updates(&models.DiscordServer{ServerName: serverName, ServerOwner: serverOwner})
+		result = m.DB.Where("server_id = ?", serverId).Updates(&model.DiscordServer{ServerName: serverName, ServerOwner: serverOwner})
 		if result.Error != nil {
 			return errors.New("(AddServerToDB) db.Updates Error:" + result.Error.Error())
 		}
 		return nil
 	}
 
-	dcServer = append(dcServer, models.DiscordServer{
+	dcServer = append(dcServer, model.DiscordServer{
 		ServerID:    serverId,
 		ServerName:  serverName,
 		ServerOwner: serverOwner,
@@ -481,8 +481,8 @@ func (m *postgresql) AddServerToDB(ctx context.Context, serverId string, serverN
 	return nil
 }
 
-func (m *postgresql) GetServers(ctx context.Context) ([]*models.DiscordServer, error) {
-	var dcServer []*models.DiscordServer
+func (m *postgresql) GetServers(ctx context.Context) ([]*model.DiscordServer, error) {
+	var dcServer []*model.DiscordServer
 
 	result := m.DB.Find(&dcServer)
 	if result.Error != nil {
@@ -493,7 +493,7 @@ func (m *postgresql) GetServers(ctx context.Context) ([]*models.DiscordServer, e
 }
 
 func (m *postgresql) DeleteServerFromDB(ctx context.Context, serverId string) error {
-	var dcServer *models.DiscordServer
+	var dcServer *model.DiscordServer
 
 	result := m.DB.Where("server_id = ?", serverId).Delete(&dcServer)
 	if result.Error != nil {

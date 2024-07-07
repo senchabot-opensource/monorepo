@@ -6,16 +6,16 @@ import (
 	"log"
 
 	"github.com/senchabot-opensource/monorepo/config"
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot"
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
+	"github.com/senchabot-opensource/monorepo/helper"
+	"github.com/senchabot-opensource/monorepo/model"
 )
 
 type createCommandServiceType func(ctx context.Context, commandName string, commandContent string, platformEntityId string, createdBy string) (*string, error)
 
-func AcmdCommand(context context.Context, service createCommandServiceType, isSystemCommand IsSystemCommandType, message models.MessageData, commandName string, params []string) (*models.CommandResponse, error) {
-	var cmdResp models.CommandResponse
+func AcmdCommand(context context.Context, service createCommandServiceType, isSystemCommand IsSystemCommandType, message model.MessageData, commandName string, params []string) (*model.CommandResponse, error) {
+	var cmdResp model.CommandResponse
 
-	command_name, command_content, check := gosenchabot.GetCommandCreateUpdateParams(params)
+	command_name, command_content, check := helper.GetCommandCreateUpdateParams(params)
 	if !check {
 		// "Birleşmiş Milletler 21 Mayıs'ı Uluslararası Çay Günü olarak belirlemiştir." (Bu yorum satırı Twitch chatinde Harami tarafından redeem yoluyla yazdırılmıştır. Arz ederim.)
 		cmdResp.Message = config.AddCommandInfo
@@ -28,7 +28,7 @@ func AcmdCommand(context context.Context, service createCommandServiceType, isSy
 	}
 
 	// Check command name and content length
-	if infoText, check := gosenchabot.ValidateCommandCreateParams(command_name, command_content); !check {
+	if infoText, check := helper.ValidateCommandCreateParams(command_name, command_content); !check {
 		cmdResp.Message = message.UserName + ", " + infoText
 		return &cmdResp, nil
 	}

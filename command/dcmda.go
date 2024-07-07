@@ -6,22 +6,22 @@ import (
 	"strings"
 
 	"github.com/senchabot-opensource/monorepo/config"
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot"
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
+	"github.com/senchabot-opensource/monorepo/helper"
+	"github.com/senchabot-opensource/monorepo/model"
 )
 
 type dcmdaCommandCommandType func(ctx context.Context, commandAlias string, twitchChannelId string) (*string, error)
 
-func DcmdaCommand(context context.Context, deleteCommandAlias dcmdaCommandCommandType, isSystemCommand IsSystemCommandType, message models.MessageData, commandName string, params []string) (*models.CommandResponse, error) {
-	var cmdResp models.CommandResponse
+func DcmdaCommand(context context.Context, deleteCommandAlias dcmdaCommandCommandType, isSystemCommand IsSystemCommandType, message model.MessageData, commandName string, params []string) (*model.CommandResponse, error) {
+	var cmdResp model.CommandResponse
 
-	if check := gosenchabot.IsCommandParamsLengthEqualToOne(params); !check {
+	if check := helper.IsCommandParamsLengthEqualToOne(params); !check {
 		cmdResp.Message = config.DeleteCommandAliasInfo
 		return &cmdResp, nil
 	}
 	var command_alias = strings.ToLower(params[0])
 
-	command_alias = gosenchabot.TrimExclamationPrefix(command_alias)
+	command_alias = helper.TrimExclamationPrefix(command_alias)
 
 	infoText, err := deleteCommandAlias(context, command_alias, message.PlatformEntityID)
 	if err != nil {

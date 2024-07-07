@@ -10,28 +10,28 @@ import (
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/service/webhook"
 	"github.com/senchabot-opensource/monorepo/db"
 	"github.com/senchabot-opensource/monorepo/db/postgresql"
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/platform"
+	"github.com/senchabot-opensource/monorepo/model"
+	"github.com/senchabot-opensource/monorepo/platform"
 )
 
 type Service interface {
 	BotJoinWebhook(client *client.Clients, joinedChannelList []string, w http.ResponseWriter, r *http.Request)
 	BotDepartWebhook(client *client.Clients, joinedChannelList []string, w http.ResponseWriter, r *http.Request)
 
-	GetTwitchChannels(ctx context.Context) ([]*models.TwitchChannel, error)
+	GetTwitchChannels(ctx context.Context) ([]*model.TwitchChannel, error)
 	CreateTwitchChannel(ctx context.Context, channelId string, channelName string, userId *string) (bool, error)
 	DeleteTwitchChannel(ctx context.Context, channelId string, userId *string) (bool, error)
 
-	GetTwitchBotConfig(ctx context.Context, twitchChannelId string, configKey string) (*models.TwitchBotConfig, error)
+	GetTwitchBotConfig(ctx context.Context, twitchChannelId string, configKey string) (*model.TwitchBotConfig, error)
 	CheckTwitchBotConfig(ctx context.Context, twitchChannelId string, configKey string, configValue string) bool
 
-	GetGlobalBotCommand(ctx context.Context, commandName string) (*models.BotCommand, error)
-	GetUserBotCommand(ctx context.Context, commandName string, twitchChannelId string) (*models.BotCommand, error)
+	GetGlobalBotCommand(ctx context.Context, commandName string) (*model.BotCommand, error)
+	GetUserBotCommand(ctx context.Context, commandName string, twitchChannelId string) (*model.BotCommand, error)
 	CreateCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string, createdBy string) (*string, error)
 	CheckCommandExists(ctx context.Context, commandName string, twitchChannelId string) (*string, error)
 	UpdateCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string, updatedBy string) (*string, *string, error)
 	DeleteCommand(ctx context.Context, commandName string, twitchChannelId string) (*string, *string, error)
-	GetCommandList(ctx context.Context, twitchChannelId string) ([]*models.BotCommand, error)
+	GetCommandList(ctx context.Context, twitchChannelId string) ([]*model.BotCommand, error)
 
 	SaveCommandActivity(context context.Context, commandName string, twitchChannelId string, commandAuthor, commandAuthorId string)
 
@@ -42,16 +42,16 @@ type Service interface {
 
 	AddBotCommandStatistic(ctx context.Context, commandName string)
 
-	SetTimer(client *client.Clients, channelName string, commandData *models.BotCommand, interval int)
+	SetTimer(client *client.Clients, channelName string, commandData *model.BotCommand, interval int)
 	SetTimerEnabled(client *client.Clients, commandId int)
 	SetTimerDisabled(commandId int)
 	GetTimerStatus(commandId int) bool
 	DeleteTimer(commandId int)
 	UpdateTimerContent(commandId int, commandContent string)
 
-	GetCommandTimers(ctx context.Context, botPlatformId string) ([]*models.CommandTimer, error)
+	GetCommandTimers(ctx context.Context, botPlatformId string) ([]*model.CommandTimer, error)
 	CreateCommandTimer(ctx context.Context, channelId string, commandName string, interval int) (bool, error)
-	GetCommandTimer(ctx context.Context, channelId string, commandName string) *models.CommandTimer
+	GetCommandTimer(ctx context.Context, channelId string, commandName string) *model.CommandTimer
 	UpdateCommandTimer(ctx context.Context, channelId string, commandName string, interval int, status int) error
 	UpdateCommandTimerInterval(commandId, interval int)
 	DeleteCommandTimer(ctx context.Context, channelId string, commandName string) error
@@ -83,7 +83,7 @@ func (s *services) BotDepartWebhook(client *client.Clients, joinedChannelList []
 	s.Webhook.BotDepart(client, joinedChannelList, w, r)
 }
 
-func (s *services) GetTwitchChannels(ctx context.Context) ([]*models.TwitchChannel, error) {
+func (s *services) GetTwitchChannels(ctx context.Context) ([]*model.TwitchChannel, error) {
 	twitchChannels, err := s.DB.GetTwitchChannels(ctx)
 	if err != nil {
 		return nil, err
@@ -110,7 +110,7 @@ func (s *services) DeleteTwitchChannel(ctx context.Context, channelId string, us
 	return deleted, nil
 }
 
-func (s *services) GetTwitchBotConfig(ctx context.Context, twitchChannelId string, configKey string) (*models.TwitchBotConfig, error) {
+func (s *services) GetTwitchBotConfig(ctx context.Context, twitchChannelId string, configKey string) (*model.TwitchBotConfig, error) {
 	configData, err := s.DB.GetTwitchBotConfig(ctx, twitchChannelId, configKey)
 	if err != nil {
 		return nil, err
@@ -133,7 +133,7 @@ func (s *services) CheckTwitchBotConfig(ctx context.Context, twitchChannelId str
 	return false
 }
 
-func (s *services) GetGlobalBotCommand(ctx context.Context, commandName string) (*models.BotCommand, error) {
+func (s *services) GetGlobalBotCommand(ctx context.Context, commandName string) (*model.BotCommand, error) {
 	commandData, err := s.DB.GetGlobalBotCommand(ctx, commandName)
 	if err != nil {
 		return nil, err
@@ -142,7 +142,7 @@ func (s *services) GetGlobalBotCommand(ctx context.Context, commandName string) 
 	return commandData, nil
 }
 
-func (s *services) GetUserBotCommand(ctx context.Context, commandName string, twitchChannelId string) (*models.BotCommand, error) {
+func (s *services) GetUserBotCommand(ctx context.Context, commandName string, twitchChannelId string) (*model.BotCommand, error) {
 	commandData, err := s.DB.GetUserBotCommand(ctx, platform.TWITCH, commandName, twitchChannelId)
 	if err != nil {
 		return nil, err
@@ -187,7 +187,7 @@ func (s *services) DeleteCommand(ctx context.Context, commandName string, twitch
 	return deletedCommandName, infoText, nil
 }
 
-func (s *services) GetCommandList(ctx context.Context, twitchChannelId string) ([]*models.BotCommand, error) {
+func (s *services) GetCommandList(ctx context.Context, twitchChannelId string) ([]*model.BotCommand, error) {
 	cmdList, err := s.DB.GetCommandList(ctx, platform.TWITCH, twitchChannelId)
 	if err != nil {
 		return nil, err
@@ -252,7 +252,7 @@ func (s *services) AddBotCommandStatistic(ctx context.Context, commandName strin
 	}
 }
 
-func (s *services) SetTimer(client *client.Clients, channelName string, commandData *models.BotCommand, interval int) {
+func (s *services) SetTimer(client *client.Clients, channelName string, commandData *model.BotCommand, interval int) {
 	// platform, channelId, commandData, interval, status
 	s.Timer.SetTimer(client, channelName, commandData, interval)
 }
@@ -277,7 +277,7 @@ func (s *services) UpdateTimerContent(commandId int, commandContent string) {
 	s.Timer.UpdateTimerContent(commandId, commandContent)
 }
 
-func (s *services) GetCommandTimers(ctx context.Context, channelId string) ([]*models.CommandTimer, error) {
+func (s *services) GetCommandTimers(ctx context.Context, channelId string) ([]*model.CommandTimer, error) {
 	return s.DB.GetCommandTimers(ctx, platform.TWITCH, channelId)
 }
 
@@ -285,7 +285,7 @@ func (s *services) CreateCommandTimer(ctx context.Context, channelId string, com
 	return s.DB.CreateCommandTimer(ctx, platform.TWITCH, channelId, commandName, interval)
 }
 
-func (s *services) GetCommandTimer(ctx context.Context, channelId string, commandName string) *models.CommandTimer {
+func (s *services) GetCommandTimer(ctx context.Context, channelId string, commandName string) *model.CommandTimer {
 	return s.DB.GetCommandTimer(ctx, platform.TWITCH, channelId, commandName)
 }
 
