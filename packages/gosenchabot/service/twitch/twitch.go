@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -44,7 +45,11 @@ func GetTwitchUserInfo(query string, userIdOrName string) (*models.TwitchUserInf
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusOK {
-		return nil, errors.New("[GetTwitchUserInfo] Twitch API request failed with status code: " + string(rune(resp.StatusCode)))
+		respBodyBytes, err := io.ReadAll(resp.Body)
+		if err != nil {
+			return nil, errors.New("[GetTwitchUserInfo] io.ReadAll error: " + err.Error())
+		}
+		return nil, errors.New("[GetTwitchUserInfo] Twitch API request failed with status code: " + string(rune(resp.StatusCode)) + " Body: " + string(respBodyBytes))
 	}
 
 	var data struct {
