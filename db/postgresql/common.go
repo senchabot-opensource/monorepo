@@ -6,14 +6,14 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/platform"
+	"github.com/senchabot-opensource/monorepo/model"
+	"github.com/senchabot-opensource/monorepo/platform"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
 func (m *postgresql) CreateBotCommand(ctx context.Context, botPlatform platform.Platform, commandName string, commandContent string, botPlatformId string, createdBy string) (*string, error) {
-	var botCommand []models.BotCommand
+	var botCommand []model.BotCommand
 	var infoText string
 	var twitchChannelId, discordServerId string
 
@@ -41,7 +41,7 @@ func (m *postgresql) CreateBotCommand(ctx context.Context, botPlatform platform.
 		return &infoText, nil
 	}
 
-	botCommand = append(botCommand, models.BotCommand{
+	botCommand = append(botCommand, model.BotCommand{
 		CommandName:     commandName,
 		CommandContent:  commandContent,
 		TwitchChannelID: &twitchChannelId,
@@ -60,7 +60,7 @@ func (m *postgresql) CreateBotCommand(ctx context.Context, botPlatform platform.
 }
 
 func (m *postgresql) UpdateBotCommand(ctx context.Context, botPlatform platform.Platform, commandName string, commandContent string, botPlatformId string, updatedBy string) (*string, *string, error) {
-	var botCommand *models.BotCommand
+	var botCommand *model.BotCommand
 	var result *gorm.DB
 
 	command, _ := m.GetCommandAlias(ctx, botPlatform, commandName, botPlatformId)
@@ -87,7 +87,7 @@ func (m *postgresql) UpdateBotCommand(ctx context.Context, botPlatform platform.
 		return nil, nil, errors.New("(UpdateBotCommand) db.Find Error:" + result.Error.Error())
 	}
 
-	result = m.DB.Model(&botCommand).Updates(models.BotCommand{
+	result = m.DB.Model(&botCommand).Updates(model.BotCommand{
 		CommandContent: commandContent,
 		UpdatedBy:      &updatedBy,
 	})
@@ -99,8 +99,8 @@ func (m *postgresql) UpdateBotCommand(ctx context.Context, botPlatform platform.
 }
 
 func (m *postgresql) DeleteBotCommand(ctx context.Context, botPlatform platform.Platform, commandName string, botPlatformId string) (*string, *string, error) {
-	var botCommand *models.BotCommand
-	var botCommandAlias *models.BotCommandAlias
+	var botCommand *model.BotCommand
+	var botCommandAlias *model.BotCommandAlias
 	var result *gorm.DB
 
 	command, _ := m.GetCommandAlias(ctx, botPlatform, commandName, botPlatformId)
@@ -184,7 +184,7 @@ func (m *postgresql) CheckCommandExists(ctx context.Context, botPlatform platfor
 }
 
 func (m *postgresql) CheckGlobalCommandExists(ctx context.Context, commandName string) (*string, error) {
-	var botCommand []models.BotCommand
+	var botCommand []model.BotCommand
 
 	result := m.DB.Where("command_name = ?", commandName).Where("command_type", 0).Find(&botCommand)
 	if result.Error != nil {
@@ -198,7 +198,7 @@ func (m *postgresql) CheckGlobalCommandExists(ctx context.Context, commandName s
 }
 
 func (m *postgresql) CheckUserCommandExists(ctx context.Context, botPlatform platform.Platform, commandName string, botPlatformId string) (*string, error) {
-	var botCommand []models.BotCommand
+	var botCommand []model.BotCommand
 	var result *gorm.DB
 
 	switch botPlatform {
@@ -218,7 +218,7 @@ func (m *postgresql) CheckUserCommandExists(ctx context.Context, botPlatform pla
 }
 
 func (m *postgresql) GetCommandAlias(ctx context.Context, botPlatform platform.Platform, command string, botPlatformId string) (*string, error) {
-	var commandAlias models.BotCommandAlias
+	var commandAlias model.BotCommandAlias
 	var err error
 
 	switch botPlatform {
@@ -235,7 +235,7 @@ func (m *postgresql) GetCommandAlias(ctx context.Context, botPlatform platform.P
 }
 
 func (m *postgresql) CheckCommandAliasExist(ctx context.Context, botPlatform platform.Platform, commandAlias string, botPlatformId string) (*string, error) {
-	var commandAliasModel []models.BotCommandAlias
+	var commandAliasModel []model.BotCommandAlias
 	var result *gorm.DB
 
 	switch botPlatform {
@@ -256,7 +256,7 @@ func (m *postgresql) CheckCommandAliasExist(ctx context.Context, botPlatform pla
 }
 
 func (m *postgresql) CreateCommandAlias(ctx context.Context, botPlatform platform.Platform, commandName string, aliases []string, botPlatformId string, createdBy string) (*string, error) {
-	commandAliases := []models.BotCommandAlias{}
+	commandAliases := []model.BotCommandAlias{}
 	var infoText string
 	var twitchChannelId, discordServerId string
 
@@ -292,7 +292,7 @@ func (m *postgresql) CreateCommandAlias(ctx context.Context, botPlatform platfor
 			return &infoText, nil
 		}
 
-		commandAlias := models.BotCommandAlias{
+		commandAlias := model.BotCommandAlias{
 			CommandAlias:    aliasCommandName,
 			CommandName:     commandName,
 			TwitchChannelID: &twitchChannelId,
@@ -312,7 +312,7 @@ func (m *postgresql) CreateCommandAlias(ctx context.Context, botPlatform platfor
 }
 
 func (m *postgresql) DeleteCommandAlias(ctx context.Context, botPlatform platform.Platform, commandAlias string, botPlatformId string) (*string, error) {
-	var commandAliasModel *models.BotCommandAlias
+	var commandAliasModel *model.BotCommandAlias
 	var result *gorm.DB
 
 	existAlias, err := m.CheckCommandAliasExist(ctx, botPlatform, commandAlias, botPlatformId)
@@ -344,7 +344,7 @@ func (m *postgresql) DeleteCommandAlias(ctx context.Context, botPlatform platfor
 }
 
 func (m *postgresql) CreateBotActionActivity(ctx context.Context, botPlatform platform.Platform, botActivity string, botPlatformId string, activityAuthor, activityAuthorId string) error {
-	botActionActivity := models.BotActionActivity{
+	botActionActivity := model.BotActionActivity{
 		BotPlatformType:  botPlatform,
 		BotPlatformID:    &botPlatformId,
 		BotActivity:      botActivity,
@@ -361,8 +361,8 @@ func (m *postgresql) CreateBotActionActivity(ctx context.Context, botPlatform pl
 	return nil
 }
 
-func (m *postgresql) GetGlobalBotCommand(ctx context.Context, commandName string) (*models.BotCommand, error) {
-	var botCommand models.BotCommand
+func (m *postgresql) GetGlobalBotCommand(ctx context.Context, commandName string) (*model.BotCommand, error) {
+	var botCommand model.BotCommand
 
 	result := m.DB.Where("command_name = ?", commandName).Where("command_type = ?", 0).Where("status = ?", 1).First(&botCommand)
 	if result.Error != nil {
@@ -372,8 +372,8 @@ func (m *postgresql) GetGlobalBotCommand(ctx context.Context, commandName string
 	return &botCommand, nil
 }
 
-func (m *postgresql) GetUserBotCommand(ctx context.Context, botPlatform platform.Platform, commandName string, botPlatformId string) (*models.BotCommand, error) {
-	var botCommand models.BotCommand
+func (m *postgresql) GetUserBotCommand(ctx context.Context, botPlatform platform.Platform, commandName string, botPlatformId string) (*model.BotCommand, error) {
+	var botCommand model.BotCommand
 	var result *gorm.DB
 
 	switch botPlatform {
@@ -389,8 +389,8 @@ func (m *postgresql) GetUserBotCommand(ctx context.Context, botPlatform platform
 	return &botCommand, nil
 }
 
-func (m *postgresql) GetCommandList(ctx context.Context, botPlatform platform.Platform, botPlatformId string) ([]*models.BotCommand, error) {
-	var botCommandList []*models.BotCommand
+func (m *postgresql) GetCommandList(ctx context.Context, botPlatform platform.Platform, botPlatformId string) ([]*model.BotCommand, error) {
+	var botCommandList []*model.BotCommand
 	var result *gorm.DB
 
 	switch botPlatform {
@@ -407,7 +407,7 @@ func (m *postgresql) GetCommandList(ctx context.Context, botPlatform platform.Pl
 }
 
 func (m *postgresql) AddBotCommandStatistic(ctx context.Context, botPlatform platform.Platform, commandName string) error {
-	botCommandStatistic := models.BotCommandStatistic{CommandName: commandName, BotPlatformType: botPlatform, Count: 1}
+	botCommandStatistic := model.BotCommandStatistic{CommandName: commandName, BotPlatformType: botPlatform, Count: 1}
 
 	updateExpr := gorm.Expr("coalesce(bot_command_statistics.count, 0) + 1")
 
@@ -424,8 +424,8 @@ func (m *postgresql) AddBotCommandStatistic(ctx context.Context, botPlatform pla
 	return nil
 }
 
-func (m *postgresql) GetCommandTimers(ctx context.Context, botPlatform platform.Platform, botPlatformId string) ([]*models.CommandTimer, error) {
-	var commandTimers []*models.CommandTimer
+func (m *postgresql) GetCommandTimers(ctx context.Context, botPlatform platform.Platform, botPlatformId string) ([]*model.CommandTimer, error) {
+	var commandTimers []*model.CommandTimer
 	result := m.DB.Where("bot_platform = ?", botPlatform).Where("bot_platform_id = ?", botPlatformId).Find(&commandTimers)
 
 	if result.Error != nil {
@@ -441,7 +441,7 @@ func (m *postgresql) CreateCommandTimer(ctx context.Context, botPlatform platfor
 		return true, fmt.Errorf("the command '%v' is already in use for timer", commandName)
 	}
 
-	result := m.DB.Create(&models.CommandTimer{
+	result := m.DB.Create(&model.CommandTimer{
 		BotPlatform:   botPlatform,
 		BotPlatformID: botPlatformId,
 		CommandName:   commandName,
@@ -455,8 +455,8 @@ func (m *postgresql) CreateCommandTimer(ctx context.Context, botPlatform platfor
 	return true, nil
 }
 
-func (m *postgresql) GetCommandTimer(ctx context.Context, botPlatform platform.Platform, botPlatformId string, commandName string) *models.CommandTimer {
-	var commandTimer []models.CommandTimer
+func (m *postgresql) GetCommandTimer(ctx context.Context, botPlatform platform.Platform, botPlatformId string, commandName string) *model.CommandTimer {
+	var commandTimer []model.CommandTimer
 
 	result := m.DB.Where("bot_platform = ?", botPlatform).Where("bot_platform_id = ?", botPlatformId).Where("command_name = ?", commandName).Find(&commandTimer)
 	if result.Error != nil {
@@ -470,19 +470,19 @@ func (m *postgresql) GetCommandTimer(ctx context.Context, botPlatform platform.P
 }
 
 func (m *postgresql) UpdateCommandTimer(ctx context.Context, botPlatform platform.Platform, botPlatformId string, commandName string, interval int, status int) error {
-	var commandTimer *models.CommandTimer
+	var commandTimer *model.CommandTimer
 
 	result := m.DB.Where("bot_platform = ?", botPlatform).Where("bot_platform_id = ?", botPlatformId).Where("command_name = ?", commandName).First(&commandTimer)
 	if result.Error != nil {
 		return fmt.Errorf("(UpdateCommandTimer) db.First error: %v", result.Error)
 	}
 
-	result = m.DB.Model(&commandTimer).Updates(models.CommandTimer{
+	result = m.DB.Model(&commandTimer).Updates(model.CommandTimer{
 		Interval: interval,
 		Status:   status,
 	})
 	if interval == 0 {
-		result = m.DB.Model(&commandTimer).Select("status").Updates(models.CommandTimer{
+		result = m.DB.Model(&commandTimer).Select("status").Updates(model.CommandTimer{
 			Status: status,
 		})
 	}
@@ -493,7 +493,7 @@ func (m *postgresql) UpdateCommandTimer(ctx context.Context, botPlatform platfor
 	return nil
 }
 func (m *postgresql) DeleteCommandTimer(ctx context.Context, botPlatform platform.Platform, botPlatformId string, commandName string) error {
-	var commandTimer *models.CommandTimer
+	var commandTimer *model.CommandTimer
 
 	result := m.DB.Where("bot_platform = ?", botPlatform).Where("bot_platform_id = ?", botPlatformId).Where("command_name = ?", commandName).First(&commandTimer)
 	if result.Error != nil {

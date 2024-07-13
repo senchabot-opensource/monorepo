@@ -8,7 +8,7 @@ import (
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service/streamer"
 	"github.com/senchabot-opensource/monorepo/config"
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot"
+	"github.com/senchabot-opensource/monorepo/helper"
 )
 
 func (c *commands) DelTwitchCommand(ctx context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, service service.Service) {
@@ -19,7 +19,7 @@ func (c *commands) DelTwitchCommand(ctx context.Context, s *discordgo.Session, i
 	case "streamer":
 		options = options[0].Options
 		twitchUsername := options[0].StringValue()
-		twitchUsername = gosenchabot.ParseTwitchUsernameURLParam(twitchUsername)
+		twitchUsername = helper.ParseTwitchUsernameURLParam(twitchUsername)
 
 		response0, uInfo := streamer.GetTwitchUserInfo(twitchUsername)
 		if response0 != "" {
@@ -113,7 +113,7 @@ func (c *commands) DelTwitchCommand(ctx context.Context, s *discordgo.Session, i
 		case "custom-content":
 			options = options[0].Options
 			twitchUsername := options[0].StringValue()
-			twitchUsername = gosenchabot.ParseTwitchUsernameURLParam(twitchUsername)
+			twitchUsername = helper.ParseTwitchUsernameURLParam(twitchUsername)
 
 			response0, uInfo := streamer.GetTwitchUserInfo(twitchUsername)
 			if response0 != "" {

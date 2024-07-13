@@ -6,11 +6,11 @@ import (
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/senchabot-opensource/monorepo/command"
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
+	"github.com/senchabot-opensource/monorepo/model"
 )
 
-func (c *commands) AddCommandCommand(context context.Context, m *discordgo.MessageCreate, commandName string, params []string) (*models.CommandResponse, error) {
-	msgData := &models.MessageData{
+func (c *commands) AddCommandCommand(context context.Context, m *discordgo.MessageCreate, commandName string, params []string) (*model.CommandResponse, error) {
+	msgData := &model.MessageData{
 		PlatformEntityID: m.GuildID,
 		UserName:         m.Author.Username,
 	}

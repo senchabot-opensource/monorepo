@@ -6,11 +6,11 @@ import (
 	"time"
 
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/client"
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
+	"github.com/senchabot-opensource/monorepo/model"
 )
 
 type Timer interface {
-	SetTimer(client *client.Clients, channelName string, commandData *models.BotCommand, interval int)
+	SetTimer(client *client.Clients, channelName string, commandData *model.BotCommand, interval int)
 	SetTimerEnabled(client *client.Clients, commandId int)
 	SetTimerDisabled(commandId int)
 	GetTimerStatus(commandId int) bool
@@ -22,7 +22,7 @@ type Timer interface {
 type TimerData struct {
 	enabled     uint32 // 0 for disabled, 1 for enabled
 	channelName string
-	commandData *models.BotCommand
+	commandData *model.BotCommand
 	interval    int
 	tickerCh    chan struct{} // channel to signal ticker to stop
 }
@@ -104,7 +104,7 @@ func (t *timer) UpdateCommandTimerInterval(commandId, interval int) {
 	}
 }
 
-func (t *timer) SetTimer(client *client.Clients, channelName string, commandData *models.BotCommand, interval int) {
+func (t *timer) SetTimer(client *client.Clients, channelName string, commandData *model.BotCommand, interval int) {
 	if timerData, ok := manager.timers[commandData.ID]; ok {
 		atomic.StoreUint32(&timerData.enabled, 1)
 		timerData.channelName = channelName

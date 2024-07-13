@@ -11,8 +11,8 @@ import (
 	"strings"
 
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/client"
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/service/twitch"
+	"github.com/senchabot-opensource/monorepo/model"
+	"github.com/senchabot-opensource/monorepo/service/twitch"
 	"gorm.io/gorm"
 )
 
@@ -28,7 +28,7 @@ func (s *webhook) BotDepart(client *client.Clients, joinedChannelList []string, 
 		return
 	}
 
-	var data models.WebhookData
+	var data model.WebhookData
 	err = json.Unmarshal(body, &data)
 	if err != nil {
 		http.Error(w, "Error parsing request body", http.StatusBadRequest)

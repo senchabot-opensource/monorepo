@@ -9,13 +9,13 @@ import (
 	"github.com/gempir/go-twitch-irc/v3"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/command/helpers"
 	"github.com/senchabot-opensource/monorepo/config"
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
+	"github.com/senchabot-opensource/monorepo/model"
 )
 
 const DELETE_TIMER_COMMAND_INFO = "!dtimer [command_name]"
 
-func (c *commands) DeleteTimerCommand(context context.Context, message twitch.PrivateMessage, _ string, params []string) (*models.CommandResponse, error) {
-	var cmdResp models.CommandResponse
+func (c *commands) DeleteTimerCommand(context context.Context, message twitch.PrivateMessage, _ string, params []string) (*model.CommandResponse, error) {
+	var cmdResp model.CommandResponse
 	channelId := message.RoomID
 
 	if !helpers.CanExecuteCommand(context, c.service, message.Tags["badges"], channelId) {

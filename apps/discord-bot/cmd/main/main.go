@@ -12,7 +12,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/handler"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
-	twsrvc "github.com/senchabot-opensource/monorepo/packages/gosenchabot/service/twitch"
+	twsrvc "github.com/senchabot-opensource/monorepo/service/twitch"
 )
 
 func main() {

@@ -1,4 +1,4 @@
-package gosenchabot
+package helper
 
 import (
 	"errors"
@@ -13,7 +13,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
+	"github.com/senchabot-opensource/monorepo/model"
 )
 
 const (
@@ -26,7 +26,7 @@ const (
 	maxCommandContentLength = 400
 )
 
-func FormatCommandContent(cv *models.CommandVariable) string {
+func FormatCommandContent(cv *model.CommandVariable) string {
 	msgContent := cv.CommandContent
 	username := cv.UserName
 	dateTemplate := "02/01/2006"

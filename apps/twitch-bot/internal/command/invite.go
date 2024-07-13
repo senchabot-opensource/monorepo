@@ -9,12 +9,12 @@ import (
 
 	"github.com/gempir/go-twitch-irc/v3"
 	"github.com/senchabot-opensource/monorepo/config"
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot"
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
+	"github.com/senchabot-opensource/monorepo/helper"
+	"github.com/senchabot-opensource/monorepo/model"
 )
 
-func (c *commands) InviteCommand(context context.Context, message twitch.PrivateMessage, commandName string, params []string) (*models.CommandResponse, error) {
-	var cmdResp models.CommandResponse
+func (c *commands) InviteCommand(context context.Context, message twitch.PrivateMessage, commandName string, params []string) (*model.CommandResponse, error) {
+	var cmdResp model.CommandResponse
 
 	if message.Channel != os.Getenv("BOT_USER_NAME") {
 		return nil, errors.New("command did not executed in senchabot")
@@ -43,7 +43,7 @@ func (c *commands) InviteCommand(context context.Context, message twitch.Private
 
 	log.Println("TRYING TO JOIN TWITCH CHANNEL `" + channelName + "`")
 	c.client.Twitch.Join(channelName)
-	optionalCommands := gosenchabot.GetOptionalCommands()
+	optionalCommands := helper.GetOptionalCommands()
 	for _, command := range optionalCommands {
 		_, err := c.service.CreateCommand(context, command.CommandName, command.CommandContent, twitchChannelId, "Senchabot")
 		if err != nil {

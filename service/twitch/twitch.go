@@ -11,7 +11,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
+	"github.com/senchabot-opensource/monorepo/model"
 	"golang.org/x/oauth2/clientcredentials"
 	"golang.org/x/oauth2/twitch"
 )
@@ -38,7 +38,7 @@ func InitTwitchOAuth2Token() string {
 	return twitchAccessToken
 }
 
-func GetTwitchUserInfo(query string, userIdOrName string) (*models.TwitchUserInfo, error) {
+func GetTwitchUserInfo(query string, userIdOrName string) (*model.TwitchUserInfo, error) {
 	resp, err := DoTwitchHttpReq("GET", fmt.Sprintf("/users?%s=%s", query, userIdOrName), twitchAccessToken)
 	if err != nil {
 		return nil, errors.New("[GetTwitchUserInfo] DoTwitchHttpReq error:" + err.Error())
@@ -53,7 +53,7 @@ func GetTwitchUserInfo(query string, userIdOrName string) (*models.TwitchUserInf
 	}
 
 	var data struct {
-		Data []models.TwitchUserInfo `json:"data"`
+		Data []model.TwitchUserInfo `json:"data"`
 	}
 	err = json.NewDecoder(resp.Body).Decode(&data)
 	if err != nil {
@@ -133,7 +133,7 @@ func CheckTwitchStreamStatus(username string) (bool, string) {
 	return data.Data[0].Type == "live", data.Data[0].Title
 }
 
-func CheckMultipleTwitchStreamer(usernames []string) []models.TwitchStreamerData {
+func CheckMultipleTwitchStreamer(usernames []string) []model.TwitchStreamerData {
 	params := usernames[0]
 	if len(usernames) > 1 {
 		params = usernames[0] + "&user_id="
@@ -153,7 +153,7 @@ func CheckMultipleTwitchStreamer(usernames []string) []models.TwitchStreamerData
 	}
 
 	var data struct {
-		Data []models.TwitchStreamerData `json:"data"`
+		Data []model.TwitchStreamerData `json:"data"`
 	}
 	err = json.NewDecoder(resp.Body).Decode(&data)
 	if err != nil {

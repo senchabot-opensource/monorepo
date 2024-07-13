@@ -10,8 +10,8 @@ import (
 	"strings"
 
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/client"
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/service/twitch"
+	"github.com/senchabot-opensource/monorepo/model"
+	"github.com/senchabot-opensource/monorepo/service/twitch"
 )
 
 func (s *webhook) BotJoin(client *client.Clients, joinedChannelList []string, w http.ResponseWriter, r *http.Request) {
@@ -26,7 +26,7 @@ func (s *webhook) BotJoin(client *client.Clients, joinedChannelList []string, w 
 		return
 	}
 
-	var data models.WebhookData
+	var data model.WebhookData
 	err = json.Unmarshal(body, &data)
 	if err != nil {
 		http.Error(w, "Error parsing request body", http.StatusBadRequest)

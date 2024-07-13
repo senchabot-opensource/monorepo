@@ -10,19 +10,19 @@ import (
 	"github.com/gempir/go-twitch-irc/v3"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/command/helpers"
 	"github.com/senchabot-opensource/monorepo/config"
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot"
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
-	twsrvc "github.com/senchabot-opensource/monorepo/packages/gosenchabot/service/twitch"
+	"github.com/senchabot-opensource/monorepo/helper"
+	"github.com/senchabot-opensource/monorepo/model"
+	twsrvc "github.com/senchabot-opensource/monorepo/service/twitch"
 )
 
-func (c *commands) SoCommand(context context.Context, message twitch.PrivateMessage, commandName string, params []string) (*models.CommandResponse, error) {
-	var cmdResp models.CommandResponse
+func (c *commands) SoCommand(context context.Context, message twitch.PrivateMessage, commandName string, params []string) (*model.CommandResponse, error) {
+	var cmdResp model.CommandResponse
 
 	if !helpers.CanExecuteCommand(context, c.service, message.Tags["badges"], message.RoomID) {
 		return nil, errors.New(message.User.DisplayName + config.CannotExecuteCommand)
 	}
 
-	if check := gosenchabot.IsCommandParamsLengthEqualToOne(params); !check {
+	if check := helper.IsCommandParamsLengthEqualToOne(params); !check {
 		cmdResp.Message = config.SoCommandInfo
 		return &cmdResp, nil
 	}

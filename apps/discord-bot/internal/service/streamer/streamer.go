@@ -13,8 +13,8 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
 	"github.com/senchabot-opensource/monorepo/config"
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
-	twsrvc "github.com/senchabot-opensource/monorepo/packages/gosenchabot/service/twitch"
+	"github.com/senchabot-opensource/monorepo/model"
+	twsrvc "github.com/senchabot-opensource/monorepo/service/twitch"
 )
 
 type GuildStreamers struct {
@@ -84,7 +84,7 @@ func DeleteServerFromData(serverId string) bool {
 	return true
 }
 
-func GetTwitchUserInfo(twitchUsername string) (string, *models.TwitchUserInfo) {
+func GetTwitchUserInfo(twitchUsername string) (string, *model.TwitchUserInfo) {
 	userInfo, err := twsrvc.GetTwitchUserInfo("login", twitchUsername)
 	if err != nil {
 		log.Println("[GetTwitchUserInfo] twsrvc.GetTwitchUserInfo error:", err.Error())
@@ -94,7 +94,7 @@ func GetTwitchUserInfo(twitchUsername string) (string, *models.TwitchUserInfo) {
 	return "", userInfo
 }
 
-func CheckIfTwitchStreamerExist(ctx context.Context, twitchUsername string, uInfo *models.TwitchUserInfo, s *discordgo.Session, i *discordgo.InteractionCreate, service service.Service) (string, bool) {
+func CheckIfTwitchStreamerExist(ctx context.Context, twitchUsername string, uInfo *model.TwitchUserInfo, s *discordgo.Session, i *discordgo.InteractionCreate, service service.Service) (string, bool) {
 	liveAnnoData, err := service.GetDiscordTwitchLiveAnno(ctx, uInfo.ID, i.GuildID)
 	if err != nil {
 		log.Println("[CheckIfTwitchStreamerExist] GetDiscordTwitchLiveAnno error:", err.Error())
@@ -111,7 +111,7 @@ func CheckIfTwitchStreamerExist(ctx context.Context, twitchUsername string, uInf
 	return "", false
 }
 
-func SetTwitchStreamer(ctx context.Context, uInfo *models.TwitchUserInfo, channelId, channelName, guildId, creatorUsername string, service service.Service) string {
+func SetTwitchStreamer(ctx context.Context, uInfo *model.TwitchUserInfo, channelId, channelName, guildId, creatorUsername string, service service.Service) string {
 	added, err := service.AddDiscordTwitchLiveAnnos(ctx, uInfo.Login, uInfo.ID, channelId, guildId, creatorUsername)
 	if err != nil {
 		log.Println("[SetTwitchStreamer] AddDiscordTwitchLiveAnnos error:", err.Error())
@@ -228,7 +228,7 @@ func getCooldownDuration(ctx context.Context, service service.Service, guildId s
 
 var streamersMutex sync.Mutex
 
-func getStreamersAndLiveData(_ context.Context, _ service.Service, guildId string) ([]models.TwitchStreamerData, map[string]GuildStreamers) {
+func getStreamersAndLiveData(_ context.Context, _ service.Service, guildId string) ([]model.TwitchStreamerData, map[string]GuildStreamers) {
 	streamers := GetStreamersData(guildId)
 
 	keys := make([]string, 0, len(streamers))
@@ -245,7 +245,7 @@ func getStreamersAndLiveData(_ context.Context, _ service.Service, guildId strin
 	return liveStreams, streamers
 }
 
-func handleAnnouncement(ctx context.Context, s *discordgo.Session, service service.Service, guildId string, streamers map[string]GuildStreamers, sd models.TwitchStreamerData) {
+func handleAnnouncement(ctx context.Context, s *discordgo.Session, service service.Service, guildId string, streamers map[string]GuildStreamers, sd model.TwitchStreamerData) {
 	streamersMutex.Lock()
 	defer streamersMutex.Unlock()
 
@@ -356,7 +356,7 @@ func CheckLiveStreams(s *discordgo.Session, ctx context.Context, service service
 	}
 }
 
-func FormatContent(str string, sd models.TwitchStreamerData) string {
+func FormatContent(str string, sd model.TwitchStreamerData) string {
 	if sd.GameName == "" {
 		sd.GameName = "Just Chatting"
 	}

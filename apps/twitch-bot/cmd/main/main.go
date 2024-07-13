@@ -10,7 +10,7 @@ import (
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/client"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/handler"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/service"
-	twsrvc "github.com/senchabot-opensource/monorepo/packages/gosenchabot/service/twitch"
+	twsrvc "github.com/senchabot-opensource/monorepo/service/twitch"
 )
 
 func clearDailyCounts() {
