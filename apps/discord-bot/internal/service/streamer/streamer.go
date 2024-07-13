@@ -26,11 +26,18 @@ type GuildStreamers struct {
 var streamers map[string]map[string]GuildStreamers = make(map[string]map[string]GuildStreamers)
 
 func InitStreamersData(ctx context.Context, service service.Service, guildId string) {
+	channelData, err := service.GetDiscordBotConfig(ctx, guildId, "stream_anno_default_channel")
+	if err != nil {
+		log.Println("[SetTwitchStreamer] GetDiscordBotConfig error:", err.Error())
+	}
 	liveAnnos, err := service.GetDiscordTwitchLiveAnnos(ctx, guildId)
 	if err != nil {
 		log.Println("[InitStreamersData] GetDiscordTwitchLiveAnnos error:", err.Error())
 	}
 	for _, dtla := range liveAnnos {
+		if dtla.AnnoChannelID == "" && channelData != nil && channelData.Value != "" {
+			dtla.AnnoChannelID = channelData.Value
+		}
 		serverStreamers, ok := streamers[dtla.AnnoServerID]
 		if !ok {
 			serverStreamers = make(map[string]GuildStreamers)
@@ -111,25 +118,36 @@ func CheckIfTwitchStreamerExist(ctx context.Context, twitchUsername string, uInf
 	return "", false
 }
 
-func SetTwitchStreamer(ctx context.Context, uInfo *model.TwitchUserInfo, channelId, channelName, guildId, creatorUsername string, service service.Service) string {
-	added, err := service.AddDiscordTwitchLiveAnnos(ctx, uInfo.Login, uInfo.ID, channelId, guildId, creatorUsername)
+func SetTwitchStreamer(ctx context.Context, uInfo *model.TwitchUserInfo, channelId *string, channel *discordgo.Channel, guildId, creatorUsername string, service service.Service) string {
+	var annoChannelId string
+	if channelId == nil {
+		channelData, err := service.GetDiscordBotConfig(ctx, guildId, "stream_anno_default_channel")
+		if err != nil {
+			log.Println("[SetTwitchStreamer] GetDiscordBotConfig error:", err.Error())
+
+			return fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısı veritabanı hatasından dolayı eklenemedi.", uInfo.Login)
+		}
+
+		channelId = &channelData.Value
+		annoChannelId = ""
+	} else {
+		annoChannelId = *channelId
+	}
+
+	added, err := service.AddDiscordTwitchLiveAnnos(ctx, uInfo.Login, uInfo.ID, annoChannelId, guildId, creatorUsername)
 	if err != nil {
 		log.Println("[SetTwitchStreamer] AddDiscordTwitchLiveAnnos error:", err.Error())
 
 		return fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısı veritabanı hatasından dolayı eklenemedi.", uInfo.Login)
 	}
 
-	if !added && err == nil {
-		SetStreamerData(guildId, uInfo.ID, uInfo.Login, channelId)
-		return fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısı varitabanında bulunmakta. Ancak... Twitch yayıncısının yayın duyurularının yapılacağı kanalı `%v` yazı kanalı olarak güncellendi.", uInfo.Login, channelName)
+	if !added {
+		SetStreamerData(guildId, uInfo.ID, uInfo.Login, *channelId)
+		return fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısı varitabanında bulunmakta. Ancak... Twitch yayıncısının yayın duyurularının yapılacağı kanalı `%v` yazı kanalı olarak güncellendi.", uInfo.Login, channel.Name)
 	}
 
-	if added {
-		SetStreamerData(guildId, uInfo.ID, uInfo.Login, channelId)
-		return fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısının yayın duyuruları `%v` isimli yazı kanalı için aktif edildi.", uInfo.Login, channelName)
-	}
-
-	return "Twitch yayıncısı eklenirken bir sorun oluştu."
+	SetStreamerData(guildId, uInfo.ID, uInfo.Login, *channelId)
+	return fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısının yayın duyuruları `%v` isimli yazı kanalı için aktif edildi.", uInfo.Login, channel.Name)
 }
 
 func GetStreamAnnoContent(ctx context.Context, service service.Service, guildId, streamerUserId string) string {
