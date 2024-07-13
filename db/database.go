@@ -65,6 +65,7 @@ type Database interface {
 	GetDiscordTwitchLiveAnnoByUsername(ctx context.Context, twitchUsername, annoServerId string) (*model.DiscordTwitchLiveAnnos, error)
 	GetDiscordTwitchLiveAnnos(ctx context.Context, serverId string) ([]*model.DiscordTwitchLiveAnnos, error)
 	GetCountDiscordTwitchLiveAnnosWithoutContent(ctx context.Context, serverId string) (int64, error)
+	GetCountDiscordTwitchLiveAnnosWithoutChannel(ctx context.Context, serverId string) (int64, error)
 	DeleteDiscordTwitchLiveAnno(ctx context.Context, twitchUserId string, serverId string) (bool, error)
 	DeleteDiscordTwitchLiveAnnosByGuildId(ctx context.Context, serverId string) (bool, error)
 	DeleteDiscordTwitchLiveAnnosByChannelId(ctx context.Context, channelId string) (bool, error)

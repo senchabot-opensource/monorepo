@@ -47,6 +47,7 @@ type Service interface {
 	GetDiscordTwitchLiveAnnoByUsername(ctx context.Context, twitchUsername, annoServerId string) (*model.DiscordTwitchLiveAnnos, error)
 	GetDiscordTwitchLiveAnnos(ctx context.Context, serverId string) ([]*model.DiscordTwitchLiveAnnos, error)
 	GetCountDiscordTwitchLiveAnnosWithoutContent(ctx context.Context, serverId string) (int64, error)
+	GetCountDiscordTwitchLiveAnnosWithoutChannel(ctx context.Context, serverId string) (int64, error)
 	DeleteDiscordTwitchLiveAnno(ctx context.Context, twitchUserId string, serverId string) (bool, error)
 	DeleteDiscordTwitchLiveAnnosByGuildId(ctx context.Context, serverId string) (bool, error)
 	DeleteDiscordTwitchLiveAnnosByChannelId(ctx context.Context, channelId string) (bool, error)
@@ -206,6 +207,9 @@ func (s *service) GetDiscordTwitchLiveAnnos(ctx context.Context, serverId string
 }
 func (s *service) GetCountDiscordTwitchLiveAnnosWithoutContent(ctx context.Context, serverId string) (int64, error) {
 	return s.DB.GetCountDiscordTwitchLiveAnnosWithoutContent(ctx, serverId)
+}
+func (s *service) GetCountDiscordTwitchLiveAnnosWithoutChannel(ctx context.Context, serverId string) (int64, error) {
+	return s.DB.GetCountDiscordTwitchLiveAnnosWithoutChannel(ctx, serverId)
 }
 func (s *service) DeleteDiscordTwitchLiveAnno(ctx context.Context, twitchUserId string, serverId string) (bool, error) {
 	return s.DB.DeleteDiscordTwitchLiveAnno(ctx, twitchUserId, serverId)

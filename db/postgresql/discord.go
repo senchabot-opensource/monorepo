@@ -327,6 +327,17 @@ func (m *postgresql) GetCountDiscordTwitchLiveAnnosWithoutContent(ctx context.Co
 	return twitchLiveAnnosCount, nil
 }
 
+func (m *postgresql) GetCountDiscordTwitchLiveAnnosWithoutChannel(ctx context.Context, serverId string) (int64, error) {
+	var twitchLiveAnnosCount int64
+
+	result := m.DB.Model(&model.DiscordTwitchLiveAnnos{}).Where("anno_server_id = ?", serverId).Where("anno_channel_id = ''").Count(&twitchLiveAnnosCount)
+	if result.Error != nil {
+		return 0, errors.New("(GetCountDiscordTwitchLiveAnnosWithoutChannel) db.Count Error:" + result.Error.Error())
+	}
+
+	return twitchLiveAnnosCount, nil
+}
+
 func (m *postgresql) DeleteDiscordTwitchLiveAnno(ctx context.Context, twitchUserId string, serverId string) (bool, error) {
 	existLiveAnno, err := m.GetDiscordTwitchLiveAnno(ctx, twitchUserId, serverId)
 	if err != nil {

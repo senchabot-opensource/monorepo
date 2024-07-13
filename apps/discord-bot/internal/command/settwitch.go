@@ -55,7 +55,7 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 				return
 			}
 
-			resp := streamer.SetTwitchStreamer(ctx, uInfo, channelData.Value, ch.Name, i.GuildID, commandUsername, service)
+			resp := streamer.SetTwitchStreamer(ctx, uInfo, nil, ch, i.GuildID, commandUsername, service)
 			ephemeralRespond(s, i, resp)
 			return
 		}
@@ -74,7 +74,13 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 			return
 		}
 
-		resp := streamer.SetTwitchStreamer(ctx, uInfo, channelId, channelName, i.GuildID, commandUsername, service)
+		ch, err := s.Channel(channelId)
+		if err != nil {
+			ephemeralRespond(s, i, config.ErrorMessage+"#XXXY")
+			return
+		}
+
+		resp := streamer.SetTwitchStreamer(ctx, uInfo, &channelId, ch, i.GuildID, commandUsername, service)
 		ephemeralRespond(s, i, resp)
 
 	case "event-channel":
