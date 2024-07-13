@@ -6,7 +6,10 @@ on:
       - command/**
       - config/**
       - db/**
-      - packages/gosenchabot/**
+      - helper/**
+      - model/**
+      - platform/**
+      - service/**
       - "go.mod"
       - "go.sum"
     branches:
