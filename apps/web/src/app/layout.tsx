@@ -36,7 +36,7 @@ interface Props {
   children: React.ReactNode
 }
 
-export default function RootLayout({ children }: Props) {
+export default function Layout({ children }: Props) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body

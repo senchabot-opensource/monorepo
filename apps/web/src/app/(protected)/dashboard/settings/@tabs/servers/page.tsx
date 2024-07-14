@@ -3,8 +3,6 @@ import { Suspense } from 'react'
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 
-import { JoinableEntities } from '@/components/pages/settings/joinable-entities'
-import { JoinedEntities } from '@/components/pages/settings/joined-entities'
 import {
   Card,
   CardContent,
@@ -15,6 +13,9 @@ import {
 import { LoaderIcon } from '@/components/ui/icons'
 
 import { auth } from '@/lib/auth'
+
+import { JoinableEntities } from './joinable-entities-list'
+import { JoinedEntities } from './joined-entities-list'
 
 export const metadata: Metadata = {
   title: 'Servers & Channels',

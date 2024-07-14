@@ -4,7 +4,7 @@ import Twitch from 'next-auth/providers/twitch'
 
 import { PrismaAdapter } from '@auth/prisma-adapter'
 
-import { linkEntity } from '@/data-layer/actions/entity'
+import { linkEntity } from '@/services/entities/actions'
 
 import { prisma } from './db'
 
@@ -13,7 +13,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [Twitch, Discord],
   events: {
     linkAccount: ({ account, user }) => {
-      linkEntity(account.provider, account.providerAccountId, user.id!)
+      linkEntity({
+        provider: account.provider as 'twitch' | 'discord',
+        providerAccountId: account.providerAccountId,
+        userId: user.id!,
+      })
     },
   },
   pages: {
