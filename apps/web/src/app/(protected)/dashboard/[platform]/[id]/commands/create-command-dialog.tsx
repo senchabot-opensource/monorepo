@@ -35,7 +35,7 @@ export function CreateCommand({ platform, entityId }: Props) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="secondary" size="sm">
+        <Button size="sm">
           <PlusIcon className="size-4" />
           <span>Create</span>
         </Button>
