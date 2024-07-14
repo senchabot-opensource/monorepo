@@ -60,6 +60,9 @@ export function EntitiesDropdown({ entities }: Props) {
                 </AvatarFallback>
               </Avatar>
               <span className="max-w-36 truncate">
+                <span className='text-muted-foreground after:content-["/"]'>
+                  {selectedEntity.platform}
+                </span>
                 {selectedEntity.entity_name}
               </span>
             </div>
@@ -93,6 +96,9 @@ export function EntitiesDropdown({ entities }: Props) {
                         </AvatarFallback>
                       </Avatar>
                       <span className="max-w-36 truncate">
+                        <span className='text-muted-foreground after:content-["/"]'>
+                          {item.platform}
+                        </span>
                         {item.entity_name}
                       </span>
                     </div>

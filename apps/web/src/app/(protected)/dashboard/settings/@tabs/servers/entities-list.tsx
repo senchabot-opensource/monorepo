@@ -27,7 +27,12 @@ export function EntitiesList({ entities }: Props) {
                 <AvatarImage src={item.entity_icon} />
                 <AvatarFallback>{item.entity_name.charAt(0)}</AvatarFallback>
               </Avatar>
-              <span>{item.entity_name}</span>
+              <span>
+                <span className='text-muted-foreground after:content-["/"]'>
+                  {item.platform}
+                </span>
+                {item.entity_name}
+              </span>
             </div>
             {item.entity_bot_joined ? (
               <DepartEntity

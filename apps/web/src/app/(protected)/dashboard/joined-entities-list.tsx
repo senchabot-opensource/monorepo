@@ -21,7 +21,7 @@ export async function JoinedEntitiesList() {
     <div className="grid grid-cols-4 gap-4">
       {entities.map((item) => (
         <NextLink
-          className="flex items-center space-x-2 rounded-md border bg-muted/25 px-4 py-2 text-sm font-medium text-muted-foreground shadow-sm transition-all hover:bg-accent focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+          className="flex items-center space-x-2 rounded-md border bg-muted/25 px-4 py-2 text-sm font-medium shadow-sm transition-all hover:bg-accent focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
           href={`/dashboard/${item.platform}/${item.platform_entity_id}`}
           key={item.platform_entity_id}
         >
@@ -29,7 +29,12 @@ export async function JoinedEntitiesList() {
             <AvatarImage src={item.entity_icon} />
             <AvatarFallback>{item.entity_name.charAt(0)}</AvatarFallback>
           </Avatar>
-          <span>{item.entity_name}</span>
+          <span>
+            <span className='text-muted-foreground after:content-["/"]'>
+              {item.platform}
+            </span>
+            {item.entity_name}
+          </span>
         </NextLink>
       ))}
     </div>
