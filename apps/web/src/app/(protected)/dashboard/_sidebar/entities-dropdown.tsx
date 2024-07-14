@@ -72,7 +72,10 @@ export function EntitiesDropdown({ entities }: Props) {
           <ChevronsUpDownIcon className="size-4 text-muted-foreground" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[--radix-popover-trigger-width] p-0">
+      <PopoverContent
+        className="w-min min-w-[--radix-popover-trigger-width] p-0"
+        align="start"
+      >
         <Command>
           <CommandInput placeholder="Search Server" />
           <CommandEmpty>No server found.</CommandEmpty>
@@ -95,7 +98,7 @@ export function EntitiesDropdown({ entities }: Props) {
                           {item.entity_name.charAt(0)}
                         </AvatarFallback>
                       </Avatar>
-                      <span className="max-w-36 truncate">
+                      <span>
                         <span className='text-muted-foreground after:content-["/"]'>
                           {item.platform}
                         </span>
