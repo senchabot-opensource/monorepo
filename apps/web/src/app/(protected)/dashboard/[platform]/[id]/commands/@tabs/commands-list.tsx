@@ -45,7 +45,7 @@ export async function CommandsList({ platform, id, type }: Props) {
                 <TableCell>
                   <CommandStatusSwitch command={item} />
                 </TableCell>
-                <TableCell>!{item.name}</TableCell>
+                <TableCell>{item.name}</TableCell>
                 <TableCell>
                   <p className="truncate" title={item.content}>
                     {item.content}
@@ -70,7 +70,7 @@ export async function CommandsList({ platform, id, type }: Props) {
   } else if (type === 'global') {
     return (
       <div className="overflow-hidden rounded-xl border">
-        <Table className="table-fixed">
+        <Table className="table-fixed overflow-hidden">
           <TableHeader>
             <TableRow>
               <TableHead>Name</TableHead>
@@ -80,9 +80,9 @@ export async function CommandsList({ platform, id, type }: Props) {
           <TableBody>
             {commands.map((item) => (
               <TableRow key={item.id}>
-                <TableCell>!{item.name}</TableCell>
+                <TableCell>{item.name}</TableCell>
                 <TableCell>
-                  <p className="truncate" title={item.content}>
+                  <p className="text-wrap break-words" title={item.content}>
                     {item.content}
                   </p>
                 </TableCell>
