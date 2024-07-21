@@ -51,7 +51,7 @@ export function JoinEntity({
             params.append('guild_id', platformEntityId)
             params.append('disable_guild_select', 'true')
             params.append('permission', '2199022698327')
-            params.append('scope', 'applications.commands')
+            params.append('scope', ['bot', 'applications.commands'].join(' '))
 
             window.open(new URL(BASE_URL + params), '_blank', 'noreferrer')
           }
