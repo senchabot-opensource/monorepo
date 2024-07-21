@@ -8,7 +8,7 @@ import (
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service/streamer"
 	"github.com/senchabot-opensource/monorepo/config"
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot"
+	"github.com/senchabot-opensource/monorepo/helper"
 )
 
 func (c *commands) DelTwitchCommand(ctx context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, service service.Service) {
@@ -19,7 +19,7 @@ func (c *commands) DelTwitchCommand(ctx context.Context, s *discordgo.Session, i
 	case "streamer":
 		options = options[0].Options
 		twitchUsername := options[0].StringValue()
-		twitchUsername = gosenchabot.ParseTwitchUsernameURLParam(twitchUsername)
+		twitchUsername = helper.ParseTwitchUsernameURLParam(twitchUsername)
 
 		response0, uInfo := streamer.GetTwitchUserInfo(twitchUsername)
 		if response0 != "" {
@@ -71,16 +71,16 @@ func (c *commands) DelTwitchCommand(ctx context.Context, s *discordgo.Session, i
 		switch options[0].Name {
 		// del-twitch announcement default-channel
 		case "default-channel":
-			liveAnnosLength, err := service.GetCountDiscordTwitchLiveAnnosWithoutContent(ctx, i.GuildID)
+			liveAnnosLength, err := service.GetCountDiscordTwitchLiveAnnosWithoutChannel(ctx, i.GuildID)
 			if err != nil {
-				log.Println("[command.DelTwitchCommand.announcement.default-channel] GetCountDiscordTwitchLiveAnnosWithoutContent error:", err.Error())
+				log.Println("[command.DelTwitchCommand.announcement.default-channel] GetCountDiscordTwitchLiveAnnosWithoutChannel error:", err.Error())
 				ephemeralRespond(s, i, config.ErrorMessage+"del-twitch:announcement:default-channel#0001")
 				return
 			}
 
 			log.Println("liveAnnosLength", liveAnnosLength)
 			if liveAnnosLength > 0 {
-				ephemeralRespond(s, i, "Twitch yayıncısına özgü yayın duyuru mesajı olmayan yayıncılar veritabanında bulunduğu için varsayılan Twitch canlı yayın duyuru kanalı ayarını silemezsiniz.")
+				ephemeralRespond(s, i, "Twitch yayıncısına özgü yayın duyuru kanalı olmayan yayıncılar veritabanında bulunduğu için varsayılan Twitch canlı yayın duyuru kanalı ayarını silemezsiniz.")
 				// EN: You cannot delete the default channel setting as there are streamers without a custom channel setting
 				return
 			}
@@ -113,7 +113,7 @@ func (c *commands) DelTwitchCommand(ctx context.Context, s *discordgo.Session, i
 		case "custom-content":
 			options = options[0].Options
 			twitchUsername := options[0].StringValue()
-			twitchUsername = gosenchabot.ParseTwitchUsernameURLParam(twitchUsername)
+			twitchUsername = helper.ParseTwitchUsernameURLParam(twitchUsername)
 
 			response0, uInfo := streamer.GetTwitchUserInfo(twitchUsername)
 			if response0 != "" {

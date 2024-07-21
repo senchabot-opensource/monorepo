@@ -1,9 +1,9 @@
-package gosenchabot_test
+package helper_test
 
 import (
 	"testing"
 
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot"
+	"github.com/senchabot-opensource/monorepo/helper"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -35,7 +35,7 @@ func TestMakeUniqueArray(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.description, func(t *testing.T) {
-			uniqueArr := gosenchabot.MakeUniqueArray(testCase.input)
+			uniqueArr := helper.MakeUniqueArray(testCase.input)
 
 			assert.Equal(t, testCase.expected, uniqueArr, "they should be equal")
 		})

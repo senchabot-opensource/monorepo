@@ -11,15 +11,15 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/command/helpers"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot"
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
+	"github.com/senchabot-opensource/monorepo/helper"
+	"github.com/senchabot-opensource/monorepo/model"
 )
 
 type CommandFunc func(context context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, service service.Service)
 
 type CommandMap map[string]CommandFunc
 
-type SysCommandFunc func(context context.Context, m *discordgo.MessageCreate, commandName string, params []string) (*models.CommandResponse, error)
+type SysCommandFunc func(context context.Context, m *discordgo.MessageCreate, commandName string, params []string) (*model.CommandResponse, error)
 
 type SysCommandMap map[string]SysCommandFunc
 
@@ -120,7 +120,7 @@ func (c *commands) Run(ctx context.Context, cmdName string, params []string, m *
 	}
 	if cmdData != nil {
 		cmdVar := helpers.GetCommandVariables(c.dS, cmdData, m)
-		formattedCommandContent := gosenchabot.FormatCommandContent(cmdVar)
+		formattedCommandContent := helper.FormatCommandContent(cmdVar)
 		c.Respond(ctx, m, cmdName, formattedCommandContent)
 		return
 	}
@@ -150,7 +150,7 @@ func (c *commands) Run(ctx context.Context, cmdName string, params []string, m *
 	}
 
 	cmdVar := helpers.GetCommandVariables(c.dS, cmdData, m)
-	formattedCommandContent := gosenchabot.FormatCommandContent(cmdVar)
+	formattedCommandContent := helper.FormatCommandContent(cmdVar)
 	c.Respond(ctx, m, cmdName, formattedCommandContent)
 	// GLOBAL COMMANDS
 }

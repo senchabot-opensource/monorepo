@@ -8,17 +8,17 @@ import (
 	"strings"
 
 	"github.com/senchabot-opensource/monorepo/config"
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot"
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
+	"github.com/senchabot-opensource/monorepo/helper"
+	"github.com/senchabot-opensource/monorepo/model"
 )
 
 type checkCommandExistCommandType func(ctx context.Context, commandName string, platformEntityId string) (*string, error)
 type acmdaCommandCommandType func(ctx context.Context, commandName string, aliases []string, platformEntityId string, createdBy string) (*string, error)
 
-func AcmdaCommand(context context.Context, checkCommandExists checkCommandExistCommandType, createCommandAlias acmdaCommandCommandType, isSystemCommand IsSystemCommandType, message models.MessageData, commandName string, params []string) (*models.CommandResponse, error) {
-	var cmdResp models.CommandResponse
+func AcmdaCommand(context context.Context, checkCommandExists checkCommandExistCommandType, createCommandAlias acmdaCommandCommandType, isSystemCommand IsSystemCommandType, message model.MessageData, commandName string, params []string) (*model.CommandResponse, error) {
+	var cmdResp model.CommandResponse
 
-	command, aliasCommands, check := gosenchabot.GetAliasCommandCreateParams(params)
+	command, aliasCommands, check := helper.GetAliasCommandCreateParams(params)
 	if !check {
 		cmdResp.Message = config.AddCommandAliasInfo
 		return &cmdResp, nil
@@ -26,7 +26,7 @@ func AcmdaCommand(context context.Context, checkCommandExists checkCommandExistC
 
 	platformEntityId := message.PlatformEntityID
 
-	if infoText, check := gosenchabot.ValidateAliasCommandsLength(aliasCommands); !check {
+	if infoText, check := helper.ValidateAliasCommandsLength(aliasCommands); !check {
 		cmdResp.Message = message.UserName + ", " + infoText
 		return &cmdResp, nil
 	}

@@ -5,11 +5,11 @@ import (
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot"
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
+	"github.com/senchabot-opensource/monorepo/helper"
+	"github.com/senchabot-opensource/monorepo/model"
 )
 
-func GetCommandVariables(dS *discordgo.Session, cmdData *models.BotCommand, m *discordgo.MessageCreate) *models.CommandVariable {
+func GetCommandVariables(dS *discordgo.Session, cmdData *model.BotCommand, m *discordgo.MessageCreate) *model.CommandVariable {
 	var channelName string
 	chData, err := dS.Channel(m.ChannelID)
 	if err != nil {
@@ -20,7 +20,7 @@ func GetCommandVariables(dS *discordgo.Session, cmdData *models.BotCommand, m *d
 		channelName = chData.Name
 	}
 
-	return &models.CommandVariable{
+	return &model.CommandVariable{
 		CommandContent:   cmdData.CommandContent,
 		UserName:         m.Author.Username,
 		CurrentDate:      &m.Timestamp,
@@ -39,7 +39,7 @@ func ParseMessage(message string) (string, []string) {
 
 	params := splitMsg[1:]
 
-	if !gosenchabot.CheckIfCommand(cmdName) {
+	if !helper.CheckIfCommand(cmdName) {
 		return "", nil
 	}
 

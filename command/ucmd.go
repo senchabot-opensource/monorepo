@@ -5,22 +5,22 @@ import (
 	"log"
 
 	"github.com/senchabot-opensource/monorepo/config"
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot"
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
+	"github.com/senchabot-opensource/monorepo/helper"
+	"github.com/senchabot-opensource/monorepo/model"
 )
 
 type updateCommandServiceType func(ctx context.Context, commandName string, commandContent string, platformEntityId string, updatedBy string) (*string, *string, error)
 
-func UcmdCommand(context context.Context, service updateCommandServiceType, isSystemCommand IsSystemCommandType, message models.MessageData, commandName string, params []string) (*models.CommandResponse, error) {
-	var cmdResp models.CommandResponse
+func UcmdCommand(context context.Context, service updateCommandServiceType, isSystemCommand IsSystemCommandType, message model.MessageData, commandName string, params []string) (*model.CommandResponse, error) {
+	var cmdResp model.CommandResponse
 
-	command_name, newCommandContent, check := gosenchabot.GetCommandCreateUpdateParams(params)
+	command_name, newCommandContent, check := helper.GetCommandCreateUpdateParams(params)
 	if !check {
 		cmdResp.Message = config.UpdateCommandInfo
 		return &cmdResp, nil
 	}
 	// Check command content length
-	if infoText, check := gosenchabot.ValidateCommandContentLength(newCommandContent); !check {
+	if infoText, check := helper.ValidateCommandContentLength(newCommandContent); !check {
 		cmdResp.Message = message.UserName + ", " + infoText
 		return &cmdResp, nil
 	}

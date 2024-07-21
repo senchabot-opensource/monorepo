@@ -7,8 +7,8 @@ import (
 	"strings"
 
 	"github.com/senchabot-opensource/monorepo/config"
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot"
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
+	"github.com/senchabot-opensource/monorepo/helper"
+	"github.com/senchabot-opensource/monorepo/model"
 )
 
 const (
@@ -29,10 +29,10 @@ type SozlukGraphQLResponse struct {
 	} `json:"data"`
 }
 
-func SozlukCommand(params []string) (*models.CommandResponse, error) {
-	var cmdResp models.CommandResponse
+func SozlukCommand(params []string) (*model.CommandResponse, error) {
+	var cmdResp model.CommandResponse
 
-	if check := gosenchabot.IsCommandParamsLengthEqualToOne(params); !check {
+	if check := helper.IsCommandParamsLengthEqualToOne(params); !check {
 		cmdResp.Message = config.SozlukCommandInfo
 		return &cmdResp, nil
 	}
@@ -49,7 +49,7 @@ func SozlukCommand(params []string) (*models.CommandResponse, error) {
 				}
 			}`, sozlukTerm)
 
-	response, err := gosenchabot.FetchGraphQL(gqlUrl, query)
+	response, err := helper.FetchGraphQL(gqlUrl, query)
 	if err != nil {
 		return nil, errors.New("Error:" + err.Error())
 	}

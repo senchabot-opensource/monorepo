@@ -6,11 +6,11 @@ import (
 
 	"github.com/gempir/go-twitch-irc/v3"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/service"
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
+	"github.com/senchabot-opensource/monorepo/model"
 )
 
-func GetCommandVariables(cmdData *models.BotCommand, message twitch.PrivateMessage) *models.CommandVariable {
-	return &models.CommandVariable{
+func GetCommandVariables(cmdData *model.BotCommand, message twitch.PrivateMessage) *model.CommandVariable {
+	return &model.CommandVariable{
 		CommandContent:   cmdData.CommandContent,
 		UserName:         message.User.DisplayName,
 		CurrentDate:      &message.Time,

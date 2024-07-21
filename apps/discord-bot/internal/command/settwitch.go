@@ -11,7 +11,7 @@ import (
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service/streamer"
 	"github.com/senchabot-opensource/monorepo/config"
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot"
+	"github.com/senchabot-opensource/monorepo/helper"
 )
 
 func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, service service.Service) {
@@ -23,7 +23,7 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 		twitchUsername := options[0].StringValue()
 
 		commandUsername := i.Member.User.Username
-		twitchUsername = gosenchabot.ParseTwitchUsernameURLParam(twitchUsername)
+		twitchUsername = helper.ParseTwitchUsernameURLParam(twitchUsername)
 
 		response0, uInfo := streamer.GetTwitchUserInfo(twitchUsername)
 		if response0 != "" {
@@ -55,7 +55,7 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 				return
 			}
 
-			resp := streamer.SetTwitchStreamer(ctx, uInfo, channelData.Value, ch.Name, i.GuildID, commandUsername, service)
+			resp := streamer.SetTwitchStreamer(ctx, uInfo, nil, ch, i.GuildID, commandUsername, service)
 			ephemeralRespond(s, i, resp)
 			return
 		}
@@ -74,7 +74,13 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 			return
 		}
 
-		resp := streamer.SetTwitchStreamer(ctx, uInfo, channelId, channelName, i.GuildID, commandUsername, service)
+		ch, err := s.Channel(channelId)
+		if err != nil {
+			ephemeralRespond(s, i, config.ErrorMessage+"#XXXY")
+			return
+		}
+
+		resp := streamer.SetTwitchStreamer(ctx, uInfo, &channelId, ch, i.GuildID, commandUsername, service)
 		ephemeralRespond(s, i, resp)
 
 	case "event-channel":
@@ -128,7 +134,7 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 		case "custom-content":
 			options = options[0].Options
 			twitchUsername := options[0].StringValue()
-			twitchUsername = gosenchabot.ParseTwitchUsernameURLParam(twitchUsername)
+			twitchUsername = helper.ParseTwitchUsernameURLParam(twitchUsername)
 			annoContent := options[1].StringValue()
 
 			response0, uInfo := streamer.GetTwitchUserInfo(twitchUsername)

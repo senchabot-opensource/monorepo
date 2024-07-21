@@ -7,7 +7,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
 	"github.com/senchabot-opensource/monorepo/config"
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot"
+	"github.com/senchabot-opensource/monorepo/helper"
 )
 
 const FOURTEEN_DAYS = 24 * 14
@@ -52,14 +52,14 @@ func (c *commands) PurgeCommand(ctx context.Context, s *discordgo.Session, i *di
 		switch options[0].Name {
 		case "message-content":
 			for _, m := range messages {
-				if gosenchabot.CheckTimeOlderThan(m.Timestamp, FOURTEEN_DAYS) && gosenchabot.ContainsLowerCase(m.Content, optionValue) {
+				if helper.CheckTimeOlderThan(m.Timestamp, FOURTEEN_DAYS) && helper.ContainsLowerCase(m.Content, optionValue) {
 					messageIDs = append(messageIDs, m.ID)
 				}
 			}
 			content = "containing the characters `" + optionValue + "`"
 		case "username":
 			for _, m := range messages {
-				if gosenchabot.CheckTimeOlderThan(m.Timestamp, FOURTEEN_DAYS) && gosenchabot.ContainsLowerCase(m.Author.Username, optionValue) {
+				if helper.CheckTimeOlderThan(m.Timestamp, FOURTEEN_DAYS) && helper.ContainsLowerCase(m.Author.Username, optionValue) {
 					messageIDs = append(messageIDs, m.ID)
 				}
 			}

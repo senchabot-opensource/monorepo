@@ -11,7 +11,7 @@ import (
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
+	"github.com/senchabot-opensource/monorepo/model"
 	"gorm.io/gorm"
 )
 
@@ -27,7 +27,7 @@ func (ss *webhook) BotLeave(s *discordgo.Session, w http.ResponseWriter, r *http
 		return
 	}
 
-	var data models.WebhookData
+	var data model.WebhookData
 	err = json.Unmarshal(body, &data)
 	if err != nil {
 		http.Error(w, "Error parsing request body", http.StatusBadRequest)

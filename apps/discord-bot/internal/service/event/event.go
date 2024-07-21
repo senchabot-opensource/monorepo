@@ -5,17 +5,17 @@ import (
 	"time"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot"
-	twsrvc "github.com/senchabot-opensource/monorepo/packages/gosenchabot/service/twitch"
+	"github.com/senchabot-opensource/monorepo/helper"
+	twsrvc "github.com/senchabot-opensource/monorepo/service/twitch"
 )
 
 func CreateLiveStreamScheduledEvent(s *discordgo.Session, msgContent string, msgEmbeds []*discordgo.MessageEmbed, guildId string) {
-	url := gosenchabot.GetURL("twitch.tv", msgContent)
+	url := helper.GetURL("twitch.tv", msgContent)
 	if url == "" && len(msgEmbeds) > 0 {
 		url = msgEmbeds[0].URL
 	}
 
-	username := gosenchabot.ParseTwitchUsernameURLParam(url)
+	username := helper.ParseTwitchUsernameURLParam(url)
 	if url == "" || username == "" {
 		return
 	}
@@ -59,7 +59,7 @@ func CheckLiveStreamScheduledEvents(s *discordgo.Session) {
 						continue
 					}
 
-					twitchUsername := gosenchabot.ParseTwitchUsernameURLParam(e.EntityMetadata.Location)
+					twitchUsername := helper.ParseTwitchUsernameURLParam(e.EntityMetadata.Location)
 					isLive, streamTitle := twsrvc.CheckTwitchStreamStatus(twitchUsername)
 					if len(streamTitle) > 100 {
 						streamTitle = streamTitle[0:90]

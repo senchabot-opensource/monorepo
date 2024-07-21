@@ -4,13 +4,13 @@ import (
 	"context"
 	"strings"
 
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
+	"github.com/senchabot-opensource/monorepo/model"
 )
 
-type getCommandListServiceType func(ctx context.Context, platformEntityId string) ([]*models.BotCommand, error)
+type getCommandListServiceType func(ctx context.Context, platformEntityId string) ([]*model.BotCommand, error)
 
-func CmdsCommand(context context.Context, service getCommandListServiceType, isSystemCommand IsSystemCommandType, message models.MessageData, commandName string, params []string) (*models.CommandResponse, error) {
-	var cmdResp models.CommandResponse
+func CmdsCommand(context context.Context, service getCommandListServiceType, isSystemCommand IsSystemCommandType, message model.MessageData, commandName string, params []string) (*model.CommandResponse, error) {
+	var cmdResp model.CommandResponse
 	var commandListArr []string
 	var commandListString string
 

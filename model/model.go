@@ -1,9 +1,9 @@
-package models
+package model
 
 import (
 	"time"
 
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/platform"
+	"github.com/senchabot-opensource/monorepo/platform"
 )
 
 type TwitchChannel struct {

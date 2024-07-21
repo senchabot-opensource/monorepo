@@ -9,11 +9,11 @@ import (
 	"github.com/gempir/go-twitch-irc/v3"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/command/helpers"
 	"github.com/senchabot-opensource/monorepo/config"
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
+	"github.com/senchabot-opensource/monorepo/model"
 )
 
-func (c *commands) TimersCommand(context context.Context, message twitch.PrivateMessage, _ string, _ []string) (*models.CommandResponse, error) {
-	var cmdResp models.CommandResponse
+func (c *commands) TimersCommand(context context.Context, message twitch.PrivateMessage, _ string, _ []string) (*model.CommandResponse, error) {
+	var cmdResp model.CommandResponse
 	channelId := message.RoomID
 
 	if !helpers.CanExecuteCommand(context, c.service, message.Tags["badges"], channelId) {

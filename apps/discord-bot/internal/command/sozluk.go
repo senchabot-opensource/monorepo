@@ -5,10 +5,10 @@ import (
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/senchabot-opensource/monorepo/command"
-	"github.com/senchabot-opensource/monorepo/packages/gosenchabot/models"
+	"github.com/senchabot-opensource/monorepo/model"
 )
 
-func (c *commands) SozlukCommand(context context.Context, m *discordgo.MessageCreate, commandName string, params []string) (*models.CommandResponse, error) {
+func (c *commands) SozlukCommand(context context.Context, m *discordgo.MessageCreate, commandName string, params []string) (*model.CommandResponse, error) {
 	return command.SozlukCommand(params)
 
 }
