@@ -7,7 +7,7 @@ import { ArrowLeft, TriangleAlertIcon } from 'lucide-react'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 
-import { auth } from '@/lib/auth'
+import { useSession } from '@/hooks/use-session'
 
 import { SignInForm } from './signin-form'
 
@@ -32,11 +32,11 @@ interface Props {
 }
 
 export default async function Page({ searchParams }: Props) {
-  const session = await auth()
+  const session = await useSession()
 
   // show error if user received an error while linking an account
   if (session && !searchParams.error) {
-    redirect('/dashboard')
+    throw redirect('/dashboard')
   }
 
   const errorMessage = getErrorMessage(searchParams.error)
