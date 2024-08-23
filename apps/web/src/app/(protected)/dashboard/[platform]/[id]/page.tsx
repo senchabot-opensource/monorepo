@@ -5,9 +5,9 @@ import { redirect } from 'next/navigation'
 
 import { LoaderIcon } from '@/components/ui/icons'
 
-import { auth } from '@/lib/auth'
+import { useSession } from '@/hooks/use-session'
 
-import type { Platform } from '@/services/shared/type'
+import type { Platform } from '@/types/platform'
 
 import { EntityLogsCard } from './entity-logs-card'
 
@@ -23,10 +23,10 @@ interface Props {
 }
 
 export default async function Page({ params }: Props) {
-  const session = await auth()
+  const session = await useSession()
 
   if (!session) {
-    redirect('/signin')
+    throw redirect('/signin')
   }
 
   return (

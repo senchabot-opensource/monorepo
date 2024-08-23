@@ -4,7 +4,7 @@ import { DiscordIcon, TwitchIcon } from '@/components/ui/icons'
 
 import { formatDate } from '@/lib/utils'
 
-import { getUserAccounts } from '@/services/users/queries'
+import { getUserAccounts } from '@/services/queries/users'
 
 import { LinkAccount } from './link-account-button'
 

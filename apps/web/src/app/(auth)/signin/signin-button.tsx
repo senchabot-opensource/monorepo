@@ -5,7 +5,7 @@ import { useTransition } from 'react'
 import { Button } from '@/components/ui/button'
 import { DiscordIcon, LoaderIcon, TwitchIcon } from '@/components/ui/icons'
 
-import { signInWithProvider } from '@/services/auth/actions'
+import { signInWithProvider } from '@/services/actions/auth'
 
 interface Props {
   provider: 'twitch' | 'discord'

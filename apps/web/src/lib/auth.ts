@@ -4,7 +4,7 @@ import Twitch from 'next-auth/providers/twitch'
 
 import { PrismaAdapter } from '@auth/prisma-adapter'
 
-import { linkEntity } from '@/services/entities/actions'
+import { linkEntity } from '@/services/actions/entities'
 
 import { prisma } from './db'
 

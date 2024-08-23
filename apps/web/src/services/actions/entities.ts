@@ -6,7 +6,7 @@ import { ZSAError, createServerAction } from 'zsa'
 
 import { fetcher } from '@/lib/fetcher'
 
-import { executeEntityActionSchema, linkEntitySchema } from './schema'
+import { executeEntityActionSchema, linkEntitySchema } from '../schemas/entity'
 
 /**
  *

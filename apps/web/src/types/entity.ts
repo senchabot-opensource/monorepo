@@ -1,4 +1,4 @@
-import type { Platform } from '../shared/type'
+import type { Platform } from '@/types/platform'
 
 export type EntityLog = {
   id: string

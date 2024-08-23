@@ -7,8 +7,9 @@ import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { LoaderIcon } from '@/components/ui/icons'
 
-import { deleteCommand } from '@/services/commands/actions'
-import type { Platform } from '@/services/shared/type'
+import { deleteCommand } from '@/services/actions/commands'
+
+import type { Platform } from '@/types/platform'
 
 interface Props {
   id: number

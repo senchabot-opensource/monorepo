@@ -1,6 +1,6 @@
 import { fetcher } from '@/lib/fetcher'
 
-import type { UserAccount, UserEntity } from './type'
+import type { UserAccount, UserEntity } from '@/types/user'
 
 /**
  *

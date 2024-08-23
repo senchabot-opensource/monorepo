@@ -1,4 +1,4 @@
-import type { Platform } from '../shared/type'
+import type { Platform } from './platform'
 
 export type UserAccount = {
   user_id: string

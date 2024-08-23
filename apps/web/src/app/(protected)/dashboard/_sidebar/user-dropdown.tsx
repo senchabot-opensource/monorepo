@@ -12,10 +12,12 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 
-import { auth, signOut } from '@/lib/auth'
+import { signOut } from '@/lib/auth'
+
+import { useSession } from '@/hooks/use-session'
 
 export async function UserDropdown() {
-  const session = await auth()
+  const session = await useSession()
 
   if (!session?.user) {
     return null

@@ -27,7 +27,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 
 import { cn } from '@/lib/utils'
 
-import type { UserEntity } from '@/services/users/type'
+import type { UserEntity } from '@/types/user'
 
 interface Props {
   entities: UserEntity[]

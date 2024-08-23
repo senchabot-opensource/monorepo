@@ -1,9 +1,9 @@
 import { z } from 'zod'
 
-import { platformEnum } from '../shared/schema'
+import { platform } from './platform'
 
 export const createCommandSchema = z.object({
-  platform: platformEnum,
+  platform: platform,
   platformEntityId: z.string().min(1),
   command_name: z
     .string()
@@ -15,7 +15,7 @@ export const createCommandSchema = z.object({
 
 export const updateCommandSchema = z.object({
   id: z.number(),
-  platform: platformEnum,
+  platform: platform,
   platformEntityId: z.string().min(1),
   command_content: z.string().min(1),
   status: z.coerce.boolean(),
@@ -23,13 +23,13 @@ export const updateCommandSchema = z.object({
 
 export const setCommandStatusSchema = z.object({
   id: z.number(),
-  platform: platformEnum,
+  platform: platform,
   platformEntityId: z.string().min(1),
   status: z.coerce.boolean(),
 })
 
 export const deleteCommandSchema = z.object({
   id: z.number(),
-  platform: platformEnum,
+  platform: platform,
   platformEntityId: z.string().min(1),
 })

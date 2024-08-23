@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation'
 
 import { LoaderIcon } from '@/components/ui/icons'
 
-import { auth } from '@/lib/auth'
+import { useSession } from '@/hooks/use-session'
 
 import { JoinedEntitiesList } from './joined-entities-list'
 
@@ -14,10 +14,10 @@ export const metadata: Metadata = {
 }
 
 export default async function Page() {
-  const session = await auth()
+  const session = await useSession()
 
   if (!session) {
-    redirect('/signin')
+    throw redirect('/signin')
   }
 
   return (

@@ -1,11 +1,12 @@
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
-import { auth } from '@/lib/auth'
 import { maskEmail } from '@/lib/utils'
 
+import { useSession } from '@/hooks/use-session'
+
 export async function PersonalInformation() {
-  const session = await auth()
+  const session = await useSession()
 
   if (!session?.user) {
     return null

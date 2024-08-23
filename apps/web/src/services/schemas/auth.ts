@@ -1,8 +1,8 @@
 import { z } from 'zod'
 
-import { platformEnum } from '../shared/schema'
+import { platform } from './platform'
 
 export const signInWithProviderSchema = z.object({
-  provider: platformEnum,
+  provider: platform,
   redirectTo: z.string().min(1),
 })

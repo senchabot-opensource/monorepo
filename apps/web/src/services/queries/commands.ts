@@ -1,7 +1,7 @@
 import { fetcher } from '@/lib/fetcher'
 
-import type { Platform } from '../shared/type'
-import { EntityCommand } from './type'
+import type { EntityCommand } from '@/types/command'
+import type { Platform } from '@/types/platform'
 
 /**
  *

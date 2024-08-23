@@ -7,8 +7,9 @@ import {
   TableRow,
 } from '@/components/ui/table'
 
-import { getCommands } from '@/services/commands/queries'
-import type { Platform } from '@/services/shared/type'
+import { getCommands } from '@/services/queries/commands'
+
+import type { Platform } from '@/types/platform'
 
 import { CommandStatusSwitch } from './command-status-switch'
 import { DeleteCommand } from './delete-command-button'

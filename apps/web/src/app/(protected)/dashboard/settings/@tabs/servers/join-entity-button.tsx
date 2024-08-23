@@ -8,8 +8,9 @@ import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { LoaderIcon } from '@/components/ui/icons'
 
-import { executeEntityAction } from '@/services/entities/actions'
-import type { Platform } from '@/services/shared/type'
+import { executeEntityAction } from '@/services/actions/entities'
+
+import type { Platform } from '@/types/platform'
 
 interface Props {
   platform: Platform
@@ -51,7 +52,7 @@ export function JoinEntity({
             params.append('guild_id', platformEntityId)
             params.append('disable_guild_select', 'true')
             params.append('permission', '2199022698327')
-            params.append('scope', 'applications.commands')
+            params.append('scope', ['bot', 'applications.commands'].join(' '))
 
             window.open(new URL(BASE_URL + params), '_blank', 'noreferrer')
           }

@@ -3,8 +3,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 import { formatDate } from '@/lib/utils'
 
-import { getEntityLogs } from '@/services/entities/queries'
-import type { Platform } from '@/services/shared/type'
+import { getEntityLogs } from '@/services/queries/entities'
+
+import type { Platform } from '@/types/platform'
 
 interface Props {
   platform: Platform

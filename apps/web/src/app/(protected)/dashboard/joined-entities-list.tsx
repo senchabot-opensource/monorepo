@@ -3,7 +3,7 @@ import NextLink from 'next/link'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Link } from '@/components/ui/link'
 
-import { getUserEntities } from '@/services/users/queries'
+import { getUserEntities } from '@/services/queries/users'
 
 export async function JoinedEntitiesList() {
   const entities = await getUserEntities('joined')
