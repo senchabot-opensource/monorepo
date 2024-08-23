@@ -1,4 +1,4 @@
-import type { Platform } from '@/services/shared/type'
+import type { Platform } from '@/types/platform'
 
 import { CreateCommand } from './create-command-dialog'
 import { ShareCommands } from './share-commands-button'

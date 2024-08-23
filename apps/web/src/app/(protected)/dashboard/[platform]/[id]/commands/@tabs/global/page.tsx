@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation'
 
 import { useSession } from '@/hooks/use-session'
 
-import type { Platform } from '@/services/shared/type'
+import type { Platform } from '@/types/platform'
 
 import { CommandsList } from '../commands-list'
 

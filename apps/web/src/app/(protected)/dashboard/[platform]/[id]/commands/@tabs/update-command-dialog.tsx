@@ -19,8 +19,9 @@ import { Label } from '@/components/ui/label'
 import { Link } from '@/components/ui/link'
 import { Switch } from '@/components/ui/switch'
 
-import { updateCommand } from '@/services/commands/actions'
-import type { EntityCommand } from '@/services/commands/type'
+import { updateCommand } from '@/services/actions/commands'
+
+import type { EntityCommand } from '@/types/command'
 
 interface Props {
   command: EntityCommand

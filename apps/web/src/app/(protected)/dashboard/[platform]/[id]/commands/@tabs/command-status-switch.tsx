@@ -6,8 +6,9 @@ import { toast } from 'sonner'
 
 import { Switch } from '@/components/ui/switch'
 
-import { setCommandStatus } from '@/services/commands/actions'
-import type { EntityCommand } from '@/services/commands/type'
+import { setCommandStatus } from '@/services/actions/commands'
+
+import type { EntityCommand } from '@/types/command'
 
 interface Props {
   command: EntityCommand

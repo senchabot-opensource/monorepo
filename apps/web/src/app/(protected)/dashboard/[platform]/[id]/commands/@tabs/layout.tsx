@@ -1,6 +1,6 @@
 import { TabGroup, TabGroupItem } from '@/components/ui/tab-group'
 
-import type { Platform } from '@/services/shared/type'
+import type { Platform } from '@/types/platform'
 
 const tabs = [
   {

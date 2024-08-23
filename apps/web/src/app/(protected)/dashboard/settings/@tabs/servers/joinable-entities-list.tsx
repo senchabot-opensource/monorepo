@@ -1,4 +1,4 @@
-import { getUserEntities } from '@/services/users/queries'
+import { getUserEntities } from '@/services/queries/users'
 
 import { EntitiesList } from './entities-list'
 

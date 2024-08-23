@@ -7,7 +7,7 @@ import { LoaderIcon } from '@/components/ui/icons'
 
 import { useSession } from '@/hooks/use-session'
 
-import type { Platform } from '@/services/shared/type'
+import type { Platform } from '@/types/platform'
 
 import { EntityLogsCard } from './entity-logs-card'
 

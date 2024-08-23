@@ -4,7 +4,7 @@ import { PlusIcon } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 
-import { getUserEntities } from '@/services/users/queries'
+import { getUserEntities } from '@/services/queries/users'
 
 import { EntitiesDropdown } from './entities-dropdown'
 

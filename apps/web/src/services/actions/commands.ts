@@ -11,13 +11,15 @@ import {
   deleteCommandSchema,
   setCommandStatusSchema,
   updateCommandSchema,
-} from './schema'
+} from '../schemas/commands'
 
 /**
  *
  */
 export const createCommand = createServerAction()
-  .input(createCommandSchema, { type: 'formData' })
+  .input(createCommandSchema, {
+    type: 'formData',
+  })
   .handler(async ({ input }) => {
     try {
       const params = new URLSearchParams()
@@ -45,7 +47,9 @@ export const createCommand = createServerAction()
  *
  */
 export const updateCommand = createServerAction()
-  .input(updateCommandSchema, { type: 'formData' })
+  .input(updateCommandSchema, {
+    type: 'formData',
+  })
   .handler(async ({ input }) => {
     try {
       const params = new URLSearchParams()

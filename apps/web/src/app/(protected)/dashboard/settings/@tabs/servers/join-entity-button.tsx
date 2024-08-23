@@ -8,8 +8,9 @@ import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { LoaderIcon } from '@/components/ui/icons'
 
-import { executeEntityAction } from '@/services/entities/actions'
-import type { Platform } from '@/services/shared/type'
+import { executeEntityAction } from '@/services/actions/entities'
+
+import type { Platform } from '@/types/platform'
 
 interface Props {
   platform: Platform

@@ -4,7 +4,7 @@ import { createServerAction } from 'zsa'
 
 import { signIn as _signIn, signOut as _signOut } from '@/lib/auth'
 
-import { signInWithProviderSchema } from './schema'
+import { signInWithProviderSchema } from '../schemas/auth'
 
 /**
  *

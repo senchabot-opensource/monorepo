@@ -1,15 +1,15 @@
 import { z } from 'zod'
 
-import { platformEnum } from '../shared/schema'
+import { platform } from './platform'
 
 export const linkEntitySchema = z.object({
-  provider: platformEnum,
+  provider: platform,
   providerAccountId: z.string().min(1),
   userId: z.string().min(1),
 })
 
 export const executeEntityActionSchema = z.object({
   action: z.enum(['join', 'depart']),
-  platform: platformEnum,
+  platform: platform,
   platformEntityId: z.string().min(1),
 })

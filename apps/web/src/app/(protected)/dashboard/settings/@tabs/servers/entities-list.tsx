@@ -1,8 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
-import type { UserEntity } from '@/services/users/type'
-
 import { env } from '@/config/env'
+import type { UserEntity } from '@/types/user'
 
 import { DepartEntity } from './depart-entity-button'
 import { JoinEntity } from './join-entity-button'

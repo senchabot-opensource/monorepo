@@ -20,8 +20,9 @@ import { Label } from '@/components/ui/label'
 import { Link } from '@/components/ui/link'
 import { Switch } from '@/components/ui/switch'
 
-import { createCommand } from '@/services/commands/actions'
-import type { Platform } from '@/services/shared/type'
+import { createCommand } from '@/services/actions/commands'
+
+import type { Platform } from '@/types/platform'
 
 interface Props {
   platform: Platform
