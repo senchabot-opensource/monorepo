@@ -59,7 +59,7 @@ export default async function Page({ params }: Props) {
       <div className="space-y-1">
         <h1 className="text-2xl font-medium tracking-tight">Event Channels</h1>
         <p className="text-sm text-muted-foreground">
-          Manage your livestream announcements in the specified channels.
+          Manage channels to create automated Discord events for your livestream announcements.
         </p>
       </div>
       <div className="space-y-4">
@@ -74,7 +74,7 @@ export default async function Page({ params }: Props) {
             <TableHeader>
               <TableRow>
                 <TableHead>Channel</TableHead>
-                <TableHead>Created Date</TableHead>
+                <TableHead>Added Date</TableHead>
                 <TableHead className="w-24" />
               </TableRow>
             </TableHeader>

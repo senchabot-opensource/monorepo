@@ -47,15 +47,15 @@ export function CreateEventChannelForm({ platformEntityId, channels }: Props) {
         setKey(+new Date())
       }}
     >
-      <div className="flex space-x-2">
+      <div className="flex rounded-md border">
         <Select
           name="guild_channel_id"
           key={key}
           disabled={!channels.length}
           required
         >
-          <SelectTrigger className="w-48">
-            <SelectValue placeholder="Select Channel" />
+          <SelectTrigger className="w-48 border-none">
+            <SelectValue placeholder="# select-channel" />
           </SelectTrigger>
           <SelectContent>
             {channels.map((channel) => (
@@ -80,8 +80,8 @@ function SubmitButton({ isDisabled }: { isDisabled?: boolean }) {
         <LoaderIcon />
       ) : (
         <>
-          <PlusIcon />
-          <span>Create</span>
+          <PlusIcon className="size-4" />
+          <span>Add</span>
         </>
       )}
     </Button>
