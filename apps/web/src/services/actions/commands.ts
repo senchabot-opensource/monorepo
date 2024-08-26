@@ -33,7 +33,7 @@ export const createCommand = createServerAction()
 
       revalidateTag(`getEntityCommands-${input.platformEntityId}-custom`)
     } catch (error) {
-      console.error('updateEntityCommand =>', error)
+      console.error('createEntityCommand =>', error)
       if (error instanceof ApiError) {
         if (error.status === 409) {
           throw new ZSAError('CONFLICT', 'This command already exists!')
