@@ -164,7 +164,7 @@ export default function Page() {
           <ul className="grid grid-cols-1 justify-center gap-4 py-8 text-3xl font-medium lg:grid-cols-3 lg:text-4xl">
             <li className="inline-flex items-center justify-center space-x-4 lg:justify-start">
               <XIcon className="size-12 shrink-0 text-red-500" />
-              <p className="text-nowrap text-muted-foreground lg:text-wrap">
+              <p className="text-nowrap lg:text-wrap">
                 Download required
               </p>
             </li>
