@@ -43,7 +43,7 @@ export function CreateEventChannelForm({ platformEntityId, channels }: Props) {
           }
         }
 
-        toast.success('Successfully addded.')
+        toast.success('Successfully added.')
         setKey(+new Date())
       }}
     >
