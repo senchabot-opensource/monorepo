@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url'
 const jiti = createJiti(fileURLToPath(import.meta.url))
 
 // Validate env during build.
-jiti('./src/env')
+jiti('./src/config/env')
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {

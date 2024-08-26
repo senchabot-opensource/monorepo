@@ -2,7 +2,7 @@ interface Props {
   tabs: React.ReactNode
 }
 
-export default function SettingsLayout({ tabs }: Props) {
+export default function Layout({ tabs }: Props) {
   return (
     <div className="max-w-screen-sm space-y-8">
       <div className="space-y-1">

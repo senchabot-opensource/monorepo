@@ -4,17 +4,17 @@ import { redirect } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
-import { auth } from '@/lib/auth'
+import { useSession } from '@/hooks/use-session'
 
 export const metadata: Metadata = {
   title: 'Privacy',
 }
 
 export default async function Page() {
-  const session = await auth()
+  const session = await useSession()
 
   if (!session) {
-    redirect('/signin')
+    throw redirect('/signin')
   }
 
   return (

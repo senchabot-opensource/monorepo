@@ -3,20 +3,21 @@ import { Suspense } from 'react'
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 
-import { JoinedEntities } from '@/components/pages/dashboard/joined-entities'
 import { LoaderIcon } from '@/components/ui/icons'
 
-import { auth } from '@/lib/auth'
+import { useSession } from '@/hooks/use-session'
+
+import { JoinedEntitiesList } from './joined-entities-list'
 
 export const metadata: Metadata = {
   title: 'Dashboard',
 }
 
 export default async function Page() {
-  const session = await auth()
+  const session = await useSession()
 
   if (!session) {
-    redirect('/signin')
+    throw redirect('/signin')
   }
 
   return (
@@ -30,7 +31,7 @@ export default async function Page() {
       <div className="space-y-4">
         <h1 className="font-medium tracking-tight">My Servers & Channels</h1>
         <Suspense fallback={<LoaderIcon />}>
-          <JoinedEntities />
+          <JoinedEntitiesList />
         </Suspense>
       </div>
     </div>
