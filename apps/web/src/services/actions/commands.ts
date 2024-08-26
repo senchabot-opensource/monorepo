@@ -60,6 +60,8 @@ export const updateCommand = createServerAction()
         method: 'PATCH',
         body: JSON.stringify(input),
       })
+
+      revalidateTag(`getEntityCommands-${input.platformEntityId}-custom`)
     } catch (error) {
       console.error('updateEntityCommand =>', error)
       throw new ZSAError('ERROR', 'Something went wrong!')

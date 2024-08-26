@@ -14,7 +14,7 @@ export const createCommandSchema = z.object({
 })
 
 export const updateCommandSchema = z.object({
-  id: z.number(),
+  id: z.string(),
   platform: platform,
   platformEntityId: z.string().min(1),
   command_content: z.string().min(1),
