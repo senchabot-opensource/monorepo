@@ -29,8 +29,7 @@ func (c *commands) PurgeCommand(ctx context.Context, s *discordgo.Session, i *di
 		}
 		// TR
 		// ephemeralRespond(s, i, "Tüm planlanmış etkinlikler silindi.")
-		// TODO: translate to English
-		ephemeralRespond(s, i, "Tüm planlanmış etkinlikler silindi.")
+		ephemeralRespond(s, i, "All scheduled events have been deleted.")
 
 	case "last-100-channel-messages":
 		options = options[0].Options
@@ -41,7 +40,7 @@ func (c *commands) PurgeCommand(ctx context.Context, s *discordgo.Session, i *di
 			return
 		}
 
-// TODO: "Something went wrong" → // TODO: edit respond + add error code or create errorMessage sheet
+		// TODO: "Something went wrong" → // TODO: edit respond + add error code or create errorMessage sheet
 
 		optionValue := options[0].StringValue()
 		channelID := i.ChannelID

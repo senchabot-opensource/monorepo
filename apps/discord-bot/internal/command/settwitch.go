@@ -47,8 +47,7 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 			if channelData == nil || channelData.Value == "" {
 				// TR
 				// ephemeralRespond(s, i, "Twitch yayıncısı eklerken daha önce `/set-twitch announcement default-channel` komutuyla varsayılan duyuru kanalı eklemiş olmalı veya isteğe bağlı kanal adını belirtmelisiniz.")
-				// TODO: translate to English
-				ephemeralRespond(s, i, "Twitch yayıncısı eklerken daha önce `/set-twitch announcement default-channel` komutuyla varsayılan duyuru kanalı eklemiş olmalı veya isteğe bağlı kanal adını belirtmelisiniz.")
+				ephemeralRespond(s, i, "When adding a Twitch streamer, you must have previously added a default announcement channel with the `/set-twitch announcement default-channel` command or specify an optional channel name.")
 				return
 			}
 
@@ -76,8 +75,7 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 		if streamerData != nil && channelId == streamerData.AnnoChannelID {
 			// TR
 			// ephemeralRespond(s, i, fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısı `%v` kanalına canlı yayın duyuruları için daha önce eklenmiş.", twitchUsername, channelName))
-			// TODO: translate to English
-			ephemeralRespond(s, i, fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısı `%v` kanalına canlı yayın duyuruları için daha önce eklenmiş.", twitchUsername, channelName))
+			ephemeralRespond(s, i, "Twitch streamer `"+twitchUsername+"` was previously added to the `"+channelName+"` text channel for live stream announcements.")
 			return
 		}
 
@@ -196,8 +194,7 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 
 				// TR
 				// ephemeralRespond(s, i, twitchUsername+" kullanıcı adlı Twitch yayıncısı için özelleştirilmiş duyuru mesajı içeriği kaldırıldı. Varsayılan duyuru mesajı içeriği kullanılacak: `{stream.user}, {stream.category} yayınına başladı! {stream.url}`.")
-				// TODO: translate to English
-				ephemeralRespond(s, i, twitchUsername+" kullanıcı adlı Twitch yayıncısı için özelleştirilmiş duyuru mesajı içeriği kaldırıldı. Varsayılan duyuru mesajı içeriği kullanılacak: `{stream.user}, {stream.category} yayınına başladı! {stream.url}`.")
+				ephemeralRespond(s, i, "Removed customized announcement message content for Twitch streamer `"+twitchUsername+"`. The default announcement message content will be used: `{twitch.username} started streaming {stream.category}! {twitch.url}`.")
 				return
 			}
 
