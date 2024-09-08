@@ -20,13 +20,16 @@ func (c *commands) PurgeCommand(ctx context.Context, s *discordgo.Session, i *di
 		events, err := s.GuildScheduledEvents(i.GuildID, false)
 		if err != nil {
 			log.Println("[command.PurgeCommand.events] GuildScheduledEvents error:", err.Error())
+			// TODO: edit respond or create errorMessage sheet
 			ephemeralRespond(s, i, config.ErrorMessage+"#1011")
 		}
 
 		for _, e := range events {
 			s.GuildScheduledEventDelete(i.GuildID, e.ID)
 		}
-
+		// TR
+		// ephemeralRespond(s, i, "Tüm planlanmış etkinlikler silindi.")
+		// TODO: translate to English
 		ephemeralRespond(s, i, "Tüm planlanmış etkinlikler silindi.")
 
 	case "last-100-channel-messages":
@@ -37,6 +40,8 @@ func (c *commands) PurgeCommand(ctx context.Context, s *discordgo.Session, i *di
 			ephemeralRespond(s, i, "One of the `message-content-contains` or `user-name-contains` options must be filled.")
 			return
 		}
+
+// TODO: "Something went wrong" → // TODO: edit respond + add error code or create errorMessage sheet
 
 		optionValue := options[0].StringValue()
 		channelID := i.ChannelID

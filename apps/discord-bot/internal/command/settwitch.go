@@ -45,12 +45,16 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 				return
 			}
 			if channelData == nil || channelData.Value == "" {
+				// TR
+				// ephemeralRespond(s, i, "Twitch yayıncısı eklerken daha önce `/set-twitch announcement default-channel` komutuyla varsayılan duyuru kanalı eklemiş olmalı veya isteğe bağlı kanal adını belirtmelisiniz.")
+				// TODO: translate to English
 				ephemeralRespond(s, i, "Twitch yayıncısı eklerken daha önce `/set-twitch announcement default-channel` komutuyla varsayılan duyuru kanalı eklemiş olmalı veya isteğe bağlı kanal adını belirtmelisiniz.")
 				return
 			}
 
 			ch, err := s.Channel(channelData.Value)
 			if err != nil {
+				// TODO: edit respond or create errorMessage sheet
 				ephemeralRespond(s, i, config.ErrorMessage+"#XXXY")
 				return
 			}
@@ -70,12 +74,16 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 		}
 
 		if streamerData != nil && channelId == streamerData.AnnoChannelID {
+			// TR
+			// ephemeralRespond(s, i, fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısı `%v` kanalına canlı yayın duyuruları için daha önce eklenmiş.", twitchUsername, channelName))
+			// TODO: translate to English
 			ephemeralRespond(s, i, fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısı `%v` kanalına canlı yayın duyuruları için daha önce eklenmiş.", twitchUsername, channelName))
 			return
 		}
 
 		ch, err := s.Channel(channelId)
 		if err != nil {
+			// TODO: edit respond or create errorMessage sheet
 			ephemeralRespond(s, i, config.ErrorMessage+"#XXXY")
 			return
 		}
@@ -91,14 +99,20 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 		ok, err := service.AddAnnouncementChannel(ctx, channelId, i.GuildID, i.Member.User.Username)
 		if err != nil {
 			log.Println("[command.SetTwitchCommand.event-channel] AddAnnouncementChannel error:", err.Error())
+			// TODO: edit respond or create errorMessage sheet
 			ephemeralRespond(s, i, config.ErrorMessage+"#0002")
 			return
 		}
 		if !ok {
+			// TR
+			// ephemeralRespond(s, i, fmt.Sprintf("`%v` isimli kanal Twitch yayın duyurusu etkinlikleri için daha önce eklenmiş.", channelName))
+			// TODO: translate to English
 			ephemeralRespond(s, i, fmt.Sprintf("`%v` isimli kanal Twitch yayın duyurusu etkinlikleri için daha önce eklenmiş.", channelName))
 			return
 		}
-
+		// TR
+		// ephemeralRespond(s, i, fmt.Sprintf("`%v` isimli kanal Twitch yayın duyurusu etkinlikleri için listeye eklendi.", channelName))
+		// TODO: translate to English
 		ephemeralRespond(s, i, fmt.Sprintf("`%v` isimli kanal Twitch yayın duyurusu etkinlikleri için listeye eklendi.", channelName))
 
 	case "announcement":
@@ -112,10 +126,13 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 			_, err := service.SetDiscordBotConfig(ctx, i.GuildID, "stream_anno_default_channel", channelId)
 			if err != nil {
 				log.Println("[command.SetTwitchCommand.announcement.default-channel] SetDiscordBotConfig error:", err.Error())
+				// TODO: edit respond or create errorMessage sheet
 				ephemeralRespond(s, i, config.ErrorMessage+"#0001")
 				return
 			}
-
+			// TR
+			// ephemeralRespond(s, i, "`"+channelName+"` isimli kanal varsayılan duyuru kanalı olarak ayarlandı.")
+			// TODO: translate to English
 			ephemeralRespond(s, i, "`"+channelName+"` isimli kanal varsayılan duyuru kanalı olarak ayarlandı.")
 
 		case "default-content":
@@ -125,10 +142,13 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 			_, err := service.SetDiscordBotConfig(ctx, i.GuildID, "stream_anno_default_content", annoText)
 			if err != nil {
 				log.Println("[command.SetTwitchCommand.announcement.default-content] SetDiscordBotConfig error:", err.Error())
+				// TODO: edit respond or create errorMessage sheet
 				ephemeralRespond(s, i, config.ErrorMessage+"#0001")
 				return
 			}
-
+			// TR
+			// ephemeralRespond(s, i, "Yayın duyuru mesajı içeriği ayarlandı: `"+annoText+"`")
+			// TODO: translate to English
 			ephemeralRespond(s, i, "Yayın duyuru mesajı içeriği ayarlandı: `"+annoText+"`")
 
 		case "custom-content":
@@ -139,6 +159,7 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 
 			response0, uInfo := streamer.GetTwitchUserInfo(twitchUsername)
 			if response0 != "" {
+				// TODO: edit respond or create errorMessage sheet
 				ephemeralRespond(s, i, response0)
 				return
 			}
@@ -146,11 +167,15 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 			ok, err := service.UpdateTwitchStreamerAnnoContent(ctx, uInfo.ID, i.GuildID, &annoContent)
 			if err != nil {
 				log.Println("[command.SetTwitchCommand.announcement.custom-content] UpdateTwitchStreamerAnnoContent error:", err.Error())
+				// TODO: edit respond or create errorMessage sheet
 				ephemeralRespond(s, i, config.ErrorMessage+"#001TEKNOBARBISI")
 				return
 			}
 
 			if !ok {
+				// TR
+				// ephemeralRespond(s, i, "`"+twitchUsername+"` kullanıcı adlı Twitch yayıncısı veritabanında bulunamadı.")
+				// TODO: translate to English
 				ephemeralRespond(s, i, "`"+twitchUsername+"` kullanıcı adlı Twitch yayıncısı veritabanında bulunamadı.")
 				return
 			}
@@ -162,10 +187,16 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 				}
 
 				if cfg != nil {
+					// TR
+					// ephemeralRespond(s, i, twitchUsername+" kullanıcı adlı Twitch yayıncısı için özelleştirilmiş duyuru mesajı içeriği kaldırıldı. `/set-twitch announcement default-content komutuyla ayarladığız mesaj içeriği kullanılacak: `"+cfg.Value+"`")
+					// TODO: translate to English
 					ephemeralRespond(s, i, twitchUsername+" kullanıcı adlı Twitch yayıncısı için özelleştirilmiş duyuru mesajı içeriği kaldırıldı. `/set-twitch announcement default-content komutuyla ayarladığız mesaj içeriği kullanılacak: `"+cfg.Value+"`")
 					return
 				}
 
+				// TR
+				// ephemeralRespond(s, i, twitchUsername+" kullanıcı adlı Twitch yayıncısı için özelleştirilmiş duyuru mesajı içeriği kaldırıldı. Varsayılan duyuru mesajı içeriği kullanılacak: `{stream.user}, {stream.category} yayınına başladı! {stream.url}`.")
+				// TODO: translate to English
 				ephemeralRespond(s, i, twitchUsername+" kullanıcı adlı Twitch yayıncısı için özelleştirilmiş duyuru mesajı içeriği kaldırıldı. Varsayılan duyuru mesajı içeriği kullanılacak: `{stream.user}, {stream.category} yayınına başladı! {stream.url}`.")
 				return
 			}
@@ -192,11 +223,13 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 
 			if err != nil {
 				log.Println(err)
+				// TODO: edit respond or create errorMessage sheet
 				ephemeralRespond(s, i, config.ErrorMessage+"#0001")
 				return
 			}
 
 			if !ok {
+				// TODO: edit respond or create errorMessage sheet
 				ephemeralRespond(s, i, config.ErrorMessage+"#0002")
 				return
 			}
@@ -209,6 +242,9 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 				conditionText = "eşleşecek"
 			}
 
+			// TR
+			// ephemeralRespond(s, i, fmt.Sprintf("`%s` isimli duyuru kanalına atılacak Twitch yayın duyurularının kategori filtresi `%s` şekilde `%s` olarak ayarlandı.", channelName, conditionText, categoryFilterRegex))
+			// TODO: translate to English
 			ephemeralRespond(s, i, fmt.Sprintf("`%s` isimli duyuru kanalına atılacak Twitch yayın duyurularının kategori filtresi `%s` şekilde `%s` olarak ayarlandı.", channelName, conditionText, categoryFilterRegex))
 		}
 	}
@@ -235,9 +271,9 @@ func SetTwitchCommandMetadata() *discordgo.ApplicationCommand {
 					{
 						Type:        discordgo.ApplicationCommandOptionString,
 						Name:        "twitch-username-or-url",
-						Description: "Twitch profile url or username",
+						Description: "Type Twitch profile url or username.",
 						DescriptionLocalizations: map[discordgo.Locale]string{
-							discordgo.Turkish: "Twitch kullanıcı profil linki veya kullanıcı adı",
+							discordgo.Turkish: "Twitch kullanıcı profil linkini veya kullanıcı adını yazınız.",
 						},
 						Required: true,
 					},
@@ -317,9 +353,9 @@ func SetTwitchCommandMetadata() *discordgo.ApplicationCommand {
 							{
 								Type:        discordgo.ApplicationCommandOptionString,
 								Name:        "twitch-username-or-url",
-								Description: "Twitch profile url or username",
+								Description: "Type Twitch profile url or username.",
 								DescriptionLocalizations: map[discordgo.Locale]string{
-									discordgo.Turkish: "Twitch kullanıcı profil linki veya kullanıcı adı",
+									discordgo.Turkish: "Twitch kullanıcı profil linkini veya kullanıcı adını yazınız.",
 								},
 								Required: true,
 							},
@@ -396,7 +432,7 @@ func SetTwitchCommandMetadata() *discordgo.ApplicationCommand {
 				Name:        "event-channel",
 				Description: "Select the live stream announcements channel to create Discord events for live streams.",
 				DescriptionLocalizations: map[discordgo.Locale]string{
-					discordgo.Turkish: "Canlı yayınların Discord etkinliklerini oluşturmak için canlı yayın duyuruları kanalını seç.",
+					discordgo.Turkish: "Canlı yayın Discord etkinliklerinin oluşturulacağı duyuru kanalını seç.",
 				},
 				Type: discordgo.ApplicationCommandOptionSubCommand,
 				Options: []*discordgo.ApplicationCommandOption{
