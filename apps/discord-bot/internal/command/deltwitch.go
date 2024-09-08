@@ -34,7 +34,9 @@ func (c *commands) DelTwitchCommand(ctx context.Context, s *discordgo.Session, i
 		}
 
 		if !ok {
-			ephemeralRespond(s, i, "`"+twitchUsername+"` kullanıcı adlı Twitch yayıncısı veritabanında bulunamadı.")
+			// * TR
+			// ephemeralRespond(s, i, "`"+twitchUsername+"` kullanıcı adlı Twitch yayıncısı veritabanında bulunamadı.")
+			ephemeralRespond(s, i, "Twitch streamer with username `"+twitchUsername+"` is not found in our database.")
 			return
 		}
 
@@ -45,7 +47,10 @@ func (c *commands) DelTwitchCommand(ctx context.Context, s *discordgo.Session, i
 			ephemeralRespond(s, i, "There was a problem when deleting Twitch streamer `"+uInfo.Login+"`")
 			return
 		}
-		ephemeralRespond(s, i, "`"+uInfo.Login+"` kullanıcı adlı Twitch streamer veritabanından silindi.")
+		// TR
+		// ephemeralRespond(s, i, "`"+uInfo.Login+"` kullanıcı adlı Twitch streamer veritabanından silindi.")
+		ephemeralRespond(s, i, "Twitch streamer with username `"+uInfo.Login+"` deleted from the database.")
+
 
 		// del-twitch event-channel
 	case "event-channel":
@@ -60,10 +65,14 @@ func (c *commands) DelTwitchCommand(ctx context.Context, s *discordgo.Session, i
 			return
 		}
 		if !ok {
-			ephemeralRespond(s, i, "`"+channelName+"` isimli yazı kanalı yayın etkinlik yazı kanalları listesinde bulunamadı.")
+			// TR
+			// ephemeralRespond(s, i, "`"+channelName+"` isimli yazı kanalı yayın etkinlik yazı kanalları listesinde bulunamadı.")
+			ephemeralRespond(s, i, "The text channel named `"+channelName+"` was not found in the list of event text channels.")
 			return
 		}
-		ephemeralRespond(s, i, "`"+channelName+"` isimli yazı kanalı yayın etkinlik yazı kanalları listesinden kaldırıldı.")
+		// TR
+		// ephemeralRespond(s, i, "`"+channelName+"` isimli yazı kanalı yayın etkinlik yazı kanalları listesinden kaldırıldı.")
+		ephemeralRespond(s, i, "The text channel named `"+channelName+"` removed from the list of event text channels.")
 
 		// del-twitch announcement
 	case "announcement":
@@ -80,8 +89,9 @@ func (c *commands) DelTwitchCommand(ctx context.Context, s *discordgo.Session, i
 
 			log.Println("liveAnnosLength", liveAnnosLength)
 			if liveAnnosLength > 0 {
-				ephemeralRespond(s, i, "Twitch yayıncısına özgü yayın duyuru kanalı olmayan yayıncılar veritabanında bulunduğu için varsayılan Twitch canlı yayın duyuru kanalı ayarını silemezsiniz.")
-				// EN: You cannot delete the default channel setting as there are streamers without a custom channel setting
+				ephemeralRespond(s, i, "You cannot delete the default Twitch live stream announcement channel setting because there are streamers in the database who do not have a custom stream announcement channel set.")
+				// TR
+				// Veritabanında özel yayın duyuru kanalı ayarlanmamış yayıncılar bulunduğu için varsayılan Twitch canlı yayın duyuru kanalı ayarını silemezsiniz.
 				return
 			}
 
@@ -96,18 +106,23 @@ func (c *commands) DelTwitchCommand(ctx context.Context, s *discordgo.Session, i
 				ephemeralRespond(s, i, config.ErrorMessage+"#0002")
 				return
 			}
-			ephemeralRespond(s, i, "Varsayılan Twitch canlı yayın duyuru kanalı ayarı kaldırıldı.")
+			// TR
+			// ephemeralRespond(s, i, "Varsayılan Twitch canlı yayın duyuru kanalı ayarı kaldırıldı.")
+			ephemeralRespond(s, i, "The default Twitch live stream announcement channel setting removed.")
 
 			// del-twitch announcement default-content
 		case "default-content":
 			_, err := service.DeleteDiscordBotConfig(ctx, i.GuildID, "stream_anno_default_content")
 			if err != nil {
 				log.Println("[command.DelTwitchCommand.announcement.default-content] DeleteDiscordBotConfig error:", err.Error())
+				// TODO: edit response message
 				ephemeralRespond(s, i, config.ErrorMessage+"#0001")
 				return
 			}
 
-			ephemeralRespond(s, i, "Yayın duyuru mesajı içeriği varsayılan olarak ayarlandı: `{stream.user}, {stream.category} yayınına başladı! {stream.url}`")
+			// TR
+			// ephemeralRespond(s, i, "Tarafınızdan ayarlanan varsayılan yayın duyuru mesajı içeriği kaldırıldı. Ve varsayılan yayın duyuru mesajı Senchabot varsayılanlarına sıfırlandı: `{stream.user}, {stream.category} yayınına başladı! {stream.url}`")
+			ephemeralRespond(s, i, "Removed the default stream announcement message content set by you. And message content has been reset to Senchabot defaults: `{stream.user} has started streaming {stream.category}! {stream.url}`")
 
 			// del-twitch announcement custom-content
 		case "custom-content":
@@ -129,11 +144,15 @@ func (c *commands) DelTwitchCommand(ctx context.Context, s *discordgo.Session, i
 			}
 
 			if !ok {
+				// TODO: edit response message
 				ephemeralRespond(s, i, config.ErrorMessage+"del-twitch:custom-content#0002")
 				return
 			}
 
-			ephemeralRespond(s, i, twitchUsername+" kullanıcı adlı Twitch yayıncısına özgü yayın duyuru mesajı silindi.")
+			//TR
+			// ephemeralRespond(s, i, twitchUsername+" kullanıcı adlı Twitch yayıncısının özel yayın duyuru mesajı silindi.")
+			ephemeralRespond(s, i, "Twitch streamer `"+twitchUsername+"` 's custom stream announcement message content has been deleted.")
+
 			// del-twitch announcement category-filter
 		case "category-filter":
 			options = options[0].Options
@@ -147,10 +166,14 @@ func (c *commands) DelTwitchCommand(ctx context.Context, s *discordgo.Session, i
 				return
 			}
 			if !ok {
-				ephemeralRespond(s, i, "`"+channelName+"` isimli yazı kanalı Twitch yayın duyurusu kategori filtrelemesi bulunamadı.")
+				// TR
+				// ephemeralRespond(s, i, "`"+channelName+"` isimli yazı kanalı için  Twitch yayın duyuru kategori filtrelemesi bulunamadı.")
+				ephemeralRespond(s, i, "For the text channel named `"+channelName+"`, Twitch stream announcement category filtering was not found.")
 				return
 			}
-			ephemeralRespond(s, i, "`"+channelName+"` isimli yazı kanalı Twitch yayın duyurusu kategori filtrelemesi kaldırıldı.")
+			// TR
+			// ephemeralRespond(s, i, "`"+channelName+"` isimli yazı kanalı için Twitch yayın duyuru kategori filtrelemesi kaldırıldı.")
+			ephemeralRespond(s, i, "For the text channel named `"+channelName+"`, Twitch stream announcement category filtering removed.")
 		}
 	}
 }
@@ -167,8 +190,9 @@ func DelTwitchCommandMetadata() *discordgo.ApplicationCommand {
 			// del-twitch streamer
 			{
 				Name:        "streamer",
-				Description: "Delete the stream from live stream announcements.",
+				Description: "Delete streamer from live stream announcements.",
 				DescriptionLocalizations: map[discordgo.Locale]string{
+					// TODO: edit
 					discordgo.Turkish: "Yayın duyuru mesajı atılan yayıncıyı sil.",
 				},
 				Type: discordgo.ApplicationCommandOptionSubCommand,
@@ -176,9 +200,9 @@ func DelTwitchCommandMetadata() *discordgo.ApplicationCommand {
 					{
 						Type:        discordgo.ApplicationCommandOptionString,
 						Name:        "twitch-username-or-url",
-						Description: "Twitch profile url or username",
+						Description: "Type Twitch profile url or username.",
 						DescriptionLocalizations: map[discordgo.Locale]string{
-							discordgo.Turkish: "Twitch kullanıcı profil linki veya kullanıcı adı",
+							discordgo.Turkish: "Twitch kullanıcı profil linkini veya kullanıcı adını yazınız.",
 						},
 						Required: true,
 					},
@@ -210,18 +234,18 @@ func DelTwitchCommandMetadata() *discordgo.ApplicationCommand {
 					// del-twitch announcement custom-content
 					{
 						Name:        "custom-content",
-						Description: "Delete the streamer specific custom live stream announcement message content.",
+						Description: "Delete the streamer custom live stream announcement message content.",
 						DescriptionLocalizations: map[discordgo.Locale]string{
-							discordgo.Turkish: "Yayıncıya özgü yayın duyuru mesajını sil.",
+							discordgo.Turkish: "Yayıncıya özel yayın duyuru mesajını sil.",
 						},
 						Type: discordgo.ApplicationCommandOptionSubCommand,
 						Options: []*discordgo.ApplicationCommandOption{
 							{
 								Type:        discordgo.ApplicationCommandOptionString,
 								Name:        "twitch-username-or-url",
-								Description: "Twitch profile url or username",
+								Description: "Type Twitch profile url or username.",
 								DescriptionLocalizations: map[discordgo.Locale]string{
-									discordgo.Turkish: "Twitch kullanıcı profil linki veya kullanıcı adı",
+									discordgo.Turkish: "Twitch kullanıcı profil linkini veya kullanıcı adını yazınız.",
 								},
 								Required: true,
 							},
@@ -259,16 +283,16 @@ func DelTwitchCommandMetadata() *discordgo.ApplicationCommand {
 				Name:        "event-channel",
 				Description: "Delete the live stream announcements channel setting to create Discord events for live streams.",
 				DescriptionLocalizations: map[discordgo.Locale]string{
-					discordgo.Turkish: "Canlı yayınların Discord etkinliklerini oluşturmak için canlı yayın duyuruları kanalını seç.",
+					discordgo.Turkish: "Canlı yayın Discord etkinliklerinin oluşturulduğu duyuru kanalını sil.",
 				},
 				Type: discordgo.ApplicationCommandOptionSubCommand,
 				Options: []*discordgo.ApplicationCommandOption{
 					{
 						Type:        discordgo.ApplicationCommandOptionChannel,
 						Name:        "channel",
-						Description: "The text channel where Twitch live stream announcements will be unfollowed",
+						Description: "Type the text channel where Twitch live stream announcements will be unfollowed",
 						DescriptionLocalizations: map[discordgo.Locale]string{
-							discordgo.Turkish: "Twitch yayın duyurularının takipten çıkarılacağı yazı kanalı",
+							discordgo.Turkish: "Twitch yayın duyurularının takipten çıkarılacağı yazı kanalını yazınız.",
 						},
 						ChannelTypes: []discordgo.ChannelType{
 							discordgo.ChannelTypeGuildNews,
