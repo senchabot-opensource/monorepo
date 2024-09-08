@@ -51,7 +51,6 @@ func (c *commands) DelTwitchCommand(ctx context.Context, s *discordgo.Session, i
 		// ephemeralRespond(s, i, "`"+uInfo.Login+"` kullanıcı adlı Twitch streamer veritabanından silindi.")
 		ephemeralRespond(s, i, "Twitch streamer with username `"+uInfo.Login+"` deleted from the database.")
 
-
 		// del-twitch event-channel
 	case "event-channel":
 		options = options[0].Options
@@ -87,7 +86,6 @@ func (c *commands) DelTwitchCommand(ctx context.Context, s *discordgo.Session, i
 				return
 			}
 
-			log.Println("liveAnnosLength", liveAnnosLength)
 			if liveAnnosLength > 0 {
 				ephemeralRespond(s, i, "You cannot delete the default Twitch live stream announcement channel setting because there are streamers in the database who do not have a custom stream announcement channel set.")
 				// TR
