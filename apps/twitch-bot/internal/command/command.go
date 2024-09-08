@@ -44,6 +44,7 @@ func (c *commands) GetCommands() CommandMap {
 	var commands = CommandMap{
 		"ping":   c.PingCommand,
 		"invite": c.InviteCommand,
+		"leave":  c.LeaveCommand,
 		"sozluk": c.SozlukCommand,
 		"so":     c.SoCommand,
 
