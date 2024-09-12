@@ -95,7 +95,8 @@ func GetTwitchUserInfo(twitchUsername string) (string, *model.TwitchUserInfo) {
 	userInfo, err := twsrvc.GetTwitchUserInfo("login", twitchUsername)
 	if err != nil {
 		log.Println("[GetTwitchUserInfo] twsrvc.GetTwitchUserInfo error:", err.Error())
-		return fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısı Twitch'te bulunamadı.", twitchUsername), nil
+		//return fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısı Twitch'te bulunamadı.", twitchUsername), nil
+		return "Twitch streamer with username `" + twitchUsername + "` was not found.", nil
 	}
 
 	return "", userInfo
@@ -113,7 +114,8 @@ func CheckIfTwitchStreamerExist(ctx context.Context, twitchUsername string, uInf
 			log.Println("[CheckIfTwitchStreamerExist] s.Channel error:", err.Error())
 			return config.ErrorMessage + "#YXXX", false
 		}
-		return fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısının duyuları `%v` isimli yazı kanalı için ekli.", twitchUsername, channel.Name), true
+		//return fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısının duyuları `%v` isimli yazı kanalı için ekli.", twitchUsername, channel.Name), true
+		return "Live stream announcement for Twitch streamer `" + twitchUsername + "` is already added for `" + channel.Name + "` text channel.", true
 	}
 	return "", false
 }
@@ -125,7 +127,8 @@ func SetTwitchStreamer(ctx context.Context, uInfo *model.TwitchUserInfo, channel
 		if err != nil {
 			log.Println("[SetTwitchStreamer] GetDiscordBotConfig error:", err.Error())
 
-			return fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısı veritabanı hatasından dolayı eklenemedi.", uInfo.Login)
+			//return fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısı veritabanı hatasından dolayı eklenemedi.", uInfo.Login)
+			return "Twitch streamer `" + uInfo.Login + "` could not be added due to database error."
 		}
 
 		channelId = &channelData.Value
@@ -138,20 +141,24 @@ func SetTwitchStreamer(ctx context.Context, uInfo *model.TwitchUserInfo, channel
 	if err != nil {
 		log.Println("[SetTwitchStreamer] AddDiscordTwitchLiveAnnos error:", err.Error())
 
-		return fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısı veritabanı hatasından dolayı eklenemedi.", uInfo.Login)
+		//return fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısı veritabanı hatasından dolayı eklenemedi.", uInfo.Login)
+		return "Twitch streamer `" + uInfo.Login + "` could not be added due to database error."
 	}
 
 	if !added {
 		SetStreamerData(guildId, uInfo.ID, uInfo.Login, *channelId)
-		return fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısı varitabanında bulunmakta. Ancak... Twitch yayıncısının yayın duyurularının yapılacağı kanalı `%v` yazı kanalı olarak güncellendi.", uInfo.Login, channel.Name)
+		//return fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısı varitabanında bulunmakta. Ancak... Twitch yayıncısının yayın duyurularının yapılacağı kanalı `%v` yazı kanalı olarak güncellendi.", uInfo.Login, channel.Name)
+		return "Twitch streamer `" + uInfo.Login + "` is in the database. However... Streamer's channel for live stream announcements has been updated to the `" + channel.Name + "` text channel."
 	}
 
 	SetStreamerData(guildId, uInfo.ID, uInfo.Login, *channelId)
-	return fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısının yayın duyuruları `%v` isimli yazı kanalı için aktif edildi.", uInfo.Login, channel.Name)
+	//return fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısının yayın duyuruları `%v` isimli yazı kanalı için aktif edildi.", uInfo.Login, channel.Name)
+	return "Twitch streamer `" + uInfo.Login + "`s live stream announcements have been activated for the `" + channel.Name + "` text channel."
 }
 
 func GetStreamAnnoContent(ctx context.Context, service service.Service, guildId, streamerUserId string) string {
-	annoContent := "{twitch.username}, {stream.category} yayınına başladı! {twitch.url}"
+	//annoContent := "{twitch.username}, {stream.category} yayınına başladı! {twitch.url}"
+	annoContent := "{twitch.username} has started streaming {stream.category}! {twitch.url}"
 
 	streamerAnnoContent, err := service.GetTwitchStreamerAnnoContent(ctx, streamerUserId, guildId)
 	if err != nil {

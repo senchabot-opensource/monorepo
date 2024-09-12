@@ -16,6 +16,6 @@ func (c *commands) SozlukCommand(context context.Context, m *discordgo.MessageCr
 func SozlukCommandMetadata() *discordgo.ApplicationCommand {
 	return &discordgo.ApplicationCommand{
 		Name:        "sozluk",
-		Description: "Kampus sozluk.",
+		Description: "kamp.us sozluk.",
 	}
 }

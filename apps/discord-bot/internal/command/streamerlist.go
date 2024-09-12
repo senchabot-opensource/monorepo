@@ -15,6 +15,7 @@ func (c *commands) StreamerListCommand(ctx context.Context, s *discordgo.Session
 	liveAnnos, err := service.GetDiscordTwitchLiveAnnos(ctx, i.GuildID)
 	if err != nil {
 		log.Println("[command.StreamerListCommand] GetDiscordTwitchLiveAnnos error:", err.Error())
+		// TODO: edit respond or create errorMessage sheet
 		ephemeralRespond(s, i, config.ErrorMessage+"streamer-list#0001")
 		return
 	}
