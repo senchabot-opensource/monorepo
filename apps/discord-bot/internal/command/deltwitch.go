@@ -119,8 +119,8 @@ func (c *commands) DelTwitchCommand(ctx context.Context, s *discordgo.Session, i
 			}
 
 			// TR
-			// ephemeralRespond(s, i, "Tarafınızdan ayarlanan varsayılan yayın duyuru mesajı içeriği kaldırıldı. Ve varsayılan yayın duyuru mesajı Senchabot varsayılanlarına sıfırlandı: `{stream.user}, {stream.category} yayınına başladı! {stream.url}`")
-			ephemeralRespond(s, i, "Removed the default stream announcement message content set by you. And message content has been reset to Senchabot defaults: `{stream.user} has started streaming {stream.category}! {stream.url}`")
+			// ephemeralRespond(s, i, "Tarafınızdan ayarlanan varsayılan yayın duyuru mesajı içeriği kaldırıldı. Ve varsayılan yayın duyuru mesajı Senchabot varsayılanlarına sıfırlandı: `{twitch.username}, {stream.category} yayınına başladı! {twitch.url}`")
+			ephemeralRespond(s, i, "Removed the default stream announcement message content set by you. And message content has been reset to Senchabot defaults: `{twitch.username} has started streaming {stream.category}! {twitch.url}`")
 
 			// del-twitch announcement custom-content
 		case "custom-content":
