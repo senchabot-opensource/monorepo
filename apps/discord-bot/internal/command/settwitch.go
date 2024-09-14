@@ -143,7 +143,7 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 			}
 			// TR
 			// ephemeralRespond(s, i, "Yayın duyuru mesajı içeriği ayarlandı: `"+annoText+"`")
-			ephemeralRespond(s, i, "Twitch live stream announcement message content set: `"+annoText+"`")
+			ephemeralRespond(s, i, "Twitch live stream announcement message content is set: `"+annoText+"`")
 
 		case "custom-content":
 			options = options[0].Options
@@ -229,9 +229,11 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 			var conditionText string
 			switch conditionType {
 			case 0:
-				conditionText = "eşleşmeyecek"
+				//conditionText = "eşleşmeyecek"
+				conditionText = "does not match"
 			case 1:
-				conditionText = "eşleşecek"
+				//conditionText = "eşleşecek"
+				conditionText = "matches"
 			}
 
 			// TR
