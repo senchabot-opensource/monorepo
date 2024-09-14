@@ -104,14 +104,12 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 		if !ok {
 			// TR
 			// ephemeralRespond(s, i, fmt.Sprintf("`%v` isimli kanal Twitch yayın duyurusu etkinlikleri için daha önce eklenmiş.", channelName))
-			// TODO: translate to English
-			ephemeralRespond(s, i, fmt.Sprintf("`%v` isimli kanal Twitch yayın duyurusu etkinlikleri için daha önce eklenmiş.", channelName))
+			ephemeralRespond(s, i, "Text channel `"+channelName+"` was added already for Twitch live stream announcement events.")
 			return
 		}
 		// TR
 		// ephemeralRespond(s, i, fmt.Sprintf("`%v` isimli kanal Twitch yayın duyurusu etkinlikleri için listeye eklendi.", channelName))
-		// TODO: translate to English
-		ephemeralRespond(s, i, fmt.Sprintf("`%v` isimli kanal Twitch yayın duyurusu etkinlikleri için listeye eklendi.", channelName))
+		ephemeralRespond(s, i, "Text channel `"+channelName+"` has been added for Twitch stream announcement events.")
 
 	case "announcement":
 		options = options[0].Options
@@ -130,8 +128,7 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 			}
 			// TR
 			// ephemeralRespond(s, i, "`"+channelName+"` isimli kanal varsayılan duyuru kanalı olarak ayarlandı.")
-			// TODO: translate to English
-			ephemeralRespond(s, i, "`"+channelName+"` isimli kanal varsayılan duyuru kanalı olarak ayarlandı.")
+			ephemeralRespond(s, i, "`Text channel `"+channelName+"` is set as the default announcement channel.")
 
 		case "default-content":
 			options = options[0].Options
@@ -146,8 +143,7 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 			}
 			// TR
 			// ephemeralRespond(s, i, "Yayın duyuru mesajı içeriği ayarlandı: `"+annoText+"`")
-			// TODO: translate to English
-			ephemeralRespond(s, i, "Yayın duyuru mesajı içeriği ayarlandı: `"+annoText+"`")
+			ephemeralRespond(s, i, "Twitch live stream announcement message content set: `"+annoText+"`")
 
 		case "custom-content":
 			options = options[0].Options
@@ -173,8 +169,7 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 			if !ok {
 				// TR
 				// ephemeralRespond(s, i, "`"+twitchUsername+"` kullanıcı adlı Twitch yayıncısı veritabanında bulunamadı.")
-				// TODO: translate to English
-				ephemeralRespond(s, i, "`"+twitchUsername+"` kullanıcı adlı Twitch yayıncısı veritabanında bulunamadı.")
+				ephemeralRespond(s, i, "Twitch streamer with username `"+twitchUsername+"` was not found in the database.")
 				return
 			}
 
@@ -187,18 +182,18 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 				if cfg != nil {
 					// TR
 					// ephemeralRespond(s, i, twitchUsername+" kullanıcı adlı Twitch yayıncısı için özelleştirilmiş duyuru mesajı içeriği kaldırıldı. `/set-twitch announcement default-content komutuyla ayarladığız mesaj içeriği kullanılacak: `"+cfg.Value+"`")
-					// TODO: translate to English
-					ephemeralRespond(s, i, twitchUsername+" kullanıcı adlı Twitch yayıncısı için özelleştirilmiş duyuru mesajı içeriği kaldırıldı. `/set-twitch announcement default-content komutuyla ayarladığız mesaj içeriği kullanılacak: `"+cfg.Value+"`")
+					ephemeralRespond(s, i, "Removed customized announcement message content for Twitch streamer `"+twitchUsername+"`. The message content you set with the `/set-twitch announcement default-content` command will be used: `"+cfg.Value+"`")
 					return
 				}
 
 				// TR
-				// ephemeralRespond(s, i, twitchUsername+" kullanıcı adlı Twitch yayıncısı için özelleştirilmiş duyuru mesajı içeriği kaldırıldı. Varsayılan duyuru mesajı içeriği kullanılacak: `{stream.user}, {stream.category} yayınına başladı! {stream.url}`.")
+				// ephemeralRespond(s, i, twitchUsername+" kullanıcı adlı Twitch yayıncısı için özelleştirilmiş duyuru mesajı içeriği kaldırıldı. Varsayılan duyuru mesajı içeriği kullanılacak: `{twitch.username}, {stream.category} yayınına başladı! {twitch.url}`.")
 				ephemeralRespond(s, i, "Removed customized announcement message content for Twitch streamer `"+twitchUsername+"`. The default announcement message content will be used: `{twitch.username} started streaming {stream.category}! {twitch.url}`.")
 				return
 			}
 
-			ephemeralRespond(s, i, twitchUsername+" kullanıcı adlı Twitch yayıncısı için duyuru mesajı içeriği ayarlandı: `"+annoContent+"`")
+			//ephemeralRespond(s, i, twitchUsername+" kullanıcı adlı Twitch yayıncısı için duyuru mesajı içeriği ayarlandı: `"+annoContent+"`")
+			ephemeralRespond(s, i, "The announcement message content for Twitch streamer with username `"+twitchUsername+"` has been set to `"+annoContent+"`.")
 
 		case "category-filter":
 			options = options[0].Options
@@ -241,8 +236,7 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 
 			// TR
 			// ephemeralRespond(s, i, fmt.Sprintf("`%s` isimli duyuru kanalına atılacak Twitch yayın duyurularının kategori filtresi `%s` şekilde `%s` olarak ayarlandı.", channelName, conditionText, categoryFilterRegex))
-			// TODO: translate to English
-			ephemeralRespond(s, i, fmt.Sprintf("`%s` isimli duyuru kanalına atılacak Twitch yayın duyurularının kategori filtresi `%s` şekilde `%s` olarak ayarlandı.", channelName, conditionText, categoryFilterRegex))
+			ephemeralRespond(s, i, "The category filter for Twitch stream announcements to be sent to the `"+channelName+"` text channel has been set to `"+categoryFilterRegex+"` `"+conditionText+"`.")
 		}
 	}
 }
