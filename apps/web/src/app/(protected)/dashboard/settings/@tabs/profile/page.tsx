@@ -3,8 +3,6 @@ import { Suspense } from 'react'
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 
-import { LinkedAccounts } from '@/components/pages/settings/linked-accounts'
-import { PersonalInformation } from '@/components/pages/settings/personal-information'
 import {
   Card,
   CardContent,
@@ -14,17 +12,20 @@ import {
 } from '@/components/ui/card'
 import { LoaderIcon } from '@/components/ui/icons'
 
-import { auth } from '@/lib/auth'
+import { useSession } from '@/hooks/use-session'
+
+import { LinkedAccounts } from './linked-accounts-list'
+import { PersonalInformation } from './personal-information'
 
 export const metadata: Metadata = {
   title: 'Profile',
 }
 
 export default async function Page() {
-  const session = await auth()
+  const session = await useSession()
 
   if (!session) {
-    redirect('/signin')
+    throw redirect('/signin')
   }
 
   return (

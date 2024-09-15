@@ -3,8 +3,6 @@ import { Suspense } from 'react'
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 
-import { JoinableEntities } from '@/components/pages/settings/joinable-entities'
-import { JoinedEntities } from '@/components/pages/settings/joined-entities'
 import {
   Card,
   CardContent,
@@ -14,17 +12,20 @@ import {
 } from '@/components/ui/card'
 import { LoaderIcon } from '@/components/ui/icons'
 
-import { auth } from '@/lib/auth'
+import { useSession } from '@/hooks/use-session'
+
+import { JoinableEntities } from './joinable-entities-list'
+import { JoinedEntities } from './joined-entities-list'
 
 export const metadata: Metadata = {
   title: 'Servers & Channels',
 }
 
 export default async function Page() {
-  const session = await auth()
+  const session = await useSession()
 
   if (!session) {
-    redirect('/signin')
+    throw redirect('/signin')
   }
 
   return (

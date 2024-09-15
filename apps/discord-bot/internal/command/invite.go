@@ -14,6 +14,6 @@ func (c *commands) InviteCommand(ctx context.Context, s *discordgo.Session, i *d
 func InviteCommandMetadata() *discordgo.ApplicationCommand {
 	return &discordgo.ApplicationCommand{
 		Name:        "invite",
-		Description: "Senchabot Discord bot invite url.",
+		Description: "Get Senchabot Discord bot invite url.",
 	}
 }

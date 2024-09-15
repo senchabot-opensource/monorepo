@@ -1,6 +1,7 @@
-import { Sidebar } from '@/components/pages/dashboard/sidebar'
-import { TopLoader } from '@/components/pages/dashboard/top-loader'
 import { Toaster } from '@/components/ui/sonner'
+import { TopLoader } from '@/components/ui/top-loader'
+
+import { Sidebar } from './_sidebar/sidebar'
 
 interface Props {
   children: React.ReactNode

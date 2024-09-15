@@ -44,6 +44,7 @@ func (c *commands) GetCommands() CommandMap {
 	var commands = CommandMap{
 		"ping":   c.PingCommand,
 		"invite": c.InviteCommand,
+		"leave":  c.LeaveCommand,
 		"sozluk": c.SozlukCommand,
 		"so":     c.SoCommand,
 
@@ -58,6 +59,7 @@ func (c *commands) GetCommands() CommandMap {
 		"atimer": c.AddTimerCommand,
 		"dtimer": c.DeleteTimerCommand,
 		"timers": c.TimersCommand,
+		"timer":  c.TimerCommand,
 
 		"help": c.HelpCommand,
 	}
@@ -115,7 +117,9 @@ func (c *commands) Run(context context.Context, cmdName string, params []string,
 			log.Println("[SYSTEM COMMAND ERROR]:", err.Error())
 			return
 		}
-		c.Respond(context, message, cmdName+" "+strings.Join(params, " "), cmdResp.Message)
+		if cmdResp != nil {
+			c.Respond(context, message, cmdName+" "+strings.Join(params, " "), cmdResp.Message)
+		}
 		return
 	}
 	// SYSTEM COMMANDS

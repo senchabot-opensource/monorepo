@@ -4,7 +4,7 @@ interface Props {
   children: React.ReactNode
 }
 
-export default function TabsLayout({ children }: Props) {
+export default function Layout({ children }: Props) {
   return (
     <div className="space-y-4">
       <TabGroup>
