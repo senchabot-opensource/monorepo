@@ -116,7 +116,9 @@ func (c *commands) Run(context context.Context, cmdName string, params []string,
 			log.Println("[SYSTEM COMMAND ERROR]:", err.Error())
 			return
 		}
-		c.Respond(context, message, cmdName+" "+strings.Join(params, " "), cmdResp.Message)
+		if cmdResp != nil {
+			c.Respond(context, message, cmdName+" "+strings.Join(params, " "), cmdResp.Message)
+		}
 		return
 	}
 	// SYSTEM COMMANDS
