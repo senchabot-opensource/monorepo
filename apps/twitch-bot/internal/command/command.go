@@ -59,6 +59,7 @@ func (c *commands) GetCommands() CommandMap {
 		"atimer": c.AddTimerCommand,
 		"dtimer": c.DeleteTimerCommand,
 		"timers": c.TimersCommand,
+		"timer":  c.TimerCommand,
 
 		"help": c.HelpCommand,
 	}
