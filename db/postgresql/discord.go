@@ -397,7 +397,7 @@ func (m *postgresql) SetDiscordChannelTwitchCategoryFilter(ctx context.Context, 
 		return false, errors.New("(SetDiscordChannelTwitchCategoryFilter) GetDiscordChannelTwitchCategoryFilter Error:" + err.Error())
 	}
 	if len(dcTwitchCF) > 0 {
-		result := m.DB.Model(&dcTwitchCF).Updates(model.DiscordChannelTwitchCategoryFilter{
+		result := m.DB.Model(&dcTwitchCF).Select("anno_server_id", "anno_channel_id", "category_filter_regex", "condition_type").Updates(model.DiscordChannelTwitchCategoryFilter{
 			AnnoChannelID:       annoChannelId,
 			AnnoServerID:        annoServerId,
 			CategoryFilterRegex: categoryFilterRegex,
