@@ -218,6 +218,7 @@ func (s *service) DeleteDiscordTwitchLiveAnnosByGuildId(ctx context.Context, ser
 	return s.DB.DeleteDiscordTwitchLiveAnnosByGuildId(ctx, serverId)
 }
 func (s *service) DeleteDiscordTwitchLiveAnnosByChannelId(ctx context.Context, channelId string) (bool, error) {
+	// TODO: Delete streamers from streamers data
 	return s.DB.DeleteDiscordTwitchLiveAnnosByChannelId(ctx, channelId)
 }
 func (s *service) GetDiscordChannelTwitchCategoryFilter(ctx context.Context, serverId string, channelId string) ([]*model.DiscordChannelTwitchCategoryFilter, error) {

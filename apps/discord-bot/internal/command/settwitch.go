@@ -366,9 +366,9 @@ func SetTwitchCommandMetadata() *discordgo.ApplicationCommand {
 					// set-twitch announcement category-filter
 					{
 						Name:        "category-filter",
-						Description: "Filtering Discord channel-specific Twitch stream category for announcement. (?i)Just Chatting",
+						Description: "Filtering Discord channel-specific Twitch stream category for announcement (case-sensitive). Just Chatting",
 						DescriptionLocalizations: map[discordgo.Locale]string{
-							discordgo.Turkish: "Discord kanalına özgü yayın duyurularının filtrelenmesi. (?i)Just Chatting",
+							discordgo.Turkish: "Discord kanalına özgü yayın duyurularının filtrelenmesi (büyük/küçük harf duyarlı). Just Chatting",
 						},
 						Type: discordgo.ApplicationCommandOptionSubCommand,
 						Options: []*discordgo.ApplicationCommandOption{
@@ -388,9 +388,9 @@ func SetTwitchCommandMetadata() *discordgo.ApplicationCommand {
 							{
 								Type:        discordgo.ApplicationCommandOptionString,
 								Name:        "regex",
-								Description: "RegEx string. For example: (?i)Just Chatting",
+								Description: "RegEx string. For example(case-sensitive): Just Chatting",
 								DescriptionLocalizations: map[discordgo.Locale]string{
-									discordgo.Turkish: "RegEx dizesi. Örneğin: (?i)Just Chatting",
+									discordgo.Turkish: "RegEx dizesi. Örneğin(büyük/küçük harf duyarlı): Just Chatting",
 								},
 								Required: true,
 							},
