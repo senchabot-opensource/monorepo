@@ -5,10 +5,8 @@ import (
 	"errors"
 	"log"
 	"os"
-	"strings"
 
 	"github.com/gempir/go-twitch-irc/v3"
-	"github.com/senchabot-opensource/monorepo/config"
 	"github.com/senchabot-opensource/monorepo/helper"
 	"github.com/senchabot-opensource/monorepo/model"
 )
@@ -20,18 +18,9 @@ func (c *commands) InviteCommand(context context.Context, message twitch.Private
 		return nil, errors.New("command did not executed in senchabot")
 	}
 
-	if len(params) < 1 {
-		cmdResp.Message = config.InviteCommandInfo
-		return &cmdResp, nil
-	}
-
 	var channelName = message.User.Name
-	if strings.ToLower(params[0]) != channelName {
-		cmdResp.Message = "You need to specify your channel name. !invite " + channelName
-		return &cmdResp, nil
-	}
-
 	var twitchChannelId = message.User.ID
+
 	alreadyJoined, err := c.service.CreateTwitchChannel(context, twitchChannelId, channelName, nil)
 	if err != nil {
 		return nil, errors.New("(CreateTwitchChannel) Error: " + err.Error())
@@ -51,6 +40,6 @@ func (c *commands) InviteCommand(context context.Context, message twitch.Private
 		}
 	}
 
-	cmdResp.Message = "I joined your Twitch channel, sweetie"
+	cmdResp.Message = "Hi VoHiYo I joined your Twitch channel, sweetie. Learn how to use my features here: docs.senchabot.app"
 	return &cmdResp, nil
 }
