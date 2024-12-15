@@ -11,6 +11,7 @@ import (
 	"os"
 	"strings"
 
+	discordwebhook "github.com/bensch777/discord-webhook-golang"
 	"github.com/senchabot-opensource/monorepo/model"
 	"golang.org/x/oauth2/clientcredentials"
 	"golang.org/x/oauth2/twitch"
@@ -149,6 +150,22 @@ func CheckMultipleTwitchStreamer(usernames []string) []model.TwitchStreamerData 
 	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusOK {
 		log.Println("[CheckMultipleTwitchStreamer] Twitch API request failed with status code:", resp.StatusCode)
+		if resp.StatusCode == http.StatusUnauthorized {
+			hook := discordwebhook.Hook{
+				Username:   "Senchabot Webhook",
+				Avatar_url: "https://avatars.githubusercontent.com/u/94869947?v=4",
+				Content:    "[CheckMultipleTwitchStreamer] Twitch API token is not authorized",
+			}
+
+			payload, err := json.Marshal(hook)
+			if err != nil {
+				log.Println("[CheckMultipleTwitchStreamer] Error while webhook json Marshal:", err.Error())
+			}
+			err = discordwebhook.ExecuteWebhook(os.Getenv("DISCORD_WEBHOOK_URL"), payload)
+			if err != nil {
+				log.Println("[CheckMultipleTwitchStreamer] ExecuteWebhook failed:", err.Error())
+			}
+		}
 		return nil
 	}
 
