@@ -12,6 +12,7 @@ require (
 )
 
 require (
+	github.com/bensch777/discord-webhook-golang v0.0.6 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/gorilla/websocket v1.5.3 // indirect
