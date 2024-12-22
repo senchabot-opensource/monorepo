@@ -38,9 +38,7 @@ func CreateLiveStreamScheduledEvent(dS *discordgo.Session, msgContent string, ms
 	if err != nil {
 		log.Println("[CreateLiveStreamScheduledEvent] GuildScheduledEventCreate error:", err.Error())
 		if strings.Contains(err.Error(), "Missing Permissions") {
-			if ok := alert.SendDMToGuildOwner(dS, guildId, "Missing guild (server) permissions for Senchabot to create Discord Scheduled Events for live stream announcements."); !ok {
-				return
-			}
+			alert.SendDMToGuildOwner(dS, guildId, "Missing guild (server) permissions for Senchabot to create Discord Scheduled Events for live stream announcements.")
 		}
 		return
 	}
