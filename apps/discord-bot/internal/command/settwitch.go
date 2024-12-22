@@ -366,7 +366,7 @@ func SetTwitchCommandMetadata() *discordgo.ApplicationCommand {
 					// set-twitch announcement category-filter
 					{
 						Name:        "category-filter",
-						Description: "Filtering Discord channel-specific Twitch stream category for announcement (case-sensitive). Just Chatting",
+						Description: "Discord channel-specific Twitch stream category for announcement (case-sensitive). Just Chatting",
 						DescriptionLocalizations: map[discordgo.Locale]string{
 							discordgo.Turkish: "Discord kanalına özgü yayın duyurularının filtrelenmesi (büyük/küçük harf duyarlı). Just Chatting",
 						},
