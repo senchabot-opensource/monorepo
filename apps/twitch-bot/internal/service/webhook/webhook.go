@@ -5,6 +5,7 @@ import (
 
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/client"
 	"github.com/senchabot-opensource/monorepo/db"
+	"github.com/senchabot-opensource/monorepo/pkg/twitchapi"
 )
 
 type Webhook interface {
@@ -13,9 +14,13 @@ type Webhook interface {
 }
 
 type webhook struct {
-	DB db.Database
+	DB            db.Database
+	twitchService twitchapi.TwitchService
 }
 
-func NewWebhook(database db.Database) Webhook {
-	return &webhook{DB: database}
+func NewWebhook(db db.Database, twitchService twitchapi.TwitchService) *webhook {
+	return &webhook{
+		DB:            db,
+		twitchService: twitchService,
+	}
 }

@@ -12,6 +12,7 @@ import (
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/service"
 	"github.com/senchabot-opensource/monorepo/helper"
 	"github.com/senchabot-opensource/monorepo/model"
+	"github.com/senchabot-opensource/monorepo/pkg/twitchapi"
 )
 
 type CommandFunc func(context context.Context, message twitch.PrivateMessage, commandName string, params []string) (*model.CommandResponse, error)
@@ -27,16 +28,18 @@ type Command interface {
 type commands struct {
 	client         *client.Clients
 	service        service.Service
+	twitchService  twitchapi.TwitchService
 	userCooldowns  map[string]time.Time
 	cooldownPeriod time.Duration
 }
 
-func New(client *client.Clients, service service.Service, cooldownPeriod time.Duration) Command {
+func New(client *client.Clients, service service.Service, twitchService twitchapi.TwitchService) Command {
 	return &commands{
 		client:         client,
 		service:        service,
+		twitchService:  twitchService,
 		userCooldowns:  make(map[string]time.Time),
-		cooldownPeriod: cooldownPeriod,
+		cooldownPeriod: time.Second,
 	}
 }
 
@@ -80,13 +83,42 @@ func (c *commands) Respond(ctx context.Context, message twitch.PrivateMessage, c
 	c.service.SaveCommandActivity(ctx, cmdName, message.RoomID, message.User.DisplayName, message.User.ID)
 }
 
-func (c *commands) Run(context context.Context, cmdName string, params []string, message twitch.PrivateMessage) {
-	if c.isUserOnCooldown(message.User.Name) {
+func (c *commands) runCustomCommand(ctx context.Context, cmdName string, privMsg twitch.PrivateMessage) {
+	cmdData, err := c.service.GetUserBotCommand(ctx, cmdName, privMsg.RoomID)
+	if err != nil {
+		log.Println("[USER COMMAND ERROR]:", err.Error())
+	}
+	if cmdData != nil {
+		cmdVar := helpers.GetCommandVariables(cmdData, privMsg)
+		formattedCommandContent := helper.FormatCommandContent(cmdVar)
+		c.Respond(ctx, privMsg, cmdName, formattedCommandContent)
+		return
+	}
+}
+
+func (c *commands) runSystemCommand(ctx context.Context, cmdName string, params []string, privMsg twitch.PrivateMessage) {
+
+	cmds := c.GetCommands()
+	if cmd, ok := cmds[cmdName]; ok {
+		cmdResp, err := cmd(ctx, privMsg, cmdName, params)
+		if err != nil {
+			log.Println("[SYSTEM COMMAND ERROR]:", err.Error())
+			return
+		}
+		if cmdResp != nil {
+			c.Respond(ctx, privMsg, cmdName+" "+strings.Join(params, " "), cmdResp.Message)
+		}
+		return
+	}
+}
+
+func (c *commands) Run(ctx context.Context, cmdName string, params []string, privMsg twitch.PrivateMessage) {
+	if c.isUserOnCooldown(privMsg.User.Name) {
 		return
 	}
 
 	// HANDLE COMMAND ALIASES
-	commandAlias, cmdAliasErr := c.service.GetCommandAlias(context, cmdName, message.RoomID)
+	commandAlias, cmdAliasErr := c.service.GetCommandAlias(ctx, cmdName, privMsg.RoomID)
 	if cmdAliasErr != nil {
 		log.Println("[COMMAND ALIAS ERROR]:", cmdAliasErr.Error())
 	}
@@ -97,35 +129,17 @@ func (c *commands) Run(context context.Context, cmdName string, params []string,
 	// HANDLE COMMAND ALIASES
 
 	// USER COMMANDS
-	cmdData, err := c.service.GetUserBotCommand(context, cmdName, message.RoomID)
-	if err != nil {
-		log.Println("[USER COMMAND ERROR]:", err.Error())
-	}
-	if cmdData != nil {
-		cmdVar := helpers.GetCommandVariables(cmdData, message)
-		formattedCommandContent := helper.FormatCommandContent(cmdVar)
-		c.Respond(context, message, cmdName, formattedCommandContent)
-		return
-	}
+	c.runCustomCommand(ctx, cmdName, privMsg)
 	// USER COMMANDS
 
 	// SYSTEM COMMANDS
-	cmds := c.GetCommands()
-	if cmd, ok := cmds[cmdName]; ok {
-		cmdResp, err := cmd(context, message, cmdName, params)
-		if err != nil {
-			log.Println("[SYSTEM COMMAND ERROR]:", err.Error())
-			return
-		}
-		if cmdResp != nil {
-			c.Respond(context, message, cmdName+" "+strings.Join(params, " "), cmdResp.Message)
-		}
-		return
-	}
+	c.runSystemCommand(ctx, cmdName, params, privMsg)
 	// SYSTEM COMMANDS
 
 	// GLOBAL COMMANDS
-	cmdData, err = c.service.GetGlobalBotCommand(context, cmdName)
+	// lower case sensitive ?
+	cmdName = strings.ToLower(cmdName)
+	cmdData, err := c.service.GetGlobalBotCommand(ctx, cmdName)
 	if err != nil {
 		log.Println("[GLOBAL COMMAND ERROR]:", err.Error())
 		return
@@ -134,9 +148,9 @@ func (c *commands) Run(context context.Context, cmdName string, params []string,
 		return
 	}
 
-	cmdVar := helpers.GetCommandVariables(cmdData, message)
+	cmdVar := helpers.GetCommandVariables(cmdData, privMsg)
 	formattedCommandContent := helper.FormatCommandContent(cmdVar)
-	c.Respond(context, message, cmdName, formattedCommandContent)
+	c.Respond(ctx, privMsg, cmdName, formattedCommandContent)
 	// GLOBAL COMMANDS
 }
 

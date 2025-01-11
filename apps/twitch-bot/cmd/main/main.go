@@ -10,7 +10,8 @@ import (
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/client"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/handler"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/service"
-	twsrvc "github.com/senchabot-opensource/monorepo/service/twitch"
+	"github.com/senchabot-opensource/monorepo/db/postgresql"
+	"github.com/senchabot-opensource/monorepo/pkg/twitchapi"
 )
 
 func clearDailyCounts() {
@@ -22,13 +23,21 @@ func clearDailyCounts() {
 }
 
 func main() {
-	twsrvc.InitTwitchOAuth2Token()
+	log.Println("Starting Twitch Bot...")
+	twitchService, err := twitchapi.NewTwitchService(
+		os.Getenv("TWITCH_CLIENT_ID"),
+		os.Getenv("TWITCH_CLIENT_SECRET"),
+		os.Getenv("BOT_USER_ID"),
+	)
+	if err != nil {
+		log.Fatalf("Failed to initialize Twitch service: %v", err)
+	}
 
 	twitchClient := twitch.NewClient(os.Getenv("BOT_USER_NAME"), os.Getenv("OAUTH"))
-
 	clients := client.NewClients(twitchClient)
-	services := service.NewServices()
-	handlers := handler.NewHandlers(clients, services)
+	database := postgresql.New()
+	service := service.New(database, twitchService)
+	handlers := handler.NewHandlers(clients, service, twitchService)
 
 	handlers.InitBotEventHandlers()
 

@@ -5,6 +5,7 @@ import (
 
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/client"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/service"
+	"github.com/senchabot-opensource/monorepo/pkg/twitchapi"
 )
 
 type Handler interface {
@@ -16,12 +17,13 @@ type handlers struct {
 	joinedChannelList []string
 	client            *client.Clients
 	service           service.Service
+	twitchService     twitchapi.TwitchService
 }
 
 func (h *handlers) InitBotEventHandlers() {
-	PrivateMessage(h.client, h.service)
-	h.joinedChannelList = BotJoin(h.client, h.service)
-	UserNoticeMessage(h.client, h.service)
+	h.PrivateMessage()
+	h.joinedChannelList = h.BotJoin()
+	h.UserNoticeMessage()
 }
 
 func (h *handlers) InitHttpHandlers(mux *http.ServeMux) {
@@ -33,9 +35,10 @@ func (h *handlers) InitHttpHandlers(mux *http.ServeMux) {
 	})
 }
 
-func NewHandlers(client *client.Clients, service service.Service) Handler {
+func NewHandlers(client *client.Clients, service service.Service, twitchService twitchapi.TwitchService) Handler {
 	return &handlers{
-		client:  client,
-		service: service,
+		client:        client,
+		service:       service,
+		twitchService: twitchService,
 	}
 }

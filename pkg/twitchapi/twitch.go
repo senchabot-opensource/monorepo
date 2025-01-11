@@ -1,4 +1,4 @@
-package twitch
+package twitchapi
 
 import (
 	"context"
