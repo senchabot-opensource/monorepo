@@ -1,7 +1,6 @@
 package twitchapi
 
 import (
-	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -13,44 +12,34 @@ import (
 
 	discordwebhook "github.com/bensch777/discord-webhook-golang"
 	"github.com/senchabot-opensource/monorepo/model"
-	"golang.org/x/oauth2/clientcredentials"
-	"golang.org/x/oauth2/twitch"
 )
 
-var (
-	twitchAPI         = "https://api.twitch.tv/helix"
-	oauth2Config      *clientcredentials.Config
-	twitchAccessToken string
-)
-
-func InitTwitchOAuth2Token() string {
-	oauth2Config = &clientcredentials.Config{
-		ClientID:     os.Getenv("TWITCH_CLIENT_ID"),
-		ClientSecret: os.Getenv("TWITCH_CLIENT_SECRET"),
-		TokenURL:     twitch.Endpoint.TokenURL,
-	}
-
-	token, err := oauth2Config.Token(context.Background())
+func (s *service) doRequest(method string, path string, token string) (*http.Response, error) {
+	// TODO: change this to the cooldown period
+	req, err := http.NewRequest(method, s.baseURL+path, nil)
 	if err != nil {
-		log.Fatal(err)
+		return nil, fmt.Errorf("failed to create request: %w", err)
 	}
 
-	twitchAccessToken = token.AccessToken
-	return twitchAccessToken
+	req.Header.Set("Client-ID", s.clientID)
+	req.Header.Set("Authorization", "Bearer "+token)
+
+	return s.httpClient.Do(req)
 }
 
-func GetTwitchUserInfo(query string, userIdOrName string) (*model.TwitchUserInfo, error) {
-	resp, err := DoTwitchHttpReq("GET", fmt.Sprintf("/users?%s=%s", query, userIdOrName), twitchAccessToken)
+func (s *service) getUserInfo(query string, userIdOrName string) (*model.TwitchUserInfo, error) {
+	resp, err := s.doRequest("GET", fmt.Sprintf("/users?%s=%s", query, userIdOrName), s.accessToken)
 	if err != nil {
-		return nil, errors.New("[GetTwitchUserInfo] DoTwitchHttpReq error:" + err.Error())
+		return nil, fmt.Errorf("failed to get user info: %w", err)
 	}
 	defer resp.Body.Close()
+
 	if resp.StatusCode != http.StatusOK {
 		respBodyBytes, err := io.ReadAll(resp.Body)
 		if err != nil {
-			return nil, errors.New("[GetTwitchUserInfo] io.ReadAll error: " + err.Error())
+			return nil, fmt.Errorf("failed to read response body: %w", err)
 		}
-		return nil, errors.New("[GetTwitchUserInfo] Twitch API request failed with status code: " + string(rune(resp.StatusCode)) + " Body: " + string(respBodyBytes))
+		return nil, fmt.Errorf("twitch API request failed with status code: %d Body: %s", resp.StatusCode, string(respBodyBytes))
 	}
 
 	var data struct {
@@ -58,8 +47,7 @@ func GetTwitchUserInfo(query string, userIdOrName string) (*model.TwitchUserInfo
 	}
 	err = json.NewDecoder(resp.Body).Decode(&data)
 	if err != nil {
-		log.Println("[GetTwitchUserInfo] Error while parsing TwitchAPI response:", err.Error())
-		return nil, errors.New("[GetTwitchUserInfo] Error while parsing TwitchAPI response: " + err.Error())
+		return nil, fmt.Errorf("error while parsing TwitchAPI response: %w", err)
 	}
 
 	if len(data.Data) == 0 {
@@ -69,48 +57,87 @@ func GetTwitchUserInfo(query string, userIdOrName string) (*model.TwitchUserInfo
 	return &data.Data[0], nil
 }
 
-func GiveShoutout(streamerUsername string, broadcasterId string, token string) (*string, error) {
+func (s *service) GetUserInfoByLoginName(loginName string) (*model.TwitchUserInfo, error) {
+	return s.getUserInfo("login", loginName)
+}
+
+func (s *service) GetUserInfoById(userId string) (*model.TwitchUserInfo, error) {
+	return s.getUserInfo("id", userId)
+}
+
+func (s *service) GiveShoutout(streamerUsername string, broadcasterId string, messageFormat string) (*string, error) {
+	// TODO: move this method to the shoutout.go file
 	var responseText string
 	fromBroadcasterId := broadcasterId
-	toBroadcaster, err := GetTwitchUserInfo("login", streamerUsername)
+	toBroadcaster, err := s.GetUserInfoByLoginName(streamerUsername)
 	if err != nil {
-		log.Println("[GiveShoutout] GetTwitchUserInfo error:", err.Error())
-		return nil, err
+		if err.Error() == "no data" {
+			responseText = "The channel you are shouting out does not exist."
+			return &responseText, nil
+		}
+		return nil, errors.New("[GiveShoutout] s.GetUserInfo failed to get user info: " + err.Error())
 	}
-	moderatorId := os.Getenv("BOT_USER_ID")
+	moderatorId := s.botUserID
 
 	url := fmt.Sprintf("/chat/shoutouts?from_broadcaster_id=%s&to_broadcaster_id=%s&moderator_id=%s", fromBroadcasterId, toBroadcaster.ID, moderatorId)
-	resp, err := DoTwitchHttpReq("POST", url, token)
+	resp, err := s.doRequest("POST", url, strings.TrimPrefix(os.Getenv("OAUTH"), "oauth:"))
 	if err != nil {
-		log.Println("[GiveShoutout] Twitch API request failed with status code:", string(rune(resp.StatusCode)))
-		return nil, err
+		return nil, fmt.Errorf("twitch API request failed with status code: %d", resp.StatusCode)
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode != http.StatusNoContent && resp.StatusCode != http.StatusTooManyRequests {
+	var errorResp struct {
+		Error   string `json:"error"`
+		Message string `json:"message"`
+	}
+	if resp.StatusCode != http.StatusNoContent {
+		respBodyBytes, err := io.ReadAll(resp.Body)
+		if err != nil {
+			return nil, fmt.Errorf("failed to read response body: %w", err)
+		}
+
+		if err := json.Unmarshal(respBodyBytes, &errorResp); err != nil {
+			log.Println("[GiveShoutout] json.Unmarshal errorResp", err.Error())
+		}
+	}
+
+	switch resp.StatusCode {
+	case http.StatusNoContent:
+		if messageFormat == "" {
+			messageFormat = "Follow @{username} over at twitch.tv/{username} <3"
+		}
+		responseText = strings.ReplaceAll(messageFormat, "{username}", streamerUsername)
+	case http.StatusBadRequest:
+		if errorResp.Message == "The broadcaster is not streaming live or does not have one or more viewers." {
+			responseText = "The channel giving a Shoutout must be live."
+		} else if errorResp.Message == "The broadcaster may not give themselves a Shoutout." {
+			responseText = "You cannot shoutout the current streamer."
+		} else {
+			responseText = "There was an error while giving shoutout"
+		}
+	case http.StatusTooManyRequests:
+		if errorResp.Message == "The broadcaster may not give another Shoutout to the specified streamer until the cooldown period expires." {
+			responseText = "You have to wait a bit before giving another Shoutout."
+		} else {
+			responseText = "Shoutout limit for this streamer has been exceeded or wait a bit to give another Shoutout."
+		}
+
+	default:
 		responseText = "There was an error while giving shoutout"
-	}
-	if resp.StatusCode == http.StatusTooManyRequests {
-		responseText = "Shoutout limit for this streamer has been exceeded or wait a bit to give another Shoutout."
-	}
-	if resp.StatusCode == http.StatusNoContent {
-		responseText = "Follow @" + streamerUsername + " over at twitch.tv/" + streamerUsername + " <3"
 	}
 
 	return &responseText, nil
 }
 
-func CheckTwitchStreamStatus(username string) (bool, string) {
-	resp, err := DoTwitchHttpReq("GET", fmt.Sprintf("/streams?user_login=%s", username), twitchAccessToken)
+func (s *service) CheckStreamStatus(username string) (bool, string, error) {
+	resp, err := s.doRequest("GET", fmt.Sprintf("/streams?user_login=%s", username), s.accessToken)
 	if err != nil {
-		log.Println("[CheckTwitchStreamStatus] DoTwitchHttpReq error", err.Error())
-		return false, ""
+		return false, "", fmt.Errorf("failed to check stream status: %w", err)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		log.Println("[CheckTwitchStreamStatus] Twitch API request failed with status code:", resp.StatusCode)
-		return false, ""
+		return false, "", fmt.Errorf("twitch API request failed with status code: %d", resp.StatusCode)
 	}
 
 	var data struct {
@@ -123,18 +150,17 @@ func CheckTwitchStreamStatus(username string) (bool, string) {
 
 	err = json.NewDecoder(resp.Body).Decode(&data)
 	if err != nil {
-		log.Println("[CheckTwitchStreamStatus] Error while parsing TwitchAPI response:", err.Error())
-		return false, ""
+		return false, "", fmt.Errorf("error while parsing TwitchAPI response: %w", err)
 	}
 
 	if len(data.Data) == 0 {
-		return false, ""
+		return false, "", nil
 	}
 
-	return data.Data[0].Type == "live", data.Data[0].Title
+	return data.Data[0].Type == "live", data.Data[0].Title, nil
 }
 
-func CheckMultipleTwitchStreamer(usernames []string) []model.TwitchStreamerData {
+func (s *service) CheckMultipleStreamers(usernames []string) ([]model.TwitchStreamerData, error) {
 	params := usernames[0]
 	if len(usernames) > 1 {
 		params = usernames[0] + "&user_id="
@@ -142,31 +168,29 @@ func CheckMultipleTwitchStreamer(usernames []string) []model.TwitchStreamerData 
 		params += strings.Join(usernames, "&user_id=")
 	}
 
-	resp, err := DoTwitchHttpReq("GET", fmt.Sprintf("/streams?user_id=%s", params), twitchAccessToken)
+	resp, err := s.doRequest("GET", fmt.Sprintf("/streams?user_id=%s", params), s.accessToken)
 	if err != nil {
-		log.Println("[CheckMultipleTwitchStreamer] DoTwitchHttpReq error: ", err.Error())
-		return nil
+		return nil, fmt.Errorf("failed to check multiple streamers: %w", err)
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusOK {
-		log.Println("[CheckMultipleTwitchStreamer] Twitch API request failed with status code:", resp.StatusCode)
 		if resp.StatusCode == http.StatusUnauthorized {
 			hook := discordwebhook.Hook{
 				Username:   "Senchabot Webhook",
 				Avatar_url: "https://avatars.githubusercontent.com/u/94869947?v=4",
-				Content:    "[CheckMultipleTwitchStreamer] Twitch API token is not authorized",
+				Content:    "[CheckMultipleStreamers] Twitch API token is not authorized",
 			}
 
 			payload, err := json.Marshal(hook)
 			if err != nil {
-				log.Println("[CheckMultipleTwitchStreamer] Error while webhook json Marshal:", err.Error())
+				log.Println("[CheckMultipleStreamers] Error while webhook json Marshal:", err.Error())
 			}
 			err = discordwebhook.ExecuteWebhook(os.Getenv("DISCORD_WEBHOOK_URL"), payload)
 			if err != nil {
-				log.Println("[CheckMultipleTwitchStreamer] ExecuteWebhook failed:", err.Error())
+				log.Println("[CheckMultipleStreamers] ExecuteWebhook failed:", err.Error())
 			}
 		}
-		return nil
+		return nil, fmt.Errorf("twitch API request failed with status code: %d", resp.StatusCode)
 	}
 
 	var data struct {
@@ -174,26 +198,8 @@ func CheckMultipleTwitchStreamer(usernames []string) []model.TwitchStreamerData 
 	}
 	err = json.NewDecoder(resp.Body).Decode(&data)
 	if err != nil {
-		log.Println("[CheckMultipleTwitchStreamer] Error while parsing TwitchAPI response:", err.Error())
-		return nil
+		return nil, fmt.Errorf("error while parsing TwitchAPI response: %w", err)
 	}
 
-	return data.Data
-}
-
-func DoTwitchHttpReq(method string, url string, token string) (*http.Response, error) {
-	req, err := http.NewRequest(method, twitchAPI+url, nil)
-	if err != nil {
-		return nil, errors.New("Error while creating Twitch API request:" + err.Error())
-	}
-	req.Header.Set("Client-ID", os.Getenv("TWITCH_CLIENT_ID"))
-	req.Header.Set("Authorization", "Bearer "+token)
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		log.Println("Error while sending http req:", err.Error())
-		return nil, err
-	}
-
-	return resp, nil
+	return data.Data, nil
 }
