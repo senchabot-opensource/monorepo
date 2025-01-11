@@ -10,6 +10,8 @@ import (
 
 func (h *handler) Ready() {
 	ctx := context.Background()
+	eventService := event.NewEventService(h.twitchService)
+
 	h.discordClient.AddHandler(func(s *discordgo.Session, r *discordgo.Ready) {
 		guilds := s.State.Guilds
 		log.Println("[handler.Ready] ADD MISSING GUILDS TO DATABASE")
@@ -39,7 +41,7 @@ func (h *handler) Ready() {
 			}
 		}
 
-		go event.CheckLiveStreamScheduledEvents(s)
+		go eventService.CheckLiveStreamScheduledEvents(s)
 
 		log.Println("[handler.Ready] Bot is ready. Logged in as:", s.State.User.Username)
 	})

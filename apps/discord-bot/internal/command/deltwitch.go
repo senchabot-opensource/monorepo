@@ -6,7 +6,6 @@ import (
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
-	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service/streamer"
 	"github.com/senchabot-opensource/monorepo/config"
 	"github.com/senchabot-opensource/monorepo/helper"
 )
@@ -21,9 +20,10 @@ func (c *commands) DelTwitchCommand(ctx context.Context, s *discordgo.Session, i
 		twitchUsername := options[0].StringValue()
 		twitchUsername = helper.ParseTwitchUsernameURLParam(twitchUsername)
 
-		response0, uInfo := streamer.GetTwitchUserInfo(twitchUsername)
-		if response0 != "" {
-			ephemeralRespond(s, i, response0)
+		uInfo, err := c.twitchService.GetUserInfoByLoginName(twitchUsername)
+		if err != nil {
+			// FIX: we send this message with all errors. we should send more accurate error messages.
+			ephemeralRespond(s, i, "Twitch streamer with username `"+twitchUsername+"` was not found.")
 			return
 		}
 
@@ -40,9 +40,9 @@ func (c *commands) DelTwitchCommand(ctx context.Context, s *discordgo.Session, i
 			return
 		}
 
-		streamers := streamer.GetStreamersData(i.GuildID)
+		streamers := c.streamerSvc.GetStreamersData(i.GuildID)
 		delete(streamers, uInfo.Login)
-		ok = streamer.DeleteStreamerFromData(i.GuildID, uInfo.Login)
+		ok = c.streamerSvc.DeleteStreamerFromData(i.GuildID, uInfo.Login)
 		if !ok {
 			ephemeralRespond(s, i, "There was a problem when deleting Twitch streamer `"+uInfo.Login+"`")
 			return
@@ -128,9 +128,10 @@ func (c *commands) DelTwitchCommand(ctx context.Context, s *discordgo.Session, i
 			twitchUsername := options[0].StringValue()
 			twitchUsername = helper.ParseTwitchUsernameURLParam(twitchUsername)
 
-			response0, uInfo := streamer.GetTwitchUserInfo(twitchUsername)
-			if response0 != "" {
-				ephemeralRespond(s, i, response0)
+			uInfo, err := c.twitchService.GetUserInfoByLoginName(twitchUsername)
+			if err != nil {
+				// FIX: we send this message with all errors. we should send more accurate error messages.
+				ephemeralRespond(s, i, "Twitch streamer with username `"+twitchUsername+"` was not found.")
 				return
 			}
 

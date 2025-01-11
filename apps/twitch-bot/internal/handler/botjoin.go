@@ -5,18 +5,15 @@ import (
 	"log"
 	"os"
 
-	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/client"
-	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/service"
 	"github.com/senchabot-opensource/monorepo/model"
-	"github.com/senchabot-opensource/monorepo/service/twitch"
 )
 
-func BotJoin(client *client.Clients, service service.Service) []string {
+func (h *handlers) BotJoin() []string {
 	botId := os.Getenv("BOT_USER_ID")
 	botUsername := os.Getenv("BOT_USER_NAME")
 
 	ctx := context.Background()
-	channels, err := service.GetTwitchChannels(ctx)
+	channels, err := h.service.GetTwitchChannels(ctx)
 	if err != nil {
 		log.Fatalf("[BotJoin Handler] Error:" + err.Error())
 	}
@@ -28,8 +25,8 @@ func BotJoin(client *client.Clients, service service.Service) []string {
 	channelIds := make([]string, 0, len(channels))
 	if len(channels) < 2 {
 		log.Println("TRYING TO JOIN THE TWITCH CHANNEL `" + botUsername + "`")
-		client.Twitch.Join(botUsername)
-		Timer(ctx, client, service, botId, botUsername)
+		h.client.Twitch.Join(botUsername)
+		Timer(ctx, h.client, h.service, botId, botUsername)
 		return nil
 	}
 
@@ -37,21 +34,21 @@ func BotJoin(client *client.Clients, service service.Service) []string {
 	for _, channel := range channels {
 		if channel.ChannelId == "" {
 			log.Println("TRYING TO JOIN THE TWITCH CHANNEL `" + botUsername + "`")
-			client.Twitch.Join(botUsername)
-			Timer(ctx, client, service, botId, botUsername)
+			h.client.Twitch.Join(botUsername)
+			Timer(ctx, h.client, h.service, botId, botUsername)
 			continue
 		}
 
-		twitchUser, err := twitch.GetTwitchUserInfo("id", channel.ChannelId)
+		twitchUser, err := h.twitchService.GetUserInfoById(channel.ChannelId)
 		if err != nil {
-			log.Printf("[handler.BotJoin] (GetTwitchUserInfo) ChannelId: %v, ChannelName: %v, Error: %v", channel.ChannelId, channel.ChannelName, err.Error())
+			log.Printf("[handler.BotJoin] (GetUserInfo) ChannelId: %v, ChannelName: %v, Error: %v", channel.ChannelId, channel.ChannelName, err.Error())
 			continue
 		}
 
 		log.Println("TRYING TO JOIN THE TWITCH CHANNEL `" + twitchUser.Login + "`")
-		client.Twitch.Join(twitchUser.Login)
+		h.client.Twitch.Join(twitchUser.Login)
 		channelIds = append(channelIds, channel.ChannelId)
-		Timer(ctx, client, service, channel.ChannelId, channel.ChannelName)
+		Timer(ctx, h.client, h.service, channel.ChannelId, channel.ChannelName)
 	}
 
 	return channelIds

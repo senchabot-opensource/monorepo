@@ -12,9 +12,11 @@ import (
 
 func (h *handler) MessageCreate(command command.Command) {
 	ctx := context.Background()
+	eventService := event.NewEventService(h.twitchService)
+
 	h.discordClient.AddHandler(func(s *discordgo.Session, m *discordgo.MessageCreate) {
 		if m.Author.Bot {
-			announcementChs, err := h.service.GetAnnouncementChannels(ctx) // redis or memory db?
+			announcementChs, err := h.service.GetAnnouncementChannels(ctx)
 			if err != nil {
 				log.Println("[handler.MessageCreate] GetAnnouncementChannels error:", err.Error())
 				return
@@ -22,7 +24,7 @@ func (h *handler) MessageCreate(command command.Command) {
 
 			for _, ch := range announcementChs {
 				if ch.ChannelID == m.ChannelID {
-					event.CreateLiveStreamScheduledEvent(s, m.Content, m.Embeds, m.GuildID)
+					eventService.CreateLiveStreamScheduledEvent(s, m.Content, m.Embeds, m.GuildID)
 				}
 			}
 		}
