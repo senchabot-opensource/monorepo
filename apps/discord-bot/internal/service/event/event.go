@@ -8,10 +8,20 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/alert"
 	"github.com/senchabot-opensource/monorepo/helper"
-	twsrvc "github.com/senchabot-opensource/monorepo/service/twitch"
+	"github.com/senchabot-opensource/monorepo/pkg/twitchapi"
 )
 
-func CreateLiveStreamScheduledEvent(dS *discordgo.Session, msgContent string, msgEmbeds []*discordgo.MessageEmbed, guildId string) {
+type EventService struct {
+	twitchService twitchapi.TwitchService
+}
+
+func NewEventService(twitchService twitchapi.TwitchService) *EventService {
+	return &EventService{
+		twitchService: twitchService,
+	}
+}
+
+func (es *EventService) CreateLiveStreamScheduledEvent(s *discordgo.Session, msgContent string, msgEmbeds []*discordgo.MessageEmbed, guildId string) {
 	url := helper.GetURL("twitch.tv", msgContent)
 	if url == "" && len(msgEmbeds) > 0 {
 		url = msgEmbeds[0].URL
@@ -46,7 +56,7 @@ func CreateLiveStreamScheduledEvent(dS *discordgo.Session, msgContent string, ms
 	log.Println("Created scheduled event: ", scheduledEvent.Name)
 }
 
-func CheckLiveStreamScheduledEvents(dS *discordgo.Session) {
+func (es *EventService) CheckLiveStreamScheduledEvents(dS *discordgo.Session) {
 	ticker := time.NewTicker(1 * time.Minute)
 	defer ticker.Stop()
 
@@ -65,7 +75,12 @@ func CheckLiveStreamScheduledEvents(dS *discordgo.Session) {
 					}
 
 					twitchUsername := helper.ParseTwitchUsernameURLParam(e.EntityMetadata.Location)
-					isLive, streamTitle := twsrvc.CheckTwitchStreamStatus(twitchUsername)
+					isLive, streamTitle, err := es.twitchService.CheckStreamStatus(twitchUsername)
+					if err != nil {
+						log.Printf("[CheckLiveStreamScheduledEvents] CheckStreamStatus error for %s: %v", twitchUsername, err)
+						continue
+					}
+
 					if len(streamTitle) > 100 {
 						streamTitle = streamTitle[0:90]
 					}

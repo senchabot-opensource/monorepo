@@ -2,26 +2,27 @@ package handler
 
 import (
 	"net/http"
-	"time"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/command"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
+	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service/streamer"
+	"github.com/senchabot-opensource/monorepo/pkg/twitchapi"
 )
 
 type Handler interface {
-	InitBotEventHandlers()
+	InitBotEventHandlers(command command.Command)
 	InitHttpHandlers(mux *http.ServeMux)
 }
 
 type handler struct {
-	discordClient *discordgo.Session
-	service       service.Service
+	discordClient   *discordgo.Session
+	service         service.Service
+	twitchService   twitchapi.TwitchService
+	streamerService *streamer.StreamerService
 }
 
-func (h *handler) InitBotEventHandlers() {
-	command := command.New(h.discordClient, h.service, 2*time.Second)
-
+func (h *handler) InitBotEventHandlers(command command.Command) {
 	h.Ready()
 	h.GuildCreate()
 	h.GuildDelete()
@@ -29,8 +30,6 @@ func (h *handler) InitBotEventHandlers() {
 	h.InteractionCreate(command)
 	h.MessageReactionAdd()
 	h.ChannelDelete()
-
-	command.DeployCommands(h.discordClient)
 }
 
 func (h *handler) InitHttpHandlers(mux *http.ServeMux) {
@@ -39,9 +38,11 @@ func (h *handler) InitHttpHandlers(mux *http.ServeMux) {
 	})
 }
 
-func New(discordClient *discordgo.Session, service service.Service) Handler {
+func New(discordClient *discordgo.Session, service service.Service, twitchService twitchapi.TwitchService) Handler {
 	return &handler{
-		discordClient: discordClient,
-		service:       service,
+		discordClient:   discordClient,
+		service:         service,
+		twitchService:   twitchService,
+		streamerService: streamer.NewStreamerService(twitchService),
 	}
 }

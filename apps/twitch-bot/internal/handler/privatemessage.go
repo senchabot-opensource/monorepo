@@ -2,21 +2,17 @@ package handler
 
 import (
 	"context"
-	"time"
 
 	"github.com/gempir/go-twitch-irc/v3"
-	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/client"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/command"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/command/helpers"
-
-	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/service"
 )
 
-func PrivateMessage(client *client.Clients, service service.Service) {
-	commands := command.New(client, service, 2*time.Second)
+func (h *handlers) PrivateMessage() {
+	commands := command.New(h.client, h.service, h.twitchService)
 	ctx := context.Background()
 
-	client.Twitch.OnPrivateMessage(func(message twitch.PrivateMessage) {
+	h.client.Twitch.OnPrivateMessage(func(message twitch.PrivateMessage) {
 		cmdName, params := helpers.ParseSysCmdMessage(message.Message)
 
 		sysCommand := commands.GetCommands()

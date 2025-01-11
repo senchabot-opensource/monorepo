@@ -10,22 +10,31 @@ import (
 	_ "time/tzdata"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/command"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/handler"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
-	twsrvc "github.com/senchabot-opensource/monorepo/service/twitch"
+	"github.com/senchabot-opensource/monorepo/pkg/twitchapi"
 )
 
 func main() {
-	twsrvc.InitTwitchOAuth2Token()
+	twitchService, err := twitchapi.NewTwitchService(
+		os.Getenv("TWITCH_CLIENT_ID"),
+		os.Getenv("TWITCH_CLIENT_SECRET"),
+		os.Getenv("BOT_USER_ID"),
+	)
+	if err != nil {
+		log.Fatalf("Failed to initialize Twitch service: %v", err)
+	}
 
 	discordClient, _ := discordgo.New("Bot " + os.Getenv("TOKEN"))
 
 	var wg sync.WaitGroup
 
 	service := service.New()
-	handler := handler.New(discordClient, service)
+	command := command.New(discordClient, service, twitchService)
+	handler := handler.New(discordClient, service, twitchService)
 
-	handler.InitBotEventHandlers()
+	handler.InitBotEventHandlers(command)
 
 	go func() {
 		err := discordClient.Open()

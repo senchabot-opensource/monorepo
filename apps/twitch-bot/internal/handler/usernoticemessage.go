@@ -4,15 +4,13 @@ import (
 	"log"
 
 	"github.com/gempir/go-twitch-irc/v3"
-	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/client"
-	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/service"
 )
 
 var subTypes = []string{"sub", "resub", "subgift", "submysterygift"}
 var ChannelSubTypeCount = make(map[string]map[string]int)
 
-func UserNoticeMessage(client *client.Clients, service service.Service) {
-	client.Twitch.OnUserNoticeMessage(func(message twitch.UserNoticeMessage) {
+func (h *handlers) UserNoticeMessage() {
+	h.client.Twitch.OnUserNoticeMessage(func(message twitch.UserNoticeMessage) {
 
 		channel := message.Channel
 

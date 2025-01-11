@@ -12,7 +12,6 @@ import (
 
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/client"
 	"github.com/senchabot-opensource/monorepo/model"
-	"github.com/senchabot-opensource/monorepo/service/twitch"
 	"gorm.io/gorm"
 )
 
@@ -47,9 +46,9 @@ func (s *webhook) BotDepart(client *client.Clients, joinedChannelList []string, 
 		return
 	}
 
-	twitchChannel, err := twitch.GetTwitchUserInfo("id", channelId)
+	twitchChannel, err := s.twitchService.GetUserInfoById(channelId)
 	if err != nil {
-		log.Println("[webhook.BotDepart] GetTwitchUserInfo error:", err.Error())
+		log.Println("[webhook.BotDepart] GetUserInfoById error:", err.Error())
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}

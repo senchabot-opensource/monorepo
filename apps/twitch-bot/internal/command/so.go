@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"log"
-	"os"
 	"strings"
 
 	"github.com/gempir/go-twitch-irc/v3"
@@ -12,7 +11,6 @@ import (
 	"github.com/senchabot-opensource/monorepo/config"
 	"github.com/senchabot-opensource/monorepo/helper"
 	"github.com/senchabot-opensource/monorepo/model"
-	twsrvc "github.com/senchabot-opensource/monorepo/service/twitch"
 )
 
 func (c *commands) SoCommand(context context.Context, message twitch.PrivateMessage, commandName string, params []string) (*model.CommandResponse, error) {
@@ -26,18 +24,28 @@ func (c *commands) SoCommand(context context.Context, message twitch.PrivateMess
 		cmdResp.Message = config.SoCommandInfo
 		return &cmdResp, nil
 	}
-	var streamerUsername = strings.ToLower(params[0])
+
+	streamerUsername := strings.ToLower(params[0])
 	streamerUsername = strings.TrimPrefix(streamerUsername, "@")
 
-	token := strings.TrimPrefix(os.Getenv("OAUTH"), "oauth:")
+	var messageFormat string
 
-	respMsg, err := twsrvc.GiveShoutout(streamerUsername, message.RoomID, token)
+	customMessageFormat, err := c.service.GetTwitchBotConfig(context, message.RoomID, "so_command_message_format")
+	if err != nil {
+		log.Println("[command.SoCommand] c.service.GetTwitchBotConfig error:", err.Error())
+		messageFormat = ""
+	}
+
+	if customMessageFormat != nil {
+		messageFormat = customMessageFormat.Value
+	}
+
+	respMsg, err := c.twitchService.GiveShoutout(streamerUsername, message.RoomID, messageFormat)
 	if err != nil {
 		log.Println("[command.SoCommand] GiveShoutout error:", err.Error())
 		return nil, err
 	}
 
 	cmdResp.Message = *respMsg
-
 	return &cmdResp, nil
 }

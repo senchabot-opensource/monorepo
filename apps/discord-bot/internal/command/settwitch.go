@@ -9,7 +9,6 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/command/helpers"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
-	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service/streamer"
 	"github.com/senchabot-opensource/monorepo/config"
 	"github.com/senchabot-opensource/monorepo/helper"
 )
@@ -25,13 +24,14 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 		commandUsername := i.Member.User.Username
 		twitchUsername = helper.ParseTwitchUsernameURLParam(twitchUsername)
 
-		response0, uInfo := streamer.GetTwitchUserInfo(twitchUsername)
-		if response0 != "" {
-			ephemeralRespond(s, i, response0)
+		uInfo, err := c.twitchService.GetUserInfoByLoginName(twitchUsername)
+		if err != nil {
+			// FIX: we send this message with all errors. we should send more accurate error messages.
+			ephemeralRespond(s, i, "Twitch streamer with username `"+twitchUsername+"` was not found.")
 			return
 		}
 
-		response1, ok := streamer.CheckIfTwitchStreamerExist(ctx, twitchUsername, uInfo, s, i, service)
+		response1, ok := c.streamerSvc.CheckIfTwitchStreamerExist(ctx, twitchUsername, uInfo, s, i, service)
 		if helpers.IsChannelNameNotGiven(len(options)) && ok {
 			ephemeralRespond(s, i, response1)
 			return
@@ -58,7 +58,7 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 				return
 			}
 
-			resp := streamer.SetTwitchStreamer(ctx, uInfo, nil, ch, i.GuildID, commandUsername, service)
+			resp := c.streamerSvc.SetTwitchStreamer(ctx, uInfo, nil, ch, i.GuildID, commandUsername, service)
 			ephemeralRespond(s, i, resp)
 			return
 		}
@@ -86,7 +86,7 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 			return
 		}
 
-		resp := streamer.SetTwitchStreamer(ctx, uInfo, &channelId, ch, i.GuildID, commandUsername, service)
+		resp := c.streamerSvc.SetTwitchStreamer(ctx, uInfo, &channelId, ch, i.GuildID, commandUsername, service)
 		ephemeralRespond(s, i, resp)
 
 	case "event-channel":
@@ -128,7 +128,7 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 			}
 			// TR
 			// ephemeralRespond(s, i, "`"+channelName+"` isimli kanal varsayılan duyuru kanalı olarak ayarlandı.")
-			ephemeralRespond(s, i, "`Text channel `"+channelName+"` is set as the default announcement channel.")
+			ephemeralRespond(s, i, "Text channel `"+channelName+"` is set as the default announcement channel.")
 
 		case "default-content":
 			options = options[0].Options
@@ -151,10 +151,10 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 			twitchUsername = helper.ParseTwitchUsernameURLParam(twitchUsername)
 			annoContent := options[1].StringValue()
 
-			response0, uInfo := streamer.GetTwitchUserInfo(twitchUsername)
-			if response0 != "" {
-				// TODO: edit respond or create errorMessage sheet
-				ephemeralRespond(s, i, response0)
+			//response0, uInfo := c.streamerSvc.GetTwitchUserInfo(twitchUsername)
+			uInfo, err := c.twitchService.GetUserInfoByLoginName(twitchUsername)
+			if err != nil {
+				ephemeralRespond(s, i, "Twitch streamer with username `"+twitchUsername+"` was not found.")
 				return
 			}
 
@@ -366,7 +366,7 @@ func SetTwitchCommandMetadata() *discordgo.ApplicationCommand {
 					// set-twitch announcement category-filter
 					{
 						Name:        "category-filter",
-						Description: "Filtering Discord channel-specific Twitch stream category for announcement (case-sensitive). Just Chatting",
+						Description: "Discord channel-specific Twitch stream category for announcement (case-sensitive). Just Chatting",
 						DescriptionLocalizations: map[discordgo.Locale]string{
 							discordgo.Turkish: "Discord kanalına özgü yayın duyurularının filtrelenmesi (büyük/küçük harf duyarlı). Just Chatting",
 						},

@@ -14,7 +14,7 @@ import (
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
 	"github.com/senchabot-opensource/monorepo/config"
 	"github.com/senchabot-opensource/monorepo/model"
-	twsrvc "github.com/senchabot-opensource/monorepo/service/twitch"
+	"github.com/senchabot-opensource/monorepo/pkg/twitchapi"
 )
 
 type GuildStreamers struct {
@@ -25,7 +25,17 @@ type GuildStreamers struct {
 
 var streamers map[string]map[string]GuildStreamers = make(map[string]map[string]GuildStreamers)
 
-func InitStreamersData(ctx context.Context, service service.Service, guildId string) {
+type StreamerService struct {
+	twitchService twitchapi.TwitchService
+}
+
+func NewStreamerService(twitchService twitchapi.TwitchService) *StreamerService {
+	return &StreamerService{
+		twitchService: twitchService,
+	}
+}
+
+func (s *StreamerService) InitStreamersData(ctx context.Context, service service.Service, guildId string) {
 	channelData, err := service.GetDiscordBotConfig(ctx, guildId, "stream_anno_default_channel")
 	if err != nil {
 		log.Println("[SetTwitchStreamer] GetDiscordBotConfig error:", err.Error())
@@ -51,7 +61,7 @@ func InitStreamersData(ctx context.Context, service service.Service, guildId str
 	}
 }
 
-func SetStreamerData(serverId, twitchUserId, twitchUserName, discordChannelId string) {
+func (s *StreamerService) SetStreamerData(serverId, twitchUserId, twitchUserName, discordChannelId string) {
 	serverStreamers, ok := streamers[serverId]
 	if !ok {
 		serverStreamers = make(map[string]GuildStreamers)
@@ -64,7 +74,7 @@ func SetStreamerData(serverId, twitchUserId, twitchUserName, discordChannelId st
 	}
 }
 
-func GetStreamersData(serverId string) map[string]GuildStreamers {
+func (s *StreamerService) GetStreamersData(serverId string) map[string]GuildStreamers {
 	serverStreamers, ok := streamers[serverId]
 	if !ok {
 		return nil
@@ -72,7 +82,7 @@ func GetStreamersData(serverId string) map[string]GuildStreamers {
 	return serverStreamers
 }
 
-func DeleteStreamerFromData(serverId, username string) bool {
+func (s *StreamerService) DeleteStreamerFromData(serverId, username string) bool {
 	serverStreamers, ok := streamers[serverId]
 	if !ok {
 		return false
@@ -81,7 +91,7 @@ func DeleteStreamerFromData(serverId, username string) bool {
 	return true
 }
 
-func DeleteServerFromData(serverId string) bool {
+func (s *StreamerService) DeleteServerFromData(serverId string) bool {
 	_, ok := streamers[serverId]
 	if !ok {
 		return false
@@ -91,25 +101,14 @@ func DeleteServerFromData(serverId string) bool {
 	return true
 }
 
-func GetTwitchUserInfo(twitchUsername string) (string, *model.TwitchUserInfo) {
-	userInfo, err := twsrvc.GetTwitchUserInfo("login", twitchUsername)
-	if err != nil {
-		log.Println("[GetTwitchUserInfo] twsrvc.GetTwitchUserInfo (login: "+twitchUsername+") error:", err.Error())
-		//return fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısı Twitch'te bulunamadı.", twitchUsername), nil
-		return "Twitch streamer with username `" + twitchUsername + "` was not found.", nil
-	}
-
-	return "", userInfo
-}
-
-func CheckIfTwitchStreamerExist(ctx context.Context, twitchUsername string, uInfo *model.TwitchUserInfo, s *discordgo.Session, i *discordgo.InteractionCreate, service service.Service) (string, bool) {
+func (s *StreamerService) CheckIfTwitchStreamerExist(ctx context.Context, twitchUsername string, uInfo *model.TwitchUserInfo, dS *discordgo.Session, i *discordgo.InteractionCreate, service service.Service) (string, bool) {
 	liveAnnoData, err := service.GetDiscordTwitchLiveAnno(ctx, uInfo.ID, i.GuildID)
 	if err != nil {
 		log.Println("[CheckIfTwitchStreamerExist] GetDiscordTwitchLiveAnno error:", err.Error())
 		return config.ErrorMessage + "#XYXX", false
 	}
 	if liveAnnoData != nil {
-		channel, err := s.Channel(liveAnnoData.AnnoChannelID)
+		channel, err := dS.Channel(liveAnnoData.AnnoChannelID)
 		if err != nil {
 			log.Println("[CheckIfTwitchStreamerExist] s.Channel error:", err.Error())
 			return config.ErrorMessage + "#YXXX", false
@@ -120,7 +119,7 @@ func CheckIfTwitchStreamerExist(ctx context.Context, twitchUsername string, uInf
 	return "", false
 }
 
-func SetTwitchStreamer(ctx context.Context, uInfo *model.TwitchUserInfo, channelId *string, channel *discordgo.Channel, guildId, creatorUsername string, service service.Service) string {
+func (s *StreamerService) SetTwitchStreamer(ctx context.Context, uInfo *model.TwitchUserInfo, channelId *string, channel *discordgo.Channel, guildId, creatorUsername string, service service.Service) string {
 	var annoChannelId string
 	if channelId == nil {
 		channelData, err := service.GetDiscordBotConfig(ctx, guildId, "stream_anno_default_channel")
@@ -146,17 +145,17 @@ func SetTwitchStreamer(ctx context.Context, uInfo *model.TwitchUserInfo, channel
 	}
 
 	if !added {
-		SetStreamerData(guildId, uInfo.ID, uInfo.Login, *channelId)
+		s.SetStreamerData(guildId, uInfo.ID, uInfo.Login, *channelId)
 		//return fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısı varitabanında bulunmakta. Ancak... Twitch yayıncısının yayın duyurularının yapılacağı kanalı `%v` yazı kanalı olarak güncellendi.", uInfo.Login, channel.Name)
 		return "Twitch streamer `" + uInfo.Login + "` is in the database. However... Streamer's channel for live stream announcements has been updated to the `" + channel.Name + "` text channel."
 	}
 
-	SetStreamerData(guildId, uInfo.ID, uInfo.Login, *channelId)
+	s.SetStreamerData(guildId, uInfo.ID, uInfo.Login, *channelId)
 	//return fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısının yayın duyuruları `%v` isimli yazı kanalı için aktif edildi.", uInfo.Login, channel.Name)
 	return "Twitch streamer `" + uInfo.Login + "`s live stream announcements have been activated for the `" + channel.Name + "` text channel."
 }
 
-func GetStreamAnnoContent(ctx context.Context, service service.Service, guildId, streamerUserId string) string {
+func (s *StreamerService) GetStreamAnnoContent(ctx context.Context, service service.Service, guildId, streamerUserId string) string {
 	//annoContent := "{twitch.username}, {stream.category} yayınına başladı! {twitch.url}"
 	annoContent := "{twitch.username} has started streaming {stream.category}! {twitch.url}"
 
@@ -253,8 +252,8 @@ func getCooldownDuration(ctx context.Context, service service.Service, guildId s
 
 var streamersMutex sync.Mutex
 
-func getStreamersAndLiveData(_ context.Context, _ service.Service, guildId string) ([]model.TwitchStreamerData, map[string]GuildStreamers) {
-	streamers := GetStreamersData(guildId)
+func (s *StreamerService) getStreamersAndLiveData(_ context.Context, _ service.Service, guildId string) ([]model.TwitchStreamerData, map[string]GuildStreamers) {
+	streamers := s.GetStreamersData(guildId)
 
 	keys := make([]string, 0, len(streamers))
 	for k := range streamers {
@@ -265,12 +264,16 @@ func getStreamersAndLiveData(_ context.Context, _ service.Service, guildId strin
 		return nil, nil
 	}
 
-	liveStreams := twsrvc.CheckMultipleTwitchStreamer(keys)
+	liveStreams, err := s.twitchService.CheckMultipleStreamers(keys)
+	if err != nil {
+		log.Printf("Error checking multiple streamers: %v", err)
+		return nil, streamers
+	}
 
 	return liveStreams, streamers
 }
 
-func handleAnnouncement(ctx context.Context, s *discordgo.Session, service service.Service, guildId string, streamers map[string]GuildStreamers, sd model.TwitchStreamerData) {
+func (s *StreamerService) handleAnnouncement(ctx context.Context, dS *discordgo.Session, service service.Service, guildId string, streamers map[string]GuildStreamers, sd model.TwitchStreamerData) {
 	streamersMutex.Lock()
 	defer streamersMutex.Unlock()
 
@@ -280,10 +283,13 @@ func handleAnnouncement(ctx context.Context, s *discordgo.Session, service servi
 		return
 	}
 
-	annoContent := GetStreamAnnoContent(ctx, service, guildId, sd.UserID)
+	annoContent := s.GetStreamAnnoContent(ctx, service, guildId, sd.UserID)
 	formattedString := FormatContent(annoContent, sd)
-	_, userInfo := GetTwitchUserInfo(sd.UserLogin)
-	s.ChannelMessageSendComplex(gs.DiscordChannelID, &discordgo.MessageSend{Content: formattedString, Embeds: []*discordgo.MessageEmbed{
+	userInfo, err := s.twitchService.GetUserInfoByLoginName(sd.UserLogin)
+	if err != nil {
+		// TODO
+	}
+	dS.ChannelMessageSendComplex(gs.DiscordChannelID, &discordgo.MessageSend{Content: formattedString, Embeds: []*discordgo.MessageEmbed{
 		{
 			Title:       fmt.Sprintf("%s - Twitch", sd.UserName),
 			Description: sd.Title,
@@ -292,7 +298,7 @@ func handleAnnouncement(ctx context.Context, s *discordgo.Session, service servi
 		},
 	}})
 
-	_, err := service.UpdateTwitchStreamerLastAnnoDate(ctx, sd.UserID, guildId, time.Now().UTC())
+	_, err = service.UpdateTwitchStreamerLastAnnoDate(ctx, sd.UserID, guildId, time.Now().UTC())
 	if err != nil {
 		log.Println("[handleAnnouncement] UpdateTwitchStreamerLastAnnoDate error:", err.Error())
 	}
@@ -300,7 +306,7 @@ func handleAnnouncement(ctx context.Context, s *discordgo.Session, service servi
 
 var liveStreamChannels = make(map[string]chan struct{})
 
-func StartCheckLiveStreams(s *discordgo.Session, ctx context.Context, service service.Service, guildId string) {
+func (s *StreamerService) StartCheckLiveStreams(dS *discordgo.Session, ctx context.Context, service service.Service, guildId string) {
 	if _, ok := liveStreamChannels[guildId]; ok {
 		return
 	}
@@ -308,27 +314,27 @@ func StartCheckLiveStreams(s *discordgo.Session, ctx context.Context, service se
 	stop := make(chan struct{})
 	liveStreamChannels[guildId] = stop
 
-	go CheckLiveStreams(s, ctx, service, guildId, stop)
+	go s.CheckLiveStreams(dS, ctx, service, guildId, stop)
 }
 
-func StopCheckLiveStreams(guildId string) {
+func (s *StreamerService) StopCheckLiveStreams(guildId string) {
 	if channel, ok := liveStreamChannels[guildId]; ok {
 		close(channel)
 		delete(liveStreamChannels, guildId)
 	}
 }
 
-func CheckLiveStreams(s *discordgo.Session, ctx context.Context, service service.Service, guildId string, stop <-chan struct{}) {
+func (s *StreamerService) CheckLiveStreams(dS *discordgo.Session, ctx context.Context, service service.Service, guildId string, stop <-chan struct{}) {
 	ticker := time.NewTicker(1 * time.Minute)
 	defer ticker.Stop()
 
-	InitStreamersData(ctx, service, guildId)
+	s.InitStreamersData(ctx, service, guildId)
 
 	for {
 		select {
 		case <-ticker.C:
 			streamersMutex.Lock()
-			liveStreams, streamers := getStreamersAndLiveData(ctx, service, guildId)
+			liveStreams, streamers := s.getStreamersAndLiveData(ctx, service, guildId)
 			streamersMutex.Unlock()
 
 			if len(liveStreams) == 0 {
@@ -370,7 +376,7 @@ func CheckLiveStreams(s *discordgo.Session, ctx context.Context, service service
 						}
 					}
 
-					handleAnnouncement(ctx, s, service, guildId, streamers, sd)
+					s.handleAnnouncement(ctx, dS, service, guildId, streamers, sd)
 				} else {
 					continue
 				}
