@@ -11,8 +11,10 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/command/helpers"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
+	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service/streamer"
 	"github.com/senchabot-opensource/monorepo/helper"
 	"github.com/senchabot-opensource/monorepo/model"
+	"github.com/senchabot-opensource/monorepo/pkg/twitchapi"
 )
 
 type CommandFunc func(context context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, service service.Service)
@@ -24,27 +26,34 @@ type SysCommandFunc func(context context.Context, m *discordgo.MessageCreate, co
 type SysCommandMap map[string]SysCommandFunc
 
 type Command interface {
-	GetCommands() CommandMap
+	GetCommands() CommandMap // GetCustomCommands
 	GetSystemCommands() SysCommandMap
 	Run(context context.Context, cmdName string, params []string, m *discordgo.MessageCreate)
 	Respond(ctx context.Context, m *discordgo.MessageCreate, cmdName string, messageContent string)
-	DeployCommands(discordClient *discordgo.Session)
 }
 
 type commands struct {
 	dS             *discordgo.Session
 	service        service.Service
+	twitchService  twitchapi.TwitchService
+	streamerSvc    *streamer.StreamerService
 	userCooldowns  map[string]time.Time
 	cooldownPeriod time.Duration
 }
 
-func New(dS *discordgo.Session, service service.Service, cooldownPeriod time.Duration) Command {
+func New(discordClient *discordgo.Session, service service.Service, twitchService twitchapi.TwitchService) *commands {
+	deployCommands(discordClient)
+
 	return &commands{
-		dS:             dS,
+		dS:             discordClient,
 		service:        service,
+		twitchService:  twitchService,
+		streamerSvc:    streamer.NewStreamerService(twitchService),
 		userCooldowns:  make(map[string]time.Time),
-		cooldownPeriod: cooldownPeriod,
+		cooldownPeriod: time.Second,
 	}
+
+	// // time.Duration(os.Getenv("COOLDOWN_PERIOD")) * time.Second
 }
 
 func (c *commands) GetCommands() CommandMap {
@@ -97,6 +106,32 @@ func (c *commands) Respond(ctx context.Context, m *discordgo.MessageCreate, cmdN
 	c.service.SaveCommandActivity(ctx, cmdName, m.GuildID, m.Author.Username, m.Author.ID)
 }
 
+func (c *commands) runCustomCommand(ctx context.Context, cmdName string, mC *discordgo.MessageCreate) {
+	cmdData, err := c.service.GetUserBotCommand(ctx, cmdName, mC.GuildID)
+	if err != nil {
+		log.Println("[runCustomCommand] USER BOT COMMAND ERROR:", err.Error())
+	}
+	if cmdData != nil {
+		cmdVar := helpers.GetCommandVariables(c.dS, cmdData, mC)
+		formattedCommandContent := helper.FormatCommandContent(cmdVar)
+		c.Respond(ctx, mC, cmdName, formattedCommandContent)
+		return
+	}
+}
+
+func (c *commands) runSystemCommand(ctx context.Context, cmdName string, params []string, m *discordgo.MessageCreate) {
+	cmds := c.GetSystemCommands()
+	if cmd, ok := cmds[cmdName]; ok {
+		cmdResp, err := cmd(ctx, m, cmdName, params)
+		if err != nil {
+			log.Println("[runSystemCommand] SYSTEM COMMAND ERROR:", err.Error())
+			return
+		}
+		c.Respond(ctx, m, cmdName+" "+strings.Join(params, " "), cmdResp.Message)
+		return
+	}
+}
+
 func (c *commands) Run(ctx context.Context, cmdName string, params []string, m *discordgo.MessageCreate) {
 	if c.isUserOnCooldown(m.Author.Username) {
 		return
@@ -105,7 +140,7 @@ func (c *commands) Run(ctx context.Context, cmdName string, params []string, m *
 	// HANDLE COMMAND ALIASES
 	commandAlias, cmdAliasErr := c.service.GetCommandAlias(ctx, cmdName, m.GuildID)
 	if cmdAliasErr != nil {
-		log.Println("[COMMAND ALIAS ERROR]:", cmdAliasErr.Error())
+		log.Println("[command.Run] COMMAND ALIAS ERROR:", cmdAliasErr.Error())
 	}
 
 	if commandAlias != nil {
@@ -114,35 +149,17 @@ func (c *commands) Run(ctx context.Context, cmdName string, params []string, m *
 	// HANDLE COMMAND ALIASES
 
 	// USER COMMANDS
-	cmdData, err := c.service.GetUserBotCommand(ctx, cmdName, m.GuildID)
-	if err != nil {
-		log.Println("[USER COMMAND ERROR]:", err.Error())
-	}
-	if cmdData != nil {
-		cmdVar := helpers.GetCommandVariables(c.dS, cmdData, m)
-		formattedCommandContent := helper.FormatCommandContent(cmdVar)
-		c.Respond(ctx, m, cmdName, formattedCommandContent)
-		return
-	}
+	c.runCustomCommand(ctx, cmdName, m)
 	// USER COMMANDS
 
 	// SYSTEM COMMMANDS
-	cmds := c.GetSystemCommands()
-	if cmd, ok := cmds[cmdName]; ok {
-		cmdResp, err := cmd(ctx, m, cmdName, params)
-		if err != nil {
-			log.Println("[SYSTEM COMMAND ERROR]:", err.Error())
-			return
-		}
-		c.Respond(ctx, m, cmdName+" "+strings.Join(params, " "), cmdResp.Message)
-		return
-	}
+	c.runSystemCommand(ctx, cmdName, params, m)
 	// SYSTEM COMMANDS
 
 	// GLOBAL COMMANDS
-	cmdData, err = c.service.GetGlobalBotCommand(ctx, cmdName)
+	cmdData, err := c.service.GetGlobalBotCommand(ctx, cmdName)
 	if err != nil {
-		log.Println("[GLOBAL COMMAND ERROR]:", err.Error())
+		log.Println("[command.Run] GLOBAL COMMAND ERROR:", err.Error())
 		return
 	}
 	if cmdData == nil {
@@ -168,8 +185,8 @@ func (c *commands) setCommandCooldown(username string) {
 	c.userCooldowns[username] = time.Now()
 }
 
-func (c *commands) DeployCommands(discordClient *discordgo.Session) {
-	log.Println("DEPLOYING SLASH COMMANDS...")
+func deployCommands(discordClient *discordgo.Session) {
+	log.Println("[deployCommands] Deploying slash commands...")
 	registeredCommands := make([]*discordgo.ApplicationCommand, len(commandMetadatas))
 	for i, v := range commandMetadatas {
 		cmd, err := discordClient.ApplicationCommandCreate(os.Getenv("CLIENT_ID"), "", v)
@@ -183,7 +200,7 @@ func (c *commands) DeployCommands(discordClient *discordgo.Session) {
 					}
 				}
 			}
-			log.Printf("[DeployCommands] Slash command '%v' cannot created. Command's options: '%v'\nError: '%v'\n", v.Name, strings.Join(options, " "), err)
+			log.Printf("[deployCommands] Slash command '%v' cannot created. Command's options: '%v'\nError: '%v'\n", v.Name, strings.Join(options, " "), err)
 		}
 		registeredCommands[i] = cmd
 	}

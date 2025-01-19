@@ -9,6 +9,9 @@ import (
 
 func (h *handler) ChannelDelete() {
 	h.discordClient.AddHandler(func(s *discordgo.Session, c *discordgo.ChannelDelete) {
+		if c.Type != discordgo.ChannelTypeGuildNews && c.Type != discordgo.ChannelTypeGuildText {
+			return
+		}
 
 		ok, err := h.service.DeleteDiscordTwitchLiveAnnosByChannelId(context.Background(), c.ID)
 		if err != nil {
