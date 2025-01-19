@@ -53,7 +53,7 @@ func (c *commands) AddTimerCommand(context context.Context, message twitch.Priva
 
 	cmdTimers, err := c.service.GetCommandTimers(context, channelId)
 	if err != nil {
-		log.Println("There was an error while getting command timers errors: " + err.Error())
+		log.Println("[command.AddTimerCommand] There was an error while getting command timers errors: " + err.Error())
 		cmdResp.Message = config.ErrorMessage + "CT2"
 		return &cmdResp, nil
 	}
@@ -65,7 +65,7 @@ func (c *commands) AddTimerCommand(context context.Context, message twitch.Priva
 
 	ok, err := c.service.CreateCommandTimer(context, channelId, commandData.CommandName, interval)
 	if err != nil {
-		log.Println(err.Error())
+		log.Println("[command.AddTimerCommand] " + err.Error())
 		if ok {
 			cmdResp.Message = err.Error()
 			return &cmdResp, nil

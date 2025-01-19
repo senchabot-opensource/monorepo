@@ -232,7 +232,7 @@ func ValidateCommandContentLength(commandContent string) (string, bool) {
 func StrToInt(intervalStr string) (int, error) {
 	interval, err := strconv.Atoi(intervalStr)
 	if err != nil {
-		log.Println("strconv.Atoi err", err)
+		log.Println("[StrToInt] Conversion error:", err)
 		return 0, errors.New("the interval value must be integer")
 	}
 

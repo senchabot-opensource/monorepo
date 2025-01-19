@@ -86,7 +86,7 @@ func (c *commands) Respond(ctx context.Context, message twitch.PrivateMessage, c
 func (c *commands) runCustomCommand(ctx context.Context, cmdName string, privMsg twitch.PrivateMessage) {
 	cmdData, err := c.service.GetUserBotCommand(ctx, cmdName, privMsg.RoomID)
 	if err != nil {
-		log.Println("[USER COMMAND ERROR]:", err.Error())
+		log.Println("[runCustomCommand] USER BOT COMMAND ERROR:", err.Error())
 	}
 	if cmdData != nil {
 		cmdVar := helpers.GetCommandVariables(cmdData, privMsg)
@@ -102,7 +102,7 @@ func (c *commands) runSystemCommand(ctx context.Context, cmdName string, params 
 	if cmd, ok := cmds[cmdName]; ok {
 		cmdResp, err := cmd(ctx, privMsg, cmdName, params)
 		if err != nil {
-			log.Println("[SYSTEM COMMAND ERROR]:", err.Error())
+			log.Println("[runSystemCommand] SYSTEM COMMAND ERROR:", err.Error())
 			return
 		}
 		if cmdResp != nil {
@@ -120,7 +120,7 @@ func (c *commands) Run(ctx context.Context, cmdName string, params []string, pri
 	// HANDLE COMMAND ALIASES
 	commandAlias, cmdAliasErr := c.service.GetCommandAlias(ctx, cmdName, privMsg.RoomID)
 	if cmdAliasErr != nil {
-		log.Println("[COMMAND ALIAS ERROR]:", cmdAliasErr.Error())
+		log.Println("[command.Run] COMMAND ALIAS ERROR:", cmdAliasErr.Error())
 	}
 
 	if commandAlias != nil {
@@ -141,7 +141,7 @@ func (c *commands) Run(ctx context.Context, cmdName string, params []string, pri
 	cmdName = strings.ToLower(cmdName)
 	cmdData, err := c.service.GetGlobalBotCommand(ctx, cmdName)
 	if err != nil {
-		log.Println("[GLOBAL COMMAND ERROR]:", err.Error())
+		log.Println("[command.Run] GLOBAL COMMAND ERROR:", err.Error())
 		return
 	}
 	if cmdData == nil {
