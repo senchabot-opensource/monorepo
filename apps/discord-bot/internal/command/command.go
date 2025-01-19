@@ -109,7 +109,7 @@ func (c *commands) Respond(ctx context.Context, m *discordgo.MessageCreate, cmdN
 func (c *commands) runCustomCommand(ctx context.Context, cmdName string, mC *discordgo.MessageCreate) {
 	cmdData, err := c.service.GetUserBotCommand(ctx, cmdName, mC.GuildID)
 	if err != nil {
-		log.Println("[USER COMMAND ERROR]:", err.Error())
+		log.Println("[runCustomCommand] USER BOT COMMAND ERROR:", err.Error())
 	}
 	if cmdData != nil {
 		cmdVar := helpers.GetCommandVariables(c.dS, cmdData, mC)
@@ -124,7 +124,7 @@ func (c *commands) runSystemCommand(ctx context.Context, cmdName string, params 
 	if cmd, ok := cmds[cmdName]; ok {
 		cmdResp, err := cmd(ctx, m, cmdName, params)
 		if err != nil {
-			log.Println("[SYSTEM COMMAND ERROR]:", err.Error())
+			log.Println("[runSystemCommand] SYSTEM COMMAND ERROR:", err.Error())
 			return
 		}
 		c.Respond(ctx, m, cmdName+" "+strings.Join(params, " "), cmdResp.Message)
@@ -140,7 +140,7 @@ func (c *commands) Run(ctx context.Context, cmdName string, params []string, m *
 	// HANDLE COMMAND ALIASES
 	commandAlias, cmdAliasErr := c.service.GetCommandAlias(ctx, cmdName, m.GuildID)
 	if cmdAliasErr != nil {
-		log.Println("[COMMAND ALIAS ERROR]:", cmdAliasErr.Error())
+		log.Println("[command.Run] COMMAND ALIAS ERROR:", cmdAliasErr.Error())
 	}
 
 	if commandAlias != nil {
@@ -159,7 +159,7 @@ func (c *commands) Run(ctx context.Context, cmdName string, params []string, m *
 	// GLOBAL COMMANDS
 	cmdData, err := c.service.GetGlobalBotCommand(ctx, cmdName)
 	if err != nil {
-		log.Println("[GLOBAL COMMAND ERROR]:", err.Error())
+		log.Println("[command.Run] GLOBAL COMMAND ERROR:", err.Error())
 		return
 	}
 	if cmdData == nil {
@@ -186,7 +186,7 @@ func (c *commands) setCommandCooldown(username string) {
 }
 
 func deployCommands(discordClient *discordgo.Session) {
-	log.Println("DEPLOYING SLASH COMMANDS...")
+	log.Println("[deployCommands] Deploying slash commands...")
 	registeredCommands := make([]*discordgo.ApplicationCommand, len(commandMetadatas))
 	for i, v := range commandMetadatas {
 		cmd, err := discordClient.ApplicationCommandCreate(os.Getenv("CLIENT_ID"), "", v)
