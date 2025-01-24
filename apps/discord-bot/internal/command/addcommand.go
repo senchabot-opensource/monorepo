@@ -24,5 +24,5 @@ func (c *commands) AddCommandCommand(context context.Context, m *discordgo.Messa
 		return nil, errors.New("dont have permission")
 	}
 
-	return command.AcmdCommand(context, c.service.CreateCommand, c.IsSystemCommand, *msgData, commandName, params)
+	return command.AcmdCommand(context, c.service.CreateCommand, c.service.GetCustomVariableContent, c.IsSystemCommand, *msgData, commandName, params)
 }

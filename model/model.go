@@ -142,6 +142,8 @@ type CommandVariable struct {
 	CurrentDate      *time.Time
 	CommandCreatedAt *time.Time
 	ChannelName      string
+	BotPlatform      platform.Platform
+	BotPlatformID    string
 }
 
 type MessageData struct {
@@ -158,3 +160,23 @@ type CommandTimer struct {
 	Interval      int               `gorm:"column:interval"`
 	Status        int               `gorm:"column:status"`
 }
+
+type BotCommandVariable struct {
+	ID              int
+	VariableName    string            `gorm:"column:variable_name"`
+	VariableContent string            `gorm:"column:variable_content"`
+	BotPlatform     platform.Platform `gorm:"column:bot_platform"`
+	BotPlatformID   string            `gorm:"column:bot_platform_id"`
+	Status          Status            `gorm:"column:status"`
+	CreatedBy       string            `gorm:"column:created_by"`
+	UpdatedBy       *string           `gorm:"column:updated_by"`
+	CreatedAt       *time.Time        `gorm:"column:created_at"`
+	UpdatedAt       *time.Time        `gorm:"column:updated_at"`
+}
+
+type Status int
+
+const (
+	BotCommandVariableStatusInactive Status = iota
+	BotCommandVariableStatusActive
+)

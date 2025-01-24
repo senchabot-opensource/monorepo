@@ -7,6 +7,7 @@ import (
 	"github.com/gempir/go-twitch-irc/v3"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/service"
 	"github.com/senchabot-opensource/monorepo/model"
+	"github.com/senchabot-opensource/monorepo/platform"
 )
 
 func GetCommandVariables(cmdData *model.BotCommand, message twitch.PrivateMessage) *model.CommandVariable {
@@ -16,6 +17,8 @@ func GetCommandVariables(cmdData *model.BotCommand, message twitch.PrivateMessag
 		CurrentDate:      &message.Time,
 		CommandCreatedAt: cmdData.CreatedAt,
 		ChannelName:      message.Channel,
+		BotPlatform:      platform.TWITCH,
+		BotPlatformID:    message.RoomID,
 	}
 }
 

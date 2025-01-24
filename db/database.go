@@ -79,4 +79,12 @@ type Database interface {
 	// DISCORD
 
 	AddBotCommandStatistic(ctx context.Context, botPlatform platform.Platform, commandName string) error
+
+	// Command Variable methods
+	GetCommandVariable(ctx context.Context, varName string, botPlatform platform.Platform, botPlatformId string) (*model.BotCommandVariable, error)
+	CreateCommandVariable(ctx context.Context, varName string, varContent string, botPlatform platform.Platform, botPlatformId string, createdBy string) error
+	UpdateCommandVariable(ctx context.Context, varName string, varContent string, botPlatform platform.Platform, botPlatformId string, updatedBy string) error
+	DeleteCommandVariable(ctx context.Context, varName string, botPlatform platform.Platform, botPlatformId string, updatedBy string) error
+	ListCommandVariables(ctx context.Context, botPlatform platform.Platform, botPlatformId string) ([]*model.BotCommandVariable, error)
+	GetCustomVariableContent(ctx context.Context, botPlatform platform.Platform, botPlatformId string, varName string) string
 }

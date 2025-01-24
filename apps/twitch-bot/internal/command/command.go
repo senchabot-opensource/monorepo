@@ -64,6 +64,11 @@ func (c *commands) GetCommands() CommandMap {
 		"timers": c.TimersCommand,
 		"timer":  c.TimerCommand,
 
+		"acmdvar": c.AddCommandVariableCommand,
+		"ucmdvar": c.UpdateCommandVariableCommand,
+		"dcmdvar": c.DeleteCommandVariableCommand,
+		"lcmdvar": c.ListCommandVariablesCommand,
+
 		"help": c.HelpCommand,
 	}
 
@@ -90,7 +95,7 @@ func (c *commands) runCustomCommand(ctx context.Context, cmdName string, privMsg
 	}
 	if cmdData != nil {
 		cmdVar := helpers.GetCommandVariables(cmdData, privMsg)
-		formattedCommandContent := helper.FormatCommandContent(cmdVar)
+		formattedCommandContent := helper.FormatCommandContent(cmdVar, c.service)
 		c.Respond(ctx, privMsg, cmdName, formattedCommandContent)
 		return
 	}
@@ -149,7 +154,7 @@ func (c *commands) Run(ctx context.Context, cmdName string, params []string, pri
 	}
 
 	cmdVar := helpers.GetCommandVariables(cmdData, privMsg)
-	formattedCommandContent := helper.FormatCommandContent(cmdVar)
+	formattedCommandContent := helper.FormatCommandContent(cmdVar, c.service)
 	c.Respond(ctx, privMsg, cmdName, formattedCommandContent)
 	// GLOBAL COMMANDS
 }

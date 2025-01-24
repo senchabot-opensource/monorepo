@@ -11,7 +11,7 @@ import (
 
 type updateCommandServiceType func(ctx context.Context, commandName string, commandContent string, platformEntityId string, updatedBy string) (*string, *string, error)
 
-func UcmdCommand(context context.Context, service updateCommandServiceType, isSystemCommand IsSystemCommandType, message model.MessageData, commandName string, params []string) (*model.CommandResponse, error) {
+func UcmdCommand(context context.Context, service updateCommandServiceType, getcvcservice getCustomVariableContentServiceType, isSystemCommand IsSystemCommandType, message model.MessageData, commandName string, params []string) (*model.CommandResponse, error) {
 	var cmdResp model.CommandResponse
 
 	command_name, newCommandContent, check := helper.GetCommandCreateUpdateParams(params)
@@ -22,6 +22,11 @@ func UcmdCommand(context context.Context, service updateCommandServiceType, isSy
 	// Check command content length
 	if infoText, check := helper.ValidateCommandContentLength(newCommandContent); !check {
 		cmdResp.Message = message.UserName + ", " + infoText
+		return &cmdResp, nil
+	}
+
+	if !checkCommandContentLengthWithCustomVariable(newCommandContent, context, message, getcvcservice) {
+		cmdResp.Message = config.CommandContentLimit
 		return &cmdResp, nil
 	}
 

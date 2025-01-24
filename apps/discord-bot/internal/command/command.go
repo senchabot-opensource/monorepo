@@ -79,6 +79,11 @@ func (c *commands) GetSystemCommands() SysCommandMap {
 		"acmda":  c.AddCommandAliasCommand,
 		"dcmda":  c.DeleteCommandAliasCommand,
 		"sozluk": c.SozlukCommand,
+
+		"acmdvar": c.AddCommandVariableCommand,
+		"ucmdvar": c.UpdateCommandVariableCommand,
+		"dcmdvar": c.DeleteCommandVariableCommand,
+		"lcmdvar": c.ListCommandVariablesCommand,
 	}
 
 	return commands
@@ -113,7 +118,7 @@ func (c *commands) runCustomCommand(ctx context.Context, cmdName string, mC *dis
 	}
 	if cmdData != nil {
 		cmdVar := helpers.GetCommandVariables(c.dS, cmdData, mC)
-		formattedCommandContent := helper.FormatCommandContent(cmdVar)
+		formattedCommandContent := helper.FormatCommandContent(cmdVar, c.service)
 		c.Respond(ctx, mC, cmdName, formattedCommandContent)
 		return
 	}
@@ -167,7 +172,7 @@ func (c *commands) Run(ctx context.Context, cmdName string, params []string, m *
 	}
 
 	cmdVar := helpers.GetCommandVariables(c.dS, cmdData, m)
-	formattedCommandContent := helper.FormatCommandContent(cmdVar)
+	formattedCommandContent := helper.FormatCommandContent(cmdVar, c.service)
 	c.Respond(ctx, m, cmdName, formattedCommandContent)
 	// GLOBAL COMMANDS
 }
