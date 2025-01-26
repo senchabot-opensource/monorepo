@@ -9,7 +9,7 @@ import (
 	"github.com/senchabot-opensource/monorepo/model"
 )
 
-func (c *commands) UpdateCommandCommand(context context.Context, m *discordgo.MessageCreate, commandName string, params []string) (*model.CommandResponse, error) {
+func (c *commands) AddCommandVariableCommand(context context.Context, m *discordgo.MessageCreate, commandName string, params []string) (*model.CommandResponse, error) {
 	msgData := &model.MessageData{
 		PlatformEntityID: m.GuildID,
 		UserName:         m.Author.Username,
@@ -24,5 +24,5 @@ func (c *commands) UpdateCommandCommand(context context.Context, m *discordgo.Me
 		return nil, errors.New("dont have permission")
 	}
 
-	return command.UcmdCommand(context, c.service.UpdateCommand, c.service.GetCustomVariableContent, c.IsSystemCommand, *msgData, commandName, params)
+	return command.AddCommandVariableCommand(context, c.service.CreateCommandVariable, c.service.GetCommandVariable, *msgData, commandName, params)
 }

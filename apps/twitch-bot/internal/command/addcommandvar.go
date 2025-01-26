@@ -11,7 +11,7 @@ import (
 	"github.com/senchabot-opensource/monorepo/model"
 )
 
-func (c *commands) AddCommandCommand(context context.Context, message twitch.PrivateMessage, commandName string, params []string) (*model.CommandResponse, error) {
+func (c *commands) AddCommandVariableCommand(context context.Context, message twitch.PrivateMessage, commandName string, params []string) (*model.CommandResponse, error) {
 	if !helpers.CanExecuteCommand(context, c.service, message.Tags["badges"], message.RoomID) {
 		return nil, errors.New(message.User.DisplayName + config.CannotExecuteCommand)
 	}
@@ -21,5 +21,5 @@ func (c *commands) AddCommandCommand(context context.Context, message twitch.Pri
 		UserName:         message.User.DisplayName,
 	}
 
-	return command.AcmdCommand(context, c.service.CreateCommand, c.service.GetCustomVariableContent, c.IsSystemCommand, *msgData, commandName, params)
+	return command.AddCommandVariableCommand(context, c.service.CreateCommandVariable, c.service.GetCommandVariable, *msgData, commandName, params)
 }

@@ -1,6 +1,7 @@
 package helper
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"io"
@@ -14,6 +15,7 @@ import (
 	"time"
 
 	"github.com/senchabot-opensource/monorepo/model"
+	"github.com/senchabot-opensource/monorepo/service"
 )
 
 const (
@@ -23,10 +25,10 @@ const (
 	maxAliasParamLength = 4
 
 	maxCommandNameLength    = 50
-	maxCommandContentLength = 400
+	MaxCommandContentLength = 400
 )
 
-func FormatCommandContent(cv *model.CommandVariable) string {
+func FormatCommandContent(cv *model.CommandVariable, service service.Service) string {
 	msgContent := cv.CommandContent
 	username := cv.UserName
 	dateTemplate := "02/01/2006"
@@ -46,6 +48,24 @@ func FormatCommandContent(cv *model.CommandVariable) string {
 
 	for k, v := range stringTemplates {
 		msgContent = strings.ReplaceAll(msgContent, k, v)
+	}
+
+	// Find and replace custom variables
+	re := regexp.MustCompile(`{([^}]+)}`)
+	matches := re.FindAllStringSubmatch(msgContent, -1)
+
+	if matches != nil && cv.BotPlatform != "" && cv.BotPlatformID != "" {
+
+		for _, match := range matches {
+			if _, exists := stringTemplates[match[0]]; !exists {
+				// This is a custom variable, look it up in the database
+				variableContent := service.GetCustomVariableContent(context.Background(), cv.BotPlatformID, match[1])
+				if variableContent != "" {
+					msgContent = strings.ReplaceAll(msgContent, match[0], variableContent)
+				}
+			}
+
+		}
 	}
 
 	url, startIndex, endIndex, ok := ParseCustomAPIURLFromMessage(msgContent)
@@ -146,12 +166,18 @@ func ContainsLowerCase(s string, substr string) bool {
 	return strings.Contains(strings.ToLower(s), substr)
 }
 
+func removeTrailingPunctuationFromURL(s string) string {
+	re := regexp.MustCompile(`[^_\w]+$`)
+	return re.ReplaceAllString(s, "")
+}
+
 func GetURL(domain, messageContent string) string {
 	pattern := fmt.Sprintf(`%s\S*`, domain)
 	re := regexp.MustCompile(pattern)
 	match := re.FindString(messageContent)
 
 	if match != "" {
+		match = removeTrailingPunctuationFromURL(match)
 		return "https://" + match
 	}
 
@@ -222,8 +248,8 @@ func ValidateCommandCreateParams(commandName string, commandContent string) (str
 }
 
 func ValidateCommandContentLength(commandContent string) (string, bool) {
-	if len(commandContent) > maxCommandContentLength {
-		return fmt.Sprintf("Command Content length must be no longer than %d chars", maxCommandContentLength), false
+	if len(commandContent) > MaxCommandContentLength {
+		return fmt.Sprintf("Command Content length must be no longer than %d chars", MaxCommandContentLength), false
 	}
 
 	return "", true

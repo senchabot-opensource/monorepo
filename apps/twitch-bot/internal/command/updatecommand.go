@@ -21,5 +21,5 @@ func (c *commands) UpdateCommandCommand(context context.Context, message twitch.
 		UserName:         message.User.DisplayName,
 	}
 
-	return command.UcmdCommand(context, c.service.UpdateCommand, c.IsSystemCommand, *msgData, commandName, params)
+	return command.UcmdCommand(context, c.service.UpdateCommand, c.service.GetCustomVariableContent, c.IsSystemCommand, *msgData, commandName, params)
 }
