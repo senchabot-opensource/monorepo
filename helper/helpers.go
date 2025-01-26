@@ -166,12 +166,18 @@ func ContainsLowerCase(s string, substr string) bool {
 	return strings.Contains(strings.ToLower(s), substr)
 }
 
+func removeTrailingPunctuationFromURL(s string) string {
+	re := regexp.MustCompile(`[^_\w]+$`)
+	return re.ReplaceAllString(s, "")
+}
+
 func GetURL(domain, messageContent string) string {
 	pattern := fmt.Sprintf(`%s\S*`, domain)
 	re := regexp.MustCompile(pattern)
 	match := re.FindString(messageContent)
 
 	if match != "" {
+		match = removeTrailingPunctuationFromURL(match)
 		return "https://" + match
 	}
 
