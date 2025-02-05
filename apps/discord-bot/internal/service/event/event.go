@@ -2,9 +2,11 @@ package event
 
 import (
 	"log"
+	"strings"
 	"time"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/alert"
 	"github.com/senchabot-opensource/monorepo/helper"
 	"github.com/senchabot-opensource/monorepo/pkg/twitchapi"
 )
@@ -33,7 +35,7 @@ func (es *EventService) CreateLiveStreamScheduledEvent(s *discordgo.Session, msg
 	startingTime := time.Now().Add(2 * time.Minute)
 	endingTime := startingTime.Add(16 * time.Hour)
 
-	scheduledEvent, err := s.GuildScheduledEventCreate(guildId, &discordgo.GuildScheduledEventParams{
+	scheduledEvent, err := dS.GuildScheduledEventCreate(guildId, &discordgo.GuildScheduledEventParams{
 		Name:               username + " is live on Twitch!",
 		ScheduledStartTime: &startingTime,
 		ScheduledEndTime:   &endingTime,
@@ -45,6 +47,9 @@ func (es *EventService) CreateLiveStreamScheduledEvent(s *discordgo.Session, msg
 	})
 	if err != nil {
 		log.Println("[CreateLiveStreamScheduledEvent] GuildScheduledEventCreate error:", err.Error())
+		if strings.Contains(err.Error(), "Missing Permissions") {
+			alert.SendDMToGuildOwner(dS, guildId, "Missing guild (server) permissions for Senchabot to create Discord Scheduled Events for live stream announcements.")
+		}
 		return
 	}
 
