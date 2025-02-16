@@ -2,6 +2,7 @@ package event
 
 import (
 	"log"
+	"os"
 	"time"
 
 	"github.com/bwmarrin/discordgo"
@@ -44,7 +45,7 @@ func (es *EventService) CreateLiveStreamScheduledEvent(s *discordgo.Session, msg
 		PrivacyLevel: discordgo.GuildScheduledEventPrivacyLevelGuildOnly,
 	})
 	if err != nil {
-		log.Println("[CreateLiveStreamScheduledEvent] GuildScheduledEventCreate error:", err.Error())
+		log.Println("[CreateLiveStreamScheduledEvent] GuildScheduledEventCreate error:", err.Error(), "GuildID:", guildId, "Url:", url)
 		return
 	}
 
@@ -59,20 +60,20 @@ func (es *EventService) CheckLiveStreamScheduledEvents(dS *discordgo.Session) {
 		for _, guild := range dS.State.Guilds {
 			events, err := dS.GuildScheduledEvents(guild.ID, false)
 			if err != nil {
-				log.Println("[CheckLiveStreamScheduledEvents] GuildScheduledEvents error:", err.Error())
+				log.Println("[EventService.CheckLiveStreamScheduledEvents] GuildScheduledEvents error:", err.Error())
 				continue
 			}
 
 			go func(guildID string, events []*discordgo.GuildScheduledEvent) {
 				for _, e := range events {
-					if !e.Creator.Bot {
+					if e.Creator.ID != os.Getenv("CLIENT_ID") {
 						continue
 					}
 
 					twitchUsername := helper.ParseTwitchUsernameURLParam(e.EntityMetadata.Location)
 					isLive, streamTitle, err := es.twitchService.CheckStreamStatus(twitchUsername)
 					if err != nil {
-						log.Printf("[CheckLiveStreamScheduledEvents] CheckStreamStatus error for %s: %v", twitchUsername, err)
+						log.Printf("[EventService.CheckLiveStreamScheduledEvents] CheckStreamStatus error for %s: %v", twitchUsername, err)
 						continue
 					}
 
@@ -85,7 +86,7 @@ func (es *EventService) CheckLiveStreamScheduledEvents(dS *discordgo.Session) {
 								Name: streamTitle,
 							})
 							if err != nil {
-								log.Println("[CheckLiveStreamScheduledEvents] GuildScheduledEventEdit error:", err.Error())
+								log.Println("[EventService.CheckLiveStreamScheduledEvents] GuildScheduledEventEdit error:", err.Error())
 							}
 						}
 					}
@@ -93,7 +94,7 @@ func (es *EventService) CheckLiveStreamScheduledEvents(dS *discordgo.Session) {
 					if !isLive {
 						err := dS.GuildScheduledEventDelete(e.GuildID, e.ID)
 						if err != nil {
-							log.Println("[CheckLiveStreamScheduledEvents] GuildScheduledEventDelete error:", err.Error())
+							log.Println("[EventService.CheckLiveStreamScheduledEvents] GuildScheduledEventDelete error:", err.Error())
 						}
 					}
 				}

@@ -13,7 +13,7 @@ import (
 
 func (c *commands) AddCommandCommand(context context.Context, message twitch.PrivateMessage, commandName string, params []string) (*model.CommandResponse, error) {
 	if !helpers.CanExecuteCommand(context, c.service, message.Tags["badges"], message.RoomID) {
-		return nil, errors.New(message.User.DisplayName + config.CannotExecuteCommand)
+		return nil, errors.New(message.User.DisplayName + config.CannotExecuteCommand + ": AddCommand")
 	}
 
 	msgData := &model.MessageData{
