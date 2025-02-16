@@ -35,14 +35,14 @@ func NewStreamerService(twitchService twitchapi.TwitchService) *StreamerService 
 	}
 }
 
-func (s *StreamerService) InitStreamersData(ctx context.Context, service service.Service, guildId string) {
+func (s *StreamerService) initStreamersData(ctx context.Context, service service.Service, guildId string) {
 	channelData, err := service.GetDiscordBotConfig(ctx, guildId, "stream_anno_default_channel")
 	if err != nil {
-		log.Println("[SetTwitchStreamer] GetDiscordBotConfig error:", err.Error())
+		log.Println("[StreamerService.initStreamersData] Service.GetDiscordBotConfig Guild ID: "+guildId+", Config Key: stream_anno_default_channel, Error:", err.Error())
 	}
 	liveAnnos, err := service.GetDiscordTwitchLiveAnnos(ctx, guildId)
 	if err != nil {
-		log.Println("[InitStreamersData] GetDiscordTwitchLiveAnnos error:", err.Error())
+		log.Println("[StreamerService.initStreamersData] Service.GetDiscordTwitchLiveAnnos Guild ID: "+guildId+", Error:", err.Error())
 	}
 	for _, dtla := range liveAnnos {
 		if dtla.AnnoChannelID == "" && channelData != nil && channelData.Value != "" {
@@ -110,7 +110,7 @@ func (s *StreamerService) CheckIfTwitchStreamerExist(ctx context.Context, twitch
 	if liveAnnoData != nil {
 		channel, err := dS.Channel(liveAnnoData.AnnoChannelID)
 		if err != nil {
-			log.Println("[CheckIfTwitchStreamerExist] s.Channel error:", err.Error())
+			log.Println("[CheckIfTwitchStreamerExist] s.Channel error:", err.Error(), "GuildID", i.GuildID, "ChannelID", liveAnnoData.AnnoChannelID)
 			return config.ErrorMessage + "#YXXX", false
 		}
 		//return fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısının duyuları `%v` isimli yazı kanalı için ekli.", twitchUsername, channel.Name), true
@@ -328,7 +328,7 @@ func (s *StreamerService) CheckLiveStreams(dS *discordgo.Session, ctx context.Co
 	ticker := time.NewTicker(1 * time.Minute)
 	defer ticker.Stop()
 
-	s.InitStreamersData(ctx, service, guildId)
+	s.initStreamersData(ctx, service, guildId)
 
 	for {
 		select {
