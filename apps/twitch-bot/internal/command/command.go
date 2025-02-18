@@ -64,6 +64,24 @@ func (c *commands) GetCommands() CommandMap {
 		"timers": c.TimersCommand,
 		"timer":  c.TimerCommand,
 
+		// REFACTOR THESE COMMANDS'	NAMES
+		"addcm":     c.AddChannelToTwitchCommunityCommand,
+		"delcm":     c.RemoveCommunityMemberCommand,
+		"subc":      c.SubscribeToCommunityCommand,
+		"unsubc":    c.UnsubscribeFromCommunityCommand,
+		"rr":        c.RrCommand,
+		"unrr":      c.UnraidCommand, // add predefined aliases to this command: !unraid, !cancelraid
+		"subcmlist": c.ListSubscribedCommunitiesCommand,
+		"cmmlist":   c.CommunityMembersCommand,
+
+		//"addcm": c.AddCommunityCommand,
+		//"dcm":   c.DeleteCommunityCommand,
+		//"cm":    c.CommunitiesCommand,
+
+		//"addcmm": c.AddCommunityMemberCommand,
+		//"dcmm":   c.DeleteCommunityMemberCommand,
+		//"cmm":    c.CommunityMembersCommand,
+
 		"acmdvar": c.AddCommandVariableCommand,
 		"ucmdvar": c.UpdateCommandVariableCommand,
 		"dcmdvar": c.DeleteCommandVariableCommand,

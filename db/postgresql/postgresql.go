@@ -32,8 +32,34 @@ func New() db.Database {
 	sqlDB.SetMaxOpenConns(1)
 
 	db.AutoMigrate(&model.BotCommandVariable{})
+	if err := CreateTwitchCommunities(db); err != nil {
+		log.Println("failed to create twitch communities. error:", err.Error())
+	}
+
+	//db.Where("1 = 1").Delete(&model.TwitchCommunityMember{})
+	//db.Where("1 = 1").Delete(&model.TwitchCommunity{})
+	//db.Where("1 = 1").Delete(&model.TwitchCommunitySubscription{})
 
 	return &postgresql{
 		DB: db,
 	}
+}
+
+func CreateTwitchCommunities(db *gorm.DB) error {
+	err := db.AutoMigrate(&model.TwitchCommunity{})
+	if err != nil {
+		return err
+	}
+
+	err = db.AutoMigrate(&model.TwitchCommunityMember{})
+	if err != nil {
+		return err
+	}
+
+	err = db.AutoMigrate(&model.TwitchCommunitySubscription{})
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

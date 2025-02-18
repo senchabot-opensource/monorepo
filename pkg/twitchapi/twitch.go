@@ -129,15 +129,23 @@ func (s *service) GiveShoutout(streamerUsername string, broadcasterId string, me
 	return &responseText, nil
 }
 
-func (s *service) CheckStreamStatus(username string) (bool, string, error) {
-	resp, err := s.doRequest("GET", fmt.Sprintf("/streams?user_login=%s", username), s.accessToken)
+func (s *service) CheckStreamStatusById(streamerId string) (bool, string, error) {
+	return s.getStreamStatus("user_id", streamerId)
+}
+
+func (s *service) CheckStreamStatusByUsername(username string) (bool, string, error) {
+	return s.getStreamStatus("user_login", username)
+}
+
+func (s *service) getStreamStatus(param string, value string) (bool, string, error) {
+	resp, err := s.doRequest("GET", fmt.Sprintf("/streams?%s=%s", param, value), s.accessToken)
 	if err != nil {
-		return false, "", fmt.Errorf("[twitchapi.CheckStreamStatus] failed to check stream status: %w", err)
+		return false, "", fmt.Errorf("[twitchapi.CheckStreamStatusByUsername] failed to check stream status: %w", err)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return false, "", fmt.Errorf("[twitchapi.CheckStreamStatus] twitch API request failed with status code: %d", resp.StatusCode)
+		return false, "", fmt.Errorf("[twitchapi.CheckStreamStatusByUsername] twitch API request failed with status code: %d", resp.StatusCode)
 	}
 
 	var data struct {
@@ -150,7 +158,7 @@ func (s *service) CheckStreamStatus(username string) (bool, string, error) {
 
 	err = json.NewDecoder(resp.Body).Decode(&data)
 	if err != nil {
-		return false, "", fmt.Errorf("[twitchapi.CheckStreamStatus] error while parsing TwitchAPI response: %w", err)
+		return false, "", fmt.Errorf("[twitchapi.CheckStreamStatusByUsername] error while parsing TwitchAPI response: %w", err)
 	}
 
 	if len(data.Data) == 0 {
@@ -202,4 +210,112 @@ func (s *service) CheckMultipleStreamers(usernames []string) ([]model.TwitchStre
 	}
 
 	return data.Data, nil
+}
+
+func (s *service) StartRaid(streamerUserId string, broadcasterId string) (*string, error) {
+	var responseText string
+	fromBroadcasterId := broadcasterId
+	toBroadcaster, err := s.GetUserInfoById(streamerUserId)
+	if err != nil {
+		if err.Error() == "no data" {
+			responseText = "The channel you are raiding does not exist."
+			return &responseText, nil
+		}
+		return nil, errors.New("[StartRaid] s.GetUserInfo failed to get user info: " + err.Error())
+	}
+
+	resp, err := s.doRequest("POST", fmt.Sprintf("/raids?from_broadcaster_id=%s&to_broadcaster_id=%s", fromBroadcasterId, toBroadcaster.ID), strings.TrimPrefix(os.Getenv("OAUTH"), "oauth:"))
+	if err != nil {
+		return nil, fmt.Errorf("[StartRaid] failed to get user info: %w", err)
+	}
+	defer resp.Body.Close()
+
+	var errorResp struct {
+		Error   string `json:"error"`
+		Message string `json:"message"`
+	}
+	if resp.StatusCode != http.StatusNoContent {
+		respBodyBytes, err := io.ReadAll(resp.Body)
+		if err != nil {
+			return nil, fmt.Errorf("[StartRaid] failed to read response body: %w", err)
+		}
+
+		if err := json.Unmarshal(respBodyBytes, &errorResp); err != nil {
+			log.Println("[StartRaid] json.Unmarshal errorResp", err.Error())
+		}
+	}
+
+	log.Println("[StartRaid] errorResp", errorResp)
+
+	//channel:manage:raids
+	switch resp.StatusCode {
+	//case http.StatusOK:
+	//	responseText = "Raid started successfully"
+	case http.StatusUnauthorized:
+		responseText = "The broadcaster may not give themselves a Shoutout."
+	case http.StatusBadRequest:
+		responseText = "There was an error while starting raid"
+	case http.StatusTooManyRequests:
+		responseText = "Raid limit for this streamer has been exceeded or wait a bit to give another Shoutout."
+	case http.StatusNotFound:
+		responseText = "The channel you are raiding does not exist."
+	}
+
+	var data struct {
+		Data []model.TwitchRaidInfo `json:"data"`
+	}
+
+	err = json.NewDecoder(resp.Body).Decode(&data)
+	if err != nil {
+		return nil, fmt.Errorf("[StartRaid] error while parsing TwitchAPI response: %w", err)
+	}
+
+	if len(data.Data) == 0 {
+		return nil, errors.New("no data")
+	}
+
+	responseText = "Raid started successfully. "
+
+	if data.Data[0].IsMature {
+		responseText += "The channel you are raiding is mature content."
+	}
+
+	return &responseText, nil
+}
+
+func (s *service) CancelRaid(broadcasterId string) (*string, error) {
+	var responseText string
+
+	resp, err := s.doRequest("DELETE", fmt.Sprintf("/raids?broadcaster_id=%s", broadcasterId), s.accessToken)
+	if err != nil {
+		return nil, fmt.Errorf("[CancelRaid] failed to get user info: %w", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		respBodyBytes, err := io.ReadAll(resp.Body)
+		if err != nil {
+			return nil, fmt.Errorf("[Raid] failed to read response body: %w", err)
+		}
+		return nil, fmt.Errorf("[CancelRaid] twitch API request failed with status code: %d Body: %s", resp.StatusCode, string(respBodyBytes))
+	}
+
+	var data struct {
+		Data []model.TwitchRaidInfo `json:"data"`
+	}
+
+	err = json.NewDecoder(resp.Body).Decode(&data)
+	if err != nil {
+		return nil, fmt.Errorf("[CancelRaid] error while parsing TwitchAPI response: %w", err)
+	}
+
+	if len(data.Data) == 0 {
+		return nil, errors.New("no data")
+	}
+
+	if data.Data[0].IsMature {
+		responseText = "The channel you are raiding is mature content."
+	}
+
+	return &responseText, nil
 }

@@ -70,7 +70,7 @@ func (es *EventService) CheckLiveStreamScheduledEvents(dS *discordgo.Session) {
 					}
 
 					twitchUsername := helper.ParseTwitchUsernameURLParam(e.EntityMetadata.Location)
-					isLive, streamTitle, err := es.twitchService.CheckStreamStatus(twitchUsername)
+					isLive, streamTitle, err := es.twitchService.CheckStreamStatusByUsername(twitchUsername)
 					if err != nil {
 						log.Printf("[CheckLiveStreamScheduledEvents] CheckStreamStatus error for %s: %v", twitchUsername, err)
 						continue
