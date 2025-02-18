@@ -72,6 +72,9 @@ type Service interface {
 	DeleteCommandVariable(ctx context.Context, varName string, botPlatformId string, updatedBy string) error
 	ListCommandVariables(ctx context.Context, botPlatformId string) ([]*model.BotCommandVariable, error)
 	GetCustomVariableContent(ctx context.Context, botPlatformId string, varName string) string
+
+	GetDiscordUserPrivacyPreferences(ctx context.Context, discordUserId string) (*model.DiscordUserPrivacyPreferences, error)
+	SetDiscordUserPrivacyPreferences(ctx context.Context, discordUserId string, doNotTrackMessages bool) error
 }
 
 type service struct {
@@ -302,4 +305,12 @@ func (s *service) ListCommandVariables(ctx context.Context, botPlatformId string
 
 func (s *service) GetCustomVariableContent(ctx context.Context, botPlatformId string, varName string) string {
 	return s.DB.GetCustomVariableContent(ctx, platform.DISCORD, botPlatformId, varName)
+}
+
+func (s *service) GetDiscordUserPrivacyPreferences(ctx context.Context, discordUserId string) (*model.DiscordUserPrivacyPreferences, error) {
+	return s.DB.GetDiscordUserPrivacyPreferences(ctx, discordUserId)
+}
+
+func (s *service) SetDiscordUserPrivacyPreferences(ctx context.Context, discordUserId string, doNotTrackMessages bool) error {
+	return s.DB.SetDiscordUserPrivacyPreferences(ctx, discordUserId, doNotTrackMessages)
 }

@@ -32,7 +32,7 @@ func New() db.Database {
 	sqlDB.SetMaxOpenConns(1)
 
 	db.AutoMigrate(&model.BotCommandVariable{})
-
+	db.AutoMigrate(&model.DiscordUserPrivacyPreferences{})
 	return &postgresql{
 		DB: db,
 	}
