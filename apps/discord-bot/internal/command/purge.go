@@ -26,13 +26,12 @@ func (c *commands) PurgeCommand(ctx context.Context, s *discordgo.Session, i *di
 
 		for _, e := range events {
 			if e.CreatorID != s.State.User.ID {
-				return
+				s.GuildScheduledEventDelete(i.GuildID, e.ID)
 			}
-			s.GuildScheduledEventDelete(i.GuildID, e.ID)
 		}
 		// TR
 		// ephemeralRespond(s, i, "Tüm planlanmış etkinlikler silindi.")
-		ephemeralRespond(s, i, "All scheduled events have been deleted.")
+		ephemeralRespond(s, i, "All scheduled events created by the Senchabot have been deleted.")
 
 	case "last-100-channel-messages":
 		options = options[0].Options
