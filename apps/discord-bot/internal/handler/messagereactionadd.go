@@ -15,7 +15,7 @@ func (h *handler) MessageReactionAdd() {
 			return
 		}
 
-		goodMorningRegexp := regexp.MustCompile(`(?i)g(ü|u)nayd(ı|i)`)
+		goodMorningRegexp := regexp.MustCompile(`(?i)(g(ü|u)nayd(ı|i)|good\s*morn[i]+ng+)`)
 		if goodMorningRegexp.MatchString(msg.Content) && i.Emoji.Name == "🌞" {
 			err = s.MessageReactionAdd(msg.ChannelID, msg.ID, "🌞")
 			if err != nil {
