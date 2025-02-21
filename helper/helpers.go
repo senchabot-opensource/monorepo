@@ -193,7 +193,7 @@ func ParseTwitchUsernameURLParam(str string) string {
 		return matches[1]
 	}
 
-	return str
+	return ""
 }
 
 func ParseCustomAPIURLFromMessage(message string) (string, int, int, bool) {
