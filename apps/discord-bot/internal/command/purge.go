@@ -25,6 +25,9 @@ func (c *commands) PurgeCommand(ctx context.Context, s *discordgo.Session, i *di
 		}
 
 		for _, e := range events {
+			if e.CreatorID != s.State.User.ID {
+				return
+			}
 			s.GuildScheduledEventDelete(i.GuildID, e.ID)
 		}
 		// TR
