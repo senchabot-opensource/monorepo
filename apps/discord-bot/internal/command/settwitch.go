@@ -23,6 +23,10 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 
 		commandUsername := i.Member.User.Username
 		twitchUsername = helper.ParseTwitchUsernameURLParam(twitchUsername)
+		if twitchUsername == "" {
+			ephemeralRespond(s, i, "Twitch username or url is invalid.")
+			return
+		}
 
 		uInfo, err := c.twitchService.GetUserInfoByLoginName(twitchUsername)
 		if err != nil {
@@ -149,6 +153,10 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 			options = options[0].Options
 			twitchUsername := options[0].StringValue()
 			twitchUsername = helper.ParseTwitchUsernameURLParam(twitchUsername)
+			if twitchUsername == "" {
+				ephemeralRespond(s, i, "Twitch username or url is invalid.")
+				return
+			}
 			annoContent := options[1].StringValue()
 
 			//response0, uInfo := c.streamerSvc.GetTwitchUserInfo(twitchUsername)
