@@ -29,6 +29,10 @@ func (s *service) doRequest(method string, path string, token string) (*http.Res
 }
 
 func (s *service) getUserInfo(query string, userIdOrName string) (*model.TwitchUserInfo, error) {
+	if userIdOrName == "" {
+		return nil, errors.New("[twitchapi.getUserInfo] userIdOrName is empty")
+	}
+
 	resp, err := s.doRequest("GET", fmt.Sprintf("/users?%s=%s", query, userIdOrName), s.accessToken)
 	if err != nil {
 		return nil, fmt.Errorf("[twitchapi.getUserInfo] failed to get user info: %w", err)
@@ -131,6 +135,10 @@ func (s *service) GiveShoutout(streamerUsername string, broadcasterId string, me
 }
 
 func (s *service) CheckStreamStatus(username string) (bool, string, error) {
+	if username == "" {
+		return false, "", errors.New("[twitchapi.CheckStreamStatus] username is empty")
+	}
+
 	resp, err := s.doRequest("GET", fmt.Sprintf("/streams?user_login=%s", username), s.accessToken)
 	if err != nil {
 		return false, "", fmt.Errorf("[twitchapi.CheckStreamStatus] failed to check stream status: %w", err)
