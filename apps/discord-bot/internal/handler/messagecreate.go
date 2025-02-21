@@ -33,6 +33,15 @@ func (h *handler) MessageCreate(command command.Command) {
 			return
 		}
 
+		userPrivacyPreferences, err := h.service.GetDiscordUserPrivacyPreferences(ctx, m.Author.ID)
+		if err != nil {
+			log.Println("[handler.MessageCreate] service.GetDiscordUserPrivacyPreferences error:", err.Error())
+			return
+		}
+		if userPrivacyPreferences != nil && userPrivacyPreferences.DoNotTrackMessages {
+			return
+		}
+
 		cmdName, params := helpers.ParseMessage(m.Content)
 		if cmdName == "" {
 			return

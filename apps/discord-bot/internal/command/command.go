@@ -58,11 +58,13 @@ func New(discordClient *discordgo.Session, service service.Service, twitchServic
 
 func (c *commands) GetCommands() CommandMap {
 	var commands = CommandMap{
-		"set-twitch":    c.SetTwitchCommand,
-		"del-twitch":    c.DelTwitchCommand,
-		"streamer-list": c.StreamerListCommand,
-		"purge":         c.PurgeCommand,
-		"invite":        c.InviteCommand,
+		"set-twitch":               c.SetTwitchCommand,
+		"del-twitch":               c.DelTwitchCommand,
+		"streamer-list":            c.StreamerListCommand,
+		"purge":                    c.PurgeCommand,
+		"invite":                   c.InviteCommand,
+		"do-not-track-my-messages": c.DoNotTrackMessagesCommand,
+		"track-my-messages":        c.TrackMyMessagesCommand,
 	}
 
 	return commands
@@ -226,6 +228,10 @@ var (
 		PurgeCommandMetadata(),
 		// INVITE
 		InviteCommandMetadata(),
+		// DO-NOT-TRACK-MY-MESSAGES
+		DoNotTrackMessagesCommandMetadata(),
+		// TRACK-MY-MESSAGES
+		TrackMyMessagesCommandMetadata(),
 	}
 )
 
