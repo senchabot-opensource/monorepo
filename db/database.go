@@ -87,4 +87,8 @@ type Database interface {
 	DeleteCommandVariable(ctx context.Context, varName string, botPlatform platform.Platform, botPlatformId string, updatedBy string) error
 	ListCommandVariables(ctx context.Context, botPlatform platform.Platform, botPlatformId string) ([]*model.BotCommandVariable, error)
 	GetCustomVariableContent(ctx context.Context, botPlatform platform.Platform, botPlatformId string, varName string) string
+
+	// DISCORD
+	GetDiscordUserPrivacyPreferences(ctx context.Context, discordUserId string) (*model.DiscordUserPrivacyPreferences, error)
+	SetDiscordUserPrivacyPreferences(ctx context.Context, discordUserId string, doNotTrackMessages bool) error
 }
