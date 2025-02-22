@@ -98,19 +98,7 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 		channelId := options[0].ChannelValue(s).ID
 		channelName := options[0].ChannelValue(s).Name
 
-		ch, err := s.Channel(channelId)
-		if err != nil {
-			ephemeralRespond(s, i, "Channel not found.")
-			return
-		}
-
-		perms, err := s.UserChannelPermissions(channelId, s.State.User.ID)
-		if err != nil || perms&discordgo.PermissionViewChannel == 0 {
-			ephemeralRespond(s, i, "I don't have permission to view the channel.")
-			return
-		}
-
-		ok, err := service.AddAnnouncementChannel(ctx, ch.ID, ch.GuildID, i.Member.User.Username)
+		ok, err := service.AddAnnouncementChannel(ctx, channelId, i.GuildID, i.Member.User.Username)
 		if err != nil {
 			log.Println("[command.SetTwitchCommand.event-channel] AddAnnouncementChannel error:", err.Error())
 			// TODO: edit respond or create errorMessage sheet
