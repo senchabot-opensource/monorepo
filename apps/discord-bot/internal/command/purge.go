@@ -25,7 +25,7 @@ func (c *commands) PurgeCommand(ctx context.Context, s *discordgo.Session, i *di
 		}
 
 		for _, e := range events {
-			if e.CreatorID != s.State.User.ID {
+			if e.CreatorID == s.State.User.ID {
 				s.GuildScheduledEventDelete(i.GuildID, e.ID)
 			}
 		}
@@ -99,9 +99,9 @@ func PurgeCommandMetadata() *discordgo.ApplicationCommand {
 			// purge events
 			{
 				Name:        "events",
-				Description: "Cancel all scheduled events.",
+				Description: "Delete all events created by Senchabot",
 				DescriptionLocalizations: map[discordgo.Locale]string{
-					discordgo.Turkish: "Tüm zamanlanmış etkinlikleri iptal et.",
+					discordgo.Turkish: "Senchabot tarafından oluşturulan tüm etkinlikleri siler.",
 				},
 				Type: discordgo.ApplicationCommandOptionSubCommand,
 			},
