@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/senchabot-opensource/monorepo/helper"
 	"github.com/senchabot-opensource/monorepo/model"
 )
 
@@ -22,7 +23,7 @@ func AddCommandVariableCommand(ctx context.Context, acmdvarservice acommandVaria
 	varName := strings.TrimSpace(params[0])
 	varContent := strings.TrimSpace(strings.Join(params[1:], " "))
 
-	if !isValidVariableName(varName) {
+	if !helper.IsValidVariableName(varName) {
 		return &model.CommandResponse{Message: "Variable name must start with a letter and can only contain letters, numbers, and underscores"}, nil
 	}
 
@@ -104,32 +105,4 @@ func ListCommandVariablesCommand(ctx context.Context, lcmdvarservice lcommandVar
 	}
 
 	return &model.CommandResponse{Message: response.String()}, nil
-}
-
-func isValidVariableName(name string) bool {
-	if len(name) == 0 {
-		return false
-	}
-
-	// First character must be a letter
-	if !isLetter(rune(name[0])) {
-		return false
-	}
-
-	// Rest can be letters, numbers, or underscores
-	for _, ch := range name[1:] {
-		if !isLetter(ch) && !isDigit(ch) && ch != '_' {
-			return false
-		}
-	}
-
-	return true
-}
-
-func isLetter(ch rune) bool {
-	return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')
-}
-
-func isDigit(ch rune) bool {
-	return ch >= '0' && ch <= '9'
 }

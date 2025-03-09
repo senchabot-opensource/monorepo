@@ -264,3 +264,31 @@ func StrToInt(intervalStr string) (int, error) {
 
 	return interval, nil
 }
+
+func IsValidVariableName(name string) bool {
+	if len(name) == 0 {
+		return false
+	}
+
+	// First character must be a letter
+	if !isLetter(rune(name[0])) {
+		return false
+	}
+
+	// Rest can be letters, numbers, or underscores
+	for _, ch := range name[1:] {
+		if !isLetter(ch) && !isDigit(ch) && ch != '_' {
+			return false
+		}
+	}
+
+	return true
+}
+
+func isLetter(ch rune) bool {
+	return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')
+}
+
+func isDigit(ch rune) bool {
+	return ch >= '0' && ch <= '9'
+}

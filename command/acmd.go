@@ -33,7 +33,7 @@ func AcmdCommand(context context.Context, service createCommandServiceType, getc
 		return &cmdResp, nil
 	}
 
-	if !checkCommandContentLengthWithCustomVariable(command_content, context, message, getcvcservice) {
+	if !CheckCommandContentLengthWithCustomVariable(command_content, context, message, getcvcservice) {
 		cmdResp.Message = config.CommandContentLimit
 		return &cmdResp, nil
 	}
