@@ -43,7 +43,9 @@ func (c *commands) AcmdCommandHandler(ctx context.Context, s *discordgo.Session,
 
 	infoText, err := c.service.CreateCommand(ctx, command_name, command_content, message.PlatformEntityID, message.UserName)
 	if err != nil {
-		ephemeralRespond(s, i, "Something went wrong while creating command")
+		log.Printf("[AcmdCommandHandler] Failed to create command '%s' for guild %s: %v\n",
+			command_name, i.GuildID, err)
+		ephemeralRespond(s, i, fmt.Sprintf("Something went wrong while creating command `%s`", command_name))
 		return
 	}
 
