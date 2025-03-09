@@ -2,27 +2,66 @@ package command
 
 import (
 	"context"
-	"errors"
+	"fmt"
+	"log"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/senchabot-opensource/monorepo/command"
+	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
+	"github.com/senchabot-opensource/monorepo/helper"
 	"github.com/senchabot-opensource/monorepo/model"
 )
 
-func (c *commands) AddCommandVariableCommand(context context.Context, m *discordgo.MessageCreate, commandName string, params []string) (*model.CommandResponse, error) {
-	msgData := &model.MessageData{
-		PlatformEntityID: m.GuildID,
-		UserName:         m.Author.Username,
+func (c *commands) AcmdvarCommandHandler(ctx context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, service service.Service) {
+	message := &model.MessageData{
+		PlatformEntityID: i.GuildID,
+		UserName:         i.Member.User.Username,
 	}
 
-	p, err := c.dS.UserChannelPermissions(m.Author.ID, m.ChannelID)
+	options := i.ApplicationCommandData().Options
+
+	cmdVarName := options[0].StringValue()
+	cmdVarContent := options[1].StringValue()
+
+	if !helper.IsValidVariableName(cmdVarName) {
+		ephemeralRespond(s, i, "Variable name must start with a letter and can only contain letters, numbers, and underscores")
+		return
+	}
+
+	// Check if variable already exists
+	_, err := c.service.GetCommandVariable(ctx, cmdVarName, message.PlatformEntityID)
+	if err == nil {
+		ephemeralRespond(s, i, fmt.Sprintf("Variable '%s' already exists", cmdVarName))
+		return
+	}
+
+	err = c.service.CreateCommandVariable(ctx, cmdVarName, cmdVarContent, message.PlatformEntityID, message.UserName)
 	if err != nil {
-		return nil, err
+		log.Printf("[AcmdvarCommandHandler] service.CreateCommandVariable Error: %s\n", err.Error())
+		ephemeralRespond(s, i, "Something went wrong while creating command variable `"+cmdVarName+"`")
+		return
 	}
 
-	if p&discordgo.PermissionManageChannels != discordgo.PermissionManageChannels {
-		return nil, errors.New("dont have permission")
-	}
+	ephemeralRespond(s, i, fmt.Sprintf("Command variable '%s' has been created", cmdVarName))
+}
 
-	return command.AddCommandVariableCommand(context, c.service.CreateCommandVariable, c.service.GetCommandVariable, *msgData, commandName, params)
+func AcmdvarCommandMetadata() *discordgo.ApplicationCommand {
+	return &discordgo.ApplicationCommand{
+		Name:        "acmdvar",
+		Description: "Add a new command variable",
+		Options: []*discordgo.ApplicationCommandOption{
+			{
+				Type:        discordgo.ApplicationCommandOptionString,
+				Name:        "name",
+				Description: "Name of the command variable",
+				Required:    true,
+			},
+			{
+				Type:        discordgo.ApplicationCommandOptionString,
+				Name:        "content",
+				Description: "Content of the command variable",
+				Required:    true,
+			},
+		},
+		DefaultMemberPermissions: &setdeletePermissions,
+	}
 }

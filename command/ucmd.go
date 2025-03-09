@@ -25,7 +25,7 @@ func UcmdCommand(context context.Context, service updateCommandServiceType, getc
 		return &cmdResp, nil
 	}
 
-	if !checkCommandContentLengthWithCustomVariable(newCommandContent, context, message, getcvcservice) {
+	if !CheckCommandContentLengthWithCustomVariable(newCommandContent, context, message, getcvcservice) {
 		cmdResp.Message = config.CommandContentLimit
 		return &cmdResp, nil
 	}
