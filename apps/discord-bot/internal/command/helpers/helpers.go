@@ -2,6 +2,7 @@ package helpers
 
 import (
 	"log"
+	"time"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/senchabot-opensource/monorepo/model"
@@ -19,10 +20,19 @@ func GetCommandVariables(dS *discordgo.Session, cmdData *model.BotCommand, i *di
 		channelName = chData.Name
 	}
 
+	// If i.Message is nil or timestamp is empty, use current time
+	var currentDate *time.Time
+	if i.Message != nil && !i.Message.Timestamp.IsZero() {
+		currentDate = &i.Message.Timestamp
+	} else {
+		now := time.Now().UTC()
+		currentDate = &now
+	}
+
 	return &model.CommandVariable{
 		CommandContent:   cmdData.CommandContent,
 		UserName:         i.Member.User.Username,
-		CurrentDate:      &i.Message.Timestamp,
+		CurrentDate:      currentDate,
 		CommandCreatedAt: cmdData.CreatedAt,
 		ChannelName:      channelName,
 		BotPlatform:      platform.DISCORD,
