@@ -12,7 +12,7 @@ func (c *commands) HelpCommand(context context.Context, message twitch.PrivateMe
 	var cmdResp model.CommandResponse
 	var commmandList []string
 
-	commandListMap := c.GetCommands()
+	commandListMap := c.GetSystemCommands()
 	for k := range commandListMap {
 		commmandList = append(commmandList, k)
 	}
