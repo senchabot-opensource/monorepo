@@ -43,3 +43,17 @@ func GetCommandVariables(dS *discordgo.Session, cmdData *model.BotCommand, i *di
 func IsChannelNameNotGiven(optionsLen int) bool {
 	return optionsLen < 2
 }
+
+func IsValidSlashCommandName(name string) bool {
+	if len(name) < 1 || len(name) > 32 {
+		return false
+	}
+
+	for _, char := range name {
+		if !((char >= 'a' && char <= 'z') || (char >= '0' && char <= '9') || char == '-') {
+			return false
+		}
+	}
+
+	return true
+}

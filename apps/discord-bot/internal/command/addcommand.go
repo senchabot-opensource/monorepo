@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/command/helpers"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
 	"github.com/senchabot-opensource/monorepo/command"
 	"github.com/senchabot-opensource/monorepo/config"
@@ -24,6 +25,11 @@ func (c *commands) AcmdCommandHandler(ctx context.Context, s *discordgo.Session,
 
 	command_name := options[0].StringValue()
 	command_content := options[1].StringValue()
+
+	if !helpers.IsValidSlashCommandName(command_name) {
+		ephemeralRespond(s, i, fmt.Sprintf("%v, command name must be 1-32 characters long, lowercase, and contain only letters, numbers, and hyphens", message.UserName))
+		return
+	}
 
 	if c.IsSystemCommand(command_name) {
 		ephemeralRespond(s, i, fmt.Sprintf("%v, the command \"%v\" is used as system command", message.UserName, command_name))
