@@ -10,7 +10,7 @@ import (
 
 type getCustomVariableContentServiceType func(ctx context.Context, botPlatformId string, varName string) string
 
-func checkCommandContentLengthWithCustomVariable(command_content string, context context.Context, message model.MessageData, getcvcservice getCustomVariableContentServiceType) bool {
+func CheckCommandContentLengthWithCustomVariable(command_content string, context context.Context, message model.MessageData, getcvcservice getCustomVariableContentServiceType) bool {
 	commandContentLen := len(command_content)
 
 	re := regexp.MustCompile(`{([^}]+)}`)

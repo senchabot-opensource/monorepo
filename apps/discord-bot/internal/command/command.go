@@ -9,27 +9,17 @@ import (
 	"time"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/command/helpers"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service/streamer"
-	"github.com/senchabot-opensource/monorepo/helper"
-	"github.com/senchabot-opensource/monorepo/model"
 	"github.com/senchabot-opensource/monorepo/pkg/twitchapi"
 )
 
-type CommandFunc func(context context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, service service.Service)
-
-type CommandMap map[string]CommandFunc
-
-type SysCommandFunc func(context context.Context, m *discordgo.MessageCreate, commandName string, params []string) (*model.CommandResponse, error)
+type SysCommandFunc func(context context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, service service.Service)
 
 type SysCommandMap map[string]SysCommandFunc
 
 type Command interface {
-	GetCommands() CommandMap // GetCustomCommands
 	GetSystemCommands() SysCommandMap
-	Run(context context.Context, cmdName string, params []string, m *discordgo.MessageCreate)
-	Respond(ctx context.Context, m *discordgo.MessageCreate, cmdName string, messageContent string)
 }
 
 type commands struct {
@@ -56,8 +46,9 @@ func New(discordClient *discordgo.Session, service service.Service, twitchServic
 	// // time.Duration(os.Getenv("COOLDOWN_PERIOD")) * time.Second
 }
 
-func (c *commands) GetCommands() CommandMap {
-	var commands = CommandMap{
+// SYSTEM COMMANDS
+func (c *commands) GetSystemCommands() SysCommandMap {
+	var commands = SysCommandMap{
 		"set-twitch":               c.SetTwitchCommand,
 		"del-twitch":               c.DelTwitchCommand,
 		"streamer-list":            c.StreamerListCommand,
@@ -65,27 +56,16 @@ func (c *commands) GetCommands() CommandMap {
 		"invite":                   c.InviteCommand,
 		"do-not-track-my-messages": c.DoNotTrackMessagesCommand,
 		"track-my-messages":        c.TrackMyMessagesCommand,
-	}
+		"cmds":                     c.CmdsCommandHandler,
+		"acmd":                     c.AcmdCommandHandler,
+		"ucmd":                     c.UcmdCommandHandler,
+		"dcmd":                     c.DcmdCommandHandler,
+		"sozluk":                   c.SozlukCommandHandler,
 
-	return commands
-}
-
-// SYSTEM COMMANDS
-
-func (c *commands) GetSystemCommands() SysCommandMap {
-	var commands = SysCommandMap{
-		"cmds":   c.CmdsCommand,
-		"acmd":   c.AddCommandCommand,
-		"ucmd":   c.UpdateCommandCommand,
-		"dcmd":   c.DeleteCommandCommand,
-		"acmda":  c.AddCommandAliasCommand,
-		"dcmda":  c.DeleteCommandAliasCommand,
-		"sozluk": c.SozlukCommand,
-
-		"acmdvar": c.AddCommandVariableCommand,
-		"ucmdvar": c.UpdateCommandVariableCommand,
-		"dcmdvar": c.DeleteCommandVariableCommand,
-		"lcmdvar": c.ListCommandVariablesCommand,
+		"acmdvar": c.AcmdvarCommandHandler,
+		"ucmdvar": c.UcmdvarCommandHandler,
+		"dcmdvar": c.DcmdvarCommandHandler,
+		"lcmdvar": c.LcmdvarCommandHandler,
 	}
 
 	return commands
@@ -95,88 +75,9 @@ func (c *commands) GetSystemCommands() SysCommandMap {
 
 func (c *commands) IsSystemCommand(commandName string) bool {
 	sysCommandListMap := c.GetSystemCommands()
-	commandListMap := c.GetCommands()
 
 	_, ok := sysCommandListMap[commandName]
-	if ok {
-		return ok
-	}
-
-	_, ok = commandListMap[commandName]
 	return ok
-}
-
-func (c *commands) Respond(ctx context.Context, m *discordgo.MessageCreate, cmdName string, messageContent string) {
-	c.dS.ChannelMessageSend(m.ChannelID, messageContent)
-	c.setCommandCooldown(m.Author.Username)
-	c.service.AddBotCommandStatistic(ctx, cmdName)
-	c.service.SaveCommandActivity(ctx, cmdName, m.GuildID, m.Author.Username, m.Author.ID)
-}
-
-func (c *commands) runCustomCommand(ctx context.Context, cmdName string, mC *discordgo.MessageCreate) {
-	cmdData, err := c.service.GetUserBotCommand(ctx, cmdName, mC.GuildID)
-	if err != nil {
-		log.Println("[runCustomCommand] USER BOT COMMAND ERROR:", err.Error())
-	}
-	if cmdData != nil {
-		cmdVar := helpers.GetCommandVariables(c.dS, cmdData, mC)
-		formattedCommandContent := helper.FormatCommandContent(cmdVar, c.service)
-		c.Respond(ctx, mC, cmdName, formattedCommandContent)
-		return
-	}
-}
-
-func (c *commands) runSystemCommand(ctx context.Context, cmdName string, params []string, m *discordgo.MessageCreate) {
-	cmds := c.GetSystemCommands()
-	if cmd, ok := cmds[cmdName]; ok {
-		cmdResp, err := cmd(ctx, m, cmdName, params)
-		if err != nil {
-			log.Println("[runSystemCommand] SYSTEM COMMAND ERROR:", err.Error())
-			return
-		}
-		c.Respond(ctx, m, cmdName+" "+strings.Join(params, " "), cmdResp.Message)
-		return
-	}
-}
-
-func (c *commands) Run(ctx context.Context, cmdName string, params []string, m *discordgo.MessageCreate) {
-	if c.isUserOnCooldown(m.Author.Username) {
-		return
-	}
-
-	// HANDLE COMMAND ALIASES
-	commandAlias, cmdAliasErr := c.service.GetCommandAlias(ctx, cmdName, m.GuildID)
-	if cmdAliasErr != nil {
-		log.Println("[command.Run] COMMAND ALIAS ERROR:", cmdAliasErr.Error())
-	}
-
-	if commandAlias != nil {
-		cmdName = *commandAlias
-	}
-	// HANDLE COMMAND ALIASES
-
-	// USER COMMANDS
-	c.runCustomCommand(ctx, cmdName, m)
-	// USER COMMANDS
-
-	// SYSTEM COMMMANDS
-	c.runSystemCommand(ctx, cmdName, params, m)
-	// SYSTEM COMMANDS
-
-	// GLOBAL COMMANDS
-	cmdData, err := c.service.GetGlobalBotCommand(ctx, cmdName)
-	if err != nil {
-		log.Println("[command.Run] GLOBAL COMMAND ERROR:", err.Error())
-		return
-	}
-	if cmdData == nil {
-		return
-	}
-
-	cmdVar := helpers.GetCommandVariables(c.dS, cmdData, m)
-	formattedCommandContent := helper.FormatCommandContent(cmdVar, c.service)
-	c.Respond(ctx, m, cmdName, formattedCommandContent)
-	// GLOBAL COMMANDS
 }
 
 func (c *commands) isUserOnCooldown(username string) bool {
@@ -188,7 +89,7 @@ func (c *commands) isUserOnCooldown(username string) bool {
 	return time.Now().Before(cooldownTime.Add(c.cooldownPeriod))
 }
 
-func (c *commands) setCommandCooldown(username string) {
+func (c *commands) setCommandCooldown(username string) { // TODO: userId
 	c.userCooldowns[username] = time.Now()
 }
 
@@ -211,6 +112,8 @@ func deployCommands(discordClient *discordgo.Session) {
 		}
 		registeredCommands[i] = cmd
 	}
+
+	log.Println("[deployCommands] Finished deploying slash commands")
 }
 
 var (
@@ -232,8 +135,52 @@ var (
 		DoNotTrackMessagesCommandMetadata(),
 		// TRACK-MY-MESSAGES
 		TrackMyMessagesCommandMetadata(),
+		// MANAGE COMMANDS
+		AcmdCommandMetadata(),
+		UcmdCommandMetadata(),
+		DcmdCommandMetadata(),
+		CmdsCommandMetadata(),
+		SozlukCommandMetadata(),
+
+		AcmdvarCommandMetadata(),
+		UcmdvarCommandMetadata(),
+		DcmdvarCommandMetadata(),
+		LcmdvarCommandMetadata(),
 	}
 )
+
+// CreateCustomCommandSlashCommand creates a slash command for a custom command
+func CreateCustomCommandSlashCommand(name string, description string) *discordgo.ApplicationCommand {
+	return &discordgo.ApplicationCommand{
+		Name:        name,
+		Description: description,
+	}
+}
+
+// DeployCustomCommandsForGuild deploys all custom commands for a guild as slash commands
+func DeployCustomCommandsForGuild(s *discordgo.Session, ctx context.Context, service service.Service, guildID string) {
+	// Get all custom commands for this guild
+	commands, err := service.GetCommandList(ctx, guildID)
+	if err != nil {
+		log.Printf("[DeployCustomCommandsForGuild] Error getting custom commands for guild %s: %v\n", guildID, err)
+		return
+	}
+
+	log.Printf("[DeployCustomCommandsForGuild] Deploying %d custom commands for guild %s\n", len(commands), guildID)
+
+	// Create slash commands for each custom command
+	for _, cmd := range commands {
+		description := "Custom command"
+
+		slashCmd := CreateCustomCommandSlashCommand(cmd.CommandName, description)
+		_, err := s.ApplicationCommandCreate(os.Getenv("CLIENT_ID"), guildID, slashCmd)
+		if err != nil {
+			log.Printf("[DeployCustomCommandsForGuild] Failed to create slash command '%s' for guild %s: %v\n",
+				cmd.CommandName, guildID, err)
+			continue
+		}
+	}
+}
 
 func ephemeralRespond(s *discordgo.Session, i *discordgo.InteractionCreate, msgContent string) {
 	s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{

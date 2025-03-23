@@ -2,27 +2,48 @@ package command
 
 import (
 	"context"
-	"errors"
+	"fmt"
+	"strings"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/senchabot-opensource/monorepo/command"
+	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
 	"github.com/senchabot-opensource/monorepo/model"
 )
 
-func (c *commands) ListCommandVariablesCommand(context context.Context, m *discordgo.MessageCreate, commandName string, params []string) (*model.CommandResponse, error) {
-	msgData := &model.MessageData{
-		PlatformEntityID: m.GuildID,
-		UserName:         m.Author.Username,
+func (c *commands) LcmdvarCommandHandler(ctx context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, service service.Service) {
+	message := &model.MessageData{
+		PlatformEntityID: i.GuildID,
+		UserName:         i.Member.User.Username,
 	}
 
-	p, err := c.dS.UserChannelPermissions(m.Author.ID, m.ChannelID)
+	variables, err := c.service.ListCommandVariables(ctx, message.PlatformEntityID)
 	if err != nil {
-		return nil, err
+		ephemeralRespond(s, i, "Failed to retrieve command variables")
+		return
 	}
 
-	if p&discordgo.PermissionManageChannels != discordgo.PermissionManageChannels {
-		return nil, errors.New("dont have permission")
+	if len(variables) == 0 {
+		ephemeralRespond(s, i, "No command variables found")
+		return
 	}
 
-	return command.ListCommandVariablesCommand(context, c.service.ListCommandVariables, *msgData)
+	var response strings.Builder
+	response.WriteString("Command variables: ")
+
+	for i, v := range variables {
+		if i > 0 {
+			response.WriteString(", ")
+		}
+		response.WriteString(fmt.Sprintf("%s={%s}", v.VariableName, v.VariableContent))
+	}
+
+	ephemeralRespond(s, i, response.String())
+}
+
+func LcmdvarCommandMetadata() *discordgo.ApplicationCommand {
+	return &discordgo.ApplicationCommand{
+		Name:                     "lcmdvar",
+		Description:              "List all command variables",
+		DefaultMemberPermissions: &setdeletePermissions,
+	}
 }

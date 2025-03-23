@@ -2,27 +2,52 @@ package command
 
 import (
 	"context"
-	"errors"
+	"fmt"
+	"log"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/senchabot-opensource/monorepo/command"
+	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
 	"github.com/senchabot-opensource/monorepo/model"
 )
 
-func (c *commands) DeleteCommandVariableCommand(context context.Context, m *discordgo.MessageCreate, commandName string, params []string) (*model.CommandResponse, error) {
-	msgData := &model.MessageData{
-		PlatformEntityID: m.GuildID,
-		UserName:         m.Author.Username,
+func (c *commands) DcmdvarCommandHandler(ctx context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, service service.Service) {
+	message := &model.MessageData{
+		PlatformEntityID: i.GuildID,
+		UserName:         i.Member.User.Username,
 	}
 
-	p, err := c.dS.UserChannelPermissions(m.Author.ID, m.ChannelID)
+	options := i.ApplicationCommandData().Options
+
+	cmdVarName := options[0].StringValue()
+
+	_, err := c.service.GetCommandVariable(ctx, cmdVarName, message.PlatformEntityID)
 	if err != nil {
-		return nil, err
+		ephemeralRespond(s, i, fmt.Sprintf("Variable '%s' not found", cmdVarName))
+		return
 	}
 
-	if p&discordgo.PermissionManageChannels != discordgo.PermissionManageChannels {
-		return nil, errors.New("dont have permission")
+	err = c.service.DeleteCommandVariable(ctx, cmdVarName, message.PlatformEntityID, message.UserName)
+	if err != nil {
+		log.Printf("[DcmdvarCommandHandler] service.DeleteCommandVariable Error: %s\n", err.Error())
+		ephemeralRespond(s, i, "Something went wrong while deleting command variable `"+cmdVarName+"`")
+		return
 	}
 
-	return command.DeleteCommandVariableCommand(context, c.service.DeleteCommandVariable, c.service.GetCommandVariable, *msgData, commandName, params)
+	ephemeralRespond(s, i, fmt.Sprintf("Command variable '%s' has been deleted", cmdVarName))
+}
+
+func DcmdvarCommandMetadata() *discordgo.ApplicationCommand {
+	return &discordgo.ApplicationCommand{
+		Name:        "dcmdvar",
+		Description: "Delete a command variable",
+		Options: []*discordgo.ApplicationCommandOption{
+			{
+				Type:        discordgo.ApplicationCommandOptionString,
+				Name:        "name",
+				Description: "Name of the command variable",
+				Required:    true,
+			},
+		},
+		DefaultMemberPermissions: &setdeletePermissions,
+	}
 }
