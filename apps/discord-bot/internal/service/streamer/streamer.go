@@ -152,7 +152,7 @@ func (s *StreamerService) SetTwitchStreamer(ctx context.Context, uInfo *model.Tw
 
 	s.SetStreamerData(guildId, uInfo.ID, uInfo.Login, *channelId)
 	//return fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısının yayın duyuruları `%v` isimli yazı kanalı için aktif edildi.", uInfo.Login, channel.Name)
-	return "Twitch streamer `" + uInfo.Login + "`s live stream announcements have been activated for the `" + channel.Name + "` text channel."
+	return "Live stream announcements for Twitch streamer `" + uInfo.Login + "` have been enabled for the `" + channel.Name + "` text channel."
 }
 
 func (s *StreamerService) GetStreamAnnoContent(ctx context.Context, service service.Service, guildId, streamerUserId string) string {
