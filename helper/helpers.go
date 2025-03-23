@@ -185,7 +185,7 @@ func GetURL(domain, messageContent string) string {
 }
 
 func ParseTwitchUsernameURLParam(str string) string {
-	pattern := `^(?:https?:\/\/)?(?:www\.)?twitch\.tv\/([a-zA-Z0-9_]+)$`
+	pattern := `^(?:https?:\/\/)?(?:(?:www|m)\.)?twitch\.tv\/([a-zA-Z0-9_]{4,25})(?:\/)?$`
 	re := regexp.MustCompile(pattern)
 	matches := re.FindStringSubmatch(str)
 
@@ -291,4 +291,22 @@ func isLetter(ch rune) bool {
 
 func isDigit(ch rune) bool {
 	return ch >= '0' && ch <= '9'
+}
+
+// ParseTwitchUsername validates and extracts username from either a Twitch URL or username string
+func ParseTwitchUsername(input string) (string, error) {
+	username := ParseTwitchUsernameURLParam(input)
+	if username != "" {
+		return username, nil
+	}
+
+	matched, err := regexp.MatchString(`^[a-zA-Z0-9_]{4,25}$`, input)
+	if err != nil {
+		return "", err
+	}
+	if !matched {
+		return "", fmt.Errorf("invalid Twitch username format: %s", input)
+	}
+
+	return input, nil
 }
