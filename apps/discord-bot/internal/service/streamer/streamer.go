@@ -136,6 +136,32 @@ func (s *StreamerService) SetTwitchStreamer(ctx context.Context, uInfo *model.Tw
 		annoChannelId = *channelId
 	}
 
+	// Check current streamer count
+	liveAnnos, err := service.GetDiscordTwitchLiveAnnos(ctx, guildId)
+	if err != nil {
+		log.Println("[SetTwitchStreamer] GetDiscordTwitchLiveAnnos error:", err.Error())
+		return "Twitch streamer `" + uInfo.Login + "` could not be added due to database error."
+	}
+
+	streamerExists := false
+	for _, anno := range liveAnnos {
+		if anno.TwitchUserID == uInfo.ID {
+			streamerExists = true
+			break
+		}
+	}
+
+	// Get livestream limit
+	limit, err := getLivestreamLimit(ctx, service, guildId)
+	if err != nil {
+		log.Println("[SetTwitchStreamer] getLivestreamLimit error:", err.Error())
+		return "Twitch streamer `" + uInfo.Login + "` could not be added due to database error."
+	}
+
+	if !streamerExists && len(liveAnnos) >= limit {
+		return "You have reached the maximum number of streamers (" + strconv.Itoa(limit) + "). Please remove some streamers before adding new ones."
+	}
+
 	added, err := service.AddDiscordTwitchLiveAnnos(ctx, uInfo.Login, uInfo.ID, annoChannelId, guildId, creatorUsername)
 	if err != nil {
 		log.Println("[SetTwitchStreamer] AddDiscordTwitchLiveAnnos error:", err.Error())
@@ -405,4 +431,24 @@ func FormatContent(str string, sd model.TwitchStreamerData) string {
 	}
 
 	return str
+}
+
+func getLivestreamLimit(ctx context.Context, service service.Service, guildId string) (int, error) {
+	cfg, err := service.GetDiscordBotConfig(ctx, guildId, "stream_anno_limit")
+	if err != nil {
+		log.Println("Error getting Discord bot config:", err.Error())
+		return 10, err // Default to 10 if not configured
+	}
+
+	if cfg == nil {
+		return 10, nil // Default to 10 if not configured
+	}
+
+	limit, err := strconv.Atoi(cfg.Value)
+	if err != nil {
+		log.Println("Error parsing livestream limit:", err.Error())
+		return 10, err // Default to 10 if parsing fails
+	}
+
+	return limit, nil
 }
