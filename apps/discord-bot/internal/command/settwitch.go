@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"regexp"
+	"strings"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/command/helpers"
@@ -58,6 +59,11 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 
 			ch, err := s.Channel(channelData.Value)
 			if err != nil {
+				log.Println("[command.SetTwitchCommand.streamer] guild:", i.GuildID, "channel:", channelData.Value, "Channel error:", err.Error())
+				if strings.Contains(err.Error(), "Missing Access") {
+					ephemeralRespond(s, i, "Missing access to the channel. Please check if Senchabot has access to the channel.")
+					return
+				}
 				// TODO: edit respond or create errorMessage sheet
 				ephemeralRespond(s, i, config.ErrorMessage+"#XXXY")
 				return
@@ -86,6 +92,11 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 
 		ch, err := s.Channel(channelId)
 		if err != nil {
+			log.Println("[command.SetTwitchCommand.streamer] guild:", i.GuildID, "channel:", channelId, "Channel error:", err.Error())
+			if strings.Contains(err.Error(), "Missing Access") {
+				ephemeralRespond(s, i, "Missing access to the channel. Please check if Senchabot has access to the channel.")
+				return
+			}
 			// TODO: edit respond or create errorMessage sheet
 			ephemeralRespond(s, i, config.ErrorMessage+"#XXXY")
 			return
@@ -259,6 +270,7 @@ func SetTwitchCommandMetadata() *discordgo.ApplicationCommand {
 		DescriptionLocalizations: &map[discordgo.Locale]string{
 			discordgo.Turkish: "Discord botunu yapılandırma ayarları",
 		},
+		DMPermission:             &dmPermission,
 		DefaultMemberPermissions: &setdeletePermissions,
 		Options: []*discordgo.ApplicationCommandOption{
 			// set-twitch streamer

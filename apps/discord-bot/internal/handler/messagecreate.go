@@ -11,7 +11,7 @@ import (
 
 func (h *handler) MessageCreate(command command.Command) {
 	ctx := context.Background()
-	eventService := event.NewEventService(h.twitchService)
+	eventService := event.NewEventService(h.twitchService, h.service)
 
 	h.discordClient.AddHandler(func(s *discordgo.Session, m *discordgo.MessageCreate) {
 		if m.Author.Bot {

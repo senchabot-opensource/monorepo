@@ -36,6 +36,7 @@ func StreamerListCommandMetadata() *discordgo.ApplicationCommand {
 	return &discordgo.ApplicationCommand{
 		Name:                     "streamer-list",
 		Description:              "Show list of Twitch streamers added for live stream announcements",
+		DMPermission:             &dmPermission,
 		DefaultMemberPermissions: &setdeletePermissions,
 	}
 }

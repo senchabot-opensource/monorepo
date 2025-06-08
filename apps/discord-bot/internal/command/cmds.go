@@ -35,7 +35,8 @@ func (c *commands) CmdsCommandHandler(ctx context.Context, s *discordgo.Session,
 // Commands List Metadata
 func CmdsCommandMetadata() *discordgo.ApplicationCommand {
 	return &discordgo.ApplicationCommand{
-		Name:        "cmds",
-		Description: "List all available commands",
+		Name:         "cmds",
+		Description:  "List all available commands",
+		DMPermission: &dmPermission,
 	}
 }

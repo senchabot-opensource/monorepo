@@ -44,6 +44,7 @@ func LcmdvarCommandMetadata() *discordgo.ApplicationCommand {
 	return &discordgo.ApplicationCommand{
 		Name:                     "lcmdvar",
 		Description:              "List all command variables",
+		DMPermission:             &dmPermission,
 		DefaultMemberPermissions: &setdeletePermissions,
 	}
 }

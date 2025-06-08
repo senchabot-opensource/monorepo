@@ -119,6 +119,7 @@ func deployCommands(discordClient *discordgo.Session) {
 var (
 	purgePermissions     int64 = discordgo.PermissionManageServer
 	setdeletePermissions int64 = discordgo.PermissionManageServer
+	dmPermission               = false
 	//manageCmdPermissions int64 = discordgo.PermissionManageChannels
 	commandMetadatas = []*discordgo.ApplicationCommand{
 		// SET-TWITCH
