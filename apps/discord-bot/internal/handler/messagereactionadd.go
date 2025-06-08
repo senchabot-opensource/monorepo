@@ -12,7 +12,8 @@ func (h *handler) MessageReactionAdd() {
 	h.discordClient.AddHandler(func(s *discordgo.Session, i *discordgo.MessageReactionAdd) {
 		msg, err := s.ChannelMessage(i.ChannelID, i.MessageID)
 		if err != nil {
-			log.Println("[handler.MessageReactionAdd] ChannelMessage error:", err.Error())
+			// TODO: uncomment when we have a way to handle this error's severity
+			//log.Println("[handler.MessageReactionAdd] ChannelMessage error:", err.Error())
 			return
 		}
 
