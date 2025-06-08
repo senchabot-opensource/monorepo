@@ -44,5 +44,6 @@ func SozlukCommandMetadata() *discordgo.ApplicationCommand {
 				Required: true,
 			},
 		},
+		DMPermission: &dmPermission,
 	}
 }

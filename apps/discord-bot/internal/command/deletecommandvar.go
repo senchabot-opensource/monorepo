@@ -48,6 +48,7 @@ func DcmdvarCommandMetadata() *discordgo.ApplicationCommand {
 				Required:    true,
 			},
 		},
+		DMPermission:             &dmPermission,
 		DefaultMemberPermissions: &setdeletePermissions,
 	}
 }

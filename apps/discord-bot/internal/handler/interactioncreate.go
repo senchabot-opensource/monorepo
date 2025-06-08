@@ -17,6 +17,7 @@ func (h *handler) InteractionCreate(command command.Command) {
 		ctx := context.Background()
 		commandHandlers := command.GetSystemCommands()
 		if cmd, ok := commandHandlers[i.ApplicationCommandData().Name]; ok {
+			log.Printf("[InteractionCreate] Executing system command: %s for guild %s\n", i.ApplicationCommandData().Name, i.GuildID)
 			cmd(ctx, h.discordClient, i, h.service)
 			options := []string{}
 			for _, v := range i.ApplicationCommandData().Options {
@@ -32,8 +33,10 @@ func (h *handler) InteractionCreate(command command.Command) {
 					}
 				}
 			}
-			commandStr := i.ApplicationCommandData().Name + " " + strings.Join(options, " ")
-			h.service.SaveCommandActivity(ctx, commandStr, i.GuildID, i.Member.User.Username, i.Member.User.ID)
+			if i.GuildID != "" {
+				commandStr := i.ApplicationCommandData().Name + " " + strings.Join(options, " ")
+				h.service.SaveCommandActivity(ctx, commandStr, i.GuildID, i.Member.User.Username, i.Member.User.ID)
+			}
 			return
 		}
 
