@@ -1,28 +1,32 @@
 package event
 
 import (
+	"context"
 	"log"
-	"strings"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/alert"
+	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
 	"github.com/senchabot-opensource/monorepo/helper"
 	"github.com/senchabot-opensource/monorepo/pkg/twitchapi"
 )
 
 type EventService struct {
 	twitchService twitchapi.TwitchService
+	service       service.Service
 }
 
-func NewEventService(twitchService twitchapi.TwitchService) *EventService {
+func NewEventService(twitchService twitchapi.TwitchService, service service.Service) *EventService {
 	return &EventService{
 		twitchService: twitchService,
+		service:       service,
 	}
 }
 
-func (es *EventService) CreateLiveStreamScheduledEvent(s *discordgo.Session, msgContent string, msgEmbeds []*discordgo.MessageEmbed, guildId string) {
+func (es *EventService) CreateLiveStreamScheduledEvent(dS *discordgo.Session, msgContent string, msgEmbeds []*discordgo.MessageEmbed, guildId string) {
 	url := helper.GetURL("twitch.tv", msgContent)
 	if url == "" && len(msgEmbeds) > 0 {
 		url = msgEmbeds[0].URL
@@ -47,9 +51,16 @@ func (es *EventService) CreateLiveStreamScheduledEvent(s *discordgo.Session, msg
 		PrivacyLevel: discordgo.GuildScheduledEventPrivacyLevelGuildOnly,
 	})
 	if err != nil {
-		log.Println("[CreateLiveStreamScheduledEvent] GuildScheduledEventCreate error:", err.Error())
 		if strings.Contains(err.Error(), "Missing Permissions") {
-			alert.SendDMToGuildOwner(dS, guildId, "Missing guild (server) permissions for Senchabot to create Discord Scheduled Events for live stream announcements.")
+			ctx := context.Background()
+			configKey := "gsec_missing_permission_dm_sent"
+			config, _ := es.service.GetDiscordBotConfig(ctx, guildId, configKey)
+			if config == nil || config.Value != "1" {
+				log.Println("[CreateLiveStreamScheduledEvent] Sending DM to guild owner for guild", guildId, "to inform them that Senchabot is missing permissions to manage Discord Scheduled Events for live stream announcements.")
+				alert.SendDMToGuildOwner(dS, guildId, "Missing guild (server) events permissions for Senchabot to create, edit or cancel automatically created Discord Scheduled Events for live stream announcements.")
+				es.service.SetDiscordBotConfig(ctx, guildId, configKey, "1")
+			}
+			return
 		}
 
 		log.Println("[CreateLiveStreamScheduledEvent] GuildScheduledEventCreate error:", err.Error(), "GuildID:", guildId, "Url:", url)

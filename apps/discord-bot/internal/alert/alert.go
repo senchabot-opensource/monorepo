@@ -19,7 +19,7 @@ func SendDMToGuildOwner(dS *discordgo.Session, guildId string, msgContent string
 		return
 	}
 
-	msgContent = msgContent + " Guild (Server) Name: " + guild.Name + ", ID: " + guild.ID
+	msgContent = "Hello, this is an automated message from Senchabot for your guild (server) **" + guild.Name + "** (ID: " + guild.ID + ").\n\n" + msgContent
 
 	_, err = dS.ChannelMessageSend(dmCh.ID, msgContent)
 	if err != nil {
