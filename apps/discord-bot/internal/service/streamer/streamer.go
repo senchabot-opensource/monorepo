@@ -322,6 +322,34 @@ func (s *StreamerService) getStreamersAndLiveData(_ context.Context, _ service.S
 	return liveStreams, streamers
 }
 
+var retryUpdateQueue = make(map[string]map[string]time.Time)
+var retryUpdateQueueMutex sync.Mutex
+
+func StartRetryFailedUpdates(service service.Service) {
+	go func() {
+		ticker := time.NewTicker(1 * time.Minute)
+		defer ticker.Stop()
+		for range ticker.C {
+			retryUpdateQueueMutex.Lock()
+			for guildId, streamerMap := range retryUpdateQueue {
+				for streamerUserId, lastAnno := range streamerMap {
+					ctx := context.Background()
+					_, err := service.UpdateTwitchStreamerLastAnnoDate(ctx, streamerUserId, guildId, lastAnno)
+					if err == nil {
+						delete(streamerMap, streamerUserId)
+					} else {
+						log.Printf("[RetryFailedUpdates] Failed to update lastAnnoDate for guild %s streamer %s: %v", guildId, streamerUserId, err)
+					}
+				}
+				if len(streamerMap) == 0 {
+					delete(retryUpdateQueue, guildId)
+				}
+			}
+			retryUpdateQueueMutex.Unlock()
+		}
+	}()
+}
+
 func (s *StreamerService) handleAnnouncement(ctx context.Context, dS *discordgo.Session, service service.Service, guildId string, streamers map[string]GuildStreamers, sd model.TwitchStreamerData) {
 	streamersMutex.Lock()
 	defer streamersMutex.Unlock()
@@ -357,7 +385,16 @@ func (s *StreamerService) handleAnnouncement(ctx context.Context, dS *discordgo.
 	_, err = service.UpdateTwitchStreamerLastAnnoDate(ctx, sd.UserID, guildId, time.Now().UTC())
 	if err != nil {
 		log.Println("[handleAnnouncement] UpdateTwitchStreamerLastAnnoDate error:", err.Error())
+
+		retryUpdateQueueMutex.Lock()
+		if retryUpdateQueue[guildId] == nil {
+			retryUpdateQueue[guildId] = make(map[string]time.Time)
+		}
+		retryUpdateQueue[guildId][sd.UserID] = time.Now().UTC()
+		retryUpdateQueueMutex.Unlock()
 	}
+
+	log.Println("[handleAnnouncement] Announcement sent for streamer:", sd.UserName, "in guild:", guildId)
 }
 
 var liveStreamChannels = make(map[string]chan struct{})
