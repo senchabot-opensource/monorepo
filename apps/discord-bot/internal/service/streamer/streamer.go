@@ -208,18 +208,41 @@ func (s *StreamerService) GetStreamAnnoContent(ctx context.Context, service serv
 	return annoContent
 }
 
+var lastAnnoDateCache = make(map[string]map[string]time.Time) // guildId -> streamerUserId -> time
+var lastAnnoDateCacheMutex sync.Mutex
+
 func CheckDatesAnnounceable(ctx context.Context, service service.Service, guildId, streamerUserId, startedAt string) bool {
-	lastAnnoDate, err := service.GetTwitchStreamerLastAnnoDate(ctx, streamerUserId, guildId)
-	if err != nil {
-		log.Println("[CheckDatesAnnounceable] GetTwitchStreamerLastAnnoDate error:", err.Error())
-		return false
+	lastAnnoDateCacheMutex.Lock()
+	guildCache, ok := lastAnnoDateCache[guildId]
+	var annoDate time.Time
+	if ok {
+		ad, ok2 := guildCache[streamerUserId]
+		if ok2 {
+			annoDate = ad
+		}
 	}
+	lastAnnoDateCacheMutex.Unlock()
 
-	if lastAnnoDate == nil {
-		return true // No previous announcement, so announceable
+	if !annoDate.IsZero() {
+	} else {
+		lastAnnoDate, err := service.GetTwitchStreamerLastAnnoDate(ctx, streamerUserId, guildId)
+		if err != nil {
+			log.Println("[CheckDatesAnnounceable] GetTwitchStreamerLastAnnoDate error:", err.Error())
+			return false
+		}
+
+		if lastAnnoDate == nil {
+			return true // No previous announcement, so announceable
+		}
+		annoDate = *lastAnnoDate
+
+		lastAnnoDateCacheMutex.Lock()
+		if lastAnnoDateCache[guildId] == nil {
+			lastAnnoDateCache[guildId] = make(map[string]time.Time)
+		}
+		lastAnnoDateCache[guildId][streamerUserId] = annoDate
+		lastAnnoDateCacheMutex.Unlock()
 	}
-
-	var annoDate = *lastAnnoDate
 
 	// Parse dates and apply location
 	loc, loadLocationErr := time.LoadLocation("Europe/Amsterdam")
@@ -299,6 +322,34 @@ func (s *StreamerService) getStreamersAndLiveData(_ context.Context, _ service.S
 	return liveStreams, streamers
 }
 
+var retryUpdateQueue = make(map[string]map[string]time.Time)
+var retryUpdateQueueMutex sync.Mutex
+
+func StartRetryFailedUpdates(service service.Service) {
+	go func() {
+		ticker := time.NewTicker(1 * time.Minute)
+		defer ticker.Stop()
+		for range ticker.C {
+			retryUpdateQueueMutex.Lock()
+			for guildId, streamerMap := range retryUpdateQueue {
+				for streamerUserId, lastAnno := range streamerMap {
+					ctx := context.Background()
+					_, err := service.UpdateTwitchStreamerLastAnnoDate(ctx, streamerUserId, guildId, lastAnno)
+					if err == nil {
+						delete(streamerMap, streamerUserId)
+					} else {
+						log.Printf("[RetryFailedUpdates] Failed to update lastAnnoDate for guild %s streamer %s: %v", guildId, streamerUserId, err)
+					}
+				}
+				if len(streamerMap) == 0 {
+					delete(retryUpdateQueue, guildId)
+				}
+			}
+			retryUpdateQueueMutex.Unlock()
+		}
+	}()
+}
+
 func (s *StreamerService) handleAnnouncement(ctx context.Context, dS *discordgo.Session, service service.Service, guildId string, streamers map[string]GuildStreamers, sd model.TwitchStreamerData) {
 	streamersMutex.Lock()
 	defer streamersMutex.Unlock()
@@ -324,10 +375,26 @@ func (s *StreamerService) handleAnnouncement(ctx context.Context, dS *discordgo.
 		},
 	}})
 
+	lastAnnoDateCacheMutex.Lock()
+	if lastAnnoDateCache[guildId] == nil {
+		lastAnnoDateCache[guildId] = make(map[string]time.Time)
+	}
+	lastAnnoDateCache[guildId][sd.UserID] = time.Now().UTC()
+	lastAnnoDateCacheMutex.Unlock()
+
 	_, err = service.UpdateTwitchStreamerLastAnnoDate(ctx, sd.UserID, guildId, time.Now().UTC())
 	if err != nil {
 		log.Println("[handleAnnouncement] UpdateTwitchStreamerLastAnnoDate error:", err.Error())
+
+		retryUpdateQueueMutex.Lock()
+		if retryUpdateQueue[guildId] == nil {
+			retryUpdateQueue[guildId] = make(map[string]time.Time)
+		}
+		retryUpdateQueue[guildId][sd.UserID] = time.Now().UTC()
+		retryUpdateQueueMutex.Unlock()
 	}
+
+	log.Println("[handleAnnouncement] Announcement sent for streamer:", sd.UserName, "in guild:", guildId)
 }
 
 var liveStreamChannels = make(map[string]chan struct{})
