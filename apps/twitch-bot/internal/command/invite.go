@@ -11,6 +11,10 @@ import (
 	"github.com/senchabot-opensource/monorepo/model"
 )
 
+func inviteCommandResponse(s string) string {
+	return "Hey VoHiYo! " + s + " Granting me moderator privileges in your channel would allow me to chat and unlock additional features to enhance your stream. You can find more details at docs.senchabot.app. Thanks! 😄"
+}
+
 func (c *commands) InviteCommand(context context.Context, message twitch.PrivateMessage, commandName string, params []string) (*model.CommandResponse, error) {
 	var cmdResp model.CommandResponse
 
@@ -27,7 +31,8 @@ func (c *commands) InviteCommand(context context.Context, message twitch.Private
 	}
 
 	if alreadyJoined {
-		return nil, errors.New("i have already joined this channel")
+		cmdResp.Message = inviteCommandResponse("I'm already in your channel and ready to go.")
+		return &cmdResp, nil
 	}
 
 	log.Println("TRYING TO JOIN TWITCH CHANNEL `" + channelName + "`")
@@ -36,10 +41,10 @@ func (c *commands) InviteCommand(context context.Context, message twitch.Private
 	for _, command := range optionalCommands {
 		_, err := c.service.CreateCommand(context, command.CommandName, command.CommandContent, twitchChannelId, "Senchabot")
 		if err != nil {
-			log.Println("[command.InviteCommand] CreateCommand error:", err.Error())
+			log.Println("[command.InviteCommand] GetOptionalCommands CreateCommand error:", err.Error())
 		}
 	}
 
-	cmdResp.Message = "Hi VoHiYo I joined your Twitch channel, sweetie. Learn how to use my features here: docs.senchabot.app"
+	cmdResp.Message = inviteCommandResponse("I've joined your Twitch channel.")
 	return &cmdResp, nil
 }

@@ -507,3 +507,66 @@ func (m *postgresql) DeleteCommandTimer(ctx context.Context, botPlatform platfor
 
 	return nil
 }
+
+func (m *postgresql) GetCustomVariableContent(ctx context.Context, botPlatform platform.Platform, botPlatformId string, varName string) string {
+	var variable model.BotCommandVariable
+	result := m.DB.Where("bot_platform = ?", botPlatform).Where("bot_platform_id = ?", botPlatformId).Where("variable_name = ? AND status = ?",
+		varName, model.BotCommandVariableStatusActive).First(&variable)
+
+	if result.Error != nil {
+		return ""
+	}
+
+	return variable.VariableContent
+}
+
+func (p *postgresql) GetCommandVariable(ctx context.Context, varName string, botPlatform platform.Platform, botPlatformId string) (*model.BotCommandVariable, error) {
+	var variable model.BotCommandVariable
+	result := p.DB.Where("variable_name = ? AND bot_platform = ? AND bot_platform_id = ? AND status = ?",
+		varName, botPlatform, botPlatformId, model.BotCommandVariableStatusActive).First(&variable)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return &variable, nil
+}
+
+func (p *postgresql) CreateCommandVariable(ctx context.Context, varName string, varContent string, botPlatform platform.Platform, botPlatformID string, createdBy string) error {
+	variable := &model.BotCommandVariable{
+		VariableName:    varName,
+		VariableContent: varContent,
+		BotPlatform:     botPlatform,
+		BotPlatformID:   botPlatformID,
+		Status:          model.BotCommandVariableStatusActive,
+		CreatedBy:       createdBy,
+	}
+	return p.DB.Create(variable).Error
+}
+
+func (p *postgresql) UpdateCommandVariable(ctx context.Context, varName string, varContent string, botPlatform platform.Platform, botPlatformId string, updatedBy string) error {
+	result := p.DB.Model(&model.BotCommandVariable{}).
+		Where("variable_name = ? AND bot_platform = ? AND bot_platform_id = ? AND status = ?", varName, botPlatform, botPlatformId, model.BotCommandVariableStatusActive).
+		Updates(map[string]interface{}{
+			"variable_content": varContent,
+			"updated_by":       updatedBy,
+		})
+	return result.Error
+}
+
+func (p *postgresql) DeleteCommandVariable(ctx context.Context, varName string, botPlatform platform.Platform, botPlatformId string, updatedBy string) error {
+	result := p.DB.Model(&model.BotCommandVariable{}).
+		Where("variable_name = ? AND bot_platform = ? AND bot_platform_id = ? AND status = ?", varName, botPlatform, botPlatformId, model.BotCommandVariableStatusActive).
+		Updates(map[string]interface{}{
+			"status":     0,
+			"updated_by": updatedBy,
+		})
+	return result.Error
+}
+
+func (p *postgresql) ListCommandVariables(ctx context.Context, botPlatform platform.Platform, botPlatformId string) ([]*model.BotCommandVariable, error) {
+	var variables []*model.BotCommandVariable
+	result := p.DB.Where("bot_platform = ? AND bot_platform_id = ? AND status = ?", botPlatform, botPlatformId, model.BotCommandVariableStatusActive).Find(&variables)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return variables, nil
+}

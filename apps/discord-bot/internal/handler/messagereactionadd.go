@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"context"
 	"log"
 	"regexp"
 
@@ -15,7 +16,16 @@ func (h *handler) MessageReactionAdd() {
 			return
 		}
 
-		goodMorningRegexp := regexp.MustCompile(`(?i)g(ü|u)nayd(ı|i)`)
+		userPrivacyPreferences, err := h.service.GetDiscordUserPrivacyPreferences(context.Background(), msg.Author.ID)
+		if err != nil {
+			log.Println("[handler.MessageReactionAdd] service.GetDiscordUserPrivacyPreferences error:", err.Error())
+			return
+		}
+		if userPrivacyPreferences != nil && userPrivacyPreferences.DoNotTrackMessages {
+			return
+		}
+
+		goodMorningRegexp := regexp.MustCompile(`(?i)(g(ü|u)nayd(ı|i)|good\s*morn[i]+ng+)`)
 		if goodMorningRegexp.MatchString(msg.Content) && i.Emoji.Name == "🌞" {
 			err = s.MessageReactionAdd(msg.ChannelID, msg.ID, "🌞")
 			if err != nil {

@@ -18,7 +18,12 @@ func (c *commands) DelTwitchCommand(ctx context.Context, s *discordgo.Session, i
 	case "streamer":
 		options = options[0].Options
 		twitchUsername := options[0].StringValue()
-		twitchUsername = helper.ParseTwitchUsernameURLParam(twitchUsername)
+		twitchUsername, err := helper.ParseTwitchUsername(twitchUsername)
+		if err != nil {
+			log.Println("[command.DelTwitchCommand.streamer] ParseTwitchUsername error:", err.Error())
+			ephemeralRespond(s, i, "Twitch username or url is invalid.")
+			return
+		}
 
 		uInfo, err := c.twitchService.GetUserInfoByLoginName(twitchUsername)
 		if err != nil {
@@ -89,7 +94,7 @@ func (c *commands) DelTwitchCommand(ctx context.Context, s *discordgo.Session, i
 			if liveAnnosLength > 0 {
 				ephemeralRespond(s, i, "You cannot delete the default Twitch live stream announcement channel setting because there are streamers in the database who do not have a custom stream announcement channel set.")
 				// TR
-				// Veritabanında özel yayın duyuru kanalı ayarlanmamış yayıncılar bulunduğu için varsayılan Twitch canlı yayın duyuru kanalı ayarını silemezsiniz.
+				// Veritabanında özel yayın duyuru kanalı ayarlanmış yayıncılar bulunduğu için varsayılan Twitch canlı yayın duyuru kanalı ayarını silemezsiniz.
 				return
 			}
 
@@ -126,7 +131,12 @@ func (c *commands) DelTwitchCommand(ctx context.Context, s *discordgo.Session, i
 		case "custom-content":
 			options = options[0].Options
 			twitchUsername := options[0].StringValue()
-			twitchUsername = helper.ParseTwitchUsernameURLParam(twitchUsername)
+			twitchUsername, err := helper.ParseTwitchUsername(twitchUsername)
+			if err != nil {
+				log.Println("[command.DelTwitchCommand.announcement.custom-content] ParseTwitchUsername error:", err.Error())
+				ephemeralRespond(s, i, "Twitch username or url is invalid.")
+				return
+			}
 
 			uInfo, err := c.twitchService.GetUserInfoByLoginName(twitchUsername)
 			if err != nil {

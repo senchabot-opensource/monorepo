@@ -12,7 +12,7 @@ import (
 
 type createCommandServiceType func(ctx context.Context, commandName string, commandContent string, platformEntityId string, createdBy string) (*string, error)
 
-func AcmdCommand(context context.Context, service createCommandServiceType, isSystemCommand IsSystemCommandType, message model.MessageData, commandName string, params []string) (*model.CommandResponse, error) {
+func AcmdCommand(context context.Context, service createCommandServiceType, getcvcservice getCustomVariableContentServiceType, isSystemCommand IsSystemCommandType, message model.MessageData, commandName string, params []string) (*model.CommandResponse, error) {
 	var cmdResp model.CommandResponse
 
 	command_name, command_content, check := helper.GetCommandCreateUpdateParams(params)
@@ -30,6 +30,11 @@ func AcmdCommand(context context.Context, service createCommandServiceType, isSy
 	// Check command name and content length
 	if infoText, check := helper.ValidateCommandCreateParams(command_name, command_content); !check {
 		cmdResp.Message = message.UserName + ", " + infoText
+		return &cmdResp, nil
+	}
+
+	if !CheckCommandContentLengthWithCustomVariable(command_content, context, message, getcvcservice) {
+		cmdResp.Message = config.CommandContentLimit
 		return &cmdResp, nil
 	}
 

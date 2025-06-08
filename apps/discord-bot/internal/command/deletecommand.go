@@ -2,27 +2,68 @@ package command
 
 import (
 	"context"
-	"errors"
+	"log"
+	"os"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/senchabot-opensource/monorepo/command"
+	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
 	"github.com/senchabot-opensource/monorepo/model"
 )
 
-func (c *commands) DeleteCommandCommand(context context.Context, m *discordgo.MessageCreate, commandName string, params []string) (*model.CommandResponse, error) {
-	msgData := &model.MessageData{
-		PlatformEntityID: m.GuildID,
-		UserName:         m.Author.Username,
+// Delete Command Handler
+func (c *commands) DcmdCommandHandler(ctx context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, service service.Service) {
+	options := i.ApplicationCommandData().Options
+	message := &model.MessageData{
+		PlatformEntityID: i.GuildID,
+		UserName:         i.Member.User.Username,
 	}
 
-	p, err := c.dS.UserChannelPermissions(m.Author.ID, m.ChannelID)
+	command_name := options[0].StringValue()
+
+	deletedCommandName, infoText, err := c.service.DeleteCommand(ctx, command_name, message.PlatformEntityID)
 	if err != nil {
-		return nil, err
+		log.Println("Something went wrong while deleting command: `"+command_name+"`. Error:", err.Error())
+		ephemeralRespond(s, i, "Something went wrong while deleting command: `"+command_name+"`")
+		return
+	}
+	if infoText != nil {
+		ephemeralRespond(s, i, message.UserName+", "+*infoText)
+		return
 	}
 
-	if p&discordgo.PermissionManageChannels != discordgo.PermissionManageChannels {
-		return nil, errors.New("dont have permission")
+	appGuildCmds, err := s.ApplicationCommands(os.Getenv("CLIENT_ID"), i.GuildID)
+	if err != nil {
+		log.Println("Something went wrong while deleting slash command: `"+command_name+"`. Error:", err.Error())
+		ephemeralRespond(s, i, "Something went wrong while deleting slash command: `"+command_name+"`")
+		return
+	}
+	for _, appCmd := range appGuildCmds {
+		if appCmd.Name == command_name {
+			s.ApplicationCommandDelete(os.Getenv("CLIENT_ID"), i.GuildID, appCmd.ID)
+			break
+		}
 	}
 
-	return command.DcmdCommand(context, c.service.DeleteCommand, c.IsSystemCommand, *msgData, commandName, params)
+	log.Println("COMMAND_DELETE: command_name:", *deletedCommandName)
+
+	cmdResp := "Command Deleted: " + *deletedCommandName
+
+	ephemeralRespond(s, i, cmdResp)
+}
+
+// Delete Command Metadata
+func DcmdCommandMetadata() *discordgo.ApplicationCommand {
+	return &discordgo.ApplicationCommand{
+		Name:        "dcmd",
+		Description: "Delete an existing command",
+		Options: []*discordgo.ApplicationCommandOption{
+			{
+				Type:        discordgo.ApplicationCommandOptionString,
+				Name:        "name",
+				Description: "Name of the command to delete",
+				Required:    true,
+			},
+		},
+		DefaultMemberPermissions: &setdeletePermissions,
+	}
 }

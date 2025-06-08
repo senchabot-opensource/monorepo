@@ -11,7 +11,7 @@ import (
 	"github.com/senchabot-opensource/monorepo/model"
 )
 
-func (c *commands) UpdateCommandCommand(context context.Context, message twitch.PrivateMessage, commandName string, params []string) (*model.CommandResponse, error) {
+func (c *commands) DeleteCommandVariableCommand(context context.Context, message twitch.PrivateMessage, commandName string, params []string) (*model.CommandResponse, error) {
 	if !helpers.CanExecuteCommand(context, c.service, message.Tags["badges"], message.RoomID) {
 		return nil, errors.New(message.User.DisplayName + config.CannotExecuteCommand)
 	}
@@ -21,5 +21,5 @@ func (c *commands) UpdateCommandCommand(context context.Context, message twitch.
 		UserName:         message.User.DisplayName,
 	}
 
-	return command.UcmdCommand(context, c.service.UpdateCommand, c.service.GetCustomVariableContent, c.IsSystemCommand, *msgData, commandName, params)
+	return command.DeleteCommandVariableCommand(context, c.service.DeleteCommandVariable, c.service.GetCommandVariable, *msgData, commandName, params)
 }
