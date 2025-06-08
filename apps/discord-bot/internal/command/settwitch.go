@@ -270,6 +270,7 @@ func SetTwitchCommandMetadata() *discordgo.ApplicationCommand {
 		DescriptionLocalizations: &map[discordgo.Locale]string{
 			discordgo.Turkish: "Discord botunu yapılandırma ayarları",
 		},
+		DMPermission:             &dmPermission,
 		DefaultMemberPermissions: &setdeletePermissions,
 		Options: []*discordgo.ApplicationCommandOption{
 			// set-twitch streamer

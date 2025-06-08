@@ -94,6 +94,7 @@ func PurgeCommandMetadata() *discordgo.ApplicationCommand {
 		DescriptionLocalizations: &map[discordgo.Locale]string{
 			discordgo.Turkish: "Temizleme komutları",
 		},
+		DMPermission:             &dmPermission,
 		DefaultMemberPermissions: &purgePermissions,
 		Options: []*discordgo.ApplicationCommandOption{
 			// purge events

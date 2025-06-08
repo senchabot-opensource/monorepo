@@ -194,6 +194,7 @@ func DelTwitchCommandMetadata() *discordgo.ApplicationCommand {
 		DescriptionLocalizations: &map[discordgo.Locale]string{
 			discordgo.Turkish: "Yapılandırma ayarlarını kaldır.",
 		},
+		DMPermission:             &dmPermission,
 		DefaultMemberPermissions: &setdeletePermissions,
 		Options: []*discordgo.ApplicationCommandOption{
 			// del-twitch streamer

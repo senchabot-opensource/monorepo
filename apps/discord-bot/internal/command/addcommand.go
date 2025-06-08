@@ -100,6 +100,7 @@ func AcmdCommandMetadata() *discordgo.ApplicationCommand {
 				Required:    true,
 			},
 		},
+		DMPermission:             &dmPermission,
 		DefaultMemberPermissions: &setdeletePermissions,
 	}
 }

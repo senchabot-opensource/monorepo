@@ -16,10 +16,16 @@ func DoNotTrackMessagesCommandMetadata() *discordgo.ApplicationCommand {
 }
 
 func (c *commands) DoNotTrackMessagesCommand(ctx context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, service service.Service) {
-	if err := service.SetDiscordUserPrivacyPreferences(context.Background(), i.Member.User.ID, true); err != nil {
+	var memberId string
+	if i.Member != nil {
+		memberId = i.Member.User.ID
+	} else {
+		memberId = i.User.ID
+	}
+	if err := service.SetDiscordUserPrivacyPreferences(context.Background(), memberId, true); err != nil {
 		log.Println("[command.DoNotTrackMessagesCommand] service.SetDiscordUserPrivacyPreferences error:", err.Error())
 		return
 	}
 
-	ephemeralRespond(s, i, "Your preference has been saved. Your message content will no longer be tracked. You will not be able to use any Senchabot text based commands. You can change your preference at any time.")
+	ephemeralRespond(s, i, "Your preference has been saved. Your message content will no longer be tracked. You will not be able to use any Senchabot's text based functions. You can change your preference at any time.")
 }
