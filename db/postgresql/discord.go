@@ -8,7 +8,55 @@ import (
 
 	"github.com/senchabot-opensource/monorepo/model"
 	"github.com/senchabot-opensource/monorepo/platform"
+	"gorm.io/gorm"
 )
+
+func (m *postgresql) GetDiscordUserPrivacyPreferences(ctx context.Context, discordUserId string) (*model.DiscordUserPrivacyPreferences, error) {
+	var userPrivacyPreferences model.DiscordUserPrivacyPreferences
+
+	result := m.DB.Where("discord_user_id = ?", discordUserId).First(&userPrivacyPreferences)
+	if result.Error != nil {
+		if result.Error == gorm.ErrRecordNotFound {
+			return nil, nil
+		}
+		return nil, errors.New("(GetDiscordUserPrivacyPreferences) db.First Error:" + result.Error.Error())
+	}
+
+	return &userPrivacyPreferences, nil
+}
+
+func (m *postgresql) SetDiscordUserPrivacyPreferences(ctx context.Context, discordUserId string, doNotTrackMessages bool) error {
+	var userPrivacyPreferences *model.DiscordUserPrivacyPreferences
+
+	existUserPrivacyPreferences, err := m.GetDiscordUserPrivacyPreferences(ctx, discordUserId)
+	if err != nil {
+		return err
+	}
+
+	if existUserPrivacyPreferences != nil {
+		result := m.DB.Model(&existUserPrivacyPreferences).Select("do_not_track_messages").Where("discord_user_id = ?", discordUserId).Updates(model.DiscordUserPrivacyPreferences{
+			DoNotTrackMessages: doNotTrackMessages,
+		})
+
+		if result.Error != nil {
+			return errors.New("(SetDiscordUserPrivacyPreferences) db.Updates Error:" + result.Error.Error())
+		}
+
+		return nil
+	}
+
+	userPrivacyPreferences = &model.DiscordUserPrivacyPreferences{
+		DiscordUserID:      discordUserId,
+		DoNotTrackMessages: doNotTrackMessages,
+	}
+
+	result := m.DB.Create(&userPrivacyPreferences)
+	if result.Error != nil {
+		return errors.New("(SetDiscordUserPrivacyPreferences) db.Create Error:" + result.Error.Error())
+	}
+
+	return nil
+}
 
 func (m *postgresql) SetDiscordBotConfig(ctx context.Context, serverId, key, value string) (bool, error) {
 	var discordBotConfig []model.DiscordBotConfigs

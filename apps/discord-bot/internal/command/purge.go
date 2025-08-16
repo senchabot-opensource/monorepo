@@ -25,11 +25,13 @@ func (c *commands) PurgeCommand(ctx context.Context, s *discordgo.Session, i *di
 		}
 
 		for _, e := range events {
-			s.GuildScheduledEventDelete(i.GuildID, e.ID)
+			if e.CreatorID == s.State.User.ID {
+				s.GuildScheduledEventDelete(i.GuildID, e.ID)
+			}
 		}
 		// TR
 		// ephemeralRespond(s, i, "Tüm planlanmış etkinlikler silindi.")
-		ephemeralRespond(s, i, "All scheduled events have been deleted.")
+		ephemeralRespond(s, i, "All scheduled events created by the Senchabot have been deleted.")
 
 	case "last-100-channel-messages":
 		options = options[0].Options
@@ -92,14 +94,15 @@ func PurgeCommandMetadata() *discordgo.ApplicationCommand {
 		DescriptionLocalizations: &map[discordgo.Locale]string{
 			discordgo.Turkish: "Temizleme komutları",
 		},
+		DMPermission:             &dmPermission,
 		DefaultMemberPermissions: &purgePermissions,
 		Options: []*discordgo.ApplicationCommandOption{
 			// purge events
 			{
 				Name:        "events",
-				Description: "Cancel all scheduled events.",
+				Description: "Delete all events created by Senchabot",
 				DescriptionLocalizations: map[discordgo.Locale]string{
-					discordgo.Turkish: "Tüm zamanlanmış etkinlikleri iptal et.",
+					discordgo.Turkish: "Senchabot tarafından oluşturulan tüm etkinlikleri siler.",
 				},
 				Type: discordgo.ApplicationCommandOptionSubCommand,
 			},

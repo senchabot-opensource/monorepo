@@ -35,14 +35,14 @@ func NewStreamerService(twitchService twitchapi.TwitchService) *StreamerService 
 	}
 }
 
-func (s *StreamerService) InitStreamersData(ctx context.Context, service service.Service, guildId string) {
+func (s *StreamerService) initStreamersData(ctx context.Context, service service.Service, guildId string) {
 	channelData, err := service.GetDiscordBotConfig(ctx, guildId, "stream_anno_default_channel")
 	if err != nil {
-		log.Println("[SetTwitchStreamer] GetDiscordBotConfig error:", err.Error())
+		log.Println("[StreamerService.initStreamersData] Service.GetDiscordBotConfig Guild ID: "+guildId+", Config Key: stream_anno_default_channel, Error:", err.Error())
 	}
 	liveAnnos, err := service.GetDiscordTwitchLiveAnnos(ctx, guildId)
 	if err != nil {
-		log.Println("[InitStreamersData] GetDiscordTwitchLiveAnnos error:", err.Error())
+		log.Println("[StreamerService.initStreamersData] Service.GetDiscordTwitchLiveAnnos Guild ID: "+guildId+", Error:", err.Error())
 	}
 	for _, dtla := range liveAnnos {
 		if dtla.AnnoChannelID == "" && channelData != nil && channelData.Value != "" {
@@ -110,7 +110,7 @@ func (s *StreamerService) CheckIfTwitchStreamerExist(ctx context.Context, twitch
 	if liveAnnoData != nil {
 		channel, err := dS.Channel(liveAnnoData.AnnoChannelID)
 		if err != nil {
-			log.Println("[CheckIfTwitchStreamerExist] s.Channel error:", err.Error())
+			log.Println("[CheckIfTwitchStreamerExist] s.Channel error:", err.Error(), "GuildID", i.GuildID, "ChannelID", liveAnnoData.AnnoChannelID)
 			return config.ErrorMessage + "#YXXX", false
 		}
 		//return fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısının duyuları `%v` isimli yazı kanalı için ekli.", twitchUsername, channel.Name), true
@@ -136,6 +136,32 @@ func (s *StreamerService) SetTwitchStreamer(ctx context.Context, uInfo *model.Tw
 		annoChannelId = *channelId
 	}
 
+	// Check current streamer count
+	liveAnnos, err := service.GetDiscordTwitchLiveAnnos(ctx, guildId)
+	if err != nil {
+		log.Println("[SetTwitchStreamer] GetDiscordTwitchLiveAnnos error:", err.Error())
+		return "Twitch streamer `" + uInfo.Login + "` could not be added due to database error."
+	}
+
+	streamerExists := false
+	for _, anno := range liveAnnos {
+		if anno.TwitchUserID == uInfo.ID {
+			streamerExists = true
+			break
+		}
+	}
+
+	// Get livestream limit
+	limit, err := getLivestreamLimit(ctx, service, guildId)
+	if err != nil {
+		log.Println("[SetTwitchStreamer] getLivestreamLimit error:", err.Error())
+		return "Twitch streamer `" + uInfo.Login + "` could not be added due to database error."
+	}
+
+	if !streamerExists && len(liveAnnos) >= limit {
+		return "You have reached the maximum number of streamers (" + strconv.Itoa(limit) + "). Please remove some streamers before adding new ones."
+	}
+
 	added, err := service.AddDiscordTwitchLiveAnnos(ctx, uInfo.Login, uInfo.ID, annoChannelId, guildId, creatorUsername)
 	if err != nil {
 		log.Println("[SetTwitchStreamer] AddDiscordTwitchLiveAnnos error:", err.Error())
@@ -152,7 +178,7 @@ func (s *StreamerService) SetTwitchStreamer(ctx context.Context, uInfo *model.Tw
 
 	s.SetStreamerData(guildId, uInfo.ID, uInfo.Login, *channelId)
 	//return fmt.Sprintf("`%v` kullanıcı adlı Twitch yayıncısının yayın duyuruları `%v` isimli yazı kanalı için aktif edildi.", uInfo.Login, channel.Name)
-	return "Twitch streamer `" + uInfo.Login + "`s live stream announcements have been activated for the `" + channel.Name + "` text channel."
+	return "Live stream announcements for Twitch streamer `" + uInfo.Login + "` have been enabled for the `" + channel.Name + "` text channel."
 }
 
 func (s *StreamerService) GetStreamAnnoContent(ctx context.Context, service service.Service, guildId, streamerUserId string) string {
@@ -182,18 +208,41 @@ func (s *StreamerService) GetStreamAnnoContent(ctx context.Context, service serv
 	return annoContent
 }
 
+var lastAnnoDateCache = make(map[string]map[string]time.Time) // guildId -> streamerUserId -> time
+var lastAnnoDateCacheMutex sync.Mutex
+
 func CheckDatesAnnounceable(ctx context.Context, service service.Service, guildId, streamerUserId, startedAt string) bool {
-	lastAnnoDate, err := service.GetTwitchStreamerLastAnnoDate(ctx, streamerUserId, guildId)
-	if err != nil {
-		log.Println("[CheckDatesAnnounceable] GetTwitchStreamerLastAnnoDate error:", err.Error())
-		return false
+	lastAnnoDateCacheMutex.Lock()
+	guildCache, ok := lastAnnoDateCache[guildId]
+	var annoDate time.Time
+	if ok {
+		ad, ok2 := guildCache[streamerUserId]
+		if ok2 {
+			annoDate = ad
+		}
 	}
+	lastAnnoDateCacheMutex.Unlock()
 
-	if lastAnnoDate == nil {
-		return true // No previous announcement, so announceable
+	if !annoDate.IsZero() {
+	} else {
+		lastAnnoDate, err := service.GetTwitchStreamerLastAnnoDate(ctx, streamerUserId, guildId)
+		if err != nil {
+			log.Println("[CheckDatesAnnounceable] GetTwitchStreamerLastAnnoDate error:", err.Error())
+			return false
+		}
+
+		if lastAnnoDate == nil {
+			return true // No previous announcement, so announceable
+		}
+		annoDate = *lastAnnoDate
+
+		lastAnnoDateCacheMutex.Lock()
+		if lastAnnoDateCache[guildId] == nil {
+			lastAnnoDateCache[guildId] = make(map[string]time.Time)
+		}
+		lastAnnoDateCache[guildId][streamerUserId] = annoDate
+		lastAnnoDateCacheMutex.Unlock()
 	}
-
-	var annoDate = *lastAnnoDate
 
 	// Parse dates and apply location
 	loc, loadLocationErr := time.LoadLocation("Europe/Amsterdam")
@@ -273,6 +322,34 @@ func (s *StreamerService) getStreamersAndLiveData(_ context.Context, _ service.S
 	return liveStreams, streamers
 }
 
+var retryUpdateQueue = make(map[string]map[string]time.Time)
+var retryUpdateQueueMutex sync.Mutex
+
+func StartRetryFailedUpdates(service service.Service) {
+	go func() {
+		ticker := time.NewTicker(1 * time.Minute)
+		defer ticker.Stop()
+		for range ticker.C {
+			retryUpdateQueueMutex.Lock()
+			for guildId, streamerMap := range retryUpdateQueue {
+				for streamerUserId, lastAnno := range streamerMap {
+					ctx := context.Background()
+					_, err := service.UpdateTwitchStreamerLastAnnoDate(ctx, streamerUserId, guildId, lastAnno)
+					if err == nil {
+						delete(streamerMap, streamerUserId)
+					} else {
+						log.Printf("[RetryFailedUpdates] Failed to update lastAnnoDate for guild %s streamer %s: %v", guildId, streamerUserId, err)
+					}
+				}
+				if len(streamerMap) == 0 {
+					delete(retryUpdateQueue, guildId)
+				}
+			}
+			retryUpdateQueueMutex.Unlock()
+		}
+	}()
+}
+
 func (s *StreamerService) handleAnnouncement(ctx context.Context, dS *discordgo.Session, service service.Service, guildId string, streamers map[string]GuildStreamers, sd model.TwitchStreamerData) {
 	streamersMutex.Lock()
 	defer streamersMutex.Unlock()
@@ -298,10 +375,26 @@ func (s *StreamerService) handleAnnouncement(ctx context.Context, dS *discordgo.
 		},
 	}})
 
+	lastAnnoDateCacheMutex.Lock()
+	if lastAnnoDateCache[guildId] == nil {
+		lastAnnoDateCache[guildId] = make(map[string]time.Time)
+	}
+	lastAnnoDateCache[guildId][sd.UserID] = time.Now().UTC()
+	lastAnnoDateCacheMutex.Unlock()
+
 	_, err = service.UpdateTwitchStreamerLastAnnoDate(ctx, sd.UserID, guildId, time.Now().UTC())
 	if err != nil {
 		log.Println("[handleAnnouncement] UpdateTwitchStreamerLastAnnoDate error:", err.Error())
+
+		retryUpdateQueueMutex.Lock()
+		if retryUpdateQueue[guildId] == nil {
+			retryUpdateQueue[guildId] = make(map[string]time.Time)
+		}
+		retryUpdateQueue[guildId][sd.UserID] = time.Now().UTC()
+		retryUpdateQueueMutex.Unlock()
 	}
+
+	log.Println("[handleAnnouncement] Announcement sent for streamer:", sd.UserName, "in guild:", guildId)
 }
 
 var liveStreamChannels = make(map[string]chan struct{})
@@ -328,7 +421,7 @@ func (s *StreamerService) CheckLiveStreams(dS *discordgo.Session, ctx context.Co
 	ticker := time.NewTicker(1 * time.Minute)
 	defer ticker.Stop()
 
-	s.InitStreamersData(ctx, service, guildId)
+	s.initStreamersData(ctx, service, guildId)
 
 	for {
 		select {
@@ -405,4 +498,24 @@ func FormatContent(str string, sd model.TwitchStreamerData) string {
 	}
 
 	return str
+}
+
+func getLivestreamLimit(ctx context.Context, service service.Service, guildId string) (int, error) {
+	cfg, err := service.GetDiscordBotConfig(ctx, guildId, "stream_anno_limit")
+	if err != nil {
+		log.Println("Error getting Discord bot config:", err.Error())
+		return 10, err // Default to 10 if not configured
+	}
+
+	if cfg == nil {
+		return 10, nil // Default to 10 if not configured
+	}
+
+	limit, err := strconv.Atoi(cfg.Value)
+	if err != nil {
+		log.Println("Error parsing livestream limit:", err.Error())
+		return 10, err // Default to 10 if parsing fails
+	}
+
+	return limit, nil
 }

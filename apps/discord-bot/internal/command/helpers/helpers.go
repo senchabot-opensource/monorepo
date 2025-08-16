@@ -2,17 +2,16 @@ package helpers
 
 import (
 	"log"
-	"strings"
+	"time"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/senchabot-opensource/monorepo/helper"
 	"github.com/senchabot-opensource/monorepo/model"
 	"github.com/senchabot-opensource/monorepo/platform"
 )
 
-func GetCommandVariables(dS *discordgo.Session, cmdData *model.BotCommand, m *discordgo.MessageCreate) *model.CommandVariable {
+func GetCommandVariables(dS *discordgo.Session, cmdData *model.BotCommand, i *discordgo.InteractionCreate) *model.CommandVariable {
 	var channelName string
-	chData, err := dS.Channel(m.ChannelID)
+	chData, err := dS.Channel(i.ChannelID)
 	if err != nil {
 		log.Println("[helpers.GetCommandVariables] dS.Channel error:", err.Error())
 		channelName = "None"
@@ -21,14 +20,23 @@ func GetCommandVariables(dS *discordgo.Session, cmdData *model.BotCommand, m *di
 		channelName = chData.Name
 	}
 
+	// If i.Message is nil or timestamp is empty, use current time
+	var currentDate *time.Time
+	if i.Message != nil && !i.Message.Timestamp.IsZero() {
+		currentDate = &i.Message.Timestamp
+	} else {
+		now := time.Now().UTC()
+		currentDate = &now
+	}
+
 	return &model.CommandVariable{
 		CommandContent:   cmdData.CommandContent,
-		UserName:         m.Author.Username,
-		CurrentDate:      &m.Timestamp,
+		UserName:         i.Member.User.Username,
+		CurrentDate:      currentDate,
 		CommandCreatedAt: cmdData.CreatedAt,
 		ChannelName:      channelName,
 		BotPlatform:      platform.DISCORD,
-		BotPlatformID:    m.GuildID,
+		BotPlatformID:    i.GuildID,
 	}
 }
 
@@ -36,17 +44,16 @@ func IsChannelNameNotGiven(optionsLen int) bool {
 	return optionsLen < 2
 }
 
-func ParseMessage(message string) (string, []string) {
-	var splitMsg = strings.Split(message, " ")
-	var cmdName = splitMsg[0]
-
-	params := splitMsg[1:]
-
-	if !helper.CheckIfCommand(cmdName) {
-		return "", nil
+func IsValidSlashCommandName(name string) bool {
+	if len(name) < 1 || len(name) > 32 {
+		return false
 	}
 
-	cmdName = strings.TrimPrefix(cmdName, "!")
+	for _, char := range name {
+		if !((char >= 'a' && char <= 'z') || (char >= '0' && char <= '9') || char == '-') {
+			return false
+		}
+	}
 
-	return cmdName, params
+	return true
 }

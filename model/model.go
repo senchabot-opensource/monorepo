@@ -100,6 +100,14 @@ type DiscordChannelTwitchCategoryFilter struct {
 	CreatedAt           *time.Time `gorm:"column:created_at"`
 }
 
+type DiscordUserPrivacyPreferences struct {
+	ID                 int        `json:"id" gorm:"column:id;primaryKey;"`
+	DiscordUserID      string     `json:"discord_user_id" gorm:"column:discord_user_id;uniqueIndex"`
+	DoNotTrackMessages bool       `json:"do_not_track_messages" gorm:"column:do_not_track_messages;default:false"`
+	CreatedAt          *time.Time `json:"created_at" gorm:"column:created_at"`
+	UpdatedAt          *time.Time `json:"updated_at" gorm:"column:updated_at"`
+}
+
 type DiscordServer struct {
 	ServerID    string `gorm:"column:server_id"`
 	ServerName  string `gorm:"column:server_name"`

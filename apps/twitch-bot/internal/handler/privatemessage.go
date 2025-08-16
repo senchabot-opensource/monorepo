@@ -15,9 +15,7 @@ func (h *handlers) PrivateMessage() {
 	h.client.Twitch.OnPrivateMessage(func(message twitch.PrivateMessage) {
 		cmdName, params := helpers.ParseSysCmdMessage(message.Message)
 
-		sysCommand := commands.GetCommands()
-		_, ok := sysCommand[cmdName]
-		if !ok {
+		if !commands.IsSystemCommand(cmdName) {
 			cmdName, params = helpers.ParseMessage(message.Message)
 		}
 

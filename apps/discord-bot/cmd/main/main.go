@@ -52,13 +52,18 @@ func main() {
 	}()
 
 	go func() {
-		log.Println("Starting HTTP server...")
 		mux := http.NewServeMux()
 		handler.InitHttpHandlers(mux)
 
-		error := http.ListenAndServe(":8080", mux)
-		if error != nil {
-			log.Fatal("ListenAndServe Error:", error)
+		port := "8080"
+		if os.Getenv("PORT") != "" {
+			port = os.Getenv("PORT")
+		}
+
+		log.Println("running http server... :" + port)
+		err := http.ListenAndServe(":"+port, mux)
+		if err != nil {
+			log.Fatal("ListenAndServe Error:", err)
 		}
 	}()
 

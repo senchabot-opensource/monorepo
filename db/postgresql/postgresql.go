@@ -40,6 +40,9 @@ func New() db.Database {
 	//db.Where("1 = 1").Delete(&model.TwitchCommunity{})
 	//db.Where("1 = 1").Delete(&model.TwitchCommunitySubscription{})
 
+
+	db.AutoMigrate(&model.DiscordUserPrivacyPreferences{})
+
 	return &postgresql{
 		DB: db,
 	}

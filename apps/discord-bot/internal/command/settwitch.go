@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"regexp"
+	"strings"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/command/helpers"
@@ -19,10 +20,15 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 	switch options[0].Name {
 	case "streamer":
 		options = options[0].Options
-		twitchUsername := options[0].StringValue()
+		twitchUrlOrUsername := options[0].StringValue()
 
 		commandUsername := i.Member.User.Username
-		twitchUsername = helper.ParseTwitchUsernameURLParam(twitchUsername)
+		twitchUsername, err := helper.ParseTwitchUsername(twitchUrlOrUsername)
+		if err != nil {
+			log.Println("[command.SetTwitchCommand.streamer] ParseTwitchUsername error:", err.Error())
+			ephemeralRespond(s, i, "Twitch username or URL is invalid.")
+			return
+		}
 
 		uInfo, err := c.twitchService.GetUserInfoByLoginName(twitchUsername)
 		if err != nil {
@@ -53,6 +59,11 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 
 			ch, err := s.Channel(channelData.Value)
 			if err != nil {
+				log.Println("[command.SetTwitchCommand.streamer] guild:", i.GuildID, "channel:", channelData.Value, "Channel error:", err.Error())
+				if strings.Contains(err.Error(), "Missing Access") {
+					ephemeralRespond(s, i, "Missing access to the channel. Please check if Senchabot has access to the channel.")
+					return
+				}
 				// TODO: edit respond or create errorMessage sheet
 				ephemeralRespond(s, i, config.ErrorMessage+"#XXXY")
 				return
@@ -81,6 +92,11 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 
 		ch, err := s.Channel(channelId)
 		if err != nil {
+			log.Println("[command.SetTwitchCommand.streamer] guild:", i.GuildID, "channel:", channelId, "Channel error:", err.Error())
+			if strings.Contains(err.Error(), "Missing Access") {
+				ephemeralRespond(s, i, "Missing access to the channel. Please check if Senchabot has access to the channel.")
+				return
+			}
 			// TODO: edit respond or create errorMessage sheet
 			ephemeralRespond(s, i, config.ErrorMessage+"#XXXY")
 			return
@@ -147,11 +163,15 @@ func (c *commands) SetTwitchCommand(ctx context.Context, s *discordgo.Session, i
 
 		case "custom-content":
 			options = options[0].Options
-			twitchUsername := options[0].StringValue()
-			twitchUsername = helper.ParseTwitchUsernameURLParam(twitchUsername)
+			twitchUrlOrUsername := options[0].StringValue()
+			twitchUsername, err := helper.ParseTwitchUsername(twitchUrlOrUsername)
+			if err != nil {
+				log.Println("[command.SetTwitchCommand.announcement.custom-content] ParseTwitchUsername error:", err.Error())
+				ephemeralRespond(s, i, "Twitch username or URL is invalid.")
+				return
+			}
 			annoContent := options[1].StringValue()
 
-			//response0, uInfo := c.streamerSvc.GetTwitchUserInfo(twitchUsername)
 			uInfo, err := c.twitchService.GetUserInfoByLoginName(twitchUsername)
 			if err != nil {
 				ephemeralRespond(s, i, "Twitch streamer with username `"+twitchUsername+"` was not found.")
@@ -250,6 +270,7 @@ func SetTwitchCommandMetadata() *discordgo.ApplicationCommand {
 		DescriptionLocalizations: &map[discordgo.Locale]string{
 			discordgo.Turkish: "Discord botunu yapılandırma ayarları",
 		},
+		DMPermission:             &dmPermission,
 		DefaultMemberPermissions: &setdeletePermissions,
 		Options: []*discordgo.ApplicationCommandOption{
 			// set-twitch streamer
