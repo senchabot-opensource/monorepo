@@ -1,67 +1,59 @@
 # Senchabot Monorepo
 
-Open source Discord & Twitch bot
+Open source bots for Discord, Twitch, and a web dashboard.
+
+## Monorepo Structure
+
+- `apps/` - Application entrypoints (bots, web dashboard)
+- `pkg/` - Shared Go packages
+- `helper/` - Utility scripts and helpers
+- `service/` - Service layer code
+- `model/` - Data models
+- `config/` - Configuration files
+- `db/` - Database-related files
+
+## Prerequisites
+
+- Git
+- Go 1.24 or higher
+- Node.js 18 or higher
+- npm, pnpm, or yarn
+- Docker & Docker Compose
 
 ## Getting Started
 
-### Prerequisites
-
-- Git
-- Node.js 18 or higher
-- npm
-- Docker & Docker Compose
-
-### Installation
-
-1. Clone the repo
-
+1. **Clone the repository**
    ```sh
    git clone https://github.com/senchabot-opensource/monorepo.git
    cd monorepo
    ```
+2. **Set up environment variables**
+   - Copy `.env.example` files to `.env` in each app or service as needed.
+   - Fill in required values.
+3. **Install dependencies**
+   - For Go apps:
+     ```sh
+     go mod download
+     ```
+   - For web app:
+     ```sh
+     cd apps/web
+     npm install # or pnpm install
+     ```
+4. **Start services**
+   - Start database and dependencies:
+     ```sh
+     docker-compose up -d
+     ```
 
-2. Create `.env` files based on the example `env.example` files
+5. **Run apps**
+   - See each app's README for specific instructions.
 
-   ```sh
-   cp env.example .env
-   cp packages/senchabot-prisma/env.example packages/senchabot-prisma/.env
-   cp apps/web/env.example apps/web/.env
-   ```
+## Documentation
 
-3. Install the dependencies
-
-   ```sh
-   npm install
-   ```
-
-4. Run turbo build
-
-   ```sh
-   npx turbo build
-   ```
-
-5. Let's build up a Docker container for MySQL database
-
-   ```sh
-   docker-compose up --build
-   # If you want to run the Docker container in the background, run this command instead of the command above:
-   docker-compose up -d
-   ```
-   
-6. Let's generate Prisma files and database
-
-   ```sh
-   npx turbo db:generate
-   npx turbo db:push
-   ```
-
-
-## Documentations
-
-- ### Apps
-  - [web](./apps/web/README.md)
-  - [discord-bot](./apps/discord-bot/README.md)
-  - [twitch-bot](./apps/twitch-bot/README.md)
+- [Web App](./apps/web/README.md)
+- [Discord Bot](./apps/discord-bot/README.md)
+- [Twitch Bot](./apps/twitch-bot/README.md)
 
 ## Contributing
 
