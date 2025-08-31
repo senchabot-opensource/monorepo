@@ -412,9 +412,9 @@ func (m *postgresql) AddBotCommandStatistic(ctx context.Context, botPlatform pla
 	updateExpr := gorm.Expr("coalesce(bot_command_statistics.count, 0) + 1")
 
 	result := m.DB.Clauses(clause.OnConflict{
-		Columns:   []clause.Column{{Name: "id"}},
+		Columns:   []clause.Column{{Name: "bot_platform_type"}, {Name: "command_name"}},
 		DoUpdates: clause.Assignments(map[string]interface{}{"count": updateExpr}),
-	}).Where("bot_platform_type = ?", botPlatform).Where("command_name = ?", commandName).Create(&botCommandStatistic)
+	}).Create(&botCommandStatistic)
 
 	if result.Error != nil {
 		log.Println("(AddBotcommandStatistic): db.Update Error: ", result.Error.Error())
