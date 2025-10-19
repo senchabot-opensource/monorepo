@@ -15,7 +15,7 @@ func (h *handlers) BotJoin() []string {
 	ctx := context.Background()
 	channels, err := h.service.GetTwitchChannels(ctx)
 	if err != nil {
-		log.Fatalf("[BotJoin Handler] Error:" + err.Error())
+		log.Fatalf("[BotJoin Handler] Error: %v", err)
 	}
 
 	channels = append(channels, &model.TwitchChannel{
