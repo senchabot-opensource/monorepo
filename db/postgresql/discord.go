@@ -519,7 +519,6 @@ func (m *postgresql) AddServerToDB(ctx context.Context, serverId string, serverN
 	}
 
 	if len(dcServer) > 0 {
-		log.Println("(AddServerToDB) Updating the guild `" + serverName + "` (ID: " + serverId + ") in the database")
 		result = m.DB.Where("server_id = ?", serverId).Updates(&model.DiscordServer{ServerName: serverName, ServerOwner: serverOwner})
 		if result.Error != nil {
 			return errors.New("(AddServerToDB) db.Updates Error:" + result.Error.Error())
