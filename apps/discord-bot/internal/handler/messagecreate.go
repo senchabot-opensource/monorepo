@@ -14,7 +14,7 @@ func (h *handler) MessageCreate(command command.Command) {
 	eventService := event.NewEventService(h.twitchService, h.service)
 
 	h.discordClient.AddHandler(func(s *discordgo.Session, m *discordgo.MessageCreate) {
-		if m != nil && m.Author.Bot {
+		if m != nil && m.Author != nil && m.Author.Bot {
 			announcementChs, err := h.service.GetAnnouncementChannels(ctx)
 			if err != nil {
 				log.Println("[handler.MessageCreate] GetAnnouncementChannels error:", err.Error())
