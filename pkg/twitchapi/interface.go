@@ -14,8 +14,11 @@ type TwitchService interface {
 	GetUserInfoByLoginName(loginName string) (*model.TwitchUserInfo, error)
 	GetUserInfoById(userId string) (*model.TwitchUserInfo, error)
 	GiveShoutout(streamerUsername string, broadcasterId string, messageFormat string) (*string, error)
-	CheckStreamStatus(username string) (bool, string, error)
+	CheckStreamStatusByUsername(username string) (bool, string, error)
+	CheckStreamStatusById(streamerId string) (bool, string, error)
 	CheckMultipleStreamers(usernames []string) ([]model.TwitchStreamerData, error)
+	StartRaid(streamerUserId string, broadcasterId string) (*string, error)
+	CancelRaid(broadcasterId string) (*string, error)
 }
 
 type service struct {

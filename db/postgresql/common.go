@@ -461,6 +461,7 @@ func (m *postgresql) GetCommandTimer(ctx context.Context, botPlatform platform.P
 	result := m.DB.Where("bot_platform = ?", botPlatform).Where("bot_platform_id = ?", botPlatformId).Where("command_name = ?", commandName).Find(&commandTimer)
 	if result.Error != nil {
 		log.Println("[postgresql.GetCommandTimer] db.Find error:", result.Error)
+		// TODO: return nil
 	}
 	if len(commandTimer) == 0 {
 		return nil
@@ -474,7 +475,7 @@ func (m *postgresql) UpdateCommandTimer(ctx context.Context, botPlatform platfor
 
 	result := m.DB.Where("bot_platform = ?", botPlatform).Where("bot_platform_id = ?", botPlatformId).Where("command_name = ?", commandName).First(&commandTimer)
 	if result.Error != nil {
-		return fmt.Errorf("(UpdateCommandTimer) db.First error: %v", result.Error)
+		return fmt.Errorf("(postgresql.UpdateCommandTimer) db.First error: %v", result.Error)
 	}
 
 	result = m.DB.Model(&commandTimer).Updates(model.CommandTimer{
@@ -487,7 +488,7 @@ func (m *postgresql) UpdateCommandTimer(ctx context.Context, botPlatform platfor
 		})
 	}
 	if result.Error != nil {
-		return fmt.Errorf("(UpdateCommandTimer) db.Updates error: %v", result.Error)
+		return fmt.Errorf("(postgresql.UpdateCommandTimer) db.Updates error: %v", result.Error)
 	}
 
 	return nil
@@ -497,12 +498,12 @@ func (m *postgresql) DeleteCommandTimer(ctx context.Context, botPlatform platfor
 
 	result := m.DB.Where("bot_platform = ?", botPlatform).Where("bot_platform_id = ?", botPlatformId).Where("command_name = ?", commandName).First(&commandTimer)
 	if result.Error != nil {
-		return fmt.Errorf("(DeleteCommandTimer) db.First error: %v", result.Error)
+		return fmt.Errorf("(postgresql.DeleteCommandTimer) db.First error: %v", result.Error)
 	}
 
 	result = m.DB.Delete(&commandTimer)
 	if result.Error != nil {
-		return fmt.Errorf("(DeleteCommandTimer) db.Delete error: %v", result.Error)
+		return fmt.Errorf("(postgresql.DeleteCommandTimer) db.Delete error: %v", result.Error)
 	}
 
 	return nil

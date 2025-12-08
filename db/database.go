@@ -80,6 +80,21 @@ type Database interface {
 
 	AddBotCommandStatistic(ctx context.Context, botPlatform platform.Platform, commandName string) error
 
+	// TWITCH COMMUNITY methods
+	AddStreamerToTwitchCommunity(ctx context.Context, communityId uint, channelId string) error
+	SubscribeToTwitchCommunity(ctx context.Context, communityId uint, channelId string) error
+	GetTwitchCommunitySubscription(ctx context.Context, channelId string) (*model.TwitchCommunitySubscription, error)
+	GetStreamersFromTwitchCommunity(ctx context.Context, communityId uint) ([]string, error)
+	RemoveStreamerFromTwitchCommunity(ctx context.Context, communityId uint, streamerId string) error
+	UnsubscribeFromTwitchCommunity(ctx context.Context, communityId uint, channelId string) error
+	GetTwitchCommunity(ctx context.Context, communityName string) (*model.TwitchCommunity, error)
+	CreateTwitchCommunity(ctx context.Context, communityName string, creatorChannelId string) (*model.TwitchCommunity, error)
+	CheckStreamerExistInCommunity(ctx context.Context, communityId uint, channelId string) (bool, error)
+	GetAllTwitchCommunitySubscriptions(ctx context.Context, channelId string) ([]*model.TwitchCommunitySubscription, error)
+	GetTwitchCommunityById(ctx context.Context, communityId uint) (*model.TwitchCommunity, error)
+	GetTwitchCommunityByCreatorId(ctx context.Context, channelId string) (*model.TwitchCommunity, error)
+	GetAllTwitchCommunityMembers(ctx context.Context, communityId uint) ([]*model.TwitchCommunityMember, error)
+
 	// Command Variable methods
 	GetCommandVariable(ctx context.Context, varName string, botPlatform platform.Platform, botPlatformId string) (*model.BotCommandVariable, error)
 	CreateCommandVariable(ctx context.Context, varName string, varContent string, botPlatform platform.Platform, botPlatformId string, createdBy string) error

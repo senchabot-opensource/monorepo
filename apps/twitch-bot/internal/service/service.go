@@ -2,8 +2,11 @@ package service
 
 import (
 	"context"
+	"errors"
 	"log"
+	"math/rand"
 	"net/http"
+	"time"
 
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/client"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/service/timer"
@@ -56,6 +59,15 @@ type Service interface {
 	UpdateCommandTimerInterval(commandId, interval int)
 	DeleteCommandTimer(ctx context.Context, channelId string, commandName string) error
 
+	AddStreamerToTwitchCommunity(ctx context.Context, communityName, communityCreatorChannelId, channelId string) error
+	SubscribeToTwitchCommunity(ctx context.Context, communityName, channelId string) error
+	GetTwitchCommunitySubscription(ctx context.Context, channelId string) (*model.TwitchCommunitySubscription, error)
+	GetRandomLiveStreamer(ctx context.Context, communityId uint) (*string, error)
+	RemoveStreamerFromTwitchCommunity(ctx context.Context, communityName, streamerId string) error
+	UnsubscribeFromTwitchCommunity(ctx context.Context, communityName, channelId string) error
+	CheckStreamerExistInCommunity(ctx context.Context, communityName string, channelId string) (bool, error)
+	//ListTwitchCommunityMembers(ctx context.Context, communityName string) ([]*model.TwitchUserInfo, error)
+
 	// Command Variable methods
 	GetCommandVariable(ctx context.Context, varName string, botPlatformId string) (*model.BotCommandVariable, error)
 	CreateCommandVariable(ctx context.Context, varName string, varContent string, botPlatformId string, createdBy string) error
@@ -63,6 +75,11 @@ type Service interface {
 	DeleteCommandVariable(ctx context.Context, varName string, botPlatformId string, updatedBy string) error
 	ListCommandVariables(ctx context.Context, botPlatformId string) ([]*model.BotCommandVariable, error)
 	GetCustomVariableContent(ctx context.Context, botPlatformId string, varName string) string
+
+	GetAllTwitchCommunitySubscriptions(ctx context.Context, channelId string) ([]*model.TwitchCommunitySubscription, error)
+	GetTwitchCommunityById(ctx context.Context, communityId uint) (*model.TwitchCommunity, error)
+	GetTwitchCommunityByCreatorId(ctx context.Context, channelId string) (*model.TwitchCommunity, error)
+	GetAllTwitchCommunityMembers(ctx context.Context, communityId uint) ([]*model.TwitchCommunityMember, error)
 }
 
 type service struct {
@@ -306,6 +323,131 @@ func (s *service) UpdateCommandTimerInterval(commandId, interval int) {
 	s.timer.UpdateCommandTimerInterval(commandId, interval)
 }
 
+func (s *service) CheckStreamerExistInCommunity(ctx context.Context, communityName string, channelId string) (bool, error) {
+	community, err := s.DB.GetTwitchCommunity(ctx, communityName)
+	if err != nil {
+		log.Println("[service.CheckStreamerExistInCommunity] GetTwitchCommunity error:", err.Error())
+		return true, err
+	}
+
+	if community == nil {
+		community, err = s.DB.CreateTwitchCommunity(ctx, communityName, channelId)
+		if err != nil {
+			return true, err
+		}
+
+		err := s.DB.SubscribeToTwitchCommunity(ctx, community.ID, community.CreatorChannelID)
+		if err != nil {
+			return true, err
+		}
+	}
+
+	return s.DB.CheckStreamerExistInCommunity(ctx, community.ID, channelId)
+}
+
+func (s *service) AddStreamerToTwitchCommunity(ctx context.Context, communityName, communityCreatorChannelId, channelId string) error {
+	community, err := s.DB.GetTwitchCommunityByCreatorId(ctx, communityCreatorChannelId)
+	if err != nil {
+		log.Println("[service.AddStreamerToTwitchCommunity] GetTwitchCommunity error:", err.Error())
+		return err
+	}
+
+	if community == nil {
+		log.Println("[service.AddStreamerToTwitchCommunity] Community not found, creating new community")
+		community, err = s.DB.CreateTwitchCommunity(ctx, communityName, communityCreatorChannelId)
+		if err != nil {
+			return err
+		}
+
+		err := s.DB.SubscribeToTwitchCommunity(ctx, community.ID, community.CreatorChannelID)
+		if err != nil {
+			return err
+		}
+	}
+
+	log.Println("[service.AddStreamerToTwitchCommunity] Community:", community.CommunityName, community.CreatorChannelID, community.ID)
+
+	log.Println("[service.AddStreamerToTwitchCommunity] Adding streamer to community")
+
+	return s.DB.AddStreamerToTwitchCommunity(ctx, community.ID, channelId)
+}
+
+func (s *service) SubscribeToTwitchCommunity(ctx context.Context, communityName, channelId string) error {
+	community, err := s.DB.GetTwitchCommunity(ctx, communityName)
+	if err != nil {
+		return err
+	}
+
+	if community == nil {
+		return errors.New("Community not found")
+	}
+
+	return s.DB.SubscribeToTwitchCommunity(ctx, community.ID, channelId)
+}
+
+func (s *service) GetTwitchCommunitySubscription(ctx context.Context, channelId string) (*model.TwitchCommunitySubscription, error) {
+	return s.DB.GetTwitchCommunitySubscription(ctx, channelId)
+}
+
+func (s *service) GetRandomLiveStreamer(ctx context.Context, communityId uint) (*string, error) {
+	streamerIds, err := s.DB.GetStreamersFromTwitchCommunity(ctx, communityId)
+	if err != nil {
+		return nil, err
+	}
+
+	// Check which streamers are live
+	var liveStreamers []string
+	for _, streamerId := range streamerIds {
+		isLive, _, err := s.twitchService.CheckStreamStatusById(streamerId)
+		if err != nil {
+			log.Println("[service.GetRandomLiveStreamer] CheckStreamStatus error:", err.Error())
+			continue
+		}
+		log.Println("[service.GetRandomLiveStreamer] Streamer ID:", streamerId, isLive, err)
+
+		if isLive {
+			liveStreamers = append(liveStreamers, streamerId)
+		}
+	}
+
+	if len(liveStreamers) == 0 {
+		return nil, nil
+	}
+
+	// Return random live streamer
+	rand.New(rand.NewSource(time.Now().UnixNano()))
+	streamerId := liveStreamers[rand.Intn(len(liveStreamers))]
+	log.Println("[service.GetRandomLiveStreamer] Streamer ID:", streamerId)
+
+	return nil, nil
+}
+
+func (s *service) RemoveStreamerFromTwitchCommunity(ctx context.Context, communityName, streamerId string) error {
+	community, err := s.DB.GetTwitchCommunity(ctx, communityName)
+	if err != nil {
+		return err
+	}
+
+	return s.DB.RemoveStreamerFromTwitchCommunity(ctx, community.ID, streamerId)
+}
+
+func (s *service) UnsubscribeFromTwitchCommunity(ctx context.Context, communityName, channelId string) error {
+	community, err := s.DB.GetTwitchCommunity(ctx, communityName)
+	if err != nil {
+		return err
+	}
+
+	if community == nil {
+		return errors.New("Community not found")
+	}
+
+	return s.DB.UnsubscribeFromTwitchCommunity(ctx, community.ID, channelId)
+}
+
+//func (s *service) ListTwitchCommunityMembers(ctx context.Context, communityName string) ([]*model.TwitchUserInfo, error) {
+//return s.DB.ListTwitchCommunityMembers(ctx, communityName)
+//}
+
 func (s *service) GetCommandVariable(ctx context.Context, varName string, botPlatformId string) (*model.BotCommandVariable, error) {
 	return s.DB.GetCommandVariable(ctx, varName, platform.TWITCH, botPlatformId)
 }
@@ -328,4 +470,20 @@ func (s *service) ListCommandVariables(ctx context.Context, botPlatformId string
 
 func (s *service) GetCustomVariableContent(ctx context.Context, botPlatformId string, varName string) string {
 	return s.DB.GetCustomVariableContent(ctx, platform.TWITCH, botPlatformId, varName)
+}
+
+func (s *service) GetAllTwitchCommunitySubscriptions(ctx context.Context, channelId string) ([]*model.TwitchCommunitySubscription, error) {
+	return s.DB.GetAllTwitchCommunitySubscriptions(ctx, channelId)
+}
+
+func (s *service) GetTwitchCommunityById(ctx context.Context, communityId uint) (*model.TwitchCommunity, error) {
+	return s.DB.GetTwitchCommunityById(ctx, communityId)
+}
+
+func (s *service) GetTwitchCommunityByCreatorId(ctx context.Context, channelId string) (*model.TwitchCommunity, error) {
+	return s.DB.GetTwitchCommunityByCreatorId(ctx, channelId)
+}
+
+func (s *service) GetAllTwitchCommunityMembers(ctx context.Context, communityId uint) ([]*model.TwitchCommunityMember, error) {
+	return s.DB.GetAllTwitchCommunityMembers(ctx, communityId)
 }
