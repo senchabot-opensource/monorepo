@@ -167,6 +167,10 @@ func DeployCustomCommandsForGuild(s *discordgo.Session, ctx context.Context, ser
 		return
 	}
 
+	if len(commands) == 0 {
+		return
+	}
+
 	log.Printf("[DeployCustomCommandsForGuild] Deploying %d custom commands for guild %s\n", len(commands), guildID)
 
 	// Create slash commands for each custom command
