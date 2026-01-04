@@ -145,6 +145,10 @@ func (s *service) CheckStreamStatus(username string) (bool, string, error) {
 	}
 	defer resp.Body.Close()
 
+	if resp.StatusCode == http.StatusBadRequest {
+		return false, "", nil
+	}
+	
 	if resp.StatusCode != http.StatusOK {
 		return false, "", fmt.Errorf("[twitchapi.CheckStreamStatus] twitch API request failed with status code: %d", resp.StatusCode)
 	}
