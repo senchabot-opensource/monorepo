@@ -102,18 +102,30 @@ func FindCommandIndices(words []string) int {
 }
 
 func CanExecuteCommand(context context.Context, service service.Service, badges string, twitchChannelId string) bool {
+	// get locale info
+	//localeInfo, err := service.GetLocaleInfo(context, twitchChannelId)
+	//if err != nil {
+	//log.Println("[CanExecuteCommand] service.GetLocaleInfo error:", err.Error())
+	//return false
+	//}
+
+	//log.Println(config.CannotExecuteCommand) // infoMessage := localeInfo.CannotExecuteCommand
+
 	// broadcaster can run the command
 	if isBroadcaster(badges) {
+		// return ""
 		return true
 	}
 
 	// moderator can run the command
 	if isModerator(badges) {
-		check := service.CheckTwitchBotConfig(context, twitchChannelId, "mods_manage_cmds_enabled", "1")
+		check := service.CheckTwitchBotConfig(context, twitchChannelId, "mods_manage_cmds_enabled", "1") // create another function for this and do not check this in all commands (for example: so command?)
+		// return ""
 		return check
 	}
 
 	// everyone else can't run the command
+	// return infoMessage
 	return false
 }
 

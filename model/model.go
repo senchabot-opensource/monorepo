@@ -169,6 +169,11 @@ type CommandTimer struct {
 	Status        int               `gorm:"column:status"`
 }
 
+type TwitchRaidInfo struct {
+	CreatedAt string `json:"created_at"`
+	IsMature  bool   `json:"is_mature"`
+}
+
 type BotCommandVariable struct {
 	ID              int
 	VariableName    string            `gorm:"column:variable_name"`
