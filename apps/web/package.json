@@ -31,7 +31,7 @@
     "geist": "^1.4.2",
     "jiti": "^1.21.7",
     "lucide-react": "^0.378.0",
-    "next": "^14.2.35",
+    "next": "^15.5.10",
     "next-auth": "^5.0.0-beta.29",
     "next-themes": "^0.3.0",
     "nextjs-toploader": "^1.6.12",
