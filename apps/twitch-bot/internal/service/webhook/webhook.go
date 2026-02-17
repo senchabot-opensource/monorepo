@@ -5,7 +5,6 @@ import (
 
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/client"
 	"github.com/senchabot-opensource/monorepo/db"
-	"github.com/senchabot-opensource/monorepo/pkg/twitchapi"
 )
 
 type Webhook interface {

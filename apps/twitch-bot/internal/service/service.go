@@ -10,7 +10,7 @@ import (
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/service/webhook"
 	"github.com/senchabot-opensource/monorepo/db"
 	"github.com/senchabot-opensource/monorepo/model"
-	"github.com/senchabot-opensource/monorepo/pkg/twitchapi"
+
 	"github.com/senchabot-opensource/monorepo/platform"
 )
 

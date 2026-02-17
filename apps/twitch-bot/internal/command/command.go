@@ -12,7 +12,6 @@ import (
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/service"
 	"github.com/senchabot-opensource/monorepo/helper"
 	"github.com/senchabot-opensource/monorepo/model"
-	"github.com/senchabot-opensource/monorepo/pkg/twitchapi"
 )
 
 type CommandFunc func(context context.Context, message twitch.PrivateMessage, commandName string, params []string) (*model.CommandResponse, error)

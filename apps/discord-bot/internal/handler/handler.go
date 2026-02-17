@@ -7,7 +7,6 @@ import (
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/command"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service/streamer"
-	"github.com/senchabot-opensource/monorepo/pkg/twitchapi"
 )
 
 type Handler interface {
