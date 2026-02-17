@@ -7,7 +7,7 @@ import { ArrowLeft, TriangleAlertIcon } from 'lucide-react'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 
-import { useSession } from '@/hooks/use-session'
+import { auth } from '@/lib/auth'
 
 import { SignInForm } from './signin-form'
 
@@ -19,7 +19,7 @@ type Error = 'OAuthAccountNotLinked'
 function getErrorMessage(error: Error) {
   switch (error) {
     case 'OAuthAccountNotLinked':
-      return 'The account is already associated with another user.'
+      return 'The account is already associated with another user. To confirm your identity, sign in with the same account you used originally.'
     default:
       return 'Something went wrong!'
   }
@@ -32,7 +32,7 @@ interface Props {
 }
 
 export default async function Page({ searchParams }: Props) {
-  const session = await useSession()
+  const session = await auth()
 
   // show error if user received an error while linking an account
   if (session && !searchParams.error) {

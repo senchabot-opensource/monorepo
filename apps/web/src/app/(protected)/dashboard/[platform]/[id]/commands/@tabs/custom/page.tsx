@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 
-import { useSession } from '@/hooks/use-session'
+import { auth } from '@/lib/auth'
 
 import type { Platform } from '@/types/platform'
 
@@ -19,7 +19,7 @@ interface Props {
 }
 
 export default async function Page({ params }: Props) {
-  const session = await useSession()
+  const session = await auth()
 
   if (!session) {
     throw redirect('/signin')

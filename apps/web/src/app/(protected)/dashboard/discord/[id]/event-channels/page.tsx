@@ -2,17 +2,15 @@ import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 
+import { auth } from '@/lib/auth'
 import { formatDate } from '@/lib/utils'
-
-import { useSession } from '@/hooks/use-session'
 
 import { getDiscordGuildChannels } from '@/services/queries/discord'
 import { getEventChannels } from '@/services/queries/livestreams'
@@ -31,7 +29,7 @@ interface Props {
 }
 
 export default async function Page({ params }: Props) {
-  const session = await useSession()
+  const session = await auth()
 
   if (!session) {
     throw redirect('/signin')
@@ -62,43 +60,56 @@ export default async function Page({ params }: Props) {
           Manage channels to create automated Discord events for your livestream announcements.
         </p>
       </div>
-      <div className="space-y-4">
-        <div className="flex justify-end">
-          <CreateEventChannelForm
-            platformEntityId={params.id}
-            channels={filterChannels}
-          />
-        </div>
-        <div className="overflow-hidden rounded-xl border">
-          <Table className="table-fixed">
-            <TableHeader>
-              <TableRow>
-                <TableHead>Channel</TableHead>
-                <TableHead>Added Date</TableHead>
-                <TableHead className="w-24" />
-              </TableRow>
-            </TableHeader>
-            <TableBody>
+
+      <Card className="divide-y divide-border">
+        <section>
+          <CardHeader>
+            <CardTitle>Create Event Channel</CardTitle>
+            <CardDescription>
+              Select a channel to create automated Discord events for your livestream announcements.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <CreateEventChannelForm
+              channels={filterChannels}
+              platformEntityId={params.id}
+            />
+          </CardContent>
+        </section>
+        <section>
+          <CardHeader>
+            <CardTitle>Event Channels</CardTitle>
+            <CardDescription>
+              Manage your event channels.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
               {eventChannels.map((channel) => (
-                <TableRow key={channel.id}>
-                  <TableCell>
-                    {getEventChannelName(channel.channel_id)}
-                  </TableCell>
-                  <TableCell>{formatDate(channel.created_at)}</TableCell>
-                  <TableCell className="w-24">
-                    <div className="flex justify-end">
-                      <DeleteChannel
-                        id={String(channel.id)}
-                        platformEntityId={params.id}
-                      />
-                    </div>
-                  </TableCell>
-                </TableRow>
+                <div
+                  key={channel.id}
+                  className="flex items-center justify-between rounded-lg border p-4"
+                >
+                  <div className="space-y-1">
+                    <p className="text-sm font-medium">
+                      {getEventChannelName(channel.channel_id)}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      Created {formatDate(channel.created_at)}
+                    </p>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <DeleteChannel
+                      id={String(channel.id)}
+                      platformEntityId={params.id}
+                    />
+                  </div>
+                </div>
               ))}
-            </TableBody>
-          </Table>
-        </div>
-      </div>
+            </div>
+          </CardContent>
+        </section>
+      </Card>
     </div>
   )
 }
