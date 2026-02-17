@@ -23,8 +23,8 @@ type TwitchService interface {
 }
 
 const (
-	helixBaseURL = "https://api.twitch.tv/helix"
-	tokenURL     = "https://id.twitch.tv/oauth2/token"
+	defaultHelixBaseURL = "https://api.twitch.tv/helix"
+	defaultTokenURL     = "https://id.twitch.tv/oauth2/token"
 )
 
 type twitchService struct {
@@ -33,6 +33,8 @@ type twitchService struct {
 	botUserID    string
 	accessToken  string
 	httpClient   *http.Client
+	helixBaseURL string
+	tokenURL     string
 	mu           sync.Mutex
 }
 
@@ -43,6 +45,8 @@ func NewTwitchService(clientID, clientSecret, botUserID string) (TwitchService, 
 		clientSecret: clientSecret,
 		botUserID:    botUserID,
 		httpClient:   &http.Client{},
+		helixBaseURL: defaultHelixBaseURL,
+		tokenURL:     defaultTokenURL,
 	}
 
 	if err := s.authenticate(); err != nil {
@@ -59,7 +63,7 @@ func (s *twitchService) authenticate() error {
 	data.Set("client_secret", s.clientSecret)
 	data.Set("grant_type", "client_credentials")
 
-	resp, err := s.httpClient.Post(tokenURL, "application/x-www-form-urlencoded", strings.NewReader(data.Encode()))
+	resp, err := s.httpClient.Post(s.tokenURL, "application/x-www-form-urlencoded", strings.NewReader(data.Encode()))
 	if err != nil {
 		return fmt.Errorf("token request failed: %w", err)
 	}
@@ -123,7 +127,7 @@ func (s *twitchService) doHelixRequest(endpoint string) ([]byte, error) {
 }
 
 func (s *twitchService) executeRequest(endpoint, token string) ([]byte, int, error) {
-	req, err := http.NewRequest("GET", helixBaseURL+endpoint, nil)
+	req, err := http.NewRequest("GET", s.helixBaseURL+endpoint, nil)
 	if err != nil {
 		return nil, 0, fmt.Errorf("failed to create request: %w", err)
 	}
