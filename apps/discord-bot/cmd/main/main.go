@@ -13,6 +13,7 @@ import (
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/command"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/handler"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
+	"github.com/senchabot-opensource/monorepo/twitchapi"
 )
 
 func main() {

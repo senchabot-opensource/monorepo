@@ -5,6 +5,7 @@ import (
 
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/client"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/service"
+	"github.com/senchabot-opensource/monorepo/twitchapi"
 )
 
 type Handler interface {

@@ -11,6 +11,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service/streamer"
+	"github.com/senchabot-opensource/monorepo/twitchapi"
 )
 
 type SysCommandFunc func(context context.Context, s *discordgo.Session, i *discordgo.InteractionCreate, service service.Service)

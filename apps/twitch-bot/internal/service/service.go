@@ -12,6 +12,7 @@ import (
 	"github.com/senchabot-opensource/monorepo/model"
 
 	"github.com/senchabot-opensource/monorepo/platform"
+	"github.com/senchabot-opensource/monorepo/twitchapi"
 )
 
 type Service interface {
