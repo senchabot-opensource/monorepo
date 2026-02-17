@@ -1,7 +1,5 @@
 import { TabGroup, TabGroupItem } from '@/components/ui/tab-group'
 
-import type { Platform } from '@/types/platform'
-
 const tabs = [
   {
     label: 'Custom Commands',
@@ -14,14 +12,18 @@ const tabs = [
 ]
 
 interface Props {
-  params: {
-    platform: Platform
+  params: Promise<{
+    platform: string
     id: string
-  }
+  }>
   children: React.ReactNode
 }
 
-export default function TabsLayout({ params, children }: Props) {
+export default async function TabsLayout(props: Props) {
+  const params = await props.params
+
+  const { children } = props
+
   return (
     <div className="space-y-4">
       <TabGroup>

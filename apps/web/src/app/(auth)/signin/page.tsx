@@ -26,12 +26,13 @@ function getErrorMessage(error: Error) {
 }
 
 interface Props {
-  searchParams: {
+  searchParams: Promise<{
     error: Error
-  }
+  }>
 }
 
-export default async function Page({ searchParams }: Props) {
+export default async function Page(props: Props) {
+  const searchParams = await props.searchParams;
   const session = await auth()
 
   // show error if user received an error while linking an account
