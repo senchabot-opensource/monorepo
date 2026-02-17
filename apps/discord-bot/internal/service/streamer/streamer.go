@@ -14,7 +14,7 @@ import (
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
 	"github.com/senchabot-opensource/monorepo/config"
 	"github.com/senchabot-opensource/monorepo/model"
-	"github.com/senchabot-opensource/monorepo/pkg/twitchapi"
+	"github.com/senchabot-opensource/monorepo/twitchapi"
 )
 
 type GuildStreamers struct {

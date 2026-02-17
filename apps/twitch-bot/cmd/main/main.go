@@ -11,7 +11,7 @@ import (
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/handler"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/service"
 	"github.com/senchabot-opensource/monorepo/db/postgresql"
-	"github.com/senchabot-opensource/monorepo/pkg/twitchapi"
+	"github.com/senchabot-opensource/monorepo/twitchapi"
 )
 
 func clearDailyCounts() {

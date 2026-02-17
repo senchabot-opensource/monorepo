@@ -11,7 +11,7 @@ import (
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/alert"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
 	"github.com/senchabot-opensource/monorepo/helper"
-	"github.com/senchabot-opensource/monorepo/pkg/twitchapi"
+	"github.com/senchabot-opensource/monorepo/twitchapi"
 )
 
 type EventService struct {
