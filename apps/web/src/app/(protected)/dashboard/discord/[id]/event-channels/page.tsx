@@ -23,12 +23,13 @@ export const metadata: Metadata = {
 }
 
 interface Props {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
-export default async function Page({ params }: Props) {
+export default async function Page(props: Props) {
+  const params = await props.params
   const session = await auth()
 
   if (!session) {
@@ -57,7 +58,8 @@ export default async function Page({ params }: Props) {
       <div className="space-y-1">
         <h1 className="text-2xl font-medium tracking-tight">Event Channels</h1>
         <p className="text-sm text-muted-foreground">
-          Manage channels to create automated Discord events for your livestream announcements.
+          Manage channels to create automated Discord events for your livestream
+          announcements.
         </p>
       </div>
 
@@ -66,7 +68,8 @@ export default async function Page({ params }: Props) {
           <CardHeader>
             <CardTitle>Create Event Channel</CardTitle>
             <CardDescription>
-              Select a channel to create automated Discord events for your livestream announcements.
+              Select a channel to create automated Discord events for your
+              livestream announcements.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -79,9 +82,7 @@ export default async function Page({ params }: Props) {
         <section>
           <CardHeader>
             <CardTitle>Event Channels</CardTitle>
-            <CardDescription>
-              Manage your event channels.
-            </CardDescription>
+            <CardDescription>Manage your event channels.</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">

@@ -12,13 +12,14 @@ export const metadata: Metadata = {
 }
 
 interface Props {
-  params: {
+  params: Promise<{
     platform: Platform
     id: string
-  }
+  }>
 }
 
-export default async function Page({ params }: Props) {
+export default async function Page(props: Props) {
+  const params = await props.params;
   const session = await auth()
 
   if (!session) {
