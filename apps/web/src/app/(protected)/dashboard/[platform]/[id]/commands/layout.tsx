@@ -1,3 +1,5 @@
+import { getUserEntities } from '@/services/queries/users'
+
 import { Platform } from '@/types/platform'
 
 import { CreateCommand } from './create-command-dialog'
@@ -18,6 +20,12 @@ export default async function Layout(props: Props) {
 
   const platform = params.platform as Platform
 
+  // Fetch entities to get the entity name for sharing
+  const entities = await getUserEntities('joined')
+  const currentEntity = entities.find(
+    (entity) => entity.platform_entity_id === params.id,
+  )
+
   return (
     <div className="max-w-screen-lg space-y-8">
       <div className="space-y-1">
@@ -25,7 +33,10 @@ export default async function Layout(props: Props) {
           <h1 className="text-2xl font-medium tracking-tight">Commands</h1>
           <div className="space-x-2">
             <CreateCommand platform={platform} entityId={params.id} />
-            <ShareCommands />
+            <ShareCommands
+              platform={platform}
+              entityName={currentEntity?.entity_name}
+            />
           </div>
         </div>
         <p className="text-sm text-muted-foreground">Manage your commands.</p>
