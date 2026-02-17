@@ -14,10 +14,10 @@ import {
 
 import { signOut } from '@/lib/auth'
 
-import { useSession } from '@/hooks/use-session'
+import { auth } from '@/lib/auth'
 
 export async function UserDropdown() {
-  const session = await useSession()
+  const session = await auth()
 
   if (!session?.user) {
     return null

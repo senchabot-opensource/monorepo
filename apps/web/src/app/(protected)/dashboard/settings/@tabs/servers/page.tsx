@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/card'
 import { LoaderIcon } from '@/components/ui/icons'
 
-import { useSession } from '@/hooks/use-session'
+import { auth } from '@/lib/auth'
 
 import { JoinableEntities } from './joinable-entities-list'
 import { JoinedEntities } from './joined-entities-list'
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 }
 
 export default async function Page() {
-  const session = await useSession()
+  const session = await auth()
 
   if (!session) {
     throw redirect('/signin')

@@ -37,9 +37,11 @@ export function CreateEventChannelForm({ platformEntityId, channels }: Props) {
 
         if (error) {
           if (error.code === 'INPUT_PARSE_ERROR') {
-            return toast.error('Invalid submission!')
+            toast.error('Invalid submission!')
+            return
           } else {
-            return toast.error(error.message)
+            toast.error(error.message)
+            return
           }
         }
 
