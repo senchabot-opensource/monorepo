@@ -213,6 +213,27 @@ func (s *twitchService) CheckStreamStatus(username string) (bool, string, error)
 	return stream.Type == "live", stream.Title, nil
 }
 
+func (s *twitchService) CheckStreamStatusByUserId(userId string) (bool, string, error) {
+	body, err := s.doHelixRequest("/streams?user_id=" + url.QueryEscape(userId))
+	if err != nil {
+		return false, "", fmt.Errorf("CheckStreamStatusByUserId error: %w", err)
+	}
+
+	var result struct {
+		Data []model.TwitchStreamerData `json:"data"`
+	}
+	if err := json.Unmarshal(body, &result); err != nil {
+		return false, "", fmt.Errorf("failed to decode stream status response: %w", err)
+	}
+
+	if len(result.Data) == 0 {
+		return false, "", nil
+	}
+
+	stream := result.Data[0]
+	return stream.Type == "live", stream.Title, nil
+}
+
 // CheckMultipleStreamers checks the live status of multiple streamers by their user IDs.
 func (s *twitchService) CheckMultipleStreamers(userIds []string) ([]model.TwitchStreamerData, error) {
 	if len(userIds) == 0 {
@@ -256,10 +277,67 @@ func (s *twitchService) CheckMultipleStreamers(userIds []string) ([]model.Twitch
 // GiveShoutout sends a shoutout for the given streamer. If a custom message format is provided,
 // it formats and returns the message. Otherwise, it returns a default shoutout message.
 func (s *twitchService) GiveShoutout(username, fromBroadcasterId, messageFormat string) (*string, error) {
+	// First, get user info to ensure the streamer exists and to get their display name and other details for the shoutout message.
 	userInfo, err := s.GetUserInfoByLoginName(username)
 	if err != nil {
 		return nil, fmt.Errorf("GiveShoutout: failed to get user info: %w", err)
 	}
+
+	// check also if the user is the same as the broadcaster (self-shoutout)
+	if userInfo.ID == fromBroadcasterId {
+		msg := "You cannot give a shoutout to yourself!"
+		return &msg, nil
+	}
+
+	// check the broadcaster is live before giving shoutout
+	if isLive, _, err := s.CheckStreamStatusByUserId(fromBroadcasterId); err != nil {
+		log.Printf("GiveShoutout: failed to check broadcaster stream status: %v", err)
+	} else if !isLive {
+		msg := "You cannot give shoutouts while you are offline! Go live to start giving shoutouts!"
+		return &msg, nil
+	}
+
+	// check if the user is live before giving shoutout
+	isLive, _, err := s.CheckStreamStatus(username)
+	if err != nil {
+		return nil, fmt.Errorf("GiveShoutout: failed to check stream status: %w", err)
+	}
+	if !isLive {
+		msg := fmt.Sprintf("%s is currently offline. Shoutouts are only for live streamers!", userInfo.DisplayName)
+		return &msg, nil
+	}
+
+	// use twitch shoutout endpoint to give the shoutout in chat (this will also trigger Twitch's built-in shoutout message in chat, so the custom message is optional and can be used to provide additional info or a different format).
+	req, err := http.NewRequest("POST", s.helixBaseURL+"/chat/shoutouts", nil)
+	if err != nil {
+		return nil, fmt.Errorf("GiveShoutout: failed to create shoutout request: %w", err)
+	}
+
+	req.Header.Set("Authorization", "Bearer "+s.accessToken)
+	req.Header.Set("Client-Id", s.clientID)
+	q := req.URL.Query()
+	q.Add("broadcaster_id", fromBroadcasterId)
+	q.Add("moderator_id", fromBroadcasterId) // assuming the broadcaster is also the moderator for simplicity
+	q.Add("receiver_id", userInfo.ID)
+	req.URL.RawQuery = q.Encode()
+
+	resp, err := s.httpClient.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("GiveShoutout: shoutout request failed: %w", err)
+	}
+	defer resp.Body.Close()
+
+	// handle 429 Too Many Requests if the broadcaster is trying to give shoutouts too frequently
+	if resp.StatusCode == http.StatusTooManyRequests {
+		msg := "You are giving shoutouts too frequently! Please wait a moment before giving another shoutout."
+		return &msg, nil
+	}
+	if resp.StatusCode != http.StatusNoContent {
+		body, _ := io.ReadAll(resp.Body)
+		return nil, fmt.Errorf("shoutout request returned status %d: %s", resp.StatusCode, string(body))
+	}
+
+	// If the channel has a custom message format for shoutouts, use it. Otherwise, use a default message.
 
 	twitchURL := "https://www.twitch.tv/" + userInfo.Login
 
