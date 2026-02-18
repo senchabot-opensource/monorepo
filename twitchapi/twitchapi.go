@@ -213,6 +213,27 @@ func (s *twitchService) CheckStreamStatus(username string) (bool, string, error)
 	return stream.Type == "live", stream.Title, nil
 }
 
+func (s *twitchService) CheckStreamStatusByUserId(userId string) (bool, string, error) {
+	body, err := s.doHelixRequest("/streams?user_id=" + url.QueryEscape(userId))
+	if err != nil {
+		return false, "", fmt.Errorf("CheckStreamStatusByUserId error: %w", err)
+	}
+
+	var result struct {
+		Data []model.TwitchStreamerData `json:"data"`
+	}
+	if err := json.Unmarshal(body, &result); err != nil {
+		return false, "", fmt.Errorf("failed to decode stream status response: %w", err)
+	}
+
+	if len(result.Data) == 0 {
+		return false, "", nil
+	}
+
+	stream := result.Data[0]
+	return stream.Type == "live", stream.Title, nil
+}
+
 // CheckMultipleStreamers checks the live status of multiple streamers by their user IDs.
 func (s *twitchService) CheckMultipleStreamers(userIds []string) ([]model.TwitchStreamerData, error) {
 	if len(userIds) == 0 {
@@ -256,10 +277,37 @@ func (s *twitchService) CheckMultipleStreamers(userIds []string) ([]model.Twitch
 // GiveShoutout sends a shoutout for the given streamer. If a custom message format is provided,
 // it formats and returns the message. Otherwise, it returns a default shoutout message.
 func (s *twitchService) GiveShoutout(username, fromBroadcasterId, messageFormat string) (*string, error) {
+	// First, get user info to ensure the streamer exists and to get their display name and other details for the shoutout message.
 	userInfo, err := s.GetUserInfoByLoginName(username)
 	if err != nil {
 		return nil, fmt.Errorf("GiveShoutout: failed to get user info: %w", err)
 	}
+
+	// check also if the user is the same as the broadcaster (self-shoutout)
+	if userInfo.ID == fromBroadcasterId {
+		msg := "You cannot give a shoutout to yourself!"
+		return &msg, nil
+	}
+
+	// check the broadcaster is live before giving shoutout
+	if isLive, _, err := s.CheckStreamStatusByUserId(fromBroadcasterId); err != nil {
+		log.Printf("GiveShoutout: failed to check broadcaster stream status: %v", err)
+	} else if !isLive {
+		msg := "You cannot give shoutouts while you are offline! Go live to start giving shoutouts!"
+		return &msg, nil
+	}
+
+	// check if the user is live before giving shoutout
+	isLive, _, err := s.CheckStreamStatus(username)
+	if err != nil {
+		return nil, fmt.Errorf("GiveShoutout: failed to check stream status: %w", err)
+	}
+	if !isLive {
+		msg := fmt.Sprintf("%s is currently offline. Shoutouts are only for live streamers!", userInfo.DisplayName)
+		return &msg, nil
+	}
+
+	// If the channel has a custom message format for shoutouts, use it. Otherwise, use a default message.
 
 	twitchURL := "https://www.twitch.tv/" + userInfo.Login
 
