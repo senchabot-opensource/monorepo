@@ -327,6 +327,11 @@ func (s *twitchService) GiveShoutout(username, fromBroadcasterId, messageFormat 
 	}
 	defer resp.Body.Close()
 
+	// handle 429 Too Many Requests if the broadcaster is trying to give shoutouts too frequently
+	if resp.StatusCode == http.StatusTooManyRequests {
+		msg := "You are giving shoutouts too frequently! Please wait a moment before giving another shoutout."
+		return &msg, nil
+	}
 	if resp.StatusCode != http.StatusNoContent {
 		body, _ := io.ReadAll(resp.Body)
 		return nil, fmt.Errorf("shoutout request returned status %d: %s", resp.StatusCode, string(body))
