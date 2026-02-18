@@ -307,6 +307,31 @@ func (s *twitchService) GiveShoutout(username, fromBroadcasterId, messageFormat 
 		return &msg, nil
 	}
 
+	// use twitch shoutout endpoint to give the shoutout in chat (this will also trigger Twitch's built-in shoutout message in chat, so the custom message is optional and can be used to provide additional info or a different format).
+	req, err := http.NewRequest("POST", s.helixBaseURL+"/chat/shoutouts", nil)
+	if err != nil {
+		return nil, fmt.Errorf("GiveShoutout: failed to create shoutout request: %w", err)
+	}
+
+	req.Header.Set("Authorization", "Bearer "+s.accessToken)
+	req.Header.Set("Client-Id", s.clientID)
+	q := req.URL.Query()
+	q.Add("broadcaster_id", fromBroadcasterId)
+	q.Add("moderator_id", fromBroadcasterId) // assuming the broadcaster is also the moderator for simplicity
+	q.Add("receiver_id", userInfo.ID)
+	req.URL.RawQuery = q.Encode()
+
+	resp, err := s.httpClient.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("GiveShoutout: shoutout request failed: %w", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusNoContent {
+		body, _ := io.ReadAll(resp.Body)
+		return nil, fmt.Errorf("shoutout request returned status %d: %s", resp.StatusCode, string(body))
+	}
+
 	// If the channel has a custom message format for shoutouts, use it. Otherwise, use a default message.
 
 	twitchURL := "https://www.twitch.tv/" + userInfo.Login
