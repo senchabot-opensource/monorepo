@@ -12,6 +12,8 @@ func (c *commands) CmdsCommand(context context.Context, message twitch.PrivateMe
 	msgData := &model.MessageData{
 		PlatformEntityID: message.RoomID,
 		UserName:         message.User.DisplayName,
+		ChannelName:      message.Channel,
 	}
+
 	return command.CmdsCommand(context, c.service.GetCommandList, c.IsSystemCommand, *msgData, commandName, params)
 }
