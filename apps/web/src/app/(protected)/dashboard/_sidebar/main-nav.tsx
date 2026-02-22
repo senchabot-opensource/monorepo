@@ -4,7 +4,7 @@ import { useMemo } from 'react'
 
 import { useParams, useSelectedLayoutSegment } from 'next/navigation'
 
-import { CalendarIcon, HomeIcon, ListIcon, MegaphoneIcon } from 'lucide-react'
+import { CalendarIcon, HomeIcon, ListIcon, SettingsIcon } from 'lucide-react'
 
 import { NavLinkItem } from './nav-link-item'
 
@@ -25,6 +25,11 @@ export function MainNav() {
           label: 'Commands',
           href: `${BASE_URL}/commands`,
           icon: ListIcon,
+        },
+        {
+          label: 'Settings',
+          href: `${BASE_URL}/settings`,
+          icon: SettingsIcon,
         },
       ]
     } else if (segment === 'discord') {
