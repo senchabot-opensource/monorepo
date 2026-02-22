@@ -49,11 +49,6 @@ export function MainNav() {
           href: `${BASE_URL}/event-channels`,
           icon: CalendarIcon,
         },
-        {
-          label: 'Settings',
-          href: `${BASE_URL}/settings`,
-          icon: SettingsIcon,
-        },
       ]
     } else {
       return [
