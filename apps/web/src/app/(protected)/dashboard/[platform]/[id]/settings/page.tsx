@@ -41,7 +41,10 @@ export default async function Page(props: Props) {
   return (
     <div className="max-w-screen-lg space-y-8">
       <div className="space-y-1">
-        <h1 className="text-2xl font-medium tracking-tight">Bot Settings</h1>
+        <h1 className="text-2xl font-medium tracking-tight">
+          {params.platform.charAt(0).toUpperCase() + params.platform.slice(1)}{' '}
+          Bot Settings
+        </h1>
         <p className="text-sm text-muted-foreground">
           Configure bot settings for your{' '}
           {/*params.platform === 'discord' ? 'server' : */ 'channel'}.
