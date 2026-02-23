@@ -4,7 +4,13 @@ import { useMemo } from 'react'
 
 import { useParams, useSelectedLayoutSegment } from 'next/navigation'
 
-import { CalendarIcon, HomeIcon, ListIcon, SettingsIcon } from 'lucide-react'
+import {
+  CalendarIcon,
+  HomeIcon,
+  ListIcon,
+  MegaphoneIcon,
+  SettingsIcon,
+} from 'lucide-react'
 
 import { NavLinkItem } from './nav-link-item'
 
@@ -43,6 +49,11 @@ export function MainNav() {
           label: 'Commands',
           href: `${BASE_URL}/commands`,
           icon: ListIcon,
+        },
+        {
+          label: 'Announcements',
+          href: `${BASE_URL}/announcements`,
+          icon: MegaphoneIcon,
         },
         {
           label: 'Event Channels',
