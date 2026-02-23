@@ -13,6 +13,7 @@ import (
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/command"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/handler"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
+	botcommandgrpc "github.com/senchabot-opensource/monorepo/grpc/botcommand/client"
 	"github.com/senchabot-opensource/monorepo/twitchapi"
 )
 
@@ -26,11 +27,16 @@ func main() {
 		log.Fatalf("Failed to initialize Twitch service: %v", err)
 	}
 
+	botCommandClient, err := botcommandgrpc.NewBotCommandClient(os.Getenv("BOT_COMMAND_GRPC_ADDR"))
+	if err != nil {
+		log.Fatalf("Failed to initialize BotCommand gRPC client: %v", err)
+	}
+
 	discordClient, _ := discordgo.New("Bot " + os.Getenv("TOKEN"))
 
 	var wg sync.WaitGroup
 
-	service := service.New()
+	service := service.New(botCommandClient)
 	command := command.New(discordClient, service, twitchService)
 	handler := handler.New(discordClient, service, twitchService)
 

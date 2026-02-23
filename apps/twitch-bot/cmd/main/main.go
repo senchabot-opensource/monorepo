@@ -11,6 +11,7 @@ import (
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/handler"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/service"
 	"github.com/senchabot-opensource/monorepo/db/postgresql"
+	botcommandgrpc "github.com/senchabot-opensource/monorepo/grpc/botcommand/client"
 	"github.com/senchabot-opensource/monorepo/twitchapi"
 )
 
@@ -33,10 +34,15 @@ func main() {
 		log.Fatalf("Failed to initialize Twitch service: %v", err)
 	}
 
+	botCommandClient, err := botcommandgrpc.NewBotCommandClient(os.Getenv("BOT_COMMAND_GRPC_ADDR"))
+	if err != nil {
+		log.Fatalf("Failed to initialize BotCommand gRPC client: %v", err)
+	}
+
 	twitchClient := twitch.NewClient(os.Getenv("BOT_USER_NAME"), os.Getenv("OAUTH"))
 	clients := client.NewClients(twitchClient)
 	database := postgresql.New()
-	service := service.New(database, twitchService)
+	service := service.New(botCommandClient, twitchService, database)
 	handlers := handler.NewHandlers(clients, service, twitchService)
 
 	handlers.InitBotEventHandlers()

@@ -138,12 +138,6 @@ type TwitchStreamerData struct {
 	ThumbnailURL string   `json:"thumbnail_url"`
 }
 
-type BotCommandStatistic struct {
-	BotPlatformType platform.Platform `gorm:"column:bot_platform_type"`
-	CommandName     string            `gorm:"column:command_name"`
-	Count           int               `gorm:"column:count"`
-}
-
 type CommandVariable struct {
 	CommandContent   string
 	UserName         string

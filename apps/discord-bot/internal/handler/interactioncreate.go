@@ -59,7 +59,6 @@ func (h *handler) InteractionCreate(command command.Command) {
 				return
 			}
 
-			h.service.AddBotCommandStatistic(ctx, commandName)
 			h.service.SaveCommandActivity(ctx, commandName, i.GuildID, i.Member.User.Username, i.Member.User.ID)
 		}
 	})

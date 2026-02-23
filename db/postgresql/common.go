@@ -9,7 +9,6 @@ import (
 	"github.com/senchabot-opensource/monorepo/model"
 	"github.com/senchabot-opensource/monorepo/platform"
 	"gorm.io/gorm"
-	"gorm.io/gorm/clause"
 )
 
 func (m *postgresql) CreateBotCommand(ctx context.Context, botPlatform platform.Platform, commandName string, commandContent string, botPlatformId string, createdBy string) (*string, error) {
@@ -404,24 +403,6 @@ func (m *postgresql) GetCommandList(ctx context.Context, botPlatform platform.Pl
 	}
 
 	return botCommandList, nil
-}
-
-func (m *postgresql) AddBotCommandStatistic(ctx context.Context, botPlatform platform.Platform, commandName string) error {
-	botCommandStatistic := model.BotCommandStatistic{CommandName: commandName, BotPlatformType: botPlatform, Count: 1}
-
-	updateExpr := gorm.Expr("coalesce(bot_command_statistics.count, 0) + 1")
-
-	result := m.DB.Clauses(clause.OnConflict{
-		Columns:   []clause.Column{{Name: "bot_platform_type"}, {Name: "command_name"}},
-		DoUpdates: clause.Assignments(map[string]interface{}{"count": updateExpr}),
-	}).Create(&botCommandStatistic)
-
-	if result.Error != nil {
-		log.Println("(AddBotcommandStatistic): db.Update Error: ", result.Error.Error())
-		return result.Error
-	}
-
-	return nil
 }
 
 func (m *postgresql) GetCommandTimers(ctx context.Context, botPlatform platform.Platform, botPlatformId string) ([]*model.CommandTimer, error) {
