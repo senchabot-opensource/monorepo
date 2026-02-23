@@ -1,4 +1,4 @@
-import { FileIcon, MessagesSquareIcon } from 'lucide-react'
+import { FileIcon, MessagesSquareIcon, WrenchIcon } from 'lucide-react'
 
 import { NavLinkItem } from './nav-link-item'
 import { UserDropdown } from './user-dropdown'
@@ -7,6 +7,11 @@ export function BottomNav() {
   return (
     <nav className="space-y-1">
       {[
+        {
+          label: 'Tools',
+          href: '/dashboard/tools',
+          icon: WrenchIcon,
+        },
         {
           label: 'Docs',
           href: '/docs',
