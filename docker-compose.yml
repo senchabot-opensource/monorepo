@@ -21,11 +21,13 @@ services:
       dockerfile: ./apps/twitch-bot/Dockerfile.dev
       context: .
     ports:
-      - "${TWITCH_BOT_PORT:-8084}:8080"
+      - "${TWITCH_BOT_PORT:-8086}:8080"
     volumes:
       - ./:/app
     env_file:
       - ./apps/twitch-bot/.env
+    networks:
+      - senchabot
     depends_on:
       - postgres
   discord-bot:
@@ -39,6 +41,8 @@ services:
       - ./:/app
     env_file:
       - ./apps/discord-bot/.env
+    networks:
+      - senchabot
     depends_on:
       - postgres
 
@@ -46,4 +50,5 @@ volumes:
   senchabot-postgres-data:
 
 networks:
-  default:
+  senchabot:
+    external: true

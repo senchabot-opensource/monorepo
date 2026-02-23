@@ -4,7 +4,7 @@ tmp_dir = "tmp"
 
 [build]
   args_bin = []
-  bin = "./tmp/main"
+  entrypoint = "./tmp/main"
   cmd = "go build -o ./tmp/main ./apps/discord-bot/cmd/main"
   delay = 1000
   exclude_dir = ["assets", "tmp", "vendor", "testdata", "apps/web", "apps/twitch-bot", "node_modules", "packages/senchabot-prisma"]
