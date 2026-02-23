@@ -1,0 +1,124 @@
+syntax = "proto3";
+
+package senchabot.grpc.botcommand;
+
+option go_package = "github.com/senchabot-opensource/monorepo/grpc/botcommand";
+
+message BotCommand {
+  int32 id = 1;
+  string command_name = 2;
+  string command_content = 3;
+  int32 command_type = 4;
+  int32 status = 5;
+  string created_by = 6;
+  string updated_by = 7;
+  string created_at = 8;
+}
+
+message CreateBotCommandRequest {
+  string platform = 1;
+  string command_name = 2;
+  string command_content = 3;
+  string bot_platform_id = 4;
+  string created_by = 5;
+}
+
+message CreateBotCommandResponse {
+  string info_text = 1;
+}
+
+message UpdateBotCommandRequest {
+  string platform = 1;
+  string command_name = 2;
+  string command_content = 3;
+  string bot_platform_id = 4;
+  string updated_by = 5;
+}
+
+message UpdateBotCommandResponse {
+  string command_name = 1;
+  string info_text = 2;
+}
+
+message GetGlobalBotCommandRequest {
+  string command_name = 1;
+}
+
+message GetGlobalBotCommandResponse {
+  BotCommand command = 1;
+}
+
+message GetUserBotCommandRequest {
+  string platform = 1;
+  string command_name = 2;
+  string bot_platform_id = 3;
+}
+
+message GetUserBotCommandResponse {
+  BotCommand command = 1;
+}
+
+message GetCommandListRequest {
+  string platform = 1;
+  string bot_platform_id = 2;
+}
+
+message GetCommandListResponse {
+  repeated BotCommand commands = 1;
+}
+
+message DeleteBotCommandRequest {
+  string platform = 1;
+  string command_name = 2;
+  string bot_platform_id = 3;
+}
+
+message DeleteBotCommandResponse {
+  string command_name = 1;
+  string info_text = 2;
+}
+
+message GetCommandAliasRequest {
+  string platform = 1;
+  string command_alias = 2;
+  string bot_platform_id = 3;
+}
+
+message GetCommandAliasResponse {
+  string command_name = 1;
+}
+
+message CreateCommandAliasRequest {
+  string platform = 1;
+  string command_name = 2;
+  repeated string aliases = 3;
+  string bot_platform_id = 4;
+  string created_by = 5;
+}
+
+message CreateCommandAliasResponse {
+  string info_text = 1;
+}
+
+message DeleteCommandAliasRequest {
+  string platform = 1;
+  string command_alias = 2;
+  string bot_platform_id = 3;
+}
+
+message DeleteCommandAliasResponse {
+  string info_text = 1;
+}
+
+
+service BotCommandService {
+  rpc CreateBotCommand(CreateBotCommandRequest) returns (CreateBotCommandResponse);
+  rpc UpdateBotCommand(UpdateBotCommandRequest) returns (UpdateBotCommandResponse);
+  rpc GetGlobalBotCommand(GetGlobalBotCommandRequest) returns (GetGlobalBotCommandResponse);
+  rpc GetUserBotCommand(GetUserBotCommandRequest) returns (GetUserBotCommandResponse);
+  rpc GetCommandList(GetCommandListRequest) returns (GetCommandListResponse);
+  rpc DeleteBotCommand(DeleteBotCommandRequest) returns (DeleteBotCommandResponse);
+  rpc GetCommandAlias(GetCommandAliasRequest) returns (GetCommandAliasResponse);
+  rpc CreateCommandAlias(CreateCommandAliasRequest) returns (CreateCommandAliasResponse);
+  rpc DeleteCommandAlias(DeleteCommandAliasRequest) returns (DeleteCommandAliasResponse);
+}

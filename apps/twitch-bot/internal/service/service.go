@@ -9,6 +9,7 @@ import (
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/service/timer"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/service/webhook"
 	"github.com/senchabot-opensource/monorepo/db"
+	botcommandgrpc "github.com/senchabot-opensource/monorepo/grpc/botcommand/client"
 	"github.com/senchabot-opensource/monorepo/model"
 
 	"github.com/senchabot-opensource/monorepo/platform"
@@ -41,8 +42,6 @@ type Service interface {
 	CheckCommandAliasExist(ctx context.Context, commandAlias string, twitchChannelId string) (*string, error)
 	DeleteCommandAlias(ctx context.Context, commandAlias string, twitchChannelId string) (*string, error)
 
-	AddBotCommandStatistic(ctx context.Context, commandName string)
-
 	SetTimer(client *client.Clients, channelName string, commandData *model.BotCommand, interval int)
 	SetTimerEnabled(client *client.Clients, commandId int)
 	SetTimerDisabled(commandId int)
@@ -67,18 +66,20 @@ type Service interface {
 }
 
 type service struct {
-	timer         timer.Timer
-	DB            db.Database
-	webhook       webhook.Webhook
-	twitchService twitchapi.TwitchService
+	timer            timer.Timer
+	db               db.Database
+	botCommandClient *botcommandgrpc.BotCommandClient
+	webhook          webhook.Webhook
+	twitchService    twitchapi.TwitchService
 }
 
-func New(db db.Database, twitchService twitchapi.TwitchService) Service {
+func New(botCommandClient *botcommandgrpc.BotCommandClient, twitchService twitchapi.TwitchService, database db.Database) Service {
 	return &service{
-		DB:            db,
-		webhook:       webhook.NewWebhook(db, twitchService),
-		twitchService: twitchService,
-		timer:         timer.NewTimer(),
+		db:               database,
+		botCommandClient: botCommandClient,
+		twitchService:    twitchService,
+		webhook:          webhook.NewWebhook(database, twitchService),
+		timer:            timer.NewTimer(),
 	}
 }
 
@@ -91,7 +92,7 @@ func (s *service) BotDepartWebhook(client *client.Clients, joinedChannelList []s
 }
 
 func (s *service) GetTwitchChannels(ctx context.Context) ([]*model.TwitchChannel, error) {
-	twitchChannels, err := s.DB.GetTwitchChannels(ctx)
+	twitchChannels, err := s.db.GetTwitchChannels(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -100,7 +101,7 @@ func (s *service) GetTwitchChannels(ctx context.Context) ([]*model.TwitchChannel
 }
 
 func (s *service) CreateTwitchChannel(ctx context.Context, channelId string, channelName string, userId *string) (bool, error) {
-	alreadyJoined, err := s.DB.CreateTwitchChannel(ctx, channelId, channelName, userId)
+	alreadyJoined, err := s.db.CreateTwitchChannel(ctx, channelId, channelName, userId)
 	if err != nil {
 		return false, err
 	}
@@ -109,7 +110,7 @@ func (s *service) CreateTwitchChannel(ctx context.Context, channelId string, cha
 }
 
 func (s *service) DeleteTwitchChannel(ctx context.Context, channelId string, userId *string) (bool, error) {
-	deleted, err := s.DB.DeleteTwitchChannel(ctx, channelId, userId)
+	deleted, err := s.db.DeleteTwitchChannel(ctx, channelId, userId)
 	if err != nil {
 		return false, err
 	}
@@ -118,7 +119,7 @@ func (s *service) DeleteTwitchChannel(ctx context.Context, channelId string, use
 }
 
 func (s *service) GetTwitchBotConfig(ctx context.Context, twitchChannelId string, configKey string) (*model.TwitchBotConfig, error) {
-	configData, err := s.DB.GetTwitchBotConfig(ctx, twitchChannelId, configKey)
+	configData, err := s.db.GetTwitchBotConfig(ctx, twitchChannelId, configKey)
 	if err != nil {
 		return nil, err
 	}
@@ -127,7 +128,7 @@ func (s *service) GetTwitchBotConfig(ctx context.Context, twitchChannelId string
 }
 
 func (s *service) CheckTwitchBotConfig(ctx context.Context, twitchChannelId string, configKey string, configValue string) bool {
-	configData, err := s.DB.GetTwitchBotConfig(ctx, twitchChannelId, configKey)
+	configData, err := s.db.GetTwitchBotConfig(ctx, twitchChannelId, configKey)
 	if err != nil {
 		log.Println("[service.CheckTwitchBotConfig] GetTwitchBotConfig Error:", err.Error())
 		return false
@@ -141,66 +142,90 @@ func (s *service) CheckTwitchBotConfig(ctx context.Context, twitchChannelId stri
 }
 
 func (s *service) GetGlobalBotCommand(ctx context.Context, commandName string) (*model.BotCommand, error) {
-	commandData, err := s.DB.GetGlobalBotCommand(ctx, commandName)
+	cmd, err := s.botCommandClient.GetGlobalBotCommand(ctx, commandName)
 	if err != nil {
 		return nil, err
 	}
-
-	return commandData, nil
+	if cmd == nil {
+		return nil, nil
+	}
+	return &model.BotCommand{
+		ID:             int(cmd.Id),
+		CommandName:    cmd.CommandName,
+		CommandContent: cmd.CommandContent,
+		CommandType:    int(cmd.CommandType),
+		Status:         int(cmd.Status),
+	}, nil
 }
 
 func (s *service) GetUserBotCommand(ctx context.Context, commandName string, twitchChannelId string) (*model.BotCommand, error) {
-	commandData, err := s.DB.GetUserBotCommand(ctx, platform.TWITCH, commandName, twitchChannelId)
+	cmd, err := s.botCommandClient.GetUserBotCommand(ctx, platform.TWITCH.String(), commandName, twitchChannelId)
 	if err != nil {
 		return nil, err
 	}
-
-	return commandData, nil
+	if cmd == nil {
+		return nil, nil
+	}
+	return &model.BotCommand{
+		ID:             int(cmd.Id),
+		CommandName:    cmd.CommandName,
+		CommandContent: cmd.CommandContent,
+		CommandType:    int(cmd.CommandType),
+		Status:         int(cmd.Status),
+	}, nil
 }
 
 func (s *service) CreateCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string, createdBy string) (*string, error) {
-	infoText, err := s.DB.CreateBotCommand(ctx, platform.TWITCH, commandName, commandContent, twitchChannelId, createdBy)
+	resp, err := s.botCommandClient.CreateBotCommand(ctx, platform.TWITCH.String(), commandName, commandContent, twitchChannelId, createdBy)
 	if err != nil {
 		return nil, err
 	}
-
-	return infoText, nil
+	return &resp.InfoText, nil
 }
 
 func (s *service) CheckCommandExists(ctx context.Context, commandName string, twitchChannelId string) (*string, error) {
-	existCommandName, err := s.DB.CheckCommandExists(ctx, platform.TWITCH, commandName, twitchChannelId)
+	cmd, err := s.botCommandClient.GetUserBotCommand(ctx, platform.TWITCH.String(), commandName, twitchChannelId)
 	if err != nil {
 		return nil, err
 	}
-
-	return existCommandName, nil
+	if cmd == nil {
+		return nil, nil
+	}
+	return &cmd.CommandName, nil
 }
 
 func (s *service) UpdateCommand(ctx context.Context, commandName string, commandContent string, twitchChannelId string, updatedBy string) (*string, *string, error) {
-	updatedCommandName, infoText, err := s.DB.UpdateBotCommand(ctx, platform.TWITCH, commandName, commandContent, twitchChannelId, updatedBy)
+	resp, err := s.botCommandClient.UpdateBotCommand(ctx, platform.TWITCH.String(), commandName, commandContent, twitchChannelId, updatedBy)
 	if err != nil {
 		return nil, nil, err
 	}
-
-	return updatedCommandName, infoText, nil
+	return &resp.CommandName, &resp.InfoText, nil
 }
 
 func (s *service) DeleteCommand(ctx context.Context, commandName string, twitchChannelId string) (*string, *string, error) {
-	deletedCommandName, infoText, err := s.DB.DeleteBotCommand(ctx, platform.TWITCH, commandName, twitchChannelId)
+	resp, err := s.botCommandClient.DeleteBotCommand(ctx, platform.TWITCH.String(), commandName, twitchChannelId)
 	if err != nil {
 		return nil, nil, err
 	}
-
-	return deletedCommandName, infoText, nil
+	return &resp.CommandName, &resp.InfoText, nil
 }
 
 func (s *service) GetCommandList(ctx context.Context, twitchChannelId string) ([]*model.BotCommand, error) {
-	cmdList, err := s.DB.GetCommandList(ctx, platform.TWITCH, twitchChannelId)
+	cmds, err := s.botCommandClient.GetCommandList(ctx, platform.TWITCH.String(), twitchChannelId)
 	if err != nil {
 		return nil, err
 	}
-
-	return cmdList, nil
+	var result []*model.BotCommand
+	for _, cmd := range cmds {
+		result = append(result, &model.BotCommand{
+			ID:             int(cmd.Id),
+			CommandName:    cmd.CommandName,
+			CommandContent: cmd.CommandContent,
+			CommandType:    int(cmd.CommandType),
+			Status:         int(cmd.Status),
+		})
+	}
+	return result, nil
 }
 
 func (s *service) SaveCommandActivity(context context.Context, commandName string, twitchChannelId string, commandAuthor, commandAuthorId string) {
@@ -211,52 +236,44 @@ func (s *service) SaveCommandActivity(context context.Context, commandName strin
 
 	commandName = "!" + commandName
 
-	if err := s.DB.CreateBotActionActivity(context, platform.TWITCH, commandName, twitchChannelId, commandAuthor, commandAuthorId); err != nil {
+	if err := s.db.CreateBotActionActivity(context, platform.TWITCH, commandName, twitchChannelId, commandAuthor, commandAuthorId); err != nil {
 		log.Println("[service.SaveCommandActivity] CreateBotActionActivity Error:", err.Error())
 	}
 }
 
 func (s *service) CreateCommandAlias(ctx context.Context, commandName string, aliases []string, twitchChannelId string, createdBy string) (*string, error) {
-	infoText, err := s.DB.CreateCommandAlias(ctx, platform.TWITCH, commandName, aliases, twitchChannelId, createdBy)
+	resp, err := s.botCommandClient.CreateCommandAlias(ctx, platform.TWITCH.String(), commandName, aliases, twitchChannelId, createdBy)
 	if err != nil {
 		return nil, err
 	}
-
-	return infoText, nil
+	return &resp.InfoText, nil
 }
 
 func (s *service) GetCommandAlias(ctx context.Context, commandAlias string, twitchChannelId string) (*string, error) {
-	command, err := s.DB.GetCommandAlias(ctx, platform.TWITCH, commandAlias, twitchChannelId)
+	commandName, err := s.botCommandClient.GetCommandAlias(ctx, platform.TWITCH.String(), commandAlias, twitchChannelId)
 	if err != nil {
 		return nil, err
 	}
-
-	return command, nil
+	return &commandName, nil
 }
 
 func (s *service) CheckCommandAliasExist(ctx context.Context, commandAlias string, twitchChannelId string) (*string, error) {
-	alias, err := s.DB.CheckCommandAliasExist(ctx, platform.TWITCH, commandAlias, twitchChannelId)
-
+	commandName, err := s.botCommandClient.GetCommandAlias(ctx, platform.TWITCH.String(), commandAlias, twitchChannelId)
 	if err != nil {
 		return nil, err
 	}
-
-	return alias, nil
+	if commandName == "" {
+		return nil, nil
+	}
+	return &commandName, nil
 }
 
 func (s *service) DeleteCommandAlias(ctx context.Context, commandAlias string, twitchChannelId string) (*string, error) {
-	infoText, err := s.DB.DeleteCommandAlias(ctx, platform.TWITCH, commandAlias, twitchChannelId)
+	resp, err := s.botCommandClient.DeleteCommandAlias(ctx, platform.TWITCH.String(), commandAlias, twitchChannelId)
 	if err != nil {
 		return nil, err
 	}
-
-	return infoText, nil
-}
-
-func (s *service) AddBotCommandStatistic(ctx context.Context, commandName string) {
-	if err := s.DB.AddBotCommandStatistic(ctx, platform.TWITCH, commandName); err != nil {
-		log.Println("[service.AddBotCommandStatistic] AddBotCommandStatistic error:", err.Error())
-	}
+	return &resp.InfoText, nil
 }
 
 func (s *service) SetTimer(client *client.Clients, channelName string, commandData *model.BotCommand, interval int) {
@@ -284,23 +301,23 @@ func (s *service) UpdateTimerContent(commandId int, commandContent string) {
 }
 
 func (s *service) GetCommandTimers(ctx context.Context, channelId string) ([]*model.CommandTimer, error) {
-	return s.DB.GetCommandTimers(ctx, platform.TWITCH, channelId)
+	return s.db.GetCommandTimers(ctx, platform.TWITCH, channelId)
 }
 
 func (s *service) CreateCommandTimer(ctx context.Context, channelId string, commandName string, interval int) (bool, error) {
-	return s.DB.CreateCommandTimer(ctx, platform.TWITCH, channelId, commandName, interval)
+	return s.db.CreateCommandTimer(ctx, platform.TWITCH, channelId, commandName, interval)
 }
 
 func (s *service) GetCommandTimer(ctx context.Context, channelId string, commandName string) *model.CommandTimer {
-	return s.DB.GetCommandTimer(ctx, platform.TWITCH, channelId, commandName)
+	return s.db.GetCommandTimer(ctx, platform.TWITCH, channelId, commandName)
 }
 
 func (s *service) UpdateCommandTimer(ctx context.Context, channelId string, commandName string, interval int, status int) error {
-	return s.DB.UpdateCommandTimer(ctx, platform.TWITCH, channelId, commandName, interval, status)
+	return s.db.UpdateCommandTimer(ctx, platform.TWITCH, channelId, commandName, interval, status)
 }
 
 func (s *service) DeleteCommandTimer(ctx context.Context, channelId string, commandName string) error {
-	return s.DB.DeleteCommandTimer(ctx, platform.TWITCH, channelId, commandName)
+	return s.db.DeleteCommandTimer(ctx, platform.TWITCH, channelId, commandName)
 }
 
 func (s *service) UpdateCommandTimerInterval(commandId, interval int) {
@@ -308,25 +325,25 @@ func (s *service) UpdateCommandTimerInterval(commandId, interval int) {
 }
 
 func (s *service) GetCommandVariable(ctx context.Context, varName string, botPlatformId string) (*model.BotCommandVariable, error) {
-	return s.DB.GetCommandVariable(ctx, varName, platform.TWITCH, botPlatformId)
+	return s.db.GetCommandVariable(ctx, varName, platform.TWITCH, botPlatformId)
 }
 
 func (s *service) CreateCommandVariable(ctx context.Context, varName string, varContent string, botPlatformId string, createdBy string) error {
-	return s.DB.CreateCommandVariable(ctx, varName, varContent, platform.TWITCH, botPlatformId, createdBy)
+	return s.db.CreateCommandVariable(ctx, varName, varContent, platform.TWITCH, botPlatformId, createdBy)
 }
 
 func (s *service) UpdateCommandVariable(ctx context.Context, varName string, varContent string, botPlatformId string, updatedBy string) error {
-	return s.DB.UpdateCommandVariable(ctx, varName, varContent, platform.TWITCH, botPlatformId, updatedBy)
+	return s.db.UpdateCommandVariable(ctx, varName, varContent, platform.TWITCH, botPlatformId, updatedBy)
 }
 
 func (s *service) DeleteCommandVariable(ctx context.Context, varName string, botPlatformId string, updatedBy string) error {
-	return s.DB.DeleteCommandVariable(ctx, varName, platform.TWITCH, botPlatformId, updatedBy)
+	return s.db.DeleteCommandVariable(ctx, varName, platform.TWITCH, botPlatformId, updatedBy)
 }
 
 func (s *service) ListCommandVariables(ctx context.Context, botPlatformId string) ([]*model.BotCommandVariable, error) {
-	return s.DB.ListCommandVariables(ctx, platform.TWITCH, botPlatformId)
+	return s.db.ListCommandVariables(ctx, platform.TWITCH, botPlatformId)
 }
 
 func (s *service) GetCustomVariableContent(ctx context.Context, botPlatformId string, varName string) string {
-	return s.DB.GetCustomVariableContent(ctx, platform.TWITCH, botPlatformId, varName)
+	return s.db.GetCustomVariableContent(ctx, platform.TWITCH, botPlatformId, varName)
 }
