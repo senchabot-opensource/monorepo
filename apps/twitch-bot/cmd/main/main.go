@@ -38,6 +38,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to initialize BotCommand gRPC client: %v", err)
 	}
+	log.Printf("BotCommand gRPC client connected to %s", os.Getenv("BOT_COMMAND_GRPC_ADDR"))
 
 	twitchClient := twitch.NewClient(os.Getenv("BOT_USER_NAME"), os.Getenv("OAUTH"))
 	clients := client.NewClients(twitchClient)

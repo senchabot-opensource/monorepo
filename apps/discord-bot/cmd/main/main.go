@@ -31,6 +31,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to initialize BotCommand gRPC client: %v", err)
 	}
+	log.Printf("BotCommand gRPC client connected to %s", os.Getenv("BOT_COMMAND_GRPC_ADDR"))
 
 	discordClient, _ := discordgo.New("Bot " + os.Getenv("TOKEN"))
 
