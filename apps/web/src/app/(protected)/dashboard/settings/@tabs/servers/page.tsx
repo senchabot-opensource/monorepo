@@ -14,8 +14,8 @@ import { LoaderIcon } from '@/components/ui/icons'
 
 import { auth } from '@/lib/auth'
 
-import { JoinableEntities } from './joinable-entities-list'
-import { JoinedEntities } from './joined-entities-list'
+import { ServersContent } from './servers-content'
+import { getUserEntities } from '@/services/queries/users'
 
 export const metadata: Metadata = {
   title: 'Servers & Channels',
@@ -28,34 +28,11 @@ export default async function Page() {
     throw redirect('/signin')
   }
 
+  const initialEntities = await getUserEntities()
+
   return (
-    <Card className="divide-y divide-border">
-      <section>
-        <CardHeader>
-          <CardTitle>Get Senchabot</CardTitle>
-          <CardDescription>
-            Select a server or channel where you want to add Senchabot.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Suspense fallback={<LoaderIcon />}>
-            <JoinableEntities />
-          </Suspense>
-        </CardContent>
-      </section>
-      <section>
-        <CardHeader>
-          <CardTitle>Senchabot joined</CardTitle>
-          <CardDescription>
-            Manage the server or channel where you use Senchabot.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Suspense fallback={<LoaderIcon />}>
-            <JoinedEntities />
-          </Suspense>
-        </CardContent>
-      </section>
-    </Card>
+    <Suspense fallback={<Card className="divide-y divide-border"><CardContent className="pt-6"><LoaderIcon /></CardContent></Card>}>
+      <ServersContent initialEntities={initialEntities} />
+    </Suspense>
   )
 }
