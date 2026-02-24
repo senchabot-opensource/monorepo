@@ -91,7 +91,7 @@ export function SystemCommandsList({ platform }: Props) {
 
       {/* Commands Count */}
       <div className="text-sm text-muted-foreground">
-        {filteredCommands.length} command
+        {filteredCommands.length}{" "}command
         {filteredCommands.length !== 1 ? 's' : ' '}
         {search && `found for "${search}"`}
         {!search && 'available'}
@@ -107,11 +107,11 @@ export function SystemCommandsList({ platform }: Props) {
           </p>
         </div>
       ) : (
-        <div className="overflow-hidden rounded-xl border">
-          <Table className="overflow-hidden">
+        <div className="rounded-xl border">
+          <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-48">Name</TableHead>
+                <TableHead className="min-w-[140px]">Name</TableHead>
                 <TableHead>Description</TableHead>
               </TableRow>
             </TableHeader>
