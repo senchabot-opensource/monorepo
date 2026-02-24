@@ -142,6 +142,29 @@ export default function SubBadgeCreatorPage() {
     }
   }, [originalImage, resizeImage, scale])
 
+  const handleResizeOnly = useCallback(async () => {
+    if (!originalImage) return
+
+    setIsProcessing(true)
+    try {
+      setProcessedImage(originalImage)
+
+      const resizedBadges = await Promise.all(
+        BADGE_SIZES.map(async (size) => ({
+          size,
+          url: await resizeImage(originalImage, size, scale),
+        }))
+      )
+      setBadges(resizedBadges)
+      toast.success('Badges resized successfully!')
+    } catch (error) {
+      console.error('Error resizing:', error)
+      toast.error('Failed to resize image')
+    } finally {
+      setIsProcessing(false)
+    }
+  }, [originalImage, resizeImage, scale])
+
   const handleDownload = useCallback((url: string | null, size: number) => {
     if (!url) return
 
@@ -248,20 +271,30 @@ export default function SubBadgeCreatorPage() {
 
             <div className="flex gap-2">
               {originalImage && !processedImage && (
-                <Button
-                  className="flex-1"
-                  disabled={isProcessing}
-                  onClick={handleRemoveBackground}
-                >
-                  {isProcessing ? (
-                    <>
-                      <Loader2 className="mr-2 size-4 animate-spin" />
-                      Processing...
-                    </>
-                  ) : (
-                    'Remove Background'
-                  )}
-                </Button>
+                <>
+                  <Button
+                    className="flex-1"
+                    disabled={isProcessing}
+                    onClick={handleRemoveBackground}
+                  >
+                    {isProcessing ? (
+                      <>
+                        <Loader2 className="mr-2 size-4 animate-spin" />
+                        Processing...
+                      </>
+                    ) : (
+                      'Remove Background'
+                    )}
+                  </Button>
+                  <Button
+                    className="flex-1"
+                    disabled={isProcessing}
+                    onClick={handleResizeOnly}
+                    variant="secondary"
+                  >
+                    Resize Only
+                  </Button>
+                </>
               )}
               {processedImage && (
                 <Button className="flex-1" variant="outline" onClick={handleReset}>
@@ -272,7 +305,7 @@ export default function SubBadgeCreatorPage() {
 
             {processedImage && (
               <div className="space-y-2">
-                <p className="text-sm font-medium">Background Removed</p>
+                <p className="text-sm font-medium">Preview</p>
                 <div className="flex justify-center rounded-lg border bg-[url('https://www.transparenttextures.com/patterns/checkerboard.png')] bg-contain p-4">
                   <img
                     alt="Processed"
