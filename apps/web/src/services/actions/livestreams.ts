@@ -4,7 +4,7 @@ import { revalidateTag } from 'next/cache'
 
 import { ZSAError, createServerAction } from 'zsa'
 
-import { RateLimitError, fetcher } from '@/lib/fetcher'
+import { fetcher } from '@/lib/fetcher'
 
 import {
   createAnnouncementSchema,
