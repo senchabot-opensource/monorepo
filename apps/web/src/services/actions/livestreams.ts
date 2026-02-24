@@ -35,12 +35,7 @@ export const createEventChannel = createServerAction()
       revalidateTag(`getEventChannels-${input.platformEntityId}`)
     } catch (error) {
       console.error('createEventChannel =>', error)
-      if (error instanceof RateLimitError) {
-        throw new ZSAError(
-          'TOO_MANY_REQUESTS',
-          'Too many requests. Please wait and try again.',
-        )
-      }
+     
       throw new ZSAError('ERROR', 'Something went wrong!')
     }
   })
@@ -62,12 +57,7 @@ export const deleteEventChannel = createServerAction()
       revalidateTag(`getEventChannels-${input.platformEntityId}`)
     } catch (error) {
       console.error('deleteEventChannel =>', error)
-      if (error instanceof RateLimitError) {
-        throw new ZSAError(
-          'TOO_MANY_REQUESTS',
-          'Too many requests. Please wait and try again.',
-        )
-      }
+     
       throw new ZSAError('ERROR', 'Something went wrong!')
     }
   })
@@ -96,12 +86,7 @@ export const createAnnouncement = createServerAction()
       revalidateTag(`getLivestreamAnnouncements-${input.platformEntityId}`)
     } catch (error) {
       console.error('createAnnouncement =>', error)
-      if (error instanceof RateLimitError) {
-        throw new ZSAError(
-          'TOO_MANY_REQUESTS',
-          'Too many requests. Please wait and try again.',
-        )
-      }
+     
       throw new ZSAError('ERROR', 'Something went wrong!')
     }
   })
@@ -123,12 +108,7 @@ export const deleteAnnouncement = createServerAction()
       revalidateTag(`getLivestreamAnnouncements-${input.platformEntityId}`)
     } catch (error) {
       console.error('deleteAnnouncement =>', error)
-      if (error instanceof RateLimitError) {
-        throw new ZSAError(
-          'TOO_MANY_REQUESTS',
-          'Too many requests. Please wait and try again.',
-        )
-      }
+     
       throw new ZSAError('ERROR', 'Something went wrong!')
     }
   })
