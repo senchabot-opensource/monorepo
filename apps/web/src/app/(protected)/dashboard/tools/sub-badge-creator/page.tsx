@@ -226,7 +226,7 @@ export default function SubBadgeCreatorPage() {
               </div>
             )}
 
-            {originalImage && !processedImage && (
+            {/*originalImage && !processedImage && (
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <p className="text-sm font-medium">Image Scale</p>
@@ -244,7 +244,7 @@ export default function SubBadgeCreatorPage() {
                   Adjust how much of the badge area the image fills
                 </p>
               </div>
-            )}
+            )*/}
 
             <div className="flex gap-2">
               {originalImage && !processedImage && (
