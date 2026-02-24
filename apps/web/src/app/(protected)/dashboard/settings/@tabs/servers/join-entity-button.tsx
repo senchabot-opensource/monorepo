@@ -45,6 +45,7 @@ export function JoinEntity({
             }
 
             toast.success('Successfully joined!')
+            window.location.href = `/dashboard/settings/servers?joined=true&joined_platform=twitch&joined_entity_id=${platformEntityId}`
           } else if (platform === 'discord') {
             const BASE_URL = 'https://discord.com/oauth2/authorize?'
             const params = new URLSearchParams()
@@ -55,6 +56,7 @@ export function JoinEntity({
             params.append('scope', ['bot', 'applications.commands'].join(' '))
 
             window.open(new URL(BASE_URL + params), '_blank', 'noreferrer')
+            toast.success('Please complete the authorization to add the bot to your server')
           }
         })
       }}

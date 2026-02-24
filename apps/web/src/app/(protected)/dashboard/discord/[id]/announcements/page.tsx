@@ -28,8 +28,6 @@ export default async function Page(props: Props) {
     throw redirect('/signin')
   }
 
-  throw redirect('/dashboard')
-
   return (
     <div className="max-w-screen-lg space-y-8">
       <div className="space-y-1">
