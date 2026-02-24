@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, Suspense } from 'react'
+import { useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 
 import type { Platform } from '@/types/platform'
@@ -12,27 +12,28 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { LoaderIcon } from '@/components/ui/icons'
 
-import { JoinableEntities } from './joinable-entities-list'
-import { JoinedEntities } from './joined-entities-list'
 import { SharedCommandsDialog } from './shared-commands-dialog'
+import { EntitiesList } from './entities-list'
 
-interface Props {
-  initialEntities: Array<{
-    entity_name: string
-    entity_icon: string
-    entity_owner_id: string
-    entity_bot_joined: boolean
-    platform: Platform
-    platform_entity_id: string
-  }>
+interface Entity {
+  entity_name: string
+  entity_icon: string
+  entity_owner_id: string
+  entity_bot_joined: boolean
+  platform: Platform
+  platform_entity_id: string
 }
 
-function ServersContent({ initialEntities }: Props) {
+interface Props {
+  initialJoinableEntities: Entity[]
+  initialJoinedEntities: Entity[]
+}
+
+function ServersContent({ initialJoinableEntities, initialJoinedEntities }: Props) {
   const searchParams = useSearchParams()
   const [showSharedCommandsDialog, setShowSharedCommandsDialog] = useState(false)
-  const [entities, setEntities] = useState(initialEntities)
+  const [entities, setEntities] = useState([...initialJoinableEntities, ...initialJoinedEntities])
   const [dialogTriggered, setDialogTriggered] = useState(false)
 
   const justJoined = searchParams.get('joined')
@@ -45,11 +46,8 @@ function ServersContent({ initialEntities }: Props) {
     const hasMultiplePlatforms = uniquePlatforms.size > 1
 
     if (justJoined && joinedParam && joinedEntityId && !dialogTriggered) {
-      const newPlatform = joinedParam as Platform
-      const newEntityId = joinedEntityId
-
       const otherPlatforms = joinedPlatforms.filter(
-        (e) => e.platform !== newPlatform,
+        (e) => e.platform !== joinedParam,
       )
 
       if (otherPlatforms.length > 0) {
@@ -59,7 +57,7 @@ function ServersContent({ initialEntities }: Props) {
 
       setEntities((prev) =>
         prev.map((e) =>
-          e.platform_entity_id === newEntityId
+          e.platform_entity_id === joinedEntityId
             ? { ...e, entity_bot_joined: true }
             : e,
         ),
@@ -79,6 +77,7 @@ function ServersContent({ initialEntities }: Props) {
   }
 
   const joinedPlatforms = entities.filter((e) => e.entity_bot_joined)
+  const joinableEntities = entities.filter((e) => !e.entity_bot_joined)
 
   return (
     <>
@@ -91,9 +90,7 @@ function ServersContent({ initialEntities }: Props) {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Suspense fallback={<LoaderIcon />}>
-              <JoinableEntities />
-            </Suspense>
+            <EntitiesList entities={joinableEntities} />
           </CardContent>
         </section>
         <section>
@@ -104,9 +101,7 @@ function ServersContent({ initialEntities }: Props) {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Suspense fallback={<LoaderIcon />}>
-              <JoinedEntities />
-            </Suspense>
+            <EntitiesList entities={joinedPlatforms} />
           </CardContent>
         </section>
       </Card>

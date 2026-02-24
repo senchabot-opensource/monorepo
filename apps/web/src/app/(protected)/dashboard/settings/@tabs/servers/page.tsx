@@ -1,5 +1,3 @@
-import { Suspense } from 'react'
-
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 
@@ -28,11 +26,14 @@ export default async function Page() {
     throw redirect('/signin')
   }
 
-  const initialEntities = await getUserEntities()
+  const allEntities = await getUserEntities()
+  const joinableEntities = allEntities.filter((e) => !e.entity_bot_joined)
+  const joinedEntities = allEntities.filter((e) => e.entity_bot_joined)
 
   return (
-    <Suspense fallback={<Card className="divide-y divide-border"><CardContent className="pt-6"><LoaderIcon /></CardContent></Card>}>
-      <ServersContent initialEntities={initialEntities} />
-    </Suspense>
+    <ServersContent 
+      initialJoinableEntities={joinableEntities} 
+      initialJoinedEntities={joinedEntities} 
+    />
   )
 }
