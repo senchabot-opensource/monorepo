@@ -108,22 +108,22 @@ export function SystemCommandsList({ platform }: Props) {
         </div>
       ) : (
         <div className="overflow-hidden rounded-xl border">
-          <Table className="table-fixed overflow-hidden">
+          <Table className="overflow-hidden">
             <TableHeader>
               <TableRow>
-                <TableHead className="w-32">Name</TableHead>
+                <TableHead className="w-48">Name</TableHead>
                 <TableHead>Description</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filteredCommands.map((cmd) => (
                 <TableRow key={cmd.name}>
-                  <TableCell>
-                    <code className="rounded bg-primary/10 px-2 py-1 text-sm font-semibold text-primary">
-                      {platformPrefix+cmd.name}
+                  <TableCell className="align-top">
+                    <code className="break-all rounded bg-primary/10 px-2 py-1 text-sm font-semibold text-primary">
+                      {platformPrefix}{cmd.name}
                     </code>
                   </TableCell>
-                  <TableCell>{cmd.description}</TableCell>
+                  <TableCell className="align-top">{cmd.description}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
