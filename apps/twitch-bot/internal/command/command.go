@@ -129,7 +129,7 @@ func (c *commands) Run(ctx context.Context, cmdName string, params []string, pri
 		log.Println("[command.Run] COMMAND ALIAS ERROR:", cmdAliasErr.Error())
 	}
 
-	if commandAlias != nil {
+	if commandAlias != nil && *commandAlias != "" {
 		cmdName = *commandAlias
 	}
 	// HANDLE COMMAND ALIASES
