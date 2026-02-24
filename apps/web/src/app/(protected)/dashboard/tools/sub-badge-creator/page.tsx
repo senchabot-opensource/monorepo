@@ -45,17 +45,37 @@ export default function SubBadgeCreatorPage() {
 
             const scaleFactor = scalePercent / 100
             const imgAspect = img.width / img.height
-            let drawWidth = size
-            let drawHeight = size
+            let drawWidth: number
+            let drawHeight: number
             let offsetX = 0
             let offsetY = 0
 
             if (imgAspect > 1) {
               drawHeight = (size / imgAspect) * scaleFactor
+              drawWidth = size * scaleFactor
               offsetY = (size - drawHeight) / 2
             } else {
               drawWidth = (size * imgAspect) * scaleFactor
+              drawHeight = size * scaleFactor
               offsetX = (size - drawWidth) / 2
+            }
+
+            const isDownscaling = drawWidth < img.width || drawHeight < img.height
+            if (isDownscaling) {
+              const tempCanvas = document.createElement('canvas')
+              const maxStep = Math.max(img.width, img.height)
+              tempCanvas.width = maxStep
+              tempCanvas.height = maxStep
+              const tempCtx = tempCanvas.getContext('2d')
+              if (tempCtx) {
+                tempCtx.imageSmoothingEnabled = true
+                tempCtx.imageSmoothingQuality = 'high'
+                tempCtx.drawImage(img, 0, 0, maxStep, maxStep)
+                ctx.clearRect(0, 0, size, size)
+                ctx.drawImage(tempCanvas, 0, 0, maxStep, maxStep, offsetX, offsetY, drawWidth, drawHeight)
+                resolve(canvas.toDataURL('image/png'))
+                return
+              }
             }
 
             ctx.clearRect(0, 0, size, size)
