@@ -28,9 +28,10 @@ interface Entity {
 interface Props {
   initialJoinableEntities: Entity[]
   initialJoinedEntities: Entity[]
+  discordClientId: string
 }
 
-function ServersContent({ initialJoinableEntities, initialJoinedEntities }: Props) {
+function ServersContent({ initialJoinableEntities, initialJoinedEntities, discordClientId }: Props) {
   const searchParams = useSearchParams()
   const [showSharedCommandsDialog, setShowSharedCommandsDialog] = useState(false)
   const [entities, setEntities] = useState([...initialJoinableEntities, ...initialJoinedEntities])
@@ -90,7 +91,7 @@ function ServersContent({ initialJoinableEntities, initialJoinedEntities }: Prop
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <EntitiesList entities={joinableEntities} />
+            <EntitiesList entities={joinableEntities} discordClientId={discordClientId} />
           </CardContent>
         </section>
         <section>
@@ -101,7 +102,7 @@ function ServersContent({ initialJoinableEntities, initialJoinedEntities }: Prop
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <EntitiesList entities={joinedPlatforms} />
+            <EntitiesList entities={joinedPlatforms} discordClientId={discordClientId} />
           </CardContent>
         </section>
       </Card>

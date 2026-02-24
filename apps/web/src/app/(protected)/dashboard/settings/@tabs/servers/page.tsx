@@ -1,16 +1,8 @@
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import { LoaderIcon } from '@/components/ui/icons'
-
 import { auth } from '@/lib/auth'
+import { env } from '@/config/env'
 
 import { ServersContent } from './servers-content'
 import { getUserEntities } from '@/services/queries/users'
@@ -33,7 +25,8 @@ export default async function Page() {
   return (
     <ServersContent 
       initialJoinableEntities={joinableEntities} 
-      initialJoinedEntities={joinedEntities} 
+      initialJoinedEntities={joinedEntities}
+      discordClientId={env.AUTH_DISCORD_ID}
     />
   )
 }

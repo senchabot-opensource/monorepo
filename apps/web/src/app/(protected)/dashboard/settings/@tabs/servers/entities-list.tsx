@@ -1,6 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
-import { env } from '@/config/env'
 import type { UserEntity } from '@/types/user'
 
 import { DepartEntity } from './depart-entity-button'
@@ -8,11 +7,10 @@ import { JoinEntity } from './join-entity-button'
 
 interface Props {
   entities: UserEntity[]
+  discordClientId: string
 }
 
-export function EntitiesList({ entities }: Props) {
-  const DISCORD_CLIENT_ID = env.AUTH_DISCORD_ID
-
+export function EntitiesList({ entities, discordClientId }: Props) {
   return (
     <ul className="flex flex-col space-y-2">
       {Boolean(entities.length) ? (
@@ -42,7 +40,7 @@ export function EntitiesList({ entities }: Props) {
               <JoinEntity
                 platform={item.platform}
                 platformEntityId={item.platform_entity_id}
-                discordClientId={DISCORD_CLIENT_ID}
+                discordClientId={discordClientId}
               />
             )}
           </li>
