@@ -28,9 +28,10 @@ export default function SubBadgeCreatorPage() {
   )
   const [isProcessing, setIsProcessing] = useState(false)
   const [isUploading, setIsUploading] = useState(false)
+  const [scale, setScale] = useState(100)
 
   const resizeImage = useCallback(
-    async (src: string, size: number): Promise<string> => {
+    async (src: string, size: number, scalePercent: number): Promise<string> => {
       return new Promise((resolve) => {
         const img = new Image()
         img.onload = () => {
@@ -41,7 +42,24 @@ export default function SubBadgeCreatorPage() {
           if (ctx) {
             ctx.imageSmoothingEnabled = true
             ctx.imageSmoothingQuality = 'high'
-            ctx.drawImage(img, 0, 0, size, size)
+
+            const scaleFactor = scalePercent / 100
+            const imgAspect = img.width / img.height
+            let drawWidth = size
+            let drawHeight = size
+            let offsetX = 0
+            let offsetY = 0
+
+            if (imgAspect > 1) {
+              drawHeight = (size / imgAspect) * scaleFactor
+              offsetY = (size - drawHeight) / 2
+            } else {
+              drawWidth = (size * imgAspect) * scaleFactor
+              offsetX = (size - drawWidth) / 2
+            }
+
+            ctx.clearRect(0, 0, size, size)
+            ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight)
           }
           resolve(canvas.toDataURL('image/png'))
         }
@@ -91,7 +109,7 @@ export default function SubBadgeCreatorPage() {
       const resizedBadges = await Promise.all(
         BADGE_SIZES.map(async (size) => ({
           size,
-          url: await resizeImage(url, size),
+          url: await resizeImage(url, size, scale),
         }))
       )
       setBadges(resizedBadges)
@@ -102,7 +120,7 @@ export default function SubBadgeCreatorPage() {
     } finally {
       setIsProcessing(false)
     }
-  }, [originalImage, resizeImage])
+  }, [originalImage, resizeImage, scale])
 
   const handleDownload = useCallback((url: string | null, size: number) => {
     if (!url) return
@@ -185,6 +203,26 @@ export default function SubBadgeCreatorPage() {
                     src={originalImage}
                   />
                 </div>
+              </div>
+            )}
+
+            {originalImage && !processedImage && (
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-medium">Image Scale</p>
+                  <span className="text-sm text-muted-foreground">{scale}%</span>
+                </div>
+                <input
+                  type="range"
+                  min="10"
+                  max="100"
+                  value={scale}
+                  onChange={(e) => setScale(Number(e.target.value))}
+                  className="w-full cursor-pointer"
+                />
+                <p className="text-xs text-muted-foreground">
+                  Adjust how much of the badge area the image fills
+                </p>
               </div>
             )}
 
