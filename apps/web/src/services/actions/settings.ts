@@ -32,12 +32,7 @@ export const updateSetting = createServerAction()
       revalidateTag(`getEntitySettings-${input.platformEntityId}`)
     } catch (error) {
       console.error('updateSetting =>', error)
-      if (error instanceof RateLimitError) {
-        throw new ZSAError(
-          'TOO_MANY_REQUESTS',
-          'Too many requests. Please wait and try again.',
-        )
-      }
+     
       throw new ZSAError('ERROR', 'Something went wrong!')
     }
   })
@@ -61,12 +56,7 @@ export const updateSettings = createServerAction()
       revalidateTag(`getEntitySettings-${input.platformEntityId}`)
     } catch (error) {
       console.error('updateSettings =>', error)
-      if (error instanceof RateLimitError) {
-        throw new ZSAError(
-          'TOO_MANY_REQUESTS',
-          'Too many requests. Please wait and try again.',
-        )
-      }
+     
       throw new ZSAError('ERROR', 'Something went wrong!')
     }
   })
