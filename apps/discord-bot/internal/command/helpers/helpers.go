@@ -6,7 +6,6 @@ import (
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/senchabot-opensource/monorepo/model"
-	"github.com/senchabot-opensource/monorepo/platform"
 )
 
 func GetCommandVariables(dS *discordgo.Session, cmdData *model.BotCommand, i *discordgo.InteractionCreate) *model.CommandVariable {
@@ -35,8 +34,6 @@ func GetCommandVariables(dS *discordgo.Session, cmdData *model.BotCommand, i *di
 		CurrentDate:      currentDate,
 		CommandCreatedAt: cmdData.CreatedAt,
 		ChannelName:      channelName,
-		BotPlatform:      platform.DISCORD,
-		BotPlatformID:    i.GuildID,
 	}
 }
 

@@ -46,7 +46,7 @@ func (h *handler) InteractionCreate(command command.Command) {
 			log.Printf("[InteractionCreate] Executing custom command: %s for guild %s\n", commandName, i.GuildID)
 
 			cmdVar := helpers.GetCommandVariables(s, botCommand, i)
-			formattedCommandContent := helper.FormatCommandContent(cmdVar, h.service)
+			formattedCommandContent := helper.FormatCommandContent(cmdVar)
 			err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 				Type: discordgo.InteractionResponseChannelMessageWithSource,
 				Data: &discordgo.InteractionResponseData{

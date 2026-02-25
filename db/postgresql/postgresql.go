@@ -31,7 +31,6 @@ func New() db.Database {
 	sqlDB.SetMaxIdleConns(1)
 	sqlDB.SetMaxOpenConns(1)
 
-	db.AutoMigrate(&model.BotCommandVariable{})
 	db.AutoMigrate(&model.DiscordUserPrivacyPreferences{})
 	return &postgresql{
 		DB: db,
