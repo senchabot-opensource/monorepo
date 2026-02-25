@@ -13,6 +13,10 @@ const tabs = [
     label: 'System Commands',
     slug: 'system',
   },
+  {
+    label: 'Variables',
+    slug: 'variables',
+  },
 ]
 
 interface Props {
