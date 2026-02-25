@@ -18,7 +18,8 @@ import (
 )
 
 type GuildStreamers struct {
-	StreamUser       string
+	StreamerUserID   string
+	StreamerUsername string
 	DiscordChannelID string
 	DiscordServerID  string
 }
@@ -54,7 +55,8 @@ func (s *StreamerService) initStreamersData(ctx context.Context, service service
 			streamers[dtla.AnnoServerID] = serverStreamers
 		}
 		serverStreamers[dtla.TwitchUserID] = GuildStreamers{
-			StreamUser:       dtla.TwitchUsername,
+			StreamerUserID:   dtla.TwitchUserID,
+			StreamerUsername: dtla.TwitchUsername,
 			DiscordChannelID: dtla.AnnoChannelID,
 			DiscordServerID:  dtla.AnnoServerID,
 		}
@@ -68,7 +70,8 @@ func (s *StreamerService) SetStreamerData(serverId, twitchUserId, twitchUserName
 		streamers[serverId] = serverStreamers
 	}
 	serverStreamers[twitchUserId] = GuildStreamers{
-		StreamUser:       twitchUserName,
+		StreamerUserID:   twitchUserId,
+		StreamerUsername: twitchUserName,
 		DiscordChannelID: discordChannelId,
 		DiscordServerID:  serverId,
 	}
@@ -82,12 +85,12 @@ func (s *StreamerService) GetStreamersData(serverId string) map[string]GuildStre
 	return serverStreamers
 }
 
-func (s *StreamerService) DeleteStreamerFromData(serverId, username string) bool {
+func (s *StreamerService) DeleteStreamerFromData(serverId, twitchUserId string) bool {
 	serverStreamers, ok := streamers[serverId]
 	if !ok {
 		return false
 	}
-	delete(serverStreamers, username)
+	delete(serverStreamers, twitchUserId)
 	return true
 }
 

@@ -86,13 +86,13 @@ func (h *handler) handleLivestreamDelete(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	if req.GuildID == "" || req.TwitchUsername == "" {
+	if req.GuildID == "" || req.TwitchUserID == "" {
 		http.Error(w, "Missing required fields", http.StatusBadRequest)
 		return
 	}
 
-	h.streamerService.DeleteStreamerFromData(req.GuildID, req.TwitchUsername)
-	log.Printf("[LivestreamDelete] Streamer removed: guild=%s, twitch=%s", req.GuildID, req.TwitchUsername)
+	h.streamerService.DeleteStreamerFromData(req.GuildID, req.TwitchUserID)
+	log.Printf("[LivestreamDelete] Streamer removed: guild=%s, twitchUserId=%s", req.GuildID, req.TwitchUserID)
 
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(map[string]string{"status": "ok"})
