@@ -5,7 +5,13 @@ import { platform } from './platform'
 export const createCustomCommandVariableSchema = z.object({
   platform: platform,
   platformEntityId: z.string().min(1),
-  name: z.string().min(1, 'Name is required').max(255, 'Name is too long'),
+  name: z
+    .string()
+    .min(1, 'Name is required')
+    .max(255, 'Name is too long')
+    .refine((val) => !val.includes('{') && !val.includes('}'), {
+      message: "Name cannot contain { or } characters",
+    }),
   value: z
     .string()
     .min(1, 'Value is required')
@@ -20,6 +26,9 @@ export const updateCustomCommandVariableSchema = z.object({
     .string()
     .min(1, 'Name is required')
     .max(255, 'Name is too long')
+    .refine((val) => !val.includes('{') && !val.includes('}'), {
+      message: "Name cannot contain { or } characters",
+    })
     .optional(),
   value: z
     .string()
