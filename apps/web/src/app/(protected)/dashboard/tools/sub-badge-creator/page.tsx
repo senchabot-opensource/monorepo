@@ -350,48 +350,43 @@ export default function SubBadgeCreatorPage() {
                 Upload an image and remove the background to generate badges
               </div>
             )}
+
+            {badges[0]?.url && (
+              <div className="mt-6 border-t pt-4">
+                <p className="mb-3 text-sm text-muted-foreground">
+                  This is how the 18x18 badge looks in Twitch chat:
+                </p>
+                <div className="rounded-lg border bg-[#0e0e10] p-3 font-irc text-sm">
+                  <div className="flex items-start gap-2">
+                    <img
+                      alt="sub badge"
+                      className="mt-0.5 size-[18px] shrink-0"
+                      src={badges[0].url}
+                    />
+                    <div>
+                      <span className="font-semibold text-[#a970ff]">username</span>
+                      <span className="text-muted-foreground"> This is a test message!</span>
+                    </div>
+                  </div>
+                  <div className="mt-1 flex items-start gap-2">
+                    <img
+                      alt="sub badge"
+                      className="mt-0.5 size-[18px] shrink-0"
+                      src={badges[0].url}
+                    />
+                    <div>
+                      <span className="font-semibold text-[#a970ff]">anotheruser</span>
+                      <span className="text-muted-foreground"> Another message with your badge</span>
+                    </div>
+                  </div>
+                </div>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  Note: Twitch automatically applies rounding to the 18x18 badge
+                </p>
+              </div>
+            )}
           </CardContent>
         </Card>
-
-        {badges[0]?.url && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Twitch Chat Preview</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="mb-3 text-sm text-muted-foreground">
-                This is how the 18x18 badge looks in Twitch chat:
-              </p>
-              <div className="rounded-lg border bg-[#0e0e10] p-3 font-irc text-sm">
-                <div className="flex items-start gap-2">
-                  <img
-                    alt="sub badge"
-                    className="mt-0.5 size-[18px] shrink-0"
-                    src={badges[0].url}
-                  />
-                  <div>
-                    <span className="font-semibold text-[#a970ff]">username</span>
-                    <span className="text-muted-foreground"> This is a test message!</span>
-                  </div>
-                </div>
-                <div className="mt-1 flex items-start gap-2">
-                  <img
-                    alt="sub badge"
-                    className="mt-0.5 size-[18px] shrink-0"
-                    src={badges[0].url}
-                  />
-                  <div>
-                    <span className="font-semibold text-[#a970ff]">anotheruser</span>
-                    <span className="text-muted-foreground"> Another message with your badge</span>
-                  </div>
-                </div>
-              </div>
-              <p className="mt-2 text-xs text-muted-foreground">
-                Note: Twitch automatically applies rounding to the 18x18 badge
-              </p>
-            </CardContent>
-          </Card>
-        )}
       </div>
     </div>
   )
