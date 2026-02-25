@@ -55,14 +55,6 @@ type Service interface {
 	UpdateCommandTimer(ctx context.Context, channelId string, commandName string, interval int, status int) error
 	UpdateCommandTimerInterval(commandId, interval int)
 	DeleteCommandTimer(ctx context.Context, channelId string, commandName string) error
-
-	// Command Variable methods
-	GetCommandVariable(ctx context.Context, varName string, botPlatformId string) (*model.BotCommandVariable, error)
-	CreateCommandVariable(ctx context.Context, varName string, varContent string, botPlatformId string, createdBy string) error
-	UpdateCommandVariable(ctx context.Context, varName string, varContent string, botPlatformId string, updatedBy string) error
-	DeleteCommandVariable(ctx context.Context, varName string, botPlatformId string, updatedBy string) error
-	ListCommandVariables(ctx context.Context, botPlatformId string) ([]*model.BotCommandVariable, error)
-	GetCustomVariableContent(ctx context.Context, botPlatformId string, varName string) string
 }
 
 type service struct {
@@ -322,28 +314,4 @@ func (s *service) DeleteCommandTimer(ctx context.Context, channelId string, comm
 
 func (s *service) UpdateCommandTimerInterval(commandId, interval int) {
 	s.timer.UpdateCommandTimerInterval(commandId, interval)
-}
-
-func (s *service) GetCommandVariable(ctx context.Context, varName string, botPlatformId string) (*model.BotCommandVariable, error) {
-	return s.db.GetCommandVariable(ctx, varName, platform.TWITCH, botPlatformId)
-}
-
-func (s *service) CreateCommandVariable(ctx context.Context, varName string, varContent string, botPlatformId string, createdBy string) error {
-	return s.db.CreateCommandVariable(ctx, varName, varContent, platform.TWITCH, botPlatformId, createdBy)
-}
-
-func (s *service) UpdateCommandVariable(ctx context.Context, varName string, varContent string, botPlatformId string, updatedBy string) error {
-	return s.db.UpdateCommandVariable(ctx, varName, varContent, platform.TWITCH, botPlatformId, updatedBy)
-}
-
-func (s *service) DeleteCommandVariable(ctx context.Context, varName string, botPlatformId string, updatedBy string) error {
-	return s.db.DeleteCommandVariable(ctx, varName, platform.TWITCH, botPlatformId, updatedBy)
-}
-
-func (s *service) ListCommandVariables(ctx context.Context, botPlatformId string) ([]*model.BotCommandVariable, error) {
-	return s.db.ListCommandVariables(ctx, platform.TWITCH, botPlatformId)
-}
-
-func (s *service) GetCustomVariableContent(ctx context.Context, botPlatformId string, varName string) string {
-	return s.db.GetCustomVariableContent(ctx, platform.TWITCH, botPlatformId, varName)
 }

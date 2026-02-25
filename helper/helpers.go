@@ -1,7 +1,6 @@
 package helper
 
 import (
-	"context"
 	"errors"
 	"fmt"
 	"io"
@@ -15,7 +14,6 @@ import (
 	"time"
 
 	"github.com/senchabot-opensource/monorepo/model"
-	"github.com/senchabot-opensource/monorepo/service"
 )
 
 const (
@@ -28,7 +26,7 @@ const (
 	MaxCommandContentLength = 400
 )
 
-func FormatCommandContent(cv *model.CommandVariable, service service.Service) string {
+func FormatCommandContent(cv *model.CommandVariable) string {
 	msgContent := cv.CommandContent
 	username := cv.UserName
 	dateTemplate := "02/01/2006"
@@ -48,24 +46,6 @@ func FormatCommandContent(cv *model.CommandVariable, service service.Service) st
 
 	for k, v := range stringTemplates {
 		msgContent = strings.ReplaceAll(msgContent, k, v)
-	}
-
-	// Find and replace custom variables
-	re := regexp.MustCompile(`{([^}]+)}`)
-	matches := re.FindAllStringSubmatch(msgContent, -1)
-
-	if matches != nil && cv.BotPlatform != "" && cv.BotPlatformID != "" {
-
-		for _, match := range matches {
-			if _, exists := stringTemplates[match[0]]; !exists {
-				// This is a custom variable, look it up in the database
-				variableContent := service.GetCustomVariableContent(context.Background(), cv.BotPlatformID, match[1])
-				if variableContent != "" {
-					msgContent = strings.ReplaceAll(msgContent, match[0], variableContent)
-				}
-			}
-
-		}
 	}
 
 	url, startIndex, endIndex, ok := ParseCustomAPIURLFromMessage(msgContent)

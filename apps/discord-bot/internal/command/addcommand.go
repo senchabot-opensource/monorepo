@@ -9,8 +9,6 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/command/helpers"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
-	"github.com/senchabot-opensource/monorepo/command"
-	"github.com/senchabot-opensource/monorepo/config"
 	"github.com/senchabot-opensource/monorepo/helper"
 	"github.com/senchabot-opensource/monorepo/model"
 )
@@ -39,11 +37,6 @@ func (c *commands) AcmdCommandHandler(ctx context.Context, s *discordgo.Session,
 	// Check command name and content length
 	if infoText, check := helper.ValidateCommandCreateParams(command_name, command_content); !check {
 		ephemeralRespond(s, i, message.UserName+", "+infoText)
-		return
-	}
-
-	if !command.CheckCommandContentLengthWithCustomVariable(command_content, ctx, *message, c.service.GetCustomVariableContent) {
-		ephemeralRespond(s, i, config.CommandContentLimit)
 		return
 	}
 

@@ -21,5 +21,5 @@ func (c *commands) AddCommandCommand(context context.Context, message twitch.Pri
 		UserName:         message.User.DisplayName,
 	}
 
-	return command.AcmdCommand(context, c.service.CreateCommand, c.service.GetCustomVariableContent, c.IsSystemCommand, *msgData, commandName, params)
+	return command.AcmdCommand(context, c.service.CreateCommand, c.IsSystemCommand, *msgData, commandName, params)
 }

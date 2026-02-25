@@ -64,14 +64,6 @@ type Service interface {
 	GetDiscordBotConfig(ctx context.Context, discordServerId string, configKey string) (*model.DiscordBotConfigs, error)
 	CheckDiscordBotConfig(ctx context.Context, discordServerId string, configKey string, configValue string) bool
 
-	// Command Variable methods
-	GetCommandVariable(ctx context.Context, varName string, botPlatformId string) (*model.BotCommandVariable, error)
-	CreateCommandVariable(ctx context.Context, varName string, varContent string, botPlatformId string, createdBy string) error
-	UpdateCommandVariable(ctx context.Context, varName string, varContent string, botPlatformId string, updatedBy string) error
-	DeleteCommandVariable(ctx context.Context, varName string, botPlatformId string, updatedBy string) error
-	ListCommandVariables(ctx context.Context, botPlatformId string) ([]*model.BotCommandVariable, error)
-	GetCustomVariableContent(ctx context.Context, botPlatformId string, varName string) string
-
 	GetDiscordUserPrivacyPreferences(ctx context.Context, discordUserId string) (*model.DiscordUserPrivacyPreferences, error)
 	SetDiscordUserPrivacyPreferences(ctx context.Context, discordUserId string, doNotTrackMessages bool) error
 }
@@ -327,32 +319,6 @@ func (s *service) CheckDiscordBotConfig(ctx context.Context, discordServerId str
 	}
 
 	return false
-}
-
-// DISCORD BOT CONFIG
-
-func (s *service) GetCommandVariable(ctx context.Context, varName string, botPlatformId string) (*model.BotCommandVariable, error) {
-	return s.db.GetCommandVariable(ctx, varName, platform.DISCORD, botPlatformId)
-}
-
-func (s *service) CreateCommandVariable(ctx context.Context, varName string, varContent string, botPlatformId string, createdBy string) error {
-	return s.db.CreateCommandVariable(ctx, varName, varContent, platform.DISCORD, botPlatformId, createdBy)
-}
-
-func (s *service) UpdateCommandVariable(ctx context.Context, varName string, varContent string, botPlatformId string, updatedBy string) error {
-	return s.db.UpdateCommandVariable(ctx, varName, varContent, platform.DISCORD, botPlatformId, updatedBy)
-}
-
-func (s *service) DeleteCommandVariable(ctx context.Context, varName string, botPlatformId string, updatedBy string) error {
-	return s.db.DeleteCommandVariable(ctx, varName, platform.DISCORD, botPlatformId, updatedBy)
-}
-
-func (s *service) ListCommandVariables(ctx context.Context, botPlatformId string) ([]*model.BotCommandVariable, error) {
-	return s.db.ListCommandVariables(ctx, platform.DISCORD, botPlatformId)
-}
-
-func (s *service) GetCustomVariableContent(ctx context.Context, botPlatformId string, varName string) string {
-	return s.db.GetCustomVariableContent(ctx, platform.DISCORD, botPlatformId, varName)
 }
 
 func (s *service) GetDiscordUserPrivacyPreferences(ctx context.Context, discordUserId string) (*model.DiscordUserPrivacyPreferences, error) {

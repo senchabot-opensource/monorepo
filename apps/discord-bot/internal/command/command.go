@@ -61,11 +61,6 @@ func (c *commands) GetSystemCommands() SysCommandMap {
 		"ucmd":                     c.UcmdCommandHandler,
 		"dcmd":                     c.DcmdCommandHandler,
 		"sozluk":                   c.SozlukCommandHandler,
-
-		"acmdvar": c.AcmdvarCommandHandler,
-		"ucmdvar": c.UcmdvarCommandHandler,
-		"dcmdvar": c.DcmdvarCommandHandler,
-		"lcmdvar": c.LcmdvarCommandHandler,
 	}
 
 	return commands
@@ -117,8 +112,8 @@ func deployCommands(discordClient *discordgo.Session) {
 }
 
 var (
-	purgePermissions     int64 = discordgo.PermissionManageServer
-	setdeletePermissions int64 = discordgo.PermissionManageServer
+	purgePermissions     int64 = discordgo.PermissionManageGuild
+	setdeletePermissions int64 = discordgo.PermissionManageGuild
 	dmPermission               = false
 	//manageCmdPermissions int64 = discordgo.PermissionManageChannels
 	commandMetadatas = []*discordgo.ApplicationCommand{
@@ -142,11 +137,6 @@ var (
 		DcmdCommandMetadata(),
 		CmdsCommandMetadata(),
 		SozlukCommandMetadata(),
-
-		AcmdvarCommandMetadata(),
-		UcmdvarCommandMetadata(),
-		DcmdvarCommandMetadata(),
-		LcmdvarCommandMetadata(),
 	}
 )
 
