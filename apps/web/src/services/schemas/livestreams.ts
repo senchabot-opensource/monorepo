@@ -10,12 +10,20 @@ export const deleteEventChannelSchema = z.object({
   platformEntityId: z.string(),
 })
 
-export const createAnnouncementSchema = z.object({
-  platformEntityId: z.string().min(1),
-  twitch_username: z.string().min(1),
-  guild_channel_id: z.string().min(1),
-  announcement_content: z.string().optional(),
-})
+export const createAnnouncementSchema = z
+  .object({
+    platformEntityId: z.string().min(1),
+    twitch_username: z.string().min(1),
+    guild_channel_id: z.string().min(1),
+    announcement_content: z.string().optional(),
+  })
+  .transform((val) => ({
+    ...val,
+    twitch_username: val.twitch_username.replace(
+      /^https?:\/\/(www\.)?twitch\.tv\//,
+      '',
+    ),
+  }))
 
 export const deleteAnnouncementSchema = z.object({
   id: z.number(),
