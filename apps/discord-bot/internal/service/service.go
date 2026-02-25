@@ -10,6 +10,7 @@ import (
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service/webhook"
 	"github.com/senchabot-opensource/monorepo/db"
 	"github.com/senchabot-opensource/monorepo/db/postgresql"
+	botcommandgrpc "github.com/senchabot-opensource/monorepo/grpc/botcommand/client"
 	"github.com/senchabot-opensource/monorepo/model"
 	"github.com/senchabot-opensource/monorepo/platform"
 )
@@ -63,32 +64,24 @@ type Service interface {
 	GetDiscordBotConfig(ctx context.Context, discordServerId string, configKey string) (*model.DiscordBotConfigs, error)
 	CheckDiscordBotConfig(ctx context.Context, discordServerId string, configKey string, configValue string) bool
 
-	AddBotCommandStatistic(ctx context.Context, commandName string)
-
-	// Command Variable methods
-	GetCommandVariable(ctx context.Context, varName string, botPlatformId string) (*model.BotCommandVariable, error)
-	CreateCommandVariable(ctx context.Context, varName string, varContent string, botPlatformId string, createdBy string) error
-	UpdateCommandVariable(ctx context.Context, varName string, varContent string, botPlatformId string, updatedBy string) error
-	DeleteCommandVariable(ctx context.Context, varName string, botPlatformId string, updatedBy string) error
-	ListCommandVariables(ctx context.Context, botPlatformId string) ([]*model.BotCommandVariable, error)
-	GetCustomVariableContent(ctx context.Context, botPlatformId string, varName string) string
-
 	GetDiscordUserPrivacyPreferences(ctx context.Context, discordUserId string) (*model.DiscordUserPrivacyPreferences, error)
 	SetDiscordUserPrivacyPreferences(ctx context.Context, discordUserId string, doNotTrackMessages bool) error
 }
 
 type service struct {
-	DB      db.Database
-	Webhook webhook.Webhook
+	db               db.Database
+	botCommandClient *botcommandgrpc.BotCommandClient
+	Webhook          webhook.Webhook
 }
 
-func New() Service {
+func New(botCommandClient *botcommandgrpc.BotCommandClient) Service {
 	dbService := postgresql.New()
 	whService := webhook.NewWebhook(dbService)
 
 	return &service{
-		DB:      dbService,
-		Webhook: whService,
+		db:               dbService,
+		botCommandClient: botCommandClient,
+		Webhook:          whService,
 	}
 }
 
@@ -97,56 +90,90 @@ func (s *service) BotLeaveWebhook(client *discordgo.Session, w http.ResponseWrit
 }
 
 func (s *service) GetUserBotCommand(ctx context.Context, commandName string, discordServerId string) (*model.BotCommand, error) {
-	return s.DB.GetUserBotCommand(ctx, platform.DISCORD, commandName, discordServerId)
+	cmd, err := s.botCommandClient.GetUserBotCommand(ctx, platform.DISCORD.String(), commandName, discordServerId)
+	if err != nil {
+		return nil, err
+	}
+	if cmd == nil {
+		return nil, nil
+	}
+	return &model.BotCommand{
+		ID:             int(cmd.Id),
+		CommandName:    cmd.CommandName,
+		CommandContent: cmd.CommandContent,
+		CommandType:    int(cmd.CommandType),
+		Status:         int(cmd.Status),
+	}, nil
 }
 
 func (s *service) GetGlobalBotCommand(ctx context.Context, commandName string) (*model.BotCommand, error) {
-	return s.DB.GetGlobalBotCommand(ctx, commandName)
+	cmd, err := s.botCommandClient.GetGlobalBotCommand(ctx, commandName)
+	if err != nil {
+		return nil, err
+	}
+	if cmd == nil {
+		return nil, nil
+	}
+	return &model.BotCommand{
+		ID:             int(cmd.Id),
+		CommandName:    cmd.CommandName,
+		CommandContent: cmd.CommandContent,
+		CommandType:    int(cmd.CommandType),
+		Status:         int(cmd.Status),
+	}, nil
 }
 
 func (s *service) CreateCommand(ctx context.Context, commandName string, commandContent string, discordServerId string, createdBy string) (*string, error) {
-	infoText, err := s.DB.CreateBotCommand(ctx, platform.DISCORD, commandName, commandContent, discordServerId, createdBy)
+	resp, err := s.botCommandClient.CreateBotCommand(ctx, platform.DISCORD.String(), commandName, commandContent, discordServerId, createdBy)
 	if err != nil {
 		return nil, err
 	}
-
-	return infoText, nil
+	return &resp.InfoText, nil
 }
 
 func (s *service) CheckCommandExists(ctx context.Context, commandName string, discordServerId string) (*string, error) {
-	existCommandName, err := s.DB.CheckCommandExists(ctx, platform.DISCORD, commandName, discordServerId)
+	cmd, err := s.botCommandClient.GetUserBotCommand(ctx, platform.DISCORD.String(), commandName, discordServerId)
 	if err != nil {
 		return nil, err
 	}
-
-	return existCommandName, nil
+	if cmd == nil {
+		return nil, nil
+	}
+	return &cmd.CommandName, nil
 }
 
 func (s *service) UpdateCommand(ctx context.Context, commandName string, commandContent string, discordServerId string, updatedBy string) (*string, *string, error) {
-	updatedCommandName, infoText, err := s.DB.UpdateBotCommand(ctx, platform.DISCORD, commandName, commandContent, discordServerId, updatedBy)
+	resp, err := s.botCommandClient.UpdateBotCommand(ctx, platform.DISCORD.String(), commandName, commandContent, discordServerId, updatedBy)
 	if err != nil {
 		return nil, nil, err
 	}
-
-	return updatedCommandName, infoText, nil
+	return &resp.CommandName, &resp.InfoText, nil
 }
 
 func (s *service) DeleteCommand(ctx context.Context, commandName string, discordServerId string) (*string, *string, error) {
-	deletedCommandName, infoText, err := s.DB.DeleteBotCommand(ctx, platform.DISCORD, commandName, discordServerId)
+	resp, err := s.botCommandClient.DeleteBotCommand(ctx, platform.DISCORD.String(), commandName, discordServerId)
 	if err != nil {
 		return nil, nil, err
 	}
-
-	return deletedCommandName, infoText, nil
+	return &resp.CommandName, &resp.InfoText, nil
 }
 
 func (s *service) GetCommandList(ctx context.Context, discordServerId string) ([]*model.BotCommand, error) {
-	cmdList, err := s.DB.GetCommandList(ctx, platform.DISCORD, discordServerId)
+	cmds, err := s.botCommandClient.GetCommandList(ctx, platform.DISCORD.String(), discordServerId)
 	if err != nil {
 		return nil, err
 	}
-
-	return cmdList, nil
+	var result []*model.BotCommand
+	for _, cmd := range cmds {
+		result = append(result, &model.BotCommand{
+			ID:             int(cmd.Id),
+			CommandName:    cmd.CommandName,
+			CommandContent: cmd.CommandContent,
+			CommandType:    int(cmd.CommandType),
+			Status:         int(cmd.Status),
+		})
+	}
+	return result, nil
 }
 
 func (s *service) SaveCommandActivity(context context.Context, commandName string, discordServerId string, commandAuthor, commandAuthorId string) {
@@ -157,112 +184,131 @@ func (s *service) SaveCommandActivity(context context.Context, commandName strin
 
 	commandName = "/" + commandName
 
-	if err := s.DB.CreateBotActionActivity(context, platform.DISCORD, commandName, discordServerId, commandAuthor, commandAuthorId); err != nil {
+	if err := s.db.CreateBotActionActivity(context, platform.DISCORD, commandName, discordServerId, commandAuthor, commandAuthorId); err != nil {
 		log.Println("[service.SaveCommandActivity] CreateBotActionActivity error:", err.Error())
 	}
 }
 
 func (s *service) CreateCommandAlias(ctx context.Context, commandName string, aliases []string, discordServerId string, createdBy string) (*string, error) {
-	return s.DB.CreateCommandAlias(ctx, platform.DISCORD, commandName, aliases, discordServerId, createdBy)
+	resp, err := s.botCommandClient.CreateCommandAlias(ctx, platform.DISCORD.String(), commandName, aliases, discordServerId, createdBy)
+	if err != nil {
+		return nil, err
+	}
+	return &resp.InfoText, nil
 }
 func (s *service) GetCommandAlias(ctx context.Context, commandAlias string, discordServerId string) (*string, error) {
-	return s.DB.GetCommandAlias(ctx, platform.DISCORD, commandAlias, discordServerId)
+	commandName, err := s.botCommandClient.GetCommandAlias(ctx, platform.DISCORD.String(), commandAlias, discordServerId)
+	if err != nil {
+		return nil, err
+	}
+	return &commandName, nil
 }
 func (s *service) CheckCommandAliasExist(ctx context.Context, commandAlias string, discordServerId string) (*string, error) {
-	return s.DB.CheckCommandAliasExist(ctx, platform.DISCORD, commandAlias, discordServerId)
+	commandName, err := s.botCommandClient.GetCommandAlias(ctx, platform.DISCORD.String(), commandAlias, discordServerId)
+	if err != nil {
+		return nil, err
+	}
+	if commandName == "" {
+		return nil, nil
+	}
+	return &commandName, nil
 }
 func (s *service) DeleteCommandAlias(ctx context.Context, commandAlias string, discordServerId string) (*string, error) {
-	return s.DB.DeleteCommandAlias(ctx, platform.DISCORD, commandAlias, discordServerId)
+	resp, err := s.botCommandClient.DeleteCommandAlias(ctx, platform.DISCORD.String(), commandAlias, discordServerId)
+	if err != nil {
+		return nil, err
+	}
+	return &resp.InfoText, nil
 }
 
 // Discord
 
 func (s *service) AddAnnouncementChannel(ctx context.Context, channelId string, serverId string, createdBy string) (bool, error) {
-	return s.DB.AddAnnouncementChannel(ctx, channelId, serverId, createdBy)
+	return s.db.AddAnnouncementChannel(ctx, channelId, serverId, createdBy)
 }
 func (s *service) GetAnnouncementChannels(ctx context.Context) ([]*model.DiscordAnnouncementChannels, error) {
-	return s.DB.GetAnnouncementChannels(ctx)
+	return s.db.GetAnnouncementChannels(ctx)
 }
 func (s *service) GetAnnouncementChannelByChannelId(ctx context.Context, channelId string) (*model.DiscordAnnouncementChannels, error) {
-	return s.DB.GetAnnouncementChannelByChannelId(ctx, channelId)
+	return s.db.GetAnnouncementChannelByChannelId(ctx, channelId)
 }
 func (s *service) GetAnnouncementChannelById(ctx context.Context, id int) (*model.DiscordAnnouncementChannels, error) {
-	return s.DB.GetAnnouncementChannelById(ctx, id)
+	return s.db.GetAnnouncementChannelById(ctx, id)
 }
 func (s *service) DeleteAnnouncementChannel(ctx context.Context, channelId string) (bool, error) {
-	return s.DB.DeleteAnnouncementChannel(ctx, channelId)
+	return s.db.DeleteAnnouncementChannel(ctx, channelId)
 }
 func (s *service) AddDiscordTwitchLiveAnnos(ctx context.Context, twitchUsername, twitchUserId, annoChannelId, annoServerId, createdBy string) (bool, error) {
-	return s.DB.AddDiscordTwitchLiveAnnos(ctx, twitchUsername, twitchUserId, annoChannelId, annoServerId, createdBy)
+	return s.db.AddDiscordTwitchLiveAnnos(ctx, twitchUsername, twitchUserId, annoChannelId, annoServerId, createdBy)
 }
 func (s *service) UpdateTwitchStreamerAnnoContent(ctx context.Context, twitchUserId, annoServerId string, annoContent *string) (bool, error) {
-	return s.DB.UpdateTwitchStreamerAnnoContent(ctx, twitchUserId, annoServerId, annoContent)
+	return s.db.UpdateTwitchStreamerAnnoContent(ctx, twitchUserId, annoServerId, annoContent)
 }
 func (s *service) UpdateTwitchStreamerLastAnnoDate(ctx context.Context, twitchUserId, annoServerId string, lastAnnoDate time.Time) (bool, error) {
-	return s.DB.UpdateTwitchStreamerLastAnnoDate(ctx, twitchUserId, annoServerId, lastAnnoDate)
+	return s.db.UpdateTwitchStreamerLastAnnoDate(ctx, twitchUserId, annoServerId, lastAnnoDate)
 }
 func (s *service) GetTwitchStreamerLastAnnoDate(ctx context.Context, twitchUserId, annoServerId string) (*time.Time, error) {
-	return s.DB.GetTwitchStreamerLastAnnoDate(ctx, twitchUserId, annoServerId)
+	return s.db.GetTwitchStreamerLastAnnoDate(ctx, twitchUserId, annoServerId)
 }
 func (s *service) GetTwitchStreamerAnnoContent(ctx context.Context, twitchUserId, annoServerId string) (*string, error) {
-	return s.DB.GetTwitchStreamerAnnoContent(ctx, twitchUserId, annoServerId)
+	return s.db.GetTwitchStreamerAnnoContent(ctx, twitchUserId, annoServerId)
 }
 func (s *service) GetDiscordTwitchLiveAnno(ctx context.Context, twitchUserId, annoServerId string) (*model.DiscordTwitchLiveAnnos, error) {
-	return s.DB.GetDiscordTwitchLiveAnno(ctx, twitchUserId, annoServerId)
+	return s.db.GetDiscordTwitchLiveAnno(ctx, twitchUserId, annoServerId)
 }
 func (s *service) GetDiscordTwitchLiveAnnoByUsername(ctx context.Context, twitchUsername, annoServerId string) (*model.DiscordTwitchLiveAnnos, error) {
-	return s.DB.GetDiscordTwitchLiveAnnoByUsername(ctx, twitchUsername, annoServerId)
+	return s.db.GetDiscordTwitchLiveAnnoByUsername(ctx, twitchUsername, annoServerId)
 }
 func (s *service) GetDiscordTwitchLiveAnnos(ctx context.Context, serverId string) ([]*model.DiscordTwitchLiveAnnos, error) {
-	return s.DB.GetDiscordTwitchLiveAnnos(ctx, serverId)
+	return s.db.GetDiscordTwitchLiveAnnos(ctx, serverId)
 }
 func (s *service) GetCountDiscordTwitchLiveAnnosWithoutContent(ctx context.Context, serverId string) (int64, error) {
-	return s.DB.GetCountDiscordTwitchLiveAnnosWithoutContent(ctx, serverId)
+	return s.db.GetCountDiscordTwitchLiveAnnosWithoutContent(ctx, serverId)
 }
 func (s *service) GetCountDiscordTwitchLiveAnnosWithoutChannel(ctx context.Context, serverId string) (int64, error) {
-	return s.DB.GetCountDiscordTwitchLiveAnnosWithoutChannel(ctx, serverId)
+	return s.db.GetCountDiscordTwitchLiveAnnosWithoutChannel(ctx, serverId)
 }
 func (s *service) DeleteDiscordTwitchLiveAnno(ctx context.Context, twitchUserId string, serverId string) (bool, error) {
-	return s.DB.DeleteDiscordTwitchLiveAnno(ctx, twitchUserId, serverId)
+	return s.db.DeleteDiscordTwitchLiveAnno(ctx, twitchUserId, serverId)
 }
 func (s *service) DeleteDiscordTwitchLiveAnnosByGuildId(ctx context.Context, serverId string) (bool, error) {
-	return s.DB.DeleteDiscordTwitchLiveAnnosByGuildId(ctx, serverId)
+	return s.db.DeleteDiscordTwitchLiveAnnosByGuildId(ctx, serverId)
 }
 func (s *service) DeleteDiscordTwitchLiveAnnosByChannelId(ctx context.Context, channelId string) (bool, error) {
 	// TODO: Delete streamers from streamers data
-	return s.DB.DeleteDiscordTwitchLiveAnnosByChannelId(ctx, channelId)
+	return s.db.DeleteDiscordTwitchLiveAnnosByChannelId(ctx, channelId)
 }
 func (s *service) GetDiscordChannelTwitchCategoryFilter(ctx context.Context, serverId string, channelId string) ([]*model.DiscordChannelTwitchCategoryFilter, error) {
-	return s.DB.GetDiscordChannelTwitchCategoryFilter(ctx, serverId, channelId)
+	return s.db.GetDiscordChannelTwitchCategoryFilter(ctx, serverId, channelId)
 }
 func (s *service) SetDiscordChannelTwitchCategoryFilter(ctx context.Context, annoServerId, annoChannelId, categoryFilterRegex string, conditionType uint, createdBy string) (bool, error) {
-	return s.DB.SetDiscordChannelTwitchCategoryFilter(ctx, annoServerId, annoChannelId, categoryFilterRegex, conditionType, createdBy)
+	return s.db.SetDiscordChannelTwitchCategoryFilter(ctx, annoServerId, annoChannelId, categoryFilterRegex, conditionType, createdBy)
 }
 func (s *service) DeleteDiscordChannelTwitchCategoryFilter(ctx context.Context, serverId string, channelId string) (bool, error) {
-	return s.DB.DeleteDiscordChannelTwitchCategoryFilter(ctx, serverId, channelId)
+	return s.db.DeleteDiscordChannelTwitchCategoryFilter(ctx, serverId, channelId)
 }
 func (s *service) AddServerToDB(ctx context.Context, serverId string, serverName string, serverOwner string) error {
-	return s.DB.AddServerToDB(ctx, serverId, serverName, serverOwner)
+	return s.db.AddServerToDB(ctx, serverId, serverName, serverOwner)
 }
 func (s *service) DeleteServerFromDB(ctx context.Context, serverId string) error {
-	return s.DB.DeleteServerFromDB(ctx, serverId)
+	return s.db.DeleteServerFromDB(ctx, serverId)
 }
 func (s *service) GetServers(ctx context.Context) ([]*model.DiscordServer, error) {
-	return s.DB.GetServers(ctx)
+	return s.db.GetServers(ctx)
 }
 
 // DISCORD BOT CONFIG
 func (s *service) SetDiscordBotConfig(ctx context.Context, serverId, key, value string) (bool, error) {
-	return s.DB.SetDiscordBotConfig(ctx, serverId, key, value)
+	return s.db.SetDiscordBotConfig(ctx, serverId, key, value)
 }
 func (s *service) DeleteDiscordBotConfig(ctx context.Context, serverId string, key string) (bool, error) {
-	return s.DB.DeleteDiscordBotConfig(ctx, serverId, key)
+	return s.db.DeleteDiscordBotConfig(ctx, serverId, key)
 }
 func (s *service) GetDiscordBotConfig(ctx context.Context, discordServerId string, configKey string) (*model.DiscordBotConfigs, error) {
-	return s.DB.GetDiscordBotConfig(ctx, discordServerId, configKey)
+	return s.db.GetDiscordBotConfig(ctx, discordServerId, configKey)
 }
 func (s *service) CheckDiscordBotConfig(ctx context.Context, discordServerId string, configKey string, configValue string) bool {
-	configData, err := s.DB.GetDiscordBotConfig(ctx, discordServerId, configKey)
+	configData, err := s.db.GetDiscordBotConfig(ctx, discordServerId, configKey)
 	if err != nil {
 		log.Println("[service.CheckDiscordBotConfig] GetDiscordBotConfig error:", err.Error())
 		return false
@@ -275,42 +321,10 @@ func (s *service) CheckDiscordBotConfig(ctx context.Context, discordServerId str
 	return false
 }
 
-// DISCORD BOT CONFIG
-
-func (s *service) AddBotCommandStatistic(ctx context.Context, commandName string) {
-	if err := s.DB.AddBotCommandStatistic(ctx, platform.DISCORD, commandName); err != nil {
-		log.Println("[service.AddBotCommandStatistic] AddBotCommandStatistic error:", err.Error())
-	}
-}
-
-func (s *service) GetCommandVariable(ctx context.Context, varName string, botPlatformId string) (*model.BotCommandVariable, error) {
-	return s.DB.GetCommandVariable(ctx, varName, platform.DISCORD, botPlatformId)
-}
-
-func (s *service) CreateCommandVariable(ctx context.Context, varName string, varContent string, botPlatformId string, createdBy string) error {
-	return s.DB.CreateCommandVariable(ctx, varName, varContent, platform.DISCORD, botPlatformId, createdBy)
-}
-
-func (s *service) UpdateCommandVariable(ctx context.Context, varName string, varContent string, botPlatformId string, updatedBy string) error {
-	return s.DB.UpdateCommandVariable(ctx, varName, varContent, platform.DISCORD, botPlatformId, updatedBy)
-}
-
-func (s *service) DeleteCommandVariable(ctx context.Context, varName string, botPlatformId string, updatedBy string) error {
-	return s.DB.DeleteCommandVariable(ctx, varName, platform.DISCORD, botPlatformId, updatedBy)
-}
-
-func (s *service) ListCommandVariables(ctx context.Context, botPlatformId string) ([]*model.BotCommandVariable, error) {
-	return s.DB.ListCommandVariables(ctx, platform.DISCORD, botPlatformId)
-}
-
-func (s *service) GetCustomVariableContent(ctx context.Context, botPlatformId string, varName string) string {
-	return s.DB.GetCustomVariableContent(ctx, platform.DISCORD, botPlatformId, varName)
-}
-
 func (s *service) GetDiscordUserPrivacyPreferences(ctx context.Context, discordUserId string) (*model.DiscordUserPrivacyPreferences, error) {
-	return s.DB.GetDiscordUserPrivacyPreferences(ctx, discordUserId)
+	return s.db.GetDiscordUserPrivacyPreferences(ctx, discordUserId)
 }
 
 func (s *service) SetDiscordUserPrivacyPreferences(ctx context.Context, discordUserId string, doNotTrackMessages bool) error {
-	return s.DB.SetDiscordUserPrivacyPreferences(ctx, discordUserId, doNotTrackMessages)
+	return s.db.SetDiscordUserPrivacyPreferences(ctx, discordUserId, doNotTrackMessages)
 }

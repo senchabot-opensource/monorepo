@@ -1,21 +1,11 @@
-import { Suspense } from 'react'
-
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import { LoaderIcon } from '@/components/ui/icons'
-
 import { auth } from '@/lib/auth'
+import { env } from '@/config/env'
 
-import { JoinableEntities } from './joinable-entities-list'
-import { JoinedEntities } from './joined-entities-list'
+import { ServersContent } from './servers-content'
+import { getUserEntities } from '@/services/queries/users'
 
 export const metadata: Metadata = {
   title: 'Servers & Channels',
@@ -28,34 +18,15 @@ export default async function Page() {
     throw redirect('/signin')
   }
 
+  const allEntities = await getUserEntities()
+  const joinableEntities = allEntities.filter((e) => !e.entity_bot_joined)
+  const joinedEntities = allEntities.filter((e) => e.entity_bot_joined)
+
   return (
-    <Card className="divide-y divide-border">
-      <section>
-        <CardHeader>
-          <CardTitle>Get Senchabot</CardTitle>
-          <CardDescription>
-            Select a server or channel where you want to add Senchabot.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Suspense fallback={<LoaderIcon />}>
-            <JoinableEntities />
-          </Suspense>
-        </CardContent>
-      </section>
-      <section>
-        <CardHeader>
-          <CardTitle>Senchabot joined</CardTitle>
-          <CardDescription>
-            Manage the server or channel where you use Senchabot.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Suspense fallback={<LoaderIcon />}>
-            <JoinedEntities />
-          </Suspense>
-        </CardContent>
-      </section>
-    </Card>
+    <ServersContent 
+      initialJoinableEntities={joinableEntities} 
+      initialJoinedEntities={joinedEntities}
+      discordClientId={env.AUTH_DISCORD_ID}
+    />
   )
 }

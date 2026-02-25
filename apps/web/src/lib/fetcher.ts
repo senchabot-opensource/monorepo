@@ -1,4 +1,3 @@
-import { cookies } from 'next/headers'
 import { notFound } from 'next/navigation'
 
 import { env } from '@/config/env'
@@ -13,8 +12,9 @@ export class ApiError extends Error {
   }
 }
 
-function getUserSessionToken() {
-  const cookieStore = cookies()
+async function getUserSessionToken(): Promise<string> {
+  const { cookies } = await import('next/headers')
+  const cookieStore = await cookies()
   const cookieName = 'authjs.session-token'
 
   const getSecureToken = cookieStore.get(`__Secure-${cookieName}`)
@@ -31,11 +31,17 @@ function getUserSessionToken() {
 
 export async function fetcher<JSON = any>(
   endpoint: RequestInfo,
-  options?: RequestInit,
+  options?: RequestInit & { authToken?: string },
 ): Promise<JSON> {
+  if (typeof window !== 'undefined') {
+    throw new Error('fetcher should not be used in client components')
+  }
+
+  const token = options?.authToken ?? (await getUserSessionToken())
+
   const response = await fetch(BASE_URL + endpoint, {
     headers: {
-      Authorization: env.API_AUTHORIZATION_PREFIX + ' ' + getUserSessionToken(),
+      Authorization: env.API_AUTHORIZATION_PREFIX + ' ' + token,
       'Content-Type': 'application/json',
     },
     ...options,
