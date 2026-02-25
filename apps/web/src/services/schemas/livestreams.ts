@@ -13,7 +13,7 @@ export const deleteEventChannelSchema = z.object({
 export const createAnnouncementSchema = z
   .object({
     platformEntityId: z.string().min(1),
-    twitch_username: z.string().min(1),
+    twitch_username: z.string().min(4),
     guild_channel_id: z.string().min(1),
     announcement_content: z.string().optional(),
   })
