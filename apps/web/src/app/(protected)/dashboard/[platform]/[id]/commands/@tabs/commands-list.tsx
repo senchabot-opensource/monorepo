@@ -1,4 +1,5 @@
 import { getCommands } from '@/services/queries/commands'
+import { getCustomCommandVariables } from '@/services/queries/custom-command-variables'
 
 import type { Platform } from '@/types/platform'
 
@@ -11,7 +12,10 @@ interface Props {
 }
 
 export async function CommandsList({ platform, id, type }: Props) {
-  const commands = await getCommands(platform, id, type)
+  const [commands, variables] = await Promise.all([
+    getCommands(platform, id, type),
+    getCustomCommandVariables(platform, id),
+  ])
 
-  return <CommandsListClient commands={commands} type={type} />
+  return <CommandsListClient commands={commands} type={type} variables={variables} />
 }

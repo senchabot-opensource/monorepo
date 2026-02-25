@@ -16,17 +16,20 @@ import { SearchIcon } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 
 import type { EntityCommand } from '@/types/command'
+import type { CustomCommandVariable } from '@/types/custom-command-variable'
 
 import { CommandStatusSwitch } from './command-status-switch'
 import { DeleteCommand } from './delete-command-button'
 import { UpdateCommand } from './update-command-dialog'
+import { CommandContentWithVariables } from '@/app/(protected)/dashboard/[platform]/[id]/commands/command-content-with-variables'
 
 interface Props {
   commands: EntityCommand[]
   type: 'custom' | 'global'
+  variables: CustomCommandVariable[]
 }
 
-export function CommandsListClient({ commands, type }: Props) {
+export function CommandsListClient({ commands, type, variables }: Props) {
   const [search, setSearch] = useState('')
 
   const filteredCommands = useMemo(() => {
@@ -90,10 +93,11 @@ export function CommandsListClient({ commands, type }: Props) {
                   <TableCell className="align-top">
                     <span className="break-all font-mono text-sm">{item.name}</span>
                   </TableCell>
-                  <TableCell className="align-top">
-                    <p className="truncate" title={item.content}>
-                      {item.content}
-                    </p>
+                  <TableCell className="align-top max-w-md">
+                    <CommandContentWithVariables
+                      content={item.content}
+                      variables={variables}
+                    />
                   </TableCell>
                   <TableCell>
                     <div className="flex justify-end space-x-2">
@@ -125,10 +129,11 @@ export function CommandsListClient({ commands, type }: Props) {
                   <TableCell className="align-top">
                     <span className="break-all font-mono text-sm">{item.name}</span>
                   </TableCell>
-                  <TableCell className="align-top">
-                    <p className="text-wrap break-words" title={item.content}>
-                      {item.content}
-                    </p>
+                  <TableCell className="align-top max-w-md">
+                    <CommandContentWithVariables
+                      content={item.content}
+                      variables={variables}
+                    />
                   </TableCell>
                 </TableRow>
               ))}
