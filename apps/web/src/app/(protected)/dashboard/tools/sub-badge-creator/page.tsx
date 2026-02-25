@@ -9,6 +9,8 @@ import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Label } from '@/components/ui/label'
 
 interface BadgeSize {
   size: number
@@ -29,6 +31,7 @@ export default function SubBadgeCreatorPage() {
   const [isProcessing, setIsProcessing] = useState(false)
   const [isUploading, setIsUploading] = useState(false)
   const [scale, setScale] = useState(100)
+  const [removeBackgroundEnabled, setRemoveBackgroundEnabled] = useState(true)
 
   const resizeImage = useCallback(
     async (src: string, size: number, scalePercent: number): Promise<string> => {
@@ -112,58 +115,46 @@ export default function SubBadgeCreatorPage() {
     []
   )
 
-  const handleRemoveBackground = useCallback(async () => {
+  const handleGenerate = useCallback(async () => {
     if (!originalImage) return
 
     setIsProcessing(true)
     try {
-      const blob = await removeBackground(originalImage, {
-        progress: (key: string, current: number, total: number) => {
-          console.log(`Downloading model: ${key} ${current}/${total}`)
-        },
-      })
+      let imageToProcess = originalImage
 
-      const url = URL.createObjectURL(blob)
-      setProcessedImage(url)
-
-      const resizedBadges = await Promise.all(
-        BADGE_SIZES.map(async (size) => ({
-          size,
-          url: await resizeImage(url, size, scale),
-        }))
-      )
-      setBadges(resizedBadges)
-      toast.success('Background removed successfully!')
-    } catch (error) {
-      console.error('Error removing background:', error)
-      toast.error('Failed to remove background')
-    } finally {
-      setIsProcessing(false)
-    }
-  }, [originalImage, resizeImage, scale])
-
-  const handleResizeOnly = useCallback(async () => {
-    if (!originalImage) return
-
-    setIsProcessing(true)
-    try {
-      setProcessedImage(originalImage)
+      if (removeBackgroundEnabled) {
+        const blob = await removeBackground(originalImage, {
+          progress: (key: string, current: number, total: number) => {
+            console.log(`Downloading model: ${key} ${current}/${total}`)
+          },
+        })
+        imageToProcess = URL.createObjectURL(blob)
+        setProcessedImage(imageToProcess)
+      } else {
+        setProcessedImage(originalImage)
+      }
 
       const resizedBadges = await Promise.all(
         BADGE_SIZES.map(async (size) => ({
           size,
-          url: await resizeImage(originalImage, size, scale),
+          url: await resizeImage(imageToProcess, size, scale),
         }))
       )
       setBadges(resizedBadges)
-      toast.success('Badges resized successfully!')
+      toast.success(removeBackgroundEnabled ? 'Background removed and badges generated!' : 'Badges generated!')
     } catch (error) {
-      console.error('Error resizing:', error)
-      toast.error('Failed to resize image')
+      console.error('Error generating badges:', error)
+      toast.error('Failed to generate badges')
     } finally {
       setIsProcessing(false)
     }
-  }, [originalImage, resizeImage, scale])
+  }, [originalImage, removeBackgroundEnabled, resizeImage, scale])
+
+  const handleReset = useCallback(() => {
+    setOriginalImage(null)
+    setProcessedImage(null)
+    setBadges(BADGE_SIZES.map((size) => ({ size, url: null })))
+  }, [])
 
   const handleDownload = useCallback((url: string | null, size: number) => {
     if (!url) return
@@ -184,12 +175,6 @@ export default function SubBadgeCreatorPage() {
     })
     toast.success('All badges downloaded!')
   }, [badges, handleDownload])
-
-  const handleReset = useCallback(() => {
-    setOriginalImage(null)
-    setProcessedImage(null)
-    setBadges(BADGE_SIZES.map((size) => ({ size, url: null })))
-  }, [])
 
   return (
     <div className="max-w-screen-lg space-y-8">
@@ -269,13 +254,23 @@ export default function SubBadgeCreatorPage() {
               </div>
             )*/}
 
-            <div className="flex gap-2">
+            <div className="flex items-center gap-2">
               {originalImage && !processedImage && (
-                <>
+                <div className="flex flex-1 items-center gap-2">
+                  <div className="flex items-center gap-2">
+                    <Checkbox
+                      id="remove-bg"
+                      checked={removeBackgroundEnabled}
+                      onCheckedChange={(checked) => setRemoveBackgroundEnabled(checked as boolean)}
+                    />
+                    <Label htmlFor="remove-bg" className="text-sm font-normal">
+                      Remove background
+                    </Label>
+                  </div>
                   <Button
                     className="flex-1"
                     disabled={isProcessing}
-                    onClick={handleRemoveBackground}
+                    onClick={handleGenerate}
                   >
                     {isProcessing ? (
                       <>
@@ -283,18 +278,10 @@ export default function SubBadgeCreatorPage() {
                         Processing...
                       </>
                     ) : (
-                      'Remove Background'
+                      'Generate'
                     )}
                   </Button>
-                  <Button
-                    className="flex-1"
-                    disabled={isProcessing}
-                    onClick={handleResizeOnly}
-                    variant="secondary"
-                  >
-                    Resize Only
-                  </Button>
-                </>
+                </div>
               )}
               {processedImage && (
                 <Button className="flex-1" variant="outline" onClick={handleReset}>
@@ -365,6 +352,46 @@ export default function SubBadgeCreatorPage() {
             )}
           </CardContent>
         </Card>
+
+        {badges[0]?.url && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Twitch Chat Preview</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="mb-3 text-sm text-muted-foreground">
+                This is how the 18x18 badge looks in Twitch chat:
+              </p>
+              <div className="rounded-lg border bg-[#0e0e10] p-3 font-irc text-sm">
+                <div className="flex items-start gap-2">
+                  <img
+                    alt="sub badge"
+                    className="mt-0.5 size-[18px] shrink-0"
+                    src={badges[0].url}
+                  />
+                  <div>
+                    <span className="font-semibold text-[#a970ff]">username</span>
+                    <span className="text-muted-foreground"> This is a test message!</span>
+                  </div>
+                </div>
+                <div className="mt-1 flex items-start gap-2">
+                  <img
+                    alt="sub badge"
+                    className="mt-0.5 size-[18px] shrink-0"
+                    src={badges[0].url}
+                  />
+                  <div>
+                    <span className="font-semibold text-[#a970ff]">anotheruser</span>
+                    <span className="text-muted-foreground"> Another message with your badge</span>
+                  </div>
+                </div>
+              </div>
+              <p className="mt-2 text-xs text-muted-foreground">
+                Note: Twitch automatically applies rounding to the 18x18 badge
+              </p>
+            </CardContent>
+          </Card>
+        )}
       </div>
     </div>
   )
