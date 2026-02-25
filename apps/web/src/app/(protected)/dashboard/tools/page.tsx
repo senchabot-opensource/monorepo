@@ -1,5 +1,9 @@
+import { redirect } from 'next/navigation'
+
 import type { Metadata } from 'next'
 import Link from 'next/link'
+
+import { auth } from '@/lib/auth'
 
 import { LayersIcon } from 'lucide-react'
 
@@ -9,7 +13,13 @@ export const metadata: Metadata = {
   title: 'Tools',
 }
 
-export default function ToolsPage() {
+export default async function ToolsPage() {
+  const session = await auth()
+
+  if (!session) {
+    throw redirect('/signin')
+  }
+
   const tools = [
     {
       title: 'Twitch Sub Badge Creator',
