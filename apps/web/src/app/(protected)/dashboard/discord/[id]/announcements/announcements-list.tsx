@@ -15,7 +15,9 @@ interface Props {
 }
 
 export async function AnnouncementsList({ id }: Props) {
-  const announcements = await getLivestreamAnnouncements(id)
+  const announcements = (await getLivestreamAnnouncements(id)).sort(
+    (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+  )
 
   return (
     <Card>
