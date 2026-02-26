@@ -8,6 +8,8 @@ services:
       - senchabot-postgres-data:/var/lib/postgresql/data
     env_file:
       - ./.env
+    networks:
+      - senchabot
   pgAdmin:
     image: dpage/pgadmin4
     container_name: pgAdmin
@@ -15,6 +17,21 @@ services:
       - ./.env
     ports:
       - "${PGADMIN_PORT:-5050}:80"
+  web-app:
+    container_name: senchabot_web_app
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./apps/web
+    ports:
+      - "${WEB_APP_PORT:-3000}:3000"
+    volumes:
+      - ./apps/web:/app
+    env_file:
+      - ./apps/web/.env
+    networks:
+      - senchabot
+    depends_on:
+      - postgres
   twitch-bot:
     container_name: senchabot_twitch_bot
     build:
