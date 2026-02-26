@@ -29,3 +29,9 @@ export const deleteAnnouncementSchema = z.object({
   id: z.number(),
   platformEntityId: z.string().min(1),
 })
+
+export const updateAnnouncementSchema = z.object({
+  id: z.number(),
+  platformEntityId: z.string().min(1),
+  announcement_content: z.string().optional(),
+})
