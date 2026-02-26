@@ -11,6 +11,7 @@ import {
   createEventChannelSchema,
   deleteAnnouncementSchema,
   deleteEventChannelSchema,
+  updateAnnouncementSchema,
 } from '../schemas/livestreams'
 
 /**
@@ -86,6 +87,31 @@ export const createAnnouncement = createServerAction()
       revalidateTag(`getLivestreamAnnouncements-${input.platformEntityId}`)
     } catch (error) {
       console.error('createAnnouncement =>', error)
+     
+      throw new ZSAError('ERROR', 'Something went wrong!')
+    }
+  })
+
+/**
+ * Update a livestream announcement
+ */
+export const updateAnnouncement = createServerAction()
+  .input(updateAnnouncementSchema)
+  .handler(async ({ input }) => {
+    try {
+      const params = new URLSearchParams()
+      params.append('platformEntityId', input.platformEntityId)
+
+      await fetcher(`/me/livestreams/announcements/${input.id}?` + params, {
+        method: 'PATCH',
+        body: JSON.stringify({
+          announcement_content: input.announcement_content || null,
+        }),
+      })
+
+      revalidateTag(`getLivestreamAnnouncements-${input.platformEntityId}`)
+    } catch (error) {
+      console.error('updateAnnouncement =>', error)
      
       throw new ZSAError('ERROR', 'Something went wrong!')
     }

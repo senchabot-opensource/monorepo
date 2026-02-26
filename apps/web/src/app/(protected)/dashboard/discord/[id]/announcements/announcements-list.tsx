@@ -9,6 +9,7 @@ import {
 import { getLivestreamAnnouncements } from '@/services/queries/livestreams'
 
 import { DeleteAnnouncementButton } from './delete-announcement-button'
+import { UpdateAnnouncementDialog } from './update-announcement-dialog'
 
 interface Props {
   id: string
@@ -63,11 +64,17 @@ export async function AnnouncementsList({ id }: Props) {
                     </p>
                   )}
                 </div>
-                <DeleteAnnouncementButton
-                  id={announcement.id}
-                  platformEntityId={id}
-                  twitchUsername={announcement.twitch_username}
-                />
+                <div className="flex items-center space-x-2">
+                  <DeleteAnnouncementButton
+                    id={announcement.id}
+                    platformEntityId={id}
+                    twitchUsername={announcement.twitch_username}
+                  />
+                  <UpdateAnnouncementDialog
+                    announcement={announcement}
+                    platformEntityId={id}
+                  />
+                </div>
               </div>
             ))}
           </div>
