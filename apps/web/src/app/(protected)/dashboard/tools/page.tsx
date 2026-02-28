@@ -1,13 +1,12 @@
-import { redirect } from 'next/navigation'
-
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 
-import { auth } from '@/lib/auth'
-
-import { LayersIcon } from 'lucide-react'
+import { LayersIcon, SproutIcon } from 'lucide-react'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+
+import { auth } from '@/lib/auth'
 
 export const metadata: Metadata = {
   title: 'Tools',
@@ -21,6 +20,13 @@ export default async function ToolsPage() {
   }
 
   const tools = [
+    {
+      title: 'Sub Sprout Overlay',
+      description:
+        'A sprout overlay that grows with each subscription. Add as a browser source in OBS to show your sub progression.',
+      href: '/dashboard/tools/sub-sprout-overlay',
+      icon: SproutIcon,
+    },
     {
       title: 'Twitch Sub Badge Creator',
       description:

@@ -29,6 +29,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
+    "comfy.js": "^1.1.29",
     "geist": "^1.7.0",
     "jiti": "^1.21.7",
     "lucide-react": "^0.555.0",
