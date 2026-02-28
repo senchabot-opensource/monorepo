@@ -20,6 +20,7 @@ type TwitchService interface {
 	CheckStreamStatus(username string) (bool, string, error)
 	CheckMultipleStreamers(userIds []string) ([]model.TwitchStreamerData, error)
 	GiveShoutout(username, fromBroadcasterId, messageFormat string) (*string, error)
+	CreateClip(broadcasterId string) (*string, error)
 }
 
 const (
@@ -351,4 +352,53 @@ func (s *twitchService) GiveShoutout(username, fromBroadcasterId, messageFormat 
 	}
 
 	return &msg, nil
+}
+
+// CreateClip creates a clip for the given broadcaster and returns the clip URL.
+func (s *twitchService) CreateClip(broadcasterId string) (*string, error) {
+	req, err := http.NewRequest("POST", s.helixBaseURL+"/clips", nil)
+	if err != nil {
+		return nil, fmt.Errorf("CreateClip: failed to create request: %w", err)
+	}
+
+	req.Header.Set("Authorization", "Bearer "+s.accessToken)
+	req.Header.Set("Client-Id", s.clientID)
+	q := req.URL.Query()
+	q.Add("broadcaster_id", broadcasterId)
+	req.URL.RawQuery = q.Encode()
+
+	resp, err := s.httpClient.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("CreateClip: request failed: %w", err)
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, fmt.Errorf("CreateClip: failed to read response body: %w", err)
+	}
+
+	if resp.StatusCode != http.StatusAccepted && resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("CreateClip returned status %d: %s", resp.StatusCode, string(body))
+	}
+
+	var result struct {
+		Data []struct {
+			ID        string `json:"id"`
+			EditURL   string `json:"edit_url"`
+			Thumbnail string `json:"thumbnail_url"`
+		} `json:"data"`
+	}
+	if err := json.Unmarshal(body, &result); err != nil {
+		return nil, fmt.Errorf("CreateClip: failed to decode response: %w", err)
+	}
+
+	if len(result.Data) == 0 {
+		return nil, fmt.Errorf("CreateClip: no clip created")
+	}
+
+	clipID := result.Data[0].ID
+	clipURL := "https://clips.twitch.tv/" + clipID
+
+	return &clipURL, nil
 }
