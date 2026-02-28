@@ -108,8 +108,8 @@ export default function SubSproutOverlayClient({
                   again
                 </li>
                 <li>
-                  Test locally by typing{' '}
-                  <code className="rounded bg-muted px-1">!test</code> in your
+                  Test by typing{' '}
+                  <code className="rounded bg-muted px-1">!grow</code> in your
                   Twitch chat
                 </li>
               </ul>

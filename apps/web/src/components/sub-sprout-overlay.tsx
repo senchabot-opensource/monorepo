@@ -53,8 +53,16 @@ export function SubSproutOverlay({ channel }: SubSproutOverlayProps) {
       ComfyJS.onResub = handleSubEvent
       ComfyJS.onSubGift = handleSubEvent
 
-      ComfyJS.onCommand = (_user: string, command: string) => {
-        if (command.toLowerCase() === 'test') {
+      ComfyJS.onCommand = (
+        _user: string,
+        command: string,
+        _message: string,
+        flags: { mod?: boolean; broadcaster?: boolean },
+      ) => {
+        if (
+          command.toLowerCase() === 'grow' &&
+          (flags.mod || flags.broadcaster)
+        ) {
           handleSubEvent()
         }
       }
