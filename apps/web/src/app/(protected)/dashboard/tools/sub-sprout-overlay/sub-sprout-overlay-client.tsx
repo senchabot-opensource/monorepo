@@ -9,20 +9,32 @@ import { toast } from 'sonner'
 import { SubSproutOverlay } from '@/components/sub-sprout-overlay'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
+type Platform = 'twitch' | 'kick'
+
 interface SubSproutOverlayClientProps {
   initialChannel?: string
+  initialPlatform?: Platform
 }
 
 export default function SubSproutOverlayClient({
   initialChannel = '',
+  initialPlatform = 'twitch',
 }: SubSproutOverlayClientProps) {
   const [channel, setChannel] = useState(initialChannel)
+  const [platform, setPlatform] = useState<Platform>(initialPlatform)
 
   const handleCopyUrl = () => {
-    const url = `${window.location.origin}/overlay/sub-sprout?channel=${channel}`
+    const url = `${window.location.origin}/overlay/sub-sprout?channel=${channel}&platform=${platform}`
     navigator.clipboard.writeText(url)
     toast.success('Overlay URL copied to clipboard!')
   }
@@ -46,11 +58,12 @@ export default function SubSproutOverlayClient({
           </CardHeader>
           <CardContent>
             <div className="aspect-video w-full overflow-hidden rounded-lg border bg-[#1a1a1a]">
-              <SubSproutOverlay channel={channel} />
+              <SubSproutOverlay channel={channel} platform={platform} />
             </div>
             <p className="mt-2 text-xs text-muted-foreground">
-              The preview shows the default state. Connect to your Twitch
-              channel to see the animation in action.
+              The preview shows the default state. Connect to your{' '}
+              {platform === 'kick' ? 'Kick' : 'Twitch'} channel to see the
+              animation in action.
             </p>
           </CardContent>
         </Card>
@@ -64,16 +77,35 @@ export default function SubSproutOverlayClient({
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="channel">Your Twitch Channel</Label>
+              <Label htmlFor="platform">Platform</Label>
+              <Select
+                value={platform}
+                onValueChange={(value) => setPlatform(value as Platform)}
+              >
+                <SelectTrigger id="platform">
+                  <SelectValue placeholder="Select platform" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="twitch">Twitch</SelectItem>
+                  <SelectItem value="kick">Kick</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="channel">
+                Your {platform === 'kick' ? 'Kick' : 'Twitch'} Channel
+              </Label>
               <Input
                 id="channel"
-                placeholder="Enter your Twitch username"
+                placeholder={`Enter your ${platform === 'kick' ? 'Kick' : 'Twitch'} username`}
                 value={channel}
                 onChange={(e) => setChannel(e.target.value.trim())}
               />
               <p className="text-xs text-muted-foreground">
-                Enter your Twitch username to see the overlay connect to your
-                chat
+                Enter your{' '}
+                {platform === 'kick' ? 'Kick' : 'Twitch'} username to see the
+                overlay connect to your chat
               </p>
             </div>
 
@@ -98,7 +130,11 @@ export default function SubSproutOverlayClient({
             <div className="space-y-2">
               <Label>How it works</Label>
               <ul className="list-disc pl-4 text-sm text-muted-foreground">
-                <li>The overlay connects to your Twitch chat using ComfyJS</li>
+                <li>
+                  The overlay connects to your{' '}
+                  {platform === 'kick' ? 'Kick' : 'Twitch'} chat{' '}
+                  {platform === 'kick' ? 'using kick-js' : 'using ComfyJS'}
+                </li>
                 <li>
                   Each subscription (new sub, resub, or gift sub) triggers the
                   sprout growth animation
@@ -109,8 +145,8 @@ export default function SubSproutOverlayClient({
                 </li>
                 <li>
                   Test by typing{' '}
-                  <code className="rounded bg-muted px-1">!grow</code> in your
-                  Twitch chat
+                  <code className="rounded bg-muted px-1">!grow</code> in your{' '}
+                  {platform === 'kick' ? 'Kick' : 'Twitch'} chat
                 </li>
               </ul>
             </div>
@@ -126,12 +162,12 @@ export default function SubSproutOverlayClient({
               </Button>
               <Button className="flex-1" asChild>
                 <a
-                  href="https://twitch.tv/"
+                  href={platform === 'kick' ? 'https://kick.com/' : 'https://twitch.tv/'}
                   rel="noopener noreferrer"
                   target="_blank"
                 >
                   <ExternalLinkIcon className="mr-2 size-4" />
-                  Open Twitch
+                  Open {platform === 'kick' ? 'Kick' : 'Twitch'}
                 </a>
               </Button>
             </div>

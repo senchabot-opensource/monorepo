@@ -4,9 +4,13 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 interface SubSproutOverlayProps {
   channel: string
+  platform?: 'twitch' | 'kick'
 }
 
-export function SubSproutOverlay({ channel }: SubSproutOverlayProps) {
+export function SubSproutOverlay({
+  channel,
+  platform = 'twitch',
+}: SubSproutOverlayProps) {
   const [step, setStep] = useState(0)
   const stepRef = useRef(0)
   const isAnimating = useRef(false)
@@ -41,39 +45,75 @@ export function SubSproutOverlay({ channel }: SubSproutOverlayProps) {
   }, [])
 
   useEffect(() => {
-    const loadComfy = async () => {
-      const { default: ComfyJS } = await import('comfy.js')
+    const loadChatClient = async () => {
+      if (platform === 'kick') {
+        const response = await fetch(
+          `https://kick.com/api/v2/channels/${channel}`,
+        )
+        const data = await response.json()
+        const chatroomId = data?.chatroom?.id
 
-      const handleSubEvent = () => {
-        subQueue.current++
-        processQueue()
-      }
-
-      ComfyJS.onSub = handleSubEvent
-      ComfyJS.onResub = handleSubEvent
-      ComfyJS.onSubGift = handleSubEvent
-
-      ComfyJS.onCommand = (
-        _user: string,
-        command: string,
-        _message: string,
-        flags: { mod?: boolean; broadcaster?: boolean },
-      ) => {
-        if (
-          command.toLowerCase() === 'grow' &&
-          (flags.mod || flags.broadcaster)
-        ) {
-          handleSubEvent()
+        if (!chatroomId) {
+          return
         }
-      }
 
-      ComfyJS.Init(channel)
+        const ws = new WebSocket(
+          `wss://ws-us2.pusher.com/app/eb074dce73a5df3f3539?protocol=7&client=js&version=7.4.0&flash=false`,
+        )
+
+        ws.onopen = () => {
+          ws.send(
+            JSON.stringify({
+              event: 'pusher:subscribe',
+              data: { channel: `chatroom.${chatroomId}` },
+            }),
+          )
+        }
+
+        ws.onmessage = (event) => {
+          const message = JSON.parse(event.data)
+          if (
+            message.event === 'App\\Events\\SubscriptionEvent' ||
+            message.event === 'App\\Events\\GiftedSubscriptionEvent'
+          ) {
+            subQueue.current++
+            processQueue()
+          }
+        }
+      } else {
+        const { default: ComfyJS } = await import('comfy.js')
+
+        const handleSubEvent = () => {
+          subQueue.current++
+          processQueue()
+        }
+
+        ComfyJS.onSub = handleSubEvent
+        ComfyJS.onResub = handleSubEvent
+        ComfyJS.onSubGift = handleSubEvent
+
+        ComfyJS.onCommand = (
+          _user: string,
+          command: string,
+          _message: string,
+          flags: { mod?: boolean; broadcaster?: boolean },
+        ) => {
+          if (
+            command.toLowerCase() === 'grow' &&
+            (flags.mod || flags.broadcaster)
+          ) {
+            handleSubEvent()
+          }
+        }
+
+        ComfyJS.Init(channel)
+      }
     }
 
     if (channel) {
-      loadComfy()
+      loadChatClient()
     }
-  }, [channel])
+  }, [channel, platform])
 
   return (
     <div className="size-full">
