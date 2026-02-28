@@ -19,16 +19,11 @@ export function SubSproutOverlay({ channel }: SubSproutOverlayProps) {
     subQueue.current--
 
     if (step >= maxSteps) {
+      setStep(0)
       setTimeout(() => {
-        setStep(0)
-        setTimeout(() => {
-          setStep(1)
-          setTimeout(() => {
-            setIsAnimating(false)
-            processQueue()
-          }, 800)
-        }, 800)
-      }, 2000)
+        setIsAnimating(false)
+        processQueue()
+      }, 800)
     } else {
       setStep(step + 1)
       setTimeout(() => {
