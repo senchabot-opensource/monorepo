@@ -8,30 +8,36 @@ interface SubSproutOverlayProps {
 
 export function SubSproutOverlay({ channel }: SubSproutOverlayProps) {
   const [step, setStep] = useState(0)
-  const [isAnimating, setIsAnimating] = useState(false)
+  const isAnimating = useRef(false)
   const subQueue = useRef(0)
   const maxSteps = 4
 
   const processQueue = useCallback(() => {
-    if (isAnimating || subQueue.current === 0) return
+    if (isAnimating.current || subQueue.current === 0) return
 
-    setIsAnimating(true)
+    isAnimating.current = true
     subQueue.current--
 
     if (step >= maxSteps) {
       setStep(0)
+
       setTimeout(() => {
-        setIsAnimating(false)
-        processQueue()
+        setStep(1)
+
+        setTimeout(() => {
+          isAnimating.current = false
+          processQueue()
+        }, 800)
       }, 800)
     } else {
       setStep(step + 1)
+
       setTimeout(() => {
-        setIsAnimating(false)
+        isAnimating.current = false
         processQueue()
       }, 800)
     }
-  }, [isAnimating, step])
+  }, [step])
 
   useEffect(() => {
     const loadComfy = async () => {
