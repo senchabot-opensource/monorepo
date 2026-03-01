@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"os"
 	"strings"
 	"sync"
 
@@ -319,9 +320,14 @@ func (s *twitchService) GiveShoutout(username, fromBroadcasterId, messageFormat 
 	req.Header.Set("Authorization", "Bearer "+s.accessToken)
 	req.Header.Set("Client-Id", s.clientID)
 	q := req.URL.Query()
-	q.Add("broadcaster_id", fromBroadcasterId)
-	q.Add("moderator_id", fromBroadcasterId) // assuming the broadcaster is also the moderator for simplicity
-	q.Add("receiver_id", userInfo.ID)
+	/*
+			from_broadcaster_id	String	Yes	The ID of the broadcaster that’s sending the Shoutout.
+		to_broadcaster_id	String	Yes	The ID of the broadcaster that’s receiving the Shoutout.
+		moderator_id
+	*/
+	q.Add("from_broadcaster_id", fromBroadcasterId)
+	q.Add("moderator_id", os.Getenv("BOT_USER_ID")) // assuming the broadcaster is also the moderator for simplicity
+	q.Add("to_broadcaster_id", userInfo.ID)
 	req.URL.RawQuery = q.Encode()
 
 	resp, err := s.httpClient.Do(req)
