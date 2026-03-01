@@ -370,6 +370,10 @@ func (s *twitchService) CreateClip(broadcasterId string) (*string, error) {
 	req.Header.Set("Client-Id", s.clientID)
 	q := req.URL.Query()
 	q.Add("broadcaster_id", broadcasterId)
+	/* TODO: Add support for optional parameters in web interface in the future:
+	 	title	String	No	The title of the clip.
+		duration	Float	No	The length of the clip in seconds. Possible values range from 5 to 60 inclusively with a precision of 0.1. The default is 30.
+	*/
 	req.URL.RawQuery = q.Encode()
 
 	resp, err := s.httpClient.Do(req)
