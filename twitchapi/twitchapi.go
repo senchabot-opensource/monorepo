@@ -356,11 +356,14 @@ func (s *twitchService) GiveShoutout(username, fromBroadcasterId, messageFormat 
 	return &msg, nil
 }
 
+var errCreateClipSomethingWentWrong = fmt.Errorf("Something went wrong while creating clip. Please try again later.")
+
 // CreateClip creates a clip for the given broadcaster and returns the clip URL.
 func (s *twitchService) CreateClip(broadcasterId string) (*string, error) {
 	req, err := http.NewRequest("POST", s.helixBaseURL+"/clips", nil)
 	if err != nil {
-		return nil, fmt.Errorf("CreateClip: failed to create request: %w", err)
+		log.Println(fmt.Errorf("CreateClip: failed to create request: %w", err))
+		return nil, errCreateClipSomethingWentWrong
 	}
 
 	req.Header.Set("Authorization", "Bearer "+s.userAccessToken)
@@ -371,17 +374,31 @@ func (s *twitchService) CreateClip(broadcasterId string) (*string, error) {
 
 	resp, err := s.httpClient.Do(req)
 	if err != nil {
-		return nil, fmt.Errorf("CreateClip: request failed: %w", err)
+		log.Println(fmt.Errorf("CreateClip: request failed: %w", err))
+		return nil, errCreateClipSomethingWentWrong
 	}
 	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return nil, fmt.Errorf("CreateClip: failed to read response body: %w", err)
+		log.Println(fmt.Errorf("CreateClip: failed to read response body: %w", err))
+
+		return nil, errCreateClipSomethingWentWrong
+	}
+
+	if resp.StatusCode == http.StatusNotFound {
+		log.Println(fmt.Errorf("CreateClip: broadcaster not found for id %s", broadcasterId))
+		return nil, fmt.Errorf("Channel must be live to create a clip.")
+	}
+
+	if resp.StatusCode == http.StatusForbidden {
+		log.Println(fmt.Errorf("CreateClip: insufficient permissions to create clip for broadcaster id %s", broadcasterId))
+		return nil, fmt.Errorf("Bot does not have permissions to create clip.")
 	}
 
 	if resp.StatusCode != http.StatusAccepted && resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("CreateClip returned status %d: %s", resp.StatusCode, string(body))
+		log.Println(fmt.Errorf("CreateClip: request returned status %d: %s", resp.StatusCode, string(body)))
+		return nil, errCreateClipSomethingWentWrong
 	}
 
 	var result struct {
@@ -392,11 +409,12 @@ func (s *twitchService) CreateClip(broadcasterId string) (*string, error) {
 		} `json:"data"`
 	}
 	if err := json.Unmarshal(body, &result); err != nil {
-		return nil, fmt.Errorf("CreateClip: failed to decode response: %w", err)
+		log.Println(fmt.Errorf("CreateClip: failed to decode response: %w", err))
+		return nil, errCreateClipSomethingWentWrong
 	}
 
 	if len(result.Data) == 0 {
-		return nil, fmt.Errorf("CreateClip: no clip created")
+		return nil, fmt.Errorf("Something went wrong. No clip created")
 	}
 
 	clipID := result.Data[0].ID

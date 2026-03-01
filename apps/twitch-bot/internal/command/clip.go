@@ -21,7 +21,7 @@ func (c *commands) ClipCommand(context context.Context, message twitch.PrivateMe
 	clipURL, err := c.twitchService.CreateClip(message.RoomID)
 	if err != nil {
 		log.Println("[command.ClipCommand] CreateClip error:", err.Error())
-		cmdResp.Message = "Failed to create clip: " + err.Error()
+		cmdResp.Message = err.Error()
 		return &cmdResp, nil
 	}
 
