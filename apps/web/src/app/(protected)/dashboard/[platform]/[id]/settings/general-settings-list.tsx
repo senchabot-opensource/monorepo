@@ -12,13 +12,14 @@ import type { Platform } from '@/types/platform'
 import { BOT_SETTING_LABELS, type BotSettingKey } from '@/types/settings'
 
 import { SettingSwitch } from './setting-switch'
+import { SettingTextInput } from './setting-text-input'
 
 interface Props {
   platform: Platform
   id: string
 }
 
-export async function SettingsList({ platform, id }: Props) {
+export async function GeneralSettingsList({ platform, id }: Props) {
   const settings = await getEntitySettings(platform, id)
 
   return (
@@ -36,7 +37,7 @@ export async function SettingsList({ platform, id }: Props) {
             No settings available.
           </p>
         ) : (
-          settings.map((setting) => {
+          settings.filter((setting) => setting.key !== 'so_command_message_format').map((setting) => {
             const settingInfo = BOT_SETTING_LABELS[setting.key as BotSettingKey]
             return (
               <div
