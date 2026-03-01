@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strings"
 	"sync"
 
 	_ "time/tzdata"
@@ -18,10 +19,12 @@ import (
 )
 
 func main() {
+	userAccessToken := strings.TrimPrefix(os.Getenv("TWITCH_OAUTH"), "oauth:")
 	twitchService, err := twitchapi.NewTwitchService(
 		os.Getenv("TWITCH_CLIENT_ID"),
 		os.Getenv("TWITCH_CLIENT_SECRET"),
 		os.Getenv("BOT_USER_ID"),
+		userAccessToken,
 	)
 	if err != nil {
 		log.Fatalf("Failed to initialize Twitch service: %v", err)

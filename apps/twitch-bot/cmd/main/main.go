@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/gempir/go-twitch-irc/v3"
@@ -25,10 +26,12 @@ func clearDailyCounts() {
 
 func main() {
 	log.Println("Starting Twitch Bot...")
+	userAccessToken := strings.TrimPrefix(os.Getenv("OAUTH"), "oauth:")
 	twitchService, err := twitchapi.NewTwitchService(
 		os.Getenv("TWITCH_CLIENT_ID"),
 		os.Getenv("TWITCH_CLIENT_SECRET"),
 		os.Getenv("BOT_USER_ID"),
+		userAccessToken,
 	)
 	if err != nil {
 		log.Fatalf("Failed to initialize Twitch service: %v", err)

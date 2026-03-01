@@ -12,6 +12,7 @@ var (
 	InviteCommandInfo = "!invite [your_channel_name]"
 	SoCommandInfo     = "For example: !so [username]"
 	SozlukCommandInfo = "For example: !sozluk [term-name]"
+	ClipCommandInfo   = "For example: !clip"
 
 	CannotExecuteCommand = " cannot execute the command"
 	CommandContentLimit  = "Command content is too long. Maximum length is 400 characters."

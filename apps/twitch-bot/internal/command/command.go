@@ -51,6 +51,7 @@ func (c *commands) GetSystemCommands() CommandMap {
 		"leave":  c.LeaveCommand,
 		"sozluk": c.SozlukCommand,
 		"so":     c.SoCommand,
+		"clip":   c.ClipCommand,
 
 		"acmd": c.AddCommandCommand,
 		"ucmd": c.UpdateCommandCommand,

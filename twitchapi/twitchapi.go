@@ -20,6 +20,7 @@ type TwitchService interface {
 	CheckStreamStatus(username string) (bool, string, error)
 	CheckMultipleStreamers(userIds []string) ([]model.TwitchStreamerData, error)
 	GiveShoutout(username, fromBroadcasterId, messageFormat string) (*string, error)
+	CreateClip(broadcasterId string) (*string, error)
 }
 
 const (
@@ -28,25 +29,27 @@ const (
 )
 
 type twitchService struct {
-	clientID     string
-	clientSecret string
-	botUserID    string
-	accessToken  string
-	httpClient   *http.Client
-	helixBaseURL string
-	tokenURL     string
-	mu           sync.Mutex
+	clientID        string
+	clientSecret    string
+	botUserID       string
+	accessToken     string
+	userAccessToken string
+	httpClient      *http.Client
+	helixBaseURL    string
+	tokenURL        string
+	mu              sync.Mutex
 }
 
 // NewTwitchService creates a new TwitchService with an initial OAuth app access token.
-func NewTwitchService(clientID, clientSecret, botUserID string) (TwitchService, error) {
+func NewTwitchService(clientID, clientSecret, botUserID, userAccessToken string) (TwitchService, error) {
 	s := &twitchService{
-		clientID:     clientID,
-		clientSecret: clientSecret,
-		botUserID:    botUserID,
-		httpClient:   &http.Client{},
-		helixBaseURL: defaultHelixBaseURL,
-		tokenURL:     defaultTokenURL,
+		clientID:        clientID,
+		clientSecret:    clientSecret,
+		botUserID:       botUserID,
+		userAccessToken: userAccessToken,
+		httpClient:      &http.Client{},
+		helixBaseURL:    defaultHelixBaseURL,
+		tokenURL:        defaultTokenURL,
 	}
 
 	if err := s.authenticate(); err != nil {
@@ -351,4 +354,75 @@ func (s *twitchService) GiveShoutout(username, fromBroadcasterId, messageFormat 
 	}
 
 	return &msg, nil
+}
+
+var errCreateClipSomethingWentWrong = fmt.Errorf("Something went wrong while creating clip. Please try again later.")
+
+// CreateClip creates a clip for the given broadcaster and returns the clip URL.
+func (s *twitchService) CreateClip(broadcasterId string) (*string, error) {
+	req, err := http.NewRequest("POST", s.helixBaseURL+"/clips", nil)
+	if err != nil {
+		log.Println(fmt.Errorf("CreateClip: failed to create request: %w", err))
+		return nil, errCreateClipSomethingWentWrong
+	}
+
+	req.Header.Set("Authorization", "Bearer "+s.userAccessToken)
+	req.Header.Set("Client-Id", s.clientID)
+	q := req.URL.Query()
+	q.Add("broadcaster_id", broadcasterId)
+	/* TODO: Add support for optional parameters in web interface in the future:
+	 	title	String	No	The title of the clip.
+		duration	Float	No	The length of the clip in seconds. Possible values range from 5 to 60 inclusively with a precision of 0.1. The default is 30.
+	*/
+	req.URL.RawQuery = q.Encode()
+
+	resp, err := s.httpClient.Do(req)
+	if err != nil {
+		log.Println(fmt.Errorf("CreateClip: request failed: %w", err))
+		return nil, errCreateClipSomethingWentWrong
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Println(fmt.Errorf("CreateClip: failed to read response body: %w", err))
+
+		return nil, errCreateClipSomethingWentWrong
+	}
+
+	if resp.StatusCode == http.StatusNotFound {
+		log.Println(fmt.Errorf("CreateClip: broadcaster not found for id %s", broadcasterId))
+		return nil, fmt.Errorf("Channel must be live to create a clip.")
+	}
+
+	if resp.StatusCode == http.StatusForbidden {
+		log.Println(fmt.Errorf("CreateClip: insufficient permissions to create clip for broadcaster id %s", broadcasterId))
+		return nil, fmt.Errorf("Bot does not have permissions to create clip.")
+	}
+
+	if resp.StatusCode != http.StatusAccepted && resp.StatusCode != http.StatusOK {
+		log.Println(fmt.Errorf("CreateClip: request returned status %d: %s", resp.StatusCode, string(body)))
+		return nil, errCreateClipSomethingWentWrong
+	}
+
+	var result struct {
+		Data []struct {
+			ID        string `json:"id"`
+			EditURL   string `json:"edit_url"`
+			Thumbnail string `json:"thumbnail_url"`
+		} `json:"data"`
+	}
+	if err := json.Unmarshal(body, &result); err != nil {
+		log.Println(fmt.Errorf("CreateClip: failed to decode response: %w", err))
+		return nil, errCreateClipSomethingWentWrong
+	}
+
+	if len(result.Data) == 0 {
+		return nil, fmt.Errorf("Something went wrong. No clip created")
+	}
+
+	clipID := result.Data[0].ID
+	clipURL := "https://clips.twitch.tv/" + clipID
+
+	return &clipURL, nil
 }
