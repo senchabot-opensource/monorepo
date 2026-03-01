@@ -317,7 +317,7 @@ func (s *twitchService) GiveShoutout(username, fromBroadcasterId, messageFormat 
 		return nil, fmt.Errorf("GiveShoutout: failed to create shoutout request: %w", err)
 	}
 
-	req.Header.Set("Authorization", "Bearer "+s.accessToken)
+	req.Header.Set("Authorization", "Bearer "+s.userAccessToken)
 	req.Header.Set("Client-Id", s.clientID)
 	q := req.URL.Query()
 	/*
