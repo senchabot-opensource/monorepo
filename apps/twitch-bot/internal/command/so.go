@@ -30,6 +30,7 @@ func (c *commands) SoCommand(context context.Context, message twitch.PrivateMess
 
 	var messageFormat string
 
+	// TODO: Add this to web interface so streamers can customize their shoutout message format. The messageFormat can include placeholders like {streamer} {url} {game} which will be replaced with the actual streamer name, stream URL, and current game respectively.
 	customMessageFormat, err := c.service.GetTwitchBotConfig(context, message.RoomID, "so_command_message_format")
 	if err != nil {
 		log.Println("[command.SoCommand] c.service.GetTwitchBotConfig error:", err.Error())

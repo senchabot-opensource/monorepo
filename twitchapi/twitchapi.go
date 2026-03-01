@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"os"
 	"strings"
 	"sync"
 
@@ -283,7 +284,9 @@ func (s *twitchService) GiveShoutout(username, fromBroadcasterId, messageFormat 
 	// First, get user info to ensure the streamer exists and to get their display name and other details for the shoutout message.
 	userInfo, err := s.GetUserInfoByLoginName(username)
 	if err != nil {
-		return nil, fmt.Errorf("GiveShoutout: failed to get user info: %w", err)
+		log.Printf("GiveShoutout: failed to get user info for %s: %v", username, err)
+		msg := fmt.Sprintf("This streamer does not exist: %s", username)
+		return &msg, nil
 	}
 
 	// check also if the user is the same as the broadcaster (self-shoutout)
@@ -295,6 +298,8 @@ func (s *twitchService) GiveShoutout(username, fromBroadcasterId, messageFormat 
 	// check the broadcaster is live before giving shoutout
 	if isLive, _, err := s.CheckStreamStatusByUserId(fromBroadcasterId); err != nil {
 		log.Printf("GiveShoutout: failed to check broadcaster stream status: %v", err)
+		msg := "Something went wrong while giving shoutout. Please try again later."
+		return &msg, nil
 	} else if !isLive {
 		msg := "You cannot give shoutouts while you are offline! Go live to start giving shoutouts!"
 		return &msg, nil
@@ -303,7 +308,9 @@ func (s *twitchService) GiveShoutout(username, fromBroadcasterId, messageFormat 
 	// check if the user is live before giving shoutout
 	isLive, _, err := s.CheckStreamStatus(username)
 	if err != nil {
-		return nil, fmt.Errorf("GiveShoutout: failed to check stream status: %w", err)
+		log.Printf("GiveShoutout: failed to check streamer %s stream status: %v", username, err)
+		msg := fmt.Sprintf("Something went wrong while giving shoutout to %s. Please try again later.", username)
+		return &msg, nil
 	}
 	if !isLive {
 		msg := fmt.Sprintf("%s is currently offline. Shoutouts are only for live streamers!", userInfo.DisplayName)
@@ -313,20 +320,24 @@ func (s *twitchService) GiveShoutout(username, fromBroadcasterId, messageFormat 
 	// use twitch shoutout endpoint to give the shoutout in chat (this will also trigger Twitch's built-in shoutout message in chat, so the custom message is optional and can be used to provide additional info or a different format).
 	req, err := http.NewRequest("POST", s.helixBaseURL+"/chat/shoutouts", nil)
 	if err != nil {
-		return nil, fmt.Errorf("GiveShoutout: failed to create shoutout request: %w", err)
+		log.Printf("GiveShoutout: failed to create shoutout request: %v", err)
+		msg := fmt.Sprintf("Something went wrong while giving shoutout to %s. Please try again later.", username)
+		return &msg, nil
 	}
 
-	req.Header.Set("Authorization", "Bearer "+s.accessToken)
+	req.Header.Set("Authorization", "Bearer "+s.userAccessToken)
 	req.Header.Set("Client-Id", s.clientID)
 	q := req.URL.Query()
-	q.Add("broadcaster_id", fromBroadcasterId)
-	q.Add("moderator_id", fromBroadcasterId) // assuming the broadcaster is also the moderator for simplicity
-	q.Add("receiver_id", userInfo.ID)
+	q.Add("from_broadcaster_id", fromBroadcasterId)
+	q.Add("moderator_id", os.Getenv("BOT_USER_ID")) // assuming the broadcaster is also the moderator for simplicity
+	q.Add("to_broadcaster_id", userInfo.ID)
 	req.URL.RawQuery = q.Encode()
 
 	resp, err := s.httpClient.Do(req)
 	if err != nil {
-		return nil, fmt.Errorf("GiveShoutout: shoutout request failed: %w", err)
+		log.Printf("GiveShoutout: failed to send shoutout request: %v", err)
+		msg := fmt.Sprintf("Something went wrong while giving shoutout to %s. Please try again later.", username)
+		return &msg, nil
 	}
 	defer resp.Body.Close()
 
@@ -337,7 +348,9 @@ func (s *twitchService) GiveShoutout(username, fromBroadcasterId, messageFormat 
 	}
 	if resp.StatusCode != http.StatusNoContent {
 		body, _ := io.ReadAll(resp.Body)
-		return nil, fmt.Errorf("shoutout request returned status %d: %s", resp.StatusCode, string(body))
+		log.Printf("GiveShoutout: shoutout request returned status %d: %s", resp.StatusCode, string(body))
+		msg := fmt.Sprintf("Something went wrong while giving shoutout to %s. Please try again later.", username)
+		return &msg, nil
 	}
 
 	// If the channel has a custom message format for shoutouts, use it. Otherwise, use a default message.
