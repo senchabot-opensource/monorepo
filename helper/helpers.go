@@ -26,6 +26,26 @@ const (
 	MaxCommandContentLength = 400
 )
 
+func FormatContent(str string, sd model.TwitchStreamerData) string {
+	if sd.GameName == "" {
+		sd.GameName = "Just Chatting"
+	}
+
+	stringTemplates := map[string]string{
+		"{twitch.username}": sd.UserName,
+		"{twitch.url}":      "https://www.twitch.tv/" + sd.UserLogin,
+		"{stream.title}":    sd.Title,
+		"{stream.category}": sd.GameName,
+		"{stream.game}":     sd.GameName,
+	}
+
+	for k, v := range stringTemplates {
+		str = strings.ReplaceAll(str, k, v)
+	}
+
+	return str
+}
+
 func FormatCommandContent(cv *model.CommandVariable) string {
 	msgContent := cv.CommandContent
 	username := cv.UserName
