@@ -14,13 +14,15 @@ import (
 func (m *postgresql) CreateBotCommand(ctx context.Context, botPlatform platform.Platform, commandName string, commandContent string, botPlatformId string, createdBy string) (*string, error) {
 	var botCommand []model.BotCommand
 	var infoText string
-	var twitchChannelId, discordServerId string
+	var twitchChannelId, discordServerId, kickChannelId string
 
 	switch botPlatform {
 	case platform.TWITCH:
 		twitchChannelId = botPlatformId
 	case platform.DISCORD:
 		discordServerId = botPlatformId
+	case platform.KICK:
+		kickChannelId = botPlatformId
 	}
 
 	infoTextResp, err := m.CheckCommandExists(ctx, botPlatform, commandName, botPlatformId)
@@ -45,6 +47,7 @@ func (m *postgresql) CreateBotCommand(ctx context.Context, botPlatform platform.
 		CommandContent:  commandContent,
 		TwitchChannelID: &twitchChannelId,
 		DiscordServerID: &discordServerId,
+		KickChannelID:   &kickChannelId,
 		CommandType:     1,
 		Status:          1,
 		CreatedBy:       &createdBy,
@@ -81,6 +84,8 @@ func (m *postgresql) UpdateBotCommand(ctx context.Context, botPlatform platform.
 		result = m.DB.Where("command_name = ?", commandName).Where("twitch_channel_id = ?", botPlatformId).First(&botCommand)
 	case platform.DISCORD:
 		result = m.DB.Where("command_name = ?", commandName).Where("discord_server_id = ?", botPlatformId).First(&botCommand)
+	case platform.KICK:
+		result = m.DB.Where("command_name = ?", commandName).Where("kick_channel_id = ?", botPlatformId).First(&botCommand)
 	}
 	if result.Error != nil {
 		return nil, nil, errors.New("(UpdateBotCommand) db.Find Error:" + result.Error.Error())
@@ -134,6 +139,16 @@ func (m *postgresql) DeleteBotCommand(ctx context.Context, botPlatform platform.
 		}
 
 		result = m.DB.Where("command_name = ?", commandName).Where("discord_server_id = ?", botPlatformId).First(&botCommand)
+		if result.Error != nil {
+			return nil, nil, errors.New("(DeleteBotCommand) botCommand db.First Error:" + result.Error.Error())
+		}
+	case platform.KICK:
+		result = m.DB.Where("command_name = ?", commandName).Where("kick_channel_id = ?", botPlatformId).Delete(&botCommandAlias)
+		if result.Error != nil {
+			return nil, nil, errors.New("(DeleteBotCommand) botCommandAlias db.AliasDelete Error: " + result.Error.Error())
+		}
+
+		result = m.DB.Where("command_name = ?", commandName).Where("kick_channel_id = ?", botPlatformId).First(&botCommand)
 		if result.Error != nil {
 			return nil, nil, errors.New("(DeleteBotCommand) botCommand db.First Error:" + result.Error.Error())
 		}
@@ -205,6 +220,8 @@ func (m *postgresql) CheckUserCommandExists(ctx context.Context, botPlatform pla
 		result = m.DB.Where("command_name = ?", commandName).Where("twitch_channel_id", botPlatformId).Where("command_type = ?", 1).Find(&botCommand)
 	case platform.DISCORD:
 		result = m.DB.Where("command_name = ?", commandName).Where("discord_server_id", botPlatformId).Where("command_type = ?", 1).Find(&botCommand)
+	case platform.KICK:
+		result = m.DB.Where("command_name = ?", commandName).Where("kick_channel_id", botPlatformId).Where("command_type = ?", 1).Find(&botCommand)
 	}
 	if result.Error != nil {
 		return nil, errors.New("(CheckUserCommandExists) db.Find Error:" + result.Error.Error())
@@ -225,6 +242,8 @@ func (m *postgresql) GetCommandAlias(ctx context.Context, botPlatform platform.P
 		err = m.DB.Where("command_alias = ?", command).Where("twitch_channel_id = ?", botPlatformId).Where("status = ?", 1).First(&commandAlias).Error
 	case platform.DISCORD:
 		err = m.DB.Where("command_alias = ?", command).Where("discord_server_id = ?", botPlatformId).Where("status = ?", 1).First(&commandAlias).Error
+	case platform.KICK:
+		err = m.DB.Where("command_alias = ?", command).Where("kick_channel_id = ?", botPlatformId).Where("status = ?", 1).First(&commandAlias).Error
 	}
 	if err != nil {
 		return nil, errors.New("(GetCommandAlias) db.Find Error:" + err.Error())
@@ -242,6 +261,8 @@ func (m *postgresql) CheckCommandAliasExist(ctx context.Context, botPlatform pla
 		result = m.DB.Where("command_alias = ?", commandAlias).Where("twitch_channel_id", botPlatformId).Find(&commandAliasModel)
 	case platform.DISCORD:
 		result = m.DB.Where("command_alias = ?", commandAlias).Where("discord_server_id", botPlatformId).Find(&commandAliasModel)
+	case platform.KICK:
+		result = m.DB.Where("command_alias = ?", commandAlias).Where("kick_channel_id", botPlatformId).Find(&commandAliasModel)
 	}
 	if result.Error != nil {
 		return nil, errors.New("(CheckCommandAlias) db.Find Error:" + result.Error.Error())
@@ -257,13 +278,15 @@ func (m *postgresql) CheckCommandAliasExist(ctx context.Context, botPlatform pla
 func (m *postgresql) CreateCommandAlias(ctx context.Context, botPlatform platform.Platform, commandName string, aliases []string, botPlatformId string, createdBy string) (*string, error) {
 	commandAliases := []model.BotCommandAlias{}
 	var infoText string
-	var twitchChannelId, discordServerId string
+	var twitchChannelId, discordServerId, kickChannelId string
 
 	switch botPlatform {
 	case platform.TWITCH:
 		twitchChannelId = botPlatformId
 	case platform.DISCORD:
 		discordServerId = botPlatformId
+	case platform.KICK:
+		kickChannelId = botPlatformId
 	}
 
 	command, _ := m.GetCommandAlias(ctx, botPlatform, commandName, botPlatformId)
@@ -296,6 +319,7 @@ func (m *postgresql) CreateCommandAlias(ctx context.Context, botPlatform platfor
 			CommandName:     commandName,
 			TwitchChannelID: &twitchChannelId,
 			DiscordServerID: &discordServerId,
+			KickChannelID:   &kickChannelId,
 			Status:          1,
 			CreatedBy:       createdBy,
 		}
@@ -329,6 +353,8 @@ func (m *postgresql) DeleteCommandAlias(ctx context.Context, botPlatform platfor
 		result = m.DB.Where("command_alias = ?", commandAlias).Where("twitch_channel_id = ?", botPlatformId).First(&commandAliasModel)
 	case platform.DISCORD:
 		result = m.DB.Where("command_alias = ?", commandAlias).Where("discord_server_id = ?", botPlatformId).First(&commandAliasModel)
+	case platform.KICK:
+		result = m.DB.Where("command_alias = ?", commandAlias).Where("kick_channel_id = ?", botPlatformId).First(&commandAliasModel)
 	}
 	if result.Error != nil {
 		return nil, errors.New("(DeleteCommandAlias) db.First Error:" + result.Error.Error())
@@ -380,6 +406,8 @@ func (m *postgresql) GetUserBotCommand(ctx context.Context, botPlatform platform
 		result = m.DB.Where("command_name = ?", commandName).Where("twitch_channel_id = ?", botPlatformId).Where("command_type = ?", 1).Where("status = ?", 1).First(&botCommand)
 	case platform.DISCORD:
 		result = m.DB.Where("command_name = ?", commandName).Where("discord_server_id = ?", botPlatformId).Where("command_type = ?", 1).Where("status = ?", 1).First(&botCommand)
+	case platform.KICK:
+		result = m.DB.Where("command_name = ?", commandName).Where("kick_channel_id = ?", botPlatformId).Where("command_type = ?", 1).Where("status = ?", 1).First(&botCommand)
 	}
 	if result.Error != nil {
 		return nil, errors.New("(GetBotCommand) db.First Error:" + result.Error.Error())
@@ -397,6 +425,8 @@ func (m *postgresql) GetCommandList(ctx context.Context, botPlatform platform.Pl
 		result = m.DB.Where("twitch_channel_id = ?", botPlatformId).Where("command_type = ?", 1).Find(&botCommandList)
 	case platform.DISCORD:
 		result = m.DB.Where("discord_server_id = ?", botPlatformId).Where("command_type = ?", 1).Find(&botCommandList)
+	case platform.KICK:
+		result = m.DB.Where("kick_channel_id = ?", botPlatformId).Where("command_type = ?", 1).Find(&botCommandList)
 	}
 	if result.Error != nil {
 		return nil, errors.New("(GetCommandList) db.Find Error:" + result.Error.Error())
