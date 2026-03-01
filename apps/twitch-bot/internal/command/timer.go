@@ -18,6 +18,6 @@ func (c *commands) TimerCommand(context context.Context, message twitch.PrivateM
 		return nil, errors.New(message.User.DisplayName + config.CannotExecuteCommand)
 	}
 
-	cmdResp.Message = "Add timer: !atimer [command_name] [interval (integer, minute)] • Delete timer: !dtimer [command_name] • Click for more information: https://docs.senchabot.app/twitch-bot/command-timer-system"
+	cmdResp.Message = "Add timer: !atimer [command_name] [interval (integer, minute)] • Delete timer: !dtimer [command_name] • Click for more information: https://docs.senchabot.com/twitch-bot/command-timer-system"
 	return &cmdResp, nil
 }

@@ -97,7 +97,7 @@ export default function Page() {
       <p>
         By using Senchabot, you agree to be bound by the terms of this EULA. If
         you have any questions about this EULA or Senchabot, please contact the
-        Senchabot team at <b>hello@senchabot.app</b>
+        Senchabot team at <b>hello@senchabot.com</b>
       </p>
     </article>
   )

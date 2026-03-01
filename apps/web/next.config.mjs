@@ -12,7 +12,7 @@ const nextConfig = {
     return [
       {
         source: '/docs',
-        destination: 'https://docs.senchabot.app',
+        destination: 'https://docs.senchabot.com',
         permanent: true,
       },
       {

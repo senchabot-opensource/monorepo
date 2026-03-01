@@ -28,6 +28,12 @@ func (c *commands) SoCommand(context context.Context, message twitch.PrivateMess
 	streamerUsername := strings.ToLower(params[0])
 	streamerUsername = strings.TrimPrefix(streamerUsername, "@")
 
+	// check twitch username regex
+	if !helper.IsValidTwitchUsername(streamerUsername) {
+		cmdResp.Message = "Invalid Twitch username. Please provide a valid Twitch username for the shoutout command."
+		return &cmdResp, nil
+	}
+
 	var messageFormat string
 
 	// TODO: Add this to web interface so streamers can customize their shoutout message format. The messageFormat can include placeholders like {streamer} {url} {game} which will be replaced with the actual streamer name, stream URL, and current game respectively.
