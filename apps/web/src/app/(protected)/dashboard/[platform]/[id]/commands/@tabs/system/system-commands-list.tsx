@@ -22,6 +22,7 @@ const TWITCH_SYSTEM_COMMANDS = [
   { name: 'invite', description: 'Invite the bot to your channel' },
   { name: 'leave', description: 'Remove the bot from your channel' },
   { name: 'so', description: 'Give a shoutout to another streamer' },
+  { name: 'clip', description: 'Create a clip of the current stream' },
   { name: 'acmd', description: 'Add a new custom command' },
   { name: 'ucmd', description: 'Update an existing custom command' },
   { name: 'dcmd', description: 'Delete a custom command' },

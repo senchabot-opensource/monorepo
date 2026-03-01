@@ -12,7 +12,7 @@ import (
 )
 
 func inviteCommandResponse(s string) string {
-	return "Hey VoHiYo! " + s + " Granting me moderator privileges in your channel would allow me to chat and unlock additional features to enhance your stream. You can find more details at docs.senchabot.app. Thanks! 😄"
+	return "Hey VoHiYo! " + s + " Granting me moderator privileges in your channel would allow me to chat and unlock additional features to enhance your stream. You can find more details at docs.senchabot.com. Thanks! 😄"
 }
 
 func (c *commands) InviteCommand(context context.Context, message twitch.PrivateMessage, commandName string, params []string) (*model.CommandResponse, error) {
