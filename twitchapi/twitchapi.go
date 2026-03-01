@@ -29,25 +29,27 @@ const (
 )
 
 type twitchService struct {
-	clientID     string
-	clientSecret string
-	botUserID    string
-	accessToken  string
-	httpClient   *http.Client
-	helixBaseURL string
-	tokenURL     string
-	mu           sync.Mutex
+	clientID        string
+	clientSecret    string
+	botUserID       string
+	accessToken     string
+	userAccessToken string
+	httpClient      *http.Client
+	helixBaseURL    string
+	tokenURL        string
+	mu              sync.Mutex
 }
 
 // NewTwitchService creates a new TwitchService with an initial OAuth app access token.
-func NewTwitchService(clientID, clientSecret, botUserID string) (TwitchService, error) {
+func NewTwitchService(clientID, clientSecret, botUserID, userAccessToken string) (TwitchService, error) {
 	s := &twitchService{
-		clientID:     clientID,
-		clientSecret: clientSecret,
-		botUserID:    botUserID,
-		httpClient:   &http.Client{},
-		helixBaseURL: defaultHelixBaseURL,
-		tokenURL:     defaultTokenURL,
+		clientID:        clientID,
+		clientSecret:    clientSecret,
+		botUserID:       botUserID,
+		userAccessToken: userAccessToken,
+		httpClient:      &http.Client{},
+		helixBaseURL:    defaultHelixBaseURL,
+		tokenURL:        defaultTokenURL,
 	}
 
 	if err := s.authenticate(); err != nil {
@@ -361,7 +363,7 @@ func (s *twitchService) CreateClip(broadcasterId string) (*string, error) {
 		return nil, fmt.Errorf("CreateClip: failed to create request: %w", err)
 	}
 
-	req.Header.Set("Authorization", "Bearer "+s.accessToken)
+	req.Header.Set("Authorization", "Bearer "+s.userAccessToken)
 	req.Header.Set("Client-Id", s.clientID)
 	q := req.URL.Query()
 	q.Add("broadcaster_id", broadcasterId)

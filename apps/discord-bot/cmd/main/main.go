@@ -22,6 +22,7 @@ func main() {
 		os.Getenv("TWITCH_CLIENT_ID"),
 		os.Getenv("TWITCH_CLIENT_SECRET"),
 		os.Getenv("BOT_USER_ID"),
+		os.Getenv("TWITCH_OAUTH"),
 	)
 	if err != nil {
 		log.Fatalf("Failed to initialize Twitch service: %v", err)
