@@ -6,13 +6,13 @@ import (
 	"log"
 	"regexp"
 	"strconv"
-	"strings"
 	"sync"
 	"time"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/senchabot-opensource/monorepo/apps/discord-bot/internal/service"
 	"github.com/senchabot-opensource/monorepo/config"
+	"github.com/senchabot-opensource/monorepo/helper"
 	"github.com/senchabot-opensource/monorepo/model"
 	"github.com/senchabot-opensource/monorepo/twitchapi"
 )
@@ -350,27 +350,27 @@ func StartRetryFailedUpdates(service service.Service) {
 	}()
 }
 
-func (s *StreamerService) handleAnnouncement(ctx context.Context, dS *discordgo.Session, service service.Service, guildId string, streamers map[string]GuildStreamers, sd model.TwitchStreamerData) {
+func (s *StreamerService) handleAnnouncement(ctx context.Context, dS *discordgo.Session, service service.Service, guildId string, streamers map[string]GuildStreamers, streamerData model.TwitchStreamerData) {
 	streamersMutex.Lock()
 	defer streamersMutex.Unlock()
 
-	gs, ok := streamers[sd.UserID]
-	announceable := CheckDatesAnnounceable(ctx, service, guildId, sd.UserID, sd.StartedAt)
+	gs, ok := streamers[streamerData.UserID]
+	announceable := CheckDatesAnnounceable(ctx, service, guildId, streamerData.UserID, streamerData.StartedAt)
 	if !ok || !announceable {
 		return
 	}
 
-	annoContent := s.GetStreamAnnoContent(ctx, service, guildId, sd.UserID)
-	formattedString := FormatContent(annoContent, sd)
-	userInfo, err := s.twitchService.GetUserInfoByLoginName(sd.UserLogin)
+	annoContent := s.GetStreamAnnoContent(ctx, service, guildId, streamerData.UserID)
+	formattedString := helper.FormatContent(annoContent, streamerData)
+	userInfo, err := s.twitchService.GetUserInfoByLoginName(streamerData.UserLogin)
 	if err != nil {
 		// TODO
 	}
 	dS.ChannelMessageSendComplex(gs.DiscordChannelID, &discordgo.MessageSend{Content: formattedString, Embeds: []*discordgo.MessageEmbed{
 		{
-			Title:       fmt.Sprintf("%s - Twitch", sd.UserName),
-			Description: sd.Title,
-			URL:         fmt.Sprintf("https://twitch.tv/%s", sd.UserLogin),
+			Title:       fmt.Sprintf("%s - Twitch", streamerData.UserName),
+			Description: streamerData.Title,
+			URL:         fmt.Sprintf("https://twitch.tv/%s", streamerData.UserLogin),
 			Thumbnail:   &discordgo.MessageEmbedThumbnail{URL: userInfo.ProfileImageURL},
 		},
 	}})
@@ -379,10 +379,10 @@ func (s *StreamerService) handleAnnouncement(ctx context.Context, dS *discordgo.
 	if lastAnnoDateCache[guildId] == nil {
 		lastAnnoDateCache[guildId] = make(map[string]time.Time)
 	}
-	lastAnnoDateCache[guildId][sd.UserID] = time.Now().UTC()
+	lastAnnoDateCache[guildId][streamerData.UserID] = time.Now().UTC()
 	lastAnnoDateCacheMutex.Unlock()
 
-	_, err = service.UpdateTwitchStreamerLastAnnoDate(ctx, sd.UserID, guildId, time.Now().UTC())
+	_, err = service.UpdateTwitchStreamerLastAnnoDate(ctx, streamerData.UserID, guildId, time.Now().UTC())
 	if err != nil {
 		log.Println("[handleAnnouncement] UpdateTwitchStreamerLastAnnoDate error:", err.Error())
 
@@ -390,11 +390,11 @@ func (s *StreamerService) handleAnnouncement(ctx context.Context, dS *discordgo.
 		if retryUpdateQueue[guildId] == nil {
 			retryUpdateQueue[guildId] = make(map[string]time.Time)
 		}
-		retryUpdateQueue[guildId][sd.UserID] = time.Now().UTC()
+		retryUpdateQueue[guildId][streamerData.UserID] = time.Now().UTC()
 		retryUpdateQueueMutex.Unlock()
 	}
 
-	log.Println("[handleAnnouncement] Announcement sent for streamer:", sd.UserName, "in guild:", guildId)
+	log.Println("[handleAnnouncement] Announcement sent for streamer:", streamerData.UserName, "in guild:", guildId)
 }
 
 var liveStreamChannels = make(map[string]chan struct{})
@@ -478,26 +478,6 @@ func (s *StreamerService) CheckLiveStreams(dS *discordgo.Session, ctx context.Co
 			return
 		}
 	}
-}
-
-func FormatContent(str string, sd model.TwitchStreamerData) string {
-	if sd.GameName == "" {
-		sd.GameName = "Just Chatting"
-	}
-
-	stringTemplates := map[string]string{
-		"{twitch.username}": sd.UserName,
-		"{twitch.url}":      "https://www.twitch.tv/" + sd.UserLogin,
-		"{stream.title}":    sd.Title,
-		"{stream.category}": sd.GameName,
-		"{stream.game}":     sd.GameName,
-	}
-
-	for k, v := range stringTemplates {
-		str = strings.ReplaceAll(str, k, v)
-	}
-
-	return str
 }
 
 func getLivestreamLimit(ctx context.Context, service service.Service, guildId string) (int, error) {

@@ -1,6 +1,7 @@
 package twitchapi
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -11,6 +12,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/senchabot-opensource/monorepo/helper"
 	"github.com/senchabot-opensource/monorepo/model"
 )
 
@@ -22,6 +24,7 @@ type TwitchService interface {
 	CheckMultipleStreamers(userIds []string) ([]model.TwitchStreamerData, error)
 	GiveShoutout(username, fromBroadcasterId, messageFormat string) (*string, error)
 	CreateClip(broadcasterId string) (*string, error)
+	GetLivestreamData(ctx context.Context, userId string) ([]model.TwitchStreamerData, error)
 }
 
 const (
@@ -278,42 +281,41 @@ func (s *twitchService) CheckMultipleStreamers(userIds []string) ([]model.Twitch
 	return allStreams, nil
 }
 
+func (s *twitchService) GetLivestreamData(ctx context.Context, userLogin string) ([]model.TwitchStreamerData, error) {
+	body, err := s.doHelixRequest("/streams?user_login=" + url.QueryEscape(userLogin))
+	if err != nil {
+		return nil, fmt.Errorf("GetLivestreamData error: %w", err)
+	}
+	var result struct {
+		Data []model.TwitchStreamerData `json:"data"`
+	}
+	if err := json.Unmarshal(body, &result); err != nil {
+		return nil, fmt.Errorf("failed to decode stream status response: %w", err)
+	}
+	return result.Data, nil
+}
+
 // GiveShoutout sends a shoutout for the given streamer. If a custom message format is provided,
 // it formats and returns the message. Otherwise, it returns a default shoutout message.
 func (s *twitchService) GiveShoutout(username, fromBroadcasterId, messageFormat string) (*string, error) {
-	// First, get user info to ensure the streamer exists and to get their display name and other details for the shoutout message.
-	userInfo, err := s.GetUserInfoByLoginName(username)
+	// First, get livestream data to ensure the streamer exists and to get their display name and other details for the shoutout message.
+	livestreamData, err := s.GetLivestreamData(context.Background(), username)
 	if err != nil {
-		log.Printf("GiveShoutout: failed to get user info for %s: %v", username, err)
+		log.Printf("GiveShoutout: failed to get livestream data for %s: %v", username, err)
 		msg := fmt.Sprintf("This streamer does not exist: %s", username)
 		return &msg, nil
 	}
 
+	if len(livestreamData) == 0 {
+		msg := fmt.Sprintf("%s is currently offline. Shoutouts are only for live streamers!", username)
+		return &msg, nil
+	}
+
+	livestreamerData := livestreamData[0]
+
 	// check also if the user is the same as the broadcaster (self-shoutout)
-	if userInfo.ID == fromBroadcasterId {
+	if livestreamerData.UserID == fromBroadcasterId {
 		msg := "You cannot give a shoutout to yourself!"
-		return &msg, nil
-	}
-
-	// check the broadcaster is live before giving shoutout
-	if isLive, _, err := s.CheckStreamStatusByUserId(fromBroadcasterId); err != nil {
-		log.Printf("GiveShoutout: failed to check broadcaster stream status: %v", err)
-		msg := "Something went wrong while giving shoutout. Please try again later."
-		return &msg, nil
-	} else if !isLive {
-		msg := "You cannot give shoutouts while you are offline! Go live to start giving shoutouts!"
-		return &msg, nil
-	}
-
-	// check if the user is live before giving shoutout
-	isLive, _, err := s.CheckStreamStatus(username)
-	if err != nil {
-		log.Printf("GiveShoutout: failed to check streamer %s stream status: %v", username, err)
-		msg := fmt.Sprintf("Something went wrong while giving shoutout to %s. Please try again later.", username)
-		return &msg, nil
-	}
-	if !isLive {
-		msg := fmt.Sprintf("%s is currently offline. Shoutouts are only for live streamers!", userInfo.DisplayName)
 		return &msg, nil
 	}
 
@@ -330,7 +332,7 @@ func (s *twitchService) GiveShoutout(username, fromBroadcasterId, messageFormat 
 	q := req.URL.Query()
 	q.Add("from_broadcaster_id", fromBroadcasterId)
 	q.Add("moderator_id", os.Getenv("BOT_USER_ID")) // assuming the broadcaster is also the moderator for simplicity
-	q.Add("to_broadcaster_id", userInfo.ID)
+	q.Add("to_broadcaster_id", livestreamerData.UserID)
 	req.URL.RawQuery = q.Encode()
 
 	resp, err := s.httpClient.Do(req)
@@ -340,6 +342,22 @@ func (s *twitchService) GiveShoutout(username, fromBroadcasterId, messageFormat 
 		return &msg, nil
 	}
 	defer resp.Body.Close()
+
+	if resp.StatusCode == http.StatusBadRequest {
+		body, _ := io.ReadAll(resp.Body)
+		var errorResp struct {
+			Error   string `json:"error"`
+			Message string `json:"message"`
+			Status  int    `json:"status"`
+		}
+		if err := json.Unmarshal(body, &errorResp); err != nil {
+			log.Printf("GiveShoutout: failed to decode error response for bad request: %v", err)
+			msg := fmt.Sprintf("Failed to give shoutout to %s. Twitch API returned a bad request. Please try again later.", username)
+			return &msg, nil
+		}
+		msg := errorResp.Message
+		return &msg, nil
+	}
 
 	// handle 429 Too Many Requests if the broadcaster is trying to give shoutouts too frequently
 	if resp.StatusCode == http.StatusTooManyRequests {
@@ -355,15 +373,17 @@ func (s *twitchService) GiveShoutout(username, fromBroadcasterId, messageFormat 
 
 	// If the channel has a custom message format for shoutouts, use it. Otherwise, use a default message.
 
-	twitchURL := "https://www.twitch.tv/" + userInfo.Login
+	twitchURL := "https://www.twitch.tv/" + livestreamerData.UserLogin
 
 	var msg string
 	if messageFormat != "" {
-		msg = strings.ReplaceAll(messageFormat, "{username}", userInfo.DisplayName)
-		msg = strings.ReplaceAll(msg, "{url}", twitchURL)
-		msg = strings.ReplaceAll(msg, "{game}", userInfo.Description)
+		msg = helper.FormatContent(msg, model.TwitchStreamerData{
+			UserName:  livestreamerData.UserName,
+			UserLogin: livestreamerData.UserLogin,
+			GameName:  livestreamerData.GameName,
+		})
 	} else {
-		msg = fmt.Sprintf("Check out %s at %s!", userInfo.DisplayName, twitchURL)
+		msg = fmt.Sprintf("Check out %s at %s!", livestreamerData.UserName, twitchURL)
 	}
 
 	return &msg, nil
