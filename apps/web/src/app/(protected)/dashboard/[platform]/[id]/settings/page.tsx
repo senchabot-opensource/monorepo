@@ -9,7 +9,8 @@ import { auth } from '@/lib/auth'
 
 import type { Platform } from '@/types/platform'
 
-import { SettingsList } from './settings-list'
+import { GeneralSettingsList } from './general-settings-list'
+import { CommandCustomizations } from './command-customizations'
 
 export const metadata: Metadata = {
   title: 'Bot Settings',
@@ -58,7 +59,8 @@ export default async function Page(props: Props) {
             </div>
           }
         >
-          <SettingsList platform={params.platform} id={params.id} />
+          <GeneralSettingsList platform={params.platform} id={params.id} />
+          <CommandCustomizations platform={params.platform} id={params.id} />
         </Suspense>
       </div>
     </div>
