@@ -5,7 +5,7 @@ import (
 
 	"github.com/gempir/go-twitch-irc/v3"
 	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/command"
-	"github.com/senchabot-opensource/monorepo/apps/twitch-bot/internal/command/helpers"
+	"github.com/senchabot-opensource/monorepo/helper"
 )
 
 func (h *handlers) PrivateMessage() {
@@ -13,10 +13,10 @@ func (h *handlers) PrivateMessage() {
 	ctx := context.Background()
 
 	h.client.Twitch.OnPrivateMessage(func(message twitch.PrivateMessage) {
-		cmdName, params := helpers.ParseSysCmdMessage(message.Message)
+		cmdName, params := helper.ParseSysCmdMessage(message.Message)
 
 		if !commands.IsSystemCommand(cmdName) {
-			cmdName, params = helpers.ParseMessage(message.Message)
+			cmdName, params = helper.ParseMessage(message.Message)
 		}
 
 		if cmdName == "" {
