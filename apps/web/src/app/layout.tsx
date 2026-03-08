@@ -37,9 +37,6 @@ interface Props {
 }
 
 export default function Layout({ children }: Props) {
-  const gaId = process.env.NEXT_PUBLIC_GA_ID ?? 'G-0N948SR48C'
-  const gtmId = process.env.NEXT_PUBLIC_GTM_ID
-
   return (
     <html lang="en" suppressHydrationWarning>
       <body
@@ -49,8 +46,8 @@ export default function Layout({ children }: Props) {
         )}
       >
         <ThemeProvider>{children}</ThemeProvider>
-        {gaId.startsWith('G-') && <GoogleAnalytics gaId={gaId} />}
-        {gtmId?.startsWith('GTM-') && <GoogleTagManager gtmId={gtmId} />}
+        <GoogleAnalytics gaId="G-0N948SR48C" />
+        <GoogleTagManager gtmId="G-0N948SR48C" />
       </body>
     </html>
   )
