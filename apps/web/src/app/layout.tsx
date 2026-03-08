@@ -13,11 +13,11 @@ export const metadata: Metadata = {
   metadataBase: new URL(`https://${process.env.VERCEL_URL}`),
   title: {
     default:
-      'Senchabot - Free, Community Management Bot for Twitch and Discord ',
+      'Senchabot - Free, Community Management Bot for Twitch, Discord, Kick, and YouTube',
     template: `%s - Senchabot`,
   },
   description:
-    'One bot, two platforms! Manage your Discord and Twitch community with an open-source multi-platform bot.',
+    'One bot, four platforms. Manage Twitch, Discord, Kick, and YouTube communities with an open-source multi-platform bot.',
   icons: {
     icon: '/favicon.ico',
     apple: '/apple-touch-icon.png',
@@ -37,6 +37,9 @@ interface Props {
 }
 
 export default function Layout({ children }: Props) {
+  const gaId = process.env.NEXT_PUBLIC_GA_ID ?? 'G-0N948SR48C'
+  const gtmId = process.env.NEXT_PUBLIC_GTM_ID
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body
@@ -46,8 +49,8 @@ export default function Layout({ children }: Props) {
         )}
       >
         <ThemeProvider>{children}</ThemeProvider>
-        <GoogleAnalytics gaId="G-0N948SR48C" />
-        <GoogleTagManager gtmId="G-0N948SR48C" />
+        {gaId.startsWith('G-') && <GoogleAnalytics gaId={gaId} />}
+        {gtmId?.startsWith('GTM-') && <GoogleTagManager gtmId={gtmId} />}
       </body>
     </html>
   )
