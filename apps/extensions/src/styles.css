@@ -1,0 +1,6 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --font-sans: "Consolas", ui-sans-serif, system-ui, sans-serif;
+}
