@@ -3,11 +3,15 @@ import { useCallback, useEffect, useRef, useState } from "react";
 interface SubSproutWidgetProps {
   channel: string;
   platform?: "twitch" | "kick";
+  kickId?: string;
+  kickChannelId?: string;
 }
 
 export function SubSproutWidget({
   channel,
   platform = "twitch",
+  kickId,
+  kickChannelId,
 }: SubSproutWidgetProps) {
   const [step, setStep] = useState(0);
   const stepRef = useRef(0);
@@ -43,13 +47,13 @@ export function SubSproutWidget({
   }, []);
 
   useEffect(() => {
+    const handleSubEvent = (amount: number = 1) => {
+      subQueue.current += amount;
+      processQueue();
+    };
+
     const loadComfy = async () => {
       const { default: ComfyJS } = await import("comfy.js");
-
-      const handleSubEvent = (amount: number = 1) => {
-        subQueue.current += amount;
-        processQueue();
-      };
 
       ComfyJS.onSub = () => handleSubEvent(1);
       ComfyJS.onResub = () => handleSubEvent(1);
@@ -72,10 +76,169 @@ export function SubSproutWidget({
       ComfyJS.Init(channel);
     };
 
+    const loadKick = () => {
+      if (!kickId && !kickChannelId) return;
+
+      const ws = new WebSocket(
+        "wss://ws-us2.pusher.com/app/32cbd69e4b950bf97679?protocol=7&client=js&version=8.4.0&flash=false",
+      );
+
+      ws.onopen = () => {
+        console.log("[Kick] WebSocket connected");
+        const channelNames = new Set<string>();
+
+        if (kickId) {
+          channelNames.add(`chatrooms.${kickId}.v2`);
+          channelNames.add(`chatrooms.${kickId}`);
+        }
+
+        if (kickChannelId) {
+          channelNames.add(`channel.${kickChannelId}`);
+          channelNames.add(`channel.${kickChannelId}.v2`);
+          channelNames.add(`chatrooms.${kickChannelId}.v2`);
+        }
+
+        for (const channelName of channelNames) {
+          ws.send(
+            JSON.stringify({
+              event: "pusher:subscribe",
+              data: { channel: channelName },
+            }),
+          );
+          console.log("[Kick] Subscribing to channel:", channelName);
+        }
+      };
+
+      ws.onmessage = event => {
+        if (typeof event.data !== "string") return;
+
+        try {
+          const response = JSON.parse(event.data) as {
+            event?: unknown;
+            data?: unknown;
+          };
+          const eventName =
+            typeof response.event === "string" ? response.event : "";
+          const parsePayload = (
+            data: unknown,
+          ): Record<string, unknown> | null => {
+            if (typeof data === "string") {
+              try {
+                const parsed = JSON.parse(data) as unknown;
+                return parsed && typeof parsed === "object"
+                  ? (parsed as Record<string, unknown>)
+                  : null;
+              } catch {
+                return null;
+              }
+            }
+
+            return data && typeof data === "object"
+              ? (data as Record<string, unknown>)
+              : null;
+          };
+          const pickAmount = (payload: Record<string, unknown> | null) => {
+            if (!payload) return NaN;
+
+            const candidates: unknown[] = [
+              payload.gifted_subscriptions_count,
+              payload.subscriptions_count,
+              payload.count,
+              payload.amount,
+            ];
+
+            const nestedData = payload.data;
+            if (nestedData && typeof nestedData === "object") {
+              const nested = nestedData as Record<string, unknown>;
+              candidates.push(
+                nested.gifted_subscriptions_count,
+                nested.subscriptions_count,
+                nested.count,
+                nested.amount,
+              );
+            }
+
+            for (const value of candidates) {
+              const asNumber =
+                typeof value === "number"
+                  ? value
+                  : typeof value === "string"
+                    ? Number(value)
+                    : NaN;
+              if (Number.isFinite(asNumber) && asNumber > 0) {
+                return asNumber;
+              }
+            }
+
+            return NaN;
+          };
+
+          // Respond to Pusher ping
+          if (eventName === "pusher:ping") {
+            ws.send(JSON.stringify({ event: "pusher:pong" }));
+            return;
+          }
+
+          // Subscription confirmation
+          if (eventName === "pusher_internal:subscription_succeeded") {
+            console.log("[Kick] Subscribed to channel");
+            return;
+          }
+
+          // Handle sub events with a tolerant matcher for Kick event variants.
+          if (
+            eventName.includes("Subscription") ||
+            (eventName.includes("Gift") && eventName.includes("Event"))
+          ) {
+            const payload = parsePayload(response.data);
+            const numericAmount = pickAmount(payload);
+
+            handleSubEvent(
+              Number.isFinite(numericAmount) && numericAmount > 0
+                ? Math.floor(numericAmount)
+                : 1,
+            );
+            return;
+          }
+
+          // Handle chat commands like "grow"
+          if (eventName === "App\\Events\\ChatMessageEvent" && response.data) {
+            const payload = parsePayload(response.data);
+            const content =
+              payload && typeof payload.content === "string"
+                ? payload.content
+                : "";
+
+            if (content.toLowerCase().trim() === "!grow") {
+              // Assuming mod check is hard to verify without badges array properly parsed,
+              // for Kick we'll just allow any "grow" command if they type it,
+              // or you can restrict it if needed based on payload.sender
+              handleSubEvent(1);
+            }
+          }
+        } catch (e) {
+          // ignore parse errors
+        }
+      };
+
+      ws.onerror = error => {
+        console.error("[Kick] WebSocket error:", error);
+      };
+
+      ws.onclose = () => {
+        console.log("[Kick] WebSocket disconnected");
+      };
+
+      return () => ws.close();
+    };
+
     if (channel && platform === "twitch") {
       loadComfy();
+    } else if (platform === "kick" && (kickId || kickChannelId)) {
+      const cleanup = loadKick();
+      return cleanup;
     }
-  }, [channel, platform]);
+  }, [channel, platform, kickId, kickChannelId]);
 
   return (
     <div className="size-full">

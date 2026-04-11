@@ -116,9 +116,9 @@ function Index() {
                   onChange={e =>
                     setPlatform(e.target.value as "twitch" | "kick")
                   }
-                  disabled
-                  className="w-full cursor-not-allowed rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-zinc-400 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500">
+                  className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500">
                   <option value="twitch">Twitch</option>
+                  <option value="kick">Kick</option>
                 </select>
               </div>
             </>
