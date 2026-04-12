@@ -46,8 +46,8 @@ func (c *commands) DelTwitchCommand(ctx context.Context, s *discordgo.Session, i
 		}
 
 		streamers := c.streamerSvc.GetStreamersData(i.GuildID)
-		delete(streamers, uInfo.Login)
-		ok = c.streamerSvc.DeleteStreamerFromData(i.GuildID, uInfo.Login)
+		delete(streamers, uInfo.ID)
+		ok = c.streamerSvc.DeleteStreamerFromData(i.GuildID, uInfo.ID)
 		if !ok {
 			ephemeralRespond(s, i, "There was a problem when deleting Twitch streamer `"+uInfo.Login+"`")
 			return
