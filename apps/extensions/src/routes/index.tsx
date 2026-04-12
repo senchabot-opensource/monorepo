@@ -50,8 +50,8 @@ function Index() {
       : twitchChannel.length > 0 || kickChannel.length > 0;
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-zinc-950 p-6 text-zinc-100 font-sans">
-      <div className="w-full max-w-md rounded-xl bg-zinc-900 p-8 shadow-xl border border-zinc-800">
+    <div className="flex min-h-screen flex-col lg:flex-row items-center lg:items-start justify-center bg-zinc-950 p-6 text-zinc-100 font-sans gap-8 pt-12">
+      <div className="w-full max-w-md lg:shrink-0 rounded-xl bg-zinc-900 p-8 shadow-xl border border-zinc-800">
         <div className="mb-6 flex justify-center">
           <a
             className="relative inline-flex select-none flex-col items-center gap-2 text-xl font-semibold tracking-wide text-white transition-opacity hover:opacity-75 focus-visible:rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-900"
@@ -90,6 +90,22 @@ function Index() {
               <option value="sub-sprout">Sub Sprout</option>
               <option value="chat">Universal Chat (Multi-platform)</option>
             </select>
+          </div>
+
+          <div className="text-sm text-zinc-400 bg-zinc-800/50 p-3 rounded-md border border-zinc-800">
+            {widgetType === "sub-sprout" ? (
+              <p>
+                <strong className="text-zinc-300">Sub Sprout:</strong> A lively
+                plant that grows with every new subscription. Perfect for
+                visualizing your community's support on stream.
+              </p>
+            ) : (
+              <p>
+                <strong className="text-zinc-300">Universal Chat:</strong> A
+                combined chat overlay that seamlessly merges messages from
+                Twitch and Kick into a single, cohesive feed.
+              </p>
+            )}
           </div>
 
           {widgetType === "sub-sprout" && (
@@ -199,6 +215,25 @@ function Index() {
               </button>
             </div>
           </div>
+        </div>
+      </div>
+
+      <div className="w-full max-w-md lg:max-w-2xl lg:shrink-0 rounded-xl bg-zinc-900 p-8 shadow-xl border border-zinc-800 flex flex-col h-[700px]">
+        <h2 className="mb-4 text-xl font-semibold text-center text-zinc-300">
+          Widget Preview
+        </h2>
+        <div className="flex-1 w-full bg-zinc-950 rounded-lg overflow-hidden border border-zinc-800 relative shadow-inner flex items-center justify-center relative bg-opacity-20">
+          {isFormValid ? (
+            <iframe
+              src={getWidgetUrl()}
+              className="absolute inset-0 w-full h-full border-0"
+              title="Widget Preview"
+            />
+          ) : (
+            <div className="text-center text-zinc-500">
+              <p>Fill in the required fields to generate preview.</p>
+            </div>
+          )}
         </div>
       </div>
     </div>
