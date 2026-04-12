@@ -13,11 +13,11 @@ export const metadata: Metadata = {
   metadataBase: new URL(`https://${process.env.VERCEL_URL}`),
   title: {
     default:
-      'Senchabot - Free, Community Management Bot for Twitch and Discord ',
+      'Senchabot - Free, Community Management Bot for Twitch, Discord, Kick, and YouTube',
     template: `%s - Senchabot`,
   },
   description:
-    'One bot, two platforms! Manage your Discord and Twitch community with an open-source multi-platform bot.',
+    'One bot, four platforms. Manage Twitch, Discord, Kick, and YouTube communities with an open-source multi-platform bot.',
   icons: {
     icon: '/favicon.ico',
     apple: '/apple-touch-icon.png',
