@@ -15,6 +15,9 @@ function Index() {
   const [kickChannel, setKickChannel] = useState("");
   const [fontSize, setFontSize] = useState("18");
   const [hasBackground, setHasBackground] = useState(false);
+  const [orientation, setOrientation] = useState<"vertical" | "horizontal">(
+    "vertical",
+  );
   const [copied, setCopied] = useState(false);
 
   const getWidgetUrl = () => {
@@ -29,6 +32,8 @@ function Index() {
       if (kickChannel) params.append("kick", kickChannel);
       if (fontSize && fontSize !== "18") params.append("fontSize", fontSize);
       if (hasBackground) params.append("background", "true");
+      if (orientation && orientation !== "vertical")
+        params.append("orientation", orientation);
 
       if (!twitchChannel && !kickChannel) return "";
       return `${baseUrl}/widgets/chat-widget?${params.toString()}`;
@@ -191,6 +196,23 @@ function Index() {
                     />
                     <span className="text-sm">Dark Background</span>
                   </label>
+                </div>
+
+                <div className="flex-1 max-w-[150px]">
+                  <label className="mb-1 block text-sm font-medium text-zinc-400">
+                    Orientation
+                  </label>
+                  <select
+                    value={orientation}
+                    onChange={e =>
+                      setOrientation(
+                        e.target.value as "vertical" | "horizontal",
+                      )
+                    }
+                    className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500">
+                    <option value="vertical">Vertical</option>
+                    <option value="horizontal">Horizontal</option>
+                  </select>
                 </div>
               </div>
             </>
