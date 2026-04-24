@@ -130,13 +130,13 @@ function RouteComponent() {
           className={`leading-tight whitespace-pre-wrap wrap-break-word text-left animate-in fade-in ${search.orientation === "horizontal" ? "slide-in-from-right-2 flex-shrink-0" : "slide-in-from-left-2"} duration-200`}>
           {showPlatformIndicator && (
             <span
-              className="mr-2 data-[platform=twitch]:text-purple-500 data-[platform=kick]:text-green-500"
+              className="mr-2 align-middle data-[platform=twitch]:text-purple-500 data-[platform=kick]:text-green-500"
               data-platform={msg.platform}>
               [{msg.platform}]
             </span>
           )}
           {msg.badges && msg.badges.length > 0 && (
-            <span className="mr-1 inline-flex items-center space-x-0.5">
+            <span className="mr-1 inline-flex items-center space-x-0.5 align-middle">
               {msg.badges.map((badge, idx) => {
                 const isTwitch = msg.platform === "twitch";
 
