@@ -8,7 +8,7 @@ export interface RaffleConfig {
   keyword: string
   subscribersOnly: boolean
   minSubMonths: number
-  allowMultipleWins: boolean
+  maxWinsPerUser: number
 }
 
 export interface RaffleParticipant {

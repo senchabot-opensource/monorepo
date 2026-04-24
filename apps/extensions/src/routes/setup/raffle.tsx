@@ -1,4 +1,3 @@
-import { Breadcrumb } from "#/components/breadcrumb";
 import { RaffleWidget } from "#/features/widgets/raffle/raffle-widget";
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
@@ -77,19 +76,9 @@ function RouteComponent() {
   const { channel, platform } = Route.useSearch();
 
   return (
-    <div className="size-full min-h-screen bg-neutral-900">
-      <div className="p-6">
-        <Breadcrumb
-          items={[
-            { label: "Home", href: "/" },
-            { label: "Raffle Setup" },
-          ]}
-        />
-      </div>
-      <RaffleWidget
-        initialChannel={channel ?? ""}
-        platform={platform ?? "twitch"}
-      />
-    </div>
+    <RaffleWidget
+      initialChannel={channel ?? ""}
+      platform={platform ?? "twitch"}
+    />
   );
 }
