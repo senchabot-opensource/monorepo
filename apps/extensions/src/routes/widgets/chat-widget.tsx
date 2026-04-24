@@ -91,8 +91,9 @@ export const parseEmotes = (text: string, platform: "twitch" | "kick", emotes?: 
 const searchSchema = z.object({
   twitch: z.string().optional(),
   kick: z.string().optional(),
-  fontSize: z.number().optional().default(18),
+  fontSize: z.coerce.number().optional().default(18),
   background: z.boolean().optional(),
+  bgOpacity: z.coerce.number().min(0).max(1).optional().default(0.5),
   orientation: z
     .enum(["vertical", "horizontal"])
     .optional()
@@ -175,7 +176,7 @@ function RouteComponent() {
       style={{
         fontSize: `${search.fontSize}px`,
         backgroundColor: search.background
-          ? "rgba(0, 0, 0, 0.5)"
+          ? `rgba(0, 0, 0, ${search.bgOpacity})`
           : "transparent",
       }}>
       {visibleMessages.map(msg => (
