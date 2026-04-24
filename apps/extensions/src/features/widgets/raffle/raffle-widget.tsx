@@ -142,7 +142,7 @@ export function RaffleWidget({
             </div>
             <input
               type="checkbox"
-              className="size-5 accent-purple-500"
+              className={`size-5 ${state.config.platform === "twitch" ? "accent-[#9146FF]" : "accent-[#53FC18]"}`}
               checked={state.config.subscribersOnly}
               onChange={(e) => updateConfig({ subscribersOnly: e.target.checked })}
               disabled={isRunning}
@@ -177,7 +177,7 @@ export function RaffleWidget({
             </div>
             <input
               type="checkbox"
-              className="size-5 accent-purple-500"
+              className={`size-5 ${state.config.platform === "twitch" ? "accent-[#9146FF]" : "accent-[#53FC18]"}`}
               checked={state.config.allowMultipleWins}
               onChange={(e) =>
                 updateConfig({ allowMultipleWins: e.target.checked })
@@ -202,7 +202,11 @@ export function RaffleWidget({
 
             <div className="flex gap-2">
               <button
-                className="flex-1 rounded-md bg-purple-600 px-4 py-2 text-sm font-medium hover:bg-purple-500 disabled:opacity-50"
+                className={`flex-1 rounded-md px-4 py-2 text-sm font-medium disabled:opacity-50 ${
+                  state.config.platform === "twitch"
+                    ? "bg-[#5A189A] text-white hover:bg-[#4A0E8F]"
+                    : "bg-[#53FC18] text-black hover:bg-[#45D115]"
+                }`}
                 onClick={start}
                 disabled={isRunning || !state.config.channel.trim()}
               >
@@ -218,7 +222,7 @@ export function RaffleWidget({
             </div>
 
             <button
-              className="w-full rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium hover:bg-emerald-500 disabled:opacity-50"
+              className="w-full rounded-md bg-emerald-800 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50"
               onClick={handleDraw}
               disabled={state.participants.length === 0}
             >
@@ -250,7 +254,7 @@ export function RaffleWidget({
             </div>
 
             <button
-              className="w-full rounded-md bg-red-900/60 px-3 py-2 text-sm font-medium text-red-200 hover:bg-red-900/80"
+              className="w-full rounded-md bg-red-900 px-3 py-2 text-sm font-medium text-white hover:bg-red-800"
               onClick={resetAll}
             >
               Reset Everything
