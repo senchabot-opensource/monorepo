@@ -8,6 +8,7 @@ const searchSchema = z.object({
 });
 
 export const Route = createFileRoute("/widgets/sub-sprout-widget")({
+  ssr: false,
   validateSearch: search => searchSchema.parse(search),
   loaderDeps: ({ search }) => ({
     platform: search.platform,

@@ -12,7 +12,23 @@ const config = defineConfig({
     tsconfigPaths({ projects: ['./tsconfig.json'] }),
     cloudflare({ viteEnvironment: { name: 'ssr' } }),
     tailwindcss(),
-    tanstackStart(),
+    tanstackStart({
+      prerender: {
+        enabled: true,
+        autoStaticPathsDiscovery: false,
+      },
+      pages: [
+        { path: '/' },
+        { path: '/setup/sub-growing-plant' },
+        { path: '/setup/chat-widget' },
+        { path: '/setup/raffle' },
+      ],
+      sitemap: {
+        enabled: true,
+        host: 'https://extensions.senchabot.com',
+        outputPath: 'sitemap.xml',
+      },
+    }),
     viteReact(),
   ],
 });
