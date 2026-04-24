@@ -1,6 +1,7 @@
 export interface KickChannelInfo {
   chatroomId: string | null;
   channelId: string | null;
+  subscriberBadges: any[];
 }
 
 export const getKickChannelInfo = async (
@@ -16,15 +17,17 @@ export const getKickChannelInfo = async (
       chatroom?: {
         id?: unknown;
       };
+      subscriber_badges?: any[];
     };
 
     return {
       chatroomId: data.chatroom?.id == null ? null : String(data.chatroom.id),
       channelId: data.id == null ? null : String(data.id),
+      subscriberBadges: data.subscriber_badges || [],
     };
   } catch (error) {
     console.error("Error while fething channel:", error);
-    return { chatroomId: null, channelId: null };
+    return { chatroomId: null, channelId: null, subscriberBadges: [] };
   }
 };
 
