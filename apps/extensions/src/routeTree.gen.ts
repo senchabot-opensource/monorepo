@@ -11,7 +11,9 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as WidgetsSubSproutWidgetRouteImport } from './routes/widgets/sub-sprout-widget'
+import { Route as WidgetsRaffleOverlayRouteImport } from './routes/widgets/raffle-overlay'
 import { Route as WidgetsChatWidgetRouteImport } from './routes/widgets/chat-widget'
+import { Route as SetupRaffleRouteImport } from './routes/setup/raffle'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -23,39 +25,73 @@ const WidgetsSubSproutWidgetRoute = WidgetsSubSproutWidgetRouteImport.update({
   path: '/widgets/sub-sprout-widget',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WidgetsRaffleOverlayRoute = WidgetsRaffleOverlayRouteImport.update({
+  id: '/widgets/raffle-overlay',
+  path: '/widgets/raffle-overlay',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const WidgetsChatWidgetRoute = WidgetsChatWidgetRouteImport.update({
   id: '/widgets/chat-widget',
   path: '/widgets/chat-widget',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SetupRaffleRoute = SetupRaffleRouteImport.update({
+  id: '/setup/raffle',
+  path: '/setup/raffle',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/setup/raffle': typeof SetupRaffleRoute
   '/widgets/chat-widget': typeof WidgetsChatWidgetRoute
+  '/widgets/raffle-overlay': typeof WidgetsRaffleOverlayRoute
   '/widgets/sub-sprout-widget': typeof WidgetsSubSproutWidgetRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/setup/raffle': typeof SetupRaffleRoute
   '/widgets/chat-widget': typeof WidgetsChatWidgetRoute
+  '/widgets/raffle-overlay': typeof WidgetsRaffleOverlayRoute
   '/widgets/sub-sprout-widget': typeof WidgetsSubSproutWidgetRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/setup/raffle': typeof SetupRaffleRoute
   '/widgets/chat-widget': typeof WidgetsChatWidgetRoute
+  '/widgets/raffle-overlay': typeof WidgetsRaffleOverlayRoute
   '/widgets/sub-sprout-widget': typeof WidgetsSubSproutWidgetRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/widgets/chat-widget' | '/widgets/sub-sprout-widget'
+  fullPaths:
+    | '/'
+    | '/setup/raffle'
+    | '/widgets/chat-widget'
+    | '/widgets/raffle-overlay'
+    | '/widgets/sub-sprout-widget'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/widgets/chat-widget' | '/widgets/sub-sprout-widget'
-  id: '__root__' | '/' | '/widgets/chat-widget' | '/widgets/sub-sprout-widget'
+  to:
+    | '/'
+    | '/setup/raffle'
+    | '/widgets/chat-widget'
+    | '/widgets/raffle-overlay'
+    | '/widgets/sub-sprout-widget'
+  id:
+    | '__root__'
+    | '/'
+    | '/setup/raffle'
+    | '/widgets/chat-widget'
+    | '/widgets/raffle-overlay'
+    | '/widgets/sub-sprout-widget'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  SetupRaffleRoute: typeof SetupRaffleRoute
   WidgetsChatWidgetRoute: typeof WidgetsChatWidgetRoute
+  WidgetsRaffleOverlayRoute: typeof WidgetsRaffleOverlayRoute
   WidgetsSubSproutWidgetRoute: typeof WidgetsSubSproutWidgetRoute
 }
 
@@ -75,6 +111,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WidgetsSubSproutWidgetRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/widgets/raffle-overlay': {
+      id: '/widgets/raffle-overlay'
+      path: '/widgets/raffle-overlay'
+      fullPath: '/widgets/raffle-overlay'
+      preLoaderRoute: typeof WidgetsRaffleOverlayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/widgets/chat-widget': {
       id: '/widgets/chat-widget'
       path: '/widgets/chat-widget'
@@ -82,12 +125,21 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WidgetsChatWidgetRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/setup/raffle': {
+      id: '/setup/raffle'
+      path: '/setup/raffle'
+      fullPath: '/setup/raffle'
+      preLoaderRoute: typeof SetupRaffleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  SetupRaffleRoute: SetupRaffleRoute,
   WidgetsChatWidgetRoute: WidgetsChatWidgetRoute,
+  WidgetsRaffleOverlayRoute: WidgetsRaffleOverlayRoute,
   WidgetsSubSproutWidgetRoute: WidgetsSubSproutWidgetRoute,
 }
 export const routeTree = rootRouteImport
