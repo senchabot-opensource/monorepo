@@ -13,7 +13,9 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as WidgetsSubSproutWidgetRouteImport } from './routes/widgets/sub-sprout-widget'
 import { Route as WidgetsRaffleOverlayRouteImport } from './routes/widgets/raffle-overlay'
 import { Route as WidgetsChatWidgetRouteImport } from './routes/widgets/chat-widget'
+import { Route as SetupSubGrowingPlantRouteImport } from './routes/setup/sub-growing-plant'
 import { Route as SetupRaffleRouteImport } from './routes/setup/raffle'
+import { Route as SetupChatWidgetRouteImport } from './routes/setup/chat-widget'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -35,22 +37,36 @@ const WidgetsChatWidgetRoute = WidgetsChatWidgetRouteImport.update({
   path: '/widgets/chat-widget',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SetupSubGrowingPlantRoute = SetupSubGrowingPlantRouteImport.update({
+  id: '/setup/sub-growing-plant',
+  path: '/setup/sub-growing-plant',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SetupRaffleRoute = SetupRaffleRouteImport.update({
   id: '/setup/raffle',
   path: '/setup/raffle',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SetupChatWidgetRoute = SetupChatWidgetRouteImport.update({
+  id: '/setup/chat-widget',
+  path: '/setup/chat-widget',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/setup/chat-widget': typeof SetupChatWidgetRoute
   '/setup/raffle': typeof SetupRaffleRoute
+  '/setup/sub-growing-plant': typeof SetupSubGrowingPlantRoute
   '/widgets/chat-widget': typeof WidgetsChatWidgetRoute
   '/widgets/raffle-overlay': typeof WidgetsRaffleOverlayRoute
   '/widgets/sub-sprout-widget': typeof WidgetsSubSproutWidgetRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/setup/chat-widget': typeof SetupChatWidgetRoute
   '/setup/raffle': typeof SetupRaffleRoute
+  '/setup/sub-growing-plant': typeof SetupSubGrowingPlantRoute
   '/widgets/chat-widget': typeof WidgetsChatWidgetRoute
   '/widgets/raffle-overlay': typeof WidgetsRaffleOverlayRoute
   '/widgets/sub-sprout-widget': typeof WidgetsSubSproutWidgetRoute
@@ -58,7 +74,9 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/setup/chat-widget': typeof SetupChatWidgetRoute
   '/setup/raffle': typeof SetupRaffleRoute
+  '/setup/sub-growing-plant': typeof SetupSubGrowingPlantRoute
   '/widgets/chat-widget': typeof WidgetsChatWidgetRoute
   '/widgets/raffle-overlay': typeof WidgetsRaffleOverlayRoute
   '/widgets/sub-sprout-widget': typeof WidgetsSubSproutWidgetRoute
@@ -67,21 +85,27 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/setup/chat-widget'
     | '/setup/raffle'
+    | '/setup/sub-growing-plant'
     | '/widgets/chat-widget'
     | '/widgets/raffle-overlay'
     | '/widgets/sub-sprout-widget'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/setup/chat-widget'
     | '/setup/raffle'
+    | '/setup/sub-growing-plant'
     | '/widgets/chat-widget'
     | '/widgets/raffle-overlay'
     | '/widgets/sub-sprout-widget'
   id:
     | '__root__'
     | '/'
+    | '/setup/chat-widget'
     | '/setup/raffle'
+    | '/setup/sub-growing-plant'
     | '/widgets/chat-widget'
     | '/widgets/raffle-overlay'
     | '/widgets/sub-sprout-widget'
@@ -89,7 +113,9 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  SetupChatWidgetRoute: typeof SetupChatWidgetRoute
   SetupRaffleRoute: typeof SetupRaffleRoute
+  SetupSubGrowingPlantRoute: typeof SetupSubGrowingPlantRoute
   WidgetsChatWidgetRoute: typeof WidgetsChatWidgetRoute
   WidgetsRaffleOverlayRoute: typeof WidgetsRaffleOverlayRoute
   WidgetsSubSproutWidgetRoute: typeof WidgetsSubSproutWidgetRoute
@@ -125,6 +151,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WidgetsChatWidgetRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/setup/sub-growing-plant': {
+      id: '/setup/sub-growing-plant'
+      path: '/setup/sub-growing-plant'
+      fullPath: '/setup/sub-growing-plant'
+      preLoaderRoute: typeof SetupSubGrowingPlantRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/setup/raffle': {
       id: '/setup/raffle'
       path: '/setup/raffle'
@@ -132,12 +165,21 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SetupRaffleRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/setup/chat-widget': {
+      id: '/setup/chat-widget'
+      path: '/setup/chat-widget'
+      fullPath: '/setup/chat-widget'
+      preLoaderRoute: typeof SetupChatWidgetRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  SetupChatWidgetRoute: SetupChatWidgetRoute,
   SetupRaffleRoute: SetupRaffleRoute,
+  SetupSubGrowingPlantRoute: SetupSubGrowingPlantRoute,
   WidgetsChatWidgetRoute: WidgetsChatWidgetRoute,
   WidgetsRaffleOverlayRoute: WidgetsRaffleOverlayRoute,
   WidgetsSubSproutWidgetRoute: WidgetsSubSproutWidgetRoute,

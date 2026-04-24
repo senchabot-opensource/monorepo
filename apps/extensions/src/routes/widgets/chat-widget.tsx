@@ -113,6 +113,7 @@ export const getBadgeEmoji = (badgeId: string) => {
 };
 
 export const Route = createFileRoute("/widgets/chat-widget")({
+  ssr: false,
   validateSearch: search => searchSchema.parse(search),
   loaderDeps: ({ search }) => ({
     kick: search.kick,

@@ -7,15 +7,15 @@ import type {
   RaffleWinner,
 } from "#/types/raffle";
 
-const STORAGE_KEY = "senchabot-raffle-state-v1";
+const STORAGE_KEY = "senchabot-raffle-state-v2";
 
 const defaultConfig: RaffleConfig = {
   platform: "twitch",
   channel: "",
   keyword: "!join",
   subscribersOnly: false,
-  minSubMonths: 0,
-  allowMultipleWins: false,
+  minSubMonths: 1,
+  maxWinsPerUser: 1,
 };
 
 function loadState(): RaffleState {
@@ -83,13 +83,11 @@ export function useRaffleState() {
       setState((prev) => {
         if (prev.status !== "running") return prev;
         if (prev.participants.some((p) => p.id === participant.id)) return prev;
-        if (
-          !prev.config.allowMultipleWins &&
-          prev.winners.some(
+        if (prev.config.maxWinsPerUser > 0) {
+          const winCount = prev.winners.filter(
             (w) => w.id === participant.id || w.username === participant.username,
-          )
-        ) {
-          return prev;
+          ).length;
+          if (winCount >= prev.config.maxWinsPerUser) return prev;
         }
         return {
           ...prev,
@@ -104,14 +102,13 @@ export function useRaffleState() {
     const current = stateRef.current;
     if (current.participants.length === 0) return null;
 
-    const eligible = current.config.allowMultipleWins
-      ? current.participants
-      : current.participants.filter(
-          (p) =>
-            !current.winners.some(
-              (w) => w.id === p.id || w.username === p.username,
-            ),
-        );
+    const eligible = current.participants.filter((p) => {
+      if (current.config.maxWinsPerUser === 0) return true;
+      const winCount = current.winners.filter(
+        (w) => w.id === p.id || w.username === p.username,
+      ).length;
+      return winCount < current.config.maxWinsPerUser;
+    });
 
     if (eligible.length === 0) return null;
 
@@ -121,17 +118,11 @@ export function useRaffleState() {
       drawnAt: Date.now(),
     };
 
-    setState((prev) => {
-      // Prevent duplicate winner entries
-      if (prev.winners.some((w) => w.id === winnerRecord.id)) {
-        return prev;
-      }
-      return {
-        ...prev,
-        participants: prev.participants.filter((p) => p.id !== winner.id),
-        winners: [...prev.winners, winnerRecord],
-      };
-    });
+    setState((prev) => ({
+      ...prev,
+      participants: prev.participants.filter((p) => p.id !== winner.id),
+      winners: [...prev.winners, winnerRecord],
+    }));
 
     return winnerRecord;
   }, []);

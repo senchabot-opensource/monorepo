@@ -1,286 +1,242 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { Breadcrumb } from "#/components/breadcrumb";
+import { createFileRoute, Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      {
+        title: "Senchabot Extensions — Free Streaming Widgets for Twitch & Kick",
+      },
+      {
+        name: "description",
+        content:
+          "Free, open-source streaming widgets for Twitch and Kick. Set up Sub Sprout, Universal Chat, and Raffle overlays for OBS in seconds.",
+      },
+      {
+        property: "og:title",
+        content:
+          "Senchabot Extensions — Free Streaming Widgets for Twitch & Kick",
+      },
+      {
+        property: "og:description",
+        content:
+          "Free, open-source streaming widgets for Twitch and Kick. Set up Sub Sprout, Universal Chat, and Raffle overlays for OBS in seconds.",
+      },
+      { property: "og:type", content: "website" },
+      {
+        property: "og:url",
+        content: "https://extensions.senchabot.com",
+      },
+      {
+        property: "og:image",
+        content: "https://extensions.senchabot.com/senchabot-logo.svg",
+      },
+      { name: "twitter:card", content: "summary" },
+      {
+        name: "twitter:title",
+        content:
+          "Senchabot Extensions — Free Streaming Widgets for Twitch & Kick",
+      },
+      {
+        name: "twitter:description",
+        content:
+          "Free, open-source streaming widgets for Twitch and Kick.",
+      },
+      {
+        name: "twitter:image",
+        content: "https://extensions.senchabot.com/senchabot-logo.svg",
+      },
+      {
+        "script:ld+json": {
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "Senchabot Extensions",
+          description:
+            "Free, open-source streaming widgets for Twitch and Kick streamers.",
+          url: "https://extensions.senchabot.com",
+          potentialAction: {
+            "@type": "SearchAction",
+            target:
+              "https://extensions.senchabot.com/setup/{search_term_string}",
+            "query-input": "required name=search_term_string",
+          },
+        },
+      },
+    ],
+    links: [
+      { rel: "canonical", href: "https://extensions.senchabot.com" },
+    ],
+  }),
   component: Index,
 });
 
 function Index() {
-  const [widgetType, setWidgetType] = useState<"sub-sprout" | "chat">(
-    "sub-sprout",
-  );
-  const [channel, setChannel] = useState("");
-  const [platform, setPlatform] = useState<"twitch" | "kick">("twitch");
-  const [twitchChannel, setTwitchChannel] = useState("");
-  const [kickChannel, setKickChannel] = useState("");
-  const [fontSize, setFontSize] = useState("18");
-  const [hasBackground, setHasBackground] = useState(false);
-  const [backgroundOpacity, setBackgroundOpacity] = useState("0.5");
-  const [orientation, setOrientation] = useState<"vertical" | "horizontal">(
-    "vertical",
-  );
-  const [copied, setCopied] = useState(false);
-
-  const getWidgetUrl = () => {
-    if (typeof window === "undefined") return "";
-    const baseUrl = window.location.origin;
-    if (widgetType === "sub-sprout") {
-      if (!channel) return "";
-      return `${baseUrl}/widgets/sub-sprout-widget?channel=${encodeURIComponent(channel)}&platform=${platform}`;
-    } else {
-      const params = new URLSearchParams();
-      if (twitchChannel) params.append("twitch", twitchChannel);
-      if (kickChannel) params.append("kick", kickChannel);
-      if (fontSize && fontSize !== "18") params.append("fontSize", fontSize);
-      if (hasBackground) params.append("background", "true");
-      if (hasBackground && backgroundOpacity)
-        params.append("bgOpacity", backgroundOpacity);
-      if (orientation && orientation !== "vertical")
-        params.append("orientation", orientation);
-
-      if (!twitchChannel && !kickChannel) return "";
-      return `${baseUrl}/widgets/chat-widget?${params.toString()}`;
-    }
-  };
-
-  const handleCopy = async () => {
-    const url = getWidgetUrl();
-    if (url) {
-      await navigator.clipboard.writeText(url);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
-  };
-
-  const isFormValid =
-    widgetType === "sub-sprout"
-      ? channel.length > 0
-      : twitchChannel.length > 0 || kickChannel.length > 0;
-
   return (
-    <div className="flex min-h-screen flex-col lg:flex-row items-center lg:items-start justify-center bg-zinc-950 p-6 text-zinc-100 font-sans gap-8 pt-12">
-      <div className="w-full max-w-md lg:shrink-0 rounded-xl bg-zinc-900 p-8 shadow-xl border border-zinc-800">
-        <div className="mb-6 flex justify-center">
-          <a
-            className="relative inline-flex select-none flex-col items-center gap-2 text-xl font-semibold tracking-wide text-white transition-opacity hover:opacity-75 focus-visible:rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-900"
-            href="https://senchabot.com"
-            target="_blank"
-            rel="noreferrer">
-            <div className="inline-flex size-10 shrink-0">
-              <img
-                src="/senchabot-logo.svg"
-                alt="Senchabot"
-                width={40}
-                height={40}
-              />
+    <div className="min-h-screen bg-zinc-950 text-zinc-100 font-sans">
+      <header className="flex items-center justify-center py-10">
+        <a
+          className="relative inline-flex select-none flex-col items-center gap-2 text-xl font-semibold tracking-wide text-white transition-opacity hover:opacity-75 focus-visible:rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-900"
+          href="https://senchabot.com"
+          target="_blank"
+          rel="noreferrer">
+          <div className="inline-flex size-10 shrink-0">
+            <img
+              src="/senchabot-logo.svg"
+              alt="Senchabot"
+              width={40}
+              height={40}
+            />
+          </div>
+          <span>Senchabot</span>
+        </a>
+      </header>
+
+      <main className="max-w-5xl mx-auto px-6 pb-16">
+
+        <div className="text-center mb-12">
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            Senchabot Extensions
+          </h1>
+          <p className="text-lg text-zinc-400 max-w-2xl mx-auto">
+            Free, open-source streaming widgets for{" "}
+            <strong className="text-zinc-200">Twitch</strong> and{" "}
+            <strong className="text-zinc-200">Kick</strong>. Configure and
+            embed overlays into OBS in seconds. No account required.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Link
+            to="/setup/sub-growing-plant"
+            className="group block rounded-xl bg-zinc-900 p-6 border border-zinc-800 shadow-xl transition-all hover:border-green-500/50 hover:bg-zinc-800/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950">
+            <div className="flex items-start justify-between mb-4">
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-green-500/10 text-green-400 text-2xl">
+                🌱
+              </div>
+              <span className="inline-flex items-center rounded-full bg-blue-500/10 px-2.5 py-0.5 text-xs font-medium text-blue-400 border border-blue-500/20">
+                Widget
+              </span>
             </div>
+            <h2 className="text-xl font-bold text-white mb-2 group-hover:text-green-400 transition-colors">
+              Sub Sprout
+            </h2>
+            <p className="text-sm text-zinc-400 leading-relaxed">
+              A growing plant that gets bigger with every new subscription.
+              Perfect for visualizing your community's support on stream.
+            </p>
+            <span className="mt-4 inline-flex items-center text-sm font-medium text-green-500 group-hover:underline">
+              Configure
+              <svg
+                className="ml-1 w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            </span>
+          </Link>
+
+          <Link
+            to="/setup/chat-widget"
+            className="group block rounded-xl bg-zinc-900 p-6 border border-zinc-800 shadow-xl transition-all hover:border-green-500/50 hover:bg-zinc-800/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950">
+            <div className="flex items-start justify-between mb-4">
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-green-500/10 text-green-400 text-2xl">
+                💬
+              </div>
+              <span className="inline-flex items-center rounded-full bg-blue-500/10 px-2.5 py-0.5 text-xs font-medium text-blue-400 border border-blue-500/20">
+                Widget
+              </span>
+            </div>
+            <h2 className="text-xl font-bold text-white mb-2 group-hover:text-green-400 transition-colors">
+              Universal Chat
+            </h2>
+            <p className="text-sm text-zinc-400 leading-relaxed">
+              Merge Twitch and Kick chat into a single, cohesive overlay.
+              Supports emotes, badges, and customizable styling.
+            </p>
+            <span className="mt-4 inline-flex items-center text-sm font-medium text-green-500 group-hover:underline">
+              Configure
+              <svg
+                className="ml-1 w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            </span>
+          </Link>
+
+          <Link
+            to="/setup/raffle"
+            className="group block rounded-xl bg-zinc-900 p-6 border border-zinc-800 shadow-xl transition-all hover:border-green-500/50 hover:bg-zinc-800/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950">
+            <div className="flex items-start justify-between mb-4">
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-green-500/10 text-green-400 text-2xl">
+                🎉
+              </div>
+              <span className="inline-flex items-center rounded-full bg-amber-500/10 px-2.5 py-0.5 text-xs font-medium text-amber-400 border border-amber-500/20">
+                Tool
+              </span>
+            </div>
+            <h2 className="text-xl font-bold text-white mb-2 group-hover:text-green-400 transition-colors">
+              Raffle
+            </h2>
+            <p className="text-sm text-zinc-400 leading-relaxed">
+              Run chat-based raffles with keyword entry, sub-only mode, and a
+              live winner overlay with confetti celebration.
+            </p>
+            <span className="mt-4 inline-flex items-center text-sm font-medium text-green-500 group-hover:underline">
+              Configure
+              <svg
+                className="ml-1 w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            </span>
+          </Link>
+        </div>
+
+        <div className="mt-12 text-center space-y-2">
+          <p className="text-sm text-zinc-500">
+            All widgets are browser-source ready. Just copy the generated URL
+            and paste it into OBS.
+          </p>
+          <a
+            href="https://github.com/senchabot-opensource/monorepo/tree/dev/apps/extensions"
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-1.5 text-sm text-zinc-400 hover:text-green-400 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 rounded">
+            <svg
+              className="w-4 h-4"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true">
+              <path
+                fillRule="evenodd"
+                d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+                clipRule="evenodd"
+              />
+            </svg>
+            Open Source on GitHub
           </a>
         </div>
-
-        <h1 className="mb-6 text-2xl font-bold text-center text-white">
-          Senchabot Extensions
-        </h1>
-        <h2 className="mb-6 text-xl font-semibold text-center text-zinc-300">
-          Widget Configuration
-        </h2>
-
-        <div className="space-y-4">
-          <div>
-            <label className="mb-1 block text-sm font-medium text-zinc-400">
-              Select Widget
-            </label>
-            <select
-              value={widgetType}
-              onChange={e =>
-                setWidgetType(e.target.value as "sub-sprout" | "chat")
-              }
-              className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500">
-              <option value="sub-sprout">Sub Sprout</option>
-              <option value="chat">Universal Chat (Multi-platform)</option>
-            </select>
-          </div>
-
-          <div className="text-sm text-zinc-400 bg-zinc-800/50 p-3 rounded-md border border-zinc-800">
-            {widgetType === "sub-sprout" ? (
-              <p>
-                <strong className="text-zinc-300">Sub Sprout:</strong> A lively
-                plant that grows with every new subscription. Perfect for
-                visualizing your community's support on stream.
-              </p>
-            ) : (
-              <p>
-                <strong className="text-zinc-300">Universal Chat:</strong> A
-                combined chat overlay that seamlessly merges messages from
-                Twitch and Kick into a single, cohesive feed.
-              </p>
-            )}
-          </div>
-
-          {widgetType === "sub-sprout" && (
-            <>
-              <div>
-                <label className="mb-1 block text-sm font-medium text-zinc-400">
-                  Channel Name
-                </label>
-                <input
-                  type="text"
-                  value={channel}
-                  onChange={e => setChannel(e.target.value)}
-                  placeholder="e.g. senchabot"
-                  className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-white placeholder-zinc-500 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
-                />
-              </div>
-
-              <div>
-                <label className="mb-1 block text-sm font-medium text-zinc-400">
-                  Platform
-                </label>
-                <select
-                  value={platform}
-                  onChange={e =>
-                    setPlatform(e.target.value as "twitch" | "kick")
-                  }
-                  className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500">
-                  <option value="twitch">Twitch</option>
-                  <option value="kick">Kick</option>
-                </select>
-              </div>
-            </>
-          )}
-
-          {widgetType === "chat" && (
-            <>
-              <div>
-                <label className="mb-1 block text-sm font-medium text-zinc-400">
-                  Twitch Channel (optional)
-                </label>
-                <input
-                  type="text"
-                  value={twitchChannel}
-                  onChange={e => setTwitchChannel(e.target.value)}
-                  placeholder="e.g. senchabot"
-                  className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-white placeholder-zinc-500 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
-                />
-              </div>
-
-              <div>
-                <label className="mb-1 block text-sm font-medium text-zinc-400">
-                  Kick Channel (optional)
-                </label>
-                <input
-                  type="text"
-                  value={kickChannel}
-                  onChange={e => setKickChannel(e.target.value)}
-                  placeholder="e.g. xqc"
-                  className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-white placeholder-zinc-500 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
-                />
-              </div>
-
-              <div className="flex gap-4">
-                <div className="flex-1 max-w-[150px]">
-                  <label className="mb-1 block text-sm font-medium text-zinc-400">
-                    Orientation
-                  </label>
-                  <select
-                    value={orientation}
-                    onChange={e =>
-                      setOrientation(
-                        e.target.value as "vertical" | "horizontal",
-                      )
-                    }
-                    className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500">
-                    <option value="vertical">Vertical</option>
-                    <option value="horizontal">Horizontal</option>
-                  </select>
-                </div>
-
-                <div className="flex-1">
-                  <label className="mb-1 block text-sm font-medium text-zinc-400">
-                    Font Size (px)
-                  </label>
-                  <input
-                    type="number"
-                    value={fontSize}
-                    onChange={e => setFontSize(e.target.value)}
-                    className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-white placeholder-zinc-500 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
-                  />
-                </div>
-
-                <div className="flex-1 flex flex-col justify-end pb-2">
-                  <label className="flex items-center space-x-2 text-white cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={hasBackground}
-                      onChange={e => setHasBackground(e.target.checked)}
-                      className="rounded border-zinc-700 bg-zinc-800 text-green-500 focus:ring-green-500"
-                    />
-                    <span className="text-sm">Dark Background</span>
-                  </label>
-                </div>
-              </div>
-
-              {hasBackground && (
-                <div>
-                  <label className="mb-1 block text-sm font-medium text-zinc-400">
-                    Background Opacity
-                  </label>
-                  <input
-                    type="range"
-                    min="0"
-                    max="1"
-                    step="0.1"
-                    value={backgroundOpacity}
-                    onChange={e => setBackgroundOpacity(e.target.value)}
-                    className="w-full h-2 bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-green-500"
-                  />
-                  <div className="text-right text-xs text-zinc-500 mt-1">
-                    {backgroundOpacity}
-                  </div>
-                </div>
-              )}
-            </>
-          )}
-
-          <div className="pt-4 mt-6 border-t border-zinc-800">
-            <label className="mb-1 block text-sm font-medium text-zinc-400">
-              Widget URL
-            </label>
-            <div className="flex">
-              <input
-                type="text"
-                readOnly
-                value={getWidgetUrl()}
-                className="w-full rounded-l-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-zinc-300 focus:outline-none"
-              />
-              <button
-                onClick={handleCopy}
-                disabled={!isFormValid}
-                className="rounded-r-md bg-green-600 px-4 py-2 font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-zinc-900 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
-                {copied ? "Copied!" : "Copy"}
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="w-full max-w-md lg:max-w-2xl lg:shrink-0 rounded-xl bg-zinc-900 p-8 shadow-xl border border-zinc-800 flex flex-col h-[700px]">
-        <h2 className="mb-4 text-xl font-semibold text-center text-zinc-300">
-          Widget Preview
-        </h2>
-        <div className="flex-1 w-full bg-zinc-950 rounded-lg overflow-hidden border border-zinc-800 relative shadow-inner flex items-center justify-center relative bg-opacity-20">
-          {isFormValid ? (
-            <iframe
-              src={getWidgetUrl()}
-              className="absolute inset-0 w-full h-full border-0"
-              title="Widget Preview"
-            />
-          ) : (
-            <div className="text-center text-zinc-500">
-              <p>Fill in the required fields to generate preview.</p>
-            </div>
-          )}
-        </div>
-      </div>
+      </main>
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { RaffleOverlay } from "#/features/widgets/raffle/raffle-overlay";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/widgets/raffle-overlay")({
+  ssr: false,
   component: RouteComponent,
 });
 
