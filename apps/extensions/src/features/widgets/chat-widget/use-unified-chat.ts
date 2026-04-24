@@ -1,5 +1,5 @@
-import React from 'react';
-import { type ChatMessagesType, chatMessagesCollection } from './chat-messages';
+import React from "react";
+import { type ChatMessagesType, chatMessagesCollection } from "./chat-messages";
 
 type ChatMessageCallback = (message: ChatMessagesType) => void;
 
@@ -33,7 +33,7 @@ class BaseChatClient implements Disconnectable {
     };
 
     ws.onmessage = handlers.onMessage;
-    ws.onerror = (error) => {
+    ws.onerror = error => {
       console.error(`${this.label} WebSocket Error:`, error);
     };
     ws.onclose = () => {
@@ -71,31 +71,31 @@ class TwitchChat extends BaseChatClient {
   private readonly channel: string;
 
   constructor(channel: string, onMessage: ChatMessageCallback) {
-    super('Twitch', onMessage);
+    super("Twitch", onMessage);
     this.channel = channel.trim();
-    this.connect('wss://irc-ws.chat.twitch.tv:443', {
+    this.connect("wss://irc-ws.chat.twitch.tv:443", {
       onOpen: () => {
-        this.send('CAP REQ :twitch.tv/tags twitch.tv/commands');
-        this.send('PASS SCHMOOPIIE');
+        this.send("CAP REQ :twitch.tv/tags twitch.tv/commands");
+        this.send("PASS SCHMOOPIIE");
         this.send(`NICK justinfan${Math.floor(Math.random() * 1000)}`);
         this.send(`JOIN #${this.channel}`);
       },
-      onMessage: (event) => this.handleSocketMessage(event),
+      onMessage: event => this.handleSocketMessage(event),
     });
   }
 
   private handleSocketMessage(event: MessageEvent) {
-    if (typeof event.data !== 'string') {
+    if (typeof event.data !== "string") {
       return;
     }
 
-    for (const message of event.data.split('\r\n')) {
+    for (const message of event.data.split("\r\n")) {
       if (!message) {
         continue;
       }
 
-      if (message.startsWith('PING')) {
-        this.send('PONG');
+      if (message.startsWith("PING")) {
+        this.send("PONG");
         continue;
       }
 
@@ -104,17 +104,23 @@ class TwitchChat extends BaseChatClient {
   }
 
   private parsePrivmsg(rawMessage: string): ChatMessagesType | null {
-    const match = rawMessage.match(/(?:@([^\s]+) )?:([^\s!]+)![^\s]+ PRIVMSG #[^\s]+ :(.+)/);
+    const match = rawMessage.match(
+      /(?:@([^\s]+) )?:([^\s!]+)![^\s]+ PRIVMSG #[^\s]+ :(.+)/,
+    );
     if (!match) {
       return null;
     }
 
     const [, tagsStr, username, messageText] = match;
     const tags = this.parseTags(tagsStr);
-    const sentAt = tags['tmi-sent-ts'];
-    const timestamp = sentAt ? new Date(Number.parseInt(sentAt, 10)) : new Date();
-    const user = tags['display-name'] || username;
+    const sentAt = tags["tmi-sent-ts"];
+    const timestamp = sentAt
+      ? new Date(Number.parseInt(sentAt, 10))
+      : new Date();
+    const user = tags["display-name"] || username;
     const message = messageText.trim();
+
+    const badges = tags.badges ? tags.badges.split(",") : [];
 
     if (!user.trim() || !message) {
       return null;
@@ -124,9 +130,10 @@ class TwitchChat extends BaseChatClient {
       id: tags.id || `twitch-${user}-${timestamp.getTime()}`,
       user,
       message,
-      platform: 'twitch',
+      platform: "twitch",
       timestamp,
       color: tags.color || undefined,
+      badges,
     };
   }
 
@@ -136,18 +143,18 @@ class TwitchChat extends BaseChatClient {
     }
 
     const tags: Record<string, string> = {};
-    for (const tag of tagsStr.split(';')) {
-      const [key, value = ''] = tag.split('=');
+    for (const tag of tagsStr.split(";")) {
+      const [key, value = ""] = tag.split("=");
       if (!key) {
         continue;
       }
 
       tags[key] = value
-        .replace(/\\s/g, ' ')
-        .replace(/\\:/g, ';')
-        .replace(/\\\\/g, '\\')
-        .replace(/\\r/g, '\r')
-        .replace(/\\n/g, '\n');
+        .replace(/\\s/g, " ")
+        .replace(/\\:/g, ";")
+        .replace(/\\\\/g, "\\")
+        .replace(/\\r/g, "\r")
+        .replace(/\\n/g, "\n");
     }
 
     return tags;
@@ -158,26 +165,26 @@ class KickChat extends BaseChatClient {
   private readonly channelId: string;
 
   constructor(channelId: string, onMessage: ChatMessageCallback) {
-    super('Kick', onMessage);
+    super("Kick", onMessage);
     this.channelId = channelId.trim();
     this.connect(
-      'wss://ws-us2.pusher.com/app/32cbd69e4b950bf97679?protocol=7&client=js&version=8.4.0&flash=false',
+      "wss://ws-us2.pusher.com/app/32cbd69e4b950bf97679?protocol=7&client=js&version=8.4.0&flash=false",
       {
         onOpen: () => {
           this.send(
             JSON.stringify({
-              event: 'pusher:subscribe',
+              event: "pusher:subscribe",
               data: { channel: `chatrooms.${this.channelId}.v2` },
             }),
           );
         },
-        onMessage: (event) => this.handleSocketMessage(event),
+        onMessage: event => this.handleSocketMessage(event),
       },
     );
   }
 
   private handleSocketMessage(event: MessageEvent) {
-    if (typeof event.data !== 'string') {
+    if (typeof event.data !== "string") {
       return;
     }
 
@@ -193,7 +200,10 @@ class KickChat extends BaseChatClient {
     }
 
     const response = responseData as { event?: unknown; data?: unknown };
-    if (response.event !== 'App\\Events\\ChatMessageEvent' || typeof response.data !== 'string') {
+    if (
+      response.event !== "App\\Events\\ChatMessageEvent" ||
+      typeof response.data !== "string"
+    ) {
       return null;
     }
 
@@ -210,6 +220,7 @@ class KickChat extends BaseChatClient {
         username: string;
         identity?: {
           color?: string;
+          badges?: { type: string; count?: number }[];
         };
       };
       content: string;
@@ -218,19 +229,30 @@ class KickChat extends BaseChatClient {
     const user = payload.sender.username;
     const message = payload.content;
     const timestamp = new Date(payload.created_at);
+    const badges =
+      payload.sender.identity?.badges?.map(b =>
+        b.count ? `${b.type}/${b.count}` : b.type,
+      ) || [];
 
     return {
-      id: payload.id == null ? `kick-${user}-${timestamp.getTime()}` : String(payload.id),
+      id:
+        payload.id == null
+          ? `kick-${user}-${timestamp.getTime()}`
+          : String(payload.id),
       user,
       message,
-      platform: 'kick',
+      platform: "kick",
       timestamp,
       color: payload.sender.identity?.color,
+      badges,
     };
   }
 }
 
-export const useUnifiedChat = (twitchChannel?: string | null, kickChannelId?: string | null) => {
+export const useUnifiedChat = (
+  twitchChannel?: string | null,
+  kickChannelId?: string | null,
+) => {
   React.useEffect(() => {
     const messageOrder: string[] = [];
     const seenIds = new Set<string>();

@@ -8,6 +8,7 @@ const schema = z.object({
   platform: z.enum(['twitch', 'kick']),
   timestamp: z.date(),
   color: z.string().optional(),
+  badges: z.array(z.string()).optional(),
   receivedAt: z.date().optional(),
 });
 

@@ -1,6 +1,8 @@
 import { chatMessagesCollection } from "#/features/widgets/chat-widget/chat-messages";
+import { KickBadge } from "#/features/widgets/chat-widget/kick-badges";
+import { useTwitchBadges } from "#/features/widgets/chat-widget/use-badges";
 import { useUnifiedChat } from "#/features/widgets/chat-widget/use-unified-chat";
-import { getKickId } from "#/lib/kick";
+import { getKickChannelInfo } from "#/lib/kick";
 import { useLiveQuery } from "@tanstack/react-db";
 import { createFileRoute } from "@tanstack/react-router";
 import React from "react";
@@ -43,6 +45,18 @@ const searchSchema = z.object({
     .default("vertical"),
 });
 
+export const getBadgeEmoji = (badgeId: string) => {
+  const norm = badgeId.toLowerCase().split("/")[0];
+  if (norm === "broadcaster") return "🎥";
+  if (norm === "moderator") return "🛡️";
+  if (norm === "subscriber") return "⭐";
+  if (norm === "vip") return "💎";
+  if (norm === "premium") return "👑";
+  if (norm === "founder") return "🥇";
+  if (norm === "staff" || norm === "admin") return "🛠️";
+  return null;
+};
+
 export const Route = createFileRoute("/widgets/chat-widget")({
   validateSearch: search => searchSchema.parse(search),
   loaderDeps: ({ search }) => ({
@@ -51,17 +65,23 @@ export const Route = createFileRoute("/widgets/chat-widget")({
   component: RouteComponent,
   loader: async ({ deps }) => {
     if (!deps.kick) {
-      return { kick: null };
+      return { kick: null, kickSubBadges: [] };
     }
 
-    const kick = await getKickId(deps.kick);
-    return { kick };
+    const info = await getKickChannelInfo(deps.kick);
+    return {
+      kick: info.chatroomId,
+      kickSubBadges: info.subscriberBadges || [],
+    };
   },
 });
 
 function RouteComponent() {
   const search = Route.useSearch();
-  const { kick } = Route.useLoaderData();
+  const { kick, kickSubBadges } = Route.useLoaderData();
+  const twitchBadgeMap = useTwitchBadges(search.twitch);
+
+  const showPlatformIndicator = Boolean(search.twitch && search.kick);
 
   useUnifiedChat(search.twitch, kick);
 
@@ -108,11 +128,56 @@ function RouteComponent() {
         <div
           key={msg.id}
           className={`leading-tight whitespace-pre-wrap wrap-break-word text-left animate-in fade-in ${search.orientation === "horizontal" ? "slide-in-from-right-2 flex-shrink-0" : "slide-in-from-left-2"} duration-200`}>
-          <span
-            className="mr-2 data-[platform=twitch]:text-purple-500 data-[platform=kick]:text-green-500"
-            data-platform={msg.platform}>
-            [{msg.platform}]
-          </span>
+          {showPlatformIndicator && (
+            <span
+              className="mr-2 align-middle data-[platform=twitch]:text-purple-500 data-[platform=kick]:text-green-500"
+              data-platform={msg.platform}>
+              [{msg.platform}]
+            </span>
+          )}
+          {msg.badges && msg.badges.length > 0 && (
+            <span className="mr-1 inline-flex items-center space-x-0.5 align-middle">
+              {msg.badges.map((badge, idx) => {
+                const isTwitch = msg.platform === "twitch";
+
+                if (!isTwitch) {
+                  return (
+                    <span
+                      key={`${msg.id}-badge-${idx}`}
+                      title={badge}
+                      className="inline-flex items-center justify-center bg-black/40 p-[2px] rounded-md border border-white/10 mx-0.5 shadow-sm">
+                      <KickBadge type={badge} subBadges={kickSubBadges} />
+                    </span>
+                  );
+                }
+
+                const imageUrl = twitchBadgeMap?.get(badge);
+                const emoji = getBadgeEmoji(badge);
+
+                if (imageUrl) {
+                  return (
+                    <img
+                      key={`${msg.id}-badge-${idx}`}
+                      src={imageUrl}
+                      alt={badge}
+                      title={badge}
+                      className="inline-block h-4 w-4"
+                    />
+                  );
+                }
+
+                if (!emoji) return null;
+                return (
+                  <span
+                    key={`${msg.id}-badge-${idx}`}
+                    title={badge}
+                    className="text-sm border border-gray-400/50 rounded-sm leading-none bg-black/20">
+                    {emoji}
+                  </span>
+                );
+              })}
+            </span>
+          )}
           <span style={{ color: msg.color || "unset" }}>{msg.user}:</span>{" "}
           <span>{parseEmotes(msg.message, msg.platform)}</span>
         </div>
