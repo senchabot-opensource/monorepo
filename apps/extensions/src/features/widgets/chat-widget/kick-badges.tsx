@@ -105,8 +105,32 @@ export const KickBadge = ({
         strokeWidth="2.5"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className="text-blue-400">
-        <path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 11-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 002.5 2.5z" />
+        className="text-amber-500">
+        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+      </svg>
+    );
+  }
+  if (t === "sub_gifter") {
+    return (
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        className="text-pink-500">
+        <path d="M20 7h-4V5c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zm-6 0h-4V5h4v2z" />
+      </svg>
+    );
+  }
+  if (t === "og") {
+    return (
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        className="text-emerald-500">
+        <path d="M12 2L2 22h20L12 2zm0 4.5l6.5 13.5h-13L12 6.5zM11 11v4h2v-4h-2zm0 5v2h2v-2h-2z" />
       </svg>
     );
   }
@@ -137,7 +161,7 @@ export const KickBadge = ({
         strokeWidth="2.5"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className="text-blue-400 text-teal-400">
+        className="text-teal-400">
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
         <path d="M9 12l2 2 4-4" />
       </svg>
