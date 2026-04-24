@@ -15,6 +15,7 @@ function Index() {
   const [kickChannel, setKickChannel] = useState("");
   const [fontSize, setFontSize] = useState("18");
   const [hasBackground, setHasBackground] = useState(false);
+  const [backgroundOpacity, setBackgroundOpacity] = useState("0.5");
   const [orientation, setOrientation] = useState<"vertical" | "horizontal">(
     "vertical",
   );
@@ -32,6 +33,8 @@ function Index() {
       if (kickChannel) params.append("kick", kickChannel);
       if (fontSize && fontSize !== "18") params.append("fontSize", fontSize);
       if (hasBackground) params.append("background", "true");
+      if (hasBackground && backgroundOpacity)
+        params.append("bgOpacity", backgroundOpacity);
       if (orientation && orientation !== "vertical")
         params.append("orientation", orientation);
 
@@ -215,6 +218,26 @@ function Index() {
                   </label>
                 </div>
               </div>
+
+              {hasBackground && (
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-zinc-400">
+                    Background Opacity
+                  </label>
+                  <input
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.1"
+                    value={backgroundOpacity}
+                    onChange={e => setBackgroundOpacity(e.target.value)}
+                    className="w-full h-2 bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-green-500"
+                  />
+                  <div className="text-right text-xs text-zinc-500 mt-1">
+                    {backgroundOpacity}
+                  </div>
+                </div>
+              )}
             </>
           )}
 
