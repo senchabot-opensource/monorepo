@@ -9,6 +9,7 @@ const schema = z.object({
   timestamp: z.date(),
   color: z.string().optional(),
   badges: z.array(z.string()).optional(),
+  emotes: z.string().optional(),
   receivedAt: z.date().optional(),
 });
 

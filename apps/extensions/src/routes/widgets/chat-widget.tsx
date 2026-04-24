@@ -10,7 +10,57 @@ import { z } from "zod";
 
 const TTL_MS = 30_000;
 
-export const parseEmotes = (text: string, platform: "twitch" | "kick") => {
+type TwitchEmoteRange = { id: string; start: number; end: number };
+
+const parseTwitchEmoteRanges = (emotesTag?: string): TwitchEmoteRange[] => {
+  if (!emotesTag) return [];
+  const ranges: TwitchEmoteRange[] = [];
+  for (const part of emotesTag.split("/")) {
+    const [id, positionsStr] = part.split(":");
+    if (!id || !positionsStr) continue;
+    for (const pos of positionsStr.split(",")) {
+      const [startStr, endStr] = pos.split("-");
+      const start = parseInt(startStr, 10);
+      const end = parseInt(endStr, 10);
+      if (!Number.isNaN(start) && !Number.isNaN(end)) {
+        ranges.push({ id, start, end });
+      }
+    }
+  }
+  return ranges.sort((a, b) => a.start - b.start);
+};
+
+const renderTwitchEmotes = (text: string, emotesTag?: string) => {
+  const ranges = parseTwitchEmoteRanges(emotesTag);
+  if (ranges.length === 0) return text;
+
+  const chars = [...text];
+  const elements: React.ReactNode[] = [];
+  let lastIndex = 0;
+
+  for (const range of ranges) {
+    if (range.start > lastIndex) {
+      elements.push(chars.slice(lastIndex, range.start).join(""));
+    }
+    elements.push(
+      <img
+        key={`${range.id}-${range.start}`}
+        src={`https://static-cdn.jtvnw.net/emoticons/v2/${range.id}/default/dark/1.0`}
+        alt="emote"
+        className="inline-block h-8 w-auto mx-0.5 align-middle object-contain"
+      />,
+    );
+    lastIndex = range.end + 1;
+  }
+
+  if (lastIndex < chars.length) {
+    elements.push(chars.slice(lastIndex).join(""));
+  }
+
+  return elements;
+};
+
+export const parseEmotes = (text: string, platform: "twitch" | "kick", emotes?: string) => {
   if (platform === "kick") {
     const kickEmoteRegex = /\[emote:(\d+):([\w\d\-_]+)\]/g;
 
@@ -29,6 +79,10 @@ export const parseEmotes = (text: string, platform: "twitch" | "kick") => {
       if (index % 3 === 2) return null;
       return part;
     });
+  }
+
+  if (platform === "twitch") {
+    return renderTwitchEmotes(text, emotes);
   }
 
   return text;
@@ -179,7 +233,7 @@ function RouteComponent() {
             </span>
           )}
           <span style={{ color: msg.color || "unset" }}>{msg.user}:</span>{" "}
-          <span>{parseEmotes(msg.message, msg.platform)}</span>
+          <span>{parseEmotes(msg.message, msg.platform, msg.emotes)}</span>
         </div>
       ))}
     </div>
