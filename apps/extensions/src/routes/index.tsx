@@ -174,6 +174,23 @@ function Index() {
               </div>
 
               <div className="flex gap-4">
+                <div className="flex-1 max-w-[150px]">
+                  <label className="mb-1 block text-sm font-medium text-zinc-400">
+                    Orientation
+                  </label>
+                  <select
+                    value={orientation}
+                    onChange={e =>
+                      setOrientation(
+                        e.target.value as "vertical" | "horizontal",
+                      )
+                    }
+                    className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500">
+                    <option value="vertical">Vertical</option>
+                    <option value="horizontal">Horizontal</option>
+                  </select>
+                </div>
+
                 <div className="flex-1">
                   <label className="mb-1 block text-sm font-medium text-zinc-400">
                     Font Size (px)
@@ -196,23 +213,6 @@ function Index() {
                     />
                     <span className="text-sm">Dark Background</span>
                   </label>
-                </div>
-
-                <div className="flex-1 max-w-[150px]">
-                  <label className="mb-1 block text-sm font-medium text-zinc-400">
-                    Orientation
-                  </label>
-                  <select
-                    value={orientation}
-                    onChange={e =>
-                      setOrientation(
-                        e.target.value as "vertical" | "horizontal",
-                      )
-                    }
-                    className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500">
-                    <option value="vertical">Vertical</option>
-                    <option value="horizontal">Horizontal</option>
-                  </select>
                 </div>
               </div>
             </>
