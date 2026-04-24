@@ -134,6 +134,7 @@ class TwitchChat extends BaseChatClient {
       timestamp,
       color: tags.color || undefined,
       badges,
+      emotes: tags.emotes || undefined,
     };
   }
 
