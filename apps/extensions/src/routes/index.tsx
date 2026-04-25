@@ -5,22 +5,22 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       {
-        title: "Senchabot Extensions — Free Streaming Widgets for Twitch & Kick",
+        title: "Senchabot Extensions — Free Streaming Widgets & Tools for Twitch & Kick",
       },
       {
         name: "description",
         content:
-          "Free, open-source streaming widgets for Twitch and Kick. Set up Sub Sprout, Universal Chat, and Raffle overlays for OBS in seconds.",
+          "Free, open-source streaming widgets and tools for Twitch and Kick. Set up Sub Sprout, Universal Chat, and Raffle overlays for OBS, Streamlabs, XSplit, and more in seconds.",
       },
       {
         property: "og:title",
         content:
-          "Senchabot Extensions — Free Streaming Widgets for Twitch & Kick",
+          "Senchabot Extensions — Free Streaming Widgets & Tools for Twitch & Kick",
       },
       {
         property: "og:description",
         content:
-          "Free, open-source streaming widgets for Twitch and Kick. Set up Sub Sprout, Universal Chat, and Raffle overlays for OBS in seconds.",
+          "Free, open-source streaming widgets and tools for Twitch and Kick. Set up Sub Sprout, Universal Chat, and Raffle overlays for OBS, Streamlabs, XSplit, and more in seconds.",
       },
       { property: "og:type", content: "website" },
       {
@@ -35,12 +35,12 @@ export const Route = createFileRoute("/")({
       {
         name: "twitter:title",
         content:
-          "Senchabot Extensions — Free Streaming Widgets for Twitch & Kick",
+          "Senchabot Extensions — Free Streaming Widgets & Tools for Twitch & Kick",
       },
       {
         name: "twitter:description",
         content:
-          "Free, open-source streaming widgets for Twitch and Kick.",
+          "Free, open-source streaming widgets and tools for Twitch and Kick.",
       },
       {
         name: "twitter:image",
@@ -52,7 +52,7 @@ export const Route = createFileRoute("/")({
           "@type": "WebSite",
           name: "Senchabot Extensions",
           description:
-            "Free, open-source streaming widgets for Twitch and Kick streamers.",
+            "Free, open-source streaming widgets and tools for Twitch and Kick streamers.",
           url: "https://extensions.senchabot.com",
           potentialAction: {
             "@type": "SearchAction",
@@ -101,7 +101,8 @@ function Index() {
             Free, open-source streaming widgets for{" "}
             <strong className="text-zinc-200">Twitch</strong> and{" "}
             <strong className="text-zinc-200">Kick</strong>. Configure and
-            embed overlays into OBS in seconds. No account required.
+            embed overlays into OBS, Streamlabs, or any browser-source-ready
+            software in seconds. No account required.
           </p>
         </div>
 
@@ -215,7 +216,8 @@ function Index() {
         <div className="mt-12 text-center space-y-2">
           <p className="text-sm text-zinc-500">
             All widgets are browser-source ready. Just copy the generated URL
-            and paste it into OBS.
+            and paste it into OBS, Streamlabs Desktop, XSplit, or any software
+            that supports browser sources.
           </p>
           <a
             href="https://github.com/senchabot-opensource/monorepo/tree/dev/apps/extensions"

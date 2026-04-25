@@ -22,11 +22,11 @@ export const Route = createRootRoute({
       {
         name: 'description',
         content:
-          'Free, open-source streaming widgets for Twitch and Kick. Configure Sub Sprout, Universal Chat, and Raffle overlays for OBS.',
+          'Free, open-source streaming widgets and tools for Twitch and Kick. Configure Sub Growing Plant, Universal Chat, and Raffle straight from your browser.',
       },
       {
         property: 'og:site_name',
-        content: 'Senchabot Extensions',
+        content: 'Senchabot Extensions — Free Streaming Widgets & Tools',
       },
       {
         property: 'og:type',

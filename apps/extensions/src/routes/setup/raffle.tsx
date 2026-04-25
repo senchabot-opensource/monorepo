@@ -11,20 +11,20 @@ export const Route = createFileRoute("/setup/raffle")({
   validateSearch: (search) => searchSchema.parse(search),
   head: () => ({
     meta: [
-      { title: "Raffle Widget Setup — Senchabot Extensions" },
+      { title: "Raffle Widget & Tool Setup — Senchabot Extensions" },
       {
         name: "description",
         content:
-          "Configure and run chat-based raffles for your Twitch or Kick stream. Set entry keywords, sub-only mode, and pick winners with a live overlay.",
+          "Configure and run chat-based raffles for your Twitch or Kick stream with this free widget and tool. Set entry keywords, sub-only mode, and pick winners with a live overlay.",
       },
       {
         property: "og:title",
-        content: "Raffle Widget Setup — Senchabot Extensions",
+        content: "Raffle Widget & Tool Setup — Senchabot Extensions",
       },
       {
         property: "og:description",
         content:
-          "Run chat-based raffles for Twitch or Kick with a live winner overlay.",
+          "Run chat-based raffles for Twitch or Kick with this free widget and tool. Includes a live winner overlay.",
       },
       { property: "og:type", content: "website" },
       {
@@ -38,12 +38,12 @@ export const Route = createFileRoute("/setup/raffle")({
       { name: "twitter:card", content: "summary" },
       {
         name: "twitter:title",
-        content: "Raffle Widget Setup — Senchabot Extensions",
+        content: "Raffle Widget & Tool Setup — Senchabot Extensions",
       },
       {
         name: "twitter:description",
         content:
-          "Run chat-based raffles for Twitch or Kick with a live winner overlay.",
+          "Run chat-based raffles for Twitch or Kick with this free widget and tool. Includes a live winner overlay.",
       },
       {
         name: "twitter:image",
@@ -53,7 +53,7 @@ export const Route = createFileRoute("/setup/raffle")({
         "script:ld+json": {
           "@context": "https://schema.org",
           "@type": "WebApplication",
-          name: "Raffle Widget",
+          name: "Raffle Widget & Tool",
           description:
             "A chat-based raffle system for Twitch and Kick streams with live winner overlay.",
           url: "https://extensions.senchabot.com/setup/raffle",
