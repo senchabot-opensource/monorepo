@@ -5,20 +5,20 @@ import { useState } from "react";
 export const Route = createFileRoute("/setup/sub-growing-plant")({
   head: () => ({
     meta: [
-      { title: "Sub Sprout Widget Setup — Senchabot Extensions" },
+      { title: "Sub Sprout Widget & Tool Setup — Senchabot Extensions" },
       {
         name: "description",
         content:
-          "Configure the Sub Sprout widget for Twitch or Kick. A growing plant that gets bigger with every new subscription, perfect for visualizing your community's support on stream.",
+          "Configure the Sub Sprout widget and tool for Twitch or Kick. A growing plant that gets bigger with every new subscription, perfect for visualizing your community's support on stream.",
       },
       {
         property: "og:title",
-        content: "Sub Sprout Widget Setup — Senchabot Extensions",
+        content: "Sub Sprout Widget & Tool Setup — Senchabot Extensions",
       },
       {
         property: "og:description",
         content:
-          "Configure the Sub Sprout widget for Twitch or Kick. A growing plant that gets bigger with every new subscription.",
+          "Configure the Sub Sprout widget and tool for Twitch or Kick. A growing plant that gets bigger with every new subscription.",
       },
       { property: "og:type", content: "website" },
       {
@@ -32,11 +32,11 @@ export const Route = createFileRoute("/setup/sub-growing-plant")({
       { name: "twitter:card", content: "summary" },
       {
         name: "twitter:title",
-        content: "Sub Sprout Widget Setup — Senchabot Extensions",
+        content: "Sub Sprout Widget & Tool Setup — Senchabot Extensions",
       },
       {
         name: "twitter:description",
-        content: "Configure the Sub Sprout widget for Twitch or Kick.",
+        content: "Configure the Sub Sprout widget and tool for Twitch or Kick.",
       },
       {
         name: "twitter:image",
@@ -46,7 +46,7 @@ export const Route = createFileRoute("/setup/sub-growing-plant")({
         "script:ld+json": {
           "@context": "https://schema.org",
           "@type": "WebApplication",
-          name: "Sub Sprout Widget",
+          name: "Sub Sprout Widget & Tool",
           description:
             "A growing plant that gets bigger with every new subscription on Twitch or Kick.",
           url: "https://extensions.senchabot.com/setup/sub-growing-plant",

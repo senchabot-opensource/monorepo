@@ -5,20 +5,20 @@ import { useState } from "react";
 export const Route = createFileRoute("/setup/chat-widget")({
   head: () => ({
     meta: [
-      { title: "Universal Chat Widget Setup — Senchabot Extensions" },
+      { title: "Universal Chat Widget & Tool Setup — Senchabot Extensions" },
       {
         name: "description",
         content:
-          "Configure the Universal Chat widget to merge Twitch and Kick chat into a single overlay. Perfect for multi-streaming setups.",
+          "Configure the Universal Chat widget and tool to merge Twitch and Kick chat into a single overlay. Perfect for multi-streaming setups.",
       },
       {
         property: "og:title",
-        content: "Universal Chat Widget Setup — Senchabot Extensions",
+        content: "Universal Chat Widget & Tool Setup — Senchabot Extensions",
       },
       {
         property: "og:description",
         content:
-          "Merge Twitch and Kick chat into a single, cohesive overlay for your stream.",
+          "Merge Twitch and Kick chat into a single, cohesive overlay for your stream with this free widget and tool.",
       },
       { property: "og:type", content: "website" },
       {
@@ -32,11 +32,11 @@ export const Route = createFileRoute("/setup/chat-widget")({
       { name: "twitter:card", content: "summary" },
       {
         name: "twitter:title",
-        content: "Universal Chat Widget Setup — Senchabot Extensions",
+        content: "Universal Chat Widget & Tool Setup — Senchabot Extensions",
       },
       {
         name: "twitter:description",
-        content: "Merge Twitch and Kick chat into a single overlay.",
+        content: "Merge Twitch and Kick chat into a single overlay with this free widget and tool.",
       },
       {
         name: "twitter:image",
@@ -46,7 +46,7 @@ export const Route = createFileRoute("/setup/chat-widget")({
         "script:ld+json": {
           "@context": "https://schema.org",
           "@type": "WebApplication",
-          name: "Universal Chat Widget",
+          name: "Universal Chat Widget & Tool",
           description:
             "A combined chat overlay that merges Twitch and Kick chat into a single feed.",
           url: "https://extensions.senchabot.com/setup/chat-widget",

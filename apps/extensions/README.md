@@ -1,19 +1,89 @@
 # Senchabot Extensions
 
-Extensions for `extensions.senchabot.com`.
+Free, open-source streaming widgets and tools for Twitch and Kick. Configure and embed overlays into OBS, Streamlabs, or any browser-source-ready software in seconds. No account required.
 
-## Getting Started
+## What It Does
 
-To run this application:
+Senchabot Extensions provides free streaming widgets and tools for Twitch and Kick streamers. Each tool runs as a browser source overlay that you can add to OBS, Streamlabs, or XSplit in seconds.
+
+- **Sub Sprout** — A visual plant widget that grows with each subscription, resub, or gift sub. Resets after reaching full growth.
+- **Universal Chat** — A chat merge tool that combines Twitch and Kick chat into a single on-screen overlay with emotes, badges, and platform indicators.
+- **Raffle** — A chat-based giveaway tool. Viewers type a keyword to enter; winners are drawn and announced on an overlay with confetti.
+
+## Live URLs
+
+- [extensions.senchabot.com](https://extensions.senchabot.com/) — Widget and tool hub
+- [Sub Sprout](https://extensions.senchabot.com/setup/sub-growing-plant/)
+- [Universal Chat](https://extensions.senchabot.com/setup/chat-widget/)
+- [Raffle](https://extensions.senchabot.com/setup/raffle/)
+
+## Widget/Tool Usage
+
+### Sub Sprout (`/setup/sub-growing-plant`)
+
+A visual SVG plant widget that grows in stages whenever a subscription event occurs.
+
+**How it works:**
+- Listens to Twitch subs/resubs/gift subs via ComfyJS.
+- Also connects to Kick's Pusher WebSocket for subscription events.
+- Has 5 growth stages (0–4). Each sub advances it by one.
+- Once it hits stage 4, the next sub resets it to the seedling stage, creating a looping animation.
+- Mods and the broadcaster can type `!grow` in Twitch chat to manually advance the plant.
+
+**Setup:**
+1. Go to `/setup/sub-growing-plant`.
+2. Enter your channel name and select the platform (Twitch or Kick).
+3. Copy the generated widget/tool URL.
+4. Paste it into OBS, Streamlabs, or XSplit as a **Browser Source**.
+
+---
+
+### Universal Chat (`/setup/chat-widget`)
+
+A chat merge tool that combines Twitch and Kick chat into a single, cohesive on-screen overlay. Designed for streamers who multistream to both platforms.
+
+**How it works:**
+- Connects to Twitch IRC anonymously and Kick's Pusher WebSocket.
+- Parses emotes, badges, and platform indicators for both services.
+- Supports configurable font size, background opacity, and vertical/horizontal layout.
+- Messages auto-fade after 30 seconds.
+
+**Setup:**
+1. Go to `/setup/chat-widget`.
+2. Enter your Twitch channel and/or Kick channel.
+3. Customize font size, background, opacity, and orientation.
+4. Copy the generated URL into OBS as a **Browser Source**.
+
+---
+
+### Raffle (`/setup/raffle`)
+
+A chat-based giveaway tool and raffle widget with an OBS overlay for winner announcements.
+
+**How it works:**
+- Monitors Twitch IRC or Kick Pusher for messages matching your configured keyword (default `!join`).
+- Validates entry rules: sub-only mode, minimum sub months, max wins per user.
+- When you draw a winner, a random participant is selected and broadcast to the overlay with `canvas-confetti` fireworks.
+- The overlay shows the winner's name for 10 seconds, then hides.
+- State persists in `localStorage` so you don't lose entries on refresh.
+
+**Setup:**
+1. Go to `/setup/raffle`.
+2. Configure platform, channel, entry keyword, and restrictions.
+3. Click **Start Raffle** to collect entries from chat.
+4. Add `/widgets/raffle-overlay` to OBS as a **Browser Source** (usually centered or full-screen).
+5. Click **Draw Winner** when ready.
+
+## Getting Started (Local Development)
 
 ```bash
 npm install
 npm run dev
 ```
 
-## Building For Production
+The dev server runs on port 3000 by default.
 
-To build this application for production:
+## Building For Production
 
 ```bash
 npm run build
@@ -21,28 +91,15 @@ npm run build
 
 ## Testing
 
-This project uses [Vitest](https://vitest.dev/) for testing. You can run the tests with:
+This project uses [Vitest](https://vitest.dev/):
 
 ```bash
 npm run test
 ```
 
-## Styling
-
-This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
-
-### Removing Tailwind CSS
-
-If you prefer not to use Tailwind CSS:
-
-1. Remove the demo pages in `src/routes/demo/`
-2. Replace the Tailwind import in `src/styles.css` with your own styles
-3. Remove `tailwindcss()` from the plugins array in `vite.config.ts`
-4. Uninstall the packages: `npm uninstall @tailwindcss/vite tailwindcss`
-
 ## Linting & Formatting
 
-This project uses [Biome](https://biomejs.dev/) for linting and formatting. The following scripts are available:
+This project uses [Biome](https://biomejs.dev/):
 
 ```bash
 npm run lint
@@ -50,154 +107,38 @@ npm run format
 npm run check
 ```
 
+## Deployment
+
+Deploy to Cloudflare Workers:
+
+```bash
+npm run deploy
+```
+
+## Project Structure
+
+```
+.
+├── src/routes/
+│   ├── index.tsx                   # Widget and tool hub landing page
+│   ├── setup/
+│   │   ├── sub-growing-plant.tsx   # Sub Sprout configuration
+│   │   ├── chat-widget.tsx         # Universal Chat configuration
+│   │   └── raffle.tsx              # Raffle configuration
+│   └── widgets/
+│       ├── sub-sprout-widget.tsx   # Sub Sprout overlay
+│       ├── chat-widget.tsx         # Universal Chat overlay
+│       └── raffle-overlay.tsx      # Raffle winner overlay
+├── src/features/widgets/           # Widget and tool logic and components
+├── src/hooks/                      # Shared hooks (raffle state, chat connections)
+├── src/styles.css                  # Tailwind CSS entry
+└── vite.config.ts                  # Vite + TanStack Router config
+```
+
 ## Routing
 
-This project uses [TanStack Router](https://tanstack.com/router) with file-based routing. Routes are managed as files in `src/routes`.
+This project uses [TanStack Router](https://tanstack.com/router) with file-based routing. Routes are auto-generated from files in `src/routes/`.
 
-### Adding A Route
+## Contributing
 
-To add a new route to your application just add a new file in the `./src/routes` directory.
-
-TanStack will automatically generate the content of the route file for you.
-
-Now that you have two routes you can use a `Link` component to navigate between them.
-
-### Adding Links
-
-To use SPA (Single Page Application) navigation you will need to import the `Link` component from `@tanstack/react-router`.
-
-```tsx
-import { Link } from "@tanstack/react-router";
-```
-
-Then anywhere in your JSX you can use it like so:
-
-```tsx
-<Link to="/about">About</Link>
-```
-
-This will create a link that will navigate to the `/about` route.
-
-More information on the `Link` component can be found in the [Link documentation](https://tanstack.com/router/v1/docs/framework/react/api/router/linkComponent).
-
-### Using A Layout
-
-In the File Based Routing setup the layout is located in `src/routes/__root.tsx`. Anything you add to the root route will appear in all the routes. The route content will appear in the JSX where you render `{children}` in the `shellComponent`.
-
-Here is an example layout that includes a header:
-
-```tsx
-import { HeadContent, Scripts, createRootRoute } from "@tanstack/react-router";
-
-export const Route = createRootRoute({
-  head: () => ({
-    meta: [
-      { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "My App" },
-    ],
-  }),
-  shellComponent: ({ children }) => (
-    <html lang="en">
-      <head>
-        <HeadContent />
-      </head>
-      <body>
-        <header>
-          <nav>
-            <Link to="/">Home</Link>
-            <Link to="/about">About</Link>
-          </nav>
-        </header>
-        {children}
-        <Scripts />
-      </body>
-    </html>
-  ),
-});
-```
-
-More information on layouts can be found in the [Layouts documentation](https://tanstack.com/router/latest/docs/framework/react/guide/routing-concepts#layouts).
-
-## Server Functions
-
-TanStack Start provides server functions that allow you to write server-side code that seamlessly integrates with your client components.
-
-```tsx
-import { createServerFn } from "@tanstack/react-start";
-
-const getServerTime = createServerFn({
-  method: "GET",
-}).handler(async () => {
-  return new Date().toISOString();
-});
-
-// Use in a component
-function MyComponent() {
-  const [time, setTime] = useState("");
-
-  useEffect(() => {
-    getServerTime().then(setTime);
-  }, []);
-
-  return <div>Server time: {time}</div>;
-}
-```
-
-## API Routes
-
-You can create API routes by using the `server` property in your route definitions:
-
-```tsx
-import { createFileRoute } from "@tanstack/react-router";
-import { json } from "@tanstack/react-start";
-
-export const Route = createFileRoute("/api/hello")({
-  server: {
-    handlers: {
-      GET: () => json({ message: "Hello, World!" }),
-    },
-  },
-});
-```
-
-## Data Fetching
-
-There are multiple ways to fetch data in your application. You can use TanStack Query to fetch data from a server. But you can also use the `loader` functionality built into TanStack Router to load the data for a route before it's rendered.
-
-For example:
-
-```tsx
-import { createFileRoute } from "@tanstack/react-router";
-
-export const Route = createFileRoute("/people")({
-  loader: async () => {
-    const response = await fetch("https://swapi.dev/api/people");
-    return response.json();
-  },
-  component: PeopleComponent,
-});
-
-function PeopleComponent() {
-  const data = Route.useLoaderData();
-  return (
-    <ul>
-      {data.results.map((person) => (
-        <li key={person.name}>{person.name}</li>
-      ))}
-    </ul>
-  );
-}
-```
-
-Loaders simplify your data fetching logic dramatically. Check out more information in the [Loader documentation](https://tanstack.com/router/latest/docs/framework/react/guide/data-loading#loader-parameters).
-
-# Demo files
-
-Files prefixed with `demo` can be safely deleted. They are there to provide a starting point for you to play around with the features you've installed.
-
-## Learn More
-
-You can learn more about all of the offerings from TanStack in the [TanStack documentation](https://tanstack.com).
-
-For TanStack Start specific documentation, visit [TanStack Start](https://tanstack.com/start).
+See [CONTRIBUTING.md](../../CONTRIBUTING.md).

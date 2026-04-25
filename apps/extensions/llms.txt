@@ -1,0 +1,135 @@
+# Senchabot Extensions
+
+Free, open-source streaming widgets and tools for Twitch and Kick. Configure and embed overlays into OBS, Streamlabs, or any browser-source-ready software in seconds. No account required.
+
+## What It Does
+
+Senchabot Extensions provides free streaming widgets and tools for Twitch and Kick streamers. Each tool runs as a browser source overlay that you can add to OBS, Streamlabs, or XSplit in seconds.
+
+- **Sub Sprout** — A visual plant widget that grows with each subscription, resub, or gift sub. Resets after reaching full growth.
+- **Universal Chat** — A chat merge tool that combines Twitch and Kick chat into a single on-screen overlay with emotes, badges, and platform indicators.
+- **Raffle** — A chat-based giveaway tool and raffle widget with an OBS overlay for winner announcements.
+
+## Tech Stack
+
+- React 19 + TypeScript
+- Vite 7
+- TanStack Router (file-based routing)
+- TanStack Start
+- Tailwind CSS v4
+- Cloudflare Workers (deployment)
+- Vitest (testing)
+- Biome (linting/formatting)
+
+## Project Structure
+
+```
+.
+├── src/routes/
+│   ├── index.tsx                   # Widget and tool hub landing page
+│   ├── __root.tsx                  # Root layout with SEO meta tags
+│   ├── setup/
+│   │   ├── sub-growing-plant.tsx   # Sub Sprout configuration page
+│   │   ├── chat-widget.tsx         # Universal Chat configuration page
+│   │   └── raffle.tsx              # Raffle configuration page
+│   └── widgets/
+│       ├── sub-sprout-widget.tsx   # Sub Sprout overlay (Browser Source)
+│       ├── chat-widget.tsx         # Universal Chat overlay (Browser Source)
+│       └── raffle-overlay.tsx      # Raffle winner overlay (Browser Source)
+├── src/features/widgets/           # Widget and tool logic and components
+│   ├── sub-sprout/
+│   │   └── sub-sprout-widget.tsx
+│   ├── chat-widget/
+│   │   ├── use-unified-chat.ts     # Chat connection hook (Twitch IRC + Kick Pusher)
+│   │   ├── chat-messages.ts        # Message parsing
+│   │   ├── use-badges.ts           # Badge loading
+│   │   └── kick-badges.tsx         # Kick badge SVGs
+│   └── raffle/
+│       ├── raffle-widget.tsx       # Raffle setup UI
+│       └── raffle-overlay.tsx      # Winner announcement overlay
+├── src/hooks/
+│   ├── use-raffle-state.ts         # localStorage-based raffle state
+│   └── use-raffle-chat.ts          # Chat monitoring for raffle entries
+├── src/types/
+│   └── raffle.ts                   # Raffle type definitions
+├── src/lib/
+│   └── kick.ts                     # Kick-specific utilities
+├── src/components/
+│   └── breadcrumb.tsx              # Navigation breadcrumb
+├── src/styles.css                  # Tailwind CSS entry
+├── src/router.tsx                  # TanStack Router setup
+├── vite.config.ts                  # Vite + TanStack Router config
+├── package.json
+└── README.md
+```
+
+## Widget Details
+
+### Sub Sprout (`/setup/sub-growing-plant`)
+
+A visual SVG plant widget that grows in stages whenever a subscription event occurs.
+
+- Listens to Twitch subs/resubs/gift subs via ComfyJS.
+- Also connects to Kick's Pusher WebSocket for subscription events.
+- Has 5 growth stages (0–4). Each sub advances it by one.
+- Once it hits stage 4, the next sub resets it to the seedling stage, creating a looping animation.
+- Mods and the broadcaster can type `!grow` in Twitch chat to manually advance the plant.
+
+**Setup:** Enter channel name, select platform (Twitch or Kick), copy the generated widget URL, paste into OBS as a Browser Source.
+
+### Universal Chat (`/setup/chat-widget`)
+
+A chat merge tool that combines Twitch and Kick chat into a single, cohesive on-screen overlay. Designed for streamers who multistream to both platforms.
+
+- Connects to Twitch IRC anonymously (`justinfan` + random number) and Kick's Pusher WebSocket.
+- Parses emotes, badges, and platform indicators for both services.
+- Supports configurable font size, background opacity, and vertical/horizontal layout.
+- Messages auto-fade after 30 seconds.
+
+**Setup:** Enter Twitch and/or Kick channel, customize settings, copy URL into OBS as a Browser Source.
+
+### Raffle (`/setup/raffle`)
+
+A chat-based giveaway tool and raffle widget with an OBS overlay for winner announcements.
+
+- Monitors Twitch IRC or Kick Pusher for messages matching the configured keyword (default `!join`).
+- Validates entry rules: sub-only mode, minimum sub months, max wins per user.
+- When a winner is drawn, a random participant is selected and broadcast to the overlay with `canvas-confetti` fireworks.
+- The overlay shows the winner's name for 10 seconds, then hides.
+- State persists in `localStorage` so data survives refreshes.
+- Setup page and overlay communicate via `BroadcastChannel` (`senchabot-raffle-broadcast`).
+
+**Setup:** Configure platform, channel, entry keyword, and restrictions. Start raffle, add `/widgets/raffle-overlay` to OBS, draw winner when ready.
+
+## Commands
+
+```bash
+npm install       # Install dependencies
+npm run dev       # Start dev server on port 3000
+npm run build     # Build for production
+npm run preview   # Preview production build
+npm run deploy    # Deploy to Cloudflare Workers
+npm run test      # Run Vitest tests
+npm run lint      # Run Biome linter
+npm run format    # Run Biome formatter
+npm run check     # Run Biome check
+npm run cf-typegen # Generate Wrangler types
+```
+
+## Routing
+
+This project uses TanStack Router with file-based routing. Routes are auto-generated from files in `src/routes/`. The root route (`__root.tsx`) contains global SEO meta tags.
+
+## Key Dependencies
+
+- `@tanstack/react-router` — File-based SPA routing
+- `@tanstack/react-start` — Server functions and API routes
+- `comfy.js` — Twitch event listening (subs, chat)
+- `canvas-confetti` — Confetti animations for raffle
+- `ws` — WebSocket client (for Kick Pusher)
+- `zod` — Schema validation
+- `@cloudflare/vite-plugin` + `wrangler` — Cloudflare deployment
+
+## Contributing
+
+See [CONTRIBUTING.md](../../CONTRIBUTING.md).
