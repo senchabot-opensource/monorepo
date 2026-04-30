@@ -74,6 +74,11 @@ function ChatWidgetSetup() {
   const [orientation, setOrientation] = useState<"vertical" | "horizontal">(
     "vertical",
   );
+  const [platformDisplay, setPlatformDisplay] = useState<"name" | "icon">(
+    "name",
+  );
+  const [showTimestamp, setShowTimestamp] = useState(false);
+  const [keepMessages, setKeepMessages] = useState(false);
   const [copied, setCopied] = useState(false);
 
   const getWidgetUrl = () => {
@@ -87,6 +92,10 @@ function ChatWidgetSetup() {
       params.append("bgOpacity", backgroundOpacity);
     if (orientation && orientation !== "vertical")
       params.append("orientation", orientation);
+    if (platformDisplay && platformDisplay !== "name")
+      params.append("platformDisplay", platformDisplay);
+    if (showTimestamp) params.append("timestamp", "true");
+    if (keepMessages) params.append("keep", "true");
 
     if (!twitchChannel && !kickChannel) return "";
     return `${window.location.origin}/widgets/chat-widget?${params.toString()}`;
@@ -170,6 +179,21 @@ function ChatWidgetSetup() {
             />
           </div>
 
+          <div>
+            <label className="mb-1 block text-sm font-medium text-zinc-400">
+              Platform Indicator
+            </label>
+            <select
+              value={platformDisplay}
+              onChange={e =>
+                setPlatformDisplay(e.target.value as "name" | "icon")
+              }
+              className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500">
+              <option value="name">Platform Name</option>
+              <option value="icon">Platform Icon</option>
+            </select>
+          </div>
+
           <div className="flex gap-4">
             <div className="flex-1 max-w-[150px]">
               <label className="mb-1 block text-sm font-medium text-zinc-400">
@@ -209,6 +233,30 @@ function ChatWidgetSetup() {
                 <span className="text-sm">Dark Background</span>
               </label>
             </div>
+          </div>
+
+          <div>
+            <label className="flex items-center space-x-2 text-white cursor-pointer">
+              <input
+                type="checkbox"
+                checked={showTimestamp}
+                onChange={e => setShowTimestamp(e.target.checked)}
+                className="rounded border-zinc-700 bg-zinc-800 text-green-500 focus:ring-green-500"
+              />
+              <span className="text-sm">Show Message Time</span>
+            </label>
+          </div>
+
+          <div>
+            <label className="flex items-center space-x-2 text-white cursor-pointer">
+              <input
+                type="checkbox"
+                checked={keepMessages}
+                onChange={e => setKeepMessages(e.target.checked)}
+                className="rounded border-zinc-700 bg-zinc-800 text-green-500 focus:ring-green-500"
+              />
+              <span className="text-sm">Keep Messages</span>
+            </label>
           </div>
 
           {hasBackground && (
