@@ -144,7 +144,7 @@ const searchSchema = z.object({
   twitch: z.string().optional(),
   kick: z.string().optional(),
   fontSize: z.coerce.number().optional().default(18),
-  background: z.boolean().optional(),
+  background: z.coerce.boolean().optional(),
   bgOpacity: z.coerce.number().min(0).max(1).optional().default(0.5),
   orientation: z
     .enum(["vertical", "horizontal"])
@@ -153,9 +153,9 @@ const searchSchema = z.object({
   platformDisplay: z
     .enum(["name", "icon"])
     .optional()
-    .default("name"),
-  timestamp: z.boolean().optional(),
-  keep: z.boolean().optional(),
+    .default("icon"),
+  timestamp: z.coerce.boolean().optional(),
+  keep: z.coerce.boolean().optional(),
 });
 
 export const getBadgeEmoji = (badgeId: string) => {
@@ -357,8 +357,8 @@ function RouteComponent() {
               })}
             </span>
           )}
-          <span style={{ color: msg.color || "unset" }}>{msg.user}:</span>{" "}
-          <span>
+          <span style={{ color: msg.color || "unset", textShadow: "0 2px 0 rgba(0,0,0,1), 0 3px 1px rgba(0,0,0,0.9)" }}>{msg.user}:</span>{" "}
+          <span style={{ textShadow: "0 2px 0 rgba(0,0,0,1), 0 3px 1px rgba(0,0,0,0.9)" }}>
             {render7tvEmotes(
               parseEmotes(msg.message, msg.platform, msg.emotes),
               sevenTvEmoteMap,

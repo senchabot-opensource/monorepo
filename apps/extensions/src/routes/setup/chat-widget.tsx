@@ -1,6 +1,6 @@
 import { Breadcrumb } from "#/components/breadcrumb";
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useDeferredValue, useMemo, useState } from "react";
 
 export const Route = createFileRoute("/setup/chat-widget")({
   head: () => ({
@@ -74,43 +74,63 @@ function ChatWidgetSetup() {
   const [orientation, setOrientation] = useState<"vertical" | "horizontal">(
     "vertical",
   );
+  const [platforms, setPlatforms] = useState<"both" | "twitch" | "kick">(
+    "both",
+  );
   const [platformDisplay, setPlatformDisplay] = useState<"name" | "icon">(
-    "name",
+    "icon",
   );
   const [showTimestamp, setShowTimestamp] = useState(false);
   const [keepMessages, setKeepMessages] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const getWidgetUrl = () => {
+  const deferredTwitch = useDeferredValue(twitchChannel);
+  const deferredKick = useDeferredValue(kickChannel);
+
+  const widgetUrl = useMemo(() => {
     if (typeof window === "undefined") return "";
     const params = new URLSearchParams();
-    if (twitchChannel) params.append("twitch", twitchChannel);
-    if (kickChannel) params.append("kick", kickChannel);
-    if (fontSize && fontSize !== "18") params.append("fontSize", fontSize);
-    if (hasBackground) params.append("background", "true");
-    if (hasBackground && backgroundOpacity)
-      params.append("bgOpacity", backgroundOpacity);
-    if (orientation && orientation !== "vertical")
-      params.append("orientation", orientation);
-    if (platformDisplay && platformDisplay !== "name")
+    if (platforms === "both" || platforms === "twitch")
+      if (deferredTwitch) params.append("twitch", deferredTwitch);
+    if (platforms === "both" || platforms === "kick")
+      if (deferredKick) params.append("kick", deferredKick);
+    if (fontSize !== "18") params.append("fontSize", fontSize);
+    if (hasBackground) {
+      params.append("background", "true");
+      if (backgroundOpacity !== "0.5") params.append("bgOpacity", backgroundOpacity);
+    }
+    if (orientation !== "vertical") params.append("orientation", orientation);
+    if (platforms === "both" && platformDisplay !== "icon")
       params.append("platformDisplay", platformDisplay);
     if (showTimestamp) params.append("timestamp", "true");
     if (keepMessages) params.append("keep", "true");
 
-    if (!twitchChannel && !kickChannel) return "";
+    if (!deferredTwitch && !deferredKick) return "";
     return `${window.location.origin}/widgets/chat-widget?${params.toString()}`;
-  };
+  }, [
+    deferredTwitch,
+    deferredKick,
+    fontSize,
+    hasBackground,
+    backgroundOpacity,
+    orientation,
+    platforms,
+    platformDisplay,
+    showTimestamp,
+    keepMessages,
+  ]);
 
   const handleCopy = async () => {
-    const url = getWidgetUrl();
-    if (url) {
-      await navigator.clipboard.writeText(url);
+    if (widgetUrl) {
+      await navigator.clipboard.writeText(widgetUrl);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
   };
 
-  const isFormValid = twitchChannel.length > 0 || kickChannel.length > 0;
+  const isFormValid =
+    (platforms !== "kick" && twitchChannel.length > 0) ||
+    (platforms !== "twitch" && kickChannel.length > 0);
 
   return (
     <div className="flex min-h-screen flex-col lg:flex-row items-center lg:items-start justify-center bg-zinc-950 p-6 text-zinc-100 font-sans gap-8 pt-12">
@@ -155,44 +175,66 @@ function ChatWidgetSetup() {
 
           <div>
             <label className="mb-1 block text-sm font-medium text-zinc-400">
-              Twitch Channel (optional)
-            </label>
-            <input
-              type="text"
-              value={twitchChannel}
-              onChange={e => setTwitchChannel(e.target.value)}
-              placeholder="e.g. senchabot"
-              className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-white placeholder-zinc-500 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
-            />
-          </div>
-
-          <div>
-            <label className="mb-1 block text-sm font-medium text-zinc-400">
-              Kick Channel (optional)
-            </label>
-            <input
-              type="text"
-              value={kickChannel}
-              onChange={e => setKickChannel(e.target.value)}
-              placeholder="e.g. xqc"
-              className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-white placeholder-zinc-500 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
-            />
-          </div>
-
-          <div>
-            <label className="mb-1 block text-sm font-medium text-zinc-400">
-              Platform Indicator
+              Platforms
             </label>
             <select
-              value={platformDisplay}
+              value={platforms}
               onChange={e =>
-                setPlatformDisplay(e.target.value as "name" | "icon")
+                setPlatforms(e.target.value as "both" | "twitch" | "kick")
               }
               className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500">
-              <option value="name">Platform Name</option>
-              <option value="icon">Platform Icon</option>
+              <option value="both">Both (Twitch & Kick)</option>
+              <option value="twitch">Twitch</option>
+              <option value="kick">Kick</option>
             </select>
           </div>
+
+          {(platforms === "both" || platforms === "twitch") && (
+            <div>
+              <label className="mb-1 block text-sm font-medium text-zinc-400">
+                Twitch Channel
+              </label>
+              <input
+                type="text"
+                value={twitchChannel}
+                onChange={e => setTwitchChannel(e.target.value)}
+                placeholder="e.g. senchabot"
+                className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-white placeholder-zinc-500 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
+              />
+            </div>
+          )}
+
+          {(platforms === "both" || platforms === "kick") && (
+            <div>
+              <label className="mb-1 block text-sm font-medium text-zinc-400">
+                Kick Channel
+              </label>
+              <input
+                type="text"
+                value={kickChannel}
+                onChange={e => setKickChannel(e.target.value)}
+                placeholder="e.g. xqc"
+                className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-white placeholder-zinc-500 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
+              />
+            </div>
+          )}
+
+          {platforms === "both" && (
+            <div>
+              <label className="mb-1 block text-sm font-medium text-zinc-400">
+                Platform Indicator
+              </label>
+              <select
+                value={platformDisplay}
+                onChange={e =>
+                  setPlatformDisplay(e.target.value as "name" | "icon")
+                }
+                className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500">
+                <option value="name">Platform Name</option>
+                <option value="icon">Platform Icon</option>
+              </select>
+            </div>
+          )}
 
           <div className="flex gap-4">
             <div className="flex-1 max-w-[150px]">
@@ -287,7 +329,7 @@ function ChatWidgetSetup() {
               <input
                 type="text"
                 readOnly
-                value={getWidgetUrl()}
+                value={widgetUrl}
                 className="w-full rounded-l-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-zinc-300 focus:outline-none"
               />
               <button
@@ -308,7 +350,7 @@ function ChatWidgetSetup() {
         <div className="flex-1 w-full bg-zinc-950 rounded-lg overflow-hidden border border-zinc-800 relative shadow-inner flex items-center justify-center relative bg-opacity-20">
           {isFormValid ? (
             <iframe
-              src={getWidgetUrl()}
+              src={widgetUrl}
               className="absolute inset-0 w-full h-full border-0"
               title="Chat Widget Preview"
             />
