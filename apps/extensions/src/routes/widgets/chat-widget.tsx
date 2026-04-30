@@ -1,6 +1,7 @@
 import { chatMessagesCollection } from "#/features/widgets/chat-widget/chat-messages";
 import { KickBadge } from "#/features/widgets/chat-widget/kick-badges";
 import { useTwitchBadges } from "#/features/widgets/chat-widget/use-badges";
+import { use7tvEmotes } from "#/features/widgets/chat-widget/use-7tv-emotes";
 import { useUnifiedChat } from "#/features/widgets/chat-widget/use-unified-chat";
 import { getKickChannelInfo } from "#/lib/kick";
 import { useLiveQuery } from "@tanstack/react-db";
@@ -86,6 +87,57 @@ export const parseEmotes = (text: string, platform: "twitch" | "kick", emotes?: 
   }
 
   return text;
+};
+
+const render7tvEmotes = (
+  nodes: React.ReactNode,
+  emoteMap: Map<string, string>,
+): React.ReactNode[] => {
+  if (emoteMap.size === 0) {
+    return Array.isArray(nodes) ? nodes : [nodes];
+  }
+
+  const names = Array.from(emoteMap.keys());
+  names.sort((a, b) => b.length - a.length);
+
+  const pattern = names
+    .map((name) => name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+    .join("|");
+  if (!pattern) return Array.isArray(nodes) ? nodes : [nodes];
+
+  const regex = new RegExp(`\\b(${pattern})\\b`, "g");
+
+  const result: React.ReactNode[] = [];
+  const input = Array.isArray(nodes) ? nodes : [nodes];
+  let keyIndex = 0;
+
+  for (const node of input) {
+    if (typeof node !== "string") {
+      result.push(node);
+      continue;
+    }
+
+    const parts = node.split(regex);
+
+    for (const part of parts) {
+      if (part === "") continue;
+      const emoteId = emoteMap.get(part);
+      if (emoteId) {
+        result.push(
+          <img
+            key={`7tv-${emoteId}-${keyIndex++}`}
+            src={`https://cdn.7tv.app/emote/${emoteId}/2x.webp`}
+            alt={part}
+            className="inline-block h-8 w-auto mx-0.5 align-middle object-contain"
+          />,
+        );
+      } else {
+        result.push(part);
+      }
+    }
+  }
+
+  return result;
 };
 
 const searchSchema = z.object({
@@ -181,6 +233,8 @@ function RouteComponent() {
   const twitchBadgeMap = useTwitchBadges(search.twitch);
 
   const showPlatformIndicator = Boolean(search.twitch && search.kick);
+
+  const sevenTvEmoteMap = use7tvEmotes(search.twitch);
 
   useUnifiedChat(search.twitch, kick);
 
@@ -304,7 +358,12 @@ function RouteComponent() {
             </span>
           )}
           <span style={{ color: msg.color || "unset" }}>{msg.user}:</span>{" "}
-          <span>{parseEmotes(msg.message, msg.platform, msg.emotes)}</span>
+          <span>
+            {render7tvEmotes(
+              parseEmotes(msg.message, msg.platform, msg.emotes),
+              sevenTvEmoteMap,
+            )}
+          </span>
         </div>
       ))}
     </div>
