@@ -3,5 +3,8 @@
   "name": "senchabot-extensions",
   "compatibility_date": "2026-03-23",
   "compatibility_flags": ["nodejs_compat"],
-  "main": "@tanstack/react-start/server-entry"
+  "main": "@tanstack/react-start/server-entry",
+  "observability": {
+    "enabled": true
+  },
 }

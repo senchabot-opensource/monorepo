@@ -98,6 +98,12 @@ const searchSchema = z.object({
     .enum(["vertical", "horizontal"])
     .optional()
     .default("vertical"),
+  platformDisplay: z
+    .enum(["name", "icon"])
+    .optional()
+    .default("name"),
+  timestamp: z.boolean().optional(),
+  keep: z.boolean().optional(),
 });
 
 export const getBadgeEmoji = (badgeId: string) => {
@@ -132,6 +138,43 @@ export const Route = createFileRoute("/widgets/chat-widget")({
   },
 });
 
+function TwitchIcon({ className, ...props }: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className={`inline-block h-4 w-4 ${className ?? ""}`}
+      viewBox="0 0 24 24"
+      {...props}>
+      <path
+        fill="currentColor"
+        d="M4.265 3L3 6.236v13.223h4.502V21l2.531.85l2.392-2.391h3.658l4.923-4.924V3zm15.052 10.691l-2.813 2.814h-4.502l-2.391 2.391v-2.391H5.813V4.688h13.504zm-2.812-5.767v4.923h-1.688V7.924zm-4.502 0v4.923h-1.688V7.924z"
+      />
+    </svg>
+  );
+}
+
+function KickIcon({ className, ...props }: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      role="img"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className={`inline-block h-4 w-4 ${className ?? ""}`}
+      {...props}>
+      <title>Kick</title>
+      <path d="M1.333 0h8v5.333H12V2.667h2.667V0h8v8H20v2.667h-2.667v2.666H20V16h2.667v8h-8v-2.667H12v-2.666H9.333V24h-8Z" />
+    </svg>
+  );
+}
+
+function PlatformIcon({ platform }: { platform: "twitch" | "kick" }) {
+  if (platform === "twitch") {
+    return <TwitchIcon />;
+  }
+
+  return <KickIcon />;
+}
+
 function RouteComponent() {
   const search = Route.useSearch();
   const { kick, kickSubBadges } = Route.useLoaderData();
@@ -142,6 +185,7 @@ function RouteComponent() {
   useUnifiedChat(search.twitch, kick);
 
   const [now, setNow] = React.useState(() => Date.now());
+  const containerRef = React.useRef<HTMLDivElement>(null);
 
   const { data: messages } = useLiveQuery(q =>
     q
@@ -149,15 +193,17 @@ function RouteComponent() {
       .orderBy(({ collection }) => collection.timestamp),
   );
 
-  const visibleMessages = messages.filter(msg => {
-    const receivedAtMs = msg.receivedAt?.getTime() ?? msg.timestamp.getTime();
-    return now - receivedAtMs < TTL_MS;
-  });
+  const visibleMessages = search.keep
+    ? messages
+    : messages.filter(msg => {
+        const receivedAtMs = msg.receivedAt?.getTime() ?? msg.timestamp.getTime();
+        return now - receivedAtMs < TTL_MS;
+      });
 
   const hasVisibleMessages = visibleMessages.length > 0;
 
   React.useEffect(() => {
-    if (!hasVisibleMessages) {
+    if (search.keep || !hasVisibleMessages) {
       return;
     }
 
@@ -169,11 +215,22 @@ function RouteComponent() {
     return () => {
       window.clearInterval(intervalId);
     };
-  }, [hasVisibleMessages]);
+  }, [hasVisibleMessages, search.keep]);
+
+  React.useEffect(() => {
+    if (!containerRef.current) return;
+
+    if (search.orientation === "horizontal") {
+      containerRef.current.scrollLeft = containerRef.current.scrollWidth;
+    } else {
+      containerRef.current.scrollTop = containerRef.current.scrollHeight;
+    }
+  }, [visibleMessages, search.orientation]);
 
   return (
     <div
-      className={`flex ${search.orientation === "horizontal" ? "flex-row justify-end items-center overflow-hidden min-w-full h-screen p-2 space-x-4" : "flex-col justify-end min-h-screen w-full p-2.5 space-y-0.5"} text-white font-sans rounded-md`}
+      ref={containerRef}
+      className={`flex ${search.orientation === "horizontal" ? "flex-row justify-end items-center overflow-hidden min-w-full h-screen p-2 space-x-4" : "flex-col justify-end h-screen w-full overflow-y-auto overflow-x-hidden p-2.5 space-y-2"} text-white font-sans rounded-md`}
       style={{
         fontSize: `${search.fontSize}px`,
         backgroundColor: search.background
@@ -184,11 +241,23 @@ function RouteComponent() {
         <div
           key={msg.id}
           className={`leading-tight whitespace-pre-wrap wrap-break-word text-left animate-in fade-in ${search.orientation === "horizontal" ? "slide-in-from-right-2 flex-shrink-0" : "slide-in-from-left-2"} duration-200`}>
+          {search.timestamp && (
+            <span className="mr-1.5 text-zinc-400 text-xs align-middle">
+              {msg.timestamp.toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </span>
+          )}
           {showPlatformIndicator && (
             <span
-              className="mr-2 align-middle data-[platform=twitch]:text-purple-500 data-[platform=kick]:text-green-500"
+              className="mr-2 inline-flex items-center align-middle data-[platform=twitch]:text-purple-500 data-[platform=kick]:text-green-500"
               data-platform={msg.platform}>
-              [{msg.platform}]
+              {search.platformDisplay === "icon" ? (
+                <PlatformIcon platform={msg.platform} />
+              ) : (
+                `[${msg.platform}]`
+              )}
             </span>
           )}
           {msg.badges && msg.badges.length > 0 && (
