@@ -11,20 +11,25 @@ export const Route = createFileRoute("/setup/raffle")({
   validateSearch: (search) => searchSchema.parse(search),
   head: () => ({
     meta: [
-      { title: "Raffle Widget & Tool Setup — Senchabot Extensions" },
+      { title: "Raffle Widget Setup — Free Chat Giveaway & Raffle Tool for Twitch & Kick — Senchabot Extensions" },
       {
         name: "description",
         content:
-          "Configure and run chat-based raffles for your Twitch or Kick stream with this free widget and tool. Set entry keywords, sub-only mode, and pick winners with a live overlay.",
+          "Set up and run free chat-based raffles and giveaways for your Twitch or Kick stream. Configure entry keywords, sub-only mode, and pick random winners with a live confetti celebration overlay. Browser source ready for OBS, Streamlabs, and XSplit.",
+      },
+      {
+        name: "keywords",
+        content:
+          "twitch raffle, kick raffle, chat raffle widget, stream giveaway tool, lucky draw overlay, subscriber raffle, viewer picker, random winner picker, streaming raffle, browser source raffle, OBS raffle widget, chat lottery, twitch giveaway, kick giveaway, free raffle tool, stream contest, entry keyword raffle, confetti winner overlay, chat giveaway, live raffle",
       },
       {
         property: "og:title",
-        content: "Raffle Widget & Tool Setup — Senchabot Extensions",
+        content: "Raffle Widget Setup — Free Chat Giveaway & Raffle Tool for Twitch & Kick — Senchabot Extensions",
       },
       {
         property: "og:description",
         content:
-          "Run chat-based raffles for Twitch or Kick with this free widget and tool. Includes a live winner overlay.",
+          "Run chat-based raffles and giveaways for Twitch or Kick with this free widget and tool. Includes keyword entry, sub-only mode, and a live confetti winner overlay.",
       },
       { property: "og:type", content: "website" },
       {
@@ -38,12 +43,11 @@ export const Route = createFileRoute("/setup/raffle")({
       { name: "twitter:card", content: "summary" },
       {
         name: "twitter:title",
-        content: "Raffle Widget & Tool Setup — Senchabot Extensions",
+        content: "Raffle Widget Setup — Free Chat Giveaway & Raffle Tool — Senchabot Extensions",
       },
       {
         name: "twitter:description",
-        content:
-          "Run chat-based raffles for Twitch or Kick with this free widget and tool. Includes a live winner overlay.",
+        content: "Run chat-based raffles and giveaways for Twitch or Kick with this free widget. Keyword entry, sub-only mode, and a live confetti winner overlay.",
       },
       {
         name: "twitter:image",
@@ -55,9 +59,10 @@ export const Route = createFileRoute("/setup/raffle")({
           "@type": "WebApplication",
           name: "Raffle Widget & Tool",
           description:
-            "A chat-based raffle system for Twitch and Kick streams with live winner overlay.",
+            "A free chat-based raffle and giveaway system for Twitch and Kick streams with keyword entry, sub-only mode, and a live confetti winner overlay.",
           url: "https://extensions.senchabot.com/setup/raffle",
           applicationCategory: "StreamingWidget",
+          operatingSystem: "All",
           offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
         },
       },

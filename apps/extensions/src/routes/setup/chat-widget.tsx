@@ -1,24 +1,30 @@
 import { Breadcrumb } from "#/components/breadcrumb";
+import { YoutubeTutorial } from "#/components/youtube-tutorial";
 import { createFileRoute } from "@tanstack/react-router";
 import { useDeferredValue, useMemo, useState } from "react";
 
 export const Route = createFileRoute("/setup/chat-widget")({
   head: () => ({
     meta: [
-      { title: "Universal Chat Widget & Tool Setup — Senchabot Extensions" },
+      { title: "Universal Chat Widget Setup — Free Multi-Stream Chat Overlay for Twitch & Kick — Senchabot Extensions" },
       {
         name: "description",
         content:
-          "Configure the Universal Chat widget and tool to merge Twitch and Kick chat into a single overlay. Perfect for multi-streaming setups.",
+          "Set up a free Universal Chat overlay that merges Twitch and Kick chat into a single widget. Supports emotes, badges, timestamps, and customizable styling. Perfect for multi-streaming setups and cross-platform chat. Browser source ready for OBS, Streamlabs, and XSplit.",
+      },
+      {
+        name: "keywords",
+        content:
+          "twitch chat overlay, kick chat overlay, unified chat widget, multi-stream chat, combined chat overlay, chat merge tool, browser source chat, streaming chat widget, OBS chat overlay, cross-platform chat, multi-chat overlay, merged chat, dual platform chat, free chat widget, live chat overlay, twitch kick chat, chat combiner, stream overlay chat",
       },
       {
         property: "og:title",
-        content: "Universal Chat Widget & Tool Setup — Senchabot Extensions",
+        content: "Universal Chat Widget Setup — Free Multi-Stream Chat Overlay for Twitch & Kick — Senchabot Extensions",
       },
       {
         property: "og:description",
         content:
-          "Merge Twitch and Kick chat into a single, cohesive overlay for your stream with this free widget and tool.",
+          "Merge Twitch and Kick chat into a single, cohesive overlay for your stream with this free multi-stream chat widget. Supports emotes, badges, and customizable styling.",
       },
       { property: "og:type", content: "website" },
       {
@@ -32,11 +38,11 @@ export const Route = createFileRoute("/setup/chat-widget")({
       { name: "twitter:card", content: "summary" },
       {
         name: "twitter:title",
-        content: "Universal Chat Widget & Tool Setup — Senchabot Extensions",
+        content: "Universal Chat Widget Setup — Free Multi-Stream Chat Overlay — Senchabot Extensions",
       },
       {
         name: "twitter:description",
-        content: "Merge Twitch and Kick chat into a single overlay with this free widget and tool.",
+        content: "Merge Twitch and Kick chat into a single overlay with this free multi-stream chat widget. Browser source ready for OBS.",
       },
       {
         name: "twitter:image",
@@ -48,9 +54,10 @@ export const Route = createFileRoute("/setup/chat-widget")({
           "@type": "WebApplication",
           name: "Universal Chat Widget & Tool",
           description:
-            "A combined chat overlay that merges Twitch and Kick chat into a single feed.",
+            "A free multi-stream chat overlay that merges Twitch and Kick chat into a single feed with emotes, badges, and customizable styling.",
           url: "https://extensions.senchabot.com/setup/chat-widget",
           applicationCategory: "StreamingWidget",
+          operatingSystem: "All",
           offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
         },
       },
@@ -169,9 +176,13 @@ function ChatWidgetSetup() {
             <p>
               <strong className="text-zinc-300">Universal Chat:</strong> A
               combined chat overlay that seamlessly merges messages from
-              Twitch and Kick into a single, cohesive feed.
+              Twitch and Kick into a single, cohesive feed. Supports emotes,
+              badges, timestamps, and customizable styling. Perfect for
+              multi-streaming and cross-platform broadcasts.
             </p>
           </div>
+
+          <YoutubeTutorial />
 
           <div>
             <label className="mb-1 block text-sm font-medium text-zinc-400">
@@ -321,7 +332,7 @@ function ChatWidgetSetup() {
             </div>
           )}
 
-          <div className="pt-4 mt-6 border-t border-zinc-800">
+          <div className="pt-4 mt-6 border-t border-zinc-800 lg:hidden">
             <label className="mb-1 block text-sm font-medium text-zinc-400">
               Widget URL
             </label>
@@ -359,6 +370,30 @@ function ChatWidgetSetup() {
               <p>Fill in at least one channel to generate preview.</p>
             </div>
           )}
+        </div>
+
+        <div className="mt-4 hidden lg:block">
+          <label className="mb-1 block text-sm font-medium text-zinc-400">
+            Widget URL
+          </label>
+          <div className="flex">
+            <input
+              type="text"
+              readOnly
+              value={widgetUrl}
+              className="w-full rounded-l-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-zinc-300 focus:outline-none"
+            />
+            <button
+              onClick={handleCopy}
+              disabled={!isFormValid}
+              className="rounded-r-md bg-green-600 px-4 py-2 font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-zinc-900 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+              {copied ? "Copied!" : "Copy"}
+            </button>
+          </div>
+          <p className="mt-2 text-xs text-zinc-500">
+            Paste this URL as a browser source in OBS, Streamlabs, or XSplit
+            to show the widget on stream.
+          </p>
         </div>
       </div>
     </div>

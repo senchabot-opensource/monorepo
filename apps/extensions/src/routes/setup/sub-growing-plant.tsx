@@ -1,24 +1,30 @@
 import { Breadcrumb } from "#/components/breadcrumb";
+import { YoutubeTutorial } from "#/components/youtube-tutorial";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 
 export const Route = createFileRoute("/setup/sub-growing-plant")({
   head: () => ({
     meta: [
-      { title: "Sub Sprout Widget & Tool Setup — Senchabot Extensions" },
+      { title: "Sub Sprout Widget Setup — Free Sub Alert & Growing Plant Overlay for Twitch & Kick — Senchabot Extensions" },
       {
         name: "description",
         content:
-          "Configure the Sub Sprout widget and tool for Twitch or Kick. A growing plant that gets bigger with every new subscription, perfect for visualizing your community's support on stream.",
+          "Set up a free Sub Sprout (sub growing plant) widget and sub alert tool for Twitch and Kick. A growing plant stream overlay that gets bigger with every new subscription — perfect for showing sub count, tracking subscription goals, and visualizing community support on your OBS or browser source stream.",
+      },
+      {
+        name: "keywords",
+        content:
+          "sub growing, sub alert, sub sprout, subscription alert, growing plant overlay, twitch sub widget, kick sub widget, stream plant, sub counter, subscription tracker, sub goal tracker, new sub alert, streaming overlay, browser source widget, OBS widget, free stream widget, twitch overlay, kick overlay",
       },
       {
         property: "og:title",
-        content: "Sub Sprout Widget & Tool Setup — Senchabot Extensions",
+        content: "Sub Sprout Widget Setup — Free Sub Alert & Growing Plant Overlay for Twitch & Kick — Senchabot Extensions",
       },
       {
         property: "og:description",
         content:
-          "Configure the Sub Sprout widget and tool for Twitch or Kick. A growing plant that gets bigger with every new subscription.",
+          "Set up a free Sub Sprout (sub growing plant) widget and sub alert tool for Twitch and Kick. A growing plant stream overlay that gets bigger with every new subscription.",
       },
       { property: "og:type", content: "website" },
       {
@@ -32,11 +38,11 @@ export const Route = createFileRoute("/setup/sub-growing-plant")({
       { name: "twitter:card", content: "summary" },
       {
         name: "twitter:title",
-        content: "Sub Sprout Widget & Tool Setup — Senchabot Extensions",
+        content: "Sub Sprout Widget Setup — Free Sub Alert & Growing Plant Overlay — Senchabot Extensions",
       },
       {
         name: "twitter:description",
-        content: "Configure the Sub Sprout widget and tool for Twitch or Kick.",
+        content: "Set up a free sub alert and growing plant stream overlay for Twitch or Kick. Tracks sub count and subscription goals.",
       },
       {
         name: "twitter:image",
@@ -48,10 +54,25 @@ export const Route = createFileRoute("/setup/sub-growing-plant")({
           "@type": "WebApplication",
           name: "Sub Sprout Widget & Tool",
           description:
-            "A growing plant that gets bigger with every new subscription on Twitch or Kick.",
+            "A free sub alert and growing plant stream overlay that gets bigger with every new subscription on Twitch or Kick.",
           url: "https://extensions.senchabot.com/setup/sub-growing-plant",
           applicationCategory: "StreamingWidget",
+          operatingSystem: "All",
           offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+        },
+      },
+      {
+        "script:ld+json": {
+          "@context": "https://schema.org",
+          "@type": "VideoObject",
+          name: "Sub Sprout Widget Setup Tutorial",
+          description:
+            "Step-by-step tutorial on how to configure the Sub Sprout sub alert and growing plant widget for Twitch and Kick streams.",
+          thumbnailUrl: "https://img.youtube.com/vi/P0Btpez9Znw/maxresdefault.jpg",
+          embedUrl: "https://www.youtube.com/embed/P0Btpez9Znw",
+          contentUrl: "https://youtu.be/P0Btpez9Znw",
+          uploadDate: "2025-04-11T12:00:00+03:00",
+          duration: "PT43S",
         },
       },
     ],
@@ -123,10 +144,13 @@ function SubSproutSetup() {
           <div className="text-sm text-zinc-400 bg-zinc-800/50 p-3 rounded-md border border-zinc-800">
             <p>
                 <strong className="text-zinc-300">Sub Sprout:</strong> A
-                growing plant that gets bigger with every new subscription.
-                Perfect for visualizing your community's support on stream.
+                sub growing plant and sub alert overlay that gets bigger with
+                every new subscription. Perfect for showing sub count and
+                tracking subscription goals on stream.
             </p>
           </div>
+
+          <YoutubeTutorial url="https://youtu.be/P0Btpez9Znw" />
 
           <div>
             <label className="mb-1 block text-sm font-medium text-zinc-400">
@@ -156,7 +180,7 @@ function SubSproutSetup() {
             </select>
           </div>
 
-          <div className="pt-4 mt-6 border-t border-zinc-800">
+          <div className="pt-4 mt-6 border-t border-zinc-800 lg:hidden">
             <label className="mb-1 block text-sm font-medium text-zinc-400">
               Widget URL
             </label>
@@ -194,6 +218,30 @@ function SubSproutSetup() {
               <p>Fill in the required fields to generate preview.</p>
             </div>
           )}
+        </div>
+
+        <div className="mt-4 hidden lg:block">
+          <label className="mb-1 block text-sm font-medium text-zinc-400">
+            Widget URL
+          </label>
+          <div className="flex">
+            <input
+              type="text"
+              readOnly
+              value={getWidgetUrl()}
+              className="w-full rounded-l-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-zinc-300 focus:outline-none"
+            />
+            <button
+              onClick={handleCopy}
+              disabled={!isFormValid}
+              className="rounded-r-md bg-green-600 px-4 py-2 font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-zinc-900 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+              {copied ? "Copied!" : "Copy"}
+            </button>
+          </div>
+          <p className="mt-2 text-xs text-zinc-500">
+            Paste this URL as a browser source in OBS, Streamlabs, or XSplit
+            to show the widget on stream.
+          </p>
         </div>
       </div>
     </div>

@@ -5,6 +5,14 @@
   --font-sans: "Consolas", ui-sans-serif, system-ui, sans-serif;
 }
 
+@variant hover (&:hover);
+
+@layer base {
+  button:disabled {
+    pointer-events: none;
+  }
+}
+
 @keyframes fadeInZoom {
   from {
     opacity: 0;
