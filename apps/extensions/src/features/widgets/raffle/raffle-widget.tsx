@@ -1,4 +1,5 @@
 import { Breadcrumb } from "#/components/breadcrumb";
+import { YoutubeTutorial } from "#/components/youtube-tutorial";
 import { useCallback, useEffect, useState } from "react";
 
 import confetti from "canvas-confetti";
@@ -60,6 +61,7 @@ export function RaffleWidget({
   } = useRaffleState();
 
   const [lastWinner, setLastWinner] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     const updates: Partial<{ channel: string; platform: "twitch" | "kick" }> = {};
@@ -85,12 +87,27 @@ export function RaffleWidget({
     }
   }, [drawWinner, onDrawWinner]);
 
+  const getWidgetUrl = () => {
+    if (typeof window === "undefined") return "";
+    return `${window.location.origin}/widgets/raffle-overlay`;
+  };
+
+  const handleCopy = async () => {
+    const url = getWidgetUrl();
+    if (url) {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
   const isRunning = state.status === "running";
+  const hasActiveState = state.participants.length > 0 || state.winners.length > 0 || state.status !== "idle";
 
   return (
-    <div className="flex min-h-screen flex-col lg:flex-row items-center lg:items-start justify-center bg-zinc-950 p-6 text-zinc-100 font-sans gap-8 pt-12">
+    <div className="flex min-h-screen flex-col lg:flex-row items-center lg:items-start justify-center bg-zinc-950 p-4 sm:p-6 text-zinc-100 font-sans gap-6 lg:gap-8 pt-12">
       {/* Left: Configuration */}
-      <div className="w-full max-w-md lg:shrink-0 rounded-xl bg-zinc-900 p-8 shadow-xl border border-zinc-800">
+      <div className="w-full max-w-md lg:shrink-0 rounded-xl bg-zinc-900 p-4 sm:p-6 lg:p-8 shadow-xl border border-zinc-800">
         <div className="mb-4">
           <Breadcrumb
             items={[
@@ -124,10 +141,13 @@ export function RaffleWidget({
           <div className="text-sm text-zinc-400 bg-zinc-800/50 p-3 rounded-md border border-zinc-800">
             <p>
               <strong className="text-zinc-300">Raffle:</strong> Run
-              chat-based raffles with keyword entry, sub-only mode, and a live
-              winner overlay with confetti celebration.
+              chat-based raffles, giveaways, and lucky draws with keyword
+              entry, sub-only mode, and a live winner overlay with confetti
+              celebration.
             </p>
           </div>
+
+          <YoutubeTutorial />
 
           <div>
             <label className="mb-1 block text-sm font-medium text-zinc-400">
@@ -242,11 +262,36 @@ export function RaffleWidget({
             disabled={isRunning}>
             Reset Configuration
           </button>
+
+          {/*<div className="pt-4 mt-6 border-t border-zinc-800 lg:hidden">
+            <label className="mb-1 block text-sm font-medium text-zinc-400">
+              Widget URL
+            </label>
+            <div className="flex">
+              <input
+                type="text"
+                readOnly
+                value={getWidgetUrl()}
+                className="w-full rounded-l-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-zinc-300 focus:outline-none"
+              />
+              <button
+                onClick={handleCopy}
+                className="rounded-r-md bg-green-600 px-4 py-2 font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-zinc-900 transition-colors">
+                {copied ? "Copied!" : "Copy"}
+              </button>
+            </div>
+            <p className="mt-2 text-xs text-zinc-500">
+              Paste this URL as a browser source in OBS, Streamlabs, or XSplit
+              to show the raffle overlay on stream.
+            </p>
+          </div>*/}
         </div>
       </div>
 
-      {/* Right: Controls + Winners + Participants */}
-      <div className="w-full max-w-md lg:max-w-2xl lg:shrink-0 rounded-xl bg-zinc-900 p-8 shadow-xl border border-zinc-800 flex flex-col h-[700px] space-y-4">
+      {/* Right column */}
+      <div className="w-full max-w-md lg:max-w-2xl lg:shrink-0 flex flex-col gap-4">
+        {/* Controls + Winners + Participants */}
+        <div className="rounded-xl bg-zinc-900 p-4 sm:p-6 lg:p-8 shadow-xl border border-zinc-800 flex flex-col min-h-[400px] lg:h-[700px] space-y-4">
         {/* Controls */}
         <div className="space-y-3">
           <div className="flex gap-2">
@@ -271,7 +316,7 @@ export function RaffleWidget({
           <button
             className="w-full rounded-md bg-emerald-800 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50"
             onClick={handleDraw}
-            disabled={state.participants.length === 0}>
+            disabled={state.participants.length === 0 || state.status === "idle"}>
             Draw Winner
           </button>
 
@@ -282,7 +327,7 @@ export function RaffleWidget({
             </div>
           )}
 
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
             <button
               className="rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-xs font-medium hover:bg-zinc-700 disabled:opacity-50"
               onClick={resetParticipants}
@@ -296,8 +341,9 @@ export function RaffleWidget({
               Reset Winners
             </button>
             <button
-              className="rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-xs font-medium hover:bg-zinc-700"
-              onClick={resetAll}>
+              className="rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-xs font-medium hover:bg-zinc-700 disabled:opacity-50"
+              onClick={resetAll}
+              disabled={!hasActiveState}>
               Reset All
             </button>
           </div>
@@ -308,7 +354,7 @@ export function RaffleWidget({
           <h2 className="mb-2 text-lg font-semibold text-center text-zinc-300">
             Winners ({state.winners.length})
           </h2>
-          <div className="max-h-40 overflow-y-auto rounded-lg border border-zinc-800">
+          <div className="max-h-40 overflow-y-auto rounded-lg bg-zinc-800/30">
             {state.winners.length === 0 ? (
               <div className="p-4 text-center text-sm text-zinc-500">
                 No winners yet.
@@ -333,11 +379,11 @@ export function RaffleWidget({
         </div>
 
         {/* Participants */}
-        <div className="flex-1 min-h-0">
+        <div className="flex-1 min-h-0 sm:mb-2 lg:mb-8">
           <h2 className="mb-2 text-lg font-semibold text-center text-zinc-300">
             Participants ({state.participants.length})
           </h2>
-          <div className="h-full overflow-y-auto rounded-lg border border-zinc-800 p-4">
+          <div className="h-full overflow-y-auto rounded-lg bg-zinc-800/30 p-4">
             {state.participants.length === 0 ? (
               <div className="text-center text-sm text-zinc-500">
                 No participants yet.
@@ -363,6 +409,31 @@ export function RaffleWidget({
             )}
           </div>
         </div>
+      </div>
+
+      {/* Widget URL card — Desktop only */}
+      {/*<div className="hidden lg:block rounded-xl bg-zinc-900 p-4 sm:p-6 lg:p-8 shadow-xl border border-zinc-800">
+        <label className="mb-1 block text-sm font-medium text-zinc-400">
+          Widget URL
+        </label>
+        <div className="flex">
+          <input
+            type="text"
+            readOnly
+            value={getWidgetUrl()}
+            className="w-full rounded-l-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-zinc-300 focus:outline-none"
+          />
+          <button
+            onClick={handleCopy}
+            className="rounded-r-md bg-green-600 px-4 py-2 font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-zinc-900 transition-colors">
+            {copied ? "Copied!" : "Copy"}
+          </button>
+        </div>
+        <p className="mt-2 text-xs text-zinc-500">
+          Paste this URL as a browser source in OBS, Streamlabs, or XSplit
+          to show the raffle overlay on stream.
+        </p>
+      </div>*/}
       </div>
     </div>
   );
