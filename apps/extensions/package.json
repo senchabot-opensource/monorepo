@@ -23,6 +23,7 @@
     "@tanstack/router-plugin": "^1.132.0",
     "canvas-confetti": "^1.9.4",
     "comfy.js": "^1.1.29",
+    "pusher-js": "^8.5.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "tailwindcss": "^4.1.18",
