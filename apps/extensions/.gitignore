@@ -4,6 +4,7 @@ dist
 dist-ssr
 *.local
 .env
+.dev.vars
 .nitro
 .tanstack
 .wrangler
@@ -11,3 +12,4 @@ dist-ssr
 .vinxi
 __unconfig*
 todos.json
+worker-configuration.d.ts
