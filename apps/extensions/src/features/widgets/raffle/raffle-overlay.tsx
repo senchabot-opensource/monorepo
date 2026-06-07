@@ -10,8 +10,17 @@ export function RaffleOverlay() {
   const [winner, setWinner] = useState<RaffleWinner | null>(null);
   const [visible, setVisible] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const confettiRafRef = useRef<number | null>(null);
+
+  const cancelConfetti = useCallback(() => {
+    if (confettiRafRef.current !== null) {
+      cancelAnimationFrame(confettiRafRef.current);
+      confettiRafRef.current = null;
+    }
+  }, []);
 
   const triggerConfetti = useCallback(() => {
+    cancelConfetti();
     const duration = 3000;
     const end = Date.now() + duration;
 
@@ -32,12 +41,14 @@ export function RaffleOverlay() {
       });
 
       if (Date.now() < end) {
-        requestAnimationFrame(frame);
+        confettiRafRef.current = requestAnimationFrame(frame);
+      } else {
+        confettiRafRef.current = null;
       }
     };
 
-    frame();
-  }, []);
+    confettiRafRef.current = requestAnimationFrame(frame);
+  }, [cancelConfetti]);
 
   const showWinner = useCallback(
     (w: RaffleWinner) => {
@@ -69,8 +80,9 @@ export function RaffleOverlay() {
       bc.removeEventListener("message", handler);
       bc.close();
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      cancelConfetti();
     };
-  }, [showWinner]);
+  }, [showWinner, cancelConfetti]);
 
   return (
     <div className="relative flex size-full min-h-screen items-center justify-center overflow-hidden bg-transparent">
