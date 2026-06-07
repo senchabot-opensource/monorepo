@@ -1,6 +1,6 @@
 import { Breadcrumb } from "#/components/breadcrumb";
 import { YoutubeTutorial } from "#/components/youtube-tutorial";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import confetti from "canvas-confetti";
 
@@ -14,7 +14,7 @@ export interface RaffleWidgetProps {
   onDrawWinner?: (winner: RaffleWinner) => void;
 }
 
-function triggerConfetti() {
+function triggerConfetti(rafRef: { current: number | null }) {
   const duration = 3000;
   const end = Date.now() + duration;
 
@@ -35,11 +35,13 @@ function triggerConfetti() {
     });
 
     if (Date.now() < end) {
-      requestAnimationFrame(frame);
+      rafRef.current = requestAnimationFrame(frame);
+    } else {
+      rafRef.current = null;
     }
   };
 
-  frame();
+  rafRef.current = requestAnimationFrame(frame);
 }
 
 export function RaffleWidget({
@@ -54,6 +56,7 @@ export function RaffleWidget({
     stop,
     addParticipant,
     drawWinner,
+    canDraw,
     resetParticipants,
     resetWinners,
     resetConfig,
@@ -62,6 +65,8 @@ export function RaffleWidget({
 
   const [lastWinner, setLastWinner] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const confettiRafRef = useRef<number | null>(null);
+  const [now, setNow] = useState(() => Date.now());
 
   useEffect(() => {
     const updates: Partial<{ channel: string; platform: "twitch" | "kick" }> = {};
@@ -76,13 +81,46 @@ export function RaffleWidget({
     }
   }, [initialChannel, platform, updateConfig]);
 
+  useEffect(() => {
+    return () => {
+      if (confettiRafRef.current !== null) {
+        cancelAnimationFrame(confettiRafRef.current);
+        confettiRafRef.current = null;
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (state.startedAt == null) return;
+    if (state.status !== "running" && state.status !== "stopped") return;
+    const id = setInterval(() => setNow(Date.now()), 250);
+    return () => clearInterval(id);
+  }, [state.status, state.startedAt]);
+
+  const isRunning = state.status === "running";
+  const isStopped = state.status === "stopped";
+  const isConfigLocked = isRunning || isStopped;
+  const hasActiveState = state.participants.length > 0 || state.winners.length > 0 || state.status !== "idle";
+
+  const liveRemainingMs =
+    (isRunning || isStopped) && state.startedAt != null
+      ? Math.max(
+          0,
+          state.config.minRaffleDurationSec * 1000 - (now - state.startedAt),
+        )
+      : 0;
+  const drawLabel =
+    (isRunning || isStopped) && liveRemainingMs > 0
+      ? `Draw Winner (${Math.ceil(liveRemainingMs / 1000)}s)`
+      : "Draw Winner";
+
   useRaffleChat(state.config, addParticipant, state.status === "running");
 
   const handleDraw = useCallback(() => {
     const winner = drawWinner();
     if (winner) {
       setLastWinner(winner.displayName || winner.username);
-      triggerConfetti();
+      triggerConfetti(confettiRafRef);
       if (onDrawWinner) onDrawWinner(winner);
     }
   }, [drawWinner, onDrawWinner]);
@@ -100,9 +138,6 @@ export function RaffleWidget({
       setTimeout(() => setCopied(false), 2000);
     }
   };
-
-  const isRunning = state.status === "running";
-  const hasActiveState = state.participants.length > 0 || state.winners.length > 0 || state.status !== "idle";
 
   return (
     <div className="flex min-h-screen flex-col lg:flex-row items-center lg:items-start justify-center bg-zinc-950 p-4 sm:p-6 text-zinc-100 font-sans gap-6 lg:gap-8 pt-12">
@@ -137,7 +172,30 @@ export function RaffleWidget({
           Raffle Setup
         </h1>
 
-        <div className="space-y-4">
+        {isConfigLocked && (
+          <div
+            role="status"
+            className="mb-4 flex items-start gap-2 rounded-md border border-amber-700/60 bg-amber-950/40 p-3 text-sm text-amber-200">
+            <span aria-hidden="true" className="select-none text-base leading-none">
+              🔒
+            </span>
+            <div className="space-y-0.5">
+              <p className="font-semibold uppercase tracking-wide text-xs">
+                Configuration locked
+              </p>
+              <p className="text-xs text-amber-300/90">
+                Inputs are disabled while the raffle is{" "}
+                {isRunning ? "running" : "stopped"} to prevent mid-raffle rule
+                changes. Use <span className="font-medium">Reset All</span> to
+                start over.
+              </p>
+            </div>
+          </div>
+        )}
+
+        <div
+          className="space-y-4"
+          aria-disabled={isConfigLocked}>
           <div className="text-sm text-zinc-400 bg-zinc-800/50 p-3 rounded-md border border-zinc-800">
             <p>
               <strong className="text-zinc-300">Raffle:</strong> Run
@@ -154,12 +212,12 @@ export function RaffleWidget({
               Platform
             </label>
             <select
-              className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
+              className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-white disabled:cursor-not-allowed disabled:opacity-60 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
               value={state.config.platform}
               onChange={(e) =>
                 updateConfig({ platform: e.target.value as "twitch" | "kick" })
               }
-              disabled={isRunning}>
+              disabled={isConfigLocked}>
               <option value="twitch">Twitch</option>
               <option value="kick">Kick</option>
             </select>
@@ -171,11 +229,11 @@ export function RaffleWidget({
             </label>
             <input
               type="text"
-              className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-white placeholder-zinc-500 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
+              className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-white placeholder-zinc-500 disabled:cursor-not-allowed disabled:opacity-60 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
               placeholder="Enter channel name"
               value={state.config.channel}
               onChange={(e) => updateConfig({ channel: e.target.value })}
-              disabled={isRunning}
+              disabled={isConfigLocked}
             />
           </div>
 
@@ -185,11 +243,11 @@ export function RaffleWidget({
             </label>
             <input
               type="text"
-              className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-white placeholder-zinc-500 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
+              className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-white placeholder-zinc-500 disabled:cursor-not-allowed disabled:opacity-60 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
               placeholder="!join"
               value={state.config.keyword}
               onChange={(e) => updateConfig({ keyword: e.target.value })}
-              disabled={isRunning}
+              disabled={isConfigLocked}
             />
           </div>
 
@@ -204,12 +262,12 @@ export function RaffleWidget({
             </div>
             <input
               type="checkbox"
-              className={`size-5 ${state.config.platform === "twitch" ? "accent-[#9146FF]" : "accent-[#53FC18]"}`}
+              className={`size-5 disabled:cursor-not-allowed disabled:opacity-60 ${state.config.platform === "twitch" ? "accent-[#9146FF]" : "accent-[#53FC18]"}`}
               checked={state.config.subscribersOnly}
               onChange={(e) =>
                 updateConfig({ subscribersOnly: e.target.checked })
               }
-              disabled={isRunning}
+              disabled={isConfigLocked}
             />
           </div>
 
@@ -221,7 +279,7 @@ export function RaffleWidget({
               <input
                 type="number"
                 min={1}
-                className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
+                className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-white disabled:cursor-not-allowed disabled:opacity-60 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
                 value={state.config.minSubMonths}
                 onChange={(e) =>
                   updateConfig({
@@ -231,7 +289,7 @@ export function RaffleWidget({
                     ),
                   })
                 }
-                disabled={isRunning}
+                disabled={isConfigLocked}
               />
             </div>
           )}
@@ -241,12 +299,12 @@ export function RaffleWidget({
               Max Wins Per User
             </label>
             <select
-              className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
+              className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-white disabled:cursor-not-allowed disabled:opacity-60 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
               value={state.config.maxWinsPerUser}
               onChange={(e) =>
                 updateConfig({ maxWinsPerUser: parseInt(e.target.value, 10) })
               }
-              disabled={isRunning}>
+              disabled={isConfigLocked}>
               <option value={1}>1 win per user</option>
               <option value={2}>2 wins per user</option>
               <option value={3}>3 wins per user</option>
@@ -256,10 +314,36 @@ export function RaffleWidget({
             </select>
           </div>
 
+          <div>
+            <label className="mb-1 block text-sm font-medium text-zinc-400">
+              Minimum Raffle Duration (seconds)
+            </label>
+            <input
+              type="number"
+              min={0}
+              max={300}
+              className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-white disabled:cursor-not-allowed disabled:opacity-60 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
+              value={state.config.minRaffleDurationSec}
+              onChange={(e) =>
+                updateConfig({
+                  minRaffleDurationSec: Math.max(
+                    0,
+                    Math.min(300, parseInt(e.target.value || "0", 10) || 0),
+                  ),
+                })
+              }
+              disabled={isConfigLocked}
+            />
+            <p className="mt-1 text-xs text-zinc-500">
+              Draw Winner is locked until this many seconds have passed since
+              Start. Prevents instant-stop-and-draw rigging.
+            </p>
+          </div>
+
           <button
-            className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm font-medium hover:bg-zinc-700 disabled:opacity-50"
+            className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm font-medium hover:bg-zinc-700 disabled:cursor-not-allowed disabled:opacity-50"
             onClick={resetConfig}
-            disabled={isRunning}>
+            disabled={isConfigLocked}>
             Reset Configuration
           </button>
 
@@ -316,8 +400,8 @@ export function RaffleWidget({
           <button
             className="w-full rounded-md bg-emerald-800 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50"
             onClick={handleDraw}
-            disabled={state.participants.length === 0 || state.status === "idle"}>
-            Draw Winner
+            disabled={!canDraw}>
+            {drawLabel}
           </button>
 
           {lastWinner && (

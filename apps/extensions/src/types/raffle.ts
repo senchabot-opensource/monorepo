@@ -9,6 +9,7 @@ export interface RaffleConfig {
   subscribersOnly: boolean
   minSubMonths: number
   maxWinsPerUser: number
+  minRaffleDurationSec: number
 }
 
 export interface RaffleParticipant {
@@ -32,6 +33,8 @@ export interface RaffleWinner {
 export interface RaffleState {
   status: RaffleStatus
   config: RaffleConfig
+  frozenConfig: RaffleConfig | null
+  startedAt: number | null
   participants: RaffleParticipant[]
   winners: RaffleWinner[]
 }
