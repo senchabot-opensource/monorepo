@@ -1,4 +1,6 @@
 import { chatMessagesCollection } from "#/features/widgets/chat-widget/chat-messages";
+import type { ChatMessagesType } from "#/features/widgets/chat-widget/chat-messages";
+
 import { KickBadge } from "#/features/widgets/chat-widget/kick-badges";
 import { useTwitchBadges } from "#/features/widgets/chat-widget/use-badges";
 import { use7tvEmotes } from "#/features/widgets/chat-widget/use-7tv-emotes";
@@ -48,7 +50,7 @@ const renderTwitchEmotes = (text: string, emotesTag?: string) => {
         key={`${range.id}-${range.start}`}
         src={`https://static-cdn.jtvnw.net/emoticons/v2/${range.id}/default/dark/1.0`}
         alt="emote"
-        className="inline-block h-8 w-auto mx-0.5 align-middle object-contain"
+        className="inline-block h-[1em] w-auto mx-0.5 align-middle object-contain"
       />,
     );
     lastIndex = range.end + 1;
@@ -73,7 +75,7 @@ export const parseEmotes = (text: string, platform: "twitch" | "kick", emotes?: 
             key={`${id}-${index.toString()}`}
             src={`https://files.kick.com/emotes/${id}/fullsize`}
             alt="emote"
-            className="inline-block h-8 w-8 mx-1 align-middle object-contain"
+            className="inline-block h-[1em] w-[1em] mx-1 align-middle object-contain"
           />
         );
       }
@@ -128,7 +130,7 @@ const render7tvEmotes = (
             key={`7tv-${emoteId}-${keyIndex++}`}
             src={`https://cdn.7tv.app/emote/${emoteId}/2x.webp`}
             alt={part}
-            className="inline-block h-8 w-auto mx-0.5 align-middle object-contain"
+            className="inline-block h-[1em] w-auto mx-0.5 align-middle object-contain"
           />,
         );
       } else {
@@ -156,7 +158,94 @@ const searchSchema = z.object({
     .default("icon"),
   timestamp: z.coerce.boolean().optional(),
   keep: z.coerce.boolean().optional(),
+  font: z
+    .enum(["inter", "roboto", "nunito", "mono", "serif", "system"])
+    .optional()
+    .default("inter"),
+  layout: z
+    .enum(["inline", "stacked", "card", "compact"])
+    .optional()
+    .default("inline"),
+  animation: z
+    .enum(["slide", "pop", "bounce", "stagger", "none"])
+    .optional()
+    .default("slide"),
 });
+
+type FontChoice = z.infer<typeof searchSchema>["font"];
+type LayoutChoice = z.infer<typeof searchSchema>["layout"];
+type AnimationChoice = z.infer<typeof searchSchema>["animation"];
+
+const FONT_STACKS: Record<FontChoice, string> = {
+  inter: '"Inter", ui-sans-serif, system-ui, sans-serif',
+  roboto: '"Roboto", ui-sans-serif, system-ui, sans-serif',
+  nunito: '"Nunito", ui-sans-serif, system-ui, sans-serif',
+  mono: '"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace',
+  serif: '"Source Serif 4", ui-serif, Georgia, serif',
+  system:
+    'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
+};
+
+const FONT_GOOGLE_FAMILIES: Partial<Record<FontChoice, string>> = {
+  inter: "Inter:wght@400;500;600;700",
+  roboto: "Roboto:wght@400;500;700",
+  nunito: "Nunito:wght@400;600;800",
+  mono: "JetBrains+Mono:wght@400;500",
+  serif: "Source+Serif+4:wght@400;600",
+};
+
+const LAYOUT_CLASSES: Record<
+  LayoutChoice,
+  { wrapper: string; meta: string; name: string; message: string }
+> = {
+  inline: {
+    wrapper: "leading-tight whitespace-pre-wrap wrap-break-word text-left",
+    meta: "inline-flex items-center gap-1.5 align-middle",
+    name: "inline",
+    message: "inline",
+  },
+  stacked: {
+    wrapper: "grid grid-cols-[auto_minmax(0,1fr)] items-baseline gap-x-1.5 gap-y-0.5 text-left",
+    meta: "flex items-center gap-1.5 whitespace-nowrap",
+    name: "inline leading-none",
+    message: "block leading-snug col-start-2 wrap-break-word",
+  },
+  card: {
+    wrapper:
+      "rounded-lg bg-black/40 border border-white/10 px-3 py-2 text-left shadow-sm grid grid-cols-[auto_minmax(0,1fr)] items-baseline gap-x-1.5 gap-y-0.5",
+    meta: "flex items-center gap-1.5 whitespace-nowrap",
+    name: "inline leading-none text-sm",
+    message: "block leading-snug col-start-2 wrap-break-word",
+  },
+  compact: {
+    wrapper: "leading-none whitespace-pre-wrap wrap-break-word text-left",
+    meta: "inline-flex items-center gap-1.5 align-middle",
+    name: "inline",
+    message: "inline",
+  },
+};
+
+const ANIMATION_CLASSES: Record<
+  AnimationChoice,
+  (orientation: "vertical" | "horizontal") => string
+> = {
+  slide: () => "animate-chat-slide-in",
+  pop: () => "animate-chat-pop-in",
+  bounce: () => "animate-chat-bounce-in",
+  stagger: () => "animate-chat-stagger-meta",
+  none: () => "",
+};
+
+const ANIMATION_MESSAGE_CLASSES: Record<AnimationChoice, string> = {
+  slide: "",
+  pop: "",
+  bounce: "",
+  stagger: "animate-chat-stagger-message",
+  none: "",
+};
+
+const GOOGLE_FONTS_LINK_ID = "chat-widget-google-fonts";
+const GOOGLE_FONTS_PRECONNECT_ID = "chat-widget-google-fonts-preconnect";
 
 export const getBadgeEmoji = (badgeId: string) => {
   const norm = badgeId.toLowerCase().split("/")[0];
@@ -241,10 +330,45 @@ function RouteComponent() {
   const [now, setNow] = React.useState(() => Date.now());
   const containerRef = React.useRef<HTMLDivElement>(null);
 
+  React.useEffect(() => {
+    if (typeof document === "undefined") return;
+    const family = FONT_GOOGLE_FAMILIES[search.font];
+    if (!family) {
+      document.getElementById(GOOGLE_FONTS_LINK_ID)?.remove();
+      document.getElementById(GOOGLE_FONTS_PRECONNECT_ID)?.remove();
+      return;
+    }
+    let preconnect = document.getElementById(
+      GOOGLE_FONTS_PRECONNECT_ID,
+    ) as HTMLLinkElement | null;
+    if (!preconnect) {
+      preconnect = document.createElement("link");
+      preconnect.id = GOOGLE_FONTS_PRECONNECT_ID;
+      preconnect.rel = "preconnect";
+      preconnect.href = "https://fonts.googleapis.com";
+      document.head.appendChild(preconnect);
+    }
+    let link = document.getElementById(GOOGLE_FONTS_LINK_ID) as HTMLLinkElement | null;
+    const nextHref = `https://fonts.googleapis.com/css2?family=${family}&display=swap`;
+    if (!link) {
+      link = document.createElement("link");
+      link.id = GOOGLE_FONTS_LINK_ID;
+      link.rel = "stylesheet";
+      document.head.appendChild(link);
+    }
+    if (link.href !== nextHref) {
+      link.href = nextHref;
+    }
+    return () => {
+      document.getElementById(GOOGLE_FONTS_LINK_ID)?.remove();
+      document.getElementById(GOOGLE_FONTS_PRECONNECT_ID)?.remove();
+    };
+  }, [search.font]);
+
   const { data: messages } = useLiveQuery(q =>
     q
       .from({ collection: chatMessagesCollection })
-      .orderBy(({ collection }) => collection.timestamp),
+      .orderBy(({ collection }) => collection.receivedAt),
   );
 
   const visibleMessages = search.keep
@@ -284,88 +408,180 @@ function RouteComponent() {
   return (
     <div
       ref={containerRef}
-      className={`flex ${search.orientation === "horizontal" ? "flex-row justify-end items-center overflow-hidden min-w-full h-screen p-2 space-x-4" : "flex-col justify-end h-screen w-full overflow-y-auto overflow-x-hidden p-2.5 space-y-2"} text-white font-sans rounded-md`}
+      className={`flex ${search.orientation === "horizontal" ? "flex-row justify-end items-center overflow-hidden min-w-full h-screen p-2 space-x-3" : "flex-col justify-end h-screen w-full overflow-y-auto overflow-x-hidden p-2.5 space-y-2"} text-white rounded-md`}
       style={{
         fontSize: `${search.fontSize}px`,
+        fontFamily: FONT_STACKS[search.font],
         backgroundColor: search.background
           ? `rgba(0, 0, 0, ${search.bgOpacity})`
           : "transparent",
       }}>
       {visibleMessages.map(msg => (
-        <div
+        <MessageRow
           key={msg.id}
-          className={`leading-tight whitespace-pre-wrap wrap-break-word text-left animate-in fade-in ${search.orientation === "horizontal" ? "slide-in-from-right-2 flex-shrink-0" : "slide-in-from-left-2"} duration-200`}>
-          {search.timestamp && (
-            <span className="mr-1.5 text-zinc-400 text-xs align-middle">
-              {msg.timestamp.toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
-            </span>
-          )}
-          {showPlatformIndicator && (
-            <span
-              className="mr-2 inline-flex items-center align-middle data-[platform=twitch]:text-purple-500 data-[platform=kick]:text-green-500"
-              data-platform={msg.platform}>
-              {search.platformDisplay === "icon" ? (
-                <PlatformIcon platform={msg.platform} />
-              ) : (
-                `[${msg.platform}]`
-              )}
-            </span>
-          )}
-          {msg.badges && msg.badges.length > 0 && (
-            <span className="mr-1 inline-flex items-center space-x-0.5 align-middle">
-              {msg.badges.map((badge, idx) => {
-                const isTwitch = msg.platform === "twitch";
-
-                if (!isTwitch) {
-                  return (
-                    <span
-                      key={`${msg.id}-badge-${idx}`}
-                      title={badge}
-                      className="inline-flex items-center justify-center bg-black/40 p-[2px] rounded-md border border-white/10 mx-0.5 shadow-sm">
-                      <KickBadge type={badge} subBadges={kickSubBadges} />
-                    </span>
-                  );
-                }
-
-                const imageUrl = twitchBadgeMap?.get(badge);
-                const emoji = getBadgeEmoji(badge);
-
-                if (imageUrl) {
-                  return (
-                    <img
-                      key={`${msg.id}-badge-${idx}`}
-                      src={imageUrl}
-                      alt={badge}
-                      title={badge}
-                      className="inline-block h-4 w-4"
-                    />
-                  );
-                }
-
-                if (!emoji) return null;
-                return (
-                  <span
-                    key={`${msg.id}-badge-${idx}`}
-                    title={badge}
-                    className="text-sm border border-gray-400/50 rounded-sm leading-none bg-black/20">
-                    {emoji}
-                  </span>
-                );
-              })}
-            </span>
-          )}
-          <span style={{ color: msg.color || "unset", textShadow: "0 2px 0 rgba(0,0,0,1), 0 3px 1px rgba(0,0,0,0.9)" }}>{msg.user}:</span>{" "}
-          <span style={{ textShadow: "0 2px 0 rgba(0,0,0,1), 0 3px 1px rgba(0,0,0,0.9)" }}>
-            {render7tvEmotes(
-              parseEmotes(msg.message, msg.platform, msg.emotes),
-              sevenTvEmoteMap,
-            )}
-          </span>
-        </div>
+          msg={msg}
+          layout={search.layout}
+          animation={search.animation}
+          orientation={search.orientation}
+          showTimestamp={Boolean(search.timestamp)}
+          showPlatformIndicator={showPlatformIndicator}
+          platformDisplay={search.platformDisplay}
+          twitchBadgeMap={twitchBadgeMap}
+          kickSubBadges={kickSubBadges}
+          sevenTvEmoteMap={sevenTvEmoteMap}
+        />
       ))}
+    </div>
+  );
+}
+
+type MessageRowProps = {
+  msg: ChatMessagesType;
+  layout: LayoutChoice;
+  animation: AnimationChoice;
+  orientation: "vertical" | "horizontal";
+  showTimestamp: boolean;
+  showPlatformIndicator: boolean;
+  platformDisplay: "name" | "icon";
+  twitchBadgeMap: Map<string, string> | null | undefined;
+  kickSubBadges: { type: string; text: string; svg?: string }[];
+  sevenTvEmoteMap: Map<string, string>;
+};
+
+function MessageRow({
+  msg,
+  layout,
+  animation,
+  orientation,
+  showTimestamp,
+  showPlatformIndicator,
+  platformDisplay,
+  twitchBadgeMap,
+  kickSubBadges,
+  sevenTvEmoteMap,
+}: MessageRowProps) {
+  const classes = LAYOUT_CLASSES[layout];
+  const animClass = ANIMATION_CLASSES[animation](orientation);
+  const messageAnimClass = ANIMATION_MESSAGE_CLASSES[animation];
+  const compactSize = layout === "compact" ? "0.875em" : undefined;
+  const isInlineOrCompact = layout === "inline" || layout === "compact";
+  const userNameStyle: React.CSSProperties = {
+    color: msg.color || "unset",
+    textShadow: "0 2px 0 rgba(0,0,0,1), 0 3px 1px rgba(0,0,0,0.9)",
+    fontSize: compactSize,
+  };
+  const messageStyle: React.CSSProperties = {
+    textShadow: "0 2px 0 rgba(0,0,0,1), 0 3px 1px rgba(0,0,0,0.9)",
+    fontSize: compactSize,
+  };
+
+  const badgesNode = msg.badges && msg.badges.length > 0 && (
+    <span className="inline-flex items-center space-x-0.5">
+      {msg.badges.map((badge, idx) => {
+        const isTwitch = msg.platform === "twitch";
+        if (!isTwitch) {
+          return (
+            <span
+              key={`${msg.id}-badge-${idx}`}
+              title={badge}
+              className="inline-flex items-center justify-center bg-black/40 p-[2px] rounded-md border border-white/10 mx-0.5 shadow-sm">
+              <KickBadge type={badge} subBadges={kickSubBadges} />
+            </span>
+          );
+        }
+        const imageUrl = twitchBadgeMap?.get(badge);
+        const emoji = getBadgeEmoji(badge);
+        if (imageUrl) {
+          return (
+            <img
+              key={`${msg.id}-badge-${idx}`}
+              src={imageUrl}
+              alt={badge}
+              title={badge}
+              className="inline-block h-4 w-4"
+            />
+          );
+        }
+        if (!emoji) return null;
+        return (
+          <span
+            key={`${msg.id}-badge-${idx}`}
+            title={badge}
+            className="text-sm border border-gray-400/50 rounded-sm leading-none bg-black/20">
+            {emoji}
+          </span>
+        );
+      })}
+    </span>
+  );
+
+  const timestampNode = showTimestamp && (
+    <span className="text-zinc-400 text-xs">
+      {msg.timestamp.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      })}
+    </span>
+  );
+
+  const platformNode = showPlatformIndicator && (
+    <span
+      className="inline-flex items-center data-[platform=twitch]:text-purple-500 data-[platform=kick]:text-green-500"
+      data-platform={msg.platform}>
+      {platformDisplay === "icon" ? (
+        <PlatformIcon platform={msg.platform} />
+      ) : (
+        `[${msg.platform}]`
+      )}
+    </span>
+  );
+
+  const userNameNode = (
+    <span
+      className={`${classes.name}`}
+      style={userNameStyle}>
+      {msg.user}
+      {/*layout === "inline" || layout === "compact" ? ":" : ""*/}:
+    </span>
+  );
+
+  const messageNode = (
+    <span className={`${classes.message} ${messageAnimClass}`} style={messageStyle}>
+      {layout === "inline" || layout === "compact" ? " " : null}
+      {render7tvEmotes(
+        parseEmotes(msg.message, msg.platform, msg.emotes),
+        sevenTvEmoteMap,
+      )}
+    </span>
+  );
+
+  return (
+    <div
+      className={`${classes.wrapper} ${animClass} ${orientation === "horizontal" ? "flex-shrink-0" : ""}`}>
+      {isInlineOrCompact ? (
+        <>
+        <div className={classes.meta}>
+          
+          {timestampNode}
+          {platformNode}
+          {badgesNode}
+          </div>
+          <span>
+            {userNameNode}
+            {messageNode}
+          </span>
+        </>
+      ) : (
+        <>
+          <div className={classes.meta}>
+            {timestampNode}
+            {platformNode}
+            {badgesNode}
+          </div>
+          {userNameNode}
+        </>
+      )}
+      {!isInlineOrCompact && messageNode}
     </div>
   );
 }

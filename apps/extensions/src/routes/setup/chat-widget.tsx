@@ -89,6 +89,15 @@ function ChatWidgetSetup() {
   );
   const [showTimestamp, setShowTimestamp] = useState(false);
   const [keepMessages, setKeepMessages] = useState(false);
+  const [font, setFont] = useState<
+    "inter" | "roboto" | "nunito" | "mono" | "serif" | "system"
+  >("inter");
+  const [layout, setLayout] = useState<
+    "inline" | "stacked" | "card" | "compact"
+  >("inline");
+  const [animation, setAnimation] = useState<
+    "slide" | "pop" | "bounce" | "stagger" | "none"
+  >("slide");
   const [copied, setCopied] = useState(false);
 
   const deferredTwitch = useDeferredValue(twitchChannel);
@@ -111,6 +120,9 @@ function ChatWidgetSetup() {
       params.append("platformDisplay", platformDisplay);
     if (showTimestamp) params.append("timestamp", "true");
     if (keepMessages) params.append("keep", "true");
+    if (font !== "inter") params.append("font", font);
+    if (layout !== "inline") params.append("layout", layout);
+    if (animation !== "slide") params.append("animation", animation);
 
     if (!deferredTwitch && !deferredKick) return "";
     return `${window.location.origin}/widgets/chat-widget?${params.toString()}`;
@@ -125,6 +137,9 @@ function ChatWidgetSetup() {
     platformDisplay,
     showTimestamp,
     keepMessages,
+    font,
+    layout,
+    animation,
   ]);
 
   const handleCopy = async () => {
@@ -246,6 +261,88 @@ function ChatWidgetSetup() {
               </select>
             </div>
           )}
+
+          <details className="rounded-md border border-zinc-800 bg-zinc-900/40 open:bg-zinc-900/60 transition-colors">
+            <summary className="cursor-pointer select-none px-3 py-2 text-sm font-medium text-zinc-300 hover:text-white">
+              Style
+            </summary>
+            <div className="space-y-4 border-t border-zinc-800 p-3">
+              <div>
+                <label className="mb-1 block text-sm font-medium text-zinc-400">
+                  Font
+                </label>
+                <select
+                  value={font}
+                  onChange={e =>
+                    setFont(
+                      e.target.value as
+                        | "inter"
+                        | "roboto"
+                        | "nunito"
+                        | "mono"
+                        | "serif"
+                        | "system",
+                    )
+                  }
+                  className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500">
+                  <option value="inter">Inter</option>
+                  <option value="roboto">Roboto</option>
+                  <option value="nunito">Nunito</option>
+                  <option value="mono">JetBrains Mono</option>
+                  <option value="serif">Source Serif 4</option>
+                  <option value="system">System Default</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="mb-1 block text-sm font-medium text-zinc-400">
+                  Message Layout
+                </label>
+                <select
+                  value={layout}
+                  onChange={e =>
+                    setLayout(
+                      e.target.value as
+                        | "inline"
+                        | "stacked"
+                        | "card"
+                        | "compact",
+                    )
+                  }
+                  className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500">
+                  <option value="inline">Inline — Username: message</option>
+                  <option value="stacked">Stacked — username above</option>
+                  <option value="card">Card / Bubble</option>
+                  <option value="compact">Compact (Twitch-like)</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="mb-1 block text-sm font-medium text-zinc-400">
+                  New Message Animation
+                </label>
+                <select
+                  value={animation}
+                  onChange={e =>
+                    setAnimation(
+                      e.target.value as
+                        | "slide"
+                        | "pop"
+                        | "bounce"
+                        | "stagger"
+                        | "none",
+                    )
+                  }
+                  className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500">
+                  <option value="slide">Slide from right + fade</option>
+                  <option value="pop">Pop / scale-in</option>
+                  <option value="bounce">Bounce in</option>
+                  <option value="stagger">Stagger (meta first, then message)</option>
+                  <option value="none">No animation</option>
+                </select>
+              </div>
+            </div>
+          </details>
 
           <div className="flex gap-4">
             <div className="flex-1 max-w-[150px]">
