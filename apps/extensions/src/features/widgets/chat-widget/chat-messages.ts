@@ -10,7 +10,9 @@ const schema = z.object({
   color: z.string().optional(),
   badges: z.array(z.string()).optional(),
   emotes: z.string().optional(),
-  receivedAt: z.date().optional(),
+  receivedAt: z.date(),
+  userLower: z.string().optional(),
+  deletedAt: z.date().optional(),
 });
 
 export type ChatMessagesType = z.infer<typeof schema>;
