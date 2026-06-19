@@ -96,7 +96,7 @@ function ChatWidgetSetup() {
     "inline" | "stacked" | "card" | "compact"
   >("inline");
   const [animation, setAnimation] = useState<
-    "slide" | "pop" | "bounce" | "stagger" | "none"
+    "slide" | "pop" | "bounce" | "stagger" | "fade" | "none"
   >("slide");
   const [copied, setCopied] = useState(false);
 
@@ -330,6 +330,7 @@ function ChatWidgetSetup() {
                         | "pop"
                         | "bounce"
                         | "stagger"
+                        | "fade"
                         | "none",
                     )
                   }
@@ -338,6 +339,7 @@ function ChatWidgetSetup() {
                   <option value="pop">Pop / scale-in</option>
                   <option value="bounce">Bounce in</option>
                   <option value="stagger">Stagger (meta first, then message)</option>
+                  <option value="fade">Fade in</option>
                   <option value="none">No animation</option>
                 </select>
               </div>
