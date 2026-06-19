@@ -14,8 +14,10 @@ import { Route as WidgetsSubSproutWidgetRouteImport } from './routes/widgets/sub
 import { Route as WidgetsRaffleOverlayRouteImport } from './routes/widgets/raffle-overlay'
 import { Route as WidgetsChatWidgetRouteImport } from './routes/widgets/chat-widget'
 import { Route as WidgetsAlertsRouteImport } from './routes/widgets/alerts'
+import { Route as ToolsObsBridgeRouteImport } from './routes/tools/obs-bridge'
 import { Route as SetupSubGrowingPlantRouteImport } from './routes/setup/sub-growing-plant'
 import { Route as SetupRaffleRouteImport } from './routes/setup/raffle'
+import { Route as SetupObsBridgeRouteImport } from './routes/setup/obs-bridge'
 import { Route as SetupChatWidgetRouteImport } from './routes/setup/chat-widget'
 
 const IndexRoute = IndexRouteImport.update({
@@ -43,6 +45,11 @@ const WidgetsAlertsRoute = WidgetsAlertsRouteImport.update({
   path: '/widgets/alerts',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ToolsObsBridgeRoute = ToolsObsBridgeRouteImport.update({
+  id: '/tools/obs-bridge',
+  path: '/tools/obs-bridge',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SetupSubGrowingPlantRoute = SetupSubGrowingPlantRouteImport.update({
   id: '/setup/sub-growing-plant',
   path: '/setup/sub-growing-plant',
@@ -51,6 +58,11 @@ const SetupSubGrowingPlantRoute = SetupSubGrowingPlantRouteImport.update({
 const SetupRaffleRoute = SetupRaffleRouteImport.update({
   id: '/setup/raffle',
   path: '/setup/raffle',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SetupObsBridgeRoute = SetupObsBridgeRouteImport.update({
+  id: '/setup/obs-bridge',
+  path: '/setup/obs-bridge',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SetupChatWidgetRoute = SetupChatWidgetRouteImport.update({
@@ -62,8 +74,10 @@ const SetupChatWidgetRoute = SetupChatWidgetRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/setup/chat-widget': typeof SetupChatWidgetRoute
+  '/setup/obs-bridge': typeof SetupObsBridgeRoute
   '/setup/raffle': typeof SetupRaffleRoute
   '/setup/sub-growing-plant': typeof SetupSubGrowingPlantRoute
+  '/tools/obs-bridge': typeof ToolsObsBridgeRoute
   '/widgets/alerts': typeof WidgetsAlertsRoute
   '/widgets/chat-widget': typeof WidgetsChatWidgetRoute
   '/widgets/raffle-overlay': typeof WidgetsRaffleOverlayRoute
@@ -72,8 +86,10 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/setup/chat-widget': typeof SetupChatWidgetRoute
+  '/setup/obs-bridge': typeof SetupObsBridgeRoute
   '/setup/raffle': typeof SetupRaffleRoute
   '/setup/sub-growing-plant': typeof SetupSubGrowingPlantRoute
+  '/tools/obs-bridge': typeof ToolsObsBridgeRoute
   '/widgets/alerts': typeof WidgetsAlertsRoute
   '/widgets/chat-widget': typeof WidgetsChatWidgetRoute
   '/widgets/raffle-overlay': typeof WidgetsRaffleOverlayRoute
@@ -83,8 +99,10 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/setup/chat-widget': typeof SetupChatWidgetRoute
+  '/setup/obs-bridge': typeof SetupObsBridgeRoute
   '/setup/raffle': typeof SetupRaffleRoute
   '/setup/sub-growing-plant': typeof SetupSubGrowingPlantRoute
+  '/tools/obs-bridge': typeof ToolsObsBridgeRoute
   '/widgets/alerts': typeof WidgetsAlertsRoute
   '/widgets/chat-widget': typeof WidgetsChatWidgetRoute
   '/widgets/raffle-overlay': typeof WidgetsRaffleOverlayRoute
@@ -95,8 +113,10 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/setup/chat-widget'
+    | '/setup/obs-bridge'
     | '/setup/raffle'
     | '/setup/sub-growing-plant'
+    | '/tools/obs-bridge'
     | '/widgets/alerts'
     | '/widgets/chat-widget'
     | '/widgets/raffle-overlay'
@@ -105,8 +125,10 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/setup/chat-widget'
+    | '/setup/obs-bridge'
     | '/setup/raffle'
     | '/setup/sub-growing-plant'
+    | '/tools/obs-bridge'
     | '/widgets/alerts'
     | '/widgets/chat-widget'
     | '/widgets/raffle-overlay'
@@ -115,8 +137,10 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/setup/chat-widget'
+    | '/setup/obs-bridge'
     | '/setup/raffle'
     | '/setup/sub-growing-plant'
+    | '/tools/obs-bridge'
     | '/widgets/alerts'
     | '/widgets/chat-widget'
     | '/widgets/raffle-overlay'
@@ -126,8 +150,10 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SetupChatWidgetRoute: typeof SetupChatWidgetRoute
+  SetupObsBridgeRoute: typeof SetupObsBridgeRoute
   SetupRaffleRoute: typeof SetupRaffleRoute
   SetupSubGrowingPlantRoute: typeof SetupSubGrowingPlantRoute
+  ToolsObsBridgeRoute: typeof ToolsObsBridgeRoute
   WidgetsAlertsRoute: typeof WidgetsAlertsRoute
   WidgetsChatWidgetRoute: typeof WidgetsChatWidgetRoute
   WidgetsRaffleOverlayRoute: typeof WidgetsRaffleOverlayRoute
@@ -171,6 +197,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WidgetsAlertsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tools/obs-bridge': {
+      id: '/tools/obs-bridge'
+      path: '/tools/obs-bridge'
+      fullPath: '/tools/obs-bridge'
+      preLoaderRoute: typeof ToolsObsBridgeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/setup/sub-growing-plant': {
       id: '/setup/sub-growing-plant'
       path: '/setup/sub-growing-plant'
@@ -183,6 +216,13 @@ declare module '@tanstack/react-router' {
       path: '/setup/raffle'
       fullPath: '/setup/raffle'
       preLoaderRoute: typeof SetupRaffleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/setup/obs-bridge': {
+      id: '/setup/obs-bridge'
+      path: '/setup/obs-bridge'
+      fullPath: '/setup/obs-bridge'
+      preLoaderRoute: typeof SetupObsBridgeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/setup/chat-widget': {
@@ -198,8 +238,10 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SetupChatWidgetRoute: SetupChatWidgetRoute,
+  SetupObsBridgeRoute: SetupObsBridgeRoute,
   SetupRaffleRoute: SetupRaffleRoute,
   SetupSubGrowingPlantRoute: SetupSubGrowingPlantRoute,
+  ToolsObsBridgeRoute: ToolsObsBridgeRoute,
   WidgetsAlertsRoute: WidgetsAlertsRoute,
   WidgetsChatWidgetRoute: WidgetsChatWidgetRoute,
   WidgetsRaffleOverlayRoute: WidgetsRaffleOverlayRoute,

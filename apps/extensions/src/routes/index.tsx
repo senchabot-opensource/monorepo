@@ -216,6 +216,41 @@ function Index() {
               </svg>
             </span>
           </Link>
+
+          <Link
+            to="/setup/obs-bridge"
+            className="group block rounded-xl bg-zinc-900 p-6 border border-zinc-800 shadow-xl transition-all hover:border-green-500/50 hover:bg-zinc-800/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950">
+            <div className="flex items-start justify-between mb-4">
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-green-500/10 text-green-400 text-2xl">
+                🔌
+              </div>
+              <span className="inline-flex items-center rounded-full bg-amber-500/10 px-2.5 py-0.5 text-xs font-medium text-amber-400 border border-amber-500/20">
+                Tool
+              </span>
+            </div>
+            <h2 className="text-xl font-bold text-white mb-2 group-hover:text-green-400 transition-colors">
+              OBS Bridge
+            </h2>
+            <p className="text-sm text-zinc-400 leading-relaxed">
+              Control OBS Studio from Twitch or Kick chat. Switch scenes,
+              toggle recording, and manage your stream via chat commands.
+            </p>
+            <span className="mt-4 inline-flex items-center text-sm font-medium text-green-500 group-hover:underline">
+              Configure
+              <svg
+                className="ml-1 w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            </span>
+          </Link>
         </div>
 
         <div className="mt-12 text-center space-y-2">
