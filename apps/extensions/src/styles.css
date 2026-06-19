@@ -111,6 +111,19 @@
   animation: chatStaggerMessage 200ms ease-out 250ms both;
 }
 
+@keyframes chatFadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.animate-chat-fade-in {
+  animation: chatFadeIn 200ms ease-out both;
+}
+
 /* Alert animations */
 @keyframes slideInUp {
   from {

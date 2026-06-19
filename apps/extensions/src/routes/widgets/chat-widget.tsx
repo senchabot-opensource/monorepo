@@ -167,7 +167,7 @@ const searchSchema = z.object({
     .optional()
     .default("inline"),
   animation: z
-    .enum(["slide", "pop", "bounce", "stagger", "none"])
+    .enum(["slide", "pop", "bounce", "stagger", "fade", "none"])
     .optional()
     .default("slide"),
 });
@@ -233,6 +233,7 @@ const ANIMATION_CLASSES: Record<
   pop: () => "animate-chat-pop-in",
   bounce: () => "animate-chat-bounce-in",
   stagger: () => "animate-chat-stagger-meta",
+  fade: () => "animate-chat-fade-in",
   none: () => "",
 };
 
@@ -241,6 +242,7 @@ const ANIMATION_MESSAGE_CLASSES: Record<AnimationChoice, string> = {
   pop: "",
   bounce: "",
   stagger: "animate-chat-stagger-message",
+  fade: "",
   none: "",
 };
 
