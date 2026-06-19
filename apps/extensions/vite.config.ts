@@ -22,6 +22,7 @@ const config = defineConfig({
         { path: '/setup/sub-growing-plant' },
         { path: '/setup/chat-widget' },
         { path: '/setup/raffle' },
+        { path: '/setup/obs-bridge' },
       ],
       sitemap: {
         enabled: true,
