@@ -124,7 +124,10 @@ function ChatWidgetSetup() {
     if (layout !== "inline") params.append("layout", layout);
     if (animation !== "slide") params.append("animation", animation);
 
-    if (!deferredTwitch && !deferredKick) return "";
+    if (!deferredTwitch && !deferredKick) {
+      params.append("mock", "true");
+      return `${window.location.origin}/widgets/chat-widget?${params.toString()}`;
+    }
     return `${window.location.origin}/widgets/chat-widget?${params.toString()}`;
   }, [
     deferredTwitch,
@@ -458,7 +461,7 @@ function ChatWidgetSetup() {
           Widget Preview
         </h2>
         <div className="flex-1 w-full bg-zinc-950 rounded-lg overflow-hidden border border-zinc-800 relative shadow-inner flex items-center justify-center relative bg-opacity-20">
-          {isFormValid ? (
+          {widgetUrl ? (
             <iframe
               src={widgetUrl}
               className="absolute inset-0 w-full h-full border-0"

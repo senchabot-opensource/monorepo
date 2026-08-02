@@ -6,15 +6,23 @@ import {
   BadgeCheckIcon,
   BotIcon,
   CrownIcon,
-  HammerIcon,
   ShieldIcon,
-  StarIcon,
   SwordIcon,
   Tv2Icon,
   TwitchIcon,
   WrenchIcon,
   YoutubeIcon,
 } from 'lucide-react'
+
+import {
+  KickBroadcasterBadge,
+  KickModeratorBadge,
+  KickSidekickBadge,
+  KickSubscriberBadge,
+  KickVerifiedBadge,
+  KickVipBadge,
+  TWITCH_BADGES,
+} from '@/components/badges/kick-badges'
 
 type BadgeKey =
   | 'tw-broadcaster'
@@ -29,6 +37,7 @@ type BadgeKey =
   | 'kick-host'
   | 'kick-mod'
   | 'kick-vip'
+  | 'kick-sub'
   | 'kick-bot'
   | 'yt-owner'
   | 'yt-mod'
@@ -59,39 +68,41 @@ const badgeConfig: Record<
   BadgeKey,
   {
     label: string
-    icon: React.ComponentType<React.SVGProps<SVGSVGElement>>
+    imageUrl?: string
+    svgIcon?: React.ComponentType<{ className?: string }>
+    icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>
     className: string
     short: string
   }
 > = {
   'tw-broadcaster': {
     label: 'Broadcaster',
-    icon: CrownIcon,
-    className: 'border-[#ff4f8b]/40 bg-[#ff4f8b]/10 text-[#ff4f8b]',
+    imageUrl: TWITCH_BADGES.broadcaster,
+    className: '',
     short: 'BC',
   },
   'tw-mod': {
     label: 'Moderator',
-    icon: SwordIcon,
-    className: 'border-[#22c55e]/40 bg-[#22c55e]/10 text-[#22c55e]',
+    imageUrl: TWITCH_BADGES.moderator,
+    className: '',
     short: 'MOD',
   },
   'tw-vip': {
     label: 'VIP',
-    icon: StarIcon,
-    className: 'border-[#a855f7]/40 bg-[#a855f7]/10 text-[#a855f7]',
+    imageUrl: TWITCH_BADGES.vip,
+    className: '',
     short: 'VIP',
   },
   'tw-sub': {
     label: 'Subscriber',
-    icon: BadgeCheckIcon,
-    className: 'border-[#3b82f6]/40 bg-[#3b82f6]/10 text-[#3b82f6]',
+    imageUrl: TWITCH_BADGES.subscriber,
+    className: '',
     short: 'SUB',
   },
   'tw-bot': {
     label: 'Bot',
-    icon: BotIcon,
-    className: 'border-[#20ab8c]/40 bg-[#20ab8c]/10 text-[#20ab8c]',
+    imageUrl: TWITCH_BADGES.bot,
+    className: '',
     short: 'BOT',
   },
   'dc-owner': {
@@ -120,31 +131,37 @@ const badgeConfig: Record<
   },
   'kick-host': {
     label: 'Host',
-    icon: CrownIcon,
-    className: 'border-[#53fc18]/40 bg-[#53fc18]/10 text-[#3ba812]',
+    svgIcon: KickBroadcasterBadge,
+    className: '',
     short: 'HOST',
   },
   'kick-mod': {
     label: 'Moderator',
-    icon: SwordIcon,
-    className: 'border-[#22c55e]/40 bg-[#22c55e]/10 text-[#22c55e]',
+    svgIcon: KickModeratorBadge,
+    className: '',
     short: 'MOD',
   },
   'kick-vip': {
     label: 'VIP',
-    icon: StarIcon,
-    className: 'border-[#84cc16]/40 bg-[#84cc16]/10 text-[#65a30d]',
+    svgIcon: KickVipBadge,
+    className: '',
     short: 'VIP',
+  },
+  'kick-sub': {
+    label: 'Subscriber',
+    svgIcon: KickSubscriberBadge,
+    className: '',
+    short: 'SUB',
   },
   'kick-bot': {
     label: 'Bot',
-    icon: BotIcon,
-    className: 'border-[#20ab8c]/40 bg-[#20ab8c]/10 text-[#20ab8c]',
+    svgIcon: KickSidekickBadge,
+    className: '',
     short: 'BOT',
   },
   'yt-owner': {
     label: 'Channel Owner',
-    icon: CrownIcon,
+    icon: BotIcon,
     className: 'border-[#ef4444]/40 bg-[#ef4444]/10 text-[#ef4444]',
     short: 'OWNER',
   },
@@ -156,7 +173,7 @@ const badgeConfig: Record<
   },
   'yt-member': {
     label: 'Member',
-    icon: StarIcon,
+    icon: WrenchIcon,
     className: 'border-[#a855f7]/40 bg-[#a855f7]/10 text-[#a855f7]',
     short: 'MEM',
   },
@@ -357,6 +374,17 @@ const platforms: Platform[] = [
         isBot: true,
         text: 'Join the community: discord.gg/streamer1',
       },
+      {
+        name: 'user4',
+        badges: ['kick-sub'],
+        text: '!uptime',
+      },
+      {
+        name: 'Senchabot',
+        badges: ['kick-bot'],
+        isBot: true,
+        text: 'Stream has been live for 2h 13m - Ranked Grind',
+      },
     ],
   },
   {
@@ -445,8 +473,25 @@ function getLineTimestamp(platformId: PlatformId, lineIndex: number) {
 
 function RoleBadge({ badge }: { badge: BadgeKey }) {
   const config = badgeConfig[badge]
-  const Icon = config.icon
 
+  if (config.imageUrl) {
+    return (
+      <img
+        src={config.imageUrl}
+        alt={config.label}
+        title={config.label}
+        className="size-4 shrink-0 rounded-[2px]"
+      />
+    )
+  }
+
+  if (config.svgIcon) {
+    const SvgIcon = config.svgIcon
+    return <SvgIcon className="size-4 shrink-0" />
+  }
+
+  const Icon = config.icon
+  if (!Icon) return null
   return (
     <span
       className={`inline-flex items-center justify-center rounded-sm border p-0.5 ${config.className}`}
@@ -569,17 +614,11 @@ export function HeroChatDemo() {
                     </>
                   ) : isKickBotLine ? (
                     <>
-                      <span
-                        className="inline-flex size-4 items-center justify-center rounded-sm bg-[#35b8ff]"
-                        title="Kick tool badge"
-                      >
-                        <HammerIcon className="size-2.5 text-[#07121a]" />
+                      <span title="Kick tool badge">
+                        <KickSidekickBadge className="size-4 shrink-0" />
                       </span>
-                      <span
-                        className="inline-flex size-4 items-center justify-center rounded-sm bg-[#53fc18]"
-                        title="Verified bot"
-                      >
-                        <BadgeCheckIcon className="size-2.5 text-[#0a1707]" />
+                      <span title="Verified bot">
+                        <KickVerifiedBadge className="size-4 shrink-0" />
                       </span>
                       <span className="shrink-0 text-sm font-semibold text-[#53fc18]">
                         {line.name}:
