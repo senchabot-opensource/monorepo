@@ -1,15 +1,14 @@
-import { chatMessagesCollection } from "#/features/widgets/chat-widget/chat-messages";
-import type { ChatMessagesType } from "#/features/widgets/chat-widget/chat-messages";
-
-import { KickBadge } from "#/features/widgets/chat-widget/kick-badges";
-import { useTwitchBadges } from "#/features/widgets/chat-widget/use-badges";
-import { use7tvEmotes } from "#/features/widgets/chat-widget/use-7tv-emotes";
-import { useUnifiedChat } from "#/features/widgets/chat-widget/use-unified-chat";
-import { getKickChannelInfo } from "#/lib/kick";
-import { useLiveQuery } from "@tanstack/react-db";
-import { createFileRoute } from "@tanstack/react-router";
-import React from "react";
-import { z } from "zod";
+import { useLiveQuery } from '@tanstack/react-db';
+import { createFileRoute } from '@tanstack/react-router';
+import React from 'react';
+import { z } from 'zod';
+import type { ChatMessagesType } from '#/features/widgets/chat-widget/chat-messages';
+import { chatMessagesCollection } from '#/features/widgets/chat-widget/chat-messages';
+import { KickBadge } from '#/features/widgets/chat-widget/kick-badges';
+import { use7tvEmotes } from '#/features/widgets/chat-widget/use-7tv-emotes';
+import { useTwitchBadges } from '#/features/widgets/chat-widget/use-badges';
+import { useUnifiedChat } from '#/features/widgets/chat-widget/use-unified-chat';
+import { getKickChannelInfo } from '#/lib/kick';
 
 const TTL_MS = 30_000;
 
@@ -18,11 +17,11 @@ type TwitchEmoteRange = { id: string; start: number; end: number };
 const parseTwitchEmoteRanges = (emotesTag?: string): TwitchEmoteRange[] => {
   if (!emotesTag) return [];
   const ranges: TwitchEmoteRange[] = [];
-  for (const part of emotesTag.split("/")) {
-    const [id, positionsStr] = part.split(":");
+  for (const part of emotesTag.split('/')) {
+    const [id, positionsStr] = part.split(':');
     if (!id || !positionsStr) continue;
-    for (const pos of positionsStr.split(",")) {
-      const [startStr, endStr] = pos.split("-");
+    for (const pos of positionsStr.split(',')) {
+      const [startStr, endStr] = pos.split('-');
       const start = parseInt(startStr, 10);
       const end = parseInt(endStr, 10);
       if (!Number.isNaN(start) && !Number.isNaN(end)) {
@@ -43,7 +42,7 @@ const renderTwitchEmotes = (text: string, emotesTag?: string) => {
 
   for (const range of ranges) {
     if (range.start > lastIndex) {
-      elements.push(chars.slice(lastIndex, range.start).join(""));
+      elements.push(chars.slice(lastIndex, range.start).join(''));
     }
     elements.push(
       <img
@@ -57,14 +56,14 @@ const renderTwitchEmotes = (text: string, emotesTag?: string) => {
   }
 
   if (lastIndex < chars.length) {
-    elements.push(chars.slice(lastIndex).join(""));
+    elements.push(chars.slice(lastIndex).join(''));
   }
 
   return elements;
 };
 
-export const parseEmotes = (text: string, platform: "twitch" | "kick", emotes?: string) => {
-  if (platform === "kick") {
+export const parseEmotes = (text: string, platform: 'twitch' | 'kick', emotes?: string) => {
+  if (platform === 'kick') {
     const kickEmoteRegex = /\[emote:(\d+):([\w\d\-_]+)\]/g;
 
     return text.split(kickEmoteRegex).map((part, index) => {
@@ -84,7 +83,7 @@ export const parseEmotes = (text: string, platform: "twitch" | "kick", emotes?: 
     });
   }
 
-  if (platform === "twitch") {
+  if (platform === 'twitch') {
     return renderTwitchEmotes(text, emotes);
   }
 
@@ -102,19 +101,17 @@ const render7tvEmotes = (
   const names = Array.from(emoteMap.keys());
   names.sort((a, b) => b.length - a.length);
 
-  const pattern = names
-    .map((name) => name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
-    .join("|");
+  const pattern = names.map((name) => name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
   if (!pattern) return Array.isArray(nodes) ? nodes : [nodes];
 
-  const regex = new RegExp(`\\b(${pattern})\\b`, "g");
+  const regex = new RegExp(`\\b(${pattern})\\b`, 'g');
 
   const result: React.ReactNode[] = [];
   const input = Array.isArray(nodes) ? nodes : [nodes];
   let keyIndex = 0;
 
   for (const node of input) {
-    if (typeof node !== "string") {
+    if (typeof node !== 'string') {
       result.push(node);
       continue;
     }
@@ -122,7 +119,7 @@ const render7tvEmotes = (
     const parts = node.split(regex);
 
     for (const part of parts) {
-      if (part === "") continue;
+      if (part === '') continue;
       const emoteId = emoteMap.get(part);
       if (emoteId) {
         result.push(
@@ -148,33 +145,25 @@ const searchSchema = z.object({
   fontSize: z.coerce.number().optional().default(18),
   background: z.coerce.boolean().optional(),
   bgOpacity: z.coerce.number().min(0).max(1).optional().default(0.5),
-  orientation: z
-    .enum(["vertical", "horizontal"])
-    .optional()
-    .default("vertical"),
-  platformDisplay: z
-    .enum(["name", "icon"])
-    .optional()
-    .default("icon"),
+  orientation: z.enum(['vertical', 'horizontal']).optional().default('vertical'),
+  platformDisplay: z.enum(['name', 'icon']).optional().default('icon'),
   timestamp: z.coerce.boolean().optional(),
   keep: z.coerce.boolean().optional(),
   font: z
-    .enum(["inter", "roboto", "nunito", "mono", "serif", "system"])
+    .enum(['inter', 'roboto', 'nunito', 'mono', 'serif', 'system'])
     .optional()
-    .default("inter"),
-  layout: z
-    .enum(["inline", "stacked", "card", "compact"])
-    .optional()
-    .default("inline"),
+    .default('inter'),
+  layout: z.enum(['inline', 'stacked', 'card', 'compact']).optional().default('inline'),
+  mock: z.coerce.boolean().optional(),
   animation: z
-    .enum(["slide", "pop", "bounce", "stagger", "fade", "none"])
+    .enum(['slide', 'pop', 'bounce', 'stagger', 'fade', 'none'])
     .optional()
-    .default("slide"),
+    .default('slide'),
 });
 
-type FontChoice = z.infer<typeof searchSchema>["font"];
-type LayoutChoice = z.infer<typeof searchSchema>["layout"];
-type AnimationChoice = z.infer<typeof searchSchema>["animation"];
+type FontChoice = z.infer<typeof searchSchema>['font'];
+type LayoutChoice = z.infer<typeof searchSchema>['layout'];
+type AnimationChoice = z.infer<typeof searchSchema>['animation'];
 
 const FONT_STACKS: Record<FontChoice, string> = {
   inter: '"Inter", ui-sans-serif, system-ui, sans-serif',
@@ -182,16 +171,15 @@ const FONT_STACKS: Record<FontChoice, string> = {
   nunito: '"Nunito", ui-sans-serif, system-ui, sans-serif',
   mono: '"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace',
   serif: '"Source Serif 4", ui-serif, Georgia, serif',
-  system:
-    'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
+  system: 'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
 };
 
 const FONT_GOOGLE_FAMILIES: Partial<Record<FontChoice, string>> = {
-  inter: "Inter:wght@400;500;600;700",
-  roboto: "Roboto:wght@400;500;700",
-  nunito: "Nunito:wght@400;600;800",
-  mono: "JetBrains+Mono:wght@400;500",
-  serif: "Source+Serif+4:wght@400;600",
+  inter: 'Inter:wght@400;500;600;700',
+  roboto: 'Roboto:wght@400;500;700',
+  nunito: 'Nunito:wght@400;600;800',
+  mono: 'JetBrains+Mono:wght@400;500',
+  serif: 'Source+Serif+4:wght@400;600',
 };
 
 const LAYOUT_CLASSES: Record<
@@ -199,71 +187,78 @@ const LAYOUT_CLASSES: Record<
   { wrapper: string; meta: string; name: string; message: string }
 > = {
   inline: {
-    wrapper: "leading-tight whitespace-pre-wrap wrap-break-word text-left",
-    meta: "inline-flex items-center gap-1.5 align-middle",
-    name: "inline",
-    message: "inline",
+    wrapper: 'leading-tight whitespace-pre-wrap wrap-break-word text-left',
+    meta: 'inline-flex items-center gap-1.5 align-middle',
+    name: 'inline',
+    message: 'inline',
   },
   stacked: {
-    wrapper: "grid grid-cols-[auto_minmax(0,1fr)] items-baseline gap-x-1.5 gap-y-0.5 text-left",
-    meta: "flex items-center gap-1.5 whitespace-nowrap",
-    name: "inline leading-none",
-    message: "block leading-snug col-start-2 wrap-break-word",
+    wrapper: 'grid grid-cols-[auto_minmax(0,1fr)] items-baseline gap-x-1.5 gap-y-0.5 text-left',
+    meta: 'flex items-center justify-end gap-1.5 whitespace-nowrap min-w-[96px]',
+    name: 'inline leading-none',
+    message: 'block leading-snug col-start-2 wrap-break-word',
   },
   card: {
     wrapper:
-      "rounded-lg bg-black/40 border border-white/10 px-3 py-2 text-left shadow-sm grid grid-cols-[auto_minmax(0,1fr)] items-baseline gap-x-1.5 gap-y-0.5",
-    meta: "flex items-center gap-1.5 whitespace-nowrap",
-    name: "inline leading-none text-sm",
-    message: "block leading-snug col-start-2 wrap-break-word",
+      'rounded-lg bg-black/40 border border-white/10 px-3 py-2 text-left shadow-sm grid grid-cols-[auto_minmax(0,1fr)] items-baseline gap-x-1.5 gap-y-0.5',
+    meta: 'flex items-center justify-end gap-1.5 whitespace-nowrap min-w-[96px]',
+    name: 'inline leading-none text-sm',
+    message: 'block leading-snug col-start-2 wrap-break-word',
   },
   compact: {
-    wrapper: "leading-none whitespace-pre-wrap wrap-break-word text-left",
-    meta: "inline-flex items-center gap-1.5 align-middle",
-    name: "inline",
-    message: "inline",
+    wrapper: 'leading-none whitespace-pre-wrap wrap-break-word text-left',
+    meta: 'inline-flex items-center gap-1.5 align-middle',
+    name: 'inline',
+    message: 'inline',
   },
 };
 
 const ANIMATION_CLASSES: Record<
   AnimationChoice,
-  (orientation: "vertical" | "horizontal") => string
+  (orientation: 'vertical' | 'horizontal') => string
 > = {
-  slide: () => "animate-chat-slide-in",
-  pop: () => "animate-chat-pop-in",
-  bounce: () => "animate-chat-bounce-in",
-  stagger: () => "animate-chat-stagger-meta",
-  fade: () => "animate-chat-fade-in",
-  none: () => "",
+  slide: () => 'animate-chat-slide-in',
+  pop: () => 'animate-chat-pop-in',
+  bounce: () => 'animate-chat-bounce-in',
+  stagger: () => 'animate-chat-stagger-meta',
+  fade: () => 'animate-chat-fade-in',
+  none: () => '',
 };
 
 const ANIMATION_MESSAGE_CLASSES: Record<AnimationChoice, string> = {
-  slide: "",
-  pop: "",
-  bounce: "",
-  stagger: "animate-chat-stagger-message",
-  fade: "",
-  none: "",
+  slide: '',
+  pop: '',
+  bounce: '',
+  stagger: 'animate-chat-stagger-message',
+  fade: '',
+  none: '',
 };
 
-const GOOGLE_FONTS_LINK_ID = "chat-widget-google-fonts";
-const GOOGLE_FONTS_PRECONNECT_ID = "chat-widget-google-fonts-preconnect";
+const GOOGLE_FONTS_LINK_ID = 'chat-widget-google-fonts';
+const GOOGLE_FONTS_PRECONNECT_ID = 'chat-widget-google-fonts-preconnect';
 
-export const getBadgeEmoji = (badgeId: string) => {
-  const norm = badgeId.toLowerCase().split("/")[0];
-  if (norm === "broadcaster") return "🎥";
-  if (norm === "moderator") return "🛡️";
-  if (norm === "subscriber") return "⭐";
-  if (norm === "vip") return "💎";
-  if (norm === "premium") return "👑";
-  if (norm === "founder") return "🥇";
-  if (norm === "staff" || norm === "admin") return "🛠️";
-  return null;
+const FALLBACK_TWITCH_BADGES: Record<string, string> = {
+  broadcaster: 'https://static-cdn.jtvnw.net/badges/v1/5527c58c-fb7d-422d-b71b-f309dcb85cc1/1',
+  moderator: 'https://static-cdn.jtvnw.net/badges/v1/3267646d-33f0-4b17-b3df-f923a41db1d0/1',
+  vip: 'https://static-cdn.jtvnw.net/badges/v1/b817aba4-fad8-49e2-b88a-7cc744dfa6ec/1',
+  subscriber: 'https://static-cdn.jtvnw.net/badges/v1/5d9f2208-5dd8-11e7-8513-2ff4adfae661/1',
+  bot: 'https://static-cdn.jtvnw.net/badges/v1/3ffa9565-c35b-4cad-800b-041e60659cf2/1',
+  staff: 'https://static-cdn.jtvnw.net/badges/v1/d97c37bd-a6f5-4c38-8f57-4e4bef88af34/1',
+  admin: 'https://static-cdn.jtvnw.net/badges/v1/9ef7e029-4cdf-4d4d-a0d5-e2b3fb2583fe/1',
+  founder: 'https://static-cdn.jtvnw.net/badges/v1/511b78a9-ab37-472f-9569-457753bbe7d3/1',
+  'sub-gifter': 'https://static-cdn.jtvnw.net/badges/v1/a5ef6c17-2e5b-4d8f-9b80-2779fd722414/1',
+  bits: 'https://static-cdn.jtvnw.net/badges/v1/73b5c3fb-24f9-4a82-a852-2f475b59411c/1',
+  premium: 'https://static-cdn.jtvnw.net/badges/v1/bbbe0db0-a598-423e-86d0-f9fb98ca1933/1',
+  partner: 'https://static-cdn.jtvnw.net/badges/v1/d12a2e27-16f6-41d0-ab77-b780518f00a3/1',
+  turbo: 'https://static-cdn.jtvnw.net/badges/v1/bd444ec6-8f34-4bf9-91f4-af1e3428d80f/1',
+  global_mod: 'https://static-cdn.jtvnw.net/badges/v1/9384c43e-4ce7-4e94-b2a1-b93656896eba/1',
+  artist: 'https://static-cdn.jtvnw.net/badges/v1/4300a897-03dc-4e83-8c0e-c332fee7057f/1',
+  ambassador: 'https://static-cdn.jtvnw.net/badges/v1/2cbc339f-34f4-488a-ae51-efdf74f4e323/1',
 };
 
-export const Route = createFileRoute("/widgets/chat-widget")({
+export const Route = createFileRoute('/widgets/chat-widget')({
   ssr: false,
-  validateSearch: search => searchSchema.parse(search),
+  validateSearch: (search) => searchSchema.parse(search),
   loaderDeps: ({ search }) => ({
     kick: search.kick,
   }),
@@ -285,9 +280,10 @@ function TwitchIcon({ className, ...props }: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      className={`inline-block h-4 w-4 ${className ?? ""}`}
+      className={`inline-block h-4 w-4 ${className ?? ''}`}
       viewBox="0 0 24 24"
-      {...props}>
+      {...props}
+    >
       <path
         fill="currentColor"
         d="M4.265 3L3 6.236v13.223h4.502V21l2.531.85l2.392-2.391h3.658l4.923-4.924V3zm15.052 10.691l-2.813 2.814h-4.502l-2.391 2.391v-2.391H5.813V4.688h13.504zm-2.812-5.767v4.923h-1.688V7.924zm-4.502 0v4.923h-1.688V7.924z"
@@ -302,16 +298,17 @@ function KickIcon({ className, ...props }: React.SVGProps<SVGSVGElement>) {
       role="img"
       viewBox="0 0 24 24"
       fill="currentColor"
-      className={`inline-block h-4 w-4 ${className ?? ""}`}
-      {...props}>
+      className={`inline-block h-4 w-4 ${className ?? ''}`}
+      {...props}
+    >
       <title>Kick</title>
       <path d="M1.333 0h8v5.333H12V2.667h2.667V0h8v8H20v2.667h-2.667v2.666H20V16h2.667v8h-8v-2.667H12v-2.666H9.333V24h-8Z" />
     </svg>
   );
 }
 
-function PlatformIcon({ platform }: { platform: "twitch" | "kick" }) {
-  if (platform === "twitch") {
+function PlatformIcon({ platform }: { platform: 'twitch' | 'kick' }) {
+  if (platform === 'twitch') {
     return <TwitchIcon />;
   }
 
@@ -329,33 +326,115 @@ function RouteComponent() {
 
   useUnifiedChat(search.twitch, kick);
 
+  const isMock = search.mock ?? (!search.twitch && !kick);
+
+  React.useEffect(() => {
+    if (!isMock) return;
+
+    const mockUsers: {
+      user: string;
+      color: string;
+      platform: 'twitch' | 'kick';
+      badges?: string[];
+    }[] = [
+        { user: 'Senchabot', color: '#00ff00', platform: 'twitch', badges: ['broadcaster'] },
+        { user: 'Streamlabs', color: '#ff69b4', platform: 'twitch', badges: ['moderator'] },
+        { user: 'NightBot', color: '#8a2be2', platform: 'kick' },
+        { user: 'AysArt', color: '#ff4500', platform: 'kick', badges: ['broadcaster'] },
+        {
+          user: 'wykonos',
+          color: '#1e90ff',
+          platform: 'twitch',
+          badges: ['moderator', 'subscriber'],
+        },
+        { user: 'Moobot', color: '#ff0000', platform: 'twitch' },
+        {
+          user: 'NotDepresseDeveloper',
+          color: '#ff69b4',
+          platform: 'twitch',
+          badges: ['broadcaster'],
+        },
+        {
+          user: 'usirin',
+          color: '#d4af37',
+          platform: 'twitch',
+          badges: ['broadcaster', 'subscriber'],
+        },
+        {
+          user: 'CoreFunctionsInitiated',
+          color: '#ff1493',
+          platform: 'kick',
+          badges: ['subscriber'],
+        },
+        {
+          user: 'eckoln',
+          color: '#00bfff',
+          platform: 'twitch',
+          badges: ['moderator', 'vip', 'subscriber'],
+        },
+      ];
+
+    const sampleMessages = [
+      'Hey everyone! 🔥',
+      'lol that was insane',
+      'Hi from the chat widget! This is a sample message to show how it looks.',
+      'Hi',
+      'first time watching, love the stream!',
+      'can someone explain what just happened?',
+      'KEKW',
+      '!uptime',
+      'this song is fire 🎵',
+      'hello from chat!',
+    ];
+
+    const now = Date.now();
+    for (let i = 0; i < mockUsers.length; i++) {
+      const u = mockUsers[i];
+      chatMessagesCollection.insert({
+        id: `mock-${i}`,
+        user: u.user,
+        message: sampleMessages[i % sampleMessages.length],
+        platform: u.platform,
+        timestamp: new Date(now - (mockUsers.length - i) * 3000),
+        color: u.color,
+        badges: u.badges,
+        receivedAt: new Date(now - (mockUsers.length - i) * 3000),
+        userLower: u.user.toLowerCase(),
+      });
+    }
+
+    return () => {
+      for (let i = 0; i < mockUsers.length; i++) {
+        chatMessagesCollection.delete(`mock-${i}`);
+      }
+    };
+  }, [isMock]);
+
   const [now, setNow] = React.useState(() => Date.now());
   const containerRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
-    if (typeof document === "undefined") return;
+    if (typeof document === 'undefined') return;
     const family = FONT_GOOGLE_FAMILIES[search.font];
     if (!family) {
       document.getElementById(GOOGLE_FONTS_LINK_ID)?.remove();
       document.getElementById(GOOGLE_FONTS_PRECONNECT_ID)?.remove();
       return;
     }
-    let preconnect = document.getElementById(
-      GOOGLE_FONTS_PRECONNECT_ID,
-    ) as HTMLLinkElement | null;
+    let preconnect = document.getElementById(GOOGLE_FONTS_PRECONNECT_ID) as HTMLLinkElement | null;
     if (!preconnect) {
-      preconnect = document.createElement("link");
+      preconnect = document.createElement('link');
       preconnect.id = GOOGLE_FONTS_PRECONNECT_ID;
-      preconnect.rel = "preconnect";
-      preconnect.href = "https://fonts.googleapis.com";
+      preconnect.rel = 'preconnect';
+      preconnect.href = 'https://fonts.googleapis.com';
       document.head.appendChild(preconnect);
     }
     let link = document.getElementById(GOOGLE_FONTS_LINK_ID) as HTMLLinkElement | null;
     const nextHref = `https://fonts.googleapis.com/css2?family=${family}&display=swap`;
     if (!link) {
-      link = document.createElement("link");
+      link = document.createElement('link');
       link.id = GOOGLE_FONTS_LINK_ID;
-      link.rel = "stylesheet";
+      link.rel = 'stylesheet';
       document.head.appendChild(link);
     }
     if (link.href !== nextHref) {
@@ -367,7 +446,7 @@ function RouteComponent() {
     };
   }, [search.font]);
 
-  const { data: messages } = useLiveQuery(q =>
+  const { data: messages } = useLiveQuery((q) =>
     q
       .from({ collection: chatMessagesCollection })
       .orderBy(({ collection }) => collection.receivedAt),
@@ -375,10 +454,10 @@ function RouteComponent() {
 
   const visibleMessages = search.keep
     ? messages
-    : messages.filter(msg => {
-        const receivedAtMs = msg.receivedAt?.getTime() ?? msg.timestamp.getTime();
-        return now - receivedAtMs < TTL_MS;
-      });
+    : messages.filter((msg) => {
+      const receivedAtMs = msg.receivedAt?.getTime() ?? msg.timestamp.getTime();
+      return now - receivedAtMs < TTL_MS;
+    });
 
   const hasVisibleMessages = visibleMessages.length > 0;
 
@@ -400,7 +479,7 @@ function RouteComponent() {
   React.useEffect(() => {
     if (!containerRef.current) return;
 
-    if (search.orientation === "horizontal") {
+    if (search.orientation === 'horizontal') {
       containerRef.current.scrollLeft = containerRef.current.scrollWidth;
     } else {
       containerRef.current.scrollTop = containerRef.current.scrollHeight;
@@ -410,15 +489,14 @@ function RouteComponent() {
   return (
     <div
       ref={containerRef}
-      className={`flex ${search.orientation === "horizontal" ? "flex-row justify-end items-center overflow-hidden min-w-full h-screen p-2 space-x-3" : "flex-col justify-end h-screen w-full overflow-y-auto overflow-x-hidden p-2.5 space-y-2"} text-white rounded-md`}
+      className={`flex ${search.orientation === 'horizontal' ? 'flex-row justify-end items-center overflow-hidden min-w-full h-screen p-2 space-x-3' : 'flex-col justify-end h-screen w-full overflow-y-auto overflow-x-hidden p-2.5 space-y-2'} text-white rounded-md`}
       style={{
         fontSize: `${search.fontSize}px`,
         fontFamily: FONT_STACKS[search.font],
-        backgroundColor: search.background
-          ? `rgba(0, 0, 0, ${search.bgOpacity})`
-          : "transparent",
-      }}>
-      {visibleMessages.map(msg => (
+        backgroundColor: search.background ? `rgba(0, 0, 0, ${search.bgOpacity})` : 'transparent',
+      }}
+    >
+      {visibleMessages.map((msg) => (
         <MessageRow
           key={msg.id}
           msg={msg}
@@ -441,12 +519,15 @@ type MessageRowProps = {
   msg: ChatMessagesType;
   layout: LayoutChoice;
   animation: AnimationChoice;
-  orientation: "vertical" | "horizontal";
+  orientation: 'vertical' | 'horizontal';
   showTimestamp: boolean;
   showPlatformIndicator: boolean;
-  platformDisplay: "name" | "icon";
+  platformDisplay: 'name' | 'icon';
   twitchBadgeMap: Map<string, string> | null | undefined;
-  kickSubBadges: { type: string; text: string; svg?: string }[];
+  kickSubBadges: {
+    months?: number;
+    badge_image?: { src?: string };
+  }[];
   sevenTvEmoteMap: Map<string, string>;
 };
 
@@ -465,53 +546,41 @@ function MessageRow({
   const classes = LAYOUT_CLASSES[layout];
   const animClass = ANIMATION_CLASSES[animation](orientation);
   const messageAnimClass = ANIMATION_MESSAGE_CLASSES[animation];
-  const compactSize = layout === "compact" ? "0.875em" : undefined;
-  const isInlineOrCompact = layout === "inline" || layout === "compact";
+  const compactSize = layout === 'compact' ? '0.875em' : undefined;
+  const isInlineOrCompact = layout === 'inline' || layout === 'compact';
   const userNameStyle: React.CSSProperties = {
-    color: msg.color || "unset",
-    textShadow: "0 2px 0 rgba(0,0,0,1), 0 3px 1px rgba(0,0,0,0.9)",
+    color: msg.color || 'unset',
+    textShadow: '0 2px 0 rgba(0,0,0,1), 0 3px 1px rgba(0,0,0,0.9)',
     fontSize: compactSize,
   };
   const messageStyle: React.CSSProperties = {
-    textShadow: "0 2px 0 rgba(0,0,0,1), 0 3px 1px rgba(0,0,0,0.9)",
+    textShadow: '0 2px 0 rgba(0,0,0,1), 0 3px 1px rgba(0,0,0,0.9)',
     fontSize: compactSize,
   };
 
   const badgesNode = msg.badges && msg.badges.length > 0 && (
     <span className="inline-flex items-center space-x-0.5">
       {msg.badges.map((badge, idx) => {
-        const isTwitch = msg.platform === "twitch";
+        const isTwitch = msg.platform === 'twitch';
         if (!isTwitch) {
           return (
-            <span
-              key={`${msg.id}-badge-${idx}`}
-              title={badge}
-              className="inline-flex items-center justify-center bg-black/40 p-[2px] rounded-md border border-white/10 mx-0.5 shadow-sm">
-              <KickBadge type={badge} subBadges={kickSubBadges} />
+            <span key={`${msg.id}-badge-${idx}`} title={badge} className="inline-flex items-center pr-1">
+              <KickBadge type={badge} subBadges={kickSubBadges} className="inline-block h-4 w-4" />
             </span>
           );
         }
-        const imageUrl = twitchBadgeMap?.get(badge);
-        const emoji = getBadgeEmoji(badge);
-        if (imageUrl) {
-          return (
+        const imageUrl =
+          twitchBadgeMap?.get(badge) ?? FALLBACK_TWITCH_BADGES[badge.toLowerCase().split('/')[0]];
+        if (!imageUrl) return null;
+        return (
+          <span className="inline-flex items-center pr-1" key={`${msg.id}-badge-${idx}`} title={badge}>
             <img
               key={`${msg.id}-badge-${idx}`}
               src={imageUrl}
               alt={badge}
               title={badge}
               className="inline-block h-4 w-4"
-            />
-          );
-        }
-        if (!emoji) return null;
-        return (
-          <span
-            key={`${msg.id}-badge-${idx}`}
-            title={badge}
-            className="text-sm border border-gray-400/50 rounded-sm leading-none bg-black/20">
-            {emoji}
-          </span>
+            /></span>
         );
       })}
     </span>
@@ -520,8 +589,8 @@ function MessageRow({
   const timestampNode = showTimestamp && (
     <span className="text-zinc-400 text-xs">
       {msg.timestamp.toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
+        hour: '2-digit',
+        minute: '2-digit',
       })}
     </span>
   );
@@ -529,44 +598,36 @@ function MessageRow({
   const platformNode = showPlatformIndicator && (
     <span
       className="inline-flex items-center data-[platform=twitch]:text-purple-500 data-[platform=kick]:text-green-500"
-      data-platform={msg.platform}>
-      {platformDisplay === "icon" ? (
-        <PlatformIcon platform={msg.platform} />
-      ) : (
-        `[${msg.platform}]`
-      )}
+      data-platform={msg.platform}
+    >
+      {platformDisplay === 'icon' ? <PlatformIcon platform={msg.platform} /> : `[${msg.platform}]`}
     </span>
   );
 
   const userNameNode = (
-    <span
-      className={`${classes.name}`}
-      style={userNameStyle}>
+    <span className={`${classes.name}`} style={userNameStyle}>
       {msg.user}
-      {/*layout === "inline" || layout === "compact" ? ":" : ""*/}:
+      {/*layout === "inline" || layout === "compact" ? ":" : ""*/ ' '}:
     </span>
   );
 
   const messageNode = (
     <span className={`${classes.message} ${messageAnimClass}`} style={messageStyle}>
-      {layout === "inline" || layout === "compact" ? " " : null}
-      {render7tvEmotes(
-        parseEmotes(msg.message, msg.platform, msg.emotes),
-        sevenTvEmoteMap,
-      )}
+      {layout === 'inline' || layout === 'compact' ? ' ' : null}
+      {render7tvEmotes(parseEmotes(msg.message, msg.platform, msg.emotes), sevenTvEmoteMap)}
     </span>
   );
 
   return (
     <div
-      className={`${classes.wrapper} ${animClass} ${orientation === "horizontal" ? "flex-shrink-0" : ""}`}>
+      className={`${classes.wrapper} ${animClass} ${orientation === 'horizontal' ? 'flex-shrink-0' : ''}`}
+    >
       {isInlineOrCompact ? (
         <>
-        <div className={classes.meta}>
-          
-          {timestampNode}
-          {platformNode}
-          {badgesNode}
+          <div className={classes.meta}>
+            {timestampNode}
+            {platformNode}
+            {badgesNode}
           </div>
           <span>
             {userNameNode}

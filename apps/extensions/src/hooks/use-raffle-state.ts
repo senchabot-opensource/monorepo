@@ -207,7 +207,7 @@ export function useRaffleState() {
 
     setState((prev) => {
       drawingRef.current = false;
-      if (prev.winners.some((w) => w.id === winnerRecord.id)) return prev;
+      if (prev.winners.some((w) => w.drawnAt === winnerRecord.drawnAt)) return prev;
       return {
         ...prev,
         participants: prev.participants.filter((p) => p.id !== winner.id),
