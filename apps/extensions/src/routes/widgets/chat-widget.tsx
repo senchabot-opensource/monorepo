@@ -144,6 +144,8 @@ const searchSchema = z.object({
   kick: z.string().optional(),
   fontSize: z.coerce.number().optional().default(18),
   background: z.coerce.boolean().optional(),
+  itemBackground: z.coerce.boolean().optional(),
+  boldUsernames: z.coerce.boolean().optional(),
   bgOpacity: z.coerce.number().min(0).max(1).optional().default(0.5),
   orientation: z.enum(['vertical', 'horizontal']).optional().default('vertical'),
   platformDisplay: z.enum(['name', 'icon']).optional().default('icon'),
@@ -509,6 +511,9 @@ function RouteComponent() {
           twitchBadgeMap={twitchBadgeMap}
           kickSubBadges={kickSubBadges}
           sevenTvEmoteMap={sevenTvEmoteMap}
+          itemBackground={Boolean(search.itemBackground)}
+          bgOpacity={search.bgOpacity}
+          boldUsernames={Boolean(search.boldUsernames)}
         />
       ))}
     </div>
@@ -529,6 +534,9 @@ type MessageRowProps = {
     badge_image?: { src?: string };
   }[];
   sevenTvEmoteMap: Map<string, string>;
+  itemBackground: boolean;
+  bgOpacity: number;
+  boldUsernames: boolean;
 };
 
 function MessageRow({
@@ -542,16 +550,26 @@ function MessageRow({
   twitchBadgeMap,
   kickSubBadges,
   sevenTvEmoteMap,
+  itemBackground,
+  bgOpacity,
+  boldUsernames,
 }: MessageRowProps) {
   const classes = LAYOUT_CLASSES[layout];
   const animClass = ANIMATION_CLASSES[animation](orientation);
   const messageAnimClass = ANIMATION_MESSAGE_CLASSES[animation];
   const compactSize = layout === 'compact' ? '0.875em' : undefined;
   const isInlineOrCompact = layout === 'inline' || layout === 'compact';
+  const itemBgClass = itemBackground
+    ? 'rounded-md border border-white/10 px-2.5 py-1'
+    : '';
+  const itemBgStyle: React.CSSProperties | undefined = itemBackground
+    ? { backgroundColor: `rgba(0, 0, 0, ${bgOpacity})` }
+    : undefined;
   const userNameStyle: React.CSSProperties = {
     color: msg.color || 'unset',
     textShadow: '0 2px 0 rgba(0,0,0,1), 0 3px 1px rgba(0,0,0,0.9)',
     fontSize: compactSize,
+    fontWeight: boldUsernames ? 700 : undefined,
   };
   const messageStyle: React.CSSProperties = {
     textShadow: '0 2px 0 rgba(0,0,0,1), 0 3px 1px rgba(0,0,0,0.9)',
@@ -620,7 +638,8 @@ function MessageRow({
 
   return (
     <div
-      className={`${classes.wrapper} ${animClass} ${orientation === 'horizontal' ? 'flex-shrink-0' : ''}`}
+      className={`${classes.wrapper} ${itemBgClass} ${animClass} ${orientation === 'horizontal' ? 'flex-shrink-0' : ''}`}
+      style={itemBgStyle}
     >
       {isInlineOrCompact ? (
         <>

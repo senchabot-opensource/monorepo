@@ -181,6 +181,113 @@
   animation: glowPulse 2s ease-in-out infinite;
 }
 
+@keyframes fx-rain-fade {
+  0% {
+    opacity: 0;
+  }
+  6% {
+    opacity: var(--drop-opacity, 0.35);
+  }
+  94% {
+    opacity: var(--drop-opacity, 0.35);
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.fx-rain-anim {
+  animation-name: fx-rain-fade;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-fill-mode: both;
+}
+
+@keyframes fx-sparkle-anim {
+  0% {
+    opacity: 0;
+    transform: translateY(0px);
+    scale: 0.3;
+  }
+  15% {
+    opacity: var(--sparkle-opacity, 0.8);
+    scale: 1;
+  }
+  35% {
+    opacity: 0.1;
+    scale: 0.45;
+  }
+  55% {
+    opacity: var(--sparkle-opacity, 0.8);
+    scale: 1;
+  }
+  70% {
+    opacity: var(--sparkle-opacity, 0.8);
+    transform: translateY(var(--rise, -40px));
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(var(--rise, -40px));
+    scale: 0.3;
+  }
+}
+
+.fx-sparkle-anim {
+  animation-name: fx-sparkle-anim;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-fill-mode: both;
+  transform-box: fill-box;
+  transform-origin: center;
+  filter: drop-shadow(0 0 4px rgba(251, 191, 36, 0.9));
+}
+
+@keyframes fx-fade {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes fx-sub-count {
+  0% {
+    opacity: 0;
+    transform: translateY(30%) scale(0.4);
+  }
+  15% {
+    opacity: 1;
+    transform: translateY(-10%) scale(1.2);
+  }
+  35% {
+    transform: translateY(-25%) scale(1);
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-110%) scale(0.9);
+  }
+}
+
+.fx-sub-count-text {
+  font-size: clamp(2.5rem, 9vw, 6rem);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: #fff;
+  -webkit-text-stroke: 2px rgba(0, 0, 0, 0.35);
+  text-shadow:
+    0 0 18px rgba(16, 185, 129, 0.65),
+    0 4px 12px rgba(0, 0, 0, 0.55);
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
+}
+
+.fx-sub-count-x {
+  color: #34d399;
+  font-size: 0.62em;
+  margin-right: 0.08em;
+}
+
 /* Subtle noise texture overlay for background */
 .noise-overlay::before {
   content: "";

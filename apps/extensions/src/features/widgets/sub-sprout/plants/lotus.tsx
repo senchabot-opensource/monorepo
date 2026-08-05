@@ -2,16 +2,12 @@ import type { PlantProps } from "./registry";
 
 const STEM_PATH = "M 0,0 C 0,-50 0,-110 0,-150";
 const STEM_LENGTH = 160;
+const STEM_OFFSETS = [160, 90, 90, 60, 60, 40, 0];
 
 export function LotusPlant({ stage, progress }: PlantProps) {
   const maxProgress = Math.max(0, Math.min(1, progress));
-  const totalProgress = stage + maxProgress;
-  const maxStages = 5;
-  const baseDash = 160;
-  const dashOffset = Math.max(
-    0,
-    baseDash * (1 - totalProgress / (maxStages - 1)),
-  );
+  const maxStages = 7;
+  const dashOffset = STEM_OFFSETS[Math.min(maxStages - 1, stage)];
 
   const s = (n: number) =>
     stage >= n ? 1 : stage === n - 1 ? maxProgress : 0;
@@ -73,10 +69,10 @@ export function LotusPlant({ stage, progress }: PlantProps) {
         }}
       />
 
-      {stage >= 1 && (
+      {stage >= 2 && (
         <g
           style={{
-            transform: `translate(-22px, -70px) rotate(-20deg) scale(${s(1)})`,
+            transform: `translate(0px, -70px) rotate(-20deg) scale(${s(2)})`,
             transformOrigin: "0 0",
             transition: "transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)",
           }}>
@@ -84,10 +80,10 @@ export function LotusPlant({ stage, progress }: PlantProps) {
         </g>
       )}
 
-      {stage >= 2 && (
+      {stage >= 4 && (
         <g
           style={{
-            transform: `translate(22px, -100px) rotate(20deg) scale(${s(2)})`,
+            transform: `translate(0px, -100px) rotate(20deg) scale(${s(4)})`,
             transformOrigin: "0 0",
             transition: "transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)",
           }}>
@@ -95,10 +91,10 @@ export function LotusPlant({ stage, progress }: PlantProps) {
         </g>
       )}
 
-      {stage >= 3 && (
+      {stage >= 6 && (
         <g
           style={{
-            transform: `translate(0, -150px) scale(${s(3)})`,
+            transform: `translate(0, -150px) scale(${s(6)})`,
             transformOrigin: "0 0",
             transition: "transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)",
           }}>
@@ -206,10 +202,10 @@ export function LotusPlant({ stage, progress }: PlantProps) {
         </g>
       )}
 
-      {stage >= 4 && (
+      {stage >= 5 && (
         <g
           style={{
-            transform: `translate(-18px, -120px) scale(${s(4)})`,
+            transform: `translate(0px, -120px) scale(${s(5)})`,
             transformOrigin: "0 0",
             transition: "transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)",
           }}>

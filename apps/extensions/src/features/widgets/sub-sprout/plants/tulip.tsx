@@ -2,16 +2,12 @@ import type { PlantProps } from "./registry";
 
 const STEM_PATH = "M 0,0 C 1,-60 -1,-120 0,-180";
 const STEM_LENGTH = 200;
+const STEM_OFFSETS = [200, 100, 100, 60, 60, 20, 0];
 
 export function TulipPlant({ stage, progress }: PlantProps) {
   const maxProgress = Math.max(0, Math.min(1, progress));
-  const totalProgress = stage + maxProgress;
-  const maxStages = 5;
-  const baseDash = 200;
-  const dashOffset = Math.max(
-    0,
-    baseDash * (1 - totalProgress / (maxStages - 1)),
-  );
+  const maxStages = 7;
+  const dashOffset = STEM_OFFSETS[Math.min(maxStages - 1, stage)];
 
   const s = (n: number) =>
     stage >= n ? 1 : stage === n - 1 ? maxProgress : 0;
@@ -79,7 +75,7 @@ export function TulipPlant({ stage, progress }: PlantProps) {
 
       <g
         style={{
-          transform: `translate(-15px, -100px) rotate(-30deg) scale(${s(1)})`,
+          transform: `translate(0px, -100px) rotate(-30deg) scale(${s(2)})`,
           transformOrigin: "0 0",
           transition: "transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)",
         }}>
@@ -97,7 +93,7 @@ export function TulipPlant({ stage, progress }: PlantProps) {
 
       <g
         style={{
-          transform: `translate(15px, -140px) rotate(30deg) scale(${s(2)})`,
+          transform: `translate(0px, -140px) rotate(30deg) scale(${s(4)})`,
           transformOrigin: "0 0",
           transition: "transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)",
         }}>
@@ -115,7 +111,7 @@ export function TulipPlant({ stage, progress }: PlantProps) {
 
       <g
         style={{
-          transform: `translate(0, -180px) scale(${s(3)})`,
+          transform: `translate(0, -180px) scale(${s(6)})`,
           transformOrigin: "0 0",
           transition: "transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)",
         }}>
@@ -147,10 +143,10 @@ export function TulipPlant({ stage, progress }: PlantProps) {
         />
       </g>
 
-      {stage >= 4 && (
+      {stage >= 5 && (
         <g
           style={{
-            transform: `translate(18px, -150px) scale(${s(4)})`,
+            transform: `translate(0px, -150px) scale(${s(5)})`,
             transformOrigin: "0 0",
             transition: "transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)",
           }}>

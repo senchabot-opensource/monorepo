@@ -77,6 +77,8 @@ function ChatWidgetSetup() {
   const [kickChannel, setKickChannel] = useState("");
   const [fontSize, setFontSize] = useState("18");
   const [hasBackground, setHasBackground] = useState(false);
+  const [itemBackground, setItemBackground] = useState(false);
+  const [boldUsernames, setBoldUsernames] = useState(false);
   const [backgroundOpacity, setBackgroundOpacity] = useState("0.5");
   const [orientation, setOrientation] = useState<"vertical" | "horizontal">(
     "vertical",
@@ -115,6 +117,8 @@ function ChatWidgetSetup() {
       params.append("background", "true");
       if (backgroundOpacity !== "0.5") params.append("bgOpacity", backgroundOpacity);
     }
+    if (itemBackground) params.append("itemBackground", "true");
+    if (boldUsernames) params.append("boldUsernames", "true");
     if (orientation !== "vertical") params.append("orientation", orientation);
     if (platforms === "both" && platformDisplay !== "icon")
       params.append("platformDisplay", platformDisplay);
@@ -135,6 +139,8 @@ function ChatWidgetSetup() {
     fontSize,
     hasBackground,
     backgroundOpacity,
+    itemBackground,
+    boldUsernames,
     orientation,
     platforms,
     platformDisplay,
@@ -433,6 +439,33 @@ function ChatWidgetSetup() {
               </div>
             </div>
           )}
+
+          <div>
+            <label className="flex items-center space-x-2 text-white cursor-pointer">
+              <input
+                type="checkbox"
+                checked={itemBackground}
+                onChange={e => setItemBackground(e.target.checked)}
+                className="rounded border-zinc-700 bg-zinc-800 text-green-500 focus:ring-green-500"
+              />
+              <span className="text-sm">Message Background</span>
+            </label>
+            <p className="mt-1 text-xs text-zinc-500">
+              Each message gets its own bordered background box.
+            </p>
+          </div>
+
+          <div>
+            <label className="flex items-center space-x-2 text-white cursor-pointer">
+              <input
+                type="checkbox"
+                checked={boldUsernames}
+                onChange={e => setBoldUsernames(e.target.checked)}
+                className="rounded border-zinc-700 bg-zinc-800 text-green-500 focus:ring-green-500"
+              />
+              <span className="text-sm">Bold Usernames</span>
+            </label>
+          </div>
 
           <div className="pt-4 mt-6 border-t border-zinc-800 lg:hidden">
             <label className="mb-1 block text-sm font-medium text-zinc-400">

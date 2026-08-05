@@ -2,16 +2,12 @@ import type { PlantProps } from "./registry";
 
 const TRUNK_PATH = "M 0,0 L 0,-200";
 const TRUNK_LENGTH = 220;
+const TRUNK_OFFSETS = [220, 140, 100, 55, 0];
 
 export function PinePlant({ stage, progress }: PlantProps) {
   const maxProgress = Math.max(0, Math.min(1, progress));
-  const totalProgress = stage + maxProgress;
   const maxStages = 5;
-  const baseDash = 210;
-  const dashOffset = Math.max(
-    0,
-    baseDash * (1 - totalProgress / (maxStages - 1)),
-  );
+  const dashOffset = TRUNK_OFFSETS[Math.min(maxStages - 1, stage)];
 
   const s = (n: number) =>
     stage >= n ? 1 : stage === n - 1 ? maxProgress : 0;

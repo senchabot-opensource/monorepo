@@ -2,16 +2,12 @@ import type { PlantProps } from "./registry";
 
 const STEM_PATH = "M 0,0 C 3,-80 -2,-180 0,-300";
 const STEM_LENGTH = 340;
+const STEM_OFFSETS = [340, 210, 210, 130, 130, 40, 0];
 
 export function SunflowerPlant({ stage, progress }: PlantProps) {
   const maxProgress = Math.max(0, Math.min(1, progress));
-  const totalProgress = stage + maxProgress;
-  const maxStages = 6;
-  const baseDash = 310;
-  const dashOffset = Math.max(
-    0,
-    baseDash * (1 - totalProgress / (maxStages - 1)),
-  );
+  const maxStages = 7;
+  const dashOffset = STEM_OFFSETS[Math.min(maxStages - 1, stage)];
 
   const s = (n: number) =>
     stage >= n ? 1 : stage === n - 1 ? maxProgress : 0;
@@ -55,7 +51,7 @@ export function SunflowerPlant({ stage, progress }: PlantProps) {
 
       <g
         style={{
-          transform: `translate(-22px, -130px) rotate(-25deg) scale(${s(1)})`,
+          transform: `translate(0px, -130px) rotate(-25deg) scale(${s(2)})`,
           transformOrigin: "0 0",
           transition: "transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)",
         }}>
@@ -73,7 +69,7 @@ export function SunflowerPlant({ stage, progress }: PlantProps) {
 
       <g
         style={{
-          transform: `translate(22px, -210px) rotate(30deg) scale(${s(2)})`,
+          transform: `translate(0px, -210px) rotate(30deg) scale(${s(4)})`,
           transformOrigin: "0 0",
           transition: "transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)",
         }}>
@@ -91,7 +87,7 @@ export function SunflowerPlant({ stage, progress }: PlantProps) {
 
       <g
         style={{
-          transform: `translate(0, -300px) scale(${s(4)})`,
+          transform: `translate(0, -300px) scale(${s(5)})`,
           transformOrigin: "0 0",
           transition: "transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)",
         }}>
@@ -130,7 +126,7 @@ export function SunflowerPlant({ stage, progress }: PlantProps) {
         })}
       </g>
 
-      {stage >= 5 && (
+      {stage >= 6 && (
         <g
           transform="translate(0, -300)"
           style={{

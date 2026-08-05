@@ -6,13 +6,9 @@ export type PlantId =
   | "sunflower"
   | "cactus"
   | "tulip"
-  | "bamboo"
-  | "carnivorous"
   | "pine"
   | "lotus"
-  | "aloe"
   | "lily"
-  | "carrot"
   | "palm"
   | "vine";
 
@@ -35,13 +31,9 @@ export const PLANT_IDS: PlantId[] = [
   "sunflower",
   "cactus",
   "tulip",
-  "bamboo",
-  "carnivorous",
   "pine",
   "lotus",
-  "aloe",
   "lily",
-  "carrot",
   "palm",
   "vine",
 ];
@@ -51,65 +43,47 @@ import { RosePlant } from "./rose";
 import { SunflowerPlant } from "./sunflower";
 import { CactusPlant } from "./cactus";
 import { TulipPlant } from "./tulip";
-import { BambooPlant } from "./bamboo";
-import { CarnivorousPlant } from "./carnivorous";
 import { PinePlant } from "./pine";
 import { LotusPlant } from "./lotus";
-import { AloePlant } from "./aloe";
 import { LilyPlant } from "./lily";
-import { CarrotPlant } from "./carrot";
 import { PalmPlant } from "./palm";
 import { VinePlant } from "./vine";
 
 export const PLANT_REGISTRY: Record<PlantId, PlantDefinition> = {
   classic: {
     id: "classic",
-    label: "Classic Sprout",
-    stages: 5,
-    accentColor: "#6B8E55",
+        label: "Classic Sprout",
+        stages: 10,
+        accentColor: "#6B8E55",
     Component: ClassicPlant,
   },
   rose: {
     id: "rose",
     label: "Rose",
-    stages: 6,
+    stages: 10,
     accentColor: "#E11D48",
     Component: RosePlant,
   },
   sunflower: {
     id: "sunflower",
     label: "Sunflower",
-    stages: 6,
+    stages: 7,
     accentColor: "#F59E0B",
     Component: SunflowerPlant,
   },
   cactus: {
     id: "cactus",
     label: "Cactus",
-    stages: 5,
+    stages: 6,
     accentColor: "#10B981",
     Component: CactusPlant,
   },
   tulip: {
     id: "tulip",
     label: "Tulip",
-    stages: 5,
+    stages: 7,
     accentColor: "#EC4899",
     Component: TulipPlant,
-  },
-  bamboo: {
-    id: "bamboo",
-    label: "Bamboo",
-    stages: 6,
-    accentColor: "#65A30D",
-    Component: BambooPlant,
-  },
-  carnivorous: {
-    id: "carnivorous",
-    label: "Venus Flytrap",
-    stages: 5,
-    accentColor: "#7C3AED",
-    Component: CarnivorousPlant,
   },
   pine: {
     id: "pine",
@@ -121,42 +95,28 @@ export const PLANT_REGISTRY: Record<PlantId, PlantDefinition> = {
   lotus: {
     id: "lotus",
     label: "Lotus",
-    stages: 5,
+    stages: 7,
     accentColor: "#FB7185",
     Component: LotusPlant,
-  },
-  aloe: {
-    id: "aloe",
-    label: "Aloe Vera",
-    stages: 5,
-    accentColor: "#84CC16",
-    Component: AloePlant,
   },
   lily: {
     id: "lily",
     label: "Lily",
-    stages: 6,
+    stages: 9,
     accentColor: "#F9A8D4",
     Component: LilyPlant,
-  },
-  carrot: {
-    id: "carrot",
-    label: "Carrot",
-    stages: 5,
-    accentColor: "#F97316",
-    Component: CarrotPlant,
   },
   palm: {
     id: "palm",
     label: "Palm Tree",
-    stages: 6,
+    stages: 10,
     accentColor: "#059669",
     Component: PalmPlant,
   },
   vine: {
     id: "vine",
     label: "Climbing Vine",
-    stages: 6,
+    stages: 11,
     accentColor: "#5A9238",
     Component: VinePlant,
   },
