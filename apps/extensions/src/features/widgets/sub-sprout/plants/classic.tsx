@@ -2,16 +2,12 @@ import type { PlantProps } from "./registry";
 
 const STEM_PATH = "M 0,0 C -8,-70 -18,-170 12,-280";
 const STEM_LENGTH = 300;
+const STEM_OFFSETS = [STEM_LENGTH, 245, 180, 180, 115, 115, 55, 55, 0, 0];
 
 export function ClassicPlant({ stage, progress }: PlantProps) {
   const maxProgress = Math.max(0, Math.min(1, progress));
-  const totalProgress = stage + maxProgress;
-  const maxStages = 5;
-  const baseDash = 280;
-  const dashOffset = Math.max(
-    0,
-    baseDash * (1 - totalProgress / (maxStages - 1)),
-  );
+  const safeStage = Math.min(stage, STEM_OFFSETS.length - 1);
+  const dashOffset = STEM_OFFSETS[safeStage];
 
   const s = (n: number) =>
     stage >= n ? 1 : stage === n - 1 ? maxProgress : 0;
@@ -44,31 +40,43 @@ export function ClassicPlant({ stage, progress }: PlantProps) {
       />
 
       <g transform="translate(-3, -20) rotate(-20)" opacity="0.8">
-        <ellipse
-          cx="-8"
-          cy="0"
-          rx="10"
-          ry="4"
-          fill="url(#classic-leaf)"
-          transform="scale(0.5)"
-        />
+        <g
+          style={{
+            opacity: s(1),
+            transition: "opacity 0.5s ease-in-out",
+          }}>
+          <ellipse
+            cx="-8"
+            cy="0"
+            rx="10"
+            ry="4"
+            fill="url(#classic-leaf)"
+            transform="scale(0.5)"
+          />
+        </g>
       </g>
       <g transform="translate(3, -35) rotate(20)" opacity="0.8">
-        <ellipse
-          cx="8"
-          cy="0"
-          rx="10"
-          ry="4"
-          fill="url(#classic-leaf)"
-          transform="scale(0.55)"
-        />
+        <g
+          style={{
+            opacity: s(1),
+            transition: "opacity 0.5s ease-in-out",
+          }}>
+          <ellipse
+            cx="8"
+            cy="0"
+            rx="10"
+            ry="4"
+            fill="url(#classic-leaf)"
+            transform="scale(0.55)"
+          />
+        </g>
       </g>
 
       <g
         transform="translate(-6, -85) rotate(-25)"
         style={{
           transformOrigin: "0 0",
-          opacity: s(1),
+          opacity: s(3),
           transition: "opacity 0.5s ease-in-out",
         }}>
         <path
@@ -89,7 +97,7 @@ export function ClassicPlant({ stage, progress }: PlantProps) {
         transform="translate(-10, -160) rotate(15)"
         style={{
           transformOrigin: "0 0",
-          opacity: s(2),
+          opacity: s(5),
           transition: "opacity 0.5s ease-in-out",
         }}>
         <path
@@ -110,7 +118,7 @@ export function ClassicPlant({ stage, progress }: PlantProps) {
         transform="translate(-4, -225) rotate(-10)"
         style={{
           transformOrigin: "0 0",
-          opacity: s(3),
+          opacity: s(7),
           transition: "opacity 0.5s ease-in-out",
         }}>
         <path
@@ -128,21 +136,26 @@ export function ClassicPlant({ stage, progress }: PlantProps) {
       </g>
 
       <g
-        transform="translate(8, -280) rotate(20)"
+        transform="translate(6, -260) rotate(45)"
         style={{
           transformOrigin: "0 0",
-          opacity: s(4),
+          opacity: s(9),
           transition: "opacity 0.5s ease-in-out",
         }}>
-        <ellipse
-          cx="0"
-          cy="0"
-          rx="6"
-          ry="8"
-          fill="#E11D48"
-          opacity="0.9"
+        <path
+          d="M 0,0 Q 35,-12 50,-50 Q 12,-38 0,0 Z"
+          fill="url(#classic-leaf)"
+          transform="scale(0.55)"
         />
-        <ellipse cx="0" cy="-2" rx="3" ry="4" fill="#FB7185" />
+        <path
+          d="M 0,0 Q 28,-22 45,-45"
+          fill="none"
+          stroke="#3F5230"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          opacity="0.6"
+          transform="scale(0.55)"
+        />
       </g>
     </g>
   );

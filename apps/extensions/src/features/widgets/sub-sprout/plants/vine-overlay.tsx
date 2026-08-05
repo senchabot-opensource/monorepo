@@ -3,7 +3,7 @@ export interface VineProps {
   progress: number;
 }
 
-const STEM_LENGTH = 1100;
+const STEM_LENGTH = 1272;
 
 const LEFT_STEM_PATH =
   "M -20,1100 C 60,1000 40,900 60,800 C 80,700 30,600 60,500 C 90,400 50,300 60,200 C 70,100 40,50 60,0 C 80,-50 50,-100 60,-150";
@@ -22,22 +22,22 @@ interface VineDecoration {
 }
 
 const LEFT_DECORATIONS: VineDecoration[] = [
-  { id: "1a", step: 1, type: "leaf-l", x: 20, y: 1020, rot: -30, delay: 1, scale: 1.2 },
-  { id: "1b", step: 1, type: "leaf-r", x: 80, y: 950, rot: 45, delay: 3, scale: 1.3 },
-  { id: "1c", step: 1, type: "tendril-l", x: 60, y: 880, rot: -15, delay: 5, scale: 1 },
-  { id: "2a", step: 2, type: "flower", x: 40, y: 800, rot: 15, delay: 1, scale: 1.4 },
-  { id: "2b", step: 2, type: "leaf-l", x: 90, y: 740, rot: -20, delay: 3, scale: 1.1 },
-  { id: "2c", step: 2, type: "leaf-r", x: 50, y: 680, rot: 35, delay: 4, scale: 1.2 },
-  { id: "3a", step: 3, type: "leaf-r", x: 80, y: 600, rot: 50, delay: 1, scale: 1 },
-  { id: "3b", step: 3, type: "leaf-l", x: 25, y: 530, rot: -40, delay: 3, scale: 1.4 },
-  { id: "3c", step: 3, type: "flower", x: 60, y: 460, rot: -15, delay: 4, scale: 1.2 },
-  { id: "3d", step: 3, type: "tendril-r", x: 45, y: 430, rot: 25, delay: 5, scale: 1.1 },
-  { id: "4a", step: 4, type: "leaf-l", x: 30, y: 350, rot: -25, delay: 1, scale: 1.3 },
-  { id: "4b", step: 4, type: "leaf-r", x: 95, y: 280, rot: 40, delay: 3, scale: 1.1 },
-  { id: "4c", step: 4, type: "tendril-l", x: 65, y: 220, rot: -10, delay: 5, scale: 1.2 },
-  { id: "5a", step: 5, type: "flower", x: 110, y: 160, rot: 20, delay: 1, scale: 1.5 },
-  { id: "5b", step: 5, type: "leaf-r", x: 100, y: 100, rot: 30, delay: 3, scale: 1.1 },
-  { id: "5c", step: 5, type: "leaf-l", x: 60, y: 40, rot: -45, delay: 5, scale: 1.2 },
+  { id: "1a", step: 1, type: "leaf-l", x: 14, y: 1050, rot: -30, delay: 1, scale: 0.95 },
+  { id: "1b", step: 2, type: "leaf-r", x: 42, y: 965, rot: 45, delay: 3, scale: 1 },
+  { id: "1c", step: 2, type: "tendril-l", x: 48, y: 880, rot: -15, delay: 1, scale: 0.8 },
+  { id: "2a", step: 3, type: "flower", x: 58, y: 800, rot: 15, delay: 3, scale: 1.25 },
+  { id: "2b", step: 3, type: "leaf-l", x: 63, y: 740, rot: -20, delay: 1, scale: 1 },
+  { id: "2c", step: 4, type: "leaf-r", x: 58, y: 680, rot: 35, delay: 3, scale: 1.05 },
+  { id: "3a", step: 5, type: "leaf-r", x: 50, y: 600, rot: 50, delay: 1, scale: 0.95 },
+  { id: "3b", step: 5, type: "leaf-l", x: 52, y: 530, rot: -40, delay: 1, scale: 1.25 },
+  { id: "3c", step: 6, type: "flower", x: 67, y: 460, rot: -15, delay: 1, scale: 1.1 },
+  { id: "3d", step: 6, type: "tendril-r", x: 70, y: 430, rot: 25, delay: 3, scale: 1 },
+  { id: "4a", step: 7, type: "leaf-l", x: 66, y: 350, rot: -25, delay: 1, scale: 1.15 },
+  { id: "4b", step: 7, type: "leaf-r", x: 60, y: 280, rot: 40, delay: 1, scale: 1 },
+  { id: "4c", step: 8, type: "tendril-l", x: 57, y: 220, rot: -10, delay: 3, scale: 1.1 },
+  { id: "5b", step: 9, type: "leaf-r", x: 58, y: 100, rot: 30, delay: 1, scale: 1 },
+  { id: "5a", step: 8, type: "flower", x: 61, y: 160, rot: 20, delay: 1, scale: 1.5 },
+  { id: "5c", step: 10, type: "leaf-l", x: 52, y: 40, rot: -45, delay: 3, scale: 1.1 },
 ];
 
 const RIGHT_DECORATIONS: VineDecoration[] = LEFT_DECORATIONS.map((d) => ({
@@ -53,10 +53,9 @@ const RIGHT_DECORATIONS: VineDecoration[] = LEFT_DECORATIONS.map((d) => ({
 export function VineOverlay({ stage, progress }: VineProps) {
   const maxProgress = Math.max(0, Math.min(1, progress));
   const totalProgress = stage + maxProgress;
-  const maxStages = 6;
+  const maxStages = 11;
   const stemProgress = Math.min(1, totalProgress / (maxStages - 1));
-  const baseDash = 1100;
-  const dashOffset = Math.max(0, baseDash * (1 - stemProgress));
+  const dashOffset = Math.max(0, STEM_LENGTH * (1 - stemProgress));
 
   const s = (n: number) =>
     stage >= n ? 1 : stage === n - 1 ? maxProgress : 0;
@@ -107,12 +106,7 @@ export function VineOverlay({ stage, progress }: VineProps) {
         </filter>
       </defs>
 
-      <g
-        style={{
-          transform: `scaleY(${stemProgress})`,
-          transformOrigin: "960px 1080px",
-          transition: "transform 0.6s ease-in-out",
-        }}>
+      <g>
         <path
           d={LEFT_STEM_PATH}
           fill="none"

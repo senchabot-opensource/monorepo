@@ -2,16 +2,12 @@ import type { PlantProps } from "./registry";
 
 const STEM_PATH = "M 0,0 C 2,-80 -3,-170 0,-250";
 const STEM_LENGTH = 300;
+const STEM_OFFSETS = [300, 215, 215, 150, 150, 90, 90, 30, 30, 0];
 
 export function RosePlant({ stage, progress }: PlantProps) {
   const maxProgress = Math.max(0, Math.min(1, progress));
-  const totalProgress = stage + maxProgress;
-  const maxStages = 6;
-  const baseDash = 260;
-  const dashOffset = Math.max(
-    0,
-    baseDash * (1 - totalProgress / (maxStages - 1)),
-  );
+  const maxStages = 10;
+  const dashOffset = STEM_OFFSETS[Math.min(maxStages - 1, stage)];
 
   const s = (n: number) =>
     stage >= n ? 1 : stage === n - 1 ? maxProgress : 0;
@@ -54,7 +50,7 @@ export function RosePlant({ stage, progress }: PlantProps) {
 
       <g
         style={{
-          transform: `translate(-12px, -85px) rotate(-30deg) scale(${s(1)})`,
+          transform: `translate(0px, -85px) rotate(-30deg) scale(${s(2)})`,
           transformOrigin: "0 0",
           transition: "transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)",
         }}>
@@ -72,7 +68,7 @@ export function RosePlant({ stage, progress }: PlantProps) {
 
       <g
         style={{
-          transform: `translate(12px, -150px) rotate(35deg) scale(${s(2)})`,
+          transform: `translate(0px, -150px) rotate(35deg) scale(${s(4)})`,
           transformOrigin: "0 0",
           transition: "transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)",
         }}>
@@ -90,7 +86,7 @@ export function RosePlant({ stage, progress }: PlantProps) {
 
       <g
         style={{
-          transform: `translate(-8px, -210px) rotate(-20deg) scale(${s(3)})`,
+          transform: `translate(0px, -210px) rotate(-20deg) scale(${s(6)})`,
           transformOrigin: "0 0",
           transition: "transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)",
         }}>
@@ -102,7 +98,7 @@ export function RosePlant({ stage, progress }: PlantProps) {
 
       <g
         style={{
-          transform: `translate(0, -250px) scale(${s(4)})`,
+            transform: `translate(0, -250px) scale(${s(9)})`,
           transformOrigin: "0 0",
           transition: "transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)",
         }}>
@@ -116,10 +112,10 @@ export function RosePlant({ stage, progress }: PlantProps) {
         </g>
       </g>
 
-      {stage >= 5 && (
+      {stage >= 8 && (
         <g
           style={{
-            transform: `translate(-22px, -200px) scale(${s(5)})`,
+            transform: `translate(0px, -200px) scale(${s(8)})`,
             transformOrigin: "0 0",
             transition: "transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)",
           }}>

@@ -11,19 +11,9 @@ const ARM_RIGHT_LENGTH = 50;
 export function CactusPlant({ stage, progress }: PlantProps) {
   const maxProgress = Math.max(0, Math.min(1, progress));
   const totalProgress = stage + maxProgress;
-  const maxStages = 5;
-  const bodyGrowth = Math.min(1, totalProgress / (maxStages - 1));
+  const bodyGrowth = Math.min(1, totalProgress / 2);
   const s = (n: number) =>
     stage >= n ? 1 : stage === n - 1 ? maxProgress : 0;
-
-  const armLeftProgress = Math.min(
-    1,
-    Math.max(0, totalProgress - 1) / 2,
-  );
-  const armRightProgress = Math.min(
-    1,
-    Math.max(0, totalProgress - 1.5) / 2,
-  );
 
   return (
     <g>
@@ -71,6 +61,8 @@ export function CactusPlant({ stage, progress }: PlantProps) {
         <g
           style={{
             opacity: s(1),
+            transform: `scaleY(${bodyGrowth})`,
+            transformOrigin: "0 0",
             transition: "opacity 0.5s ease-in-out",
           }}>
           {Array.from({ length: 6 }).map((_, i) => {
@@ -99,7 +91,7 @@ export function CactusPlant({ stage, progress }: PlantProps) {
         </g>
       )}
 
-      {stage >= 1 && (
+      {stage >= 3 && (
         <path
           d={ARM_LEFT_PATH}
           fill="none"
@@ -109,16 +101,13 @@ export function CactusPlant({ stage, progress }: PlantProps) {
           strokeLinejoin="round"
           style={{
             strokeDasharray: ARM_LEFT_LENGTH,
-            strokeDashoffset: Math.max(
-              0,
-              ARM_LEFT_LENGTH * (1 - armLeftProgress),
-            ),
+            strokeDashoffset: stage >= 3 ? 0 : ARM_LEFT_LENGTH,
             transition: "stroke-dashoffset 0.6s ease-in-out",
           }}
         />
       )}
 
-      {stage >= 2 && (
+      {stage >= 4 && (
         <path
           d={ARM_RIGHT_PATH}
           fill="none"
@@ -128,19 +117,16 @@ export function CactusPlant({ stage, progress }: PlantProps) {
           strokeLinejoin="round"
           style={{
             strokeDasharray: ARM_RIGHT_LENGTH,
-            strokeDashoffset: Math.max(
-              0,
-              ARM_RIGHT_LENGTH * (1 - armRightProgress),
-            ),
+            strokeDashoffset: stage >= 4 ? 0 : ARM_RIGHT_LENGTH,
             transition: "stroke-dashoffset 0.6s ease-in-out",
           }}
         />
       )}
 
-      {stage >= 3 && (
+      {stage >= 5 && (
         <g
           style={{
-            transform: `translate(0, -80px) scale(${s(3)})`,
+            transform: `translate(0, -80px) scale(${s(5)})`,
             transformOrigin: "0 0",
             transition: "transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)",
           }}>
@@ -164,10 +150,10 @@ export function CactusPlant({ stage, progress }: PlantProps) {
         </g>
       )}
 
-      {stage >= 4 && (
+      {stage >= 5 && (
         <g
           style={{
-            transform: `translate(-40px, -75px) scale(${s(4)})`,
+            transform: `translate(-40px, -75px) scale(${s(5)})`,
             transformOrigin: "0 0",
             transition: "transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)",
           }}>

@@ -2,9 +2,56 @@ import { SubSproutWidget } from "#/features/widgets/sub-sprout/sub-sprout-widget
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
 
+const parseBoolFlag = (v: unknown): boolean => {
+  if (v === undefined || v === null) return true;
+  if (typeof v === "boolean") return v;
+  if (typeof v === "number") return v !== 0;
+  const s = String(v).toLowerCase();
+  return !(s === "0" || s === "false" || s === "off" || s === "no");
+};
+
+const parseSimulateFlag = (v: unknown): boolean | "auto" => {
+  if (v === undefined || v === null) return false;
+  if (typeof v === "boolean") return v;
+  if (typeof v === "number") return v !== 0;
+  const s = String(v).toLowerCase();
+  if (s === "auto") return "auto";
+  return s === "1" || s === "true" || s === "on" || s === "yes";
+};
+
 const searchSchema = z.object({
   channel: z.string().optional(),
-  platform: z.enum(["twitch", "kick"]).optional().default("twitch"),
+  platform: z
+    .enum(["twitch", "kick"])
+    .optional()
+    .catch("twitch"),
+  variety: z.string().optional(),
+  pick: z
+    .enum(["fixed", "cycle", "random"])
+    .optional()
+    .catch("fixed"),
+  growth: z
+    .coerce
+    .number()
+    .int()
+    .min(1)
+    .max(2)
+    .optional()
+    .catch(1),
+  water: z
+    .enum(["off", "rain", "sparkle"])
+    .optional()
+    .catch("off"),
+  countfx: z
+    .unknown()
+    .optional()
+    .transform(v => (v === undefined ? undefined : parseBoolFlag(v)))
+    .catch(true),
+  simulate: z
+    .unknown()
+    .optional()
+    .transform(v => (v === undefined ? undefined : parseSimulateFlag(v)))
+    .catch(false),
 });
 
 export const Route = createFileRoute("/widgets/sub-sprout-widget")({
@@ -13,15 +60,24 @@ export const Route = createFileRoute("/widgets/sub-sprout-widget")({
   loaderDeps: ({ search }) => ({
     platform: search.platform,
     channel: search.channel,
+    simulate: search.simulate,
   }),
   loader: async ({ deps }) => {
-    if (deps.platform === "kick" && deps.channel) {
-      const { getKickChannelInfo } = await import("#/lib/kick");
-      const kickInfo = await getKickChannelInfo(deps.channel);
-      return {
-        kickId: kickInfo.chatroomId,
-        kickChannelId: kickInfo.channelId,
-      };
+    if (
+      deps.simulate !== true &&
+      deps.platform === "kick" &&
+      deps.channel
+    ) {
+      try {
+        const { getKickChannelInfo } = await import("#/lib/kick");
+        const kickInfo = await getKickChannelInfo(deps.channel);
+        return {
+          kickId: kickInfo.chatroomId,
+          kickChannelId: kickInfo.channelId,
+        };
+      } catch {
+        return { kickId: null, kickChannelId: null };
+      }
     }
     return { kickId: null, kickChannelId: null };
   },
@@ -29,8 +85,21 @@ export const Route = createFileRoute("/widgets/sub-sprout-widget")({
 });
 
 function RouteComponent() {
-  const { channel, platform } = Route.useSearch();
+  const {
+    channel,
+    platform,
+    variety,
+    pick,
+    growth,
+    water,
+    countfx,
+    simulate,
+  } = Route.useSearch();
   const { kickId, kickChannelId } = Route.useLoaderData();
+
+  if (countfx === false) {
+    console.info("[SubSprout] sub count effect disabled (countfx=0)");
+  }
 
   return (
     <div className="size-full min-h-screen bg-transparent">
@@ -39,6 +108,12 @@ function RouteComponent() {
         platform={platform}
         kickId={kickId ?? undefined}
         kickChannelId={kickChannelId ?? undefined}
+        variety={variety}
+        pick={pick}
+        growth={growth}
+        water={water}
+        countFx={countfx}
+        simulate={simulate}
       />
     </div>
   );

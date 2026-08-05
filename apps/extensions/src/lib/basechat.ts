@@ -9,8 +9,19 @@ export type Disconnectable = {
   disconnect: () => void;
 };
 
+const MAX_RECONNECT_DELAY_MS = 30000;
+
 export class BaseChatClient implements Disconnectable {
   protected ws: WebSocket | null = null;
+
+  private url: string | null = null;
+  private handlers: {
+    onOpen?: () => void;
+    onMessage: (event: MessageEvent) => void;
+  } | null = null;
+  private reconnectTimer: ReturnType<typeof setTimeout> | null = null;
+  private reconnectAttempts = 0;
+  private disposed = false;
 
   constructor(
     private readonly label: string,
@@ -27,21 +38,61 @@ export class BaseChatClient implements Disconnectable {
       onMessage: (event: MessageEvent) => void;
     },
   ) {
-    const ws = new WebSocket(url);
+    this.url = url;
+    this.handlers = handlers;
+    this.disposed = false;
+    this.openSocket();
+  }
+
+  private openSocket() {
+    if (this.disposed || !this.url || !this.handlers) {
+      return;
+    }
+
+    const ws = new WebSocket(this.url);
     this.ws = ws;
+    const handlers = this.handlers;
 
     ws.onopen = () => {
+      if (this.disposed || ws !== this.ws) {
+        return;
+      }
+      this.reconnectAttempts = 0;
       handlers.onOpen?.();
       console.log(`${this.label} chat connected.`);
     };
 
-    ws.onmessage = handlers.onMessage;
+    ws.onmessage = event => {
+      if (this.disposed || ws !== this.ws) {
+        return;
+      }
+      handlers.onMessage(event);
+    };
+
     ws.onerror = error => {
       console.error(`${this.label} WebSocket Error:`, error);
     };
+
     ws.onclose = () => {
       console.log(`${this.label} chat connection closed.`);
+      this.scheduleReconnect();
     };
+  }
+
+  private scheduleReconnect() {
+    if (this.disposed) {
+      return;
+    }
+
+    const delay = Math.min(
+      1000 * 2 ** this.reconnectAttempts,
+      MAX_RECONNECT_DELAY_MS,
+    );
+    this.reconnectAttempts += 1;
+    console.log(
+      `${this.label} chat disconnected, reconnecting in ${delay}ms (attempt ${this.reconnectAttempts})`,
+    );
+    this.reconnectTimer = setTimeout(() => this.openSocket(), delay);
   }
 
   protected emit(payload: ChatMessagesType | null) {
@@ -55,12 +106,18 @@ export class BaseChatClient implements Disconnectable {
   }
 
   disconnect() {
-    if (!this.ws) {
-      return;
+    this.disposed = true;
+    if (this.reconnectTimer !== null) {
+      clearTimeout(this.reconnectTimer);
+      this.reconnectTimer = null;
     }
 
     const ws = this.ws;
     this.ws = null;
+    if (!ws) {
+      return;
+    }
+
     ws.onopen = null;
     ws.onmessage = null;
     ws.onerror = null;
