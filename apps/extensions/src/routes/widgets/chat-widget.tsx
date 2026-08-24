@@ -9,6 +9,7 @@ import { use7tvEmotes } from '#/features/widgets/chat-widget/use-7tv-emotes';
 import { useTwitchBadges } from '#/features/widgets/chat-widget/use-badges';
 import { useUnifiedChat } from '#/features/widgets/chat-widget/use-unified-chat';
 import { getKickChannelInfo } from '#/lib/kick';
+import { getAccessibleColor } from '#/features/widgets/chat-widget/color-utils';
 
 const TTL_MS = 30_000;
 
@@ -49,6 +50,7 @@ const renderTwitchEmotes = (text: string, emotesTag?: string) => {
         key={`${range.id}-${range.start}`}
         src={`https://static-cdn.jtvnw.net/emoticons/v2/${range.id}/default/dark/1.0`}
         alt="emote"
+        decoding="async"
         className="inline-block h-[1em] w-auto mx-0.5 align-middle object-contain"
       />,
     );
@@ -74,6 +76,7 @@ export const parseEmotes = (text: string, platform: 'twitch' | 'kick', emotes?: 
             key={`${id}-${index.toString()}`}
             src={`https://files.kick.com/emotes/${id}/fullsize`}
             alt="emote"
+            decoding="async"
             className="inline-block h-[1em] w-[1em] mx-1 align-middle object-contain"
           />
         );
@@ -120,6 +123,7 @@ const render7tvEmotes = (
             key={`7tv-${emoteId}-${keyIndex++}`}
             src={`https://cdn.7tv.app/emote/${emoteId}/2x.webp`}
             alt={part}
+            decoding="async"
             className="inline-block h-[1em] w-auto mx-0.5 align-middle object-contain"
           />,
         );
@@ -508,6 +512,7 @@ function RouteComponent() {
           kickSubBadges={kickSubBadges}
           sevenTvEmoteMap={sevenTvEmoteMap}
           showBadges={Boolean(search.badges)}
+          hasBackground={Boolean(search.background)}
           itemBackground={Boolean(search.itemBackground)}
           bgOpacity={search.bgOpacity}
           boldUsernames={Boolean(search.boldUsernames)}
@@ -533,13 +538,14 @@ type MessageRowProps = {
   }[];
   sevenTvEmoteMap: Map<string, string>;
   showBadges: boolean;
+  hasBackground: boolean;
   itemBackground: boolean;
   bgOpacity: number;
   boldUsernames: boolean;
   boldMessages: boolean;
 };
 
-function MessageRow({
+const MessageRow = React.memo(function MessageRow({
   msg,
   layout,
   animation,
@@ -551,6 +557,7 @@ function MessageRow({
   kickSubBadges,
   sevenTvEmoteMap,
   showBadges,
+  hasBackground,
   itemBackground,
   bgOpacity,
   boldUsernames,
@@ -567,17 +574,36 @@ function MessageRow({
   const itemBgStyle: React.CSSProperties | undefined = itemBackground
     ? { backgroundColor: `rgba(0, 0, 0, ${bgOpacity})` }
     : undefined;
-  const userNameStyle: React.CSSProperties = {
-    color: msg.color || 'unset',
-    textShadow: '0 2px 0 rgba(0,0,0,1), 0 3px 1px rgba(0,0,0,0.9)',
-    fontSize: compactSize,
-    fontWeight: boldUsernames ? 700 : undefined,
-  };
-  const messageStyle: React.CSSProperties = {
-    textShadow: '0 2px 0 rgba(0,0,0,1), 0 3px 1px rgba(0,0,0,0.9)',
-    fontSize: compactSize,
-    fontWeight: boldMessages ? 600 : undefined,
-  };
+  const accessibleColor = React.useMemo(
+    () => getAccessibleColor(msg.color, true) || msg.color || 'unset',
+    [msg.color],
+  );
+  const hasAnyBackground = hasBackground || itemBackground;
+  const shadowStyle = hasAnyBackground
+    ? '1px 1px 1px rgba(0, 0, 0)'
+    : '0 1px 1px #000, 1px 1px 1px rgba(0, 0, 0), 1px 1px 1px rgba(0, 0, 0)';
+  const userNameStyle: React.CSSProperties = React.useMemo(
+    () => ({
+      color: accessibleColor,
+      textShadow: '1px 1px 1px rgba(0, 0, 0)',
+      fontSize: compactSize,
+      fontWeight: boldUsernames ? 700 : undefined,
+    }),
+    [accessibleColor, compactSize, boldUsernames],
+  );
+  const messageStyle: React.CSSProperties = React.useMemo(
+    () => ({
+      textShadow: shadowStyle,
+      fontSize: compactSize,
+      fontWeight: boldMessages ? 600 : undefined,
+    }),
+    [compactSize, boldMessages],
+  );
+
+  const parsedContent = React.useMemo(
+    () => render7tvEmotes(parseEmotes(msg.message, msg.platform, msg.emotes), sevenTvEmoteMap),
+    [msg.message, msg.platform, msg.emotes, sevenTvEmoteMap],
+  );
 
   const badgesNode = showBadges && msg.badges && msg.badges.length > 0 && (
     <span className="inline-flex shrink-0 items-center gap-1 align-middle select-none">
@@ -599,6 +625,7 @@ function MessageRow({
               src={imageUrl}
               alt={badge}
               title={badge}
+              decoding="async"
               className="inline-block h-[1em] w-[1em] object-contain"
             />
           </span>
@@ -634,13 +661,13 @@ function MessageRow({
   const messageNode = (
     <span className={`${classes.message} ${messageAnimClass}`} style={messageStyle}>
       {layout === 'inline' || layout === 'compact' ? ' ' : null}
-      {render7tvEmotes(parseEmotes(msg.message, msg.platform, msg.emotes), sevenTvEmoteMap)}
+      {parsedContent}
     </span>
   );
 
   return (
     <div
-      className={`${classes.wrapper} ${itemBgClass} ${animClass} ${orientation === 'horizontal' ? 'flex-shrink-0' : ''}`}
+      className={`${classes.wrapper} ${itemBgClass} ${animClass} transform-gpu ${orientation === 'horizontal' ? 'flex-shrink-0' : ''}`}
       style={itemBgStyle}
     >
       {isInlineOrCompact ? (
@@ -668,4 +695,4 @@ function MessageRow({
       {!isInlineOrCompact && messageNode}
     </div>
   );
-}
+});
