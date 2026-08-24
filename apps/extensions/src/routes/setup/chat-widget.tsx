@@ -79,6 +79,7 @@ function ChatWidgetSetup() {
   const [hasBackground, setHasBackground] = useState(false);
   const [itemBackground, setItemBackground] = useState(false);
   const [boldUsernames, setBoldUsernames] = useState(false);
+  const [boldMessages, setBoldMessages] = useState(false);
   const [backgroundOpacity, setBackgroundOpacity] = useState("0.5");
   const [orientation, setOrientation] = useState<"vertical" | "horizontal">(
     "vertical",
@@ -89,6 +90,8 @@ function ChatWidgetSetup() {
   const [platformDisplay, setPlatformDisplay] = useState<"name" | "icon">(
     "icon",
   );
+  const [sevenTv, setSevenTv] = useState(true);
+  const [badges, setBadges] = useState(true);
   const [showTimestamp, setShowTimestamp] = useState(false);
   const [keepMessages, setKeepMessages] = useState(false);
   const [font, setFont] = useState<
@@ -112,6 +115,8 @@ function ChatWidgetSetup() {
       if (deferredTwitch) params.append("twitch", deferredTwitch);
     if (platforms === "both" || platforms === "kick")
       if (deferredKick) params.append("kick", deferredKick);
+    if (!sevenTv) params.append("sevenTv", "false");
+    if (!badges) params.append("badges", "false");
     if (fontSize !== "18") params.append("fontSize", fontSize);
     if (hasBackground) {
       params.append("background", "true");
@@ -119,6 +124,7 @@ function ChatWidgetSetup() {
     }
     if (itemBackground) params.append("itemBackground", "true");
     if (boldUsernames) params.append("boldUsernames", "true");
+    if (boldMessages) params.append("boldMessages", "true");
     if (orientation !== "vertical") params.append("orientation", orientation);
     if (platforms === "both" && platformDisplay !== "icon")
       params.append("platformDisplay", platformDisplay);
@@ -136,11 +142,14 @@ function ChatWidgetSetup() {
   }, [
     deferredTwitch,
     deferredKick,
+    sevenTv,
+    badges,
     fontSize,
     hasBackground,
     backgroundOpacity,
     itemBackground,
     boldUsernames,
+    boldMessages,
     orientation,
     platforms,
     platformDisplay,
@@ -400,6 +409,30 @@ function ChatWidgetSetup() {
             <label className="flex items-center space-x-2 text-white cursor-pointer">
               <input
                 type="checkbox"
+                checked={sevenTv}
+                onChange={e => setSevenTv(e.target.checked)}
+                className="rounded border-zinc-700 bg-zinc-800 text-green-500 focus:ring-green-500"
+              />
+              <span className="text-sm">7TV Emotes</span>
+            </label>
+          </div>
+
+          <div>
+            <label className="flex items-center space-x-2 text-white cursor-pointer">
+              <input
+                type="checkbox"
+                checked={badges}
+                onChange={e => setBadges(e.target.checked)}
+                className="rounded border-zinc-700 bg-zinc-800 text-green-500 focus:ring-green-500"
+              />
+              <span className="text-sm">Show Badges</span>
+            </label>
+          </div>
+
+          <div>
+            <label className="flex items-center space-x-2 text-white cursor-pointer">
+              <input
+                type="checkbox"
                 checked={showTimestamp}
                 onChange={e => setShowTimestamp(e.target.checked)}
                 className="rounded border-zinc-700 bg-zinc-800 text-green-500 focus:ring-green-500"
@@ -464,6 +497,18 @@ function ChatWidgetSetup() {
                 className="rounded border-zinc-700 bg-zinc-800 text-green-500 focus:ring-green-500"
               />
               <span className="text-sm">Bold Usernames</span>
+            </label>
+          </div>
+
+          <div>
+            <label className="flex items-center space-x-2 text-white cursor-pointer">
+              <input
+                type="checkbox"
+                checked={boldMessages}
+                onChange={e => setBoldMessages(e.target.checked)}
+                className="rounded border-zinc-700 bg-zinc-800 text-green-500 focus:ring-green-500"
+              />
+              <span className="text-sm">Bold Messages</span>
             </label>
           </div>
 

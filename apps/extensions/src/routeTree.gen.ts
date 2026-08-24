@@ -10,54 +10,24 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as WidgetsSubSproutWidgetRouteImport } from './routes/widgets/sub-sprout-widget'
-import { Route as WidgetsRaffleOverlayRouteImport } from './routes/widgets/raffle-overlay'
-import { Route as WidgetsChatWidgetRouteImport } from './routes/widgets/chat-widget'
-import { Route as WidgetsAlertsRouteImport } from './routes/widgets/alerts'
-import { Route as ToolsObsBridgeRouteImport } from './routes/tools/obs-bridge'
-import { Route as SetupSubGrowingPlantRouteImport } from './routes/setup/sub-growing-plant'
-import { Route as SetupRaffleRouteImport } from './routes/setup/raffle'
-import { Route as SetupObsBridgeRouteImport } from './routes/setup/obs-bridge'
 import { Route as SetupChatWidgetRouteImport } from './routes/setup/chat-widget'
+import { Route as SetupObsBridgeRouteImport } from './routes/setup/obs-bridge'
+import { Route as SetupRaffleRouteImport } from './routes/setup/raffle'
+import { Route as SetupSubGrowingPlantRouteImport } from './routes/setup/sub-growing-plant'
+import { Route as ToolsObsBridgeRouteImport } from './routes/tools/obs-bridge'
+import { Route as WidgetsAlertsRouteImport } from './routes/widgets/alerts'
+import { Route as WidgetsChatWidgetRouteImport } from './routes/widgets/chat-widget'
+import { Route as WidgetsRaffleOverlayRouteImport } from './routes/widgets/raffle-overlay'
+import { Route as WidgetsSubSproutWidgetRouteImport } from './routes/widgets/sub-sprout-widget'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const WidgetsSubSproutWidgetRoute = WidgetsSubSproutWidgetRouteImport.update({
-  id: '/widgets/sub-sprout-widget',
-  path: '/widgets/sub-sprout-widget',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const WidgetsRaffleOverlayRoute = WidgetsRaffleOverlayRouteImport.update({
-  id: '/widgets/raffle-overlay',
-  path: '/widgets/raffle-overlay',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const WidgetsChatWidgetRoute = WidgetsChatWidgetRouteImport.update({
-  id: '/widgets/chat-widget',
-  path: '/widgets/chat-widget',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const WidgetsAlertsRoute = WidgetsAlertsRouteImport.update({
-  id: '/widgets/alerts',
-  path: '/widgets/alerts',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ToolsObsBridgeRoute = ToolsObsBridgeRouteImport.update({
-  id: '/tools/obs-bridge',
-  path: '/tools/obs-bridge',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SetupSubGrowingPlantRoute = SetupSubGrowingPlantRouteImport.update({
-  id: '/setup/sub-growing-plant',
-  path: '/setup/sub-growing-plant',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SetupRaffleRoute = SetupRaffleRouteImport.update({
-  id: '/setup/raffle',
-  path: '/setup/raffle',
+const SetupChatWidgetRoute = SetupChatWidgetRouteImport.update({
+  id: '/setup/chat-widget',
+  path: '/setup/chat-widget',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SetupObsBridgeRoute = SetupObsBridgeRouteImport.update({
@@ -65,9 +35,39 @@ const SetupObsBridgeRoute = SetupObsBridgeRouteImport.update({
   path: '/setup/obs-bridge',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SetupChatWidgetRoute = SetupChatWidgetRouteImport.update({
-  id: '/setup/chat-widget',
-  path: '/setup/chat-widget',
+const SetupRaffleRoute = SetupRaffleRouteImport.update({
+  id: '/setup/raffle',
+  path: '/setup/raffle',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SetupSubGrowingPlantRoute = SetupSubGrowingPlantRouteImport.update({
+  id: '/setup/sub-growing-plant',
+  path: '/setup/sub-growing-plant',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsObsBridgeRoute = ToolsObsBridgeRouteImport.update({
+  id: '/tools/obs-bridge',
+  path: '/tools/obs-bridge',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WidgetsAlertsRoute = WidgetsAlertsRouteImport.update({
+  id: '/widgets/alerts',
+  path: '/widgets/alerts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WidgetsChatWidgetRoute = WidgetsChatWidgetRouteImport.update({
+  id: '/widgets/chat-widget',
+  path: '/widgets/chat-widget',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WidgetsRaffleOverlayRoute = WidgetsRaffleOverlayRouteImport.update({
+  id: '/widgets/raffle-overlay',
+  path: '/widgets/raffle-overlay',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WidgetsSubSproutWidgetRoute = WidgetsSubSproutWidgetRouteImport.update({
+  id: '/widgets/sub-sprout-widget',
+  path: '/widgets/sub-sprout-widget',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -169,53 +169,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/widgets/sub-sprout-widget': {
-      id: '/widgets/sub-sprout-widget'
-      path: '/widgets/sub-sprout-widget'
-      fullPath: '/widgets/sub-sprout-widget'
-      preLoaderRoute: typeof WidgetsSubSproutWidgetRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/widgets/raffle-overlay': {
-      id: '/widgets/raffle-overlay'
-      path: '/widgets/raffle-overlay'
-      fullPath: '/widgets/raffle-overlay'
-      preLoaderRoute: typeof WidgetsRaffleOverlayRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/widgets/chat-widget': {
-      id: '/widgets/chat-widget'
-      path: '/widgets/chat-widget'
-      fullPath: '/widgets/chat-widget'
-      preLoaderRoute: typeof WidgetsChatWidgetRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/widgets/alerts': {
-      id: '/widgets/alerts'
-      path: '/widgets/alerts'
-      fullPath: '/widgets/alerts'
-      preLoaderRoute: typeof WidgetsAlertsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/tools/obs-bridge': {
-      id: '/tools/obs-bridge'
-      path: '/tools/obs-bridge'
-      fullPath: '/tools/obs-bridge'
-      preLoaderRoute: typeof ToolsObsBridgeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/setup/sub-growing-plant': {
-      id: '/setup/sub-growing-plant'
-      path: '/setup/sub-growing-plant'
-      fullPath: '/setup/sub-growing-plant'
-      preLoaderRoute: typeof SetupSubGrowingPlantRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/setup/raffle': {
-      id: '/setup/raffle'
-      path: '/setup/raffle'
-      fullPath: '/setup/raffle'
-      preLoaderRoute: typeof SetupRaffleRouteImport
+    '/setup/chat-widget': {
+      id: '/setup/chat-widget'
+      path: '/setup/chat-widget'
+      fullPath: '/setup/chat-widget'
+      preLoaderRoute: typeof SetupChatWidgetRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/setup/obs-bridge': {
@@ -225,11 +183,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SetupObsBridgeRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/setup/chat-widget': {
-      id: '/setup/chat-widget'
-      path: '/setup/chat-widget'
-      fullPath: '/setup/chat-widget'
-      preLoaderRoute: typeof SetupChatWidgetRouteImport
+    '/setup/raffle': {
+      id: '/setup/raffle'
+      path: '/setup/raffle'
+      fullPath: '/setup/raffle'
+      preLoaderRoute: typeof SetupRaffleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/setup/sub-growing-plant': {
+      id: '/setup/sub-growing-plant'
+      path: '/setup/sub-growing-plant'
+      fullPath: '/setup/sub-growing-plant'
+      preLoaderRoute: typeof SetupSubGrowingPlantRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/obs-bridge': {
+      id: '/tools/obs-bridge'
+      path: '/tools/obs-bridge'
+      fullPath: '/tools/obs-bridge'
+      preLoaderRoute: typeof ToolsObsBridgeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/widgets/alerts': {
+      id: '/widgets/alerts'
+      path: '/widgets/alerts'
+      fullPath: '/widgets/alerts'
+      preLoaderRoute: typeof WidgetsAlertsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/widgets/chat-widget': {
+      id: '/widgets/chat-widget'
+      path: '/widgets/chat-widget'
+      fullPath: '/widgets/chat-widget'
+      preLoaderRoute: typeof WidgetsChatWidgetRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/widgets/raffle-overlay': {
+      id: '/widgets/raffle-overlay'
+      path: '/widgets/raffle-overlay'
+      fullPath: '/widgets/raffle-overlay'
+      preLoaderRoute: typeof WidgetsRaffleOverlayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/widgets/sub-sprout-widget': {
+      id: '/widgets/sub-sprout-widget'
+      path: '/widgets/sub-sprout-widget'
+      fullPath: '/widgets/sub-sprout-widget'
+      preLoaderRoute: typeof WidgetsSubSproutWidgetRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
