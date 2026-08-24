@@ -1,6 +1,6 @@
 import { useId } from 'react';
 
-const HostBadge = ({ className = 'h-4 w-4' }: { className?: string } = {}) => {
+const HostBadge = ({ className = 'h-[1em] w-[1em]' }: { className?: string } = {}) => {
   const g1 = useId();
   const g2 = useId();
   const g3 = useId();
@@ -100,7 +100,7 @@ const HostBadge = ({ className = 'h-4 w-4' }: { className?: string } = {}) => {
   );
 };
 
-const ModeratorBadge = ({ className = 'h-4 w-4' }: { className?: string } = {}) => (
+const ModeratorBadge = ({ className = 'h-[1em] w-[1em]' }: { className?: string } = {}) => (
   <svg viewBox="0 0 16 16" className={className} aria-hidden="true">
     <path
       d="M11.7,1.3v1.5h-1.5v1.5 H8.7v1.5H7.3v1.5H5.8V5.8h-3v3h1.5v1.5H2.8v1.5H1.3v3h3v-1.5h1.5v-1.5h1.5v1.5h3v-3H8.7V8.7h1.5V7.3h1.5V5.8h1.5V4.3h1.5v-3 C14.7,1.3,11.7,1.3,11.7,1.3z"
@@ -109,7 +109,7 @@ const ModeratorBadge = ({ className = 'h-4 w-4' }: { className?: string } = {}) 
   </svg>
 );
 
-const VipBadge = ({ className = 'h-4 w-4' }: { className?: string } = {}) => {
+const VipBadge = ({ className = 'h-[1em] w-[1em]' }: { className?: string } = {}) => {
   const g = useId();
 
   return (
@@ -136,7 +136,7 @@ const VipBadge = ({ className = 'h-4 w-4' }: { className?: string } = {}) => {
   );
 };
 
-const VerifiedBadge = ({ className = 'h-4 w-4' }: { className?: string } = {}) => {
+const VerifiedBadge = ({ className = 'h-[1em] w-[1em]' }: { className?: string } = {}) => {
   const g = useId();
 
   return (
@@ -162,7 +162,7 @@ const VerifiedBadge = ({ className = 'h-4 w-4' }: { className?: string } = {}) =
   );
 };
 
-const SubscriberBadge = ({ className = 'h-4 w-4' }: { className?: string } = {}) => {
+const SubscriberBadge = ({ className = 'h-[1em] w-[1em]' }: { className?: string } = {}) => {
   const g1 = useId();
   const g2 = useId();
   const g3 = useId();
@@ -276,7 +276,7 @@ const SubscriberBadge = ({ className = 'h-4 w-4' }: { className?: string } = {})
   );
 };
 
-const OgBadge = ({ className = 'h-4 w-4' }: { className?: string } = {}) => {
+const OgBadge = ({ className = 'h-[1em] w-[1em]' }: { className?: string } = {}) => {
   const g1 = useId();
   const g2 = useId();
 
@@ -325,7 +325,7 @@ const OgBadge = ({ className = 'h-4 w-4' }: { className?: string } = {}) => {
   );
 };
 
-const FounderBadge = ({ className = 'h-4 w-4' }: { className?: string } = {}) => {
+const FounderBadge = ({ className = 'h-[1em] w-[1em]' }: { className?: string } = {}) => {
   const g = useId();
 
   return (
@@ -354,7 +354,7 @@ const FounderBadge = ({ className = 'h-4 w-4' }: { className?: string } = {}) =>
   );
 };
 
-const SubGifterBadge = ({ className = 'h-4 w-4' }: { className?: string } = {}) => {
+const SubGifterBadge = ({ className = 'h-[1em] w-[1em]' }: { className?: string } = {}) => {
   const clip = useId();
 
   return (
@@ -380,7 +380,7 @@ const SubGifterBadge = ({ className = 'h-4 w-4' }: { className?: string } = {}) 
   );
 };
 
-const StaffBadge = ({ className = 'h-4 w-4' }: { className?: string } = {}) => {
+const StaffBadge = ({ className = 'h-[1em] w-[1em]' }: { className?: string } = {}) => {
   const g = useId();
 
   return (
@@ -408,7 +408,7 @@ const StaffBadge = ({ className = 'h-4 w-4' }: { className?: string } = {}) => {
   );
 };
 
-const SidekickBadge = ({ className = 'h-4 w-4' }: { className?: string } = {}) => {
+const SidekickBadge = ({ className = 'h-[1em] w-[1em]' }: { className?: string } = {}) => {
   const g = useId();
 
   return (
@@ -437,7 +437,7 @@ const SidekickBadge = ({ className = 'h-4 w-4' }: { className?: string } = {}) =
 export const KickBadge = ({
   type,
   subBadges,
-  className = 'h-4 w-4',
+  className = 'h-[1em] w-[1em]',
 }: {
   type: string;
   className?: string;

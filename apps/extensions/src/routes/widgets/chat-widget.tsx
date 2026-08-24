@@ -98,14 +98,6 @@ const render7tvEmotes = (
     return Array.isArray(nodes) ? nodes : [nodes];
   }
 
-  const names = Array.from(emoteMap.keys());
-  names.sort((a, b) => b.length - a.length);
-
-  const pattern = names.map((name) => name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
-  if (!pattern) return Array.isArray(nodes) ? nodes : [nodes];
-
-  const regex = new RegExp(`\\b(${pattern})\\b`, 'g');
-
   const result: React.ReactNode[] = [];
   const input = Array.isArray(nodes) ? nodes : [nodes];
   let keyIndex = 0;
@@ -116,7 +108,8 @@ const render7tvEmotes = (
       continue;
     }
 
-    const parts = node.split(regex);
+    // Split by whitespace so only exact full words match emotes
+    const parts = node.split(/(\s+)/);
 
     for (const part of parts) {
       if (part === '') continue;
@@ -142,10 +135,13 @@ const render7tvEmotes = (
 const searchSchema = z.object({
   twitch: z.string().optional(),
   kick: z.string().optional(),
+  sevenTv: z.coerce.boolean().optional().default(true),
+  badges: z.coerce.boolean().optional().default(true),
   fontSize: z.coerce.number().optional().default(18),
   background: z.coerce.boolean().optional(),
   itemBackground: z.coerce.boolean().optional(),
   boldUsernames: z.coerce.boolean().optional(),
+  boldMessages: z.coerce.boolean().optional(),
   bgOpacity: z.coerce.number().min(0).max(1).optional().default(0.5),
   orientation: z.enum(['vertical', 'horizontal']).optional().default('vertical'),
   platformDisplay: z.enum(['name', 'icon']).optional().default('icon'),
@@ -190,7 +186,7 @@ const LAYOUT_CLASSES: Record<
 > = {
   inline: {
     wrapper: 'leading-tight whitespace-pre-wrap wrap-break-word text-left',
-    meta: 'inline-flex items-center gap-1.5 align-middle',
+    meta: 'inline-flex items-center gap-1.5 mr-1.5 align-middle select-none',
     name: 'inline',
     message: 'inline',
   },
@@ -209,7 +205,7 @@ const LAYOUT_CLASSES: Record<
   },
   compact: {
     wrapper: 'leading-none whitespace-pre-wrap wrap-break-word text-left',
-    meta: 'inline-flex items-center gap-1.5 align-middle',
+    meta: 'inline-flex items-center gap-1.5 mr-1.5 align-middle select-none',
     name: 'inline',
     message: 'inline',
   },
@@ -282,7 +278,7 @@ function TwitchIcon({ className, ...props }: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      className={`inline-block h-4 w-4 ${className ?? ''}`}
+      className={`inline-block h-[1em] w-[1em] ${className ?? ''}`}
       viewBox="0 0 24 24"
       {...props}
     >
@@ -300,7 +296,7 @@ function KickIcon({ className, ...props }: React.SVGProps<SVGSVGElement>) {
       role="img"
       viewBox="0 0 24 24"
       fill="currentColor"
-      className={`inline-block h-4 w-4 ${className ?? ''}`}
+      className={`inline-block h-[1em] w-[1em] ${className ?? ''}`}
       {...props}
     >
       <title>Kick</title>
@@ -324,7 +320,7 @@ function RouteComponent() {
 
   const showPlatformIndicator = Boolean(search.twitch && search.kick);
 
-  const sevenTvEmoteMap = use7tvEmotes(search.twitch);
+  const sevenTvEmoteMap = use7tvEmotes(search.sevenTv ? search.twitch : null);
 
   useUnifiedChat(search.twitch, kick);
 
@@ -511,9 +507,11 @@ function RouteComponent() {
           twitchBadgeMap={twitchBadgeMap}
           kickSubBadges={kickSubBadges}
           sevenTvEmoteMap={sevenTvEmoteMap}
+          showBadges={Boolean(search.badges)}
           itemBackground={Boolean(search.itemBackground)}
           bgOpacity={search.bgOpacity}
           boldUsernames={Boolean(search.boldUsernames)}
+          boldMessages={Boolean(search.boldMessages)}
         />
       ))}
     </div>
@@ -534,9 +532,11 @@ type MessageRowProps = {
     badge_image?: { src?: string };
   }[];
   sevenTvEmoteMap: Map<string, string>;
+  showBadges: boolean;
   itemBackground: boolean;
   bgOpacity: number;
   boldUsernames: boolean;
+  boldMessages: boolean;
 };
 
 function MessageRow({
@@ -550,9 +550,11 @@ function MessageRow({
   twitchBadgeMap,
   kickSubBadges,
   sevenTvEmoteMap,
+  showBadges,
   itemBackground,
   bgOpacity,
   boldUsernames,
+  boldMessages,
 }: MessageRowProps) {
   const classes = LAYOUT_CLASSES[layout];
   const animClass = ANIMATION_CLASSES[animation](orientation);
@@ -574,16 +576,17 @@ function MessageRow({
   const messageStyle: React.CSSProperties = {
     textShadow: '0 2px 0 rgba(0,0,0,1), 0 3px 1px rgba(0,0,0,0.9)',
     fontSize: compactSize,
+    fontWeight: boldMessages ? 600 : undefined,
   };
 
-  const badgesNode = msg.badges && msg.badges.length > 0 && (
-    <span className="inline-flex items-center space-x-0.5">
+  const badgesNode = showBadges && msg.badges && msg.badges.length > 0 && (
+    <span className="inline-flex shrink-0 items-center gap-1 align-middle select-none">
       {msg.badges.map((badge, idx) => {
         const isTwitch = msg.platform === 'twitch';
         if (!isTwitch) {
           return (
-            <span key={`${msg.id}-badge-${idx}`} title={badge} className="inline-flex items-center pr-1">
-              <KickBadge type={badge} subBadges={kickSubBadges} className="inline-block h-4 w-4" />
+            <span key={`${msg.id}-badge-${idx}`} title={badge} className="inline-flex items-center">
+              <KickBadge type={badge} subBadges={kickSubBadges} className="inline-block h-[1em] w-[1em] object-contain" />
             </span>
           );
         }
@@ -591,14 +594,14 @@ function MessageRow({
           twitchBadgeMap?.get(badge) ?? FALLBACK_TWITCH_BADGES[badge.toLowerCase().split('/')[0]];
         if (!imageUrl) return null;
         return (
-          <span className="inline-flex items-center pr-1" key={`${msg.id}-badge-${idx}`} title={badge}>
+          <span key={`${msg.id}-badge-${idx}`} title={badge} className="inline-flex items-center">
             <img
-              key={`${msg.id}-badge-${idx}`}
               src={imageUrl}
               alt={badge}
               title={badge}
-              className="inline-block h-4 w-4"
-            /></span>
+              className="inline-block h-[1em] w-[1em] object-contain"
+            />
+          </span>
         );
       })}
     </span>
@@ -624,8 +627,7 @@ function MessageRow({
 
   const userNameNode = (
     <span className={`${classes.name}`} style={userNameStyle}>
-      {msg.user}
-      {/*layout === "inline" || layout === "compact" ? ":" : ""*/ ' '}:
+      {msg.user}:
     </span>
   );
 
