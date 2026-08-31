@@ -17,16 +17,21 @@ export const Route = createRootRoute({
         content: '#000000',
       },
       {
-        title: 'Extensions - Senchabot',
+        title: 'Senchabot Extensions — Free Customizable Stream Overlays, Browser Sources & Stream Tools',
       },
       {
         name: 'description',
         content:
-          'Free, open-source streaming widgets and tools for Twitch and Kick. Configure Sub Growing Plant, Universal Chat, and Raffle straight from your browser.',
+          '100% Free customizable stream overlays, multi-chat widgets, subscriber goal plants, transparent chat box overlays, and interactive stream tools for Twitch & Kick with zero login required. Works with OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio, and any software supporting browser sources.',
+      },
+      {
+        name: 'keywords',
+        content:
+          'customizable stream overlays, multi-chat widgets, subscriber goal plants, chat box, stream chat box, free streaming widgets, stream tools, obs studio, streamlabs desktop, xsplit broadcaster, vmix, lightstream, prism live studio, meld studio, twitch widgets free, kick widgets free, free obs overlays, senchabot extensions',
       },
       {
         property: 'og:site_name',
-        content: 'Senchabot Extensions — Free Streaming Widgets & Tools',
+        content: 'Senchabot Extensions — Free Stream Overlays, Browser Sources & Stream Tools',
       },
       {
         property: 'og:type',
@@ -69,7 +74,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <head>
         <HeadContent />
       </head>
-      <body className="font-sans antialiased">
+      <body className="font-sans antialiased bg-zinc-950 text-zinc-100 min-h-screen">
         {children}
         <Scripts />
       </body>

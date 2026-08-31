@@ -1,3 +1,4 @@
+// @ts-ignore
 import { env } from 'cloudflare:workers';
 import crypto from 'node:crypto';
 import { createServerFn } from '@tanstack/react-start';
@@ -12,7 +13,8 @@ export const pusherAuth = createServerFn({ method: 'POST' })
   )
   .handler(async ({ data }) => {
     const { socketId, channelName } = data;
-    const { VITE_SOCKETO_KEY: key, SOCKETO_SECRET: secret } = env;
+    // @ts-ignore
+    const { VITE_SOCKETO_KEY: key, SOCKETO_SECRET: secret } = env || {};
 
     if (!key || !secret) {
       throw new Error('VITE_SOCKETO_KEY or SOCKETO_SECRET not configured');

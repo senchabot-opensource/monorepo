@@ -19,8 +19,14 @@ const defaultConfig: RaffleConfig = {
   minRaffleDurationSec: 15,
 };
 
-function isIdentityMatch(a: { platform: string; username: string }, b: { platform: string; username: string }): boolean {
-  return a.platform === b.platform && a.username.toLowerCase() === b.username.toLowerCase();
+function isIdentityMatch(
+  a: { platform: string; username: string },
+  b: { platform: string; username: string },
+): boolean {
+  return (
+    a.platform === b.platform &&
+    a.username.trim().toLowerCase() === b.username.trim().toLowerCase()
+  );
 }
 
 function isEligible(
@@ -30,30 +36,25 @@ function isEligible(
 ): boolean {
   if (maxWinsPerUser === 0) return true;
   const winCount = winners.filter(
-    (w) => w.id === participant.id || (w.platform === participant.platform && w.username.toLowerCase() === participant.username.toLowerCase()),
+    (w) => w.id === participant.id || isIdentityMatch(w, participant),
   ).length;
   return winCount < maxWinsPerUser;
 }
 
-function countEligible(participants: RaffleParticipant[], winners: RaffleWinner[], maxWinsPerUser: number): number {
+function countEligible(
+  participants: RaffleParticipant[],
+  winners: RaffleWinner[],
+  maxWinsPerUser: number,
+): number {
   if (maxWinsPerUser === 0) return participants.length;
   return participants.filter((p) => isEligible(p, winners, maxWinsPerUser)).length;
 }
 
-//
-// Residual-fairness note:
-// A determined host with DevTools access can still patch React state, edit
-// localStorage, or override `crypto.getRandomValues`. Client-only fairness
-// cannot prevent that. The measures here (CSPRNG draw, frozen config snapshot,
-// minimum raffle duration, reset confirms) raise the bar for *accidental* and
-// *casual* rigging and make *deliberate* rigging leave visible traces (confirm
-// dialogs in browser history), but they are not cryptographic guarantees.
-//
 function secureRandomIndex(length: number): number {
   if (length <= 0) return 0;
   const buf = new Uint32Array(1);
   crypto.getRandomValues(buf);
-  return Math.floor((buf[0] ?? 0) / 0x1_0000_0000 * length);
+  return Math.floor(((buf[0] ?? 0) / 0x1_0000_0000) * length);
 }
 
 function clampDuration(value: unknown): number {
@@ -85,9 +86,16 @@ function loadState(): RaffleState {
           minRaffleDurationSec: clampDuration(parsed.config?.minRaffleDurationSec),
         },
         frozenConfig: parsed.frozenConfig
-          ? { ...defaultConfig, ...parsed.frozenConfig, minRaffleDurationSec: clampDuration(parsed.frozenConfig.minRaffleDurationSec) }
+          ? {
+              ...defaultConfig,
+              ...parsed.frozenConfig,
+              minRaffleDurationSec: clampDuration(
+                parsed.frozenConfig.minRaffleDurationSec,
+              ),
+            }
           : null,
-        startedAt: typeof parsed.startedAt === "number" ? parsed.startedAt : null,
+        startedAt:
+          typeof parsed.startedAt === "number" ? parsed.startedAt : null,
         participants: parsed.participants ?? [],
         winners: parsed.winners ?? [],
       };
@@ -112,8 +120,28 @@ function confirmOrTrue(message: string): boolean {
   return window.confirm(message);
 }
 
-export function useRaffleState() {
-  const [state, setState] = useState<RaffleState>(loadState);
+export function useRaffleState({
+  initialChannel = "",
+  platform = "twitch",
+}: {
+  initialChannel?: string;
+  platform?: "twitch" | "kick";
+} = {}) {
+  const [state, setState] = useState<RaffleState>(() => {
+    const loaded = loadState();
+    if (initialChannel && !loaded.config.channel) {
+      return {
+        ...loaded,
+        config: {
+          ...loaded.config,
+          channel: initialChannel,
+          platform,
+        },
+      };
+    }
+    return loaded;
+  });
+
   const stateRef = useRef(state);
   const drawingRef = useRef(false);
 
@@ -144,11 +172,15 @@ export function useRaffleState() {
         );
         if (!ok) return prev;
       }
+      const initialRules = {
+        ...prev.config,
+        minRaffleDurationSec: clampDuration(prev.config.minRaffleDurationSec),
+      };
       return {
         ...prev,
         status: "running",
-        config: { ...prev.config, minRaffleDurationSec: clampDuration(prev.config.minRaffleDurationSec) },
-        frozenConfig: { ...prev.config, minRaffleDurationSec: clampDuration(prev.config.minRaffleDurationSec) },
+        config: initialRules,
+        frozenConfig: initialRules,
         startedAt: Date.now(),
         participants: [],
         winners: [],
@@ -160,25 +192,46 @@ export function useRaffleState() {
     setState((prev) => ({ ...prev, status: "stopped" }));
   }, []);
 
-  const addParticipant = useCallback(
-    (participant: RaffleParticipant) => {
-      setState((prev) => {
-        if (prev.status !== "running") return prev;
-        const rules = prev.frozenConfig ?? prev.config;
-        if (prev.participants.some((p) => isIdentityMatch(p, participant) || p.id === participant.id)) {
-          return prev;
-        }
-        if (!isEligible(participant, prev.winners, rules.maxWinsPerUser)) {
-          return prev;
-        }
-        return {
-          ...prev,
-          participants: [...prev.participants, participant],
-        };
-      });
-    },
-    [],
-  );
+  const addParticipant = useCallback((participant: RaffleParticipant) => {
+    setState((prev) => {
+      if (prev.status !== "running") return prev;
+      const rules = prev.frozenConfig ?? prev.config;
+      // Prevent duplicate entry by ID or username
+      if (
+        prev.participants.some(
+          (p) => isIdentityMatch(p, participant) || p.id === participant.id,
+        )
+      ) {
+        return prev;
+      }
+      // Check eligibility (maxWinsPerUser)
+      if (!isEligible(participant, prev.winners, rules.maxWinsPerUser)) {
+        return prev;
+      }
+      return {
+        ...prev,
+        participants: [...prev.participants, participant],
+      };
+    });
+  }, []);
+
+  const removeParticipant = useCallback((idOrUsername: string) => {
+    setState((prev) => {
+      const filtered = prev.participants.filter(
+        (p) =>
+          p.id !== idOrUsername &&
+          p.username.toLowerCase() !== idOrUsername.toLowerCase(),
+      );
+      stateRef.current = {
+        ...prev,
+        participants: filtered,
+      };
+      return {
+        ...prev,
+        participants: filtered,
+      };
+    });
+  }, []);
 
   const drawWinner = useCallback((): RaffleWinner | null => {
     if (drawingRef.current) return null;
@@ -193,6 +246,7 @@ export function useRaffleState() {
     const startedAt = current.startedAt ?? 0;
     if (Date.now() - startedAt < minMs) return null;
 
+    // Filter strictly eligible participants (strictly prevents accidental double-wins)
     const eligible = current.participants.filter((p) =>
       isEligible(p, current.winners, rules.maxWinsPerUser),
     );
@@ -205,15 +259,50 @@ export function useRaffleState() {
       drawnAt: Date.now(),
     };
 
+    // Calculate next state
+    const nextWinners = [...current.winners, winnerRecord];
+    const nextParticipants = current.participants.filter(
+      (p) => !isIdentityMatch(p, winner) && p.id !== winner.id,
+    );
+
+    // Synchronously update stateRef to prevent race conditions on rapid clicks
+    stateRef.current = {
+      ...current,
+      participants: nextParticipants,
+      winners: nextWinners,
+    };
+
     setState((prev) => {
       drawingRef.current = false;
-      if (prev.winners.some((w) => w.drawnAt === winnerRecord.drawnAt)) return prev;
+      // Prevent duplicate insertion
+      if (
+        prev.winners.some(
+          (w) =>
+            isIdentityMatch(w, winnerRecord) &&
+            w.drawnAt === winnerRecord.drawnAt,
+        )
+      ) {
+        return prev;
+      }
       return {
         ...prev,
-        participants: prev.participants.filter((p) => p.id !== winner.id),
+        participants: prev.participants.filter(
+          (p) => !isIdentityMatch(p, winner) && p.id !== winner.id,
+        ),
         winners: [...prev.winners, winnerRecord],
       };
     });
+
+    // Broadcast winner to overlay
+    if (typeof window !== "undefined" && "BroadcastChannel" in window) {
+      try {
+        const bc = new BroadcastChannel("senchabot-raffle-broadcast");
+        bc.postMessage({ type: "raffle:winner", winner: winnerRecord });
+        bc.close();
+      } catch {
+        // broadcast failed
+      }
+    }
 
     return winnerRecord;
   }, []);
@@ -267,9 +356,16 @@ export function useRaffleState() {
   }, []);
 
   const rules = state.frozenConfig ?? state.config;
-  const eligibleCount = countEligible(state.participants, state.winners, rules.maxWinsPerUser);
+  const eligibleCount = countEligible(
+    state.participants,
+    state.winners,
+    rules.maxWinsPerUser,
+  );
   const minMs = clampDuration(rules.minRaffleDurationSec) * 1000;
-  const elapsedMs = state.startedAt != null ? Date.now() - state.startedAt : Number.POSITIVE_INFINITY;
+  const elapsedMs =
+    state.startedAt != null
+      ? Date.now() - state.startedAt
+      : Number.POSITIVE_INFINITY;
   const remainingMs =
     state.status === "running" || state.status === "stopped"
       ? Math.max(0, minMs - elapsedMs)
@@ -285,6 +381,7 @@ export function useRaffleState() {
     start,
     stop,
     addParticipant,
+    removeParticipant,
     drawWinner,
     eligibleCount,
     canDraw,

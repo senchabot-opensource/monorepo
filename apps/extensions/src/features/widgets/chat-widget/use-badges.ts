@@ -13,7 +13,6 @@ type TwitchBadgeSet = {
   versions: TwitchBadgeVersion[];
 };
 
-let cachedGlobalBadges: Map<string, string> | null = null;
 let globalFetchPromise: Promise<Map<string, string>> | null = null;
 const channelBadgeCaches = new Map<string, Promise<Map<string, string>>>();
 
@@ -38,14 +37,11 @@ export const useTwitchBadges = (channelName?: string | null) => {
               map.set(`${set.set_id}/${version.id}`, version.image_url_1x);
             }
           }
-          cachedGlobalBadges = map;
           return map;
         })
         .catch(err => {
           console.error("Failed to load Twitch global badges:", err);
-          const map = new Map<string, string>();
-          cachedGlobalBadges = map;
-          return map;
+          return new Map<string, string>();
         });
     }
 
@@ -73,10 +69,7 @@ export const useTwitchBadges = (channelName?: string | null) => {
             return map;
           })
           .catch(err => {
-            console.error(
-              `Failed to load Twitch channel badges for ${channelName}:`,
-              err,
-            );
+            console.error("Failed to load Twitch channel badges:", err);
             return new Map<string, string>();
           });
         channelBadgeCaches.set(lowerChannel, p);
@@ -84,13 +77,18 @@ export const useTwitchBadges = (channelName?: string | null) => {
       channelPromise = channelBadgeCaches.get(lowerChannel)!;
     }
 
+    let isMounted = true;
     Promise.all([globalFetchPromise, channelPromise]).then(
-      ([global, channel]) => {
-        // Merge channel badges over global badges
-        const merged = new Map([...global, ...channel]);
+      ([globalMap, channelMap]) => {
+        if (!isMounted) return;
+        const merged = new Map<string, string>([...globalMap, ...channelMap]);
         setBadgeMap(merged);
       },
     );
+
+    return () => {
+      isMounted = false;
+    };
   }, [channelName]);
 
   return badgeMap;
