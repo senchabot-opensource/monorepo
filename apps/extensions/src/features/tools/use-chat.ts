@@ -8,6 +8,26 @@ type Disconnectable = {
   disconnect: () => void;
 };
 
+export interface ObsBridgeCustomCommands {
+  cmdBrb?: string;
+  cmdBack?: string;
+  cmdStartStream?: string;
+  cmdStopStream?: string;
+  cmdStartRecord?: string;
+  cmdStopRecord?: string;
+  cmdScene?: string;
+}
+
+export const DEFAULT_OBS_COMMANDS: Required<ObsBridgeCustomCommands> = {
+  cmdBrb: "brb",
+  cmdBack: "back",
+  cmdStartStream: "!startstream",
+  cmdStopStream: "!stopstream",
+  cmdStartRecord: "!startrecord",
+  cmdStopRecord: "!stoprecord",
+  cmdScene: "!scene",
+};
+
 function parseUsers(raw: string | null | undefined): Set<string> {
   return new Set(
     raw ? raw
@@ -27,6 +47,7 @@ export const useChat = (
   commandUser?: string | null,
   onScenes?: (scenes: string[]) => void,
   onConnected?: (connected: boolean) => void,
+  customCommands?: ObsBridgeCustomCommands,
 ) => {
   const onScenesRef = useRef(onScenes);
   onScenesRef.current = onScenes;
@@ -38,6 +59,15 @@ export const useChat = (
   brbSceneRef.current = brbScene;
   const cmdUsersRef = useRef(parseUsers(commandUser));
   cmdUsersRef.current = parseUsers(commandUser);
+  const scenesRef = useRef<string[]>([]);
+  const customCommandsRef = useRef({
+    ...DEFAULT_OBS_COMMANDS,
+    ...customCommands,
+  });
+  customCommandsRef.current = {
+    ...DEFAULT_OBS_COMMANDS,
+    ...customCommands,
+  };
 
   useEffect(() => {
     const obs = new OBSWebSocket();
@@ -49,6 +79,18 @@ export const useChat = (
       if (el) {
         el.innerText = text;
         el.style.color = color;
+      }
+    };
+
+    const fetchScenes = async () => {
+      try {
+        const data = await obs.call('GetSceneList');
+        const items = data.scenes as Array<{ sceneName: string }>;
+        const scenes = items.map(s => s.sceneName);
+        scenesRef.current = scenes;
+        onScenesRef.current?.(scenes);
+      } catch {
+        // scene list unavailable
       }
     };
 
@@ -75,14 +117,11 @@ export const useChat = (
     });
 
     obs.on('Identified', async () => {
-      try {
-        const data = await obs.call('GetSceneList');
-        const items = data.scenes as Array<{ sceneName: string }>;
-        const scenes = items.map(s => s.sceneName);
-        onScenesRef.current?.(scenes);
-      } catch {
-        // scene list unavailable
-      }
+      await fetchScenes();
+    });
+
+    obs.on('SceneListChanged', async () => {
+      await fetchScenes();
     });
 
     connectOBS();
@@ -90,25 +129,48 @@ export const useChat = (
     const pushToMessages = (payload: ChatMessagesType) => {
       if (!cmdUsersRef.current.has(payload.user.toLowerCase())) return;
 
-      switch (payload.message) {
-        case '!startrecord':
-          obs.call('StartRecord').catch(console.error);
-          break;
-        case '!stoprecord':
-          obs.call('StopRecord').catch(console.error);
-          break;
-        case '!startstream':
-          obs.call('StartStream').catch(console.error);
-          break;
-        case '!stopstream':
-          obs.call('StopStream').catch(console.error);
-          break;
-        case 'brb':
-          obs.call('SetCurrentProgramScene', { sceneName: brbSceneRef.current }).catch(console.error);
-          break;
-        case 'back':
-          obs.call('SetCurrentProgramScene', { sceneName: mainSceneRef.current }).catch(console.error);
-          break;
+      const rawMsg = payload.message.trim();
+      const msg = rawMsg.toLowerCase();
+      const cmds = customCommandsRef.current;
+
+      const startRec = (cmds.cmdStartRecord || DEFAULT_OBS_COMMANDS.cmdStartRecord).trim().toLowerCase();
+      const stopRec = (cmds.cmdStopRecord || DEFAULT_OBS_COMMANDS.cmdStopRecord).trim().toLowerCase();
+      const startStr = (cmds.cmdStartStream || DEFAULT_OBS_COMMANDS.cmdStartStream).trim().toLowerCase();
+      const stopStr = (cmds.cmdStopStream || DEFAULT_OBS_COMMANDS.cmdStopStream).trim().toLowerCase();
+      const brb = (cmds.cmdBrb || DEFAULT_OBS_COMMANDS.cmdBrb).trim().toLowerCase();
+      const back = (cmds.cmdBack || DEFAULT_OBS_COMMANDS.cmdBack).trim().toLowerCase();
+      const scenePrefix = (cmds.cmdScene || DEFAULT_OBS_COMMANDS.cmdScene).trim().toLowerCase();
+
+      if (startRec && msg === startRec) {
+        obs.call('StartRecord').catch(console.error);
+      } else if (stopRec && msg === stopRec) {
+        obs.call('StopRecord').catch(console.error);
+      } else if (startStr && msg === startStr) {
+        obs.call('StartStream').catch(console.error);
+      } else if (stopStr && msg === stopStr) {
+        obs.call('StopStream').catch(console.error);
+      } else if (brb && msg === brb) {
+        obs.call('SetCurrentProgramScene', { sceneName: brbSceneRef.current }).catch(console.error);
+      } else if (back && msg === back) {
+        obs.call('SetCurrentProgramScene', { sceneName: mainSceneRef.current }).catch(console.error);
+      } else if (scenePrefix && (msg === scenePrefix || msg.startsWith(scenePrefix + " "))) {
+        const query = rawMsg.slice(scenePrefix.length).trim();
+        if (query && scenesRef.current.length > 0) {
+          const lowerQuery = query.toLowerCase();
+          // 1. Try exact match (case-insensitive)
+          let match = scenesRef.current.find(
+            (s) => s.trim().toLowerCase() === lowerQuery
+          );
+          // 2. Try substring match (case-insensitive)
+          if (!match) {
+            match = scenesRef.current.find(
+              (s) => s.trim().toLowerCase().includes(lowerQuery)
+            );
+          }
+          if (match) {
+            obs.call('SetCurrentProgramScene', { sceneName: match }).catch(console.error);
+          }
+        }
       }
     };
 

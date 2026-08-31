@@ -1,7 +1,7 @@
-import { useChat } from "#/features/tools/use-chat";
+import { useChat, DEFAULT_OBS_COMMANDS, type ObsBridgeCustomCommands } from "#/features/tools/use-chat";
 import { getKickChannelInfo } from "#/lib/kick";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { z } from "zod";
 
 const searchSchema = z.object({
@@ -12,6 +12,13 @@ const searchSchema = z.object({
   obsWebsocketUrl: z.string().optional(),
   obsWebsocketPassword: z.string().optional(),
   commandUser: z.string().optional(),
+  cmdBrb: z.string().optional(),
+  cmdBack: z.string().optional(),
+  cmdStartStream: z.string().optional(),
+  cmdStopStream: z.string().optional(),
+  cmdStartRecord: z.string().optional(),
+  cmdStopRecord: z.string().optional(),
+  cmdScene: z.string().optional(),
 });
 
 export const Route = createFileRoute("/tools/obs-bridge")({
@@ -109,8 +116,7 @@ function SceneList({
       </div>
       <p className="mt-2 text-[11px] text-zinc-500">
         Click <span className="text-green-400">Main</span> or{" "}
-        <span className="text-amber-400">BRB</span> next to a scene to assign it. The
-        URL updates automatically.
+        <span className="text-amber-400">BRB</span> next to a scene to assign it. Or switch to any scene using <code className="text-zinc-300">!scene &lt;name&gt;</code>.
       </p>
     </div>
   );
@@ -193,6 +199,24 @@ function RouteComponent() {
     .map((u) => u.trim().toLowerCase())
     .filter(Boolean) : [];
 
+  const customCommands: ObsBridgeCustomCommands = useMemo(() => ({
+    cmdBrb: search.cmdBrb || DEFAULT_OBS_COMMANDS.cmdBrb,
+    cmdBack: search.cmdBack || DEFAULT_OBS_COMMANDS.cmdBack,
+    cmdStartStream: search.cmdStartStream || DEFAULT_OBS_COMMANDS.cmdStartStream,
+    cmdStopStream: search.cmdStopStream || DEFAULT_OBS_COMMANDS.cmdStopStream,
+    cmdStartRecord: search.cmdStartRecord || DEFAULT_OBS_COMMANDS.cmdStartRecord,
+    cmdStopRecord: search.cmdStopRecord || DEFAULT_OBS_COMMANDS.cmdStopRecord,
+    cmdScene: search.cmdScene || DEFAULT_OBS_COMMANDS.cmdScene,
+  }), [
+    search.cmdBrb,
+    search.cmdBack,
+    search.cmdStartStream,
+    search.cmdStopStream,
+    search.cmdStartRecord,
+    search.cmdStopRecord,
+    search.cmdScene,
+  ]);
+
   const onScenes = useCallback((list: string[]) => {
     setScenes(list);
   }, []);
@@ -211,6 +235,7 @@ function RouteComponent() {
     search.commandUser,
     onScenes,
     onConnected,
+    customCommands,
   );
 
   const setMain = (name: string) => {
@@ -305,6 +330,42 @@ function RouteComponent() {
               <span className="text-green-400 font-medium">{search.kick}</span>
             </div>
           )}
+
+          <div className="bg-zinc-800/50 p-3 rounded-md border border-zinc-800">
+            <h3 className="text-sm font-semibold text-zinc-400 mb-2">
+              Active Chat Commands
+            </h3>
+            <div className="space-y-1 text-xs text-zinc-300 font-mono">
+              <div className="flex justify-between">
+                <span className="text-zinc-500">Switch to Any Scene:</span>
+                <span className="text-green-400 font-semibold">{customCommands.cmdScene} &lt;name&gt;</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-zinc-500">Switch to BRB:</span>
+                <span className="text-green-400 font-semibold">{customCommands.cmdBrb}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-zinc-500">Switch to Main:</span>
+                <span className="text-green-400 font-semibold">{customCommands.cmdBack}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-zinc-500">Start Stream:</span>
+                <span className="text-green-400 font-semibold">{customCommands.cmdStartStream}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-zinc-500">Stop Stream:</span>
+                <span className="text-green-400 font-semibold">{customCommands.cmdStopStream}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-zinc-500">Start Record:</span>
+                <span className="text-green-400 font-semibold">{customCommands.cmdStartRecord}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-zinc-500">Stop Record:</span>
+                <span className="text-green-400 font-semibold">{customCommands.cmdStopRecord}</span>
+              </div>
+            </div>
+          </div>
         </div>
 
         <p className="mt-6 text-xs text-zinc-500 text-center">

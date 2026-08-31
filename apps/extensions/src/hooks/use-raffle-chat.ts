@@ -1,8 +1,22 @@
 import { useEffect, useRef } from "react";
-
 import type { RaffleConfig, RaffleParticipant } from "#/types/raffle";
+import { getKickChannelInfo } from "#/lib/kick";
 
 type OnParticipant = (participant: RaffleParticipant) => void;
+
+const KNOWN_BOTS = new Set([
+  "nightbot",
+  "streamelements",
+  "streamlabs",
+  "moobot",
+  "fossabot",
+  "wizebot",
+  "botrix",
+  "soundalerts",
+  "blerp",
+  "kofi_stream_bot",
+  "senchabot",
+]);
 
 export function parseTags(tagsStr?: string): Record<string, string> {
   if (!tagsStr) return {};
@@ -21,19 +35,22 @@ export function parseTags(tagsStr?: string): Record<string, string> {
 }
 
 export function extractSubMonths(tags: Record<string, string>): number {
-  const badgeInfo = tags["badge-info"];
-  if (badgeInfo) {
-    const match = badgeInfo.match(/subscriber\/(\d+)/);
-    if (match) return parseInt(match[1], 10);
-  }
+  const badgeInfo = tags["badge-info"] || "";
+  const matchInfo = badgeInfo.match(/(?:subscriber|founder)\/(\d+)/);
+  if (matchInfo) return parseInt(matchInfo[1], 10);
+
   const badges = tags.badges || "";
-  if (badges.includes("subscriber") || badges.includes("founder")) {
-    return 0;
+  const matchBadges = badges.match(/(?:subscriber|founder)\/(\d+)/);
+  if (matchBadges) return parseInt(matchBadges[1], 10);
+
+  if (badges.includes("subscriber") || badges.includes("founder") || tags.subscriber === "1") {
+    return 1;
   }
   return -1;
 }
 
 export function isSubscriber(tags: Record<string, string>): boolean {
+  if (tags.subscriber === "1") return true;
   const badges = tags.badges || "";
   return (
     badges.includes("subscriber") ||
@@ -54,32 +71,35 @@ export function parsePrivmsg(rawMessage: string): {
   const [, tagsStr, username, messageText] = match;
   return {
     tags: parseTags(tagsStr),
-    username,
+    username: username.toLowerCase(),
     message: messageText.trim(),
   };
 }
 
-// Decides whether a chatter's entry should be accepted based on the raffle's
-// subscription rules. `minSubMonths` only filters subscribers; non-subscribers
-// (subMonths < 0) are governed solely by `subscribersOnly`.
+export function isKeywordMatch(messageText: string, keyword: string): boolean {
+  const cleanMsg = messageText.trim().toLowerCase();
+  const cleanKeyword = keyword.trim().toLowerCase();
+  if (!cleanKeyword) return false;
+  return cleanMsg === cleanKeyword || cleanMsg.startsWith(`${cleanKeyword} `);
+}
+
 export function shouldAcceptEntry(
   isSub: boolean,
   subMonths: number,
   config: Pick<RaffleConfig, "subscribersOnly" | "minSubMonths">,
 ): boolean {
   if (config.subscribersOnly && !isSub) return false;
-  if (
-    config.minSubMonths > 0 &&
-    subMonths >= 0 &&
-    subMonths < config.minSubMonths
-  ) {
-    return false;
+  if (config.subscribersOnly && config.minSubMonths > 1) {
+    const effectiveMonths = subMonths >= 0 ? subMonths : 0;
+    if (effectiveMonths < config.minSubMonths) {
+      return false;
+    }
   }
   return true;
 }
 
 function makeUserId(platform: "twitch" | "kick", username: string): string {
-  return `${platform}-${username.toLowerCase()}`;
+  return `${platform}-${username.trim().toLowerCase()}`;
 }
 
 interface ReconnectingWS {
@@ -173,6 +193,7 @@ export function useRaffleChat(
   useEffect(() => {
     if (!enabled || !config.channel.trim()) return;
 
+    let cancelled = false;
     const clients: ReconnectingWS[] = [];
 
     if (config.platform === "twitch") {
@@ -194,33 +215,34 @@ export function useRaffleChat(
               continue;
             }
 
-          const parsed = parsePrivmsg(message);
-          if (!parsed) continue;
+            const parsed = parsePrivmsg(message);
+            if (!parsed) continue;
 
-          const currentConfig = configRef.current;
-          const currentEnabled = enabledRef.current;
-          if (!currentEnabled) continue;
+            const username = parsed.username.toLowerCase();
+            if (KNOWN_BOTS.has(username)) continue;
 
-          const msgLower = parsed.message.toLowerCase();
-          const keywordLower = currentConfig.keyword.toLowerCase();
-          if (msgLower !== keywordLower) continue;
+            const currentConfig = configRef.current;
+            const currentEnabled = enabledRef.current;
+            if (!currentEnabled) continue;
 
-          const subMonths = extractSubMonths(parsed.tags);
-          const isSub = isSubscriber(parsed.tags);
+            if (!isKeywordMatch(parsed.message, currentConfig.keyword)) continue;
 
-          if (!shouldAcceptEntry(isSub, subMonths, currentConfig)) continue;
+            const subMonths = extractSubMonths(parsed.tags);
+            const isSub = isSubscriber(parsed.tags);
 
-          const displayName = parsed.tags["display-name"] || parsed.username;
-          const id = makeUserId("twitch", parsed.username);
+            if (!shouldAcceptEntry(isSub, subMonths, currentConfig)) continue;
 
-          onParticipantRef.current({
-            id,
-            username: parsed.username,
-            displayName,
-            platform: "twitch",
-            subMonths,
-            timestamp: Date.now(),
-          });
+            const displayName = parsed.tags["display-name"] || parsed.username;
+            const id = makeUserId("twitch", username);
+
+            onParticipantRef.current({
+              id,
+              username,
+              displayName,
+              platform: "twitch",
+              subMonths,
+              timestamp: Date.now(),
+            });
           }
         },
         (err) => {
@@ -234,97 +256,116 @@ export function useRaffleChat(
     }
 
     if (config.platform === "kick") {
-      const channelId = config.channel.trim();
-      const client = createReconnectingWS(
-        "wss://ws-us2.pusher.com/app/32cbd69e4b950bf97679?protocol=7&client=js&version=8.4.0&flash=false",
-        (ws) => {
-          ws.send(
-            JSON.stringify({
-              event: "pusher:subscribe",
-              data: { channel: `chatrooms.${channelId}.v2` },
-            }),
-          );
-        },
-        (event) => {
-          if (typeof event.data !== "string") return;
+      const rawChannel = config.channel.trim();
 
-          let responseData: unknown;
-          try {
-            responseData = JSON.parse(event.data);
-          } catch {
+      const connectKick = async () => {
+        let channelId = rawChannel;
+
+        // If not purely numeric chatroom ID, resolve channel name to chatroomId
+        if (!/^\d+$/.test(channelId)) {
+          const info = await getKickChannelInfo(rawChannel);
+          if (cancelled) return;
+          if (!info.chatroomId) {
+            console.warn(`[RaffleChat] Could not find Kick chatroom for ${rawChannel}`);
             return;
           }
+          channelId = info.chatroomId;
+        }
 
-          const response = responseData as { event?: unknown; data?: unknown };
-          if (
-            response.event !== "App\\Events\\ChatMessageEvent" ||
-            typeof response.data !== "string"
-          ) {
-            return;
-          }
+        const client = createReconnectingWS(
+          "wss://ws-us2.pusher.com/app/32cbd69e4b950bf97679?protocol=7&client=js&version=8.4.0&flash=false",
+          (ws) => {
+            ws.send(
+              JSON.stringify({
+                event: "pusher:subscribe",
+                data: { channel: `chatrooms.${channelId}.v2` },
+              }),
+            );
+          },
+          (event) => {
+            if (typeof event.data !== "string") return;
 
-          let payloadData: unknown;
-          try {
-            payloadData = JSON.parse(response.data);
-          } catch {
-            return;
-          }
+            let responseData: unknown;
+            try {
+              responseData = JSON.parse(event.data);
+            } catch {
+              return;
+            }
 
-          const payload = payloadData as {
-            id?: unknown;
-            sender: {
-              username: string;
-              identity?: {
-                color?: string;
-                badges?: { type: string; count?: number }[];
+            const response = responseData as { event?: unknown; data?: unknown };
+            if (
+              response.event !== "App\\Events\\ChatMessageEvent" ||
+              typeof response.data !== "string"
+            ) {
+              return;
+            }
+
+            let payloadData: unknown;
+            try {
+              payloadData = JSON.parse(response.data);
+            } catch {
+              return;
+            }
+
+            const payload = payloadData as {
+              id?: unknown;
+              sender: {
+                username: string;
+                identity?: {
+                  color?: string;
+                  badges?: { type: string; count?: number }[];
+                };
               };
+              content: string;
+              created_at: string;
             };
-            content: string;
-            created_at: string;
-          };
 
-          const currentConfig = configRef.current;
-          const currentEnabled = enabledRef.current;
-          if (!currentEnabled) return;
+            const user = payload.sender.username.toLowerCase();
+            if (KNOWN_BOTS.has(user)) return;
 
-          const msgLower = payload.content.toLowerCase().trim();
-          const keywordLower = currentConfig.keyword.toLowerCase();
-          if (msgLower !== keywordLower) return;
+            const currentConfig = configRef.current;
+            const currentEnabled = enabledRef.current;
+            if (!currentEnabled) return;
 
-          const badges = payload.sender.identity?.badges || [];
-          const subBadge = badges.find((b) =>
-            b.type.toLowerCase().startsWith("sub"),
-          );
-          const isSub =
-            Boolean(subBadge) ||
-            badges.some((b) => b.type === "broadcaster");
-          const subMonths = subBadge?.count ?? -1;
+            if (!isKeywordMatch(payload.content, currentConfig.keyword)) return;
 
-          if (!shouldAcceptEntry(isSub, subMonths, currentConfig)) return;
+            const badges = payload.sender.identity?.badges || [];
+            const subBadge = badges.find((b) =>
+              b.type.toLowerCase().startsWith("sub"),
+            );
+            const isSub =
+              Boolean(subBadge) ||
+              badges.some((b) => b.type === "broadcaster");
+            const subMonths = subBadge?.count ?? (isSub ? 1 : -1);
 
-          const user = payload.sender.username;
-          const id = makeUserId("kick", user);
+            if (!shouldAcceptEntry(isSub, subMonths, currentConfig)) return;
 
-          onParticipantRef.current({
-            id,
-            username: user,
-            displayName: user,
-            platform: "kick",
-            subMonths,
-            timestamp: Date.now(),
-          });
-        },
-        (err) => {
-          console.error("[RaffleChat] Kick WebSocket error:", err);
-        },
-        (msg) => {
-          console.log(msg);
-        },
-      );
-      clients.push(client);
+            const id = makeUserId("kick", user);
+
+            onParticipantRef.current({
+              id,
+              username: user,
+              displayName: payload.sender.username,
+              platform: "kick",
+              subMonths,
+              timestamp: Date.now(),
+            });
+          },
+          (err) => {
+            console.error("[RaffleChat] Kick WebSocket error:", err);
+          },
+          (msg) => {
+            console.log(msg);
+          },
+        );
+        clients.push(client);
+      };
+
+      connectKick();
     }
 
     return () => {
+      cancelled = true;
       for (const client of clients) {
         client.close();
       }
