@@ -1,9 +1,9 @@
 import { Breadcrumb } from "#/components/breadcrumb";
 import { YoutubeTutorial } from "#/components/youtube-tutorial";
-import { useT } from "#/lib/i18n";
+import { useI18n } from "#/lib/i18n";
 import { getLocaleLinks } from "#/lib/i18n/seo";
 import { createFileRoute } from "@tanstack/react-router";
-import { useDeferredValue, useMemo, useState } from "react";
+import { useDeferredValue, useEffect, useMemo, useState } from "react";
 
 export const Route = createFileRoute("/setup/chat-widget")({
   head: () => ({
@@ -106,7 +106,7 @@ export const Route = createFileRoute("/setup/chat-widget")({
 });
 
 function ChatWidgetSetup() {
-  const t = useT();
+  const { locale, t } = useI18n();
   const [twitchChannel, setTwitchChannel] = useState("");
   const [kickChannel, setKickChannel] = useState("");
   const [fontSize, setFontSize] = useState("18");
@@ -138,6 +138,11 @@ function ChatWidgetSetup() {
     "slide" | "pop" | "bounce" | "stagger" | "fade" | "none"
   >("slide");
   const [copied, setCopied] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const deferredTwitch = useDeferredValue(twitchChannel);
   const deferredKick = useDeferredValue(kickChannel);
@@ -146,9 +151,9 @@ function ChatWidgetSetup() {
     if (typeof window === "undefined") return "";
     const params = new URLSearchParams();
     if (platforms === "both" || platforms === "twitch")
-      if (deferredTwitch) params.append("twitch", deferredTwitch);
+      if (twitchChannel.trim()) params.append("twitch", twitchChannel.trim().toLowerCase());
     if (platforms === "both" || platforms === "kick")
-      if (deferredKick) params.append("kick", deferredKick);
+      if (kickChannel.trim()) params.append("kick", kickChannel.trim().toLowerCase());
     if (!sevenTv) params.append("sevenTv", "false");
     if (!badges) params.append("badges", "false");
     if (fontSize !== "18") params.append("fontSize", fontSize);
@@ -168,10 +173,58 @@ function ChatWidgetSetup() {
     if (layout !== "inline") params.append("layout", layout);
     if (animation !== "slide") params.append("animation", animation);
 
-    if (!deferredTwitch && !deferredKick) {
-      params.append("mock", "true");
-      return `${window.location.origin}/widgets/chat-widget?${params.toString()}`;
+    if (!twitchChannel.trim() && !kickChannel.trim()) {
+      return "";
     }
+    return `${window.location.origin}/widgets/chat-widget?${params.toString()}`;
+  }, [
+    twitchChannel,
+    kickChannel,
+    sevenTv,
+    badges,
+    fontSize,
+    hasBackground,
+    backgroundOpacity,
+    itemBackground,
+    boldUsernames,
+    boldMessages,
+    orientation,
+    platforms,
+    platformDisplay,
+    showTimestamp,
+    keepMessages,
+    font,
+    layout,
+    animation,
+  ]);
+
+  const previewUrl = useMemo(() => {
+    if (typeof window === "undefined") return "";
+    const params = new URLSearchParams();
+    if (platforms === "both" || platforms === "twitch")
+      if (deferredTwitch.trim()) params.append("twitch", deferredTwitch.trim().toLowerCase());
+    if (platforms === "both" || platforms === "kick")
+      if (deferredKick.trim()) params.append("kick", deferredKick.trim().toLowerCase());
+    if (!sevenTv) params.append("sevenTv", "false");
+    if (!badges) params.append("badges", "false");
+    if (fontSize !== "18") params.append("fontSize", fontSize);
+    if (hasBackground) {
+      params.append("background", "true");
+      if (backgroundOpacity !== "0.5") params.append("bgOpacity", backgroundOpacity);
+    }
+    if (itemBackground) params.append("itemBackground", "true");
+    if (boldUsernames) params.append("boldUsernames", "true");
+    if (boldMessages) params.append("boldMessages", "true");
+    if (orientation !== "vertical") params.append("orientation", orientation);
+    if (platforms === "both" && platformDisplay !== "icon")
+      params.append("platformDisplay", platformDisplay);
+    if (showTimestamp) params.append("timestamp", "true");
+    if (keepMessages) params.append("keep", "true");
+    if (font !== "inter") params.append("font", font);
+    if (layout !== "inline") params.append("layout", layout);
+    if (animation !== "slide") params.append("animation", animation);
+    params.append("mock", "true");
+    params.append("lang", locale);
     return `${window.location.origin}/widgets/chat-widget?${params.toString()}`;
   }, [
     deferredTwitch,
@@ -192,6 +245,7 @@ function ChatWidgetSetup() {
     font,
     layout,
     animation,
+    locale,
   ]);
 
   const handleCopy = async () => {
@@ -581,11 +635,11 @@ function ChatWidgetSetup() {
               <h2 className="mb-4 text-xl font-semibold text-center text-zinc-700 dark:text-zinc-300">
                 {t("chatWidget.previewTitle")}
               </h2>
-              <div className="flex-1 w-full bg-zinc-950 rounded-lg overflow-hidden border border-zinc-300 relative shadow-inner flex items-center justify-center relative bg-opacity-20 dark:border-zinc-800">
-                {widgetUrl ? (
+              <div className="flex-1 w-full bg-zinc-950/80 rounded-lg overflow-hidden border border-zinc-300 relative shadow-inner flex items-center justify-center dark:border-zinc-800">
+                {mounted ? (
                   <iframe
-                    src={widgetUrl}
-                    className="absolute inset-0 w-full h-full border-0"
+                    src={previewUrl}
+                    className="absolute inset-0 w-full h-full border-0 pointer-events-none"
                     title={t("chatWidget.previewIframeTitle")}
                   />
                 ) : (
@@ -594,6 +648,9 @@ function ChatWidgetSetup() {
                   </div>
                 )}
               </div>
+              <p className="mt-2 text-center text-xs text-zinc-500">
+                {t("chatWidget.previewHint")}
+              </p>
 
               <div className="mt-4 hidden lg:block">
                 <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">

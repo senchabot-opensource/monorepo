@@ -322,92 +322,180 @@ function RouteComponent() {
   const { kick, kickSubBadges } = Route.useLoaderData();
   const twitchBadgeMap = useTwitchBadges(search.twitch);
 
-  const showPlatformIndicator = Boolean(search.twitch && search.kick);
+  const isMock = Boolean(search.mock || (!search.twitch && !kick));
+
+  const showPlatformIndicator = Boolean(
+    (search.twitch && search.kick) ||
+      isMock ||
+      search.platformDisplay === 'name' ||
+      search.platformDisplay === 'icon'
+  );
 
   const sevenTvEmoteMap = use7tvEmotes(search.sevenTv ? search.twitch : null);
 
   useUnifiedChat(search.twitch, kick);
 
-  const isMock = search.mock ?? (!search.twitch && !kick);
-
   React.useEffect(() => {
     if (!isMock) return;
 
-    const mockUsers: {
+    const mockMessagesData: Array<{
       user: string;
       color: string;
       platform: 'twitch' | 'kick';
       badges?: string[];
-    }[] = [
-        { user: 'Senchabot', color: '#00ff00', platform: 'twitch', badges: ['broadcaster'] },
-        { user: 'Streamlabs', color: '#ff69b4', platform: 'twitch', badges: ['moderator'] },
-        { user: 'NightBot', color: '#8a2be2', platform: 'kick' },
-        { user: 'AysArt', color: '#ff4500', platform: 'kick', badges: ['broadcaster'] },
-        {
-          user: 'wykonos',
-          color: '#1e90ff',
-          platform: 'twitch',
-          badges: ['moderator', 'subscriber'],
-        },
-        { user: 'Moobot', color: '#ff0000', platform: 'twitch' },
-        {
-          user: 'NotDepresseDeveloper',
-          color: '#ff69b4',
-          platform: 'twitch',
-          badges: ['broadcaster'],
-        },
-        {
-          user: 'usirin',
-          color: '#d4af37',
-          platform: 'twitch',
-          badges: ['broadcaster', 'subscriber'],
-        },
-        {
-          user: 'CoreFunctionsInitiated',
-          color: '#ff1493',
-          platform: 'kick',
-          badges: ['subscriber'],
-        },
-        {
-          user: 'eckoln',
-          color: '#00bfff',
-          platform: 'twitch',
-          badges: ['moderator', 'vip', 'subscriber'],
-        },
-      ];
-
-    const sampleMessages = [
-      'Hey everyone! 🔥',
-      'lol that was insane',
-      'Hi from the chat widget! This is a sample message to show how it looks.',
-      'Hi',
-      'first time watching, love the stream!',
-      'can someone explain what just happened?',
-      'KEKW',
-      '!uptime',
-      'this song is fire 🎵',
-      'hello from chat!',
+      message: string;
+    }> = [
+      {
+        user: 'MonkeyDLuffy',
+        color: '#FF4500',
+        platform: 'twitch',
+        badges: ['broadcaster'],
+        message: 'GOMU GOMU NO... GG! 🍖🏴‍☠️',
+      },
+      {
+        user: 'Goku',
+        color: '#FFA500',
+        platform: 'kick',
+        badges: ['broadcaster'],
+        message: 'That clutch power level is over 9000! 💥🔥',
+      },
+      {
+        user: 'GojoSatoru',
+        color: '#00BFFF',
+        platform: 'twitch',
+        badges: ['moderator', 'vip'],
+        message: 'Throughout heaven and earth, this stream alone is honored 🤞✨',
+      },
+      {
+        user: 'RoronoaZoro',
+        color: '#22C55E',
+        platform: 'kick',
+        badges: ['subscriber'],
+        message: 'Wait... which stream is this? I got lost again ⚔️🧭',
+      },
+      {
+        user: 'NarutoUzumaki',
+        color: '#FF8C00',
+        platform: 'twitch',
+        badges: ['vip', 'subscriber'],
+        message: 'Believe it! Best stream on the platform dattebayo! 🍜🍥',
+      },
+      {
+        user: 'Tanjiro',
+        color: '#20B2AA',
+        platform: 'kick',
+        badges: ['subscriber'],
+        message: 'Total Concentration... Gaming Breathing, First Form! 🌊⚔️',
+      },
+      {
+        user: 'Frieren',
+        color: '#E0E7FF',
+        platform: 'twitch',
+        badges: ['subscriber'],
+        message: "I've been watching this stream for only 80 years, time flies 🪄⏳",
+      },
+      {
+        user: 'AnyaForger',
+        color: '#FF69B4',
+        platform: 'kick',
+        badges: ['vip'],
+        message: 'WAKU WAKU!! Peanut power activated! 🥜✨',
+      },
+      {
+        user: 'SungJinwoo',
+        color: '#9333EA',
+        platform: 'twitch',
+        badges: ['broadcaster', 'subscriber'],
+        message: 'Arise... and drop a follow! 👑🗡️',
+      },
+      {
+        user: 'LeviAckerman',
+        color: '#10B981',
+        platform: 'twitch',
+        badges: ['moderator'],
+        message: 'Clean gameplay and incredible focus! ✨🎮',
+      },
+      {
+        user: 'Nezuko',
+        color: '#FF69B4',
+        platform: 'kick',
+        badges: ['moderator'],
+        message: "Mmm-hmm! Let's go team! 🌸🎋",
+      },
+      {
+        user: 'Killua',
+        color: '#38BDF8',
+        platform: 'twitch',
+        badges: ['subscriber', 'vip'],
+        message: 'Clip that lightning fast clutch right now! ⚡🐱',
+      },
+      {
+        user: 'Denji',
+        color: '#F59E0B',
+        platform: 'kick',
+        badges: ['subscriber'],
+        message: "LET'S GOOOOO TOAST AND JAM ENERGY! 🍞✨",
+      },
+      {
+        user: 'Chopper',
+        color: '#38BDF8',
+        platform: 'twitch',
+        badges: ['vip'],
+        message: 'Senchabot makes the stream so colorful and fun! 🌸🩺',
+      },
+      {
+        user: 'Saitama',
+        color: '#FACC15',
+        platform: 'kick',
+        badges: ['subscriber'],
+        message: 'One punch victory! Just a gamer having fun 🥊🥚',
+      },
+      {
+        user: 'Senchabot',
+        color: '#00DB84',
+        platform: 'twitch',
+        badges: ['moderator'],
+        message: '!uptime | Welcome friends to the stream! 🍵🚀',
+      },
     ];
 
-    const now = Date.now();
-    for (let i = 0; i < mockUsers.length; i++) {
-      const u = mockUsers[i];
+    let messageCounter = 0;
+    const insertedIds: string[] = [];
+
+    const insertNextMock = () => {
+      const item = mockMessagesData[messageCounter % mockMessagesData.length];
+      const id = `mock-${Date.now()}-${messageCounter}`;
+      messageCounter++;
+      insertedIds.push(id);
+
       chatMessagesCollection.insert({
-        id: `mock-${i}`,
-        user: u.user,
-        message: sampleMessages[i % sampleMessages.length],
-        platform: u.platform,
-        timestamp: new Date(now - (mockUsers.length - i) * 3000),
-        color: u.color,
-        badges: u.badges,
-        receivedAt: new Date(now - (mockUsers.length - i) * 3000),
-        userLower: u.user.toLowerCase(),
+        id,
+        user: item.user,
+        message: item.message,
+        platform: item.platform,
+        timestamp: new Date(),
+        color: item.color,
+        badges: item.badges,
+        receivedAt: new Date(),
+        userLower: item.user.toLowerCase(),
       });
-    }
+
+      if (insertedIds.length > 20) {
+        const oldestId = insertedIds.shift();
+        if (oldestId) {
+          chatMessagesCollection.delete(oldestId);
+        }
+      }
+    };
+
+    const firstTimer = setTimeout(insertNextMock, 400);
+    const interval = setInterval(insertNextMock, 3000);
 
     return () => {
-      for (let i = 0; i < mockUsers.length; i++) {
-        chatMessagesCollection.delete(`mock-${i}`);
+      clearTimeout(firstTimer);
+      clearInterval(interval);
+      for (const id of insertedIds) {
+        chatMessagesCollection.delete(id);
       }
     };
   }, [isMock]);
