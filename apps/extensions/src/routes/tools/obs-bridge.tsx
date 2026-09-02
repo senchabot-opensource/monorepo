@@ -1,4 +1,5 @@
 import { useChat, DEFAULT_OBS_COMMANDS, type ObsBridgeCustomCommands } from "#/features/tools/use-chat";
+import { useT } from "#/lib/i18n";
 import { getKickChannelInfo } from "#/lib/kick";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useCallback, useMemo, useState } from "react";
@@ -19,6 +20,7 @@ const searchSchema = z.object({
   cmdStartRecord: z.string().optional(),
   cmdStopRecord: z.string().optional(),
   cmdScene: z.string().optional(),
+  lang: z.string().optional(),
 });
 
 export const Route = createFileRoute("/tools/obs-bridge")({
@@ -53,6 +55,7 @@ function SceneList({
   onSetMain: (name: string) => void;
   onSetBrb: (name: string) => void;
 }) {
+  const t = useT();
   if (scenes.length === 0) return null;
 
   const mainInList = scenes.includes(mainScene);
@@ -63,16 +66,16 @@ function SceneList({
   return (
     <div className="mt-6">
       {(needsMain || needsBrb) && (
-        <div className="mb-3 p-2 rounded-md border border-yellow-700 bg-yellow-500/10 text-xs text-yellow-300">
+        <div className="mb-3 p-2 rounded-md border border-yellow-400 bg-yellow-50 text-xs text-yellow-800 dark:border-yellow-700 dark:bg-yellow-500/10 dark:text-yellow-300">
           {needsMain && needsBrb
-            ? "Assign a Main and a BRB scene below so chat commands know which scenes to switch to."
+            ? t("tools.assignMainBrbWarning")
             : needsMain
-              ? "Assign a Main scene below so the back command knows which scene to switch to."
-              : "Assign a BRB scene below so the brb command knows which scene to switch to."}
+              ? t("tools.assignMainWarning")
+              : t("tools.assignBrbWarning")}
         </div>
       )}
-      <h3 className="text-sm font-semibold text-zinc-400 mb-3">
-        OBS Scenes ({scenes.length})
+      <h3 className="text-sm font-semibold text-zinc-600 dark:text-zinc-400 mb-3">
+        {t("tools.obsScenes", { count: scenes.length })}
       </h3>
       <div className="space-y-1.5 max-h-64 overflow-y-auto">
         {scenes.map((name) => {
@@ -86,28 +89,28 @@ function SceneList({
                   ? "border-green-600 bg-green-500/10"
                   : isBrb
                     ? "border-amber-600 bg-amber-500/10"
-                    : "border-zinc-700 bg-zinc-800 hover:border-zinc-600"
+                    : "border-zinc-300 bg-zinc-100 hover:border-zinc-400 dark:border-zinc-700 dark:bg-zinc-800 dark:hover:border-zinc-600"
               }`}
             >
-              <span className="text-zinc-200 font-mono text-xs truncate flex-1">
-                {isMain && <span className="text-green-400 mr-1">●</span>}
-                {isBrb && <span className="text-amber-400 mr-1">●</span>}
+              <span className="text-zinc-800 dark:text-zinc-200 font-mono text-xs truncate flex-1">
+                {isMain && <span className="text-green-600 dark:text-green-400 mr-1">●</span>}
+                {isBrb && <span className="text-amber-600 dark:text-amber-400 mr-1">●</span>}
                 {name}
               </span>
               <div className="flex gap-1 shrink-0 ml-2">
                 <button
                   onClick={() => onSetMain(name)}
                   disabled={isMain}
-                  className="rounded px-2 py-0.5 text-[11px] font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed bg-green-600/20 text-green-400 hover:bg-green-600/40"
+                  className="rounded px-2 py-0.5 text-[11px] font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed bg-green-600/20 text-green-700 hover:bg-green-600/40 dark:text-green-400"
                 >
-                  Main
+                  {t("tools.main")}
                 </button>
                 <button
                   onClick={() => onSetBrb(name)}
                   disabled={isBrb}
-                  className="rounded px-2 py-0.5 text-[11px] font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed bg-amber-600/20 text-amber-400 hover:bg-amber-600/40"
+                  className="rounded px-2 py-0.5 text-[11px] font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed bg-amber-600/20 text-amber-700 hover:bg-amber-600/40 dark:text-amber-400"
                 >
-                  BRB
+                  {t("tools.brb")}
                 </button>
               </div>
             </div>
@@ -115,8 +118,12 @@ function SceneList({
         })}
       </div>
       <p className="mt-2 text-[11px] text-zinc-500">
-        Click <span className="text-green-400">Main</span> or{" "}
-        <span className="text-amber-400">BRB</span> next to a scene to assign it. Or switch to any scene using <code className="text-zinc-300">!scene &lt;name&gt;</code>.
+        {t("tools.assignHintClick")}{" "}
+        <span className="text-green-600 dark:text-green-400">{t("tools.main")}</span>{" "}
+        {t("tools.assignHintOr")}{" "}
+        <span className="text-amber-600 dark:text-amber-400">{t("tools.brb")}</span>{" "}
+        {t("tools.assignHintRest")}{" "}
+        <code className="text-zinc-700 dark:text-zinc-300">!scene &lt;name&gt;</code>.
       </p>
     </div>
   );
@@ -131,6 +138,7 @@ function CommandUsers({
   onAdd: (user: string) => void;
   onRemove: (user: string) => void;
 }) {
+  const t = useT();
   const [input, setInput] = useState("");
 
   const handleAdd = () => {
@@ -143,14 +151,14 @@ function CommandUsers({
 
   return (
     <div>
-      <h3 className="text-sm font-semibold text-zinc-400 mb-2">
-        Command Users ({users.length})
+      <h3 className="text-sm font-semibold text-zinc-600 dark:text-zinc-400 mb-2">
+        {t("tools.commandUsers", { count: users.length })}
       </h3>
       <div className="flex flex-wrap gap-1.5 mb-2">
         {users.map((u) => (
           <span
             key={u}
-            className="inline-flex items-center gap-1 rounded-full bg-zinc-800 border border-zinc-700 px-2.5 py-0.5 text-xs text-zinc-200"
+            className="inline-flex items-center gap-1 rounded-full bg-zinc-200 border border-zinc-300 px-2.5 py-0.5 text-xs text-zinc-800 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-200"
           >
             {u}
             <button
@@ -168,15 +176,15 @@ function CommandUsers({
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => { if (e.key === "Enter") handleAdd(); }}
-          placeholder="Add username"
-          className="flex-1 rounded-md border border-zinc-700 bg-zinc-800 px-2.5 py-1.5 text-xs text-white placeholder-zinc-500 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
+          placeholder={t("tools.addUsername")}
+          className="flex-1 rounded-md border border-zinc-300 bg-zinc-100 px-2.5 py-1.5 text-xs text-zinc-900 placeholder-zinc-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
         />
         <button
           onClick={handleAdd}
           disabled={!input.trim()}
-          className="rounded-md bg-green-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-zinc-900 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="rounded-md bg-green-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors dark:focus:ring-offset-zinc-900"
         >
-          Add
+          {t("tools.add")}
         </button>
       </div>
     </div>
@@ -184,6 +192,7 @@ function CommandUsers({
 }
 
 function RouteComponent() {
+  const t = useT();
   const navigate = useNavigate();
   const search = Route.useSearch();
   const { kick } = Route.useLoaderData();
@@ -266,18 +275,18 @@ function RouteComponent() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 font-sans flex items-start justify-center py-12 px-4">
-      <div className="rounded-xl bg-zinc-900 p-8 border border-zinc-800 shadow-xl max-w-lg w-full">
+    <div className="min-h-screen bg-zinc-50 text-zinc-900 font-sans flex items-start justify-center py-12 px-4 dark:bg-zinc-950 dark:text-zinc-100">
+      <div className="rounded-xl bg-white p-8 border border-zinc-200 shadow-xl max-w-lg w-full dark:bg-zinc-900 dark:border-zinc-800">
         <div className="flex justify-center mb-4">
           <img src="/senchabot-logo.svg" alt="Senchabot" width={40} height={40} />
         </div>
-        <h1 className="text-xl font-bold text-center text-white mb-6">OBS Bridge</h1>
+        <h1 className="text-xl font-bold text-center text-zinc-900 mb-6 dark:text-white">{t("tools.title")}</h1>
 
         <div className="space-y-3 text-sm">
-          <div className="flex justify-between items-center bg-zinc-800/50 p-3 rounded-md border border-zinc-800">
-            <span className="text-zinc-400">OBS WebSocket</span>
+          <div className="flex justify-between items-center bg-zinc-100 p-3 rounded-md border border-zinc-200 dark:bg-zinc-800/50 dark:border-zinc-800">
+            <span className="text-zinc-600 dark:text-zinc-400">{t("tools.obsWebSocket")}</span>
             <span id="obs-status" style={{ color: connected ? "lime" : "yellow" }}>
-              {connected ? "Connected" : "Connecting..."}
+              {connected ? t("tools.connected") : t("tools.connecting")}
             </span>
           </div>
 
@@ -292,25 +301,25 @@ function RouteComponent() {
           )}
 
           {connected && scenes.length === 0 && (
-            <div className="text-xs text-zinc-500 bg-zinc-800/30 p-3 rounded-md border border-zinc-800/50 text-center">
-              Fetching scene list...
+            <div className="text-xs text-zinc-500 bg-zinc-100/60 p-3 rounded-md border border-zinc-200/60 text-center dark:bg-zinc-800/30 dark:border-zinc-800/50">
+              {t("tools.fetchingScenes")}
             </div>
           )}
 
-          <div className="flex justify-between items-center bg-zinc-800/50 p-3 rounded-md border border-zinc-800">
-            <span className="text-zinc-400">Main Scene</span>
-            <span className={`font-mono text-xs font-medium ${mainSelected ? "text-green-400" : "text-red-400"}`}>
-              {connected && scenes.length > 0 ? mainSelected ? search.mainScene : "Not selected" : search.mainScene}
+          <div className="flex justify-between items-center bg-zinc-100 p-3 rounded-md border border-zinc-200 dark:bg-zinc-800/50 dark:border-zinc-800">
+            <span className="text-zinc-600 dark:text-zinc-400">{t("tools.mainScene")}</span>
+            <span className={`font-mono text-xs font-medium ${mainSelected ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}`}>
+              {connected && scenes.length > 0 ? mainSelected ? search.mainScene : t("tools.notSelected") : search.mainScene}
             </span>
           </div>
-          <div className="flex justify-between items-center bg-zinc-800/50 p-3 rounded-md border border-zinc-800">
-            <span className="text-zinc-400">BRB Scene</span>
-            <span className={`font-mono text-xs font-medium ${brbSelected ? "text-amber-400" : "text-red-400"}`}>
-              {connected && scenes.length > 0 ? brbSelected ? search.brbScene : "Not selected" : search.brbScene}
+          <div className="flex justify-between items-center bg-zinc-100 p-3 rounded-md border border-zinc-200 dark:bg-zinc-800/50 dark:border-zinc-800">
+            <span className="text-zinc-600 dark:text-zinc-400">{t("tools.brbScene")}</span>
+            <span className={`font-mono text-xs font-medium ${brbSelected ? "text-amber-600 dark:text-amber-400" : "text-red-600 dark:text-red-400"}`}>
+              {connected && scenes.length > 0 ? brbSelected ? search.brbScene : t("tools.notSelected") : search.brbScene}
             </span>
           </div>
 
-          <div className="bg-zinc-800/50 p-3 rounded-md border border-zinc-800">
+          <div className="bg-zinc-100 p-3 rounded-md border border-zinc-200 dark:bg-zinc-800/50 dark:border-zinc-800">
             <CommandUsers
               users={commandUsers}
               onAdd={addUser}
@@ -319,57 +328,57 @@ function RouteComponent() {
           </div>
 
           {search.twitch && (
-            <div className="flex justify-between items-center bg-zinc-800/50 p-3 rounded-md border border-zinc-800">
-              <span className="text-zinc-400">Twitch</span>
-              <span className="text-purple-400 font-medium">{search.twitch}</span>
+            <div className="flex justify-between items-center bg-zinc-100 p-3 rounded-md border border-zinc-200 dark:bg-zinc-800/50 dark:border-zinc-800">
+              <span className="text-zinc-600 dark:text-zinc-400">Twitch</span>
+              <span className="text-purple-600 font-medium dark:text-purple-400">{search.twitch}</span>
             </div>
           )}
           {search.kick && (
-            <div className="flex justify-between items-center bg-zinc-800/50 p-3 rounded-md border border-zinc-800">
-              <span className="text-zinc-400">Kick</span>
-              <span className="text-green-400 font-medium">{search.kick}</span>
+            <div className="flex justify-between items-center bg-zinc-100 p-3 rounded-md border border-zinc-200 dark:bg-zinc-800/50 dark:border-zinc-800">
+              <span className="text-zinc-600 dark:text-zinc-400">Kick</span>
+              <span className="text-green-600 font-medium dark:text-green-400">{search.kick}</span>
             </div>
           )}
 
-          <div className="bg-zinc-800/50 p-3 rounded-md border border-zinc-800">
-            <h3 className="text-sm font-semibold text-zinc-400 mb-2">
-              Active Chat Commands
+          <div className="bg-zinc-100 p-3 rounded-md border border-zinc-200 dark:bg-zinc-800/50 dark:border-zinc-800">
+            <h3 className="text-sm font-semibold text-zinc-600 dark:text-zinc-400 mb-2">
+              {t("tools.activeCommands")}
             </h3>
-            <div className="space-y-1 text-xs text-zinc-300 font-mono">
+            <div className="space-y-1 text-xs text-zinc-700 dark:text-zinc-300 font-mono">
               <div className="flex justify-between">
-                <span className="text-zinc-500">Switch to Any Scene:</span>
-                <span className="text-green-400 font-semibold">{customCommands.cmdScene} &lt;name&gt;</span>
+                <span className="text-zinc-500">{t("tools.cmdScene")}</span>
+                <span className="text-green-600 dark:text-green-400 font-semibold">{customCommands.cmdScene} &lt;name&gt;</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-zinc-500">Switch to BRB:</span>
-                <span className="text-green-400 font-semibold">{customCommands.cmdBrb}</span>
+                <span className="text-zinc-500">{t("tools.cmdBrb")}</span>
+                <span className="text-green-600 dark:text-green-400 font-semibold">{customCommands.cmdBrb}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-zinc-500">Switch to Main:</span>
-                <span className="text-green-400 font-semibold">{customCommands.cmdBack}</span>
+                <span className="text-zinc-500">{t("tools.cmdBack")}</span>
+                <span className="text-green-600 dark:text-green-400 font-semibold">{customCommands.cmdBack}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-zinc-500">Start Stream:</span>
-                <span className="text-green-400 font-semibold">{customCommands.cmdStartStream}</span>
+                <span className="text-zinc-500">{t("tools.cmdStartStream")}</span>
+                <span className="text-green-600 dark:text-green-400 font-semibold">{customCommands.cmdStartStream}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-zinc-500">Stop Stream:</span>
-                <span className="text-green-400 font-semibold">{customCommands.cmdStopStream}</span>
+                <span className="text-zinc-500">{t("tools.cmdStopStream")}</span>
+                <span className="text-green-600 dark:text-green-400 font-semibold">{customCommands.cmdStopStream}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-zinc-500">Start Record:</span>
-                <span className="text-green-400 font-semibold">{customCommands.cmdStartRecord}</span>
+                <span className="text-zinc-500">{t("tools.cmdStartRecord")}</span>
+                <span className="text-green-600 dark:text-green-400 font-semibold">{customCommands.cmdStartRecord}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-zinc-500">Stop Record:</span>
-                <span className="text-green-400 font-semibold">{customCommands.cmdStopRecord}</span>
+                <span className="text-zinc-500">{t("tools.cmdStopRecord")}</span>
+                <span className="text-green-600 dark:text-green-400 font-semibold">{customCommands.cmdStopRecord}</span>
               </div>
             </div>
           </div>
         </div>
 
         <p className="mt-6 text-xs text-zinc-500 text-center">
-          This page stays open to maintain the bridge connection. Any of the command users can control OBS via chat.
+          {t("tools.footer")}
         </p>
       </div>
     </div>

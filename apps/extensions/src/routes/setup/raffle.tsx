@@ -1,10 +1,12 @@
 import { RaffleWidget } from "#/features/widgets/raffle/raffle-widget";
 import { createFileRoute } from "@tanstack/react-router";
+import { getLocaleLinks } from "#/lib/i18n/seo";
 import { z } from "zod";
 
 const searchSchema = z.object({
   channel: z.string().optional(),
   platform: z.enum(["twitch", "kick"]).optional(),
+  lang: z.string().optional(),
 });
 
 export const Route = createFileRoute("/setup/raffle")({
@@ -148,12 +150,7 @@ export const Route = createFileRoute("/setup/raffle")({
         },
       },
     ],
-    links: [
-      {
-        rel: "canonical",
-        href: "https://extensions.senchabot.com/setup/raffle",
-      },
-    ],
+    links: getLocaleLinks("/setup/raffle"),
   }),
   component: RouteComponent,
 });

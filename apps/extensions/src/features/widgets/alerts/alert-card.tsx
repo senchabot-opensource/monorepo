@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { AlertEvent } from '#/lib/alert-config';
 import { ALERT_CONFIG } from '#/lib/alert-config';
+import { useT } from '#/lib/i18n';
 
 interface AlertCardProps {
   alert: AlertEvent;
@@ -50,6 +51,7 @@ function AlertIcon({ type }: { type: AlertEvent['type'] }) {
 }
 
 export function AlertCard({ alert, glow = true }: AlertCardProps) {
+  const t = useT();
   const [phase, setPhase] = useState<AnimationPhase>('entering');
   const config = ALERT_CONFIG[alert.type];
 
@@ -123,7 +125,7 @@ export function AlertCard({ alert, glow = true }: AlertCardProps) {
           className="text-[10px] font-bold uppercase tracking-widest font-display"
           style={{ color: config.color }}
         >
-          {config.label}
+          {t(`alerts.${alert.type}`)}
         </span>
         <span className="text-white font-display text-sm font-bold truncate">
           {alert.data.name}

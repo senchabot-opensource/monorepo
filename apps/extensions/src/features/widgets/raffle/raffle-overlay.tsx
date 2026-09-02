@@ -1,12 +1,13 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import confetti from 'canvas-confetti';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
-import confetti from "canvas-confetti";
+import { useT } from '#/lib/i18n';
+import type { RaffleWinner } from '#/types/raffle';
 
-import type { RaffleWinner } from "#/types/raffle";
-
-const CHANNEL_NAME = "senchabot-raffle-broadcast";
+const CHANNEL_NAME = 'senchabot-raffle-broadcast';
 
 export function RaffleOverlay() {
+  const t = useT();
   const [winner, setWinner] = useState<RaffleWinner | null>(null);
   const [visible, setVisible] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -30,14 +31,14 @@ export function RaffleOverlay() {
         angle: 60,
         spread: 55,
         origin: { x: 0 },
-        colors: ["#9146FF", "#00D4AA", "#FFD700", "#FF4500"],
+        colors: ['#9146FF', '#00D4AA', '#FFD700', '#FF4500'],
       });
       confetti({
         particleCount: 4,
         angle: 120,
         spread: 55,
         origin: { x: 1 },
-        colors: ["#9146FF", "#00D4AA", "#FFD700", "#FF4500"],
+        colors: ['#9146FF', '#00D4AA', '#FFD700', '#FF4500'],
       });
 
       if (Date.now() < end) {
@@ -66,18 +67,18 @@ export function RaffleOverlay() {
   );
 
   useEffect(() => {
-    if (typeof window === "undefined" || !("BroadcastChannel" in window)) return;
+    if (typeof window === 'undefined' || !('BroadcastChannel' in window)) return;
 
     const bc = new BroadcastChannel(CHANNEL_NAME);
     const handler = (event: MessageEvent) => {
-      if (event.data?.type === "raffle:winner" && event.data?.winner) {
+      if (event.data?.type === 'raffle:winner' && event.data?.winner) {
         showWinner(event.data.winner as RaffleWinner);
       }
     };
-    bc.addEventListener("message", handler);
+    bc.addEventListener('message', handler);
 
     return () => {
-      bc.removeEventListener("message", handler);
+      bc.removeEventListener('message', handler);
       bc.close();
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
       cancelConfetti();
@@ -90,14 +91,14 @@ export function RaffleOverlay() {
         <div
           className="flex flex-col items-center gap-4"
           style={{
-            animation: "fadeInZoom 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)",
+            animation: 'fadeInZoom 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)',
           }}
         >
           <div className="text-6xl font-extrabold tracking-tight text-white drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)]">
             {winner.displayName || winner.username}
           </div>
           <div className="text-2xl font-medium text-yellow-300 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
-            Winner!
+            {t('raffle.winner')}
           </div>
         </div>
       )}

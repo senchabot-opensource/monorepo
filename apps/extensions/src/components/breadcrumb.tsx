@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link } from '@tanstack/react-router';
 
 interface BreadcrumbItem {
   label: string;
@@ -11,10 +11,10 @@ interface BreadcrumbProps {
 
 export function Breadcrumb({ items }: BreadcrumbProps) {
   const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
     itemListElement: items.map((item, index) => ({
-      "@type": "ListItem",
+      '@type': 'ListItem',
       position: index + 1,
       name: item.label,
       ...(item.href ? { item: `https://extensions.senchabot.com${item.href}` } : {}),
@@ -34,11 +34,12 @@ export function Breadcrumb({ items }: BreadcrumbProps) {
             <li key={item.label} className="flex items-center">
               {index > 0 && (
                 <svg
-                  className="mx-2 h-4 w-4 text-zinc-700"
+                  className="mx-2 h-4 w-4 text-zinc-400 dark:text-zinc-700"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
-                  aria-hidden="true">
+                  aria-hidden="true"
+                >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -49,14 +50,16 @@ export function Breadcrumb({ items }: BreadcrumbProps) {
               )}
               {isLast || !item.href ? (
                 <span
-                  className={isLast ? "font-medium text-zinc-300" : ""}
-                  aria-current={isLast ? "page" : undefined}>
+                  className={isLast ? 'font-medium text-zinc-700 dark:text-zinc-300' : ''}
+                  aria-current={isLast ? 'page' : undefined}
+                >
                   {item.label}
                 </span>
               ) : (
                 <Link
                   to={item.href}
-                  className="transition-colors hover:text-green-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 rounded">
+                  className="transition-colors hover:text-green-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 rounded dark:hover:text-green-400 dark:focus-visible:ring-offset-zinc-950"
+                >
                   {item.label}
                 </Link>
               )}

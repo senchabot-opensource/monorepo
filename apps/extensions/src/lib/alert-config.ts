@@ -1,11 +1,15 @@
 // Event type definitions
-export type AlertType = 'follow' | 'sub' | 'donate';
+export type AlertType = 'follow' | 'sub' | 'donate' | 'raid';
 
 export interface AlertData {
   name: string;
   platform: 'kick' | 'twitch' | 'youtube';
+  eventId?: string;
   amount?: string;
   tier?: string;
+  months?: number;
+  count?: number;
+  kind?: 'new' | 'resub' | 'gift';
   message?: string;
 }
 
@@ -46,6 +50,13 @@ export const ALERT_CONFIG: Record<AlertType, AlertConfig> = {
     glowColor: 'rgba(255, 69, 0, 0.4)',
     borderColor: 'rgba(255, 69, 0, 0.3)',
     iconType: 'heart',
+  },
+  raid: {
+    label: 'Incoming Raid!',
+    color: '#9147FF',
+    glowColor: 'rgba(145, 71, 255, 0.4)',
+    borderColor: 'rgba(145, 71, 255, 0.3)',
+    iconType: 'user',
   },
 };
 

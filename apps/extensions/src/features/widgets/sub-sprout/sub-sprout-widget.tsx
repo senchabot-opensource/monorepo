@@ -137,6 +137,9 @@ export function SubSproutWidget({
   const pendingAnonGiftSlots = useRef<{ count: number; at: number } | null>(
     null,
   );
+  const pendingKickGiftSlots = useRef<{ count: number; at: number } | null>(
+    null,
+  );
   const [activeWaterSlot, setActiveWaterSlot] = useState<{
     slot: number;
     key: number;
@@ -157,7 +160,7 @@ export function SubSproutWidget({
 
   useEffect(() => {
     if (platform !== "kick" || simulate === true) return;
-    if (kickId || kickChannelId || !channel) return;
+    if ((kickId && kickChannelId) || !channel) return;
     let cancelled = false;
     fetch(
       `https://kick.com/api/v1/channels/${encodeURIComponent(channel)}`,
@@ -248,7 +251,16 @@ export function SubSproutWidget({
     slotStatesRef.current = buildSlots(1);
     setSlotStates(slotStatesRef.current);
     cycleRef.current = 0;
-  }, [safeVariety, safePick, safeGrowth, safeWater, simulate, joined]);
+  }, [safeVariety, safePick, safeGrowth, safeWater, simulate]);
+
+  // In "auto" simulation (setup previews) clear the simulated growth once the
+  // real connection takes over. Regular reconnects must not wipe progress.
+  useEffect(() => {
+    if (simulate !== "auto" || !joined) return;
+    slotStatesRef.current = buildSlots(1);
+    setSlotStates(slotStatesRef.current);
+    cycleRef.current = 0;
+  }, [simulate, joined]);
 
   useEffect(() => {
     const simulateOn =
@@ -474,6 +486,7 @@ export function SubSproutWidget({
             const candidates: unknown[] = [
               payload.gifted_subscriptions_count,
               payload.subscriptions_count,
+              payload.quantity,
               payload.count,
               payload.amount,
             ];
@@ -484,6 +497,7 @@ export function SubSproutWidget({
               candidates.push(
                 nested.gifted_subscriptions_count,
                 nested.subscriptions_count,
+                nested.quantity,
                 nested.count,
                 nested.amount,
               );
@@ -515,6 +529,8 @@ export function SubSproutWidget({
             return;
           }
 
+          const isGiftPurchaseEvent = eventName.includes("GiftSubPurchase");
+          const isGiftRedeemEvent = eventName.includes("GiftSubRedeemed");
           const isSubOrGiftEvent =
             eventName.includes("Subscription") ||
             eventName.includes("Subscribed") ||
@@ -534,12 +550,25 @@ export function SubSproutWidget({
           if (isSubOrGiftEvent) {
             const payload = parsePayload(response.data);
             const numericAmount = pickAmount(payload);
-
-            handleSubEvent(
+            const amount =
               Number.isFinite(numericAmount) && numericAmount > 0
                 ? Math.floor(numericAmount)
-                : 1,
-            );
+                : 1;
+            console.debug("[SubSprout] Kick sub/gift event:", eventName, payload);
+
+            if (isGiftRedeemEvent) {
+              // Redemption belonging to a recently announced gift bundle must
+              // not grow the plant a second time.
+              if (!consumeBundleSlot(pendingKickGiftSlots)) {
+                handleSubEvent(1);
+              }
+            } else if (isGiftPurchaseEvent) {
+              pendingKickGiftSlots.current = { count: amount, at: Date.now() };
+              handleSubEvent(amount);
+            } else {
+              // SubscriptionEvent covers both new subs and resubs.
+              handleSubEvent(amount);
+            }
             return;
           }
 
