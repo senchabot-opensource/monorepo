@@ -1,6 +1,13 @@
 import { createRootRoute, HeadContent, Scripts } from '@tanstack/react-router';
 
+import { SettingsControls } from '#/components/settings-controls';
+import { LocaleProvider } from '#/lib/i18n';
+import { ThemeProvider } from '#/lib/theme';
+
 import appCss from '../styles.css?url';
+
+// Runs before first paint to avoid a flash of the wrong theme/language.
+const themeInitScript = `(function(){try{var t=localStorage.getItem("theme");var d=t?t==="dark":!window.matchMedia||window.matchMedia("(prefers-color-scheme: dark)").matches;var el=document.documentElement;el.classList.toggle("dark",d);el.style.colorScheme=d?"dark":"light";var l=new URLSearchParams(location.search).get("lang")||localStorage.getItem("lang");if(l)el.lang=l;var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute("content",d?"#09090b":"#fafafa")}catch(e){}})();`;
 
 export const Route = createRootRoute({
   head: () => ({
@@ -14,10 +21,11 @@ export const Route = createRootRoute({
       },
       {
         name: 'theme-color',
-        content: '#000000',
+        content: '#09090b',
       },
       {
-        title: 'Senchabot Extensions — Free Customizable Stream Overlays, Browser Sources & Stream Tools',
+        title:
+          'Senchabot Extensions — Free Customizable Stream Overlays, Browser Sources & Stream Tools',
       },
       {
         name: 'description',
@@ -72,10 +80,17 @@ function RootDocument({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        {/* biome-ignore lint/security/noDangerouslySetInnerHtml: inline bootstrap script must run before first paint */}
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <HeadContent />
       </head>
-      <body className="font-sans antialiased bg-zinc-950 text-zinc-100 min-h-screen">
-        {children}
+      <body className="font-sans antialiased min-h-screen">
+        <ThemeProvider>
+          <LocaleProvider>
+            {children}
+            <SettingsControls />
+          </LocaleProvider>
+        </ThemeProvider>
         <Scripts />
       </body>
     </html>

@@ -89,7 +89,7 @@ export function shouldAcceptEntry(
   config: Pick<RaffleConfig, "subscribersOnly" | "minSubMonths">,
 ): boolean {
   if (config.subscribersOnly && !isSub) return false;
-  if (config.subscribersOnly && config.minSubMonths > 1) {
+  if (isSub && config.minSubMonths > 0) {
     const effectiveMonths = subMonths >= 0 ? subMonths : 0;
     if (effectiveMonths < config.minSubMonths) {
       return false;

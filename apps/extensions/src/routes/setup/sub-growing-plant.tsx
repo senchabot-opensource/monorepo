@@ -1,5 +1,7 @@
 import { Breadcrumb } from "#/components/breadcrumb";
 import { YoutubeTutorial } from "#/components/youtube-tutorial";
+import { useT, type TranslationKey } from "#/lib/i18n";
+import { getLocaleLinks } from "#/lib/i18n/seo";
 import {
   PLANT_REGISTRY,
   PLANT_IDS,
@@ -129,12 +131,7 @@ export const Route = createFileRoute("/setup/sub-growing-plant")({
         },
       },
     ],
-    links: [
-      {
-        rel: "canonical",
-        href: "https://extensions.senchabot.com/setup/sub-growing-plant",
-      },
-    ],
+    links: getLocaleLinks("/setup/sub-growing-plant"),
   }),
   component: SubSproutSetup,
 });
@@ -142,6 +139,7 @@ export const Route = createFileRoute("/setup/sub-growing-plant")({
 type PickMode = "fixed" | "cycle" | "random";
 
 function SubSproutSetup() {
+  const t = useT();
   const [channel, setChannel] = useState("");
   const [platform, setPlatform] = useState<"twitch" | "kick">("twitch");
   const [variety, setVariety] = useState<PlantId>("classic");
@@ -194,22 +192,22 @@ function SubSproutSetup() {
     water !== "off" || growth > 1 || pick !== "fixed" || variety !== "classic" || !countFx;
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 font-sans p-6 pt-12">
+    <div className="min-h-screen bg-zinc-50 text-zinc-900 font-sans p-6 pt-12 dark:bg-zinc-950 dark:text-zinc-100">
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col lg:flex-row items-center lg:items-start justify-center gap-8 mb-12">
           {/* Left: Configuration Panel */}
-          <div className="w-full max-w-md lg:shrink-0 rounded-xl bg-zinc-900 p-6 md:p-8 shadow-xl border border-zinc-800">
+          <div className="w-full max-w-md lg:shrink-0 rounded-xl bg-white p-6 md:p-8 shadow-xl border border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800">
             <div className="mb-4">
               <Breadcrumb
                 items={[
-                  { label: "Home", href: "/" },
-                  { label: "Sub Sprout Setup" },
+                  { label: t("common.home"), href: "/" },
+                  { label: t("subSprout.breadcrumb") },
                 ]}
               />
             </div>
             <div className="mb-6 flex justify-center">
               <a
-                className="relative inline-flex select-none flex-col items-center gap-2 text-xl font-semibold tracking-wide text-white transition-opacity hover:opacity-75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500"
+                className="relative inline-flex select-none flex-col items-center gap-2 text-xl font-semibold tracking-wide text-zinc-900 transition-opacity hover:opacity-75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 dark:text-white"
                 href="https://senchabot.com"
                 target="_blank"
                 rel="noreferrer">
@@ -225,75 +223,78 @@ function SubSproutSetup() {
             </div>
 
             <div className="flex justify-center mb-3">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-green-500/10 px-3 py-0.5 text-xs font-medium text-green-400 border border-green-500/20">
-                100% Free · No Login Required
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-green-500/10 px-3 py-0.5 text-xs font-medium text-green-700 border border-green-500/20 dark:text-green-400">
+                {t("common.freeBadge")}
               </span>
             </div>
 
-            <h1 className="mb-4 text-2xl font-bold text-center text-white">
-              Sub Sprout — Subscriber Goal Plant Setup
+            <h1 className="mb-4 text-2xl font-bold text-center text-zinc-900 dark:text-white">
+              {t("subSprout.title")}
             </h1>
 
             <div className="space-y-4">
-              <p className="text-xs text-zinc-400 bg-zinc-800/40 p-3 rounded-md border border-zinc-800 leading-relaxed">
-                A customizable subscriber goal plant overlay that levels up with every new subscription on Twitch or Kick.
+              <p className="text-xs text-zinc-600 bg-zinc-100 p-3 rounded-md border border-zinc-200 leading-relaxed dark:text-zinc-400 dark:bg-zinc-800/40 dark:border-zinc-800">
+                {t("subSprout.intro")}
               </p>
 
               <YoutubeTutorial url="https://youtu.be/P0Btpez9Znw" />
 
               <div>
-                <label className="mb-1 block text-sm font-medium text-zinc-400">
-                  Channel Name
+                <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                  {t("subSprout.channelName")}
                 </label>
                 <input
                   type="text"
                   value={channel}
                   onChange={(e) => setChannel(e.target.value)}
-                  placeholder="e.g. yourchannel"
-                  className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-white placeholder-zinc-500 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
+                  placeholder={t("common.channelPlaceholder")}
+                  className="w-full rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2 text-zinc-900 placeholder-zinc-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
                 />
               </div>
 
               <div>
-                <label className="mb-1 block text-sm font-medium text-zinc-400">
-                  Platform
+                <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                  {t("subSprout.platform")}
                 </label>
                 <select
                   value={platform}
                   onChange={(e) =>
                     setPlatform(e.target.value as "twitch" | "kick")
                   }
-                  className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500">
+                  className="w-full rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2 text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500">
                   <option value="twitch">Twitch</option>
                   <option value="kick">Kick</option>
                 </select>
               </div>
 
-              <div className="pt-4 mt-4 border-t border-zinc-800 space-y-4">
-                <h2 className="text-sm font-semibold text-zinc-300">
-                  Growth &amp; Plant Options
+              <div className="pt-4 mt-4 border-t border-zinc-200 space-y-4 dark:border-zinc-800">
+                <h2 className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+                  {t("subSprout.growthOptions")}
                 </h2>
 
                 <div>
-                  <label className="mb-1 block text-sm font-medium text-zinc-400">
-                    Plant variety
+                  <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                    {t("subSprout.plantVariety")}
                   </label>
                   <select
                     value={variety}
                     onChange={(e) => setVariety(e.target.value as PlantId)}
-                    className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500">
+                    className="w-full rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2 text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500">
                     {PLANT_IDS.map((id) => (
                       <option key={id} value={id}>
-                        {PLANT_REGISTRY[id].label} (
-                        {PLANT_REGISTRY[id].stages} stages)
+                        {t(`plants.${id}` as TranslationKey)} (
+                        {t("subSprout.stagesSuffix", {
+                          stages: PLANT_REGISTRY[id].stages,
+                        })}
+                        )
                       </option>
                     ))}
                   </select>
                 </div>
 
                 <div>
-                  <label className="mb-1 block text-sm font-medium text-zinc-400">
-                    Selection Mode
+                  <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                    {t("subSprout.selectionMode")}
                   </label>
                   <div className="flex gap-2">
                     {(["fixed", "cycle", "random"] as const).map((mode) => (
@@ -301,8 +302,8 @@ function SubSproutSetup() {
                         key={mode}
                         className={`flex-1 cursor-pointer rounded-md border px-2 py-2 text-center transition-colors ${
                           pick === mode
-                            ? "border-green-500 bg-green-500/10 text-green-300"
-                            : "border-zinc-700 bg-zinc-800 text-zinc-400 hover:border-zinc-600"
+                            ? "border-green-500 bg-green-500/10 text-green-700 dark:text-green-300"
+                            : "border-zinc-300 bg-zinc-100 text-zinc-600 hover:border-zinc-400 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:border-zinc-600"
                         }`}>
                         <input
                           type="radio"
@@ -312,30 +313,30 @@ function SubSproutSetup() {
                           onChange={() => setPick(mode)}
                           className="sr-only"
                         />
-                        {mode === "fixed" && "Fixed"}
-                        {mode === "cycle" && "Cycle"}
-                        {mode === "random" && "Random"}
+                        {mode === "fixed" && t("subSprout.fixed")}
+                        {mode === "cycle" && t("subSprout.cycle")}
+                        {mode === "random" && t("subSprout.random")}
                       </label>
                     ))}
                   </div>
                   <p className="mt-1 text-xs text-zinc-500">
-                    {pick === "fixed" && "Restarts the same plant after finishing."}
-                    {pick === "cycle" && "Loops through plant varieties in order."}
-                    {pick === "random" && "Picks a random plant after each cycle."}
+                    {pick === "fixed" && t("subSprout.fixedHint")}
+                    {pick === "cycle" && t("subSprout.cycleHint")}
+                    {pick === "random" && t("subSprout.randomHint")}
                   </p>
                 </div>
 
                 <div>
-                  <label className="mb-1 block text-sm font-medium text-zinc-400">
-                    Watering effect
+                  <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                    {t("subSprout.wateringEffect")}
                   </label>
                   <select
                     value={water}
                     onChange={(e) => setWater(e.target.value as WaterEffectType)}
-                    className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500">
+                    className="w-full rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2 text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500">
                     {WATER_EFFECT_OPTIONS.map((opt) => (
                       <option key={opt.value} value={opt.value}>
-                        {opt.label}
+                        {t(`plants.water${opt.value.charAt(0).toUpperCase()}${opt.value.slice(1)}` as TranslationKey)}
                       </option>
                     ))}
                   </select>
@@ -344,8 +345,8 @@ function SubSproutSetup() {
                 <div>
                   <label
                     htmlFor="growth"
-                    className="mb-1 block text-sm font-medium text-zinc-400">
-                    Growth stages per sub: <span className="text-zinc-200">{growth}</span>
+                    className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                    {t("subSprout.growthStagesPerSub")} <span className="text-zinc-800 dark:text-zinc-200">{growth}</span>
                   </label>
                   <input
                     id="growth"
@@ -358,44 +359,44 @@ function SubSproutSetup() {
                   />
                 </div>
 
-                <label className="flex cursor-pointer items-center gap-3 rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2.5">
+                <label className="flex cursor-pointer items-center gap-3 rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2.5 dark:border-zinc-700 dark:bg-zinc-800">
                   <input
                     type="checkbox"
                     checked={countFx}
                     onChange={(e) => setCountFx(e.target.checked)}
                     className="size-4 accent-green-500"
                   />
-                  <span className="text-sm text-zinc-300">
-                    Show sub count effect{" "}
+                  <span className="text-sm text-zinc-700 dark:text-zinc-300">
+                    {t("subSprout.showSubCountEffect")}{" "}
                     <span className="text-zinc-500">
-                      (e.g. <span className="text-emerald-400">x5</span> for gift bundles)
+                      {t("subSprout.subCountHint", { count: "x5" })}
                     </span>
                   </span>
                 </label>
 
                 {showAdvanced && (
-                  <p className="text-[11px] text-amber-400/80 bg-amber-500/10 border border-amber-500/20 rounded p-2">
-                   Advanced options enabled. Custom growth parameters enabled in widget URL.
+                  <p className="text-[11px] text-amber-600 bg-amber-500/10 border border-amber-500/20 rounded p-2 dark:text-amber-400/80">
+                   {t("subSprout.advancedNotice")}
                   </p>
                 )}
               </div>
 
-              <div className="pt-4 mt-6 border-t border-zinc-800 lg:hidden">
-                <label className="mb-1 block text-sm font-medium text-zinc-400">
-                  Widget URL
+              <div className="pt-4 mt-6 border-t border-zinc-200 lg:hidden dark:border-zinc-800">
+                <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                  {t("common.widgetUrl")}
                 </label>
                 <div className="flex">
                   <input
                     type="text"
                     readOnly
                     value={mounted ? getWidgetUrl() : ""}
-                    className="w-full rounded-l-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-zinc-300 focus:outline-none"
+                    className="w-full rounded-l-md border border-zinc-300 bg-zinc-100 px-3 py-2 text-zinc-600 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
                   />
                   <button
                     onClick={handleCopy}
                     disabled={!isFormValid}
                     className="rounded-r-md bg-green-600 px-4 py-2 font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
-                    {copied ? "Copied!" : "Copy"}
+                    {copied ? t("common.copied") : t("common.copy")}
                   </button>
                 </div>
               </div>
@@ -404,83 +405,83 @@ function SubSproutSetup() {
 
           {/* Right: Live Preview Panel & Guides/FAQ */}
           <div className="w-full max-w-md lg:max-w-2xl lg:shrink-0 flex flex-col gap-4">
-            <div className="rounded-xl bg-zinc-900 p-6 md:p-8 shadow-xl border border-zinc-800 flex flex-col h-[700px]">
-              <h2 className="mb-4 text-xl font-semibold text-center text-zinc-300">
-                Subscriber Goal Plant Preview
+            <div className="rounded-xl bg-white p-6 md:p-8 shadow-xl border border-zinc-200 flex flex-col h-[700px] dark:bg-zinc-900 dark:border-zinc-800">
+              <h2 className="mb-4 text-xl font-semibold text-center text-zinc-700 dark:text-zinc-300">
+                {t("subSprout.previewTitle")}
               </h2>
-              <div className="flex-1 w-full bg-zinc-950 rounded-lg overflow-hidden border border-zinc-800 relative shadow-inner flex items-center justify-center relative bg-opacity-20">
+              <div className="flex-1 w-full bg-zinc-950 rounded-lg overflow-hidden border border-zinc-300 relative shadow-inner flex items-center justify-center relative bg-opacity-20 dark:border-zinc-800">
                 {mounted ? (
                   <iframe
                     src={getPreviewUrl()}
                     className="absolute inset-0 w-full h-full border-0"
-                    title="Sub Sprout Preview"
+                    title={t("subSprout.previewIframeTitle")}
                   />
                 ) : (
                   <div className="text-center text-zinc-500">
-                    <p>Loading preview...</p>
+                    <p>{t("subSprout.loadingPreview")}</p>
                   </div>
                 )}
               </div>
               <p className="mt-2 text-center text-xs text-zinc-500">
                 {channel
-                  ? `Simulated subs shown until the widget connects to ${channel}'s chat.`
-                  : "Enter a channel name to connect to live chat. Simulated subs shown in preview."}
+                  ? t("subSprout.previewHintChannel", { channel })
+                  : t("subSprout.previewHintNoChannel")}
               </p>
 
               <div className="mt-4 hidden lg:block">
-                <label className="mb-1 block text-sm font-medium text-zinc-400">
-                  Widget URL
+                <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                  {t("common.widgetUrl")}
                 </label>
                 <div className="flex">
                   <input
                     type="text"
                     readOnly
                     value={mounted ? getWidgetUrl() : ""}
-                    className="w-full rounded-l-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-zinc-300 focus:outline-none"
+                    className="w-full rounded-l-md border border-zinc-300 bg-zinc-100 px-3 py-2 text-zinc-600 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
                   />
                   <button
                     onClick={handleCopy}
                     disabled={!isFormValid}
                     className="rounded-r-md bg-green-600 px-4 py-2 font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
-                    {copied ? "Copied!" : "Copy"}
+                    {copied ? t("common.copied") : t("common.copy")}
                   </button>
                 </div>
                 <p className="mt-2 text-xs text-zinc-500">
-                  Paste this URL as a Browser Source in OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio, or any software that supports browser sources (recommended size: 800×600).
+                  {t("common.browserSourceHint")} (800×600).
                 </p>
               </div>
             </div>
 
             {/* Quick OBS Guide & FAQ (Placed under preview) */}
             <div className="space-y-4">
-              <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-5">
-                <h3 className="text-sm font-semibold text-white mb-2">Streaming Software Setup (OBS, Streamlabs, XSplit, etc.)</h3>
-                <p className="text-xs text-zinc-400 leading-relaxed">
-                  1. Add a <strong>Browser Source</strong> in your streaming software (OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio, etc.).<br />
-                  2. Paste your copied subscriber goal plant URL.<br />
-                  3. Set width to <strong>800</strong> and height to <strong>600</strong>.<br />
-                  4. Broadcasters &amp; mods can type <code className="text-green-400">!grow</code> in chat to trigger growth manually.
+              <div className="rounded-xl border border-zinc-200 bg-zinc-100/60 p-5 dark:border-zinc-800 dark:bg-zinc-900/50">
+                <h3 className="text-sm font-semibold text-zinc-900 mb-2 dark:text-white">{t("subSprout.guideTitle")}</h3>
+                <p className="text-xs text-zinc-600 leading-relaxed dark:text-zinc-400">
+                  {t("subSprout.guideStep1")}<br />
+                  {t("subSprout.guideStep2")}<br />
+                  {t("subSprout.guideStep3")}<br />
+                  {t("subSprout.guideStep4")}
                 </p>
               </div>
 
               <div className="space-y-3">
-                <details className="group rounded-lg border border-zinc-800/80 bg-zinc-900/50 p-4 transition-colors open:bg-zinc-900">
-                  <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-medium text-zinc-200 group-hover:text-white">
-                    <span>Do I need to sign in to use the subscriber goal plant?</span>
+                <details className="group rounded-lg border border-zinc-200/80 bg-zinc-100/60 p-4 transition-colors open:bg-zinc-100 dark:border-zinc-800/80 dark:bg-zinc-900/50 dark:open:bg-zinc-900">
+                  <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-medium text-zinc-700 group-hover:text-zinc-900 dark:text-zinc-200 dark:group-hover:text-white">
+                    <span>{t("subSprout.faq1Q")}</span>
                     <span className="transition-transform group-open:rotate-180 text-zinc-500 text-xs">▼</span>
                   </summary>
-                  <p className="mt-2 text-xs text-zinc-400 leading-relaxed">
-                    No sign-up or OAuth login is needed. Sub Sprout connects anonymously via public chat event listeners.
+                  <p className="mt-2 text-xs text-zinc-600 leading-relaxed dark:text-zinc-400">
+                    {t("subSprout.faq1A")}
                   </p>
                 </details>
 
-                <details className="group rounded-lg border border-zinc-800/80 bg-zinc-900/50 p-4 transition-colors open:bg-zinc-900">
-                  <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-medium text-zinc-200 group-hover:text-white">
-                    <span>What happens when the subscriber goal plant reaches full growth?</span>
+                <details className="group rounded-lg border border-zinc-200/80 bg-zinc-100/60 p-4 transition-colors open:bg-zinc-100 dark:border-zinc-800/80 dark:bg-zinc-900/50 dark:open:bg-zinc-900">
+                  <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-medium text-zinc-700 group-hover:text-zinc-900 dark:text-zinc-200 dark:group-hover:text-white">
+                    <span>{t("subSprout.faq2Q")}</span>
                     <span className="transition-transform group-open:rotate-180 text-zinc-500 text-xs">▼</span>
                   </summary>
-                  <p className="mt-2 text-xs text-zinc-400 leading-relaxed">
-                    Once the plant finishes growing, the next subscription resets the plant according to your selection mode (restart the same plant, cycle to the next variety, or pick randomly).
+                  <p className="mt-2 text-xs text-zinc-600 leading-relaxed dark:text-zinc-400">
+                    {t("subSprout.faq2A")}
                   </p>
                 </details>
               </div>

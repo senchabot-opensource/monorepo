@@ -1,5 +1,7 @@
 import { Breadcrumb } from "#/components/breadcrumb";
 import { YoutubeTutorial } from "#/components/youtube-tutorial";
+import { useT } from "#/lib/i18n";
+import { getLocaleLinks } from "#/lib/i18n/seo";
 import { createFileRoute } from "@tanstack/react-router";
 import { useDeferredValue, useMemo, useState } from "react";
 
@@ -98,17 +100,13 @@ export const Route = createFileRoute("/setup/chat-widget")({
         },
       },
     ],
-    links: [
-      {
-        rel: "canonical",
-        href: "https://extensions.senchabot.com/setup/chat-widget",
-      },
-    ],
+    links: getLocaleLinks("/setup/chat-widget"),
   }),
   component: ChatWidgetSetup,
 });
 
 function ChatWidgetSetup() {
+  const t = useT();
   const [twitchChannel, setTwitchChannel] = useState("");
   const [kickChannel, setKickChannel] = useState("");
   const [fontSize, setFontSize] = useState("18");
@@ -209,22 +207,22 @@ function ChatWidgetSetup() {
     (platforms !== "twitch" && kickChannel.length > 0);
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 font-sans p-6 pt-12">
+    <div className="min-h-screen bg-zinc-50 text-zinc-900 font-sans p-6 pt-12 dark:bg-zinc-950 dark:text-zinc-100">
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col lg:flex-row items-center lg:items-start justify-center gap-8 mb-12">
           {/* Left: Configuration Panel */}
-          <div className="w-full max-w-md lg:shrink-0 rounded-xl bg-zinc-900 p-6 md:p-8 shadow-xl border border-zinc-800">
+          <div className="w-full max-w-md lg:shrink-0 rounded-xl bg-white p-6 md:p-8 shadow-xl border border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800">
             <div className="mb-4">
               <Breadcrumb
                 items={[
-                  { label: "Home", href: "/" },
-                  { label: "Chat Box Setup" },
+                  { label: t("common.home"), href: "/" },
+                  { label: t("chatWidget.breadcrumb") },
                 ]}
               />
             </div>
             <div className="mb-6 flex justify-center">
               <a
-                className="relative inline-flex select-none flex-col items-center gap-2 text-xl font-semibold tracking-wide text-white transition-opacity hover:opacity-75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500"
+                className="relative inline-flex select-none flex-col items-center gap-2 text-xl font-semibold tracking-wide text-zinc-900 transition-opacity hover:opacity-75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 dark:text-white"
                 href="https://senchabot.com"
                 target="_blank"
                 rel="noreferrer">
@@ -240,93 +238,93 @@ function ChatWidgetSetup() {
             </div>
 
             <div className="flex justify-center mb-3">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-green-500/10 px-3 py-0.5 text-xs font-medium text-green-400 border border-green-500/20">
-                100% Free · No Login Required
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-green-500/10 px-3 py-0.5 text-xs font-medium text-green-700 border border-green-500/20 dark:text-green-400">
+                {t("common.freeBadge")}
               </span>
             </div>
 
-            <h1 className="mb-4 text-2xl font-bold text-center text-white">
-              Chat Box Setup
+            <h1 className="mb-4 text-2xl font-bold text-center text-zinc-900 dark:text-white">
+              {t("chatWidget.title")}
             </h1>
 
             <div className="space-y-4">
-              <p className="text-xs text-zinc-400 bg-zinc-800/40 p-3 rounded-md border border-zinc-800 leading-relaxed">
-                A customizable multi-chat widget and stream chat box overlay merging Twitch and Kick into a single feed with 7TV emotes and custom themes.
+              <p className="text-xs text-zinc-600 bg-zinc-100 p-3 rounded-md border border-zinc-200 leading-relaxed dark:text-zinc-400 dark:bg-zinc-800/40 dark:border-zinc-800">
+                {t("chatWidget.intro")}
               </p>
 
               <YoutubeTutorial />
 
               <div>
-                <label className="mb-1 block text-sm font-medium text-zinc-400">
-                  Platforms
+                <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                  {t("chatWidget.platforms")}
                 </label>
                 <select
                   value={platforms}
                   onChange={(e) =>
                     setPlatforms(e.target.value as "both" | "twitch" | "kick")
                   }
-                  className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500">
-                  <option value="both">Both (Twitch & Kick)</option>
-                  <option value="twitch">Twitch</option>
-                  <option value="kick">Kick</option>
+                  className="w-full rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2.5 text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500">
+                  <option value="both">{t("chatWidget.both")}</option>
+                  <option value="twitch">{t("chatWidget.twitch")}</option>
+                  <option value="kick">{t("chatWidget.kick")}</option>
                 </select>
               </div>
 
               {(platforms === "both" || platforms === "twitch") && (
                 <div>
-                  <label className="mb-1 block text-sm font-medium text-zinc-400">
-                    Twitch Channel
+                  <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                    {t("chatWidget.twitchChannel")}
                   </label>
                   <input
                     type="text"
                     value={twitchChannel}
                     onChange={(e) => setTwitchChannel(e.target.value)}
-                    placeholder="e.g. yourchannel"
-                    className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-white placeholder-zinc-500 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
+                    placeholder={t("common.channelPlaceholder")}
+                    className="w-full rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2 text-zinc-900 placeholder-zinc-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
                   />
                 </div>
               )}
 
               {(platforms === "both" || platforms === "kick") && (
                 <div>
-                  <label className="mb-1 block text-sm font-medium text-zinc-400">
-                    Kick Channel
+                  <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                    {t("chatWidget.kickChannel")}
                   </label>
                   <input
                     type="text"
                     value={kickChannel}
                     onChange={(e) => setKickChannel(e.target.value)}
-                    placeholder="e.g. yourchannel"
-                    className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-white placeholder-zinc-500 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
+                    placeholder={t("common.channelPlaceholder")}
+                    className="w-full rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2 text-zinc-900 placeholder-zinc-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
                   />
                 </div>
               )}
 
               {platforms === "both" && (
                 <div>
-                  <label className="mb-1 block text-sm font-medium text-zinc-400">
-                    Platform Indicator
+                  <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                    {t("chatWidget.platformIndicator")}
                   </label>
                   <select
                     value={platformDisplay}
                     onChange={(e) =>
                       setPlatformDisplay(e.target.value as "name" | "icon")
                     }
-                    className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500">
-                    <option value="name">Platform Name</option>
-                    <option value="icon">Platform Icon</option>
+                    className="w-full rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2.5 text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500">
+                    <option value="name">{t("chatWidget.platformName")}</option>
+                    <option value="icon">{t("chatWidget.platformIcon")}</option>
                   </select>
                 </div>
               )}
 
-              <details className="rounded-md border border-zinc-800 bg-zinc-900/40 open:bg-zinc-900/60 transition-colors">
-                <summary className="cursor-pointer select-none px-3 py-2 text-sm font-medium text-zinc-300 hover:text-white">
-                  Style &amp; Appearance (Customizable Stream Overlays)
+              <details className="rounded-md border border-zinc-200 bg-zinc-100/60 open:bg-zinc-100 transition-colors dark:border-zinc-800 dark:bg-zinc-900/40 dark:open:bg-zinc-900/60">
+                <summary className="cursor-pointer select-none px-3 py-2 text-sm font-medium text-zinc-700 hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-white">
+                  {t("chatWidget.styleSection")}
                 </summary>
-                <div className="space-y-4 border-t border-zinc-800 p-3">
+                <div className="space-y-4 border-t border-zinc-200 p-3 dark:border-zinc-800">
                   <div>
-                    <label className="mb-1 block text-sm font-medium text-zinc-400">
-                      Font
+                    <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                      {t("chatWidget.font")}
                     </label>
                     <select
                       value={font}
@@ -341,19 +339,19 @@ function ChatWidgetSetup() {
                             | "system",
                         )
                       }
-                      className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500">
+                      className="w-full rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2.5 text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500">
                       <option value="inter">Inter</option>
                       <option value="roboto">Roboto</option>
                       <option value="nunito">Nunito</option>
                       <option value="mono">JetBrains Mono</option>
                       <option value="serif">Source Serif 4</option>
-                      <option value="system">System Default</option>
+                      <option value="system">{t("chatWidget.fontSystem")}</option>
                     </select>
                   </div>
 
                   <div>
-                    <label className="mb-1 block text-sm font-medium text-zinc-400">
-                      Message Layout
+                    <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                      {t("chatWidget.messageLayout")}
                     </label>
                     <select
                       value={layout}
@@ -366,17 +364,17 @@ function ChatWidgetSetup() {
                             | "compact",
                         )
                       }
-                      className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500">
-                      <option value="inline">Inline — Username: message</option>
-                      <option value="stacked">Stacked — username above</option>
-                      <option value="card">Card / Bubble</option>
-                      <option value="compact">Compact (Twitch-like)</option>
+                      className="w-full rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2.5 text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500">
+                      <option value="inline">{t("chatWidget.layoutInline")}</option>
+                      <option value="stacked">{t("chatWidget.layoutStacked")}</option>
+                      <option value="card">{t("chatWidget.layoutCard")}</option>
+                      <option value="compact">{t("chatWidget.layoutCompact")}</option>
                     </select>
                   </div>
 
                   <div>
-                    <label className="mb-1 block text-sm font-medium text-zinc-400">
-                      New Message Animation
+                    <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                      {t("chatWidget.newMessageAnimation")}
                     </label>
                     <select
                       value={animation}
@@ -391,15 +389,15 @@ function ChatWidgetSetup() {
                             | "none",
                         )
                       }
-                      className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500">
-                      <option value="slide">Slide from right + fade</option>
-                      <option value="pop">Pop / scale-in</option>
-                      <option value="bounce">Bounce in</option>
+                      className="w-full rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2.5 text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500">
+                      <option value="slide">{t("chatWidget.animSlide")}</option>
+                      <option value="pop">{t("chatWidget.animPop")}</option>
+                      <option value="bounce">{t("chatWidget.animBounce")}</option>
                       <option value="stagger">
-                        Stagger (meta first, then message)
+                        {t("chatWidget.animStagger")}
                       </option>
-                      <option value="fade">Fade in</option>
-                      <option value="none">No animation</option>
+                      <option value="fade">{t("chatWidget.animFade")}</option>
+                      <option value="none">{t("chatWidget.animNone")}</option>
                     </select>
                   </div>
                 </div>
@@ -407,8 +405,8 @@ function ChatWidgetSetup() {
 
               <div className="flex gap-4">
                 <div className="flex-1 max-w-[150px]">
-                  <label className="mb-1 block text-sm font-medium text-zinc-400">
-                    Orientation
+                  <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                    {t("chatWidget.orientation")}
                   </label>
                   <select
                     value={orientation}
@@ -417,89 +415,89 @@ function ChatWidgetSetup() {
                         e.target.value as "vertical" | "horizontal",
                       )
                     }
-                    className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500">
-                    <option value="vertical">Vertical</option>
-                    <option value="horizontal">Horizontal</option>
+                    className="w-full rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2.5 text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500">
+                    <option value="vertical">{t("chatWidget.vertical")}</option>
+                    <option value="horizontal">{t("chatWidget.horizontal")}</option>
                   </select>
                 </div>
 
                 <div className="flex-1">
-                  <label className="mb-1 block text-sm font-medium text-zinc-400">
-                    Font Size (px)
+                  <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                    {t("chatWidget.fontSize")}
                   </label>
                   <input
                     type="number"
                     value={fontSize}
                     onChange={(e) => setFontSize(e.target.value)}
-                    className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-white placeholder-zinc-500 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
+                    className="w-full rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2 text-zinc-900 placeholder-zinc-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
                   />
                 </div>
 
                 <div className="flex-1 flex flex-col justify-end pb-2">
-                  <label className="flex items-center space-x-2 text-white cursor-pointer">
+                  <label className="flex items-center space-x-2 text-zinc-900 cursor-pointer dark:text-white">
                     <input
                       type="checkbox"
                       checked={hasBackground}
                       onChange={(e) => setHasBackground(e.target.checked)}
-                      className="rounded border-zinc-700 bg-zinc-800 text-green-500 focus:ring-green-500"
+                      className="rounded border-zinc-300 bg-zinc-100 text-green-500 focus:ring-green-500 dark:border-zinc-700 dark:bg-zinc-800"
                     />
-                    <span className="text-sm">Dark Background</span>
+                    <span className="text-sm">{t("chatWidget.darkBackground")}</span>
                   </label>
                 </div>
               </div>
 
               <div>
-                <label className="flex items-center space-x-2 text-white cursor-pointer">
+                <label className="flex items-center space-x-2 text-zinc-900 cursor-pointer dark:text-white">
                   <input
                     type="checkbox"
                     checked={sevenTv}
                     onChange={(e) => setSevenTv(e.target.checked)}
-                    className="rounded border-zinc-700 bg-zinc-800 text-green-500 focus:ring-green-500"
+                    className="rounded border-zinc-300 bg-zinc-100 text-green-500 focus:ring-green-500 dark:border-zinc-700 dark:bg-zinc-800"
                   />
-                  <span className="text-sm">7TV Emotes</span>
+                  <span className="text-sm">{t("chatWidget.sevenTvEmotes")}</span>
                 </label>
               </div>
 
               <div>
-                <label className="flex items-center space-x-2 text-white cursor-pointer">
+                <label className="flex items-center space-x-2 text-zinc-900 cursor-pointer dark:text-white">
                   <input
                     type="checkbox"
                     checked={badges}
                     onChange={(e) => setBadges(e.target.checked)}
-                    className="rounded border-zinc-700 bg-zinc-800 text-green-500 focus:ring-green-500"
+                    className="rounded border-zinc-300 bg-zinc-100 text-green-500 focus:ring-green-500 dark:border-zinc-700 dark:bg-zinc-800"
                   />
-                  <span className="text-sm">Show Badges</span>
+                  <span className="text-sm">{t("chatWidget.showBadges")}</span>
                 </label>
               </div>
 
               <div>
-                <label className="flex items-center space-x-2 text-white cursor-pointer">
+                <label className="flex items-center space-x-2 text-zinc-900 cursor-pointer dark:text-white">
                   <input
                     type="checkbox"
                     checked={showTimestamp}
                     onChange={(e) => setShowTimestamp(e.target.checked)}
-                    className="rounded border-zinc-700 bg-zinc-800 text-green-500 focus:ring-green-500"
+                    className="rounded border-zinc-300 bg-zinc-100 text-green-500 focus:ring-green-500 dark:border-zinc-700 dark:bg-zinc-800"
                   />
-                  <span className="text-sm">Show Message Time</span>
+                  <span className="text-sm">{t("chatWidget.showMessageTime")}</span>
                 </label>
               </div>
 
               <div>
-                <label className="flex items-center space-x-2 text-white cursor-pointer">
+                <label className="flex items-center space-x-2 text-zinc-900 cursor-pointer dark:text-white">
                   <input
                     type="checkbox"
                     checked={keepMessages}
                     onChange={(e) => setKeepMessages(e.target.checked)}
-                    className="rounded border-zinc-700 bg-zinc-800 text-green-500 focus:ring-green-500"
+                    className="rounded border-zinc-300 bg-zinc-100 text-green-500 focus:ring-green-500 dark:border-zinc-700 dark:bg-zinc-800"
                   />
-                  <span className="text-sm">Keep Messages</span>
+                  <span className="text-sm">{t("chatWidget.keepMessages")}</span>
                 </label>
               </div>
 
               {hasBackground && (
                 <div>
-                  <label className="mb-1 block text-sm font-medium text-zinc-400">
-                    Background Opacity
+                  <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                    {t("chatWidget.backgroundOpacity")}
                   </label>
                   <input
                     type="range"
@@ -508,7 +506,7 @@ function ChatWidgetSetup() {
                     step="0.1"
                     value={backgroundOpacity}
                     onChange={(e) => setBackgroundOpacity(e.target.value)}
-                    className="w-full h-2 bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-green-500"
+                    className="w-full h-2 bg-zinc-300 rounded-lg appearance-none cursor-pointer accent-green-500 dark:bg-zinc-700"
                   />
                   <div className="text-right text-xs text-zinc-500 mt-1">
                     {backgroundOpacity}
@@ -517,60 +515,60 @@ function ChatWidgetSetup() {
               )}
 
               <div>
-                <label className="flex items-center space-x-2 text-white cursor-pointer">
+                <label className="flex items-center space-x-2 text-zinc-900 cursor-pointer dark:text-white">
                   <input
                     type="checkbox"
                     checked={itemBackground}
                     onChange={(e) => setItemBackground(e.target.checked)}
-                    className="rounded border-zinc-700 bg-zinc-800 text-green-500 focus:ring-green-500"
+                    className="rounded border-zinc-300 bg-zinc-100 text-green-500 focus:ring-green-500 dark:border-zinc-700 dark:bg-zinc-800"
                   />
-                  <span className="text-sm">Message Background Box</span>
+                  <span className="text-sm">{t("chatWidget.messageBackgroundBox")}</span>
                 </label>
                 <p className="mt-1 text-xs text-zinc-500">
-                  Each message gets its own bordered background box.
+                  {t("chatWidget.messageBackgroundHint")}
                 </p>
               </div>
 
               <div>
-                <label className="flex items-center space-x-2 text-white cursor-pointer">
+                <label className="flex items-center space-x-2 text-zinc-900 cursor-pointer dark:text-white">
                   <input
                     type="checkbox"
                     checked={boldUsernames}
                     onChange={(e) => setBoldUsernames(e.target.checked)}
-                    className="rounded border-zinc-700 bg-zinc-800 text-green-500 focus:ring-green-500"
+                    className="rounded border-zinc-300 bg-zinc-100 text-green-500 focus:ring-green-500 dark:border-zinc-700 dark:bg-zinc-800"
                   />
-                  <span className="text-sm">Bold Usernames</span>
+                  <span className="text-sm">{t("chatWidget.boldUsernames")}</span>
                 </label>
               </div>
 
               <div>
-                <label className="flex items-center space-x-2 text-white cursor-pointer">
+                <label className="flex items-center space-x-2 text-zinc-900 cursor-pointer dark:text-white">
                   <input
                     type="checkbox"
                     checked={boldMessages}
                     onChange={(e) => setBoldMessages(e.target.checked)}
-                    className="rounded border-zinc-700 bg-zinc-800 text-green-500 focus:ring-green-500"
+                    className="rounded border-zinc-300 bg-zinc-100 text-green-500 focus:ring-green-500 dark:border-zinc-700 dark:bg-zinc-800"
                   />
-                  <span className="text-sm">Bold Messages</span>
+                  <span className="text-sm">{t("chatWidget.boldMessages")}</span>
                 </label>
               </div>
 
-              <div className="pt-4 mt-6 border-t border-zinc-800 lg:hidden">
-                <label className="mb-1 block text-sm font-medium text-zinc-400">
-                  Widget URL
+              <div className="pt-4 mt-6 border-t border-zinc-200 lg:hidden dark:border-zinc-800">
+                <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                  {t("common.widgetUrl")}
                 </label>
                 <div className="flex">
                   <input
                     type="text"
                     readOnly
                     value={widgetUrl}
-                    className="w-full rounded-l-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-zinc-300 focus:outline-none"
+                    className="w-full rounded-l-md border border-zinc-300 bg-zinc-100 px-3 py-2 text-zinc-600 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
                   />
                   <button
                     onClick={handleCopy}
                     disabled={!isFormValid}
                     className="rounded-r-md bg-green-600 px-4 py-2 font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
-                    {copied ? "Copied!" : "Copy"}
+                    {copied ? t("common.copied") : t("common.copy")}
                   </button>
                 </div>
               </div>
@@ -579,77 +577,78 @@ function ChatWidgetSetup() {
 
           {/* Right: Live Preview Panel & Guides/FAQ */}
           <div className="w-full max-w-md lg:max-w-2xl lg:shrink-0 flex flex-col gap-4">
-            <div className="rounded-xl bg-zinc-900 p-6 md:p-8 shadow-xl border border-zinc-800 flex flex-col h-[700px]">
-              <h2 className="mb-4 text-xl font-semibold text-center text-zinc-300">
-                Widget Preview (Chat Box)
+            <div className="rounded-xl bg-white p-6 md:p-8 shadow-xl border border-zinc-200 flex flex-col h-[700px] dark:bg-zinc-900 dark:border-zinc-800">
+              <h2 className="mb-4 text-xl font-semibold text-center text-zinc-700 dark:text-zinc-300">
+                {t("chatWidget.previewTitle")}
               </h2>
-              <div className="flex-1 w-full bg-zinc-950 rounded-lg overflow-hidden border border-zinc-800 relative shadow-inner flex items-center justify-center relative bg-opacity-20">
+              <div className="flex-1 w-full bg-zinc-950 rounded-lg overflow-hidden border border-zinc-300 relative shadow-inner flex items-center justify-center relative bg-opacity-20 dark:border-zinc-800">
                 {widgetUrl ? (
                   <iframe
                     src={widgetUrl}
                     className="absolute inset-0 w-full h-full border-0"
-                    title="Chat Widget Preview"
+                    title={t("chatWidget.previewIframeTitle")}
                   />
                 ) : (
                   <div className="text-center text-zinc-500">
-                    <p>Fill in at least one channel to generate preview.</p>
+                    <p>{t("common.previewNoChannel")}</p>
                   </div>
                 )}
               </div>
 
               <div className="mt-4 hidden lg:block">
-                <label className="mb-1 block text-sm font-medium text-zinc-400">
-                  Widget URL
+                <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                  {t("common.widgetUrl")}
                 </label>
                 <div className="flex">
                   <input
                     type="text"
                     readOnly
                     value={widgetUrl}
-                    className="w-full rounded-l-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-zinc-300 focus:outline-none"
+                    className="w-full rounded-l-md border border-zinc-300 bg-zinc-100 px-3 py-2 text-zinc-600 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
                   />
                   <button
                     onClick={handleCopy}
                     disabled={!isFormValid}
                     className="rounded-r-md bg-green-600 px-4 py-2 font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
-                    {copied ? "Copied!" : "Copy"}
+                    {copied ? t("common.copied") : t("common.copy")}
                   </button>
                 </div>
                 <p className="mt-2 text-xs text-zinc-500">
-                  Paste this URL as a Browser Source in OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio, or any software that supports browser sources (recommended size: 400×600 for chat box).
+                  {t("common.browserSourceHint")}
+                  {t("chatWidget.browserSourceHintSize")}
                 </p>
               </div>
             </div>
 
             {/* Quick OBS Guide & FAQ (Placed under preview) */}
             <div className="space-y-4">
-              <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-5">
-                <h3 className="text-sm font-semibold text-white mb-2">Streaming Software Chat Box Setup (OBS, Streamlabs, XSplit, etc.)</h3>
-                <p className="text-xs text-zinc-400 leading-relaxed">
-                  1. Add a <strong>Browser Source</strong> in your streaming software (OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio, etc.).<br />
-                  2. Paste your copied multi-chat widget URL.<br />
-                  3. Set width and height to match your desired chat box overlay dimensions (e.g. 400×600 for vertical).
+              <div className="rounded-xl border border-zinc-200 bg-zinc-100/60 p-5 dark:border-zinc-800 dark:bg-zinc-900/50">
+                <h3 className="text-sm font-semibold text-zinc-900 mb-2 dark:text-white">{t("chatWidget.guideTitle")}</h3>
+                <p className="text-xs text-zinc-600 leading-relaxed dark:text-zinc-400">
+                  {t("chatWidget.guideStep1")}<br />
+                  {t("chatWidget.guideStep2")}<br />
+                  {t("chatWidget.guideStep3")}
                 </p>
               </div>
 
               <div className="space-y-3">
-                <details className="group rounded-lg border border-zinc-800/80 bg-zinc-900/50 p-4 transition-colors open:bg-zinc-900">
-                  <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-medium text-zinc-200 group-hover:text-white">
-                    <span>Do I need to sign in to Twitch or Kick to use the chat box?</span>
+                <details className="group rounded-lg border border-zinc-200/80 bg-zinc-100/60 p-4 transition-colors open:bg-zinc-100 dark:border-zinc-800/80 dark:bg-zinc-900/50 dark:open:bg-zinc-900">
+                  <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-medium text-zinc-700 group-hover:text-zinc-900 dark:text-zinc-200 dark:group-hover:text-white">
+                    <span>{t("chatWidget.faq1Q")}</span>
                     <span className="transition-transform group-open:rotate-180 text-zinc-500 text-xs">▼</span>
                   </summary>
-                  <p className="mt-2 text-xs text-zinc-400 leading-relaxed">
-                    No login is required. Chat Box listens anonymously to public chat streams for both platforms.
+                  <p className="mt-2 text-xs text-zinc-600 leading-relaxed dark:text-zinc-400">
+                    {t("chatWidget.faq1A")}
                   </p>
                 </details>
 
-                <details className="group rounded-lg border border-zinc-800/80 bg-zinc-900/50 p-4 transition-colors open:bg-zinc-900">
-                  <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-medium text-zinc-200 group-hover:text-white">
-                    <span>Does this multi-chat widget work with 7TV emotes?</span>
+                <details className="group rounded-lg border border-zinc-200/80 bg-zinc-100/60 p-4 transition-colors open:bg-zinc-100 dark:border-zinc-800/80 dark:bg-zinc-900/50 dark:open:bg-zinc-900">
+                  <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-medium text-zinc-700 group-hover:text-zinc-900 dark:text-zinc-200 dark:group-hover:text-white">
+                    <span>{t("chatWidget.faq2Q")}</span>
                     <span className="transition-transform group-open:rotate-180 text-zinc-500 text-xs">▼</span>
                   </summary>
-                  <p className="mt-2 text-xs text-zinc-400 leading-relaxed">
-                    Yes, 7TV channel and global emotes are fetched and rendered automatically in the chat box overlay for both Twitch and Kick.
+                  <p className="mt-2 text-xs text-zinc-600 leading-relaxed dark:text-zinc-400">
+                    {t("chatWidget.faq2A")}
                   </p>
                 </details>
               </div>

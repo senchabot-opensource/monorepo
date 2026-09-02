@@ -1,212 +1,210 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link } from '@tanstack/react-router';
+import { type TranslationKey, useT } from '#/lib/i18n';
+import { getLocaleLinks } from '#/lib/i18n/seo';
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute('/')({
   head: () => ({
     meta: [
       {
-        title: "Free Customizable Stream Overlays, Browser Sources & Stream Tools (No Login) — Senchabot Extensions",
+        title:
+          'Free Customizable Stream Overlays, Browser Sources & Stream Tools (No Login) — Senchabot Extensions',
       },
       {
-        name: "description",
+        name: 'description',
         content:
-          "100% Free customizable stream overlays, multi-chat widgets, subscriber goal plants, transparent chat box overlays, and interactive stream tools for Twitch & Kick. Works with OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio, or any software that supports browser sources. Zero login required.",
+          '100% Free customizable stream overlays, multi-chat widgets, subscriber goal plants, transparent chat box overlays, and interactive stream tools for Twitch & Kick. Works with OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio, or any software that supports browser sources. Zero login required.',
       },
       {
-        name: "keywords",
+        name: 'keywords',
         content:
-          "customizable stream overlays, multi-chat widgets, subscriber goal plants, chat box, stream chat box, free streaming widgets, stream tools, obs studio overlays, streamlabs desktop, xsplit broadcaster, vmix, lightstream, prism live studio, twitch widgets free, kick widgets free, free obs overlays, sub goal plant, stream raffle picker, obs bridge",
+          'customizable stream overlays, multi-chat widgets, subscriber goal plants, chat box, stream chat box, free streaming widgets, stream tools, obs studio overlays, streamlabs desktop, xsplit broadcaster, vmix, lightstream, prism live studio, twitch widgets free, kick widgets free, free obs overlays, sub goal plant, stream raffle picker, obs bridge',
       },
       {
-        property: "og:title",
+        property: 'og:title',
         content:
-          "Free Customizable Stream Overlays, Browser Sources & Stream Tools (No Login Required) — Senchabot Extensions",
+          'Free Customizable Stream Overlays, Browser Sources & Stream Tools (No Login Required) — Senchabot Extensions',
       },
       {
-        property: "og:description",
+        property: 'og:description',
         content:
-          "100% Free customizable stream overlays, multi-chat widgets, subscriber goal plants, chat box overlays, and stream tools for Twitch & Kick. Add to OBS Studio, Streamlabs Desktop, XSplit, or any browser source in seconds.",
+          '100% Free customizable stream overlays, multi-chat widgets, subscriber goal plants, chat box overlays, and stream tools for Twitch & Kick. Add to OBS Studio, Streamlabs Desktop, XSplit, or any browser source in seconds.',
       },
-      { property: "og:type", content: "website" },
+      { property: 'og:type', content: 'website' },
       {
-        property: "og:url",
-        content: "https://extensions.senchabot.com",
+        property: 'og:url',
+        content: 'https://extensions.senchabot.com',
       },
       {
-        property: "og:image",
-        content: "https://extensions.senchabot.com/senchabot-logo.svg",
+        property: 'og:image',
+        content: 'https://extensions.senchabot.com/senchabot-logo.svg',
       },
-      { name: "twitter:card", content: "summary" },
+      { name: 'twitter:card', content: 'summary' },
       {
-        name: "twitter:title",
+        name: 'twitter:title',
         content:
-          "Free Customizable Stream Overlays, Browser Sources & Stream Tools (No Login Required)",
+          'Free Customizable Stream Overlays, Browser Sources & Stream Tools (No Login Required)',
       },
       {
-        name: "twitter:description",
+        name: 'twitter:description',
         content:
-          "100% Free customizable stream overlays, multi-chat widgets, subscriber goal plants, and interactive stream tools for Twitch & Kick. Works with OBS Studio, Streamlabs Desktop, XSplit, vMix, and any browser source.",
+          '100% Free customizable stream overlays, multi-chat widgets, subscriber goal plants, and interactive stream tools for Twitch & Kick. Works with OBS Studio, Streamlabs Desktop, XSplit, vMix, and any browser source.',
       },
       {
-        name: "twitter:image",
-        content: "https://extensions.senchabot.com/senchabot-logo.svg",
+        name: 'twitter:image',
+        content: 'https://extensions.senchabot.com/senchabot-logo.svg',
       },
       {
-        "script:ld+json": {
-          "@context": "https://schema.org",
-          "@type": "WebSite",
-          name: "Senchabot Extensions",
+        'script:ld+json': {
+          '@context': 'https://schema.org',
+          '@type': 'WebSite',
+          name: 'Senchabot Extensions',
           description:
-            "Free, open-source customizable stream overlays, multi-chat widgets, subscriber goal plants, chat box overlays, and stream tools for Twitch and Kick streamers. Works with OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio, and any software supporting browser sources with no login required.",
-          url: "https://extensions.senchabot.com",
+            'Free, open-source customizable stream overlays, multi-chat widgets, subscriber goal plants, chat box overlays, and stream tools for Twitch and Kick streamers. Works with OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio, and any software supporting browser sources with no login required.',
+          url: 'https://extensions.senchabot.com',
           publisher: {
-            "@type": "Organization",
-            name: "Senchabot",
-            url: "https://senchabot.com",
-            logo: "https://extensions.senchabot.com/senchabot-logo.svg",
+            '@type': 'Organization',
+            name: 'Senchabot',
+            url: 'https://senchabot.com',
+            logo: 'https://extensions.senchabot.com/senchabot-logo.svg',
           },
         },
       },
       {
-        "script:ld+json": {
-          "@context": "https://schema.org",
-          "@type": "ItemList",
-          name: "Free Customizable Stream Overlays, Browser Sources & Stream Tools",
+        'script:ld+json': {
+          '@context': 'https://schema.org',
+          '@type': 'ItemList',
+          name: 'Free Customizable Stream Overlays, Browser Sources & Stream Tools',
           itemListElement: [
             {
-              "@type": "ListItem",
+              '@type': 'ListItem',
               position: 1,
-              name: "Sub Sprout (Subscriber Goal Plants Overlay)",
-              url: "https://extensions.senchabot.com/setup/sub-growing-plant",
-              description: "Free subscriber goal plants overlay that grows with new subscriptions on Twitch and Kick.",
+              name: 'Sub Sprout (Subscriber Goal Plants Overlay)',
+              url: 'https://extensions.senchabot.com/setup/sub-growing-plant',
+              description:
+                'Free subscriber goal plants overlay that grows with new subscriptions on Twitch and Kick.',
             },
             {
-              "@type": "ListItem",
+              '@type': 'ListItem',
               position: 2,
-              name: "Universal Chat (Multi-Chat Widget & Chat Box Overlay)",
-              url: "https://extensions.senchabot.com/setup/chat-widget",
-              description: "Free customizable multi-chat widget and stream chat box overlay for Twitch and Kick with 7TV emotes.",
+              name: 'Universal Chat (Multi-Chat Widget & Chat Box Overlay)',
+              url: 'https://extensions.senchabot.com/setup/chat-widget',
+              description:
+                'Free customizable multi-chat widget and stream chat box overlay for Twitch and Kick with 7TV emotes.',
             },
             {
-              "@type": "ListItem",
+              '@type': 'ListItem',
               position: 3,
-              name: "Raffle Picker (Chat Giveaway & Contest Tool)",
-              url: "https://extensions.senchabot.com/setup/raffle",
-              description: "Free chat-based giveaway picker and live confetti winner overlay for Twitch and Kick.",
+              name: 'Raffle Picker (Chat Giveaway & Contest Tool)',
+              url: 'https://extensions.senchabot.com/setup/raffle',
+              description:
+                'Free chat-based giveaway picker and live confetti winner overlay for Twitch and Kick.',
             },
             {
-              "@type": "ListItem",
+              '@type': 'ListItem',
               position: 4,
-              name: "OBS Bridge (Chat Scene Control & Broadcast Tool)",
-              url: "https://extensions.senchabot.com/setup/obs-bridge",
-              description: "Free tool to control OBS Studio scenes and recording from chat commands.",
+              name: 'OBS Bridge (Chat Scene Control & Broadcast Tool)',
+              url: 'https://extensions.senchabot.com/setup/obs-bridge',
+              description:
+                'Free tool to control OBS Studio scenes and recording from chat commands.',
             },
           ],
         },
       },
       {
-        "script:ld+json": {
-          "@context": "https://schema.org",
-          "@type": "FAQPage",
+        'script:ld+json': {
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
           mainEntity: [
             {
-              "@type": "Question",
-              name: "Are these customizable stream overlays really free?",
+              '@type': 'Question',
+              name: 'Are these customizable stream overlays really free?',
               acceptedAnswer: {
-                "@type": "Answer",
-                text: "Yes, all multi-chat widgets, subscriber goal plants, and stream overlays are 100% free, open-source, and watermark-free with no paid tiers.",
+                '@type': 'Answer',
+                text: 'Yes, all multi-chat widgets, subscriber goal plants, and stream overlays are 100% free, open-source, and watermark-free with no paid tiers.',
               },
             },
             {
-              "@type": "Question",
-              name: "Do I need to create an account or sign in to use the chat box widget?",
+              '@type': 'Question',
+              name: 'Do I need to create an account or sign in to use the chat box widget?',
               acceptedAnswer: {
-                "@type": "Answer",
-                text: "No login or account is required. Enter your Twitch or Kick channel name, customize your chat box or overlay, copy the URL, and paste it into OBS.",
+                '@type': 'Answer',
+                text: 'No login or account is required. Enter your Twitch or Kick channel name, customize your chat box or overlay, copy the URL, and paste it into OBS.',
               },
             },
             {
-              "@type": "Question",
-              name: "Which streaming software is supported?",
+              '@type': 'Question',
+              name: 'Which streaming software is supported?',
               acceptedAnswer: {
-                "@type": "Answer",
-                text: "Works with OBS, Streamlabs Desktop, XSplit, vMix, Lightstream, or any software that supports browser sources.",
+                '@type': 'Answer',
+                text: 'Works with OBS, Streamlabs Desktop, XSplit, vMix, Lightstream, or any software that supports browser sources.',
               },
             },
             {
-              "@type": "Question",
-              name: "How do I add a chat widget or subscriber goal plant that supports multiple platforms to OBS Studio?",
+              '@type': 'Question',
+              name: 'How do I add a chat widget or subscriber goal plant that supports multiple platforms to OBS Studio?',
               acceptedAnswer: {
-                "@type": "Answer",
-                text: "Configure your widget, copy the URL, add a Browser Source in OBS Studio, and paste the URL.",
+                '@type': 'Answer',
+                text: 'Configure your widget, copy the URL, add a Browser Source in OBS Studio, and paste the URL.',
               },
             },
           ],
         },
       },
     ],
-    links: [
-      { rel: "canonical", href: "https://extensions.senchabot.com" },
-    ],
+    links: getLocaleLinks('/'),
   }),
   component: Index,
 });
 
 const EXTENSIONS = [
   {
-    to: "/setup/sub-growing-plant" as const,
-    icon: "🌱",
-    tag: "OBS Browser Source",
-    //tagColor: "bg-green-500/10 text-green-400 border-green-500/20",
-    tagColor: "bg-blue-500/10 text-blue-400 border-blue-500/20",
-    title: "Sub Sprout",
-    description:
-      "Interactive subscriber goal plants that grow with every new subscription on Twitch & Kick. Multiple plant varieties, watering animations, and customizable stream overlay effects.",
+    to: '/setup/sub-growing-plant' as const,
+    icon: '🌱',
+    tagKey: 'tagObsSource' as TranslationKey,
+    tagColor: 'bg-blue-500/10 text-blue-700 border-blue-500/20 dark:text-blue-400',
+    title: 'Sub Sprout',
+    descriptionKey: 'cardSubSprout' as TranslationKey,
   },
   {
-    to: "/setup/chat-widget" as const,
-    icon: "💬",
-    tag: "OBS Browser Source",
-    tagColor: "bg-blue-500/10 text-blue-400 border-blue-500/20",
-    title: "Chat Box",
-    description:
-      "A customizable multi-chat widget and stream chat box merging Twitch & Kick chat into one overlay. Supports 7TV emotes, sub badges, custom fonts, animations, and transparent backgrounds.",
+    to: '/setup/chat-widget' as const,
+    icon: '💬',
+    tagKey: 'tagObsSource' as TranslationKey,
+    tagColor: 'bg-blue-500/10 text-blue-700 border-blue-500/20 dark:text-blue-400',
+    title: 'Chat Box',
+    descriptionKey: 'cardChatBox' as TranslationKey,
   },
   {
-    to: "/setup/raffle" as const,
-    icon: "🎉",
-    tag: "Giveaway Tool",
-    tagColor: "bg-amber-500/10 text-amber-400 border-amber-500/20",
-    title: "Raffle Picker",
-    description:
-      "Run viewer giveaways via chat keyword (!join). Includes sub-only filter, anti-rigging timer, and a live OBS confetti celebration overlay.",
+    to: '/setup/raffle' as const,
+    icon: '🎉',
+    tagKey: 'tagGiveaway' as TranslationKey,
+    tagColor: 'bg-amber-500/10 text-amber-700 border-amber-500/20 dark:text-amber-400',
+    title: 'Raffle Picker',
+    descriptionKey: 'cardRaffle' as TranslationKey,
   },
   {
-    to: "/setup/obs-bridge" as const,
-    icon: "🔌",
-    tag: "Stream Control Tool",
-    tagColor: "bg-purple-500/10 text-purple-400 border-purple-500/20",
-    title: "OBS Bridge",
-    description:
-      "Control OBS from chat commands with custom trigger names. Let trusted mods switch to BRB/Main scenes, toggle recording, and manage your broadcast over local WebSocket.",
-  },
+    to: '/setup/obs-bridge' as const,
+    icon: '🔌',
+    tagKey: 'tagControlTool' as TranslationKey,
+    tagColor: 'bg-purple-500/10 text-purple-700 border-purple-500/20 dark:text-purple-400',
+    title: 'OBS Bridge',
+    descriptionKey: 'cardObsBridge' as TranslationKey,
+  }
 ];
 
 function Index() {
+  const t = useT();
+
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 font-sans">
+    <div className="min-h-screen bg-zinc-50 text-zinc-900 font-sans dark:bg-zinc-950 dark:text-zinc-100">
       <header className="flex items-center justify-center py-10">
         <a
-          className="inline-flex select-none flex-col items-center gap-2 text-xl font-semibold tracking-wide text-white transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500"
+          className="inline-flex select-none flex-col items-center gap-2 text-xl font-semibold tracking-wide text-zinc-900 transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 dark:text-white"
           href="https://senchabot.com"
           target="_blank"
-          rel="noreferrer">
+          rel="noreferrer"
+        >
           <div className="inline-flex size-10 shrink-0">
-            <img
-              src="/senchabot-logo.svg"
-              alt="Senchabot"
-              width={40}
-              height={40}
-            />
+            <img src="/senchabot-logo.svg" alt="Senchabot" width={40} height={40} />
           </div>
           <span>Senchabot</span>
         </a>
@@ -215,44 +213,49 @@ function Index() {
       <main className="max-w-5xl mx-auto px-6 pb-20">
         {/* Hero Section */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 rounded-full bg-zinc-900 border border-zinc-800 px-3.5 py-1 text-xs font-medium text-zinc-300 mb-5">
+          <div className="inline-flex items-center gap-2 rounded-full bg-zinc-100 border border-zinc-200 px-3.5 py-1 text-xs font-medium text-zinc-600 mb-5 dark:bg-zinc-900 dark:border-zinc-800 dark:text-zinc-300">
             <span className="inline-block size-2 rounded-full bg-green-500" />
-            100% Free · No Login Required · Instant Browser Source Setup
+            {t('home.heroBadge')}
           </div>
 
-          <h1 className="text-3xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">
-            Customizable Stream Overlays, Browser Sources &amp; Tools
+          <h1 className="text-3xl md:text-5xl font-extrabold text-zinc-900 mb-4 tracking-tight dark:text-white">
+            {t('home.heroTitle')}
           </h1>
-          <p className="text-base md:text-lg text-zinc-400 max-w-2xl mx-auto leading-relaxed">
-            Configure <strong className="text-zinc-200">customizable stream overlays</strong>, <strong className="text-zinc-200">multi-chat widgets</strong>, <strong className="text-zinc-200">subscriber goal plants</strong>, and streaming <strong className="text-zinc-200">tools</strong> for Twitch &amp; Kick. Zero login or download required.
+          <p className="text-base md:text-lg text-zinc-600 max-w-2xl mx-auto leading-relaxed dark:text-zinc-400">
+            {t('home.heroLead')}
           </p>
         </div>
 
         {/* Extensions Grid */}
-        <section aria-label="Available widgets" className="mb-16">
+        <section aria-label={t('home.sectionLabel')} className="mb-16">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {EXTENSIONS.map((ext) => (
               <Link
                 key={ext.to}
                 to={ext.to}
-                className="group flex flex-col justify-between rounded-xl bg-zinc-900/90 p-6 border border-zinc-800 shadow-md transition-all hover:border-zinc-700 hover:bg-zinc-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500">
+                className="group flex flex-col justify-between rounded-xl bg-white/90 p-6 border border-zinc-200 shadow-md transition-all hover:border-zinc-300 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 dark:bg-zinc-900/90 dark:border-zinc-800 dark:hover:border-zinc-700 dark:hover:bg-zinc-900"
+              >
                 <div>
                   <div className="flex items-center justify-between mb-4">
                     <span className="text-2xl">{ext.icon}</span>
-                    <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium border ${ext.tagColor}`}>
-                      {ext.tag}
+                    <span
+                      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium border ${ext.tagColor}`}
+                    >
+                      {t(`home.${ext.tagKey}` as TranslationKey)}
                     </span>
                   </div>
-                  <h2 className="text-lg font-bold text-white mb-2 group-hover:text-green-400 transition-colors">
+                  <h2 className="text-lg font-bold text-zinc-900 mb-2 group-hover:text-green-600 transition-colors dark:text-white dark:group-hover:text-green-400">
                     {ext.title}
                   </h2>
-                  <p className="text-sm text-zinc-400 leading-relaxed">
-                    {ext.description}
+                  <p className="text-sm text-zinc-600 leading-relaxed dark:text-zinc-400">
+                    {t(`home.${ext.descriptionKey}` as TranslationKey)}
                   </p>
                 </div>
-                <div className="mt-5 flex items-center text-xs font-semibold text-green-400 group-hover:text-green-300">
-                  <span>Open setup</span>
-                  <span className="ml-1 text-zinc-500 font-normal">· no login required &rarr;</span>
+                <div className="mt-5 flex items-center text-xs font-semibold text-green-600 group-hover:text-green-700 dark:text-green-400 dark:group-hover:text-green-300">
+                  <span>{t('home.openSetup')}</span>
+                  <span className="ml-1 text-zinc-500 font-normal">
+                    · {t('home.noLoginHint')} &rarr;
+                  </span>
                 </div>
               </Link>
             ))}
@@ -261,72 +264,77 @@ function Index() {
 
         {/* Quick FAQ Section */}
         <section className="max-w-2xl mx-auto mb-16">
-          <h2 className="text-lg font-semibold text-white mb-4 text-center">
-            Frequently Asked Questions
+          <h2 className="text-lg font-semibold text-zinc-900 mb-4 text-center dark:text-white">
+            {t('home.faqTitle')}
           </h2>
           <div className="space-y-3">
-            <details className="group rounded-lg border border-zinc-800/80 bg-zinc-900/50 p-4 transition-colors open:bg-zinc-900">
-              <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-medium text-zinc-200 group-hover:text-white">
-                <span>Are these customizable stream overlays really 100% free?</span>
-                <span className="transition-transform group-open:rotate-180 text-zinc-500 text-xs">▼</span>
+            <details className="group rounded-lg border border-zinc-200/80 bg-zinc-100/60 p-4 transition-colors open:bg-zinc-100 dark:border-zinc-800/80 dark:bg-zinc-900/50 dark:open:bg-zinc-900">
+              <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-medium text-zinc-700 group-hover:text-zinc-900 dark:text-zinc-200 dark:group-hover:text-white">
+                <span>{t('home.faq1Q')}</span>
+                <span className="transition-transform group-open:rotate-180 text-zinc-500 text-xs">
+                  ▼
+                </span>
               </summary>
-              <p className="mt-2 text-xs text-zinc-400 leading-relaxed">
-                Yes. There are no paywalls, watermarks, or premium accounts. All multi-chat widgets, subscriber goal plants, and stream overlays are completely free and open-source.
+              <p className="mt-2 text-xs text-zinc-600 leading-relaxed dark:text-zinc-400">
+                {t('home.faq1A')}
               </p>
             </details>
 
-            <details className="group rounded-lg border border-zinc-800/80 bg-zinc-900/50 p-4 transition-colors open:bg-zinc-900">
-              <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-medium text-zinc-200 group-hover:text-white">
-                <span>Do I need to sign in to use the multi-chat widget or chat box?</span>
-                <span className="transition-transform group-open:rotate-180 text-zinc-500 text-xs">▼</span>
+            <details className="group rounded-lg border border-zinc-200/80 bg-zinc-100/60 p-4 transition-colors open:bg-zinc-100 dark:border-zinc-800/80 dark:bg-zinc-900/50 dark:open:bg-zinc-900">
+              <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-medium text-zinc-700 group-hover:text-zinc-900 dark:text-zinc-200 dark:group-hover:text-white">
+                <span>{t('home.faq2Q')}</span>
+                <span className="transition-transform group-open:rotate-180 text-zinc-500 text-xs">
+                  ▼
+                </span>
               </summary>
-              <p className="mt-2 text-xs text-zinc-400 leading-relaxed">
-                No sign-up or OAuth login required. Just type your channel name, copy the widget URL, and add it directly into OBS Studio.
+              <p className="mt-2 text-xs text-zinc-600 leading-relaxed dark:text-zinc-400">
+                {t('home.faq2A')}
               </p>
             </details>
 
-            <details className="group rounded-lg border border-zinc-800/80 bg-zinc-900/50 p-4 transition-colors open:bg-zinc-900">
-              <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-medium text-zinc-200 group-hover:text-white">
-                <span>Which streaming software is supported?</span>
-                <span className="transition-transform group-open:rotate-180 text-zinc-500 text-xs">▼</span>
+            <details className="group rounded-lg border border-zinc-200/80 bg-zinc-100/60 p-4 transition-colors open:bg-zinc-100 dark:border-zinc-800/80 dark:bg-zinc-900/50 dark:open:bg-zinc-900">
+              <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-medium text-zinc-700 group-hover:text-zinc-900 dark:text-zinc-200 dark:group-hover:text-white">
+                <span>{t('home.faq3Q')}</span>
+                <span className="transition-transform group-open:rotate-180 text-zinc-500 text-xs">
+                  ▼
+                </span>
               </summary>
-              <p className="mt-2 text-xs text-zinc-400 leading-relaxed">
-                Works with OBS, Streamlabs Desktop, XSplit, vMix, Lightstream, or any software that supports browser sources.
+              <p className="mt-2 text-xs text-zinc-600 leading-relaxed dark:text-zinc-400">
+                {t('home.faq3A')}
               </p>
             </details>
 
-            <details className="group rounded-lg border border-zinc-800/80 bg-zinc-900/50 p-4 transition-colors open:bg-zinc-900">
-              <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-medium text-zinc-200 group-hover:text-white">
-                <span>How do I add a chat widget or subscriber goal plant that supports multiple platforms to OBS Studio?</span>
-                <span className="transition-transform group-open:rotate-180 text-zinc-500 text-xs">▼</span>
+            <details className="group rounded-lg border border-zinc-200/80 bg-zinc-100/60 p-4 transition-colors open:bg-zinc-100 dark:border-zinc-800/80 dark:bg-zinc-900/50 dark:open:bg-zinc-900">
+              <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-medium text-zinc-700 group-hover:text-zinc-900 dark:text-zinc-200 dark:group-hover:text-white">
+                <span>{t('home.faq4Q')}</span>
+                <span className="transition-transform group-open:rotate-180 text-zinc-500 text-xs">
+                  ▼
+                </span>
               </summary>
-              <p className="mt-2 text-xs text-zinc-400 leading-relaxed">
-                In OBS Studio, click <strong>+ &gt; Browser</strong> in your Sources panel, paste your generated widget URL, set your desired size (e.g. 800x600 for Sub Sprout or 400x600 for chat box), and click OK.
+              <p className="mt-2 text-xs text-zinc-600 leading-relaxed dark:text-zinc-400">
+                {t('home.faq4A')}
               </p>
             </details>
           </div>
         </section>
 
         {/* Footer */}
-        <footer className="text-center pt-8 border-t border-zinc-800/60">
+        <footer className="text-center pt-8 border-t border-zinc-200/60 dark:border-zinc-800/60">
           <div className="flex justify-center mb-4">
             <a
               href="https://github.com/senchabot-opensource/monorepo/tree/dev/apps/extensions"
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-1.5 text-sm text-zinc-400 hover:text-green-400 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 rounded">
-              <svg
-                className="w-4 h-4"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden="true">
+              className="inline-flex items-center gap-1.5 text-sm text-zinc-600 hover:text-green-600 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 rounded dark:text-zinc-400 dark:hover:text-green-400"
+            >
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path
                   fillRule="evenodd"
                   d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
                   clipRule="evenodd"
                 />
               </svg>
-              View on GitHub (Open Source)
+              {t('home.footerGithub')}
             </a>
           </div>
 
@@ -335,7 +343,7 @@ function Index() {
               href="https://x.com/senchabot"
               target="_blank"
               rel="noreferrer"
-              className="text-zinc-500 hover:text-zinc-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 rounded"
+              className="text-zinc-500 hover:text-zinc-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 rounded dark:hover:text-zinc-300"
               aria-label="Twitter"
             >
               <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -346,7 +354,7 @@ function Index() {
               href="https://instagram.com/senchabot"
               target="_blank"
               rel="noreferrer"
-              className="text-zinc-500 hover:text-zinc-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 rounded"
+              className="text-zinc-500 hover:text-zinc-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 rounded dark:hover:text-zinc-300"
               aria-label="Instagram"
             >
               <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -357,7 +365,7 @@ function Index() {
               href="https://www.youtube.com/@senchabot"
               target="_blank"
               rel="noreferrer"
-              className="text-zinc-500 hover:text-zinc-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 rounded"
+              className="text-zinc-500 hover:text-zinc-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 rounded dark:hover:text-zinc-300"
               aria-label="YouTube"
             >
               <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -368,7 +376,7 @@ function Index() {
               href="https://discord.com/invite/qUxwcjRzND"
               target="_blank"
               rel="noreferrer"
-              className="text-zinc-500 hover:text-zinc-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 rounded"
+              className="text-zinc-500 hover:text-zinc-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 rounded dark:hover:text-zinc-300"
               aria-label="Discord"
             >
               <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -379,7 +387,7 @@ function Index() {
               href="https://reddit.com/r/Senchabot/"
               target="_blank"
               rel="noreferrer"
-              className="text-zinc-500 hover:text-zinc-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 rounded"
+              className="text-zinc-500 hover:text-zinc-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 rounded dark:hover:text-zinc-300"
               aria-label="Subreddit"
             >
               <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
