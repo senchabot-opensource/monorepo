@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { PlantSlot } from "./plant-slot";
-import { SubCountFX } from "./fx/sub-count-fx";
+import { SubCountFX, SUB_COUNT_DURATION_MS } from "./fx/sub-count-fx";
 import { VineOverlay } from "./plants/vine-overlay";
 import {
   PLANT_IDS,
@@ -19,13 +19,12 @@ import {
 export type PickMode = "fixed" | "cycle" | "random";
 
 export interface SubSproutWidgetProps {
-  channel: string;
-  platform?: "twitch" | "kick";
+  twitchChannel?: string;
+  kickChannel?: string;
   kickId?: string;
   kickChannelId?: string;
   variety?: PlantId | string;
   pick?: PickMode | string;
-  growth?: number;
   water?: WaterEffectType | string;
   countFx?: boolean;
   simulate?: boolean | "auto";
@@ -34,11 +33,12 @@ export interface SubSproutWidgetProps {
 const VIEWBOX_W = 800;
 const VIEWBOX_H = 600;
 const ANIMATION_INTERVAL_MS = 800;
-const WATER_EFFECT_DURATION_MS = 1800;
+const WATER_EFFECT_DURATION_MS = 2500;
 const LEGACY_MAX_STEPS = 9;
 const LEGACY_STEM_OFFSETS = [320, 265, 200, 200, 135, 135, 75, 75, 0, 0];
 const GIFT_BUNDLE_WINDOW_MS = 15000;
 const KICK_DUPLICATE_WINDOW_MS = 10000;
+const SIM_NEXT_GAP_MS = 400;
 
 interface SlotState {
   stagesDone: number;
@@ -74,7 +74,6 @@ function pickNextVariety(
 
 function distributeGrowth(
   slots: SlotState[],
-  amount: number,
   pickMode: PickMode,
   cycleRef: { current: number },
 ): { targetSlot: number; perSlot: number[] } {
@@ -82,7 +81,7 @@ function distributeGrowth(
   const target = pickTargetSlot(pickMode, n, cycleRef);
 
   const perSlot = Array(n).fill(0);
-  perSlot[target] = amount;
+  perSlot[target] = 1;
 
   return { targetSlot: target, perSlot };
 }
@@ -95,13 +94,12 @@ function buildSlots(count: number): SlotState[] {
 }
 
 export function SubSproutWidget({
-  channel,
-  platform = "twitch",
+  twitchChannel,
+  kickChannel,
   kickId,
   kickChannelId,
   variety = "classic",
   pick = "fixed",
-  growth = 1,
   water = "off",
   countFx = true,
   simulate = false,
@@ -109,7 +107,6 @@ export function SubSproutWidget({
   const safeVariety = isValidPlantId(variety) ? variety : "classic";
   const safePick: PickMode =
     pick === "cycle" || pick === "random" || pick === "fixed" ? pick : "fixed";
-  const safeGrowth = Math.max(1, Math.min(2, Math.floor(growth)));
   const safeWater: WaterEffectType = isValidWaterEffect(water) ? water : "off";
 
   const [currentVariety, setCurrentVariety] = useState<PlantId>(
@@ -149,6 +146,11 @@ export function SubSproutWidget({
     key: number;
   } | null>(null);
   const [joined, setJoined] = useState(false);
+  const twitchConnectedRef = useRef(false);
+  const kickConnectedRef = useRef(false);
+
+  const syncJoined = () =>
+    setJoined(twitchConnectedRef.current || kickConnectedRef.current);
 
   const [clientKickIds, setClientKickIds] = useState<{
     kickId: string | null;
@@ -159,11 +161,11 @@ export function SubSproutWidget({
   const effectiveKickChannelId = kickChannelId ?? clientKickIds.kickChannelId;
 
   useEffect(() => {
-    if (platform !== "kick" || simulate === true) return;
-    if ((kickId && kickChannelId) || !channel) return;
+    if (simulate === true) return;
+    if ((kickId && kickChannelId) || !kickChannel) return;
     let cancelled = false;
     fetch(
-      `https://kick.com/api/v1/channels/${encodeURIComponent(channel)}`,
+      `https://kick.com/api/v1/channels/${encodeURIComponent(kickChannel)}`,
       { headers: { Accept: "application/json" } },
     )
       .then(r => (r.ok ? r.json() : Promise.reject(new Error("Kick channel lookup failed"))))
@@ -178,44 +180,40 @@ export function SubSproutWidget({
     return () => {
       cancelled = true;
     };
-  }, [platform, channel, kickId, kickChannelId, simulate]);
+  }, [kickChannel, kickId, kickChannelId, simulate]);
 
-  const applyGrowth = useCallback(
-    (amount: number) => {
-      const { targetSlot, perSlot } = distributeGrowth(
-        slotStatesRef.current,
-        amount,
-        safePick,
-        cycleRef,
-      );
-      let nextVariety = currentVarietyRef.current;
-      const newStates = slotStatesRef.current.map((s, i) => {
-        const inc = perSlot[i] || 0;
-        if (inc <= 0) return s;
-        let newProgress = s.progress + inc;
-        let newStages = s.stagesDone;
-        while (newProgress >= 1) {
-          newProgress -= 1;
-          newStages += 1;
-          if (newStages >= getPlant(nextVariety).stages) {
-            newStages = 1;
-            nextVariety = pickNextVariety(safePick, nextVariety);
-          }
+  const applyGrowth = useCallback(() => {
+    const { targetSlot, perSlot } = distributeGrowth(
+      slotStatesRef.current,
+      safePick,
+      cycleRef,
+    );
+    let nextVariety = currentVarietyRef.current;
+    const newStates = slotStatesRef.current.map((s, i) => {
+      const inc = perSlot[i] || 0;
+      if (inc <= 0) return s;
+      let newProgress = s.progress + inc;
+      let newStages = s.stagesDone;
+      while (newProgress >= 1) {
+        newProgress -= 1;
+        newStages += 1;
+        if (newStages >= getPlant(nextVariety).stages) {
+          newStages = 1;
+          nextVariety = pickNextVariety(safePick, nextVariety);
         }
-        return { stagesDone: newStages, progress: newProgress };
-      });
-      slotStatesRef.current = newStates;
-      setSlotStates(newStates);
-      if (nextVariety !== currentVarietyRef.current) {
-        currentVarietyRef.current = nextVariety;
-        setCurrentVariety(nextVariety);
       }
-      if (safeWater !== "off") {
-        setActiveWaterSlot({ slot: targetSlot, key: Date.now() });
-      }
-    },
-    [safePick, safeWater],
-  );
+      return { stagesDone: newStages, progress: newProgress };
+    });
+    slotStatesRef.current = newStates;
+    setSlotStates(newStates);
+    if (nextVariety !== currentVarietyRef.current) {
+      currentVarietyRef.current = nextVariety;
+      setCurrentVariety(nextVariety);
+    }
+    if (safeWater !== "off") {
+      setActiveWaterSlot({ slot: targetSlot, key: Date.now() });
+    }
+  }, [safePick, safeWater]);
 
   const processQueue = useCallback(() => {
     if (isAnimating.current || subQueue.current === 0) return;
@@ -223,13 +221,13 @@ export function SubSproutWidget({
     isAnimating.current = true;
     subQueue.current--;
 
-    applyGrowth(safeGrowth);
+    applyGrowth();
 
     setTimeout(() => {
       isAnimating.current = false;
       processQueue();
     }, ANIMATION_INTERVAL_MS);
-  }, [applyGrowth, safeGrowth]);
+  }, [applyGrowth]);
 
   const handleSubEvent = useCallback(
     (amount: number = 1) => {
@@ -251,7 +249,7 @@ export function SubSproutWidget({
     slotStatesRef.current = buildSlots(1);
     setSlotStates(slotStatesRef.current);
     cycleRef.current = 0;
-  }, [safeVariety, safePick, safeGrowth, safeWater, simulate]);
+  }, [safeVariety, safePick, safeWater, simulate]);
 
   // In "auto" simulation (setup previews) clear the simulated growth once the
   // real connection takes over. Regular reconnects must not wipe progress.
@@ -262,25 +260,40 @@ export function SubSproutWidget({
     cycleRef.current = 0;
   }, [simulate, joined]);
 
+  // Preview simulation: only x1/x2 subs are shown and the next growth is
+  // scheduled after the sub count animation has finished.
   useEffect(() => {
     const simulateOn =
       simulate === true || (simulate === "auto" && !joined);
     if (!simulateOn) return;
 
-    const emit = () => {
-      if (Math.random() < 0.25) {
-        handleSubEvent(2 + Math.floor(Math.random() * 9));
-      } else {
-        handleSubEvent(1);
-      }
+    let cancelled = false;
+    let timer: number | undefined;
+
+    const scheduleNext = () => {
+      if (cancelled) return;
+      const amount = Math.random() < 0.5 ? 1 : 2;
+      handleSubEvent(amount);
+      const growthMs = amount * ANIMATION_INTERVAL_MS;
+      const fxMs = countFx ? SUB_COUNT_DURATION_MS : 0;
+      const waterMs =
+        safeWater !== "off" ? WATER_EFFECT_DURATION_MS : 0;
+      timer = window.setTimeout(
+        scheduleNext,
+        Math.max(growthMs, fxMs, waterMs) + SIM_NEXT_GAP_MS,
+      );
     };
 
-    emit();
-    const interval = setInterval(emit, 1200);
-    return () => clearInterval(interval);
-  }, [simulate, joined, handleSubEvent]);
+    scheduleNext();
+    return () => {
+      cancelled = true;
+      if (timer !== undefined) window.clearTimeout(timer);
+    };
+  }, [simulate, joined, handleSubEvent, countFx, safeWater]);
 
   useEffect(() => {
+    twitchConnectedRef.current = false;
+    kickConnectedRef.current = false;
     setJoined(false);
     if (simulate === true) return;
     const consumeBundleSlot = (
@@ -302,7 +315,7 @@ export function SubSproutWidget({
     let comfyClient: { disconnect: () => void } | null = null;
     let comfyDisposed = false;
 
-    const loadComfy = async () => {
+    const loadComfy = async (channelName: string) => {
       const { default: tmi } = await import("tmi.js");
       const client = new tmi.Client({
         connection: {
@@ -311,7 +324,7 @@ export function SubSproutWidget({
           maxReconnectAttempts: Infinity,
           maxReconnectInterval: 30000,
         },
-        channels: [channel],
+        channels: [channelName],
       });
       if (comfyDisposed) {
         client.disconnect();
@@ -319,12 +332,21 @@ export function SubSproutWidget({
       }
       comfyClient = client;
 
-      client.on("connected", () => setJoined(true));
-      client.on("disconnected", () => setJoined(false));
+      client.on("connected", () => {
+        twitchConnectedRef.current = true;
+        syncJoined();
+      });
+      client.on("disconnected", () => {
+        twitchConnectedRef.current = false;
+        syncJoined();
+      });
       client.on(
         "join",
         (_channel: string, _username: string, self: boolean) => {
-          if (self) setJoined(true);
+          if (self) {
+            twitchConnectedRef.current = true;
+            syncJoined();
+          }
         },
       );
       client.on("subscription", () => handleSubEvent(1));
@@ -525,7 +547,8 @@ export function SubSproutWidget({
 
           if (eventName === "pusher_internal:subscription_succeeded") {
             console.log("[Kick] Subscribed to channel");
-            setJoined(true);
+            kickConnectedRef.current = true;
+            syncJoined();
             return;
           }
 
@@ -617,7 +640,8 @@ export function SubSproutWidget({
 
         socket.onclose = () => {
           console.log("[Kick] WebSocket disconnected");
-          setJoined(false);
+          kickConnectedRef.current = false;
+          syncJoined();
           scheduleReconnect();
         };
       };
@@ -632,18 +656,26 @@ export function SubSproutWidget({
       };
     };
 
-    if (channel && platform === "twitch") {
-      loadComfy();
-      return () => {
+    const cleanups: Array<() => void> = [];
+
+    if (twitchChannel) {
+      loadComfy(twitchChannel);
+      cleanups.push(() => {
         comfyDisposed = true;
         comfyClient?.disconnect();
         comfyClient = null;
-      };
-    } else if (platform === "kick" && (effectiveKickId || effectiveKickChannelId)) {
-      const cleanup = loadKick();
-      return cleanup;
+      });
     }
-  }, [channel, platform, effectiveKickId, effectiveKickChannelId, handleSubEvent]);
+
+    if (kickChannel && (effectiveKickId || effectiveKickChannelId)) {
+      const kickCleanup = loadKick();
+      if (kickCleanup) cleanups.push(kickCleanup);
+    }
+
+    return () => {
+      for (const cleanup of cleanups) cleanup();
+    };
+  }, [twitchChannel, kickChannel, effectiveKickId, effectiveKickChannelId, handleSubEvent]);
 
   useEffect(() => {
     if (!activeWaterSlot) return;
