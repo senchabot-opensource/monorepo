@@ -37,8 +37,8 @@ const generateRain = (count: number) => {
         : Math.random() * -600,
       length: Math.random() * 20 + 18,
       opacity: Math.random() * 0.35 + 0.35,
-      animDelay: `${Math.random() * 0.6}s`,
-      animDuration: `${Math.random() * 0.6 + 1.2}s`,
+      animDelay: `${Math.random() * 0.4}s`,
+      animDuration: `${Math.random() * 0.5 + 1.4}s`,
     };
   });
 };
@@ -63,48 +63,49 @@ function RainFX() {
         </clipPath>
       </defs>
       <g className="pointer-events-none" clipPath={`url(#${FX_CLIP_ID})`}>
-        {staticRaindrops.map((drop) => (
-          <line
-            key={drop.id}
-            x1={drop.x}
-            y1={drop.y}
-            x2={drop.x - 2}
-            y2={drop.y + drop.length}
-            stroke="#9fb1c9"
-            strokeWidth="2"
-            opacity={drop.opacity}
-            className="fx-rain-anim"
-            style={
-              {
-                animationDelay: drop.animDelay,
-                animationDuration: drop.animDuration,
-                "--drop-opacity": drop.opacity,
-              } as React.CSSProperties
-            }>
-            <animate
-              attributeName="y1"
-              from={drop.y}
-              to={POT_SOIL - drop.length * 0.85}
-              dur={drop.animDuration}
-              begin={drop.animDelay}
-              repeatCount="indefinite"
-              calcMode="spline"
-              keySplines="0.45 0.05 1 0.6"
-              keyTimes="0; 1"
-            />
-            <animate
-              attributeName="y2"
-              from={drop.y + drop.length}
-              to={POT_SOIL}
-              dur={drop.animDuration}
-              begin={drop.animDelay}
-              repeatCount="indefinite"
-              calcMode="spline"
-              keySplines="0.45 0.05 1 0.6"
-              keyTimes="0; 1"
-            />
-          </line>
-        ))}
+        {staticRaindrops.map((drop) => {
+          const soilY1 = POT_SOIL - drop.length * 0.85;
+          return (
+            <line
+              key={drop.id}
+              x1={drop.x}
+              y1={drop.y}
+              x2={drop.x - 2}
+              y2={drop.y + drop.length}
+              stroke="#9fb1c9"
+              strokeWidth="2"
+              opacity={drop.opacity}
+              className="fx-rain-anim"
+              style={
+                {
+                  animationDelay: drop.animDelay,
+                  animationDuration: drop.animDuration,
+                  "--drop-opacity": drop.opacity,
+                } as React.CSSProperties
+              }>
+              <animate
+                attributeName="y1"
+                values={`${drop.y}; ${soilY1}; ${soilY1}`}
+                dur={drop.animDuration}
+                begin={drop.animDelay}
+                repeatCount="indefinite"
+                calcMode="spline"
+                keySplines="0.45 0.05 1 0.6; 0 0 1 1"
+                keyTimes="0; 0.8; 1"
+              />
+              <animate
+                attributeName="y2"
+                values={`${drop.y + drop.length}; ${POT_SOIL}; ${POT_SOIL}`}
+                dur={drop.animDuration}
+                begin={drop.animDelay}
+                repeatCount="indefinite"
+                calcMode="spline"
+                keySplines="0.45 0.05 1 0.6; 0 0 1 1"
+                keyTimes="0; 0.8; 1"
+              />
+            </line>
+          );
+        })}
       </g>
     </svg>
   );
@@ -197,7 +198,7 @@ export function WateringFX({ effect, active, durationMs = 1300 }: WateringFXProp
 
   const fadeDelay = Math.max(0, (durationMs - FX_FADE_MS) / 1000);
   const endFade =
-    effect === "sparkle" && fadeDelay > 0
+    fadeDelay > 0
       ? `fx-fade ${FX_FADE_MS / 1000}s ease-in ${fadeDelay}s forwards`
       : undefined;
 

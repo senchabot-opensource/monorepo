@@ -23,21 +23,15 @@ const searchSchema = z.object({
   channel: z.string().optional(),
   platform: z
     .enum(["twitch", "kick"])
-    .optional()
-    .catch("twitch"),
+    .catch("twitch")
+    .default("twitch"),
+  twitch: z.string().optional(),
+  kick: z.string().optional(),
   variety: z.string().optional(),
   pick: z
     .enum(["fixed", "cycle", "random"])
     .optional()
     .catch("fixed"),
-  growth: z
-    .coerce
-    .number()
-    .int()
-    .min(1)
-    .max(2)
-    .optional()
-    .catch(1),
   water: z
     .enum(["off", "rain", "sparkle"])
     .optional()
@@ -58,19 +52,15 @@ export const Route = createFileRoute("/widgets/sub-sprout-widget")({
   ssr: false,
   validateSearch: search => searchSchema.parse(search),
   loaderDeps: ({ search }) => ({
-    platform: search.platform,
-    channel: search.channel,
+    kickChannel:
+      search.kick || (search.platform === "kick" ? search.channel : undefined),
     simulate: search.simulate,
   }),
   loader: async ({ deps }) => {
-    if (
-      deps.simulate !== true &&
-      deps.platform === "kick" &&
-      deps.channel
-    ) {
+    if (deps.simulate !== true && deps.kickChannel) {
       try {
         const { getKickChannelInfo } = await import("#/lib/kick");
-        const kickInfo = await getKickChannelInfo(deps.channel);
+        const kickInfo = await getKickChannelInfo(deps.kickChannel);
         return {
           kickId: kickInfo.chatroomId,
           kickChannelId: kickInfo.channelId,
@@ -88,14 +78,20 @@ function RouteComponent() {
   const {
     channel,
     platform,
+    twitch,
+    kick,
     variety,
     pick,
-    growth,
     water,
     countfx,
     simulate,
   } = Route.useSearch();
   const { kickId, kickChannelId } = Route.useLoaderData();
+
+  const twitchChannel =
+    twitch || (platform === "twitch" ? channel : undefined);
+  const kickChannel =
+    kick || (platform === "kick" ? channel : undefined);
 
   if (countfx === false) {
     console.info("[SubSprout] sub count effect disabled (countfx=0)");
@@ -104,13 +100,12 @@ function RouteComponent() {
   return (
     <div className="size-full min-h-screen bg-transparent">
       <SubSproutWidget
-        channel={channel ?? ""}
-        platform={platform}
+        twitchChannel={twitchChannel}
+        kickChannel={kickChannel}
         kickId={kickId ?? undefined}
         kickChannelId={kickChannelId ?? undefined}
         variety={variety}
         pick={pick}
-        growth={growth}
         water={water}
         countFx={countfx}
         simulate={simulate}

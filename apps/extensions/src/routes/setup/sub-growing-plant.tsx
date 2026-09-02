@@ -140,12 +140,16 @@ type PickMode = "fixed" | "cycle" | "random";
 
 function SubSproutSetup() {
   const t = useT();
-  const [channel, setChannel] = useState("");
-  const [platform, setPlatform] = useState<"twitch" | "kick">("twitch");
+  const [platform, setPlatform] = useState<"both" | "twitch" | "kick">(
+    "both",
+  );
+  const [twitchChannel, setTwitchChannel] = useState("");
+  const [kickChannel, setKickChannel] = useState("");
+  const [debouncedTwitch, setDebouncedTwitch] = useState("");
+  const [debouncedKick, setDebouncedKick] = useState("");
   const [variety, setVariety] = useState<PlantId>("classic");
   const [pick, setPick] = useState<PickMode>("fixed");
   const [water, setWater] = useState<WaterEffectType>("off");
-  const [growth, setGrowth] = useState(1);
   const [countFx, setCountFx] = useState(true);
   const [copied, setCopied] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -154,27 +158,53 @@ function SubSproutSetup() {
     setMounted(true);
   }, []);
 
-  const getWidgetUrl = (withChannel = true) => {
+  useEffect(() => {
+    const timer = setTimeout(
+      () => setDebouncedTwitch(twitchChannel.trim().toLowerCase()),
+      700,
+    );
+    return () => clearTimeout(timer);
+  }, [twitchChannel]);
+
+  useEffect(() => {
+    const timer = setTimeout(
+      () => setDebouncedKick(kickChannel.trim().toLowerCase()),
+      700,
+    );
+    return () => clearTimeout(timer);
+  }, [kickChannel]);
+
+  const buildUrl = (twitch: string, kick: string, withChannel: boolean) => {
     if (typeof window === "undefined") return "";
-    if (withChannel && !channel) return "";
+    if (withChannel && !twitch && !kick) return "";
     const params = new URLSearchParams();
-    if (channel && withChannel) {
-      params.set("channel", channel);
-      params.set("platform", platform);
+    if (withChannel) {
+      if (platform !== "kick" && twitch) params.set("twitch", twitch);
+      if (platform !== "twitch" && kick) params.set("kick", kick);
     }
     if (variety !== "classic") params.set("variety", variety);
     if (pick !== "fixed") params.set("pick", pick);
-    if (growth > 1) params.set("growth", String(growth));
     if (water !== "off") params.set("water", water);
     if (!countFx) params.set("countfx", "0");
     return `${window.location.origin}/widgets/sub-sprout-widget?${params.toString()}`;
   };
 
+  const getWidgetUrl = (withChannel = true) =>
+    buildUrl(
+      twitchChannel.trim().toLowerCase(),
+      kickChannel.trim().toLowerCase(),
+      withChannel,
+    );
+
   const getPreviewUrl = () => {
-    const url = getWidgetUrl(false);
+    const url =
+      buildUrl(debouncedTwitch, debouncedKick, true) ||
+      buildUrl("", "", false);
     if (!url) return "";
     const previewUrl = new URL(url);
-    previewUrl.searchParams.set("simulate", "auto");
+    if (!debouncedTwitch && !debouncedKick) {
+      previewUrl.searchParams.set("simulate", "auto");
+    }
     return previewUrl.toString();
   };
 
@@ -187,9 +217,13 @@ function SubSproutSetup() {
     }
   };
 
-  const isFormValid = channel.length > 0;
+  const isFormValid =
+    (platform !== "kick" && twitchChannel.trim().length > 0) ||
+    (platform !== "twitch" && kickChannel.trim().length > 0);
   const showAdvanced =
-    water !== "off" || growth > 1 || pick !== "fixed" || variety !== "classic" || !countFx;
+    water !== "off" || pick !== "fixed" || variety !== "classic" || !countFx;
+  const previewChannel =
+    twitchChannel.trim() || kickChannel.trim();
 
   return (
     <div className="min-h-screen bg-zinc-50 text-zinc-900 font-sans p-6 pt-12 dark:bg-zinc-950 dark:text-zinc-100">
@@ -241,31 +275,49 @@ function SubSproutSetup() {
 
               <div>
                 <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                  {t("subSprout.channelName")}
-                </label>
-                <input
-                  type="text"
-                  value={channel}
-                  onChange={(e) => setChannel(e.target.value)}
-                  placeholder={t("common.channelPlaceholder")}
-                  className="w-full rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2 text-zinc-900 placeholder-zinc-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
-                />
-              </div>
-
-              <div>
-                <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                  {t("subSprout.platform")}
+                  {t("subSprout.platforms")}
                 </label>
                 <select
                   value={platform}
                   onChange={(e) =>
-                    setPlatform(e.target.value as "twitch" | "kick")
+                    setPlatform(e.target.value as "both" | "twitch" | "kick")
                   }
                   className="w-full rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2 text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500">
-                  <option value="twitch">Twitch</option>
-                  <option value="kick">Kick</option>
+                  <option value="both">{t("subSprout.both")}</option>
+                  <option value="twitch">{t("subSprout.twitch")}</option>
+                  <option value="kick">{t("subSprout.kick")}</option>
                 </select>
               </div>
+
+              {(platform === "both" || platform === "twitch") && (
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                    {t("subSprout.twitchChannel")}
+                  </label>
+                  <input
+                    type="text"
+                    value={twitchChannel}
+                    onChange={(e) => setTwitchChannel(e.target.value)}
+                    placeholder={t("common.channelPlaceholder")}
+                    className="w-full rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2 text-zinc-900 placeholder-zinc-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
+                  />
+                </div>
+              )}
+
+              {(platform === "both" || platform === "kick") && (
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                    {t("subSprout.kickChannel")}
+                  </label>
+                  <input
+                    type="text"
+                    value={kickChannel}
+                    onChange={(e) => setKickChannel(e.target.value)}
+                    placeholder={t("common.channelPlaceholder")}
+                    className="w-full rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2 text-zinc-900 placeholder-zinc-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
+                  />
+                </div>
+              )}
 
               <div className="pt-4 mt-4 border-t border-zinc-200 space-y-4 dark:border-zinc-800">
                 <h2 className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
@@ -342,23 +394,6 @@ function SubSproutSetup() {
                   </select>
                 </div>
 
-                <div>
-                  <label
-                    htmlFor="growth"
-                    className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                    {t("subSprout.growthStagesPerSub")} <span className="text-zinc-800 dark:text-zinc-200">{growth}</span>
-                  </label>
-                  <input
-                    id="growth"
-                    type="range"
-                    min="1"
-                    max="2"
-                    value={growth}
-                    onChange={(e) => setGrowth(Number(e.target.value))}
-                    className="w-full accent-green-500"
-                  />
-                </div>
-
                 <label className="flex cursor-pointer items-center gap-3 rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2.5 dark:border-zinc-700 dark:bg-zinc-800">
                   <input
                     type="checkbox"
@@ -423,8 +458,10 @@ function SubSproutSetup() {
                 )}
               </div>
               <p className="mt-2 text-center text-xs text-zinc-500">
-                {channel
-                  ? t("subSprout.previewHintChannel", { channel })
+                {previewChannel
+                  ? t("subSprout.previewHintChannel", {
+                      channel: previewChannel,
+                    })
                   : t("subSprout.previewHintNoChannel")}
               </p>
 
