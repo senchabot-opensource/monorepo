@@ -174,14 +174,6 @@ export const Route = createFileRoute('/')({
 
 const EXTENSIONS = [
   {
-    to: '/setup/alerts' as const,
-    icon: '🔔',
-    tagKey: 'tagObsSource' as TranslationKey,
-    tagColor: 'bg-green-500/10 text-green-700 border-green-500/20 dark:text-green-400',
-    title: 'Alerts',
-    descriptionKey: 'cardAlerts' as TranslationKey,
-  },
-  {
     to: '/setup/sub-growing-plant' as const,
     icon: '🌱',
     tagKey: 'tagObsSource' as TranslationKey,
