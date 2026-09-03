@@ -1,15 +1,16 @@
 # Senchabot Extensions
 
-Free, open-source customizable stream overlays, multi-chat widgets, subscriber goal plants, transparent chat boxes, and interactive streaming tools for Twitch and Kick. Configure and embed overlays and tools into OBS Studio, Streamlabs Desktop, XSplit Broadcaster, vMix, Lightstream, PRISM Live Studio, Twitch Studio, Meld Studio, Wirecast, Ecamm Live, or any software that supports browser sources in seconds. No account or login required.
+Free, open-source customizable stream overlays, multi-chat widgets, subscriber goal plants, floating emote wall overlays, transparent chat boxes, and interactive streaming tools for Twitch and Kick. Configure and embed overlays and tools into OBS Studio, Streamlabs Desktop, XSplit Broadcaster, vMix, Lightstream, PRISM Live Studio, Twitch Studio, Meld Studio, Wirecast, Ecamm Live, or any software that supports browser sources in seconds. No account or login required.
 
 ## What It Does
 
-Senchabot Extensions provides 100% free customizable stream overlays, multi-chat widgets, subscriber goal plants, transparent chat box overlays, and interactive streaming tools for Twitch and Kick streamers. Each overlay and tool runs seamlessly as a browser source that you can add to OBS Studio, Streamlabs Desktop, XSplit Broadcaster, vMix, Lightstream, PRISM Live Studio, or any streaming software supporting browser sources in seconds.
+Senchabot Extensions provides 100% free customizable stream overlays, multi-chat widgets, subscriber goal plants, floating emote wall overlays, transparent chat box overlays, and interactive streaming tools for Twitch and Kick streamers. Each overlay and tool runs seamlessly as a browser source that you can add to OBS Studio, Streamlabs Desktop, XSplit Broadcaster, vMix, Lightstream, PRISM Live Studio, or any streaming software supporting browser sources in seconds.
 
 - **Sub Sprout** — A 100% free visual subscriber goal plant overlay (no login required) that grows with each subscription, resub, or gift sub on Twitch and Kick. Resets after reaching full growth.
 - **Universal Chat** — A 100% free multi-chat widget and stream chat box overlay (no login required) that combines Twitch and Kick chat into a single on-screen feed with 7TV emotes, badges, and customizable stream overlay styles.
 - **Raffle** — A 100% free chat-based giveaway tool and raffle picker (no login required) with custom keyword entry and a live confetti winner celebration overlay for OBS Studio, Streamlabs Desktop, XSplit, and more.
 - **OBS Bridge** — A 100% free chat-controlled OBS scene switcher and recording broadcast tool (no login required) with custom command trigger naming via local OBS WebSocket.
+- **Emote Wall** — A 100% free floating emote overlay (no login required) that turns emote-only Twitch, Kick, and 7TV chat messages into floating on-screen emotes with Calm drift or Chaos zip-across animations.
 
 ## Tech Stack
 
@@ -33,12 +34,14 @@ Senchabot Extensions provides 100% free customizable stream overlays, multi-chat
 │   │   ├── sub-growing-plant.tsx   # Sub Sprout configuration page
 │   │   ├── chat-widget.tsx         # Universal Chat configuration page
 │   │   ├── raffle.tsx              # Raffle configuration page
+│   │   ├── emote-wall.tsx          # Emote Wall configuration page
 │   │   └── obs-bridge.tsx          # OBS Bridge configuration page
 │   ├── tools/
 │   │   └── obs-bridge.tsx          # OBS Bridge live WebSocket receiver frame
 │   └── widgets/
 │       ├── sub-sprout-widget.tsx   # Sub Sprout overlay (Browser Source)
 │       ├── chat-widget.tsx         # Universal Chat overlay (Browser Source)
+│       ├── emote-wall.tsx          # Emote Wall overlay (Browser Source)
 │       └── raffle-overlay.tsx      # Raffle winner overlay (Browser Source)
 ├── src/features/
 │   ├── tools/
@@ -46,16 +49,20 @@ Senchabot Extensions provides 100% free customizable stream overlays, multi-chat
 │   └── widgets/
 │       ├── sub-sprout/
 │       │   ├── sub-sprout-widget.tsx
-│       │   ├── plants/registry.ts  # Plant definitions (classic, bamboo, cherry, etc.)
+│       │   ├── plants/registry.ts  # Plant definitions (classic, rose, sunflower, etc.)
 │       │   └── water/watering-fx.ts # Watering animations
 │       ├── chat-widget/
 │       │   ├── use-unified-chat.ts # Chat connection hook (Twitch IRC + Kick Pusher)
 │       │   ├── chat-messages.ts    # Message parsing & 7TV emote tokenizer
 │       │   ├── use-badges.ts       # Twitch & Kick sub badge loader
 │       │   └── kick-badges.tsx     # Kick badge SVGs
-│       └── raffle/
-│           ├── raffle-widget.tsx   # Raffle setup UI & state manager
-│           └── raffle-overlay.tsx  # Winner celebration overlay (canvas-confetti)
+│       ├── raffle/
+│       │   ├── raffle-widget.tsx   # Raffle setup UI & state manager
+│       │   └── raffle-overlay.tsx  # Winner celebration overlay (canvas-confetti)
+│       └── emote-wall/
+│           ├── emote-wall.tsx      # Floating emote overlay (Calm drift + Chaos zip)
+│           ├── emote-pops.ts       # Calm/Chaos spawn position & flight factories
+│           └── emote-utils.ts      # Emote-only message detection (Twitch/Kick/7TV)
 ├── src/hooks/
 │   ├── use-raffle-state.ts         # localStorage-based raffle state
 │   └── use-raffle-chat.ts          # Chat monitoring for raffle entries
@@ -78,28 +85,31 @@ Senchabot Extensions provides 100% free customizable stream overlays, multi-chat
 
 ### 1. Sub Sprout — Subscriber Goal Plant Overlay (`/setup/sub-growing-plant`)
 
-A customizable subscriber goal plant overlay that levels up and blossoms in real time as subscribers join on Twitch or Kick.
+A customizable subscriber goal plant overlay that levels up and blossoms in real time as subscribers join on Twitch or Kick. The widget itself lives at `/widgets/sub-sprout-widget` and can be used directly with URL query parameters — no setup UI required.
 
-- **Event Listening**: Connects anonymously to Twitch IRC for subs, resubs, and gift subs (via ComfyJS) and Kick Pusher WebSocket for subscription events.
-- **Plant Varieties (`variety`)**: Supports multiple visual plant types from `PLANT_REGISTRY` including `classic`, `bamboo`, `cherry`, `sunflower`, and seasonal species.
-- **Growth Stages & Multipliers (`growth`)**: 5 progressive growth stages (seedling to full blossom). Growth multiplier slider allows 1 to 2 stages per sub.
-- **Plant Selection Modes (`pick`)**:
-  - `fixed`: Restarts the same plant variety from step 1 after reaching full growth.
-  - `cycle`: Automatically cycles through registered plant varieties in sequence.
-  - `random`: Selects a random plant variety after each completed cycle.
-- **Watering Effects (`water`)**: Visual watering animations from `WATER_EFFECT_OPTIONS` (e.g. watering can, droplet showers, sparkles).
-- **Sub Count Badge (`countfx`)**: Configurable visual badge displaying bundle quantities (e.g. `x5`, `x10`) for multi-gift subscriptions.
-- **Live Simulated Preview**: Automatic preview simulation (`simulate=auto`) shows stage transitions before a channel name is entered.
-- **Moderator & Broadcaster Testing**: Broadcasters and channel moderators can type `!grow` in chat to manually test or trigger plant growth.
+- **Event Listening**: Connects anonymously to Twitch IRC for subs, resubs, and gift subs (via tmi.js) and Kick Pusher WebSocket for subscription events. Both platforms can be connected simultaneously in a single browser source.
+- **Multi-Platform Support**: Pass `twitch=<channel>` and/or `kick=<channel>` to listen to both platforms at once.
+- **Plant Varieties (`variety`)**: `classic`, `rose`, `sunflower`, `cactus`, `tulip`, `pine`, `lotus`, `lily`, `palm`, `vine` (default: `classic`).
+- **Plant Changing Modes (`pick`)**: `fixed` (default, restarts the same plant after full growth), `cycle` (loops through plant varieties in order), `random` (picks a random variety after each cycle).
+- **Watering Effects (`water`)**: `off` (default), `rain`, `sparkle`.
+- **Sub Count Badge (`countfx`)**: `1` (default) shows bundle quantities (e.g. `x5`); `0` disables it.
+- **Preview Simulation (`simulate`)**: `auto` simulates x1/x2 subs until a real connection is established (used by the setup preview); `1`/`true` forces always-on simulation; `0`/`off` (default) means real events only.
+- **Moderator & Broadcaster Testing**: Broadcasters and channel moderators can type `!grow` in chat to manually trigger plant growth.
+- **Legacy Params**: Older URLs using `channel` + `platform` still work. `channel` maps to the Twitch channel when `platform=twitch` (default) and to the Kick channel when `platform=kick`.
+- **Direct URL examples**:
+  - Twitch only: `https://extensions.senchabot.com/widgets/sub-sprout-widget?twitch=senchabot`
+  - Kick only: `https://extensions.senchabot.com/widgets/sub-sprout-widget?kick=senchabot`
+  - Both platforms: `https://extensions.senchabot.com/widgets/sub-sprout-widget?twitch=senchabot&kick=senchabot`
+  - Customized: `https://extensions.senchabot.com/widgets/sub-sprout-widget?twitch=senchabot&variety=rose&pick=cycle&water=rain&countfx=0`
 - **URL Query Parameters**:
-  - `channel` (string, required for live stream)
-  - `platform` (`twitch` | `kick`)
-  - `variety` (plant identifier string)
-  - `pick` (`fixed` | `cycle` | `random`)
-  - `water` (`off` | effect name string)
-  - `growth` (`1` | `2`)
-  - `countfx` (`0` | `1`)
-  - `simulate` (`auto` | `off`)
+  - `twitch` (string, Twitch channel name)
+  - `kick` (string, Kick channel name)
+  - `variety` (plant id string, default `classic`)
+  - `pick` (`fixed` | `cycle` | `random`, default `fixed`)
+  - `water` (`off` | `rain` | `sparkle`, default `off`)
+  - `countfx` (`0` | `1`, default `1`)
+  - `simulate` (`auto` | `1`/`true` | `0`/`off`, default off)
+  - Legacy: `channel` (string), `platform` (`twitch` | `kick`, default `twitch`)
 
 ---
 
@@ -179,6 +189,32 @@ A local WebSocket bridge that allows streamers and authorized channel moderators
   - `obsWebsocketUrl` (string, default: `ws://localhost:4455`), `obsWebsocketPassword` (string)
   - `mainScene` (string), `brbScene` (string)
   - `cmdScene`, `cmdBrb`, `cmdBack`, `cmdStartStream`, `cmdStopStream`, `cmdStartRecord`, `cmdStopRecord`
+
+---
+
+### 5. Emote Wall — Floating Emote Overlay (`/setup/emote-wall`)
+
+A floating emote overlay that turns emote-only Twitch, Kick, and 7TV chat messages into floating on-screen emotes. Normal text messages are ignored.
+
+- **Anonymous Chat Listening**: Connects to Twitch IRC anonymously (`justinfan`) and Kick Pusher WebSocket without account login. The widget itself lives at `/widgets/emote-wall` and can be used directly with URL query parameters.
+- **Emote-Only Detection**: A message triggers a floating on-screen emote only when it contains nothing but emotes — a single emote, repeated emotes, or a mix. Supported sources: Twitch native emotes (IRC `emotes` tag), Kick native emotes (`[emote:id:name]` tokens), 7TV channel emotes, and mixed native + 7TV messages.
+- **Animation Modes (`mode`)**:
+  - `calm` (default): emotes pop up at random screen positions with a fade-in, drift gently away from the spawn point, then fade out.
+  - `chaos`: emotes zip in from random screen borders (left, right, top, bottom), travel linearly across the canvas, and vanish randomly once halfway or when reaching the far side.
+- **Direct URL examples**:
+  - Twitch only: `https://extensions.senchabot.com/widgets/emote-wall?twitch=senchabot`
+  - Kick only: `https://extensions.senchabot.com/widgets/emote-wall?kick=senchabot`
+  - Both platforms: `https://extensions.senchabot.com/widgets/emote-wall?twitch=senchabot&kick=senchabot`
+  - Chaos mode: `https://extensions.senchabot.com/widgets/emote-wall?twitch=senchabot&mode=chaos`
+- **URL Query Parameters**:
+  - `twitch` (string, Twitch channel name), `kick` (string, Kick channel name)
+  - `sevenTv` (`true` | `false`, default `true`)
+  - `mode` (`calm` | `chaos`, default `calm`)
+  - `subsOnly` (`true` | `false`, default `false`, only subscriber emotes appear)
+  - `subDurationX2` (`true` | `false`, default `false`, subscriber emotes stay 2x longer)
+  - `showAllEmotes` (`true` | `false`, default `false`, also show emotes mixed into normal text messages)
+  - `size` (number 32–256, default `112`), `duration` (seconds 2–15, default `5`), `max` (1–60 simultaneous emotes, default `25`)
+  - `mock` (`true` | `false`, simulated emotes for preview/testing)
 
 ---
 

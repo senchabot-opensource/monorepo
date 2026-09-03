@@ -23,6 +23,7 @@ const config = defineConfig({
         { path: '/setup/chat-widget' },
         { path: '/setup/raffle' },
         { path: '/setup/obs-bridge' },
+        { path: '/setup/emote-wall' },
       ],
       sitemap: {
         enabled: true,

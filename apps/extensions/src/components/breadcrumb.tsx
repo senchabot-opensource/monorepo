@@ -55,6 +55,29 @@ export function Breadcrumb({ items }: BreadcrumbProps) {
                 >
                   {item.label}
                 </span>
+              ) : item.href === '/' ? (
+                <Link
+                  to={item.href}
+                  title={item.label}
+                  aria-label={item.label}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-zinc-100/70 px-2.5 py-1 text-xs font-medium text-zinc-600 transition-colors hover:border-green-500/40 hover:bg-green-500/10 hover:text-green-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 dark:border-zinc-700 dark:bg-zinc-800/60 dark:text-zinc-300 dark:hover:border-green-500/40 dark:hover:text-green-400"
+                >
+                  <svg
+                    className="h-3.5 w-3.5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75"
+                    />
+                  </svg>
+                  {item.label}
+                </Link>
               ) : (
                 <Link
                   to={item.href}

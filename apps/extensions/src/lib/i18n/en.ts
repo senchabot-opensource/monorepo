@@ -18,7 +18,7 @@ export const en = {
     heroBadge: '100% Free · No Login Required · Instant Browser Source Setup',
     heroTitle: 'Customizable Stream Overlays, Browser Sources & Tools',
     heroLead:
-      'Configure customizable stream overlays, multi-chat widgets, subscriber goal plants, and streaming tools for Twitch & Kick. Zero login or download required.',
+      'Configure customizable stream overlays, multi-chat widgets, subscriber goal plants, floating on-screen emotes, and streaming tools for Twitch & Kick. Zero login or download required.',
     sectionLabel: 'Available widgets',
     tagObsSource: 'OBS Browser Source',
     tagGiveaway: 'Giveaway Tool',
@@ -33,6 +33,8 @@ export const en = {
       'Control OBS from chat commands with custom trigger names. Let trusted mods switch to BRB/Main scenes, toggle recording, and manage your broadcast over local WebSocket.',
     cardAlerts:
       'Show Twitch and Kick follow, subscription, renewal, gift subscription, Cheer, and raid alerts in your stream.',
+    cardEmoteWall:
+      'Floating on-screen emotes for emote-only Twitch, Kick and 7TV chat messages. Calm mode drifts gently, Chaos mode zips across the screen.',
     openSetup: 'Open setup',
     noLoginHint: 'no login required',
     faqTitle: 'Frequently Asked Questions',
@@ -312,6 +314,8 @@ export const en = {
     title: 'Twitch & Kick Stream Alerts',
     intro:
       'Free customizable stream alerts for Twitch and Kick in a single unified overlay. Supports follows, new subscriptions, renewals, gift subscriptions, Cheers/bits, and raids.',
+    addBotNotice:
+      'To receive alerts, the Senchabot bot must be in your Twitch and Kick channel. Add it from senchabot.com.',
     platforms: 'Platforms',
     both: 'Both (Twitch & Kick)',
     twitch: 'Twitch',
@@ -336,10 +340,54 @@ export const en = {
       'Yes! Select "Both (Twitch & Kick)", enter your channels for each platform, and you will get a single browser source URL that handles alerts from both platforms simultaneously.',
     faq2Q: 'Do I need to log in or create an account?',
     faq2A:
-      'No account or OAuth login is required. Senchabot connects directly via Socketo real-time events.',
+      'No account or OAuth login is required. Senchabot connects directly via real-time events.',
     faq3Q: 'Which alert types are supported?',
     faq3A:
       'Follows, subscriptions (new & resub renewals), community/individual gift subscriptions, Cheers/bits donations, and incoming channel raids are all supported for both Twitch and Kick.',
+  },
+  emoteWallSetup: {
+    breadcrumb: 'Emote Wall Setup',
+    title: 'Emote Wall — Floating Emote Overlay',
+    intro:
+      'Show emote-only Twitch, Kick and 7TV chat messages as floating on-screen emotes. Pick Calm for emotes drifting at random spots, or Chaos for emotes zipping across the screen.',
+    platforms: 'Platforms',
+    both: 'Both (Twitch & Kick)',
+    twitch: 'Twitch',
+    kick: 'Kick',
+    twitchChannel: 'Twitch Channel',
+    kickChannel: 'Kick Channel',
+    sevenTvEmotes: '7TV Emotes',
+    subsOnly: 'Subscribers only',
+    subsOnlyHint: 'Only emote messages from subscribers appear on screen.',
+    subDurationX2: 'Subscriber emotes stay 2× longer',
+    subDurationX2Hint: 'Emotes from subscribers stay visible twice as long.',
+    showAllEmotes: 'Show emotes in messages too',
+    showAllEmotesHint: 'Also show emotes found inside normal text messages, not just emote-only ones.',
+    mode: 'Animation Mode',
+    modeCalm: 'Calm — pop up & drift',
+    modeChaos: 'Chaos — zip across the screen',
+    modeCalmHint: 'Emotes pop up at random spots, drift gently, then fade out.',
+    modeChaosHint:
+      'Emotes zip in from random screen edges and vanish halfway or at the far side.',
+    emoteSize: 'Emote Size (px)',
+    duration: 'Visible Duration (sec)',
+    maxEmotes: 'Max Simultaneous Emotes',
+    previewTitle: 'Emote Wall Preview',
+    previewIframeTitle: 'Emote Wall Preview',
+    previewHint: 'Live preview with floating on-screen emotes.',
+    guideTitle: 'Streaming Software Setup (OBS, Streamlabs, XSplit, etc.)',
+    guideStep1:
+      '1. Add a Browser Source in your streaming software (OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio, etc.).',
+    guideStep2: '2. Paste your copied emote wall URL.',
+    guideStep3:
+      '3. Set width and height to your full canvas size (e.g. 1920×1080) and place it above your gameplay.',
+    browserSourceHintSize: ' (recommended size: 1920×1080 full canvas).',
+    faq1Q: 'Which messages trigger a floating emote?',
+    faq1A:
+      'Only messages containing nothing but emotes trigger a floating on-screen emote — e.g. a single Kappa, repeated emotes, or a mix of Twitch/Kick/7TV emotes. Normal text messages are ignored.',
+    faq2Q: 'Do I need to sign in to use the emote wall?',
+    faq2A:
+      'No login is required. Emote Wall listens anonymously to public chat streams for both platforms.',
   },
   plants: {
     classic: 'Classic Sprout',

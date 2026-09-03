@@ -11,12 +11,13 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SetupChatWidgetRouteImport } from './routes/setup/chat-widget'
+import { Route as SetupEmoteWallRouteImport } from './routes/setup/emote-wall'
 import { Route as SetupObsBridgeRouteImport } from './routes/setup/obs-bridge'
 import { Route as SetupRaffleRouteImport } from './routes/setup/raffle'
 import { Route as SetupSubGrowingPlantRouteImport } from './routes/setup/sub-growing-plant'
 import { Route as ToolsObsBridgeRouteImport } from './routes/tools/obs-bridge'
-import { Route as WidgetsAlertsRouteImport } from './routes/widgets/alerts'
 import { Route as WidgetsChatWidgetRouteImport } from './routes/widgets/chat-widget'
+import { Route as WidgetsEmoteWallRouteImport } from './routes/widgets/emote-wall'
 import { Route as WidgetsRaffleOverlayRouteImport } from './routes/widgets/raffle-overlay'
 import { Route as WidgetsSubSproutWidgetRouteImport } from './routes/widgets/sub-sprout-widget'
 
@@ -28,6 +29,11 @@ const IndexRoute = IndexRouteImport.update({
 const SetupChatWidgetRoute = SetupChatWidgetRouteImport.update({
   id: '/setup/chat-widget',
   path: '/setup/chat-widget',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SetupEmoteWallRoute = SetupEmoteWallRouteImport.update({
+  id: '/setup/emote-wall',
+  path: '/setup/emote-wall',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SetupObsBridgeRoute = SetupObsBridgeRouteImport.update({
@@ -50,14 +56,14 @@ const ToolsObsBridgeRoute = ToolsObsBridgeRouteImport.update({
   path: '/tools/obs-bridge',
   getParentRoute: () => rootRouteImport,
 } as any)
-const WidgetsAlertsRoute = WidgetsAlertsRouteImport.update({
-  id: '/widgets/alerts',
-  path: '/widgets/alerts',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const WidgetsChatWidgetRoute = WidgetsChatWidgetRouteImport.update({
   id: '/widgets/chat-widget',
   path: '/widgets/chat-widget',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WidgetsEmoteWallRoute = WidgetsEmoteWallRouteImport.update({
+  id: '/widgets/emote-wall',
+  path: '/widgets/emote-wall',
   getParentRoute: () => rootRouteImport,
 } as any)
 const WidgetsRaffleOverlayRoute = WidgetsRaffleOverlayRouteImport.update({
@@ -74,24 +80,26 @@ const WidgetsSubSproutWidgetRoute = WidgetsSubSproutWidgetRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/setup/chat-widget': typeof SetupChatWidgetRoute
+  '/setup/emote-wall': typeof SetupEmoteWallRoute
   '/setup/obs-bridge': typeof SetupObsBridgeRoute
   '/setup/raffle': typeof SetupRaffleRoute
   '/setup/sub-growing-plant': typeof SetupSubGrowingPlantRoute
   '/tools/obs-bridge': typeof ToolsObsBridgeRoute
-  '/widgets/alerts': typeof WidgetsAlertsRoute
   '/widgets/chat-widget': typeof WidgetsChatWidgetRoute
+  '/widgets/emote-wall': typeof WidgetsEmoteWallRoute
   '/widgets/raffle-overlay': typeof WidgetsRaffleOverlayRoute
   '/widgets/sub-sprout-widget': typeof WidgetsSubSproutWidgetRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/setup/chat-widget': typeof SetupChatWidgetRoute
+  '/setup/emote-wall': typeof SetupEmoteWallRoute
   '/setup/obs-bridge': typeof SetupObsBridgeRoute
   '/setup/raffle': typeof SetupRaffleRoute
   '/setup/sub-growing-plant': typeof SetupSubGrowingPlantRoute
   '/tools/obs-bridge': typeof ToolsObsBridgeRoute
-  '/widgets/alerts': typeof WidgetsAlertsRoute
   '/widgets/chat-widget': typeof WidgetsChatWidgetRoute
+  '/widgets/emote-wall': typeof WidgetsEmoteWallRoute
   '/widgets/raffle-overlay': typeof WidgetsRaffleOverlayRoute
   '/widgets/sub-sprout-widget': typeof WidgetsSubSproutWidgetRoute
 }
@@ -99,12 +107,13 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/setup/chat-widget': typeof SetupChatWidgetRoute
+  '/setup/emote-wall': typeof SetupEmoteWallRoute
   '/setup/obs-bridge': typeof SetupObsBridgeRoute
   '/setup/raffle': typeof SetupRaffleRoute
   '/setup/sub-growing-plant': typeof SetupSubGrowingPlantRoute
   '/tools/obs-bridge': typeof ToolsObsBridgeRoute
-  '/widgets/alerts': typeof WidgetsAlertsRoute
   '/widgets/chat-widget': typeof WidgetsChatWidgetRoute
+  '/widgets/emote-wall': typeof WidgetsEmoteWallRoute
   '/widgets/raffle-overlay': typeof WidgetsRaffleOverlayRoute
   '/widgets/sub-sprout-widget': typeof WidgetsSubSproutWidgetRoute
 }
@@ -113,36 +122,39 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/setup/chat-widget'
+    | '/setup/emote-wall'
     | '/setup/obs-bridge'
     | '/setup/raffle'
     | '/setup/sub-growing-plant'
     | '/tools/obs-bridge'
-    | '/widgets/alerts'
     | '/widgets/chat-widget'
+    | '/widgets/emote-wall'
     | '/widgets/raffle-overlay'
     | '/widgets/sub-sprout-widget'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/setup/chat-widget'
+    | '/setup/emote-wall'
     | '/setup/obs-bridge'
     | '/setup/raffle'
     | '/setup/sub-growing-plant'
     | '/tools/obs-bridge'
-    | '/widgets/alerts'
     | '/widgets/chat-widget'
+    | '/widgets/emote-wall'
     | '/widgets/raffle-overlay'
     | '/widgets/sub-sprout-widget'
   id:
     | '__root__'
     | '/'
     | '/setup/chat-widget'
+    | '/setup/emote-wall'
     | '/setup/obs-bridge'
     | '/setup/raffle'
     | '/setup/sub-growing-plant'
     | '/tools/obs-bridge'
-    | '/widgets/alerts'
     | '/widgets/chat-widget'
+    | '/widgets/emote-wall'
     | '/widgets/raffle-overlay'
     | '/widgets/sub-sprout-widget'
   fileRoutesById: FileRoutesById
@@ -150,12 +162,13 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SetupChatWidgetRoute: typeof SetupChatWidgetRoute
+  SetupEmoteWallRoute: typeof SetupEmoteWallRoute
   SetupObsBridgeRoute: typeof SetupObsBridgeRoute
   SetupRaffleRoute: typeof SetupRaffleRoute
   SetupSubGrowingPlantRoute: typeof SetupSubGrowingPlantRoute
   ToolsObsBridgeRoute: typeof ToolsObsBridgeRoute
-  WidgetsAlertsRoute: typeof WidgetsAlertsRoute
   WidgetsChatWidgetRoute: typeof WidgetsChatWidgetRoute
+  WidgetsEmoteWallRoute: typeof WidgetsEmoteWallRoute
   WidgetsRaffleOverlayRoute: typeof WidgetsRaffleOverlayRoute
   WidgetsSubSproutWidgetRoute: typeof WidgetsSubSproutWidgetRoute
 }
@@ -174,6 +187,13 @@ declare module '@tanstack/react-router' {
       path: '/setup/chat-widget'
       fullPath: '/setup/chat-widget'
       preLoaderRoute: typeof SetupChatWidgetRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/setup/emote-wall': {
+      id: '/setup/emote-wall'
+      path: '/setup/emote-wall'
+      fullPath: '/setup/emote-wall'
+      preLoaderRoute: typeof SetupEmoteWallRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/setup/obs-bridge': {
@@ -204,18 +224,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ToolsObsBridgeRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/widgets/alerts': {
-      id: '/widgets/alerts'
-      path: '/widgets/alerts'
-      fullPath: '/widgets/alerts'
-      preLoaderRoute: typeof WidgetsAlertsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/widgets/chat-widget': {
       id: '/widgets/chat-widget'
       path: '/widgets/chat-widget'
       fullPath: '/widgets/chat-widget'
       preLoaderRoute: typeof WidgetsChatWidgetRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/widgets/emote-wall': {
+      id: '/widgets/emote-wall'
+      path: '/widgets/emote-wall'
+      fullPath: '/widgets/emote-wall'
+      preLoaderRoute: typeof WidgetsEmoteWallRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/widgets/raffle-overlay': {
@@ -238,12 +258,13 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SetupChatWidgetRoute: SetupChatWidgetRoute,
+  SetupEmoteWallRoute: SetupEmoteWallRoute,
   SetupObsBridgeRoute: SetupObsBridgeRoute,
   SetupRaffleRoute: SetupRaffleRoute,
   SetupSubGrowingPlantRoute: SetupSubGrowingPlantRoute,
   ToolsObsBridgeRoute: ToolsObsBridgeRoute,
-  WidgetsAlertsRoute: WidgetsAlertsRoute,
   WidgetsChatWidgetRoute: WidgetsChatWidgetRoute,
+  WidgetsEmoteWallRoute: WidgetsEmoteWallRoute,
   WidgetsRaffleOverlayRoute: WidgetsRaffleOverlayRoute,
   WidgetsSubSproutWidgetRoute: WidgetsSubSproutWidgetRoute,
 }

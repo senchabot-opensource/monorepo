@@ -126,6 +126,44 @@
   animation: chatFadeIn 200ms ease-out both;
 }
 
+/* Emote wall calm mode: fade in, drift away, fade out */
+@keyframes emoteWallFloat {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.4) rotate(var(--rot-start, 0deg));
+  }
+  12% {
+    opacity: 1;
+    transform: translate(
+        calc(var(--drift-x, 0px) * 0.08),
+        calc(var(--drift-y, 0px) * 0.08)
+      )
+      scale(1.15) rotate(0deg);
+  }
+  25% {
+    opacity: 1;
+    transform: translate(
+        calc(var(--drift-x, 0px) * 0.2),
+        calc(var(--drift-y, 0px) * 0.2)
+      )
+      scale(1) rotate(0deg);
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--drift-x, 0px), var(--drift-y, 0px))
+      scale(0.9) rotate(var(--rot-end, 0deg));
+  }
+}
+
+.emote-wall-pop {
+  animation: emoteWallFloat var(--emote-duration, 5s) ease-out forwards;
+  will-change: transform, opacity;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.55));
+}
+
 /* Alert animations */
 @keyframes slideInUp {
   from {
