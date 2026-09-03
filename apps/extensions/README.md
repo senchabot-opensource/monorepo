@@ -10,6 +10,7 @@ Senchabot Extensions provides 100% free streaming widgets, customizable overlays
 - **Universal Chat** — A multi-chat widget and stream chat box overlay that combines Twitch and Kick chat into a single on-screen feed with 7TV emotes, badges, and platform indicators.
 - **Raffle Picker** — A chat-based giveaway and raffle tool. Viewers type a keyword to enter; winners are drawn and announced on a live confetti celebration overlay.
 - **OBS Bridge** — A chat-controlled scene switching and stream control tool connecting over local OBS WebSocket.
+- **Emote Wall** — A floating emote overlay that turns emote-only Twitch, Kick, and 7TV chat messages into floating on-screen emotes with Calm drift or Chaos zip-across animations.
 
 ## Live URLs
 
@@ -18,6 +19,7 @@ Senchabot Extensions provides 100% free streaming widgets, customizable overlays
 - [Universal Chat](https://extensions.senchabot.com/setup/chat-widget/)
 - [Raffle Picker](https://extensions.senchabot.com/setup/raffle/)
 - [OBS Bridge](https://extensions.senchabot.com/setup/obs-bridge/)
+- [Emote Wall](https://extensions.senchabot.com/setup/emote-wall/)
 
 ## Widget & Tool Usage
 
@@ -26,17 +28,24 @@ Senchabot Extensions provides 100% free streaming widgets, customizable overlays
 A visual SVG plant widget and subscriber goal overlay that grows in stages whenever a subscription event occurs.
 
 **How it works:**
-- Listens to Twitch subs/resubs/gift subs via ComfyJS.
-- Also connects to Kick's Pusher WebSocket for subscription events.
-- Has 5 growth stages (0–4). Each sub advances it by one.
-- Once it hits stage 4, the next sub resets it to the seedling stage, creating a looping animation.
+- Listens to Twitch subs/resubs/gift subs via tmi.js and Kick's Pusher WebSocket — supports both platforms simultaneously in a single browser source.
+- 10 plant varieties (`classic`, `rose`, `sunflower`, `cactus`, `tulip`, `pine`, `lotus`, `lily`, `palm`, `vine`), each with multiple growth stages.
+- When the plant reaches full growth, the next sub resets it according to the plant changing mode (`fixed`, `cycle`, `random`).
 - Mods and the broadcaster can type `!grow` in chat to manually advance the plant.
 
 **Setup:**
 1. Go to `/setup/sub-growing-plant`.
-2. Enter your channel name and select the platform (Twitch or Kick).
+2. Select Twitch, Kick, or Both and enter your channel name(s).
 3. Copy the generated widget URL.
 4. Paste it into OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio, or any software supporting browser sources as a **Browser Source**.
+
+You can also build the widget URL directly without the setup page:
+
+```
+https://extensions.senchabot.com/widgets/sub-sprout-widget?twitch=YOUR_TWITCH_CHANNEL&kick=YOUR_KICK_CHANNEL&variety=classic&pick=fixed&water=off&countfx=1
+```
+
+**URL parameters:** `twitch`, `kick`, `variety`, `pick` (`fixed` | `cycle` | `random`), `water` (`off` | `rain` | `sparkle`), `countfx` (`0` | `1`), `simulate` (`auto` | `1` | `0`). Older URLs using `channel` + `platform` still work.
 
 ---
 
@@ -92,6 +101,31 @@ A local WebSocket bridge that lets streamers and moderators control OBS Studio s
 2. Enter your channel and local OBS WebSocket port/password.
 3. Keep the tool open in a tab or add as a Browser Source / Custom Dock in OBS Studio or Streamlabs Desktop.
 
+---
+
+### Emote Wall (`/setup/emote-wall`)
+
+A floating emote overlay that turns emote-only Twitch, Kick, and 7TV chat messages into floating on-screen emotes. Normal text messages are ignored.
+
+**How it works:**
+- Connects to Twitch IRC anonymously and Kick's Pusher WebSocket — supports both platforms simultaneously in a single browser source.
+- Detects emote-only messages: Twitch native emotes, Kick native `[emote:id:name]` tokens, 7TV channel emotes, and mixed messages.
+- Two animation modes: `calm` (emotes pop up at random spots, drift, and fade out) and `chaos` (emotes zip across the screen from random borders and vanish halfway or at the far side).
+
+**Setup:**
+1. Go to `/setup/emote-wall`.
+2. Enter your Twitch channel and/or Kick channel.
+3. Pick Calm or Chaos mode and customize size, duration, and max simultaneous emotes.
+4. Copy the generated URL into OBS Studio, Streamlabs Desktop, XSplit, or your preferred streaming software as a full-canvas **Browser Source** (e.g. 1920×1080).
+
+You can also build the widget URL directly without the setup page:
+
+```
+https://extensions.senchabot.com/widgets/emote-wall?twitch=YOUR_TWITCH_CHANNEL&kick=YOUR_KICK_CHANNEL&mode=chaos
+```
+
+**URL parameters:** `twitch`, `kick`, `sevenTv` (`true` | `false`), `mode` (`calm` | `chaos`), `subsOnly` (`true` | `false`), `subDurationX2` (`true` | `false`, sub emotes stay 2x longer), `showAllEmotes` (`true` | `false`, also show emotes in normal messages), `size` (32–256), `duration` (2–15 seconds), `max` (1–60), `mock` (`true` | `false`).
+
 ## Getting Started (Local Development)
 
 ```bash
@@ -142,11 +176,13 @@ npm run deploy
 │   ├── setup/
 │   │   ├── sub-growing-plant.tsx   # Sub Sprout configuration
 │   │   ├── chat-widget.tsx         # Universal Chat configuration
-│   │   └── raffle.tsx              # Raffle configuration
+│   │   ├── raffle.tsx              # Raffle configuration
+│   │   └── emote-wall.tsx          # Emote Wall configuration
 │   └── widgets/
 │       ├── sub-sprout-widget.tsx   # Sub Sprout overlay
 │       ├── chat-widget.tsx         # Universal Chat overlay
-│       └── raffle-overlay.tsx      # Raffle winner overlay
+│       ├── raffle-overlay.tsx      # Raffle winner overlay
+│       └── emote-wall.tsx          # Emote Wall overlay
 ├── src/features/widgets/           # Widget and tool logic and components
 ├── src/hooks/                      # Shared hooks (raffle state, chat connections)
 ├── src/styles.css                  # Tailwind CSS entry

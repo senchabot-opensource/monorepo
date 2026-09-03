@@ -20,7 +20,7 @@ export const tr: typeof en = {
     heroBadge: '%100 Ücretsiz · Giriş Gerektirmez · Anında Tarayıcı Kaynağı Kurulumu',
     heroTitle: 'Özelleştirilebilir Yayın Ekranı Kaplamaları, Tarayıcı Kaynakları ve Araçlar',
     heroLead:
-      "Twitch ve Kick için özelleştirilebilir yayın kaplamalarını, çoklu sohbet widget'larını, abone hedefi bitkilerini ve yayın araçlarını yapılandır. Giriş veya indirme gerekmez.",
+      "Twitch ve Kick için özelleştirilebilir yayın kaplamalarını, çoklu sohbet widget'larını, abone hedefi bitkilerini, ekrandaki yüzen emote'ları ve yayın araçlarını yapılandır. Giriş veya indirme gerekmez.",
     sectionLabel: "Mevcut widget'lar",
     tagObsSource: 'OBS Tarayıcı Kaynağı',
     tagGiveaway: 'Çekiliş Aracı',
@@ -35,6 +35,8 @@ export const tr: typeof en = {
       "Özel tetikleyici adlarıyla sohbet komutlarından OBS'yi kontrol et. Güvendiğin moderatörlere BRB/Ana sahnelerine geçirme, kayıt açıp kapatma ve yayını yerel WebSocket üzerinden yönetme imkanı ver.",
     cardAlerts:
       'Twitch ve Kick takip, abonelik, yenileme, hediye abonelik, Cheer ve raid uyarılarını yayınında göster.',
+    cardEmoteWall:
+      "Yalnızca emote içeren Twitch, Kick ve 7TV sohbet mesajları için ekrandaki yüzen emote'lar. Sakin modda süzülür, Kaos modunda ekranı boydan boya geçer.",
     openSetup: 'Kurulumu Aç',
     noLoginHint: 'giriş gerekmez',
     faqTitle: 'Sıkça Sorulan Sorular',
@@ -318,6 +320,8 @@ export const tr: typeof en = {
     title: 'Twitch & Kick Yayın Uyarıları',
     intro:
       'Tek bir birleşik kaplamada Twitch ve Kick için ücretsiz özelleştirilebilir yayın uyarıları. Takip, yeni abonelik, yenileme, hediye abonelik, Cheer/bit ve raid uyarılarını destekler.',
+    addBotNotice:
+      'Uyarıları alabilmek için Senchabot botunun Twitch ve Kick kanalınızda bulunması gerekir. Botu senchabot.com adresinden ekleyebilirsiniz.',
     platforms: 'Platformlar',
     both: 'İkisi (Twitch & Kick)',
     twitch: 'Twitch',
@@ -342,10 +346,55 @@ export const tr: typeof en = {
       'Evet! "İkisi (Twitch & Kick)" seçeneğini seçin, her iki platform için kanal adlarınızı girin ve her iki platformun uyarılarını aynı anda işleyen tek bir tarayıcı kaynağı URL\'si elde edin.',
     faq2Q: 'Giriş yapmam veya hesap oluşturmam gerekiyor mu?',
     faq2A:
-      'Hesap veya OAuth girişi gerekmez. Senchabot, Socketo gerçek zamanlı olayları üzerinden doğrudan bağlanır.',
+      'Hesap veya OAuth girişi gerekmez. Senchabot, gerçek zamanlı olaylar üzerinden doğrudan bağlanır.',
     faq3Q: 'Hangi uyarı türleri destekleniyor?',
     faq3A:
       'Hem Twitch hem Kick için takipçiler, abonelikler (yeni ve yenilemeler), topluluk/bireysel hediye abonelikler, Cheer/bit bağışları ve gelen kanal raid\'leri desteklenir.',
+  },
+  emoteWallSetup: {
+    breadcrumb: 'Emote Duvarı Kurulumu',
+    title: 'Emote Duvarı — Yüzen Emote Kaplaması',
+    intro:
+      "Yalnızca emote içeren Twitch, Kick ve 7TV sohbet mesajlarını ekrandaki yüzen emote'lar olarak göster. Sakin modda emote'lar rastgele noktalarda süzülür, Kaos modunda ekranın bir ucundan diğerine fırlar.",
+    platforms: 'Platformlar',
+    both: 'İkisi (Twitch & Kick)',
+    twitch: 'Twitch',
+    kick: 'Kick',
+    twitchChannel: 'Twitch Kanalı',
+    kickChannel: 'Kick Kanalı',
+    sevenTvEmotes: "7TV Emote'ları",
+    subsOnly: 'Sadece aboneler',
+    subsOnlyHint: 'Ekranda yalnızca abonelerin emote mesajları görünür.',
+    subDurationX2: "Abone emote'ları 2× uzun kalır",
+    subDurationX2Hint: "Abonelerden gelen emote'lar iki kat uzun süre görünür.",
+    showAllEmotes: "Mesajlardaki emote'ları da göster",
+    showAllEmotesHint: "Yalnızca emote içeren mesajlar değil, normal mesajların içindeki emote'lar da gösterilir.",
+    mode: 'Animasyon Modu',
+    modeCalm: 'Sakin — belirir ve süzülür',
+    modeChaos: 'Kaos — ekranı boydan boya hızlıca geçer',
+    modeCalmHint:
+      "Emote'lar rastgele noktalarda belirir, hafifçe süzülür ve solar.",
+    modeChaosHint:
+      "Emote'lar rastgele ekran kenarlarından fırlar ve yarı yolda ya da karşı tarafta kaybolur.",
+    emoteSize: 'Emote Boyutu (px)',
+    duration: 'Görünür Süre (sn)',
+    maxEmotes: 'Aynı Anda Maks. Emote',
+    previewTitle: 'Emote Duvarı Önizleme',
+    previewIframeTitle: 'Emote Duvarı Önizleme',
+    previewHint: "Ekrandaki yüzen emote'larla canlı önizleme.",
+    guideTitle: 'Yayın Yazılımı Kurulumu (OBS, Streamlabs, XSplit vb.)',
+    guideStep1:
+      '1. Yayın yazılımında (OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio vb.) bir Tarayıcı Kaynağı ekle.',
+    guideStep2: "2. Kopyaladığın emote duvarı URL'sini yapıştır.",
+    guideStep3:
+      '3. Genişlik ve yüksekliği tam tuval boyutuna ayarla (örn. 1920×1080) ve oyun görüntünün üstüne yerleştir.',
+    browserSourceHintSize: ' (önerilen boyut: 1920×1080 tam tuval).',
+    faq1Q: 'Hangi mesajlar yüzen emote tetikler?',
+    faq1A:
+      "Yalnızca emote içeren mesajlar ekranda yüzen bir emote tetikler — örn. tek bir Kappa, tekrarlanan emote'lar veya Twitch/Kick/7TV emote karışımı. Normal metin mesajlar yok sayılır.",
+    faq2Q: 'Emote duvarını kullanmak için giriş yapmam gerekiyor mu?',
+    faq2A:
+      'Giriş gerekmez. Emote Duvarı, her iki platformun herkese açık sohbet akışlarını anonim olarak dinler.',
   },
   plants: {
     classic: 'Klasik Filiz',

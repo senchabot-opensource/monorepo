@@ -12,12 +12,12 @@ export const Route = createFileRoute('/')({
       {
         name: 'description',
         content:
-          '100% Free customizable stream overlays, multi-chat widgets, subscriber goal plants, transparent chat box overlays, and interactive stream tools for Twitch & Kick. Works with OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio, or any software that supports browser sources. Zero login required.',
+          '100% Free customizable stream overlays, multi-chat widgets, subscriber goal plants, floating emote wall overlays, transparent chat box overlays, and interactive stream tools for Twitch & Kick. Works with OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio, or any software that supports browser sources. Zero login required.',
       },
       {
         name: 'keywords',
         content:
-          'customizable stream overlays, multi-chat widgets, subscriber goal plants, chat box, stream chat box, free streaming widgets, stream tools, obs studio overlays, streamlabs desktop, xsplit broadcaster, vmix, lightstream, prism live studio, twitch widgets free, kick widgets free, free obs overlays, sub goal plant, stream raffle picker, obs bridge',
+          'customizable stream overlays, multi-chat widgets, subscriber goal plants, chat box, stream chat box, emote wall, floating emotes, emote overlay, twitch emote overlay, kick emote overlay, 7tv emote overlay, free streaming widgets, stream tools, obs studio overlays, streamlabs desktop, xsplit broadcaster, vmix, lightstream, prism live studio, twitch widgets free, kick widgets free, free obs overlays, sub goal plant, stream raffle picker, obs bridge',
       },
       {
         property: 'og:title',
@@ -27,7 +27,7 @@ export const Route = createFileRoute('/')({
       {
         property: 'og:description',
         content:
-          '100% Free customizable stream overlays, multi-chat widgets, subscriber goal plants, chat box overlays, and stream tools for Twitch & Kick. Add to OBS Studio, Streamlabs Desktop, XSplit, or any browser source in seconds.',
+          '100% Free customizable stream overlays, multi-chat widgets, subscriber goal plants, floating emote wall overlays, chat box overlays, and stream tools for Twitch & Kick. Add to OBS Studio, Streamlabs Desktop, XSplit, or any browser source in seconds.',
       },
       { property: 'og:type', content: 'website' },
       {
@@ -47,7 +47,7 @@ export const Route = createFileRoute('/')({
       {
         name: 'twitter:description',
         content:
-          '100% Free customizable stream overlays, multi-chat widgets, subscriber goal plants, and interactive stream tools for Twitch & Kick. Works with OBS Studio, Streamlabs Desktop, XSplit, vMix, and any browser source.',
+          '100% Free customizable stream overlays, multi-chat widgets, subscriber goal plants, floating emote wall overlays, and interactive stream tools for Twitch & Kick. Works with OBS Studio, Streamlabs Desktop, XSplit, vMix, and any browser source.',
       },
       {
         name: 'twitter:image',
@@ -59,7 +59,7 @@ export const Route = createFileRoute('/')({
           '@type': 'WebSite',
           name: 'Senchabot Extensions',
           description:
-            'Free, open-source customizable stream overlays, multi-chat widgets, subscriber goal plants, chat box overlays, and stream tools for Twitch and Kick streamers. Works with OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio, and any software supporting browser sources with no login required.',
+            'Free, open-source customizable stream overlays, multi-chat widgets, subscriber goal plants, floating emote wall overlays, chat box overlays, and stream tools for Twitch and Kick streamers. Works with OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio, and any software supporting browser sources with no login required.',
           url: 'https://extensions.senchabot.com',
           publisher: {
             '@type': 'Organization',
@@ -107,6 +107,14 @@ export const Route = createFileRoute('/')({
               description:
                 'Free tool to control OBS Studio scenes and recording from chat commands.',
             },
+            {
+              '@type': 'ListItem',
+              position: 5,
+              name: 'Emote Wall (Floating Emote Overlay)',
+              url: 'https://extensions.senchabot.com/setup/emote-wall',
+              description:
+                'Free floating emote overlay that shows emote-only Twitch, Kick, and 7TV chat messages at random screen positions with Calm drift or Chaos zip-across animations.',
+            },
           ],
         },
       },
@@ -147,6 +155,14 @@ export const Route = createFileRoute('/')({
                 text: 'Configure your widget, copy the URL, add a Browser Source in OBS Studio, and paste the URL.',
               },
             },
+            {
+              '@type': 'Question',
+              name: 'What is the Emote Wall overlay and which messages trigger it?',
+              acceptedAnswer: {
+                '@type': 'Answer',
+                text: 'Emote Wall is a free browser source overlay that turns emote-only Twitch, Kick, and 7TV chat messages into floating on-screen emotes. Only messages containing nothing but emotes trigger it; normal text messages are ignored. Choose Calm mode for emotes that pop up at random spots and drift away, or Chaos mode for emotes that zip across the screen from random edges.',
+              },
+            },
           ],
         },
       },
@@ -157,6 +173,14 @@ export const Route = createFileRoute('/')({
 });
 
 const EXTENSIONS = [
+  {
+    to: '/setup/alerts' as const,
+    icon: '🔔',
+    tagKey: 'tagObsSource' as TranslationKey,
+    tagColor: 'bg-green-500/10 text-green-700 border-green-500/20 dark:text-green-400',
+    title: 'Alerts',
+    descriptionKey: 'cardAlerts' as TranslationKey,
+  },
   {
     to: '/setup/sub-growing-plant' as const,
     icon: '🌱',
@@ -180,6 +204,14 @@ const EXTENSIONS = [
     tagColor: 'bg-amber-500/10 text-amber-700 border-amber-500/20 dark:text-amber-400',
     title: 'Raffle Picker',
     descriptionKey: 'cardRaffle' as TranslationKey,
+  },
+  {
+    to: '/setup/emote-wall' as const,
+    icon: '😂',
+    tagKey: 'tagObsSource' as TranslationKey,
+    tagColor: 'bg-blue-500/10 text-blue-700 border-blue-500/20 dark:text-blue-400',
+    title: 'Emote Wall',
+    descriptionKey: 'cardEmoteWall' as TranslationKey,
   },
   {
     to: '/setup/obs-bridge' as const,
