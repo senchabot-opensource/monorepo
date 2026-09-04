@@ -1,9 +1,9 @@
-export type EmoteWallMode = 'calm' | 'chaos';
+export type EmoteWallMode = 'calm' | 'chaos' | 'bounce';
 
-export const EMOTE_WALL_MODES: readonly EmoteWallMode[] = ['calm', 'chaos'];
+export const EMOTE_WALL_MODES: readonly EmoteWallMode[] = ['calm', 'chaos', 'bounce'];
 
 export function isEmoteWallMode(value: unknown): value is EmoteWallMode {
-  return value === 'calm' || value === 'chaos';
+  return value === 'calm' || value === 'chaos' || value === 'bounce';
 }
 
 /** Calm: pops up at a random spot, drifts gently, fades out. */
@@ -44,10 +44,113 @@ export type ChaosPop = {
   vanishAt: number;
 };
 
-export type EmotePop = CalmPop | ChaosPop;
+export type EmotePop = CalmPop | ChaosPop | BouncePop;
 
 export const randomIn = (min: number, max: number) =>
   min + Math.random() * (max - min);
+
+/**
+ * Bounce: screensaver-style ricochet. Spawns inside the canvas, flies
+ * straight, reflects off edges, and every edge hit boosts speed.
+ */
+export type BouncePop = {
+  kind: 'bounce';
+  id: string;
+  src: string;
+  /** Human-readable emote name for alt text (when known). */
+  name?: string;
+  size: number;
+  startXPct: number;
+  startYPct: number;
+  /** Flight direction in radians. */
+  angle: number;
+  /** Pixels per second. */
+  speed: number;
+  /** How long the emote stays visible in ms. */
+  visibleMs: number;
+};
+
+/** Speed multiplier applied on every edge hit. */
+export const BOUNCE_BOOST = 1.3;
+/** Hard speed cap (px/s) so boosted bounces stay on screen. */
+export const BOUNCE_MAX_SPEED = 1000;
+
+export function createBouncePop(
+  src: string,
+  baseSize: number,
+  durationSec: number,
+): Omit<BouncePop, 'id' | 'kind'> {
+  return {
+    src,
+    size: Math.round(baseSize * randomIn(0.8, 1.3)),
+    startXPct: randomIn(5, 90),
+    startYPct: randomIn(5, 85),
+    angle: randomIn(0, Math.PI * 2),
+    speed: randomIn(140, 260),
+    visibleMs: Math.round(durationSec * 1000),
+  };
+}
+
+export type BounceStep = {
+  x: number;
+  y: number;
+  angle: number;
+  speed: number;
+  bounced: boolean;
+};
+
+/**
+ * One physics step: advance by velocity, reflect off the [0, maxX] x
+ * [0, maxY] box, and boost speed on every edge hit (with a small angle
+ * jitter so flights never loop in a perfect pattern).
+ */
+export function bounceStep(
+  x: number,
+  y: number,
+  angle: number,
+  speed: number,
+  dt: number,
+  maxX: number,
+  maxY: number,
+): BounceStep {
+  let vx = Math.cos(angle) * speed;
+  let vy = Math.sin(angle) * speed;
+  let nx = x + vx * dt;
+  let ny = y + vy * dt;
+  let bounced = false;
+
+  if (maxX <= 0) {
+    nx = 0;
+  } else if (nx <= 0) {
+    nx = 0;
+    vx = Math.abs(vx);
+    bounced = true;
+  } else if (nx >= maxX) {
+    nx = maxX;
+    vx = -Math.abs(vx);
+    bounced = true;
+  }
+
+  if (maxY <= 0) {
+    ny = 0;
+  } else if (ny <= 0) {
+    ny = 0;
+    vy = Math.abs(vy);
+    bounced = true;
+  } else if (ny >= maxY) {
+    ny = maxY;
+    vy = -Math.abs(vy);
+    bounced = true;
+  }
+
+  if (!bounced) {
+    return { x: nx, y: ny, angle, speed, bounced: false };
+  }
+
+  const boosted = Math.min(speed * BOUNCE_BOOST, BOUNCE_MAX_SPEED);
+  const reflected = Math.atan2(vy, vx) + randomIn(-0.15, 0.15);
+  return { x: nx, y: ny, angle: reflected, speed: boosted, bounced: true };
+}
 
 export function createCalmPop(
   src: string,

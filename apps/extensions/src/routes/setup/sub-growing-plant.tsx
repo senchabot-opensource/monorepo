@@ -11,7 +11,7 @@ import {
   WATER_EFFECT_OPTIONS,
   type WaterEffectType,
 } from "#/features/widgets/sub-sprout/water/watering-fx";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
 export const Route = createFileRoute("/setup/sub-growing-plant")({
@@ -151,6 +151,7 @@ function SubSproutSetup() {
   const [pick, setPick] = useState<PickMode>("fixed");
   const [water, setWater] = useState<WaterEffectType>("off");
   const [countFx, setCountFx] = useState(true);
+  const [potLabel, setPotLabel] = useState(false);
   const [copied, setCopied] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -186,6 +187,7 @@ function SubSproutSetup() {
     if (pick !== "fixed") params.set("pick", pick);
     if (water !== "off") params.set("water", water);
     if (!countFx) params.set("countfx", "0");
+    if (potLabel) params.set("potlabel", "1");
     return `${window.location.origin}/widgets/sub-sprout-widget?${params.toString()}`;
   };
 
@@ -221,7 +223,11 @@ function SubSproutSetup() {
     (platform !== "kick" && twitchChannel.trim().length > 0) ||
     (platform !== "twitch" && kickChannel.trim().length > 0);
   const showAdvanced =
-    water !== "off" || pick !== "fixed" || variety !== "classic" || !countFx;
+    water !== "off" ||
+    pick !== "fixed" ||
+    variety !== "classic" ||
+    !countFx ||
+    potLabel;
   const previewChannel =
     twitchChannel.trim() || kickChannel.trim();
 
@@ -240,11 +246,9 @@ function SubSproutSetup() {
               />
             </div>
             <div className="mb-6 flex justify-center">
-              <a
-                className="relative inline-flex select-none flex-col items-center gap-2 text-xl font-semibold tracking-wide text-zinc-900 transition-opacity hover:opacity-75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 dark:text-white"
-                href="https://senchabot.com"
-                target="_blank"
-                rel="noreferrer">
+              <Link
+                to="/"
+                className="relative inline-flex select-none flex-col items-center gap-2 text-xl font-semibold tracking-wide text-zinc-900 transition-opacity hover:opacity-75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 dark:text-white">
                 <div className="inline-flex size-10 shrink-0">
                   <img
                     src="/senchabot-logo.svg"
@@ -253,7 +257,7 @@ function SubSproutSetup() {
                     height={40}
                   />
                 </div>
-              </a>
+              </Link>
             </div>
 
             <div className="flex justify-center mb-3">
@@ -409,6 +413,21 @@ function SubSproutSetup() {
                   </span>
                 </label>
 
+                <label className="flex cursor-pointer items-center gap-3 rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2.5 dark:border-zinc-700 dark:bg-zinc-800">
+                  <input
+                    type="checkbox"
+                    checked={potLabel}
+                    onChange={(e) => setPotLabel(e.target.checked)}
+                    className="size-4 accent-green-500"
+                  />
+                  <span className="text-sm text-zinc-700 dark:text-zinc-300">
+                    {t("subSprout.showPotLabel")}{" "}
+                    <span className="text-zinc-500">
+                      {t("subSprout.potLabelHint")}
+                    </span>
+                  </span>
+                </label>
+
                 {showAdvanced && (
                   <p className="text-[11px] text-amber-600 bg-amber-500/10 border border-amber-500/20 rounded p-2 dark:text-amber-400/80">
                    {t("subSprout.advancedNotice")}
@@ -439,7 +458,7 @@ function SubSproutSetup() {
           </div>
 
           {/* Right: Live Preview Panel & Guides/FAQ */}
-          <div className="w-full max-w-md lg:max-w-2xl lg:shrink-0 flex flex-col gap-4">
+          <div className="w-full max-w-md lg:max-w-2xl lg:shrink-0 flex flex-col gap-4 lg:sticky lg:top-6">
             <div className="rounded-xl bg-white p-6 md:p-8 shadow-xl border border-zinc-200 flex flex-col h-[700px] dark:bg-zinc-900 dark:border-zinc-800">
               <h2 className="mb-4 text-xl font-semibold text-center text-zinc-700 dark:text-zinc-300">
                 {t("subSprout.previewTitle")}

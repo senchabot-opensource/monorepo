@@ -1,14 +1,19 @@
 import { describe, expect, it } from 'vitest';
 import {
+  BOUNCE_BOOST,
+  BOUNCE_MAX_SPEED,
+  bounceStep,
+  createBouncePop,
   createCalmPop,
   createChaosPop,
   isEmoteWallMode,
 } from './emote-pops';
 
 describe('isEmoteWallMode', () => {
-  it('accepts calm and chaos only', () => {
+  it('accepts calm, chaos and bounce only', () => {
     expect(isEmoteWallMode('calm')).toBe(true);
     expect(isEmoteWallMode('chaos')).toBe(true);
+    expect(isEmoteWallMode('bounce')).toBe(true);
     expect(isEmoteWallMode('wild')).toBe(false);
     expect(isEmoteWallMode(undefined)).toBe(false);
   });
@@ -75,5 +80,55 @@ describe('createChaosPop', () => {
       else seen.add('bottom');
     }
     expect(seen).toEqual(new Set(['left', 'right', 'top', 'bottom']));
+  });
+});
+
+describe('createBouncePop', () => {
+  it('spawns inside the canvas with a sane flight', () => {
+    for (let i = 0; i < 50; i++) {
+      const pop = createBouncePop('src', 112, 5);
+      expect(pop.startXPct).toBeGreaterThanOrEqual(0);
+      expect(pop.startXPct).toBeLessThanOrEqual(100);
+      expect(pop.startYPct).toBeGreaterThanOrEqual(0);
+      expect(pop.startYPct).toBeLessThanOrEqual(100);
+      expect(pop.angle).toBeGreaterThanOrEqual(0);
+      expect(pop.angle).toBeLessThan(Math.PI * 2);
+      expect(pop.speed).toBeGreaterThanOrEqual(140);
+      expect(pop.speed).toBeLessThanOrEqual(260);
+      expect(pop.visibleMs).toBe(5000);
+    }
+  });
+});
+
+describe('bounceStep', () => {
+  it('flies straight without bouncing mid-field', () => {
+    const res = bounceStep(100, 100, 0, 200, 0.5, 800, 600);
+    expect(res.bounced).toBe(false);
+    expect(res.x).toBeCloseTo(200);
+    expect(res.y).toBeCloseTo(100);
+    expect(res.angle).toBe(0);
+    expect(res.speed).toBe(200);
+  });
+
+  it('reflects off the right edge and boosts speed', () => {
+    const res = bounceStep(790, 100, 0, 200, 0.5, 800, 600);
+    expect(res.bounced).toBe(true);
+    expect(res.x).toBe(800);
+    expect(res.speed).toBeCloseTo(200 * BOUNCE_BOOST);
+    // Heading back left (angle near PI, modulo jitter).
+    expect(Math.cos(res.angle)).toBeLessThan(0);
+  });
+
+  it('reflects off the top edge downward', () => {
+    const res = bounceStep(400, 5, -Math.PI / 2, 200, 0.5, 800, 600);
+    expect(res.bounced).toBe(true);
+    expect(res.y).toBe(0);
+    expect(Math.sin(res.angle)).toBeGreaterThan(0);
+  });
+
+  it('caps boosted speed at the maximum', () => {
+    const res = bounceStep(790, 100, 0, 950, 0.5, 800, 600);
+    expect(res.bounced).toBe(true);
+    expect(res.speed).toBe(BOUNCE_MAX_SPEED);
   });
 });

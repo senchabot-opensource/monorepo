@@ -34,6 +34,137 @@ export function isSubscriberMessage(input: SubscriberChatInput): boolean {
   return false;
 }
 
+export const HYPE_WINDOW_MS = 15_000;
+export const HYPE_MIN_USERS = 2;
+export const SPAM_WINDOW_MS = 10_000;
+/** More same-emote repeats than this by one user in the window counts as spam. */
+export const SPAM_MAX_REPEATS = 2;
+/** More emote messages than this by one user in the window counts as spam. */
+export const SPAM_MAX_MESSAGES = 3;
+
+export type HypeSighting = { user: string; at: number };
+export type HypeState = Map<string, { sightings: HypeSighting[]; lastFiredAt: number }>;
+
+function pruneHypeState(
+  state: HypeState,
+  now: number,
+  windowMs: number,
+): void {
+  for (const [url, entry] of state) {
+    entry.sightings = entry.sightings.filter((s) => now - s.at < windowMs);
+    if (entry.sightings.length === 0) {
+      state.delete(url);
+    }
+  }
+}
+
+/**
+ * Hype gate: returns true once the same emote was sent by enough distinct
+ * users within the window. Re-fires at most once per window while hype lasts.
+ */
+export function checkHype(
+  state: HypeState,
+  url: string,
+  userLower: string,
+  now: number,
+  opts: { windowMs?: number; minUsers?: number } = {},
+): boolean {
+  const windowMs = opts.windowMs ?? HYPE_WINDOW_MS;
+  const minUsers = opts.minUsers ?? HYPE_MIN_USERS;
+  let entry = state.get(url);
+  if (!entry) {
+    entry = { sightings: [], lastFiredAt: Number.NEGATIVE_INFINITY };
+    state.set(url, entry);
+  }
+  entry.sightings = entry.sightings.filter((s) => now - s.at < windowMs);
+  entry.sightings.push({ user: userLower, at: now });
+  if (state.size > 500) {
+    pruneHypeState(state, now, windowMs);
+  }
+  const distinctUsers = new Set(entry.sightings.map((s) => s.user));
+  if (distinctUsers.size >= minUsers && now - entry.lastFiredAt >= windowMs) {
+    entry.lastFiredAt = now;
+    return true;
+  }
+  return false;
+}
+
+export type SpamState = {
+  /** `${user} ${url}` -> sighting timestamps (same-emote repeats). */
+  byEmote: Map<string, number[]>;
+  /** user -> emote-message timestamps (overall rate). */
+  byUser: Map<string, number[]>;
+};
+
+export function createSpamState(): SpamState {
+  return { byEmote: new Map(), byUser: new Map() };
+}
+
+function pruneTimes(times: number[], now: number, windowMs: number): number[] {
+  return times.filter((at) => now - at < windowMs);
+}
+
+function sweepSpamState(state: SpamState, now: number, windowMs: number): void {
+  for (const map of [state.byEmote, state.byUser]) {
+    for (const [k, times] of map) {
+      const fresh = pruneTimes(times, now, windowMs);
+      if (fresh.length === 0) {
+        map.delete(k);
+      } else {
+        map.set(k, fresh);
+      }
+    }
+  }
+}
+
+/**
+ * Spam filter for one user's emote message. Blocks the whole message when
+ * the user exceeds the emote-message rate, otherwise drops only the
+ * individually spammed (rapidly repeated same) emotes. Returns the allowed
+ * urls, possibly empty. Sliding windows recover on their own.
+ */
+export function filterSpam(
+  state: SpamState,
+  userLower: string,
+  urls: string[],
+  now: number,
+  opts: { windowMs?: number; maxRepeats?: number; maxMessages?: number } = {},
+): string[] {
+  if (urls.length === 0) return urls;
+  const windowMs = opts.windowMs ?? SPAM_WINDOW_MS;
+  const maxRepeats = opts.maxRepeats ?? SPAM_MAX_REPEATS;
+  const maxMessages = opts.maxMessages ?? SPAM_MAX_MESSAGES;
+
+  // Record sightings first so blocked attempts keep counting.
+  for (const url of urls) {
+    const key = `${userLower} ${url}`;
+    state.byEmote.set(key, [
+      ...pruneTimes(state.byEmote.get(key) ?? [], now, windowMs),
+      now,
+    ]);
+  }
+  state.byUser.set(
+    userLower,
+    pruneTimes(state.byUser.get(userLower) ?? [], now, windowMs),
+  );
+  state.byUser.get(userLower)?.push(now);
+
+  if (state.byEmote.size + state.byUser.size > 1000) {
+    sweepSpamState(state, now, windowMs);
+  }
+
+  // Per-user rate: too many emote messages in a short time.
+  if ((state.byUser.get(userLower) ?? []).length > maxMessages) {
+    return [];
+  }
+
+  // Same-emote repeats: drop only the spammed emotes.
+  return urls.filter((url) => {
+    const times = state.byEmote.get(`${userLower} ${url}`) ?? [];
+    return times.length <= maxRepeats;
+  });
+}
+
 export type TwitchEmoteRange = { id: string; start: number; end: number };
 
 export const parseTwitchEmoteRanges = (
