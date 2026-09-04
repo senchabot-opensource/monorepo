@@ -10,7 +10,7 @@ Senchabot Extensions provides 100% free streaming widgets, customizable overlays
 - **Universal Chat** — A multi-chat widget and stream chat box overlay that combines Twitch and Kick chat into a single on-screen feed with 7TV emotes, badges, and platform indicators.
 - **Raffle Picker** — A chat-based giveaway and raffle tool. Viewers type a keyword to enter; winners are drawn and announced on a live confetti celebration overlay.
 - **OBS Bridge** — A chat-controlled scene switching and stream control tool connecting over local OBS WebSocket.
-- **Emote Wall** — A floating emote overlay that turns emote-only Twitch, Kick, and 7TV chat messages into floating on-screen emotes with Calm drift or Chaos zip-across animations.
+- **Emote Wall** — A floating emote overlay that turns emote-only Twitch, Kick, and 7TV chat messages into floating on-screen emotes with Calm, Chaos or Bounce animations.
 
 ## Live URLs
 
@@ -45,7 +45,7 @@ You can also build the widget URL directly without the setup page:
 https://extensions.senchabot.com/widgets/sub-sprout-widget?twitch=YOUR_TWITCH_CHANNEL&kick=YOUR_KICK_CHANNEL&variety=classic&pick=fixed&water=off&countfx=1
 ```
 
-**URL parameters:** `twitch`, `kick`, `variety`, `pick` (`fixed` | `cycle` | `random`), `water` (`off` | `rain` | `sparkle`), `countfx` (`0` | `1`), `simulate` (`auto` | `1` | `0`). Older URLs using `channel` + `platform` still work.
+**URL parameters:** `twitch`, `kick`, `variety`, `pick` (`fixed` | `cycle` | `random`), `water` (`off` | `rain` | `sparkle`), `countfx` (`0` | `1`), `potlabel` (`0` | `1`, stage text like `3/10` on the pot), `simulate` (`auto` | `1` | `0`). Older URLs using `channel` + `platform` still work.
 
 ---
 
@@ -110,12 +110,12 @@ A floating emote overlay that turns emote-only Twitch, Kick, and 7TV chat messag
 **How it works:**
 - Connects to Twitch IRC anonymously and Kick's Pusher WebSocket — supports both platforms simultaneously in a single browser source.
 - Detects emote-only messages: Twitch native emotes, Kick native `[emote:id:name]` tokens, 7TV channel emotes, and mixed messages.
-- Two animation modes: `calm` (emotes pop up at random spots, drift, and fade out) and `chaos` (emotes zip across the screen from random borders and vanish halfway or at the far side).
+- Three animation modes: `calm` (emotes pop up at random spots, drift, and fade out), `chaos` (emotes zip across the screen from random borders and vanish halfway or at the far side), and `bounce` (emotes ricochet off the screen edges and speed up with every hit).
 
 **Setup:**
 1. Go to `/setup/emote-wall`.
 2. Enter your Twitch channel and/or Kick channel.
-3. Pick Calm or Chaos mode and customize size, duration, and max simultaneous emotes.
+3. Pick Calm, Chaos or Bounce mode and customize size, duration, and max simultaneous emotes.
 4. Copy the generated URL into OBS Studio, Streamlabs Desktop, XSplit, or your preferred streaming software as a full-canvas **Browser Source** (e.g. 1920×1080).
 
 You can also build the widget URL directly without the setup page:
@@ -124,7 +124,7 @@ You can also build the widget URL directly without the setup page:
 https://extensions.senchabot.com/widgets/emote-wall?twitch=YOUR_TWITCH_CHANNEL&kick=YOUR_KICK_CHANNEL&mode=chaos
 ```
 
-**URL parameters:** `twitch`, `kick`, `sevenTv` (`true` | `false`), `mode` (`calm` | `chaos`), `subsOnly` (`true` | `false`), `subDurationX2` (`true` | `false`, sub emotes stay 2x longer), `showAllEmotes` (`true` | `false`, also show emotes in normal messages), `size` (32–256), `duration` (2–15 seconds), `max` (1–60), `mock` (`true` | `false`).
+**URL parameters:** `twitch`, `kick`, `sevenTv` (`true` | `false`), `mode` (`calm` | `chaos` | `bounce`), `subsOnly` (`true` | `false`), `subDurationX2` (`true` | `false`, sub emotes stay 2x longer), `showAllEmotes` (`true` | `false`, also show emotes in normal messages), `hypeMode` (`true` | `false`, only show emotes doubled by 2+ users), `spamBlock` (`true` | `false`, default on, block same-user emote spam), `size` (32–256), `duration` (2–30 seconds), `max` (1–120), `mock` (`true` | `false`).
 
 ## Getting Started (Local Development)
 

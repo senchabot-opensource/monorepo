@@ -1,11 +1,15 @@
 import { describe, expect, it } from 'vitest';
 import {
+  checkHype,
+  createSpamState,
+  filterSpam,
   getAnyEmoteUrls,
   getEmoteOnlyUrls,
   getKickEmoteOnlyUrls,
   getSevenTvEmoteOnlyUrls,
   getTwitchNativeEmoteOnlyUrls,
   isSubscriberMessage,
+  type HypeState,
 } from './emote-utils';
 
 describe('getKickEmoteOnlyUrls', () => {
@@ -252,5 +256,87 @@ describe('getAnyEmoteUrls', () => {
     expect(
       getAnyEmoteUrls({ message: msg, platform: 'kick' }, null),
     ).toHaveLength(5);
+  });
+});
+
+describe('checkHype', () => {
+  it('fires only when distinct users double the emote', () => {
+    const state: HypeState = new Map();
+    expect(checkHype(state, 'url1', 'alice', 1000)).toBe(false);
+    // Same user repeating does not hype.
+    expect(checkHype(state, 'url1', 'alice', 2000)).toBe(false);
+    // Second distinct user triggers.
+    expect(checkHype(state, 'url1', 'bob', 3000)).toBe(true);
+  });
+
+  it('does not re-fire within the same window', () => {
+    const state: HypeState = new Map();
+    checkHype(state, 'url1', 'alice', 1000);
+    expect(checkHype(state, 'url1', 'bob', 2000)).toBe(true);
+    // Still hyped but cooling down.
+    expect(checkHype(state, 'url1', 'carol', 3000)).toBe(false);
+  });
+
+  it('re-fires after the window passes', () => {
+    const state: HypeState = new Map();
+    checkHype(state, 'url1', 'alice', 1000);
+    expect(checkHype(state, 'url1', 'bob', 2000)).toBe(true);
+    expect(checkHype(state, 'url1', 'carol', 20_000)).toBe(false);
+    expect(checkHype(state, 'url1', 'dave', 21_000)).toBe(true);
+  });
+
+  it('tracks emotes independently', () => {
+    const state: HypeState = new Map();
+    checkHype(state, 'url1', 'alice', 1000);
+    expect(checkHype(state, 'url2', 'bob', 2000)).toBe(false);
+    expect(checkHype(state, 'url1', 'bob', 3000)).toBe(true);
+  });
+});
+
+describe('filterSpam', () => {
+  it('blocks the 3rd same-emote repeat within the window', () => {
+    const state = createSpamState();
+    expect(filterSpam(state, 'alice', ['url1'], 1000)).toEqual(['url1']);
+    expect(filterSpam(state, 'alice', ['url1'], 2000)).toEqual(['url1']);
+    expect(filterSpam(state, 'alice', ['url1'], 3000)).toEqual([]);
+  });
+
+  it('blocks the 4th emote message with different emotes', () => {
+    const state = createSpamState();
+    expect(filterSpam(state, 'alice', ['url1'], 1000)).toEqual(['url1']);
+    expect(filterSpam(state, 'alice', ['url2'], 2000)).toEqual(['url2']);
+    expect(filterSpam(state, 'alice', ['url3'], 3000)).toEqual(['url3']);
+    expect(filterSpam(state, 'alice', ['url4'], 4000)).toEqual([]);
+  });
+
+  it('drops only the spammed emote from a mixed message', () => {
+    const state = createSpamState();
+    filterSpam(state, 'alice', ['url1'], 1000);
+    filterSpam(state, 'alice', ['url1'], 2000);
+    // url1 is now spam, url2 is fresh.
+    expect(filterSpam(state, 'alice', ['url1', 'url2'], 3000)).toEqual([
+      'url2',
+    ]);
+  });
+
+  it('tracks users independently', () => {
+    const state = createSpamState();
+    filterSpam(state, 'alice', ['url1'], 1000);
+    filterSpam(state, 'alice', ['url1'], 2000);
+    filterSpam(state, 'alice', ['url1'], 3000);
+    expect(filterSpam(state, 'bob', ['url1'], 4000)).toEqual(['url1']);
+  });
+
+  it('recovers after the window slides past', () => {
+    const state = createSpamState();
+    filterSpam(state, 'alice', ['url1'], 1000);
+    filterSpam(state, 'alice', ['url1'], 2000);
+    expect(filterSpam(state, 'alice', ['url1'], 3000)).toEqual([]);
+    expect(filterSpam(state, 'alice', ['url1'], 15_000)).toEqual(['url1']);
+    expect(filterSpam(state, 'alice', ['url9'], 16_000)).toEqual(['url9']);
+  });
+
+  it('passes through empty input', () => {
+    expect(filterSpam(createSpamState(), 'alice', [], 1000)).toEqual([]);
   });
 });

@@ -2,7 +2,7 @@ import { Breadcrumb } from "#/components/breadcrumb";
 import { YoutubeTutorial } from "#/components/youtube-tutorial";
 import { useI18n } from "#/lib/i18n";
 import { getLocaleLinks } from "#/lib/i18n/seo";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useDeferredValue, useEffect, useMemo, useState } from "react";
 
 export const Route = createFileRoute("/setup/chat-widget")({
@@ -275,11 +275,9 @@ function ChatWidgetSetup() {
               />
             </div>
             <div className="mb-6 flex justify-center">
-              <a
-                className="relative inline-flex select-none flex-col items-center gap-2 text-xl font-semibold tracking-wide text-zinc-900 transition-opacity hover:opacity-75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 dark:text-white"
-                href="https://senchabot.com"
-                target="_blank"
-                rel="noreferrer">
+              <Link
+                to="/"
+                className="relative inline-flex select-none flex-col items-center gap-2 text-xl font-semibold tracking-wide text-zinc-900 transition-opacity hover:opacity-75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 dark:text-white">
                 <div className="inline-flex size-10 shrink-0">
                   <img
                     src="/senchabot-logo.svg"
@@ -288,7 +286,7 @@ function ChatWidgetSetup() {
                     height={40}
                   />
                 </div>
-              </a>
+              </Link>
             </div>
 
             <div className="flex justify-center mb-3">
@@ -630,7 +628,7 @@ function ChatWidgetSetup() {
           </div>
 
           {/* Right: Live Preview Panel & Guides/FAQ */}
-          <div className="w-full max-w-md lg:max-w-2xl lg:shrink-0 flex flex-col gap-4">
+          <div className="w-full max-w-md lg:max-w-2xl lg:shrink-0 flex flex-col gap-4 lg:sticky lg:top-6">
             <div className="rounded-xl bg-white p-6 md:p-8 shadow-xl border border-zinc-200 flex flex-col h-[700px] dark:bg-zinc-900 dark:border-zinc-800">
               <h2 className="mb-4 text-xl font-semibold text-center text-zinc-700 dark:text-zinc-300">
                 {t("chatWidget.previewTitle")}

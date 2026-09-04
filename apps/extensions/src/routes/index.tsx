@@ -113,7 +113,7 @@ export const Route = createFileRoute('/')({
               name: 'Emote Wall (Floating Emote Overlay)',
               url: 'https://extensions.senchabot.com/setup/emote-wall',
               description:
-                'Free floating emote overlay that shows emote-only Twitch, Kick, and 7TV chat messages at random screen positions with Calm drift or Chaos zip-across animations.',
+                'Free floating emote overlay that shows emote-only Twitch, Kick, and 7TV chat messages at random screen positions with Calm, Chaos or Bounce animations.',
             },
           ],
         },
@@ -160,7 +160,7 @@ export const Route = createFileRoute('/')({
               name: 'What is the Emote Wall overlay and which messages trigger it?',
               acceptedAnswer: {
                 '@type': 'Answer',
-                text: 'Emote Wall is a free browser source overlay that turns emote-only Twitch, Kick, and 7TV chat messages into floating on-screen emotes. Only messages containing nothing but emotes trigger it; normal text messages are ignored. Choose Calm mode for emotes that pop up at random spots and drift away, or Chaos mode for emotes that zip across the screen from random edges.',
+                text: 'Emote Wall is a free browser source overlay that turns emote-only Twitch, Kick, and 7TV chat messages into floating on-screen emotes. Only messages containing nothing but emotes trigger it; normal text messages are ignored. Choose Calm mode for emotes that pop up at random spots and drift away, Chaos mode for emotes that zip across the screen from random edges, or Bounce mode for emotes that ricochet off the edges and speed up with every hit.',
               },
             },
           ],
@@ -221,17 +221,15 @@ function Index() {
   return (
     <div className="min-h-screen bg-zinc-50 text-zinc-900 font-sans dark:bg-zinc-950 dark:text-zinc-100">
       <header className="flex items-center justify-center py-10">
-        <a
+        <Link
+          to="/"
           className="inline-flex select-none flex-col items-center gap-2 text-xl font-semibold tracking-wide text-zinc-900 transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 dark:text-white"
-          href="https://senchabot.com"
-          target="_blank"
-          rel="noreferrer"
         >
           <div className="inline-flex size-10 shrink-0">
             <img src="/senchabot-logo.svg" alt="Senchabot" width={40} height={40} />
           </div>
           <span>Senchabot</span>
-        </a>
+        </Link>
       </header>
 
       <main className="max-w-5xl mx-auto px-6 pb-20">

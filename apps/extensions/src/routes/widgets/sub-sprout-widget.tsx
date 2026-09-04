@@ -41,6 +41,11 @@ const searchSchema = z.object({
     .optional()
     .transform(v => (v === undefined ? undefined : parseBoolFlag(v)))
     .catch(true),
+  potlabel: z
+    .unknown()
+    .optional()
+    .transform(v => (v === undefined ? undefined : parseBoolFlag(v)))
+    .catch(false),
   simulate: z
     .unknown()
     .optional()
@@ -84,6 +89,7 @@ function RouteComponent() {
     pick,
     water,
     countfx,
+    potlabel,
     simulate,
   } = Route.useSearch();
   const { kickId, kickChannelId } = Route.useLoaderData();
@@ -108,6 +114,7 @@ function RouteComponent() {
         pick={pick}
         water={water}
         countFx={countfx}
+        potLabel={potlabel}
         simulate={simulate}
       />
     </div>

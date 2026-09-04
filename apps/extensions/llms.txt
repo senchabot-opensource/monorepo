@@ -10,7 +10,7 @@ Senchabot Extensions provides 100% free customizable stream overlays, multi-chat
 - **Universal Chat** — A 100% free multi-chat widget and stream chat box overlay (no login required) that combines Twitch and Kick chat into a single on-screen feed with 7TV emotes, badges, and customizable stream overlay styles.
 - **Raffle** — A 100% free chat-based giveaway tool and raffle picker (no login required) with custom keyword entry and a live confetti winner celebration overlay for OBS Studio, Streamlabs Desktop, XSplit, and more.
 - **OBS Bridge** — A 100% free chat-controlled OBS scene switcher and recording broadcast tool (no login required) with custom command trigger naming via local OBS WebSocket.
-- **Emote Wall** — A 100% free floating emote overlay (no login required) that turns emote-only Twitch, Kick, and 7TV chat messages into floating on-screen emotes with Calm drift or Chaos zip-across animations.
+- **Emote Wall** — A 100% free floating emote overlay (no login required) that turns emote-only Twitch, Kick, and 7TV chat messages into floating on-screen emotes with Calm, Chaos or Bounce animations.
 
 ## Tech Stack
 
@@ -60,8 +60,8 @@ Senchabot Extensions provides 100% free customizable stream overlays, multi-chat
 │       │   ├── raffle-widget.tsx   # Raffle setup UI & state manager
 │       │   └── raffle-overlay.tsx  # Winner celebration overlay (canvas-confetti)
 │       └── emote-wall/
-│           ├── emote-wall.tsx      # Floating emote overlay (Calm drift + Chaos zip)
-│           ├── emote-pops.ts       # Calm/Chaos spawn position & flight factories
+│           ├── emote-wall.tsx      # Floating emote overlay (Calm/Chaos/Bounce)
+│           ├── emote-pops.ts       # Calm/Chaos/Bounce spawn & flight factories
 │           └── emote-utils.ts      # Emote-only message detection (Twitch/Kick/7TV)
 ├── src/hooks/
 │   ├── use-raffle-state.ts         # localStorage-based raffle state
@@ -93,6 +93,7 @@ A customizable subscriber goal plant overlay that levels up and blossoms in real
 - **Plant Changing Modes (`pick`)**: `fixed` (default, restarts the same plant after full growth), `cycle` (loops through plant varieties in order), `random` (picks a random variety after each cycle).
 - **Watering Effects (`water`)**: `off` (default), `rain`, `sparkle`.
 - **Sub Count Badge (`countfx`)**: `1` (default) shows bundle quantities (e.g. `x5`); `0` disables it.
+- **Pot Stage Label (`potlabel`)**: `1` draws the current stage over total stages (e.g. `3/10`) as text on the flower pot; omitted (default) hides it.
 - **Preview Simulation (`simulate`)**: `auto` simulates x1/x2 subs until a real connection is established (used by the setup preview); `1`/`true` forces always-on simulation; `0`/`off` (default) means real events only.
 - **Moderator & Broadcaster Testing**: Broadcasters and channel moderators can type `!grow` in chat to manually trigger plant growth.
 - **Legacy Params**: Older URLs using `channel` + `platform` still work. `channel` maps to the Twitch channel when `platform=twitch` (default) and to the Kick channel when `platform=kick`.
@@ -108,6 +109,7 @@ A customizable subscriber goal plant overlay that levels up and blossoms in real
   - `pick` (`fixed` | `cycle` | `random`, default `fixed`)
   - `water` (`off` | `rain` | `sparkle`, default `off`)
   - `countfx` (`0` | `1`, default `1`)
+  - `potlabel` (`0` | `1`, default `0`)
   - `simulate` (`auto` | `1`/`true` | `0`/`off`, default off)
   - Legacy: `channel` (string), `platform` (`twitch` | `kick`, default `twitch`)
 
@@ -201,6 +203,7 @@ A floating emote overlay that turns emote-only Twitch, Kick, and 7TV chat messag
 - **Animation Modes (`mode`)**:
   - `calm` (default): emotes pop up at random screen positions with a fade-in, drift gently away from the spawn point, then fade out.
   - `chaos`: emotes zip in from random screen borders (left, right, top, bottom), travel linearly across the canvas, and vanish randomly once halfway or when reaching the far side.
+  - `bounce`: emotes ricochet around like a screensaver, reflecting off the screen edges with a speed boost on every hit.
 - **Direct URL examples**:
   - Twitch only: `https://extensions.senchabot.com/widgets/emote-wall?twitch=senchabot`
   - Kick only: `https://extensions.senchabot.com/widgets/emote-wall?kick=senchabot`
@@ -209,11 +212,13 @@ A floating emote overlay that turns emote-only Twitch, Kick, and 7TV chat messag
 - **URL Query Parameters**:
   - `twitch` (string, Twitch channel name), `kick` (string, Kick channel name)
   - `sevenTv` (`true` | `false`, default `true`)
-  - `mode` (`calm` | `chaos`, default `calm`)
+  - `mode` (`calm` | `chaos` | `bounce`, default `calm`)
   - `subsOnly` (`true` | `false`, default `false`, only subscriber emotes appear)
   - `subDurationX2` (`true` | `false`, default `false`, subscriber emotes stay 2x longer)
   - `showAllEmotes` (`true` | `false`, default `false`, also show emotes mixed into normal text messages)
-  - `size` (number 32–256, default `112`), `duration` (seconds 2–15, default `5`), `max` (1–60 simultaneous emotes, default `25`)
+  - `hypeMode` (`true` | `false`, default `false`, only show an emote after 2+ distinct users send it within 15s)
+  - `spamBlock` (`true` | `false`, default `true`, block rapid same-emote repeats from one user)
+  - `size` (number 32–256, default `112`), `duration` (seconds 2–30, default `5`), `max` (1–120 simultaneous emotes, default `25`)
   - `mock` (`true` | `false`, simulated emotes for preview/testing)
 
 ---

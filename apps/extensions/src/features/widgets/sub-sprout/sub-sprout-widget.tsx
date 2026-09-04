@@ -27,6 +27,7 @@ export interface SubSproutWidgetProps {
   pick?: PickMode | string;
   water?: WaterEffectType | string;
   countFx?: boolean;
+  potLabel?: boolean;
   simulate?: boolean | "auto";
 }
 
@@ -93,6 +94,13 @@ function buildSlots(count: number): SlotState[] {
   }));
 }
 
+/** "3/10" style pot label: completed stages over total stages. */
+export function formatPotLabel(stage: number, stages: number): string {
+  const total = Math.max(1, Math.floor(stages));
+  const current = Math.max(0, Math.min(total, Math.floor(stage)));
+  return `${current}/${total}`;
+}
+
 export function SubSproutWidget({
   twitchChannel,
   kickChannel,
@@ -102,6 +110,7 @@ export function SubSproutWidget({
   pick = "fixed",
   water = "off",
   countFx = true,
+  potLabel = false,
   simulate = false,
 }: SubSproutWidgetProps) {
   const safeVariety = isValidPlantId(variety) ? variety : "classic";
@@ -703,7 +712,7 @@ export function SubSproutWidget({
     const step = Math.min(LEGACY_MAX_STEPS, Math.floor(first.stagesDone));
     return (
       <div className="relative size-full">
-        <LegacySubSproutSvg step={step} />
+        <LegacySubSproutSvg step={step} potLabel={potLabel} />
         {countFx && subCountFx && (
           <SubCountFX count={subCountFx.count} triggerKey={subCountFx.key} />
         )}
@@ -739,6 +748,14 @@ export function SubSproutWidget({
           stage={first.stagesDone}
           progress={first.progress}
         />
+        {potLabel && (
+          <PotStageLabel
+            text={formatPotLabel(
+              first.stagesDone,
+              getPlant(currentVariety).stages,
+            )}
+          />
+        )}
       </svg>
 
       {activeWaterSlot && safeWater !== "off" && (
@@ -757,7 +774,28 @@ export function SubSproutWidget({
   );
 }
 
-function LegacySubSproutSvg({ step }: { step: number }) {
+/** Stage text drawn on the flower pot body (pot spans x 330-470, y 440-550). */
+function PotStageLabel({ text }: { text: string }) {
+  return (
+    <text
+      x="400"
+      y="505"
+      textAnchor="middle"
+      fontSize="34"
+      fontWeight="800"
+      fontFamily="inherit"
+      fill="#ffffff"
+      stroke="rgba(0,0,0,0.6)"
+      strokeWidth="6"
+      paintOrder="stroke"
+      strokeLinejoin="round"
+      style={{ pointerEvents: "none", userSelect: "none" }}>
+      {text}
+    </text>
+  );
+}
+
+function LegacySubSproutSvg({ step, potLabel }: { step: number; potLabel: boolean }) {
   const safeStep = Math.max(0, Math.min(LEGACY_MAX_STEPS, step));
   const dashOffset = LEGACY_STEM_OFFSETS[safeStep];
   return (
@@ -881,6 +919,7 @@ function LegacySubSproutSvg({ step }: { step: number }) {
           fill="#A85F45"
           opacity="0.3"
         />
+        {potLabel && <PotStageLabel text={formatPotLabel(step, LEGACY_MAX_STEPS)} />}
       </svg>
     </div>
   );

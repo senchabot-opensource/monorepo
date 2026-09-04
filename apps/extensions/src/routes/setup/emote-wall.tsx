@@ -2,7 +2,7 @@ import { Breadcrumb } from '#/components/breadcrumb';
 import { YoutubeTutorial } from '#/components/youtube-tutorial';
 import { useI18n } from '#/lib/i18n';
 import { getLocaleLinks } from '#/lib/i18n/seo';
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, Link } from '@tanstack/react-router';
 import { useDeferredValue, useEffect, useMemo, useState } from 'react';
 
 export const Route = createFileRoute('/setup/emote-wall')({
@@ -15,7 +15,7 @@ export const Route = createFileRoute('/setup/emote-wall')({
       {
         name: 'description',
         content:
-          'Show emote-only chat messages as floating on-screen emotes on stream. 100% Free & No Login Required. Supports Twitch, Kick and 7TV emotes with Calm drift and Chaos zip-across animations for OBS Studio, Streamlabs Desktop, XSplit, vMix, or any software that supports browser sources.',
+          'Show emote-only chat messages as floating on-screen emotes on stream. 100% Free & No Login Required. Supports Twitch, Kick and 7TV emotes with Calm, Chaos and Bounce animations for OBS Studio, Streamlabs Desktop, XSplit, vMix, or any software that supports browser sources.',
       },
       {
         name: 'keywords',
@@ -30,7 +30,7 @@ export const Route = createFileRoute('/setup/emote-wall')({
       {
         property: 'og:description',
         content:
-          '100% Free floating emote overlay: emote-only Twitch, Kick and 7TV chat messages appear as floating on-screen emotes with Calm drift or Chaos zip-across animations.',
+          '100% Free floating emote overlay: emote-only Twitch, Kick and 7TV chat messages appear as floating on-screen emotes with Calm, Chaos or Bounce animations.',
       },
       { property: 'og:type', content: 'website' },
       {
@@ -113,10 +113,12 @@ function EmoteWallSetup() {
     'both',
   );
   const [sevenTv, setSevenTv] = useState(true);
-  const [mode, setMode] = useState<'calm' | 'chaos'>('calm');
+  const [mode, setMode] = useState<'calm' | 'chaos' | 'bounce'>('calm');
   const [subsOnly, setSubsOnly] = useState(false);
   const [subDurationX2, setSubDurationX2] = useState(false);
   const [showAllEmotes, setShowAllEmotes] = useState(false);
+  const [hypeMode, setHypeMode] = useState(false);
+  const [spamBlock, setSpamBlock] = useState(true);
   const [emoteSize, setEmoteSize] = useState('112');
   const [duration, setDuration] = useState('5');
   const [maxEmotes, setMaxEmotes] = useState('25');
@@ -129,6 +131,13 @@ function EmoteWallSetup() {
 
   const deferredTwitch = useDeferredValue(twitchChannel);
   const deferredKick = useDeferredValue(kickChannel);
+
+  // Number inputs accept out-of-range typing, so clamp before writing params.
+  const clampParam = (raw: string, min: number, max: number, fallback: number) => {
+    const n = Number(raw);
+    if (!Number.isFinite(n)) return String(fallback);
+    return String(Math.min(max, Math.max(min, n)));
+  };
 
   const buildParams = (
     twitch: string,
@@ -148,9 +157,13 @@ function EmoteWallSetup() {
     if (subsOnly) params.append('subsOnly', 'true');
     if (subDurationX2) params.append('subDurationX2', 'true');
     if (showAllEmotes) params.append('showAllEmotes', 'true');
-    if (emoteSize !== '112') params.append('size', emoteSize);
-    if (duration !== '5') params.append('duration', duration);
-    if (maxEmotes !== '25') params.append('max', maxEmotes);
+    if (hypeMode) params.append('hypeMode', 'true');
+    if (!spamBlock) params.append('spamBlock', 'false');
+    if (emoteSize !== '112') params.append('size', clampParam(emoteSize, 32, 256, 112));
+    const safeDuration = clampParam(duration, 2, 30, 5);
+    if (safeDuration !== '5') params.append('duration', safeDuration);
+    const safeMax = clampParam(maxEmotes, 1, 120, 25);
+    if (safeMax !== '25') params.append('max', safeMax);
     if (withMock) {
       params.append('mock', 'true');
       params.append('lang', locale);
@@ -164,7 +177,7 @@ function EmoteWallSetup() {
     if (!twitchChannel.trim() && !kickChannel.trim()) return '';
     return `${window.location.origin}/widgets/emote-wall?${params.toString()}`;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [twitchChannel, kickChannel, platforms, sevenTv, mode, subsOnly, subDurationX2, showAllEmotes, emoteSize, duration, maxEmotes]);
+  }, [twitchChannel, kickChannel, platforms, sevenTv, mode, subsOnly, subDurationX2, showAllEmotes, hypeMode, spamBlock, emoteSize, duration, maxEmotes]);
 
   const previewUrl = useMemo(() => {
     if (typeof window === 'undefined') return '';
@@ -180,6 +193,8 @@ function EmoteWallSetup() {
     subsOnly,
     subDurationX2,
     showAllEmotes,
+    hypeMode,
+    spamBlock,
     emoteSize,
     duration,
     maxEmotes,
@@ -213,11 +228,9 @@ function EmoteWallSetup() {
               />
             </div>
             <div className="mb-6 flex justify-center">
-              <a
+              <Link
+                to="/"
                 className="relative inline-flex select-none flex-col items-center gap-2 text-xl font-semibold tracking-wide text-zinc-900 transition-opacity hover:opacity-75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 dark:text-white"
-                href="https://senchabot.com"
-                target="_blank"
-                rel="noreferrer"
               >
                 <div className="inline-flex size-10 shrink-0">
                   <img
@@ -227,7 +240,7 @@ function EmoteWallSetup() {
                     height={40}
                   />
                 </div>
-              </a>
+              </Link>
             </div>
 
             <div className="flex justify-center mb-3">
@@ -352,23 +365,56 @@ function EmoteWallSetup() {
               </div>
 
               <div>
+                <label className="flex items-center space-x-2 text-zinc-900 cursor-pointer dark:text-white">
+                  <input
+                    type="checkbox"
+                    checked={hypeMode}
+                    onChange={(e) => setHypeMode(e.target.checked)}
+                    className="rounded border-zinc-300 bg-zinc-100 text-green-500 focus:ring-green-500 dark:border-zinc-700 dark:bg-zinc-800"
+                  />
+                  <span className="text-sm">{t('emoteWallSetup.hypeMode')}</span>
+                </label>
+                <p className="mt-1 text-xs text-zinc-500">
+                  {t('emoteWallSetup.hypeModeHint')}
+                </p>
+              </div>
+
+              <div>
+                <label className="flex items-center space-x-2 text-zinc-900 cursor-pointer dark:text-white">
+                  <input
+                    type="checkbox"
+                    checked={spamBlock}
+                    onChange={(e) => setSpamBlock(e.target.checked)}
+                    className="rounded border-zinc-300 bg-zinc-100 text-green-500 focus:ring-green-500 dark:border-zinc-700 dark:bg-zinc-800"
+                  />
+                  <span className="text-sm">{t('emoteWallSetup.spamBlock')}</span>
+                </label>
+                <p className="mt-1 text-xs text-zinc-500">
+                  {t('emoteWallSetup.spamBlockHint')}
+                </p>
+              </div>
+
+              <div>
                 <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
                   {t('emoteWallSetup.mode')}
                 </label>
                 <select
                   value={mode}
                   onChange={(e) =>
-                    setMode(e.target.value as 'calm' | 'chaos')
+                    setMode(e.target.value as 'calm' | 'chaos' | 'bounce')
                   }
                   className="w-full rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2.5 text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
                 >
                   <option value="calm">{t('emoteWallSetup.modeCalm')}</option>
                   <option value="chaos">{t('emoteWallSetup.modeChaos')}</option>
+                  <option value="bounce">{t('emoteWallSetup.modeBounce')}</option>
                 </select>
                 <p className="mt-1 text-xs text-zinc-500">
                   {mode === 'chaos'
                     ? t('emoteWallSetup.modeChaosHint')
-                    : t('emoteWallSetup.modeCalmHint')}
+                    : mode === 'bounce'
+                      ? t('emoteWallSetup.modeBounceHint')
+                      : t('emoteWallSetup.modeCalmHint')}
                 </p>
               </div>
 
@@ -398,7 +444,7 @@ function EmoteWallSetup() {
                   <input
                     type="number"
                     min="2"
-                    max="15"
+                    max="30"
                     value={duration}
                     onChange={(e) => setDuration(e.target.value)}
                     className="w-full rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2 text-zinc-900 placeholder-zinc-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
@@ -411,7 +457,7 @@ function EmoteWallSetup() {
                   <input
                     type="number"
                     min="1"
-                    max="60"
+                    max="120"
                     value={maxEmotes}
                     onChange={(e) => setMaxEmotes(e.target.value)}
                     className="w-full rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2 text-zinc-900 placeholder-zinc-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
@@ -443,7 +489,7 @@ function EmoteWallSetup() {
           </div>
 
           {/* Right: Live Preview Panel & Guides/FAQ */}
-          <div className="w-full max-w-md lg:max-w-2xl lg:shrink-0 flex flex-col gap-4">
+          <div className="w-full max-w-md lg:max-w-2xl lg:shrink-0 flex flex-col gap-4 lg:sticky lg:top-6">
             <div className="rounded-xl bg-white p-6 md:p-8 shadow-xl border border-zinc-200 flex flex-col h-[700px] dark:bg-zinc-900 dark:border-zinc-800">
               <h2 className="mb-4 text-xl font-semibold text-center text-zinc-700 dark:text-zinc-300">
                 {t('emoteWallSetup.previewTitle')}

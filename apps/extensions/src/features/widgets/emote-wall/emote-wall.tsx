@@ -4,13 +4,21 @@ import { KickChat, type KickChannelInfo } from '#/lib/kick';
 import { TwitchChat } from '#/lib/twitch';
 import type { ChatMessagesType } from '#/features/widgets/chat-widget/chat-messages';
 import {
+  checkHype,
+  createSpamState,
+  filterSpam,
   getAnyEmoteUrls,
   getEmoteOnlyUrls,
   isSubscriberMessage,
+  type HypeState,
+  type SpamState,
 } from './emote-utils';
 import {
+  bounceStep,
+  createBouncePop,
   createCalmPop,
   createChaosPop,
+  type BouncePop,
   type ChaosPop,
   type EmotePop,
   type EmoteWallMode,
@@ -29,6 +37,8 @@ export type EmoteWallProps = {
   subsOnly?: boolean;
   subDurationX2?: boolean;
   showAllEmotes?: boolean;
+  hypeMode?: boolean;
+  spamBlock?: boolean;
 };
 
 const MOCK_EMOTES: { name: string; src: string; source: 'twitch' | '7tv' }[] = [
@@ -46,12 +56,29 @@ const MOCK_EMOTES: { name: string; src: string; source: 'twitch' | '7tv' }[] = [
 ];
 
 const CHAOS_FADE_MS = 350;
+const BOUNCE_FADE_MS = 400;
+
+// NOTE: animated emotes intentionally have no CSS `filter` (e.g.
+// drop-shadow). Transform/opacity animations composite for free, but any
+// filter forces a repaint of every emote on every frame.
+
+/** Mutable flight record driven by the single shared bounce loop. */
+type BounceRecord = {
+  el: HTMLImageElement;
+  x: number;
+  y: number;
+  angle: number;
+  speed: number;
+  size: number;
+};
 
 /**
  * Chaos flight: kicks off a linear edge-to-edge zip on mount,
  * fades out at a random point past halfway, then reports completion.
+ * Memoized: pop objects are never mutated, so a parent re-render caused by
+ * a sibling spawn/removal must not re-render settled flights.
  */
-function ChaosEmote({
+const ChaosEmote = React.memo(function ChaosEmote({
   pop,
   onDone,
 }: {
@@ -95,11 +122,84 @@ function ChaosEmote({
           : 'translate(0, 0)',
         transition: `transform ${pop.travelMs}ms linear, opacity 300ms ease-out`,
         willChange: 'transform, opacity',
-        filter: 'drop-shadow(0 4px 12px rgba(0, 0, 0, 0.55))',
       }}
     />
   );
-}
+});
+
+/**
+ * Bounce flight: DVD-screensaver ricochet. Physics runs in the single shared
+ * loop in EmoteWall (one rAF total, all transforms batched in one pass);
+ * this component only registers its flight record, fades out after its
+ * visible time, then reports completion. Position updates bypass React state
+ * (direct DOM transform) so frames never re-render.
+ * Memoized for the same reason as ChaosEmote (see above).
+ */
+const BounceEmote = React.memo(function BounceEmote({
+  pop,
+  onDone,
+  registry,
+}: {
+  pop: BouncePop;
+  onDone: (id: string) => void;
+  registry: { current: Map<string, BounceRecord> };
+}) {
+  const imgRef = React.useRef<HTMLImageElement>(null);
+  const [launched, setLaunched] = React.useState(false);
+  const [fading, setFading] = React.useState(false);
+
+  React.useEffect(() => {
+    // Timers are scheduled unconditionally so a pop can never get stuck in
+    // state, even if the img ref is unexpectedly unavailable.
+    const showTimer = setTimeout(() => setLaunched(true), 30);
+    const fadeTimer = setTimeout(() => setFading(true), pop.visibleMs);
+    const doneTimer = setTimeout(
+      () => onDone(pop.id),
+      pop.visibleMs + BOUNCE_FADE_MS + 50,
+    );
+
+    const img = imgRef.current;
+    if (img) {
+      const rec: BounceRecord = {
+        el: img,
+        x: (pop.startXPct / 100) * window.innerWidth,
+        y: (pop.startYPct / 100) * window.innerHeight,
+        angle: pop.angle,
+        speed: pop.speed,
+        size: pop.size,
+      };
+      img.style.transform = `translate(${rec.x}px, ${rec.y}px)`;
+      registry.current.set(pop.id, rec);
+    }
+
+    return () => {
+      registry.current.delete(pop.id);
+      clearTimeout(showTimer);
+      clearTimeout(fadeTimer);
+      clearTimeout(doneTimer);
+    };
+  }, [pop, onDone, registry]);
+
+  return (
+    <img
+      ref={imgRef}
+      src={pop.src}
+      alt={pop.name ?? ''}
+      draggable={false}
+      decoding="async"
+      className="absolute object-contain select-none"
+      style={{
+        left: 0,
+        top: 0,
+        width: pop.size,
+        height: pop.size,
+        opacity: fading ? 0 : launched ? 1 : 0,
+        transition: 'opacity 350ms ease-out',
+        willChange: 'transform, opacity',
+      }}
+    />
+  );
+});
 
 export function EmoteWall({
   twitchChannel,
@@ -113,6 +213,8 @@ export function EmoteWall({
   subsOnly = false,
   subDurationX2 = false,
   showAllEmotes = false,
+  hypeMode = false,
+  spamBlock = true,
 }: EmoteWallProps) {
   const normalizedTwitch = twitchChannel?.trim() || null;
   const normalizedKick = kickChatroomId?.trim() || null;
@@ -129,18 +231,31 @@ export function EmoteWall({
   const subsOnlyRef = React.useRef(subsOnly);
   const subDurationX2Ref = React.useRef(subDurationX2);
   const showAllEmotesRef = React.useRef(showAllEmotes);
+  const hypeModeRef = React.useRef(hypeMode);
+  const spamBlockRef = React.useRef(spamBlock);
   React.useEffect(() => {
     subsOnlyRef.current = subsOnly;
     subDurationX2Ref.current = subDurationX2;
     showAllEmotesRef.current = showAllEmotes;
-  }, [subsOnly, subDurationX2, showAllEmotes]);
+    hypeModeRef.current = hypeMode;
+    spamBlockRef.current = spamBlock;
+  }, [subsOnly, subDurationX2, showAllEmotes, hypeMode, spamBlock]);
+
+  const hypeRef = React.useRef<HypeState>(new Map());
+  const spamRef = React.useRef<SpamState>(createSpamState());
+  const bounceRegistry = React.useRef(new Map<string, BounceRecord>());
 
   const [pops, setPops] = React.useState<EmotePop[]>([]);
   const counterRef = React.useRef(0);
   const timeoutsRef = React.useRef<Set<ReturnType<typeof setTimeout>>>(new Set());
 
   const removePop = React.useCallback((id: string) => {
-    setPops((prev) => prev.filter((p) => p.id !== id));
+    // Return the same array reference when nothing was removed so React
+    // bails out instead of re-rendering (stale calm timers fire after
+    // max-cap eviction and must be no-ops).
+    setPops((prev) =>
+      prev.some((p) => p.id === id) ? prev.filter((p) => p.id !== id) : prev,
+    );
   }, []);
 
   const spawnUrls = React.useCallback(
@@ -153,20 +268,23 @@ export function EmoteWall({
         if (mode === 'chaos') {
           return { kind: 'chaos', id, name, ...createChaosPop(src, emoteSize, effectiveDuration) };
         }
+        if (mode === 'bounce') {
+          return { kind: 'bounce', id, name, ...createBouncePop(src, emoteSize, effectiveDuration) };
+        }
         return { kind: 'calm', id, name, ...createCalmPop(src, emoteSize, effectiveDuration) };
       });
 
       setPops((prev) => {
         const next = [...prev, ...fresh];
-        // Drop oldest (chaos timers clean themselves up on unmount).
+        // Drop oldest (chaos/bounce timers clean themselves up on unmount).
         if (next.length > maxEmotes) {
           return next.slice(next.length - maxEmotes);
         }
         return next;
       });
 
-      // Calm pops are removed by a fixed timer; chaos pops remove
-      // themselves via ChaosEmote once they vanish mid-flight.
+      // Calm pops are removed by a fixed timer; chaos/bounce pops remove
+      // themselves via their flight components once they vanish.
       if (mode === 'calm') {
         for (const pop of fresh) {
           if (pop.kind !== 'calm') continue;
@@ -197,12 +315,31 @@ export function EmoteWall({
       const urls = showAllEmotesRef.current
         ? getAnyEmoteUrls(chatInput, sevenTvRef.current)
         : getEmoteOnlyUrls(chatInput, sevenTvRef.current);
-      if (urls.length > 0) {
-        spawnUrls(
-          urls.map((src) => ({ src })),
-          subDurationX2Ref.current && isSub ? durationSec * 2 : undefined,
-        );
+      if (urls.length === 0) return;
+
+      const userLower = msg.user.toLowerCase();
+      const now = Date.now();
+
+      // General spam prevention: same user flooding the same emote or
+      // emote messages in a short time gets filtered out.
+      let fresh = urls;
+      if (spamBlockRef.current) {
+        fresh = filterSpam(spamRef.current, userLower, urls, now);
+        if (fresh.length === 0) return;
       }
+
+      // Hype mode: show only once doubled by distinct users' messages.
+      if (hypeModeRef.current) {
+        fresh = fresh.filter((url) =>
+          checkHype(hypeRef.current, url, userLower, now),
+        );
+        if (fresh.length === 0) return;
+      }
+
+      spawnUrls(
+        fresh.map((src) => ({ src })),
+        subDurationX2Ref.current && isSub ? durationSec * 2 : undefined,
+      );
     };
 
     const clients: { disconnect: () => void }[] = [];
@@ -221,14 +358,15 @@ export function EmoteWall({
   // Mock mode for setup preview / browser-source testing.
   // Honors the 7TV toggle so the preview matches live behavior.
   // Mock emotes count as subscriber emotes so subsOnly previews stay alive.
+  // Mock bypasses hype/spam gates (no user identity) to keep previewing visuals.
   React.useEffect(() => {
     if (!mock) return;
-    const isChaos = mode === 'chaos';
+    const fast = mode !== 'calm';
     const pool = sevenTvEnabled
       ? MOCK_EMOTES
       : MOCK_EMOTES.filter((e) => e.source !== '7tv');
     const spawnMock = () => {
-      const count = isChaos
+      const count = fast
         ? 1 + Math.floor(Math.random() * 3)
         : Math.random() < 0.3
           ? 2
@@ -242,7 +380,7 @@ export function EmoteWall({
       spawnUrls(items, boosted ? durationSec * 2 : undefined);
     };
     const first = setTimeout(spawnMock, 500);
-    const interval = setInterval(spawnMock, isChaos ? 900 : 2200);
+    const interval = setInterval(spawnMock, fast ? 900 : 2200);
     return () => {
       clearTimeout(first);
       clearInterval(interval);
@@ -257,6 +395,40 @@ export function EmoteWall({
     [],
   );
 
+  // Single shared physics loop for all bounce emotes: one rAF total with
+  // every transform batched in one pass. Runs only while bounce pops exist.
+  const hasBounce = pops.some((p) => p.kind === 'bounce');
+  React.useEffect(() => {
+    if (!hasBounce) return;
+    let last = performance.now();
+    let raf = 0;
+    const frame = (t: number) => {
+      const dt = Math.min((t - last) / 1000, 0.05);
+      last = t;
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      for (const rec of bounceRegistry.current.values()) {
+        const next = bounceStep(
+          rec.x,
+          rec.y,
+          rec.angle,
+          rec.speed,
+          dt,
+          Math.max(0, vw - rec.size),
+          Math.max(0, vh - rec.size),
+        );
+        rec.x = next.x;
+        rec.y = next.y;
+        rec.angle = next.angle;
+        rec.speed = next.speed;
+        rec.el.style.transform = `translate(${next.x}px, ${next.y}px)`;
+      }
+      raf = requestAnimationFrame(frame);
+    };
+    raf = requestAnimationFrame(frame);
+    return () => cancelAnimationFrame(raf);
+  }, [hasBounce]);
+
   return (
     <div
       className="pointer-events-none fixed inset-0 overflow-hidden bg-transparent"
@@ -265,6 +437,13 @@ export function EmoteWall({
       {pops.map((pop) =>
         pop.kind === 'chaos' ? (
           <ChaosEmote key={pop.id} pop={pop} onDone={removePop} />
+        ) : pop.kind === 'bounce' ? (
+          <BounceEmote
+            key={pop.id}
+            pop={pop}
+            onDone={removePop}
+            registry={bounceRegistry}
+          />
         ) : (
           <img
             key={pop.id}

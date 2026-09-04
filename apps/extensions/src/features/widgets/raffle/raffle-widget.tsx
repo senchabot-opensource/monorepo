@@ -5,6 +5,7 @@ import { useRaffleState } from "#/hooks/use-raffle-state";
 import { useT } from "#/lib/i18n";
 import type { RaffleWinner } from "#/types/raffle";
 import confetti from "canvas-confetti";
+import { Link } from "@tanstack/react-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 function triggerConfetti(rafRef: React.MutableRefObject<number | null>) {
@@ -139,11 +140,9 @@ export function RaffleWidget({
               />
             </div>
             <div className="mb-6 flex justify-center">
-              <a
-                className="relative inline-flex select-none flex-col items-center gap-2 text-xl font-semibold tracking-wide text-zinc-900 transition-opacity hover:opacity-75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 dark:text-white"
-                href="https://senchabot.com"
-                target="_blank"
-                rel="noreferrer">
+              <Link
+                to="/"
+                className="relative inline-flex select-none flex-col items-center gap-2 text-xl font-semibold tracking-wide text-zinc-900 transition-opacity hover:opacity-75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 dark:text-white">
                 <div className="inline-flex size-10 shrink-0">
                   <img
                     src="/senchabot-logo.svg"
@@ -152,7 +151,7 @@ export function RaffleWidget({
                     height={40}
                   />
                 </div>
-              </a>
+              </Link>
             </div>
 
             <div className="flex justify-center mb-3">
