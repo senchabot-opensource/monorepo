@@ -3,6 +3,14 @@ export const PLATFORM_DISPLAYS = ['name', 'icon', 'none'] as const;
 export const FONTS = ['inter', 'roboto', 'nunito', 'mono', 'serif', 'system'] as const;
 export const LAYOUTS = ['inline', 'stacked', 'card', 'compact'] as const;
 export const ORIENTATIONS = ['vertical', 'horizontal'] as const;
+// Order is the URL order too, so the same selection always builds the same URL.
+export const HIGHLIGHTS = [
+  'mention',
+  'reply',
+  'firstMessage',
+  'announcement',
+  'highlighted',
+] as const;
 export const ANIMATIONS = [
   'slide',
   'smooth',
@@ -20,6 +28,7 @@ export type Font = (typeof FONTS)[number];
 export type Layout = (typeof LAYOUTS)[number];
 export type Orientation = (typeof ORIENTATIONS)[number];
 export type Animation = (typeof ANIMATIONS)[number];
+export type Highlight = (typeof HIGHLIGHTS)[number];
 
 export interface Settings {
   platforms: Platforms;
@@ -39,6 +48,7 @@ export interface Settings {
   badges: boolean;
   timestamp: boolean;
   keep: boolean;
+  highlights: Highlight[];
 }
 
 // Mirrors the widget's own defaults, so only changed settings end up in the URL.
@@ -60,6 +70,7 @@ export const DEFAULT_SETTINGS: Settings = {
   badges: true,
   timestamp: false,
   keep: false,
+  highlights: [...HIGHLIGHTS],
 };
 
 export function buildWidgetParams(settings: Settings, twitchChannel: string, kickChannel: string) {
@@ -91,6 +102,11 @@ export function buildWidgetParams(settings: Settings, twitchChannel: string, kic
     params.append('platformDisplay', settings.platformDisplay);
   if (settings.timestamp) params.append('timestamp', 'true');
   if (settings.keep) params.append('keep', 'true');
+  // Only a narrowed selection is written, so highlight types added later reach default URLs only.
+  if (settings.highlights.length < HIGHLIGHTS.length) {
+    const selected = HIGHLIGHTS.filter((h) => settings.highlights.includes(h));
+    params.append('highlights', selected.length > 0 ? selected.join(',') : 'none');
+  }
   if (settings.font !== DEFAULT_SETTINGS.font) params.append('font', settings.font);
   if (settings.layout !== DEFAULT_SETTINGS.layout) params.append('layout', settings.layout);
   if (settings.animation !== DEFAULT_SETTINGS.animation)
@@ -165,6 +181,15 @@ export function parseWidgetUrl(text: string): ParsedWidgetUrl | null {
       badges: flag('badges', DEFAULT_SETTINGS.badges),
       timestamp: flag('timestamp', DEFAULT_SETTINGS.timestamp),
       keep: flag('keep', DEFAULT_SETTINGS.keep),
+      highlights: parseHighlights(params.get('highlights')),
     },
   };
+}
+
+export function parseHighlights(value: string | null | undefined): Highlight[] {
+  if (value == null) return [...HIGHLIGHTS];
+  if (value === 'none') return [];
+  const listed = value.split(',');
+  const selected = HIGHLIGHTS.filter((h) => listed.includes(h));
+  return selected.length > 0 ? selected : [...HIGHLIGHTS];
 }

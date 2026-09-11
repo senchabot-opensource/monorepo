@@ -58,6 +58,7 @@ describe('parseWidgetUrl', () => {
       badges: false,
       timestamp: true,
       keep: true,
+      highlights: ['mention', 'announcement'],
     };
     expect(parseWidgetUrl(widgetUrl(settings, 'foo', 'bar'))).toEqual({
       settings,
@@ -91,11 +92,22 @@ describe('parseWidgetUrl', () => {
     });
   });
 
+  it('reads the highlight selection, with none and unknown values', () => {
+    const highlightsOf = (value: string) =>
+      parseWidgetUrl(`${ORIGIN}/widgets/chat-widget?twitch=foo&highlights=${value}`)?.settings
+        .highlights;
+    expect(highlightsOf('reply,mention')).toEqual(['mention', 'reply']);
+    expect(highlightsOf('none')).toEqual([]);
+    expect(highlightsOf('subs')).toEqual(DEFAULT_SETTINGS.highlights);
+  });
+
   it('rebuilds the same URL it was given', () => {
     const urls = [
       `${ORIGIN}/widgets/chat-widget?twitch=foo`,
       `${ORIGIN}/widgets/chat-widget?kick=bar&sevenTv=false&fontSize=30`,
       `${ORIGIN}/widgets/chat-widget?twitch=foo&kick=bar&background=true&bgOpacity=0.2&platformDisplay=name&animation=none`,
+      `${ORIGIN}/widgets/chat-widget?twitch=foo&highlights=none`,
+      `${ORIGIN}/widgets/chat-widget?twitch=foo&highlights=mention%2CfirstMessage`,
     ];
     for (const url of urls) expect(roundTrip(url)).toBe(url);
   });
