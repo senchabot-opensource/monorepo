@@ -12,6 +12,25 @@ import { getKickChannelInfo } from '#/lib/kick';
 import { getAccessibleColor } from '#/features/widgets/chat-widget/color-utils';
 
 const TTL_MS = 30_000;
+// Must cover the 1s `now` tick, otherwise a row can expire without ever getting its fade-out class.
+const EXIT_MS = 1_000;
+const SHIFT_MS = 400;
+// Busy chat speeds animations up so each one finishes before the next message lands: full speed
+// when messages are SPEED_BASE_GAP_MS or more apart, scaled down with the gap, never below MIN_SPEED.
+const SPEED_BASE_GAP_MS = 500;
+const MIN_SPEED = 0.35;
+
+const getReceivedAtMs = (msg: ChatMessagesType) =>
+  msg.receivedAt?.getTime() ?? msg.timestamp.getTime();
+
+const getAnimationSpeeds = (messages: ChatMessagesType[]) => {
+  const speeds = new Map<string, number>();
+  messages.forEach((msg, i) => {
+    const gap = i > 0 ? getReceivedAtMs(msg) - getReceivedAtMs(messages[i - 1]) : Infinity;
+    speeds.set(msg.id, Math.min(1, Math.max(MIN_SPEED, gap / SPEED_BASE_GAP_MS)));
+  });
+  return speeds;
+};
 
 type TwitchEmoteRange = { id: string; start: number; end: number };
 
@@ -149,7 +168,7 @@ const searchSchema = z.object({
   bgOpacity: z.coerce.number().min(0).max(1).optional().default(0.5),
   platformAccent: z.coerce.boolean().optional(),
   orientation: z.enum(['vertical', 'horizontal']).optional().default('vertical'),
-  platformDisplay: z.enum(['name', 'icon']).optional().default('icon'),
+  platformDisplay: z.enum(['name', 'icon', 'none']).optional().default('icon'),
   timestamp: z.coerce.boolean().optional(),
   keep: z.coerce.boolean().optional(),
   font: z
@@ -158,8 +177,9 @@ const searchSchema = z.object({
     .default('inter'),
   layout: z.enum(['inline', 'stacked', 'card', 'compact']).optional().default('inline'),
   mock: z.coerce.boolean().optional(),
+  mockRate: z.coerce.number().min(0.1).max(50).optional(),
   animation: z
-    .enum(['slide', 'pop', 'bounce', 'stagger', 'fade', 'none'])
+    .enum(['slide', 'smooth', 'pop', 'bounce', 'stagger', 'fade', 'typing', 'none'])
     .optional()
     .default('slide'),
 });
@@ -221,21 +241,82 @@ const ANIMATION_CLASSES: Record<
   (orientation: 'vertical' | 'horizontal') => string
 > = {
   slide: () => 'animate-chat-slide-in',
+  smooth: () => 'animate-chat-smooth-slide-in',
   pop: () => 'animate-chat-pop-in',
   bounce: () => 'animate-chat-bounce-in',
   stagger: () => 'animate-chat-stagger-meta',
   fade: () => 'animate-chat-fade-in',
+  typing: () => 'animate-chat-fade-in',
   none: () => '',
 };
 
 const ANIMATION_MESSAGE_CLASSES: Record<AnimationChoice, string> = {
   slide: '',
+  smooth: '',
   pop: '',
   bounce: '',
   stagger: 'animate-chat-stagger-message',
   fade: '',
+  typing: '',
   none: '',
 };
+
+const TYPING_MS_PER_CHAR = 35;
+// Long messages type faster so no message takes longer than this to finish.
+const TYPING_MAX_MS = 1_500;
+
+// Grapheme clusters, so emoji like 🏴‍☠️ are never shown half-typed.
+const splitGraphemes = (text: string): string[] =>
+  typeof Intl.Segmenter === 'function'
+    ? Array.from(
+        new Intl.Segmenter(undefined, { granularity: 'grapheme' }).segment(text),
+        (s) => s.segment,
+      )
+    : Array.from(text);
+
+function TypedContent({ nodes, speed }: { nodes: React.ReactNode[]; speed: number }) {
+  const units = React.useMemo(
+    () =>
+      nodes.flatMap((node) => {
+        if (node == null || typeof node === 'boolean' || node === '') return [];
+        return typeof node === 'string' ? splitGraphemes(node) : [node];
+      }),
+    [nodes],
+  );
+  const [count, setCount] = React.useState(0);
+  // Kept across effect restarts so a late emote-map load doesn't retype the message from scratch.
+  const startRef = React.useRef<number | null>(null);
+
+  React.useEffect(() => {
+    startRef.current ??= performance.now();
+    const start = startRef.current;
+    const msPerUnit =
+      speed * Math.min(TYPING_MS_PER_CHAR, TYPING_MAX_MS / Math.max(units.length, 1));
+    const id = window.setInterval(() => {
+      const next = Math.min(units.length, Math.ceil((performance.now() - start) / msPerUnit));
+      setCount(next);
+      if (next >= units.length) window.clearInterval(id);
+    }, 30);
+    return () => window.clearInterval(id);
+  }, [units.length, speed]);
+
+  if (count >= units.length) return <>{nodes}</>;
+
+  const caretUnit = count > 0 ? units[count - 1] : null;
+  // The untyped rest stays in the layout (just invisible) so the row has its final size from the
+  // first frame; otherwise every wrapped line would push older rows up again.
+  return (
+    <>
+      {units.slice(0, Math.max(count - 1, 0))}
+      {typeof caretUnit === 'string' ? (
+        <span className="chat-typing-caret">{caretUnit}</span>
+      ) : (
+        caretUnit
+      )}
+      <span style={{ visibility: 'hidden' }}>{units.slice(count)}</span>
+    </>
+  );
+}
 
 const PLATFORM_COLORS: Record<'twitch' | 'kick', string> = {
   twitch: '#9146FF',
@@ -284,12 +365,14 @@ export const Route = createFileRoute('/widgets/chat-widget')({
   },
 });
 
+// Both viewBoxes are cropped horizontally to the glyph's own bounds: the stock 24x24 boxes pad
+// Twitch 3 units but Kick only 1.33, so Kick sat visibly further left and closer to the badges.
 function TwitchIcon({ className, ...props }: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      className={`inline-block h-[1.15em] w-[1.15em] ${className ?? ''}`}
-      viewBox="0 0 24 24"
+      className={`inline-block h-[1.15em] w-auto ${className ?? ''}`}
+      viewBox="3 0 18.006 24"
       {...props}
     >
       <path
@@ -304,9 +387,9 @@ function KickIcon({ className, ...props }: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       role="img"
-      viewBox="0 0 24 24"
+      viewBox="1.333 0 21.334 24"
       fill="currentColor"
-      className={`inline-block h-[1.15em] w-[1.15em] ${className ?? ''}`}
+      className={`inline-block h-[1em] w-auto ${className ?? ''}`}
       {...props}
     >
       <title>Kick</title>
@@ -330,12 +413,7 @@ function RouteComponent() {
 
   const isMock = Boolean(search.mock || (!search.twitch && !kick));
 
-  const showPlatformIndicator = Boolean(
-    (search.twitch && search.kick) ||
-      isMock ||
-      search.platformDisplay === 'name' ||
-      search.platformDisplay === 'icon'
-  );
+  const showPlatformIndicator = search.platformDisplay !== 'none';
 
   const sevenTvEmoteMap = use7tvEmotes(search.sevenTv ? search.twitch : null);
 
@@ -495,7 +573,7 @@ function RouteComponent() {
     };
 
     const firstTimer = setTimeout(insertNextMock, 400);
-    const interval = setInterval(insertNextMock, 3000);
+    const interval = setInterval(insertNextMock, search.mockRate ? 1000 / search.mockRate : 3000);
 
     return () => {
       clearTimeout(firstTimer);
@@ -504,10 +582,11 @@ function RouteComponent() {
         chatMessagesCollection.delete(id);
       }
     };
-  }, [isMock]);
+  }, [isMock, search.mockRate]);
 
   const [now, setNow] = React.useState(() => Date.now());
-  const containerRef = React.useRef<HTMLDivElement>(null);
+  const listRef = React.useRef<HTMLDivElement>(null);
+  const lastIdRef = React.useRef<string | null>(null);
 
   React.useEffect(() => {
     if (typeof document === 'undefined') return;
@@ -550,10 +629,12 @@ function RouteComponent() {
 
   const visibleMessages = search.keep
     ? messages
-    : messages.filter((msg) => {
-      const receivedAtMs = msg.receivedAt?.getTime() ?? msg.timestamp.getTime();
-      return now - receivedAtMs < TTL_MS;
-    });
+    : messages.filter((msg) => now - getReceivedAtMs(msg) < TTL_MS);
+  // `slide` is the original default and must look exactly as it always did, so the shift and
+  // fade-out only come with the other animations.
+  const animatesLayout = search.animation !== 'none' && search.animation !== 'slide';
+  const fadeOut = !search.keep && animatesLayout;
+  const speeds = React.useMemo(() => getAnimationSpeeds(messages), [messages]);
 
   const hasVisibleMessages = visibleMessages.length > 0;
 
@@ -572,60 +653,94 @@ function RouteComponent() {
     };
   }, [hasVisibleMessages, search.keep]);
 
-  React.useEffect(() => {
-    if (!containerRef.current) return;
+  // The list is anchored to the bottom (right when horizontal), so appending a row makes every
+  // older row jump by its size. Offset the list back by that jump, then transition it to rest.
+  React.useLayoutEffect(() => {
+    const list = listRef.current;
+    if (!list) return;
+    const horizontal = search.orientation === 'horizontal';
+    // Measured from the new rows themselves rather than a stored position, so a late image load
+    // that resized an older row is not replayed as a shift.
+    const endOf = (el: HTMLElement) =>
+      horizontal ? el.offsetLeft + el.offsetWidth : el.offsetTop + el.offsetHeight;
 
-    if (search.orientation === 'horizontal') {
-      containerRef.current.scrollLeft = containerRef.current.scrollWidth;
-    } else {
-      containerRef.current.scrollTop = containerRef.current.scrollHeight;
-    }
-  }, [visibleMessages, search.orientation]);
+    const prevId = lastIdRef.current;
+    const last = list.lastElementChild as HTMLElement | null;
+    lastIdRef.current = last?.dataset.msgId ?? null;
+    if (!prevId || !last || prevId === lastIdRef.current || !animatesLayout) return;
 
+    const prevEl = list.querySelector<HTMLElement>(`[data-msg-id="${CSS.escape(prevId)}"]`);
+    if (!prevEl) return;
+    const shift = endOf(last) - endOf(prevEl);
+    if (shift <= 0) return;
+
+    // Carry over what is left of a shift that is still running so back-to-back messages don't jump.
+    const running = new DOMMatrixReadOnly(getComputedStyle(list).transform);
+    const start = shift + (horizontal ? running.m41 : running.m42);
+    list.style.transition = 'none';
+    list.style.transform = horizontal ? `translateX(${start}px)` : `translateY(${start}px)`;
+    void list.offsetWidth;
+    const shiftMs = Math.round(SHIFT_MS * (speeds.get(lastIdRef.current ?? '') ?? 1));
+    list.style.transition = `transform ${shiftMs}ms cubic-bezier(0.22, 1, 0.36, 1)`;
+    list.style.transform = '';
+  });
+
+  const horizontal = search.orientation === 'horizontal';
+
+  // Rows overflow toward the start edge, which is never scrollable, so clip instead of scroll:
+  // a scrollable box would flash a scrollbar while the list is offset during the shift.
   return (
     <div
-      ref={containerRef}
-      className={`flex ${search.orientation === 'horizontal' ? 'flex-row justify-end items-center overflow-hidden min-w-full h-screen p-2 space-x-3' : 'flex-col justify-end h-screen w-full overflow-y-auto overflow-x-hidden p-2.5 space-y-2'} text-white rounded-md`}
+      className={`flex ${horizontal ? 'flex-row justify-end items-center min-w-full h-screen p-2' : 'flex-col justify-end h-screen w-full p-2.5'} overflow-clip text-white rounded-md`}
       style={{
         fontSize: `${search.fontSize}px`,
         fontFamily: FONT_STACKS[search.font],
         backgroundColor: search.background ? `rgba(0, 0, 0, ${search.bgOpacity})` : 'transparent',
       }}
     >
-      {visibleMessages.map((msg) => (
-        <MessageRow
-          key={msg.id}
-          msg={msg}
-          layout={search.layout}
-          animation={search.animation}
-          orientation={search.orientation}
-          showTimestamp={Boolean(search.timestamp)}
-          showPlatformIndicator={showPlatformIndicator}
-          platformDisplay={search.platformDisplay}
-          twitchBadgeMap={twitchBadgeMap}
-          kickSubBadges={kickSubBadges}
-          sevenTvEmoteMap={sevenTvEmoteMap}
-          showBadges={Boolean(search.badges)}
-          hasBackground={Boolean(search.background)}
-          itemBackground={Boolean(search.itemBackground)}
-          bgOpacity={search.bgOpacity}
-          platformAccent={Boolean(search.platformAccent)}
-          boldUsernames={Boolean(search.boldUsernames)}
-          boldMessages={Boolean(search.boldMessages)}
-        />
-      ))}
+      <div
+        ref={listRef}
+        className={`flex ${horizontal ? 'flex-row items-center space-x-3' : 'flex-col space-y-2'}`}
+      >
+        {visibleMessages.map((msg) => (
+          <MessageRow
+            key={msg.id}
+            msg={msg}
+            exiting={fadeOut && now - getReceivedAtMs(msg) >= TTL_MS - EXIT_MS}
+            speed={speeds.get(msg.id) ?? 1}
+            layout={search.layout}
+            animation={search.animation}
+            orientation={search.orientation}
+            showTimestamp={Boolean(search.timestamp)}
+            showPlatformIndicator={showPlatformIndicator}
+            platformDisplay={search.platformDisplay}
+            twitchBadgeMap={twitchBadgeMap}
+            kickSubBadges={kickSubBadges}
+            sevenTvEmoteMap={sevenTvEmoteMap}
+            showBadges={Boolean(search.badges)}
+            hasBackground={Boolean(search.background)}
+            itemBackground={Boolean(search.itemBackground)}
+            bgOpacity={search.bgOpacity}
+            platformAccent={Boolean(search.platformAccent)}
+            boldUsernames={Boolean(search.boldUsernames)}
+            boldMessages={Boolean(search.boldMessages)}
+          />
+        ))}
+      </div>
     </div>
   );
 }
 
 type MessageRowProps = {
   msg: ChatMessagesType;
+  exiting: boolean;
+  speed: number;
   layout: LayoutChoice;
   animation: AnimationChoice;
   orientation: 'vertical' | 'horizontal';
   showTimestamp: boolean;
   showPlatformIndicator: boolean;
-  platformDisplay: 'name' | 'icon';
+  platformDisplay: 'name' | 'icon' | 'none';
   twitchBadgeMap: Map<string, string> | null | undefined;
   kickSubBadges: {
     months?: number;
@@ -643,6 +758,8 @@ type MessageRowProps = {
 
 const MessageRow = React.memo(function MessageRow({
   msg,
+  exiting,
+  speed,
   layout,
   animation,
   orientation,
@@ -660,8 +777,11 @@ const MessageRow = React.memo(function MessageRow({
   boldUsernames,
   boldMessages,
 }: MessageRowProps) {
+  // Frozen at mount: a moderator deleting the previous message would otherwise change this row's
+  // speed mid-animation and make it jump (or un-type letters in typing mode).
+  const [mountSpeed] = React.useState(speed);
   const classes = LAYOUT_CLASSES[layout];
-  const animClass = ANIMATION_CLASSES[animation](orientation);
+  const animClass = exiting ? 'animate-chat-fade-out' : ANIMATION_CLASSES[animation](orientation);
   const messageAnimClass = ANIMATION_MESSAGE_CLASSES[animation];
   const compactSize = layout === 'compact' ? '0.875em' : undefined;
   const isInlineOrCompact = layout === 'inline' || layout === 'compact';
@@ -766,14 +886,19 @@ const MessageRow = React.memo(function MessageRow({
   const messageNode = (
     <span className={`${classes.message} ${messageAnimClass}`} style={messageStyle}>
       {layout === 'inline' || layout === 'compact' ? ' ' : null}
-      {parsedContent}
+      {animation === 'typing' ? (
+        <TypedContent nodes={parsedContent} speed={mountSpeed} />
+      ) : (
+        parsedContent
+      )}
     </span>
   );
 
   return (
     <div
+      data-msg-id={msg.id}
       className={`${classes.wrapper} ${itemBgClass} ${animClass} transform-gpu ${orientation === 'horizontal' ? 'flex-shrink-0' : ''}`}
-      style={wrapperStyle}
+      style={{ ...wrapperStyle, '--chat-speed': mountSpeed } as React.CSSProperties}
     >
       {isInlineOrCompact ? (
         <>
