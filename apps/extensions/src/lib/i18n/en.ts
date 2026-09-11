@@ -94,6 +94,8 @@ export const en = {
     backgroundOpacity: 'Background Opacity',
     messageBackgroundBox: 'Message Background Box',
     messageBackgroundHint: 'Each message gets its own bordered background box.',
+    platformAccent: 'Platform Color Stripe',
+    platformAccentHint: 'A Twitch purple or Kick green stripe on the left shows where each message came from.',
     boldUsernames: 'Bold Usernames',
     boldMessages: 'Bold Messages',
     previewTitle: 'Widget Preview (Chat Box)',
