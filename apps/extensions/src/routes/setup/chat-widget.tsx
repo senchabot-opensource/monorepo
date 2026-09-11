@@ -1,145 +1,163 @@
-import { Breadcrumb } from "#/components/breadcrumb";
-import { YoutubeTutorial } from "#/components/youtube-tutorial";
-import { useI18n } from "#/lib/i18n";
-import { getLocaleLinks } from "#/lib/i18n/seo";
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useDeferredValue, useEffect, useMemo, useState } from "react";
+import { createFileRoute, Link } from '@tanstack/react-router';
+import { type ReactNode, useDeferredValue, useEffect, useId, useMemo, useState } from 'react';
+import { Breadcrumb } from '#/components/breadcrumb';
+import { FieldLabel } from '#/components/ui/field-label';
+import { InfoTip } from '#/components/ui/info-tip';
+import { MultiSelect, type MultiSelectOption } from '#/components/ui/multi-select';
+import { NumberField } from '#/components/ui/number-field';
+import { SegmentedControl, type SegmentedOption } from '#/components/ui/segmented-control';
+import { Select, type SelectOption } from '#/components/ui/select';
+import { Switch } from '#/components/ui/switch';
+import { YoutubeTutorial } from '#/components/youtube-tutorial';
+import { getHighlightSwatch } from '#/features/widgets/chat-widget/highlights';
+import {
+  type Animation,
+  buildWidgetParams,
+  DEFAULT_SETTINGS,
+  type Font,
+  type Highlight,
+  type Layout,
+  type Orientation,
+  type PlatformDisplay,
+  type Platforms,
+  parseWidgetUrl,
+  type Settings,
+} from '#/features/widgets/chat-widget/widget-settings';
+import { useI18n } from '#/lib/i18n';
+import { getLocaleLinks } from '#/lib/i18n/seo';
 
-export const Route = createFileRoute("/setup/chat-widget")({
+export const Route = createFileRoute('/setup/chat-widget')({
   head: () => ({
     meta: [
       {
         title:
-          "Free Multi-Chat Widget & Stream Chat Box for Twitch & Kick (No Login Required) — Chat Box | Senchabot",
+          'Free Multi-Chat Widget & Stream Chat Box for Twitch & Kick (No Login Required) — Chat Box | Senchabot',
       },
       {
-        name: "description",
+        name: 'description',
         content:
-          "Combine Twitch and Kick chat into one free multi-chat widget and stream chat box overlay. 100% Free & No Login Required. Supports 7TV emotes, badges, custom fonts, animations, and customizable stream overlays for OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio, or any software that supports browser sources.",
+          'Combine Twitch and Kick chat into one free multi-chat widget and stream chat box overlay. 100% Free & No Login Required. Supports 7TV emotes, badges, custom fonts, animations, and customizable stream overlays for OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio, or any software that supports browser sources.',
       },
       {
-        name: "keywords",
+        name: 'keywords',
         content:
-          "chat box, stream chat box, multi-chat widgets, customizable stream overlays, stream tools, free twitch kick chat overlay, multi-stream chat overlay no login, unified chat widget free, combined chat overlay obs, streamlabs chat box, xsplit chat widget, cross-platform stream chat free",
+          'chat box, stream chat box, multi-chat widgets, customizable stream overlays, stream tools, free twitch kick chat overlay, multi-stream chat overlay no login, unified chat widget free, combined chat overlay obs, streamlabs chat box, xsplit chat widget, cross-platform stream chat free',
       },
       {
-        property: "og:title",
+        property: 'og:title',
         content:
-          "Free Multi-Chat Widget & Stream Chat Box for Twitch & Kick (No Login Required) — Chat Box | Senchabot",
+          'Free Multi-Chat Widget & Stream Chat Box for Twitch & Kick (No Login Required) — Chat Box | Senchabot',
       },
       {
-        property: "og:description",
+        property: 'og:description',
         content:
-          "100% Free multi-chat widget and stream chat box overlay merging Twitch and Kick into a single feed. No login or account required. 7TV emotes and badges included.",
+          '100% Free multi-chat widget and stream chat box overlay merging Twitch and Kick into a single feed. No login or account required. 7TV emotes and badges included.',
       },
-      { property: "og:type", content: "website" },
+      { property: 'og:type', content: 'website' },
       {
-        property: "og:url",
-        content: "https://extensions.senchabot.com/setup/chat-widget",
+        property: 'og:url',
+        content: 'https://extensions.senchabot.com/setup/chat-widget',
       },
       {
-        property: "og:image",
-        content: "https://extensions.senchabot.com/senchabot-logo.svg",
+        property: 'og:image',
+        content: 'https://extensions.senchabot.com/senchabot-logo.svg',
       },
-      { name: "twitter:card", content: "summary" },
+      { name: 'twitter:card', content: 'summary' },
       {
-        name: "twitter:title",
+        name: 'twitter:title',
+        content: 'Free Multi-Chat Widget & Stream Chat Box for Twitch & Kick (No Login Required)',
+      },
+      {
+        name: 'twitter:description',
         content:
-          "Free Multi-Chat Widget & Stream Chat Box for Twitch & Kick (No Login Required)",
+          'Combine Twitch and Kick chat in OBS Studio, Streamlabs Desktop, XSplit, or any software supporting browser sources. Zero login required. 100% Free with 7TV emotes and badge support.',
       },
       {
-        name: "twitter:description",
-        content:
-          "Combine Twitch and Kick chat in OBS Studio, Streamlabs Desktop, XSplit, or any software supporting browser sources. Zero login required. 100% Free with 7TV emotes and badge support.",
+        name: 'twitter:image',
+        content: 'https://extensions.senchabot.com/senchabot-logo.svg',
       },
       {
-        name: "twitter:image",
-        content: "https://extensions.senchabot.com/senchabot-logo.svg",
-      },
-      {
-        "script:ld+json": {
-          "@context": "https://schema.org",
-          "@type": "WebApplication",
-          name: "Chat Box - Free Multi-Chat Widget & Stream Chat Box",
+        'script:ld+json': {
+          '@context': 'https://schema.org',
+          '@type': 'WebApplication',
+          name: 'Chat Box - Free Multi-Chat Widget & Stream Chat Box',
           description:
-            "A free customizable multi-chat widget and stream chat box overlay that merges Twitch and Kick chat into a single on-stream feed with 7TV emotes, badges, and customizable themes.",
-          url: "https://extensions.senchabot.com/setup/chat-widget",
-          applicationCategory: "MultimediaApplication",
-          operatingSystem: "All, OBS Studio, Streamlabs Desktop, XSplit Broadcaster, vMix, Lightstream, PRISM Live Studio, Twitch Studio, Meld Studio, Wirecast, Browser Source compatible",
+            'A free customizable multi-chat widget and stream chat box overlay that merges Twitch and Kick chat into a single on-stream feed with 7TV emotes, badges, and customizable themes.',
+          url: 'https://extensions.senchabot.com/setup/chat-widget',
+          applicationCategory: 'MultimediaApplication',
+          operatingSystem:
+            'All, OBS Studio, Streamlabs Desktop, XSplit Broadcaster, vMix, Lightstream, PRISM Live Studio, Twitch Studio, Meld Studio, Wirecast, Browser Source compatible',
           isAccessibleForFree: true,
           offers: {
-            "@type": "Offer",
-            price: "0",
-            priceCurrency: "USD",
-            description: "100% Free, No Login Required",
+            '@type': 'Offer',
+            price: '0',
+            priceCurrency: 'USD',
+            description: '100% Free, No Login Required',
           },
         },
       },
       {
-        "script:ld+json": {
-          "@context": "https://schema.org",
-          "@type": "FAQPage",
+        'script:ld+json': {
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
           mainEntity: [
             {
-              "@type": "Question",
-              name: "Is this multi-chat widget and stream chat box completely free?",
+              '@type': 'Question',
+              name: 'Is this multi-chat widget and stream chat box completely free?',
               acceptedAnswer: {
-                "@type": "Answer",
-                text: "Yes, Chat Box is 100% free and open-source with no subscription fees, account sign-ups, or watermarks.",
+                '@type': 'Answer',
+                text: 'Yes, Chat Box is 100% free and open-source with no subscription fees, account sign-ups, or watermarks.',
               },
             },
             {
-              "@type": "Question",
-              name: "Does the chat box support 7TV emotes?",
+              '@type': 'Question',
+              name: 'Does the chat box support 7TV emotes?',
               acceptedAnswer: {
-                "@type": "Answer",
-                text: "Yes, 7TV custom channel emotes and animated emotes are supported automatically without extra extensions.",
+                '@type': 'Answer',
+                text: 'Yes, 7TV custom channel emotes and animated emotes are supported automatically without extra extensions.',
               },
             },
           ],
         },
       },
     ],
-    links: getLocaleLinks("/setup/chat-widget"),
+    links: getLocaleLinks('/setup/chat-widget'),
   }),
   component: ChatWidgetSetup,
 });
 
+// Messages per second for the mock preview only; index 0 keeps the widget's default mock pace.
+const PREVIEW_RATES = [0.3, 0.5, 1, 2, 3, 5, 10, 15, 20];
+
+const PANEL_CLASS =
+  'rounded-xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900';
+const INPUT_CLASS =
+  'h-9 w-full rounded-md border border-zinc-300 bg-zinc-100 px-3 text-sm text-zinc-900 placeholder-zinc-500 transition-colors focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white';
+const RANGE_CLASS =
+  'h-2 w-full cursor-pointer appearance-none rounded-lg bg-zinc-300 accent-green-500 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-zinc-700';
+
+function SettingsGroup({ title, children }: { title: string; children: ReactNode }) {
+  return (
+    <section className="space-y-3 border-t border-zinc-200 pt-3 first:border-t-0 first:pt-0 dark:border-zinc-800">
+      <h2 className="text-[11px] font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+        {title}
+      </h2>
+      {children}
+    </section>
+  );
+}
+
 function ChatWidgetSetup() {
   const { locale, t } = useI18n();
-  const [twitchChannel, setTwitchChannel] = useState("");
-  const [kickChannel, setKickChannel] = useState("");
-  const [fontSize, setFontSize] = useState("18");
-  const [hasBackground, setHasBackground] = useState(false);
-  const [itemBackground, setItemBackground] = useState(false);
-  const [platformAccent, setPlatformAccent] = useState(false);
-  const [boldUsernames, setBoldUsernames] = useState(false);
-  const [boldMessages, setBoldMessages] = useState(false);
-  const [backgroundOpacity, setBackgroundOpacity] = useState("0.5");
-  const [orientation, setOrientation] = useState<"vertical" | "horizontal">(
-    "vertical",
-  );
-  const [platforms, setPlatforms] = useState<"both" | "twitch" | "kick">(
-    "both",
-  );
-  const [platformDisplay, setPlatformDisplay] = useState<"name" | "icon">(
-    "icon",
-  );
-  const [sevenTv, setSevenTv] = useState(true);
-  const [badges, setBadges] = useState(true);
-  const [showTimestamp, setShowTimestamp] = useState(false);
-  const [keepMessages, setKeepMessages] = useState(false);
-  const [font, setFont] = useState<
-    "inter" | "roboto" | "nunito" | "mono" | "serif" | "system"
-  >("inter");
-  const [layout, setLayout] = useState<
-    "inline" | "stacked" | "card" | "compact"
-  >("inline");
-  const [animation, setAnimation] = useState<
-    "slide" | "pop" | "bounce" | "stagger" | "fade" | "none"
-  >("slide");
+  const [twitchChannel, setTwitchChannel] = useState('');
+  const [kickChannel, setKickChannel] = useState('');
+  const [settings, setSettings] = useState(DEFAULT_SETTINGS);
+  const [previewRateIndex, setPreviewRateIndex] = useState(0);
   const [copied, setCopied] = useState(false);
+  // Text typed or pasted into the URL field that isn't a widget URL yet; null shows the generated URL.
+  const [urlDraft, setUrlDraft] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
+  const id = useId();
 
   useEffect(() => {
     setMounted(true);
@@ -148,110 +166,24 @@ function ChatWidgetSetup() {
   const deferredTwitch = useDeferredValue(twitchChannel);
   const deferredKick = useDeferredValue(kickChannel);
 
-  const widgetUrl = useMemo(() => {
-    if (typeof window === "undefined") return "";
-    const params = new URLSearchParams();
-    if (platforms === "both" || platforms === "twitch")
-      if (twitchChannel.trim()) params.append("twitch", twitchChannel.trim().toLowerCase());
-    if (platforms === "both" || platforms === "kick")
-      if (kickChannel.trim()) params.append("kick", kickChannel.trim().toLowerCase());
-    if (!sevenTv) params.append("sevenTv", "false");
-    if (!badges) params.append("badges", "false");
-    if (fontSize !== "18") params.append("fontSize", fontSize);
-    if (hasBackground) {
-      params.append("background", "true");
-      if (backgroundOpacity !== "0.5") params.append("bgOpacity", backgroundOpacity);
-    }
-    if (itemBackground) params.append("itemBackground", "true");
-    if (platformAccent) params.append("platformAccent", "true");
-    if (boldUsernames) params.append("boldUsernames", "true");
-    if (boldMessages) params.append("boldMessages", "true");
-    if (orientation !== "vertical") params.append("orientation", orientation);
-    if (platforms === "both" && platformDisplay !== "icon")
-      params.append("platformDisplay", platformDisplay);
-    if (showTimestamp) params.append("timestamp", "true");
-    if (keepMessages) params.append("keep", "true");
-    if (font !== "inter") params.append("font", font);
-    if (layout !== "inline") params.append("layout", layout);
-    if (animation !== "slide") params.append("animation", animation);
+  const update = <K extends keyof Settings>(key: K, value: Settings[K]) =>
+    setSettings((current) => ({ ...current, [key]: value }));
 
-    if (!twitchChannel.trim() && !kickChannel.trim()) {
-      return "";
-    }
+  const widgetUrl = useMemo(() => {
+    if (!mounted) return '';
+    const params = buildWidgetParams(settings, twitchChannel, kickChannel);
+    if (!params.has('twitch') && !params.has('kick')) return '';
     return `${window.location.origin}/widgets/chat-widget?${params.toString()}`;
-  }, [
-    twitchChannel,
-    kickChannel,
-    sevenTv,
-    badges,
-    fontSize,
-    hasBackground,
-    backgroundOpacity,
-    itemBackground,
-    platformAccent,
-    boldUsernames,
-    boldMessages,
-    orientation,
-    platforms,
-    platformDisplay,
-    showTimestamp,
-    keepMessages,
-    font,
-    layout,
-    animation,
-  ]);
+  }, [mounted, settings, twitchChannel, kickChannel]);
 
   const previewUrl = useMemo(() => {
-    if (typeof window === "undefined") return "";
-    const params = new URLSearchParams();
-    if (platforms === "both" || platforms === "twitch")
-      if (deferredTwitch.trim()) params.append("twitch", deferredTwitch.trim().toLowerCase());
-    if (platforms === "both" || platforms === "kick")
-      if (deferredKick.trim()) params.append("kick", deferredKick.trim().toLowerCase());
-    if (!sevenTv) params.append("sevenTv", "false");
-    if (!badges) params.append("badges", "false");
-    if (fontSize !== "18") params.append("fontSize", fontSize);
-    if (hasBackground) {
-      params.append("background", "true");
-      if (backgroundOpacity !== "0.5") params.append("bgOpacity", backgroundOpacity);
-    }
-    if (itemBackground) params.append("itemBackground", "true");
-    if (platformAccent) params.append("platformAccent", "true");
-    if (boldUsernames) params.append("boldUsernames", "true");
-    if (boldMessages) params.append("boldMessages", "true");
-    if (orientation !== "vertical") params.append("orientation", orientation);
-    if (platforms === "both" && platformDisplay !== "icon")
-      params.append("platformDisplay", platformDisplay);
-    if (showTimestamp) params.append("timestamp", "true");
-    if (keepMessages) params.append("keep", "true");
-    if (font !== "inter") params.append("font", font);
-    if (layout !== "inline") params.append("layout", layout);
-    if (animation !== "slide") params.append("animation", animation);
-    params.append("mock", "true");
-    params.append("lang", locale);
+    if (!mounted) return '';
+    const params = buildWidgetParams(settings, deferredTwitch, deferredKick);
+    params.append('mock', 'true');
+    if (previewRateIndex > 0) params.append('mockRate', String(PREVIEW_RATES[previewRateIndex]));
+    params.append('lang', locale);
     return `${window.location.origin}/widgets/chat-widget?${params.toString()}`;
-  }, [
-    deferredTwitch,
-    deferredKick,
-    sevenTv,
-    badges,
-    fontSize,
-    hasBackground,
-    backgroundOpacity,
-    itemBackground,
-    platformAccent,
-    boldUsernames,
-    boldMessages,
-    orientation,
-    platforms,
-    platformDisplay,
-    showTimestamp,
-    keepMessages,
-    font,
-    layout,
-    animation,
-    locale,
-  ]);
+  }, [mounted, settings, deferredTwitch, deferredKick, previewRateIndex, locale]);
 
   const handleCopy = async () => {
     if (widgetUrl) {
@@ -261,474 +193,447 @@ function ChatWidgetSetup() {
     }
   };
 
-  const isFormValid =
-    (platforms !== "kick" && twitchChannel.length > 0) ||
-    (platforms !== "twitch" && kickChannel.length > 0);
+  const handleUrlChange = (text: string) => {
+    const parsed = parseWidgetUrl(text);
+    if (!parsed) {
+      setUrlDraft(text);
+      return;
+    }
+    setSettings(parsed.settings);
+    setTwitchChannel(parsed.twitchChannel);
+    setKickChannel(parsed.kickChannel);
+    setUrlDraft(null);
+  };
+
+  const platformOptions: SegmentedOption<Platforms>[] = [
+    { value: 'both', label: t('chatWidget.both') },
+    { value: 'twitch', label: t('chatWidget.twitch') },
+    { value: 'kick', label: t('chatWidget.kick') },
+  ];
+  const platformDisplayOptions: SelectOption<PlatformDisplay>[] = [
+    { value: 'name', label: t('chatWidget.platformName') },
+    { value: 'icon', label: t('chatWidget.platformIcon') },
+    { value: 'none', label: t('chatWidget.platformHidden') },
+  ];
+  const fontOptions: SelectOption<Font>[] = [
+    { value: 'inter', label: 'Inter' },
+    { value: 'roboto', label: 'Roboto' },
+    { value: 'nunito', label: 'Nunito' },
+    { value: 'mono', label: 'JetBrains Mono' },
+    { value: 'serif', label: 'Source Serif 4' },
+    { value: 'system', label: t('chatWidget.fontSystem') },
+  ];
+  const orientationOptions: SegmentedOption<Orientation>[] = [
+    { value: 'vertical', label: t('chatWidget.vertical') },
+    { value: 'horizontal', label: t('chatWidget.horizontal') },
+  ];
+  const layoutOptions: SelectOption<Layout>[] = [
+    { value: 'inline', label: t('chatWidget.layoutInline') },
+    { value: 'stacked', label: t('chatWidget.layoutStacked') },
+    { value: 'card', label: t('chatWidget.layoutCard') },
+    { value: 'compact', label: t('chatWidget.layoutCompact') },
+  ];
+  const animationOptions: SelectOption<Animation>[] = [
+    { value: 'slide', label: t('chatWidget.animSlide') },
+    { value: 'smooth', label: t('chatWidget.animSmoothSlide') },
+    { value: 'pop', label: t('chatWidget.animPop') },
+    { value: 'bounce', label: t('chatWidget.animBounce') },
+    { value: 'stagger', label: t('chatWidget.animStagger') },
+    { value: 'fade', label: t('chatWidget.animFade') },
+    { value: 'typing', label: t('chatWidget.animTyping') },
+    { value: 'none', label: t('chatWidget.animNone') },
+  ];
+
+  const highlightOptions: MultiSelectOption<Highlight>[] = (
+    [
+      { value: 'mention', label: t('chatWidget.highlightMention') },
+      { value: 'reply', label: t('chatWidget.highlightReply') },
+      { value: 'firstMessage', label: t('chatWidget.highlightFirstMessage'), hint: 'Twitch' },
+      { value: 'announcement', label: t('chatWidget.highlightAnnouncement'), hint: 'Twitch' },
+      { value: 'highlighted', label: t('chatWidget.highlightHighlighted'), hint: 'Twitch' },
+    ] as const
+  ).map((option) => ({ ...option, color: getHighlightSwatch(option.value) }));
+  const highlightsSummary =
+    settings.highlights.length === 0
+      ? t('chatWidget.highlightsNone')
+      : settings.highlights.length === highlightOptions.length
+        ? t('chatWidget.highlightsAll')
+        : highlightOptions
+            .filter((option) => settings.highlights.includes(option.value))
+            .map((option) => option.label)
+            .join(', ');
 
   return (
-    <div className="min-h-screen bg-zinc-50 text-zinc-900 font-sans p-6 pt-12 dark:bg-zinc-950 dark:text-zinc-100">
-      <div className="max-w-6xl mx-auto">
-        <div className="flex flex-col lg:flex-row items-center lg:items-start justify-center gap-8 mb-12">
-          {/* Left: Configuration Panel */}
-          <div className="w-full max-w-md lg:shrink-0 rounded-xl bg-white p-6 md:p-8 shadow-xl border border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800">
-            <div className="mb-4">
-              <Breadcrumb
-                items={[
-                  { label: t("common.home"), href: "/" },
-                  { label: t("chatWidget.breadcrumb") },
-                ]}
-              />
-            </div>
-            <div className="mb-6 flex justify-center">
-              <Link
-                to="/"
-                className="relative inline-flex select-none flex-col items-center gap-2 text-xl font-semibold tracking-wide text-zinc-900 transition-opacity hover:opacity-75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 dark:text-white">
-                <div className="inline-flex size-10 shrink-0">
-                  <img
-                    src="/senchabot-logo.svg"
-                    alt="Senchabot"
-                    width={40}
-                    height={40}
-                  />
-                </div>
-              </Link>
-            </div>
-
-            <div className="flex justify-center mb-3">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-green-500/10 px-3 py-0.5 text-xs font-medium text-green-700 border border-green-500/20 dark:text-green-400">
-                {t("common.freeBadge")}
+    <div className="min-h-screen bg-zinc-50 font-sans text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100">
+      <div className="mx-auto flex max-w-6xl flex-col px-4 py-4 lg:h-dvh lg:min-h-[640px]">
+        <header className="mb-3 flex flex-wrap items-center gap-x-3 gap-y-2 pr-32">
+          <Link
+            to="/"
+            className="shrink-0 rounded-md transition-opacity hover:opacity-75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500"
+          >
+            <img src="/senchabot-logo.svg" alt="Senchabot" width={36} height={36} />
+          </Link>
+          <div className="min-w-0">
+            <Breadcrumb
+              items={[
+                { label: t('common.home'), href: '/' },
+                { label: t('chatWidget.breadcrumb') },
+              ]}
+            />
+            <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
+              <h1 className="text-xl font-bold text-zinc-900 dark:text-white">
+                {t('chatWidget.title')}
+              </h1>
+              <span className="rounded-full border border-green-500/20 bg-green-500/10 px-2.5 py-0.5 text-xs font-medium text-green-700 dark:text-green-400">
+                {t('common.freeBadge')}
               </span>
             </div>
+          </div>
+        </header>
 
-            <h1 className="mb-4 text-2xl font-bold text-center text-zinc-900 dark:text-white">
-              {t("chatWidget.title")}
-            </h1>
-
-            <div className="space-y-4">
-              <p className="text-xs text-zinc-600 bg-zinc-100 p-3 rounded-md border border-zinc-200 leading-relaxed dark:text-zinc-400 dark:bg-zinc-800/40 dark:border-zinc-800">
-                {t("chatWidget.intro")}
-              </p>
-
-              <YoutubeTutorial />
-
-              <div>
-                <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                  {t("chatWidget.platforms")}
-                </label>
-                <select
-                  value={platforms}
-                  onChange={(e) =>
-                    setPlatforms(e.target.value as "both" | "twitch" | "kick")
-                  }
-                  className="w-full rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2.5 text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500">
-                  <option value="both">{t("chatWidget.both")}</option>
-                  <option value="twitch">{t("chatWidget.twitch")}</option>
-                  <option value="kick">{t("chatWidget.kick")}</option>
-                </select>
-              </div>
-
-              {(platforms === "both" || platforms === "twitch") && (
-                <div>
-                  <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                    {t("chatWidget.twitchChannel")}
-                  </label>
-                  <input
-                    type="text"
-                    value={twitchChannel}
-                    onChange={(e) => setTwitchChannel(e.target.value)}
-                    placeholder={t("common.channelPlaceholder")}
-                    className="w-full rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2 text-zinc-900 placeholder-zinc-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
-                  />
-                </div>
-              )}
-
-              {(platforms === "both" || platforms === "kick") && (
-                <div>
-                  <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                    {t("chatWidget.kickChannel")}
-                  </label>
-                  <input
-                    type="text"
-                    value={kickChannel}
-                    onChange={(e) => setKickChannel(e.target.value)}
-                    placeholder={t("common.channelPlaceholder")}
-                    className="w-full rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2 text-zinc-900 placeholder-zinc-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
-                  />
-                </div>
-              )}
-
-              {platforms === "both" && (
-                <div>
-                  <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                    {t("chatWidget.platformIndicator")}
-                  </label>
-                  <select
-                    value={platformDisplay}
-                    onChange={(e) =>
-                      setPlatformDisplay(e.target.value as "name" | "icon")
-                    }
-                    className="w-full rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2.5 text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500">
-                    <option value="name">{t("chatWidget.platformName")}</option>
-                    <option value="icon">{t("chatWidget.platformIcon")}</option>
-                  </select>
-                </div>
-              )}
-
-              <details className="rounded-md border border-zinc-200 bg-zinc-100/60 open:bg-zinc-100 transition-colors dark:border-zinc-800 dark:bg-zinc-900/40 dark:open:bg-zinc-900/60">
-                <summary className="cursor-pointer select-none px-3 py-2 text-sm font-medium text-zinc-700 hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-white">
-                  {t("chatWidget.styleSection")}
-                </summary>
-                <div className="space-y-4 border-t border-zinc-200 p-3 dark:border-zinc-800">
+        <div className="grid gap-5 lg:min-h-0 lg:flex-1 lg:grid-cols-[34rem_minmax(0,1fr)]">
+          {/* Scrolling happens on the inner box, so on short screens content is clipped inside the
+              panel padding instead of running under the bottom edge; its p-1 keeps focus rings unclipped. */}
+          <div className={`${PANEL_CLASS} p-4 lg:flex lg:min-h-0 lg:flex-col`}>
+            <div className="space-y-3 p-1 lg:min-h-0 lg:flex-1 lg:overflow-y-auto">
+              <SettingsGroup title={t('chatWidget.sectionChannel')}>
+                <div className="grid gap-3 sm:grid-cols-2">
                   <div>
-                    <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                      {t("chatWidget.font")}
-                    </label>
-                    <select
-                      value={font}
-                      onChange={(e) =>
-                        setFont(
-                          e.target.value as
-                            | "inter"
-                            | "roboto"
-                            | "nunito"
-                            | "mono"
-                            | "serif"
-                            | "system",
-                        )
-                      }
-                      className="w-full rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2.5 text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500">
-                      <option value="inter">Inter</option>
-                      <option value="roboto">Roboto</option>
-                      <option value="nunito">Nunito</option>
-                      <option value="mono">JetBrains Mono</option>
-                      <option value="serif">Source Serif 4</option>
-                      <option value="system">{t("chatWidget.fontSystem")}</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                      {t("chatWidget.messageLayout")}
-                    </label>
-                    <select
-                      value={layout}
-                      onChange={(e) =>
-                        setLayout(
-                          e.target.value as
-                            | "inline"
-                            | "stacked"
-                            | "card"
-                            | "compact",
-                        )
-                      }
-                      className="w-full rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2.5 text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500">
-                      <option value="inline">{t("chatWidget.layoutInline")}</option>
-                      <option value="stacked">{t("chatWidget.layoutStacked")}</option>
-                      <option value="card">{t("chatWidget.layoutCard")}</option>
-                      <option value="compact">{t("chatWidget.layoutCompact")}</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                      {t("chatWidget.newMessageAnimation")}
-                    </label>
-                    <select
-                      value={animation}
-                      onChange={(e) =>
-                        setAnimation(
-                          e.target.value as
-                            | "slide"
-                            | "pop"
-                            | "bounce"
-                            | "stagger"
-                            | "fade"
-                            | "none",
-                        )
-                      }
-                      className="w-full rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2.5 text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500">
-                      <option value="slide">{t("chatWidget.animSlide")}</option>
-                      <option value="pop">{t("chatWidget.animPop")}</option>
-                      <option value="bounce">{t("chatWidget.animBounce")}</option>
-                      <option value="stagger">
-                        {t("chatWidget.animStagger")}
-                      </option>
-                      <option value="fade">{t("chatWidget.animFade")}</option>
-                      <option value="none">{t("chatWidget.animNone")}</option>
-                    </select>
-                  </div>
-                </div>
-              </details>
-
-              <div className="flex gap-4">
-                <div className="flex-1 max-w-[150px]">
-                  <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                    {t("chatWidget.orientation")}
-                  </label>
-                  <select
-                    value={orientation}
-                    onChange={(e) =>
-                      setOrientation(
-                        e.target.value as "vertical" | "horizontal",
-                      )
-                    }
-                    className="w-full rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2.5 text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500">
-                    <option value="vertical">{t("chatWidget.vertical")}</option>
-                    <option value="horizontal">{t("chatWidget.horizontal")}</option>
-                  </select>
-                </div>
-
-                <div className="flex-1">
-                  <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                    {t("chatWidget.fontSize")}
-                  </label>
-                  <input
-                    type="number"
-                    value={fontSize}
-                    onChange={(e) => setFontSize(e.target.value)}
-                    className="w-full rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2 text-zinc-900 placeholder-zinc-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
-                  />
-                </div>
-
-                <div className="flex-1 flex flex-col justify-end pb-2">
-                  <label className="flex items-center space-x-2 text-zinc-900 cursor-pointer dark:text-white">
-                    <input
-                      type="checkbox"
-                      checked={hasBackground}
-                      onChange={(e) => setHasBackground(e.target.checked)}
-                      className="rounded border-zinc-300 bg-zinc-100 text-green-500 focus:ring-green-500 dark:border-zinc-700 dark:bg-zinc-800"
+                    <FieldLabel id={`${id}-platforms`} tip={t('chatWidget.platformsTip')}>
+                      {t('chatWidget.platforms')}
+                    </FieldLabel>
+                    <SegmentedControl
+                      labelledBy={`${id}-platforms`}
+                      value={settings.platforms}
+                      onChange={(value) => update('platforms', value)}
+                      options={platformOptions}
                     />
-                    <span className="text-sm">{t("chatWidget.darkBackground")}</span>
-                  </label>
-                </div>
-              </div>
-
-              <div>
-                <label className="flex items-center space-x-2 text-zinc-900 cursor-pointer dark:text-white">
-                  <input
-                    type="checkbox"
-                    checked={sevenTv}
-                    onChange={(e) => setSevenTv(e.target.checked)}
-                    className="rounded border-zinc-300 bg-zinc-100 text-green-500 focus:ring-green-500 dark:border-zinc-700 dark:bg-zinc-800"
-                  />
-                  <span className="text-sm">{t("chatWidget.sevenTvEmotes")}</span>
-                </label>
-              </div>
-
-              <div>
-                <label className="flex items-center space-x-2 text-zinc-900 cursor-pointer dark:text-white">
-                  <input
-                    type="checkbox"
-                    checked={badges}
-                    onChange={(e) => setBadges(e.target.checked)}
-                    className="rounded border-zinc-300 bg-zinc-100 text-green-500 focus:ring-green-500 dark:border-zinc-700 dark:bg-zinc-800"
-                  />
-                  <span className="text-sm">{t("chatWidget.showBadges")}</span>
-                </label>
-              </div>
-
-              <div>
-                <label className="flex items-center space-x-2 text-zinc-900 cursor-pointer dark:text-white">
-                  <input
-                    type="checkbox"
-                    checked={showTimestamp}
-                    onChange={(e) => setShowTimestamp(e.target.checked)}
-                    className="rounded border-zinc-300 bg-zinc-100 text-green-500 focus:ring-green-500 dark:border-zinc-700 dark:bg-zinc-800"
-                  />
-                  <span className="text-sm">{t("chatWidget.showMessageTime")}</span>
-                </label>
-              </div>
-
-              <div>
-                <label className="flex items-center space-x-2 text-zinc-900 cursor-pointer dark:text-white">
-                  <input
-                    type="checkbox"
-                    checked={keepMessages}
-                    onChange={(e) => setKeepMessages(e.target.checked)}
-                    className="rounded border-zinc-300 bg-zinc-100 text-green-500 focus:ring-green-500 dark:border-zinc-700 dark:bg-zinc-800"
-                  />
-                  <span className="text-sm">{t("chatWidget.keepMessages")}</span>
-                </label>
-              </div>
-
-              {hasBackground && (
-                <div>
-                  <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                    {t("chatWidget.backgroundOpacity")}
-                  </label>
-                  <input
-                    type="range"
-                    min="0"
-                    max="1"
-                    step="0.1"
-                    value={backgroundOpacity}
-                    onChange={(e) => setBackgroundOpacity(e.target.value)}
-                    className="w-full h-2 bg-zinc-300 rounded-lg appearance-none cursor-pointer accent-green-500 dark:bg-zinc-700"
-                  />
-                  <div className="text-right text-xs text-zinc-500 mt-1">
-                    {backgroundOpacity}
                   </div>
+                  <div>
+                    <FieldLabel id={`${id}-indicator`} tip={t('chatWidget.platformIndicatorTip')}>
+                      {t('chatWidget.platformIndicator')}
+                    </FieldLabel>
+                    <Select
+                      labelledBy={`${id}-indicator`}
+                      disabled={settings.platforms !== 'both'}
+                      value={settings.platformDisplay}
+                      onChange={(value) => update('platformDisplay', value)}
+                      options={platformDisplayOptions}
+                    />
+                  </div>
+                  <div>
+                    <FieldLabel htmlFor={`${id}-twitch`} tip={t('chatWidget.channelTip')}>
+                      {t('chatWidget.twitchChannel')}
+                    </FieldLabel>
+                    <input
+                      id={`${id}-twitch`}
+                      type="text"
+                      disabled={settings.platforms === 'kick'}
+                      value={twitchChannel}
+                      onChange={(e) => setTwitchChannel(e.target.value)}
+                      placeholder={t('common.channelPlaceholder')}
+                      className={INPUT_CLASS}
+                    />
+                  </div>
+                  <div>
+                    <FieldLabel htmlFor={`${id}-kick`} tip={t('chatWidget.channelTip')}>
+                      {t('chatWidget.kickChannel')}
+                    </FieldLabel>
+                    <input
+                      id={`${id}-kick`}
+                      type="text"
+                      disabled={settings.platforms === 'twitch'}
+                      value={kickChannel}
+                      onChange={(e) => setKickChannel(e.target.value)}
+                      placeholder={t('common.channelPlaceholder')}
+                      className={INPUT_CLASS}
+                    />
+                  </div>
+                </div>
+              </SettingsGroup>
+
+              <SettingsGroup title={t('chatWidget.sectionAppearance')}>
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)_minmax(0,1fr)]">
+                  <div>
+                    <FieldLabel id={`${id}-font`}>{t('chatWidget.font')}</FieldLabel>
+                    <Select
+                      labelledBy={`${id}-font`}
+                      value={settings.font}
+                      onChange={(value) => update('font', value)}
+                      options={fontOptions}
+                    />
+                  </div>
+                  <div>
+                    <FieldLabel htmlFor={`${id}-font-size`}>{t('chatWidget.fontSize')}</FieldLabel>
+                    <NumberField
+                      id={`${id}-font-size`}
+                      value={settings.fontSize}
+                      onChange={(value) => update('fontSize', value)}
+                      min={8}
+                      max={72}
+                      fallback={Number(DEFAULT_SETTINGS.fontSize)}
+                    />
+                  </div>
+                  <div className="col-span-2 sm:col-span-1">
+                    <FieldLabel id={`${id}-orientation`} tip={t('chatWidget.orientationTip')}>
+                      {t('chatWidget.orientation')}
+                    </FieldLabel>
+                    <SegmentedControl
+                      labelledBy={`${id}-orientation`}
+                      value={settings.orientation}
+                      onChange={(value) => update('orientation', value)}
+                      options={orientationOptions}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <FieldLabel id={`${id}-layout`}>{t('chatWidget.messageLayout')}</FieldLabel>
+                  <Select
+                    labelledBy={`${id}-layout`}
+                    value={settings.layout}
+                    onChange={(value) => update('layout', value)}
+                    options={layoutOptions}
+                  />
+                </div>
+                <div className="grid gap-x-6 gap-y-1 sm:grid-cols-2">
+                  <Switch
+                    label={t('chatWidget.darkBackground')}
+                    tip={t('chatWidget.darkBackgroundTip')}
+                    checked={settings.background}
+                    onChange={(value) => update('background', value)}
+                  />
+                  <div className="flex min-h-7 items-center gap-3">
+                    <input
+                      type="range"
+                      min="0"
+                      max="1"
+                      step="0.1"
+                      aria-label={t('chatWidget.backgroundOpacity')}
+                      title={t('chatWidget.backgroundOpacity')}
+                      disabled={!settings.background}
+                      value={settings.bgOpacity}
+                      onChange={(e) => update('bgOpacity', e.target.value)}
+                      className={RANGE_CLASS}
+                    />
+                    <span
+                      className={`w-9 shrink-0 text-right text-xs tabular-nums text-zinc-500 ${settings.background ? '' : 'opacity-40'}`}
+                    >
+                      {Math.round(Number(settings.bgOpacity) * 100)}%
+                    </span>
+                  </div>
+                  <Switch
+                    label={t('chatWidget.messageBackgroundBox')}
+                    tip={t('chatWidget.messageBackgroundHint')}
+                    checked={settings.itemBackground}
+                    onChange={(value) => update('itemBackground', value)}
+                  />
+                  <Switch
+                    label={t('chatWidget.platformAccent')}
+                    tip={t('chatWidget.platformAccentHint')}
+                    checked={settings.platformAccent}
+                    onChange={(value) => update('platformAccent', value)}
+                  />
+                  <Switch
+                    label={t('chatWidget.boldUsernames')}
+                    checked={settings.boldUsernames}
+                    onChange={(value) => update('boldUsernames', value)}
+                  />
+                  <Switch
+                    label={t('chatWidget.boldMessages')}
+                    checked={settings.boldMessages}
+                    onChange={(value) => update('boldMessages', value)}
+                  />
+                </div>
+              </SettingsGroup>
+
+              <SettingsGroup title={t('chatWidget.sectionMessages')}>
+                {/* Highlights share the animation row: one more row would make the panel scroll
+                    at 1366×768. */}
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div>
+                    <FieldLabel id={`${id}-animation`} tip={t('chatWidget.animationTip')}>
+                      {t('chatWidget.newMessageAnimation')}
+                    </FieldLabel>
+                    <Select
+                      labelledBy={`${id}-animation`}
+                      value={settings.animation}
+                      onChange={(value) => update('animation', value)}
+                      options={animationOptions}
+                    />
+                  </div>
+                  <div>
+                    <FieldLabel id={`${id}-highlights`} tip={t('chatWidget.highlightsTip')}>
+                      {t('chatWidget.highlights')}
+                    </FieldLabel>
+                    <MultiSelect
+                      labelledBy={`${id}-highlights`}
+                      value={settings.highlights}
+                      onChange={(value) => update('highlights', value)}
+                      options={highlightOptions}
+                      summary={highlightsSummary}
+                    />
+                  </div>
+                </div>
+                <div className="grid gap-x-6 gap-y-1 sm:grid-cols-2">
+                  <Switch
+                    label={t('chatWidget.sevenTvEmotes')}
+                    tip={t('chatWidget.sevenTvTip')}
+                    checked={settings.sevenTv}
+                    onChange={(value) => update('sevenTv', value)}
+                  />
+                  <Switch
+                    label={t('chatWidget.showBadges')}
+                    tip={t('chatWidget.badgesTip')}
+                    checked={settings.badges}
+                    onChange={(value) => update('badges', value)}
+                  />
+                  <Switch
+                    label={t('chatWidget.showMessageTime')}
+                    checked={settings.timestamp}
+                    onChange={(value) => update('timestamp', value)}
+                  />
+                  <Switch
+                    label={t('chatWidget.keepMessages')}
+                    tip={t('chatWidget.keepMessagesTip')}
+                    checked={settings.keep}
+                    onChange={(value) => update('keep', value)}
+                  />
+                </div>
+              </SettingsGroup>
+            </div>
+          </div>
+
+          <div className={`${PANEL_CLASS} flex h-[640px] flex-col gap-3 p-5 lg:h-auto lg:min-h-0`}>
+            <div className="flex items-center gap-1">
+              <h2 className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+                {t('chatWidget.previewTitle')}
+              </h2>
+              <InfoTip text={t('chatWidget.previewHint')} />
+            </div>
+            <div className="relative min-h-0 flex-1 overflow-hidden rounded-lg border border-zinc-300 bg-zinc-950/80 shadow-inner dark:border-zinc-800">
+              {mounted ? (
+                <iframe
+                  src={previewUrl}
+                  className="pointer-events-none absolute inset-0 h-full w-full border-0"
+                  title={t('chatWidget.previewIframeTitle')}
+                />
+              ) : (
+                <div className="flex h-full items-center justify-center text-sm text-zinc-500">
+                  {t('common.previewNoChannel')}
                 </div>
               )}
-
-              <div>
-                <label className="flex items-center space-x-2 text-zinc-900 cursor-pointer dark:text-white">
-                  <input
-                    type="checkbox"
-                    checked={itemBackground}
-                    onChange={(e) => setItemBackground(e.target.checked)}
-                    className="rounded border-zinc-300 bg-zinc-100 text-green-500 focus:ring-green-500 dark:border-zinc-700 dark:bg-zinc-800"
-                  />
-                  <span className="text-sm">{t("chatWidget.messageBackgroundBox")}</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="flex shrink-0 items-center gap-1">
+                <label
+                  htmlFor={`${id}-speed`}
+                  className="text-xs font-medium text-zinc-600 dark:text-zinc-400"
+                >
+                  {t('chatWidget.previewSpeed')}
                 </label>
-                <p className="mt-1 text-xs text-zinc-500">
-                  {t("chatWidget.messageBackgroundHint")}
+                <InfoTip text={t('chatWidget.previewSpeedHint')} />
+              </div>
+              <input
+                id={`${id}-speed`}
+                type="range"
+                min="0"
+                max={PREVIEW_RATES.length - 1}
+                step="1"
+                value={previewRateIndex}
+                onChange={(e) => setPreviewRateIndex(Number(e.target.value))}
+                className={RANGE_CLASS}
+              />
+              <span className="w-20 shrink-0 text-right text-xs tabular-nums text-zinc-500">
+                {t('chatWidget.previewSpeedValue', { rate: PREVIEW_RATES[previewRateIndex] })}
+              </span>
+            </div>
+            <div className="border-t border-zinc-200 pt-3 dark:border-zinc-800">
+              <FieldLabel htmlFor={`${id}-url`} tip={t('chatWidget.widgetUrlTip')}>
+                {t('common.widgetUrl')}
+              </FieldLabel>
+              <div className="flex">
+                <input
+                  id={`${id}-url`}
+                  type="text"
+                  spellCheck={false}
+                  value={urlDraft ?? widgetUrl}
+                  onChange={(e) => handleUrlChange(e.target.value)}
+                  onFocus={(e) => e.currentTarget.select()}
+                  onBlur={() => setUrlDraft(null)}
+                  placeholder={t('chatWidget.widgetUrlPlaceholder')}
+                  aria-invalid={Boolean(urlDraft)}
+                  aria-describedby={`${id}-url-hint`}
+                  className="h-9 w-full min-w-0 rounded-l-md border border-zinc-300 bg-zinc-100 px-3 text-sm text-zinc-600 placeholder-zinc-500 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500 aria-invalid:border-red-500 aria-invalid:ring-red-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
+                />
+                <button
+                  type="button"
+                  onClick={handleCopy}
+                  disabled={!widgetUrl}
+                  className="h-9 shrink-0 rounded-r-md bg-green-600 px-4 text-sm font-medium text-white transition-colors hover:bg-green-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {copied ? t('common.copied') : t('common.copy')}
+                </button>
+              </div>
+              {urlDraft ? (
+                <p
+                  id={`${id}-url-hint`}
+                  className="mt-2 text-xs leading-relaxed text-red-600 dark:text-red-400"
+                >
+                  {t('chatWidget.widgetUrlInvalid')}
                 </p>
-              </div>
-
-              <div>
-                <label className="flex items-center space-x-2 text-zinc-900 cursor-pointer dark:text-white">
-                  <input
-                    type="checkbox"
-                    checked={platformAccent}
-                    onChange={(e) => setPlatformAccent(e.target.checked)}
-                    className="rounded border-zinc-300 bg-zinc-100 text-green-500 focus:ring-green-500 dark:border-zinc-700 dark:bg-zinc-800"
-                  />
-                  <span className="text-sm">{t("chatWidget.platformAccent")}</span>
-                </label>
-                <p className="mt-1 text-xs text-zinc-500">
-                  {t("chatWidget.platformAccentHint")}
+              ) : (
+                <p id={`${id}-url-hint`} className="mt-2 text-xs leading-relaxed text-zinc-500">
+                  {t('common.browserSourceHint')}
+                  {t('chatWidget.browserSourceHintSize')}
                 </p>
-              </div>
-
-              <div>
-                <label className="flex items-center space-x-2 text-zinc-900 cursor-pointer dark:text-white">
-                  <input
-                    type="checkbox"
-                    checked={boldUsernames}
-                    onChange={(e) => setBoldUsernames(e.target.checked)}
-                    className="rounded border-zinc-300 bg-zinc-100 text-green-500 focus:ring-green-500 dark:border-zinc-700 dark:bg-zinc-800"
-                  />
-                  <span className="text-sm">{t("chatWidget.boldUsernames")}</span>
-                </label>
-              </div>
-
-              <div>
-                <label className="flex items-center space-x-2 text-zinc-900 cursor-pointer dark:text-white">
-                  <input
-                    type="checkbox"
-                    checked={boldMessages}
-                    onChange={(e) => setBoldMessages(e.target.checked)}
-                    className="rounded border-zinc-300 bg-zinc-100 text-green-500 focus:ring-green-500 dark:border-zinc-700 dark:bg-zinc-800"
-                  />
-                  <span className="text-sm">{t("chatWidget.boldMessages")}</span>
-                </label>
-              </div>
-
-              <div className="pt-4 mt-6 border-t border-zinc-200 lg:hidden dark:border-zinc-800">
-                <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                  {t("common.widgetUrl")}
-                </label>
-                <div className="flex">
-                  <input
-                    type="text"
-                    readOnly
-                    value={widgetUrl}
-                    className="w-full rounded-l-md border border-zinc-300 bg-zinc-100 px-3 py-2 text-zinc-600 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
-                  />
-                  <button
-                    onClick={handleCopy}
-                    disabled={!isFormValid}
-                    className="rounded-r-md bg-green-600 px-4 py-2 font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
-                    {copied ? t("common.copied") : t("common.copy")}
-                  </button>
-                </div>
-              </div>
+              )}
             </div>
           </div>
+        </div>
+      </div>
 
-          {/* Right: Live Preview Panel & Guides/FAQ */}
-          <div className="w-full max-w-md lg:max-w-2xl lg:shrink-0 flex flex-col gap-4 lg:sticky lg:top-6">
-            <div className="rounded-xl bg-white p-6 md:p-8 shadow-xl border border-zinc-200 flex flex-col h-[700px] dark:bg-zinc-900 dark:border-zinc-800">
-              <h2 className="mb-4 text-xl font-semibold text-center text-zinc-700 dark:text-zinc-300">
-                {t("chatWidget.previewTitle")}
-              </h2>
-              <div className="flex-1 w-full bg-zinc-950/80 rounded-lg overflow-hidden border border-zinc-300 relative shadow-inner flex items-center justify-center dark:border-zinc-800">
-                {mounted ? (
-                  <iframe
-                    src={previewUrl}
-                    className="absolute inset-0 w-full h-full border-0 pointer-events-none"
-                    title={t("chatWidget.previewIframeTitle")}
-                  />
-                ) : (
-                  <div className="text-center text-zinc-500">
-                    <p>{t("common.previewNoChannel")}</p>
-                  </div>
-                )}
-              </div>
-              <p className="mt-2 text-center text-xs text-zinc-500">
-                {t("chatWidget.previewHint")}
+      <div className="mx-auto grid max-w-6xl gap-4 px-4 pt-4 pb-12 lg:grid-cols-2">
+        <div className="space-y-4">
+          <p className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+            {t('chatWidget.intro')}
+          </p>
+          <YoutubeTutorial />
+          <div className="rounded-xl border border-zinc-200 bg-zinc-100/60 p-5 dark:border-zinc-800 dark:bg-zinc-900/50">
+            <h3 className="mb-2 text-sm font-semibold text-zinc-900 dark:text-white">
+              {t('chatWidget.guideTitle')}
+            </h3>
+            <p className="text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
+              {t('chatWidget.guideStep1')}
+              <br />
+              {t('chatWidget.guideStep2')}
+              <br />
+              {t('chatWidget.guideStep3')}
+            </p>
+          </div>
+        </div>
+
+        <div className="space-y-3">
+          {(
+            [
+              ['chatWidget.faq1Q', 'chatWidget.faq1A'],
+              ['chatWidget.faq2Q', 'chatWidget.faq2A'],
+            ] as const
+          ).map(([question, answer]) => (
+            <details
+              key={question}
+              className="group rounded-lg border border-zinc-200/80 bg-zinc-100/60 p-4 transition-colors open:bg-zinc-100 dark:border-zinc-800/80 dark:bg-zinc-900/50 dark:open:bg-zinc-900"
+            >
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-sm font-medium text-zinc-700 group-hover:text-zinc-900 dark:text-zinc-200 dark:group-hover:text-white">
+                <span>{t(question)}</span>
+                <span className="text-xs text-zinc-500 transition-transform group-open:rotate-180">
+                  ▼
+                </span>
+              </summary>
+              <p className="mt-2 text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
+                {t(answer)}
               </p>
-
-              <div className="mt-4 hidden lg:block">
-                <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                  {t("common.widgetUrl")}
-                </label>
-                <div className="flex">
-                  <input
-                    type="text"
-                    readOnly
-                    value={widgetUrl}
-                    className="w-full rounded-l-md border border-zinc-300 bg-zinc-100 px-3 py-2 text-zinc-600 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
-                  />
-                  <button
-                    onClick={handleCopy}
-                    disabled={!isFormValid}
-                    className="rounded-r-md bg-green-600 px-4 py-2 font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
-                    {copied ? t("common.copied") : t("common.copy")}
-                  </button>
-                </div>
-                <p className="mt-2 text-xs text-zinc-500">
-                  {t("common.browserSourceHint")}
-                  {t("chatWidget.browserSourceHintSize")}
-                </p>
-              </div>
-            </div>
-
-            {/* Quick OBS Guide & FAQ (Placed under preview) */}
-            <div className="space-y-4">
-              <div className="rounded-xl border border-zinc-200 bg-zinc-100/60 p-5 dark:border-zinc-800 dark:bg-zinc-900/50">
-                <h3 className="text-sm font-semibold text-zinc-900 mb-2 dark:text-white">{t("chatWidget.guideTitle")}</h3>
-                <p className="text-xs text-zinc-600 leading-relaxed dark:text-zinc-400">
-                  {t("chatWidget.guideStep1")}<br />
-                  {t("chatWidget.guideStep2")}<br />
-                  {t("chatWidget.guideStep3")}
-                </p>
-              </div>
-
-              <div className="space-y-3">
-                <details className="group rounded-lg border border-zinc-200/80 bg-zinc-100/60 p-4 transition-colors open:bg-zinc-100 dark:border-zinc-800/80 dark:bg-zinc-900/50 dark:open:bg-zinc-900">
-                  <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-medium text-zinc-700 group-hover:text-zinc-900 dark:text-zinc-200 dark:group-hover:text-white">
-                    <span>{t("chatWidget.faq1Q")}</span>
-                    <span className="transition-transform group-open:rotate-180 text-zinc-500 text-xs">▼</span>
-                  </summary>
-                  <p className="mt-2 text-xs text-zinc-600 leading-relaxed dark:text-zinc-400">
-                    {t("chatWidget.faq1A")}
-                  </p>
-                </details>
-
-                <details className="group rounded-lg border border-zinc-200/80 bg-zinc-100/60 p-4 transition-colors open:bg-zinc-100 dark:border-zinc-800/80 dark:bg-zinc-900/50 dark:open:bg-zinc-900">
-                  <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-medium text-zinc-700 group-hover:text-zinc-900 dark:text-zinc-200 dark:group-hover:text-white">
-                    <span>{t("chatWidget.faq2Q")}</span>
-                    <span className="transition-transform group-open:rotate-180 text-zinc-500 text-xs">▼</span>
-                  </summary>
-                  <p className="mt-2 text-xs text-zinc-600 leading-relaxed dark:text-zinc-400">
-                    {t("chatWidget.faq2A")}
-                  </p>
-                </details>
-              </div>
-            </div>
-          </div>
+            </details>
+          ))}
         </div>
       </div>
     </div>

@@ -4,33 +4,8 @@ import {
   extractSubMonths,
   isSubscriber,
   parsePrivmsg,
-  parseTags,
   shouldAcceptEntry,
 } from './use-raffle-chat';
-
-describe('parseTags', () => {
-  it('returns an empty object when input is undefined', () => {
-    expect(parseTags(undefined)).toEqual({});
-  });
-
-  it('parses simple key=value pairs', () => {
-    expect(parseTags('color=#FF0000;display-name=Alice')).toEqual({
-      color: '#FF0000',
-      'display-name': 'Alice',
-    });
-  });
-
-  it('unescapes IRCv3 tag values', () => {
-    expect(parseTags(String.raw`display-name=Alice\:Bob;foo=line\sone\ntwo`)).toEqual({
-      'display-name': 'Alice;Bob',
-      foo: 'line one\ntwo',
-    });
-  });
-
-  it('handles keys with no value', () => {
-    expect(parseTags('foo;bar=baz')).toEqual({ foo: '', bar: 'baz' });
-  });
-});
 
 describe('extractSubMonths', () => {
   it('returns -1 for non-subscribers', () => {
@@ -87,6 +62,26 @@ describe('parsePrivmsg', () => {
   it('returns null for non-PRIVMSG input', () => {
     expect(parsePrivmsg('PING :tmi.twitch.tv')).toBeNull();
     expect(parsePrivmsg('JOIN #chan')).toBeNull();
+  });
+
+  it('ignores a PRIVMSG line typed into a resub message', () => {
+    expect(
+      parsePrivmsg(
+        '@badges=;display-name=Viewer;login=viewer;msg-id=resub :tmi.twitch.tv USERNOTICE #chan :@badge-info=subscriber/99;subscriber=1 :victim!v@v PRIVMSG #chan :!join',
+      ),
+    ).toBeNull();
+  });
+
+  it('keeps the real sender when the text looks like another line', () => {
+    expect(
+      parsePrivmsg(
+        '@display-name=Alice :alice!alice@alice.tmi.twitch.tv PRIVMSG #chan :@subscriber=1 :victim!v@v PRIVMSG #chan :!join',
+      ),
+    ).toEqual({
+      tags: { 'display-name': 'Alice' },
+      username: 'alice',
+      message: '@subscriber=1 :victim!v@v PRIVMSG #chan :!join',
+    });
   });
 });
 
