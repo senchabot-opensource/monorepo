@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import type { RaffleConfig, RaffleParticipant } from "#/types/raffle";
 import { getKickChannelInfo } from "#/lib/kick";
+import { parseIrcLine } from "#/lib/twitch";
 
 type OnParticipant = (participant: RaffleParticipant) => void;
 
@@ -17,22 +18,6 @@ const KNOWN_BOTS = new Set([
   "kofi_stream_bot",
   "senchabot",
 ]);
-
-export function parseTags(tagsStr?: string): Record<string, string> {
-  if (!tagsStr) return {};
-  const tags: Record<string, string> = {};
-  for (const tag of tagsStr.split(";")) {
-    const [key, value = ""] = tag.split("=");
-    if (!key) continue;
-    tags[key] = value
-      .replace(/\\s/g, " ")
-      .replace(/\\:/g, ";")
-      .replace(/\\\\/g, "\\")
-      .replace(/\\r/g, "\r")
-      .replace(/\\n/g, "\n");
-  }
-  return tags;
-}
 
 export function extractSubMonths(tags: Record<string, string>): number {
   const badgeInfo = tags["badge-info"] || "";
@@ -64,14 +49,12 @@ export function parsePrivmsg(rawMessage: string): {
   username: string;
   message: string;
 } | null {
-  const match = rawMessage.match(
-    /(?:@([^\s]+) )?:([^\s!]+)![^\s]+ PRIVMSG #[^\s]+ :(.+)/,
-  );
-  if (!match) return null;
-  const [, tagsStr, username, messageText] = match;
+  const line = parseIrcLine(rawMessage);
+  const messageText = line?.params[1];
+  if (line?.command !== "PRIVMSG" || messageText === undefined) return null;
   return {
-    tags: parseTags(tagsStr),
-    username: username.toLowerCase(),
+    tags: line.tags,
+    username: line.source.split("!")[0].toLowerCase(),
     message: messageText.trim(),
   };
 }
