@@ -184,10 +184,10 @@ A local WebSocket bridge that allows streamers and authorized channel moderators
   - `cmdBack`: Switch to Main scene (default: `back`, can be `main`, `imback`).
   - `cmdStartStream` & `cmdStopStream`: Stream management (default: `!startstream` / `!stopstream`, can be `start` / `stop`).
   - `cmdStartRecord` & `cmdStopRecord`: Recording management (default: `!startrecord` / `!stoprecord`, can be `rec` / `stoprec`).
-- **User Whitelist (`commandUser`)**: Comma-separated username whitelist ensuring only authorized moderators or broadcasters can execute OBS commands.
+- **User Whitelist (`commandUser`)**: Comma-separated whitelist of `platform:username` entries (e.g. `twitch:bob,kick:alice`) ensuring only authorized moderators or broadcasters can execute OBS commands, and only from the platform they were added for. Older entries without a platform count for the only platform set up; when both Twitch and Kick are set up they are ignored until a platform is picked on the tool page.
 - **Scene Assignment Interface**: Interactive scene selector allowing broadcasters to assign `Main` and `BRB` scenes dynamically from their live OBS scene list.
 - **URL Query Parameters**:
-  - `twitch` (string), `kick` (string), `commandUser` (comma-separated usernames)
+  - `twitch` (string), `kick` (string), `commandUser` (comma-separated `platform:username` entries)
   - `obsWebsocketUrl` (string, default: `ws://localhost:4455`), `obsWebsocketPassword` (string)
   - `mainScene` (string), `brbScene` (string)
   - `cmdScene`, `cmdBrb`, `cmdBack`, `cmdStartStream`, `cmdStopStream`, `cmdStartRecord`, `cmdStopRecord`
