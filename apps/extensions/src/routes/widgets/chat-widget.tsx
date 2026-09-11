@@ -365,12 +365,14 @@ export const Route = createFileRoute('/widgets/chat-widget')({
   },
 });
 
+// Both viewBoxes are cropped horizontally to the glyph's own bounds: the stock 24x24 boxes pad
+// Twitch 3 units but Kick only 1.33, so Kick sat visibly further left and closer to the badges.
 function TwitchIcon({ className, ...props }: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      className={`inline-block h-[1.15em] w-[1.15em] ${className ?? ''}`}
-      viewBox="0 0 24 24"
+      className={`inline-block h-[1.15em] w-auto ${className ?? ''}`}
+      viewBox="3 0 18.006 24"
       {...props}
     >
       <path
@@ -385,9 +387,9 @@ function KickIcon({ className, ...props }: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       role="img"
-      viewBox="0 0 24 24"
+      viewBox="1.333 0 21.334 24"
       fill="currentColor"
-      className={`inline-block h-[1em] w-[1em] ${className ?? ''}`}
+      className={`inline-block h-[1em] w-auto ${className ?? ''}`}
       {...props}
     >
       <title>Kick</title>
