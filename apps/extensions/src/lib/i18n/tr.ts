@@ -15,6 +15,7 @@ export const tr: typeof en = {
       "Bu URL'yi OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio veya tarayıcı kaynağı destekleyen herhangi bir yazılımda Tarayıcı Kaynağı olarak yapıştır",
     themeToggle: 'Tema değiştir',
     languageToggle: 'Dil değiştir',
+    moreInfo: 'Daha fazla bilgi',
   },
   home: {
     heroBadge: '%100 Ücretsiz · Giriş Gerektirmez · Anında Tarayıcı Kaynağı Kurulumu',
@@ -61,7 +62,7 @@ export const tr: typeof en = {
     intro:
       "Twitch ve Kick'i 7TV emote'ları ve özel temalarla tek bir akışta birleştiren özelleştirilebilir çoklu sohbet widget'ı ve yayın sohbet kutusu kaplaması.",
     platforms: 'Platformlar',
-    both: 'İkisi (Twitch & Kick)',
+    both: 'İkisi',
     twitch: 'Twitch',
     kick: 'Kick',
     twitchChannel: 'Twitch Kanalı',
@@ -69,7 +70,27 @@ export const tr: typeof en = {
     platformIndicator: 'Platform Göstergesi',
     platformName: 'Platform Adı',
     platformIcon: 'Platform Simgesi',
-    styleSection: 'Stil ve Görünüm (Özelleştirilebilir Yayın Kaplamaları)',
+    platformHidden: 'Platformu Gizle',
+    sectionChannel: 'Kanal',
+    sectionAppearance: 'Görünüm',
+    sectionMessages: 'Mesajlar',
+    platformsTip:
+      'Sohbeti hangi platformlardan alacağını seç. İkisini seçersen Twitch ve Kick mesajları tek akışta birleşir.',
+    channelTip:
+      'Tam linki değil, sadece kanal adını yaz. Örneğin twitch.tv/senchabot için senchabot.',
+    platformIndicatorTip:
+      'İki platform birlikteyken her mesajın yanında nereden geldiğini gösterir: platform adı, simgesi ya da hiçbir şey.',
+    orientationTip:
+      'Dikeyde mesajlar alt alta dizilir, klasik sohbet kutusu gibi. Yatayda yan yana akar, ekranın altına şerit olarak koymak için ideal.',
+    darkBackgroundTip:
+      "Widget'ın arkasına yarı saydam siyah bir zemin koyar. Açık renkli sahnelerde yazıları okumayı kolaylaştırır.",
+    sevenTvTip:
+      "Kanalın 7TV'ye eklediği özel ve global emote'ları resim olarak gösterir. Kapalıyken bu emote'lar düz yazı olarak görünür.",
+    badgesTip: 'Kullanıcı adının yanında yayıncı, moderatör, VIP ve abone rozetlerini gösterir.',
+    keepMessagesTip:
+      'Mesajlar normalde 30 saniye sonra kaybolur. Bunu açarsan ekranda kalırlar, yeni gelenler eskileri yukarı iter.',
+    animationTip:
+      'Yeni mesajın ekrana nasıl gireceğini belirler. Sohbet hızlandıkça animasyonlar otomatik olarak kısalır.',
     font: 'Yazı Tipi',
     fontSystem: 'Sistem Varsayılanı',
     messageLayout: 'Mesaj Düzeni',
@@ -79,10 +100,12 @@ export const tr: typeof en = {
     layoutCompact: 'Kompakt (Twitch benzeri)',
     newMessageAnimation: 'Yeni Mesaj Animasyonu',
     animSlide: 'Sağdan kayarak gir + solma',
+    animSmoothSlide: 'Sağdan yumuşakça kayarak gir',
     animPop: 'Belirerek büyü / ölçeklen',
     animBounce: 'Zıplayarak gir',
     animStagger: 'Sıralı (önce bilgi, sonra mesaj)',
     animFade: 'Solayarak belir',
+    animTyping: 'Daktilo gibi yaz',
     animNone: 'Animasyon yok',
     orientation: 'Yön',
     vertical: 'Dikey',
@@ -103,6 +126,9 @@ export const tr: typeof en = {
     boldMessages: 'Kalın Mesajlar',
     previewTitle: 'Widget Önizleme (Sohbet Kutusu)',
     previewIframeTitle: 'Sohbet Widget Önizleme',
+    previewSpeed: 'Önizleme Sohbet Hızı',
+    previewSpeedValue: '{rate} mesaj/sn',
+    previewSpeedHint: "Sadece önizlemeyi etkiler, widget URL'si değişmez.",
     previewHint: 'Animasyonlu mesaj akışıyla canlı sohbet önizlemesi.',
     guideTitle: 'Yayın Yazılımı Sohbet Kutusu Kurulumu (OBS, Streamlabs, XSplit vb.)',
     guideStep1:
@@ -111,6 +137,10 @@ export const tr: typeof en = {
     guideStep3:
       '3. Genişlik ve yüksekliği istediğin sohbet kutusu kaplama boyutlarına ayarla (örn. dikey için 400×600).',
     browserSourceHintSize: ' (önerilen boyut: sohbet kutusu için 400×600).',
+    widgetUrlTip:
+      "Daha önce bir widget oluşturduysan URL'sini buraya yapıştır. Ayarların geri yüklenir, istediğini değiştirebilirsin.",
+    widgetUrlPlaceholder: "Düzenlemek için widget URL'sini yapıştır",
+    widgetUrlInvalid: "Bu bir Sohbet Kutusu widget URL'si değil.",
     faq1Q: "Sohbet kutusunu kullanmak için Twitch veya Kick'e giriş yapmam gerekiyor mu?",
     faq1A:
       'Giriş gerekmez. Sohbet Kutusu, her iki platformun herkese açık sohbet akışlarını anonim olarak dinler.',
