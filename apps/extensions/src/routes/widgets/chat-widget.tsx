@@ -2,16 +2,45 @@ import { useLiveQuery } from '@tanstack/react-db';
 import { createFileRoute } from '@tanstack/react-router';
 import React from 'react';
 import { z } from 'zod';
-import type { ChatMessagesType } from '#/features/widgets/chat-widget/chat-messages';
+import type {
+  AnnouncementColor,
+  ChatMessagesType,
+} from '#/features/widgets/chat-widget/chat-messages';
 import { chatMessagesCollection } from '#/features/widgets/chat-widget/chat-messages';
+import {
+  getHighlightColors,
+  getHighlightKind,
+  type HighlightKind,
+} from '#/features/widgets/chat-widget/highlights';
 import { KickBadge } from '#/features/widgets/chat-widget/kick-badges';
 import { use7tvEmotes } from '#/features/widgets/chat-widget/use-7tv-emotes';
 import { useTwitchBadges } from '#/features/widgets/chat-widget/use-badges';
 import { useUnifiedChat } from '#/features/widgets/chat-widget/use-unified-chat';
+import { parseHighlights } from '#/features/widgets/chat-widget/widget-settings';
+import { useT } from '#/lib/i18n';
 import { getKickChannelInfo } from '#/lib/kick';
 import { getAccessibleColor } from '#/features/widgets/chat-widget/color-utils';
 
 const TTL_MS = 30_000;
+// Must cover the 1s `now` tick, otherwise a row can expire without ever getting its fade-out class.
+const EXIT_MS = 1_000;
+const SHIFT_MS = 400;
+// Busy chat speeds animations up so each one finishes before the next message lands: full speed
+// when messages are SPEED_BASE_GAP_MS or more apart, scaled down with the gap, never below MIN_SPEED.
+const SPEED_BASE_GAP_MS = 500;
+const MIN_SPEED = 0.35;
+
+const getReceivedAtMs = (msg: ChatMessagesType) =>
+  msg.receivedAt?.getTime() ?? msg.timestamp.getTime();
+
+const getAnimationSpeeds = (messages: ChatMessagesType[]) => {
+  const speeds = new Map<string, number>();
+  messages.forEach((msg, i) => {
+    const gap = i > 0 ? getReceivedAtMs(msg) - getReceivedAtMs(messages[i - 1]) : Infinity;
+    speeds.set(msg.id, Math.min(1, Math.max(MIN_SPEED, gap / SPEED_BASE_GAP_MS)));
+  });
+  return speeds;
+};
 
 type TwitchEmoteRange = { id: string; start: number; end: number };
 
@@ -149,17 +178,19 @@ const searchSchema = z.object({
   bgOpacity: z.coerce.number().min(0).max(1).optional().default(0.5),
   platformAccent: z.coerce.boolean().optional(),
   orientation: z.enum(['vertical', 'horizontal']).optional().default('vertical'),
-  platformDisplay: z.enum(['name', 'icon']).optional().default('icon'),
+  platformDisplay: z.enum(['name', 'icon', 'none']).optional().default('icon'),
   timestamp: z.coerce.boolean().optional(),
   keep: z.coerce.boolean().optional(),
+  highlights: z.string().optional(),
   font: z
     .enum(['inter', 'roboto', 'nunito', 'mono', 'serif', 'system'])
     .optional()
     .default('inter'),
   layout: z.enum(['inline', 'stacked', 'card', 'compact']).optional().default('inline'),
   mock: z.coerce.boolean().optional(),
+  mockRate: z.coerce.number().min(0.1).max(50).optional(),
   animation: z
-    .enum(['slide', 'pop', 'bounce', 'stagger', 'fade', 'none'])
+    .enum(['slide', 'smooth', 'pop', 'bounce', 'stagger', 'fade', 'typing', 'none'])
     .optional()
     .default('slide'),
 });
@@ -187,16 +218,18 @@ const FONT_GOOGLE_FAMILIES: Partial<Record<FontChoice, string>> = {
 
 const LAYOUT_CLASSES: Record<
   LayoutChoice,
-  { wrapper: string; meta: string; name: string; message: string }
+  { wrapper: string; header: string; meta: string; name: string; message: string }
 > = {
   inline: {
     wrapper: 'leading-tight whitespace-pre-wrap wrap-break-word text-left',
+    header: 'mb-0.5',
     meta: 'inline-flex items-center gap-1.5 mr-1.5 align-middle select-none',
     name: 'inline',
     message: 'inline',
   },
   stacked: {
     wrapper: 'grid grid-cols-[auto_minmax(0,1fr)] items-baseline gap-x-1.5 gap-y-0.5 text-left',
+    header: 'col-span-2',
     meta: 'flex items-center justify-end gap-1.5 whitespace-nowrap min-w-[96px]',
     name: 'inline leading-none',
     message: 'block leading-snug col-start-2 wrap-break-word',
@@ -204,12 +237,14 @@ const LAYOUT_CLASSES: Record<
   card: {
     wrapper:
       'rounded-lg bg-black/40 border border-white/10 px-3 py-2 text-left shadow-sm grid grid-cols-[auto_minmax(0,1fr)] items-baseline gap-x-1.5 gap-y-0.5',
+    header: 'col-span-2',
     meta: 'flex items-center justify-end gap-1.5 whitespace-nowrap min-w-[96px]',
     name: 'inline leading-none text-sm',
     message: 'block leading-snug col-start-2 wrap-break-word',
   },
   compact: {
     wrapper: 'leading-none whitespace-pre-wrap wrap-break-word text-left',
+    header: 'mb-0.5',
     meta: 'inline-flex items-center gap-1.5 mr-1.5 align-middle select-none',
     name: 'inline',
     message: 'inline',
@@ -221,21 +256,82 @@ const ANIMATION_CLASSES: Record<
   (orientation: 'vertical' | 'horizontal') => string
 > = {
   slide: () => 'animate-chat-slide-in',
+  smooth: () => 'animate-chat-smooth-slide-in',
   pop: () => 'animate-chat-pop-in',
   bounce: () => 'animate-chat-bounce-in',
   stagger: () => 'animate-chat-stagger-meta',
   fade: () => 'animate-chat-fade-in',
+  typing: () => 'animate-chat-fade-in',
   none: () => '',
 };
 
 const ANIMATION_MESSAGE_CLASSES: Record<AnimationChoice, string> = {
   slide: '',
+  smooth: '',
   pop: '',
   bounce: '',
   stagger: 'animate-chat-stagger-message',
   fade: '',
+  typing: '',
   none: '',
 };
+
+const TYPING_MS_PER_CHAR = 35;
+// Long messages type faster so no message takes longer than this to finish.
+const TYPING_MAX_MS = 1_500;
+
+// Grapheme clusters, so emoji like 🏴‍☠️ are never shown half-typed.
+const splitGraphemes = (text: string): string[] =>
+  typeof Intl.Segmenter === 'function'
+    ? Array.from(
+        new Intl.Segmenter(undefined, { granularity: 'grapheme' }).segment(text),
+        (s) => s.segment,
+      )
+    : Array.from(text);
+
+function TypedContent({ nodes, speed }: { nodes: React.ReactNode[]; speed: number }) {
+  const units = React.useMemo(
+    () =>
+      nodes.flatMap((node) => {
+        if (node == null || typeof node === 'boolean' || node === '') return [];
+        return typeof node === 'string' ? splitGraphemes(node) : [node];
+      }),
+    [nodes],
+  );
+  const [count, setCount] = React.useState(0);
+  // Kept across effect restarts so a late emote-map load doesn't retype the message from scratch.
+  const startRef = React.useRef<number | null>(null);
+
+  React.useEffect(() => {
+    startRef.current ??= performance.now();
+    const start = startRef.current;
+    const msPerUnit =
+      speed * Math.min(TYPING_MS_PER_CHAR, TYPING_MAX_MS / Math.max(units.length, 1));
+    const id = window.setInterval(() => {
+      const next = Math.min(units.length, Math.ceil((performance.now() - start) / msPerUnit));
+      setCount(next);
+      if (next >= units.length) window.clearInterval(id);
+    }, 30);
+    return () => window.clearInterval(id);
+  }, [units.length, speed]);
+
+  if (count >= units.length) return <>{nodes}</>;
+
+  const caretUnit = count > 0 ? units[count - 1] : null;
+  // The untyped rest stays in the layout (just invisible) so the row has its final size from the
+  // first frame; otherwise every wrapped line would push older rows up again.
+  return (
+    <>
+      {units.slice(0, Math.max(count - 1, 0))}
+      {typeof caretUnit === 'string' ? (
+        <span className="chat-typing-caret">{caretUnit}</span>
+      ) : (
+        caretUnit
+      )}
+      <span style={{ visibility: 'hidden' }}>{units.slice(count)}</span>
+    </>
+  );
+}
 
 const PLATFORM_COLORS: Record<'twitch' | 'kick', string> = {
   twitch: '#9146FF',
@@ -284,12 +380,14 @@ export const Route = createFileRoute('/widgets/chat-widget')({
   },
 });
 
+// Both viewBoxes are cropped horizontally to the glyph's own bounds: the stock 24x24 boxes pad
+// Twitch 3 units but Kick only 1.33, so Kick sat visibly further left and closer to the badges.
 function TwitchIcon({ className, ...props }: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      className={`inline-block h-[1.15em] w-[1.15em] ${className ?? ''}`}
-      viewBox="0 0 24 24"
+      className={`inline-block h-[1.15em] w-auto ${className ?? ''}`}
+      viewBox="3 0 18.006 24"
       {...props}
     >
       <path
@@ -304,9 +402,9 @@ function KickIcon({ className, ...props }: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       role="img"
-      viewBox="0 0 24 24"
+      viewBox="1.333 0 21.334 24"
       fill="currentColor"
-      className={`inline-block h-[1.15em] w-[1.15em] ${className ?? ''}`}
+      className={`inline-block h-[1em] w-auto ${className ?? ''}`}
       {...props}
     >
       <title>Kick</title>
@@ -323,6 +421,41 @@ function PlatformIcon({ platform }: { platform: 'twitch' | 'kick' }) {
   return <KickIcon />;
 }
 
+function HeaderIcon({ children, filled }: { children: React.ReactNode; filled?: boolean }) {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      className="inline-block h-[1em] w-[1em] shrink-0"
+      fill={filled ? 'currentColor' : 'none'}
+      stroke={filled ? undefined : 'currentColor'}
+      strokeWidth={2.5}
+    >
+      {children}
+    </svg>
+  );
+}
+
+const ReplyIcon = () => (
+  <HeaderIcon>
+    <path d="M15 10l5 5-5 5" />
+    <path d="M4 4v7a4 4 0 0 0 4 4h12" />
+  </HeaderIcon>
+);
+
+const MegaphoneIcon = () => (
+  <HeaderIcon>
+    <path d="M3 11l18-5v12L3 14v-3z" />
+    <path d="M11.6 16.8a3 3 0 1 1-5.8-1.6" />
+  </HeaderIcon>
+);
+
+const SparkleIcon = () => (
+  <HeaderIcon filled>
+    <path d="M12 2l2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2z" />
+  </HeaderIcon>
+);
+
 function RouteComponent() {
   const search = Route.useSearch();
   const { kick, kickSubBadges } = Route.useLoaderData();
@@ -330,14 +463,20 @@ function RouteComponent() {
 
   const isMock = Boolean(search.mock || (!search.twitch && !kick));
 
-  const showPlatformIndicator = Boolean(
-    (search.twitch && search.kick) ||
-      isMock ||
-      search.platformDisplay === 'name' ||
-      search.platformDisplay === 'icon'
-  );
+  const showPlatformIndicator = search.platformDisplay !== 'none';
 
   const sevenTvEmoteMap = use7tvEmotes(search.sevenTv ? search.twitch : null);
+
+  // Mentions of these names get highlighted. A mock preview without channels mentions Senchabot.
+  const channels = React.useMemo(() => {
+    const names = [search.twitch, search.kick].filter((name): name is string => Boolean(name));
+    return names.length > 0 || !isMock ? names : ['senchabot'];
+  }, [search.twitch, search.kick, isMock]);
+  const mockChannel = channels[0] ?? 'senchabot';
+  const highlights = React.useMemo(
+    () => new Set(parseHighlights(search.highlights)),
+    [search.highlights],
+  );
 
   useUnifiedChat(search.twitch, kick);
 
@@ -350,6 +489,10 @@ function RouteComponent() {
       platform: 'twitch' | 'kick';
       badges?: string[];
       message: string;
+      replyTo?: { user: string; message: string };
+      firstMessage?: boolean;
+      variant?: 'announcement' | 'highlighted';
+      announcementColor?: AnnouncementColor;
     }> = [
       {
         user: 'MonkeyDLuffy',
@@ -378,6 +521,7 @@ function RouteComponent() {
         platform: 'kick',
         badges: ['subscriber'],
         message: 'Wait... which stream is this? I got lost again ⚔️🧭',
+        replyTo: { user: 'Goku', message: 'That clutch power level is over 9000! 💥🔥' },
       },
       {
         user: 'NarutoUzumaki',
@@ -398,7 +542,7 @@ function RouteComponent() {
         color: '#E0E7FF',
         platform: 'twitch',
         badges: ['subscriber'],
-        message: "I've been watching this stream for only 80 years, time flies 🪄⏳",
+        message: "@{channel} I've been watching you for only 80 years, time flies 🪄⏳",
       },
       {
         user: 'AnyaForger',
@@ -434,6 +578,7 @@ function RouteComponent() {
         platform: 'twitch',
         badges: ['subscriber', 'vip'],
         message: 'Clip that lightning fast clutch right now! ⚡🐱',
+        variant: 'highlighted',
       },
       {
         user: 'Denji',
@@ -446,8 +591,8 @@ function RouteComponent() {
         user: 'Chopper',
         color: '#38BDF8',
         platform: 'twitch',
-        badges: ['vip'],
-        message: 'Senchabot makes the stream so colorful and fun! 🌸🩺',
+        message: 'First time here, Senchabot makes the stream so colorful! 🌸🩺',
+        firstMessage: true,
       },
       {
         user: 'Saitama',
@@ -461,7 +606,9 @@ function RouteComponent() {
         color: '#00DB84',
         platform: 'twitch',
         badges: ['moderator'],
-        message: '!uptime | Welcome friends to the stream! 🍵🚀',
+        message: 'Welcome friends to the stream! Type !commands to see what I can do 🍵🚀',
+        variant: 'announcement',
+        announcementColor: 'BLUE',
       },
     ];
 
@@ -477,13 +624,17 @@ function RouteComponent() {
       chatMessagesCollection.insert({
         id,
         user: item.user,
-        message: item.message,
+        message: item.message.replace('{channel}', mockChannel),
         platform: item.platform,
         timestamp: new Date(),
         color: item.color,
         badges: item.badges,
         receivedAt: new Date(),
         userLower: item.user.toLowerCase(),
+        replyTo: item.replyTo,
+        firstMessage: item.firstMessage,
+        variant: item.variant,
+        announcementColor: item.announcementColor,
       });
 
       if (insertedIds.length > 20) {
@@ -495,7 +646,7 @@ function RouteComponent() {
     };
 
     const firstTimer = setTimeout(insertNextMock, 400);
-    const interval = setInterval(insertNextMock, 3000);
+    const interval = setInterval(insertNextMock, search.mockRate ? 1000 / search.mockRate : 3000);
 
     return () => {
       clearTimeout(firstTimer);
@@ -504,10 +655,11 @@ function RouteComponent() {
         chatMessagesCollection.delete(id);
       }
     };
-  }, [isMock]);
+  }, [isMock, search.mockRate, mockChannel]);
 
   const [now, setNow] = React.useState(() => Date.now());
-  const containerRef = React.useRef<HTMLDivElement>(null);
+  const listRef = React.useRef<HTMLDivElement>(null);
+  const lastIdRef = React.useRef<string | null>(null);
 
   React.useEffect(() => {
     if (typeof document === 'undefined') return;
@@ -550,10 +702,12 @@ function RouteComponent() {
 
   const visibleMessages = search.keep
     ? messages
-    : messages.filter((msg) => {
-      const receivedAtMs = msg.receivedAt?.getTime() ?? msg.timestamp.getTime();
-      return now - receivedAtMs < TTL_MS;
-    });
+    : messages.filter((msg) => now - getReceivedAtMs(msg) < TTL_MS);
+  // `slide` is the original default and must look exactly as it always did, so the shift and
+  // fade-out only come with the other animations.
+  const animatesLayout = search.animation !== 'none' && search.animation !== 'slide';
+  const fadeOut = !search.keep && animatesLayout;
+  const speeds = React.useMemo(() => getAnimationSpeeds(messages), [messages]);
 
   const hasVisibleMessages = visibleMessages.length > 0;
 
@@ -572,60 +726,96 @@ function RouteComponent() {
     };
   }, [hasVisibleMessages, search.keep]);
 
-  React.useEffect(() => {
-    if (!containerRef.current) return;
+  // The list is anchored to the bottom (right when horizontal), so appending a row makes every
+  // older row jump by its size. Offset the list back by that jump, then transition it to rest.
+  React.useLayoutEffect(() => {
+    const list = listRef.current;
+    if (!list) return;
+    const horizontal = search.orientation === 'horizontal';
+    // Measured from the new rows themselves rather than a stored position, so a late image load
+    // that resized an older row is not replayed as a shift.
+    const endOf = (el: HTMLElement) =>
+      horizontal ? el.offsetLeft + el.offsetWidth : el.offsetTop + el.offsetHeight;
 
-    if (search.orientation === 'horizontal') {
-      containerRef.current.scrollLeft = containerRef.current.scrollWidth;
-    } else {
-      containerRef.current.scrollTop = containerRef.current.scrollHeight;
-    }
-  }, [visibleMessages, search.orientation]);
+    const prevId = lastIdRef.current;
+    const last = list.lastElementChild as HTMLElement | null;
+    lastIdRef.current = last?.dataset.msgId ?? null;
+    if (!prevId || !last || prevId === lastIdRef.current || !animatesLayout) return;
 
+    const prevEl = list.querySelector<HTMLElement>(`[data-msg-id="${CSS.escape(prevId)}"]`);
+    if (!prevEl) return;
+    const shift = endOf(last) - endOf(prevEl);
+    if (shift <= 0) return;
+
+    // Carry over what is left of a shift that is still running so back-to-back messages don't jump.
+    const running = new DOMMatrixReadOnly(getComputedStyle(list).transform);
+    const start = shift + (horizontal ? running.m41 : running.m42);
+    list.style.transition = 'none';
+    list.style.transform = horizontal ? `translateX(${start}px)` : `translateY(${start}px)`;
+    void list.offsetWidth;
+    const shiftMs = Math.round(SHIFT_MS * (speeds.get(lastIdRef.current ?? '') ?? 1));
+    list.style.transition = `transform ${shiftMs}ms cubic-bezier(0.22, 1, 0.36, 1)`;
+    list.style.transform = '';
+  });
+
+  const horizontal = search.orientation === 'horizontal';
+
+  // Rows overflow toward the start edge, which is never scrollable, so clip instead of scroll:
+  // a scrollable box would flash a scrollbar while the list is offset during the shift.
   return (
     <div
-      ref={containerRef}
-      className={`flex ${search.orientation === 'horizontal' ? 'flex-row justify-end items-center overflow-hidden min-w-full h-screen p-2 space-x-3' : 'flex-col justify-end h-screen w-full overflow-y-auto overflow-x-hidden p-2.5 space-y-2'} text-white rounded-md`}
+      className={`flex ${horizontal ? 'flex-row justify-end items-center min-w-full h-screen p-2' : 'flex-col justify-end h-screen w-full p-2.5'} overflow-clip text-white rounded-md`}
       style={{
         fontSize: `${search.fontSize}px`,
         fontFamily: FONT_STACKS[search.font],
         backgroundColor: search.background ? `rgba(0, 0, 0, ${search.bgOpacity})` : 'transparent',
       }}
     >
-      {visibleMessages.map((msg) => (
-        <MessageRow
-          key={msg.id}
-          msg={msg}
-          layout={search.layout}
-          animation={search.animation}
-          orientation={search.orientation}
-          showTimestamp={Boolean(search.timestamp)}
-          showPlatformIndicator={showPlatformIndicator}
-          platformDisplay={search.platformDisplay}
-          twitchBadgeMap={twitchBadgeMap}
-          kickSubBadges={kickSubBadges}
-          sevenTvEmoteMap={sevenTvEmoteMap}
-          showBadges={Boolean(search.badges)}
-          hasBackground={Boolean(search.background)}
-          itemBackground={Boolean(search.itemBackground)}
-          bgOpacity={search.bgOpacity}
-          platformAccent={Boolean(search.platformAccent)}
-          boldUsernames={Boolean(search.boldUsernames)}
-          boldMessages={Boolean(search.boldMessages)}
-        />
-      ))}
+      <div
+        ref={listRef}
+        className={`flex ${horizontal ? 'flex-row items-center space-x-3' : 'flex-col space-y-2'}`}
+      >
+        {visibleMessages.map((msg) => (
+          <MessageRow
+            key={msg.id}
+            msg={msg}
+            exiting={fadeOut && now - getReceivedAtMs(msg) >= TTL_MS - EXIT_MS}
+            speed={speeds.get(msg.id) ?? 1}
+            layout={search.layout}
+            animation={search.animation}
+            orientation={search.orientation}
+            showTimestamp={Boolean(search.timestamp)}
+            showPlatformIndicator={showPlatformIndicator}
+            platformDisplay={search.platformDisplay}
+            twitchBadgeMap={twitchBadgeMap}
+            kickSubBadges={kickSubBadges}
+            sevenTvEmoteMap={sevenTvEmoteMap}
+            showBadges={Boolean(search.badges)}
+            hasBackground={Boolean(search.background)}
+            itemBackground={Boolean(search.itemBackground)}
+            bgOpacity={search.bgOpacity}
+            platformAccent={Boolean(search.platformAccent)}
+            boldUsernames={Boolean(search.boldUsernames)}
+            boldMessages={Boolean(search.boldMessages)}
+            highlight={getHighlightKind(msg, channels, highlights)}
+            showReply={highlights.has('reply')}
+          />
+        ))}
+      </div>
     </div>
   );
 }
 
 type MessageRowProps = {
   msg: ChatMessagesType;
+  exiting: boolean;
+  speed: number;
   layout: LayoutChoice;
   animation: AnimationChoice;
   orientation: 'vertical' | 'horizontal';
   showTimestamp: boolean;
   showPlatformIndicator: boolean;
-  platformDisplay: 'name' | 'icon';
+  platformDisplay: 'name' | 'icon' | 'none';
   twitchBadgeMap: Map<string, string> | null | undefined;
   kickSubBadges: {
     months?: number;
@@ -639,10 +829,14 @@ type MessageRowProps = {
   platformAccent: boolean;
   boldUsernames: boolean;
   boldMessages: boolean;
+  highlight: HighlightKind | null;
+  showReply: boolean;
 };
 
 const MessageRow = React.memo(function MessageRow({
   msg,
+  exiting,
+  speed,
   layout,
   animation,
   orientation,
@@ -659,9 +853,15 @@ const MessageRow = React.memo(function MessageRow({
   platformAccent,
   boldUsernames,
   boldMessages,
+  highlight,
+  showReply,
 }: MessageRowProps) {
+  const t = useT();
+  // Frozen at mount: a moderator deleting the previous message would otherwise change this row's
+  // speed mid-animation and make it jump (or un-type letters in typing mode).
+  const [mountSpeed] = React.useState(speed);
   const classes = LAYOUT_CLASSES[layout];
-  const animClass = ANIMATION_CLASSES[animation](orientation);
+  const animClass = exiting ? 'animate-chat-fade-out' : ANIMATION_CLASSES[animation](orientation);
   const messageAnimClass = ANIMATION_MESSAGE_CLASSES[animation];
   const compactSize = layout === 'compact' ? '0.875em' : undefined;
   const isInlineOrCompact = layout === 'inline' || layout === 'compact';
@@ -672,13 +872,28 @@ const MessageRow = React.memo(function MessageRow({
     ? { backgroundColor: `rgba(0, 0, 0, ${bgOpacity})` }
     : undefined;
   // Card and item-background boxes already have horizontal padding; plain rows need room for the stripe.
-  const wrapperStyle: React.CSSProperties | undefined = platformAccent
-    ? {
-        ...itemBgStyle,
-        borderLeft: `2px solid ${PLATFORM_COLORS[msg.platform]}`,
-        paddingLeft: itemBackground || layout === 'card' ? undefined : '0.5em',
-      }
-    : itemBgStyle;
+  const boxed = itemBackground || layout === 'card';
+  const [highlightFrom, highlightTo] = highlight
+    ? getHighlightColors(highlight, msg.announcementColor)
+    : [];
+  let wrapperStyle: React.CSSProperties | undefined = itemBgStyle;
+  if (highlightFrom && highlightTo) {
+    // A solid bar plus a tint that fades out to the right: visible at a glance, but the text on
+    // top keeps the contrast every other row has. The bar takes the platform stripe's place.
+    wrapperStyle = {
+      ...itemBgStyle,
+      backgroundImage: `linear-gradient(${highlightFrom}, ${highlightTo}), linear-gradient(90deg, ${highlightFrom}29, ${highlightTo}0a)`,
+      backgroundSize: '3px 100%, 100% 100%',
+      backgroundRepeat: 'no-repeat',
+      ...(boxed ? {} : { borderRadius: '0.375em', padding: '0.25em 0.5em 0.25em 0.75em' }),
+    };
+  } else if (platformAccent) {
+    wrapperStyle = {
+      ...itemBgStyle,
+      borderLeft: `2px solid ${PLATFORM_COLORS[msg.platform]}`,
+      paddingLeft: boxed ? undefined : '0.5em',
+    };
+  }
   const accessibleColor = React.useMemo(
     () => getAccessibleColor(msg.color, true) || msg.color || 'unset',
     [msg.color],
@@ -708,6 +923,48 @@ const MessageRow = React.memo(function MessageRow({
   const parsedContent = React.useMemo(
     () => render7tvEmotes(parseEmotes(msg.message, msg.platform, msg.emotes), sevenTvEmoteMap),
     [msg.message, msg.platform, msg.emotes, sevenTvEmoteMap],
+  );
+  const replyTo = showReply ? msg.replyTo : undefined;
+  const replyContent = React.useMemo(
+    () => (replyTo ? render7tvEmotes(parseEmotes(replyTo.message, msg.platform), sevenTvEmoteMap) : []),
+    [replyTo, msg.platform, sevenTvEmoteMap],
+  );
+
+  const label =
+    highlight === 'announcement'
+      ? { icon: <MegaphoneIcon />, text: t('chatWidget.announcement') }
+      : highlight === 'firstMessage'
+        ? { icon: <SparkleIcon />, text: t('chatWidget.firstMessage') }
+        : null;
+  const headerNode = (label || replyTo) && (
+    <div
+      className={`${classes.header} text-[0.75em] leading-snug select-none`}
+      style={{ textShadow: shadowStyle }}
+    >
+      {label && (
+        <div
+          className="flex items-center gap-1 font-semibold"
+          style={{ color: getAccessibleColor(highlightFrom, true) }}
+        >
+          {label.icon}
+          {label.text}
+        </div>
+      )}
+      {replyTo && (
+        // A shrink-to-fit horizontal row has no width to truncate against, so it gets a cap.
+        <div
+          className="flex min-w-0 items-center gap-1 text-white/60"
+          style={{ maxWidth: orientation === 'horizontal' ? '24em' : undefined }}
+        >
+          <ReplyIcon />
+          <span className="truncate">
+            <span className="font-semibold">@{replyTo.user}</span>
+            {replyTo.message && ': '}
+            {replyContent}
+          </span>
+        </div>
+      )}
+    </div>
   );
 
   const badgesNode = showBadges && msg.badges && msg.badges.length > 0 && (
@@ -766,15 +1023,21 @@ const MessageRow = React.memo(function MessageRow({
   const messageNode = (
     <span className={`${classes.message} ${messageAnimClass}`} style={messageStyle}>
       {layout === 'inline' || layout === 'compact' ? ' ' : null}
-      {parsedContent}
+      {animation === 'typing' ? (
+        <TypedContent nodes={parsedContent} speed={mountSpeed} />
+      ) : (
+        parsedContent
+      )}
     </span>
   );
 
   return (
     <div
+      data-msg-id={msg.id}
       className={`${classes.wrapper} ${itemBgClass} ${animClass} transform-gpu ${orientation === 'horizontal' ? 'flex-shrink-0' : ''}`}
-      style={wrapperStyle}
+      style={{ ...wrapperStyle, '--chat-speed': mountSpeed } as React.CSSProperties}
     >
+      {headerNode}
       {isInlineOrCompact ? (
         <>
           <div className={classes.meta}>

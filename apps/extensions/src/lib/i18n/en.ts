@@ -13,6 +13,7 @@ export const en = {
       'Paste this URL as a Browser Source in OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio, or any software that supports browser sources',
     themeToggle: 'Toggle color theme',
     languageToggle: 'Switch language',
+    moreInfo: 'More info',
   },
   home: {
     heroBadge: '100% Free · No Login Required · Instant Browser Source Setup',
@@ -59,7 +60,7 @@ export const en = {
     intro:
       'A customizable multi-chat widget and stream chat box overlay merging Twitch and Kick into a single feed with 7TV emotes and custom themes.',
     platforms: 'Platforms',
-    both: 'Both (Twitch & Kick)',
+    both: 'Both',
     twitch: 'Twitch',
     kick: 'Kick',
     twitchChannel: 'Twitch Channel',
@@ -67,7 +68,27 @@ export const en = {
     platformIndicator: 'Platform Indicator',
     platformName: 'Platform Name',
     platformIcon: 'Platform Icon',
-    styleSection: 'Style & Appearance (Customizable Stream Overlays)',
+    platformHidden: 'Hide Platform',
+    sectionChannel: 'Channel',
+    sectionAppearance: 'Appearance',
+    sectionMessages: 'Messages',
+    platformsTip:
+      'Pick which platforms to pull chat from. Select both to merge Twitch and Kick messages into a single feed.',
+    channelTip:
+      "Just type the channel name, not the full link. For twitch.tv/senchabot, that's senchabot.",
+    platformIndicatorTip:
+      'When both platforms are on, shows where each message came from: the platform name, its icon, or nothing.',
+    orientationTip:
+      'Vertical stacks messages on top of each other, like a classic chat box. Horizontal runs them side by side, great for a strip along the bottom of your screen.',
+    darkBackgroundTip:
+      'Adds a semi-transparent black background behind the widget. Makes text easier to read on bright scenes.',
+    sevenTvTip:
+      'Shows the custom and global emotes your channel added on 7TV as images. When off, they show up as plain text.',
+    badgesTip: 'Shows broadcaster, moderator, VIP and subscriber badges next to usernames.',
+    keepMessagesTip:
+      'Messages normally disappear after 30 seconds. Turn this on to keep them on screen, with new ones pushing older ones up.',
+    animationTip:
+      'Sets how new messages enter the screen. Animations get shorter automatically as chat speeds up.',
     font: 'Font',
     fontSystem: 'System Default',
     messageLayout: 'Message Layout',
@@ -77,10 +98,12 @@ export const en = {
     layoutCompact: 'Compact (Twitch-like)',
     newMessageAnimation: 'New Message Animation',
     animSlide: 'Slide from right + fade',
+    animSmoothSlide: 'Smooth slide from right',
     animPop: 'Pop / scale-in',
     animBounce: 'Bounce in',
     animStagger: 'Stagger (meta first, then message)',
     animFade: 'Fade in',
+    animTyping: 'Typewriter',
     animNone: 'No animation',
     orientation: 'Orientation',
     vertical: 'Vertical',
@@ -98,8 +121,23 @@ export const en = {
     platformAccentHint: 'A Twitch purple or Kick green stripe on the left shows where each message came from.',
     boldUsernames: 'Bold Usernames',
     boldMessages: 'Bold Messages',
+    highlights: 'Highlights',
+    highlightsTip:
+      "Pick which messages get a thin colored bar on stream. Replies show who they're answering, and the Twitch-tagged ones only exist on Twitch.",
+    highlightMention: 'Mentions',
+    highlightReply: 'Reply context',
+    highlightFirstMessage: 'First-time chatters',
+    highlightAnnouncement: 'Announcements',
+    highlightHighlighted: 'Highlight My Message',
+    highlightsAll: 'All',
+    highlightsNone: 'Off',
+    announcement: 'Announcement',
+    firstMessage: 'First Time Chat',
     previewTitle: 'Widget Preview (Chat Box)',
     previewIframeTitle: 'Chat Widget Preview',
+    previewSpeed: 'Preview Chat Speed',
+    previewSpeedValue: '{rate} msg/s',
+    previewSpeedHint: 'Only changes the preview. Your widget URL stays the same.',
     previewHint: 'Live chat preview with animated message stream.',
     guideTitle: 'Streaming Software Chat Box Setup (OBS, Streamlabs, XSplit, etc.)',
     guideStep1:
@@ -108,6 +146,10 @@ export const en = {
     guideStep3:
       '3. Set width and height to match your desired chat box overlay dimensions (e.g. 400×600 for vertical).',
     browserSourceHintSize: ' (recommended size: 400×600 for chat box).',
+    widgetUrlTip:
+      'Already made a widget? Paste its URL here to load your settings and change what you need.',
+    widgetUrlPlaceholder: 'Paste an existing widget URL to edit it',
+    widgetUrlInvalid: "This isn't a Chat Box widget URL.",
     faq1Q: 'Do I need to sign in to Twitch or Kick to use the chat box?',
     faq1A:
       'No login is required. Chat Box listens anonymously to public chat streams for both platforms.',
