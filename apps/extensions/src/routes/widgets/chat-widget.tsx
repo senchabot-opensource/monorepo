@@ -14,10 +14,23 @@ import { getAccessibleColor } from '#/features/widgets/chat-widget/color-utils';
 const TTL_MS = 30_000;
 // Must cover the 1s `now` tick, otherwise a row can expire without ever getting its fade-out class.
 const EXIT_MS = 1_000;
-const SHIFT_TRANSITION = 'transform 400ms cubic-bezier(0.22, 1, 0.36, 1)';
+const SHIFT_MS = 400;
+// Busy chat speeds animations up so each one finishes before the next message lands: full speed
+// when messages are SPEED_BASE_GAP_MS or more apart, scaled down with the gap, never below MIN_SPEED.
+const SPEED_BASE_GAP_MS = 500;
+const MIN_SPEED = 0.35;
 
 const getReceivedAtMs = (msg: ChatMessagesType) =>
   msg.receivedAt?.getTime() ?? msg.timestamp.getTime();
+
+const getAnimationSpeeds = (messages: ChatMessagesType[]) => {
+  const speeds = new Map<string, number>();
+  messages.forEach((msg, i) => {
+    const gap = i > 0 ? getReceivedAtMs(msg) - getReceivedAtMs(messages[i - 1]) : Infinity;
+    speeds.set(msg.id, Math.min(1, Math.max(MIN_SPEED, gap / SPEED_BASE_GAP_MS)));
+  });
+  return speeds;
+};
 
 type TwitchEmoteRange = { id: string; start: number; end: number };
 
@@ -164,8 +177,9 @@ const searchSchema = z.object({
     .default('inter'),
   layout: z.enum(['inline', 'stacked', 'card', 'compact']).optional().default('inline'),
   mock: z.coerce.boolean().optional(),
+  mockRate: z.coerce.number().min(0.1).max(50).optional(),
   animation: z
-    .enum(['slide', 'pop', 'bounce', 'stagger', 'fade', 'typing', 'none'])
+    .enum(['slide', 'smooth', 'pop', 'bounce', 'stagger', 'fade', 'typing', 'none'])
     .optional()
     .default('slide'),
 });
@@ -227,6 +241,7 @@ const ANIMATION_CLASSES: Record<
   (orientation: 'vertical' | 'horizontal') => string
 > = {
   slide: () => 'animate-chat-slide-in',
+  smooth: () => 'animate-chat-smooth-slide-in',
   pop: () => 'animate-chat-pop-in',
   bounce: () => 'animate-chat-bounce-in',
   stagger: () => 'animate-chat-stagger-meta',
@@ -237,6 +252,7 @@ const ANIMATION_CLASSES: Record<
 
 const ANIMATION_MESSAGE_CLASSES: Record<AnimationChoice, string> = {
   slide: '',
+  smooth: '',
   pop: '',
   bounce: '',
   stagger: 'animate-chat-stagger-message',
@@ -258,7 +274,7 @@ const splitGraphemes = (text: string): string[] =>
       )
     : Array.from(text);
 
-function TypedContent({ nodes }: { nodes: React.ReactNode[] }) {
+function TypedContent({ nodes, speed }: { nodes: React.ReactNode[]; speed: number }) {
   const units = React.useMemo(
     () =>
       nodes.flatMap((node) => {
@@ -274,14 +290,15 @@ function TypedContent({ nodes }: { nodes: React.ReactNode[] }) {
   React.useEffect(() => {
     startRef.current ??= performance.now();
     const start = startRef.current;
-    const msPerUnit = Math.min(TYPING_MS_PER_CHAR, TYPING_MAX_MS / Math.max(units.length, 1));
+    const msPerUnit =
+      speed * Math.min(TYPING_MS_PER_CHAR, TYPING_MAX_MS / Math.max(units.length, 1));
     const id = window.setInterval(() => {
       const next = Math.min(units.length, Math.ceil((performance.now() - start) / msPerUnit));
       setCount(next);
       if (next >= units.length) window.clearInterval(id);
     }, 30);
     return () => window.clearInterval(id);
-  }, [units.length]);
+  }, [units.length, speed]);
 
   if (count >= units.length) return <>{nodes}</>;
 
@@ -559,7 +576,7 @@ function RouteComponent() {
     };
 
     const firstTimer = setTimeout(insertNextMock, 400);
-    const interval = setInterval(insertNextMock, 3000);
+    const interval = setInterval(insertNextMock, search.mockRate ? 1000 / search.mockRate : 3000);
 
     return () => {
       clearTimeout(firstTimer);
@@ -568,7 +585,7 @@ function RouteComponent() {
         chatMessagesCollection.delete(id);
       }
     };
-  }, [isMock]);
+  }, [isMock, search.mockRate]);
 
   const [now, setNow] = React.useState(() => Date.now());
   const listRef = React.useRef<HTMLDivElement>(null);
@@ -616,7 +633,11 @@ function RouteComponent() {
   const visibleMessages = search.keep
     ? messages
     : messages.filter((msg) => now - getReceivedAtMs(msg) < TTL_MS);
-  const fadeOut = !search.keep && search.animation !== 'none';
+  // `slide` is the original default and must look exactly as it always did, so the shift and
+  // fade-out only come with the other animations.
+  const animatesLayout = search.animation !== 'none' && search.animation !== 'slide';
+  const fadeOut = !search.keep && animatesLayout;
+  const speeds = React.useMemo(() => getAnimationSpeeds(messages), [messages]);
 
   const hasVisibleMessages = visibleMessages.length > 0;
 
@@ -649,7 +670,7 @@ function RouteComponent() {
     const prevId = lastIdRef.current;
     const last = list.lastElementChild as HTMLElement | null;
     lastIdRef.current = last?.dataset.msgId ?? null;
-    if (!prevId || !last || prevId === lastIdRef.current || search.animation === 'none') return;
+    if (!prevId || !last || prevId === lastIdRef.current || !animatesLayout) return;
 
     const prevEl = list.querySelector<HTMLElement>(`[data-msg-id="${CSS.escape(prevId)}"]`);
     if (!prevEl) return;
@@ -662,7 +683,8 @@ function RouteComponent() {
     list.style.transition = 'none';
     list.style.transform = horizontal ? `translateX(${start}px)` : `translateY(${start}px)`;
     void list.offsetWidth;
-    list.style.transition = SHIFT_TRANSITION;
+    const shiftMs = Math.round(SHIFT_MS * (speeds.get(lastIdRef.current ?? '') ?? 1));
+    list.style.transition = `transform ${shiftMs}ms cubic-bezier(0.22, 1, 0.36, 1)`;
     list.style.transform = '';
   });
 
@@ -688,6 +710,7 @@ function RouteComponent() {
             key={msg.id}
             msg={msg}
             exiting={fadeOut && now - getReceivedAtMs(msg) >= TTL_MS - EXIT_MS}
+            speed={speeds.get(msg.id) ?? 1}
             layout={search.layout}
             animation={search.animation}
             orientation={search.orientation}
@@ -714,6 +737,7 @@ function RouteComponent() {
 type MessageRowProps = {
   msg: ChatMessagesType;
   exiting: boolean;
+  speed: number;
   layout: LayoutChoice;
   animation: AnimationChoice;
   orientation: 'vertical' | 'horizontal';
@@ -738,6 +762,7 @@ type MessageRowProps = {
 const MessageRow = React.memo(function MessageRow({
   msg,
   exiting,
+  speed,
   layout,
   animation,
   orientation,
@@ -755,6 +780,9 @@ const MessageRow = React.memo(function MessageRow({
   boldUsernames,
   boldMessages,
 }: MessageRowProps) {
+  // Frozen at mount: a moderator deleting the previous message would otherwise change this row's
+  // speed mid-animation and make it jump (or un-type letters in typing mode).
+  const [mountSpeed] = React.useState(speed);
   const classes = LAYOUT_CLASSES[layout];
   const animClass = exiting ? 'animate-chat-fade-out' : ANIMATION_CLASSES[animation](orientation);
   const messageAnimClass = ANIMATION_MESSAGE_CLASSES[animation];
@@ -861,7 +889,11 @@ const MessageRow = React.memo(function MessageRow({
   const messageNode = (
     <span className={`${classes.message} ${messageAnimClass}`} style={messageStyle}>
       {layout === 'inline' || layout === 'compact' ? ' ' : null}
-      {animation === 'typing' ? <TypedContent nodes={parsedContent} /> : parsedContent}
+      {animation === 'typing' ? (
+        <TypedContent nodes={parsedContent} speed={mountSpeed} />
+      ) : (
+        parsedContent
+      )}
     </span>
   );
 
@@ -869,7 +901,7 @@ const MessageRow = React.memo(function MessageRow({
     <div
       data-msg-id={msg.id}
       className={`${classes.wrapper} ${itemBgClass} ${animClass} transform-gpu ${orientation === 'horizontal' ? 'flex-shrink-0' : ''}`}
-      style={wrapperStyle}
+      style={{ ...wrapperStyle, '--chat-speed': mountSpeed } as React.CSSProperties}
     >
       {isInlineOrCompact ? (
         <>
