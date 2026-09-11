@@ -147,6 +147,7 @@ const searchSchema = z.object({
   boldUsernames: z.coerce.boolean().optional(),
   boldMessages: z.coerce.boolean().optional(),
   bgOpacity: z.coerce.number().min(0).max(1).optional().default(0.5),
+  platformAccent: z.coerce.boolean().optional(),
   orientation: z.enum(['vertical', 'horizontal']).optional().default('vertical'),
   platformDisplay: z.enum(['name', 'icon']).optional().default('icon'),
   timestamp: z.coerce.boolean().optional(),
@@ -236,6 +237,11 @@ const ANIMATION_MESSAGE_CLASSES: Record<AnimationChoice, string> = {
   none: '',
 };
 
+const PLATFORM_COLORS: Record<'twitch' | 'kick', string> = {
+  twitch: '#9146FF',
+  kick: '#53FC18',
+};
+
 const GOOGLE_FONTS_LINK_ID = 'chat-widget-google-fonts';
 const GOOGLE_FONTS_PRECONNECT_ID = 'chat-widget-google-fonts-preconnect';
 
@@ -282,7 +288,7 @@ function TwitchIcon({ className, ...props }: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      className={`inline-block h-[1em] w-[1em] ${className ?? ''}`}
+      className={`inline-block h-[1.15em] w-[1.15em] ${className ?? ''}`}
       viewBox="0 0 24 24"
       {...props}
     >
@@ -300,7 +306,7 @@ function KickIcon({ className, ...props }: React.SVGProps<SVGSVGElement>) {
       role="img"
       viewBox="0 0 24 24"
       fill="currentColor"
-      className={`inline-block h-[1em] w-[1em] ${className ?? ''}`}
+      className={`inline-block h-[1.15em] w-[1.15em] ${className ?? ''}`}
       {...props}
     >
       <title>Kick</title>
@@ -603,6 +609,7 @@ function RouteComponent() {
           hasBackground={Boolean(search.background)}
           itemBackground={Boolean(search.itemBackground)}
           bgOpacity={search.bgOpacity}
+          platformAccent={Boolean(search.platformAccent)}
           boldUsernames={Boolean(search.boldUsernames)}
           boldMessages={Boolean(search.boldMessages)}
         />
@@ -629,6 +636,7 @@ type MessageRowProps = {
   hasBackground: boolean;
   itemBackground: boolean;
   bgOpacity: number;
+  platformAccent: boolean;
   boldUsernames: boolean;
   boldMessages: boolean;
 };
@@ -648,6 +656,7 @@ const MessageRow = React.memo(function MessageRow({
   hasBackground,
   itemBackground,
   bgOpacity,
+  platformAccent,
   boldUsernames,
   boldMessages,
 }: MessageRowProps) {
@@ -662,6 +671,14 @@ const MessageRow = React.memo(function MessageRow({
   const itemBgStyle: React.CSSProperties | undefined = itemBackground
     ? { backgroundColor: `rgba(0, 0, 0, ${bgOpacity})` }
     : undefined;
+  // Card and item-background boxes already have horizontal padding; plain rows need room for the stripe.
+  const wrapperStyle: React.CSSProperties | undefined = platformAccent
+    ? {
+        ...itemBgStyle,
+        borderLeft: `2px solid ${PLATFORM_COLORS[msg.platform]}`,
+        paddingLeft: itemBackground || layout === 'card' ? undefined : '0.5em',
+      }
+    : itemBgStyle;
   const accessibleColor = React.useMemo(
     () => getAccessibleColor(msg.color, true) || msg.color || 'unset',
     [msg.color],
@@ -756,7 +773,7 @@ const MessageRow = React.memo(function MessageRow({
   return (
     <div
       className={`${classes.wrapper} ${itemBgClass} ${animClass} transform-gpu ${orientation === 'horizontal' ? 'flex-shrink-0' : ''}`}
-      style={itemBgStyle}
+      style={wrapperStyle}
     >
       {isInlineOrCompact ? (
         <>
