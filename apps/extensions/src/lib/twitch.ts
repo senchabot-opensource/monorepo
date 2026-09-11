@@ -34,6 +34,54 @@ export function stripReplyMention(
   return { message: [...message].slice(shift).join(""), emotes: shifted || undefined };
 }
 
+export type IrcLine = {
+  tags: Record<string, string>;
+  source: string;
+  command: string;
+  params: string[];
+};
+
+// "[@tags] [:source] COMMAND [params] [:trailing]", matched from the start of the line. Viewers
+// write the trailing part, so it must never be searched for commands or another line.
+const IRC_LINE = /^(?:@(\S+) )?(?::(\S+) )?(\S+)((?: [^:\s]\S*)*)(?: :(.*))?$/;
+
+export function parseIrcLine(raw: string): IrcLine | null {
+  const match = raw.match(IRC_LINE);
+  if (!match) {
+    return null;
+  }
+
+  const [, tagsStr, source = "", command, middle, trailing] = match;
+  const params = middle.split(" ").filter(Boolean);
+  if (trailing !== undefined) {
+    params.push(trailing);
+  }
+  return { tags: parseTags(tagsStr), source, command, params };
+}
+
+export function parseTags(tagsStr?: string): Record<string, string> {
+  if (!tagsStr) {
+    return {};
+  }
+
+  const tags: Record<string, string> = {};
+  for (const tag of tagsStr.split(";")) {
+    const [key, value = ""] = tag.split("=");
+    if (!key) {
+      continue;
+    }
+
+    tags[key] = value
+      .replace(/\\s/g, " ")
+      .replace(/\\:/g, ";")
+      .replace(/\\\\/g, "\\")
+      .replace(/\\r/g, "\r")
+      .replace(/\\n/g, "\n");
+  }
+
+  return tags;
+}
+
 export class TwitchChat extends BaseChatClient {
   private readonly channel: string;
 
@@ -62,50 +110,50 @@ export class TwitchChat extends BaseChatClient {
       return;
     }
 
-    for (const message of event.data.split("\r\n")) {
-      if (!message) {
+    for (const raw of event.data.split("\r\n")) {
+      const line = parseIrcLine(raw);
+      if (!line) {
         continue;
       }
 
-      if (message.startsWith("PING")) {
-        this.send("PONG");
-        continue;
-      }
-
-      if (message.includes(" CLEARMSG ")) {
-        const targetId = this.parseClearmsg(message);
-        if (targetId) {
-          this.onDeleteMessageCallback(targetId);
+      switch (line.command) {
+        case "PING":
+          this.send("PONG");
+          break;
+        case "CLEARMSG": {
+          const targetId = line.tags["target-msg-id"];
+          if (targetId) {
+            this.onDeleteMessageCallback(targetId);
+          }
+          break;
         }
-        continue;
-      }
-
-      if (message.includes(" CLEARCHAT ")) {
-        const result = this.parseClearchat(message);
-        if (result) {
-          if (result.targetUserLower) {
-            this.onBanUserCallback(result.targetUserLower);
+        case "CLEARCHAT": {
+          // A timeout or ban names the user after the channel; without one the whole chat was cleared.
+          const targetUser = line.params[1];
+          if (targetUser) {
+            this.onBanUserCallback(targetUser.toLowerCase());
           } else {
             this.onClearAllCallback();
           }
+          break;
         }
-        continue;
+        case "PRIVMSG":
+          this.emit(this.parsePrivmsg(line));
+          break;
+        case "USERNOTICE":
+          this.emit(this.parseAnnouncement(line));
+          break;
       }
-
-      this.emit(this.parseAnnouncement(message) ?? this.parsePrivmsg(message));
     }
   }
 
-  private parsePrivmsg(rawMessage: string): ChatMessagesType | null {
-    const match = rawMessage.match(
-      /(?:@([^\s]+) )?:([^\s!]+)![^\s]+ PRIVMSG #[^\s]+ :(.+)/,
-    );
-    if (!match) {
+  private parsePrivmsg({ tags, source, params }: IrcLine): ChatMessagesType | null {
+    const username = source.split("!")[0];
+    const messageText = params[1];
+    if (messageText === undefined) {
       return null;
     }
 
-    const [, tagsStr, username, messageText] = match;
-    const tags = this.parseTags(tagsStr);
     const message = this.toMessage(tags, username, messageText);
     if (!message) {
       return null;
@@ -130,17 +178,12 @@ export class TwitchChat extends BaseChatClient {
 
   // Announcements (/announce) arrive as USERNOTICE, not PRIVMSG. Other USERNOTICEs (subs, raids)
   // are left out on purpose.
-  private parseAnnouncement(rawMessage: string): ChatMessagesType | null {
-    const match = rawMessage.match(/^@(\S+) :tmi\.twitch\.tv USERNOTICE #\S+ :(.+)/);
-    if (!match) {
+  private parseAnnouncement({ tags, params }: IrcLine): ChatMessagesType | null {
+    const text = params[1];
+    if (tags["msg-id"] !== "announcement" || text === undefined) {
       return null;
     }
-
-    const tags = this.parseTags(match[1]);
-    if (tags["msg-id"] !== "announcement") {
-      return null;
-    }
-    const message = this.toMessage(tags, tags.login ?? "", match[2]);
+    const message = this.toMessage(tags, tags.login ?? "", text);
     if (!message) {
       return null;
     }
@@ -182,52 +225,6 @@ export class TwitchChat extends BaseChatClient {
       badges,
       emotes: tags.emotes || undefined,
     };
-  }
-
-  private parseClearmsg(rawMessage: string): string | null {
-    const tagsMatch = rawMessage.match(/^@([^\s]+)\s/);
-    if (!tagsMatch) {
-      return null;
-    }
-    const tags = this.parseTags(tagsMatch[1]);
-    const targetId = tags["target-msg-id"];
-    return targetId || null;
-  }
-
-  private parseClearchat(
-    rawMessage: string,
-  ): { targetUserLower: string | null } | null {
-    if (!/CLEARCHAT\s+#?[^\s]+/i.test(rawMessage)) {
-      return null;
-    }
-
-    const tagsMatch = rawMessage.match(/^@([^\s]+)\s/);
-    const tags = tagsMatch ? this.parseTags(tagsMatch[1]) : {};
-    const targetUser = tags["login"] || "";
-    return { targetUserLower: targetUser ? targetUser.toLowerCase() : null };
-  }
-
-  private parseTags(tagsStr?: string): Record<string, string> {
-    if (!tagsStr) {
-      return {};
-    }
-
-    const tags: Record<string, string> = {};
-    for (const tag of tagsStr.split(";")) {
-      const [key, value = ""] = tag.split("=");
-      if (!key) {
-        continue;
-      }
-
-      tags[key] = value
-        .replace(/\\s/g, " ")
-        .replace(/\\:/g, ";")
-        .replace(/\\\\/g, "\\")
-        .replace(/\\r/g, "\r")
-        .replace(/\\n/g, "\n");
-    }
-
-    return tags;
   }
 }
 
