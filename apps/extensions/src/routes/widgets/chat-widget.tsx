@@ -168,7 +168,7 @@ const searchSchema = z.object({
   bgOpacity: z.coerce.number().min(0).max(1).optional().default(0.5),
   platformAccent: z.coerce.boolean().optional(),
   orientation: z.enum(['vertical', 'horizontal']).optional().default('vertical'),
-  platformDisplay: z.enum(['name', 'icon']).optional().default('icon'),
+  platformDisplay: z.enum(['name', 'icon', 'none']).optional().default('icon'),
   timestamp: z.coerce.boolean().optional(),
   keep: z.coerce.boolean().optional(),
   font: z
@@ -411,12 +411,7 @@ function RouteComponent() {
 
   const isMock = Boolean(search.mock || (!search.twitch && !kick));
 
-  const showPlatformIndicator = Boolean(
-    (search.twitch && search.kick) ||
-      isMock ||
-      search.platformDisplay === 'name' ||
-      search.platformDisplay === 'icon'
-  );
+  const showPlatformIndicator = search.platformDisplay !== 'none';
 
   const sevenTvEmoteMap = use7tvEmotes(search.sevenTv ? search.twitch : null);
 
@@ -743,7 +738,7 @@ type MessageRowProps = {
   orientation: 'vertical' | 'horizontal';
   showTimestamp: boolean;
   showPlatformIndicator: boolean;
-  platformDisplay: 'name' | 'icon';
+  platformDisplay: 'name' | 'icon' | 'none';
   twitchBadgeMap: Map<string, string> | null | undefined;
   kickSubBadges: {
     months?: number;

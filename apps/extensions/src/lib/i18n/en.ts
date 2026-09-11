@@ -67,6 +67,7 @@ export const en = {
     platformIndicator: 'Platform Indicator',
     platformName: 'Platform Name',
     platformIcon: 'Platform Icon',
+    platformHidden: 'Hide Platform',
     styleSection: 'Style & Appearance (Customizable Stream Overlays)',
     font: 'Font',
     fontSystem: 'System Default',

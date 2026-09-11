@@ -125,7 +125,7 @@ function ChatWidgetSetup() {
   const [platforms, setPlatforms] = useState<"both" | "twitch" | "kick">(
     "both",
   );
-  const [platformDisplay, setPlatformDisplay] = useState<"name" | "icon">(
+  const [platformDisplay, setPlatformDisplay] = useState<"name" | "icon" | "none">(
     "icon",
   );
   const [sevenTv, setSevenTv] = useState(true);
@@ -372,11 +372,12 @@ function ChatWidgetSetup() {
                   <select
                     value={platformDisplay}
                     onChange={(e) =>
-                      setPlatformDisplay(e.target.value as "name" | "icon")
+                      setPlatformDisplay(e.target.value as "name" | "icon" | "none")
                     }
                     className="w-full rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2.5 text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500">
                     <option value="name">{t("chatWidget.platformName")}</option>
                     <option value="icon">{t("chatWidget.platformIcon")}</option>
+                    <option value="none">{t("chatWidget.platformHidden")}</option>
                   </select>
                 </div>
               )}

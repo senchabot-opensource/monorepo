@@ -69,6 +69,7 @@ export const tr: typeof en = {
     platformIndicator: 'Platform Göstergesi',
     platformName: 'Platform Adı',
     platformIcon: 'Platform Simgesi',
+    platformHidden: 'Platformu Gizle',
     styleSection: 'Stil ve Görünüm (Özelleştirilebilir Yayın Kaplamaları)',
     font: 'Yazı Tipi',
     fontSystem: 'Sistem Varsayılanı',
