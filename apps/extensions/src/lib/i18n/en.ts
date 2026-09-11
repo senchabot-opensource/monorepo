@@ -13,6 +13,7 @@ export const en = {
       'Paste this URL as a Browser Source in OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio, or any software that supports browser sources',
     themeToggle: 'Toggle color theme',
     languageToggle: 'Switch language',
+    moreInfo: 'More info',
   },
   home: {
     heroBadge: '100% Free · No Login Required · Instant Browser Source Setup',
@@ -59,7 +60,7 @@ export const en = {
     intro:
       'A customizable multi-chat widget and stream chat box overlay merging Twitch and Kick into a single feed with 7TV emotes and custom themes.',
     platforms: 'Platforms',
-    both: 'Both (Twitch & Kick)',
+    both: 'Both',
     twitch: 'Twitch',
     kick: 'Kick',
     twitchChannel: 'Twitch Channel',
@@ -68,7 +69,26 @@ export const en = {
     platformName: 'Platform Name',
     platformIcon: 'Platform Icon',
     platformHidden: 'Hide Platform',
-    styleSection: 'Style & Appearance (Customizable Stream Overlays)',
+    sectionChannel: 'Channel',
+    sectionAppearance: 'Appearance',
+    sectionMessages: 'Messages',
+    platformsTip:
+      'Pick which platforms to pull chat from. Select both to merge Twitch and Kick messages into a single feed.',
+    channelTip:
+      "Just type the channel name, not the full link. For twitch.tv/senchabot, that's senchabot.",
+    platformIndicatorTip:
+      'When both platforms are on, shows where each message came from: the platform name, its icon, or nothing.',
+    orientationTip:
+      'Vertical stacks messages on top of each other, like a classic chat box. Horizontal runs them side by side, great for a strip along the bottom of your screen.',
+    darkBackgroundTip:
+      'Adds a semi-transparent black background behind the widget. Makes text easier to read on bright scenes.',
+    sevenTvTip:
+      'Shows the custom and global emotes your channel added on 7TV as images. When off, they show up as plain text.',
+    badgesTip: 'Shows broadcaster, moderator, VIP and subscriber badges next to usernames.',
+    keepMessagesTip:
+      'Messages normally disappear after 30 seconds. Turn this on to keep them on screen, with new ones pushing older ones up.',
+    animationTip:
+      'Sets how new messages enter the screen. Animations get shorter automatically as chat speeds up.',
     font: 'Font',
     fontSystem: 'System Default',
     messageLayout: 'Message Layout',
