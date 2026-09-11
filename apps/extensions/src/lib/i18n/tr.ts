@@ -96,6 +96,9 @@ export const tr: typeof en = {
     backgroundOpacity: 'Arka Plan Saydamlığı',
     messageBackgroundBox: 'Mesaj Arka Plan Kutusu',
     messageBackgroundHint: 'Her mesaj kendi çerçeveli arka plan kutusunu alır.',
+    platformAccent: 'Platform Renk Şeridi',
+    platformAccentHint:
+      'Her mesajın solundaki Twitch moru ya da Kick yeşili şerit, mesajın nereden geldiğini gösterir.',
     boldUsernames: 'Kalın Kullanıcı Adları',
     boldMessages: 'Kalın Mesajlar',
     previewTitle: 'Widget Önizleme (Sohbet Kutusu)',

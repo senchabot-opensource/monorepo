@@ -112,6 +112,7 @@ function ChatWidgetSetup() {
   const [fontSize, setFontSize] = useState("18");
   const [hasBackground, setHasBackground] = useState(false);
   const [itemBackground, setItemBackground] = useState(false);
+  const [platformAccent, setPlatformAccent] = useState(false);
   const [boldUsernames, setBoldUsernames] = useState(false);
   const [boldMessages, setBoldMessages] = useState(false);
   const [backgroundOpacity, setBackgroundOpacity] = useState("0.5");
@@ -162,6 +163,7 @@ function ChatWidgetSetup() {
       if (backgroundOpacity !== "0.5") params.append("bgOpacity", backgroundOpacity);
     }
     if (itemBackground) params.append("itemBackground", "true");
+    if (platformAccent) params.append("platformAccent", "true");
     if (boldUsernames) params.append("boldUsernames", "true");
     if (boldMessages) params.append("boldMessages", "true");
     if (orientation !== "vertical") params.append("orientation", orientation);
@@ -186,6 +188,7 @@ function ChatWidgetSetup() {
     hasBackground,
     backgroundOpacity,
     itemBackground,
+    platformAccent,
     boldUsernames,
     boldMessages,
     orientation,
@@ -213,6 +216,7 @@ function ChatWidgetSetup() {
       if (backgroundOpacity !== "0.5") params.append("bgOpacity", backgroundOpacity);
     }
     if (itemBackground) params.append("itemBackground", "true");
+    if (platformAccent) params.append("platformAccent", "true");
     if (boldUsernames) params.append("boldUsernames", "true");
     if (boldMessages) params.append("boldMessages", "true");
     if (orientation !== "vertical") params.append("orientation", orientation);
@@ -235,6 +239,7 @@ function ChatWidgetSetup() {
     hasBackground,
     backgroundOpacity,
     itemBackground,
+    platformAccent,
     boldUsernames,
     boldMessages,
     orientation,
@@ -578,6 +583,21 @@ function ChatWidgetSetup() {
                 </label>
                 <p className="mt-1 text-xs text-zinc-500">
                   {t("chatWidget.messageBackgroundHint")}
+                </p>
+              </div>
+
+              <div>
+                <label className="flex items-center space-x-2 text-zinc-900 cursor-pointer dark:text-white">
+                  <input
+                    type="checkbox"
+                    checked={platformAccent}
+                    onChange={(e) => setPlatformAccent(e.target.checked)}
+                    className="rounded border-zinc-300 bg-zinc-100 text-green-500 focus:ring-green-500 dark:border-zinc-700 dark:bg-zinc-800"
+                  />
+                  <span className="text-sm">{t("chatWidget.platformAccent")}</span>
+                </label>
+                <p className="mt-1 text-xs text-zinc-500">
+                  {t("chatWidget.platformAccentHint")}
                 </p>
               </div>
 
