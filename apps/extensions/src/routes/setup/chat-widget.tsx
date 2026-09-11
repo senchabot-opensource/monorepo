@@ -105,6 +105,9 @@ export const Route = createFileRoute("/setup/chat-widget")({
   component: ChatWidgetSetup,
 });
 
+// Messages per second for the mock preview only; index 0 keeps the widget's default mock pace.
+const PREVIEW_RATES = [0.3, 0.5, 1, 2, 3, 5, 10, 15, 20];
+
 function ChatWidgetSetup() {
   const { locale, t } = useI18n();
   const [twitchChannel, setTwitchChannel] = useState("");
@@ -136,8 +139,9 @@ function ChatWidgetSetup() {
     "inline" | "stacked" | "card" | "compact"
   >("inline");
   const [animation, setAnimation] = useState<
-    "slide" | "pop" | "bounce" | "stagger" | "fade" | "typing" | "none"
+    "slide" | "smooth" | "pop" | "bounce" | "stagger" | "fade" | "typing" | "none"
   >("slide");
+  const [previewRateIndex, setPreviewRateIndex] = useState(0);
   const [copied, setCopied] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -228,6 +232,8 @@ function ChatWidgetSetup() {
     if (layout !== "inline") params.append("layout", layout);
     if (animation !== "slide") params.append("animation", animation);
     params.append("mock", "true");
+    if (previewRateIndex > 0)
+      params.append("mockRate", String(PREVIEW_RATES[previewRateIndex]));
     params.append("lang", locale);
     return `${window.location.origin}/widgets/chat-widget?${params.toString()}`;
   }, [
@@ -250,6 +256,7 @@ function ChatWidgetSetup() {
     font,
     layout,
     animation,
+    previewRateIndex,
     locale,
   ]);
 
@@ -439,6 +446,7 @@ function ChatWidgetSetup() {
                         setAnimation(
                           e.target.value as
                             | "slide"
+                            | "smooth"
                             | "pop"
                             | "bounce"
                             | "stagger"
@@ -449,6 +457,7 @@ function ChatWidgetSetup() {
                       }
                       className="w-full rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2.5 text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500">
                       <option value="slide">{t("chatWidget.animSlide")}</option>
+                      <option value="smooth">{t("chatWidget.animSmoothSlide")}</option>
                       <option value="pop">{t("chatWidget.animPop")}</option>
                       <option value="bounce">{t("chatWidget.animBounce")}</option>
                       <option value="stagger">
@@ -671,6 +680,34 @@ function ChatWidgetSetup() {
               <p className="mt-2 text-center text-xs text-zinc-500">
                 {t("chatWidget.previewHint")}
               </p>
+
+              <div className="mt-3">
+                <div className="mb-1 flex items-center justify-between">
+                  <label
+                    htmlFor="preview-chat-speed"
+                    className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                    {t("chatWidget.previewSpeed")}
+                  </label>
+                  <span className="text-xs text-zinc-500">
+                    {t("chatWidget.previewSpeedValue", {
+                      rate: PREVIEW_RATES[previewRateIndex],
+                    })}
+                  </span>
+                </div>
+                <input
+                  id="preview-chat-speed"
+                  type="range"
+                  min="0"
+                  max={PREVIEW_RATES.length - 1}
+                  step="1"
+                  value={previewRateIndex}
+                  onChange={(e) => setPreviewRateIndex(Number(e.target.value))}
+                  className="w-full h-2 bg-zinc-300 rounded-lg appearance-none cursor-pointer accent-green-500 dark:bg-zinc-700"
+                />
+                <p className="mt-1 text-xs text-zinc-500">
+                  {t("chatWidget.previewSpeedHint")}
+                </p>
+              </div>
 
               <div className="mt-4 hidden lg:block">
                 <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">

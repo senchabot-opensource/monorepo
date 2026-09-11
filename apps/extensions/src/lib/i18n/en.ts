@@ -77,6 +77,7 @@ export const en = {
     layoutCompact: 'Compact (Twitch-like)',
     newMessageAnimation: 'New Message Animation',
     animSlide: 'Slide from right + fade',
+    animSmoothSlide: 'Smooth slide from right',
     animPop: 'Pop / scale-in',
     animBounce: 'Bounce in',
     animStagger: 'Stagger (meta first, then message)',
@@ -101,6 +102,9 @@ export const en = {
     boldMessages: 'Bold Messages',
     previewTitle: 'Widget Preview (Chat Box)',
     previewIframeTitle: 'Chat Widget Preview',
+    previewSpeed: 'Preview Chat Speed',
+    previewSpeedValue: '{rate} msg/s',
+    previewSpeedHint: 'Only changes the preview. Your widget URL stays the same.',
     previewHint: 'Live chat preview with animated message stream.',
     guideTitle: 'Streaming Software Chat Box Setup (OBS, Streamlabs, XSplit, etc.)',
     guideStep1:

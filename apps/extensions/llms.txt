@@ -127,7 +127,7 @@ A customizable multi-chat widget and stream chat box overlay that merges Twitch 
   - `stacked`: Username header displayed above message body.
   - `card`: Message displayed in modern bubble/card format.
   - `compact`: Dense, Twitch-native spacing for high-velocity chats.
-- **Entry Animations (`animation`)**: `slide` (from right), `pop` (scale-in), `bounce`, `stagger`, `fade`, `typing` (letter by letter), and `none`.
+- **Entry Animations (`animation`)**: `slide` (from right), `smooth` (smoother slide, older messages glide up), `pop` (scale-in), `bounce`, `stagger`, `fade`, `typing` (letter by letter), and `none`.
 - **Typography (`font`)**: Selectable fonts including `inter`, `roboto`, `nunito`, `mono` (JetBrains Mono), `serif` (Source Serif 4), and `system`.
 - **Styling Options**:
   - `fontSize`: Pixel font size (default: 18px).
@@ -144,7 +144,7 @@ A customizable multi-chat widget and stream chat box overlay that merges Twitch 
   - `sevenTv` (`true` | `false`), `badges` (`true` | `false`)
   - `fontSize` (number), `font` (`inter` | `roboto` | `nunito` | `mono` | `serif` | `system`)
   - `layout` (`inline` | `stacked` | `card` | `compact`)
-  - `animation` (`slide` | `pop` | `bounce` | `stagger` | `fade` | `typing` | `none`)
+  - `animation` (`slide` | `smooth` | `pop` | `bounce` | `stagger` | `fade` | `typing` | `none`)
   - `background` (`true` | `false`), `bgOpacity` (string: 0.0 - 1.0)
   - `itemBackground` (`true` | `false`)
   - `boldUsernames` (`true` | `false`), `boldMessages` (`true` | `false`)

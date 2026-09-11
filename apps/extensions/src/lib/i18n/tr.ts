@@ -79,6 +79,7 @@ export const tr: typeof en = {
     layoutCompact: 'Kompakt (Twitch benzeri)',
     newMessageAnimation: 'Yeni Mesaj Animasyonu',
     animSlide: 'Sağdan kayarak gir + solma',
+    animSmoothSlide: 'Sağdan yumuşakça kayarak gir',
     animPop: 'Belirerek büyü / ölçeklen',
     animBounce: 'Zıplayarak gir',
     animStagger: 'Sıralı (önce bilgi, sonra mesaj)',
@@ -104,6 +105,9 @@ export const tr: typeof en = {
     boldMessages: 'Kalın Mesajlar',
     previewTitle: 'Widget Önizleme (Sohbet Kutusu)',
     previewIframeTitle: 'Sohbet Widget Önizleme',
+    previewSpeed: 'Önizleme Sohbet Hızı',
+    previewSpeedValue: '{rate} mesaj/sn',
+    previewSpeedHint: "Sadece önizlemeyi etkiler, widget URL'si değişmez.",
     previewHint: 'Animasyonlu mesaj akışıyla canlı sohbet önizlemesi.',
     guideTitle: 'Yayın Yazılımı Sohbet Kutusu Kurulumu (OBS, Streamlabs, XSplit vb.)',
     guideStep1:
