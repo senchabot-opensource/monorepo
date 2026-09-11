@@ -387,7 +387,7 @@ function KickIcon({ className, ...props }: React.SVGProps<SVGSVGElement>) {
       role="img"
       viewBox="0 0 24 24"
       fill="currentColor"
-      className={`inline-block h-[1.15em] w-[1.15em] ${className ?? ''}`}
+      className={`inline-block h-[1em] w-[1em] ${className ?? ''}`}
       {...props}
     >
       <title>Kick</title>
