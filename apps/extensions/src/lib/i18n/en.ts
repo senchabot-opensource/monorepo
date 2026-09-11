@@ -134,6 +134,10 @@ export const en = {
     guideStep3:
       '3. Set width and height to match your desired chat box overlay dimensions (e.g. 400×600 for vertical).',
     browserSourceHintSize: ' (recommended size: 400×600 for chat box).',
+    widgetUrlTip:
+      'Already made a widget? Paste its URL here to load your settings and change what you need.',
+    widgetUrlPlaceholder: 'Paste an existing widget URL to edit it',
+    widgetUrlInvalid: "This isn't a Chat Box widget URL.",
     faq1Q: 'Do I need to sign in to Twitch or Kick to use the chat box?',
     faq1A:
       'No login is required. Chat Box listens anonymously to public chat streams for both platforms.',

@@ -8,6 +8,18 @@ import { SegmentedControl, type SegmentedOption } from '#/components/ui/segmente
 import { Select, type SelectOption } from '#/components/ui/select';
 import { Switch } from '#/components/ui/switch';
 import { YoutubeTutorial } from '#/components/youtube-tutorial';
+import {
+  type Animation,
+  buildWidgetParams,
+  DEFAULT_SETTINGS,
+  type Font,
+  type Layout,
+  type Orientation,
+  type PlatformDisplay,
+  type Platforms,
+  parseWidgetUrl,
+  type Settings,
+} from '#/features/widgets/chat-widget/widget-settings';
 import { useI18n } from '#/lib/i18n';
 import { getLocaleLinks } from '#/lib/i18n/seo';
 
@@ -114,90 +126,6 @@ export const Route = createFileRoute('/setup/chat-widget')({
 // Messages per second for the mock preview only; index 0 keeps the widget's default mock pace.
 const PREVIEW_RATES = [0.3, 0.5, 1, 2, 3, 5, 10, 15, 20];
 
-type Platforms = 'both' | 'twitch' | 'kick';
-type PlatformDisplay = 'name' | 'icon' | 'none';
-type Font = 'inter' | 'roboto' | 'nunito' | 'mono' | 'serif' | 'system';
-type Layout = 'inline' | 'stacked' | 'card' | 'compact';
-type Orientation = 'vertical' | 'horizontal';
-type Animation = 'slide' | 'smooth' | 'pop' | 'bounce' | 'stagger' | 'fade' | 'typing' | 'none';
-
-interface Settings {
-  platforms: Platforms;
-  platformDisplay: PlatformDisplay;
-  font: Font;
-  fontSize: string;
-  layout: Layout;
-  orientation: Orientation;
-  animation: Animation;
-  background: boolean;
-  bgOpacity: string;
-  itemBackground: boolean;
-  platformAccent: boolean;
-  boldUsernames: boolean;
-  boldMessages: boolean;
-  sevenTv: boolean;
-  badges: boolean;
-  timestamp: boolean;
-  keep: boolean;
-}
-
-// Mirrors the widget's own defaults, so only changed settings end up in the URL.
-const DEFAULT_SETTINGS: Settings = {
-  platforms: 'both',
-  platformDisplay: 'icon',
-  font: 'inter',
-  fontSize: '18',
-  layout: 'inline',
-  orientation: 'vertical',
-  animation: 'slide',
-  background: false,
-  bgOpacity: '0.5',
-  itemBackground: false,
-  platformAccent: false,
-  boldUsernames: false,
-  boldMessages: false,
-  sevenTv: true,
-  badges: true,
-  timestamp: false,
-  keep: false,
-};
-
-function buildWidgetParams(settings: Settings, twitchChannel: string, kickChannel: string) {
-  const params = new URLSearchParams();
-  const twitch = twitchChannel.trim().toLowerCase();
-  const kick = kickChannel.trim().toLowerCase();
-  if (settings.platforms !== 'kick' && twitch) params.append('twitch', twitch);
-  if (settings.platforms !== 'twitch' && kick) params.append('kick', kick);
-  if (!settings.sevenTv) params.append('sevenTv', 'false');
-  if (!settings.badges) params.append('badges', 'false');
-  // An emptied field would otherwise reach the widget as fontSize=0.
-  if (Number(settings.fontSize) > 0 && settings.fontSize !== DEFAULT_SETTINGS.fontSize)
-    params.append('fontSize', settings.fontSize);
-  if (settings.background) {
-    params.append('background', 'true');
-    if (settings.bgOpacity !== DEFAULT_SETTINGS.bgOpacity)
-      params.append('bgOpacity', settings.bgOpacity);
-  }
-  if (settings.itemBackground) params.append('itemBackground', 'true');
-  if (settings.platformAccent) params.append('platformAccent', 'true');
-  if (settings.boldUsernames) params.append('boldUsernames', 'true');
-  if (settings.boldMessages) params.append('boldMessages', 'true');
-  if (settings.orientation !== DEFAULT_SETTINGS.orientation)
-    params.append('orientation', settings.orientation);
-  if (
-    settings.platforms === 'both' &&
-    settings.platformDisplay !== DEFAULT_SETTINGS.platformDisplay
-  )
-    params.append('platformDisplay', settings.platformDisplay);
-  if (settings.timestamp) params.append('timestamp', 'true');
-  if (settings.keep) params.append('keep', 'true');
-  if (settings.font !== DEFAULT_SETTINGS.font) params.append('font', settings.font);
-  if (settings.layout !== DEFAULT_SETTINGS.layout) params.append('layout', settings.layout);
-  if (settings.animation !== DEFAULT_SETTINGS.animation)
-    params.append('animation', settings.animation);
-  return params;
-}
-
 const PANEL_CLASS =
   'rounded-xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900';
 const INPUT_CLASS =
@@ -223,6 +151,8 @@ function ChatWidgetSetup() {
   const [settings, setSettings] = useState(DEFAULT_SETTINGS);
   const [previewRateIndex, setPreviewRateIndex] = useState(0);
   const [copied, setCopied] = useState(false);
+  // Text typed or pasted into the URL field that isn't a widget URL yet; null shows the generated URL.
+  const [urlDraft, setUrlDraft] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
   const id = useId();
 
@@ -258,6 +188,18 @@ function ChatWidgetSetup() {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
+  };
+
+  const handleUrlChange = (text: string) => {
+    const parsed = parseWidgetUrl(text);
+    if (!parsed) {
+      setUrlDraft(text);
+      return;
+    }
+    setSettings(parsed.settings);
+    setTwitchChannel(parsed.twitchChannel);
+    setKickChannel(parsed.kickChannel);
+    setUrlDraft(null);
   };
 
   const platformOptions: SegmentedOption<Platforms>[] = [
@@ -568,15 +510,22 @@ function ChatWidgetSetup() {
               </span>
             </div>
             <div className="border-t border-zinc-200 pt-3 dark:border-zinc-800">
-              <FieldLabel htmlFor={`${id}-url`}>{t('common.widgetUrl')}</FieldLabel>
+              <FieldLabel htmlFor={`${id}-url`} tip={t('chatWidget.widgetUrlTip')}>
+                {t('common.widgetUrl')}
+              </FieldLabel>
               <div className="flex">
                 <input
                   id={`${id}-url`}
                   type="text"
-                  readOnly
-                  value={widgetUrl}
+                  spellCheck={false}
+                  value={urlDraft ?? widgetUrl}
+                  onChange={(e) => handleUrlChange(e.target.value)}
                   onFocus={(e) => e.currentTarget.select()}
-                  className="h-9 w-full min-w-0 rounded-l-md border border-zinc-300 bg-zinc-100 px-3 text-sm text-zinc-600 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
+                  onBlur={() => setUrlDraft(null)}
+                  placeholder={t('chatWidget.widgetUrlPlaceholder')}
+                  aria-invalid={Boolean(urlDraft)}
+                  aria-describedby={`${id}-url-hint`}
+                  className="h-9 w-full min-w-0 rounded-l-md border border-zinc-300 bg-zinc-100 px-3 text-sm text-zinc-600 placeholder-zinc-500 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500 aria-invalid:border-red-500 aria-invalid:ring-red-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
                 />
                 <button
                   type="button"
@@ -587,10 +536,19 @@ function ChatWidgetSetup() {
                   {copied ? t('common.copied') : t('common.copy')}
                 </button>
               </div>
-              <p className="mt-2 text-xs leading-relaxed text-zinc-500">
-                {t('common.browserSourceHint')}
-                {t('chatWidget.browserSourceHintSize')}
-              </p>
+              {urlDraft ? (
+                <p
+                  id={`${id}-url-hint`}
+                  className="mt-2 text-xs leading-relaxed text-red-600 dark:text-red-400"
+                >
+                  {t('chatWidget.widgetUrlInvalid')}
+                </p>
+              ) : (
+                <p id={`${id}-url-hint`} className="mt-2 text-xs leading-relaxed text-zinc-500">
+                  {t('common.browserSourceHint')}
+                  {t('chatWidget.browserSourceHintSize')}
+                </p>
+              )}
             </div>
           </div>
         </div>
