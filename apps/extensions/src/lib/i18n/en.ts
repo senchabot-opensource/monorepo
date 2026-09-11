@@ -81,6 +81,7 @@ export const en = {
     animBounce: 'Bounce in',
     animStagger: 'Stagger (meta first, then message)',
     animFade: 'Fade in',
+    animTyping: 'Typewriter',
     animNone: 'No animation',
     orientation: 'Orientation',
     vertical: 'Vertical',

@@ -136,7 +136,7 @@ function ChatWidgetSetup() {
     "inline" | "stacked" | "card" | "compact"
   >("inline");
   const [animation, setAnimation] = useState<
-    "slide" | "pop" | "bounce" | "stagger" | "fade" | "none"
+    "slide" | "pop" | "bounce" | "stagger" | "fade" | "typing" | "none"
   >("slide");
   const [copied, setCopied] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -443,6 +443,7 @@ function ChatWidgetSetup() {
                             | "bounce"
                             | "stagger"
                             | "fade"
+                            | "typing"
                             | "none",
                         )
                       }
@@ -454,6 +455,7 @@ function ChatWidgetSetup() {
                         {t("chatWidget.animStagger")}
                       </option>
                       <option value="fade">{t("chatWidget.animFade")}</option>
+                      <option value="typing">{t("chatWidget.animTyping")}</option>
                       <option value="none">{t("chatWidget.animNone")}</option>
                     </select>
                   </div>

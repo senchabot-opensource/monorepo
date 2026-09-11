@@ -83,6 +83,7 @@ export const tr: typeof en = {
     animBounce: 'Zıplayarak gir',
     animStagger: 'Sıralı (önce bilgi, sonra mesaj)',
     animFade: 'Solayarak belir',
+    animTyping: 'Daktilo gibi yaz',
     animNone: 'Animasyon yok',
     orientation: 'Yön',
     vertical: 'Dikey',
