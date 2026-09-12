@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { kickSubChannels, kickSubCount } from "./kick-sub-events";
 import { PlantSlot } from "./plant-slot";
 import { SubCountFX, SUB_COUNT_DURATION_MS } from "./fx/sub-count-fx";
 import { VineOverlay } from "./plants/vine-overlay";
@@ -22,7 +23,6 @@ export interface SubSproutWidgetProps {
   twitchChannel?: string;
   kickChannel?: string;
   kickId?: string;
-  kickChannelId?: string;
   variety?: PlantId | string;
   pick?: PickMode | string;
   water?: WaterEffectType | string;
@@ -105,7 +105,6 @@ export function SubSproutWidget({
   twitchChannel,
   kickChannel,
   kickId,
-  kickChannelId,
   variety = "classic",
   pick = "fixed",
   water = "off",
@@ -143,9 +142,6 @@ export function SubSproutWidget({
   const pendingAnonGiftSlots = useRef<{ count: number; at: number } | null>(
     null,
   );
-  const pendingKickGiftSlots = useRef<{ count: number; at: number } | null>(
-    null,
-  );
   const [activeWaterSlot, setActiveWaterSlot] = useState<{
     slot: number;
     key: number;
@@ -161,35 +157,28 @@ export function SubSproutWidget({
   const syncJoined = () =>
     setJoined(twitchConnectedRef.current || kickConnectedRef.current);
 
-  const [clientKickIds, setClientKickIds] = useState<{
-    kickId: string | null;
-    kickChannelId: string | null;
-  }>({ kickId: null, kickChannelId: null });
+  const [clientKickId, setClientKickId] = useState<string | null>(null);
 
-  const effectiveKickId = kickId ?? clientKickIds.kickId;
-  const effectiveKickChannelId = kickChannelId ?? clientKickIds.kickChannelId;
+  const effectiveKickId = kickId ?? clientKickId;
 
   useEffect(() => {
     if (simulate === true) return;
-    if ((kickId && kickChannelId) || !kickChannel) return;
+    if (kickId || !kickChannel) return;
     let cancelled = false;
     fetch(
       `https://kick.com/api/v1/channels/${encodeURIComponent(kickChannel)}`,
       { headers: { Accept: "application/json" } },
     )
       .then(r => (r.ok ? r.json() : Promise.reject(new Error("Kick channel lookup failed"))))
-      .then((data: { id?: unknown; chatroom?: { id?: unknown } }) => {
+      .then((data: { chatroom?: { id?: unknown } }) => {
         if (cancelled) return;
-        setClientKickIds({
-          kickId: data.chatroom?.id == null ? null : String(data.chatroom.id),
-          kickChannelId: data.id == null ? null : String(data.id),
-        });
+        setClientKickId(data.chatroom?.id == null ? null : String(data.chatroom.id));
       })
       .catch(() => {});
     return () => {
       cancelled = true;
     };
-  }, [kickChannel, kickId, kickChannelId, simulate]);
+  }, [kickChannel, kickId, simulate]);
 
   const applyGrowth = useCallback(() => {
     const { targetSlot, perSlot } = distributeGrowth(
@@ -414,7 +403,8 @@ export function SubSproutWidget({
     };
 
     const loadKick = () => {
-      if (!effectiveKickId && !effectiveKickChannelId) return;
+      if (!effectiveKickId) return;
+      const chatroomId = effectiveKickId;
 
       const MAX_RECONNECT_DELAY_MS = 30000;
       let ws: WebSocket | null = null;
@@ -446,20 +436,7 @@ export function SubSproutWidget({
         socket.onopen = () => {
           console.log("[Kick] WebSocket connected");
           reconnectAttempts = 0;
-        const channelNames = new Set<string>();
-
-        if (effectiveKickId) {
-          channelNames.add(`chatrooms.${effectiveKickId}.v2`);
-          channelNames.add(`chatrooms.${effectiveKickId}`);
-        }
-
-        if (effectiveKickChannelId) {
-          channelNames.add(`channel.${effectiveKickChannelId}`);
-          channelNames.add(`channel.${effectiveKickChannelId}.v2`);
-          channelNames.add(`chatrooms.${effectiveKickChannelId}.v2`);
-        }
-
-        for (const channelName of channelNames) {
+        for (const channelName of kickSubChannels(chatroomId)) {
           socket.send(
             JSON.stringify({
               event: "pusher:subscribe",
@@ -470,6 +447,7 @@ export function SubSproutWidget({
         }
       };
 
+      const seenGifts = new Set<string>();
       const recentEvents: { key: string; at: number }[] = [];
       const isDuplicate = (key: string): boolean => {
         const now = Date.now();
@@ -511,44 +489,6 @@ export function SubSproutWidget({
               ? (data as Record<string, unknown>)
               : null;
           };
-          const pickAmount = (payload: Record<string, unknown> | null) => {
-            if (!payload) return NaN;
-
-            const candidates: unknown[] = [
-              payload.gifted_subscriptions_count,
-              payload.subscriptions_count,
-              payload.quantity,
-              payload.count,
-              payload.amount,
-            ];
-
-            const nestedData = payload.data;
-            if (nestedData && typeof nestedData === "object") {
-              const nested = nestedData as Record<string, unknown>;
-              candidates.push(
-                nested.gifted_subscriptions_count,
-                nested.subscriptions_count,
-                nested.quantity,
-                nested.count,
-                nested.amount,
-              );
-            }
-
-            for (const value of candidates) {
-              const asNumber =
-                typeof value === "number"
-                  ? value
-                  : typeof value === "string"
-                    ? Number(value)
-                    : NaN;
-              if (Number.isFinite(asNumber) && asNumber > 0) {
-                return asNumber;
-              }
-            }
-
-            return NaN;
-          };
-
           if (eventName === "pusher:ping") {
             socket.send(JSON.stringify({ event: "pusher:pong" }));
             return;
@@ -561,12 +501,9 @@ export function SubSproutWidget({
             return;
           }
 
-          const isGiftPurchaseEvent = eventName.includes("GiftSubPurchase");
-          const isGiftRedeemEvent = eventName.includes("GiftSubRedeemed");
           const isSubOrGiftEvent =
-            eventName.includes("Subscription") ||
-            eventName.includes("Subscribed") ||
-            (eventName.includes("Gift") && eventName.includes("Event"));
+            eventName === "App\\Events\\SubscriptionEvent" ||
+            eventName === "GiftedSubscriptionsEvent";
           const isChatMessageEvent =
             eventName === "App\\Events\\ChatMessageEvent";
 
@@ -581,25 +518,10 @@ export function SubSproutWidget({
 
           if (isSubOrGiftEvent) {
             const payload = parsePayload(response.data);
-            const numericAmount = pickAmount(payload);
-            const amount =
-              Number.isFinite(numericAmount) && numericAmount > 0
-                ? Math.floor(numericAmount)
-                : 1;
             console.debug("[SubSprout] Kick sub/gift event:", eventName, payload);
-
-            if (isGiftRedeemEvent) {
-              // Redemption belonging to a recently announced gift bundle must
-              // not grow the plant a second time.
-              if (!consumeBundleSlot(pendingKickGiftSlots)) {
-                handleSubEvent(1);
-              }
-            } else if (isGiftPurchaseEvent) {
-              pendingKickGiftSlots.current = { count: amount, at: Date.now() };
-              handleSubEvent(amount);
-            } else {
-              // SubscriptionEvent covers both new subs and resubs.
-              handleSubEvent(amount);
+            const count = kickSubCount(eventName, payload, seenGifts);
+            if (count > 0) {
+              handleSubEvent(count);
             }
             return;
           }
@@ -676,7 +598,7 @@ export function SubSproutWidget({
       });
     }
 
-    if (kickChannel && (effectiveKickId || effectiveKickChannelId)) {
+    if (kickChannel && effectiveKickId) {
       const kickCleanup = loadKick();
       if (kickCleanup) cleanups.push(kickCleanup);
     }
@@ -684,7 +606,7 @@ export function SubSproutWidget({
     return () => {
       for (const cleanup of cleanups) cleanup();
     };
-  }, [twitchChannel, kickChannel, effectiveKickId, effectiveKickChannelId, handleSubEvent]);
+  }, [twitchChannel, kickChannel, effectiveKickId, handleSubEvent]);
 
   useEffect(() => {
     if (!activeWaterSlot) return;
