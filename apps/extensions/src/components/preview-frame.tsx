@@ -105,15 +105,15 @@ export function PreviewFrame({
         <iframe
           src={src}
           title={title}
-          style={
-            canvas
-              ? {
-                  width: canvas.width,
-                  height: canvas.height,
-                  transform: `translate(-50%, -50%) scale(${scale})`,
-                }
-              : undefined
-          }
+          // Overlays are theme-neutral; the frame must match them or it stops being transparent.
+          style={{
+            colorScheme: 'normal',
+            ...(canvas && {
+              width: canvas.width,
+              height: canvas.height,
+              transform: `translate(-50%, -50%) scale(${scale})`,
+            }),
+          }}
           className={`pointer-events-none absolute border-0 ${
             canvas ? 'top-1/2 left-1/2' : 'inset-0 h-full w-full'
           }`}

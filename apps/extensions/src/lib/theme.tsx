@@ -17,7 +17,12 @@ const THEME_COLORS: Record<Theme, string> = {
   dark: '#09090b',
 };
 
+// Overlays stay theme-neutral. A color-scheme on an iframed overlay that no longer matches the
+// embedding page (after a theme toggle) makes the browser paint an opaque backdrop behind it.
+export const isOverlayPath = (pathname: string) => pathname.startsWith('/widgets/');
+
 export function applyTheme(theme: Theme) {
+  if (isOverlayPath(window.location.pathname)) return;
   const el = document.documentElement;
   el.classList.toggle('dark', theme === 'dark');
   el.style.colorScheme = theme;

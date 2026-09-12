@@ -6,15 +6,16 @@ import { WidgetCrossLinks } from '#/components/widget-cross-links';
 import { LocaleProvider, useI18n } from '#/lib/i18n';
 import { getPageHead, ROBOTS_INDEX, ROBOTS_NOINDEX, SITE_META, SITE_NAME } from '#/lib/seo/head';
 import { PAGE_META } from '#/lib/seo/pages';
-import { ThemeProvider } from '#/lib/theme';
+import { isOverlayPath, ThemeProvider } from '#/lib/theme';
 
 import appCss from '../styles.css?url';
 
 // Runs before first paint to avoid a flash of the wrong theme/language.
-const themeInitScript = `(function(){try{var t=localStorage.getItem("theme");var d=t?t==="dark":!window.matchMedia||window.matchMedia("(prefers-color-scheme: dark)").matches;var el=document.documentElement;el.classList.toggle("dark",d);el.style.colorScheme=d?"dark":"light";var l=new URLSearchParams(location.search).get("lang")||localStorage.getItem("lang");if(l)el.lang=l;var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute("content",d?"#09090b":"#fafafa")}catch(e){}})();`;
+// Skips the theme on overlays (see isOverlayPath in lib/theme).
+const themeInitScript = `(function(){try{var el=document.documentElement;var l=new URLSearchParams(location.search).get("lang")||localStorage.getItem("lang");if(l)el.lang=l;if(location.pathname.indexOf("/widgets/")===0)return;var t=localStorage.getItem("theme");var d=t?t==="dark":!window.matchMedia||window.matchMedia("(prefers-color-scheme: dark)").matches;el.classList.toggle("dark",d);el.style.colorScheme=d?"dark":"light";var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute("content",d?"#09090b":"#fafafa")}catch(e){}})();`;
 
 // Overlays run inside streamers' OBS scenes: they keep their old font and never download Geist.
-const isWidgetPath = (pathname: string) => pathname.startsWith('/widgets/');
+const isWidgetPath = isOverlayPath;
 // Overlays and the live OBS Bridge page are opened by URL, never searched for.
 const isAppPath = (pathname: string) => isWidgetPath(pathname) || pathname.startsWith('/tools/');
 
