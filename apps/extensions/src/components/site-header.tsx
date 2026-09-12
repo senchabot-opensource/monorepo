@@ -1,10 +1,10 @@
 import { Link, useLocation } from '@tanstack/react-router';
 import { useEffect, useId, useRef, useState } from 'react';
 import { ExternalLink } from '#/components/external-link';
-import { ChevronDownIcon, CloseIcon, ExternalIcon, GithubIcon, MenuIcon } from '#/components/icons';
+import { CloseIcon, ExternalIcon, GithubIcon, MenuIcon } from '#/components/icons';
 import { PlatformChips } from '#/components/platform-chips';
 import { ICON_BUTTON_CLASS, SiteControls } from '#/components/site-controls';
-import { useDisclosure } from '#/components/ui/use-disclosure';
+import { DROPDOWN_ITEM_CLASS, DropdownMenu } from '#/components/ui/dropdown-menu';
 import { useI18n } from '#/lib/i18n';
 import { CONTENT_PATHS, LINKS, useRouteExists } from '#/lib/links';
 import { getWidget, OVERLAYS, TOOLS, type WidgetEntry, type WidgetId } from '#/lib/widgets';
@@ -25,8 +25,6 @@ export type SiteHeaderProps =
 
 const NAV_LINK_CLASS =
   'inline-flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-200/60 hover:text-zinc-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 aria-[current=page]:text-zinc-900 aria-expanded:bg-zinc-200/60 aria-expanded:text-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-white dark:aria-[current=page]:text-white dark:aria-expanded:bg-zinc-800 dark:aria-expanded:text-white';
-const PANEL_CLASS =
-  'rounded-xl border border-zinc-200 bg-white shadow-xl dark:border-zinc-800 dark:bg-zinc-900';
 const GROUP_LABEL_CLASS =
   'px-2.5 pb-1 text-[11px] font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400';
 
@@ -124,21 +122,17 @@ function WidgetGroups({ sideBySide }: { sideBySide: boolean }) {
 
 function WidgetsMenu() {
   const { t } = useI18n();
-  const { open, buttonProps, panelProps } = useDisclosure();
   return (
-    <>
-      <button {...buttonProps} className={NAV_LINK_CLASS}>
-        {t('common.nav.widgets')}
-        <ChevronDownIcon className={`size-4 transition-transform ${open ? 'rotate-180' : ''}`} />
-      </button>
-      {/* Anchored to the header row, not the button, so it never runs off a tablet screen. */}
-      <div
-        {...panelProps}
-        className={`${PANEL_CLASS} absolute top-full left-4 z-50 mt-1 w-[min(44rem,calc(100%-2rem))] p-3`}
-      >
-        <WidgetGroups sideBySide />
-      </div>
-    </>
+    // Anchored to the header row, not the button, so the wide panel never runs off a tablet.
+    <DropdownMenu
+      label={t('common.nav.widgets')}
+      triggerClassName={NAV_LINK_CLASS}
+      anchor="container"
+      positionClassName="left-4"
+      panelClassName="w-[min(44rem,calc(100%-2rem))] p-3"
+    >
+      <WidgetGroups sideBySide />
+    </DropdownMenu>
   );
 }
 
@@ -265,62 +259,53 @@ function FullHeader() {
 
 function WidgetSwitcher({ current }: { current: WidgetId }) {
   const { t } = useI18n();
-  const { open, buttonProps, panelProps } = useDisclosure();
   return (
-    <>
-      <button
-        {...buttonProps}
-        aria-label={t('common.nav.switchWidget')}
-        title={t('common.nav.switchWidget')}
-        className="inline-flex size-8 shrink-0 items-center justify-center rounded-md text-zinc-500 transition-colors hover:bg-zinc-200/70 hover:text-zinc-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 aria-expanded:bg-zinc-200/70 aria-expanded:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-white dark:aria-expanded:bg-zinc-800 dark:aria-expanded:text-white"
-      >
-        <ChevronDownIcon className={`size-4 transition-transform ${open ? 'rotate-180' : ''}`} />
-      </button>
-      <div
-        {...panelProps}
-        className={`${PANEL_CLASS} absolute top-full left-0 z-50 mt-1 w-72 max-w-[calc(100vw-2rem)] p-1.5`}
-      >
-        {(
-          [
-            ['overlays', OVERLAYS],
-            ['tools', TOOLS],
-          ] as const
-        ).map(([group, widgets]) => (
-          <div key={group} className="py-1">
-            <p className={`${GROUP_LABEL_CLASS} pt-1`}>{t(`widgets.${group}`)}</p>
-            <ul>
-              {widgets.map((widget) => {
-                const isCurrent = widget.id === current;
-                return (
-                  <li key={widget.id}>
-                    <Link
-                      to={widget.setupPath}
-                      aria-current={isCurrent ? 'page' : undefined}
-                      className="flex items-center gap-2.5 rounded-lg px-2 py-1.5 text-sm text-zinc-800 transition-colors hover:bg-zinc-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 aria-[current=page]:font-medium aria-[current=page]:text-green-700 dark:text-zinc-200 dark:hover:bg-zinc-800 dark:aria-[current=page]:text-green-400"
-                    >
-                      <WidgetIconTile widget={widget} size="sm" />
-                      <span className="flex-1">{t(widget.nameKey)}</span>
-                      {isCurrent && (
-                        <svg
-                          className="size-4 shrink-0"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth={2.5}
-                          viewBox="0 0 24 24"
-                          aria-hidden="true"
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" d="m5 12 5 5L20 7" />
-                        </svg>
-                      )}
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        ))}
-      </div>
-    </>
+    <DropdownMenu
+      label={null}
+      ariaLabel={t('common.nav.switchWidget')}
+      triggerClassName="inline-flex size-8 shrink-0 items-center justify-center rounded-md text-zinc-500 transition-colors hover:bg-zinc-200/70 hover:text-zinc-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 aria-expanded:bg-zinc-200/70 aria-expanded:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-white dark:aria-expanded:bg-zinc-800 dark:aria-expanded:text-white"
+      anchor="container"
+    >
+      {(
+        [
+          ['overlays', OVERLAYS],
+          ['tools', TOOLS],
+        ] as const
+      ).map(([group, widgets]) => (
+        <div key={group} className="py-1">
+          <p className={`${GROUP_LABEL_CLASS} pt-1`}>{t(`widgets.${group}`)}</p>
+          <ul>
+            {widgets.map((widget) => {
+              const isCurrent = widget.id === current;
+              return (
+                <li key={widget.id}>
+                  <Link
+                    to={widget.setupPath}
+                    aria-current={isCurrent ? 'page' : undefined}
+                    className={DROPDOWN_ITEM_CLASS}
+                  >
+                    <WidgetIconTile widget={widget} size="sm" />
+                    <span className="flex-1">{t(widget.nameKey)}</span>
+                    {isCurrent && (
+                      <svg
+                        className="size-4 shrink-0"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth={2.5}
+                        viewBox="0 0 24 24"
+                        aria-hidden="true"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="m5 12 5 5L20 7" />
+                      </svg>
+                    )}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      ))}
+    </DropdownMenu>
   );
 }
 
