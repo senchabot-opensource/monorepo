@@ -37,8 +37,11 @@ export const Route = createRootRoute({
   head: ({ matches }) => {
     const isNotFound = matches.some((match) => match._notFound || match.status === 'notFound');
     const isAppPage = matches.some((match) => isAppPath(match.pathname));
+    // A 404 under /tr still matches the locale route, so its deepest match carries the prefix.
+    const locale = getPathLocale(matches[matches.length - 1]?.pathname ?? '/');
     const page = isNotFound
-      ? getPageHead({ meta: PAGE_META.notFound, image: 'guides', noindex: true }).meta
+      ? getPageHead({ locale, meta: PAGE_META.notFound[locale], image: 'guides', noindex: true })
+          .meta
       : [
           { title: SITE_NAME },
           { name: 'robots', content: isAppPage ? ROBOTS_NOINDEX : ROBOTS_INDEX },

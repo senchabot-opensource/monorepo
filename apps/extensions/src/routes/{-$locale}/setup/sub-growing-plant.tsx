@@ -17,6 +17,7 @@ import {
 } from '#/features/widgets/sub-sprout/plants/registry';
 import type { WaterEffectType } from '#/features/widgets/sub-sprout/water/watering-fx';
 import { useI18n } from '#/lib/i18n';
+import { getParamsLocale } from '#/lib/i18n/paths';
 import type { FaqEntry } from '#/lib/i18n/seo';
 import { getSetupPageHead } from '#/lib/seo/pages';
 import {
@@ -30,7 +31,11 @@ import {
 import { getWidget } from '#/lib/widgets';
 
 export const Route = createFileRoute('/{-$locale}/setup/sub-growing-plant')({
-  head: () => getSetupPageHead('sub-sprout', { breadcrumb: 'subSprout.breadcrumb', faq: FAQ }),
+  head: ({ params }) =>
+    getSetupPageHead('sub-sprout', getParamsLocale(params), {
+      breadcrumb: 'subSprout.breadcrumb',
+      faq: FAQ,
+    }),
   component: SubSproutSetup,
 });
 

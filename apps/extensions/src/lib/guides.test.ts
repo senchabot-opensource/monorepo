@@ -5,6 +5,7 @@ import { CONTENT_META, GUIDES, getGuide } from './guides';
 import { en } from './i18n/en';
 import { resolveKey } from './i18n/index';
 import { tr } from './i18n/tr';
+import { LOCALES } from './i18n/locales';
 import type { PageMeta } from './seo/head';
 
 const srcDir = `${resolve(__dirname, '..')}/`;
@@ -46,8 +47,12 @@ describe('guide registry', () => {
     }
   });
 
-  it('keeps titles within 60 and descriptions within 160 characters', () => {
-    for (const guide of GUIDES) expectMetaFits(guide.meta, guide.id);
-    for (const [page, meta] of Object.entries(CONTENT_META)) expectMetaFits(meta, page);
+  it('keeps titles within 60 and descriptions within 160 characters in every locale', () => {
+    for (const locale of LOCALES) {
+      for (const guide of GUIDES) expectMetaFits(guide.meta[locale], `${guide.id} ${locale}`);
+      for (const [page, meta] of Object.entries(CONTENT_META)) {
+        expectMetaFits(meta[locale], `${page} ${locale}`);
+      }
+    }
   });
 });

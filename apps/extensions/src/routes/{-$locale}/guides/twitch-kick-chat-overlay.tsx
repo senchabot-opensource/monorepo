@@ -4,12 +4,13 @@ import { CtaBand } from '#/components/cta-band';
 import { GuideArticle } from '#/components/guide-article';
 import { getGuide } from '#/lib/guides';
 import { useT } from '#/lib/i18n';
+import { getParamsLocale } from '#/lib/i18n/paths';
 import { getGuideHead } from '#/lib/seo/pages';
 
 const GUIDE = getGuide('twitch-kick-chat-overlay');
 
 export const Route = createFileRoute('/{-$locale}/guides/twitch-kick-chat-overlay')({
-  head: () => getGuideHead(GUIDE),
+  head: ({ params }) => getGuideHead(GUIDE, getParamsLocale(params)),
   component: TwitchKickChatGuide,
 });
 

@@ -4,12 +4,13 @@ import { CtaBand } from '#/components/cta-band';
 import { GuideArticle } from '#/components/guide-article';
 import { getGuide } from '#/lib/guides';
 import { useT } from '#/lib/i18n';
+import { getParamsLocale } from '#/lib/i18n/paths';
 import { getGuideHead } from '#/lib/seo/pages';
 
 const GUIDE = getGuide('chat-giveaway');
 
 export const Route = createFileRoute('/{-$locale}/guides/chat-giveaway')({
-  head: () => getGuideHead(GUIDE),
+  head: ({ params }) => getGuideHead(GUIDE, getParamsLocale(params)),
   component: ChatGiveawayGuide,
 });
 

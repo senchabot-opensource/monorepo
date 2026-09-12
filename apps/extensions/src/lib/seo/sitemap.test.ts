@@ -16,7 +16,7 @@ const prerendered = [
 describe('sitemap.xml', () => {
   it('lists each page once, at its canonical URL', () => {
     expect(new Set(locs).size).toBe(locs.length);
-    expect(locs.sort()).toEqual(prerendered.map(pageUrl).sort());
+    expect(locs.sort()).toEqual(prerendered.map((path) => pageUrl(path)).sort());
   });
 
   it('covers the home page, every setup page, guide and content page', () => {
@@ -28,6 +28,6 @@ describe('sitemap.xml', () => {
       '/faq',
       '/changelog',
     ];
-    expect(locs.sort()).toEqual(paths.map(pageUrl).sort());
+    expect(locs.sort()).toEqual(paths.map((path) => pageUrl(path)).sort());
   });
 });

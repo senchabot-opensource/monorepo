@@ -28,12 +28,17 @@ import {
   type Settings,
 } from '#/features/widgets/chat-widget/widget-settings';
 import { useI18n } from '#/lib/i18n';
+import { getParamsLocale } from '#/lib/i18n/paths';
 import type { FaqEntry } from '#/lib/i18n/seo';
 import { getSetupPageHead } from '#/lib/seo/pages';
 import { getWidget } from '#/lib/widgets';
 
 export const Route = createFileRoute('/{-$locale}/setup/chat-widget')({
-  head: () => getSetupPageHead('chat-box', { breadcrumb: 'chatWidget.breadcrumb', faq: FAQ }),
+  head: ({ params }) =>
+    getSetupPageHead('chat-box', getParamsLocale(params), {
+      breadcrumb: 'chatWidget.breadcrumb',
+      faq: FAQ,
+    }),
   component: ChatWidgetSetup,
 });
 

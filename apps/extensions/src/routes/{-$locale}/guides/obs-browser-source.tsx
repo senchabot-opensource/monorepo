@@ -6,13 +6,14 @@ import { LocaleLink } from '#/components/locale-link';
 import { WidgetCrossLinks } from '#/components/widget-cross-links';
 import { getGuide } from '#/lib/guides';
 import { type TranslationKey, useT } from '#/lib/i18n';
+import { getParamsLocale } from '#/lib/i18n/paths';
 import { getGuideHead } from '#/lib/seo/pages';
 import { WIDGETS, type WidgetId } from '#/lib/widgets';
 
 const GUIDE = getGuide('obs-browser-source');
 
 export const Route = createFileRoute('/{-$locale}/guides/obs-browser-source')({
-  head: () => getGuideHead(GUIDE),
+  head: ({ params }) => getGuideHead(GUIDE, getParamsLocale(params)),
   component: ObsBrowserSourceGuide,
 });
 

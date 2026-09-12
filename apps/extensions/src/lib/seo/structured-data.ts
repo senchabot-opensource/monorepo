@@ -1,4 +1,4 @@
-import { translate } from '#/lib/i18n';
+import { type Locale, translate } from '#/lib/i18n';
 import { type FaqEntry, SITE_URL } from '#/lib/i18n/seo';
 import { LINKS } from '#/lib/links';
 import { OG_IMAGE_SIZE, type OgImage, ogImageUrl, type PageMeta, pageUrl, SITE_NAME } from './head';
@@ -8,14 +8,28 @@ type JsonLdNode = Record<string, unknown>;
 export const ORGANIZATION_ID = 'https://senchabot.com/#organization';
 export const WEBSITE_ID = `${SITE_URL}/#website`;
 
-const ORGANIZATION: JsonLdNode = {
+/** Each language's home page is its own WebSite; the English one keeps the original @id. */
+export const getWebsiteId = (locale: Locale) =>
+  locale === 'en' ? WEBSITE_ID : `${pageUrl('/', locale)}#website`;
+
+const COPY = {
+  organization: {
+    en: 'Senchabot is an open source, multi-platform community bot for Twitch, Discord, Kick and YouTube.',
+    tr: 'Senchabot, Twitch, Discord, Kick ve YouTube için açık kaynaklı, çok platformlu bir topluluk botu.',
+  },
+  website: {
+    en: 'Free, open source overlays and stream tools for Twitch and Kick, made by Senchabot. No login.',
+    tr: "Senchabot'tan Twitch ve Kick için ücretsiz, açık kaynaklı overlay'ler ve yayın araçları. Giriş yok.",
+  },
+} as const satisfies Record<string, Record<Locale, string>>;
+
+const getOrganization = (locale: Locale): JsonLdNode => ({
   '@type': 'Organization',
   '@id': ORGANIZATION_ID,
   name: 'Senchabot',
   url: LINKS.senchabot,
   logo: { '@type': 'ImageObject', url: `${SITE_URL}/senchabot-logo.svg` },
-  description:
-    'Senchabot is an open source, multi-platform community bot for Twitch, Discord, Kick and YouTube.',
+  description: COPY.organization[locale],
   sameAs: [
     'https://github.com/senchabot-opensource',
     LINKS.x,
@@ -23,23 +37,24 @@ const ORGANIZATION: JsonLdNode = {
     LINKS.youtube,
     LINKS.reddit,
   ],
-};
+});
 
-const WEBSITE: JsonLdNode = {
+const getWebsite = (locale: Locale): JsonLdNode => ({
   '@type': 'WebSite',
-  '@id': WEBSITE_ID,
-  url: SITE_URL,
+  '@id': getWebsiteId(locale),
+  url: pageUrl('/', locale),
   name: SITE_NAME,
-  description:
-    'Free, open source overlays and stream tools for Twitch and Kick, made by Senchabot. No login.',
-  inLanguage: 'en',
+  description: COPY.website[locale],
+  inLanguage: locale,
   publisher: { '@id': ORGANIZATION_ID },
-};
+});
 
 const ref = (id: string) => ({ '@id': id });
 
 export interface GraphPage {
+  /** English site path; nodes use the URL of `locale`. */
   path: string;
+  locale: Locale;
   meta: PageMeta;
   image: OgImage;
 }
@@ -66,16 +81,17 @@ const imageObject = (image: OgImage) => ({
   height: OG_IMAGE_SIZE.height,
 });
 
-/** FAQPage built from the same keys the page renders, in English like the prerendered HTML. */
-export function getFaqNode(path: string, entries: readonly FaqEntry[]): JsonLdNode {
+/** FAQPage built from the same keys the page renders, in the language it renders them. */
+export function getFaqNode(path: string, entries: readonly FaqEntry[], locale: Locale): JsonLdNode {
+  const url = pageUrl(path, locale);
   return {
     '@type': 'FAQPage',
-    '@id': `${pageUrl(path)}#faq`,
-    isPartOf: ref(`${pageUrl(path)}#webpage`),
+    '@id': `${url}#faq`,
+    isPartOf: ref(`${url}#webpage`),
     mainEntity: entries.map(([question, answer]) => ({
       '@type': 'Question',
-      name: translate('en', question),
-      acceptedAnswer: { '@type': 'Answer', text: translate('en', answer) },
+      name: translate(locale, question),
+      acceptedAnswer: { '@type': 'Answer', text: translate(locale, answer) },
     })),
   };
 }
@@ -86,22 +102,23 @@ export function getFaqNode(path: string, entries: readonly FaqEntry[]): JsonLdNo
  */
 export function getPageGraph(page: GraphPage, options: PageGraphOptions = {}) {
   const { breadcrumbs, faq, mainEntity } = options;
-  const url = pageUrl(page.path);
+  const { locale } = page;
+  const url = pageUrl(page.path, locale);
   const webPage: JsonLdNode = {
     '@type': 'WebPage',
     '@id': `${url}#webpage`,
     url,
     name: page.meta.title,
     description: page.meta.description,
-    inLanguage: 'en',
-    isPartOf: ref(WEBSITE_ID),
+    inLanguage: locale,
+    isPartOf: ref(getWebsiteId(locale)),
     publisher: ref(ORGANIZATION_ID),
     primaryImageOfPage: imageObject(page.image),
   };
-  const nodes: JsonLdNode[] = [ORGANIZATION, WEBSITE, webPage];
+  const nodes: JsonLdNode[] = [getOrganization(locale), getWebsite(locale), webPage];
 
   if (breadcrumbs?.length) {
-    const trail: Crumb[] = [{ name: translate('en', 'common.home'), path: '/' }, ...breadcrumbs];
+    const trail: Crumb[] = [{ name: translate(locale, 'common.home'), path: '/' }, ...breadcrumbs];
     webPage.breadcrumb = ref(`${url}#breadcrumb`);
     nodes.push({
       '@type': 'BreadcrumbList',
@@ -110,7 +127,7 @@ export function getPageGraph(page: GraphPage, options: PageGraphOptions = {}) {
         '@type': 'ListItem',
         position: index + 1,
         name: crumb.name,
-        item: pageUrl(crumb.path ?? page.path),
+        item: pageUrl(crumb.path ?? page.path, locale),
       })),
     });
   }
@@ -119,7 +136,7 @@ export function getPageGraph(page: GraphPage, options: PageGraphOptions = {}) {
     nodes.push(mainEntity);
   }
   if (faq?.length) {
-    const faqNode = getFaqNode(page.path, faq);
+    const faqNode = getFaqNode(page.path, faq, locale);
     webPage.mainEntity ??= ref(String(faqNode['@id']));
     nodes.push(faqNode);
   }
@@ -130,19 +147,21 @@ export function getPageGraph(page: GraphPage, options: PageGraphOptions = {}) {
 /** A setup page's widget or tool: free, runs in a browser, so any desktop OS. */
 export function getAppNode({
   path,
+  locale,
   name,
   description,
   image,
   features,
 }: {
   path: string;
+  locale: Locale;
   name: string;
   description: string;
   image: OgImage;
   /** Facts the page shows, one per entry. */
   features: readonly string[];
 }): JsonLdNode {
-  const url = pageUrl(path);
+  const url = pageUrl(path, locale);
   return {
     '@type': 'WebApplication',
     '@id': `${url}#app`,
@@ -163,16 +182,18 @@ export function getAppNode({
 
 export function getArticleNode({
   path,
+  locale,
   headline,
   description,
   datePublished,
 }: {
   path: string;
+  locale: Locale;
   headline: string;
   description: string;
   datePublished: string;
 }): JsonLdNode {
-  const url = pageUrl(path);
+  const url = pageUrl(path, locale);
   return {
     '@type': 'Article',
     '@id': `${url}#article`,
@@ -181,7 +202,7 @@ export function getArticleNode({
     url,
     mainEntityOfPage: ref(`${url}#webpage`),
     image: ogImageUrl('guides'),
-    inLanguage: 'en',
+    inLanguage: locale,
     datePublished,
     dateModified: datePublished,
     author: ref(ORGANIZATION_ID),
@@ -191,11 +212,13 @@ export function getArticleNode({
 
 export function getItemListNode({
   id,
+  locale,
   name,
   items,
 }: {
   /** Fragment id, e.g. `${url}#widgets`. */
   id: string;
+  locale: Locale;
   name: string;
   items: readonly { name: string; path: string; description?: string }[];
 }): JsonLdNode {
@@ -207,7 +230,7 @@ export function getItemListNode({
       '@type': 'ListItem',
       position: index + 1,
       name: item.name,
-      url: pageUrl(item.path),
+      url: pageUrl(item.path, locale),
       ...(item.description ? { description: item.description } : {}),
     })),
   };

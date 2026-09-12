@@ -3,15 +3,18 @@ import { ContentPage, formatDate } from '#/components/content-page';
 import { CHANGELOG, groupByMonth } from '#/lib/changelog';
 import { CONTENT_META } from '#/lib/guides';
 import { translate, useI18n } from '#/lib/i18n';
+import { getParamsLocale } from '#/lib/i18n/paths';
 import { getSeoHead } from '#/lib/seo/pages';
 import { getWidget } from '#/lib/widgets';
 
 export const Route = createFileRoute('/{-$locale}/changelog')({
-  head: () =>
-    getSeoHead(
-      { path: '/changelog', meta: CONTENT_META.changelog, image: 'guides' },
-      { breadcrumbs: [{ name: translate('en', 'changelog.breadcrumb') }] },
-    ),
+  head: ({ params }) => {
+    const locale = getParamsLocale(params);
+    return getSeoHead(
+      { path: '/changelog', locale, meta: CONTENT_META.changelog, image: 'guides' },
+      { breadcrumbs: [{ name: translate(locale, 'changelog.breadcrumb') }] },
+    );
+  },
   component: ChangelogPage,
 });
 

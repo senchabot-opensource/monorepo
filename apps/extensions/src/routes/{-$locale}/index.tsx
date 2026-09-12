@@ -18,32 +18,42 @@ import { WidgetCard } from '#/components/landing/widget-card';
 import { SiteLayout } from '#/components/site-layout';
 import { StepsList } from '#/components/steps-list';
 import { BUTTON_PRIMARY, BUTTON_SECONDARY } from '#/components/ui/button-styles';
-import { type TranslationKey, translate, useI18n } from '#/lib/i18n';
-import { type FaqEntry, SITE_URL } from '#/lib/i18n/seo';
+import { type Locale, type TranslationKey, translate, useI18n } from '#/lib/i18n';
+import { getParamsLocale } from '#/lib/i18n/paths';
+import type { FaqEntry } from '#/lib/i18n/seo';
 import { LINKS } from '#/lib/links';
+import { pageUrl } from '#/lib/seo/head';
 import { getSeoHead, PAGE_META } from '#/lib/seo/pages';
 import { getItemListNode } from '#/lib/seo/structured-data';
 import { OVERLAYS, TOOLS, WIDGETS, type WidgetPlatform } from '#/lib/widgets';
 
 export const Route = createFileRoute('/{-$locale}/')({
-  head: () =>
-    getSeoHead(
-      { path: '/', meta: PAGE_META.home, image: 'home' },
+  head: ({ params }) => {
+    const locale = getParamsLocale(params);
+    return getSeoHead(
+      { path: '/', locale, meta: PAGE_META.home, image: 'home' },
       {
         faq: FAQ,
         mainEntity: getItemListNode({
-          id: `${SITE_URL}/#widgets`,
-          name: 'Senchabot Extensions overlays and tools',
+          id: `${pageUrl('/', locale)}#widgets`,
+          locale,
+          name: WIDGET_LIST_NAME[locale],
           items: WIDGETS.map((widget) => ({
-            name: translate('en', widget.nameKey),
+            name: translate(locale, widget.nameKey),
             path: widget.setupPath,
-            description: translate('en', widget.taglineKey),
+            description: translate(locale, widget.taglineKey),
           })),
         }),
       },
-    ),
+    );
+  },
   component: Index,
 });
+
+const WIDGET_LIST_NAME: Record<Locale, string> = {
+  en: 'Senchabot Extensions overlays and tools',
+  tr: "Senchabot Extensions overlay'leri ve araçları",
+};
 
 const FAQ: FaqEntry[] = [
   ['home.faq1Q', 'home.faq1A'],

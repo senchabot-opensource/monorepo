@@ -20,6 +20,7 @@ import {
 } from '#/features/tools/obs-bridge-config';
 import { ObsCommandList } from '#/features/tools/obs-command-list';
 import { type TranslationKey, useI18n } from '#/lib/i18n';
+import { getParamsLocale } from '#/lib/i18n/paths';
 import type { FaqEntry } from '#/lib/i18n/seo';
 import { getSetupPageHead } from '#/lib/seo/pages';
 import { getWidget } from '#/lib/widgets';
@@ -33,7 +34,11 @@ const FAQ: FaqEntry[] = [
 ];
 
 export const Route = createFileRoute('/{-$locale}/setup/obs-bridge')({
-  head: () => getSetupPageHead('obs-bridge', { breadcrumb: 'obsBridge.breadcrumb', faq: FAQ }),
+  head: ({ params }) =>
+    getSetupPageHead('obs-bridge', getParamsLocale(params), {
+      breadcrumb: 'obsBridge.breadcrumb',
+      faq: FAQ,
+    }),
   component: ObsBridgeSetup,
 });
 

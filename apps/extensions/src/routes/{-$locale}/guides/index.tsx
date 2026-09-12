@@ -3,26 +3,30 @@ import { ContentPage, Rich } from '#/components/content-page';
 import { GuideCard } from '#/components/guide-article';
 import { CONTENT_META, GUIDES, GUIDES_PATH } from '#/lib/guides';
 import { translate, useT } from '#/lib/i18n';
+import { getParamsLocale } from '#/lib/i18n/paths';
 import { pageUrl } from '#/lib/seo/head';
 import { getSeoHead } from '#/lib/seo/pages';
 import { getItemListNode } from '#/lib/seo/structured-data';
 
 export const Route = createFileRoute('/{-$locale}/guides/')({
-  head: () =>
-    getSeoHead(
-      { path: GUIDES_PATH, meta: CONTENT_META.guides, image: 'guides' },
+  head: ({ params }) => {
+    const locale = getParamsLocale(params);
+    return getSeoHead(
+      { path: GUIDES_PATH, locale, meta: CONTENT_META.guides, image: 'guides' },
       {
-        breadcrumbs: [{ name: translate('en', 'guides.breadcrumb') }],
+        breadcrumbs: [{ name: translate(locale, 'guides.breadcrumb') }],
         mainEntity: getItemListNode({
-          id: `${pageUrl(GUIDES_PATH)}#guides`,
-          name: translate('en', 'guides.index.title'),
+          id: `${pageUrl(GUIDES_PATH, locale)}#guides`,
+          locale,
+          name: translate(locale, 'guides.index.title'),
           items: GUIDES.map((guide) => ({
-            name: translate('en', guide.titleKey),
+            name: translate(locale, guide.titleKey),
             path: guide.path,
           })),
         }),
       },
-    ),
+    );
+  },
   component: GuidesIndex,
 });
 

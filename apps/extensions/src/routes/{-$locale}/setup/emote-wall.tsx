@@ -20,12 +20,17 @@ import {
   parseEmoteWallUrl,
 } from '#/features/widgets/emote-wall/widget-url';
 import { useI18n } from '#/lib/i18n';
+import { getParamsLocale } from '#/lib/i18n/paths';
 import type { FaqEntry } from '#/lib/i18n/seo';
 import { getSetupPageHead } from '#/lib/seo/pages';
 import { getWidget } from '#/lib/widgets';
 
 export const Route = createFileRoute('/{-$locale}/setup/emote-wall')({
-  head: () => getSetupPageHead('emote-wall', { breadcrumb: 'emoteWallSetup.breadcrumb', faq: FAQ }),
+  head: ({ params }) =>
+    getSetupPageHead('emote-wall', getParamsLocale(params), {
+      breadcrumb: 'emoteWallSetup.breadcrumb',
+      faq: FAQ,
+    }),
   component: EmoteWallSetup,
 });
 

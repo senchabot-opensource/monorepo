@@ -4,6 +4,7 @@ import { CtaBand } from '#/components/cta-band';
 import { FaqList } from '#/components/faq-list';
 import { CONTENT_META } from '#/lib/guides';
 import { type TranslationKey, translate, useT } from '#/lib/i18n';
+import { getParamsLocale } from '#/lib/i18n/paths';
 import type { FaqEntry } from '#/lib/i18n/seo';
 import { LINKS } from '#/lib/links';
 import { getSeoHead } from '#/lib/seo/pages';
@@ -44,14 +45,16 @@ const FAQ_GROUPS: readonly { id: string; title: TranslationKey; entries: readonl
 ];
 
 export const Route = createFileRoute('/{-$locale}/faq')({
-  head: () =>
-    getSeoHead(
-      { path: '/faq', meta: CONTENT_META.faq, image: 'guides' },
+  head: ({ params }) => {
+    const locale = getParamsLocale(params);
+    return getSeoHead(
+      { path: '/faq', locale, meta: CONTENT_META.faq, image: 'guides' },
       {
-        breadcrumbs: [{ name: translate('en', 'faqPage.breadcrumb') }],
+        breadcrumbs: [{ name: translate(locale, 'faqPage.breadcrumb') }],
         faq: FAQ_GROUPS.flatMap((group) => group.entries),
       },
-    ),
+    );
+  },
   component: FaqPage,
 });
 
