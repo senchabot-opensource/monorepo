@@ -3,30 +3,11 @@ import { TwitchChat } from "#/lib/twitch";
 import { KickChat } from "#/lib/kick";
 import type { ChatMessagesType } from "../widgets/chat-widget/chat-messages";
 import { commandUserKey } from "./command-users";
+import { DEFAULT_OBS_COMMANDS, type ObsBridgeCustomCommands } from "./obs-bridge-config";
 import { OBSWebSocket } from 'obs-websocket-js';
 
 type Disconnectable = {
   disconnect: () => void;
-};
-
-export interface ObsBridgeCustomCommands {
-  cmdBrb?: string;
-  cmdBack?: string;
-  cmdStartStream?: string;
-  cmdStopStream?: string;
-  cmdStartRecord?: string;
-  cmdStopRecord?: string;
-  cmdScene?: string;
-}
-
-export const DEFAULT_OBS_COMMANDS: Required<ObsBridgeCustomCommands> = {
-  cmdBrb: "brb",
-  cmdBack: "back",
-  cmdStartStream: "!startstream",
-  cmdStopStream: "!stopstream",
-  cmdStartRecord: "!startrecord",
-  cmdStopRecord: "!stoprecord",
-  cmdScene: "!scene",
 };
 
 export const useChat = (

@@ -8,7 +8,8 @@ import {
 import { SiteFooter } from "#/components/site-footer";
 import { SiteHeader } from "#/components/site-header";
 import { PlatformPicker, PlatformTag } from "#/features/tools/platform-picker";
-import { useChat, DEFAULT_OBS_COMMANDS, type ObsBridgeCustomCommands } from "#/features/tools/use-chat";
+import { DEFAULT_OBS_COMMANDS, type ObsBridgeCustomCommands } from "#/features/tools/obs-bridge-config";
+import { useChat } from "#/features/tools/use-chat";
 import { useT } from "#/lib/i18n";
 import { getKickChannelInfo } from "#/lib/kick";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";

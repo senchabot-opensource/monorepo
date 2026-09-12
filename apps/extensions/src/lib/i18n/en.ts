@@ -243,53 +243,90 @@ export const en = {
     breadcrumb: 'OBS Bridge Setup',
     title: 'OBS Bridge Setup',
     intro:
-      'Control OBS Studio scenes and recording from chat commands issued by authorized users in your Twitch or Kick channel.',
-    scenesNote:
-      'Scenes are assigned on the tool page. After opening the tool, select your Main and BRB scenes, or switch to any scene anytime using !scene <name>.',
-    twitchChannel: 'Twitch Channel (to listen in)',
-    kickChannel: 'Kick Channel (to listen in)',
-    authorizedUsers: 'Authorized Users',
-    authorizedHint: 'Only these users can trigger OBS actions from chat, and only on the platform you picked for each.',
+      'Let the people you trust switch OBS scenes and start or stop your stream and recording from Twitch or Kick chat. The bridge runs in a browser tab or an OBS dock and talks to OBS directly.',
+    sectionChannels: 'Channels',
+    sectionUsers: 'Authorized Users',
+    usersLabel: 'Chat Usernames',
+    usersTip:
+      'Only the people on this list can run commands. With an empty list nobody can, not even you. On Twitch the name is matched against the display name shown in chat.',
+    usersEmpty: 'Nobody yet, so no one can run commands.',
     userPlatform: 'Platform',
-    customCommands: 'Custom Command Names',
-    customCommandsHint:
-      'Customize the chat trigger words for each action (e.g. change !scene to scene or !startstream to start).',
-    cmdSceneLabel: 'Switch to Matching Scene',
-    cmdBrbLabel: 'Switch to BRB Scene',
-    cmdBackLabel: 'Switch to Main Scene',
-    cmdStartStreamLabel: 'Start Streaming',
-    cmdStopStreamLabel: 'Stop Streaming',
-    cmdStartRecordLabel: 'Start Recording',
-    cmdStopRecordLabel: 'Stop Recording',
-    wsSettings: 'OBS WebSocket Settings',
+    addUser: 'Add',
+    userPlaceholder: 'username',
+    removeUser: 'Remove {name}',
+    assignUser: 'Make {name} a {platform} user',
+    pickPlatformWarning:
+      "Twitch and Kick are both connected, so pick a platform for each yellow name. They can't run commands until you do.",
+    sectionCommands: 'Commands',
+    commandsHint:
+      "The whole message has to match the command, capital letters don't matter. Leave a field empty to keep the default.",
+    label: {
+      cmdScene: 'Switch Scene',
+      cmdBrb: 'BRB Scene',
+      cmdBack: 'Back to Main',
+      cmdStartStream: 'Start Stream',
+      cmdStopStream: 'Stop Stream',
+      cmdStartRecord: 'Start Recording',
+      cmdStopRecord: 'Stop Recording',
+    },
+    action: {
+      cmdScene: 'Switches to the scene you name, like {example}',
+      cmdBrb: 'Switches to your BRB scene',
+      cmdBack: 'Switches back to your Main scene',
+      cmdStartStream: 'Starts the stream',
+      cmdStopStream: 'Ends the stream',
+      cmdStartRecord: 'Starts recording',
+      cmdStopRecord: 'Stops recording',
+    },
+    sceneArg: '<name>',
+    sceneTip:
+      'Type the command, a space and a scene name, like !scene Gaming. A scene with exactly that name wins, otherwise the first one whose name contains it.',
+    brbTip:
+      'Switches to the BRB scene you pick on the tool page. It has no ! by default, so anyone on the list typing just brb switches scenes.',
+    backTip: 'Switches back to the Main scene you pick on the tool page. Like brb, it has no ! by default.',
+    sectionConnection: 'OBS Connection',
     wsUrl: 'WebSocket URL',
-    wsUrlHint:
-      'Custom WebSocket URL if OBS is on a different machine. Defaults to ws://localhost:4455.',
+    wsUrlTip:
+      'Only needed if OBS runs on another computer or you changed the port. Leave it empty for ws://127.0.0.1:4455.',
+    wsUrlPlaceholder: 'ws://127.0.0.1:4455 (default)',
     wsPassword: 'WebSocket Password',
-    wsPasswordHint: 'Set in OBS → Tools → WebSocket Server Settings.',
-    activeCommands: 'Active Chat Commands:',
-    activeSceneCmd: '— Switch to matching scene (e.g. {cmd} Gaming)',
-    activeBrbCmd: '— Switch to BRB scene',
-    activeBackCmd: '— Switch to Main scene',
-    activeStreamCmd: '— Toggle stream',
-    activeRecordCmd: '— Toggle recording',
-    previewTitle: 'Tool Preview',
-    previewIframeTitle: 'OBS Bridge Preview',
+    wsPasswordTip:
+      'Find it in OBS under Tools → WebSocket Server Settings → Show Connect Info. It is saved in the tool URL, so treat that link like a password.',
+    wsPasswordPlaceholder: 'Leave empty if none',
+    previewTitle: 'Command Summary',
+    previewTip:
+      "What the link you're building will do. The live bridge only runs on the tool page, so nothing here connects to OBS or chat.",
+    summaryCommands: 'Chat commands',
+    summaryUsers: 'Who can run them',
+    summaryNobody: 'Nobody yet. Add at least one username.',
+    summaryNotListening: "No {platform} channel is set, so {names} can't run commands yet.",
+    summaryChannels: 'Listening to',
+    summaryNoChannel: 'No channel yet. Add a Twitch or Kick channel first.',
+    openTool: 'Open the Tool',
+    openToolHint: 'Opens the live bridge in a new tab. It connects to OBS and your chat right away.',
+    toolUrlTip:
+      "It contains your OBS password, so treat it like one: don't share it and don't show it on stream.",
     toolUrlHint:
-      'Keep this URL open in a tab or add as a Browser Source / Custom Dock in OBS Studio or Streamlabs Desktop to keep the bridge active.',
-    guideTitle: 'OBS Studio Setup',
-    guideStep1: '1. Enable WebSocket Server under Tools > WebSocket Server Settings in OBS.',
+      'Open it in a browser tab or an OBS Custom Browser Dock and keep it open while you stream.',
+    nextOpen: 'Open it in a browser tab, or paste it into a Custom Browser Dock in OBS.',
+    nextKeepOpen: 'Pick your Main and BRB scenes there and keep the page open while you stream.',
+    guideStep1:
+      'In OBS, open Tools → WebSocket Server Settings, turn on the WebSocket server and copy the password from Show Connect Info.',
     guideStep2:
-      '2. Open your generated Tool URL in a browser tab or add as a Custom Browser Dock in OBS.',
+      'Enter your channel, the people allowed to run commands and the password, then copy the tool URL.',
     guideStep3:
-      '3. Type !scene <name> in chat (e.g. !scene Gaming) to switch to any scene matching that name.',
-    guideStep4: '4. You can also assign quick Main and BRB scenes in the tool interface.',
+      'Open the URL in a browser tab or an OBS Custom Browser Dock and pick your Main and BRB scenes.',
+    guideStep4:
+      'Using a dock? After picking scenes, press Copy Updated URL and paste it into the dock, since a dock keeps opening the URL it was created with.',
     faq1Q: 'How does the !scene chat command work?',
     faq1A:
-      'When an authorized user sends !scene <name>, OBS Bridge searches your OBS scenes for an exact or partial case-insensitive name match and switches to that scene immediately.',
-    faq2Q: 'Is my OBS WebSocket password secure?',
+      "Someone on your list types the command, a space and a scene name, like !scene Gaming. OBS Bridge first looks for a scene with exactly that name, capital letters don't matter, then for the first scene whose name contains it, and switches to it.",
+    faq2Q: 'Is my OBS WebSocket password safe?',
     faq2A:
-      'Yes. The WebSocket connection runs directly between your browser and OBS Studio on your local machine. No credentials are sent to our servers.',
+      "The bridge connects to OBS straight from your browser, so the password never reaches our servers. It is saved in the tool URL though, so treat that link like a password: don't share it and don't show it on stream.",
+    faq3Q: 'Why did my scene picks disappear in the OBS dock?',
+    faq3A:
+      "Scene picks and user changes are saved in the tool page's URL. A browser tab keeps them if you bookmark the page, but an OBS dock always opens the URL it was created with. Press Copy Updated URL on the tool page and paste the new URL into the dock.",
   },
   subSprout: {
     breadcrumb: 'Sub Sprout Setup',
