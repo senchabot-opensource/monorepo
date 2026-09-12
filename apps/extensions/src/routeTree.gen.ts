@@ -10,12 +10,18 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as GuidesIndexRouteImport } from './routes/guides/index'
+import { Route as GuidesChatGiveawayRouteImport } from './routes/guides/chat-giveaway'
+import { Route as GuidesObsBrowserSourceRouteImport } from './routes/guides/obs-browser-source'
+import { Route as GuidesObsSceneSwitcherRouteImport } from './routes/guides/obs-scene-switcher'
+import { Route as GuidesTwitchKickChatOverlayRouteImport } from './routes/guides/twitch-kick-chat-overlay'
 import { Route as SetupChatWidgetRouteImport } from './routes/setup/chat-widget'
 import { Route as SetupEmoteWallRouteImport } from './routes/setup/emote-wall'
 import { Route as SetupObsBridgeRouteImport } from './routes/setup/obs-bridge'
 import { Route as SetupRaffleRouteImport } from './routes/setup/raffle'
 import { Route as SetupSubGrowingPlantRouteImport } from './routes/setup/sub-growing-plant'
 import { Route as ToolsObsBridgeRouteImport } from './routes/tools/obs-bridge'
+import { Route as WidgetsAlertsRouteImport } from './routes/widgets/alerts'
 import { Route as WidgetsChatWidgetRouteImport } from './routes/widgets/chat-widget'
 import { Route as WidgetsEmoteWallRouteImport } from './routes/widgets/emote-wall'
 import { Route as WidgetsRaffleOverlayRouteImport } from './routes/widgets/raffle-overlay'
@@ -26,6 +32,32 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GuidesIndexRoute = GuidesIndexRouteImport.update({
+  id: '/guides/',
+  path: '/guides/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GuidesChatGiveawayRoute = GuidesChatGiveawayRouteImport.update({
+  id: '/guides/chat-giveaway',
+  path: '/guides/chat-giveaway',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GuidesObsBrowserSourceRoute = GuidesObsBrowserSourceRouteImport.update({
+  id: '/guides/obs-browser-source',
+  path: '/guides/obs-browser-source',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GuidesObsSceneSwitcherRoute = GuidesObsSceneSwitcherRouteImport.update({
+  id: '/guides/obs-scene-switcher',
+  path: '/guides/obs-scene-switcher',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GuidesTwitchKickChatOverlayRoute =
+  GuidesTwitchKickChatOverlayRouteImport.update({
+    id: '/guides/twitch-kick-chat-overlay',
+    path: '/guides/twitch-kick-chat-overlay',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const SetupChatWidgetRoute = SetupChatWidgetRouteImport.update({
   id: '/setup/chat-widget',
   path: '/setup/chat-widget',
@@ -56,6 +88,11 @@ const ToolsObsBridgeRoute = ToolsObsBridgeRouteImport.update({
   path: '/tools/obs-bridge',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WidgetsAlertsRoute = WidgetsAlertsRouteImport.update({
+  id: '/widgets/alerts',
+  path: '/widgets/alerts',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const WidgetsChatWidgetRoute = WidgetsChatWidgetRouteImport.update({
   id: '/widgets/chat-widget',
   path: '/widgets/chat-widget',
@@ -79,98 +116,140 @@ const WidgetsSubSproutWidgetRoute = WidgetsSubSproutWidgetRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/guides/chat-giveaway': typeof GuidesChatGiveawayRoute
+  '/guides/obs-browser-source': typeof GuidesObsBrowserSourceRoute
+  '/guides/obs-scene-switcher': typeof GuidesObsSceneSwitcherRoute
+  '/guides/twitch-kick-chat-overlay': typeof GuidesTwitchKickChatOverlayRoute
   '/setup/chat-widget': typeof SetupChatWidgetRoute
   '/setup/emote-wall': typeof SetupEmoteWallRoute
   '/setup/obs-bridge': typeof SetupObsBridgeRoute
   '/setup/raffle': typeof SetupRaffleRoute
   '/setup/sub-growing-plant': typeof SetupSubGrowingPlantRoute
   '/tools/obs-bridge': typeof ToolsObsBridgeRoute
+  '/widgets/alerts': typeof WidgetsAlertsRoute
   '/widgets/chat-widget': typeof WidgetsChatWidgetRoute
   '/widgets/emote-wall': typeof WidgetsEmoteWallRoute
   '/widgets/raffle-overlay': typeof WidgetsRaffleOverlayRoute
   '/widgets/sub-sprout-widget': typeof WidgetsSubSproutWidgetRoute
+  '/guides/': typeof GuidesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/guides/chat-giveaway': typeof GuidesChatGiveawayRoute
+  '/guides/obs-browser-source': typeof GuidesObsBrowserSourceRoute
+  '/guides/obs-scene-switcher': typeof GuidesObsSceneSwitcherRoute
+  '/guides/twitch-kick-chat-overlay': typeof GuidesTwitchKickChatOverlayRoute
   '/setup/chat-widget': typeof SetupChatWidgetRoute
   '/setup/emote-wall': typeof SetupEmoteWallRoute
   '/setup/obs-bridge': typeof SetupObsBridgeRoute
   '/setup/raffle': typeof SetupRaffleRoute
   '/setup/sub-growing-plant': typeof SetupSubGrowingPlantRoute
   '/tools/obs-bridge': typeof ToolsObsBridgeRoute
+  '/widgets/alerts': typeof WidgetsAlertsRoute
   '/widgets/chat-widget': typeof WidgetsChatWidgetRoute
   '/widgets/emote-wall': typeof WidgetsEmoteWallRoute
   '/widgets/raffle-overlay': typeof WidgetsRaffleOverlayRoute
   '/widgets/sub-sprout-widget': typeof WidgetsSubSproutWidgetRoute
+  '/guides': typeof GuidesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/guides/chat-giveaway': typeof GuidesChatGiveawayRoute
+  '/guides/obs-browser-source': typeof GuidesObsBrowserSourceRoute
+  '/guides/obs-scene-switcher': typeof GuidesObsSceneSwitcherRoute
+  '/guides/twitch-kick-chat-overlay': typeof GuidesTwitchKickChatOverlayRoute
   '/setup/chat-widget': typeof SetupChatWidgetRoute
   '/setup/emote-wall': typeof SetupEmoteWallRoute
   '/setup/obs-bridge': typeof SetupObsBridgeRoute
   '/setup/raffle': typeof SetupRaffleRoute
   '/setup/sub-growing-plant': typeof SetupSubGrowingPlantRoute
   '/tools/obs-bridge': typeof ToolsObsBridgeRoute
+  '/widgets/alerts': typeof WidgetsAlertsRoute
   '/widgets/chat-widget': typeof WidgetsChatWidgetRoute
   '/widgets/emote-wall': typeof WidgetsEmoteWallRoute
   '/widgets/raffle-overlay': typeof WidgetsRaffleOverlayRoute
   '/widgets/sub-sprout-widget': typeof WidgetsSubSproutWidgetRoute
+  '/guides/': typeof GuidesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/guides/chat-giveaway'
+    | '/guides/obs-browser-source'
+    | '/guides/obs-scene-switcher'
+    | '/guides/twitch-kick-chat-overlay'
     | '/setup/chat-widget'
     | '/setup/emote-wall'
     | '/setup/obs-bridge'
     | '/setup/raffle'
     | '/setup/sub-growing-plant'
     | '/tools/obs-bridge'
+    | '/widgets/alerts'
     | '/widgets/chat-widget'
     | '/widgets/emote-wall'
     | '/widgets/raffle-overlay'
     | '/widgets/sub-sprout-widget'
+    | '/guides/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/guides/chat-giveaway'
+    | '/guides/obs-browser-source'
+    | '/guides/obs-scene-switcher'
+    | '/guides/twitch-kick-chat-overlay'
     | '/setup/chat-widget'
     | '/setup/emote-wall'
     | '/setup/obs-bridge'
     | '/setup/raffle'
     | '/setup/sub-growing-plant'
     | '/tools/obs-bridge'
+    | '/widgets/alerts'
     | '/widgets/chat-widget'
     | '/widgets/emote-wall'
     | '/widgets/raffle-overlay'
     | '/widgets/sub-sprout-widget'
+    | '/guides'
   id:
     | '__root__'
     | '/'
+    | '/guides/chat-giveaway'
+    | '/guides/obs-browser-source'
+    | '/guides/obs-scene-switcher'
+    | '/guides/twitch-kick-chat-overlay'
     | '/setup/chat-widget'
     | '/setup/emote-wall'
     | '/setup/obs-bridge'
     | '/setup/raffle'
     | '/setup/sub-growing-plant'
     | '/tools/obs-bridge'
+    | '/widgets/alerts'
     | '/widgets/chat-widget'
     | '/widgets/emote-wall'
     | '/widgets/raffle-overlay'
     | '/widgets/sub-sprout-widget'
+    | '/guides/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  GuidesChatGiveawayRoute: typeof GuidesChatGiveawayRoute
+  GuidesObsBrowserSourceRoute: typeof GuidesObsBrowserSourceRoute
+  GuidesObsSceneSwitcherRoute: typeof GuidesObsSceneSwitcherRoute
+  GuidesTwitchKickChatOverlayRoute: typeof GuidesTwitchKickChatOverlayRoute
   SetupChatWidgetRoute: typeof SetupChatWidgetRoute
   SetupEmoteWallRoute: typeof SetupEmoteWallRoute
   SetupObsBridgeRoute: typeof SetupObsBridgeRoute
   SetupRaffleRoute: typeof SetupRaffleRoute
   SetupSubGrowingPlantRoute: typeof SetupSubGrowingPlantRoute
   ToolsObsBridgeRoute: typeof ToolsObsBridgeRoute
+  WidgetsAlertsRoute: typeof WidgetsAlertsRoute
   WidgetsChatWidgetRoute: typeof WidgetsChatWidgetRoute
   WidgetsEmoteWallRoute: typeof WidgetsEmoteWallRoute
   WidgetsRaffleOverlayRoute: typeof WidgetsRaffleOverlayRoute
   WidgetsSubSproutWidgetRoute: typeof WidgetsSubSproutWidgetRoute
+  GuidesIndexRoute: typeof GuidesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -180,6 +259,41 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/guides/': {
+      id: '/guides/'
+      path: '/guides'
+      fullPath: '/guides/'
+      preLoaderRoute: typeof GuidesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/guides/chat-giveaway': {
+      id: '/guides/chat-giveaway'
+      path: '/guides/chat-giveaway'
+      fullPath: '/guides/chat-giveaway'
+      preLoaderRoute: typeof GuidesChatGiveawayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/guides/obs-browser-source': {
+      id: '/guides/obs-browser-source'
+      path: '/guides/obs-browser-source'
+      fullPath: '/guides/obs-browser-source'
+      preLoaderRoute: typeof GuidesObsBrowserSourceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/guides/obs-scene-switcher': {
+      id: '/guides/obs-scene-switcher'
+      path: '/guides/obs-scene-switcher'
+      fullPath: '/guides/obs-scene-switcher'
+      preLoaderRoute: typeof GuidesObsSceneSwitcherRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/guides/twitch-kick-chat-overlay': {
+      id: '/guides/twitch-kick-chat-overlay'
+      path: '/guides/twitch-kick-chat-overlay'
+      fullPath: '/guides/twitch-kick-chat-overlay'
+      preLoaderRoute: typeof GuidesTwitchKickChatOverlayRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/setup/chat-widget': {
@@ -224,6 +338,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ToolsObsBridgeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/widgets/alerts': {
+      id: '/widgets/alerts'
+      path: '/widgets/alerts'
+      fullPath: '/widgets/alerts'
+      preLoaderRoute: typeof WidgetsAlertsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/widgets/chat-widget': {
       id: '/widgets/chat-widget'
       path: '/widgets/chat-widget'
@@ -257,16 +378,22 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  GuidesChatGiveawayRoute: GuidesChatGiveawayRoute,
+  GuidesObsBrowserSourceRoute: GuidesObsBrowserSourceRoute,
+  GuidesObsSceneSwitcherRoute: GuidesObsSceneSwitcherRoute,
+  GuidesTwitchKickChatOverlayRoute: GuidesTwitchKickChatOverlayRoute,
   SetupChatWidgetRoute: SetupChatWidgetRoute,
   SetupEmoteWallRoute: SetupEmoteWallRoute,
   SetupObsBridgeRoute: SetupObsBridgeRoute,
   SetupRaffleRoute: SetupRaffleRoute,
   SetupSubGrowingPlantRoute: SetupSubGrowingPlantRoute,
   ToolsObsBridgeRoute: ToolsObsBridgeRoute,
+  WidgetsAlertsRoute: WidgetsAlertsRoute,
   WidgetsChatWidgetRoute: WidgetsChatWidgetRoute,
   WidgetsEmoteWallRoute: WidgetsEmoteWallRoute,
   WidgetsRaffleOverlayRoute: WidgetsRaffleOverlayRoute,
   WidgetsSubSproutWidgetRoute: WidgetsSubSproutWidgetRoute,
+  GuidesIndexRoute: GuidesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
