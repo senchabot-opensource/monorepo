@@ -5,6 +5,8 @@ import { useAnchoredPosition, useDismiss } from './floating';
 export interface SelectOption<T extends string> {
   value: T;
   label: string;
+  /** Muted text after the label, e.g. "9 stages". */
+  hint?: string;
 }
 
 interface SelectProps<T extends string> {
@@ -135,8 +137,11 @@ export function Select<T extends string>({
         onKeyDown={onKeyDown}
         className="flex h-9 w-full items-center justify-between gap-2 rounded-md border border-zinc-300 bg-zinc-100 px-3 text-left text-sm text-zinc-900 transition-colors hover:border-zinc-400 focus-visible:border-green-500 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-green-500 disabled:cursor-not-allowed disabled:opacity-50 aria-expanded:border-green-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white dark:hover:border-zinc-600"
       >
-        <span id={valueId} className="truncate">
-          {options[selectedIndex]?.label}
+        <span id={valueId} className="flex min-w-0 items-baseline gap-2">
+          <span className="truncate">{options[selectedIndex]?.label}</span>
+          {options[selectedIndex]?.hint && (
+            <span className="shrink-0 text-xs text-zinc-500">{options[selectedIndex].hint}</span>
+          )}
         </span>
         <svg
           className={`size-4 shrink-0 text-zinc-500 transition-transform ${open ? 'rotate-180' : ''}`}
@@ -178,7 +183,7 @@ export function Select<T extends string>({
                   onMouseDown={(e) => e.preventDefault()}
                   onMouseMove={() => setActiveIndex(index)}
                   onClick={() => commit(index)}
-                  className={`flex cursor-pointer items-center justify-between gap-3 whitespace-nowrap rounded px-2.5 py-1.5 text-sm ${
+                  className={`flex cursor-pointer items-center gap-3 whitespace-nowrap rounded px-2.5 py-1.5 text-sm ${
                     index === activeIndex ? 'bg-zinc-100 dark:bg-zinc-800' : ''
                   } ${
                     selected
@@ -186,7 +191,10 @@ export function Select<T extends string>({
                       : 'text-zinc-800 dark:text-zinc-200'
                   }`}
                 >
-                  {option.label}
+                  <span className="flex-1">{option.label}</span>
+                  {option.hint && (
+                    <span className="text-xs font-normal text-zinc-500">{option.hint}</span>
+                  )}
                   <svg
                     className={`size-4 shrink-0 ${selected ? '' : 'invisible'}`}
                     fill="none"

@@ -1,5 +1,6 @@
 import { type ReactNode, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { useI18n } from '#/lib/i18n';
+import type { SourceSize } from '#/lib/widgets';
 
 const REDUCED_MOTION = '(prefers-reduced-motion: reduce)';
 
@@ -24,6 +25,11 @@ interface PreviewFrameProps {
   title: string;
   /** Width / height, e.g. `16 / 9`. Without it the frame fills its parent, which needs a height. */
   aspect?: number;
+  /**
+   * The page's native size, e.g. 1920×1080. It renders at that size and is scaled down to fit,
+   * so pixel-sized content (a 112px emote) keeps its proportions.
+   */
+  canvas?: SourceSize;
   /** Shown until the iframe mounts; defaults to a "Loading preview" line. */
   placeholder?: ReactNode;
   /** For demos that play on their own: with reduced motion on, wait for a Play click. */
@@ -41,6 +47,7 @@ export function PreviewFrame({
   src,
   title,
   aspect,
+  canvas,
   placeholder,
   motionSafe,
   backgroundClassName = 'bg-zinc-950/80',
@@ -50,7 +57,10 @@ export function PreviewFrame({
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
   const [played, setPlayed] = useState(false);
+  const [scale, setScale] = useState(0);
   const reducedMotion = usePrefersReducedMotion();
+  const canvasWidth = canvas?.width;
+  const canvasHeight = canvas?.height;
 
   useEffect(() => {
     const element = ref.current;
@@ -72,8 +82,20 @@ export function PreviewFrame({
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    const element = ref.current;
+    if (!element || !canvasWidth || !canvasHeight) return;
+    const measure = () =>
+      setScale(Math.min(element.clientWidth / canvasWidth, element.clientHeight / canvasHeight));
+    measure();
+    if (typeof ResizeObserver === 'undefined') return;
+    const observer = new ResizeObserver(measure);
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [canvasWidth, canvasHeight]);
+
   const waitingForPlay = Boolean(motionSafe && reducedMotion && !played);
-  const mounted = visible && Boolean(src) && !waitingForPlay;
+  const mounted = visible && Boolean(src) && !waitingForPlay && (!canvas || scale > 0);
 
   return (
     <div
@@ -87,7 +109,18 @@ export function PreviewFrame({
         <iframe
           src={src}
           title={title}
-          className="pointer-events-none absolute inset-0 h-full w-full border-0"
+          style={
+            canvas
+              ? {
+                  width: canvas.width,
+                  height: canvas.height,
+                  transform: `translate(-50%, -50%) scale(${scale})`,
+                }
+              : undefined
+          }
+          className={`pointer-events-none absolute border-0 ${
+            canvas ? 'top-1/2 left-1/2' : 'inset-0 h-full w-full'
+          }`}
         />
       ) : (
         <div className="absolute inset-0 flex items-center justify-center p-4 text-center text-sm text-zinc-400">
