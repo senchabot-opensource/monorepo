@@ -15,11 +15,11 @@ Senchabot Extensions provides 100% free streaming widgets, customizable overlays
 ## Live URLs
 
 - [extensions.senchabot.com](https://extensions.senchabot.com/) — Widget and tool hub
-- [Sub Sprout](https://extensions.senchabot.com/setup/sub-growing-plant/)
-- [Universal Chat](https://extensions.senchabot.com/setup/chat-widget/)
-- [Raffle Picker](https://extensions.senchabot.com/setup/raffle/)
-- [OBS Bridge](https://extensions.senchabot.com/setup/obs-bridge/)
-- [Emote Wall](https://extensions.senchabot.com/setup/emote-wall/)
+- [Sub Sprout](https://extensions.senchabot.com/setup/sub-growing-plant)
+- [Universal Chat](https://extensions.senchabot.com/setup/chat-widget)
+- [Raffle Picker](https://extensions.senchabot.com/setup/raffle)
+- [OBS Bridge](https://extensions.senchabot.com/setup/obs-bridge)
+- [Emote Wall](https://extensions.senchabot.com/setup/emote-wall)
 
 ## Widget & Tool Usage
 
