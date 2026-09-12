@@ -1,16 +1,12 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { useEffect, useId, useMemo, useState } from 'react';
+import { useDeferredValue, useEffect, useMemo, useState } from 'react';
 import { CopyUrlField } from '#/components/copy-url-field';
 import { ExternalIcon } from '#/components/icons';
 import { SetupShell } from '#/components/setup-shell';
 import { SettingsGroup } from '#/components/ui/settings-group';
 import { TextField } from '#/components/ui/text-field';
 import { type CommandUser, summarizeCommandUsers } from '#/features/tools/command-users';
-import {
-  CommandUsersField,
-  PLATFORM_LABELS,
-  PlatformDot,
-} from '#/features/tools/command-users-field';
+import { CommandUsersField, PLATFORM_LABELS } from '#/features/tools/command-users-field';
 import {
   buildObsBridgeParams,
   DEFAULT_OBS_COMMANDS,
@@ -18,7 +14,6 @@ import {
   type ObsBridgeCustomCommands,
   type ObsCommandKey,
 } from '#/features/tools/obs-bridge-config';
-import { ObsCommandList } from '#/features/tools/obs-command-list';
 import { type TranslationKey, useI18n } from '#/lib/i18n';
 import { getParamsLocale, withLangParam } from '#/lib/i18n/paths';
 import type { FaqEntry } from '#/lib/i18n/seo';
@@ -60,13 +55,11 @@ const COMMAND_CELLS: Record<ObsCommandKey, string> = {
   cmdStopRecord: 'sm:col-span-3',
 };
 
-const SUMMARY_HEADING = 'mb-2 text-xs font-semibold text-zinc-700 dark:text-zinc-300';
-const SUMMARY_WARNING =
+const WARNING =
   'rounded-md border border-amber-300 bg-amber-50 px-2.5 py-1.5 text-xs leading-relaxed text-amber-800 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-300';
 
 function ObsBridgeSetup() {
   const { t, locale } = useI18n();
-  const id = useId();
   const [twitch, setTwitch] = useState('');
   const [kick, setKick] = useState('');
   const [commandUsers, setCommandUsers] = useState<CommandUser[]>([]);
@@ -94,6 +87,7 @@ function ObsBridgeSetup() {
     });
     return `${window.location.origin}${WIDGET.widgetPath}?${params.toString()}`;
   }, [mounted, twitch, kick, commandUsers, commands, obsWebsocketUrl, obsWebsocketPassword]);
+  const deferredToolUrl = useDeferredValue(toolUrl);
 
   const users = summarizeCommandUsers(commandUsers, platforms);
   const notListening = (['twitch', 'kick'] as const)
@@ -186,97 +180,64 @@ function ObsBridgeSetup() {
     </>
   );
 
-  const summary = (
-    <div className="h-full space-y-5 overflow-y-auto p-1">
-      <section aria-labelledby={`${id}-summary-commands`}>
-        <h3 id={`${id}-summary-commands`} className={SUMMARY_HEADING}>
-          {t('obsBridge.summaryCommands')}
-        </h3>
-        <ObsCommandList commands={commands} />
-      </section>
-
-      <section aria-labelledby={`${id}-summary-users`} className="space-y-2">
-        <h3 id={`${id}-summary-users`} className={SUMMARY_HEADING}>
-          {t('obsBridge.summaryUsers')}
-        </h3>
-        {users.active.length > 0 && (
-          <ul className="flex flex-wrap gap-1.5">
-            {users.active.map((user) => (
-              <li
-                key={`${user.platform}:${user.name}`}
-                className="inline-flex items-center gap-1.5 rounded-full border border-zinc-300 bg-zinc-100 px-2.5 py-0.5 text-xs font-medium text-zinc-800 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
-              >
-                <PlatformDot platform={user.platform} />
-                {user.name}
-              </li>
-            ))}
-          </ul>
-        )}
-        {commandUsers.length === 0 && (
-          <p className={SUMMARY_WARNING}>{t('obsBridge.summaryNobody')}</p>
-        )}
-        {hasChannel &&
-          notListening.map((group) => (
-            <p key={group.platform} className={SUMMARY_WARNING}>
-              {t('obsBridge.summaryNotListening', {
-                platform: PLATFORM_LABELS[group.platform],
-                names: group.names.join(', '),
-              })}
-            </p>
-          ))}
-      </section>
-
-      <section aria-labelledby={`${id}-summary-channels`}>
-        <h3 id={`${id}-summary-channels`} className={SUMMARY_HEADING}>
-          {t('obsBridge.summaryChannels')}
-        </h3>
-        {hasChannel ? (
-          <ul className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-zinc-800 dark:text-zinc-200">
-            {(['twitch', 'kick'] as const)
-              .filter((platform) => platforms[platform])
-              .map((platform) => (
-                <li key={platform} className="inline-flex items-center gap-1.5">
-                  <PlatformDot platform={platform} />
-                  <span className="break-all font-medium">
-                    {(platform === 'twitch' ? twitch : kick).trim().toLowerCase()}
-                  </span>
-                </li>
-              ))}
-          </ul>
-        ) : (
-          <p className="text-xs text-zinc-500">{t('obsBridge.summaryNoChannel')}</p>
-        )}
-      </section>
+  // The real tool, as on the old setup page: it connects to OBS and chat, so it can be tested here.
+  const preview = deferredToolUrl ? (
+    <iframe
+      src={withLangParam(deferredToolUrl, locale)}
+      title={t('obsBridge.previewIframeTitle')}
+      className="size-full rounded-lg border border-zinc-300 dark:border-zinc-800"
+    />
+  ) : (
+    <div className="flex size-full items-center justify-center rounded-lg border border-zinc-300 bg-zinc-950 p-4 text-center text-sm text-zinc-500 dark:border-zinc-800">
+      {t('common.previewNoChannel')}
     </div>
   );
 
+  const warnings = hasChannel
+    ? notListening.map((group) =>
+        t('obsBridge.summaryNotListening', {
+          platform: PLATFORM_LABELS[group.platform],
+          names: group.names.join(', '),
+        }),
+      )
+    : [];
+
   const openTool = (
-    <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-      {toolUrl ? (
-        <a
-          // Opens in this page's language; the copied tool URL stays as the user built it.
-          href={withLangParam(toolUrl, locale)}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex h-9 items-center gap-2 rounded-md border border-zinc-300 bg-white px-3 text-sm font-semibold text-zinc-900 transition-colors hover:bg-zinc-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white dark:hover:bg-zinc-800 dark:focus-visible:ring-offset-zinc-900"
-        >
-          {t('obsBridge.openTool')}
-          <ExternalIcon className="size-4 text-zinc-500" />
-          <span className="sr-only"> {t('common.newTab')}</span>
-        </a>
-      ) : (
-        <button
-          type="button"
-          disabled
-          className="inline-flex h-9 cursor-not-allowed items-center gap-2 rounded-md border border-zinc-300 bg-white px-3 text-sm font-semibold text-zinc-900 opacity-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white"
-        >
-          {t('obsBridge.openTool')}
-          <ExternalIcon className="size-4 text-zinc-500" />
-        </button>
-      )}
-      <p className="min-w-0 flex-1 text-xs leading-relaxed text-zinc-500">
-        {toolUrl ? t('obsBridge.openToolHint') : t('obsBridge.summaryNoChannel')}
-      </p>
+    <div className="space-y-2">
+      {warnings.map((warning) => (
+        <p key={warning} className={WARNING}>
+          {warning}
+        </p>
+      ))}
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+        {toolUrl ? (
+          <a
+            // Opens in this page's language; the copied tool URL stays as the user built it.
+            href={withLangParam(toolUrl, locale)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex h-9 items-center gap-2 rounded-md border border-zinc-300 bg-white px-3 text-sm font-semibold text-zinc-900 transition-colors hover:bg-zinc-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white dark:hover:bg-zinc-800 dark:focus-visible:ring-offset-zinc-900"
+          >
+            {t('obsBridge.openTool')}
+            <ExternalIcon className="size-4 text-zinc-500" />
+            <span className="sr-only"> {t('common.newTab')}</span>
+          </a>
+        ) : (
+          <button
+            type="button"
+            disabled
+            className="inline-flex h-9 cursor-not-allowed items-center gap-2 rounded-md border border-zinc-300 bg-white px-3 text-sm font-semibold text-zinc-900 opacity-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white"
+          >
+            {t('obsBridge.openTool')}
+            <ExternalIcon className="size-4 text-zinc-500" />
+          </button>
+        )}
+        {toolUrl && (
+          <p className="min-w-0 flex-1 text-xs leading-relaxed text-zinc-500">
+            {t('obsBridge.openToolHint')}
+          </p>
+        )}
+      </div>
     </div>
   );
 
@@ -286,8 +247,7 @@ function ObsBridgeSetup() {
       title={t('obsBridge.title')}
       settings={settingsPanel}
       previewTitle={t('obsBridge.previewTitle')}
-      previewTip={t('obsBridge.previewTip')}
-      preview={summary}
+      preview={preview}
       previewFooter={openTool}
       urlField={
         <CopyUrlField

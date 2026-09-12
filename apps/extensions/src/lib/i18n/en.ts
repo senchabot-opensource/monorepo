@@ -340,12 +340,8 @@ export const en = {
     wsPasswordTip:
       'Find it in OBS under Tools → WebSocket Server Settings → Show Connect Info. It is saved in the tool URL, so treat that link like a password.',
     wsPasswordPlaceholder: 'Leave empty if none',
-    previewTitle: 'Command Summary',
-    previewTip:
-      "What the link you're building will do. The live bridge only runs on the tool page, so nothing here connects to OBS or chat.",
-    summaryCommands: 'Chat commands',
-    summaryUsers: 'Who can run them',
-    summaryNobody: 'Nobody yet. Add at least one username.',
+    previewTitle: 'Tool Preview',
+    previewIframeTitle: 'OBS Bridge Preview',
     summaryNotListening: "No {platform} channel is set, so {names} can't run commands yet.",
     summaryChannels: 'Listening to',
     summaryNoChannel: 'No channel yet. Add a Twitch or Kick channel first.',

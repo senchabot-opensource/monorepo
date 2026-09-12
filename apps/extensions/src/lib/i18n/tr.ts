@@ -345,12 +345,8 @@ export const tr: typeof en = {
     wsPasswordTip:
       "OBS'de Araçlar → WebSocket Sunucu Ayarları → Bağlantı Bilgilerini Göster yolunda bulursun. Şifre araç URL'sine yazılır, o linki de şifre gibi sakla.",
     wsPasswordPlaceholder: 'Şifre yoksa boş bırak',
-    previewTitle: 'Komut Özeti',
-    previewTip:
-      "Oluşturduğun linkin ne yapacağının özeti. Canlı köprü sadece araç sayfasında çalışır, burası OBS'ye ya da sohbete bağlanmaz.",
-    summaryCommands: 'Sohbet komutları',
-    summaryUsers: 'Kimler çalıştırabilir',
-    summaryNobody: 'Henüz kimse yok. En az bir kullanıcı adı ekle.',
+    previewTitle: 'Araç Önizleme',
+    previewIframeTitle: 'OBS Bridge Önizleme',
     summaryNotListening: '{platform} kanalı girilmediği için {names} şimdilik komut çalıştıramaz.',
     summaryChannels: 'Dinlenen kanallar',
     summaryNoChannel: 'Henüz kanal yok. Önce bir Twitch ya da Kick kanalı gir.',

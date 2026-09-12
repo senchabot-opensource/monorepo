@@ -1,11 +1,11 @@
-import { screen, within } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import type { CommandUser } from '#/features/tools/command-users';
 import {
   buildObsBridgeParams,
   type ObsBridgeCustomCommands,
 } from '#/features/tools/obs-bridge-config';
-import { button, en, section, segment, textbox, tr } from '#/test/queries';
+import { button, en, segment, textbox, tr } from '#/test/queries';
 import { renderRoute, setupUser } from '#/test/render';
 
 const PAGE = '/setup/obs-bridge';
@@ -15,7 +15,6 @@ const twitchField = () => textbox(en('common.twitchChannel'));
 const kickField = () => textbox(en('common.kickChannel'));
 const usersField = () => textbox(en('obsBridge.usersLabel'));
 const userPlatform = (option: string) => segment(en('obsBridge.userPlatform'), option);
-const summary = () => section(en('obsBridge.summaryCommands'));
 
 describe('OBS Bridge setup', () => {
   it('builds the tool URL from channels, users, commands and the connection', async () => {
@@ -74,32 +73,21 @@ describe('OBS Bridge setup', () => {
     expect(urlField().value).toContain('commandUser=kick%3Akmod&');
   });
 
-  it('summarizes what the link will do', async () => {
+  it('runs the live tool in the preview, like the old setup page', async () => {
     const user = setupUser();
     await renderRoute(PAGE);
-    expect(screen.getByText(en('obsBridge.summaryNobody'))).toBeTruthy();
+    expect(screen.queryByTitle(en('obsBridge.previewIframeTitle'))).toBeNull();
+    expect(screen.getByText(en('common.previewNoChannel'))).toBeTruthy();
 
     await user.type(twitchField(), 'streamer');
-    await user.type(textbox(en('obsBridge.label.cmdScene')), '!cam');
     await user.click(userPlatform('Kick'));
     await user.type(usersField(), 'kmod{Enter}');
 
-    const codes = within(summary())
-      .getAllByRole('term')
-      .map((term) => term.textContent);
-    expect(codes).toEqual([
-      `!cam ${en('obsBridge.sceneArg')}`,
-      'brb',
-      'back',
-      '!startstream',
-      '!stopstream',
-      '!startrecord',
-      '!stoprecord',
-    ]);
+    const frame = screen.getByTitle(en('obsBridge.previewIframeTitle')) as HTMLIFrameElement;
+    expect(frame.getAttribute('src')).toBe(`${urlField().value}&lang=en`);
     expect(
       screen.getByText(en('obsBridge.summaryNotListening', { platform: 'Kick', names: 'kmod' })),
     ).toBeTruthy();
-    expect(screen.queryByText(en('obsBridge.summaryNobody'))).toBeNull();
   });
 
   it('opens the tool in the page language but copies the URL without one', async () => {

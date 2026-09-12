@@ -79,8 +79,8 @@ export const SETUP_SPECS = {
     exact: '/widgets/raffle-overlay',
   },
   'obs-bridge': {
-    // Commands, users and channels summary instead of a preview.
-    preview: { selector: 'section', min: 3 },
+    // The preview runs the live tool, so with no channel yet it shows a hint instead.
+    preview: { selector: 'p', min: 1 },
     steps: [{ type: 'input[placeholder="brb"]', text: '!pause' }],
     expect: ['/tools/obs-bridge?', 'twitch={channel}', 'cmdBrb=%21pause'],
   },
