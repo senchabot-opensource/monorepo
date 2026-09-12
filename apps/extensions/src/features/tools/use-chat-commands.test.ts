@@ -71,18 +71,14 @@ const bridge = async (
     kick: Boolean(channels.kick),
   }).allowed;
   renderHook(() =>
-    useChat(
-      'Main',
-      'BRB',
-      channels.twitch,
-      channels.kick,
-      null,
-      undefined,
-      allowed,
-      undefined,
-      undefined,
-      resolveObsCommands(commands),
-    ),
+    useChat({
+      mainScene: 'Main',
+      brbScene: 'BRB',
+      twitchChannel: channels.twitch,
+      kickChannelId: channels.kick,
+      commandUsers: allowed,
+      customCommands: resolveObsCommands(commands),
+    }),
   );
   await obs.handlers.get('Identified')?.();
 };

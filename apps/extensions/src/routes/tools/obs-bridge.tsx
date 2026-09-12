@@ -5,16 +5,19 @@ import { ChevronDownIcon } from '#/components/icons';
 import { PANEL_CLASS } from '#/components/setup-shell';
 import { SiteHeader } from '#/components/site-header';
 import { INPUT_CLASS } from '#/components/ui/text-field';
+import type { ChatPlatform } from '#/features/tools/command-users';
 import {
   type CommandUser,
   formatCommandUsers,
   parseCommandUsers,
   resolveCommandUsers,
 } from '#/features/tools/command-users';
-import { CommandUsersField, PlatformDot } from '#/features/tools/command-users-field';
+import { CommandUsersField } from '#/features/tools/command-users-field';
 import { resolveObsCommands } from '#/features/tools/obs-bridge-config';
+import { ActivityList, ConnectionsCard, DEFAULT_OBS_URL } from '#/features/tools/obs-bridge-status';
 import { ObsCommandList } from '#/features/tools/obs-command-list';
-import { type ObsStatus, useChat } from '#/features/tools/use-chat';
+import { type ObsActivity, type ObsState, useChat } from '#/features/tools/use-chat';
+import type { ChatConnectionStatus } from '#/lib/basechat';
 import { useI18n } from '#/lib/i18n';
 import { getKickChannelInfo } from '#/lib/kick';
 
@@ -54,16 +57,6 @@ export const Route = createFileRoute('/tools/obs-bridge')({
     };
   },
 });
-
-const STATUS_STYLES: Record<ObsStatus, { dot: string; text: string }> = {
-  connecting: {
-    dot: 'bg-zinc-400 motion-safe:animate-pulse',
-    text: 'text-zinc-600 dark:text-zinc-400',
-  },
-  connected: { dot: 'bg-green-500', text: 'text-green-700 dark:text-green-400' },
-  disconnected: { dot: 'bg-amber-500', text: 'text-amber-700 dark:text-amber-400' },
-  failed: { dot: 'bg-red-500', text: 'text-red-700 dark:text-red-400' },
-};
 
 const HEADING_CLASS = 'text-sm font-semibold text-zinc-900 dark:text-white';
 const WARNING_CLASS =
@@ -150,6 +143,7 @@ function SceneList({
 }
 
 const COPIED_MS = 2000;
+const ACTIVITY_LIMIT = 20;
 
 /** Copies the page's own URL, which is where scene picks and user changes are saved. */
 function CopyCurrentUrl() {
@@ -218,8 +212,19 @@ function RouteComponent() {
   const { kick } = Route.useLoaderData();
 
   const [scenes, setScenes] = useState<string[]>([]);
-  const [status, setStatus] = useState<ObsStatus>('connecting');
-  const connected = status === 'connected';
+  const [obsState, setObsState] = useState<ObsState>({
+    status: 'connecting',
+    attempt: 0,
+    retryAt: null,
+    code: null,
+    reason: '',
+    since: null,
+  });
+  const [chatStatus, setChatStatus] = useState<Partial<Record<ChatPlatform, ChatConnectionStatus>>>(
+    {},
+  );
+  const [activity, setActivity] = useState<ObsActivity[]>([]);
+  const connected = obsState.status === 'connected';
   const scenesLoaded = connected && scenes.length > 0;
   const mainPicked = scenes.includes(search.mainScene);
   const brbPicked = scenes.includes(search.brbScene);
@@ -257,21 +262,33 @@ function RouteComponent() {
     ],
   );
 
-  const onScenes = useCallback((list: string[]) => setScenes(list), []);
-  const onStatus = useCallback((next: ObsStatus) => setStatus(next), []);
-
-  useChat(
-    search.mainScene,
-    search.brbScene,
-    search.twitch,
-    kick,
-    search.obsWebsocketUrl,
-    search.obsWebsocketPassword,
-    allowedCommandUsers,
-    onScenes,
-    onStatus,
-    commands,
+  const onChatStatus = useCallback(
+    (platform: ChatPlatform, next: ChatConnectionStatus) =>
+      setChatStatus((current) => ({ ...current, [platform]: next })),
+    [],
   );
+  const onActivity = useCallback(
+    (entry: ObsActivity) =>
+      setActivity((current) =>
+        [entry, ...current].sort((a, b) => b.id - a.id).slice(0, ACTIVITY_LIMIT),
+      ),
+    [],
+  );
+
+  const retryNow = useChat({
+    mainScene: search.mainScene,
+    brbScene: search.brbScene,
+    twitchChannel: search.twitch,
+    kickChannelId: kick,
+    obsWebsocketUrl: search.obsWebsocketUrl,
+    obsWebsocketPassword: search.obsWebsocketPassword,
+    commandUsers: allowedCommandUsers,
+    customCommands: commands,
+    onScenes: setScenes,
+    onStatus: setObsState,
+    onChatStatus,
+    onActivity,
+  });
 
   const updateSearch = (patch: Partial<typeof search>) =>
     navigate({ to: '.', search: { ...search, ...patch }, replace: true });
@@ -289,11 +306,14 @@ function RouteComponent() {
           ? t('obsBridge.tool.assignBrbWarning', { brb: commands.cmdBrb })
           : null;
 
+  // Until OBS answers, the names are only what the link asks for, so they stay muted.
   const sceneValue = (name: string, picked: boolean) =>
     scenesLoaded && !picked ? (
       <span className="text-red-700 dark:text-red-400">{t('obsBridge.tool.notSelected')}</span>
     ) : (
-      <span className="text-zinc-900 dark:text-white">{name}</span>
+      <span className={scenesLoaded ? 'text-zinc-900 dark:text-white' : 'text-zinc-500'}>
+        {name}
+      </span>
     );
 
   // The header only belongs on the real page, not when another page frames the tool. There's no
@@ -308,114 +328,94 @@ function RouteComponent() {
       <main
         id="main"
         tabIndex={-1}
-        className="mx-auto w-full max-w-md flex-1 space-y-3 px-4 pt-2 pb-8 focus:outline-none"
+        className="mx-auto grid w-full max-w-md flex-1 content-start gap-3 px-4 pt-2 pb-8 focus:outline-none lg:max-w-6xl lg:grid-cols-2 lg:items-start"
       >
-        <Card label={t('obsBridge.tool.connection')}>
-          <div className="flex items-center justify-between gap-3">
-            <span className="text-sm text-zinc-600 dark:text-zinc-400">
-              {t('obsBridge.tool.connection')}
-            </span>
-            <span
-              aria-live="polite"
-              className={`inline-flex items-center gap-1.5 text-right text-sm font-medium ${STATUS_STYLES[status].text}`}
-            >
-              <span
-                aria-hidden="true"
-                className={`size-2 shrink-0 rounded-full ${STATUS_STYLES[status].dot}`}
-              />
-              {t(`obsBridge.tool.status.${status}`)}
-            </span>
-          </div>
-          {status === 'failed' && (
-            <p className="text-xs leading-relaxed text-zinc-500">
-              {t('obsBridge.tool.failedHint')}
-            </p>
-          )}
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-zinc-200 pt-3 text-sm dark:border-zinc-800">
-            <span className="text-zinc-600 dark:text-zinc-400">
-              {t('obsBridge.summaryChannels')}
-            </span>
-            {hasTwitch || hasKick ? (
-              (['twitch', 'kick'] as const)
-                .filter((platform) => platforms[platform])
-                .map((platform) => (
-                  <span key={platform} className="inline-flex min-w-0 items-center gap-1.5">
-                    <PlatformDot platform={platform} />
-                    <span className="break-all font-medium">
-                      {(platform === 'twitch' ? twitchChannel : kickChannel).toLowerCase()}
-                    </span>
-                  </span>
-                ))
-            ) : (
-              <span className="text-xs text-red-700 dark:text-red-400">
-                {t('obsBridge.summaryNoChannel')}
-              </span>
-            )}
-          </div>
-        </Card>
-
-        <Card label={t('obsBridge.tool.scenesTitle')}>
-          <h2 className={HEADING_CLASS}>
-            {scenesLoaded
-              ? t('obsBridge.tool.scenes', { count: scenes.length })
-              : t('obsBridge.tool.scenesTitle')}
-          </h2>
-          {sceneWarning && <p className={WARNING_CLASS}>{sceneWarning}</p>}
-          <dl className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-3 gap-y-1 text-sm">
-            <dt className="text-zinc-600 dark:text-zinc-400">{t('obsBridge.tool.mainScene')}</dt>
-            <dd className="truncate text-right font-medium">
-              {sceneValue(search.mainScene, mainPicked)}
-            </dd>
-            <dt className="text-zinc-600 dark:text-zinc-400">{t('obsBridge.tool.brbScene')}</dt>
-            <dd className="truncate text-right font-medium">
-              {sceneValue(search.brbScene, brbPicked)}
-            </dd>
-          </dl>
-          {scenesLoaded ? (
-            <SceneList
-              scenes={scenes}
-              mainScene={search.mainScene}
-              brbScene={search.brbScene}
-              onSetMain={(name) => updateSearch({ mainScene: name })}
-              onSetBrb={(name) => updateSearch({ brbScene: name })}
+        <div className="space-y-3">
+          <Card label={t('obsBridge.tool.connectionsTitle')}>
+            <h2 className={HEADING_CLASS}>{t('obsBridge.tool.connectionsTitle')}</h2>
+            <ConnectionsCard
+              obs={obsState}
+              obsUrl={search.obsWebsocketUrl?.trim() || DEFAULT_OBS_URL}
+              hasPassword={Boolean(search.obsWebsocketPassword)}
+              onRetryNow={retryNow}
+              channels={{ twitch: twitchChannel.toLowerCase(), kick: kickChannel.toLowerCase() }}
+              chatStatus={chatStatus}
+              kickNotFound={hasKick && !kick}
             />
-          ) : (
-            <p className="text-xs text-zinc-500">
-              {connected ? t('obsBridge.tool.fetchingScenes') : t('obsBridge.tool.scenesOffline')}
+          </Card>
+
+          <Card label={t('obsBridge.tool.activityTitle')}>
+            <h2 className={HEADING_CLASS}>{t('obsBridge.tool.activityTitle')}</h2>
+            <ActivityList activity={activity} />
+          </Card>
+        </div>
+
+        <div className="space-y-3">
+          <Card label={t('obsBridge.tool.scenesTitle')}>
+            <h2 className={HEADING_CLASS}>
+              {scenesLoaded
+                ? t('obsBridge.tool.scenes', { count: scenes.length })
+                : t('obsBridge.tool.scenesTitle')}
+            </h2>
+            {sceneWarning && <p className={WARNING_CLASS}>{sceneWarning}</p>}
+            <dl className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-3 gap-y-1 text-sm">
+              <dt className="text-zinc-600 dark:text-zinc-400">{t('obsBridge.tool.mainScene')}</dt>
+              <dd className="truncate text-right font-medium">
+                {sceneValue(search.mainScene, mainPicked)}
+              </dd>
+              <dt className="text-zinc-600 dark:text-zinc-400">{t('obsBridge.tool.brbScene')}</dt>
+              <dd className="truncate text-right font-medium">
+                {sceneValue(search.brbScene, brbPicked)}
+              </dd>
+            </dl>
+            {scenesLoaded ? (
+              <SceneList
+                scenes={scenes}
+                mainScene={search.mainScene}
+                brbScene={search.brbScene}
+                onSetMain={(name) => updateSearch({ mainScene: name })}
+                onSetBrb={(name) => updateSearch({ brbScene: name })}
+              />
+            ) : (
+              <p className="text-xs text-zinc-500">
+                {connected ? t('obsBridge.tool.fetchingScenes') : t('obsBridge.tool.scenesOffline')}
+              </p>
+            )}
+            <p className="text-xs leading-relaxed text-zinc-500">
+              {t('obsBridge.tool.sceneHint', {
+                command: `${commands.cmdScene} ${t('obsBridge.sceneArg')}`,
+              })}
             </p>
-          )}
-          <p className="text-xs leading-relaxed text-zinc-500">
-            {t('obsBridge.tool.sceneHint', {
-              command: `${commands.cmdScene} ${t('obsBridge.sceneArg')}`,
-            })}
-          </p>
-        </Card>
+          </Card>
 
-        <Card label={t('obsBridge.sectionUsers')}>
-          <CommandUsersField
-            users={commandUsers}
-            onChange={setCommandUsers}
-            platforms={platforms}
-            label={t('obsBridge.tool.usersCount', { count: commandUsers.length })}
-            tip={t('obsBridge.usersTip')}
-          />
-        </Card>
+          <Card label={t('obsBridge.sectionUsers')}>
+            <CommandUsersField
+              users={commandUsers}
+              onChange={setCommandUsers}
+              platforms={platforms}
+              label={t('obsBridge.tool.usersCount', { count: commandUsers.length })}
+              tip={t('obsBridge.usersTip')}
+            />
+          </Card>
 
-        <Card label={t('obsBridge.tool.copyUrl')}>
-          <CopyCurrentUrl />
-        </Card>
+          <Card label={t('obsBridge.tool.copyUrl')}>
+            <CopyCurrentUrl />
+          </Card>
 
-        <details className={`${PANEL_CLASS} group`}>
-          <summary className="flex cursor-pointer list-none items-center justify-between gap-3 rounded-xl p-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 [&::-webkit-details-marker]:hidden">
-            <h2 className={HEADING_CLASS}>{t('obsBridge.tool.commands')}</h2>
-            <ChevronDownIcon className="size-4 shrink-0 text-zinc-500 transition-transform group-open:rotate-180" />
-          </summary>
-          <div className="px-4 pb-4">
-            <ObsCommandList commands={commands} />
-          </div>
-        </details>
+          <details className={`${PANEL_CLASS} group`}>
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-3 rounded-xl p-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 [&::-webkit-details-marker]:hidden">
+              <h2 className={HEADING_CLASS}>{t('obsBridge.tool.commands')}</h2>
+              <ChevronDownIcon className="size-4 shrink-0 text-zinc-500 transition-transform group-open:rotate-180" />
+            </summary>
+            <div className="px-4 pb-4">
+              <ObsCommandList commands={commands} />
+            </div>
+          </details>
+        </div>
 
-        <p className="text-center text-xs text-zinc-500">{t('obsBridge.tool.footer')}</p>
+        <p className="text-center text-xs text-zinc-500 lg:col-span-2">
+          {t('obsBridge.tool.footer')}
+        </p>
       </main>
     </div>
   );

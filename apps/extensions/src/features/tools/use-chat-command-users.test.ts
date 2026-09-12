@@ -40,7 +40,14 @@ vi.mock('#/lib/kick', () => ({
 
 const say = (platform: 'twitch' | 'kick', user: string, message: string) => {
   const now = new Date();
-  chat[platform]({ id: `${platform}-${user}`, platform, user, message, timestamp: now, receivedAt: now });
+  chat[platform]({
+    id: `${platform}-${user}`,
+    platform,
+    user,
+    message,
+    timestamp: now,
+    receivedAt: now,
+  });
 };
 
 const bridge = (commandUser: string) => {
@@ -48,7 +55,15 @@ const bridge = (commandUser: string) => {
     twitch: true,
     kick: true,
   }).allowed;
-  renderHook(() => useChat('Main', 'BRB', 'channel', '1', null, undefined, allowed));
+  renderHook(() =>
+    useChat({
+      mainScene: 'Main',
+      brbScene: 'BRB',
+      twitchChannel: 'channel',
+      kickChannelId: '1',
+      commandUsers: allowed,
+    }),
+  );
 };
 
 beforeEach(() => {

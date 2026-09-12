@@ -11,16 +11,28 @@ const PLATFORM_OPTIONS: SegmentedOption<ChatPlatform>[] = [
   { value: 'kick', label: PLATFORM_LABELS.kick },
 ];
 
-/** Brand-coloured dot for a platform; the name is there for screen readers and on hover. */
-export function PlatformDot({ platform }: { platform: ChatPlatform }) {
+/**
+ * Brand-coloured dot for a platform; the name is there for screen readers and on hover.
+ * `decorative` drops it where the platform name is already written next to the dot.
+ */
+export function PlatformDot({
+  platform,
+  decorative,
+}: {
+  platform: ChatPlatform;
+  decorative?: boolean;
+}) {
   return (
-    <span title={PLATFORM_LABELS[platform]} className="inline-flex shrink-0">
+    <span
+      title={decorative ? undefined : PLATFORM_LABELS[platform]}
+      className="inline-flex shrink-0"
+    >
       <span
         aria-hidden="true"
         className="size-2 rounded-full"
         style={{ background: PLATFORM_COLORS[platform] }}
       />
-      <span className="sr-only">{PLATFORM_LABELS[platform]}:</span>
+      {!decorative && <span className="sr-only">{PLATFORM_LABELS[platform]}:</span>}
     </span>
   );
 }

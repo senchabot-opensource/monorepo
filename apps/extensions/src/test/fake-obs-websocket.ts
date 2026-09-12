@@ -45,8 +45,9 @@ export class OBSWebSocket {
     this.pending = null;
   }
 
-  refuse() {
-    this.pending?.reject(new Error('connection refused'));
+  /** Rejects like obs-websocket-js in a browser: the close code, 1006 when nothing answered. */
+  refuse(code = 1006, reason = '') {
+    this.pending?.reject(Object.assign(new Error(reason), { code }));
     this.pending = null;
   }
 

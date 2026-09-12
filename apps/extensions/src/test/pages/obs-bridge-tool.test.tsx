@@ -52,30 +52,77 @@ describe('OBS Bridge tool', () => {
   it.each([
     'en',
     'tr',
-  ] as const)('shows each connection state with a translated label (%s)', async (locale) => {
+  ] as const)('shows the OBS state, why it failed and when it retries (%s)', async (locale) => {
     const t = inLocale(locale);
     await renderRoute(`${TOOL}?twitch=streamer&lang=${locale}`);
     vi.useFakeTimers();
-    const live = () =>
-      within(
-        screen.getByLabelText(t('obsBridge.tool.connection'), { selector: 'section' }),
-      ).getByText((_, element) => element?.getAttribute('aria-live') === 'polite');
+    const card = () =>
+      within(screen.getByLabelText(t('obsBridge.tool.connectionsTitle'), { selector: 'section' }));
+    const badge = () =>
+      card().getByText((_, element) => element?.getAttribute('aria-live') === 'polite');
+    const url = 'ws://127.0.0.1:4455';
 
-    expect(live().textContent).toBe(t('obsBridge.tool.status.connecting'));
+    expect(badge().textContent).toBe(t('obsBridge.tool.status.connecting'));
+    expect(card().getByText(t('obsBridge.tool.obsConnecting', { url }))).toBeTruthy();
 
     await act(async () => OBSWebSocket.latest.refuse());
-    expect(live().textContent).toBe(t('obsBridge.tool.status.failed'));
-    expect(screen.getByText(t('obsBridge.tool.failedHint'))).toBeTruthy();
+    expect(badge().textContent).toBe(t('obsBridge.tool.status.failed'));
+    expect(card().getByText(t('obsBridge.tool.obsUnreachable', { url }))).toBeTruthy();
+    expect(card().getByText(t('obsBridge.tool.retryIn', { seconds: 5, attempt: 2 }))).toBeTruthy();
+    act(() => vi.advanceTimersByTime(2000));
+    expect(card().getByText(t('obsBridge.tool.retryIn', { seconds: 3, attempt: 2 }))).toBeTruthy();
 
     // It retries after 5s on the same client.
-    act(() => vi.advanceTimersByTime(5000));
+    act(() => vi.advanceTimersByTime(3000));
     expect(OBSWebSocket.latest.connectArgs).toHaveLength(2);
+    expect(card().getByText(t('obsBridge.tool.retrying'))).toBeTruthy();
     await act(async () => OBSWebSocket.latest.accept());
-    expect(live().textContent).toBe(t('obsBridge.tool.status.connected'));
-    expect(screen.queryByText(t('obsBridge.tool.failedHint'))).toBeNull();
+    expect(badge().textContent).toBe(t('obsBridge.tool.status.connected'));
+    expect(card().queryByText(t('obsBridge.tool.obsUnreachable', { url }))).toBeNull();
 
-    act(() => OBSWebSocket.latest.emit('ConnectionClosed'));
-    expect(live().textContent).toBe(t('obsBridge.tool.status.disconnected'));
+    act(() => OBSWebSocket.latest.emit('ConnectionClosed', { code: 1001, message: '' }));
+    expect(badge().textContent).toBe(t('obsBridge.tool.status.disconnected'));
+    expect(card().getByText(t('obsBridge.tool.obsClosed'))).toBeTruthy();
+  });
+
+  it('tells a wrong password from a missing one', async () => {
+    await renderRoute(`${TOOL}?twitch=streamer&obsWebsocketPassword=nope&lang=en`);
+    await act(async () => OBSWebSocket.latest.refuse(4009, 'Authentication failed.'));
+    expect(screen.getByText(en('obsBridge.tool.obsWrongPassword'))).toBeTruthy();
+    cleanup();
+
+    await renderRoute(`${TOOL}?twitch=streamer&lang=en`);
+    await act(async () => OBSWebSocket.latest.refuse(4009, 'missing authentication'));
+    expect(screen.getByText(en('obsBridge.tool.obsNeedsPassword'))).toBeTruthy();
+  });
+
+  it('retries at once when asked instead of waiting', async () => {
+    const user = setupUser();
+    await renderRoute(`${TOOL}?twitch=streamer&lang=en`);
+    const retry = () => button(en('obsBridge.tool.retryNow')) as HTMLButtonElement;
+    await act(async () => OBSWebSocket.latest.refuse());
+    await user.click(retry());
+    expect(OBSWebSocket.latest.connectArgs).toHaveLength(2);
+    // Nothing to skip while that attempt runs.
+    expect(retry().disabled).toBe(true);
+  });
+
+  it('shows whether each chat is connected', async () => {
+    await renderRoute(`${TOOL}?twitch=Streamer&lang=en`);
+    const row = () => screen.getByText('streamer').closest('li') as HTMLElement;
+    expect(within(row()).getByText(en('obsBridge.tool.chat.connecting'))).toBeTruthy();
+
+    const chat = FakeWebSocket.instances.find((ws) =>
+      ws.url.startsWith('wss://irc-ws.chat.twitch'),
+    );
+    act(() => chat?.open());
+    expect(within(row()).getByText(en('obsBridge.tool.chat.connected'))).toBeTruthy();
+  });
+
+  it('says so when the Kick channel does not exist', async () => {
+    // Without a network the channel lookup fails, as it does for an unknown name.
+    await renderRoute(`${TOOL}?kick=nobody&lang=en`);
+    expect(screen.getByText(en('obsBridge.tool.kickNotFound', { channel: 'nobody' }))).toBeTruthy();
   });
 
   it('connects with the URL and password from the link', async () => {
@@ -117,13 +164,32 @@ describe('OBS Bridge tool', () => {
     await renderRoute(`${TOOL}?twitch=streamer&commandUser=twitch%3Amod&brbScene=AFK&lang=en`);
     await connectWithScenes(['Main Scene', 'Gaming', 'AFK']);
 
+    const log = within(
+      screen.getByLabelText(en('obsBridge.tool.activityTitle'), { selector: 'section' }),
+    );
+    expect(log.getByText(en('obsBridge.tool.activityEmpty'))).toBeTruthy();
+
     say('Viewer', 'brb');
     say('Mod', 'brb');
     say('Mod', 'BACK');
     say('Mod', '!scene gam');
     say('Mod', '!startstream');
+    say('Mod', '!scene nowhere');
     expect(sceneSwitches()).toEqual(['AFK', 'Main Scene', 'Gaming']);
     expect(OBSWebSocket.latest.calls.map(([request]) => request)).toContain('StartStream');
+
+    // Newest first; the viewer isn't on the list, so nothing of theirs shows up.
+    await act(async () => {});
+    const outcomes = log
+      .getAllByRole('listitem')
+      .map((item) => item.querySelector('p')?.textContent);
+    expect(outcomes).toEqual([
+      `✕ ${en('obsBridge.tool.activityNoScene', { query: 'nowhere' })}`,
+      `✓ ${en('obsBridge.tool.activityStartStream')}`,
+      `✓ ${en('obsBridge.tool.activityScene', { scene: 'Gaming' })}`,
+      `✓ ${en('obsBridge.tool.activityScene', { scene: 'Main Scene' })}`,
+      `✓ ${en('obsBridge.tool.activityScene', { scene: 'AFK' })}`,
+    ]);
 
     // A new BRB pick applies to the running bridge right away.
     await user.click(button(en('obsBridge.tool.setBrb', { scene: 'Gaming' })));

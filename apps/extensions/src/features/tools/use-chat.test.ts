@@ -35,7 +35,7 @@ afterEach(() => {
 
 describe('useChat OBS connection', () => {
   it('retries once every 5s while OBS refuses the connection', async () => {
-    renderHook(() => useChat('Main', 'BRB'));
+    renderHook(() => useChat({ mainScene: 'Main', brbScene: 'BRB' }));
     await vi.advanceTimersByTimeAsync(0);
     expect(connect).toHaveBeenCalledTimes(1);
 
@@ -44,7 +44,7 @@ describe('useChat OBS connection', () => {
   });
 
   it('stops retrying after unmount', async () => {
-    const { unmount } = renderHook(() => useChat('Main', 'BRB'));
+    const { unmount } = renderHook(() => useChat({ mainScene: 'Main', brbScene: 'BRB' }));
     await vi.advanceTimersByTimeAsync(0);
     unmount();
 
@@ -53,30 +53,44 @@ describe('useChat OBS connection', () => {
   });
 
   it('sends the password to the default URL when no URL is set', async () => {
-    renderHook(() => useChat('Main', 'BRB', null, null, '', 'secret'));
+    renderHook(() =>
+      useChat({
+        mainScene: 'Main',
+        brbScene: 'BRB',
+        obsWebsocketUrl: '',
+        obsWebsocketPassword: 'secret',
+      }),
+    );
     await vi.advanceTimersByTimeAsync(0);
     expect(connect).toHaveBeenCalledWith(undefined, 'secret');
   });
 
   it('sends the URL and password when both are set', async () => {
-    renderHook(() => useChat('Main', 'BRB', null, null, 'ws://192.168.1.5:4455', 'secret'));
+    renderHook(() =>
+      useChat({
+        mainScene: 'Main',
+        brbScene: 'BRB',
+        obsWebsocketUrl: 'ws://192.168.1.5:4455',
+        obsWebsocketPassword: 'secret',
+      }),
+    );
     await vi.advanceTimersByTimeAsync(0);
     expect(connect).toHaveBeenCalledWith('ws://192.168.1.5:4455', 'secret');
   });
 
   it('sends no password when none is set', async () => {
-    renderHook(() => useChat('Main', 'BRB', null, null, null, undefined));
+    renderHook(() => useChat({ mainScene: 'Main', brbScene: 'BRB', obsWebsocketUrl: null }));
     await vi.advanceTimersByTimeAsync(0);
     expect(connect).toHaveBeenCalledWith(undefined, undefined);
   });
 
   it('reports the status through the callback instead of the DOM', async () => {
     const onStatus = vi.fn();
-    renderHook(() =>
-      useChat('Main', 'BRB', null, null, null, undefined, undefined, undefined, onStatus),
-    );
-    expect(onStatus).toHaveBeenCalledWith('connecting');
+    renderHook(() => useChat({ mainScene: 'Main', brbScene: 'BRB', onStatus }));
+    expect(onStatus).toHaveBeenCalledWith(expect.objectContaining({ status: 'connecting' }));
     await vi.advanceTimersByTimeAsync(0);
-    expect(onStatus).toHaveBeenLastCalledWith('failed');
+    expect(onStatus).toHaveBeenLastCalledWith(
+      expect.objectContaining({ status: 'failed', attempt: 1, retryAt: Date.now() + 5000 }),
+    );
   });
 });

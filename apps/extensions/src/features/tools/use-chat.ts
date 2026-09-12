@@ -1,34 +1,92 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
+import type { BaseChatClient, ChatConnectionStatus } from "#/lib/basechat";
 import { TwitchChat } from "#/lib/twitch";
 import { KickChat } from "#/lib/kick";
 import type { ChatMessagesType } from "../widgets/chat-widget/chat-messages";
-import { commandUserKey } from "./command-users";
+import { type ChatPlatform, commandUserKey } from "./command-users";
 import { DEFAULT_OBS_COMMANDS, type ObsBridgeCustomCommands } from "./obs-bridge-config";
 import { OBSWebSocket } from 'obs-websocket-js';
 
-type Disconnectable = {
-  disconnect: () => void;
-};
-
 export type ObsStatus = "connecting" | "connected" | "failed" | "disconnected";
 
-export const useChat = (
-  mainScene: string,
-  brbScene: string,
-  twitchChannel?: string | null,
-  kickChannelId?: string | null,
-  obsWebsocketUrl?: string | null,
-  obsWebsocketPassword?: string | undefined,
-  // commandUserKey values, from resolveCommandUsers.
-  commandUsers: ReadonlySet<string> = new Set(),
-  onScenes?: (scenes: string[]) => void,
-  onStatus?: (status: ObsStatus) => void,
-  customCommands?: ObsBridgeCustomCommands,
-) => {
+export const OBS_RETRY_MS = 5000;
+
+export type ObsState = {
+  status: ObsStatus;
+  /** Attempts since the last successful connect. */
+  attempt: number;
+  /** When the next attempt starts, while one is scheduled. */
+  retryAt: number | null;
+  /** Close code of the last failure: 4009 is a rejected or missing password, 1006 no answer. */
+  code: number | null;
+  reason: string;
+  /** When the current connection was made. */
+  since: number | null;
+};
+
+export type ObsAction =
+  | "scene"
+  | "brb"
+  | "back"
+  | "startStream"
+  | "stopStream"
+  | "startRecord"
+  | "stopRecord";
+
+/** A command from an authorized user and what came of it. */
+export type ObsActivity = {
+  id: number;
+  at: number;
+  platform: ChatPlatform;
+  user: string;
+  text: string;
+  outcome:
+    | { kind: "done"; action: ObsAction; scene?: string }
+    | { kind: "noScene"; query: string }
+    | { kind: "failed"; offline: boolean; message: string };
+};
+
+type UseChatOptions = {
+  mainScene: string;
+  brbScene: string;
+  twitchChannel?: string | null;
+  kickChannelId?: string | null;
+  obsWebsocketUrl?: string | null;
+  obsWebsocketPassword?: string;
+  /** commandUserKey values, from resolveCommandUsers. */
+  commandUsers?: ReadonlySet<string>;
+  customCommands?: ObsBridgeCustomCommands;
+  onScenes?: (scenes: string[]) => void;
+  onStatus?: (state: ObsState) => void;
+  onChatStatus?: (platform: ChatPlatform, status: ChatConnectionStatus) => void;
+  onActivity?: (activity: ObsActivity) => void;
+};
+
+const NO_USERS: ReadonlySet<string> = new Set();
+
+/** Runs the bridge. Returns a function that skips the wait before the next OBS attempt. */
+export const useChat = ({
+  mainScene,
+  brbScene,
+  twitchChannel,
+  kickChannelId,
+  obsWebsocketUrl,
+  obsWebsocketPassword,
+  commandUsers = NO_USERS,
+  customCommands,
+  onScenes,
+  onStatus,
+  onChatStatus,
+  onActivity,
+}: UseChatOptions) => {
   const onScenesRef = useRef(onScenes);
   onScenesRef.current = onScenes;
   const onStatusRef = useRef(onStatus);
   onStatusRef.current = onStatus;
+  const onChatStatusRef = useRef(onChatStatus);
+  onChatStatusRef.current = onChatStatus;
+  const onActivityRef = useRef(onActivity);
+  onActivityRef.current = onActivity;
   const mainSceneRef = useRef(mainScene);
   mainSceneRef.current = mainScene;
   const brbSceneRef = useRef(brbScene);
@@ -44,12 +102,26 @@ export const useChat = (
     ...DEFAULT_OBS_COMMANDS,
     ...customCommands,
   };
+  const retryNowRef = useRef(() => {});
 
   useEffect(() => {
     const obs = new OBSWebSocket();
     let reconnectTimer: ReturnType<typeof setTimeout> | null = null;
     let disposed = false;
-    onStatusRef.current?.("connecting");
+    let activityId = 0;
+    let state: ObsState = {
+      status: "connecting",
+      attempt: 0,
+      retryAt: null,
+      code: null,
+      reason: "",
+      since: null,
+    };
+    const setState = (patch: Partial<ObsState>) => {
+      state = { ...state, ...patch };
+      onStatusRef.current?.(state);
+    };
+    setState({});
 
     const fetchScenes = async () => {
       try {
@@ -67,27 +139,45 @@ export const useChat = (
     // doubling the attempts every round; now they share one pending retry.
     const scheduleReconnect = () => {
       if (disposed || reconnectTimer) return;
+      setState({ retryAt: Date.now() + OBS_RETRY_MS });
       reconnectTimer = setTimeout(() => {
         reconnectTimer = null;
         connectOBS();
-      }, 5000);
+      }, OBS_RETRY_MS);
     };
 
     const connectOBS = async () => {
+      // A retry keeps showing the last failure (with no countdown) instead of flashing
+      // "connecting" for the few milliseconds a refused local connection takes.
+      setState({ attempt: state.attempt + 1, retryAt: null });
       try {
         // An empty URL must still send the password; undefined (not null) picks the library's default URL.
         await obs.connect(obsWebsocketUrl || undefined, obsWebsocketPassword);
-        onStatusRef.current?.("connected");
-      } catch {
+        setState({ status: "connected", attempt: 0, code: null, reason: "", since: Date.now() });
+      } catch (error) {
         if (disposed) return;
-        onStatusRef.current?.("failed");
+        const { code, message } = error as { code?: number; message?: string };
+        setState({ status: "failed", code: code ?? null, reason: message ?? "" });
         scheduleReconnect();
       }
     };
 
-    obs.on('ConnectionClosed', () => {
-      if (disposed) return;
-      onStatusRef.current?.("disconnected");
+    retryNowRef.current = () => {
+      if (!reconnectTimer) return;
+      clearTimeout(reconnectTimer);
+      reconnectTimer = null;
+      connectOBS();
+    };
+
+    // Only a drop of a live connection lands here; a failed attempt is handled by its catch.
+    obs.on('ConnectionClosed', (error) => {
+      if (disposed || state.status !== "connected") return;
+      setState({
+        status: "disconnected",
+        code: error?.code ?? null,
+        reason: error?.message ?? "",
+        since: null,
+      });
       scheduleReconnect();
     });
 
@@ -108,6 +198,31 @@ export const useChat = (
       const msg = rawMsg.toLowerCase();
       const cmds = customCommandsRef.current;
 
+      // Numbered on arrival: OBS answers asynchronously, so outcomes can come back out of order.
+      const id = ++activityId;
+      const at = Date.now();
+      const report = (outcome: ObsActivity["outcome"]) =>
+        onActivityRef.current?.({
+          id,
+          at,
+          platform: payload.platform,
+          user: payload.user,
+          text: rawMsg,
+          outcome,
+        });
+      const settle = (request: Promise<unknown>, action: ObsAction, scene?: string) =>
+        request.then(
+          () => report({ kind: "done", action, scene }),
+          (error: unknown) => {
+            console.error(error);
+            report({
+              kind: "failed",
+              offline: state.status !== "connected",
+              message: (error as { message?: string })?.message ?? String(error),
+            });
+          },
+        );
+
       const startRec = (cmds.cmdStartRecord || DEFAULT_OBS_COMMANDS.cmdStartRecord).trim().toLowerCase();
       const stopRec = (cmds.cmdStopRecord || DEFAULT_OBS_COMMANDS.cmdStopRecord).trim().toLowerCase();
       const startStr = (cmds.cmdStartStream || DEFAULT_OBS_COMMANDS.cmdStartStream).trim().toLowerCase();
@@ -117,53 +232,67 @@ export const useChat = (
       const scenePrefix = (cmds.cmdScene || DEFAULT_OBS_COMMANDS.cmdScene).trim().toLowerCase();
 
       if (startRec && msg === startRec) {
-        obs.call('StartRecord').catch(console.error);
+        settle(obs.call('StartRecord'), "startRecord");
       } else if (stopRec && msg === stopRec) {
-        obs.call('StopRecord').catch(console.error);
+        settle(obs.call('StopRecord'), "stopRecord");
       } else if (startStr && msg === startStr) {
-        obs.call('StartStream').catch(console.error);
+        settle(obs.call('StartStream'), "startStream");
       } else if (stopStr && msg === stopStr) {
-        obs.call('StopStream').catch(console.error);
+        settle(obs.call('StopStream'), "stopStream");
       } else if (brb && msg === brb) {
-        obs.call('SetCurrentProgramScene', { sceneName: brbSceneRef.current }).catch(console.error);
+        const sceneName = brbSceneRef.current;
+        settle(obs.call('SetCurrentProgramScene', { sceneName }), "brb", sceneName);
       } else if (back && msg === back) {
-        obs.call('SetCurrentProgramScene', { sceneName: mainSceneRef.current }).catch(console.error);
+        const sceneName = mainSceneRef.current;
+        settle(obs.call('SetCurrentProgramScene', { sceneName }), "back", sceneName);
       } else if (scenePrefix && (msg === scenePrefix || msg.startsWith(scenePrefix + " "))) {
         const query = rawMsg.slice(scenePrefix.length).trim();
-        if (query && scenesRef.current.length > 0) {
-          const lowerQuery = query.toLowerCase();
-          // 1. Try exact match (case-insensitive)
-          let match = scenesRef.current.find(
-            (s) => s.trim().toLowerCase() === lowerQuery
+        if (!query) return;
+        if (scenesRef.current.length === 0) {
+          // Scenes arrive once OBS is connected; before that there's nothing to match against.
+          report({ kind: "failed", offline: true, message: "" });
+          return;
+        }
+        const lowerQuery = query.toLowerCase();
+        // 1. Try exact match (case-insensitive)
+        let match = scenesRef.current.find(
+          (s) => s.trim().toLowerCase() === lowerQuery
+        );
+        // 2. Try substring match (case-insensitive)
+        if (!match) {
+          match = scenesRef.current.find(
+            (s) => s.trim().toLowerCase().includes(lowerQuery)
           );
-          // 2. Try substring match (case-insensitive)
-          if (!match) {
-            match = scenesRef.current.find(
-              (s) => s.trim().toLowerCase().includes(lowerQuery)
-            );
-          }
-          if (match) {
-            obs.call('SetCurrentProgramScene', { sceneName: match }).catch(console.error);
-          }
+        }
+        if (match) {
+          settle(obs.call('SetCurrentProgramScene', { sceneName: match }), "scene", match);
+        } else {
+          report({ kind: "noScene", query });
         }
       }
     };
 
-    const clients: Disconnectable[] = [];
+    const clients: BaseChatClient[] = [];
+    const watch = (platform: ChatPlatform, client: BaseChatClient) => {
+      onChatStatusRef.current?.(platform, { state: "connecting" });
+      client.onStatus = (status) => onChatStatusRef.current?.(platform, status);
+      clients.push(client);
+    };
     const normalizedTwitchChannel = twitchChannel?.trim();
     const normalizedKickChannelId = kickChannelId?.trim();
 
     if (normalizedTwitchChannel) {
-      clients.push(new TwitchChat(normalizedTwitchChannel, pushToMessages));
+      watch("twitch", new TwitchChat(normalizedTwitchChannel, pushToMessages));
     }
 
     if (normalizedKickChannelId) {
-      clients.push(new KickChat(normalizedKickChannelId, pushToMessages));
+      watch("kick", new KickChat(normalizedKickChannelId, pushToMessages));
     }
 
     return () => {
       // Set before disconnect(), whose ConnectionClosed would otherwise schedule a retry.
       disposed = true;
+      retryNowRef.current = () => {};
       if (reconnectTimer) clearTimeout(reconnectTimer);
       for (const client of clients) {
         client.disconnect();
@@ -171,4 +300,6 @@ export const useChat = (
       obs.disconnect().catch(console.error);
     };
   }, [twitchChannel, kickChannelId, obsWebsocketUrl, obsWebsocketPassword]);
+
+  return useCallback(() => retryNowRef.current(), []);
 };
