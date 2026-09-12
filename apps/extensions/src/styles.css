@@ -16,6 +16,13 @@
   button:disabled {
     pointer-events: none;
   }
+
+  /* Tailwind v4's preflight dropped the pointer cursor from buttons; restore it for everything clickable. */
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  summary {
+    cursor: pointer;
+  }
 }
 
 @keyframes fadeInZoom {
