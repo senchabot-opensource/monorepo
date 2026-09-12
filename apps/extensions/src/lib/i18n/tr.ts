@@ -84,11 +84,14 @@ export const tr: typeof en = {
       'Dikeyde mesajlar alt alta dizilir, klasik sohbet kutusu gibi. Yatayda yan yana akar, ekranın altına şerit olarak koymak için ideal.',
     darkBackgroundTip:
       "Widget'ın arkasına yarı saydam siyah bir zemin koyar. Açık renkli sahnelerde yazıları okumayı kolaylaştırır.",
-    sevenTvTip:
-      "Kanalın 7TV'ye eklediği özel ve global emote'ları resim olarak gösterir. Kapalıyken bu emote'lar düz yazı olarak görünür.",
+    emotesTip:
+      "Seçtiğin sağlayıcıların emote'ları resim olarak görünür, seçmediklerin düz yazı kalır. 7TV hem Twitch hem Kick'te çalışır, BTTV ve FFZ sadece Twitch'te.",
+    messageDurationTip:
+      'Mesajlar bu süre dolunca kaybolur. "Süresiz" seçersen ekranda kalırlar, yeni gelenler eskileri yukarı iter.',
+    hideBotsTip:
+      'Nightbot, StreamElements, Fossabot, BotRix ve KickBot gibi bilinen botların, bir de Twitch\'te "Chat Bot" rozeti olan hesapların mesajlarını gizler.',
+    hideCommandsTip: '!discord veya !uptime gibi "!" ile başlayan mesajları gizler.',
     badgesTip: 'Kullanıcı adının yanında yayıncı, moderatör, VIP ve abone rozetlerini gösterir.',
-    keepMessagesTip:
-      'Mesajlar normalde 30 saniye sonra kaybolur. Bunu açarsan ekranda kalırlar, yeni gelenler eskileri yukarı iter.',
     animationTip:
       'Yeni mesajın ekrana nasıl gireceğini belirler. Sohbet hızlandıkça animasyonlar otomatik olarak kısalır.',
     font: 'Yazı Tipi',
@@ -112,10 +115,16 @@ export const tr: typeof en = {
     horizontal: 'Yatay',
     fontSize: 'Yazı Boyutu (px)',
     darkBackground: 'Koyu Arka Plan',
-    sevenTvEmotes: "7TV Emote'ları",
+    emotes: "Emote'lar",
+    emotesNone: 'Kapalı',
+    messageDuration: 'Mesaj Süresi',
+    durationSeconds: '{count} sn',
+    durationMinutes: '{count} dk',
+    durationKeep: 'Süresiz',
+    hideBots: 'Botları Gizle',
+    hideCommands: 'Komutları Gizle',
     showBadges: 'Rozetleri Göster',
     showMessageTime: 'Mesaj Saatini Göster',
-    keepMessages: 'Mesajları Tut',
     backgroundOpacity: 'Arka Plan Saydamlığı',
     messageBackgroundBox: 'Mesaj Arka Plan Kutusu',
     messageBackgroundHint: 'Her mesaj kendi çerçeveli arka plan kutusunu alır.',

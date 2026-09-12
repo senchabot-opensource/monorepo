@@ -82,11 +82,14 @@ export const en = {
       'Vertical stacks messages on top of each other, like a classic chat box. Horizontal runs them side by side, great for a strip along the bottom of your screen.',
     darkBackgroundTip:
       'Adds a semi-transparent black background behind the widget. Makes text easier to read on bright scenes.',
-    sevenTvTip:
-      'Shows the custom and global emotes your channel added on 7TV as images. When off, they show up as plain text.',
+    emotesTip:
+      'Emotes from the providers you tick show as images, the rest show as plain text. 7TV works on Twitch and Kick, BTTV and FFZ only on Twitch.',
+    messageDurationTip:
+      'Messages fade out after this time. Pick "Forever" to keep them on screen, with new ones pushing older ones up.',
+    hideBotsTip:
+      'Hides messages from common bots like Nightbot, StreamElements, Fossabot, BotRix and KickBot, plus Twitch accounts with the "Chat Bot" badge.',
+    hideCommandsTip: 'Hides messages that start with "!", like !discord or !uptime.',
     badgesTip: 'Shows broadcaster, moderator, VIP and subscriber badges next to usernames.',
-    keepMessagesTip:
-      'Messages normally disappear after 30 seconds. Turn this on to keep them on screen, with new ones pushing older ones up.',
     animationTip:
       'Sets how new messages enter the screen. Animations get shorter automatically as chat speeds up.',
     font: 'Font',
@@ -110,10 +113,16 @@ export const en = {
     horizontal: 'Horizontal',
     fontSize: 'Font Size (px)',
     darkBackground: 'Dark Background',
-    sevenTvEmotes: '7TV Emotes',
+    emotes: 'Emotes',
+    emotesNone: 'Off',
+    messageDuration: 'Message Duration',
+    durationSeconds: '{count} sec',
+    durationMinutes: '{count} min',
+    durationKeep: 'Forever',
+    hideBots: 'Hide Bots',
+    hideCommands: 'Hide Commands',
     showBadges: 'Show Badges',
     showMessageTime: 'Show Message Time',
-    keepMessages: 'Keep Messages',
     backgroundOpacity: 'Background Opacity',
     messageBackgroundBox: 'Message Background Box',
     messageBackgroundHint: 'Each message gets its own bordered background box.',

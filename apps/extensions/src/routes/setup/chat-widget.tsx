@@ -14,6 +14,8 @@ import {
   type Animation,
   buildWidgetParams,
   DEFAULT_SETTINGS,
+  DURATIONS,
+  type Duration,
   type Font,
   type Highlight,
   type Layout,
@@ -136,6 +138,8 @@ const INPUT_CLASS =
 const RANGE_CLASS =
   'h-2 w-full cursor-pointer appearance-none rounded-lg bg-zinc-300 accent-green-500 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-zinc-700';
 
+type EmoteProvider = 'sevenTv' | 'bttv' | 'ffz';
+
 function SettingsGroup({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section className="space-y-3 border-t border-zinc-200 pt-3 first:border-t-0 first:pt-0 dark:border-zinc-800">
@@ -243,6 +247,24 @@ function ChatWidgetSetup() {
     { value: 'typing', label: t('chatWidget.animTyping') },
     { value: 'none', label: t('chatWidget.animNone') },
   ];
+
+  const emoteOptions: MultiSelectOption<EmoteProvider>[] = [
+    { value: 'sevenTv', label: '7TV', hint: 'Twitch, Kick' },
+    { value: 'bttv', label: 'BTTV', hint: 'Twitch' },
+    { value: 'ffz', label: 'FFZ', hint: 'Twitch' },
+  ];
+  const emoteValue = emoteOptions
+    .map((option) => option.value)
+    .filter((provider) => settings[provider]);
+  const durationOptions: SelectOption<Duration>[] = DURATIONS.map((value) => ({
+    value,
+    label:
+      value === 'keep'
+        ? t('chatWidget.durationKeep')
+        : Number(value) < 60
+          ? t('chatWidget.durationSeconds', { count: value })
+          : t('chatWidget.durationMinutes', { count: Number(value) / 60 }),
+  }));
 
   const highlightOptions: MultiSelectOption<Highlight>[] = (
     [
@@ -474,13 +496,46 @@ function ChatWidgetSetup() {
                     />
                   </div>
                 </div>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div>
+                    <FieldLabel id={`${id}-emotes`} tip={t('chatWidget.emotesTip')}>
+                      {t('chatWidget.emotes')}
+                    </FieldLabel>
+                    <MultiSelect
+                      labelledBy={`${id}-emotes`}
+                      value={emoteValue}
+                      onChange={(value) =>
+                        setSettings((current) => ({
+                          ...current,
+                          sevenTv: value.includes('sevenTv'),
+                          bttv: value.includes('bttv'),
+                          ffz: value.includes('ffz'),
+                        }))
+                      }
+                      options={emoteOptions}
+                      summary={
+                        emoteValue.length > 0
+                          ? emoteOptions
+                              .filter((option) => emoteValue.includes(option.value))
+                              .map((option) => option.label)
+                              .join(', ')
+                          : t('chatWidget.emotesNone')
+                      }
+                    />
+                  </div>
+                  <div>
+                    <FieldLabel id={`${id}-duration`} tip={t('chatWidget.messageDurationTip')}>
+                      {t('chatWidget.messageDuration')}
+                    </FieldLabel>
+                    <Select
+                      labelledBy={`${id}-duration`}
+                      value={settings.duration}
+                      onChange={(value) => update('duration', value)}
+                      options={durationOptions}
+                    />
+                  </div>
+                </div>
                 <div className="grid gap-x-6 gap-y-1 sm:grid-cols-2">
-                  <Switch
-                    label={t('chatWidget.sevenTvEmotes')}
-                    tip={t('chatWidget.sevenTvTip')}
-                    checked={settings.sevenTv}
-                    onChange={(value) => update('sevenTv', value)}
-                  />
                   <Switch
                     label={t('chatWidget.showBadges')}
                     tip={t('chatWidget.badgesTip')}
@@ -493,10 +548,16 @@ function ChatWidgetSetup() {
                     onChange={(value) => update('timestamp', value)}
                   />
                   <Switch
-                    label={t('chatWidget.keepMessages')}
-                    tip={t('chatWidget.keepMessagesTip')}
-                    checked={settings.keep}
-                    onChange={(value) => update('keep', value)}
+                    label={t('chatWidget.hideBots')}
+                    tip={t('chatWidget.hideBotsTip')}
+                    checked={settings.hideBots}
+                    onChange={(value) => update('hideBots', value)}
+                  />
+                  <Switch
+                    label={t('chatWidget.hideCommands')}
+                    tip={t('chatWidget.hideCommandsTip')}
+                    checked={settings.hideCommands}
+                    onChange={(value) => update('hideCommands', value)}
                   />
                 </div>
               </SettingsGroup>

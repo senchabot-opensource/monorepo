@@ -55,9 +55,13 @@ describe('parseWidgetUrl', () => {
       boldUsernames: true,
       boldMessages: true,
       sevenTv: false,
+      bttv: false,
+      ffz: false,
       badges: false,
       timestamp: true,
-      keep: true,
+      duration: 'keep',
+      hideBots: true,
+      hideCommands: true,
       highlights: ['mention', 'announcement'],
     };
     expect(parseWidgetUrl(widgetUrl(settings, 'foo', 'bar'))).toEqual({
@@ -101,12 +105,22 @@ describe('parseWidgetUrl', () => {
     expect(highlightsOf('subs')).toEqual(DEFAULT_SETTINGS.highlights);
   });
 
+  it('reads the message duration, with keep=true meaning never remove', () => {
+    const durationOf = (query: string) =>
+      parseWidgetUrl(`${ORIGIN}/widgets/chat-widget?twitch=foo&${query}`)?.settings.duration;
+    expect(durationOf('duration=120')).toBe('120');
+    expect(durationOf('keep=true')).toBe('keep');
+    expect(durationOf('duration=7')).toBe(DEFAULT_SETTINGS.duration);
+  });
+
   it('rebuilds the same URL it was given', () => {
     const urls = [
       `${ORIGIN}/widgets/chat-widget?twitch=foo`,
       `${ORIGIN}/widgets/chat-widget?kick=bar&sevenTv=false&fontSize=30`,
       `${ORIGIN}/widgets/chat-widget?twitch=foo&kick=bar&background=true&bgOpacity=0.2&platformDisplay=name&animation=none`,
       `${ORIGIN}/widgets/chat-widget?twitch=foo&highlights=none`,
+      `${ORIGIN}/widgets/chat-widget?twitch=foo&keep=true&hideBots=true`,
+      `${ORIGIN}/widgets/chat-widget?kick=bar&duration=60&hideCommands=true`,
       `${ORIGIN}/widgets/chat-widget?twitch=foo&highlights=mention%2CfirstMessage`,
     ];
     for (const url of urls) expect(roundTrip(url)).toBe(url);

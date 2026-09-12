@@ -11,6 +11,8 @@ export const HIGHLIGHTS = [
   'announcement',
   'highlighted',
 ] as const;
+// Seconds a message stays on screen; 'keep' never removes it.
+export const DURATIONS = ['10', '15', '30', '60', '120', '300', 'keep'] as const;
 export const ANIMATIONS = [
   'slide',
   'smooth',
@@ -29,6 +31,7 @@ export type Layout = (typeof LAYOUTS)[number];
 export type Orientation = (typeof ORIENTATIONS)[number];
 export type Animation = (typeof ANIMATIONS)[number];
 export type Highlight = (typeof HIGHLIGHTS)[number];
+export type Duration = (typeof DURATIONS)[number];
 
 export interface Settings {
   platforms: Platforms;
@@ -45,9 +48,13 @@ export interface Settings {
   boldUsernames: boolean;
   boldMessages: boolean;
   sevenTv: boolean;
+  bttv: boolean;
+  ffz: boolean;
   badges: boolean;
   timestamp: boolean;
-  keep: boolean;
+  duration: Duration;
+  hideBots: boolean;
+  hideCommands: boolean;
   highlights: Highlight[];
 }
 
@@ -67,9 +74,13 @@ export const DEFAULT_SETTINGS: Settings = {
   boldUsernames: false,
   boldMessages: false,
   sevenTv: true,
+  bttv: true,
+  ffz: true,
   badges: true,
   timestamp: false,
-  keep: false,
+  duration: '30',
+  hideBots: false,
+  hideCommands: false,
   highlights: [...HIGHLIGHTS],
 };
 
@@ -80,6 +91,8 @@ export function buildWidgetParams(settings: Settings, twitchChannel: string, kic
   if (settings.platforms !== 'kick' && twitch) params.append('twitch', twitch);
   if (settings.platforms !== 'twitch' && kick) params.append('kick', kick);
   if (!settings.sevenTv) params.append('sevenTv', 'false');
+  if (!settings.bttv) params.append('bttv', 'false');
+  if (!settings.ffz) params.append('ffz', 'false');
   if (!settings.badges) params.append('badges', 'false');
   // An emptied field would otherwise reach the widget as fontSize=0.
   if (Number(settings.fontSize) > 0 && settings.fontSize !== DEFAULT_SETTINGS.fontSize)
@@ -101,7 +114,12 @@ export function buildWidgetParams(settings: Settings, twitchChannel: string, kic
   )
     params.append('platformDisplay', settings.platformDisplay);
   if (settings.timestamp) params.append('timestamp', 'true');
-  if (settings.keep) params.append('keep', 'true');
+  // 'keep' predates the duration choice, so URLs already in OBS keep working.
+  if (settings.duration === 'keep') params.append('keep', 'true');
+  else if (settings.duration !== DEFAULT_SETTINGS.duration)
+    params.append('duration', settings.duration);
+  if (settings.hideBots) params.append('hideBots', 'true');
+  if (settings.hideCommands) params.append('hideCommands', 'true');
   // Only a narrowed selection is written, so highlight types added later reach default URLs only.
   if (settings.highlights.length < HIGHLIGHTS.length) {
     const selected = HIGHLIGHTS.filter((h) => settings.highlights.includes(h));
@@ -178,9 +196,15 @@ export function parseWidgetUrl(text: string): ParsedWidgetUrl | null {
       boldUsernames: flag('boldUsernames', DEFAULT_SETTINGS.boldUsernames),
       boldMessages: flag('boldMessages', DEFAULT_SETTINGS.boldMessages),
       sevenTv: flag('sevenTv', DEFAULT_SETTINGS.sevenTv),
+      bttv: flag('bttv', DEFAULT_SETTINGS.bttv),
+      ffz: flag('ffz', DEFAULT_SETTINGS.ffz),
       badges: flag('badges', DEFAULT_SETTINGS.badges),
       timestamp: flag('timestamp', DEFAULT_SETTINGS.timestamp),
-      keep: flag('keep', DEFAULT_SETTINGS.keep),
+      duration: flag('keep', false)
+        ? 'keep'
+        : oneOf('duration', DURATIONS, DEFAULT_SETTINGS.duration),
+      hideBots: flag('hideBots', DEFAULT_SETTINGS.hideBots),
+      hideCommands: flag('hideCommands', DEFAULT_SETTINGS.hideCommands),
       highlights: parseHighlights(params.get('highlights')),
     },
   };
