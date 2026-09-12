@@ -145,8 +145,6 @@ function SubSproutSetup() {
   );
   const [twitchChannel, setTwitchChannel] = useState("");
   const [kickChannel, setKickChannel] = useState("");
-  const [debouncedTwitch, setDebouncedTwitch] = useState("");
-  const [debouncedKick, setDebouncedKick] = useState("");
   const [variety, setVariety] = useState<PlantId>("classic");
   const [pick, setPick] = useState<PickMode>("fixed");
   const [water, setWater] = useState<WaterEffectType>("off");
@@ -158,22 +156,6 @@ function SubSproutSetup() {
   useEffect(() => {
     setMounted(true);
   }, []);
-
-  useEffect(() => {
-    const timer = setTimeout(
-      () => setDebouncedTwitch(twitchChannel.trim().toLowerCase()),
-      700,
-    );
-    return () => clearTimeout(timer);
-  }, [twitchChannel]);
-
-  useEffect(() => {
-    const timer = setTimeout(
-      () => setDebouncedKick(kickChannel.trim().toLowerCase()),
-      700,
-    );
-    return () => clearTimeout(timer);
-  }, [kickChannel]);
 
   const buildUrl = (twitch: string, kick: string, withChannel: boolean) => {
     if (typeof window === "undefined") return "";
@@ -198,15 +180,14 @@ function SubSproutSetup() {
       withChannel,
     );
 
+  // simulate=auto stops once the channel's chat connects, leaving the plant at
+  // stage 0 with no setting visible. simulate=1 never connects to chat, so the
+  // channel is left out and the preview keeps growing.
   const getPreviewUrl = () => {
-    const url =
-      buildUrl(debouncedTwitch, debouncedKick, true) ||
-      buildUrl("", "", false);
+    const url = buildUrl("", "", false);
     if (!url) return "";
     const previewUrl = new URL(url);
-    if (!debouncedTwitch && !debouncedKick) {
-      previewUrl.searchParams.set("simulate", "auto");
-    }
+    previewUrl.searchParams.set("simulate", "1");
     return previewUrl.toString();
   };
 
@@ -228,8 +209,6 @@ function SubSproutSetup() {
     variety !== "classic" ||
     !countFx ||
     potLabel;
-  const previewChannel =
-    twitchChannel.trim() || kickChannel.trim();
 
   return (
     <div className="min-h-screen bg-zinc-50 text-zinc-900 font-sans p-6 pt-12 dark:bg-zinc-950 dark:text-zinc-100">
@@ -463,7 +442,7 @@ function SubSproutSetup() {
               <h2 className="mb-4 text-xl font-semibold text-center text-zinc-700 dark:text-zinc-300">
                 {t("subSprout.previewTitle")}
               </h2>
-              <div className="flex-1 w-full bg-zinc-950 rounded-lg overflow-hidden border border-zinc-300 relative shadow-inner flex items-center justify-center relative bg-opacity-20 dark:border-zinc-800">
+              <div className="flex-1 w-full bg-zinc-950/20 rounded-lg overflow-hidden border border-zinc-300 relative shadow-inner flex items-center justify-center relative dark:border-zinc-800">
                 {mounted ? (
                   <iframe
                     src={getPreviewUrl()}
@@ -477,11 +456,7 @@ function SubSproutSetup() {
                 )}
               </div>
               <p className="mt-2 text-center text-xs text-zinc-500">
-                {previewChannel
-                  ? t("subSprout.previewHintChannel", {
-                      channel: previewChannel,
-                    })
-                  : t("subSprout.previewHintNoChannel")}
+                {t("subSprout.previewHintNoChannel")}
               </p>
 
               <div className="mt-4 hidden lg:block">
