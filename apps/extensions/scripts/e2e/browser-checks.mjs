@@ -54,8 +54,11 @@ function withClipboard(fn) {
   return run;
 }
 
-/** Opens a tab with the viewport, theme, English locale and console capture every job needs. */
-export async function openTab(chrome, { width, height, theme, origin }) {
+/**
+ * Opens a tab with the viewport, theme, browser language (English unless `language` is given,
+ * e.g. `tr-TR`) and console capture every job needs.
+ */
+export async function openTab(chrome, { width, height, theme, origin, language = 'en-US' }) {
   const page = await chrome.newPage();
   if (origin) {
     await page.grantPermissions(origin, ['clipboardReadWrite', 'clipboardSanitizedWrite']);
@@ -100,9 +103,12 @@ export async function openTab(chrome, { width, height, theme, origin }) {
       deviceScaleFactor: 1,
       mobile: false,
     }),
-    // The site picks Turkish from navigator.languages, so pin the browser to English.
-    page.send('Emulation.setLocaleOverride', { locale: 'en-US' }),
-    page.send('Network.setUserAgentOverride', { userAgent, acceptLanguage: 'en-US,en' }),
+    // The site lands visitors in their browser language, so pin it (English by default).
+    page.send('Emulation.setLocaleOverride', { locale: language }),
+    page.send('Network.setUserAgentOverride', {
+      userAgent,
+      acceptLanguage: `${language},${language.slice(0, 2)}`,
+    }),
     // Clipboard writes and :focus-visible need a focused page.
     page.send('Emulation.setFocusEmulationEnabled', { enabled: true }),
   ]);
@@ -178,8 +184,8 @@ function collectPageFacts() {
       '';
     return `<${el.tagName.toLowerCase()}${role ? ` role=${role}` : ''}> "${label}"`;
   };
-  // The cursor a person sees: an element with pointer-events: none (every disabled button, see
-  // styles.css) passes the hover to what is under it, so its own cursor never shows.
+  // The cursor a person sees: an element with pointer-events: none passes the hover to what is
+  // under it, so its own cursor never shows (disabled buttons used to do this).
   const shownCursor = (el) => {
     let target = el;
     while (target.parentElement && getComputedStyle(target).pointerEvents === 'none') {
@@ -556,6 +562,77 @@ export async function runHeaderMenu({ chrome, base, path, setupPaths, check, noi
   } catch (err) {
     check('menu test ran to the end', false, err.message);
     checkConsole(tab, check, noise);
+  } finally {
+    await tab.close();
+  }
+}
+
+/**
+ * Language landing: each case is a fresh profile with a given browser language and optional
+ * saved choice. Visitors must land on their language's URL, explicit /tr links and ?lang= must
+ * update the saved choice, and the EN/TR switcher must stick on the next visit.
+ */
+// No console check here: every case redirects or navigates mid-load, which cancels in-flight
+// font and API requests (net::ERR_SOCKET_NOT_CONNECTED). Page cases already cover console health.
+export async function runLanguageLanding({ chrome, base, check }) {
+  const url = (path) => new URL(path, base).href;
+  const state = () => ({
+    path: location.pathname + location.search,
+    lang: document.documentElement.lang,
+    saved: localStorage.getItem('lang'),
+  });
+  const settle = async (tab, path) => {
+    await tab.page.poll(
+      `location.pathname + location.search === ${JSON.stringify(path)} && Object.keys(document.body ?? {}).some((k) => k.startsWith('__reactFiber'))`,
+      { timeout: 15_000, what: `to land on ${path}` },
+    );
+    return tab.page.evaluate(state);
+  };
+  const cases = [
+    { name: 'Turkish browser opening / lands on /tr', language: 'tr-TR', open: '/', expect: '/tr', lang: 'tr' },
+    { name: 'English browser stays on /', language: 'en-US', open: '/', expect: '/', lang: 'en' },
+    { name: 'unsupported browser language falls back to English', language: 'de-DE', open: '/faq', expect: '/faq', lang: 'en' },
+    { name: 'saved English beats a Turkish browser', language: 'tr-TR', saved: 'en', open: '/guides', expect: '/guides', lang: 'en' },
+    { name: 'saved Turkish beats an English browser', language: 'en-US', saved: 'tr', open: '/guides', expect: '/tr/guides', lang: 'tr' },
+    { name: 'legacy ?lang=tr lands on the Turkish URL without the param', language: 'en-US', open: '/setup/chat-widget?lang=tr', expect: '/tr/setup/chat-widget', lang: 'tr', savedAfter: 'tr' },
+  ];
+  for (const c of cases) {
+    const tab = await openTab(chrome, { width: 1280, height: 800, theme: 'dark', language: c.language });
+    try {
+      if (c.saved) {
+        await tab.page.goto(url('/robots.txt'));
+        await tab.page.evaluate((v) => localStorage.setItem('lang', v), c.saved);
+      }
+      await tab.page.goto(url(c.open));
+      const landed = await settle(tab, c.expect);
+      check(
+        c.name,
+        landed.lang === c.lang && (!c.savedAfter || landed.saved === c.savedAfter),
+        JSON.stringify(landed),
+      );
+    } catch (err) {
+      check(c.name, false, err.message);
+    } finally {
+      await tab.close();
+    }
+  }
+
+  // A /tr link updates the choice, and the switcher's EN link sticks on the next visit.
+  const tab = await openTab(chrome, { width: 1280, height: 800, theme: 'dark', language: 'en-US' });
+  try {
+    await tab.page.goto(url('/tr/faq'));
+    const viaLink = await settle(tab, '/tr/faq');
+    await tab.page.goto(url('/'));
+    const back = await settle(tab, '/tr');
+    check('a /tr link saves Turkish for the next visit', viaLink.saved === 'tr' && back.lang === 'tr', JSON.stringify({ viaLink, back }));
+
+    await tab.page.click('header a[hreflang="en"]');
+    const switched = await settle(tab, '/');
+    await tab.page.goto(url('/'));
+    const again = await settle(tab, '/');
+    check('clicking EN saves English and the next visit stays English', switched.saved === 'en' && again.lang === 'en', JSON.stringify({ switched, again }));
+  } catch (err) {
+    check('switcher choice sticks', false, err.message);
   } finally {
     await tab.close();
   }

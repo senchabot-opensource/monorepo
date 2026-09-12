@@ -11,6 +11,7 @@ import { launchChrome } from '../lib/chrome.mjs';
 import {
   parseXmlInBrowser,
   runHeaderMenu,
+  runLanguageLanding,
   runOverlay,
   runPageCase,
   runSetupFlow,
@@ -272,6 +273,11 @@ async function main() {
         .map((p) => p.path);
       job('flow', landing.path, 'dark 1440x900', `${landing.path}  header Widgets menu`, (check) =>
         runHeaderMenu({ chrome, base: BASE, path: landing.path, setupPaths, check, noise }),
+      );
+    }
+    if (!only || only === '/') {
+      job('flow', '/', 'languages', '/  language landing', (check) =>
+        runLanguageLanding({ chrome, base: BASE, check }),
       );
     }
     for (const overlay of overlays) {
