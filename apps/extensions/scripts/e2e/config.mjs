@@ -142,11 +142,4 @@ export const CONSOLE_ALLOWLIST = [
  * Failing checks caused by app bugs that are known and reported. They still fail the run; the
  * report labels them so a new failure stands out. Delete an entry once its bug is fixed.
  */
-export const KNOWN_BUGS = [
-  {
-    check: 'disabled controls show a not-allowed cursor',
-    note:
-      'styles.css gives button:disabled pointer-events: none, so the hover falls through to the ' +
-      'parent and disabled:cursor-not-allowed never shows (only NumberField sets it on a wrapper).',
-  },
-];
+export const KNOWN_BUGS = [];
