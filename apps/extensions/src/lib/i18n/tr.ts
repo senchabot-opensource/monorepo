@@ -183,7 +183,7 @@ export const tr: typeof en = {
       "Evet. Sohbet Kutusu, Emote Duvarı ve Sub Sprout tek bir URL'de hem Twitch hem Kick kanalını alır. OBS Bridge da iki sohbeti aynı anda dinleyebilir. Çekiliş ise her seferinde tek bir platformda çalışır.",
     faq5Q: "Bir widget'ı sonradan nasıl değiştiririm?",
     faq5A:
-      "Kurulum sayfasını aç, widget'ı istediğin gibi ayarla ve Tarayıcı Kaynağı'ndaki URL'yi yenisiyle değiştir. Sohbet Kutusu mevcut bir URL'yi de açabilir: URL'yi kurulum sayfasına yapıştır, eski ayarların geri gelsin, sadece istediğini değiştir.",
+      "Kurulum sayfasını aç, widget'ı istediğin gibi ayarla ve Tarayıcı Kaynağı'ndaki URL'yi yenisiyle değiştir. Sohbet Kutusu, Emote Duvarı ve Sub Sprout mevcut bir URL'yi de açabilir: URL'yi kurulum sayfasına yapıştır, eski ayarların geri gelsin, sadece istediğini değiştir.",
     faq6Q: "Güncellemelerden sonra widget URL'm çalışmaya devam eder mi?",
     faq6A:
       'Evet. Güncellemelerde mevcut URL ayarları ve değerleri korunur, yani sahnendeki widget için yeni bir URL almana gerek kalmaz.',
@@ -192,7 +192,7 @@ export const tr: typeof en = {
     breadcrumb: 'Sohbet Kutusu Kurulumu',
     title: 'Sohbet Kutusu Kurulumu',
     intro:
-      "Twitch ve Kick'i 7TV emote'ları ve özel temalarla tek bir akışta birleştiren özelleştirilebilir çoklu sohbet widget'ı ve yayın sohbet kutusu kaplaması.",
+      "Twitch ve Kick sohbetini tek bir kaplamada birleştiren çoklu sohbet widget'ı. 7TV emote'ları iki platformda da, BTTV ve FFZ emote'ları Twitch'te görünür, rozetler de gösterilir. Düzeni, yazı tipini ve animasyonu sen seçersin.",
     platformIndicator: 'Platform Göstergesi',
     platformName: 'Platform Adı',
     platformIcon: 'Platform Simgesi',
@@ -289,7 +289,7 @@ export const tr: typeof en = {
       'Giriş gerekmez. Sohbet Kutusu, her iki platformun herkese açık sohbet akışlarını anonim olarak dinler.',
     faq2Q: "Bu çoklu sohbet widget'ı 7TV emote'larıyla çalışıyor mu?",
     faq2A:
-      "Evet, 7TV kanal ve global emote'ları hem Twitch hem Kick için sohbet kutusu kaplamasında otomatik olarak alınır ve gösterilir.",
+      "Evet. 7TV kanal ve global emote'ları hem Twitch hem Kick mesajlarında görünür, BTTV ve FFZ emote'ları ise sadece Twitch mesajlarında. Üçü de varsayılan olarak açık, istediğini Emote'lar menüsünden kapatabilirsin.",
   },
   obsBridge: {
     breadcrumb: 'OBS Bridge Kurulumu',
@@ -374,7 +374,7 @@ export const tr: typeof en = {
       'Listendeki biri komutu, bir boşluk ve sahne adını yazar, örneğin !scene Gaming. OBS Bridge önce adı birebir tutan sahneyi arar, büyük küçük harfe bakmaz. Bulamazsa adında o yazı geçen ilk sahneye geçer.',
     faq2Q: 'OBS WebSocket şifrem güvende mi?',
     faq2A:
-      "Köprü OBS'ye doğrudan tarayıcından bağlanır, şifren sunucularımıza hiç gelmez. Ama şifre araç URL'sinin içinde durur, o yüzden linki de şifre gibi sakla. Kimseyle paylaşma, yayında gösterme.",
+      "OBS bağlantısı doğrudan tarayıcından OBS'ye gider. Ama şifre araç URL'sinde kayıtlı, bu URL'yi açtığında sayfa extensions.senchabot.com'dan yüklenir ve şifre de adresle birlikte oraya gider. O yüzden linki şifre gibi sakla. Kimseyle paylaşma, yayında gösterme.",
     faq3Q: "Seçtiğim sahneler OBS dock'unda neden kayboldu?",
     faq3A:
       "Sahne seçimleri ve kullanıcı değişiklikleri araç sayfasının URL'sine kaydedilir. Tarayıcı sekmesinde sayfayı yer imlerine eklersen kalırlar, ama OBS dock'u her zaman ilk eklendiği URL'yi açar. Araç sayfasındaki Güncel URL'yi Kopyala'ya bas ve yeni URL'yi dock'a yapıştır.",
@@ -588,7 +588,7 @@ export const tr: typeof en = {
     breadcrumb: 'Emote Duvarı Kurulumu',
     title: 'Emote Duvarı Kurulumu',
     intro:
-      "Yalnızca emote içeren Twitch, Kick ve 7TV sohbet mesajlarını ekrandaki yüzen emote'lar olarak göster. Sakin modda emote'lar rastgele noktalarda süzülür, Kaos modunda ekranın bir ucundan diğerine fırlar.",
+      "Sadece emote'tan oluşan mesajlar (Twitch, Kick ve Twitch kanalının 7TV emote'ları) ekranda emote olarak belirir. Normal yazılı mesajlar varsayılan olarak atlanır, Tüm Emote'ları Göster açıksa onların içindeki emote'lar da çıkar. Sakin modda emote'lar rastgele bir noktada belirip süzülür ve kaybolur, Kaos modunda ekranın kenarından girip karşıya fırlar, Sekme modunda ekranın kenarlarından seker.",
     sectionAnimation: 'Animasyon',
     sectionFilters: 'Filtreler',
     sevenTvEmotes: "7TV Emote'ları",
@@ -738,8 +738,8 @@ export const tr: typeof en = {
       update: {
         title: "Widget'ı sonradan nasıl değiştiririm?",
         p1: "Ayarlar widget adresinin içinde durur, yani bir ayarı değiştirmek yeni bir adres demek. Kurulum sayfasında ayarı değiştir, yeni adresi kopyala, sonra OBS'te kaynağa çift tıklayıp URL alanındaki eski adresin yerine yapıştır.",
-        p2: "Sohbet Kutusu'nda baştan başlaman gerekmez. Mevcut adresini [kurulum sayfasındaki](/setup/chat-widget) Widget URL alanına yapıştır, kanalların ve bütün ayarların geri yüklenir. Değiştirmek istediğini değiştir ve yeni adresi kopyala.",
-        p3: "Diğer widget'larda ayarları kurulum sayfasında yeniden seçip yeni adresi kopyalarsın. Eski adresler çalışmaya devam eder, güncellemek zorunda değilsin.",
+        p2: "[Sohbet Kutusu](/setup/chat-widget), [Emote Duvarı](/setup/emote-wall) ve [Sub Sprout](/setup/sub-growing-plant) için baştan başlaman gerekmez. Mevcut adresini kurulum sayfasındaki Widget URL alanına yapıştır, kanalların ve bütün ayarların geri yüklenir. Değiştirmek istediğini değiştir ve yeni adresi kopyala.",
+        p3: "OBS Bridge'de yapıştırma alanı yok, ayarları kurulum sayfasında yeniden girip yeni araç adresini kopyalarsın. Sahne seçimlerini ve yetkili kullanıcıları araç sayfasında da değiştirebilir, yeni adresi oradaki Copy Updated URL düğmesiyle alabilirsin. Eski adresler çalışmaya devam eder, güncellemek zorunda değilsin.",
       },
       troubleshoot: {
         title: "Widget OBS'te görünmüyorsa ne yapmalıyım?",
@@ -752,7 +752,7 @@ export const tr: typeof en = {
           "Adı yazım hatasına karşı kontrol et. Twitch'te olmayan bir kanal hata vermez, widget sadece boş kalır.",
         quietTitle: 'Sohbette henüz bir şey oldu mu?',
         quietBody:
-          "Sohbet Kutusu ve Emote Duvarı sohbette bir şey olana kadar tamamen boş ve şeffaftır. Sohbete bir mesaj yaz; Emote Duvarı için sadece emote'tan oluşan bir mesaj gerekir. Çekiliş overlay'i de sadece kazanan çekildiğinde görünür ve 10 saniye sonra kaybolur. Sub Sprout ise bitkiyi hemen gösterir.",
+          "Sohbet Kutusu ve Emote Duvarı sohbette bir şey olana kadar tamamen boş ve şeffaftır. Sohbete bir mesaj yaz; Emote Duvarı için varsayılan olarak sadece emote'tan oluşan bir mesaj gerekir, Tüm Emote'ları Göster açıksa normal mesajlardaki emote'lar da sayılır. Çekiliş overlay'i de sadece kazanan çekildiğinde görünür ve 10 saniye sonra kaybolur. Sub Sprout ise bitkiyi hemen gösterir.",
         kickTitle: 'Kick kanalı bulunamadı mı?',
         kickBody:
           "Widget açılırken Kick kanalını kick.com üzerinden arar. Bu arama başarısız olursa, yani ad yanlışsa, kanal yoksa ya da Kick cevap vermezse, Kick mesajları gelmez. Adreste Twitch kanalı da yoksa Sohbet Kutusu ve Emote Duvarı gerçek sohbet yerine örnek içerik oynatır. OBS'te Goku ya da Frieren gibi isimlerden mesajlar görüyorsan Kick kanalın bulunamamış demektir. Kick adını kick.com adresinde göründüğü gibi yaz.",
@@ -972,7 +972,7 @@ export const tr: typeof en = {
       security: {
         title: 'Araç adresi neden şifre gibi saklanmalı?',
         p1: 'Çünkü OBS WebSocket şifren adresin içinde durur (`obsWebsocketPassword` parametresi). Adresi paylaşmak şifreni paylaşmak demek. Adresi yayında gösterme, sohbette paylaşma ve ekran paylaşırken adres çubuğunu gizle.',
-        p2: "OBS Bridge, OBS'e doğrudan tarayıcından bağlanır ve şifreni başka bir yerde saklamaz.",
+        p2: "OBS bağlantısı doğrudan tarayıcından OBS'e gider. Araç sayfasının kendisi ise her site gibi extensions.senchabot.com'dan yüklenir, yani şifre dahil adresin tamamı bu istekle birlikte gider.",
       },
       ctaTitle: "OBS Bridge'i kur",
       ctaText:
@@ -1006,7 +1006,7 @@ export const tr: typeof en = {
       "Beşi de iki platformu destekliyor. Sohbet Kutusu, Emote Duvarı ve Sub Sprout tek adreste Twitch ve Kick kanalını birlikte dinler. OBS Bridge iki sohbetten gelen komutları dinler ve her yetkili kullanıcı kendi platformuyla eklenir. Çekiliş her seferinde tek platformda çalışır, Twitch ya da Kick. Sohbet Kutusu'nda 7TV emote'ları iki platformda, BTTV ve FFZ emote'ları sadece Twitch'te görünür.",
     editQ: "Widget'ı sonradan nasıl değiştiririm?",
     editA:
-      "Kurulum sayfasında ayarları değiştir, yeni adresi kopyala ve OBS'te kaynağın URL alanındaki eski adresin yerine yapıştır. Sohbet Kutusu'nda eski adresini kurulum sayfasındaki Widget URL alanına yapıştırırsan bütün ayarların geri yüklenir, baştan başlaman gerekmez.",
+      "Kurulum sayfasında ayarları değiştir, yeni adresi kopyala ve OBS'te kaynağın URL alanındaki eski adresin yerine yapıştır. Sohbet Kutusu, Emote Duvarı ve Sub Sprout'ta eski adresini kurulum sayfasındaki Widget URL alanına yapıştırırsan bütün ayarların geri yüklenir, baştan başlaman gerekmez.",
     oldUrlsQ: 'Eski widget adreslerim çalışmaya devam eder mi?',
     oldUrlsA:
       "Evet. Güncellemeler mevcut adresleri bozmayacak şekilde yapılır: parametre adları, değerleri ve varsayılanları değişmez. Örneğin Sohbet Kutusu'ndaki eski keep=true hâlâ Süresiz anlamına gelir ve Sub Sprout eski channel ve platform parametrelerini hâlâ okur.",

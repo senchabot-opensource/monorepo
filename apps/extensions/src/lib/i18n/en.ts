@@ -179,7 +179,7 @@ export const en = {
       'Yes. Chat Box, Emote Wall and Sub Sprout take a Twitch and a Kick channel in the same URL. OBS Bridge can listen to both chats at once too. Raffle runs on one platform at a time.',
     faq5Q: 'How do I change a widget later?',
     faq5A:
-      'Open its setup page, set it up the way you want and replace the URL in your Browser Source. Chat Box can also open an existing URL: paste it on the setup page, your settings come back, and you change only what you need.',
+      'Open its setup page, set it up the way you want and replace the URL in your Browser Source. Chat Box, Emote Wall and Sub Sprout can also open an existing URL: paste it on the setup page, your settings come back, and you change only what you need.',
     faq6Q: 'Will my widget URL keep working after updates?',
     faq6A:
       "Yes. Updates keep existing URL settings and their values working, so a widget that's already in your scene doesn't need a new URL.",
@@ -188,7 +188,7 @@ export const en = {
     breadcrumb: 'Chat Box Setup',
     title: 'Chat Box Setup',
     intro:
-      'A customizable multi-chat widget and stream chat box overlay merging Twitch and Kick into a single feed with 7TV emotes and custom themes.',
+      'A multi-chat widget that merges Twitch and Kick chat into one overlay. 7TV emotes work on both platforms, BTTV and FFZ on Twitch, and badges show up too. You pick the layout, font and animation.',
     platformIndicator: 'Platform Indicator',
     platformName: 'Platform Name',
     platformIcon: 'Platform Icon',
@@ -284,7 +284,7 @@ export const en = {
       'No login is required. Chat Box listens anonymously to public chat streams for both platforms.',
     faq2Q: 'Does this multi-chat widget work with 7TV emotes?',
     faq2A:
-      'Yes, 7TV channel and global emotes are fetched and rendered automatically in the chat box overlay for both Twitch and Kick.',
+      'Yes. 7TV channel and global emotes show up in both Twitch and Kick messages, and BTTV and FFZ emotes show up in Twitch messages only. All three are on by default, and you can turn any of them off in the Emotes menu.',
   },
   obsBridge: {
     breadcrumb: 'OBS Bridge Setup',
@@ -370,7 +370,7 @@ export const en = {
       "Someone on your list types the command, a space and a scene name, like !scene Gaming. OBS Bridge first looks for a scene with exactly that name, capital letters don't matter, then for the first scene whose name contains it, and switches to it.",
     faq2Q: 'Is my OBS WebSocket password safe?',
     faq2A:
-      "The bridge connects to OBS straight from your browser, so the password never reaches our servers. It is saved in the tool URL though, so treat that link like a password: don't share it and don't show it on stream.",
+      "The connection to OBS goes straight from your browser to OBS. But the password is saved in the tool URL, and opening that URL loads the page from extensions.senchabot.com with the password in it. So treat the link like a password: don't share it and don't show it on stream.",
     faq3Q: 'Why did my scene picks disappear in the OBS dock?',
     faq3A:
       "Scene picks and user changes are saved in the tool page's URL. A browser tab keeps them if you bookmark the page, but an OBS dock always opens the URL it was created with. Press Copy Updated URL on the tool page and paste the new URL into the dock.",
@@ -583,7 +583,7 @@ export const en = {
     breadcrumb: 'Emote Wall Setup',
     title: 'Emote Wall Setup',
     intro:
-      'Show emote-only Twitch, Kick and 7TV chat messages as floating on-screen emotes. Pick Calm for emotes drifting at random spots, or Chaos for emotes zipping across the screen.',
+      "Messages made only of emotes (Twitch, Kick and your Twitch channel's 7TV emotes) pop up as emotes on screen. Normal text messages are skipped by default, and Show All Emotes pulls the emotes out of those too. Calm pops them up at random spots to drift and fade, Chaos flies them in from an edge across the screen, and Bounce bounces them off the screen edges.",
     sectionAnimation: 'Animation',
     sectionFilters: 'Filters',
     sevenTvEmotes: '7TV Emotes',
@@ -733,8 +733,8 @@ export const en = {
       update: {
         title: 'How do I change a widget later?',
         p1: 'Your settings live inside the widget URL, so changing a setting means a new URL. Change the setting on the setup page, copy the new URL, then double-click the source in OBS and paste it over the old URL in the URL field.',
-        p2: "With Chat Box you don't have to start over. Paste your current URL into the Widget URL field on the [setup page](/setup/chat-widget) and your channels and all your settings come back. Change what you want and copy the new URL.",
-        p3: "For the other widgets, pick your settings again on the setup page and copy the new URL. Old URLs keep working, so you don't have to update them.",
+        p2: "You don't have to start over with [Chat Box](/setup/chat-widget), [Emote Wall](/setup/emote-wall) or [Sub Sprout](/setup/sub-growing-plant). Paste your current URL into the Widget URL field on the setup page and your channels and all your settings come back. Change what you want and copy the new URL.",
+        p3: "OBS Bridge has no paste field, so enter your settings again on its setup page and copy the new tool URL. You can also change scene picks and authorized users on the tool page itself and grab the new URL with its Copy Updated URL button. Old URLs keep working, so you don't have to update them.",
       },
       troubleshoot: {
         title: "What should I do if the widget doesn't show up in OBS?",
@@ -748,7 +748,7 @@ export const en = {
           "Check the name for typos. A channel that doesn't exist on Twitch doesn't throw an error. The widget just stays empty.",
         quietTitle: 'Has anything happened in chat yet?',
         quietBody:
-          'Chat Box and Emote Wall stay completely empty and transparent until something happens in chat. Send a message in chat; for Emote Wall it has to be a message made only of emotes. The Raffle overlay also only appears when a winner is drawn and disappears after 10 seconds. Sub Sprout, on the other hand, shows the plant right away.',
+          'Chat Box and Emote Wall stay completely empty and transparent until something happens in chat. Send a message in chat; for Emote Wall it has to be a message made only of emotes by default, but with Show All Emotes on, emotes inside normal messages count too. The Raffle overlay also only appears when a winner is drawn and disappears after 10 seconds. Sub Sprout, on the other hand, shows the plant right away.',
         kickTitle: 'Kick channel not found?',
         kickBody:
           "When the widget opens, it looks up the Kick channel on kick.com. If that lookup fails (wrong name, the channel doesn't exist, or Kick doesn't respond), Kick messages won't come in. If the URL has no Twitch channel either, Chat Box and Emote Wall play sample content instead of real chat. If you see messages from names like Goku or Frieren in OBS, your Kick channel wasn't found. Type your Kick name exactly as it appears in the kick.com URL.",
@@ -967,7 +967,7 @@ export const en = {
       security: {
         title: 'Why should you treat the tool URL like a password?',
         p1: "Because your OBS WebSocket password is inside the URL (the `obsWebsocketPassword` parameter). Sharing the URL means sharing your password. Don't show it on stream, don't post it in chat, and hide the address bar when you share your screen.",
-        p2: "OBS Bridge connects to OBS straight from your browser and doesn't store your password anywhere else.",
+        p2: 'The connection to OBS goes straight from your browser to OBS. The tool page itself loads from extensions.senchabot.com like any website, so the full address, password included, goes along with that request.',
       },
       ctaTitle: 'Set up OBS Bridge',
       ctaText:
@@ -1001,7 +1001,7 @@ export const en = {
       'All five support both platforms. Chat Box, Emote Wall and Sub Sprout listen to a Twitch and a Kick channel together in one URL. OBS Bridge listens for commands from both chats, and each authorized user is added with their own platform. Raffle runs on one platform at a time, Twitch or Kick. In Chat Box, 7TV emotes show on both platforms, while BTTV and FFZ emotes show on Twitch only.',
     editQ: 'How do I change a widget later?',
     editA:
-      "Change the settings on the setup page, copy the new URL, and paste it over the old one in the source's URL field in OBS. With Chat Box, if you paste your old URL into the Widget URL field on the setup page, all your settings come back and you don't have to start over.",
+      "Change the settings on the setup page, copy the new URL, and paste it over the old one in the source's URL field in OBS. With Chat Box, Emote Wall and Sub Sprout, if you paste your old URL into the Widget URL field on the setup page, all your settings come back and you don't have to start over.",
     oldUrlsQ: 'Will my old widget URLs keep working?',
     oldUrlsA:
       "Yes. Updates are made so existing URLs don't break: parameter names, values and defaults stay the same. For example, the old keep=true in Chat Box still means Forever, and Sub Sprout still reads the old channel and platform parameters.",
