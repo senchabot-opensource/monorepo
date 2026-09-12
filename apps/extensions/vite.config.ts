@@ -29,6 +29,7 @@ const config = defineConfig({
         { path: '/guides/twitch-kick-chat-overlay' },
         { path: '/guides/chat-giveaway' },
         { path: '/guides/obs-scene-switcher' },
+        { path: '/faq' },
       ],
       // public/sitemap.xml is the source of truth. The generated one overwrote it with an
       // invalid https:// xmlns and the build date as every page's lastmod.
