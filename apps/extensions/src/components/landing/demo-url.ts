@@ -5,6 +5,8 @@ import type { WidgetEntry, WidgetId } from '#/lib/widgets';
 const DEMO_PARAMS: Partial<Record<WidgetId, Record<string, string>>> = {
   'chat-box': { fontSize: '14', mockRate: '0.5' },
   'emote-wall': { size: '56' },
+  // The sub count badge has a 40px minimum, so in a small frame it dwarfs the plant.
+  'sub-sprout': { countfx: '0' },
 };
 
 /** The widget's self-running demo URL tuned for small previews; empty when it has no demo. */

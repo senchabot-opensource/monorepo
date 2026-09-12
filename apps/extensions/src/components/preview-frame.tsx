@@ -40,8 +40,8 @@ interface PreviewFrameProps {
 }
 
 /**
- * Non-interactive iframe preview. It only mounts once scrolled near the viewport, so pages
- * with several previews don't load them all up front, and it stays mounted afterwards.
+ * Non-interactive iframe preview. It only mounts while it's near the viewport, so pages with
+ * several previews run just the ones on screen.
  */
 export function PreviewFrame({
   src,
@@ -69,15 +69,11 @@ export function PreviewFrame({
       setVisible(true);
       return;
     }
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          observer.disconnect();
-        }
-      },
-      { rootMargin: '200px' },
-    );
+    // Each preview is a whole app instance, so a page with several of them (the landing runs six)
+    // stutters if they all keep animating. Unmount the ones scrolled out of view.
+    const observer = new IntersectionObserver(([entry]) => setVisible(entry.isIntersecting), {
+      rootMargin: '200px',
+    });
     observer.observe(element);
     return () => observer.disconnect();
   }, []);

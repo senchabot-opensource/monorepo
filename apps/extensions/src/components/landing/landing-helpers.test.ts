@@ -21,9 +21,10 @@ describe('getDemoSrc', () => {
     expect(wall.searchParams.get('size')).toBe('56');
   });
 
-  it('leaves demos without tweaks as they are', () => {
-    const sprout = getWidget('sub-sprout');
-    expect(getDemoSrc(sprout)).toBe(sprout.demoUrl);
+  it('turns off the Sub Sprout count badge, which dwarfs the plant in a small frame', () => {
+    const params = new URL(getDemoSrc(getWidget('sub-sprout')), 'https://x').searchParams;
+    expect(params.get('countfx')).toBe('0');
+    expect(params.get('simulate')).toBe('true');
   });
 
   it('gives every overlay a demo and no tool one', () => {
