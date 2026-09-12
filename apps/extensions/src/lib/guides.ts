@@ -1,4 +1,5 @@
 import type { TranslationKey } from '#/lib/i18n';
+import type { PageMeta } from '#/lib/seo/head';
 import type { RoutePath, WidgetId } from '#/lib/widgets';
 
 export type GuideId =
@@ -6,12 +7,6 @@ export type GuideId =
   | 'twitch-kick-chat-overlay'
   | 'chat-giveaway'
   | 'obs-scene-switcher';
-
-/** English `<title>` and meta description; the server always renders English. */
-export interface PageMeta {
-  title: string;
-  description: string;
-}
 
 export interface GuideEntry {
   id: GuideId;

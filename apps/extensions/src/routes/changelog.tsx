@@ -1,13 +1,13 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { ContentPage, formatDate } from '#/components/content-page';
 import { CHANGELOG, groupByMonth } from '#/lib/changelog';
-import { getContentHead } from '#/lib/content-seo';
 import { CONTENT_META } from '#/lib/guides';
 import { useI18n } from '#/lib/i18n';
+import { getPageHead } from '#/lib/seo/head';
 import { getWidget } from '#/lib/widgets';
 
 export const Route = createFileRoute('/changelog')({
-  head: () => getContentHead({ path: '/changelog', meta: CONTENT_META.changelog }),
+  head: () => getPageHead({ path: '/changelog', meta: CONTENT_META.changelog, image: 'guides' }),
   component: ChangelogPage,
 });
 

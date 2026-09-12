@@ -20,7 +20,9 @@ import {
 } from '#/features/tools/obs-bridge-config';
 import { ObsCommandList } from '#/features/tools/obs-command-list';
 import { type TranslationKey, useI18n } from '#/lib/i18n';
-import { type FaqEntry, getFaqJsonLd, getLocaleLinks } from '#/lib/i18n/seo';
+import { type FaqEntry, getFaqJsonLd } from '#/lib/i18n/seo';
+import { getPageHead } from '#/lib/seo/head';
+import { PAGE_META } from '#/lib/seo/pages';
 import { getWidget } from '#/lib/widgets';
 
 const WIDGET = getWidget('obs-bridge');
@@ -32,57 +34,13 @@ const FAQ: FaqEntry[] = [
 ];
 
 export const Route = createFileRoute('/setup/obs-bridge')({
-  head: () => ({
-    meta: [
-      {
-        title:
-          'Free Chat-Controlled OBS Scene Switcher (No Login Required) — OBS Bridge | Senchabot',
-      },
-      {
-        name: 'description',
-        content:
-          'Control OBS Studio directly from Twitch and Kick chat commands. 100% Free, no login or account required. Switch scenes (BRB/Main/!scene) and trigger recording with chat commands.',
-      },
-      {
-        name: 'keywords',
-        content:
-          'free obs chat commands, chat controlled obs no login, obs scene switcher twitch kick, obs remote control chat free, obs bridge senchabot, obs !scene command',
-      },
-      {
-        property: 'og:title',
-        content:
-          'Free Chat-Controlled OBS Scene Switcher (No Login Required) — OBS Bridge | Senchabot',
-      },
-      {
-        property: 'og:description',
-        content:
-          'Control OBS Studio from Twitch or Kick chat. Switch to any scene with !scene, toggle recording, and manage your stream with chat commands. 100% Free & zero login required.',
-      },
-      { property: 'og:type', content: 'website' },
-      {
-        property: 'og:url',
-        content: 'https://extensions.senchabot.com/setup/obs-bridge',
-      },
-      {
-        property: 'og:image',
-        content: 'https://extensions.senchabot.com/senchabot-logo.svg',
-      },
-      { name: 'twitter:card', content: 'summary' },
-      {
-        name: 'twitter:title',
-        content: 'Free Chat-Controlled OBS Scene Switcher (No Login Required)',
-      },
-      {
-        name: 'twitter:description',
-        content:
-          'Control OBS Studio scenes and recording directly from Twitch or Kick chat commands. 100% Free, zero login required.',
-      },
-      {
-        name: 'twitter:image',
-        content: 'https://extensions.senchabot.com/senchabot-logo.svg',
-      },
-      {
-        'script:ld+json': {
+  head: () =>
+    getPageHead({
+      path: '/setup/obs-bridge',
+      meta: PAGE_META['obs-bridge'],
+      image: 'obs-bridge',
+      jsonLd: [
+        {
           '@context': 'https://schema.org',
           '@type': 'WebApplication',
           name: 'OBS Bridge - Free Chat-Controlled OBS Tool',
@@ -99,11 +57,9 @@ export const Route = createFileRoute('/setup/obs-bridge')({
             description: '100% Free, No Login Required',
           },
         },
-      },
-      { 'script:ld+json': getFaqJsonLd(FAQ) },
-    ],
-    links: getLocaleLinks('/setup/obs-bridge'),
-  }),
+        getFaqJsonLd(FAQ),
+      ],
+    }),
   component: ObsBridgeSetup,
 });
 

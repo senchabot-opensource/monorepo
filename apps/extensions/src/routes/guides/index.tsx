@@ -1,15 +1,16 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { ContentPage, Rich } from '#/components/content-page';
 import { GuideCard } from '#/components/guide-article';
-import { getContentHead, pageUrl } from '#/lib/content-seo';
 import { CONTENT_META, GUIDES, GUIDES_PATH } from '#/lib/guides';
 import { translate, useT } from '#/lib/i18n';
+import { getPageHead, pageUrl } from '#/lib/seo/head';
 
 export const Route = createFileRoute('/guides/')({
   head: () =>
-    getContentHead({
+    getPageHead({
       path: GUIDES_PATH,
       meta: CONTENT_META.guides,
+      image: 'guides',
       jsonLd: [
         {
           '@context': 'https://schema.org',

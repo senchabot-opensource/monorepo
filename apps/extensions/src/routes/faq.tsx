@@ -2,11 +2,11 @@ import { createFileRoute } from '@tanstack/react-router';
 import { ContentPage } from '#/components/content-page';
 import { CtaBand } from '#/components/cta-band';
 import { FaqList } from '#/components/faq-list';
-import { getContentHead } from '#/lib/content-seo';
 import { CONTENT_META } from '#/lib/guides';
 import { type TranslationKey, useT } from '#/lib/i18n';
 import { type FaqEntry, getFaqJsonLd } from '#/lib/i18n/seo';
 import { LINKS } from '#/lib/links';
+import { getPageHead } from '#/lib/seo/head';
 
 const FAQ_GROUPS: readonly { id: string; title: TranslationKey; entries: readonly FaqEntry[] }[] = [
   {
@@ -45,9 +45,10 @@ const FAQ_GROUPS: readonly { id: string; title: TranslationKey; entries: readonl
 
 export const Route = createFileRoute('/faq')({
   head: () =>
-    getContentHead({
+    getPageHead({
       path: '/faq',
       meta: CONTENT_META.faq,
+      image: 'guides',
       jsonLd: [getFaqJsonLd(FAQ_GROUPS.flatMap((group) => group.entries))],
     }),
   component: FaqPage,

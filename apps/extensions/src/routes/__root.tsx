@@ -4,6 +4,8 @@ import { SiteLayout } from '#/components/site-layout';
 import { BUTTON_PRIMARY } from '#/components/ui/button-styles';
 import { WidgetCrossLinks } from '#/components/widget-cross-links';
 import { LocaleProvider, useI18n } from '#/lib/i18n';
+import { getPageHead, ROBOTS_INDEX, ROBOTS_NOINDEX, SITE_META, SITE_NAME } from '#/lib/seo/head';
+import { PAGE_META } from '#/lib/seo/pages';
 import { ThemeProvider } from '#/lib/theme';
 
 import appCss from '../styles.css?url';
@@ -13,6 +15,8 @@ const themeInitScript = `(function(){try{var t=localStorage.getItem("theme");var
 
 // Overlays run inside streamers' OBS scenes: they keep their old font and never download Geist.
 const isWidgetPath = (pathname: string) => pathname.startsWith('/widgets/');
+// Overlays and the live OBS Bridge page are opened by URL, never searched for.
+const isAppPath = (pathname: string) => isWidgetPath(pathname) || pathname.startsWith('/tools/');
 
 // Geist is variable, so one 400..800 range (the weights the site uses) serves one file per subset.
 const geistLinks = [
@@ -26,70 +30,41 @@ const geistLinks = [
 
 export const Route = createRootRoute({
   // Root head sees every match, so this is the one place that can skip Geist for all widget routes.
-  head: ({ matches }) => ({
-    meta: [
-      {
-        charSet: 'utf-8',
-      },
-      {
-        name: 'viewport',
-        content: 'width=device-width, initial-scale=1',
-      },
-      {
-        name: 'theme-color',
-        content: '#09090b',
-      },
-      {
-        title:
-          'Senchabot Extensions — Free Customizable Stream Overlays, Browser Sources & Stream Tools',
-      },
-      {
-        name: 'description',
-        content:
-          '100% Free customizable stream overlays, multi-chat widgets, subscriber goal plants, transparent chat box overlays, and interactive stream tools for Twitch & Kick with zero login required. Works with OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio, and any software supporting browser sources.',
-      },
-      {
-        name: 'keywords',
-        content:
-          'customizable stream overlays, multi-chat widgets, subscriber goal plants, chat box, stream chat box, free streaming widgets, stream tools, obs studio, streamlabs desktop, xsplit broadcaster, vmix, lightstream, prism live studio, meld studio, twitch widgets free, kick widgets free, free obs overlays, senchabot extensions',
-      },
-      {
-        property: 'og:site_name',
-        content: 'Senchabot Extensions — Free Stream Overlays, Browser Sources & Stream Tools',
-      },
-      {
-        property: 'og:type',
-        content: 'website',
-      },
-      {
-        property: 'og:image',
-        content: 'https://extensions.senchabot.com/senchabot-logo.svg',
-      },
-      {
-        name: 'twitter:card',
-        content: 'summary',
-      },
-      {
-        name: 'twitter:image',
-        content: 'https://extensions.senchabot.com/senchabot-logo.svg',
-      },
-    ],
-    links: [
-      {
-        rel: 'stylesheet',
-        href: appCss,
-      },
-      ...(matches.some((match) => isWidgetPath(match.pathname)) ? [] : geistLinks),
-      {
-        rel: 'icon',
-        href: '/favicon.ico',
-      },
-      {
-        rel: 'manifest',
-        href: '/manifest.json',
-      },
-    ],
-  }),
+  // Its title, robots and 404 tags are fallbacks: a page's own getPageHead tags replace them.
+  head: ({ matches }) => {
+    const isNotFound = matches.some((match) => match._notFound || match.status === 'notFound');
+    const isAppPage = matches.some((match) => isAppPath(match.pathname));
+    const page = isNotFound
+      ? getPageHead({ meta: PAGE_META.notFound, image: 'guides', noindex: true }).meta
+      : [
+          { title: SITE_NAME },
+          { name: 'robots', content: isAppPage ? ROBOTS_NOINDEX : ROBOTS_INDEX },
+        ];
+    return {
+      meta: [
+        { charSet: 'utf-8' },
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        { name: 'theme-color', content: '#09090b' },
+        ...SITE_META,
+        ...page,
+      ],
+      links: [
+        {
+          rel: 'stylesheet',
+          href: appCss,
+        },
+        ...(matches.some((match) => isWidgetPath(match.pathname)) ? [] : geistLinks),
+        {
+          rel: 'icon',
+          href: '/favicon.ico',
+        },
+        {
+          rel: 'manifest',
+          href: '/manifest.json',
+        },
+      ],
+    };
+  },
   shellComponent: RootDocument,
   notFoundComponent: NotFound,
 });

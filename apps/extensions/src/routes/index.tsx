@@ -19,63 +19,20 @@ import { SiteLayout } from '#/components/site-layout';
 import { StepsList } from '#/components/steps-list';
 import { BUTTON_PRIMARY, BUTTON_SECONDARY } from '#/components/ui/button-styles';
 import { type TranslationKey, translate, useI18n } from '#/lib/i18n';
-import { type FaqEntry, getFaqJsonLd, getLocaleLinks, SITE_URL } from '#/lib/i18n/seo';
+import { type FaqEntry, getFaqJsonLd, SITE_URL } from '#/lib/i18n/seo';
 import { LINKS } from '#/lib/links';
+import { getPageHead } from '#/lib/seo/head';
+import { PAGE_META } from '#/lib/seo/pages';
 import { OVERLAYS, TOOLS, WIDGETS, type WidgetPlatform } from '#/lib/widgets';
 
 export const Route = createFileRoute('/')({
-  head: () => ({
-    meta: [
-      {
-        title:
-          'Free Customizable Stream Overlays, Browser Sources & Stream Tools (No Login) — Senchabot Extensions',
-      },
-      {
-        name: 'description',
-        content:
-          '100% Free customizable stream overlays, multi-chat widgets, subscriber goal plants, floating emote wall overlays, transparent chat box overlays, and interactive stream tools for Twitch & Kick. Works with OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio, or any software that supports browser sources. Zero login required.',
-      },
-      {
-        name: 'keywords',
-        content:
-          'customizable stream overlays, multi-chat widgets, subscriber goal plants, chat box, stream chat box, emote wall, floating emotes, emote overlay, twitch emote overlay, kick emote overlay, 7tv emote overlay, free streaming widgets, stream tools, obs studio overlays, streamlabs desktop, xsplit broadcaster, vmix, lightstream, prism live studio, twitch widgets free, kick widgets free, free obs overlays, sub goal plant, stream raffle picker, obs bridge',
-      },
-      {
-        property: 'og:title',
-        content:
-          'Free Customizable Stream Overlays, Browser Sources & Stream Tools (No Login Required) — Senchabot Extensions',
-      },
-      {
-        property: 'og:description',
-        content:
-          '100% Free customizable stream overlays, multi-chat widgets, subscriber goal plants, floating emote wall overlays, chat box overlays, and stream tools for Twitch & Kick. Add to OBS Studio, Streamlabs Desktop, XSplit, or any browser source in seconds.',
-      },
-      { property: 'og:type', content: 'website' },
-      {
-        property: 'og:url',
-        content: 'https://extensions.senchabot.com',
-      },
-      {
-        property: 'og:image',
-        content: 'https://extensions.senchabot.com/senchabot-logo.svg',
-      },
-      { name: 'twitter:card', content: 'summary' },
-      {
-        name: 'twitter:title',
-        content:
-          'Free Customizable Stream Overlays, Browser Sources & Stream Tools (No Login Required)',
-      },
-      {
-        name: 'twitter:description',
-        content:
-          '100% Free customizable stream overlays, multi-chat widgets, subscriber goal plants, floating emote wall overlays, and interactive stream tools for Twitch & Kick. Works with OBS Studio, Streamlabs Desktop, XSplit, vMix, and any browser source.',
-      },
-      {
-        name: 'twitter:image',
-        content: 'https://extensions.senchabot.com/senchabot-logo.svg',
-      },
-      {
-        'script:ld+json': {
+  head: () =>
+    getPageHead({
+      path: '/',
+      meta: PAGE_META.home,
+      image: 'home',
+      jsonLd: [
+        {
           '@context': 'https://schema.org',
           '@type': 'WebSite',
           name: 'Senchabot Extensions',
@@ -89,9 +46,7 @@ export const Route = createFileRoute('/')({
             logo: 'https://extensions.senchabot.com/senchabot-logo.svg',
           },
         },
-      },
-      {
-        'script:ld+json': {
+        {
           '@context': 'https://schema.org',
           '@type': 'ItemList',
           name: 'Free Customizable Stream Overlays, Browser Sources & Stream Tools',
@@ -103,11 +58,9 @@ export const Route = createFileRoute('/')({
             description: translate('en', widget.taglineKey),
           })),
         },
-      },
-      { 'script:ld+json': getFaqJsonLd(FAQ) },
-    ],
-    links: getLocaleLinks('/'),
-  }),
+        getFaqJsonLd(FAQ),
+      ],
+    }),
   component: Index,
 });
 

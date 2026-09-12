@@ -1,10 +1,11 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { CONTENT_META, GUIDES, getGuide, type PageMeta } from './guides';
+import { CONTENT_META, GUIDES, getGuide } from './guides';
 import { en } from './i18n/en';
 import { resolveKey } from './i18n/index';
 import { tr } from './i18n/tr';
+import type { PageMeta } from './seo/head';
 
 const srcDir = `${resolve(__dirname, '..')}/`;
 const routeTree = readFileSync(`${srcDir}routeTree.gen.ts`, 'utf8');

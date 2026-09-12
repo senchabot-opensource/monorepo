@@ -29,61 +29,18 @@ import {
 } from '#/features/widgets/chat-widget/widget-settings';
 import { useI18n } from '#/lib/i18n';
 import type { FaqEntry } from '#/lib/i18n/seo';
-import { getLocaleLinks } from '#/lib/i18n/seo';
+import { getPageHead } from '#/lib/seo/head';
+import { PAGE_META } from '#/lib/seo/pages';
 import { getWidget } from '#/lib/widgets';
 
 export const Route = createFileRoute('/setup/chat-widget')({
-  head: () => ({
-    meta: [
-      {
-        title:
-          'Free Multi-Chat Widget & Stream Chat Box for Twitch & Kick (No Login Required) — Chat Box | Senchabot',
-      },
-      {
-        name: 'description',
-        content:
-          'Combine Twitch and Kick chat into one free multi-chat widget and stream chat box overlay. 100% Free & No Login Required. Supports 7TV emotes, badges, custom fonts, animations, and customizable stream overlays for OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio, or any software that supports browser sources.',
-      },
-      {
-        name: 'keywords',
-        content:
-          'chat box, stream chat box, multi-chat widgets, customizable stream overlays, stream tools, free twitch kick chat overlay, multi-stream chat overlay no login, unified chat widget free, combined chat overlay obs, streamlabs chat box, xsplit chat widget, cross-platform stream chat free',
-      },
-      {
-        property: 'og:title',
-        content:
-          'Free Multi-Chat Widget & Stream Chat Box for Twitch & Kick (No Login Required) — Chat Box | Senchabot',
-      },
-      {
-        property: 'og:description',
-        content:
-          '100% Free multi-chat widget and stream chat box overlay merging Twitch and Kick into a single feed. No login or account required. 7TV emotes and badges included.',
-      },
-      { property: 'og:type', content: 'website' },
-      {
-        property: 'og:url',
-        content: 'https://extensions.senchabot.com/setup/chat-widget',
-      },
-      {
-        property: 'og:image',
-        content: 'https://extensions.senchabot.com/senchabot-logo.svg',
-      },
-      { name: 'twitter:card', content: 'summary' },
-      {
-        name: 'twitter:title',
-        content: 'Free Multi-Chat Widget & Stream Chat Box for Twitch & Kick (No Login Required)',
-      },
-      {
-        name: 'twitter:description',
-        content:
-          'Combine Twitch and Kick chat in OBS Studio, Streamlabs Desktop, XSplit, or any software supporting browser sources. Zero login required. 100% Free with 7TV emotes and badge support.',
-      },
-      {
-        name: 'twitter:image',
-        content: 'https://extensions.senchabot.com/senchabot-logo.svg',
-      },
-      {
-        'script:ld+json': {
+  head: () =>
+    getPageHead({
+      path: '/setup/chat-widget',
+      meta: PAGE_META['chat-box'],
+      image: 'chat-box',
+      jsonLd: [
+        {
           '@context': 'https://schema.org',
           '@type': 'WebApplication',
           name: 'Chat Box - Free Multi-Chat Widget & Stream Chat Box',
@@ -101,9 +58,7 @@ export const Route = createFileRoute('/setup/chat-widget')({
             description: '100% Free, No Login Required',
           },
         },
-      },
-      {
-        'script:ld+json': {
+        {
           '@context': 'https://schema.org',
           '@type': 'FAQPage',
           mainEntity: [
@@ -125,10 +80,8 @@ export const Route = createFileRoute('/setup/chat-widget')({
             },
           ],
         },
-      },
-    ],
-    links: getLocaleLinks('/setup/chat-widget'),
-  }),
+      ],
+    }),
   component: ChatWidgetSetup,
 });
 

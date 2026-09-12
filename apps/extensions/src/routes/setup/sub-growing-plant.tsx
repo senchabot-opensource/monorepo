@@ -17,7 +17,9 @@ import {
 } from '#/features/widgets/sub-sprout/plants/registry';
 import type { WaterEffectType } from '#/features/widgets/sub-sprout/water/watering-fx';
 import { useI18n } from '#/lib/i18n';
-import { type FaqEntry, getFaqJsonLd, getLocaleLinks } from '#/lib/i18n/seo';
+import { type FaqEntry, getFaqJsonLd } from '#/lib/i18n/seo';
+import { getPageHead } from '#/lib/seo/head';
+import { PAGE_META } from '#/lib/seo/pages';
 import {
   buildSubSproutPreviewUrl,
   buildSubSproutUrl,
@@ -29,57 +31,13 @@ import {
 import { getWidget } from '#/lib/widgets';
 
 export const Route = createFileRoute('/setup/sub-growing-plant')({
-  head: () => ({
-    meta: [
-      {
-        title:
-          'Free Subscriber Goal Plant & Sub Alert Overlay for Twitch & Kick (No Login) — Sub Sprout | Senchabot',
-      },
-      {
-        name: 'description',
-        content:
-          '100% Free subscriber goal plants and customizable stream overlays for Twitch & Kick. No login or account required. Watch your plant grow live with every new subscription in OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio, or any software supporting browser sources.',
-      },
-      {
-        name: 'keywords',
-        content:
-          'subscriber goal plants, customizable stream overlays, stream tools, free sub growing plant overlay, sub goal widget no login, twitch sub plant free, kick sub alert overlay, browser source sub counter, streamlabs sub plant, xsplit sub goal, free stream sub goal, stream sub sprout',
-      },
-      {
-        property: 'og:title',
-        content:
-          'Free Subscriber Goal Plant & Sub Alert Overlay for Twitch & Kick (No Login Required) — Sub Sprout | Senchabot',
-      },
-      {
-        property: 'og:description',
-        content:
-          '100% Free subscriber goal plant and customizable stream overlay for Twitch and Kick. Zero login required. Watch your plant grow live with every new subscription in OBS Studio, Streamlabs Desktop, XSplit, or any browser source.',
-      },
-      { property: 'og:type', content: 'website' },
-      {
-        property: 'og:url',
-        content: 'https://extensions.senchabot.com/setup/sub-growing-plant',
-      },
-      {
-        property: 'og:image',
-        content: 'https://extensions.senchabot.com/senchabot-logo.svg',
-      },
-      { name: 'twitter:card', content: 'summary' },
-      {
-        name: 'twitter:title',
-        content: 'Free Subscriber Goal Plant Overlay for Twitch & Kick (No Login Required)',
-      },
-      {
-        name: 'twitter:description',
-        content:
-          '100% Free subscriber goal plant and customizable stream overlay for Twitch & Kick. No account or login required. Works with OBS Studio, Streamlabs Desktop, XSplit, vMix, and any browser source.',
-      },
-      {
-        name: 'twitter:image',
-        content: 'https://extensions.senchabot.com/senchabot-logo.svg',
-      },
-      {
-        'script:ld+json': {
+  head: () =>
+    getPageHead({
+      path: '/setup/sub-growing-plant',
+      meta: PAGE_META['sub-sprout'],
+      image: 'sub-sprout',
+      jsonLd: [
+        {
           '@context': 'https://schema.org',
           '@type': 'WebApplication',
           name: 'Sub Sprout - Free Subscriber Goal Plant Overlay',
@@ -97,11 +55,9 @@ export const Route = createFileRoute('/setup/sub-growing-plant')({
             description: '100% Free, No Login Required',
           },
         },
-      },
-      { 'script:ld+json': getFaqJsonLd(FAQ) },
-    ],
-    links: getLocaleLinks('/setup/sub-growing-plant'),
-  }),
+        getFaqJsonLd(FAQ),
+      ],
+    }),
   component: SubSproutSetup,
 });
 

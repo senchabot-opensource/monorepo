@@ -3,18 +3,20 @@ import { useId } from 'react';
 import { Bullets, DataTable, P, Steps } from '#/components/content-page';
 import { GuideArticle } from '#/components/guide-article';
 import { WidgetCrossLinks } from '#/components/widget-cross-links';
-import { getArticleJsonLd, getContentHead } from '#/lib/content-seo';
+import { getArticleJsonLd } from '#/lib/content-seo';
 import { GUIDES_PUBLISHED, getGuide } from '#/lib/guides';
 import { type TranslationKey, translate, useT } from '#/lib/i18n';
+import { getPageHead } from '#/lib/seo/head';
 import { WIDGETS, type WidgetId } from '#/lib/widgets';
 
 const GUIDE = getGuide('obs-browser-source');
 
 export const Route = createFileRoute('/guides/obs-browser-source')({
   head: () =>
-    getContentHead({
+    getPageHead({
       path: GUIDE.path,
       meta: GUIDE.meta,
+      image: 'guides',
       ogType: 'article',
       jsonLd: [
         getArticleJsonLd({

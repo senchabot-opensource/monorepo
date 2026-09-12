@@ -1,18 +1,20 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { CtaBand } from '#/components/cta-band';
 import { Callout, DataTable, P, Steps } from '#/components/content-page';
+import { CtaBand } from '#/components/cta-band';
 import { GuideArticle } from '#/components/guide-article';
-import { getArticleJsonLd, getContentHead } from '#/lib/content-seo';
+import { getArticleJsonLd } from '#/lib/content-seo';
 import { GUIDES_PUBLISHED, getGuide } from '#/lib/guides';
 import { translate, useT } from '#/lib/i18n';
+import { getPageHead } from '#/lib/seo/head';
 
 const GUIDE = getGuide('chat-giveaway');
 
 export const Route = createFileRoute('/guides/chat-giveaway')({
   head: () =>
-    getContentHead({
+    getPageHead({
       path: GUIDE.path,
       meta: GUIDE.meta,
+      image: 'guides',
       ogType: 'article',
       jsonLd: [
         getArticleJsonLd({

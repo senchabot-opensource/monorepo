@@ -20,61 +20,19 @@ import {
   parseEmoteWallUrl,
 } from '#/features/widgets/emote-wall/widget-url';
 import { useI18n } from '#/lib/i18n';
-import { type FaqEntry, getFaqJsonLd, getLocaleLinks } from '#/lib/i18n/seo';
+import { type FaqEntry, getFaqJsonLd } from '#/lib/i18n/seo';
+import { getPageHead } from '#/lib/seo/head';
+import { PAGE_META } from '#/lib/seo/pages';
 import { getWidget } from '#/lib/widgets';
 
 export const Route = createFileRoute('/setup/emote-wall')({
-  head: () => ({
-    meta: [
-      {
-        title:
-          'Free Emote Wall Overlay for Twitch & Kick (No Login Required) — Floating On-Screen Emotes | Senchabot',
-      },
-      {
-        name: 'description',
-        content:
-          'Show emote-only chat messages as floating on-screen emotes on stream. 100% Free & No Login Required. Supports Twitch, Kick and 7TV emotes with Calm, Chaos and Bounce animations for OBS Studio, Streamlabs Desktop, XSplit, vMix, or any software that supports browser sources.',
-      },
-      {
-        name: 'keywords',
-        content:
-          'emote wall, emote overlay, floating emotes, on-screen emotes, twitch emote overlay, kick emote overlay, 7tv overlay, free obs emote overlay, browser source emotes',
-      },
-      {
-        property: 'og:title',
-        content:
-          'Free Emote Wall Overlay for Twitch & Kick (No Login Required) — Floating On-Screen Emotes | Senchabot',
-      },
-      {
-        property: 'og:description',
-        content:
-          '100% Free floating emote overlay: emote-only Twitch, Kick and 7TV chat messages appear as floating on-screen emotes with Calm, Chaos or Bounce animations.',
-      },
-      { property: 'og:type', content: 'website' },
-      {
-        property: 'og:url',
-        content: 'https://extensions.senchabot.com/setup/emote-wall',
-      },
-      {
-        property: 'og:image',
-        content: 'https://extensions.senchabot.com/senchabot-logo.svg',
-      },
-      { name: 'twitter:card', content: 'summary' },
-      {
-        name: 'twitter:title',
-        content: 'Free Emote Wall Overlay for Twitch & Kick (No Login Required)',
-      },
-      {
-        name: 'twitter:description',
-        content:
-          'Emote-only chat messages float across your stream with fade effects. Works with OBS Studio, Streamlabs Desktop, XSplit, or any browser source.',
-      },
-      {
-        name: 'twitter:image',
-        content: 'https://extensions.senchabot.com/senchabot-logo.svg',
-      },
-      {
-        'script:ld+json': {
+  head: () =>
+    getPageHead({
+      path: '/setup/emote-wall',
+      meta: PAGE_META['emote-wall'],
+      image: 'emote-wall',
+      jsonLd: [
+        {
           '@context': 'https://schema.org',
           '@type': 'WebApplication',
           name: 'Emote Wall - Free Floating Emote Overlay',
@@ -92,11 +50,9 @@ export const Route = createFileRoute('/setup/emote-wall')({
             description: '100% Free, No Login Required',
           },
         },
-      },
-      { 'script:ld+json': getFaqJsonLd(FAQ) },
-    ],
-    links: getLocaleLinks('/setup/emote-wall'),
-  }),
+        getFaqJsonLd(FAQ),
+      ],
+    }),
   component: EmoteWallSetup,
 });
 
