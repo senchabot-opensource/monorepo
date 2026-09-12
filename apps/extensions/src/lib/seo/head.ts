@@ -1,5 +1,5 @@
 import type { JSX } from 'react';
-import { DEFAULT_LOCALE, type Locale, LOCALES } from '#/lib/i18n/locales';
+import { DEFAULT_LOCALE, LOCALES, type Locale } from '#/lib/i18n/locales';
 import { getLocaleLinks, SITE_URL, siteUrl } from '#/lib/i18n/seo';
 
 type MetaTag = JSX.IntrinsicElements['meta'];

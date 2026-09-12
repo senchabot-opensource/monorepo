@@ -4,8 +4,8 @@ import { describe, expect, it } from 'vitest';
 import { CONTENT_META, GUIDES, getGuide } from './guides';
 import { en } from './i18n/en';
 import { resolveKey } from './i18n/index';
-import { tr } from './i18n/tr';
 import { LOCALES } from './i18n/locales';
+import { tr } from './i18n/tr';
 import type { PageMeta } from './seo/head';
 
 const srcDir = `${resolve(__dirname, '..')}/`;
