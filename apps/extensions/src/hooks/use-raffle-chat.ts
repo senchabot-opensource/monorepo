@@ -72,7 +72,9 @@ export function shouldAcceptEntry(
   config: Pick<RaffleConfig, "subscribersOnly" | "minSubMonths">,
 ): boolean {
   if (config.subscribersOnly && !isSub) return false;
-  if (isSub && config.minSubMonths > 0) {
+  // The 1-month floor means "any subscriber", so a badge without tenure (0) and the broadcaster
+  // (-1, can't sub to their own channel) still get in; only a higher minimum checks months.
+  if (config.subscribersOnly && config.minSubMonths > 1) {
     const effectiveMonths = subMonths >= 0 ? subMonths : 0;
     if (effectiveMonths < config.minSubMonths) {
       return false;

@@ -112,16 +112,16 @@ describe('shouldAcceptEntry', () => {
     ).toBe(false);
   });
 
-  it('rejects subscribers with too few months when minSubMonths > 0', () => {
+  it('rejects subscribers with too few months when subscribersOnly is true', () => {
     expect(
       shouldAcceptEntry(true, 0, {
-        subscribersOnly: false,
+        subscribersOnly: true,
         minSubMonths: 3,
       }),
     ).toBe(false);
     expect(
       shouldAcceptEntry(true, 2, {
-        subscribersOnly: false,
+        subscribersOnly: true,
         minSubMonths: 3,
       }),
     ).toBe(false);
@@ -130,16 +130,57 @@ describe('shouldAcceptEntry', () => {
   it('accepts subscribers at or above the minSubMonths threshold', () => {
     expect(
       shouldAcceptEntry(true, 3, {
-        subscribersOnly: false,
+        subscribersOnly: true,
         minSubMonths: 3,
       }),
     ).toBe(true);
     expect(
       shouldAcceptEntry(true, 12, {
+        subscribersOnly: true,
+        minSubMonths: 3,
+      }),
+    ).toBe(true);
+  });
+
+  it('ignores minSubMonths when subscribersOnly is false', () => {
+    // Regression: the hidden min-months field (default 1) still filtered
+    // subscribers and kept a broadcaster without a sub badge (-1) out.
+    expect(
+      shouldAcceptEntry(true, 2, {
         subscribersOnly: false,
         minSubMonths: 3,
       }),
     ).toBe(true);
+    expect(
+      shouldAcceptEntry(true, -1, {
+        subscribersOnly: false,
+        minSubMonths: 1,
+      }),
+    ).toBe(true);
+  });
+
+  it('treats the 1-month floor as any subscriber, including the broadcaster', () => {
+    expect(
+      shouldAcceptEntry(true, 0, {
+        subscribersOnly: true,
+        minSubMonths: 1,
+      }),
+    ).toBe(true);
+    expect(
+      shouldAcceptEntry(true, -1, {
+        subscribersOnly: true,
+        minSubMonths: 1,
+      }),
+    ).toBe(true);
+  });
+
+  it('rejects the broadcaster when subscribersOnly requires more than 1 month', () => {
+    expect(
+      shouldAcceptEntry(true, -1, {
+        subscribersOnly: true,
+        minSubMonths: 3,
+      }),
+    ).toBe(false);
   });
 
   it('accepts everyone when minSubMonths is 0 and subscribersOnly is false', () => {

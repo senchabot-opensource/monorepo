@@ -61,6 +61,8 @@ export function RaffleWidget({
 
   const [lastWinner, setLastWinner] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  // Raw text while the field is focused, so clearing it doesn't snap back to 1 mid-edit.
+  const [minSubMonthsDraft, setMinSubMonthsDraft] = useState<string | null>(null);
   const confettiRafRef = useRef<number | null>(null);
   const [now, setNow] = useState(() => Date.now());
 
@@ -270,15 +272,17 @@ export function RaffleWidget({
                     type="number"
                     min={1}
                     className="w-full rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2 text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white disabled:cursor-not-allowed disabled:opacity-60 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
-                    value={state.config.minSubMonths}
-                    onChange={(e) =>
+                    value={minSubMonthsDraft ?? state.config.minSubMonths}
+                    onChange={(e) => {
+                      setMinSubMonthsDraft(e.target.value);
                       updateConfig({
                         minSubMonths: Math.max(
                           1,
-                          parseInt(e.target.value || "1", 10),
+                          parseInt(e.target.value, 10) || 1,
                         ),
-                      })
-                    }
+                      });
+                    }}
+                    onBlur={() => setMinSubMonthsDraft(null)}
                     disabled={isConfigLocked}
                   />
                   <p className="mt-1 text-xs text-zinc-500">
@@ -357,7 +361,11 @@ export function RaffleWidget({
                         : "bg-[#53FC18] text-black hover:bg-[#45D115]"
                     }`}
                     onClick={start}
-                    disabled={isRunning || !state.config.channel.trim()}>
+                    disabled={
+                      isRunning ||
+                      !state.config.channel.trim() ||
+                      !state.config.keyword.trim()
+                    }>
                     {t("raffle.startRaffle")}
                   </button>
                   <button
