@@ -4,6 +4,8 @@
 
 Short version with links only: https://extensions.senchabot.com/llms.txt
 
+Languages: English, and Turkish under /tr (https://extensions.senchabot.com/tr). Overlay and tool URLs are the same in both languages.
+
 ## About
 
 - Made by Senchabot (https://senchabot.com), an open source, multi-platform community bot for Twitch, Discord, Kick and YouTube.

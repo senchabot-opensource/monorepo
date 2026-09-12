@@ -6,6 +6,8 @@ Senchabot Extensions is made by Senchabot (https://senchabot.com), an open sourc
 
 Widget settings, URL parameters with defaults, and the full FAQ: [llms-full.txt](https://extensions.senchabot.com/llms-full.txt)
 
+Every page is also in Turkish under /tr, for example [Chat Box in Turkish](https://extensions.senchabot.com/tr/setup/chat-widget). Overlay and tool URLs are the same in both languages.
+
 ## Overlays
 
 - [Chat Box](https://extensions.senchabot.com/setup/chat-widget): Twitch and Kick chat in one overlay, with 7TV emotes on both and BTTV and FFZ emotes on Twitch. Browser source size 400x600.

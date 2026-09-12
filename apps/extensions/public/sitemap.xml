@@ -1,67 +1,210 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://extensions.senchabot.com</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com"/>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://extensions.senchabot.com/setup/sub-growing-plant</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/sub-growing-plant"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/sub-growing-plant"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/sub-growing-plant"/>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://extensions.senchabot.com/setup/chat-widget</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/chat-widget"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/chat-widget"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/chat-widget"/>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://extensions.senchabot.com/setup/raffle</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/raffle"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/raffle"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/raffle"/>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://extensions.senchabot.com/setup/obs-bridge</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/obs-bridge"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/obs-bridge"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/obs-bridge"/>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://extensions.senchabot.com/setup/emote-wall</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/emote-wall"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/emote-wall"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/emote-wall"/>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://extensions.senchabot.com/guides</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/guides"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/guides"/>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://extensions.senchabot.com/guides/obs-browser-source</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/obs-browser-source"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/guides/obs-browser-source"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/guides/obs-browser-source"/>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://extensions.senchabot.com/guides/twitch-kick-chat-overlay</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/twitch-kick-chat-overlay"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/guides/twitch-kick-chat-overlay"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/guides/twitch-kick-chat-overlay"/>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://extensions.senchabot.com/guides/chat-giveaway</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/chat-giveaway"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/guides/chat-giveaway"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/guides/chat-giveaway"/>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://extensions.senchabot.com/guides/obs-scene-switcher</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/obs-scene-switcher"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/guides/obs-scene-switcher"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/guides/obs-scene-switcher"/>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://extensions.senchabot.com/faq</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/faq"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/faq"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/faq"/>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://extensions.senchabot.com/changelog</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/changelog"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/changelog"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/changelog"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/tr</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com"/>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/tr/setup/sub-growing-plant</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/sub-growing-plant"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/sub-growing-plant"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/sub-growing-plant"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/tr/setup/chat-widget</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/chat-widget"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/chat-widget"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/chat-widget"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/tr/setup/raffle</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/raffle"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/raffle"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/raffle"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/tr/setup/obs-bridge</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/obs-bridge"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/obs-bridge"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/obs-bridge"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/tr/setup/emote-wall</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/emote-wall"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/emote-wall"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/emote-wall"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/tr/guides</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/guides"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/guides"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/tr/guides/obs-browser-source</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/obs-browser-source"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/guides/obs-browser-source"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/guides/obs-browser-source"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/tr/guides/twitch-kick-chat-overlay</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/twitch-kick-chat-overlay"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/guides/twitch-kick-chat-overlay"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/guides/twitch-kick-chat-overlay"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/tr/guides/chat-giveaway</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/chat-giveaway"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/guides/chat-giveaway"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/guides/chat-giveaway"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/tr/guides/obs-scene-switcher</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/obs-scene-switcher"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/guides/obs-scene-switcher"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/guides/obs-scene-switcher"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/tr/faq</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/faq"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/faq"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/faq"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/tr/changelog</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/changelog"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/changelog"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/changelog"/>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
