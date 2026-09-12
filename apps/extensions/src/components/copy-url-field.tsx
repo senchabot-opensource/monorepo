@@ -58,6 +58,8 @@ export function CopyUrlField({
       await navigator.clipboard.writeText(url);
     } catch {
       // No clipboard access (insecure context, denied permission): select it for a manual copy.
+      // Focus first: browsers don't show a selection in an unfocused input.
+      inputRef.current?.focus();
       inputRef.current?.select();
       return;
     }
