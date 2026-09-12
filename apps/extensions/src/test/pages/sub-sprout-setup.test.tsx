@@ -1,11 +1,11 @@
-import { screen } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import {
   buildSubSproutUrl,
   DEFAULT_SUB_SPROUT_SETTINGS,
   type SubSproutSettings,
 } from '#/lib/sub-sprout-url';
-import { combobox, en, pickOption, segment, textbox, toggle } from '#/test/queries';
+import { combobox, en, pickOption, segment, slider, textbox, toggle } from '#/test/queries';
 import { renderRoute, setupUser } from '#/test/render';
 
 const PAGE = '/setup/sub-growing-plant';
@@ -81,6 +81,18 @@ describe('Sub Sprout setup', () => {
     await pickOption(user, en('subSprout.plantVariety'), en('plants.rose'));
     expect(water().disabled).toBe(false);
     expect(potLabel().disabled).toBe(false);
+  });
+
+  it('speeds up only the preview, never the widget URL', async () => {
+    const user = setupUser();
+    await renderRoute(PAGE);
+    await user.type(twitchField(), 'streamer');
+    const before = urlField().value;
+
+    fireEvent.change(slider(en('subSprout.previewSpeed')), { target: { value: '3' } });
+
+    expect(screen.getByText(en('subSprout.previewSpeedValue', { rate: 5 }))).toBeTruthy();
+    expect(urlField().value).toBe(before);
   });
 
   it('disables the channel field of the platform that is not picked', async () => {

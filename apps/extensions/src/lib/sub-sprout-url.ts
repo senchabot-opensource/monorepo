@@ -63,10 +63,15 @@ export function buildSubSproutUrl(
 
 // simulate=auto stops once the channel's chat connects, leaving the plant at stage 0 with no
 // setting visible. simulate=1 never connects to chat, so the channel is left out and the
-// preview keeps growing.
-export function buildSubSproutPreviewUrl(origin: string, settings: SubSproutSettings): string {
+// preview keeps growing. speed fast-forwards the simulated subs; 1 leaves the param out.
+export function buildSubSproutPreviewUrl(
+  origin: string,
+  settings: SubSproutSettings,
+  speed = 1,
+): string {
   const params = buildSubSproutParams(settings, '', '');
   params.set('simulate', '1');
+  if (speed !== 1) params.set('simspeed', String(speed));
   return `${origin}${WIDGET_PATH}?${params.toString()}`;
 }
 

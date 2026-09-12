@@ -464,6 +464,8 @@ export const tr: typeof en = {
     potLabelTip: "Saksının üstüne aşamayı yazar, örneğin 3/10. Sarmaşık'ta görünmez.",
     previewTitle: 'Abone Hedefi Bitkisi Önizleme',
     previewIframeTitle: 'Sub Sprout Önizleme',
+    previewSpeed: 'Önizleme Büyüme Hızı',
+    previewSpeedValue: '{rate}×',
     previewHint:
       'Önizleme sahte aboneliklerle büyür. Yayında ise bitkin kanalına gelen abonelik, yenileme ve hediye aboneliklerle büyür.',
     widgetUrlTip:

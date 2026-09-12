@@ -51,6 +51,7 @@ const searchSchema = z.object({
     .optional()
     .transform(v => (v === undefined ? undefined : parseSimulateFlag(v)))
     .catch(false),
+  simspeed: z.coerce.number().min(1).max(20).optional().catch(undefined),
 });
 
 export const Route = createFileRoute("/widgets/sub-sprout-widget")({
@@ -88,6 +89,7 @@ function RouteComponent() {
     countfx,
     potlabel,
     simulate,
+    simspeed,
   } = Route.useSearch();
   const { kickId } = Route.useLoaderData();
 
@@ -112,6 +114,7 @@ function RouteComponent() {
         countFx={countfx}
         potLabel={potlabel}
         simulate={simulate}
+        simSpeed={simspeed}
       />
     </div>
   );
