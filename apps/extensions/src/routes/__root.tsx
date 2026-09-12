@@ -1,6 +1,5 @@
 import { createRootRoute, HeadContent, Scripts, useLocation } from '@tanstack/react-router';
 
-import { SettingsControls } from '#/components/settings-controls';
 import { LocaleProvider } from '#/lib/i18n';
 import { ThemeProvider } from '#/lib/theme';
 
@@ -105,7 +104,6 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <ThemeProvider>
           <LocaleProvider>
             {children}
-            <SettingsControls />
           </LocaleProvider>
         </ThemeProvider>
         <Scripts />

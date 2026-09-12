@@ -5,6 +5,8 @@ import {
   parseCommandUsers,
   resolveCommandUsers,
 } from "#/features/tools/command-users";
+import { SiteFooter } from "#/components/site-footer";
+import { SiteHeader } from "#/components/site-header";
 import { PlatformPicker, PlatformTag } from "#/features/tools/platform-picker";
 import { useChat, DEFAULT_OBS_COMMANDS, type ObsBridgeCustomCommands } from "#/features/tools/use-chat";
 import { useT } from "#/lib/i18n";
@@ -321,13 +323,18 @@ function RouteComponent() {
     navigate({ to: ".", search: { ...search, commandUser: formatCommandUsers(users) }, replace: true });
   };
 
+  // The setup page previews this tool in an iframe; site chrome only belongs on the real page.
+  const embedded = window.self !== window.top;
+
   return (
-    <div className="min-h-screen bg-zinc-50 text-zinc-900 font-sans flex items-start justify-center py-12 px-4 dark:bg-zinc-950 dark:text-zinc-100">
+    <div className="min-h-screen bg-zinc-50 text-zinc-900 font-sans dark:bg-zinc-950 dark:text-zinc-100">
+      {!embedded && <SiteHeader variant="compact" title={t("tools.title")} widgetId="obs-bridge" />}
+      <main
+        id="main"
+        tabIndex={-1}
+        className={`flex items-start justify-center px-4 focus:outline-none ${embedded ? "py-12" : "pt-4 pb-12"}`}
+      >
       <div className="rounded-xl bg-white p-8 border border-zinc-200 shadow-xl max-w-lg w-full dark:bg-zinc-900 dark:border-zinc-800">
-        <div className="flex justify-center mb-4">
-          <img src="/senchabot-logo.svg" alt="Senchabot" width={40} height={40} />
-        </div>
-        <h1 className="text-xl font-bold text-center text-zinc-900 mb-6 dark:text-white">{t("tools.title")}</h1>
 
         <div className="space-y-3 text-sm">
           <div className="flex justify-between items-center bg-zinc-100 p-3 rounded-md border border-zinc-200 dark:bg-zinc-800/50 dark:border-zinc-800">
@@ -428,6 +435,8 @@ function RouteComponent() {
           {t("tools.footer")}
         </p>
       </div>
+      </main>
+      {!embedded && <SiteFooter />}
     </div>
   );
 }

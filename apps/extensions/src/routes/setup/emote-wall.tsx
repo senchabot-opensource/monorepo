@@ -1,4 +1,5 @@
-import { Breadcrumb } from '#/components/breadcrumb';
+import { SiteFooter } from '#/components/site-footer';
+import { SiteHeader } from '#/components/site-header';
 import { YoutubeTutorial } from '#/components/youtube-tutorial';
 import {
   buildEmoteWallParams,
@@ -7,7 +8,7 @@ import {
 } from '#/features/widgets/emote-wall/widget-url';
 import { useI18n } from '#/lib/i18n';
 import { type FaqEntry, getFaqJsonLd, getLocaleLinks } from '#/lib/i18n/seo';
-import { createFileRoute, Link } from '@tanstack/react-router';
+import { createFileRoute } from '@tanstack/react-router';
 import { useDeferredValue, useEffect, useMemo, useState } from 'react';
 
 export const Route = createFileRoute('/setup/emote-wall')({
@@ -175,45 +176,17 @@ function EmoteWallSetup() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-50 text-zinc-900 font-sans p-6 pt-12 dark:bg-zinc-950 dark:text-zinc-100">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-zinc-50 text-zinc-900 font-sans dark:bg-zinc-950 dark:text-zinc-100">
+      <SiteHeader
+        variant="compact"
+        title={t('emoteWallSetup.title')}
+        widgetId="emote-wall"
+        breadcrumbLabel={t('emoteWallSetup.breadcrumb')}
+      />
+      <main id="main" tabIndex={-1} className="max-w-6xl mx-auto px-6 pt-4 focus:outline-none">
         <div className="flex flex-col lg:flex-row items-center lg:items-start justify-center gap-8 mb-12">
           {/* Left: Configuration Panel */}
           <div className="w-full max-w-md lg:shrink-0 rounded-xl bg-white p-6 md:p-8 shadow-xl border border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800">
-            <div className="mb-4">
-              <Breadcrumb
-                items={[
-                  { label: t('common.home'), href: '/' },
-                  { label: t('emoteWallSetup.breadcrumb') },
-                ]}
-              />
-            </div>
-            <div className="mb-6 flex justify-center">
-              <Link
-                to="/"
-                className="relative inline-flex select-none flex-col items-center gap-2 text-xl font-semibold tracking-wide text-zinc-900 transition-opacity hover:opacity-75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 dark:text-white"
-              >
-                <div className="inline-flex size-10 shrink-0">
-                  <img
-                    src="/senchabot-logo.svg"
-                    alt="Senchabot"
-                    width={40}
-                    height={40}
-                  />
-                </div>
-              </Link>
-            </div>
-
-            <div className="flex justify-center mb-3">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-green-500/10 px-3 py-0.5 text-xs font-medium text-green-700 border border-green-500/20 dark:text-green-400">
-                {t('common.freeBadge')}
-              </span>
-            </div>
-
-            <h1 className="mb-4 text-2xl font-bold text-center text-zinc-900 dark:text-white">
-              {t('emoteWallSetup.title')}
-            </h1>
-
             <div className="space-y-4">
               <p className="text-xs text-zinc-600 bg-zinc-100 p-3 rounded-md border border-zinc-200 leading-relaxed dark:text-zinc-400 dark:bg-zinc-800/40 dark:border-zinc-800">
                 {t('emoteWallSetup.intro')}
@@ -533,7 +506,8 @@ function EmoteWallSetup() {
             </div>
           </div>
         </div>
-      </div>
+      </main>
+      <SiteFooter />
     </div>
   );
 }
