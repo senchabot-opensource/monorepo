@@ -16,6 +16,30 @@ export const tr: typeof en = {
     themeToggle: 'Tema değiştir',
     languageToggle: 'Dil değiştir',
     moreInfo: 'Daha fazla bilgi',
+    sectionChannel: 'Kanal',
+    sectionAppearance: 'Görünüm',
+    platforms: 'Platformlar',
+    platformsTip:
+      "Hangi platformu dinleyeceğini seç. Twitch ve Kick'te aynı anda yayın yapıyorsan ikisini birden seç.",
+    platformBoth: 'İkisi',
+    twitchChannel: 'Twitch Kanalı',
+    kickChannel: 'Kick Kanalı',
+    channelTip:
+      'Tam linki değil, sadece kanal adını yaz. Örneğin twitch.tv/senchabot için senchabot.',
+    previewLoading: 'Önizleme yükleniyor…',
+    playPreview: 'Önizlemeyi oynat',
+    setupGuideTitle: 'Nasıl kurulur?',
+    faqTitle: 'Sık sorulan sorular',
+    moreWidgets: "Diğer widget'lar",
+    nextSteps: {
+      title: 'Şimdi yayın programına ekle',
+      addSource:
+        "OBS Studio'da ya da tarayıcı kaynağı destekleyen başka bir programda yeni bir Tarayıcı Kaynağı ekle.",
+      paste: 'Kopyaladığın adresi URL alanına yapıştır.',
+      size: 'Genişliği {width}, yüksekliği {height} yap.',
+      test: 'Çalıştığını görmek için adresi yeni sekmede aç',
+      dismiss: 'Gizle',
+    },
     siteName: 'Senchabot Extensions',
     homeLink: 'Senchabot Extensions ana sayfası',
     skipToContent: 'İçeriğe geç',
@@ -116,23 +140,13 @@ export const tr: typeof en = {
     title: 'Sohbet Kutusu Kurulumu',
     intro:
       "Twitch ve Kick'i 7TV emote'ları ve özel temalarla tek bir akışta birleştiren özelleştirilebilir çoklu sohbet widget'ı ve yayın sohbet kutusu kaplaması.",
-    platforms: 'Platformlar',
-    both: 'İkisi',
-    twitch: 'Twitch',
-    kick: 'Kick',
-    twitchChannel: 'Twitch Kanalı',
-    kickChannel: 'Kick Kanalı',
     platformIndicator: 'Platform Göstergesi',
     platformName: 'Platform Adı',
     platformIcon: 'Platform Simgesi',
     platformHidden: 'Platformu Gizle',
-    sectionChannel: 'Kanal',
-    sectionAppearance: 'Görünüm',
     sectionMessages: 'Mesajlar',
     platformsTip:
       'Sohbeti hangi platformlardan alacağını seç. İkisini seçersen Twitch ve Kick mesajları tek akışta birleşir.',
-    channelTip:
-      'Tam linki değil, sadece kanal adını yaz. Örneğin twitch.tv/senchabot için senchabot.',
     platformIndicatorTip:
       'İki platform birlikteyken her mesajın yanında nereden geldiğini gösterir: platform adı, simgesi ya da hiçbir şey.',
     orientationTip:
@@ -208,10 +222,10 @@ export const tr: typeof en = {
     previewHint: 'Animasyonlu mesaj akışıyla canlı sohbet önizlemesi.',
     guideTitle: 'Yayın Yazılımı Sohbet Kutusu Kurulumu (OBS, Streamlabs, XSplit vb.)',
     guideStep1:
-      '1. Yayın yazılımında (OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio vb.) bir Tarayıcı Kaynağı ekle.',
-    guideStep2: "2. Kopyaladığın çoklu sohbet widget URL'sini yapıştır.",
+      'Yayın yazılımında (OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio vb.) bir Tarayıcı Kaynağı ekle.',
+    guideStep2: "Kopyaladığın çoklu sohbet widget URL'sini yapıştır.",
     guideStep3:
-      '3. Genişlik ve yüksekliği istediğin sohbet kutusu kaplama boyutlarına ayarla (örn. dikey için 400×600).',
+      'Genişlik ve yüksekliği istediğin sohbet kutusu kaplama boyutlarına ayarla (örn. dikey için 400×600).',
     browserSourceHintSize: ' (önerilen boyut: sohbet kutusu için 400×600).',
     widgetUrlTip:
       "Daha önce bir widget oluşturduysan URL'sini buraya yapıştır. Ayarların geri yüklenir, istediğini değiştirebilirsin.",

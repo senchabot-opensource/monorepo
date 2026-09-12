@@ -14,6 +14,29 @@ export const en = {
     themeToggle: 'Toggle color theme',
     languageToggle: 'Switch language',
     moreInfo: 'More info',
+    sectionChannel: 'Channel',
+    sectionAppearance: 'Appearance',
+    platforms: 'Platforms',
+    platformsTip:
+      'Pick the platform to listen to. Streaming on Twitch and Kick at the same time? Pick Both.',
+    platformBoth: 'Both',
+    twitchChannel: 'Twitch Channel',
+    kickChannel: 'Kick Channel',
+    channelTip:
+      "Just type the channel name, not the full link. For twitch.tv/senchabot, that's senchabot.",
+    previewLoading: 'Loading preview…',
+    playPreview: 'Play preview',
+    setupGuideTitle: 'How to set it up',
+    faqTitle: 'Frequently asked questions',
+    moreWidgets: 'More widgets',
+    nextSteps: {
+      title: 'Now add it to your streaming app',
+      addSource: 'Add a new Browser Source in OBS Studio or any app that supports browser sources.',
+      paste: 'Paste the URL into its URL field.',
+      size: 'Set the width to {width} and the height to {height}.',
+      test: 'Open the URL in a new tab to check it works',
+      dismiss: 'Hide',
+    },
     siteName: 'Senchabot Extensions',
     homeLink: 'Senchabot Extensions home',
     skipToContent: 'Skip to content',
@@ -114,23 +137,13 @@ export const en = {
     title: 'Chat Box Setup',
     intro:
       'A customizable multi-chat widget and stream chat box overlay merging Twitch and Kick into a single feed with 7TV emotes and custom themes.',
-    platforms: 'Platforms',
-    both: 'Both',
-    twitch: 'Twitch',
-    kick: 'Kick',
-    twitchChannel: 'Twitch Channel',
-    kickChannel: 'Kick Channel',
     platformIndicator: 'Platform Indicator',
     platformName: 'Platform Name',
     platformIcon: 'Platform Icon',
     platformHidden: 'Hide Platform',
-    sectionChannel: 'Channel',
-    sectionAppearance: 'Appearance',
     sectionMessages: 'Messages',
     platformsTip:
       'Pick which platforms to pull chat from. Select both to merge Twitch and Kick messages into a single feed.',
-    channelTip:
-      "Just type the channel name, not the full link. For twitch.tv/senchabot, that's senchabot.",
     platformIndicatorTip:
       'When both platforms are on, shows where each message came from: the platform name, its icon, or nothing.',
     orientationTip:
@@ -205,10 +218,10 @@ export const en = {
     previewHint: 'Live chat preview with animated message stream.',
     guideTitle: 'Streaming Software Chat Box Setup (OBS, Streamlabs, XSplit, etc.)',
     guideStep1:
-      '1. Add a Browser Source in your streaming software (OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio, etc.).',
-    guideStep2: '2. Paste your copied multi-chat widget URL.',
+      'Add a Browser Source in your streaming software (OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio, etc.).',
+    guideStep2: 'Paste your copied multi-chat widget URL.',
     guideStep3:
-      '3. Set width and height to match your desired chat box overlay dimensions (e.g. 400×600 for vertical).',
+      'Set width and height to match your desired chat box overlay dimensions (e.g. 400×600 for vertical).',
     browserSourceHintSize: ' (recommended size: 400×600 for chat box).',
     widgetUrlTip:
       'Already made a widget? Paste its URL here to load your settings and change what you need.',
