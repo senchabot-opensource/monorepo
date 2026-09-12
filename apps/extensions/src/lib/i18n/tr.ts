@@ -187,27 +187,6 @@ export const tr: typeof en = {
     faq6Q: "Güncellemelerden sonra widget URL'm çalışmaya devam eder mi?",
     faq6A:
       'Evet. Güncellemelerde mevcut URL ayarları ve değerleri korunur, yani sahnendeki widget için yeni bir URL almana gerek kalmaz.',
-    heroBadge: '%100 Ücretsiz · Giriş Gerektirmez · Anında Tarayıcı Kaynağı Kurulumu',
-    sectionLabel: "Mevcut widget'lar",
-    tagObsSource: 'OBS Tarayıcı Kaynağı',
-    tagGiveaway: 'Çekiliş Aracı',
-    tagControlTool: 'Yayın Kontrol Aracı',
-    cardSubSprout:
-      "Twitch ve Kick'te her yeni abonelikle büyüyen etkileşimli abone hedefi bitkileri. Birden fazla bitki çeşidi, sulama animasyonları ve özelleştirilebilir yayın kaplama efektleri.",
-    cardChatBox:
-      "Twitch ve Kick sohbetlerini tek bir kaplamada birleştiren özelleştirilebilir çoklu sohbet widget'ı ve yayın sohbet kutusu. 7TV emote'ları, abone rozetleri, özel yazı tipleri, animasyonlar ve şeffaf arka planlar destekler.",
-    cardRaffle:
-      'Sohbet anahtar kelimesi (!join) ile izleyici çekilişleri düzenle. Yalnızca aboneler filtresi, hile önleyici zamanlayıcı ve canlı OBS konfeti kutlama kaplaması içerir.',
-    cardObsBridge:
-      "Özel tetikleyici adlarıyla sohbet komutlarından OBS'yi kontrol et. Güvendiğin moderatörlere BRB/Ana sahnelerine geçirme, kayıt açıp kapatma ve yayını yerel WebSocket üzerinden yönetme imkanı ver.",
-    cardAlerts:
-      'Twitch ve Kick takip, abonelik, yenileme, hediye abonelik, Cheer ve raid uyarılarını yayınında göster.',
-    cardEmoteWall:
-      "Yalnızca emote içeren Twitch, Kick ve 7TV sohbet mesajları için ekrandaki yüzen emote'lar. Sakin modda süzülür, Kaos modunda ekranı boydan boya geçer.",
-    openSetup: 'Kurulumu Aç',
-    noLoginHint: 'giriş gerekmez',
-    faqTitle: 'Sıkça Sorulan Sorular',
-    footerGithub: "GitHub'da Görüntüle (Açık Kaynak)",
   },
   chatWidget: {
     breadcrumb: 'Sohbet Kutusu Kurulumu',

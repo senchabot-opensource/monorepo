@@ -183,27 +183,6 @@ export const en = {
     faq6Q: 'Will my widget URL keep working after updates?',
     faq6A:
       "Yes. Updates keep existing URL settings and their values working, so a widget that's already in your scene doesn't need a new URL.",
-    heroBadge: '100% Free · No Login Required · Instant Browser Source Setup',
-    sectionLabel: 'Available widgets',
-    tagObsSource: 'OBS Browser Source',
-    tagGiveaway: 'Giveaway Tool',
-    tagControlTool: 'Stream Control Tool',
-    cardSubSprout:
-      'Interactive subscriber goal plants that grow with every new subscription on Twitch & Kick. Multiple plant varieties, watering animations, and customizable stream overlay effects.',
-    cardChatBox:
-      'A customizable multi-chat widget and stream chat box merging Twitch & Kick chat into one overlay. Supports 7TV emotes, sub badges, custom fonts, animations, and transparent backgrounds.',
-    cardRaffle:
-      'Run viewer giveaways via chat keyword (!join). Includes sub-only filter, anti-rigging timer, and a live OBS confetti celebration overlay.',
-    cardObsBridge:
-      'Control OBS from chat commands with custom trigger names. Let trusted mods switch to BRB/Main scenes, toggle recording, and manage your broadcast over local WebSocket.',
-    cardAlerts:
-      'Show Twitch and Kick follow, subscription, renewal, gift subscription, Cheer, and raid alerts in your stream.',
-    cardEmoteWall:
-      'Floating on-screen emotes for emote-only Twitch, Kick and 7TV chat messages. Calm mode drifts gently, Chaos mode zips across the screen.',
-    openSetup: 'Open setup',
-    noLoginHint: 'no login required',
-    faqTitle: 'Frequently Asked Questions',
-    footerGithub: 'View on GitHub (Open Source)',
   },
   chatWidget: {
     breadcrumb: 'Chat Box Setup',
