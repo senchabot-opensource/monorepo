@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ChangelogRouteImport } from './routes/changelog'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as GuidesIndexRouteImport } from './routes/guides/index'
 import { Route as GuidesChatGiveawayRouteImport } from './routes/guides/chat-giveaway'
@@ -31,6 +32,11 @@ import { Route as WidgetsSubSproutWidgetRouteImport } from './routes/widgets/sub
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChangelogRoute = ChangelogRouteImport.update({
+  id: '/changelog',
+  path: '/changelog',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FaqRoute = FaqRouteImport.update({
@@ -122,6 +128,7 @@ const WidgetsSubSproutWidgetRoute = WidgetsSubSproutWidgetRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/changelog': typeof ChangelogRoute
   '/faq': typeof FaqRoute
   '/guides/chat-giveaway': typeof GuidesChatGiveawayRoute
   '/guides/obs-browser-source': typeof GuidesObsBrowserSourceRoute
@@ -142,6 +149,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/changelog': typeof ChangelogRoute
   '/faq': typeof FaqRoute
   '/guides/chat-giveaway': typeof GuidesChatGiveawayRoute
   '/guides/obs-browser-source': typeof GuidesObsBrowserSourceRoute
@@ -163,6 +171,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/changelog': typeof ChangelogRoute
   '/faq': typeof FaqRoute
   '/guides/chat-giveaway': typeof GuidesChatGiveawayRoute
   '/guides/obs-browser-source': typeof GuidesObsBrowserSourceRoute
@@ -185,6 +194,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/changelog'
     | '/faq'
     | '/guides/chat-giveaway'
     | '/guides/obs-browser-source'
@@ -205,6 +215,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/changelog'
     | '/faq'
     | '/guides/chat-giveaway'
     | '/guides/obs-browser-source'
@@ -225,6 +236,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/changelog'
     | '/faq'
     | '/guides/chat-giveaway'
     | '/guides/obs-browser-source'
@@ -246,6 +258,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ChangelogRoute: typeof ChangelogRoute
   FaqRoute: typeof FaqRoute
   GuidesChatGiveawayRoute: typeof GuidesChatGiveawayRoute
   GuidesObsBrowserSourceRoute: typeof GuidesObsBrowserSourceRoute
@@ -272,6 +285,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/changelog': {
+      id: '/changelog'
+      path: '/changelog'
+      fullPath: '/changelog'
+      preLoaderRoute: typeof ChangelogRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/faq': {
@@ -398,6 +418,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ChangelogRoute: ChangelogRoute,
   FaqRoute: FaqRoute,
   GuidesChatGiveawayRoute: GuidesChatGiveawayRoute,
   GuidesObsBrowserSourceRoute: GuidesObsBrowserSourceRoute,
