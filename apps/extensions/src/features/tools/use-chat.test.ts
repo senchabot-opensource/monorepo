@@ -69,4 +69,14 @@ describe('useChat OBS connection', () => {
     await vi.advanceTimersByTimeAsync(0);
     expect(connect).toHaveBeenCalledWith(undefined, undefined);
   });
+
+  it('reports the status through the callback instead of the DOM', async () => {
+    const onStatus = vi.fn();
+    renderHook(() =>
+      useChat('Main', 'BRB', null, null, null, undefined, undefined, undefined, onStatus),
+    );
+    expect(onStatus).toHaveBeenCalledWith('connecting');
+    await vi.advanceTimersByTimeAsync(0);
+    expect(onStatus).toHaveBeenLastCalledWith('failed');
+  });
 });

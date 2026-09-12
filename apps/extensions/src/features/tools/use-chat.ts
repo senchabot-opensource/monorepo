@@ -10,6 +10,8 @@ type Disconnectable = {
   disconnect: () => void;
 };
 
+export type ObsStatus = "connecting" | "connected" | "failed" | "disconnected";
+
 export const useChat = (
   mainScene: string,
   brbScene: string,
@@ -20,13 +22,13 @@ export const useChat = (
   // commandUserKey values, from resolveCommandUsers.
   commandUsers: ReadonlySet<string> = new Set(),
   onScenes?: (scenes: string[]) => void,
-  onConnected?: (connected: boolean) => void,
+  onStatus?: (status: ObsStatus) => void,
   customCommands?: ObsBridgeCustomCommands,
 ) => {
   const onScenesRef = useRef(onScenes);
   onScenesRef.current = onScenes;
-  const onConnectedRef = useRef(onConnected);
-  onConnectedRef.current = onConnected;
+  const onStatusRef = useRef(onStatus);
+  onStatusRef.current = onStatus;
   const mainSceneRef = useRef(mainScene);
   mainSceneRef.current = mainScene;
   const brbSceneRef = useRef(brbScene);
@@ -45,17 +47,9 @@ export const useChat = (
 
   useEffect(() => {
     const obs = new OBSWebSocket();
-    const statusElId = "obs-status";
     let reconnectTimer: ReturnType<typeof setTimeout> | null = null;
     let disposed = false;
-
-    const updateUI = (text: string, color: string) => {
-      const el = document.getElementById(statusElId);
-      if (el) {
-        el.innerText = text;
-        el.style.color = color;
-      }
-    };
+    onStatusRef.current?.("connecting");
 
     const fetchScenes = async () => {
       try {
@@ -83,20 +77,17 @@ export const useChat = (
       try {
         // An empty URL must still send the password; undefined (not null) picks the library's default URL.
         await obs.connect(obsWebsocketUrl || undefined, obsWebsocketPassword);
-        updateUI("Connected", "green");
-        onConnectedRef.current?.(true);
+        onStatusRef.current?.("connected");
       } catch {
         if (disposed) return;
-        updateUI("Connection Failed, Retrying...", "red");
-        onConnectedRef.current?.(false);
+        onStatusRef.current?.("failed");
         scheduleReconnect();
       }
     };
 
     obs.on('ConnectionClosed', () => {
       if (disposed) return;
-      updateUI("Disconnected, Reconnecting...", "red");
-      onConnectedRef.current?.(false);
+      onStatusRef.current?.("disconnected");
       scheduleReconnect();
     });
 

@@ -330,6 +330,42 @@ export const tr: typeof en = {
     faq3Q: "Seçtiğim sahneler OBS dock'unda neden kayboldu?",
     faq3A:
       "Sahne seçimleri ve kullanıcı değişiklikleri araç sayfasının URL'sine kaydedilir. Tarayıcı sekmesinde sayfayı yer imlerine eklersen kalırlar, ama OBS dock'u her zaman ilk eklendiği URL'yi açar. Araç sayfasındaki Güncel URL'yi Kopyala'ya bas ve yeni URL'yi dock'a yapıştır.",
+    tool: {
+      title: 'OBS Bridge',
+      connection: 'OBS bağlantısı',
+      status: {
+        connecting: 'Bağlanıyor…',
+        connected: 'Bağlandı',
+        failed: "OBS'ye ulaşılamıyor, yeniden deneniyor…",
+        disconnected: 'Bağlantı koptu, yeniden bağlanıyor…',
+      },
+      failedHint:
+        "OBS'nin açık, WebSocket sunucusunun etkin ve bu URL'deki şifrenin doğru olduğundan emin ol.",
+      scenesTitle: 'Sahneler',
+      scenes: 'Sahneler ({count})',
+      fetchingScenes: 'Sahne listesi alınıyor…',
+      scenesOffline: 'Sahne listesi OBS bağlanınca görünür.',
+      mainScene: 'Ana Sahne',
+      brbScene: 'BRB Sahnesi',
+      notSelected: 'Seçilmedi',
+      main: 'Ana',
+      brb: 'BRB',
+      setMain: '{scene} Ana sahne olsun',
+      setBrb: '{scene} BRB sahnesi olsun',
+      assignMainBrbWarning:
+        'Aşağıdan bir Ana ve bir BRB sahnesi seç, yoksa {brb} ve {back} nereye geçeceğini bilemez.',
+      assignMainWarning: 'Aşağıdan bir Ana sahne seç, yoksa {back} nereye döneceğini bilemez.',
+      assignBrbWarning: 'Aşağıdan bir BRB sahnesi seç, yoksa {brb} nereye geçeceğini bilemez.',
+      sceneHint:
+        'Atamak için sahnenin yanındaki Ana ya da BRB düğmesine bas. Diğer sahnelere {command} ile geçilir.',
+      usersCount: 'Yetkili Kullanıcılar ({count})',
+      copyUrl: "Güncel URL'yi Kopyala",
+      copyUrlHint:
+        "Sahne seçimleri ve kullanıcı değişiklikleri bu sayfanın URL'sine kaydedilir. OBS dock'u ilk eklendiği URL'yi açmaya devam eder, kopyaladığın yeni URL'yi dock ayarlarına yapıştır.",
+      copyUrlManual: "Kopyalanamadı. Aşağıdaki URL'yi seçip kendin kopyala.",
+      commands: 'Sohbet Komutları',
+      footer: 'Yayın boyunca bu sayfayı açık tut. Kapanınca köprü de durur.',
+    },
   },
   subSprout: {
     breadcrumb: 'Sub Sprout Kurulumu',
@@ -454,44 +490,6 @@ export const tr: typeof en = {
       "Çekiliş sayfası kazananı BroadcastChannel ile gönderir, bu da sadece aynı tarayıcının içinde çalışır. Sayfa Chrome'da, overlay OBS'de açıksa mesaj hiç ulaşmaz. Çekiliş sayfasını overlay ile aynı uygulamada çalıştır ve yayından önce bir deneme çekilişi yap.",
     winner: 'Kazanan!',
     subMonthsShort: '{months} ay',
-  },
-  tools: {
-    title: 'OBS Bridge',
-    connected: 'Bağlandı',
-    connecting: 'Bağlanıyor...',
-    fetchingScenes: 'Sahne listesi alınıyor...',
-    notSelected: 'Seçilmedi',
-    obsWebSocket: 'OBS WebSocket',
-    mainScene: 'Ana Sahne',
-    brbScene: 'BRB Sahnesi',
-    obsScenes: 'OBS Sahneleri ({count})',
-    assignMainBrbWarning:
-      'Sohbet komutlarının hangi sahnelerine geçeceğini bilmesi için aşağıda bir Ana ve bir BRB sahnesi ata.',
-    assignMainWarning:
-      'Geri dönme komutunun hangi sahneye geçeceğini bilmesi için aşağıda bir Ana sahne ata.',
-    assignBrbWarning:
-      'BRB komutunun hangi sahneye geçeceğini bilmesi için aşağıda bir BRB sahnesi ata.',
-    main: 'Ana',
-    brb: 'BRB',
-    assignHintClick: 'Bir sahneyi atamak için yanındaki',
-    assignHintOr: 'veya',
-    assignHintRest: 'düğmesine tıkla. Ya da !scene <ad> komutuyla herhangi bir sahneye geç.',
-    commandUsers: 'Komut Kullanıcıları ({count})',
-    addUsername: 'Kullanıcı adı ekle',
-    userPlatform: 'Platform',
-    pickPlatformWarning:
-      'Twitch ve Kick ikisi de bağlı, sarı görünen her isim için bir platform seç. Seçene kadar komut kullanamazlar.',
-    add: 'Ekle',
-    activeCommands: 'Aktif Sohbet Komutları',
-    cmdScene: 'Herhangi Bir Sahneye Geç:',
-    cmdBrb: "BRB'ye Geç:",
-    cmdBack: 'Ana Sahneye Geç:',
-    cmdStartStream: 'Yayını Başlat:',
-    cmdStopStream: 'Yayını Durdur:',
-    cmdStartRecord: 'Kaydı Başlat:',
-    cmdStopRecord: 'Kaydı Durdur:',
-    footer:
-      "Köprü bağlantısını sürdürmek için bu sayfa açık kalmalı. Komut kullanıcılarının herhangi biri sohbet üzerinden OBS'yi kontrol edebilir.",
   },
   alerts: {
     follow: 'Yeni Takipçi Geldi!',
