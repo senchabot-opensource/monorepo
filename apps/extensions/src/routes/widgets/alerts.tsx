@@ -21,6 +21,16 @@ interface FollowData {
 export const Route = createFileRoute('/widgets/alerts')({
   ssr: false,
   validateSearch: (search) => searchSchema.parse(search),
+  // Only the alert card uses font-display (400 and 700), so Orbitron loads here, not site-wide.
+  head: () => ({
+    links: [
+      { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossOrigin: 'anonymous' },
+      {
+        rel: 'stylesheet',
+        href: 'https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap',
+      },
+    ],
+  }),
   component: RouteComponent,
 });
 
