@@ -14,11 +14,11 @@ describe('getDemoSrc', () => {
     const chat = new URL(getDemoSrc(getWidget('chat-box')), 'https://x.test');
     expect(chat.pathname).toBe('/widgets/chat-widget');
     expect(chat.searchParams.get('mock')).toBe('true');
-    expect(chat.searchParams.get('fontSize')).toBe('14');
+    expect(chat.searchParams.get('fontSize')).toBe('12');
 
     const wall = new URL(getDemoSrc(getWidget('emote-wall')), 'https://x.test');
     expect(wall.searchParams.get('mock')).toBe('true');
-    expect(wall.searchParams.get('size')).toBe('56');
+    expect(wall.searchParams.get('size')).toBe('48');
   });
 
   it('turns off the Sub Sprout count badge, which dwarfs the plant in a small frame', () => {
