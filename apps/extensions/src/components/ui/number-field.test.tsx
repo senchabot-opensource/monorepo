@@ -65,6 +65,17 @@ describe('NumberField', () => {
     expect(input().value).toBe('99');
   });
 
+  it('keeps one decimal point, as the old number inputs did', async () => {
+    const user = userEvent.setup();
+    render(<Size />);
+    await user.clear(input());
+    await user.type(input(), '2.5');
+    expect(input().value).toBe('2.5');
+    await user.clear(input());
+    await user.type(input(), '1.2.3');
+    expect(input().value).toBe('1.23');
+  });
+
   it('steps from the fallback when the field is empty', async () => {
     const user = userEvent.setup();
     render(<Size />);

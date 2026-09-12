@@ -13,6 +13,13 @@ interface NumberFieldProps {
 const STEP_BUTTON_CLASS =
   'w-8 shrink-0 text-base text-zinc-500 transition-colors hover:bg-zinc-200 hover:text-zinc-900 focus-visible:bg-zinc-200 focus-visible:outline-none dark:hover:bg-zinc-700 dark:hover:text-white dark:focus-visible:bg-zinc-700';
 
+// Digits and one decimal point, like the old type="number" inputs: an emote wall duration of 2.5s
+// is valid, and dropping the dot would silently make it 25.
+const toNumberText = (text: string) => {
+  const [whole, ...fraction] = text.replace(/[^\d.]/g, '').split('.');
+  return fraction.length > 0 ? `${whole}.${fraction.join('')}` : whole;
+};
+
 // Typing stays free-form like the old input; only the −/+ buttons clamp to min/max.
 export function NumberField({
   id,
@@ -46,10 +53,10 @@ export function NumberField({
       <input
         id={id}
         type="text"
-        inputMode="numeric"
+        inputMode="decimal"
         disabled={disabled}
         value={value}
-        onChange={(e) => onChange(e.target.value.replace(/\D/g, ''))}
+        onChange={(e) => onChange(toNumberText(e.target.value))}
         onBlur={onBlur}
         onKeyDown={(e) => {
           if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
