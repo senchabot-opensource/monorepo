@@ -15,7 +15,6 @@ import {
   LANG_PARAM,
   LANG_STORAGE_KEY,
   type Locale,
-  pickBrowserLocale,
 } from './locales';
 import { getPathLocale, isAppPath, localizePath } from './paths';
 import { tr } from './tr';
@@ -75,10 +74,14 @@ function localeFromStorage(): Locale | null {
   }
 }
 
+// Overlays and tools keep the pre-redesign rule (Turkish anywhere in the list) so a scene in OBS
+// doesn't switch language. Site pages pick the first supported language in the landing script.
 function readBrowserLocale(): Locale {
   if (typeof window === 'undefined') return DEFAULT_LOCALE;
-  const { languages, language } = window.navigator;
-  return pickBrowserLocale(languages?.length ? languages : [language ?? '']);
+  const candidates =
+    window.navigator.languages ?? (window.navigator.language ? [window.navigator.language] : []);
+  const prefersTurkish = candidates.some((tag) => tag?.toLowerCase().startsWith('tr'));
+  return prefersTurkish ? 'tr' : DEFAULT_LOCALE;
 }
 
 // Overlays and tools only. External store so the locale resolves synchronously after hydration
