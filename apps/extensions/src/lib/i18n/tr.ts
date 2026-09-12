@@ -56,6 +56,11 @@ export const tr: typeof en = {
       github: "GitHub'daki kaynak kodu",
       switchWidget: "Başka bir widget'a geç",
     },
+    notFound: {
+      title: 'Sayfa bulunamadı',
+      text: 'Aradığın sayfa yok ya da taşınmış. Aşağıdan bir widget seç ya da ana sayfaya dön.',
+      home: 'Ana sayfaya dön',
+    },
     footer: {
       about:
         "Twitch ve Kick için ücretsiz overlay'ler ve yayın araçları. Giriş yok, indirme yok, kaynak kodu herkese açık.",

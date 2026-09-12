@@ -53,6 +53,11 @@ export const en = {
       github: 'Source code on GitHub',
       switchWidget: 'Switch to another widget',
     },
+    notFound: {
+      title: 'Page not found',
+      text: "This page doesn't exist or has moved. Pick a widget below or head back to the home page.",
+      home: 'Back to home',
+    },
     footer: {
       about:
         'Free overlays and stream tools for Twitch and Kick. No login, nothing to download, and the code is open.',

@@ -1,6 +1,9 @@
-import { createRootRoute, HeadContent, Scripts, useLocation } from '@tanstack/react-router';
+import { createRootRoute, HeadContent, Link, Scripts, useLocation } from '@tanstack/react-router';
 
-import { LocaleProvider } from '#/lib/i18n';
+import { SiteLayout } from '#/components/site-layout';
+import { BUTTON_PRIMARY } from '#/components/ui/button-styles';
+import { WidgetCrossLinks } from '#/components/widget-cross-links';
+import { LocaleProvider, useI18n } from '#/lib/i18n';
 import { ThemeProvider } from '#/lib/theme';
 
 import appCss from '../styles.css?url';
@@ -88,7 +91,36 @@ export const Route = createRootRoute({
     ],
   }),
   shellComponent: RootDocument,
+  notFoundComponent: NotFound,
 });
+
+function NotFound() {
+  const { t } = useI18n();
+
+  return (
+    <SiteLayout>
+      <div className="mx-auto max-w-5xl px-4 py-16 sm:py-24">
+        <div className="mx-auto max-w-xl text-center">
+          <p className="text-sm font-semibold text-green-600 dark:text-green-400">404</p>
+          <h1 className="mt-2 text-3xl font-bold tracking-tight text-zinc-900 sm:text-4xl dark:text-white">
+            {t('common.notFound.title')}
+          </h1>
+          <p className="mt-4 text-base leading-relaxed text-zinc-600 dark:text-zinc-400">
+            {t('common.notFound.text')}
+          </p>
+        </div>
+        <div className="mt-12">
+          <WidgetCrossLinks columns={3} />
+        </div>
+        <div className="mt-10 text-center">
+          <Link to="/" className={BUTTON_PRIMARY}>
+            {t('common.notFound.home')}
+          </Link>
+        </div>
+      </div>
+    </SiteLayout>
+  );
+}
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   const isWidget = useLocation({ select: (location) => isWidgetPath(location.pathname) });
@@ -102,9 +134,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       </head>
       <body className={`${isWidget ? 'font-widget' : 'font-sans'} antialiased min-h-screen`}>
         <ThemeProvider>
-          <LocaleProvider>
-            {children}
-          </LocaleProvider>
+          <LocaleProvider>{children}</LocaleProvider>
         </ThemeProvider>
         <Scripts />
       </body>

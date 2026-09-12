@@ -3,11 +3,20 @@ import { useI18n } from '#/lib/i18n';
 import { WIDGETS, type WidgetId } from '#/lib/widgets';
 
 /** Cards linking to the setup page of every registry widget except `exclude`. */
-export function WidgetCrossLinks({ exclude }: { exclude?: WidgetId }) {
+export function WidgetCrossLinks({
+  exclude,
+  columns = 4,
+}: {
+  exclude?: WidgetId;
+  /** Cards per row on wide screens. */
+  columns?: 3 | 4;
+}) {
   const { t } = useI18n();
   const widgets = WIDGETS.filter((widget) => widget.id !== exclude);
   return (
-    <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+    <ul
+      className={`grid gap-3 sm:grid-cols-2 ${columns === 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-4'}`}
+    >
       {widgets.map((widget) => (
         <li key={widget.id}>
           <Link
