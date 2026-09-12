@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { TwitchChat } from "#/lib/twitch";
 import { KickChat } from "#/lib/kick";
 import type { ChatMessagesType } from "../widgets/chat-widget/chat-messages";
+import { commandUserKey } from "./command-users";
 import { OBSWebSocket } from 'obs-websocket-js';
 
 type Disconnectable = {
@@ -28,15 +29,6 @@ export const DEFAULT_OBS_COMMANDS: Required<ObsBridgeCustomCommands> = {
   cmdScene: "!scene",
 };
 
-function parseUsers(raw: string | null | undefined): Set<string> {
-  return new Set(
-    raw ? raw
-      .split(",")
-      .map(u => u.trim().toLowerCase())
-      .filter(Boolean): [],
-  );
-}
-
 export const useChat = (
   mainScene: string,
   brbScene: string,
@@ -44,7 +36,8 @@ export const useChat = (
   kickChannelId?: string | null,
   obsWebsocketUrl?: string | null,
   obsWebsocketPassword?: string | undefined,
-  commandUser?: string | null,
+  // commandUserKey values, from resolveCommandUsers.
+  commandUsers: ReadonlySet<string> = new Set(),
   onScenes?: (scenes: string[]) => void,
   onConnected?: (connected: boolean) => void,
   customCommands?: ObsBridgeCustomCommands,
@@ -57,8 +50,8 @@ export const useChat = (
   mainSceneRef.current = mainScene;
   const brbSceneRef = useRef(brbScene);
   brbSceneRef.current = brbScene;
-  const cmdUsersRef = useRef(parseUsers(commandUser));
-  cmdUsersRef.current = parseUsers(commandUser);
+  const cmdUsersRef = useRef(commandUsers);
+  cmdUsersRef.current = commandUsers;
   const scenesRef = useRef<string[]>([]);
   const customCommandsRef = useRef({
     ...DEFAULT_OBS_COMMANDS,
@@ -140,7 +133,7 @@ export const useChat = (
     connectOBS();
 
     const pushToMessages = (payload: ChatMessagesType) => {
-      if (!cmdUsersRef.current.has(payload.user.toLowerCase())) return;
+      if (!cmdUsersRef.current.has(commandUserKey(payload.platform, payload.user))) return;
 
       const rawMsg = payload.message.trim();
       const msg = rawMsg.toLowerCase();

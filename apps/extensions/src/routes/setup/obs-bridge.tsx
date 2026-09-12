@@ -1,5 +1,11 @@
 import { Breadcrumb } from "#/components/breadcrumb";
 import { YoutubeTutorial } from "#/components/youtube-tutorial";
+import {
+  type ChatPlatform,
+  type CommandUser,
+  formatCommandUsers,
+} from "#/features/tools/command-users";
+import { PlatformPicker, PlatformTag } from "#/features/tools/platform-picker";
 import { useT } from "#/lib/i18n";
 import { getLocaleLinks } from "#/lib/i18n/seo";
 import { createFileRoute, Link } from "@tanstack/react-router";
@@ -108,17 +114,21 @@ export const Route = createFileRoute("/setup/obs-bridge")({
 function CommandUserInput({
   users,
   onChange,
+  defaultPlatform,
 }: {
-  users: string[];
-  onChange: (users: string[]) => void;
+  users: CommandUser[];
+  onChange: (users: CommandUser[]) => void;
+  defaultPlatform: ChatPlatform;
 }) {
   const t = useT();
   const [input, setInput] = useState("");
+  const [picked, setPicked] = useState<ChatPlatform | null>(null);
+  const platform = picked ?? defaultPlatform;
 
   const handleAdd = () => {
     const name = input.trim().toLowerCase();
-    if (name && !users.includes(name)) {
-      onChange([...users, name]);
+    if (name && !users.some((u) => u.platform === platform && u.name === name)) {
+      onChange([...users, { platform, name }]);
       setInput("");
     }
   };
@@ -131,10 +141,11 @@ function CommandUserInput({
       <div className="flex flex-wrap gap-1.5 mb-2">
         {users.map((u) => (
           <span
-            key={u}
+            key={`${u.platform}:${u.name}`}
             className="inline-flex items-center gap-1 rounded-full bg-zinc-100 border border-zinc-300 px-2.5 py-0.5 text-xs text-zinc-800 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-200"
           >
-            {u}
+            {u.platform && <PlatformTag platform={u.platform} />}
+            {u.name}
             <button
               onClick={() => onChange(users.filter((x) => x !== u))}
               className="text-zinc-500 hover:text-red-400 transition-colors leading-none"
@@ -145,6 +156,7 @@ function CommandUserInput({
         ))}
       </div>
       <div className="flex gap-1">
+        <PlatformPicker value={platform} onChange={setPicked} label={t("obsBridge.userPlatform")} />
         <input
           type="text"
           value={input}
@@ -170,7 +182,7 @@ function CommandUserInput({
 
 function ObsBridgeSetup() {
   const t = useT();
-  const [commandUsers, setCommandUsers] = useState<string[]>([]);
+  const [commandUsers, setCommandUsers] = useState<CommandUser[]>([]);
   const [obsWebsocketUrl, setObsWebsocketUrl] = useState("");
   const [obsWebsocketPassword, setObsWebsocketPassword] = useState("");
   const [twitchChannel, setTwitchChannel] = useState("");
@@ -201,7 +213,7 @@ function ObsBridgeSetup() {
     if (typeof window === "undefined") return "";
     const params = new URLSearchParams();
     if (deferredCommandUsers.length > 0) {
-      params.append("commandUser", deferredCommandUsers.join(","));
+      params.append("commandUser", formatCommandUsers(deferredCommandUsers));
     }
     if (deferredObsUrl) params.append("obsWebsocketUrl", deferredObsUrl);
     if (deferredObsPass) params.append("obsWebsocketPassword", deferredObsPass);
@@ -329,6 +341,7 @@ function ObsBridgeSetup() {
               <CommandUserInput
                 users={commandUsers}
                 onChange={setCommandUsers}
+                defaultPlatform={kickChannel.trim() && !twitchChannel.trim() ? "kick" : "twitch"}
               />
 
               {/* Custom Command Naming */}

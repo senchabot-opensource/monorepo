@@ -170,7 +170,8 @@ export const tr: typeof en = {
     twitchChannel: 'Twitch Kanalı (dinlenecek)',
     kickChannel: 'Kick Kanalı (dinlenecek)',
     authorizedUsers: 'Yetkili Kullanıcılar',
-    authorizedHint: 'Sadece bu kullanıcıların sohbet mesajları OBS eylemlerini tetikler.',
+    authorizedHint: 'Sohbetten OBS eylemlerini sadece bu kullanıcılar tetikleyebilir, o da her biri için seçtiğin platformda.',
+    userPlatform: 'Platform',
     customCommands: 'Özel Komut Adları',
     customCommandsHint:
       'Her eylem için sohbet tetikleyici kelimelerini özelleştir (örn. !scene yerine scene, !startstream yerine start kullan).',
@@ -339,6 +340,9 @@ export const tr: typeof en = {
     assignHintRest: 'düğmesine tıkla. Ya da !scene <ad> komutuyla herhangi bir sahneye geç.',
     commandUsers: 'Komut Kullanıcıları ({count})',
     addUsername: 'Kullanıcı adı ekle',
+    userPlatform: 'Platform',
+    pickPlatformWarning:
+      'Twitch ve Kick ikisi de bağlı, sarı görünen her isim için bir platform seç. Seçene kadar komut kullanamazlar.',
     add: 'Ekle',
     activeCommands: 'Aktif Sohbet Komutları',
     cmdScene: 'Herhangi Bir Sahneye Geç:',
