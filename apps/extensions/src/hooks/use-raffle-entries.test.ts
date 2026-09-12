@@ -79,7 +79,13 @@ const VIEWERS: Viewer[] = [
   { name: 'kick gifter', badges: [{ type: 'sub_gifter', count: 5 }], isSub: false, months: -1 },
   { name: 'kick sub 1', badges: [{ type: 'subscriber', count: 1 }], isSub: true, months: 1 },
   { name: 'kick sub 6', badges: [{ type: 'subscriber', count: 6 }], isSub: true, months: 6 },
-  { name: 'kick founder 2', badges: [{ type: 'founder', count: 2 }], isSub: true, months: 2 },
+  // Kick sends the count-less founder badge ahead of the subscriber badge.
+  {
+    name: 'kick founder 2',
+    badges: [{ type: 'founder' }, { type: 'subscriber', count: 2 }],
+    isSub: true,
+    months: 2,
+  },
   {
     name: 'kick gifter sub 3',
     badges: [
