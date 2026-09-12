@@ -58,6 +58,8 @@ export const Route = createRootRoute({
           rel: 'icon',
           href: '/favicon.ico',
         },
+        { rel: 'icon', type: 'image/svg+xml', href: '/senchabot-logo.svg' },
+        { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' },
         {
           rel: 'manifest',
           href: '/manifest.json',
