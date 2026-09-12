@@ -11,6 +11,7 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:e2e": "node scripts/e2e/run.mjs",
     "deploy": "npm run build && wrangler deploy",
     "cf-typegen": "wrangler types"
   },
