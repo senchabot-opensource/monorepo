@@ -12,8 +12,8 @@ vi.mock('obs-websocket-js', () => ({
     on(event: string, handler: () => void) {
       this.handlers.set(event, handler);
     }
-    async connect() {
-      connect();
+    async connect(...args: unknown[]) {
+      connect(...args);
       this.handlers.get('ConnectionClosed')?.();
       throw new Error('connection refused');
     }
@@ -50,5 +50,23 @@ describe('useChat OBS connection', () => {
 
     await vi.advanceTimersByTimeAsync(20_000);
     expect(connect).toHaveBeenCalledTimes(1);
+  });
+
+  it('sends the password to the default URL when no URL is set', async () => {
+    renderHook(() => useChat('Main', 'BRB', null, null, '', 'secret'));
+    await vi.advanceTimersByTimeAsync(0);
+    expect(connect).toHaveBeenCalledWith(undefined, 'secret');
+  });
+
+  it('sends the URL and password when both are set', async () => {
+    renderHook(() => useChat('Main', 'BRB', null, null, 'ws://192.168.1.5:4455', 'secret'));
+    await vi.advanceTimersByTimeAsync(0);
+    expect(connect).toHaveBeenCalledWith('ws://192.168.1.5:4455', 'secret');
+  });
+
+  it('sends no password when none is set', async () => {
+    renderHook(() => useChat('Main', 'BRB', null, null, null, undefined));
+    await vi.advanceTimersByTimeAsync(0);
+    expect(connect).toHaveBeenCalledWith(undefined, undefined);
   });
 });

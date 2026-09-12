@@ -107,11 +107,8 @@ export const useChat = (
 
     const connectOBS = async () => {
       try {
-        if (!obsWebsocketUrl) {
-          await obs.connect();
-        } else {
-          await obs.connect(obsWebsocketUrl, obsWebsocketPassword);
-        }
+        // An empty URL must still send the password; undefined (not null) picks the library's default URL.
+        await obs.connect(obsWebsocketUrl || undefined, obsWebsocketPassword);
         updateUI("Connected", "green");
         onConnectedRef.current?.(true);
       } catch {
