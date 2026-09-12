@@ -19,48 +19,29 @@ import { SiteLayout } from '#/components/site-layout';
 import { StepsList } from '#/components/steps-list';
 import { BUTTON_PRIMARY, BUTTON_SECONDARY } from '#/components/ui/button-styles';
 import { type TranslationKey, translate, useI18n } from '#/lib/i18n';
-import { type FaqEntry, getFaqJsonLd, SITE_URL } from '#/lib/i18n/seo';
+import { type FaqEntry, SITE_URL } from '#/lib/i18n/seo';
 import { LINKS } from '#/lib/links';
-import { getPageHead } from '#/lib/seo/head';
-import { PAGE_META } from '#/lib/seo/pages';
+import { getSeoHead, PAGE_META } from '#/lib/seo/pages';
+import { getItemListNode } from '#/lib/seo/structured-data';
 import { OVERLAYS, TOOLS, WIDGETS, type WidgetPlatform } from '#/lib/widgets';
 
 export const Route = createFileRoute('/')({
   head: () =>
-    getPageHead({
-      path: '/',
-      meta: PAGE_META.home,
-      image: 'home',
-      jsonLd: [
-        {
-          '@context': 'https://schema.org',
-          '@type': 'WebSite',
-          name: 'Senchabot Extensions',
-          description:
-            'Free, open-source customizable stream overlays, multi-chat widgets, subscriber goal plants, floating emote wall overlays, chat box overlays, and stream tools for Twitch and Kick streamers. Works with OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio, and any software supporting browser sources with no login required.',
-          url: 'https://extensions.senchabot.com',
-          publisher: {
-            '@type': 'Organization',
-            name: 'Senchabot',
-            url: 'https://senchabot.com',
-            logo: 'https://extensions.senchabot.com/senchabot-logo.svg',
-          },
-        },
-        {
-          '@context': 'https://schema.org',
-          '@type': 'ItemList',
-          name: 'Free Customizable Stream Overlays, Browser Sources & Stream Tools',
-          itemListElement: WIDGETS.map((widget, index) => ({
-            '@type': 'ListItem',
-            position: index + 1,
+    getSeoHead(
+      { path: '/', meta: PAGE_META.home, image: 'home' },
+      {
+        faq: FAQ,
+        mainEntity: getItemListNode({
+          id: `${SITE_URL}/#widgets`,
+          name: 'Senchabot Extensions overlays and tools',
+          items: WIDGETS.map((widget) => ({
             name: translate('en', widget.nameKey),
-            url: `${SITE_URL}${widget.setupPath}`,
+            path: widget.setupPath,
             description: translate('en', widget.taglineKey),
           })),
-        },
-        getFaqJsonLd(FAQ),
-      ],
-    }),
+        }),
+      },
+    ),
   component: Index,
 });
 

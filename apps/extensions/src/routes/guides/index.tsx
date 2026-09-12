@@ -3,28 +3,26 @@ import { ContentPage, Rich } from '#/components/content-page';
 import { GuideCard } from '#/components/guide-article';
 import { CONTENT_META, GUIDES, GUIDES_PATH } from '#/lib/guides';
 import { translate, useT } from '#/lib/i18n';
-import { getPageHead, pageUrl } from '#/lib/seo/head';
+import { pageUrl } from '#/lib/seo/head';
+import { getSeoHead } from '#/lib/seo/pages';
+import { getItemListNode } from '#/lib/seo/structured-data';
 
 export const Route = createFileRoute('/guides/')({
   head: () =>
-    getPageHead({
-      path: GUIDES_PATH,
-      meta: CONTENT_META.guides,
-      image: 'guides',
-      jsonLd: [
-        {
-          '@context': 'https://schema.org',
-          '@type': 'ItemList',
+    getSeoHead(
+      { path: GUIDES_PATH, meta: CONTENT_META.guides, image: 'guides' },
+      {
+        breadcrumbs: [{ name: translate('en', 'guides.breadcrumb') }],
+        mainEntity: getItemListNode({
+          id: `${pageUrl(GUIDES_PATH)}#guides`,
           name: translate('en', 'guides.index.title'),
-          itemListElement: GUIDES.map((guide, index) => ({
-            '@type': 'ListItem',
-            position: index + 1,
+          items: GUIDES.map((guide) => ({
             name: translate('en', guide.titleKey),
-            url: pageUrl(guide.path),
+            path: guide.path,
           })),
-        },
-      ],
-    }),
+        }),
+      },
+    ),
   component: GuidesIndex,
 });
 

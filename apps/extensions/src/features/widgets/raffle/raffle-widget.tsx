@@ -471,7 +471,6 @@ export function RaffleWidget({
     <SetupShell
       widgetId={WIDGET.id}
       title={t('raffle.title')}
-      breadcrumbLabel={t('raffle.breadcrumb')}
       settingsTop={lockBanner}
       settings={settingsPanel}
       previewTitle={t('raffle.controlTitle')}

@@ -3,30 +3,15 @@ import { useId } from 'react';
 import { Bullets, DataTable, P, Steps } from '#/components/content-page';
 import { GuideArticle } from '#/components/guide-article';
 import { WidgetCrossLinks } from '#/components/widget-cross-links';
-import { getArticleJsonLd } from '#/lib/content-seo';
-import { GUIDES_PUBLISHED, getGuide } from '#/lib/guides';
-import { type TranslationKey, translate, useT } from '#/lib/i18n';
-import { getPageHead } from '#/lib/seo/head';
+import { getGuide } from '#/lib/guides';
+import { type TranslationKey, useT } from '#/lib/i18n';
+import { getGuideHead } from '#/lib/seo/pages';
 import { WIDGETS, type WidgetId } from '#/lib/widgets';
 
 const GUIDE = getGuide('obs-browser-source');
 
 export const Route = createFileRoute('/guides/obs-browser-source')({
-  head: () =>
-    getPageHead({
-      path: GUIDE.path,
-      meta: GUIDE.meta,
-      image: 'guides',
-      ogType: 'article',
-      jsonLd: [
-        getArticleJsonLd({
-          path: GUIDE.path,
-          headline: translate('en', GUIDE.titleKey),
-          description: GUIDE.meta.description,
-          datePublished: GUIDES_PUBLISHED,
-        }),
-      ],
-    }),
+  head: () => getGuideHead(GUIDE),
   component: ObsBrowserSourceGuide,
 });
 

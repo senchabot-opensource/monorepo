@@ -3,7 +3,7 @@ import { useT } from '#/lib/i18n';
 import type { FaqEntry } from '#/lib/i18n/seo';
 
 /**
- * Collapsible Q&A list. Pass the same `FaqEntry[]` to `getFaqJsonLd` in the route's head so
+ * Collapsible Q&A list. Pass the same `FaqEntry[]` as the `faq` of the route's page graph so
  * the FAQPage markup always matches what's on screen.
  */
 export function FaqList({ entries }: { entries: readonly FaqEntry[] }) {

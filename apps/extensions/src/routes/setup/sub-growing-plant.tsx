@@ -17,9 +17,8 @@ import {
 } from '#/features/widgets/sub-sprout/plants/registry';
 import type { WaterEffectType } from '#/features/widgets/sub-sprout/water/watering-fx';
 import { useI18n } from '#/lib/i18n';
-import { type FaqEntry, getFaqJsonLd } from '#/lib/i18n/seo';
-import { getPageHead } from '#/lib/seo/head';
-import { PAGE_META } from '#/lib/seo/pages';
+import type { FaqEntry } from '#/lib/i18n/seo';
+import { getSetupPageHead } from '#/lib/seo/pages';
 import {
   buildSubSproutPreviewUrl,
   buildSubSproutUrl,
@@ -31,33 +30,7 @@ import {
 import { getWidget } from '#/lib/widgets';
 
 export const Route = createFileRoute('/setup/sub-growing-plant')({
-  head: () =>
-    getPageHead({
-      path: '/setup/sub-growing-plant',
-      meta: PAGE_META['sub-sprout'],
-      image: 'sub-sprout',
-      jsonLd: [
-        {
-          '@context': 'https://schema.org',
-          '@type': 'WebApplication',
-          name: 'Sub Sprout - Free Subscriber Goal Plant Overlay',
-          description:
-            'A free customizable subscriber goal plant and subscriber alert overlay for Twitch and Kick streamers. No account or login required.',
-          url: 'https://extensions.senchabot.com/setup/sub-growing-plant',
-          applicationCategory: 'MultimediaApplication',
-          operatingSystem:
-            'All, OBS Studio, Streamlabs Desktop, XSplit Broadcaster, vMix, Lightstream, PRISM Live Studio, Twitch Studio, Meld Studio, Wirecast, Browser Source compatible',
-          isAccessibleForFree: true,
-          offers: {
-            '@type': 'Offer',
-            price: '0',
-            priceCurrency: 'USD',
-            description: '100% Free, No Login Required',
-          },
-        },
-        getFaqJsonLd(FAQ),
-      ],
-    }),
+  head: () => getSetupPageHead('sub-sprout', { breadcrumb: 'subSprout.breadcrumb', faq: FAQ }),
   component: SubSproutSetup,
 });
 
@@ -192,7 +165,6 @@ function SubSproutSetup() {
     <SetupShell
       widgetId={WIDGET.id}
       title={t('subSprout.title')}
-      breadcrumbLabel={t('subSprout.breadcrumb')}
       settings={settingsPanel}
       previewTitle={t('subSprout.previewTitle')}
       previewAspect={CANVAS.width / CANVAS.height}

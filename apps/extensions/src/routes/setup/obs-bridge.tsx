@@ -20,9 +20,8 @@ import {
 } from '#/features/tools/obs-bridge-config';
 import { ObsCommandList } from '#/features/tools/obs-command-list';
 import { type TranslationKey, useI18n } from '#/lib/i18n';
-import { type FaqEntry, getFaqJsonLd } from '#/lib/i18n/seo';
-import { getPageHead } from '#/lib/seo/head';
-import { PAGE_META } from '#/lib/seo/pages';
+import type { FaqEntry } from '#/lib/i18n/seo';
+import { getSetupPageHead } from '#/lib/seo/pages';
 import { getWidget } from '#/lib/widgets';
 
 const WIDGET = getWidget('obs-bridge');
@@ -34,32 +33,7 @@ const FAQ: FaqEntry[] = [
 ];
 
 export const Route = createFileRoute('/setup/obs-bridge')({
-  head: () =>
-    getPageHead({
-      path: '/setup/obs-bridge',
-      meta: PAGE_META['obs-bridge'],
-      image: 'obs-bridge',
-      jsonLd: [
-        {
-          '@context': 'https://schema.org',
-          '@type': 'WebApplication',
-          name: 'OBS Bridge - Free Chat-Controlled OBS Tool',
-          description:
-            'A free OBS control tool that lets you switch scenes with !scene commands, start/stop recording and streaming directly from Twitch or Kick chat commands with no account required.',
-          url: 'https://extensions.senchabot.com/setup/obs-bridge',
-          applicationCategory: 'MultimediaApplication',
-          operatingSystem: 'All, OBS Studio, Streamlabs Desktop (OBS WebSocket), OBS.Live',
-          isAccessibleForFree: true,
-          offers: {
-            '@type': 'Offer',
-            price: '0',
-            priceCurrency: 'USD',
-            description: '100% Free, No Login Required',
-          },
-        },
-        getFaqJsonLd(FAQ),
-      ],
-    }),
+  head: () => getSetupPageHead('obs-bridge', { breadcrumb: 'obsBridge.breadcrumb', faq: FAQ }),
   component: ObsBridgeSetup,
 });
 
@@ -304,7 +278,6 @@ function ObsBridgeSetup() {
     <SetupShell
       widgetId={WIDGET.id}
       title={t('obsBridge.title')}
-      breadcrumbLabel={t('obsBridge.breadcrumb')}
       settings={settingsPanel}
       previewTitle={t('obsBridge.previewTitle')}
       previewTip={t('obsBridge.previewTip')}

@@ -17,8 +17,6 @@ export interface SetupShellProps {
   widgetId: WidgetId;
   /** Page H1, shown in the compact header. */
   title: string;
-  /** BreadcrumbList JSON-LD label for this page; defaults to `title`. */
-  breadcrumbLabel?: string;
   /** Settings panel body, usually SettingsGroup blocks. Scrolls inside the panel on desktop. */
   settings: ReactNode;
   /** Pinned above the scrolling settings, e.g. Raffle's "configuration locked" banner. */
@@ -41,7 +39,7 @@ export interface SetupShellProps {
   guideTitle?: string;
   /** Numbered setup steps (copy without a "1." prefix). */
   guideSteps?: readonly TranslationKey[];
-  /** Pass the same array to getFaqJsonLd in the route head. */
+  /** Pass the same array to getSetupPageHead in the route head, for the FAQPage markup. */
   faq?: readonly FaqEntry[];
   /** Extra below-the-fold content after the intro, e.g. a tutorial link. */
   aboutExtra?: ReactNode;
@@ -54,7 +52,6 @@ export interface SetupShellProps {
 export function SetupShell({
   widgetId,
   title,
-  breadcrumbLabel,
   settings,
   settingsTop,
   previewTitle,
@@ -75,12 +72,7 @@ export function SetupShell({
 
   return (
     <div className="flex min-h-dvh flex-col bg-zinc-50 font-sans text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100">
-      <SiteHeader
-        variant="compact"
-        title={title}
-        widgetId={widgetId}
-        breadcrumbLabel={breadcrumbLabel ?? title}
-      />
+      <SiteHeader variant="compact" title={title} widgetId={widgetId} />
       <main id="main" tabIndex={-1} className="flex-1 focus:outline-none">
         {/* With the 3rem header this fills exactly one desktop screen. */}
         <div className="mx-auto grid max-w-6xl gap-5 px-4 pb-4 lg:h-[calc(100dvh-3rem)] lg:min-h-[592px] lg:grid-cols-[34rem_minmax(0,1fr)]">

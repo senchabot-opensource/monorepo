@@ -3,29 +3,14 @@ import { DataTable, P, Steps } from '#/components/content-page';
 import { CtaBand } from '#/components/cta-band';
 import { GuideArticle } from '#/components/guide-article';
 import { DEFAULT_OBS_COMMANDS } from '#/features/tools/obs-bridge-config';
-import { getArticleJsonLd } from '#/lib/content-seo';
-import { GUIDES_PUBLISHED, getGuide } from '#/lib/guides';
-import { translate, useT } from '#/lib/i18n';
-import { getPageHead } from '#/lib/seo/head';
+import { getGuide } from '#/lib/guides';
+import { useT } from '#/lib/i18n';
+import { getGuideHead } from '#/lib/seo/pages';
 
 const GUIDE = getGuide('obs-scene-switcher');
 
 export const Route = createFileRoute('/guides/obs-scene-switcher')({
-  head: () =>
-    getPageHead({
-      path: GUIDE.path,
-      meta: GUIDE.meta,
-      image: 'guides',
-      ogType: 'article',
-      jsonLd: [
-        getArticleJsonLd({
-          path: GUIDE.path,
-          headline: translate('en', GUIDE.titleKey),
-          description: GUIDE.meta.description,
-          datePublished: GUIDES_PUBLISHED,
-        }),
-      ],
-    }),
+  head: () => getGuideHead(GUIDE),
   component: ObsSceneSwitcherGuide,
 });
 

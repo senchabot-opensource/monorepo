@@ -29,59 +29,11 @@ import {
 } from '#/features/widgets/chat-widget/widget-settings';
 import { useI18n } from '#/lib/i18n';
 import type { FaqEntry } from '#/lib/i18n/seo';
-import { getPageHead } from '#/lib/seo/head';
-import { PAGE_META } from '#/lib/seo/pages';
+import { getSetupPageHead } from '#/lib/seo/pages';
 import { getWidget } from '#/lib/widgets';
 
 export const Route = createFileRoute('/setup/chat-widget')({
-  head: () =>
-    getPageHead({
-      path: '/setup/chat-widget',
-      meta: PAGE_META['chat-box'],
-      image: 'chat-box',
-      jsonLd: [
-        {
-          '@context': 'https://schema.org',
-          '@type': 'WebApplication',
-          name: 'Chat Box - Free Multi-Chat Widget & Stream Chat Box',
-          description:
-            'A free customizable multi-chat widget and stream chat box overlay that merges Twitch and Kick chat into a single on-stream feed with 7TV emotes, badges, and customizable themes.',
-          url: 'https://extensions.senchabot.com/setup/chat-widget',
-          applicationCategory: 'MultimediaApplication',
-          operatingSystem:
-            'All, OBS Studio, Streamlabs Desktop, XSplit Broadcaster, vMix, Lightstream, PRISM Live Studio, Twitch Studio, Meld Studio, Wirecast, Browser Source compatible',
-          isAccessibleForFree: true,
-          offers: {
-            '@type': 'Offer',
-            price: '0',
-            priceCurrency: 'USD',
-            description: '100% Free, No Login Required',
-          },
-        },
-        {
-          '@context': 'https://schema.org',
-          '@type': 'FAQPage',
-          mainEntity: [
-            {
-              '@type': 'Question',
-              name: 'Is this multi-chat widget and stream chat box completely free?',
-              acceptedAnswer: {
-                '@type': 'Answer',
-                text: 'Yes, Chat Box is 100% free and open-source with no subscription fees, account sign-ups, or watermarks.',
-              },
-            },
-            {
-              '@type': 'Question',
-              name: 'Does the chat box support 7TV emotes?',
-              acceptedAnswer: {
-                '@type': 'Answer',
-                text: 'Yes, 7TV custom channel emotes and animated emotes are supported automatically without extra extensions.',
-              },
-            },
-          ],
-        },
-      ],
-    }),
+  head: () => getSetupPageHead('chat-box', { breadcrumb: 'chatWidget.breadcrumb', faq: FAQ }),
   component: ChatWidgetSetup,
 });
 
@@ -426,7 +378,6 @@ function ChatWidgetSetup() {
     <SetupShell
       widgetId={WIDGET.id}
       title={t('chatWidget.title')}
-      breadcrumbLabel={t('chatWidget.breadcrumb')}
       settings={settingsPanel}
       previewTitle={t('chatWidget.previewTitle')}
       previewTip={t('chatWidget.previewHint')}

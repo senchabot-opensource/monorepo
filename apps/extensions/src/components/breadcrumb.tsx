@@ -9,32 +9,9 @@ interface BreadcrumbProps {
   items: BreadcrumbItem[];
 }
 
-/** BreadcrumbList JSON-LD on its own, for pages whose visible trail is the compact header. */
-export function BreadcrumbJsonLd({ items }: BreadcrumbProps) {
-  const structuredData = {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: items.map((item, index) => ({
-      '@type': 'ListItem',
-      position: index + 1,
-      name: item.label,
-      ...(item.href ? { item: `https://extensions.senchabot.com${item.href}` } : {}),
-    })),
-  };
-
-  return (
-    <script
-      type="application/ld+json"
-      // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD serialized from our own labels.
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-    />
-  );
-}
-
 export function Breadcrumb({ items }: BreadcrumbProps) {
   return (
     <nav aria-label="Breadcrumb" className="w-full">
-      <BreadcrumbJsonLd items={items} />
       <ol className="flex items-center space-x-2 text-sm text-zinc-500">
         {items.map((item, index) => {
           const isLast = index === items.length - 1;

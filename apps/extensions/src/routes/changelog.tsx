@@ -2,12 +2,16 @@ import { createFileRoute } from '@tanstack/react-router';
 import { ContentPage, formatDate } from '#/components/content-page';
 import { CHANGELOG, groupByMonth } from '#/lib/changelog';
 import { CONTENT_META } from '#/lib/guides';
-import { useI18n } from '#/lib/i18n';
-import { getPageHead } from '#/lib/seo/head';
+import { translate, useI18n } from '#/lib/i18n';
+import { getSeoHead } from '#/lib/seo/pages';
 import { getWidget } from '#/lib/widgets';
 
 export const Route = createFileRoute('/changelog')({
-  head: () => getPageHead({ path: '/changelog', meta: CONTENT_META.changelog, image: 'guides' }),
+  head: () =>
+    getSeoHead(
+      { path: '/changelog', meta: CONTENT_META.changelog, image: 'guides' },
+      { breadcrumbs: [{ name: translate('en', 'changelog.breadcrumb') }] },
+    ),
   component: ChangelogPage,
 });
 

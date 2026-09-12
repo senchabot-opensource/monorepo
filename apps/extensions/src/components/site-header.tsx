@@ -1,6 +1,5 @@
 import { Link, useLocation } from '@tanstack/react-router';
 import { useEffect, useId, useRef, useState } from 'react';
-import { BreadcrumbJsonLd } from '#/components/breadcrumb';
 import { ExternalLink } from '#/components/external-link';
 import { ChevronDownIcon, CloseIcon, ExternalIcon, GithubIcon, MenuIcon } from '#/components/icons';
 import { PlatformChips } from '#/components/platform-chips';
@@ -22,8 +21,6 @@ export type SiteHeaderProps =
       title: string;
       /** Marks the current entry in the widget switcher and shows its icon; omit to hide both. */
       widgetId?: WidgetId;
-      /** Emits BreadcrumbList JSON-LD as Home > label. Omit when the page has no breadcrumb. */
-      breadcrumbLabel?: string;
     };
 
 const NAV_LINK_CLASS =
@@ -327,22 +324,13 @@ function WidgetSwitcher({ current }: { current: WidgetId }) {
   );
 }
 
-function CompactHeader({
-  title,
-  widgetId,
-  breadcrumbLabel,
-}: Extract<SiteHeaderProps, { variant: 'compact' }>) {
+function CompactHeader({ title, widgetId }: Extract<SiteHeaderProps, { variant: 'compact' }>) {
   const { t } = useI18n();
   const widget = widgetId ? getWidget(widgetId) : null;
 
   return (
     <header className="mx-auto flex h-12 w-full max-w-6xl items-center gap-2 px-4">
       <SkipLink />
-      {breadcrumbLabel && (
-        <BreadcrumbJsonLd
-          items={[{ label: t('common.home'), href: '/' }, { label: breadcrumbLabel }]}
-        />
-      )}
       <HomeLink showName={false} />
       <span aria-hidden="true" className="text-zinc-300 dark:text-zinc-700">
         /

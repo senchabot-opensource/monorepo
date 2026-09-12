@@ -20,39 +20,12 @@ import {
   parseEmoteWallUrl,
 } from '#/features/widgets/emote-wall/widget-url';
 import { useI18n } from '#/lib/i18n';
-import { type FaqEntry, getFaqJsonLd } from '#/lib/i18n/seo';
-import { getPageHead } from '#/lib/seo/head';
-import { PAGE_META } from '#/lib/seo/pages';
+import type { FaqEntry } from '#/lib/i18n/seo';
+import { getSetupPageHead } from '#/lib/seo/pages';
 import { getWidget } from '#/lib/widgets';
 
 export const Route = createFileRoute('/setup/emote-wall')({
-  head: () =>
-    getPageHead({
-      path: '/setup/emote-wall',
-      meta: PAGE_META['emote-wall'],
-      image: 'emote-wall',
-      jsonLd: [
-        {
-          '@context': 'https://schema.org',
-          '@type': 'WebApplication',
-          name: 'Emote Wall - Free Floating Emote Overlay',
-          description:
-            'A free floating emote overlay that shows emote-only Twitch, Kick and 7TV chat messages at random screen positions with fade and drift animations.',
-          url: 'https://extensions.senchabot.com/setup/emote-wall',
-          applicationCategory: 'MultimediaApplication',
-          operatingSystem:
-            'All, OBS Studio, Streamlabs Desktop, XSplit Broadcaster, vMix, Lightstream, PRISM Live Studio, Twitch Studio, Meld Studio, Wirecast, Browser Source compatible',
-          isAccessibleForFree: true,
-          offers: {
-            '@type': 'Offer',
-            price: '0',
-            priceCurrency: 'USD',
-            description: '100% Free, No Login Required',
-          },
-        },
-        getFaqJsonLd(FAQ),
-      ],
-    }),
+  head: () => getSetupPageHead('emote-wall', { breadcrumb: 'emoteWallSetup.breadcrumb', faq: FAQ }),
   component: EmoteWallSetup,
 });
 
@@ -218,7 +191,6 @@ function EmoteWallSetup() {
     <SetupShell
       widgetId={WIDGET.id}
       title={t('emoteWallSetup.title')}
-      breadcrumbLabel={t('emoteWallSetup.breadcrumb')}
       settings={settingsPanel}
       previewTitle={t('emoteWallSetup.previewTitle')}
       previewAspect={CANVAS.width / CANVAS.height}
