@@ -2,6 +2,8 @@ interface NumberFieldProps {
   id?: string;
   value: string;
   onChange: (value: string) => void;
+  /** Fires when the text input loses focus, e.g. to drop a half-typed draft. */
+  onBlur?: () => void;
   min: number;
   max: number;
   fallback: number;
@@ -16,6 +18,7 @@ export function NumberField({
   id,
   value,
   onChange,
+  onBlur,
   min,
   max,
   fallback,
@@ -47,6 +50,7 @@ export function NumberField({
         disabled={disabled}
         value={value}
         onChange={(e) => onChange(e.target.value.replace(/\D/g, ''))}
+        onBlur={onBlur}
         onKeyDown={(e) => {
           if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
             e.preventDefault();
