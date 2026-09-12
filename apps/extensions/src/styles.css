@@ -3,18 +3,28 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&display=swap');
-
 @theme {
-  --font-sans: "Consolas", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+  /* Overlays keep the pre-Geist stack so streamers' OBS scenes don't change. */
+  --font-widget: "Consolas", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Orbitron", sans-serif;
 }
 
-@variant hover (&:hover);
+/* Disabled controls get no hover styles. This used to be `pointer-events: none` on disabled
+   buttons, which also sent the hover to the parent and hid the not-allowed cursor. */
+@variant hover (&:hover:not(:disabled));
 
 @layer base {
-  button:disabled {
-    pointer-events: none;
+  /* Tailwind v4's preflight dropped the pointer cursor from buttons; restore it for everything clickable. */
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  summary {
+    cursor: pointer;
+  }
+
+  button:disabled,
+  [role="button"][aria-disabled="true"] {
+    cursor: not-allowed;
   }
 }
 
@@ -45,7 +55,7 @@
 }
 
 .animate-chat-bounce-in {
-  animation: chatBounceIn 500ms ease-out forwards;
+  animation: chatBounceIn calc(500ms * var(--chat-speed, 1)) ease-out forwards;
 }
 
 @keyframes chatSlideIn {
@@ -63,14 +73,16 @@
   animation: chatSlideIn 200ms ease-out both;
 }
 
+/* --chat-speed is set per row from how busy chat is (1 = calm); see getAnimationSpeeds. */
+.animate-chat-smooth-slide-in {
+  animation: chatSlideIn calc(380ms * var(--chat-speed, 1)) cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* The easing already overshoots, so a mid-keyframe overshoot would double it. */
 @keyframes chatPopIn {
   0% {
     opacity: 0;
-    transform: scale(0.6);
-  }
-  60% {
-    opacity: 1;
-    transform: scale(1.05);
+    transform: scale(0.85);
   }
   100% {
     opacity: 1;
@@ -79,7 +91,7 @@
 }
 
 .animate-chat-pop-in {
-  animation: chatPopIn 300ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  animation: chatPopIn calc(380ms * var(--chat-speed, 1)) cubic-bezier(0.34, 1.56, 0.64, 1) both;
   transform-origin: right center;
 }
 
@@ -95,7 +107,7 @@
 }
 
 .animate-chat-stagger-meta {
-  animation: chatStaggerMeta 200ms ease-out both;
+  animation: chatStaggerMeta calc(320ms * var(--chat-speed, 1)) cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 @keyframes chatStaggerMessage {
@@ -110,7 +122,8 @@
 }
 
 .animate-chat-stagger-message {
-  animation: chatStaggerMessage 200ms ease-out 250ms both;
+  animation: chatStaggerMessage calc(320ms * var(--chat-speed, 1)) cubic-bezier(0.22, 1, 0.36, 1)
+    calc(150ms * var(--chat-speed, 1)) both;
 }
 
 @keyframes chatFadeIn {
@@ -123,7 +136,23 @@
 }
 
 .animate-chat-fade-in {
-  animation: chatFadeIn 200ms ease-out both;
+  animation: chatFadeIn calc(350ms * var(--chat-speed, 1)) ease-out both;
+}
+
+/* Box-shadow instead of an extra caret element: it paints outside the glyph without taking up
+   layout space, so it can't change where the half-typed line wraps. */
+.chat-typing-caret {
+  box-shadow: 2px 0 0 currentColor;
+}
+
+@keyframes chatFadeOut {
+  to {
+    opacity: 0;
+  }
+}
+
+.animate-chat-fade-out {
+  animation: chatFadeOut 400ms ease-in forwards;
 }
 
 /* Emote wall calm mode: fade in, drift away, fade out */

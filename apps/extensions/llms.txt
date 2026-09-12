@@ -127,7 +127,7 @@ A customizable multi-chat widget and stream chat box overlay that merges Twitch 
   - `stacked`: Username header displayed above message body.
   - `card`: Message displayed in modern bubble/card format.
   - `compact`: Dense, Twitch-native spacing for high-velocity chats.
-- **Entry Animations (`animation`)**: `slide` (from right), `pop` (scale-in), `bounce`, `stagger`, `fade`, and `none`.
+- **Entry Animations (`animation`)**: `slide` (from right), `smooth` (smoother slide, older messages glide up), `pop` (scale-in), `bounce`, `stagger`, `fade`, `typing` (letter by letter), and `none`.
 - **Typography (`font`)**: Selectable fonts including `inter`, `roboto`, `nunito`, `mono` (JetBrains Mono), `serif` (Source Serif 4), and `system`.
 - **Styling Options**:
   - `fontSize`: Pixel font size (default: 18px).
@@ -135,7 +135,7 @@ A customizable multi-chat widget and stream chat box overlay that merges Twitch 
   - `itemBackground`: Individual bordered background box for each chat message item.
   - `boldUsernames` & `boldMessages`: Bold font weight toggles.
   - `orientation`: `vertical` (sidebar) or `horizontal` (ticker/bottom bar).
-  - `platformDisplay`: `icon` (Twitch/Kick platform logos) or `name` (text label).
+  - `platformDisplay`: `icon` (Twitch/Kick platform logos), `name` (text label), or `none` (hidden, e.g. when `platformAccent` already marks the platform).
   - `timestamp`: Shows timestamp (`HH:MM`) on each message.
   - `keepMessages`: Toggle 30s auto-fade vs permanent on-screen message history.
   - `mock`: Realistic simulated stream chat in preview when channels are blank.
@@ -144,11 +144,11 @@ A customizable multi-chat widget and stream chat box overlay that merges Twitch 
   - `sevenTv` (`true` | `false`), `badges` (`true` | `false`)
   - `fontSize` (number), `font` (`inter` | `roboto` | `nunito` | `mono` | `serif` | `system`)
   - `layout` (`inline` | `stacked` | `card` | `compact`)
-  - `animation` (`slide` | `pop` | `bounce` | `stagger` | `fade` | `none`)
+  - `animation` (`slide` | `smooth` | `pop` | `bounce` | `stagger` | `fade` | `typing` | `none`)
   - `background` (`true` | `false`), `bgOpacity` (string: 0.0 - 1.0)
   - `itemBackground` (`true` | `false`)
   - `boldUsernames` (`true` | `false`), `boldMessages` (`true` | `false`)
-  - `orientation` (`vertical` | `horizontal`), `platformDisplay` (`name` | `icon`)
+  - `orientation` (`vertical` | `horizontal`), `platformDisplay` (`name` | `icon` | `none`)
   - `timestamp` (`true` | `false`), `keep` (`true` | `false`), `mock` (`true` | `false`)
 
 ---
@@ -184,10 +184,10 @@ A local WebSocket bridge that allows streamers and authorized channel moderators
   - `cmdBack`: Switch to Main scene (default: `back`, can be `main`, `imback`).
   - `cmdStartStream` & `cmdStopStream`: Stream management (default: `!startstream` / `!stopstream`, can be `start` / `stop`).
   - `cmdStartRecord` & `cmdStopRecord`: Recording management (default: `!startrecord` / `!stoprecord`, can be `rec` / `stoprec`).
-- **User Whitelist (`commandUser`)**: Comma-separated username whitelist ensuring only authorized moderators or broadcasters can execute OBS commands.
+- **User Whitelist (`commandUser`)**: Comma-separated whitelist of `platform:username` entries (e.g. `twitch:bob,kick:alice`) ensuring only authorized moderators or broadcasters can execute OBS commands, and only from the platform they were added for. Older entries without a platform count for the only platform set up; when both Twitch and Kick are set up they are ignored until a platform is picked on the tool page.
 - **Scene Assignment Interface**: Interactive scene selector allowing broadcasters to assign `Main` and `BRB` scenes dynamically from their live OBS scene list.
 - **URL Query Parameters**:
-  - `twitch` (string), `kick` (string), `commandUser` (comma-separated usernames)
+  - `twitch` (string), `kick` (string), `commandUser` (comma-separated `platform:username` entries)
   - `obsWebsocketUrl` (string, default: `ws://localhost:4455`), `obsWebsocketPassword` (string)
   - `mainScene` (string), `brbScene` (string)
   - `cmdScene`, `cmdBrb`, `cmdBack`, `cmdStartStream`, `cmdStopStream`, `cmdStartRecord`, `cmdStopRecord`

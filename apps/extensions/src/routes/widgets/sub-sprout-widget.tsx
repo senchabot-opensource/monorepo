@@ -51,6 +51,7 @@ const searchSchema = z.object({
     .optional()
     .transform(v => (v === undefined ? undefined : parseSimulateFlag(v)))
     .catch(false),
+  simspeed: z.coerce.number().min(1).max(20).optional().catch(undefined),
 });
 
 export const Route = createFileRoute("/widgets/sub-sprout-widget")({
@@ -66,15 +67,12 @@ export const Route = createFileRoute("/widgets/sub-sprout-widget")({
       try {
         const { getKickChannelInfo } = await import("#/lib/kick");
         const kickInfo = await getKickChannelInfo(deps.kickChannel);
-        return {
-          kickId: kickInfo.chatroomId,
-          kickChannelId: kickInfo.channelId,
-        };
+        return { kickId: kickInfo.chatroomId };
       } catch {
-        return { kickId: null, kickChannelId: null };
+        return { kickId: null };
       }
     }
-    return { kickId: null, kickChannelId: null };
+    return { kickId: null };
   },
   component: RouteComponent,
 });
@@ -91,8 +89,9 @@ function RouteComponent() {
     countfx,
     potlabel,
     simulate,
+    simspeed,
   } = Route.useSearch();
-  const { kickId, kickChannelId } = Route.useLoaderData();
+  const { kickId } = Route.useLoaderData();
 
   const twitchChannel =
     twitch || (platform === "twitch" ? channel : undefined);
@@ -109,13 +108,13 @@ function RouteComponent() {
         twitchChannel={twitchChannel}
         kickChannel={kickChannel}
         kickId={kickId ?? undefined}
-        kickChannelId={kickChannelId ?? undefined}
         variety={variety}
         pick={pick}
         water={water}
         countFx={countfx}
         potLabel={potlabel}
         simulate={simulate}
+        simSpeed={simspeed}
       />
     </div>
   );
