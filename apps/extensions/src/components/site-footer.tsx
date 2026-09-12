@@ -10,7 +10,7 @@ import {
   YoutubeIcon,
 } from '#/components/icons';
 import { useI18n } from '#/lib/i18n';
-import { CONTENT_PATHS, LINKS } from '#/lib/links';
+import { CONTENT_PATHS, LINKS, useRouteExists } from '#/lib/links';
 import { OVERLAYS, TOOLS } from '#/lib/widgets';
 
 const LINK_CLASS =
@@ -37,6 +37,23 @@ function FooterColumn({ title, children }: { title: string; children: ReactNode 
 
 export function SiteFooter() {
   const { t } = useI18n();
+  const guideLinks = [
+    {
+      path: CONTENT_PATHS.guides,
+      label: t('common.footer.setupGuides'),
+      exists: useRouteExists(CONTENT_PATHS.guides),
+    },
+    {
+      path: CONTENT_PATHS.faq,
+      label: t('common.footer.faq'),
+      exists: useRouteExists(CONTENT_PATHS.faq),
+    },
+    {
+      path: CONTENT_PATHS.changelog,
+      label: t('common.footer.changelog'),
+      exists: useRouteExists(CONTENT_PATHS.changelog),
+    },
+  ].filter((link) => link.exists);
 
   return (
     <footer className="border-t border-zinc-200 bg-white/60 dark:border-zinc-800 dark:bg-zinc-900/30">
@@ -94,23 +111,17 @@ export function SiteFooter() {
             ))}
           </FooterColumn>
 
-          <FooterColumn title={t('common.footer.guides')}>
-            <li>
-              <a href={CONTENT_PATHS.guides} className={LINK_CLASS}>
-                {t('common.footer.setupGuides')}
-              </a>
-            </li>
-            <li>
-              <a href={CONTENT_PATHS.faq} className={LINK_CLASS}>
-                {t('common.footer.faq')}
-              </a>
-            </li>
-            <li>
-              <a href={CONTENT_PATHS.changelog} className={LINK_CLASS}>
-                {t('common.footer.changelog')}
-              </a>
-            </li>
-          </FooterColumn>
+          {guideLinks.length > 0 && (
+            <FooterColumn title={t('common.footer.guides')}>
+              {guideLinks.map(({ path, label }) => (
+                <li key={path}>
+                  <a href={path} className={LINK_CLASS}>
+                    {label}
+                  </a>
+                </li>
+              ))}
+            </FooterColumn>
+          )}
 
           <FooterColumn title={t('common.nav.senchabot')}>
             {(

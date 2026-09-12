@@ -7,7 +7,7 @@ import { PlatformChips } from '#/components/platform-chips';
 import { ICON_BUTTON_CLASS, SiteControls } from '#/components/site-controls';
 import { useDisclosure } from '#/components/ui/use-disclosure';
 import { useI18n } from '#/lib/i18n';
-import { CONTENT_PATHS, LINKS } from '#/lib/links';
+import { CONTENT_PATHS, LINKS, useRouteExists } from '#/lib/links';
 import { getWidget, OVERLAYS, TOOLS, type WidgetEntry, type WidgetId } from '#/lib/widgets';
 
 export type SiteHeaderProps =
@@ -154,14 +154,20 @@ function ContentLinks({ className }: { className: string }) {
   const { t } = useI18n();
   const guidesCurrent = useCurrent(CONTENT_PATHS.guides);
   const faqCurrent = useCurrent(CONTENT_PATHS.faq);
+  const hasGuides = useRouteExists(CONTENT_PATHS.guides);
+  const hasFaq = useRouteExists(CONTENT_PATHS.faq);
   return (
     <>
-      <a href={CONTENT_PATHS.guides} aria-current={guidesCurrent} className={className}>
-        {t('common.nav.guides')}
-      </a>
-      <a href={CONTENT_PATHS.faq} aria-current={faqCurrent} className={className}>
-        {t('common.nav.faq')}
-      </a>
+      {hasGuides && (
+        <a href={CONTENT_PATHS.guides} aria-current={guidesCurrent} className={className}>
+          {t('common.nav.guides')}
+        </a>
+      )}
+      {hasFaq && (
+        <a href={CONTENT_PATHS.faq} aria-current={faqCurrent} className={className}>
+          {t('common.nav.faq')}
+        </a>
+      )}
       <ExternalLink href={LINKS.senchabot} className={className}>
         {t('common.nav.senchabot')}
         <ExternalIcon className="size-3.5 opacity-60" />
