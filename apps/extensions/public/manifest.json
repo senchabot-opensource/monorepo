@@ -1,20 +1,26 @@
 {
-  "short_name": "Senchabot Extensions",
   "name": "Senchabot Extensions",
+  "short_name": "Senchabot Extensions",
+  "description": "Free Twitch and Kick overlays and stream tools for OBS. No login.",
   "icons": [
     {
-      "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
     },
     {
-      "src": "senchabot-logo.svg",
-      "type": "image/svg+xml",
-      "sizes": "any"
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/senchabot-logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
     }
   ],
-  "start_url": ".",
+  "start_url": "/",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#09090b",
+  "background_color": "#09090b"
 }

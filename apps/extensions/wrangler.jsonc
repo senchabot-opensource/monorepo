@@ -4,6 +4,11 @@
   "compatibility_date": "2026-03-23",
   "compatibility_flags": ["nodejs_compat"],
   "main": "@tanstack/react-start/server-entry",
+  "assets": {
+    // Prerender writes setup/*/index.html; the default "auto-trailing-slash" would
+    // redirect /setup/x to /setup/x/, away from the canonical no-slash URLs.
+    "html_handling": "drop-trailing-slash"
+  },
   "observability": {
     "enabled": true
   }

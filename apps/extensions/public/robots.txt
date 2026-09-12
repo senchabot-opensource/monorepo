@@ -1,7 +1,112 @@
 # https://www.robotstxt.org/robotstxt.html
+# Named groups replace the * group, so each allowed bot repeats the Disallow rules.
 User-agent: *
 Disallow: /widgets/
 Disallow: /tools/
 Allow: /
+
+# AI search, assistant and fetch bots
+User-agent: GPTBot
+Disallow: /widgets/
+Disallow: /tools/
+Allow: /
+
+User-agent: ChatGPT-User
+Disallow: /widgets/
+Disallow: /tools/
+Allow: /
+
+User-agent: OAI-SearchBot
+Disallow: /widgets/
+Disallow: /tools/
+Allow: /
+
+User-agent: ClaudeBot
+Disallow: /widgets/
+Disallow: /tools/
+Allow: /
+
+User-agent: Claude-User
+Disallow: /widgets/
+Disallow: /tools/
+Allow: /
+
+User-agent: Claude-Web
+Disallow: /widgets/
+Disallow: /tools/
+Allow: /
+
+User-agent: Claude-SearchBot
+Disallow: /widgets/
+Disallow: /tools/
+Allow: /
+
+User-agent: anthropic-ai
+Disallow: /widgets/
+Disallow: /tools/
+Allow: /
+
+User-agent: PerplexityBot
+Disallow: /widgets/
+Disallow: /tools/
+Allow: /
+
+User-agent: Perplexity-User
+Disallow: /widgets/
+Disallow: /tools/
+Allow: /
+
+User-agent: Google-Extended
+Disallow: /widgets/
+Disallow: /tools/
+Allow: /
+
+User-agent: Gemini-Deep-Research
+Disallow: /widgets/
+Disallow: /tools/
+Allow: /
+
+User-agent: Google-CloudVertexBot
+Disallow: /widgets/
+Disallow: /tools/
+Allow: /
+
+User-agent: MistralAI-User
+Disallow: /widgets/
+Disallow: /tools/
+Allow: /
+
+User-agent: DuckAssistBot
+Disallow: /widgets/
+Disallow: /tools/
+Allow: /
+
+# Scrapers and training-only bots
+User-agent: Bytespider
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: omgili
+Disallow: /
+
+User-agent: Diffbot
+Disallow: /
+
+User-agent: Meta-ExternalAgent
+Disallow: /
+
+User-agent: Meta-WebIndexer
+Disallow: /
+
+User-agent: Applebot-Extended
+Disallow: /
+
+User-agent: Amazonbot
+Disallow: /
+
+User-agent: ICC-Crawler
+Disallow: /
 
 Sitemap: https://extensions.senchabot.com/sitemap.xml

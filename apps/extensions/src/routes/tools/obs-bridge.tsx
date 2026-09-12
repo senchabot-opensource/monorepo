@@ -1,13 +1,29 @@
-import { useChat, DEFAULT_OBS_COMMANDS, type ObsBridgeCustomCommands } from "#/features/tools/use-chat";
-import { useT } from "#/lib/i18n";
-import { getKickChannelInfo } from "#/lib/kick";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useCallback, useMemo, useState } from "react";
-import { z } from "zod";
+import { createFileRoute, useNavigate } from '@tanstack/react-router';
+import { type ReactNode, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
+import { z } from 'zod';
+import { ChevronDownIcon } from '#/components/icons';
+import { PANEL_CLASS } from '#/components/setup-shell';
+import { SiteHeader } from '#/components/site-header';
+import { INPUT_CLASS } from '#/components/ui/text-field';
+import type { ChatPlatform } from '#/features/tools/command-users';
+import {
+  type CommandUser,
+  formatCommandUsers,
+  parseCommandUsers,
+  resolveCommandUsers,
+} from '#/features/tools/command-users';
+import { CommandUsersField } from '#/features/tools/command-users-field';
+import { resolveObsCommands } from '#/features/tools/obs-bridge-config';
+import { ActivityList, ConnectionsCard, DEFAULT_OBS_URL } from '#/features/tools/obs-bridge-status';
+import { ObsCommandList } from '#/features/tools/obs-command-list';
+import { type ObsActivity, type ObsState, useChat } from '#/features/tools/use-chat';
+import type { ChatConnectionStatus } from '#/lib/basechat';
+import { useI18n } from '#/lib/i18n';
+import { getKickChannelInfo } from '#/lib/kick';
 
 const searchSchema = z.object({
-  mainScene: z.string().default("Main Scene"),
-  brbScene: z.string().default("BRB Scene"),
+  mainScene: z.string().default('Main Scene'),
+  brbScene: z.string().default('BRB Scene'),
   twitch: z.string().optional(),
   kick: z.string().optional(),
   obsWebsocketUrl: z.string().optional(),
@@ -23,7 +39,7 @@ const searchSchema = z.object({
   lang: z.string().optional(),
 });
 
-export const Route = createFileRoute("/tools/obs-bridge")({
+export const Route = createFileRoute('/tools/obs-bridge')({
   ssr: false,
   validateSearch: (search) => searchSchema.parse(search),
   loaderDeps: ({ search }) => ({
@@ -42,6 +58,20 @@ export const Route = createFileRoute("/tools/obs-bridge")({
   },
 });
 
+const HEADING_CLASS = 'text-sm font-semibold text-zinc-900 dark:text-white';
+const WARNING_CLASS =
+  'rounded-md border border-amber-300 bg-amber-50 px-2.5 py-1.5 text-xs leading-relaxed text-amber-800 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-300';
+const SMALL_BUTTON =
+  'rounded px-2 py-0.5 text-[11px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 disabled:cursor-default';
+
+function Card({ children, label }: { children: ReactNode; label: string }) {
+  return (
+    <section aria-label={label} className={`${PANEL_CLASS} space-y-3 p-4`}>
+      {children}
+    </section>
+  );
+}
+
 function SceneList({
   scenes,
   mainScene,
@@ -55,332 +85,338 @@ function SceneList({
   onSetMain: (name: string) => void;
   onSetBrb: (name: string) => void;
 }) {
-  const t = useT();
-  if (scenes.length === 0) return null;
-
-  const mainInList = scenes.includes(mainScene);
-  const brbInList = scenes.includes(brbScene);
-  const needsMain = !mainInList;
-  const needsBrb = !brbInList;
-
+  const { t } = useI18n();
   return (
-    <div className="mt-6">
-      {(needsMain || needsBrb) && (
-        <div className="mb-3 p-2 rounded-md border border-yellow-400 bg-yellow-50 text-xs text-yellow-800 dark:border-yellow-700 dark:bg-yellow-500/10 dark:text-yellow-300">
-          {needsMain && needsBrb
-            ? t("tools.assignMainBrbWarning")
-            : needsMain
-              ? t("tools.assignMainWarning")
-              : t("tools.assignBrbWarning")}
-        </div>
-      )}
-      <h3 className="text-sm font-semibold text-zinc-600 dark:text-zinc-400 mb-3">
-        {t("tools.obsScenes", { count: scenes.length })}
-      </h3>
-      <div className="space-y-1.5 max-h-64 overflow-y-auto">
-        {scenes.map((name) => {
-          const isMain = name === mainScene;
-          const isBrb = name === brbScene;
-          return (
-            <div
-              key={name}
-              className={`flex items-center justify-between rounded-md border px-3 py-2 text-sm transition-colors ${
-                isMain
-                  ? "border-green-600 bg-green-500/10"
-                  : isBrb
-                    ? "border-amber-600 bg-amber-500/10"
-                    : "border-zinc-300 bg-zinc-100 hover:border-zinc-400 dark:border-zinc-700 dark:bg-zinc-800 dark:hover:border-zinc-600"
-              }`}
-            >
-              <span className="text-zinc-800 dark:text-zinc-200 font-mono text-xs truncate flex-1">
-                {isMain && <span className="text-green-600 dark:text-green-400 mr-1">●</span>}
-                {isBrb && <span className="text-amber-600 dark:text-amber-400 mr-1">●</span>}
-                {name}
-              </span>
-              <div className="flex gap-1 shrink-0 ml-2">
-                <button
-                  onClick={() => onSetMain(name)}
-                  disabled={isMain}
-                  className="rounded px-2 py-0.5 text-[11px] font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed bg-green-600/20 text-green-700 hover:bg-green-600/40 dark:text-green-400"
-                >
-                  {t("tools.main")}
-                </button>
-                <button
-                  onClick={() => onSetBrb(name)}
-                  disabled={isBrb}
-                  className="rounded px-2 py-0.5 text-[11px] font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed bg-amber-600/20 text-amber-700 hover:bg-amber-600/40 dark:text-amber-400"
-                >
-                  {t("tools.brb")}
-                </button>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-      <p className="mt-2 text-[11px] text-zinc-500">
-        {t("tools.assignHintClick")}{" "}
-        <span className="text-green-600 dark:text-green-400">{t("tools.main")}</span>{" "}
-        {t("tools.assignHintOr")}{" "}
-        <span className="text-amber-600 dark:text-amber-400">{t("tools.brb")}</span>{" "}
-        {t("tools.assignHintRest")}{" "}
-        <code className="text-zinc-700 dark:text-zinc-300">!scene &lt;name&gt;</code>.
-      </p>
-    </div>
+    <ul className="max-h-64 space-y-1 overflow-y-auto">
+      {scenes.map((name) => {
+        const isMain = name === mainScene;
+        const isBrb = name === brbScene;
+        return (
+          <li
+            key={name}
+            className={`flex items-center justify-between gap-2 rounded-md border px-2.5 py-1.5 ${
+              isMain
+                ? 'border-green-500/50 bg-green-500/10'
+                : isBrb
+                  ? 'border-amber-500/50 bg-amber-500/10'
+                  : 'border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950/40'
+            }`}
+          >
+            <span className="min-w-0 truncate text-sm text-zinc-800 dark:text-zinc-200">
+              {name}
+            </span>
+            <span className="flex shrink-0 gap-1">
+              <button
+                type="button"
+                onClick={() => onSetMain(name)}
+                disabled={isMain}
+                aria-pressed={isMain}
+                aria-label={t('obsBridge.tool.setMain', { scene: name })}
+                className={`${SMALL_BUTTON} ${
+                  isMain
+                    ? 'bg-green-600 text-white'
+                    : 'bg-green-600/10 text-green-700 hover:bg-green-600/20 dark:text-green-400'
+                }`}
+              >
+                {t('obsBridge.tool.main')}
+              </button>
+              <button
+                type="button"
+                onClick={() => onSetBrb(name)}
+                disabled={isBrb}
+                aria-pressed={isBrb}
+                aria-label={t('obsBridge.tool.setBrb', { scene: name })}
+                className={`${SMALL_BUTTON} ${
+                  isBrb
+                    ? 'bg-amber-500 text-zinc-950'
+                    : 'bg-amber-500/15 text-amber-800 hover:bg-amber-500/25 dark:text-amber-300'
+                }`}
+              >
+                {t('obsBridge.tool.brb')}
+              </button>
+            </span>
+          </li>
+        );
+      })}
+    </ul>
   );
 }
 
-function CommandUsers({
-  users,
-  onAdd,
-  onRemove,
-}: {
-  users: string[];
-  onAdd: (user: string) => void;
-  onRemove: (user: string) => void;
-}) {
-  const t = useT();
-  const [input, setInput] = useState("");
+const COPIED_MS = 2000;
+const ACTIVITY_LIMIT = 20;
 
-  const handleAdd = () => {
-    const name = input.trim().toLowerCase();
-    if (name && !users.includes(name)) {
-      onAdd(name);
-      setInput("");
+/** Copies the page's own URL, which is where scene picks and user changes are saved. */
+function CopyCurrentUrl() {
+  const { t } = useI18n();
+  const id = useId();
+  const [copied, setCopied] = useState(false);
+  const [manualUrl, setManualUrl] = useState<string | null>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+
+  useEffect(() => () => clearTimeout(timerRef.current), []);
+
+  const copy = async () => {
+    const url = window.location.href;
+    try {
+      await navigator.clipboard.writeText(url);
+    } catch {
+      // Clipboard access can be blocked (permissions, some embedded browsers): copy by hand.
+      setManualUrl(url);
+      return;
     }
+    setManualUrl(null);
+    setCopied(true);
+    clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => setCopied(false), COPIED_MS);
   };
 
   return (
-    <div>
-      <h3 className="text-sm font-semibold text-zinc-600 dark:text-zinc-400 mb-2">
-        {t("tools.commandUsers", { count: users.length })}
-      </h3>
-      <div className="flex flex-wrap gap-1.5 mb-2">
-        {users.map((u) => (
-          <span
-            key={u}
-            className="inline-flex items-center gap-1 rounded-full bg-zinc-200 border border-zinc-300 px-2.5 py-0.5 text-xs text-zinc-800 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-200"
-          >
-            {u}
-            <button
-              onClick={() => onRemove(u)}
-              className="text-zinc-500 hover:text-red-400 transition-colors leading-none"
-            >
-              ✕
-            </button>
-          </span>
-        ))}
-      </div>
-      <div className="flex gap-1">
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => { if (e.key === "Enter") handleAdd(); }}
-          placeholder={t("tools.addUsername")}
-          className="flex-1 rounded-md border border-zinc-300 bg-zinc-100 px-2.5 py-1.5 text-xs text-zinc-900 placeholder-zinc-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
-        />
-        <button
-          onClick={handleAdd}
-          disabled={!input.trim()}
-          className="rounded-md bg-green-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors dark:focus:ring-offset-zinc-900"
-        >
-          {t("tools.add")}
-        </button>
-      </div>
+    <div className="space-y-2">
+      <button
+        type="button"
+        onClick={copy}
+        aria-describedby={`${id}-hint`}
+        className="inline-flex h-9 w-full items-center justify-center rounded-md bg-green-600 px-3 text-sm font-semibold text-white transition-colors hover:bg-green-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-900"
+      >
+        {copied ? t('common.copied') : t('obsBridge.tool.copyUrl')}
+      </button>
+      <span className="sr-only" aria-live="polite">
+        {copied ? t('common.copied') : ''}
+      </span>
+      <p id={`${id}-hint`} className="text-xs leading-relaxed text-zinc-500">
+        {t('obsBridge.tool.copyUrlHint')}
+      </p>
+      {manualUrl && (
+        <div className="space-y-1">
+          <label htmlFor={`${id}-manual`} className="block text-xs text-red-700 dark:text-red-400">
+            {t('obsBridge.tool.copyUrlManual')}
+          </label>
+          <input
+            id={`${id}-manual`}
+            type="text"
+            readOnly
+            value={manualUrl}
+            onFocus={(e) => e.currentTarget.select()}
+            className={INPUT_CLASS}
+          />
+        </div>
+      )}
     </div>
   );
 }
 
 function RouteComponent() {
-  const t = useT();
+  const { t } = useI18n();
   const navigate = useNavigate();
   const search = Route.useSearch();
   const { kick } = Route.useLoaderData();
 
   const [scenes, setScenes] = useState<string[]>([]);
-  const [connected, setConnected] = useState(false);
+  const [obsState, setObsState] = useState<ObsState>({
+    status: 'connecting',
+    attempt: 0,
+    retryAt: null,
+    code: null,
+    reason: '',
+    since: null,
+  });
+  const [chatStatus, setChatStatus] = useState<Partial<Record<ChatPlatform, ChatConnectionStatus>>>(
+    {},
+  );
+  const [activity, setActivity] = useState<ObsActivity[]>([]);
+  const connected = obsState.status === 'connected';
+  const scenesLoaded = connected && scenes.length > 0;
+  const mainPicked = scenes.includes(search.mainScene);
+  const brbPicked = scenes.includes(search.brbScene);
 
-  const mainSelected = scenes.length > 0 && scenes.includes(search.mainScene);
-  const brbSelected = scenes.length > 0 && scenes.includes(search.brbScene);
-
-  const commandUsers = search.commandUser ? search.commandUser
-    .split(",")
-    .map((u) => u.trim().toLowerCase())
-    .filter(Boolean) : [];
-
-  const customCommands: ObsBridgeCustomCommands = useMemo(() => ({
-    cmdBrb: search.cmdBrb || DEFAULT_OBS_COMMANDS.cmdBrb,
-    cmdBack: search.cmdBack || DEFAULT_OBS_COMMANDS.cmdBack,
-    cmdStartStream: search.cmdStartStream || DEFAULT_OBS_COMMANDS.cmdStartStream,
-    cmdStopStream: search.cmdStopStream || DEFAULT_OBS_COMMANDS.cmdStopStream,
-    cmdStartRecord: search.cmdStartRecord || DEFAULT_OBS_COMMANDS.cmdStartRecord,
-    cmdStopRecord: search.cmdStopRecord || DEFAULT_OBS_COMMANDS.cmdStopRecord,
-    cmdScene: search.cmdScene || DEFAULT_OBS_COMMANDS.cmdScene,
-  }), [
-    search.cmdBrb,
-    search.cmdBack,
-    search.cmdStartStream,
-    search.cmdStopStream,
-    search.cmdStartRecord,
-    search.cmdStopRecord,
-    search.cmdScene,
-  ]);
-
-  const onScenes = useCallback((list: string[]) => {
-    setScenes(list);
-  }, []);
-
-  const onConnected = useCallback((ok: boolean) => {
-    setConnected(ok);
-  }, []);
-
-  useChat(
-    search.mainScene,
-    search.brbScene,
-    search.twitch,
-    kick,
-    search.obsWebsocketUrl,
-    search.obsWebsocketPassword,
-    search.commandUser,
-    onScenes,
-    onConnected,
-    customCommands,
+  const commandUsers = useMemo(() => parseCommandUsers(search.commandUser), [search.commandUser]);
+  const twitchChannel = search.twitch?.trim() ?? '';
+  const kickChannel = search.kick?.trim() ?? '';
+  const hasTwitch = Boolean(twitchChannel);
+  const hasKick = Boolean(kickChannel);
+  const platforms = { twitch: hasTwitch, kick: hasKick };
+  const allowedCommandUsers = useMemo(
+    () => resolveCommandUsers(commandUsers, { twitch: hasTwitch, kick: hasKick }).allowed,
+    [commandUsers, hasTwitch, hasKick],
   );
 
-  const setMain = (name: string) => {
-    navigate({
-      to: ".",
-      search: { ...search, mainScene: name },
-      replace: true,
-    });
-  };
+  const commands = useMemo(
+    () =>
+      resolveObsCommands({
+        cmdBrb: search.cmdBrb,
+        cmdBack: search.cmdBack,
+        cmdStartStream: search.cmdStartStream,
+        cmdStopStream: search.cmdStopStream,
+        cmdStartRecord: search.cmdStartRecord,
+        cmdStopRecord: search.cmdStopRecord,
+        cmdScene: search.cmdScene,
+      }),
+    [
+      search.cmdBrb,
+      search.cmdBack,
+      search.cmdStartStream,
+      search.cmdStopStream,
+      search.cmdStartRecord,
+      search.cmdStopRecord,
+      search.cmdScene,
+    ],
+  );
 
-  const setBrb = (name: string) => {
-    navigate({
-      to: ".",
-      search: { ...search, brbScene: name },
-      replace: true,
-    });
-  };
+  const onChatStatus = useCallback(
+    (platform: ChatPlatform, next: ChatConnectionStatus) =>
+      setChatStatus((current) => ({ ...current, [platform]: next })),
+    [],
+  );
+  const onActivity = useCallback(
+    (entry: ObsActivity) =>
+      setActivity((current) =>
+        [entry, ...current].sort((a, b) => b.id - a.id).slice(0, ACTIVITY_LIMIT),
+      ),
+    [],
+  );
 
-  const addUser = (user: string) => {
-    const updated = [...new Set([...commandUsers, user])].join(",");
-    navigate({ to: ".", search: { ...search, commandUser: updated }, replace: true });
-  };
+  const retryNow = useChat({
+    mainScene: search.mainScene,
+    brbScene: search.brbScene,
+    twitchChannel: search.twitch,
+    kickChannelId: kick,
+    obsWebsocketUrl: search.obsWebsocketUrl,
+    obsWebsocketPassword: search.obsWebsocketPassword,
+    commandUsers: allowedCommandUsers,
+    customCommands: commands,
+    onScenes: setScenes,
+    onStatus: setObsState,
+    onChatStatus,
+    onActivity,
+  });
 
-  const removeUser = (user: string) => {
-    const updated = commandUsers.filter((u) => u !== user);
-    const val = updated.length > 0 ? updated.join(",") : "";
-    navigate({ to: ".", search: { ...search, commandUser: val }, replace: true });
-  };
+  const updateSearch = (patch: Partial<typeof search>) =>
+    navigate({ to: '.', search: { ...search, ...patch }, replace: true });
+
+  const setCommandUsers = (users: CommandUser[]) =>
+    updateSearch({ commandUser: formatCommandUsers(users) });
+
+  const sceneWarning = !scenesLoaded
+    ? null
+    : !mainPicked && !brbPicked
+      ? t('obsBridge.tool.assignMainBrbWarning', { brb: commands.cmdBrb, back: commands.cmdBack })
+      : !mainPicked
+        ? t('obsBridge.tool.assignMainWarning', { back: commands.cmdBack })
+        : !brbPicked
+          ? t('obsBridge.tool.assignBrbWarning', { brb: commands.cmdBrb })
+          : null;
+
+  // Until OBS answers, the names are only what the link asks for, so they stay muted.
+  const sceneValue = (name: string, picked: boolean) =>
+    scenesLoaded && !picked ? (
+      <span className="text-red-700 dark:text-red-400">{t('obsBridge.tool.notSelected')}</span>
+    ) : (
+      <span className={scenesLoaded ? 'text-zinc-900 dark:text-white' : 'text-zinc-500'}>
+        {name}
+      </span>
+    );
+
+  // The header only belongs on the real page, not when another page frames the tool. There's no
+  // footer: the tool often runs in an OBS dock, where following a link would drop the bridge.
+  const embedded = window.self !== window.top;
 
   return (
-    <div className="min-h-screen bg-zinc-50 text-zinc-900 font-sans flex items-start justify-center py-12 px-4 dark:bg-zinc-950 dark:text-zinc-100">
-      <div className="rounded-xl bg-white p-8 border border-zinc-200 shadow-xl max-w-lg w-full dark:bg-zinc-900 dark:border-zinc-800">
-        <div className="flex justify-center mb-4">
-          <img src="/senchabot-logo.svg" alt="Senchabot" width={40} height={40} />
-        </div>
-        <h1 className="text-xl font-bold text-center text-zinc-900 mb-6 dark:text-white">{t("tools.title")}</h1>
-
-        <div className="space-y-3 text-sm">
-          <div className="flex justify-between items-center bg-zinc-100 p-3 rounded-md border border-zinc-200 dark:bg-zinc-800/50 dark:border-zinc-800">
-            <span className="text-zinc-600 dark:text-zinc-400">{t("tools.obsWebSocket")}</span>
-            <span id="obs-status" style={{ color: connected ? "lime" : "yellow" }}>
-              {connected ? t("tools.connected") : t("tools.connecting")}
-            </span>
-          </div>
-
-          {connected && scenes.length > 0 && (
-            <SceneList
-              scenes={scenes}
-              mainScene={search.mainScene}
-              brbScene={search.brbScene}
-              onSetMain={setMain}
-              onSetBrb={setBrb}
+    <div className="flex min-h-dvh flex-col bg-zinc-50 font-sans text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100">
+      {!embedded && (
+        <SiteHeader variant="tool" title={t('obsBridge.tool.title')} widgetId="obs-bridge" />
+      )}
+      <main
+        id="main"
+        tabIndex={-1}
+        className="mx-auto grid w-full max-w-md flex-1 content-start gap-3 px-4 pt-2 pb-8 focus:outline-none lg:max-w-6xl lg:grid-cols-2 lg:items-start"
+      >
+        <div className="space-y-3">
+          <Card label={t('obsBridge.tool.connectionsTitle')}>
+            <h2 className={HEADING_CLASS}>{t('obsBridge.tool.connectionsTitle')}</h2>
+            <ConnectionsCard
+              obs={obsState}
+              obsUrl={search.obsWebsocketUrl?.trim() || DEFAULT_OBS_URL}
+              hasPassword={Boolean(search.obsWebsocketPassword)}
+              onRetryNow={retryNow}
+              channels={{ twitch: twitchChannel.toLowerCase(), kick: kickChannel.toLowerCase() }}
+              chatStatus={chatStatus}
+              kickNotFound={hasKick && !kick}
             />
-          )}
+          </Card>
 
-          {connected && scenes.length === 0 && (
-            <div className="text-xs text-zinc-500 bg-zinc-100/60 p-3 rounded-md border border-zinc-200/60 text-center dark:bg-zinc-800/30 dark:border-zinc-800/50">
-              {t("tools.fetchingScenes")}
-            </div>
-          )}
+          <Card label={t('obsBridge.tool.activityTitle')}>
+            <h2 className={HEADING_CLASS}>{t('obsBridge.tool.activityTitle')}</h2>
+            <ActivityList activity={activity} />
+          </Card>
+        </div>
 
-          <div className="flex justify-between items-center bg-zinc-100 p-3 rounded-md border border-zinc-200 dark:bg-zinc-800/50 dark:border-zinc-800">
-            <span className="text-zinc-600 dark:text-zinc-400">{t("tools.mainScene")}</span>
-            <span className={`font-mono text-xs font-medium ${mainSelected ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}`}>
-              {connected && scenes.length > 0 ? mainSelected ? search.mainScene : t("tools.notSelected") : search.mainScene}
-            </span>
-          </div>
-          <div className="flex justify-between items-center bg-zinc-100 p-3 rounded-md border border-zinc-200 dark:bg-zinc-800/50 dark:border-zinc-800">
-            <span className="text-zinc-600 dark:text-zinc-400">{t("tools.brbScene")}</span>
-            <span className={`font-mono text-xs font-medium ${brbSelected ? "text-amber-600 dark:text-amber-400" : "text-red-600 dark:text-red-400"}`}>
-              {connected && scenes.length > 0 ? brbSelected ? search.brbScene : t("tools.notSelected") : search.brbScene}
-            </span>
-          </div>
+        <div className="space-y-3">
+          <Card label={t('obsBridge.tool.scenesTitle')}>
+            <h2 className={HEADING_CLASS}>
+              {scenesLoaded
+                ? t('obsBridge.tool.scenes', { count: scenes.length })
+                : t('obsBridge.tool.scenesTitle')}
+            </h2>
+            {sceneWarning && <p className={WARNING_CLASS}>{sceneWarning}</p>}
+            <dl className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-3 gap-y-1 text-sm">
+              <dt className="text-zinc-600 dark:text-zinc-400">{t('obsBridge.tool.mainScene')}</dt>
+              <dd className="truncate text-right font-medium">
+                {sceneValue(search.mainScene, mainPicked)}
+              </dd>
+              <dt className="text-zinc-600 dark:text-zinc-400">{t('obsBridge.tool.brbScene')}</dt>
+              <dd className="truncate text-right font-medium">
+                {sceneValue(search.brbScene, brbPicked)}
+              </dd>
+            </dl>
+            {scenesLoaded ? (
+              <SceneList
+                scenes={scenes}
+                mainScene={search.mainScene}
+                brbScene={search.brbScene}
+                onSetMain={(name) => updateSearch({ mainScene: name })}
+                onSetBrb={(name) => updateSearch({ brbScene: name })}
+              />
+            ) : (
+              <p className="text-xs text-zinc-500">
+                {connected ? t('obsBridge.tool.fetchingScenes') : t('obsBridge.tool.scenesOffline')}
+              </p>
+            )}
+            <p className="text-xs leading-relaxed text-zinc-500">
+              {t('obsBridge.tool.sceneHint', {
+                command: `${commands.cmdScene} ${t('obsBridge.sceneArg')}`,
+              })}
+            </p>
+          </Card>
 
-          <div className="bg-zinc-100 p-3 rounded-md border border-zinc-200 dark:bg-zinc-800/50 dark:border-zinc-800">
-            <CommandUsers
+          <Card label={t('obsBridge.sectionUsers')}>
+            <CommandUsersField
               users={commandUsers}
-              onAdd={addUser}
-              onRemove={removeUser}
+              onChange={setCommandUsers}
+              platforms={platforms}
+              label={t('obsBridge.tool.usersCount', { count: commandUsers.length })}
+              tip={t('obsBridge.usersTip')}
             />
-          </div>
+          </Card>
 
-          {search.twitch && (
-            <div className="flex justify-between items-center bg-zinc-100 p-3 rounded-md border border-zinc-200 dark:bg-zinc-800/50 dark:border-zinc-800">
-              <span className="text-zinc-600 dark:text-zinc-400">Twitch</span>
-              <span className="text-purple-600 font-medium dark:text-purple-400">{search.twitch}</span>
-            </div>
-          )}
-          {search.kick && (
-            <div className="flex justify-between items-center bg-zinc-100 p-3 rounded-md border border-zinc-200 dark:bg-zinc-800/50 dark:border-zinc-800">
-              <span className="text-zinc-600 dark:text-zinc-400">Kick</span>
-              <span className="text-green-600 font-medium dark:text-green-400">{search.kick}</span>
-            </div>
-          )}
+          <Card label={t('obsBridge.tool.copyUrl')}>
+            <CopyCurrentUrl />
+          </Card>
 
-          <div className="bg-zinc-100 p-3 rounded-md border border-zinc-200 dark:bg-zinc-800/50 dark:border-zinc-800">
-            <h3 className="text-sm font-semibold text-zinc-600 dark:text-zinc-400 mb-2">
-              {t("tools.activeCommands")}
-            </h3>
-            <div className="space-y-1 text-xs text-zinc-700 dark:text-zinc-300 font-mono">
-              <div className="flex justify-between">
-                <span className="text-zinc-500">{t("tools.cmdScene")}</span>
-                <span className="text-green-600 dark:text-green-400 font-semibold">{customCommands.cmdScene} &lt;name&gt;</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-zinc-500">{t("tools.cmdBrb")}</span>
-                <span className="text-green-600 dark:text-green-400 font-semibold">{customCommands.cmdBrb}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-zinc-500">{t("tools.cmdBack")}</span>
-                <span className="text-green-600 dark:text-green-400 font-semibold">{customCommands.cmdBack}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-zinc-500">{t("tools.cmdStartStream")}</span>
-                <span className="text-green-600 dark:text-green-400 font-semibold">{customCommands.cmdStartStream}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-zinc-500">{t("tools.cmdStopStream")}</span>
-                <span className="text-green-600 dark:text-green-400 font-semibold">{customCommands.cmdStopStream}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-zinc-500">{t("tools.cmdStartRecord")}</span>
-                <span className="text-green-600 dark:text-green-400 font-semibold">{customCommands.cmdStartRecord}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-zinc-500">{t("tools.cmdStopRecord")}</span>
-                <span className="text-green-600 dark:text-green-400 font-semibold">{customCommands.cmdStopRecord}</span>
-              </div>
+          <details className={`${PANEL_CLASS} group`}>
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-3 rounded-xl p-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 [&::-webkit-details-marker]:hidden">
+              <h2 className={HEADING_CLASS}>{t('obsBridge.tool.commands')}</h2>
+              <ChevronDownIcon className="size-4 shrink-0 text-zinc-500 transition-transform group-open:rotate-180" />
+            </summary>
+            <div className="px-4 pb-4">
+              <ObsCommandList commands={commands} />
             </div>
-          </div>
+          </details>
         </div>
 
-        <p className="mt-6 text-xs text-zinc-500 text-center">
-          {t("tools.footer")}
+        <p className="text-center text-xs text-zinc-500 lg:col-span-2">
+          {t('obsBridge.tool.footer')}
         </p>
-      </div>
+      </main>
     </div>
   );
 }

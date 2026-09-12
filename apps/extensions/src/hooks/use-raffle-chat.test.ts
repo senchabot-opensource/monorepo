@@ -2,35 +2,11 @@ import { describe, expect, it } from 'vitest';
 
 import {
   extractSubMonths,
+  getKickSubStatus,
   isSubscriber,
   parsePrivmsg,
-  parseTags,
   shouldAcceptEntry,
 } from './use-raffle-chat';
-
-describe('parseTags', () => {
-  it('returns an empty object when input is undefined', () => {
-    expect(parseTags(undefined)).toEqual({});
-  });
-
-  it('parses simple key=value pairs', () => {
-    expect(parseTags('color=#FF0000;display-name=Alice')).toEqual({
-      color: '#FF0000',
-      'display-name': 'Alice',
-    });
-  });
-
-  it('unescapes IRCv3 tag values', () => {
-    expect(parseTags(String.raw`display-name=Alice\:Bob;foo=line\sone\ntwo`)).toEqual({
-      'display-name': 'Alice;Bob',
-      foo: 'line one\ntwo',
-    });
-  });
-
-  it('handles keys with no value', () => {
-    expect(parseTags('foo;bar=baz')).toEqual({ foo: '', bar: 'baz' });
-  });
-});
 
 describe('extractSubMonths', () => {
   it('returns -1 for non-subscribers', () => {
@@ -88,6 +64,26 @@ describe('parsePrivmsg', () => {
     expect(parsePrivmsg('PING :tmi.twitch.tv')).toBeNull();
     expect(parsePrivmsg('JOIN #chan')).toBeNull();
   });
+
+  it('ignores a PRIVMSG line typed into a resub message', () => {
+    expect(
+      parsePrivmsg(
+        '@badges=;display-name=Viewer;login=viewer;msg-id=resub :tmi.twitch.tv USERNOTICE #chan :@badge-info=subscriber/99;subscriber=1 :victim!v@v PRIVMSG #chan :!join',
+      ),
+    ).toBeNull();
+  });
+
+  it('keeps the real sender when the text looks like another line', () => {
+    expect(
+      parsePrivmsg(
+        '@display-name=Alice :alice!alice@alice.tmi.twitch.tv PRIVMSG #chan :@subscriber=1 :victim!v@v PRIVMSG #chan :!join',
+      ),
+    ).toEqual({
+      tags: { 'display-name': 'Alice' },
+      username: 'alice',
+      message: '@subscriber=1 :victim!v@v PRIVMSG #chan :!join',
+    });
+  });
 });
 
 describe('shouldAcceptEntry', () => {
@@ -117,16 +113,16 @@ describe('shouldAcceptEntry', () => {
     ).toBe(false);
   });
 
-  it('rejects subscribers with too few months when minSubMonths > 0', () => {
+  it('rejects subscribers with too few months when subscribersOnly is true', () => {
     expect(
       shouldAcceptEntry(true, 0, {
-        subscribersOnly: false,
+        subscribersOnly: true,
         minSubMonths: 3,
       }),
     ).toBe(false);
     expect(
       shouldAcceptEntry(true, 2, {
-        subscribersOnly: false,
+        subscribersOnly: true,
         minSubMonths: 3,
       }),
     ).toBe(false);
@@ -135,16 +131,57 @@ describe('shouldAcceptEntry', () => {
   it('accepts subscribers at or above the minSubMonths threshold', () => {
     expect(
       shouldAcceptEntry(true, 3, {
-        subscribersOnly: false,
+        subscribersOnly: true,
         minSubMonths: 3,
       }),
     ).toBe(true);
     expect(
       shouldAcceptEntry(true, 12, {
+        subscribersOnly: true,
+        minSubMonths: 3,
+      }),
+    ).toBe(true);
+  });
+
+  it('ignores minSubMonths when subscribersOnly is false', () => {
+    // Regression: the hidden min-months field (default 1) still filtered
+    // subscribers and kept a broadcaster without a sub badge (-1) out.
+    expect(
+      shouldAcceptEntry(true, 2, {
         subscribersOnly: false,
         minSubMonths: 3,
       }),
     ).toBe(true);
+    expect(
+      shouldAcceptEntry(true, -1, {
+        subscribersOnly: false,
+        minSubMonths: 1,
+      }),
+    ).toBe(true);
+  });
+
+  it('treats the 1-month floor as any subscriber, including the broadcaster', () => {
+    expect(
+      shouldAcceptEntry(true, 0, {
+        subscribersOnly: true,
+        minSubMonths: 1,
+      }),
+    ).toBe(true);
+    expect(
+      shouldAcceptEntry(true, -1, {
+        subscribersOnly: true,
+        minSubMonths: 1,
+      }),
+    ).toBe(true);
+  });
+
+  it('rejects the broadcaster when subscribersOnly requires more than 1 month', () => {
+    expect(
+      shouldAcceptEntry(true, -1, {
+        subscribersOnly: true,
+        minSubMonths: 3,
+      }),
+    ).toBe(false);
   });
 
   it('accepts everyone when minSubMonths is 0 and subscribersOnly is false', () => {
@@ -160,5 +197,44 @@ describe('shouldAcceptEntry', () => {
         minSubMonths: 0,
       }),
     ).toBe(true);
+  });
+});
+
+describe('getKickSubStatus', () => {
+  it('reads months from a subscriber or founder badge', () => {
+    expect(getKickSubStatus([{ type: 'subscriber', count: 6 }])).toEqual({
+      isSub: true,
+      subMonths: 6,
+    });
+    expect(getKickSubStatus([{ type: 'founder' }])).toEqual({ isSub: true, subMonths: 1 });
+  });
+
+  // Badge lists as a live Kick chat sent them (2026-09-12), in payload order.
+  it('takes a founder’s months from the subscriber badge that follows it', () => {
+    expect(
+      getKickSubStatus([
+        { type: 'og' },
+        { type: 'founder' },
+        { type: 'subscriber', count: 84 },
+        { type: 'sub_gifter', count: 156 },
+      ]),
+    ).toEqual({ isSub: true, subMonths: 84 });
+  });
+
+  it('does not treat a sub gifter as a subscriber', () => {
+    expect(getKickSubStatus([{ type: 'sub_gifter', count: 2 }])).toEqual({
+      isSub: false,
+      subMonths: -1,
+    });
+    expect(
+      getKickSubStatus([
+        { type: 'subscriber', count: 52 },
+        { type: 'sub_gifter', count: 31 },
+      ]),
+    ).toEqual({ isSub: true, subMonths: 52 });
+  });
+
+  it('lets the broadcaster in as a 1-month subscriber', () => {
+    expect(getKickSubStatus([{ type: 'broadcaster' }])).toEqual({ isSub: true, subMonths: 1 });
   });
 });

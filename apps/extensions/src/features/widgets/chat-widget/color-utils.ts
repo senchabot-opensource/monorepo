@@ -23,7 +23,9 @@ const NAMED_COLORS: Record<string, string> = {
 };
 
 function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
-  const clean = NAMED_COLORS[hex.toLowerCase()] || hex.trim();
+  // hasOwn, not a plain lookup: "constructor" or "__proto__" would return a function or object.
+  const name = hex.toLowerCase();
+  const clean = Object.hasOwn(NAMED_COLORS, name) ? NAMED_COLORS[name] : hex.trim();
   const match = clean.match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i);
   if (match) {
     return {
