@@ -548,3 +548,46 @@ describe('useRaffleState - fairness hardening', () => {
     });
   });
 });
+
+describe('useRaffleState - persistence and prompts', () => {
+  it('restores the saved raffle after mount', () => {
+    const first = renderHook(() => useRaffleState());
+    act(() => {
+      first.result.current.updateConfig({ channel: 'saved', keyword: '!enter' });
+    });
+    first.unmount();
+
+    const { result } = renderHook(() => useRaffleState({ initialChannel: 'fromurl' }));
+    expect(result.current.state.config.channel).toBe('saved');
+    expect(result.current.state.config.keyword).toBe('!enter');
+  });
+
+  it('fills the channel from the URL when none is saved', () => {
+    const { result } = renderHook(() =>
+      useRaffleState({ initialChannel: 'fromurl', platform: 'kick' }),
+    );
+    expect(result.current.state.config.channel).toBe('fromurl');
+    expect(result.current.state.config.platform).toBe('kick');
+  });
+
+  it('asks with the translated message', () => {
+    const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(false);
+    const t = vi.fn(() => 'translated');
+    const { result } = renderHook(() => useRaffleState({ t }));
+    act(() => {
+      result.current.updateConfig({ minRaffleDurationSec: 0 });
+    });
+    act(() => {
+      result.current.start();
+    });
+    act(() => {
+      result.current.addParticipant(makeParticipant());
+    });
+    act(() => {
+      result.current.resetParticipants();
+    });
+    expect(t).toHaveBeenCalledWith('raffle.confirmResetEntries');
+    expect(confirmSpy).toHaveBeenCalledWith('translated');
+    expect(confirmSpy).toHaveBeenCalledTimes(1);
+  });
+});
