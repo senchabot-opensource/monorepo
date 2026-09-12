@@ -1012,7 +1012,7 @@ export const tr: typeof en = {
       "Evet. Güncellemeler mevcut adresleri bozmayacak şekilde yapılır: parametre adları, değerleri ve varsayılanları değişmez. Örneğin Sohbet Kutusu'ndaki eski keep=true hâlâ Süresiz anlamına gelir ve Sub Sprout eski channel ve platform parametrelerini hâlâ okur.",
     privacyQ: 'Ayarlarım nerede duruyor, hangi veriler nereye gidiyor?',
     privacyA:
-      "Ayarların widget adresinin içinde durur; hesap ya da sunucuda kayıtlı bir ayar yok, adresi bilen herkes aynı widget'ı açabilir. Widget'lar sohbeti doğrudan Twitch ve Kick'ten anonim olarak okur, emote'ları 7TV, BetterTTV ve FrankerFaceZ'den, Twitch kanal bilgisini ivr.fi'den alır. Çekiliş katılımcıları ve kazananları kendi tarayıcında kalır. OBS Bridge adresinde OBS WebSocket şifren bulunduğu için onu şifre gibi sakla.",
+      "Ayarların bir hesapta ya da veritabanında değil, widget adresinin içinde durur. Bu yüzden adresi bilen herkes aynı widget'ı açabilir. Her sitede olduğu gibi açtığın sayfa adresi barındırma altyapımıza ulaşır ve istek kayıtlarında görünebilir. Widget'lar sohbeti doğrudan Twitch ve Kick'ten anonim olarak okur, emote'ları 7TV, BetterTTV ve FrankerFaceZ'den, Twitch kanal bilgisini ivr.fi'den alır. Çekiliş katılımcıları ve kazananları kendi tarayıcında kalır. OBS Bridge adresinde OBS WebSocket şifren bulunduğu için onu şifre gibi sakla.",
     emptyQ: "Widget'ım OBS'te neden boş görünüyor?",
     emptyA:
       'Sohbet Kutusu ve Emote Duvarı sohbette bir şey olana kadar şeffaf ve boştur, önce sohbete bir mesaj yaz. Hâlâ bir şey yoksa kanal alanına link değil sadece kanal adını yazdığından ve adın doğru olduğundan emin ol. Ayrıntılı kontrol listesi OBS rehberinde.',

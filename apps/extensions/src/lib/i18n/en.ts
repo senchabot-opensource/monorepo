@@ -1007,7 +1007,7 @@ export const en = {
       "Yes. Updates are made so existing URLs don't break: parameter names, values and defaults stay the same. For example, the old keep=true in Chat Box still means Forever, and Sub Sprout still reads the old channel and platform parameters.",
     privacyQ: 'Where are my settings stored, and where does my data go?',
     privacyA:
-      'Your settings live inside the widget URL; nothing is saved to an account or a server, and anyone who has the URL can open the same widget. The widgets read chat anonymously straight from Twitch and Kick, get emotes from 7TV, BetterTTV and FrankerFaceZ, and get Twitch channel info from ivr.fi. Raffle entries and winners stay in your own browser. The OBS Bridge URL contains your OBS WebSocket password, so treat it like a password.',
+      'Your settings live inside the widget URL, not in an account or a database, so anyone who has the URL can open the same widget. Like any website, the page address you open reaches our hosting, and can show up in its request logs. The widgets read chat anonymously straight from Twitch and Kick, get emotes from 7TV, BetterTTV and FrankerFaceZ, and get Twitch channel info from ivr.fi. Raffle entries and winners stay in your own browser. The OBS Bridge URL contains your OBS WebSocket password, so treat it like a password.',
     emptyQ: 'Why does my widget look empty in OBS?',
     emptyA:
       "Chat Box and Emote Wall stay transparent and empty until something happens in chat, so send a message in chat first. If there's still nothing, make sure you typed just the channel name, not a link, in the channel field, and that the name is spelled right. The full checklist is in the OBS guide.",
