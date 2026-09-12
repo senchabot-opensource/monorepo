@@ -10,18 +10,21 @@
   --font-display: "Orbitron", sans-serif;
 }
 
-@variant hover (&:hover);
+/* Disabled controls get no hover styles. This used to be `pointer-events: none` on disabled
+   buttons, which also sent the hover to the parent and hid the not-allowed cursor. */
+@variant hover (&:hover:not(:disabled));
 
 @layer base {
-  button:disabled {
-    pointer-events: none;
-  }
-
   /* Tailwind v4's preflight dropped the pointer cursor from buttons; restore it for everything clickable. */
   button:not(:disabled),
   [role="button"]:not([aria-disabled="true"]),
   summary {
     cursor: pointer;
+  }
+
+  button:disabled,
+  [role="button"][aria-disabled="true"] {
+    cursor: not-allowed;
   }
 }
 
