@@ -13,7 +13,8 @@ import {
   type HighlightKind,
 } from '#/features/widgets/chat-widget/highlights';
 import { KickBadge } from '#/features/widgets/chat-widget/kick-badges';
-import { use7tvEmotes } from '#/features/widgets/chat-widget/use-7tv-emotes';
+import { isHiddenMessage } from '#/features/widgets/chat-widget/message-filters';
+import { type EmoteMap, useChannelEmotes } from '#/features/widgets/chat-widget/use-channel-emotes';
 import { useTwitchBadges } from '#/features/widgets/chat-widget/use-badges';
 import { useUnifiedChat } from '#/features/widgets/chat-widget/use-unified-chat';
 import { parseHighlights } from '#/features/widgets/chat-widget/widget-settings';
@@ -21,7 +22,7 @@ import { useT } from '#/lib/i18n';
 import { getKickChannelInfo } from '#/lib/kick';
 import { getAccessibleColor } from '#/features/widgets/chat-widget/color-utils';
 
-const TTL_MS = 30_000;
+const DEFAULT_TTL_MS = 30_000;
 // Must cover the 1s `now` tick, otherwise a row can expire without ever getting its fade-out class.
 const EXIT_MS = 1_000;
 const SHIFT_MS = 400;
@@ -122,10 +123,8 @@ export const parseEmotes = (text: string, platform: 'twitch' | 'kick', emotes?: 
   return text;
 };
 
-const render7tvEmotes = (
-  nodes: React.ReactNode,
-  emoteMap: Map<string, string>,
-): React.ReactNode[] => {
+// 7TV, BTTV and FFZ emotes are plain words in the text, matched against the channel's emote map.
+const renderThirdPartyEmotes = (nodes: React.ReactNode, emoteMap: EmoteMap): React.ReactNode[] => {
   if (emoteMap.size === 0) {
     return Array.isArray(nodes) ? nodes : [nodes];
   }
@@ -145,12 +144,12 @@ const render7tvEmotes = (
 
     for (const part of parts) {
       if (part === '') continue;
-      const emoteId = emoteMap.get(part);
-      if (emoteId) {
+      const emoteUrl = emoteMap.get(part);
+      if (emoteUrl) {
         result.push(
           <img
-            key={`7tv-${emoteId}-${keyIndex++}`}
-            src={`https://cdn.7tv.app/emote/${emoteId}/2x.webp`}
+            key={`emote-${keyIndex++}`}
+            src={emoteUrl}
             alt={part}
             decoding="async"
             className="inline-block h-[1em] w-auto mx-0.5 align-middle object-contain"
@@ -169,6 +168,8 @@ const searchSchema = z.object({
   twitch: z.string().optional(),
   kick: z.string().optional(),
   sevenTv: z.coerce.boolean().optional().default(true),
+  bttv: z.coerce.boolean().optional().default(true),
+  ffz: z.coerce.boolean().optional().default(true),
   badges: z.coerce.boolean().optional().default(true),
   fontSize: z.coerce.number().optional().default(18),
   background: z.coerce.boolean().optional(),
@@ -181,6 +182,10 @@ const searchSchema = z.object({
   platformDisplay: z.enum(['name', 'icon', 'none']).optional().default('icon'),
   timestamp: z.coerce.boolean().optional(),
   keep: z.coerce.boolean().optional(),
+  // Seconds a message stays; `keep` wins over it.
+  duration: z.coerce.number().min(1).optional(),
+  hideBots: z.coerce.boolean().optional(),
+  hideCommands: z.coerce.boolean().optional(),
   highlights: z.string().optional(),
   font: z
     .enum(['inter', 'roboto', 'nunito', 'mono', 'serif', 'system'])
@@ -369,12 +374,13 @@ export const Route = createFileRoute('/widgets/chat-widget')({
   component: RouteComponent,
   loader: async ({ deps }) => {
     if (!deps.kick) {
-      return { kick: null, kickSubBadges: [] };
+      return { kick: null, kickUserId: null, kickSubBadges: [] };
     }
 
     const info = await getKickChannelInfo(deps.kick);
     return {
       kick: info.chatroomId,
+      kickUserId: info.userId,
       kickSubBadges: info.subscriberBadges || [],
     };
   },
@@ -458,14 +464,18 @@ const SparkleIcon = () => (
 
 function RouteComponent() {
   const search = Route.useSearch();
-  const { kick, kickSubBadges } = Route.useLoaderData();
+  const { kick, kickUserId, kickSubBadges } = Route.useLoaderData();
   const twitchBadgeMap = useTwitchBadges(search.twitch);
 
   const isMock = Boolean(search.mock || (!search.twitch && !kick));
 
   const showPlatformIndicator = search.platformDisplay !== 'none';
 
-  const sevenTvEmoteMap = use7tvEmotes(search.sevenTv ? search.twitch : null);
+  const emotes = useChannelEmotes(search.twitch, kickUserId, {
+    sevenTv: search.sevenTv,
+    bttv: search.bttv,
+    ffz: search.ffz,
+  });
 
   // Mentions of these names get highlighted. A mock preview without channels mentions Senchabot.
   const channels = React.useMemo(() => {
@@ -595,6 +605,20 @@ function RouteComponent() {
         firstMessage: true,
       },
       {
+        user: 'Usopp',
+        color: '#A3E635',
+        platform: 'twitch',
+        badges: ['subscriber'],
+        message: '!uptime',
+      },
+      {
+        user: 'Nightbot',
+        color: '#7C7CE1',
+        platform: 'twitch',
+        badges: ['moderator'],
+        message: 'The stream has been live for 2 hours 14 minutes',
+      },
+      {
         user: 'Saitama',
         color: '#FACC15',
         platform: 'kick',
@@ -700,14 +724,19 @@ function RouteComponent() {
       .orderBy(({ collection }) => collection.receivedAt),
   );
 
+  const ttlMs = search.duration ? search.duration * 1000 : DEFAULT_TTL_MS;
+  const shownMessages = React.useMemo(() => {
+    const filters = { hideBots: Boolean(search.hideBots), hideCommands: Boolean(search.hideCommands) };
+    return messages.filter((msg) => !isHiddenMessage(msg, filters));
+  }, [messages, search.hideBots, search.hideCommands]);
   const visibleMessages = search.keep
-    ? messages
-    : messages.filter((msg) => now - getReceivedAtMs(msg) < TTL_MS);
+    ? shownMessages
+    : shownMessages.filter((msg) => now - getReceivedAtMs(msg) < ttlMs);
   // `slide` is the original default and must look exactly as it always did, so the shift and
   // fade-out only come with the other animations.
   const animatesLayout = search.animation !== 'none' && search.animation !== 'slide';
   const fadeOut = !search.keep && animatesLayout;
-  const speeds = React.useMemo(() => getAnimationSpeeds(messages), [messages]);
+  const speeds = React.useMemo(() => getAnimationSpeeds(shownMessages), [shownMessages]);
 
   const hasVisibleMessages = visibleMessages.length > 0;
 
@@ -779,7 +808,7 @@ function RouteComponent() {
           <MessageRow
             key={msg.id}
             msg={msg}
-            exiting={fadeOut && now - getReceivedAtMs(msg) >= TTL_MS - EXIT_MS}
+            exiting={fadeOut && now - getReceivedAtMs(msg) >= ttlMs - EXIT_MS}
             speed={speeds.get(msg.id) ?? 1}
             layout={search.layout}
             animation={search.animation}
@@ -789,7 +818,7 @@ function RouteComponent() {
             platformDisplay={search.platformDisplay}
             twitchBadgeMap={twitchBadgeMap}
             kickSubBadges={kickSubBadges}
-            sevenTvEmoteMap={sevenTvEmoteMap}
+            emoteMap={emotes[msg.platform]}
             showBadges={Boolean(search.badges)}
             hasBackground={Boolean(search.background)}
             itemBackground={Boolean(search.itemBackground)}
@@ -821,7 +850,7 @@ type MessageRowProps = {
     months?: number;
     badge_image?: { src?: string };
   }[];
-  sevenTvEmoteMap: Map<string, string>;
+  emoteMap: EmoteMap;
   showBadges: boolean;
   hasBackground: boolean;
   itemBackground: boolean;
@@ -845,7 +874,7 @@ const MessageRow = React.memo(function MessageRow({
   platformDisplay,
   twitchBadgeMap,
   kickSubBadges,
-  sevenTvEmoteMap,
+  emoteMap,
   showBadges,
   hasBackground,
   itemBackground,
@@ -921,13 +950,13 @@ const MessageRow = React.memo(function MessageRow({
   );
 
   const parsedContent = React.useMemo(
-    () => render7tvEmotes(parseEmotes(msg.message, msg.platform, msg.emotes), sevenTvEmoteMap),
-    [msg.message, msg.platform, msg.emotes, sevenTvEmoteMap],
+    () => renderThirdPartyEmotes(parseEmotes(msg.message, msg.platform, msg.emotes), emoteMap),
+    [msg.message, msg.platform, msg.emotes, emoteMap],
   );
   const replyTo = showReply ? msg.replyTo : undefined;
   const replyContent = React.useMemo(
-    () => (replyTo ? render7tvEmotes(parseEmotes(replyTo.message, msg.platform), sevenTvEmoteMap) : []),
-    [replyTo, msg.platform, sevenTvEmoteMap],
+    () => (replyTo ? renderThirdPartyEmotes(parseEmotes(replyTo.message, msg.platform), emoteMap) : []),
+    [replyTo, msg.platform, emoteMap],
   );
 
   const label =
