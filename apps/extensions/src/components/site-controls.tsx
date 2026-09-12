@@ -36,9 +36,10 @@ export function LanguageSwitcher() {
   const searchStr = useLocation({ select: (location) => location.searchStr });
 
   // Real links, so crawlers and new tabs reach the other language; overlays and tools switch
-  // through ?lang= since their URL never changes.
+  // through ?lang= since their URL never changes. Site hrefs leave out the query: prerendered
+  // HTML never has one, so it would differ at hydration. A click still carries it over.
   const hrefFor = (target: Locale) => {
-    if (!isAppPath(pathname)) return localizePath(`${pathname}${searchStr}`, target);
+    if (!isAppPath(pathname)) return localizePath(pathname, target);
     const params = new URLSearchParams(searchStr);
     params.set(LANG_PARAM, target);
     return `${pathname}?${params.toString()}`;
