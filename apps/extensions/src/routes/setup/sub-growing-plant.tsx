@@ -442,7 +442,7 @@ function SubSproutSetup() {
               <h2 className="mb-4 text-xl font-semibold text-center text-zinc-700 dark:text-zinc-300">
                 {t("subSprout.previewTitle")}
               </h2>
-              <div className="flex-1 w-full bg-zinc-950 rounded-lg overflow-hidden border border-zinc-300 relative shadow-inner flex items-center justify-center relative bg-opacity-20 dark:border-zinc-800">
+              <div className="flex-1 w-full bg-zinc-950/20 rounded-lg overflow-hidden border border-zinc-300 relative shadow-inner flex items-center justify-center relative dark:border-zinc-800">
                 {mounted ? (
                   <iframe
                     src={getPreviewUrl()}
