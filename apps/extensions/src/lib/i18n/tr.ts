@@ -102,43 +102,91 @@ export const tr: typeof en = {
     },
   },
   home: {
-    heroBadge: '%100 Ücretsiz · Giriş Gerektirmez · Anında Tarayıcı Kaynağı Kurulumu',
-    heroTitle: 'Özelleştirilebilir Yayın Ekranı Kaplamaları, Tarayıcı Kaynakları ve Araçlar',
+    heroTitle: "Twitch ve Kick için ücretsiz yayın overlay'leri",
     heroLead:
-      "Twitch ve Kick için özelleştirilebilir yayın kaplamalarını, çoklu sohbet widget'larını, abone hedefi bitkilerini, ekrandaki yüzen emote'ları ve yayın araçlarını yapılandır. Giriş veya indirme gerekmez.",
-    sectionLabel: "Mevcut widget'lar",
-    tagObsSource: 'OBS Tarayıcı Kaynağı',
-    tagGiveaway: 'Çekiliş Aracı',
-    tagControlTool: 'Yayın Kontrol Aracı',
-    cardSubSprout:
-      "Twitch ve Kick'te her yeni abonelikle büyüyen etkileşimli abone hedefi bitkileri. Birden fazla bitki çeşidi, sulama animasyonları ve özelleştirilebilir yayın kaplama efektleri.",
-    cardChatBox:
-      "Twitch ve Kick sohbetlerini tek bir kaplamada birleştiren özelleştirilebilir çoklu sohbet widget'ı ve yayın sohbet kutusu. 7TV emote'ları, abone rozetleri, özel yazı tipleri, animasyonlar ve şeffaf arka planlar destekler.",
-    cardRaffle:
-      'Sohbet anahtar kelimesi (!join) ile izleyici çekilişleri düzenle. Yalnızca aboneler filtresi, hile önleyici zamanlayıcı ve canlı OBS konfeti kutlama kaplaması içerir.',
-    cardObsBridge:
-      "Özel tetikleyici adlarıyla sohbet komutlarından OBS'yi kontrol et. Güvendiğin moderatörlere BRB/Ana sahnelerine geçirme, kayıt açıp kapatma ve yayını yerel WebSocket üzerinden yönetme imkanı ver.",
-    cardAlerts:
-      'Twitch ve Kick takip, abonelik, yenileme, hediye abonelik, Cheer ve raid uyarılarını yayınında göster.',
-    cardEmoteWall:
-      "Yalnızca emote içeren Twitch, Kick ve 7TV sohbet mesajları için ekrandaki yüzen emote'lar. Sakin modda süzülür, Kaos modunda ekranı boydan boya geçer.",
-    openSetup: 'Kurulumu Aç',
-    noLoginHint: 'giriş gerekmez',
-    faqTitle: 'Sıkça Sorulan Sorular',
-    faq1Q: 'Bu özelleştirilebilir yayın kaplamaları gerçekten %100 ücretsiz mi?',
+      "Widget'ını canlı önizlemeyle ayarla, çıkan tek URL'yi OBS'e yapıştır. Hesap yok, filigran yok, kodu da açık kaynak.",
+    browseWidgets: "Widget'lara göz at",
+    viewOnGithub: "GitHub'da incele",
+    trustLabel: 'Öne çıkanlar',
+    trustFree: 'Ücretsiz',
+    trustNoLogin: 'Giriş yok',
+    trustOpenSource: 'Açık kaynak',
+    trustPlatforms: 'Twitch + Kick',
+    sceneLive: 'Canlı',
+    sceneCaption: 'Örnek sohbetle çalışan canlı demo',
+    demoTitle: '{name} demosu',
+    worksWithTitle: 'Nerelerde çalışır',
+    worksWithApps: 'Yayın programları',
+    worksWithAppsText: 'OBS Studio ve tarayıcı kaynağı destekleyen diğer programlar',
+    galleryTitle: 'Bir widget seç',
+    galleryLead:
+      'Her birinin canlı önizlemeli kendi ayar sayfası var. İndirmen gereken hiçbir şey yok.',
+    overlaysLead: 'Sahneye ekledikten sonra kendi kendine çalışan tarayıcı kaynakları.',
+    toolsLead: 'Yayın sırasında senin kullandığın sayfalar.',
+    setUp: 'Ayarla',
+    toolFeatures: 'Özellikler',
+    raffleFeatureKeyword: '!join gibi katılım komutu',
+    raffleFeatureSubs: 'Sadece aboneler, minimum ay şartıyla',
+    raffleFeatureDuration: 'Çekilişten önce minimum süre',
+    obsFeatureScenes: 'Sohbetten sahne değiştir',
+    obsFeatureCommands: 'Komut adlarını sen belirle',
+    obsFeatureLocal: 'Yerel obs-websocket bağlantısı',
+    visualScenes: 'Sahneler',
+    howTitle: 'Nasıl çalışır?',
+    howLead: 'Üç adım, hiçbirinde hesap açmak yok.',
+    howStep1: 'Bir widget seç ve ayarlarını yap. Canlı önizleme her değişikliği anında gösterir.',
+    howStep2: "Kanal adını yaz ve widget URL'sini kopyala.",
+    howStep3:
+      "OBS Studio'da bir Tarayıcı Kaynağı ekle, URL'yi yapıştır ve önerilen boyutu gir.",
+    sizesTitle: 'Önerilen Tarayıcı Kaynağı boyutları',
+    sizesNote: 'Genişlik × yükseklik, piksel olarak.',
+    sizesWidget: 'Widget',
+    sizesValue: 'Boyut',
+    trustTitle: 'Hesap yok, sürpriz yok',
+    noLoginTitle: 'Giriş yok',
+    noLoginText:
+      "Widget'lar kanalının herkese açık sohbetini, giriş yapmamış bir izleyici gibi okur. Twitch ya da Kick hesabını hiçbir yere bağlamazsın.",
+    noWatermarkTitle: 'Filigran yok',
+    noWatermarkText:
+      "Overlay'lerine logo ya da yazı eklenmez. Önizlemede ne görüyorsan yayında da o çıkar.",
+    openSourceTitle: 'Açık kaynak',
+    openSourceText:
+      "Kodun tamamı GPL-3.0 lisansıyla GitHub'da. İnceleyebilir, fork'layabilir ya da düzeltme gönderebilirsin.",
+    urlSettingsTitle: "Ayarların URL'de saklı",
+    urlSettingsText:
+      "Widget ayarları doğrudan URL'nin içine yazılır, bu yüzden onları tutacak bir hesaba gerek yok. URL'yi sakla, widget'ın hep elinde olsun.",
+    senchabotTitle: "Bir sohbet botu mu lazım? Senchabot'u dene",
+    senchabotText:
+      "Bu widget'ları yapan ekip Senchabot'u da geliştiriyor: Twitch'te özel sohbet komutları, zamanlayıcılar ve shoutout'lar, yayına başladığında da Discord sunucunda duyuru.",
+    senchabotCta: "senchabot.com'a git",
+    communityTitle: 'Sen de dahil ol',
+    communityLead: 'Proje açık kaynak ve destek olmanın birkaç kolay yolu var.',
+    starTitle: "GitHub'da yıldız ver",
+    starText: 'Yıldızlar, projenin daha fazla yayıncıya ulaşmasını sağlıyor.',
+    starCount: '{count} yıldız',
+    requestTitle: 'Widget iste',
+    requestText: 'Yayının için bir şey mi eksik? Bir issue aç, neye ihtiyacın olduğunu yaz.',
+    discordTitle: "Discord'a katıl",
+    discordText: 'Soru sor, kurulumunu diğer yayıncılarla paylaş.',
+    faqMore: 'Cevabını bulamadın mı?',
+    faq1Q: 'Gerçekten ücretsiz mi?',
     faq1A:
-      "Evet. Ödeme duvarı, filigran veya premium hesap yok. Tüm çoklu sohbet widget'ları, abone hedefi bitkileri ve yayın kaplamaları tamamen ücretsiz ve açık kaynaklıdır.",
-    faq2Q: "Çoklu sohbet widget'ını veya sohbet kutusunu kullanmak için giriş yapmam gerekiyor mu?",
+      "Evet. Tüm widget'lar ve araçlar ücretsiz. Ücretli bir paket yok, overlay'lerine filigran da eklenmez. Proje açık kaynak ve Senchabot ekibi tarafından geliştiriliyor.",
+    faq2Q: '"Giriş yok" tam olarak ne demek?',
     faq2A:
-      "Kayıt veya OAuth girişi gerekmez. Sadece kanal adını yaz, widget URL'sini kopyala ve doğrudan OBS Studio'ya ekle.",
-    faq3Q: 'Hangi yayın yazılımları destekleniyor?',
+      'Hiçbir yere giriş yapmaz, Twitch ya da Kick hesabını bağlamazsın. Sadece kanal adını yazarsın, widget da o kanalın herkese açık sohbetini giriş yapmamış bir izleyici gibi anonim olarak okur. Yani sohbette herkesin görebildiğini görür, fazlasını değil.',
+    faq3Q: 'Hangi yayın programlarıyla çalışır?',
     faq3A:
-      'OBS, Streamlabs Desktop, XSplit, vMix, Lightstream veya tarayıcı kaynağı destekleyen herhangi bir yazılımla çalışır.',
-    faq4Q:
-      "Birden fazla platformu destekleyen bir sohbet widget'ını veya abone hedefi bitkisini OBS Studio'ya nasıl eklerim?",
+      "OBS Studio ve tarayıcı kaynağı destekleyen diğer programlarla. Widget URL'sini Tarayıcı Kaynağı olarak ekle ve kurulum sayfasında yazan boyutu kullan.",
+    faq4Q: "Twitch ve Kick'i birlikte kullanabilir miyim?",
     faq4A:
-      "OBS Studio'da Kaynaklar panelinde + > Tarayıcı'ya tıkla, oluşturduğun widget URL'sini yapıştır, istediğin boyutu ayarla (örn. Sub Sprout için 800x600, sohbet kutusu için 400x600) ve Tamam'a bas.",
-    footerGithub: "GitHub'da Görüntüle (Açık Kaynak)",
+      "Evet. Sohbet Kutusu, Emote Duvarı ve Sub Sprout tek bir URL'de hem Twitch hem Kick kanalını alır. OBS Bridge da iki sohbeti aynı anda dinleyebilir. Çekiliş ise her seferinde tek bir platformda çalışır.",
+    faq5Q: "Bir widget'ı sonradan nasıl değiştiririm?",
+    faq5A:
+      "Kurulum sayfasını aç, widget'ı istediğin gibi ayarla ve Tarayıcı Kaynağı'ndaki URL'yi yenisiyle değiştir. Sohbet Kutusu mevcut bir URL'yi de açabilir: URL'yi kurulum sayfasına yapıştır, eski ayarların geri gelsin, sadece istediğini değiştir.",
+    faq6Q: "Güncellemelerden sonra widget URL'm çalışmaya devam eder mi?",
+    faq6A:
+      'Evet. Güncellemelerde mevcut URL ayarları ve değerleri korunur, yani sahnendeki widget için yeni bir URL almana gerek kalmaz.',
   },
   chatWidget: {
     breadcrumb: 'Sohbet Kutusu Kurulumu',
