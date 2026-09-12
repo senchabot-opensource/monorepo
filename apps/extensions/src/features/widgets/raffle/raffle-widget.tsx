@@ -357,7 +357,11 @@ export function RaffleWidget({
                         : "bg-[#53FC18] text-black hover:bg-[#45D115]"
                     }`}
                     onClick={start}
-                    disabled={isRunning || !state.config.channel.trim()}>
+                    disabled={
+                      isRunning ||
+                      !state.config.channel.trim() ||
+                      !state.config.keyword.trim()
+                    }>
                     {t("raffle.startRaffle")}
                   </button>
                   <button
