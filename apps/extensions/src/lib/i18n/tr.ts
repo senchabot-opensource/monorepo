@@ -297,50 +297,48 @@ export const tr: typeof en = {
   },
   subSprout: {
     breadcrumb: 'Sub Sprout Kurulumu',
-    title: 'Sub Sprout — Abone Hedefi Bitkisi Kurulumu',
+    title: 'Sub Sprout Kurulumu',
     intro:
       "Twitch veya Kick'te her yeni abonelikle seviye atlayan özelleştirilebilir abone hedefi bitkisi kaplaması.",
-    platforms: 'Platformlar',
-    both: 'İkisi (Twitch & Kick)',
-    twitch: 'Twitch',
-    kick: 'Kick',
-    twitchChannel: 'Twitch Kanalı',
-    kickChannel: 'Kick Kanalı',
-    growthOptions: 'Büyüme ve Bitki Seçenekleri',
-    plantVariety: 'Bitki çeşidi',
+    sectionPlant: 'Bitki',
+    plantVariety: 'Bitki Çeşidi',
+    plantVarietyTip:
+      'Her abonelik bitkiyi bir aşama büyütür. Aşama sayısı arttıkça bitkinin tamamen büyümesi için daha çok abone gerekir.',
     stagesSuffix: '{stages} aşama',
     selectionMode: 'Bitki Değişimi',
+    selectionModeTip:
+      "Son aşamadan sonra bitki baştan başlar: aynı bitki, listedeki sıradaki ya da rastgele başka bir bitki. Sırayla ve Rastgele, Sarmaşık'ı hiç seçmez.",
     fixed: 'Aynı Bitki',
     cycle: 'Sırayla',
     random: 'Rastgele',
-    fixedHint: 'Bitirdikten sonra aynı bitkiyi yeniden başlatır.',
-    cycleHint: 'Bitki çeşitlerini sırayla döngüler.',
-    randomHint: 'Her döngüden sonra rastgele bir bitki seçer.',
-    wateringEffect: 'Sulama efekti',
-    showSubCountEffect: 'Abone sayısı efektini göster',
-    subCountHint: '(hediye paketleri için örn. {count})',
-    showPotLabel: 'Saksıda aşama etiketi göster',
-    potLabelHint: '(örn. mevcut aşama ve toplam aşama için 3/10)',
-    advancedNotice: "Gelişmiş seçenekler etkin. Widget URL'sine özel büyüme parametreleri eklendi.",
+    wateringEffect: 'Sulama Efekti',
+    wateringEffectTip:
+      "Bitki her büyüdüğünde kısa bir yağmur ya da parıltı animasyonu oynar. Sarmaşık'ta görünmez.",
+    showSubCountEffect: 'Abone Sayısını Göster',
+    subCountTip: "Aynı anda kaç abonelik geldiğini gösterir, örneğin 5'li hediye paketinde x5.",
+    showPotLabel: 'Aşamayı Saksıda Göster',
+    potLabelTip: "Saksının üstüne aşamayı yazar, örneğin 3/10. Sarmaşık'ta görünmez.",
     previewTitle: 'Abone Hedefi Bitkisi Önizleme',
     previewIframeTitle: 'Sub Sprout Önizleme',
-    loadingPreview: 'Önizleme yükleniyor...',
-    previewHintChannel: 'Canlı önizleme — bitki {channel} sohbetindeki abonelerle büyür.',
-    previewHintNoChannel:
-      'Canlı sohbete bağlanmak için bir kanal adı gir. Önizlemede simüle aboneler gösterilir.',
+    previewHint:
+      'Önizleme sahte aboneliklerle büyür. Yayında ise bitkin kanalına gelen abonelik, yenileme ve hediye aboneliklerle büyür.',
+    widgetUrlTip:
+      "Daha önce bir widget oluşturduysan URL'sini buraya yapıştır. Ayarların geri yüklenir, istediğini değiştirebilirsin.",
+    widgetUrlPlaceholder: "Düzenlemek için widget URL'sini yapıştır",
+    widgetUrlInvalid: "Bu bir Sub Sprout widget URL'si değil.",
+    browserSourceHintSize: ' (önerilen boyut: 800×600).',
     guideTitle: 'Yayın Yazılımı Kurulumu (OBS, Streamlabs, XSplit vb.)',
     guideStep1:
-      '1. Yayın yazılımında (OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio vb.) bir Tarayıcı Kaynağı ekle.',
-    guideStep2: "2. Kopyaladığın abone hedefi bitkisi URL'sini yapıştır.",
-    guideStep3: '3. Genişliği 800 ve yüksekliği 600 olarak ayarla.',
-    guideStep4:
-      '4. Yayıncılar ve moderatörler büyümeyi elle tetiklemek için sohbette !grow yazabilir.',
+      'Yayın yazılımında (OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio vb.) bir Tarayıcı Kaynağı ekle.',
+    guideStep2: "Kopyaladığın abone hedefi bitkisi URL'sini yapıştır.",
+    guideStep3: 'Genişliği 800 ve yüksekliği 600 olarak ayarla.',
+    guideStep4: 'Yayıncılar ve moderatörler büyümeyi elle tetiklemek için sohbette !grow yazabilir.',
     faq1Q: 'Abone hedefi bitkisini kullanmak için giriş yapmam gerekiyor mu?',
     faq1A:
       'Kayıt veya OAuth girişi gerekmez. Sub Sprout, herkese açık sohbet olay dinleyicileri aracılığıyla anonim olarak bağlanır.',
     faq2Q: 'Abone hedefi bitkisi tam büyüklüğe ulaştığında ne olur?',
     faq2A:
-      'Bitki büyümeyi tamamladığında bir sonraki abonelik, seçim moduna göre bitkiyi sıfırlar (aynı bitkiyi yeniden başlat, sıradaki çeşide geç veya rastgele seç).',
+      'Bitki tamamen büyüdükten sonra gelen ilk abonelik, Bitki Değişimi ayarına göre bitkiyi baştan başlatır: aynı bitki, sıradaki çeşit ya da rastgele biri.',
   },
   raffle: {
     breadcrumb: 'Çekiliş Kurulumu',
@@ -487,52 +485,58 @@ export const tr: typeof en = {
   },
   emoteWallSetup: {
     breadcrumb: 'Emote Duvarı Kurulumu',
-    title: 'Emote Duvarı — Yüzen Emote Kaplaması',
+    title: 'Emote Duvarı Kurulumu',
     intro:
       "Yalnızca emote içeren Twitch, Kick ve 7TV sohbet mesajlarını ekrandaki yüzen emote'lar olarak göster. Sakin modda emote'lar rastgele noktalarda süzülür, Kaos modunda ekranın bir ucundan diğerine fırlar.",
-    platforms: 'Platformlar',
-    both: 'İkisi (Twitch & Kick)',
-    twitch: 'Twitch',
-    kick: 'Kick',
-    twitchChannel: 'Twitch Kanalı',
-    kickChannel: 'Kick Kanalı',
+    sectionAnimation: 'Animasyon',
+    sectionFilters: 'Filtreler',
     sevenTvEmotes: "7TV Emote'ları",
-    subsOnly: 'Sadece aboneler',
-    subsOnlyHint: 'Ekranda yalnızca abonelerin emote mesajları görünür.',
-    subDurationX2: "Abone emote'ları 2× uzun kalır",
-    subDurationX2Hint: "Abonelerden gelen emote'lar iki kat uzun süre görünür.",
-    showAllEmotes: "Mesajlardaki emote'ları da göster",
-    showAllEmotesHint: "Yalnızca emote içeren mesajlar değil, normal mesajların içindeki emote'lar da gösterilir.",
-    hypeMode: 'Sadece hype modu',
-    hypeModeHint: "Bir emote yalnızca 2 veya daha fazla kullanıcı farklı mesajlarda gönderirse gösterilir.",
-    spamBlock: 'Emote spamını engelle',
-    spamBlockHint: "Aynı kullanıcı aynı emote'u üst üste gönderirse veya art arda emote mesajları atarsa yok sayılır.",
+    sevenTvTip:
+      "Twitch kanalındaki 7TV emote'larını gösterir, Kick sohbetinde de. Bunun için Twitch kanalını girmen gerekir.",
     mode: 'Animasyon Modu',
-    modeCalm: 'Sakin — belirir ve süzülür',
-    modeChaos: 'Kaos — ekranı boydan boya hızlıca geçer',
-    modeBounce: 'Sekme — kenarlardan yansır',
-    modeCalmHint:
-      "Emote'lar rastgele noktalarda belirir, hafifçe süzülür ve solar.",
-    modeChaosHint:
-      "Emote'lar rastgele ekran kenarlarından fırlar ve yarı yolda ya da karşı tarafta kaybolur.",
-    modeBounceHint:
-      "Emote'lar ekran koruyucu gibi seker ve her kenar çarpışında hızlanır.",
-    emoteSize: 'Emote Boyutu (px)',
+    modeCalm: 'Sakin',
+    modeChaos: 'Kaos',
+    modeBounce: 'Sekme',
+    modeTip:
+      'Sakin: emote rastgele bir yerde belirir, süzülür ve solar. Kaos: rastgele bir kenardan fırlar, ekranın ortasıyla karşı kenar arasında bir yerde kaybolur. Sekme: kenarlardan seker, her çarpışta biraz daha hızlanır.',
+    emoteSize: 'Emote Boyutu',
     duration: 'Görünür Süre (sn)',
+    durationTip:
+      "Her emote'un ekranda kalma süresi. Kaos modunda emote'lar ekranı bu sürenin bir kısmında geçer, yani daha erken kaybolur.",
     maxEmotes: 'Aynı Anda Maks. Emote',
+    maxEmotesTip: 'Ekrandaki emote sayısı bunu geçerse en eskiler silinir.',
+    subsOnly: 'Sadece Aboneler',
+    subsOnlyTip:
+      "Sadece abone ya da kurucu rozeti olanların ve senin emote'ların çıkar. Önizlemeye yansımaz.",
+    subDurationX2: "Abone Emote'ları 2× Uzun",
+    subDurationX2Tip:
+      "Abone ya da kurucu rozeti olanların ve senin emote'ların ekranda iki kat uzun kalır.",
+    showAllEmotes: "Tüm Emote'ları Göster",
+    showAllEmotesTip:
+      "Sadece emote'tan oluşan mesajlar değil, yazının arasındaki emote'lar da çıkar. Mesaj başına en fazla 5 tane. Önizlemeye yansımaz.",
+    hypeMode: 'Hype Modu',
+    hypeModeTip:
+      'Bir emote ancak 15 saniye içinde en az 2 farklı kişi gönderince çıkar, sonra da en fazla 15 saniyede bir. Önizlemeye yansımaz.',
+    spamBlock: 'Emote Spamını Engelle',
+    spamBlockTip:
+      "Biri 10 saniyede 3'ten fazla emote mesajı atarsa fazlası atlanır. Aynı emote'u 10 saniyede 2'den fazla atarsa sadece o emote atlanır. Önizlemeye yansımaz.",
     previewTitle: 'Emote Duvarı Önizleme',
     previewIframeTitle: 'Emote Duvarı Önizleme',
-    previewHint: "Ekrandaki yüzen emote'larla canlı önizleme.",
+    previewHint: "Önizlemede örnek emote'lar uçuşur. Yayında emote'lar kendi sohbetinden gelir.",
+    widgetUrlTip:
+      "Daha önce bir widget oluşturduysan URL'sini buraya yapıştır. Ayarların geri yüklenir, istediğini değiştirebilirsin.",
+    widgetUrlPlaceholder: "Düzenlemek için widget URL'sini yapıştır",
+    widgetUrlInvalid: "Bu bir Emote Duvarı widget URL'si değil.",
     guideTitle: 'Yayın Yazılımı Kurulumu (OBS, Streamlabs, XSplit vb.)',
     guideStep1:
-      '1. Yayın yazılımında (OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio vb.) bir Tarayıcı Kaynağı ekle.',
-    guideStep2: "2. Kopyaladığın emote duvarı URL'sini yapıştır.",
+      'Yayın yazılımında (OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio vb.) bir Tarayıcı Kaynağı ekle.',
+    guideStep2: "Kopyaladığın emote duvarı URL'sini yapıştır.",
     guideStep3:
-      '3. Genişlik ve yüksekliği tam tuval boyutuna ayarla (örn. 1920×1080) ve oyun görüntünün üstüne yerleştir.',
+      'Genişlik ve yüksekliği tam tuval boyutuna ayarla (örn. 1920×1080) ve oyun görüntünün üstüne yerleştir.',
     browserSourceHintSize: ' (önerilen boyut: 1920×1080 tam tuval).',
     faq1Q: 'Hangi mesajlar yüzen emote tetikler?',
     faq1A:
-      "Yalnızca emote içeren mesajlar ekranda yüzen bir emote tetikler — örn. tek bir Kappa, tekrarlanan emote'lar veya Twitch/Kick/7TV emote karışımı. Normal metin mesajlar yok sayılır.",
+      "Sadece emote'tan oluşan mesajlar: tek bir Kappa, arka arkaya emote'lar ya da Twitch, Kick ve 7TV emote'larının karışımı. Normal yazı mesajları, Tüm Emote'ları Göster açık değilse yok sayılır.",
     faq2Q: 'Emote duvarını kullanmak için giriş yapmam gerekiyor mu?',
     faq2A:
       'Giriş gerekmez. Emote Duvarı, her iki platformun herkese açık sohbet akışlarını anonim olarak dinler.',

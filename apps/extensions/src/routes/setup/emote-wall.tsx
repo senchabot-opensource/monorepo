@@ -1,15 +1,27 @@
-import { SiteFooter } from '#/components/site-footer';
-import { SiteHeader } from '#/components/site-header';
-import { YoutubeTutorial } from '#/components/youtube-tutorial';
+import { createFileRoute } from '@tanstack/react-router';
+import { useEffect, useId, useState } from 'react';
+import { ChannelFields } from '#/components/channel-fields';
+import { CopyUrlField } from '#/components/copy-url-field';
+import { PreviewFrame } from '#/components/preview-frame';
+import { SetupShell } from '#/components/setup-shell';
+import { FieldLabel } from '#/components/ui/field-label';
+import { NumberField } from '#/components/ui/number-field';
+import { RangeField } from '#/components/ui/range-field';
+import { SegmentedControl, type SegmentedOption } from '#/components/ui/segmented-control';
+import { SettingsGroup } from '#/components/ui/settings-group';
+import { Switch } from '#/components/ui/switch';
 import {
   buildEmoteWallParams,
   buildEmoteWallUrl,
+  DEFAULT_EMOTE_WALL_OPTIONS,
+  EMOTE_WALL_RANGES,
+  type EmoteWallMode,
   type EmoteWallUrlOptions,
+  parseEmoteWallUrl,
 } from '#/features/widgets/emote-wall/widget-url';
 import { useI18n } from '#/lib/i18n';
 import { type FaqEntry, getFaqJsonLd, getLocaleLinks } from '#/lib/i18n/seo';
-import { createFileRoute } from '@tanstack/react-router';
-import { useDeferredValue, useEffect, useMemo, useState } from 'react';
+import { getWidget } from '#/lib/widgets';
 
 export const Route = createFileRoute('/setup/emote-wall')({
   head: () => ({
@@ -88,426 +100,202 @@ export const Route = createFileRoute('/setup/emote-wall')({
   component: EmoteWallSetup,
 });
 
+const WIDGET = getWidget('emote-wall');
+// sourceSize is only null for tools; the fallback just satisfies the type.
+const CANVAS = WIDGET.sourceSize ?? { width: 1920, height: 1080 };
+
 const FAQ: FaqEntry[] = [
   ['emoteWallSetup.faq1Q', 'emoteWallSetup.faq1A'],
   ['emoteWallSetup.faq2Q', 'emoteWallSetup.faq2A'],
 ];
 
 function EmoteWallSetup() {
-  const { locale, t } = useI18n();
-  const [twitchChannel, setTwitchChannel] = useState('');
-  const [kickChannel, setKickChannel] = useState('');
-  const [platforms, setPlatforms] = useState<'both' | 'twitch' | 'kick'>(
-    'both',
-  );
-  const [sevenTv, setSevenTv] = useState(true);
-  const [mode, setMode] = useState<'calm' | 'chaos' | 'bounce'>('calm');
-  const [subsOnly, setSubsOnly] = useState(false);
-  const [subDurationX2, setSubDurationX2] = useState(false);
-  const [showAllEmotes, setShowAllEmotes] = useState(false);
-  const [hypeMode, setHypeMode] = useState(false);
-  const [spamBlock, setSpamBlock] = useState(true);
-  const [emoteSize, setEmoteSize] = useState('112');
-  const [duration, setDuration] = useState('5');
-  const [maxEmotes, setMaxEmotes] = useState('25');
-  const [copied, setCopied] = useState(false);
+  const { t } = useI18n();
+  const [options, setOptions] = useState(DEFAULT_EMOTE_WALL_OPTIONS);
   const [mounted, setMounted] = useState(false);
+  const id = useId();
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  const deferredTwitch = useDeferredValue(twitchChannel);
-  const deferredKick = useDeferredValue(kickChannel);
-
-  const urlOptions = (twitch: string, kick: string): EmoteWallUrlOptions => ({
-    twitch,
-    kick,
-    platforms,
-    sevenTv,
-    mode,
-    subsOnly,
-    subDurationX2,
-    showAllEmotes,
-    hypeMode,
-    spamBlock,
-    size: emoteSize,
-    duration,
-    max: maxEmotes,
-  });
+  const update = <K extends keyof EmoteWallUrlOptions>(key: K, value: EmoteWallUrlOptions[K]) =>
+    setOptions((current) => ({ ...current, [key]: value }));
 
   // Gated on mount so the prerendered input and the first client render agree.
-  const widgetUrl = useMemo(() => {
-    if (!mounted) return '';
-    return buildEmoteWallUrl(window.location.origin, urlOptions(twitchChannel, kickChannel));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mounted, twitchChannel, kickChannel, platforms, sevenTv, mode, subsOnly, subDurationX2, showAllEmotes, hypeMode, spamBlock, emoteSize, duration, maxEmotes]);
+  const widgetUrl = mounted ? buildEmoteWallUrl(window.location.origin, options) : '';
+  // The mock preview never reads the channels, so leaving them out keeps typing from reloading it.
+  const previewParams = buildEmoteWallParams({ ...options, twitch: '', kick: '' });
+  previewParams.append('mock', 'true');
+  const previewUrl = mounted ? `${window.location.origin}/widgets/emote-wall?${previewParams}` : '';
 
-  const previewUrl = useMemo(() => {
-    if (typeof window === 'undefined') return '';
-    const params = buildEmoteWallParams(urlOptions(deferredTwitch, deferredKick));
-    params.append('mock', 'true');
-    params.append('lang', locale);
-    return `${window.location.origin}/widgets/emote-wall?${params.toString()}`;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    deferredTwitch,
-    deferredKick,
-    platforms,
-    sevenTv,
-    mode,
-    subsOnly,
-    subDurationX2,
-    showAllEmotes,
-    hypeMode,
-    spamBlock,
-    emoteSize,
-    duration,
-    maxEmotes,
-    locale,
-  ]);
-
-  const handleCopy = async () => {
-    if (widgetUrl) {
-      await navigator.clipboard.writeText(widgetUrl);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
+  const applyWidgetUrl = (text: string) => {
+    const parsed = parseEmoteWallUrl(text);
+    if (!parsed) return false;
+    setOptions(parsed);
+    return true;
   };
 
-  return (
-    <div className="min-h-screen bg-zinc-50 text-zinc-900 font-sans dark:bg-zinc-950 dark:text-zinc-100">
-      <SiteHeader
-        variant="compact"
-        title={t('emoteWallSetup.title')}
-        widgetId="emote-wall"
-        breadcrumbLabel={t('emoteWallSetup.breadcrumb')}
-      />
-      <main id="main" tabIndex={-1} className="max-w-6xl mx-auto px-6 pt-4 focus:outline-none">
-        <div className="flex flex-col lg:flex-row items-center lg:items-start justify-center gap-8 mb-12">
-          {/* Left: Configuration Panel */}
-          <div className="w-full max-w-md lg:shrink-0 rounded-xl bg-white p-6 md:p-8 shadow-xl border border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800">
-            <div className="space-y-4">
-              <p className="text-xs text-zinc-600 bg-zinc-100 p-3 rounded-md border border-zinc-200 leading-relaxed dark:text-zinc-400 dark:bg-zinc-800/40 dark:border-zinc-800">
-                {t('emoteWallSetup.intro')}
-              </p>
+  const modeOptions: SegmentedOption<EmoteWallMode>[] = [
+    { value: 'calm', label: t('emoteWallSetup.modeCalm') },
+    { value: 'chaos', label: t('emoteWallSetup.modeChaos') },
+    { value: 'bounce', label: t('emoteWallSetup.modeBounce') },
+  ];
 
-              <YoutubeTutorial />
-
-              <div>
-                <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                  {t('emoteWallSetup.platforms')}
-                </label>
-                <select
-                  value={platforms}
-                  onChange={(e) =>
-                    setPlatforms(e.target.value as 'both' | 'twitch' | 'kick')
-                  }
-                  className="w-full rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2.5 text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
-                >
-                  <option value="both">{t('emoteWallSetup.both')}</option>
-                  <option value="twitch">{t('emoteWallSetup.twitch')}</option>
-                  <option value="kick">{t('emoteWallSetup.kick')}</option>
-                </select>
-              </div>
-
-              {(platforms === 'both' || platforms === 'twitch') && (
-                <div>
-                  <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                    {t('emoteWallSetup.twitchChannel')}
-                  </label>
-                  <input
-                    type="text"
-                    value={twitchChannel}
-                    onChange={(e) => setTwitchChannel(e.target.value)}
-                    placeholder={t('common.channelPlaceholder')}
-                    className="w-full rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2 text-zinc-900 placeholder-zinc-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
-                  />
-                </div>
-              )}
-
-              {(platforms === 'both' || platforms === 'kick') && (
-                <div>
-                  <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                    {t('emoteWallSetup.kickChannel')}
-                  </label>
-                  <input
-                    type="text"
-                    value={kickChannel}
-                    onChange={(e) => setKickChannel(e.target.value)}
-                    placeholder={t('common.channelPlaceholder')}
-                    className="w-full rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2 text-zinc-900 placeholder-zinc-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
-                  />
-                </div>
-              )}
-
-              <div>
-                <label className="flex items-center space-x-2 text-zinc-900 cursor-pointer dark:text-white">
-                  <input
-                    type="checkbox"
-                    checked={sevenTv}
-                    onChange={(e) => setSevenTv(e.target.checked)}
-                    className="rounded border-zinc-300 bg-zinc-100 text-green-500 focus:ring-green-500 dark:border-zinc-700 dark:bg-zinc-800"
-                  />
-                  <span className="text-sm">{t('emoteWallSetup.sevenTvEmotes')}</span>
-                </label>
-              </div>
-
-              <div>
-                <label className="flex items-center space-x-2 text-zinc-900 cursor-pointer dark:text-white">
-                  <input
-                    type="checkbox"
-                    checked={subsOnly}
-                    onChange={(e) => setSubsOnly(e.target.checked)}
-                    className="rounded border-zinc-300 bg-zinc-100 text-green-500 focus:ring-green-500 dark:border-zinc-700 dark:bg-zinc-800"
-                  />
-                  <span className="text-sm">{t('emoteWallSetup.subsOnly')}</span>
-                </label>
-                <p className="mt-1 text-xs text-zinc-500">
-                  {t('emoteWallSetup.subsOnlyHint')}
-                </p>
-              </div>
-
-              <div>
-                <label className="flex items-center space-x-2 text-zinc-900 cursor-pointer dark:text-white">
-                  <input
-                    type="checkbox"
-                    checked={subDurationX2}
-                    onChange={(e) => setSubDurationX2(e.target.checked)}
-                    className="rounded border-zinc-300 bg-zinc-100 text-green-500 focus:ring-green-500 dark:border-zinc-700 dark:bg-zinc-800"
-                  />
-                  <span className="text-sm">{t('emoteWallSetup.subDurationX2')}</span>
-                </label>
-                <p className="mt-1 text-xs text-zinc-500">
-                  {t('emoteWallSetup.subDurationX2Hint')}
-                </p>
-              </div>
-
-              <div>
-                <label className="flex items-center space-x-2 text-zinc-900 cursor-pointer dark:text-white">
-                  <input
-                    type="checkbox"
-                    checked={showAllEmotes}
-                    onChange={(e) => setShowAllEmotes(e.target.checked)}
-                    className="rounded border-zinc-300 bg-zinc-100 text-green-500 focus:ring-green-500 dark:border-zinc-700 dark:bg-zinc-800"
-                  />
-                  <span className="text-sm">{t('emoteWallSetup.showAllEmotes')}</span>
-                </label>
-                <p className="mt-1 text-xs text-zinc-500">
-                  {t('emoteWallSetup.showAllEmotesHint')}
-                </p>
-              </div>
-
-              <div>
-                <label className="flex items-center space-x-2 text-zinc-900 cursor-pointer dark:text-white">
-                  <input
-                    type="checkbox"
-                    checked={hypeMode}
-                    onChange={(e) => setHypeMode(e.target.checked)}
-                    className="rounded border-zinc-300 bg-zinc-100 text-green-500 focus:ring-green-500 dark:border-zinc-700 dark:bg-zinc-800"
-                  />
-                  <span className="text-sm">{t('emoteWallSetup.hypeMode')}</span>
-                </label>
-                <p className="mt-1 text-xs text-zinc-500">
-                  {t('emoteWallSetup.hypeModeHint')}
-                </p>
-              </div>
-
-              <div>
-                <label className="flex items-center space-x-2 text-zinc-900 cursor-pointer dark:text-white">
-                  <input
-                    type="checkbox"
-                    checked={spamBlock}
-                    onChange={(e) => setSpamBlock(e.target.checked)}
-                    className="rounded border-zinc-300 bg-zinc-100 text-green-500 focus:ring-green-500 dark:border-zinc-700 dark:bg-zinc-800"
-                  />
-                  <span className="text-sm">{t('emoteWallSetup.spamBlock')}</span>
-                </label>
-                <p className="mt-1 text-xs text-zinc-500">
-                  {t('emoteWallSetup.spamBlockHint')}
-                </p>
-              </div>
-
-              <div>
-                <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                  {t('emoteWallSetup.mode')}
-                </label>
-                <select
-                  value={mode}
-                  onChange={(e) =>
-                    setMode(e.target.value as 'calm' | 'chaos' | 'bounce')
-                  }
-                  className="w-full rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2.5 text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
-                >
-                  <option value="calm">{t('emoteWallSetup.modeCalm')}</option>
-                  <option value="chaos">{t('emoteWallSetup.modeChaos')}</option>
-                  <option value="bounce">{t('emoteWallSetup.modeBounce')}</option>
-                </select>
-                <p className="mt-1 text-xs text-zinc-500">
-                  {mode === 'chaos'
-                    ? t('emoteWallSetup.modeChaosHint')
-                    : mode === 'bounce'
-                      ? t('emoteWallSetup.modeBounceHint')
-                      : t('emoteWallSetup.modeCalmHint')}
-                </p>
-              </div>
-
-              <div>
-                <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                  {t('emoteWallSetup.emoteSize')}
-                </label>
-                <input
-                  type="range"
-                  min="32"
-                  max="256"
-                  step="8"
-                  value={emoteSize}
-                  onChange={(e) => setEmoteSize(e.target.value)}
-                  className="w-full h-2 bg-zinc-300 rounded-lg appearance-none cursor-pointer accent-green-500 dark:bg-zinc-700"
+  const settingsPanel = (
+    <>
+      <SettingsGroup title={t('common.sectionChannel')}>
+        <ChannelFields
+          platforms={options.platforms}
+          onPlatformsChange={(value) => update('platforms', value)}
+          twitch={options.twitch}
+          onTwitchChange={(value) => update('twitch', value)}
+          kick={options.kick}
+          onKickChange={(value) => update('kick', value)}
+          aside={
+            // The widget loads 7TV from the Twitch channel only, so Kick alone has none.
+            <div className="flex items-end sm:pb-1">
+              <div className="w-full">
+                <Switch
+                  label={t('emoteWallSetup.sevenTvEmotes')}
+                  tip={t('emoteWallSetup.sevenTvTip')}
+                  checked={options.sevenTv}
+                  onChange={(value) => update('sevenTv', value)}
+                  disabled={options.platforms === 'kick'}
                 />
-                <div className="text-right text-xs text-zinc-500 mt-1">
-                  {emoteSize}px
-                </div>
-              </div>
-
-              <div className="flex gap-4">
-                <div className="flex-1">
-                  <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                    {t('emoteWallSetup.duration')}
-                  </label>
-                  <input
-                    type="number"
-                    min="2"
-                    max="30"
-                    value={duration}
-                    onChange={(e) => setDuration(e.target.value)}
-                    className="w-full rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2 text-zinc-900 placeholder-zinc-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
-                  />
-                </div>
-                <div className="flex-1">
-                  <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                    {t('emoteWallSetup.maxEmotes')}
-                  </label>
-                  <input
-                    type="number"
-                    min="1"
-                    max="120"
-                    value={maxEmotes}
-                    onChange={(e) => setMaxEmotes(e.target.value)}
-                    className="w-full rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2 text-zinc-900 placeholder-zinc-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
-                  />
-                </div>
-              </div>
-
-              <div className="pt-4 mt-6 border-t border-zinc-200 lg:hidden dark:border-zinc-800">
-                <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                  {t('common.widgetUrl')}
-                </label>
-                <div className="flex">
-                  <input
-                    type="text"
-                    readOnly
-                    value={widgetUrl}
-                    className="w-full rounded-l-md border border-zinc-300 bg-zinc-100 px-3 py-2 text-zinc-600 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
-                  />
-                  <button
-                    onClick={handleCopy}
-                    disabled={!widgetUrl}
-                    className="rounded-r-md bg-green-600 px-4 py-2 font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                  >
-                    {copied ? t('common.copied') : t('common.copy')}
-                  </button>
-                </div>
               </div>
             </div>
+          }
+        />
+      </SettingsGroup>
+
+      <SettingsGroup title={t('emoteWallSetup.sectionAnimation')}>
+        <div>
+          <FieldLabel id={`${id}-mode`} tip={t('emoteWallSetup.modeTip')}>
+            {t('emoteWallSetup.mode')}
+          </FieldLabel>
+          <SegmentedControl
+            labelledBy={`${id}-mode`}
+            value={options.mode}
+            onChange={(value) => update('mode', value)}
+            options={modeOptions}
+          />
+        </div>
+        <RangeField
+          label={t('emoteWallSetup.emoteSize')}
+          min={EMOTE_WALL_RANGES.size.min}
+          max={EMOTE_WALL_RANGES.size.max}
+          step={8}
+          value={options.size}
+          onChange={(value) => update('size', value)}
+          format={(value) => `${value}px`}
+          readoutClassName="w-12"
+        />
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <FieldLabel htmlFor={`${id}-duration`} tip={t('emoteWallSetup.durationTip')}>
+              {t('emoteWallSetup.duration')}
+            </FieldLabel>
+            <NumberField
+              id={`${id}-duration`}
+              value={options.duration}
+              onChange={(value) => update('duration', value)}
+              min={EMOTE_WALL_RANGES.duration.min}
+              max={EMOTE_WALL_RANGES.duration.max}
+              fallback={EMOTE_WALL_RANGES.duration.fallback}
+            />
           </div>
-
-          {/* Right: Live Preview Panel & Guides/FAQ */}
-          <div className="w-full max-w-md lg:max-w-2xl lg:shrink-0 flex flex-col gap-4 lg:sticky lg:top-6">
-            <div className="rounded-xl bg-white p-6 md:p-8 shadow-xl border border-zinc-200 flex flex-col h-[700px] dark:bg-zinc-900 dark:border-zinc-800">
-              <h2 className="mb-4 text-xl font-semibold text-center text-zinc-700 dark:text-zinc-300">
-                {t('emoteWallSetup.previewTitle')}
-              </h2>
-              <div className="flex-1 w-full bg-zinc-950/80 rounded-lg overflow-hidden border border-zinc-300 relative shadow-inner flex items-center justify-center dark:border-zinc-800">
-                {mounted ? (
-                  <iframe
-                    src={previewUrl}
-                    className="absolute inset-0 w-full h-full border-0 pointer-events-none"
-                    title={t('emoteWallSetup.previewIframeTitle')}
-                  />
-                ) : (
-                  <div className="text-center text-zinc-500">
-                    <p>{t('common.previewNoChannel')}</p>
-                  </div>
-                )}
-              </div>
-              <p className="mt-2 text-center text-xs text-zinc-500">
-                {t('emoteWallSetup.previewHint')}
-              </p>
-
-              <div className="mt-4 hidden lg:block">
-                <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                  {t('common.widgetUrl')}
-                </label>
-                <div className="flex">
-                  <input
-                    type="text"
-                    readOnly
-                    value={widgetUrl}
-                    className="w-full rounded-l-md border border-zinc-300 bg-zinc-100 px-3 py-2 text-zinc-600 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
-                  />
-                  <button
-                    onClick={handleCopy}
-                    disabled={!widgetUrl}
-                    className="rounded-r-md bg-green-600 px-4 py-2 font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                  >
-                    {copied ? t('common.copied') : t('common.copy')}
-                  </button>
-                </div>
-                <p className="mt-2 text-xs text-zinc-500">
-                  {t('common.browserSourceHint')}
-                  {t('emoteWallSetup.browserSourceHintSize')}
-                </p>
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              <div className="rounded-xl border border-zinc-200 bg-zinc-100/60 p-5 dark:border-zinc-800 dark:bg-zinc-900/50">
-                <h3 className="text-sm font-semibold text-zinc-900 mb-2 dark:text-white">
-                  {t('emoteWallSetup.guideTitle')}
-                </h3>
-                <p className="text-xs text-zinc-600 leading-relaxed dark:text-zinc-400">
-                  {t('emoteWallSetup.guideStep1')}
-                  <br />
-                  {t('emoteWallSetup.guideStep2')}
-                  <br />
-                  {t('emoteWallSetup.guideStep3')}
-                </p>
-              </div>
-
-              <div className="space-y-3">
-                {FAQ.map(([question, answer]) => (
-                  <details
-                    key={question}
-                    className="group rounded-lg border border-zinc-200/80 bg-zinc-100/60 p-4 transition-colors open:bg-zinc-100 dark:border-zinc-800/80 dark:bg-zinc-900/50 dark:open:bg-zinc-900"
-                  >
-                    <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-medium text-zinc-700 group-hover:text-zinc-900 dark:text-zinc-200 dark:group-hover:text-white">
-                      <span>{t(question)}</span>
-                      <span className="transition-transform group-open:rotate-180 text-zinc-500 text-xs">
-                        ▼
-                      </span>
-                    </summary>
-                    <p className="mt-2 text-xs text-zinc-600 leading-relaxed dark:text-zinc-400">
-                      {t(answer)}
-                    </p>
-                  </details>
-                ))}
-              </div>
-            </div>
+          <div>
+            <FieldLabel htmlFor={`${id}-max`} tip={t('emoteWallSetup.maxEmotesTip')}>
+              {t('emoteWallSetup.maxEmotes')}
+            </FieldLabel>
+            <NumberField
+              id={`${id}-max`}
+              value={options.max}
+              onChange={(value) => update('max', value)}
+              min={EMOTE_WALL_RANGES.max.min}
+              max={EMOTE_WALL_RANGES.max.max}
+              fallback={EMOTE_WALL_RANGES.max.fallback}
+            />
           </div>
         </div>
-      </main>
-      <SiteFooter />
-    </div>
+      </SettingsGroup>
+
+      <SettingsGroup title={t('emoteWallSetup.sectionFilters')}>
+        <div className="grid gap-x-6 gap-y-1 sm:grid-cols-2">
+          <Switch
+            label={t('emoteWallSetup.subsOnly')}
+            tip={t('emoteWallSetup.subsOnlyTip')}
+            checked={options.subsOnly}
+            onChange={(value) => update('subsOnly', value)}
+          />
+          <Switch
+            label={t('emoteWallSetup.subDurationX2')}
+            tip={t('emoteWallSetup.subDurationX2Tip')}
+            checked={options.subDurationX2}
+            onChange={(value) => update('subDurationX2', value)}
+          />
+          <Switch
+            label={t('emoteWallSetup.showAllEmotes')}
+            tip={t('emoteWallSetup.showAllEmotesTip')}
+            checked={options.showAllEmotes}
+            onChange={(value) => update('showAllEmotes', value)}
+          />
+          <Switch
+            label={t('emoteWallSetup.hypeMode')}
+            tip={t('emoteWallSetup.hypeModeTip')}
+            checked={options.hypeMode}
+            onChange={(value) => update('hypeMode', value)}
+          />
+          <Switch
+            label={t('emoteWallSetup.spamBlock')}
+            tip={t('emoteWallSetup.spamBlockTip')}
+            checked={options.spamBlock}
+            onChange={(value) => update('spamBlock', value)}
+          />
+        </div>
+      </SettingsGroup>
+    </>
+  );
+
+  return (
+    <SetupShell
+      widgetId={WIDGET.id}
+      title={t('emoteWallSetup.title')}
+      breadcrumbLabel={t('emoteWallSetup.breadcrumb')}
+      settings={settingsPanel}
+      previewTitle={t('emoteWallSetup.previewTitle')}
+      previewAspect={CANVAS.width / CANVAS.height}
+      preview={
+        <PreviewFrame
+          src={previewUrl}
+          title={t('emoteWallSetup.previewIframeTitle')}
+          canvas={CANVAS}
+          motionSafe
+        />
+      }
+      previewFooter={
+        <p className="text-xs leading-relaxed text-zinc-500">{t('emoteWallSetup.previewHint')}</p>
+      }
+      urlField={
+        <CopyUrlField
+          url={widgetUrl}
+          tip={t('emoteWallSetup.widgetUrlTip')}
+          hint={`${t('common.browserSourceHint')}${t('emoteWallSetup.browserSourceHintSize')}`}
+          sourceSize={WIDGET.sourceSize}
+          onEdit={applyWidgetUrl}
+          editPlaceholder={t('emoteWallSetup.widgetUrlPlaceholder')}
+          invalidMessage={t('emoteWallSetup.widgetUrlInvalid')}
+        />
+      }
+      intro={t('emoteWallSetup.intro')}
+      guideTitle={t('emoteWallSetup.guideTitle')}
+      guideSteps={[
+        'emoteWallSetup.guideStep1',
+        'emoteWallSetup.guideStep2',
+        'emoteWallSetup.guideStep3',
+      ]}
+      faq={FAQ}
+    />
   );
 }
