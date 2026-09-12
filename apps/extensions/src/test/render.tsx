@@ -6,6 +6,7 @@ import {
   RouterProvider,
 } from '@tanstack/react-router';
 import { act, render } from '@testing-library/react';
+import userEvent, { PointerEventsCheckLevel } from '@testing-library/user-event';
 import type { ReactNode } from 'react';
 import { afterEach } from 'vitest';
 import { LocaleProvider } from '#/lib/i18n';
@@ -53,4 +54,12 @@ export function renderWithProviders(ui: ReactNode, url = '/') {
     ),
   });
   return mount(rootRoute as unknown as typeof routeTree, url, false);
+}
+
+/**
+ * userEvent.setup() without the pointer-events check: jsdom loads no stylesheet, so the check
+ * can't catch anything, and walking computed styles on every click slows page tests down.
+ */
+export function setupUser(options: Parameters<typeof userEvent.setup>[0] = {}) {
+  return userEvent.setup({ pointerEventsCheck: PointerEventsCheckLevel.Never, ...options });
 }
