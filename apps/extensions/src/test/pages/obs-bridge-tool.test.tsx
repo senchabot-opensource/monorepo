@@ -187,3 +187,18 @@ describe('OBS Bridge tool', () => {
     ).toBeTruthy();
   });
 });
+
+describe('OBS Bridge tool in an OBS dock', () => {
+  it('has no link or menu a stray click could follow away from the bridge', async () => {
+    await renderRoute(`${TOOL}?twitch=streamer&lang=en`);
+    const header = document.querySelector('header');
+    expect(header).not.toBeNull();
+    // The EN/TR links only swap ?lang= on the same page, so they're the one allowed kind.
+    const leaving = [...(header?.querySelectorAll('a[href]') ?? [])].filter(
+      (link) => !link.hasAttribute('hreflang'),
+    );
+    expect(leaving.map((link) => link.getAttribute('href'))).toEqual([]);
+    expect(header?.querySelector('button[aria-controls]')).toBeNull();
+    expect(document.querySelector('footer')).toBeNull();
+  });
+});
