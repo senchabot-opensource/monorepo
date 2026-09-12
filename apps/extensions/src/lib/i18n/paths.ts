@@ -64,3 +64,17 @@ export function getLangRedirect(pathname: string, searchStr: string, hash = ''):
   const search = kept.length ? `?${kept.join('&')}` : '';
   return `${target}${search}${hash ? `#${hash}` : ''}`;
 }
+
+/**
+ * Sets `?lang=` on an overlay or tool URL, for previews and "open" links shown on a page.
+ * Overlays and tools take their language from the query, not the path; the URLs users copy
+ * into OBS must never get it, so only use this for what the page itself displays or opens.
+ */
+export function withLangParam(url: string, locale: Locale): string {
+  if (!url) return '';
+  const parsed = new URL(url, 'http://relative.invalid');
+  parsed.searchParams.set(LANG_PARAM, locale);
+  return parsed.origin === 'http://relative.invalid'
+    ? `${parsed.pathname}${parsed.search}${parsed.hash}`
+    : parsed.toString();
+}

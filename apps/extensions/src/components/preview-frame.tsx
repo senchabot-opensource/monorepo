@@ -1,5 +1,6 @@
 import { type ReactNode, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { useI18n } from '#/lib/i18n';
+import { withLangParam } from '#/lib/i18n/paths';
 import type { SourceSize } from '#/lib/widgets';
 
 const REDUCED_MOTION = '(prefers-reduced-motion: reduce)';
@@ -53,7 +54,7 @@ export function PreviewFrame({
   backgroundClassName = 'bg-zinc-950/80',
   className = '',
 }: PreviewFrameProps) {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
   const [played, setPlayed] = useState(false);
@@ -103,7 +104,7 @@ export function PreviewFrame({
     >
       {mounted ? (
         <iframe
-          src={src}
+          src={withLangParam(src, locale)}
           title={title}
           // Overlays can overflow a small frame by a pixel; OBS never shows their scrollbar, and
           // this non-interactive preview shouldn't either (in light mode it paints a white bar).

@@ -6,6 +6,7 @@ import {
   isAppPath,
   localizePath,
   stripLocale,
+  withLangParam,
 } from './paths';
 
 describe('getPathLocale', () => {
@@ -117,5 +118,29 @@ describe('getLangRedirect', () => {
     expect(getLangRedirect('/setup/raffle', '?channel=foo&language=tr')).toBeNull();
     expect(getLangRedirect('/widgets/chat-widget', '?lang=tr')).toBeNull();
     expect(getLangRedirect('/tools/obs-bridge', '?lang=tr')).toBeNull();
+  });
+});
+
+describe('withLangParam', () => {
+  it('sets lang on relative overlay URLs and keeps the other params in order', () => {
+    expect(withLangParam('/widgets/emote-wall?mock=true&size=48', 'tr')).toBe(
+      '/widgets/emote-wall?mock=true&size=48&lang=tr',
+    );
+  });
+
+  it('replaces an existing lang instead of adding a second one', () => {
+    expect(withLangParam('/widgets/chat-widget?mock=true&lang=en', 'tr')).toBe(
+      '/widgets/chat-widget?mock=true&lang=tr',
+    );
+  });
+
+  it('keeps absolute URLs absolute', () => {
+    expect(withLangParam('https://extensions.senchabot.com/tools/obs-bridge?twitch=a', 'tr')).toBe(
+      'https://extensions.senchabot.com/tools/obs-bridge?twitch=a&lang=tr',
+    );
+  });
+
+  it('returns an empty string for an empty URL, so nothing loads', () => {
+    expect(withLangParam('', 'en')).toBe('');
   });
 });

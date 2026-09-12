@@ -20,7 +20,7 @@ import {
 } from '#/features/tools/obs-bridge-config';
 import { ObsCommandList } from '#/features/tools/obs-command-list';
 import { type TranslationKey, useI18n } from '#/lib/i18n';
-import { getParamsLocale } from '#/lib/i18n/paths';
+import { getParamsLocale, withLangParam } from '#/lib/i18n/paths';
 import type { FaqEntry } from '#/lib/i18n/seo';
 import { getSetupPageHead } from '#/lib/seo/pages';
 import { getWidget } from '#/lib/widgets';
@@ -65,7 +65,7 @@ const SUMMARY_WARNING =
   'rounded-md border border-amber-300 bg-amber-50 px-2.5 py-1.5 text-xs leading-relaxed text-amber-800 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-300';
 
 function ObsBridgeSetup() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const id = useId();
   const [twitch, setTwitch] = useState('');
   const [kick, setKick] = useState('');
@@ -254,7 +254,8 @@ function ObsBridgeSetup() {
     <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
       {toolUrl ? (
         <a
-          href={toolUrl}
+          // Opens in this page's language; the copied tool URL stays as the user built it.
+          href={withLangParam(toolUrl, locale)}
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex h-9 items-center gap-2 rounded-md border border-zinc-300 bg-white px-3 text-sm font-semibold text-zinc-900 transition-colors hover:bg-zinc-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white dark:hover:bg-zinc-800 dark:focus-visible:ring-offset-zinc-900"
