@@ -9,13 +9,18 @@ import {
   useSyncExternalStore,
 } from 'react';
 import { en } from './en';
-import { DEFAULT_LOCALE, isValidLocale, LANG_PARAM, type Locale } from './locales';
+import {
+  DEFAULT_LOCALE,
+  isValidLocale,
+  LANG_PARAM,
+  LANG_STORAGE_KEY,
+  type Locale,
+  pickBrowserLocale,
+} from './locales';
 import { getPathLocale, isAppPath, localizePath } from './paths';
 import { tr } from './tr';
 
 export { isValidLocale, LANG_PARAM, LOCALE_LABELS, LOCALES, type Locale } from './locales';
-
-const STORAGE_KEY = 'lang';
 
 const dictionaries: Record<Locale, typeof en> = { en, tr };
 
@@ -63,7 +68,7 @@ function localeFromUrl(): Locale | null {
 function localeFromStorage(): Locale | null {
   if (typeof window === 'undefined') return null;
   try {
-    const stored = window.localStorage.getItem(STORAGE_KEY);
+    const stored = window.localStorage.getItem(LANG_STORAGE_KEY);
     return isValidLocale(stored) ? stored : null;
   } catch {
     return null;
@@ -72,10 +77,8 @@ function localeFromStorage(): Locale | null {
 
 function readBrowserLocale(): Locale {
   if (typeof window === 'undefined') return DEFAULT_LOCALE;
-  const candidates =
-    window.navigator.languages ?? (window.navigator.language ? [window.navigator.language] : []);
-  const prefersTurkish = candidates.some((tag) => tag?.toLowerCase().startsWith('tr'));
-  return prefersTurkish ? 'tr' : DEFAULT_LOCALE;
+  const { languages, language } = window.navigator;
+  return pickBrowserLocale(languages?.length ? languages : [language ?? '']);
 }
 
 // Overlays and tools only. External store so the locale resolves synchronously after hydration
@@ -110,8 +113,11 @@ function emitLocale(next: Locale) {
 }
 
 function saveLocale(next: Locale) {
+  // Setup-page previews are same-origin iframes with ?lang=; they must not overwrite the
+  // visitor's own choice, which decides the language the site opens in.
+  if (window.self !== window.top) return;
   try {
-    window.localStorage.setItem(STORAGE_KEY, next);
+    window.localStorage.setItem(LANG_STORAGE_KEY, next);
   } catch {
     // localStorage unavailable
   }

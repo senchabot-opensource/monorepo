@@ -5,6 +5,7 @@ import { SiteLayout } from '#/components/site-layout';
 import { BUTTON_PRIMARY } from '#/components/ui/button-styles';
 import { WidgetCrossLinks } from '#/components/widget-cross-links';
 import { LocaleProvider, useI18n } from '#/lib/i18n';
+import { LANDING_SCRIPT } from '#/lib/i18n/landing';
 import { DEFAULT_LOCALE } from '#/lib/i18n/locales';
 import { getPathLocale, isAppPath } from '#/lib/i18n/paths';
 import { getPageHead, ROBOTS_INDEX, ROBOTS_NOINDEX, SITE_META, SITE_NAME } from '#/lib/seo/head';
@@ -113,6 +114,8 @@ function RootDocument({ children }: { children: React.ReactNode }) {
   return (
     <html lang={lang} suppressHydrationWarning>
       <head>
+        {/* biome-ignore lint/security/noDangerouslySetInnerHtml: must redirect before first paint */}
+        <script dangerouslySetInnerHTML={{ __html: LANDING_SCRIPT }} />
         {/* biome-ignore lint/security/noDangerouslySetInnerHtml: inline bootstrap script must run before first paint */}
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <HeadContent />
