@@ -23,6 +23,15 @@ export type SiteHeaderProps =
       title: string;
       /** Marks the current entry in the widget switcher and shows its icon; omit to hide both. */
       widgetId?: WidgetId;
+    }
+  | {
+      /**
+       * Live tools that run in an OBS dock: no links at all (logo included), so a stray click
+       * can't navigate away and drop the tool's connections. Language and theme stay.
+       */
+      variant: 'tool';
+      title: string;
+      widgetId: WidgetId;
     };
 
 const NAV_LINK_CLASS =
@@ -31,7 +40,28 @@ const GROUP_LABEL_CLASS =
   'px-2.5 pb-1 text-[11px] font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400';
 
 export function SiteHeader(props: SiteHeaderProps) {
-  return props.variant === 'compact' ? <CompactHeader {...props} /> : <FullHeader />;
+  if (props.variant === 'compact') return <CompactHeader {...props} />;
+  if (props.variant === 'tool') return <ToolHeader {...props} />;
+  return <FullHeader />;
+}
+
+function ToolHeader({ title, widgetId }: Extract<SiteHeaderProps, { variant: 'tool' }>) {
+  const widget = getWidget(widgetId);
+  return (
+    <header className="mx-auto flex h-12 w-full max-w-6xl items-center gap-2 px-4">
+      <img src="/senchabot-logo.svg" alt="" width={28} height={28} className="size-7 shrink-0" />
+      <span aria-hidden="true" className="text-zinc-300 dark:text-zinc-700">
+        /
+      </span>
+      <div className="flex min-w-0 items-center gap-1.5">
+        <widget.Icon className="size-[18px] shrink-0 text-green-600 dark:text-green-400" />
+        <h1 className="truncate text-base font-semibold text-zinc-900 dark:text-white">{title}</h1>
+      </div>
+      <div className="ml-auto">
+        <SiteControls showGithub={false} />
+      </div>
+    </header>
+  );
 }
 
 function SkipLink() {

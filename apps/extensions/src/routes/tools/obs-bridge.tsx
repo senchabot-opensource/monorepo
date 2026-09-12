@@ -3,7 +3,6 @@ import { type ReactNode, useCallback, useEffect, useId, useMemo, useRef, useStat
 import { z } from 'zod';
 import { ChevronDownIcon } from '#/components/icons';
 import { PANEL_CLASS } from '#/components/setup-shell';
-import { SiteFooter } from '#/components/site-footer';
 import { SiteHeader } from '#/components/site-header';
 import { INPUT_CLASS } from '#/components/ui/text-field';
 import {
@@ -297,13 +296,14 @@ function RouteComponent() {
       <span className="text-zinc-900 dark:text-white">{name}</span>
     );
 
-  // Site chrome only belongs on the real page, not when another page frames the tool.
+  // The header only belongs on the real page, not when another page frames the tool. There's no
+  // footer: the tool often runs in an OBS dock, where following a link would drop the bridge.
   const embedded = window.self !== window.top;
 
   return (
     <div className="flex min-h-dvh flex-col bg-zinc-50 font-sans text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100">
       {!embedded && (
-        <SiteHeader variant="compact" title={t('obsBridge.tool.title')} widgetId="obs-bridge" />
+        <SiteHeader variant="tool" title={t('obsBridge.tool.title')} widgetId="obs-bridge" />
       )}
       <main
         id="main"
@@ -417,7 +417,6 @@ function RouteComponent() {
 
         <p className="text-center text-xs text-zinc-500">{t('obsBridge.tool.footer')}</p>
       </main>
-      {!embedded && <SiteFooter />}
     </div>
   );
 }
