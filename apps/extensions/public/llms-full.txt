@@ -4,8 +4,6 @@
 
 Short version with links only: https://extensions.senchabot.com/llms.txt
 
-Languages: English, and Turkish under /tr (https://extensions.senchabot.com/tr). Overlay and tool URLs are the same in both languages.
-
 ## About
 
 - Made by Senchabot (https://senchabot.com), an open source, multi-platform community bot for Twitch, Discord, Kick and YouTube.
@@ -14,7 +12,7 @@ Languages: English, and Turkish under /tr (https://extensions.senchabot.com/tr).
 - Price: free. There is no paid plan, no premium account and no watermark on the overlays.
 - No login: you never create an account or connect a Twitch or Kick account. You type a channel name and get a URL. On Twitch the widgets read chat like an anonymous viewer, on Kick they listen to the public chat feed. They can't post in chat, moderate or see private account data.
 - Streaming apps: OBS Studio and other apps that support browser sources. The guides are written for OBS Studio.
-- Languages: the site is in English and Turkish. Add ?lang=en or ?lang=tr to any URL to pick one.
+- Languages: English, and Turkish under /tr (for example https://extensions.senchabot.com/tr/setup/chat-widget). Overlay and tool URLs are the same in both languages; add ?lang=tr to one to show its text in Turkish.
 - Settings live inside the widget URL. Nothing is saved to an account, and anyone with the URL opens the same widget.
 - Old URLs keep working: parameter names, values and defaults are not changed by updates.
 - Data sources: chat comes straight from Twitch and Kick, emotes from 7TV, BetterTTV and FrankerFaceZ, Twitch channel IDs from ivr.fi, and Kick channel info from kick.com.
