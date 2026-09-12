@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { CtaBand } from '#/components/cta-band';
 import { DataTable, P, Steps } from '#/components/content-page';
 import { GuideArticle } from '#/components/guide-article';
-import { DEFAULT_OBS_COMMANDS } from '#/features/tools/use-chat';
+import { DEFAULT_OBS_COMMANDS } from '#/features/tools/obs-bridge-config';
 import { getArticleJsonLd, getContentHead } from '#/lib/content-seo';
 import { GUIDES_PUBLISHED, getGuide } from '#/lib/guides';
 import { translate, useT } from '#/lib/i18n';
