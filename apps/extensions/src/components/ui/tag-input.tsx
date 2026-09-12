@@ -57,32 +57,35 @@ export function TagInput({
       <FieldLabel htmlFor={`${id}-input`} tip={tip}>
         {label}
       </FieldLabel>
-      <div className="flex gap-2">
+      {/* Input and Add wrap under `before` as one unit when the row gets too narrow (OBS docks). */}
+      <div className="flex flex-wrap gap-2">
         {before}
-        <input
-          ref={inputRef}
-          id={`${id}-input`}
-          type="text"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key !== 'Enter') return;
-            e.preventDefault();
-            add();
-          }}
-          placeholder={placeholder}
-          autoComplete="off"
-          spellCheck={false}
-          className={`${INPUT_CLASS} min-w-0 flex-1`}
-        />
-        <button
-          type="button"
-          onClick={add}
-          disabled={!text.trim()}
-          className="h-9 shrink-0 rounded-md bg-green-600 px-3 text-sm font-medium text-white transition-colors hover:bg-green-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:focus-visible:ring-offset-zinc-900"
-        >
-          {addLabel}
-        </button>
+        <div className="flex min-w-40 flex-1 gap-2">
+          <input
+            ref={inputRef}
+            id={`${id}-input`}
+            type="text"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key !== 'Enter') return;
+              e.preventDefault();
+              add();
+            }}
+            placeholder={placeholder}
+            autoComplete="off"
+            spellCheck={false}
+            className={`${INPUT_CLASS} min-w-0 flex-1`}
+          />
+          <button
+            type="button"
+            onClick={add}
+            disabled={!text.trim()}
+            className="h-9 shrink-0 rounded-md bg-green-600 px-3 text-sm font-medium text-white transition-colors hover:bg-green-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:focus-visible:ring-offset-zinc-900"
+          >
+            {addLabel}
+          </button>
+        </div>
       </div>
       {items.length > 0 ? (
         <ul aria-label={label} className="mt-2 flex flex-wrap gap-1.5">
