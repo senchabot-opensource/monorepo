@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { getParamsLocale, getPathLocale, isAppPath, localizePath, stripLocale } from './paths';
+import {
+  getLangRedirect,
+  getParamsLocale,
+  getPathLocale,
+  isAppPath,
+  localizePath,
+  stripLocale,
+} from './paths';
 
 describe('getPathLocale', () => {
   it('reads Turkish from the /tr prefix only', () => {
@@ -76,5 +83,39 @@ describe('isAppPath', () => {
     expect(isAppPath('/tools/obs-bridge')).toBe(true);
     expect(isAppPath('/setup/obs-bridge')).toBe(false);
     expect(isAppPath('/tr/setup/obs-bridge')).toBe(false);
+  });
+});
+
+describe('getLangRedirect', () => {
+  it('moves ?lang=tr to the /tr page and drops the param', () => {
+    expect(getLangRedirect('/setup/chat-widget', '?lang=tr')).toBe('/tr/setup/chat-widget');
+    expect(getLangRedirect('/', '?lang=tr')).toBe('/tr');
+    expect(getLangRedirect('/tr/faq', '?lang=tr')).toBe('/tr/faq');
+  });
+
+  it('moves ?lang=en on a Turkish page to the English one', () => {
+    expect(getLangRedirect('/tr/setup/chat-widget', '?lang=en')).toBe('/setup/chat-widget');
+    expect(getLangRedirect('/tr', '?lang=en')).toBe('/');
+    expect(getLangRedirect('/faq', '?lang=en')).toBe('/faq');
+  });
+
+  it('keeps every other param exactly as it was, and the hash', () => {
+    expect(getLangRedirect('/setup/raffle', '?channel=a%20b&lang=tr&platform=kick')).toBe(
+      '/tr/setup/raffle?channel=a%20b&platform=kick',
+    );
+    expect(getLangRedirect('/guides/chat-giveaway', '?lang=tr', 'rules')).toBe(
+      '/tr/guides/chat-giveaway#rules',
+    );
+  });
+
+  it('drops an unknown language without switching pages', () => {
+    expect(getLangRedirect('/tr/faq', '?lang=de&x=1')).toBe('/tr/faq?x=1');
+  });
+
+  it('does nothing without the param, and never on overlays or tools', () => {
+    expect(getLangRedirect('/setup/raffle', '')).toBeNull();
+    expect(getLangRedirect('/setup/raffle', '?channel=foo&language=tr')).toBeNull();
+    expect(getLangRedirect('/widgets/chat-widget', '?lang=tr')).toBeNull();
+    expect(getLangRedirect('/tools/obs-bridge', '?lang=tr')).toBeNull();
   });
 });

@@ -1,5 +1,5 @@
 import type { FileRouteTypes } from '#/routeTree.gen';
-import { DEFAULT_LOCALE, isValidLocale, type Locale } from './locales';
+import { DEFAULT_LOCALE, isValidLocale, LANG_PARAM, type Locale } from './locales';
 
 type WithoutLocale<T> = T extends `/{-$locale}${infer Rest}`
   ? Rest extends ''
@@ -45,4 +45,22 @@ export function localizePath(path: string, locale: Locale): string {
   const base = stripLocale(pathname);
   if (locale === DEFAULT_LOCALE) return `${base}${rest}`;
   return `/${locale}${base === '/' ? '' : base}${rest}`;
+}
+
+/**
+ * Where a site URL carrying the old `?lang=` param belongs: the same page in that language,
+ * with the param dropped and every other param kept byte for byte. Null when nothing changes.
+ * `hash` comes without its `#`, like the router's location.hash.
+ */
+export function getLangRedirect(pathname: string, searchStr: string, hash = ''): string | null {
+  if (isAppPath(pathname)) return null;
+  const query = searchStr.replace(/^\?/, '');
+  if (!query) return null;
+  const parts = query.split('&');
+  const kept = parts.filter((part) => part.split('=')[0] !== LANG_PARAM);
+  if (kept.length === parts.length) return null;
+  const lang = new URLSearchParams(query).get(LANG_PARAM);
+  const target = localizePath(pathname, isValidLocale(lang) ? lang : getPathLocale(pathname));
+  const search = kept.length ? `?${kept.join('&')}` : '';
+  return `${target}${search}${hash ? `#${hash}` : ''}`;
 }

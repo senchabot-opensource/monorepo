@@ -1,6 +1,9 @@
+import { useLocation } from '@tanstack/react-router';
+import type { MouseEvent } from 'react';
 import { ExternalLink } from '#/components/external-link';
 import { GithubIcon, MoonIcon, SunIcon } from '#/components/icons';
-import { LOCALE_LABELS, LOCALES, type Locale, useI18n } from '#/lib/i18n';
+import { LANG_PARAM, LOCALE_LABELS, LOCALES, type Locale, useI18n } from '#/lib/i18n';
+import { isAppPath, localizePath } from '#/lib/i18n/paths';
 import { LINKS } from '#/lib/links';
 import { useTheme } from '#/lib/theme';
 
@@ -29,6 +32,25 @@ export function ThemeToggle() {
 
 export function LanguageSwitcher() {
   const { locale, setLocale, t } = useI18n();
+  const pathname = useLocation({ select: (location) => location.pathname });
+  const searchStr = useLocation({ select: (location) => location.searchStr });
+
+  // Real links, so crawlers and new tabs reach the other language; overlays and tools switch
+  // through ?lang= since their URL never changes.
+  const hrefFor = (target: Locale) => {
+    if (!isAppPath(pathname)) return localizePath(`${pathname}${searchStr}`, target);
+    const params = new URLSearchParams(searchStr);
+    params.set(LANG_PARAM, target);
+    return `${pathname}?${params.toString()}`;
+  };
+
+  const handleClick = (event: MouseEvent<HTMLAnchorElement>, target: Locale) => {
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+      return;
+    }
+    event.preventDefault();
+    if (target !== locale) setLocale(target);
+  };
 
   return (
     <fieldset
@@ -36,11 +58,13 @@ export function LanguageSwitcher() {
       className="inline-flex shrink-0 items-center rounded-md border border-zinc-200 p-0.5 dark:border-zinc-800"
     >
       {LOCALES.map((item: Locale) => (
-        <button
+        <a
           key={item}
-          type="button"
-          onClick={() => setLocale(item)}
-          aria-pressed={locale === item}
+          href={hrefFor(item)}
+          hrefLang={item}
+          lang={item}
+          onClick={(event) => handleClick(event, item)}
+          aria-current={locale === item ? 'true' : undefined}
           className={`rounded px-2 py-1 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 ${
             locale === item
               ? 'bg-green-500/15 text-green-700 dark:bg-green-500/20 dark:text-green-400'
@@ -48,7 +72,7 @@ export function LanguageSwitcher() {
           }`}
         >
           {LOCALE_LABELS[item]}
-        </button>
+        </a>
       ))}
     </fieldset>
   );
