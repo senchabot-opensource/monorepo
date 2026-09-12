@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router';
 
-interface BreadcrumbItem {
+export interface BreadcrumbItem {
   label: string;
   href?: string;
 }
@@ -9,7 +9,8 @@ interface BreadcrumbProps {
   items: BreadcrumbItem[];
 }
 
-export function Breadcrumb({ items }: BreadcrumbProps) {
+/** BreadcrumbList JSON-LD on its own, for pages whose visible trail is the compact header. */
+export function BreadcrumbJsonLd({ items }: BreadcrumbProps) {
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -22,11 +23,18 @@ export function Breadcrumb({ items }: BreadcrumbProps) {
   };
 
   return (
+    <script
+      type="application/ld+json"
+      // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD serialized from our own labels.
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+    />
+  );
+}
+
+export function Breadcrumb({ items }: BreadcrumbProps) {
+  return (
     <nav aria-label="Breadcrumb" className="w-full">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
+      <BreadcrumbJsonLd items={items} />
       <ol className="flex items-center space-x-2 text-sm text-zinc-500">
         {items.map((item, index) => {
           const isLast = index === items.length - 1;
