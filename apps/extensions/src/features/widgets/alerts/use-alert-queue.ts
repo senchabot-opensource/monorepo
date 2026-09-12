@@ -42,15 +42,18 @@ export function useAlertQueue() {
     timersRef.current.delete(id);
   }, []);
 
-  const scheduleRemoval = useCallback(
-    (id: string) => {
-      const timer = window.setTimeout(() => {
-        removeAlert(id);
-      }, DISPLAY_DURATION);
-      timersRef.current.set(id, timer);
-    },
-    [removeAlert],
-  );
+  // Timers follow what is on screen. Scheduling only in addAlert missed alerts promoted from the
+  // queue, which then stayed forever; five of them filled the screen and stalled the queue.
+  useEffect(() => {
+    for (const alert of state.visible) {
+      if (!timersRef.current.has(alert.id)) {
+        const timer = window.setTimeout(() => {
+          removeAlert(alert.id);
+        }, DISPLAY_DURATION);
+        timersRef.current.set(alert.id, timer);
+      }
+    }
+  }, [state.visible, removeAlert]);
 
   const addAlert = useCallback(
     (type: AlertType, data: AlertEvent['data']) => {
@@ -63,7 +66,6 @@ export function useAlertQueue() {
 
       setState((prev) => {
         if (prev.visible.length < MAX_VISIBLE) {
-          scheduleRemoval(newAlert.id);
           return {
             visible: [...prev.visible, newAlert],
             queue: prev.queue,
@@ -75,7 +77,7 @@ export function useAlertQueue() {
         };
       });
     },
-    [scheduleRemoval],
+    [],
   );
 
   return {
