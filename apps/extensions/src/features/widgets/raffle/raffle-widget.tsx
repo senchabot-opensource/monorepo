@@ -1,55 +1,108 @@
-import { SiteFooter } from "#/components/site-footer";
-import { SiteHeader } from "#/components/site-header";
-import { YoutubeTutorial } from "#/components/youtube-tutorial";
-import { useRaffleChat } from "#/hooks/use-raffle-chat";
-import { useRaffleState } from "#/hooks/use-raffle-state";
-import { useT } from "#/lib/i18n";
-import type { FaqEntry } from "#/lib/i18n/seo";
-import type { RaffleWinner } from "#/types/raffle";
-import confetti from "canvas-confetti";
-import { useCallback, useEffect, useRef, useState } from "react";
+import confetti from 'canvas-confetti';
+import { type RefObject, useCallback, useEffect, useId, useRef, useState } from 'react';
+import { CopyUrlField } from '#/components/copy-url-field';
+import { CloseIcon, RaffleIcon } from '#/components/icons';
+import { SetupShell } from '#/components/setup-shell';
+import { FieldLabel } from '#/components/ui/field-label';
+import { NumberField } from '#/components/ui/number-field';
+import { SegmentedControl, type SegmentedOption } from '#/components/ui/segmented-control';
+import { Select, type SelectOption } from '#/components/ui/select';
+import { SettingsGroup } from '#/components/ui/settings-group';
+import { Switch } from '#/components/ui/switch';
+import { TextField } from '#/components/ui/text-field';
+import { useRaffleChat } from '#/hooks/use-raffle-chat';
+import { useRaffleState } from '#/hooks/use-raffle-state';
+import { useI18n } from '#/lib/i18n';
+import type { FaqEntry } from '#/lib/i18n/seo';
+import { getWidget } from '#/lib/widgets';
+import type { RafflePlatform } from '#/types/raffle';
 
 export const RAFFLE_FAQ: FaqEntry[] = [
-  ["raffle.faq1Q", "raffle.faq1A"],
-  ["raffle.faq2Q", "raffle.faq2A"],
+  ['raffle.faq1Q', 'raffle.faq1A'],
+  ['raffle.faq2Q', 'raffle.faq2A'],
+  ['raffle.faq3Q', 'raffle.faq3A'],
 ];
 
-function triggerConfetti(rafRef: React.MutableRefObject<number | null>) {
-  const duration = 3000;
-  const end = Date.now() + duration;
+const WIDGET = getWidget('raffle');
 
+const MAX_WINS = ['1', '2', '3', '4', '5', '0'] as const;
+
+const BUTTON_BASE =
+  'inline-flex items-center justify-center gap-2 rounded-md px-3 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:focus-visible:ring-offset-zinc-900';
+const BUTTON_PRIMARY = `${BUTTON_BASE} bg-green-600 text-white enabled:hover:bg-green-700`;
+const BUTTON_SECONDARY = `${BUTTON_BASE} border border-zinc-300 bg-white text-zinc-900 enabled:hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white dark:enabled:hover:bg-zinc-800`;
+const BUTTON_QUIET =
+  'rounded px-1.5 py-0.5 text-xs font-medium text-zinc-500 transition-colors enabled:hover:bg-zinc-100 enabled:hover:text-zinc-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 disabled:cursor-not-allowed disabled:opacity-50 dark:text-zinc-400 dark:enabled:hover:bg-zinc-800 dark:enabled:hover:text-white';
+const LIST_BOX =
+  'overflow-y-auto rounded-lg border border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950/40';
+
+function triggerConfetti(rafRef: RefObject<number | null>) {
+  const end = Date.now() + 3000;
   const frame = () => {
+    // canvas-confetti skips the animation itself when the viewer prefers reduced motion.
     confetti({
       particleCount: 3,
       angle: 60,
       spread: 55,
       origin: { x: 0 },
+      disableForReducedMotion: true,
     });
     confetti({
       particleCount: 3,
       angle: 120,
       spread: 55,
       origin: { x: 1 },
+      disableForReducedMotion: true,
     });
-
-    if (Date.now() < end) {
-      rafRef.current = requestAnimationFrame(frame);
-    }
+    if (Date.now() < end) rafRef.current = requestAnimationFrame(frame);
   };
-
   rafRef.current = requestAnimationFrame(frame);
 }
 
+/** Whole-number setting whose field may sit empty while typing; blur shows the saved value again. */
+function IntegerField({
+  id,
+  value,
+  onChange,
+  min,
+  max,
+  disabled,
+}: {
+  id: string;
+  value: number;
+  onChange: (value: number) => void;
+  min: number;
+  max: number;
+  disabled?: boolean;
+}) {
+  const [draft, setDraft] = useState<string | null>(null);
+  return (
+    <NumberField
+      id={id}
+      value={draft ?? String(value)}
+      onChange={(text) => {
+        const next = Math.min(max, Math.max(min, Number.parseInt(text, 10) || min));
+        setDraft(text === String(next) ? null : text);
+        onChange(next);
+      }}
+      onBlur={() => setDraft(null)}
+      min={min}
+      max={max}
+      fallback={value}
+      disabled={disabled}
+    />
+  );
+}
+
 export function RaffleWidget({
-  initialChannel = "",
-  platform = "twitch",
-  onDrawWinner,
+  initialChannel = '',
+  platform = 'twitch',
 }: {
   initialChannel?: string;
-  platform?: "twitch" | "kick";
-  onDrawWinner?: (winner: RaffleWinner) => void;
+  platform?: RafflePlatform;
 }) {
-  const t = useT();
+  const { locale, t } = useI18n();
+  const id = useId();
   const {
     state,
     updateConfig,
@@ -63,453 +116,390 @@ export function RaffleWidget({
     resetConfig,
     addParticipant,
     eligibleCount,
-  } = useRaffleState({ initialChannel, platform });
+    canDraw,
+    remainingMs,
+  } = useRaffleState({ initialChannel, platform, t });
+  const { config } = state;
 
-  const [lastWinner, setLastWinner] = useState<string | null>(null);
-  const [copied, setCopied] = useState(false);
-  // Raw text while the field is focused, so clearing it doesn't snap back to 1 mid-edit.
-  const [minSubMonthsDraft, setMinSubMonthsDraft] = useState<string | null>(null);
+  const [overlayUrl, setOverlayUrl] = useState('');
   const confettiRafRef = useRef<number | null>(null);
-  const [now, setNow] = useState(() => Date.now());
+  // remainingMs is read from the clock on render, so re-render every second while it counts down.
+  const [, setTick] = useState(0);
+  const countingDown = remainingMs > 0;
 
   useEffect(() => {
-    const timer = setInterval(() => setNow(Date.now()), 1000);
-    return () => clearInterval(timer);
-  }, []);
-
-  useEffect(() => {
+    setOverlayUrl(`${window.location.origin}${WIDGET.widgetPath}`);
     return () => {
-      if (confettiRafRef.current) {
-        cancelAnimationFrame(confettiRafRef.current);
-      }
+      if (confettiRafRef.current) cancelAnimationFrame(confettiRafRef.current);
     };
   }, []);
 
-  const getWidgetUrl = useCallback(() => {
-    if (typeof window === "undefined") return "";
-    return `${window.location.origin}/widgets/raffle-overlay`;
-  }, []);
+  useEffect(() => {
+    if (!countingDown) return;
+    const timer = setInterval(() => setTick((tick) => tick + 1), 1000);
+    return () => clearInterval(timer);
+  }, [countingDown]);
 
-  const handleCopy = useCallback(async () => {
-    const url = getWidgetUrl();
-    if (url) {
-      await navigator.clipboard.writeText(url);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
-  }, [getWidgetUrl]);
-
-  const minDurationRemainingMs =
-    state.startedAt != null
-      ? Math.max(
-          0,
-          state.config.minRaffleDurationSec * 1000 - (now - state.startedAt),
-        )
-      : 0;
-
-  const canDraw =
-    (state.status === "running" || state.status === "stopped") &&
-    eligibleCount > 0 &&
-    minDurationRemainingMs === 0;
-
-  const isRunning = state.status === "running";
-  const isStopped = state.status === "stopped";
-  const isConfigLocked = isRunning || isStopped;
-  const hasActiveState = state.participants.length > 0 || state.winners.length > 0 || state.status !== "idle";
-
-  const drawLabel =
-    (isRunning || isStopped) && minDurationRemainingMs > 0
-      ? t("raffle.drawLocked", { seconds: Math.ceil(minDurationRemainingMs / 1000) })
-      : t("raffle.drawWinner", { count: eligibleCount });
-
-  useRaffleChat(state.config, addParticipant, state.status === "running");
+  useRaffleChat(config, addParticipant, state.status === 'running');
 
   const handleDraw = useCallback(() => {
-    const winner = drawWinner();
-    if (winner) {
-      setLastWinner(winner.displayName || winner.username);
-      triggerConfetti(confettiRafRef);
-      if (onDrawWinner) onDrawWinner(winner);
-    }
-  }, [drawWinner, onDrawWinner]);
+    if (drawWinner()) triggerConfetti(confettiRafRef);
+  }, [drawWinner]);
 
-  return (
-    <div className="min-h-screen bg-zinc-50 text-zinc-900 font-sans dark:bg-zinc-950 dark:text-zinc-100">
-      <SiteHeader
-        variant="compact"
-        title={t("raffle.title")}
-        widgetId="raffle"
-        breadcrumbLabel={t("raffle.breadcrumb")}
-      />
-      <main id="main" tabIndex={-1} className="max-w-6xl mx-auto px-4 sm:px-6 pt-4 focus:outline-none">
-        <div className="flex flex-col lg:flex-row items-center lg:items-start justify-center gap-6 lg:gap-8 mb-12">
-          {/* Left: Configuration */}
-          <div className="w-full max-w-md lg:shrink-0 rounded-xl bg-white p-4 sm:p-6 lg:p-8 shadow-xl border border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800">
-            {isConfigLocked && (
-              <div
-                role="status"
-                className="mb-4 flex items-start gap-2 rounded-md border border-amber-300 bg-amber-50 p-3 text-sm text-amber-800 dark:border-amber-700/60 dark:bg-amber-950/40 dark:text-amber-200">
-                <span aria-hidden="true" className="select-none text-base leading-none">
-                  🔒
-                </span>
-                <div className="space-y-0.5">
-                  <p className="font-semibold uppercase tracking-wide text-xs">
-                    {t("raffle.lockedTitle")}
-                  </p>
-                  <p className="text-xs text-amber-700/90 dark:text-amber-300/90">
-                    {t("raffle.lockedDesc")}
-                  </p>
-                </div>
-              </div>
-            )}
+  const isRunning = state.status === 'running';
+  const locked = state.status !== 'idle';
+  const canStart = !isRunning && Boolean(config.channel.trim()) && Boolean(config.keyword.trim());
+  const hasActiveState =
+    state.participants.length > 0 || state.winners.length > 0 || state.status !== 'idle';
+  const lastWinner = state.winners.at(-1);
+  const keyword = config.keyword.trim();
 
-            <div
-              className="space-y-4"
-              aria-disabled={isConfigLocked}>
-              <p className="text-xs text-zinc-600 bg-zinc-100 p-3 rounded-md border border-zinc-200 leading-relaxed dark:text-zinc-400 dark:bg-zinc-800/40 dark:border-zinc-800">
-                {t("raffle.intro")}
-              </p>
+  const platformOptions: SegmentedOption<RafflePlatform>[] = [
+    { value: 'twitch', label: 'Twitch' },
+    { value: 'kick', label: 'Kick' },
+  ];
+  const maxWinsOptions: SelectOption<(typeof MAX_WINS)[number]>[] = MAX_WINS.map((value) => ({
+    value,
+    label: value === '0' ? t('raffle.maxWinsUnlimited') : value,
+  }));
 
-              <YoutubeTutorial />
+  const statusText =
+    state.status === 'running'
+      ? t('raffle.statusRunning', { keyword })
+      : state.status === 'stopped'
+        ? t('raffle.statusStopped')
+        : canStart
+          ? t('raffle.statusIdle')
+          : t('raffle.statusNeedsSetup');
 
-              <div>
-                <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                  Platform
-                </label>
-                <select
-                  className="w-full rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2 text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white disabled:cursor-not-allowed disabled:opacity-60 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
-                  value={state.config.platform}
-                  onChange={(e) =>
-                    updateConfig({ platform: e.target.value as "twitch" | "kick" })
-                  }
-                  disabled={isConfigLocked}>
-                  <option value="twitch">Twitch</option>
-                  <option value="kick">Kick</option>
-                </select>
-              </div>
+  const lockBanner = locked && (
+    <div
+      role="status"
+      className="flex items-start gap-2.5 rounded-lg border border-amber-300 bg-amber-50 px-3 py-2.5 text-amber-900 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-200"
+    >
+      <svg
+        className="mt-0.5 size-4 shrink-0"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+      >
+        <rect x="5" y="11" width="14" height="10" rx="2" />
+        <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+      </svg>
+      <div>
+        <p className="text-sm font-semibold">{t('raffle.lockedTitle')}</p>
+        <p className="text-xs leading-relaxed text-amber-800 dark:text-amber-300/90">
+          {t('raffle.lockedDesc')}
+        </p>
+      </div>
+    </div>
+  );
 
-              <div>
-                <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                  {t("raffle.channelName")}
-                </label>
-                <input
-                  type="text"
-                  className="w-full rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2 text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white placeholder-zinc-500 disabled:cursor-not-allowed disabled:opacity-60 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
-                  placeholder={t("common.channelPlaceholder")}
-                  value={state.config.channel}
-                  onChange={(e) => updateConfig({ channel: e.target.value })}
-                  disabled={isConfigLocked}
-                />
-                <p className="mt-1 text-xs text-zinc-500">
-                  {t("raffle.channelHint")}
-                </p>
-              </div>
-
-              <div>
-                <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                  {t("raffle.entryKeyword")}
-                </label>
-                <input
-                  type="text"
-                  className="w-full rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2 text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white placeholder-zinc-500 disabled:cursor-not-allowed disabled:opacity-60 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
-                  placeholder="!join"
-                  value={state.config.keyword}
-                  onChange={(e) => updateConfig({ keyword: e.target.value })}
-                  disabled={isConfigLocked}
-                />
-                <p className="mt-1 text-xs text-zinc-500">
-                  {t("raffle.entryKeywordHint")}
-                </p>
-              </div>
-
-              <div className="flex items-center justify-between rounded-lg border border-zinc-300 p-3 dark:border-zinc-700">
-                <div>
-                  <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                    {t("raffle.subscribersOnly")}
-                  </p>
-                  <p className="text-xs text-zinc-500">
-                    {t("raffle.subscribersOnlyHint")}
-                  </p>
-                </div>
-                <input
-                  type="checkbox"
-                  className={`size-5 disabled:cursor-not-allowed disabled:opacity-60 ${state.config.platform === "twitch" ? "accent-[#9146FF]" : "accent-[#53FC18]"}`}
-                  checked={state.config.subscribersOnly}
-                  onChange={(e) =>
-                    updateConfig({ subscribersOnly: e.target.checked })
-                  }
-                  disabled={isConfigLocked}
-                />
-              </div>
-
-              {state.config.subscribersOnly && (
-                <div>
-                  <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                    {t("raffle.minSubMonths")}
-                  </label>
-                  <input
-                    type="number"
-                    min={1}
-                    className="w-full rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2 text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white disabled:cursor-not-allowed disabled:opacity-60 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
-                    value={minSubMonthsDraft ?? state.config.minSubMonths}
-                    onChange={(e) => {
-                      setMinSubMonthsDraft(e.target.value);
-                      updateConfig({
-                        minSubMonths: Math.max(
-                          1,
-                          parseInt(e.target.value, 10) || 1,
-                        ),
-                      });
-                    }}
-                    onBlur={() => setMinSubMonthsDraft(null)}
-                    disabled={isConfigLocked}
-                  />
-                  <p className="mt-1 text-xs text-zinc-500">
-                    {t("raffle.minSubMonthsHint")}
-                  </p>
-                </div>
-              )}
-
-              <div>
-                <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                  {t("raffle.maxWinsPerUser")}
-                </label>
-                <select
-                  className="w-full rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2 text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white disabled:cursor-not-allowed disabled:opacity-60 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
-                  value={state.config.maxWinsPerUser}
-                  onChange={(e) =>
-                    updateConfig({ maxWinsPerUser: parseInt(e.target.value, 10) })
-                  }
-                  disabled={isConfigLocked}>
-                  <option value={1}>{t("raffle.maxWins1")}</option>
-                  <option value={2}>{t("raffle.maxWins2")}</option>
-                  <option value={3}>{t("raffle.maxWins3")}</option>
-                  <option value={4}>{t("raffle.maxWins4")}</option>
-                  <option value={5}>{t("raffle.maxWins5")}</option>
-                  <option value={0}>{t("raffle.maxWinsUnlimited")}</option>
-                </select>
-                <p className="mt-1 text-xs text-zinc-500">
-                  {t("raffle.maxWinsHint")}
-                </p>
-              </div>
-
-              <div>
-                <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                  {t("raffle.minDuration")}
-                </label>
-                <input
-                  type="number"
-                  min={0}
-                  max={300}
-                  className="w-full rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2 text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white disabled:cursor-not-allowed disabled:opacity-60 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
-                  value={state.config.minRaffleDurationSec}
-                  onChange={(e) =>
-                    updateConfig({
-                      minRaffleDurationSec: Math.max(
-                        0,
-                        Math.min(300, parseInt(e.target.value || "0", 10) || 0),
-                      ),
-                    })
-                  }
-                  disabled={isConfigLocked}
-                />
-                <p className="mt-1 text-xs text-zinc-500">
-                  {t("raffle.minDurationHint")}
-                </p>
-              </div>
-
-              <button
-                className="w-full rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2 text-sm font-medium hover:bg-zinc-200 disabled:cursor-not-allowed disabled:opacity-50 transition-colors dark:border-zinc-700 dark:bg-zinc-800 dark:hover:bg-zinc-700"
-                onClick={resetConfig}
-                disabled={isConfigLocked}>
-                {t("raffle.resetConfig")}
-              </button>
-            </div>
+  const settingsPanel = (
+    <>
+      <SettingsGroup title={t('common.sectionChannel')}>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <div>
+            <FieldLabel id={`${id}-platform`}>{t('raffle.platform')}</FieldLabel>
+            <SegmentedControl
+              labelledBy={`${id}-platform`}
+              value={config.platform}
+              onChange={(value) => updateConfig({ platform: value })}
+              options={platformOptions}
+              disabled={locked}
+            />
           </div>
+          <TextField
+            label={t('raffle.channelName')}
+            tip={t('common.channelTip')}
+            value={config.channel}
+            onChange={(value) => updateConfig({ channel: value })}
+            placeholder={t('common.channelPlaceholder')}
+            disabled={locked}
+            autoComplete="off"
+            spellCheck={false}
+          />
+        </div>
+      </SettingsGroup>
 
-          {/* Right: Controls + Winners + Participants + Overlay URL + FAQs */}
-          <div className="w-full max-w-md lg:max-w-2xl lg:shrink-0 flex flex-col gap-4">
-            <div className="rounded-xl bg-white p-4 sm:p-6 lg:p-8 shadow-xl border border-zinc-200 flex flex-col min-h-[400px] lg:h-[700px] space-y-4 dark:bg-zinc-900 dark:border-zinc-800">
-              {/* Controls */}
-              <div className="space-y-3">
-                <div className="flex gap-2">
-                  <button
-                    className={`flex-1 rounded-md px-4 py-2 text-sm font-medium disabled:opacity-50 transition-colors ${
-                      state.config.platform === "twitch"
-                        ? "bg-[#5A189A] text-white hover:bg-[#4A0E8F]"
-                        : "bg-[#53FC18] text-black hover:bg-[#45D115]"
-                    }`}
-                    onClick={start}
-                    disabled={
-                      isRunning ||
-                      !state.config.channel.trim() ||
-                      !state.config.keyword.trim()
-                    }>
-                    {t("raffle.startRaffle")}
-                  </button>
-                  <button
-                    className="flex-1 rounded-md bg-zinc-300 px-4 py-2 text-sm font-medium text-zinc-900 hover:bg-zinc-400 disabled:opacity-50 transition-colors dark:bg-zinc-700 dark:text-white dark:hover:bg-zinc-600"
-                    onClick={stop}
-                    disabled={!isRunning}>
-                    {t("raffle.stopRaffle")}
-                  </button>
-                </div>
-
-                <button
-                  className="w-full rounded-md bg-emerald-800 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50 transition-colors"
-                  onClick={handleDraw}
-                  disabled={!canDraw}>
-                  {drawLabel}
-                </button>
-
-                {lastWinner && (
-                  <div className="rounded-lg border border-zinc-300 bg-zinc-100 p-4 text-center dark:border-zinc-700 dark:bg-zinc-800">
-                    <p className="text-sm text-zinc-600 dark:text-zinc-400">{t("raffle.lastWinner")}</p>
-                    <p className="text-xl font-bold text-zinc-900 dark:text-white">{lastWinner}</p>
-                  </div>
-                )}
-
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                  <button
-                    className="rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2 text-xs font-medium hover:bg-zinc-200 disabled:opacity-50 transition-colors dark:border-zinc-700 dark:bg-zinc-800 dark:hover:bg-zinc-700"
-                    onClick={resetParticipants}
-                    disabled={state.participants.length === 0}>
-                    {t("raffle.resetEntries")}
-                  </button>
-                  <button
-                    className="rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2 text-xs font-medium hover:bg-zinc-200 disabled:opacity-50 transition-colors dark:border-zinc-700 dark:bg-zinc-800 dark:hover:bg-zinc-700"
-                    onClick={resetWinners}
-                    disabled={state.winners.length === 0}>
-                    {t("raffle.resetWinners")}
-                  </button>
-                  <button
-                    className="rounded-md border border-zinc-300 bg-zinc-100 px-3 py-2 text-xs font-medium hover:bg-zinc-200 disabled:opacity-50 transition-colors dark:border-zinc-700 dark:bg-zinc-800 dark:hover:bg-zinc-700"
-                    onClick={resetAll}
-                    disabled={!hasActiveState}>
-                    {t("raffle.resetAll")}
-                  </button>
-                </div>
-              </div>
-
-              {/* Winners */}
-              <div>
-                <h2 className="mb-2 text-lg font-semibold text-center text-zinc-700 dark:text-zinc-300">
-                  {t("raffle.winners", { count: state.winners.length })}
-                </h2>
-                <div className="max-h-40 overflow-y-auto rounded-lg bg-zinc-100 dark:bg-zinc-800/30">
-                  {state.winners.length === 0 ? (
-                    <div className="p-4 text-center text-sm text-zinc-500">
-                      {t("raffle.noWinners")}
-                    </div>
-                  ) : (
-                    <ul className="divide-y divide-zinc-200 dark:divide-zinc-800">
-                      {state.winners.map((w, idx) => (
-                        <li
-                          key={`${w.id}-${idx}`}
-                          className="flex items-center justify-between px-4 py-2 text-sm">
-                          <span className="font-medium text-zinc-800 dark:text-zinc-200">
-                            {w.displayName || w.username}
-                          </span>
-                          <span className="text-xs text-zinc-500 dark:text-zinc-400">
-                            {new Date(w.drawnAt).toLocaleTimeString()}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-              </div>
-
-              {/* Participants with Disqualify Option */}
-              <div className="flex-1 min-h-0 sm:mb-2 lg:mb-8">
-                <h2 className="mb-2 text-lg font-semibold text-center text-zinc-700 dark:text-zinc-300">
-                  {t("raffle.participants", { count: state.participants.length })}
-                </h2>
-                <div className="h-full overflow-y-auto rounded-lg bg-zinc-100 p-4 dark:bg-zinc-800/30">
-                  {state.participants.length === 0 ? (
-                    <div className="text-center text-sm text-zinc-500">
-                      {t("raffle.noParticipants", { keyword: state.config.keyword })}
-                    </div>
-                  ) : (
-                    <div className="flex flex-wrap gap-1.5">
-                      {state.participants.map((p) => (
-                        <span
-                          key={p.id}
-                          className="inline-flex items-center gap-1.5 rounded-full bg-zinc-200 border border-zinc-300 px-2.5 py-1 text-xs text-zinc-800 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-200"
-                        >
-                          <span className="font-medium">{p.displayName || p.username}</span>
-                          {p.subMonths > 0 && (
-                            <span className="text-[10px] text-green-700 font-semibold bg-green-500/10 px-1 py-0.2 rounded dark:text-green-400">
-                              {t("raffle.subMonthsShort", { months: p.subMonths })}
-                            </span>
-                          )}
-                          <button
-                            onClick={() => removeParticipant(p.id)}
-                            title={t("raffle.disqualify")}
-                            className="text-zinc-500 hover:text-red-400 transition-colors text-xs ml-0.5 leading-none"
-                          >
-                            ✕
-                          </button>
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Winner Overlay URL Card */}
-            <div className="rounded-xl bg-white p-4 sm:p-6 shadow-xl border border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800">
-              <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                {t("raffle.overlayUrl")}
-              </label>
-              <div className="flex">
-                <input
-                  type="text"
-                  readOnly
-                  value={getWidgetUrl()}
-                  className="w-full rounded-l-md border border-zinc-300 bg-zinc-100 px-3 py-2 text-zinc-600 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 focus:outline-none text-sm"
-                />
-                <button
-                  onClick={handleCopy}
-                  className="rounded-r-md bg-green-600 px-4 py-2 font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors">
-                  {copied ? t("common.copied") : t("common.copy")}
-                </button>
-              </div>
-              <p className="mt-2 text-xs text-zinc-500">
-                {t("raffle.overlayUrlHint")}
-              </p>
-            </div>
-
-            {/* Quick OBS Guide & FAQ (Placed under preview/controls) */}
-            <div className="space-y-4">
-              <div className="rounded-xl border border-zinc-200 bg-zinc-100/60 p-5 dark:border-zinc-800 dark:bg-zinc-900/50">
-                <h3 className="text-sm font-semibold text-zinc-900 mb-2 dark:text-white">{t("raffle.guideTitle")}</h3>
-                <p className="text-xs text-zinc-600 leading-relaxed dark:text-zinc-400">
-                  {t("raffle.guideBody")}
-                </p>
-              </div>
-
-              <div className="space-y-3">
-                {RAFFLE_FAQ.map(([question, answer]) => (
-                  <details
-                    key={question}
-                    className="group rounded-lg border border-zinc-200/80 bg-zinc-100/60 p-4 transition-colors open:bg-zinc-100 dark:border-zinc-800/80 dark:bg-zinc-900/50 dark:open:bg-zinc-900">
-                    <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-medium text-zinc-700 group-hover:text-zinc-900 dark:text-zinc-200 dark:group-hover:text-white">
-                      <span>{t(question)}</span>
-                      <span className="transition-transform group-open:rotate-180 text-zinc-500 text-xs">▼</span>
-                    </summary>
-                    <p className="mt-2 text-xs text-zinc-600 leading-relaxed dark:text-zinc-400">
-                      {t(answer)}
-                    </p>
-                  </details>
-                ))}
-              </div>
-            </div>
+      <SettingsGroup title={t('raffle.sectionRules')}>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <TextField
+            label={t('raffle.entryKeyword')}
+            tip={t('raffle.keywordTip')}
+            value={config.keyword}
+            onChange={(value) => updateConfig({ keyword: value })}
+            placeholder="!join"
+            disabled={locked}
+            autoComplete="off"
+            spellCheck={false}
+          />
+          <div>
+            <FieldLabel htmlFor={`${id}-duration`} tip={t('raffle.minDurationTip')}>
+              {t('raffle.minDuration')}
+            </FieldLabel>
+            <IntegerField
+              id={`${id}-duration`}
+              value={config.minRaffleDurationSec}
+              onChange={(value) => updateConfig({ minRaffleDurationSec: value })}
+              min={0}
+              max={300}
+              disabled={locked}
+            />
           </div>
         </div>
-      </main>
-      <SiteFooter />
+        <div className="grid gap-3 sm:grid-cols-2">
+          {/* Nudged down to sit level with the number input beside it. */}
+          <div className="sm:self-end sm:pb-1">
+            <Switch
+              label={t('raffle.subscribersOnly')}
+              tip={t('raffle.subscribersOnlyTip')}
+              checked={config.subscribersOnly}
+              onChange={(value) => updateConfig({ subscribersOnly: value })}
+              disabled={locked}
+            />
+          </div>
+          <div>
+            <FieldLabel htmlFor={`${id}-months`}>{t('raffle.minSubMonths')}</FieldLabel>
+            <IntegerField
+              id={`${id}-months`}
+              value={config.minSubMonths}
+              onChange={(value) => updateConfig({ minSubMonths: value })}
+              min={1}
+              max={999}
+              disabled={locked || !config.subscribersOnly}
+            />
+          </div>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <div>
+            <FieldLabel id={`${id}-max-wins`} tip={t('raffle.maxWinsTip')}>
+              {t('raffle.maxWinsPerUser')}
+            </FieldLabel>
+            <Select
+              labelledBy={`${id}-max-wins`}
+              value={String(config.maxWinsPerUser) as (typeof MAX_WINS)[number]}
+              onChange={(value) => updateConfig({ maxWinsPerUser: Number(value) })}
+              options={maxWinsOptions}
+              disabled={locked}
+            />
+          </div>
+        </div>
+      </SettingsGroup>
+
+      <div className="flex justify-end border-t border-zinc-200 pt-3 dark:border-zinc-800">
+        <button type="button" onClick={resetConfig} disabled={locked} className={BUTTON_QUIET}>
+          {t('raffle.resetConfig')}
+        </button>
+      </div>
+    </>
+  );
+
+  const controls = (
+    <div className="flex h-full flex-col gap-3">
+      <div className="flex items-center justify-between gap-3">
+        <p className="flex min-w-0 items-center gap-2 text-xs text-zinc-600 dark:text-zinc-400">
+          <span
+            aria-hidden="true"
+            className={`size-2 shrink-0 rounded-full ${
+              state.status === 'running'
+                ? 'bg-green-500 motion-safe:animate-pulse'
+                : state.status === 'stopped'
+                  ? 'bg-amber-500'
+                  : 'bg-zinc-400 dark:bg-zinc-600'
+            }`}
+          />
+          <span className="truncate">{statusText}</span>
+        </p>
+        <button
+          type="button"
+          onClick={resetAll}
+          disabled={!hasActiveState}
+          className={BUTTON_QUIET}
+        >
+          {t('raffle.resetAll')}
+        </button>
+      </div>
+
+      <div className="grid grid-cols-2 gap-2">
+        <button
+          type="button"
+          onClick={start}
+          disabled={!canStart}
+          className={`${BUTTON_PRIMARY} h-9`}
+        >
+          {t('raffle.startRaffle')}
+        </button>
+        <button
+          type="button"
+          onClick={stop}
+          disabled={!isRunning}
+          className={`${BUTTON_SECONDARY} h-9`}
+        >
+          {t('raffle.stopRaffle')}
+        </button>
+      </div>
+
+      <button
+        type="button"
+        onClick={handleDraw}
+        disabled={!canDraw}
+        className={`${BUTTON_PRIMARY} h-11 text-base`}
+      >
+        <RaffleIcon className="size-5" />
+        {countingDown
+          ? t('raffle.drawLocked', { seconds: Math.ceil(remainingMs / 1000) })
+          : t('raffle.drawWinner', { count: eligibleCount })}
+      </button>
+
+      <div aria-live="polite">
+        {lastWinner && (
+          <div className="flex items-baseline justify-between gap-3 rounded-lg border border-green-500/30 bg-green-500/10 px-3 py-2">
+            <span className="shrink-0 text-xs font-medium text-green-800 dark:text-green-300">
+              {t('raffle.lastWinner')}
+            </span>
+            <span className="truncate text-lg font-bold text-zinc-900 dark:text-white">
+              {lastWinner.displayName || lastWinner.username}
+            </span>
+          </div>
+        )}
+      </div>
+
+      <section aria-labelledby={`${id}-winners`}>
+        <div className="mb-1.5 flex items-center justify-between gap-2">
+          <h3
+            id={`${id}-winners`}
+            className="text-xs font-semibold text-zinc-700 dark:text-zinc-300"
+          >
+            {t('raffle.winners', { count: state.winners.length })}
+          </h3>
+          <button
+            type="button"
+            onClick={resetWinners}
+            disabled={state.winners.length === 0}
+            aria-label={t('raffle.resetWinners')}
+            className={BUTTON_QUIET}
+          >
+            {t('raffle.clear')}
+          </button>
+        </div>
+        <div className={`${LIST_BOX} max-h-24`}>
+          {state.winners.length === 0 ? (
+            <p className="px-3 py-2 text-xs text-zinc-500">{t('raffle.noWinners')}</p>
+          ) : (
+            <ol className="divide-y divide-zinc-200 dark:divide-zinc-800">
+              {state.winners.map((winner) => (
+                <li
+                  key={`${winner.id}-${winner.drawnAt}`}
+                  className="flex items-center justify-between gap-3 px-3 py-1.5 text-sm"
+                >
+                  <span className="truncate font-medium text-zinc-800 dark:text-zinc-200">
+                    {winner.displayName || winner.username}
+                  </span>
+                  <span className="shrink-0 text-xs tabular-nums text-zinc-500">
+                    {new Date(winner.drawnAt).toLocaleTimeString(locale)}
+                  </span>
+                </li>
+              ))}
+            </ol>
+          )}
+        </div>
+      </section>
+
+      <section aria-labelledby={`${id}-entries`} className="flex min-h-0 flex-1 flex-col">
+        <div className="mb-1.5 flex items-center justify-between gap-2">
+          <h3
+            id={`${id}-entries`}
+            className="text-xs font-semibold text-zinc-700 dark:text-zinc-300"
+          >
+            {t('raffle.participants', { count: state.participants.length })}
+          </h3>
+          <button
+            type="button"
+            onClick={resetParticipants}
+            disabled={state.participants.length === 0}
+            aria-label={t('raffle.resetEntries')}
+            className={BUTTON_QUIET}
+          >
+            {t('raffle.clear')}
+          </button>
+        </div>
+        <div className={`${LIST_BOX} min-h-16 flex-1 p-2`}>
+          {state.participants.length === 0 ? (
+            <p className="p-1 text-xs text-zinc-500">
+              {t('raffle.noParticipants', { keyword: keyword || '!join' })}
+            </p>
+          ) : (
+            <ul className="flex flex-wrap gap-1.5">
+              {state.participants.map((participant) => {
+                const name = participant.displayName || participant.username;
+                return (
+                  <li
+                    key={participant.id}
+                    className="inline-flex min-w-0 items-center gap-1.5 rounded-full border border-zinc-300 bg-white py-0.5 pr-1 pl-2.5 text-xs text-zinc-800 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
+                  >
+                    <span className="truncate font-medium">{name}</span>
+                    {participant.subMonths > 0 && (
+                      <span className="rounded bg-green-500/10 px-1 text-[10px] font-semibold text-green-700 dark:text-green-400">
+                        {t('raffle.subMonthsShort', { months: participant.subMonths })}
+                      </span>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => removeParticipant(participant.id)}
+                      aria-label={t('raffle.disqualify', { name })}
+                      title={t('raffle.disqualify', { name })}
+                      className="rounded-full p-0.5 text-zinc-500 transition-colors hover:text-red-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 dark:hover:text-red-400"
+                    >
+                      <CloseIcon className="size-3" />
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </div>
+      </section>
     </div>
+  );
+
+  return (
+    <SetupShell
+      widgetId={WIDGET.id}
+      title={t('raffle.title')}
+      breadcrumbLabel={t('raffle.breadcrumb')}
+      settingsTop={lockBanner}
+      settings={settingsPanel}
+      previewTitle={t('raffle.controlTitle')}
+      previewTip={t('raffle.controlTip')}
+      preview={controls}
+      urlField={
+        <CopyUrlField
+          url={overlayUrl}
+          label={t('raffle.overlayUrl')}
+          tip={t('raffle.overlayUrlTip')}
+          hint={t('raffle.overlayUrlHint')}
+          sourceSize={WIDGET.sourceSize}
+          nextSteps={[
+            t('common.nextSteps.addSource'),
+            t('common.nextSteps.paste'),
+            ...(WIDGET.sourceSize ? [t('common.nextSteps.size', { ...WIDGET.sourceSize })] : []),
+            t('raffle.overlayNextStep'),
+          ]}
+        />
+      }
+      intro={t('raffle.intro')}
+      guideSteps={[
+        'raffle.guideStep1',
+        'raffle.guideStep2',
+        'raffle.guideStep3',
+        'raffle.guideStep4',
+      ]}
+      faq={RAFFLE_FAQ}
+    />
   );
 }
