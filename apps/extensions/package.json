@@ -41,6 +41,7 @@
     "@tanstack/devtools-vite": "^0.7.2",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.7",
     "@types/canvas-confetti": "^1.9.0",
     "@types/node": "^22.20.1",
     "@types/react": "^19.2.18",
