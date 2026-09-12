@@ -105,6 +105,9 @@ export function PreviewFrame({
         <iframe
           src={src}
           title={title}
+          // Overlays can overflow a small frame by a pixel; OBS never shows their scrollbar, and
+          // this non-interactive preview shouldn't either (in light mode it paints a white bar).
+          scrolling="no"
           // Overlays are theme-neutral; the frame must match them or it stops being transparent.
           style={{
             colorScheme: 'normal',
