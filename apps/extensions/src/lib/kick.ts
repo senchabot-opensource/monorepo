@@ -4,6 +4,7 @@ import { BaseChatClient, type BanUserCallback, type ChatMessageCallback, type Cl
 export interface KickChannelInfo {
   chatroomId: string | null;
   channelId: string | null;
+  userId: string | null;
   subscriberBadges: any[];
 }
 
@@ -17,6 +18,7 @@ export const getKickChannelInfo = async (
     if (!response.ok) throw new Error("Channel not found");
     const data = (await response.json()) as {
       id?: unknown;
+      user_id?: unknown;
       chatroom?: {
         id?: unknown;
       };
@@ -26,11 +28,12 @@ export const getKickChannelInfo = async (
     return {
       chatroomId: data.chatroom?.id == null ? null : String(data.chatroom.id),
       channelId: data.id == null ? null : String(data.id),
+      userId: data.user_id == null ? null : String(data.user_id),
       subscriberBadges: data.subscriber_badges || [],
     };
   } catch (error) {
     console.error("Error while fething channel:", error);
-    return { chatroomId: null, channelId: null, subscriberBadges: [] };
+    return { chatroomId: null, channelId: null, userId: null, subscriberBadges: [] };
   }
 };
 
@@ -151,6 +154,13 @@ export class KickChat extends BaseChatClient {
     const content = payload.content;
     const createdAt = payload.created_at;
     const id = payload.id;
+    const metadata = payload.metadata as
+      | {
+          original_sender?: { username?: string };
+          original_message?: { content?: string };
+        }
+      | undefined;
+    const replyUser = payload.type === "reply" ? metadata?.original_sender?.username : undefined;
 
     if (!sender || typeof content !== "string" || typeof createdAt !== "string") {
       return null;
@@ -172,6 +182,9 @@ export class KickChat extends BaseChatClient {
       receivedAt: timestamp,
       color: sender.identity?.color,
       badges,
+      replyTo: replyUser
+        ? { user: replyUser, message: metadata?.original_message?.content ?? "" }
+        : undefined,
     };
   }
 
