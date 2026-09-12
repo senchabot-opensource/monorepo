@@ -17,7 +17,8 @@ describe('widget registry', () => {
 
   it('points every setup and widget path at an existing route', () => {
     for (const widget of WIDGETS) {
-      for (const path of [widget.setupPath, widget.widgetPath]) {
+      // Setup pages sit under the optional locale segment; overlays and tools don't.
+      for (const path of [`/{-$locale}${widget.setupPath}`, widget.widgetPath]) {
         expect(existsSync(`${srcDir}routes${path}.tsx`), path).toBe(true);
         expect(routeTree, path).toContain(`'${path}'`);
       }

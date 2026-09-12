@@ -29,7 +29,7 @@ import {
 } from '#/lib/sub-sprout-url';
 import { getWidget } from '#/lib/widgets';
 
-export const Route = createFileRoute('/setup/sub-growing-plant')({
+export const Route = createFileRoute('/{-$locale}/setup/sub-growing-plant')({
   head: () => getSetupPageHead('sub-sprout', { breadcrumb: 'subSprout.breadcrumb', faq: FAQ }),
   component: SubSproutSetup,
 });

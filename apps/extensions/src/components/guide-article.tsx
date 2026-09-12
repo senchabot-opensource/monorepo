@@ -1,6 +1,6 @@
-import { Link } from '@tanstack/react-router';
 import { type ReactNode, useId } from 'react';
 import { ContentPage, PROSE_CLASS, useLocaleDate } from '#/components/content-page';
+import { LocaleLink } from '#/components/locale-link';
 import { GUIDES_PATH, GUIDES_PUBLISHED, type GuideEntry, getGuide } from '#/lib/guides';
 import { type TranslationKey, useI18n } from '#/lib/i18n';
 import { getWidget } from '#/lib/widgets';
@@ -26,7 +26,7 @@ export function GuideCard({
   const { t } = useI18n();
   const Heading = headingLevel;
   return (
-    <Link to={guide.path} className={CARD_CLASS}>
+    <LocaleLink to={guide.path} className={CARD_CLASS}>
       <span className="flex gap-1.5" aria-hidden="true">
         {guide.widgets.map((id) => {
           const widget = getWidget(id);
@@ -49,7 +49,7 @@ export function GuideCard({
       <span className="mt-4 text-sm font-semibold text-green-700 dark:text-green-400">
         {t('guides.readGuide')} <span aria-hidden="true">→</span>
       </span>
-    </Link>
+    </LocaleLink>
   );
 }
 
@@ -70,14 +70,14 @@ function GuideMeta({ guide }: { guide: GuideEntry }) {
         {guide.widgets.map((id) => {
           const widget = getWidget(id);
           return (
-            <Link
+            <LocaleLink
               key={id}
               to={widget.setupPath}
               className="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-2.5 py-0.5 text-xs font-medium text-zinc-700 transition-colors hover:border-green-500/40 hover:text-green-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:text-green-400"
             >
               <widget.Icon className="size-3.5 text-green-600 dark:text-green-400" />
               {t(widget.nameKey)}
-            </Link>
+            </LocaleLink>
           );
         })}
       </p>
@@ -154,12 +154,12 @@ export function GuideArticle({
             >
               {t('guides.relatedTitle')}
             </h2>
-            <Link
+            <LocaleLink
               to={GUIDES_PATH}
               className="rounded text-sm font-semibold text-green-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 dark:text-green-400"
             >
               {t('guides.allGuides')} <span aria-hidden="true">→</span>
-            </Link>
+            </LocaleLink>
           </div>
           <ul className="mt-4 grid gap-4 sm:grid-cols-2">
             {related.map((entry) => (

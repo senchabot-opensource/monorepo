@@ -25,7 +25,7 @@ import { getSeoHead, PAGE_META } from '#/lib/seo/pages';
 import { getItemListNode } from '#/lib/seo/structured-data';
 import { OVERLAYS, TOOLS, WIDGETS, type WidgetPlatform } from '#/lib/widgets';
 
-export const Route = createFileRoute('/')({
+export const Route = createFileRoute('/{-$locale}/')({
   head: () =>
     getSeoHead(
       { path: '/', meta: PAGE_META.home, image: 'home' },

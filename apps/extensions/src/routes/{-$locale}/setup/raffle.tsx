@@ -9,7 +9,7 @@ const searchSchema = z.object({
   lang: z.string().optional(),
 });
 
-export const Route = createFileRoute('/setup/raffle')({
+export const Route = createFileRoute('/{-$locale}/setup/raffle')({
   validateSearch: (search) => searchSchema.parse(search),
   head: () => getSetupPageHead('raffle', { breadcrumb: 'raffle.breadcrumb', faq: RAFFLE_FAQ }),
   component: RouteComponent,

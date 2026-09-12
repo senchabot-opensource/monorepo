@@ -8,7 +8,7 @@ import { getGuideHead } from '#/lib/seo/pages';
 
 const GUIDE = getGuide('twitch-kick-chat-overlay');
 
-export const Route = createFileRoute('/guides/twitch-kick-chat-overlay')({
+export const Route = createFileRoute('/{-$locale}/guides/twitch-kick-chat-overlay')({
   head: () => getGuideHead(GUIDE),
   component: TwitchKickChatGuide,
 });

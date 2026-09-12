@@ -24,8 +24,9 @@ describe('guide registry', () => {
 
   it('points every guide at an existing route', () => {
     for (const guide of GUIDES) {
-      expect(existsSync(`${srcDir}routes${guide.path}.tsx`), guide.path).toBe(true);
-      expect(routeTree, guide.path).toContain(`'${guide.path}'`);
+      const route = `/{-$locale}${guide.path}`;
+      expect(existsSync(`${srcDir}routes${route}.tsx`), route).toBe(true);
+      expect(routeTree, route).toContain(`'${route}'`);
     }
   });
 

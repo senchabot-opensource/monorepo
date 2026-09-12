@@ -43,7 +43,7 @@ const FAQ_GROUPS: readonly { id: string; title: TranslationKey; entries: readonl
   },
 ];
 
-export const Route = createFileRoute('/faq')({
+export const Route = createFileRoute('/{-$locale}/faq')({
   head: () =>
     getSeoHead(
       { path: '/faq', meta: CONTENT_META.faq, image: 'guides' },

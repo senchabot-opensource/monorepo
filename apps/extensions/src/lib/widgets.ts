@@ -8,6 +8,7 @@ import {
   SubSproutIcon,
 } from '#/components/icons';
 import type { TranslationKey } from '#/lib/i18n';
+import type { SitePath } from '#/lib/i18n/paths';
 import type { FileRouteTypes } from '#/routeTree.gen';
 
 export type WidgetId = 'chat-box' | 'emote-wall' | 'sub-sprout' | 'raffle' | 'obs-bridge';
@@ -24,8 +25,8 @@ export interface SourceSize {
 export interface WidgetEntry {
   id: WidgetId;
   kind: WidgetKind;
-  /** Setup page, usable as a Link `to`. */
-  setupPath: RoutePath;
+  /** Setup page, by its English path; LocaleLink adds the language. */
+  setupPath: SitePath;
   /** The page that ends up in OBS: the overlay, or the live tool page. */
   widgetPath: RoutePath;
   /** Public name, e.g. "Chat Box". */

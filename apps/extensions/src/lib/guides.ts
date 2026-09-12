@@ -1,6 +1,7 @@
 import type { TranslationKey } from '#/lib/i18n';
+import type { SitePath } from '#/lib/i18n/paths';
 import type { PageMeta } from '#/lib/seo/head';
-import type { RoutePath, WidgetId } from '#/lib/widgets';
+import type { WidgetId } from '#/lib/widgets';
 
 export type GuideId =
   | 'obs-browser-source'
@@ -10,7 +11,7 @@ export type GuideId =
 
 export interface GuideEntry {
   id: GuideId;
-  path: RoutePath;
+  path: SitePath;
   /** The H1, a "How to ..." question; also the Article headline. */
   titleKey: TranslationKey;
   /** Short label for the breadcrumb. */
@@ -25,7 +26,7 @@ export interface GuideEntry {
   meta: PageMeta;
 }
 
-export const GUIDES_PATH = '/guides';
+export const GUIDES_PATH: SitePath = '/guides';
 export const GUIDES_PUBLISHED = '2026-09-12';
 
 export const GUIDES: readonly GuideEntry[] = [

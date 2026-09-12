@@ -1,4 +1,3 @@
-import { Link } from '@tanstack/react-router';
 import type { ComponentType, ReactNode } from 'react';
 import { ExternalLink } from '#/components/external-link';
 import {
@@ -9,8 +8,9 @@ import {
   XIcon,
   YoutubeIcon,
 } from '#/components/icons';
+import { LocaleLink } from '#/components/locale-link';
 import { useI18n } from '#/lib/i18n';
-import { CONTENT_PATHS, LINKS, useRouteExists } from '#/lib/links';
+import { CONTENT_PATHS, LINKS } from '#/lib/links';
 import { OVERLAYS, TOOLS } from '#/lib/widgets';
 
 const LINK_CLASS =
@@ -38,35 +38,23 @@ function FooterColumn({ title, children }: { title: string; children: ReactNode 
 export function SiteFooter() {
   const { t } = useI18n();
   const guideLinks = [
-    {
-      path: CONTENT_PATHS.guides,
-      label: t('common.footer.setupGuides'),
-      exists: useRouteExists(CONTENT_PATHS.guides),
-    },
-    {
-      path: CONTENT_PATHS.faq,
-      label: t('common.footer.faq'),
-      exists: useRouteExists(CONTENT_PATHS.faq),
-    },
-    {
-      path: CONTENT_PATHS.changelog,
-      label: t('common.footer.changelog'),
-      exists: useRouteExists(CONTENT_PATHS.changelog),
-    },
-  ].filter((link) => link.exists);
+    { path: CONTENT_PATHS.guides, label: t('common.footer.setupGuides') },
+    { path: CONTENT_PATHS.faq, label: t('common.footer.faq') },
+    { path: CONTENT_PATHS.changelog, label: t('common.footer.changelog') },
+  ];
 
   return (
     <footer className="border-t border-zinc-200 bg-white/60 dark:border-zinc-800 dark:bg-zinc-900/30">
       <div className="mx-auto max-w-6xl px-4 pt-12 pb-8">
         <div className="grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-4 lg:grid-cols-[minmax(0,1.6fr)_repeat(4,minmax(0,1fr))]">
           <div className="col-span-2 md:col-span-4 lg:col-span-1">
-            <Link
+            <LocaleLink
               to="/"
               className="inline-flex items-center gap-2 rounded-md text-sm font-semibold text-zinc-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 dark:text-white"
             >
               <img src="/senchabot-logo.svg" alt="" width={28} height={28} className="size-7" />
               {t('common.siteName')}
-            </Link>
+            </LocaleLink>
             <p className="mt-3 max-w-xs text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
               {t('common.footer.about')}
             </p>
@@ -94,9 +82,9 @@ export function SiteFooter() {
           <FooterColumn title={t('widgets.overlays')}>
             {OVERLAYS.map((widget) => (
               <li key={widget.id}>
-                <Link to={widget.setupPath} className={LINK_CLASS}>
+                <LocaleLink to={widget.setupPath} className={LINK_CLASS}>
                   {t(widget.nameKey)}
-                </Link>
+                </LocaleLink>
               </li>
             ))}
           </FooterColumn>
@@ -104,24 +92,22 @@ export function SiteFooter() {
           <FooterColumn title={t('widgets.tools')}>
             {TOOLS.map((widget) => (
               <li key={widget.id}>
-                <Link to={widget.setupPath} className={LINK_CLASS}>
+                <LocaleLink to={widget.setupPath} className={LINK_CLASS}>
                   {t(widget.nameKey)}
-                </Link>
+                </LocaleLink>
               </li>
             ))}
           </FooterColumn>
 
-          {guideLinks.length > 0 && (
-            <FooterColumn title={t('common.footer.guides')}>
-              {guideLinks.map(({ path, label }) => (
-                <li key={path}>
-                  <a href={path} className={LINK_CLASS}>
-                    {label}
-                  </a>
-                </li>
-              ))}
-            </FooterColumn>
-          )}
+          <FooterColumn title={t('common.footer.guides')}>
+            {guideLinks.map(({ path, label }) => (
+              <li key={path}>
+                <LocaleLink to={path} className={LINK_CLASS}>
+                  {label}
+                </LocaleLink>
+              </li>
+            ))}
+          </FooterColumn>
 
           <FooterColumn title={t('common.nav.senchabot')}>
             {(

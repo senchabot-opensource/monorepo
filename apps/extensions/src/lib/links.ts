@@ -1,4 +1,4 @@
-import { useRouter } from '@tanstack/react-router';
+import type { SitePath } from '#/lib/i18n/paths';
 
 const REPO = 'https://github.com/senchabot-opensource/monorepo';
 
@@ -16,19 +16,8 @@ export const LINKS = {
   reddit: 'https://reddit.com/r/Senchabot/',
 } as const;
 
-/** Content pages that land separately; link to them through `useRouteExists`. */
 export const CONTENT_PATHS = {
   guides: '/guides',
   faq: '/faq',
   changelog: '/changelog',
-} as const;
-
-/**
- * Whether a route is in the route tree. Links to content pages render only once it is: the
- * prerender crawler follows every <a href> and fails the build on a 404. They stay plain
- * anchors because Link's typed `to` rejects paths the tree doesn't know yet.
- */
-export function useRouteExists(path: string) {
-  const router = useRouter();
-  return path in router.routesByPath;
-}
+} as const satisfies Record<string, SitePath>;

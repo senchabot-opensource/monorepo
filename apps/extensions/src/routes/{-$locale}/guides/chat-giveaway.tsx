@@ -8,7 +8,7 @@ import { getGuideHead } from '#/lib/seo/pages';
 
 const GUIDE = getGuide('chat-giveaway');
 
-export const Route = createFileRoute('/guides/chat-giveaway')({
+export const Route = createFileRoute('/{-$locale}/guides/chat-giveaway')({
   head: () => getGuideHead(GUIDE),
   component: ChatGiveawayGuide,
 });

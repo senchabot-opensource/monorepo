@@ -9,7 +9,7 @@ import { getGuideHead } from '#/lib/seo/pages';
 
 const GUIDE = getGuide('obs-scene-switcher');
 
-export const Route = createFileRoute('/guides/obs-scene-switcher')({
+export const Route = createFileRoute('/{-$locale}/guides/obs-scene-switcher')({
   head: () => getGuideHead(GUIDE),
   component: ObsSceneSwitcherGuide,
 });

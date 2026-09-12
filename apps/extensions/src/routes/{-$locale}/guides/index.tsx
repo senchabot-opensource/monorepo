@@ -7,7 +7,7 @@ import { pageUrl } from '#/lib/seo/head';
 import { getSeoHead } from '#/lib/seo/pages';
 import { getItemListNode } from '#/lib/seo/structured-data';
 
-export const Route = createFileRoute('/guides/')({
+export const Route = createFileRoute('/{-$locale}/guides/')({
   head: () =>
     getSeoHead(
       { path: GUIDES_PATH, meta: CONTENT_META.guides, image: 'guides' },

@@ -32,7 +32,7 @@ import type { FaqEntry } from '#/lib/i18n/seo';
 import { getSetupPageHead } from '#/lib/seo/pages';
 import { getWidget } from '#/lib/widgets';
 
-export const Route = createFileRoute('/setup/chat-widget')({
+export const Route = createFileRoute('/{-$locale}/setup/chat-widget')({
   head: () => getSetupPageHead('chat-box', { breadcrumb: 'chatWidget.breadcrumb', faq: FAQ }),
   component: ChatWidgetSetup,
 });

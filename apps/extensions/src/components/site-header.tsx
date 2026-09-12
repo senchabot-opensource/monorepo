@@ -1,12 +1,14 @@
-import { Link, useLocation } from '@tanstack/react-router';
+import { useLocation } from '@tanstack/react-router';
 import { useEffect, useId, useRef, useState } from 'react';
 import { ExternalLink } from '#/components/external-link';
 import { CloseIcon, ExternalIcon, GithubIcon, MenuIcon } from '#/components/icons';
+import { LocaleLink } from '#/components/locale-link';
 import { PlatformChips } from '#/components/platform-chips';
 import { ICON_BUTTON_CLASS, SiteControls } from '#/components/site-controls';
 import { DROPDOWN_ITEM_CLASS, DropdownMenu } from '#/components/ui/dropdown-menu';
 import { useI18n } from '#/lib/i18n';
-import { CONTENT_PATHS, LINKS, useRouteExists } from '#/lib/links';
+import { type SitePath, stripLocale } from '#/lib/i18n/paths';
+import { CONTENT_PATHS, LINKS } from '#/lib/links';
 import { getWidget, OVERLAYS, TOOLS, type WidgetEntry, type WidgetId } from '#/lib/widgets';
 
 export type SiteHeaderProps =
@@ -47,14 +49,14 @@ function SkipLink() {
 function HomeLink({ showName }: { showName: boolean }) {
   const { t } = useI18n();
   return (
-    <Link
+    <LocaleLink
       to="/"
       aria-label={showName ? undefined : t('common.homeLink')}
       className="flex shrink-0 items-center gap-2 rounded-md text-sm font-semibold text-zinc-900 transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 dark:text-white"
     >
       <img src="/senchabot-logo.svg" alt="" width={28} height={28} className="size-7" />
       {showName && <span className="whitespace-nowrap">{t('common.siteName')}</span>}
-    </Link>
+    </LocaleLink>
   );
 }
 
@@ -73,7 +75,7 @@ function WidgetIconTile({ widget, size = 'md' }: { widget: WidgetEntry; size?: '
 function WidgetMenuLink({ widget }: { widget: WidgetEntry }) {
   const { t } = useI18n();
   return (
-    <Link
+    <LocaleLink
       to={widget.setupPath}
       className="flex gap-3 rounded-lg p-2.5 transition-colors hover:bg-zinc-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 dark:hover:bg-zinc-800/70"
     >
@@ -87,7 +89,7 @@ function WidgetMenuLink({ widget }: { widget: WidgetEntry }) {
         </span>
         <PlatformChips platforms={widget.platforms} className="mt-1.5" />
       </span>
-    </Link>
+    </LocaleLink>
   );
 }
 
@@ -136,8 +138,8 @@ function WidgetsMenu() {
   );
 }
 
-function useCurrent(path: string) {
-  const pathname = useLocation({ select: (location) => location.pathname });
+function useCurrent(path: SitePath) {
+  const pathname = useLocation({ select: (location) => stripLocale(location.pathname) });
   return pathname === path || pathname.startsWith(`${path}/`) ? ('page' as const) : undefined;
 }
 
@@ -145,20 +147,14 @@ function ContentLinks({ className }: { className: string }) {
   const { t } = useI18n();
   const guidesCurrent = useCurrent(CONTENT_PATHS.guides);
   const faqCurrent = useCurrent(CONTENT_PATHS.faq);
-  const hasGuides = useRouteExists(CONTENT_PATHS.guides);
-  const hasFaq = useRouteExists(CONTENT_PATHS.faq);
   return (
     <>
-      {hasGuides && (
-        <a href={CONTENT_PATHS.guides} aria-current={guidesCurrent} className={className}>
-          {t('common.nav.guides')}
-        </a>
-      )}
-      {hasFaq && (
-        <a href={CONTENT_PATHS.faq} aria-current={faqCurrent} className={className}>
-          {t('common.nav.faq')}
-        </a>
-      )}
+      <LocaleLink to={CONTENT_PATHS.guides} aria-current={guidesCurrent} className={className}>
+        {t('common.nav.guides')}
+      </LocaleLink>
+      <LocaleLink to={CONTENT_PATHS.faq} aria-current={faqCurrent} className={className}>
+        {t('common.nav.faq')}
+      </LocaleLink>
       <ExternalLink href={LINKS.senchabot} className={className}>
         {t('common.nav.senchabot')}
         <ExternalIcon className="size-3.5 opacity-60" />
@@ -279,7 +275,7 @@ function WidgetSwitcher({ current }: { current: WidgetId }) {
               const isCurrent = widget.id === current;
               return (
                 <li key={widget.id}>
-                  <Link
+                  <LocaleLink
                     to={widget.setupPath}
                     aria-current={isCurrent ? 'page' : undefined}
                     className={DROPDOWN_ITEM_CLASS}
@@ -298,7 +294,7 @@ function WidgetSwitcher({ current }: { current: WidgetId }) {
                         <path strokeLinecap="round" strokeLinejoin="round" d="m5 12 5 5L20 7" />
                       </svg>
                     )}
-                  </Link>
+                  </LocaleLink>
                 </li>
               );
             })}

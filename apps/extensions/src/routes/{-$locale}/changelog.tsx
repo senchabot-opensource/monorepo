@@ -6,7 +6,7 @@ import { translate, useI18n } from '#/lib/i18n';
 import { getSeoHead } from '#/lib/seo/pages';
 import { getWidget } from '#/lib/widgets';
 
-export const Route = createFileRoute('/changelog')({
+export const Route = createFileRoute('/{-$locale}/changelog')({
   head: () =>
     getSeoHead(
       { path: '/changelog', meta: CONTENT_META.changelog, image: 'guides' },

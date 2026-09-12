@@ -1,7 +1,8 @@
-import { createFileRoute, Link } from '@tanstack/react-router';
+import { createFileRoute } from '@tanstack/react-router';
 import { useId } from 'react';
 import { Bullets, DataTable, P, Steps } from '#/components/content-page';
 import { GuideArticle } from '#/components/guide-article';
+import { LocaleLink } from '#/components/locale-link';
 import { WidgetCrossLinks } from '#/components/widget-cross-links';
 import { getGuide } from '#/lib/guides';
 import { type TranslationKey, useT } from '#/lib/i18n';
@@ -10,7 +11,7 @@ import { WIDGETS, type WidgetId } from '#/lib/widgets';
 
 const GUIDE = getGuide('obs-browser-source');
 
-export const Route = createFileRoute('/guides/obs-browser-source')({
+export const Route = createFileRoute('/{-$locale}/guides/obs-browser-source')({
   head: () => getGuideHead(GUIDE),
   component: ObsBrowserSourceGuide,
 });
@@ -73,13 +74,13 @@ function ObsBrowserSourceGuide() {
                   { label: t('guides.obs.size.colNote') },
                 ]}
                 rows={WIDGETS.map((widget) => [
-                  <Link
+                  <LocaleLink
                     key="name"
                     to={widget.setupPath}
                     className="rounded-sm hover:text-green-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 dark:hover:text-green-400"
                   >
                     {t(widget.nameKey)}
-                  </Link>,
+                  </LocaleLink>,
                   widget.sourceSize
                     ? `${widget.sourceSize.width} × ${widget.sourceSize.height}`
                     : t('guides.obs.size.notSource'),

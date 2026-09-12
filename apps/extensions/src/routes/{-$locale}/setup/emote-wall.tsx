@@ -24,7 +24,7 @@ import type { FaqEntry } from '#/lib/i18n/seo';
 import { getSetupPageHead } from '#/lib/seo/pages';
 import { getWidget } from '#/lib/widgets';
 
-export const Route = createFileRoute('/setup/emote-wall')({
+export const Route = createFileRoute('/{-$locale}/setup/emote-wall')({
   head: () => getSetupPageHead('emote-wall', { breadcrumb: 'emoteWallSetup.breadcrumb', faq: FAQ }),
   component: EmoteWallSetup,
 });

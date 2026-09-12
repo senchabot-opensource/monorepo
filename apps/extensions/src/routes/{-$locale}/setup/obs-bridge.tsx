@@ -32,7 +32,7 @@ const FAQ: FaqEntry[] = [
   ['obsBridge.faq3Q', 'obsBridge.faq3A'],
 ];
 
-export const Route = createFileRoute('/setup/obs-bridge')({
+export const Route = createFileRoute('/{-$locale}/setup/obs-bridge')({
   head: () => getSetupPageHead('obs-bridge', { breadcrumb: 'obsBridge.breadcrumb', faq: FAQ }),
   component: ObsBridgeSetup,
 });

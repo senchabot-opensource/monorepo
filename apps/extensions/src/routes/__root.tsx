@@ -1,23 +1,25 @@
-import { createRootRoute, HeadContent, Link, Scripts, useLocation } from '@tanstack/react-router';
+import { createRootRoute, HeadContent, Scripts, useLocation } from '@tanstack/react-router';
 
+import { LocaleLink } from '#/components/locale-link';
 import { SiteLayout } from '#/components/site-layout';
 import { BUTTON_PRIMARY } from '#/components/ui/button-styles';
 import { WidgetCrossLinks } from '#/components/widget-cross-links';
 import { LocaleProvider, useI18n } from '#/lib/i18n';
+import { DEFAULT_LOCALE } from '#/lib/i18n/locales';
+import { getPathLocale, isAppPath } from '#/lib/i18n/paths';
 import { getPageHead, ROBOTS_INDEX, ROBOTS_NOINDEX, SITE_META, SITE_NAME } from '#/lib/seo/head';
 import { PAGE_META } from '#/lib/seo/pages';
 import { isOverlayPath, ThemeProvider } from '#/lib/theme';
 
 import appCss from '../styles.css?url';
 
-// Runs before first paint to avoid a flash of the wrong theme/language.
+// Runs before first paint to avoid a flash of the wrong theme/language. Only overlays and tools
+// take the language from ?lang= or storage; site pages render theirs from the path.
 // Skips the theme on overlays (see isOverlayPath in lib/theme).
-const themeInitScript = `(function(){try{var el=document.documentElement;var l=new URLSearchParams(location.search).get("lang")||localStorage.getItem("lang");if(l)el.lang=l;if(location.pathname.indexOf("/widgets/")===0)return;var t=localStorage.getItem("theme");var d=t?t==="dark":!window.matchMedia||window.matchMedia("(prefers-color-scheme: dark)").matches;el.classList.toggle("dark",d);el.style.colorScheme=d?"dark":"light";var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute("content",d?"#09090b":"#fafafa")}catch(e){}})();`;
+const themeInitScript = `(function(){try{var el=document.documentElement;var p=location.pathname;if(p.indexOf("/widgets/")===0||p.indexOf("/tools/")===0){var l=new URLSearchParams(location.search).get("lang")||localStorage.getItem("lang");if(l)el.lang=l}if(p.indexOf("/widgets/")===0)return;var t=localStorage.getItem("theme");var d=t?t==="dark":!window.matchMedia||window.matchMedia("(prefers-color-scheme: dark)").matches;el.classList.toggle("dark",d);el.style.colorScheme=d?"dark":"light";var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute("content",d?"#09090b":"#fafafa")}catch(e){}})();`;
 
 // Overlays run inside streamers' OBS scenes: they keep their old font and never download Geist.
 const isWidgetPath = isOverlayPath;
-// Overlays and the live OBS Bridge page are opened by URL, never searched for.
-const isAppPath = (pathname: string) => isWidgetPath(pathname) || pathname.startsWith('/tools/');
 
 // Geist is variable, so one 400..800 range (the weights the site uses) serves one file per subset.
 const geistLinks = [
@@ -91,9 +93,9 @@ function NotFound() {
           <WidgetCrossLinks columns={3} />
         </div>
         <div className="mt-10 text-center">
-          <Link to="/" className={BUTTON_PRIMARY}>
+          <LocaleLink to="/" className={BUTTON_PRIMARY}>
             {t('common.notFound.home')}
-          </Link>
+          </LocaleLink>
         </div>
       </div>
     </SiteLayout>
@@ -101,10 +103,12 @@ function NotFound() {
 }
 
 function RootDocument({ children }: { children: React.ReactNode }) {
-  const isWidget = useLocation({ select: (location) => isWidgetPath(location.pathname) });
+  const pathname = useLocation({ select: (location) => location.pathname });
+  const isWidget = isWidgetPath(pathname);
+  const lang = isAppPath(pathname) ? DEFAULT_LOCALE : getPathLocale(pathname);
 
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={lang} suppressHydrationWarning>
       <head>
         {/* biome-ignore lint/security/noDangerouslySetInnerHtml: inline bootstrap script must run before first paint */}
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />

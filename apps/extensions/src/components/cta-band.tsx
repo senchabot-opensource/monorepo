@@ -1,10 +1,10 @@
-import { Link } from '@tanstack/react-router';
 import { ExternalLink } from '#/components/external-link';
+import { LocaleLink } from '#/components/locale-link';
 import { BUTTON_PRIMARY, BUTTON_SECONDARY } from '#/components/ui/button-styles';
-import type { RoutePath } from '#/lib/widgets';
+import type { SitePath } from '#/lib/i18n/paths';
 
 export type CtaAction = { label: string; variant?: 'primary' | 'secondary' } & (
-  | { to: RoutePath; href?: never }
+  | { to: SitePath; href?: never }
   /** Plain or external URL; external ones open in a new tab. */
   | { href: string; external?: boolean; to?: never }
 );
@@ -36,9 +36,9 @@ export function CtaBand({ title, text, actions, headingLevel = 'h2' }: CtaBandPr
           const className = variant === 'primary' ? BUTTON_PRIMARY : BUTTON_SECONDARY;
           if (action.to) {
             return (
-              <Link key={action.label} to={action.to} className={className}>
+              <LocaleLink key={action.label} to={action.to} className={className}>
                 {action.label}
-              </Link>
+              </LocaleLink>
             );
           }
           return action.external ? (

@@ -1,4 +1,4 @@
-import { Link } from '@tanstack/react-router';
+import { LocaleLink } from '#/components/locale-link';
 import { PlatformChips } from '#/components/platform-chips';
 import { PreviewFrame, usePrefersReducedMotion } from '#/components/preview-frame';
 import { useI18n } from '#/lib/i18n';
@@ -56,12 +56,12 @@ export function WidgetCard({ widget, headingLevel: Heading = 'h3' }: WidgetCardP
             <widget.Icon className="size-5" />
           </span>
           <Heading className="text-base font-semibold text-zinc-900 dark:text-white">
-            <Link
+            <LocaleLink
               to={widget.setupPath}
               className="after:absolute after:inset-0 after:content-[''] focus-visible:outline-none"
             >
               {name}
-            </Link>
+            </LocaleLink>
           </Heading>
         </div>
         <p className="mt-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">

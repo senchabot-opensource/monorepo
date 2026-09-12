@@ -1,8 +1,9 @@
-import { Link } from '@tanstack/react-router';
+import { LocaleLink } from '#/components/locale-link';
+import type { SitePath } from '#/lib/i18n/paths';
 
 export interface BreadcrumbItem {
   label: string;
-  href?: string;
+  href?: SitePath;
 }
 
 interface BreadcrumbProps {
@@ -41,7 +42,7 @@ export function Breadcrumb({ items }: BreadcrumbProps) {
                   {item.label}
                 </span>
               ) : item.href === '/' ? (
-                <Link
+                <LocaleLink
                   to={item.href}
                   title={item.label}
                   aria-label={item.label}
@@ -62,14 +63,14 @@ export function Breadcrumb({ items }: BreadcrumbProps) {
                     />
                   </svg>
                   {item.label}
-                </Link>
+                </LocaleLink>
               ) : (
-                <Link
+                <LocaleLink
                   to={item.href}
                   className="transition-colors hover:text-green-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 rounded dark:hover:text-green-400 dark:focus-visible:ring-offset-zinc-950"
                 >
                   {item.label}
-                </Link>
+                </LocaleLink>
               )}
             </li>
           );

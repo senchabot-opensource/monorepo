@@ -5,6 +5,7 @@ import { ExternalLink } from '#/components/external-link';
 import { SiteLayout } from '#/components/site-layout';
 import { toUtcDate } from '#/lib/dates';
 import { type Locale, type TranslationKey, useI18n, useT } from '#/lib/i18n';
+import { localizePath } from '#/lib/i18n/paths';
 import { isExternalHref, parseRichText } from '#/lib/rich-text';
 
 const LINK_CLASS =
@@ -16,6 +17,7 @@ export const PROSE_CLASS =
 
 /** Renders translated copy with its `code` spans and [label](href) links. */
 export function Rich({ text }: { text: string }) {
+  const { locale } = useI18n();
   return (
     <>
       {parseRichText(text).map((token, index) => {
@@ -27,7 +29,7 @@ export function Rich({ text }: { text: string }) {
               {token.text}
             </ExternalLink>
           ) : (
-            <Link key={key} to={token.href} className={LINK_CLASS}>
+            <Link key={key} to={localizePath(token.href, locale)} className={LINK_CLASS}>
               {token.text}
             </Link>
           );
