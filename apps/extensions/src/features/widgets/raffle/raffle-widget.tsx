@@ -3,10 +3,16 @@ import { YoutubeTutorial } from "#/components/youtube-tutorial";
 import { useRaffleChat } from "#/hooks/use-raffle-chat";
 import { useRaffleState } from "#/hooks/use-raffle-state";
 import { useT } from "#/lib/i18n";
+import type { FaqEntry } from "#/lib/i18n/seo";
 import type { RaffleWinner } from "#/types/raffle";
 import confetti from "canvas-confetti";
 import { Link } from "@tanstack/react-router";
 import { useCallback, useEffect, useRef, useState } from "react";
+
+export const RAFFLE_FAQ: FaqEntry[] = [
+  ["raffle.faq1Q", "raffle.faq1A"],
+  ["raffle.faq2Q", "raffle.faq2A"],
+];
 
 function triggerConfetti(rafRef: React.MutableRefObject<number | null>) {
   const duration = 3000;
@@ -504,25 +510,19 @@ export function RaffleWidget({
               </div>
 
               <div className="space-y-3">
-                <details className="group rounded-lg border border-zinc-200/80 bg-zinc-100/60 p-4 transition-colors open:bg-zinc-100 dark:border-zinc-800/80 dark:bg-zinc-900/50 dark:open:bg-zinc-900">
-                  <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-medium text-zinc-700 group-hover:text-zinc-900 dark:text-zinc-200 dark:group-hover:text-white">
-                    <span>{t("raffle.faq1Q")}</span>
-                    <span className="transition-transform group-open:rotate-180 text-zinc-500 text-xs">▼</span>
-                  </summary>
-                  <p className="mt-2 text-xs text-zinc-600 leading-relaxed dark:text-zinc-400">
-                    {t("raffle.faq1A")}
-                  </p>
-                </details>
-
-                <details className="group rounded-lg border border-zinc-200/80 bg-zinc-100/60 p-4 transition-colors open:bg-zinc-100 dark:border-zinc-800/80 dark:bg-zinc-900/50 dark:open:bg-zinc-900">
-                  <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-medium text-zinc-700 group-hover:text-zinc-900 dark:text-zinc-200 dark:group-hover:text-white">
-                    <span>{t("raffle.faq2Q")}</span>
-                    <span className="transition-transform group-open:rotate-180 text-zinc-500 text-xs">▼</span>
-                  </summary>
-                  <p className="mt-2 text-xs text-zinc-600 leading-relaxed dark:text-zinc-400">
-                    {t("raffle.faq2A")}
-                  </p>
-                </details>
+                {RAFFLE_FAQ.map(([question, answer]) => (
+                  <details
+                    key={question}
+                    className="group rounded-lg border border-zinc-200/80 bg-zinc-100/60 p-4 transition-colors open:bg-zinc-100 dark:border-zinc-800/80 dark:bg-zinc-900/50 dark:open:bg-zinc-900">
+                    <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-medium text-zinc-700 group-hover:text-zinc-900 dark:text-zinc-200 dark:group-hover:text-white">
+                      <span>{t(question)}</span>
+                      <span className="transition-transform group-open:rotate-180 text-zinc-500 text-xs">▼</span>
+                    </summary>
+                    <p className="mt-2 text-xs text-zinc-600 leading-relaxed dark:text-zinc-400">
+                      {t(answer)}
+                    </p>
+                  </details>
+                ))}
               </div>
             </div>
           </div>
