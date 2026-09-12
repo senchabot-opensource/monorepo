@@ -17,6 +17,30 @@ export const tr: typeof en = {
     languageToggle: 'Dil değiştir',
     moreInfo: 'Daha fazla bilgi',
   },
+  widgets: {
+    overlays: "Overlay'ler",
+    tools: 'Araçlar',
+    chatBox: {
+      name: 'Sohbet Kutusu',
+      tagline: "Twitch ve Kick sohbeti tek bir overlay'de, 7TV, BTTV ve FFZ emote'larıyla birlikte.",
+    },
+    emoteWall: {
+      name: 'Emote Duvarı',
+      tagline: "Sadece emote'tan oluşan sohbet mesajları ekranında uçuşur.",
+    },
+    subSprout: {
+      name: 'Sub Sprout',
+      tagline: 'Her yeni abonelikle biraz daha büyüyen bir yayın bitkisi.',
+    },
+    raffle: {
+      name: 'Çekiliş',
+      tagline: 'İzleyiciler !join gibi bir komutla katılır, kazananı sen çekersin.',
+    },
+    obsBridge: {
+      name: 'OBS Bridge',
+      tagline: "Sohbet komutlarıyla OBS'te sahne değiştir, yayını ve kaydı yönet.",
+    },
+  },
   home: {
     heroBadge: '%100 Ücretsiz · Giriş Gerektirmez · Anında Tarayıcı Kaynağı Kurulumu',
     heroTitle: 'Özelleştirilebilir Yayın Ekranı Kaplamaları, Tarayıcı Kaynakları ve Araçlar',

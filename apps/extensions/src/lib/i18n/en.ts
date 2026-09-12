@@ -15,6 +15,30 @@ export const en = {
     languageToggle: 'Switch language',
     moreInfo: 'More info',
   },
+  widgets: {
+    overlays: 'Overlays',
+    tools: 'Tools',
+    chatBox: {
+      name: 'Chat Box',
+      tagline: 'Twitch and Kick chat together in one overlay, with 7TV, BTTV and FFZ emotes.',
+    },
+    emoteWall: {
+      name: 'Emote Wall',
+      tagline: 'Emote-only chat messages float across your screen.',
+    },
+    subSprout: {
+      name: 'Sub Sprout',
+      tagline: 'A plant on your stream that grows a little with every new sub.',
+    },
+    raffle: {
+      name: 'Raffle',
+      tagline: 'Viewers join with a chat keyword like !join, and you draw the winner.',
+    },
+    obsBridge: {
+      name: 'OBS Bridge',
+      tagline: 'Switch OBS scenes and control streaming and recording from chat commands.',
+    },
+  },
   home: {
     heroBadge: '100% Free · No Login Required · Instant Browser Source Setup',
     heroTitle: 'Customizable Stream Overlays, Browser Sources & Tools',
