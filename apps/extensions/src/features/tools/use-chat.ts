@@ -73,6 +73,7 @@ export const useChat = (
     const obs = new OBSWebSocket();
     const statusElId = "obs-status";
     let reconnectTimer: ReturnType<typeof setTimeout> | null = null;
+    let disposed = false;
 
     const updateUI = (text: string, color: string) => {
       const el = document.getElementById(statusElId);
@@ -94,26 +95,35 @@ export const useChat = (
       }
     };
 
+    // A failed connect both rejects and fires ConnectionClosed. Each used to start its own retry,
+    // doubling the attempts every round; now they share one pending retry.
+    const scheduleReconnect = () => {
+      if (disposed || reconnectTimer) return;
+      reconnectTimer = setTimeout(() => {
+        reconnectTimer = null;
+        connectOBS();
+      }, 5000);
+    };
+
     const connectOBS = async () => {
       try {
-        if (!obsWebsocketUrl) {
-          await obs.connect();
-        } else {
-          await obs.connect(obsWebsocketUrl, obsWebsocketPassword);
-        }
+        // An empty URL must still send the password; undefined (not null) picks the library's default URL.
+        await obs.connect(obsWebsocketUrl || undefined, obsWebsocketPassword);
         updateUI("Connected", "green");
         onConnectedRef.current?.(true);
       } catch {
+        if (disposed) return;
         updateUI("Connection Failed, Retrying...", "red");
         onConnectedRef.current?.(false);
-        reconnectTimer = setTimeout(connectOBS, 5000);
+        scheduleReconnect();
       }
     };
 
     obs.on('ConnectionClosed', () => {
+      if (disposed) return;
       updateUI("Disconnected, Reconnecting...", "red");
       onConnectedRef.current?.(false);
-      reconnectTimer = setTimeout(connectOBS, 5000);
+      scheduleReconnect();
     });
 
     obs.on('Identified', async () => {
@@ -187,6 +197,8 @@ export const useChat = (
     }
 
     return () => {
+      // Set before disconnect(), whose ConnectionClosed would otherwise schedule a retry.
+      disposed = true;
       if (reconnectTimer) clearTimeout(reconnectTimer);
       for (const client of clients) {
         client.disconnect();
