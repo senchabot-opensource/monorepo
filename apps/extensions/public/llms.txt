@@ -1,0 +1,38 @@
+# Senchabot Extensions
+
+> Free, open source stream overlays and tools for Twitch and Kick: Chat Box, Emote Wall, Sub Sprout, Raffle and OBS Bridge. You set one up on its web page, copy the URL and add it to OBS Studio (or another app that supports browser sources) as a Browser Source. No login and nothing to install.
+
+Senchabot Extensions is made by Senchabot (https://senchabot.com), an open source, multi-platform community bot for Twitch, Discord, Kick and YouTube. The code is GPL-3.0 licensed at https://github.com/senchabot-opensource/monorepo (folder apps/extensions). It is not affiliated with Twitch or Kick.
+
+Widget settings, URL parameters with defaults, and the full FAQ: [llms-full.txt](https://extensions.senchabot.com/llms-full.txt)
+
+## Overlays
+
+- [Chat Box](https://extensions.senchabot.com/setup/chat-widget): Twitch and Kick chat in one overlay, with 7TV emotes on both and BTTV and FFZ emotes on Twitch. Browser source size 400x600.
+- [Emote Wall](https://extensions.senchabot.com/setup/emote-wall): Emote-only chat messages from Twitch and Kick appear as emotes on screen in Calm, Chaos or Bounce mode. Browser source size 1920x1080.
+- [Sub Sprout](https://extensions.senchabot.com/setup/sub-growing-plant): A plant that grows one stage with every new sub, resub or gifted sub on Twitch and Kick. Browser source size 800x600.
+
+## Tools
+
+- [Raffle](https://extensions.senchabot.com/setup/raffle): Chat giveaways on Twitch or Kick. Viewers enter with a keyword like !join and you draw the winner.
+- [OBS Bridge](https://extensions.senchabot.com/setup/obs-bridge): People you authorize switch OBS scenes and start or stop the stream and recording from Twitch or Kick chat.
+
+## Guides
+
+- [All guides](https://extensions.senchabot.com/guides): Step-by-step guides for the widgets in OBS.
+- [Add a widget to OBS as a Browser Source](https://extensions.senchabot.com/guides/obs-browser-source): The steps, the size for each widget, and what to check when a widget looks empty.
+- [Show Twitch and Kick chat together in OBS](https://extensions.senchabot.com/guides/twitch-kick-chat-overlay): One Chat Box URL for both chats, emotes, bot filters and a horizontal bar.
+- [Run a chat giveaway on Twitch or Kick](https://extensions.senchabot.com/guides/chat-giveaway): Entry keyword, subscriber-only rules, win limits and the winner overlay.
+- [Let mods switch OBS scenes from chat](https://extensions.senchabot.com/guides/obs-scene-switcher): OBS WebSocket setup, chat commands and who can use them.
+
+## Information
+
+- [Home](https://extensions.senchabot.com): Overview of every widget and tool.
+- [FAQ](https://extensions.senchabot.com/faq): Pricing, login, supported platforms, widget URLs and privacy.
+- [Changelog](https://extensions.senchabot.com/changelog): New features and fixes, newest first.
+
+## Contact
+
+- Bug reports and widget requests: https://github.com/senchabot-opensource/monorepo/issues/new
+- Discussions: https://github.com/senchabot-opensource/monorepo/discussions
+- Discord: https://discord.com/invite/qUxwcjRzND

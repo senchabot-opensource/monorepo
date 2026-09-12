@@ -1,0 +1,270 @@
+# Senchabot Extensions: full reference
+
+> Free, open source stream overlays and tools for Twitch and Kick: Chat Box, Emote Wall, Sub Sprout, Raffle and OBS Bridge. Each one is set up on a web page at https://extensions.senchabot.com and runs from a URL. No login and nothing to install.
+
+Short version with links only: https://extensions.senchabot.com/llms.txt
+
+## About
+
+- Made by Senchabot (https://senchabot.com), an open source, multi-platform community bot for Twitch, Discord, Kick and YouTube.
+- Source code: https://github.com/senchabot-opensource/monorepo, folder apps/extensions, GPL-3.0 license.
+- Not affiliated with, endorsed by or partnered with Twitch or Kick.
+- Price: free. There is no paid plan, no premium account and no watermark on the overlays.
+- No login: you never create an account or connect a Twitch or Kick account. You type a channel name and get a URL. On Twitch the widgets read chat like an anonymous viewer, on Kick they listen to the public chat feed. They can't post in chat, moderate or see private account data.
+- Streaming apps: OBS Studio and other apps that support browser sources. The guides are written for OBS Studio.
+- Languages: the site is in English and Turkish. Add ?lang=en or ?lang=tr to any URL to pick one.
+- Settings live inside the widget URL. Nothing is saved to an account, and anyone with the URL opens the same widget.
+- Old URLs keep working: parameter names, values and defaults are not changed by updates.
+- Data sources: chat comes straight from Twitch and Kick, emotes from 7TV, BetterTTV and FrankerFaceZ, Twitch channel IDs from ivr.fi, and Kick channel info from kick.com.
+
+## Widgets at a glance
+
+| Widget | Kind | Setup page | URL used in OBS | Browser source size |
+| --- | --- | --- | --- | --- |
+| Chat Box | Overlay | /setup/chat-widget | /widgets/chat-widget | 400x600 |
+| Emote Wall | Overlay | /setup/emote-wall | /widgets/emote-wall | 1920x1080 |
+| Sub Sprout | Overlay | /setup/sub-growing-plant | /widgets/sub-sprout-widget | 800x600 |
+| Raffle | Tool | /setup/raffle | /widgets/raffle-overlay (winner overlay) | 1920x1080 |
+| OBS Bridge | Tool | /setup/obs-bridge | /tools/obs-bridge (tab or OBS dock, not a source) | none |
+
+All five work with Twitch and Kick. Chat Box, Emote Wall and Sub Sprout take a Twitch and a Kick channel in the same URL. OBS Bridge listens to both chats at once. Raffle runs on one platform at a time.
+
+## How to add a widget to OBS Studio
+
+1. Open the widget's setup page, type just the channel name (senchabot, not twitch.tv/senchabot), adjust the settings and copy the URL.
+2. In OBS, select the scene, click + in the Sources dock and pick Browser.
+3. Name the source, paste the URL into the URL field and set Width and Height to the size in the table above.
+4. Click OK and place the source in the scene.
+
+Notes:
+- The background is already transparent. No chroma key, filter or custom CSS is needed.
+- Leave "Shutdown source when not visible" and "Refresh browser when scene becomes active" off. Both reload the page, and the widget forgets what it was showing (Sub Sprout goes back to its first stage, a Raffle winner drawn while the source is off never shows).
+- To make Chat Box text bigger, change Font Size on the setup page instead of stretching the source.
+- To change a widget later, copy a new URL from the setup page and paste it over the old one. Chat Box, Emote Wall and Sub Sprout can load an existing URL: paste it into the Widget URL field on the setup page and all settings come back.
+- If a widget looks empty: check that you typed the channel name, not a link, and that it is spelled right. Chat Box and Emote Wall stay empty until something happens in chat. If a Kick channel can't be found and there is no Twitch channel either, Chat Box and Emote Wall play sample content instead.
+
+## Chat Box
+
+Merges Twitch and Kick chat into one overlay.
+
+- Widget URL: https://extensions.senchabot.com/widgets/chat-widget?twitch=CHANNEL&kick=CHANNEL
+- Demo with sample chat: https://extensions.senchabot.com/widgets/chat-widget?mock=true
+- Recommended size: 400x600 for a vertical column. For a horizontal bar, use the bar's length as width and one line of messages as height.
+- Emotes: Twitch and Kick native emotes always show as images. 7TV channel and global emotes show in Twitch and Kick messages. BTTV and FFZ emotes show in Twitch messages only. On Kick messages 7TV uses the set linked to the channel's Kick account, or the Twitch set if only Twitch is linked on 7TV. If two emotes share a name, the channel emote wins, and the order between providers is 7TV, BTTV, FFZ.
+- Hide Bots hides nightbot, streamelements, streamlabs, moobot, fossabot, wizebot, sery_bot, soundalerts, streamlootsbot, kofistreambot, pokemoncommunitygame, own3d, blerp, botrix, kickbot, kicklet and senchabot, plus Twitch accounts with the Chat Bot badge.
+- Hide Commands hides every message that starts with "!".
+- Deleted messages and messages from users who get a timeout or ban are removed from the overlay.
+- It only reads chat. It does not restream and can't post in chat.
+
+URL parameters (all optional):
+
+| Parameter | Values | Default |
+| --- | --- | --- |
+| twitch | Twitch channel name | none |
+| kick | Kick channel name | none |
+| sevenTv | true, false | true |
+| bttv | true, false | true |
+| ffz | true, false | true |
+| badges | true, false (broadcaster, moderator, VIP and subscriber badges) | true |
+| fontSize | pixels (the setup page allows 8 to 72) | 18 |
+| font | inter, roboto, nunito, mono (JetBrains Mono), serif (Source Serif 4), system | inter |
+| layout | inline, stacked, card, compact | inline |
+| animation | slide, smooth, pop, bounce, stagger, fade, typing, none | slide |
+| orientation | vertical, horizontal | vertical |
+| platformDisplay | icon, name, none (only used when both channels are set) | icon |
+| platformAccent | true, false (purple stripe for Twitch, green for Kick) | false |
+| background | true, false (semi-transparent black background) | false |
+| bgOpacity | 0 to 1, used with background=true | 0.5 |
+| itemBackground | true, false (a box behind each message) | false |
+| boldUsernames | true, false | false |
+| boldMessages | true, false | false |
+| timestamp | true, false | false |
+| duration | seconds a message stays (the setup page offers 10, 15, 30, 60, 120, 300) | 30 |
+| keep | true keeps messages on screen, up to the last 100; overrides duration | false |
+| hideBots | true, false | false |
+| hideCommands | true, false | false |
+| highlights | comma list of mention, reply, firstMessage, announcement, highlighted, or none | all five |
+| mock | true plays sample chat | false |
+| mockRate | sample messages per second, 0.1 to 50 | about 0.3 |
+
+Highlights: mention and reply work on both platforms. firstMessage, announcement and highlighted (Highlight My Message) are Twitch only, because Kick doesn't send that info.
+
+## Emote Wall
+
+Shows emotes from chat on screen, anywhere on a full canvas.
+
+- Widget URL: https://extensions.senchabot.com/widgets/emote-wall?twitch=CHANNEL&kick=CHANNEL
+- Demo with sample emotes: https://extensions.senchabot.com/widgets/emote-wall?mock=true
+- Recommended size: 1920x1080, placed above the gameplay.
+- By default only messages made entirely of emotes count. With showAllEmotes=true, up to 5 emotes are also taken from normal text messages.
+- 7TV: the emotes in the Twitch channel's active 7TV set, used in Kick chat too. It needs the Twitch channel in the URL.
+- Modes: calm (pops up at a random spot, drifts and fades out), chaos (flies in from a random edge and vanishes between halfway and the far side), bounce (bounces off the edges and speeds up on every hit).
+
+URL parameters (all optional; numbers out of range are clamped, invalid ones use the default):
+
+| Parameter | Values | Default |
+| --- | --- | --- |
+| twitch | Twitch channel name | none |
+| kick | Kick channel name | none |
+| sevenTv | true, false | true |
+| mode | calm, chaos, bounce | calm |
+| size | emote size in pixels, 32 to 256 | 112 |
+| duration | seconds on screen, 2 to 30 | 5 |
+| max | emotes on screen at once, 1 to 120 (oldest removed first) | 25 |
+| subsOnly | true shows only emotes from subscribers, founders and the broadcaster | false |
+| subDurationX2 | true keeps subscriber emotes on screen twice as long | false |
+| showAllEmotes | true also uses emotes inside normal messages | false |
+| hypeMode | true shows an emote only after 2 or more chatters send it within 15 seconds, then at most once every 15 seconds | false |
+| spamBlock | true skips a chatter's emote messages beyond 3 in 10 seconds, and the same emote beyond 2 in 10 seconds | true |
+| mock | true plays sample emotes | false |
+
+## Sub Sprout
+
+A plant that grows one stage with every new sub, resub or gifted sub on Twitch and Kick. On Kick every gifted sub counts as one stage.
+
+- Widget URL: https://extensions.senchabot.com/widgets/sub-sprout-widget?twitch=CHANNEL&kick=CHANNEL
+- Demo with simulated subs: https://extensions.senchabot.com/widgets/sub-sprout-widget?simulate=true
+- Recommended size: 800x600.
+- The broadcaster and moderators can type !grow in chat to grow the plant by one stage.
+- Growth is not saved. If the page reloads, the plant starts again from the first stage.
+- When the plant is fully grown, the next sub starts it over according to the pick setting.
+
+URL parameters (all optional):
+
+| Parameter | Values | Default |
+| --- | --- | --- |
+| twitch | Twitch channel name | none |
+| kick | Kick channel name | none |
+| variety | classic (9 stages), rose (10), sunflower (7), cactus (6), tulip (7), pine (5), lotus (7), lily (9), palm (10), vine (11) | classic |
+| pick | fixed (same plant), cycle (next in the list), random; cycle and random never pick vine | fixed |
+| water | off, rain, sparkle (plays when the plant grows; vine doesn't show it) | off |
+| countfx | 0 hides the sub count badge (for example x5 for a 5-gift bundle) | shown |
+| potlabel | 1 writes the stage on the pot, like 3/10 (vine doesn't show it) | hidden |
+| simulate | true or 1 grows with simulated subs and doesn't read chat; auto simulates until chat connects | off |
+| channel, platform | older single-channel form (platform is twitch or kick); still read | none |
+
+## Raffle
+
+A chat giveaway tool. The setup page is the tool itself: https://extensions.senchabot.com/setup/raffle (optional ?channel=NAME&platform=twitch or kick fills in the form).
+
+- Pick Twitch or Kick and the channel. One raffle runs on one platform.
+- Entry keyword: !join by default. A message counts when it is the keyword, or starts with it followed by a space. Case doesn't matter. Each person enters once.
+- Known bots (for example Nightbot, StreamElements, Streamlabs, Moobot, Fossabot and Senchabot) can't enter. You can remove anyone with the x next to their name.
+- Rules lock when the raffle starts. Reset All unlocks them.
+- The winner is drawn from eligible entries with the browser's secure random number generator (crypto.getRandomValues).
+- Settings, entries and winners are stored in the browser's localStorage, so a refresh keeps them. They stay in that browser only. Chat isn't read while the page is closed.
+
+| Rule | Options | Default |
+| --- | --- | --- |
+| Subscribers Only | on, off (subscriber or founder badge; the broadcaster counts too) | off |
+| Minimum Sub Months | 1 or more, only with Subscribers Only (read from the subscriber badge) | 1 |
+| Max Wins Per Viewer | 1 to 5, or unlimited | 1 |
+| Minimum Duration | 0 to 300 seconds before Draw Winner unlocks | 15 |
+
+Winner overlay:
+- URL: https://extensions.senchabot.com/widgets/raffle-overlay, added as a 1920x1080 browser source. It has no parameters and no demo mode.
+- On Draw Winner the name appears in the middle of the screen, confetti bursts from both sides for 3 seconds, and the name disappears after 10 seconds.
+- The winner reaches the overlay through the browser's BroadcastChannel, which only works inside one browser or app. A raffle page open in a separate browser such as Chrome can't reach an overlay inside OBS. Run the raffle page in the same app as the overlay and do a test draw before going live. The winner also always shows on the raffle page.
+
+## OBS Bridge
+
+Lets the people you authorize control OBS from Twitch or Kick chat.
+
+- Setup page: https://extensions.senchabot.com/setup/obs-bridge. It builds a tool URL: https://extensions.senchabot.com/tools/obs-bridge?...
+- Open the tool URL in a browser tab or an OBS Custom Browser Dock and keep it open while streaming. It is not a browser source. Closing it stops the commands.
+- Needs obs-websocket 5, built into OBS Studio 28 and later. In OBS open Tools > WebSocket Server Settings, enable the WebSocket server and copy the password from Show Connect Info.
+- The tool connects from the browser to OBS. If OBS is closed or the password is wrong, it tries again every 5 seconds.
+- The tool page lists the OBS scenes. Pick Main and BRB there; the picks and user changes are saved in the page's URL. Copy Updated URL copies it (an OBS dock keeps opening the URL it was created with).
+- Password: the OBS WebSocket password is saved in the tool URL (obsWebsocketPassword), and opening that URL loads the page from extensions.senchabot.com with the password in it. Treat the URL like a password: don't share it or show it on stream.
+
+Commands (the whole message must be the command, case doesn't matter):
+
+| Default command | Action |
+| --- | --- |
+| !scene NAME | Switches to the scene named NAME; if no exact match, the first scene whose name contains it |
+| brb | Switches to the BRB scene |
+| back | Switches to the Main scene |
+| !startstream / !stopstream | Starts / stops the stream |
+| !startrecord / !stoprecord | Starts / stops recording |
+
+Only users on the authorized list can run commands. With an empty list nobody can, not even the broadcaster. Each user is tied to a platform, so the same name on the other platform can't use commands.
+
+URL parameters:
+
+| Parameter | Values | Default |
+| --- | --- | --- |
+| twitch | Twitch channel to listen to | none |
+| kick | Kick channel to listen to | none |
+| commandUser | comma list of platform:name, for example twitch:bob,kick:alice | none |
+| obsWebsocketUrl | WebSocket address of OBS | ws://127.0.0.1:4455 |
+| obsWebsocketPassword | OBS WebSocket password | none |
+| mainScene | scene used by back | Main Scene |
+| brbScene | scene used by brb | BRB Scene |
+| cmdScene | command text | !scene |
+| cmdBrb | command text | brb |
+| cmdBack | command text | back |
+| cmdStartStream | command text | !startstream |
+| cmdStopStream | command text | !stopstream |
+| cmdStartRecord | command text | !startrecord |
+| cmdStopRecord | command text | !stoprecord |
+
+## FAQ
+
+Q: Is Senchabot Extensions free?
+A: Yes. All five widgets and tools are free: Chat Box, Emote Wall, Sub Sprout, Raffle and OBS Bridge. There's no paid plan, watermark or premium account. The source code is open on GitHub under the GPL-3.0 license.
+
+Q: What does "no login required" mean?
+A: You don't create an account on the site, you don't log in with Twitch or Kick, and you don't download anything. You type your channel name and the setup page gives you a URL. The widgets read public chat anonymously, so they can't post in chat, moderate, or access private info on your account.
+
+Q: Is Senchabot Extensions affiliated with Twitch or Kick?
+A: No. It is made by Senchabot, an open source community bot for Twitch, Discord, Kick and YouTube, and has no official connection to, partnership with or endorsement from Twitch or Kick.
+
+Q: Which streaming software does it work with?
+A: OBS Studio and any other streaming software that supports a browser source. Each widget runs as a web URL that you paste into the source.
+
+Q: Which widgets support Twitch and which support Kick?
+A: All five support both. Chat Box, Emote Wall and Sub Sprout listen to a Twitch and a Kick channel in one URL. OBS Bridge listens for commands from both chats. Raffle runs on one platform at a time. In Chat Box, 7TV emotes show on both platforms, BTTV and FFZ emotes on Twitch only.
+
+Q: How do I change a widget later?
+A: Change the settings on the setup page, copy the new URL and paste it over the old one in OBS. With Chat Box, Emote Wall and Sub Sprout you can paste your old URL into the Widget URL field on the setup page to get all your settings back.
+
+Q: Will my old widget URLs keep working?
+A: Yes. Parameter names, values and defaults stay the same. For example the old keep=true in Chat Box still means Forever, and Sub Sprout still reads the old channel and platform parameters.
+
+Q: Where are my settings stored, and where does my data go?
+A: Settings live in the widget URL, not in an account. Chat is read from Twitch and Kick, emotes come from 7TV, BetterTTV and FrankerFaceZ, and Twitch channel info from ivr.fi. Raffle entries and winners stay in your own browser. The OBS Bridge URL contains your OBS WebSocket password, so treat it like a password.
+
+Q: Why does my widget look empty in OBS?
+A: Chat Box and Emote Wall stay empty until something happens in chat, so send a message first. If there's still nothing, check that you typed just the channel name, not a link, and that it's spelled right.
+
+Q: Is my OBS WebSocket password safe?
+A: The connection to OBS goes straight from your browser to OBS. The password is saved in the tool URL, and opening that URL loads the page from extensions.senchabot.com with the password in it. Treat the link like a password.
+
+Q: Does Chat Box restream to both platforms?
+A: No. It only reads chat and shows it. Streaming to Twitch and Kick at once needs a separate multistreaming setup.
+
+Q: How do I request a widget or report a bug?
+A: Open an issue at https://github.com/senchabot-opensource/monorepo/issues/new. Include the widget URL (remove any password), your streaming software and what you see. Ideas also go to GitHub Discussions or the Senchabot Discord.
+
+## Pages
+
+- Home: https://extensions.senchabot.com
+- Chat Box setup: https://extensions.senchabot.com/setup/chat-widget
+- Emote Wall setup: https://extensions.senchabot.com/setup/emote-wall
+- Sub Sprout setup: https://extensions.senchabot.com/setup/sub-growing-plant
+- Raffle: https://extensions.senchabot.com/setup/raffle
+- OBS Bridge setup: https://extensions.senchabot.com/setup/obs-bridge
+- Guides: https://extensions.senchabot.com/guides
+- Guide, add a widget to OBS: https://extensions.senchabot.com/guides/obs-browser-source
+- Guide, Twitch and Kick chat together: https://extensions.senchabot.com/guides/twitch-kick-chat-overlay
+- Guide, chat giveaway: https://extensions.senchabot.com/guides/chat-giveaway
+- Guide, switch OBS scenes from chat: https://extensions.senchabot.com/guides/obs-scene-switcher
+- FAQ: https://extensions.senchabot.com/faq
+- Changelog: https://extensions.senchabot.com/changelog
+
+## Contact
+
+- Issues: https://github.com/senchabot-opensource/monorepo/issues/new
+- Discussions: https://github.com/senchabot-opensource/monorepo/discussions
+- Discord: https://discord.com/invite/qUxwcjRzND
+- Website: https://senchabot.com
