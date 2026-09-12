@@ -5,20 +5,17 @@
  *
  *   node scripts/og/generate.mjs [--base http://localhost:4173] [--only home,chat-box]
  */
-import { spawn } from 'node:child_process';
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { parseArgs } from 'node:util';
 import { en } from '../../src/lib/i18n/en.ts';
+import { launchChrome, sleep } from '../lib/chrome.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const PUBLIC_DIR = resolve(HERE, '../../public');
 const TEMPLATE_URL = pathToFileURL(join(HERE, 'template.html')).href;
 const LOGO_URL = pathToFileURL(join(PUBLIC_DIR, 'senchabot-logo.svg')).href;
-const CHROME =
-  process.env.CHROME_PATH ?? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const HARD_TIMEOUT_MS = 5 * 60_000;
 
 const { values: args } = parseArgs({
@@ -240,168 +237,64 @@ const CARDS = [
 
 // --- Chrome over the DevTools protocol -------------------------------------------------------
 
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-const profile = mkdtempSync(join(tmpdir(), 'og-prof-'));
-const port = 9500 + Math.floor(Math.random() * 400);
-let chrome;
-
-function cleanup() {
-  try {
-    chrome?.kill('SIGKILL');
-  } catch {}
-  rmSync(profile, { recursive: true, force: true });
-}
-// Also covers crashes that skip `finally`, like an uncaught EPIPE when stdout is piped to `head`.
-process.on('exit', cleanup);
-process.on('SIGINT', () => {
-  cleanup();
-  process.exit(130);
-});
-process.on('SIGTERM', () => {
-  cleanup();
-  process.exit(143);
-});
-const hardStop = setTimeout(() => {
-  console.error(`Gave up after ${HARD_TIMEOUT_MS / 1000}s.`);
-  cleanup();
-  process.exit(2);
-}, HARD_TIMEOUT_MS);
-
-async function connect() {
-  chrome = spawn(
-    CHROME,
-    [
-      '--headless=new',
-      '--no-first-run',
-      '--no-default-browser-check',
-      '--disable-extensions',
-      '--hide-scrollbars',
-      '--mute-audio',
-      '--lang=en-US',
-      '--force-color-profile=srgb',
-      `--remote-debugging-port=${port}`,
-      `--user-data-dir=${profile}`,
-      'about:blank',
-    ],
-    { stdio: 'ignore' },
-  );
-  let target;
-  for (let i = 0; i < 50 && !target; i++) {
-    try {
-      const res = await fetch(`http://127.0.0.1:${port}/json/new?about:blank`, { method: 'PUT' });
-      target = await res.json();
-    } catch {
-      await sleep(200);
-    }
-  }
-  if (!target) throw new Error(`Chrome did not start (${CHROME})`);
-
-  const ws = new WebSocket(target.webSocketDebuggerUrl);
-  await new Promise((resolveOpen, reject) => {
-    ws.onopen = resolveOpen;
-    ws.onerror = reject;
-  });
-  let nextId = 0;
-  const pending = new Map();
-  const listeners = new Map();
-  ws.onmessage = (event) => {
-    const msg = JSON.parse(event.data);
-    if (msg.id && pending.has(msg.id)) {
-      const { resolve: done, reject } = pending.get(msg.id);
-      pending.delete(msg.id);
-      if (msg.error) reject(new Error(`${msg.error.message} (${msg.error.code})`));
-      else done(msg.result);
-    } else if (msg.method && listeners.has(msg.method)) {
-      for (const fn of listeners.get(msg.method)) fn(msg.params);
-      listeners.delete(msg.method);
-    }
-  };
-  const send = (method, params = {}) =>
-    new Promise((done, reject) => {
-      const id = ++nextId;
-      pending.set(id, { resolve: done, reject });
-      ws.send(JSON.stringify({ id, method, params }));
-    });
-  const once = (method) =>
-    new Promise((done) => listeners.set(method, [...(listeners.get(method) ?? []), done]));
-  return { send, once, close: () => ws.close() };
-}
-
-async function evaluate(cdp, expression) {
-  const { result, exceptionDetails } = await cdp.send('Runtime.evaluate', {
-    expression,
-    awaitPromise: true,
-    returnByValue: true,
-  });
-  if (exceptionDetails) {
-    throw new Error(exceptionDetails.exception?.description ?? exceptionDetails.text);
-  }
-  return result.value;
-}
-
-async function waitFor(cdp, expression, timeoutMs, what) {
-  const start = Date.now();
-  while (Date.now() - start < timeoutMs) {
-    if (await evaluate(cdp, `Boolean(${expression})`)) return;
-    await sleep(50);
-  }
-  throw new Error(`Timed out waiting for ${what}`);
-}
-
-async function open(cdp, url, { width, height, scale, transparent }) {
-  await cdp.send('Emulation.setDeviceMetricsOverride', {
+async function open(page, url, { width, height, scale, transparent }) {
+  await page.send('Emulation.setDeviceMetricsOverride', {
     width,
     height,
     deviceScaleFactor: scale,
     mobile: false,
   });
-  await cdp.send(
+  await page.send(
     'Emulation.setDefaultBackgroundColorOverride',
     transparent ? { color: { r: 0, g: 0, b: 0, a: 0 } } : {},
   );
-  const loaded = cdp.once('Page.loadEventFired');
-  await cdp.send('Page.navigate', { url });
-  await loaded;
+  const error = await page.goto(url);
+  if (error) throw new Error(`Could not open ${url}: ${error}`);
 }
 
-async function screenshot(cdp) {
-  const { data } = await cdp.send('Page.captureScreenshot', { format: 'png' });
+async function screenshot(page) {
+  const { data } = await page.send('Page.captureScreenshot', { format: 'png' });
   return data;
 }
 
+const isTrue = (page, expression) => page.evaluate(`Boolean(${expression})`);
+
 // --- Rendering -------------------------------------------------------------------------------
 
-async function captureDemo(cdp, name) {
+async function captureDemo(page, name) {
   const spec = CAPTURES[name];
   const url = new URL(spec.path, BASE);
   // Chat labels and the raffle "Winner!" text are translated; crawlers get the English site.
   url.searchParams.set('lang', 'en');
-  const { identifier } = await cdp.send('Page.addScriptToEvaluateOnNewDocument', {
+  const { identifier } = await page.send('Page.addScriptToEvaluateOnNewDocument', {
     source: seededRandom(spec.seed ?? 1),
   });
   // Twice the display size, so the card downsamples instead of upscaling.
-  await open(cdp, url.href, { ...spec, scale: 2, transparent: true });
-  await cdp.send('Page.removeScriptToEvaluateOnNewDocument', { identifier });
-  await evaluate(
-    cdp,
+  await open(page, url.href, { ...spec, scale: 2, transparent: true });
+  await page.send('Page.removeScriptToEvaluateOnNewDocument', { identifier });
+  await page.evaluate(
     `document.head.append(Object.assign(document.createElement('style'), { textContent: ${JSON.stringify(OBS_SOURCE_CSS)} }))`,
   );
   await sleep(spec.settleMs);
   if (spec.trigger) {
-    await evaluate(cdp, spec.trigger);
+    await page.evaluate(spec.trigger);
     await sleep(spec.afterTriggerMs);
   }
-  if (spec.score) return bestFrame(cdp, name, spec);
+  if (spec.score) return bestFrame(page, name, spec);
   // The demos keep moving, so the ready state is checked again after the shot: a chat message
   // or plant step that lands mid-capture means another try.
   for (let attempt = 0; attempt < 10; attempt++) {
-    await waitFor(cdp, spec.ready, 90_000, `the ${name} demo`);
+    await page.poll(`Boolean(${spec.ready})`, {
+      timeout: 90_000,
+      interval: 50,
+      what: `the ${name} demo`,
+    });
     if (spec.holdMs) {
       await sleep(spec.holdMs);
-      if (!(await evaluate(cdp, `Boolean(${spec.ready})`))) continue;
+      if (!(await isTrue(page, spec.ready))) continue;
     }
-    const png = await screenshot(cdp);
-    if (await evaluate(cdp, `Boolean(${spec.ready})`)) {
+    const png = await screenshot(page);
+    if (await isTrue(page, spec.ready)) {
       console.log(`  captured ${name}`);
       return `data:image/png;base64,${png}`;
     }
@@ -409,24 +302,24 @@ async function captureDemo(cdp, name) {
   throw new Error(`The ${name} demo never held still long enough to capture`);
 }
 
-async function bestFrame(cdp, name, spec) {
+async function bestFrame(page, name, spec) {
   let best = { score: Number.NEGATIVE_INFINITY, png: '' };
   for (const end = Date.now() + spec.sampleMs; Date.now() < end; await sleep(100)) {
-    const before = await evaluate(cdp, spec.score);
+    const before = await page.evaluate(spec.score);
     if (before <= best.score) continue;
-    const png = await screenshot(cdp);
+    const png = await screenshot(page);
     // Scored on both sides of the shot, since emotes move while it is taken.
-    const score = Math.min(before, await evaluate(cdp, spec.score));
+    const score = Math.min(before, await page.evaluate(spec.score));
     if (score > best.score) best = { score, png };
   }
   console.log(`  captured ${name} (score ${best.score})`);
   return `data:image/png;base64,${best.png}`;
 }
 
-async function renderTemplate(cdp, size, call) {
-  await open(cdp, TEMPLATE_URL, { ...size, scale: 1, transparent: false });
-  await evaluate(cdp, call);
-  return Buffer.from(await screenshot(cdp), 'base64');
+async function renderTemplate(page, size, call) {
+  await open(page, TEMPLATE_URL, { ...size, scale: 1, transparent: false });
+  await page.evaluate(call);
+  return Buffer.from(await screenshot(page), 'base64');
 }
 
 function write(file, png) {
@@ -437,6 +330,8 @@ function write(file, png) {
   );
 }
 
+let chrome;
+
 async function main() {
   const cards = CARDS.filter((card) => !ONLY || ONLY.has(card.id));
   const needed = new Set(cards.flatMap((card) => (card.visual.layers ?? []).map((l) => l.capture)));
@@ -444,19 +339,20 @@ async function main() {
   const res = await fetch(`${BASE}/widgets/chat-widget?mock=true`).catch(() => null);
   if (!res?.ok) throw new Error(`No app at ${BASE}. Start a build first (see README.md).`);
 
-  const cdp = await connect();
-  await cdp.send('Page.enable');
-  await cdp.send('Emulation.setLocaleOverride', { locale: 'en-US' });
+  chrome = await launchChrome({ hardTimeoutMs: HARD_TIMEOUT_MS });
+  const page = await chrome.newPage();
+  await page.send('Page.enable');
+  await page.send('Emulation.setLocaleOverride', { locale: 'en-US' });
 
   const shots = {};
-  for (const name of needed) shots[name] = await captureDemo(cdp, name);
+  for (const name of needed) shots[name] = await captureDemo(page, name);
 
   for (const card of cards) {
     const cardShots = Object.fromEntries(
       (card.visual.layers ?? []).map((l) => [l.capture, shots[l.capture]]),
     );
     const payload = { ...card, stage: STAGE, logo: LOGO_URL, shots: cardShots };
-    const png = await renderTemplate(cdp, CARD, `window.renderCard(${JSON.stringify(payload)})`);
+    const png = await renderTemplate(page, CARD, `window.renderCard(${JSON.stringify(payload)})`);
     write(join(PUBLIC_DIR, 'og', `${card.id}.png`), png);
   }
 
@@ -464,14 +360,13 @@ async function main() {
     for (const icon of ICONS) {
       const size = { width: icon.size, height: icon.size };
       const png = await renderTemplate(
-        cdp,
+        page,
         size,
         `window.renderIcon(${JSON.stringify({ size: icon.size, logo: LOGO_URL })})`,
       );
       write(join(PUBLIC_DIR, icon.file), png);
     }
   }
-  cdp.close();
 }
 
 try {
@@ -480,6 +375,5 @@ try {
   console.error(err instanceof Error ? err.message : err);
   process.exitCode = 1;
 } finally {
-  clearTimeout(hardStop);
-  cleanup();
+  await chrome?.close();
 }
