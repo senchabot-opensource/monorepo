@@ -1,3 +1,11 @@
+import {
+  type ChatPlatform,
+  type CommandUser,
+  formatCommandUsers,
+  parseCommandUsers,
+  resolveCommandUsers,
+} from "#/features/tools/command-users";
+import { PlatformPicker, PlatformTag } from "#/features/tools/platform-picker";
 import { useChat, DEFAULT_OBS_COMMANDS, type ObsBridgeCustomCommands } from "#/features/tools/use-chat";
 import { useT } from "#/lib/i18n";
 import { getKickChannelInfo } from "#/lib/kick";
@@ -131,46 +139,89 @@ function SceneList({
 
 function CommandUsers({
   users,
-  onAdd,
-  onRemove,
+  platforms,
+  onChange,
 }: {
-  users: string[];
-  onAdd: (user: string) => void;
-  onRemove: (user: string) => void;
+  users: CommandUser[];
+  platforms: { twitch: boolean; kick: boolean };
+  onChange: (users: CommandUser[]) => void;
 }) {
   const t = useT();
   const [input, setInput] = useState("");
+  const [picked, setPicked] = useState<ChatPlatform | null>(null);
+  const bothPlatforms = platforms.twitch && platforms.kick;
+  const onlyPlatform = bothPlatforms ? null : platforms.kick ? "kick" : platforms.twitch ? "twitch" : null;
+  const platform = picked ?? onlyPlatform ?? "twitch";
+
+  const has = (p: ChatPlatform | null, name: string) =>
+    users.some((u) => u.platform === p && u.name === name);
 
   const handleAdd = () => {
     const name = input.trim().toLowerCase();
-    if (name && !users.includes(name)) {
-      onAdd(name);
+    if (name && !has(platform, name)) {
+      onChange([...users, { platform, name }]);
       setInput("");
     }
   };
+
+  const assign = (user: CommandUser, p: ChatPlatform) => {
+    onChange(
+      has(p, user.name)
+        ? users.filter((u) => u !== user)
+        : users.map((u) => (u === user ? { platform: p, name: u.name } : u)),
+    );
+  };
+
+  const unassigned = users.some((u) => !u.platform) && bothPlatforms;
 
   return (
     <div>
       <h3 className="text-sm font-semibold text-zinc-600 dark:text-zinc-400 mb-2">
         {t("tools.commandUsers", { count: users.length })}
       </h3>
+      {unassigned && (
+        <p className="mb-2 rounded-md border border-amber-300 bg-amber-50 px-2.5 py-1.5 text-xs text-amber-800 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-300">
+          {t("tools.pickPlatformWarning")}
+        </p>
+      )}
       <div className="flex flex-wrap gap-1.5 mb-2">
-        {users.map((u) => (
-          <span
-            key={u}
-            className="inline-flex items-center gap-1 rounded-full bg-zinc-200 border border-zinc-300 px-2.5 py-0.5 text-xs text-zinc-800 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-200"
-          >
-            {u}
-            <button
-              onClick={() => onRemove(u)}
-              className="text-zinc-500 hover:text-red-400 transition-colors leading-none"
+        {users.map((u) => {
+          const shown = u.platform ?? onlyPlatform;
+          const needsPlatform = !u.platform && bothPlatforms;
+          return (
+            <span
+              key={`${u.platform}:${u.name}`}
+              className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-xs ${
+                needsPlatform
+                  ? "bg-amber-50 border-amber-300 text-amber-900 dark:bg-amber-500/10 dark:border-amber-500/40 dark:text-amber-200"
+                  : "bg-zinc-200 border-zinc-300 text-zinc-800 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-200"
+              }`}
             >
-              ✕
-            </button>
-          </span>
-        ))}
+              {shown && <PlatformTag platform={shown} />}
+              {u.name}
+              {needsPlatform &&
+                (["twitch", "kick"] as const).map((p) => (
+                  <button
+                    key={p}
+                    type="button"
+                    onClick={() => assign(u, p)}
+                    className="rounded border border-amber-300 px-1 leading-4 hover:bg-amber-100 dark:border-amber-500/40 dark:hover:bg-amber-500/20"
+                  >
+                    <PlatformTag platform={p} />
+                  </button>
+                ))}
+              <button
+                onClick={() => onChange(users.filter((x) => x !== u))}
+                className="text-zinc-500 hover:text-red-400 transition-colors leading-none"
+              >
+                ✕
+              </button>
+            </span>
+          );
+        })}
       </div>
       <div className="flex gap-1">
+        <PlatformPicker value={platform} onChange={setPicked} label={t("tools.userPlatform")} />
         <input
           type="text"
           value={input}
@@ -203,10 +254,13 @@ function RouteComponent() {
   const mainSelected = scenes.length > 0 && scenes.includes(search.mainScene);
   const brbSelected = scenes.length > 0 && scenes.includes(search.brbScene);
 
-  const commandUsers = search.commandUser ? search.commandUser
-    .split(",")
-    .map((u) => u.trim().toLowerCase())
-    .filter(Boolean) : [];
+  const commandUsers = useMemo(() => parseCommandUsers(search.commandUser), [search.commandUser]);
+  const hasTwitch = Boolean(search.twitch?.trim());
+  const hasKick = Boolean(search.kick?.trim());
+  const allowedCommandUsers = useMemo(
+    () => resolveCommandUsers(commandUsers, { twitch: hasTwitch, kick: hasKick }).allowed,
+    [commandUsers, hasTwitch, hasKick],
+  );
 
   const customCommands: ObsBridgeCustomCommands = useMemo(() => ({
     cmdBrb: search.cmdBrb || DEFAULT_OBS_COMMANDS.cmdBrb,
@@ -241,7 +295,7 @@ function RouteComponent() {
     kick,
     search.obsWebsocketUrl,
     search.obsWebsocketPassword,
-    search.commandUser,
+    allowedCommandUsers,
     onScenes,
     onConnected,
     customCommands,
@@ -263,15 +317,8 @@ function RouteComponent() {
     });
   };
 
-  const addUser = (user: string) => {
-    const updated = [...new Set([...commandUsers, user])].join(",");
-    navigate({ to: ".", search: { ...search, commandUser: updated }, replace: true });
-  };
-
-  const removeUser = (user: string) => {
-    const updated = commandUsers.filter((u) => u !== user);
-    const val = updated.length > 0 ? updated.join(",") : "";
-    navigate({ to: ".", search: { ...search, commandUser: val }, replace: true });
+  const setCommandUsers = (users: CommandUser[]) => {
+    navigate({ to: ".", search: { ...search, commandUser: formatCommandUsers(users) }, replace: true });
   };
 
   return (
@@ -322,8 +369,8 @@ function RouteComponent() {
           <div className="bg-zinc-100 p-3 rounded-md border border-zinc-200 dark:bg-zinc-800/50 dark:border-zinc-800">
             <CommandUsers
               users={commandUsers}
-              onAdd={addUser}
-              onRemove={removeUser}
+              platforms={{ twitch: hasTwitch, kick: hasKick }}
+              onChange={setCommandUsers}
             />
           </div>
 

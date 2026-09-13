@@ -125,7 +125,8 @@ export const en = {
     twitchChannel: 'Twitch Channel (to listen in)',
     kickChannel: 'Kick Channel (to listen in)',
     authorizedUsers: 'Authorized Users',
-    authorizedHint: "Only these users' chat messages will trigger OBS actions.",
+    authorizedHint: 'Only these users can trigger OBS actions from chat, and only on the platform you picked for each.',
+    userPlatform: 'Platform',
     customCommands: 'Custom Command Names',
     customCommandsHint:
       'Customize the chat trigger words for each action (e.g. change !scene to scene or !startstream to start).',
@@ -290,6 +291,9 @@ export const en = {
     assignHintRest: 'next to a scene to assign it. Or switch to any scene using',
     commandUsers: 'Command Users ({count})',
     addUsername: 'Add username',
+    userPlatform: 'Platform',
+    pickPlatformWarning:
+      "Twitch and Kick are both connected, so pick a platform for each yellow name. They can't run commands until you do.",
     add: 'Add',
     activeCommands: 'Active Chat Commands',
     cmdScene: 'Switch to Any Scene:',
