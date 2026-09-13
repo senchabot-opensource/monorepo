@@ -17,12 +17,12 @@ export const PAGE_META = {
     en: {
       title: 'Free Twitch & Kick Overlays for OBS | Senchabot Extensions',
       description:
-        'Five free tools for Twitch and Kick streamers: Chat Box, Emote Wall, Sub Sprout, Raffle and OBS Bridge. Set one up, copy its URL and add it to OBS. No login.',
+        'Six free tools for Twitch and Kick streamers: Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Raffle and OBS Bridge. Set one up, copy its URL, add it to OBS.',
     },
     tr: {
       title: "OBS için Ücretsiz Twitch ve Kick Overlay'leri | Senchabot",
       description:
-        "Twitch ve Kick için beş ücretsiz araç: Sohbet Kutusu, Emote Duvarı, Sub Sprout, Çekiliş ve OBS Bridge. Birini ayarla, URL'sini kopyala, OBS'e ekle. Giriş yok.",
+        "Twitch ve Kick için altı ücretsiz araç: Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Çekiliş ve OBS Bridge. Ayarla, URL'yi kopyala, OBS'e ekle.",
     },
   },
   'chat-box': {
@@ -59,6 +59,18 @@ export const PAGE_META = {
       title: 'Sub Sprout: Twitch ve Kick için Abone Hedefi Bitkisi',
       description:
         "Twitch ve Kick'te her yeni abonelik, yenileme ya da hediye abonelikle bir aşama büyüyen bitki overlay'i. 10 bitkiden birini seç, yağmur ya da parıltı ekle.",
+    },
+  },
+  subathon: {
+    en: {
+      title: 'Subathon Timer for Twitch & Kick (Free) | Senchabot',
+      description:
+        'A free subathon timer overlay for OBS. Subs, gifted subs, Bits and Kicks add time. Show it as a health bar, a clock or a ring. Mods control it from chat.',
+    },
+    tr: {
+      title: 'Twitch ve Kick için Subathon Timer (Ücretsiz) | Senchabot',
+      description:
+        "OBS için ücretsiz subathon sayacı overlay'i. Abonelik, hediye abonelik, Bits ve Kicks süre ekler. Can barı, saat ya da halka seç, modlar sohbetten yönetsin.",
     },
   },
   raffle: {
@@ -161,6 +173,28 @@ export const APP_FEATURES: Record<WidgetId, Record<Locale, readonly string[]>> =
       'İsteğe bağlı abone sayısı ve saksıda aşama etiketi',
       'Yayıncı ve modlar !grow yazarak bitkiyi elle büyütebilir',
       'Önerilen Tarayıcı Kaynağı boyutu: 800x600',
+    ],
+  },
+  subathon: {
+    en: [
+      'A countdown that subs, gifted subs, Bits and Kicks add time to, on Twitch and Kick',
+      'Health bar, clock or ring style, with health colors or a fixed color',
+      'Time per sub, per gifted sub and per 100 Bits or Kicks, each one can be turned off',
+      'Twitch Tier 2 and Tier 3 subs can count as 2 and 5 subs',
+      'Optional time limit and a custom title',
+      'The broadcaster and mods can start, pause, add, remove, set and reset time with !subathon',
+      'The timer is saved in OBS and survives reloads',
+      'Recommended browser source size: 800x300',
+    ],
+    tr: [
+      "Twitch ve Kick'te abonelik, hediye abonelik, Bits ve Kicks geldikçe uzayan geri sayım",
+      'Can barı, saat ya da halka stili, can renkleriyle ya da sabit bir renkle',
+      'Abonelik, hediye abonelik ve 100 Bits ya da Kicks başına süre, her biri kapatılabilir',
+      "Twitch'te Tier 2 ve Tier 3 abonelikler 2 ve 5 abonelik sayılabilir",
+      'İsteğe bağlı süre sınırı ve özel başlık',
+      'Yayıncı ve modlar !subathon ile sayacı başlatıp duraklatabilir, süre ekleyip çıkarabilir, ayarlayıp sıfırlayabilir',
+      "Sayaç OBS'te kaydedilir, sayfa yenilense de kaybolmaz",
+      'Önerilen Tarayıcı Kaynağı boyutu: 800x300',
     ],
   },
   raffle: {

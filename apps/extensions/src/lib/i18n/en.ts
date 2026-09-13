@@ -89,6 +89,11 @@ export const en = {
       name: 'Sub Sprout',
       tagline: 'A plant on your stream that grows a little with every new sub.',
     },
+    subathon: {
+      name: 'Subathon Timer',
+      tagline:
+        'A countdown that subs, gifted subs, Bits and Kicks push back. Health bar, clock or ring.',
+    },
     raffle: {
       name: 'Raffle',
       tagline: 'Viewers join with a chat keyword like !join, and you draw the winner.',
@@ -176,10 +181,10 @@ export const en = {
       'OBS Studio and other apps that support browser sources. Add the widget URL as a Browser Source and use the size shown on the setup page.',
     faq4Q: 'Can I use Twitch and Kick together?',
     faq4A:
-      'Yes. Chat Box, Emote Wall and Sub Sprout take a Twitch and a Kick channel in the same URL. OBS Bridge can listen to both chats at once too. Raffle runs on one platform at a time.',
+      'Yes. Chat Box, Emote Wall, Sub Sprout and Subathon Timer take a Twitch and a Kick channel in the same URL. OBS Bridge can listen to both chats at once too. Raffle runs on one platform at a time.',
     faq5Q: 'How do I change a widget later?',
     faq5A:
-      'Open its setup page, set it up the way you want and replace the URL in your Browser Source. Chat Box, Emote Wall and Sub Sprout can also open an existing URL: paste it on the setup page, your settings come back, and you change only what you need.',
+      'Open its setup page, set it up the way you want and replace the URL in your Browser Source. Chat Box, Emote Wall, Sub Sprout and Subathon Timer can also open an existing URL: paste it on the setup page, your settings come back, and you change only what you need.',
     faq6Q: 'Will my widget URL keep working after updates?',
     faq6A:
       "Yes. Updates keep existing URL settings and their values working, so a widget that's already in your scene doesn't need a new URL.",
@@ -520,6 +525,113 @@ export const en = {
     faq2A:
       'Once the plant is fully grown, the next sub starts it over based on your Plant Changing setting: the same plant, the next variety, or a random one.',
   },
+  subathon: {
+    breadcrumb: 'Subathon Timer Setup',
+    title: 'Subathon Timer Setup',
+    intro:
+      'A subathon timer for Twitch and Kick. It counts down, and every sub, gifted sub, Bits cheer or Kicks gift adds time. Show it as a game-style health bar that drains toward zero, a big clock or a ring, and you decide how much time each one adds.',
+    style: 'Style',
+    styleTip:
+      'Health Bar drains from 100% toward zero like a game character. Clock shows big numbers. Ring shows a circle that empties.',
+    styleBar: 'Health Bar',
+    styleClock: 'Clock',
+    styleRing: 'Ring',
+    color: 'Color',
+    colorTip:
+      'Health goes from green to amber to red as the time runs out. The others stay one color.',
+    colors: {
+      hp: 'Health (green to red)',
+      green: 'Green',
+      purple: 'Purple',
+      red: 'Red',
+      gold: 'Gold',
+      cyan: 'Cyan',
+      pink: 'Pink',
+    },
+    titleLabel: 'Title',
+    titleTip: 'Shown next to the timer. Leave it empty to show no title.',
+    titlePlaceholder: 'No title',
+    showPercent: 'Show Percentage',
+    showPercentTip:
+      'Shows how full the timer is. 100% is the most time it has held so far, so it never goes over.',
+    showPops: 'Show Added Time',
+    showPopsTip: "Floats up +1:00 with the viewer's name every time time is added.",
+    sectionTimer: 'Timer',
+    startTime: 'Starting Time',
+    startTimeTip:
+      'Where the timer starts. It only applies to a new subathon: to start over with a new value, type !subathon reset in chat.',
+    maxTime: 'Time Limit',
+    maxTimeTip: "The timer never holds more than this. Time that would go past it isn't added.",
+    maxTimeOff: 'No limit',
+    startMode: 'Start',
+    startModeTip:
+      'With the command, the timer waits paused until you or a mod types it in chat. Right Away starts it as soon as the overlay loads in OBS.',
+    startCommand: 'With {command}',
+    startAuto: 'Right Away',
+    sectionValues: 'Time Added',
+    valuesHint: 'Set any of these to 0 to turn it off.',
+    perSub: 'Per Sub',
+    perSubTip: 'Every new sub and resub. On Twitch this is a Tier 1 or Prime sub.',
+    perGift: 'Per Gifted Sub',
+    perGiftTip: 'Counted for every sub in a gift, so a gift of 5 adds this five times.',
+    perBits: 'Per 100 Bits or Kicks',
+    perBitsTip:
+      '100 Bits on Twitch or 100 Kicks on Kick. Other amounts add their share, so 50 Bits adds half.',
+    tiers: 'Tier 2 and 3 Count More',
+    tiersTip:
+      'On Twitch a Tier 2 sub adds 2 subs worth of time and a Tier 3 sub 5, in line with their price.',
+    unitHours: 'h',
+    unitMinutes: 'min',
+    unitSeconds: 's',
+    sectionCommands: 'Chat Commands',
+    commandsIntro: 'You and your mods control the timer from Twitch or Kick chat.',
+    cmdStart: 'Starts or resumes the timer',
+    cmdPause: 'Pauses it',
+    cmdAdd: 'Adds time',
+    cmdRemove: 'Takes time away',
+    cmdSet: 'Sets the time left',
+    cmdReset: 'Starts over from the starting time',
+    commandsDurations: 'Write times like 10m, 1h30m, 45s or 1:30:00. A plain number means minutes.',
+    previewTitle: 'Subathon Timer Preview',
+    previewIframeTitle: 'Subathon Timer Preview',
+    previewHint:
+      'The preview plays simulated subs, gifts and cheers. On stream the timer runs in real time and only your chat adds time.',
+    previewSpeed: 'Preview Speed',
+    previewSpeedTip: '1× is real time. At 60× a one hour timer runs out in about a minute.',
+    previewSpeedValue: '{rate}×',
+    testTitle: 'Try it:',
+    testViewer: 'You',
+    testSub: '+1 Sub',
+    testGift: '+5 Gifted',
+    testBits: '+500 Bits/Kicks',
+    testRemove: '−10 min',
+    testPause: 'Pause / Resume',
+    testReset: 'Reset',
+    widgetUrlTip:
+      'Already made a widget? Paste its URL here to load your settings and change what you need.',
+    widgetUrlPlaceholder: 'Paste an existing widget URL to edit it',
+    widgetUrlInvalid: "This isn't a Subathon Timer URL.",
+    browserSourceHintSize: ' (recommended size: 800×300).',
+    guideTitle: 'Streaming Software Setup (OBS, Streamlabs, XSplit, etc.)',
+    guideStep1:
+      'Add a Browser Source in your streaming software (OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio, etc.).',
+    guideStep2: 'Paste your copied subathon timer URL.',
+    guideStep3: 'Set width to 800 and height to 300.',
+    guideStep4:
+      'When you go live, type !subathon start in chat. Mods can add, remove or pause time too.',
+    faq1Q: 'What happens if OBS closes or the browser source reloads?',
+    faq1A:
+      "The timer is saved inside OBS, so it comes back where it was. While OBS is closed it keeps counting down, like a real deadline. Subs that come in while it's closed can't be seen, so a mod can add them with !subathon add.",
+    faq2Q: 'What happens when the timer reaches zero?',
+    faq2A:
+      'The timer stops at zero and the health bar shows K.O. New subs no longer add time. A mod can bring it back with !subathon add or !subathon set, or start a new one with !subathon reset.',
+    faq3Q: 'How do I start a new subathon or change the starting time?',
+    faq3A:
+      'Type !subathon reset in chat. The timer goes back to the starting time in its URL. Until the timer has started for the first time, a new starting time in the URL applies on its own.',
+    faq4Q: 'Do I need to log in or connect my account?',
+    faq4A:
+      'No. The timer reads subs, gifts, Bits, Kicks and mod commands from your public Twitch and Kick chat, the way a logged-out viewer sees them.',
+  },
   raffle: {
     breadcrumb: 'Raffle Setup',
     title: 'Raffle Setup',
@@ -766,6 +878,7 @@ export const en = {
             'A vertical chat column. A bigger source fits more messages, the text stays the same size.',
           emoteWall: 'A full 1080p canvas. Emotes show up anywhere on the screen.',
           subSprout: 'The plant and pot grow inside this area.',
+          subathon: 'A wide strip for the health bar, clock or ring. A bigger source scales it up.',
           raffle:
             "The winner overlay. Confetti bursts from both sides of the screen and the winner's name appears in the middle.",
           obsBridge: 'Not a visible overlay. Keep the tool open in a browser tab or an OBS dock.',
@@ -775,7 +888,7 @@ export const en = {
       },
       transparent: {
         title: 'Do you need to do anything to make the background transparent?',
-        p1: "No. Chat Box, Emote Wall, Sub Sprout and the Raffle overlay are drawn on a transparent background. You don't need a chroma key or a filter, and you can leave the Custom CSS field in OBS as it is.",
+        p1: "No. Chat Box, Emote Wall, Sub Sprout, Subathon Timer and the Raffle overlay are drawn on a transparent background. You don't need a chroma key or a filter, and you can leave the Custom CSS field in OBS as it is.",
         p2: 'If Chat Box is hard to read on a bright scene, turn on Dark Background. It puts a semi-transparent black layer behind the widget, and you can set its opacity anywhere from 0% to 100% (50% by default). If you want each message in its own box, turn on Message Background Box.',
       },
       settings: {
@@ -787,6 +900,8 @@ export const en = {
           'Chat Box: messages only come in while the source is running. If the source shuts down and comes back, the screen starts empty and only shows new messages.',
         subSprout:
           "Sub Sprout: the plant's growth isn't saved anywhere. If the page reloads, the plant goes back to the first stage.",
+        subathon:
+          "Subathon Timer: the time left is saved inside OBS, so a reload doesn't lose it. The timer keeps counting down while the source is off, but it can't see subs that come in during that time.",
         raffle:
           'Raffle overlay: only the overlay that is open at that moment gets the winner. A winner drawn while the source is off never shows up on screen.',
         emoteWall:
@@ -797,7 +912,7 @@ export const en = {
       update: {
         title: 'How do I change a widget later?',
         p1: 'Your settings live inside the widget URL, so changing a setting means a new URL. Change the setting on the setup page, copy the new URL, then double-click the source in OBS and paste it over the old URL in the URL field.',
-        p2: "You don't have to start over with [Chat Box](/setup/chat-widget), [Emote Wall](/setup/emote-wall) or [Sub Sprout](/setup/sub-growing-plant). Paste your current URL into the Widget URL field on the setup page and your channels and all your settings come back. Change what you want and copy the new URL.",
+        p2: "You don't have to start over with [Chat Box](/setup/chat-widget), [Emote Wall](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant) or [Subathon Timer](/setup/subathon-timer). Paste your current URL into the Widget URL field on the setup page and your channels and all your settings come back. Change what you want and copy the new URL.",
         p3: "OBS Bridge has no paste field, so enter your settings again on its setup page and copy the new tool URL. You can also change scene picks and authorized users on the tool page itself and grab the new URL with its Copy Updated URL button. Old URLs keep working, so you don't have to update them.",
       },
       troubleshoot: {
@@ -812,7 +927,7 @@ export const en = {
           "Check the name for typos. A channel that doesn't exist on Twitch doesn't throw an error. The widget just stays empty.",
         quietTitle: 'Has anything happened in chat yet?',
         quietBody:
-          'Chat Box and Emote Wall stay completely empty and transparent until something happens in chat. Send a message in chat; for Emote Wall it has to be a message made only of emotes by default, but with Show All Emotes on, emotes inside normal messages count too. The Raffle overlay also only appears when a winner is drawn and disappears after 10 seconds. Sub Sprout, on the other hand, shows the plant right away.',
+          'Chat Box and Emote Wall stay completely empty and transparent until something happens in chat. Send a message in chat; for Emote Wall it has to be a message made only of emotes by default, but with Show All Emotes on, emotes inside normal messages count too. The Raffle overlay also only appears when a winner is drawn and disappears after 10 seconds. Sub Sprout and Subathon Timer, on the other hand, show up right away.',
         kickTitle: 'Kick channel not found?',
         kickBody:
           "When the widget opens, it looks up the Kick channel on kick.com. If that lookup fails (wrong name, the channel doesn't exist, or Kick doesn't respond), Kick messages won't come in. If the URL has no Twitch channel either, Chat Box and Emote Wall play sample content instead of real chat. If you see messages from names like Goku or Frieren in OBS, your Kick channel wasn't found. Type your Kick name exactly as it appears in the kick.com URL.",
@@ -899,7 +1014,7 @@ export const en = {
       },
       others: {
         title: 'Which other widgets listen to both platforms together?',
-        p1: '[Emote Wall](/setup/emote-wall) and [Sub Sprout](/setup/sub-growing-plant) also take both channels in one URL. Emote Wall sends emote-only messages from both chats flying across the screen. Sub Sprout grows with subscriptions on both platforms, gifted subs on Kick included.',
+        p1: '[Emote Wall](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant) and [Subathon Timer](/setup/subathon-timer) also take both channels in one URL. Emote Wall sends emote-only messages from both chats flying across the screen. Sub Sprout grows with subscriptions on both platforms, gifted subs on Kick included. Subathon Timer adds time for subs, gifted subs, Bits and Kicks from both chats.',
         p2: '[Raffle](/setup/raffle), on the other hand, runs on one platform at a time: Twitch or Kick.',
       },
       ctaTitle: 'Set up Chat Box',
@@ -1050,7 +1165,7 @@ export const en = {
     },
     freeQ: 'Is Senchabot Extensions free?',
     freeA:
-      "Yes. All five widgets and tools are free: Chat Box, Emote Wall, Sub Sprout, Raffle and OBS Bridge. There's no paid plan, watermark or premium account. The source code is open on GitHub under the GPL-3.0 license.",
+      "Yes. All six widgets and tools are free: Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Raffle and OBS Bridge. There's no paid plan, watermark or premium account. The source code is open on GitHub under the GPL-3.0 license.",
     loginQ: 'What does "no login required" mean?',
     loginA:
       "You don't create an account on this site, you don't log in with Twitch or Kick, and you don't download anything. You type your channel name and the setup page gives you a URL. The widgets read public chat anonymously: on Twitch they connect like an anonymous viewer, and on Kick they listen to the public chat feed. That's why they can't post in chat, moderate, or access private info on your account.",
@@ -1062,10 +1177,10 @@ export const en = {
       'OBS Studio and any other streaming software that supports a browser source. Each widget runs as a web URL, and you paste that URL into the source. Our guides are written for OBS Studio.',
     platformsQ: 'Which widgets support Twitch and which support Kick?',
     platformsA:
-      'All five support both platforms. Chat Box, Emote Wall and Sub Sprout listen to a Twitch and a Kick channel together in one URL. OBS Bridge listens for commands from both chats, and each authorized user is added with their own platform. Raffle runs on one platform at a time, Twitch or Kick. In Chat Box, 7TV emotes show on both platforms, while BTTV and FFZ emotes show on Twitch only.',
+      'All six support both platforms. Chat Box, Emote Wall, Sub Sprout and Subathon Timer listen to a Twitch and a Kick channel together in one URL. OBS Bridge listens for commands from both chats, and each authorized user is added with their own platform. Raffle runs on one platform at a time, Twitch or Kick. In Chat Box, 7TV emotes show on both platforms, while BTTV and FFZ emotes show on Twitch only.',
     editQ: 'How do I change a widget later?',
     editA:
-      "Change the settings on the setup page, copy the new URL, and paste it over the old one in the source's URL field in OBS. With Chat Box, Emote Wall and Sub Sprout, if you paste your old URL into the Widget URL field on the setup page, all your settings come back and you don't have to start over.",
+      "Change the settings on the setup page, copy the new URL, and paste it over the old one in the source's URL field in OBS. With Chat Box, Emote Wall, Sub Sprout and Subathon Timer, if you paste your old URL into the Widget URL field on the setup page, all your settings come back and you don't have to start over.",
     oldUrlsQ: 'Will my old widget URLs keep working?',
     oldUrlsA:
       "Yes. Updates are made so existing URLs don't break: parameter names, values and defaults stay the same. For example, the old keep=true in Chat Box still means Forever, and Sub Sprout still reads the old channel and platform parameters.",
@@ -1089,6 +1204,8 @@ export const en = {
     lead: "New features and bug fixes in Senchabot Extensions, newest first. The list is put together from the project's commit history on [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      subathon:
+        'New Subathon Timer: a countdown that subs, gifted subs, Bits and Kicks push back, shown as a health bar, a clock or a ring. You pick how much time each one adds, and mods control it with !subathon.',
       chatReader:
         'New Chat Reader: read your Twitch and Kick chat in a browser tab or an OBS dock. It reconnects on its own with a countdown, marks every drop in the chat and keeps your history through a refresh.',
       chatSilentDrop:

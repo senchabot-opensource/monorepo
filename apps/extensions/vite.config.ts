@@ -20,6 +20,7 @@ const config = defineConfig({
       pages: [
         { path: '/' },
         { path: '/setup/sub-growing-plant' },
+        { path: '/setup/subathon-timer' },
         { path: '/setup/chat-widget' },
         { path: '/setup/raffle' },
         { path: '/setup/obs-bridge' },
@@ -33,6 +34,7 @@ const config = defineConfig({
         { path: '/changelog' },
         { path: '/tr' },
         { path: '/tr/setup/sub-growing-plant' },
+        { path: '/tr/setup/subathon-timer' },
         { path: '/tr/setup/chat-widget' },
         { path: '/tr/setup/raffle' },
         { path: '/tr/setup/obs-bridge' },

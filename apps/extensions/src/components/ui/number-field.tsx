@@ -8,6 +8,8 @@ interface NumberFieldProps {
   max: number;
   fallback: number;
   disabled?: boolean;
+  /** For an input without a visible label of its own. */
+  ariaLabel?: string;
 }
 
 const STEP_BUTTON_CLASS =
@@ -30,6 +32,7 @@ export function NumberField({
   max,
   fallback,
   disabled,
+  ariaLabel,
 }: NumberFieldProps) {
   const step = (delta: number) => {
     const current = Number(value) || fallback;
@@ -52,6 +55,7 @@ export function NumberField({
       </button>
       <input
         id={id}
+        aria-label={ariaLabel}
         type="text"
         inputMode="decimal"
         disabled={disabled}

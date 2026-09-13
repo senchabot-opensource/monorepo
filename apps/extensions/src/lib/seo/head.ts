@@ -54,6 +54,13 @@ export const OG_IMAGES = {
       tr: "Sub Sprout, aboneliklerle büyüyen bitki overlay'i",
     },
   },
+  subathon: {
+    path: '/og/subathon.png',
+    alt: {
+      en: 'Subathon Timer, a countdown overlay that subs add time to',
+      tr: "Subathon Timer, aboneliklerle süresi uzayan geri sayım overlay'i",
+    },
+  },
   raffle: {
     path: '/og/raffle.png',
     alt: {

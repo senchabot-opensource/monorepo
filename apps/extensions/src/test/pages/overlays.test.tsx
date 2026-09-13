@@ -11,6 +11,7 @@ const OVERLAYS = [
   '/widgets/chat-widget?mock=true',
   '/widgets/emote-wall?mock=true',
   '/widgets/sub-sprout-widget?simulate=true',
+  '/widgets/subathon?simulate=1',
   '/widgets/raffle-overlay',
 ];
 

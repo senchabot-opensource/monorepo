@@ -12,6 +12,7 @@ const TEXT_PARAMS = new Set([
   'variety',
   'highlights',
   'lang',
+  'title',
   'obsWebsocketUrl',
   'obsWebsocketPassword',
   'commandUser',

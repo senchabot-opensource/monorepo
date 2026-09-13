@@ -56,6 +56,22 @@ const PAGES: PageCase[] = [
     faq: ['subSprout.faq1Q', 'subSprout.faq2Q'],
   },
   {
+    path: '/setup/subathon-timer',
+    title: 'subathon.title',
+    sections: [
+      'common.sectionChannel',
+      'common.sectionAppearance',
+      'subathon.sectionTimer',
+      'subathon.sectionValues',
+      'subathon.sectionCommands',
+      'subathon.previewTitle',
+      'subathon.guideTitle',
+      'common.faqTitle',
+      'common.moreWidgets',
+    ],
+    faq: ['subathon.faq1Q', 'subathon.faq2Q', 'subathon.faq3Q', 'subathon.faq4Q'],
+  },
+  {
     path: '/setup/raffle',
     title: 'raffle.title',
     sections: [

@@ -59,6 +59,16 @@ export function SubSproutIcon(props: IconProps) {
   );
 }
 
+export function SubathonIcon(props: IconProps) {
+  return (
+    <StrokeIcon {...props}>
+      <circle cx="12" cy="13.5" r="7" />
+      <path d="M10 3h4M12 3v3.5M18 7l1.5-1.5" />
+      <path d="M12 13.5V10M12 13.5l2.5 1.5" />
+    </StrokeIcon>
+  );
+}
+
 export function RaffleIcon(props: IconProps) {
   return (
     <StrokeIcon {...props}>
