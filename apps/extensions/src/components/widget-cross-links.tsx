@@ -2,6 +2,8 @@ import { LocaleLink } from '#/components/locale-link';
 import { useI18n } from '#/lib/i18n';
 import { WIDGETS, type WidgetId } from '#/lib/widgets';
 
+const LG_COLUMNS = { 3: 'lg:grid-cols-3', 4: 'lg:grid-cols-4', 5: 'lg:grid-cols-5' } as const;
+
 /** Cards linking to the setup page of every registry widget except `exclude`. */
 export function WidgetCrossLinks({
   exclude,
@@ -9,14 +11,12 @@ export function WidgetCrossLinks({
 }: {
   exclude?: WidgetId;
   /** Cards per row on wide screens. */
-  columns?: 3 | 4;
+  columns?: 3 | 4 | 5;
 }) {
   const { t } = useI18n();
   const widgets = WIDGETS.filter((widget) => widget.id !== exclude);
   return (
-    <ul
-      className={`grid gap-3 sm:grid-cols-2 ${columns === 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-4'}`}
-    >
+    <ul className={`grid gap-3 sm:grid-cols-2 ${LG_COLUMNS[columns]}`}>
       {widgets.map((widget) => (
         <li key={widget.id}>
           <LocaleLink

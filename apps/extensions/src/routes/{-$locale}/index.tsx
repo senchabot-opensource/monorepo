@@ -219,7 +219,8 @@ function WorksWith() {
 function Gallery() {
   const { t } = useI18n();
   const groups = [
-    { key: 'overlays', widgets: OVERLAYS, lead: 'home.overlaysLead', columns: 'lg:grid-cols-3' },
+    // Four overlays: two by two, or one row on wide screens.
+    { key: 'overlays', widgets: OVERLAYS, lead: 'home.overlaysLead', columns: 'xl:grid-cols-4' },
     { key: 'tools', widgets: TOOLS, lead: 'home.toolsLead', columns: '' },
   ] as const;
   return (
