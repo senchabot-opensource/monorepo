@@ -105,6 +105,11 @@ export class TwitchChat extends BaseChatClient {
     });
   }
 
+  // Answered with "PONG tmi.twitch.tv :tmi.twitch.tv", which the switch below ignores.
+  protected override pingFrame() {
+    return "PING :tmi.twitch.tv";
+  }
+
   private handleSocketMessage(event: MessageEvent) {
     if (typeof event.data !== "string") {
       return;

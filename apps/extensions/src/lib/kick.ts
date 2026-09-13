@@ -70,6 +70,11 @@ export class KickChat extends BaseChatClient {
     );
   }
 
+  // Answered with pusher:pong. Pusher's own liveness pings are protocol frames the page never sees.
+  protected override pingFrame() {
+    return JSON.stringify({ event: "pusher:ping", data: {} });
+  }
+
   private handleSocketMessage(event: MessageEvent) {
     if (typeof event.data !== "string") {
       return;
