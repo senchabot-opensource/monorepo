@@ -791,6 +791,8 @@ function RouteComponent() {
 
   // Rows overflow toward the start edge, which is never scrollable, so clip instead of scroll:
   // a scrollable box would flash a scrollbar while the list is offset during the shift.
+  // The list must not shrink: it would narrow to fit the screen while its unwrapping rows
+  // spill past the end edge, hiding the newest messages.
   return (
     <div
       className={`flex ${horizontal ? 'flex-row justify-end items-center min-w-full h-screen p-2' : 'flex-col justify-end h-screen w-full p-2.5'} overflow-clip text-white rounded-md`}
@@ -802,7 +804,7 @@ function RouteComponent() {
     >
       <div
         ref={listRef}
-        className={`flex ${horizontal ? 'flex-row items-center space-x-3' : 'flex-col space-y-2'}`}
+        className={`flex shrink-0 ${horizontal ? 'flex-row items-center space-x-3' : 'flex-col space-y-2'}`}
       >
         {visibleMessages.map((msg) => (
           <MessageRow
