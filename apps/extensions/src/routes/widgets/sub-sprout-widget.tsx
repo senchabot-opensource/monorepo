@@ -66,15 +66,12 @@ export const Route = createFileRoute("/widgets/sub-sprout-widget")({
       try {
         const { getKickChannelInfo } = await import("#/lib/kick");
         const kickInfo = await getKickChannelInfo(deps.kickChannel);
-        return {
-          kickId: kickInfo.chatroomId,
-          kickChannelId: kickInfo.channelId,
-        };
+        return { kickId: kickInfo.chatroomId };
       } catch {
-        return { kickId: null, kickChannelId: null };
+        return { kickId: null };
       }
     }
-    return { kickId: null, kickChannelId: null };
+    return { kickId: null };
   },
   component: RouteComponent,
 });
@@ -92,7 +89,7 @@ function RouteComponent() {
     potlabel,
     simulate,
   } = Route.useSearch();
-  const { kickId, kickChannelId } = Route.useLoaderData();
+  const { kickId } = Route.useLoaderData();
 
   const twitchChannel =
     twitch || (platform === "twitch" ? channel : undefined);
@@ -109,7 +106,6 @@ function RouteComponent() {
         twitchChannel={twitchChannel}
         kickChannel={kickChannel}
         kickId={kickId ?? undefined}
-        kickChannelId={kickChannelId ?? undefined}
         variety={variety}
         pick={pick}
         water={water}
