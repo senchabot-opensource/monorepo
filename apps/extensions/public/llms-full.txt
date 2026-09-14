@@ -146,7 +146,7 @@ URL parameters (all optional):
 
 ## Subathon Timer
 
-A subathon countdown for Twitch and Kick. Subs, gifted subs, Bits (Twitch) and Kicks (Kick) add time; at zero the subathon is over.
+A subathon countdown for Twitch and Kick. Subs, gifted subs, Bits (Twitch) and Kicks (Kick) add time, with separate values per platform; at zero the subathon is over.
 
 - Widget URL: https://extensions.senchabot.com/widgets/subathon?twitch=CHANNEL&kick=CHANNEL
 - Demo with simulated subs: https://extensions.senchabot.com/widgets/subathon?simulate=1
@@ -180,10 +180,13 @@ URL parameters (all optional, times in seconds):
 | title | text shown with the timer, up to 32 characters; empty hides it | SUBATHON |
 | time | starting time | 3600 |
 | cap | most time the timer can hold; 0 means no limit | 0 |
-| sub | time per sub or resub (Twitch Tier 1 or Prime) | 60 |
-| gift | time per gifted sub | 60 |
-| bits | time per 100 Bits or 100 Kicks; smaller amounts add their share | 20 |
-| tiers | 0 counts Twitch Tier 2 and 3 subs like Tier 1 instead of 2 and 5 subs | 1 |
+| tsub | Twitch: time per Tier 1 or Prime sub or resub | 60 |
+| tgift | Twitch: time per gifted sub | 60 |
+| bits | Twitch: time per 500 Bits; other amounts add their share | 60 |
+| tiers | 0 counts Twitch Tier 2 and 3 subs and gifts like Tier 1 instead of 2 and 5 subs | 1 |
+| ksub | Kick: time per sub or resub | 60 |
+| kgift | Kick: time per gifted sub | 60 |
+| kicks | Kick: time per 500 Kicks; other amounts add their share | 60 |
 | autostart | 1 starts the timer when the overlay first loads instead of waiting for !subathon start | 0 |
 | pct | 0 hides the percentage | 1 |
 | pops | 0 hides the floating +1:00 added-time numbers | 1 |

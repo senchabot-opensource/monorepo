@@ -6,11 +6,14 @@ import { PreviewFrame } from '#/components/preview-frame';
 import { SetupShell } from '#/components/setup-shell';
 import { DurationField } from '#/components/ui/duration-field';
 import { FieldLabel } from '#/components/ui/field-label';
+import { MinutesField } from '#/components/ui/minutes-field';
 import { RangeField } from '#/components/ui/range-field';
 import { SegmentedControl, type SegmentedOption } from '#/components/ui/segmented-control';
 import { SettingsGroup } from '#/components/ui/settings-group';
 import { Switch } from '#/components/ui/switch';
+import { Tabs } from '#/components/ui/tabs';
 import { HINT_CLASS, TextField } from '#/components/ui/text-field';
+import type { SubathonEvent, SubathonPlatform } from '#/features/widgets/subathon/subathon-events';
 import { COMMAND } from '#/features/widgets/subathon/subathon-timer';
 import { hueFor } from '#/features/widgets/subathon/subathon-widget';
 import { PREVIEW_CHANNEL, type PreviewMessage } from '#/features/widgets/subathon/use-subathon';
@@ -28,6 +31,7 @@ import {
   type SubathonColor,
   type SubathonSettings,
   type SubathonStyle,
+  type SubathonTimeKey,
   TITLE_MAX_LENGTH,
 } from '#/lib/subathon-url';
 import { getWidget } from '#/lib/widgets';
@@ -50,6 +54,29 @@ const PREVIEW_SPEEDS = [1, 10, 60, 300];
 const DEFAULT_SPEED_INDEX = 2;
 // Per-event values past an hour would be a typo, not a setting.
 const MAX_EVENT_SECONDS = 3600;
+// The widget starts at least one minute in, whatever the URL says.
+const MIN_START_SECONDS = 60;
+
+interface TimeField {
+  key: SubathonTimeKey;
+  label: TranslationKey;
+  tip: TranslationKey;
+}
+
+const TIME_FIELDS: Record<SubathonPlatform, TimeField[]> = {
+  twitch: [
+    { key: 'tsub', label: 'subathon.perSub', tip: 'subathon.perSubTip' },
+    { key: 'tgift', label: 'subathon.perGift', tip: 'subathon.perGiftTip' },
+    { key: 'bits', label: 'subathon.perBits', tip: 'subathon.perBitsTip' },
+  ],
+  kick: [
+    { key: 'ksub', label: 'subathon.perSub', tip: 'subathon.perSubKickTip' },
+    { key: 'kgift', label: 'subathon.perGift', tip: 'subathon.perGiftTip' },
+    { key: 'kicks', label: 'subathon.perKicks', tip: 'subathon.perKicksTip' },
+  ],
+};
+
+const PLATFORM_DOTS: Record<SubathonPlatform, string> = { twitch: '#9146FF', kick: '#53FC18' };
 
 const FAQ: FaqEntry[] = [
   ['subathon.faq1Q', 'subathon.faq1A'],
@@ -68,7 +95,7 @@ const COMMANDS: { usage: string; action: TranslationKey }[] = [
 ];
 
 const TEST_BUTTON_CLASS =
-  'inline-flex h-8 items-center rounded-md border border-zinc-300 bg-white px-2.5 text-xs font-semibold text-zinc-800 transition-colors hover:bg-zinc-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 disabled:cursor-not-allowed disabled:opacity-40 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700';
+  'inline-flex h-8 items-center justify-center truncate rounded-md border border-zinc-300 bg-white px-2.5 text-xs font-semibold text-zinc-800 transition-colors hover:bg-zinc-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 disabled:cursor-not-allowed disabled:opacity-40 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700';
 
 function ColorSwatches({
   value,
@@ -119,10 +146,11 @@ function SubathonSetup() {
   const [twitchChannel, setTwitchChannel] = useState('');
   const [kickChannel, setKickChannel] = useState('');
   const [settings, setSettings] = useState(DEFAULT_SUBATHON_SETTINGS);
+  const [valuesTab, setValuesTab] = useState<SubathonPlatform>('twitch');
   const [speedIndex, setSpeedIndex] = useState(DEFAULT_SPEED_INDEX);
   const [mounted, setMounted] = useState(false);
   const channelRef = useRef<BroadcastChannel | null>(null);
-  const bitsPlatform = useRef<'twitch' | 'kick'>('twitch');
+  const bitsPlatform = useRef<SubathonPlatform>('twitch');
   const id = useId();
 
   useEffect(() => {
@@ -137,7 +165,6 @@ function SubathonSetup() {
     setSettings((current) => ({ ...current, [key]: value }));
 
   const send = (message: PreviewMessage) => channelRef.current?.postMessage(message);
-  const testName = t('subathon.testViewer');
 
   // Gated on mount so the prerendered input and the first client render agree.
   const origin = mounted ? window.location.origin : '';
@@ -164,23 +191,66 @@ function SubathonSetup() {
     { value: 'command', label: t('subathon.startCommand', { command: `${COMMAND} start` }) },
     { value: 'auto', label: t('subathon.startAuto') },
   ];
-  const hm = [t('subathon.unitHours'), t('subathon.unitMinutes')] as const;
-  const ms = [t('subathon.unitMinutes'), t('subathon.unitSeconds')] as const;
+  const hoursMinutes = [t('subathon.unitHours'), t('subathon.unitMinutes')] as const;
 
-  const valueField = (key: 'sub' | 'gift' | 'bits', label: string, tip: string) => (
+  const timerField = (key: 'start' | 'cap', label: TranslationKey, tip: TranslationKey) => (
     <div>
-      <FieldLabel id={`${id}-${key}`} tip={tip}>
-        {label}
+      <FieldLabel id={`${id}-${key}`} tip={t(tip)}>
+        {t(label)}
       </FieldLabel>
       <DurationField
         labelledBy={`${id}-${key}`}
         value={settings[key]}
         onChange={(value) => update(key, value)}
-        units={['m', 's']}
-        unitLabels={ms}
-        max={MAX_EVENT_SECONDS}
+        units={['h', 'm']}
+        unitLabels={hoursMinutes}
+        min={key === 'start' ? MIN_START_SECONDS : 0}
+        max={MAX_SECONDS}
       />
+      {key === 'cap' && settings.cap === 0 && (
+        <p className={HINT_CLASS}>{t('subathon.maxTimeOff')}</p>
+      )}
     </div>
+  );
+
+  const valueFields = (platform: SubathonPlatform) => (
+    <div className="space-y-3">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+        {TIME_FIELDS[platform].map(({ key, label, tip }) => (
+          <div key={key}>
+            <FieldLabel htmlFor={`${id}-${key}`} tip={t(tip)}>
+              {t(label)}
+            </FieldLabel>
+            <MinutesField
+              id={`${id}-${key}`}
+              value={settings[key]}
+              onChange={(value) => update(key, value)}
+              max={MAX_EVENT_SECONDS}
+              unitLabel={t('subathon.unitMinutes')}
+            />
+          </div>
+        ))}
+      </div>
+      {platform === 'twitch' && (
+        <Switch
+          label={t('subathon.tiers')}
+          tip={t('subathon.tiersTip')}
+          checked={settings.tiers}
+          disabled={settings.tsub === 0 && settings.tgift === 0}
+          onChange={(value) => update('tiers', value)}
+        />
+      )}
+    </div>
+  );
+  const platformLabel = (platform: SubathonPlatform) => (
+    <>
+      <span
+        aria-hidden="true"
+        className="size-2 rounded-full"
+        style={{ background: PLATFORM_DOTS[platform] }}
+      />
+      {platform === 'twitch' ? 'Twitch' : 'Kick'}
+    </>
   );
 
   const settingsPanel = (
@@ -247,33 +317,8 @@ function SubathonSetup() {
 
       <SettingsGroup title={t('subathon.sectionTimer')}>
         <div className="grid gap-3 sm:grid-cols-2">
-          <div>
-            <FieldLabel id={`${id}-start`} tip={t('subathon.startTimeTip')}>
-              {t('subathon.startTime')}
-            </FieldLabel>
-            <DurationField
-              labelledBy={`${id}-start`}
-              value={settings.start}
-              onChange={(value) => update('start', value)}
-              units={['h', 'm']}
-              unitLabels={hm}
-              max={MAX_SECONDS}
-            />
-          </div>
-          <div>
-            <FieldLabel id={`${id}-cap`} tip={t('subathon.maxTimeTip')}>
-              {t('subathon.maxTime')}
-            </FieldLabel>
-            <DurationField
-              labelledBy={`${id}-cap`}
-              value={settings.cap}
-              onChange={(value) => update('cap', value)}
-              units={['h', 'm']}
-              unitLabels={hm}
-              max={MAX_SECONDS}
-            />
-            {settings.cap === 0 && <p className={HINT_CLASS}>{t('subathon.maxTimeOff')}</p>}
-          </div>
+          {timerField('start', 'subathon.startTime', 'subathon.startTimeTip')}
+          {timerField('cap', 'subathon.maxTime', 'subathon.maxTimeTip')}
         </div>
         <div>
           <FieldLabel id={`${id}-autostart`} tip={t('subathon.startModeTip')}>
@@ -290,86 +335,104 @@ function SubathonSetup() {
 
       <SettingsGroup title={t('subathon.sectionValues')}>
         <p className={`${HINT_CLASS} mt-0`}>{t('subathon.valuesHint')}</p>
-        <div className="grid gap-3 sm:grid-cols-2">
-          {valueField('sub', t('subathon.perSub'), t('subathon.perSubTip'))}
-          {valueField('gift', t('subathon.perGift'), t('subathon.perGiftTip'))}
-          {valueField('bits', t('subathon.perBits'), t('subathon.perBitsTip'))}
-          <div className="flex items-end pb-1">
-            <div className="w-full">
-              <Switch
-                label={t('subathon.tiers')}
-                tip={t('subathon.tiersTip')}
-                checked={settings.tiers}
-                disabled={settings.sub === 0 && settings.gift === 0}
-                onChange={(value) => update('tiers', value)}
-              />
-            </div>
-          </div>
-        </div>
-      </SettingsGroup>
-
-      <SettingsGroup title={t('subathon.sectionCommands')}>
-        <p className={`${HINT_CLASS} mt-0`}>{t('subathon.commandsIntro')}</p>
-        <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1.5 text-xs">
-          {COMMANDS.map((command) => (
-            <div key={command.usage} className="contents">
-              <dt>
-                <code className="rounded bg-zinc-100 px-1.5 py-0.5 font-mono text-[11px] text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200">
-                  {command.usage}
-                </code>
-              </dt>
-              <dd className="self-center text-zinc-600 dark:text-zinc-400">{t(command.action)}</dd>
-            </div>
-          ))}
-        </dl>
-        <p className={HINT_CLASS}>{t('subathon.commandsDurations')}</p>
+        {settings.platforms === 'both' ? (
+          <Tabs
+            label={t('common.platforms')}
+            value={valuesTab}
+            onChange={setValuesTab}
+            tabs={(['twitch', 'kick'] as const).map((platform) => ({
+              value: platform,
+              label: platformLabel(platform),
+            }))}
+          >
+            {valueFields(valuesTab)}
+          </Tabs>
+        ) : (
+          valueFields(settings.platforms)
+        )}
       </SettingsGroup>
     </>
   );
 
-  const testButtons: { label: string; disabled?: boolean; message: () => PreviewMessage }[] = [
+  // The test buttons use a platform whose value is on, so a click always shows something.
+  const onPlatform = (twitch: number, kick: number, preferred: SubathonPlatform) =>
+    preferred === 'twitch'
+      ? twitch
+        ? 'twitch'
+        : kick
+          ? 'kick'
+          : null
+      : kick
+        ? 'kick'
+        : twitch
+          ? 'twitch'
+          : null;
+  const name = t('subathon.testViewer');
+  const subPlatform = onPlatform(settings.tsub, settings.ksub, 'twitch');
+  const giftPlatform = onPlatform(settings.tgift, settings.kgift, 'kick');
+  const bitsOn = onPlatform(settings.bits, settings.kicks, 'twitch');
+  const testButtons: { label: string; event?: () => SubathonEvent | null }[] = [
     {
       label: t('subathon.testSub'),
-      disabled: settings.sub === 0,
-      message: () => ({
-        type: 'event',
-        event: { kind: 'sub', platform: 'twitch', name: testName, tier: 1 },
-      }),
+      event: () => subPlatform && { kind: 'sub', platform: subPlatform, name, tier: 1 },
     },
     {
       label: t('subathon.testGift'),
-      disabled: settings.gift === 0,
-      message: () => ({
-        type: 'event',
-        event: { kind: 'gift', platform: 'kick', name: testName, count: 5, tier: 1 },
-      }),
+      event: () =>
+        giftPlatform && { kind: 'gift', platform: giftPlatform, name, count: 5, tier: 1 },
     },
     {
       label: t('subathon.testBits'),
-      disabled: settings.bits === 0,
-      message: () => {
-        // Alternates, so both platforms' pops get shown.
-        const platform = bitsPlatform.current;
+      event: () => {
+        // Alternates when both are on, so both platforms' pops get shown.
+        const platform = onPlatform(settings.bits, settings.kicks, bitsPlatform.current);
         bitsPlatform.current = platform === 'twitch' ? 'kick' : 'twitch';
-        return { type: 'event', event: { kind: 'bits', platform, name: testName, amount: 500 } };
+        return platform && { kind: 'bits', platform, name, amount: 500 };
       },
     },
     {
       label: t('subathon.testRemove'),
-      message: () => ({
-        type: 'event',
-        event: { kind: 'command', platform: 'twitch', command: { action: 'remove', ms: 600_000 } },
+      event: () => ({
+        kind: 'command',
+        platform: 'twitch',
+        command: { action: 'remove', ms: 600_000 },
       }),
     },
-    { label: t('subathon.testPause'), message: () => ({ type: 'toggle' }) },
+    { label: t('subathon.testPause') },
     {
       label: t('subathon.testReset'),
-      message: () => ({
-        type: 'event',
-        event: { kind: 'command', platform: 'twitch', command: { action: 'reset' } },
-      }),
+      event: () => ({ kind: 'command', platform: 'twitch', command: { action: 'reset' } }),
     },
   ];
+  const disabled = [!subPlatform, !giftPlatform, !bitsOn, false, false, false];
+
+  const commands = (
+    <section
+      aria-labelledby={`${id}-commands`}
+      className="rounded-xl border border-zinc-200 bg-zinc-100/60 p-5 dark:border-zinc-800 dark:bg-zinc-900/50"
+    >
+      <h2
+        id={`${id}-commands`}
+        className="mb-2 text-base font-semibold text-zinc-900 dark:text-white"
+      >
+        {t('subathon.sectionCommands')}
+      </h2>
+      <p className="mb-3 text-sm text-zinc-600 dark:text-zinc-400">{t('subathon.commandsIntro')}</p>
+      <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-sm">
+        {COMMANDS.map((command) => (
+          <div key={command.usage} className="contents">
+            <dt>
+              <code className="rounded bg-white px-1.5 py-0.5 font-mono text-xs text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200">
+                {command.usage}
+              </code>
+            </dt>
+            <dd className="self-center text-zinc-600 dark:text-zinc-400">{t(command.action)}</dd>
+          </div>
+        ))}
+      </dl>
+      <p className={`${HINT_CLASS} mt-3`}>{t('subathon.commandsDurations')}</p>
+    </section>
+  );
 
   return (
     <SetupShell
@@ -378,7 +441,8 @@ function SubathonSetup() {
       settings={settingsPanel}
       previewTitle={t('subathon.previewTitle')}
       previewTip={t('subathon.previewHint')}
-      previewAspect={16 / 7}
+      // A 16:9 box, like a stream frame, so the band the +time pops rise into shows too.
+      previewAspect={16 / 9}
       preview={
         <PreviewFrame
           src={previewUrl}
@@ -389,19 +453,24 @@ function SubathonSetup() {
       }
       previewFooter={
         <div className="space-y-2.5">
-          <fieldset
-            aria-label={t('subathon.testTitle')}
-            className="flex flex-wrap items-center gap-1.5"
-          >
-            <span className="mr-1 text-xs font-medium text-zinc-600 dark:text-zinc-400">
+          {/* Three events on the first row, three controls on the second. */}
+          <fieldset aria-labelledby={`${id}-test`} className="grid grid-cols-3 gap-1.5">
+            <span
+              id={`${id}-test`}
+              className="col-span-3 text-xs font-medium text-zinc-600 dark:text-zinc-400"
+            >
               {t('subathon.testTitle')}
             </span>
-            {testButtons.map((button) => (
+            {testButtons.map((button, index) => (
               <button
                 key={button.label}
                 type="button"
-                disabled={button.disabled}
-                onClick={() => send(button.message())}
+                disabled={disabled[index]}
+                onClick={() => {
+                  if (!button.event) return send({ type: 'toggle' });
+                  const event = button.event();
+                  if (event) send({ type: 'event', event });
+                }}
                 className={TEST_BUTTON_CLASS}
               >
                 {button.label}
@@ -433,6 +502,7 @@ function SubathonSetup() {
         />
       }
       intro={t('subathon.intro')}
+      aboutExtra={commands}
       guideTitle={t('subathon.guideTitle')}
       guideSteps={[
         'subathon.guideStep1',

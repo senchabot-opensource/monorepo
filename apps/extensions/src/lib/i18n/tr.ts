@@ -575,18 +575,20 @@ export const tr: typeof en = {
     valuesHint: 'Birini kapatmak için 0 yap.',
     perSub: 'Abonelik Başına',
     perSubTip: "Her yeni abonelik ve yenileme. Twitch'te bu Tier 1 ya da Prime abonelik demek.",
+    perSubKickTip: 'Her yeni abonelik ve yenileme.',
     perGift: 'Hediye Abonelik Başına',
     perGiftTip:
       "Hediyedeki her abonelik ayrı sayılır, yani 5'li bir hediye bu süreyi beş kez ekler.",
-    perBits: '100 Bits ya da Kicks Başına',
+    perBits: '500 Bits Başına',
     perBitsTip:
-      "Twitch'te 100 Bits ya da Kick'te 100 Kicks. Diğer miktarlar oranına göre ekler, yani 50 Bits bu sürenin yarısını ekler.",
+      'Yaklaşık bir abonelik fiyatı. Diğer miktarlar oranına göre ekler, yani 100 Bits bu sürenin beşte birini ekler.',
+    perKicks: '500 Kicks Başına',
+    perKicksTip: 'Diğer miktarlar oranına göre ekler, yani 100 Kicks bu sürenin beşte birini ekler.',
     tiers: 'Tier 2 ve 3 Daha Çok Sayılır',
     tiersTip:
       "Twitch'te Tier 2 abonelik 2, Tier 3 abonelik 5 abonelik kadar süre ekler, fiyatlarıyla orantılı.",
     unitHours: 'sa',
     unitMinutes: 'dk',
-    unitSeconds: 'sn',
     sectionCommands: 'Sohbet Komutları',
     commandsIntro: 'Sayacı sen ve modların Twitch ya da Kick sohbetinden yönetirsiniz.',
     cmdStart: 'Sayacı başlatır ya da devam ettirir',

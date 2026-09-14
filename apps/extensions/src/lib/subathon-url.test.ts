@@ -17,9 +17,12 @@ const CUSTOM: SubathonSettings = {
   title: 'SUB-A-THON 2026',
   start: 7200,
   cap: 86400,
-  sub: 120,
-  gift: 90,
+  tsub: 120,
+  tgift: 90,
   bits: 0,
+  ksub: 30,
+  kgift: 45,
+  kicks: 10,
   tiers: false,
   autostart: true,
   percent: false,
@@ -49,9 +52,12 @@ describe('buildSubathonUrl', () => {
       title: 'SUB-A-THON 2026',
       time: '7200',
       cap: '86400',
-      sub: '120',
-      gift: '90',
+      tsub: '120',
+      tgift: '90',
       bits: '0',
+      ksub: '30',
+      kgift: '45',
+      kicks: '10',
       tiers: '0',
       autostart: '1',
       pct: '0',
@@ -92,13 +98,13 @@ describe('parseSubathonUrl', () => {
 
   it('falls back to defaults for values the widget would not accept', () => {
     const parsed = parseSubathonUrl(
-      `${ORIGIN}/widgets/subathon?twitch=a&style=pie&color=teal&time=-5&sub=abc&cap=99999999999&pct=yes`,
+      `${ORIGIN}/widgets/subathon?twitch=a&style=pie&color=teal&time=-5&tsub=abc&cap=99999999999&pct=yes`,
     );
     expect(parsed?.settings).toMatchObject({
       style: 'bar',
       color: 'hp',
       start: DEFAULT_SUBATHON_SETTINGS.start,
-      sub: DEFAULT_SUBATHON_SETTINGS.sub,
+      tsub: DEFAULT_SUBATHON_SETTINGS.tsub,
       cap: MAX_SECONDS,
       percent: true,
     });
@@ -115,6 +121,10 @@ describe('readSubathonSettings', () => {
     for (const off of ['0', 'false', 'off', 'no']) {
       expect(readSubathonSettings(new URLSearchParams(`pops=${off}`)).pops).toBe(false);
     }
+  });
+
+  it('starts at least a minute in', () => {
+    expect(readSubathonSettings(new URLSearchParams('time=0')).start).toBe(60);
   });
 
   it('cuts an overlong title', () => {

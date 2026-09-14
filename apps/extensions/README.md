@@ -58,15 +58,15 @@ A subathon countdown overlay. It counts down in real time, and subs, gifted subs
 **How it works:**
 - Listens to Twitch IRC anonymously and Kick's Pusher WebSocket, both in one browser source.
 - Three styles (`bar` health bar, `clock`, `ring`) and health colors (green to red) or a fixed color.
-- Time per sub, per gifted sub and per 100 Bits or Kicks; any of them can be turned off. Twitch Tier 2 and 3 subs can count as 2 and 5 subs.
+- Separate times for Twitch and Kick: per sub, per gifted sub, and per 500 Bits or 500 Kicks. Any of them can be turned off. Twitch Tier 2 and 3 subs can count as 2 and 5 subs.
 - The timer is saved in the browser source's `localStorage`, stored as its end time, so a reload or an OBS restart doesn't lose it.
 - The broadcaster and mods control it from chat: `!subathon start`, `pause`, `add 10m`, `remove 5m`, `set 2h`, `reset`.
 
 ```
-https://extensions.senchabot.com/widgets/subathon?twitch=YOUR_TWITCH_CHANNEL&kick=YOUR_KICK_CHANNEL&style=bar&time=3600&sub=60&gift=60&bits=20
+https://extensions.senchabot.com/widgets/subathon?twitch=YOUR_TWITCH_CHANNEL&kick=YOUR_KICK_CHANNEL&style=bar&time=3600&tsub=60&ksub=60
 ```
 
-**URL parameters** (times in seconds): `twitch`, `kick`, `style` (`bar` | `clock` | `ring`), `color` (`hp` | `green` | `purple` | `red` | `gold` | `cyan` | `pink`), `title`, `time` (starting time), `cap` (0 = no limit), `sub`, `gift`, `bits` (per 100), `tiers` (`0` | `1`), `autostart` (`0` | `1`), `pct` (`0` | `1`), `pops` (`0` | `1`), `simulate` (`1` plays simulated subs), `simspeed`.
+**URL parameters** (times in seconds): `twitch`, `kick`, `style` (`bar` | `clock` | `ring`), `color` (`hp` | `green` | `purple` | `red` | `gold` | `cyan` | `pink`), `title`, `time` (starting time), `cap` (0 = no limit), Twitch `tsub` (Tier 1 and Prime), `tgift`, `bits` (per 500), `tiers` (`0` | `1`), Kick `ksub`, `kgift`, `kicks` (per 500), `autostart` (`0` | `1`), `pct` (`0` | `1`), `pops` (`0` | `1`), `simulate` (`1` plays simulated subs), `simspeed`.
 
 ---
 

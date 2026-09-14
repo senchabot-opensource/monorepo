@@ -179,7 +179,7 @@ export const APP_FEATURES: Record<WidgetId, Record<Locale, readonly string[]>> =
     en: [
       'A countdown that subs, gifted subs, Bits and Kicks add time to, on Twitch and Kick',
       'Health bar, clock or ring style, with health colors or a fixed color',
-      'Time per sub, per gifted sub and per 100 Bits or Kicks, each one can be turned off',
+      'Separate times for Twitch and Kick: subs, gifted subs, and Bits or Kicks',
       'Twitch Tier 2 and Tier 3 subs can count as 2 and 5 subs',
       'Optional time limit and a custom title',
       'The broadcaster and mods can start, pause, add, remove, set and reset time with !subathon',
@@ -189,7 +189,7 @@ export const APP_FEATURES: Record<WidgetId, Record<Locale, readonly string[]>> =
     tr: [
       "Twitch ve Kick'te abonelik, hediye abonelik, Bits ve Kicks geldikçe uzayan geri sayım",
       'Can barı, saat ya da halka stili, can renkleriyle ya da sabit bir renkle',
-      'Abonelik, hediye abonelik ve 100 Bits ya da Kicks başına süre, her biri kapatılabilir',
+      'Twitch ve Kick için ayrı süreler: abonelik, hediye abonelik, Bits ya da Kicks',
       "Twitch'te Tier 2 ve Tier 3 abonelikler 2 ve 5 abonelik sayılabilir",
       'İsteğe bağlı süre sınırı ve özel başlık',
       'Yayıncı ve modlar !subathon ile sayacı başlatıp duraklatabilir, süre ekleyip çıkarabilir, ayarlayıp sıfırlayabilir',

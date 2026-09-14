@@ -7,23 +7,34 @@ export type SubathonStyle = (typeof SUBATHON_STYLES)[number];
 export const SUBATHON_COLORS = ['hp', 'green', 'purple', 'red', 'gold', 'cyan', 'pink'] as const;
 export type SubathonColor = (typeof SUBATHON_COLORS)[number];
 
-export interface SubathonSettings {
+/** Seconds each event adds, per platform. 0 turns that event off. */
+export interface SubathonTimeValues {
+  /** Twitch Tier 1 or Prime sub, resubs included. */
+  tsub: number;
+  /** Per gifted Twitch sub. */
+  tgift: number;
+  /** Per 500 Bits, about one sub; other amounts add their share. */
+  bits: number;
+  ksub: number;
+  kgift: number;
+  /** Per 500 Kicks. */
+  kicks: number;
+}
+
+const TIME_KEYS = ['tsub', 'tgift', 'bits', 'ksub', 'kgift', 'kicks'] as const;
+export type SubathonTimeKey = keyof SubathonTimeValues;
+
+export interface SubathonSettings extends SubathonTimeValues {
   platforms: ChannelPlatforms;
   style: SubathonStyle;
   color: SubathonColor;
-  /** Shown above the clock; empty hides it. */
+  /** Shown with the clock; empty hides it. */
   title: string;
   /** Starting time, seconds. */
   start: number;
   /** Most time the clock can hold, seconds; 0 means no limit. */
   cap: number;
-  /** Seconds added per sub (Tier 1 or Prime on Twitch). */
-  sub: number;
-  /** Seconds added per gifted sub. */
-  gift: number;
-  /** Seconds added per 100 Bits on Twitch or 100 Kicks on Kick. */
-  bits: number;
-  /** Twitch Tier 2 and Tier 3 subs count as 2 and 5 subs, like their price. */
+  /** Twitch Tier 2 and Tier 3 subs and gifts count as 2 and 5, like their price. */
   tiers: boolean;
   /** Run as soon as the overlay first loads, instead of waiting for !subathon start. */
   autostart: boolean;
@@ -38,9 +49,12 @@ export const DEFAULT_SUBATHON_SETTINGS: SubathonSettings = {
   title: 'SUBATHON',
   start: 3600,
   cap: 0,
-  sub: 60,
-  gift: 60,
-  bits: 20,
+  tsub: 60,
+  tgift: 60,
+  bits: 60,
+  ksub: 60,
+  kgift: 60,
+  kicks: 60,
   tiers: true,
   autostart: false,
   percent: true,
@@ -53,42 +67,27 @@ export const MAX_SECONDS = 30 * 24 * 3600;
 const MIN_START_SECONDS = 60;
 export const TITLE_MAX_LENGTH = 32;
 
-export const WIDGET_PATH = '/widgets/subathon';
+const WIDGET_PATH = '/widgets/subathon';
 
-type NumberKey = 'start' | 'cap' | 'sub' | 'gift' | 'bits';
+type NumberKey = 'start' | 'cap' | SubathonTimeKey;
 type FlagKey = 'tiers' | 'autostart' | 'percent' | 'pops';
-const NUMBER_KEYS: NumberKey[] = ['start', 'cap', 'sub', 'gift', 'bits'];
-// URL name of each on/off setting.
+// URL name of each setting; the time values use their own key.
+const NUMBER_PARAMS: Record<NumberKey, string> = {
+  start: 'time',
+  cap: 'cap',
+  ...(Object.fromEntries(TIME_KEYS.map((key) => [key, key])) as Record<SubathonTimeKey, string>),
+};
 const FLAG_PARAMS: Record<FlagKey, string> = {
   tiers: 'tiers',
   autostart: 'autostart',
   percent: 'pct',
   pops: 'pops',
 };
-// Starting time is `time` in the URL, the other numbers keep their name.
-const NUMBER_PARAMS: Record<NumberKey, string> = {
-  start: 'time',
-  cap: 'cap',
-  sub: 'sub',
-  gift: 'gift',
-  bits: 'bits',
-};
-
-/** Every settings param the widget reads, channels aside. */
-export const SUBATHON_PARAMS = [
-  'style',
-  'color',
-  'title',
-  ...Object.values(NUMBER_PARAMS),
-  ...Object.values(FLAG_PARAMS),
-];
+const NUMBER_KEYS = Object.keys(NUMBER_PARAMS) as NumberKey[];
+const FLAG_KEYS = Object.keys(FLAG_PARAMS) as FlagKey[];
 
 /** Only settings that differ from the defaults are written, so URLs stay short. */
-export function buildSubathonParams(
-  settings: SubathonSettings,
-  twitchChannel: string,
-  kickChannel: string,
-): URLSearchParams {
+function buildParams(settings: SubathonSettings, twitchChannel: string, kickChannel: string) {
   const params = new URLSearchParams();
   const twitch = twitchChannel.trim().toLowerCase();
   const kick = kickChannel.trim().toLowerCase();
@@ -101,7 +100,7 @@ export function buildSubathonParams(
   for (const key of NUMBER_KEYS) {
     if (settings[key] !== defaults[key]) params.set(NUMBER_PARAMS[key], String(settings[key]));
   }
-  for (const key of Object.keys(FLAG_PARAMS) as FlagKey[]) {
+  for (const key of FLAG_KEYS) {
     if (settings[key] !== defaults[key]) params.set(FLAG_PARAMS[key], settings[key] ? '1' : '0');
   }
   return params;
@@ -114,7 +113,7 @@ export function buildSubathonUrl(
   twitchChannel: string,
   kickChannel: string,
 ): string {
-  const params = buildSubathonParams(settings, twitchChannel, kickChannel);
+  const params = buildParams(settings, twitchChannel, kickChannel);
   if (!params.has('twitch') && !params.has('kick')) return '';
   return `${origin}${WIDGET_PATH}?${params.toString()}`;
 }
@@ -128,7 +127,7 @@ export function buildSubathonPreviewUrl(
   settings: SubathonSettings,
   speed?: number,
 ): string {
-  const params = buildSubathonParams(settings, '', '');
+  const params = buildParams(settings, '', '');
   params.set('simulate', '1');
   if (speed) params.set('simspeed', String(speed));
   return `${origin}${WIDGET_PATH}?${params.toString()}`;
@@ -143,8 +142,8 @@ export function readFlag(value: string | null | undefined, fallback: boolean): b
 }
 
 /** A whole number of seconds from 0 to MAX_SECONDS, or `fallback`. */
-export function readSeconds(value: string | null | undefined, fallback: number): number {
-  if (value === null || value === undefined || value.trim() === '') return fallback;
+function readSeconds(value: string | null, fallback: number): number {
+  if (value === null || value.trim() === '') return fallback;
   const n = Number(value);
   return Number.isFinite(n) && n >= 0 ? Math.min(MAX_SECONDS, Math.round(n)) : fallback;
 }
@@ -159,10 +158,7 @@ export function readSubathonSettings(params: URLSearchParams): Omit<SubathonSett
     NUMBER_KEYS.map((key) => [key, readSeconds(params.get(NUMBER_PARAMS[key]), defaults[key])]),
   ) as Record<NumberKey, number>;
   const flags = Object.fromEntries(
-    (Object.keys(FLAG_PARAMS) as FlagKey[]).map((key) => [
-      key,
-      readFlag(params.get(FLAG_PARAMS[key]), defaults[key]),
-    ]),
+    FLAG_KEYS.map((key) => [key, readFlag(params.get(FLAG_PARAMS[key]), defaults[key])]),
   ) as Record<FlagKey, boolean>;
   return {
     style: SUBATHON_STYLES.includes(style) ? style : defaults.style,
@@ -174,14 +170,10 @@ export function readSubathonSettings(params: URLSearchParams): Omit<SubathonSett
   };
 }
 
-export interface ParsedSubathonUrl {
-  settings: SubathonSettings;
-  twitchChannel: string;
-  kickChannel: string;
-}
-
 /** Reverse of buildSubathonUrl; null for anything that isn't a Subathon URL. */
-export function parseSubathonUrl(text: string): ParsedSubathonUrl | null {
+export function parseSubathonUrl(
+  text: string,
+): { settings: SubathonSettings; twitchChannel: string; kickChannel: string } | null {
   let url: URL;
   try {
     url = new URL(text.trim());
