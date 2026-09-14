@@ -204,7 +204,6 @@ function EmoteWallSetup() {
           src={previewUrl}
           title={t('emoteWallSetup.previewIframeTitle')}
           canvas={CANVAS}
-          motionSafe
         />
       }
       previewFooter={

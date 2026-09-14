@@ -2,7 +2,7 @@ import { screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { applyTheme } from '#/lib/theme';
 import { setReducedMotion, withLayout } from '#/test/browser';
-import { button, en, inLocale, textbox } from '#/test/queries';
+import { en, inLocale, textbox } from '#/test/queries';
 import { renderRoute, setupUser } from '#/test/render';
 
 vi.mock('canvas-confetti', () => ({ default: vi.fn() }));
@@ -105,14 +105,10 @@ describe('setup page previews', () => {
     expect(frame.getAttribute('scrolling')).toBe('no');
   });
 
-  it('waits for a Play click before running the Sub Sprout demo with reduced motion', async () => {
+  it('runs the Sub Sprout demo right away, even with reduced motion', async () => {
     withLayout(800, 600);
     setReducedMotion(true);
-    const user = setupUser();
     await renderRoute('/setup/sub-growing-plant');
-    expect(screen.queryByTitle(en('subSprout.previewIframeTitle'))).toBeNull();
-
-    await user.click(button(en('common.playPreview')));
     const frame = screen.getByTitle(en('subSprout.previewIframeTitle')) as HTMLIFrameElement;
     const src = new URL(frame.src);
     expect(src.pathname).toBe('/widgets/sub-sprout-widget');

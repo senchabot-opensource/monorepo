@@ -182,12 +182,7 @@ function SubSproutSetup() {
       previewTip={t('subSprout.previewHint')}
       previewAspect={CANVAS.width / CANVAS.height}
       preview={
-        <PreviewFrame
-          src={previewUrl}
-          title={t('subSprout.previewIframeTitle')}
-          canvas={CANVAS}
-          motionSafe
-        />
+        <PreviewFrame src={previewUrl} title={t('subSprout.previewIframeTitle')} canvas={CANVAS} />
       }
       previewFooter={
         <RangeField

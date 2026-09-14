@@ -1,5 +1,5 @@
-import { type CSSProperties, useState } from 'react';
-import { PreviewFrame, usePrefersReducedMotion } from '#/components/preview-frame';
+import type { CSSProperties } from 'react';
+import { PreviewFrame } from '#/components/preview-frame';
 import { useI18n } from '#/lib/i18n';
 import { getWidget, type WidgetId } from '#/lib/widgets';
 import { getDemoSrc } from './demo-url';
@@ -49,19 +49,16 @@ function SceneBackdrop() {
 
 /**
  * Hero visual: Emote Wall, Chat Box, Sub Sprout and Subathon Timer demos layered like sources in
- * one stream scene. Phones only get the chat. With reduced motion, one Play button starts them all.
+ * one stream scene. Phones only get the chat.
  */
 export function StreamScene() {
   const { t } = useI18n();
-  const reducedMotion = usePrefersReducedMotion();
-  const [played, setPlayed] = useState(false);
-  const paused = reducedMotion && !played;
 
   const demo = (id: WidgetId) => {
     const widget = getWidget(id);
     return (
       <PreviewFrame
-        src={paused ? '' : getDemoSrc(widget)}
+        src={getDemoSrc(widget)}
         title={t('home.demoTitle', { name: t(widget.nameKey) })}
         placeholder={<span />}
         backgroundClassName="bg-transparent"
@@ -92,20 +89,6 @@ export function StreamScene() {
             <span aria-hidden="true" className="size-1.5 rounded-full bg-white" />
             {t('home.sceneLive')}
           </span>
-          {paused && (
-            <div className="absolute inset-0 flex items-center justify-center bg-zinc-950/40">
-              <button
-                type="button"
-                onClick={() => setPlayed(true)}
-                className="inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm transition-colors hover:bg-white/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500"
-              >
-                <svg className="size-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5Z" />
-                </svg>
-                {t('common.playPreview')}
-              </button>
-            </div>
-          )}
         </div>
       </div>
       <figcaption className="mt-3 flex items-center justify-center gap-2 text-xs text-zinc-500 dark:text-zinc-400">
