@@ -11,8 +11,8 @@ import {
 
 type EventCallback = (event: SubathonEvent) => void;
 
-/** Anonymous Twitch IRC reader for subs, gifts, Bits and mod commands. */
-export class TwitchSubathonSource extends BaseChatClient {
+/** Anonymous Twitch IRC reader for subs, gifts, Bits, raids and mod commands. */
+export class TwitchEventSource extends BaseChatClient {
   private readonly bundles = new Map<string, number>();
 
   constructor(
@@ -49,8 +49,8 @@ export class TwitchSubathonSource extends BaseChatClient {
   }
 }
 
-/** Kick Pusher reader for subs, gifted subs, Kicks and mod commands. */
-export class KickSubathonSource extends BaseChatClient {
+/** Kick Pusher reader for subs, gifted subs, Kicks, raids and mod commands. */
+export class KickEventSource extends BaseChatClient {
   private readonly dedupe = createKickDedupe();
 
   constructor(

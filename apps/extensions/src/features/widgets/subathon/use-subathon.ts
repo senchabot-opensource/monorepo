@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { getKickChannelInfo } from '#/lib/kick';
 import type { SubathonSettings, SubathonTimeValues } from '#/lib/subathon-url';
 import type { SubathonEvent, SubathonPlatform, SubTier, TimedEvent } from './subathon-events';
-import { KickSubathonSource, TwitchSubathonSource } from './subathon-sources';
+import { KickEventSource, TwitchEventSource } from './subathon-sources';
 import {
   addTime,
   applyCommand,
@@ -117,7 +117,7 @@ function simulatedEvent(values: SubathonValues): TimedEvent | null {
 }
 
 /** The Kick chatroom and channel ids, looked up again until kick.com answers. */
-function useKickIds(kick: string | undefined, enabled: boolean) {
+export function useKickIds(kick: string | undefined, enabled: boolean) {
   const [ids, setIds] = useState<{ chatroomId: string; channelId: string | null } | null>(null);
   useEffect(() => {
     setIds(null);
@@ -216,6 +216,8 @@ export function useSubathon({
         commit(applyCommand(stateRef.current, event.command, at, clockOptions(current)));
         return;
       }
+      // A raid adds no time, and Kick's second word on a sub was counted with the first.
+      if (event.kind === 'raid' || (event.kind === 'sub' && event.again)) return;
       if (isEnded(stateRef.current, at)) return;
       const ms = eventTime(event, current);
       // At the cap nothing gets through, so there's nothing to show either.
@@ -248,7 +250,7 @@ export function useSubathon({
   // which would lose Twitch events meanwhile and forget the gift bundles in flight.
   useEffect(() => {
     if (simulate || !twitch) return;
-    const source = new TwitchSubathonSource(twitch, handleEvent);
+    const source = new TwitchEventSource(twitch, handleEvent);
     return () => source.disconnect();
   }, [simulate, twitch, handleEvent]);
 
@@ -256,7 +258,7 @@ export function useSubathon({
   const channelId = kickIds?.channelId ?? null;
   useEffect(() => {
     if (simulate || !chatroomId) return;
-    const source = new KickSubathonSource(chatroomId, channelId, handleEvent);
+    const source = new KickEventSource(chatroomId, channelId, handleEvent);
     return () => source.disconnect();
   }, [simulate, chatroomId, channelId, handleEvent]);
 
