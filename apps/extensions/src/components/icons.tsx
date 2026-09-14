@@ -69,6 +69,15 @@ export function SubathonIcon(props: IconProps) {
   );
 }
 
+export function StreamAlertsIcon(props: IconProps) {
+  return (
+    <StrokeIcon {...props}>
+      <path d="M6 16.5V11a6 6 0 0 1 12 0v5.5l1.5 2h-15Z" />
+      <path d="M10 21h4M12 3v2M3 6.5 4.8 8M21 6.5 19.2 8" />
+    </StrokeIcon>
+  );
+}
+
 export function RaffleIcon(props: IconProps) {
   return (
     <StrokeIcon {...props}>

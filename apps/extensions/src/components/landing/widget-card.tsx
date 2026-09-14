@@ -28,14 +28,17 @@ const fillsRows = (shapes: CardShape[]) =>
   shapes.reduce((cells, shape) => cells + (shape === 'standard' ? 1 : 2), 0) % 6 === 0;
 
 /**
- * Shapes for one gallery grid. A set that would leave a hole (say a fifth overlay) drops the tall
- * card first, then every span, so the grid stays even instead of showing a lone card.
+ * Shapes for one gallery grid. A set that would leave a hole (say a fifth overlay) drops the wide
+ * cards first, then the tall one, then every span, so the grid stays even instead of showing a
+ * lone card. The tall chat column goes last: it reads as the gallery's anchor.
  */
 export function getGalleryShapes(widgets: readonly WidgetEntry[]): CardShape[] {
   const shapes = widgets.map(getCardShape);
   if (fillsRows(shapes)) return shapes;
-  const withoutTall = shapes.map((shape) => (shape === 'tall' ? 'standard' : shape));
-  if (fillsRows(withoutTall)) return withoutTall;
+  for (const dropped of ['wide', 'tall'] as const) {
+    const fewer = shapes.map((shape) => (shape === dropped ? 'standard' : shape));
+    if (fillsRows(fewer)) return fewer;
+  }
   return shapes.map(() => 'standard');
 }
 

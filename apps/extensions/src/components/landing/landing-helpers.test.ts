@@ -46,31 +46,38 @@ describe('getDemoSrc', () => {
 });
 
 describe('gallery card shapes', () => {
+  // The four overlays the bento was drawn for: a tall Chat Box and a wide Subathon Timer.
+  const BENTO = (['chat-box', 'emote-wall', 'sub-sprout', 'subathon'] as const).map(getWidget);
+  const extra = (id: string, width: number, height: number) =>
+    ({ ...getWidget('emote-wall'), id, sourceSize: { width, height } }) as WidgetEntry;
+
   it('derives the shape from the source size', () => {
     expect(OVERLAYS.map((widget) => [widget.id, getCardShape(widget)])).toEqual([
       ['chat-box', 'tall'],
       ['emote-wall', 'standard'],
       ['sub-sprout', 'standard'],
       ['subathon', 'wide'],
+      ['stream-alerts', 'standard'],
     ]);
     for (const widget of TOOLS) expect(getCardShape(widget), widget.id).toBe('standard');
   });
 
   it('keeps the bento spans while the overlays fill whole rows', () => {
-    expect(getGalleryShapes(OVERLAYS)).toEqual(OVERLAYS.map(getCardShape));
+    expect(getGalleryShapes(BENTO)).toEqual(BENTO.map(getCardShape));
   });
 
-  it('drops the tall card, then every span, when a new overlay would leave a hole', () => {
-    const extra = (id: string, width: number, height: number) =>
-      ({ ...getWidget('emote-wall'), id, sourceSize: { width, height } }) as WidgetEntry;
-    expect(getGalleryShapes([...OVERLAYS, extra('a', 1920, 1080)])).toEqual([
+  it('drops the wide cards, then the tall one, then every span, when a new overlay would leave a hole', () => {
+    // Five overlays: Chat Box stays tall beside a 2×2 of the rest.
+    expect(getGalleryShapes(OVERLAYS)).toEqual(['tall', ...Array(4).fill('standard')]);
+    // Two strips and a column: flattening the strips leaves a hole, flattening the column doesn't.
+    const [chat, emote, , subathon] = BENTO;
+    expect(getGalleryShapes([chat, subathon, extra('a', 800, 200), emote])).toEqual([
       'standard',
-      'standard',
-      'standard',
+      'wide',
       'wide',
       'standard',
     ]);
-    expect(getGalleryShapes([...OVERLAYS, extra('a', 800, 200), extra('b', 800, 200)])).toEqual(
+    expect(getGalleryShapes([...BENTO, extra('a', 800, 200), extra('b', 800, 200)])).toEqual(
       Array(6).fill('standard'),
     );
   });

@@ -17,12 +17,12 @@ export const PAGE_META = {
     en: {
       title: 'Free Twitch & Kick Overlays for OBS | Senchabot Extensions',
       description:
-        'Six free tools for Twitch and Kick streamers: Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Raffle and OBS Bridge. Set one up, copy its URL, add it to OBS.',
+        'Seven free tools for Twitch and Kick streamers: Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Raffle and OBS Bridge. Add one to OBS.',
     },
     tr: {
       title: "OBS için Ücretsiz Twitch ve Kick Overlay'leri | Senchabot",
       description:
-        "Twitch ve Kick için altı ücretsiz araç: Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Çekiliş ve OBS Bridge. Ayarla, URL'yi kopyala, OBS'e ekle.",
+        "Twitch ve Kick için yedi ücretsiz araç: Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Çekiliş ve OBS Bridge. Ayarla, OBS'e ekle.",
     },
   },
   'chat-box': {
@@ -71,6 +71,18 @@ export const PAGE_META = {
       title: 'Twitch ve Kick için Subathon Timer (Ücretsiz) | Senchabot',
       description:
         "OBS için ücretsiz subathon sayacı overlay'i. Abonelik, hediye abonelik, Bits ve Kicks süre ekler. Can barı, saat ya da halka seç, modlar sohbetten yönetsin.",
+    },
+  },
+  'stream-alerts': {
+    en: {
+      title: 'Animated Stream Alerts for Twitch & Kick (Free) | Senchabot',
+      description:
+        'Free animated stream alerts for OBS. Subs, gifted subs, Bits, Kicks and raids on Twitch and Kick each get an alert with a sound. No login, no download.',
+    },
+    tr: {
+      title: 'Twitch ve Kick için Yayın Uyarıları (Ücretsiz) | Senchabot',
+      description:
+        "OBS için ücretsiz animasyonlu yayın uyarıları. Twitch ve Kick'te her abonelik, hediye abonelik, Bits, Kicks ve raid için sesli uyarı. Giriş yok, indirme yok.",
     },
   },
   raffle: {
@@ -195,6 +207,28 @@ export const APP_FEATURES: Record<WidgetId, Record<Locale, readonly string[]>> =
       'Yayıncı ve modlar !subathon ile sayacı başlatıp duraklatabilir, süre ekleyip çıkarabilir, ayarlayıp sıfırlayabilir',
       "Sayaç OBS'te kaydedilir, sayfa yenilense de kaybolmaz",
       'Önerilen Tarayıcı Kaynağı boyutu: 800x300',
+    ],
+  },
+  'stream-alerts': {
+    en: [
+      'Alerts for subs, gifted subs, Bits, Kicks and raids on Twitch and Kick',
+      'Two themes: Neon with synth sounds and Celestial with bell chimes, each with an icon per alert',
+      'Seven colors, including one that tells Twitch and Kick apart',
+      'Custom headings and minimum amounts for gifts, cheers and raids',
+      "Resub months, and the viewer's message with a resub, Bits or Kicks, without links",
+      'Alerts wait their turn and a gift of many subs is a single alert',
+      'English or Turkish alert text',
+      'Recommended browser source size: 800x450',
+    ],
+    tr: [
+      "Twitch ve Kick'te abonelik, hediye abonelik, Bits, Kicks ve raid uyarıları",
+      'İki tema: synth sesli Neon ve çan sesli Göksel, ikisinde de her uyarıya özel ikon',
+      "Yedi renk seçeneği, biri Twitch ile Kick'i farklı renkte gösterir",
+      'Özel başlıklar, hediye, cheer ve raid için en az miktar ayarı',
+      'Yenilemelerde ay sayısı ve yenileme, Bits ya da Kicks ile gelen izleyici mesajı, linkler olmadan',
+      'Uyarılar sırayla çıkar, çoklu hediye abonelik tek bir uyarı olur',
+      'İngilizce ya da Türkçe uyarı metni',
+      'Önerilen Tarayıcı Kaynağı boyutu: 800x450',
     ],
   },
   raffle: {

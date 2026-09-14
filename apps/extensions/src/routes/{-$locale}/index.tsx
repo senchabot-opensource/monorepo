@@ -216,8 +216,9 @@ function WorksWith() {
   );
 }
 
-// A bento: Chat Box (portrait) spans two rows and Subathon Timer (a strip) two columns, so the four
-// overlays fill a 3×2 grid, or 2×3 on tablets. Dense flow backfills if a span can't fit in a row.
+// Card shapes come from getGalleryShapes: with five overlays Chat Box (portrait) spans two rows
+// beside a 2×2 of the rest, filling a 3×2 grid, or 2×3 on tablets. Dense flow backfills if a span
+// can't fit in a row.
 const GALLERY_GROUPS = [
   {
     key: 'overlays',
