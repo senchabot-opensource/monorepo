@@ -5,7 +5,7 @@ import { formatClock, formatDelta } from './subathon-timer';
 import { POP_MS, type SubathonHit, type SubathonPop, useSubathon } from './use-subathon';
 
 /** Design size; the overlay scales to fill whatever browser source size it gets. */
-export const STAGE = { width: 800, height: 300 };
+const STAGE = { width: 800, height: 300 };
 
 export const SUBATHON_FONT =
   'https://fonts.googleapis.com/css2?family=Oxanium:wght@500;700;800&display=swap';
@@ -24,24 +24,26 @@ const HUES: Record<Exclude<SubathonColor, 'hp'>, number> = {
 export function hueFor(color: SubathonColor, health: number): number {
   if (color !== 'hp') return HUES[color];
   const h = Math.max(0, Math.min(1, health));
-  if (h >= 0.6) return 142;
-  if (h >= 0.3) return 42 + ((h - 0.3) / 0.3) * 100;
-  return (h / 0.3) * 42;
+  if (h >= 0.6) return HUES.green;
+  if (h >= 0.3) return HUES.gold + ((h - 0.3) / 0.3) * (HUES.green - HUES.gold);
+  return (h / 0.3) * HUES.gold;
 }
 
 // Every style keeps a band on top for the rising pops, so they stay inside the source.
 const POP_BAND = 100;
-// Health bar layout, top to bottom: the pops, the bar, the title and time row.
-const BAR_HEIGHT = 64;
-const INFO_ROW_HEIGHT = 44;
+// Health bar layout, bottom up: margin, the title and time row, a gap, the bar; pops above it.
 const BAR_BOTTOM = 36;
-const BAR_TOP = STAGE.height - BAR_BOTTOM - INFO_ROW_HEIGHT - 12 - BAR_HEIGHT;
+const INFO_ROW_HEIGHT = 44;
+const BAR_GAP = 12;
+const BAR_HEIGHT = 64;
+const BAR_TOP = STAGE.height - BAR_BOTTOM - INFO_ROW_HEIGHT - BAR_GAP - BAR_HEIGHT;
 
 // Segment lines on the health bar, every 10%.
 const TICKS = [10, 20, 30, 40, 50, 60, 70, 80, 90];
 
-// How long a heal plays: the white ghost fades in 900ms, the fill eases in over 600ms.
+// A heal's white ghost fades in 900ms while the fill eases in; a loss's red ghost lingers longer.
 const HEAL_MS = 900;
+const HURT_MS = 1300;
 
 const LOW_HEALTH = 0.2;
 const CRITICAL_HEALTH = 0.07;
@@ -68,7 +70,11 @@ const CSS = `
 function useHealing(hit: SubathonHit | null): boolean {
   const [healing, setHealing] = useState(false);
   useEffect(() => {
-    if (!hit?.heal) return;
+    // A loss right after a heal ends the heal early, so its flash doesn't play on the loss.
+    if (!hit?.heal) {
+      setHealing(false);
+      return;
+    }
     setHealing(true);
     const timer = window.setTimeout(() => setHealing(false), HEAL_MS);
     return () => window.clearTimeout(timer);
@@ -88,10 +94,17 @@ function useFitScale(): number {
   return scale;
 }
 
-export interface SubathonWidgetProps {
+/** Heartbeat speed in seconds by health, or null when it shouldn't beat. */
+function beatFor(health: number, paused: boolean, ended: boolean): number | null {
+  if (paused || ended) return null;
+  if (health <= CRITICAL_HEALTH) return 0.55;
+  if (health <= LOW_HEALTH) return 0.8;
+  return 1.3;
+}
+
+interface SubathonWidgetProps {
   twitchChannel?: string;
   kickChannel?: string;
-  kickIds?: { chatroomId: string; channelId: string | null } | null;
   settings: Omit<SubathonSettings, 'platforms'>;
   simulate?: boolean;
   simSpeed?: number;
@@ -100,28 +113,35 @@ export interface SubathonWidgetProps {
 export function SubathonWidget({
   twitchChannel,
   kickChannel,
-  kickIds,
   settings,
   simulate,
   simSpeed,
 }: SubathonWidgetProps) {
   const scale = useFitScale();
-  const timer = useSubathon({
+  const { left, health, paused, ended, pops, hit } = useSubathon({
     twitch: twitchChannel,
     kick: kickChannel,
-    kickIds,
     values: settings,
     simulate,
     simSpeed,
   });
-  const healing = useHealing(timer.hit);
+  const healing = useHealing(hit);
+  const shown = ended ? 0 : health;
   const view: ViewProps = {
-    ...timer,
-    healing,
-    hue: hueFor(settings.color, timer.health),
+    left,
+    shown,
+    paused,
+    ended,
+    low: !ended && health <= LOW_HEALTH,
+    critical: !ended && health <= CRITICAL_HEALTH,
+    beat: beatFor(health, paused, ended),
+    hue: hueFor(settings.color, health),
     title: settings.title,
-    percent: settings.percent,
-    pops: settings.pops ? timer.pops : [],
+    percent: settings.percent ? `${ended ? 0 : Math.max(1, Math.ceil(health * 100))}%` : null,
+    pops: settings.pops ? pops : [],
+    hit,
+    healing,
+    ease: healing ? '.6s cubic-bezier(.2,.9,.3,1.1)' : '.25s linear',
   };
   const View = VIEWS[settings.style];
 
@@ -137,16 +157,24 @@ export function SubathonWidget({
 
 interface ViewProps {
   left: number;
-  health: number;
+  /** Health to draw, 0 to 1: 0 once ended. */
+  shown: number;
   paused: boolean;
   ended: boolean;
+  low: boolean;
+  critical: boolean;
+  /** Heartbeat seconds, null when it shouldn't beat. */
+  beat: number | null;
   hue: number;
   title: string;
-  percent: boolean;
+  /** "72%", or null when the percentage is turned off. */
+  percent: string | null;
   pops: SubathonPop[];
   hit: SubathonHit | null;
-  /** Time was just added: plays the heal flash and eases the fill up. */
+  /** Time was just added: plays the heal flash. */
   healing: boolean;
+  /** Transition timing for the fill: springy right after a heal, linear while draining. */
+  ease: string;
 }
 
 const VIEWS: Record<SubathonStyle, (props: ViewProps) => React.JSX.Element> = {
@@ -156,8 +184,12 @@ const VIEWS: Record<SubathonStyle, (props: ViewProps) => React.JSX.Element> = {
 };
 
 const hsl = (hue: number, s: number, l: number, a = 1) => `hsl(${hue} ${s}% ${l}% / ${a})`;
-const percentText = (health: number, ended: boolean) =>
-  `${ended ? 0 : Math.max(1, Math.ceil(health * 100))}%`;
+
+/** Color of the time left: red and blinking once it's over. */
+const clockColor = (ended: boolean): CSSProperties => ({
+  color: ended ? '#f87171' : '#fff',
+  animation: ended ? 'sa-blink 1s steps(2) infinite' : undefined,
+});
 
 function HeartIcon({ hue, beat }: { hue: number; beat: number | null }) {
   return (
@@ -225,41 +257,78 @@ function KnockOut({ size = 76 }: { size?: number }) {
   );
 }
 
+/** Glow around a shape that fades out right after time is added. */
+function HealFlash({
+  hit,
+  healing,
+  hue,
+  radius,
+  spread,
+}: {
+  hit: SubathonHit | null;
+  healing: boolean;
+  hue: number;
+  radius: number | string;
+  spread: number;
+}) {
+  if (!hit || !healing) return null;
+  return (
+    <div
+      key={hit.key}
+      style={{
+        position: 'absolute',
+        inset: -2,
+        borderRadius: radius,
+        boxShadow: `0 0 ${spread * 4}px ${spread}px ${hsl(hue, 100, 70, 0.9)}`,
+        animation: 'sa-flash .7s ease-out forwards',
+        pointerEvents: 'none',
+      }}
+    />
+  );
+}
+
 const PLATFORM_COLORS: Record<SubathonPlatform, string> = { twitch: '#a970ff', kick: '#53fc18' };
 
-function popDetail(pop: SubathonPop): string {
-  const { event } = pop;
-  if (event.kind === 'gift') return `🎁 ×${event.count}`;
-  if (event.kind === 'bits') return `◆ ${event.amount}`;
-  return event.tier > 1 ? `★ T${event.tier}` : '★';
+function popDetail({ event }: SubathonPop): string {
+  switch (event.kind) {
+    case 'gift':
+      return `🎁 ×${event.count}`;
+    case 'bits':
+      return `◆ ${event.amount}`;
+    case 'sub':
+      return event.tier > 1 ? `★ T${event.tier}` : '★';
+  }
 }
 
 // Pops that land close together rise side by side instead of on top of each other. Keyed by
 // pop id, so a pop keeps its spot when an older one disappears.
 const POP_OFFSETS = [0, -17, 17];
 
-/** Floating "+1:00" numbers, like heals in a game. `x` is where they rise from, in %. */
-function Pops({
+/**
+ * Floating "+1:00" numbers, like heals in a game, rising from the bottom of a band at the top of
+ * the stage. `x` is where they start, in %.
+ */
+function PopBand({
   pops,
   hue,
   x,
-  bottom,
+  height,
 }: {
   pops: SubathonPop[];
   hue: number;
   x: number;
-  bottom: number;
+  height: number;
 }) {
   const base = Math.min(70, Math.max(30, x));
   return (
-    <>
+    <div style={{ position: 'absolute', left: 0, right: 0, top: 0, height }}>
       {pops.map((pop) => (
         <div
           key={pop.id}
           style={{
             position: 'absolute',
             left: `${base + POP_OFFSETS[pop.id % POP_OFFSETS.length]}%`,
-            bottom,
+            bottom: 0,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -301,33 +370,12 @@ function Pops({
           </span>
         </div>
       ))}
-    </>
+    </div>
   );
 }
 
-/** Heartbeat speed in seconds by health, or null when it shouldn't beat. */
-function beatFor(health: number, paused: boolean, ended: boolean): number | null {
-  if (paused || ended) return null;
-  if (health <= CRITICAL_HEALTH) return 0.55;
-  if (health <= LOW_HEALTH) return 0.8;
-  return 1.3;
-}
-
-function HealthBarView({
-  left,
-  health,
-  paused,
-  ended,
-  hue,
-  title,
-  percent,
-  pops,
-  hit,
-  healing,
-}: ViewProps) {
-  const fill = ended ? 0 : health * 100;
-  const low = !ended && health <= LOW_HEALTH;
-  const critical = !ended && health <= CRITICAL_HEALTH;
+function HealthBarView(view: ViewProps) {
+  const { left, shown, paused, ended, low, critical, hue, title, percent, hit, healing } = view;
   const barStyle: CSSProperties = {
     position: 'relative',
     height: BAR_HEIGHT,
@@ -344,198 +392,169 @@ function HealthBarView({
   };
 
   return (
-    <div
-      style={{
-        position: 'absolute',
-        inset: '0 28px',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'flex-end',
-        gap: 12,
-        paddingBottom: BAR_BOTTOM,
-      }}
-    >
-      <div style={{ position: 'absolute', left: 0, right: 0, top: 0, height: BAR_TOP }}>
-        <Pops pops={pops} hue={hue} x={Math.max(8, fill)} bottom={0} />
-      </div>
-      <div style={barStyle}>
-        <div
-          style={{
-            position: 'relative',
-            height: '100%',
-            overflow: 'hidden',
-            borderRadius: 3,
-            background:
-              'repeating-linear-gradient(90deg, rgba(255,255,255,.045) 0 14px, transparent 14px 28px), linear-gradient(180deg, #16161c, #07070a)',
-          }}
-        >
-          {hit && (
-            <div
-              key={hit.key}
-              style={{
-                position: 'absolute',
-                top: 0,
-                bottom: 0,
-                left: `${Math.min(hit.from, hit.to) * 100}%`,
-                width: `${Math.abs(hit.to - hit.from) * 100}%`,
-                background: hit.heal ? '#ffffff' : '#ef4444',
-                animation: `sa-ghost ${hit.heal ? HEAL_MS : 1300}ms ease-out forwards`,
-              }}
-            />
-          )}
+    <>
+      <PopBand pops={view.pops} hue={hue} x={shown * 100} height={BAR_TOP} />
+      <div
+        style={{
+          position: 'absolute',
+          inset: '0 28px',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'flex-end',
+          gap: BAR_GAP,
+          paddingBottom: BAR_BOTTOM,
+        }}
+      >
+        <div style={barStyle}>
           <div
             style={{
-              position: 'absolute',
-              top: 0,
-              bottom: 0,
-              left: 0,
-              width: `${fill}%`,
-              background: `linear-gradient(180deg, ${hsl(hue, 95, 72)} 0%, ${hsl(hue, 88, 52)} 42%, ${hsl(hue, 85, 34)} 100%)`,
-              boxShadow: `inset -3px 0 0 ${hsl(hue, 100, 85)}`,
-              transition: `width ${healing ? '.6s cubic-bezier(.2,.9,.3,1.1)' : '.25s linear'}, background .4s`,
-              filter: paused ? 'saturate(.35) brightness(.85)' : undefined,
+              position: 'relative',
+              height: '100%',
               overflow: 'hidden',
+              borderRadius: 3,
+              background:
+                'repeating-linear-gradient(90deg, rgba(255,255,255,.045) 0 14px, transparent 14px 28px), linear-gradient(180deg, #16161c, #07070a)',
             }}
           >
-            <div
-              style={{
-                position: 'absolute',
-                inset: 0,
-                background:
-                  'repeating-linear-gradient(115deg, rgba(255,255,255,.14) 0 10px, transparent 10px 20px)',
-                backgroundSize: '28px 100%',
-                animation: paused ? undefined : 'sa-stripes 1.2s linear infinite',
-              }}
-            />
-            <div
-              style={{
-                position: 'absolute',
-                left: 0,
-                right: 0,
-                top: 4,
-                height: '32%',
-                background: 'linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,0))',
-                borderRadius: 2,
-              }}
-            />
-            {hit && healing && (
+            {hit && (
               <div
                 key={hit.key}
                 style={{
                   position: 'absolute',
                   top: 0,
                   bottom: 0,
-                  width: '40%',
-                  background:
-                    'linear-gradient(90deg, transparent, rgba(255,255,255,.75), transparent)',
-                  animation: 'sa-sheen .8s ease-out forwards',
+                  left: `${Math.min(hit.from, hit.to) * 100}%`,
+                  width: `${Math.abs(hit.to - hit.from) * 100}%`,
+                  background: hit.heal ? '#ffffff' : '#ef4444',
+                  animation: `sa-ghost ${hit.heal ? HEAL_MS : HURT_MS}ms ease-out forwards`,
                 }}
               />
             )}
-          </div>
-          {TICKS.map((tick) => (
             <div
-              key={tick}
               style={{
                 position: 'absolute',
                 top: 0,
                 bottom: 0,
-                left: `${tick}%`,
-                width: 2,
-                background: 'rgba(0,0,0,.45)',
-              }}
-            />
-          ))}
-          {percent && (
-            <span
-              className="sa-shadow"
-              style={{
-                position: 'absolute',
-                right: 14,
-                top: '50%',
-                transform: 'translateY(-50%) skewX(14deg)',
-                fontSize: 26,
-                fontWeight: 800,
-                WebkitTextStroke: '1px rgba(0,0,0,.6)',
-              }}
-            >
-              {percentText(health, ended)}
-            </span>
-          )}
-        </div>
-        {hit && healing && (
-          <div
-            key={`f${hit.key}`}
-            style={{
-              position: 'absolute',
-              inset: -2,
-              borderRadius: 8,
-              boxShadow: `0 0 26px 6px ${hsl(hue, 100, 70, 0.9)}`,
-              animation: 'sa-flash .7s ease-out forwards',
-              pointerEvents: 'none',
-            }}
-          />
-        )}
-        {ended && <KnockOut />}
-      </div>
-
-      <div
-        style={{
-          height: INFO_ROW_HEIGHT,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: 16,
-          padding: '0 10px',
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
-          <HeartIcon hue={hue} beat={beatFor(health, paused, ended)} />
-          {title && (
-            <span
-              className="sa-title sa-shadow"
-              style={{
-                fontSize: 26,
+                left: 0,
+                width: `${shown * 100}%`,
+                background: `linear-gradient(180deg, ${hsl(hue, 95, 72)} 0%, ${hsl(hue, 88, 52)} 42%, ${hsl(hue, 85, 34)} 100%)`,
+                boxShadow: `inset -3px 0 0 ${hsl(hue, 100, 85)}`,
+                transition: `width ${view.ease}, background .4s`,
+                filter: paused ? 'saturate(.35) brightness(.85)' : undefined,
                 overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
               }}
             >
-              {title}
-            </span>
-          )}
-          {paused && !ended && <PauseChip />}
+              <div
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  background:
+                    'repeating-linear-gradient(115deg, rgba(255,255,255,.14) 0 10px, transparent 10px 20px)',
+                  backgroundSize: '28px 100%',
+                  animation: paused ? undefined : 'sa-stripes 1.2s linear infinite',
+                }}
+              />
+              <div
+                style={{
+                  position: 'absolute',
+                  left: 0,
+                  right: 0,
+                  top: 4,
+                  height: '32%',
+                  background: 'linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,0))',
+                  borderRadius: 2,
+                }}
+              />
+              {hit && healing && (
+                <div
+                  key={hit.key}
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    bottom: 0,
+                    width: '40%',
+                    background:
+                      'linear-gradient(90deg, transparent, rgba(255,255,255,.75), transparent)',
+                    animation: 'sa-sheen .8s ease-out forwards',
+                  }}
+                />
+              )}
+            </div>
+            {TICKS.map((tick) => (
+              <div
+                key={tick}
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  bottom: 0,
+                  left: `${tick}%`,
+                  width: 2,
+                  background: 'rgba(0,0,0,.45)',
+                }}
+              />
+            ))}
+            {percent && (
+              <span
+                className="sa-shadow"
+                style={{
+                  position: 'absolute',
+                  right: 14,
+                  top: '50%',
+                  transform: 'translateY(-50%) skewX(14deg)',
+                  fontSize: 26,
+                  fontWeight: 800,
+                  WebkitTextStroke: '1px rgba(0,0,0,.6)',
+                }}
+              >
+                {percent}
+              </span>
+            )}
+          </div>
+          <HealFlash hit={hit} healing={healing} hue={hue} radius={8} spread={6} />
+          {ended && <KnockOut />}
         </div>
-        <span
-          className="sa-shadow"
+
+        <div
           style={{
-            fontSize: 44,
-            fontWeight: 800,
-            lineHeight: 1,
-            color: ended ? '#f87171' : '#fff',
-            animation: ended ? 'sa-blink 1s steps(2) infinite' : undefined,
+            height: INFO_ROW_HEIGHT,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 16,
+            padding: '0 10px',
           }}
         >
-          {formatClock(left)}
-        </span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
+            <HeartIcon hue={hue} beat={view.beat} />
+            {title && (
+              <span
+                className="sa-title sa-shadow"
+                style={{
+                  fontSize: 26,
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {title}
+              </span>
+            )}
+            {paused && !ended && <PauseChip />}
+          </div>
+          <span
+            className="sa-shadow"
+            style={{ fontSize: 44, fontWeight: 800, lineHeight: 1, ...clockColor(ended) }}
+          >
+            {formatClock(left)}
+          </span>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
-function ClockView({
-  left,
-  health,
-  paused,
-  ended,
-  hue,
-  title,
-  percent,
-  pops,
-  hit,
-  healing,
-}: ViewProps) {
-  const low = !ended && health <= LOW_HEALTH;
+function ClockView(view: ViewProps) {
+  const { left, shown, paused, ended, low, hue, title, percent } = view;
   const [h, m, s] = formatClock(left).split(':');
   const colon = (
     <span style={{ opacity: paused ? 0.5 : 0.85, margin: '0 2px', position: 'relative', top: -6 }}>
@@ -544,111 +563,90 @@ function ClockView({
   );
 
   return (
-    <div
-      style={{
-        position: 'absolute',
-        inset: `${POP_BAND}px 0 0`,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: 10,
-      }}
-    >
-      <div style={{ position: 'absolute', left: 0, right: 0, bottom: '100%', height: POP_BAND }}>
-        <Pops pops={pops} hue={hue} x={50} bottom={0} />
-      </div>
-      {title && (
-        <span
-          className="sa-title sa-shadow"
-          style={{
-            fontSize: 24,
-            color: hsl(hue, 95, 72),
-            display: 'flex',
-            alignItems: 'center',
-            gap: 10,
-          }}
-        >
-          {title}
-        </span>
-      )}
+    <>
+      <PopBand pops={view.pops} hue={hue} x={50} height={POP_BAND} />
       <div
         style={{
-          position: 'relative',
+          position: 'absolute',
+          inset: `${POP_BAND}px 0 0`,
           display: 'flex',
+          flexDirection: 'column',
           alignItems: 'center',
-          gap: 16,
-          padding: '6px 34px 10px',
-          borderRadius: 22,
-          background: 'linear-gradient(180deg, rgba(24,24,30,.86), rgba(8,8,11,.9))',
-          border: `2px solid ${hsl(hue, 90, 60, 0.55)}`,
-          boxShadow: `0 0 ${low ? 40 : 26}px ${hsl(hue, 90, 50, low ? 0.6 : 0.35)}, inset 0 1px 0 rgba(255,255,255,.12)`,
-          animation: low && !paused ? 'sa-pulse .9s ease-in-out infinite' : undefined,
+          justifyContent: 'center',
+          gap: 10,
         }}
       >
-        {paused && !ended && <PauseChip />}
-        <span
+        {title && (
+          <span className="sa-title sa-shadow" style={{ fontSize: 24, color: hsl(hue, 95, 72) }}>
+            {title}
+          </span>
+        )}
+        <div
           style={{
-            fontSize: 96,
-            fontWeight: 800,
-            lineHeight: 1.05,
-            letterSpacing: '.02em',
-            color: ended ? '#f87171' : '#fff',
-            textShadow: `0 0 22px ${hsl(hue, 90, 55, 0.55)}`,
-            animation: ended ? 'sa-blink 1s steps(2) infinite' : undefined,
+            position: 'relative',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 16,
+            padding: '6px 34px 10px',
+            borderRadius: 22,
+            background: 'linear-gradient(180deg, rgba(24,24,30,.86), rgba(8,8,11,.9))',
+            border: `2px solid ${hsl(hue, 90, 60, 0.55)}`,
+            boxShadow: `0 0 ${low ? 40 : 26}px ${hsl(hue, 90, 50, low ? 0.6 : 0.35)}, inset 0 1px 0 rgba(255,255,255,.12)`,
+            animation: low && !paused ? 'sa-pulse .9s ease-in-out infinite' : undefined,
           }}
         >
-          {h}
-          {colon}
-          {m}
-          {colon}
-          {s}
-        </span>
-        {hit && healing && (
-          <div
-            key={hit.key}
+          {paused && !ended && <PauseChip />}
+          <span
             style={{
-              position: 'absolute',
-              inset: -2,
-              borderRadius: 22,
-              boxShadow: `0 0 30px 8px ${hsl(hue, 100, 70, 0.9)}`,
-              animation: 'sa-flash .7s ease-out forwards',
-            }}
-          />
-        )}
-      </div>
-      {percent && (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12, width: 440 }}>
-          <div
-            style={{
-              flex: 1,
-              height: 8,
-              borderRadius: 99,
-              background: 'rgba(0,0,0,.6)',
-              overflow: 'hidden',
-              boxShadow: '0 0 0 1px rgba(255,255,255,.12)',
+              fontSize: 96,
+              fontWeight: 800,
+              lineHeight: 1.05,
+              letterSpacing: '.02em',
+              textShadow: `0 0 22px ${hsl(hue, 90, 55, 0.55)}`,
+              ...clockColor(ended),
             }}
           >
+            {h}
+            {colon}
+            {m}
+            {colon}
+            {s}
+          </span>
+          <HealFlash hit={view.hit} healing={view.healing} hue={hue} radius={22} spread={8} />
+        </div>
+        {percent && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, width: 440 }}>
             <div
               style={{
-                height: '100%',
-                width: `${ended ? 0 : health * 100}%`,
+                flex: 1,
+                height: 8,
                 borderRadius: 99,
-                background: `linear-gradient(90deg, ${hsl(hue, 85, 45)}, ${hsl(hue, 95, 68)})`,
-                boxShadow: `0 0 12px ${hsl(hue, 95, 60, 0.8)}`,
-                transition: `width ${healing ? '.6s ease-out' : '.25s linear'}`,
+                background: 'rgba(0,0,0,.6)',
+                overflow: 'hidden',
+                boxShadow: '0 0 0 1px rgba(255,255,255,.12)',
               }}
-            />
+            >
+              <div
+                style={{
+                  height: '100%',
+                  width: `${shown * 100}%`,
+                  borderRadius: 99,
+                  background: `linear-gradient(90deg, ${hsl(hue, 85, 45)}, ${hsl(hue, 95, 68)})`,
+                  boxShadow: `0 0 12px ${hsl(hue, 95, 60, 0.8)}`,
+                  transition: `width ${view.ease}`,
+                }}
+              />
+            </div>
+            <span
+              className="sa-shadow"
+              style={{ fontSize: 18, fontWeight: 700, width: 52, textAlign: 'right' }}
+            >
+              {percent}
+            </span>
           </div>
-          <span
-            className="sa-shadow"
-            style={{ fontSize: 18, fontWeight: 700, width: 52, textAlign: 'right' }}
-          >
-            {percentText(health, ended)}
-          </span>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </>
   );
 }
 
@@ -657,159 +655,122 @@ const RING_STROKE = 18;
 const RING_RADIUS = (RING_SIZE - RING_STROKE) / 2;
 const RING_LENGTH = 2 * Math.PI * RING_RADIUS;
 
-function RingView({
-  left,
-  health,
-  paused,
-  ended,
-  hue,
-  title,
-  percent,
-  pops,
-  hit,
-  healing,
-}: ViewProps) {
-  const low = !ended && health <= LOW_HEALTH;
-  const shown = ended ? 0 : health;
+function RingView(view: ViewProps) {
+  const { left, shown, paused, ended, low, hue, title, percent } = view;
   const angle = shown * 2 * Math.PI - Math.PI / 2;
   const center = RING_SIZE / 2;
 
   return (
-    <div
-      style={{
-        position: 'absolute',
-        inset: `${POP_BAND}px 0 0`,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: 30,
-      }}
-    >
-      <div style={{ position: 'absolute', left: 0, right: 0, bottom: '100%', height: POP_BAND }}>
-        <Pops pops={pops} hue={hue} x={58} bottom={0} />
-      </div>
+    <>
+      <PopBand pops={view.pops} hue={hue} x={58} height={POP_BAND} />
       <div
         style={{
-          position: 'relative',
-          width: RING_SIZE,
-          height: RING_SIZE,
-          animation: low && !paused ? 'sa-pulse .9s ease-in-out infinite' : undefined,
+          position: 'absolute',
+          inset: `${POP_BAND}px 0 0`,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 30,
         }}
       >
-        <svg
-          width={RING_SIZE}
-          height={RING_SIZE}
-          viewBox={`0 0 ${RING_SIZE} ${RING_SIZE}`}
-          aria-hidden="true"
-          style={{ overflow: 'visible' }}
-        >
-          <defs>
-            <linearGradient id="sa-ring" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stopColor={hsl(hue, 95, 72)} />
-              <stop offset="1" stopColor={hsl(hue, 85, 42)} />
-            </linearGradient>
-          </defs>
-          <circle
-            cx={center}
-            cy={center}
-            r={RING_RADIUS + RING_STROKE / 2 + 4}
-            fill="rgba(8,8,11,.82)"
-          />
-          <circle
-            cx={center}
-            cy={center}
-            r={RING_RADIUS}
-            fill="none"
-            stroke="rgba(255,255,255,.1)"
-            strokeWidth={RING_STROKE}
-          />
-          <circle
-            cx={center}
-            cy={center}
-            r={RING_RADIUS}
-            fill="none"
-            stroke="url(#sa-ring)"
-            strokeWidth={RING_STROKE}
-            strokeLinecap="round"
-            strokeDasharray={RING_LENGTH}
-            strokeDashoffset={RING_LENGTH * (1 - shown)}
-            transform={`rotate(-90 ${center} ${center})`}
-            style={{
-              filter: `drop-shadow(0 0 10px ${hsl(hue, 95, 55, 0.8)})`,
-              transition: `stroke-dashoffset ${healing ? '.6s ease-out' : '.25s linear'}`,
-              opacity: paused ? 0.55 : 1,
-            }}
-          />
-          {shown > 0 && (
-            <circle
-              cx={center + RING_RADIUS * Math.cos(angle)}
-              cy={center + RING_RADIUS * Math.sin(angle)}
-              r={RING_STROKE / 2 - 3}
-              fill="#fff"
-              style={{ filter: `drop-shadow(0 0 6px ${hsl(hue, 100, 75)})` }}
-            />
-          )}
-        </svg>
         <div
           style={{
-            position: 'absolute',
-            inset: 0,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            position: 'relative',
+            width: RING_SIZE,
+            height: RING_SIZE,
+            animation: low && !paused ? 'sa-pulse .9s ease-in-out infinite' : undefined,
           }}
         >
-          {ended ? null : paused ? (
-            <PauseChip />
-          ) : percent ? (
-            <span className="sa-shadow" style={{ fontSize: 42, fontWeight: 800 }}>
-              {percentText(health, ended)}
-            </span>
-          ) : (
-            <HeartIcon hue={hue} beat={beatFor(health, paused, ended)} />
-          )}
-        </div>
-        {hit && healing && (
+          <svg
+            width={RING_SIZE}
+            height={RING_SIZE}
+            viewBox={`0 0 ${RING_SIZE} ${RING_SIZE}`}
+            aria-hidden="true"
+            style={{ overflow: 'visible' }}
+          >
+            <defs>
+              <linearGradient id="sa-ring" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stopColor={hsl(hue, 95, 72)} />
+                <stop offset="1" stopColor={hsl(hue, 85, 42)} />
+              </linearGradient>
+            </defs>
+            <circle
+              cx={center}
+              cy={center}
+              r={RING_RADIUS + RING_STROKE / 2 + 4}
+              fill="rgba(8,8,11,.82)"
+            />
+            <circle
+              cx={center}
+              cy={center}
+              r={RING_RADIUS}
+              fill="none"
+              stroke="rgba(255,255,255,.1)"
+              strokeWidth={RING_STROKE}
+            />
+            <circle
+              cx={center}
+              cy={center}
+              r={RING_RADIUS}
+              fill="none"
+              stroke="url(#sa-ring)"
+              strokeWidth={RING_STROKE}
+              strokeLinecap="round"
+              strokeDasharray={RING_LENGTH}
+              strokeDashoffset={RING_LENGTH * (1 - shown)}
+              transform={`rotate(-90 ${center} ${center})`}
+              style={{
+                filter: `drop-shadow(0 0 10px ${hsl(hue, 95, 55, 0.8)})`,
+                transition: `stroke-dashoffset ${view.ease}`,
+                opacity: paused ? 0.55 : 1,
+              }}
+            />
+            {shown > 0 && (
+              <circle
+                cx={center + RING_RADIUS * Math.cos(angle)}
+                cy={center + RING_RADIUS * Math.sin(angle)}
+                r={RING_STROKE / 2 - 3}
+                fill="#fff"
+                style={{ filter: `drop-shadow(0 0 6px ${hsl(hue, 100, 75)})` }}
+              />
+            )}
+          </svg>
           <div
-            key={hit.key}
             style={{
               position: 'absolute',
               inset: 0,
-              borderRadius: '50%',
-              boxShadow: `0 0 34px 10px ${hsl(hue, 100, 70, 0.9)}`,
-              animation: 'sa-flash .7s ease-out forwards',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
-          />
-        )}
-        {ended && <KnockOut size={54} />}
-      </div>
-      <div
-        style={{
-          position: 'relative',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 4,
-          minWidth: 0,
-        }}
-      >
-        {title && (
-          <span className="sa-title sa-shadow" style={{ fontSize: 24, color: hsl(hue, 95, 72) }}>
-            {title}
+          >
+            {ended ? null : paused ? (
+              <PauseChip />
+            ) : percent ? (
+              <span className="sa-shadow" style={{ fontSize: 42, fontWeight: 800 }}>
+                {percent}
+              </span>
+            ) : (
+              <HeartIcon hue={hue} beat={view.beat} />
+            )}
+          </div>
+          <HealFlash hit={view.hit} healing={view.healing} hue={hue} radius="50%" spread={10} />
+          {ended && <KnockOut size={54} />}
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 4, minWidth: 0 }}>
+          {title && (
+            <span className="sa-title sa-shadow" style={{ fontSize: 24, color: hsl(hue, 95, 72) }}>
+              {title}
+            </span>
+          )}
+          <span
+            className="sa-shadow"
+            style={{ fontSize: 72, fontWeight: 800, lineHeight: 1, ...clockColor(ended) }}
+          >
+            {formatClock(left)}
           </span>
-        )}
-        <span
-          className="sa-shadow"
-          style={{
-            fontSize: 72,
-            fontWeight: 800,
-            lineHeight: 1,
-            color: ended ? '#f87171' : '#fff',
-            animation: ended ? 'sa-blink 1s steps(2) infinite' : undefined,
-          }}
-        >
-          {formatClock(left)}
-        </span>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

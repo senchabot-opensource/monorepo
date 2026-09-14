@@ -1,60 +1,48 @@
 import { act, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { DEFAULT_SUBATHON_SETTINGS, type SubathonSettings } from '#/lib/subathon-url';
+import { FakeWebSocket } from '#/test/browser';
 import { SubathonWidget } from './subathon-widget';
 import { storageKey } from './use-subathon';
 
 const kickLookup = vi.hoisted(() => vi.fn());
-vi.mock('#/lib/kick', () => ({ getKickChannelInfo: kickLookup }));
+vi.mock('#/lib/kick', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('#/lib/kick')>()),
+  getKickChannelInfo: kickLookup,
+}));
 
-class FakeWebSocket {
-  static OPEN = 1;
-  static all: FakeWebSocket[] = [];
-  readyState = 1;
-  sent: string[] = [];
-  onopen: (() => void) | null = null;
-  onmessage: ((event: { data: string }) => void) | null = null;
-  onerror: (() => void) | null = null;
-  onclose: (() => void) | null = null;
-  constructor(readonly url: string) {
-    FakeWebSocket.all.push(this);
-  }
-  send(data: string) {
-    this.sent.push(data);
-  }
-  close() {}
-}
+const NO_KICK = { chatroomId: null, channelId: null, userId: null, subscriberBadges: [] };
+const KICK_42 = { ...NO_KICK, chatroomId: '42', channelId: '7' };
 
 // The newest one: an unanswered connect or heartbeat makes the client swap in a new socket.
 const socket = (host: string) => {
-  const found = [...FakeWebSocket.all].reverse().find((ws) => ws.url.includes(host));
+  const found = [...FakeWebSocket.instances].reverse().find((ws) => ws.url.includes(host));
   if (!found) throw new Error(`no ${host} socket`);
   return found;
 };
-const receive = (ws: FakeWebSocket, data: string) => act(() => ws.onmessage?.({ data }));
+const receive = (host: string, data: string) => act(() => socket(host).receive(data));
 const pusher = (channel: string, event: string, data: unknown) =>
-  receive(socket('pusher'), JSON.stringify({ event, channel, data: JSON.stringify(data) }));
+  receive('pusher', JSON.stringify({ event, channel, data: JSON.stringify(data) }));
 const clock = () => screen.getByTestId('subathon').textContent ?? '';
 
 const { platforms: _, ...DEFAULTS } = DEFAULT_SUBATHON_SETTINGS;
 const settings = (overrides: Partial<SubathonSettings> = {}) => ({ ...DEFAULTS, ...overrides });
 
 const SUB =
-  '@display-name=Subber;login=subber;msg-id=sub;msg-param-sub-plan=1000 :tmi.twitch.tv USERNOTICE #streamer';
+  '@display-name=Subber;login=subber;msg-id=sub;msg-param-sub-plan=1000;room-id=1 :tmi.twitch.tv USERNOTICE #streamer';
 const MOD_SAYS = (text: string) =>
-  `@badges=moderator/1;display-name=Mod;mod=1 :mod!mod@mod.tmi.twitch.tv PRIVMSG #streamer :${text}`;
+  `@badges=moderator/1;display-name=Mod;mod=1;room-id=1 :mod!mod@mod.tmi.twitch.tv PRIVMSG #streamer :${text}`;
+const bundle = (type: 'submysterygift' | 'subgift') =>
+  `@display-name=Gifter;msg-id=${type};msg-param-community-gift-id=9;msg-param-mass-gift-count=3;msg-param-sub-plan=1000;room-id=1 :tmi.twitch.tv USERNOTICE #streamer`;
 
 beforeEach(() => {
   vi.useFakeTimers();
   vi.setSystemTime(new Date('2026-09-14T12:00:00Z'));
-  vi.stubGlobal('WebSocket', FakeWebSocket);
   vi.spyOn(console, 'log').mockImplementation(() => {});
-  FakeWebSocket.all = [];
-  localStorage.clear();
+  kickLookup.mockReset().mockResolvedValue(KICK_42);
 });
 
 afterEach(() => {
-  vi.unstubAllGlobals();
   vi.restoreAllMocks();
   vi.useRealTimers();
 });
@@ -62,19 +50,19 @@ afterEach(() => {
 describe('SubathonWidget', () => {
   it('waits paused at the starting time until a mod starts it', () => {
     render(<SubathonWidget twitchChannel="streamer" settings={settings()} />);
-    act(() => socket('twitch').onopen?.());
+    act(() => socket('twitch').open());
     expect(clock()).toContain('01:00:00');
     act(() => vi.advanceTimersByTime(60_000));
     expect(clock()).toContain('01:00:00');
 
-    receive(socket('twitch'), MOD_SAYS('!subathon start'));
+    receive('twitch', MOD_SAYS('!subathon start'));
     act(() => vi.advanceTimersByTime(60_000));
     expect(clock()).toContain('00:59:00');
   });
 
   it('adds the sub value, shows who it was from and saves the clock', () => {
-    render(<SubathonWidget twitchChannel="streamer" settings={settings({ sub: 300 })} />);
-    receive(socket('twitch'), SUB);
+    render(<SubathonWidget twitchChannel="streamer" settings={settings({ tsub: 300 })} />);
+    receive('twitch', SUB);
     expect(clock()).toContain('01:05:00');
     expect(clock()).toContain('+5:00');
     expect(clock()).toContain('Subber');
@@ -95,28 +83,12 @@ describe('SubathonWidget', () => {
     expect(clock()).toContain('00:45:00');
   });
 
-  it('follows a changed starting time while the clock is untouched', () => {
+  it('follows a changed starting time until the clock first runs', () => {
     const { unmount } = render(<SubathonWidget twitchChannel="streamer" settings={settings()} />);
-    unmount();
-    render(<SubathonWidget twitchChannel="streamer" settings={settings({ start: 7200 })} />);
-    expect(clock()).toContain('02:00:00');
-  });
-
-  it('keeps time added before the start when the starting time changes', () => {
-    const { unmount } = render(<SubathonWidget twitchChannel="streamer" settings={settings()} />);
-    receive(socket('twitch'), SUB);
+    receive('twitch', SUB);
     unmount();
     render(<SubathonWidget twitchChannel="streamer" settings={settings({ start: 7200 })} />);
     expect(clock()).toContain('02:01:00');
-  });
-
-  it('shows no added time when the cap lets none through', () => {
-    render(
-      <SubathonWidget twitchChannel="streamer" settings={settings({ start: 3600, cap: 3600 })} />,
-    );
-    receive(socket('twitch'), SUB);
-    expect(clock()).toContain('01:00:00');
-    expect(clock()).not.toContain('+1:00');
   });
 
   it('stops taking subs at zero until a mod adds time', () => {
@@ -128,23 +100,29 @@ describe('SubathonWidget', () => {
     );
     act(() => vi.advanceTimersByTime(61_000));
     expect(clock()).toContain('K.O.');
-    receive(socket('twitch'), SUB);
+    receive('twitch', SUB);
     expect(clock()).toContain('00:00:00');
 
-    receive(socket('twitch'), MOD_SAYS('!subathon add 10m'));
+    receive('twitch', MOD_SAYS('!subathon add 10m'));
     expect(clock()).toContain('00:10:00');
     expect(clock()).not.toContain('K.O.');
   });
 
-  it('listens to Kick subs, gifts and Kicks on the channels kick.com uses', () => {
+  it('ignores a mod command with an absurd duration instead of breaking the clock', () => {
+    render(<SubathonWidget twitchChannel="streamer" settings={settings()} />);
+    receive('twitch', MOD_SAYS(`!subathon set ${'9'.repeat(320)}`));
+    expect(clock()).toContain('01:00:00');
+  });
+
+  it('reads Kick subs, gifts and Kicks with the Kick values', async () => {
     render(
       <SubathonWidget
         kickChannel="kicker"
-        kickIds={{ chatroomId: '42', channelId: '7' }}
-        settings={settings({ sub: 60, gift: 60, bits: 30 })}
+        settings={settings({ ksub: 60, kgift: 30, kicks: 150, tsub: 999 })}
       />,
     );
-    act(() => socket('pusher').onopen?.());
+    await act(async () => {});
+    act(() => socket('pusher').open());
     const channels = socket('pusher').sent.map((s) => JSON.parse(s).data.channel);
     expect(channels).toEqual(['chatrooms.42.v2', 'chatroom_42', 'channel_7']);
 
@@ -157,57 +135,110 @@ describe('SubathonWidget', () => {
 
     pusher('chatroom_42', 'GiftedSubscriptionsEvent', {
       gifter_username: 'Gifter',
-      gifted_usernames: ['a', 'b', 'c'],
-      gifted_total: 3,
+      gifted_usernames: ['a', 'b', 'c', 'd'],
+      gifted_total: 4,
       chunk_details: null,
     });
-    expect(clock()).toContain('01:04:00');
+    expect(clock()).toContain('01:03:00');
 
     pusher('channel_7', 'KicksGifted', {
       gift_transaction_id: 't1',
       sender: { username: 'Kicker' },
       gift: { amount: 200 },
     });
+    expect(clock()).toContain('01:04:00');
+  });
+
+  it('counts a Twitch Tier 3 sub as 5 subs, or 1 with tiers off', () => {
+    const tier3 = SUB.replace('sub-plan=1000', 'sub-plan=3000');
+    const { unmount } = render(<SubathonWidget twitchChannel="streamer" settings={settings()} />);
+    receive('twitch', tier3);
     expect(clock()).toContain('01:05:00');
+    unmount();
+    localStorage.clear();
+    render(<SubathonWidget twitchChannel="streamer" settings={settings({ tiers: false })} />);
+    receive('twitch', tier3);
+    expect(clock()).toContain('01:01:00');
+  });
+
+  it('adds a share of a second for a tiny cheer', () => {
+    render(<SubathonWidget twitchChannel="streamer" settings={settings({ bits: 60 })} />);
+    const cheer5 =
+      '@bits=5;display-name=C;room-id=1 :c!c@c.tmi.twitch.tv PRIVMSG #streamer :Cheer5';
+    for (let i = 0; i < 10; i++) receive('twitch', cheer5);
+    // 60 s per 500 Bits: 5 Bits add 0.6 s, ten of them 6 s.
+    expect(clock()).toContain('01:00:06');
   });
 
   it('keeps looking the Kick channel up until kick.com answers', async () => {
-    const missing = { chatroomId: null, channelId: null, userId: null, subscriberBadges: [] };
-    kickLookup
-      .mockResolvedValueOnce(missing)
-      .mockResolvedValue({ ...missing, chatroomId: '42', channelId: '7' });
+    kickLookup.mockReset().mockResolvedValueOnce(NO_KICK).mockResolvedValue(KICK_42);
     render(<SubathonWidget kickChannel="kicker" settings={settings()} />);
     await act(async () => {});
-    expect(FakeWebSocket.all).toHaveLength(0);
+    expect(FakeWebSocket.instances).toHaveLength(0);
 
     await act(async () => vi.advanceTimersByTime(5_000));
     expect(kickLookup).toHaveBeenCalledTimes(2);
-    act(() => socket('pusher').onopen?.());
+    act(() => socket('pusher').open());
     expect(socket('pusher').sent.map((s) => JSON.parse(s).data.channel)).toContain('channel_7');
   });
 
-  it('flashes when time is added to a full bar', () => {
-    const { container } = render(<SubathonWidget twitchChannel="streamer" settings={settings()} />);
-    expect(container.querySelector('[style*="sa-flash"]')).toBeNull();
-    receive(socket('twitch'), SUB);
-    expect(clock()).toContain('100%');
-    expect(container.querySelector('[style*="sa-flash"]')).not.toBeNull();
-    act(() => vi.advanceTimersByTime(1_000));
-    expect(container.querySelector('[style*="sa-flash"]')).toBeNull();
+  it("doesn't restart Twitch when the Kick lookup lands, so a gift bundle counts once", async () => {
+    let resolveKick: (value: typeof KICK_42) => void = () => {};
+    kickLookup.mockReset().mockReturnValue(
+      new Promise((resolve) => {
+        resolveKick = resolve;
+      }),
+    );
+    render(
+      <SubathonWidget
+        twitchChannel="streamer"
+        kickChannel="kicker"
+        settings={settings({ tgift: 60 })}
+      />,
+    );
+    const twitch = socket('twitch');
+    receive('twitch', bundle('submysterygift'));
+    receive('twitch', bundle('subgift'));
+    await act(async () => resolveKick(KICK_42));
+    expect(socket('twitch')).toBe(twitch);
+    receive('twitch', bundle('subgift'));
+    receive('twitch', bundle('subgift'));
+    expect(clock()).toContain('01:03:00');
   });
 
-  it('skips events whose value is turned off, and the cap holds', () => {
-    render(<SubathonWidget twitchChannel="streamer" settings={settings({ sub: 0, cap: 3700 })} />);
-    receive(socket('twitch'), SUB);
+  it('flashes when time is added to a full bar, and not on a loss right after', () => {
+    const { container } = render(<SubathonWidget twitchChannel="streamer" settings={settings()} />);
+    const flash = () => container.querySelector('[style*="sa-flash"]');
+    expect(flash()).toBeNull();
+    receive('twitch', SUB);
+    expect(clock()).toContain('100%');
+    expect(flash()).not.toBeNull();
+    receive('twitch', MOD_SAYS('!subathon remove 5m'));
+    expect(flash()).toBeNull();
+  });
+
+  it('skips events whose value is off, and holds the cap', () => {
+    render(<SubathonWidget twitchChannel="streamer" settings={settings({ tsub: 0, cap: 3700 })} />);
+    receive('twitch', SUB);
     expect(clock()).toContain('01:00:00');
-    receive(socket('twitch'), MOD_SAYS('!subathon add 1h'));
+    receive('twitch', MOD_SAYS('!subathon add 1h'));
     expect(clock()).toContain('01:01:40');
+  });
+
+  it('shows no added time when the cap lets none through', () => {
+    render(
+      <SubathonWidget twitchChannel="streamer" settings={settings({ start: 3600, cap: 3600 })} />,
+    );
+    receive('twitch', SUB);
+    expect(clock()).toContain('01:00:00');
+    expect(clock()).not.toContain('+1:00');
   });
 
   it('never connects or saves in a preview', () => {
     render(<SubathonWidget twitchChannel="streamer" settings={settings()} simulate />);
-    expect(FakeWebSocket.all).toHaveLength(0);
+    expect(FakeWebSocket.instances).toHaveLength(0);
     act(() => vi.advanceTimersByTime(10_000));
     expect(localStorage.getItem(storageKey('streamer'))).toBeNull();
+    expect(kickLookup).not.toHaveBeenCalled();
   });
 });

@@ -107,6 +107,13 @@ describe('followSettings', () => {
     expect(timeLeft(moved, 10 * MIN)).toBe(110 * MIN);
   });
 
+  it('takes a new cap on a clock that never ran, either way', () => {
+    const capped = createState(2 * HOUR, false, 0, HOUR);
+    expect(timeLeft(followSettings(capped, 0, { ...options, cap: 0 }), 0)).toBe(2 * HOUR);
+    const open = createState(2 * HOUR, false, 0);
+    expect(timeLeft(followSettings(open, 0, { ...options, cap: 30 * MIN }), 0)).toBe(30 * MIN);
+  });
+
   it('leaves a clock that has run alone', () => {
     const running = createState(HOUR, true, 0);
     expect(followSettings(running, 0, options)).toBe(running);
@@ -144,7 +151,7 @@ describe('parseDuration', () => {
     expect(parseDuration(text)).toBe(ms);
   });
 
-  it.each(['', 'abc', '10x', '1:75', 'm10'])('rejects %j', (text) => {
+  it.each(['', 'abc', '10x', '1:75', 'm10', '9'.repeat(320), '800h'])('rejects %j', (text) => {
     expect(parseDuration(text)).toBeNull();
   });
 });

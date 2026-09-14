@@ -9,10 +9,17 @@ export interface SubathonState {
   left: number;
   /** The most time the clock has held: the health bar's 100%. */
   peak: number;
-  /** Starting time from the URL the clock was made with, so a clock that never ran can follow a new one. */
+  /** The time it was created with (starting time, capped), to tell what was added since. */
   base: number;
   /** Whether the clock has ever run. */
   ran: boolean;
+}
+
+/** Settings the clock takes from the URL, in ms: starting time, cap (0 is none), autostart. */
+export interface ClockOptions {
+  base: number;
+  cap: number;
+  autostart: boolean;
 }
 
 /** A new clock at the starting time, or at `cap` when that is lower (0 means no cap). */
@@ -22,7 +29,7 @@ export function createState(base: number, running: boolean, now: number, cap = 0
     endsAt: running ? now + time : null,
     left: time,
     peak: time,
-    base: Math.max(0, base),
+    base: time,
     ran: running,
   };
 }
@@ -76,21 +83,20 @@ export function resume(state: SubathonState, now: number): SubathonState {
 }
 
 /**
- * A clock that has never run takes the URL's current settings: a changed starting time moves it
- * by the difference, so time added before the start stays on top, and autostart starts it.
+ * A clock that has never run is made again from the URL's current starting time and cap, with
+ * the time added (or removed) before the start carried over, and autostart starts it.
  */
 export function followSettings(
   state: SubathonState,
   now: number,
-  options: { base: number; cap: number; autostart: boolean },
+  options: ClockOptions,
 ): SubathonState {
   if (state.ran) return state;
-  const moved =
-    options.base === state.base
-      ? state
-      : addTime(state, options.base - state.base, now, options.cap);
-  const next = { ...moved, base: options.base, peak: timeLeft(moved, now) };
-  return options.autostart ? resume(next, now) : next;
+  const fresh = createState(options.base, false, now, options.cap);
+  const extra = state.left - state.base;
+  const next = extra === 0 ? fresh : addTime(fresh, extra, now, options.cap);
+  const rebuilt = { ...next, base: fresh.base, peak: next.left };
+  return options.autostart ? resume(rebuilt, now) : rebuilt;
 }
 
 export function isSubathonState(value: unknown): value is SubathonState {
@@ -127,15 +133,11 @@ export function formatDelta(ms: number): string {
 }
 
 const UNIT_MS: Record<string, number> = { h: 3_600_000, m: 60_000, s: 1000 };
+// A mod typing 999999h is a typo; left unchecked it can reach Infinity and break the saved clock.
+const MAX_DURATION_MS = 30 * 24 * 3_600_000;
 
-/**
- * A duration a mod types in chat, in ms: "1h30m", "10m", "45s", "1:30:00", "5:00", or a bare
- * number of minutes ("10"). Null when it isn't one.
- */
-export function parseDuration(text: string): number | null {
-  const value = text.trim().toLowerCase();
-  if (!value) return null;
-  if (/^\d+(\.\d+)?$/.test(value)) return Math.round(Number(value) * 60_000);
+function durationMs(value: string): number | null {
+  if (/^\d+(\.\d+)?$/.test(value)) return Number(value) * 60_000;
   if (/^\d+(:\d{1,2}){1,2}$/.test(value)) {
     const parts = value.split(':').map(Number);
     if (parts.slice(1).some((n) => n >= 60)) return null;
@@ -144,9 +146,16 @@ export function parseDuration(text: string): number | null {
   }
   const units = value.match(/^(?:\d+(?:\.\d+)?[hms])+$/) && value.match(/\d+(?:\.\d+)?[hms]/g);
   if (!units) return null;
-  return Math.round(
-    units.reduce((sum, part) => sum + Number(part.slice(0, -1)) * UNIT_MS[part.slice(-1)], 0),
-  );
+  return units.reduce((sum, part) => sum + Number(part.slice(0, -1)) * UNIT_MS[part.slice(-1)], 0);
+}
+
+/**
+ * A duration a mod types in chat, in ms: "1h30m", "10m", "45s", "1:30:00", "5:00", or a bare
+ * number of minutes ("10"). Null when it isn't one or is over 30 days.
+ */
+export function parseDuration(text: string): number | null {
+  const ms = durationMs(text.trim().toLowerCase());
+  return ms !== null && Number.isFinite(ms) && ms <= MAX_DURATION_MS ? Math.round(ms) : null;
 }
 
 export const COMMAND = '!subathon';
@@ -184,7 +193,7 @@ export function applyCommand(
   state: SubathonState,
   command: SubathonCommand,
   now: number,
-  options: { base: number; cap: number; autostart: boolean },
+  options: ClockOptions,
 ): SubathonState {
   switch (command.action) {
     case 'start':

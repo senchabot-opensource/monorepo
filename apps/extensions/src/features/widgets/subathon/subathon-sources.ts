@@ -1,5 +1,6 @@
 import { BaseChatClient } from '#/lib/basechat';
-import { parseIrcLine } from '#/lib/twitch';
+import { KICK_PUSHER_URL } from '#/lib/kick';
+import { anonymousJoin, parseIrcLine, TWITCH_IRC_URL } from '#/lib/twitch';
 import {
   createKickDedupe,
   kickEvent,
@@ -8,12 +9,7 @@ import {
   twitchEvent,
 } from './subathon-events';
 
-export type SubathonEventCallback = (event: SubathonEvent) => void;
-
-const KICK_PUSHER_URL =
-  'wss://ws-us2.pusher.com/app/32cbd69e4b950bf97679?protocol=7&client=js&version=8.4.0&flash=false';
-// Same window as Sub Sprout: Kick can deliver one gift event twice in a row.
-const KICK_DUPLICATE_WINDOW_MS = 10_000;
+type EventCallback = (event: SubathonEvent) => void;
 
 /** Anonymous Twitch IRC reader for subs, gifts, Bits and mod commands. */
 export class TwitchSubathonSource extends BaseChatClient {
@@ -21,21 +17,19 @@ export class TwitchSubathonSource extends BaseChatClient {
 
   constructor(
     channel: string,
-    private readonly onEvent: SubathonEventCallback,
+    private readonly onEvent: EventCallback,
   ) {
     super('Twitch', () => {});
     const name = channel.trim().toLowerCase();
-    this.connect('wss://irc-ws.chat.twitch.tv:443', {
+    this.connect(TWITCH_IRC_URL, {
       onOpen: () => {
-        this.send('CAP REQ :twitch.tv/tags twitch.tv/commands');
-        this.send('PASS SCHMOOPIIE');
-        this.send(`NICK justinfan${Math.floor(Math.random() * 100000)}`);
-        this.send(`JOIN #${name}`);
+        for (const line of anonymousJoin(name)) this.send(line);
       },
       onMessage: (event) => this.handle(event),
     });
   }
 
+  // Answered with "PONG tmi.twitch.tv :tmi.twitch.tv", which twitchEvent ignores.
   protected override pingFrame() {
     return 'PING :tmi.twitch.tv';
   }
@@ -58,12 +52,11 @@ export class TwitchSubathonSource extends BaseChatClient {
 /** Kick Pusher reader for subs, gifted subs, Kicks and mod commands. */
 export class KickSubathonSource extends BaseChatClient {
   private readonly dedupe = createKickDedupe();
-  private readonly recent: { key: string; at: number }[] = [];
 
   constructor(
     chatroomId: string,
     channelId: string | null,
-    private readonly onEvent: SubathonEventCallback,
+    private readonly onEvent: EventCallback,
   ) {
     super('Kick', () => {});
     this.connect(KICK_PUSHER_URL, {
@@ -76,43 +69,23 @@ export class KickSubathonSource extends BaseChatClient {
     });
   }
 
+  // Answered with pusher:pong. Pusher's own liveness pings are protocol frames the page never sees.
   protected override pingFrame() {
     return JSON.stringify({ event: 'pusher:ping', data: {} });
   }
 
-  private isDuplicate(key: string): boolean {
-    const now = Date.now();
-    while (this.recent.length > 0 && now - this.recent[0].at > KICK_DUPLICATE_WINDOW_MS) {
-      this.recent.shift();
-    }
-    if (this.recent.some((entry) => entry.key === key)) return true;
-    this.recent.push({ key, at: now });
-    return false;
-  }
-
   private handle(event: MessageEvent) {
     if (typeof event.data !== 'string') return;
-    let message: { event?: unknown; data?: unknown };
-    let payload: unknown;
+    let name: unknown;
+    let data: unknown;
     try {
-      message = JSON.parse(event.data);
-      payload = typeof message.data === 'string' ? JSON.parse(message.data) : message.data;
+      const message = JSON.parse(event.data);
+      name = message.event;
+      data = typeof message.data === 'string' ? JSON.parse(message.data) : message.data;
     } catch {
       return;
     }
-    const name = typeof message.event === 'string' ? message.event : '';
-    if (name === 'pusher:ping') {
-      this.send(JSON.stringify({ event: 'pusher:pong' }));
-      return;
-    }
-    if (name === 'GiftedSubscriptionsEvent' && this.isDuplicate(JSON.stringify(payload))) {
-      return;
-    }
-    const subathonEvent = kickEvent(
-      name,
-      payload && typeof payload === 'object' ? (payload as Record<string, unknown>) : null,
-      this.dedupe,
-    );
+    const subathonEvent = typeof name === 'string' ? kickEvent(name, data, this.dedupe) : null;
     if (subathonEvent) this.onEvent(subathonEvent);
   }
 }

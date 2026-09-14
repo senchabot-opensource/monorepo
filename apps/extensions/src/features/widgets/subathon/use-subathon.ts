@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { Disconnectable } from '#/lib/basechat';
 import { getKickChannelInfo } from '#/lib/kick';
-import type { SubathonSettings } from '#/lib/subathon-url';
-import type { SubathonEvent, SubTier } from './subathon-events';
+import type { SubathonSettings, SubathonTimeValues } from '#/lib/subathon-url';
+import type { SubathonEvent, SubathonPlatform, SubTier, TimedEvent } from './subathon-events';
 import { KickSubathonSource, TwitchSubathonSource } from './subathon-sources';
 import {
   addTime,
   applyCommand,
+  type ClockOptions,
   createState,
   followSettings,
   healthOf,
@@ -16,28 +16,38 @@ import {
   timeLeft,
 } from './subathon-timer';
 
-export type SubathonValues = Pick<
-  SubathonSettings,
-  'start' | 'cap' | 'sub' | 'gift' | 'bits' | 'tiers' | 'autostart'
->;
+type SubathonValues = SubathonTimeValues &
+  Pick<SubathonSettings, 'start' | 'cap' | 'autostart' | 'tiers'>;
 
 // Tier 2 and Tier 3 cost about 2x and 5x a Tier 1 sub.
 const TIER_WEIGHT: Record<SubTier, number> = { 1: 1, 2: 2, 3: 5 };
 
-/** Time an event adds, in ms; 0 when its value is turned off. */
-export function eventTime(event: SubathonEvent, values: SubathonValues): number {
-  const weight = (tier: SubTier) => (values.tiers ? TIER_WEIGHT[tier] : 1);
+// The Bits and Kicks values are per this many, about the price of one sub.
+const BITS_PER_VALUE = 500;
+
+const clockOptions = (values: SubathonValues): ClockOptions => ({
+  base: values.start * 1000,
+  cap: values.cap * 1000,
+  autostart: values.autostart,
+});
+
+/** Seconds an event adds by its platform's values; Twitch tiers weigh in when turned on. */
+function valueFor(event: TimedEvent, values: SubathonValues): number {
+  const kick = event.platform === 'kick';
+  const weight = kick || event.kind === 'bits' || !values.tiers ? 1 : TIER_WEIGHT[event.tier];
   switch (event.kind) {
     case 'sub':
-      return values.sub * weight(event.tier) * 1000;
+      return (kick ? values.ksub : values.tsub) * weight;
     case 'gift':
-      return values.gift * event.count * weight(event.tier) * 1000;
+      return (kick ? values.kgift : values.tgift) * event.count * weight;
     case 'bits':
-      return Math.round((values.bits * event.amount) / 100) * 1000;
-    case 'command':
-      return 0;
+      return ((kick ? values.kicks : values.bits) * event.amount) / BITS_PER_VALUE;
   }
 }
+
+/** Time an event adds in ms (a 1 Bit cheer adds its share too); 0 when its value is off. */
+const eventTime = (event: TimedEvent, values: SubathonValues) =>
+  Math.round(valueFor(event, values) * 1000);
 
 /** Storage key per channel pair, so every Subathon source for the channel shares one clock. */
 export const storageKey = (twitch = '', kick = '') =>
@@ -47,12 +57,7 @@ export const storageKey = (twitch = '', kick = '') =>
  * The saved clock, or a new one from the settings. Until the clock first runs it follows the
  * URL, so changing the starting time before the subathon begins needs no reset.
  */
-export function loadState(key: string | null, values: SubathonValues, now: number): SubathonState {
-  const options = {
-    base: values.start * 1000,
-    cap: values.cap * 1000,
-    autostart: values.autostart,
-  };
+function loadState(key: string | null, options: ClockOptions, now: number): SubathonState {
   const fresh = createState(options.base, options.autostart, now, options.cap);
   if (!key) return fresh;
   try {
@@ -63,8 +68,6 @@ export function loadState(key: string | null, values: SubathonValues, now: numbe
   }
   return fresh;
 }
-
-type TimedEvent = Exclude<SubathonEvent, { kind: 'command' }>;
 
 export interface SubathonPop {
   id: number;
@@ -78,11 +81,6 @@ export interface SubathonHit {
   from: number;
   to: number;
   heal: boolean;
-}
-
-export interface KickIds {
-  chatroomId: string;
-  channelId: string | null;
 }
 
 /** Setup page buttons talk to the preview on this channel; both pages share the site's origin. */
@@ -103,39 +101,27 @@ const SIM_RESTART_MS = 3500;
 // After a test button, simulated events hold off so the click's effect stands alone.
 const SIM_QUIET_AFTER_TEST_MS = 8000;
 const SIM_NAMES = ['NightOwl', 'pixelpanda', 'ChatGremlin', 'lunaa', 'GG_Tobi', 'mochi', 'Rook'];
+const pick = <T>(list: readonly T[]) => list[Math.floor(Math.random() * list.length)];
 
+/** A random event the settings give time for, or null when every value is off. */
 function simulatedEvent(values: SubathonValues): TimedEvent | null {
-  const kinds = (['sub', 'gift', 'bits'] as const).filter((kind) => values[kind] > 0);
-  if (kinds.length === 0) return null;
-  const kind = kinds[Math.floor(Math.random() * kinds.length)];
-  const platform = Math.random() < 0.5 ? 'twitch' : 'kick';
-  const name = SIM_NAMES[Math.floor(Math.random() * SIM_NAMES.length)];
-  if (kind === 'sub') return { kind, platform, name, tier: 1 };
-  if (kind === 'gift') {
-    return { kind, platform, name, tier: 1, count: [1, 1, 3, 5][Math.floor(Math.random() * 4)] };
-  }
-  return { kind, platform, name, amount: [100, 250, 500][Math.floor(Math.random() * 3)] };
-}
-
-interface UseSubathonOptions {
-  twitch?: string;
-  kick?: string;
-  /** Skips the Kick channel lookup, e.g. in tests. */
-  kickIds?: KickIds | null;
-  values: SubathonValues;
-  /** Preview mode: simulated events on a fast clock, no chat and no saved state. */
-  simulate?: boolean;
-  /** Preview clock speed, e.g. 60 for a minute per second. Without it the bar drains in ~40 s. */
-  simSpeed?: number;
+  const platform = pick<SubathonPlatform>(['twitch', 'kick']);
+  const name = pick(SIM_NAMES);
+  const events: TimedEvent[] = [
+    { kind: 'sub', platform, name, tier: 1 },
+    { kind: 'gift', platform, name, tier: 1, count: pick([1, 1, 3, 5]) },
+    { kind: 'bits', platform, name, amount: pick([100, 250, 500]) },
+  ];
+  const enabled = events.filter((event) => eventTime(event, values) > 0);
+  return enabled.length > 0 ? pick(enabled) : null;
 }
 
 /** The Kick chatroom and channel ids, looked up again until kick.com answers. */
-function useKickIds(kick: string | undefined, known: KickIds | null | undefined, enabled: boolean) {
-  const [ids, setIds] = useState<KickIds | null>(null);
-  const lookUp = enabled && Boolean(kick) && !known;
+function useKickIds(kick: string | undefined, enabled: boolean) {
+  const [ids, setIds] = useState<{ chatroomId: string; channelId: string | null } | null>(null);
   useEffect(() => {
     setIds(null);
-    if (!lookUp || !kick) return;
+    if (!enabled || !kick) return;
     let cancelled = false;
     let timer: number | undefined;
     const lookup = async (attempt: number) => {
@@ -153,14 +139,23 @@ function useKickIds(kick: string | undefined, known: KickIds | null | undefined,
       cancelled = true;
       window.clearTimeout(timer);
     };
-  }, [kick, lookUp]);
-  return known ?? ids;
+  }, [kick, enabled]);
+  return ids;
+}
+
+interface UseSubathonOptions {
+  twitch?: string;
+  kick?: string;
+  values: SubathonValues;
+  /** Preview mode: simulated events on a fast clock, no chat and no saved state. */
+  simulate?: boolean;
+  /** Preview clock speed, e.g. 60 for a minute per second. Without it the bar drains in ~40 s. */
+  simSpeed?: number;
 }
 
 export function useSubathon({
   twitch,
   kick,
-  kickIds,
   values,
   simulate = false,
   simSpeed,
@@ -178,11 +173,11 @@ export function useSubathon({
   );
 
   const key = simulate ? null : storageKey(twitch, kick);
-  const kickIdsFound = useKickIds(kick, kickIds, !simulate);
+  const kickIds = useKickIds(kick, !simulate);
   const valuesRef = useRef(values);
   valuesRef.current = values;
   const [state, setState] = useState<SubathonState>(() =>
-    loadState(key, simulate ? { ...values, autostart: true } : values, clock()),
+    loadState(key, clockOptions(simulate ? { ...values, autostart: true } : values), clock()),
   );
   const stateRef = useRef(state);
   const [now, setNow] = useState(clock);
@@ -191,8 +186,9 @@ export function useSubathon({
   const popId = useRef(0);
   const lastTestAt = useRef(0);
 
+  /** Makes `next` the clock and returns how much time that added (negative when removed). */
   const commit = useCallback(
-    (next: SubathonState) => {
+    (next: SubathonState): number => {
       const at = clock();
       const previous = stateRef.current;
       stateRef.current = next;
@@ -207,6 +203,7 @@ export function useSubathon({
           heal: added > 0,
         });
       }
+      return added;
     },
     [clock],
   );
@@ -216,24 +213,16 @@ export function useSubathon({
       const current = valuesRef.current;
       const at = clock();
       if (event.kind === 'command') {
-        commit(
-          applyCommand(stateRef.current, event.command, at, {
-            base: current.start * 1000,
-            cap: current.cap * 1000,
-            autostart: current.autostart,
-          }),
-        );
+        commit(applyCommand(stateRef.current, event.command, at, clockOptions(current)));
         return;
       }
       if (isEnded(stateRef.current, at)) return;
-      const previous = stateRef.current;
-      const next = addTime(previous, eventTime(event, current), at, current.cap * 1000);
+      const ms = eventTime(event, current);
       // At the cap nothing gets through, so there's nothing to show either.
-      const ms = timeLeft(next, at) - timeLeft(previous, at);
-      if (ms <= 0) return;
-      commit(next);
+      const added = ms > 0 ? commit(addTime(stateRef.current, ms, at, current.cap * 1000)) : 0;
+      if (added <= 0) return;
       const id = ++popId.current;
-      setPops((list) => [...list.slice(-(MAX_POPS - 1)), { id, ms, event }]);
+      setPops((list) => [...list.slice(-(MAX_POPS - 1)), { id, ms: added, event }]);
       window.setTimeout(() => setPops((list) => list.filter((pop) => pop.id !== id)), POP_MS);
     },
     [clock, commit],
@@ -255,36 +244,37 @@ export function useSubathon({
     return () => window.clearInterval(timer);
   }, [running, clock, simulate]);
 
+  // One effect per platform: a Kick lookup that lands later must not restart the Twitch reader,
+  // which would lose Twitch events meanwhile and forget the gift bundles in flight.
   useEffect(() => {
-    if (simulate) return;
-    const sources: Disconnectable[] = [];
-    if (twitch) sources.push(new TwitchSubathonSource(twitch, handleEvent));
-    const chatroomId = kickIdsFound?.chatroomId;
-    const channelId = kickIdsFound?.channelId ?? null;
-    if (kick && chatroomId) {
-      sources.push(new KickSubathonSource(chatroomId, channelId, handleEvent));
-    }
-    return () => {
-      for (const source of sources) source.disconnect();
-    };
-  }, [simulate, twitch, kick, kickIdsFound?.chatroomId, kickIdsFound?.channelId, handleEvent]);
+    if (simulate || !twitch) return;
+    const source = new TwitchSubathonSource(twitch, handleEvent);
+    return () => source.disconnect();
+  }, [simulate, twitch, handleEvent]);
 
-  // Preview: a sub, gift or cheer every few seconds; once out of time, show the end and restart.
+  const chatroomId = kickIds?.chatroomId;
+  const channelId = kickIds?.channelId ?? null;
+  useEffect(() => {
+    if (simulate || !chatroomId) return;
+    const source = new KickSubathonSource(chatroomId, channelId, handleEvent);
+    return () => source.disconnect();
+  }, [simulate, chatroomId, channelId, handleEvent]);
+
+  // Preview: an event every few seconds; once out of time, show the end and start over.
   useEffect(() => {
     if (!simulate) return;
     let timer: number;
     const step = () => {
       if (isEnded(stateRef.current, clock())) {
         timer = window.setTimeout(() => {
-          const { start, cap } = valuesRef.current;
-          commit(createState(start * 1000, true, clock(), cap * 1000));
+          const options = { ...clockOptions(valuesRef.current), autostart: true };
+          commit(applyCommand(stateRef.current, { action: 'reset' }, clock(), options));
           timer = window.setTimeout(step, 1200);
         }, SIM_RESTART_MS);
         return;
       }
-      const event =
-        Date.now() - lastTestAt.current > SIM_QUIET_AFTER_TEST_MS &&
-        simulatedEvent(valuesRef.current);
+      const quiet = Date.now() - lastTestAt.current < SIM_QUIET_AFTER_TEST_MS;
+      const event = quiet ? null : simulatedEvent(valuesRef.current);
       if (event) handleEvent(event);
       timer = window.setTimeout(step, 2200 + Math.random() * 2000);
     };

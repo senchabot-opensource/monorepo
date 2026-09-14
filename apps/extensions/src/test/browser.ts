@@ -84,6 +84,15 @@ export class FakeWebSocket {
 }
 
 /**
+ * Gives every element this size, since jsdom lays nothing out: scaled previews only mount once
+ * they have room to scale into. vi.restoreAllMocks() puts the real getters back.
+ */
+export function withLayout(width: number, height: number) {
+  vi.spyOn(HTMLElement.prototype, 'clientWidth', 'get').mockReturnValue(width);
+  vi.spyOn(HTMLElement.prototype, 'clientHeight', 'get').mockReturnValue(height);
+}
+
+/**
  * In-memory clipboard. userEvent.setup() swaps in its own stub with the same two methods, so
  * tests read what was copied with navigator.clipboard.readText() either way.
  */

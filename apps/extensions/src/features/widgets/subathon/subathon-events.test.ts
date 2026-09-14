@@ -71,10 +71,18 @@ describe('twitchEvent', () => {
     expect(twitchEvent(say('badges=subscriber/1;mod=0', '!subathon add 5h'), new Map())).toBeNull();
   });
 
+  it("ignores a Shared Chat partner channel's cheers and mods", () => {
+    const partner =
+      '@badges=moderator/1;bits=500;mod=1;room-id=1;source-room-id=2 :u!u@u.tmi.twitch.tv PRIVMSG #channel :Cheer500';
+    expect(twitchEvent(line(partner), new Map())).toBeNull();
+    const own = partner.replace('source-room-id=2', 'source-room-id=1');
+    expect(twitchEvent(line(own), new Map())).toMatchObject({ kind: 'bits', amount: 500 });
+  });
+
   it('ignores other notices', () => {
-    const raid =
-      '@display-name=Raider;msg-id=raid;msg-param-viewerCount=50 :tmi.twitch.tv USERNOTICE #channel';
-    expect(twitchEvent(line(raid), new Map())).toBeNull();
+    const milestone =
+      '@display-name=Viewer;msg-id=viewermilestone;msg-param-value=5 :tmi.twitch.tv USERNOTICE #channel';
+    expect(twitchEvent(line(milestone), new Map())).toBeNull();
   });
 });
 
@@ -134,6 +142,19 @@ describe('kickEvent', () => {
       tier: 1,
     });
     expect(kickEvent('GiftedSubscriptionsEvent', chunk(1), dedupe)).toBeNull();
+  });
+
+  it('counts a repeated gift event once', () => {
+    const dedupe = createKickDedupe();
+    const gift = {
+      gifter_username: 'G',
+      gifted_usernames: ['a'],
+      gifted_total: 1,
+      chunk_details: null,
+    };
+    expect(kickEvent('GiftedSubscriptionsEvent', gift, dedupe, 0)).not.toBeNull();
+    expect(kickEvent('GiftedSubscriptionsEvent', gift, dedupe, 2_000)).toBeNull();
+    expect(kickEvent('GiftedSubscriptionsEvent', gift, dedupe, 30_000)).not.toBeNull();
   });
 
   it('reads Kicks and skips a repeated transaction', () => {

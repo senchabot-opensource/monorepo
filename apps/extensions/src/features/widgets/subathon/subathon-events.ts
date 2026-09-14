@@ -1,15 +1,19 @@
 import type { IrcLine } from '#/lib/twitch';
-import { kickSubCount } from '../sub-sprout/kick-sub-events';
+import { kickSubChannels, kickSubCount } from '../sub-sprout/kick-sub-events';
 import { parseCommand, type SubathonCommand } from './subathon-timer';
 
 export type SubathonPlatform = 'twitch' | 'kick';
 export type SubTier = 1 | 2 | 3;
 
-/** Something that changes the clock: a sub, gifted subs, Bits or Kicks, or a mod command. */
-export type SubathonEvent =
+/** Something that adds time: a sub, gifted subs, or Bits or Kicks. */
+export type TimedEvent =
   | { kind: 'sub'; platform: SubathonPlatform; name: string; tier: SubTier }
   | { kind: 'gift'; platform: SubathonPlatform; name: string; count: number; tier: SubTier }
-  | { kind: 'bits'; platform: SubathonPlatform; name: string; amount: number }
+  | { kind: 'bits'; platform: SubathonPlatform; name: string; amount: number };
+
+/** Something that changes the clock: a timed event or a mod command. */
+export type SubathonEvent =
+  | TimedEvent
   | { kind: 'command'; platform: SubathonPlatform; command: SubathonCommand };
 
 // Twitch's msg-param-sub-plan. Prime is a Tier 1 sub.
@@ -30,6 +34,10 @@ const positiveInt = (value: unknown): number => {
 export function twitchEvent(line: IrcLine, bundles: Map<string, number>): SubathonEvent | null {
   const { tags } = line;
   const name = tags['display-name'] || tags.login || '';
+  // In a Shared Chat session the partner channels' messages come through too, marked with their
+  // own source-room-id. Their cheers and mods aren't ours.
+  const sourceRoom = tags['source-room-id'];
+  if (sourceRoom && sourceRoom !== tags['room-id']) return null;
 
   if (line.command === 'PRIVMSG') {
     const bits = positiveInt(tags.bits);
@@ -70,13 +78,11 @@ export function twitchEvent(line: IrcLine, bundles: Map<string, number>): Subath
 }
 
 /**
- * Pusher channels kick.com's own pages listen on. Chat and SubscriptionEvent come on
- * chatrooms.{chatroom}.v2, gifted subs on chatroom_{chatroom}, and Kicks and
- * ChannelSubscriptionEvent on channel_{channel}, which takes the channel id, not the chatroom id.
+ * Sub Sprout's channels plus channel_{channel}, where Kicks and ChannelSubscriptionEvent come.
+ * That one takes the channel id, not the chatroom id.
  */
 export const kickSubathonChannels = (chatroomId: string, channelId: string | null): string[] => [
-  `chatrooms.${chatroomId}.v2`,
-  `chatroom_${chatroomId}`,
+  ...kickSubChannels(chatroomId),
   ...(channelId ? [`channel_${channelId}`] : []),
 ];
 
@@ -85,10 +91,12 @@ const record = (value: unknown): KickRecord | null =>
   value && typeof value === 'object' ? (value as KickRecord) : null;
 const text = (value: unknown): string => (typeof value === 'string' ? value : '');
 
-/** What a Kick event keeps between messages to count every sub and Kicks gift once. */
+/** What a Kick event keeps between messages to count every sub and gift once. */
 export interface KickDedupe {
   /** Ids of gifted-sub events whose later chunks are still to come. */
-  gifts: Set<string>;
+  giftChunks: Set<string>;
+  /** Gifted-sub payloads seen lately, with when. */
+  gifts: Map<string, number>;
   /** gift_transaction_id of every Kicks gift already counted. */
   kicks: Set<string>;
   /** When each subscriber's sub was counted, by lowercase username. */
@@ -96,47 +104,50 @@ export interface KickDedupe {
 }
 
 export const createKickDedupe = (): KickDedupe => ({
-  gifts: new Set(),
+  giftChunks: new Set(),
+  gifts: new Map(),
   kicks: new Set(),
   subs: new Map(),
 });
 
 // Both sub events for one sub arrive within the same second.
 const KICK_SUB_PAIR_MS = 60_000;
-
-/**
- * A paid Kick sub comes as SubscriptionEvent, ChannelSubscriptionEvent, or both. Live traffic had
- * subs with only one of the two either way (and gift recipients get neither), so either counts,
- * and the other one for the same username right after is the same sub.
- */
-function isNewSub(username: string, dedupe: KickDedupe, now: number): boolean {
-  const key = username.toLowerCase();
-  for (const [name, at] of dedupe.subs) {
-    if (now - at > KICK_SUB_PAIR_MS) dedupe.subs.delete(name);
-  }
-  if (key && dedupe.subs.has(key)) return false;
-  if (key) dedupe.subs.set(key, now);
-  return true;
-}
-
+// Same window as Sub Sprout: Kick can deliver one gift event twice in a row.
+const KICK_GIFT_REPEAT_MS = 10_000;
 const KICKS_SEEN_MAX = 500;
 
-/** One Kick Pusher event (payload already parsed) as a subathon event, or null. */
+/** Whether `key` was seen within `windowMs`; if not, it's recorded now. Older keys are dropped. */
+function seenRecently(seen: Map<string, number>, key: string, now: number, windowMs: number) {
+  for (const [old, at] of seen) {
+    if (now - at > windowMs) seen.delete(old);
+  }
+  if (seen.has(key)) return true;
+  seen.set(key, now);
+  return false;
+}
+
+/** One Kick Pusher event (payload already parsed from JSON) as a subathon event, or null. */
 export function kickEvent(
   eventName: string,
-  payload: KickRecord | null,
+  data: unknown,
   dedupe: KickDedupe,
   now = Date.now(),
 ): SubathonEvent | null {
+  const payload = record(data);
   if (!payload) return null;
   switch (eventName) {
+    // A paid sub comes as SubscriptionEvent, ChannelSubscriptionEvent or both: live traffic had
+    // subs with only one either way, and gift recipients get neither. So either counts, once.
     case 'App\\Events\\SubscriptionEvent':
     case 'App\\Events\\ChannelSubscriptionEvent': {
       const name = text(payload.username);
-      return isNewSub(name, dedupe, now) ? { kind: 'sub', platform: 'kick', name, tier: 1 } : null;
+      if (name && seenRecently(dedupe.subs, name.toLowerCase(), now, KICK_SUB_PAIR_MS)) return null;
+      return { kind: 'sub', platform: 'kick', name, tier: 1 };
     }
     case 'GiftedSubscriptionsEvent': {
-      const count = kickSubCount(eventName, payload, dedupe.gifts);
+      if (seenRecently(dedupe.gifts, JSON.stringify(payload), now, KICK_GIFT_REPEAT_MS))
+        return null;
+      const count = kickSubCount(eventName, payload, dedupe.giftChunks);
       return count > 0
         ? { kind: 'gift', platform: 'kick', name: text(payload.gifter_username), count, tier: 1 }
         : null;
