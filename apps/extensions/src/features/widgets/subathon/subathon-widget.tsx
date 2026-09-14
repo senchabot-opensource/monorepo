@@ -63,7 +63,7 @@ const CSS = `
 @keyframes sa-pop{0%{transform:translate(-50%,12px) scale(.6);opacity:0}12%{transform:translate(-50%,-6px) scale(1.12);opacity:1}24%{transform:translate(-50%,-12px) scale(1)}78%{opacity:1}100%{transform:translate(-50%,-40px) scale(.96);opacity:0}}
 @keyframes sa-ko{0%{transform:translate(-50%,-50%) scale(3) rotate(-8deg);opacity:0}55%{transform:translate(-50%,-50%) scale(.92) rotate(-8deg);opacity:1}70%{transform:translate(-50%,-50%) scale(1.06) rotate(-8deg)}100%{transform:translate(-50%,-50%) scale(1) rotate(-8deg);opacity:1}}
 @keyframes sa-blink{0%,100%{opacity:1}50%{opacity:.35}}
-@keyframes sa-stripes{0%{background-position:0 0}100%{background-position:28px 0}}
+@keyframes sa-stripes{0%{transform:translateX(0)}100%{transform:translateX(28px)}}
 `;
 
 /** True for a moment after time is added, while the heal animations play. */
@@ -430,24 +430,26 @@ function HealthBarView(view: ViewProps) {
                 }}
               />
             )}
+            {/* The bar drains nonstop, so a width transition would relayout every frame for as
+                long as the overlay runs. Sliding a full-width fill stays on the compositor. */}
             <div
               style={{
                 position: 'absolute',
-                top: 0,
-                bottom: 0,
-                left: 0,
-                width: `${shown * 100}%`,
+                inset: 0,
+                transform: `translateX(${(shown - 1) * 100}%)`,
                 background: `linear-gradient(180deg, ${hsl(hue, 95, 72)} 0%, ${hsl(hue, 88, 52)} 42%, ${hsl(hue, 85, 34)} 100%)`,
                 boxShadow: `inset -3px 0 0 ${hsl(hue, 100, 85)}`,
-                transition: `width ${view.ease}, background .4s`,
+                transition: `transform ${view.ease}, background .4s`,
                 filter: paused ? 'saturate(.35) brightness(.85)' : undefined,
                 overflow: 'hidden',
               }}
             >
               <div
+                // One tile wider on the left, so sliding it a tile (a transform, unlike moving
+                // background-position) never shows an edge.
                 style={{
                   position: 'absolute',
-                  inset: 0,
+                  inset: '0 0 0 -28px',
                   background:
                     'repeating-linear-gradient(115deg, rgba(255,255,255,.14) 0 10px, transparent 10px 20px)',
                   backgroundSize: '28px 100%',
@@ -466,13 +468,15 @@ function HealthBarView(view: ViewProps) {
                 }}
               />
               {hit && healing && (
+                // The fill is shifted left, so start the sweep where it becomes visible.
                 <div
                   key={hit.key}
                   style={{
                     position: 'absolute',
                     top: 0,
                     bottom: 0,
-                    width: '40%',
+                    left: `${(1 - shown) * 100}%`,
+                    width: `${shown * 40}%`,
                     background:
                       'linear-gradient(90deg, transparent, rgba(255,255,255,.75), transparent)',
                     animation: 'sa-sheen .8s ease-out forwards',
@@ -626,14 +630,15 @@ function ClockView(view: ViewProps) {
                 boxShadow: '0 0 0 1px rgba(255,255,255,.12)',
               }}
             >
+              {/* Slid, not resized, for the same reason as the health bar's fill. */}
               <div
                 style={{
                   height: '100%',
-                  width: `${shown * 100}%`,
+                  transform: `translateX(${(shown - 1) * 100}%)`,
                   borderRadius: 99,
                   background: `linear-gradient(90deg, ${hsl(hue, 85, 45)}, ${hsl(hue, 95, 68)})`,
                   boxShadow: `0 0 12px ${hsl(hue, 95, 60, 0.8)}`,
-                  transition: `width ${view.ease}`,
+                  transition: `transform ${view.ease}`,
                 }}
               />
             </div>
