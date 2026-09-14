@@ -4,6 +4,8 @@ import { ChannelFields } from '#/components/channel-fields';
 import { CopyUrlField } from '#/components/copy-url-field';
 import { PreviewFrame } from '#/components/preview-frame';
 import { SetupShell } from '#/components/setup-shell';
+import { BUTTON_TEST } from '#/components/ui/button-styles';
+import { ColorSwatches } from '#/components/ui/color-swatches';
 import { DurationField } from '#/components/ui/duration-field';
 import { FieldLabel } from '#/components/ui/field-label';
 import { MinutesField } from '#/components/ui/minutes-field';
@@ -94,52 +96,11 @@ const COMMANDS: { usage: string; action: TranslationKey }[] = [
   { usage: `${COMMAND} reset`, action: 'subathon.cmdReset' },
 ];
 
-const TEST_BUTTON_CLASS =
-  'inline-flex h-8 items-center justify-center truncate rounded-md border border-zinc-300 bg-white px-2.5 text-xs font-semibold text-zinc-800 transition-colors hover:bg-zinc-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 disabled:cursor-not-allowed disabled:opacity-40 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700';
-
-function ColorSwatches({
-  value,
-  onChange,
-  labelledBy,
-}: {
-  value: SubathonColor;
-  onChange: (color: SubathonColor) => void;
-  labelledBy: string;
-}) {
-  const { t } = useI18n();
-  const name = useId();
-  return (
-    <fieldset aria-labelledby={labelledBy} className="flex flex-wrap gap-2">
-      {SUBATHON_COLORS.map((color) => (
-        <label
-          key={color}
-          title={t(`subathon.colors.${color}`)}
-          className="relative flex size-8 cursor-pointer items-center justify-center rounded-full ring-offset-2 ring-offset-white has-checked:ring-2 has-checked:ring-zinc-900 has-focus-visible:ring-2 has-focus-visible:ring-green-500 dark:ring-offset-zinc-900 dark:has-checked:ring-white"
-        >
-          <input
-            type="radio"
-            name={name}
-            value={color}
-            checked={value === color}
-            onChange={() => onChange(color)}
-            aria-label={t(`subathon.colors.${color}`)}
-            className="sr-only"
-          />
-          <span
-            aria-hidden="true"
-            className="size-7 rounded-full border border-black/10"
-            style={{
-              background:
-                color === 'hp'
-                  ? `conic-gradient(from 200deg, hsl(${hueFor('hp', 1)} 85% 50%), hsl(${hueFor('hp', 0.45)} 90% 52%), hsl(${hueFor('hp', 0)} 85% 52%), hsl(${hueFor('hp', 1)} 85% 50%))`
-                  : `hsl(${hueFor(color, 1)} 85% 52%)`,
-            }}
-          />
-        </label>
-      ))}
-    </fieldset>
-  );
-}
+/** A swatch shows the color; Health shows its whole green-to-red run. */
+const swatchBackground = (color: SubathonColor) =>
+  color === 'hp'
+    ? `conic-gradient(from 200deg, hsl(${hueFor('hp', 1)} 85% 50%), hsl(${hueFor('hp', 0.45)} 90% 52%), hsl(${hueFor('hp', 0)} 85% 52%), hsl(${hueFor('hp', 1)} 85% 50%))`
+    : `hsl(${hueFor(color, 1)} 85% 52%)`;
 
 function SubathonSetup() {
   const { t } = useI18n();
@@ -286,6 +247,11 @@ function SubathonSetup() {
             labelledBy={`${id}-color`}
             value={settings.color}
             onChange={(value) => update('color', value)}
+            options={SUBATHON_COLORS.map((color) => ({
+              value: color,
+              label: t(`subathon.colors.${color}`),
+              background: swatchBackground(color),
+            }))}
           />
         </div>
         <div className="grid gap-3 sm:grid-cols-2">
@@ -466,7 +432,7 @@ function SubathonSetup() {
                   const event = button.event();
                   if (event) send({ type: 'event', event });
                 }}
-                className={TEST_BUTTON_CLASS}
+                className={BUTTON_TEST}
               >
                 {button.label}
               </button>

@@ -1,5 +1,6 @@
 import { type CSSProperties, useEffect, useState } from 'react';
 import type { SubathonColor, SubathonSettings, SubathonStyle } from '#/lib/subathon-url';
+import { useFitScale } from '../use-fit-scale';
 import type { SubathonPlatform } from './subathon-events';
 import { formatClock, formatDelta } from './subathon-timer';
 import { POP_MS, type SubathonHit, type SubathonPop, useSubathon } from './use-subathon';
@@ -82,18 +83,6 @@ function useHealing(hit: SubathonHit | null): boolean {
   return healing;
 }
 
-function useFitScale(): number {
-  const [scale, setScale] = useState(1);
-  useEffect(() => {
-    const measure = () =>
-      setScale(Math.min(window.innerWidth / STAGE.width, window.innerHeight / STAGE.height));
-    measure();
-    window.addEventListener('resize', measure);
-    return () => window.removeEventListener('resize', measure);
-  }, []);
-  return scale;
-}
-
 /** Heartbeat speed in seconds by health, or null when it shouldn't beat. */
 function beatFor(health: number, paused: boolean, ended: boolean): number | null {
   if (paused || ended) return null;
@@ -117,7 +106,7 @@ export function SubathonWidget({
   simulate,
   simSpeed,
 }: SubathonWidgetProps) {
-  const scale = useFitScale();
+  const scale = useFitScale(STAGE);
   const { left, health, paused, ended, pops, hit } = useSubathon({
     twitch: twitchChannel,
     kick: kickChannel,
