@@ -252,7 +252,7 @@ const CARDS = [
   },
   {
     id: 'subathon',
-    eyebrow: { icon: 'subathon', label: 'Overlay' },
+    eyebrow: { icon: 'subathon', label: 'Tool' },
     title: en.widgets.subathon.name,
     subtitle: en.widgets.subathon.tagline,
     visual: {

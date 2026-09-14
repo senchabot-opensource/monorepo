@@ -126,7 +126,7 @@ export const en = {
     galleryTitle: 'Pick a widget',
     galleryLead: 'Each one has its own setup page with a live preview. Nothing to download.',
     overlaysLead: 'Browser sources that run on their own once they are in your scene.',
-    toolsLead: 'Pages you run yourself during the stream.',
+    toolsLead: 'Tools you run yourself during the stream, from a page or from chat.',
     setUp: 'Set up',
     toolFeatures: 'Features',
     raffleFeatureKeyword: 'Entry keyword like !join',
@@ -135,6 +135,9 @@ export const en = {
     obsFeatureScenes: 'Switch scenes from chat',
     obsFeatureCommands: 'Custom command names',
     obsFeatureLocal: 'Local obs-websocket connection',
+    subathonFeatureChat: 'Control it from chat with !subathon',
+    subathonFeaturePlatforms: 'Separate time settings for Twitch and Kick',
+    subathonFeatureSaved: 'Time left survives OBS restarts',
     visualScenes: 'Scenes',
     howTitle: 'How it works',
     howLead: 'Three steps, and none of them asks for an account.',
@@ -1115,7 +1118,7 @@ export const en = {
         commands:
           'Hide Commands hides every message that starts with "!", so commands like `!discord` or `!uptime` stay off your screen. To also hide what the bot replies to a command, turn on both settings.',
         highlights:
-          "To do the opposite and make certain messages stand out, use Highlights. All five are on by default: messages that tag your channel or reply to you, the line above a reply that shows who's being replied to, first-time chatters, announcements, and messages sent with Highlight My Message. The last three are Twitch only, because Kick doesn't send that info.",
+          "To do the opposite and make certain messages stand out, use Highlights. All five are off by default, so just turn on the ones you want: messages that tag your channel or reply to you, the line above a reply that shows who's being replied to, first-time chatters, announcements, and messages sent with Highlight My Message. The last three are Twitch only, because Kick doesn't send that info.",
       },
       horizontal: {
         title: 'How do you put chat along the bottom of the screen as a bar?',

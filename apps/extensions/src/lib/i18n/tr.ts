@@ -131,7 +131,7 @@ export const tr: typeof en = {
     galleryLead:
       'Her birinin canlı önizlemeli kendi ayar sayfası var. İndirmen gereken hiçbir şey yok.',
     overlaysLead: 'Sahneye ekledikten sonra kendi kendine çalışan tarayıcı kaynakları.',
-    toolsLead: 'Yayın sırasında senin kullandığın sayfalar.',
+    toolsLead: 'Yayın boyunca sayfadan ya da sohbetten senin yönettiğin araçlar.',
     setUp: 'Ayarla',
     toolFeatures: 'Özellikler',
     raffleFeatureKeyword: '!join gibi katılım komutu',
@@ -140,6 +140,9 @@ export const tr: typeof en = {
     obsFeatureScenes: 'Sohbetten sahne değiştir',
     obsFeatureCommands: 'Komut adlarını sen belirle',
     obsFeatureLocal: 'Yerel obs-websocket bağlantısı',
+    subathonFeatureChat: 'Sohbetten !subathon ile yönet',
+    subathonFeaturePlatforms: 'Twitch ve Kick için ayrı süreler',
+    subathonFeatureSaved: 'OBS kapansa da kalan süre korunur',
     visualScenes: 'Sahneler',
     howTitle: 'Nasıl çalışır?',
     howLead: 'Üç adım, hiçbirinde hesap açmak yok.',
@@ -1127,7 +1130,7 @@ export const tr: typeof en = {
         commands:
           'Komutları Gizle, "!" ile başlayan her mesajı gizler; `!discord` ya da `!uptime` gibi komutlar ekranı doldurmaz. Botun komuta verdiği cevabı da saklamak için iki ayarı birlikte aç.',
         highlights:
-          "Bunun tersine bazı mesajları öne çıkarmak için Vurgular var. Varsayılan olarak beşi de açık: kanalını etiketleyen ya da sana yanıt veren mesajlar, yanıtların üstündeki kime cevap verildiğini gösteren satır, sohbete ilk kez yazanlar, duyurular ve Mesajınızı Vurgulayın ile gönderilen mesajlar. Son üçü sadece Twitch'te var, çünkü Kick bu bilgileri göndermiyor.",
+          "Bunun tersine bazı mesajları öne çıkarmak için Vurgular var. Varsayılan olarak beşi de kapalı, istediklerini açman yeterli: kanalını etiketleyen ya da sana yanıt veren mesajlar, yanıtların üstündeki kime cevap verildiğini gösteren satır, sohbete ilk kez yazanlar, duyurular ve Mesajınızı Vurgulayın ile gönderilen mesajlar. Son üçü sadece Twitch'te var, çünkü Kick bu bilgileri göndermiyor.",
       },
       horizontal: {
         title: 'Sohbet ekranın altına şerit olarak nasıl konur?',

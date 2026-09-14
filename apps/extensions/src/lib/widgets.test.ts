@@ -25,13 +25,15 @@ describe('widget registry', () => {
     }
   });
 
-  it('gives demo URLs only to overlays, on their own widget route', () => {
-    for (const widget of OVERLAYS) {
+  it('gives every overlay a demo URL, and runs every demo on its own widget route', () => {
+    for (const widget of OVERLAYS) expect(widget.demoUrl, widget.id).not.toBeNull();
+    for (const widget of WIDGETS.filter((entry) => entry.demoUrl)) {
       expect(widget.demoUrl, widget.id).toMatch(new RegExp(`^${widget.widgetPath}\\?`));
     }
-    for (const widget of TOOLS) {
-      expect(widget.demoUrl, widget.id).toBeNull();
-    }
+    // A tool's demo is its on-stream part; the Subathon clock is the only one with one.
+    expect(TOOLS.filter((widget) => widget.demoUrl).map((widget) => widget.id)).toEqual([
+      'subathon',
+    ]);
   });
 
   it('gives every overlay a browser-source size', () => {

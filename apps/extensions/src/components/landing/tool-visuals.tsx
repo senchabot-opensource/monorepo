@@ -6,6 +6,11 @@ import type { WidgetId } from '#/lib/widgets';
 export const TOOL_FEATURES: Partial<Record<WidgetId, readonly TranslationKey[]>> = {
   raffle: ['home.raffleFeatureKeyword', 'home.raffleFeatureSubs', 'home.raffleFeatureDuration'],
   'obs-bridge': ['home.obsFeatureScenes', 'home.obsFeatureCommands', 'home.obsFeatureLocal'],
+  subathon: [
+    'home.subathonFeatureChat',
+    'home.subathonFeaturePlatforms',
+    'home.subathonFeatureSaved',
+  ],
 };
 
 const CHAT_ROW = { x: 24, width: 172, height: 28, gap: 8 };
