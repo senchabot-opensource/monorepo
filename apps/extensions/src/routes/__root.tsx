@@ -94,7 +94,7 @@ function NotFound() {
           </p>
         </div>
         <div className="mt-12">
-          <WidgetCrossLinks columns={3} />
+          <WidgetCrossLinks />
         </div>
         <div className="mt-10 text-center">
           <LocaleLink to="/" className={BUTTON_PRIMARY}>

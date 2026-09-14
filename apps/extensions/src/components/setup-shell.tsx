@@ -171,8 +171,7 @@ export function SetupShell({
             >
               {t('common.moreWidgets')}
             </h2>
-            {/* Every widget but this one: five, so one row. */}
-            <WidgetCrossLinks exclude={widgetId} columns={5} />
+            <WidgetCrossLinks exclude={widgetId} />
           </section>
         </div>
       </main>

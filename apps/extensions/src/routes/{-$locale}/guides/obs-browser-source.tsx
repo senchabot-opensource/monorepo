@@ -160,7 +160,7 @@ function ObsBrowserSourceGuide() {
           <p className="mt-2 mb-5 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
             {t('guides.obs.ctaText')}
           </p>
-          <WidgetCrossLinks columns={3} />
+          <WidgetCrossLinks />
         </section>
       }
     />
