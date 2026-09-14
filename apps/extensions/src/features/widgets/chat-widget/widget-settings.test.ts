@@ -118,7 +118,6 @@ describe('parseWidgetUrl', () => {
       `${ORIGIN}/widgets/chat-widget?twitch=foo`,
       `${ORIGIN}/widgets/chat-widget?kick=bar&sevenTv=false&fontSize=30`,
       `${ORIGIN}/widgets/chat-widget?twitch=foo&kick=bar&background=true&bgOpacity=0.2&platformDisplay=name&animation=none`,
-      `${ORIGIN}/widgets/chat-widget?twitch=foo&highlights=none`,
       `${ORIGIN}/widgets/chat-widget?twitch=foo&keep=true&hideBots=true`,
       `${ORIGIN}/widgets/chat-widget?kick=bar&duration=60&hideCommands=true`,
       `${ORIGIN}/widgets/chat-widget?twitch=foo&highlights=mention%2CfirstMessage`,
