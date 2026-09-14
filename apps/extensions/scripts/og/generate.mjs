@@ -90,6 +90,10 @@ const SUBATHON_HIT = `(() => {
   channel.postMessage({ type: 'event', event: { kind: 'gift', platform: 'twitch', name: 'pixelfox', count: 5, tier: 1 } });
 })()`;
 const OXANIUM_READY = `document.fonts.check('800 20px Oxanium')`;
+// One test alert over the preview channel; it stays up while the demo's own alerts wait.
+const streamAlert = (alert) =>
+  `new BroadcastChannel('senchabot:stream-alerts-preview').postMessage({ type: 'alert', preview: 'og', alert: ${JSON.stringify(alert)} })`;
+const ALERT_READY = `Boolean(document.querySelector('[data-testid="stream-alert"]'))`;
 
 /** Stage corner covered by the Live badge (template.html `.live`). */
 const LIVE_BADGE = { right: 104, bottom: 50 };
@@ -158,6 +162,25 @@ const CAPTURES = {
     trigger: SUBATHON_HIT,
     afterTriggerMs: 650,
     ready: OXANIUM_READY,
+  },
+  alertNeon: {
+    path: '/widgets/stream-alerts?simulate=1&dur=20&preview=og',
+    width: 800,
+    height: 450,
+    settleMs: 600,
+    trigger: streamAlert({ kind: 'sub', platform: 'twitch', name: 'pixelfox', tier: 1 }),
+    // Past the entrance, while the frame sweep is mid-way.
+    afterTriggerMs: 1900,
+    ready: `${ALERT_READY} && ${OXANIUM_READY}`,
+  },
+  alertCelestial: {
+    path: '/widgets/stream-alerts?simulate=1&dur=20&theme=celestial&color=gold&preview=og',
+    width: 800,
+    height: 450,
+    settleMs: 600,
+    trigger: streamAlert({ kind: 'gift', platform: 'kick', name: 'lunaa', count: 5, tier: 1 }),
+    afterTriggerMs: 2200,
+    ready: `${ALERT_READY} && document.fonts.check('700 20px Cinzel')`,
   },
   // Raffle has no demo mode: the overlay gets the same BroadcastChannel message the setup
   // page sends when you draw a winner.
@@ -242,6 +265,21 @@ const CARDS = [
     },
   },
   {
+    id: 'stream-alerts',
+    eyebrow: { icon: 'stream-alerts', label: 'Overlay' },
+    title: en.widgets.streamAlerts.name,
+    subtitle: en.widgets.streamAlerts.tagline,
+    visual: {
+      kind: 'stage',
+      live: true,
+      // The 800x450 sources hold the alert in their middle 320 rows.
+      layers: [
+        layer('alertNeon', { x: 9, y: -34, width: 520, height: 293 }),
+        layer('alertCelestial', { x: 9, y: 168, width: 520, height: 293 }),
+      ],
+    },
+  },
+  {
     id: 'raffle',
     eyebrow: { icon: 'raffle', label: 'Tool' },
     title: en.widgets.raffle.name,
@@ -270,7 +308,7 @@ const CARDS = [
       guides: [
         {
           title: en.guides.obs.title,
-          icons: ['chat-box', 'emote-wall', 'sub-sprout', 'subathon', 'raffle'],
+          icons: ['chat-box', 'emote-wall', 'sub-sprout', 'subathon', 'stream-alerts', 'raffle'],
         },
         { title: en.guides.chat.title, icons: ['chat-box', 'emote-wall', 'sub-sprout'] },
         { title: en.guides.raffle.title, icons: ['raffle'] },
