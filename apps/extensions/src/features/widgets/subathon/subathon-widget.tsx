@@ -3,12 +3,25 @@ import { barFrameStyle, fillBackground, fillLayers, trackBackground } from '#/fe
 import { Frame, panelStyle } from '#/features/presets/frame';
 import { painter, type Skin, skinCss, skinFor } from '#/features/presets/skin';
 import { SkinProvider, useSkin } from '#/features/presets/skin-context';
-import type { SubathonSettings, SubathonStyle } from '#/lib/subathon-url';
+import { useI18n } from '#/lib/i18n';
+import type {
+  SubathonSettings,
+  SubathonStyle,
+  SubathonTimeKey,
+  SubathonTimeValues,
+} from '#/lib/subathon-url';
+import { KickIcon, TwitchIcon } from '../chat-widget/message-parts';
 import { hueFor, OVERLAY_FONT_FAMILY as FONT_FAMILY, PLATFORM_COLORS } from '../overlay-style';
 import { useFitScale } from '../use-fit-scale';
 import type { SubathonPlatform } from './subathon-events';
 import { formatClock, formatDelta } from './subathon-timer';
-import { POP_MS, type SubathonHit, type SubathonPop, useSubathon } from './use-subathon';
+import {
+  BITS_PER_VALUE,
+  POP_MS,
+  type SubathonHit,
+  type SubathonPop,
+  useSubathon,
+} from './use-subathon';
 
 /** Design size; the overlay scales to fill whatever browser source size it gets. */
 const STAGE = { width: 800, height: 300 };
@@ -48,6 +61,7 @@ const CSS = `
 @keyframes sa-ko{0%{transform:translate(-50%,-50%) scale(3) rotate(-8deg);opacity:0}55%{transform:translate(-50%,-50%) scale(.92) rotate(-8deg);opacity:1}70%{transform:translate(-50%,-50%) scale(1.06) rotate(-8deg)}100%{transform:translate(-50%,-50%) scale(1) rotate(-8deg);opacity:1}}
 @keyframes sa-blink{0%,100%{opacity:1}50%{opacity:.35}}
 @keyframes sa-stripes{0%{transform:translateX(0)}100%{transform:translateX(28px)}}
+@keyframes sa-rates-in{0%{opacity:0;transform:translateY(6px)}100%{opacity:1;transform:none}}
 `;
 
 /** True for a moment after time is added, while the heal animations play. */
@@ -107,6 +121,11 @@ export function SubathonWidget({
   });
   const healing = useHealing(hit);
   const shown = ended ? 0 : health;
+  const platforms: SubathonPlatform[] = simulate
+    ? simPlatform
+      ? [simPlatform]
+      : ['twitch', 'kick']
+    : [...(twitchChannel ? ['twitch' as const] : []), ...(kickChannel ? ['kick' as const] : [])];
   const view: ViewProps = {
     left,
     shown,
@@ -122,6 +141,7 @@ export function SubathonWidget({
     hit,
     healing,
     ease: healing ? '.6s cubic-bezier(.2,.9,.3,1.1)' : '.25s linear',
+    rates: settings.rates ? rateRows(settings, platforms) : [],
   };
   const View = VIEWS[settings.style];
   const skin = skinFor(settings.preset);
@@ -163,6 +183,8 @@ interface ViewProps {
   healing: boolean;
   /** Transition timing for the fill: springy right after a heal, linear while draining. */
   ease: string;
+  /** What each event adds, for viewers; empty when turned off. */
+  rates: RateRow[];
 }
 
 const VIEWS: Record<SubathonStyle, (props: ViewProps) => React.JSX.Element> = {
@@ -365,6 +387,110 @@ function PopBand({
   );
 }
 
+type RateKind = 'sub' | 'gift' | 'bits';
+
+interface RateRow {
+  platforms: SubathonPlatform[];
+  items: { kind: RateKind; seconds: number }[];
+}
+
+const RATE_KINDS: RateKind[] = ['sub', 'gift', 'bits'];
+const RATE_KEYS: Record<SubathonPlatform, Record<RateKind, SubathonTimeKey>> = {
+  twitch: { sub: 'tsub', gift: 'tgift', bits: 'bits' },
+  kick: { sub: 'ksub', gift: 'kgift', bits: 'kicks' },
+};
+
+/** One row per platform, or one for both when their values match. Events set to 0 are left out. */
+function rateRows(values: SubathonTimeValues, platforms: SubathonPlatform[]): RateRow[] {
+  const rows = platforms
+    .map((platform) => ({
+      platforms: [platform],
+      items: RATE_KINDS.map((kind) => ({
+        kind,
+        seconds: values[RATE_KEYS[platform][kind]],
+      })).filter((item) => item.seconds > 0),
+    }))
+    .filter((row) => row.items.length > 0);
+  const [first, second] = rows;
+  const same =
+    second &&
+    first.items.length === second.items.length &&
+    first.items.every(
+      (item, i) => item.kind === second.items[i].kind && item.seconds === second.items[i].seconds,
+    );
+  return same ? [{ platforms: ['twitch', 'kick'], items: first.items }] : rows;
+}
+
+// Long enough to read a row of three, short enough that the other platform's row comes soon.
+const RATES_TURN_MS = 6000;
+
+/** "Sub +15 min · Gift Sub +10 min · 500 Bits +25 min"; two rows take turns. */
+function RateStrip({ rows }: { rows: RateRow[] }) {
+  const { t } = useI18n();
+  const skin = useSkin();
+  const [turn, setTurn] = useState(0);
+  useEffect(() => {
+    if (rows.length < 2) return;
+    const timer = window.setInterval(() => setTurn((n) => n + 1), RATES_TURN_MS);
+    return () => window.clearInterval(timer);
+  }, [rows.length]);
+
+  const index = turn % rows.length;
+  const row = rows[index];
+  const amount = BITS_PER_VALUE;
+  const label = (kind: RateKind) => {
+    if (kind === 'sub') return t('subathon.rateSub');
+    if (kind === 'gift') return t('subathon.rateGift');
+    if (row.platforms.length > 1) return t('subathon.rateBitsKicks', { amount });
+    return t(row.platforms[0] === 'twitch' ? 'subathon.rateBits' : 'subathon.rateKicks', {
+      amount,
+    });
+  };
+  const time = (seconds: number) =>
+    seconds % 3600 === 0
+      ? `+${seconds / 3600} ${t('subathon.unitHours')}`
+      : seconds % 60 === 0
+        ? `+${seconds / 60} ${t('subathon.unitMinutes')}`
+        : `+${formatDelta(seconds * 1000)}`;
+
+  return (
+    <div
+      key={index}
+      data-testid="subathon-rates"
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: 14,
+        padding: '4px 14px',
+        borderRadius: skin ? 999 * skin.radius : 999,
+        background: skin ? skin.panel2 : 'rgba(0,0,0,.62)',
+        border: `1px solid ${skin ? skin.frame2 : 'rgba(255,255,255,.14)'}`,
+        fontSize: 17,
+        fontWeight: 700,
+        lineHeight: 1.3,
+        whiteSpace: 'nowrap',
+        animation: rows.length > 1 ? 'sa-rates-in .45s ease-out' : undefined,
+      }}
+    >
+      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+        {row.platforms.map((platform) =>
+          platform === 'twitch' ? (
+            <TwitchIcon key={platform} style={{ color: PLATFORM_COLORS.twitch }} />
+          ) : (
+            <KickIcon key={platform} style={{ color: PLATFORM_COLORS.kick }} />
+          ),
+        )}
+      </span>
+      {row.items.map((item) => (
+        <span key={item.kind}>
+          <span style={{ color: skin?.muted ?? 'rgba(255,255,255,.7)' }}>{label(item.kind)}</span>{' '}
+          <span style={{ color: skin?.text ?? '#fff' }}>{time(item.seconds)}</span>
+        </span>
+      ))}
+    </div>
+  );
+}
+
 function HealthBarView(view: ViewProps) {
   const { left, shown, paused, ended, low, critical, hue, title, percent, hit, healing } = view;
   const skin = useSkin();
@@ -558,6 +684,12 @@ function HealthBarView(view: ViewProps) {
             {formatClock(left)}
           </span>
         </div>
+        {/* In the margin under the title row, so the bar stays where it was without them. */}
+        {view.rates.length > 0 && (
+          <div style={{ position: 'absolute', left: 10, bottom: 2 }}>
+            <RateStrip rows={view.rates} />
+          </div>
+        )}
       </div>
     </>
   );
@@ -569,6 +701,8 @@ function ClockView(view: ViewProps) {
   const hsl = painter(skin, hue);
   const glow = `0 0 ${low ? 40 : 26}px ${hsl(90, 50, low ? 0.6 : 0.35)}`;
   const panel = skin && panelStyle(skin, 22);
+  // The rates take a row, so the clock shrinks to keep it all under the pop band.
+  const compact = view.rates.length > 0;
   const [h, m, s] = formatClock(left).split(':');
   const colon = (
     <span style={{ opacity: paused ? 0.5 : 0.85, margin: '0 2px', position: 'relative', top: -6 }}>
@@ -587,7 +721,7 @@ function ClockView(view: ViewProps) {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: 10,
+          gap: compact ? 6 : 10,
         }}
       >
         {title && (
@@ -617,7 +751,7 @@ function ClockView(view: ViewProps) {
           {paused && !ended && <PauseChip />}
           <span
             style={{
-              fontSize: 96,
+              fontSize: compact ? 72 : 96,
               fontWeight: 800,
               lineHeight: 1.05,
               letterSpacing: '.02em',
@@ -666,6 +800,7 @@ function ClockView(view: ViewProps) {
             </span>
           </div>
         )}
+        {view.rates.length > 0 && <RateStrip rows={view.rates} />}
       </div>
     </>
   );
@@ -797,6 +932,11 @@ function RingView(view: ViewProps) {
           >
             {formatClock(left)}
           </span>
+          {view.rates.length > 0 && (
+            <div style={{ marginTop: 8 }}>
+              <RateStrip rows={view.rates} />
+            </div>
+          )}
         </div>
       </div>
     </>

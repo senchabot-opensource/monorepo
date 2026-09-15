@@ -1,6 +1,7 @@
 import { fireEvent, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { PREVIEW_CHANNEL } from '#/features/widgets/subathon/use-subathon';
+import type { Locale } from '#/lib/i18n';
 import {
   buildSubathonUrl,
   DEFAULT_SUBATHON_SETTINGS,
@@ -38,16 +39,20 @@ describe('Subathon Timer setup', () => {
     await renderRoute(PAGE);
     expect(urlField().value).toBe('');
 
-    let settings: SubathonSettings = { ...DEFAULT_SUBATHON_SETTINGS };
+    let settings: SubathonSettings = { ...DEFAULT_SUBATHON_SETTINGS, rates: true };
+    let locale: Locale = 'en';
     const expectUrl = (patch: Partial<SubathonSettings>) => {
       settings = { ...settings, ...patch };
       expect(urlField().value).toBe(
-        buildSubathonUrl(window.location.origin, settings, 'streamer', ''),
+        buildSubathonUrl(window.location.origin, settings, 'streamer', '', locale),
       );
     };
 
     await user.type(twitchField(), 'Streamer');
-    expect(urlField().value).toBe('http://localhost:3000/widgets/subathon?twitch=streamer');
+    // New timers list their rates, in the page's language.
+    expect(urlField().value).toBe(
+      'http://localhost:3000/widgets/subathon?twitch=streamer&rates=1&lang=en',
+    );
 
     await user.click(segment(en('subathon.style'), en('subathon.styleRing')));
     expectUrl({ style: 'ring' });
@@ -78,6 +83,12 @@ describe('Subathon Timer setup', () => {
     expectUrl({ percent: false });
     await user.click(toggle(en('subathon.showPops')));
     expectUrl({ pops: false });
+    await user.click(segment(en('subathon.ratesLanguage'), 'Türkçe'));
+    locale = 'tr';
+    expectUrl({});
+    await user.click(toggle(en('subathon.showRates')));
+    expectUrl({ rates: false });
+    expect(screen.queryByText(en('subathon.ratesLanguage'))).toBeNull();
 
     expect(urlField().value).toBe(
       'http://localhost:3000/widgets/subathon?twitch=streamer&style=ring&color=purple' +
@@ -141,6 +152,16 @@ describe('Subathon Timer setup', () => {
     await user.click(urlField());
     await user.paste(pasted);
     expect(urlField().value).toBe(pasted);
+  });
+
+  it("keeps a pasted timer's rates language", async () => {
+    const user = setupUser();
+    await renderRoute(PAGE);
+    const pasted = 'http://localhost:3000/widgets/subathon?twitch=streamer&rates=1&lang=tr';
+    await user.click(urlField());
+    await user.paste(pasted);
+    expect(urlField().value).toBe(pasted);
+    expect(segment(en('subathon.ratesLanguage'), 'Türkçe').checked).toBe(true);
   });
 
   it('sends the remove and reset commands the chat would', async () => {

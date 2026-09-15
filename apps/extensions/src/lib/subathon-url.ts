@@ -1,4 +1,5 @@
 import { isClassic } from '#/features/presets/registry';
+import { isValidLocale, LANG_PARAM, type Locale } from '#/lib/i18n/locales';
 import {
   type ChannelPlatforms,
   channelWidgetUrl,
@@ -52,6 +53,8 @@ export interface SubathonSettings extends SubathonTimeValues {
   autostart: boolean;
   percent: boolean;
   pops: boolean;
+  /** Lists what each event adds, so viewers know what a sub is worth. */
+  rates: boolean;
 }
 
 export const DEFAULT_SUBATHON_SETTINGS: SubathonSettings = {
@@ -72,6 +75,9 @@ export const DEFAULT_SUBATHON_SETTINGS: SubathonSettings = {
   autostart: false,
   percent: true,
   pops: true,
+  // Off when the URL doesn't say, so overlays made before it keep their look. The setup page
+  // starts with it on.
+  rates: false,
 };
 
 /** Upper bound for every time setting: 30 days. */
@@ -83,7 +89,7 @@ export const TITLE_MAX_LENGTH = 32;
 const WIDGET_PATH = '/widgets/subathon';
 
 type NumberKey = 'start' | 'cap' | SubathonTimeKey;
-type FlagKey = 'tiers' | 'autostart' | 'percent' | 'pops';
+type FlagKey = 'tiers' | 'autostart' | 'percent' | 'pops' | 'rates';
 // URL name of each setting; the time values use their own key.
 const NUMBER_PARAMS: Record<NumberKey, string> = {
   start: 'time',
@@ -95,12 +101,18 @@ const FLAG_PARAMS: Record<FlagKey, string> = {
   autostart: 'autostart',
   percent: 'pct',
   pops: 'pops',
+  rates: 'rates',
 };
 const NUMBER_KEYS = Object.keys(NUMBER_PARAMS) as NumberKey[];
 const FLAG_KEYS = Object.keys(FLAG_PARAMS) as FlagKey[];
 
 /** Only settings that differ from the defaults are written, so URLs stay short. */
-function buildParams(settings: SubathonSettings, twitchChannel: string, kickChannel: string) {
+function buildParams(
+  settings: SubathonSettings,
+  twitchChannel: string,
+  kickChannel: string,
+  locale: Locale,
+) {
   const params = new URLSearchParams();
   const defaults = DEFAULT_SUBATHON_SETTINGS;
   setChannels(params, settings.platforms, twitchChannel, kickChannel);
@@ -115,6 +127,8 @@ function buildParams(settings: SubathonSettings, twitchChannel: string, kickChan
   for (const key of FLAG_KEYS) {
     if (settings[key] !== defaults[key]) params.set(FLAG_PARAMS[key], settings[key] ? '1' : '0');
   }
+  // The rates are the only words on the timer, and OBS shouldn't pick their language.
+  if (settings.rates) params.set(LANG_PARAM, locale);
   return params;
 }
 
@@ -124,8 +138,13 @@ export function buildSubathonUrl(
   settings: SubathonSettings,
   twitchChannel: string,
   kickChannel: string,
+  locale: Locale,
 ): string {
-  return channelWidgetUrl(origin, WIDGET_PATH, buildParams(settings, twitchChannel, kickChannel));
+  return channelWidgetUrl(
+    origin,
+    WIDGET_PATH,
+    buildParams(settings, twitchChannel, kickChannel, locale),
+  );
 }
 
 /**
@@ -135,10 +154,11 @@ export function buildSubathonUrl(
 export function buildSubathonPreviewUrl(
   origin: string,
   settings: SubathonSettings,
+  locale: Locale,
   previewId: string,
   speed?: number,
 ): string {
-  const params = buildParams(settings, '', '');
+  const params = buildParams(settings, '', '', locale);
   setPreview(params, settings.platforms, previewId);
   if (speed) params.set('simspeed', String(speed));
   return `${origin}${WIDGET_PATH}?${params.toString()}`;
@@ -172,11 +192,19 @@ export function readSubathonSettings(params: URLSearchParams): Omit<SubathonSett
 }
 
 /** Reverse of buildSubathonUrl; null for anything that isn't a Subathon URL. */
-export function parseSubathonUrl(
-  text: string,
-): { settings: SubathonSettings; twitchChannel: string; kickChannel: string } | null {
+export function parseSubathonUrl(text: string): {
+  settings: SubathonSettings;
+  twitchChannel: string;
+  kickChannel: string;
+  locale: Locale | null;
+} | null {
   const pasted = readWidgetUrl(text, WIDGET_PATH);
   if (!pasted) return null;
   const { params, platforms, ...channels } = pasted;
-  return { ...channels, settings: { platforms, ...readSubathonSettings(params) } };
+  const lang = params.get(LANG_PARAM);
+  return {
+    ...channels,
+    locale: isValidLocale(lang) ? lang : null,
+    settings: { platforms, ...readSubathonSettings(params) },
+  };
 }

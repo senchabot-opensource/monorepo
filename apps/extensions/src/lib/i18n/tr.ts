@@ -620,6 +620,17 @@ export const tr: typeof en = {
       'Yaklaşık bir abonelik fiyatı. Diğer miktarlar oranına göre ekler, yani 100 Bits bu sürenin beşte birini ekler.',
     perKicks: '500 Kicks Başına',
     perKicksTip: 'Diğer miktarlar oranına göre ekler, yani 100 Kicks bu sürenin beşte birini ekler.',
+    showRates: 'Sayaçta Göster',
+    showRatesTip:
+      "Bir aboneliğin, hediye aboneliğin ve 500 Bits ya da Kicks'in ne kadar süre eklediğini sayaçta listeler, böylece izleyiciler aboneliklerinin kaç dakika eklediğini bilir. 0 yaptıkların gösterilmez. Twitch ve Kick değerleri farklıysa sırayla gösterilir.",
+    ratesLanguage: 'Sayaç Dili',
+    ratesLanguageTip:
+      "Listedeki kelimelerin dili, örneğin \"Hediye Sub\" ve \"dk\". Bu seçim URL'de saklanır, OBS hangi dilde açılırsa açılsın değişmez.",
+    rateSub: 'Sub',
+    rateGift: 'Hediye Sub',
+    rateBits: '{amount} Bits',
+    rateKicks: '{amount} Kicks',
+    rateBitsKicks: '{amount} Bits/Kicks',
     tiers: 'Tier 2 ve 3 Daha Çok Sayılır',
     tiersTip:
       "Twitch'te Tier 2 abonelik 2, Tier 3 abonelik 5 abonelik kadar süre ekler, fiyatlarıyla orantılı.",
@@ -1476,7 +1487,7 @@ export const tr: typeof en = {
       values: {
         title: 'Her abonelik ne kadar süre ekler?',
         intro:
-          "Süreyi 0 ile 60 arasında tam dakika olarak seçersin, 0 o olayı kapatır. Twitch ve Kick'in değerleri ayrı, hepsi varsayılan olarak 1 dakika.",
+          "Süreyi 0 ile 60 arasında tam dakika olarak seçersin, 0 o olayı kapatır. Twitch ve Kick'in değerleri ayrı, hepsi varsayılan olarak 1 dakika. Varsayılan olarak açık gelen Sayaçta Göster, bu süreleri Sub +1 dk gibi sayaçta listeler, böylece izleyiciler aboneliklerinin ne kadar süre eklediğini bilir. Twitch ve Kick farklı süreler ekliyorsa ikisi sırayla gösterilir.",
         caption: 'Subathon sayacına her olayın eklediği süre',
         colEvent: 'Olay',
         colDefault: 'Varsayılan',
@@ -1891,6 +1902,8 @@ export const tr: typeof en = {
     lead: "Senchabot Extensions'a eklenen özellikler ve düzeltilen hatalar, en yenisi en üstte. Liste projenin [GitHub'daki](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) commit geçmişinden hazırlanıyor.",
     site: 'Site',
     entries: {
+      subathonRates:
+        "Subathon Timer artık bir aboneliğin, hediye aboneliğin ve 500 Bits ya da Kicks'in ne kadar süre eklediğini sayaçta gösterebiliyor, böylece izleyiciler aboneliklerinin kaç dakika eklediğini biliyor.",
       presets:
         "Preset'ler geldi: tek bir preset seçip Sohbet Kutusu, Yayın Uyarıları, Abone Hedefi, Subathon Timer, Sohbet Anketi ve Çekiliş kazanan overlay'ine aynı görünümü veriyorsun. League of Legends, World of Warcraft, Metin2, Dota 2, Valorant, CS2 ve Minecraft için oyun preset'leri de hazır.",
       poll: "Sohbet Anketi geldi: sohbetten !poll ile anket başlatıyorsun, Twitch ve Kick'teki izleyiciler de numara yazarak oy veriyor. Canlı barlar, geri sayım, izleyici başına tek oy ve sonunda kazanan var.",

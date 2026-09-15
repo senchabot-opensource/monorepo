@@ -24,7 +24,7 @@ import { COMMAND } from '#/features/widgets/subathon/subathon-timer';
 import { hueFor } from '#/features/widgets/overlay-style';
 import { PREVIEW_CHANNEL, type PreviewMessage } from '#/features/widgets/subathon/use-subathon';
 import { usePreviewSender } from '#/hooks/use-preview-channel';
-import { type TranslationKey, useI18n } from '#/lib/i18n';
+import { LOCALES, type Locale, type TranslationKey, useI18n } from '#/lib/i18n';
 import { getParamsLocale } from '#/lib/i18n/paths';
 import type { FaqEntry } from '#/lib/i18n/seo';
 import { getSetupPageHead } from '#/lib/seo/pages';
@@ -84,6 +84,7 @@ const TIME_FIELDS: Record<SubathonPlatform, TimeField[]> = {
 };
 
 const PLATFORM_DOTS: Record<SubathonPlatform, string> = { twitch: '#9146FF', kick: '#53FC18' };
+const LANGUAGE_NAMES: Record<Locale, string> = { en: 'English', tr: 'Türkçe' };
 
 const FAQ: FaqEntry[] = [
   ['subathon.faq1Q', 'subathon.faq1A'],
@@ -108,10 +109,13 @@ const swatchBackground = (color: SubathonColor) =>
     : `hsl(${hueFor(color, 1)} 85% 52%)`;
 
 function SubathonSetup() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const [twitchChannel, setTwitchChannel] = useState('');
   const [kickChannel, setKickChannel] = useState('');
-  const [settings, setSettings] = useState(DEFAULT_SUBATHON_SETTINGS);
+  // New timers list their rates; the URL default stays off for timers made before them.
+  const [settings, setSettings] = useState({ ...DEFAULT_SUBATHON_SETTINGS, rates: true });
+  const [pickedLocale, setPickedLocale] = useState<Locale | null>(null);
+  const ratesLocale = pickedLocale ?? locale;
   const [valuesTab, setValuesTab] = useState<SubathonPlatform>('twitch');
   const [speedIndex, setSpeedIndex] = useState(DEFAULT_SPEED_INDEX);
   const mounted = useHydrated();
@@ -127,9 +131,11 @@ function SubathonSetup() {
 
   // Gated on mount so the prerendered input and the first client render agree.
   const origin = mounted ? window.location.origin : '';
-  const widgetUrl = mounted ? buildSubathonUrl(origin, settings, twitchChannel, kickChannel) : '';
+  const widgetUrl = mounted
+    ? buildSubathonUrl(origin, settings, twitchChannel, kickChannel, ratesLocale)
+    : '';
   const previewUrl = mounted
-    ? buildSubathonPreviewUrl(origin, settings, previewId, PREVIEW_SPEEDS[speedIndex])
+    ? buildSubathonPreviewUrl(origin, settings, ratesLocale, previewId, PREVIEW_SPEEDS[speedIndex])
     : '';
 
   const applyWidgetUrl = (text: string) => {
@@ -138,6 +144,7 @@ function SubathonSetup() {
     setSettings(parsed.settings);
     setTwitchChannel(parsed.twitchChannel);
     setKickChannel(parsed.kickChannel);
+    if (parsed.locale) setPickedLocale(parsed.locale);
     return true;
   };
 
@@ -316,6 +323,25 @@ function SubathonSetup() {
           </Tabs>
         ) : (
           valueFields(settings.platforms)
+        )}
+        <Switch
+          label={t('subathon.showRates')}
+          tip={t('subathon.showRatesTip')}
+          checked={settings.rates}
+          onChange={(value) => update('rates', value)}
+        />
+        {settings.rates && (
+          <div>
+            <FieldLabel id={`${id}-lang`} tip={t('subathon.ratesLanguageTip')}>
+              {t('subathon.ratesLanguage')}
+            </FieldLabel>
+            <SegmentedControl
+              labelledBy={`${id}-lang`}
+              value={ratesLocale}
+              onChange={setPickedLocale}
+              options={LOCALES.map((value) => ({ value, label: LANGUAGE_NAMES[value] }))}
+            />
+          </div>
         )}
       </SettingsGroup>
     </>

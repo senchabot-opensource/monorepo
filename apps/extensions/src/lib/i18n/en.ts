@@ -613,6 +613,17 @@ export const en = {
     perBitsTip: 'About the price of one sub. Other amounts add their share, so 100 Bits adds a fifth.',
     perKicks: 'Per 500 Kicks',
     perKicksTip: 'Other amounts add their share, so 100 Kicks adds a fifth.',
+    showRates: 'Show on the Timer',
+    showRatesTip:
+      'Lists what a sub, a gifted sub and 500 Bits or Kicks add, so viewers know what their sub is worth. Values set to 0 are left out. When Twitch and Kick have different values, they take turns.',
+    ratesLanguage: 'Timer Language',
+    ratesLanguageTip:
+      'The language of the listed words, like "Gift Sub" and "min". The OBS URL keeps it, whatever language OBS runs in.',
+    rateSub: 'Sub',
+    rateGift: 'Gift Sub',
+    rateBits: '{amount} Bits',
+    rateKicks: '{amount} Kicks',
+    rateBitsKicks: '{amount} Bits/Kicks',
     tiers: 'Tier 2 and 3 Count More',
     tiersTip:
       'On Twitch a Tier 2 sub adds 2 subs worth of time and a Tier 3 sub 5, in line with their price.',
@@ -1461,7 +1472,7 @@ export const en = {
       values: {
         title: 'How much time does each sub add?',
         intro:
-          'You pick the time in whole minutes, from 0 to 60, and 0 turns that event off. Twitch and Kick have separate values, all 1 minute by default.',
+          'You pick the time in whole minutes, from 0 to 60, and 0 turns that event off. Twitch and Kick have separate values, all 1 minute by default. Show on the Timer, on by default, lists them on the timer, like Sub +1 min, so viewers know what their sub adds. When Twitch and Kick add different times, the two take turns.',
         caption: 'Time each event adds to the subathon timer',
         colEvent: 'Event',
         colDefault: 'Default',
@@ -1875,6 +1886,8 @@ export const en = {
     lead: "New features and bug fixes in Senchabot Extensions, newest first. The list is put together from the project's commit history on [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      subathonRates:
+        'Subathon Timer can now list what a sub, a gifted sub and 500 Bits or Kicks add, right on the timer, so viewers know what their sub is worth.',
       presets:
         'New presets: one look for Chat Box, Stream Alerts, Sub Goal, Subathon Timer, Chat Poll and the Raffle winner, with game presets for League of Legends, World of Warcraft, Metin2, Dota 2, Valorant, CS2 and Minecraft.',
       poll: 'New Chat Poll: put up a poll from chat with !poll, and viewers on Twitch and Kick vote by typing a number. Live bars, a timer, one vote per viewer and the winner at the end.',

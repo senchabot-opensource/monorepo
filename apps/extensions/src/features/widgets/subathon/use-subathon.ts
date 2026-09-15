@@ -25,7 +25,7 @@ type SubathonValues = SubathonTimeValues &
 const TIER_WEIGHT: Record<SubTier, number> = { 1: 1, 2: 2, 3: 5 };
 
 // The Bits and Kicks values are per this many, about the price of one sub.
-const BITS_PER_VALUE = 500;
+export const BITS_PER_VALUE = 500;
 
 const clockOptions = (values: SubathonValues): ClockOptions => ({
   base: values.start * 1000,
