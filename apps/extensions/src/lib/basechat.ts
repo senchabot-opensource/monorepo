@@ -205,6 +205,16 @@ export class BaseChatClient implements Disconnectable {
     }, delay);
   }
 
+  /** Opens a new socket right away, e.g. when the server says it is about to close this one. */
+  protected restart() {
+    if (this.disposed) {
+      return;
+    }
+    this.reconnectAttempts = 0;
+    this.dropSocket();
+    this.reconnectNow();
+  }
+
   /** Skips the wait before the next attempt; does nothing while a connection is up or opening. */
   reconnectNow() {
     if (this.disposed || this.reconnectTimer === null) {
