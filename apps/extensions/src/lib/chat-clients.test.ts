@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ChatMessagesType } from '#/features/widgets/chat-widget/chat-messages';
 import { KickChat } from './kick';
-import { TwitchChat } from './twitch';
+import { parseTags, TwitchChat } from './twitch';
 
 // Lines and payloads below were captured from live Twitch IRC and Kick Pusher, names replaced.
 
@@ -29,8 +29,21 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
+const twitchModeration = {
+  deleteMessage: vi.fn(),
+  banUser: vi.fn(),
+  clearAll: vi.fn(),
+};
+
 const twitchLines = (...lines: string[]) => {
-  const client = new TwitchChat('channel', (m) => received.push(m));
+  vi.clearAllMocks();
+  const client = new TwitchChat(
+    'channel',
+    (m) => received.push(m),
+    twitchModeration.deleteMessage,
+    twitchModeration.banUser,
+    twitchModeration.clearAll,
+  );
   FakeWebSocket.last.onmessage?.({ data: lines.join('\r\n') });
   client.disconnect();
   return received;
@@ -44,6 +57,30 @@ const kickEvent = (event: string, payload: unknown) => {
   client.disconnect();
   return received;
 };
+
+describe('parseTags', () => {
+  it('returns an empty object when input is undefined', () => {
+    expect(parseTags(undefined)).toEqual({});
+  });
+
+  it('parses simple key=value pairs', () => {
+    expect(parseTags('color=#FF0000;display-name=Alice')).toEqual({
+      color: '#FF0000',
+      'display-name': 'Alice',
+    });
+  });
+
+  it('unescapes IRCv3 tag values', () => {
+    expect(parseTags(String.raw`display-name=Alice\:Bob;foo=line\sone\ntwo`)).toEqual({
+      'display-name': 'Alice;Bob',
+      foo: 'line one\ntwo',
+    });
+  });
+
+  it('handles keys with no value', () => {
+    expect(parseTags('foo;bar=baz')).toEqual({ foo: '', bar: 'baz' });
+  });
+});
 
 describe('TwitchChat', () => {
   it('reads a reply and drops the "@parent " prefix, keeping emotes aligned', () => {
@@ -85,6 +122,46 @@ describe('TwitchChat', () => {
       twitchLines(
         '@badge-info=subscriber/4;badges=subscriber/3;display-name=Subber;id=s1;login=subber;msg-id=resub;msg-param-cumulative-months=4;tmi-sent-ts=1789165478997 :tmi.twitch.tv USERNOTICE #channel',
         '@display-name=Watcher;id=w1;login=watcher;msg-id=viewermilestone;tmi-sent-ts=1789165472656 :tmi.twitch.tv USERNOTICE #channel :Yay',
+      ),
+    ).toEqual([]);
+  });
+
+  it('removes only the timed-out user on CLEARCHAT with a target', () => {
+    twitchLines(
+      '@ban-duration=350;room-id=1;target-user-id=2;tmi-sent-ts=1642719320727 :tmi.twitch.tv CLEARCHAT #channel :Ronni',
+    );
+    expect(twitchModeration.banUser).toHaveBeenCalledWith('ronni');
+    expect(twitchModeration.clearAll).not.toHaveBeenCalled();
+  });
+
+  it('clears everything on CLEARCHAT without a target', () => {
+    twitchLines('@room-id=1;tmi-sent-ts=1642715695392 :tmi.twitch.tv CLEARCHAT #channel');
+    expect(twitchModeration.clearAll).toHaveBeenCalledOnce();
+    expect(twitchModeration.banUser).not.toHaveBeenCalled();
+  });
+
+  it('deletes the message named by CLEARMSG', () => {
+    twitchLines(
+      '@login=viewer;room-id=;target-msg-id=m1;tmi-sent-ts=1642720582342 :tmi.twitch.tv CLEARMSG #channel :what a great day',
+    );
+    expect(twitchModeration.deleteMessage).toHaveBeenCalledWith('m1');
+  });
+
+  it('shows chat text that names a moderation command as a normal message', () => {
+    const messages = twitchLines(
+      '@badges=;display-name=Viewer;id=c1;tmi-sent-ts=1789165490905 :viewer!viewer@viewer.tmi.twitch.tv PRIVMSG #channel :a CLEARCHAT b',
+      '@badges=;display-name=Viewer;id=c2;tmi-sent-ts=1789165490906 :viewer!viewer@viewer.tmi.twitch.tv PRIVMSG #channel :a CLEARMSG b',
+    );
+    expect(messages.map((m) => m.message)).toEqual(['a CLEARCHAT b', 'a CLEARMSG b']);
+    expect(twitchModeration.clearAll).not.toHaveBeenCalled();
+    expect(twitchModeration.banUser).not.toHaveBeenCalled();
+    expect(twitchModeration.deleteMessage).not.toHaveBeenCalled();
+  });
+
+  it('does not read a raw IRC line typed into a resub message', () => {
+    expect(
+      twitchLines(
+        '@badges=subscriber/3;display-name=Subber;id=s1;login=subber;msg-id=resub;tmi-sent-ts=1789165478997 :tmi.twitch.tv USERNOTICE #channel :@badges=broadcaster/1;display-name=TheStreamer;id=fake1 :x!x PRIVMSG #channel :hi',
       ),
     ).toEqual([]);
   });
