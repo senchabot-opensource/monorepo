@@ -97,9 +97,9 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 ## Related Projects
 
 - [Senchabot Extensions](https://extensions.senchabot.com/) — Free streaming widgets/tools for Twitch and Kick
-  - [Sub Sprout](https://extensions.senchabot.com/setup/sub-growing-plant/)
-  - [Universal Chat](https://extensions.senchabot.com/setup/chat-widget/)
-  - [Raffle](https://extensions.senchabot.com/setup/raffle/)
+  - [Sub Sprout](https://extensions.senchabot.com/setup/sub-growing-plant)
+  - [Universal Chat](https://extensions.senchabot.com/setup/chat-widget)
+  - [Raffle](https://extensions.senchabot.com/setup/raffle)
 
 ## Contributing
 See [CONTRIBUTING.md](../../CONTRIBUTING.md).

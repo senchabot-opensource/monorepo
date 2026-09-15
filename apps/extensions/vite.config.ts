@@ -25,10 +25,10 @@ const config = defineConfig({
         { path: '/setup/obs-bridge' },
         { path: '/setup/emote-wall' },
       ],
+      // public/sitemap.xml is the source of truth. The generated one overwrote it with an
+      // invalid https:// xmlns and the build date as every page's lastmod.
       sitemap: {
-        enabled: true,
-        host: 'https://extensions.senchabot.com',
-        outputPath: 'sitemap.xml',
+        enabled: false,
       },
     }),
     viteReact(),
