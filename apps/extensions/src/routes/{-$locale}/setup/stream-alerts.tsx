@@ -4,7 +4,7 @@ import { ChannelFields } from '#/components/channel-fields';
 import { CopyUrlField } from '#/components/copy-url-field';
 import { PreviewFrame } from '#/components/preview-frame';
 import { SetupShell } from '#/components/setup-shell';
-import { BUTTON_TEST } from '#/components/ui/button-styles';
+import { TestButtons } from '#/components/test-buttons';
 import { ColorSwatches } from '#/components/ui/color-swatches';
 import { CountField } from '#/components/ui/count-field';
 import { FieldLabel } from '#/components/ui/field-label';
@@ -348,27 +348,15 @@ function StreamAlertsSetup() {
         />
       }
       previewFooter={
-        <fieldset aria-labelledby={`${id}-test`} className="grid grid-cols-4 gap-1.5">
-          <span
-            id={`${id}-test`}
-            className="col-span-4 text-xs font-medium text-zinc-600 dark:text-zinc-400"
-          >
-            {t('streamAlerts.testTitle')}
-          </span>
-          {ALERT_KINDS.map((kind) => (
-            <button
-              key={kind}
-              type="button"
-              disabled={!settings.enabled[kind]}
-              onClick={() =>
-                send({ type: 'alert', alert: testAlerts[kind](testPlatform()) })
-              }
-              className={BUTTON_TEST}
-            >
-              {t(TEST_LABELS[kind], { count: testGift, amount: testBits })}
-            </button>
-          ))}
-        </fieldset>
+        <TestButtons
+          title={t('streamAlerts.testTitle')}
+          layout="four"
+          buttons={ALERT_KINDS.map((kind) => ({
+            label: t(TEST_LABELS[kind], { count: testGift, amount: testBits }),
+            disabled: !settings.enabled[kind],
+            onClick: () => send({ type: 'alert', alert: testAlerts[kind](testPlatform()) }),
+          }))}
+        />
       }
       urlField={
         <CopyUrlField

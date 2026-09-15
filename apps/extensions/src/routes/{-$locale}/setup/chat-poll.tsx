@@ -1,10 +1,12 @@
 import { createFileRoute, useHydrated } from '@tanstack/react-router';
 import { useId, useRef, useState } from 'react';
 import { ChannelFields } from '#/components/channel-fields';
+import { ChatCommandsCard } from '#/components/chat-commands-card';
 import { CopyUrlField } from '#/components/copy-url-field';
 import { CloseIcon } from '#/components/icons';
 import { PreviewFrame } from '#/components/preview-frame';
 import { SetupShell } from '#/components/setup-shell';
+import { TestButtons } from '#/components/test-buttons';
 import { BUTTON_TEST } from '#/components/ui/button-styles';
 import { ColorSwatches } from '#/components/ui/color-swatches';
 import { CountField } from '#/components/ui/count-field';
@@ -370,31 +372,17 @@ function PollSetup() {
   ];
 
   const commands = (
-    <section
-      aria-labelledby={`${id}-commands`}
-      className="rounded-xl border border-zinc-200 bg-zinc-100/60 p-5 dark:border-zinc-800 dark:bg-zinc-900/50"
-    >
-      <h2
-        id={`${id}-commands`}
-        className="mb-2 text-base font-semibold text-zinc-900 dark:text-white"
-      >
-        {t('poll.sectionCommands')}
-      </h2>
-      <p className="mb-3 text-sm text-zinc-600 dark:text-zinc-400">{t('poll.commandsIntro')}</p>
-      <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-sm">
-        {COMMANDS.map((command) => (
-          <div key={command.action} className="contents">
-            <dt>
-              <code className="rounded bg-white px-1.5 py-0.5 font-mono text-xs text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200">
-                {command.usage(t('poll.exampleQuestion'))}
-              </code>
-            </dt>
-            <dd className="self-center text-zinc-600 dark:text-zinc-400">{t(command.action)}</dd>
-          </div>
-        ))}
-      </dl>
-      <p className="mt-3 text-sm text-zinc-600 dark:text-zinc-400">{t('poll.votingIntro')}</p>
-    </section>
+    <ChatCommandsCard
+      title={t('poll.sectionCommands')}
+      intro={t('poll.commandsIntro')}
+      commands={COMMANDS.map((command) => ({
+        usage: command.usage(t('poll.exampleQuestion')),
+        action: t(command.action),
+      }))}
+      footer={
+        <p className="mt-3 text-sm text-zinc-600 dark:text-zinc-400">{t('poll.votingIntro')}</p>
+      }
+    />
   );
 
   return (
@@ -414,22 +402,11 @@ function PollSetup() {
         />
       }
       previewFooter={
-        <fieldset
-          aria-labelledby={`${id}-test`}
-          className="grid grid-cols-2 gap-1.5 sm:grid-cols-4"
-        >
-          <span
-            id={`${id}-test`}
-            className="col-span-2 text-xs font-medium text-zinc-600 sm:col-span-4 dark:text-zinc-400"
-          >
-            {t('poll.testTitle')}
-          </span>
-          {testButtons.map((button) => (
-            <button key={button.label} type="button" onClick={button.run} className={BUTTON_TEST}>
-              {button.label}
-            </button>
-          ))}
-        </fieldset>
+        <TestButtons
+          title={t('poll.testTitle')}
+          layout="two-four"
+          buttons={testButtons.map(({ label, run }) => ({ label, onClick: run }))}
+        />
       }
       urlField={
         <CopyUrlField
