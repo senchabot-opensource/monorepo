@@ -1,10 +1,11 @@
 import { fireEvent, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   buildSubSproutUrl,
   DEFAULT_SUB_SPROUT_SETTINGS,
   type SubSproutSettings,
 } from '#/lib/sub-sprout-url';
+import { FakeWebSocket } from '#/test/browser';
 import { combobox, en, pickOption, segment, slider, textbox, toggle } from '#/test/queries';
 import { renderRoute, setupUser } from '#/test/render';
 
@@ -17,6 +18,38 @@ const platforms = (option: string) => segment(en('common.platforms'), option);
 const pick = (option: string) => segment(en('subSprout.selectionMode'), option);
 const water = () => combobox(en('subSprout.wateringEffect'));
 const potLabel = () => toggle(en('subSprout.showPotLabel'));
+
+afterEach(() => {
+  vi.restoreAllMocks();
+});
+
+describe('Sub Sprout overlay route', () => {
+  it('falls back to the defaults for garbage params instead of breaking', async () => {
+    vi.spyOn(console, 'log').mockImplementation(() => {});
+    vi.spyOn(console, 'info').mockImplementation(() => {});
+    await renderRoute(
+      '/widgets/sub-sprout-widget?twitch=12345&variety=oak&pick=shuffle&water=snow&simspeed=abc&countfx=maybe&potlabel=1&simulate=banana',
+    );
+    // The Classic Sprout, with its pot label, waiting for real subs.
+    expect(document.querySelector('.sprout-overlay.step-0')).not.toBeNull();
+    expect(document.body.textContent).toContain('0/9');
+    await vi.waitFor(() =>
+      expect(FakeWebSocket.instances.some((ws) => ws.url.includes('twitch'))).toBe(true),
+    );
+  });
+
+  it('reads the legacy channel and platform pair for Kick', async () => {
+    vi.spyOn(console, 'log').mockImplementation(() => {});
+    const lookups: string[] = [];
+    vi.mocked(globalThis.fetch).mockImplementation(async (input) => {
+      lookups.push(String(input));
+      return new Response('{}', { status: 503 });
+    });
+    await renderRoute('/widgets/sub-sprout-widget?channel=kicker&platform=kick');
+    await vi.waitFor(() => expect(lookups.some((url) => url.includes('kicker'))).toBe(true));
+    expect(FakeWebSocket.instances.some((ws) => ws.url.includes('twitch'))).toBe(false);
+  });
+});
 
 describe('Sub Sprout setup', () => {
   it('builds the widget URL from every kind of control', async () => {
@@ -59,6 +92,13 @@ describe('Sub Sprout setup', () => {
     expect(urlField().value).toBe(
       'http://localhost:3000/widgets/sub-sprout-widget?twitch=streamer&kick=kicker' +
         '&variety=sunflower&pick=random&water=rain&countfx=0&potlabel=1',
+    );
+  });
+
+  it('lists the Classic Sprout with the ten stages it draws, 0 to 9', async () => {
+    await renderRoute(PAGE);
+    expect(combobox(en('subSprout.plantVariety')).textContent).toBe(
+      `${en('plants.classic')}${en('subSprout.stagesSuffix', { stages: 10 })}`,
     );
   });
 

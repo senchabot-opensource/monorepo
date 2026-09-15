@@ -120,7 +120,7 @@ describe("SubSproutWidget on Kick", () => {
 
     chat("!grow now", [{ type: "broadcaster" }]);
     grow(1);
-    expect(container.textContent).toContain("1/10");
+    expect(container.textContent).toContain("2/10");
   });
 
   it("looks the channel up again until kick.com answers", async () => {

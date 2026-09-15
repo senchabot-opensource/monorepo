@@ -53,7 +53,8 @@ export const PLANT_REGISTRY: Record<PlantId, PlantDefinition> = {
   classic: {
     id: "classic",
         label: "Classic Sprout",
-        stages: 9,
+        // Steps 0-9: the sprout's top leaf only shows at step 9.
+        stages: 10,
         accentColor: "#6B8E55",
     Component: ClassicPlant,
   },
