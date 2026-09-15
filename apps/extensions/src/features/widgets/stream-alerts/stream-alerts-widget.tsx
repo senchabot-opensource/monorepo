@@ -1,4 +1,6 @@
 import type { ComponentType } from 'react';
+import { skinFor } from '#/features/presets/skin';
+import { SkinProvider } from '#/features/presets/skin-context';
 import { type Locale, useI18n } from '#/lib/i18n';
 import type { AlertSettings, AlertTheme } from '#/lib/stream-alerts-url';
 import type { SubathonPlatform } from '../subathon/subathon-events';
@@ -7,6 +9,7 @@ import { alertHue, defaultHeadingKey } from './alert-style';
 import { cleanMessage, isAnonymous, type StreamAlert } from './stream-alert';
 import { CELESTIAL_FONT, CelestialAlert } from './themes/celestial';
 import { NEON_FONT, NeonAlert } from './themes/neon';
+import { PresetAlert } from './themes/preset';
 import type { AlertViewProps } from './themes/types';
 import { type ShownAlert, useStreamAlerts } from './use-stream-alerts';
 
@@ -53,46 +56,59 @@ export function StreamAlertsWidget({
   });
   // A platform tag only helps when alerts can come from either.
   const bothPlatforms = simulate ? !simPlatform : Boolean(twitchChannel && kickChannel);
+  const skin = skinFor(settings.preset);
   const { View } = THEMES[settings.theme];
 
   return (
-    <div
-      data-testid="stream-alerts"
-      style={{ position: 'fixed', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}
-    >
+    <SkinProvider skin={skin}>
       <div
-        style={{
-          position: 'absolute',
-          left: '50%',
-          top: '50%',
-          width: STAGE.width,
-          height: STAGE.height,
-          transform: `translate(-50%, -50%) scale(${scale})`,
-        }}
+        data-testid="stream-alerts"
+        data-preset={skin?.id}
+        style={{ position: 'fixed', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}
       >
         <div
           style={{
             position: 'absolute',
-            left: 0,
-            top: (STAGE.height - ALERT_BOX.height) / 2,
-            width: ALERT_BOX.width,
-            height: ALERT_BOX.height,
+            left: '50%',
+            top: '50%',
+            width: STAGE.width,
+            height: STAGE.height,
+            transform: `translate(-50%, -50%) scale(${scale})`,
           }}
         >
-          {shown && (
-            <div
-              key={shown.id}
-              data-testid="stream-alert"
-              data-kind={shown.alert.kind}
-              data-theme={settings.theme}
-              style={{ position: 'absolute', inset: 0 }}
-            >
-              <View {...viewProps(shown, settings, { showPlatform: bothPlatforms, t, locale })} />
-            </div>
-          )}
+          <div
+            style={{
+              position: 'absolute',
+              left: 0,
+              top: (STAGE.height - ALERT_BOX.height) / 2,
+              width: ALERT_BOX.width,
+              height: ALERT_BOX.height,
+            }}
+          >
+            {shown && (
+              <div
+                key={shown.id}
+                data-testid="stream-alert"
+                data-kind={shown.alert.kind}
+                data-theme={skin ? 'preset' : settings.theme}
+                style={{ position: 'absolute', inset: 0 }}
+              >
+                {skin ? (
+                  <PresetAlert
+                    skin={skin}
+                    {...viewProps(shown, settings, { showPlatform: bothPlatforms, t, locale })}
+                  />
+                ) : (
+                  <View
+                    {...viewProps(shown, settings, { showPlatform: bothPlatforms, t, locale })}
+                  />
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </SkinProvider>
   );
 }
 

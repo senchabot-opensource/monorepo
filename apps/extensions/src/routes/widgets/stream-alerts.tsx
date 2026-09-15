@@ -1,4 +1,5 @@
 import { createFileRoute, useLocation } from '@tanstack/react-router';
+import { isClassic } from '#/features/presets/registry';
 import {
   StreamAlertsWidget,
   themeFont,
@@ -20,8 +21,11 @@ function RouteComponent() {
   const simPlatform = params.get('simplatform');
   return (
     <>
-      {/* React hoists it into <head>; the font follows the theme, which only the URL knows. */}
-      <link rel="stylesheet" href={themeFont(settings.theme)} precedence="default" />
+      {/* React hoists it into <head>; the font follows the theme, which only the URL knows.
+          A preset loads its own fonts. */}
+      {isClassic(settings.preset) && (
+        <link rel="stylesheet" href={themeFont(settings.theme)} precedence="default" />
+      )}
       <StreamAlertsWidget
         twitchChannel={text('twitch')}
         kickChannel={text('kick')}

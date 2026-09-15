@@ -27,6 +27,7 @@ describe('buildStreamAlertsUrl', () => {
   it('round-trips every setting through parseStreamAlertsUrl', () => {
     const settings: StreamAlertsSettings = {
       platforms: 'kick',
+      preset: 'classic',
       theme: 'celestial',
       color: 'gold',
       enabled: { sub: true, gift: false, bits: true, raid: false },

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { skinFor } from '#/features/presets/skin';
 import { usePreviewReceiver } from '#/hooks/use-preview-channel';
 import { ALERT_KINDS, type AlertSettings } from '#/lib/stream-alerts-url';
 import type { SubathonEvent, SubathonPlatform } from '../subathon/subathon-events';
@@ -123,8 +124,10 @@ export function useStreamAlerts({
 
   useEffect(() => {
     if (!current) return;
-    const { theme, volume, duration } = settingsRef.current;
-    if (current.sound) playAlertSound(theme, current.alert.kind, volume / 100);
+    const { preset, theme, volume, duration } = settingsRef.current;
+    // A preset picks which of the two sound sets fits its look.
+    const sound = skinFor(preset)?.sound ?? theme;
+    if (current.sound) playAlertSound(sound, current.alert.kind, volume / 100);
     const timer = window.setTimeout(() => setCurrent(null), duration * 1000);
     return () => window.clearTimeout(timer);
   }, [current]);

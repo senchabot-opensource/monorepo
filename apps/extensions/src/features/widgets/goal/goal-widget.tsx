@@ -1,7 +1,11 @@
 import type { CSSProperties } from 'react';
+import { barFrameStyle, fillBackground, fillLayers, trackBackground } from '#/features/presets/bar';
+import { Frame } from '#/features/presets/frame';
+import { painter, skinCss, skinFor } from '#/features/presets/skin';
+import { SkinProvider, useSkin } from '#/features/presets/skin-context';
 import type { GoalSettings } from '#/lib/goal-url';
 import type { SubathonPlatform } from '../subathon/subathon-events';
-import { hsl, hueFor, OVERLAY_FONT_FAMILY as FONT_FAMILY, PLATFORM_COLORS } from '../overlay-style';
+import { hueFor, OVERLAY_FONT_FAMILY as FONT_FAMILY, PLATFORM_COLORS } from '../overlay-style';
 import { useFitScale } from '../use-fit-scale';
 import { CELEBRATE_MS, type GoalHit, type GoalPop, POP_MS, useGoal } from './use-goal';
 
@@ -68,46 +72,50 @@ export function GoalWidget({
     previewId,
   });
   const hue = hueFor(settings.color, 1);
+  const skin = skinFor(settings.preset);
 
   return (
-    <div className="sg-root" data-testid="goal" data-reached={reached}>
-      <style>{CSS}</style>
-      <div className="sg-stage" style={{ transform: `translate(-50%, -50%) scale(${scale})` }}>
-        {settings.pops && <PopBand pops={pops} hue={hue} x={progress * 100} />}
-        <div
-          style={{
-            position: 'absolute',
-            inset: '0 28px',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'flex-end',
-            gap: BAR_GAP,
-            paddingBottom: BAR_BOTTOM,
-          }}
-        >
-          <InfoRow
-            title={settings.title}
-            count={count}
-            target={settings.target}
-            hue={hue}
-            reached={reached}
-            hit={hit}
-          />
-          <Bar
-            progress={progress}
-            target={settings.target}
-            hue={hue}
-            hit={hit}
-            celebrating={celebration !== null}
-          />
+    <SkinProvider skin={skin}>
+      <div className="sg-root" data-testid="goal" data-reached={reached} data-preset={skin?.id}>
+        <style>{CSS + skinCss('sg', skin)}</style>
+        <div className="sg-stage" style={{ transform: `translate(-50%, -50%) scale(${scale})` }}>
+          {settings.pops && <PopBand pops={pops} hue={hue} x={progress * 100} />}
+          <div
+            style={{
+              position: 'absolute',
+              inset: '0 28px',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'flex-end',
+              gap: BAR_GAP,
+              paddingBottom: BAR_BOTTOM,
+            }}
+          >
+            <InfoRow
+              title={settings.title}
+              count={count}
+              target={settings.target}
+              hue={hue}
+              reached={reached}
+              hit={hit}
+            />
+            <Bar
+              progress={progress}
+              target={settings.target}
+              hue={hue}
+              hit={hit}
+              celebrating={celebration !== null}
+            />
+          </div>
+          {celebration !== null && <Celebration key={celebration} />}
         </div>
-        {celebration !== null && <Celebration key={celebration} />}
       </div>
-    </div>
+    </SkinProvider>
   );
 }
 
 function StarIcon({ hue, hit }: { hue: number; hit: GoalHit | null }) {
+  const hsl = painter(useSkin(), hue);
   return (
     <svg
       key={hit?.up ? hit.key : undefined}
@@ -116,13 +124,13 @@ function StarIcon({ hue, hit }: { hue: number; hit: GoalHit | null }) {
       height="26"
       aria-hidden="true"
       style={{
-        filter: `drop-shadow(0 0 8px ${hsl(hue, 90, 55, 0.8)})`,
+        filter: `drop-shadow(0 0 8px ${hsl(90, 55, 0.8)})`,
         animation: hit?.up ? 'sg-bump .5s ease-out' : undefined,
       }}
     >
       <path
         d="m12 2.5 2.9 6 6.6.8-4.9 4.5 1.3 6.5L12 17l-5.9 3.3 1.3-6.5-4.9-4.5 6.6-.8Z"
-        fill={hsl(hue, 90, 60)}
+        fill={hsl(90, 60)}
         stroke="rgba(0,0,0,.55)"
         strokeWidth="1.5"
         strokeLinejoin="round"
@@ -132,6 +140,7 @@ function StarIcon({ hue, hit }: { hue: number; hit: GoalHit | null }) {
 }
 
 function TrophyIcon({ size, glow }: { size: number; glow: string }) {
+  const gold = painter(useSkin(), GOLD_HUE, 'win');
   return (
     <svg
       viewBox="0 0 24 24"
@@ -142,8 +151,8 @@ function TrophyIcon({ size, glow }: { size: number; glow: string }) {
     >
       <path
         d="M7 3.5h10v5a5 5 0 0 1-10 0Zm0 1.5H3.5v1.5A3.5 3.5 0 0 0 7 10m10-5h3.5v1.5A3.5 3.5 0 0 1 17 10m-5 3.5v3.5m-4 3.5h8l-1-3.5H9Z"
-        fill={hsl(GOLD_HUE, 95, 58)}
-        stroke={hsl(GOLD_HUE, 70, 22)}
+        fill={gold(95, 58)}
+        stroke={gold(70, 22)}
         strokeWidth="1.4"
         strokeLinejoin="round"
       />
@@ -167,6 +176,8 @@ function InfoRow({
   reached: boolean;
   hit: GoalHit | null;
 }) {
+  const skin = useSkin();
+  const gold = painter(skin, GOLD_HUE, 'win');
   return (
     <div
       style={{
@@ -180,7 +191,7 @@ function InfoRow({
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
         {reached ? (
-          <TrophyIcon size={28} glow={hsl(GOLD_HUE, 95, 55, 0.8)} />
+          <TrophyIcon size={28} glow={gold(95, 55, 0.8)} />
         ) : (
           <StarIcon hue={hue} hit={hit} />
         )}
@@ -206,7 +217,7 @@ function InfoRow({
           key={hit?.up ? hit.key : undefined}
           style={{
             fontSize: 44,
-            color: reached ? hsl(GOLD_HUE, 100, 72) : '#fff',
+            color: reached ? gold(100, 72) : (skin?.text ?? '#fff'),
             transformOrigin: 'right bottom',
             animation: hit?.up ? 'sg-bump .5s ease-out' : undefined,
           }}
@@ -232,9 +243,13 @@ function Bar({
   hit: GoalHit | null;
   celebrating: boolean;
 }) {
+  const skin = useSkin();
+  const hsl = painter(skin, hue);
+  const glow = celebrating ? painter(skin, GOLD_HUE, 'win') : hsl;
+  const layers = fillLayers(skin);
   const segments = target <= MAX_SEGMENTS ? target : 10;
   const ticks = Array.from({ length: segments - 1 }, (_, index) => ((index + 1) / segments) * 100);
-  const glowHue = celebrating ? GOLD_HUE : hue;
+  const glowShadow = `0 0 ${celebrating ? 38 : 22}px ${glow(90, 50, celebrating ? 0.8 : 0.45)}`;
   const barStyle: CSSProperties = {
     position: 'relative',
     height: BAR_HEIGHT,
@@ -242,7 +257,8 @@ function Bar({
     borderRadius: 6,
     padding: 4,
     background: 'linear-gradient(180deg, #2a2a33 0%, #0c0c10 100%)',
-    boxShadow: `0 0 0 2px rgba(0,0,0,.85), 0 0 ${celebrating ? 38 : 22}px ${hsl(glowHue, 90, 50, celebrating ? 0.8 : 0.45)}, inset 0 1px 0 rgba(255,255,255,.18)`,
+    boxShadow: `0 0 0 2px rgba(0,0,0,.85), ${glowShadow}, inset 0 1px 0 rgba(255,255,255,.18)`,
+    ...(skin && barFrameStyle(skin, glowShadow)),
     animation: celebrating ? 'sg-glow .7s ease-in-out 5' : undefined,
     transition: 'box-shadow .4s',
   };
@@ -254,9 +270,10 @@ function Bar({
           position: 'relative',
           height: '100%',
           overflow: 'hidden',
-          borderRadius: 3,
-          background:
-            'repeating-linear-gradient(90deg, rgba(255,255,255,.045) 0 14px, transparent 14px 28px), linear-gradient(180deg, #16161c, #07070a)',
+          borderRadius: skin ? 3 * skin.radius : 3,
+          background: skin
+            ? trackBackground(skin)
+            : 'repeating-linear-gradient(90deg, rgba(255,255,255,.045) 0 14px, transparent 14px 28px), linear-gradient(180deg, #16161c, #07070a)',
         }}
       >
         {hit && (
@@ -279,34 +296,40 @@ function Bar({
             position: 'absolute',
             inset: 0,
             transform: `translateX(${(progress - 1) * 100}%)`,
-            background: `linear-gradient(180deg, ${hsl(hue, 95, 72)} 0%, ${hsl(hue, 88, 52)} 42%, ${hsl(hue, 85, 34)} 100%)`,
-            boxShadow: `inset -3px 0 0 ${hsl(hue, 100, 85)}`,
+            background: skin
+              ? fillBackground(skin, hsl)
+              : `linear-gradient(180deg, ${hsl(95, 72)} 0%, ${hsl(88, 52)} 42%, ${hsl(85, 34)} 100%)`,
+            boxShadow: `inset -3px 0 0 ${hsl(100, 85)}`,
             transition: 'transform .7s cubic-bezier(.2,.9,.3,1.1)',
             overflow: 'hidden',
           }}
         >
-          <div
-            // One tile wider on the left, so sliding it a tile never shows an edge.
-            style={{
-              position: 'absolute',
-              inset: '0 0 0 -28px',
-              background:
-                'repeating-linear-gradient(115deg, rgba(255,255,255,.14) 0 10px, transparent 10px 20px)',
-              backgroundSize: '28px 100%',
-              animation: 'sg-stripes 1.6s linear infinite',
-            }}
-          />
-          <div
-            style={{
-              position: 'absolute',
-              left: 0,
-              right: 0,
-              top: 4,
-              height: '32%',
-              background: 'linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,0))',
-              borderRadius: 2,
-            }}
-          />
+          {layers.stripes && (
+            <div
+              // One tile wider on the left, so sliding it a tile never shows an edge.
+              style={{
+                position: 'absolute',
+                inset: '0 0 0 -28px',
+                background:
+                  'repeating-linear-gradient(115deg, rgba(255,255,255,.14) 0 10px, transparent 10px 20px)',
+                backgroundSize: '28px 100%',
+                animation: 'sg-stripes 1.6s linear infinite',
+              }}
+            />
+          )}
+          {layers.gloss && (
+            <div
+              style={{
+                position: 'absolute',
+                left: 0,
+                right: 0,
+                top: 4,
+                height: '32%',
+                background: 'linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,0))',
+                borderRadius: 2,
+              }}
+            />
+          )}
           {hit?.up && (
             // The fill is shifted left, so start the sweep where it becomes visible.
             <div
@@ -332,18 +355,20 @@ function Bar({
               top: 0,
               bottom: 0,
               left: `${tick}%`,
-              width: 2,
+              width: layers.tickWidth,
               background: 'rgba(0,0,0,.45)',
             }}
           />
         ))}
       </div>
+      {skin && <Frame skin={skin} radius={6} />}
     </div>
   );
 }
 
 /** A trophy that lands on the bar, with a ring and sparks bursting out of it. */
 function Celebration() {
+  const gold = painter(useSkin(), GOLD_HUE, 'win');
   const center: CSSProperties = { position: 'absolute', left: '50%', top: BAR_CENTER };
   return (
     <div
@@ -357,8 +382,8 @@ function Celebration() {
           width: 120,
           height: 120,
           borderRadius: '50%',
-          border: `4px solid ${hsl(GOLD_HUE, 100, 70)}`,
-          boxShadow: `0 0 24px ${hsl(GOLD_HUE, 100, 60, 0.8)}`,
+          border: `4px solid ${gold(100, 70)}`,
+          boxShadow: `0 0 24px ${gold(100, 60, 0.8)}`,
           // Hidden until its delay is up; the burst waits for the trophy to land.
           opacity: 0,
           animation: 'sg-ring 1s ease-out .25s forwards',
@@ -375,7 +400,7 @@ function Celebration() {
               marginLeft: -4,
               marginTop: -9,
               borderRadius: 4,
-              background: spark % 2 ? hsl(GOLD_HUE, 100, 70) : '#fff',
+              background: spark % 2 ? gold(100, 70) : '#fff',
               opacity: 0,
               '--a': `${(spark / SPARK_COUNT) * 360}deg`,
               '--d': `${-90 - (spark % 3) * 26}px`,
@@ -390,7 +415,7 @@ function Celebration() {
           animation: `sg-trophy ${CELEBRATE_MS}ms cubic-bezier(.2,.9,.3,1.2) both`,
         }}
       >
-        <TrophyIcon size={104} glow={hsl(GOLD_HUE, 100, 55, 0.9)} />
+        <TrophyIcon size={104} glow={gold(100, 55, 0.9)} />
       </div>
     </div>
   );
@@ -406,6 +431,8 @@ const POP_GAP = 12;
 
 /** Floating "+1" numbers with who they came from, rising from the fill's edge. */
 function PopBand({ pops, hue, x }: { pops: GoalPop[]; hue: number; x: number }) {
+  const skin = useSkin();
+  const hsl = painter(skin, hue);
   const base = Math.min(70, Math.max(30, x));
   return (
     <div style={{ position: 'absolute', left: 0, right: 0, top: 0, height: POP_BAND - POP_GAP }}>
@@ -429,8 +456,8 @@ function PopBand({ pops, hue, x }: { pops: GoalPop[]; hue: number; x: number }) 
             style={{
               fontSize: 38,
               fontWeight: 800,
-              color: hsl(hue, 100, 78),
-              WebkitTextStroke: `1.5px ${hsl(hue, 80, 22)}`,
+              color: hsl(100, 78),
+              WebkitTextStroke: `1.5px ${hsl(80, 22)}`,
             }}
           >
             +{pop.amount}
@@ -446,7 +473,7 @@ function PopBand({ pops, hue, x }: { pops: GoalPop[]; hue: number; x: number }) 
               borderRadius: 999,
               fontSize: 15,
               fontWeight: 700,
-              background: 'rgba(0,0,0,.7)',
+              background: skin ? skin.panel2 : 'rgba(0,0,0,.7)',
               border: `1px solid ${PLATFORM_COLORS[pop.event.platform]}66`,
             }}
           >
