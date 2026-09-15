@@ -374,6 +374,9 @@ A: Open an issue at https://github.com/senchabot-opensource/monorepo/issues/new.
 - Guide, Twitch and Kick chat together: https://extensions.senchabot.com/guides/twitch-kick-chat-overlay
 - Guide, chat giveaway: https://extensions.senchabot.com/guides/chat-giveaway
 - Guide, switch OBS scenes from chat: https://extensions.senchabot.com/guides/obs-scene-switcher
+- Guide, read chat in an OBS dock: https://extensions.senchabot.com/guides/obs-chat-dock
+- Guide, stream alerts: https://extensions.senchabot.com/guides/stream-alerts
+- Guide, subathon timer: https://extensions.senchabot.com/guides/subathon-timer
 - FAQ: https://extensions.senchabot.com/faq
 - Changelog: https://extensions.senchabot.com/changelog
 
