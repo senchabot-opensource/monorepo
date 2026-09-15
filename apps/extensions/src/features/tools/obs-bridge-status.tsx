@@ -1,4 +1,5 @@
-import { type ReactNode, useEffect, useState } from 'react';
+import type { ReactNode } from 'react';
+import { secondsLeft, useNow } from '#/hooks/use-now';
 import type { ChatConnectionStatus } from '#/lib/basechat';
 import { type TranslationKey, useI18n } from '#/lib/i18n';
 import type { ChatPlatform } from './command-users';
@@ -32,21 +33,6 @@ const TONES: Record<Tone, { badge: string; dot: string }> = {
     dot: 'bg-red-500',
   },
 };
-
-/** Date.now(), re-read every half second while `active`, for the retry countdowns. */
-function useNow(active: boolean) {
-  const [now, setNow] = useState(() => Date.now());
-  useEffect(() => {
-    if (!active) return;
-    setNow(Date.now());
-    const id = setInterval(() => setNow(Date.now()), 500);
-    return () => clearInterval(id);
-  }, [active]);
-  return now;
-}
-
-const secondsLeft = (retryAt: number, now: number) =>
-  Math.max(1, Math.ceil((retryAt - now) / 1000));
 
 function useTimeFormat(withSeconds: boolean) {
   const { locale } = useI18n();
