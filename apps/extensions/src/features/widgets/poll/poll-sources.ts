@@ -35,6 +35,11 @@ export class TwitchPollSource extends BaseChatClient {
         this.send('PONG');
         continue;
       }
+      // Sent before maintenance closes this connection; the rest of the frame is the old one's.
+      if (line.command === 'RECONNECT') {
+        this.restart();
+        return;
+      }
       const pollEvent = twitchPollEvent(line);
       if (pollEvent) this.onEvent(pollEvent);
     }
