@@ -72,6 +72,21 @@ const PAGES: PageCase[] = [
     faq: ['subathon.faq1Q', 'subathon.faq2Q', 'subathon.faq3Q', 'subathon.faq4Q'],
   },
   {
+    path: '/setup/sub-goal',
+    title: 'goal.title',
+    sections: [
+      'common.sectionChannel',
+      'goal.sectionGoal',
+      'common.sectionAppearance',
+      'goal.sectionCommands',
+      'goal.previewTitle',
+      'goal.guideTitle',
+      'common.faqTitle',
+      'common.moreWidgets',
+    ],
+    faq: ['goal.faq1Q', 'goal.faq2Q', 'goal.faq3Q', 'goal.faq4Q'],
+  },
+  {
     path: '/setup/stream-alerts',
     title: 'streamAlerts.title',
     sections: [

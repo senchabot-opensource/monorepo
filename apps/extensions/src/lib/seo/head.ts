@@ -61,6 +61,13 @@ export const OG_IMAGES = {
       tr: "Subathon Timer, aboneliklerle süresi uzayan geri sayım overlay'i",
     },
   },
+  goal: {
+    path: '/og/goal.png',
+    alt: {
+      en: 'Sub Goal, a goal bar overlay that subs and gifted subs fill',
+      tr: "Abone Hedefi, abonelik ve hediye aboneliklerle dolan hedef barı overlay'i",
+    },
+  },
   'stream-alerts': {
     path: '/og/stream-alerts.png',
     alt: {

@@ -17,12 +17,12 @@ export const PAGE_META = {
     en: {
       title: 'Free Twitch & Kick Overlays for OBS | Senchabot Extensions',
       description:
-        'Seven free tools for Twitch and Kick streamers: Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Raffle and OBS Bridge. Add one to OBS.',
+        'Eight free tools for Twitch and Kick streamers: Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Raffle and OBS Bridge. Add to OBS.',
     },
     tr: {
       title: "OBS için Ücretsiz Twitch ve Kick Overlay'leri | Senchabot",
       description:
-        "Twitch ve Kick için yedi ücretsiz araç: Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Çekiliş ve OBS Bridge. Ayarla, OBS'e ekle.",
+        'Twitch ve Kick için sekiz ücretsiz yayın aracı: Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Çekiliş ve OBS Bridge.',
     },
   },
   'chat-box': {
@@ -83,6 +83,18 @@ export const PAGE_META = {
       title: 'Twitch ve Kick için Yayın Uyarıları (Ücretsiz) | Senchabot',
       description:
         "OBS için ücretsiz animasyonlu yayın uyarıları. Twitch ve Kick'te her abonelik, hediye abonelik, Bits, Kicks ve raid için sesli uyarı. Giriş yok, indirme yok.",
+    },
+  },
+  goal: {
+    en: {
+      title: 'Free Sub Goal Overlay for Twitch & Kick | Senchabot',
+      description:
+        'A free sub goal overlay for OBS. Every sub, resub and gifted sub on Twitch and Kick fills the bar, with a trophy when you hit the goal. Mods fix it from chat.',
+    },
+    tr: {
+      title: 'Twitch ve Kick için Abone Hedefi Barı (Ücretsiz) | Senchabot',
+      description:
+        "OBS için ücretsiz abone hedefi barı. Twitch ve Kick'te her abonelik, yenileme ve hediye abonelik 1 ekler, hedefe ulaşınca kupa iner. Modlar sohbetten düzeltir.",
     },
   },
   raffle: {
@@ -229,6 +241,28 @@ export const APP_FEATURES: Record<WidgetId, Record<Locale, readonly string[]>> =
       'Uyarılar sırayla çıkar, çoklu hediye abonelik tek bir uyarı olur',
       'İngilizce ya da Türkçe uyarı metni',
       'Önerilen Tarayıcı Kaynağı boyutu: 800x450',
+    ],
+  },
+  goal: {
+    en: [
+      'A goal bar that every sub, resub and gifted sub on Twitch and Kick fills by one',
+      'Both platforms add into one count',
+      'Prime and every tier count as one sub, a gift counts every sub in it',
+      'Start from your current sub count, or from 0 for this stream',
+      'A trophy celebration when the goal is reached, and the count keeps going past it',
+      'The broadcaster and mods can add, remove, set and reset the count with !goal',
+      'The count is saved in OBS and survives reloads',
+      'Recommended browser source size: 800x260',
+    ],
+    tr: [
+      "Twitch ve Kick'te her abonelik, yenileme ve hediye abonelikle birer birer dolan hedef barı",
+      'İki platformdan gelenler tek bir sayıda toplanır',
+      "Prime ve bütün tier'lar tek abonelik sayılır, hediyede içindeki her abonelik sayılır",
+      "Mevcut abone sayısından ya da sadece bu yayın için 0'dan başlar",
+      'Hedefe ulaşınca kupa kutlaması, sayı hedefi geçince de artmaya devam eder',
+      'Yayıncı ve modlar !goal ile abone ekleyip çıkarabilir, sayıyı ayarlayıp sıfırlayabilir',
+      "Sayı OBS'te kaydedilir, sayfa yenilense de kaybolmaz",
+      'Önerilen Tarayıcı Kaynağı boyutu: 800x260',
     ],
   },
   raffle: {

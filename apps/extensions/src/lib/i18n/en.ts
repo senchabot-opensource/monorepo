@@ -88,6 +88,10 @@ export const en = {
       name: 'Sub Sprout',
       tagline: 'A plant on your stream that grows a little with every new sub.',
     },
+    goal: {
+      name: 'Sub Goal',
+      tagline: 'A goal bar that every sub and gifted sub fills, with a trophy when you reach it.',
+    },
     subathon: {
       name: 'Subathon Timer',
       tagline:
@@ -639,6 +643,66 @@ export const en = {
     faq4A:
       'No. The timer reads subs, gifts, Bits, Kicks and mod commands from your public Twitch and Kick chat, the way a logged-out viewer sees them.',
   },
+  goal: {
+    breadcrumb: 'Sub Goal Setup',
+    title: 'Sub Goal Setup',
+    intro:
+      'A sub goal bar for Twitch and Kick. Every new sub, resub and gifted sub from both chats fills it by one, and a trophy lands on the bar when you reach the goal. Pick where the count starts and where the goal is, and your mods can fix the count from chat.',
+    sectionGoal: 'Goal',
+    start: 'Starting Count',
+    startTip:
+      'Where the count starts: the sub count on your dashboard, or 0 to count this stream only. Changing it later starts the count over from the new number.',
+    target: 'Goal',
+    targetTip: 'The bar is full at this count. The count keeps going past it.',
+    countsHint:
+      'Every sub and resub adds 1, Prime and every tier alike. A gift adds 1 for each sub in it.',
+    color: 'Color',
+    titleLabel: 'Title',
+    titleTip: 'Shown above the bar. Leave it empty to show no title.',
+    titlePlaceholder: 'No title',
+    showPops: 'Show New Subs',
+    showPopsTip: "Floats up +1 with the viewer's name for every sub, or +5 for a gift of 5.",
+    sectionCommands: 'Chat Commands',
+    commandsIntro:
+      'You and your mods can fix the count from Twitch or Kick chat, for example to add subs that came in while OBS was closed.',
+    cmdAdd: 'Adds subs to the count, 1 if you leave the number out',
+    cmdRemove: 'Takes subs off the count, 1 if you leave the number out',
+    cmdSet: 'Sets the count',
+    cmdReset: 'Goes back to the starting count',
+    previewTitle: 'Sub Goal Preview',
+    previewIframeTitle: 'Sub Goal Preview',
+    previewHint:
+      'The preview plays simulated subs and gifts until the goal is reached, then starts over. On stream only your chat adds to the count.',
+    testTitle: 'Try it:',
+    testViewer: 'You',
+    testSub: '+1 Sub',
+    testGift: '+5 Gifted',
+    testReach: 'Reach Goal',
+    testReset: 'Reset',
+    widgetUrlTip:
+      'Already made a widget? Paste its URL here to load your settings and change what you need.',
+    widgetUrlPlaceholder: 'Paste an existing widget URL to edit it',
+    widgetUrlInvalid: "This isn't a Sub Goal URL.",
+    browserSourceHintSize: ' (recommended size: 800×260).',
+    guideTitle: 'Streaming Software Setup (OBS, Streamlabs, XSplit, etc.)',
+    guideStep1:
+      'Add a Browser Source in your streaming software (OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio, etc.).',
+    guideStep2: 'Paste your copied sub goal URL.',
+    guideStep3: 'Set width to 800 and height to 260.',
+    guideStep4: 'If the count is ever off, you or a mod can fix it with !goal set in chat.',
+    faq1Q: "Why doesn't it read my sub count from Twitch or Kick?",
+    faq1A:
+      "Neither platform shows a channel's sub count to a page that isn't logged in, and this goal never asks you to log in. So you type your starting count once, and from then on every sub and gift that comes in adds to it.",
+    faq2Q: 'What happens if OBS closes or the browser source reloads?',
+    faq2A:
+      "The count is saved inside OBS, so it comes back where it was, on your next stream too. Subs that come in while OBS is closed can't be seen, so a mod can add them with !goal add.",
+    faq3Q: 'Do resubs and gifted subs count?',
+    faq3A:
+      'Yes. Every new sub and resub adds 1, and a gift adds 1 for each sub in it, so a gift of 5 adds 5. On Twitch a resub counts when the viewer shares it in chat, and on Kick when it renews.',
+    faq4Q: 'Can I make a follower goal?',
+    faq4A:
+      "Not yet. Twitch and Kick don't show new follows to a page that isn't logged in, so the goal counts subs, the same way on both platforms.",
+  },
   streamAlerts: {
     breadcrumb: 'Stream Alerts Setup',
     title: 'Stream Alerts Setup',
@@ -987,6 +1051,7 @@ export const en = {
             'A vertical chat column. A bigger source fits more messages, the text stays the same size.',
           emoteWall: 'A full 1080p canvas. Emotes show up anywhere on the screen.',
           subSprout: 'The plant and pot grow inside this area.',
+          goal: 'A wide strip for the goal bar, with room above it for the +1s to rise into.',
           subathon: 'A wide strip for the health bar, clock or ring. A bigger source scales it up.',
           streamAlerts:
             'One alert at a time, in the middle of this area. A bigger source scales it up.',
@@ -1011,6 +1076,7 @@ export const en = {
           'Chat Box: messages only come in while the source is running. If the source shuts down and comes back, the screen starts empty and only shows new messages.',
         subSprout:
           "Sub Sprout: the plant's growth isn't saved anywhere. If the page reloads, the plant goes back to the first stage.",
+        goal: "Sub Goal: the count is saved inside OBS, so a reload doesn't lose it, but subs that come in while the source is off aren't counted.",
         subathon:
           "Subathon Timer: the time left is saved inside OBS, so a reload doesn't lose it. The timer keeps counting down while the source is off, but it can't see subs that come in during that time.",
         streamAlerts:
@@ -1025,7 +1091,7 @@ export const en = {
       update: {
         title: 'How do I change a widget later?',
         p1: 'Your settings live inside the widget URL, so changing a setting means a new URL. Change the setting on the setup page, copy the new URL, then double-click the source in OBS and paste it over the old URL in the URL field.',
-        p2: "You don't have to start over with [Chat Box](/setup/chat-widget), [Emote Wall](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer) or [Stream Alerts](/setup/stream-alerts). Paste your current URL into the Widget URL field on the setup page and your channels and all your settings come back. Change what you want and copy the new URL.",
+        p2: "You don't have to start over with [Chat Box](/setup/chat-widget), [Emote Wall](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Stream Alerts](/setup/stream-alerts) or [Sub Goal](/setup/sub-goal). Paste your current URL into the Widget URL field on the setup page and your channels and all your settings come back. Change what you want and copy the new URL.",
         p3: "OBS Bridge has no paste field, so enter your settings again on its setup page and copy the new tool URL. You can also change scene picks and authorized users on the tool page itself and grab the new URL with its Copy Updated URL button. Old URLs keep working, so you don't have to update them.",
       },
       troubleshoot: {
@@ -1127,7 +1193,7 @@ export const en = {
       },
       others: {
         title: 'Which other widgets listen to both platforms together?',
-        p1: '[Emote Wall](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer) and [Stream Alerts](/setup/stream-alerts) also take both channels in one URL. Emote Wall sends emote-only messages from both chats flying across the screen. Sub Sprout grows with subscriptions on both platforms, gifted subs on Kick included. Subathon Timer adds time for subs, gifted subs, Bits and Kicks from both chats. Stream Alerts shows an alert for subs, gifted subs, Bits, Kicks and raids from both.',
+        p1: '[Emote Wall](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Stream Alerts](/setup/stream-alerts) and [Sub Goal](/setup/sub-goal) also take both channels in one URL. Emote Wall sends emote-only messages from both chats flying across the screen. Sub Sprout grows with subscriptions on both platforms, gifted subs on Kick included. Subathon Timer adds time for subs, gifted subs, Bits and Kicks from both chats. Stream Alerts shows an alert for subs, gifted subs, Bits, Kicks and raids from both. Sub Goal adds subs and gifted subs from both chats into one count.',
         p2: '[Raffle](/setup/raffle), on the other hand, runs on one platform at a time: Twitch or Kick.',
       },
       ctaTitle: 'Set up Chat Box',
@@ -1278,7 +1344,7 @@ export const en = {
     },
     freeQ: 'Is Senchabot Extensions free?',
     freeA:
-      "Yes. All seven widgets and tools are free: Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Raffle and OBS Bridge. There's no paid plan, watermark or premium account. The source code is open on GitHub under the GPL-3.0 license.",
+      "Yes. All eight widgets and tools are free: Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Raffle and OBS Bridge. There's no paid plan, watermark or premium account. The source code is open on GitHub under the GPL-3.0 license.",
     loginQ: 'What does "no login required" mean?',
     loginA:
       "You don't create an account on this site, you don't log in with Twitch or Kick, and you don't download anything. You type your channel name and the setup page gives you a URL. The widgets read public chat anonymously: on Twitch they connect like an anonymous viewer, and on Kick they listen to the public chat feed. That's why they can't post in chat, moderate, or access private info on your account.",
@@ -1290,10 +1356,10 @@ export const en = {
       'OBS Studio and any other streaming software that supports a browser source. Each widget runs as a web URL, and you paste that URL into the source. Our guides are written for OBS Studio.',
     platformsQ: 'Which widgets support Twitch and which support Kick?',
     platformsA:
-      'All seven support both platforms. Chat Box, Emote Wall, Sub Sprout, Subathon Timer and Stream Alerts listen to a Twitch and a Kick channel together in one URL. OBS Bridge listens for commands from both chats, and each authorized user is added with their own platform. Raffle runs on one platform at a time, Twitch or Kick. In Chat Box, 7TV emotes show on both platforms, while BTTV and FFZ emotes show on Twitch only.',
+      'All eight support both platforms. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts and Sub Goal listen to a Twitch and a Kick channel together in one URL. OBS Bridge listens for commands from both chats, and each authorized user is added with their own platform. Raffle runs on one platform at a time, Twitch or Kick. In Chat Box, 7TV emotes show on both platforms, while BTTV and FFZ emotes show on Twitch only.',
     editQ: 'How do I change a widget later?',
     editA:
-      "Change the settings on the setup page, copy the new URL, and paste it over the old one in the source's URL field in OBS. With Chat Box, Emote Wall, Sub Sprout, Subathon Timer and Stream Alerts, if you paste your old URL into the Widget URL field on the setup page, all your settings come back and you don't have to start over.",
+      "Change the settings on the setup page, copy the new URL, and paste it over the old one in the source's URL field in OBS. With Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts and Sub Goal, if you paste your old URL into the Widget URL field on the setup page, all your settings come back and you don't have to start over.",
     oldUrlsQ: 'Will my old widget URLs keep working?',
     oldUrlsA:
       "Yes. Updates are made so existing URLs don't break: parameter names, values and defaults stay the same. For example, the old keep=true in Chat Box still means Forever, and Sub Sprout still reads the old channel and platform parameters.",
@@ -1317,6 +1383,7 @@ export const en = {
     lead: "New features and bug fixes in Senchabot Extensions, newest first. The list is put together from the project's commit history on [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      goal: 'New Sub Goal: a goal bar that every sub, resub and gifted sub on Twitch and Kick fills by one, with a trophy when you reach it. Mods can fix the count with !goal.',
       streamAlerts:
         'New Stream Alerts: an animated alert with its own sound for every sub, gifted sub, Bits, Kicks and raid on Twitch and Kick. Pick a color, rename the headings and set minimum amounts.',
       subathon:

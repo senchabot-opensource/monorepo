@@ -69,6 +69,15 @@ export function SubathonIcon(props: IconProps) {
   );
 }
 
+export function GoalIcon(props: IconProps) {
+  return (
+    <StrokeIcon {...props}>
+      <path d="M5 21V3.5" />
+      <path d="M5 4h12.5l-2.5 4 2.5 4H5" />
+    </StrokeIcon>
+  );
+}
+
 export function StreamAlertsIcon(props: IconProps) {
   return (
     <StrokeIcon {...props}>
