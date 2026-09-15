@@ -6,11 +6,18 @@ import { AlertContainer } from '#/features/widgets/alerts/alert-container';
 import { useAlertQueue } from '#/features/widgets/alerts/use-alert-queue';
 import type { AlertPosition } from '#/lib/alert-config';
 import { pusherAuth } from '#/lib/pusher-auth';
+import { readFlag } from '#/lib/url-params';
 
 const searchSchema = z.object({
   kick: z.string(),
-  pos: z.enum(['center', 'center-right', 'center-left']).optional(),
-  glow: z.boolean().default(false).optional(),
+  // A mistyped value falls back instead of putting the router's error screen on stream.
+  pos: z.enum(['center', 'center-right', 'center-left']).optional().catch(undefined),
+  // The router hands over glow=1 as a number and glow=yes as text; read them as the other
+  // overlays read a flag, so they turn the glow on instead of failing.
+  glow: z.preprocess(
+    (value) => readFlag(value === undefined ? null : String(value), false),
+    z.boolean(),
+  ),
 });
 
 interface FollowData {
