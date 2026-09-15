@@ -6,6 +6,9 @@ import type { WidgetId } from '#/lib/widgets';
 export type GuideId =
   | 'obs-browser-source'
   | 'twitch-kick-chat-overlay'
+  | 'obs-chat-dock'
+  | 'stream-alerts'
+  | 'subathon-timer'
   | 'chat-giveaway'
   | 'obs-scene-switcher';
 
@@ -23,11 +26,12 @@ export interface GuideEntry {
   /** The widgets it covers, shown as links under the H1. */
   widgets: readonly WidgetId[];
   related: readonly GuideId[];
+  /** ISO date, shown under the H1 and used as the Article's datePublished. */
+  published: string;
   meta: LocalizedMeta;
 }
 
 export const GUIDES_PATH: SitePath = '/guides';
-export const GUIDES_PUBLISHED = '2026-09-12';
 
 export const GUIDES: readonly GuideEntry[] = [
   {
@@ -39,6 +43,7 @@ export const GUIDES: readonly GuideEntry[] = [
     leadKey: 'guides.obs.lead',
     widgets: ['chat-box', 'emote-wall', 'sub-sprout', 'raffle'],
     related: ['twitch-kick-chat-overlay', 'chat-giveaway'],
+    published: '2026-09-12',
     meta: {
       en: {
         title: 'Add a Stream Widget to OBS as a Browser Source | Senchabot',
@@ -60,7 +65,8 @@ export const GUIDES: readonly GuideEntry[] = [
     summaryKey: 'guides.chat.summary',
     leadKey: 'guides.chat.lead',
     widgets: ['chat-box', 'emote-wall', 'sub-sprout'],
-    related: ['obs-browser-source', 'obs-scene-switcher'],
+    related: ['obs-browser-source', 'obs-chat-dock'],
+    published: '2026-09-12',
     meta: {
       en: {
         title: 'Show Twitch and Kick Chat Together in OBS | Senchabot',
@@ -75,6 +81,76 @@ export const GUIDES: readonly GuideEntry[] = [
     },
   },
   {
+    id: 'obs-chat-dock',
+    path: '/guides/obs-chat-dock',
+    titleKey: 'guides.reader.title',
+    shortKey: 'guides.reader.short',
+    summaryKey: 'guides.reader.summary',
+    leadKey: 'guides.reader.lead',
+    // Chat Reader opens from the Chat Box setup page and has no setup page of its own.
+    widgets: ['chat-box'],
+    related: ['twitch-kick-chat-overlay', 'obs-scene-switcher'],
+    published: '2026-09-15',
+    meta: {
+      en: {
+        title: 'Read Twitch and Kick Chat in an OBS Dock | Senchabot',
+        description:
+          'Read Twitch and Kick chat together in a browser tab or an OBS dock. It reconnects on its own, marks every drop and keeps 1000 lines through a refresh.',
+      },
+      tr: {
+        title: "Twitch ve Kick Sohbetini OBS Dock'unda Oku | Senchabot",
+        description:
+          "Twitch ve Kick sohbetini tarayıcıda ya da OBS dock'unda birlikte oku. Kendiliğinden yeniden bağlanır, her kopmayı işaretler, yenilesen de 1000 satır kalır.",
+      },
+    },
+  },
+  {
+    id: 'stream-alerts',
+    path: '/guides/stream-alerts',
+    titleKey: 'guides.alerts.title',
+    shortKey: 'guides.alerts.short',
+    summaryKey: 'guides.alerts.summary',
+    leadKey: 'guides.alerts.lead',
+    widgets: ['stream-alerts'],
+    related: ['subathon-timer', 'obs-browser-source'],
+    published: '2026-09-15',
+    meta: {
+      en: {
+        title: 'Sub, Cheer and Raid Alerts for Twitch and Kick | Senchabot',
+        description:
+          'Add free animated alerts for Twitch and Kick subs, gifted subs, Bits, Kicks and raids to OBS: one 800×450 URL, two themes and sound that plays in OBS.',
+      },
+      tr: {
+        title: "Twitch ve Kick'te Abone, Cheer ve Raid Uyarıları | Senchabot",
+        description:
+          "Twitch ve Kick'te abonelik, hediye abonelik, Bits, Kicks ve raid için OBS'e ücretsiz animasyonlu uyarılar: tek 800×450 URL, iki tema ve OBS'te çalan ses.",
+      },
+    },
+  },
+  {
+    id: 'subathon-timer',
+    path: '/guides/subathon-timer',
+    titleKey: 'guides.subathon.title',
+    shortKey: 'guides.subathon.short',
+    summaryKey: 'guides.subathon.summary',
+    leadKey: 'guides.subathon.lead',
+    widgets: ['subathon'],
+    related: ['stream-alerts', 'obs-browser-source'],
+    published: '2026-09-15',
+    meta: {
+      en: {
+        title: 'Run a Subathon Timer on Twitch and Kick in OBS | Senchabot',
+        description:
+          'Run a free subathon timer on Twitch and Kick: subs, gifts, Bits and Kicks add time, mods use !subathon add or pause, and it survives an OBS restart.',
+      },
+      tr: {
+        title: "OBS'te Twitch ve Kick için Subathon Sayacı Kur | Senchabot",
+        description:
+          'Twitch ve Kick için ücretsiz subathon sayacı: abonelik, hediye, Bits ve Kicks süre ekler, modlar !subathon add ya da pause yazar, OBS kapansa da süre korunur.',
+      },
+    },
+  },
+  {
     id: 'chat-giveaway',
     path: '/guides/chat-giveaway',
     titleKey: 'guides.raffle.title',
@@ -83,6 +159,7 @@ export const GUIDES: readonly GuideEntry[] = [
     leadKey: 'guides.raffle.lead',
     widgets: ['raffle'],
     related: ['obs-browser-source', 'twitch-kick-chat-overlay'],
+    published: '2026-09-12',
     meta: {
       en: {
         title: 'Run a Twitch or Kick Chat Giveaway with !join | Senchabot',
@@ -105,6 +182,7 @@ export const GUIDES: readonly GuideEntry[] = [
     leadKey: 'guides.bridge.lead',
     widgets: ['obs-bridge'],
     related: ['obs-browser-source', 'chat-giveaway'],
+    published: '2026-09-12',
     meta: {
       en: {
         title: 'Let Mods Switch OBS Scenes from Chat | Senchabot',
@@ -132,12 +210,12 @@ export const CONTENT_META = {
     en: {
       title: 'Guides for Twitch and Kick Overlays in OBS | Senchabot',
       description:
-        "Step-by-step guides for Senchabot's free Twitch and Kick overlays: add a widget to OBS, merge two chats, run a !join giveaway, switch scenes from chat.",
+        "Step-by-step guides for Senchabot's free Twitch and Kick overlays: add a widget to OBS, merge two chats, add alerts, run a subathon or a !join giveaway.",
     },
     tr: {
       title: "Twitch ve Kick Overlay'leri için OBS Rehberleri | Senchabot",
       description:
-        "Ücretsiz Twitch ve Kick overlay'leri için adım adım rehberler: OBS'e widget ekle, iki sohbeti birleştir, !join çekilişi yap, sohbetten sahne değiştir.",
+        "Ücretsiz Twitch ve Kick overlay'leri için adım adım rehberler: OBS'e widget ekle, iki sohbeti birleştir, uyarı ekle, subathon ya da !join çekilişi yap.",
     },
   },
   faq: {

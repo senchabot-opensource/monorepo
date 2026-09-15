@@ -1,7 +1,7 @@
 import { type ReactNode, useId } from 'react';
 import { ContentPage, PROSE_CLASS, useLocaleDate } from '#/components/content-page';
 import { LocaleLink } from '#/components/locale-link';
-import { GUIDES_PATH, GUIDES_PUBLISHED, type GuideEntry, getGuide } from '#/lib/guides';
+import { GUIDES_PATH, type GuideEntry, getGuide } from '#/lib/guides';
 import { type TranslationKey, useI18n } from '#/lib/i18n';
 import { getWidget } from '#/lib/widgets';
 
@@ -55,14 +55,14 @@ export function GuideCard({
 
 function GuideMeta({ guide }: { guide: GuideEntry }) {
   const { t } = useI18n();
-  const published = useLocaleDate(GUIDES_PUBLISHED, { dateStyle: 'long' });
+  const published = useLocaleDate(guide.published, { dateStyle: 'long' });
   // Split around the placeholder so the date can sit in a <time> wherever the language puts it.
   const [beforeDate, afterDate = ''] = t('guides.published').split('{date}');
   return (
     <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-3 text-sm text-zinc-500 dark:text-zinc-400">
       <p>
         {beforeDate}
-        <time dateTime={GUIDES_PUBLISHED}>{published}</time>
+        <time dateTime={guide.published}>{published}</time>
         {afterDate}
       </p>
       <p className="flex flex-wrap items-center gap-2">

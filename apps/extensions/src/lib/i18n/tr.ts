@@ -1026,7 +1026,7 @@ export const tr: typeof en = {
     openSetup: 'Kurulum sayfasını aç',
     index: {
       title: 'Rehberler',
-      lead: "Her rehber tek bir soruyu adım adım cevaplıyor: OBS'e widget eklemek, Twitch ve Kick sohbetini birleştirmek, sohbet çekilişi yapmak ve sohbetten sahne değiştirmek. Hepsi ücretsiz ve giriş istemeyen araçlar için.",
+      lead: "Her rehber tek bir soruyu adım adım cevaplıyor: OBS'e widget eklemek, Twitch ve Kick sohbetini birleştirmek, sohbeti OBS dock'unda okumak, yayın uyarıları eklemek, subathon sayacı kurmak, sohbet çekilişi yapmak ve sohbetten sahne değiştirmek. Hepsi ücretsiz ve giriş istemeyen araçlar için.",
       listLabel: 'Tüm rehberler',
       moreText:
         'Genel sorular için [sık sorulan sorulara](/faq) bak. Nelerin değiştiğini [yenilikler](/changelog) sayfasında bulabilirsin.',
@@ -1078,7 +1078,7 @@ export const tr: typeof en = {
       },
       transparent: {
         title: 'Arka planı şeffaf yapmak için bir şey gerekiyor mu?',
-        p1: "Hayır. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer ve çekiliş overlay'i şeffaf bir arka planla çizilir. Renk anahtarı (chroma key) ya da filtre eklemen gerekmez, OBS'in Özel CSS alanını da olduğu gibi bırakabilirsin.",
+        p1: "Hayır. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi ve çekiliş overlay'i şeffaf bir arka planla çizilir. Renk anahtarı (chroma key) ya da filtre eklemen gerekmez, OBS'in Özel CSS alanını da olduğu gibi bırakabilirsin.",
         p2: "Sohbet Kutusu açık renkli bir sahnede zor okunuyorsa Koyu Arka Plan ayarını aç. Widget'ın arkasına yarı saydam siyah bir zemin gelir, saydamlığını %0 ile %100 arasında seçersin (varsayılan %50). Her mesajın ayrı bir kutuda durmasını istersen Mesaj Arka Plan Kutusu'nu aç.",
       },
       settings: {
@@ -1344,6 +1344,238 @@ export const tr: typeof en = {
       ctaTitle: "OBS Bridge'i kur",
       ctaText:
         'Kanalını ve yetkili kullanıcıları gir, araç adresini aç. Sahne komutları hemen çalışmaya başlar.',
+    },
+    subathon: {
+      title: "Twitch ve Kick'te subathon sayacı nasıl kurulur?",
+      short: 'Subathon sayacı kurma',
+      summary:
+        "Her abonelik, hediye, Bits cheer'ı ve Kicks hediyesinin ne kadar süre eklediği, sayacı !subathon ile başlatma, mod komutları ve OBS kapanınca ya da süre bitince ne olduğu.",
+      lead: "Subathon Timer, abonelik geldikçe uzayan bir geri sayım. Başlangıç süresini ve her abonelik, hediye abonelik, Bits cheer'ı ve Kicks hediyesinin ne kadar süre ekleyeceğini belirle, URL'yi OBS'e 800 × 300 boyutunda Tarayıcı Kaynağı olarak ekle ve yayına geçince sohbete `!subathon start` yaz. Giriş gerekmez, sayaç herkese açık Twitch ve Kick sohbetini okur.",
+      setup: {
+        title: 'Subathon sayacı nasıl ayarlanır?',
+        step1: '[Subathon Timer kurulum sayfasını](/setup/subathon-timer) aç.',
+        step2: "Twitch, Kick ya da İkisi'ni seç ve sadece kanal adlarını yaz.",
+        step3: "Başlangıç Süresi'ni ayarla (varsayılan 1 saat), istersen bir Süre Sınırı da koy.",
+        step4:
+          "Abonelik, hediye abonelik, Bits ve Kicks'in ne kadar süre ekleyeceğini belirle. İkisi'ni seçtiysen Twitch ve Kick için ayrı sekmeler çıkar.",
+        step5:
+          "Bir stil ve renk seç, URL'yi kopyala ve OBS'e 800 × 300 boyutunda Tarayıcı Kaynağı olarak ekle.",
+        p1: "Kurulum sayfasındaki önizleme sahte abonelik, hediye ve cheer'ları 60× hızda oynatır, yani bir saatlik sayaç yaklaşık bir dakikada biter. Hızı 1× ile 300× arasında ayarlayabilirsin. Dene düğmeleriyle bir abonelik, 5'li bir hediye ya da 500 Bits/Kicks ekleyebilir, 10 dakika düşebilir, sayacı duraklatıp sıfırlayabilirsin. Bu düğmeler sadece önizlemeyi değiştirir, OBS'teki sayaca hiç dokunmaz.",
+      },
+      values: {
+        title: 'Her abonelik ne kadar süre ekler?',
+        intro:
+          "Süreyi 0 ile 60 arasında tam dakika olarak seçersin, 0 o olayı kapatır. Twitch ve Kick'in değerleri ayrı, hepsi varsayılan olarak 1 dakika.",
+        caption: 'Subathon sayacına her olayın eklediği süre',
+        colEvent: 'Olay',
+        colDefault: 'Varsayılan',
+        colHow: 'Nasıl sayılır',
+        oneMinute: '1 dk',
+        sub: 'Abonelik',
+        subHow: "Her yeni abonelik ve yenileme. Twitch'te Prime abonelik Tier 1 sayılır.",
+        gift: 'Hediye abonelik',
+        giftHow: "Hediyedeki her abonelik ayrı sayılır, yani 5'li bir hediye beş kat süre ekler.",
+        bits: '500 Bits ya da 500 Kicks',
+        bitsHow: 'Diğer miktarlar oranına göre ekler: değer 1 dakikaysa 100 Bits 12 saniye ekler.',
+        tiers:
+          "Tier 2 ve 3 Daha Çok Sayılır açıkken (varsayılan böyle), Twitch'te Tier 2 abonelik ya da hediye iki kat, Tier 3 beş kat süre ekler, fiyatlarıyla orantılı. Kick aboneliklerinde tier olmadığı için her biri bir kez sayılır.",
+        cap: "Süre Sınırı, sayacın tutabileceği en uzun süre. Sınırı aşacak kısım eklenmez, onun için +süre yazısı da çıkmaz. Varsayılan olan Sınırsız'da sayaç, abonelik geldikçe uzamaya devam eder.",
+      },
+      start: {
+        title: 'Subathon nasıl başlatılır?',
+        p1: "Varsayılan olarak sayaç, sen ya da bir mod sohbete `!subathon start` yazana kadar duraklatılmış bekler. Böylece kaynağı yayından önce ekleyip saati yayına geçince başlatabilirsin. Başlatma'da Hemen'i seçersen sayaç, kaynak OBS'te yüklenir yüklenmez başlar.",
+        p2: 'Başlamadan önce gelen abonelikler de süre ekler, sayaç duraklatılmışken gelenler de. Saat başladığında o süre zaten eklenmiş olur.',
+      },
+      commands: {
+        title: 'Modlar hangi sohbet komutlarını kullanabilir?',
+        caption: 'Subathon Timer sohbet komutları',
+        colCommand: 'Komut',
+        colAction: 'Ne yapar',
+        start: 'Sayacı başlatır ya da duraklatıldıysa devam ettirir',
+        pause: 'Sayacı duraklatır, kalan süre olduğu gibi kalır',
+        add: "Süre ekler, en fazla Süre Sınırı'na kadar",
+        remove: 'Süreden düşer, sıfırın altına inmez',
+        set: 'Kalan süreyi ayarlar',
+        reset: "Başlangıç Süresi'yle baştan başlatır",
+        p1: "Twitch'te de Kick'te de bunları sadece yayıncı ve moderatörler kullanabilir. VIP'ler ve izleyiciler kullanamaz. Sayaç sohbette cevap vermez, sonucu doğrudan sayacın üstünde görürsün.",
+        p2: 'Süreleri `10m`, `45s`, `1h30m` ya da `1:30:00` gibi yaz. Sadece sayı yazarsan dakika sayılır, yani `!subathon add 15` 15 dakika ekler. Birimler tek harf: `10min` çalışmaz, `10m` çalışır.',
+      },
+      look: {
+        title: 'Hangi stiller ve renkler var?',
+        bar: "Can Barı (varsayılan): %100'den sıfıra doğru eriyen, oyun tarzı bir bar.",
+        clock: 'Saat: saat, dakika ve saniye olarak büyük rakamlar.',
+        ring: 'Halka: süre azaldıkça boşalan bir çember.',
+        p1: 'Varsayılan renk olan Can, süre azaldıkça yeşilden sarıya, sonra kırmızıya döner. İstersen sabit bir renk de seçebilirsin: yeşil, mor, kırmızı, altın, turkuaz ya da pembe. Sayacın yanındaki başlıkta varsayılan olarak SUBATHON yazar. Bunu en fazla 32 karakterlik istediğin bir yazıyla değiştirebilir ya da boş bırakıp gizleyebilirsin.',
+        p2: "Yüzdeyi Göster, sayacın ne kadar dolu olduğunu gösterir. %100, sayacın şimdiye kadar tuttuğu en uzun süre demek, bu yüzden yüzde hiçbir zaman 100'ü geçmez: dolu bara süre eklenince bar dolu kalır ve yeni zirveden geri saymaya başlar. Eklenen Süreyi Göster açıksa her süre eklendiğinde sayacın üstünde izleyicinin adıyla birlikte +1:00 gibi bir yazı süzülür.",
+      },
+      saved: {
+        title: 'OBS kapanırsa ya da kaynak yeniden yüklenirse ne olur?',
+        p1: "Sayaç OBS'in içinde kaydedilir, bu yüzden kaynak yeniden yüklenince ya da OBS yeniden açılınca kaldığı yerden devam eder. OBS kapalıyken de geri sayım durmaz, gerçek bir saat gibi işlemeye devam eder.",
+        p2: 'OBS ya da kaynak kapalıyken sohbetin okunmaz, bu yüzden o arada gelen abonelikler süre eklemez. Bir mod bunları sonradan `!subathon add` ile ekleyebilir. "Görünür olmadığında kaynağı kapat" seçeneğini de bu yüzden kapalı tut, nedenini [OBS rehberi](/guides/obs-browser-source) anlatıyor.',
+        p3: "Kaydedilen sayaç o OBS'e ve o kanallara ait. URL'deki kanalları değiştirirsen, örneğin subathon'un ortasında Kick'i eklersen, ya da URL'yi başka bir OBS'te veya tarayıcı sekmesinde açarsan sıfırdan yeni bir sayaç başlar.",
+      },
+      zero: {
+        title: 'Sayaç sıfıra ulaşınca ne olur?',
+        p1: "00:00:00'da durur ve kırmızı yanıp söner, Can Barı ve Halka stillerinde K.O. yazar. Yeni abonelikler artık süre eklemez, yani subathon biter.",
+        p2: 'Devam etmek için bir mod `!subathon add` ya da `!subathon set` komutunu bir süreyle yazar, sayaç hemen yeniden işlemeye başlar. Yeni bir subathon başlatmak için `!subathon reset` yaz.',
+      },
+      change: {
+        title: 'Sayaç nasıl değiştirilir ya da yeni subathon nasıl başlatılır?',
+        p1: "Mevcut URL'ni kurulum sayfasındaki Widget URL alanına yapıştır. Kanalların ve ayarların geri gelir. İstediğini değiştir, yeni URL'yi kopyala ve OBS'teki eskisinin yerine yapıştır. Yeni süre değerleri ve yeni Süre Sınırı, OBS yeni URL'yi yükler yüklemez geçerli olur, kalan süre de olduğu gibi kalır.",
+        p2: "Yeni Başlangıç Süresi sadece sayaç ilk kez başlayana kadar kendiliğinden uygulanır. Ondan sonra yeni Başlangıç Süresi'yle baştan başlamak için sohbete `!subathon reset` yaz. Başlatma komuta ayarlıysa sayaç bundan sonra yine `!subathon start` gelene kadar duraklatılmış bekler.",
+      },
+      notCounted: {
+        title: 'Neler süre eklemez?',
+        follows:
+          'Takipler ve bağışlar. Twitch ve Kick, giriş yapılmamış bir sayfaya yeni takipçileri göstermiyor, iki platformun da kendine ait bir bağış sistemi yok.',
+        raids: "Raid'ler, iki platformda da.",
+        resubs:
+          'İzleyicinin paylaşmadığı Twitch yenilemeleri. Twitch bir yenilemeyi sohbete ancak izleyici paylaşırsa bildirir. Kick yenilemeleri abonelik olarak gönderdiği için onlar sayılır.',
+        bits: "Power-up'lar gibi sohbet dışında harcanan Bits. Sadece sohbette cheer olarak gönderilen Bits sayılır.",
+        sharedChat:
+          "Twitch Shared Chat oturumunda sohbeti paylaştığın diğer kanala gelen abonelik ve cheer'lar. Sadece kendi kanalın sayılır.",
+      },
+      ctaTitle: 'Subathon sayacını kur',
+      ctaText: "Başlangıç süresini ve her aboneliğin ne kadar ekleyeceğini belirle, URL'yi kopyala, OBS'e ekle.",
+    },
+    alerts: {
+      title: "OBS'e Twitch ve Kick için abonelik, cheer ve raid uyarıları nasıl eklenir?",
+      short: 'Yayın uyarıları ekleme',
+      summary:
+        "Hangi platformda hangi uyarıların çıktığı, temalar ve renkler, en az miktarlar, sesi OBS'e alma ve neden takip uyarısı olmadığı.",
+      lead: "Yayın Uyarıları, Twitch ve Kick'teki her abonelik, hediye abonelik, Bits cheer'ı, Kicks hediyesi ve raid için kendi sesiyle animasyonlu bir uyarı gösterir. Kurulum sayfasında kanal adlarını yaz, bir tema seç ve URL'yi OBS'e 800 × 450 boyutunda Tarayıcı Kaynağı olarak ekle. Giriş gerekmez, tek URL iki platformu da kapsar.",
+      setup: {
+        title: "Yayın uyarıları OBS'e nasıl eklenir?",
+        step1: '[Yayın Uyarıları kurulum sayfasını](/setup/stream-alerts) aç.',
+        step2: "Twitch, Kick ya da İkisi'ni seç ve sadece kanal adlarını yaz.",
+        step3: 'Bir tema ve renk seç, istemediğin uyarıları kapat.',
+        step4:
+          "URL'yi kopyala, OBS'e 800 × 450 boyutunda Tarayıcı Kaynağı olarak ekle ve kaynağı uyarıların çıkacağı yere taşı.",
+        step5:
+          'Sesin yayına gitmesi için kaynak özelliklerinde "OBS ile sesi kontrol etme" (Control audio via OBS) seçeneğini aç. Ses konusu aşağıda ayrıca anlatılıyor.',
+        p1: "Uyarılar arasında kaynak boş ve şeffaftır. URL'yi kontrol etmek için bir tarayıcı sekmesinde açarsan kanalında bir şey olana kadar boş bir sayfa görürsün.",
+        p2: "Sonradan değiştirmek için mevcut URL'ni kurulum sayfasındaki Widget URL alanına yapıştır. Kanalların ve ayarların geri gelir, yeni URL'yi kopyalayıp OBS'teki eskisinin yerine yapıştır.",
+      },
+      kinds: {
+        title: 'Hangi uyarılar var?',
+        caption: "Yayın Uyarıları'nın Twitch ve Kick'te gösterdiği olaylar",
+        colAlert: 'Uyarı',
+        sub: 'Abonelikler',
+        subTwitch: 'Yeni abonelikler ve paylaşılan yenilemeler, ay sayısı ve mesajla birlikte',
+        subKick:
+          'Yeni abonelikler ve yenilemeler, Kick gönderdiğinde ay sayısıyla, bir de sohbette paylaşılan yenilemeler',
+        gift: 'Hediye Abonelikler',
+        giftBoth: 'Her hediye için tek uyarı, hediye edenin adı ve abonelik sayısıyla',
+        bits: 'Bits ve Kicks',
+        bitsTwitch: "Bits cheer'ları, miktar ve mesajla birlikte",
+        bitsKick: 'Kicks, miktar ve mesajla birlikte',
+        raid: "Raid'ler",
+        raidTwitch: 'Raid atan kanal ve kaç izleyiciyle geldiği',
+        raidKick: 'Raid atan kanal, Kick gönderirse izleyici sayısı da',
+        p1: "50'li bir hediye abonelik 50 değil, tek uyarı olarak çıkar, hediyeyi alanlar için de ayrıca uyarı çıkmaz. Anonim hediyede isim olarak Anonim yazar. Tier'lar gösterilmez: Prime, Tier 1, Tier 2 ya da Tier 3 abonelik aynı uyarıyı alır.",
+        p2: "Kick çoğu abonelikte ay sayısını gönderir ama bazı kanallara hiç göndermez, o zaman uyarıda sadece abone olduğu yazar. Kick'te bir izleyici yenilemesini sonradan sohbette paylaşırsa bunun için ay sayısı ve mesajla ayrı bir uyarı çıkar, yani tek bir Kick yenilemesi iki kez görünebilir. Twitch'te yenileme sohbete ancak izleyici paylaşınca düşer, o yüzden bir kez görünür.",
+        p3: "Twitch Shared Chat oturumunda sohbeti paylaştığın diğer kanallara gelen abonelik, hediye, cheer ve raid'ler görünmez. Uyarı sadece kendi kanalın için çıkar.",
+      },
+      follows: {
+        title: 'Neden takip ya da bağış uyarısı yok?',
+        p1: 'Twitch ve Kick, giriş yapılmamış bir sayfaya yeni takipçileri göstermiyor, iki platformun da kendine ait bir bağış sistemi yok. Yayın Uyarıları sadece iki platformun her izleyiciye gönderdiği bilgileri kullanır. Bu yüzden giriş istemeden ve iki platformda da aynı şekilde çalışır.',
+      },
+      look: {
+        title: 'Hangi temalar ve renkler var?',
+        neon: 'Neon (varsayılan): synth sesleriyle köşeli, bilim kurgu tarzı bir şerit. Giderken bir neon tabela gibi titreyip söner.',
+        celestial: 'Göksel: yıldızların altında lacivert bir kart, ince bir çerçeve ve çan sesleriyle.',
+        p1: "Renk, uyarının vurgu rengi. Varsayılan Platform seçeneğinde Twitch uyarıları mor, Kick uyarıları yeşil görünür. İstersen bütün uyarılar için tek bir renk de seçebilirsin: mavi, mor, pembe, kırmızı, altın ya da yeşil. URL'de iki kanal da varsa küçük bir TWITCH ya da KICK etiketi uyarının nereden geldiğini gösterir.",
+        p2: "Her uyarının başlığını en fazla 24 karakter olacak şekilde değiştirebilir ya da boş bırakıp Yeni Abone gibi varsayılanı kullanabilirsin. Neon başlıkları büyük harfle yazar. Uyarı Dili, uyarıdaki kelimelerin dilini belirler: İngilizce ya da Türkçe. Bu seçim URL'de saklanır, OBS hangi dilde olursa olsun değişmez.",
+      },
+      min: {
+        title: "Küçük hediye, cheer ve raid'ler nasıl atlanır?",
+        caption: "Yayın Uyarıları'nda en az miktarlar",
+        colSetting: 'Ayar',
+        colDefault: 'Varsayılan',
+        colRange: 'Aralık',
+        gift: 'En Az Abonelik (hediye abonelik)',
+        giftRange: '1 ile 100.000 arası',
+        bits: 'En Az Miktar (Bits ya da Kicks)',
+        bitsRange: '1 ile 100.000 arası',
+        raid: "En Az İzleyici (raid'ler)",
+        raidRange: '0 ile 100.000 arası',
+        p1: "En az değerin altında kalanlar için uyarı çıkmaz. Tek bir En Az Miktar hem Bits hem Kicks için geçerli, aboneliklerde ise alt sınır yok. Kick bir raid'i izleyici sayısı olmadan gönderirse 0 izleyici sayılır, yani En Az İzleyici 1 ya da daha fazlaysa o raid atlanır.",
+      },
+      queue: {
+        title: 'Aynı anda çok sayıda uyarı gelirse ne olur?',
+        p1: 'Uyarılar sıralarını bekler ve geldikleri sırayla, aralarında kısa bir boşlukla tek tek gösterilir. Her birinin ne kadar kalacağını Ekranda Kalma Süresi belirler: 3 ile 20 saniye arası, varsayılan 7. Sırada en fazla 30 uyarı bekleyebilir, daha fazlası birikirse en yeni gelenler atlanır.',
+        p2: "Varsayılan olarak açık olan İzleyici Mesajını Göster, izleyicinin yenilemesiyle, Bits'iyle ya da Kicks'iyle birlikte yazdığı mesajı gösterir. Linkler çıkarılır, uzun mesajlar kısaltılır, böylece kimse yayınına link koyamaz.",
+      },
+      sound: {
+        title: "Uyarı sesi OBS'e nasıl alınır?",
+        step1:
+          'Yayın Uyarıları kaynağına çift tıkla, "OBS ile sesi kontrol etme" (Control audio via OBS) kutusunu işaretle ve Tamam\'a bas. Kaynak artık Ses Karıştırıcı\'da (Audio Mixer) görünür.',
+        step2:
+          "Üst menüden Düzenle → Gelişmiş Ses Özellikleri'ni aç (Edit → Advanced Audio Properties).",
+        step3:
+          'Uyarıları sen de duymak istiyorsan kaynağın Ses İzleme ayarını "İzleme Aktif Edildi" (Monitoring Enabled) yap. Eski OBS sürümlerinde bu seçeneğin adı Monitor and Output.',
+        p1: "Ses Seviyesi 0 ile 100 arasında, varsayılan 50, 0 da sesi kapatır. Her uyarının temaya uyan kendi kısa sesi var: Neon'da synth, Göksel'de çan sesleri. OBS sesi kendiliğinden çalar, normal bir tarayıcı sekmesinde ise sayfaya bir kez tıklayana kadar ses çıkmaz.",
+      },
+      test: {
+        title: 'Uyarılar yayından önce nasıl denenir?',
+        p1: 'Kurulum sayfasındaki önizlemede sessiz örnek uyarılar gelir. Altındaki Dene düğmeleri abonelik, hediye, Bits/Kicks ve raid uyarısını seçtiğin ses seviyesinde, sesiyle birlikte oynatır. Böylece temayı seçmeden önce görüp duyabilirsin.',
+        warnTitle: "Dene düğmeleri OBS'e ulaşmaz",
+        warn: "Sadece kurulum sayfasındaki önizlemede çalışırlar. OBS'teki kaynak yalnızca kanalına gelen gerçek abonelik, hediye, cheer ve raid'leri gösterir, yani ona deneme uyarısı gönderemezsin.",
+        p2: 'Kaynağın olduğu sahne açık kalsın ve "Görünür olmadığında kaynağı kapat" kapalı dursun. Kaynak kapalıyken gelen uyarılar kaçırılır, sonradan da gösterilmez.',
+      },
+      ctaTitle: "Yayın Uyarıları'nı kur",
+      ctaText: "Kanallarını yaz, bir tema seç, URL'yi kopyala. Sıradaki abonen için uyarı hazır.",
+    },
+    reader: {
+      title: "Twitch ve Kick sohbeti tek pencerede ya da OBS dock'unda nasıl okunur?",
+      short: "Sohbeti OBS dock'unda okuma",
+      summary:
+        "Sohbet Okuyucu'yu açma, OBS'e dock olarak ekleme, bağlantı kopunca ne olduğu ve sayfayı yenileyince sohbetin nasıl korunduğu.",
+      lead: "Sohbet Okuyucu, Twitch ve Kick sohbetini bir tarayıcı sekmesinde ya da OBS dock'unda tek listede gösterir, böylece yayın yaparken sohbeti okuyabilirsin. Sohbet Kutusu kurulum sayfasındaki Sohbet Okuyucu'yu Aç düğmesiyle açılır. Bağlantı koparsa kendi kendine yeniden bağlanır, her kopmayı listeye not düşer ve sayfayı yenilesen de sohbetin kaybolmaz.",
+      open: {
+        title: 'Sohbet Okuyucu nasıl açılır?',
+        step1:
+          '[Sohbet Kutusu kurulum sayfasını](/setup/chat-widget) aç ve Twitch kanalını, Kick kanalını ya da ikisini birden yaz.',
+        step2: "Widget URL alanının altındaki Sohbet Okuyucu'yu Aç düğmesine tıkla. Okuyucu yeni bir sekmede açılır.",
+        step3: 'Bir dahaki sefere aynı okuyucuyu açmak için sekmeyi yer imlerine ekle ya da adresini bir yere kaydet.',
+        p1: "Okuyucu, kanalları ve birkaç Sohbet Kutusu ayarını da yanına alır: emote sağlayıcıları, rozetler, Botları Gizle, Komutları Gizle ve Vurgular. Yazı tipi, düzen, animasyon ve diğer görünüm ayarları overlay'de kalır, okuyucunun kendi yazı boyutu ve saat ayarı var. Aldığı ayarları değiştirmek için onları kurulum sayfasında değiştir ve okuyucuyu yeniden aç.",
+      },
+      dock: {
+        title: "Sohbet Okuyucu OBS'e dock olarak nasıl eklenir?",
+        step1: "Sohbet Okuyucu'yu aç ve adres çubuğundaki adresi kopyala.",
+        step2:
+          "OBS'te üst menüden Paneller → Özel Tarayıcı Yuvaları'nı aç (Docks → Custom Browser Docks). Eski sürümlerde bu menü Görünüm → Paneller (View → Docks) altında.",
+        step3: "Yuva Adı sütununa Sohbet gibi bir ad yaz, adresi URL sütununa yapıştır ve Uygula'ya bas.",
+        step4: "Yeni dock'u OBS penceresinde istediğin yere sürükle.",
+        p1: "OBS'in kendi tarayıcı depolaması var, bu yüzden dock'un geçmişi ve ayarları normal tarayıcındakinden ayrı tutulur.",
+      },
+      shows: {
+        title: 'Sohbet Okuyucu neler gösterir?',
+        p1: "İki sohbetten gelen mesajları geldikleri sırayla tek listede gösterir. İki kanal da girildiyse her mesajın yanında nereden geldiğini gösteren bir Twitch ya da Kick simgesi olur. Emote'lar, rozetler ve kullanıcı adı renkleri Sohbet Kutusu'ndakiyle aynı görünür.",
+        p2: 'Silinen mesajlar listede kalır, üstü çizilir ve yanına (silindi) yazılır, böylece neyin kaldırıldığını yine görürsün. Biri susturulur ya da banlanırsa önceki mesajları da aynı şekilde işaretlenir. Bir mod sohbeti temizlerse listeye bunu söyleyen bir satır düşer.',
+        p3: 'A- ve A+ yazı boyutunu 12 ile 28 piksel arasında değiştirir, varsayılan 15. Saat düğmesi mesaj saatlerini gösterir ya da gizler, çöp kutusu düğmesi de ikinci tıklamada geçmişi temizler. Okuyucu yazı boyutunu ve saat ayarını hatırlar.',
+        p4: 'Bir şey okumak için yukarı kaydırırsan liste akmayı bırakır. Alttaki düğme yeni mesajları sayar, ona tıklayınca canlı sohbete geri dönersin.',
+      },
+      drops: {
+        title: 'Bağlantı koparsa ne olur?',
+        p1: 'Her kanalın durumu en üstte yazar: Bağlanıyor, Bağlı ya da Yeniden bağlanıyor. Kick adı bulunamazsa Kanal bulunamadı yazar. Bir sohbet bağlantısı koptuğunda bir uyarı bir sonraki denemeye kalan süreyi sayar, Şimdi dene düğmesi de hemen tekrar dener. Denemeler 1 saniye arayla başlar, sonra yavaşlayıp 30 saniyede bire iner.',
+        p2: 'Okuyucu, kapanmadan sessizce susan bağlantıları da yakalar. Bu, bir ağ kesintisinden sonra olabiliyor. 30 saniye boyunca hiçbir şey gelmezse sohbetin hâlâ orada olup olmadığını kontrol eder, cevap gelmezse yeniden bağlanır. Bilgisayarının internet bağlantısı giderse bunu sana söyler ve internet gelir gelmez yeniden bağlanır.',
+        p3: 'Her kopma listeye yazılır, örneğin "Twitch sohbet bağlantısı koptu" ve "12 sn sonra Twitch sohbetine tekrar bağlanıldı". Böylece hangi aralıkta mesaj eksik olabileceğini tam olarak bilirsin.',
+      },
+      history: {
+        title: 'Sayfayı yenileyince sohbet kaybolur mu?',
+        p1: 'Hayır. Okuyucu son 1000 satırı tarayıcına kaydeder ve yeniden açtığında geri getirir. Ardından "Son ziyaretinden kalan mesajlar, son kayıt:" yazan ve saati gösteren bir satır gelir. 12 saatten eski satırlar silinir.',
+        p2: 'Okuyucu kapalıyken yazılan mesajlar geri gelmez: o satırın üstündeki her şey son ziyaretinden, altındaki her şey yeni. Geçmiş, kanallara göre ayrı tutulur ve Geçmişi temizle o geçmişi siler.',
+      },
+      limits: {
+        title: 'Sohbet Okuyucu neleri yapamaz?',
+        send: 'Mesaj gönderemez, moderasyon yapamaz. Sohbeti giriş yapmamış bir izleyici gibi anonim olarak okur.',
+        events:
+          'Abonelik, hediye ya da raid bildirimlerini göstermez. Bunlar için yayınına [Yayın Uyarıları](/setup/stream-alerts) ekle.',
+        missed: 'Kapalıyken yazılan mesajları iki platformda da geri getiremez.',
+      },
+      ctaTitle: "Sohbet Okuyucu'yu aç",
+      ctaText: "Sohbet Kutusu kurulum sayfasında kanallarını yaz ve Sohbet Okuyucu'yu Aç'a tıkla.",
     },
   },
   faqPage: {

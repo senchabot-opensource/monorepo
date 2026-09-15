@@ -113,6 +113,30 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://extensions.senchabot.com/guides/obs-chat-dock</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/obs-chat-dock"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/guides/obs-chat-dock"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/guides/obs-chat-dock"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/guides/stream-alerts</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/stream-alerts"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/guides/stream-alerts"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/guides/stream-alerts"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/guides/subathon-timer</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/subathon-timer"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/guides/subathon-timer"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/guides/subathon-timer"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://extensions.senchabot.com/faq</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/faq"/>
     <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/faq"/>
@@ -237,6 +261,30 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/obs-scene-switcher"/>
     <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/guides/obs-scene-switcher"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/guides/obs-scene-switcher"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/tr/guides/obs-chat-dock</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/obs-chat-dock"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/guides/obs-chat-dock"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/guides/obs-chat-dock"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/tr/guides/stream-alerts</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/stream-alerts"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/guides/stream-alerts"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/guides/stream-alerts"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/tr/guides/subathon-timer</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/subathon-timer"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/guides/subathon-timer"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/guides/subathon-timer"/>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
