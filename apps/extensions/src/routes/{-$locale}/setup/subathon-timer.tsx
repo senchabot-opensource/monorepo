@@ -17,7 +17,7 @@ import { Tabs } from '#/components/ui/tabs';
 import { HINT_CLASS, TextField } from '#/components/ui/text-field';
 import type { SubathonEvent, SubathonPlatform } from '#/features/widgets/subathon/subathon-events';
 import { COMMAND } from '#/features/widgets/subathon/subathon-timer';
-import { hueFor } from '#/features/widgets/subathon/subathon-widget';
+import { hueFor } from '#/features/widgets/overlay-style';
 import { PREVIEW_CHANNEL, type PreviewMessage } from '#/features/widgets/subathon/use-subathon';
 import { type TranslationKey, useI18n } from '#/lib/i18n';
 import { getParamsLocale } from '#/lib/i18n/paths';

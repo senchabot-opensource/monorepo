@@ -1,6 +1,6 @@
 import { createFileRoute, useLocation } from '@tanstack/react-router';
 import { PollWidget } from '#/features/widgets/poll/poll-widget';
-import { SUBATHON_FONT } from '#/features/widgets/subathon/subathon-widget';
+import { OVERLAY_FONT_URL } from '#/features/widgets/overlay-style';
 import { readPollSettings } from '#/lib/poll-url';
 import { readFlag } from '#/lib/subathon-url';
 
@@ -10,7 +10,7 @@ export const Route = createFileRoute('/widgets/poll')({
     links: [
       { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossOrigin: 'anonymous' },
       // Subathon Timer's font, so the chat-run tools read as one family on stream.
-      { rel: 'stylesheet', href: SUBATHON_FONT },
+      { rel: 'stylesheet', href: OVERLAY_FONT_URL },
     ],
   }),
   component: RouteComponent,

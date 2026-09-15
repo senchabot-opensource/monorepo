@@ -14,7 +14,7 @@ import { SettingsGroup } from '#/components/ui/settings-group';
 import { Switch } from '#/components/ui/switch';
 import { TextField } from '#/components/ui/text-field';
 import type { StreamAlert } from '#/features/widgets/stream-alerts/stream-alert';
-import { defaultHeadingKey, hueFor } from '#/features/widgets/stream-alerts/stream-alerts-widget';
+import { alertHue, defaultHeadingKey } from '#/features/widgets/stream-alerts/alert-style';
 import {
   PREVIEW_CHANNEL,
   type PreviewMessage,
@@ -99,8 +99,8 @@ const TEST_LABELS: Record<AlertKind, TranslationKey> = {
 /** A swatch shows the accent; Platform shows Twitch purple and Kick green side by side. */
 const swatchBackground = (color: AlertColor) =>
   color === 'platform'
-    ? `linear-gradient(135deg, hsl(${hueFor(color, 'twitch')} 85% 60%) 50%, hsl(${hueFor(color, 'kick')} 85% 50%) 50%)`
-    : `hsl(${hueFor(color, 'twitch')} 85% 55%)`;
+    ? `linear-gradient(135deg, hsl(${alertHue(color, 'twitch')} 85% 60%) 50%, hsl(${alertHue(color, 'kick')} 85% 50%) 50%)`
+    : `hsl(${alertHue(color, 'twitch')} 85% 55%)`;
 
 function StreamAlertsSetup() {
   const { t, locale } = useI18n();

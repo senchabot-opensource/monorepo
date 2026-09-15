@@ -1,5 +1,6 @@
 import { createFileRoute, useLocation } from '@tanstack/react-router';
-import { SUBATHON_FONT, SubathonWidget } from '#/features/widgets/subathon/subathon-widget';
+import { OVERLAY_FONT_URL } from '#/features/widgets/overlay-style';
+import { SubathonWidget } from '#/features/widgets/subathon/subathon-widget';
 import { readFlag, readSubathonSettings } from '#/lib/subathon-url';
 
 export const Route = createFileRoute('/widgets/subathon')({
@@ -7,7 +8,7 @@ export const Route = createFileRoute('/widgets/subathon')({
   head: () => ({
     links: [
       { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossOrigin: 'anonymous' },
-      { rel: 'stylesheet', href: SUBATHON_FONT },
+      { rel: 'stylesheet', href: OVERLAY_FONT_URL },
     ],
   }),
   component: RouteComponent,

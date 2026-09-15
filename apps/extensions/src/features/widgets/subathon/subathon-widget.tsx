@@ -1,5 +1,6 @@
 import { type CSSProperties, useEffect, useState } from 'react';
-import type { SubathonColor, SubathonSettings, SubathonStyle } from '#/lib/subathon-url';
+import type { SubathonSettings, SubathonStyle } from '#/lib/subathon-url';
+import { hsl, hueFor, OVERLAY_FONT_FAMILY as FONT_FAMILY, PLATFORM_COLORS } from '../overlay-style';
 import { useFitScale } from '../use-fit-scale';
 import type { SubathonPlatform } from './subathon-events';
 import { formatClock, formatDelta } from './subathon-timer';
@@ -7,28 +8,6 @@ import { POP_MS, type SubathonHit, type SubathonPop, useSubathon } from './use-s
 
 /** Design size; the overlay scales to fill whatever browser source size it gets. */
 const STAGE = { width: 800, height: 300 };
-
-export const SUBATHON_FONT =
-  'https://fonts.googleapis.com/css2?family=Oxanium:wght@500;700;800&display=swap';
-const FONT_FAMILY = "'Oxanium', ui-sans-serif, system-ui, sans-serif";
-
-const HUES: Record<Exclude<SubathonColor, 'hp'>, number> = {
-  green: 142,
-  purple: 265,
-  red: 356,
-  gold: 42,
-  cyan: 188,
-  pink: 322,
-};
-
-/** Accent hue. `hp` goes green, then amber, then red as the clock runs down. */
-export function hueFor(color: SubathonColor, health: number): number {
-  if (color !== 'hp') return HUES[color];
-  const h = Math.max(0, Math.min(1, health));
-  if (h >= 0.6) return HUES.green;
-  if (h >= 0.3) return HUES.gold + ((h - 0.3) / 0.3) * (HUES.green - HUES.gold);
-  return (h / 0.3) * HUES.gold;
-}
 
 // Every style keeps a band on top for the rising pops, so they stay inside the source.
 const POP_BAND = 100;
@@ -180,7 +159,6 @@ const VIEWS: Record<SubathonStyle, (props: ViewProps) => React.JSX.Element> = {
   ring: RingView,
 };
 
-const hsl = (hue: number, s: number, l: number, a = 1) => `hsl(${hue} ${s}% ${l}% / ${a})`;
 
 /** Color of the time left: red and blinking once it's over. */
 const clockColor = (ended: boolean): CSSProperties => ({
@@ -284,7 +262,6 @@ function HealFlash({
   );
 }
 
-const PLATFORM_COLORS: Record<SubathonPlatform, string> = { twitch: '#a970ff', kick: '#53fc18' };
 
 function popDetail({ event }: SubathonPop): string {
   switch (event.kind) {

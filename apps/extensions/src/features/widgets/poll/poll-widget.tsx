@@ -2,19 +2,17 @@ import { type CSSProperties, useEffect, useRef, useState } from 'react';
 import { useI18n } from '#/lib/i18n';
 import type { PollSettings } from '#/lib/poll-url';
 import type { SubathonPlatform } from '../subathon/subathon-events';
-import { hueFor } from '../subathon/subathon-widget';
+import { hsl, hueFor, OVERLAY_FONT_FAMILY as FONT_FAMILY, PLATFORM_COLORS } from '../overlay-style';
 import { useFitScale } from '../use-fit-scale';
 import { type PollView, usePoll } from './use-poll';
 
 /** Design size; the overlay scales to fill whatever browser source size it gets. Fits 6 options. */
 const STAGE = { width: 640, height: 560 };
-const FONT_FAMILY = "'Oxanium', ui-sans-serif, system-ui, sans-serif";
 const GOLD_HUE = 42;
 const RED_HUE = 356;
 // The timer turns red for its last seconds.
 const HURRY_MS = 10_000;
 const LEAVE_MS = 450;
-const PLATFORM_COLORS: Record<SubathonPlatform, string> = { twitch: '#a970ff', kick: '#53fc18' };
 
 const CSS = `
 .cp-root{position:fixed;inset:0;overflow:hidden;font-family:${FONT_FAMILY};color:#fff;
@@ -35,7 +33,6 @@ const CSS = `
 @keyframes cp-crown{0%{transform:translateY(-10px) scale(.4) rotate(-20deg);opacity:0}60%{transform:translateY(0) scale(1.2) rotate(6deg);opacity:1}100%{transform:none;opacity:1}}
 `;
 
-const hsl = (hue: number, s: number, l: number, a = 1) => `hsl(${hue} ${s}% ${l}% / ${a})`;
 
 interface PollWidgetProps {
   twitchChannel?: string;

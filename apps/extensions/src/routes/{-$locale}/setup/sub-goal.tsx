@@ -14,7 +14,7 @@ import { HINT_CLASS, TextField } from '#/components/ui/text-field';
 import { COMMAND } from '#/features/widgets/goal/goal-count';
 import { PREVIEW_CHANNEL, type PreviewMessage } from '#/features/widgets/goal/use-goal';
 import type { SubathonEvent, SubathonPlatform } from '#/features/widgets/subathon/subathon-events';
-import { hueFor } from '#/features/widgets/subathon/subathon-widget';
+import { hueFor } from '#/features/widgets/overlay-style';
 import {
   buildGoalPreviewUrl,
   buildGoalUrl,

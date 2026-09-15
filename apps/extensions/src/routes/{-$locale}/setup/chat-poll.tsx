@@ -18,7 +18,7 @@ import type { PollChatEvent } from '#/features/widgets/poll/poll-chat';
 import { COMMAND } from '#/features/widgets/poll/poll-state';
 import { PREVIEW_CHANNEL, type PreviewMessage } from '#/features/widgets/poll/use-poll';
 import type { SubathonPlatform } from '#/features/widgets/subathon/subathon-events';
-import { hueFor } from '#/features/widgets/subathon/subathon-widget';
+import { hueFor } from '#/features/widgets/overlay-style';
 import { LOCALES, type Locale, type TranslationKey, useI18n } from '#/lib/i18n';
 import { getParamsLocale } from '#/lib/i18n/paths';
 import type { FaqEntry } from '#/lib/i18n/seo';

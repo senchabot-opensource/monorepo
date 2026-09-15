@@ -1,8 +1,9 @@
 import type { ComponentType } from 'react';
-import { type Locale, type TranslationKey, useI18n } from '#/lib/i18n';
-import type { AlertColor, AlertKind, AlertSettings, AlertTheme } from '#/lib/stream-alerts-url';
+import { type Locale, useI18n } from '#/lib/i18n';
+import type { AlertSettings, AlertTheme } from '#/lib/stream-alerts-url';
 import type { SubathonPlatform } from '../subathon/subathon-events';
 import { useFitScale } from '../use-fit-scale';
+import { alertHue, defaultHeadingKey } from './alert-style';
 import { cleanMessage, isAnonymous, type StreamAlert } from './stream-alert';
 import { CELESTIAL_FONT, CelestialAlert } from './themes/celestial';
 import { NEON_FONT, NeonAlert } from './themes/neon';
@@ -20,20 +21,6 @@ const THEMES: Record<AlertTheme, { View: ComponentType<AlertViewProps>; font: st
 };
 
 export const themeFont = (theme: AlertTheme) => THEMES[theme].font;
-
-const HUES: Record<Exclude<AlertColor, 'platform'>, number> = {
-  blue: 212,
-  purple: 268,
-  pink: 322,
-  red: 352,
-  gold: 42,
-  green: 142,
-};
-// Twitch purple and Kick green.
-const PLATFORM_HUES: Record<SubathonPlatform, number> = { twitch: 264, kick: 103 };
-
-export const hueFor = (color: AlertColor, platform: SubathonPlatform) =>
-  color === 'platform' ? PLATFORM_HUES[platform] : HUES[color];
 
 interface StreamAlertsWidgetProps {
   twitchChannel?: string;
@@ -121,7 +108,7 @@ function viewProps(
   return {
     id,
     kind: alert.kind,
-    hue: hueFor(settings.color, alert.platform),
+    hue: alertHue(settings.color, alert.platform),
     heading: settings.headings[alert.kind] || t(defaultHeadingKey(alert.kind, alert.platform)),
     name: isAnonymous(alert) ? t('streamAlerts.alert.anonymous') : alert.name,
     detail: detailFor(alert, t, number),
@@ -131,21 +118,6 @@ function viewProps(
   };
 }
 
-/** Bits and Kicks have their own words; the rest are the same on both platforms. */
-export function defaultHeadingKey(kind: AlertKind, platform: SubathonPlatform): TranslationKey {
-  switch (kind) {
-    case 'sub':
-      return 'streamAlerts.alert.subHeading';
-    case 'gift':
-      return 'streamAlerts.alert.giftHeading';
-    case 'bits':
-      return platform === 'twitch'
-        ? 'streamAlerts.alert.bitsHeading'
-        : 'streamAlerts.alert.kicksHeading';
-    case 'raid':
-      return 'streamAlerts.alert.raidHeading';
-  }
-}
 
 function detailFor(alert: StreamAlert, t: Translate, number: (n: number) => string): string {
   switch (alert.kind) {
