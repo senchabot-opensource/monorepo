@@ -39,7 +39,7 @@ const WIDGET_PATH = '/widgets/sub-sprout-widget';
 
 // Order and encodings are what this page has always written (countfx=0, potlabel=1), so URLs
 // already in OBS rebuild to the same text.
-export function buildSubSproutParams(
+function buildSubSproutParams(
   settings: SubSproutSettings,
   twitchChannel: string,
   kickChannel: string,

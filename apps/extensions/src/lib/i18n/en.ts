@@ -1030,49 +1030,8 @@ export const en = {
   alerts: {
     follow: 'New Follower!',
     sub: 'New Subscriber!',
-    resub: 'Resubscription!',
-    gift: 'Gift Subscription!',
     donate: 'Donation!',
     raid: 'Incoming Raid!',
-    giftAmount: 'Gifted x{count} subscription{s}',
-    resubMonths: '{months} months',
-    raidViewers: '{viewers} viewers',
-  },
-  alertsSetup: {
-    breadcrumb: 'Alerts Setup',
-    title: 'Twitch & Kick Stream Alerts',
-    intro:
-      'Free customizable stream alerts for Twitch and Kick in a single unified overlay. Supports follows, new subscriptions, renewals, gift subscriptions, Cheers/bits, and raids.',
-    addBotNotice:
-      'To receive alerts, the Senchabot bot must be in your Twitch and Kick channel. Add it from senchabot.com.',
-    platforms: 'Platforms',
-    both: 'Both (Twitch & Kick)',
-    twitch: 'Twitch',
-    kick: 'Kick',
-    twitchChannel: 'Twitch Channel',
-    kickChannel: 'Kick Channel',
-    glowEffect: 'Background Glow Effect',
-    previewTitle: 'Alert Widget Preview',
-    previewIframeTitle: 'Alerts Preview',
-    previewHint: 'Live alert preview with animated notifications.',
-    guideTitle: 'Streaming Software Alert Setup (OBS, Streamlabs, XSplit, etc.)',
-    guideStep1:
-      '1. Add a Browser Source in your streaming software (OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio, etc.).',
-    guideStep2: '2. Paste your copied alerts widget URL.',
-    guideStep3:
-      '3. Set width and height (e.g. 1920×1080 for full canvas coverage, or 500×700 for a compact zone).',
-    guideStep4:
-      '4. Check "Shutdown source when not visible" and keep "Refresh browser when scene becomes active" unchecked.',
-    browserSourceHintSize: ' (recommended size: 1920×1080 for full canvas or 500×700).',
-    faq1Q: 'Can I use this widget for both Twitch and Kick at the same time?',
-    faq1A:
-      'Yes! Select "Both (Twitch & Kick)", enter your channels for each platform, and you will get a single browser source URL that handles alerts from both platforms simultaneously.',
-    faq2Q: 'Do I need to log in or create an account?',
-    faq2A:
-      'No account or OAuth login is required. Senchabot connects directly via real-time events.',
-    faq3Q: 'Which alert types are supported?',
-    faq3A:
-      'Follows, subscriptions (new & resub renewals), community/individual gift subscriptions, Cheers/bits donations, and incoming channel raids are all supported for both Twitch and Kick.',
   },
   emoteWallSetup: {
     breadcrumb: 'Emote Wall Setup',

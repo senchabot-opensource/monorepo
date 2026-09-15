@@ -1,7 +1,5 @@
 export type EmoteWallMode = 'calm' | 'chaos' | 'bounce';
 
-export const EMOTE_WALL_MODES: readonly EmoteWallMode[] = ['calm', 'chaos', 'bounce'];
-
 export function isEmoteWallMode(value: unknown): value is EmoteWallMode {
   return value === 'calm' || value === 'chaos' || value === 'bounce';
 }

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isExternalHref, parseRichText, richTextToPlain } from './rich-text';
+import { isExternalHref, parseRichText } from './rich-text';
 
 describe('parseRichText', () => {
   it('returns plain copy as a single text token', () => {
@@ -29,14 +29,6 @@ describe('parseRichText', () => {
 
   it('returns nothing for an empty string', () => {
     expect(parseRichText('')).toEqual([]);
-  });
-});
-
-describe('richTextToPlain', () => {
-  it('drops the markup and keeps the words', () => {
-    expect(richTextToPlain('Type `!join` on the [Raffle page](/setup/raffle).')).toBe(
-      'Type !join on the Raffle page.',
-    );
   });
 });
 

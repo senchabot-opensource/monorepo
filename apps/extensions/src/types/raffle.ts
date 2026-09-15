@@ -30,8 +30,6 @@ export interface RaffleWinner {
   drawnAt: number;
 }
 
-export type Winner = RaffleWinner;
-
 export interface RaffleState {
   status: RaffleStatus;
   config: RaffleConfig;

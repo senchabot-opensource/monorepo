@@ -5,12 +5,12 @@ import {
   readWidgetUrl,
   setChannels,
 } from '#/lib/url-params';
-import { isEmoteWallMode } from './emote-pops';
+import { type EmoteWallMode, isEmoteWallMode } from './emote-pops';
 
 export type EmoteWallPlatforms = ChannelPlatforms;
 
 const WIDGET_PATH = '/widgets/emote-wall';
-export type EmoteWallMode = 'calm' | 'chaos' | 'bounce';
+export type { EmoteWallMode };
 
 export interface EmoteWallUrlOptions {
   twitch: string;

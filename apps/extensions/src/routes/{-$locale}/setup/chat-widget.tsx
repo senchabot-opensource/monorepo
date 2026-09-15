@@ -100,9 +100,9 @@ function ChatWidgetSetup() {
     const params = buildWidgetParams(settings, deferredTwitch, deferredKick);
     params.append('mock', 'true');
     if (previewRateIndex > 0) params.append('mockRate', String(PREVIEW_RATES[previewRateIndex]));
-    params.append('lang', locale);
+    // PreviewFrame adds the page's language.
     return `${window.location.origin}/widgets/chat-widget?${params.toString()}`;
-  }, [mounted, settings, deferredTwitch, deferredKick, previewRateIndex, locale]);
+  }, [mounted, settings, deferredTwitch, deferredKick, previewRateIndex]);
 
   const applyWidgetUrl = (text: string) => {
     const parsed = parseWidgetUrl(text);

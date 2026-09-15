@@ -21,11 +21,4 @@ export function parseRichText(input: string): RichToken[] {
   return tokens;
 }
 
-/** The copy as plain text, e.g. for meta tags and JSON-LD. */
-export function richTextToPlain(input: string): string {
-  return parseRichText(input)
-    .map((token) => token.text)
-    .join('');
-}
-
 export const isExternalHref = (href: string) => /^https?:\/\//.test(href);

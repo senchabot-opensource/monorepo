@@ -7,9 +7,9 @@ import { type ChatPlatform, commandUserKey } from "./command-users";
 import { DEFAULT_OBS_COMMANDS, type ObsBridgeCustomCommands, obsSocketUrl } from "./obs-bridge-config";
 import { OBSWebSocket } from 'obs-websocket-js';
 
-export type ObsStatus = "connecting" | "connected" | "failed" | "disconnected";
+type ObsStatus = "connecting" | "connected" | "failed" | "disconnected";
 
-export const OBS_RETRY_MS = 5000;
+const OBS_RETRY_MS = 5000;
 
 export type ObsState = {
   status: ObsStatus;
