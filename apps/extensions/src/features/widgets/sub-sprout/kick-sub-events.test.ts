@@ -20,16 +20,6 @@ describe("kickSubChannels", () => {
 });
 
 describe("kickSubCount", () => {
-  it("counts a sub once", () => {
-    expect(
-      kickSubCount(
-        "App\\Events\\SubscriptionEvent",
-        { chatroom_id: 1, username: "Viewer", months: 1 },
-        new Set(),
-      ),
-    ).toBe(1);
-  });
-
   it("counts every sub in a gift", () => {
     expect(kickSubCount("GiftedSubscriptionsEvent", gift(), new Set())).toBe(5);
   });
@@ -49,6 +39,18 @@ describe("kickSubCount", () => {
     expect(seen.size).toBe(0);
   });
 
+  it("counts a gift once when its parts only share the top-level correlation_id", () => {
+    const seen = new Set<string>();
+    const part = (names: string[]) =>
+      gift({ gifted_total: 150, gifted_usernames: names, chunk_details: null });
+
+    expect(kickSubCount("GiftedSubscriptionsEvent", part(["a"]), seen)).toBe(150);
+    expect(kickSubCount("GiftedSubscriptionsEvent", part(["b"]), seen)).toBe(0);
+    expect(
+      kickSubCount("GiftedSubscriptionsEvent", gift({ correlation_id: "other" }), seen),
+    ).toBe(5);
+  });
+
   it("falls back to the gifted names when there is no total", () => {
     expect(
       kickSubCount("GiftedSubscriptionsEvent", gift({ gifted_total: undefined }), new Set()),
@@ -56,7 +58,8 @@ describe("kickSubCount", () => {
   });
 
   it("ignores other events", () => {
-    for (const event of ["App\\Events\\ChatMessageEvent", "RewardRedeemedEvent", "KicksGifted"]) {
+    const events = ["App\\Events\\SubscriptionEvent", "App\\Events\\ChatMessageEvent", "KicksGifted"];
+    for (const event of events) {
       expect(kickSubCount(event, gift(), new Set())).toBe(0);
     }
   });

@@ -6,6 +6,7 @@ export const kickSubChannels = (chatroomId: string): string[] => [
 ];
 
 type GiftedSubscriptions = {
+  correlation_id?: unknown;
   gifted_usernames?: unknown;
   gifted_total?: unknown;
   chunk_details?: {
@@ -15,27 +16,29 @@ type GiftedSubscriptions = {
   } | null;
 };
 
+// Only the ids of recent gifts matter for spotting a later chunk or a repeat.
+const SEEN_GIFTS_MAX = 500;
+const idOf = (value: unknown) => (typeof value === "string" && value ? value : null);
+
 /**
- * How many subs a Kick event adds, 0 when it isn't a sub. A large gift arrives in several
- * GiftedSubscriptionsEvent chunks that share a correlation_id and all carry the gift's
- * gifted_total, so only the first chunk counts. seenGifts keeps the ids of gifts in flight.
+ * How many subs a Kick GiftedSubscriptionsEvent adds, 0 for any other event. A large gift arrives
+ * in several chunks that share a correlation_id and all carry the gift's gifted_total, so only
+ * the first chunk counts. seenGifts keeps the ids of gifts in flight.
  */
 export function kickSubCount(
   eventName: string,
   payload: Record<string, unknown> | null,
   seenGifts: Set<string>,
 ): number {
-  if (eventName === "App\\Events\\SubscriptionEvent") {
-    return 1;
-  }
   if (eventName !== "GiftedSubscriptionsEvent" || !payload) {
     return 0;
   }
 
   const gift = payload as GiftedSubscriptions;
   const chunk = gift.chunk_details;
-  const correlationId =
-    typeof chunk?.correlation_id === "string" ? chunk.correlation_id : null;
+  // Live gifts carry the id at the top level with chunk_details null (every one of 29 probed),
+  // so it is read there as well as from a chunk's own details.
+  const correlationId = idOf(chunk?.correlation_id) ?? idOf(gift.correlation_id);
   const firstChunk = !correlationId || !seenGifts.has(correlationId);
   if (correlationId) {
     const last =
@@ -46,6 +49,9 @@ export function kickSubCount(
       seenGifts.delete(correlationId);
     } else {
       seenGifts.add(correlationId);
+      if (seenGifts.size > SEEN_GIFTS_MAX) {
+        seenGifts.delete(seenGifts.values().next().value as string);
+      }
     }
   }
   if (!firstChunk) {
