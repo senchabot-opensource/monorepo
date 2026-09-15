@@ -7,6 +7,7 @@ import {
   combobox,
   en,
   inLocale,
+  pickOption,
   retype,
   section,
   segment,
@@ -316,5 +317,225 @@ describe('Raffle flow', () => {
     expect(screen.queryByText(t('raffle.lockedTitle'))).toBeNull();
     expect(textbox(t('raffle.channelName')).disabled).toBe(false);
     expect(screen.getByText(t('raffle.noParticipants', { keyword: '!join' }))).toBeTruthy();
+  });
+});
+
+describe('Raffle edge cases', () => {
+  // The newest socket: a reload or a reconnect opens another.
+  const latestTwitch = () => {
+    const socket = [...FakeWebSocket.instances]
+      .reverse()
+      .find((ws) => ws.url.startsWith('wss://irc-ws.chat.twitch'));
+    if (!socket) throw new Error('The raffle never connected to Twitch chat');
+    return socket;
+  };
+  const sayOn = (socket: FakeWebSocket, login: string, text: string, tags = '') =>
+    act(() =>
+      socket.receive(
+        `@badges=;display-name=${login[0].toUpperCase()}${login.slice(1)}${tags ? `;${tags}` : ''} :${login}!${login}@${login}.tmi.twitch.tv PRIVMSG #streamer :${text}\r\n`,
+      ),
+    );
+  // Pins the crypto draw to the first eligible entry.
+  const drawFirst = () =>
+    vi.spyOn(crypto, 'getRandomValues').mockImplementation((array) => {
+      (array as Uint32Array)[0] = 0;
+      return array;
+    });
+
+  async function openRaffle(user: UserEvent, keyword?: string) {
+    await user.type(textbox(en('raffle.channelName')), 'streamer');
+    if (keyword !== undefined) await retype(user, textbox(en('raffle.entryKeyword')), keyword);
+    await retype(user, textbox(en('raffle.minDuration')), '0');
+    await user.click(button(en('raffle.startRaffle')));
+    act(() => latestTwitch().open());
+  }
+
+  it("doesn't enter a viewer who sends the keyword as a reply, which may be teaching someone", async () => {
+    const user = setupUser();
+    await renderRoute('/setup/raffle');
+    await openRaffle(user);
+    const reply =
+      'reply-parent-msg-id=p1;reply-parent-display-name=Viewer;reply-parent-user-login=viewer';
+    sayOn(latestTwitch(), 'alice', '@Viewer !join', reply);
+    sayOn(latestTwitch(), 'bob', '!join');
+    expect(entryNames()).toEqual(['Bob']);
+  });
+
+  it('enters viewers who type a Turkish keyword in capitals', async () => {
+    const user = setupUser();
+    await renderRoute('/setup/raffle');
+    await openRaffle(user, '!katıl');
+    sayOn(latestTwitch(), 'ayse', '!KATIL');
+    sayOn(latestTwitch(), 'mehmet', '!Katıl bence');
+    sayOn(latestTwitch(), 'ali', '!katılıyorum');
+    expect(entryNames()).toEqual(['Ayse', 'Mehmet']);
+  });
+
+  it('takes no entries once entries close, and still draws from those in', async () => {
+    const user = setupUser();
+    await renderRoute('/setup/raffle');
+    await openRaffle(user);
+    const socket = latestTwitch();
+    sayOn(socket, 'alice', '!join');
+    await user.click(button(en('raffle.stopRaffle')));
+    expect(screen.getByText(en('raffle.statusStopped'))).toBeTruthy();
+    // The reader is gone: its socket no longer delivers anything.
+    expect(socket.onmessage).toBeNull();
+    sayOn(socket, 'bob', '!join');
+    expect(entryNames()).toEqual(['Alice']);
+
+    await user.click(drawButton());
+    expect(within(section(en('raffle.winners', { count: 1 }))).getByText('Alice')).toBeTruthy();
+    expect(drawButton().disabled).toBe(true);
+  });
+
+  it('never draws a winner or a removed entry again with Max Wins at 1', async () => {
+    const user = setupUser();
+    await renderRoute('/setup/raffle');
+    await openRaffle(user);
+    for (const name of ['alice', 'bob', 'carol']) sayOn(latestTwitch(), name, '!join');
+    await user.click(button(en('raffle.disqualify', { name: 'Alice' })));
+    drawFirst();
+    await user.click(drawButton());
+    await user.click(drawButton());
+    const winners = section(en('raffle.winners', { count: 2 }));
+    expect(
+      [...winners.querySelectorAll('li > span:first-child')].map((s) => s.textContent),
+    ).toEqual(['Bob', 'Carol']);
+    expect(drawButton().disabled).toBe(true);
+    // Winners typing the keyword again stay out.
+    sayOn(latestTwitch(), 'bob', '!join');
+    sayOn(latestTwitch(), 'carol', '!join');
+    expect(entryNames()).toEqual([]);
+  });
+
+  it('lets a winner join and win again with Max Wins at 2, but not a third time', async () => {
+    const user = setupUser();
+    await renderRoute('/setup/raffle');
+    await pickOption(user, en('raffle.maxWinsPerUser'), '2');
+    await openRaffle(user);
+    drawFirst();
+    sayOn(latestTwitch(), 'alice', '!join');
+    await user.click(drawButton());
+    sayOn(latestTwitch(), 'alice', '!join');
+    expect(entryNames()).toEqual(['Alice']);
+    await user.click(drawButton());
+    sayOn(latestTwitch(), 'alice', '!join');
+    expect(entryNames()).toEqual([]);
+    expect(section(en('raffle.winners', { count: 2 }))).toBeTruthy();
+  });
+
+  it('keeps a running raffle through a reload: entries, the lock, and reading chat', async () => {
+    const user = setupUser();
+    await renderRoute('/setup/raffle');
+    await openRaffle(user, '!ticket');
+    sayOn(latestTwitch(), 'alice', '!ticket');
+    cleanup();
+
+    await renderRoute('/setup/raffle');
+    expect(entryNames()).toEqual(['Alice']);
+    expect(screen.getByText(en('raffle.statusRunning', { keyword: '!ticket' }))).toBeTruthy();
+    expect(textbox(en('raffle.entryKeyword')).disabled).toBe(true);
+    const socket = latestTwitch();
+    act(() => socket.open());
+    expect(socket.sent).toContain('JOIN #streamer');
+    sayOn(socket, 'alice', '!ticket');
+    sayOn(socket, 'bob', '!ticket');
+    expect(entryNames()).toEqual(['Alice', 'Bob']);
+  });
+
+  it('keeps the draw locked for the rest of the minimum duration after a reload', async () => {
+    vi.useFakeTimers();
+    await renderRoute('/setup/raffle');
+    const user = setupUser({ advanceTimers: vi.advanceTimersByTime });
+    await user.type(textbox(en('raffle.channelName')), 'streamer');
+    await user.click(button(en('raffle.startRaffle')));
+    act(() => latestTwitch().open());
+    sayOn(latestTwitch(), 'alice', '!join');
+    act(() => vi.advanceTimersByTime(5_000));
+    cleanup();
+
+    await renderRoute('/setup/raffle');
+    expect(drawButton().disabled).toBe(true);
+    expect(drawButton().textContent).toBe(en('raffle.drawLocked', { seconds: 10 }));
+    act(() => vi.advanceTimersByTime(10_000));
+    expect(drawButton().disabled).toBe(false);
+  });
+
+  it('stops reading chat and unlocks the rules on Reset All', async () => {
+    vi.spyOn(window, 'confirm').mockReturnValue(true);
+    const user = setupUser();
+    await renderRoute('/setup/raffle');
+    await openRaffle(user);
+    const socket = latestTwitch();
+    sayOn(socket, 'alice', '!join');
+    await user.click(button(en('raffle.resetAll')));
+    expect(socket.onmessage).toBeNull();
+    expect(textbox(en('raffle.channelName')).disabled).toBe(false);
+    expect(screen.getByText(en('raffle.noParticipants', { keyword: '!join' }))).toBeTruthy();
+  });
+
+  it('fires one burst of confetti per draw and none for a draw that finds no one', async () => {
+    // Frames never run, so each burst schedules exactly one: on a busy machine a real first frame
+    // ran before the assertion and scheduled the next.
+    const frames = vi.spyOn(window, 'requestAnimationFrame').mockImplementation(() => 1);
+    try {
+      const user = setupUser();
+      await renderRoute('/setup/raffle');
+      await openRaffle(user);
+      sayOn(latestTwitch(), 'alice', '!join');
+      await user.click(drawButton());
+      expect(frames).toHaveBeenCalledTimes(1);
+      // Disabled with nobody left, so a click draws nothing.
+      await user.click(drawButton());
+      expect(frames).toHaveBeenCalledTimes(1);
+    } finally {
+      frames.mockRestore();
+    }
+  });
+});
+
+describe('Raffle winner overlay', () => {
+  const winner = (name: string) => ({
+    type: 'raffle:winner',
+    winner: {
+      id: `twitch-${name}`,
+      username: name,
+      displayName: name[0].toUpperCase() + name.slice(1),
+      platform: 'twitch',
+      subMonths: -1,
+      drawnAt: 1,
+    },
+  });
+  const send = (message: unknown) =>
+    act(() => {
+      const sender = new FakeBroadcastChannel(CHANNEL);
+      sender.postMessage(message);
+      sender.close();
+    });
+
+  it('shows each winner for 10 s, a new winner restarting the time, and ignores other messages', async () => {
+    await renderRoute('/widgets/raffle-overlay');
+    vi.useFakeTimers();
+    send({ type: 'something-else' });
+    send({ type: 'raffle:winner' });
+    expect(screen.queryByText(en('raffle.winner'))).toBeNull();
+
+    send(winner('alice'));
+    expect(screen.getByText('Alice')).toBeTruthy();
+    act(() => vi.advanceTimersByTime(8_000));
+    send(winner('bob'));
+    expect(screen.queryByText('Alice')).toBeNull();
+    act(() => vi.advanceTimersByTime(8_000));
+    expect(screen.getByText('Bob')).toBeTruthy();
+    act(() => vi.advanceTimersByTime(2_000));
+    expect(screen.queryByText('Bob')).toBeNull();
+  });
+
+  it('stops listening once closed', async () => {
+    const { unmount } = await renderRoute('/widgets/raffle-overlay');
+    expect(FakeBroadcastChannel.open.some((channel) => channel.name === CHANNEL)).toBe(true);
+    unmount();
+    expect(FakeBroadcastChannel.open.some((channel) => channel.name === CHANNEL)).toBe(false);
   });
 });
