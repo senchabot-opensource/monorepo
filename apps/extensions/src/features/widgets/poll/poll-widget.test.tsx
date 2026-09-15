@@ -199,6 +199,17 @@ describe('PollWidget', () => {
     expect(shown()).toMatch(/B2\s*67%/);
   });
 
+  it("counts a sub once in a subs-only poll, whatever weight the URL kept", async () => {
+    await render(
+      <PollWidget twitchChannel="streamer" settings={settings({ subsOnly: true, subWeight: 3 })} />,
+    );
+    mod('!poll Q | A | B');
+    say('sub', '2', 'subscriber/3');
+    await settle();
+    expect(shown()).toMatch(/B1\s*100%/);
+    expect(shown()).not.toContain('×3');
+  });
+
   it('hides the bars until the end when asked', async () => {
     await render(
       <PollWidget twitchChannel="streamer" settings={settings({ blind: true, delay: 0 })} />,
@@ -209,8 +220,22 @@ describe('PollWidget', () => {
     expect(shown()).toContain('Results show when voting ends');
     expect(shown()).toContain('1 vote');
     expect(shown()).not.toContain('%');
+    // No row flashes either, or chat would see where each vote went.
+    expect(card()?.querySelector('[style*="cp-flash"]')).toBeNull();
     mod('!poll end');
     expect(shown()).toMatch(/B1\s*100%/);
+  });
+
+  it('saves the last votes when OBS closes the page', async () => {
+    await render(<PollWidget twitchChannel="streamer" settings={settings()} />);
+    mod('!poll Q | A | B');
+    await wait(2000);
+    say('a', '2');
+    // Closing OBS unloads the page without unmounting React.
+    act(() => window.dispatchEvent(new Event('pagehide')));
+    expect(JSON.parse(localStorage.getItem(storageKey('streamer')) ?? 'null')).toMatchObject({
+      votes: [['twitch:a', 1, 1]],
+    });
   });
 
   it('keeps the poll and its votes through a reload', async () => {
