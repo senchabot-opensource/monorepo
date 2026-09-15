@@ -16,7 +16,8 @@ export function parseCommandUsers(raw: string | null | undefined): CommandUser[]
   for (const entry of raw?.split(",") ?? []) {
     const [prefix, ...rest] = entry.split(":");
     const platform = PLATFORMS.find((p) => p === prefix.trim().toLowerCase());
-    const name = (platform ? rest.join(":") : entry).trim().toLowerCase();
+    // Links from before the field stripped "@" can still carry "@bob"; names never contain one.
+    const name = (platform ? rest.join(":") : entry).trim().replace(/^@/, "").toLowerCase();
     if (name && !users.some((u) => u.platform === (platform ?? null) && u.name === name)) {
       users.push({ platform: platform ?? null, name });
     }

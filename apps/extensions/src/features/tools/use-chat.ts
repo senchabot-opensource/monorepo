@@ -4,7 +4,7 @@ import { TwitchChat } from "#/lib/twitch";
 import { KickChat } from "#/lib/kick";
 import type { ChatMessagesType } from "../widgets/chat-widget/chat-messages";
 import { type ChatPlatform, commandUserKey } from "./command-users";
-import { DEFAULT_OBS_COMMANDS, type ObsBridgeCustomCommands } from "./obs-bridge-config";
+import { DEFAULT_OBS_COMMANDS, type ObsBridgeCustomCommands, obsSocketUrl } from "./obs-bridge-config";
 import { OBSWebSocket } from 'obs-websocket-js';
 
 export type ObsStatus = "connecting" | "connected" | "failed" | "disconnected";
@@ -169,7 +169,7 @@ export const useChat = ({
       setState({ attempt: state.attempt + 1, retryAt: null });
       try {
         // An empty URL must still send the password; undefined (not null) picks the library's default URL.
-        await obs.connect(obsWebsocketUrl || undefined, obsWebsocketPassword);
+        await obs.connect(obsSocketUrl(obsWebsocketUrl), obsWebsocketPassword);
         setState({ status: "connected", attempt: 0, code: null, reason: "", since: Date.now() });
       } catch (error) {
         if (disposed) return;

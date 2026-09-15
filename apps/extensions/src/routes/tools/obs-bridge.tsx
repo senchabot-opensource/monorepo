@@ -13,7 +13,7 @@ import {
   resolveCommandUsers,
 } from '#/features/tools/command-users';
 import { CommandUsersField } from '#/features/tools/command-users-field';
-import { resolveObsCommands } from '#/features/tools/obs-bridge-config';
+import { obsSocketUrl, resolveObsCommands } from '#/features/tools/obs-bridge-config';
 import { ActivityList, ConnectionsCard, DEFAULT_OBS_URL } from '#/features/tools/obs-bridge-status';
 import { ObsCommandList } from '#/features/tools/obs-command-list';
 import { type ObsActivity, type ObsState, useChat } from '#/features/tools/use-chat';
@@ -323,7 +323,7 @@ function RouteComponent() {
             <h2 className={HEADING_CLASS}>{t('obsBridge.tool.connectionsTitle')}</h2>
             <ConnectionsCard
               obs={obsState}
-              obsUrl={search.obsWebsocketUrl?.trim() || DEFAULT_OBS_URL}
+              obsUrl={obsSocketUrl(search.obsWebsocketUrl) ?? DEFAULT_OBS_URL}
               hasPassword={Boolean(search.obsWebsocketPassword)}
               onRetryNow={retryNow}
               channels={{ twitch: twitchChannel.toLowerCase(), kick: kickChannel.toLowerCase() }}

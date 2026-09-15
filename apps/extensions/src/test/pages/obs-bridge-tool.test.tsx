@@ -157,6 +157,12 @@ describe('OBS Bridge tool', () => {
     expect(OBSWebSocket.latest.connectArgs[0]).toEqual(['ws://10.0.0.2:4455', 'secret']);
   });
 
+  it('connects to an address typed without ws://, as OBS shows it', async () => {
+    await renderRoute(`${TOOL}?twitch=streamer&obsWebsocketUrl=192.168.1.5%3A4455&lang=en`);
+    expect(OBSWebSocket.latest.connectArgs[0][0]).toBe('ws://192.168.1.5:4455');
+    expect(screen.getByText(/ws:\/\/192\.168\.1\.5:4455/)).toBeTruthy();
+  });
+
   it('lists the OBS scenes and saves Main and BRB picks in the page URL', async () => {
     const user = setupUser();
     await renderRoute(`${TOOL}?twitch=streamer&lang=en`);

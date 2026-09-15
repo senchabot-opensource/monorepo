@@ -18,6 +18,13 @@ describe('parseCommandUsers', () => {
     ]);
   });
 
+  it('drops the "@" old links kept in front of a name', () => {
+    expect(parseCommandUsers('twitch:@Bob,@carol')).toEqual([
+      { platform: 'twitch', name: 'bob' },
+      { platform: null, name: 'carol' },
+    ]);
+  });
+
   it('keeps the same name on both platforms as two users', () => {
     expect(parseCommandUsers('twitch:bob,kick:bob')).toHaveLength(2);
   });
