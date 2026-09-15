@@ -1,55 +1,21 @@
-import confetti from 'canvas-confetti';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import { type BurstOptions, useConfettiBurst } from '#/hooks/use-confetti-burst';
 import { useT } from '#/lib/i18n';
 import type { RaffleWinner } from '#/types/raffle';
 
 const CHANNEL_NAME = 'senchabot-raffle-broadcast';
+const CONFETTI: BurstOptions = {
+  particleCount: 4,
+  colors: ['#9146FF', '#00D4AA', '#FFD700', '#FF4500'],
+};
 
 export function RaffleOverlay() {
   const t = useT();
   const [winner, setWinner] = useState<RaffleWinner | null>(null);
   const [visible, setVisible] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const confettiRafRef = useRef<number | null>(null);
-
-  const cancelConfetti = useCallback(() => {
-    if (confettiRafRef.current !== null) {
-      cancelAnimationFrame(confettiRafRef.current);
-      confettiRafRef.current = null;
-    }
-  }, []);
-
-  const triggerConfetti = useCallback(() => {
-    cancelConfetti();
-    const duration = 3000;
-    const end = Date.now() + duration;
-
-    const frame = () => {
-      confetti({
-        particleCount: 4,
-        angle: 60,
-        spread: 55,
-        origin: { x: 0 },
-        colors: ['#9146FF', '#00D4AA', '#FFD700', '#FF4500'],
-      });
-      confetti({
-        particleCount: 4,
-        angle: 120,
-        spread: 55,
-        origin: { x: 1 },
-        colors: ['#9146FF', '#00D4AA', '#FFD700', '#FF4500'],
-      });
-
-      if (Date.now() < end) {
-        confettiRafRef.current = requestAnimationFrame(frame);
-      } else {
-        confettiRafRef.current = null;
-      }
-    };
-
-    confettiRafRef.current = requestAnimationFrame(frame);
-  }, [cancelConfetti]);
+  const triggerConfetti = useConfettiBurst(CONFETTI);
 
   const showWinner = useCallback(
     (w: RaffleWinner) => {
@@ -81,9 +47,8 @@ export function RaffleOverlay() {
       bc.removeEventListener('message', handler);
       bc.close();
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
-      cancelConfetti();
     };
-  }, [showWinner, cancelConfetti]);
+  }, [showWinner]);
 
   return (
     <div className="relative flex size-full min-h-screen items-center justify-center overflow-hidden bg-transparent">
