@@ -3,10 +3,10 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&display=swap');
-
 @theme {
-  --font-sans: "Consolas", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+  /* Overlays keep the pre-Geist stack so streamers' OBS scenes don't change. */
+  --font-widget: "Consolas", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Orbitron", sans-serif;
 }
 

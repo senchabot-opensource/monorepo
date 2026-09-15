@@ -1,4 +1,4 @@
-import { createRootRoute, HeadContent, Scripts } from '@tanstack/react-router';
+import { createRootRoute, HeadContent, Scripts, useLocation } from '@tanstack/react-router';
 
 import { SettingsControls } from '#/components/settings-controls';
 import { LocaleProvider } from '#/lib/i18n';
@@ -9,8 +9,22 @@ import appCss from '../styles.css?url';
 // Runs before first paint to avoid a flash of the wrong theme/language.
 const themeInitScript = `(function(){try{var t=localStorage.getItem("theme");var d=t?t==="dark":!window.matchMedia||window.matchMedia("(prefers-color-scheme: dark)").matches;var el=document.documentElement;el.classList.toggle("dark",d);el.style.colorScheme=d?"dark":"light";var l=new URLSearchParams(location.search).get("lang")||localStorage.getItem("lang");if(l)el.lang=l;var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute("content",d?"#09090b":"#fafafa")}catch(e){}})();`;
 
+// Overlays run inside streamers' OBS scenes: they keep their old font and never download Geist.
+const isWidgetPath = (pathname: string) => pathname.startsWith('/widgets/');
+
+// Geist is variable, so one 400..800 range (the weights the site uses) serves one file per subset.
+const geistLinks = [
+  { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+  { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossOrigin: 'anonymous' as const },
+  {
+    rel: 'stylesheet',
+    href: 'https://fonts.googleapis.com/css2?family=Geist:wght@400..800&display=swap',
+  },
+];
+
 export const Route = createRootRoute({
-  head: () => ({
+  // Root head sees every match, so this is the one place that can skip Geist for all widget routes.
+  head: ({ matches }) => ({
     meta: [
       {
         charSet: 'utf-8',
@@ -63,6 +77,7 @@ export const Route = createRootRoute({
         rel: 'stylesheet',
         href: appCss,
       },
+      ...(matches.some((match) => isWidgetPath(match.pathname)) ? [] : geistLinks),
       {
         rel: 'icon',
         href: '/favicon.ico',
@@ -77,6 +92,8 @@ export const Route = createRootRoute({
 });
 
 function RootDocument({ children }: { children: React.ReactNode }) {
+  const isWidget = useLocation({ select: (location) => isWidgetPath(location.pathname) });
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -84,7 +101,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <HeadContent />
       </head>
-      <body className="font-sans antialiased min-h-screen">
+      <body className={`${isWidget ? 'font-widget' : 'font-sans'} antialiased min-h-screen`}>
         <ThemeProvider>
           <LocaleProvider>
             {children}
