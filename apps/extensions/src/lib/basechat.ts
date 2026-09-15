@@ -11,6 +11,10 @@ export type Disconnectable = {
 
 const MAX_RECONNECT_DELAY_MS = 30000;
 
+export type ChatConnectionStatus =
+  | { state: "connecting" | "connected" }
+  | { state: "reconnecting"; retryAt: number };
+
 export class BaseChatClient implements Disconnectable {
   protected ws: WebSocket | null = null;
 
@@ -22,6 +26,9 @@ export class BaseChatClient implements Disconnectable {
   private reconnectTimer: ReturnType<typeof setTimeout> | null = null;
   private reconnectAttempts = 0;
   private disposed = false;
+
+  /** Connection state for pages that show it (the OBS Bridge tool); set after construction. */
+  onStatus?: (status: ChatConnectionStatus) => void;
 
   constructor(
     private readonly label: string,
@@ -49,6 +56,7 @@ export class BaseChatClient implements Disconnectable {
       return;
     }
 
+    this.onStatus?.({ state: "connecting" });
     const ws = new WebSocket(this.url);
     this.ws = ws;
     const handlers = this.handlers;
@@ -58,6 +66,7 @@ export class BaseChatClient implements Disconnectable {
         return;
       }
       this.reconnectAttempts = 0;
+      this.onStatus?.({ state: "connected" });
       handlers.onOpen?.();
       console.log(`${this.label} chat connected.`);
     };
@@ -89,6 +98,7 @@ export class BaseChatClient implements Disconnectable {
       MAX_RECONNECT_DELAY_MS,
     );
     this.reconnectAttempts += 1;
+    this.onStatus?.({ state: "reconnecting", retryAt: Date.now() + delay });
     console.log(
       `${this.label} chat disconnected, reconnecting in ${delay}ms (attempt ${this.reconnectAttempts})`,
     );

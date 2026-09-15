@@ -9,51 +9,41 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as SetupChatWidgetRouteImport } from './routes/setup/chat-widget'
-import { Route as SetupEmoteWallRouteImport } from './routes/setup/emote-wall'
-import { Route as SetupObsBridgeRouteImport } from './routes/setup/obs-bridge'
-import { Route as SetupRaffleRouteImport } from './routes/setup/raffle'
-import { Route as SetupSubGrowingPlantRouteImport } from './routes/setup/sub-growing-plant'
+import { Route as Char123LocaleChar125RouteRouteImport } from './routes/{-$locale}/route'
 import { Route as ToolsObsBridgeRouteImport } from './routes/tools/obs-bridge'
+import { Route as WidgetsAlertsRouteImport } from './routes/widgets/alerts'
 import { Route as WidgetsChatWidgetRouteImport } from './routes/widgets/chat-widget'
 import { Route as WidgetsEmoteWallRouteImport } from './routes/widgets/emote-wall'
 import { Route as WidgetsRaffleOverlayRouteImport } from './routes/widgets/raffle-overlay'
 import { Route as WidgetsSubSproutWidgetRouteImport } from './routes/widgets/sub-sprout-widget'
+import { Route as Char123LocaleChar125IndexRouteImport } from './routes/{-$locale}/index'
+import { Route as Char123LocaleChar125ChangelogRouteImport } from './routes/{-$locale}/changelog'
+import { Route as Char123LocaleChar125FaqRouteImport } from './routes/{-$locale}/faq'
+import { Route as Char123LocaleChar125GuidesIndexRouteImport } from './routes/{-$locale}/guides/index'
+import { Route as Char123LocaleChar125GuidesChatGiveawayRouteImport } from './routes/{-$locale}/guides/chat-giveaway'
+import { Route as Char123LocaleChar125GuidesObsBrowserSourceRouteImport } from './routes/{-$locale}/guides/obs-browser-source'
+import { Route as Char123LocaleChar125GuidesObsSceneSwitcherRouteImport } from './routes/{-$locale}/guides/obs-scene-switcher'
+import { Route as Char123LocaleChar125GuidesTwitchKickChatOverlayRouteImport } from './routes/{-$locale}/guides/twitch-kick-chat-overlay'
+import { Route as Char123LocaleChar125SetupChatWidgetRouteImport } from './routes/{-$locale}/setup/chat-widget'
+import { Route as Char123LocaleChar125SetupEmoteWallRouteImport } from './routes/{-$locale}/setup/emote-wall'
+import { Route as Char123LocaleChar125SetupObsBridgeRouteImport } from './routes/{-$locale}/setup/obs-bridge'
+import { Route as Char123LocaleChar125SetupRaffleRouteImport } from './routes/{-$locale}/setup/raffle'
+import { Route as Char123LocaleChar125SetupSubGrowingPlantRouteImport } from './routes/{-$locale}/setup/sub-growing-plant'
 
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SetupChatWidgetRoute = SetupChatWidgetRouteImport.update({
-  id: '/setup/chat-widget',
-  path: '/setup/chat-widget',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SetupEmoteWallRoute = SetupEmoteWallRouteImport.update({
-  id: '/setup/emote-wall',
-  path: '/setup/emote-wall',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SetupObsBridgeRoute = SetupObsBridgeRouteImport.update({
-  id: '/setup/obs-bridge',
-  path: '/setup/obs-bridge',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SetupRaffleRoute = SetupRaffleRouteImport.update({
-  id: '/setup/raffle',
-  path: '/setup/raffle',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SetupSubGrowingPlantRoute = SetupSubGrowingPlantRouteImport.update({
-  id: '/setup/sub-growing-plant',
-  path: '/setup/sub-growing-plant',
-  getParentRoute: () => rootRouteImport,
-} as any)
+const Char123LocaleChar125RouteRoute =
+  Char123LocaleChar125RouteRouteImport.update({
+    id: '/{-$locale}',
+    path: '/{-$locale}',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ToolsObsBridgeRoute = ToolsObsBridgeRouteImport.update({
   id: '/tools/obs-bridge',
   path: '/tools/obs-bridge',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WidgetsAlertsRoute = WidgetsAlertsRouteImport.update({
+  id: '/widgets/alerts',
+  path: '/widgets/alerts',
   getParentRoute: () => rootRouteImport,
 } as any)
 const WidgetsChatWidgetRoute = WidgetsChatWidgetRouteImport.update({
@@ -76,97 +66,222 @@ const WidgetsSubSproutWidgetRoute = WidgetsSubSproutWidgetRouteImport.update({
   path: '/widgets/sub-sprout-widget',
   getParentRoute: () => rootRouteImport,
 } as any)
+const Char123LocaleChar125IndexRoute =
+  Char123LocaleChar125IndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => Char123LocaleChar125RouteRoute,
+  } as any)
+const Char123LocaleChar125ChangelogRoute =
+  Char123LocaleChar125ChangelogRouteImport.update({
+    id: '/changelog',
+    path: '/changelog',
+    getParentRoute: () => Char123LocaleChar125RouteRoute,
+  } as any)
+const Char123LocaleChar125FaqRoute = Char123LocaleChar125FaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
+  getParentRoute: () => Char123LocaleChar125RouteRoute,
+} as any)
+const Char123LocaleChar125GuidesIndexRoute =
+  Char123LocaleChar125GuidesIndexRouteImport.update({
+    id: '/guides/',
+    path: '/guides/',
+    getParentRoute: () => Char123LocaleChar125RouteRoute,
+  } as any)
+const Char123LocaleChar125GuidesChatGiveawayRoute =
+  Char123LocaleChar125GuidesChatGiveawayRouteImport.update({
+    id: '/guides/chat-giveaway',
+    path: '/guides/chat-giveaway',
+    getParentRoute: () => Char123LocaleChar125RouteRoute,
+  } as any)
+const Char123LocaleChar125GuidesObsBrowserSourceRoute =
+  Char123LocaleChar125GuidesObsBrowserSourceRouteImport.update({
+    id: '/guides/obs-browser-source',
+    path: '/guides/obs-browser-source',
+    getParentRoute: () => Char123LocaleChar125RouteRoute,
+  } as any)
+const Char123LocaleChar125GuidesObsSceneSwitcherRoute =
+  Char123LocaleChar125GuidesObsSceneSwitcherRouteImport.update({
+    id: '/guides/obs-scene-switcher',
+    path: '/guides/obs-scene-switcher',
+    getParentRoute: () => Char123LocaleChar125RouteRoute,
+  } as any)
+const Char123LocaleChar125GuidesTwitchKickChatOverlayRoute =
+  Char123LocaleChar125GuidesTwitchKickChatOverlayRouteImport.update({
+    id: '/guides/twitch-kick-chat-overlay',
+    path: '/guides/twitch-kick-chat-overlay',
+    getParentRoute: () => Char123LocaleChar125RouteRoute,
+  } as any)
+const Char123LocaleChar125SetupChatWidgetRoute =
+  Char123LocaleChar125SetupChatWidgetRouteImport.update({
+    id: '/setup/chat-widget',
+    path: '/setup/chat-widget',
+    getParentRoute: () => Char123LocaleChar125RouteRoute,
+  } as any)
+const Char123LocaleChar125SetupEmoteWallRoute =
+  Char123LocaleChar125SetupEmoteWallRouteImport.update({
+    id: '/setup/emote-wall',
+    path: '/setup/emote-wall',
+    getParentRoute: () => Char123LocaleChar125RouteRoute,
+  } as any)
+const Char123LocaleChar125SetupObsBridgeRoute =
+  Char123LocaleChar125SetupObsBridgeRouteImport.update({
+    id: '/setup/obs-bridge',
+    path: '/setup/obs-bridge',
+    getParentRoute: () => Char123LocaleChar125RouteRoute,
+  } as any)
+const Char123LocaleChar125SetupRaffleRoute =
+  Char123LocaleChar125SetupRaffleRouteImport.update({
+    id: '/setup/raffle',
+    path: '/setup/raffle',
+    getParentRoute: () => Char123LocaleChar125RouteRoute,
+  } as any)
+const Char123LocaleChar125SetupSubGrowingPlantRoute =
+  Char123LocaleChar125SetupSubGrowingPlantRouteImport.update({
+    id: '/setup/sub-growing-plant',
+    path: '/setup/sub-growing-plant',
+    getParentRoute: () => Char123LocaleChar125RouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/setup/chat-widget': typeof SetupChatWidgetRoute
-  '/setup/emote-wall': typeof SetupEmoteWallRoute
-  '/setup/obs-bridge': typeof SetupObsBridgeRoute
-  '/setup/raffle': typeof SetupRaffleRoute
-  '/setup/sub-growing-plant': typeof SetupSubGrowingPlantRoute
+  '/{-$locale}': typeof Char123LocaleChar125RouteRouteWithChildren
   '/tools/obs-bridge': typeof ToolsObsBridgeRoute
+  '/widgets/alerts': typeof WidgetsAlertsRoute
   '/widgets/chat-widget': typeof WidgetsChatWidgetRoute
   '/widgets/emote-wall': typeof WidgetsEmoteWallRoute
   '/widgets/raffle-overlay': typeof WidgetsRaffleOverlayRoute
   '/widgets/sub-sprout-widget': typeof WidgetsSubSproutWidgetRoute
+  '/{-$locale}/changelog': typeof Char123LocaleChar125ChangelogRoute
+  '/{-$locale}/faq': typeof Char123LocaleChar125FaqRoute
+  '/{-$locale}/': typeof Char123LocaleChar125IndexRoute
+  '/{-$locale}/guides/chat-giveaway': typeof Char123LocaleChar125GuidesChatGiveawayRoute
+  '/{-$locale}/guides/obs-browser-source': typeof Char123LocaleChar125GuidesObsBrowserSourceRoute
+  '/{-$locale}/guides/obs-scene-switcher': typeof Char123LocaleChar125GuidesObsSceneSwitcherRoute
+  '/{-$locale}/guides/twitch-kick-chat-overlay': typeof Char123LocaleChar125GuidesTwitchKickChatOverlayRoute
+  '/{-$locale}/setup/chat-widget': typeof Char123LocaleChar125SetupChatWidgetRoute
+  '/{-$locale}/setup/emote-wall': typeof Char123LocaleChar125SetupEmoteWallRoute
+  '/{-$locale}/setup/obs-bridge': typeof Char123LocaleChar125SetupObsBridgeRoute
+  '/{-$locale}/setup/raffle': typeof Char123LocaleChar125SetupRaffleRoute
+  '/{-$locale}/setup/sub-growing-plant': typeof Char123LocaleChar125SetupSubGrowingPlantRoute
+  '/{-$locale}/guides/': typeof Char123LocaleChar125GuidesIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/setup/chat-widget': typeof SetupChatWidgetRoute
-  '/setup/emote-wall': typeof SetupEmoteWallRoute
-  '/setup/obs-bridge': typeof SetupObsBridgeRoute
-  '/setup/raffle': typeof SetupRaffleRoute
-  '/setup/sub-growing-plant': typeof SetupSubGrowingPlantRoute
   '/tools/obs-bridge': typeof ToolsObsBridgeRoute
+  '/widgets/alerts': typeof WidgetsAlertsRoute
   '/widgets/chat-widget': typeof WidgetsChatWidgetRoute
   '/widgets/emote-wall': typeof WidgetsEmoteWallRoute
   '/widgets/raffle-overlay': typeof WidgetsRaffleOverlayRoute
   '/widgets/sub-sprout-widget': typeof WidgetsSubSproutWidgetRoute
+  '/{-$locale}/changelog': typeof Char123LocaleChar125ChangelogRoute
+  '/{-$locale}/faq': typeof Char123LocaleChar125FaqRoute
+  '/{-$locale}': typeof Char123LocaleChar125IndexRoute
+  '/{-$locale}/guides/chat-giveaway': typeof Char123LocaleChar125GuidesChatGiveawayRoute
+  '/{-$locale}/guides/obs-browser-source': typeof Char123LocaleChar125GuidesObsBrowserSourceRoute
+  '/{-$locale}/guides/obs-scene-switcher': typeof Char123LocaleChar125GuidesObsSceneSwitcherRoute
+  '/{-$locale}/guides/twitch-kick-chat-overlay': typeof Char123LocaleChar125GuidesTwitchKickChatOverlayRoute
+  '/{-$locale}/setup/chat-widget': typeof Char123LocaleChar125SetupChatWidgetRoute
+  '/{-$locale}/setup/emote-wall': typeof Char123LocaleChar125SetupEmoteWallRoute
+  '/{-$locale}/setup/obs-bridge': typeof Char123LocaleChar125SetupObsBridgeRoute
+  '/{-$locale}/setup/raffle': typeof Char123LocaleChar125SetupRaffleRoute
+  '/{-$locale}/setup/sub-growing-plant': typeof Char123LocaleChar125SetupSubGrowingPlantRoute
+  '/{-$locale}/guides': typeof Char123LocaleChar125GuidesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/setup/chat-widget': typeof SetupChatWidgetRoute
-  '/setup/emote-wall': typeof SetupEmoteWallRoute
-  '/setup/obs-bridge': typeof SetupObsBridgeRoute
-  '/setup/raffle': typeof SetupRaffleRoute
-  '/setup/sub-growing-plant': typeof SetupSubGrowingPlantRoute
+  '/{-$locale}': typeof Char123LocaleChar125RouteRouteWithChildren
   '/tools/obs-bridge': typeof ToolsObsBridgeRoute
+  '/widgets/alerts': typeof WidgetsAlertsRoute
   '/widgets/chat-widget': typeof WidgetsChatWidgetRoute
   '/widgets/emote-wall': typeof WidgetsEmoteWallRoute
   '/widgets/raffle-overlay': typeof WidgetsRaffleOverlayRoute
   '/widgets/sub-sprout-widget': typeof WidgetsSubSproutWidgetRoute
+  '/{-$locale}/changelog': typeof Char123LocaleChar125ChangelogRoute
+  '/{-$locale}/faq': typeof Char123LocaleChar125FaqRoute
+  '/{-$locale}/': typeof Char123LocaleChar125IndexRoute
+  '/{-$locale}/guides/chat-giveaway': typeof Char123LocaleChar125GuidesChatGiveawayRoute
+  '/{-$locale}/guides/obs-browser-source': typeof Char123LocaleChar125GuidesObsBrowserSourceRoute
+  '/{-$locale}/guides/obs-scene-switcher': typeof Char123LocaleChar125GuidesObsSceneSwitcherRoute
+  '/{-$locale}/guides/twitch-kick-chat-overlay': typeof Char123LocaleChar125GuidesTwitchKickChatOverlayRoute
+  '/{-$locale}/setup/chat-widget': typeof Char123LocaleChar125SetupChatWidgetRoute
+  '/{-$locale}/setup/emote-wall': typeof Char123LocaleChar125SetupEmoteWallRoute
+  '/{-$locale}/setup/obs-bridge': typeof Char123LocaleChar125SetupObsBridgeRoute
+  '/{-$locale}/setup/raffle': typeof Char123LocaleChar125SetupRaffleRoute
+  '/{-$locale}/setup/sub-growing-plant': typeof Char123LocaleChar125SetupSubGrowingPlantRoute
+  '/{-$locale}/guides/': typeof Char123LocaleChar125GuidesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/'
-    | '/setup/chat-widget'
-    | '/setup/emote-wall'
-    | '/setup/obs-bridge'
-    | '/setup/raffle'
-    | '/setup/sub-growing-plant'
+    | '/{-$locale}'
     | '/tools/obs-bridge'
+    | '/widgets/alerts'
     | '/widgets/chat-widget'
     | '/widgets/emote-wall'
     | '/widgets/raffle-overlay'
     | '/widgets/sub-sprout-widget'
+    | '/{-$locale}/changelog'
+    | '/{-$locale}/faq'
+    | '/{-$locale}/'
+    | '/{-$locale}/guides/chat-giveaway'
+    | '/{-$locale}/guides/obs-browser-source'
+    | '/{-$locale}/guides/obs-scene-switcher'
+    | '/{-$locale}/guides/twitch-kick-chat-overlay'
+    | '/{-$locale}/setup/chat-widget'
+    | '/{-$locale}/setup/emote-wall'
+    | '/{-$locale}/setup/obs-bridge'
+    | '/{-$locale}/setup/raffle'
+    | '/{-$locale}/setup/sub-growing-plant'
+    | '/{-$locale}/guides/'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/'
-    | '/setup/chat-widget'
-    | '/setup/emote-wall'
-    | '/setup/obs-bridge'
-    | '/setup/raffle'
-    | '/setup/sub-growing-plant'
     | '/tools/obs-bridge'
+    | '/widgets/alerts'
     | '/widgets/chat-widget'
     | '/widgets/emote-wall'
     | '/widgets/raffle-overlay'
     | '/widgets/sub-sprout-widget'
+    | '/{-$locale}/changelog'
+    | '/{-$locale}/faq'
+    | '/{-$locale}'
+    | '/{-$locale}/guides/chat-giveaway'
+    | '/{-$locale}/guides/obs-browser-source'
+    | '/{-$locale}/guides/obs-scene-switcher'
+    | '/{-$locale}/guides/twitch-kick-chat-overlay'
+    | '/{-$locale}/setup/chat-widget'
+    | '/{-$locale}/setup/emote-wall'
+    | '/{-$locale}/setup/obs-bridge'
+    | '/{-$locale}/setup/raffle'
+    | '/{-$locale}/setup/sub-growing-plant'
+    | '/{-$locale}/guides'
   id:
     | '__root__'
-    | '/'
-    | '/setup/chat-widget'
-    | '/setup/emote-wall'
-    | '/setup/obs-bridge'
-    | '/setup/raffle'
-    | '/setup/sub-growing-plant'
+    | '/{-$locale}'
     | '/tools/obs-bridge'
+    | '/widgets/alerts'
     | '/widgets/chat-widget'
     | '/widgets/emote-wall'
     | '/widgets/raffle-overlay'
     | '/widgets/sub-sprout-widget'
+    | '/{-$locale}/changelog'
+    | '/{-$locale}/faq'
+    | '/{-$locale}/'
+    | '/{-$locale}/guides/chat-giveaway'
+    | '/{-$locale}/guides/obs-browser-source'
+    | '/{-$locale}/guides/obs-scene-switcher'
+    | '/{-$locale}/guides/twitch-kick-chat-overlay'
+    | '/{-$locale}/setup/chat-widget'
+    | '/{-$locale}/setup/emote-wall'
+    | '/{-$locale}/setup/obs-bridge'
+    | '/{-$locale}/setup/raffle'
+    | '/{-$locale}/setup/sub-growing-plant'
+    | '/{-$locale}/guides/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  SetupChatWidgetRoute: typeof SetupChatWidgetRoute
-  SetupEmoteWallRoute: typeof SetupEmoteWallRoute
-  SetupObsBridgeRoute: typeof SetupObsBridgeRoute
-  SetupRaffleRoute: typeof SetupRaffleRoute
-  SetupSubGrowingPlantRoute: typeof SetupSubGrowingPlantRoute
+  Char123LocaleChar125RouteRoute: typeof Char123LocaleChar125RouteRouteWithChildren
   ToolsObsBridgeRoute: typeof ToolsObsBridgeRoute
+  WidgetsAlertsRoute: typeof WidgetsAlertsRoute
   WidgetsChatWidgetRoute: typeof WidgetsChatWidgetRoute
   WidgetsEmoteWallRoute: typeof WidgetsEmoteWallRoute
   WidgetsRaffleOverlayRoute: typeof WidgetsRaffleOverlayRoute
@@ -175,46 +290,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/setup/chat-widget': {
-      id: '/setup/chat-widget'
-      path: '/setup/chat-widget'
-      fullPath: '/setup/chat-widget'
-      preLoaderRoute: typeof SetupChatWidgetRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/setup/emote-wall': {
-      id: '/setup/emote-wall'
-      path: '/setup/emote-wall'
-      fullPath: '/setup/emote-wall'
-      preLoaderRoute: typeof SetupEmoteWallRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/setup/obs-bridge': {
-      id: '/setup/obs-bridge'
-      path: '/setup/obs-bridge'
-      fullPath: '/setup/obs-bridge'
-      preLoaderRoute: typeof SetupObsBridgeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/setup/raffle': {
-      id: '/setup/raffle'
-      path: '/setup/raffle'
-      fullPath: '/setup/raffle'
-      preLoaderRoute: typeof SetupRaffleRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/setup/sub-growing-plant': {
-      id: '/setup/sub-growing-plant'
-      path: '/setup/sub-growing-plant'
-      fullPath: '/setup/sub-growing-plant'
-      preLoaderRoute: typeof SetupSubGrowingPlantRouteImport
+    '/{-$locale}': {
+      id: '/{-$locale}'
+      path: '/{-$locale}'
+      fullPath: '/{-$locale}'
+      preLoaderRoute: typeof Char123LocaleChar125RouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tools/obs-bridge': {
@@ -222,6 +302,13 @@ declare module '@tanstack/react-router' {
       path: '/tools/obs-bridge'
       fullPath: '/tools/obs-bridge'
       preLoaderRoute: typeof ToolsObsBridgeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/widgets/alerts': {
+      id: '/widgets/alerts'
+      path: '/widgets/alerts'
+      fullPath: '/widgets/alerts'
+      preLoaderRoute: typeof WidgetsAlertsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/widgets/chat-widget': {
@@ -252,17 +339,150 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WidgetsSubSproutWidgetRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/{-$locale}/': {
+      id: '/{-$locale}/'
+      path: '/'
+      fullPath: '/{-$locale}/'
+      preLoaderRoute: typeof Char123LocaleChar125IndexRouteImport
+      parentRoute: typeof Char123LocaleChar125RouteRoute
+    }
+    '/{-$locale}/changelog': {
+      id: '/{-$locale}/changelog'
+      path: '/changelog'
+      fullPath: '/{-$locale}/changelog'
+      preLoaderRoute: typeof Char123LocaleChar125ChangelogRouteImport
+      parentRoute: typeof Char123LocaleChar125RouteRoute
+    }
+    '/{-$locale}/faq': {
+      id: '/{-$locale}/faq'
+      path: '/faq'
+      fullPath: '/{-$locale}/faq'
+      preLoaderRoute: typeof Char123LocaleChar125FaqRouteImport
+      parentRoute: typeof Char123LocaleChar125RouteRoute
+    }
+    '/{-$locale}/guides/': {
+      id: '/{-$locale}/guides/'
+      path: '/guides'
+      fullPath: '/{-$locale}/guides/'
+      preLoaderRoute: typeof Char123LocaleChar125GuidesIndexRouteImport
+      parentRoute: typeof Char123LocaleChar125RouteRoute
+    }
+    '/{-$locale}/guides/chat-giveaway': {
+      id: '/{-$locale}/guides/chat-giveaway'
+      path: '/guides/chat-giveaway'
+      fullPath: '/{-$locale}/guides/chat-giveaway'
+      preLoaderRoute: typeof Char123LocaleChar125GuidesChatGiveawayRouteImport
+      parentRoute: typeof Char123LocaleChar125RouteRoute
+    }
+    '/{-$locale}/guides/obs-browser-source': {
+      id: '/{-$locale}/guides/obs-browser-source'
+      path: '/guides/obs-browser-source'
+      fullPath: '/{-$locale}/guides/obs-browser-source'
+      preLoaderRoute: typeof Char123LocaleChar125GuidesObsBrowserSourceRouteImport
+      parentRoute: typeof Char123LocaleChar125RouteRoute
+    }
+    '/{-$locale}/guides/obs-scene-switcher': {
+      id: '/{-$locale}/guides/obs-scene-switcher'
+      path: '/guides/obs-scene-switcher'
+      fullPath: '/{-$locale}/guides/obs-scene-switcher'
+      preLoaderRoute: typeof Char123LocaleChar125GuidesObsSceneSwitcherRouteImport
+      parentRoute: typeof Char123LocaleChar125RouteRoute
+    }
+    '/{-$locale}/guides/twitch-kick-chat-overlay': {
+      id: '/{-$locale}/guides/twitch-kick-chat-overlay'
+      path: '/guides/twitch-kick-chat-overlay'
+      fullPath: '/{-$locale}/guides/twitch-kick-chat-overlay'
+      preLoaderRoute: typeof Char123LocaleChar125GuidesTwitchKickChatOverlayRouteImport
+      parentRoute: typeof Char123LocaleChar125RouteRoute
+    }
+    '/{-$locale}/setup/chat-widget': {
+      id: '/{-$locale}/setup/chat-widget'
+      path: '/setup/chat-widget'
+      fullPath: '/{-$locale}/setup/chat-widget'
+      preLoaderRoute: typeof Char123LocaleChar125SetupChatWidgetRouteImport
+      parentRoute: typeof Char123LocaleChar125RouteRoute
+    }
+    '/{-$locale}/setup/emote-wall': {
+      id: '/{-$locale}/setup/emote-wall'
+      path: '/setup/emote-wall'
+      fullPath: '/{-$locale}/setup/emote-wall'
+      preLoaderRoute: typeof Char123LocaleChar125SetupEmoteWallRouteImport
+      parentRoute: typeof Char123LocaleChar125RouteRoute
+    }
+    '/{-$locale}/setup/obs-bridge': {
+      id: '/{-$locale}/setup/obs-bridge'
+      path: '/setup/obs-bridge'
+      fullPath: '/{-$locale}/setup/obs-bridge'
+      preLoaderRoute: typeof Char123LocaleChar125SetupObsBridgeRouteImport
+      parentRoute: typeof Char123LocaleChar125RouteRoute
+    }
+    '/{-$locale}/setup/raffle': {
+      id: '/{-$locale}/setup/raffle'
+      path: '/setup/raffle'
+      fullPath: '/{-$locale}/setup/raffle'
+      preLoaderRoute: typeof Char123LocaleChar125SetupRaffleRouteImport
+      parentRoute: typeof Char123LocaleChar125RouteRoute
+    }
+    '/{-$locale}/setup/sub-growing-plant': {
+      id: '/{-$locale}/setup/sub-growing-plant'
+      path: '/setup/sub-growing-plant'
+      fullPath: '/{-$locale}/setup/sub-growing-plant'
+      preLoaderRoute: typeof Char123LocaleChar125SetupSubGrowingPlantRouteImport
+      parentRoute: typeof Char123LocaleChar125RouteRoute
+    }
   }
 }
 
+interface Char123LocaleChar125RouteRouteChildren {
+  Char123LocaleChar125ChangelogRoute: typeof Char123LocaleChar125ChangelogRoute
+  Char123LocaleChar125FaqRoute: typeof Char123LocaleChar125FaqRoute
+  Char123LocaleChar125IndexRoute: typeof Char123LocaleChar125IndexRoute
+  Char123LocaleChar125GuidesChatGiveawayRoute: typeof Char123LocaleChar125GuidesChatGiveawayRoute
+  Char123LocaleChar125GuidesObsBrowserSourceRoute: typeof Char123LocaleChar125GuidesObsBrowserSourceRoute
+  Char123LocaleChar125GuidesObsSceneSwitcherRoute: typeof Char123LocaleChar125GuidesObsSceneSwitcherRoute
+  Char123LocaleChar125GuidesTwitchKickChatOverlayRoute: typeof Char123LocaleChar125GuidesTwitchKickChatOverlayRoute
+  Char123LocaleChar125SetupChatWidgetRoute: typeof Char123LocaleChar125SetupChatWidgetRoute
+  Char123LocaleChar125SetupEmoteWallRoute: typeof Char123LocaleChar125SetupEmoteWallRoute
+  Char123LocaleChar125SetupObsBridgeRoute: typeof Char123LocaleChar125SetupObsBridgeRoute
+  Char123LocaleChar125SetupRaffleRoute: typeof Char123LocaleChar125SetupRaffleRoute
+  Char123LocaleChar125SetupSubGrowingPlantRoute: typeof Char123LocaleChar125SetupSubGrowingPlantRoute
+  Char123LocaleChar125GuidesIndexRoute: typeof Char123LocaleChar125GuidesIndexRoute
+}
+
+const Char123LocaleChar125RouteRouteChildren: Char123LocaleChar125RouteRouteChildren =
+  {
+    Char123LocaleChar125ChangelogRoute: Char123LocaleChar125ChangelogRoute,
+    Char123LocaleChar125FaqRoute: Char123LocaleChar125FaqRoute,
+    Char123LocaleChar125IndexRoute: Char123LocaleChar125IndexRoute,
+    Char123LocaleChar125GuidesChatGiveawayRoute:
+      Char123LocaleChar125GuidesChatGiveawayRoute,
+    Char123LocaleChar125GuidesObsBrowserSourceRoute:
+      Char123LocaleChar125GuidesObsBrowserSourceRoute,
+    Char123LocaleChar125GuidesObsSceneSwitcherRoute:
+      Char123LocaleChar125GuidesObsSceneSwitcherRoute,
+    Char123LocaleChar125GuidesTwitchKickChatOverlayRoute:
+      Char123LocaleChar125GuidesTwitchKickChatOverlayRoute,
+    Char123LocaleChar125SetupChatWidgetRoute:
+      Char123LocaleChar125SetupChatWidgetRoute,
+    Char123LocaleChar125SetupEmoteWallRoute:
+      Char123LocaleChar125SetupEmoteWallRoute,
+    Char123LocaleChar125SetupObsBridgeRoute:
+      Char123LocaleChar125SetupObsBridgeRoute,
+    Char123LocaleChar125SetupRaffleRoute: Char123LocaleChar125SetupRaffleRoute,
+    Char123LocaleChar125SetupSubGrowingPlantRoute:
+      Char123LocaleChar125SetupSubGrowingPlantRoute,
+    Char123LocaleChar125GuidesIndexRoute: Char123LocaleChar125GuidesIndexRoute,
+  }
+
+const Char123LocaleChar125RouteRouteWithChildren =
+  Char123LocaleChar125RouteRoute._addFileChildren(
+    Char123LocaleChar125RouteRouteChildren,
+  )
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  SetupChatWidgetRoute: SetupChatWidgetRoute,
-  SetupEmoteWallRoute: SetupEmoteWallRoute,
-  SetupObsBridgeRoute: SetupObsBridgeRoute,
-  SetupRaffleRoute: SetupRaffleRoute,
-  SetupSubGrowingPlantRoute: SetupSubGrowingPlantRoute,
+  Char123LocaleChar125RouteRoute: Char123LocaleChar125RouteRouteWithChildren,
   ToolsObsBridgeRoute: ToolsObsBridgeRoute,
+  WidgetsAlertsRoute: WidgetsAlertsRoute,
   WidgetsChatWidgetRoute: WidgetsChatWidgetRoute,
   WidgetsEmoteWallRoute: WidgetsEmoteWallRoute,
   WidgetsRaffleOverlayRoute: WidgetsRaffleOverlayRoute,

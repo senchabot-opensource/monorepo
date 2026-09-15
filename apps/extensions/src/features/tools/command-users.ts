@@ -48,3 +48,23 @@ export function resolveCommandUsers(
   }
   return { allowed, unassigned };
 }
+
+export type TaggedCommandUser = { platform: ChatPlatform; name: string };
+
+// Same rules as resolveCommandUsers, split for display: who can run commands, who is on a platform
+// the link doesn't listen to, and old untagged names that still need a platform.
+export function summarizeCommandUsers(
+  users: CommandUser[],
+  platforms: { twitch: boolean; kick: boolean },
+): { active: TaggedCommandUser[]; notListening: TaggedCommandUser[]; unassigned: string[] } {
+  const configured = PLATFORMS.filter((p) => platforms[p]);
+  const active: TaggedCommandUser[] = [];
+  const notListening: TaggedCommandUser[] = [];
+  const unassigned: string[] = [];
+  for (const user of users) {
+    const platform = user.platform ?? (configured.length === 1 ? configured[0] : null);
+    if (!platform) unassigned.push(user.name);
+    else (platforms[platform] ? active : notListening).push({ platform, name: user.name });
+  }
+  return { active, notListening, unassigned };
+}

@@ -9,15 +9,17 @@ import {
   useSyncExternalStore,
 } from 'react';
 import { en } from './en';
+import {
+  DEFAULT_LOCALE,
+  isValidLocale,
+  LANG_PARAM,
+  LANG_STORAGE_KEY,
+  type Locale,
+} from './locales';
+import { getPathLocale, isAppPath, localizePath } from './paths';
 import { tr } from './tr';
 
-export const LOCALES = ['en', 'tr'] as const;
-export type Locale = (typeof LOCALES)[number];
-export const LOCALE_LABELS: Record<Locale, string> = { en: 'EN', tr: 'TR' };
-export const LANG_PARAM = 'lang';
-
-const STORAGE_KEY = 'lang';
-const DEFAULT_LOCALE: Locale = 'en';
+export { isValidLocale, LANG_PARAM, LOCALE_LABELS, LOCALES, type Locale } from './locales';
 
 const dictionaries: Record<Locale, typeof en> = { en, tr };
 
@@ -56,10 +58,6 @@ export function translate(
   );
 }
 
-export function isValidLocale(value: string | null | undefined): value is Locale {
-  return !!value && (LOCALES as readonly string[]).includes(value);
-}
-
 function localeFromUrl(): Locale | null {
   if (typeof window === 'undefined') return null;
   const param = new URLSearchParams(window.location.search).get(LANG_PARAM);
@@ -69,13 +67,15 @@ function localeFromUrl(): Locale | null {
 function localeFromStorage(): Locale | null {
   if (typeof window === 'undefined') return null;
   try {
-    const stored = window.localStorage.getItem(STORAGE_KEY);
+    const stored = window.localStorage.getItem(LANG_STORAGE_KEY);
     return isValidLocale(stored) ? stored : null;
   } catch {
     return null;
   }
 }
 
+// Overlays and tools keep the pre-redesign rule (Turkish anywhere in the list) so a scene in OBS
+// doesn't switch language. Site pages pick the first supported language in the landing script.
 function readBrowserLocale(): Locale {
   if (typeof window === 'undefined') return DEFAULT_LOCALE;
   const candidates =
@@ -84,7 +84,7 @@ function readBrowserLocale(): Locale {
   return prefersTurkish ? 'tr' : DEFAULT_LOCALE;
 }
 
-// External store so the locale resolves synchronously after hydration
+// Overlays and tools only. External store so the locale resolves synchronously after hydration
 // (before first paint) without SSR/hydration mismatches.
 let currentLocale: Locale = DEFAULT_LOCALE;
 let initialized = false;
@@ -115,10 +115,12 @@ function emitLocale(next: Locale) {
   for (const listener of listeners) listener();
 }
 
-function applyLocaleSideEffects(next: Locale) {
-  document.documentElement.lang = next;
+function saveLocale(next: Locale) {
+  // Setup-page previews are same-origin iframes with ?lang=; they must not overwrite the
+  // visitor's own choice, which decides the language the site opens in.
+  if (window.self !== window.top) return;
   try {
-    window.localStorage.setItem(STORAGE_KEY, next);
+    window.localStorage.setItem(LANG_STORAGE_KEY, next);
   } catch {
     // localStorage unavailable
   }
@@ -133,11 +135,15 @@ interface LocaleContextValue {
 const LocaleContext = createContext<LocaleContextValue | null>(null);
 
 export function LocaleProvider({ children }: { children: ReactNode }) {
-  const locale = useSyncExternalStore(subscribe, getClientSnapshot, getServerSnapshot);
   const router = useRouter();
+  const location = useLocation();
+  const isApp = isAppPath(location.pathname);
+  const appLocale = useSyncExternalStore(subscribe, getClientSnapshot, getServerSnapshot);
+  // Site pages take the language from the path, so the server renders it and every URL has one
+  // language. Overlays and tools keep ?lang=, then the saved choice, then the browser language.
+  const locale = isApp ? appLocale : getPathLocale(location.pathname);
 
   // React to ?lang= changes during client-side navigation (shared links etc.).
-  const location = useLocation();
   const rawSearch: unknown = location.search;
   const langParam =
     typeof rawSearch === 'string'
@@ -147,18 +153,26 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
         : null;
 
   useEffect(() => {
-    if (isValidLocale(langParam) && langParam !== currentLocale) {
+    if (isApp && isValidLocale(langParam) && langParam !== currentLocale) {
       emitLocale(langParam);
-      applyLocaleSideEffects(langParam);
+      saveLocale(langParam);
     }
-  }, [langParam]);
+  }, [isApp, langParam]);
+
+  useEffect(() => {
+    document.documentElement.lang = locale;
+  }, [locale]);
 
   const setLocale = useCallback(
     (next: Locale) => {
       emitLocale(next);
-      applyLocaleSideEffects(next);
-      // Keep the URL param in sync so links stay shareable and reloads stick.
+      saveLocale(next);
       const url = new URL(window.location.href);
+      if (!isAppPath(url.pathname)) {
+        router.navigate({ href: localizePath(`${url.pathname}${url.search}${url.hash}`, next) });
+        return;
+      }
+      // Keep the URL param in sync so links stay shareable and reloads stick.
       url.searchParams.set(LANG_PARAM, next);
       router.history.replace(`${url.pathname}${url.search}`);
     },

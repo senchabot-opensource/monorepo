@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
   extractSubMonths,
+  getKickSubStatus,
   isSubscriber,
   parsePrivmsg,
   shouldAcceptEntry,
@@ -196,5 +197,44 @@ describe('shouldAcceptEntry', () => {
         minSubMonths: 0,
       }),
     ).toBe(true);
+  });
+});
+
+describe('getKickSubStatus', () => {
+  it('reads months from a subscriber or founder badge', () => {
+    expect(getKickSubStatus([{ type: 'subscriber', count: 6 }])).toEqual({
+      isSub: true,
+      subMonths: 6,
+    });
+    expect(getKickSubStatus([{ type: 'founder' }])).toEqual({ isSub: true, subMonths: 1 });
+  });
+
+  // Badge lists as a live Kick chat sent them (2026-09-12), in payload order.
+  it('takes a founder’s months from the subscriber badge that follows it', () => {
+    expect(
+      getKickSubStatus([
+        { type: 'og' },
+        { type: 'founder' },
+        { type: 'subscriber', count: 84 },
+        { type: 'sub_gifter', count: 156 },
+      ]),
+    ).toEqual({ isSub: true, subMonths: 84 });
+  });
+
+  it('does not treat a sub gifter as a subscriber', () => {
+    expect(getKickSubStatus([{ type: 'sub_gifter', count: 2 }])).toEqual({
+      isSub: false,
+      subMonths: -1,
+    });
+    expect(
+      getKickSubStatus([
+        { type: 'subscriber', count: 52 },
+        { type: 'sub_gifter', count: 31 },
+      ]),
+    ).toEqual({ isSub: true, subMonths: 52 });
+  });
+
+  it('lets the broadcaster in as a 1-month subscriber', () => {
+    expect(getKickSubStatus([{ type: 'broadcaster' }])).toEqual({ isSub: true, subMonths: 1 });
   });
 });

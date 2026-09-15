@@ -4,6 +4,7 @@ import {
   formatCommandUsers,
   parseCommandUsers,
   resolveCommandUsers,
+  summarizeCommandUsers,
 } from './command-users';
 
 const both = { twitch: true, kick: true };
@@ -56,5 +57,20 @@ describe('resolveCommandUsers', () => {
     );
     expect([...allowed]).toEqual(['kick:ali']);
     expect(unassigned).toEqual(['bob']);
+  });
+});
+
+describe('summarizeCommandUsers', () => {
+  it('splits users into active, not listened to and unassigned', () => {
+    const users = parseCommandUsers('twitch:bob,kick:ali,carol');
+    expect(summarizeCommandUsers(users, { twitch: true, kick: false })).toEqual({
+      active: [
+        { platform: 'twitch', name: 'bob' },
+        { platform: 'twitch', name: 'carol' },
+      ],
+      notListening: [{ platform: 'kick', name: 'ali' }],
+      unassigned: [],
+    });
+    expect(summarizeCommandUsers(users, both).unassigned).toEqual(['carol']);
   });
 });

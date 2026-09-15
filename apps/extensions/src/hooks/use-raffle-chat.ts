@@ -66,6 +66,19 @@ export function isKeywordMatch(messageText: string, keyword: string): boolean {
   return cleanMsg === cleanKeyword || cleanMsg.startsWith(`${cleanKeyword} `);
 }
 
+// A gifted-sub badge (sub_gifter) doesn't make the gifter a subscriber: its `count` is subs given.
+// Live payloads send a count-less founder badge ahead of the subscriber badge, so months come
+// from the subscriber badge first.
+export function getKickSubStatus(badges: { type: string; count?: number }[]): {
+  isSub: boolean;
+  subMonths: number;
+} {
+  const findBadge = (type: string) => badges.find((b) => b.type.toLowerCase() === type);
+  const subBadge = findBadge("subscriber") ?? findBadge("founder");
+  const isSub = Boolean(subBadge) || badges.some((b) => b.type === "broadcaster");
+  return { isSub, subMonths: subBadge?.count ?? (isSub ? 1 : -1) };
+}
+
 export function shouldAcceptEntry(
   isSub: boolean,
   subMonths: number,
@@ -314,14 +327,9 @@ export function useRaffleChat(
 
             if (!isKeywordMatch(payload.content, currentConfig.keyword)) return;
 
-            const badges = payload.sender.identity?.badges || [];
-            const subBadge = badges.find((b) =>
-              b.type.toLowerCase().startsWith("sub"),
+            const { isSub, subMonths } = getKickSubStatus(
+              payload.sender.identity?.badges || [],
             );
-            const isSub =
-              Boolean(subBadge) ||
-              badges.some((b) => b.type === "broadcaster");
-            const subMonths = subBadge?.count ?? (isSub ? 1 : -1);
 
             if (!shouldAcceptEntry(isSub, subMonths, currentConfig)) return;
 

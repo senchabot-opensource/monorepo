@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { type TranslationKey, translate } from "#/lib/i18n";
 import type {
   RaffleConfig,
   RaffleParticipant,
@@ -64,15 +65,17 @@ function clampDuration(value: unknown): number {
   return Math.floor(n);
 }
 
+const emptyState: RaffleState = {
+  status: "idle",
+  config: defaultConfig,
+  frozenConfig: null,
+  startedAt: null,
+  participants: [],
+  winners: [],
+};
+
 function loadState(): RaffleState {
-  const empty: RaffleState = {
-    status: "idle",
-    config: { ...defaultConfig },
-    frozenConfig: null,
-    startedAt: null,
-    participants: [],
-    winners: [],
-  };
+  const empty: RaffleState = { ...emptyState, config: { ...defaultConfig } };
   if (typeof window === "undefined") return empty;
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -120,35 +123,43 @@ function confirmOrTrue(message: string): boolean {
   return window.confirm(message);
 }
 
+type Translate = (key: TranslationKey, vars?: Record<string, string | number>) => string;
+
+const englishT: Translate = (key, vars) => translate("en", key, vars);
+
 export function useRaffleState({
   initialChannel = "",
   platform = "twitch",
+  t = englishT,
 }: {
   initialChannel?: string;
   platform?: "twitch" | "kick";
+  /** Translates the confirm prompts; English when omitted. */
+  t?: Translate;
 } = {}) {
-  const [state, setState] = useState<RaffleState>(() => {
-    const loaded = loadState();
-    if (initialChannel && !loaded.config.channel) {
-      return {
-        ...loaded,
-        config: {
-          ...loaded.config,
-          channel: initialChannel,
-          platform,
-        },
-      };
-    }
-    return loaded;
-  });
+  const [state, setState] = useState<RaffleState>(emptyState);
+  const [hydrated, setHydrated] = useState(false);
 
   const stateRef = useRef(state);
   const drawingRef = useRef(false);
 
+  // The server renders the empty state, so the saved one loads after mount instead of in the
+  // first render, where it would break hydration.
+  useEffect(() => {
+    const loaded = loadState();
+    setState(
+      initialChannel && !loaded.config.channel
+        ? { ...loaded, config: { ...loaded.config, channel: initialChannel, platform } }
+        : loaded,
+    );
+    setHydrated(true);
+  }, [initialChannel, platform]);
+
   useEffect(() => {
     stateRef.current = state;
-    saveState(state);
-  }, [state]);
+    // Saving before the load would overwrite the stored raffle with the empty one.
+    if (hydrated) saveState(state);
+  }, [state, hydrated]);
 
   const updateConfig = useCallback((partial: Partial<RaffleConfig>) => {
     setState((prev) => {
@@ -164,14 +175,16 @@ export function useRaffleState({
     });
   }, []);
 
+  // Confirms run before setState: updaters must stay pure, React may call them twice.
   const start = useCallback(() => {
+    const current = stateRef.current;
+    if (
+      (current.participants.length > 0 || current.winners.length > 0) &&
+      !confirmOrTrue(t("raffle.confirmStart"))
+    ) {
+      return;
+    }
     setState((prev) => {
-      if (prev.participants.length > 0) {
-        const ok = confirmOrTrue(
-          `Starting a new raffle will clear ${prev.participants.length} participant(s). Continue?`,
-        );
-        if (!ok) return prev;
-      }
       const initialRules = {
         ...prev.config,
         minRaffleDurationSec: clampDuration(prev.config.minRaffleDurationSec),
@@ -186,7 +199,7 @@ export function useRaffleState({
         winners: [],
       };
     });
-  }, []);
+  }, [t]);
 
   const stop = useCallback(() => {
     setState((prev) => ({ ...prev, status: "stopped" }));
@@ -308,26 +321,16 @@ export function useRaffleState({
   }, []);
 
   const resetParticipants = useCallback(() => {
-    setState((prev) => {
-      if (prev.participants.length === 0) return prev;
-      const ok = confirmOrTrue(
-        `Clear ${prev.participants.length} participant(s)?`,
-      );
-      if (!ok) return prev;
-      return { ...prev, participants: [] };
-    });
-  }, []);
+    if (stateRef.current.participants.length === 0) return;
+    if (!confirmOrTrue(t("raffle.confirmResetEntries"))) return;
+    setState((prev) => ({ ...prev, participants: [] }));
+  }, [t]);
 
   const resetWinners = useCallback(() => {
-    setState((prev) => {
-      if (prev.winners.length === 0) return prev;
-      const ok = confirmOrTrue(
-        `Clear ${prev.winners.length} winner(s)?`,
-      );
-      if (!ok) return prev;
-      return { ...prev, winners: [] };
-    });
-  }, []);
+    if (stateRef.current.winners.length === 0) return;
+    if (!confirmOrTrue(t("raffle.confirmResetWinners"))) return;
+    setState((prev) => ({ ...prev, winners: [] }));
+  }, [t]);
 
   const resetConfig = useCallback(() => {
     setState((prev) => {
@@ -337,23 +340,21 @@ export function useRaffleState({
   }, []);
 
   const resetAll = useCallback(() => {
-    setState((prev) => {
-      const total = prev.participants.length + prev.winners.length;
-      if (total > 0 || prev.frozenConfig !== null) {
-        const ok = confirmOrTrue("Reset everything and start over?");
-        if (!ok) return prev;
-      }
-      drawingRef.current = false;
-      return {
-        ...prev,
-        status: "idle",
-        frozenConfig: null,
-        startedAt: null,
-        participants: [],
-        winners: [],
-      };
-    });
-  }, []);
+    const current = stateRef.current;
+    const total = current.participants.length + current.winners.length;
+    if ((total > 0 || current.frozenConfig !== null) && !confirmOrTrue(t("raffle.confirmResetAll"))) {
+      return;
+    }
+    drawingRef.current = false;
+    setState((prev) => ({
+      ...prev,
+      status: "idle",
+      frozenConfig: null,
+      startedAt: null,
+      participants: [],
+      winners: [],
+    }));
+  }, [t]);
 
   const rules = state.frozenConfig ?? state.config;
   const eligibleCount = countEligible(
