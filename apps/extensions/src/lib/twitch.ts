@@ -10,6 +10,7 @@ import {
   type ClearAllCallback,
   type DeleteMessageCallback,
 } from './basechat';
+import { withoutBypassSuffix } from './chat-text';
 
 // Twitch starts a reply with "@parent ", which the widget already shows above the message. Emote
 // positions count code points from the start of the text, so they move back by the prefix length.
@@ -231,7 +232,7 @@ export class TwitchChat extends BaseChatClient {
     const sentAt = tags['tmi-sent-ts'];
     const timestamp = sentAt ? new Date(Number.parseInt(sentAt, 10)) : new Date();
     const user = tags['display-name'] || login;
-    const message = text.trim();
+    const message = withoutBypassSuffix(text).trim();
 
     const badges = tags.badges ? tags.badges.split(',') : [];
 

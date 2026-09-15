@@ -6,6 +6,7 @@ import {
   type ClearAllCallback,
   type DeleteMessageCallback,
 } from './basechat';
+import { withoutBypassSuffix } from './chat-text';
 
 export interface KickChannelInfo {
   chatroomId: string | null;
@@ -186,7 +187,7 @@ export class KickChat extends BaseChatClient {
     return {
       id: id == null ? `kick-${user}-${timestamp.getTime()}` : String(id),
       user,
-      message: content,
+      message: withoutBypassSuffix(content),
       platform: 'kick',
       timestamp,
       receivedAt: timestamp,

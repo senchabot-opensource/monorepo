@@ -84,6 +84,10 @@ describe('twitchEvent', () => {
       { text: '!goal set 20' },
     );
     expect(twitchEvent(say('badges=subscriber/1;mod=0', '!subathon add 5h'), new Map())).toBeNull();
+    // Repeated through Chatterino, which adds " U+034F" to get past Twitch's duplicate block.
+    expect(
+      twitchEvent(say('badges=moderator/1;mod=1', '!subathon add 5m \u034F'), new Map()),
+    ).toMatchObject({ text: '!subathon add 5m' });
     // A mod just chatting isn't a command for anyone.
     expect(twitchEvent(say('badges=moderator/1;mod=1', 'hello chat'), new Map())).toBeNull();
   });

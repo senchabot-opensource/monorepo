@@ -222,7 +222,8 @@ describe('PollWidget', () => {
     expect(shown()).not.toContain('%');
     // No row flashes either, or chat would see where each vote went.
     expect(card()?.querySelector('[style*="cp-flash"]')).toBeNull();
-    mod('!poll end');
+    // Sent again through 7TV, which adds an invisible " U+E0000" to a repeated message.
+    mod('!poll end \u{E0000}');
     expect(shown()).toMatch(/B1\s*100%/);
   });
 

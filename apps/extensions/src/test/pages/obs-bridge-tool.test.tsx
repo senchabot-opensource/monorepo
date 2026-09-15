@@ -222,6 +222,11 @@ describe('OBS Bridge tool', () => {
       `✓ ${en('obsBridge.tool.activityScene', { scene: 'AFK' })}`,
     ]);
 
+    // Sent again from Chatterino, which adds an invisible " U+034F" to get past Twitch's block on
+    // repeating a message.
+    say('Mod', 'back \u034F');
+    expect(sceneSwitches().at(-1)).toBe('Main Scene');
+
     // A new BRB pick applies to the running bridge right away.
     await user.click(button(en('obsBridge.tool.setBrb', { scene: 'Gaming' })));
     say('Mod', 'brb');
