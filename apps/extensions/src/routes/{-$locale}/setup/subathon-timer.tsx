@@ -19,6 +19,7 @@ import type { SubathonEvent, SubathonPlatform } from '#/features/widgets/subatho
 import { COMMAND } from '#/features/widgets/subathon/subathon-timer';
 import { hueFor } from '#/features/widgets/overlay-style';
 import { PREVIEW_CHANNEL, type PreviewMessage } from '#/features/widgets/subathon/use-subathon';
+import { usePreviewSender } from '#/hooks/use-preview-channel';
 import { type TranslationKey, useI18n } from '#/lib/i18n';
 import { getParamsLocale } from '#/lib/i18n/paths';
 import type { FaqEntry } from '#/lib/i18n/seo';
@@ -110,24 +111,18 @@ function SubathonSetup() {
   const [valuesTab, setValuesTab] = useState<SubathonPlatform>('twitch');
   const [speedIndex, setSpeedIndex] = useState(DEFAULT_SPEED_INDEX);
   const [mounted, setMounted] = useState(false);
-  const channelRef = useRef<BroadcastChannel | null>(null);
+  const { previewId, send } = usePreviewSender<PreviewMessage>(PREVIEW_CHANNEL);
   const bitsPlatform = useRef<SubathonPlatform>('twitch');
-  const [previewId] = useState(() => Math.random().toString(36).slice(2, 10));
   const id = useId();
 
   useEffect(() => {
     setMounted(true);
-    if (typeof BroadcastChannel === 'undefined') return;
-    const channel = new BroadcastChannel(PREVIEW_CHANNEL);
-    channelRef.current = channel;
-    return () => channel.close();
   }, []);
 
   const update = <K extends keyof SubathonSettings>(key: K, value: SubathonSettings[K]) =>
     setSettings((current) => ({ ...current, [key]: value }));
 
-  const send = (message: PreviewMessage) => channelRef.current?.postMessage(message);
-  const sendEvent = (event: SubathonEvent) => send({ type: 'event', preview: previewId, event });
+  const sendEvent = (event: SubathonEvent) => send({ type: 'event', event });
 
   // Gated on mount so the prerendered input and the first client render agree.
   const origin = mounted ? window.location.origin : '';
@@ -428,7 +423,7 @@ function SubathonSetup() {
                 type="button"
                 disabled={button.disabled}
                 onClick={() => {
-                  if (!button.event) return send({ type: 'toggle', preview: previewId });
+                  if (!button.event) return send({ type: 'toggle' });
                   const event = button.event();
                   if (event) sendEvent(event);
                 }}

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { usePreviewReceiver } from '#/hooks/use-preview-channel';
 import type { SubathonSettings, SubathonTimeValues } from '#/lib/subathon-url';
 import type { SubathonEvent, SubathonPlatform, SubTier, TimedEvent } from './subathon-events';
 import { useSubEvents } from './use-sub-events';
@@ -251,21 +252,15 @@ export function useSubathon({
     return () => window.clearTimeout(timer);
   }, [simulate, simPlatform, clock, commit, handleEvent]);
 
-  useEffect(() => {
-    if (!simulate || !previewId || typeof BroadcastChannel === 'undefined') return;
-    const channel = new BroadcastChannel(PREVIEW_CHANNEL);
-    channel.onmessage = ({ data }: MessageEvent<PreviewMessage>) => {
-      if (data?.preview !== previewId) return;
-      lastTestAt.current = Date.now();
-      if (data?.type === 'toggle') {
-        const action = stateRef.current.endsAt === null ? 'start' : 'pause';
-        handleEvent({ kind: 'mod', platform: 'twitch', text: `${COMMAND} ${action}` });
-      } else if (data?.type === 'event') {
-        handleEvent(data.event);
-      }
-    };
-    return () => channel.close();
-  }, [simulate, previewId, handleEvent]);
+  usePreviewReceiver<PreviewMessage>(PREVIEW_CHANNEL, previewId, simulate, (message) => {
+    lastTestAt.current = Date.now();
+    if (message.type === 'toggle') {
+      const action = stateRef.current.endsAt === null ? 'start' : 'pause';
+      handleEvent({ kind: 'mod', platform: 'twitch', text: `${COMMAND} ${action}` });
+    } else {
+      handleEvent(message.event);
+    }
+  });
 
   return {
     left: timeLeft(state, now),

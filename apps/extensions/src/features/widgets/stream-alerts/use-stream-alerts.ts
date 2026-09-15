@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { usePreviewReceiver } from '#/hooks/use-preview-channel';
 import { ALERT_KINDS, type AlertSettings } from '#/lib/stream-alerts-url';
 import type { SubathonEvent, SubathonPlatform } from '../subathon/subathon-events';
 import { useSubEvents } from '../subathon/use-sub-events';
@@ -198,16 +199,11 @@ export function useStreamAlerts({
   }, [simulate, simPlatform, enqueue]);
 
   // A test button's alert replaces whatever is showing, so the click answers right away.
-  useEffect(() => {
-    if (!simulate || !previewId || typeof BroadcastChannel === 'undefined') return;
-    const channel = new BroadcastChannel(PREVIEW_CHANNEL);
-    channel.onmessage = ({ data }: MessageEvent<PreviewMessage>) => {
-      if (data?.type !== 'alert' || data.preview !== previewId) return;
-      lastTestAt.current = Date.now();
-      enqueue(data.alert, { interrupt: true });
-    };
-    return () => channel.close();
-  }, [simulate, previewId, enqueue]);
+  usePreviewReceiver<PreviewMessage>(PREVIEW_CHANNEL, previewId, simulate, (message) => {
+    if (message.type !== 'alert') return;
+    lastTestAt.current = Date.now();
+    enqueue(message.alert, { interrupt: true });
+  });
 
   return current;
 }

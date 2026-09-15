@@ -19,6 +19,7 @@ import { COMMAND } from '#/features/widgets/poll/poll-state';
 import { PREVIEW_CHANNEL, type PreviewMessage } from '#/features/widgets/poll/use-poll';
 import type { SubathonPlatform } from '#/features/widgets/subathon/subathon-events';
 import { hueFor } from '#/features/widgets/overlay-style';
+import { usePreviewSender } from '#/hooks/use-preview-channel';
 import { LOCALES, type Locale, type TranslationKey, useI18n } from '#/lib/i18n';
 import { getParamsLocale } from '#/lib/i18n/paths';
 import type { FaqEntry } from '#/lib/i18n/seo';
@@ -92,18 +93,12 @@ function PollSetup() {
   const [pickedLocale, setPickedLocale] = useState<Locale | null>(null);
   const pollLocale = pickedLocale ?? locale;
   const [mounted, setMounted] = useState(false);
-  // Pairs this page with its own preview, not the ones in other tabs.
-  const [previewId] = useState(() => Math.random().toString(36).slice(2, 10));
-  const channelRef = useRef<BroadcastChannel | null>(null);
+  const { previewId, send } = usePreviewSender<PreviewMessage>(PREVIEW_CHANNEL);
   const testVoter = useRef(0);
   const id = useId();
 
   useEffect(() => {
     setMounted(true);
-    if (typeof BroadcastChannel === 'undefined') return;
-    const channel = new BroadcastChannel(PREVIEW_CHANNEL);
-    channelRef.current = channel;
-    return () => channel.close();
   }, []);
 
   const update = <K extends keyof PollSettings>(key: K, value: PollSettings[K]) =>
@@ -350,12 +345,9 @@ function PollSetup() {
     </>
   );
 
-  const send = (event: PollChatEvent) => {
-    const message: PreviewMessage = { type: 'event', preview: previewId, event };
-    channelRef.current?.postMessage(message);
-  };
+  const sendEvent = (event: PollChatEvent) => send({ type: 'event', event });
   const mod = (text: string) =>
-    send({ kind: 'message', platform: 'twitch', login: 'you', text, mod: true, sub: true });
+    sendEvent({ kind: 'message', platform: 'twitch', login: 'you', text, mod: true, sub: true });
   const optionCount = savedPoll(settings)?.options.length ?? SAMPLE_OPTIONS;
   const testPlatform = (): SubathonPlatform =>
     settings.platforms === 'both' ? (Math.random() < 0.5 ? 'twitch' : 'kick') : settings.platforms;
@@ -364,7 +356,7 @@ function PollSetup() {
       label: t('poll.testVotes', { count: TEST_VOTES }),
       run: () => {
         for (let i = 0; i < TEST_VOTES; i++) {
-          send({
+          sendEvent({
             kind: 'message',
             platform: testPlatform(),
             login: `tester${testVoter.current++}`,

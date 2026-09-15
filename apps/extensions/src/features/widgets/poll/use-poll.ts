@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { usePreviewReceiver } from '#/hooks/use-preview-channel';
 import { type PollSettings, savedPoll } from '#/lib/poll-url';
 import type { SubathonPlatform } from '../subathon/subathon-events';
 import { useKickChannel } from '#/hooks/use-kick-channel';
@@ -339,16 +340,11 @@ export function usePoll({
     return () => window.clearTimeout(timer);
   }, [simulate, simPlatform, clock, runCommand, handleEvent]);
 
-  useEffect(() => {
-    if (!simulate || !previewId || typeof BroadcastChannel === 'undefined') return;
-    const channel = new BroadcastChannel(PREVIEW_CHANNEL);
-    channel.onmessage = ({ data }: MessageEvent<PreviewMessage>) => {
-      if (data?.type !== 'event' || data.preview !== previewId) return;
-      lastTestAt.current = Date.now();
-      handleEvent(data.event);
-    };
-    return () => channel.close();
-  }, [simulate, previewId, handleEvent]);
+  usePreviewReceiver<PreviewMessage>(PREVIEW_CHANNEL, previewId, simulate, (message) => {
+    if (message.type !== 'event') return;
+    lastTestAt.current = Date.now();
+    handleEvent(message.event);
+  });
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: votes change the poll in place, and `version` counts those changes.
   const counted = useMemo(() => (poll ? tally(poll) : null), [poll, version]);

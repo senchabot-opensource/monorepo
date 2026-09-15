@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { usePreviewReceiver } from '#/hooks/use-preview-channel';
 import type { SubathonEvent, SubathonPlatform, TimedEvent } from '../subathon/subathon-events';
 import { useSubEvents } from '../subathon/use-sub-events';
 import {
@@ -177,16 +178,11 @@ export function useGoal({
     return () => window.clearTimeout(timer);
   }, [simulate, simPlatform, commit, handleEvent]);
 
-  useEffect(() => {
-    if (!simulate || !previewId || typeof BroadcastChannel === 'undefined') return;
-    const channel = new BroadcastChannel(PREVIEW_CHANNEL);
-    channel.onmessage = ({ data }: MessageEvent<PreviewMessage>) => {
-      if (data?.type !== 'event' || data.preview !== previewId) return;
-      lastTestAt.current = Date.now();
-      handleEvent(data.event);
-    };
-    return () => channel.close();
-  }, [simulate, previewId, handleEvent]);
+  usePreviewReceiver<PreviewMessage>(PREVIEW_CHANNEL, previewId, simulate, (message) => {
+    if (message.type !== 'event') return;
+    lastTestAt.current = Date.now();
+    handleEvent(message.event);
+  });
 
   return {
     count: state.count,

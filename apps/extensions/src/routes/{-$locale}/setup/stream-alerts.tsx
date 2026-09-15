@@ -20,6 +20,7 @@ import {
   type PreviewMessage,
 } from '#/features/widgets/stream-alerts/use-stream-alerts';
 import type { SubathonPlatform } from '#/features/widgets/subathon/subathon-events';
+import { usePreviewSender } from '#/hooks/use-preview-channel';
 import { LOCALES, type Locale, type TranslationKey, translate, useI18n } from '#/lib/i18n';
 import { getParamsLocale } from '#/lib/i18n/paths';
 import type { FaqEntry } from '#/lib/i18n/seo';
@@ -111,18 +112,12 @@ function StreamAlertsSetup() {
   const [pickedLocale, setPickedLocale] = useState<Locale | null>(null);
   const alertLocale = pickedLocale ?? locale;
   const [mounted, setMounted] = useState(false);
-  // Pairs this page with its own preview, not the ones in other tabs.
-  const [previewId] = useState(() => Math.random().toString(36).slice(2, 10));
-  const channelRef = useRef<BroadcastChannel | null>(null);
+  const { previewId, send } = usePreviewSender<PreviewMessage>(PREVIEW_CHANNEL);
   const nextPlatform = useRef<SubathonPlatform>('twitch');
   const id = useId();
 
   useEffect(() => {
     setMounted(true);
-    if (typeof BroadcastChannel === 'undefined') return;
-    const channel = new BroadcastChannel(PREVIEW_CHANNEL);
-    channelRef.current = channel;
-    return () => channel.close();
   }, []);
 
   const update = <K extends keyof StreamAlertsSettings>(key: K, value: StreamAlertsSettings[K]) =>
@@ -338,7 +333,6 @@ function StreamAlertsSetup() {
       viewers: Math.max(42, settings.minRaid),
     }),
   };
-  const send = (message: PreviewMessage) => channelRef.current?.postMessage(message);
 
   return (
     <SetupShell
@@ -371,7 +365,7 @@ function StreamAlertsSetup() {
               type="button"
               disabled={!settings.enabled[kind]}
               onClick={() =>
-                send({ type: 'alert', preview: previewId, alert: testAlerts[kind](testPlatform()) })
+                send({ type: 'alert', alert: testAlerts[kind](testPlatform()) })
               }
               className={BUTTON_TEST}
             >
