@@ -95,3 +95,96 @@ describe('parseStreamAlertsUrl', () => {
     expect(parseStreamAlertsUrl('streamer')).toBeNull();
   });
 });
+
+describe('Stream Alerts URL edge cases', () => {
+  const read = (query: string) => readStreamAlertsSettings(new URLSearchParams(query));
+
+  it('never throws on garbage, and every value stays in range', () => {
+    const garbage = [
+      'dur=Infinity&vol=-Infinity&mingift=1e400&minbits=NaN&minraid=--1',
+      'dur=0x10&vol=1e2&mingift=%20&theme=__proto__&color=constructor',
+      'sub=&gift=%00&hsub=%E0%A4%A&msg=',
+      'dur=3.4&vol=99.5&minraid=-0',
+    ];
+    for (const query of garbage) {
+      const settings = read(query);
+      expect(settings.duration).toBeGreaterThanOrEqual(3);
+      expect(settings.duration).toBeLessThanOrEqual(20);
+      expect(settings.volume).toBeGreaterThanOrEqual(0);
+      expect(settings.volume).toBeLessThanOrEqual(100);
+      for (const key of ['minGift', 'minBits', 'minRaid'] as const) {
+        expect(Number.isInteger(settings[key])).toBe(true);
+        expect(settings[key]).toBeGreaterThanOrEqual(0);
+      }
+      expect(['neon', 'celestial']).toContain(settings.theme);
+    }
+  });
+
+  it('rounds fractions to whole numbers', () => {
+    expect(read('dur=3.4&vol=99.5')).toMatchObject({ duration: 3, volume: 100 });
+  });
+
+  it('reads an empty flag as on, like any word but an off word', () => {
+    expect(read('sub=&msg=').enabled.sub).toBe(true);
+    expect(read('msg=').message).toBe(true);
+    expect(read('sub=OFF&gift=No&bits=FALSE&raid=0').enabled).toEqual({
+      sub: false,
+      gift: false,
+      bits: false,
+      raid: false,
+    });
+  });
+
+  it('round-trips headings with URL-special characters and non-Latin text', () => {
+    const headings = { sub: 'A&B=C?#%', gift: 'Hediye 🎁', bits: 'YENİ ÇİZ', raid: '+ raid +' };
+    const url = buildStreamAlertsUrl(
+      ORIGIN,
+      { ...DEFAULT_STREAM_ALERTS_SETTINGS, headings },
+      'streamer',
+      '',
+      'en',
+    );
+    expect(parseStreamAlertsUrl(url)?.settings.headings).toEqual(headings);
+  });
+
+  it('writes a heading of only spaces as no heading', () => {
+    const url = buildStreamAlertsUrl(
+      ORIGIN,
+      { ...DEFAULT_STREAM_ALERTS_SETTINGS, headings: { ...DEFAULTS.headings, sub: '   ' } },
+      'streamer',
+      '',
+      'en',
+    );
+    expect(new URL(url).searchParams.has('hsub')).toBe(false);
+  });
+
+  it('round-trips the minimums at both ends of their range', () => {
+    for (const [minGift, minBits, minRaid] of [
+      [1, 1, 0],
+      [100_000, 100_000, 100_000],
+    ]) {
+      const settings = { ...DEFAULT_STREAM_ALERTS_SETTINGS, minGift, minBits, minRaid };
+      const url = buildStreamAlertsUrl(ORIGIN, settings, 'streamer', '', 'en');
+      expect(parseStreamAlertsUrl(url)?.settings).toMatchObject({ minGift, minBits, minRaid });
+    }
+  });
+
+  it('keeps no locale from a URL without a valid lang', () => {
+    expect(parseStreamAlertsUrl(`${ORIGIN}/widgets/stream-alerts?twitch=a&lang=xx`)?.locale).toBe(
+      null,
+    );
+  });
+
+  it('reads a preview URL back without its preview params', () => {
+    const preview = buildStreamAlertsPreviewUrl(
+      ORIGIN,
+      { ...DEFAULT_STREAM_ALERTS_SETTINGS, theme: 'celestial', platforms: 'kick' },
+      'tr',
+      'p9',
+    );
+    const parsed = parseStreamAlertsUrl(preview);
+    expect(parsed?.settings.theme).toBe('celestial');
+    expect(parsed?.twitchChannel).toBe('');
+    expect(parsed?.kickChannel).toBe('');
+  });
+});
