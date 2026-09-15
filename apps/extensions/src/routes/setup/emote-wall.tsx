@@ -1,5 +1,10 @@
 import { Breadcrumb } from '#/components/breadcrumb';
 import { YoutubeTutorial } from '#/components/youtube-tutorial';
+import {
+  buildEmoteWallParams,
+  buildEmoteWallUrl,
+  type EmoteWallUrlOptions,
+} from '#/features/widgets/emote-wall/widget-url';
 import { useI18n } from '#/lib/i18n';
 import { getLocaleLinks } from '#/lib/i18n/seo';
 import { createFileRoute, Link } from '@tanstack/react-router';
@@ -132,56 +137,34 @@ function EmoteWallSetup() {
   const deferredTwitch = useDeferredValue(twitchChannel);
   const deferredKick = useDeferredValue(kickChannel);
 
-  // Number inputs accept out-of-range typing, so clamp before writing params.
-  const clampParam = (raw: string, min: number, max: number, fallback: number) => {
-    const n = Number(raw);
-    if (!Number.isFinite(n)) return String(fallback);
-    return String(Math.min(max, Math.max(min, n)));
-  };
+  const urlOptions = (twitch: string, kick: string): EmoteWallUrlOptions => ({
+    twitch,
+    kick,
+    platforms,
+    sevenTv,
+    mode,
+    subsOnly,
+    subDurationX2,
+    showAllEmotes,
+    hypeMode,
+    spamBlock,
+    size: emoteSize,
+    duration,
+    max: maxEmotes,
+  });
 
-  const buildParams = (
-    twitch: string,
-    kick: string,
-    withMock: boolean,
-  ) => {
-    const params = new URLSearchParams();
-    if (platforms === 'both' || platforms === 'twitch') {
-      if (twitch.trim())
-        params.append('twitch', twitch.trim().toLowerCase());
-    }
-    if (platforms === 'both' || platforms === 'kick') {
-      if (kick.trim()) params.append('kick', kick.trim().toLowerCase());
-    }
-    if (!sevenTv) params.append('sevenTv', 'false');
-    if (mode !== 'calm') params.append('mode', mode);
-    if (subsOnly) params.append('subsOnly', 'true');
-    if (subDurationX2) params.append('subDurationX2', 'true');
-    if (showAllEmotes) params.append('showAllEmotes', 'true');
-    if (hypeMode) params.append('hypeMode', 'true');
-    if (!spamBlock) params.append('spamBlock', 'false');
-    if (emoteSize !== '112') params.append('size', clampParam(emoteSize, 32, 256, 112));
-    const safeDuration = clampParam(duration, 2, 30, 5);
-    if (safeDuration !== '5') params.append('duration', safeDuration);
-    const safeMax = clampParam(maxEmotes, 1, 120, 25);
-    if (safeMax !== '25') params.append('max', safeMax);
-    if (withMock) {
-      params.append('mock', 'true');
-      params.append('lang', locale);
-    }
-    return params;
-  };
-
+  // Gated on mount so the prerendered input and the first client render agree.
   const widgetUrl = useMemo(() => {
-    if (typeof window === 'undefined') return '';
-    const params = buildParams(twitchChannel, kickChannel, false);
-    if (!twitchChannel.trim() && !kickChannel.trim()) return '';
-    return `${window.location.origin}/widgets/emote-wall?${params.toString()}`;
+    if (!mounted) return '';
+    return buildEmoteWallUrl(window.location.origin, urlOptions(twitchChannel, kickChannel));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [twitchChannel, kickChannel, platforms, sevenTv, mode, subsOnly, subDurationX2, showAllEmotes, hypeMode, spamBlock, emoteSize, duration, maxEmotes]);
+  }, [mounted, twitchChannel, kickChannel, platforms, sevenTv, mode, subsOnly, subDurationX2, showAllEmotes, hypeMode, spamBlock, emoteSize, duration, maxEmotes]);
 
   const previewUrl = useMemo(() => {
     if (typeof window === 'undefined') return '';
-    const params = buildParams(deferredTwitch, deferredKick, true);
+    const params = buildEmoteWallParams(urlOptions(deferredTwitch, deferredKick));
+    params.append('mock', 'true');
+    params.append('lang', locale);
     return `${window.location.origin}/widgets/emote-wall?${params.toString()}`;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
@@ -208,10 +191,6 @@ function EmoteWallSetup() {
       setTimeout(() => setCopied(false), 2000);
     }
   };
-
-  const isFormValid =
-    (platforms !== 'kick' && twitchChannel.trim().length > 0) ||
-    (platforms !== 'twitch' && kickChannel.trim().length > 0);
 
   return (
     <div className="min-h-screen bg-zinc-50 text-zinc-900 font-sans p-6 pt-12 dark:bg-zinc-950 dark:text-zinc-100">
@@ -478,7 +457,7 @@ function EmoteWallSetup() {
                   />
                   <button
                     onClick={handleCopy}
-                    disabled={!isFormValid}
+                    disabled={!widgetUrl}
                     className="rounded-r-md bg-green-600 px-4 py-2 font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   >
                     {copied ? t('common.copied') : t('common.copy')}
@@ -524,7 +503,7 @@ function EmoteWallSetup() {
                   />
                   <button
                     onClick={handleCopy}
-                    disabled={!isFormValid}
+                    disabled={!widgetUrl}
                     className="rounded-r-md bg-green-600 px-4 py-2 font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   >
                     {copied ? t('common.copied') : t('common.copy')}
