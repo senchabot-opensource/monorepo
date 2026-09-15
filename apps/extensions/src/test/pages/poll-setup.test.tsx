@@ -154,4 +154,61 @@ describe('Chat Poll setup', () => {
     expect(received.every(({ event }) => event.sub)).toBe(true);
     listener.close();
   });
+
+  it('writes the poll length and how long results stay, with the hint for 0', async () => {
+    const user = setupUser();
+    await renderRoute(PAGE);
+    await user.type(twitchField(), 'streamer');
+    const box = (label: string, unit: string) =>
+      within(screen.getByRole('group', { name: label })).getByLabelText(unit) as HTMLInputElement;
+    await retype(user, box(en('poll.duration'), en('poll.unitMinutes')), '2');
+    await retype(user, box(en('poll.duration'), en('poll.unitSeconds')), '30');
+    const url = () => new URL(urlField().value).searchParams;
+    expect(url().get('dur')).toBe('150');
+    await retype(user, box(en('poll.hold'), en('poll.unitMinutes')), '0');
+    await retype(user, box(en('poll.hold'), en('poll.unitSeconds')), '0');
+    expect(url().get('hold')).toBe('0');
+    expect(screen.getByText(en('poll.holdOff'))).toBeTruthy();
+    await retype(user, box(en('poll.duration'), en('poll.unitMinutes')), '0');
+    await retype(user, box(en('poll.duration'), en('poll.unitSeconds')), '0');
+    expect(url().get('dur')).toBe('0');
+    expect(screen.getByText(en('poll.durationOff'))).toBeTruthy();
+  });
+
+  it('loads a pasted URL with more than six options as six, and every setting back', async () => {
+    const user = setupUser();
+    await renderRoute(PAGE);
+    await user.click(urlField());
+    await user.paste(
+      'https://extensions.senchabot.com/widgets/poll?twitch=streamer&o=A%7CB%7CC%7CD%7CE%7CF%7CG&dur=0&hold=0&delay=12&subs=1&change=0&blind=1&color=gold&pos=bottom&lang=en',
+    );
+    expect(option(6).value).toBe('F');
+    expect(screen.queryByLabelText(en('poll.optionLabel').replace('{n}', '7'))).toBeNull();
+    expect(button(en('poll.addOption')).hasAttribute('disabled')).toBe(true);
+    expect(textbox(en('poll.delay')).value).toBe('12');
+    expect(segment(en('poll.voters'), en('poll.votersSubs')).checked).toBe(true);
+    expect(toggle(en('poll.change')).getAttribute('aria-checked')).toBe('false');
+    expect(toggle(en('poll.blind')).getAttribute('aria-checked')).toBe('true');
+    expect(color(en('subathon.colors.gold')).checked).toBe(true);
+    expect(segment(en('poll.position'), en('poll.positionBottom')).checked).toBe(true);
+    expect(urlField().value).toBe(
+      'http://localhost:3000/widgets/poll?twitch=streamer&o=A%7CB%7CC%7CD%7CE%7CF&dur=0&delay=12&hold=0&subs=1&change=0&blind=1&color=gold&pos=bottom&lang=en',
+    );
+  });
+
+  it('sends test votes only for the options the ready-made poll has', async () => {
+    withLayout(800, 700);
+    const user = setupUser();
+    const received: { event: { text?: string } }[] = [];
+    const listener = new BroadcastChannel(PREVIEW_CHANNEL);
+    listener.onmessage = ({ data }) => received.push(data);
+    await renderRoute(PAGE);
+    await retype(user, option(1), 'Minecraft');
+    await retype(user, option(2), 'Valorant');
+    for (let i = 0; i < 3; i++)
+      await user.click(button(en('poll.testVotes').replace('{count}', '10')));
+    await vi.waitFor(() => expect(received).toHaveLength(30));
+    expect(new Set(received.map(({ event }) => event.text))).toEqual(new Set(['1', '2']));
+    listener.close();
+  });
 });

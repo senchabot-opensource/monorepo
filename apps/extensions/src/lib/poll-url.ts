@@ -1,5 +1,6 @@
 import {
   cleanOptions,
+  clip,
   MAX_OPTIONS,
   MIN_OPTIONS,
   OPTION_MAX_LENGTH,
@@ -72,7 +73,7 @@ const OPTION_SEPARATOR = '|';
 export function savedPoll(settings: Pick<PollSettings, 'question' | 'options'>) {
   const options = cleanOptions(settings.options);
   return options.length >= MIN_OPTIONS
-    ? { question: settings.question.trim().slice(0, QUESTION_MAX_LENGTH), options }
+    ? { question: clip(settings.question.trim(), QUESTION_MAX_LENGTH), options }
     : null;
 }
 
@@ -138,7 +139,7 @@ export function readPollSettings(params: URLSearchParams): Omit<PollSettings, 'p
   const subWeight = Number(params.get('subx'));
   const options = cleanOptions((params.get('o') ?? '').split(OPTION_SEPARATOR));
   return {
-    question: (params.get('q') ?? '').trim().slice(0, QUESTION_MAX_LENGTH),
+    question: clip((params.get('q') ?? '').trim(), QUESTION_MAX_LENGTH),
     // The setup page shows at least two boxes.
     options: options.length >= MIN_OPTIONS ? options : [...options, '', ''].slice(0, MIN_OPTIONS),
     duration: readWhole(params.get('dur'), defaults.duration, { max: MAX_DURATION_SECONDS }),

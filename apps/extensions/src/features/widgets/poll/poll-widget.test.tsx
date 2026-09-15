@@ -283,4 +283,255 @@ describe('PollWidget', () => {
     // Twitch 1, Kick 2 beside the total.
     expect(shown()).toMatch(/123 votes$/);
   });
+
+  describe('edge cases', () => {
+    const kickSay = (username: string, content: string, badges: object[] = []) =>
+      receive(
+        'pusher',
+        JSON.stringify({
+          event: 'App\\Events\\ChatMessageEvent',
+          channel: 'chatrooms.42.v2',
+          data: JSON.stringify({
+            content,
+            type: 'message',
+            sender: { username, identity: { badges } },
+          }),
+        }),
+      );
+    const kickBan = (username: string) =>
+      receive(
+        'pusher',
+        JSON.stringify({
+          event: 'App\\Events\\UserBannedEvent',
+          channel: 'chatrooms.42.v2',
+          data: JSON.stringify({
+            user: { id: 1, username, slug: username.toLowerCase() },
+            banned_by: { id: 0, username: 'Mod' },
+            permanent: false,
+            duration: 1,
+          }),
+        }),
+      );
+    const renderBoth = async (overrides: Partial<PollSettings> = {}) => {
+      const result = await render(
+        <PollWidget twitchChannel="streamer" kickChannel="kicker" settings={settings(overrides)} />,
+      );
+      await act(async () => {});
+      act(() => socket('pusher').open());
+      return result;
+    };
+    const saved = () => JSON.parse(localStorage.getItem(storageKey('streamer')) ?? 'null');
+
+    it("counts a Kick viewer's emote as a vote for the option named after it", async () => {
+      await renderBoth();
+      mod('!poll Best emote? | KEKW | LUL');
+      say('twitchfan', 'KEKW');
+      kickSay('kickfan', '[emote:37226:KEKW]');
+      await settle();
+      expect(shown()).toMatch(/KEKW2\s*100%/);
+    });
+
+    it("shows a Kick mod's emotes by name, not as Kick's emote code", async () => {
+      await renderBoth();
+      kickSay('Kickmod', '!poll Good run? [emote:37230:POLICE] | [emote:37226:KEKW] | LUL', [
+        { type: 'moderator' },
+      ]);
+      expect(shown()).toContain('Good run? POLICE');
+      expect(shown()).toContain('KEKW');
+      expect(shown()).not.toContain('[emote:');
+    });
+
+    it('takes no votes after a cancel, and none after the results are up', async () => {
+      await render(<PollWidget twitchChannel="streamer" settings={settings({ delay: 2 })} />);
+      mod('!poll Q | A | B');
+      mod('!poll cancel');
+      say('a', '1');
+      // Past the card's fade-out.
+      await wait(500);
+      expect(card()).toBeNull();
+      expect(saved()).toBeNull();
+
+      mod('!poll Q2 | A | B');
+      say('a', '1');
+      mod('!poll end');
+      await wait(2000);
+      expect(phase()).toBe('results');
+      say('b', '2');
+      say('a', '2');
+      await settle();
+      expect(shown()).toMatch(/A1\s*100%/);
+      expect(shown()).toContain('Winner: A');
+    });
+
+    it('keeps counting through the stream delay after a mod ends the poll, and a second end changes nothing', async () => {
+      await render(<PollWidget twitchChannel="streamer" settings={settings({ delay: 5 })} />);
+      mod('!poll Q | A | B');
+      say('a', '1');
+      mod('!poll end');
+      expect(phase()).toBe('closing');
+      await wait(3000);
+      mod('!poll end');
+      say('b', '2');
+      say('c', '2');
+      await wait(2000);
+      expect(phase()).toBe('results');
+      expect(shown()).toContain('Winner: B');
+    });
+
+    it('starts a new poll from scratch, without the last one’s votes', async () => {
+      await render(<PollWidget twitchChannel="streamer" settings={settings()} />);
+      mod('!poll Q | A | B');
+      say('a', '1');
+      say('b', '1');
+      mod('!poll Next | C | D');
+      say('a', '2');
+      await wait(1000);
+      expect(shown()).toContain('1 vote');
+      expect(shown()).toMatch(/D1\s*100%/);
+      expect(saved()).toMatchObject({ question: 'Next', votes: [['twitch:a', 1, 1]] });
+    });
+
+    it('ignores poll commands from viewers and mistyped ones from mods', async () => {
+      await render(<PollWidget twitchChannel="streamer" settings={settings()} />);
+      mod('!poll Q | A | B');
+      say('viewer', '!poll cancel');
+      say('viewer', '!poll end');
+      mod('!poll extend 30');
+      mod('!poll end now');
+      say('a', '2');
+      await settle();
+      expect(phase()).toBe('open');
+      expect(shown()).toContain('1:00');
+      expect(shown()).toMatch(/B1\s*100%/);
+    });
+
+    it('takes a Kick ban off only the Kick vote, and a ban after the results changes nothing', async () => {
+      await renderBoth({ delay: 0 });
+      mod('!poll Q | A | B');
+      say('same', '1');
+      kickSay('Same', '2');
+      kickBan('Same');
+      await settle();
+      expect(shown()).toContain('1 vote');
+      expect(shown()).toMatch(/A1\s*100%/);
+      mod('!poll end');
+      receive('twitch', '@room-id=1 :tmi.twitch.tv CLEARCHAT #streamer :same');
+      await settle();
+      expect(shown()).toContain('Winner: A');
+    });
+
+    it('takes a timed out viewer’s vote off during the stream delay too', async () => {
+      await render(<PollWidget twitchChannel="streamer" settings={settings({ delay: 5 })} />);
+      mod('!poll Q | A | B');
+      say('bot', '1');
+      say('b', '2');
+      mod('!poll end');
+      receive('twitch', '@room-id=1;ban-duration=600 :tmi.twitch.tv CLEARCHAT #streamer :bot');
+      await wait(5000);
+      expect(shown()).toContain('Winner: B');
+    });
+
+    it('lets a timed out viewer vote again once the timeout is over', async () => {
+      await render(<PollWidget twitchChannel="streamer" settings={settings({ change: false })} />);
+      mod('!poll Q | A | B');
+      say('v', '1');
+      receive('twitch', '@room-id=1;ban-duration=1 :tmi.twitch.tv CLEARCHAT #streamer :v');
+      say('v', '2');
+      await settle();
+      expect(shown()).toMatch(/B1\s*100%/);
+    });
+
+    it('keeps its votes through a Twitch RECONNECT, without counting anyone twice', async () => {
+      await render(<PollWidget twitchChannel="streamer" settings={settings()} />);
+      act(() => socket('twitch').open());
+      mod('!poll Q | A | B');
+      say('a', '1');
+      receive('twitch', ':tmi.twitch.tv RECONNECT');
+      act(() => socket('twitch').open());
+      expect(socket('twitch').sent).toContain('JOIN #streamer');
+      say('a', '1');
+      say('b', '2');
+      await settle();
+      expect(shown()).toContain('2 votes');
+    });
+
+    it('comes back after a reload in the stream delay, still taking late votes', async () => {
+      const { unmount } = await render(
+        <PollWidget twitchChannel="streamer" settings={settings({ duration: 30, delay: 5 })} />,
+      );
+      mod('!poll Q | A | B');
+      say('a', '1');
+      await wait(31_000);
+      expect(phase()).toBe('closing');
+      unmount();
+
+      await render(
+        <PollWidget twitchChannel="streamer" settings={settings({ duration: 30, delay: 5 })} />,
+      );
+      expect(phase()).toBe('closing');
+      say('b', '2');
+      say('c', '2');
+      await wait(4000);
+      expect(phase()).toBe('results');
+      expect(shown()).toContain('Winner: B');
+    });
+
+    it('shows no poll after a reload once its results have gone', async () => {
+      const { unmount } = await render(
+        <PollWidget twitchChannel="streamer" settings={settings({ delay: 0, hold: 10 })} />,
+      );
+      mod('!poll Q | A | B');
+      mod('!poll end');
+      unmount();
+      vi.advanceTimersByTime(11_000);
+      await render(
+        <PollWidget twitchChannel="streamer" settings={settings({ delay: 0, hold: 10 })} />,
+      );
+      expect(card()).toBeNull();
+    });
+
+    it('starts with no poll instead of crashing on a broken saved poll', async () => {
+      localStorage.setItem(storageKey('streamer'), '{"startedAt":"x","options":7');
+      await render(<PollWidget twitchChannel="streamer" settings={settings()} />);
+      expect(card()).toBeNull();
+      localStorage.setItem(
+        storageKey('streamer'),
+        JSON.stringify({ startedAt: 1, question: 'Q', options: 'AB', endsAt: null, votes: [] }),
+      );
+      await render(<PollWidget twitchChannel="streamer" settings={settings()} />);
+      expect(card()).toBeNull();
+    });
+
+    it('saves a burst of votes once, within a second', async () => {
+      await render(<PollWidget twitchChannel="streamer" settings={settings()} />);
+      mod('!poll Q | A | B');
+      const setItem = vi.spyOn(Storage.prototype, 'setItem');
+      for (let i = 0; i < 50; i++) say(`v${i}`, String(1 + (i % 2)));
+      expect(setItem).not.toHaveBeenCalled();
+      await wait(1000);
+      expect(setItem).toHaveBeenCalledTimes(1);
+      expect(saved().votes).toHaveLength(50);
+    });
+
+    it("counts a Kick sub's vote in a subs-only poll, and a Kick gifter's not", async () => {
+      await renderBoth({ subsOnly: true });
+      mod('!poll Q | A | B');
+      kickSay('sub', '1', [{ type: 'subscriber', count: 3 }]);
+      kickSay('gifter', '2', [{ type: 'sub_gifter', count: 5 }]);
+      await settle();
+      expect(shown()).toMatch(/A1\s*100%/);
+    });
+
+    it('reads a /me vote, and no vote sent as a reply, which answers someone', async () => {
+      await render(<PollWidget twitchChannel="streamer" settings={settings()} />);
+      mod('!poll Q | A | B');
+      receive(
+        'twitch',
+        '@badges=;display-name=R;reply-parent-msg-id=p1;reply-parent-display-name=Mod;reply-parent-user-login=mod;room-id=1 :r!r@r.tmi.twitch.tv PRIVMSG #streamer :@Mod 1',
+      );
+      say('m', '\x01ACTION 2\x01');
+      await settle();
+      expect(shown()).toMatch(/B1\s*100%/);
+    });
+  });
 });

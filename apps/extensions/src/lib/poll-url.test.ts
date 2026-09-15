@@ -108,6 +108,37 @@ describe('readPollSettings', () => {
   });
 });
 
+describe('readPollSettings edge cases', () => {
+  it("doesn't cut an emoji in half in a long question or option", () => {
+    const params = new URLSearchParams();
+    params.set('q', `${'x'.repeat(79)}🍕🍔`);
+    params.set('o', `${'y'.repeat(29)}🍕🍔|B`);
+    const read = readPollSettings(params);
+    expect(read.question).toBe(`${'x'.repeat(79)}🍕`);
+    expect(read.options).toEqual([`${'y'.repeat(29)}🍕`, 'B']);
+  });
+
+  it('keeps six options, drops repeats and never throws on garbage', () => {
+    const read = readPollSettings(new URLSearchParams('o=A|B|C|D|E|F|G|H|a&subs=yes&subx=2.5'));
+    expect(read.options).toEqual(['A', 'B', 'C', 'D', 'E', 'F']);
+    expect(read.subsOnly).toBe(true);
+    expect(read.subWeight).toBe(1);
+    for (const search of ['dur=Infinity&hold=1e400&delay=NaN', 'color=__proto__&pos=constructor']) {
+      expect(() => readPollSettings(new URLSearchParams(search))).not.toThrow();
+    }
+    expect(readPollSettings(new URLSearchParams('dur=Infinity')).duration).toBe(60);
+  });
+
+  it('reads back a Turkish ready-made poll with emoji, accents and "&"', () => {
+    const custom = settings({ question: 'Hangi oyun? 🎮', options: ['Işık & Gölge', 'Çay', '🍕'] });
+    const url = buildPollUrl(ORIGIN, custom, 'streamer', '', 'tr');
+    expect(parsePollUrl(url)?.settings).toMatchObject({
+      question: 'Hangi oyun? 🎮',
+      options: ['Işık & Gölge', 'Çay', '🍕'],
+    });
+  });
+});
+
 describe('preview URL', () => {
   it('simulates, pairs with its page and keeps to the picked platform', () => {
     const url = new URL(

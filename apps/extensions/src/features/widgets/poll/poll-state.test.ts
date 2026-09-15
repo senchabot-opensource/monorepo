@@ -157,6 +157,73 @@ describe('cleanOptions', () => {
   it('trims, shortens and drops repeats in any case', () => {
     expect(cleanOptions([' A ', 'a', '', 'x'.repeat(40)])).toEqual(['A', 'x'.repeat(30)]);
   });
+
+  it('drops repeats that differ only in accents or Turkish i, and turns "|" into a space', () => {
+    expect(cleanOptions(['Işık', 'isik', 'IŞIK', 'Á', 'a', 'x|y', '|'])).toEqual([
+      'Işık',
+      'Á',
+      'x y',
+    ]);
+  });
+
+  it("doesn't cut an emoji in half at the length limit", () => {
+    expect(cleanOptions([`${'x'.repeat(29)}🍕🍔`])).toEqual([`${'x'.repeat(29)}🍕`]);
+  });
+});
+
+describe('parsePollCommand edge cases', () => {
+  it("doesn't cut an emoji in the question in half", () => {
+    const command = parsePollCommand(`!poll ${'x'.repeat(79)}🍕🍔 | A | B`, YES_NO);
+    expect(command).toMatchObject({ question: `${'x'.repeat(79)}🍕` });
+  });
+
+  it('reads a length with no question, a length with a yes/no question, and 0s as no timer', () => {
+    expect(parsePollCommand('!poll 2m | A | B', YES_NO)).toEqual({
+      action: 'new',
+      question: '',
+      options: ['A', 'B'],
+      ms: 120_000,
+    });
+    expect(parsePollCommand('!poll 0s Q | A | B', YES_NO)).toMatchObject({ ms: 0 });
+    expect(parsePollCommand('!poll 2h Q | A | B', YES_NO)).toMatchObject({ ms: MAX_POLL_MS });
+    expect(parsePollCommand('!poll extend 1m 30s', YES_NO)).toEqual({
+      action: 'extend',
+      ms: 90_000,
+    });
+  });
+
+  it('keeps a first word that only looks like a length in the question', () => {
+    expect(parsePollCommand('!poll 5:00pm raid? | Yes | No', YES_NO)).toMatchObject({
+      question: '5:00pm raid?',
+      ms: null,
+    });
+  });
+
+  it('turns down a poll whose options are all the same', () => {
+    expect(parsePollCommand('!poll Q | a | A | á', YES_NO)).toBeNull();
+    expect(parsePollCommand('!poll Q | | |', YES_NO)).toBeNull();
+  });
+
+  it('reads command words in any case and turns down end or cancel with extra words', () => {
+    expect(parsePollCommand('!POLL END', YES_NO)).toEqual({ action: 'end' });
+    expect(parsePollCommand('!poll Cancel', YES_NO)).toEqual({ action: 'cancel' });
+    expect(parsePollCommand('!poll cancel it', YES_NO)).toBeNull();
+    expect(parsePollCommand('!poll start 1m now', YES_NO)).toBeNull();
+    expect(parsePollCommand('!poll extend 0s', YES_NO)).toBeNull();
+  });
+});
+
+describe('parseVote edge cases', () => {
+  it('reads a Turkish option typed in capitals with a dotted İ', () => {
+    expect(parseVote('HAYİR', ['Evet', 'Hayır'])).toBe(1);
+    expect(parseVote('!vote İSTANBUL', ['İzmir', 'İstanbul'])).toBe(1);
+  });
+
+  it("doesn't read signs or punctuation around a number as a vote", () => {
+    for (const message of ['+2', '2.', '#2', '-1', '!!2', '! 2', '!vote2']) {
+      expect(parseVote(message, ['A', 'B'])).toBeNull();
+    }
+  });
 });
 
 describe('poll', () => {
