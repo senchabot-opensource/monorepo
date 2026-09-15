@@ -1,6 +1,6 @@
 # Senchabot Extensions: full reference
 
-> Free, open source stream overlays and tools for Twitch and Kick: Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Raffle and OBS Bridge. Each one is set up on a web page at https://extensions.senchabot.com and runs from a URL. No login and nothing to install.
+> Free, open source stream overlays and tools for Twitch and Kick: Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll, Raffle and OBS Bridge. Each one is set up on a web page at https://extensions.senchabot.com and runs from a URL. No login and nothing to install.
 
 Short version with links only: https://extensions.senchabot.com/llms.txt
 
@@ -27,10 +27,11 @@ Short version with links only: https://extensions.senchabot.com/llms.txt
 | Stream Alerts | Overlay | /setup/stream-alerts | /widgets/stream-alerts | 800x450 |
 | Sub Goal | Overlay | /setup/sub-goal | /widgets/goal | 800x260 |
 | Subathon Timer | Tool | /setup/subathon-timer | /widgets/subathon (run from chat with !subathon) | 800x300 |
+| Chat Poll | Tool | /setup/chat-poll | /widgets/poll (run from chat with !poll) | 640x560 |
 | Raffle | Tool | /setup/raffle | /widgets/raffle-overlay (winner overlay) | 1920x1080 |
 | OBS Bridge | Tool | /setup/obs-bridge | /tools/obs-bridge (tab or OBS dock, not a source) | none |
 
-All eight work with Twitch and Kick. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts and Sub Goal take a Twitch and a Kick channel in the same URL. OBS Bridge listens to both chats at once. Raffle runs on one platform at a time.
+All nine work with Twitch and Kick. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal and Chat Poll take a Twitch and a Kick channel in the same URL. OBS Bridge listens to both chats at once. Raffle runs on one platform at a time.
 
 ## How to add a widget to OBS Studio
 
@@ -41,9 +42,9 @@ All eight work with Twitch and Kick. Chat Box, Emote Wall, Sub Sprout, Subathon 
 
 Notes:
 - The background is already transparent. No chroma key, filter or custom CSS is needed.
-- Leave "Shutdown source when not visible" and "Refresh browser when scene becomes active" off. Both reload the page, and the widget forgets what it was showing (Sub Sprout goes back to its first stage, a Raffle winner drawn while the source is off never shows). Subathon Timer and Sub Goal keep their time and count through a reload but can't see subs while the source is off. Stream Alerts only shows what comes in while the source is running.
+- Leave "Shutdown source when not visible" and "Refresh browser when scene becomes active" off. Both reload the page, and the widget forgets what it was showing (Sub Sprout goes back to its first stage, a Raffle winner drawn while the source is off never shows). Subathon Timer, Sub Goal and Chat Poll keep their time, count or poll through a reload but can't see subs or votes while the source is off. Stream Alerts only shows what comes in while the source is running.
 - To make Chat Box text bigger, change Font Size on the setup page instead of stretching the source.
-- To change a widget later, copy a new URL from the setup page and paste it over the old one. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts and Sub Goal can load an existing URL: paste it into the Widget URL field on the setup page and all settings come back.
+- To change a widget later, copy a new URL from the setup page and paste it over the old one. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal and Chat Poll can load an existing URL: paste it into the Widget URL field on the setup page and all settings come back.
 - If a widget looks empty: check that you typed the channel name, not a link, and that it is spelled right. Chat Box and Emote Wall stay empty until something happens in chat. If a Kick channel can't be found and there is no Twitch channel either, Chat Box and Emote Wall play sample content instead.
 
 ## Chat Box
@@ -255,6 +256,41 @@ URL parameters (all optional):
 | simulate | 1 plays simulated subs, doesn't read chat and doesn't save the count | off |
 | simplatform | twitch or kick: simulate only that platform | both |
 
+## Chat Poll
+
+A chat poll for Twitch and Kick. The broadcaster and mods put a poll up from chat, viewers vote by typing a number, and votes from both chats go into one result with live bars, a countdown and the winner at the end. Twitch's own polls can't be read without logging in, so this poll takes votes from chat, the same way on both platforms.
+
+- Widget URL: https://extensions.senchabot.com/widgets/poll?twitch=CHANNEL&kick=CHANNEL&lang=en
+- Demo with simulated voters: https://extensions.senchabot.com/widgets/poll?simulate=1
+- Guide: https://extensions.senchabot.com/guides/chat-poll
+- Recommended size: 640x560, room for a poll with 6 options. The poll sits at the top or bottom and grows with its options; the overlay scales to any source size.
+- Chat commands for the broadcaster and mods: !poll Question | A | B (2 to 6 options), !poll 2m Question | A | B (its own length: 90s, 2m, 1:30), !poll Question? (a Yes/No poll), !poll start (the ready-made poll saved in the URL), !poll extend 30s, !poll end (results now), !poll cancel (off the screen).
+- Viewers vote with the whole message: 2, !2, !vote 2 or an option's own text, in any case, with or without accents or Turkish letters. A message with more in it ("2 please", 4Head) isn't a vote. Twitch's /vote command is for Twitch's own polls, so viewers should type the number.
+- One vote per Twitch or Kick account. With vote changing on (default), a new vote moves it; a vote for an option that doesn't exist keeps the old one. A timeout or ban while the poll is open takes the account's vote off.
+- Viewers watch a few seconds behind chat, so votes keep counting for the stream delay after the timer ends, then the winner or a tie shows.
+- The poll and its votes are saved inside OBS and survive a reload. The timer keeps running while OBS is closed.
+
+URL parameters (all optional):
+
+| Parameter | Values | Default |
+| --- | --- | --- |
+| twitch | Twitch channel name | none |
+| kick | Kick channel name | none |
+| q | question of the ready-made poll, up to 80 characters | none |
+| o | options of the ready-made poll, 2 to 6, split with a pipe, up to 30 characters each | none |
+| dur | seconds a poll takes votes, up to 3600; 0 keeps it open until !poll end | 60 |
+| delay | seconds late votes still count after the timer ends, 0 to 30 | 5 |
+| hold | seconds the results stay up, up to 600; 0 keeps them until the next poll | 30 |
+| subs | 1 lets only subscribers (sub or founder badge) and the broadcaster vote | 0 |
+| subx | 2 or 3: a subscriber's vote counts that many times | 1 |
+| change | 0 makes a viewer's first vote final | 1 |
+| blind | 1 hides the bars until voting ends | 0 |
+| color | purple, green, red, gold, cyan, pink | purple |
+| pos | top or bottom of the browser source | top |
+| lang | en or tr, the language of the words on the poll | the setup page's |
+| simulate | 1 plays simulated polls, doesn't read chat and doesn't save | off |
+| simplatform | twitch or kick: simulate only that platform | both |
+
 ## Raffle
 
 A chat giveaway tool. The setup page is the tool itself: https://extensions.senchabot.com/setup/raffle (optional ?channel=NAME&platform=twitch or kick fills in the form).
@@ -323,7 +359,7 @@ URL parameters:
 ## FAQ
 
 Q: Is Senchabot Extensions free?
-A: Yes. All eight widgets and tools are free: Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Raffle and OBS Bridge. There's no paid plan, watermark or premium account. The source code is open on GitHub under the GPL-3.0 license.
+A: Yes. All nine widgets and tools are free: Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll, Raffle and OBS Bridge. There's no paid plan, watermark or premium account. The source code is open on GitHub under the GPL-3.0 license.
 
 Q: What does "no login required" mean?
 A: You don't create an account on the site, you don't log in with Twitch or Kick, and you don't download anything. You type your channel name and the setup page gives you a URL. The widgets read public chat anonymously, so they can't post in chat, moderate, or access private info on your account.
@@ -335,10 +371,10 @@ Q: Which streaming software does it work with?
 A: OBS Studio and any other streaming software that supports a browser source. Each widget runs as a web URL that you paste into the source.
 
 Q: Which widgets support Twitch and which support Kick?
-A: All eight support both. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts and Sub Goal listen to a Twitch and a Kick channel in one URL. OBS Bridge listens for commands from both chats. Raffle runs on one platform at a time. In Chat Box, 7TV emotes show on both platforms, BTTV and FFZ emotes on Twitch only.
+A: All nine support both. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal and Chat Poll listen to a Twitch and a Kick channel in one URL. OBS Bridge listens for commands from both chats. Raffle runs on one platform at a time. In Chat Box, 7TV emotes show on both platforms, BTTV and FFZ emotes on Twitch only.
 
 Q: How do I change a widget later?
-A: Change the settings on the setup page, copy the new URL and paste it over the old one in OBS. With Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts and Sub Goal you can paste your old URL into the Widget URL field on the setup page to get all your settings back.
+A: Change the settings on the setup page, copy the new URL and paste it over the old one in OBS. With Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal and Chat Poll you can paste your old URL into the Widget URL field on the setup page to get all your settings back.
 
 Q: Will my old widget URLs keep working?
 A: Yes. Parameter names, values and defaults stay the same. For example the old keep=true in Chat Box still means Forever, and Sub Sprout still reads the old channel and platform parameters.
@@ -367,6 +403,7 @@ A: Open an issue at https://github.com/senchabot-opensource/monorepo/issues/new.
 - Subathon Timer setup: https://extensions.senchabot.com/setup/subathon-timer
 - Stream Alerts setup: https://extensions.senchabot.com/setup/stream-alerts
 - Sub Goal setup: https://extensions.senchabot.com/setup/sub-goal
+- Chat Poll setup: https://extensions.senchabot.com/setup/chat-poll
 - Raffle: https://extensions.senchabot.com/setup/raffle
 - OBS Bridge setup: https://extensions.senchabot.com/setup/obs-bridge
 - Guides: https://extensions.senchabot.com/guides
@@ -377,6 +414,7 @@ A: Open an issue at https://github.com/senchabot-opensource/monorepo/issues/new.
 - Guide, read chat in an OBS dock: https://extensions.senchabot.com/guides/obs-chat-dock
 - Guide, stream alerts: https://extensions.senchabot.com/guides/stream-alerts
 - Guide, subathon timer: https://extensions.senchabot.com/guides/subathon-timer
+- Guide, chat poll: https://extensions.senchabot.com/guides/chat-poll
 - FAQ: https://extensions.senchabot.com/faq
 - Changelog: https://extensions.senchabot.com/changelog
 

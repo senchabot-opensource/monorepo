@@ -101,6 +101,22 @@ const goalEvents = (...events) =>
     .map((event) => `channel.postMessage({ type: 'event', preview: 'og', event: ${JSON.stringify(event)} });`)
     .join(' ')} })()`;
 
+// Chat Poll's preview takes chat messages over its channel: a mod puts the poll from the URL up,
+// then viewers on both platforms vote. Test messages pause the simulated voters for a few seconds.
+const POLL_VOTES = [12, 27, 18, 7];
+const POLL_VOTE = `(() => {
+  const channel = new BroadcastChannel('senchabot:poll-preview');
+  const send = (event) => channel.postMessage({ type: 'event', preview: 'og', event });
+  send({ kind: 'message', platform: 'twitch', login: 'mod', text: '!poll start', mod: true, sub: true });
+  let viewer = 0;
+  ${JSON.stringify(POLL_VOTES)}.forEach((count, option) => {
+    for (let i = 0; i < count; i++) {
+      const platform = viewer++ % 3 === 0 ? 'kick' : 'twitch';
+      send({ kind: 'message', platform, login: 'v' + viewer, text: String(option + 1), mod: false, sub: false });
+    }
+  });
+})()`;
+
 /** Stage corner covered by the Live badge (template.html `.live`). */
 const LIVE_BADGE = { right: 104, bottom: 50 };
 
@@ -190,6 +206,16 @@ const CAPTURES = {
     // The trophy has landed and the burst is on its way out.
     afterTriggerMs: 1300,
     ready: OXANIUM_READY,
+  },
+  poll: {
+    path: `/widgets/poll?simulate=1&preview=og&q=${encodeURIComponent('What should we play tonight?')}&o=${encodeURIComponent('Horror game|Speedrun|Viewer games|Just chatting')}`,
+    width: 640,
+    height: 560,
+    settleMs: 600,
+    trigger: POLL_VOTE,
+    // The bars have grown and the new-vote flashes have faded.
+    afterTriggerMs: 1200,
+    ready: `${OXANIUM_READY} && document.querySelector('[data-testid="poll-card"]')`,
   },
   alertNeon: {
     path: '/widgets/stream-alerts?simulate=1&dur=20&preview=og',
@@ -320,6 +346,18 @@ const CARDS = [
         layer('goal', { x: 9, y: 40, width: 520, height: 169 }),
         layer('goalReached', { x: 9, y: 212, width: 520, height: 169 }),
       ],
+    },
+  },
+  {
+    id: 'poll',
+    eyebrow: { icon: 'poll', label: 'Tool' },
+    title: en.widgets.poll.name,
+    subtitle: en.widgets.poll.tagline,
+    visual: {
+      kind: 'stage',
+      live: true,
+      // The 640x560 source, its poll at the top; four options fill about two thirds of it.
+      layers: [layer('poll', { x: 22, y: 30, width: 494, height: 432 })],
     },
   },
   {

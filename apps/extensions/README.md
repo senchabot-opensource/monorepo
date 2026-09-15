@@ -10,6 +10,7 @@ Senchabot Extensions provides 100% free streaming widgets, customizable overlays
 - **Subathon Timer** — A subathon countdown that subs, gifted subs, Bits and Kicks add time to, shown as a game-style health bar, a clock or a ring. Mods control it from chat.
 - **Stream Alerts** — Animated alerts with their own sound for subs, gifted subs, Bits, Kicks and raids, in a Neon or a Celestial theme.
 - **Sub Goal** — A goal bar that every sub, resub and gifted sub on Twitch and Kick fills by one, with a trophy when the goal is reached. Mods fix the count from chat.
+- **Chat Poll** — A poll that Twitch and Kick chat vote in by typing a number, with live bars, a timer and the winner at the end. Mods run it from chat.
 - **Universal Chat** — A multi-chat widget and stream chat box overlay that combines Twitch and Kick chat into a single on-screen feed with 7TV emotes, badges, and platform indicators.
 - **Raffle Picker** — A chat-based giveaway and raffle tool. Viewers type a keyword to enter; winners are drawn and announced on a live confetti celebration overlay.
 - **OBS Bridge** — A chat-controlled scene switching and stream control tool connecting over local OBS WebSocket.
@@ -22,6 +23,7 @@ Senchabot Extensions provides 100% free streaming widgets, customizable overlays
 - [Subathon Timer](https://extensions.senchabot.com/setup/subathon-timer)
 - [Stream Alerts](https://extensions.senchabot.com/setup/stream-alerts)
 - [Sub Goal](https://extensions.senchabot.com/setup/sub-goal)
+- [Chat Poll](https://extensions.senchabot.com/setup/chat-poll)
 - [Universal Chat](https://extensions.senchabot.com/setup/chat-widget)
 - [Raffle Picker](https://extensions.senchabot.com/setup/raffle)
 - [OBS Bridge](https://extensions.senchabot.com/setup/obs-bridge)
@@ -109,6 +111,26 @@ https://extensions.senchabot.com/widgets/goal?twitch=YOUR_TWITCH_CHANNEL&kick=YO
 ```
 
 **URL parameters:** `twitch`, `kick`, `color` (`purple` | `green` | `red` | `gold` | `cyan` | `pink`), `title` (empty hides it), `start` (starting count), `target` (the goal, 1 or more), `pops` (`0` hides the rising +1s), `simulate` (`1` plays simulated subs), `simplatform` (`twitch` | `kick`).
+
+---
+
+### Chat Poll (`/setup/chat-poll`)
+
+A chat poll for Twitch and Kick. Mods put a poll up from chat, viewers vote by typing a number, and votes from both chats go into one result with live bars, a timer and the winner at the end.
+
+**How it works:**
+- Listens to Twitch IRC anonymously and Kick's Pusher WebSocket, both in one browser source. Twitch's and Kick's own polls aren't used: Twitch's can't be read without a login.
+- The broadcaster and mods run it from chat: `!poll Question | A | B` (2 to 6 options), `!poll 2m Question | A | B` (its own length), `!poll Question?` (a Yes/No poll), `!poll start` (the ready-made poll from the URL), `!poll extend 30s`, `!poll end`, `!poll cancel`.
+- A vote is the whole message: `2`, `!2`, `!vote 2` or an option's own text, in any case and with or without accents or Turkish letters. `4Head` or `2 please` don't count.
+- One vote per account. With vote changing on, a new vote moves it; a vote for an option that doesn't exist keeps the old one. A timeout or ban while the poll is open takes the account's vote off.
+- Viewers watch a few seconds behind chat, so votes keep counting for the stream delay (5 s by default) after the timer ends, then the winner shows.
+- The poll and its votes are saved in the browser source's `localStorage` per channel pair, so a reload picks up where it was.
+
+```
+https://extensions.senchabot.com/widgets/poll?twitch=YOUR_TWITCH_CHANNEL&kick=YOUR_KICK_CHANNEL&lang=en
+```
+
+**URL parameters:** `twitch`, `kick`, `q` (the ready-made poll's question), `o` (its options, split with `|`), `dur` (seconds a poll takes votes, `0` for no timer; default 60), `delay` (seconds late votes still count, 0 to 30; default 5), `hold` (seconds results stay up, `0` keeps them; default 30), `subs` (`1` lets only subscribers vote), `subx` (`2` or `3`: a sub's vote counts that many times), `change` (`0` makes the first vote final), `blind` (`1` hides the bars until voting ends), `color` (`purple` | `green` | `red` | `gold` | `cyan` | `pink`), `pos` (`top` | `bottom`), `lang` (`en` | `tr`), `simulate` (`1` plays simulated polls), `simplatform` (`twitch` | `kick`).
 
 ---
 
@@ -241,6 +263,7 @@ npm run deploy
 │   │   ├── subathon-timer.tsx      # Subathon Timer configuration
 │   │   ├── stream-alerts.tsx       # Stream Alerts configuration
 │   │   ├── sub-goal.tsx            # Sub Goal configuration
+│   │   ├── chat-poll.tsx           # Chat Poll configuration
 │   │   ├── chat-widget.tsx         # Universal Chat configuration
 │   │   ├── raffle.tsx              # Raffle configuration
 │   │   └── emote-wall.tsx          # Emote Wall configuration
@@ -249,6 +272,7 @@ npm run deploy
 │       ├── subathon.tsx            # Subathon Timer overlay
 │       ├── stream-alerts.tsx       # Stream Alerts overlay
 │       ├── goal.tsx                # Sub Goal overlay
+│       ├── poll.tsx                # Chat Poll overlay
 │       ├── chat-widget.tsx         # Universal Chat overlay
 │       ├── raffle-overlay.tsx      # Raffle winner overlay
 │       └── emote-wall.tsx          # Emote Wall overlay

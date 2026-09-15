@@ -2,13 +2,13 @@
 
 `generate.mjs` renders these files with headless Chrome:
 
-- `public/og/{home,chat-box,emote-wall,sub-sprout,subathon,stream-alerts,goal,raffle,obs-bridge,guides}.png`: 1200×630
+- `public/og/{home,chat-box,emote-wall,sub-sprout,subathon,stream-alerts,goal,poll,raffle,obs-bridge,guides}.png`: 1200×630
   Open Graph / Twitter cards
 - `public/apple-touch-icon.png` (180), `public/icon-192.png`, `public/icon-512.png`: the logo on
   `#09090b`, sized to stay inside the maskable safe zone
 
 The overlay pictures are screenshots of the real widget demos (`?mock=true`, `?simulate=true`, and
-the Raffle overlay, Subathon Timer, Stream Alerts and Sub Goal fed events over their BroadcastChannels), laid onto `template.html`. Titles and
+the Raffle overlay, Subathon Timer, Stream Alerts, Sub Goal and Chat Poll fed events over their BroadcastChannels), laid onto `template.html`. Titles and
 taglines come from `src/lib/i18n/en.ts`, so rerun the script when that copy changes.
 
 ## Regenerate
