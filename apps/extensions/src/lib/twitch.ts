@@ -1,7 +1,38 @@
-import type { ChatMessagesType } from "#/features/widgets/chat-widget/chat-messages";
+import {
+  ANNOUNCEMENT_COLORS,
+  type AnnouncementColor,
+  type ChatMessagesType,
+} from "#/features/widgets/chat-widget/chat-messages";
 import { BaseChatClient, type BanUserCallback, type ChatMessageCallback, type ClearAllCallback, type DeleteMessageCallback } from "./basechat";
 
+// Twitch starts a reply with "@parent ", which the widget already shows above the message. Emote
+// positions count code points from the start of the text, so they move back by the prefix length.
+export function stripReplyMention(
+  message: string,
+  emotes: string | undefined,
+  names: (string | undefined)[],
+): { message: string; emotes: string | undefined } {
+  const name = names.find((n) => n && message.startsWith(`@${n} `));
+  if (!name) {
+    return { message, emotes };
+  }
 
+  const shift = [...`@${name} `].length;
+  const shifted = emotes
+    ?.split("/")
+    .map((part) => {
+      const [id, positions = ""] = part.split(":");
+      const ranges = positions
+        .split(",")
+        .map((range) => range.split("-").map((n) => Number(n) - shift))
+        .filter(([start]) => start >= 0)
+        .map(([start, end]) => `${start}-${end}`);
+      return ranges.length > 0 ? `${id}:${ranges.join(",")}` : null;
+    })
+    .filter(Boolean)
+    .join("/");
+  return { message: [...message].slice(shift).join(""), emotes: shifted || undefined };
+}
 
 export class TwitchChat extends BaseChatClient {
   private readonly channel: string;
@@ -61,7 +92,7 @@ export class TwitchChat extends BaseChatClient {
         continue;
       }
 
-      this.emit(this.parsePrivmsg(message));
+      this.emit(this.parseAnnouncement(message) ?? this.parsePrivmsg(message));
     }
   }
 
@@ -75,12 +106,64 @@ export class TwitchChat extends BaseChatClient {
 
     const [, tagsStr, username, messageText] = match;
     const tags = this.parseTags(tagsStr);
+    const message = this.toMessage(tags, username, messageText);
+    if (!message) {
+      return null;
+    }
+
+    const replyUser = tags["reply-parent-display-name"] || tags["reply-parent-user-login"];
+    return {
+      ...message,
+      ...(replyUser
+        ? {
+            ...stripReplyMention(message.message, message.emotes, [
+              replyUser,
+              tags["reply-parent-user-login"],
+            ]),
+            replyTo: { user: replyUser, message: tags["reply-parent-msg-body"] ?? "" },
+          }
+        : {}),
+      firstMessage: tags["first-msg"] === "1" || undefined,
+      variant: tags["msg-id"] === "highlighted-message" ? "highlighted" : undefined,
+    };
+  }
+
+  // Announcements (/announce) arrive as USERNOTICE, not PRIVMSG. Other USERNOTICEs (subs, raids)
+  // are left out on purpose.
+  private parseAnnouncement(rawMessage: string): ChatMessagesType | null {
+    const match = rawMessage.match(/^@(\S+) :tmi\.twitch\.tv USERNOTICE #\S+ :(.+)/);
+    if (!match) {
+      return null;
+    }
+
+    const tags = this.parseTags(match[1]);
+    if (tags["msg-id"] !== "announcement") {
+      return null;
+    }
+    const message = this.toMessage(tags, tags.login ?? "", match[2]);
+    if (!message) {
+      return null;
+    }
+
+    const color = tags["msg-param-color"] as AnnouncementColor;
+    return {
+      ...message,
+      variant: "announcement",
+      announcementColor: ANNOUNCEMENT_COLORS.includes(color) ? color : "PRIMARY",
+    };
+  }
+
+  private toMessage(
+    tags: Record<string, string>,
+    login: string,
+    text: string,
+  ): ChatMessagesType | null {
     const sentAt = tags["tmi-sent-ts"];
     const timestamp = sentAt
       ? new Date(Number.parseInt(sentAt, 10))
       : new Date();
-    const user = tags["display-name"] || username;
-    const message = messageText.trim();
+    const user = tags["display-name"] || login;
+    const message = text.trim();
 
     const badges = tags.badges ? tags.badges.split(",") : [];
 

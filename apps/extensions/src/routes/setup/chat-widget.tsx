@@ -3,16 +3,19 @@ import { type ReactNode, useDeferredValue, useEffect, useId, useMemo, useState }
 import { Breadcrumb } from '#/components/breadcrumb';
 import { FieldLabel } from '#/components/ui/field-label';
 import { InfoTip } from '#/components/ui/info-tip';
+import { MultiSelect, type MultiSelectOption } from '#/components/ui/multi-select';
 import { NumberField } from '#/components/ui/number-field';
 import { SegmentedControl, type SegmentedOption } from '#/components/ui/segmented-control';
 import { Select, type SelectOption } from '#/components/ui/select';
 import { Switch } from '#/components/ui/switch';
 import { YoutubeTutorial } from '#/components/youtube-tutorial';
+import { getHighlightSwatch } from '#/features/widgets/chat-widget/highlights';
 import {
   type Animation,
   buildWidgetParams,
   DEFAULT_SETTINGS,
   type Font,
+  type Highlight,
   type Layout,
   type Orientation,
   type PlatformDisplay,
@@ -241,6 +244,25 @@ function ChatWidgetSetup() {
     { value: 'none', label: t('chatWidget.animNone') },
   ];
 
+  const highlightOptions: MultiSelectOption<Highlight>[] = (
+    [
+      { value: 'mention', label: t('chatWidget.highlightMention') },
+      { value: 'reply', label: t('chatWidget.highlightReply') },
+      { value: 'firstMessage', label: t('chatWidget.highlightFirstMessage'), hint: 'Twitch' },
+      { value: 'announcement', label: t('chatWidget.highlightAnnouncement'), hint: 'Twitch' },
+      { value: 'highlighted', label: t('chatWidget.highlightHighlighted'), hint: 'Twitch' },
+    ] as const
+  ).map((option) => ({ ...option, color: getHighlightSwatch(option.value) }));
+  const highlightsSummary =
+    settings.highlights.length === 0
+      ? t('chatWidget.highlightsNone')
+      : settings.highlights.length === highlightOptions.length
+        ? t('chatWidget.highlightsAll')
+        : highlightOptions
+            .filter((option) => settings.highlights.includes(option.value))
+            .map((option) => option.label)
+            .join(', ');
+
   return (
     <div className="min-h-screen bg-zinc-50 font-sans text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100">
       <div className="mx-auto flex max-w-6xl flex-col px-4 py-4 lg:h-dvh lg:min-h-[640px]">
@@ -425,16 +447,32 @@ function ChatWidgetSetup() {
               </SettingsGroup>
 
               <SettingsGroup title={t('chatWidget.sectionMessages')}>
-                <div>
-                  <FieldLabel id={`${id}-animation`} tip={t('chatWidget.animationTip')}>
-                    {t('chatWidget.newMessageAnimation')}
-                  </FieldLabel>
-                  <Select
-                    labelledBy={`${id}-animation`}
-                    value={settings.animation}
-                    onChange={(value) => update('animation', value)}
-                    options={animationOptions}
-                  />
+                {/* Highlights share the animation row: one more row would make the panel scroll
+                    at 1366×768. */}
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div>
+                    <FieldLabel id={`${id}-animation`} tip={t('chatWidget.animationTip')}>
+                      {t('chatWidget.newMessageAnimation')}
+                    </FieldLabel>
+                    <Select
+                      labelledBy={`${id}-animation`}
+                      value={settings.animation}
+                      onChange={(value) => update('animation', value)}
+                      options={animationOptions}
+                    />
+                  </div>
+                  <div>
+                    <FieldLabel id={`${id}-highlights`} tip={t('chatWidget.highlightsTip')}>
+                      {t('chatWidget.highlights')}
+                    </FieldLabel>
+                    <MultiSelect
+                      labelledBy={`${id}-highlights`}
+                      value={settings.highlights}
+                      onChange={(value) => update('highlights', value)}
+                      options={highlightOptions}
+                      summary={highlightsSummary}
+                    />
+                  </div>
                 </div>
                 <div className="grid gap-x-6 gap-y-1 sm:grid-cols-2">
                   <Switch

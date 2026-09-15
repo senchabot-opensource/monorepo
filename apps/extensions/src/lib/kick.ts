@@ -151,6 +151,13 @@ export class KickChat extends BaseChatClient {
     const content = payload.content;
     const createdAt = payload.created_at;
     const id = payload.id;
+    const metadata = payload.metadata as
+      | {
+          original_sender?: { username?: string };
+          original_message?: { content?: string };
+        }
+      | undefined;
+    const replyUser = payload.type === "reply" ? metadata?.original_sender?.username : undefined;
 
     if (!sender || typeof content !== "string" || typeof createdAt !== "string") {
       return null;
@@ -172,6 +179,9 @@ export class KickChat extends BaseChatClient {
       receivedAt: timestamp,
       color: sender.identity?.color,
       badges,
+      replyTo: replyUser
+        ? { user: replyUser, message: metadata?.original_message?.content ?? "" }
+        : undefined,
     };
   }
 
