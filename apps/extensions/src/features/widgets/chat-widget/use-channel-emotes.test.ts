@@ -1,5 +1,12 @@
-import { describe, expect, it } from 'vitest';
-import { mergeEmotes, parse7tvSet, parseBttv, parseFfz } from './use-channel-emotes';
+import { act, renderHook } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
+import {
+  mergeEmotes,
+  parse7tvSet,
+  parseBttv,
+  parseFfz,
+  useChannelEmotes,
+} from './use-channel-emotes';
 
 // Shapes trimmed from live 7TV, BTTV and FFZ API responses.
 
@@ -44,5 +51,34 @@ describe('emote parsers', () => {
   it('lets later lists win a name clash', () => {
     const map = mergeEmotes([['KEKW', 'ffz']], [['KEKW', 'bttv']], [['KEKW', '7tv']]);
     expect(map.get('KEKW')).toBe('7tv');
+  });
+});
+
+describe('useChannelEmotes', () => {
+  it('loads the emotes once the network answers, when OBS started the source before it', async () => {
+    vi.useFakeTimers();
+    let online = false;
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (url: string) => {
+        if (!online) throw new TypeError('Failed to fetch');
+        if (url.startsWith('https://api.ivr.fi/')) return Response.json([{ id: '1' }]);
+        if (url === 'https://7tv.io/v3/users/twitch/1') {
+          return Response.json({ emote_set: { emotes: [{ id: 'e1', name: 'catJAM' }] } });
+        }
+        return new Response('{}', { status: 404 });
+      }),
+    );
+    const { result } = renderHook(() =>
+      useChannelEmotes('streamer', null, { sevenTv: true, bttv: false, ffz: false }),
+    );
+    await act(async () => {});
+    expect(result.current.twitch.size).toBe(0);
+
+    online = true;
+    await act(async () => vi.advanceTimersByTime(5_000));
+    expect(result.current.twitch.get('catJAM')).toBe('https://cdn.7tv.app/emote/e1/2x.webp');
+    vi.useRealTimers();
+    vi.unstubAllGlobals();
   });
 });

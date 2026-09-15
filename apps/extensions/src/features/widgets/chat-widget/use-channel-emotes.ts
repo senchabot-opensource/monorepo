@@ -1,4 +1,6 @@
-import React from 'react';
+import { useState } from 'react';
+import { useRetryingEffect } from '#/hooks/use-retrying-effect';
+import { fetchJson } from '#/lib/fetch-json';
 
 // Emote name -> image URL.
 export type EmoteMap = Map<string, string>;
@@ -28,21 +30,10 @@ export const parseFfz = (sets: FfzSet[]): EmoteList =>
 // Later lists win on a name clash: channel emotes over global ones, 7TV over BTTV over FFZ.
 export const mergeEmotes = (...lists: EmoteList[]): EmoteMap => new Map(lists.flat());
 
-// One request per URL per page, shared by every hook instance and re-render.
-const requests = new Map<string, Promise<unknown>>();
-const fetchJson = <T>(url: string): Promise<T | undefined> => {
-  if (!requests.has(url)) {
-    requests.set(
-      url,
-      fetch(url)
-        .then((res) => (res.ok ? res.json() : undefined))
-        .catch(() => undefined),
-    );
-  }
-  return requests.get(url) as Promise<T | undefined>;
-};
+/** Fetches JSON, or undefined when the request failed (and should be tried again later). */
+type Get = <T>(url: string) => Promise<T | undefined>;
 
-async function loadTwitchEmotes(login: string, providers: EmoteProviders) {
+async function loadTwitchEmotes(fetchJson: Get, login: string, providers: EmoteProviders) {
   const users = await fetchJson<{ id: string }[]>(
     `https://api.ivr.fi/v2/twitch/user?login=${encodeURIComponent(login)}`,
   );
@@ -75,7 +66,7 @@ async function loadTwitchEmotes(login: string, providers: EmoteProviders) {
   return {
     sevenTvChannel: parse7tvSet(sevenTvUser?.emote_set),
     map: mergeEmotes(
-      parseFfz(ffzGlobal ? ffzGlobal.default_sets.map((set) => ffzGlobal.sets[set] ?? {}) : []),
+      parseFfz((ffzGlobal?.default_sets ?? []).map((set) => ffzGlobal?.sets?.[set] ?? {})),
       parseBttv(bttvGlobal),
       parse7tvSet(sevenTvGlobal),
       parseFfz(Object.values(ffzRoom?.sets ?? {})),
@@ -87,7 +78,7 @@ async function loadTwitchEmotes(login: string, providers: EmoteProviders) {
 
 // BTTV and FFZ only exist on Twitch, so Kick messages get 7TV alone: the set linked to the Kick
 // account, or the Twitch one when the streamer only linked Twitch on 7TV.
-async function loadKickEmotes(kickUserId: string | null, twitchSevenTv: EmoteList) {
+async function loadKickEmotes(fetchJson: Get, kickUserId: string | null, twitchSevenTv: EmoteList) {
   const [global, user] = await Promise.all([
     fetchJson<SevenTvSet>('https://7tv.io/v3/emote-sets/global'),
     kickUserId
@@ -105,25 +96,30 @@ export function useChannelEmotes(
   kickUserId: string | null | undefined,
   providers: EmoteProviders,
 ): Record<'twitch' | 'kick', EmoteMap> {
-  const [emotes, setEmotes] = React.useState(EMPTY);
+  const [emotes, setEmotes] = useState(EMPTY);
   const { sevenTv, bttv, ffz } = providers;
 
-  React.useEffect(() => {
-    let cancelled = false;
-    const load = async () => {
+  // What loaded is shown right away; the requests that failed are tried again, since OBS can load
+  // the source before the network is up.
+  useRetryingEffect(
+    async (isCurrent) => {
+      let failed = false;
+      const get: Get = <T>(url: string) =>
+        fetchJson<T>(url).catch(() => {
+          failed = true;
+          return undefined;
+        });
       const twitch = twitchChannel
-        ? await loadTwitchEmotes(twitchChannel, { sevenTv, bttv, ffz })
+        ? await loadTwitchEmotes(get, twitchChannel, { sevenTv, bttv, ffz })
         : { map: new Map<string, string>(), sevenTvChannel: [] };
       const kick = sevenTv
-        ? await loadKickEmotes(kickUserId ?? null, twitch.sevenTvChannel)
+        ? await loadKickEmotes(get, kickUserId ?? null, twitch.sevenTvChannel)
         : new Map<string, string>();
-      if (!cancelled) setEmotes({ twitch: twitch.map, kick });
-    };
-    load();
-    return () => {
-      cancelled = true;
-    };
-  }, [twitchChannel, kickUserId, sevenTv, bttv, ffz]);
+      if (isCurrent()) setEmotes({ twitch: twitch.map, kick });
+      return failed;
+    },
+    [twitchChannel, kickUserId, sevenTv, bttv, ffz],
+  );
 
   return emotes;
 }

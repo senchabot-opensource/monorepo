@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
+import { retryDelay } from '#/lib/fetch-json';
 import { getKickChannelInfo, type KickChannelInfo } from '#/lib/kick';
-
-// kick.com's API answers 403/5xx at times, and OBS can load a source before the network is up.
-const RETRY_MS = [5_000, 15_000, 30_000, 60_000];
 
 export type KickChannel = KickChannelInfo & { chatroomId: string };
 
@@ -15,7 +13,10 @@ export interface KickChannelLookup {
 
 const PENDING: KickChannelLookup = { channel: null, notFound: false };
 
-/** The Kick channel's ids and badges, looked up again until kick.com answers. */
+/**
+ * The Kick channel's ids and badges, looked up again until kick.com answers: its API answers
+ * 403/5xx at times, and OBS can load a source before the network is up.
+ */
 export function useKickChannel(slug: string | undefined, enabled = true): KickChannelLookup {
   const [lookup, setLookup] = useState<KickChannelLookup>(PENDING);
   const name = slug?.trim() ?? '';
@@ -33,7 +34,7 @@ export function useKickChannel(slug: string | undefined, enabled = true): KickCh
         return;
       }
       setLookup({ channel: null, notFound: info.notFound });
-      timer = window.setTimeout(() => run(attempt + 1), RETRY_MS[Math.min(attempt, RETRY_MS.length - 1)]);
+      timer = window.setTimeout(() => run(attempt + 1), retryDelay(attempt));
     };
     run(0);
     return () => {
