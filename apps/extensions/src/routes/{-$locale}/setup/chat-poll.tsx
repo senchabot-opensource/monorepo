@@ -370,7 +370,8 @@ function PollSetup() {
             login: `tester${testVoter.current++}`,
             text: String(1 + Math.floor(Math.random() * optionCount)),
             mod: false,
-            sub: false,
+            // A subs-only poll turns everyone else's votes away.
+            sub: settings.subsOnly,
           });
         }
       },
