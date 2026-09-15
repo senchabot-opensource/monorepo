@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { useDeferredValue, useEffect, useId, useMemo, useState } from 'react';
+import { useEffect, useId, useMemo, useState } from 'react';
 import { ChannelFields } from '#/components/channel-fields';
 import { CopyUrlField } from '#/components/copy-url-field';
 import { ExternalIcon } from '#/components/icons';
@@ -29,6 +29,7 @@ import {
   parseWidgetUrl,
   type Settings,
 } from '#/features/widgets/chat-widget/widget-settings';
+import { TYPING_PAUSE_MS, useDebouncedValue } from '#/hooks/use-debounced-value';
 import { useI18n } from '#/lib/i18n';
 import { getParamsLocale, withLangParam } from '#/lib/i18n/paths';
 import type { FaqEntry } from '#/lib/i18n/seo';
@@ -72,8 +73,10 @@ function ChatWidgetSetup() {
     setMounted(true);
   }, []);
 
-  const deferredTwitch = useDeferredValue(twitchChannel);
-  const deferredKick = useDeferredValue(kickChannel);
+  // The preview connects to the channels it names, so it waits for typing to pause instead of
+  // reloading, and looking up a Kick name, on every keystroke.
+  const deferredTwitch = useDebouncedValue(twitchChannel, TYPING_PAUSE_MS);
+  const deferredKick = useDebouncedValue(kickChannel, TYPING_PAUSE_MS);
 
   const update = <K extends keyof Settings>(key: K, value: Settings[K]) =>
     setSettings((current) => ({ ...current, [key]: value }));

@@ -114,7 +114,9 @@ describe('setup page previews', () => {
     expect(textbox(t('common.widgetUrl')).value).toBe(
       'http://localhost:3000/widgets/chat-widget?twitch=streamer',
     );
-    expect(new URL(frame.src).searchParams.get('twitch')).toBe('streamer');
+    // The preview joins the channel it names, so it waits for typing to pause.
+    expect(new URL(frame.src).searchParams.has('twitch')).toBe(false);
+    await vi.waitFor(() => expect(new URL(frame.src).searchParams.get('twitch')).toBe('streamer'));
   });
 
   it('scales the Emote Wall demo down from its 1920×1080 canvas', async () => {
