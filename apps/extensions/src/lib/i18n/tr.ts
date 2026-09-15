@@ -137,6 +137,10 @@ export const tr: typeof en = {
     guideStep3:
       '3. Genişlik ve yüksekliği istediğin sohbet kutusu kaplama boyutlarına ayarla (örn. dikey için 400×600).',
     browserSourceHintSize: ' (önerilen boyut: sohbet kutusu için 400×600).',
+    widgetUrlTip:
+      "Daha önce bir widget oluşturduysan URL'sini buraya yapıştır. Ayarların geri yüklenir, istediğini değiştirebilirsin.",
+    widgetUrlPlaceholder: "Düzenlemek için widget URL'sini yapıştır",
+    widgetUrlInvalid: "Bu bir Sohbet Kutusu widget URL'si değil.",
     faq1Q: "Sohbet kutusunu kullanmak için Twitch veya Kick'e giriş yapmam gerekiyor mu?",
     faq1A:
       'Giriş gerekmez. Sohbet Kutusu, her iki platformun herkese açık sohbet akışlarını anonim olarak dinler.',
