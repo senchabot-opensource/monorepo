@@ -10,7 +10,14 @@ import {
   type ClearAllCallback,
   type DeleteMessageCallback,
 } from './basechat';
-import { withoutBypassSuffix } from './chat-text';
+import { withoutAction, withoutBypassSuffix } from './chat-text';
+
+/**
+ * A message sent with Twitch's reply button. Chat commands, raffle entries and poll votes skip
+ * these: a reply answers someone, e.g. teaches them a command, as Kick replies (type "reply") do.
+ */
+export const isTwitchReply = (tags: Record<string, string>) =>
+  Boolean(tags['reply-parent-msg-id'] || tags['reply-parent-user-login']);
 
 // Twitch starts a reply with "@parent ", which the widget already shows above the message. Emote
 // positions count code points from the start of the text, so they move back by the prefix length.
@@ -66,6 +73,8 @@ export function parseIrcLine(raw: string): IrcLine | null {
   return { tags: parseTags(tagsStr), source, command, params };
 }
 
+const TAG_ESCAPES: Record<string, string> = { ':': ';', s: ' ', '\\': '\\', r: '\r', n: '\n' };
+
 export function parseTags(tagsStr?: string): Record<string, string> {
   if (!tagsStr) {
     return {};
@@ -73,17 +82,16 @@ export function parseTags(tagsStr?: string): Record<string, string> {
 
   const tags: Record<string, string> = {};
   for (const tag of tagsStr.split(';')) {
-    const [key, value = ''] = tag.split('=');
+    // Values keep "=" unescaped: a reply to a YouTube link carries "watch?v=...".
+    const eq = tag.indexOf('=');
+    const key = eq === -1 ? tag : tag.slice(0, eq);
     if (!key) {
       continue;
     }
 
-    tags[key] = value
-      .replace(/\\s/g, ' ')
-      .replace(/\\:/g, ';')
-      .replace(/\\\\/g, '\\')
-      .replace(/\\r/g, '\r')
-      .replace(/\\n/g, '\n');
+    // One pass, so an escaped backslash before "s" stays a backslash and an "s".
+    tags[key] =
+      eq === -1 ? '' : tag.slice(eq + 1).replace(/\\(.?)/g, (_, c: string) => TAG_ESCAPES[c] ?? c);
   }
 
   return tags;
@@ -173,10 +181,11 @@ export class TwitchChat extends BaseChatClient {
 
   private parsePrivmsg({ tags, source, params }: IrcLine): ChatMessagesType | null {
     const username = source.split('!')[0];
-    const messageText = params[1];
-    if (messageText === undefined) {
+    if (params[1] === undefined) {
       return null;
     }
+    // A /me message's emote positions count from its text, not from the wrapper.
+    const messageText = withoutAction(params[1]);
 
     const message = this.toMessage(tags, username, messageText);
     if (!message) {

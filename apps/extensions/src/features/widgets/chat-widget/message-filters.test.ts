@@ -32,6 +32,39 @@ describe('isHiddenMessage', () => {
     );
   });
 
+  it("hides accounts with Kick's Bot badge, like @Kicklet and @StreamElements", () => {
+    // As Kick sent them live (2026-09-15): an "@" in the name and a "bot" badge.
+    expect(
+      isHiddenMessage(
+        message({ user: '@Kicklet', platform: 'kick', badges: ['bot', 'verified'] }),
+        ALL,
+      ),
+    ).toBe(true);
+    expect(
+      isHiddenMessage(
+        message({
+          user: '@StreamElements',
+          platform: 'kick',
+          badges: ['bot', 'moderator', 'verified'],
+        }),
+        ALL,
+      ),
+    ).toBe(true);
+    expect(
+      isHiddenMessage(message({ user: 'viewer', platform: 'kick', badges: ['og'] }), ALL),
+    ).toBe(false);
+  });
+
+  it('hides a listed bot that Kick sends with an "@" and no Bot badge, like @Streamlabs', () => {
+    // Seen live 2026-09-15: @Streamlabs carried only "verified".
+    expect(
+      isHiddenMessage(
+        message({ user: '@Streamlabs', platform: 'kick', badges: ['verified'] }),
+        ALL,
+      ),
+    ).toBe(true);
+  });
+
   it('hides commands, but not a "!" later in the message', () => {
     expect(isHiddenMessage(message({ message: '  !discord' }), ALL)).toBe(true);
     expect(isHiddenMessage(message({ message: 'wow!' }), ALL)).toBe(false);

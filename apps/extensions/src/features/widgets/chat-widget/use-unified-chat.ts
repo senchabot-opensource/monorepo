@@ -40,11 +40,16 @@ function createChatStore() {
     chatMessagesCollection.delete(id);
   };
 
+  // The overlay orders by receivedAt and breaks ties by id, which Twitch makes random UUIDs, so
+  // the lines of one frame (arriving in the same millisecond) each get their own later time.
+  let lastReceivedAt = 0;
+
   const pushToMessages = (payload: ChatMessagesType) => {
     const userLower = payload.userLower ?? payload.user.toLowerCase();
+    lastReceivedAt = Math.max(Date.now(), lastReceivedAt + 1);
     const message: ChatMessagesType = {
       ...payload,
-      receivedAt: new Date(),
+      receivedAt: new Date(lastReceivedAt),
       userLower,
     };
     const key = userKey(message.platform, userLower);
