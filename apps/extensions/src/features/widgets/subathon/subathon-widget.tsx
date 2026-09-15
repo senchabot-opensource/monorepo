@@ -97,6 +97,10 @@ interface SubathonWidgetProps {
   settings: Omit<SubathonSettings, 'platforms'>;
   simulate?: boolean;
   simSpeed?: number;
+  /** The only platform the preview simulates; both when unset. */
+  simPlatform?: SubathonPlatform;
+  /** Pairs the preview with its setup page's test buttons. */
+  previewId?: string;
 }
 
 export function SubathonWidget({
@@ -105,6 +109,8 @@ export function SubathonWidget({
   settings,
   simulate,
   simSpeed,
+  simPlatform,
+  previewId,
 }: SubathonWidgetProps) {
   const scale = useFitScale(STAGE);
   const { left, health, paused, ended, pops, hit } = useSubathon({
@@ -113,6 +119,8 @@ export function SubathonWidget({
     values: settings,
     simulate,
     simSpeed,
+    simPlatform,
+    previewId,
   });
   const healing = useHealing(hit);
   const shown = ended ? 0 : health;

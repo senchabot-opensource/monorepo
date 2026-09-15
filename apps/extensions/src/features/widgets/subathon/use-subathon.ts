@@ -87,7 +87,10 @@ export interface SubathonHit {
 
 /** Setup page buttons talk to the preview on this channel; both pages share the site's origin. */
 export const PREVIEW_CHANNEL = 'senchabot:subathon-preview';
-export type PreviewMessage = { type: 'event'; event: SubathonEvent } | { type: 'toggle' };
+/** `preview` is the id in the preview's URL, so only the preview of the page that sent it plays it. */
+export type PreviewMessage =
+  | { type: 'event'; preview: string; event: SubathonEvent }
+  | { type: 'toggle'; preview: string };
 
 // The preview's fast clock needs smooth steps; on stream the bar moves too slowly to see 100ms.
 const SIM_TICK_MS = 100;
@@ -104,8 +107,8 @@ const SIM_NAMES = ['NightOwl', 'pixelpanda', 'ChatGremlin', 'lunaa', 'GG_Tobi', 
 const pick = <T>(list: readonly T[]) => list[Math.floor(Math.random() * list.length)];
 
 /** A random event the settings give time for, or null when every value is off. */
-function simulatedEvent(values: SubathonValues): TimedEvent | null {
-  const platform = pick<SubathonPlatform>(['twitch', 'kick']);
+function simulatedEvent(values: SubathonValues, only?: SubathonPlatform): TimedEvent | null {
+  const platform = only ?? pick<SubathonPlatform>(['twitch', 'kick']);
   const name = pick(SIM_NAMES);
   const events: TimedEvent[] = [
     { kind: 'sub', platform, name, tier: 1 },
@@ -124,6 +127,10 @@ interface UseSubathonOptions {
   simulate?: boolean;
   /** Preview clock speed, e.g. 60 for a minute per second. Without it the bar drains in ~40 s. */
   simSpeed?: number;
+  /** The only platform the preview simulates; both when unset. */
+  simPlatform?: SubathonPlatform;
+  /** Pairs the preview with its setup page's test buttons. */
+  previewId?: string;
 }
 
 export function useSubathon({
@@ -132,6 +139,8 @@ export function useSubathon({
   values,
   simulate = false,
   simSpeed,
+  simPlatform,
+  previewId,
 }: UseSubathonOptions) {
   // The preview runs a fast virtual clock so the bar visibly drains.
   const rate = !simulate
@@ -250,18 +259,19 @@ export function useSubathon({
         return;
       }
       const quiet = Date.now() - lastTestAt.current < SIM_QUIET_AFTER_TEST_MS;
-      const event = quiet ? null : simulatedEvent(valuesRef.current);
+      const event = quiet ? null : simulatedEvent(valuesRef.current, simPlatform);
       if (event) handleEvent(event);
       timer = window.setTimeout(step, 2200 + Math.random() * 2000);
     };
     timer = window.setTimeout(step, 1200);
     return () => window.clearTimeout(timer);
-  }, [simulate, clock, commit, handleEvent]);
+  }, [simulate, simPlatform, clock, commit, handleEvent]);
 
   useEffect(() => {
-    if (!simulate || typeof BroadcastChannel === 'undefined') return;
+    if (!simulate || !previewId || typeof BroadcastChannel === 'undefined') return;
     const channel = new BroadcastChannel(PREVIEW_CHANNEL);
     channel.onmessage = ({ data }: MessageEvent<PreviewMessage>) => {
+      if (data?.preview !== previewId) return;
       lastTestAt.current = Date.now();
       if (data?.type === 'toggle') {
         const action = stateRef.current.endsAt === null ? 'start' : 'pause';
@@ -271,7 +281,7 @@ export function useSubathon({
       }
     };
     return () => channel.close();
-  }, [simulate, handleEvent]);
+  }, [simulate, previewId, handleEvent]);
 
   return {
     left: timeLeft(state, now),

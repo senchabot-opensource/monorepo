@@ -112,6 +112,7 @@ function SubathonSetup() {
   const [mounted, setMounted] = useState(false);
   const channelRef = useRef<BroadcastChannel | null>(null);
   const bitsPlatform = useRef<SubathonPlatform>('twitch');
+  const [previewId] = useState(() => Math.random().toString(36).slice(2, 10));
   const id = useId();
 
   useEffect(() => {
@@ -126,12 +127,13 @@ function SubathonSetup() {
     setSettings((current) => ({ ...current, [key]: value }));
 
   const send = (message: PreviewMessage) => channelRef.current?.postMessage(message);
+  const sendEvent = (event: SubathonEvent) => send({ type: 'event', preview: previewId, event });
 
   // Gated on mount so the prerendered input and the first client render agree.
   const origin = mounted ? window.location.origin : '';
   const widgetUrl = mounted ? buildSubathonUrl(origin, settings, twitchChannel, kickChannel) : '';
   const previewUrl = mounted
-    ? buildSubathonPreviewUrl(origin, settings, PREVIEW_SPEEDS[speedIndex])
+    ? buildSubathonPreviewUrl(origin, settings, previewId, PREVIEW_SPEEDS[speedIndex])
     : '';
 
   const applyWidgetUrl = (text: string) => {
@@ -320,35 +322,38 @@ function SubathonSetup() {
     </>
   );
 
-  // The test buttons use a platform whose value is on, so a click always shows something.
-  const onPlatform = (twitch: number, kick: number, preferred: SubathonPlatform) =>
-    preferred === 'twitch'
-      ? twitch
-        ? 'twitch'
-        : kick
-          ? 'kick'
-          : null
-      : kick
-        ? 'kick'
-        : twitch
-          ? 'twitch'
-          : null;
+  // The test buttons use a picked platform whose value is on, so a click always shows something.
+  const onPlatform = (twitch: number, kick: number, preferred: SubathonPlatform) => {
+    const on: Record<SubathonPlatform, boolean> = {
+      twitch: settings.platforms !== 'kick' && twitch > 0,
+      kick: settings.platforms !== 'twitch' && kick > 0,
+    };
+    const other = preferred === 'twitch' ? 'kick' : 'twitch';
+    return on[preferred] ? preferred : on[other] ? other : null;
+  };
   const name = t('subathon.testViewer');
   const subPlatform = onPlatform(settings.tsub, settings.ksub, 'twitch');
   const giftPlatform = onPlatform(settings.tgift, settings.kgift, 'kick');
   const bitsOn = onPlatform(settings.bits, settings.kicks, 'twitch');
-  const testButtons: { label: string; event?: () => SubathonEvent | null }[] = [
+  const testButtons: {
+    label: string;
+    event?: () => SubathonEvent | null;
+    disabled?: boolean;
+  }[] = [
     {
       label: t('subathon.testSub'),
       event: () => subPlatform && { kind: 'sub', platform: subPlatform, name, tier: 1 },
+      disabled: !subPlatform,
     },
     {
       label: t('subathon.testGift'),
       event: () =>
         giftPlatform && { kind: 'gift', platform: giftPlatform, name, count: 5, tier: 1 },
+      disabled: !giftPlatform,
     },
     {
       label: t('subathon.testBits'),
+      disabled: !bitsOn,
       event: () => {
         // Alternates when both are on, so both platforms' pops get shown.
         const platform = onPlatform(settings.bits, settings.kicks, bitsPlatform.current);
@@ -366,7 +371,6 @@ function SubathonSetup() {
       event: () => ({ kind: 'mod', platform: 'twitch', text: `${COMMAND} reset` }),
     },
   ];
-  const disabled = [!subPlatform, !giftPlatform, !bitsOn, false, false, false];
 
   const commands = (
     <section
@@ -418,15 +422,15 @@ function SubathonSetup() {
             >
               {t('subathon.testTitle')}
             </span>
-            {testButtons.map((button, index) => (
+            {testButtons.map((button) => (
               <button
                 key={button.label}
                 type="button"
-                disabled={disabled[index]}
+                disabled={button.disabled}
                 onClick={() => {
-                  if (!button.event) return send({ type: 'toggle' });
+                  if (!button.event) return send({ type: 'toggle', preview: previewId });
                   const event = button.event();
-                  if (event) send({ type: 'event', event });
+                  if (event) sendEvent(event);
                 }}
                 className={BUTTON_TEST}
               >

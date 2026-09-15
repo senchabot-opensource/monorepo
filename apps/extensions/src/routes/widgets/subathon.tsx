@@ -18,13 +18,17 @@ export const Route = createFileRoute('/widgets/subathon')({
 function RouteComponent() {
   const params = new URLSearchParams(useLocation({ select: (location) => location.searchStr }));
   const text = (key: string) => params.get(key)?.trim() || undefined;
+  const simPlatform = params.get('simplatform');
+  const simSpeed = Number(params.get('simspeed'));
   return (
     <SubathonWidget
       twitchChannel={text('twitch')}
       kickChannel={text('kick')}
       settings={readSubathonSettings(params)}
       simulate={readFlag(params.get('simulate'), false)}
-      simSpeed={Number(params.get('simspeed')) || undefined}
+      simSpeed={Number.isFinite(simSpeed) && simSpeed > 0 ? simSpeed : undefined}
+      simPlatform={simPlatform === 'twitch' || simPlatform === 'kick' ? simPlatform : undefined}
+      previewId={text('preview')}
     />
   );
 }

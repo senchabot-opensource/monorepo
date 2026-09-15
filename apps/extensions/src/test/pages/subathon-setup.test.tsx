@@ -147,11 +147,36 @@ describe('Subathon Timer setup', () => {
     await user.click(button(en('subathon.testGift')));
     await user.click(button(en('subathon.testPause')));
     await vi.waitFor(() => expect(received).toHaveLength(2));
+    // Tagged with the preview's id, so previews and demos in other tabs ignore them.
+    const preview = previewSrc().searchParams.get('preview');
+    expect(preview).toBeTruthy();
     expect(received[0]).toMatchObject({
       type: 'event',
+      preview,
       event: { kind: 'gift', platform: 'kick', count: 5 },
     });
-    expect(received[1]).toEqual({ type: 'toggle' });
+    expect(received[1]).toEqual({ type: 'toggle', preview });
+    listener.close();
+  });
+
+  it('tests only the picked platform', async () => {
+    withLayout(800, 350);
+    const user = setupUser();
+    const received: { event?: { platform: string } }[] = [];
+    const listener = new BroadcastChannel(PREVIEW_CHANNEL);
+    listener.onmessage = ({ data }) => received.push(data);
+    await renderRoute(PAGE);
+    await user.click(segment(en('common.platforms'), 'Twitch'));
+    expect(previewSrc().searchParams.get('simplatform')).toBe('twitch');
+
+    // The gift button prefers Kick, which is off now.
+    await user.click(button(en('subathon.testGift')));
+    await vi.waitFor(() => expect(received).toHaveLength(1));
+    expect(received[0].event?.platform).toBe('twitch');
+
+    // Twitch gifts off: the Kick value left behind doesn't keep the button on.
+    await retype(user, minutes(en('subathon.perGift')), '0');
+    expect(button(en('subathon.testGift')).disabled).toBe(true);
     listener.close();
   });
 
