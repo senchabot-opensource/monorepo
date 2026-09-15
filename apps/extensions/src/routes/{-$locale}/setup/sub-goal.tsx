@@ -1,5 +1,5 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { useEffect, useId, useRef, useState } from 'react';
+import { createFileRoute, useHydrated } from '@tanstack/react-router';
+import { useId, useRef, useState } from 'react';
 import { ChannelFields } from '#/components/channel-fields';
 import { CopyUrlField } from '#/components/copy-url-field';
 import { PreviewFrame } from '#/components/preview-frame';
@@ -64,14 +64,10 @@ function GoalSetup() {
   const [twitchChannel, setTwitchChannel] = useState('');
   const [kickChannel, setKickChannel] = useState('');
   const [settings, setSettings] = useState(DEFAULT_GOAL_SETTINGS);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useHydrated();
   const { previewId, send } = usePreviewSender<PreviewMessage>(PREVIEW_CHANNEL);
   const nextPlatform = useRef<SubathonPlatform>('twitch');
   const id = useId();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const update = <K extends keyof GoalSettings>(key: K, value: GoalSettings[K]) =>
     setSettings((current) => ({ ...current, [key]: value }));

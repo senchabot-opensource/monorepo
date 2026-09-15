@@ -1,5 +1,5 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { useEffect, useId, useRef, useState } from 'react';
+import { createFileRoute, useHydrated } from '@tanstack/react-router';
+import { useId, useRef, useState } from 'react';
 import { ChannelFields } from '#/components/channel-fields';
 import { CopyUrlField } from '#/components/copy-url-field';
 import { PreviewFrame } from '#/components/preview-frame';
@@ -110,14 +110,10 @@ function SubathonSetup() {
   const [settings, setSettings] = useState(DEFAULT_SUBATHON_SETTINGS);
   const [valuesTab, setValuesTab] = useState<SubathonPlatform>('twitch');
   const [speedIndex, setSpeedIndex] = useState(DEFAULT_SPEED_INDEX);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useHydrated();
   const { previewId, send } = usePreviewSender<PreviewMessage>(PREVIEW_CHANNEL);
   const bitsPlatform = useRef<SubathonPlatform>('twitch');
   const id = useId();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const update = <K extends keyof SubathonSettings>(key: K, value: SubathonSettings[K]) =>
     setSettings((current) => ({ ...current, [key]: value }));

@@ -1,5 +1,5 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { useEffect, useId, useState } from 'react';
+import { createFileRoute, useHydrated } from '@tanstack/react-router';
+import { useId, useState } from 'react';
 import { ChannelFields } from '#/components/channel-fields';
 import { CopyUrlField } from '#/components/copy-url-field';
 import { PreviewFrame } from '#/components/preview-frame';
@@ -58,12 +58,8 @@ function SubSproutSetup() {
   const [kickChannel, setKickChannel] = useState('');
   const [settings, setSettings] = useState(DEFAULT_SUB_SPROUT_SETTINGS);
   const [previewSpeedIndex, setPreviewSpeedIndex] = useState(0);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useHydrated();
   const id = useId();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const update = <K extends keyof SubSproutSettings>(key: K, value: SubSproutSettings[K]) =>
     setSettings((current) => ({ ...current, [key]: value }));

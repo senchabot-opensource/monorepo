@@ -1,5 +1,5 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { useEffect, useMemo, useState } from 'react';
+import { createFileRoute, useHydrated } from '@tanstack/react-router';
+import { useMemo, useState } from 'react';
 import { CopyUrlField } from '#/components/copy-url-field';
 import { ExternalIcon } from '#/components/icons';
 import { SetupShell } from '#/components/setup-shell';
@@ -67,11 +67,7 @@ function ObsBridgeSetup() {
   const [commands, setCommands] = useState<ObsBridgeCustomCommands>({});
   const [obsWebsocketUrl, setObsWebsocketUrl] = useState('');
   const [obsWebsocketPassword, setObsWebsocketPassword] = useState('');
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useHydrated();
 
   const platforms = { twitch: Boolean(twitch.trim()), kick: Boolean(kick.trim()) };
   const hasChannel = platforms.twitch || platforms.kick;

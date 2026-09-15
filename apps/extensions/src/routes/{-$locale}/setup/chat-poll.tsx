@@ -1,5 +1,5 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { useEffect, useId, useRef, useState } from 'react';
+import { createFileRoute, useHydrated } from '@tanstack/react-router';
+import { useId, useRef, useState } from 'react';
 import { ChannelFields } from '#/components/channel-fields';
 import { CopyUrlField } from '#/components/copy-url-field';
 import { CloseIcon } from '#/components/icons';
@@ -92,14 +92,10 @@ function PollSetup() {
   // The poll's own language: the page's until one is picked. The OBS URL always carries it.
   const [pickedLocale, setPickedLocale] = useState<Locale | null>(null);
   const pollLocale = pickedLocale ?? locale;
-  const [mounted, setMounted] = useState(false);
+  const mounted = useHydrated();
   const { previewId, send } = usePreviewSender<PreviewMessage>(PREVIEW_CHANNEL);
   const testVoter = useRef(0);
   const id = useId();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const update = <K extends keyof PollSettings>(key: K, value: PollSettings[K]) =>
     setSettings((current) => ({ ...current, [key]: value }));

@@ -1,5 +1,5 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { useEffect, useId, useMemo, useState } from 'react';
+import { createFileRoute, useHydrated } from '@tanstack/react-router';
+import { useId, useMemo, useState } from 'react';
 import { ChannelFields } from '#/components/channel-fields';
 import { CopyUrlField } from '#/components/copy-url-field';
 import { ExternalIcon } from '#/components/icons';
@@ -67,12 +67,8 @@ function ChatWidgetSetup() {
   const [kickChannel, setKickChannel] = useState('');
   const [settings, setSettings] = useState(DEFAULT_SETTINGS);
   const [previewRateIndex, setPreviewRateIndex] = useState(0);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useHydrated();
   const id = useId();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   // The preview connects to the channels it names, so it waits for typing to pause instead of
   // reloading, and looking up a Kick name, on every keystroke.
