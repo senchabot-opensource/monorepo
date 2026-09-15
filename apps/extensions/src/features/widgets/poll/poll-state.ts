@@ -135,11 +135,13 @@ export function tally(poll: PollState): Tally {
  * i alike ("ISIK", "ışık" and "Işık" all match). JavaScript lowercases "I" to "i" and "İ" to
  * "i̇", so without this a Turkish option would only match when typed exactly.
  */
+// Chat clients add an invisible character to get past Twitch's "identical message" block: 7TV
+// U+E0000 (unassigned, so no \p{} class has it) and Chatterino U+034F (a mark).
 export const foldText = (text: string) =>
   text
     .replace(/[İIı]/g, 'i')
     .normalize('NFD')
-    .replace(/\p{M}/gu, '')
+    .replace(/[\u{E0000}\p{M}\p{Cf}]/gu, '')
     .toLowerCase()
     .replace(/\s+/g, ' ')
     .trim();
@@ -158,8 +160,9 @@ export function parseVote(message: string, options: readonly string[]): number |
   if (!folded) return null;
   const byText = options.findIndex((option) => foldText(option) === folded);
   if (byText >= 0) return byText;
-  if (!/^\d{1,2}$/.test(body)) return null;
-  const number = Number(body);
+  // Folded, so "1 " plus a chat client's invisible suffix, or the keycap emoji 1️⃣, is still 1.
+  if (!/^\d{1,2}$/.test(folded)) return null;
+  const number = Number(folded);
   return number >= 1 && number <= options.length ? number - 1 : null;
 }
 
@@ -237,8 +240,9 @@ export function parsePollCommand(
   }
   if (action === 'end' || action === 'cancel') return words.length === 1 ? { action } : null;
   if (action === 'extend') {
-    const ms = parseDuration(words.slice(1).join(''));
-    return ms ? { action, ms: Math.min(ms, MAX_POLL_MS) } : null;
+    // With a unit, like a poll's length: a bare "30" read as 30 minutes.
+    const ms = pollLength(words.slice(1).join(''));
+    return ms ? { action, ms } : null;
   }
 
   const ms = words.length > 1 ? pollLength(words[0]) : null;
