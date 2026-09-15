@@ -9,6 +9,9 @@ import { Select, type SelectOption } from '#/components/ui/select';
 import { SettingsGroup } from '#/components/ui/settings-group';
 import { Switch } from '#/components/ui/switch';
 import { TextField } from '#/components/ui/text-field';
+import { PresetField } from '#/features/presets/preset-field';
+import { CLASSIC_PRESET, isClassic, PRESET_PARAM } from '#/features/presets/registry';
+import { useStartOnSitePreset } from '#/features/presets/site-preset';
 import { type BurstOptions, useConfettiBurst } from '#/hooks/use-confetti-burst';
 import { useRaffleChat } from '#/hooks/use-raffle-chat';
 import { useRaffleState } from '#/hooks/use-raffle-state';
@@ -101,14 +104,20 @@ export function RaffleWidget({
   } = useRaffleState({ initialChannel, platform, t });
   const { config } = state;
 
-  const [overlayUrl, setOverlayUrl] = useState('');
+  const [origin, setOrigin] = useState('');
+  // The winner overlay's look only; it isn't a raffle rule, so it never locks.
+  const [preset, setPreset] = useState(CLASSIC_PRESET);
+  useStartOnSitePreset(setPreset);
+  const overlayUrl = origin
+    ? `${origin}${WIDGET.widgetPath}${isClassic(preset) ? '' : `?${PRESET_PARAM}=${preset}`}`
+    : '';
   const fireConfetti = useConfettiBurst(CONFETTI);
   // remainingMs is read from the clock on render, so re-render every second while it counts down.
   const [, setTick] = useState(0);
   const countingDown = remainingMs > 0;
 
   useEffect(() => {
-    setOverlayUrl(`${window.location.origin}${WIDGET.widgetPath}`);
+    setOrigin(window.location.origin);
   }, []);
 
   useEffect(() => {
@@ -273,6 +282,10 @@ export function RaffleWidget({
           {t('raffle.resetConfig')}
         </button>
       </div>
+
+      <SettingsGroup title={t('common.sectionAppearance')}>
+        <PresetField value={preset} onChange={setPreset} />
+      </SettingsGroup>
     </>
   );
 

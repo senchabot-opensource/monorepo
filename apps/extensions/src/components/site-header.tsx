@@ -175,10 +175,14 @@ function useCurrent(path: SitePath) {
 
 function ContentLinks({ className }: { className: string }) {
   const { t } = useI18n();
+  const presetsCurrent = useCurrent(CONTENT_PATHS.presets);
   const guidesCurrent = useCurrent(CONTENT_PATHS.guides);
   const faqCurrent = useCurrent(CONTENT_PATHS.faq);
   return (
     <>
+      <LocaleLink to={CONTENT_PATHS.presets} aria-current={presetsCurrent} className={className}>
+        {t('common.nav.presets')}
+      </LocaleLink>
       <LocaleLink to={CONTENT_PATHS.guides} aria-current={guidesCurrent} className={className}>
         {t('common.nav.guides')}
       </LocaleLink>

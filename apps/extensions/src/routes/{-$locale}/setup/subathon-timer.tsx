@@ -16,6 +16,9 @@ import { SettingsGroup } from '#/components/ui/settings-group';
 import { Switch } from '#/components/ui/switch';
 import { Tabs } from '#/components/ui/tabs';
 import { HINT_CLASS, TextField } from '#/components/ui/text-field';
+import { PresetField } from '#/features/presets/preset-field';
+import { isClassic } from '#/features/presets/registry';
+import { useStartOnSitePreset } from '#/features/presets/site-preset';
 import type { SubathonEvent, SubathonPlatform } from '#/features/widgets/subathon/subathon-events';
 import { COMMAND } from '#/features/widgets/subathon/subathon-timer';
 import { hueFor } from '#/features/widgets/overlay-style';
@@ -118,6 +121,7 @@ function SubathonSetup() {
 
   const update = <K extends keyof SubathonSettings>(key: K, value: SubathonSettings[K]) =>
     setSettings((current) => ({ ...current, [key]: value }));
+  useStartOnSitePreset((preset) => update('preset', preset));
 
   const sendEvent = (event: SubathonEvent) => send({ type: 'event', event });
 
@@ -222,6 +226,7 @@ function SubathonSetup() {
       </SettingsGroup>
 
       <SettingsGroup title={t('common.sectionAppearance')}>
+        <PresetField value={settings.preset} onChange={(value) => update('preset', value)} />
         <div>
           <FieldLabel id={`${id}-style`} tip={t('subathon.styleTip')}>
             {t('subathon.style')}
@@ -233,21 +238,23 @@ function SubathonSetup() {
             options={styleOptions}
           />
         </div>
-        <div>
-          <FieldLabel id={`${id}-color`} tip={t('subathon.colorTip')}>
-            {t('subathon.color')}
-          </FieldLabel>
-          <ColorSwatches
-            labelledBy={`${id}-color`}
-            value={settings.color}
-            onChange={(value) => update('color', value)}
-            options={SUBATHON_COLORS.map((color) => ({
-              value: color,
-              label: t(`subathon.colors.${color}`),
-              background: swatchBackground(color),
-            }))}
-          />
-        </div>
+        {isClassic(settings.preset) && (
+          <div>
+            <FieldLabel id={`${id}-color`} tip={t('subathon.colorTip')}>
+              {t('subathon.color')}
+            </FieldLabel>
+            <ColorSwatches
+              labelledBy={`${id}-color`}
+              value={settings.color}
+              onChange={(value) => update('color', value)}
+              options={SUBATHON_COLORS.map((color) => ({
+                value: color,
+                label: t(`subathon.colors.${color}`),
+                background: swatchBackground(color),
+              }))}
+            />
+          </div>
+        )}
         <div className="grid gap-3 sm:grid-cols-2">
           <TextField
             label={t('subathon.titleLabel')}

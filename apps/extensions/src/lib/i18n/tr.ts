@@ -50,6 +50,7 @@ export const tr: typeof en = {
       closeMenu: 'Menüyü kapat',
       widgets: "Widget'lar",
       guides: 'Rehberler',
+      presets: "Preset'ler",
       faq: 'SSS',
       senchabot: 'Senchabot',
       github: "GitHub'daki kaynak kodu",
@@ -68,6 +69,7 @@ export const tr: typeof en = {
       social: 'Sosyal medyada Senchabot',
       guides: 'Rehberler',
       setupGuides: 'Kurulum rehberleri',
+      presets: "Oyun preset'leri",
       faq: 'Sık sorulan sorular',
       changelog: 'Yenilikler',
       senchabotBot: 'Senchabot botu',
@@ -1771,6 +1773,73 @@ export const tr: typeof en = {
       ctaText: "Sohbet Kutusu kurulum sayfasında kanallarını yaz ve Sohbet Okuyucu'yu Aç'a tıkla.",
     },
   },
+  presets: {
+    classic: 'Klasik',
+    classicTag: "Her widget'ın kendi görünümü",
+    breadcrumb: "Preset'ler",
+    eyebrow: "Preset'ler",
+    title: "Yayın overlay'lerin için oyun preset'leri",
+    lead: "Seçtiğin preset'le Sohbet Kutusu, Yayın Uyarıları, Abone Hedefi, Subathon Timer, Sohbet Anketi ve Çekiliş kazanan overlay'i aynı çerçeveyi, yazı tiplerini ve renkleri alır. İstersen hepsinde aynısını kullan, istersen her birinde başka birini.",
+    pickTitle: 'Bir preset seç',
+    by: 'Hazırlayan: {author}',
+    community: 'Topluluk',
+    makeDefault: "{name} preset'ini her widget'ta kullan",
+    isDefault: "{name} varsayılan preset'in",
+    defaultHint:
+      "Bu tarayıcıdaki her kurulum sayfası varsayılan preset'inle açılır. Yine de her widget'ta başka bir preset seçebilirsin.",
+    previewTitle: "Her widget'ta {name}",
+    setUp: '{widget} kurulumu',
+    previewIframeTitle: "{name} preset'iyle {widget} önizlemesi",
+    descriptions: {
+      classic:
+        "Widget'ların orijinal görünümü: neon Yayın Uyarıları, mor Abone Hedefi barı ve sade Sohbet Kutusu yazısı. Renkleri sen seçersin.",
+      rift: 'Elmas süslemeli ince altın çerçeveler, koyu lacivert paneller, parlayan turkuaz barlar ve Cinzel başlıklar.',
+      realm:
+        'Perçinli bronz ve altın çerçeveler, koyu deri paneller, legendary turuncusu barlar ve Marcellus başlıklar.',
+      dynasty:
+        'Altın köşebentli kırmızı lake çerçeveler, koyu ahşap paneller, kan kırmızısı barlar ve Zen Antique başlıklar.',
+      ancient: 'Bronz köşeli koyu demir çerçeveler, alt kenarda kırmızı bir parıltı ve keskin Grenze başlıklar.',
+      agent: 'Koyu antrasit zeminde kesik köşeler, kırmızı bir kenar, eğik barlar ve uzun Teko rakamları.',
+      defuse: 'HUD tarzı köşe işaretleri, kehribar rengi bir üst çizgi, barlarda ikaz şeritleri ve dar Saira yazı tipi.',
+      blocks: 'Tooltip morunda piksel çerçeveler, bloklara bölünmüş yeşil barlar ve Jersey 10 piksel yazı tipi.',
+    },
+    existingTitle: "OBS'te zaten widget'ların var mı?",
+    existingText:
+      "URL'lerini buraya alt alta yapıştır, {name} preset'iyle güncellenmiş hallerini kopyala. Sonra her birini OBS'te kendi tarayıcı kaynağının URL alanına yapıştır. URL'deki diğer ayarlar olduğu gibi kalır.",
+    existingLabel: "Widget URL'leri",
+    existingResult: "{name} preset'iyle URL'lerin",
+    existingUnsupported: 'Preset desteklemiyor, olduğu gibi bırakıldı',
+    existingInvalid: "Senchabot widget URL'si değil",
+    communityTitle: "Kendi preset'ini yap",
+    communityText:
+      "Bir preset tek bir küçük JSON dosyası: dokuz renk, iki Google Fonts yazı tipi ve bir çerçeve stili. Seninkini GitHub'da pull request olarak gönder. Kabul edilince burada ve bütün kurulum sayfalarında senin adınla görünür.",
+    communityLink: 'Preset nasıl yapılır?',
+    communityEmpty: "Henüz topluluk preset'i yok. İlki seninki olabilir.",
+    disclaimer:
+      "Oyun adları, sahiplerinin markalarıdır. Bu preset'ler oyun görseli içermeyen, hayran yapımı renk ve yazı tipi stilleridir. Oyun yapımcılarıyla bir bağlantıları yok, onlar tarafından onaylanmış da değiller.",
+    faqTitle: "Preset'ler hakkında sorular",
+    faq1Q: "Preset'ler OBS'e eklediğim widget'ları da değiştirir mi?",
+    faq1A:
+      "Hayır. Widget'ın görünümü URL'sinin bir parçası, yani OBS'teki widget yeni bir URL alana kadar aynı görünür. URL'lerini yukarıdaki kutuya yapıştır, preset eklenmiş hallerini al.",
+    faq2Q: "Her widget'ta farklı bir preset kullanabilir miyim?",
+    faq2A:
+      "Evet. Varsayılan preset sadece kurulum sayfalarının hangi preset'le açılacağını belirler. Herhangi bir widget'ın kurulum sayfasında başka bir preset seçebilirsin, o preset de o widget'ın URL'sine yazılır.",
+    faq3Q: "Hangi widget'lar preset destekliyor?",
+    faq3A:
+      "Sohbet Kutusu, Yayın Uyarıları, Abone Hedefi, Subathon Timer, Sohbet Anketi ve Çekiliş kazanan overlay'i. Emote Duvarı sadece emote gösterdiği, Sub Sprout da kendi bitkilerini çizdiği için ikisi kendi görünümünde kalır.",
+    faq4Q: 'Bunlar oyunların resmi görünümleri mi?',
+    faq4A:
+      'Hayır. Renklerden ve ücretsiz Google Fonts yazı tiplerinden oluşan hayran yapımı stiller. Oyun logosu ya da görseli içermezler, oyun yapımcılarıyla da bir bağlantıları yok.',
+    field: {
+      label: 'Preset',
+      tip: "Bu widget için hazır bir görünüm, yani çerçeve, yazı tipleri ve renkler. Widget'ların birbirine uysun istiyorsan hepsinde aynı preset'i seç.",
+      browse: "Tüm preset'ler",
+      owns: "Renkler ve yazı tipleri {name} preset'inden geliyor.",
+      makeDefault: "{name} preset'ini varsayılan yap",
+      makeDefaultTip: "Bu tarayıcıdaki bütün kurulum sayfaları bu preset'le açılır.",
+      isDefault: "Varsayılan preset'in",
+    },
+  },
   faqPage: {
     breadcrumb: 'SSS',
     title: 'Sık sorulan sorular',
@@ -1822,6 +1891,8 @@ export const tr: typeof en = {
     lead: "Senchabot Extensions'a eklenen özellikler ve düzeltilen hatalar, en yenisi en üstte. Liste projenin [GitHub'daki](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) commit geçmişinden hazırlanıyor.",
     site: 'Site',
     entries: {
+      presets:
+        "Preset'ler geldi: tek bir preset seçip Sohbet Kutusu, Yayın Uyarıları, Abone Hedefi, Subathon Timer, Sohbet Anketi ve Çekiliş kazanan overlay'ine aynı görünümü veriyorsun. League of Legends, World of Warcraft, Metin2, Dota 2, Valorant, CS2 ve Minecraft için oyun preset'leri de hazır.",
       poll: "Sohbet Anketi geldi: sohbetten !poll ile anket başlatıyorsun, Twitch ve Kick'teki izleyiciler de numara yazarak oy veriyor. Canlı barlar, geri sayım, izleyici başına tek oy ve sonunda kazanan var.",
       goal: "Abone Hedefi geldi: Twitch ve Kick'teki her abonelik, yenileme ve hediye abonelik hedef barına 1 ekliyor, hedefe ulaşınca bara bir kupa iniyor. Modlar sayıyı !goal ile düzeltebiliyor.",
       streamAlerts:

@@ -12,6 +12,9 @@ import { FieldLabel } from '#/components/ui/field-label';
 import { SettingsGroup } from '#/components/ui/settings-group';
 import { Switch } from '#/components/ui/switch';
 import { HINT_CLASS, TextField } from '#/components/ui/text-field';
+import { PresetField } from '#/features/presets/preset-field';
+import { isClassic } from '#/features/presets/registry';
+import { useStartOnSitePreset } from '#/features/presets/site-preset';
 import { COMMAND } from '#/features/widgets/goal/goal-count';
 import { PREVIEW_CHANNEL, type PreviewMessage } from '#/features/widgets/goal/use-goal';
 import type { SubathonEvent, SubathonPlatform } from '#/features/widgets/subathon/subathon-events';
@@ -72,6 +75,7 @@ function GoalSetup() {
 
   const update = <K extends keyof GoalSettings>(key: K, value: GoalSettings[K]) =>
     setSettings((current) => ({ ...current, [key]: value }));
+  useStartOnSitePreset((preset) => update('preset', preset));
 
   const sendEvent = (event: SubathonEvent) => send({ type: 'event', event });
 
@@ -126,19 +130,22 @@ function GoalSetup() {
       </SettingsGroup>
 
       <SettingsGroup title={t('common.sectionAppearance')}>
-        <div>
-          <FieldLabel id={`${id}-color`}>{t('goal.color')}</FieldLabel>
-          <ColorSwatches
-            labelledBy={`${id}-color`}
-            value={settings.color}
-            onChange={(value) => update('color', value)}
-            options={GOAL_COLORS.map((color) => ({
-              value: color,
-              label: t(`subathon.colors.${color}`),
-              background: `hsl(${hueFor(color, 1)} 85% 52%)`,
-            }))}
-          />
-        </div>
+        <PresetField value={settings.preset} onChange={(value) => update('preset', value)} />
+        {isClassic(settings.preset) && (
+          <div>
+            <FieldLabel id={`${id}-color`}>{t('goal.color')}</FieldLabel>
+            <ColorSwatches
+              labelledBy={`${id}-color`}
+              value={settings.color}
+              onChange={(value) => update('color', value)}
+              options={GOAL_COLORS.map((color) => ({
+                value: color,
+                label: t(`subathon.colors.${color}`),
+                background: `hsl(${hueFor(color, 1)} 85% 52%)`,
+              }))}
+            />
+          </div>
+        )}
         <div className="grid gap-3 sm:grid-cols-2">
           <TextField
             label={t('goal.titleLabel')}

@@ -38,6 +38,7 @@ Every page is also in Turkish under /tr, for example [Chat Box in Turkish](https
 ## Information
 
 - [Home](https://extensions.senchabot.com): Overview of every widget and tool.
+- [Presets](https://extensions.senchabot.com/presets): Game presets (League of Legends, World of Warcraft, Metin2, Dota 2, Valorant, Counter-Strike 2, Minecraft) that give Chat Box, Stream Alerts, Sub Goal, Subathon Timer, Chat Poll and the Raffle winner the same look.
 - [FAQ](https://extensions.senchabot.com/faq): Pricing, login, supported platforms, widget URLs and privacy.
 - [Changelog](https://extensions.senchabot.com/changelog): New features and fixes, newest first.
 

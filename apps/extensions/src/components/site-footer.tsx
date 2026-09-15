@@ -39,6 +39,7 @@ export function SiteFooter() {
   const { t } = useI18n();
   const guideLinks = [
     { path: CONTENT_PATHS.guides, label: t('common.footer.setupGuides') },
+    { path: CONTENT_PATHS.presets, label: t('common.footer.presets') },
     { path: CONTENT_PATHS.faq, label: t('common.footer.faq') },
     { path: CONTENT_PATHS.changelog, label: t('common.footer.changelog') },
   ];

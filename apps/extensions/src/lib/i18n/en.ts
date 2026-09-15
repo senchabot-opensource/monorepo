@@ -47,6 +47,7 @@ export const en = {
       closeMenu: 'Close menu',
       widgets: 'Widgets',
       guides: 'Guides',
+      presets: 'Presets',
       faq: 'FAQ',
       senchabot: 'Senchabot',
       github: 'Source code on GitHub',
@@ -65,6 +66,7 @@ export const en = {
       social: 'Senchabot on social media',
       guides: 'Guides',
       setupGuides: 'Setup guides',
+      presets: 'Game presets',
       faq: 'FAQ',
       changelog: 'Changelog',
       senchabotBot: 'Senchabot bot',
@@ -1755,6 +1757,73 @@ export const en = {
       ctaText: 'Type your channels on the Chat Box setup page and click Open Chat Reader.',
     },
   },
+  presets: {
+    classic: 'Classic',
+    classicTag: "Each widget's own look",
+    breadcrumb: 'Presets',
+    eyebrow: 'Presets',
+    title: 'Game presets for your stream overlays',
+    lead: 'Pick a preset and your Chat Box, Stream Alerts, Sub Goal, Subathon Timer, Chat Poll and Raffle winner get the same frame, fonts and colors. Use one on every widget, or a different one on each.',
+    pickTitle: 'Pick a preset',
+    by: 'by {author}',
+    community: 'Community',
+    makeDefault: 'Use {name} on every widget',
+    isDefault: '{name} is your default',
+    defaultHint:
+      'Every setup page on this browser starts with your default. You can still pick another preset on any widget.',
+    previewTitle: '{name} on every widget',
+    setUp: 'Set up {widget}',
+    previewIframeTitle: '{widget} preview with the {name} preset',
+    descriptions: {
+      classic:
+        'The look each widget was made with: neon Stream Alerts, the purple Sub Goal bar and plain Chat Box text. You pick the colors.',
+      rift: 'Thin gold frames with diamond studs, deep navy panels and glowing teal bars, with Cinzel titles.',
+      realm:
+        'Bronze and gold frames with rivets, dark leather panels and legendary orange bars, with Marcellus titles.',
+      dynasty:
+        'Red lacquer frames with gold corner brackets, dark wood panels and crimson bars, with Zen Antique titles.',
+      ancient: 'Dark iron frames with bronze corners, a red glow along the bottom and sharp Grenze titles.',
+      agent: 'Cut corners, a red edge, slanted bars and tall Teko numbers on dark slate.',
+      defuse: 'HUD corner brackets, an amber top line, hazard stripes on the bars and condensed Saira type.',
+      blocks: 'Pixel frames in tooltip purple, green bars split into blocks and the Jersey 10 pixel font.',
+    },
+    existingTitle: 'Already have widgets in OBS?',
+    existingText:
+      "Paste their URLs here, one per line, and copy them back with {name}. Then paste each one into its browser source's URL field in OBS. The rest of each URL stays the same.",
+    existingLabel: 'Widget URLs',
+    existingResult: 'Your URLs with {name}',
+    existingUnsupported: "Doesn't take a preset, left as it was",
+    existingInvalid: 'Not a Senchabot widget URL',
+    communityTitle: 'Make your own preset',
+    communityText:
+      "A preset is one small JSON file: nine colors, two Google Fonts and a frame style. Send yours as a pull request on GitHub. Once it's merged, it shows up here and on every setup page with your name on it.",
+    communityLink: 'How to make a preset',
+    communityEmpty: 'No community presets yet. Yours could be the first.',
+    disclaimer:
+      "Game names are trademarks of their owners. These presets are fan-made color and font styles with no game art, and they aren't affiliated with or endorsed by the game makers.",
+    faqTitle: 'Questions about presets',
+    faq1Q: 'Do presets change widgets that are already in OBS?',
+    faq1A:
+      "No. A widget's look is part of its URL, so a widget in OBS keeps its look until it gets a new URL. Paste your URLs in the box above to get them back with the preset.",
+    faq2Q: 'Can each widget have a different preset?',
+    faq2A:
+      "Yes. Your default is only where every setup page starts. On any widget's setup page you can pick another preset, and that widget's URL carries it.",
+    faq3Q: 'Which widgets take a preset?',
+    faq3A:
+      'Chat Box, Stream Alerts, Sub Goal, Subathon Timer, Chat Poll and the Raffle winner overlay. Emote Wall only shows emotes and Sub Sprout draws its own plants, so they keep their look.',
+    faq4Q: 'Are these official game themes?',
+    faq4A:
+      "No. They're fan-made styles built from colors and free Google Fonts, with no game logos or art, and they aren't affiliated with the game makers.",
+    field: {
+      label: 'Preset',
+      tip: 'A ready-made look for this widget: its frame, fonts and colors. Pick the same preset on every widget to make them match.',
+      browse: 'All presets',
+      owns: 'Colors and fonts come from {name}.',
+      makeDefault: 'Make {name} my default',
+      makeDefaultTip: 'Every setup page on this browser will start with it.',
+      isDefault: 'Your default',
+    },
+  },
   faqPage: {
     breadcrumb: 'FAQ',
     title: 'Frequently asked questions',
@@ -1806,6 +1875,8 @@ export const en = {
     lead: "New features and bug fixes in Senchabot Extensions, newest first. The list is put together from the project's commit history on [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      presets:
+        'New presets: one look for Chat Box, Stream Alerts, Sub Goal, Subathon Timer, Chat Poll and the Raffle winner, with game presets for League of Legends, World of Warcraft, Metin2, Dota 2, Valorant, CS2 and Minecraft.',
       poll: 'New Chat Poll: put up a poll from chat with !poll, and viewers on Twitch and Kick vote by typing a number. Live bars, a timer, one vote per viewer and the winner at the end.',
       goal: 'New Sub Goal: a goal bar that every sub, resub and gifted sub on Twitch and Kick fills by one, with a trophy when you reach it. Mods can fix the count with !goal.',
       streamAlerts:

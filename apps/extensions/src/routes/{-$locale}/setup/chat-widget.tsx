@@ -13,6 +13,9 @@ import { SegmentedControl, type SegmentedOption } from '#/components/ui/segmente
 import { Select, type SelectOption } from '#/components/ui/select';
 import { SettingsGroup } from '#/components/ui/settings-group';
 import { Switch } from '#/components/ui/switch';
+import { PresetField } from '#/features/presets/preset-field';
+import { findPreset } from '#/features/presets/registry';
+import { useStartOnSitePreset } from '#/features/presets/site-preset';
 import { buildReaderUrl } from '#/features/tools/chat-reader/reader-url';
 import { getHighlightSwatch } from '#/features/widgets/chat-widget/highlights';
 import {
@@ -77,6 +80,12 @@ function ChatWidgetSetup() {
 
   const update = <K extends keyof Settings>(key: K, value: Settings[K]) =>
     setSettings((current) => ({ ...current, [key]: value }));
+  useStartOnSitePreset((preset) => update('preset', preset));
+  const preset = findPreset(settings.preset)?.data;
+  // A preset brings its fonts: names in the first, messages in the second.
+  const presetFonts = preset
+    ? [...new Set([preset.fonts.display.family, preset.fonts.body.family])].join(' + ')
+    : '';
 
   const widgetUrl = useMemo(
     () =>
@@ -213,6 +222,7 @@ function ChatWidgetSetup() {
       </SettingsGroup>
 
       <SettingsGroup title={t('common.sectionAppearance')}>
+        <PresetField value={settings.preset} onChange={(value) => update('preset', value)} />
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)_minmax(0,1fr)]">
           <div>
             <FieldLabel id={`${id}-font`}>{t('chatWidget.font')}</FieldLabel>
@@ -220,7 +230,8 @@ function ChatWidgetSetup() {
               labelledBy={`${id}-font`}
               value={settings.font}
               onChange={(value) => update('font', value)}
-              options={fontOptions}
+              options={preset ? [{ value: settings.font, label: presetFonts }] : fontOptions}
+              disabled={Boolean(preset)}
             />
           </div>
           <div>

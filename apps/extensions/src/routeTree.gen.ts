@@ -24,6 +24,7 @@ import { Route as WidgetsSubathonRouteImport } from './routes/widgets/subathon'
 import { Route as Char123LocaleChar125IndexRouteImport } from './routes/{-$locale}/index'
 import { Route as Char123LocaleChar125ChangelogRouteImport } from './routes/{-$locale}/changelog'
 import { Route as Char123LocaleChar125FaqRouteImport } from './routes/{-$locale}/faq'
+import { Route as Char123LocaleChar125PresetsRouteImport } from './routes/{-$locale}/presets'
 import { Route as Char123LocaleChar125GuidesIndexRouteImport } from './routes/{-$locale}/guides/index'
 import { Route as Char123LocaleChar125GuidesChatGiveawayRouteImport } from './routes/{-$locale}/guides/chat-giveaway'
 import { Route as Char123LocaleChar125GuidesChatPollRouteImport } from './routes/{-$locale}/guides/chat-poll'
@@ -121,6 +122,12 @@ const Char123LocaleChar125FaqRoute = Char123LocaleChar125FaqRouteImport.update({
   path: '/faq',
   getParentRoute: () => Char123LocaleChar125RouteRoute,
 } as any)
+const Char123LocaleChar125PresetsRoute =
+  Char123LocaleChar125PresetsRouteImport.update({
+    id: '/presets',
+    path: '/presets',
+    getParentRoute: () => Char123LocaleChar125RouteRoute,
+  } as any)
 const Char123LocaleChar125GuidesIndexRoute =
   Char123LocaleChar125GuidesIndexRouteImport.update({
     id: '/guides/',
@@ -245,6 +252,7 @@ export interface FileRoutesByFullPath {
   '/widgets/subathon': typeof WidgetsSubathonRoute
   '/{-$locale}/changelog': typeof Char123LocaleChar125ChangelogRoute
   '/{-$locale}/faq': typeof Char123LocaleChar125FaqRoute
+  '/{-$locale}/presets': typeof Char123LocaleChar125PresetsRoute
   '/{-$locale}/': typeof Char123LocaleChar125IndexRoute
   '/{-$locale}/guides/chat-giveaway': typeof Char123LocaleChar125GuidesChatGiveawayRoute
   '/{-$locale}/guides/chat-poll': typeof Char123LocaleChar125GuidesChatPollRoute
@@ -279,6 +287,7 @@ export interface FileRoutesByTo {
   '/widgets/subathon': typeof WidgetsSubathonRoute
   '/{-$locale}/changelog': typeof Char123LocaleChar125ChangelogRoute
   '/{-$locale}/faq': typeof Char123LocaleChar125FaqRoute
+  '/{-$locale}/presets': typeof Char123LocaleChar125PresetsRoute
   '/{-$locale}': typeof Char123LocaleChar125IndexRoute
   '/{-$locale}/guides/chat-giveaway': typeof Char123LocaleChar125GuidesChatGiveawayRoute
   '/{-$locale}/guides/chat-poll': typeof Char123LocaleChar125GuidesChatPollRoute
@@ -315,6 +324,7 @@ export interface FileRoutesById {
   '/widgets/subathon': typeof WidgetsSubathonRoute
   '/{-$locale}/changelog': typeof Char123LocaleChar125ChangelogRoute
   '/{-$locale}/faq': typeof Char123LocaleChar125FaqRoute
+  '/{-$locale}/presets': typeof Char123LocaleChar125PresetsRoute
   '/{-$locale}/': typeof Char123LocaleChar125IndexRoute
   '/{-$locale}/guides/chat-giveaway': typeof Char123LocaleChar125GuidesChatGiveawayRoute
   '/{-$locale}/guides/chat-poll': typeof Char123LocaleChar125GuidesChatPollRoute
@@ -352,6 +362,7 @@ export interface FileRouteTypes {
     | '/widgets/subathon'
     | '/{-$locale}/changelog'
     | '/{-$locale}/faq'
+    | '/{-$locale}/presets'
     | '/{-$locale}/'
     | '/{-$locale}/guides/chat-giveaway'
     | '/{-$locale}/guides/chat-poll'
@@ -386,6 +397,7 @@ export interface FileRouteTypes {
     | '/widgets/subathon'
     | '/{-$locale}/changelog'
     | '/{-$locale}/faq'
+    | '/{-$locale}/presets'
     | '/{-$locale}'
     | '/{-$locale}/guides/chat-giveaway'
     | '/{-$locale}/guides/chat-poll'
@@ -421,6 +433,7 @@ export interface FileRouteTypes {
     | '/widgets/subathon'
     | '/{-$locale}/changelog'
     | '/{-$locale}/faq'
+    | '/{-$locale}/presets'
     | '/{-$locale}/'
     | '/{-$locale}/guides/chat-giveaway'
     | '/{-$locale}/guides/chat-poll'
@@ -564,6 +577,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char123LocaleChar125FaqRouteImport
       parentRoute: typeof Char123LocaleChar125RouteRoute
     }
+    '/{-$locale}/presets': {
+      id: '/{-$locale}/presets'
+      path: '/presets'
+      fullPath: '/{-$locale}/presets'
+      preLoaderRoute: typeof Char123LocaleChar125PresetsRouteImport
+      parentRoute: typeof Char123LocaleChar125RouteRoute
+    }
     '/{-$locale}/guides/': {
       id: '/{-$locale}/guides/'
       path: '/guides'
@@ -696,6 +716,7 @@ declare module '@tanstack/react-router' {
 interface Char123LocaleChar125RouteRouteChildren {
   Char123LocaleChar125ChangelogRoute: typeof Char123LocaleChar125ChangelogRoute
   Char123LocaleChar125FaqRoute: typeof Char123LocaleChar125FaqRoute
+  Char123LocaleChar125PresetsRoute: typeof Char123LocaleChar125PresetsRoute
   Char123LocaleChar125IndexRoute: typeof Char123LocaleChar125IndexRoute
   Char123LocaleChar125GuidesChatGiveawayRoute: typeof Char123LocaleChar125GuidesChatGiveawayRoute
   Char123LocaleChar125GuidesChatPollRoute: typeof Char123LocaleChar125GuidesChatPollRoute
@@ -721,6 +742,7 @@ const Char123LocaleChar125RouteRouteChildren: Char123LocaleChar125RouteRouteChil
   {
     Char123LocaleChar125ChangelogRoute: Char123LocaleChar125ChangelogRoute,
     Char123LocaleChar125FaqRoute: Char123LocaleChar125FaqRoute,
+    Char123LocaleChar125PresetsRoute: Char123LocaleChar125PresetsRoute,
     Char123LocaleChar125IndexRoute: Char123LocaleChar125IndexRoute,
     Char123LocaleChar125GuidesChatGiveawayRoute:
       Char123LocaleChar125GuidesChatGiveawayRoute,

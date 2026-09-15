@@ -254,6 +254,18 @@ export const CONTENT_META = {
         "Senchabot Extensions için kısa cevaplar: ücretsiz ve girişsiz, 9 widget'tan hangisi Twitch ve Kick'te çalışıyor, ayarlar nerede duruyor, hata nasıl bildirilir.",
     },
   },
+  presets: {
+    en: {
+      title: 'Game Presets for Twitch and Kick Overlays | Senchabot',
+      description:
+        'Free game presets for Twitch and Kick overlays: League of Legends, WoW, Metin2, Dota 2, Valorant, CS2 and Minecraft looks for chat, alerts, goals and polls.',
+    },
+    tr: {
+      title: "Twitch ve Kick için Oyun Overlay Preset'leri | Senchabot",
+      description:
+        "Twitch ve Kick için ücretsiz oyun preset'leri. Sohbet, uyarı, hedef ve anket overlay'lerine LoL, WoW, Metin2, Dota 2, Valorant, CS2 ya da Minecraft havası kat.",
+    },
+  },
   changelog: {
     en: {
       title: 'Changelog: New Features and Fixes | Senchabot Extensions',

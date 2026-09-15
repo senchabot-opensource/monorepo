@@ -310,7 +310,7 @@ A chat giveaway tool. The setup page is the tool itself: https://extensions.senc
 | Minimum Duration | 0 to 300 seconds before Draw Winner unlocks | 15 |
 
 Winner overlay:
-- URL: https://extensions.senchabot.com/widgets/raffle-overlay, added as a 1920x1080 browser source. It has no parameters and no demo mode.
+- URL: https://extensions.senchabot.com/widgets/raffle-overlay, added as a 1920x1080 browser source. Optional parameters: preset (see Presets) and demo=1, which shows a sample winner on repeat.
 - On Draw Winner the name appears in the middle of the screen, confetti bursts from both sides for 3 seconds, and the name disappears after 10 seconds.
 - The winner reaches the overlay through the browser's BroadcastChannel, which only works inside one browser or app. A raffle page open in a separate browser such as Chrome can't reach an overlay inside OBS. Run the raffle page in the same app as the overlay and do a test draw before going live. The winner also always shows on the raffle page.
 
@@ -355,6 +355,17 @@ URL parameters:
 | cmdStopStream | command text | !stopstream |
 | cmdStartRecord | command text | !startrecord |
 | cmdStopRecord | command text | !stoprecord |
+
+## Presets
+
+A preset gives several widgets the same look: frame, fonts and colors. Page: https://extensions.senchabot.com/presets
+
+- Widgets that take one: Chat Box, Stream Alerts, Sub Goal, Subathon Timer, Chat Poll and the Raffle winner overlay. Emote Wall and Sub Sprout keep their own art.
+- URL parameter on those widgets: preset, one of rift, realm, dynasty, ancient, agent, defuse, blocks. Missing or unknown means classic, each widget's own look, so URLs from before presets look the same.
+- Built-in presets, each made for a game: Rift (League of Legends), Realm (World of Warcraft), Dynasty (Metin2), Ancient (Dota 2), Agent (Valorant), Defuse (Counter-Strike 2), Blocks (Minecraft). They are fan-made styles from colors and free Google Fonts, with no game art, and aren't affiliated with the game makers.
+- A preset brings its own colors and fonts: with one set, the color and font parameters and Stream Alerts' theme are ignored. Layout settings (Subathon style, Chat Box layout, poll position and so on) still apply.
+- The presets page can set a default preset that every setup page in that browser starts with. Widgets already in OBS keep their look until they get a new URL; the presets page takes pasted widget URLs and gives them back with the preset added.
+- Community presets are JSON files in the source repository (apps/extensions/src/features/presets/community), added by pull request.
 
 ## FAQ
 
@@ -406,6 +417,7 @@ A: Open an issue at https://github.com/senchabot-opensource/monorepo/issues/new.
 - Chat Poll setup: https://extensions.senchabot.com/setup/chat-poll
 - Raffle: https://extensions.senchabot.com/setup/raffle
 - OBS Bridge setup: https://extensions.senchabot.com/setup/obs-bridge
+- Presets: https://extensions.senchabot.com/presets
 - Guides: https://extensions.senchabot.com/guides
 - Guide, add a widget to OBS: https://extensions.senchabot.com/guides/obs-browser-source
 - Guide, Twitch and Kick chat together: https://extensions.senchabot.com/guides/twitch-kick-chat-overlay
