@@ -142,6 +142,35 @@ describe('Chat Reader', () => {
     expect(log().textContent).not.toContain('remember me');
   });
 
+  it('keeps the newest rows in view when the dock gets shorter', async () => {
+    const observers: { callback: ResizeObserverCallback; targets: Element[] }[] = [];
+    vi.stubGlobal(
+      'ResizeObserver',
+      class {
+        targets: Element[] = [];
+        constructor(callback: ResizeObserverCallback) {
+          observers.push({ callback, targets: this.targets });
+        }
+        observe(target: Element) {
+          this.targets.push(target);
+        }
+        unobserve() {}
+        disconnect() {}
+      },
+    );
+    await renderRoute(`${TOOL}?twitch=streamer&lang=en`);
+    const list = log();
+    Object.defineProperty(list, 'scrollHeight', { configurable: true, value: 900 });
+    list.scrollTop = 500;
+
+    // Only the dock's own box changed size.
+    for (const { callback, targets } of observers) {
+      if (targets.includes(list)) callback([], {} as ResizeObserver);
+    }
+    expect(list.scrollTop).toBe(900);
+    vi.unstubAllGlobals();
+  });
+
   it('says so when the Kick channel does not exist', async () => {
     vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response('{}', { status: 404 }));
     await renderRoute(`${TOOL}?kick=nobody&lang=en`);
