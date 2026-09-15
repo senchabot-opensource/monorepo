@@ -78,6 +78,16 @@ export function GoalIcon(props: IconProps) {
   );
 }
 
+export function PollIcon(props: IconProps) {
+  return (
+    <StrokeIcon {...props}>
+      <rect x="3.5" y="4.5" width="17" height="4" rx="1.2" />
+      <rect x="3.5" y="10" width="11" height="4" rx="1.2" />
+      <rect x="3.5" y="15.5" width="14" height="4" rx="1.2" />
+    </StrokeIcon>
+  );
+}
+
 export function StreamAlertsIcon(props: IconProps) {
   return (
     <StrokeIcon {...props}>

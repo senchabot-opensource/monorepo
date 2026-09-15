@@ -100,6 +100,10 @@ export const tr: typeof en = {
       tagline:
         'Abonelik, hediye abonelik, Bits ve Kicks geldikçe uzayan bir geri sayım. Can barı, saat ya da halka.',
     },
+    poll: {
+      name: 'Sohbet Anketi',
+      tagline: 'Sohbet numara yazarak oy verir, barlar canlı dolar, sonunda kazanan çıkar.',
+    },
     streamAlerts: {
       name: 'Yayın Uyarıları',
       tagline:
@@ -147,6 +151,24 @@ export const tr: typeof en = {
     subathonFeatureChat: 'Sohbetten !subathon ile yönet',
     subathonFeaturePlatforms: 'Twitch ve Kick için ayrı süreler',
     subathonFeatureSaved: 'OBS kapansa da kalan süre korunur',
+    pollFeatureVote: 'İzleyiciler numara yazarak oy verir',
+    pollFeatureBoth: 'Twitch ve Kick oyları tek ankette',
+    pollFeatureLate: 'Son saniye oyları gecikmeye rağmen sayılır',
+    pollSpotlight: {
+      eyebrow: 'Yeni: Sohbet Anketi',
+      title: 'Kararı sohbetin versin',
+      lead: "Sohbetten !poll ile bir anket başlat, Twitch ve Kick'teki izleyiciler numara yazarak oy versin. Barlar yayında canlı dolar, süre bitince kazanan ekrana gelir.",
+      pointVote:
+        'İzleyiciler 2, !vote 2 ya da seçeneğin kendisini yazar. Her izleyici bir kez sayılır.',
+      pointBoth: "Twitch ve Kick'ten gelen oylar aynı ankette toplanır.",
+      pointLate:
+        'İzleyiciler yayını biraz geriden izlese de son saniyelerde yazılan oylar sayılır.',
+      pointMods: 'Anketi sen ve modların sohbetten yönetirsiniz. Bot yok, giriş yok.',
+      setup: "Sohbet Anketi'ni kur",
+      guide: 'Rehberi oku',
+      chat: 'Sohbet',
+      caption: 'Sahte izleyicilerin oy verdiği canlı demo',
+    },
     visualScenes: 'Sahneler',
     howTitle: 'Nasıl çalışır?',
     howLead: 'Üç adım, hiçbirinde hesap açmak yok.',
@@ -711,6 +733,131 @@ export const tr: typeof en = {
     faq4A:
       'Şimdilik hayır. Twitch ve Kick, giriş yapılmamış bir sayfaya yeni takipçileri göstermiyor, bu yüzden hedef iki platformda da aynı şekilde abonelikleri sayıyor.',
   },
+  poll: {
+    breadcrumb: 'Sohbet Anketi Kurulumu',
+    title: 'Sohbet Anketi Kurulumu',
+    intro:
+      'Twitch ve Kick için sohbet anketi. Sen ya da bir mod sohbetten anket başlatırsınız, izleyiciler numara yazarak oy verir, barlar da yayında canlı dolar. İki sohbetten gelen oylar tek ankette toplanır, her izleyici bir kez sayılır, süre bitince de kazanan ekrana gelir.',
+    sectionPoll: 'Hazır Anket',
+    question: 'Soru',
+    questionTip: 'Seçeneklerin üstünde görünür. Soruyu yayında sesli soracaksan boş bırak.',
+    questionPlaceholder: 'Sırada ne oynayalım?',
+    options: 'Seçenekler',
+    optionsTip:
+      'İzleyiciler bir seçeneğin yanındaki numarayı ya da seçeneğin kendisini yazarak oy verir. En fazla 6 seçenek.',
+    optionLabel: 'Seçenek {n}',
+    optionPlaceholder: 'Seçenek {n}',
+    removeOption: '{n}. seçeneği kaldır',
+    addOption: '+ Seçenek Ekle',
+    pollHint:
+      "URL'de saklanır. Sohbete {command} yazınca ekrana gelir. Modlar da istedikleri an sohbetten yeni bir anket yazabilir.",
+    sectionVoting: 'Oylama',
+    duration: 'Anket Süresi',
+    durationTip:
+      'Bir anketin ne kadar süre oy toplayacağı. Bir mod sohbetten tek bir ankete farklı süre verebilir, erken bitirebilir ya da süre ekleyebilir.',
+    durationOff: 'Süre yok: anket, bir mod !poll end yazana kadar açık kalır.',
+    hold: 'Sonuç Gösterim Süresi',
+    holdTip:
+      'Oylama bittikten sonra sonuçların ekranda ne kadar kalacağı. Sonra anket ekrandan çıkar.',
+    holdOff: 'Sonuçlar, bir sonraki ankete ya da !poll cancel yazılana kadar ekranda kalır.',
+    delay: 'Yayın Gecikmesi',
+    delayTip:
+      'İzleyiciler yayınını sohbetten birkaç saniye geriden izler, bu yüzden "1 saniye kaldı" anında yazılan oy sohbete geç düşer. Süre bittikten sonra oylar bu kadar saniye daha sayılır. Twitch ve Kick genelde 2 ile 10 saniye geriden gelir.',
+    voters: 'Kimler Oy Verebilir',
+    votersTip: 'Aboneler seçeneği, abone ya da kurucu (founder) rozeti olanlar ve sen demek.',
+    votersAll: 'Herkes',
+    votersSubs: 'Aboneler',
+    subWeight: 'Abone Oyunun Değeri',
+    subWeightTip: 'Bir abonenin oyu bu kadar sayılır. Anket bunu ekranda da yazar.',
+    subWeightValue: '{n}×',
+    change: 'İzleyiciler Oyunu Değiştirebilir',
+    changeTip:
+      'Açıkken başka bir numara yazan izleyicinin oyu oraya geçer. Kapalıyken ilk oy geçerli kalır. İki durumda da her izleyici bir kez sayılır.',
+    blind: 'Sonuçları Sona Kadar Gizle',
+    blindTip:
+      'Oylama açıkken barlar gizli kalır, böylece ilk oylar diğerlerini etkilemez. Sadece oy sayısı görünür.',
+    color: 'Renk',
+    position: 'Konum',
+    positionTip: "Anketin Tarayıcı Kaynağı'nda duracağı yer. Seçenek sayısına göre oradan uzar.",
+    positionTop: 'Üst',
+    positionBottom: 'Alt',
+    language: 'Anket Dili',
+    languageTip:
+      'Anketteki kelimelerin dili, örneğin "Sonuçlar" ya da hızlı anketteki Evet ve Hayır.',
+    unitMinutes: 'dk',
+    unitSeconds: 'sn',
+    sectionCommands: 'Sohbet Komutları',
+    commandsIntro:
+      'Anketleri sen ve modların Twitch ya da Kick sohbetinden yönetirsiniz. Yeni bir anketin parçalarını | ile ayır.',
+    exampleQuestion: 'Soru',
+    cmdNew: '2 ile 6 arası seçenekli yeni bir anket başlatır',
+    cmdNewTime: 'Aynısı, kendi süresiyle: 90s, 2m ya da 1:30 gibi',
+    cmdYesNo: 'Hızlı bir Evet ya da Hayır anketi başlatır',
+    cmdStart: 'Bu sayfadaki hazır anketi başlatır',
+    cmdExtend: 'Ankete süre ekler',
+    cmdEnd: 'Oylamayı hemen bitirir ve sonuçları gösterir',
+    cmdCancel: 'Anketi ekrandan kaldırır',
+    votingIntro:
+      "İzleyiciler sadece numarayı (2), !vote 2 ya da seçeneğin kendisini yazarak oy verir. \"2 olsun\" gibi fazladan bir şey içeren mesaj sayılmaz. Twitch'in /vote komutu Twitch'in kendi anketleri için, o yüzden sohbete numarayı yazmalarını söyle.",
+    previewTitle: 'Sohbet Anketi Önizleme',
+    previewIframeTitle: 'Sohbet Anketi Önizleme',
+    previewHint:
+      'Önizlemede sahte izleyicilerin oy verdiği bir anket gerçek zamandan hızlı oynar, bitince sıradaki başlar. Yayında anket sadece sen ya da bir mod başlattığında ekrana gelir.',
+    testTitle: 'Dene:',
+    testVotes: '+{count} Oy',
+    testExtend: '+30 sn',
+    testEnd: 'Hemen Bitir',
+    testNew: 'Yeni Anket',
+    widgetUrlTip:
+      "Daha önce bir widget oluşturduysan URL'sini buraya yapıştır. Ayarların geri yüklenir, istediğini değiştirebilirsin.",
+    widgetUrlPlaceholder: "Düzenlemek için widget URL'sini yapıştır",
+    widgetUrlInvalid: "Bu bir Sohbet Anketi URL'si değil.",
+    browserSourceHintSize: ' (önerilen boyut: 640×560).',
+    guideTitle: 'Yayın Yazılımı Kurulumu (OBS, Streamlabs, XSplit vb.)',
+    guideStep1:
+      'Yayın yazılımında (OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio vb.) bir Tarayıcı Kaynağı ekle.',
+    guideStep2: "Kopyaladığın sohbet anketi URL'sini yapıştır.",
+    guideStep3: 'Genişliği 640 ve yüksekliği 560 olarak ayarla.',
+    guideStep4:
+      'Anket başlayana kadar kaynak boş kalır. Sohbete !poll start ya da !poll Soru | A | B yaz.',
+    faq1Q: 'İzleyiciler nasıl oy veriyor?',
+    faq1A:
+      'Sohbete seçeneğin numarasını yazarak, örneğin 2. !vote 2 ya da seçeneğin kendisini yazmak da olur. Büyük küçük harf fark etmez, Türkçe karakterli de karaktersiz de yazılabilir. Mesajın tamamı oy olmalı, yani "2 olsun" ya da 4Head sayılmaz.',
+    faq2Q: 'Bir izleyici birden fazla oy verebilir mi?',
+    faq2A:
+      'Hayır. Her Twitch ya da Kick hesabı bir kez sayılır. Oy değiştirme açıksa yeni yazılan numara oyu taşır, asla ikinci bir oy eklemez. Anket açıkken bir mod bir hesabı susturursa ya da banlarsa o hesabın oyu düşer, bu da spam botlarına karşı işe yarar.',
+    faq3Q: "Twitch'in ya da Kick'in kendi anketi varken neden bunu kullanayım?",
+    faq3A:
+      "Bu anket Twitch ve Kick'ten gelen oyları tek bir sonuçta toplar ve iki platformda da aynı çalışır. Twitch'in kendi anketleri giriş yapmadan okunamıyor, bu overlay ise senden hiçbir zaman giriş yapmanı istemiyor. Affiliate ya da Partner olman da gerekmiyor.",
+    faq4Q: 'OBS kapanırsa ya da Tarayıcı Kaynağı yenilenirse ne olur?',
+    faq4A:
+      "Anket ve oylar OBS'in içinde kayıtlı, bu yüzden kaldığı yerden geri gelir. OBS kapalıyken de süre işlemeye devam eder ama o arada yazılan oyları göremez.",
+    faq5Q: 'Süre sıfıra indikten sonra oylar neden hâlâ sayılıyor?',
+    faq5A:
+      'İzleyiciler yayınını sohbetin birkaç saniye gerisinden izler, yani onların ekranında 1 saniye kaldığında süre sohbette çoktan bitmiştir. Yayın Gecikmesi oyları birkaç saniye daha sayar (varsayılan 5 saniye), kazanan da bundan sonra çıkar.',
+    overlay: {
+      label: 'Anket',
+      closing: 'Son oylar',
+      results: 'Sonuçlar',
+      tie: 'Berabere',
+      tieHint: 'Berabere kaldı!',
+      winner: 'Kazanan: {option}',
+      noVotes: 'Oy gelmedi',
+      hidden: 'Sonuçlar oylama bitince görünür',
+      howTo: 'Sohbete 1 ile {last} arası yaz',
+      howToTwo: 'Sohbete 1 ya da 2 yaz',
+      subsOnly: 'Sadece aboneler',
+      subBonus: 'Abone oyu ×{n}',
+      votes: '{count} oy',
+      voteOne: '1 oy',
+      yes: 'Evet',
+      no: 'Hayır',
+      sampleQuestion: 'Sırada ne oynayalım?',
+      sampleOption1: 'Korku oyunu',
+      sampleOption2: 'Speedrun',
+      sampleOption3: 'İzleyicilerle oyun',
+    },
+  },
   streamAlerts: {
     breadcrumb: 'Yayın Uyarıları Kurulumu',
     title: 'Yayın Uyarıları Kurulumu',
@@ -1066,6 +1213,7 @@ export const tr: typeof en = {
           goal: "Hedef barı için geniş bir şerit, üstünde +1'lerin süzüleceği boşluk da var.",
           subathon:
             'Can barı, saat ya da halka için geniş bir şerit. Kaynağı büyütürsen sayaç da büyür.',
+          poll: 'En fazla 6 seçenekli bir anket için alan. Üstte ya da altta durur, seçenek arttıkça uzar.',
           streamAlerts:
             'Uyarılar bu alanın ortasında tek tek çıkar. Kaynağı büyütürsen uyarı da büyür.',
           raffle:
@@ -1078,7 +1226,7 @@ export const tr: typeof en = {
       },
       transparent: {
         title: 'Arka planı şeffaf yapmak için bir şey gerekiyor mu?',
-        p1: "Hayır. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi ve çekiliş overlay'i şeffaf bir arka planla çizilir. Renk anahtarı (chroma key) ya da filtre eklemen gerekmez, OBS'in Özel CSS alanını da olduğu gibi bırakabilirsin.",
+        p1: "Hayır. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi ve çekiliş overlay'i şeffaf bir arka planla çizilir. Renk anahtarı (chroma key) ya da filtre eklemen gerekmez, OBS'in Özel CSS alanını da olduğu gibi bırakabilirsin.",
         p2: "Sohbet Kutusu açık renkli bir sahnede zor okunuyorsa Koyu Arka Plan ayarını aç. Widget'ın arkasına yarı saydam siyah bir zemin gelir, saydamlığını %0 ile %100 arasında seçersin (varsayılan %50). Her mesajın ayrı bir kutuda durmasını istersen Mesaj Arka Plan Kutusu'nu aç.",
       },
       settings: {
@@ -1091,6 +1239,7 @@ export const tr: typeof en = {
         subSprout:
           'Sub Sprout: bitkinin büyümesi hiçbir yere kaydedilmez. Sayfa yeniden yüklenirse bitki ilk aşamaya döner.',
         goal: "Abone Hedefi: sayı OBS'in içinde kaydedilir, sayfa yeniden yüklenince kaybolmaz, ama kaynak kapalıyken gelen abonelikler sayılmaz.",
+        poll: "Sohbet Anketi: anket ve oylar OBS'in içinde kaydedilir, sayfa yeniden yüklenince kaybolmaz, ama kaynak kapalıyken yazılan oylar sayılmaz.",
         subathon:
           "Subathon Timer: kalan süre OBS'in içinde kaydedilir, sayfa yeniden yüklenince kaybolmaz. Kaynak kapalıyken sayaç geri saymaya devam eder ama o arada gelen abonelikleri göremez.",
         streamAlerts:
@@ -1105,7 +1254,7 @@ export const tr: typeof en = {
       update: {
         title: "Widget'ı sonradan nasıl değiştiririm?",
         p1: "Ayarlar widget adresinin içinde durur, yani bir ayarı değiştirmek yeni bir adres demek. Kurulum sayfasında ayarı değiştir, yeni adresi kopyala, sonra OBS'te kaynağa çift tıklayıp URL alanındaki eski adresin yerine yapıştır.",
-        p2: '[Sohbet Kutusu](/setup/chat-widget), [Emote Duvarı](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Yayın Uyarıları](/setup/stream-alerts) ve [Abone Hedefi](/setup/sub-goal) için baştan başlaman gerekmez. Mevcut adresini kurulum sayfasındaki Widget URL alanına yapıştır, kanalların ve bütün ayarların geri yüklenir. Değiştirmek istediğini değiştir ve yeni adresi kopyala.',
+        p2: '[Sohbet Kutusu](/setup/chat-widget), [Emote Duvarı](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Yayın Uyarıları](/setup/stream-alerts), [Abone Hedefi](/setup/sub-goal) ve [Sohbet Anketi](/setup/chat-poll) için baştan başlaman gerekmez. Mevcut adresini kurulum sayfasındaki Widget URL alanına yapıştır, kanalların ve bütün ayarların geri yüklenir. Değiştirmek istediğini değiştir ve yeni adresi kopyala.',
         p3: "OBS Bridge'de yapıştırma alanı yok, ayarları kurulum sayfasında yeniden girip yeni araç adresini kopyalarsın. Sahne seçimlerini ve yetkili kullanıcıları araç sayfasında da değiştirebilir, yeni adresi oradaki Copy Updated URL düğmesiyle alabilirsin. Eski adresler çalışmaya devam eder, güncellemek zorunda değilsin.",
       },
       troubleshoot: {
@@ -1206,7 +1355,7 @@ export const tr: typeof en = {
       },
       others: {
         title: "Başka hangi widget'lar iki platformu birlikte dinler?",
-        p1: "[Emote Duvarı](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Yayın Uyarıları](/setup/stream-alerts) ve [Abone Hedefi](/setup/sub-goal) de tek adreste iki kanalı birlikte alır. Emote Duvarı iki sohbetten gelen, sadece emote'tan oluşan mesajları ekranda uçurur. Sub Sprout iki platformdaki aboneliklerle büyür, Kick'teki hediye abonelikler de dahil. Subathon Timer iki sohbetten gelen abonelik, hediye abonelik, Bits ve Kicks için süre ekler. Yayın Uyarıları iki platformdan gelen abonelik, hediye abonelik, Bits, Kicks ve raid'ler için uyarı gösterir. Abone Hedefi iki sohbetten gelen abonelikleri ve hediye abonelikleri tek bir sayıda toplar.",
+        p1: "[Emote Duvarı](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Yayın Uyarıları](/setup/stream-alerts), [Abone Hedefi](/setup/sub-goal) ve [Sohbet Anketi](/setup/chat-poll) de tek adreste iki kanalı birlikte alır. Emote Duvarı iki sohbetten gelen, sadece emote'tan oluşan mesajları ekranda uçurur. Sub Sprout iki platformdaki aboneliklerle büyür, Kick'teki hediye abonelikler de dahil. Subathon Timer iki sohbetten gelen abonelik, hediye abonelik, Bits ve Kicks için süre ekler. Yayın Uyarıları iki platformdan gelen abonelik, hediye abonelik, Bits, Kicks ve raid'ler için uyarı gösterir. Abone Hedefi iki sohbetten gelen abonelikleri ve hediye abonelikleri tek bir sayıda toplar. Sohbet Anketi iki sohbetten gelen oyları tek bir sonuçta toplar.",
         p2: '[Çekiliş](/setup/raffle) ise her seferinde tek platformda çalışır: Twitch ya da Kick.',
       },
       ctaTitle: "Sohbet Kutusu'nu kur",
@@ -1438,6 +1587,90 @@ export const tr: typeof en = {
       ctaTitle: 'Subathon sayacını kur',
       ctaText: "Başlangıç süresini ve her aboneliğin ne kadar ekleyeceğini belirle, URL'yi kopyala, OBS'e ekle.",
     },
+    poll: {
+      title: "Twitch ve Kick'te sohbet anketi nasıl yapılır?",
+      short: 'Sohbet anketi yapma',
+      summary:
+        '!poll ile anket başlatma, izleyicilerin oy verme yolları, izleyici başına tek oy, yayın gecikmesi ve süre bitince ya da OBS kapanınca ne olduğu.',
+      lead: "Sohbet Anketi, yayınına Twitch ve Kick sohbetinin numara yazarak oy verdiği bir anket koyar. URL'yi OBS'e 640 × 560 boyutunda Tarayıcı Kaynağı olarak ekle. Sen ya da bir mod sohbete `!poll Soru | A | B` yazınca anket ekrana gelir. Giriş de bot da gerekmez, anket herkese açık sohbetini okur.",
+      setup: {
+        title: 'Sohbet anketi nasıl ayarlanır?',
+        step1: '[Sohbet Anketi kurulum sayfasını](/setup/chat-poll) aç.',
+        step2: "Twitch, Kick ya da İkisi'ni seç ve sadece kanal adlarını yaz.",
+        step3:
+          'Yayından önce hazır bir anket istiyorsan Hazır Anket bölümüne bir soru ve 2 ile 6 arası seçenek yaz. Bu anket `!poll start` ile ekrana gelir.',
+        step4:
+          "Anket Süresi'ni (varsayılan 1 dakika), sonuçların ekranda ne kadar kalacağını ve kimlerin oy verebileceğini ayarla.",
+        step5:
+          "Bir renk, konum ve anket dili seç, URL'yi kopyala ve OBS'e 640 × 560 boyutunda Tarayıcı Kaynağı olarak ekle.",
+        p1: "Kurulum sayfasındaki önizleme, sahte izleyicilerin oy verdiği bir anketi gerçek zamandan hızlı oynatır, bitince sıradakini başlatır. Dene düğmeleri 10 oy ekler, 30 saniye ekler, anketi bitirir ve yeni bir anket başlatır. Bu düğmeler sadece önizlemeyi değiştirir, OBS'teki ankete hiç dokunmaz.",
+      },
+      commands: {
+        title: 'Sohbetten anket nasıl başlatılır?',
+        intro:
+          "Twitch'te de Kick'te de anketleri sadece yayıncı ve moderatörler yönetebilir. VIP'ler ve izleyiciler yönetemez: bir izleyici `!poll` yazarsa hiçbir şey değişmez.",
+        caption: 'Sohbet Anketi sohbet komutları',
+        colCommand: 'Komut',
+        colAction: 'Ne yapar',
+        question: 'Soru',
+        new: "2 ile 6 arası seçenekli yeni bir anket başlatır, süresi URL'deki Anket Süresi kadar",
+        newTime: 'Aynısı, kendi süresiyle: 90s, 2m, 1m30s ya da 1:30',
+        yesNo: 'Seçenekleri Evet ve Hayır olan hızlı bir anket başlatır',
+        start: "URL'de kayıtlı hazır anketi başlatır",
+        extend: 'Süresi olan açık bir ankete süre ekler',
+        end: "Oylamayı hemen bitirir, kazanan Yayın Gecikmesi'nden sonra çıkar",
+        cancel: 'Anketi sonuçlarıyla birlikte ekrandan kaldırır',
+        p1: 'Soruyu ve seçenekleri `|` ile ayır. Altıncıdan sonraki seçenekler atlanır. Aynı seçenek iki kez yazılırsa, büyük küçük harf farklı olsa da ikincisi atlanır. Soru en fazla 80, her seçenek en fazla 30 karakter olabilir. Yeni bir anket ekrandakinin yerini alır.',
+        p2: 'Komut kelimeleri sadece doğru yazılınca çalışır: `!poll extend 30 seconds` hiçbir şey yapmaz, soru olarak da ekrana gelmez. Sorudan önce yazılan tek başına bir sayı süre sayılmaz, yani `!poll 3 oyun mu 4 oyun mu? | 3 | 4` yazınca soru olduğu gibi kalır. Anket sohbette cevap vermez, sonucu ekranda görürsün.',
+      },
+      voting: {
+        title: 'İzleyiciler nasıl oy verir?',
+        number: 'Tek başına seçeneğin numarası, örneğin `2`.',
+        command: '`!vote 2` ya da `!2`, bot anketlerine alışkın izleyiciler için.',
+        text: "Seçeneğin kendisi: `speedrun` yazmak Speedrun'a oy verir. Büyük küçük harf ve aksan fark etmez, Türkçe karakterli de karaktersiz de yazılabilir.",
+        p1: 'Mesajın tamamı oy olmalı. `2 olsun`, `4Head` ya da `1 oyun daha` sayılmaz, böylece normal sohbet oya dönüşmez. Bir seçenek sayıdan oluşuyorsa numara yerine o seçenek sayılır: `3 | 4 | 5` anketinde 3 yazan üçüncü seçeneğe değil, 3 seçeneğine oy verir.',
+        p2: "Twitch'in `/vote` komutu Twitch'in kendi anketleri için, o yüzden sohbete numarayı yazmalarını söyle. Anket, seçeneklerin altında \"Sohbete 1 ile 3 arası yaz\" gibi bir ipucu gösterir.",
+      },
+      rules: {
+        title: 'Bir izleyici birden fazla oy verebilir mi?',
+        p1: 'Hayır. Her Twitch ya da Kick hesabı bir kez sayılır. İzleyiciler Oyunu Değiştirebilir açıkken (varsayılan böyle) yeni yazılan numara oyu oraya taşır, kapatırsan ilk oy geçerli kalır. Olmayan bir seçeneğe yazılan oy, izleyicinin önceki oyunu hiçbir zaman silmez.',
+        p2: "Kimler Oy Verebilir'i Aboneler yaparsan sadece abone ya da kurucu (founder) rozeti olanlar oy verebilir, bir de sen. Herkes oy verirken Abone Oyunun Değeri bir abonenin oyunu 2 ya da 3 kat saydırır. Anket bunu ekranda da yazar, yüzdeler de bu ağırlıklı oylarla hesaplanır.",
+        p3: 'Anket oy toplarken bir mod bir hesabı susturur ya da banlarsa o hesabın oyu düşer. Bu da bir anda gelen spam botlarının oylarını temizlemeye yarar.',
+      },
+      timing: {
+        title: 'Süre bitince ne olur?',
+        p1: 'İzleyiciler yayınını sohbetin birkaç saniye gerisinden izler, yani onların ekranında 1 saniye kaldığında anket sohbette çoktan kapanmıştır. Süre bittikten sonra oylar Yayın Gecikmesi kadar daha sayılır (varsayılan 5 saniye), bu sırada ankette Son oylar yazar. Bunu izleyicilerinin ne kadar geriden izlediğine göre ayarla, Twitch ve Kick genelde 2 ile 10 saniye geriden gelir.',
+        p2: 'Ardından kazanan taçla birlikte altın renginde parlar, diğer seçenekler soluklaşır. İki ya da daha fazla seçenek en çok oyda eşit kalırsa ankette Berabere yazar. Sonuçlar Sonuç Gösterim Süresi boyunca ekranda kalır (varsayılan 30 saniye), sonra anket yavaşça kaybolur. Sonuçların bir sonraki ankete ya da `!poll cancel` yazılana kadar kalması için 0 yap.',
+        p3: 'Anket Süresi 0 olursa ankette süre olmaz, anket bir mod `!poll end` yazana kadar açık kalır. `!poll extend` sadece süresi olan bir ankete süre ekler.',
+      },
+      look: {
+        title: 'Anketin görünümü nasıl değiştirilir?',
+        blind:
+          'Sonuçları Sona Kadar Gizle: oylama açıkken barlar gizli kalır ve sadece oy sayısı görünür, böylece ilk oylar diğerlerini etkilemez.',
+        color: 'Renk: mor (varsayılan), yeşil, kırmızı, altın, turkuaz ya da pembe.',
+        position:
+          "Konum: anket Tarayıcı Kaynağı'nın üst ya da alt kısmında durur, seçenek sayısına göre oradan uzar.",
+        language:
+          'Anket Dili: anketteki kelimeler için İngilizce ya da Türkçe, örneğin Sonuçlar yazısı ve hızlı anketteki Evet ile Hayır.',
+        p1: "İki platform da açıksa anket, toplamın yanında oyların kaçının Twitch'ten, kaçının Kick'ten geldiğini gösterir. Kaynak şeffaftır, yayında sadece anket kartı görünür.",
+      },
+      saved: {
+        title: 'OBS kapanırsa ya da kaynak yeniden yüklenirse ne olur?',
+        p1: "Anket ve oylar OBS'in içinde kaydedilir, bu yüzden kaynak yeniden yüklenince ya da OBS yeniden açılınca kaldığı yerden devam eder. OBS kapalıyken de süre işlemeye devam eder.",
+        p2: 'OBS ya da kaynak kapalıyken sohbetin okunmaz, bu yüzden o arada yazılan oylar sayılmaz. "Görünür olmadığında kaynağı kapat" seçeneğini de bu yüzden kapalı tut, nedenini [OBS rehberi](/guides/obs-browser-source) anlatıyor. Kaydedilen anket o OBS\'e ve o kanallara ait.',
+      },
+      limits: {
+        title: 'Sohbet Anketi neleri yapamaz?',
+        chat: 'Sohbete yazamaz. Sadece sohbeti okur, bu yüzden anketi ya da kazananı orada duyurmaz, ikisini de yayındaki anket gösterir.',
+        native:
+          "Twitch'in ya da Kick'in kendi anketlerini gösteremez. Twitch'in anketleri giriş yapmadan okunamıyor, bu yüzden iki platformda da aynı çalışsın diye oylar sohbetten gelir.",
+        points:
+          'Kanal Puanları ya da Bits ile oy almaz. Her izleyicinin bir oyu var, bunu açarsan abonelerin 2 ya da 3 oyu olur.',
+        multiple: 'Çoklu seçimli anket yapamaz. Her izleyici tek bir seçenek seçer.',
+      },
+      ctaTitle: 'Sohbet anketini kur',
+      ctaText: "Hazır bir anketi ve oylama kurallarını tek URL'ye koy, OBS'e ekle ve sohbete !poll yaz.",
+    },
     alerts: {
       title: "OBS'e Twitch ve Kick için abonelik, cheer ve raid uyarıları nasıl eklenir?",
       short: 'Yayın uyarıları ekleme',
@@ -1590,7 +1823,7 @@ export const tr: typeof en = {
     },
     freeQ: 'Senchabot Extensions ücretsiz mi?',
     freeA:
-      "Evet. Sekiz widget'ın ve aracın hepsi ücretsiz: Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Çekiliş ve OBS Bridge. Ücretli paket, filigran ya da premium hesap yok. Kaynak kodu GPL-3.0 lisansıyla GitHub'da açık.",
+      "Evet. Dokuz widget'ın ve aracın hepsi ücretsiz: Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi, Çekiliş ve OBS Bridge. Ücretli paket, filigran ya da premium hesap yok. Kaynak kodu GPL-3.0 lisansıyla GitHub'da açık.",
     loginQ: '"Giriş gerektirmez" ne demek?',
     loginA:
       "Bu sitede hesap açmazsın, Twitch ya da Kick ile giriş yapmazsın ve bir şey indirmezsin. Kanal adını yazarsın, kurulum sayfası sana bir adres verir. Widget'lar herkese açık sohbeti anonim olarak okur: Twitch'e isimsiz bir izleyici gibi bağlanır, Kick'te herkese açık sohbet akışını dinler. Bu yüzden sohbete yazamaz, moderasyon yapamaz ve hesabındaki özel bilgilere erişemez.",
@@ -1602,10 +1835,10 @@ export const tr: typeof en = {
       'OBS Studio ve tarayıcı kaynağı (browser source) destekleyen diğer yayın programlarıyla. Her widget bir web adresi olarak çalışır, kaynağa bu adresi yapıştırırsın. Rehberlerimiz OBS Studio için yazıldı.',
     platformsQ: "Hangi widget'lar Twitch'i, hangileri Kick'i destekliyor?",
     platformsA:
-      "Sekizi de iki platformu destekliyor. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları ve Abone Hedefi tek adreste Twitch ve Kick kanalını birlikte dinler. OBS Bridge iki sohbetten gelen komutları dinler ve her yetkili kullanıcı kendi platformuyla eklenir. Çekiliş her seferinde tek platformda çalışır, Twitch ya da Kick. Sohbet Kutusu'nda 7TV emote'ları iki platformda, BTTV ve FFZ emote'ları sadece Twitch'te görünür.",
+      "Dokuzu da iki platformu destekliyor. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi ve Sohbet Anketi tek adreste Twitch ve Kick kanalını birlikte dinler. OBS Bridge iki sohbetten gelen komutları dinler ve her yetkili kullanıcı kendi platformuyla eklenir. Çekiliş her seferinde tek platformda çalışır, Twitch ya da Kick. Sohbet Kutusu'nda 7TV emote'ları iki platformda, BTTV ve FFZ emote'ları sadece Twitch'te görünür.",
     editQ: "Widget'ı sonradan nasıl değiştiririm?",
     editA:
-      "Kurulum sayfasında ayarları değiştir, yeni adresi kopyala ve OBS'te kaynağın URL alanındaki eski adresin yerine yapıştır. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları ve Abone Hedefi'nde eski adresini kurulum sayfasındaki Widget URL alanına yapıştırırsan bütün ayarların geri yüklenir, baştan başlaman gerekmez.",
+      "Kurulum sayfasında ayarları değiştir, yeni adresi kopyala ve OBS'te kaynağın URL alanındaki eski adresin yerine yapıştır. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi ve Sohbet Anketi'nde eski adresini kurulum sayfasındaki Widget URL alanına yapıştırırsan bütün ayarların geri yüklenir, baştan başlaman gerekmez.",
     oldUrlsQ: 'Eski widget adreslerim çalışmaya devam eder mi?',
     oldUrlsA:
       "Evet. Güncellemeler mevcut adresleri bozmayacak şekilde yapılır: parametre adları, değerleri ve varsayılanları değişmez. Örneğin Sohbet Kutusu'ndaki eski keep=true hâlâ Süresiz anlamına gelir ve Sub Sprout eski channel ve platform parametrelerini hâlâ okur.",
@@ -1629,6 +1862,7 @@ export const tr: typeof en = {
     lead: "Senchabot Extensions'a eklenen özellikler ve düzeltilen hatalar, en yenisi en üstte. Liste projenin [GitHub'daki](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) commit geçmişinden hazırlanıyor.",
     site: 'Site',
     entries: {
+      poll: "Sohbet Anketi geldi: sohbetten !poll ile anket başlatıyorsun, Twitch ve Kick'teki izleyiciler de numara yazarak oy veriyor. Canlı barlar, geri sayım, izleyici başına tek oy ve sonunda kazanan var.",
       goal: "Abone Hedefi geldi: Twitch ve Kick'teki her abonelik, yenileme ve hediye abonelik hedef barına 1 ekliyor, hedefe ulaşınca bara bir kupa iniyor. Modlar sayıyı !goal ile düzeltebiliyor.",
       streamAlerts:
         "Yayın Uyarıları geldi: Twitch ve Kick'teki her abonelik, hediye abonelik, Bits, Kicks ve raid için kendi sesiyle animasyonlu bir uyarı çıkıyor. Rengi seçebilir, başlıkları değiştirebilir ve en az miktarları belirleyebilirsin.",

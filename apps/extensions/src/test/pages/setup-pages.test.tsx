@@ -87,6 +87,22 @@ const PAGES: PageCase[] = [
     faq: ['goal.faq1Q', 'goal.faq2Q', 'goal.faq3Q', 'goal.faq4Q'],
   },
   {
+    path: '/setup/chat-poll',
+    title: 'poll.title',
+    sections: [
+      'common.sectionChannel',
+      'poll.sectionPoll',
+      'poll.sectionVoting',
+      'common.sectionAppearance',
+      'poll.sectionCommands',
+      'poll.previewTitle',
+      'poll.guideTitle',
+      'common.faqTitle',
+      'common.moreWidgets',
+    ],
+    faq: ['poll.faq1Q', 'poll.faq2Q', 'poll.faq3Q', 'poll.faq4Q', 'poll.faq5Q'],
+  },
+  {
     path: '/setup/stream-alerts',
     title: 'streamAlerts.title',
     sections: [

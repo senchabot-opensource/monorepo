@@ -14,6 +14,7 @@ const OVERLAYS = [
   '/widgets/subathon?simulate=1',
   '/widgets/stream-alerts?simulate=1',
   '/widgets/goal?simulate=1',
+  '/widgets/poll?simulate=1',
   '/widgets/raffle-overlay',
 ];
 

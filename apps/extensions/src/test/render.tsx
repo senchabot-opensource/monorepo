@@ -10,6 +10,7 @@ import userEvent, { PointerEventsCheckLevel } from '@testing-library/user-event'
 import type { ReactNode } from 'react';
 import { afterEach } from 'vitest';
 import { LocaleProvider } from '#/lib/i18n';
+import { parseSearch, stringifySearch } from '#/lib/search-params';
 import { ThemeProvider } from '#/lib/theme';
 import { routeTree } from '#/routeTree.gen';
 
@@ -25,7 +26,13 @@ async function mount(routeTreeToRender: typeof routeTree, url: string, asDocumen
   window.history.replaceState(null, '', url);
   const history = createBrowserHistory();
   histories.push(history);
-  const router = createRouter({ routeTree: routeTreeToRender, history });
+  // The app's own search params handling, as in src/router.tsx.
+  const router = createRouter({
+    routeTree: routeTreeToRender,
+    history,
+    parseSearch,
+    stringifySearch,
+  });
   await act(() => router.load());
   const result = render(
     <RouterProvider router={router} />,

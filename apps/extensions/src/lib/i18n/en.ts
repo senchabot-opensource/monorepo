@@ -97,6 +97,10 @@ export const en = {
       tagline:
         'A countdown that subs, gifted subs, Bits and Kicks push back. Health bar, clock or ring.',
     },
+    poll: {
+      name: 'Chat Poll',
+      tagline: 'A poll your chat votes in by typing a number, with live bars and a winner.',
+    },
     streamAlerts: {
       name: 'Stream Alerts',
       tagline: 'An animated alert with a sound for every sub, gifted sub, Bits, Kicks and raid.',
@@ -142,6 +146,23 @@ export const en = {
     subathonFeatureChat: 'Control it from chat with !subathon',
     subathonFeaturePlatforms: 'Separate time settings for Twitch and Kick',
     subathonFeatureSaved: 'Time left survives OBS restarts',
+    pollFeatureVote: 'Viewers vote by typing a number',
+    pollFeatureBoth: 'Twitch and Kick votes in one poll',
+    pollFeatureLate: 'Last-second votes count despite stream delay',
+    pollSpotlight: {
+      eyebrow: 'New: Chat Poll',
+      title: 'Let your chat decide',
+      lead: 'Put a poll up from chat with !poll and viewers on Twitch and Kick vote by typing a number. The bars fill live on stream, and the winner shows when time is up.',
+      pointVote: 'Viewers type 2, !vote 2 or the option itself. Every viewer counts once.',
+      pointBoth: 'Votes from Twitch and Kick land in the same poll.',
+      pointLate:
+        'Votes typed in the last seconds still count, even though viewers watch a little behind.',
+      pointMods: 'You and your mods run it from chat. No bot, no login.',
+      setup: 'Set up Chat Poll',
+      guide: 'Read the guide',
+      chat: 'Chat',
+      caption: 'Live demo with simulated voters',
+    },
     visualScenes: 'Scenes',
     howTitle: 'How it works',
     howLead: 'Three steps, and none of them asks for an account.',
@@ -703,6 +724,131 @@ export const en = {
     faq4A:
       "Not yet. Twitch and Kick don't show new follows to a page that isn't logged in, so the goal counts subs, the same way on both platforms.",
   },
+  poll: {
+    breadcrumb: 'Chat Poll Setup',
+    title: 'Chat Poll Setup',
+    intro:
+      'A chat poll for Twitch and Kick. You or a mod put a poll up from chat, viewers vote by typing a number, and the bars fill live on your stream. Votes from both chats go into one poll, every viewer counts once, and the winner shows when time runs out.',
+    sectionPoll: 'Ready-Made Poll',
+    question: 'Question',
+    questionTip: 'Shown above the options. Leave it empty if you ask the question out loud.',
+    questionPlaceholder: 'What should we play next?',
+    options: 'Options',
+    optionsTip:
+      'Viewers vote with the number next to an option, or by typing the option itself. Up to 6 options.',
+    optionLabel: 'Option {n}',
+    optionPlaceholder: 'Option {n}',
+    removeOption: 'Remove option {n}',
+    addOption: '+ Add Option',
+    pollHint:
+      'Saved in the URL. Put it up with {command} in chat. Mods can also type a new poll in chat any time.',
+    sectionVoting: 'Voting',
+    duration: 'Poll Length',
+    durationTip:
+      'How long a poll takes votes. In chat a mod can give one poll another length, end it early or add time.',
+    durationOff: 'No timer: the poll stays open until a mod types !poll end.',
+    hold: 'Results On Screen',
+    holdTip: 'How long the results stay up after voting ends. Then the poll leaves the screen.',
+    holdOff: 'The results stay up until the next poll or !poll cancel.',
+    delay: 'Stream Delay',
+    delayTip:
+      'Viewers see your stream a few seconds after chat does, so a vote typed at "1 second left" reaches chat late. Votes keep counting for this many seconds after the timer ends. Twitch and Kick are usually 2 to 10 seconds behind.',
+    voters: 'Who Can Vote',
+    votersTip: 'Subscribers means viewers with a sub or founder badge, plus you.',
+    votersAll: 'Everyone',
+    votersSubs: 'Subscribers',
+    subWeight: 'A Sub Vote Counts',
+    subWeightTip: "A subscriber's vote counts this many times. The poll says so on screen.",
+    subWeightValue: '{n}×',
+    change: 'Viewers Can Change Their Vote',
+    changeTip:
+      'On: typing another number moves the vote. Off: the first vote stands. Either way every viewer counts once.',
+    blind: 'Hide Results Until the End',
+    blindTip:
+      "The bars stay hidden while voting is open, so early votes don't sway the rest. Only the vote count shows.",
+    color: 'Color',
+    position: 'Position',
+    positionTip:
+      'Where the poll sits in the browser source. It grows from there with the number of options.',
+    positionTop: 'Top',
+    positionBottom: 'Bottom',
+    language: 'Poll Language',
+    languageTip:
+      'The language of the words on the poll, like "Results" and the Yes and No of a quick poll.',
+    unitMinutes: 'min',
+    unitSeconds: 'sec',
+    sectionCommands: 'Chat Commands',
+    commandsIntro:
+      'You and your mods run polls from Twitch or Kick chat. The parts of a new poll are split with |.',
+    exampleQuestion: 'Question',
+    cmdNew: 'Puts up a new poll with 2 to 6 options',
+    cmdNewTime: 'The same, with its own length, like 90s, 2m or 1:30',
+    cmdYesNo: 'Puts up a quick Yes or No poll',
+    cmdStart: 'Puts up the ready-made poll from this page',
+    cmdExtend: 'Adds time to the poll',
+    cmdEnd: 'Ends voting now and shows the results',
+    cmdCancel: 'Takes the poll off the screen',
+    votingIntro:
+      "Viewers vote by typing just the number (2), !vote 2 or an option's own text. A message with more in it, like \"2 please\", doesn't count. Twitch's /vote command is for Twitch's own polls, so tell chat to type the number.",
+    previewTitle: 'Chat Poll Preview',
+    previewIframeTitle: 'Chat Poll Preview',
+    previewHint:
+      'The preview plays a poll with simulated voters, faster than real time, then starts the next one. On stream a poll only shows up when you or a mod puts one up.',
+    testTitle: 'Try it:',
+    testVotes: '+{count} Votes',
+    testExtend: '+30 sec',
+    testEnd: 'End Now',
+    testNew: 'New Poll',
+    widgetUrlTip:
+      'Already made a widget? Paste its URL here to load your settings and change what you need.',
+    widgetUrlPlaceholder: 'Paste an existing widget URL to edit it',
+    widgetUrlInvalid: "This isn't a Chat Poll URL.",
+    browserSourceHintSize: ' (recommended size: 640×560).',
+    guideTitle: 'Streaming Software Setup (OBS, Streamlabs, XSplit, etc.)',
+    guideStep1:
+      'Add a Browser Source in your streaming software (OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio, etc.).',
+    guideStep2: 'Paste your copied chat poll URL.',
+    guideStep3: 'Set width to 640 and height to 560.',
+    guideStep4:
+      'The source stays empty until a poll starts. Type !poll start, or !poll Question | A | B, in chat.',
+    faq1Q: 'How do viewers vote?',
+    faq1A:
+      "By typing the option's number in chat, like 2. !vote 2 and the option's own text work too, in any case and with or without Turkish letters. The whole message has to be the vote, so \"2 please\" or 4Head don't count.",
+    faq2Q: 'Can a viewer vote more than once?',
+    faq2A:
+      'No. Every Twitch or Kick account counts once. With vote changing on, a new number moves their vote and never adds a second one. If a mod times out or bans an account while the poll is open, its vote comes off, which helps against spam bots.',
+    faq3Q: "Why not use Twitch's or Kick's own polls?",
+    faq3A:
+      "This poll takes votes from Twitch and Kick into one result and works the same on both. Twitch's own polls can't be read without logging in, and this overlay never asks you to log in. You also don't need to be an Affiliate or Partner.",
+    faq4Q: 'What happens if OBS closes or the browser source reloads?',
+    faq4A:
+      "The poll and its votes are saved inside OBS, so it comes back where it was. The timer keeps running while OBS is closed, but votes typed in that time can't be seen.",
+    faq5Q: 'Why do votes still count after the timer hits zero?',
+    faq5A:
+      'Viewers watch your stream a few seconds behind chat, so when their timer shows 1 second left, it has already ended in chat. Stream Delay keeps counting votes for a few more seconds, 5 by default, and the winner shows after that.',
+    overlay: {
+      label: 'Poll',
+      closing: 'Last votes',
+      results: 'Results',
+      tie: 'Tie',
+      tieHint: "It's a tie!",
+      winner: 'Winner: {option}',
+      noVotes: 'No votes',
+      hidden: 'Results show when voting ends',
+      howTo: 'Type 1 to {last} in chat',
+      howToTwo: 'Type 1 or 2 in chat',
+      subsOnly: 'Subs only',
+      subBonus: 'Sub votes ×{n}',
+      votes: '{count} votes',
+      voteOne: '1 vote',
+      yes: 'Yes',
+      no: 'No',
+      sampleQuestion: 'What should we play next?',
+      sampleOption1: 'Horror game',
+      sampleOption2: 'Speedrun',
+      sampleOption3: 'Viewer games',
+    },
+  },
   streamAlerts: {
     breadcrumb: 'Stream Alerts Setup',
     title: 'Stream Alerts Setup',
@@ -1053,6 +1199,7 @@ export const en = {
           subSprout: 'The plant and pot grow inside this area.',
           goal: 'A wide strip for the goal bar, with room above it for the +1s to rise into.',
           subathon: 'A wide strip for the health bar, clock or ring. A bigger source scales it up.',
+          poll: 'Room for a poll with up to 6 options. It sits at the top or bottom and grows with the options.',
           streamAlerts:
             'One alert at a time, in the middle of this area. A bigger source scales it up.',
           raffle:
@@ -1064,7 +1211,7 @@ export const en = {
       },
       transparent: {
         title: 'Do you need to do anything to make the background transparent?',
-        p1: "No. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal and the Raffle overlay are drawn on a transparent background. You don't need a chroma key or a filter, and you can leave the Custom CSS field in OBS as it is.",
+        p1: "No. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll and the Raffle overlay are drawn on a transparent background. You don't need a chroma key or a filter, and you can leave the Custom CSS field in OBS as it is.",
         p2: 'If Chat Box is hard to read on a bright scene, turn on Dark Background. It puts a semi-transparent black layer behind the widget, and you can set its opacity anywhere from 0% to 100% (50% by default). If you want each message in its own box, turn on Message Background Box.',
       },
       settings: {
@@ -1077,6 +1224,7 @@ export const en = {
         subSprout:
           "Sub Sprout: the plant's growth isn't saved anywhere. If the page reloads, the plant goes back to the first stage.",
         goal: "Sub Goal: the count is saved inside OBS, so a reload doesn't lose it, but subs that come in while the source is off aren't counted.",
+        poll: "Chat Poll: the poll and its votes are saved inside OBS, so a reload doesn't lose them, but votes typed while the source is off aren't counted.",
         subathon:
           "Subathon Timer: the time left is saved inside OBS, so a reload doesn't lose it. The timer keeps counting down while the source is off, but it can't see subs that come in during that time.",
         streamAlerts:
@@ -1091,7 +1239,7 @@ export const en = {
       update: {
         title: 'How do I change a widget later?',
         p1: 'Your settings live inside the widget URL, so changing a setting means a new URL. Change the setting on the setup page, copy the new URL, then double-click the source in OBS and paste it over the old URL in the URL field.',
-        p2: "You don't have to start over with [Chat Box](/setup/chat-widget), [Emote Wall](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Stream Alerts](/setup/stream-alerts) or [Sub Goal](/setup/sub-goal). Paste your current URL into the Widget URL field on the setup page and your channels and all your settings come back. Change what you want and copy the new URL.",
+        p2: "You don't have to start over with [Chat Box](/setup/chat-widget), [Emote Wall](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Stream Alerts](/setup/stream-alerts), [Sub Goal](/setup/sub-goal) or [Chat Poll](/setup/chat-poll). Paste your current URL into the Widget URL field on the setup page and your channels and all your settings come back. Change what you want and copy the new URL.",
         p3: "OBS Bridge has no paste field, so enter your settings again on its setup page and copy the new tool URL. You can also change scene picks and authorized users on the tool page itself and grab the new URL with its Copy Updated URL button. Old URLs keep working, so you don't have to update them.",
       },
       troubleshoot: {
@@ -1193,7 +1341,7 @@ export const en = {
       },
       others: {
         title: 'Which other widgets listen to both platforms together?',
-        p1: '[Emote Wall](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Stream Alerts](/setup/stream-alerts) and [Sub Goal](/setup/sub-goal) also take both channels in one URL. Emote Wall sends emote-only messages from both chats flying across the screen. Sub Sprout grows with subscriptions on both platforms, gifted subs on Kick included. Subathon Timer adds time for subs, gifted subs, Bits and Kicks from both chats. Stream Alerts shows an alert for subs, gifted subs, Bits, Kicks and raids from both. Sub Goal adds subs and gifted subs from both chats into one count.',
+        p1: '[Emote Wall](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Stream Alerts](/setup/stream-alerts), [Sub Goal](/setup/sub-goal) and [Chat Poll](/setup/chat-poll) also take both channels in one URL. Emote Wall sends emote-only messages from both chats flying across the screen. Sub Sprout grows with subscriptions on both platforms, gifted subs on Kick included. Subathon Timer adds time for subs, gifted subs, Bits and Kicks from both chats. Stream Alerts shows an alert for subs, gifted subs, Bits, Kicks and raids from both. Sub Goal adds subs and gifted subs from both chats into one count. Chat Poll puts votes from both chats into one result.',
         p2: '[Raffle](/setup/raffle), on the other hand, runs on one platform at a time: Twitch or Kick.',
       },
       ctaTitle: 'Set up Chat Box',
@@ -1424,6 +1572,90 @@ export const en = {
       ctaTitle: 'Set up your subathon timer',
       ctaText: 'Set the starting time and what each sub adds, copy the URL, add it to OBS.',
     },
+    poll: {
+      title: 'How to run a chat poll on Twitch and Kick',
+      short: 'Run a chat poll',
+      summary:
+        'Putting a poll up with !poll, the ways viewers vote, one vote per viewer, stream delay, and what happens when time runs out or OBS closes.',
+      lead: 'Chat Poll puts a poll on your stream that Twitch and Kick chat vote in by typing a number. Add the URL to OBS as a 640 × 560 Browser Source, then you or a mod types `!poll Question | A | B` in chat. No login and no bot: it reads your public chat.',
+      setup: {
+        title: 'How do you set up a chat poll?',
+        step1: 'Open the [Chat Poll setup page](/setup/chat-poll).',
+        step2: 'Pick Twitch, Kick or Both and type just the channel names.',
+        step3:
+          'If you want a poll ready before the stream, type a question and 2 to 6 options under Ready-Made Poll. It goes up with `!poll start`.',
+        step4:
+          'Set the Poll Length (1 minute by default), how long the results stay on screen and who can vote.',
+        step5:
+          'Pick a color, a position and the poll language, copy the URL and add it to OBS as a Browser Source at 640 × 560.',
+        p1: 'The preview on the setup page plays a poll with simulated voters, faster than real time, then starts the next one. The Try it buttons add 10 votes, add 30 seconds, end the poll and start a new one. They only change the preview, never the poll in OBS.',
+      },
+      commands: {
+        title: 'How do you start a poll from chat?',
+        intro:
+          "Only the broadcaster and moderators can run polls, on Twitch and on Kick. VIPs and viewers can't: a viewer typing `!poll` changes nothing.",
+        caption: 'Chat Poll chat commands',
+        colCommand: 'Command',
+        colAction: 'What it does',
+        question: 'Question',
+        new: 'Puts up a new poll with 2 to 6 options, for the Poll Length in the URL',
+        newTime: 'The same, with its own length: 90s, 2m, 1m30s or 1:30',
+        yesNo: 'Puts up a quick poll with Yes and No as its options',
+        start: 'Puts up the ready-made poll saved in the URL',
+        extend: 'Adds time to an open poll that has a timer',
+        end: 'Ends voting now; the winner shows after the Stream Delay',
+        cancel: 'Takes the poll off the screen, results and all',
+        p1: 'Split the question and the options with `|`. Options past the sixth are left out, and so are repeats, even in a different case. The question can be up to 80 characters and each option up to 30. A new poll replaces the one on screen.',
+        p2: "A command word needs the right arguments: `!poll extend 30 seconds` does nothing instead of putting that up as a question. A plain number before the question isn't read as a length, so `!poll 3 or 4 games? | 3 | 4` keeps its question. The poll doesn't answer in chat; you see the result on screen.",
+      },
+      voting: {
+        title: 'How do viewers vote?',
+        number: 'The number of the option on its own, like `2`.',
+        command: '`!vote 2` or `!2`, for viewers used to bot polls.',
+        text: 'The option itself: `speedrun` votes for Speedrun, in any case and with or without accents or Turkish letters.',
+        p1: "The whole message has to be the vote. `2 please`, `4Head` or `1 more game` don't count, so normal chat never turns into votes. When an option is a number itself, its text wins: in a poll of `3 | 4 | 5`, typing 3 votes for the option 3, not the third option.",
+        p2: "Twitch's own `/vote` command is for Twitch's native polls, so tell chat to type the number. The poll shows a hint like \"Type 1 to 3 in chat\" under its options.",
+      },
+      rules: {
+        title: 'Can a viewer vote more than once?',
+        p1: "No. Every Twitch or Kick account counts once. With Viewers Can Change Their Vote on, which is the default, a new number moves the vote; turn it off and the first vote is final. A vote for an option that doesn't exist never costs a viewer the vote they already had.",
+        p2: "With Who Can Vote set to Subscribers, only viewers with a sub or founder badge can vote, plus you. With everyone voting, A Sub Vote Counts makes a sub's vote count 2 or 3 times. The poll says so on screen, and the percentages use those weighted votes.",
+        p3: 'If a mod times out or bans an account while the poll takes votes, its vote comes off, which helps undo a wave of spam bots.',
+      },
+      timing: {
+        title: 'What happens when the time runs out?',
+        p1: 'Viewers watch your stream a few seconds behind chat, so when their screen shows 1 second left, the poll has already closed in chat. Votes keep counting for the Stream Delay after the timer ends, 5 seconds by default, while the poll shows Last votes. Set it to how far behind your viewers are; Twitch and Kick are usually 2 to 10 seconds behind.',
+        p2: 'Then the winner lights up in gold with a crown and the other options dim. When two or more options share the most votes, the poll calls it a tie. The results stay up for Results On Screen, 30 seconds by default, then the poll fades out. Set it to 0 to keep them up until the next poll or `!poll cancel`.',
+        p3: 'With Poll Length at 0 the poll has no timer and stays open until a mod types `!poll end`. `!poll extend` only adds time to a poll that has a timer.',
+      },
+      look: {
+        title: 'How can you change the way it looks?',
+        blind:
+          "Hide Results Until the End: the bars stay hidden while voting is open and only the vote count shows, so early votes don't sway the rest.",
+        color: 'Color: purple (default), green, red, gold, cyan or pink.',
+        position:
+          'Position: the poll sits at the top or the bottom of the browser source and grows from there with the number of options.',
+        language:
+          'Poll Language: English or Turkish for the words on the poll, like Results and the Yes and No of a quick poll.',
+        p1: 'With both platforms on, the poll shows how many votes came from Twitch and from Kick next to the total. The source is transparent, so only the poll card shows on stream.',
+      },
+      saved: {
+        title: 'What happens if OBS closes or the source reloads?',
+        p1: 'The poll and its votes are saved inside OBS, so a reload or an OBS restart brings it back where it was. The timer keeps running while OBS is closed.',
+        p2: "Nothing reads your chat while OBS or the source is off, so votes typed in that time aren't counted. That's why \"Shutdown source when not visible\" should stay off; the [OBS guide](/guides/obs-browser-source) explains it. The saved poll belongs to that OBS and those channels.",
+      },
+      limits: {
+        title: "What can't Chat Poll do?",
+        chat: "Post in chat. It only reads chat, so it never announces the poll or the winner there; the poll on stream shows both.",
+        native:
+          "Show Twitch's or Kick's own polls. Twitch's can't be read without logging in, so to work the same on both platforms the votes come from chat.",
+        points:
+          'Take Channel Points or Bits votes. Every viewer has one vote, or 2 or 3 as a sub when you turn that on.',
+        multiple: 'Multiple choice. Each viewer picks one option.',
+      },
+      ctaTitle: 'Set up your chat poll',
+      ctaText: 'Put a ready-made poll and the voting rules in one URL, add it to OBS and type !poll in chat.',
+    },
     alerts: {
       title: 'How to add sub, cheer and raid alerts for Twitch and Kick in OBS',
       short: 'Add stream alerts',
@@ -1575,7 +1807,7 @@ export const en = {
     },
     freeQ: 'Is Senchabot Extensions free?',
     freeA:
-      "Yes. All eight widgets and tools are free: Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Raffle and OBS Bridge. There's no paid plan, watermark or premium account. The source code is open on GitHub under the GPL-3.0 license.",
+      "Yes. All nine widgets and tools are free: Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll, Raffle and OBS Bridge. There's no paid plan, watermark or premium account. The source code is open on GitHub under the GPL-3.0 license.",
     loginQ: 'What does "no login required" mean?',
     loginA:
       "You don't create an account on this site, you don't log in with Twitch or Kick, and you don't download anything. You type your channel name and the setup page gives you a URL. The widgets read public chat anonymously: on Twitch they connect like an anonymous viewer, and on Kick they listen to the public chat feed. That's why they can't post in chat, moderate, or access private info on your account.",
@@ -1587,10 +1819,10 @@ export const en = {
       'OBS Studio and any other streaming software that supports a browser source. Each widget runs as a web URL, and you paste that URL into the source. Our guides are written for OBS Studio.',
     platformsQ: 'Which widgets support Twitch and which support Kick?',
     platformsA:
-      'All eight support both platforms. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts and Sub Goal listen to a Twitch and a Kick channel together in one URL. OBS Bridge listens for commands from both chats, and each authorized user is added with their own platform. Raffle runs on one platform at a time, Twitch or Kick. In Chat Box, 7TV emotes show on both platforms, while BTTV and FFZ emotes show on Twitch only.',
+      'All nine support both platforms. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal and Chat Poll listen to a Twitch and a Kick channel together in one URL. OBS Bridge listens for commands from both chats, and each authorized user is added with their own platform. Raffle runs on one platform at a time, Twitch or Kick. In Chat Box, 7TV emotes show on both platforms, while BTTV and FFZ emotes show on Twitch only.',
     editQ: 'How do I change a widget later?',
     editA:
-      "Change the settings on the setup page, copy the new URL, and paste it over the old one in the source's URL field in OBS. With Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts and Sub Goal, if you paste your old URL into the Widget URL field on the setup page, all your settings come back and you don't have to start over.",
+      "Change the settings on the setup page, copy the new URL, and paste it over the old one in the source's URL field in OBS. With Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal and Chat Poll, if you paste your old URL into the Widget URL field on the setup page, all your settings come back and you don't have to start over.",
     oldUrlsQ: 'Will my old widget URLs keep working?',
     oldUrlsA:
       "Yes. Updates are made so existing URLs don't break: parameter names, values and defaults stay the same. For example, the old keep=true in Chat Box still means Forever, and Sub Sprout still reads the old channel and platform parameters.",
@@ -1614,6 +1846,7 @@ export const en = {
     lead: "New features and bug fixes in Senchabot Extensions, newest first. The list is put together from the project's commit history on [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      poll: 'New Chat Poll: put up a poll from chat with !poll, and viewers on Twitch and Kick vote by typing a number. Live bars, a timer, one vote per viewer and the winner at the end.',
       goal: 'New Sub Goal: a goal bar that every sub, resub and gifted sub on Twitch and Kick fills by one, with a trophy when you reach it. Mods can fix the count with !goal.',
       streamAlerts:
         'New Stream Alerts: an animated alert with its own sound for every sub, gifted sub, Bits, Kicks and raid on Twitch and Kick. Pick a color, rename the headings and set minimum amounts.',

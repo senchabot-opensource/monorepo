@@ -9,6 +9,7 @@ export type GuideId =
   | 'obs-chat-dock'
   | 'stream-alerts'
   | 'subathon-timer'
+  | 'chat-poll'
   | 'chat-giveaway'
   | 'obs-scene-switcher';
 
@@ -147,6 +148,29 @@ export const GUIDES: readonly GuideEntry[] = [
         title: "OBS'te Twitch ve Kick için Subathon Sayacı Kur | Senchabot",
         description:
           'Twitch ve Kick için ücretsiz subathon sayacı: abonelik, hediye, Bits ve Kicks süre ekler, modlar !subathon add ya da pause yazar, OBS kapansa da süre korunur.',
+      },
+    },
+  },
+  {
+    id: 'chat-poll',
+    path: '/guides/chat-poll',
+    titleKey: 'guides.poll.title',
+    shortKey: 'guides.poll.short',
+    summaryKey: 'guides.poll.summary',
+    leadKey: 'guides.poll.lead',
+    widgets: ['poll'],
+    related: ['chat-giveaway', 'subathon-timer'],
+    published: '2026-09-15',
+    meta: {
+      en: {
+        title: 'Run a Chat Poll on Twitch and Kick in OBS | Senchabot',
+        description:
+          'Run a free chat poll on Twitch and Kick: mods type !poll Question | A | B, viewers vote with a number, and the bars and the winner show in OBS.',
+      },
+      tr: {
+        title: "OBS'te Twitch ve Kick için Sohbet Anketi Yap | Senchabot",
+        description:
+          "Twitch ve Kick için ücretsiz sohbet anketi: modlar !poll Soru | A | B yazar, izleyiciler numarayla oy verir, barlar ve kazanan OBS'te görünür.",
       },
     },
   },

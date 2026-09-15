@@ -17,6 +17,8 @@ const TEXT_PARAMS = new Set([
   'hgift',
   'hbits',
   'hraid',
+  'q',
+  'o',
   'obsWebsocketUrl',
   'obsWebsocketPassword',
   'commandUser',
