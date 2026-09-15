@@ -135,6 +135,17 @@ describe('formatting', () => {
     expect(formatDelta(5 * MIN)).toBe('5:00');
     expect(formatDelta(HOUR + 2 * MIN)).toBe('1:02:00');
   });
+
+  it('rounds added time up, so a tiny cheer never shows +0:00', () => {
+    // 1 Bit at the default 1 minute per 500 Bits.
+    expect(formatDelta(120)).toBe('0:01');
+    expect(formatDelta(59_400)).toBe('1:00');
+  });
+
+  it('shows hours past 99 and nothing below zero', () => {
+    expect(formatClock(250 * HOUR)).toBe('250:00:00');
+    expect(formatClock(-5_000)).toBe('00:00:00');
+  });
 });
 
 describe('parseDuration', () => {

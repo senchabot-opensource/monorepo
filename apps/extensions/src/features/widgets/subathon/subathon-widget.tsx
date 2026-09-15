@@ -633,6 +633,9 @@ const RING_SIZE = 196;
 const RING_STROKE = 18;
 const RING_RADIUS = (RING_SIZE - RING_STROKE) / 2;
 const RING_LENGTH = 2 * Math.PI * RING_RADIUS;
+// The backdrop disc and the stroke's glow reach past the ring's box; centered in the 200px under
+// the pop band, the 800x300 source cut the ring's bottom flat.
+const RING_BOTTOM_ROOM = 16;
 
 function RingView(view: ViewProps) {
   const { left, shown, paused, ended, low, hue, title, percent } = view;
@@ -645,7 +648,7 @@ function RingView(view: ViewProps) {
       <div
         style={{
           position: 'absolute',
-          inset: `${POP_BAND}px 0 0`,
+          inset: `${POP_BAND}px 0 ${RING_BOTTOM_ROOM}px`,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
