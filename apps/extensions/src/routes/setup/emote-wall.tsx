@@ -6,7 +6,7 @@ import {
   type EmoteWallUrlOptions,
 } from '#/features/widgets/emote-wall/widget-url';
 import { useI18n } from '#/lib/i18n';
-import { getLocaleLinks } from '#/lib/i18n/seo';
+import { type FaqEntry, getFaqJsonLd, getLocaleLinks } from '#/lib/i18n/seo';
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { useDeferredValue, useEffect, useMemo, useState } from 'react';
 
@@ -80,35 +80,17 @@ export const Route = createFileRoute('/setup/emote-wall')({
           },
         },
       },
-      {
-        'script:ld+json': {
-          '@context': 'https://schema.org',
-          '@type': 'FAQPage',
-          mainEntity: [
-            {
-              '@type': 'Question',
-              name: 'Which messages trigger the emote wall?',
-              acceptedAnswer: {
-                '@type': 'Answer',
-                text: 'Only messages that contain nothing but emotes (Twitch, Kick, or 7TV emotes, optionally repeated) trigger a floating on-screen emote. Normal text messages are ignored.',
-              },
-            },
-            {
-              '@type': 'Question',
-              name: 'Do I need to sign in to use the emote wall?',
-              acceptedAnswer: {
-                '@type': 'Answer',
-                text: 'No login is required. Emote Wall listens anonymously to public chat streams for both platforms.',
-              },
-            },
-          ],
-        },
-      },
+      { 'script:ld+json': getFaqJsonLd(FAQ) },
     ],
     links: getLocaleLinks('/setup/emote-wall'),
   }),
   component: EmoteWallSetup,
 });
+
+const FAQ: FaqEntry[] = [
+  ['emoteWallSetup.faq1Q', 'emoteWallSetup.faq1A'],
+  ['emoteWallSetup.faq2Q', 'emoteWallSetup.faq2A'],
+];
 
 function EmoteWallSetup() {
   const { locale, t } = useI18n();
@@ -531,29 +513,22 @@ function EmoteWallSetup() {
               </div>
 
               <div className="space-y-3">
-                <details className="group rounded-lg border border-zinc-200/80 bg-zinc-100/60 p-4 transition-colors open:bg-zinc-100 dark:border-zinc-800/80 dark:bg-zinc-900/50 dark:open:bg-zinc-900">
-                  <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-medium text-zinc-700 group-hover:text-zinc-900 dark:text-zinc-200 dark:group-hover:text-white">
-                    <span>{t('emoteWallSetup.faq1Q')}</span>
-                    <span className="transition-transform group-open:rotate-180 text-zinc-500 text-xs">
-                      ▼
-                    </span>
-                  </summary>
-                  <p className="mt-2 text-xs text-zinc-600 leading-relaxed dark:text-zinc-400">
-                    {t('emoteWallSetup.faq1A')}
-                  </p>
-                </details>
-
-                <details className="group rounded-lg border border-zinc-200/80 bg-zinc-100/60 p-4 transition-colors open:bg-zinc-100 dark:border-zinc-800/80 dark:bg-zinc-900/50 dark:open:bg-zinc-900">
-                  <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-medium text-zinc-700 group-hover:text-zinc-900 dark:text-zinc-200 dark:group-hover:text-white">
-                    <span>{t('emoteWallSetup.faq2Q')}</span>
-                    <span className="transition-transform group-open:rotate-180 text-zinc-500 text-xs">
-                      ▼
-                    </span>
-                  </summary>
-                  <p className="mt-2 text-xs text-zinc-600 leading-relaxed dark:text-zinc-400">
-                    {t('emoteWallSetup.faq2A')}
-                  </p>
-                </details>
+                {FAQ.map(([question, answer]) => (
+                  <details
+                    key={question}
+                    className="group rounded-lg border border-zinc-200/80 bg-zinc-100/60 p-4 transition-colors open:bg-zinc-100 dark:border-zinc-800/80 dark:bg-zinc-900/50 dark:open:bg-zinc-900"
+                  >
+                    <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-medium text-zinc-700 group-hover:text-zinc-900 dark:text-zinc-200 dark:group-hover:text-white">
+                      <span>{t(question)}</span>
+                      <span className="transition-transform group-open:rotate-180 text-zinc-500 text-xs">
+                        ▼
+                      </span>
+                    </summary>
+                    <p className="mt-2 text-xs text-zinc-600 leading-relaxed dark:text-zinc-400">
+                      {t(answer)}
+                    </p>
+                  </details>
+                ))}
               </div>
             </div>
           </div>

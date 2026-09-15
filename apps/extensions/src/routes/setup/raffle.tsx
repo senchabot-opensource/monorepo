@@ -1,6 +1,6 @@
-import { RaffleWidget } from "#/features/widgets/raffle/raffle-widget";
+import { RAFFLE_FAQ, RaffleWidget } from "#/features/widgets/raffle/raffle-widget";
 import { createFileRoute } from "@tanstack/react-router";
-import { getLocaleLinks } from "#/lib/i18n/seo";
+import { getFaqJsonLd, getLocaleLinks } from "#/lib/i18n/seo";
 import { z } from "zod";
 
 const searchSchema = z.object({
@@ -80,75 +80,7 @@ export const Route = createFileRoute("/setup/raffle")({
           },
         },
       },
-      {
-        "script:ld+json": {
-          "@context": "https://schema.org",
-          "@type": "HowTo",
-          name: "How to Run a Free Stream Giveaway on Twitch and Kick",
-          description:
-            "Step-by-step instructions to run interactive viewer giveaways with chat keyword entry in OBS Studio, Streamlabs Desktop, XSplit, or any software supporting browser sources.",
-          step: [
-            {
-              "@type": "HowToStep",
-              name: "Set Channel & Entry Keyword",
-              text: "Choose Twitch or Kick, enter your channel, and specify your giveaway keyword (e.g. !join).",
-              position: 1,
-            },
-            {
-              "@type": "HowToStep",
-              name: "Start Giveaway & Collect Entries",
-              text: "Click 'Start Raffle'. Viewers entering the keyword in chat are automatically added to the live entries list.",
-              position: 2,
-            },
-            {
-              "@type": "HowToStep",
-              name: "Draw Random Winner & Celebrate",
-              text: "Click 'Draw Winner' to randomly pick a winner with fireworks and confetti on your overlay.",
-              position: 3,
-            },
-          ],
-        },
-      },
-      {
-        "script:ld+json": {
-          "@context": "https://schema.org",
-          "@type": "FAQPage",
-          mainEntity: [
-            {
-              "@type": "Question",
-              name: "Is this giveaway tool free to use?",
-              acceptedAnswer: {
-                "@type": "Answer",
-                text: "Yes, this stream raffle tool is 100% free and open source with no hidden costs, limits, or account sign-ups.",
-              },
-            },
-            {
-              "@type": "Question",
-              name: "Do viewers or streamers need to log in?",
-              acceptedAnswer: {
-                "@type": "Answer",
-                text: "No login is needed. Streamers only provide their channel name, and viewers enter simply by chatting your keyword in Twitch or Kick chat.",
-              },
-            },
-            {
-              "@type": "Question",
-              name: "Can I restrict the raffle to subscribers only?",
-              acceptedAnswer: {
-                "@type": "Answer",
-                text: "Yes, you can enable 'Subscribers Only' and set a minimum subscribed months filter to reward loyal community members.",
-              },
-            },
-            {
-              "@type": "Question",
-              name: "How does the winner celebration overlay work?",
-              acceptedAnswer: {
-                "@type": "Answer",
-                text: "Add '/widgets/raffle-overlay' as a browser source in OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio, or any software supporting browser sources. When you draw a winner on the setup dashboard, the overlay immediately triggers a confetti celebration banner on stream.",
-              },
-            },
-          ],
-        },
-      },
+      { "script:ld+json": getFaqJsonLd(RAFFLE_FAQ) },
     ],
     links: getLocaleLinks("/setup/raffle"),
   }),

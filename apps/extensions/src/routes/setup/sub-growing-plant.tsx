@@ -1,7 +1,7 @@
 import { Breadcrumb } from "#/components/breadcrumb";
 import { YoutubeTutorial } from "#/components/youtube-tutorial";
 import { useT, type TranslationKey } from "#/lib/i18n";
-import { getLocaleLinks } from "#/lib/i18n/seo";
+import { type FaqEntry, getFaqJsonLd, getLocaleLinks } from "#/lib/i18n/seo";
 import {
   PLANT_REGISTRY,
   PLANT_IDS,
@@ -84,57 +84,17 @@ export const Route = createFileRoute("/setup/sub-growing-plant")({
           },
         },
       },
-      {
-        "script:ld+json": {
-          "@context": "https://schema.org",
-          "@type": "FAQPage",
-          mainEntity: [
-            {
-              "@type": "Question",
-              name: "Are subscriber goal plants on Sub Sprout completely free?",
-              acceptedAnswer: {
-                "@type": "Answer",
-                text: "Yes, Sub Sprout is 100% free and open-source with no subscription fees, account sign-ups, or watermarks.",
-              },
-            },
-            {
-              "@type": "Question",
-              name: "Do I need to sign in with Twitch or Kick to use the subscriber goal plant?",
-              acceptedAnswer: {
-                "@type": "Answer",
-                text: "No login is required. Sub Sprout connects to public chat and subscription events directly from your browser source URL.",
-              },
-            },
-            {
-              "@type": "Question",
-              name: "How do I test the subscriber goal plant on stream?",
-              acceptedAnswer: {
-                "@type": "Answer",
-                text: "Broadcasters and channel moderators can type the '!grow' command in chat to test or manually advance the plant.",
-              },
-            },
-          ],
-        },
-      },
-      {
-        "script:ld+json": {
-          "@context": "https://schema.org",
-          "@type": "VideoObject",
-          name: "Sub Sprout Subscriber Goal Plant Tutorial",
-          description:
-            "Step-by-step tutorial on how to configure the Sub Sprout subscriber goal plant and sub alert widget for Twitch and Kick streams.",
-          thumbnailUrl: "https://img.youtube.com/vi/P0Btpez9Znw/maxresdefault.jpg",
-          embedUrl: "https://www.youtube.com/embed/P0Btpez9Znw",
-          contentUrl: "https://youtu.be/P0Btpez9Znw",
-          uploadDate: "2025-04-11T12:00:00+03:00",
-          duration: "PT43S",
-        },
-      },
+      { "script:ld+json": getFaqJsonLd(FAQ) },
     ],
     links: getLocaleLinks("/setup/sub-growing-plant"),
   }),
   component: SubSproutSetup,
 });
+
+const FAQ: FaqEntry[] = [
+  ["subSprout.faq1Q", "subSprout.faq1A"],
+  ["subSprout.faq2Q", "subSprout.faq2A"],
+];
 
 type PickMode = "fixed" | "cycle" | "random";
 
@@ -521,25 +481,19 @@ function SubSproutSetup() {
               </div>
 
               <div className="space-y-3">
-                <details className="group rounded-lg border border-zinc-200/80 bg-zinc-100/60 p-4 transition-colors open:bg-zinc-100 dark:border-zinc-800/80 dark:bg-zinc-900/50 dark:open:bg-zinc-900">
-                  <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-medium text-zinc-700 group-hover:text-zinc-900 dark:text-zinc-200 dark:group-hover:text-white">
-                    <span>{t("subSprout.faq1Q")}</span>
-                    <span className="transition-transform group-open:rotate-180 text-zinc-500 text-xs">▼</span>
-                  </summary>
-                  <p className="mt-2 text-xs text-zinc-600 leading-relaxed dark:text-zinc-400">
-                    {t("subSprout.faq1A")}
-                  </p>
-                </details>
-
-                <details className="group rounded-lg border border-zinc-200/80 bg-zinc-100/60 p-4 transition-colors open:bg-zinc-100 dark:border-zinc-800/80 dark:bg-zinc-900/50 dark:open:bg-zinc-900">
-                  <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-medium text-zinc-700 group-hover:text-zinc-900 dark:text-zinc-200 dark:group-hover:text-white">
-                    <span>{t("subSprout.faq2Q")}</span>
-                    <span className="transition-transform group-open:rotate-180 text-zinc-500 text-xs">▼</span>
-                  </summary>
-                  <p className="mt-2 text-xs text-zinc-600 leading-relaxed dark:text-zinc-400">
-                    {t("subSprout.faq2A")}
-                  </p>
-                </details>
+                {FAQ.map(([question, answer]) => (
+                  <details
+                    key={question}
+                    className="group rounded-lg border border-zinc-200/80 bg-zinc-100/60 p-4 transition-colors open:bg-zinc-100 dark:border-zinc-800/80 dark:bg-zinc-900/50 dark:open:bg-zinc-900">
+                    <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-medium text-zinc-700 group-hover:text-zinc-900 dark:text-zinc-200 dark:group-hover:text-white">
+                      <span>{t(question)}</span>
+                      <span className="transition-transform group-open:rotate-180 text-zinc-500 text-xs">▼</span>
+                    </summary>
+                    <p className="mt-2 text-xs text-zinc-600 leading-relaxed dark:text-zinc-400">
+                      {t(answer)}
+                    </p>
+                  </details>
+                ))}
               </div>
             </div>
           </div>

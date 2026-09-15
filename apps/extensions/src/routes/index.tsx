@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
-import { type TranslationKey, useT } from '#/lib/i18n';
-import { getLocaleLinks } from '#/lib/i18n/seo';
+import { type TranslationKey, translate, useT } from '#/lib/i18n';
+import { type FaqEntry, getFaqJsonLd, getLocaleLinks, SITE_URL } from '#/lib/i18n/seo';
 
 export const Route = createFileRoute('/')({
   head: () => ({
@@ -74,98 +74,16 @@ export const Route = createFileRoute('/')({
           '@context': 'https://schema.org',
           '@type': 'ItemList',
           name: 'Free Customizable Stream Overlays, Browser Sources & Stream Tools',
-          itemListElement: [
-            {
-              '@type': 'ListItem',
-              position: 1,
-              name: 'Sub Sprout (Subscriber Goal Plants Overlay)',
-              url: 'https://extensions.senchabot.com/setup/sub-growing-plant',
-              description:
-                'Free subscriber goal plants overlay that grows with new subscriptions on Twitch and Kick.',
-            },
-            {
-              '@type': 'ListItem',
-              position: 2,
-              name: 'Universal Chat (Multi-Chat Widget & Chat Box Overlay)',
-              url: 'https://extensions.senchabot.com/setup/chat-widget',
-              description:
-                'Free customizable multi-chat widget and stream chat box overlay for Twitch and Kick with 7TV emotes.',
-            },
-            {
-              '@type': 'ListItem',
-              position: 3,
-              name: 'Raffle Picker (Chat Giveaway & Contest Tool)',
-              url: 'https://extensions.senchabot.com/setup/raffle',
-              description:
-                'Free chat-based giveaway picker and live confetti winner overlay for Twitch and Kick.',
-            },
-            {
-              '@type': 'ListItem',
-              position: 4,
-              name: 'OBS Bridge (Chat Scene Control & Broadcast Tool)',
-              url: 'https://extensions.senchabot.com/setup/obs-bridge',
-              description:
-                'Free tool to control OBS Studio scenes and recording from chat commands.',
-            },
-            {
-              '@type': 'ListItem',
-              position: 5,
-              name: 'Emote Wall (Floating Emote Overlay)',
-              url: 'https://extensions.senchabot.com/setup/emote-wall',
-              description:
-                'Free floating emote overlay that shows emote-only Twitch, Kick, and 7TV chat messages at random screen positions with Calm, Chaos or Bounce animations.',
-            },
-          ],
+          itemListElement: EXTENSIONS.map((ext, index) => ({
+            '@type': 'ListItem',
+            position: index + 1,
+            name: ext.title,
+            url: `${SITE_URL}${ext.to}`,
+            description: translate('en', `home.${ext.descriptionKey}` as TranslationKey),
+          })),
         },
       },
-      {
-        'script:ld+json': {
-          '@context': 'https://schema.org',
-          '@type': 'FAQPage',
-          mainEntity: [
-            {
-              '@type': 'Question',
-              name: 'Are these customizable stream overlays really free?',
-              acceptedAnswer: {
-                '@type': 'Answer',
-                text: 'Yes, all multi-chat widgets, subscriber goal plants, and stream overlays are 100% free, open-source, and watermark-free with no paid tiers.',
-              },
-            },
-            {
-              '@type': 'Question',
-              name: 'Do I need to create an account or sign in to use the chat box widget?',
-              acceptedAnswer: {
-                '@type': 'Answer',
-                text: 'No login or account is required. Enter your Twitch or Kick channel name, customize your chat box or overlay, copy the URL, and paste it into OBS.',
-              },
-            },
-            {
-              '@type': 'Question',
-              name: 'Which streaming software is supported?',
-              acceptedAnswer: {
-                '@type': 'Answer',
-                text: 'Works with OBS, Streamlabs Desktop, XSplit, vMix, Lightstream, or any software that supports browser sources.',
-              },
-            },
-            {
-              '@type': 'Question',
-              name: 'How do I add a chat widget or subscriber goal plant that supports multiple platforms to OBS Studio?',
-              acceptedAnswer: {
-                '@type': 'Answer',
-                text: 'Configure your widget, copy the URL, add a Browser Source in OBS Studio, and paste the URL.',
-              },
-            },
-            {
-              '@type': 'Question',
-              name: 'What is the Emote Wall overlay and which messages trigger it?',
-              acceptedAnswer: {
-                '@type': 'Answer',
-                text: 'Emote Wall is a free browser source overlay that turns emote-only Twitch, Kick, and 7TV chat messages into floating on-screen emotes. Only messages containing nothing but emotes trigger it; normal text messages are ignored. Choose Calm mode for emotes that pop up at random spots and drift away, Chaos mode for emotes that zip across the screen from random edges, or Bounce mode for emotes that ricochet off the edges and speed up with every hit.',
-              },
-            },
-          ],
-        },
-      },
+      { 'script:ld+json': getFaqJsonLd(FAQ) },
     ],
     links: getLocaleLinks('/'),
   }),
@@ -213,6 +131,13 @@ const EXTENSIONS = [
     title: 'OBS Bridge',
     descriptionKey: 'cardObsBridge' as TranslationKey,
   }
+];
+
+const FAQ: FaqEntry[] = [
+  ['home.faq1Q', 'home.faq1A'],
+  ['home.faq2Q', 'home.faq2A'],
+  ['home.faq3Q', 'home.faq3A'],
+  ['home.faq4Q', 'home.faq4A'],
 ];
 
 function Index() {
@@ -290,53 +215,22 @@ function Index() {
             {t('home.faqTitle')}
           </h2>
           <div className="space-y-3">
-            <details className="group rounded-lg border border-zinc-200/80 bg-zinc-100/60 p-4 transition-colors open:bg-zinc-100 dark:border-zinc-800/80 dark:bg-zinc-900/50 dark:open:bg-zinc-900">
-              <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-medium text-zinc-700 group-hover:text-zinc-900 dark:text-zinc-200 dark:group-hover:text-white">
-                <span>{t('home.faq1Q')}</span>
-                <span className="transition-transform group-open:rotate-180 text-zinc-500 text-xs">
-                  ▼
-                </span>
-              </summary>
-              <p className="mt-2 text-xs text-zinc-600 leading-relaxed dark:text-zinc-400">
-                {t('home.faq1A')}
-              </p>
-            </details>
-
-            <details className="group rounded-lg border border-zinc-200/80 bg-zinc-100/60 p-4 transition-colors open:bg-zinc-100 dark:border-zinc-800/80 dark:bg-zinc-900/50 dark:open:bg-zinc-900">
-              <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-medium text-zinc-700 group-hover:text-zinc-900 dark:text-zinc-200 dark:group-hover:text-white">
-                <span>{t('home.faq2Q')}</span>
-                <span className="transition-transform group-open:rotate-180 text-zinc-500 text-xs">
-                  ▼
-                </span>
-              </summary>
-              <p className="mt-2 text-xs text-zinc-600 leading-relaxed dark:text-zinc-400">
-                {t('home.faq2A')}
-              </p>
-            </details>
-
-            <details className="group rounded-lg border border-zinc-200/80 bg-zinc-100/60 p-4 transition-colors open:bg-zinc-100 dark:border-zinc-800/80 dark:bg-zinc-900/50 dark:open:bg-zinc-900">
-              <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-medium text-zinc-700 group-hover:text-zinc-900 dark:text-zinc-200 dark:group-hover:text-white">
-                <span>{t('home.faq3Q')}</span>
-                <span className="transition-transform group-open:rotate-180 text-zinc-500 text-xs">
-                  ▼
-                </span>
-              </summary>
-              <p className="mt-2 text-xs text-zinc-600 leading-relaxed dark:text-zinc-400">
-                {t('home.faq3A')}
-              </p>
-            </details>
-
-            <details className="group rounded-lg border border-zinc-200/80 bg-zinc-100/60 p-4 transition-colors open:bg-zinc-100 dark:border-zinc-800/80 dark:bg-zinc-900/50 dark:open:bg-zinc-900">
-              <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-medium text-zinc-700 group-hover:text-zinc-900 dark:text-zinc-200 dark:group-hover:text-white">
-                <span>{t('home.faq4Q')}</span>
-                <span className="transition-transform group-open:rotate-180 text-zinc-500 text-xs">
-                  ▼
-                </span>
-              </summary>
-              <p className="mt-2 text-xs text-zinc-600 leading-relaxed dark:text-zinc-400">
-                {t('home.faq4A')}
-              </p>
-            </details>
+            {FAQ.map(([question, answer]) => (
+              <details
+                key={question}
+                className="group rounded-lg border border-zinc-200/80 bg-zinc-100/60 p-4 transition-colors open:bg-zinc-100 dark:border-zinc-800/80 dark:bg-zinc-900/50 dark:open:bg-zinc-900"
+              >
+                <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-medium text-zinc-700 group-hover:text-zinc-900 dark:text-zinc-200 dark:group-hover:text-white">
+                  <span>{t(question)}</span>
+                  <span className="transition-transform group-open:rotate-180 text-zinc-500 text-xs">
+                    ▼
+                  </span>
+                </summary>
+                <p className="mt-2 text-xs text-zinc-600 leading-relaxed dark:text-zinc-400">
+                  {t(answer)}
+                </p>
+              </details>
+            ))}
           </div>
         </section>
 
