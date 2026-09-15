@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { ALERT_KINDS, type AlertSettings } from '#/lib/stream-alerts-url';
 import type { SubathonEvent, SubathonPlatform } from '../subathon/subathon-events';
 import { KickEventSource, TwitchEventSource } from '../subathon/subathon-sources';
-import { useKickIds } from '../subathon/use-subathon';
+import { useKickChannel } from '#/hooks/use-kick-channel';
 import { playAlertSound } from './alert-sound';
 import { passesFilters, type StreamAlert } from './stream-alert';
 
@@ -176,7 +176,7 @@ export function useStreamAlerts({
     };
   }, []);
 
-  const kickIds = useKickIds(kick, !simulate);
+  const kickIds = useKickChannel(kick, !simulate).channel;
   // One effect per platform: a Kick lookup that lands later must not restart the Twitch reader.
   useEffect(() => {
     if (simulate || !twitch) return;

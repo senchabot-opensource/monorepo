@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { type RefObject, useCallback, useEffect, useRef } from "react";
 import type { BaseChatClient, ChatConnectionStatus } from "#/lib/basechat";
 import { TwitchChat } from "#/lib/twitch";
 import { KickChat } from "#/lib/kick";
@@ -64,6 +64,17 @@ type UseChatOptions = {
 
 const NO_USERS: ReadonlySet<string> = new Set();
 
+/** Reports a chat client's status and returns its cleanup. */
+function watchChat(
+  platform: ChatPlatform,
+  client: BaseChatClient,
+  onChatStatus: RefObject<UseChatOptions["onChatStatus"]>,
+) {
+  onChatStatus.current?.(platform, { state: "connecting" });
+  client.onStatus = (status) => onChatStatus.current?.(platform, status);
+  return () => client.disconnect();
+}
+
 /** Runs the bridge. Returns a function that skips the wait before the next OBS attempt. */
 export const useChat = ({
   mainScene,
@@ -103,12 +114,17 @@ export const useChat = ({
     ...customCommands,
   };
   const retryNowRef = useRef(() => {});
+  const obsRef = useRef<OBSWebSocket | null>(null);
+  const obsStatusRef = useRef<ObsStatus>("connecting");
+  const activityIdRef = useRef(0);
 
+  // OBS, Twitch and Kick each get their own effect, so one reconnecting (or a Kick lookup that
+  // answers late) never drops the others.
   useEffect(() => {
     const obs = new OBSWebSocket();
+    obsRef.current = obs;
     let reconnectTimer: ReturnType<typeof setTimeout> | null = null;
     let disposed = false;
-    let activityId = 0;
     let state: ObsState = {
       status: "connecting",
       attempt: 0,
@@ -119,6 +135,7 @@ export const useChat = ({
     };
     const setState = (patch: Partial<ObsState>) => {
       state = { ...state, ...patch };
+      obsStatusRef.current = state.status;
       onStatusRef.current?.(state);
     };
     setState({});
@@ -191,117 +208,123 @@ export const useChat = ({
 
     connectOBS();
 
-    const pushToMessages = (payload: ChatMessagesType) => {
-      // By login only: a Twitch display-name can be a localized name that says nothing about who it is.
-      const login = payload.userLower ?? payload.user;
-      if (!cmdUsersRef.current.has(commandUserKey(payload.platform, login))) return;
-
-      const rawMsg = payload.message.trim();
-      const msg = rawMsg.toLowerCase();
-      const cmds = customCommandsRef.current;
-
-      // Numbered on arrival: OBS answers asynchronously, so outcomes can come back out of order.
-      const id = ++activityId;
-      const at = Date.now();
-      const report = (outcome: ObsActivity["outcome"]) =>
-        onActivityRef.current?.({
-          id,
-          at,
-          platform: payload.platform,
-          user: payload.user,
-          text: rawMsg,
-          outcome,
-        });
-      const settle = (request: Promise<unknown>, action: ObsAction, scene?: string) =>
-        request.then(
-          () => report({ kind: "done", action, scene }),
-          (error: unknown) => {
-            console.error(error);
-            report({
-              kind: "failed",
-              offline: state.status !== "connected",
-              message: (error as { message?: string })?.message ?? String(error),
-            });
-          },
-        );
-
-      const startRec = (cmds.cmdStartRecord || DEFAULT_OBS_COMMANDS.cmdStartRecord).trim().toLowerCase();
-      const stopRec = (cmds.cmdStopRecord || DEFAULT_OBS_COMMANDS.cmdStopRecord).trim().toLowerCase();
-      const startStr = (cmds.cmdStartStream || DEFAULT_OBS_COMMANDS.cmdStartStream).trim().toLowerCase();
-      const stopStr = (cmds.cmdStopStream || DEFAULT_OBS_COMMANDS.cmdStopStream).trim().toLowerCase();
-      const brb = (cmds.cmdBrb || DEFAULT_OBS_COMMANDS.cmdBrb).trim().toLowerCase();
-      const back = (cmds.cmdBack || DEFAULT_OBS_COMMANDS.cmdBack).trim().toLowerCase();
-      const scenePrefix = (cmds.cmdScene || DEFAULT_OBS_COMMANDS.cmdScene).trim().toLowerCase();
-
-      if (startRec && msg === startRec) {
-        settle(obs.call('StartRecord'), "startRecord");
-      } else if (stopRec && msg === stopRec) {
-        settle(obs.call('StopRecord'), "stopRecord");
-      } else if (startStr && msg === startStr) {
-        settle(obs.call('StartStream'), "startStream");
-      } else if (stopStr && msg === stopStr) {
-        settle(obs.call('StopStream'), "stopStream");
-      } else if (brb && msg === brb) {
-        const sceneName = brbSceneRef.current;
-        settle(obs.call('SetCurrentProgramScene', { sceneName }), "brb", sceneName);
-      } else if (back && msg === back) {
-        const sceneName = mainSceneRef.current;
-        settle(obs.call('SetCurrentProgramScene', { sceneName }), "back", sceneName);
-      } else if (scenePrefix && (msg === scenePrefix || msg.startsWith(scenePrefix + " "))) {
-        const query = rawMsg.slice(scenePrefix.length).trim();
-        if (!query) return;
-        if (scenesRef.current.length === 0) {
-          // Scenes arrive once OBS is connected; before that there's nothing to match against.
-          report({ kind: "failed", offline: true, message: "" });
-          return;
-        }
-        const lowerQuery = query.toLowerCase();
-        // 1. Try exact match (case-insensitive)
-        let match = scenesRef.current.find(
-          (s) => s.trim().toLowerCase() === lowerQuery
-        );
-        // 2. Try substring match (case-insensitive)
-        if (!match) {
-          match = scenesRef.current.find(
-            (s) => s.trim().toLowerCase().includes(lowerQuery)
-          );
-        }
-        if (match) {
-          settle(obs.call('SetCurrentProgramScene', { sceneName: match }), "scene", match);
-        } else {
-          report({ kind: "noScene", query });
-        }
-      }
-    };
-
-    const clients: BaseChatClient[] = [];
-    const watch = (platform: ChatPlatform, client: BaseChatClient) => {
-      onChatStatusRef.current?.(platform, { state: "connecting" });
-      client.onStatus = (status) => onChatStatusRef.current?.(platform, status);
-      clients.push(client);
-    };
-    const normalizedTwitchChannel = twitchChannel?.trim();
-    const normalizedKickChannelId = kickChannelId?.trim();
-
-    if (normalizedTwitchChannel) {
-      watch("twitch", new TwitchChat(normalizedTwitchChannel, pushToMessages));
-    }
-
-    if (normalizedKickChannelId) {
-      watch("kick", new KickChat(normalizedKickChannelId, pushToMessages));
-    }
-
     return () => {
       // Set before disconnect(), whose ConnectionClosed would otherwise schedule a retry.
       disposed = true;
       retryNowRef.current = () => {};
       if (reconnectTimer) clearTimeout(reconnectTimer);
-      for (const client of clients) {
-        client.disconnect();
-      }
+      if (obsRef.current === obs) obsRef.current = null;
       obs.disconnect().catch(console.error);
     };
-  }, [twitchChannel, kickChannelId, obsWebsocketUrl, obsWebsocketPassword]);
+  }, [obsWebsocketUrl, obsWebsocketPassword]);
+
+  // Reads everything through refs, so settings changes never restart the chat connections.
+  const pushToMessages = useCallback((payload: ChatMessagesType) => {
+    const obs = obsRef.current;
+    if (!obs) return;
+    // By login only: a Twitch display-name can be a localized name that says nothing about who it is.
+    const login = payload.userLower ?? payload.user;
+    if (!cmdUsersRef.current.has(commandUserKey(payload.platform, login))) return;
+
+    const rawMsg = payload.message.trim();
+    const msg = rawMsg.toLowerCase();
+    const cmds = customCommandsRef.current;
+
+    // Numbered on arrival: OBS answers asynchronously, so outcomes can come back out of order.
+    const id = ++activityIdRef.current;
+    const at = Date.now();
+    const report = (outcome: ObsActivity["outcome"]) =>
+      onActivityRef.current?.({
+        id,
+        at,
+        platform: payload.platform,
+        user: payload.user,
+        text: rawMsg,
+        outcome,
+      });
+    const settle = (request: Promise<unknown>, action: ObsAction, scene?: string) => {
+      // obs-websocket-js drops its pending requests when the socket closes, so a request still
+      // waiting on OBS would never settle and the command would vanish from the activity list.
+      let onClosed = () => {};
+      const closed = new Promise<never>((_, reject) => {
+        onClosed = () => reject(new Error("OBS connection closed"));
+        obs.once("ConnectionClosed", onClosed);
+      });
+      Promise.race([request, closed])
+        .then(
+          () => report({ kind: "done", action, scene }),
+          (error: unknown) => {
+            console.error(error);
+            report({
+              kind: "failed",
+              offline: obsStatusRef.current !== "connected",
+              message: (error as { message?: string })?.message ?? String(error),
+            });
+          },
+        )
+        .finally(() => obs.off("ConnectionClosed", onClosed));
+    };
+
+    const startRec = (cmds.cmdStartRecord || DEFAULT_OBS_COMMANDS.cmdStartRecord).trim().toLowerCase();
+    const stopRec = (cmds.cmdStopRecord || DEFAULT_OBS_COMMANDS.cmdStopRecord).trim().toLowerCase();
+    const startStr = (cmds.cmdStartStream || DEFAULT_OBS_COMMANDS.cmdStartStream).trim().toLowerCase();
+    const stopStr = (cmds.cmdStopStream || DEFAULT_OBS_COMMANDS.cmdStopStream).trim().toLowerCase();
+    const brb = (cmds.cmdBrb || DEFAULT_OBS_COMMANDS.cmdBrb).trim().toLowerCase();
+    const back = (cmds.cmdBack || DEFAULT_OBS_COMMANDS.cmdBack).trim().toLowerCase();
+    const scenePrefix = (cmds.cmdScene || DEFAULT_OBS_COMMANDS.cmdScene).trim().toLowerCase();
+
+    if (startRec && msg === startRec) {
+      settle(obs.call('StartRecord'), "startRecord");
+    } else if (stopRec && msg === stopRec) {
+      settle(obs.call('StopRecord'), "stopRecord");
+    } else if (startStr && msg === startStr) {
+      settle(obs.call('StartStream'), "startStream");
+    } else if (stopStr && msg === stopStr) {
+      settle(obs.call('StopStream'), "stopStream");
+    } else if (brb && msg === brb) {
+      const sceneName = brbSceneRef.current;
+      settle(obs.call('SetCurrentProgramScene', { sceneName }), "brb", sceneName);
+    } else if (back && msg === back) {
+      const sceneName = mainSceneRef.current;
+      settle(obs.call('SetCurrentProgramScene', { sceneName }), "back", sceneName);
+    } else if (scenePrefix && (msg === scenePrefix || msg.startsWith(scenePrefix + " "))) {
+      const query = rawMsg.slice(scenePrefix.length).trim();
+      if (!query) return;
+      if (scenesRef.current.length === 0) {
+        // Scenes arrive once OBS is connected; before that there's nothing to match against.
+        report({ kind: "failed", offline: true, message: "" });
+        return;
+      }
+      const lowerQuery = query.toLowerCase();
+      // 1. Try exact match (case-insensitive)
+      let match = scenesRef.current.find(
+        (s) => s.trim().toLowerCase() === lowerQuery
+      );
+      // 2. Try substring match (case-insensitive)
+      if (!match) {
+        match = scenesRef.current.find(
+          (s) => s.trim().toLowerCase().includes(lowerQuery)
+        );
+      }
+      if (match) {
+        settle(obs.call('SetCurrentProgramScene', { sceneName: match }), "scene", match);
+      } else {
+        report({ kind: "noScene", query });
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    const channel = twitchChannel?.trim();
+    if (!channel) return;
+    return watchChat("twitch", new TwitchChat(channel, pushToMessages), onChatStatusRef);
+  }, [twitchChannel, pushToMessages]);
+
+  useEffect(() => {
+    const chatroomId = kickChannelId?.trim();
+    if (!chatroomId) return;
+    return watchChat("kick", new KickChat(chatroomId, pushToMessages), onChatStatusRef);
+  }, [kickChannelId, pushToMessages]);
 
   return useCallback(() => retryNowRef.current(), []);
 };

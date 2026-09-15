@@ -17,9 +17,9 @@ import { resolveObsCommands } from '#/features/tools/obs-bridge-config';
 import { ActivityList, ConnectionsCard, DEFAULT_OBS_URL } from '#/features/tools/obs-bridge-status';
 import { ObsCommandList } from '#/features/tools/obs-command-list';
 import { type ObsActivity, type ObsState, useChat } from '#/features/tools/use-chat';
+import { useKickChannel } from '#/hooks/use-kick-channel';
 import type { ChatConnectionStatus } from '#/lib/basechat';
 import { useI18n } from '#/lib/i18n';
-import { getKickChannelInfo } from '#/lib/kick';
 
 const searchSchema = z.object({
   mainScene: z.string().default('Main Scene'),
@@ -42,20 +42,7 @@ const searchSchema = z.object({
 export const Route = createFileRoute('/tools/obs-bridge')({
   ssr: false,
   validateSearch: (search) => searchSchema.parse(search),
-  loaderDeps: ({ search }) => ({
-    kick: search.kick,
-  }),
   component: RouteComponent,
-  loader: async ({ deps }) => {
-    if (!deps.kick) {
-      return { kick: null, kickSubBadges: [] };
-    }
-    const info = await getKickChannelInfo(deps.kick);
-    return {
-      kick: info.chatroomId,
-      kickSubBadges: info.subscriberBadges || [],
-    };
-  },
 });
 
 const HEADING_CLASS = 'text-sm font-semibold text-zinc-900 dark:text-white';
@@ -209,7 +196,6 @@ function RouteComponent() {
   const { t } = useI18n();
   const navigate = useNavigate();
   const search = Route.useSearch();
-  const { kick } = Route.useLoaderData();
 
   const [scenes, setScenes] = useState<string[]>([]);
   const [obsState, setObsState] = useState<ObsState>({
@@ -232,6 +218,8 @@ function RouteComponent() {
   const commandUsers = useMemo(() => parseCommandUsers(search.commandUser), [search.commandUser]);
   const twitchChannel = search.twitch?.trim() ?? '';
   const kickChannel = search.kick?.trim() ?? '';
+  // Retried until kick.com answers, so a dock opened before the network is up still gets Kick.
+  const kickLookup = useKickChannel(kickChannel);
   const hasTwitch = Boolean(twitchChannel);
   const hasKick = Boolean(kickChannel);
   const platforms = { twitch: hasTwitch, kick: hasKick };
@@ -279,7 +267,7 @@ function RouteComponent() {
     mainScene: search.mainScene,
     brbScene: search.brbScene,
     twitchChannel: search.twitch,
-    kickChannelId: kick,
+    kickChannelId: kickLookup.channel?.chatroomId,
     obsWebsocketUrl: search.obsWebsocketUrl,
     obsWebsocketPassword: search.obsWebsocketPassword,
     commandUsers: allowedCommandUsers,
@@ -340,7 +328,7 @@ function RouteComponent() {
               onRetryNow={retryNow}
               channels={{ twitch: twitchChannel.toLowerCase(), kick: kickChannel.toLowerCase() }}
               chatStatus={chatStatus}
-              kickNotFound={hasKick && !kick}
+              kickNotFound={kickLookup.notFound}
             />
           </Card>
 

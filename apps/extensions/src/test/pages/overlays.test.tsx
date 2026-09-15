@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { act, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { applyTheme } from '#/lib/theme';
 import { setReducedMotion, withLayout } from '#/test/browser';
@@ -42,6 +42,29 @@ describe('overlay routes', () => {
     expect(html.classList.contains('dark')).toBe(false);
     expect(html.style.colorScheme).toBe('');
     expect(document.body.classList.contains('font-widget')).toBe(true);
+  });
+});
+
+describe('a Kick-only overlay whose channel lookup fails', () => {
+  beforeEach(() => {
+    vi.spyOn(globalThis, 'fetch').mockRejectedValue(new TypeError('Failed to fetch'));
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it('never shows demo chat in Chat Box', async () => {
+    await renderRoute('/widgets/chat-widget?kick=streamer');
+    await act(async () => vi.advanceTimersByTime(10_000));
+    expect(document.body.textContent).not.toContain('MonkeyDLuffy');
+  });
+
+  it('never shows demo emotes in Emote Wall', async () => {
+    await renderRoute('/widgets/emote-wall?kick=streamer');
+    await act(async () => vi.advanceTimersByTime(10_000));
+    expect(document.querySelectorAll('img')).toHaveLength(0);
   });
 });
 

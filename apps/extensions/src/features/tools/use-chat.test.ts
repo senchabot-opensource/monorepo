@@ -12,6 +12,8 @@ vi.mock('obs-websocket-js', () => ({
     on(event: string, handler: () => void) {
       this.handlers.set(event, handler);
     }
+    once() {}
+    off() {}
     async connect(...args: unknown[]) {
       connect(...args);
       this.handlers.get('ConnectionClosed')?.();

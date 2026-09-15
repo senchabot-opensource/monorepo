@@ -143,8 +143,33 @@ describe('Chat Reader', () => {
   });
 
   it('says so when the Kick channel does not exist', async () => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response('{}', { status: 404 }));
     await renderRoute(`${TOOL}?kick=nobody&lang=en`);
+    await act(async () => {});
     expect(screen.getByText(en('chatReader.notFound'))).toBeTruthy();
+  });
+
+  it('keeps looking up a Kick channel while kick.com fails, then reads its chat', async () => {
+    const kickApi = vi.fn(async (): Promise<Response> => {
+      throw new TypeError('Failed to fetch');
+    });
+    vi.spyOn(globalThis, 'fetch').mockImplementation(async (input) =>
+      String(input).startsWith('https://kick.com/') ? kickApi() : new Response('{}', { status: 500 }),
+    );
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    await renderRoute(`${TOOL}?kick=streamer&lang=en`);
+    await act(async () => {});
+    // A failed lookup is not a missing channel.
+    expect(screen.queryByText(en('chatReader.notFound'))).toBeNull();
+    expect(screen.getByText(en('chatReader.statusConnecting'))).toBeTruthy();
+
+    kickApi.mockImplementation(async () =>
+      Response.json({ id: 1, user_id: 2, chatroom: { id: 668 } }),
+    );
+    await act(async () => vi.advanceTimersByTime(5_000));
+    expect(FakeWebSocket.instances.some((ws) => ws.url.startsWith('wss://ws-us2.pusher.com'))).toBe(
+      true,
+    );
   });
 
   it('is opened from the Chat Box setup with the chat settings', async () => {

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { type PollSettings, savedPoll } from '#/lib/poll-url';
 import type { SubathonPlatform } from '../subathon/subathon-events';
-import { useKickIds } from '../subathon/use-subathon';
+import { useKickChannel } from '#/hooks/use-kick-channel';
 import type { PollChatEvent } from './poll-chat';
 import { KickPollSource, TwitchPollSource } from './poll-sources';
 import {
@@ -101,7 +101,7 @@ export function usePoll({
   previewId,
 }: UsePollOptions) {
   const key = simulate ? null : storageKey(twitch, kick);
-  const kickIds = useKickIds(kick, !simulate);
+  const kickIds = useKickChannel(kick, !simulate).channel;
   // The preview runs its clock faster, so a poll of any length plays out in a few seconds.
   const [speed] = useState(() =>
     simulate && settings.duration > 0 ? Math.max(1, settings.duration / SIM_POLL_SECONDS) : 1,

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { SubathonEvent, SubathonPlatform, TimedEvent } from '../subathon/subathon-events';
 import { KickEventSource, TwitchEventSource } from '../subathon/subathon-sources';
-import { useKickIds } from '../subathon/use-subathon';
+import { useKickChannel } from '#/hooks/use-kick-channel';
 import {
   addToGoal,
   applyGoalCommand,
@@ -92,7 +92,7 @@ export function useGoal({
   previewId,
 }: UseGoalOptions) {
   const key = simulate ? null : storageKey(twitch, kick);
-  const kickIds = useKickIds(kick, !simulate);
+  const kickIds = useKickChannel(kick, !simulate).channel;
   const settingsRef = useRef({ start, target });
   settingsRef.current = { start, target };
   const [state, setState] = useState<GoalState>(() => loadState(key, start));

@@ -182,6 +182,7 @@ describe('useRaffleChat on Kick', () => {
       channelId: '1',
       userId: '2',
       subscriberBadges: [],
+      notFound: false,
     });
     renderRaffleChat({ platform: 'kick', channel: 'streamer' });
     await act(async () => {});

@@ -12,12 +12,22 @@ export interface KickChannelInfo {
   channelId: string | null;
   userId: string | null;
   subscriberBadges: any[];
+  /** kick.com answered 404. Any other failure (403, 5xx, offline, timeout) is worth retrying. */
+  notFound: boolean;
 }
 
+// A lookup that hangs would otherwise never fail, so nothing would retry it.
+const LOOKUP_TIMEOUT_MS = 10_000;
+
 export const getKickChannelInfo = async (username: string): Promise<KickChannelInfo> => {
+  let notFound = false;
   try {
-    const response = await fetch(`https://kick.com/api/v1/channels/${username}`);
-    if (!response.ok) throw new Error('Channel not found');
+    const response = await fetch(
+      `https://kick.com/api/v1/channels/${encodeURIComponent(username.trim())}`,
+      { signal: AbortSignal.timeout(LOOKUP_TIMEOUT_MS) },
+    );
+    notFound = response.status === 404;
+    if (!response.ok) throw new Error(`Kick channel lookup failed: ${response.status}`);
     const data = (await response.json()) as {
       id?: unknown;
       user_id?: unknown;
@@ -32,21 +42,17 @@ export const getKickChannelInfo = async (username: string): Promise<KickChannelI
       channelId: data.id == null ? null : String(data.id),
       userId: data.user_id == null ? null : String(data.user_id),
       subscriberBadges: data.subscriber_badges || [],
+      notFound: false,
     };
   } catch (error) {
-    console.error('Error while fething channel:', error);
-    return { chatroomId: null, channelId: null, userId: null, subscriberBadges: [] };
+    console.error('Error while fetching Kick channel:', error);
+    return { chatroomId: null, channelId: null, userId: null, subscriberBadges: [], notFound };
   }
 };
 
 /** Kick's public Pusher app, the one kick.com's own pages connect to. */
 export const KICK_PUSHER_URL =
   'wss://ws-us2.pusher.com/app/32cbd69e4b950bf97679?protocol=7&client=js&version=8.4.0&flash=false';
-
-export const getKickId = async (username: string): Promise<string | null> => {
-  const info = await getKickChannelInfo(username);
-  return info.chatroomId;
-};
 
 export class KickChat extends BaseChatClient {
   private readonly channelId: string;

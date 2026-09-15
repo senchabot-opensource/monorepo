@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { ChatPlatform } from '#/features/tools/command-users';
 import type { ChatMessagesType } from '#/features/widgets/chat-widget/chat-messages';
 import type { BaseChatClient, ChatConnectionStatus } from '#/lib/basechat';
@@ -20,7 +20,10 @@ const SAVE_MS = 1000;
 
 type Options = {
   twitchChannel: string;
-  kick: { slug: string; chatroomId: string } | null;
+  /** The channel name from the link: names the saved history even before kick.com answers. */
+  kickSlug: string;
+  /** Known once kick.com answers the lookup. */
+  kickChatroomId: string | null;
 };
 
 function readSaved(key: string, now: number): ReaderEntry[] {
@@ -38,8 +41,8 @@ function readSaved(key: string, now: number): ReaderEntry[] {
 }
 
 /** Runs the reader's chat connections and keeps its message and event log. */
-export function useChatReader({ twitchChannel, kick }: Options) {
-  const key = storageKey(twitchChannel, kick?.slug ?? '');
+export function useChatReader({ twitchChannel, kickSlug, kickChatroomId }: Options) {
+  const key = storageKey(twitchChannel, kickSlug);
   const [entries, setEntries] = useState<ReaderEntry[]>(() => readSaved(key, Date.now()));
   const [status, setStatus] = useState<Partial<Record<ChatPlatform, ChatConnectionStatus>>>({});
   /** When each lost connection dropped, until it is back. */
@@ -110,15 +113,13 @@ export function useChatReader({ twitchChannel, kick }: Options) {
     };
   }, [pushEvent]);
 
-  const kickSlug = kick?.slug ?? '';
-  const kickChatroomId = kick?.chatroomId ?? '';
-
-  useEffect(() => {
-    const clients: Partial<Record<ChatPlatform, BaseChatClient>> = {};
-
-    const watch = (platform: ChatPlatform, channel: string, client: BaseChatClient) => {
+  const watch = useCallback(
+    (platform: ChatPlatform, channel: string, client: BaseChatClient) => {
       let everConnected = false;
       let downSince: number | null = null;
+      // onStatus is set after the constructor has opened the socket, so the first "connecting" is
+      // reported here.
+      setStatus((current) => ({ ...current, [platform]: { state: 'connecting' } }));
       client.onStatus = (next) => {
         setStatus((current) => ({ ...current, [platform]: next }));
         const now = Date.now();
@@ -137,40 +138,46 @@ export function useChatReader({ twitchChannel, kick }: Options) {
           pushEvent({ kind: 'disconnected', platform });
         }
       };
-      clients[platform] = client;
-    };
+      clientsRef.current[platform] = client;
+      return () => {
+        delete clientsRef.current[platform];
+        client.disconnect();
+      };
+    },
+    [pushEvent],
+  );
 
-    const onMessage = (msg: ChatMessagesType) => push({ op: 'message', msg, at: Date.now() });
-    const onDelete = (id: string) => push({ op: 'delete', id });
-    const onBan = (platform: ChatPlatform) => (userLower: string) =>
-      push({ op: 'deleteUser', platform, userLower });
-    const onClear = (platform: ChatPlatform) => () => pushEvent({ kind: 'chatCleared', platform });
+  const handlers = useMemo(
+    () => ({
+      message: (msg: ChatMessagesType) => push({ op: 'message', msg, at: Date.now() }),
+      delete: (id: string) => push({ op: 'delete', id }),
+      ban: (platform: ChatPlatform) => (userLower: string) =>
+        push({ op: 'deleteUser', platform, userLower }),
+      clear: (platform: ChatPlatform) => () => pushEvent({ kind: 'chatCleared', platform }),
+    }),
+    [push, pushEvent],
+  );
 
-    // onStatus is set after the constructor has opened the socket, so the first "connecting" is
-    // reported here.
-    if (twitchChannel) {
-      setStatus((current) => ({ ...current, twitch: { state: 'connecting' } }));
-      watch(
-        'twitch',
-        twitchChannel,
-        new TwitchChat(twitchChannel, onMessage, onDelete, onBan('twitch'), onClear('twitch')),
-      );
-    }
-    if (kickChatroomId) {
-      setStatus((current) => ({ ...current, kick: { state: 'connecting' } }));
-      watch(
-        'kick',
-        kickSlug,
-        new KickChat(kickChatroomId, onMessage, onDelete, onBan('kick'), onClear('kick')),
-      );
-    }
-    clientsRef.current = clients;
+  // One connection each, so a Kick lookup that answers late leaves Twitch be.
+  useEffect(() => {
+    if (!twitchChannel) return;
+    const { message, delete: remove, ban, clear } = handlers;
+    return watch(
+      'twitch',
+      twitchChannel,
+      new TwitchChat(twitchChannel, message, remove, ban('twitch'), clear('twitch')),
+    );
+  }, [twitchChannel, handlers, watch]);
 
-    return () => {
-      clientsRef.current = {};
-      for (const client of Object.values(clients)) client.disconnect();
-    };
-  }, [twitchChannel, kickSlug, kickChatroomId, push, pushEvent]);
+  useEffect(() => {
+    if (!kickChatroomId) return;
+    const { message, delete: remove, ban, clear } = handlers;
+    return watch(
+      'kick',
+      kickSlug,
+      new KickChat(kickChatroomId, message, remove, ban('kick'), clear('kick')),
+    );
+  }, [kickSlug, kickChatroomId, handlers, watch]);
 
   const retryNow = useCallback((platform: ChatPlatform) => {
     clientsRef.current[platform]?.reconnectNow();

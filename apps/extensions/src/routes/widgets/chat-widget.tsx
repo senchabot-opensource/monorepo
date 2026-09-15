@@ -24,8 +24,8 @@ import { type EmoteMap, useChannelEmotes } from '#/features/widgets/chat-widget/
 import { useTwitchBadges } from '#/features/widgets/chat-widget/use-badges';
 import { useUnifiedChat } from '#/features/widgets/chat-widget/use-unified-chat';
 import { parseHighlights } from '#/features/widgets/chat-widget/widget-settings';
+import { useKickChannel } from '#/hooks/use-kick-channel';
 import { useT } from '#/lib/i18n';
-import { getKickChannelInfo } from '#/lib/kick';
 import { getAccessibleColor } from '#/features/widgets/chat-widget/color-utils';
 
 const DEFAULT_TTL_MS = 30_000;
@@ -236,23 +236,10 @@ const GOOGLE_FONTS_PRECONNECT_ID = 'chat-widget-google-fonts-preconnect';
 export const Route = createFileRoute('/widgets/chat-widget')({
   ssr: false,
   validateSearch: (search) => searchSchema.parse(search),
-  loaderDeps: ({ search }) => ({
-    kick: search.kick,
-  }),
   component: RouteComponent,
-  loader: async ({ deps }) => {
-    if (!deps.kick) {
-      return { kick: null, kickUserId: null, kickSubBadges: [] };
-    }
-
-    const info = await getKickChannelInfo(deps.kick);
-    return {
-      kick: info.chatroomId,
-      kickUserId: info.userId,
-      kickSubBadges: info.subscriberBadges || [],
-    };
-  },
 });
+
+const NO_SUB_BADGES: KickSubBadges = [];
 
 function HeaderIcon({ children, filled }: { children: React.ReactNode; filled?: boolean }) {
   return (
@@ -291,14 +278,18 @@ const SparkleIcon = () => (
 
 function RouteComponent() {
   const search = Route.useSearch();
-  const { kick, kickUserId, kickSubBadges } = Route.useLoaderData();
+  // Looked up in the page, not a route loader, so a failed lookup is retried and never holds up
+  // Twitch.
+  const kick = useKickChannel(search.kick).channel;
+  const kickSubBadges = kick?.subscriberBadges ?? NO_SUB_BADGES;
   const twitchBadgeMap = useTwitchBadges(search.twitch);
 
-  const isMock = Boolean(search.mock || (!search.twitch && !kick));
+  // Decided by the link, so a Kick lookup that fails can't swap a streamer's chat for demo chat.
+  const isMock = Boolean(search.mock || (!search.twitch && !search.kick?.trim()));
 
   const showPlatformIndicator = search.platformDisplay !== 'none';
 
-  const emotes = useChannelEmotes(search.twitch, kickUserId, {
+  const emotes = useChannelEmotes(search.twitch, kick?.userId ?? null, {
     sevenTv: search.sevenTv,
     bttv: search.bttv,
     ffz: search.ffz,
@@ -315,7 +306,7 @@ function RouteComponent() {
     [search.highlights],
   );
 
-  useUnifiedChat(search.twitch, kick);
+  useUnifiedChat(search.twitch, kick?.chatroomId);
 
   React.useEffect(() => {
     if (!isMock) return;

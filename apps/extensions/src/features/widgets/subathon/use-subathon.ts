@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { getKickChannelInfo } from '#/lib/kick';
+import { useKickChannel } from '#/hooks/use-kick-channel';
 import type { SubathonSettings, SubathonTimeValues } from '#/lib/subathon-url';
 import type { SubathonEvent, SubathonPlatform, SubTier, TimedEvent } from './subathon-events';
 import { KickEventSource, TwitchEventSource } from './subathon-sources';
@@ -92,8 +92,6 @@ export type PreviewMessage = { type: 'event'; event: SubathonEvent } | { type: '
 // The preview's fast clock needs smooth steps; on stream the bar moves too slowly to see 100ms.
 const SIM_TICK_MS = 100;
 const LIVE_TICK_MS = 250;
-// OBS can start before the network is up, and a subathon runs for days: keep trying Kick.
-const KICK_LOOKUP_RETRY_MS = [5_000, 15_000, 30_000, 60_000];
 export const POP_MS = 2600;
 const MAX_POPS = 3;
 // The preview drains the bar in about this long, whatever the starting time.
@@ -116,33 +114,6 @@ function simulatedEvent(values: SubathonValues): TimedEvent | null {
   ];
   const enabled = events.filter((event) => eventTime(event, values) > 0);
   return enabled.length > 0 ? pick(enabled) : null;
-}
-
-/** The Kick chatroom and channel ids, looked up again until kick.com answers. */
-export function useKickIds(kick: string | undefined, enabled: boolean) {
-  const [ids, setIds] = useState<{ chatroomId: string; channelId: string | null } | null>(null);
-  useEffect(() => {
-    setIds(null);
-    if (!enabled || !kick) return;
-    let cancelled = false;
-    let timer: number | undefined;
-    const lookup = async (attempt: number) => {
-      const info = await getKickChannelInfo(kick);
-      if (cancelled) return;
-      if (info.chatroomId) {
-        setIds({ chatroomId: info.chatroomId, channelId: info.channelId });
-        return;
-      }
-      const delay = KICK_LOOKUP_RETRY_MS[Math.min(attempt, KICK_LOOKUP_RETRY_MS.length - 1)];
-      timer = window.setTimeout(() => lookup(attempt + 1), delay);
-    };
-    lookup(0);
-    return () => {
-      cancelled = true;
-      window.clearTimeout(timer);
-    };
-  }, [kick, enabled]);
-  return ids;
 }
 
 interface UseSubathonOptions {
@@ -175,7 +146,7 @@ export function useSubathon({
   );
 
   const key = simulate ? null : storageKey(twitch, kick);
-  const kickIds = useKickIds(kick, !simulate);
+  const kickIds = useKickChannel(kick, !simulate).channel;
   const valuesRef = useRef(values);
   valuesRef.current = values;
   const [state, setState] = useState<SubathonState>(() =>
