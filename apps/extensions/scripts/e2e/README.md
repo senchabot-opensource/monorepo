@@ -60,6 +60,8 @@ Flows, once per page at 1440×900 in the dark theme:
 - **Header Widgets menu** (landing): click opens it with a link to every setup page and a second
   click closes it; ArrowDown opens it on the first link and moves on; Escape closes it and gives
   focus back.
+- **Header fits** (landing, at 768, 900, 1023 and 1024 px wide, where the full header is
+  tightest): every header link and button ends inside the window.
 - **Setup pages**: type a channel, change one setting, and check the widget URL (for example
   `twitch=twitch` and `mode=chaos` on the Emote Wall); click Copy and check the next steps panel
   and the clipboard; on Chat Box, Emote Wall and Sub Sprout paste that URL into a fresh page and
