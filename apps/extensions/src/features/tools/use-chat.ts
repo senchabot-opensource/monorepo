@@ -192,7 +192,9 @@ export const useChat = ({
     connectOBS();
 
     const pushToMessages = (payload: ChatMessagesType) => {
-      if (!cmdUsersRef.current.has(commandUserKey(payload.platform, payload.user))) return;
+      // By login only: a Twitch display-name can be a localized name that says nothing about who it is.
+      const login = payload.userLower ?? payload.user;
+      if (!cmdUsersRef.current.has(commandUserKey(payload.platform, login))) return;
 
       const rawMsg = payload.message.trim();
       const msg = rawMsg.toLowerCase();

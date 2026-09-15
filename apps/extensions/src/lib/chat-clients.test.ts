@@ -126,6 +126,28 @@ describe('TwitchChat', () => {
     ).toEqual([]);
   });
 
+  it('keeps the login for bans when the display-name is another name', () => {
+    const [msg] = twitchLines(
+      '@badges=;display-name=お命頂戴;id=j1;tmi-sent-ts=1789476149257 :oinotityoudai!oinotityoudai@oinotityoudai.tmi.twitch.tv PRIVMSG #channel :草',
+    );
+    expect(msg).toMatchObject({ user: 'お命頂戴', userLower: 'oinotityoudai' });
+  });
+
+  it('keeps the login of the user a reply answers', () => {
+    const [msg] = twitchLines(
+      '@badges=;display-name=Viewer;id=r1;reply-parent-display-name=加藤純一;reply-parent-msg-body=hi;reply-parent-user-login=kato_junichi0817;tmi-sent-ts=1789165490905 :viewer!viewer@viewer.tmi.twitch.tv PRIVMSG #channel :@加藤純一 hello',
+    );
+    expect(msg.replyTo).toEqual({ user: '加藤純一', login: 'kato_junichi0817', message: 'hi' });
+  });
+
+  it('opens a new connection right away when Twitch announces a RECONNECT', () => {
+    const client = new TwitchChat('channel', () => {});
+    const first = FakeWebSocket.last;
+    first.onmessage?.({ data: ':tmi.twitch.tv RECONNECT' });
+    expect(FakeWebSocket.last).not.toBe(first);
+    client.disconnect();
+  });
+
   it('removes only the timed-out user on CLEARCHAT with a target', () => {
     twitchLines(
       '@ban-duration=350;room-id=1;target-user-id=2;tmi-sent-ts=1642719320727 :tmi.twitch.tv CLEARCHAT #channel :Ronni',

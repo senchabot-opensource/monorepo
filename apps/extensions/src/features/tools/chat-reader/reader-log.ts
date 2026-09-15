@@ -59,7 +59,7 @@ function applyOne(entries: ReaderEntry[], op: ReaderOp): ReaderEntry[] {
           entry.type !== 'message' ||
           entry.deleted ||
           entry.msg.platform !== op.platform ||
-          entry.msg.user.toLowerCase() !== op.userLower
+          (entry.msg.userLower ?? entry.msg.user.toLowerCase()) !== op.userLower
         ) {
           return entry;
         }

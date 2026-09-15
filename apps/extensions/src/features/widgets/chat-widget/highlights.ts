@@ -10,7 +10,8 @@ const normalizeName = (name: string) => name.toLowerCase().replace(/_/g, '-');
 export function mentionsAny(msg: ChatMessagesType, channels: string[]): boolean {
   const targets = new Set(channels.map(normalizeName));
   if (targets.size === 0) return false;
-  if (msg.replyTo && targets.has(normalizeName(msg.replyTo.user))) return true;
+  const replied = msg.replyTo?.login ?? msg.replyTo?.user;
+  if (replied && targets.has(normalizeName(replied))) return true;
   for (const [, name] of msg.message.matchAll(/@(\w+)/g)) {
     if (targets.has(normalizeName(name))) return true;
   }

@@ -13,12 +13,15 @@ const schema = z.object({
   badges: z.array(z.string()).optional(),
   emotes: z.string().optional(),
   receivedAt: z.date(),
+  /** The lowercase name bans and allow-lists go by: Twitch's login, Kick's username. */
   userLower: z.string().optional(),
   deletedAt: z.date().optional(),
   variant: z.enum(['announcement', 'highlighted']).optional(),
   announcementColor: z.enum(ANNOUNCEMENT_COLORS).optional(),
   firstMessage: z.boolean().optional(),
-  replyTo: z.object({ user: z.string(), message: z.string() }).optional(),
+  replyTo: z
+    .object({ user: z.string(), login: z.string().optional(), message: z.string() })
+    .optional(),
 });
 
 export type ChatMessagesType = z.infer<typeof schema>;
