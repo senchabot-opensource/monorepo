@@ -51,6 +51,7 @@ export const en = {
       senchabot: 'Senchabot',
       github: 'Source code on GitHub',
       switchWidget: 'Switch to another widget',
+      breadcrumb: 'Breadcrumb',
     },
     notFound: {
       title: 'Page not found',
@@ -212,10 +213,10 @@ export const en = {
       'OBS Studio and other apps that support browser sources. Add the widget URL as a Browser Source and use the size shown on the setup page.',
     faq4Q: 'Can I use Twitch and Kick together?',
     faq4A:
-      'Yes. Chat Box, Emote Wall, Sub Sprout and Subathon Timer take a Twitch and a Kick channel in the same URL. OBS Bridge can listen to both chats at once too. Raffle runs on one platform at a time.',
+      'Yes. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal and Chat Poll take a Twitch and a Kick channel in the same URL. OBS Bridge can listen to both chats at once too. Raffle runs on one platform at a time.',
     faq5Q: 'How do I change a widget later?',
     faq5A:
-      'Open its setup page, set it up the way you want and replace the URL in your Browser Source. Chat Box, Emote Wall, Sub Sprout and Subathon Timer can also open an existing URL: paste it on the setup page, your settings come back, and you change only what you need.',
+      'Open its setup page, set it up the way you want and replace the URL in your Browser Source. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal and Chat Poll can also open an existing URL: paste it on the setup page, your settings come back, and you change only what you need.',
     faq6Q: 'Will my widget URL keep working after updates?',
     faq6A:
       "Yes. Updates keep existing URL settings and their values working, so a widget that's already in your scene doesn't need a new URL.",
@@ -243,7 +244,7 @@ export const en = {
     messageDurationTip:
       'Messages fade out after this time. Pick "Forever" to keep them on screen, with new ones pushing older ones up.',
     hideBotsTip:
-      'Hides messages from common bots like Nightbot, StreamElements, Fossabot, BotRix and KickBot, plus Twitch accounts with the "Chat Bot" badge.',
+      'Hides messages from common bots like Nightbot, StreamElements, Fossabot, BotRix and KickBot, plus accounts with Twitch\'s "Chat Bot" badge or Kick\'s "Bot" badge.',
     hideCommandsTip: 'Hides messages that start with "!", like !discord or !uptime.',
     badgesTip: 'Shows broadcaster, moderator, VIP and subscriber badges next to usernames.',
     animationTip:
@@ -367,7 +368,7 @@ export const en = {
     sectionUsers: 'Authorized Users',
     usersLabel: 'Chat Usernames',
     usersTip:
-      'Only the people on this list can run commands. With an empty list nobody can, not even you. On Twitch the name is matched against the display name shown in chat.',
+      "Only the people on this list can run commands. With an empty list nobody can, not even you. On Twitch the name is matched against the login, the name in the channel's URL.",
     usersEmpty: 'Nobody yet, so no one can run commands.',
     userPlatform: 'Platform',
     addUser: 'Add',
@@ -1118,7 +1119,7 @@ export const en = {
     openSetup: 'Open the setup page',
     index: {
       title: 'Guides',
-      lead: "Each guide answers one question step by step: adding a widget to OBS, combining Twitch and Kick chat, reading chat in an OBS dock, adding stream alerts, running a subathon timer, running a chat raffle and switching scenes from chat. They all cover free tools that don't need a login.",
+      lead: "Each guide answers one question step by step: adding a widget to OBS, combining Twitch and Kick chat, reading chat in an OBS dock, adding stream alerts, running a subathon timer, running a chat poll, running a chat raffle and switching scenes from chat. They all cover free tools that don't need a login.",
       listLabel: 'All guides',
       moreText:
         "For general questions, check the [FAQ](/faq). To see what's changed, head to the [changelog](/changelog).",
@@ -1216,7 +1217,7 @@ export const en = {
           'Chat Box and Emote Wall stay completely empty and transparent until something happens in chat. Send a message in chat; for Emote Wall it has to be a message made only of emotes by default, but with Show All Emotes on, emotes inside normal messages count too. The Raffle overlay also only appears when a winner is drawn and disappears after 10 seconds. Sub Sprout and Subathon Timer, on the other hand, show up right away.',
         kickTitle: 'Kick channel not found?',
         kickBody:
-          "When the widget opens, it looks up the Kick channel on kick.com. If that lookup fails (wrong name, the channel doesn't exist, or Kick doesn't respond), Kick messages won't come in. If the URL has no Twitch channel either, Chat Box and Emote Wall play sample content instead of real chat. If you see messages from names like Goku or Frieren in OBS, your Kick channel wasn't found. Type your Kick name exactly as it appears in the kick.com URL.",
+          "When the widget opens, it looks up the Kick channel on kick.com. If that lookup fails (wrong name, the channel doesn't exist, or Kick doesn't respond), Kick messages won't come in. Type your Kick name exactly as it appears in the kick.com URL.",
         tabTitle: 'Does the URL work in a browser?',
         tabBody:
           "Open the URL in a regular browser tab. If it works there but not in OBS, check the source's URL field and size.",
@@ -1287,7 +1288,7 @@ export const en = {
       },
       filters: {
         title: 'How do you hide bots and commands?',
-        bots: 'Hide Bots removes messages from known bot accounts: Nightbot, StreamElements, Streamlabs, Moobot, Fossabot, Wizebot, Sery_Bot, SoundAlerts, StreamlootsBot, KofiStreamBot, PokemonCommunityGame, OWN3D, Blerp, BotRix, KickBot, Kicklet and Senchabot. Accounts with the "Chat Bot" badge on Twitch are hidden too. Kick has no bot badge, so there only this name list works.',
+        bots: 'Hide Bots removes messages from known bot accounts: Nightbot, StreamElements, Streamlabs, Moobot, Fossabot, Wizebot, Sery_Bot, SoundAlerts, StreamlootsBot, KofiStreamBot, PokemonCommunityGame, OWN3D, Blerp, BotRix, KickBot, Kicklet and Senchabot. Accounts with the "Chat Bot" badge on Twitch or the "Bot" badge on Kick are hidden too.',
         commands:
           'Hide Commands hides every message that starts with "!", so commands like `!discord` or `!uptime` stay off your screen. To also hide what the bot replies to a command, turn on both settings.',
         highlights:
@@ -1324,7 +1325,7 @@ export const en = {
           'Pick your rules, then hit Start Raffle. The button stays disabled while the keyword is empty.',
         step5:
           'People who join show up in the list. Once you have enough entries, hit Draw Winner.',
-        p1: "Settings lock when the raffle starts, so the rules can't change mid-raffle. To close entries, hit Stop Raffle; you can still draw a winner after stopping. Starting a new raffle clears the entry list, so the page asks you to confirm first.",
+        p1: "Settings lock when the raffle starts, so the rules can't change mid-raffle. To close entries, hit Close Entries; you can still draw a winner after that. Starting a new raffle clears the entry list, so the page asks you to confirm first.",
       },
       entry: {
         title: 'How do viewers enter the raffle?',
@@ -1344,14 +1345,14 @@ export const en = {
         minMonths: 'Minimum Sub Months',
         minMonthsOptions: '1 or more, only when Subscribers Only is on',
         minMonthsDefault: '1',
-        maxWins: 'Max Wins Per User',
+        maxWins: 'Max Wins Per Viewer',
         maxWinsOptions: '1 to 5, or unlimited',
         maxWinsDefault: '1',
         minDuration: 'Minimum Duration',
         minDurationOptions: '0 to 300 seconds',
         minDurationDefault: '15 seconds',
         subsText:
-          "With Subscribers Only on, anyone without a subscriber badge can't enter. The broadcaster counts as a subscriber too, so you can enter your own raffle. If Minimum Sub Months stays at 1, every subscriber can enter; set it to 6 and only people who have been subscribed for at least 6 months get in. On both Twitch and Kick, sub length is read from the viewer's subscriber badge.",
+          "With Subscribers Only on, anyone without a subscriber badge can't enter. The broadcaster counts as a subscriber too, so you can enter your own raffle as long as Minimum Sub Months is 1. At 1, every subscriber can enter; set it to 6 and only people who have been subscribed for at least 6 months get in. On both Twitch and Kick, sub length is read from the viewer's subscriber badge.",
         winsText:
           "A drawn winner leaves the entry list and moves to the winners list. If the limit is 1, they can't win again in the same raffle. If the limit is higher or unlimited, they can enter again by typing the keyword again.",
         durationText:
@@ -1411,13 +1412,13 @@ export const en = {
         back: 'Switches to the Main scene',
         stream: 'Starts / stops the stream',
         record: 'Starts / stops recording',
-        p1: "`brb` and `back` are typed without an exclamation mark. Commands ignore case, but the whole message has to be the command: `brb` works, `brb 5 min` doesn't. You can rename any command under Custom Command Names on the setup page, for example `!switch` instead of `!scene`.",
+        p1: "`brb` and `back` are typed without an exclamation mark. Commands ignore case, but the whole message has to be the command: `brb` works, `brb 5 min` doesn't. You can rename any command under Commands on the setup page, for example `!switch` instead of `!scene`.",
         p2: 'The stop stream command really does end your stream. Keep the authorized list short.',
       },
       matching: {
         title: 'How does the !scene command find the right scene?',
         p1: 'It looks for an exact match first: `!scene game` switches to the scene named exactly "Game", ignoring case. Without an exact match, it picks the first scene with that word in its name: `!scene chatting` finds the "Just Chatting" scene. If no scene matches, nothing happens.',
-        p2: 'If more than one scene contains the same word, the first match in the list OBS sends wins. With similarly named scenes, typing the full name is the safest bet. When you add or rename a scene, the list updates on its own.',
+        p2: 'If more than one scene contains the same word, the one highest in your Scenes list wins. With similarly named scenes, typing the full name is the safest bet. When you add or rename a scene, the list updates on its own.',
       },
       users: {
         title: 'Who can use the commands?',

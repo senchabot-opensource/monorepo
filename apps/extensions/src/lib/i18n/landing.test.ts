@@ -116,3 +116,39 @@ describe('pickBrowserLocale', () => {
     expect(pickBrowserLocale([])).toBe('en');
   });
 });
+
+describe('landing script: awkward URLs', () => {
+  it('reads /tr/ as the Turkish home page and tidies the slash', () => {
+    expect(land({ url: '/tr/', languages: ['en-US'] })).toEqual({ redirect: '/tr', saved: 'tr' });
+  });
+
+  it('keeps the hash and the other params when it switches language', () => {
+    expect(land({ url: '/guides/chat-poll?x=a%20b#commands', languages: ['tr'] }).redirect).toBe(
+      '/tr/guides/chat-poll?x=a+b#commands',
+    );
+    expect(land({ url: '/tr/faq?lang=en#support' }).redirect).toBe('/faq#support');
+  });
+
+  it('only takes the exact lowercase codes from ?lang=', () => {
+    expect(land({ url: '/?lang=TR', languages: ['en-US'] })).toEqual({
+      redirect: null,
+      saved: null,
+    });
+  });
+
+  it('does not save anything or move a visitor already on their saved language', () => {
+    expect(land({ url: '/tr/setup/raffle', saved: 'tr' })).toEqual({ redirect: null, saved: 'tr' });
+    expect(land({ url: '/faq', saved: 'en', languages: ['tr'] })).toEqual({
+      redirect: null,
+      saved: 'en',
+    });
+  });
+
+  it('agrees with pickBrowserLocale for every language list', () => {
+    const lists = [['tr-TR'], ['en-GB', 'tr'], ['de', 'TR'], ['pt-BR', 'fr'], [''], ['zh', 'en']];
+    for (const languages of lists) {
+      const expected = pickBrowserLocale(languages) === 'tr' ? '/tr' : null;
+      expect(land({ url: '/', languages }).redirect, languages.join(',')).toBe(expected);
+    }
+  });
+});

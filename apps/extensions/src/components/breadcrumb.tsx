@@ -1,4 +1,5 @@
 import { LocaleLink } from '#/components/locale-link';
+import { useT } from '#/lib/i18n';
 import type { SitePath } from '#/lib/i18n/paths';
 
 export interface BreadcrumbItem {
@@ -11,8 +12,9 @@ interface BreadcrumbProps {
 }
 
 export function Breadcrumb({ items }: BreadcrumbProps) {
+  const t = useT();
   return (
-    <nav aria-label="Breadcrumb" className="w-full">
+    <nav aria-label={t('common.nav.breadcrumb')} className="w-full">
       <ol className="flex items-center space-x-2 text-sm text-zinc-500">
         {items.map((item, index) => {
           const isLast = index === items.length - 1;

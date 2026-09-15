@@ -78,3 +78,53 @@ describe('routes accept digit-only and JSON-looking text', () => {
     expect(validate(SubSprout, '?kick=678').kick).toBe('678');
   });
 });
+
+describe('text params survive awkward values', () => {
+  const awkward = [
+    'çağla İstanbul',
+    'a+b',
+    'a&b=c',
+    'C#',
+    '100%',
+    '1e3',
+    '1.50',
+    '007',
+    '-5',
+    'null',
+    'false',
+    '[1,2]',
+    '{"a":1}',
+    '"quoted"',
+    ' padded ',
+    'pipe|separated|options',
+    '🎮 emoji',
+    '',
+  ];
+
+  it.each(awkward)('round-trips %j through the router serializer and parser', (value) => {
+    const search = { q: value, o: value, obsWebsocketPassword: value, title: value };
+    expect(parseSearch(stringifySearch(search))).toEqual(search);
+  });
+
+  it.each(awkward)('reads %j exactly as URLSearchParams wrote it', (value) => {
+    const query = `?${new URLSearchParams({ twitch: value, hsub: value, cmdScene: value })}`;
+    expect(parseSearch(query)).toMatchObject({ twitch: value, hsub: value, cmdScene: value });
+  });
+
+  it('keeps the first of a repeated text param, like URLSearchParams.get', () => {
+    expect(parseSearch('?twitch=a&twitch=b').twitch).toBe('a');
+  });
+
+  it('parses a query with or without its leading question mark the same way', () => {
+    expect(parseSearch('twitch=123&mock=true')).toEqual(parseSearch('?twitch=123&mock=true'));
+  });
+
+  it('writes nothing for an empty or all-undefined search', () => {
+    expect(stringifySearch({})).toBe('');
+    expect(stringifySearch({ twitch: undefined, mock: undefined })).toBe('');
+  });
+
+  it('leaves non-string values of text params to the default serializer', () => {
+    expect(stringifySearch({ twitch: 123 })).toBe(defaultStringifySearch({ twitch: 123 }));
+  });
+});

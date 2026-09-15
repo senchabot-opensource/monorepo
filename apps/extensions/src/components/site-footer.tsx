@@ -129,7 +129,9 @@ export function SiteFooter() {
         </div>
 
         <div className="mt-10 flex flex-col gap-2 border-t border-zinc-200 pt-6 text-xs text-zinc-500 sm:flex-row sm:items-center sm:justify-between dark:border-zinc-800">
-          <p>
+          {/* Pages are prerendered at build time: from New Year's Day until the next deploy the
+              year differs at hydration, and React re-renders the whole page over a mismatch. */}
+          <p suppressHydrationWarning>
             © {new Date().getFullYear()} Senchabot ·{' '}
             <ExternalLink
               href={LINKS.license}

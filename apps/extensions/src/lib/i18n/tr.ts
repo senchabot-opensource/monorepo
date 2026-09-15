@@ -54,6 +54,7 @@ export const tr: typeof en = {
       senchabot: 'Senchabot',
       github: "GitHub'daki kaynak kodu",
       switchWidget: "Başka bir widget'a geç",
+      breadcrumb: 'Sayfa yolu',
     },
     notFound: {
       title: 'Sayfa bulunamadı',
@@ -218,10 +219,10 @@ export const tr: typeof en = {
       "OBS Studio ve tarayıcı kaynağı destekleyen diğer programlarla. Widget URL'sini Tarayıcı Kaynağı olarak ekle ve kurulum sayfasında yazan boyutu kullan.",
     faq4Q: "Twitch ve Kick'i birlikte kullanabilir miyim?",
     faq4A:
-      "Evet. Sohbet Kutusu, Emote Duvarı, Sub Sprout ve Subathon Timer tek bir URL'de hem Twitch hem Kick kanalını alır. OBS Bridge da iki sohbeti aynı anda dinleyebilir. Çekiliş ise her seferinde tek bir platformda çalışır.",
+      "Evet. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi ve Sohbet Anketi tek bir URL'de hem Twitch hem Kick kanalını alır. OBS Bridge da iki sohbeti aynı anda dinleyebilir. Çekiliş ise her seferinde tek bir platformda çalışır.",
     faq5Q: "Bir widget'ı sonradan nasıl değiştiririm?",
     faq5A:
-      "Kurulum sayfasını aç, widget'ı istediğin gibi ayarla ve Tarayıcı Kaynağı'ndaki URL'yi yenisiyle değiştir. Sohbet Kutusu, Emote Duvarı, Sub Sprout ve Subathon Timer mevcut bir URL'yi de açabilir: URL'yi kurulum sayfasına yapıştır, eski ayarların geri gelsin, sadece istediğini değiştir.",
+      "Kurulum sayfasını aç, widget'ı istediğin gibi ayarla ve Tarayıcı Kaynağı'ndaki URL'yi yenisiyle değiştir. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi ve Sohbet Anketi mevcut bir URL'yi de açabilir: URL'yi kurulum sayfasına yapıştır, eski ayarların geri gelsin, sadece istediğini değiştir.",
     faq6Q: "Güncellemelerden sonra widget URL'm çalışmaya devam eder mi?",
     faq6A:
       'Evet. Güncellemelerde mevcut URL ayarları ve değerleri korunur, yani sahnendeki widget için yeni bir URL almana gerek kalmaz.',
@@ -249,7 +250,7 @@ export const tr: typeof en = {
     messageDurationTip:
       'Mesajlar bu süre dolunca kaybolur. "Süresiz" seçersen ekranda kalırlar, yeni gelenler eskileri yukarı iter.',
     hideBotsTip:
-      'Nightbot, StreamElements, Fossabot, BotRix ve KickBot gibi bilinen botların, bir de Twitch\'te "Chat Bot" rozeti olan hesapların mesajlarını gizler.',
+      'Nightbot, StreamElements, Fossabot, BotRix ve KickBot gibi bilinen botların, bir de Twitch\'te "Chat Bot", Kick\'te "Bot" rozeti olan hesapların mesajlarını gizler.',
     hideCommandsTip: '!discord veya !uptime gibi "!" ile başlayan mesajları gizler.',
     badgesTip: 'Kullanıcı adının yanında yayıncı, moderatör, VIP ve abone rozetlerini gösterir.',
     animationTip:
@@ -374,7 +375,7 @@ export const tr: typeof en = {
     sectionUsers: 'Yetkili Kullanıcılar',
     usersLabel: 'Sohbetteki Kullanıcı Adları',
     usersTip:
-      "Komutları sadece bu listedekiler çalıştırabilir. Liste boşsa kimse çalıştıramaz, sen bile. Twitch'te sohbette görünen adla eşleştirilir.",
+      "Komutları sadece bu listedekiler çalıştırabilir. Liste boşsa kimse çalıştıramaz, sen bile. Twitch'te kanal URL'sinde geçen kullanıcı adıyla eşleştirilir.",
     usersEmpty: 'Henüz kimse yok, yani şu an kimse komut çalıştıramaz.',
     userPlatform: 'Platform',
     addUser: 'Ekle',
@@ -1132,7 +1133,7 @@ export const tr: typeof en = {
     openSetup: 'Kurulum sayfasını aç',
     index: {
       title: 'Rehberler',
-      lead: "Her rehber tek bir soruyu adım adım cevaplıyor: OBS'e widget eklemek, Twitch ve Kick sohbetini birleştirmek, sohbeti OBS dock'unda okumak, yayın uyarıları eklemek, subathon sayacı kurmak, sohbet çekilişi yapmak ve sohbetten sahne değiştirmek. Hepsi ücretsiz ve giriş istemeyen araçlar için.",
+      lead: "Her rehber tek bir soruyu adım adım cevaplıyor: OBS'e widget eklemek, Twitch ve Kick sohbetini birleştirmek, sohbeti OBS dock'unda okumak, yayın uyarıları eklemek, subathon sayacı kurmak, sohbet anketi yapmak, sohbet çekilişi yapmak ve sohbetten sahne değiştirmek. Hepsi ücretsiz ve giriş istemeyen araçlar için.",
       listLabel: 'Tüm rehberler',
       moreText:
         'Genel sorular için [sık sorulan sorulara](/faq) bak. Nelerin değiştiğini [yenilikler](/changelog) sayfasında bulabilirsin.',
@@ -1230,7 +1231,7 @@ export const tr: typeof en = {
           "Sohbet Kutusu ve Emote Duvarı sohbette bir şey olana kadar tamamen boş ve şeffaftır. Sohbete bir mesaj yaz; Emote Duvarı için varsayılan olarak sadece emote'tan oluşan bir mesaj gerekir, Tüm Emote'ları Göster açıksa normal mesajlardaki emote'lar da sayılır. Çekiliş overlay'i de sadece kazanan çekildiğinde görünür ve 10 saniye sonra kaybolur. Sub Sprout ise bitkiyi, Subathon Timer da sayacı hemen gösterir.",
         kickTitle: 'Kick kanalı bulunamadı mı?',
         kickBody:
-          "Widget açılırken Kick kanalını kick.com üzerinden arar. Bu arama başarısız olursa, yani ad yanlışsa, kanal yoksa ya da Kick cevap vermezse, Kick mesajları gelmez. Adreste Twitch kanalı da yoksa Sohbet Kutusu ve Emote Duvarı gerçek sohbet yerine örnek içerik oynatır. OBS'te Goku ya da Frieren gibi isimlerden mesajlar görüyorsan Kick kanalın bulunamamış demektir. Kick adını kick.com adresinde göründüğü gibi yaz.",
+          "Widget açılırken Kick kanalını kick.com üzerinden arar. Bu arama başarısız olursa, yani ad yanlışsa, kanal yoksa ya da Kick cevap vermezse, Kick mesajları gelmez. Kick adını kick.com adresinde göründüğü gibi yaz.",
         tabTitle: 'Adres tarayıcıda çalışıyor mu?',
         tabBody:
           "Adresi normal bir tarayıcı sekmesinde aç. Orada çalışıp OBS'te çalışmıyorsa kaynağın URL alanını ve boyutunu kontrol et.",
@@ -1301,7 +1302,7 @@ export const tr: typeof en = {
       },
       filters: {
         title: 'Botlar ve komutlar nasıl gizlenir?',
-        bots: 'Botları Gizle, bilinen bot hesaplarının mesajlarını ekrandan çıkarır: Nightbot, StreamElements, Streamlabs, Moobot, Fossabot, Wizebot, Sery_Bot, SoundAlerts, StreamlootsBot, KofiStreamBot, PokemonCommunityGame, OWN3D, Blerp, BotRix, KickBot, Kicklet ve Senchabot. Twitch\'te "Chat Bot" rozeti taşıyan hesaplar da gizlenir. Kick\'te bot rozeti olmadığı için orada sadece bu isim listesi işe yarar.',
+        bots: 'Botları Gizle, bilinen bot hesaplarının mesajlarını ekrandan çıkarır: Nightbot, StreamElements, Streamlabs, Moobot, Fossabot, Wizebot, Sery_Bot, SoundAlerts, StreamlootsBot, KofiStreamBot, PokemonCommunityGame, OWN3D, Blerp, BotRix, KickBot, Kicklet ve Senchabot. Twitch\'te "Chat Bot", Kick\'te "Bot" rozeti taşıyan hesaplar da gizlenir.',
         commands:
           'Komutları Gizle, "!" ile başlayan her mesajı gizler; `!discord` ya da `!uptime` gibi komutlar ekranı doldurmaz. Botun komuta verdiği cevabı da saklamak için iki ayarı birlikte aç.',
         highlights:
@@ -1337,7 +1338,7 @@ export const tr: typeof en = {
         step4:
           "Kuralları seç, sonra Çekilişi Başlat'a bas. Anahtar kelime boşken bu düğme kapalı kalır.",
         step5: "Katılanlar listede görünür. Yeterince katılım olunca Kazananı Çek'e bas.",
-        p1: "Çekiliş başladığında ayarlar kilitlenir, çekiliş sürerken kurallar değişmez. Katılımı kapatmak için Çekilişi Durdur'a bas; durdurduktan sonra da kazanan çekebilirsin. Yeni bir çekiliş başlatmak katılımcı listesini sildiği için sayfa önce onay ister.",
+        p1: "Çekiliş başladığında ayarlar kilitlenir, çekiliş sürerken kurallar değişmez. Katılımları kapatmak için Katılımı Kapat'a bas; kapattıktan sonra da kazanan çekebilirsin. Yeni bir çekiliş başlatmak katılımcı listesini sildiği için sayfa önce onay ister.",
       },
       entry: {
         title: 'İzleyiciler çekilişe nasıl katılır?',
@@ -1354,17 +1355,17 @@ export const tr: typeof en = {
         subsOnly: 'Sadece Aboneler',
         subsOnlyOptions: 'Açık ya da kapalı',
         subsOnlyDefault: 'Kapalı',
-        minMonths: 'Minimum Abonelik Ayı',
+        minMonths: 'En Az Abonelik (ay)',
         minMonthsOptions: '1 ve üstü, sadece Sadece Aboneler açıkken',
         minMonthsDefault: '1',
-        maxWins: 'Kullanıcı Başına Maksimum Kazanç',
+        maxWins: 'Kişi Başı Kazanma Sınırı',
         maxWinsOptions: '1 ile 5 arası ya da sınırsız',
         maxWinsDefault: '1',
-        minDuration: 'Minimum Süre',
+        minDuration: 'En Kısa Süre',
         minDurationOptions: '0 ile 300 saniye',
         minDurationDefault: '15 saniye',
         subsText:
-          "Sadece Aboneler açıkken abone rozeti olmayanlar katılamaz. Yayıncı da abone sayılır, kendi çekilişine girebilir. Minimum Abonelik Ayı 1'de kalırsa her abone katılır; 6 yaparsan sadece en az 6 aydır abone olanlar girer. Abonelik süresi Twitch'te ve Kick'te izleyicinin abone rozetinden okunur.",
+          "Sadece Aboneler açıkken abone rozeti olmayanlar katılamaz. Yayıncı da abone sayılır, En Az Abonelik 1 ay olduğu sürece kendi çekilişine girebilir. Bu alan 1'de kalırsa her abone katılır; 6 yaparsan sadece en az 6 aydır abone olanlar girer. Abonelik süresi Twitch'te ve Kick'te izleyicinin abone rozetinden okunur.",
         winsText:
           'Çekilen kazanan katılımcı listesinden çıkar ve kazananlar listesine eklenir. Sınır 1 ise aynı çekilişte bir daha kazanamaz. Sınır daha yüksekse ya da sınırsızsa, anahtar kelimeyi yeniden yazarak tekrar katılabilir.',
         durationText:
@@ -1426,13 +1427,13 @@ export const tr: typeof en = {
         back: 'Ana sahneye geçer',
         stream: 'Yayını başlatır / durdurur',
         record: 'Kaydı başlatır / durdurur',
-        p1: "`brb` ve `back` ünlemsiz yazılır. Komutlar büyük küçük harfe bakmaz ama mesajın tamamı komut olmalı: `brb` çalışır, `brb 5 dk` çalışmaz. Kurulum sayfasındaki Özel Komut Adları'ndan her komutun adını değiştirebilirsin, örneğin `!scene` yerine `!sahne`.",
+        p1: "`brb` ve `back` ünlemsiz yazılır. Komutlar büyük küçük harfe bakmaz ama mesajın tamamı komut olmalı: `brb` çalışır, `brb 5 dk` çalışmaz. Kurulum sayfasındaki Komutlar bölümünden her komutun adını değiştirebilirsin, örneğin `!scene` yerine `!sahne`.",
         p2: 'Yayını durdurma komutu yayını gerçekten kapatır. Yetkili listesini kısa tut.',
       },
       matching: {
         title: '!scene komutu doğru sahneyi nasıl bulur?',
         p1: 'Önce tam eşleşme aranır: `!scene oyun`, adı tam olarak "Oyun" olan sahneye geçer, büyük küçük harf fark etmez. Tam eşleşme yoksa adında o kelime geçen ilk sahne seçilir: `!scene sohbet`, "Sadece Sohbet" sahnesini bulur. Hiçbir sahne eşleşmezse hiçbir şey olmaz.',
-        p2: "Birden fazla sahne aynı kelimeyi içeriyorsa OBS'in gönderdiği listedeki ilk eşleşme kazanır. Benzer adlı sahnelerde tam adı yazmak en güvenlisi. Sahne ekleyip adını değiştirdiğinde liste kendiliğinden güncellenir.",
+        p2: "Birden fazla sahne aynı kelimeyi içeriyorsa Sahneler listende en üstte olan kazanır. Benzer adlı sahnelerde tam adı yazmak en güvenlisi. Sahne eklediğinde ya da adını değiştirdiğinde liste kendiliğinden güncellenir.",
       },
       users: {
         title: 'Komutları kimler kullanabilir?',
