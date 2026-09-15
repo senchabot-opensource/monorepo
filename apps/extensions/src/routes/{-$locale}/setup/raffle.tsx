@@ -6,7 +6,8 @@ import { getSetupPageHead } from '#/lib/seo/pages';
 
 const searchSchema = z.object({
   channel: z.string().optional(),
-  platform: z.enum(['twitch', 'kick']).optional(),
+  // A mistyped link opens the Twitch raffle instead of an error page.
+  platform: z.enum(['twitch', 'kick']).optional().catch(undefined),
   lang: z.string().optional(),
 });
 

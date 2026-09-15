@@ -25,6 +25,7 @@ import { useTwitchBadges } from '#/features/widgets/chat-widget/use-badges';
 import { useUnifiedChat } from '#/features/widgets/chat-widget/use-unified-chat';
 import { parseHighlights } from '#/features/widgets/chat-widget/widget-settings';
 import { useKickChannel } from '#/hooks/use-kick-channel';
+import { clampedNumber } from '#/lib/url-params';
 import { useT } from '#/lib/i18n';
 import { getAccessibleColor } from '#/features/widgets/chat-widget/color-utils';
 
@@ -56,33 +57,30 @@ const searchSchema = z.object({
   bttv: z.coerce.boolean().optional().default(true),
   ffz: z.coerce.boolean().optional().default(true),
   badges: z.coerce.boolean().optional().default(true),
-  fontSize: z.coerce.number().optional().default(18),
+  // Hand-edited values must never throw: that shows an error screen in OBS.
+  fontSize: z.coerce.number().catch(18),
   background: z.coerce.boolean().optional(),
   itemBackground: z.coerce.boolean().optional(),
   boldUsernames: z.coerce.boolean().optional(),
   boldMessages: z.coerce.boolean().optional(),
-  bgOpacity: z.coerce.number().min(0).max(1).optional().default(0.5),
+  bgOpacity: clampedNumber(0, 1, 0.5),
   platformAccent: z.coerce.boolean().optional(),
-  orientation: z.enum(['vertical', 'horizontal']).optional().default('vertical'),
-  platformDisplay: z.enum(['name', 'icon', 'none']).optional().default('icon'),
+  orientation: z.enum(['vertical', 'horizontal']).catch('vertical'),
+  platformDisplay: z.enum(['name', 'icon', 'none']).catch('icon'),
   timestamp: z.coerce.boolean().optional(),
   keep: z.coerce.boolean().optional(),
   // Seconds a message stays; `keep` wins over it.
-  duration: z.coerce.number().min(1).optional(),
+  duration: clampedNumber(1, Number.POSITIVE_INFINITY, undefined),
   hideBots: z.coerce.boolean().optional(),
   hideCommands: z.coerce.boolean().optional(),
   highlights: z.string().optional(),
-  font: z
-    .enum(['inter', 'roboto', 'nunito', 'mono', 'serif', 'system'])
-    .optional()
-    .default('inter'),
-  layout: z.enum(['inline', 'stacked', 'card', 'compact']).optional().default('inline'),
+  font: z.enum(['inter', 'roboto', 'nunito', 'mono', 'serif', 'system']).catch('inter'),
+  layout: z.enum(['inline', 'stacked', 'card', 'compact']).catch('inline'),
   mock: z.coerce.boolean().optional(),
-  mockRate: z.coerce.number().min(0.1).max(50).optional(),
+  mockRate: clampedNumber(0.1, 50, undefined),
   animation: z
     .enum(['slide', 'smooth', 'pop', 'bounce', 'stagger', 'fade', 'typing', 'none'])
-    .optional()
-    .default('slide'),
+    .catch('slide'),
 });
 
 type FontChoice = z.infer<typeof searchSchema>['font'];

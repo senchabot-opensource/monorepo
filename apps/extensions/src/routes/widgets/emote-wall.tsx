@@ -2,19 +2,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { z } from 'zod';
 import { EmoteWall } from '#/features/widgets/emote-wall/emote-wall';
 import { useKickChannel } from '#/hooks/use-kick-channel';
-
-/**
- * Numeric widget params never throw on out-of-range input: garbage falls
- * back to the default and anything else is clamped into range. A mistyped
- * URL must degrade gracefully, never white-screen.
- */
-const clampedNumber = (min: number, max: number, fallback: number) =>
-  z.coerce
-    .number()
-    .catch(fallback)
-    .transform((v) =>
-      Number.isFinite(v) ? Math.min(max, Math.max(min, v)) : fallback,
-    );
+import { clampedNumber } from '#/lib/url-params';
 
 const searchSchema = z.object({
   twitch: z.string().optional(),
