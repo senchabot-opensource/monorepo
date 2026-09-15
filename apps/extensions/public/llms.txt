@@ -1,6 +1,6 @@
 # Senchabot Extensions
 
-> Free, open source stream overlays and tools for Twitch and Kick: Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Raffle and OBS Bridge. You set one up on its web page, copy the URL and add it to OBS Studio (or another app that supports browser sources) as a Browser Source. No login and nothing to install.
+> Free, open source stream overlays and tools for Twitch and Kick: Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Raffle and OBS Bridge. You set one up on its web page, copy the URL and add it to OBS Studio (or another app that supports browser sources) as a Browser Source. No login and nothing to install.
 
 Senchabot Extensions is made by Senchabot (https://senchabot.com), an open source, multi-platform community bot for Twitch, Discord, Kick and YouTube. The code is GPL-3.0 licensed at https://github.com/senchabot-opensource/monorepo (folder apps/extensions). It is not affiliated with Twitch or Kick.
 
@@ -14,6 +14,7 @@ Every page is also in Turkish under /tr, for example [Chat Box in Turkish](https
 - [Emote Wall](https://extensions.senchabot.com/setup/emote-wall): Emote-only chat messages from Twitch and Kick appear as emotes on screen in Calm, Chaos or Bounce mode. Browser source size 1920x1080.
 - [Sub Sprout](https://extensions.senchabot.com/setup/sub-growing-plant): A plant that grows one stage with every new sub, resub or gifted sub on Twitch and Kick. Browser source size 800x600.
 - [Stream Alerts](https://extensions.senchabot.com/setup/stream-alerts): An animated alert with its own sound for every sub, gifted sub, Bits, Kicks and raid on Twitch and Kick, in a Neon or a Celestial theme. Browser source size 800x450.
+- [Sub Goal](https://extensions.senchabot.com/setup/sub-goal): A goal bar that every sub, resub and gifted sub on Twitch and Kick fills by one, with a trophy when the goal is reached. Mods fix the count with !goal. Browser source size 800x260.
 
 ## Tools
 

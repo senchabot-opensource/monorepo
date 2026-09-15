@@ -86,7 +86,7 @@ const CHAT_READY = `${IMAGES_READY} && document.getAnimations().every((a) => a.p
 // then gift 5 subs, so the bar sits around two thirds with the +5:00 on its way up.
 const SUBATHON_HIT = `(() => {
   const channel = new BroadcastChannel('senchabot:subathon-preview');
-  channel.postMessage({ type: 'event', event: { kind: 'command', platform: 'twitch', command: { action: 'remove', ms: 1500000 } } });
+  channel.postMessage({ type: 'event', event: { kind: 'mod', platform: 'twitch', text: '!subathon remove 25m' } });
   channel.postMessage({ type: 'event', event: { kind: 'gift', platform: 'twitch', name: 'pixelfox', count: 5, tier: 1 } });
 })()`;
 const OXANIUM_READY = `document.fonts.check('800 20px Oxanium')`;
@@ -94,6 +94,12 @@ const OXANIUM_READY = `document.fonts.check('800 20px Oxanium')`;
 const streamAlert = (alert) =>
   `new BroadcastChannel('senchabot:stream-alerts-preview').postMessage({ type: 'alert', preview: 'og', alert: ${JSON.stringify(alert)} })`;
 const ALERT_READY = `Boolean(document.querySelector('[data-testid="stream-alert"]'))`;
+// Sub Goal's preview takes test events over its channel: set the count, then a gift that
+// lands the bar two short of the goal with its +5 on the way up.
+const goalEvents = (...events) =>
+  `(() => { const channel = new BroadcastChannel('senchabot:goal-preview'); ${events
+    .map((event) => `channel.postMessage({ type: 'event', preview: 'og', event: ${JSON.stringify(event)} });`)
+    .join(' ')} })()`;
 
 /** Stage corner covered by the Live badge (template.html `.live`). */
 const LIVE_BADGE = { right: 104, bottom: 50 };
@@ -161,6 +167,28 @@ const CAPTURES = {
     settleMs: 600,
     trigger: SUBATHON_HIT,
     afterTriggerMs: 650,
+    ready: OXANIUM_READY,
+  },
+  goal: {
+    path: '/widgets/goal?simulate=1&start=13&target=20&title=ROAD+TO+20&preview=og',
+    width: 800,
+    height: 260,
+    settleMs: 600,
+    trigger: goalEvents(
+      { kind: 'mod', platform: 'twitch', text: '!goal set 13' },
+      { kind: 'gift', platform: 'kick', name: 'pixelfox', count: 5, tier: 1 },
+    ),
+    afterTriggerMs: 650,
+    ready: OXANIUM_READY,
+  },
+  goalReached: {
+    path: '/widgets/goal?simulate=1&start=9&target=10&color=gold&preview=og',
+    width: 800,
+    height: 260,
+    settleMs: 600,
+    trigger: goalEvents({ kind: 'sub', platform: 'twitch', name: 'lunaa', tier: 1 }),
+    // The trophy has landed and the burst is on its way out.
+    afterTriggerMs: 1300,
     ready: OXANIUM_READY,
   },
   alertNeon: {
@@ -276,6 +304,21 @@ const CARDS = [
       layers: [
         layer('alertNeon', { x: 9, y: -34, width: 520, height: 293 }),
         layer('alertCelestial', { x: 9, y: 168, width: 520, height: 293 }),
+      ],
+    },
+  },
+  {
+    id: 'goal',
+    eyebrow: { icon: 'goal', label: 'Overlay' },
+    title: en.widgets.goal.name,
+    subtitle: en.widgets.goal.tagline,
+    visual: {
+      kind: 'stage',
+      live: true,
+      // Two 800x260 sources: one on its way to the goal, one just past it with the trophy.
+      layers: [
+        layer('goal', { x: 9, y: 40, width: 520, height: 169 }),
+        layer('goalReached', { x: 9, y: 212, width: 520, height: 169 }),
       ],
     },
   },
