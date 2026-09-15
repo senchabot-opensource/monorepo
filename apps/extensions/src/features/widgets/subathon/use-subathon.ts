@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useKickChannel } from '#/hooks/use-kick-channel';
 import type { SubathonSettings, SubathonTimeValues } from '#/lib/subathon-url';
 import type { SubathonEvent, SubathonPlatform, SubTier, TimedEvent } from './subathon-events';
-import { KickEventSource, TwitchEventSource } from './subathon-sources';
+import { useSubEvents } from './use-sub-events';
 import {
   addTime,
   applyCommand,
@@ -155,7 +154,6 @@ export function useSubathon({
   );
 
   const key = simulate ? null : storageKey(twitch, kick);
-  const kickIds = useKickChannel(kick, !simulate).channel;
   const valuesRef = useRef(values);
   valuesRef.current = values;
   const [state, setState] = useState<SubathonState>(() =>
@@ -229,21 +227,7 @@ export function useSubathon({
     return () => window.clearInterval(timer);
   }, [running, clock, simulate]);
 
-  // One effect per platform: a Kick lookup that lands later must not restart the Twitch reader,
-  // which would lose Twitch events meanwhile and forget the gift bundles in flight.
-  useEffect(() => {
-    if (simulate || !twitch) return;
-    const source = new TwitchEventSource(twitch, handleEvent);
-    return () => source.disconnect();
-  }, [simulate, twitch, handleEvent]);
-
-  const chatroomId = kickIds?.chatroomId;
-  const channelId = kickIds?.channelId ?? null;
-  useEffect(() => {
-    if (simulate || !chatroomId) return;
-    const source = new KickEventSource(chatroomId, channelId, handleEvent);
-    return () => source.disconnect();
-  }, [simulate, chatroomId, channelId, handleEvent]);
+  useSubEvents(twitch, kick, !simulate, handleEvent);
 
   // Preview: an event every few seconds; once out of time, show the end and start over.
   useEffect(() => {

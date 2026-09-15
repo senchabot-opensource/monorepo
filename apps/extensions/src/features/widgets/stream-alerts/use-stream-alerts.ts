@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ALERT_KINDS, type AlertSettings } from '#/lib/stream-alerts-url';
 import type { SubathonEvent, SubathonPlatform } from '../subathon/subathon-events';
-import { KickEventSource, TwitchEventSource } from '../subathon/subathon-sources';
-import { useKickChannel } from '#/hooks/use-kick-channel';
+import { useSubEvents } from '../subathon/use-sub-events';
 import { playAlertSound } from './alert-sound';
 import { passesFilters, type StreamAlert } from './stream-alert';
 
@@ -176,21 +175,7 @@ export function useStreamAlerts({
     };
   }, []);
 
-  const kickIds = useKickChannel(kick, !simulate).channel;
-  // One effect per platform: a Kick lookup that lands later must not restart the Twitch reader.
-  useEffect(() => {
-    if (simulate || !twitch) return;
-    const source = new TwitchEventSource(twitch, handleEvent);
-    return () => source.disconnect();
-  }, [simulate, twitch, handleEvent]);
-
-  const chatroomId = kickIds?.chatroomId;
-  const channelId = kickIds?.channelId ?? null;
-  useEffect(() => {
-    if (simulate || !chatroomId) return;
-    const source = new KickEventSource(chatroomId, channelId, handleEvent);
-    return () => source.disconnect();
-  }, [simulate, chatroomId, channelId, handleEvent]);
+  useSubEvents(twitch, kick, !simulate, handleEvent);
 
   // Preview: a silent alert whenever the screen has been empty for a moment, unless a test
   // button's alert just played.
