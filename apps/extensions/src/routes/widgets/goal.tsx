@@ -2,7 +2,7 @@ import { createFileRoute, useLocation } from '@tanstack/react-router';
 import { GoalWidget } from '#/features/widgets/goal/goal-widget';
 import { OVERLAY_FONT_URL } from '#/features/widgets/overlay-style';
 import { readGoalSettings } from '#/lib/goal-url';
-import { readFlag } from '#/lib/subathon-url';
+import { readFlag } from '#/lib/url-params';
 
 export const Route = createFileRoute('/widgets/goal')({
   ssr: false,

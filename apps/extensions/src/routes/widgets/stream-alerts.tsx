@@ -4,7 +4,7 @@ import {
   themeFont,
 } from '#/features/widgets/stream-alerts/stream-alerts-widget';
 import { readStreamAlertsSettings } from '#/lib/stream-alerts-url';
-import { readFlag } from '#/lib/subathon-url';
+import { readFlag } from '#/lib/url-params';
 
 export const Route = createFileRoute('/widgets/stream-alerts')({
   ssr: false,

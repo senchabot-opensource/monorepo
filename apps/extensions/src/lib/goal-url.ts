@@ -1,5 +1,12 @@
-import type { ChannelPlatforms } from '#/components/channel-fields';
-import { readFlag } from './subathon-url';
+import {
+  type ChannelPlatforms,
+  channelWidgetUrl,
+  readFlag,
+  readWhole,
+  readWidgetUrl,
+  setChannels,
+  setPreview,
+} from './url-params';
 
 export const GOAL_COLORS = ['purple', 'green', 'red', 'gold', 'cyan', 'pink'] as const;
 export type GoalColor = (typeof GOAL_COLORS)[number];
@@ -35,11 +42,8 @@ const WIDGET_PATH = '/widgets/goal';
 /** Only settings that differ from the defaults are written, so URLs stay short. */
 function buildParams(settings: GoalSettings, twitchChannel: string, kickChannel: string) {
   const params = new URLSearchParams();
-  const twitch = twitchChannel.trim().toLowerCase();
-  const kick = kickChannel.trim().toLowerCase();
   const defaults = DEFAULT_GOAL_SETTINGS;
-  if (settings.platforms !== 'kick' && twitch) params.set('twitch', twitch);
-  if (settings.platforms !== 'twitch' && kick) params.set('kick', kick);
+  setChannels(params, settings.platforms, twitchChannel, kickChannel);
   if (settings.color !== defaults.color) params.set('color', settings.color);
   if (settings.title !== defaults.title) params.set('title', settings.title);
   if (settings.start !== defaults.start) params.set('start', String(settings.start));
@@ -55,33 +59,18 @@ export function buildGoalUrl(
   twitchChannel: string,
   kickChannel: string,
 ): string {
-  const params = buildParams(settings, twitchChannel, kickChannel);
-  if (!params.has('twitch') && !params.has('kick')) return '';
-  return `${origin}${WIDGET_PATH}?${params.toString()}`;
+  return channelWidgetUrl(origin, WIDGET_PATH, buildParams(settings, twitchChannel, kickChannel));
 }
 
-/**
- * Plays simulated subs with the same settings and never touches a channel or saved count. With
- * one platform picked, it only simulates that one's subs. `previewId` pairs it with its setup
- * page, whose test buttons would otherwise reach every preview and demo open on the site.
- */
+/** Plays simulated subs with the same settings and never touches a channel or saved count. */
 export function buildGoalPreviewUrl(
   origin: string,
   settings: GoalSettings,
   previewId: string,
 ): string {
   const params = buildParams(settings, '', '');
-  params.set('simulate', '1');
-  params.set('preview', previewId);
-  if (settings.platforms !== 'both') params.set('simplatform', settings.platforms);
+  setPreview(params, settings.platforms, previewId);
   return `${origin}${WIDGET_PATH}?${params.toString()}`;
-}
-
-/** A whole number from `min` to MAX_GOAL_COUNT, or `fallback`. */
-function readCount(value: string | null, fallback: number, min: number): number {
-  if (value === null || value.trim() === '') return fallback;
-  const n = Number(value);
-  return Number.isFinite(n) && n >= min ? Math.min(MAX_GOAL_COUNT, Math.round(n)) : fallback;
 }
 
 /** Settings from URL params, each falling back to its default when missing or invalid. */
@@ -92,9 +81,9 @@ export function readGoalSettings(params: URLSearchParams): Omit<GoalSettings, 'p
   return {
     color: GOAL_COLORS.includes(color) ? color : defaults.color,
     title: title === null ? defaults.title : title.slice(0, TITLE_MAX_LENGTH),
-    start: readCount(params.get('start'), defaults.start, 0),
+    start: readWhole(params.get('start'), defaults.start, { max: MAX_GOAL_COUNT }),
     // A goal of 0 would be reached before it began.
-    target: readCount(params.get('target'), defaults.target, 1),
+    target: readWhole(params.get('target'), defaults.target, { min: 1, max: MAX_GOAL_COUNT }),
     pops: readFlag(params.get('pops'), defaults.pops),
   };
 }
@@ -103,22 +92,8 @@ export function readGoalSettings(params: URLSearchParams): Omit<GoalSettings, 'p
 export function parseGoalUrl(
   text: string,
 ): { settings: GoalSettings; twitchChannel: string; kickChannel: string } | null {
-  let url: URL;
-  try {
-    url = new URL(text.trim());
-  } catch {
-    return null;
-  }
-  if (!url.pathname.replace(/\/+$/, '').endsWith(WIDGET_PATH)) return null;
-  const twitchChannel = url.searchParams.get('twitch')?.trim() ?? '';
-  const kickChannel = url.searchParams.get('kick')?.trim() ?? '';
-  return {
-    twitchChannel,
-    kickChannel,
-    settings: {
-      platforms:
-        twitchChannel && !kickChannel ? 'twitch' : kickChannel && !twitchChannel ? 'kick' : 'both',
-      ...readGoalSettings(url.searchParams),
-    },
-  };
+  const pasted = readWidgetUrl(text, WIDGET_PATH);
+  if (!pasted) return null;
+  const { params, platforms, ...channels } = pasted;
+  return { ...channels, settings: { platforms, ...readGoalSettings(params) } };
 }

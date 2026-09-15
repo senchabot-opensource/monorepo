@@ -1,6 +1,13 @@
-import type { ChannelPlatforms } from '#/components/channel-fields';
 import { isValidLocale, LANG_PARAM, type Locale } from '#/lib/i18n/locales';
-import { readFlag } from '#/lib/subathon-url';
+import {
+  type ChannelPlatforms,
+  channelWidgetUrl,
+  readFlag,
+  readWhole,
+  readWidgetUrl,
+  setChannels,
+  setPreview,
+} from '#/lib/url-params';
 
 export const ALERT_THEMES = ['neon', 'celestial'] as const;
 export type AlertTheme = (typeof ALERT_THEMES)[number];
@@ -86,11 +93,8 @@ function buildParams(
   locale: Locale,
 ) {
   const params = new URLSearchParams();
-  const twitch = twitchChannel.trim().toLowerCase();
-  const kick = kickChannel.trim().toLowerCase();
   const defaults = DEFAULT_STREAM_ALERTS_SETTINGS;
-  if (settings.platforms !== 'kick' && twitch) params.set('twitch', twitch);
-  if (settings.platforms !== 'twitch' && kick) params.set('kick', kick);
+  setChannels(params, settings.platforms, twitchChannel, kickChannel);
   if (settings.theme !== defaults.theme) params.set('theme', settings.theme);
   if (settings.color !== defaults.color) params.set('color', settings.color);
   for (const kind of ALERT_KINDS) {
@@ -115,16 +119,10 @@ export function buildStreamAlertsUrl(
   kickChannel: string,
   locale: Locale,
 ): string {
-  const params = buildParams(settings, twitchChannel, kickChannel, locale);
-  if (!params.has('twitch') && !params.has('kick')) return '';
-  return `${origin}${WIDGET_PATH}?${params.toString()}`;
+  return channelWidgetUrl(origin, WIDGET_PATH, buildParams(settings, twitchChannel, kickChannel, locale));
 }
 
-/**
- * Plays simulated alerts with the same settings and never connects to a channel. With one
- * platform picked, it only simulates that one's alerts. `previewId` pairs it with its setup page,
- * whose test buttons would otherwise reach every preview and demo open on the site.
- */
+/** Plays simulated alerts with the same settings and never connects to a channel. */
 export function buildStreamAlertsPreviewUrl(
   origin: string,
   settings: StreamAlertsSettings,
@@ -132,19 +130,14 @@ export function buildStreamAlertsPreviewUrl(
   previewId: string,
 ): string {
   const params = buildParams(settings, '', '', locale);
-  params.set('simulate', '1');
-  params.set('preview', previewId);
-  if (settings.platforms !== 'both') params.set('simplatform', settings.platforms);
+  setPreview(params, settings.platforms, previewId);
   return `${origin}${WIDGET_PATH}?${params.toString()}`;
 }
 
+// Unlike the other widgets, a number out of range is clamped, not dropped.
 function readNumber(value: string | null, key: NumberKey): number {
-  const fallback = DEFAULT_STREAM_ALERTS_SETTINGS[key];
-  if (value === null || value.trim() === '') return fallback;
-  const n = Math.round(Number(value));
-  if (!Number.isFinite(n)) return fallback;
   const [min, max] = NUMBER_RANGES[key];
-  return Math.min(max, Math.max(min, n));
+  return readWhole(value, DEFAULT_STREAM_ALERTS_SETTINGS[key], { min, max, below: 'clamp' });
 }
 
 /** Settings from URL params, each falling back to its default when missing or invalid. */
@@ -175,24 +168,13 @@ export function parseStreamAlertsUrl(text: string): {
   kickChannel: string;
   locale: Locale | null;
 } | null {
-  let url: URL;
-  try {
-    url = new URL(text.trim());
-  } catch {
-    return null;
-  }
-  if (!url.pathname.replace(/\/+$/, '').endsWith(WIDGET_PATH)) return null;
-  const twitchChannel = url.searchParams.get('twitch')?.trim() ?? '';
-  const kickChannel = url.searchParams.get('kick')?.trim() ?? '';
-  const lang = url.searchParams.get(LANG_PARAM);
+  const pasted = readWidgetUrl(text, WIDGET_PATH);
+  if (!pasted) return null;
+  const { params, platforms, ...channels } = pasted;
+  const lang = params.get(LANG_PARAM);
   return {
-    twitchChannel,
-    kickChannel,
+    ...channels,
     locale: isValidLocale(lang) ? lang : null,
-    settings: {
-      platforms:
-        twitchChannel && !kickChannel ? 'twitch' : kickChannel && !twitchChannel ? 'kick' : 'both',
-      ...readStreamAlertsSettings(url.searchParams),
-    },
+    settings: { platforms, ...readStreamAlertsSettings(params) },
   };
 }

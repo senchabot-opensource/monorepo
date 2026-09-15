@@ -34,6 +34,7 @@ import { useI18n } from '#/lib/i18n';
 import { getParamsLocale, withLangParam } from '#/lib/i18n/paths';
 import type { FaqEntry } from '#/lib/i18n/seo';
 import { getSetupPageHead } from '#/lib/seo/pages';
+import { channelWidgetUrl } from '#/lib/url-params';
 import { getWidget } from '#/lib/widgets';
 
 export const Route = createFileRoute('/{-$locale}/setup/chat-widget')({
@@ -81,12 +82,17 @@ function ChatWidgetSetup() {
   const update = <K extends keyof Settings>(key: K, value: Settings[K]) =>
     setSettings((current) => ({ ...current, [key]: value }));
 
-  const widgetUrl = useMemo(() => {
-    if (!mounted) return '';
-    const params = buildWidgetParams(settings, twitchChannel, kickChannel);
-    if (!params.has('twitch') && !params.has('kick')) return '';
-    return `${window.location.origin}/widgets/chat-widget?${params.toString()}`;
-  }, [mounted, settings, twitchChannel, kickChannel]);
+  const widgetUrl = useMemo(
+    () =>
+      mounted
+        ? channelWidgetUrl(
+            window.location.origin,
+            '/widgets/chat-widget',
+            buildWidgetParams(settings, twitchChannel, kickChannel),
+          )
+        : '',
+    [mounted, settings, twitchChannel, kickChannel],
+  );
 
   const readerUrl = useMemo(
     () => (mounted ? buildReaderUrl(window.location.origin, settings, twitchChannel, kickChannel) : ''),

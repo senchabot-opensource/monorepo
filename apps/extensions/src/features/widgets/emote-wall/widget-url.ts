@@ -1,7 +1,15 @@
-import { readCoercedFlag } from '#/lib/url-params';
+import {
+  type ChannelPlatforms,
+  channelWidgetUrl,
+  readCoercedFlag,
+  readWidgetUrl,
+  setChannels,
+} from '#/lib/url-params';
 import { isEmoteWallMode } from './emote-pops';
 
-export type EmoteWallPlatforms = 'both' | 'twitch' | 'kick';
+export type EmoteWallPlatforms = ChannelPlatforms;
+
+const WIDGET_PATH = '/widgets/emote-wall';
 export type EmoteWallMode = 'calm' | 'chaos' | 'bounce';
 
 export interface EmoteWallUrlOptions {
@@ -56,10 +64,7 @@ const clampParam = (raw: string, key: RangeKey) => {
 
 export function buildEmoteWallParams(options: EmoteWallUrlOptions): URLSearchParams {
   const params = new URLSearchParams();
-  const twitch = options.twitch.trim().toLowerCase();
-  const kick = options.kick.trim().toLowerCase();
-  if (options.platforms !== 'kick' && twitch) params.append('twitch', twitch);
-  if (options.platforms !== 'twitch' && kick) params.append('kick', kick);
+  setChannels(params, options.platforms, options.twitch, options.kick);
   if (!options.sevenTv) params.append('sevenTv', 'false');
   if (options.mode !== 'calm') params.append('mode', options.mode);
   if (options.subsOnly) params.append('subsOnly', 'true');
@@ -76,9 +81,7 @@ export function buildEmoteWallParams(options: EmoteWallUrlOptions): URLSearchPar
 
 /** Empty unless the URL names a channel on a selected platform. */
 export function buildEmoteWallUrl(origin: string, options: EmoteWallUrlOptions): string {
-  const params = buildEmoteWallParams(options);
-  if (!params.has('twitch') && !params.has('kick')) return '';
-  return `${origin}/widgets/emote-wall?${params.toString()}`;
+  return channelWidgetUrl(origin, WIDGET_PATH, buildEmoteWallParams(options));
 }
 
 // The router JSON-parses search values before zod's coerce.boolean, so "false", "0", "null"
@@ -88,28 +91,18 @@ export function buildEmoteWallUrl(origin: string, options: EmoteWallUrlOptions):
  * default for any value it wouldn't accept, and unknown params (`mock`, `lang`) ignored.
  */
 export function parseEmoteWallUrl(text: string): EmoteWallUrlOptions | null {
-  let url: URL;
-  try {
-    url = new URL(text.trim());
-  } catch {
-    return null;
-  }
-  if (!url.pathname.replace(/\/+$/, '').endsWith('/widgets/emote-wall')) return null;
+  const pasted = readWidgetUrl(text, WIDGET_PATH);
+  if (!pasted) return null;
 
-  const params = url.searchParams;
-  const flag = (key: string, fallback: boolean) => {
-    const value = params.get(key);
-    return readCoercedFlag(value, fallback);
-  };
+  const { params, platforms } = pasted;
+  const flag = (key: string, fallback: boolean) => readCoercedFlag(params.get(key), fallback);
   const mode = params.get('mode');
-  const twitch = params.get('twitch')?.trim() ?? '';
-  const kick = params.get('kick')?.trim() ?? '';
   const defaults = DEFAULT_EMOTE_WALL_OPTIONS;
 
   return {
-    twitch,
-    kick,
-    platforms: twitch && !kick ? 'twitch' : kick && !twitch ? 'kick' : 'both',
+    twitch: pasted.twitchChannel,
+    kick: pasted.kickChannel,
+    platforms,
     sevenTv: flag('sevenTv', defaults.sevenTv),
     mode: isEmoteWallMode(mode) ? mode : defaults.mode,
     subsOnly: flag('subsOnly', defaults.subsOnly),

@@ -2,7 +2,7 @@ import { createFileRoute, useLocation } from '@tanstack/react-router';
 import { PollWidget } from '#/features/widgets/poll/poll-widget';
 import { OVERLAY_FONT_URL } from '#/features/widgets/overlay-style';
 import { readPollSettings } from '#/lib/poll-url';
-import { readFlag } from '#/lib/subathon-url';
+import { readFlag } from '#/lib/url-params';
 
 export const Route = createFileRoute('/widgets/poll')({
   ssr: false,
