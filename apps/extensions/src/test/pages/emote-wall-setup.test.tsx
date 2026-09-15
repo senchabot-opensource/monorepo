@@ -1,10 +1,11 @@
 import { fireEvent, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   buildEmoteWallUrl,
   DEFAULT_EMOTE_WALL_OPTIONS,
   type EmoteWallUrlOptions,
 } from '#/features/widgets/emote-wall/widget-url';
+import { withLayout } from '#/test/browser';
 import { en, retype, segment, slider, steppers, textbox, toggle } from '#/test/queries';
 import { renderRoute, setupUser } from '#/test/render';
 
@@ -16,6 +17,10 @@ const kickField = () => textbox(en('common.kickChannel'));
 const platforms = (option: string) => segment(en('common.platforms'), option);
 const mode = (option: string) => segment(en('emoteWallSetup.mode'), option);
 const sevenTv = () => toggle(en('emoteWallSetup.sevenTvEmotes'));
+
+afterEach(() => {
+  vi.restoreAllMocks();
+});
 
 describe('Emote Wall setup', () => {
   it('builds the widget URL from every kind of control', async () => {
@@ -132,5 +137,38 @@ describe('Emote Wall setup', () => {
     expect(mode(en('emoteWallSetup.modeChaos')).checked).toBe(true);
     await user.tab();
     expect(urlField().value).toBe(before);
+  });
+
+  it('previews the settings with demo emotes, without the channels', async () => {
+    withLayout(800, 450);
+    const user = setupUser();
+    await renderRoute(PAGE);
+    await user.type(twitchField(), 'streamer');
+    await user.click(mode(en('emoteWallSetup.modeBounce')));
+    const preview = new URL(
+      (screen.getByTitle(en('emoteWallSetup.previewIframeTitle')) as HTMLIFrameElement).src,
+    );
+    expect(preview.pathname).toBe('/widgets/emote-wall');
+    expect(preview.searchParams.get('mock')).toBe('true');
+    expect(preview.searchParams.get('mode')).toBe('bounce');
+    expect(preview.searchParams.has('twitch')).toBe(false);
+  });
+
+  it('loads out-of-range numbers from a pasted URL clamped, and flags the widget reads as off', async () => {
+    const user = setupUser();
+    await renderRoute(PAGE);
+    await user.click(urlField());
+    await user.paste(
+      'http://localhost:3000/widgets/emote-wall?twitch=streamer&size=9999&duration=0&max=abc&sevenTv=0&spamBlock=null',
+    );
+    await user.tab();
+    expect(slider(en('emoteWallSetup.emoteSize')).value).toBe('256');
+    expect(textbox(en('emoteWallSetup.duration')).value).toBe('2');
+    expect(textbox(en('emoteWallSetup.maxEmotes')).value).toBe('25');
+    expect(sevenTv().getAttribute('aria-checked')).toBe('false');
+    expect(toggle(en('emoteWallSetup.spamBlock')).getAttribute('aria-checked')).toBe('false');
+    expect(urlField().value).toBe(
+      'http://localhost:3000/widgets/emote-wall?twitch=streamer&sevenTv=false&spamBlock=false&size=256&duration=2',
+    );
   });
 });
