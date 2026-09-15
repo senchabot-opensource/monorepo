@@ -67,6 +67,37 @@ describe('resolveCommandUsers', () => {
   });
 });
 
+describe('command users edge cases', () => {
+  it('matches a name however it is cased or padded in chat', () => {
+    const { allowed } = resolveCommandUsers(parseCommandUsers('kick:Liliuy_56'), both);
+    expect(allowed.has(commandUserKey('kick', ' LILIUY_56 '))).toBe(true);
+  });
+
+  it('keeps a Kick name on Kick when the link only listens to Twitch, instead of moving it', () => {
+    const { allowed } = resolveCommandUsers(parseCommandUsers('kick:ali'), {
+      twitch: true,
+      kick: false,
+    });
+    expect(allowed.has(commandUserKey('twitch', 'ali'))).toBe(false);
+  });
+
+  it('lets no untagged name in while the link has no channel at all', () => {
+    const none = { twitch: false, kick: false };
+    expect(resolveCommandUsers(parseCommandUsers('bob'), none)).toEqual({
+      allowed: new Set(),
+      unassigned: [],
+    });
+    expect(summarizeCommandUsers(parseCommandUsers('bob'), none).unassigned).toEqual(['bob']);
+  });
+
+  it('reads a list with spaces and empty entries', () => {
+    expect(parseCommandUsers(' twitch : bob ,, kick:, , @ ,kick: @Ali ')).toEqual([
+      { platform: 'twitch', name: 'bob' },
+      { platform: 'kick', name: 'ali' },
+    ]);
+  });
+});
+
 describe('summarizeCommandUsers', () => {
   it('splits users into active, not listened to and unassigned', () => {
     const users = parseCommandUsers('twitch:bob,kick:ali,carol');

@@ -1,5 +1,6 @@
 import { act, cleanup, screen, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { buildObsBridgeParams } from '#/features/tools/obs-bridge-config';
 import { FakeWebSocket } from '#/test/browser';
 import { OBSWebSocket } from '#/test/fake-obs-websocket';
 import { button, en, inLocale, segment, textbox } from '#/test/queries';
@@ -190,6 +191,16 @@ describe('OBS Bridge tool', () => {
     expect(screen.queryByText(/nowhere to go/)).toBeNull();
   });
 
+  it('lists the scenes in the order OBS shows them', async () => {
+    await renderRoute(`${TOOL}?twitch=streamer&lang=en`);
+    await connectWithScenes(['Starting Soon', 'Gaming', 'Be Right Back']);
+    const card = screen.getByLabelText(en('obsBridge.tool.scenesTitle'), { selector: 'section' });
+    const names = within(card)
+      .getAllByRole('listitem')
+      .map((item) => item.querySelector('span')?.textContent);
+    expect(names).toEqual(['Starting Soon', 'Gaming', 'Be Right Back']);
+  });
+
   it('runs chat commands from authorized users against the picked scenes', async () => {
     const user = setupUser();
     await renderRoute(`${TOOL}?twitch=streamer&commandUser=twitch%3Amod&brbScene=AFK&lang=en`);
@@ -303,6 +314,70 @@ describe('OBS Bridge tool', () => {
         en('obsBridge.tool.sceneHint', { command: `!cam ${en('obsBridge.sceneArg')}` }),
       ),
     ).toBeTruthy();
+  });
+});
+
+describe('OBS Bridge tool links', () => {
+  it('reads back everything the setup page puts in the URL', async () => {
+    const params = buildObsBridgeParams({
+      twitch: 'Streamer',
+      kick: '',
+      commandUsers: [
+        { platform: 'twitch', name: 'mod' },
+        { platform: 'kick', name: 'k_mod' },
+      ],
+      commands: { cmdBrb: '!Mola', cmdScene: '!sahne', cmdStopStream: 'bitir & kapat' },
+      obsWebsocketUrl: '192.168.1.5:4455',
+      obsWebsocketPassword: ' p&ss+wörd %20=?#1 ',
+    });
+    await renderRoute(`${TOOL}?${params}&lang=en`);
+    expect(OBSWebSocket.latest.connectArgs[0]).toEqual([
+      'ws://192.168.1.5:4455',
+      ' p&ss+wörd %20=?#1 ',
+    ]);
+    await connectWithScenes(['Main Scene', 'BRB Scene', 'Oyun']);
+    say('Mod', '!MOLA');
+    say('Mod', '!sahne oyun');
+    say('Mod', 'BITIR & KAPAT');
+    expect(sceneSwitches()).toEqual(['BRB Scene', 'Oyun']);
+    expect(OBSWebSocket.latest.calls.map(([request]) => request)).toContain('StopStream');
+  });
+
+  it.each([
+    'obsWebsocketPassword=123456',
+    'obsWebsocketPassword=true',
+    'mainScene=2&brbScene=null',
+    'cmdBrb=1',
+    'commandUser=12345',
+    'obsWebsocketUrl=%5B%5D',
+    'mainScene=&brbScene=',
+    'commandUser=%2C%2C%3A%2C@',
+  ])('opens with a link carrying %s', async (query) => {
+    await renderRoute(`${TOOL}?twitch=streamer&${query}&lang=en`);
+    expect(
+      screen.getByText(en('obsBridge.tool.connectionsTitle'), { selector: 'h2' }),
+    ).toBeTruthy();
+  });
+
+  it('keeps the page URL readable by the tool after a scene pick', async () => {
+    const user = setupUser();
+    await renderRoute(
+      `${TOOL}?twitch=streamer&obsWebsocketPassword=123456&commandUser=twitch%3Amod&lang=en`,
+    );
+    await connectWithScenes(['Oyun & Sohbet', '1']);
+    await user.click(button(en('obsBridge.tool.setMain', { scene: '1' })));
+    await user.click(button(en('obsBridge.tool.setBrb', { scene: 'Oyun & Sohbet' })));
+    const params = new URL(window.location.href).searchParams;
+    expect(params.get('mainScene')).toBe('1');
+    expect(params.get('brbScene')).toBe('Oyun & Sohbet');
+    expect(params.get('obsWebsocketPassword')).toBe('123456');
+
+    say('Mod', 'brb');
+    say('Mod', 'back');
+    expect(sceneSwitches()).toEqual(['Oyun & Sohbet', '1']);
+    // Picks rewrite the URL, but the OBS and chat connections stay up.
+    expect(OBSWebSocket.instances).toHaveLength(1);
+    expect(FakeWebSocket.instances).toHaveLength(1);
   });
 });
 

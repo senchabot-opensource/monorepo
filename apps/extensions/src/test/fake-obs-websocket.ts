@@ -7,7 +7,7 @@ type Handler = (...args: unknown[]) => void;
 export class OBSWebSocket {
   static instances: OBSWebSocket[] = [];
 
-  /** Scene names GetSceneList answers with. */
+  /** Scene names top to bottom, as OBS's Scenes dock lists them. */
   scenes: string[] = [];
   connectArgs: unknown[][] = [];
   calls: [request: string, data: unknown][] = [];
@@ -45,6 +45,10 @@ export class OBSWebSocket {
     this.handlers.set(event, kept);
   }
 
+  listenerCount(event: string) {
+    return this.handlers.get(event)?.length ?? 0;
+  }
+
   emit(event: string, ...args: unknown[]) {
     for (const handler of this.handlers.get(event) ?? []) handler(...args);
   }
@@ -71,7 +75,10 @@ export class OBSWebSocket {
   async call(request: string, data?: unknown) {
     this.calls.push([request, data]);
     if (request === 'GetSceneList') {
-      return { scenes: this.scenes.map((sceneName) => ({ sceneName })) };
+      // Like obs-websocket 5 (Obs_ArrayHelper.cpp): bottom to top, sceneIndex 0 the bottom scene.
+      const count = this.scenes.length;
+      const scenes = this.scenes.map((sceneName, i) => ({ sceneName, sceneIndex: count - 1 - i }));
+      return { scenes: scenes.reverse() };
     }
     if (this.holdCalls) return new Promise<never>(() => {});
     return {};
