@@ -26,7 +26,7 @@ const GRID_STYLE: CSSProperties = {
 export const FLUSH_FRAME_CLASS = 'rounded-none! border-0! shadow-none!';
 
 /** Faint grid and hills, so the scene reads as a game or camera shot under the overlays. */
-function SceneBackdrop() {
+export function SceneBackdrop() {
   return (
     <div aria-hidden="true" className="absolute inset-0">
       <div className="absolute inset-0" style={GRID_STYLE} />

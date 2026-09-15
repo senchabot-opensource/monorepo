@@ -13,6 +13,7 @@ import {
   NoWatermarkIcon,
   UserOffIcon,
 } from '#/components/landing/landing-icons';
+import { PollSpotlight } from '#/components/landing/poll-spotlight';
 import { StreamScene } from '#/components/landing/stream-scene';
 import { type CardShape, getGalleryShapes, WidgetCard } from '#/components/landing/widget-card';
 import { SiteLayout } from '#/components/site-layout';
@@ -216,9 +217,8 @@ function WorksWith() {
   );
 }
 
-// Card shapes come from getGalleryShapes: Chat Box (portrait) spans two rows beside two overlays
-// and a wide Stream Alerts, filling a 3×2 grid, or 2×3 on tablets; the Subathon strip spans the
-// tools row above the other two. Dense flow backfills if a span can't fit in a row.
+// Card shapes come from getGalleryShapes: Chat Box (portrait) spans two rows beside a 2×2 of the
+// other overlays; the tools are a 2×2 of flat cards. Dense flow backfills if a span can't fit.
 const GALLERY_GROUPS = [
   {
     key: 'overlays',
@@ -392,6 +392,7 @@ function Index() {
       <Hero />
       <WorksWith />
       <div className="mx-auto max-w-6xl space-y-24 px-4 py-20 sm:space-y-28 sm:py-24">
+        <PollSpotlight />
         <Gallery />
         <HowItWorks />
         <Trust />

@@ -6,15 +6,17 @@ import type { WidgetEntry } from '#/lib/widgets';
 import { getDemoSrc } from './demo-url';
 import { ArrowRightIcon, CheckIcon } from './landing-icons';
 import { FLUSH_FRAME_CLASS, STAGE_STYLE } from './stream-scene';
-import { TOOL_FEATURES, ToolVisual } from './tool-visuals';
+import { hasToolVisual, TOOL_FEATURES, ToolVisual } from './tool-visuals';
 
 /**
  * Card shape in the gallery grid, from the live demo's browser-source size: a portrait source (a
- * chat column) gets a card two rows tall, a strip (a timer bar) one two columns wide.
+ * chat column) gets a card two rows tall, a strip (a goal bar) one two columns wide. Tools are
+ * two by two with a flat picture each, so they never span.
  */
 export type CardShape = 'standard' | 'tall' | 'wide';
 
 export function getCardShape(widget: WidgetEntry): CardShape {
+  if (widget.kind === 'tool') return 'standard';
   const size = widget.demoUrl ? widget.sourceSize : null;
   if (!size) return 'standard';
   const ratio = size.width / size.height;
@@ -76,7 +78,8 @@ export function WidgetCard({
   shape = 'standard',
 }: WidgetCardProps) {
   const { t } = useI18n();
-  const hasDemo = Boolean(widget.demoUrl);
+  // A tool's own picture explains it better than its overlay squeezed into a flat card.
+  const hasDemo = Boolean(widget.demoUrl) && !hasToolVisual(widget.id);
   const features = TOOL_FEATURES[widget.id];
   const name = t(widget.nameKey);
   const size = widget.sourceSize;
@@ -90,8 +93,8 @@ export function WidgetCard({
     <article className="group relative flex w-full flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm transition-[border-color,box-shadow] hover:border-zinc-300 hover:shadow-md has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-green-500 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700">
       <div
         className={`relative border-b border-zinc-200 dark:border-zinc-800 ${
-          // Flatter on wide screens, so a tool card is as tall as an overlay row above it.
-          hasDemo ? PREVIEW_CLASS[shape] : 'aspect-[2/1] lg:aspect-[5/2]'
+          // Tools are flatter, so the four of them take two short rows under the overlays.
+          widget.kind === 'overlay' ? PREVIEW_CLASS[shape] : 'aspect-[2/1] lg:aspect-[5/2]'
         }`}
         style={previewStyle}
       >
