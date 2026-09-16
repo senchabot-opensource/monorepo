@@ -2,6 +2,7 @@ import type { ComponentType } from 'react';
 import {
   ChatBoxIcon,
   EmoteWallIcon,
+  FramesIcon,
   GoalIcon,
   type IconProps,
   ObsBridgeIcon,
@@ -23,6 +24,7 @@ export type WidgetId =
   | 'subathon'
   | 'poll'
   | 'stream-alerts'
+  | 'frames'
   | 'raffle'
   | 'obs-bridge';
 /** `overlay`: a browser source that runs on its own. `tool`: something the streamer operates. */
@@ -115,6 +117,19 @@ export const WIDGETS: readonly WidgetEntry[] = [
     platforms: ['twitch', 'kick'],
     demoUrl: '/widgets/goal?simulate=1',
     sourceSize: { width: 800, height: 260 },
+  },
+  {
+    id: 'frames',
+    kind: 'overlay',
+    setupPath: '/setup/stream-frames',
+    widgetPath: '/widgets/frame',
+    nameKey: 'widgets.frames.name',
+    taglineKey: 'widgets.frames.tagline',
+    Icon: FramesIcon,
+    platforms: ['twitch', 'kick'],
+    // Every piece on one canvas; the setup page shows one piece at its own size.
+    demoUrl: '/widgets/frame?demo=1',
+    sourceSize: { width: 1920, height: 1080 },
   },
   {
     id: 'poll',

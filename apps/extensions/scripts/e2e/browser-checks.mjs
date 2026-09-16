@@ -41,6 +41,7 @@ const READY = `(doc, kind) => {
   }
   if (kind === 'alert') return Boolean(doc.querySelector('[data-testid="stream-alert"]'));
   if (kind === 'poll') return Boolean(doc.querySelector('[data-testid="poll-card"]'));
+  if (kind === 'frame') return Boolean(doc.querySelector('[data-testid="frame-art"] svg path'));
   if (kind.startsWith('text:')) return doc.body.innerText.includes(kind.slice(5));
   return false;
 }`;

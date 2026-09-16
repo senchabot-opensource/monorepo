@@ -68,6 +68,13 @@ export const OG_IMAGES = {
       tr: "Abone Hedefi, abonelik ve hediye aboneliklerle dolan hedef barı overlay'i",
     },
   },
+  frames: {
+    path: '/og/frames.png',
+    alt: {
+      en: 'Stream Frames, frame overlays with presets for your camera, chat and screen',
+      tr: "Yayın Çerçeveleri, kamera, sohbet ve ekran için preset'li çerçeve overlay'leri",
+    },
+  },
   poll: {
     path: '/og/poll.png',
     alt: {

@@ -97,6 +97,18 @@ export const PAGE_META = {
         "OBS için ücretsiz abone hedefi barı. Twitch ve Kick'te her abonelik, yenileme ve hediye abonelik 1 ekler, hedefe ulaşınca kupa iner. Modlar sohbetten düzeltir.",
     },
   },
+  frames: {
+    en: {
+      title: 'Free Stream Frame Overlays for Twitch & Kick | Senchabot',
+      description:
+        'Free camera, chat and screen frames for OBS. Presets with the feel of Metin2, LoL, WoW, Valorant and Minecraft, with the art included. No login, no download.',
+    },
+    tr: {
+      title: 'Twitch ve Kick için Yayın Çerçeveleri (Ücretsiz) | Senchabot',
+      description:
+        "OBS için ücretsiz kamera, sohbet ve ekran çerçeveleri. Metin2, LoL, WoW, Valorant ve Minecraft havasında preset'ler, hazır çizimlerle. Giriş yok, indirme yok.",
+    },
+  },
   poll: {
     en: {
       title: 'Free Chat Poll Overlay for Twitch & Kick | Senchabot',
@@ -275,6 +287,26 @@ export const APP_FEATURES: Record<WidgetId, Record<Locale, readonly string[]>> =
       'Yayıncı ve modlar !goal ile abone ekleyip çıkarabilir, sayıyı ayarlayıp sıfırlayabilir',
       "Sayı OBS'te kaydedilir, sayfa yenilense de kaybolmaz",
       'Önerilen Tarayıcı Kaynağı boyutu: 800x260',
+    ],
+  },
+  frames: {
+    en: [
+      'Three ready-made frames for your camera, chat and whole stream screen',
+      'Every preset has its own art: a pagoda roof and lanterns, gold ornaments, riveted shields, pixel blocks',
+      'The middle is transparent, so your camera or Chat Box shows through',
+      'Light animations like glowing lines, swaying tassels and flickering torches, and you can turn them off',
+      'A tab for your channel name or any text you like',
+      'Fits any source size, square or vertical cameras included',
+      'Works on Twitch, Kick and other platforms without connecting a channel',
+    ],
+    tr: [
+      'Kamera, sohbet ve bütün yayın ekranı için üç hazır çerçeve',
+      "Her preset'in kendi çizimleri: pagoda çatısı ve fenerler, altın süslemeler, perçinli kalkanlar, piksel bloklar",
+      'Ortası şeffaf, kameran ya da Sohbet Kutusu altında görünür',
+      'Parlayan çizgiler, sallanan püsküller, titreyen meşaleler gibi hafif animasyonlar, istersen kapatılır',
+      'Kanal adın ya da istediğin bir yazı için sekme',
+      'Kaynağın her boyutuna uyar, kare ya da dikey kamera da olur',
+      'Kanal bağlamadan Twitch, Kick ve diğer platformlarda çalışır',
     ],
   },
   poll: {

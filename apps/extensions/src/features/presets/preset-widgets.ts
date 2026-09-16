@@ -9,6 +9,7 @@ export const PRESET_WIDGET_IDS = [
   'subathon',
   'poll',
   'raffle',
+  'frames',
 ] as const satisfies readonly WidgetId[];
 
 export const PRESET_WIDGETS: readonly WidgetEntry[] = PRESET_WIDGET_IDS.map(getWidget);

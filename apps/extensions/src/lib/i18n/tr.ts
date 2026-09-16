@@ -98,6 +98,10 @@ export const tr: typeof en = {
       name: 'Abone Hedefi',
       tagline: 'Her abonelik ve hediye abonelikle dolan bir bar, hedefe ulaşınca üstüne kupa iner.',
     },
+    frames: {
+      name: 'Yayın Çerçeveleri',
+      tagline: "Kameran, sohbetin ve yayın ekranın için preset'e göre çizilmiş hazır çerçeveler.",
+    },
     subathon: {
       name: 'Subathon Timer',
       tagline:
@@ -224,7 +228,7 @@ export const tr: typeof en = {
       "Evet. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi ve Sohbet Anketi tek bir URL'de hem Twitch hem Kick kanalını alır. OBS Bridge da iki sohbeti aynı anda dinleyebilir. Çekiliş ise her seferinde tek bir platformda çalışır.",
     faq5Q: "Bir widget'ı sonradan nasıl değiştiririm?",
     faq5A:
-      "Kurulum sayfasını aç, widget'ı istediğin gibi ayarla ve Tarayıcı Kaynağı'ndaki URL'yi yenisiyle değiştir. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi ve Sohbet Anketi mevcut bir URL'yi de açabilir: URL'yi kurulum sayfasına yapıştır, eski ayarların geri gelsin, sadece istediğini değiştir.",
+      "Kurulum sayfasını aç, widget'ı istediğin gibi ayarla ve Tarayıcı Kaynağı'ndaki URL'yi yenisiyle değiştir. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi ve Yayın Çerçeveleri mevcut bir URL'yi de açabilir: URL'yi kurulum sayfasına yapıştır, eski ayarların geri gelsin, sadece istediğini değiştir.",
     faq6Q: "Güncellemelerden sonra widget URL'm çalışmaya devam eder mi?",
     faq6A:
       'Evet. Güncellemelerde mevcut URL ayarları ve değerleri korunur, yani sahnendeki widget için yeni bir URL almana gerek kalmaz.',
@@ -747,6 +751,67 @@ export const tr: typeof en = {
     faq4A:
       'Şimdilik hayır. Twitch ve Kick, giriş yapılmamış bir sayfaya yeni takipçileri göstermiyor, bu yüzden hedef iki platformda da aynı şekilde abonelikleri sayıyor.',
   },
+  frames: {
+    breadcrumb: 'Yayın Çerçeveleri Kurulumu',
+    title: 'Yayın Çerçeveleri Kurulumu',
+    intro:
+      "Kameran, sohbetin ya da bütün yayın ekranın için hazır çerçeveler. Seçtiğin preset çerçeveyi o oyunun havasında çizer, şekliyle, süsleriyle ve hareketiyle: Dynasty'de pagoda çatısı, sallanan püsküller ve süzülen çiçek yaprakları, Blocks'ta çimen blokları ve titreyen meşaleler. Kanal bağlamana gerek yok, URL'yi OBS'e ekle, kameranı ya da sohbetini çerçevenin altına yerleştir.",
+    sectionPiece: 'Çerçeve',
+    piece: 'Neyin çerçevesi?',
+    pieceTip:
+      'Her parça ayrı bir tarayıcı kaynağı. Üçünü de aynı preset ile eklersen ekrandaki her şey birbirine uyar.',
+    pieces: {
+      camera: 'Kamera',
+      chat: 'Sohbet',
+      screen: 'Ekran',
+    },
+    pieceHints: {
+      camera: 'Webcam için 16:9 çerçeve. Kameranı ortadaki boşluğa sığdır.',
+      chat: "Sohbet Kutusu için başlıklı, uzun bir çerçeve. Sohbet Kutusu'nu başlığın altına yerleştir.",
+      screen: "Bütün yayının kenarına oturan ince bir çerçeve. Oyunun üstünü kapatmasın diye köşelerde süslenir.",
+    },
+    labelLabel: 'Yazı',
+    labelTips: {
+      camera: 'Kameranın üstündeki sekmede görünür, örneğin kanal adın. Boş bırakırsan sekme süslemeyle kalır.',
+      chat: 'Sohbet çerçevesinin üstündeki sekmede görünür. Boş bırakırsan sekme süslemeyle kalır.',
+      screen: 'Ekranın alt ortasındaki plakada görünür. Boş bırakırsan plaka çıkmaz.',
+    },
+    labelPlaceholder: 'Yazı yok',
+    color: 'Renk',
+    motion: 'Animasyonlar',
+    motionTip:
+      "Parlayan çizgiler, ışık geçişleri ve preset'e göre fener, meşale ya da kıvılcım gibi küçük hareketler. Kapatırsan çerçeve sabit durur.",
+    previewTitle: 'Yayın Çerçevesi Önizleme',
+    previewIframeTitle: 'Yayın Çerçevesi Önizleme',
+    previewHint:
+      'Önizlemedeki silüet ve sohbet satırları sadece yer tutucu. Yayında çerçevenin ortası şeffaftır, altındaki kameran ya da sohbetin görünür.',
+    widgetUrlTip:
+      "Daha önce bir çerçeve oluşturduysan URL'sini buraya yapıştır. Ayarların geri yüklenir, istediğini değiştirebilirsin.",
+    widgetUrlPlaceholder: "Düzenlemek için çerçeve URL'sini yapıştır",
+    widgetUrlInvalid: "Bu bir Yayın Çerçevesi URL'si değil.",
+    browserSourceHintSize: ' (önerilen boyut: {width}×{height}).',
+    guideTitle: 'Yayın Yazılımı Kurulumu (OBS, Streamlabs, XSplit vb.)',
+    guideStep1:
+      "Yayın yazılımında (OBS Studio, Streamlabs Desktop, XSplit, vMix vb.) bir Tarayıcı Kaynağı ekle ve çerçeve URL'sini yapıştır.",
+    guideStep2:
+      'Genişlik ve yüksekliği önerilen boyuta ayarla. Kare ya da dikey bir kamera için kendi ölçülerini yazabilirsin, çerçeve her boyuta uyar.',
+    guideStep3:
+      "Kaynaklar listesinde çerçeveyi kameranın ya da Sohbet Kutusu'nun üstüne taşı, sonra sahnede onların üstüne yerleştir.",
+    guideStep4:
+      'Kamerayı ortadaki boşluğu dolduracak kadar büyüt ama çerçevenin dış kenarından taşırma. 640 × 360 çerçevede 590 × 296 tam oturur.',
+    faq1Q: 'Çerçeve kameramı ya da sohbetimi kendisi mi gösteriyor?',
+    faq1A:
+      "Hayır. Çerçevenin ortası şeffaf, sadece süsleme. Kameranı ve Sohbet Kutusu'nu OBS'e ayrı kaynak olarak ekleyip çerçevenin altına koyuyorsun.",
+    faq2Q: 'Twitch ve Kick hesabımı bağlamam gerekiyor mu?',
+    faq2A:
+      'Hayır. Çerçeve sohbet okumaz, kanal adı da istemez. Twitch, Kick ya da başka bir platformda yayın yapsan da aynı çalışır.',
+    faq3Q: 'Kamera çerçevesini farklı bir boyutta kullanabilir miyim?',
+    faq3A:
+      'Evet. Çerçeve tarayıcı kaynağının boyutuna göre çizilir. Kare ya da dikey bir kamera için genişlik ve yüksekliği ona göre ayarla, süslemeler de o boyuta göre ölçeklenir.',
+    faq4Q: 'Çerçevelerdeki çizimler oyunlardan mı alındı?',
+    faq4A:
+      "Hayır. Pagoda çatısı, fenerler ya da piksel bloklar gibi her çizim sıfırdan çizildi, oyun logosu ya da görseli içermez. Preset'ler o oyunların havasını yakalayan hayran yapımı stiller.",
+  },
   poll: {
     breadcrumb: 'Sohbet Anketi Kurulumu',
     title: 'Sohbet Anketi Kurulumu',
@@ -1146,7 +1211,7 @@ export const tr: typeof en = {
     openSetup: 'Kurulum sayfasını aç',
     index: {
       title: 'Rehberler',
-      lead: "Her rehber tek bir soruyu adım adım cevaplıyor: OBS'e widget eklemek, Twitch ve Kick sohbetini birleştirmek, sohbeti OBS dock'unda okumak, yayın uyarıları eklemek, subathon sayacı kurmak, sohbet anketi yapmak, sohbet çekilişi yapmak ve sohbetten sahne değiştirmek. Hepsi ücretsiz ve giriş istemeyen araçlar için.",
+      lead: "Her rehber tek bir soruyu adım adım cevaplıyor: OBS'e widget eklemek, Twitch ve Kick sohbetini birleştirmek, sohbeti OBS dock'unda okumak, yayın uyarıları eklemek, subathon sayacı kurmak, sohbet anketi yapmak, kameraya ve sohbete çerçeve eklemek, sohbet çekilişi yapmak ve sohbetten sahne değiştirmek. Hepsi ücretsiz ve giriş istemeyen araçlar için.",
       listLabel: 'Tüm rehberler',
       moreText:
         'Genel sorular için [sık sorulan sorulara](/faq) bak. Nelerin değiştiğini [yenilikler](/changelog) sayfasında bulabilirsin.',
@@ -1183,6 +1248,8 @@ export const tr: typeof en = {
           chatBox: 'Dikey sohbet sütunu. Kaynak büyüdükçe yazı büyümez, daha çok mesaj sığar.',
           emoteWall: "Tam 1080p tuval. Emote'lar ekranın her yerinde belirir.",
           subSprout: 'Bitki ve saksı bu alanın içinde büyür.',
+          frames:
+            "Kamera için 640x360, sohbet için 420x720, ekran için 1920x1080. Çerçeve verdiğin her boyuta uyar.",
           goal: "Hedef barı için geniş bir şerit, üstünde +1'lerin süzüleceği boşluk da var.",
           subathon:
             'Can barı, saat ya da halka için geniş bir şerit. Kaynağı büyütürsen sayaç da büyür.',
@@ -1227,7 +1294,7 @@ export const tr: typeof en = {
       update: {
         title: "Widget'ı sonradan nasıl değiştiririm?",
         p1: "Ayarlar widget adresinin içinde durur, yani bir ayarı değiştirmek yeni bir adres demek. Kurulum sayfasında ayarı değiştir, yeni adresi kopyala, sonra OBS'te kaynağa çift tıklayıp URL alanındaki eski adresin yerine yapıştır.",
-        p2: '[Sohbet Kutusu](/setup/chat-widget), [Emote Duvarı](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Yayın Uyarıları](/setup/stream-alerts), [Abone Hedefi](/setup/sub-goal) ve [Sohbet Anketi](/setup/chat-poll) için baştan başlaman gerekmez. Mevcut adresini kurulum sayfasındaki Widget URL alanına yapıştır, kanalların ve bütün ayarların geri yüklenir. Değiştirmek istediğini değiştir ve yeni adresi kopyala.',
+        p2: '[Sohbet Kutusu](/setup/chat-widget), [Emote Duvarı](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Yayın Uyarıları](/setup/stream-alerts), [Abone Hedefi](/setup/sub-goal), [Sohbet Anketi](/setup/chat-poll) ve [Yayın Çerçeveleri](/setup/stream-frames) için baştan başlaman gerekmez. Mevcut adresini kurulum sayfasındaki Widget URL alanına yapıştır, kanalların ve bütün ayarların geri yüklenir. Değiştirmek istediğini değiştir ve yeni adresi kopyala.',
         p3: "OBS Bridge'de yapıştırma alanı yok, ayarları kurulum sayfasında yeniden girip yeni araç adresini kopyalarsın. Sahne seçimlerini ve yetkili kullanıcıları araç sayfasında da değiştirebilir, yeni adresi oradaki Copy Updated URL düğmesiyle alabilirsin. Eski adresler çalışmaya devam eder, güncellemek zorunda değilsin.",
       },
       troubleshoot: {
@@ -1644,6 +1711,61 @@ export const tr: typeof en = {
       ctaTitle: 'Sohbet anketini kur',
       ctaText: "Hazır bir anketi ve oylama kurallarını tek URL'ye koy, OBS'e ekle ve sohbete !poll yaz.",
     },
+    frames: {
+      title: "OBS'te kameraya, sohbete ve ekrana çerçeve nasıl eklenir?",
+      short: 'Yayın çerçevesi ekleme',
+      summary:
+        "Kamera, sohbet ve ekran çerçevesini OBS'e ekleme, kaynak sırası, kamerayı çerçeveye sığdırma, preset ve animasyon seçimi.",
+      lead: "Yayın Çerçeveleri kameranın, sohbetinin ya da bütün yayın ekranının etrafına seçtiğin preset'in havasında hazır bir çerçeve koyar. Kurulum sayfasında parçayı ve preset'i seç, URL'yi OBS'e Tarayıcı Kaynağı olarak ekle ve kameranın ya da sohbetinin üstüne yerleştir. Çerçevenin ortası şeffaftır, kanal bağlaman ya da giriş yapman gerekmez.",
+      setup: {
+        title: 'Yayın çerçevesi nasıl ayarlanır?',
+        step1: '[Yayın Çerçeveleri kurulum sayfasını](/setup/stream-frames) aç.',
+        step2:
+          'Neyin çerçevesi? kısmında Kamera, Sohbet ya da Ekran seç. Her parça ayrı bir Tarayıcı Kaynağı, istersen üçünü de ekle.',
+        step3:
+          "Bir preset seç. Klasik'te rengi sen seçersin, diğer preset'ler kendi renkleri, yazı tipi ve çizimleriyle gelir.",
+        step4:
+          'Yazı alanına kanal adını ya da istediğin bir kelimeyi yaz. Kamera ve sohbette çerçevenin üstündeki sekmede, ekranda alttaki plakada görünür.',
+        step5:
+          "URL'yi kopyala ve OBS'e Tarayıcı Kaynağı olarak ekle: kamera için 640 × 360, sohbet için 420 × 720, ekran için 1920 × 1080.",
+        p1: 'Önizleme çerçeveyi bir kişi silüeti ya da örnek sohbet satırlarıyla gösterir. Bunlar sadece yer tutucu, yayında çerçevenin ortası boştur.',
+      },
+      layers: {
+        title: 'Çerçeve neden kameramın arkasında kalıyor?',
+        p1: "OBS'te Kaynaklar listesinde üstte olan kaynak sahnede önde durur. Çerçeve kaynağını kameranın (Video Yakalama Aygıtı) ya da Sohbet Kutusu'nun üstüne taşı. Kaynağa sağ tıklayıp Sırala → En Üste Taşı'nı da seçebilirsin.",
+        p2: "Kamerayı ve çerçeveyi birlikte taşımak için ikisini seç, sağ tıkla ve Seçilen Ögeleri Grupla'yı seç. Grubu büyütüp küçültünce ikisi aynı oranda değişir.",
+        p3: 'Ekran çerçevesi bütün sahnenin önünde durmalı. Onu listenin en üstüne koy, oyun ve diğer kaynaklar altında kalsın.',
+      },
+      fit: {
+        title: 'Kamera çerçeveye nasıl sığdırılır?',
+        intro:
+          'Çerçevenin ortasındaki boşluk dış kenarından biraz küçüktür. Kameran boşluğu doldurmalı ama çerçevenin dış kenarından taşmamalı, taşan kısım çerçevenin etrafında görünür. Önerilen boyutlarda şu ölçüler iyi oturur:',
+        caption: 'Önerilen çerçeve boyutları ve içine gelen kaynak',
+        colPiece: 'Parça',
+        colFrame: 'Çerçeve boyutu',
+        colInside: 'İçine gelen kaynak',
+        camera: 'Kamera',
+        chat: 'Sohbet',
+        screen: 'Ekran',
+        cameraInside: 'Kamera 590 × 296, çerçeveyle ortalanmış',
+        chatInside: 'Sohbet Kutusu 370 × 660, çerçeveyle ortalanmış',
+        screenInside: 'Oyun ya da ekran yakalama bütün sahneyi kaplar',
+        p1: "16:9 bir kamerayı 590 genişliğe getirince yüksekliği 332 olur, bu yüzden yükseklik 296 kalana kadar üstten ve alttan eşit kırp. Alt tuşunu (Mac'te Option) basılı tutup kaynağın üst ve alt kenarını sürükle, ya da kameraya sağ tıklayıp Dönüştür → Dönüştürmeyi Düzenle'deki Kırp alanlarını kullan.",
+        p2: "Çerçeveyi daha büyük kullanırsan bu ölçüler de aynı oranda büyür: 1280 × 720 bir kamera çerçevesinde kamera 1180 × 592 olur. Kare ya da dikey bir kamera için Tarayıcı Kaynağı'nın genişlik ve yüksekliğini ona göre yaz, çerçeve o şekle göre çizilir.",
+      },
+      look: {
+        title: 'Preset ve animasyonlar neyi değiştirir?',
+        p1: "Preset çerçevenin şeklini, çizimlerini, renklerini ve yazı tipini belirler: Dynasty'de pagoda çatısı ve püsküller, Rift'te altın süslemeler ve turkuaz taşlar, Blocks'ta çimen blokları ve eşya çubuğu. Sohbet Kutusu'na, Yayın Uyarıları'na ve Abone Hedefi'ne de aynı preset'i verirsen ekrandaki her şey aynı stilde durur.",
+        p2: "Animasyonlar açıkken çerçevenin etrafında ışıklar döner, çizgiler parlar, preset'e göre fenerler, meşaleler ya da kıvılcımlar hareket eder. Bunlar hafif tutuldu. Yine de oyunla birlikte bilgisayarın zorlanıyorsa Animasyonlar'ı kapat, URL'ye `motion=0` eklenir ve çerçeve sabit durur.",
+        p3: 'Çizimlerin hepsi sıfırdan çizildi, oyun logosu ya da görseli içermez.',
+      },
+      change: {
+        title: 'Çerçeveyi sonradan nasıl değiştiririm?',
+        p1: "OBS'teki URL'yi kurulum sayfasındaki Widget URL alanına yapıştır, ayarların geri gelir. Preset'i, parçayı ya da yazıyı değiştir, yeni URL'yi kopyala ve Tarayıcı Kaynağı'ndaki eskisinin yerine yapıştır. Bütün widget'larının preset'ini birden değiştirmek için [Preset'ler sayfasını](/presets) kullanabilirsin.",
+      },
+      ctaTitle: 'Çerçeveni hazırla',
+      ctaText: "Parçayı ve preset'i seç, önizlemede gör, URL'yi kopyala.",
+    },
     alerts: {
       title: "OBS'e Twitch ve Kick için abonelik, cheer ve raid uyarıları nasıl eklenir?",
       short: 'Yayın uyarıları ekleme',
@@ -1790,7 +1912,7 @@ export const tr: typeof en = {
     breadcrumb: "Preset'ler",
     eyebrow: "Preset'ler",
     title: "Yayın overlay'lerin için oyun preset'leri",
-    lead: "Seçtiğin preset'le Sohbet Kutusu, Yayın Uyarıları, Abone Hedefi, Subathon Timer, Sohbet Anketi ve Çekiliş kazanan overlay'i aynı çerçeveyi, yazı tiplerini ve renkleri alır. İstersen hepsinde aynısını kullan, istersen her birinde başka birini.",
+    lead: "Seçtiğin preset'le Sohbet Kutusu, Yayın Uyarıları, Abone Hedefi, Subathon Timer, Sohbet Anketi, Çekiliş kazanan overlay'i ve Yayın Çerçeveleri aynı çerçeveyi, yazı tiplerini ve renkleri alır. İstersen hepsinde aynısını kullan, istersen her birinde başka birini.",
     pickTitle: 'Bir preset seç',
     by: 'Hazırlayan: {author}',
     community: 'Topluluk',
@@ -1812,7 +1934,7 @@ export const tr: typeof en = {
       ancient: 'Bronz köşeli koyu demir çerçeveler, alt kenarda kırmızı bir parıltı ve keskin Grenze başlıklar.',
       agent: 'Koyu antrasit zeminde kesik köşeler, kırmızı bir kenar, eğik barlar ve uzun Teko rakamları.',
       defuse: 'HUD tarzı köşe işaretleri, kehribar rengi bir üst çizgi, barlarda ikaz şeritleri ve dar Saira yazı tipi.',
-      blocks: 'Tooltip morunda piksel çerçeveler, bloklara bölünmüş yeşil barlar ve Jersey 10 piksel yazı tipi.',
+      blocks: 'Çimen ve toprak renginde piksel çerçeveler, bloklara bölünmüş yeşil barlar ve Jersey 10 piksel yazı tipi.',
     },
     existingTitle: "OBS'te zaten widget'ların var mı?",
     existingText:
@@ -1827,7 +1949,7 @@ export const tr: typeof en = {
     communityLink: 'Preset nasıl yapılır?',
     communityEmpty: "Henüz topluluk preset'i yok. İlki seninki olabilir.",
     disclaimer:
-      "Oyun adları, sahiplerinin markalarıdır. Bu preset'ler oyun görseli içermeyen, hayran yapımı renk ve yazı tipi stilleridir. Oyun yapımcılarıyla bir bağlantıları yok, onlar tarafından onaylanmış da değiller.",
+      "Oyun adları, sahiplerinin markalarıdır. Bu preset'ler oyun görseli içermeyen, hayran yapımı renk, yazı tipi ve çizim stilleridir. Oyun yapımcılarıyla bir bağlantıları yok, onlar tarafından onaylanmış da değiller.",
     faqTitle: "Preset'ler hakkında sorular",
     faq1Q: "Preset'ler OBS'e eklediğim widget'ları da değiştirir mi?",
     faq1A:
@@ -1837,10 +1959,10 @@ export const tr: typeof en = {
       "Evet. Varsayılan preset sadece kurulum sayfalarının hangi preset'le açılacağını belirler. Herhangi bir widget'ın kurulum sayfasında başka bir preset seçebilirsin, o preset de o widget'ın URL'sine yazılır.",
     faq3Q: "Hangi widget'lar preset destekliyor?",
     faq3A:
-      "Sohbet Kutusu, Yayın Uyarıları, Abone Hedefi, Subathon Timer, Sohbet Anketi ve Çekiliş kazanan overlay'i. Emote Duvarı sadece emote gösterdiği, Sub Sprout da kendi bitkilerini çizdiği için ikisi kendi görünümünde kalır.",
+      "Sohbet Kutusu, Yayın Uyarıları, Abone Hedefi, Subathon Timer, Sohbet Anketi, Çekiliş kazanan overlay'i ve Yayın Çerçeveleri. Emote Duvarı sadece emote gösterdiği, Sub Sprout da kendi bitkilerini çizdiği için ikisi kendi görünümünde kalır.",
     faq4Q: 'Bunlar oyunların resmi görünümleri mi?',
     faq4A:
-      'Hayır. Renklerden ve ücretsiz Google Fonts yazı tiplerinden oluşan hayran yapımı stiller. Oyun logosu ya da görseli içermezler, oyun yapımcılarıyla da bir bağlantıları yok.',
+      'Hayır. Renklerden, ücretsiz Google Fonts yazı tiplerinden ve sıfırdan çizilmiş süslemelerden oluşan hayran yapımı stiller. Oyun logosu ya da görseli içermezler, oyun yapımcılarıyla da bir bağlantıları yok.',
     field: {
       label: 'Preset',
       tip: "Bu widget için hazır bir görünüm, yani çerçeve, yazı tipleri ve renkler. Widget'ların birbirine uysun istiyorsan hepsinde aynı preset'i seç.",
@@ -1878,7 +2000,7 @@ export const tr: typeof en = {
       "Dokuzu da iki platformu destekliyor. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi ve Sohbet Anketi tek adreste Twitch ve Kick kanalını birlikte dinler. OBS Bridge iki sohbetten gelen komutları dinler ve her yetkili kullanıcı kendi platformuyla eklenir. Çekiliş her seferinde tek platformda çalışır, Twitch ya da Kick. Sohbet Kutusu'nda 7TV emote'ları iki platformda, BTTV ve FFZ emote'ları sadece Twitch'te görünür.",
     editQ: "Widget'ı sonradan nasıl değiştiririm?",
     editA:
-      "Kurulum sayfasında ayarları değiştir, yeni adresi kopyala ve OBS'te kaynağın URL alanındaki eski adresin yerine yapıştır. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi ve Sohbet Anketi'nde eski adresini kurulum sayfasındaki Widget URL alanına yapıştırırsan bütün ayarların geri yüklenir, baştan başlaman gerekmez.",
+      "Kurulum sayfasında ayarları değiştir, yeni adresi kopyala ve OBS'te kaynağın URL alanındaki eski adresin yerine yapıştır. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi ve Yayın Çerçeveleri'nde eski adresini kurulum sayfasındaki Widget URL alanına yapıştırırsan bütün ayarların geri yüklenir, baştan başlaman gerekmez.",
     oldUrlsQ: 'Eski widget adreslerim çalışmaya devam eder mi?',
     oldUrlsA:
       "Evet. Güncellemeler mevcut adresleri bozmayacak şekilde yapılır: parametre adları, değerleri ve varsayılanları değişmez. Örneğin Sohbet Kutusu'ndaki eski keep=true hâlâ Süresiz anlamına gelir ve Sub Sprout eski channel ve platform parametrelerini hâlâ okur.",
@@ -1902,6 +2024,8 @@ export const tr: typeof en = {
     lead: "Senchabot Extensions'a eklenen özellikler ve düzeltilen hatalar, en yenisi en üstte. Liste projenin [GitHub'daki](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) commit geçmişinden hazırlanıyor.",
     site: 'Site',
     entries: {
+      frames:
+        "Yeni Yayın Çerçeveleri: kameran, sohbetin ve bütün yayın ekranın için hazır çerçeveler. Her preset kendi çizimleriyle gelir, Dynasty'de pagoda çatısı ve fenerler, Blocks'ta piksel bloklar.",
       subathonRates:
         "Subathon Timer artık bir aboneliğin, hediye aboneliğin ve 500 Bits ya da Kicks'in ne kadar süre eklediğini sayaçta gösterebiliyor, böylece izleyiciler aboneliklerinin kaç dakika eklediğini biliyor.",
       presets:
