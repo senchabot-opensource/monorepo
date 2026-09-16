@@ -1,7 +1,7 @@
 # Community presets
 
-A preset gives Chat Box, Stream Alerts, Sub Goal, Subathon Timer, Chat Poll and the Raffle
-winner overlay the same look. Each community preset is one JSON file in this folder. Once your
+A preset gives Chat Box, Stream Alerts, Sub Goal, Subathon Timer, Chat Poll, the Raffle
+winner overlay and Stream Frames the same look. Each community preset is one JSON file in this folder. Once your
 pull request is merged, the preset shows up on [extensions.senchabot.com/presets](https://extensions.senchabot.com/presets)
 and on every setup page, with your name on it.
 
@@ -63,7 +63,7 @@ and on every setup page, with your name on it.
 | `fonts` | Two [Google Fonts](https://fonts.google.com): `display` for titles, names and numbers, `body` for chat and small text. `weights` is the `wght` axis, a range like `400..900` or a list like `400;700`. Pick fonts with the latin-ext subset, so Turkish letters (ş ğ ı İ) don't fall back to another font. |
 | `colors` | Nine `#rrggbb` colors: `accent` fills bars and glows, `win` marks a reached goal or a poll's winner, `panel` and `panel2` are the panel's top and bottom, `frame` and `frame2` are the frame's light and dark lines, `track` is a bar's empty part. |
 | `panelOpacity` | 0.5 to 1. Below 1 the game shows through the panels a little. |
-| `frame` | `gilded` (thin gold lines, diamond studs), `ornate` (thick bevel, rivets), `lacquer` (outer band, inner line, corner brackets), `iron` (dark border, corner teeth, a glow along the bottom), `tactical` (cut corners, an accent edge), `hud` (corner brackets, an accent top line) or `pixel` (stepped pixel border). |
+| `frame` | `gilded` (thin gold lines, diamond studs), `ornate` (thick bevel, rivets), `lacquer` (outer band, inner line, corner brackets), `iron` (dark border, corner teeth, a glow along the bottom), `tactical` (cut corners, an accent edge), `hud` (corner brackets, an accent top line) or `pixel` (stepped pixel border). It also picks the drawings Stream Frames puts on the webcam, chat and screen frames. |
 | `radius` | 0 to 1.5, scales each widget's own corner radius: 0 is square, 1 keeps it. |
 | `skew` | -20 to 0, how far bars lean, in degrees. |
 | `title` | Title text: uppercase or not, italic or not, letter spacing in em (0 to 0.4). |
@@ -75,5 +75,6 @@ and on every setup page, with your name on it.
 ## Rules
 
 - Colors and fonts only: presets can't carry images, so no game logos, art or official fonts.
+  Stream Frames' drawings come with the `frame` you pick.
 - Game names are fine to name what a preset is made for, not to make it look official.
 - A preset can't reuse an id that's already taken, including `classic`.

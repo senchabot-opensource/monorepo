@@ -10,6 +10,7 @@ Senchabot Extensions provides 100% free streaming widgets, customizable overlays
 - **Subathon Timer** — A subathon countdown that subs, gifted subs, Bits and Kicks add time to, shown as a game-style health bar, a clock or a ring. Mods control it from chat.
 - **Stream Alerts** — Animated alerts with their own sound for subs, gifted subs, Bits, Kicks and raids, in a Neon or a Celestial theme.
 - **Sub Goal** — A goal bar that every sub, resub and gifted sub on Twitch and Kick fills by one, with a trophy when the goal is reached. Mods fix the count from chat.
+- **Stream Frames** — Ready-made webcam, chat and screen frames drawn in the picked preset's look, transparent in the middle.
 - **Chat Poll** — A poll that Twitch and Kick chat vote in by typing a number, with live bars, a timer and the winner at the end. Mods run it from chat.
 - **Universal Chat** — A multi-chat widget and stream chat box overlay that combines Twitch and Kick chat into a single on-screen feed with 7TV emotes, badges, and platform indicators.
 - **Raffle Picker** — A chat-based giveaway and raffle tool. Viewers type a keyword to enter; winners are drawn and announced on a live confetti celebration overlay.
@@ -23,6 +24,7 @@ Senchabot Extensions provides 100% free streaming widgets, customizable overlays
 - [Subathon Timer](https://extensions.senchabot.com/setup/subathon-timer)
 - [Stream Alerts](https://extensions.senchabot.com/setup/stream-alerts)
 - [Sub Goal](https://extensions.senchabot.com/setup/sub-goal)
+- [Stream Frames](https://extensions.senchabot.com/setup/stream-frames)
 - [Chat Poll](https://extensions.senchabot.com/setup/chat-poll)
 - [Universal Chat](https://extensions.senchabot.com/setup/chat-widget)
 - [Raffle Picker](https://extensions.senchabot.com/setup/raffle)
@@ -111,6 +113,23 @@ https://extensions.senchabot.com/widgets/goal?twitch=YOUR_TWITCH_CHANNEL&kick=YO
 ```
 
 **URL parameters:** `twitch`, `kick`, `color` (`purple` | `green` | `red` | `gold` | `cyan` | `pink`), `title` (empty hides it), `start` (starting count), `target` (the goal, 1 or more), `pops` (`0` hides the rising +1s), `simulate` (`1` plays simulated subs), `simplatform` (`twitch` | `kick`).
+
+---
+
+### Stream Frames (`/setup/stream-frames`)
+
+Ready-made frames for a webcam, a chat or the whole stream, drawn in the picked preset's look with its own shape, ornaments and small animations (a temple roof and swaying tassels in Dynasty, grass blocks and flickering torches in Blocks). The middle is transparent, so the webcam or Chat Box under it shows through.
+
+**How it works:**
+- Static SVG drawn for the browser source's size, so any webcam shape works; no chat connection.
+- Each frame kind in `src/features/widgets/frame/art/` gives a silhouette (corners, tab, tray, wings; see `shape.ts`) and draws the plate, ornaments and animations on it. Colors come from the preset, so community presets on the same frame kind get the art too.
+- Animations only move opacity and transform (no filters or masks), to stay light next to a game capture.
+
+```
+https://extensions.senchabot.com/widgets/frame?piece=camera&preset=dynasty&label=YOUR_NAME
+```
+
+**URL parameters:** `piece` (`camera` | `chat` | `screen`), `preset`, `color` (`purple` | `green` | `red` | `gold` | `cyan` | `pink`, classic only), `label` (tab or plate text, empty leaves it off), `motion` (`0` turns animations off), `demo` (`1` draws a stand-in webcam or chat).
 
 ---
 
@@ -263,6 +282,7 @@ npm run deploy
 │   │   ├── subathon-timer.tsx      # Subathon Timer configuration
 │   │   ├── stream-alerts.tsx       # Stream Alerts configuration
 │   │   ├── sub-goal.tsx            # Sub Goal configuration
+│   │   ├── stream-frames.tsx       # Stream Frames configuration
 │   │   ├── chat-poll.tsx           # Chat Poll configuration
 │   │   ├── chat-widget.tsx         # Universal Chat configuration
 │   │   ├── raffle.tsx              # Raffle configuration
@@ -272,6 +292,7 @@ npm run deploy
 │       ├── subathon.tsx            # Subathon Timer overlay
 │       ├── stream-alerts.tsx       # Stream Alerts overlay
 │       ├── goal.tsx                # Sub Goal overlay
+│       ├── frame.tsx               # Stream Frames overlay
 │       ├── poll.tsx                # Chat Poll overlay
 │       ├── chat-widget.tsx         # Universal Chat overlay
 │       ├── raffle-overlay.tsx      # Raffle winner overlay
