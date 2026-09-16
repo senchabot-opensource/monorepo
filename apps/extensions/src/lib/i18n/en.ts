@@ -462,6 +462,8 @@ export const en = {
     potLabelTip: "Writes the stage on the pot, like 3/10. Climbing Vine doesn't show it.",
     previewTitle: 'Subscriber Goal Plant Preview',
     previewIframeTitle: 'Sub Sprout Preview',
+    previewSpeed: 'Preview Growth Speed',
+    previewSpeedValue: '{rate}×',
     previewHint:
       'The preview grows with simulated subs. On stream, your plant grows with real subs, resubs and gifted subs in your channel.',
     widgetUrlTip:

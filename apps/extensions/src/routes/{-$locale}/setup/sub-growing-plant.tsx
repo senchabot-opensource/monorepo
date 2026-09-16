@@ -5,6 +5,7 @@ import { CopyUrlField } from '#/components/copy-url-field';
 import { PreviewFrame } from '#/components/preview-frame';
 import { SetupShell } from '#/components/setup-shell';
 import { FieldLabel } from '#/components/ui/field-label';
+import { RangeField } from '#/components/ui/range-field';
 import { SegmentedControl, type SegmentedOption } from '#/components/ui/segmented-control';
 import { Select, type SelectOption } from '#/components/ui/select';
 import { SettingsGroup } from '#/components/ui/settings-group';
@@ -43,6 +44,9 @@ const WIDGET = getWidget('sub-sprout');
 // sourceSize is only null for tools; the fallback just satisfies the type.
 const CANVAS = WIDGET.sourceSize ?? { width: 800, height: 600 };
 
+// Preview only. At 1x a plant takes 10-20 s to grow through; 10x shows a whole cycle in ~2 s.
+const PREVIEW_SPEEDS = [1, 2, 3, 5, 10];
+
 const FAQ: FaqEntry[] = [
   ['subSprout.faq1Q', 'subSprout.faq1A'],
   ['subSprout.faq2Q', 'subSprout.faq2A'],
@@ -53,6 +57,7 @@ function SubSproutSetup() {
   const [twitchChannel, setTwitchChannel] = useState('');
   const [kickChannel, setKickChannel] = useState('');
   const [settings, setSettings] = useState(DEFAULT_SUB_SPROUT_SETTINGS);
+  const [previewSpeedIndex, setPreviewSpeedIndex] = useState(0);
   const [mounted, setMounted] = useState(false);
   const id = useId();
 
@@ -66,7 +71,9 @@ function SubSproutSetup() {
   // Gated on mount so the prerendered input and the first client render agree.
   const origin = mounted ? window.location.origin : '';
   const widgetUrl = mounted ? buildSubSproutUrl(origin, settings, twitchChannel, kickChannel) : '';
-  const previewUrl = mounted ? buildSubSproutPreviewUrl(origin, settings) : '';
+  const previewUrl = mounted
+    ? buildSubSproutPreviewUrl(origin, settings, PREVIEW_SPEEDS[previewSpeedIndex])
+    : '';
 
   const applyWidgetUrl = (text: string) => {
     const parsed = parseSubSproutUrl(text);
@@ -172,6 +179,7 @@ function SubSproutSetup() {
       title={t('subSprout.title')}
       settings={settingsPanel}
       previewTitle={t('subSprout.previewTitle')}
+      previewTip={t('subSprout.previewHint')}
       previewAspect={CANVAS.width / CANVAS.height}
       preview={
         <PreviewFrame
@@ -182,7 +190,17 @@ function SubSproutSetup() {
         />
       }
       previewFooter={
-        <p className="text-xs leading-relaxed text-zinc-500">{t('subSprout.previewHint')}</p>
+        <RangeField
+          layout="inline"
+          label={t('subSprout.previewSpeed')}
+          tip={t('chatWidget.previewSpeedHint')}
+          min={0}
+          max={PREVIEW_SPEEDS.length - 1}
+          value={previewSpeedIndex}
+          onChange={(value) => setPreviewSpeedIndex(Number(value))}
+          format={(index) => t('subSprout.previewSpeedValue', { rate: PREVIEW_SPEEDS[index] })}
+          readoutClassName="w-10"
+        />
       }
       urlField={
         <CopyUrlField

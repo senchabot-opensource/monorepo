@@ -29,6 +29,8 @@ export interface SubSproutWidgetProps {
   countFx?: boolean;
   potLabel?: boolean;
   simulate?: boolean | "auto";
+  /** Fast-forwards the simulated subs, for the setup page's preview speed slider. */
+  simSpeed?: number;
 }
 
 const VIEWBOX_W = 800;
@@ -111,11 +113,18 @@ export function SubSproutWidget({
   countFx = true,
   potLabel = false,
   simulate = false,
+  simSpeed = 1,
 }: SubSproutWidgetProps) {
   const safeVariety = isValidPlantId(variety) ? variety : "classic";
   const safePick: PickMode =
     pick === "cycle" || pick === "random" || pick === "fixed" ? pick : "fixed";
   const safeWater: WaterEffectType = isValidWaterEffect(water) ? water : "off";
+  // Every timing scales together so the preview plays like a fast-forward, not cut-off effects.
+  // Real subs always run at 1x, even if the param ends up in an OBS URL.
+  const speed = simulate && simSpeed > 0 ? simSpeed : 1;
+  const growthIntervalMs = ANIMATION_INTERVAL_MS / speed;
+  const waterDurationMs = WATER_EFFECT_DURATION_MS / speed;
+  const countDurationMs = SUB_COUNT_DURATION_MS / speed;
 
   const [currentVariety, setCurrentVariety] = useState<PlantId>(
     () => safeVariety,
@@ -224,8 +233,8 @@ export function SubSproutWidget({
     setTimeout(() => {
       isAnimating.current = false;
       processQueue();
-    }, ANIMATION_INTERVAL_MS);
-  }, [applyGrowth]);
+    }, growthIntervalMs);
+  }, [applyGrowth, growthIntervalMs]);
 
   const handleSubEvent = useCallback(
     (amount: number = 1) => {
@@ -272,13 +281,12 @@ export function SubSproutWidget({
       if (cancelled) return;
       const amount = Math.random() < 0.5 ? 1 : 2;
       handleSubEvent(amount);
-      const growthMs = amount * ANIMATION_INTERVAL_MS;
-      const fxMs = countFx ? SUB_COUNT_DURATION_MS : 0;
-      const waterMs =
-        safeWater !== "off" ? WATER_EFFECT_DURATION_MS : 0;
+      const growthMs = amount * growthIntervalMs;
+      const fxMs = countFx ? countDurationMs : 0;
+      const waterMs = safeWater !== "off" ? waterDurationMs : 0;
       timer = window.setTimeout(
         scheduleNext,
-        Math.max(growthMs, fxMs, waterMs) + SIM_NEXT_GAP_MS,
+        Math.max(growthMs, fxMs, waterMs) + SIM_NEXT_GAP_MS / speed,
       );
     };
 
@@ -287,7 +295,17 @@ export function SubSproutWidget({
       cancelled = true;
       if (timer !== undefined) window.clearTimeout(timer);
     };
-  }, [simulate, joined, handleSubEvent, countFx, safeWater]);
+  }, [
+    simulate,
+    joined,
+    handleSubEvent,
+    countFx,
+    safeWater,
+    speed,
+    growthIntervalMs,
+    countDurationMs,
+    waterDurationMs,
+  ]);
 
   useEffect(() => {
     twitchConnectedRef.current = false;
@@ -610,12 +628,9 @@ export function SubSproutWidget({
 
   useEffect(() => {
     if (!activeWaterSlot) return;
-    const t = setTimeout(
-      () => setActiveWaterSlot(null),
-      WATER_EFFECT_DURATION_MS,
-    );
+    const t = setTimeout(() => setActiveWaterSlot(null), waterDurationMs);
     return () => clearTimeout(t);
-  }, [activeWaterSlot]);
+  }, [activeWaterSlot, waterDurationMs]);
 
   if (currentVariety === "vine") {
     const first = slotStates[0] ?? { stagesDone: 0, progress: 0 };
@@ -623,7 +638,11 @@ export function SubSproutWidget({
       <div className="size-full">
         <VineOverlay stage={first.stagesDone} progress={first.progress} />
         {countFx && subCountFx && (
-          <SubCountFX count={subCountFx.count} triggerKey={subCountFx.key} />
+          <SubCountFX
+            count={subCountFx.count}
+            triggerKey={subCountFx.key}
+            durationMs={countDurationMs}
+          />
         )}
       </div>
     );
@@ -636,14 +655,18 @@ export function SubSproutWidget({
       <div className="relative size-full">
         <LegacySubSproutSvg step={step} potLabel={potLabel} />
         {countFx && subCountFx && (
-          <SubCountFX count={subCountFx.count} triggerKey={subCountFx.key} />
+          <SubCountFX
+            count={subCountFx.count}
+            triggerKey={subCountFx.key}
+            durationMs={countDurationMs}
+          />
         )}
         {activeWaterSlot && safeWater !== "off" && (
           <WateringFX
             key={activeWaterSlot.key}
             effect={safeWater}
             active
-            durationMs={WATER_EFFECT_DURATION_MS}
+            durationMs={waterDurationMs}
           />
         )}
       </div>
@@ -685,12 +708,16 @@ export function SubSproutWidget({
           key={activeWaterSlot.key}
           effect={safeWater}
           active
-          durationMs={WATER_EFFECT_DURATION_MS}
+          durationMs={waterDurationMs}
         />
       )}
 
       {countFx && subCountFx && (
-        <SubCountFX count={subCountFx.count} triggerKey={subCountFx.key} />
+        <SubCountFX
+          count={subCountFx.count}
+          triggerKey={subCountFx.key}
+          durationMs={countDurationMs}
+        />
       )}
     </div>
   );

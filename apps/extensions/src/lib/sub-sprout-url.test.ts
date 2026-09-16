@@ -72,6 +72,15 @@ describe('buildSubSproutPreviewUrl', () => {
       }),
     ).toBe(`${WIDGET}?variety=cactus&countfx=0&simulate=1`);
   });
+
+  it('adds simspeed only when the preview is sped up', () => {
+    expect(buildSubSproutPreviewUrl(ORIGIN, DEFAULT_SUB_SPROUT_SETTINGS, 1)).toBe(
+      `${WIDGET}?simulate=1`,
+    );
+    expect(buildSubSproutPreviewUrl(ORIGIN, DEFAULT_SUB_SPROUT_SETTINGS, 5)).toBe(
+      `${WIDGET}?simulate=1&simspeed=5`,
+    );
+  });
 });
 
 describe('parseSubSproutUrl', () => {
