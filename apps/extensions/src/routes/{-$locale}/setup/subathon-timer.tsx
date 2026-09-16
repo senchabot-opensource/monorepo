@@ -444,12 +444,7 @@ function SubathonSetup() {
       // A 16:9 box, like a stream frame, so the band the +time pops rise into shows too.
       previewAspect={16 / 9}
       preview={
-        <PreviewFrame
-          src={previewUrl}
-          title={t('subathon.previewIframeTitle')}
-          canvas={CANVAS}
-          motionSafe
-        />
+        <PreviewFrame src={previewUrl} title={t('subathon.previewIframeTitle')} canvas={CANVAS} />
       }
       previewFooter={
         <div className="space-y-2.5">

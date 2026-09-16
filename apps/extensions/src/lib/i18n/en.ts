@@ -25,7 +25,6 @@ export const en = {
     channelTip:
       "Just type the channel name, not the full link. For twitch.tv/senchabot, that's senchabot.",
     previewLoading: 'Loading preview…',
-    playPreview: 'Play preview',
     setupGuideTitle: 'How to set it up',
     faqTitle: 'Frequently asked questions',
     moreWidgets: 'More widgets',

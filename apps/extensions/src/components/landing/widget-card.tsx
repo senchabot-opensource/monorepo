@@ -1,6 +1,6 @@
 import { LocaleLink } from '#/components/locale-link';
 import { PlatformChips } from '#/components/platform-chips';
-import { PreviewFrame, usePrefersReducedMotion } from '#/components/preview-frame';
+import { PreviewFrame } from '#/components/preview-frame';
 import { useI18n } from '#/lib/i18n';
 import type { WidgetEntry } from '#/lib/widgets';
 import { getDemoSrc } from './demo-url';
@@ -64,7 +64,6 @@ export function WidgetCard({
   shape = 'standard',
 }: WidgetCardProps) {
   const { t } = useI18n();
-  const reducedMotion = usePrefersReducedMotion();
   const isOverlay = widget.kind === 'overlay';
   const features = TOOL_FEATURES[widget.id];
   const name = t(widget.nameKey);
@@ -77,13 +76,11 @@ export function WidgetCard({
 
   return (
     <article className="group relative flex w-full flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm transition-[border-color,box-shadow] hover:border-zinc-300 hover:shadow-md has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-green-500 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700">
-      {/* With reduced motion the preview waits for a Play click, so it has to sit above the
-          card-wide link; otherwise the link covers it and a click opens the setup page. */}
       <div
         className={`relative border-b border-zinc-200 dark:border-zinc-800 ${
           // Flatter on wide screens, so a tool card is as tall as an overlay row above it.
           isOverlay ? PREVIEW_CLASS[shape] : 'aspect-[2/1] lg:aspect-[5/2]'
-        } ${isOverlay && reducedMotion ? 'z-10' : ''}`}
+        }`}
         style={previewStyle}
       >
         {isOverlay ? (
@@ -91,7 +88,6 @@ export function WidgetCard({
             <PreviewFrame
               src={getDemoSrc(widget, 'card')}
               title={t('home.demoTitle', { name })}
-              motionSafe
               backgroundClassName="bg-transparent"
               className={FLUSH_FRAME_CLASS}
             />

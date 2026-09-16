@@ -27,7 +27,6 @@ export const tr: typeof en = {
     channelTip:
       'Tam linki değil, sadece kanal adını yaz. Örneğin twitch.tv/senchabot için senchabot.',
     previewLoading: 'Önizleme yükleniyor…',
-    playPreview: 'Önizlemeyi oynat',
     setupGuideTitle: 'Nasıl kurulur?',
     faqTitle: 'Sık sorulan sorular',
     moreWidgets: "Diğer widget'lar",

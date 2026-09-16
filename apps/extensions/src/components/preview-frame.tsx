@@ -1,23 +1,7 @@
-import { type ReactNode, useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { type ReactNode, useEffect, useRef, useState } from 'react';
 import { useI18n } from '#/lib/i18n';
 import { withLangParam } from '#/lib/i18n/paths';
 import type { SourceSize } from '#/lib/widgets';
-
-const REDUCED_MOTION = '(prefers-reduced-motion: reduce)';
-
-function subscribeReducedMotion(onChange: () => void) {
-  const query = window.matchMedia(REDUCED_MOTION);
-  query.addEventListener('change', onChange);
-  return () => query.removeEventListener('change', onChange);
-}
-
-export function usePrefersReducedMotion() {
-  return useSyncExternalStore(
-    subscribeReducedMotion,
-    () => window.matchMedia(REDUCED_MOTION).matches,
-    () => false,
-  );
-}
 
 interface PreviewFrameProps {
   /** Page to show in the iframe. Nothing loads while it's empty. */
@@ -33,8 +17,6 @@ interface PreviewFrameProps {
   canvas?: SourceSize;
   /** Shown until the iframe mounts; defaults to a "Loading preview" line. */
   placeholder?: ReactNode;
-  /** For demos that play on their own: with reduced motion on, wait for a Play click. */
-  motionSafe?: boolean;
   /** Background behind the page; overlays are transparent, so this is what shows through. */
   backgroundClassName?: string;
   className?: string;
@@ -50,16 +32,13 @@ export function PreviewFrame({
   aspect,
   canvas,
   placeholder,
-  motionSafe,
   backgroundClassName = 'bg-zinc-950/80',
   className = '',
 }: PreviewFrameProps) {
   const { t, locale } = useI18n();
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
-  const [played, setPlayed] = useState(false);
   const [scale, setScale] = useState(0);
-  const reducedMotion = usePrefersReducedMotion();
   const canvasWidth = canvas?.width;
   const canvasHeight = canvas?.height;
 
@@ -91,8 +70,7 @@ export function PreviewFrame({
     return () => observer.disconnect();
   }, [canvasWidth, canvasHeight]);
 
-  const waitingForPlay = Boolean(motionSafe && reducedMotion && !played);
-  const mounted = visible && Boolean(src) && !waitingForPlay && (!canvas || scale > 0);
+  const mounted = visible && Boolean(src) && (!canvas || scale > 0);
 
   return (
     <div
@@ -124,20 +102,7 @@ export function PreviewFrame({
         />
       ) : (
         <div className="absolute inset-0 flex items-center justify-center p-4 text-center text-sm text-zinc-400">
-          {waitingForPlay ? (
-            <button
-              type="button"
-              onClick={() => setPlayed(true)}
-              className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 font-medium text-white transition-colors hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500"
-            >
-              <svg className="size-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5Z" />
-              </svg>
-              {t('common.playPreview')}
-            </button>
-          ) : (
-            (placeholder ?? t('common.previewLoading'))
-          )}
+          {placeholder ?? t('common.previewLoading')}
         </div>
       )}
     </div>
