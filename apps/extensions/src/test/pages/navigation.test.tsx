@@ -140,6 +140,7 @@ const TURKISH_PAGES = [
   '/tr/guides/stream-alerts',
   '/tr/guides/subathon-timer',
   '/tr/guides/chat-poll',
+  '/tr/guides/stream-frames',
   '/tr/presets',
   '/tr/faq',
   '/tr/changelog',
