@@ -387,14 +387,18 @@ export const pixel: Art = {
   // Experience-orb green hopping around the picture's edge, a pixel at a time.
   runner: (g) => {
     const { p, hole } = grid(g);
+    // Down the middle of the dark ring around the picture.
+    const ring = inset(hole, -p / 2);
+    const lap = 2 * (ring.x1 - ring.x0 + ring.y1 - ring.y0);
     return {
       path: 'hole',
-      // Down the middle of the dark ring around the picture.
-      d: holePath(inset(hole, -p / 2), { kind: 'square', size: 0 }),
+      d: holePath(ring, { kind: 'square', size: 0 }),
       color: g.look.accent(62),
       width: p,
       dur: 10,
       pixel: true,
+      // One art pixel per hop: pixel-snapped, and still dozens of hops a second.
+      steps: Math.round(lap / p),
     };
   },
   shape: (g) => spec(g, grid(g)),

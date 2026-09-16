@@ -340,13 +340,19 @@ export function Runner({
   width,
   dur = 9,
   pixel = false,
+  steps,
 }: {
   d: string;
   color: string;
   width: number;
   dur?: number;
-  /** Square streaks that hop in whole steps, for pixel art. */
+  /** Square streaks without a glow or a white core, for pixel art. */
   pixel?: boolean;
+  /**
+   * Hops per lap instead of a smooth glide. Pixel art passes one hop per art pixel: fewer hops
+   * than that (100 over a 10 s lap was 10 a second) read as a stutter.
+   */
+  steps?: number;
 }) {
   const a = anim('run', { dur });
   const line = {
@@ -359,7 +365,7 @@ export function Runner({
     // Two streaks, half a lap apart.
     strokeDasharray: pixel ? '5 45' : '9 41',
     className: a.className,
-    style: pixel ? { ...a.style, animationTimingFunction: 'steps(100)' } : a.style,
+    style: steps ? { ...a.style, animationTimingFunction: `steps(${steps})` } : a.style,
   } as const;
   if (pixel) {
     return (

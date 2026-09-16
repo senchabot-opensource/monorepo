@@ -154,6 +154,7 @@ export function FrameArt({ look, piece, width, height, label, motion }: FrameArt
             width={runner.width}
             dur={runner.dur}
             pixel={runner.pixel}
+            steps={runner.steps}
           />
         </svg>
       )}

@@ -113,6 +113,7 @@ export interface Art {
     width: number;
     dur?: number;
     pixel?: boolean;
+    steps?: number;
   };
   /** Label text color, when the preset's text color doesn't suit the style's tab. */
   labelColor?: (g: Geometry) => string;
