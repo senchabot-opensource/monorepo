@@ -1,5 +1,6 @@
 import { screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
+import { crossLinkSpan } from '#/components/widget-cross-links';
 import { isAppPath } from '#/lib/i18n/paths';
 import { OVERLAYS, TOOLS, WIDGETS } from '#/lib/widgets';
 import { button, en, headings, section, tr } from '#/test/queries';
@@ -108,6 +109,21 @@ describe('compact header on setup pages', () => {
     expect(hrefs).toEqual(
       WIDGETS.filter((widget) => widget.id !== 'raffle').map((widget) => widget.setupPath),
     );
+  });
+
+  it('widens the cards of a short last row so the grid has no hole', () => {
+    const spans = (count: number) =>
+      Array.from({ length: count }, (_, index) => crossLinkSpan(index, count));
+    // Five: 3 + 2 halves on wide screens, the odd one full width on tablets.
+    expect(spans(5)).toEqual([
+      'lg:col-span-2',
+      'lg:col-span-2',
+      'lg:col-span-2',
+      'lg:col-span-3',
+      'lg:col-span-3 sm:col-span-2',
+    ]);
+    expect(spans(6)).toEqual(Array(6).fill('lg:col-span-2'));
+    expect(spans(7).at(-1)).toBe('lg:col-span-6 sm:col-span-2');
   });
 });
 

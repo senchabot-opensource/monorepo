@@ -8,22 +8,72 @@ import { ArrowRightIcon, CheckIcon } from './landing-icons';
 import { FLUSH_FRAME_CLASS, STAGE_STYLE } from './stream-scene';
 import { TOOL_FEATURES, ToolVisual } from './tool-visuals';
 
+/**
+ * Card shape in the gallery grid, from the overlay's browser-source size: a portrait source (a
+ * chat column) gets a card two rows tall, a strip (a timer bar) one two columns wide.
+ */
+export type CardShape = 'standard' | 'tall' | 'wide';
+
+export function getCardShape(widget: WidgetEntry): CardShape {
+  const size = widget.kind === 'overlay' ? widget.sourceSize : null;
+  if (!size) return 'standard';
+  const ratio = size.width / size.height;
+  if (ratio < 1) return 'tall';
+  if (ratio >= 2) return 'wide';
+  return 'standard';
+}
+
+/** True when the cards fill whole rows of both the 2- and the 3-column grid. */
+const fillsRows = (shapes: CardShape[]) =>
+  shapes.reduce((cells, shape) => cells + (shape === 'standard' ? 1 : 2), 0) % 6 === 0;
+
+/**
+ * Shapes for one gallery grid. A set that would leave a hole (say a fifth overlay) drops the tall
+ * card first, then every span, so the grid stays even instead of showing a lone card.
+ */
+export function getGalleryShapes(widgets: readonly WidgetEntry[]): CardShape[] {
+  const shapes = widgets.map(getCardShape);
+  if (fillsRows(shapes)) return shapes;
+  const withoutTall = shapes.map((shape) => (shape === 'tall' ? 'standard' : shape));
+  if (fillsRows(withoutTall)) return withoutTall;
+  return shapes.map(() => 'standard');
+}
+
+// Standard overlays are 4:3: Sub Sprout's demo sizes its pot by width, so a flatter box clips it.
+// A tall card fills its two grid rows once there is more than one column.
+const PREVIEW_CLASS: Record<CardShape, string> = {
+  standard: 'aspect-[4/3]',
+  tall: 'aspect-[4/3] sm:aspect-auto sm:flex-1',
+  wide: '',
+};
+
 interface WidgetCardProps {
   widget: WidgetEntry;
   /** Level of the widget name heading, to fit the page outline. */
   headingLevel?: 'h2' | 'h3' | 'h4';
+  shape?: CardShape;
 }
 
 /**
  * Gallery card for one registry widget: a lazy live demo for overlays or a static picture with
  * feature chips for tools, then name, tagline and platforms. The whole card links to setup.
  */
-export function WidgetCard({ widget, headingLevel: Heading = 'h3' }: WidgetCardProps) {
+export function WidgetCard({
+  widget,
+  headingLevel: Heading = 'h3',
+  shape = 'standard',
+}: WidgetCardProps) {
   const { t } = useI18n();
   const reducedMotion = usePrefersReducedMotion();
   const isOverlay = widget.kind === 'overlay';
   const features = TOOL_FEATURES[widget.id];
   const name = t(widget.nameKey);
+  const size = widget.sourceSize;
+  // A wide card shows the strip at its own aspect ratio.
+  const previewStyle =
+    shape === 'wide' && size
+      ? { ...STAGE_STYLE, aspectRatio: `${size.width} / ${size.height}` }
+      : STAGE_STYLE;
 
   return (
     <article className="group relative flex w-full flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm transition-[border-color,box-shadow] hover:border-zinc-300 hover:shadow-md has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-green-500 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700">
@@ -31,14 +81,15 @@ export function WidgetCard({ widget, headingLevel: Heading = 'h3' }: WidgetCardP
           card-wide link; otherwise the link covers it and a click opens the setup page. */}
       <div
         className={`relative border-b border-zinc-200 dark:border-zinc-800 ${
-          isOverlay ? 'aspect-[4/3]' : 'aspect-[2/1]'
+          // Flatter on wide screens, so a tool card is as tall as an overlay row above it.
+          isOverlay ? PREVIEW_CLASS[shape] : 'aspect-[2/1] lg:aspect-[5/2]'
         } ${isOverlay && reducedMotion ? 'z-10' : ''}`}
-        style={STAGE_STYLE}
+        style={previewStyle}
       >
         {isOverlay ? (
           <div className="absolute inset-0">
             <PreviewFrame
-              src={getDemoSrc(widget)}
+              src={getDemoSrc(widget, 'card')}
               title={t('home.demoTitle', { name })}
               motionSafe
               backgroundClassName="bg-transparent"
@@ -50,7 +101,7 @@ export function WidgetCard({ widget, headingLevel: Heading = 'h3' }: WidgetCardP
         )}
       </div>
 
-      <div className="flex flex-1 flex-col p-5">
+      <div className={`flex flex-col p-5 ${shape === 'tall' ? '' : 'flex-1'}`}>
         <div className="flex items-center gap-3">
           <span className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-zinc-200 bg-zinc-50 text-green-600 dark:border-zinc-700 dark:bg-zinc-800 dark:text-green-400">
             <widget.Icon className="size-5" />

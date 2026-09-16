@@ -5,13 +5,20 @@ import {
   type IconProps,
   ObsBridgeIcon,
   RaffleIcon,
+  SubathonIcon,
   SubSproutIcon,
 } from '#/components/icons';
 import type { TranslationKey } from '#/lib/i18n';
 import type { SitePath } from '#/lib/i18n/paths';
 import type { FileRouteTypes } from '#/routeTree.gen';
 
-export type WidgetId = 'chat-box' | 'emote-wall' | 'sub-sprout' | 'raffle' | 'obs-bridge';
+export type WidgetId =
+  | 'chat-box'
+  | 'emote-wall'
+  | 'sub-sprout'
+  | 'subathon'
+  | 'raffle'
+  | 'obs-bridge';
 /** `overlay`: a browser source that runs on its own. `tool`: a page the streamer operates. */
 export type WidgetKind = 'overlay' | 'tool';
 export type WidgetPlatform = 'twitch' | 'kick';
@@ -77,6 +84,18 @@ export const WIDGETS: readonly WidgetEntry[] = [
     platforms: ['twitch', 'kick'],
     demoUrl: '/widgets/sub-sprout-widget?simulate=true',
     sourceSize: { width: 800, height: 600 },
+  },
+  {
+    id: 'subathon',
+    kind: 'overlay',
+    setupPath: '/setup/subathon-timer',
+    widgetPath: '/widgets/subathon',
+    nameKey: 'widgets.subathon.name',
+    taglineKey: 'widgets.subathon.tagline',
+    Icon: SubathonIcon,
+    platforms: ['twitch', 'kick'],
+    demoUrl: '/widgets/subathon?simulate=1',
+    sourceSize: { width: 800, height: 300 },
   },
   {
     id: 'raffle',

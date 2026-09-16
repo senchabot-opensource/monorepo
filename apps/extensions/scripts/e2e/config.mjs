@@ -30,7 +30,12 @@ export const THEME_TOGGLE = [en, tr]
 
 /** Hero demos by widget path. Below Tailwind's `sm` (640px) the hero only shows the chat. */
 export const HERO_DEMOS = {
-  wide: ['/widgets/emote-wall', '/widgets/sub-sprout-widget', '/widgets/chat-widget'],
+  wide: [
+    '/widgets/emote-wall',
+    '/widgets/sub-sprout-widget',
+    '/widgets/subathon',
+    '/widgets/chat-widget',
+  ],
   narrow: ['/widgets/chat-widget'],
   breakpoint: 640,
 };
@@ -40,6 +45,7 @@ export const READY_BY_WIDGET = {
   '/widgets/chat-widget': 'chat',
   '/widgets/emote-wall': 'emotes',
   '/widgets/sub-sprout-widget': 'plant',
+  '/widgets/subathon': 'text:SUBATHON',
 };
 
 /**
@@ -71,6 +77,12 @@ export const SETUP_SPECS = {
     expect: ['/widgets/sub-sprout-widget?', 'twitch={channel}', 'variety='],
     pasteToEdit: true,
   },
+  'subathon-timer': {
+    preview: 'iframe',
+    steps: [{ click: 'input[type="radio"][value="clock"]' }],
+    expect: ['/widgets/subathon?', 'twitch={channel}', 'style=clock'],
+    pasteToEdit: true,
+  },
   raffle: {
     // Start, Stop and Draw live in the right-hand panel instead of a preview.
     preview: { selector: 'button', min: 3 },
@@ -95,6 +107,7 @@ export const OVERLAYS = [
   { path: '/widgets/chat-widget?mock=true', width: 400, height: 600, ready: 'chat' },
   { path: '/widgets/emote-wall?mock=true', width: 1920, height: 1080, ready: 'emotes' },
   { path: '/widgets/sub-sprout-widget?simulate=true', width: 800, height: 600, ready: 'plant' },
+  { path: '/widgets/subathon?simulate=1', width: 800, height: 300, ready: 'text:SUBATHON' },
   {
     path: '/widgets/raffle-overlay',
     width: 1920,

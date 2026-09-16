@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getWidget, OVERLAYS, TOOLS } from '#/lib/widgets';
+import { getWidget, OVERLAYS, TOOLS, type WidgetEntry } from '#/lib/widgets';
 import { getDemoSrc } from './demo-url';
 import {
   formatStarCount,
@@ -8,6 +8,7 @@ import {
   STARS_CACHE_TTL_MS,
   writeStarsCache,
 } from './github-stars';
+import { getCardShape, getGalleryShapes } from './widget-card';
 
 describe('getDemoSrc', () => {
   it('keeps the registry demo params and adds the preview sizing', () => {
@@ -30,6 +31,48 @@ describe('getDemoSrc', () => {
   it('gives every overlay a demo and no tool one', () => {
     for (const widget of OVERLAYS) expect(getDemoSrc(widget), widget.id).not.toBe('');
     for (const widget of TOOLS) expect(getDemoSrc(widget), widget.id).toBe('');
+  });
+
+  it('runs a bigger, busier chat in the tall gallery card than in the hero scene', () => {
+    const chat = getWidget('chat-box');
+    const card = new URL(getDemoSrc(chat, 'card'), 'https://x').searchParams;
+    expect(card.get('fontSize')).toBe('15');
+    expect(card.get('mockRate')).toBe('1.5');
+    expect(card.get('mock')).toBe('true');
+    expect(getDemoSrc(chat)).toBe(getDemoSrc(chat, 'scene'));
+    const wall = getWidget('emote-wall');
+    expect(getDemoSrc(wall, 'card')).toBe(getDemoSrc(wall));
+  });
+});
+
+describe('gallery card shapes', () => {
+  it('derives the shape from the source size', () => {
+    expect(OVERLAYS.map((widget) => [widget.id, getCardShape(widget)])).toEqual([
+      ['chat-box', 'tall'],
+      ['emote-wall', 'standard'],
+      ['sub-sprout', 'standard'],
+      ['subathon', 'wide'],
+    ]);
+    for (const widget of TOOLS) expect(getCardShape(widget), widget.id).toBe('standard');
+  });
+
+  it('keeps the bento spans while the overlays fill whole rows', () => {
+    expect(getGalleryShapes(OVERLAYS)).toEqual(OVERLAYS.map(getCardShape));
+  });
+
+  it('drops the tall card, then every span, when a new overlay would leave a hole', () => {
+    const extra = (id: string, width: number, height: number) =>
+      ({ ...getWidget('emote-wall'), id, sourceSize: { width, height } }) as WidgetEntry;
+    expect(getGalleryShapes([...OVERLAYS, extra('a', 1920, 1080)])).toEqual([
+      'standard',
+      'standard',
+      'standard',
+      'wide',
+      'standard',
+    ]);
+    expect(getGalleryShapes([...OVERLAYS, extra('a', 800, 200), extra('b', 800, 200)])).toEqual(
+      Array(6).fill('standard'),
+    );
   });
 });
 

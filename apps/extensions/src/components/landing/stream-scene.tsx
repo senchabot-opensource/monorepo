@@ -48,8 +48,8 @@ function SceneBackdrop() {
 }
 
 /**
- * Hero visual: Emote Wall, Chat Box and Sub Sprout demos layered like sources in one stream
- * scene. Phones only get the chat. With reduced motion, one Play button starts all three.
+ * Hero visual: Emote Wall, Chat Box, Sub Sprout and Subathon Timer demos layered like sources in
+ * one stream scene. Phones only get the chat. With reduced motion, one Play button starts them all.
  */
 export function StreamScene() {
   const { t } = useI18n();
@@ -81,6 +81,9 @@ export function StreamScene() {
           <div className="absolute inset-0 max-sm:hidden">{demo('emote-wall')}</div>
           <div className="absolute bottom-[3%] left-[3%] h-[45%] w-[34%] max-sm:hidden">
             {demo('sub-sprout')}
+          </div>
+          <div className="absolute top-[5%] left-[2%] aspect-[8/3] w-[42%] max-sm:hidden">
+            {demo('subathon')}
           </div>
           <div className="absolute top-12 right-4 bottom-4 left-4 sm:top-[6%] sm:right-[3%] sm:bottom-[6%] sm:left-auto sm:w-[36%]">
             {demo('chat-box')}

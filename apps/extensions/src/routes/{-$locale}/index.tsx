@@ -14,7 +14,7 @@ import {
   UserOffIcon,
 } from '#/components/landing/landing-icons';
 import { StreamScene } from '#/components/landing/stream-scene';
-import { WidgetCard } from '#/components/landing/widget-card';
+import { type CardShape, getGalleryShapes, WidgetCard } from '#/components/landing/widget-card';
 import { SiteLayout } from '#/components/site-layout';
 import { StepsList } from '#/components/steps-list';
 import { BUTTON_PRIMARY, BUTTON_SECONDARY } from '#/components/ui/button-styles';
@@ -216,12 +216,33 @@ function WorksWith() {
   );
 }
 
+// A bento: Chat Box (portrait) spans two rows and Subathon Timer (a strip) two columns, so the four
+// overlays fill a 3×2 grid, or 2×3 on tablets. Dense flow backfills if a span can't fit in a row.
+const GALLERY_GROUPS = [
+  {
+    key: 'overlays',
+    widgets: OVERLAYS,
+    shapes: getGalleryShapes(OVERLAYS),
+    lead: 'home.overlaysLead',
+    columns: 'sm:grid-cols-2 lg:grid-cols-3',
+  },
+  {
+    key: 'tools',
+    widgets: TOOLS,
+    shapes: getGalleryShapes(TOOLS),
+    lead: 'home.toolsLead',
+    columns: 'sm:grid-cols-2',
+  },
+] as const;
+
+const SHAPE_SPAN: Record<CardShape, string> = {
+  standard: '',
+  tall: 'sm:row-span-2',
+  wide: 'sm:col-span-2',
+};
+
 function Gallery() {
   const { t } = useI18n();
-  const groups = [
-    { key: 'overlays', widgets: OVERLAYS, lead: 'home.overlaysLead', columns: 'lg:grid-cols-3' },
-    { key: 'tools', widgets: TOOLS, lead: 'home.toolsLead', columns: '' },
-  ] as const;
   return (
     <section id="widgets" aria-labelledby="widgets-title" className="scroll-mt-20">
       <SectionHeading
@@ -230,7 +251,7 @@ function Gallery() {
         lead={t('home.galleryLead')}
       />
       <div className="mt-10 space-y-14">
-        {groups.map((group) => (
+        {GALLERY_GROUPS.map((group) => (
           <div key={group.key}>
             <div className="mb-5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
               <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">
@@ -238,10 +259,10 @@ function Gallery() {
               </h3>
               <p className="text-sm text-zinc-500 dark:text-zinc-400">{t(group.lead)}</p>
             </div>
-            <ul className={`grid gap-5 sm:grid-cols-2 ${group.columns}`}>
-              {group.widgets.map((widget) => (
-                <li key={widget.id} className="flex">
-                  <WidgetCard widget={widget} headingLevel="h4" />
+            <ul className={`grid grid-flow-row-dense gap-5 ${group.columns}`}>
+              {group.widgets.map((widget, index) => (
+                <li key={widget.id} className={`flex ${SHAPE_SPAN[group.shapes[index]]}`}>
+                  <WidgetCard widget={widget} headingLevel="h4" shape={group.shapes[index]} />
                 </li>
               ))}
             </ul>

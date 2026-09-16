@@ -7,6 +7,7 @@ Free, open-source customizable stream overlays, multi-chat widgets, and streamin
 Senchabot Extensions provides 100% free streaming widgets, customizable overlays, and interactive tools for Twitch and Kick streamers. Each tool and overlay runs as a browser source that you can add to OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio, or any software supporting browser sources in seconds.
 
 - **Sub Sprout** — A visual plant widget and subscriber goal overlay that grows with each subscription, resub, or gift sub. Resets after reaching full growth.
+- **Subathon Timer** — A subathon countdown that subs, gifted subs, Bits and Kicks add time to, shown as a game-style health bar, a clock or a ring. Mods control it from chat.
 - **Universal Chat** — A multi-chat widget and stream chat box overlay that combines Twitch and Kick chat into a single on-screen feed with 7TV emotes, badges, and platform indicators.
 - **Raffle Picker** — A chat-based giveaway and raffle tool. Viewers type a keyword to enter; winners are drawn and announced on a live confetti celebration overlay.
 - **OBS Bridge** — A chat-controlled scene switching and stream control tool connecting over local OBS WebSocket.
@@ -16,6 +17,7 @@ Senchabot Extensions provides 100% free streaming widgets, customizable overlays
 
 - [extensions.senchabot.com](https://extensions.senchabot.com/) — Widget and tool hub
 - [Sub Sprout](https://extensions.senchabot.com/setup/sub-growing-plant)
+- [Subathon Timer](https://extensions.senchabot.com/setup/subathon-timer)
 - [Universal Chat](https://extensions.senchabot.com/setup/chat-widget)
 - [Raffle Picker](https://extensions.senchabot.com/setup/raffle)
 - [OBS Bridge](https://extensions.senchabot.com/setup/obs-bridge)
@@ -46,6 +48,25 @@ https://extensions.senchabot.com/widgets/sub-sprout-widget?twitch=YOUR_TWITCH_CH
 ```
 
 **URL parameters:** `twitch`, `kick`, `variety`, `pick` (`fixed` | `cycle` | `random`), `water` (`off` | `rain` | `sparkle`), `countfx` (`0` | `1`), `potlabel` (`0` | `1`, stage text like `3/10` on the pot), `simulate` (`auto` | `1` | `0`). Older URLs using `channel` + `platform` still work.
+
+---
+
+### Subathon Timer (`/setup/subathon-timer`)
+
+A subathon countdown overlay. It counts down in real time, and subs, gifted subs, Bits (Twitch) and Kicks (Kick) add time. At zero the subathon is over.
+
+**How it works:**
+- Listens to Twitch IRC anonymously and Kick's Pusher WebSocket, both in one browser source.
+- Three styles (`bar` health bar, `clock`, `ring`) and health colors (green to red) or a fixed color.
+- Separate times for Twitch and Kick: per sub, per gifted sub, and per 500 Bits or 500 Kicks. Any of them can be turned off. Twitch Tier 2 and 3 subs can count as 2 and 5 subs.
+- The timer is saved in the browser source's `localStorage`, stored as its end time, so a reload or an OBS restart doesn't lose it.
+- The broadcaster and mods control it from chat: `!subathon start`, `pause`, `add 10m`, `remove 5m`, `set 2h`, `reset`.
+
+```
+https://extensions.senchabot.com/widgets/subathon?twitch=YOUR_TWITCH_CHANNEL&kick=YOUR_KICK_CHANNEL&style=bar&time=3600&tsub=60&ksub=60
+```
+
+**URL parameters** (times in seconds): `twitch`, `kick`, `style` (`bar` | `clock` | `ring`), `color` (`hp` | `green` | `purple` | `red` | `gold` | `cyan` | `pink`), `title`, `time` (starting time), `cap` (0 = no limit), Twitch `tsub` (Tier 1 and Prime), `tgift`, `bits` (per 500), `tiers` (`0` | `1`), Kick `ksub`, `kgift`, `kicks` (per 500), `autostart` (`0` | `1`), `pct` (`0` | `1`), `pops` (`0` | `1`), `simulate` (`1` plays simulated subs), `simspeed`.
 
 ---
 
@@ -175,11 +196,13 @@ npm run deploy
 │   ├── index.tsx                   # Widget and tool hub landing page
 │   ├── setup/
 │   │   ├── sub-growing-plant.tsx   # Sub Sprout configuration
+│   │   ├── subathon-timer.tsx      # Subathon Timer configuration
 │   │   ├── chat-widget.tsx         # Universal Chat configuration
 │   │   ├── raffle.tsx              # Raffle configuration
 │   │   └── emote-wall.tsx          # Emote Wall configuration
 │   └── widgets/
 │       ├── sub-sprout-widget.tsx   # Sub Sprout overlay
+│       ├── subathon.tsx            # Subathon Timer overlay
 │       ├── chat-widget.tsx         # Universal Chat overlay
 │       ├── raffle-overlay.tsx      # Raffle winner overlay
 │       └── emote-wall.tsx          # Emote Wall overlay

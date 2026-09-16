@@ -21,6 +21,7 @@ const SIZE_NOTES: Record<WidgetId, TranslationKey> = {
   'chat-box': 'guides.obs.size.notes.chatBox',
   'emote-wall': 'guides.obs.size.notes.emoteWall',
   'sub-sprout': 'guides.obs.size.notes.subSprout',
+  subathon: 'guides.obs.size.notes.subathon',
   raffle: 'guides.obs.size.notes.raffle',
   'obs-bridge': 'guides.obs.size.notes.obsBridge',
 };
@@ -112,6 +113,7 @@ function ObsBrowserSourceGuide() {
                 items={[
                   'guides.obs.settings.chatBox',
                   'guides.obs.settings.subSprout',
+                  'guides.obs.settings.subathon',
                   'guides.obs.settings.raffle',
                   'guides.obs.settings.emoteWall',
                 ]}
@@ -158,7 +160,7 @@ function ObsBrowserSourceGuide() {
           <p className="mt-2 mb-5 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
             {t('guides.obs.ctaText')}
           </p>
-          <WidgetCrossLinks columns={3} />
+          <WidgetCrossLinks />
         </section>
       }
     />

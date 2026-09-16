@@ -1,6 +1,6 @@
 # Senchabot Extensions: full reference
 
-> Free, open source stream overlays and tools for Twitch and Kick: Chat Box, Emote Wall, Sub Sprout, Raffle and OBS Bridge. Each one is set up on a web page at https://extensions.senchabot.com and runs from a URL. No login and nothing to install.
+> Free, open source stream overlays and tools for Twitch and Kick: Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Raffle and OBS Bridge. Each one is set up on a web page at https://extensions.senchabot.com and runs from a URL. No login and nothing to install.
 
 Short version with links only: https://extensions.senchabot.com/llms.txt
 
@@ -24,10 +24,11 @@ Short version with links only: https://extensions.senchabot.com/llms.txt
 | Chat Box | Overlay | /setup/chat-widget | /widgets/chat-widget | 400x600 |
 | Emote Wall | Overlay | /setup/emote-wall | /widgets/emote-wall | 1920x1080 |
 | Sub Sprout | Overlay | /setup/sub-growing-plant | /widgets/sub-sprout-widget | 800x600 |
+| Subathon Timer | Overlay | /setup/subathon-timer | /widgets/subathon | 800x300 |
 | Raffle | Tool | /setup/raffle | /widgets/raffle-overlay (winner overlay) | 1920x1080 |
 | OBS Bridge | Tool | /setup/obs-bridge | /tools/obs-bridge (tab or OBS dock, not a source) | none |
 
-All five work with Twitch and Kick. Chat Box, Emote Wall and Sub Sprout take a Twitch and a Kick channel in the same URL. OBS Bridge listens to both chats at once. Raffle runs on one platform at a time.
+All six work with Twitch and Kick. Chat Box, Emote Wall, Sub Sprout and Subathon Timer take a Twitch and a Kick channel in the same URL. OBS Bridge listens to both chats at once. Raffle runs on one platform at a time.
 
 ## How to add a widget to OBS Studio
 
@@ -38,9 +39,9 @@ All five work with Twitch and Kick. Chat Box, Emote Wall and Sub Sprout take a T
 
 Notes:
 - The background is already transparent. No chroma key, filter or custom CSS is needed.
-- Leave "Shutdown source when not visible" and "Refresh browser when scene becomes active" off. Both reload the page, and the widget forgets what it was showing (Sub Sprout goes back to its first stage, a Raffle winner drawn while the source is off never shows).
+- Leave "Shutdown source when not visible" and "Refresh browser when scene becomes active" off. Both reload the page, and the widget forgets what it was showing (Sub Sprout goes back to its first stage, a Raffle winner drawn while the source is off never shows). Subathon Timer keeps its time through a reload but can't see subs while the source is off.
 - To make Chat Box text bigger, change Font Size on the setup page instead of stretching the source.
-- To change a widget later, copy a new URL from the setup page and paste it over the old one. Chat Box, Emote Wall and Sub Sprout can load an existing URL: paste it into the Widget URL field on the setup page and all settings come back.
+- To change a widget later, copy a new URL from the setup page and paste it over the old one. Chat Box, Emote Wall, Sub Sprout and Subathon Timer can load an existing URL: paste it into the Widget URL field on the setup page and all settings come back.
 - If a widget looks empty: check that you typed the channel name, not a link, and that it is spelled right. Chat Box and Emote Wall stay empty until something happens in chat. If a Kick channel can't be found and there is no Twitch channel either, Chat Box and Emote Wall play sample content instead.
 
 ## Chat Box
@@ -143,6 +144,55 @@ URL parameters (all optional):
 | simulate | true or 1 grows with simulated subs and doesn't read chat; auto simulates until chat connects | off |
 | channel, platform | older single-channel form (platform is twitch or kick); still read | none |
 
+## Subathon Timer
+
+A subathon countdown for Twitch and Kick. Subs, gifted subs, Bits (Twitch) and Kicks (Kick) add time, with separate values per platform; at zero the subathon is over.
+
+- Widget URL: https://extensions.senchabot.com/widgets/subathon?twitch=CHANNEL&kick=CHANNEL
+- Demo with simulated subs: https://extensions.senchabot.com/widgets/subathon?simulate=1
+- Recommended size: 800x300. The overlay scales to any source size.
+- The timer is saved in the browser source (OBS keeps it across reloads and restarts). While OBS is closed it keeps counting down, but subs in that time can't be seen.
+- The health bar's 100% is the most time the timer has held, so the bar never goes over 100%.
+- Once it reaches zero, subs no longer add time. A mod can bring it back with add or set, or start over with reset.
+- On Kick a sub is counted from SubscriptionEvent or ChannelSubscriptionEvent, whichever arrives, once per subscriber.
+
+Chat commands for the broadcaster and moderators, on Twitch and Kick:
+
+| Command | What it does |
+| --- | --- |
+| !subathon start (or resume) | Starts or resumes the timer |
+| !subathon pause (or stop) | Pauses the timer |
+| !subathon add 10m | Adds time |
+| !subathon remove 5m | Takes time away |
+| !subathon set 2h | Sets the time left |
+| !subathon reset | Starts over from the starting time |
+
+Times can be written as 10m, 1h30m, 45s or 1:30:00; a plain number is minutes.
+
+URL parameters (all optional, times in seconds):
+
+| Parameter | Values | Default |
+| --- | --- | --- |
+| twitch | Twitch channel name | none |
+| kick | Kick channel name | none |
+| style | bar (health bar), clock, ring | bar |
+| color | hp (green to amber to red as time runs out), green, purple, red, gold, cyan, pink | hp |
+| title | text shown with the timer, up to 32 characters; empty hides it | SUBATHON |
+| time | starting time | 3600 |
+| cap | most time the timer can hold; 0 means no limit | 0 |
+| tsub | Twitch: time per Tier 1 or Prime sub or resub | 60 |
+| tgift | Twitch: time per gifted sub | 60 |
+| bits | Twitch: time per 500 Bits; other amounts add their share | 60 |
+| tiers | 0 counts Twitch Tier 2 and 3 subs and gifts like Tier 1 instead of 2 and 5 subs | 1 |
+| ksub | Kick: time per sub or resub | 60 |
+| kgift | Kick: time per gifted sub | 60 |
+| kicks | Kick: time per 500 Kicks; other amounts add their share | 60 |
+| autostart | 1 starts the timer when the overlay first loads instead of waiting for !subathon start | 0 |
+| pct | 0 hides the percentage | 1 |
+| pops | 0 hides the floating +1:00 added-time numbers | 1 |
+| simulate | 1 plays simulated subs, doesn't read chat and doesn't save the timer | off |
+| simspeed | clock speed for simulate, e.g. 60 for a minute per second | about 40 seconds for the whole bar |
+
 ## Raffle
 
 A chat giveaway tool. The setup page is the tool itself: https://extensions.senchabot.com/setup/raffle (optional ?channel=NAME&platform=twitch or kick fills in the form).
@@ -211,7 +261,7 @@ URL parameters:
 ## FAQ
 
 Q: Is Senchabot Extensions free?
-A: Yes. All five widgets and tools are free: Chat Box, Emote Wall, Sub Sprout, Raffle and OBS Bridge. There's no paid plan, watermark or premium account. The source code is open on GitHub under the GPL-3.0 license.
+A: Yes. All six widgets and tools are free: Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Raffle and OBS Bridge. There's no paid plan, watermark or premium account. The source code is open on GitHub under the GPL-3.0 license.
 
 Q: What does "no login required" mean?
 A: You don't create an account on the site, you don't log in with Twitch or Kick, and you don't download anything. You type your channel name and the setup page gives you a URL. The widgets read public chat anonymously, so they can't post in chat, moderate, or access private info on your account.
@@ -223,10 +273,10 @@ Q: Which streaming software does it work with?
 A: OBS Studio and any other streaming software that supports a browser source. Each widget runs as a web URL that you paste into the source.
 
 Q: Which widgets support Twitch and which support Kick?
-A: All five support both. Chat Box, Emote Wall and Sub Sprout listen to a Twitch and a Kick channel in one URL. OBS Bridge listens for commands from both chats. Raffle runs on one platform at a time. In Chat Box, 7TV emotes show on both platforms, BTTV and FFZ emotes on Twitch only.
+A: All six support both. Chat Box, Emote Wall, Sub Sprout and Subathon Timer listen to a Twitch and a Kick channel in one URL. OBS Bridge listens for commands from both chats. Raffle runs on one platform at a time. In Chat Box, 7TV emotes show on both platforms, BTTV and FFZ emotes on Twitch only.
 
 Q: How do I change a widget later?
-A: Change the settings on the setup page, copy the new URL and paste it over the old one in OBS. With Chat Box, Emote Wall and Sub Sprout you can paste your old URL into the Widget URL field on the setup page to get all your settings back.
+A: Change the settings on the setup page, copy the new URL and paste it over the old one in OBS. With Chat Box, Emote Wall, Sub Sprout and Subathon Timer you can paste your old URL into the Widget URL field on the setup page to get all your settings back.
 
 Q: Will my old widget URLs keep working?
 A: Yes. Parameter names, values and defaults stay the same. For example the old keep=true in Chat Box still means Forever, and Sub Sprout still reads the old channel and platform parameters.
@@ -252,6 +302,7 @@ A: Open an issue at https://github.com/senchabot-opensource/monorepo/issues/new.
 - Chat Box setup: https://extensions.senchabot.com/setup/chat-widget
 - Emote Wall setup: https://extensions.senchabot.com/setup/emote-wall
 - Sub Sprout setup: https://extensions.senchabot.com/setup/sub-growing-plant
+- Subathon Timer setup: https://extensions.senchabot.com/setup/subathon-timer
 - Raffle: https://extensions.senchabot.com/setup/raffle
 - OBS Bridge setup: https://extensions.senchabot.com/setup/obs-bridge
 - Guides: https://extensions.senchabot.com/guides

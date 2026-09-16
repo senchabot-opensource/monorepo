@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { applyTheme } from '#/lib/theme';
-import { setReducedMotion } from '#/test/browser';
+import { setReducedMotion, withLayout } from '#/test/browser';
 import { button, en, inLocale, textbox } from '#/test/queries';
 import { renderRoute, setupUser } from '#/test/render';
 
@@ -11,6 +11,7 @@ const OVERLAYS = [
   '/widgets/chat-widget?mock=true',
   '/widgets/emote-wall?mock=true',
   '/widgets/sub-sprout-widget?simulate=true',
+  '/widgets/subathon?simulate=1',
   '/widgets/raffle-overlay',
 ];
 
@@ -64,24 +65,6 @@ describe('applyTheme', () => {
   });
 });
 
-/** jsdom has no layout; give the preview box a size so scaled canvases mount. */
-function withLayout(width: number, height: number) {
-  const width_ = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'clientWidth');
-  const height_ = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'clientHeight');
-  Object.defineProperty(HTMLElement.prototype, 'clientWidth', {
-    configurable: true,
-    get: () => width,
-  });
-  Object.defineProperty(HTMLElement.prototype, 'clientHeight', {
-    configurable: true,
-    get: () => height,
-  });
-  return () => {
-    if (width_) Object.defineProperty(HTMLElement.prototype, 'clientWidth', width_);
-    if (height_) Object.defineProperty(HTMLElement.prototype, 'clientHeight', height_);
-  };
-}
-
 describe('setup page previews', () => {
   it.each([
     'en',
@@ -109,39 +92,31 @@ describe('setup page previews', () => {
   });
 
   it('scales the Emote Wall demo down from its 1920×1080 canvas', async () => {
-    const restore = withLayout(960, 540);
-    try {
-      await renderRoute('/tr/setup/emote-wall');
-      const frame = screen.getByTitle(inLocale('tr')('emoteWallSetup.previewIframeTitle'));
-      const src = new URL((frame as HTMLIFrameElement).src);
-      expect(src.searchParams.get('mock')).toBe('true');
-      expect(src.searchParams.get('lang')).toBe('tr');
-      expect(frame.style.width).toBe('1920px');
-      expect(frame.style.height).toBe('1080px');
-      expect(frame.style.transform).toBe('translate(-50%, -50%) scale(0.5)');
-      expect(frame.style.colorScheme).toBe('normal');
-      expect(frame.getAttribute('scrolling')).toBe('no');
-    } finally {
-      restore();
-    }
+    withLayout(960, 540);
+    await renderRoute('/tr/setup/emote-wall');
+    const frame = screen.getByTitle(inLocale('tr')('emoteWallSetup.previewIframeTitle'));
+    const src = new URL((frame as HTMLIFrameElement).src);
+    expect(src.searchParams.get('mock')).toBe('true');
+    expect(src.searchParams.get('lang')).toBe('tr');
+    expect(frame.style.width).toBe('1920px');
+    expect(frame.style.height).toBe('1080px');
+    expect(frame.style.transform).toBe('translate(-50%, -50%) scale(0.5)');
+    expect(frame.style.colorScheme).toBe('normal');
+    expect(frame.getAttribute('scrolling')).toBe('no');
   });
 
   it('waits for a Play click before running the Sub Sprout demo with reduced motion', async () => {
-    const restore = withLayout(800, 600);
-    try {
-      setReducedMotion(true);
-      const user = setupUser();
-      await renderRoute('/setup/sub-growing-plant');
-      expect(screen.queryByTitle(en('subSprout.previewIframeTitle'))).toBeNull();
+    withLayout(800, 600);
+    setReducedMotion(true);
+    const user = setupUser();
+    await renderRoute('/setup/sub-growing-plant');
+    expect(screen.queryByTitle(en('subSprout.previewIframeTitle'))).toBeNull();
 
-      await user.click(button(en('common.playPreview')));
-      const frame = screen.getByTitle(en('subSprout.previewIframeTitle')) as HTMLIFrameElement;
-      const src = new URL(frame.src);
-      expect(src.pathname).toBe('/widgets/sub-sprout-widget');
-      expect(src.searchParams.get('simulate')).toBe('1');
-      expect(src.searchParams.get('lang')).toBe('en');
-    } finally {
-      restore();
-    }
+    await user.click(button(en('common.playPreview')));
+    const frame = screen.getByTitle(en('subSprout.previewIframeTitle')) as HTMLIFrameElement;
+    const src = new URL(frame.src);
+    expect(src.pathname).toBe('/widgets/sub-sprout-widget');
+    expect(src.searchParams.get('simulate')).toBe('1');
+    expect(src.searchParams.get('lang')).toBe('en');
   });
 });

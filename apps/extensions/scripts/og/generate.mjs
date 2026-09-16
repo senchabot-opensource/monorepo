@@ -82,6 +82,15 @@ const seededRandom = (seed) => `(() => {
 // New chat messages slide in; wait for a moment between two of them.
 const CHAT_READY = `${IMAGES_READY} && document.getAnimations().every((a) => a.playState !== 'running')`;
 
+// The preview's test buttons reach it over this channel: take 25 minutes off a one hour timer,
+// then gift 5 subs, so the bar sits around two thirds with the +5:00 on its way up.
+const SUBATHON_HIT = `(() => {
+  const channel = new BroadcastChannel('senchabot:subathon-preview');
+  channel.postMessage({ type: 'event', event: { kind: 'command', platform: 'twitch', command: { action: 'remove', ms: 1500000 } } });
+  channel.postMessage({ type: 'event', event: { kind: 'gift', platform: 'twitch', name: 'pixelfox', count: 5, tier: 1 } });
+})()`;
+const OXANIUM_READY = `document.fonts.check('800 20px Oxanium')`;
+
 /** Stage corner covered by the Live badge (template.html `.live`). */
 const LIVE_BADGE = { right: 104, bottom: 50 };
 
@@ -130,6 +139,25 @@ const CAPTURES = {
     settleMs: 0,
     ready: `document.querySelector('.sprout-overlay')?.classList.contains('step-8')`,
     holdMs: 700,
+  },
+  // simspeed=1 runs the clock in real time, so only the scripted events move it.
+  subathonBar: {
+    path: '/widgets/subathon?simulate=1&simspeed=1',
+    width: 800,
+    height: 300,
+    settleMs: 600,
+    trigger: SUBATHON_HIT,
+    afterTriggerMs: 650,
+    ready: OXANIUM_READY,
+  },
+  subathonRing: {
+    path: '/widgets/subathon?simulate=1&simspeed=1&style=ring&color=purple',
+    width: 800,
+    height: 300,
+    settleMs: 600,
+    trigger: SUBATHON_HIT,
+    afterTriggerMs: 650,
+    ready: OXANIUM_READY,
   },
   // Raffle has no demo mode: the overlay gets the same BroadcastChannel message the setup
   // page sends when you draw a winner.
@@ -200,6 +228,20 @@ const CARDS = [
     },
   },
   {
+    id: 'subathon',
+    eyebrow: { icon: 'subathon', label: 'Overlay' },
+    title: en.widgets.subathon.name,
+    subtitle: en.widgets.subathon.tagline,
+    visual: {
+      kind: 'stage',
+      live: true,
+      layers: [
+        layer('subathonBar', { x: 9, y: 22, width: 520, height: 195 }),
+        layer('subathonRing', { x: 49, y: 200, width: 440, height: 165 }),
+      ],
+    },
+  },
+  {
     id: 'raffle',
     eyebrow: { icon: 'raffle', label: 'Tool' },
     title: en.widgets.raffle.name,
@@ -226,7 +268,10 @@ const CARDS = [
       kind: 'guides',
       readLabel: en.guides.readGuide,
       guides: [
-        { title: en.guides.obs.title, icons: ['chat-box', 'emote-wall', 'sub-sprout', 'raffle'] },
+        {
+          title: en.guides.obs.title,
+          icons: ['chat-box', 'emote-wall', 'sub-sprout', 'subathon', 'raffle'],
+        },
         { title: en.guides.chat.title, icons: ['chat-box', 'emote-wall', 'sub-sprout'] },
         { title: en.guides.raffle.title, icons: ['raffle'] },
         { title: en.guides.bridge.title, icons: ['obs-bridge'] },

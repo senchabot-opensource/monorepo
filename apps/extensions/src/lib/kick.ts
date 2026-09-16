@@ -1,5 +1,11 @@
-import type { ChatMessagesType } from "#/features/widgets/chat-widget/chat-messages";
-import { BaseChatClient, type BanUserCallback, type ChatMessageCallback, type ClearAllCallback, type DeleteMessageCallback } from "./basechat";
+import type { ChatMessagesType } from '#/features/widgets/chat-widget/chat-messages';
+import {
+  type BanUserCallback,
+  BaseChatClient,
+  type ChatMessageCallback,
+  type ClearAllCallback,
+  type DeleteMessageCallback,
+} from './basechat';
 
 export interface KickChannelInfo {
   chatroomId: string | null;
@@ -8,14 +14,10 @@ export interface KickChannelInfo {
   subscriberBadges: any[];
 }
 
-export const getKickChannelInfo = async (
-  username: string,
-): Promise<KickChannelInfo> => {
+export const getKickChannelInfo = async (username: string): Promise<KickChannelInfo> => {
   try {
-    const response = await fetch(
-      `https://kick.com/api/v1/channels/${username}`,
-    );
-    if (!response.ok) throw new Error("Channel not found");
+    const response = await fetch(`https://kick.com/api/v1/channels/${username}`);
+    if (!response.ok) throw new Error('Channel not found');
     const data = (await response.json()) as {
       id?: unknown;
       user_id?: unknown;
@@ -32,10 +34,14 @@ export const getKickChannelInfo = async (
       subscriberBadges: data.subscriber_badges || [],
     };
   } catch (error) {
-    console.error("Error while fething channel:", error);
+    console.error('Error while fething channel:', error);
     return { chatroomId: null, channelId: null, userId: null, subscriberBadges: [] };
   }
 };
+
+/** Kick's public Pusher app, the one kick.com's own pages connect to. */
+export const KICK_PUSHER_URL =
+  'wss://ws-us2.pusher.com/app/32cbd69e4b950bf97679?protocol=7&client=js&version=8.4.0&flash=false';
 
 export const getKickId = async (username: string): Promise<string | null> => {
   const info = await getKickChannelInfo(username);
@@ -52,31 +58,28 @@ export class KickChat extends BaseChatClient {
     onBanUser: BanUserCallback = () => {},
     onClearAll: ClearAllCallback = () => {},
   ) {
-    super("Kick", onMessage, onDeleteMessage, onBanUser, onClearAll);
+    super('Kick', onMessage, onDeleteMessage, onBanUser, onClearAll);
     this.channelId = channelId.trim();
-    this.connect(
-      "wss://ws-us2.pusher.com/app/32cbd69e4b950bf97679?protocol=7&client=js&version=8.4.0&flash=false",
-      {
-        onOpen: () => {
-          this.send(
-            JSON.stringify({
-              event: "pusher:subscribe",
-              data: { channel: `chatrooms.${this.channelId}.v2` },
-            }),
-          );
-        },
-        onMessage: event => this.handleSocketMessage(event),
+    this.connect(KICK_PUSHER_URL, {
+      onOpen: () => {
+        this.send(
+          JSON.stringify({
+            event: 'pusher:subscribe',
+            data: { channel: `chatrooms.${this.channelId}.v2` },
+          }),
+        );
       },
-    );
+      onMessage: (event) => this.handleSocketMessage(event),
+    });
   }
 
   // Answered with pusher:pong. Pusher's own liveness pings are protocol frames the page never sees.
   protected override pingFrame() {
-    return JSON.stringify({ event: "pusher:ping", data: {} });
+    return JSON.stringify({ event: 'pusher:ping', data: {} });
   }
 
   private handleSocketMessage(event: MessageEvent) {
-    if (typeof event.data !== "string") {
+    if (typeof event.data !== 'string') {
       return;
     }
 
@@ -95,7 +98,7 @@ export class KickChat extends BaseChatClient {
       event?: string;
       data?: string;
     };
-    if (!response.event || typeof response.data !== "string") {
+    if (!response.event || typeof response.data !== 'string') {
       return;
     }
 
@@ -107,35 +110,35 @@ export class KickChat extends BaseChatClient {
     }
     const payload = payloadData as Record<string, unknown>;
 
-    if (typeof console !== "undefined" && response.event.startsWith("App\\Events\\")) {
+    if (typeof console !== 'undefined' && response.event.startsWith('App\\Events\\')) {
       console.debug(`[chat-widget] Kick event: ${response.event}`, payload);
     }
 
     switch (response.event) {
-      case "App\\Events\\ChatMessageEvent": {
+      case 'App\\Events\\ChatMessageEvent': {
         const message = this.parseChatMessage(payload);
         if (message) {
           this.emit(message);
         }
         return;
       }
-      case "App\\Events\\ChatMessageDeletedEvent":
-      case "App\\Events\\MessageDeletedEvent": {
+      case 'App\\Events\\ChatMessageDeletedEvent':
+      case 'App\\Events\\MessageDeletedEvent': {
         const id = this.extractDeletedMessageId(payload);
         if (id) {
           this.onDeleteMessageCallback(id);
         }
         return;
       }
-      case "App\\Events\\UserBannedEvent":
-      case "App\\Events\\ChatroomBanEvent": {
+      case 'App\\Events\\UserBannedEvent':
+      case 'App\\Events\\ChatroomBanEvent': {
         const username = this.extractUsername(payload);
         if (username) {
           this.onBanUserCallback(username.toLowerCase());
         }
         return;
       }
-      case "App\\Events\\ChatroomClearEvent": {
+      case 'App\\Events\\ChatroomClearEvent': {
         this.onClearAllCallback();
         return;
       }
@@ -144,9 +147,7 @@ export class KickChat extends BaseChatClient {
     }
   }
 
-  private parseChatMessage(
-    payload: Record<string, unknown>,
-  ): ChatMessagesType | null {
+  private parseChatMessage(payload: Record<string, unknown>): ChatMessagesType | null {
     const sender = payload.sender as
       | {
           username: string;
@@ -165,30 +166,28 @@ export class KickChat extends BaseChatClient {
           original_message?: { content?: string };
         }
       | undefined;
-    const replyUser = payload.type === "reply" ? metadata?.original_sender?.username : undefined;
+    const replyUser = payload.type === 'reply' ? metadata?.original_sender?.username : undefined;
 
-    if (!sender || typeof content !== "string" || typeof createdAt !== "string") {
+    if (!sender || typeof content !== 'string' || typeof createdAt !== 'string') {
       return null;
     }
 
     const user = sender.username;
     const timestamp = new Date(createdAt);
     const badges =
-      sender.identity?.badges?.map(b =>
-        b.count ? `${b.type}/${b.count}` : b.type,
-      ) || [];
+      sender.identity?.badges?.map((b) => (b.count ? `${b.type}/${b.count}` : b.type)) || [];
 
     return {
       id: id == null ? `kick-${user}-${timestamp.getTime()}` : String(id),
       user,
       message: content,
-      platform: "kick",
+      platform: 'kick',
       timestamp,
       receivedAt: timestamp,
       color: sender.identity?.color,
       badges,
       replyTo: replyUser
-        ? { user: replyUser, message: metadata?.original_message?.content ?? "" }
+        ? { user: replyUser, message: metadata?.original_message?.content ?? '' }
         : undefined,
     };
   }
@@ -200,7 +199,7 @@ export class KickChat extends BaseChatClient {
       (message?.id as unknown) ??
       (payload.message_id as unknown) ??
       (payload.messageId as unknown);
-    if (candidate == null || candidate === "") {
+    if (candidate == null || candidate === '') {
       return null;
     }
     return String(candidate);
@@ -209,24 +208,23 @@ export class KickChat extends BaseChatClient {
   private extractDeletedMessageId(payload: Record<string, unknown>): string | null {
     const message = payload.message as { id?: unknown } | undefined;
     const fromMessage = message?.id;
-    if (fromMessage != null && fromMessage !== "") {
+    if (fromMessage != null && fromMessage !== '') {
       return String(fromMessage);
     }
     return this.extractId(payload);
   }
 
   private extractUsername(payload: Record<string, unknown>): string | null {
-    const direct =
-      (payload.username as unknown) ?? (payload.user as unknown);
-    if (typeof direct === "string" && direct.length > 0) {
+    const direct = (payload.username as unknown) ?? (payload.user as unknown);
+    if (typeof direct === 'string' && direct.length > 0) {
       return direct;
     }
     const user = payload.user as { username?: unknown } | undefined;
-    if (user && typeof user.username === "string") {
+    if (user && typeof user.username === 'string') {
       return user.username;
     }
     const sender = payload.sender as { username?: unknown } | undefined;
-    if (sender && typeof sender.username === "string") {
+    if (sender && typeof sender.username === 'string') {
       return sender.username;
     }
     return null;

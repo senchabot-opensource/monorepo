@@ -2,8 +2,14 @@ import {
   ANNOUNCEMENT_COLORS,
   type AnnouncementColor,
   type ChatMessagesType,
-} from "#/features/widgets/chat-widget/chat-messages";
-import { BaseChatClient, type BanUserCallback, type ChatMessageCallback, type ClearAllCallback, type DeleteMessageCallback } from "./basechat";
+} from '#/features/widgets/chat-widget/chat-messages';
+import {
+  type BanUserCallback,
+  BaseChatClient,
+  type ChatMessageCallback,
+  type ClearAllCallback,
+  type DeleteMessageCallback,
+} from './basechat';
 
 // Twitch starts a reply with "@parent ", which the widget already shows above the message. Emote
 // positions count code points from the start of the text, so they move back by the prefix length.
@@ -19,19 +25,19 @@ export function stripReplyMention(
 
   const shift = [...`@${name} `].length;
   const shifted = emotes
-    ?.split("/")
+    ?.split('/')
     .map((part) => {
-      const [id, positions = ""] = part.split(":");
+      const [id, positions = ''] = part.split(':');
       const ranges = positions
-        .split(",")
-        .map((range) => range.split("-").map((n) => Number(n) - shift))
+        .split(',')
+        .map((range) => range.split('-').map((n) => Number(n) - shift))
         .filter(([start]) => start >= 0)
         .map(([start, end]) => `${start}-${end}`);
-      return ranges.length > 0 ? `${id}:${ranges.join(",")}` : null;
+      return ranges.length > 0 ? `${id}:${ranges.join(',')}` : null;
     })
     .filter(Boolean)
-    .join("/");
-  return { message: [...message].slice(shift).join(""), emotes: shifted || undefined };
+    .join('/');
+  return { message: [...message].slice(shift).join(''), emotes: shifted || undefined };
 }
 
 export type IrcLine = {
@@ -51,8 +57,8 @@ export function parseIrcLine(raw: string): IrcLine | null {
     return null;
   }
 
-  const [, tagsStr, source = "", command, middle, trailing] = match;
-  const params = middle.split(" ").filter(Boolean);
+  const [, tagsStr, source = '', command, middle, trailing] = match;
+  const params = middle.split(' ').filter(Boolean);
   if (trailing !== undefined) {
     params.push(trailing);
   }
@@ -65,22 +71,32 @@ export function parseTags(tagsStr?: string): Record<string, string> {
   }
 
   const tags: Record<string, string> = {};
-  for (const tag of tagsStr.split(";")) {
-    const [key, value = ""] = tag.split("=");
+  for (const tag of tagsStr.split(';')) {
+    const [key, value = ''] = tag.split('=');
     if (!key) {
       continue;
     }
 
     tags[key] = value
-      .replace(/\\s/g, " ")
-      .replace(/\\:/g, ";")
-      .replace(/\\\\/g, "\\")
-      .replace(/\\r/g, "\r")
-      .replace(/\\n/g, "\n");
+      .replace(/\\s/g, ' ')
+      .replace(/\\:/g, ';')
+      .replace(/\\\\/g, '\\')
+      .replace(/\\r/g, '\r')
+      .replace(/\\n/g, '\n');
   }
 
   return tags;
 }
+
+export const TWITCH_IRC_URL = 'wss://irc-ws.chat.twitch.tv:443';
+
+/** Lines that join a channel's chat as an anonymous justinfan reader, with tags and notices. */
+export const anonymousJoin = (channel: string): string[] => [
+  'CAP REQ :twitch.tv/tags twitch.tv/commands',
+  'PASS SCHMOOPIIE',
+  `NICK justinfan${Math.floor(Math.random() * 1000)}`,
+  `JOIN #${channel}`,
+];
 
 export class TwitchChat extends BaseChatClient {
   private readonly channel: string;
@@ -92,47 +108,44 @@ export class TwitchChat extends BaseChatClient {
     onBanUser: BanUserCallback = () => {},
     onClearAll: ClearAllCallback = () => {},
   ) {
-    super("Twitch", onMessage, onDeleteMessage, onBanUser, onClearAll);
+    super('Twitch', onMessage, onDeleteMessage, onBanUser, onClearAll);
     this.channel = channel.trim();
-    this.connect("wss://irc-ws.chat.twitch.tv:443", {
+    this.connect(TWITCH_IRC_URL, {
       onOpen: () => {
-        this.send("CAP REQ :twitch.tv/tags twitch.tv/commands");
-        this.send("PASS SCHMOOPIIE");
-        this.send(`NICK justinfan${Math.floor(Math.random() * 1000)}`);
-        this.send(`JOIN #${this.channel}`);
+        for (const line of anonymousJoin(this.channel)) this.send(line);
       },
-      onMessage: event => this.handleSocketMessage(event),
+      onMessage: (event) => this.handleSocketMessage(event),
     });
   }
 
   // Answered with "PONG tmi.twitch.tv :tmi.twitch.tv", which the switch below ignores.
   protected override pingFrame() {
-    return "PING :tmi.twitch.tv";
+    return 'PING :tmi.twitch.tv';
   }
 
   private handleSocketMessage(event: MessageEvent) {
-    if (typeof event.data !== "string") {
+    if (typeof event.data !== 'string') {
       return;
     }
 
-    for (const raw of event.data.split("\r\n")) {
+    for (const raw of event.data.split('\r\n')) {
       const line = parseIrcLine(raw);
       if (!line) {
         continue;
       }
 
       switch (line.command) {
-        case "PING":
-          this.send("PONG");
+        case 'PING':
+          this.send('PONG');
           break;
-        case "CLEARMSG": {
-          const targetId = line.tags["target-msg-id"];
+        case 'CLEARMSG': {
+          const targetId = line.tags['target-msg-id'];
           if (targetId) {
             this.onDeleteMessageCallback(targetId);
           }
           break;
         }
-        case "CLEARCHAT": {
+        case 'CLEARCHAT': {
           // A timeout or ban names the user after the channel; without one the whole chat was cleared.
           const targetUser = line.params[1];
           if (targetUser) {
@@ -142,10 +155,10 @@ export class TwitchChat extends BaseChatClient {
           }
           break;
         }
-        case "PRIVMSG":
+        case 'PRIVMSG':
           this.emit(this.parsePrivmsg(line));
           break;
-        case "USERNOTICE":
+        case 'USERNOTICE':
           this.emit(this.parseAnnouncement(line));
           break;
       }
@@ -153,7 +166,7 @@ export class TwitchChat extends BaseChatClient {
   }
 
   private parsePrivmsg({ tags, source, params }: IrcLine): ChatMessagesType | null {
-    const username = source.split("!")[0];
+    const username = source.split('!')[0];
     const messageText = params[1];
     if (messageText === undefined) {
       return null;
@@ -164,20 +177,20 @@ export class TwitchChat extends BaseChatClient {
       return null;
     }
 
-    const replyUser = tags["reply-parent-display-name"] || tags["reply-parent-user-login"];
+    const replyUser = tags['reply-parent-display-name'] || tags['reply-parent-user-login'];
     return {
       ...message,
       ...(replyUser
         ? {
             ...stripReplyMention(message.message, message.emotes, [
               replyUser,
-              tags["reply-parent-user-login"],
+              tags['reply-parent-user-login'],
             ]),
-            replyTo: { user: replyUser, message: tags["reply-parent-msg-body"] ?? "" },
+            replyTo: { user: replyUser, message: tags['reply-parent-msg-body'] ?? '' },
           }
         : {}),
-      firstMessage: tags["first-msg"] === "1" || undefined,
-      variant: tags["msg-id"] === "highlighted-message" ? "highlighted" : undefined,
+      firstMessage: tags['first-msg'] === '1' || undefined,
+      variant: tags['msg-id'] === 'highlighted-message' ? 'highlighted' : undefined,
     };
   }
 
@@ -185,19 +198,19 @@ export class TwitchChat extends BaseChatClient {
   // are left out on purpose.
   private parseAnnouncement({ tags, params }: IrcLine): ChatMessagesType | null {
     const text = params[1];
-    if (tags["msg-id"] !== "announcement" || text === undefined) {
+    if (tags['msg-id'] !== 'announcement' || text === undefined) {
       return null;
     }
-    const message = this.toMessage(tags, tags.login ?? "", text);
+    const message = this.toMessage(tags, tags.login ?? '', text);
     if (!message) {
       return null;
     }
 
-    const color = tags["msg-param-color"] as AnnouncementColor;
+    const color = tags['msg-param-color'] as AnnouncementColor;
     return {
       ...message,
-      variant: "announcement",
-      announcementColor: ANNOUNCEMENT_COLORS.includes(color) ? color : "PRIMARY",
+      variant: 'announcement',
+      announcementColor: ANNOUNCEMENT_COLORS.includes(color) ? color : 'PRIMARY',
     };
   }
 
@@ -206,14 +219,12 @@ export class TwitchChat extends BaseChatClient {
     login: string,
     text: string,
   ): ChatMessagesType | null {
-    const sentAt = tags["tmi-sent-ts"];
-    const timestamp = sentAt
-      ? new Date(Number.parseInt(sentAt, 10))
-      : new Date();
-    const user = tags["display-name"] || login;
+    const sentAt = tags['tmi-sent-ts'];
+    const timestamp = sentAt ? new Date(Number.parseInt(sentAt, 10)) : new Date();
+    const user = tags['display-name'] || login;
     const message = text.trim();
 
-    const badges = tags.badges ? tags.badges.split(",") : [];
+    const badges = tags.badges ? tags.badges.split(',') : [];
 
     if (!user.trim() || !message) {
       return null;
@@ -223,7 +234,7 @@ export class TwitchChat extends BaseChatClient {
       id: tags.id || `twitch-${user}-${timestamp.getTime()}`,
       user,
       message,
-      platform: "twitch",
+      platform: 'twitch',
       timestamp,
       receivedAt: timestamp,
       color: tags.color || undefined,
@@ -232,4 +243,3 @@ export class TwitchChat extends BaseChatClient {
     };
   }
 }
-

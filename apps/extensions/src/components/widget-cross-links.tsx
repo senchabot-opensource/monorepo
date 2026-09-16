@@ -2,23 +2,27 @@ import { LocaleLink } from '#/components/locale-link';
 import { useI18n } from '#/lib/i18n';
 import { WIDGETS, type WidgetId } from '#/lib/widgets';
 
+/**
+ * Grid span for card `index` of `count`: three per row on wide screens, two on tablets, and the
+ * cards of a short last row widen to fill it (five cards read 3 + 2, not 3 + 2 and a hole).
+ */
+export function crossLinkSpan(index: number, count: number): string {
+  const classes = ['lg:col-span-2'];
+  if (count % 2 === 1 && index === count - 1) classes.push('sm:col-span-2');
+  const lastRow = count % 3;
+  if (lastRow === 2 && index >= count - 2) classes[0] = 'lg:col-span-3';
+  if (lastRow === 1 && index === count - 1) classes[0] = 'lg:col-span-6';
+  return classes.join(' ');
+}
+
 /** Cards linking to the setup page of every registry widget except `exclude`. */
-export function WidgetCrossLinks({
-  exclude,
-  columns = 4,
-}: {
-  exclude?: WidgetId;
-  /** Cards per row on wide screens. */
-  columns?: 3 | 4;
-}) {
+export function WidgetCrossLinks({ exclude }: { exclude?: WidgetId }) {
   const { t } = useI18n();
   const widgets = WIDGETS.filter((widget) => widget.id !== exclude);
   return (
-    <ul
-      className={`grid gap-3 sm:grid-cols-2 ${columns === 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-4'}`}
-    >
-      {widgets.map((widget) => (
-        <li key={widget.id}>
+    <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
+      {widgets.map((widget, index) => (
+        <li key={widget.id} className={crossLinkSpan(index, widgets.length)}>
           <LocaleLink
             to={widget.setupPath}
             className="group flex h-full gap-3 rounded-xl border border-zinc-200 bg-white p-4 transition-colors hover:border-zinc-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700"
