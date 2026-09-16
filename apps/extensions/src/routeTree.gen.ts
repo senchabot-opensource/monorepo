@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as Char123LocaleChar125RouteRouteImport } from './routes/{-$locale}/route'
+import { Route as ToolsChatReaderRouteImport } from './routes/tools/chat-reader'
 import { Route as ToolsObsBridgeRouteImport } from './routes/tools/obs-bridge'
 import { Route as WidgetsAlertsRouteImport } from './routes/widgets/alerts'
 import { Route as WidgetsChatWidgetRouteImport } from './routes/widgets/chat-widget'
@@ -36,6 +37,11 @@ const Char123LocaleChar125RouteRoute =
     path: '/{-$locale}',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ToolsChatReaderRoute = ToolsChatReaderRouteImport.update({
+  id: '/tools/chat-reader',
+  path: '/tools/chat-reader',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ToolsObsBridgeRoute = ToolsObsBridgeRouteImport.update({
   id: '/tools/obs-bridge',
   path: '/tools/obs-bridge',
@@ -146,6 +152,7 @@ const Char123LocaleChar125SetupSubGrowingPlantRoute =
 
 export interface FileRoutesByFullPath {
   '/{-$locale}': typeof Char123LocaleChar125RouteRouteWithChildren
+  '/tools/chat-reader': typeof ToolsChatReaderRoute
   '/tools/obs-bridge': typeof ToolsObsBridgeRoute
   '/widgets/alerts': typeof WidgetsAlertsRoute
   '/widgets/chat-widget': typeof WidgetsChatWidgetRoute
@@ -167,6 +174,7 @@ export interface FileRoutesByFullPath {
   '/{-$locale}/guides/': typeof Char123LocaleChar125GuidesIndexRoute
 }
 export interface FileRoutesByTo {
+  '/tools/chat-reader': typeof ToolsChatReaderRoute
   '/tools/obs-bridge': typeof ToolsObsBridgeRoute
   '/widgets/alerts': typeof WidgetsAlertsRoute
   '/widgets/chat-widget': typeof WidgetsChatWidgetRoute
@@ -190,6 +198,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/{-$locale}': typeof Char123LocaleChar125RouteRouteWithChildren
+  '/tools/chat-reader': typeof ToolsChatReaderRoute
   '/tools/obs-bridge': typeof ToolsObsBridgeRoute
   '/widgets/alerts': typeof WidgetsAlertsRoute
   '/widgets/chat-widget': typeof WidgetsChatWidgetRoute
@@ -214,6 +223,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/{-$locale}'
+    | '/tools/chat-reader'
     | '/tools/obs-bridge'
     | '/widgets/alerts'
     | '/widgets/chat-widget'
@@ -235,6 +245,7 @@ export interface FileRouteTypes {
     | '/{-$locale}/guides/'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/tools/chat-reader'
     | '/tools/obs-bridge'
     | '/widgets/alerts'
     | '/widgets/chat-widget'
@@ -257,6 +268,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/{-$locale}'
+    | '/tools/chat-reader'
     | '/tools/obs-bridge'
     | '/widgets/alerts'
     | '/widgets/chat-widget'
@@ -280,6 +292,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   Char123LocaleChar125RouteRoute: typeof Char123LocaleChar125RouteRouteWithChildren
+  ToolsChatReaderRoute: typeof ToolsChatReaderRoute
   ToolsObsBridgeRoute: typeof ToolsObsBridgeRoute
   WidgetsAlertsRoute: typeof WidgetsAlertsRoute
   WidgetsChatWidgetRoute: typeof WidgetsChatWidgetRoute
@@ -295,6 +308,13 @@ declare module '@tanstack/react-router' {
       path: '/{-$locale}'
       fullPath: '/{-$locale}'
       preLoaderRoute: typeof Char123LocaleChar125RouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/chat-reader': {
+      id: '/tools/chat-reader'
+      path: '/tools/chat-reader'
+      fullPath: '/tools/chat-reader'
+      preLoaderRoute: typeof ToolsChatReaderRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tools/obs-bridge': {
@@ -481,6 +501,7 @@ const Char123LocaleChar125RouteRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   Char123LocaleChar125RouteRoute: Char123LocaleChar125RouteRouteWithChildren,
+  ToolsChatReaderRoute: ToolsChatReaderRoute,
   ToolsObsBridgeRoute: ToolsObsBridgeRoute,
   WidgetsAlertsRoute: WidgetsAlertsRoute,
   WidgetsChatWidgetRoute: WidgetsChatWidgetRoute,

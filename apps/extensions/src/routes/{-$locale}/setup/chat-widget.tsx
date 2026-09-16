@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { useDeferredValue, useEffect, useId, useMemo, useState } from 'react';
 import { ChannelFields } from '#/components/channel-fields';
 import { CopyUrlField } from '#/components/copy-url-field';
+import { ExternalIcon } from '#/components/icons';
 import { PreviewFrame } from '#/components/preview-frame';
 import { SetupShell } from '#/components/setup-shell';
 import { FieldLabel } from '#/components/ui/field-label';
@@ -12,6 +13,7 @@ import { SegmentedControl, type SegmentedOption } from '#/components/ui/segmente
 import { Select, type SelectOption } from '#/components/ui/select';
 import { SettingsGroup } from '#/components/ui/settings-group';
 import { Switch } from '#/components/ui/switch';
+import { buildReaderUrl } from '#/features/tools/chat-reader/reader-url';
 import { getHighlightSwatch } from '#/features/widgets/chat-widget/highlights';
 import {
   type Animation,
@@ -28,7 +30,7 @@ import {
   type Settings,
 } from '#/features/widgets/chat-widget/widget-settings';
 import { useI18n } from '#/lib/i18n';
-import { getParamsLocale } from '#/lib/i18n/paths';
+import { getParamsLocale, withLangParam } from '#/lib/i18n/paths';
 import type { FaqEntry } from '#/lib/i18n/seo';
 import { getSetupPageHead } from '#/lib/seo/pages';
 import { getWidget } from '#/lib/widgets';
@@ -53,6 +55,9 @@ const FAQ: FaqEntry[] = [
 ];
 
 type EmoteProvider = 'sevenTv' | 'bttv' | 'ffz';
+
+const READER_BUTTON =
+  'inline-flex h-9 shrink-0 items-center gap-2 rounded-md border border-zinc-300 bg-white px-3 text-sm font-semibold text-zinc-900 transition-colors hover:bg-zinc-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white dark:hover:bg-zinc-800 dark:focus-visible:ring-offset-zinc-900';
 
 function ChatWidgetSetup() {
   const { locale, t } = useI18n();
@@ -79,6 +84,11 @@ function ChatWidgetSetup() {
     if (!params.has('twitch') && !params.has('kick')) return '';
     return `${window.location.origin}/widgets/chat-widget?${params.toString()}`;
   }, [mounted, settings, twitchChannel, kickChannel]);
+
+  const readerUrl = useMemo(
+    () => (mounted ? buildReaderUrl(window.location.origin, settings, twitchChannel, kickChannel) : ''),
+    [mounted, settings, twitchChannel, kickChannel],
+  );
 
   const previewUrl = useMemo(() => {
     if (!mounted) return '';
@@ -401,15 +411,40 @@ function ChatWidgetSetup() {
         />
       }
       urlField={
-        <CopyUrlField
-          url={widgetUrl}
-          tip={t('chatWidget.widgetUrlTip')}
-          hint={`${t('common.browserSourceHint')}${t('chatWidget.browserSourceHintSize')}`}
-          sourceSize={WIDGET.sourceSize}
-          onEdit={applyWidgetUrl}
-          editPlaceholder={t('chatWidget.widgetUrlPlaceholder')}
-          invalidMessage={t('chatWidget.widgetUrlInvalid')}
-        />
+        <div className="space-y-3">
+          <CopyUrlField
+            url={widgetUrl}
+            tip={t('chatWidget.widgetUrlTip')}
+            hint={`${t('common.browserSourceHint')}${t('chatWidget.browserSourceHintSize')}`}
+            sourceSize={WIDGET.sourceSize}
+            onEdit={applyWidgetUrl}
+            editPlaceholder={t('chatWidget.widgetUrlPlaceholder')}
+            invalidMessage={t('chatWidget.widgetUrlInvalid')}
+          />
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+            {readerUrl ? (
+              <a
+                // Opens in this page's language, like the OBS Bridge tool link.
+                href={withLangParam(readerUrl, locale)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={READER_BUTTON}
+              >
+                {t('chatWidget.openReader')}
+                <ExternalIcon className="size-4 text-zinc-500" />
+                <span className="sr-only"> {t('common.newTab')}</span>
+              </a>
+            ) : (
+              <button type="button" disabled className={`${READER_BUTTON} cursor-not-allowed opacity-50`}>
+                {t('chatWidget.openReader')}
+                <ExternalIcon className="size-4 text-zinc-500" />
+              </button>
+            )}
+            <p className="min-w-0 flex-1 basis-60 text-xs leading-relaxed text-zinc-500">
+              {t('chatWidget.openReaderHint')}
+            </p>
+          </div>
+        </div>
       }
       intro={t('chatWidget.intro')}
       guideTitle={t('chatWidget.guideTitle')}
