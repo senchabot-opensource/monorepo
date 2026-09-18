@@ -4,6 +4,7 @@ import {
   buildFrameUrl,
   DEFAULT_FRAME_SETTINGS,
   type FrameSettings,
+  frameSizeFor,
   LABEL_MAX_LENGTH,
   parseFrameUrl,
   readFrameSettings,
@@ -22,6 +23,7 @@ describe('buildFrameUrl', () => {
     const settings: FrameSettings = {
       preset: 'dynasty',
       piece: 'chat',
+      orientation: 'landscape',
       color: 'gold',
       label: '  Sohbet ş ğ  ',
       motion: true,
@@ -39,6 +41,15 @@ describe('buildFrameUrl', () => {
   it('writes the animations only when they are off', () => {
     const url = new URL(buildFrameUrl(ORIGIN, { ...DEFAULT_FRAME_SETTINGS, motion: false }));
     expect(url.searchParams.get('motion')).toBe('0');
+  });
+
+  it('writes a portrait orientation only on a camera', () => {
+    const portrait = { ...DEFAULT_FRAME_SETTINGS, orientation: 'portrait' } as const;
+    expect(new URL(buildFrameUrl(ORIGIN, portrait)).searchParams.get('orientation')).toBe(
+      'portrait',
+    );
+    const chat = new URL(buildFrameUrl(ORIGIN, { ...portrait, piece: 'chat' }));
+    expect(chat.searchParams.has('orientation')).toBe(false);
   });
 
   it('previews the same frame with a stand-in inside', () => {
@@ -59,15 +70,38 @@ describe('readFrameSettings', () => {
   });
 });
 
+describe('frameSizeFor', () => {
+  it('turns only the camera upright', () => {
+    expect(frameSizeFor({ piece: 'camera', orientation: 'portrait' })).toEqual({
+      width: 360,
+      height: 640,
+    });
+    expect(frameSizeFor({ piece: 'camera', orientation: 'landscape' })).toEqual({
+      width: 640,
+      height: 360,
+    });
+    expect(frameSizeFor({ piece: 'chat', orientation: 'portrait' })).toEqual({
+      width: 420,
+      height: 720,
+    });
+  });
+});
+
 describe('parseFrameUrl', () => {
   it('reads back what buildFrameUrl wrote', () => {
     const settings: FrameSettings = {
       preset: 'blocks',
       piece: 'screen',
+      orientation: 'landscape',
       color: 'purple',
       label: 'LIVE',
       motion: false,
     };
+    expect(parseFrameUrl(buildFrameUrl(ORIGIN, settings))).toEqual(settings);
+  });
+
+  it('reads back a portrait camera', () => {
+    const settings: FrameSettings = { ...DEFAULT_FRAME_SETTINGS, orientation: 'portrait' };
     expect(parseFrameUrl(buildFrameUrl(ORIGIN, settings))).toEqual(settings);
   });
 

@@ -759,9 +759,16 @@ export const en = {
     },
     pieceHints: {
       camera: 'A 16:9 frame for your webcam. Fit your camera into the opening in the middle.',
+      cameraPortrait:
+        'A 9:16 frame for a phone camera or a webcam turned on its side. Fit your camera into the opening in the middle.',
       chat: 'A tall frame with a header for the Chat Box. Place the Chat Box under the header.',
       screen:
         "A thin frame along the edges of your whole stream. The decorations stay in the corners so they don't cover your game.",
+    },
+    orientation: 'Orientation',
+    orientations: {
+      landscape: 'Landscape',
+      portrait: 'Portrait',
     },
     labelLabel: 'Label',
     labelTips: {
@@ -790,11 +797,11 @@ export const en = {
     guideStep1:
       'Add a Browser Source in your streaming software (OBS Studio, Streamlabs Desktop, XSplit, vMix, etc.) and paste the frame URL.',
     guideStep2:
-      'Set the width and height to the recommended size. For a square or vertical camera, type your own size. The frame fits any size.',
+      'Set the width and height to the recommended size. For a square camera, type your own size. The frame fits any size.',
     guideStep3:
       'In the Sources list, move the frame above your camera or Chat Box, then place it over them in the scene.',
     guideStep4:
-      "Make your camera big enough to fill the opening, but keep it inside the frame's outer edge. In a 640 × 360 frame, 590 × 296 fits exactly.",
+      "Make your camera big enough to fill the opening, but keep it inside the frame's outer edge. In a 640 × 360 frame, 590 × 296 fits exactly, and in a 360 × 640 portrait frame, 306 × 572 does.",
     faq1Q: 'Does the frame show my camera or chat by itself?',
     faq1A:
       "No. The middle of the frame is transparent, it's only decoration. You add your camera and Chat Box to OBS as separate sources and put them under the frame.",
@@ -803,7 +810,7 @@ export const en = {
       "No. The frame doesn't read chat and doesn't need a channel name. It works the same whether you stream on Twitch, Kick or anywhere else.",
     faq3Q: 'Can I use the camera frame at a different size?',
     faq3A:
-      'Yes. The frame is drawn to fit its browser source. For a square or vertical camera, set the width and height to match, and the decorations scale with it.',
+      'Yes. For a vertical camera, set Orientation to Portrait and the recommended size becomes 360 × 640. The frame is drawn to fit its browser source, so for a square camera just set the width and height to match, and the decorations scale with it.',
     faq4Q: 'Is the art in the frames taken from the games?',
     faq4A:
       'No. Every drawing, like the pagoda roof, the lanterns or the pixel blocks, was made from scratch, with no game logos or art. The presets are fan-made styles that capture the feel of those games.',
@@ -1713,13 +1720,13 @@ export const en = {
         title: 'How do you set up a stream frame?',
         step1: 'Open the [Stream Frames setup page](/setup/stream-frames).',
         step2:
-          'Under What are you framing?, pick Camera, Chat or Screen. Each piece is its own Browser Source, so add all three if you like.',
+          'Under What are you framing?, pick Camera, Chat or Screen. If you picked Camera, set Orientation to Landscape or Portrait. Each piece is its own Browser Source, so add all three if you like.',
         step3:
           'Pick a preset. With Classic you choose the color. The other presets come with their own colors, font and art.',
         step4:
           'Type your channel name or any word you like in the Label field. On camera and chat it shows on the tab above the frame, and on screen it shows on the plate at the bottom.',
         step5:
-          'Copy the URL and add it to OBS as a Browser Source: 640 × 360 for a camera, 420 × 720 for chat, 1920 × 1080 for the screen.',
+          'Copy the URL and add it to OBS as a Browser Source: 640 × 360 for a camera (360 × 640 for a portrait camera), 420 × 720 for chat, 1920 × 1080 for the screen.',
         p1:
           "The preview shows the frame with a person's silhouette or sample chat lines. Those are just placeholders. On stream the middle of the frame is empty.",
       },
@@ -1740,16 +1747,18 @@ export const en = {
         colPiece: 'Piece',
         colFrame: 'Frame size',
         colInside: 'Source inside',
-        camera: 'Camera',
+        camera: 'Landscape camera',
+        cameraPortrait: 'Portrait camera',
         chat: 'Chat',
         screen: 'Screen',
         cameraInside: 'Camera at 590 × 296, centered on the frame',
+        cameraPortraitInside: 'Camera at 306 × 572, centered on the frame',
         chatInside: 'Chat Box at 370 × 660, centered on the frame',
         screenInside: 'Game or screen capture fills the whole scene',
         p1:
-          "A 16:9 camera scaled to 590 wide is 332 tall, so crop the top and bottom evenly until it's 296. Hold Alt (Option on Mac) and drag the top and bottom edges of the source, or right-click the camera and use the Crop fields in Transform → Edit Transform.",
+          "A 16:9 camera scaled to 590 wide is 332 tall, so crop the top and bottom evenly until it's 296. Hold Alt (Option on Mac) and drag the top and bottom edges of the source, or right-click the camera and use the Crop fields in Transform → Edit Transform. For a portrait camera it's the other way around: a 9:16 camera scaled to 572 tall is 322 wide, so crop the left and right evenly until it's 306.",
         p2:
-          'If you use a bigger frame, these sizes scale with it: in a 1280 × 720 camera frame the camera is 1180 × 592. For a square or vertical camera, set the Browser Source width and height to match and the frame is drawn to that shape.',
+          'If you use a bigger frame, these sizes scale with it: in a 1280 × 720 camera frame the camera is 1180 × 592. For a square camera, set the Browser Source width and height to match and the frame is drawn to that shape.',
       },
       look: {
         title: 'What do the preset and animations change?',

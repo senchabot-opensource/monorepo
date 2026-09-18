@@ -10,10 +10,15 @@ export type FramePiece = (typeof FRAME_PIECES)[number];
 export const FRAME_COLORS = ['purple', 'green', 'red', 'gold', 'cyan', 'pink'] as const;
 export type FrameColor = (typeof FRAME_COLORS)[number];
 
+export const CAMERA_ORIENTATIONS = ['landscape', 'portrait'] as const;
+export type CameraOrientation = (typeof CAMERA_ORIENTATIONS)[number];
+
 export interface FrameSettings {
   /** Preset id; any preset but classic brings its own frame art, colors and fonts. */
   preset: string;
   piece: FramePiece;
+  /** A camera frame's shape; the art fits any size, this only sets the suggested one. */
+  orientation: CameraOrientation;
   /** Classic frames' accent. */
   color: FrameColor;
   /** Text on the frame's tab, e.g. the channel name; empty leaves the tab bare. */
@@ -25,6 +30,7 @@ export interface FrameSettings {
 export const DEFAULT_FRAME_SETTINGS: FrameSettings = {
   preset: CLASSIC_PRESET,
   piece: 'camera',
+  orientation: 'landscape',
   color: 'purple',
   label: '',
   motion: true,
@@ -42,6 +48,15 @@ export const FRAME_SIZES: Record<FramePiece, SourceSize> = {
   screen: { width: 1920, height: 1080 },
 };
 
+/** A 9:16 webcam, e.g. a phone camera. */
+export const PORTRAIT_CAMERA_SIZE: SourceSize = { width: 360, height: 640 };
+
+export function frameSizeFor({ piece, orientation }: Pick<FrameSettings, 'piece' | 'orientation'>) {
+  return piece === 'camera' && orientation === 'portrait'
+    ? PORTRAIT_CAMERA_SIZE
+    : FRAME_SIZES[piece];
+}
+
 const WIDGET_PATH = '/widgets/frame';
 
 /** Only settings that differ from the defaults are written, so URLs stay short. */
@@ -50,6 +65,8 @@ function buildParams(settings: FrameSettings) {
   const defaults = DEFAULT_FRAME_SETTINGS;
   // Always written, so a pasted URL says what it frames.
   params.set('piece', settings.piece);
+  if (settings.piece === 'camera' && settings.orientation !== defaults.orientation)
+    params.set('orientation', settings.orientation);
   writePreset(params, settings.preset);
   if (isClassic(settings.preset) && settings.color !== defaults.color)
     params.set('color', settings.color);
@@ -75,10 +92,12 @@ export function buildFramePreviewUrl(origin: string, settings: FrameSettings): s
 export function readFrameSettings(params: URLSearchParams): FrameSettings {
   const defaults = DEFAULT_FRAME_SETTINGS;
   const piece = params.get('piece') as FramePiece;
+  const orientation = params.get('orientation') as CameraOrientation;
   const color = params.get('color') as FrameColor;
   return {
     preset: readPreset(params),
     piece: FRAME_PIECES.includes(piece) ? piece : defaults.piece,
+    orientation: CAMERA_ORIENTATIONS.includes(orientation) ? orientation : defaults.orientation,
     color: FRAME_COLORS.includes(color) ? color : defaults.color,
     label: (params.get('label') ?? '').trim().slice(0, LABEL_MAX_LENGTH),
     motion: readFlag(params.get('motion'), defaults.motion),

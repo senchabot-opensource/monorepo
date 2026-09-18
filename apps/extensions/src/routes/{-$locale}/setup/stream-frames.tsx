@@ -16,11 +16,12 @@ import { hueFor } from '#/features/widgets/overlay-style';
 import {
   buildFramePreviewUrl,
   buildFrameUrl,
+  CAMERA_ORIENTATIONS,
   DEFAULT_FRAME_SETTINGS,
   FRAME_COLORS,
   FRAME_PIECES,
-  FRAME_SIZES,
   type FrameSettings,
+  frameSizeFor,
   LABEL_MAX_LENGTH,
   parseFrameUrl,
 } from '#/lib/frame-url';
@@ -62,7 +63,7 @@ function FramesSetup() {
     setSettings((current) => ({ ...current, [key]: value }));
   useStartOnSitePreset((preset) => update('preset', preset));
 
-  const size = FRAME_SIZES[settings.piece];
+  const size = frameSizeFor(settings);
   // Gated on mount so the prerendered input and the first client render agree.
   const origin = mounted ? window.location.origin : '';
   const widgetUrl = mounted ? buildFrameUrl(origin, settings) : '';
@@ -90,8 +91,28 @@ function FramesSetup() {
               label: t(`frames.pieces.${piece}`),
             }))}
           />
-          <p className={HINT_CLASS}>{t(`frames.pieceHints.${settings.piece}`)}</p>
+          <p className={HINT_CLASS}>
+            {t(
+              settings.piece === 'camera' && settings.orientation === 'portrait'
+                ? 'frames.pieceHints.cameraPortrait'
+                : `frames.pieceHints.${settings.piece}`,
+            )}
+          </p>
         </div>
+        {settings.piece === 'camera' && (
+          <div>
+            <FieldLabel id={`${id}-orientation`}>{t('frames.orientation')}</FieldLabel>
+            <SegmentedControl
+              labelledBy={`${id}-orientation`}
+              value={settings.orientation}
+              onChange={(value) => update('orientation', value)}
+              options={CAMERA_ORIENTATIONS.map((orientation) => ({
+                value: orientation,
+                label: t(`frames.orientations.${orientation}`),
+              }))}
+            />
+          </div>
+        )}
         <TextField
           label={t('frames.labelLabel')}
           tip={t(`frames.labelTips.${settings.piece}`)}
@@ -140,8 +161,8 @@ function FramesSetup() {
       previewAspect={16 / 9}
       preview={
         <PreviewFrame
-          // A new frame per piece, so the canvas size and the page inside change together.
-          key={settings.piece}
+          // A new frame per shape, so the canvas size and the page inside change together.
+          key={`${size.width}x${size.height}`}
           src={previewUrl}
           title={t('frames.previewIframeTitle')}
           canvas={size}

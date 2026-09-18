@@ -26,7 +26,7 @@ Short version with links only: https://extensions.senchabot.com/llms.txt
 | Sub Sprout | Overlay | /setup/sub-growing-plant | /widgets/sub-sprout-widget | 800x600 |
 | Stream Alerts | Overlay | /setup/stream-alerts | /widgets/stream-alerts | 800x450 |
 | Sub Goal | Overlay | /setup/sub-goal | /widgets/goal | 800x260 |
-| Stream Frames | Overlay | /setup/stream-frames | /widgets/frame | 640x360, 420x720 or 1920x1080 |
+| Stream Frames | Overlay | /setup/stream-frames | /widgets/frame | 640x360, 360x640, 420x720 or 1920x1080 |
 | Subathon Timer | Tool | /setup/subathon-timer | /widgets/subathon (run from chat with !subathon) | 800x300 |
 | Chat Poll | Tool | /setup/chat-poll | /widgets/poll (run from chat with !poll) | 640x560 |
 | Raffle | Tool | /setup/raffle | /widgets/raffle-overlay (winner overlay) | 1920x1080 |
@@ -264,8 +264,8 @@ Ready-made frames for a webcam, a chat or the whole stream. The frame is drawn i
 - Widget URL: https://extensions.senchabot.com/widgets/frame?piece=camera&preset=dynasty&label=CHANNEL
 - Demo with every piece on one canvas: https://extensions.senchabot.com/widgets/frame?demo=1&preset=dynasty
 - Guide: https://extensions.senchabot.com/guides/stream-frames
-- Recommended size: 640x360 for camera, 420x720 for chat, 1920x1080 for screen. The frame is drawn for whatever size the source has, so a square or vertical webcam works too.
-- In OBS, put the frame source above the webcam or Chat Box in the sources list. The opening is a little smaller than the frame's outer edge: in a 640x360 camera frame, a 590x296 webcam (a 16:9 camera cropped evenly at the top and bottom), centered on the frame, fills it without showing around the frame; in a 420x720 chat frame, a 370x660 Chat Box. Both scale with the frame.
+- Recommended size: 640x360 for camera, 360x640 for a portrait camera (pick Portrait under Orientation, written as `orientation=portrait`), 420x720 for chat, 1920x1080 for screen. The frame is drawn for whatever size the source has, so a square webcam works too.
+- In OBS, put the frame source above the webcam or Chat Box in the sources list. The opening is a little smaller than the frame's outer edge: in a 640x360 camera frame, a 590x296 webcam (a 16:9 camera cropped evenly at the top and bottom), centered on the frame, fills it without showing around the frame; in a 360x640 portrait camera frame, a 306x572 webcam (a 9:16 camera cropped evenly at the sides); in a 420x720 chat frame, a 370x660 Chat Box. Both scale with the frame.
 - The drawings are original, with no game logos or art.
 
 URL parameters (all optional):

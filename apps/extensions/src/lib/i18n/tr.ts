@@ -767,8 +767,15 @@ export const tr: typeof en = {
     },
     pieceHints: {
       camera: 'Webcam için 16:9 çerçeve. Kameranı ortadaki boşluğa sığdır.',
+      cameraPortrait:
+        'Telefon kamerası ya da dik çevrilmiş webcam için 9:16 çerçeve. Kameranı ortadaki boşluğa sığdır.',
       chat: "Sohbet Kutusu için başlıklı, uzun bir çerçeve. Sohbet Kutusu'nu başlığın altına yerleştir.",
       screen: "Bütün yayının kenarına oturan ince bir çerçeve. Oyunun üstünü kapatmasın diye köşelerde süslenir.",
+    },
+    orientation: 'Yön',
+    orientations: {
+      landscape: 'Yatay',
+      portrait: 'Dikey',
     },
     labelLabel: 'Yazı',
     labelTips: {
@@ -794,11 +801,11 @@ export const tr: typeof en = {
     guideStep1:
       "Yayın yazılımında (OBS Studio, Streamlabs Desktop, XSplit, vMix vb.) bir Tarayıcı Kaynağı ekle ve çerçeve URL'sini yapıştır.",
     guideStep2:
-      'Genişlik ve yüksekliği önerilen boyuta ayarla. Kare ya da dikey bir kamera için kendi ölçülerini yazabilirsin, çerçeve her boyuta uyar.',
+      'Genişlik ve yüksekliği önerilen boyuta ayarla. Kare bir kamera için kendi ölçülerini yazabilirsin, çerçeve her boyuta uyar.',
     guideStep3:
       "Kaynaklar listesinde çerçeveyi kameranın ya da Sohbet Kutusu'nun üstüne taşı, sonra sahnede onların üstüne yerleştir.",
     guideStep4:
-      'Kamerayı ortadaki boşluğu dolduracak kadar büyüt ama çerçevenin dış kenarından taşırma. 640 × 360 çerçevede 590 × 296 tam oturur.',
+      'Kamerayı ortadaki boşluğu dolduracak kadar büyüt ama çerçevenin dış kenarından taşırma. 640 × 360 çerçevede 590 × 296, 360 × 640 dikey çerçevede 306 × 572 tam oturur.',
     faq1Q: 'Çerçeve kameramı ya da sohbetimi kendisi mi gösteriyor?',
     faq1A:
       "Hayır. Çerçevenin ortası şeffaf, sadece süsleme. Kameranı ve Sohbet Kutusu'nu OBS'e ayrı kaynak olarak ekleyip çerçevenin altına koyuyorsun.",
@@ -807,7 +814,7 @@ export const tr: typeof en = {
       'Hayır. Çerçeve sohbet okumaz, kanal adı da istemez. Twitch, Kick ya da başka bir platformda yayın yapsan da aynı çalışır.',
     faq3Q: 'Kamera çerçevesini farklı bir boyutta kullanabilir miyim?',
     faq3A:
-      'Evet. Çerçeve tarayıcı kaynağının boyutuna göre çizilir. Kare ya da dikey bir kamera için genişlik ve yüksekliği ona göre ayarla, süslemeler de o boyuta göre ölçeklenir.',
+      "Evet. Dikey bir kamera için Yön'de Dikey'i seç, önerilen boyut 360 × 640 olur. Çerçeve tarayıcı kaynağının boyutuna göre çizilir, bu yüzden kare bir kamera için genişlik ve yüksekliği ona göre ayarlaman yeterli, süslemeler de o boyuta göre ölçeklenir.",
     faq4Q: 'Çerçevelerdeki çizimler oyunlardan mı alındı?',
     faq4A:
       "Hayır. Pagoda çatısı, fenerler ya da piksel bloklar gibi her çizim sıfırdan çizildi, oyun logosu ya da görseli içermez. Preset'ler o oyunların havasını yakalayan hayran yapımı stiller.",
@@ -1721,13 +1728,13 @@ export const tr: typeof en = {
         title: 'Yayın çerçevesi nasıl ayarlanır?',
         step1: '[Yayın Çerçeveleri kurulum sayfasını](/setup/stream-frames) aç.',
         step2:
-          'Neyin çerçevesi? kısmında Kamera, Sohbet ya da Ekran seç. Her parça ayrı bir Tarayıcı Kaynağı, istersen üçünü de ekle.',
+          "Neyin çerçevesi? kısmında Kamera, Sohbet ya da Ekran seç. Kamerayı seçtiysen Yön'de Yatay ya da Dikey'i seç. Her parça ayrı bir Tarayıcı Kaynağı, istersen üçünü de ekle.",
         step3:
           "Bir preset seç. Klasik'te rengi sen seçersin, diğer preset'ler kendi renkleri, yazı tipi ve çizimleriyle gelir.",
         step4:
           'Yazı alanına kanal adını ya da istediğin bir kelimeyi yaz. Kamera ve sohbette çerçevenin üstündeki sekmede, ekranda alttaki plakada görünür.',
         step5:
-          "URL'yi kopyala ve OBS'e Tarayıcı Kaynağı olarak ekle: kamera için 640 × 360, sohbet için 420 × 720, ekran için 1920 × 1080.",
+          "URL'yi kopyala ve OBS'e Tarayıcı Kaynağı olarak ekle: kamera için 640 × 360 (dikey kamerada 360 × 640), sohbet için 420 × 720, ekran için 1920 × 1080.",
         p1: 'Önizleme çerçeveyi bir kişi silüeti ya da örnek sohbet satırlarıyla gösterir. Bunlar sadece yer tutucu, yayında çerçevenin ortası boştur.',
       },
       layers: {
@@ -1744,14 +1751,16 @@ export const tr: typeof en = {
         colPiece: 'Parça',
         colFrame: 'Çerçeve boyutu',
         colInside: 'İçine gelen kaynak',
-        camera: 'Kamera',
+        camera: 'Yatay kamera',
+        cameraPortrait: 'Dikey kamera',
         chat: 'Sohbet',
         screen: 'Ekran',
         cameraInside: 'Kamera 590 × 296, çerçeveyle ortalanmış',
+        cameraPortraitInside: 'Kamera 306 × 572, çerçeveyle ortalanmış',
         chatInside: 'Sohbet Kutusu 370 × 660, çerçeveyle ortalanmış',
         screenInside: 'Oyun ya da ekran yakalama bütün sahneyi kaplar',
-        p1: "16:9 bir kamerayı 590 genişliğe getirince yüksekliği 332 olur, bu yüzden yükseklik 296 kalana kadar üstten ve alttan eşit kırp. Alt tuşunu (Mac'te Option) basılı tutup kaynağın üst ve alt kenarını sürükle, ya da kameraya sağ tıklayıp Dönüştür → Dönüştürmeyi Düzenle'deki Kırp alanlarını kullan.",
-        p2: "Çerçeveyi daha büyük kullanırsan bu ölçüler de aynı oranda büyür: 1280 × 720 bir kamera çerçevesinde kamera 1180 × 592 olur. Kare ya da dikey bir kamera için Tarayıcı Kaynağı'nın genişlik ve yüksekliğini ona göre yaz, çerçeve o şekle göre çizilir.",
+        p1: "16:9 bir kamerayı 590 genişliğe getirince yüksekliği 332 olur, bu yüzden yükseklik 296 kalana kadar üstten ve alttan eşit kırp. Alt tuşunu (Mac'te Option) basılı tutup kaynağın üst ve alt kenarını sürükle, ya da kameraya sağ tıklayıp Dönüştür → Dönüştürmeyi Düzenle'deki Kırp alanlarını kullan. Dikey kamerada tersi: 9:16 bir kamerayı 572 yüksekliğe getirince genişliği 322 olur, 306 kalana kadar soldan ve sağdan eşit kırp.",
+        p2: "Çerçeveyi daha büyük kullanırsan bu ölçüler de aynı oranda büyür: 1280 × 720 bir kamera çerçevesinde kamera 1180 × 592 olur. Kare bir kamera için Tarayıcı Kaynağı'nın genişlik ve yüksekliğini ona göre yaz, çerçeve o şekle göre çizilir.",
       },
       look: {
         title: 'Preset ve animasyonlar neyi değiştirir?',

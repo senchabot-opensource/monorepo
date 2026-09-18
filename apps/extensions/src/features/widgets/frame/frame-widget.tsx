@@ -131,7 +131,7 @@ const CHAT_LINES = [
 function StandIn({ piece, width, height }: Omit<PieceProps, 'standIn'>) {
   const pad = Math.min(width, height) * 0.1;
   if (piece === 'camera') {
-    const head = height * 0.16;
+    const head = Math.min(width, height) * 0.16;
     return (
       <div
         style={{

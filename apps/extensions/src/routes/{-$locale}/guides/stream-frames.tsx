@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { DataTable, P, Steps } from '#/components/content-page';
 import { CtaBand } from '#/components/cta-band';
 import { GuideArticle } from '#/components/guide-article';
-import { FRAME_SIZES, type FramePiece } from '#/lib/frame-url';
+import { FRAME_SIZES, type FramePiece, PORTRAIT_CAMERA_SIZE } from '#/lib/frame-url';
 import { getGuide } from '#/lib/guides';
 import { useT } from '#/lib/i18n';
 import { getParamsLocale } from '#/lib/i18n/paths';
@@ -15,7 +15,8 @@ export const Route = createFileRoute('/{-$locale}/guides/stream-frames')({
   component: StreamFramesGuide,
 });
 
-const size = (piece: FramePiece) => `${FRAME_SIZES[piece].width} × ${FRAME_SIZES[piece].height}`;
+const format = ({ width, height }: { width: number; height: number }) => `${width} × ${height}`;
+const size = (piece: FramePiece) => format(FRAME_SIZES[piece]);
 
 function StreamFramesGuide() {
   const t = useT();
@@ -70,6 +71,11 @@ function StreamFramesGuide() {
                     t('guides.frames.fit.camera'),
                     size('camera'),
                     t('guides.frames.fit.cameraInside'),
+                  ],
+                  [
+                    t('guides.frames.fit.cameraPortrait'),
+                    format(PORTRAIT_CAMERA_SIZE),
+                    t('guides.frames.fit.cameraPortraitInside'),
                   ],
                   [t('guides.frames.fit.chat'), size('chat'), t('guides.frames.fit.chatInside')],
                   [
