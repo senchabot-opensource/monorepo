@@ -36,11 +36,13 @@ interface Sizes {
   height: number;
   /** The label's measured width, 0 when there's none. */
   labelWidth: number;
+  /** Tab room around the label, in bands. */
+  labelPad: number;
 }
 
 export function geometryFor(
   piece: FramePiece,
-  { width, height, labelWidth }: Sizes,
+  { width, height, labelWidth, labelPad }: Sizes,
   look: Look,
   motion: boolean,
   id: (name: string) => string,
@@ -55,7 +57,7 @@ export function geometryFor(
   // Room above for the label tab, below for a tray, at the sides for wings.
   const body = { x0: 1.2 * t, y0: 1.9 * t, x1: width - 1.2 * t, y1: height - 1.4 * t };
   const span = body.x1 - body.x0;
-  const tabWidth = Math.min(span * 0.8, Math.max(span * 0.3, labelWidth + 5 * t));
+  const tabWidth = Math.min(span * 0.8, Math.max(span * 0.3, labelWidth + labelPad * t));
   return {
     ...common,
     body,
@@ -107,7 +109,12 @@ export function FrameArt({ look, piece, width, height, label, motion }: FrameArt
     return () => observer.disconnect();
   }, [label]);
 
-  const g = geometryFor(piece, { width, height, labelWidth }, look, motion, idFor(''));
+  const labelPad = art.labelPad ?? 5;
+  const g = geometryFor(piece, { width, height, labelWidth, labelPad }, look, motion, idFor(''));
+  // A long name on a narrow frame, e.g. a portrait camera, shrinks to fit its tab. Scaled, not
+  // resized, so the measured width stays the natural one.
+  const labelRoom = g.tab.width - labelPad * g.t;
+  const labelScale = piece !== 'screen' && labelWidth > labelRoom ? labelRoom / labelWidth : 1;
   const spec = art.shape(g);
   const edge = outlinePath(g.body, spec);
   const hole = holePath(g.hole, spec.hole);
@@ -166,7 +173,7 @@ export function FrameArt({ look, piece, width, height, label, motion }: FrameArt
             position: 'absolute',
             left: labelAt.cx,
             top: labelAt.cy,
-            transform: 'translate(-50%, -50%)',
+            transform: `translate(-50%, -50%) scale(${labelScale})`,
           }}
         >
           {label}

@@ -115,6 +115,8 @@ export interface Art {
     pixel?: boolean;
     steps?: number;
   };
+  /** Tab room around the label, in bands; more when the style draws inside the tab. Default 5. */
+  labelPad?: number;
   /** Label text color, when the preset's text color doesn't suit the style's tab. */
   labelColor?: (g: Geometry) => string;
   /** Moves the label down from the middle of the tab, in px (e.g. under a roof). */

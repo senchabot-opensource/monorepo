@@ -129,6 +129,8 @@ function Segments({
 export const hud: Art = {
   runner: (g) => ({ path: 'edge', color: g.look.accent(62), width: 0.18 * g.t, dur: 8 }),
   shape,
+  // The segment lights sit inside the tab, on both sides of the label.
+  labelPad: 7,
 
   draw: (g, { outline, hole }) => {
     const { t, look, body, tab, piece, motion } = g;

@@ -153,6 +153,8 @@ function StripeBlock({
 export const tactical: Art = {
   runner: (g) => ({ path: 'edge', color: g.look.accent(62), width: 0.2 * g.t, dur: 7 }),
   shape,
+  // The name tag's chevrons sit inside the tab, left of the label.
+  labelPad: 7,
 
   draw: (g, { outline, hole }) => {
     const { t, look, body, tab, piece, motion } = g;
