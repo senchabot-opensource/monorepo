@@ -51,7 +51,7 @@ describe('widget registry', () => {
   });
 
   it('never lists the unpromoted alerts widget', () => {
-    expect(WIDGETS.some((w) => w.widgetPath.includes('alerts'))).toBe(false);
+    expect(WIDGETS.some((w) => w.widgetPath === '/widgets/alerts')).toBe(false);
   });
 
   it('looks widgets up by id', () => {

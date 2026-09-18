@@ -8,6 +8,7 @@ Senchabot Extensions provides 100% free streaming widgets, customizable overlays
 
 - **Sub Sprout** — A visual plant widget and subscriber goal overlay that grows with each subscription, resub, or gift sub. Resets after reaching full growth.
 - **Subathon Timer** — A subathon countdown that subs, gifted subs, Bits and Kicks add time to, shown as a game-style health bar, a clock or a ring. Mods control it from chat.
+- **Stream Alerts** — Animated alerts with their own sound for subs, gifted subs, Bits, Kicks and raids, in a Neon or a Celestial theme.
 - **Universal Chat** — A multi-chat widget and stream chat box overlay that combines Twitch and Kick chat into a single on-screen feed with 7TV emotes, badges, and platform indicators.
 - **Raffle Picker** — A chat-based giveaway and raffle tool. Viewers type a keyword to enter; winners are drawn and announced on a live confetti celebration overlay.
 - **OBS Bridge** — A chat-controlled scene switching and stream control tool connecting over local OBS WebSocket.
@@ -18,6 +19,7 @@ Senchabot Extensions provides 100% free streaming widgets, customizable overlays
 - [extensions.senchabot.com](https://extensions.senchabot.com/) — Widget and tool hub
 - [Sub Sprout](https://extensions.senchabot.com/setup/sub-growing-plant)
 - [Subathon Timer](https://extensions.senchabot.com/setup/subathon-timer)
+- [Stream Alerts](https://extensions.senchabot.com/setup/stream-alerts)
 - [Universal Chat](https://extensions.senchabot.com/setup/chat-widget)
 - [Raffle Picker](https://extensions.senchabot.com/setup/raffle)
 - [OBS Bridge](https://extensions.senchabot.com/setup/obs-bridge)
@@ -67,6 +69,26 @@ https://extensions.senchabot.com/widgets/subathon?twitch=YOUR_TWITCH_CHANNEL&kic
 ```
 
 **URL parameters** (times in seconds): `twitch`, `kick`, `style` (`bar` | `clock` | `ring`), `color` (`hp` | `green` | `purple` | `red` | `gold` | `cyan` | `pink`), `title`, `time` (starting time), `cap` (0 = no limit), Twitch `tsub` (Tier 1 and Prime), `tgift`, `bits` (per 500), `tiers` (`0` | `1`), Kick `ksub`, `kgift`, `kicks` (per 500), `autostart` (`0` | `1`), `pct` (`0` | `1`), `pops` (`0` | `1`), `simulate` (`1` plays simulated subs), `simspeed`.
+
+---
+
+### Stream Alerts (`/setup/stream-alerts`)
+
+An alert box overlay. A new sub, gifted subs, Bits (Twitch), Kicks (Kick) or a raid each get an animated alert with an icon and a short sound, one at a time.
+
+**How it works:**
+- Listens to Twitch IRC anonymously and Kick's Pusher WebSocket, both in one browser source.
+- Two themes, each with its own look, animation and sounds: `neon` (an angular sci-fi banner, synth sounds) and `celestial` (a gold-line card under the stars, bell chimes). Colors follow the platform (Twitch purple, Kick green) or one fixed accent.
+- Alerts queue up and show in order; a gift of many subs is a single alert. Every alert can be turned off, renamed, and gifts, cheers and raids can have a minimum.
+- Resubs show their months, and a resub shared in chat shows the viewer's message (Twitch's resub message, Kick's chat celebration). Messages with Bits and Kicks can be shown too, always without links.
+- On Kick the months come from a second sub event that can trail the first by a second, so a Kick sub without months waits 1.5 s for it. The sounds are made in the page with Web Audio, so there are no sound files.
+- Follows and donations aren't included: neither platform shows them to a page that isn't logged in.
+
+```
+https://extensions.senchabot.com/widgets/stream-alerts?twitch=YOUR_TWITCH_CHANNEL&kick=YOUR_KICK_CHANNEL&theme=neon&lang=en
+```
+
+**URL parameters:** `twitch`, `kick`, `theme` (`neon` | `celestial`), `color` (`platform` | `blue` | `purple` | `pink` | `red` | `gold` | `green`), `lang` (`en` | `tr`, the alert text), `sub`, `gift`, `bits`, `raid` (`0` turns an alert off), `hsub`, `hgift`, `hbits`, `hraid` (custom headings, up to 24 characters), `mingift`, `minbits`, `minraid` (minimum subs, Bits or Kicks, viewers), `dur` (seconds on screen, 3 to 20), `vol` (0 to 100), `msg` (`0` hides viewer messages), `simulate` (`1` plays sample alerts), `simplatform` (`twitch` | `kick`).
 
 ---
 
@@ -197,12 +219,14 @@ npm run deploy
 │   ├── setup/
 │   │   ├── sub-growing-plant.tsx   # Sub Sprout configuration
 │   │   ├── subathon-timer.tsx      # Subathon Timer configuration
+│   │   ├── stream-alerts.tsx       # Stream Alerts configuration
 │   │   ├── chat-widget.tsx         # Universal Chat configuration
 │   │   ├── raffle.tsx              # Raffle configuration
 │   │   └── emote-wall.tsx          # Emote Wall configuration
 │   └── widgets/
 │       ├── sub-sprout-widget.tsx   # Sub Sprout overlay
 │       ├── subathon.tsx            # Subathon Timer overlay
+│       ├── stream-alerts.tsx       # Stream Alerts overlay
 │       ├── chat-widget.tsx         # Universal Chat overlay
 │       ├── raffle-overlay.tsx      # Raffle winner overlay
 │       └── emote-wall.tsx          # Emote Wall overlay

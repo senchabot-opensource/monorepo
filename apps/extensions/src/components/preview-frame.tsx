@@ -1,5 +1,5 @@
 import { type ReactNode, useEffect, useRef, useState } from 'react';
-import { useI18n } from '#/lib/i18n';
+import { type Locale, useI18n } from '#/lib/i18n';
 import { withLangParam } from '#/lib/i18n/paths';
 import type { SourceSize } from '#/lib/widgets';
 
@@ -20,6 +20,10 @@ interface PreviewFrameProps {
   /** Background behind the page; overlays are transparent, so this is what shows through. */
   backgroundClassName?: string;
   className?: string;
+  /** Language for the page when it isn't the site's, e.g. Stream Alerts in its own language. */
+  lang?: Locale;
+  /** iframe permissions, e.g. `autoplay` so a click on the setup page can play its sound. */
+  allow?: string;
 }
 
 /**
@@ -34,6 +38,8 @@ export function PreviewFrame({
   placeholder,
   backgroundClassName = 'bg-zinc-950/80',
   className = '',
+  lang,
+  allow,
 }: PreviewFrameProps) {
   const { t, locale } = useI18n();
   const ref = useRef<HTMLDivElement>(null);
@@ -82,8 +88,9 @@ export function PreviewFrame({
     >
       {mounted ? (
         <iframe
-          src={withLangParam(src, locale)}
+          src={withLangParam(src, lang ?? locale)}
           title={title}
+          allow={allow}
           // Overlays can overflow a small frame by a pixel; OBS never shows their scrollbar, and
           // this non-interactive preview shouldn't either (in light mode it paints a white bar).
           scrolling="no"

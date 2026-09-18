@@ -7,18 +7,48 @@ export type SubTier = 1 | 2 | 3;
 
 /** Something that adds time: a sub, gifted subs, or Bits or Kicks. */
 export type TimedEvent =
-  | { kind: 'sub'; platform: SubathonPlatform; name: string; tier: SubTier }
+  | {
+      kind: 'sub';
+      platform: SubathonPlatform;
+      name: string;
+      tier: SubTier;
+      /** Months subscribed in total, when the platform says (Twitch always, Kick sometimes). */
+      months?: number;
+      /** What the viewer wrote with a resub, as sent. */
+      message?: string;
+      /**
+       * A sub already passed on a moment ago, again from Kick's other sub event: `repeat` when it
+       * only brings the months, `shared` when the viewer shares the resub in chat later on.
+       */
+      again?: 'repeat' | 'shared';
+    }
   | { kind: 'gift'; platform: SubathonPlatform; name: string; count: number; tier: SubTier }
-  | { kind: 'bits'; platform: SubathonPlatform; name: string; amount: number };
+  | {
+      kind: 'bits';
+      platform: SubathonPlatform;
+      name: string;
+      amount: number;
+      /** What the viewer wrote with it, as sent (Twitch's still has its cheermotes). */
+      message?: string;
+    };
 
-/** Something that changes the clock: a timed event or a mod command. */
+/** A channel raiding (Twitch) or hosting (Kick) this one. Stream Alerts shows it, Subathon doesn't. */
+export type RaidEvent = { kind: 'raid'; platform: SubathonPlatform; name: string; viewers: number };
+
+/** Something the chat readers pass on: a timed event, a raid or a mod command. */
 export type SubathonEvent =
   | TimedEvent
+  | RaidEvent
   | { kind: 'command'; platform: SubathonPlatform; command: SubathonCommand };
 
 // Twitch's msg-param-sub-plan. Prime is a Tier 1 sub.
 const TIERS: Record<string, SubTier> = { Prime: 1, '1000': 1, '2000': 2, '3000': 3 };
 const tierOf = (plan: string | undefined): SubTier => TIERS[plan ?? ''] ?? 1;
+
+// A /me message arrives wrapped as \x01ACTION ...\x01.
+const ACTION = '\x01ACTION ';
+const withoutAction = (text: string) =>
+  text.startsWith(ACTION) && text.endsWith('\x01') ? text.slice(ACTION.length, -1) : text;
 
 const positiveInt = (value: unknown): number => {
   const n = typeof value === 'string' ? Number.parseInt(value, 10) : Number(value);
@@ -41,7 +71,15 @@ export function twitchEvent(line: IrcLine, bundles: Map<string, number>): Subath
 
   if (line.command === 'PRIVMSG') {
     const bits = positiveInt(tags.bits);
-    if (bits > 0) return { kind: 'bits', platform: 'twitch', name, amount: bits };
+    if (bits > 0) {
+      return {
+        kind: 'bits',
+        platform: 'twitch',
+        name,
+        amount: bits,
+        message: withoutAction(line.params[1] ?? ''),
+      };
+    }
     const badges = tags.badges ?? '';
     const isMod = tags.mod === '1' || /(^|,)(broadcaster|moderator)\//.test(badges);
     const command = isMod ? parseCommand(line.params[1] ?? '') : null;
@@ -53,7 +91,14 @@ export function twitchEvent(line: IrcLine, bundles: Map<string, number>): Subath
   switch (tags['msg-id']) {
     case 'sub':
     case 'resub':
-      return { kind: 'sub', platform: 'twitch', name, tier };
+      return {
+        kind: 'sub',
+        platform: 'twitch',
+        name,
+        tier,
+        months: positiveInt(tags['msg-param-cumulative-months']) || undefined,
+        message: line.params[1] ?? '',
+      };
     case 'submysterygift':
     case 'anonsubmysterygift': {
       const count = positiveInt(tags['msg-param-mass-gift-count']) || 1;
@@ -72,6 +117,13 @@ export function twitchEvent(line: IrcLine, bundles: Map<string, number>): Subath
       }
       return { kind: 'gift', platform: 'twitch', name, count: 1, tier };
     }
+    case 'raid':
+      return {
+        kind: 'raid',
+        platform: 'twitch',
+        name: tags['msg-param-displayName'] || name,
+        viewers: positiveInt(tags['msg-param-viewerCount']),
+      };
     default:
       return null;
   }
@@ -138,11 +190,16 @@ export function kickEvent(
   switch (eventName) {
     // A paid sub comes as SubscriptionEvent, ChannelSubscriptionEvent or both: live traffic had
     // subs with only one either way, and gift recipients get neither. So either counts, once.
+    // Only SubscriptionEvent has months, on some channels, and in 15 of 36 live pairs it came
+    // second (up to 1.4 s later): then it passes on as a repeat, for its months.
     case 'App\\Events\\SubscriptionEvent':
     case 'App\\Events\\ChannelSubscriptionEvent': {
       const name = text(payload.username);
-      if (name && seenRecently(dedupe.subs, name.toLowerCase(), now, KICK_SUB_PAIR_MS)) return null;
-      return { kind: 'sub', platform: 'kick', name, tier: 1 };
+      const months = positiveInt(payload.months) || undefined;
+      const sub = { kind: 'sub', platform: 'kick', name, tier: 1, months } as const;
+      if (!name || !seenRecently(dedupe.subs, name.toLowerCase(), now, KICK_SUB_PAIR_MS))
+        return sub;
+      return months ? { ...sub, again: 'repeat' } : null;
     }
     case 'GiftedSubscriptionsEvent': {
       if (seenRecently(dedupe.gifts, JSON.stringify(payload), now, KICK_GIFT_REPEAT_MS))
@@ -168,10 +225,34 @@ export function kickEvent(
         platform: 'kick',
         name: text(record(payload.sender)?.username),
         amount,
+        message: text(payload.message),
       };
     }
+    // A raid, on chatrooms.{id}.v2. kick.com also sends it as StreamHostedEvent on
+    // chatrooms.{id}, which isn't subscribed, so each raid comes once.
+    case 'App\\Events\\StreamHostEvent':
+      return {
+        kind: 'raid',
+        platform: 'kick',
+        name: text(payload.host_username),
+        viewers: positiveInt(payload.number_viewers),
+      };
     case 'App\\Events\\ChatMessageEvent': {
       const sender = record(payload.sender);
+      // A resub shared in chat, minutes to weeks after the renewal was counted (Kick's version of
+      // Twitch's resub message). Live, all 50 had the months and the viewer's text.
+      const celebration = record(record(payload.metadata)?.celebration);
+      if (payload.type === 'celebration' && celebration?.type === 'subscription_renewed') {
+        return {
+          kind: 'sub',
+          platform: 'kick',
+          name: text(sender?.username),
+          tier: 1,
+          months: positiveInt(celebration.total_months) || undefined,
+          message: text(payload.content),
+          again: 'shared',
+        };
+      }
       const badges = record(sender?.identity)?.badges;
       const isMod =
         Array.isArray(badges) &&

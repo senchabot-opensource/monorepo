@@ -16,6 +16,7 @@ import { Route as WidgetsAlertsRouteImport } from './routes/widgets/alerts'
 import { Route as WidgetsChatWidgetRouteImport } from './routes/widgets/chat-widget'
 import { Route as WidgetsEmoteWallRouteImport } from './routes/widgets/emote-wall'
 import { Route as WidgetsRaffleOverlayRouteImport } from './routes/widgets/raffle-overlay'
+import { Route as WidgetsStreamAlertsRouteImport } from './routes/widgets/stream-alerts'
 import { Route as WidgetsSubSproutWidgetRouteImport } from './routes/widgets/sub-sprout-widget'
 import { Route as WidgetsSubathonRouteImport } from './routes/widgets/subathon'
 import { Route as Char123LocaleChar125IndexRouteImport } from './routes/{-$locale}/index'
@@ -30,6 +31,7 @@ import { Route as Char123LocaleChar125SetupChatWidgetRouteImport } from './route
 import { Route as Char123LocaleChar125SetupEmoteWallRouteImport } from './routes/{-$locale}/setup/emote-wall'
 import { Route as Char123LocaleChar125SetupObsBridgeRouteImport } from './routes/{-$locale}/setup/obs-bridge'
 import { Route as Char123LocaleChar125SetupRaffleRouteImport } from './routes/{-$locale}/setup/raffle'
+import { Route as Char123LocaleChar125SetupStreamAlertsRouteImport } from './routes/{-$locale}/setup/stream-alerts'
 import { Route as Char123LocaleChar125SetupSubGrowingPlantRouteImport } from './routes/{-$locale}/setup/sub-growing-plant'
 import { Route as Char123LocaleChar125SetupSubathonTimerRouteImport } from './routes/{-$locale}/setup/subathon-timer'
 
@@ -67,6 +69,11 @@ const WidgetsEmoteWallRoute = WidgetsEmoteWallRouteImport.update({
 const WidgetsRaffleOverlayRoute = WidgetsRaffleOverlayRouteImport.update({
   id: '/widgets/raffle-overlay',
   path: '/widgets/raffle-overlay',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WidgetsStreamAlertsRoute = WidgetsStreamAlertsRouteImport.update({
+  id: '/widgets/stream-alerts',
+  path: '/widgets/stream-alerts',
   getParentRoute: () => rootRouteImport,
 } as any)
 const WidgetsSubSproutWidgetRoute = WidgetsSubSproutWidgetRouteImport.update({
@@ -150,6 +157,12 @@ const Char123LocaleChar125SetupRaffleRoute =
     path: '/setup/raffle',
     getParentRoute: () => Char123LocaleChar125RouteRoute,
   } as any)
+const Char123LocaleChar125SetupStreamAlertsRoute =
+  Char123LocaleChar125SetupStreamAlertsRouteImport.update({
+    id: '/setup/stream-alerts',
+    path: '/setup/stream-alerts',
+    getParentRoute: () => Char123LocaleChar125RouteRoute,
+  } as any)
 const Char123LocaleChar125SetupSubGrowingPlantRoute =
   Char123LocaleChar125SetupSubGrowingPlantRouteImport.update({
     id: '/setup/sub-growing-plant',
@@ -171,6 +184,7 @@ export interface FileRoutesByFullPath {
   '/widgets/chat-widget': typeof WidgetsChatWidgetRoute
   '/widgets/emote-wall': typeof WidgetsEmoteWallRoute
   '/widgets/raffle-overlay': typeof WidgetsRaffleOverlayRoute
+  '/widgets/stream-alerts': typeof WidgetsStreamAlertsRoute
   '/widgets/sub-sprout-widget': typeof WidgetsSubSproutWidgetRoute
   '/widgets/subathon': typeof WidgetsSubathonRoute
   '/{-$locale}/changelog': typeof Char123LocaleChar125ChangelogRoute
@@ -184,6 +198,7 @@ export interface FileRoutesByFullPath {
   '/{-$locale}/setup/emote-wall': typeof Char123LocaleChar125SetupEmoteWallRoute
   '/{-$locale}/setup/obs-bridge': typeof Char123LocaleChar125SetupObsBridgeRoute
   '/{-$locale}/setup/raffle': typeof Char123LocaleChar125SetupRaffleRoute
+  '/{-$locale}/setup/stream-alerts': typeof Char123LocaleChar125SetupStreamAlertsRoute
   '/{-$locale}/setup/sub-growing-plant': typeof Char123LocaleChar125SetupSubGrowingPlantRoute
   '/{-$locale}/setup/subathon-timer': typeof Char123LocaleChar125SetupSubathonTimerRoute
   '/{-$locale}/guides/': typeof Char123LocaleChar125GuidesIndexRoute
@@ -195,6 +210,7 @@ export interface FileRoutesByTo {
   '/widgets/chat-widget': typeof WidgetsChatWidgetRoute
   '/widgets/emote-wall': typeof WidgetsEmoteWallRoute
   '/widgets/raffle-overlay': typeof WidgetsRaffleOverlayRoute
+  '/widgets/stream-alerts': typeof WidgetsStreamAlertsRoute
   '/widgets/sub-sprout-widget': typeof WidgetsSubSproutWidgetRoute
   '/widgets/subathon': typeof WidgetsSubathonRoute
   '/{-$locale}/changelog': typeof Char123LocaleChar125ChangelogRoute
@@ -208,6 +224,7 @@ export interface FileRoutesByTo {
   '/{-$locale}/setup/emote-wall': typeof Char123LocaleChar125SetupEmoteWallRoute
   '/{-$locale}/setup/obs-bridge': typeof Char123LocaleChar125SetupObsBridgeRoute
   '/{-$locale}/setup/raffle': typeof Char123LocaleChar125SetupRaffleRoute
+  '/{-$locale}/setup/stream-alerts': typeof Char123LocaleChar125SetupStreamAlertsRoute
   '/{-$locale}/setup/sub-growing-plant': typeof Char123LocaleChar125SetupSubGrowingPlantRoute
   '/{-$locale}/setup/subathon-timer': typeof Char123LocaleChar125SetupSubathonTimerRoute
   '/{-$locale}/guides': typeof Char123LocaleChar125GuidesIndexRoute
@@ -221,6 +238,7 @@ export interface FileRoutesById {
   '/widgets/chat-widget': typeof WidgetsChatWidgetRoute
   '/widgets/emote-wall': typeof WidgetsEmoteWallRoute
   '/widgets/raffle-overlay': typeof WidgetsRaffleOverlayRoute
+  '/widgets/stream-alerts': typeof WidgetsStreamAlertsRoute
   '/widgets/sub-sprout-widget': typeof WidgetsSubSproutWidgetRoute
   '/widgets/subathon': typeof WidgetsSubathonRoute
   '/{-$locale}/changelog': typeof Char123LocaleChar125ChangelogRoute
@@ -234,6 +252,7 @@ export interface FileRoutesById {
   '/{-$locale}/setup/emote-wall': typeof Char123LocaleChar125SetupEmoteWallRoute
   '/{-$locale}/setup/obs-bridge': typeof Char123LocaleChar125SetupObsBridgeRoute
   '/{-$locale}/setup/raffle': typeof Char123LocaleChar125SetupRaffleRoute
+  '/{-$locale}/setup/stream-alerts': typeof Char123LocaleChar125SetupStreamAlertsRoute
   '/{-$locale}/setup/sub-growing-plant': typeof Char123LocaleChar125SetupSubGrowingPlantRoute
   '/{-$locale}/setup/subathon-timer': typeof Char123LocaleChar125SetupSubathonTimerRoute
   '/{-$locale}/guides/': typeof Char123LocaleChar125GuidesIndexRoute
@@ -248,6 +267,7 @@ export interface FileRouteTypes {
     | '/widgets/chat-widget'
     | '/widgets/emote-wall'
     | '/widgets/raffle-overlay'
+    | '/widgets/stream-alerts'
     | '/widgets/sub-sprout-widget'
     | '/widgets/subathon'
     | '/{-$locale}/changelog'
@@ -261,6 +281,7 @@ export interface FileRouteTypes {
     | '/{-$locale}/setup/emote-wall'
     | '/{-$locale}/setup/obs-bridge'
     | '/{-$locale}/setup/raffle'
+    | '/{-$locale}/setup/stream-alerts'
     | '/{-$locale}/setup/sub-growing-plant'
     | '/{-$locale}/setup/subathon-timer'
     | '/{-$locale}/guides/'
@@ -272,6 +293,7 @@ export interface FileRouteTypes {
     | '/widgets/chat-widget'
     | '/widgets/emote-wall'
     | '/widgets/raffle-overlay'
+    | '/widgets/stream-alerts'
     | '/widgets/sub-sprout-widget'
     | '/widgets/subathon'
     | '/{-$locale}/changelog'
@@ -285,6 +307,7 @@ export interface FileRouteTypes {
     | '/{-$locale}/setup/emote-wall'
     | '/{-$locale}/setup/obs-bridge'
     | '/{-$locale}/setup/raffle'
+    | '/{-$locale}/setup/stream-alerts'
     | '/{-$locale}/setup/sub-growing-plant'
     | '/{-$locale}/setup/subathon-timer'
     | '/{-$locale}/guides'
@@ -297,6 +320,7 @@ export interface FileRouteTypes {
     | '/widgets/chat-widget'
     | '/widgets/emote-wall'
     | '/widgets/raffle-overlay'
+    | '/widgets/stream-alerts'
     | '/widgets/sub-sprout-widget'
     | '/widgets/subathon'
     | '/{-$locale}/changelog'
@@ -310,6 +334,7 @@ export interface FileRouteTypes {
     | '/{-$locale}/setup/emote-wall'
     | '/{-$locale}/setup/obs-bridge'
     | '/{-$locale}/setup/raffle'
+    | '/{-$locale}/setup/stream-alerts'
     | '/{-$locale}/setup/sub-growing-plant'
     | '/{-$locale}/setup/subathon-timer'
     | '/{-$locale}/guides/'
@@ -323,6 +348,7 @@ export interface RootRouteChildren {
   WidgetsChatWidgetRoute: typeof WidgetsChatWidgetRoute
   WidgetsEmoteWallRoute: typeof WidgetsEmoteWallRoute
   WidgetsRaffleOverlayRoute: typeof WidgetsRaffleOverlayRoute
+  WidgetsStreamAlertsRoute: typeof WidgetsStreamAlertsRoute
   WidgetsSubSproutWidgetRoute: typeof WidgetsSubSproutWidgetRoute
   WidgetsSubathonRoute: typeof WidgetsSubathonRoute
 }
@@ -376,6 +402,13 @@ declare module '@tanstack/react-router' {
       path: '/widgets/raffle-overlay'
       fullPath: '/widgets/raffle-overlay'
       preLoaderRoute: typeof WidgetsRaffleOverlayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/widgets/stream-alerts': {
+      id: '/widgets/stream-alerts'
+      path: '/widgets/stream-alerts'
+      fullPath: '/widgets/stream-alerts'
+      preLoaderRoute: typeof WidgetsStreamAlertsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/widgets/sub-sprout-widget': {
@@ -476,6 +509,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char123LocaleChar125SetupRaffleRouteImport
       parentRoute: typeof Char123LocaleChar125RouteRoute
     }
+    '/{-$locale}/setup/stream-alerts': {
+      id: '/{-$locale}/setup/stream-alerts'
+      path: '/setup/stream-alerts'
+      fullPath: '/{-$locale}/setup/stream-alerts'
+      preLoaderRoute: typeof Char123LocaleChar125SetupStreamAlertsRouteImport
+      parentRoute: typeof Char123LocaleChar125RouteRoute
+    }
     '/{-$locale}/setup/sub-growing-plant': {
       id: '/{-$locale}/setup/sub-growing-plant'
       path: '/setup/sub-growing-plant'
@@ -505,6 +545,7 @@ interface Char123LocaleChar125RouteRouteChildren {
   Char123LocaleChar125SetupEmoteWallRoute: typeof Char123LocaleChar125SetupEmoteWallRoute
   Char123LocaleChar125SetupObsBridgeRoute: typeof Char123LocaleChar125SetupObsBridgeRoute
   Char123LocaleChar125SetupRaffleRoute: typeof Char123LocaleChar125SetupRaffleRoute
+  Char123LocaleChar125SetupStreamAlertsRoute: typeof Char123LocaleChar125SetupStreamAlertsRoute
   Char123LocaleChar125SetupSubGrowingPlantRoute: typeof Char123LocaleChar125SetupSubGrowingPlantRoute
   Char123LocaleChar125SetupSubathonTimerRoute: typeof Char123LocaleChar125SetupSubathonTimerRoute
   Char123LocaleChar125GuidesIndexRoute: typeof Char123LocaleChar125GuidesIndexRoute
@@ -530,6 +571,8 @@ const Char123LocaleChar125RouteRouteChildren: Char123LocaleChar125RouteRouteChil
     Char123LocaleChar125SetupObsBridgeRoute:
       Char123LocaleChar125SetupObsBridgeRoute,
     Char123LocaleChar125SetupRaffleRoute: Char123LocaleChar125SetupRaffleRoute,
+    Char123LocaleChar125SetupStreamAlertsRoute:
+      Char123LocaleChar125SetupStreamAlertsRoute,
     Char123LocaleChar125SetupSubGrowingPlantRoute:
       Char123LocaleChar125SetupSubGrowingPlantRoute,
     Char123LocaleChar125SetupSubathonTimerRoute:
@@ -550,6 +593,7 @@ const rootRouteChildren: RootRouteChildren = {
   WidgetsChatWidgetRoute: WidgetsChatWidgetRoute,
   WidgetsEmoteWallRoute: WidgetsEmoteWallRoute,
   WidgetsRaffleOverlayRoute: WidgetsRaffleOverlayRoute,
+  WidgetsStreamAlertsRoute: WidgetsStreamAlertsRoute,
   WidgetsSubSproutWidgetRoute: WidgetsSubSproutWidgetRoute,
   WidgetsSubathonRoute: WidgetsSubathonRoute,
 }

@@ -61,6 +61,13 @@ export const OG_IMAGES = {
       tr: "Subathon Timer, aboneliklerle süresi uzayan geri sayım overlay'i",
     },
   },
+  'stream-alerts': {
+    path: '/og/stream-alerts.png',
+    alt: {
+      en: 'Stream Alerts, animated sub, gift, cheer and raid alerts for Twitch and Kick',
+      tr: "Yayın Uyarıları, Twitch ve Kick'te abonelik, hediye, cheer ve raid için animasyonlu uyarı overlay'i",
+    },
+  },
   raffle: {
     path: '/og/raffle.png',
     alt: {

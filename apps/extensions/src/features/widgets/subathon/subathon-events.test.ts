@@ -18,12 +18,14 @@ const directGift =
   '@display-name=Gifter;login=gifter;msg-id=subgift;msg-param-recipient-user-name=lucky;msg-param-sub-plan=3000;room-id=1 :tmi.twitch.tv USERNOTICE #channel';
 
 describe('twitchEvent', () => {
-  it('reads a sub with its tier, Prime as Tier 1', () => {
+  it('reads a sub with its tier (Prime as Tier 1), months and message', () => {
     expect(twitchEvent(line(resub), new Map())).toEqual({
       kind: 'sub',
       platform: 'twitch',
       name: 'Subber',
       tier: 1,
+      months: 4,
+      message: 'hi',
     });
     const tier3 = resub.replace('msg-param-sub-plan=Prime', 'msg-param-sub-plan=3000');
     expect(twitchEvent(line(tier3), new Map())).toMatchObject({ kind: 'sub', tier: 3 });
@@ -54,6 +56,19 @@ describe('twitchEvent', () => {
       platform: 'twitch',
       name: 'Cheerer',
       amount: 250,
+      message: 'Cheer250 go',
+    });
+  });
+
+  it('reads a raid', () => {
+    // Twitch's docs example; raids are rare enough that the live probe caught none.
+    const raid =
+      '@badge-info=;badges=turbo/1;color=#9ACD32;display-name=TestChannel;emotes=;id=3d830f12;login=testchannel;mod=0;msg-id=raid;msg-param-displayName=TestChannel;msg-param-login=testchannel;msg-param-viewerCount=15;room-id=33332222;subscriber=0;system-msg=15\\sraiders\\sfrom\\sTestChannel\\shave\\sjoined\\n!;tmi-sent-ts=1507246572675;turbo=1;user-id=123456;user-type= :tmi.twitch.tv USERNOTICE #othertestchannel';
+    expect(twitchEvent(line(raid), new Map())).toEqual({
+      kind: 'raid',
+      platform: 'twitch',
+      name: 'TestChannel',
+      viewers: 15,
     });
   });
 
@@ -106,7 +121,7 @@ describe('kickEvent', () => {
       dedupe,
       0,
     );
-    expect(sub).toEqual({ kind: 'sub', platform: 'kick', name: 'Viewer', tier: 1 });
+    expect(sub).toEqual({ kind: 'sub', platform: 'kick', name: 'Viewer', tier: 1, months: 5 });
     const pair = { user_ids: [9], username: 'viewer', channel_id: 7 };
     expect(kickEvent('App\\Events\\ChannelSubscriptionEvent', pair, dedupe, 500)).toBeNull();
 
@@ -117,6 +132,41 @@ describe('kickEvent', () => {
       1000,
     );
     expect(onlyChannel).toMatchObject({ kind: 'sub', name: 'Other' });
+  });
+
+  it('passes the months on when they come second, as a repeat of the sub', () => {
+    const dedupe = createKickDedupe();
+    const channel = { user_ids: [9], username: 'Viewer', channel_id: 7 };
+    expect(kickEvent('App\\Events\\ChannelSubscriptionEvent', channel, dedupe, 0)).toEqual({
+      kind: 'sub',
+      platform: 'kick',
+      name: 'Viewer',
+      tier: 1,
+    });
+    const withMonths = { chatroom_id: 1, username: 'Viewer', months: 19 };
+    expect(kickEvent('App\\Events\\SubscriptionEvent', withMonths, dedupe, 300)).toMatchObject({
+      kind: 'sub',
+      months: 19,
+      again: 'repeat',
+    });
+  });
+
+  it('reads a resub shared in chat, with its months and text', () => {
+    const celebration = {
+      content: 'love it',
+      type: 'celebration',
+      sender: { username: 'Fan', identity: { badges: [{ type: 'subscriber', count: 19 }] } },
+      metadata: { celebration: { type: 'subscription_renewed', total_months: 19 } },
+    };
+    expect(kickEvent('App\\Events\\ChatMessageEvent', celebration, createKickDedupe())).toEqual({
+      kind: 'sub',
+      platform: 'kick',
+      name: 'Fan',
+      tier: 1,
+      months: 19,
+      message: 'love it',
+      again: 'shared',
+    });
   });
 
   it('counts the same viewer again for a later sub', () => {
@@ -170,8 +220,26 @@ describe('kickEvent', () => {
       platform: 'kick',
       name: 'Fan',
       amount: 100,
+      message: '',
     });
     expect(kickEvent('KicksGifted', kicks, dedupe)).toBeNull();
+    const withMessage = { ...kicks, gift_transaction_id: 'c0ffee', message: 'gg' };
+    expect(kickEvent('KicksGifted', withMessage, dedupe)).toMatchObject({ message: 'gg' });
+  });
+
+  it('reads a raid from StreamHostEvent', () => {
+    const host = {
+      chatroom_id: 5,
+      optional_message: '',
+      number_viewers: 9,
+      host_username: 'raider',
+    };
+    expect(kickEvent('App\\Events\\StreamHostEvent', host, createKickDedupe())).toEqual({
+      kind: 'raid',
+      platform: 'kick',
+      name: 'raider',
+      viewers: 9,
+    });
   });
 
   it('takes commands from mods and the broadcaster only', () => {

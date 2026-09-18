@@ -93,6 +93,10 @@ export const en = {
       tagline:
         'A countdown that subs, gifted subs, Bits and Kicks push back. Health bar, clock or ring.',
     },
+    streamAlerts: {
+      name: 'Stream Alerts',
+      tagline: 'An animated alert with a sound for every sub, gifted sub, Bits, Kicks and raid.',
+    },
     raffle: {
       name: 'Raffle',
       tagline: 'Viewers join with a chat keyword like !join, and you draw the winner.',
@@ -632,6 +636,108 @@ export const en = {
     faq4A:
       'No. The timer reads subs, gifts, Bits, Kicks and mod commands from your public Twitch and Kick chat, the way a logged-out viewer sees them.',
   },
+  streamAlerts: {
+    breadcrumb: 'Stream Alerts Setup',
+    title: 'Stream Alerts Setup',
+    intro:
+      'Animated stream alerts for Twitch and Kick. A new sub, gifted subs, Bits, Kicks or a raid each get an alert with their own icon and sound, one after another. Pick a color, rename the headings and set the smallest gift, cheer or raid worth an alert.',
+    color: 'Color',
+    theme: 'Theme',
+    themeTip:
+      'Neon is an angular sci-fi banner with synth sounds. Celestial is a gold-line card under the stars with bell chimes.',
+    themes: {
+      neon: 'Neon',
+      celestial: 'Celestial',
+    },
+    colorTip: 'Platform shows Twitch alerts in purple and Kick alerts in green.',
+    colors: {
+      blue: 'Blue',
+      purple: 'Purple',
+      pink: 'Pink',
+      red: 'Red',
+      gold: 'Gold',
+      green: 'Green',
+      platform: 'Platform (Twitch purple, Kick green)',
+    },
+    language: 'Alert Language',
+    languageTip:
+      "The language of the alert's words. The OBS URL keeps it, whatever language OBS runs in.",
+    sectionAlerts: 'Alerts',
+    heading: 'Heading',
+    kindSub: 'Subs',
+    kindSubTip: 'Every new sub and resub, and a resub a viewer shares in chat with a message.',
+    kindGift: 'Gifted Subs',
+    kindGiftTip: 'One alert per gift, however many subs it has.',
+    kindBits: 'Bits & Kicks',
+    kindBitsTip: 'Bits cheered on Twitch and Kicks sent on Kick.',
+    kindRaid: 'Raids',
+    kindRaidTip: 'Another channel raiding yours, with how many viewers came along.',
+    minGift: 'Min. Subs',
+    minBits: 'Min. Amount',
+    minRaid: 'Min. Viewers',
+    sectionTiming: 'Timing & Sound',
+    duration: 'Time on Screen',
+    durationTip: 'How long each alert stays up. When several come in, they wait their turn.',
+    seconds: '{value}s',
+    volume: 'Volume',
+    volumeTip: 'Each alert plays a short sound of its own. 0 turns the sound off.',
+    volumeOff: 'Off',
+    showMessage: 'Show Viewer Message',
+    showMessageTip:
+      'Shows what the viewer wrote with their resub, Bits or Kicks. Links are left out, and long messages are cut short.',
+    previewTitle: 'Stream Alerts Preview',
+    previewIframeTitle: 'Stream Alerts Preview',
+    previewHint:
+      "The preview plays silent sample alerts. The buttons below play one with its sound. On stream only your channel's subs, gifts, cheers and raids show up.",
+    testTitle: 'Try it:',
+    testSub: 'Sub',
+    testGift: '{count} Gifted',
+    testBits: '{amount} Bits/Kicks',
+    testRaid: 'Raid',
+    testViewer: 'TestViewer',
+    testMessage: 'Great stream!',
+    widgetUrlTip:
+      'Already made a widget? Paste its URL here to load your settings and change what you need.',
+    widgetUrlPlaceholder: 'Paste an existing widget URL to edit it',
+    widgetUrlInvalid: "This isn't a Stream Alerts URL.",
+    browserSourceHintSize: ' (recommended size: 800×450).',
+    guideTitle: 'Streaming Software Setup (OBS, Streamlabs, XSplit, etc.)',
+    guideStep1:
+      'Add a Browser Source in your streaming software (OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio, etc.).',
+    guideStep2: 'Paste your copied stream alerts URL.',
+    guideStep3: 'Set width to 800 and height to 450, then place it where alerts should appear.',
+    guideStep4:
+      'To hear the sound in OBS, turn on Control audio via OBS in the source settings and set the source to Monitor and Output in Advanced Audio Properties.',
+    faq1Q: 'Why are there no follow or donation alerts?',
+    faq1A:
+      "Twitch and Kick don't show new follows to a page that isn't logged in, and neither platform has donations of its own. The alerts only use what both platforms send to every viewer, so they work the same on both.",
+    faq2Q: "Does a sub alert show the months and the viewer's message?",
+    faq2A:
+      'Yes. When a viewer shares their resub in chat, on Twitch or on Kick, it gets an alert with the months and what they wrote. On Twitch every sub alert shows the months. Kick sends them with most subs, but some channels never get them, and then the alert just says they subscribed.',
+    faq3Q: 'What happens when many alerts come in at once?',
+    faq3A:
+      'They show one at a time in the order they came in. A gift of 50 subs is a single alert, not 50.',
+    faq4Q: 'Do I need to log in or connect my account?',
+    faq4A:
+      'No. The alerts read subs, gifts, Bits, Kicks and raids from your public Twitch and Kick chat, the way a logged-out viewer sees them.',
+    alert: {
+      subHeading: 'New Subscriber',
+      subDetail: 'just subscribed',
+      resubDetail: 'subscribed for {months} months',
+      giftHeading: 'Gifted Subs',
+      giftDetail: 'gifted {count} subs',
+      giftDetailOne: 'gifted a sub',
+      bitsHeading: 'New Cheer',
+      bitsDetail: 'cheered {amount} Bits',
+      kicksHeading: 'Kicks',
+      kicksDetail: 'sent {amount} Kicks',
+      raidHeading: 'Incoming Raid',
+      raidDetail: 'is raiding with {viewers} viewers',
+      raidDetailOne: 'is raiding with 1 viewer',
+      raidDetailNoCount: 'is raiding',
+      anonymous: 'Anonymous',
+    },
+  },
   raffle: {
     breadcrumb: 'Raffle Setup',
     title: 'Raffle Setup',
@@ -879,6 +985,8 @@ export const en = {
           emoteWall: 'A full 1080p canvas. Emotes show up anywhere on the screen.',
           subSprout: 'The plant and pot grow inside this area.',
           subathon: 'A wide strip for the health bar, clock or ring. A bigger source scales it up.',
+          streamAlerts:
+            'One alert at a time, in the middle of this area. A bigger source scales it up.',
           raffle:
             "The winner overlay. Confetti bursts from both sides of the screen and the winner's name appears in the middle.",
           obsBridge: 'Not a visible overlay. Keep the tool open in a browser tab or an OBS dock.',
@@ -902,6 +1010,8 @@ export const en = {
           "Sub Sprout: the plant's growth isn't saved anywhere. If the page reloads, the plant goes back to the first stage.",
         subathon:
           "Subathon Timer: the time left is saved inside OBS, so a reload doesn't lose it. The timer keeps counting down while the source is off, but it can't see subs that come in during that time.",
+        streamAlerts:
+          "Stream Alerts: only subs, gifts, cheers and raids that come in while the source is running get an alert. Anything that arrives while it's off is missed.",
         raffle:
           'Raffle overlay: only the overlay that is open at that moment gets the winner. A winner drawn while the source is off never shows up on screen.',
         emoteWall:
@@ -912,7 +1022,7 @@ export const en = {
       update: {
         title: 'How do I change a widget later?',
         p1: 'Your settings live inside the widget URL, so changing a setting means a new URL. Change the setting on the setup page, copy the new URL, then double-click the source in OBS and paste it over the old URL in the URL field.',
-        p2: "You don't have to start over with [Chat Box](/setup/chat-widget), [Emote Wall](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant) or [Subathon Timer](/setup/subathon-timer). Paste your current URL into the Widget URL field on the setup page and your channels and all your settings come back. Change what you want and copy the new URL.",
+        p2: "You don't have to start over with [Chat Box](/setup/chat-widget), [Emote Wall](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer) or [Stream Alerts](/setup/stream-alerts). Paste your current URL into the Widget URL field on the setup page and your channels and all your settings come back. Change what you want and copy the new URL.",
         p3: "OBS Bridge has no paste field, so enter your settings again on its setup page and copy the new tool URL. You can also change scene picks and authorized users on the tool page itself and grab the new URL with its Copy Updated URL button. Old URLs keep working, so you don't have to update them.",
       },
       troubleshoot: {
@@ -1014,7 +1124,7 @@ export const en = {
       },
       others: {
         title: 'Which other widgets listen to both platforms together?',
-        p1: '[Emote Wall](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant) and [Subathon Timer](/setup/subathon-timer) also take both channels in one URL. Emote Wall sends emote-only messages from both chats flying across the screen. Sub Sprout grows with subscriptions on both platforms, gifted subs on Kick included. Subathon Timer adds time for subs, gifted subs, Bits and Kicks from both chats.',
+        p1: '[Emote Wall](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer) and [Stream Alerts](/setup/stream-alerts) also take both channels in one URL. Emote Wall sends emote-only messages from both chats flying across the screen. Sub Sprout grows with subscriptions on both platforms, gifted subs on Kick included. Subathon Timer adds time for subs, gifted subs, Bits and Kicks from both chats. Stream Alerts shows an alert for subs, gifted subs, Bits, Kicks and raids from both.',
         p2: '[Raffle](/setup/raffle), on the other hand, runs on one platform at a time: Twitch or Kick.',
       },
       ctaTitle: 'Set up Chat Box',
@@ -1165,7 +1275,7 @@ export const en = {
     },
     freeQ: 'Is Senchabot Extensions free?',
     freeA:
-      "Yes. All six widgets and tools are free: Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Raffle and OBS Bridge. There's no paid plan, watermark or premium account. The source code is open on GitHub under the GPL-3.0 license.",
+      "Yes. All seven widgets and tools are free: Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Raffle and OBS Bridge. There's no paid plan, watermark or premium account. The source code is open on GitHub under the GPL-3.0 license.",
     loginQ: 'What does "no login required" mean?',
     loginA:
       "You don't create an account on this site, you don't log in with Twitch or Kick, and you don't download anything. You type your channel name and the setup page gives you a URL. The widgets read public chat anonymously: on Twitch they connect like an anonymous viewer, and on Kick they listen to the public chat feed. That's why they can't post in chat, moderate, or access private info on your account.",
@@ -1177,10 +1287,10 @@ export const en = {
       'OBS Studio and any other streaming software that supports a browser source. Each widget runs as a web URL, and you paste that URL into the source. Our guides are written for OBS Studio.',
     platformsQ: 'Which widgets support Twitch and which support Kick?',
     platformsA:
-      'All six support both platforms. Chat Box, Emote Wall, Sub Sprout and Subathon Timer listen to a Twitch and a Kick channel together in one URL. OBS Bridge listens for commands from both chats, and each authorized user is added with their own platform. Raffle runs on one platform at a time, Twitch or Kick. In Chat Box, 7TV emotes show on both platforms, while BTTV and FFZ emotes show on Twitch only.',
+      'All seven support both platforms. Chat Box, Emote Wall, Sub Sprout, Subathon Timer and Stream Alerts listen to a Twitch and a Kick channel together in one URL. OBS Bridge listens for commands from both chats, and each authorized user is added with their own platform. Raffle runs on one platform at a time, Twitch or Kick. In Chat Box, 7TV emotes show on both platforms, while BTTV and FFZ emotes show on Twitch only.',
     editQ: 'How do I change a widget later?',
     editA:
-      "Change the settings on the setup page, copy the new URL, and paste it over the old one in the source's URL field in OBS. With Chat Box, Emote Wall, Sub Sprout and Subathon Timer, if you paste your old URL into the Widget URL field on the setup page, all your settings come back and you don't have to start over.",
+      "Change the settings on the setup page, copy the new URL, and paste it over the old one in the source's URL field in OBS. With Chat Box, Emote Wall, Sub Sprout, Subathon Timer and Stream Alerts, if you paste your old URL into the Widget URL field on the setup page, all your settings come back and you don't have to start over.",
     oldUrlsQ: 'Will my old widget URLs keep working?',
     oldUrlsA:
       "Yes. Updates are made so existing URLs don't break: parameter names, values and defaults stay the same. For example, the old keep=true in Chat Box still means Forever, and Sub Sprout still reads the old channel and platform parameters.",
@@ -1204,6 +1314,8 @@ export const en = {
     lead: "New features and bug fixes in Senchabot Extensions, newest first. The list is put together from the project's commit history on [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      streamAlerts:
+        'New Stream Alerts: an animated alert with its own sound for every sub, gifted sub, Bits, Kicks and raid on Twitch and Kick. Pick a color, rename the headings and set minimum amounts.',
       subathon:
         'New Subathon Timer: a countdown that subs, gifted subs, Bits and Kicks push back, shown as a health bar, a clock or a ring. You pick how much time each one adds, and mods control it with !subathon.',
       chatReader:

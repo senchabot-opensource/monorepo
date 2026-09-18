@@ -132,6 +132,14 @@ describe('SubathonWidget', () => {
     });
     pusher('chatrooms.42.v2', 'App\\Events\\SubscriptionEvent', { username: 'Fan', months: 1 });
     expect(clock()).toContain('01:01:00');
+    // Sharing the resub in chat later is the same sub, already counted.
+    pusher('chatrooms.42.v2', 'App\\Events\\ChatMessageEvent', {
+      content: 'love it',
+      type: 'celebration',
+      sender: { username: 'Fan', identity: { badges: [{ type: 'subscriber', count: 19 }] } },
+      metadata: { celebration: { type: 'subscription_renewed', total_months: 19 } },
+    });
+    expect(clock()).toContain('01:01:00');
 
     pusher('chatroom_42', 'GiftedSubscriptionsEvent', {
       gifter_username: 'Gifter',

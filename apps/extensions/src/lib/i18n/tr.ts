@@ -96,6 +96,11 @@ export const tr: typeof en = {
       tagline:
         'Abonelik, hediye abonelik, Bits ve Kicks geldikçe uzayan bir geri sayım. Can barı, saat ya da halka.',
     },
+    streamAlerts: {
+      name: 'Yayın Uyarıları',
+      tagline:
+        'Her abonelik, hediye abonelik, Bits, Kicks ve raid için sesli, animasyonlu bir uyarı.',
+    },
     raffle: {
       name: 'Çekiliş',
       tagline: 'İzleyiciler !join gibi bir komutla katılır, kazananı sen çekersin.',
@@ -638,6 +643,112 @@ export const tr: typeof en = {
     faq4A:
       'Hayır. Sayaç abonelik, hediye, Bits, Kicks ve mod komutlarını herkese açık Twitch ve Kick sohbetinden okur, tıpkı giriş yapmamış bir izleyicinin gördüğü gibi.',
   },
+  streamAlerts: {
+    breadcrumb: 'Yayın Uyarıları Kurulumu',
+    title: 'Yayın Uyarıları Kurulumu',
+    intro:
+      "Twitch ve Kick için animasyonlu yayın uyarıları. Yeni abonelik, hediye abonelik, Bits, Kicks ve raid'lerin her birinin kendi ikonu ve sesi var, uyarılar sırayla ekrana gelir. Rengi seç, başlıkları kendine göre değiştir ve uyarı çıkaracak en küçük hediyeyi, cheer'ı ya da raid'i belirle.",
+    color: 'Renk',
+    theme: 'Tema',
+    themeTip:
+      'Neon, köşeli ve bilim kurgu tarzı bir şerit, synth sesleriyle. Göksel ise yıldızların altında altın çizgili bir kart, çan sesleriyle.',
+    themes: {
+      neon: 'Neon',
+      celestial: 'Göksel',
+    },
+    colorTip: 'Platform seçeneğinde Twitch uyarıları mor, Kick uyarıları yeşil görünür.',
+    colors: {
+      blue: 'Mavi',
+      purple: 'Mor',
+      pink: 'Pembe',
+      red: 'Kırmızı',
+      gold: 'Altın',
+      green: 'Yeşil',
+      platform: 'Platform (Twitch mor, Kick yeşil)',
+    },
+    language: 'Uyarı Dili',
+    languageTip:
+      "Uyarıda yazan kelimelerin dili. Bu seçim URL'de saklanır, OBS hangi dilde açılırsa açılsın değişmez.",
+    sectionAlerts: 'Uyarılar',
+    heading: 'Başlık',
+    kindSub: 'Abonelikler',
+    kindSubTip:
+      'Her yeni abonelik ve yenileme, izleyicinin sohbette mesajıyla paylaştığı yenilemeler de dahil.',
+    kindGift: 'Hediye Abonelikler',
+    kindGiftTip: 'İçinde kaç abonelik olursa olsun, her hediye için tek uyarı.',
+    kindBits: 'Bits ve Kicks',
+    kindBitsTip: "Twitch'teki Bits cheer'ları ve Kick'te gönderilen Kicks.",
+    kindRaid: "Raid'ler",
+    kindRaidTip:
+      'Başka bir kanal sana raid attığında çıkar, kaç izleyiciyle geldiğini de gösterir.',
+    minGift: 'En Az Abonelik',
+    minBits: 'En Az Miktar',
+    minRaid: 'En Az İzleyici',
+    sectionTiming: 'Süre ve Ses',
+    duration: 'Ekranda Kalma Süresi',
+    durationTip:
+      'Her uyarının ekranda ne kadar kalacağı. Birkaç uyarı üst üste gelirse sırayla çıkar.',
+    seconds: '{value} sn',
+    volume: 'Ses Seviyesi',
+    volumeTip: 'Her uyarı kendine ait kısa bir ses çalar. Sesi kapatmak için 0 yap.',
+    volumeOff: 'Kapalı',
+    showMessage: 'İzleyici Mesajını Göster',
+    showMessageTip:
+      'İzleyicinin aboneliğini yenilerken ya da Bits veya Kicks gönderirken yazdığı mesajı gösterir. Linkler gösterilmez, uzun mesajlar kısaltılır.',
+    previewTitle: 'Yayın Uyarıları Önizleme',
+    previewIframeTitle: 'Yayın Uyarıları Önizleme',
+    previewHint:
+      "Önizlemede sessiz örnek uyarılar gelir. Aşağıdaki düğmelerle bir uyarıyı sesiyle birlikte deneyebilirsin. Yayında sadece kendi kanalına gelen abonelik, hediye, cheer ve raid'ler görünür.",
+    testTitle: 'Dene:',
+    testSub: 'Abone',
+    testGift: '{count} Hediye',
+    testBits: '{amount} Bits/Kicks',
+    testRaid: 'Raid',
+    testViewer: 'TestIzleyici',
+    testMessage: 'Efsane yayın!',
+    widgetUrlTip:
+      "Daha önce bir widget oluşturduysan URL'sini buraya yapıştır. Ayarların geri yüklenir, istediğini değiştirebilirsin.",
+    widgetUrlPlaceholder: "Düzenlemek için widget URL'sini yapıştır",
+    widgetUrlInvalid: "Bu bir Yayın Uyarıları URL'si değil.",
+    browserSourceHintSize: ' (önerilen boyut: 800×450).',
+    guideTitle: 'Yayın Yazılımı Kurulumu (OBS, Streamlabs, XSplit vb.)',
+    guideStep1:
+      'Yayın yazılımında (OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio vb.) bir Tarayıcı Kaynağı ekle.',
+    guideStep2: "Kopyaladığın yayın uyarıları URL'sini yapıştır.",
+    guideStep3:
+      'Genişliği 800 ve yüksekliği 450 olarak ayarla, sonra kaynağı uyarıların çıkacağı yere taşı.',
+    guideStep4:
+      'OBS\'te sesi duymak için kaynak ayarlarında "OBS ile sesi kontrol etme" (Control audio via OBS) seçeneğini aç. Sonra Gelişmiş Ses Özellikleri (Advanced Audio Properties) penceresinde kaynağın Ses İzleme ayarını "İzleme Aktif Edildi" (Monitor and Output) yap.',
+    faq1Q: 'Neden takip ya da bağış uyarısı yok?',
+    faq1A:
+      'Twitch ve Kick, giriş yapılmamış bir sayfaya yeni takipçileri göstermiyor, iki platformun da kendine ait bir bağış sistemi yok. Uyarılar sadece iki platformun her izleyiciye gönderdiği bilgileri kullanır, bu yüzden ikisinde de aynı çalışır.',
+    faq2Q: 'Abonelik uyarısında ay sayısı ve izleyicinin mesajı görünüyor mu?',
+    faq2A:
+      "Evet. İzleyici abonelik yenilemesini sohbette paylaşırsa, Twitch'te de Kick'te de ay sayısı ve yazdığı mesajla bir uyarı çıkar. Twitch'te her abonelik uyarısında ay sayısı görünür. Kick çoğu abonelikte ay sayısını gönderiyor ama bazı kanallarda hiç göndermiyor, o zaman uyarıda sadece abone olduğu yazar.",
+    faq3Q: 'Aynı anda çok sayıda uyarı gelirse ne olur?',
+    faq3A:
+      "Geldikleri sırayla tek tek gösterilir. 50'li bir hediye abonelik 50 değil, tek bir uyarı olarak çıkar.",
+    faq4Q: 'Giriş yapmam ya da hesabımı bağlamam gerekiyor mu?',
+    faq4A:
+      "Hayır. Uyarılar abonelik, hediye, Bits, Kicks ve raid'leri herkese açık Twitch ve Kick sohbetinden okur, tıpkı giriş yapmamış bir izleyicinin gördüğü gibi.",
+    alert: {
+      subHeading: 'Yeni Abone',
+      subDetail: 'abone oldu',
+      resubDetail: '{months} aydır abone',
+      giftHeading: 'Hediye Abonelik',
+      giftDetail: '{count} abonelik hediye etti',
+      giftDetailOne: 'bir abonelik hediye etti',
+      bitsHeading: 'Yeni Cheer',
+      bitsDetail: '{amount} Bits gönderdi',
+      kicksHeading: 'Kicks',
+      kicksDetail: '{amount} Kicks gönderdi',
+      raidHeading: 'Raid Geldi',
+      raidDetail: '{viewers} izleyiciyle raid attı',
+      raidDetailOne: '1 izleyiciyle raid attı',
+      raidDetailNoCount: 'raid attı',
+      anonymous: 'Anonim',
+    },
+  },
   raffle: {
     breadcrumb: 'Çekiliş Kurulumu',
     title: 'Çekiliş Kurulumu',
@@ -886,6 +997,8 @@ export const tr: typeof en = {
           subSprout: 'Bitki ve saksı bu alanın içinde büyür.',
           subathon:
             'Can barı, saat ya da halka için geniş bir şerit. Kaynağı büyütürsen sayaç da büyür.',
+          streamAlerts:
+            'Uyarılar bu alanın ortasında tek tek çıkar. Kaynağı büyütürsen uyarı da büyür.',
           raffle:
             "Kazanan overlay'i. Konfeti ekranın iki kenarından patlar, kazananın adı ortada çıkar.",
           obsBridge:
@@ -910,6 +1023,8 @@ export const tr: typeof en = {
           'Sub Sprout: bitkinin büyümesi hiçbir yere kaydedilmez. Sayfa yeniden yüklenirse bitki ilk aşamaya döner.',
         subathon:
           "Subathon Timer: kalan süre OBS'in içinde kaydedilir, sayfa yeniden yüklenince kaybolmaz. Kaynak kapalıyken sayaç geri saymaya devam eder ama o arada gelen abonelikleri göremez.",
+        streamAlerts:
+          "Yayın Uyarıları: sadece kaynak açıkken gelen abonelik, hediye, cheer ve raid'ler için uyarı çıkar. Kaynak kapalıyken gelenler için uyarı çıkmaz, sonradan da gösterilmez.",
         raffle:
           "Çekiliş overlay'i: kazananı sadece o an açık olan overlay alır. Kaynak kapalıyken çekilen kazanan ekrana gelmez.",
         emoteWall:
@@ -920,7 +1035,7 @@ export const tr: typeof en = {
       update: {
         title: "Widget'ı sonradan nasıl değiştiririm?",
         p1: "Ayarlar widget adresinin içinde durur, yani bir ayarı değiştirmek yeni bir adres demek. Kurulum sayfasında ayarı değiştir, yeni adresi kopyala, sonra OBS'te kaynağa çift tıklayıp URL alanındaki eski adresin yerine yapıştır.",
-        p2: '[Sohbet Kutusu](/setup/chat-widget), [Emote Duvarı](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant) ve [Subathon Timer](/setup/subathon-timer) için baştan başlaman gerekmez. Mevcut adresini kurulum sayfasındaki Widget URL alanına yapıştır, kanalların ve bütün ayarların geri yüklenir. Değiştirmek istediğini değiştir ve yeni adresi kopyala.',
+        p2: '[Sohbet Kutusu](/setup/chat-widget), [Emote Duvarı](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer) ve [Yayın Uyarıları](/setup/stream-alerts) için baştan başlaman gerekmez. Mevcut adresini kurulum sayfasındaki Widget URL alanına yapıştır, kanalların ve bütün ayarların geri yüklenir. Değiştirmek istediğini değiştir ve yeni adresi kopyala.',
         p3: "OBS Bridge'de yapıştırma alanı yok, ayarları kurulum sayfasında yeniden girip yeni araç adresini kopyalarsın. Sahne seçimlerini ve yetkili kullanıcıları araç sayfasında da değiştirebilir, yeni adresi oradaki Copy Updated URL düğmesiyle alabilirsin. Eski adresler çalışmaya devam eder, güncellemek zorunda değilsin.",
       },
       troubleshoot: {
@@ -1021,7 +1136,7 @@ export const tr: typeof en = {
       },
       others: {
         title: "Başka hangi widget'lar iki platformu birlikte dinler?",
-        p1: "[Emote Duvarı](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant) ve [Subathon Timer](/setup/subathon-timer) de tek adreste iki kanalı birlikte alır. Emote Duvarı iki sohbetten gelen, sadece emote'tan oluşan mesajları ekranda uçurur. Sub Sprout iki platformdaki aboneliklerle büyür, Kick'teki hediye abonelikler de dahil. Subathon Timer iki sohbetten gelen abonelik, hediye abonelik, Bits ve Kicks için süre ekler.",
+        p1: "[Emote Duvarı](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer) ve [Yayın Uyarıları](/setup/stream-alerts) da tek adreste iki kanalı birlikte alır. Emote Duvarı iki sohbetten gelen, sadece emote'tan oluşan mesajları ekranda uçurur. Sub Sprout iki platformdaki aboneliklerle büyür, Kick'teki hediye abonelikler de dahil. Subathon Timer iki sohbetten gelen abonelik, hediye abonelik, Bits ve Kicks için süre ekler. Yayın Uyarıları iki platformdan gelen abonelik, hediye abonelik, Bits, Kicks ve raid'ler için uyarı gösterir.",
         p2: '[Çekiliş](/setup/raffle) ise her seferinde tek platformda çalışır: Twitch ya da Kick.',
       },
       ctaTitle: "Sohbet Kutusu'nu kur",
@@ -1173,7 +1288,7 @@ export const tr: typeof en = {
     },
     freeQ: 'Senchabot Extensions ücretsiz mi?',
     freeA:
-      "Evet. Altı widget'ın ve aracın hepsi ücretsiz: Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Çekiliş ve OBS Bridge. Ücretli paket, filigran ya da premium hesap yok. Kaynak kodu GPL-3.0 lisansıyla GitHub'da açık.",
+      "Evet. Yedi widget'ın ve aracın hepsi ücretsiz: Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Çekiliş ve OBS Bridge. Ücretli paket, filigran ya da premium hesap yok. Kaynak kodu GPL-3.0 lisansıyla GitHub'da açık.",
     loginQ: '"Giriş gerektirmez" ne demek?',
     loginA:
       "Bu sitede hesap açmazsın, Twitch ya da Kick ile giriş yapmazsın ve bir şey indirmezsin. Kanal adını yazarsın, kurulum sayfası sana bir adres verir. Widget'lar herkese açık sohbeti anonim olarak okur: Twitch'e isimsiz bir izleyici gibi bağlanır, Kick'te herkese açık sohbet akışını dinler. Bu yüzden sohbete yazamaz, moderasyon yapamaz ve hesabındaki özel bilgilere erişemez.",
@@ -1185,10 +1300,10 @@ export const tr: typeof en = {
       'OBS Studio ve tarayıcı kaynağı (browser source) destekleyen diğer yayın programlarıyla. Her widget bir web adresi olarak çalışır, kaynağa bu adresi yapıştırırsın. Rehberlerimiz OBS Studio için yazıldı.',
     platformsQ: "Hangi widget'lar Twitch'i, hangileri Kick'i destekliyor?",
     platformsA:
-      "Altısı da iki platformu destekliyor. Sohbet Kutusu, Emote Duvarı, Sub Sprout ve Subathon Timer tek adreste Twitch ve Kick kanalını birlikte dinler. OBS Bridge iki sohbetten gelen komutları dinler ve her yetkili kullanıcı kendi platformuyla eklenir. Çekiliş her seferinde tek platformda çalışır, Twitch ya da Kick. Sohbet Kutusu'nda 7TV emote'ları iki platformda, BTTV ve FFZ emote'ları sadece Twitch'te görünür.",
+      "Yedisi de iki platformu destekliyor. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer ve Yayın Uyarıları tek adreste Twitch ve Kick kanalını birlikte dinler. OBS Bridge iki sohbetten gelen komutları dinler ve her yetkili kullanıcı kendi platformuyla eklenir. Çekiliş her seferinde tek platformda çalışır, Twitch ya da Kick. Sohbet Kutusu'nda 7TV emote'ları iki platformda, BTTV ve FFZ emote'ları sadece Twitch'te görünür.",
     editQ: "Widget'ı sonradan nasıl değiştiririm?",
     editA:
-      "Kurulum sayfasında ayarları değiştir, yeni adresi kopyala ve OBS'te kaynağın URL alanındaki eski adresin yerine yapıştır. Sohbet Kutusu, Emote Duvarı, Sub Sprout ve Subathon Timer'da eski adresini kurulum sayfasındaki Widget URL alanına yapıştırırsan bütün ayarların geri yüklenir, baştan başlaman gerekmez.",
+      "Kurulum sayfasında ayarları değiştir, yeni adresi kopyala ve OBS'te kaynağın URL alanındaki eski adresin yerine yapıştır. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer ve Yayın Uyarıları'nda eski adresini kurulum sayfasındaki Widget URL alanına yapıştırırsan bütün ayarların geri yüklenir, baştan başlaman gerekmez.",
     oldUrlsQ: 'Eski widget adreslerim çalışmaya devam eder mi?',
     oldUrlsA:
       "Evet. Güncellemeler mevcut adresleri bozmayacak şekilde yapılır: parametre adları, değerleri ve varsayılanları değişmez. Örneğin Sohbet Kutusu'ndaki eski keep=true hâlâ Süresiz anlamına gelir ve Sub Sprout eski channel ve platform parametrelerini hâlâ okur.",
@@ -1212,6 +1327,8 @@ export const tr: typeof en = {
     lead: "Senchabot Extensions'a eklenen özellikler ve düzeltilen hatalar, en yenisi en üstte. Liste projenin [GitHub'daki](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) commit geçmişinden hazırlanıyor.",
     site: 'Site',
     entries: {
+      streamAlerts:
+        "Yayın Uyarıları geldi: Twitch ve Kick'teki her abonelik, hediye abonelik, Bits, Kicks ve raid için kendi sesiyle animasyonlu bir uyarı çıkıyor. Rengi seçebilir, başlıkları değiştirebilir ve en az miktarları belirleyebilirsin.",
       subathon:
         'Subathon Timer geldi: abonelik, hediye abonelik, Bits ve Kicks geldikçe uzayan geri sayımı can barı, saat ya da halka olarak gösteriyor. Hangisinin ne kadar süre ekleyeceğini sen seçiyorsun, modlar da sayacı !subathon ile yönetiyor.',
       chatReader:

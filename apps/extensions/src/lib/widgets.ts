@@ -5,6 +5,7 @@ import {
   type IconProps,
   ObsBridgeIcon,
   RaffleIcon,
+  StreamAlertsIcon,
   SubathonIcon,
   SubSproutIcon,
 } from '#/components/icons';
@@ -17,6 +18,7 @@ export type WidgetId =
   | 'emote-wall'
   | 'sub-sprout'
   | 'subathon'
+  | 'stream-alerts'
   | 'raffle'
   | 'obs-bridge';
 /** `overlay`: a browser source that runs on its own. `tool`: a page the streamer operates. */
@@ -96,6 +98,18 @@ export const WIDGETS: readonly WidgetEntry[] = [
     platforms: ['twitch', 'kick'],
     demoUrl: '/widgets/subathon?simulate=1',
     sourceSize: { width: 800, height: 300 },
+  },
+  {
+    id: 'stream-alerts',
+    kind: 'overlay',
+    setupPath: '/setup/stream-alerts',
+    widgetPath: '/widgets/stream-alerts',
+    nameKey: 'widgets.streamAlerts.name',
+    taglineKey: 'widgets.streamAlerts.tagline',
+    Icon: StreamAlertsIcon,
+    platforms: ['twitch', 'kick'],
+    demoUrl: '/widgets/stream-alerts?simulate=1',
+    sourceSize: { width: 800, height: 450 },
   },
   {
     id: 'raffle',
