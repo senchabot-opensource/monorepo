@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { kickSubChannels, kickSubCount } from "./kick-sub-events";
+import { subsIn } from "../goal/goal-count";
+import { KickEventSource } from "../subathon/subathon-sources";
+import { useKickIds } from "../subathon/use-subathon";
 import { PlantSlot } from "./plant-slot";
 import { SubCountFX, SUB_COUNT_DURATION_MS } from "./fx/sub-count-fx";
 import { VineOverlay } from "./plants/vine-overlay";
@@ -22,7 +24,6 @@ export type PickMode = "fixed" | "cycle" | "random";
 export interface SubSproutWidgetProps {
   twitchChannel?: string;
   kickChannel?: string;
-  kickId?: string;
   variety?: PlantId | string;
   pick?: PickMode | string;
   water?: WaterEffectType | string;
@@ -40,7 +41,6 @@ const WATER_EFFECT_DURATION_MS = 2500;
 const LEGACY_MAX_STEPS = 9;
 const LEGACY_STEM_OFFSETS = [320, 265, 200, 200, 135, 135, 75, 75, 0, 0];
 const GIFT_BUNDLE_WINDOW_MS = 15000;
-const KICK_DUPLICATE_WINDOW_MS = 10000;
 const SIM_NEXT_GAP_MS = 400;
 
 interface SlotState {
@@ -106,7 +106,6 @@ export function formatPotLabel(stage: number, stages: number): string {
 export function SubSproutWidget({
   twitchChannel,
   kickChannel,
-  kickId,
   variety = "classic",
   pick = "fixed",
   water = "off",
@@ -163,31 +162,12 @@ export function SubSproutWidget({
   const twitchConnectedRef = useRef(false);
   const kickConnectedRef = useRef(false);
 
-  const syncJoined = () =>
-    setJoined(twitchConnectedRef.current || kickConnectedRef.current);
+  const syncJoined = useCallback(
+    () => setJoined(twitchConnectedRef.current || kickConnectedRef.current),
+    [],
+  );
 
-  const [clientKickId, setClientKickId] = useState<string | null>(null);
-
-  const effectiveKickId = kickId ?? clientKickId;
-
-  useEffect(() => {
-    if (simulate === true) return;
-    if (kickId || !kickChannel) return;
-    let cancelled = false;
-    fetch(
-      `https://kick.com/api/v1/channels/${encodeURIComponent(kickChannel)}`,
-      { headers: { Accept: "application/json" } },
-    )
-      .then(r => (r.ok ? r.json() : Promise.reject(new Error("Kick channel lookup failed"))))
-      .then((data: { chatroom?: { id?: unknown } }) => {
-        if (cancelled) return;
-        setClientKickId(data.chatroom?.id == null ? null : String(data.chatroom.id));
-      })
-      .catch(() => {});
-    return () => {
-      cancelled = true;
-    };
-  }, [kickChannel, kickId, simulate]);
+  const kickIds = useKickIds(kickChannel, simulate !== true);
 
   const applyGrowth = useCallback(() => {
     const { targetSlot, perSlot } = distributeGrowth(
@@ -309,8 +289,7 @@ export function SubSproutWidget({
 
   useEffect(() => {
     twitchConnectedRef.current = false;
-    kickConnectedRef.current = false;
-    setJoined(false);
+    syncJoined();
     if (simulate === true) return;
     const consumeBundleSlot = (
       pending: { current: { count: number; at: number } | null },
@@ -420,191 +399,6 @@ export function SubSproutWidget({
       client.connect();
     };
 
-    const loadKick = () => {
-      if (!effectiveKickId) return;
-      const chatroomId = effectiveKickId;
-
-      const MAX_RECONNECT_DELAY_MS = 30000;
-      let ws: WebSocket | null = null;
-      let intentionalClose = false;
-      let reconnectTimer: number | null = null;
-      let reconnectAttempts = 0;
-
-      const scheduleReconnect = () => {
-        if (intentionalClose) return;
-        const delay = Math.min(
-          1000 * 2 ** reconnectAttempts,
-          MAX_RECONNECT_DELAY_MS,
-        );
-        reconnectAttempts += 1;
-        console.log(
-          `[Kick] WebSocket disconnected, reconnecting in ${delay}ms (attempt ${reconnectAttempts})`,
-        );
-        reconnectTimer = window.setTimeout(connect, delay);
-      };
-
-      const connect = () => {
-        if (intentionalClose) return;
-
-        const socket = new WebSocket(
-          "wss://ws-us2.pusher.com/app/32cbd69e4b950bf97679?protocol=7&client=js&version=8.4.0&flash=false",
-        );
-        ws = socket;
-
-        socket.onopen = () => {
-          console.log("[Kick] WebSocket connected");
-          reconnectAttempts = 0;
-        for (const channelName of kickSubChannels(chatroomId)) {
-          socket.send(
-            JSON.stringify({
-              event: "pusher:subscribe",
-              data: { channel: channelName },
-            }),
-          );
-          console.log("[Kick] Subscribing to channel:", channelName);
-        }
-      };
-
-      const seenGifts = new Set<string>();
-      const recentEvents: { key: string; at: number }[] = [];
-      const isDuplicate = (key: string): boolean => {
-        const now = Date.now();
-        for (let i = recentEvents.length - 1; i >= 0; i--) {
-          if (now - recentEvents[i].at > KICK_DUPLICATE_WINDOW_MS) {
-            recentEvents.splice(i, 1);
-          }
-        }
-        if (recentEvents.some(e => e.key === key)) return true;
-        recentEvents.push({ key, at: now });
-        return false;
-      };
-
-        socket.onmessage = event => {
-        if (typeof event.data !== "string") return;
-
-        try {
-          const response = JSON.parse(event.data) as {
-            event?: unknown;
-            data?: unknown;
-          };
-          const eventName =
-            typeof response.event === "string" ? response.event : "";
-          const parsePayload = (
-            data: unknown,
-          ): Record<string, unknown> | null => {
-            if (typeof data === "string") {
-              try {
-                const parsed = JSON.parse(data) as unknown;
-                return parsed && typeof parsed === "object"
-                  ? (parsed as Record<string, unknown>)
-                  : null;
-              } catch {
-                return null;
-              }
-            }
-
-            return data && typeof data === "object"
-              ? (data as Record<string, unknown>)
-              : null;
-          };
-          if (eventName === "pusher:ping") {
-            socket.send(JSON.stringify({ event: "pusher:pong" }));
-            return;
-          }
-
-          if (eventName === "pusher_internal:subscription_succeeded") {
-            console.log("[Kick] Subscribed to channel");
-            kickConnectedRef.current = true;
-            syncJoined();
-            return;
-          }
-
-          const isSubOrGiftEvent =
-            eventName === "App\\Events\\SubscriptionEvent" ||
-            eventName === "GiftedSubscriptionsEvent";
-          const isChatMessageEvent =
-            eventName === "App\\Events\\ChatMessageEvent";
-
-          if (isSubOrGiftEvent || isChatMessageEvent) {
-            const eventKey = `${eventName}|${
-              typeof response.data === "string"
-                ? response.data
-                : JSON.stringify(response.data ?? null)
-            }`;
-            if (isDuplicate(eventKey)) return;
-          }
-
-          if (isSubOrGiftEvent) {
-            const payload = parsePayload(response.data);
-            console.debug("[SubSprout] Kick sub/gift event:", eventName, payload);
-            const count = kickSubCount(eventName, payload, seenGifts);
-            if (count > 0) {
-              handleSubEvent(count);
-            }
-            return;
-          }
-
-          if (isChatMessageEvent && response.data) {
-            const payload = parsePayload(response.data);
-            const content =
-              payload && typeof payload.content === "string"
-                ? payload.content
-                : "";
-            const sender =
-              payload && typeof payload.sender === "object"
-                ? (payload.sender as Record<string, unknown>)
-                : null;
-            const identity =
-              sender && typeof sender.identity === "object"
-                ? (sender.identity as Record<string, unknown>)
-                : null;
-            const badges = Array.isArray(identity?.badges)
-              ? (identity.badges as { type?: unknown }[])
-              : [];
-            const badgeTypes = new Set(
-              badges.map(b =>
-                typeof b.type === "string" ? b.type.toLowerCase() : "",
-              ),
-            );
-            const isMod =
-              sender?.is_moderator === true || badgeTypes.has("moderator");
-            const isBroadcaster =
-              sender?.is_broadcaster === true || badgeTypes.has("broadcaster");
-
-            if (
-              content.toLowerCase().trim() === "!grow" &&
-              (isMod || isBroadcaster)
-            ) {
-              handleSubEvent(1);
-            }
-          }
-        } catch (e) {
-          // ignore parse errors
-        }
-      };
-
-        socket.onerror = error => {
-          console.error("[Kick] WebSocket error:", error);
-        };
-
-        socket.onclose = () => {
-          console.log("[Kick] WebSocket disconnected");
-          kickConnectedRef.current = false;
-          syncJoined();
-          scheduleReconnect();
-        };
-      };
-
-      connect();
-
-      return () => {
-        intentionalClose = true;
-        if (reconnectTimer !== null) window.clearTimeout(reconnectTimer);
-        ws?.close();
-        ws = null;
-      };
-    };
-
     const cleanups: Array<() => void> = [];
 
     if (twitchChannel) {
@@ -616,15 +410,33 @@ export function SubSproutWidget({
       });
     }
 
-    if (kickChannel && effectiveKickId) {
-      const kickCleanup = loadKick();
-      if (kickCleanup) cleanups.push(kickCleanup);
-    }
-
     return () => {
       for (const cleanup of cleanups) cleanup();
     };
-  }, [twitchChannel, kickChannel, effectiveKickId, handleSubEvent]);
+  }, [twitchChannel, handleSubEvent]);
+
+  // Its own effect: a Kick lookup that lands later must not restart the Twitch reader.
+  const chatroomId = kickIds?.chatroomId;
+  const channelId = kickIds?.channelId ?? null;
+  useEffect(() => {
+    kickConnectedRef.current = false;
+    syncJoined();
+    if (simulate === true || !chatroomId) return;
+    const source = new KickEventSource(chatroomId, channelId, event => {
+      if (event.kind === "mod") {
+        if (event.text.toLowerCase().trim() === "!grow") handleSubEvent(1);
+        return;
+      }
+      // Kick's second word on a sub, a resub shared in chat, Kicks and raids add nothing.
+      const subs = subsIn(event);
+      if (subs > 0) handleSubEvent(subs);
+    });
+    source.onStatus = status => {
+      kickConnectedRef.current = status.state === "connected";
+      syncJoined();
+    };
+    return () => source.disconnect();
+  }, [simulate, chatroomId, channelId, handleSubEvent, syncJoined]);
 
   useEffect(() => {
     if (!activeWaterSlot) return;

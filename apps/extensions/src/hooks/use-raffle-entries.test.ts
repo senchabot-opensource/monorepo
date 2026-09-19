@@ -10,7 +10,10 @@ import {
   useRaffleChat,
 } from './use-raffle-chat';
 
-vi.mock('#/lib/kick', () => ({ getKickChannelInfo: vi.fn() }));
+vi.mock('#/lib/kick', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('#/lib/kick')>()),
+  getKickChannelInfo: vi.fn(),
+}));
 
 describe('isKeywordMatch', () => {
   it.each([

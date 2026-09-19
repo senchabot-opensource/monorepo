@@ -38,12 +38,13 @@ vi.mock('#/lib/kick', () => ({
   },
 }));
 
-const say = (platform: 'twitch' | 'kick', user: string, message: string) => {
+const say = (platform: 'twitch' | 'kick', user: string, message: string, userLower?: string) => {
   const now = new Date();
   chat[platform]({
     id: `${platform}-${user}`,
     platform,
     user,
+    userLower,
     message,
     timestamp: now,
     receivedAt: now,
@@ -75,6 +76,18 @@ describe('useChat command users', () => {
     bridge('twitch:bob');
     say('twitch', 'Bob', '!stopstream');
     expect(obsCall).toHaveBeenCalledWith('StopStream');
+  });
+
+  it('knows a Twitch user by login when their display-name is another name', () => {
+    bridge('twitch:oinotityoudai');
+    say('twitch', 'お命頂戴', '!stopstream', 'oinotityoudai');
+    expect(obsCall).toHaveBeenCalledWith('StopStream');
+  });
+
+  it('ignores someone whose display-name is an allowed name but whose login is not', () => {
+    bridge('twitch:お命頂戴');
+    say('twitch', 'お命頂戴', '!stopstream', 'someoneelse');
+    expect(obsCall).not.toHaveBeenCalled();
   });
 
   it('ignores the same name on the other platform', () => {

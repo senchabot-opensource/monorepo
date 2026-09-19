@@ -138,6 +138,11 @@ export class TwitchChat extends BaseChatClient {
         case 'PING':
           this.send('PONG');
           break;
+        // Sent before maintenance closes this connection. What follows in the frame is the old
+        // connection's, and a PONG to the new, still-opening socket would throw.
+        case 'RECONNECT':
+          this.restart();
+          return;
         case 'CLEARMSG': {
           const targetId = line.tags['target-msg-id'];
           if (targetId) {
@@ -186,7 +191,11 @@ export class TwitchChat extends BaseChatClient {
               replyUser,
               tags['reply-parent-user-login'],
             ]),
-            replyTo: { user: replyUser, message: tags['reply-parent-msg-body'] ?? '' },
+            replyTo: {
+              user: replyUser,
+              login: tags['reply-parent-user-login'] || undefined,
+              message: tags['reply-parent-msg-body'] ?? '',
+            },
           }
         : {}),
       firstMessage: tags['first-msg'] === '1' || undefined,
@@ -233,6 +242,9 @@ export class TwitchChat extends BaseChatClient {
     return {
       id: tags.id || `twitch-${user}-${timestamp.getTime()}`,
       user,
+      // Bans name the login. A display-name can be a different name altogether: 36% of messages
+      // on Japanese channels had one (お命頂戴 for oinotityoudai).
+      userLower: (login || user).toLowerCase(),
       message,
       platform: 'twitch',
       timestamp,

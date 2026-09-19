@@ -17,29 +17,45 @@ export const useUnifiedChat = (
   React.useEffect(() => {
     const messageOrder: string[] = [];
     const seenIds = new Set<string>();
+    // Keyed by platform too: a ban or /clear on one platform leaves the other's messages alone.
     const userIndex = new Map<string, Set<string>>();
+    const userKey = (platform: ChatMessagesType["platform"], userLower: string) =>
+      `${platform}:${userLower}`;
 
-    const pruneUserIndex = (id: string, userLower?: string) => {
-      if (!userLower) {
+    const pruneUserIndex = (id: string, key?: string) => {
+      if (!key) {
         return;
       }
-      const set = userIndex.get(userLower);
+      const set = userIndex.get(key);
       if (!set) {
         return;
       }
       set.delete(id);
       if (set.size === 0) {
-        userIndex.delete(userLower);
+        userIndex.delete(key);
       }
     };
 
+    const keyOf = (message?: ChatMessagesType) =>
+      message?.userLower ? userKey(message.platform, message.userLower) : undefined;
+
+    const forget = (id: string) => {
+      seenIds.delete(id);
+      const idx = messageOrder.indexOf(id);
+      if (idx !== -1) {
+        messageOrder.splice(idx, 1);
+      }
+      chatMessagesCollection.delete(id);
+    };
+
     const pushToMessages = (payload: ChatMessagesType) => {
-      const userLower = payload.user.toLowerCase();
+      const userLower = payload.userLower ?? payload.user.toLowerCase();
       const message: ChatMessagesType = {
         ...payload,
         receivedAt: new Date(),
         userLower,
       };
+      const key = userKey(message.platform, userLower);
       chatMessagesCollection.insert(message);
 
       if (seenIds.has(message.id)) {
@@ -47,14 +63,14 @@ export const useUnifiedChat = (
         if (existingIndex !== -1) {
           messageOrder.splice(existingIndex, 1);
         }
-        pruneUserIndex(message.id, userLower);
+        pruneUserIndex(message.id, key);
       } else {
         seenIds.add(message.id);
       }
       messageOrder.push(message.id);
-      const bucket = userIndex.get(userLower) ?? new Set<string>();
+      const bucket = userIndex.get(key) ?? new Set<string>();
       bucket.add(message.id);
-      userIndex.set(userLower, bucket);
+      userIndex.set(key, bucket);
 
       while (messageOrder.length > MAX_CHAT_HISTORY) {
         const oldestId = messageOrder.shift();
@@ -64,7 +80,7 @@ export const useUnifiedChat = (
 
         const oldest = chatMessagesCollection.get(oldestId);
         seenIds.delete(oldestId);
-        pruneUserIndex(oldestId, oldest?.userLower);
+        pruneUserIndex(oldestId, keyOf(oldest));
         chatMessagesCollection.delete(oldestId);
       }
     };
@@ -76,13 +92,8 @@ export const useUnifiedChat = (
       const existing = chatMessagesCollection.get(id);
       const hadIt = existing !== undefined;
       if (hadIt) {
-        seenIds.delete(id);
-        const idx = messageOrder.indexOf(id);
-        if (idx !== -1) {
-          messageOrder.splice(idx, 1);
-        }
-        pruneUserIndex(id, existing?.userLower);
-        chatMessagesCollection.delete(id);
+        pruneUserIndex(id, keyOf(existing));
+        forget(id);
       }
       if (typeof window !== "undefined") {
         console.debug(
@@ -91,33 +102,30 @@ export const useUnifiedChat = (
       }
     };
 
-    const banUser = (usernameLower: string) => {
-      const bucket = userIndex.get(usernameLower);
-      if (!bucket || bucket.size === 0) {
-        return;
-      }
-      const ids = Array.from(bucket);
-      for (const id of ids) {
-        if (!seenIds.has(id)) {
+    const banUser =
+      (platform: ChatMessagesType["platform"]) => (usernameLower: string) => {
+        const key = userKey(platform, usernameLower);
+        const bucket = userIndex.get(key);
+        if (!bucket || bucket.size === 0) {
+          return;
+        }
+        for (const id of Array.from(bucket)) {
+          if (seenIds.has(id)) {
+            forget(id);
+          }
+        }
+        userIndex.delete(key);
+      };
+
+    const clearAll = (platform: ChatMessagesType["platform"]) => () => {
+      for (const id of [...messageOrder]) {
+        const message = chatMessagesCollection.get(id);
+        if (message && message.platform !== platform) {
           continue;
         }
-        seenIds.delete(id);
-        const idx = messageOrder.indexOf(id);
-        if (idx !== -1) {
-          messageOrder.splice(idx, 1);
-        }
-        chatMessagesCollection.delete(id);
+        pruneUserIndex(id, keyOf(message));
+        forget(id);
       }
-      userIndex.delete(usernameLower);
-    };
-
-    const clearAll = () => {
-      for (const id of messageOrder) {
-        chatMessagesCollection.delete(id);
-      }
-      messageOrder.length = 0;
-      seenIds.clear();
-      userIndex.clear();
     };
 
     const clients: Disconnectable[] = [];
@@ -130,8 +138,8 @@ export const useUnifiedChat = (
           normalizedTwitchChannel,
           pushToMessages,
           deleteMessage,
-          banUser,
-          clearAll,
+          banUser("twitch"),
+          clearAll("twitch"),
         ),
       );
     }
@@ -142,8 +150,8 @@ export const useUnifiedChat = (
           normalizedKickChannelId,
           pushToMessages,
           deleteMessage,
-          banUser,
-          clearAll,
+          banUser("kick"),
+          clearAll("kick"),
         ),
       );
     }

@@ -131,7 +131,7 @@ export function twitchEvent(line: IrcLine, bundles: Map<string, number>): Subath
 }
 
 /**
- * Sub Sprout's channels plus channel_{channel}, where Kicks and ChannelSubscriptionEvent come.
+ * The chatroom channels plus channel_{channel}, where Kicks and ChannelSubscriptionEvent come.
  * That one takes the channel id, not the chatroom id.
  */
 export const kickSubathonChannels = (chatroomId: string, channelId: string | null): string[] => [

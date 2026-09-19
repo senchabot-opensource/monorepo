@@ -1,7 +1,8 @@
 import { useEffect, useRef } from "react";
 import type { RaffleConfig, RaffleParticipant } from "#/types/raffle";
-import { getKickChannelInfo } from "#/lib/kick";
-import { parseIrcLine } from "#/lib/twitch";
+import { BaseChatClient } from "#/lib/basechat";
+import { getKickChannelInfo, KICK_PUSHER_URL } from "#/lib/kick";
+import { anonymousJoin, parseIrcLine, TWITCH_IRC_URL } from "#/lib/twitch";
 
 type OnParticipant = (participant: RaffleParticipant) => void;
 
@@ -100,77 +101,71 @@ function makeUserId(platform: "twitch" | "kick", username: string): string {
   return `${platform}-${username.trim().toLowerCase()}`;
 }
 
-interface ReconnectingWS {
-  send: (data: string) => void;
-  close: () => void;
+/** Anonymous Twitch IRC reader that passes each chat line on. */
+class TwitchRaffleReader extends BaseChatClient {
+  constructor(
+    channel: string,
+    private readonly onLine: (line: string) => void,
+  ) {
+    super("[RaffleChat] Twitch", () => {});
+    this.connect(TWITCH_IRC_URL, {
+      onOpen: () => {
+        for (const line of anonymousJoin(channel)) this.send(line);
+      },
+      onMessage: (event) => this.handle(event),
+    });
+  }
+
+  // Answered with "PONG tmi.twitch.tv :tmi.twitch.tv", which parsePrivmsg ignores.
+  protected override pingFrame() {
+    return "PING :tmi.twitch.tv";
+  }
+
+  private handle(event: MessageEvent) {
+    if (typeof event.data !== "string") return;
+    for (const raw of event.data.split("\r\n")) {
+      if (!raw) continue;
+      const command = parseIrcLine(raw)?.command;
+      if (command === "PING") {
+        this.send("PONG");
+        continue;
+      }
+      // Sent before maintenance closes the connection; the rest of this frame belongs to it.
+      if (command === "RECONNECT") {
+        this.restart();
+        return;
+      }
+      this.onLine(raw);
+    }
+  }
 }
 
-function createReconnectingWS(
-  url: string,
-  onOpen: (ws: WebSocket) => void,
-  onMessage: (event: MessageEvent) => void,
-  onError: (err: Event) => void,
-  onStatus: (msg: string) => void,
-): ReconnectingWS {
-  let ws: WebSocket | null = null;
-  let attempt = 0;
-  let stopped = false;
-  let reconnectTimer: ReturnType<typeof setTimeout> | null = null;
-  const maxAttempts = 10;
-  const baseDelay = 1000;
-  const maxDelay = 30000;
+/** Kick Pusher reader that passes each chatroom frame on. */
+class KickRaffleReader extends BaseChatClient {
+  constructor(
+    chatroomId: string,
+    private readonly onFrame: (data: string) => void,
+  ) {
+    super("[RaffleChat] Kick", () => {});
+    this.connect(KICK_PUSHER_URL, {
+      onOpen: () => {
+        this.send(
+          JSON.stringify({
+            event: "pusher:subscribe",
+            data: { channel: `chatrooms.${chatroomId}.v2` },
+          }),
+        );
+      },
+      onMessage: (event) => {
+        if (typeof event.data === "string") this.onFrame(event.data);
+      },
+    });
+  }
 
-  const scheduleReconnect = () => {
-    if (stopped) return;
-    if (attempt >= maxAttempts) {
-      onStatus("[RaffleChat] Reconnect attempts exhausted, giving up.");
-      return;
-    }
-    const delay = Math.min(baseDelay * 2 ** attempt, maxDelay);
-    attempt += 1;
-    onStatus(`[RaffleChat] Reconnecting in ${delay}ms (attempt ${attempt}/${maxAttempts})...`);
-    reconnectTimer = setTimeout(connect, delay);
-  };
-
-  const connect = () => {
-    if (stopped) return;
-    const socket = new WebSocket(url);
-    ws = socket;
-    socket.onopen = () => {
-      attempt = 0;
-      onOpen(socket);
-    };
-    socket.onmessage = onMessage;
-    socket.onerror = onError;
-    socket.onclose = () => {
-      if (stopped) return;
-      onStatus("[RaffleChat] Connection closed, will reconnect.");
-      scheduleReconnect();
-    };
-  };
-
-  connect();
-
-  return {
-    send: (data: string) => {
-      if (ws && ws.readyState === WebSocket.OPEN) ws.send(data);
-    },
-    close: () => {
-      stopped = true;
-      if (reconnectTimer) {
-        clearTimeout(reconnectTimer);
-        reconnectTimer = null;
-      }
-      if (ws) {
-        ws.onopen = null;
-        ws.onmessage = null;
-        ws.onerror = null;
-        ws.onclose = null;
-        ws.close();
-        ws = null;
-      }
-    },
-  };
+  // Answered with pusher:pong. Pusher's own liveness pings are protocol frames the page never sees.
+  protected override pingFrame() {
+    return JSON.stringify({ event: "pusher:ping", data: {} });
+  }
 }
 
 export function useRaffleChat(
@@ -192,64 +187,40 @@ export function useRaffleChat(
     if (!enabled || !config.channel.trim()) return;
 
     let cancelled = false;
-    const clients: ReconnectingWS[] = [];
+    const clients: BaseChatClient[] = [];
 
     if (config.platform === "twitch") {
       const channel = config.channel.trim().toLowerCase();
-      const client = createReconnectingWS(
-        "wss://irc-ws.chat.twitch.tv:443",
-        (ws) => {
-          ws.send("CAP REQ :twitch.tv/tags twitch.tv/commands");
-          ws.send("PASS SCHMOOPIIE");
-          ws.send(`NICK justinfan${Date.now() % 1_000_000}`);
-          ws.send(`JOIN #${channel}`);
-        },
-        (event) => {
-          if (typeof event.data !== "string") return;
-          for (const message of event.data.split("\r\n")) {
-            if (!message) continue;
-            if (message.startsWith("PING")) {
-              client.send("PONG");
-              continue;
-            }
+      const client = new TwitchRaffleReader(channel, (message) => {
+        const parsed = parsePrivmsg(message);
+        if (!parsed) return;
 
-            const parsed = parsePrivmsg(message);
-            if (!parsed) continue;
+        const username = parsed.username.toLowerCase();
+        if (KNOWN_BOTS.has(username)) return;
 
-            const username = parsed.username.toLowerCase();
-            if (KNOWN_BOTS.has(username)) continue;
+        const currentConfig = configRef.current;
+        const currentEnabled = enabledRef.current;
+        if (!currentEnabled) return;
 
-            const currentConfig = configRef.current;
-            const currentEnabled = enabledRef.current;
-            if (!currentEnabled) continue;
+        if (!isKeywordMatch(parsed.message, currentConfig.keyword)) return;
 
-            if (!isKeywordMatch(parsed.message, currentConfig.keyword)) continue;
+        const subMonths = extractSubMonths(parsed.tags);
+        const isSub = isSubscriber(parsed.tags);
 
-            const subMonths = extractSubMonths(parsed.tags);
-            const isSub = isSubscriber(parsed.tags);
+        if (!shouldAcceptEntry(isSub, subMonths, currentConfig)) return;
 
-            if (!shouldAcceptEntry(isSub, subMonths, currentConfig)) continue;
+        const displayName = parsed.tags["display-name"] || parsed.username;
+        const id = makeUserId("twitch", username);
 
-            const displayName = parsed.tags["display-name"] || parsed.username;
-            const id = makeUserId("twitch", username);
-
-            onParticipantRef.current({
-              id,
-              username,
-              displayName,
-              platform: "twitch",
-              subMonths,
-              timestamp: Date.now(),
-            });
-          }
-        },
-        (err) => {
-          console.error("[RaffleChat] Twitch WebSocket error:", err);
-        },
-        (msg) => {
-          console.log(msg);
-        },
-      );
+        onParticipantRef.current({
+          id,
+          username,
+          displayName,
+          platform: "twitch",
+          subMonths,
+          timestamp: Date.now(),
+        });
+      });
       clients.push(client);
     }
 
@@ -270,87 +241,68 @@ export function useRaffleChat(
           channelId = info.chatroomId;
         }
 
-        const client = createReconnectingWS(
-          "wss://ws-us2.pusher.com/app/32cbd69e4b950bf97679?protocol=7&client=js&version=8.4.0&flash=false",
-          (ws) => {
-            ws.send(
-              JSON.stringify({
-                event: "pusher:subscribe",
-                data: { channel: `chatrooms.${channelId}.v2` },
-              }),
-            );
-          },
-          (event) => {
-            if (typeof event.data !== "string") return;
+        const client = new KickRaffleReader(channelId, (data) => {
+          let responseData: unknown;
+          try {
+            responseData = JSON.parse(data);
+          } catch {
+            return;
+          }
 
-            let responseData: unknown;
-            try {
-              responseData = JSON.parse(event.data);
-            } catch {
-              return;
-            }
+          const response = responseData as { event?: unknown; data?: unknown };
+          if (
+            response.event !== "App\\Events\\ChatMessageEvent" ||
+            typeof response.data !== "string"
+          ) {
+            return;
+          }
 
-            const response = responseData as { event?: unknown; data?: unknown };
-            if (
-              response.event !== "App\\Events\\ChatMessageEvent" ||
-              typeof response.data !== "string"
-            ) {
-              return;
-            }
+          let payloadData: unknown;
+          try {
+            payloadData = JSON.parse(response.data);
+          } catch {
+            return;
+          }
 
-            let payloadData: unknown;
-            try {
-              payloadData = JSON.parse(response.data);
-            } catch {
-              return;
-            }
-
-            const payload = payloadData as {
-              id?: unknown;
-              sender: {
-                username: string;
-                identity?: {
-                  color?: string;
-                  badges?: { type: string; count?: number }[];
-                };
+          const payload = payloadData as {
+            id?: unknown;
+            sender: {
+              username: string;
+              identity?: {
+                color?: string;
+                badges?: { type: string; count?: number }[];
               };
-              content: string;
-              created_at: string;
             };
+            content: string;
+            created_at: string;
+          };
 
-            const user = payload.sender.username.toLowerCase();
-            if (KNOWN_BOTS.has(user)) return;
+          const user = payload.sender.username.toLowerCase();
+          if (KNOWN_BOTS.has(user)) return;
 
-            const currentConfig = configRef.current;
-            const currentEnabled = enabledRef.current;
-            if (!currentEnabled) return;
+          const currentConfig = configRef.current;
+          const currentEnabled = enabledRef.current;
+          if (!currentEnabled) return;
 
-            if (!isKeywordMatch(payload.content, currentConfig.keyword)) return;
+          if (!isKeywordMatch(payload.content, currentConfig.keyword)) return;
 
-            const { isSub, subMonths } = getKickSubStatus(
-              payload.sender.identity?.badges || [],
-            );
+          const { isSub, subMonths } = getKickSubStatus(
+            payload.sender.identity?.badges || [],
+          );
 
-            if (!shouldAcceptEntry(isSub, subMonths, currentConfig)) return;
+          if (!shouldAcceptEntry(isSub, subMonths, currentConfig)) return;
 
-            const id = makeUserId("kick", user);
+          const id = makeUserId("kick", user);
 
-            onParticipantRef.current({
-              id,
-              username: user,
-              displayName: payload.sender.username,
-              platform: "kick",
-              subMonths,
-              timestamp: Date.now(),
-            });
-          },
-          (err) => {
-            console.error("[RaffleChat] Kick WebSocket error:", err);
-          },
-          (msg) => {
-            console.log(msg);
-          },
-        );
+          onParticipantRef.current({
+            id,
+            username: user,
+            displayName: payload.sender.username,
+            platform: "kick",
+            subMonths,
+            timestamp: Date.now(),
+          });
+        });
         clients.push(client);
       };
 
@@ -360,7 +312,7 @@ export function useRaffleChat(
     return () => {
       cancelled = true;
       for (const client of clients) {
-        client.close();
+        client.disconnect();
       }
     };
   }, [enabled, config.channel, config.platform]);

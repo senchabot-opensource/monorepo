@@ -57,23 +57,6 @@ const searchSchema = z.object({
 export const Route = createFileRoute("/widgets/sub-sprout-widget")({
   ssr: false,
   validateSearch: search => searchSchema.parse(search),
-  loaderDeps: ({ search }) => ({
-    kickChannel:
-      search.kick || (search.platform === "kick" ? search.channel : undefined),
-    simulate: search.simulate,
-  }),
-  loader: async ({ deps }) => {
-    if (deps.simulate !== true && deps.kickChannel) {
-      try {
-        const { getKickChannelInfo } = await import("#/lib/kick");
-        const kickInfo = await getKickChannelInfo(deps.kickChannel);
-        return { kickId: kickInfo.chatroomId };
-      } catch {
-        return { kickId: null };
-      }
-    }
-    return { kickId: null };
-  },
   component: RouteComponent,
 });
 
@@ -91,7 +74,6 @@ function RouteComponent() {
     simulate,
     simspeed,
   } = Route.useSearch();
-  const { kickId } = Route.useLoaderData();
 
   const twitchChannel =
     twitch || (platform === "twitch" ? channel : undefined);
@@ -107,7 +89,6 @@ function RouteComponent() {
       <SubSproutWidget
         twitchChannel={twitchChannel}
         kickChannel={kickChannel}
-        kickId={kickId ?? undefined}
         variety={variety}
         pick={pick}
         water={water}

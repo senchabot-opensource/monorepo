@@ -49,6 +49,21 @@ describe('reader log', () => {
     expect(rows(log)).toEqual(['a (deleted)', 'b (deleted)', 'c', 'd (deleted)']);
   });
 
+  it('marks a Twitch ban by login, whatever the display-name', () => {
+    const log = applyOps(
+      [],
+      [
+        {
+          op: 'message',
+          msg: msg('a', T0, { user: 'お命頂戴', userLower: 'oinotityoudai', platform: 'twitch' }),
+          at: T0,
+        },
+        { op: 'deleteUser', platform: 'twitch', userLower: 'oinotityoudai' },
+      ],
+    );
+    expect(rows(log)).toEqual(['a (deleted)']);
+  });
+
   it('keeps the newest rows once it is full', () => {
     const ops = Array.from({ length: MAX_ENTRIES + 5 }, (_, i) => ({
       op: 'message' as const,

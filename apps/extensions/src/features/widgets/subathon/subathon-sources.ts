@@ -43,6 +43,11 @@ export class TwitchEventSource extends BaseChatClient {
         this.send('PONG');
         continue;
       }
+      // Sent before maintenance closes this connection; the rest of the frame is the old one's.
+      if (line.command === 'RECONNECT') {
+        this.restart();
+        return;
+      }
       const subathonEvent = twitchEvent(line, this.bundles);
       if (subathonEvent) this.onEvent(subathonEvent);
     }

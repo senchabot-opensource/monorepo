@@ -39,6 +39,13 @@ describe('getHighlightKind', () => {
     expect(getHighlightKind(reply, ['senchabot'])).toBe('mention');
   });
 
+  it('counts a reply to a channel whose display-name is another name', () => {
+    const reply = message({
+      replyTo: { user: '加藤純一', login: 'kato_junichi0817', message: 'hi' },
+    });
+    expect(getHighlightKind(reply, ['kato_junichi0817'])).toBe('mention');
+  });
+
   it('does not match a name that only starts with the channel name', () => {
     expect(getHighlightKind(message({ message: '@senchabotfan hi' }), ['senchabot'])).toBeNull();
   });
