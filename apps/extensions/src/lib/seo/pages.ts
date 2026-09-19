@@ -1,4 +1,4 @@
-import { GUIDES_PATH, GUIDES_PUBLISHED, type GuideEntry } from '#/lib/guides';
+import { GUIDES_PATH, type GuideEntry } from '#/lib/guides';
 import { type Locale, type TranslationKey, translate } from '#/lib/i18n';
 import type { FaqEntry } from '#/lib/i18n/seo';
 import { getWidget, type WidgetId } from '#/lib/widgets';
@@ -353,7 +353,7 @@ export function getGuideHead(guide: GuideEntry, locale: Locale) {
         locale,
         headline: translate(locale, guide.titleKey),
         description: guide.meta[locale].description,
-        datePublished: GUIDES_PUBLISHED,
+        datePublished: guide.published,
       }),
     },
   );

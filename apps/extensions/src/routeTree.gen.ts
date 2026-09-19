@@ -26,7 +26,10 @@ import { Route as Char123LocaleChar125FaqRouteImport } from './routes/{-$locale}
 import { Route as Char123LocaleChar125GuidesIndexRouteImport } from './routes/{-$locale}/guides/index'
 import { Route as Char123LocaleChar125GuidesChatGiveawayRouteImport } from './routes/{-$locale}/guides/chat-giveaway'
 import { Route as Char123LocaleChar125GuidesObsBrowserSourceRouteImport } from './routes/{-$locale}/guides/obs-browser-source'
+import { Route as Char123LocaleChar125GuidesObsChatDockRouteImport } from './routes/{-$locale}/guides/obs-chat-dock'
 import { Route as Char123LocaleChar125GuidesObsSceneSwitcherRouteImport } from './routes/{-$locale}/guides/obs-scene-switcher'
+import { Route as Char123LocaleChar125GuidesStreamAlertsRouteImport } from './routes/{-$locale}/guides/stream-alerts'
+import { Route as Char123LocaleChar125GuidesSubathonTimerRouteImport } from './routes/{-$locale}/guides/subathon-timer'
 import { Route as Char123LocaleChar125GuidesTwitchKickChatOverlayRouteImport } from './routes/{-$locale}/guides/twitch-kick-chat-overlay'
 import { Route as Char123LocaleChar125SetupChatWidgetRouteImport } from './routes/{-$locale}/setup/chat-widget'
 import { Route as Char123LocaleChar125SetupEmoteWallRouteImport } from './routes/{-$locale}/setup/emote-wall'
@@ -128,10 +131,28 @@ const Char123LocaleChar125GuidesObsBrowserSourceRoute =
     path: '/guides/obs-browser-source',
     getParentRoute: () => Char123LocaleChar125RouteRoute,
   } as any)
+const Char123LocaleChar125GuidesObsChatDockRoute =
+  Char123LocaleChar125GuidesObsChatDockRouteImport.update({
+    id: '/guides/obs-chat-dock',
+    path: '/guides/obs-chat-dock',
+    getParentRoute: () => Char123LocaleChar125RouteRoute,
+  } as any)
 const Char123LocaleChar125GuidesObsSceneSwitcherRoute =
   Char123LocaleChar125GuidesObsSceneSwitcherRouteImport.update({
     id: '/guides/obs-scene-switcher',
     path: '/guides/obs-scene-switcher',
+    getParentRoute: () => Char123LocaleChar125RouteRoute,
+  } as any)
+const Char123LocaleChar125GuidesStreamAlertsRoute =
+  Char123LocaleChar125GuidesStreamAlertsRouteImport.update({
+    id: '/guides/stream-alerts',
+    path: '/guides/stream-alerts',
+    getParentRoute: () => Char123LocaleChar125RouteRoute,
+  } as any)
+const Char123LocaleChar125GuidesSubathonTimerRoute =
+  Char123LocaleChar125GuidesSubathonTimerRouteImport.update({
+    id: '/guides/subathon-timer',
+    path: '/guides/subathon-timer',
     getParentRoute: () => Char123LocaleChar125RouteRoute,
   } as any)
 const Char123LocaleChar125GuidesTwitchKickChatOverlayRoute =
@@ -206,7 +227,10 @@ export interface FileRoutesByFullPath {
   '/{-$locale}/': typeof Char123LocaleChar125IndexRoute
   '/{-$locale}/guides/chat-giveaway': typeof Char123LocaleChar125GuidesChatGiveawayRoute
   '/{-$locale}/guides/obs-browser-source': typeof Char123LocaleChar125GuidesObsBrowserSourceRoute
+  '/{-$locale}/guides/obs-chat-dock': typeof Char123LocaleChar125GuidesObsChatDockRoute
   '/{-$locale}/guides/obs-scene-switcher': typeof Char123LocaleChar125GuidesObsSceneSwitcherRoute
+  '/{-$locale}/guides/stream-alerts': typeof Char123LocaleChar125GuidesStreamAlertsRoute
+  '/{-$locale}/guides/subathon-timer': typeof Char123LocaleChar125GuidesSubathonTimerRoute
   '/{-$locale}/guides/twitch-kick-chat-overlay': typeof Char123LocaleChar125GuidesTwitchKickChatOverlayRoute
   '/{-$locale}/setup/chat-widget': typeof Char123LocaleChar125SetupChatWidgetRoute
   '/{-$locale}/setup/emote-wall': typeof Char123LocaleChar125SetupEmoteWallRoute
@@ -234,7 +258,10 @@ export interface FileRoutesByTo {
   '/{-$locale}': typeof Char123LocaleChar125IndexRoute
   '/{-$locale}/guides/chat-giveaway': typeof Char123LocaleChar125GuidesChatGiveawayRoute
   '/{-$locale}/guides/obs-browser-source': typeof Char123LocaleChar125GuidesObsBrowserSourceRoute
+  '/{-$locale}/guides/obs-chat-dock': typeof Char123LocaleChar125GuidesObsChatDockRoute
   '/{-$locale}/guides/obs-scene-switcher': typeof Char123LocaleChar125GuidesObsSceneSwitcherRoute
+  '/{-$locale}/guides/stream-alerts': typeof Char123LocaleChar125GuidesStreamAlertsRoute
+  '/{-$locale}/guides/subathon-timer': typeof Char123LocaleChar125GuidesSubathonTimerRoute
   '/{-$locale}/guides/twitch-kick-chat-overlay': typeof Char123LocaleChar125GuidesTwitchKickChatOverlayRoute
   '/{-$locale}/setup/chat-widget': typeof Char123LocaleChar125SetupChatWidgetRoute
   '/{-$locale}/setup/emote-wall': typeof Char123LocaleChar125SetupEmoteWallRoute
@@ -264,7 +291,10 @@ export interface FileRoutesById {
   '/{-$locale}/': typeof Char123LocaleChar125IndexRoute
   '/{-$locale}/guides/chat-giveaway': typeof Char123LocaleChar125GuidesChatGiveawayRoute
   '/{-$locale}/guides/obs-browser-source': typeof Char123LocaleChar125GuidesObsBrowserSourceRoute
+  '/{-$locale}/guides/obs-chat-dock': typeof Char123LocaleChar125GuidesObsChatDockRoute
   '/{-$locale}/guides/obs-scene-switcher': typeof Char123LocaleChar125GuidesObsSceneSwitcherRoute
+  '/{-$locale}/guides/stream-alerts': typeof Char123LocaleChar125GuidesStreamAlertsRoute
+  '/{-$locale}/guides/subathon-timer': typeof Char123LocaleChar125GuidesSubathonTimerRoute
   '/{-$locale}/guides/twitch-kick-chat-overlay': typeof Char123LocaleChar125GuidesTwitchKickChatOverlayRoute
   '/{-$locale}/setup/chat-widget': typeof Char123LocaleChar125SetupChatWidgetRoute
   '/{-$locale}/setup/emote-wall': typeof Char123LocaleChar125SetupEmoteWallRoute
@@ -295,7 +325,10 @@ export interface FileRouteTypes {
     | '/{-$locale}/'
     | '/{-$locale}/guides/chat-giveaway'
     | '/{-$locale}/guides/obs-browser-source'
+    | '/{-$locale}/guides/obs-chat-dock'
     | '/{-$locale}/guides/obs-scene-switcher'
+    | '/{-$locale}/guides/stream-alerts'
+    | '/{-$locale}/guides/subathon-timer'
     | '/{-$locale}/guides/twitch-kick-chat-overlay'
     | '/{-$locale}/setup/chat-widget'
     | '/{-$locale}/setup/emote-wall'
@@ -323,7 +356,10 @@ export interface FileRouteTypes {
     | '/{-$locale}'
     | '/{-$locale}/guides/chat-giveaway'
     | '/{-$locale}/guides/obs-browser-source'
+    | '/{-$locale}/guides/obs-chat-dock'
     | '/{-$locale}/guides/obs-scene-switcher'
+    | '/{-$locale}/guides/stream-alerts'
+    | '/{-$locale}/guides/subathon-timer'
     | '/{-$locale}/guides/twitch-kick-chat-overlay'
     | '/{-$locale}/setup/chat-widget'
     | '/{-$locale}/setup/emote-wall'
@@ -352,7 +388,10 @@ export interface FileRouteTypes {
     | '/{-$locale}/'
     | '/{-$locale}/guides/chat-giveaway'
     | '/{-$locale}/guides/obs-browser-source'
+    | '/{-$locale}/guides/obs-chat-dock'
     | '/{-$locale}/guides/obs-scene-switcher'
+    | '/{-$locale}/guides/stream-alerts'
+    | '/{-$locale}/guides/subathon-timer'
     | '/{-$locale}/guides/twitch-kick-chat-overlay'
     | '/{-$locale}/setup/chat-widget'
     | '/{-$locale}/setup/emote-wall'
@@ -500,11 +539,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char123LocaleChar125GuidesObsBrowserSourceRouteImport
       parentRoute: typeof Char123LocaleChar125RouteRoute
     }
+    '/{-$locale}/guides/obs-chat-dock': {
+      id: '/{-$locale}/guides/obs-chat-dock'
+      path: '/guides/obs-chat-dock'
+      fullPath: '/{-$locale}/guides/obs-chat-dock'
+      preLoaderRoute: typeof Char123LocaleChar125GuidesObsChatDockRouteImport
+      parentRoute: typeof Char123LocaleChar125RouteRoute
+    }
     '/{-$locale}/guides/obs-scene-switcher': {
       id: '/{-$locale}/guides/obs-scene-switcher'
       path: '/guides/obs-scene-switcher'
       fullPath: '/{-$locale}/guides/obs-scene-switcher'
       preLoaderRoute: typeof Char123LocaleChar125GuidesObsSceneSwitcherRouteImport
+      parentRoute: typeof Char123LocaleChar125RouteRoute
+    }
+    '/{-$locale}/guides/stream-alerts': {
+      id: '/{-$locale}/guides/stream-alerts'
+      path: '/guides/stream-alerts'
+      fullPath: '/{-$locale}/guides/stream-alerts'
+      preLoaderRoute: typeof Char123LocaleChar125GuidesStreamAlertsRouteImport
+      parentRoute: typeof Char123LocaleChar125RouteRoute
+    }
+    '/{-$locale}/guides/subathon-timer': {
+      id: '/{-$locale}/guides/subathon-timer'
+      path: '/guides/subathon-timer'
+      fullPath: '/{-$locale}/guides/subathon-timer'
+      preLoaderRoute: typeof Char123LocaleChar125GuidesSubathonTimerRouteImport
       parentRoute: typeof Char123LocaleChar125RouteRoute
     }
     '/{-$locale}/guides/twitch-kick-chat-overlay': {
@@ -579,7 +639,10 @@ interface Char123LocaleChar125RouteRouteChildren {
   Char123LocaleChar125IndexRoute: typeof Char123LocaleChar125IndexRoute
   Char123LocaleChar125GuidesChatGiveawayRoute: typeof Char123LocaleChar125GuidesChatGiveawayRoute
   Char123LocaleChar125GuidesObsBrowserSourceRoute: typeof Char123LocaleChar125GuidesObsBrowserSourceRoute
+  Char123LocaleChar125GuidesObsChatDockRoute: typeof Char123LocaleChar125GuidesObsChatDockRoute
   Char123LocaleChar125GuidesObsSceneSwitcherRoute: typeof Char123LocaleChar125GuidesObsSceneSwitcherRoute
+  Char123LocaleChar125GuidesStreamAlertsRoute: typeof Char123LocaleChar125GuidesStreamAlertsRoute
+  Char123LocaleChar125GuidesSubathonTimerRoute: typeof Char123LocaleChar125GuidesSubathonTimerRoute
   Char123LocaleChar125GuidesTwitchKickChatOverlayRoute: typeof Char123LocaleChar125GuidesTwitchKickChatOverlayRoute
   Char123LocaleChar125SetupChatWidgetRoute: typeof Char123LocaleChar125SetupChatWidgetRoute
   Char123LocaleChar125SetupEmoteWallRoute: typeof Char123LocaleChar125SetupEmoteWallRoute
@@ -601,8 +664,14 @@ const Char123LocaleChar125RouteRouteChildren: Char123LocaleChar125RouteRouteChil
       Char123LocaleChar125GuidesChatGiveawayRoute,
     Char123LocaleChar125GuidesObsBrowserSourceRoute:
       Char123LocaleChar125GuidesObsBrowserSourceRoute,
+    Char123LocaleChar125GuidesObsChatDockRoute:
+      Char123LocaleChar125GuidesObsChatDockRoute,
     Char123LocaleChar125GuidesObsSceneSwitcherRoute:
       Char123LocaleChar125GuidesObsSceneSwitcherRoute,
+    Char123LocaleChar125GuidesStreamAlertsRoute:
+      Char123LocaleChar125GuidesStreamAlertsRoute,
+    Char123LocaleChar125GuidesSubathonTimerRoute:
+      Char123LocaleChar125GuidesSubathonTimerRoute,
     Char123LocaleChar125GuidesTwitchKickChatOverlayRoute:
       Char123LocaleChar125GuidesTwitchKickChatOverlayRoute,
     Char123LocaleChar125SetupChatWidgetRoute:

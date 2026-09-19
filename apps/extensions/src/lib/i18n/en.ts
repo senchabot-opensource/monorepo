@@ -1013,7 +1013,7 @@ export const en = {
     openSetup: 'Open the setup page',
     index: {
       title: 'Guides',
-      lead: "Each guide answers one question step by step: adding a widget to OBS, combining Twitch and Kick chat, running a chat raffle and switching scenes from chat. They all cover free tools that don't need a login.",
+      lead: "Each guide answers one question step by step: adding a widget to OBS, combining Twitch and Kick chat, reading chat in an OBS dock, adding stream alerts, running a subathon timer, running a chat raffle and switching scenes from chat. They all cover free tools that don't need a login.",
       listLabel: 'All guides',
       moreText:
         "For general questions, check the [FAQ](/faq). To see what's changed, head to the [changelog](/changelog).",
@@ -1064,7 +1064,7 @@ export const en = {
       },
       transparent: {
         title: 'Do you need to do anything to make the background transparent?',
-        p1: "No. Chat Box, Emote Wall, Sub Sprout, Subathon Timer and the Raffle overlay are drawn on a transparent background. You don't need a chroma key or a filter, and you can leave the Custom CSS field in OBS as it is.",
+        p1: "No. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal and the Raffle overlay are drawn on a transparent background. You don't need a chroma key or a filter, and you can leave the Custom CSS field in OBS as it is.",
         p2: 'If Chat Box is hard to read on a bright scene, turn on Dark Background. It puts a semi-transparent black layer behind the widget, and you can set its opacity anywhere from 0% to 100% (50% by default). If you want each message in its own box, turn on Message Background Box.',
       },
       settings: {
@@ -1330,6 +1330,237 @@ export const en = {
       ctaTitle: 'Set up OBS Bridge',
       ctaText:
         'Enter your channel and authorized users, then open the tool URL. Scene commands start working right away.',
+    },
+    subathon: {
+      title: 'How to run a subathon timer on Twitch and Kick',
+      short: 'Run a subathon timer',
+      summary:
+        'How much time each sub, gift, Bits cheer and Kicks gift adds, starting it with !subathon, mod commands, and what happens when OBS closes or time runs out.',
+      lead: 'Subathon Timer is a countdown that subs push back. Set a starting time and how much each sub, gifted sub, Bits cheer and Kicks gift adds, add the URL to OBS as an 800 × 300 Browser Source, and type `!subathon start` in chat when you go live. No login needed; it reads your public Twitch and Kick chat.',
+      setup: {
+        title: 'How do you set up a subathon timer?',
+        step1: 'Open the [Subathon Timer setup page](/setup/subathon-timer).',
+        step2: 'Pick Twitch, Kick or Both and type just the channel names.',
+        step3: 'Set the Starting Time, 1 hour by default, and a Time Limit if you want one.',
+        step4:
+          'Set how much time a sub, a gifted sub, Bits and Kicks add. With Both, Twitch and Kick each get their own tab.',
+        step5:
+          'Pick a style and a color, copy the URL and add it to OBS as a Browser Source at 800 × 300.',
+        p1: 'The preview on the setup page plays simulated subs, gifts and cheers at 60× speed, so a one hour timer runs out in about a minute. You can set the speed from 1× to 300×. The Try it buttons add a sub, a gift of 5 or 500 Bits/Kicks, take 10 minutes away, pause and reset. They only change the preview, never the timer in OBS.',
+      },
+      values: {
+        title: 'How much time does each sub add?',
+        intro:
+          'You pick the time in whole minutes, from 0 to 60, and 0 turns that event off. Twitch and Kick have separate values, all 1 minute by default.',
+        caption: 'Time each event adds to the subathon timer',
+        colEvent: 'Event',
+        colDefault: 'Default',
+        colHow: 'How it counts',
+        oneMinute: '1 min',
+        sub: 'Sub',
+        subHow: 'Every new sub and resub. On Twitch a Prime sub counts as Tier 1.',
+        gift: 'Gifted sub',
+        giftHow: 'Every sub in the gift, so a gift of 5 adds five times as much.',
+        bits: '500 Bits or 500 Kicks',
+        bitsHow: 'Other amounts add their share: at 1 minute, 100 Bits adds 12 seconds.',
+        tiers:
+          'With Tier 2 and 3 Count More on, which is the default, a Twitch Tier 2 sub or gift adds twice the time and Tier 3 adds five times, in line with their price. Kick subs have no tiers, so each one counts once.',
+        cap: "The Time Limit is the most time the timer can hold. Anything that would go past it isn't added, and no +time shows for it. With No limit, which is the default, the timer keeps growing as long as subs keep coming.",
+      },
+      start: {
+        title: 'How do you start the subathon?',
+        p1: "By default the timer waits, paused, until you or a mod types `!subathon start` in chat. That way you can add the source before the stream and start the clock when you're live. If you pick Right Away under Start, the timer starts as soon as the source loads in OBS.",
+        p2: "Subs that come in before the start still add time, and so do subs while the timer is paused. The time is there waiting when the clock starts.",
+      },
+      commands: {
+        title: 'Which chat commands can mods use?',
+        caption: 'Subathon Timer chat commands',
+        colCommand: 'Command',
+        colAction: 'What it does',
+        start: 'Starts the timer, or resumes it after a pause',
+        pause: 'Pauses it; the time left stays where it is',
+        add: 'Adds time, up to the Time Limit',
+        remove: 'Takes time away, down to zero',
+        set: 'Sets the time left',
+        reset: 'Starts over from the Starting Time',
+        p1: "Only the broadcaster and moderators can use them, on Twitch and on Kick. VIPs and viewers can't. The timer doesn't answer in chat; you see the result on the timer itself.",
+        p2: "Write times like `10m`, `45s`, `1h30m` or `1:30:00`. A plain number means minutes, so `!subathon add 15` adds 15 minutes. Units are single letters: `10min` doesn't work, `10m` does.",
+      },
+      look: {
+        title: 'Which styles and colors are there?',
+        bar: 'Health Bar (default): a game-style bar that drains from 100% toward zero.',
+        clock: 'Clock: big numbers in hours, minutes and seconds.',
+        ring: 'Ring: a circle that empties as the time runs out.',
+        p1: 'The default color, Health, goes from green to amber to red as the time runs low. You can also pick one fixed color: green, purple, red, gold, cyan or pink. The title next to the timer says SUBATHON by default; change it to anything up to 32 characters, or leave it empty to hide it.',
+        p2: "Show Percentage shows how full the timer is. 100% is the most time the timer has held so far, so it never goes over 100%: when time is added to a full bar, the bar stays full and counts down from the new peak. Show Added Time floats a +1:00 with the viewer's name above the timer every time time is added.",
+      },
+      saved: {
+        title: 'What happens if OBS closes or the source reloads?',
+        p1: 'The timer is saved inside OBS, so after a reload or an OBS restart it comes back where it was. While OBS is closed it keeps counting down, like a real deadline.',
+        p2: "Nothing reads your chat while OBS or the source is off, so subs in that time don't add anything. A mod can add them afterwards with `!subathon add`. That's also why \"Shutdown source when not visible\" should stay off; the [OBS guide](/guides/obs-browser-source) explains it.",
+        p3: 'The saved timer belongs to that OBS and those channels. If you change the channels in the URL, for example by adding Kick mid-subathon, or open the URL in another OBS or a browser tab, it starts a fresh timer.',
+      },
+      zero: {
+        title: 'What happens when the timer reaches zero?',
+        p1: 'It stops at 00:00:00 and blinks red, and the Health Bar and Ring styles show K.O. New subs no longer add time, so the subathon is over.',
+        p2: 'To keep going, a mod types `!subathon add` or `!subathon set` with a time, and the timer runs again right away. To start a new subathon, type `!subathon reset`.',
+      },
+      change: {
+        title: 'How do you change the timer or start a new subathon?',
+        p1: 'Paste your current URL into the Widget URL field on the setup page. Your channels and settings come back; change what you want, copy the new URL and paste it over the old one in OBS. New time values and a new Time Limit apply as soon as OBS loads the new URL, and the time left stays as it was.',
+        p2: 'A new Starting Time applies on its own only until the timer has started for the first time. After that, type `!subathon reset` in chat to start over from the new Starting Time. If Start is set to the command, the timer then waits paused again until `!subathon start`.',
+      },
+      notCounted: {
+        title: "What doesn't add time?",
+        follows:
+          "Follows and donations. Twitch and Kick don't show new follows to a page that isn't logged in, and neither platform has donations of its own.",
+        raids: 'Raids, on either platform.',
+        resubs:
+          "Twitch resubs the viewer doesn't share. Twitch only tells chat about a resub when the viewer shares it. Kick sends renewals as subs, so those count.",
+        bits: 'Bits spent outside chat, like Power-ups. Only Bits cheered in chat count.',
+        sharedChat:
+          'Subs and cheers in a partner channel during a Twitch Shared Chat session. Only your own channel counts.',
+      },
+      ctaTitle: 'Set up your subathon timer',
+      ctaText: 'Set the starting time and what each sub adds, copy the URL, add it to OBS.',
+    },
+    alerts: {
+      title: 'How to add sub, cheer and raid alerts for Twitch and Kick in OBS',
+      short: 'Add stream alerts',
+      summary:
+        'Which alerts each platform gets, themes and colors, minimum amounts, getting the sound into OBS, and why there are no follow alerts.',
+      lead: 'Stream Alerts shows an animated alert with its own sound for every sub, gifted sub, Bits cheer, Kicks gift and raid on Twitch and Kick. Type your channel names on the setup page, pick a theme and add the URL to OBS as an 800 × 450 Browser Source. No login needed, and one URL covers both platforms.',
+      setup: {
+        title: 'How do you add stream alerts to OBS?',
+        step1: 'Open the [Stream Alerts setup page](/setup/stream-alerts).',
+        step2: 'Pick Twitch, Kick or Both and type just the channel names.',
+        step3: "Pick a theme and a color, and turn off any alert you don't want.",
+        step4:
+          'Copy the URL and add it to OBS as a Browser Source at 800 × 450, then place it where alerts should appear.',
+        step5:
+          'Turn on Control audio via OBS in the source properties so the sound goes out on your stream. More on sound below.',
+        p1: "Between alerts the source is empty and transparent. If you open the URL in a browser tab to check it, you'll see a blank page until something happens in your channel.",
+        p2: 'To change it later, paste your current URL into the Widget URL field on the setup page. Your channels and settings come back; copy the new URL and paste it over the old one in OBS.',
+      },
+      kinds: {
+        title: 'Which alerts are there?',
+        caption: 'Stream Alerts events on Twitch and Kick',
+        colAlert: 'Alert',
+        sub: 'Subs',
+        subTwitch: 'New subs and shared resubs, with the months and the message',
+        subKick:
+          'New subs and renewals, with the months when Kick sends them, and resubs shared in chat',
+        gift: 'Gifted subs',
+        giftBoth: 'One alert per gift, with the gifter and how many subs',
+        bits: 'Bits & Kicks',
+        bitsTwitch: 'Bits cheers, with the amount and the message',
+        bitsKick: 'Kicks, with the amount and the message',
+        raid: 'Raids',
+        raidTwitch: 'The raiding channel and how many viewers came',
+        raidKick: 'The raiding channel, and the viewers when Kick sends them',
+        p1: "A gift of 50 subs is one alert, not 50, and the people who get the subs don't get alerts of their own. An anonymous gift shows Anonymous as the name. Tiers aren't shown: a Prime, Tier 1, Tier 2 or Tier 3 sub gets the same alert.",
+        p2: 'Kick sends the months with most subs, but some channels never get them, and then the alert just says they subscribed. When a Kick viewer later shares their resub in chat, it gets its own alert with the months and the message, so one Kick resub can show up twice. On Twitch a resub only reaches chat when the viewer shares it, so it shows up once.',
+        p3: "During a Twitch Shared Chat session, subs, gifts, cheers and raids in the partner channels don't show up. Only your own channel gets alerts.",
+      },
+      follows: {
+        title: 'Why are there no follow or donation alerts?',
+        p1: "Twitch and Kick don't show new follows to a page that isn't logged in, and neither platform has donations of its own. Stream Alerts only uses what both platforms send to every viewer, which is why it works without a login and the same way on both.",
+      },
+      look: {
+        title: 'Which themes and colors are there?',
+        neon: 'Neon (default): an angular sci-fi banner with synth sounds. When it leaves, it flickers like a neon sign.',
+        celestial: 'Celestial: a navy card under the stars with a thin frame and bell chimes.',
+        p1: "Color is the alert's accent. The default, Platform, shows Twitch alerts in purple and Kick alerts in green. You can also pick one color for every alert: blue, purple, pink, red, gold or green. When both channels are in the URL, a small TWITCH or KICK tag shows where each alert came from.",
+        p2: "You can rename each alert's heading, up to 24 characters, or leave it empty to keep the default, like New Subscriber. Neon writes headings in capital letters. Alert Language sets the language of the alert's words, English or Turkish, and it stays in the URL whatever language OBS is in.",
+      },
+      min: {
+        title: 'How do you skip small gifts, cheers and raids?',
+        caption: 'Stream Alerts minimum amounts',
+        colSetting: 'Setting',
+        colDefault: 'Default',
+        colRange: 'Range',
+        gift: 'Min. Subs (gifted subs)',
+        giftRange: '1 to 100,000',
+        bits: 'Min. Amount (Bits or Kicks)',
+        bitsRange: '1 to 100,000',
+        raid: 'Min. Viewers (raids)',
+        raidRange: '0 to 100,000',
+        p1: 'Anything below the minimum gets no alert. One Min. Amount covers both Bits and Kicks, and subs have no minimum. If Kick sends a raid without a viewer count, it counts as 0 viewers, so a Min. Viewers of 1 or more skips it.',
+      },
+      queue: {
+        title: 'What happens when many alerts come in at once?',
+        p1: 'They wait their turn and show one at a time, in the order they came in, with a short pause between them. Time on Screen sets how long each one stays: 3 to 20 seconds, 7 by default. Up to 30 alerts can wait in line; if more pile up, the newest ones are skipped.',
+        p2: 'Show Viewer Message, on by default, shows what the viewer wrote with their resub, Bits or Kicks. Links are taken out and long messages are cut short, so nobody can put a link on your stream.',
+      },
+      sound: {
+        title: 'How do you get the alert sound into OBS?',
+        step1:
+          'Double-click the Stream Alerts source, check Control audio via OBS and click OK. The source now shows up in the Audio Mixer.',
+        step2: 'Open Edit → Advanced Audio Properties from the top menu.',
+        step3:
+          'To hear the alerts yourself too, set Audio Monitoring for the source to Monitoring Enabled, called Monitor and Output in older OBS versions.',
+        p1: 'Volume goes from 0 to 100, 50 by default, and 0 turns the sound off. Each alert has its own short sound that matches the theme: synths in Neon, bells in Celestial. OBS plays the sound on its own; in a regular browser tab the page stays silent until you click it once.',
+      },
+      test: {
+        title: 'How do you test the alerts before going live?',
+        p1: 'The preview on the setup page plays silent sample alerts. The Try it buttons under it play a sub, a gift, Bits/Kicks and a raid with sound at your current volume, so you can see and hear the theme before you pick it.',
+        warnTitle: "The test buttons don't reach OBS",
+        warn: "They only play in the preview on the setup page. The source in OBS only shows real subs, gifts, cheers and raids from your channel, so you can't send it a test alert.",
+        p2: 'Keep the scene with the source active and leave "Shutdown source when not visible" off. Alerts that come in while the source is off are missed, and they aren\'t played later.',
+      },
+      ctaTitle: 'Set up Stream Alerts',
+      ctaText: 'Type your channels, pick a theme, copy the URL. Your next sub gets an alert.',
+    },
+    reader: {
+      title: 'How to read Twitch and Kick chat in one window or an OBS dock',
+      short: 'Read chat in an OBS dock',
+      summary:
+        'Opening the Chat Reader, adding it to OBS as a dock, what happens when the connection drops, and how your chat survives a refresh.',
+      lead: 'Chat Reader shows your Twitch and Kick chat in one list, in a browser tab or an OBS dock, so you can read it while you stream. Open it with the Open Chat Reader button on the Chat Box setup page. It reconnects on its own, marks every drop in the list and keeps your chat through a refresh.',
+      open: {
+        title: 'How do you open the Chat Reader?',
+        step1:
+          'Open the [Chat Box setup page](/setup/chat-widget) and type your Twitch channel, your Kick channel or both.',
+        step2: 'Click Open Chat Reader under the Widget URL. The reader opens in a new tab.',
+        step3: 'Bookmark the tab, or keep its address, to open the same reader next time.',
+        p1: 'The reader takes the channels and a few Chat Box settings with it: emote providers, badges, Hide Bots, Hide Commands and Highlights. Font, layout, animation and the other looks stay with the overlay, and the reader has its own text size and time settings. To change the settings it took, change them on the setup page and open the reader again.',
+      },
+      dock: {
+        title: 'How do you add the Chat Reader to OBS as a dock?',
+        step1: 'Open the Chat Reader and copy the address from the address bar.',
+        step2:
+          "In OBS, open Docks → Custom Browser Docks from the top menu. In older versions it's under View → Docks.",
+        step3: 'Type a name like Chat, paste the address into the URL column and click Apply.',
+        step4: 'Drag the new dock wherever you want it in the OBS window.',
+        p1: 'OBS has its own browser storage, so the dock keeps its own history and settings, separate from your regular browser.',
+      },
+      shows: {
+        title: 'What does the Chat Reader show?',
+        p1: 'Messages from both chats in one list, in the order they come in. When both channels are set, a Twitch or Kick icon shows where each message came from. Emotes, badges and username colors show the same way as in Chat Box.',
+        p2: 'Deleted messages stay in the list, struck through and marked (deleted), so you can still see what was removed. When someone gets a timeout or a ban, their earlier messages are marked the same way. When a mod clears the chat, a line in the list says so.',
+        p3: 'A- and A+ change the text size from 12 to 28 pixels, 15 by default. The clock button shows or hides message times, and the trash button clears the history after a second click. The reader remembers your text size and time setting.',
+        p4: 'If you scroll up to read something, the list stops moving. A button at the bottom counts the new messages; click it to jump back to live chat.',
+      },
+      drops: {
+        title: 'What happens when the connection drops?',
+        p1: "Each channel has a status at the top: Connecting, Connected or Reconnecting, or Channel not found when a Kick name can't be found. When a chat connection drops, a notice counts down to the next try, and Retry now tries right away. Tries start 1 second apart and slow down to one every 30 seconds.",
+        p2: "The reader also catches a connection that goes quiet without closing, which can happen after a network drop. If nothing comes in for 30 seconds, it checks whether the chat is still there and reconnects if there's no answer. If your computer goes offline, it tells you and reconnects as soon as the internet is back.",
+        p3: 'Every drop is written into the list, like "Twitch chat connection lost" and "Back on Twitch chat after 12s", so you know exactly where messages may be missing.',
+      },
+      history: {
+        title: 'Do you lose your chat when you refresh?',
+        p1: 'No. The reader saves the last 1000 lines in your browser and brings them back when you open it again, followed by a line that says "Saved from your last visit, until" and the time. Lines older than 12 hours are dropped.',
+        p2: "Messages sent while the reader was closed don't come back: everything above that line is from your last visit, everything below it is new. Each set of channels keeps its own history, and Clear history deletes it.",
+      },
+      limits: {
+        title: "What can't the Chat Reader do?",
+        send: "It can't send messages or moderate. It reads chat anonymously, like a viewer who isn't logged in.",
+        events:
+          "It doesn't show sub, gift or raid notices. For those, add [Stream Alerts](/setup/stream-alerts) to your stream.",
+        missed: "It can't bring back messages sent while it was closed, on either platform.",
+      },
+      ctaTitle: 'Open the Chat Reader',
+      ctaText: 'Type your channels on the Chat Box setup page and click Open Chat Reader.',
     },
   },
   faqPage: {
