@@ -1,4 +1,4 @@
-import { screen, within } from '@testing-library/react';
+import { cleanup, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { crossLinkSpan } from '#/components/widget-cross-links';
 import { isAppPath } from '#/lib/i18n/paths';
@@ -130,11 +130,7 @@ describe('compact header on setup pages', () => {
 
 const TURKISH_PAGES = [
   '/tr',
-  '/tr/setup/chat-widget',
-  '/tr/setup/emote-wall',
-  '/tr/setup/sub-growing-plant',
-  '/tr/setup/raffle',
-  '/tr/setup/obs-bridge',
+  ...WIDGETS.map((widget) => `/tr${widget.setupPath}`),
   '/tr/guides',
   '/tr/guides/obs-browser-source',
   '/tr/guides/twitch-kick-chat-overlay',
@@ -171,6 +167,30 @@ describe('Turkish pages', () => {
     expect(
       english.map((link) => [link.getAttribute('href'), link.getAttribute('hreflang')]),
     ).toEqual([[english[0]?.getAttribute('href'), 'en']]);
+  });
+
+  it.each([
+    '/faq',
+    '/changelog',
+    '/guides',
+    '/guides/chat-poll',
+  ])('%s names every landmark in Turkish under /tr', async (url) => {
+    const landmarkNames = () =>
+      [...document.querySelectorAll('nav')].map(
+        (nav) =>
+          nav.getAttribute('aria-label') ??
+          document.getElementById(nav.getAttribute('aria-labelledby') ?? '')?.textContent,
+      );
+    await renderRoute(url);
+    const english = landmarkNames();
+    cleanup();
+    await renderRoute(`/tr${url}`);
+    const turkish = landmarkNames();
+    expect(turkish).toHaveLength(english.length);
+    turkish.forEach((name, index) => {
+      expect(name, `landmark ${index}`).not.toBe(english[index]);
+    });
+    expect(screen.getByRole('navigation', { name: tr('common.nav.breadcrumb') })).toBeTruthy();
   });
 
   it.each([
@@ -316,5 +336,79 @@ describe('footer', () => {
           .map((link) => link.getAttribute('href')),
       ).toEqual(widgets.map((widget) => `/tr${widget.setupPath}`));
     }
+  });
+});
+
+describe('language switch keeps the visitor in place', () => {
+  it('carries the query and the hash over to the page in the other language', async () => {
+    const user = setupUser();
+    await renderRoute('/setup/raffle?channel=foo&platform=kick#faq');
+    await user.click(languageLinks().trLink);
+    expect(window.location.pathname).toBe('/tr/setup/raffle');
+    expect(window.location.search).toBe('?channel=foo&platform=kick');
+    expect(window.location.hash).toBe('#faq');
+    expect(localStorage.getItem('lang')).toBe('tr');
+  });
+
+  it('does nothing when the current language is clicked', async () => {
+    const user = setupUser();
+    await renderRoute('/tr/faq');
+    await user.click(languageLinks().trLink);
+    expect(window.location.pathname).toBe('/tr/faq');
+    expect(localStorage.getItem('lang')).toBeNull();
+  });
+});
+
+describe('mobile menu', () => {
+  it('opens as a modal, and a link in it closes it and stays in Turkish', async () => {
+    const user = setupUser();
+    await renderRoute('/tr/faq');
+    const open = screen.getByRole('button', { name: tr('common.nav.openMenu') });
+    await user.click(open);
+    const dialog = document.querySelector('dialog') as HTMLDialogElement;
+    expect(dialog.open).toBe(true);
+    expect(open.getAttribute('aria-expanded')).toBe('true');
+
+    const poll = within(dialog)
+      .getAllByRole('link')
+      .find((link) => link.textContent?.includes(tr('widgets.poll.name')));
+    expect(poll?.getAttribute('href')).toBe('/tr/setup/chat-poll');
+    await user.click(poll as HTMLElement);
+    expect(window.location.pathname).toBe('/tr/setup/chat-poll');
+    expect(headings(1)).toEqual([tr('poll.title')]);
+  });
+
+  it('closes from its close button', async () => {
+    const user = setupUser();
+    await renderRoute('/guides');
+    await user.click(screen.getByRole('button', { name: en('common.nav.openMenu') }));
+    const dialog = document.querySelector('dialog') as HTMLDialogElement;
+    await user.click(within(dialog).getByRole('button', { name: en('common.nav.closeMenu') }));
+    expect(dialog.open).toBe(false);
+    expect(
+      screen.getByRole('button', { name: en('common.nav.openMenu') }).getAttribute('aria-expanded'),
+    ).toBe('false');
+  });
+});
+
+describe('404 page', () => {
+  const meta = (name: string) =>
+    document.head.querySelector(`meta[name="${name}"]`)?.getAttribute('content');
+
+  it.each([
+    ['/no-such-page', 'en', '/'],
+    ['/tr/no-such-page', 'tr', '/tr'],
+    ['/setup/no-such-widget', 'en', '/'],
+  ] as const)('%s is a noindex page in its language that links home', async (url, locale, home) => {
+    await renderRoute(url);
+    const t = locale === 'en' ? en : tr;
+    expect(headings(1)).toEqual([t('common.notFound.title')]);
+    expect(document.documentElement.lang).toBe(locale);
+    expect(meta('robots')).toBe('noindex, follow');
+    expect(document.head.querySelector('link[rel="canonical"]')).toBeNull();
+    expect(document.title).toContain(t('common.notFound.title').split(' ')[0]);
+    expect(screen.getByText(t('common.notFound.home')).closest('a')?.getAttribute('href')).toBe(
+      home,
+    );
   });
 });

@@ -76,17 +76,23 @@ export async function checkPageStatus(base, pages, record) {
   return { images: [...images], icons: [...icons] };
 }
 
+/** The response, or null after recording why it failed (record's own return value is not one). */
 async function expectFile(record, name, url, { type, status = 200 } = {}) {
   try {
     const { res, hops, loop } = await fetchChain(url);
-    if (loop) return record('seo', name, 'served', false, `redirect loop: ${describeChain(hops)}`);
+    if (loop) {
+      record('seo', name, 'served', false, `redirect loop: ${describeChain(hops)}`);
+      return null;
+    }
     if (res.status !== status) {
-      return record('seo', name, 'served', false, `got ${res.status}, want ${status}`);
+      record('seo', name, 'served', false, `got ${res.status}, want ${status}`);
+      return null;
     }
     const contentType = res.headers.get('content-type') ?? '';
     const types = [type ?? []].flat();
     if (types.length && !types.some((t) => contentType.startsWith(t))) {
-      return record('seo', name, 'content type', false, `got "${contentType}", want ${types}`);
+      record('seo', name, 'content type', false, `got "${contentType}", want ${types}`);
+      return null;
     }
     record('seo', name, 'served', true, `${res.status} ${contentType}`);
     return res;

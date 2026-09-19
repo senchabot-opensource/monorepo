@@ -604,3 +604,148 @@ describe('saved state', () => {
     expect(result.current.eligibleCount).toBe(0);
   });
 });
+
+describe('useRaffleState - edge cases', () => {
+  const alice = () => makeParticipant({ id: 'twitch-alice', username: 'alice' });
+  const bob = () => makeParticipant({ id: 'twitch-bob', username: 'bob', displayName: 'Bob' });
+
+  it('keeps a winner out after a reload of a running raffle', () => {
+    const first = startWithZeroDuration();
+    act(() => first.result.current.addParticipant(alice()));
+    act(() => {
+      first.result.current.drawWinner();
+    });
+    const { result } = renderHook(() => useRaffleState());
+    expect(result.current.state.status).toBe('running');
+    expect(result.current.state.winners.map((w) => w.username)).toEqual(['alice']);
+    act(() => result.current.addParticipant(alice()));
+    expect(result.current.state.participants).toHaveLength(0);
+    act(() => result.current.addParticipant(bob()));
+    expect(result.current.state.participants.map((p) => p.username)).toEqual(['bob']);
+  });
+
+  it('never draws a removed entry', () => {
+    const { result } = startWithZeroDuration();
+    act(() => {
+      result.current.addParticipant(alice());
+      result.current.addParticipant(bob());
+    });
+    act(() => result.current.removeParticipant('twitch-alice'));
+    for (let i = 0; i < 2; i++) {
+      act(() => {
+        result.current.drawWinner();
+      });
+    }
+    expect(result.current.state.winners.map((w) => w.username)).toEqual(['bob']);
+  });
+
+  it('lets a winner join and win again with unlimited wins', () => {
+    const { result } = renderHook(() => useRaffleState());
+    act(() => result.current.updateConfig({ minRaffleDurationSec: 0, maxWinsPerUser: 0 }));
+    act(() => result.current.start());
+    act(() => result.current.addParticipant(alice()));
+    act(() => {
+      result.current.drawWinner();
+    });
+    act(() => result.current.addParticipant(alice()));
+    // A second click comes a moment later, never in the same millisecond.
+    const later = Date.now() + 1000;
+    vi.spyOn(Date, 'now').mockReturnValue(later);
+    act(() => {
+      result.current.drawWinner();
+    });
+    expect(result.current.state.winners.map((w) => w.username)).toEqual(['alice', 'alice']);
+  });
+
+  it('counts a win against the same viewer whatever the case of their name', () => {
+    const { result } = startWithZeroDuration();
+    act(() => result.current.addParticipant(alice()));
+    act(() => {
+      result.current.drawWinner();
+    });
+    act(() =>
+      result.current.addParticipant(makeParticipant({ id: 'twitch-ALICE', username: 'ALICE' })),
+    );
+    expect(result.current.state.participants).toHaveLength(0);
+  });
+
+  it('sends each winner to the overlay once', () => {
+    const posted: unknown[] = [];
+    vi.stubGlobal(
+      'BroadcastChannel',
+      class {
+        postMessage(message: unknown) {
+          posted.push(message);
+        }
+        close() {}
+      },
+    );
+    try {
+      const { result } = startWithZeroDuration();
+      act(() => {
+        result.current.addParticipant(alice());
+        result.current.addParticipant(bob());
+      });
+      act(() => {
+        result.current.drawWinner();
+        result.current.drawWinner();
+      });
+      expect(posted).toHaveLength(1);
+      act(() => {
+        result.current.drawWinner();
+      });
+      expect(posted).toHaveLength(2);
+      expect(result.current.state.winners).toHaveLength(2);
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+
+  it('takes no entries before the start or once entries close', () => {
+    const { result } = renderHook(() => useRaffleState());
+    act(() => result.current.addParticipant(alice()));
+    act(() => result.current.updateConfig({ minRaffleDurationSec: 0 }));
+    act(() => result.current.start());
+    act(() => result.current.stop());
+    act(() => result.current.addParticipant(bob()));
+    expect(result.current.state.participants).toHaveLength(0);
+    expect(result.current.canDraw).toBe(false);
+  });
+
+  it('falls back to a 15 s minimum when the saved one is garbage', () => {
+    localStorage.setItem(
+      'senchabot-raffle-state-v3',
+      JSON.stringify({
+        status: 'running',
+        config: { minRaffleDurationSec: 'abc', channel: 'x' },
+        frozenConfig: { minRaffleDurationSec: null },
+        startedAt: Date.now(),
+        participants: [],
+        winners: [],
+      }),
+    );
+    const { result } = renderHook(() => useRaffleState());
+    expect(result.current.state.config.minRaffleDurationSec).toBe(15);
+    expect(result.current.state.frozenConfig?.minRaffleDurationSec).toBe(15);
+    expect(result.current.remainingMs).toBeGreaterThan(14_000);
+  });
+
+  it('starts empty when the saved raffle is not JSON', () => {
+    localStorage.setItem('senchabot-raffle-state-v3', '{not json');
+    const { result } = renderHook(() => useRaffleState());
+    expect(result.current.state.status).toBe('idle');
+    expect(result.current.state.participants).toEqual([]);
+  });
+
+  it('clears the old entries and winners on a new start, so past winners can join again', () => {
+    const { result } = startWithZeroDuration();
+    act(() => result.current.addParticipant(alice()));
+    act(() => {
+      result.current.drawWinner();
+    });
+    act(() => result.current.start());
+    expect(result.current.state.winners).toHaveLength(0);
+    act(() => result.current.addParticipant(alice()));
+    expect(result.current.state.participants).toHaveLength(1);
+  });
+});

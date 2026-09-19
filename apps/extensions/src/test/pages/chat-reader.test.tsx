@@ -201,6 +201,201 @@ describe('Chat Reader', () => {
     );
   });
 
+  it('marks every message of a banned or timed-out user, found by login', async () => {
+    await renderRoute(`${TOOL}?twitch=streamer&lang=en`);
+    vi.useFakeTimers();
+    act(() => twitchSocket().open());
+    act(() =>
+      twitchSocket().receive(
+        `@display-name=お命頂戴;id=j1 :oinotityoudai!oinotityoudai@oinotityoudai.tmi.twitch.tv PRIVMSG #streamer :first\r\n` +
+          `@display-name=お命頂戴;id=j2 :oinotityoudai!oinotityoudai@oinotityoudai.tmi.twitch.tv PRIVMSG #streamer :second\r\n`,
+      ),
+    );
+    say('Viewer', 'still here', 'v1');
+    act(() =>
+      twitchSocket().receive(
+        '@ban-duration=600;target-user-id=1 :tmi.twitch.tv CLEARCHAT #streamer :oinotityoudai\r\n',
+      ),
+    );
+    flush();
+    expect(screen.getAllByText(en('chatReader.deleted'))).toHaveLength(2);
+    expect(log().textContent).toContain('still here');
+  });
+
+  it('logs a /clear but keeps the messages to read', async () => {
+    await renderRoute(`${TOOL}?twitch=streamer&lang=en`);
+    vi.useFakeTimers();
+    act(() => twitchSocket().open());
+    say('Viewer', 'before the clear', 'c1');
+    act(() => twitchSocket().receive(':tmi.twitch.tv CLEARCHAT #streamer\r\n'));
+    flush();
+    expect(log().textContent).toContain('before the clear');
+    expect(log().textContent).toContain(en('chatReader.eventChatCleared', { platform: 'Twitch' }));
+  });
+
+  it('hides bots and commands when the link says so', async () => {
+    await renderRoute(`${TOOL}?twitch=streamer&hideBots=true&hideCommands=true&lang=en`);
+    vi.useFakeTimers();
+    act(() => twitchSocket().open());
+    say('Nightbot', 'follow the rules', 'b1');
+    say('Viewer', '!discord', 'b2');
+    say('Viewer', 'a real message', 'b3');
+    flush();
+    expect(log().textContent).not.toContain('follow the rules');
+    expect(log().textContent).not.toContain('!discord');
+    expect(log().textContent).toContain('a real message');
+  });
+
+  it('joins the channel lowercased and shows it that way', async () => {
+    await renderRoute(`${TOOL}?twitch=%20StreamER%20&lang=en`);
+    act(() => twitchSocket().open());
+    expect(twitchSocket().sent).toContain('JOIN #streamer');
+    expect(screen.getByText('streamer')).toBeTruthy();
+  });
+
+  it.each([
+    'twitch=streamer&hideBots=%5B%5D&badges=%7B&sevenTv=null&highlights=1%2C2',
+    'twitch=123456&kick=true',
+    'twitch=&kick=',
+    'twitch=streamer&twitch=other',
+  ])('opens with a link carrying %s', async (query) => {
+    await renderRoute(`${TOOL}?${query}&lang=en`);
+    expect(log()).toBeTruthy();
+  });
+
+  it('says a channel is missing when the link has none', async () => {
+    await renderRoute(`${TOOL}?twitch=%20&lang=en`);
+    expect(screen.getByText(en('chatReader.noChannel'))).toBeTruthy();
+    expect(FakeWebSocket.instances).toHaveLength(0);
+  });
+
+  it('opens with an empty chat when the saved history or settings are unreadable', async () => {
+    localStorage.setItem('chat-reader:streamer|', '{"savedAt":1,"entries":[null,{"at":"x"}]}');
+    localStorage.setItem('chat-reader:prefs', '{"fontSize":99,"showTime":"yes"}');
+    await renderRoute(`${TOOL}?twitch=streamer&lang=en`);
+    expect(log().style.fontSize).toBe('15px');
+    expect(screen.getByText(en('chatReader.empty', { channels: 'streamer' }))).toBeTruthy();
+  });
+
+  it('remembers the text size and the times toggle', async () => {
+    const user = setupUser();
+    await renderRoute(`${TOOL}?twitch=streamer&lang=en`);
+    act(() => twitchSocket().open());
+    say('Viewer', 'hello', 'p1');
+    await act(async () => new Promise((resolve) => setTimeout(resolve, 150)));
+    expect(log().querySelectorAll('time')).toHaveLength(2);
+
+    await user.click(button(en('chatReader.fontLarger')));
+    await user.click(button(en('chatReader.timestamps')));
+    expect(log().style.fontSize).toBe('16px');
+    // The event row keeps its time; the message row loses it.
+    expect(log().querySelectorAll('time')).toHaveLength(1);
+    cleanup();
+
+    await renderRoute(`${TOOL}?twitch=streamer&lang=en`);
+    expect(log().style.fontSize).toBe('16px');
+    expect(button(en('chatReader.timestamps')).getAttribute('aria-pressed')).toBe('false');
+  });
+
+  it('keeps a deleted message marked after a refresh', async () => {
+    await renderRoute(`${TOOL}?twitch=streamer&lang=en`);
+    act(() => twitchSocket().open());
+    say('Spammer', 'buy followers', 'bad-1');
+    act(() =>
+      twitchSocket().receive(
+        '@target-msg-id=bad-1 :tmi.twitch.tv CLEARMSG #streamer :buy followers\r\n',
+      ),
+    );
+    cleanup();
+
+    await renderRoute(`${TOOL}?twitch=streamer&lang=en`);
+    expect(log().textContent).toContain('buy followers');
+    expect(screen.getByText(en('chatReader.deleted'))).toBeTruthy();
+  });
+
+  it('asks twice before clearing, and the second click expires', async () => {
+    await renderRoute(`${TOOL}?twitch=streamer&lang=en`);
+    vi.useFakeTimers();
+    act(() => twitchSocket().open());
+    say('Viewer', 'keep me', 'k1');
+    flush();
+    fireEvent.click(button(en('chatReader.clear')));
+    act(() => vi.advanceTimersByTime(3_000));
+    fireEvent.click(button(en('chatReader.clear')));
+    expect(log().textContent).toContain('keep me');
+    fireEvent.click(button(en('chatReader.clearConfirm')));
+    expect(log().textContent).not.toContain('keep me');
+  });
+
+  it('counts new messages while scrolled up and goes back to them on request', async () => {
+    await renderRoute(`${TOOL}?twitch=streamer&lang=en`);
+    vi.useFakeTimers();
+    act(() => twitchSocket().open());
+    say('Viewer', 'one', 's1');
+    flush();
+    const list = log();
+    let scrollHeight = 1000;
+    Object.defineProperty(list, 'scrollHeight', { configurable: true, get: () => scrollHeight });
+    Object.defineProperty(list, 'clientHeight', { configurable: true, value: 300 });
+    act(() => {
+      list.scrollTop = 200;
+      fireEvent.scroll(list);
+    });
+    expect(button(en('chatReader.backToLive'))).toBeTruthy();
+
+    say('Viewer', 'two', 's2');
+    say('Viewer', 'three', 's3');
+    scrollHeight = 1200;
+    flush();
+    // Scrolled up, the list stays where the reader left it.
+    expect(list.scrollTop).toBe(200);
+    fireEvent.click(button(en('chatReader.newMessages', { count: 2 })));
+    expect(list.scrollTop).toBe(1200);
+    expect(screen.queryByText(en('chatReader.backToLive'))).toBeNull();
+  });
+
+  it('shows which platform each message came from when it reads both', async () => {
+    vi.spyOn(globalThis, 'fetch').mockImplementation(async (input) =>
+      String(input).startsWith('https://kick.com/')
+        ? Response.json({ id: 1, user_id: 2, chatroom: { id: 668 } })
+        : new Response('{}', { status: 503 }),
+    );
+    await renderRoute(`${TOOL}?twitch=streamer&kick=streamer&lang=en`);
+    await act(async () => {});
+    const kick = FakeWebSocket.instances.find((ws) => ws.url.startsWith('wss://ws-us2.pusher.com'));
+    if (!kick) throw new Error('The reader never connected to Kick chat');
+    vi.useFakeTimers();
+    act(() => kick.open());
+    expect(kick.sent).toContain(
+      JSON.stringify({ event: 'pusher:subscribe', data: { channel: 'chatrooms.668.v2' } }),
+    );
+    act(() =>
+      kick.receive(
+        JSON.stringify({
+          event: 'App\\Events\\ChatMessageEvent',
+          data: JSON.stringify({
+            id: 'k1',
+            content: 'from kick',
+            type: 'message',
+            created_at: '2026-09-15T17:43:13+00:00',
+            sender: { username: 'Liliuy_56', identity: { color: '#FF2C56', badges: [] } },
+          }),
+        }),
+      ),
+    );
+    act(() =>
+      kick.receive(
+        JSON.stringify({
+          event: 'App\\Events\\UserBannedEvent',
+          data: JSON.stringify({ user: { id: 7, username: 'Liliuy_56', slug: 'liliuy-56' } }),
+        }),
+      ),
+    );
+    flush();
+    expect(log().textContent).toContain('from kick');
+    expect(screen.getByText(en('chatReader.deleted'))).toBeTruthy();
+  });
+
   it('is opened from the Chat Box setup with the chat settings', async () => {
     const user = setupUser();
     await renderRoute('/setup/chat-widget');

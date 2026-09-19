@@ -131,6 +131,35 @@ describe('Subathon Timer setup', () => {
     expect(minutes(en('subathon.perGift')).value).toBe('2');
   });
 
+  it('gives back the same URL for a pasted one with every setting changed', async () => {
+    const user = setupUser();
+    await renderRoute(PAGE);
+    const pasted =
+      'http://localhost:3000/widgets/subathon?twitch=streamer&kick=kicker&style=clock&color=gold' +
+      '&title=Day+3&time=5430&cap=90000&tsub=120&tgift=0&bits=90&ksub=30&kgift=180&kicks=600' +
+      '&tiers=0&autostart=1&pct=0&pops=0';
+    await user.click(urlField());
+    await user.paste(pasted);
+    expect(urlField().value).toBe(pasted);
+  });
+
+  it('sends the remove and reset commands the chat would', async () => {
+    withLayout(800, 350);
+    const user = setupUser();
+    const received: unknown[] = [];
+    const listener = new BroadcastChannel(PREVIEW_CHANNEL);
+    listener.onmessage = ({ data }) => received.push(data);
+    await renderRoute(PAGE);
+    await user.click(button(en('subathon.testRemove')));
+    await user.click(button(en('subathon.testReset')));
+    await vi.waitFor(() => expect(received).toHaveLength(2));
+    expect(received).toMatchObject([
+      { type: 'event', event: { kind: 'mod', text: '!subathon remove 10m' } },
+      { type: 'event', event: { kind: 'mod', text: '!subathon reset' } },
+    ]);
+    listener.close();
+  });
+
   it('previews with the chosen speed and sends test events to the preview', async () => {
     withLayout(800, 350);
     const user = setupUser();

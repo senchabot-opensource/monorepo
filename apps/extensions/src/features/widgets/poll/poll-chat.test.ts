@@ -45,11 +45,33 @@ describe('twitchPollEvent', () => {
     expect(privmsg('badges=founder/0', 'f', 'x')).toMatchObject({ sub: true });
   });
 
-  it('strips a /me wrapper and a reply mention', () => {
+  it('strips a /me wrapper, also from a vote sent again through 7TV', () => {
     expect(privmsg('badges=', 'v', '\x01ACTION 3\x01')).toMatchObject({ text: '3' });
+    expect(privmsg('badges=', 'v', '\x01ACTION 3 \u{E0000}\x01')).toMatchObject({ text: '3' });
+  });
+
+  it('ignores a reply, which answers someone instead of voting or running a command', () => {
+    const reply = 'badges=moderator/1;mod=1;reply-parent-msg-id=p1;reply-parent-user-login=bob';
+    expect(privmsg(`${reply};reply-parent-display-name=Bob`, 'v', '@Bob 1')).toBeNull();
+    expect(privmsg(`${reply};reply-parent-display-name=Bob`, 'v', '@Bob !poll end')).toBeNull();
+    // A client that sends a reply without the name in front.
+    expect(privmsg(reply, 'v', '2')).toBeNull();
+    // A mention typed by hand stays in the text, so it's no vote.
+    expect(privmsg('badges=', 'v', '@someone 2')).toMatchObject({ text: '@someone 2' });
+  });
+
+  it('reads a lowercase login for an uppercase CLEARCHAT target and skips a Shared Chat ban', () => {
+    expect(twitch('@room-id=1 :tmi.twitch.tv CLEARCHAT #streamer :MixedCase')).toMatchObject({
+      login: 'mixedcase',
+    });
     expect(
-      privmsg('badges=;reply-parent-display-name=Bob;reply-parent-user-login=bob', 'v', '@Bob 1'),
-    ).toMatchObject({ text: '1' });
+      twitch('@room-id=1;source-room-id=2 :tmi.twitch.tv CLEARCHAT #streamer :spammer'),
+    ).toBeNull();
+  });
+
+  it('ignores lines that are neither chat nor a ban', () => {
+    expect(twitch('@room-id=1 :tmi.twitch.tv ROOMSTATE #streamer')).toBeNull();
+    expect(twitch('@msg-id=resub;room-id=1 :tmi.twitch.tv USERNOTICE #streamer :1')).toBeNull();
   });
 
   it("skips Shared Chat partners' messages", () => {
@@ -86,6 +108,27 @@ describe('kickPollEvent', () => {
     expect(kickMessage('x', [{ type: 'subscriber', count: 3 }])).toMatchObject({ sub: true });
     // A gifter badge counts subs given, not a sub.
     expect(kickMessage('x', [{ type: 'sub_gifter', count: 5 }])).toMatchObject({ sub: false });
+  });
+
+  // Kick sends an emote as [emote:id:name] (2591 of 5059 live messages, 2026-09-15); Twitch sends
+  // its name, so a poll made on either one reads the same.
+  it('reads a Kick emote as its name, as Twitch sends it', () => {
+    expect(kickMessage('[emote:37226:KEKW]')).toMatchObject({ text: 'KEKW' });
+    expect(
+      kickMessage('!poll Best emote? [emote:37230:POLICE] | [emote:37226:KEKW] | LUL'),
+    ).toMatchObject({ text: '!poll Best emote? POLICE | KEKW | LUL' });
+  });
+
+  it('ignores a Kick reply, as on Twitch', () => {
+    expect(
+      kickMessage('2', [], {
+        type: 'reply',
+        metadata: {
+          original_sender: { id: 1, username: 'Bob' },
+          original_message: { id: 'x', content: 'vote!' },
+        },
+      }),
+    ).toBeNull();
   });
 
   it('skips shared resubs', () => {

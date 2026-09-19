@@ -24,6 +24,16 @@ describe('isKeywordMatch', () => {
     ['!join please', '!join'],
     ['!join raffle now', '!join raffle'],
     ['çekiliş', 'çekiliş'],
+    // Capitals don't matter in Turkish either: JavaScript lowercases I to i and İ to "i̇".
+    ['!KATIL', '!katıl'],
+    ['!katıl', '!KATIL'],
+    ['!ÇEKİLİŞ', '!çekiliş'],
+    ['!Çekiliş', '!ÇEKİLİŞ'],
+    ['!JOIN', '!join'],
+    ['!join İstanbul', '!join'],
+    // A repeated message from 7TV or Chatterino, with its invisible suffix.
+    ['!join \u{E0000}', '!join'],
+    ['!join \u034F', '!join'],
   ])('matches %j for the keyword %j', (message, keyword) => {
     expect(isKeywordMatch(message, keyword)).toBe(true);
   });
@@ -36,6 +46,8 @@ describe('isKeywordMatch', () => {
     ['', '!join'],
     ['!join', ''],
     ['!join', '   '],
+    ['!katılım', '!katıl'],
+    ['@streamer !join', '!join'],
   ])('does not match %j for the keyword %j', (message, keyword) => {
     expect(isKeywordMatch(message, keyword)).toBe(false);
   });
@@ -235,6 +247,30 @@ describe('useRaffleChat entries', () => {
     ).toEqual(['alice:-1', 'bob:-1']);
   });
 
+  it('ignores the keyword sent as a reply or after a mention, which may be teaching someone', () => {
+    const reply =
+      'reply-parent-msg-id=p1;reply-parent-display-name=Streamer;reply-parent-user-login=streamer';
+    expect(
+      entrants(config({}), [
+        // Twitch starts a reply with "@parent " (61 of 61 live replies, 2026-09-15).
+        twitch('Alice', '@Streamer !join', reply),
+        // A client that sends a reply without the name in front.
+        twitch('Bob', '!join', reply),
+        twitch('Dave', '@someone !join'),
+        twitch('Erin', '!join'),
+      ]),
+    ).toEqual(['erin:-1']);
+  });
+
+  it('enters a Twitch chatter who sends the keyword with /me, as a Kick chatter can', () => {
+    expect(
+      entrants(config({}), [
+        twitch('Alice', '\x01ACTION !join\x01'),
+        twitch('Bob', '\x01ACTION hello\x01'),
+      ]),
+    ).toEqual(['alice:-1']);
+  });
+
   it('applies the subs-only minimum to Twitch chatters', () => {
     expect(
       entrants(config({ subscribersOnly: true, minSubMonths: 3 }), [
@@ -255,6 +291,29 @@ describe('useRaffleChat entries', () => {
       ]),
     ).toEqual(['kickuser:-1']);
     expect(sockets[0].url).toContain('pusher.com');
+  });
+
+  it('ignores a Kick reply with the keyword, as on Twitch', () => {
+    const reply = JSON.stringify({
+      event: 'App\\Events\\ChatMessageEvent',
+      data: JSON.stringify({
+        id: 'r1',
+        type: 'reply',
+        sender: { username: 'Replier', identity: { badges: [] } },
+        content: '!join',
+        metadata: { original_sender: { id: 1, username: 'Streamer' } },
+      }),
+    });
+    expect(entrants(config({ platform: 'kick', channel: '12345' }), [reply])).toEqual([]);
+  });
+
+  it('enters a Kick chatter who types a Turkish keyword in capitals', () => {
+    expect(
+      entrants(config({ platform: 'kick', channel: '12345', keyword: '!katıl' }), [
+        kick('Ayşe', '!KATIL'),
+        kick('Mehmet', '!Katıl'),
+      ]),
+    ).toEqual(['ayşe:-1', 'mehmet:-1']);
   });
 
   it('applies the subs-only minimum to Kick badges, not counting gifted subs', () => {

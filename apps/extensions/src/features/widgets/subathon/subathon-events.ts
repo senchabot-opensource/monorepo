@@ -1,5 +1,5 @@
-import { withoutBypassSuffix } from '#/lib/chat-text';
-import type { IrcLine } from '#/lib/twitch';
+import { withoutAction, withoutBypassSuffix } from '#/lib/chat-text';
+import { type IrcLine, isTwitchReply } from '#/lib/twitch';
 import { kickSubChannels, kickSubCount } from '../sub-sprout/kick-sub-events';
 
 export type SubathonPlatform = 'twitch' | 'kick';
@@ -48,11 +48,6 @@ const modMessage = (platform: SubathonPlatform, text: string): ModMessage | null
 const TIERS: Record<string, SubTier> = { Prime: 1, '1000': 1, '2000': 2, '3000': 3 };
 const tierOf = (plan: string | undefined): SubTier => TIERS[plan ?? ''] ?? 1;
 
-// A /me message arrives wrapped as \x01ACTION ...\x01.
-const ACTION = '\x01ACTION ';
-const withoutAction = (text: string) =>
-  text.startsWith(ACTION) && text.endsWith('\x01') ? text.slice(ACTION.length, -1) : text;
-
 const positiveInt = (value: unknown): number => {
   const n = typeof value === 'string' ? Number.parseInt(value, 10) : Number(value);
   return Number.isFinite(n) && n > 0 ? Math.floor(n) : 0;
@@ -85,7 +80,8 @@ export function twitchEvent(line: IrcLine, bundles: Map<string, number>): Subath
     }
     const badges = tags.badges ?? '';
     const isMod = tags.mod === '1' || /(^|,)(broadcaster|moderator)\//.test(badges);
-    return isMod ? modMessage('twitch', line.params[1] ?? '') : null;
+    if (!isMod || isTwitchReply(tags)) return null;
+    return modMessage('twitch', withoutAction(line.params[1] ?? ''));
   }
 
   if (line.command !== 'USERNOTICE') return null;
@@ -255,6 +251,8 @@ export function kickEvent(
           again: 'shared',
         };
       }
+      // A reply answers someone, e.g. teaches them a command, so it's no command, as on Twitch.
+      if (payload.type === 'reply') return null;
       const badges = record(sender?.identity)?.badges;
       const isMod =
         Array.isArray(badges) &&

@@ -2,9 +2,10 @@ import { useEffect, useRef } from "react";
 import type { RaffleConfig, RaffleParticipant } from "#/types/raffle";
 import type { BaseChatClient } from "#/lib/basechat";
 import { KickPusherReader, kickChatroomChannel, TwitchIrcReader } from "#/lib/chat-readers";
+import { withoutAction } from "#/lib/chat-text";
 import { retryDelay } from "#/lib/fetch-json";
 import { getKickChannelInfo } from "#/lib/kick";
-import { type IrcLine, parseIrcLine } from "#/lib/twitch";
+import { type IrcLine, isTwitchReply, parseIrcLine } from "#/lib/twitch";
 
 type OnParticipant = (participant: RaffleParticipant) => void;
 
@@ -55,7 +56,8 @@ function privmsgOf(line: IrcLine | null): Privmsg | null {
   return {
     tags: line.tags,
     username: line.source.split("!")[0].toLowerCase(),
-    message: messageText.trim(),
+    // A /me "!join" enters like any other, as it does on Kick.
+    message: withoutAction(messageText).trim(),
   };
 }
 
@@ -63,9 +65,13 @@ export function parsePrivmsg(rawMessage: string): Privmsg | null {
   return privmsgOf(parseIrcLine(rawMessage));
 }
 
+// JavaScript lowercases "I" to "i" and "İ" to "i̇", so "!KATIL" missed "!katıl" and "!ÇEKİLİŞ"
+// missed "!çekiliş". Turkish dotted and dotless i count as one letter, as in Chat Poll votes.
+const caseless = (text: string) => text.trim().replace(/[İIı]/g, "i").toLowerCase();
+
 export function isKeywordMatch(messageText: string, keyword: string): boolean {
-  const cleanMsg = messageText.trim().toLowerCase();
-  const cleanKeyword = keyword.trim().toLowerCase();
+  const cleanMsg = caseless(messageText);
+  const cleanKeyword = caseless(keyword);
   if (!cleanKeyword) return false;
   return cleanMsg === cleanKeyword || cleanMsg.startsWith(`${cleanKeyword} `);
 }
@@ -105,6 +111,7 @@ function makeUserId(platform: "twitch" | "kick", username: string): string {
 }
 
 type KickChatMessage = {
+  type?: string;
   sender: { username: string; identity?: { badges?: { type: string; count?: number }[] } };
   content: string;
 };
@@ -149,6 +156,7 @@ export function useRaffleChat(
         const currentEnabled = enabledRef.current;
         if (!currentEnabled) return;
 
+        if (isTwitchReply(parsed.tags)) return;
         if (!isKeywordMatch(parsed.message, currentConfig.keyword)) return;
 
         const subMonths = extractSubMonths(parsed.tags);
@@ -205,6 +213,8 @@ export function useRaffleChat(
             const currentEnabled = enabledRef.current;
             if (!currentEnabled) return;
 
+            // A reply answers someone, e.g. tells them the keyword, as on Twitch.
+            if (payload.type === "reply") return;
             if (!isKeywordMatch(payload.content, currentConfig.keyword)) return;
 
             const { isSub, subMonths } = getKickSubStatus(

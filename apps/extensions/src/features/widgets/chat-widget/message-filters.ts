@@ -1,6 +1,6 @@
 import type { ChatMessagesType } from './chat-messages';
 
-// Common chat bots on Twitch and Kick. Kick has no bot badge, so names are the only signal there.
+// Common chat bots on Twitch and Kick, for bot accounts without a bot badge.
 const BOT_NAMES = new Set([
   'nightbot',
   'streamelements',
@@ -21,8 +21,12 @@ const BOT_NAMES = new Set([
   'senchabot',
 ]);
 
-// Twitch's own "Chat Bot" badge, given to accounts registered as chatbots.
-const TWITCH_BOT_BADGE = 'bot-badge';
+// The platforms' own bot badges: Twitch's "Chat Bot", and Kick's "Bot", which Kick's @Kicklet and
+// @StreamElements carry (seen live 2026-09-15).
+const BOT_BADGES: Record<ChatMessagesType['platform'], string> = {
+  twitch: 'bot-badge',
+  kick: 'bot',
+};
 
 export interface MessageFilters {
   hideBots: boolean;
@@ -33,7 +37,8 @@ export function isHiddenMessage(msg: ChatMessagesType, filters: MessageFilters):
   if (filters.hideCommands && msg.message.trimStart().startsWith('!')) return true;
   if (!filters.hideBots) return false;
   return (
-    BOT_NAMES.has(msg.user.toLowerCase()) ||
-    (msg.badges ?? []).some((badge) => badge.split('/')[0] === TWITCH_BOT_BADGE)
+    // Kick sends its bot accounts with an "@" in the name, and @Streamlabs without a badge.
+    BOT_NAMES.has(msg.user.toLowerCase().replace(/^@/, '')) ||
+    (msg.badges ?? []).some((badge) => badge.split('/')[0] === BOT_BADGES[msg.platform])
   );
 }

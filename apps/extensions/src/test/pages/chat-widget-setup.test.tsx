@@ -1,4 +1,4 @@
-import { fireEvent, screen } from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import {
   buildWidgetParams,
@@ -197,6 +197,43 @@ describe('Chat Box setup', () => {
     );
     expect(kickField().value).toBe('Kicker');
     expect(platforms('Kick').checked).toBe(true);
+  });
+
+  it('previews demo chat with the chosen settings, the speed and, once typing stops, the channel', async () => {
+    const user = setupUser();
+    await renderRoute(PAGE);
+    const preview = () =>
+      new URL((screen.getByTitle(en('chatWidget.previewIframeTitle')) as HTMLIFrameElement).src)
+        .searchParams;
+    expect(preview().get('mock')).toBe('true');
+    expect(preview().get('mockRate')).toBeNull();
+
+    await user.click(toggle(en('chatWidget.hideCommands')));
+    expect(preview().get('hideCommands')).toBe('true');
+    fireEvent.change(slider(en('chatWidget.previewSpeed')), { target: { value: '2' } });
+    expect(preview().get('mockRate')).toBe('1');
+
+    await user.type(twitchField(), 'streamer');
+    expect(preview().get('twitch')).toBeNull();
+    await waitFor(() => expect(preview().get('twitch')).toBe('streamer'), { timeout: 2_000 });
+    expect(preview().get('mock')).toBe('true');
+  });
+
+  it('loads a pasted URL with the old keep=1 and number flags as the widget reads them', async () => {
+    const user = setupUser();
+    await renderRoute(PAGE);
+    await user.click(urlField());
+    await user.paste(
+      'https://extensions.senchabot.com/widgets/chat-widget?twitch=foo&keep=1&badges=0&hideBots=1',
+    );
+    expect(combobox(en('chatWidget.messageDuration')).textContent).toBe(
+      en('chatWidget.durationKeep'),
+    );
+    expect(toggle(en('chatWidget.showBadges')).getAttribute('aria-checked')).toBe('false');
+    expect(toggle(en('chatWidget.hideBots')).getAttribute('aria-checked')).toBe('true');
+    expect(urlField().value).toBe(
+      'http://localhost:3000/widgets/chat-widget?twitch=foo&badges=false&keep=true&hideBots=true',
+    );
   });
 
   it('flags a pasted URL it does not understand and changes nothing', async () => {

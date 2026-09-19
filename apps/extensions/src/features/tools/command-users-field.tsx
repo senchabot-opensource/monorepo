@@ -73,9 +73,16 @@ export function CommandUsersField({
     users.some((u) => u.platform === p && u.name === name);
 
   const add = (text: string) => {
-    // Chat shows mentions with an @, so people paste names that way.
-    const name = text.replace(/^@/, '').trim().toLowerCase();
-    if (name && !has(platform, name)) onChange([...users, { platform, name }]);
+    // Chat shows mentions with an @, so people paste names that way, often several at once. A
+    // comma would split the name in the URL anyway, and no username has one or a space.
+    const added = [...users];
+    for (const part of text.split(/[\s,]+/)) {
+      const name = part.replace(/^@/, '').toLowerCase();
+      if (name && !added.some((u) => u.platform === platform && u.name === name)) {
+        added.push({ platform, name });
+      }
+    }
+    if (added.length > users.length) onChange(added);
   };
 
   const assign = (user: CommandUser, p: ChatPlatform) =>

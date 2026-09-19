@@ -76,7 +76,73 @@ describe('reader log', () => {
   });
 });
 
+describe('reader log edge cases', () => {
+  it('returns the same log when a delete or ban matches nothing, so nothing re-renders', () => {
+    const log = applyOps([], [{ op: 'message', msg: msg('a', T0), at: T0 }]);
+    expect(applyOps(log, [{ op: 'delete', id: 'zzz' }])).toBe(log);
+    expect(applyOps(log, [{ op: 'deleteUser', platform: 'twitch', userLower: 'viewer' }])).toBe(
+      log,
+    );
+    expect(applyOps(log, [])).toBe(log);
+  });
+
+  it('keeps messages and connection rows in arrival order, events counted toward the limit', () => {
+    const ops = Array.from({ length: MAX_ENTRIES }, (_, i) => ({
+      op: 'message' as const,
+      msg: msg(String(i), T0 + i),
+      at: T0 + i,
+    }));
+    const log = applyOps(
+      [],
+      [
+        ...ops,
+        { op: 'event', event: { kind: 'networkLost' }, at: T0 + MAX_ENTRIES },
+        { op: 'message', msg: msg('last', T0 + MAX_ENTRIES), at: T0 + MAX_ENTRIES },
+      ],
+    );
+    expect(log).toHaveLength(MAX_ENTRIES);
+    expect(rows(log).slice(-3)).toEqual([String(MAX_ENTRIES - 1), '[networkLost]', 'last']);
+    expect(rows(log)[0]).toBe('2');
+  });
+
+  it('marks a deleted message only once, and a ban leaves it as it is', () => {
+    const log = applyOps(
+      [],
+      [
+        { op: 'message', msg: msg('a', T0, { user: 'Bob' }), at: T0 },
+        { op: 'delete', id: 'a' },
+      ],
+    );
+    expect(applyOps(log, [{ op: 'delete', id: 'a' }])).toBe(log);
+    expect(applyOps(log, [{ op: 'deleteUser', platform: 'kick', userLower: 'bob' }])).toBe(log);
+  });
+
+  it('gives every event its own key, even several in the same millisecond', () => {
+    const log = applyOps(
+      [],
+      [
+        { op: 'event', event: { kind: 'networkLost' }, at: T0 },
+        { op: 'event', event: { kind: 'networkBack' }, at: T0 },
+      ],
+    );
+    expect(new Set(log.map((entry) => entry.key)).size).toBe(2);
+  });
+});
+
 describe('saved reader log', () => {
+  it('keeps connection rows and deleted marks across a refresh', () => {
+    const log = applyOps(
+      [],
+      [
+        { op: 'event', event: { kind: 'disconnected', platform: 'twitch' }, at: T0 },
+        { op: 'message', msg: msg('a', T0), at: T0 },
+        { op: 'delete', id: 'a' },
+      ],
+    );
+    const saved = deserializeLog(serializeLog(log, T0), T0 + 1);
+    expect(rows(saved?.entries ?? [])).toEqual(['[disconnected]', 'a (deleted)']);
+  });
+
   it('round-trips messages with their dates and marks where the visit resumed', () => {
     const log = applyOps(
       [],

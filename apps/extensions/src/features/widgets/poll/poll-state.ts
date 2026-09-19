@@ -197,13 +197,19 @@ function pollLength(word: string): number | null {
   return ms === null ? null : Math.min(ms, MAX_POLL_MS);
 }
 
+/**
+ * `text` cut to `max` characters by code point: cut by UTF-16 unit, an emoji at the cut showed
+ * up on stream as "�".
+ */
+export const clip = (text: string, max: number) => Array.from(text).slice(0, max).join('');
+
 /** Options as given, trimmed, with blanks and repeats (in any case) left out. */
 export function cleanOptions(options: readonly string[]): string[] {
   const seen = new Set<string>();
   const clean: string[] = [];
   for (const raw of options) {
     // "|" splits options in chat commands and the URL, so it can't be part of one.
-    const option = raw.replaceAll('|', ' ').trim().slice(0, OPTION_MAX_LENGTH).trim();
+    const option = clip(raw.replaceAll('|', ' ').trim(), OPTION_MAX_LENGTH).trim();
     const folded = foldText(option);
     if (!folded || seen.has(folded)) continue;
     seen.add(folded);
@@ -249,7 +255,7 @@ export function parsePollCommand(
   const body = ms === null ? rest : rest.slice(words[0].length).trim();
   const [question, ...given] = body.split('|');
   const options = cleanOptions(given.length > 0 ? given : yesNo);
-  const title = question.trim().slice(0, QUESTION_MAX_LENGTH).trim();
+  const title = clip(question.trim(), QUESTION_MAX_LENGTH).trim();
   if (options.length < MIN_OPTIONS || (given.length === 0 && !title)) return null;
   return { action: 'new', question: title, options, ms };
 }

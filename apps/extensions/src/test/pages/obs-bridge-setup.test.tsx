@@ -73,6 +73,23 @@ describe('OBS Bridge setup', () => {
     expect(urlField().value).toContain('commandUser=kick%3Akmod&');
   });
 
+  it('adds each name of a pasted list, so the URL gives the tool the same users', async () => {
+    const user = setupUser();
+    await renderRoute(PAGE);
+    await user.type(twitchField(), 'streamer');
+    await user.type(kickField(), 'kicker');
+    await user.click(usersField());
+    await user.paste('@Mod1, mod2 @mod3,,mod1');
+    await user.keyboard('{Enter}');
+
+    expect(new URL(urlField().value).searchParams.get('commandUser')).toBe(
+      'twitch:mod1,twitch:mod2,twitch:mod3',
+    );
+    for (const name of ['mod1', 'mod2', 'mod3']) {
+      expect(button(en('obsBridge.removeUser', { name }))).toBeTruthy();
+    }
+  });
+
   it('runs the live tool in the preview, like the old setup page', async () => {
     const user = setupUser();
     await renderRoute(PAGE);

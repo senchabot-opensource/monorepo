@@ -241,9 +241,8 @@ export function getSevenTvEmoteOnlyUrls(
     const id = emoteMap.get(token);
     if (!id) return null;
     urls.push(sevenTvEmoteUrl(id));
-    if (urls.length >= MAX_EMOTES_PER_MESSAGE) break;
   }
-  return urls.length > 0 ? urls : null;
+  return urls.length > 0 ? urls.slice(0, MAX_EMOTES_PER_MESSAGE) : null;
 }
 
 export type EmoteChatInput = {

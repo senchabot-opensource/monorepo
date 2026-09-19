@@ -45,7 +45,7 @@ Notes:
 - Leave "Shutdown source when not visible" and "Refresh browser when scene becomes active" off. Both reload the page, and the widget forgets what it was showing (Sub Sprout goes back to its first stage, a Raffle winner drawn while the source is off never shows). Subathon Timer, Sub Goal and Chat Poll keep their time, count or poll through a reload but can't see subs or votes while the source is off. Stream Alerts only shows what comes in while the source is running.
 - To make Chat Box text bigger, change Font Size on the setup page instead of stretching the source.
 - To change a widget later, copy a new URL from the setup page and paste it over the old one. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal and Chat Poll can load an existing URL: paste it into the Widget URL field on the setup page and all settings come back.
-- If a widget looks empty: check that you typed the channel name, not a link, and that it is spelled right. Chat Box and Emote Wall stay empty until something happens in chat. If a Kick channel can't be found and there is no Twitch channel either, Chat Box and Emote Wall play sample content instead.
+- If a widget looks empty: check that you typed the channel name, not a link, and that it is spelled right. Chat Box and Emote Wall stay empty until something happens in chat.
 
 ## Chat Box
 
@@ -55,7 +55,7 @@ Merges Twitch and Kick chat into one overlay.
 - Demo with sample chat: https://extensions.senchabot.com/widgets/chat-widget?mock=true
 - Recommended size: 400x600 for a vertical column. For a horizontal bar, use the bar's length as width and one line of messages as height.
 - Emotes: Twitch and Kick native emotes always show as images. 7TV channel and global emotes show in Twitch and Kick messages. BTTV and FFZ emotes show in Twitch messages only. On Kick messages 7TV uses the set linked to the channel's Kick account, or the Twitch set if only Twitch is linked on 7TV. If two emotes share a name, the channel emote wins, and the order between providers is 7TV, BTTV, FFZ.
-- Hide Bots hides nightbot, streamelements, streamlabs, moobot, fossabot, wizebot, sery_bot, soundalerts, streamlootsbot, kofistreambot, pokemoncommunitygame, own3d, blerp, botrix, kickbot, kicklet and senchabot, plus Twitch accounts with the Chat Bot badge.
+- Hide Bots hides nightbot, streamelements, streamlabs, moobot, fossabot, wizebot, sery_bot, soundalerts, streamlootsbot, kofistreambot, pokemoncommunitygame, own3d, blerp, botrix, kickbot, kicklet and senchabot (Kick sends some of them with an "@" in front, which still matches), plus accounts with Twitch's Chat Bot badge or Kick's Bot badge.
 - Hide Commands hides every message that starts with "!".
 - Deleted messages and messages from users who get a timeout or ban are removed from the overlay.
 - It only reads chat. It does not restream and can't post in chat.
@@ -139,7 +139,7 @@ URL parameters (all optional):
 | --- | --- | --- |
 | twitch | Twitch channel name | none |
 | kick | Kick channel name | none |
-| variety | classic (9 stages), rose (10), sunflower (7), cactus (6), tulip (7), pine (5), lotus (7), lily (9), palm (10), vine (11) | classic |
+| variety | classic (10 stages), rose (10), sunflower (7), cactus (6), tulip (7), pine (5), lotus (7), lily (9), palm (10), vine (11) | classic |
 | pick | fixed (same plant), cycle (next in the list), random; cycle and random never pick vine | fixed |
 | water | off, rain, sparkle (plays when the plant grows; vine doesn't show it) | off |
 | countfx | 0 hides the sub count badge (for example x5 for a 5-gift bundle) | shown |

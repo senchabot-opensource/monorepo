@@ -64,6 +64,10 @@ type UseChatOptions = {
 
 const NO_USERS: ReadonlySet<string> = new Set();
 
+// JavaScript lowercases "İ" to "i̇", so "!scene istanbul" missed "İstanbul". Turkish dotted and
+// dotless i count as one letter, as in Raffle keywords and Chat Poll votes.
+const caseless = (text: string) => text.replace(/[İIı]/g, "i").toLowerCase();
+
 /** Reports a chat client's status and returns its cleanup. */
 function watchChat(
   platform: ChatPlatform,
@@ -144,7 +148,8 @@ export const useChat = ({
       try {
         const data = await obs.call('GetSceneList');
         const items = data.scenes as Array<{ sceneName: string }>;
-        const scenes = items.map(s => s.sceneName);
+        // obs-websocket lists them bottom to top; OBS's Scenes dock shows them top to bottom.
+        const scenes = items.map(s => s.sceneName).reverse();
         scenesRef.current = scenes;
         onScenesRef.current?.(scenes);
       } catch {
@@ -222,12 +227,14 @@ export const useChat = ({
   const pushToMessages = useCallback((payload: ChatMessagesType) => {
     const obs = obsRef.current;
     if (!obs) return;
+    // A reply on either platform answers someone, e.g. teaches them "brb", so it runs nothing.
+    if (payload.replyTo) return;
     // By login only: a Twitch display-name can be a localized name that says nothing about who it is.
     const login = payload.userLower ?? payload.user;
     if (!cmdUsersRef.current.has(commandUserKey(payload.platform, login))) return;
 
     const rawMsg = payload.message.trim();
-    const msg = rawMsg.toLowerCase();
+    const msg = caseless(rawMsg);
     const cmds = customCommandsRef.current;
 
     // Numbered on arrival: OBS answers asynchronously, so outcomes can come back out of order.
@@ -265,13 +272,13 @@ export const useChat = ({
         .finally(() => obs.off("ConnectionClosed", onClosed));
     };
 
-    const startRec = (cmds.cmdStartRecord || DEFAULT_OBS_COMMANDS.cmdStartRecord).trim().toLowerCase();
-    const stopRec = (cmds.cmdStopRecord || DEFAULT_OBS_COMMANDS.cmdStopRecord).trim().toLowerCase();
-    const startStr = (cmds.cmdStartStream || DEFAULT_OBS_COMMANDS.cmdStartStream).trim().toLowerCase();
-    const stopStr = (cmds.cmdStopStream || DEFAULT_OBS_COMMANDS.cmdStopStream).trim().toLowerCase();
-    const brb = (cmds.cmdBrb || DEFAULT_OBS_COMMANDS.cmdBrb).trim().toLowerCase();
-    const back = (cmds.cmdBack || DEFAULT_OBS_COMMANDS.cmdBack).trim().toLowerCase();
-    const scenePrefix = (cmds.cmdScene || DEFAULT_OBS_COMMANDS.cmdScene).trim().toLowerCase();
+    const startRec = caseless((cmds.cmdStartRecord || DEFAULT_OBS_COMMANDS.cmdStartRecord).trim());
+    const stopRec = caseless((cmds.cmdStopRecord || DEFAULT_OBS_COMMANDS.cmdStopRecord).trim());
+    const startStr = caseless((cmds.cmdStartStream || DEFAULT_OBS_COMMANDS.cmdStartStream).trim());
+    const stopStr = caseless((cmds.cmdStopStream || DEFAULT_OBS_COMMANDS.cmdStopStream).trim());
+    const brb = caseless((cmds.cmdBrb || DEFAULT_OBS_COMMANDS.cmdBrb).trim());
+    const back = caseless((cmds.cmdBack || DEFAULT_OBS_COMMANDS.cmdBack).trim());
+    const scenePrefix = caseless((cmds.cmdScene || DEFAULT_OBS_COMMANDS.cmdScene).trim());
 
     if (startRec && msg === startRec) {
       settle(obs.call('StartRecord'), "startRecord");
@@ -295,15 +302,15 @@ export const useChat = ({
         report({ kind: "failed", offline: true, message: "" });
         return;
       }
-      const lowerQuery = query.toLowerCase();
+      const lowerQuery = caseless(query);
       // 1. Try exact match (case-insensitive)
       let match = scenesRef.current.find(
-        (s) => s.trim().toLowerCase() === lowerQuery
+        (s) => caseless(s.trim()) === lowerQuery
       );
       // 2. Try substring match (case-insensitive)
       if (!match) {
         match = scenesRef.current.find(
-          (s) => s.trim().toLowerCase().includes(lowerQuery)
+          (s) => caseless(s.trim()).includes(lowerQuery)
         );
       }
       if (match) {

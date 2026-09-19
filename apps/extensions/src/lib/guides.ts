@@ -246,24 +246,24 @@ export const CONTENT_META = {
     en: {
       title: 'Senchabot Extensions FAQ: Free Twitch and Kick Overlays',
       description:
-        'Answers about Senchabot Extensions: free with no login, which of the 5 widgets support Twitch and Kick, where your settings live and how to report a bug.',
+        'Answers about Senchabot Extensions: free with no login, which of the 9 widgets support Twitch and Kick, where your settings live and how to report a bug.',
     },
     tr: {
       title: "Senchabot Extensions SSS: Twitch ve Kick Overlay'leri",
       description:
-        "Senchabot Extensions için kısa cevaplar: ücretsiz ve girişsiz, 5 widget'tan hangisi Twitch ve Kick'te çalışıyor, ayarlar nerede duruyor, hata nasıl bildirilir.",
+        "Senchabot Extensions için kısa cevaplar: ücretsiz ve girişsiz, 9 widget'tan hangisi Twitch ve Kick'te çalışıyor, ayarlar nerede duruyor, hata nasıl bildirilir.",
     },
   },
   changelog: {
     en: {
       title: 'Changelog: New Features and Fixes | Senchabot Extensions',
       description:
-        'Every feature and fix in Senchabot Extensions since the April 2026 launch, newest first, for Chat Box, Emote Wall, Sub Sprout, Raffle and OBS Bridge.',
+        'Every feature and fix in Senchabot Extensions since the April 2026 launch, newest first, for all nine Twitch and Kick overlays and tools.',
     },
     tr: {
       title: 'Yenilikler: Eklenen Özellikler ve Düzeltmeler | Senchabot',
       description:
-        "Senchabot Extensions'a Nisan 2026'dan beri gelen her özellik ve düzeltme, en yenisi en üstte: Sohbet Kutusu, Emote Duvarı, Sub Sprout, Çekiliş ve OBS Bridge.",
+        "Senchabot Extensions'taki dokuz Twitch ve Kick overlay'ine ve aracına Nisan 2026'dan beri gelen her özellik ve düzeltme, en yenisi en üstte.",
     },
   },
 } as const satisfies Record<string, LocalizedMeta>;

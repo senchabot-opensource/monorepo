@@ -102,4 +102,83 @@ describe('Stream Alerts setup', () => {
     });
     listener.close();
   });
+
+  it('round-trips a pasted URL with every setting back into the same URL', async () => {
+    const user = setupUser();
+    await renderRoute(PAGE);
+    const pasted =
+      'http://localhost:3000/widgets/stream-alerts?twitch=streamer&kick=kicker&theme=celestial' +
+      '&color=pink&hsub=A%26B&gift=0&hbits=Cheer%21&minbits=250&minraid=10&dur=12&vol=0&msg=0&lang=tr';
+    await user.click(urlField());
+    await user.paste(pasted);
+    await user.tab();
+    expect(urlField().value).toBe(pasted);
+    expect(headingBox(en('streamAlerts.kindSub')).value).toBe('A&B');
+    expect(color(en('streamAlerts.colors.pink')).checked).toBe(true);
+    expect(slider(en('streamAlerts.volume')).value).toBe('0');
+  });
+
+  it('loads a pasted URL with broken values as the defaults, without breaking the page', async () => {
+    const user = setupUser();
+    await renderRoute(PAGE);
+    await user.click(urlField());
+    await user.paste(
+      'https://extensions.senchabot.com/widgets/stream-alerts?twitch=streamer&theme=%3Cb%3E&dur=abc&vol=-9&mingift=0&lang=zz',
+    );
+    await user.tab();
+    expect(urlField().value).toBe(
+      'http://localhost:3000/widgets/stream-alerts?twitch=streamer&vol=0&lang=en',
+    );
+  });
+
+  it('carries the look and words into the preview, never the channels', async () => {
+    withLayout(800, 350);
+    const user = setupUser();
+    await renderRoute(PAGE);
+    await user.type(twitchField(), 'streamer');
+    await user.click(segment(en('streamAlerts.theme'), en('streamAlerts.themes.celestial')));
+    await retype(user, headingBox(en('streamAlerts.kindRaid')), 'Raid!');
+    const params = previewSrc().searchParams;
+    expect(params.get('theme')).toBe('celestial');
+    expect(params.get('hraid')).toBe('Raid!');
+    expect(params.has('twitch')).toBe(false);
+    expect(params.get('simulate')).toBe('1');
+  });
+
+  it("sends test alerts that clear the page's own minimums", async () => {
+    withLayout(800, 350);
+    const user = setupUser();
+    const received: {
+      alert: { kind: string; count?: number; amount?: number; viewers?: number };
+    }[] = [];
+    const listener = new BroadcastChannel(PREVIEW_CHANNEL);
+    listener.onmessage = ({ data }) => received.push(data);
+    await renderRoute(PAGE);
+    await retype(user, textbox(en('streamAlerts.minGift')), '20');
+    await retype(user, textbox(en('streamAlerts.minBits')), '9000');
+    await retype(user, textbox(en('streamAlerts.minRaid')), '77');
+    await user.click(button(en('streamAlerts.testGift', { count: 20 })));
+    await user.click(button(en('streamAlerts.testBits', { amount: 9000 })));
+    await user.click(button(en('streamAlerts.testRaid')));
+    await vi.waitFor(() => expect(received).toHaveLength(3));
+    expect(received.map((m) => m.alert)).toMatchObject([
+      { kind: 'gift', count: 20 },
+      { kind: 'bits', amount: 9000 },
+      { kind: 'raid', viewers: 77 },
+    ]);
+    listener.close();
+  });
+
+  it('takes turns between the platforms for test alerts when both are on', async () => {
+    withLayout(800, 350);
+    const user = setupUser();
+    const received: { alert: { platform: string } }[] = [];
+    const listener = new BroadcastChannel(PREVIEW_CHANNEL);
+    listener.onmessage = ({ data }) => received.push(data);
+    await renderRoute(PAGE);
+    for (let i = 0; i < 3; i++) await user.click(button(en('streamAlerts.testSub')));
+    await vi.waitFor(() => expect(received).toHaveLength(3));
+    expect(received.map((m) => m.alert.platform)).toEqual(['twitch', 'kick', 'twitch']);
+    listener.close();
+  });
 });

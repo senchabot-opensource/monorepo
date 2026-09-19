@@ -121,6 +121,100 @@ describe('chat reconnects', () => {
     expect(FakeWebSocket.instances).toHaveLength(2);
   });
 
+  it('waits twice as long after each failed attempt, up to 30s, and starts over once connected', () => {
+    connectTwitch();
+    const waits: number[] = [];
+    for (let i = 0; i < 7; i++) {
+      const before = FakeWebSocket.instances.length;
+      latest().onclose?.(new CloseEvent('close'));
+      let waited = 0;
+      while (FakeWebSocket.instances.length === before) {
+        vi.advanceTimersByTime(500);
+        waited += 500;
+      }
+      waits.push(waited);
+    }
+    expect(waits).toEqual([1_000, 2_000, 4_000, 8_000, 16_000, 30_000, 30_000]);
+
+    latest().open();
+    const before = FakeWebSocket.instances.length;
+    latest().onclose?.(new CloseEvent('close'));
+    vi.advanceTimersByTime(1_000);
+    expect(FakeWebSocket.instances).toHaveLength(before + 1);
+  });
+
+  it('never keeps two sockets alive, whatever order drops, pings and network events come in', () => {
+    connectTwitch();
+    const live = () =>
+      FakeWebSocket.instances.filter(
+        (ws) => ws.onmessage !== null && ws.readyState !== FakeWebSocket.CLOSED,
+      );
+    const is = (state: number) => latest().readyState === state;
+    const steps = [
+      () => is(FakeWebSocket.CONNECTING) && latest().open(),
+      () => {
+        if (is(FakeWebSocket.CLOSED)) return;
+        latest().readyState = FakeWebSocket.CLOSED;
+        latest().onclose?.(new CloseEvent('close'));
+      },
+      () => window.dispatchEvent(new Event('offline')),
+      () => window.dispatchEvent(new Event('online')),
+      () => is(FakeWebSocket.OPEN) && latest().receive(':tmi.twitch.tv RECONNECT\r\n'),
+      () => vi.advanceTimersByTime(12_000),
+      () => vi.advanceTimersByTime(45_000),
+    ];
+    let seed = 7;
+    for (let i = 0; i < 300; i++) {
+      seed = (seed * 16807) % 2147483647;
+      steps[seed % steps.length]();
+      expect(live().length).toBeLessThanOrEqual(1);
+    }
+  });
+
+  it('opens a single new socket when an error is followed by a close', () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    connectTwitch();
+    latest().onerror?.(new Event('error'));
+    latest().onclose?.(new CloseEvent('close'));
+    vi.advanceTimersByTime(1_500);
+    expect(FakeWebSocket.instances).toHaveLength(2);
+  });
+
+  it('ignores what a replaced socket still delivers', () => {
+    const received: string[] = [];
+    client = new TwitchChat('streamer', (m) => received.push(m.message));
+    const first = latest();
+    first.open();
+    const onmessage = first.onmessage;
+    first.receive(':tmi.twitch.tv RECONNECT\r\n');
+    onmessage?.(new MessageEvent('message', { data: ':v!v@v PRIVMSG #streamer :late\r\n' }));
+    expect(received).toEqual([]);
+  });
+
+  it('closes an attempt still opening on disconnect, and never opens another', () => {
+    const twitch = new TwitchChat('streamer', () => {});
+    const socket = latest();
+    twitch.disconnect();
+    expect(socket.readyState).toBe(FakeWebSocket.CLOSED);
+    expect(socket.onopen).toBeNull();
+    vi.advanceTimersByTime(60_000);
+    expect(FakeWebSocket.instances).toHaveLength(1);
+  });
+
+  it('can be disconnected twice', () => {
+    const twitch = connectTwitch();
+    twitch.disconnect();
+    expect(() => twitch.disconnect()).not.toThrow();
+  });
+
+  it('reports each state it goes through', () => {
+    connectTwitch();
+    latest().onclose?.(new CloseEvent('close'));
+    vi.advanceTimersByTime(1_000);
+    latest().open();
+    expect(statuses).toEqual(['connected', 'reconnecting', 'connecting', 'connected']);
+  });
+
   it('stops everything on disconnect', () => {
     const twitch = connectTwitch();
     twitch.disconnect();

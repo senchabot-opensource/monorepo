@@ -25,7 +25,8 @@ vi.mock('obs-websocket-js', () => ({
     async disconnect() {}
     async call(request: string, data?: unknown) {
       if (request === 'GetSceneList') {
-        return { scenes: obs.scenes.map((sceneName) => ({ sceneName })) };
+        // obs-websocket answers bottom to top; obs.scenes is top to bottom, as OBS shows them.
+        return { scenes: [...obs.scenes].reverse().map((sceneName) => ({ sceneName })) };
       }
       obs.calls.push(data === undefined ? [request] : [request, data]);
     }

@@ -123,9 +123,12 @@ export function formatClock(ms: number): string {
   return `${pad(h)}:${pad(m)}:${pad(s)}`;
 }
 
-/** Short form for added time: "0:30", "5:00", "1:02:00". */
+/**
+ * Short form for added time: "0:30", "5:00", "1:02:00". Rounds up like the clock, so a 1 Bit
+ * cheer's 0.12 s shows as +0:01, not +0:00.
+ */
 export function formatDelta(ms: number): string {
-  const total = Math.round(Math.abs(ms) / 1000);
+  const total = Math.ceil(Math.abs(ms) / 1000);
   const h = Math.floor(total / 3600);
   const m = Math.floor((total % 3600) / 60);
   const s = total % 60;

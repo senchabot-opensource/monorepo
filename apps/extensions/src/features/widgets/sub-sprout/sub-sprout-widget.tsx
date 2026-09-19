@@ -424,7 +424,9 @@ export function SubSproutWidget({
     if (simulate === true || !chatroomId) return;
     const source = new KickEventSource(chatroomId, channelId, event => {
       if (event.kind === "mod") {
-        if (event.text.toLowerCase().trim() === "!grow") handleSubEvent(1);
+        // The first word, as the Twitch reader takes it.
+        const command = event.text.trim().split(/\s+/)[0]?.toLowerCase();
+        if (command === "!grow") handleSubEvent(1);
         return;
       }
       // Kick's second word on a sub, a resub shared in chat, Kicks and raids add nothing.

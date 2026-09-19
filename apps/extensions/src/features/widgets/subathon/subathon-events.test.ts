@@ -92,6 +92,29 @@ describe('twitchEvent', () => {
     expect(twitchEvent(say('badges=moderator/1;mod=1', 'hello chat'), new Map())).toBeNull();
   });
 
+  it("ignores a mod's command sent as a reply, which may be teaching someone the command", () => {
+    const reply = (text: string) =>
+      line(
+        `@badges=moderator/1;mod=1;reply-parent-msg-id=p1;reply-parent-display-name=Viewer;reply-parent-user-login=viewer :u!u@u.tmi.twitch.tv PRIVMSG #channel :${text}`,
+      );
+    expect(twitchEvent(reply('@Viewer !subathon add 5m'), new Map())).toBeNull();
+    // A client that sends a reply without the name in front.
+    expect(twitchEvent(reply('!subathon add 5m'), new Map())).toBeNull();
+  });
+
+  it("reads a mod's command sent with /me, like any other message", () => {
+    const say = (text: string) =>
+      line(`@badges=moderator/1;mod=1 :u!u@u.tmi.twitch.tv PRIVMSG #channel :${text}`);
+    expect(twitchEvent(say('\x01ACTION !subathon add 5m\x01'), new Map())).toMatchObject({
+      kind: 'mod',
+      text: '!subathon add 5m',
+    });
+    // Repeated through Chatterino: the suffix sits inside the wrapper.
+    expect(twitchEvent(say('\x01ACTION !goal add 2 ͏\x01'), new Map())).toMatchObject({
+      text: '!goal add 2',
+    });
+  });
+
   it("ignores a Shared Chat partner channel's cheers and mods", () => {
     const partner =
       '@badges=moderator/1;bits=500;mod=1;room-id=1;source-room-id=2 :u!u@u.tmi.twitch.tv PRIVMSG #channel :Cheer500';
@@ -262,5 +285,15 @@ describe('kickEvent', () => {
     expect(
       kickEvent('App\\Events\\ChatMessageEvent', message('vip'), createKickDedupe()),
     ).toBeNull();
+  });
+
+  it("ignores a mod's command sent as a reply, as on Twitch", () => {
+    const reply = {
+      type: 'reply',
+      content: '!subathon add 5m',
+      sender: { username: 'u', identity: { badges: [{ type: 'moderator', text: 'Moderator' }] } },
+      metadata: { original_sender: { username: 'viewer' }, original_message: { content: 'how?' } },
+    };
+    expect(kickEvent('App\\Events\\ChatMessageEvent', reply, createKickDedupe())).toBeNull();
   });
 });

@@ -144,3 +144,84 @@ describe('withLangParam', () => {
     expect(withLangParam('', 'en')).toBe('');
   });
 });
+
+describe('paths with awkward input', () => {
+  it('treats /tr with a trailing slash as the Turkish home page', () => {
+    expect(stripLocale('/tr/')).toBe('/');
+    expect(localizePath('/tr/', 'en')).toBe('/');
+    expect(localizePath('/tr/', 'tr')).toBe('/tr');
+  });
+
+  it('keeps a trailing slash on inner pages', () => {
+    expect(localizePath('/faq/', 'tr')).toBe('/tr/faq/');
+    expect(localizePath('/tr/faq/', 'en')).toBe('/faq/');
+  });
+
+  it('keeps a query and a hash together, in order', () => {
+    expect(localizePath('/setup/raffle?channel=a%26b#faq', 'tr')).toBe(
+      '/tr/setup/raffle?channel=a%26b#faq',
+    );
+    expect(localizePath('/tr#faq', 'en')).toBe('/#faq');
+    expect(localizePath('/#widgets', 'tr')).toBe('/tr#widgets');
+  });
+
+  it('leaves relative paths alone', () => {
+    expect(localizePath('faq', 'tr')).toBe('faq');
+    expect(localizePath('?lang=tr', 'tr')).toBe('?lang=tr');
+  });
+
+  it('never reads a path that only starts with a locale as localized', () => {
+    expect(stripLocale('/trivia')).toBe('/trivia');
+    expect(localizePath('/trivia', 'en')).toBe('/trivia');
+    expect(localizePath('/trivia', 'tr')).toBe('/tr/trivia');
+  });
+
+  it('matches only real overlay and tool paths as app paths', () => {
+    expect(isAppPath('/widgets')).toBe(false);
+    expect(isAppPath('/tools')).toBe(false);
+    expect(isAppPath('/widgetsfoo/x')).toBe(false);
+  });
+});
+
+describe('getLangRedirect with awkward queries', () => {
+  it('drops every copy of a repeated lang param and follows the first one', () => {
+    expect(getLangRedirect('/faq', '?lang=tr&x=1&lang=en')).toBe('/tr/faq?x=1');
+  });
+
+  it('drops an empty or valueless lang param without switching pages', () => {
+    expect(getLangRedirect('/tr/faq', '?lang=')).toBe('/tr/faq');
+    expect(getLangRedirect('/faq', '?lang&x=1')).toBe('/faq?x=1');
+  });
+
+  it('keeps params whose names only contain "lang"', () => {
+    expect(getLangRedirect('/faq', '?language=tr&slang=1&lang=tr')).toBe(
+      '/tr/faq?language=tr&slang=1',
+    );
+  });
+
+  it('keeps encoded values byte for byte', () => {
+    expect(getLangRedirect('/setup/raffle', '?channel=%C3%A7a%C4%9Fla&lang=tr&x=a+b')).toBe(
+      '/tr/setup/raffle?channel=%C3%A7a%C4%9Fla&x=a+b',
+    );
+  });
+});
+
+describe('withLangParam with awkward URLs', () => {
+  it('keeps the hash after the query', () => {
+    expect(withLangParam('/widgets/poll?simulate=1#x', 'tr')).toBe(
+      '/widgets/poll?simulate=1&lang=tr#x',
+    );
+  });
+
+  it('adds a query to a URL without one', () => {
+    expect(withLangParam('/widgets/raffle-overlay', 'en')).toBe('/widgets/raffle-overlay?lang=en');
+  });
+
+  it('keeps every other param value, pipes and spaces included', () => {
+    const url = withLangParam('/widgets/poll?q=Who+wins%3F&o=A%7CB+C&lang=en&lang=tr', 'tr');
+    const params = new URL(url, 'https://x').searchParams;
+    expect(params.get('q')).toBe('Who wins?');
+    expect(params.get('o')).toBe('A|B C');
+    expect(params.getAll('lang')).toEqual(['tr']);
+  });
+});

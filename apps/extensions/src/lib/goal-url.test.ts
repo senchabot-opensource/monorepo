@@ -7,6 +7,7 @@ import {
   MAX_GOAL_COUNT,
   parseGoalUrl,
   readGoalSettings,
+  TITLE_MAX_LENGTH,
 } from './goal-url';
 
 const ORIGIN = 'https://extensions.senchabot.com';
@@ -69,6 +70,17 @@ describe('readGoalSettings', () => {
     expect(readGoalSettings(params)).toMatchObject({ start: 13, target: MAX_GOAL_COUNT });
   });
 
+  it('cuts a long title to the length the setup page allows', () => {
+    const title = 'x'.repeat(TITLE_MAX_LENGTH + 10);
+    expect(readGoalSettings(new URLSearchParams({ title })).title).toHaveLength(TITLE_MAX_LENGTH);
+  });
+
+  it('reads the off words in any case, and a goal of 1 at the least', () => {
+    const settings = readGoalSettings(new URLSearchParams('pops=OFF&target=1&start=0'));
+    expect(settings).toMatchObject({ pops: false, target: 1, start: 0 });
+    expect(readGoalSettings(new URLSearchParams('target=0.4')).target).toBe(10);
+  });
+
   it('keeps an empty title, which hides it', () => {
     expect(readGoalSettings(new URLSearchParams('title=')).title).toBe('');
   });
@@ -82,6 +94,20 @@ describe('parseGoalUrl', () => {
       kickChannel: 'kicker',
     });
     expect(parseGoalUrl(`${ORIGIN}/widgets/goal?kick=kicker`)?.settings.platforms).toBe('kick');
+  });
+
+  it('reads back a title with URL characters, the top of the scale and a goal of 1', () => {
+    const settings: GoalSettings = {
+      ...CUSTOM,
+      title: 'a&b=c %20 #1 ?',
+      start: MAX_GOAL_COUNT,
+      target: 1,
+      pops: true,
+    };
+    expect(parseGoalUrl(buildGoalUrl(ORIGIN, settings, 'streamer', ''))?.settings).toEqual({
+      ...settings,
+      platforms: 'twitch',
+    });
   });
 
   it("returns null for text that isn't a Sub Goal URL", () => {
