@@ -8,14 +8,7 @@ import {
   type Settings,
 } from '#/features/widgets/chat-widget/widget-settings';
 import { Route } from '#/routes/widgets/chat-widget';
-import {
-  asFixture,
-  type FixtureCase,
-  fixtureUrls,
-  GARBAGE,
-  GROUPS,
-  readWidgetSearch,
-} from './contract';
+import { asFixture, type FixtureCase, GARBAGE, GROUPS, readWidgetSearch } from './contract';
 import json from './fixtures/chat-box.json';
 
 interface Input {
@@ -25,7 +18,11 @@ interface Input {
 }
 
 const fixture = asFixture<Input, Settings>(json);
-const settingsOf = (input: Input): Settings => ({ ...fixture.defaults, ...input.settings });
+// Highlights went opt-in before they shipped: none on is now the default, so the frozen logic's
+// "all on" default and its highlights=none are the one intended difference.
+const defaults: Settings = { ...fixture.defaults, highlights: [] };
+const expectedUrlOf = (c: FixtureCase<Input>) => c.expectedUrl.replace('&highlights=none', '');
+const settingsOf = (input: Input): Settings => ({ ...defaults, ...input.settings });
 
 // Mirrors widgetUrl in routes/setup/chat-widget.tsx, which assembles the URL inline.
 const widgetUrl = (settings: Settings, twitch: string, kick: string) => {
@@ -40,21 +37,31 @@ const url = (query: string) => `${fixture.origin}/widgets/chat-widget?${query}`;
 
 describe('Chat Box setup URL', () => {
   it('keeps the widget defaults the old URLs rely on', () => {
-    expect(DEFAULT_SETTINGS).toEqual(fixture.defaults);
+    expect(DEFAULT_SETTINGS).toEqual(defaults);
   });
 
   it.each(GROUPS)('builds the pre-redesign URL for every "%s" fixture', (group) => {
     const cases = fixture.cases.filter((c) => c.group === group);
     expect(cases.length).toBeGreaterThan(0);
     expect(cases.map((c) => ({ input: c.input, url: build(c) }))).toEqual(
-      cases.map((c) => ({ input: c.input, url: c.expectedUrl })),
+      cases.map((c) => ({ input: c.input, url: expectedUrlOf(c) })),
+    );
+  });
+
+  it('writes only the highlights that are on', () => {
+    const urlWith = (highlights: Settings['highlights']) =>
+      widgetUrl({ ...DEFAULT_SETTINGS, highlights }, 'foo', '');
+    expect(urlWith([])).toBe(url('twitch=foo'));
+    expect(urlWith(['reply', 'mention'])).toBe(url('twitch=foo&highlights=mention%2Creply'));
+    expect(urlWith([...HIGHLIGHTS])).toBe(
+      url('twitch=foo&highlights=mention%2Creply%2CfirstMessage%2Cannouncement%2Chighlighted'),
     );
   });
 });
 
 describe('Chat Box paste-to-edit', () => {
   it('rebuilds every setup URL from its own text', () => {
-    const urls = fixtureUrls(fixture);
+    const urls = fixture.cases.map(expectedUrlOf).filter(Boolean);
     const rebuilt = urls.map((text) => {
       const parsed = parseWidgetUrl(text);
       return parsed && widgetUrl(parsed.settings, parsed.twitchChannel, parsed.kickChannel);
@@ -68,8 +75,8 @@ describe('Chat Box paste-to-edit', () => {
     expect(parseWidgetUrl(url('twitch=foo&keep=false&duration=60'))?.settings.duration).toBe('60');
   });
 
-  it('reads a URL from before highlights existed as every highlight on', () => {
-    expect(parseWidgetUrl(url('twitch=foo'))?.settings.highlights).toEqual([...HIGHLIGHTS]);
+  it('reads a URL from before highlights existed as every highlight off', () => {
+    expect(parseWidgetUrl(url('twitch=foo'))?.settings.highlights).toEqual([]);
     expect(parseWidgetUrl(url('twitch=foo&highlights=none'))?.settings.highlights).toEqual([]);
   });
 

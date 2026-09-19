@@ -21,7 +21,7 @@ export type WidgetId =
   | 'stream-alerts'
   | 'raffle'
   | 'obs-bridge';
-/** `overlay`: a browser source that runs on its own. `tool`: a page the streamer operates. */
+/** `overlay`: a browser source that runs on its own. `tool`: something the streamer operates. */
 export type WidgetKind = 'overlay' | 'tool';
 export type WidgetPlatform = 'twitch' | 'kick';
 export type RoutePath = FileRouteTypes['to'];
@@ -88,18 +88,6 @@ export const WIDGETS: readonly WidgetEntry[] = [
     sourceSize: { width: 800, height: 600 },
   },
   {
-    id: 'subathon',
-    kind: 'overlay',
-    setupPath: '/setup/subathon-timer',
-    widgetPath: '/widgets/subathon',
-    nameKey: 'widgets.subathon.name',
-    taglineKey: 'widgets.subathon.tagline',
-    Icon: SubathonIcon,
-    platforms: ['twitch', 'kick'],
-    demoUrl: '/widgets/subathon?simulate=1',
-    sourceSize: { width: 800, height: 300 },
-  },
-  {
     id: 'stream-alerts',
     kind: 'overlay',
     setupPath: '/setup/stream-alerts',
@@ -110,6 +98,19 @@ export const WIDGETS: readonly WidgetEntry[] = [
     platforms: ['twitch', 'kick'],
     demoUrl: '/widgets/stream-alerts?simulate=1',
     sourceSize: { width: 800, height: 450 },
+  },
+  {
+    id: 'subathon',
+    // Mods run the clock from chat (start, pause, add time), so it sits with the tools.
+    kind: 'tool',
+    setupPath: '/setup/subathon-timer',
+    widgetPath: '/widgets/subathon',
+    nameKey: 'widgets.subathon.name',
+    taglineKey: 'widgets.subathon.tagline',
+    Icon: SubathonIcon,
+    platforms: ['twitch', 'kick'],
+    demoUrl: '/widgets/subathon?simulate=1',
+    sourceSize: { width: 800, height: 300 },
   },
   {
     id: 'raffle',

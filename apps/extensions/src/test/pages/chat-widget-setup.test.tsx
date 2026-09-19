@@ -84,7 +84,7 @@ describe('Chat Box setup', () => {
       en('chatWidget.highlightMention'),
       en('chatWidget.highlightReply'),
     ]);
-    expectUrl({ highlights: ['firstMessage', 'announcement', 'highlighted'] });
+    expectUrl({ highlights: ['mention', 'reply'] });
 
     await toggleOptions(user, en('chatWidget.emotes'), ['BTTV']);
     expectUrl({ bttv: false });
@@ -103,7 +103,7 @@ describe('Chat Box setup', () => {
       'http://localhost:3000/widgets/chat-widget?twitch=streamer&kick=kickuser&bttv=false' +
         '&fontSize=24&background=true&bgOpacity=0.8&boldUsernames=true&orientation=horizontal' +
         '&platformDisplay=name&keep=true&hideBots=true' +
-        '&highlights=firstMessage%2Cannouncement%2Chighlighted&font=roboto&layout=card&animation=pop',
+        '&highlights=mention%2Creply&font=roboto&layout=card&animation=pop',
     );
   });
 
@@ -152,7 +152,7 @@ describe('Chat Box setup', () => {
         sevenTv: false,
         ffz: false,
         duration: '120',
-        highlights: [],
+        highlights: ['mention', 'announcement'],
         hideCommands: true,
       },
       'Streamer',
@@ -179,7 +179,9 @@ describe('Chat Box setup', () => {
     expect(toggle(en('chatWidget.showMessageTime')).getAttribute('aria-checked')).toBe('true');
     expect(toggle(en('chatWidget.hideCommands')).getAttribute('aria-checked')).toBe('true');
     expect(combobox(en('chatWidget.emotes')).textContent).toBe('BTTV');
-    expect(combobox(en('chatWidget.highlights')).textContent).toBe(en('chatWidget.highlightsNone'));
+    expect(combobox(en('chatWidget.highlights')).textContent).toBe(
+      `${en('chatWidget.highlightMention')}, ${en('chatWidget.highlightAnnouncement')}`,
+    );
     expect(combobox(en('chatWidget.messageDuration')).textContent).toBe(
       en('chatWidget.durationMinutes', { count: 2 }),
     );

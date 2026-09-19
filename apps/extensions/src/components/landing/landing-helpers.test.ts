@@ -28,9 +28,11 @@ describe('getDemoSrc', () => {
     expect(params.get('simulate')).toBe('true');
   });
 
-  it('gives every overlay a demo and no tool one', () => {
+  it('gives every overlay a demo, and of the tools only the Subathon Timer', () => {
     for (const widget of OVERLAYS) expect(getDemoSrc(widget), widget.id).not.toBe('');
-    for (const widget of TOOLS) expect(getDemoSrc(widget), widget.id).toBe('');
+    expect(TOOLS.filter((widget) => getDemoSrc(widget)).map((widget) => widget.id)).toEqual([
+      'subathon',
+    ]);
   });
 
   it('runs a bigger, busier chat in the tall gallery card than in the hero scene', () => {
@@ -46,40 +48,54 @@ describe('getDemoSrc', () => {
 });
 
 describe('gallery card shapes', () => {
-  // The four overlays the bento was drawn for: a tall Chat Box and a wide Subathon Timer.
+  // A tall Chat Box and a wide Subathon strip: the bento the gallery was drawn for.
   const BENTO = (['chat-box', 'emote-wall', 'sub-sprout', 'subathon'] as const).map(getWidget);
   const extra = (id: string, width: number, height: number) =>
     ({ ...getWidget('emote-wall'), id, sourceSize: { width, height } }) as WidgetEntry;
+  const OVERLAY_COLUMNS = [2, 3];
 
-  it('derives the shape from the source size', () => {
+  it('derives the shape from the live demo source size', () => {
     expect(OVERLAYS.map((widget) => [widget.id, getCardShape(widget)])).toEqual([
       ['chat-box', 'tall'],
       ['emote-wall', 'standard'],
       ['sub-sprout', 'standard'],
-      ['subathon', 'wide'],
       ['stream-alerts', 'standard'],
     ]);
-    for (const widget of TOOLS) expect(getCardShape(widget), widget.id).toBe('standard');
+    // Raffle's overlay has a size but no demo, so its card keeps the static picture.
+    expect(TOOLS.map((widget) => [widget.id, getCardShape(widget)])).toEqual([
+      ['subathon', 'wide'],
+      ['raffle', 'standard'],
+      ['obs-bridge', 'standard'],
+    ]);
   });
 
   it('keeps the bento spans while the overlays fill whole rows', () => {
-    expect(getGalleryShapes(BENTO)).toEqual(BENTO.map(getCardShape));
+    expect(getGalleryShapes(BENTO, OVERLAY_COLUMNS)).toEqual(BENTO.map(getCardShape));
+  });
+
+  it('widens the last standard card when the grid is one cell short', () => {
+    expect(getGalleryShapes(OVERLAYS, OVERLAY_COLUMNS)).toEqual([
+      'tall',
+      'standard',
+      'standard',
+      'wide',
+    ]);
+    // The tools grid only has two columns, so the Subathon strip spans the row above the others.
+    expect(getGalleryShapes(TOOLS, [2])).toEqual(['wide', 'standard', 'standard']);
   });
 
   it('drops the wide cards, then the tall one, then every span, when a new overlay would leave a hole', () => {
     // Five overlays: Chat Box stays tall beside a 2×2 of the rest.
-    expect(getGalleryShapes(OVERLAYS)).toEqual(['tall', ...Array(4).fill('standard')]);
+    const five = [...BENTO, getWidget('stream-alerts')];
+    expect(getGalleryShapes(five, OVERLAY_COLUMNS)).toEqual(['tall', ...Array(4).fill('standard')]);
     // Two strips and a column: flattening the strips leaves a hole, flattening the column doesn't.
     const [chat, emote, , subathon] = BENTO;
-    expect(getGalleryShapes([chat, subathon, extra('a', 800, 200), emote])).toEqual([
-      'standard',
-      'wide',
-      'wide',
-      'standard',
-    ]);
-    expect(getGalleryShapes([...BENTO, extra('a', 800, 200), extra('b', 800, 200)])).toEqual(
-      Array(6).fill('standard'),
-    );
+    expect(
+      getGalleryShapes([chat, subathon, extra('a', 800, 200), emote], OVERLAY_COLUMNS),
+    ).toEqual(['standard', 'wide', 'wide', 'standard']);
+    expect(
+      getGalleryShapes([...BENTO, extra('a', 800, 200), extra('b', 800, 200)], OVERLAY_COLUMNS),
+    ).toEqual(Array(6).fill('standard'));
   });
 });
 

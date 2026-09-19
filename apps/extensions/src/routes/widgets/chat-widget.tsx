@@ -119,7 +119,9 @@ const LAYOUT_CLASSES: Record<
   },
   stacked: {
     wrapper: 'grid grid-cols-[auto_minmax(0,1fr)] items-baseline gap-x-1.5 gap-y-0.5 text-left',
-    header: 'col-span-2',
+    // Same column as the name and message: the badges are right-aligned, so col 1's left edge
+    // would leave the label floating out past them.
+    header: 'col-start-2',
     meta: 'flex items-center justify-end gap-1.5 whitespace-nowrap min-w-[96px]',
     name: 'inline leading-none',
     message: 'block leading-snug col-start-2 wrap-break-word',
@@ -127,7 +129,7 @@ const LAYOUT_CLASSES: Record<
   card: {
     wrapper:
       'rounded-lg bg-black/40 border border-white/10 px-3 py-2 text-left shadow-sm grid grid-cols-[auto_minmax(0,1fr)] items-baseline gap-x-1.5 gap-y-0.5',
-    header: 'col-span-2',
+    header: 'col-start-2',
     meta: 'flex items-center justify-end gap-1.5 whitespace-nowrap min-w-[96px]',
     name: 'inline leading-none text-sm',
     message: 'block leading-snug col-start-2 wrap-break-word',
@@ -457,7 +459,8 @@ function RouteComponent() {
         badges: ['moderator'],
         message: 'Welcome friends to the stream! Type !commands to see what I can do 🍵🚀',
         variant: 'announcement',
-        announcementColor: 'BLUE',
+        // A plain /announce, whose colors the setup's Announcements checkbox shows.
+        announcementColor: 'PRIMARY',
       },
     ];
 

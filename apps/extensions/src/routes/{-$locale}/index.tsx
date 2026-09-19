@@ -216,21 +216,21 @@ function WorksWith() {
   );
 }
 
-// Card shapes come from getGalleryShapes: with five overlays Chat Box (portrait) spans two rows
-// beside a 2×2 of the rest, filling a 3×2 grid, or 2×3 on tablets. Dense flow backfills if a span
-// can't fit in a row.
+// Card shapes come from getGalleryShapes: Chat Box (portrait) spans two rows beside two overlays
+// and a wide Stream Alerts, filling a 3×2 grid, or 2×3 on tablets; the Subathon strip spans the
+// tools row above the other two. Dense flow backfills if a span can't fit in a row.
 const GALLERY_GROUPS = [
   {
     key: 'overlays',
     widgets: OVERLAYS,
-    shapes: getGalleryShapes(OVERLAYS),
+    shapes: getGalleryShapes(OVERLAYS, [2, 3]),
     lead: 'home.overlaysLead',
     columns: 'sm:grid-cols-2 lg:grid-cols-3',
   },
   {
     key: 'tools',
     widgets: TOOLS,
-    shapes: getGalleryShapes(TOOLS),
+    shapes: getGalleryShapes(TOOLS, [2]),
     lead: 'home.toolsLead',
     columns: 'sm:grid-cols-2',
   },

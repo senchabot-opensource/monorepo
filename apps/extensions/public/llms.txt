@@ -13,11 +13,11 @@ Every page is also in Turkish under /tr, for example [Chat Box in Turkish](https
 - [Chat Box](https://extensions.senchabot.com/setup/chat-widget): Twitch and Kick chat in one overlay, with 7TV emotes on both and BTTV and FFZ emotes on Twitch. Browser source size 400x600.
 - [Emote Wall](https://extensions.senchabot.com/setup/emote-wall): Emote-only chat messages from Twitch and Kick appear as emotes on screen in Calm, Chaos or Bounce mode. Browser source size 1920x1080.
 - [Sub Sprout](https://extensions.senchabot.com/setup/sub-growing-plant): A plant that grows one stage with every new sub, resub or gifted sub on Twitch and Kick. Browser source size 800x600.
-- [Subathon Timer](https://extensions.senchabot.com/setup/subathon-timer): A subathon countdown that subs, gifted subs, Bits and Kicks add time to, shown as a health bar, a clock or a ring. Mods control it with !subathon. Browser source size 800x300.
 - [Stream Alerts](https://extensions.senchabot.com/setup/stream-alerts): An animated alert with its own sound for every sub, gifted sub, Bits, Kicks and raid on Twitch and Kick, in a Neon or a Celestial theme. Browser source size 800x450.
 
 ## Tools
 
+- [Subathon Timer](https://extensions.senchabot.com/setup/subathon-timer): A subathon countdown that subs, gifted subs, Bits and Kicks add time to, shown as a health bar, a clock or a ring. Mods control it with !subathon. Browser source size 800x300.
 - [Raffle](https://extensions.senchabot.com/setup/raffle): Chat giveaways on Twitch or Kick. Viewers enter with a keyword like !join and you draw the winner.
 - [OBS Bridge](https://extensions.senchabot.com/setup/obs-bridge): People you authorize switch OBS scenes and start or stop the stream and recording from Twitch or Kick chat.
 

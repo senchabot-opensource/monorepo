@@ -9,13 +9,13 @@ import { FLUSH_FRAME_CLASS, STAGE_STYLE } from './stream-scene';
 import { TOOL_FEATURES, ToolVisual } from './tool-visuals';
 
 /**
- * Card shape in the gallery grid, from the overlay's browser-source size: a portrait source (a
+ * Card shape in the gallery grid, from the live demo's browser-source size: a portrait source (a
  * chat column) gets a card two rows tall, a strip (a timer bar) one two columns wide.
  */
 export type CardShape = 'standard' | 'tall' | 'wide';
 
 export function getCardShape(widget: WidgetEntry): CardShape {
-  const size = widget.kind === 'overlay' ? widget.sourceSize : null;
+  const size = widget.demoUrl ? widget.sourceSize : null;
   if (!size) return 'standard';
   const ratio = size.width / size.height;
   if (ratio < 1) return 'tall';
@@ -23,21 +23,30 @@ export function getCardShape(widget: WidgetEntry): CardShape {
   return 'standard';
 }
 
-/** True when the cards fill whole rows of both the 2- and the 3-column grid. */
-const fillsRows = (shapes: CardShape[]) =>
-  shapes.reduce((cells, shape) => cells + (shape === 'standard' ? 1 : 2), 0) % 6 === 0;
+/** True when the cards fill whole rows at every column count the grid uses. */
+const fillsRows = (shapes: CardShape[], columns: readonly number[]) => {
+  const cells = shapes.reduce((sum, shape) => sum + (shape === 'standard' ? 1 : 2), 0);
+  return columns.every((count) => cells % count === 0);
+};
 
 /**
- * Shapes for one gallery grid. A set that would leave a hole (say a fifth overlay) drops the wide
- * cards first, then the tall one, then every span, so the grid stays even instead of showing a
- * lone card. The tall chat column goes last: it reads as the gallery's anchor.
+ * Shapes for one gallery grid of the given column counts. A set one cell short (four overlays
+ * beside the tall chat column) widens its last standard card. One that would still leave a hole
+ * drops the wide cards first, then the tall one, then every span, so the grid stays even instead
+ * of showing a lone card. The tall chat column goes last: it reads as the gallery's anchor.
  */
-export function getGalleryShapes(widgets: readonly WidgetEntry[]): CardShape[] {
+export function getGalleryShapes(
+  widgets: readonly WidgetEntry[],
+  columns: readonly number[],
+): CardShape[] {
   const shapes = widgets.map(getCardShape);
-  if (fillsRows(shapes)) return shapes;
+  if (fillsRows(shapes, columns)) return shapes;
+  const last = shapes.lastIndexOf('standard');
+  const widened = shapes.map((shape, index) => (index === last ? 'wide' : shape));
+  if (last >= 0 && fillsRows(widened, columns)) return widened;
   for (const dropped of ['wide', 'tall'] as const) {
     const fewer = shapes.map((shape) => (shape === dropped ? 'standard' : shape));
-    if (fillsRows(fewer)) return fewer;
+    if (fillsRows(fewer, columns)) return fewer;
   }
   return shapes.map(() => 'standard');
 }
@@ -58,8 +67,8 @@ interface WidgetCardProps {
 }
 
 /**
- * Gallery card for one registry widget: a lazy live demo for overlays or a static picture with
- * feature chips for tools, then name, tagline and platforms. The whole card links to setup.
+ * Gallery card for one registry widget: a lazy live demo when it has one, or a static picture,
+ * then name, tagline, a tool's feature chips and platforms. The whole card links to setup.
  */
 export function WidgetCard({
   widget,
@@ -67,7 +76,7 @@ export function WidgetCard({
   shape = 'standard',
 }: WidgetCardProps) {
   const { t } = useI18n();
-  const isOverlay = widget.kind === 'overlay';
+  const hasDemo = Boolean(widget.demoUrl);
   const features = TOOL_FEATURES[widget.id];
   const name = t(widget.nameKey);
   const size = widget.sourceSize;
@@ -82,11 +91,11 @@ export function WidgetCard({
       <div
         className={`relative border-b border-zinc-200 dark:border-zinc-800 ${
           // Flatter on wide screens, so a tool card is as tall as an overlay row above it.
-          isOverlay ? PREVIEW_CLASS[shape] : 'aspect-[2/1] lg:aspect-[5/2]'
+          hasDemo ? PREVIEW_CLASS[shape] : 'aspect-[2/1] lg:aspect-[5/2]'
         }`}
         style={previewStyle}
       >
-        {isOverlay ? (
+        {hasDemo ? (
           <div className="absolute inset-0">
             <PreviewFrame
               src={getDemoSrc(widget, 'card')}

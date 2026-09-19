@@ -81,7 +81,7 @@ export const DEFAULT_SETTINGS: Settings = {
   duration: '30',
   hideBots: false,
   hideCommands: false,
-  highlights: [...HIGHLIGHTS],
+  highlights: [],
 };
 
 export function buildWidgetParams(settings: Settings, twitchChannel: string, kickChannel: string) {
@@ -120,11 +120,9 @@ export function buildWidgetParams(settings: Settings, twitchChannel: string, kic
     params.append('duration', settings.duration);
   if (settings.hideBots) params.append('hideBots', 'true');
   if (settings.hideCommands) params.append('hideCommands', 'true');
-  // Only a narrowed selection is written, so highlight types added later reach default URLs only.
-  if (settings.highlights.length < HIGHLIGHTS.length) {
-    const selected = HIGHLIGHTS.filter((h) => settings.highlights.includes(h));
-    params.append('highlights', selected.length > 0 ? selected.join(',') : 'none');
-  }
+  // Opt-in: URLs from before highlights existed carry no param and must keep looking the same.
+  const highlights = HIGHLIGHTS.filter((h) => settings.highlights.includes(h));
+  if (highlights.length > 0) params.append('highlights', highlights.join(','));
   if (settings.font !== DEFAULT_SETTINGS.font) params.append('font', settings.font);
   if (settings.layout !== DEFAULT_SETTINGS.layout) params.append('layout', settings.layout);
   if (settings.animation !== DEFAULT_SETTINGS.animation)
@@ -211,9 +209,6 @@ export function parseWidgetUrl(text: string): ParsedWidgetUrl | null {
 }
 
 export function parseHighlights(value: string | null | undefined): Highlight[] {
-  if (value == null) return [...HIGHLIGHTS];
-  if (value === 'none') return [];
-  const listed = value.split(',');
-  const selected = HIGHLIGHTS.filter((h) => listed.includes(h));
-  return selected.length > 0 ? selected : [...HIGHLIGHTS];
+  const listed = value?.split(',') ?? [];
+  return HIGHLIGHTS.filter((h) => listed.includes(h));
 }
