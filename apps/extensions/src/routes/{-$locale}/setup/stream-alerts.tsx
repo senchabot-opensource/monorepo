@@ -6,8 +6,8 @@ import { PreviewFrame } from '#/components/preview-frame';
 import { SetupShell } from '#/components/setup-shell';
 import { BUTTON_TEST } from '#/components/ui/button-styles';
 import { ColorSwatches } from '#/components/ui/color-swatches';
+import { CountField } from '#/components/ui/count-field';
 import { FieldLabel } from '#/components/ui/field-label';
-import { NumberField } from '#/components/ui/number-field';
 import { RangeField } from '#/components/ui/range-field';
 import { SegmentedControl } from '#/components/ui/segmented-control';
 import { SettingsGroup } from '#/components/ui/settings-group';
@@ -102,39 +102,6 @@ const swatchBackground = (color: AlertColor) =>
     ? `linear-gradient(135deg, hsl(${hueFor(color, 'twitch')} 85% 60%) 50%, hsl(${hueFor(color, 'kick')} 85% 50%) 50%)`
     : `hsl(${hueFor(color, 'twitch')} 85% 55%)`;
 
-/** A whole number in a box that may sit empty while typing. */
-function CountField({
-  id,
-  value,
-  onChange,
-  min,
-  disabled,
-}: {
-  id: string;
-  value: number;
-  onChange: (value: number) => void;
-  min: number;
-  disabled?: boolean;
-}) {
-  const [draft, setDraft] = useState<string | null>(null);
-  return (
-    <NumberField
-      id={id}
-      value={draft ?? String(value)}
-      onChange={(text) => {
-        setDraft(text.includes('.') ? null : text);
-        const n = Math.round(Number(text));
-        if (text !== '' && Number.isFinite(n)) onChange(Math.min(MAX_MIN_AMOUNT, Math.max(min, n)));
-      }}
-      onBlur={() => setDraft(null)}
-      min={min}
-      max={MAX_MIN_AMOUNT}
-      fallback={min}
-      disabled={disabled}
-    />
-  );
-}
-
 function StreamAlertsSetup() {
   const { t, locale } = useI18n();
   const [twitchChannel, setTwitchChannel] = useState('');
@@ -227,6 +194,7 @@ function StreamAlertsSetup() {
                 value={settings[min.key]}
                 onChange={(value) => update(min.key, value)}
                 min={min.key === 'minRaid' ? 0 : 1}
+                max={MAX_MIN_AMOUNT}
                 disabled={!on}
               />
             </div>

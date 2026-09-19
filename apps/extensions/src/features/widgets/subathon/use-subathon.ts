@@ -7,11 +7,13 @@ import {
   addTime,
   applyCommand,
   type ClockOptions,
+  COMMAND,
   createState,
   followSettings,
   healthOf,
   isEnded,
   isSubathonState,
+  parseCommand,
   type SubathonState,
   timeLeft,
 } from './subathon-timer';
@@ -212,8 +214,9 @@ export function useSubathon({
     (event: SubathonEvent) => {
       const current = valuesRef.current;
       const at = clock();
-      if (event.kind === 'command') {
-        commit(applyCommand(stateRef.current, event.command, at, clockOptions(current)));
+      if (event.kind === 'mod') {
+        const command = parseCommand(event.text);
+        if (command) commit(applyCommand(stateRef.current, command, at, clockOptions(current)));
         return;
       }
       // A raid adds no time, and Kick's second word on a sub was counted with the first.
@@ -291,7 +294,7 @@ export function useSubathon({
       lastTestAt.current = Date.now();
       if (data?.type === 'toggle') {
         const action = stateRef.current.endsAt === null ? 'start' : 'pause';
-        handleEvent({ kind: 'command', platform: 'twitch', command: { action } });
+        handleEvent({ kind: 'mod', platform: 'twitch', text: `${COMMAND} ${action}` });
       } else if (data?.type === 'event') {
         handleEvent(data.event);
       }

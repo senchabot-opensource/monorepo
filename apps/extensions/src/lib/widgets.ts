@@ -2,6 +2,7 @@ import type { ComponentType } from 'react';
 import {
   ChatBoxIcon,
   EmoteWallIcon,
+  GoalIcon,
   type IconProps,
   ObsBridgeIcon,
   RaffleIcon,
@@ -17,6 +18,7 @@ export type WidgetId =
   | 'chat-box'
   | 'emote-wall'
   | 'sub-sprout'
+  | 'goal'
   | 'subathon'
   | 'stream-alerts'
   | 'raffle'
@@ -98,6 +100,19 @@ export const WIDGETS: readonly WidgetEntry[] = [
     platforms: ['twitch', 'kick'],
     demoUrl: '/widgets/stream-alerts?simulate=1',
     sourceSize: { width: 800, height: 450 },
+  },
+  {
+    id: 'goal',
+    kind: 'overlay',
+    setupPath: '/setup/sub-goal',
+    // Named for any goal, so a follower or Bits goal can join later without breaking OBS URLs.
+    widgetPath: '/widgets/goal',
+    nameKey: 'widgets.goal.name',
+    taglineKey: 'widgets.goal.tagline',
+    Icon: GoalIcon,
+    platforms: ['twitch', 'kick'],
+    demoUrl: '/widgets/goal?simulate=1',
+    sourceSize: { width: 800, height: 260 },
   },
   {
     id: 'subathon',

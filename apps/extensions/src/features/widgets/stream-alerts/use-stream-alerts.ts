@@ -142,7 +142,7 @@ export function useStreamAlerts({
 
   const handleEvent = useCallback(
     (event: SubathonEvent) => {
-      if (event.kind === 'command') return;
+      if (event.kind === 'mod') return;
       if (event.kind !== 'sub' || event.platform !== 'kick' || event.again === 'shared') {
         enqueue(event);
         return;

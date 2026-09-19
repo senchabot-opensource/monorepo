@@ -60,6 +60,7 @@ describe('gallery card shapes', () => {
       ['emote-wall', 'standard'],
       ['sub-sprout', 'standard'],
       ['stream-alerts', 'standard'],
+      ['goal', 'wide'],
     ]);
     // Raffle's overlay has a size but no demo, so its card keeps the static picture.
     expect(TOOLS.map((widget) => [widget.id, getCardShape(widget)])).toEqual([
@@ -74,7 +75,11 @@ describe('gallery card shapes', () => {
   });
 
   it('widens the last standard card when the grid is one cell short', () => {
-    expect(getGalleryShapes(OVERLAYS, OVERLAY_COLUMNS)).toEqual([
+    // The four overlays before Sub Goal: Chat Box and three standard cards.
+    const four = (['chat-box', 'emote-wall', 'sub-sprout', 'stream-alerts'] as const).map(
+      getWidget,
+    );
+    expect(getGalleryShapes(four, OVERLAY_COLUMNS)).toEqual([
       'tall',
       'standard',
       'standard',
@@ -88,6 +93,11 @@ describe('gallery card shapes', () => {
     // Five overlays: Chat Box stays tall beside a 2×2 of the rest.
     const five = [...BENTO, getWidget('stream-alerts')];
     expect(getGalleryShapes(five, OVERLAY_COLUMNS)).toEqual(['tall', ...Array(4).fill('standard')]);
+    // So do today's: Sub Goal's strip gives up its span.
+    expect(getGalleryShapes(OVERLAYS, OVERLAY_COLUMNS)).toEqual([
+      'tall',
+      ...Array(4).fill('standard'),
+    ]);
     // Two strips and a column: flattening the strips leaves a hole, flattening the column doesn't.
     const [chat, emote, , subathon] = BENTO;
     expect(

@@ -47,6 +47,7 @@ export const READY_BY_WIDGET = {
   '/widgets/sub-sprout-widget': 'plant',
   '/widgets/subathon': 'text:SUBATHON',
   '/widgets/stream-alerts': 'alert',
+  '/widgets/goal': 'text:SUB GOAL',
 };
 
 /**
@@ -90,6 +91,12 @@ export const SETUP_SPECS = {
     expect: ['/widgets/stream-alerts?', 'twitch={channel}', 'color=gold'],
     pasteToEdit: true,
   },
+  'sub-goal': {
+    preview: 'iframe',
+    steps: [{ click: 'input[type="radio"][value="gold"]' }],
+    expect: ['/widgets/goal?', 'twitch={channel}', 'color=gold'],
+    pasteToEdit: true,
+  },
   raffle: {
     // Start, Stop and Draw live in the right-hand panel instead of a preview.
     preview: { selector: 'button', min: 3 },
@@ -116,6 +123,7 @@ export const OVERLAYS = [
   { path: '/widgets/sub-sprout-widget?simulate=true', width: 800, height: 600, ready: 'plant' },
   { path: '/widgets/subathon?simulate=1', width: 800, height: 300, ready: 'text:SUBATHON' },
   { path: '/widgets/stream-alerts?simulate=1', width: 800, height: 450, ready: 'alert' },
+  { path: '/widgets/goal?simulate=1', width: 800, height: 260, ready: 'text:SUB GOAL' },
   {
     path: '/widgets/raffle-overlay',
     width: 1920,

@@ -91,6 +91,10 @@ export const tr: typeof en = {
       name: 'Sub Sprout',
       tagline: 'Her yeni abonelikle biraz daha büyüyen bir yayın bitkisi.',
     },
+    goal: {
+      name: 'Abone Hedefi',
+      tagline: 'Her abonelik ve hediye abonelikle dolan bir bar, hedefe ulaşınca üstüne kupa iner.',
+    },
     subathon: {
       name: 'Subathon Timer',
       tagline:
@@ -646,6 +650,67 @@ export const tr: typeof en = {
     faq4A:
       'Hayır. Sayaç abonelik, hediye, Bits, Kicks ve mod komutlarını herkese açık Twitch ve Kick sohbetinden okur, tıpkı giriş yapmamış bir izleyicinin gördüğü gibi.',
   },
+  goal: {
+    breadcrumb: 'Abone Hedefi Kurulumu',
+    title: 'Abone Hedefi Kurulumu',
+    intro:
+      'Twitch ve Kick için abone hedefi barı. İki sohbetten gelen her yeni abonelik, yenileme ve hediye abonelik bara 1 ekler, hedefe ulaşınca barın üstüne bir kupa iner. Sayının nereden başlayacağını ve hedefi sen belirle, modların da sayıyı sohbetten düzeltebilir.',
+    sectionGoal: 'Hedef',
+    start: 'Başlangıç Sayısı',
+    startTip:
+      'Sayının başlayacağı yer: yayıncı panelindeki abone sayın ya da sadece bu yayını saymak için 0. Sonradan değiştirirsen sayı yeni değerden baştan başlar.',
+    target: 'Hedef',
+    targetTip: 'Bar bu sayıda dolar. Sayı hedefi geçince de artmaya devam eder.',
+    countsHint:
+      'Prime ya da hangi tier olursa olsun, her abonelik ve yenileme 1 ekler. Hediyede içindeki her abonelik için 1 eklenir.',
+    color: 'Renk',
+    titleLabel: 'Başlık',
+    titleTip: 'Barın üstünde görünür. Başlık istemiyorsan boş bırak.',
+    titlePlaceholder: 'Başlık yok',
+    showPops: 'Yeni Aboneleri Göster',
+    showPopsTip:
+      "Her abonelikte izleyicinin adıyla birlikte +1, 5'li bir hediyede +5 yazısı yukarı süzülür.",
+    sectionCommands: 'Sohbet Komutları',
+    commandsIntro:
+      'Sayıyı sen ve modların Twitch ya da Kick sohbetinden düzeltebilirsiniz, örneğin OBS kapalıyken gelen abonelikleri eklemek için.',
+    cmdAdd: 'Sayıya abone ekler, miktarı yazmazsan 1 ekler',
+    cmdRemove: 'Sayıdan abone düşer, miktarı yazmazsan 1 düşer',
+    cmdSet: 'Sayıyı ayarlar',
+    cmdReset: 'Başlangıç sayısına geri döner',
+    previewTitle: 'Abone Hedefi Önizleme',
+    previewIframeTitle: 'Abone Hedefi Önizleme',
+    previewHint:
+      'Önizlemede hedefe ulaşana kadar sahte abonelikler ve hediyeler gelir, sonra baştan başlar. Yayında sayıyı sadece kendi sohbetin artırır.',
+    testTitle: 'Dene:',
+    testViewer: 'Sen',
+    testSub: '+1 Abone',
+    testGift: '+5 Hediye',
+    testReach: 'Hedefi Tamamla',
+    testReset: 'Sıfırla',
+    widgetUrlTip:
+      "Daha önce bir widget oluşturduysan URL'sini buraya yapıştır. Ayarların geri yüklenir, istediğini değiştirebilirsin.",
+    widgetUrlPlaceholder: "Düzenlemek için widget URL'sini yapıştır",
+    widgetUrlInvalid: "Bu bir Abone Hedefi URL'si değil.",
+    browserSourceHintSize: ' (önerilen boyut: 800×260).',
+    guideTitle: 'Yayın Yazılımı Kurulumu (OBS, Streamlabs, XSplit vb.)',
+    guideStep1:
+      'Yayın yazılımında (OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio vb.) bir Tarayıcı Kaynağı ekle.',
+    guideStep2: "Kopyaladığın abone hedefi URL'sini yapıştır.",
+    guideStep3: 'Genişliği 800 ve yüksekliği 260 olarak ayarla.',
+    guideStep4: 'Sayı tutmazsa sen ya da bir mod sohbete !goal set yazarak düzeltebilirsiniz.',
+    faq1Q: "Neden abone sayımı Twitch'ten ya da Kick'ten okumuyor?",
+    faq1A:
+      'İki platform da giriş yapılmamış bir sayfaya kanalın abone sayısını göstermiyor, bu hedef de senden hiç giriş yapmanı istemiyor. Bu yüzden başlangıç sayını bir kere yazıyorsun, sonrasında gelen her abonelik ve hediye bunun üstüne ekleniyor.',
+    faq2Q: 'OBS kapanırsa ya da Tarayıcı Kaynağı yenilenirse ne olur?',
+    faq2A:
+      "Sayı OBS'in içinde kayıtlı, bu yüzden bir sonraki yayında bile kaldığı yerden geri gelir. OBS kapalıyken gelen abonelikleri göremez, onları bir mod !goal add ile ekleyebilir.",
+    faq3Q: 'Yenilemeler ve hediye abonelikler sayılıyor mu?',
+    faq3A:
+      "Evet. Her yeni abonelik ve yenileme 1 ekler, hediyede ise içindeki her abonelik için 1 eklenir, yani 5'li bir hediye 5 ekler. Twitch'te yenileme, izleyici bunu sohbette paylaştığında sayılır, Kick'te ise abonelik yenilendiğinde.",
+    faq4Q: 'Takipçi hedefi yapabilir miyim?',
+    faq4A:
+      'Şimdilik hayır. Twitch ve Kick, giriş yapılmamış bir sayfaya yeni takipçileri göstermiyor, bu yüzden hedef iki platformda da aynı şekilde abonelikleri sayıyor.',
+  },
   streamAlerts: {
     breadcrumb: 'Yayın Uyarıları Kurulumu',
     title: 'Yayın Uyarıları Kurulumu',
@@ -998,6 +1063,7 @@ export const tr: typeof en = {
           chatBox: 'Dikey sohbet sütunu. Kaynak büyüdükçe yazı büyümez, daha çok mesaj sığar.',
           emoteWall: "Tam 1080p tuval. Emote'lar ekranın her yerinde belirir.",
           subSprout: 'Bitki ve saksı bu alanın içinde büyür.',
+          goal: "Hedef barı için geniş bir şerit, üstünde +1'lerin süzüleceği boşluk da var.",
           subathon:
             'Can barı, saat ya da halka için geniş bir şerit. Kaynağı büyütürsen sayaç da büyür.',
           streamAlerts:
@@ -1024,6 +1090,7 @@ export const tr: typeof en = {
           'Sohbet Kutusu: mesajlar sadece kaynak açıkken gelir. Kaynak kapanıp açılırsa ekran boş başlar ve yalnızca yeni mesajları gösterir.',
         subSprout:
           'Sub Sprout: bitkinin büyümesi hiçbir yere kaydedilmez. Sayfa yeniden yüklenirse bitki ilk aşamaya döner.',
+        goal: "Abone Hedefi: sayı OBS'in içinde kaydedilir, sayfa yeniden yüklenince kaybolmaz, ama kaynak kapalıyken gelen abonelikler sayılmaz.",
         subathon:
           "Subathon Timer: kalan süre OBS'in içinde kaydedilir, sayfa yeniden yüklenince kaybolmaz. Kaynak kapalıyken sayaç geri saymaya devam eder ama o arada gelen abonelikleri göremez.",
         streamAlerts:
@@ -1038,7 +1105,7 @@ export const tr: typeof en = {
       update: {
         title: "Widget'ı sonradan nasıl değiştiririm?",
         p1: "Ayarlar widget adresinin içinde durur, yani bir ayarı değiştirmek yeni bir adres demek. Kurulum sayfasında ayarı değiştir, yeni adresi kopyala, sonra OBS'te kaynağa çift tıklayıp URL alanındaki eski adresin yerine yapıştır.",
-        p2: '[Sohbet Kutusu](/setup/chat-widget), [Emote Duvarı](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer) ve [Yayın Uyarıları](/setup/stream-alerts) için baştan başlaman gerekmez. Mevcut adresini kurulum sayfasındaki Widget URL alanına yapıştır, kanalların ve bütün ayarların geri yüklenir. Değiştirmek istediğini değiştir ve yeni adresi kopyala.',
+        p2: '[Sohbet Kutusu](/setup/chat-widget), [Emote Duvarı](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Yayın Uyarıları](/setup/stream-alerts) ve [Abone Hedefi](/setup/sub-goal) için baştan başlaman gerekmez. Mevcut adresini kurulum sayfasındaki Widget URL alanına yapıştır, kanalların ve bütün ayarların geri yüklenir. Değiştirmek istediğini değiştir ve yeni adresi kopyala.',
         p3: "OBS Bridge'de yapıştırma alanı yok, ayarları kurulum sayfasında yeniden girip yeni araç adresini kopyalarsın. Sahne seçimlerini ve yetkili kullanıcıları araç sayfasında da değiştirebilir, yeni adresi oradaki Copy Updated URL düğmesiyle alabilirsin. Eski adresler çalışmaya devam eder, güncellemek zorunda değilsin.",
       },
       troubleshoot: {
@@ -1139,7 +1206,7 @@ export const tr: typeof en = {
       },
       others: {
         title: "Başka hangi widget'lar iki platformu birlikte dinler?",
-        p1: "[Emote Duvarı](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer) ve [Yayın Uyarıları](/setup/stream-alerts) da tek adreste iki kanalı birlikte alır. Emote Duvarı iki sohbetten gelen, sadece emote'tan oluşan mesajları ekranda uçurur. Sub Sprout iki platformdaki aboneliklerle büyür, Kick'teki hediye abonelikler de dahil. Subathon Timer iki sohbetten gelen abonelik, hediye abonelik, Bits ve Kicks için süre ekler. Yayın Uyarıları iki platformdan gelen abonelik, hediye abonelik, Bits, Kicks ve raid'ler için uyarı gösterir.",
+        p1: "[Emote Duvarı](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Yayın Uyarıları](/setup/stream-alerts) ve [Abone Hedefi](/setup/sub-goal) de tek adreste iki kanalı birlikte alır. Emote Duvarı iki sohbetten gelen, sadece emote'tan oluşan mesajları ekranda uçurur. Sub Sprout iki platformdaki aboneliklerle büyür, Kick'teki hediye abonelikler de dahil. Subathon Timer iki sohbetten gelen abonelik, hediye abonelik, Bits ve Kicks için süre ekler. Yayın Uyarıları iki platformdan gelen abonelik, hediye abonelik, Bits, Kicks ve raid'ler için uyarı gösterir. Abone Hedefi iki sohbetten gelen abonelikleri ve hediye abonelikleri tek bir sayıda toplar.",
         p2: '[Çekiliş](/setup/raffle) ise her seferinde tek platformda çalışır: Twitch ya da Kick.',
       },
       ctaTitle: "Sohbet Kutusu'nu kur",
@@ -1291,7 +1358,7 @@ export const tr: typeof en = {
     },
     freeQ: 'Senchabot Extensions ücretsiz mi?',
     freeA:
-      "Evet. Yedi widget'ın ve aracın hepsi ücretsiz: Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Çekiliş ve OBS Bridge. Ücretli paket, filigran ya da premium hesap yok. Kaynak kodu GPL-3.0 lisansıyla GitHub'da açık.",
+      "Evet. Sekiz widget'ın ve aracın hepsi ücretsiz: Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Çekiliş ve OBS Bridge. Ücretli paket, filigran ya da premium hesap yok. Kaynak kodu GPL-3.0 lisansıyla GitHub'da açık.",
     loginQ: '"Giriş gerektirmez" ne demek?',
     loginA:
       "Bu sitede hesap açmazsın, Twitch ya da Kick ile giriş yapmazsın ve bir şey indirmezsin. Kanal adını yazarsın, kurulum sayfası sana bir adres verir. Widget'lar herkese açık sohbeti anonim olarak okur: Twitch'e isimsiz bir izleyici gibi bağlanır, Kick'te herkese açık sohbet akışını dinler. Bu yüzden sohbete yazamaz, moderasyon yapamaz ve hesabındaki özel bilgilere erişemez.",
@@ -1303,10 +1370,10 @@ export const tr: typeof en = {
       'OBS Studio ve tarayıcı kaynağı (browser source) destekleyen diğer yayın programlarıyla. Her widget bir web adresi olarak çalışır, kaynağa bu adresi yapıştırırsın. Rehberlerimiz OBS Studio için yazıldı.',
     platformsQ: "Hangi widget'lar Twitch'i, hangileri Kick'i destekliyor?",
     platformsA:
-      "Yedisi de iki platformu destekliyor. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer ve Yayın Uyarıları tek adreste Twitch ve Kick kanalını birlikte dinler. OBS Bridge iki sohbetten gelen komutları dinler ve her yetkili kullanıcı kendi platformuyla eklenir. Çekiliş her seferinde tek platformda çalışır, Twitch ya da Kick. Sohbet Kutusu'nda 7TV emote'ları iki platformda, BTTV ve FFZ emote'ları sadece Twitch'te görünür.",
+      "Sekizi de iki platformu destekliyor. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları ve Abone Hedefi tek adreste Twitch ve Kick kanalını birlikte dinler. OBS Bridge iki sohbetten gelen komutları dinler ve her yetkili kullanıcı kendi platformuyla eklenir. Çekiliş her seferinde tek platformda çalışır, Twitch ya da Kick. Sohbet Kutusu'nda 7TV emote'ları iki platformda, BTTV ve FFZ emote'ları sadece Twitch'te görünür.",
     editQ: "Widget'ı sonradan nasıl değiştiririm?",
     editA:
-      "Kurulum sayfasında ayarları değiştir, yeni adresi kopyala ve OBS'te kaynağın URL alanındaki eski adresin yerine yapıştır. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer ve Yayın Uyarıları'nda eski adresini kurulum sayfasındaki Widget URL alanına yapıştırırsan bütün ayarların geri yüklenir, baştan başlaman gerekmez.",
+      "Kurulum sayfasında ayarları değiştir, yeni adresi kopyala ve OBS'te kaynağın URL alanındaki eski adresin yerine yapıştır. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları ve Abone Hedefi'nde eski adresini kurulum sayfasındaki Widget URL alanına yapıştırırsan bütün ayarların geri yüklenir, baştan başlaman gerekmez.",
     oldUrlsQ: 'Eski widget adreslerim çalışmaya devam eder mi?',
     oldUrlsA:
       "Evet. Güncellemeler mevcut adresleri bozmayacak şekilde yapılır: parametre adları, değerleri ve varsayılanları değişmez. Örneğin Sohbet Kutusu'ndaki eski keep=true hâlâ Süresiz anlamına gelir ve Sub Sprout eski channel ve platform parametrelerini hâlâ okur.",
@@ -1330,6 +1397,7 @@ export const tr: typeof en = {
     lead: "Senchabot Extensions'a eklenen özellikler ve düzeltilen hatalar, en yenisi en üstte. Liste projenin [GitHub'daki](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) commit geçmişinden hazırlanıyor.",
     site: 'Site',
     entries: {
+      goal: "Abone Hedefi geldi: Twitch ve Kick'teki her abonelik, yenileme ve hediye abonelik hedef barına 1 ekliyor, hedefe ulaşınca bara bir kupa iniyor. Modlar sayıyı !goal ile düzeltebiliyor.",
       streamAlerts:
         "Yayın Uyarıları geldi: Twitch ve Kick'teki her abonelik, hediye abonelik, Bits, Kicks ve raid için kendi sesiyle animasyonlu bir uyarı çıkıyor. Rengi seçebilir, başlıkları değiştirebilir ve en az miktarları belirleyebilirsin.",
       subathon:

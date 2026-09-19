@@ -76,14 +76,16 @@ describe('twitchEvent', () => {
     const say = (tags: string, text: string) =>
       line(`@${tags} :u!u@u.tmi.twitch.tv PRIVMSG #channel :${text}`);
     expect(twitchEvent(say('badges=moderator/1;mod=1', '!subathon add 5m'), new Map())).toEqual({
-      kind: 'command',
+      kind: 'mod',
       platform: 'twitch',
-      command: { action: 'add', ms: 300_000 },
+      text: '!subathon add 5m',
     });
-    expect(
-      twitchEvent(say('badges=broadcaster/1;mod=0', '!subathon pause'), new Map()),
-    ).toMatchObject({ command: { action: 'pause' } });
+    expect(twitchEvent(say('badges=broadcaster/1;mod=0', '!goal set 20'), new Map())).toMatchObject(
+      { text: '!goal set 20' },
+    );
     expect(twitchEvent(say('badges=subscriber/1;mod=0', '!subathon add 5h'), new Map())).toBeNull();
+    // A mod just chatting isn't a command for anyone.
+    expect(twitchEvent(say('badges=moderator/1;mod=1', 'hello chat'), new Map())).toBeNull();
   });
 
   it("ignores a Shared Chat partner channel's cheers and mods", () => {
@@ -249,11 +251,7 @@ describe('kickEvent', () => {
     });
     expect(
       kickEvent('App\\Events\\ChatMessageEvent', message('moderator'), createKickDedupe()),
-    ).toEqual({
-      kind: 'command',
-      platform: 'kick',
-      command: { action: 'set', ms: 3_600_000 },
-    });
+    ).toEqual({ kind: 'mod', platform: 'kick', text: '!subathon set 1h' });
     expect(
       kickEvent('App\\Events\\ChatMessageEvent', message('broadcaster'), createKickDedupe()),
     ).not.toBeNull();

@@ -13,6 +13,7 @@ const OVERLAYS = [
   '/widgets/sub-sprout-widget?simulate=true',
   '/widgets/subathon?simulate=1',
   '/widgets/stream-alerts?simulate=1',
+  '/widgets/goal?simulate=1',
   '/widgets/raffle-overlay',
 ];
 

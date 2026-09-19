@@ -9,6 +9,7 @@ Senchabot Extensions provides 100% free streaming widgets, customizable overlays
 - **Sub Sprout** — A visual plant widget and subscriber goal overlay that grows with each subscription, resub, or gift sub. Resets after reaching full growth.
 - **Subathon Timer** — A subathon countdown that subs, gifted subs, Bits and Kicks add time to, shown as a game-style health bar, a clock or a ring. Mods control it from chat.
 - **Stream Alerts** — Animated alerts with their own sound for subs, gifted subs, Bits, Kicks and raids, in a Neon or a Celestial theme.
+- **Sub Goal** — A goal bar that every sub, resub and gifted sub on Twitch and Kick fills by one, with a trophy when the goal is reached. Mods fix the count from chat.
 - **Universal Chat** — A multi-chat widget and stream chat box overlay that combines Twitch and Kick chat into a single on-screen feed with 7TV emotes, badges, and platform indicators.
 - **Raffle Picker** — A chat-based giveaway and raffle tool. Viewers type a keyword to enter; winners are drawn and announced on a live confetti celebration overlay.
 - **OBS Bridge** — A chat-controlled scene switching and stream control tool connecting over local OBS WebSocket.
@@ -20,6 +21,7 @@ Senchabot Extensions provides 100% free streaming widgets, customizable overlays
 - [Sub Sprout](https://extensions.senchabot.com/setup/sub-growing-plant)
 - [Subathon Timer](https://extensions.senchabot.com/setup/subathon-timer)
 - [Stream Alerts](https://extensions.senchabot.com/setup/stream-alerts)
+- [Sub Goal](https://extensions.senchabot.com/setup/sub-goal)
 - [Universal Chat](https://extensions.senchabot.com/setup/chat-widget)
 - [Raffle Picker](https://extensions.senchabot.com/setup/raffle)
 - [OBS Bridge](https://extensions.senchabot.com/setup/obs-bridge)
@@ -89,6 +91,24 @@ https://extensions.senchabot.com/widgets/stream-alerts?twitch=YOUR_TWITCH_CHANNE
 ```
 
 **URL parameters:** `twitch`, `kick`, `theme` (`neon` | `celestial`), `color` (`platform` | `blue` | `purple` | `pink` | `red` | `gold` | `green`), `lang` (`en` | `tr`, the alert text), `sub`, `gift`, `bits`, `raid` (`0` turns an alert off), `hsub`, `hgift`, `hbits`, `hraid` (custom headings, up to 24 characters), `mingift`, `minbits`, `minraid` (minimum subs, Bits or Kicks, viewers), `dur` (seconds on screen, 3 to 20), `vol` (0 to 100), `msg` (`0` hides viewer messages), `simulate` (`1` plays sample alerts), `simplatform` (`twitch` | `kick`).
+
+---
+
+### Sub Goal (`/setup/sub-goal`)
+
+A sub goal bar. Every new sub, resub and gifted sub from Twitch and Kick adds to one count, and a trophy lands on the bar when the goal is reached. The count keeps going past it.
+
+**How it works:**
+- Listens to Twitch IRC anonymously and Kick's Pusher WebSocket, both in one browser source.
+- A sub or resub adds 1 (Prime and every tier alike) and a gift adds 1 per sub in it. Kick can't tell a new sub from a renewal on the client, so resubs count on both platforms. Twitch gift-sub continuations and Prime upgrades aren't counted: that person is already subscribed.
+- Neither platform shows a channel's sub count to a page that isn't logged in, so the count starts at the number in the URL and is saved in the browser source's `localStorage`. A new starting count in the URL starts it over.
+- The broadcaster and mods fix it from chat: `!goal add 3`, `remove 1` (the number defaults to 1), `set 25`, `reset`.
+
+```
+https://extensions.senchabot.com/widgets/goal?twitch=YOUR_TWITCH_CHANNEL&kick=YOUR_KICK_CHANNEL&start=120&target=150
+```
+
+**URL parameters:** `twitch`, `kick`, `color` (`purple` | `green` | `red` | `gold` | `cyan` | `pink`), `title` (empty hides it), `start` (starting count), `target` (the goal, 1 or more), `pops` (`0` hides the rising +1s), `simulate` (`1` plays simulated subs), `simplatform` (`twitch` | `kick`).
 
 ---
 
@@ -220,6 +240,7 @@ npm run deploy
 │   │   ├── sub-growing-plant.tsx   # Sub Sprout configuration
 │   │   ├── subathon-timer.tsx      # Subathon Timer configuration
 │   │   ├── stream-alerts.tsx       # Stream Alerts configuration
+│   │   ├── sub-goal.tsx            # Sub Goal configuration
 │   │   ├── chat-widget.tsx         # Universal Chat configuration
 │   │   ├── raffle.tsx              # Raffle configuration
 │   │   └── emote-wall.tsx          # Emote Wall configuration
@@ -227,6 +248,7 @@ npm run deploy
 │       ├── sub-sprout-widget.tsx   # Sub Sprout overlay
 │       ├── subathon.tsx            # Subathon Timer overlay
 │       ├── stream-alerts.tsx       # Stream Alerts overlay
+│       ├── goal.tsx                # Sub Goal overlay
 │       ├── chat-widget.tsx         # Universal Chat overlay
 │       ├── raffle-overlay.tsx      # Raffle winner overlay
 │       └── emote-wall.tsx          # Emote Wall overlay

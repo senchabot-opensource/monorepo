@@ -21,6 +21,7 @@ const SIZE_NOTES: Record<WidgetId, TranslationKey> = {
   'chat-box': 'guides.obs.size.notes.chatBox',
   'emote-wall': 'guides.obs.size.notes.emoteWall',
   'sub-sprout': 'guides.obs.size.notes.subSprout',
+  goal: 'guides.obs.size.notes.goal',
   subathon: 'guides.obs.size.notes.subathon',
   'stream-alerts': 'guides.obs.size.notes.streamAlerts',
   raffle: 'guides.obs.size.notes.raffle',
@@ -114,6 +115,7 @@ function ObsBrowserSourceGuide() {
                 items={[
                   'guides.obs.settings.chatBox',
                   'guides.obs.settings.subSprout',
+                  'guides.obs.settings.goal',
                   'guides.obs.settings.subathon',
                   'guides.obs.settings.streamAlerts',
                   'guides.obs.settings.raffle',

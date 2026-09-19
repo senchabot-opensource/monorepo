@@ -33,6 +33,14 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://extensions.senchabot.com/setup/sub-goal</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/sub-goal"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/sub-goal"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/sub-goal"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://extensions.senchabot.com/setup/chat-widget</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/chat-widget"/>
     <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/chat-widget"/>
@@ -149,6 +157,14 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/stream-alerts"/>
     <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/stream-alerts"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/stream-alerts"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/tr/setup/sub-goal</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/sub-goal"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/sub-goal"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/sub-goal"/>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>

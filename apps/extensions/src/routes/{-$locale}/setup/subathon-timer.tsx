@@ -358,16 +358,12 @@ function SubathonSetup() {
     },
     {
       label: t('subathon.testRemove'),
-      event: () => ({
-        kind: 'command',
-        platform: 'twitch',
-        command: { action: 'remove', ms: 600_000 },
-      }),
+      event: () => ({ kind: 'mod', platform: 'twitch', text: `${COMMAND} remove 10m` }),
     },
     { label: t('subathon.testPause') },
     {
       label: t('subathon.testReset'),
-      event: () => ({ kind: 'command', platform: 'twitch', command: { action: 'reset' } }),
+      event: () => ({ kind: 'mod', platform: 'twitch', text: `${COMMAND} reset` }),
     },
   ];
   const disabled = [!subPlatform, !giftPlatform, !bitsOn, false, false, false];

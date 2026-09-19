@@ -1,6 +1,5 @@
 import type { IrcLine } from '#/lib/twitch';
 import { kickSubChannels, kickSubCount } from '../sub-sprout/kick-sub-events';
-import { parseCommand, type SubathonCommand } from './subathon-timer';
 
 export type SubathonPlatform = 'twitch' | 'kick';
 export type SubTier = 1 | 2 | 3;
@@ -35,11 +34,14 @@ export type TimedEvent =
 /** A channel raiding (Twitch) or hosting (Kick) this one. Stream Alerts shows it, Subathon doesn't. */
 export type RaidEvent = { kind: 'raid'; platform: SubathonPlatform; name: string; viewers: number };
 
-/** Something the chat readers pass on: a timed event, a raid or a mod command. */
-export type SubathonEvent =
-  | TimedEvent
-  | RaidEvent
-  | { kind: 'command'; platform: SubathonPlatform; command: SubathonCommand };
+/** A "!" message from a mod or the broadcaster. Each widget reads its own command from it. */
+export type ModMessage = { kind: 'mod'; platform: SubathonPlatform; text: string };
+
+/** Something the chat readers pass on: a timed event, a raid or a mod's command. */
+export type SubathonEvent = TimedEvent | RaidEvent | ModMessage;
+
+const modMessage = (platform: SubathonPlatform, text: string): ModMessage | null =>
+  text.trimStart().startsWith('!') ? { kind: 'mod', platform, text } : null;
 
 // Twitch's msg-param-sub-plan. Prime is a Tier 1 sub.
 const TIERS: Record<string, SubTier> = { Prime: 1, '1000': 1, '2000': 2, '3000': 3 };
@@ -82,8 +84,7 @@ export function twitchEvent(line: IrcLine, bundles: Map<string, number>): Subath
     }
     const badges = tags.badges ?? '';
     const isMod = tags.mod === '1' || /(^|,)(broadcaster|moderator)\//.test(badges);
-    const command = isMod ? parseCommand(line.params[1] ?? '') : null;
-    return command ? { kind: 'command', platform: 'twitch', command } : null;
+    return isMod ? modMessage('twitch', line.params[1] ?? '') : null;
   }
 
   if (line.command !== 'USERNOTICE') return null;
@@ -257,8 +258,7 @@ export function kickEvent(
       const isMod =
         Array.isArray(badges) &&
         badges.some((badge) => ['broadcaster', 'moderator'].includes(text(record(badge)?.type)));
-      const command = isMod ? parseCommand(text(payload.content)) : null;
-      return command ? { kind: 'command', platform: 'kick', command } : null;
+      return isMod ? modMessage('kick', text(payload.content)) : null;
     }
     default:
       return null;
