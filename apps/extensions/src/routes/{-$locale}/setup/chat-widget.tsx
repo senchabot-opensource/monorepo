@@ -1,5 +1,5 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { useEffect, useId, useMemo, useState } from 'react';
+import { createFileRoute, useHydrated } from '@tanstack/react-router';
+import { useId, useMemo, useState } from 'react';
 import { ChannelFields } from '#/components/channel-fields';
 import { CopyUrlField } from '#/components/copy-url-field';
 import { ExternalIcon } from '#/components/icons';
@@ -34,6 +34,7 @@ import { useI18n } from '#/lib/i18n';
 import { getParamsLocale, withLangParam } from '#/lib/i18n/paths';
 import type { FaqEntry } from '#/lib/i18n/seo';
 import { getSetupPageHead } from '#/lib/seo/pages';
+import { channelWidgetUrl } from '#/lib/url-params';
 import { getWidget } from '#/lib/widgets';
 
 export const Route = createFileRoute('/{-$locale}/setup/chat-widget')({
@@ -66,12 +67,8 @@ function ChatWidgetSetup() {
   const [kickChannel, setKickChannel] = useState('');
   const [settings, setSettings] = useState(DEFAULT_SETTINGS);
   const [previewRateIndex, setPreviewRateIndex] = useState(0);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useHydrated();
   const id = useId();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   // The preview connects to the channels it names, so it waits for typing to pause instead of
   // reloading, and looking up a Kick name, on every keystroke.
@@ -81,12 +78,17 @@ function ChatWidgetSetup() {
   const update = <K extends keyof Settings>(key: K, value: Settings[K]) =>
     setSettings((current) => ({ ...current, [key]: value }));
 
-  const widgetUrl = useMemo(() => {
-    if (!mounted) return '';
-    const params = buildWidgetParams(settings, twitchChannel, kickChannel);
-    if (!params.has('twitch') && !params.has('kick')) return '';
-    return `${window.location.origin}/widgets/chat-widget?${params.toString()}`;
-  }, [mounted, settings, twitchChannel, kickChannel]);
+  const widgetUrl = useMemo(
+    () =>
+      mounted
+        ? channelWidgetUrl(
+            window.location.origin,
+            '/widgets/chat-widget',
+            buildWidgetParams(settings, twitchChannel, kickChannel),
+          )
+        : '',
+    [mounted, settings, twitchChannel, kickChannel],
+  );
 
   const readerUrl = useMemo(
     () => (mounted ? buildReaderUrl(window.location.origin, settings, twitchChannel, kickChannel) : ''),
@@ -98,9 +100,9 @@ function ChatWidgetSetup() {
     const params = buildWidgetParams(settings, deferredTwitch, deferredKick);
     params.append('mock', 'true');
     if (previewRateIndex > 0) params.append('mockRate', String(PREVIEW_RATES[previewRateIndex]));
-    params.append('lang', locale);
+    // PreviewFrame adds the page's language.
     return `${window.location.origin}/widgets/chat-widget?${params.toString()}`;
-  }, [mounted, settings, deferredTwitch, deferredKick, previewRateIndex, locale]);
+  }, [mounted, settings, deferredTwitch, deferredKick, previewRateIndex]);
 
   const applyWidgetUrl = (text: string) => {
     const parsed = parseWidgetUrl(text);

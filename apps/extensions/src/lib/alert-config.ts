@@ -22,7 +22,6 @@ export interface AlertEvent {
 
 // Alert configuration metadata
 export interface AlertConfig {
-  label: string;
   color: string;
   glowColor: string;
   borderColor: string;
@@ -31,28 +30,24 @@ export interface AlertConfig {
 
 export const ALERT_CONFIG: Record<AlertType, AlertConfig> = {
   follow: {
-    label: 'New Follower!',
     color: '#00E701',
     glowColor: 'rgba(0, 231, 1, 0.4)',
     borderColor: 'rgba(0, 231, 1, 0.3)',
     iconType: 'user',
   },
   sub: {
-    label: 'New Subscriber!',
     color: '#FFD700',
     glowColor: 'rgba(255, 215, 0, 0.4)',
     borderColor: 'rgba(255, 215, 0, 0.3)',
     iconType: 'star',
   },
   donate: {
-    label: 'Donation!',
     color: '#FF4500',
     glowColor: 'rgba(255, 69, 0, 0.4)',
     borderColor: 'rgba(255, 69, 0, 0.3)',
     iconType: 'heart',
   },
   raid: {
-    label: 'Incoming Raid!',
     color: '#9147FF',
     glowColor: 'rgba(145, 71, 255, 0.4)',
     borderColor: 'rgba(145, 71, 255, 0.3)',

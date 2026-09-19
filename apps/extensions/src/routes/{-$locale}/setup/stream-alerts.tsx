@@ -1,10 +1,10 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { useEffect, useId, useRef, useState } from 'react';
+import { createFileRoute, useHydrated } from '@tanstack/react-router';
+import { useId, useRef, useState } from 'react';
 import { ChannelFields } from '#/components/channel-fields';
 import { CopyUrlField } from '#/components/copy-url-field';
 import { PreviewFrame } from '#/components/preview-frame';
 import { SetupShell } from '#/components/setup-shell';
-import { BUTTON_TEST } from '#/components/ui/button-styles';
+import { TestButtons } from '#/components/test-buttons';
 import { ColorSwatches } from '#/components/ui/color-swatches';
 import { CountField } from '#/components/ui/count-field';
 import { FieldLabel } from '#/components/ui/field-label';
@@ -14,12 +14,13 @@ import { SettingsGroup } from '#/components/ui/settings-group';
 import { Switch } from '#/components/ui/switch';
 import { TextField } from '#/components/ui/text-field';
 import type { StreamAlert } from '#/features/widgets/stream-alerts/stream-alert';
-import { defaultHeadingKey, hueFor } from '#/features/widgets/stream-alerts/stream-alerts-widget';
+import { alertHue, defaultHeadingKey } from '#/features/widgets/stream-alerts/alert-style';
 import {
   PREVIEW_CHANNEL,
   type PreviewMessage,
 } from '#/features/widgets/stream-alerts/use-stream-alerts';
 import type { SubathonPlatform } from '#/features/widgets/subathon/subathon-events';
+import { usePreviewSender } from '#/hooks/use-preview-channel';
 import { LOCALES, type Locale, type TranslationKey, translate, useI18n } from '#/lib/i18n';
 import { getParamsLocale } from '#/lib/i18n/paths';
 import type { FaqEntry } from '#/lib/i18n/seo';
@@ -99,8 +100,8 @@ const TEST_LABELS: Record<AlertKind, TranslationKey> = {
 /** A swatch shows the accent; Platform shows Twitch purple and Kick green side by side. */
 const swatchBackground = (color: AlertColor) =>
   color === 'platform'
-    ? `linear-gradient(135deg, hsl(${hueFor(color, 'twitch')} 85% 60%) 50%, hsl(${hueFor(color, 'kick')} 85% 50%) 50%)`
-    : `hsl(${hueFor(color, 'twitch')} 85% 55%)`;
+    ? `linear-gradient(135deg, hsl(${alertHue(color, 'twitch')} 85% 60%) 50%, hsl(${alertHue(color, 'kick')} 85% 50%) 50%)`
+    : `hsl(${alertHue(color, 'twitch')} 85% 55%)`;
 
 function StreamAlertsSetup() {
   const { t, locale } = useI18n();
@@ -110,20 +111,10 @@ function StreamAlertsSetup() {
   // The alerts' own language: the page's until one is picked. The OBS URL always carries it.
   const [pickedLocale, setPickedLocale] = useState<Locale | null>(null);
   const alertLocale = pickedLocale ?? locale;
-  const [mounted, setMounted] = useState(false);
-  // Pairs this page with its own preview, not the ones in other tabs.
-  const [previewId] = useState(() => Math.random().toString(36).slice(2, 10));
-  const channelRef = useRef<BroadcastChannel | null>(null);
+  const mounted = useHydrated();
+  const { previewId, send } = usePreviewSender<PreviewMessage>(PREVIEW_CHANNEL);
   const nextPlatform = useRef<SubathonPlatform>('twitch');
   const id = useId();
-
-  useEffect(() => {
-    setMounted(true);
-    if (typeof BroadcastChannel === 'undefined') return;
-    const channel = new BroadcastChannel(PREVIEW_CHANNEL);
-    channelRef.current = channel;
-    return () => channel.close();
-  }, []);
 
   const update = <K extends keyof StreamAlertsSettings>(key: K, value: StreamAlertsSettings[K]) =>
     setSettings((current) => ({ ...current, [key]: value }));
@@ -338,7 +329,6 @@ function StreamAlertsSetup() {
       viewers: Math.max(42, settings.minRaid),
     }),
   };
-  const send = (message: PreviewMessage) => channelRef.current?.postMessage(message);
 
   return (
     <SetupShell
@@ -358,27 +348,15 @@ function StreamAlertsSetup() {
         />
       }
       previewFooter={
-        <fieldset aria-labelledby={`${id}-test`} className="grid grid-cols-4 gap-1.5">
-          <span
-            id={`${id}-test`}
-            className="col-span-4 text-xs font-medium text-zinc-600 dark:text-zinc-400"
-          >
-            {t('streamAlerts.testTitle')}
-          </span>
-          {ALERT_KINDS.map((kind) => (
-            <button
-              key={kind}
-              type="button"
-              disabled={!settings.enabled[kind]}
-              onClick={() =>
-                send({ type: 'alert', preview: previewId, alert: testAlerts[kind](testPlatform()) })
-              }
-              className={BUTTON_TEST}
-            >
-              {t(TEST_LABELS[kind], { count: testGift, amount: testBits })}
-            </button>
-          ))}
-        </fieldset>
+        <TestButtons
+          title={t('streamAlerts.testTitle')}
+          layout="four"
+          buttons={ALERT_KINDS.map((kind) => ({
+            label: t(TEST_LABELS[kind], { count: testGift, amount: testBits }),
+            disabled: !settings.enabled[kind],
+            onClick: () => send({ type: 'alert', alert: testAlerts[kind](testPlatform()) }),
+          }))}
+        />
       }
       urlField={
         <CopyUrlField

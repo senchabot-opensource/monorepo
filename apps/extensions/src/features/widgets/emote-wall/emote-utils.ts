@@ -1,3 +1,4 @@
+import { parseTwitchEmoteRanges } from '#/lib/twitch-emotes';
 export const KICK_EMOTE_RE = /\[emote:(\d+):([\w\d\-_]+)\]/g;
 
 export const kickEmoteUrl = (id: string) =>
@@ -164,28 +165,6 @@ export function filterSpam(
     return times.length <= maxRepeats;
   });
 }
-
-export type TwitchEmoteRange = { id: string; start: number; end: number };
-
-export const parseTwitchEmoteRanges = (
-  emotesTag?: string,
-): TwitchEmoteRange[] => {
-  if (!emotesTag) return [];
-  const ranges: TwitchEmoteRange[] = [];
-  for (const part of emotesTag.split('/')) {
-    const [id, positionsStr] = part.split(':');
-    if (!id || !positionsStr) continue;
-    for (const pos of positionsStr.split(',')) {
-      const [startStr, endStr] = pos.split('-');
-      const start = parseInt(startStr, 10);
-      const end = parseInt(endStr, 10);
-      if (!Number.isNaN(start) && !Number.isNaN(end)) {
-        ranges.push({ id, start, end });
-      }
-    }
-  }
-  return ranges.sort((a, b) => a.start - b.start);
-};
 
 export const MAX_EMOTES_PER_MESSAGE = 5;
 

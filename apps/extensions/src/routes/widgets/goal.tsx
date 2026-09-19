@@ -1,8 +1,8 @@
 import { createFileRoute, useLocation } from '@tanstack/react-router';
 import { GoalWidget } from '#/features/widgets/goal/goal-widget';
-import { SUBATHON_FONT } from '#/features/widgets/subathon/subathon-widget';
+import { OVERLAY_FONT_URL } from '#/features/widgets/overlay-style';
 import { readGoalSettings } from '#/lib/goal-url';
-import { readFlag } from '#/lib/subathon-url';
+import { readFlag } from '#/lib/url-params';
 
 export const Route = createFileRoute('/widgets/goal')({
   ssr: false,
@@ -10,7 +10,7 @@ export const Route = createFileRoute('/widgets/goal')({
     links: [
       { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossOrigin: 'anonymous' },
       // Subathon Timer's font, so the two read as one family on stream.
-      { rel: 'stylesheet', href: SUBATHON_FONT },
+      { rel: 'stylesheet', href: OVERLAY_FONT_URL },
     ],
   }),
   component: RouteComponent,

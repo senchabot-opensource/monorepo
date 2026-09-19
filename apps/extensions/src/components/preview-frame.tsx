@@ -8,8 +8,6 @@ interface PreviewFrameProps {
   src: string;
   /** Accessible iframe title. */
   title: string;
-  /** Width / height, e.g. `16 / 9`. Without it the frame fills its parent, which needs a height. */
-  aspect?: number;
   /**
    * The page's native size, e.g. 1920×1080. It renders at that size and is scaled down to fit,
    * so pixel-sized content (a 112px emote) keeps its proportions.
@@ -33,7 +31,6 @@ interface PreviewFrameProps {
 export function PreviewFrame({
   src,
   title,
-  aspect,
   canvas,
   placeholder,
   backgroundClassName = 'bg-zinc-950/80',
@@ -81,10 +78,8 @@ export function PreviewFrame({
   return (
     <div
       ref={ref}
-      style={aspect ? { aspectRatio: aspect } : undefined}
-      className={`relative w-full overflow-hidden rounded-lg border border-zinc-300 shadow-inner dark:border-zinc-800 ${
-        aspect ? '' : 'h-full'
-      } ${backgroundClassName} ${className}`}
+      // Fills its parent, which needs a height.
+      className={`relative w-full overflow-hidden rounded-lg border border-zinc-300 shadow-inner dark:border-zinc-800 h-full ${backgroundClassName} ${className}`}
     >
       {mounted ? (
         <iframe

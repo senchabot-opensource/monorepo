@@ -1,10 +1,12 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { useEffect, useId, useRef, useState } from 'react';
+import { createFileRoute, useHydrated } from '@tanstack/react-router';
+import { useId, useRef, useState } from 'react';
 import { ChannelFields } from '#/components/channel-fields';
+import { ChatCommandsCard } from '#/components/chat-commands-card';
 import { CopyUrlField } from '#/components/copy-url-field';
 import { CloseIcon } from '#/components/icons';
 import { PreviewFrame } from '#/components/preview-frame';
 import { SetupShell } from '#/components/setup-shell';
+import { TestButtons } from '#/components/test-buttons';
 import { BUTTON_TEST } from '#/components/ui/button-styles';
 import { ColorSwatches } from '#/components/ui/color-swatches';
 import { CountField } from '#/components/ui/count-field';
@@ -18,7 +20,8 @@ import type { PollChatEvent } from '#/features/widgets/poll/poll-chat';
 import { COMMAND } from '#/features/widgets/poll/poll-state';
 import { PREVIEW_CHANNEL, type PreviewMessage } from '#/features/widgets/poll/use-poll';
 import type { SubathonPlatform } from '#/features/widgets/subathon/subathon-events';
-import { hueFor } from '#/features/widgets/subathon/subathon-widget';
+import { hueFor } from '#/features/widgets/overlay-style';
+import { usePreviewSender } from '#/hooks/use-preview-channel';
 import { LOCALES, type Locale, type TranslationKey, useI18n } from '#/lib/i18n';
 import { getParamsLocale } from '#/lib/i18n/paths';
 import type { FaqEntry } from '#/lib/i18n/seo';
@@ -91,20 +94,10 @@ function PollSetup() {
   // The poll's own language: the page's until one is picked. The OBS URL always carries it.
   const [pickedLocale, setPickedLocale] = useState<Locale | null>(null);
   const pollLocale = pickedLocale ?? locale;
-  const [mounted, setMounted] = useState(false);
-  // Pairs this page with its own preview, not the ones in other tabs.
-  const [previewId] = useState(() => Math.random().toString(36).slice(2, 10));
-  const channelRef = useRef<BroadcastChannel | null>(null);
+  const mounted = useHydrated();
+  const { previewId, send } = usePreviewSender<PreviewMessage>(PREVIEW_CHANNEL);
   const testVoter = useRef(0);
   const id = useId();
-
-  useEffect(() => {
-    setMounted(true);
-    if (typeof BroadcastChannel === 'undefined') return;
-    const channel = new BroadcastChannel(PREVIEW_CHANNEL);
-    channelRef.current = channel;
-    return () => channel.close();
-  }, []);
 
   const update = <K extends keyof PollSettings>(key: K, value: PollSettings[K]) =>
     setSettings((current) => ({ ...current, [key]: value }));
@@ -350,12 +343,9 @@ function PollSetup() {
     </>
   );
 
-  const send = (event: PollChatEvent) => {
-    const message: PreviewMessage = { type: 'event', preview: previewId, event };
-    channelRef.current?.postMessage(message);
-  };
+  const sendEvent = (event: PollChatEvent) => send({ type: 'event', event });
   const mod = (text: string) =>
-    send({ kind: 'message', platform: 'twitch', login: 'you', text, mod: true, sub: true });
+    sendEvent({ kind: 'message', platform: 'twitch', login: 'you', text, mod: true, sub: true });
   const optionCount = savedPoll(settings)?.options.length ?? SAMPLE_OPTIONS;
   const testPlatform = (): SubathonPlatform =>
     settings.platforms === 'both' ? (Math.random() < 0.5 ? 'twitch' : 'kick') : settings.platforms;
@@ -364,7 +354,7 @@ function PollSetup() {
       label: t('poll.testVotes', { count: TEST_VOTES }),
       run: () => {
         for (let i = 0; i < TEST_VOTES; i++) {
-          send({
+          sendEvent({
             kind: 'message',
             platform: testPlatform(),
             login: `tester${testVoter.current++}`,
@@ -382,31 +372,17 @@ function PollSetup() {
   ];
 
   const commands = (
-    <section
-      aria-labelledby={`${id}-commands`}
-      className="rounded-xl border border-zinc-200 bg-zinc-100/60 p-5 dark:border-zinc-800 dark:bg-zinc-900/50"
-    >
-      <h2
-        id={`${id}-commands`}
-        className="mb-2 text-base font-semibold text-zinc-900 dark:text-white"
-      >
-        {t('poll.sectionCommands')}
-      </h2>
-      <p className="mb-3 text-sm text-zinc-600 dark:text-zinc-400">{t('poll.commandsIntro')}</p>
-      <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-sm">
-        {COMMANDS.map((command) => (
-          <div key={command.action} className="contents">
-            <dt>
-              <code className="rounded bg-white px-1.5 py-0.5 font-mono text-xs text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200">
-                {command.usage(t('poll.exampleQuestion'))}
-              </code>
-            </dt>
-            <dd className="self-center text-zinc-600 dark:text-zinc-400">{t(command.action)}</dd>
-          </div>
-        ))}
-      </dl>
-      <p className="mt-3 text-sm text-zinc-600 dark:text-zinc-400">{t('poll.votingIntro')}</p>
-    </section>
+    <ChatCommandsCard
+      title={t('poll.sectionCommands')}
+      intro={t('poll.commandsIntro')}
+      commands={COMMANDS.map((command) => ({
+        usage: command.usage(t('poll.exampleQuestion')),
+        action: t(command.action),
+      }))}
+      footer={
+        <p className="mt-3 text-sm text-zinc-600 dark:text-zinc-400">{t('poll.votingIntro')}</p>
+      }
+    />
   );
 
   return (
@@ -426,22 +402,11 @@ function PollSetup() {
         />
       }
       previewFooter={
-        <fieldset
-          aria-labelledby={`${id}-test`}
-          className="grid grid-cols-2 gap-1.5 sm:grid-cols-4"
-        >
-          <span
-            id={`${id}-test`}
-            className="col-span-2 text-xs font-medium text-zinc-600 sm:col-span-4 dark:text-zinc-400"
-          >
-            {t('poll.testTitle')}
-          </span>
-          {testButtons.map((button) => (
-            <button key={button.label} type="button" onClick={button.run} className={BUTTON_TEST}>
-              {button.label}
-            </button>
-          ))}
-        </fieldset>
+        <TestButtons
+          title={t('poll.testTitle')}
+          layout="two-four"
+          buttons={testButtons.map(({ label, run }) => ({ label, onClick: run }))}
+        />
       }
       urlField={
         <CopyUrlField

@@ -1,5 +1,5 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { useEffect, useId, useState } from 'react';
+import { createFileRoute, useHydrated } from '@tanstack/react-router';
+import { useId, useState } from 'react';
 import { ChannelFields } from '#/components/channel-fields';
 import { CopyUrlField } from '#/components/copy-url-field';
 import { PreviewFrame } from '#/components/preview-frame';
@@ -46,12 +46,8 @@ const FAQ: FaqEntry[] = [
 function EmoteWallSetup() {
   const { t } = useI18n();
   const [options, setOptions] = useState(DEFAULT_EMOTE_WALL_OPTIONS);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useHydrated();
   const id = useId();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const update = <K extends keyof EmoteWallUrlOptions>(key: K, value: EmoteWallUrlOptions[K]) =>
     setOptions((current) => ({ ...current, [key]: value }));

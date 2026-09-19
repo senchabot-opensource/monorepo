@@ -1,6 +1,6 @@
 import React from 'react';
 import { use7tvEmotes } from '#/features/widgets/chat-widget/use-7tv-emotes';
-import { KickChat, type KickChannelInfo } from '#/lib/kick';
+import { KickChat } from '#/lib/kick';
 import { TwitchChat } from '#/lib/twitch';
 import type { ChatMessagesType } from '#/features/widgets/chat-widget/chat-messages';
 import {
@@ -471,4 +471,3 @@ export function EmoteWall({
   );
 }
 
-export type { KickChannelInfo };

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { usePreviewReceiver } from '#/hooks/use-preview-channel';
 import type { SubathonEvent, SubathonPlatform, TimedEvent } from '../subathon/subathon-events';
-import { KickEventSource, TwitchEventSource } from '../subathon/subathon-sources';
-import { useKickChannel } from '#/hooks/use-kick-channel';
+import { useSubEvents } from '../subathon/use-sub-events';
 import {
   addToGoal,
   applyGoalCommand,
@@ -92,7 +92,6 @@ export function useGoal({
   previewId,
 }: UseGoalOptions) {
   const key = simulate ? null : storageKey(twitch, kick);
-  const kickIds = useKickChannel(kick, !simulate).channel;
   const settingsRef = useRef({ start, target });
   settingsRef.current = { start, target };
   const [state, setState] = useState<GoalState>(() => loadState(key, start));
@@ -157,21 +156,7 @@ export function useGoal({
     return () => window.clearTimeout(timer);
   }, [celebration]);
 
-  // One effect per platform: a Kick lookup that lands later must not restart the Twitch reader,
-  // which would lose Twitch events meanwhile and forget the gift bundles in flight.
-  useEffect(() => {
-    if (simulate || !twitch) return;
-    const source = new TwitchEventSource(twitch, handleEvent);
-    return () => source.disconnect();
-  }, [simulate, twitch, handleEvent]);
-
-  const chatroomId = kickIds?.chatroomId;
-  const channelId = kickIds?.channelId ?? null;
-  useEffect(() => {
-    if (simulate || !chatroomId) return;
-    const source = new KickEventSource(chatroomId, channelId, handleEvent);
-    return () => source.disconnect();
-  }, [simulate, chatroomId, channelId, handleEvent]);
+  useSubEvents(twitch, kick, !simulate, handleEvent);
 
   // Preview: a sub or gift every few seconds; once the goal is reached, celebrate and start over.
   useEffect(() => {
@@ -193,16 +178,11 @@ export function useGoal({
     return () => window.clearTimeout(timer);
   }, [simulate, simPlatform, commit, handleEvent]);
 
-  useEffect(() => {
-    if (!simulate || !previewId || typeof BroadcastChannel === 'undefined') return;
-    const channel = new BroadcastChannel(PREVIEW_CHANNEL);
-    channel.onmessage = ({ data }: MessageEvent<PreviewMessage>) => {
-      if (data?.type !== 'event' || data.preview !== previewId) return;
-      lastTestAt.current = Date.now();
-      handleEvent(data.event);
-    };
-    return () => channel.close();
-  }, [simulate, previewId, handleEvent]);
+  usePreviewReceiver<PreviewMessage>(PREVIEW_CHANNEL, previewId, simulate, (message) => {
+    if (message.type !== 'event') return;
+    lastTestAt.current = Date.now();
+    handleEvent(message.event);
+  });
 
   return {
     count: state.count,

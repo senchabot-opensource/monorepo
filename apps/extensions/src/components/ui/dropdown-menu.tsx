@@ -3,7 +3,7 @@ import { ChevronDownIcon } from '#/components/icons';
 import { useDisclosure } from './use-disclosure';
 
 /** The floating surface shared by dropdowns, so every menu on the site looks the same. */
-export const DROPDOWN_PANEL_CLASS =
+const DROPDOWN_PANEL_CLASS =
   'rounded-xl border border-zinc-200 bg-white shadow-xl dark:border-zinc-800 dark:bg-zinc-900';
 
 /** A row inside a dropdown panel: a link or button with the same hover and focus look. */

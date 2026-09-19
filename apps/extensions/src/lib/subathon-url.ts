@@ -1,4 +1,12 @@
-import type { ChannelPlatforms } from '#/components/channel-fields';
+import {
+  type ChannelPlatforms,
+  channelWidgetUrl,
+  readFlag,
+  readWhole,
+  readWidgetUrl,
+  setChannels,
+  setPreview,
+} from '#/lib/url-params';
 
 export const SUBATHON_STYLES = ['bar', 'clock', 'ring'] as const;
 export type SubathonStyle = (typeof SUBATHON_STYLES)[number];
@@ -89,11 +97,8 @@ const FLAG_KEYS = Object.keys(FLAG_PARAMS) as FlagKey[];
 /** Only settings that differ from the defaults are written, so URLs stay short. */
 function buildParams(settings: SubathonSettings, twitchChannel: string, kickChannel: string) {
   const params = new URLSearchParams();
-  const twitch = twitchChannel.trim().toLowerCase();
-  const kick = kickChannel.trim().toLowerCase();
   const defaults = DEFAULT_SUBATHON_SETTINGS;
-  if (settings.platforms !== 'kick' && twitch) params.set('twitch', twitch);
-  if (settings.platforms !== 'twitch' && kick) params.set('kick', kick);
+  setChannels(params, settings.platforms, twitchChannel, kickChannel);
   if (settings.style !== defaults.style) params.set('style', settings.style);
   if (settings.color !== defaults.color) params.set('color', settings.color);
   if (settings.title !== defaults.title) params.set('title', settings.title);
@@ -113,15 +118,11 @@ export function buildSubathonUrl(
   twitchChannel: string,
   kickChannel: string,
 ): string {
-  const params = buildParams(settings, twitchChannel, kickChannel);
-  if (!params.has('twitch') && !params.has('kick')) return '';
-  return `${origin}${WIDGET_PATH}?${params.toString()}`;
+  return channelWidgetUrl(origin, WIDGET_PATH, buildParams(settings, twitchChannel, kickChannel));
 }
 
 /**
- * Plays simulated subs with the same settings and never touches a channel or saved clock. With
- * one platform picked, it only simulates that one's events. `previewId` pairs it with its setup
- * page, whose test buttons would otherwise reach every preview and demo open on the site.
+ * Plays simulated subs with the same settings and never touches a channel or saved clock.
  * `speed` runs its clock faster than real time, e.g. 60 for a minute per second.
  */
 export function buildSubathonPreviewUrl(
@@ -131,27 +132,14 @@ export function buildSubathonPreviewUrl(
   speed?: number,
 ): string {
   const params = buildParams(settings, '', '');
-  params.set('simulate', '1');
-  params.set('preview', previewId);
-  if (settings.platforms !== 'both') params.set('simplatform', settings.platforms);
+  setPreview(params, settings.platforms, previewId);
   if (speed) params.set('simspeed', String(speed));
   return `${origin}${WIDGET_PATH}?${params.toString()}`;
 }
 
-const OFF_FLAGS = ['0', 'false', 'off', 'no'];
-
-/** Reads one on/off param the way the widget does: anything but an "off" word is on. */
-export function readFlag(value: string | null | undefined, fallback: boolean): boolean {
-  if (value === null || value === undefined) return fallback;
-  return !OFF_FLAGS.includes(value.trim().toLowerCase());
-}
-
 /** A whole number of seconds from 0 to MAX_SECONDS, or `fallback`. */
-function readSeconds(value: string | null, fallback: number): number {
-  if (value === null || value.trim() === '') return fallback;
-  const n = Number(value);
-  return Number.isFinite(n) && n >= 0 ? Math.min(MAX_SECONDS, Math.round(n)) : fallback;
-}
+const readSeconds = (value: string | null, fallback: number) =>
+  readWhole(value, fallback, { max: MAX_SECONDS });
 
 /** Settings from URL params, each falling back to its default when missing or invalid. */
 export function readSubathonSettings(params: URLSearchParams): Omit<SubathonSettings, 'platforms'> {
@@ -179,22 +167,8 @@ export function readSubathonSettings(params: URLSearchParams): Omit<SubathonSett
 export function parseSubathonUrl(
   text: string,
 ): { settings: SubathonSettings; twitchChannel: string; kickChannel: string } | null {
-  let url: URL;
-  try {
-    url = new URL(text.trim());
-  } catch {
-    return null;
-  }
-  if (!url.pathname.replace(/\/+$/, '').endsWith(WIDGET_PATH)) return null;
-  const twitchChannel = url.searchParams.get('twitch')?.trim() ?? '';
-  const kickChannel = url.searchParams.get('kick')?.trim() ?? '';
-  return {
-    twitchChannel,
-    kickChannel,
-    settings: {
-      platforms:
-        twitchChannel && !kickChannel ? 'twitch' : kickChannel && !twitchChannel ? 'kick' : 'both',
-      ...readSubathonSettings(url.searchParams),
-    },
-  };
+  const pasted = readWidgetUrl(text, WIDGET_PATH);
+  if (!pasted) return null;
+  const { params, platforms, ...channels } = pasted;
+  return { ...channels, settings: { platforms, ...readSubathonSettings(params) } };
 }

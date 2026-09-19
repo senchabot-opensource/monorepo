@@ -1,4 +1,4 @@
-import { readCoercedFlag } from '#/lib/url-params';
+import { readCoercedFlag, readWidgetUrl, setChannels } from '#/lib/url-params';
 
 export const PLATFORMS = ['both', 'twitch', 'kick'] as const;
 export const PLATFORM_DISPLAYS = ['name', 'icon', 'none'] as const;
@@ -88,10 +88,7 @@ export const DEFAULT_SETTINGS: Settings = {
 
 export function buildWidgetParams(settings: Settings, twitchChannel: string, kickChannel: string) {
   const params = new URLSearchParams();
-  const twitch = twitchChannel.trim().toLowerCase();
-  const kick = kickChannel.trim().toLowerCase();
-  if (settings.platforms !== 'kick' && twitch) params.append('twitch', twitch);
-  if (settings.platforms !== 'twitch' && kick) params.append('kick', kick);
+  setChannels(params, settings.platforms, twitchChannel, kickChannel);
   if (!settings.sevenTv) params.append('sevenTv', 'false');
   if (!settings.bttv) params.append('bttv', 'false');
   if (!settings.ffz) params.append('ffz', 'false');
@@ -141,15 +138,10 @@ export interface ParsedWidgetUrl {
 // Reverse of buildWidgetParams: returns null for anything that isn't a chat widget URL, and falls
 // back to the default for any single value the widget wouldn't accept either.
 export function parseWidgetUrl(text: string): ParsedWidgetUrl | null {
-  let url: URL;
-  try {
-    url = new URL(text.trim());
-  } catch {
-    return null;
-  }
-  if (!url.pathname.replace(/\/+$/, '').endsWith('/widgets/chat-widget')) return null;
+  const pasted = readWidgetUrl(text, '/widgets/chat-widget');
+  if (!pasted) return null;
 
-  const params = url.searchParams;
+  const { params, twitchChannel, kickChannel } = pasted;
   const oneOf = <T extends string>(key: string, values: readonly T[], fallback: T): T => {
     const value = params.get(key);
     return values.includes(value as T) ? (value as T) : fallback;
@@ -161,8 +153,6 @@ export function parseWidgetUrl(text: string): ParsedWidgetUrl | null {
     return value && Number.isFinite(n) && isValid(n) ? String(n) : fallback;
   };
 
-  const twitchChannel = params.get('twitch')?.trim() ?? '';
-  const kickChannel = params.get('kick')?.trim() ?? '';
   // A single channel means a single platform, unless the URL carries a platform indicator,
   // which buildWidgetParams only writes for 'both'. Either way the rebuilt URL stays the same.
   let platforms: Platforms = 'both';

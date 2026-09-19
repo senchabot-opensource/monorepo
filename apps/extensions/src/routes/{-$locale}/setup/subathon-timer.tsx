@@ -1,10 +1,11 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { useEffect, useId, useRef, useState } from 'react';
+import { createFileRoute, useHydrated } from '@tanstack/react-router';
+import { useId, useRef, useState } from 'react';
 import { ChannelFields } from '#/components/channel-fields';
+import { ChatCommandsCard } from '#/components/chat-commands-card';
 import { CopyUrlField } from '#/components/copy-url-field';
 import { PreviewFrame } from '#/components/preview-frame';
 import { SetupShell } from '#/components/setup-shell';
-import { BUTTON_TEST } from '#/components/ui/button-styles';
+import { TestButtons } from '#/components/test-buttons';
 import { ColorSwatches } from '#/components/ui/color-swatches';
 import { DurationField } from '#/components/ui/duration-field';
 import { FieldLabel } from '#/components/ui/field-label';
@@ -17,8 +18,9 @@ import { Tabs } from '#/components/ui/tabs';
 import { HINT_CLASS, TextField } from '#/components/ui/text-field';
 import type { SubathonEvent, SubathonPlatform } from '#/features/widgets/subathon/subathon-events';
 import { COMMAND } from '#/features/widgets/subathon/subathon-timer';
-import { hueFor } from '#/features/widgets/subathon/subathon-widget';
+import { hueFor } from '#/features/widgets/overlay-style';
 import { PREVIEW_CHANNEL, type PreviewMessage } from '#/features/widgets/subathon/use-subathon';
+import { usePreviewSender } from '#/hooks/use-preview-channel';
 import { type TranslationKey, useI18n } from '#/lib/i18n';
 import { getParamsLocale } from '#/lib/i18n/paths';
 import type { FaqEntry } from '#/lib/i18n/seo';
@@ -109,25 +111,15 @@ function SubathonSetup() {
   const [settings, setSettings] = useState(DEFAULT_SUBATHON_SETTINGS);
   const [valuesTab, setValuesTab] = useState<SubathonPlatform>('twitch');
   const [speedIndex, setSpeedIndex] = useState(DEFAULT_SPEED_INDEX);
-  const [mounted, setMounted] = useState(false);
-  const channelRef = useRef<BroadcastChannel | null>(null);
+  const mounted = useHydrated();
+  const { previewId, send } = usePreviewSender<PreviewMessage>(PREVIEW_CHANNEL);
   const bitsPlatform = useRef<SubathonPlatform>('twitch');
-  const [previewId] = useState(() => Math.random().toString(36).slice(2, 10));
   const id = useId();
-
-  useEffect(() => {
-    setMounted(true);
-    if (typeof BroadcastChannel === 'undefined') return;
-    const channel = new BroadcastChannel(PREVIEW_CHANNEL);
-    channelRef.current = channel;
-    return () => channel.close();
-  }, []);
 
   const update = <K extends keyof SubathonSettings>(key: K, value: SubathonSettings[K]) =>
     setSettings((current) => ({ ...current, [key]: value }));
 
-  const send = (message: PreviewMessage) => channelRef.current?.postMessage(message);
-  const sendEvent = (event: SubathonEvent) => send({ type: 'event', preview: previewId, event });
+  const sendEvent = (event: SubathonEvent) => send({ type: 'event', event });
 
   // Gated on mount so the prerendered input and the first client render agree.
   const origin = mounted ? window.location.origin : '';
@@ -373,31 +365,12 @@ function SubathonSetup() {
   ];
 
   const commands = (
-    <section
-      aria-labelledby={`${id}-commands`}
-      className="rounded-xl border border-zinc-200 bg-zinc-100/60 p-5 dark:border-zinc-800 dark:bg-zinc-900/50"
-    >
-      <h2
-        id={`${id}-commands`}
-        className="mb-2 text-base font-semibold text-zinc-900 dark:text-white"
-      >
-        {t('subathon.sectionCommands')}
-      </h2>
-      <p className="mb-3 text-sm text-zinc-600 dark:text-zinc-400">{t('subathon.commandsIntro')}</p>
-      <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-sm">
-        {COMMANDS.map((command) => (
-          <div key={command.usage} className="contents">
-            <dt>
-              <code className="rounded bg-white px-1.5 py-0.5 font-mono text-xs text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200">
-                {command.usage}
-              </code>
-            </dt>
-            <dd className="self-center text-zinc-600 dark:text-zinc-400">{t(command.action)}</dd>
-          </div>
-        ))}
-      </dl>
-      <p className={`${HINT_CLASS} mt-3`}>{t('subathon.commandsDurations')}</p>
-    </section>
+    <ChatCommandsCard
+      title={t('subathon.sectionCommands')}
+      intro={t('subathon.commandsIntro')}
+      commands={COMMANDS.map((command) => ({ usage: command.usage, action: t(command.action) }))}
+      footer={<p className={`${HINT_CLASS} mt-3`}>{t('subathon.commandsDurations')}</p>}
+    />
   );
 
   return (
@@ -415,29 +388,19 @@ function SubathonSetup() {
       previewFooter={
         <div className="space-y-2.5">
           {/* Three events on the first row, three controls on the second. */}
-          <fieldset aria-labelledby={`${id}-test`} className="grid grid-cols-3 gap-1.5">
-            <span
-              id={`${id}-test`}
-              className="col-span-3 text-xs font-medium text-zinc-600 dark:text-zinc-400"
-            >
-              {t('subathon.testTitle')}
-            </span>
-            {testButtons.map((button) => (
-              <button
-                key={button.label}
-                type="button"
-                disabled={button.disabled}
-                onClick={() => {
-                  if (!button.event) return send({ type: 'toggle', preview: previewId });
-                  const event = button.event();
-                  if (event) sendEvent(event);
-                }}
-                className={BUTTON_TEST}
-              >
-                {button.label}
-              </button>
-            ))}
-          </fieldset>
+          <TestButtons
+            title={t('subathon.testTitle')}
+            layout="three"
+            buttons={testButtons.map((button) => ({
+              label: button.label,
+              disabled: button.disabled,
+              onClick: () => {
+                if (!button.event) return send({ type: 'toggle' });
+                const event = button.event();
+                if (event) sendEvent(event);
+              },
+            }))}
+          />
           <RangeField
             layout="inline"
             label={t('subathon.previewSpeed')}

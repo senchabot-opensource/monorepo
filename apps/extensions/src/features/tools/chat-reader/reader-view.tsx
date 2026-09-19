@@ -17,6 +17,7 @@ import {
 import { isHiddenMessage } from '#/features/widgets/chat-widget/message-filters';
 import type { EmoteMap } from '#/features/widgets/chat-widget/use-channel-emotes';
 import type { Highlight } from '#/features/widgets/chat-widget/widget-settings';
+import { secondsLeft, useNow } from '#/hooks/use-now';
 import type { ChatConnectionStatus } from '#/lib/basechat';
 import { type TranslationKey, useI18n } from '#/lib/i18n';
 import type { ReaderEntry, ReaderEvent } from './reader-log';
@@ -25,21 +26,6 @@ type Translate = ReturnType<typeof useI18n>['t'];
 
 // Within this distance of the bottom the list counts as following the chat.
 const PIN_THRESHOLD_PX = 40;
-
-/** Date.now(), re-read every half second while `active`. */
-function useNow(active: boolean) {
-  const [now, setNow] = useState(() => Date.now());
-  useEffect(() => {
-    if (!active) return;
-    setNow(Date.now());
-    const id = setInterval(() => setNow(Date.now()), 500);
-    return () => clearInterval(id);
-  }, [active]);
-  return now;
-}
-
-const secondsLeft = (retryAt: number, now: number) =>
-  Math.max(1, Math.ceil((retryAt - now) / 1000));
 
 export function formatDuration(ms: number, t: Translate) {
   const total = Math.max(1, Math.round(ms / 1000));

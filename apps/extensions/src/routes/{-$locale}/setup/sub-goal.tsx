@@ -1,10 +1,11 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { useEffect, useId, useRef, useState } from 'react';
+import { createFileRoute, useHydrated } from '@tanstack/react-router';
+import { useId, useRef, useState } from 'react';
 import { ChannelFields } from '#/components/channel-fields';
+import { ChatCommandsCard } from '#/components/chat-commands-card';
 import { CopyUrlField } from '#/components/copy-url-field';
 import { PreviewFrame } from '#/components/preview-frame';
 import { SetupShell } from '#/components/setup-shell';
-import { BUTTON_TEST } from '#/components/ui/button-styles';
+import { TestButtons } from '#/components/test-buttons';
 import { ColorSwatches } from '#/components/ui/color-swatches';
 import { CountField } from '#/components/ui/count-field';
 import { FieldLabel } from '#/components/ui/field-label';
@@ -14,7 +15,8 @@ import { HINT_CLASS, TextField } from '#/components/ui/text-field';
 import { COMMAND } from '#/features/widgets/goal/goal-count';
 import { PREVIEW_CHANNEL, type PreviewMessage } from '#/features/widgets/goal/use-goal';
 import type { SubathonEvent, SubathonPlatform } from '#/features/widgets/subathon/subathon-events';
-import { hueFor } from '#/features/widgets/subathon/subathon-widget';
+import { hueFor } from '#/features/widgets/overlay-style';
+import { usePreviewSender } from '#/hooks/use-preview-channel';
 import {
   buildGoalPreviewUrl,
   buildGoalUrl,
@@ -63,28 +65,15 @@ function GoalSetup() {
   const [twitchChannel, setTwitchChannel] = useState('');
   const [kickChannel, setKickChannel] = useState('');
   const [settings, setSettings] = useState(DEFAULT_GOAL_SETTINGS);
-  const [mounted, setMounted] = useState(false);
-  // Pairs this page with its own preview, not the ones in other tabs.
-  const [previewId] = useState(() => Math.random().toString(36).slice(2, 10));
-  const channelRef = useRef<BroadcastChannel | null>(null);
+  const mounted = useHydrated();
+  const { previewId, send } = usePreviewSender<PreviewMessage>(PREVIEW_CHANNEL);
   const nextPlatform = useRef<SubathonPlatform>('twitch');
   const id = useId();
-
-  useEffect(() => {
-    setMounted(true);
-    if (typeof BroadcastChannel === 'undefined') return;
-    const channel = new BroadcastChannel(PREVIEW_CHANNEL);
-    channelRef.current = channel;
-    return () => channel.close();
-  }, []);
 
   const update = <K extends keyof GoalSettings>(key: K, value: GoalSettings[K]) =>
     setSettings((current) => ({ ...current, [key]: value }));
 
-  const send = (event: SubathonEvent) => {
-    const message: PreviewMessage = { type: 'event', preview: previewId, event };
-    channelRef.current?.postMessage(message);
-  };
+  const sendEvent = (event: SubathonEvent) => send({ type: 'event', event });
 
   // Gated on mount so the prerendered input and the first client render agree.
   const origin = mounted ? window.location.origin : '';
@@ -196,30 +185,11 @@ function GoalSetup() {
   ];
 
   const commands = (
-    <section
-      aria-labelledby={`${id}-commands`}
-      className="rounded-xl border border-zinc-200 bg-zinc-100/60 p-5 dark:border-zinc-800 dark:bg-zinc-900/50"
-    >
-      <h2
-        id={`${id}-commands`}
-        className="mb-2 text-base font-semibold text-zinc-900 dark:text-white"
-      >
-        {t('goal.sectionCommands')}
-      </h2>
-      <p className="mb-3 text-sm text-zinc-600 dark:text-zinc-400">{t('goal.commandsIntro')}</p>
-      <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-sm">
-        {COMMANDS.map((command) => (
-          <div key={command.usage} className="contents">
-            <dt>
-              <code className="rounded bg-white px-1.5 py-0.5 font-mono text-xs text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200">
-                {command.usage}
-              </code>
-            </dt>
-            <dd className="self-center text-zinc-600 dark:text-zinc-400">{t(command.action)}</dd>
-          </div>
-        ))}
-      </dl>
-    </section>
+    <ChatCommandsCard
+      title={t('goal.sectionCommands')}
+      intro={t('goal.commandsIntro')}
+      commands={COMMANDS.map((command) => ({ usage: command.usage, action: t(command.action) }))}
+    />
   );
 
   return (
@@ -235,27 +205,14 @@ function GoalSetup() {
         <PreviewFrame src={previewUrl} title={t('goal.previewIframeTitle')} canvas={CANVAS} />
       }
       previewFooter={
-        <fieldset
-          aria-labelledby={`${id}-test`}
-          className="grid grid-cols-2 gap-1.5 sm:grid-cols-4"
-        >
-          <span
-            id={`${id}-test`}
-            className="col-span-2 text-xs font-medium text-zinc-600 sm:col-span-4 dark:text-zinc-400"
-          >
-            {t('goal.testTitle')}
-          </span>
-          {testButtons.map((button) => (
-            <button
-              key={button.label}
-              type="button"
-              onClick={() => send(button.event())}
-              className={BUTTON_TEST}
-            >
-              {button.label}
-            </button>
-          ))}
-        </fieldset>
+        <TestButtons
+          title={t('goal.testTitle')}
+          layout="two-four"
+          buttons={testButtons.map(({ label, event }) => ({
+            label,
+            onClick: () => sendEvent(event()),
+          }))}
+        />
       }
       urlField={
         <CopyUrlField

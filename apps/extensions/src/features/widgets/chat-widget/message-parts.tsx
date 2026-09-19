@@ -1,29 +1,10 @@
 import type React from 'react';
+import { parseTwitchEmoteRanges } from '#/lib/twitch-emotes';
 import type { ChatMessagesType } from './chat-messages';
 import { KickBadge } from './kick-badges';
 import type { EmoteMap } from './use-channel-emotes';
 
 // Message pieces shared by the chat overlay and the Chat Reader tool.
-
-type TwitchEmoteRange = { id: string; start: number; end: number };
-
-const parseTwitchEmoteRanges = (emotesTag?: string): TwitchEmoteRange[] => {
-  if (!emotesTag) return [];
-  const ranges: TwitchEmoteRange[] = [];
-  for (const part of emotesTag.split('/')) {
-    const [id, positionsStr] = part.split(':');
-    if (!id || !positionsStr) continue;
-    for (const pos of positionsStr.split(',')) {
-      const [startStr, endStr] = pos.split('-');
-      const start = parseInt(startStr, 10);
-      const end = parseInt(endStr, 10);
-      if (!Number.isNaN(start) && !Number.isNaN(end)) {
-        ranges.push({ id, start, end });
-      }
-    }
-  }
-  return ranges.sort((a, b) => a.start - b.start);
-};
 
 const renderTwitchEmotes = (text: string, emotesTag?: string) => {
   const ranges = parseTwitchEmoteRanges(emotesTag);

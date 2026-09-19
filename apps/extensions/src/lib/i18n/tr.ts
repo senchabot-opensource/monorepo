@@ -1044,49 +1044,8 @@ export const tr: typeof en = {
   alerts: {
     follow: 'Yeni Takipçi Geldi!',
     sub: 'Yeni Abone Geldi!',
-    resub: 'Abonelik Yeniledi!',
-    gift: 'Hediye Abonelik Geldi!',
     donate: 'Bağış Yaptı!',
     raid: 'Baskın Vaar!',
-    giftAmount: 'x{count} hediye abonelik',
-    resubMonths: '{months} aydır abone',
-    raidViewers: '{viewers} izleyici ile',
-  },
-  alertsSetup: {
-    breadcrumb: 'Uyarılar Kurulumu',
-    title: 'Twitch & Kick Yayın Uyarıları',
-    intro:
-      'Tek bir birleşik kaplamada Twitch ve Kick için ücretsiz özelleştirilebilir yayın uyarıları. Takip, yeni abonelik, yenileme, hediye abonelik, Cheer/bit ve raid uyarılarını destekler.',
-    addBotNotice:
-      'Uyarıları alabilmek için Senchabot botunun Twitch ve Kick kanalınızda bulunması gerekir. Botu senchabot.com adresinden ekleyebilirsiniz.',
-    platforms: 'Platformlar',
-    both: 'İkisi (Twitch & Kick)',
-    twitch: 'Twitch',
-    kick: 'Kick',
-    twitchChannel: 'Twitch Kanalı',
-    kickChannel: 'Kick Kanalı',
-    glowEffect: 'Arka Plan Parlama Efekti',
-    previewTitle: 'Uyarı Widget Önizleme',
-    previewIframeTitle: 'Uyarılar Önizleme',
-    previewHint: 'Animasyonlu bildirimlerle canlı uyarı önizlemesi.',
-    guideTitle: 'Yayın Yazılımı Uyarı Kurulumu (OBS, Streamlabs, XSplit vb.)',
-    guideStep1:
-      '1. Yayın yazılımında (OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio vb.) bir Tarayıcı Kaynağı ekle.',
-    guideStep2: "2. Kopyaladığın uyarı widget URL'sini yapıştır.",
-    guideStep3:
-      '3. Genişlik ve yüksekliği ayarla (tam tuval kaplaması için örn. 1920×1080 veya kompakt alan için 500×700).',
-    guideStep4:
-      '4. "Görünür olmadığında kaynağı kapat" seçeneğini işaretle ve "Sahne etkinleştiğinde tarayıcıyı yenile" seçeneğini kapalı tut.',
-    browserSourceHintSize: ' (önerilen boyut: tam ekran için 1920×1080 veya 500×700).',
-    faq1Q: 'Bu widget\'ı hem Twitch hem Kick için aynı anda kullanabilir miyim?',
-    faq1A:
-      'Evet! "İkisi (Twitch & Kick)" seçeneğini seçin, her iki platform için kanal adlarınızı girin ve her iki platformun uyarılarını aynı anda işleyen tek bir tarayıcı kaynağı URL\'si elde edin.',
-    faq2Q: 'Giriş yapmam veya hesap oluşturmam gerekiyor mu?',
-    faq2A:
-      'Hesap veya OAuth girişi gerekmez. Senchabot, gerçek zamanlı olaylar üzerinden doğrudan bağlanır.',
-    faq3Q: 'Hangi uyarı türleri destekleniyor?',
-    faq3A:
-      'Hem Twitch hem Kick için takipçiler, abonelikler (yeni ve yenilemeler), topluluk/bireysel hediye abonelikler, Cheer/bit bağışları ve gelen kanal raid\'leri desteklenir.',
   },
   emoteWallSetup: {
     breadcrumb: 'Emote Duvarı Kurulumu',

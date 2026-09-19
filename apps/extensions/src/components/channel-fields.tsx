@@ -3,8 +3,9 @@ import { FieldLabel } from '#/components/ui/field-label';
 import { SegmentedControl, type SegmentedOption } from '#/components/ui/segmented-control';
 import { TextField } from '#/components/ui/text-field';
 import { useI18n } from '#/lib/i18n';
+import type { ChannelPlatforms } from '#/lib/url-params';
 
-export type ChannelPlatforms = 'both' | 'twitch' | 'kick';
+export type { ChannelPlatforms };
 
 interface ChannelFieldsProps {
   platforms: ChannelPlatforms;

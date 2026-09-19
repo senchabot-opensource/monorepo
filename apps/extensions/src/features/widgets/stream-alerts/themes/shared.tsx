@@ -1,6 +1,6 @@
 import type { AlertKind } from '#/lib/stream-alerts-url';
 
-export const hsl = (hue: number, s: number, l: number, a = 1) => `hsl(${hue} ${s}% ${l}% / ${a})`;
+export { hsl } from '../../overlay-style';
 
 /** Points of a diamond centered on (x, y), `r` from the center to each tip. */
 export const diamond = (x: number, y: number, r: number) =>

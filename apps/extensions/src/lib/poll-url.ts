@@ -1,4 +1,3 @@
-import type { ChannelPlatforms } from '#/components/channel-fields';
 import {
   cleanOptions,
   MAX_OPTIONS,
@@ -7,7 +6,15 @@ import {
   QUESTION_MAX_LENGTH,
 } from '#/features/widgets/poll/poll-state';
 import { isValidLocale, LANG_PARAM, type Locale } from '#/lib/i18n/locales';
-import { readFlag } from '#/lib/subathon-url';
+import {
+  type ChannelPlatforms,
+  channelWidgetUrl,
+  readFlag,
+  readWhole,
+  readWidgetUrl,
+  setChannels,
+  setPreview,
+} from '#/lib/url-params';
 
 export const POLL_COLORS = ['purple', 'green', 'red', 'gold', 'cyan', 'pink'] as const;
 export type PollColor = (typeof POLL_COLORS)[number];
@@ -77,11 +84,8 @@ function buildParams(
   locale: Locale,
 ) {
   const params = new URLSearchParams();
-  const twitch = twitchChannel.trim().toLowerCase();
-  const kick = kickChannel.trim().toLowerCase();
   const defaults = DEFAULT_POLL_SETTINGS;
-  if (settings.platforms !== 'kick' && twitch) params.set('twitch', twitch);
-  if (settings.platforms !== 'twitch' && kick) params.set('kick', kick);
+  setChannels(params, settings.platforms, twitchChannel, kickChannel);
   const poll = savedPoll(settings);
   if (poll) {
     if (poll.question) params.set('q', poll.question);
@@ -111,16 +115,10 @@ export function buildPollUrl(
   kickChannel: string,
   locale: Locale,
 ): string {
-  const params = buildParams(settings, twitchChannel, kickChannel, locale);
-  if (!params.has('twitch') && !params.has('kick')) return '';
-  return `${origin}${WIDGET_PATH}?${params.toString()}`;
+  return channelWidgetUrl(origin, WIDGET_PATH, buildParams(settings, twitchChannel, kickChannel, locale));
 }
 
-/**
- * Plays simulated polls with the same settings and never touches a channel or saved poll. With
- * one platform picked, only that one's viewers vote. `previewId` pairs it with its setup page,
- * whose test buttons would otherwise reach every preview and demo open on the site.
- */
+/** Plays simulated polls with the same settings and never touches a channel or saved poll. */
 export function buildPollPreviewUrl(
   origin: string,
   settings: PollSettings,
@@ -128,17 +126,8 @@ export function buildPollPreviewUrl(
   previewId: string,
 ): string {
   const params = buildParams(settings, '', '', locale);
-  params.set('simulate', '1');
-  params.set('preview', previewId);
-  if (settings.platforms !== 'both') params.set('simplatform', settings.platforms);
+  setPreview(params, settings.platforms, previewId);
   return `${origin}${WIDGET_PATH}?${params.toString()}`;
-}
-
-/** A whole number from 0 to `max`, or `fallback`. */
-function readWhole(value: string | null, fallback: number, max: number): number {
-  if (value === null || value.trim() === '') return fallback;
-  const n = Number(value);
-  return Number.isFinite(n) && n >= 0 ? Math.min(max, Math.round(n)) : fallback;
 }
 
 /** Settings from URL params, each falling back to its default when missing or invalid. */
@@ -152,9 +141,9 @@ export function readPollSettings(params: URLSearchParams): Omit<PollSettings, 'p
     question: (params.get('q') ?? '').trim().slice(0, QUESTION_MAX_LENGTH),
     // The setup page shows at least two boxes.
     options: options.length >= MIN_OPTIONS ? options : [...options, '', ''].slice(0, MIN_OPTIONS),
-    duration: readWhole(params.get('dur'), defaults.duration, MAX_DURATION_SECONDS),
-    delay: readWhole(params.get('delay'), defaults.delay, MAX_DELAY_SECONDS),
-    hold: readWhole(params.get('hold'), defaults.hold, MAX_HOLD_SECONDS),
+    duration: readWhole(params.get('dur'), defaults.duration, { max: MAX_DURATION_SECONDS }),
+    delay: readWhole(params.get('delay'), defaults.delay, { max: MAX_DELAY_SECONDS }),
+    hold: readWhole(params.get('hold'), defaults.hold, { max: MAX_HOLD_SECONDS }),
     subsOnly: readFlag(params.get('subs'), defaults.subsOnly),
     subWeight: (SUB_WEIGHTS as readonly number[]).includes(subWeight)
       ? subWeight
@@ -173,24 +162,13 @@ export function parsePollUrl(text: string): {
   kickChannel: string;
   locale: Locale | null;
 } | null {
-  let url: URL;
-  try {
-    url = new URL(text.trim());
-  } catch {
-    return null;
-  }
-  if (!url.pathname.replace(/\/+$/, '').endsWith(WIDGET_PATH)) return null;
-  const twitchChannel = url.searchParams.get('twitch')?.trim() ?? '';
-  const kickChannel = url.searchParams.get('kick')?.trim() ?? '';
-  const lang = url.searchParams.get(LANG_PARAM);
+  const pasted = readWidgetUrl(text, WIDGET_PATH);
+  if (!pasted) return null;
+  const { params, platforms, ...channels } = pasted;
+  const lang = params.get(LANG_PARAM);
   return {
-    twitchChannel,
-    kickChannel,
+    ...channels,
     locale: isValidLocale(lang) ? lang : null,
-    settings: {
-      platforms:
-        twitchChannel && !kickChannel ? 'twitch' : kickChannel && !twitchChannel ? 'kick' : 'both',
-      ...readPollSettings(url.searchParams),
-    },
+    settings: { platforms, ...readPollSettings(params) },
   };
 }

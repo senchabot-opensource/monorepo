@@ -1,13 +1,12 @@
 import type { CSSProperties } from 'react';
 import type { GoalSettings } from '#/lib/goal-url';
 import type { SubathonPlatform } from '../subathon/subathon-events';
-import { hueFor } from '../subathon/subathon-widget';
+import { hsl, hueFor, OVERLAY_FONT_FAMILY as FONT_FAMILY, PLATFORM_COLORS } from '../overlay-style';
 import { useFitScale } from '../use-fit-scale';
 import { CELEBRATE_MS, type GoalHit, type GoalPop, POP_MS, useGoal } from './use-goal';
 
 /** Design size; the overlay scales to fill whatever browser source size it gets. */
 const STAGE = { width: 800, height: 260 };
-const FONT_FAMILY = "'Oxanium', ui-sans-serif, system-ui, sans-serif";
 
 // Bottom up: margin, the bar, a gap, the title and count row; the rising pops use the rest.
 const BAR_BOTTOM = 30;
@@ -40,7 +39,6 @@ const CSS = `
 @keyframes sg-spark{0%{transform:rotate(var(--a)) translateY(-18px) scale(1);opacity:1}100%{transform:rotate(var(--a)) translateY(var(--d)) scale(.3);opacity:0}}
 `;
 
-const hsl = (hue: number, s: number, l: number, a = 1) => `hsl(${hue} ${s}% ${l}% / ${a})`;
 
 interface GoalWidgetProps {
   twitchChannel?: string;
@@ -398,7 +396,6 @@ function Celebration() {
   );
 }
 
-const PLATFORM_COLORS: Record<SubathonPlatform, string> = { twitch: '#a970ff', kick: '#53fc18' };
 
 // Pops that land close together rise side by side instead of on top of each other. Keyed by
 // pop id, so a pop keeps its spot when an older one disappears.
