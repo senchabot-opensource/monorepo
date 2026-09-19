@@ -5,6 +5,7 @@ import {
   GoalIcon,
   type IconProps,
   ObsBridgeIcon,
+  PollIcon,
   RaffleIcon,
   StreamAlertsIcon,
   SubathonIcon,
@@ -20,6 +21,7 @@ export type WidgetId =
   | 'sub-sprout'
   | 'goal'
   | 'subathon'
+  | 'poll'
   | 'stream-alerts'
   | 'raffle'
   | 'obs-bridge';
@@ -115,17 +117,17 @@ export const WIDGETS: readonly WidgetEntry[] = [
     sourceSize: { width: 800, height: 260 },
   },
   {
-    id: 'subathon',
-    // Mods run the clock from chat (start, pause, add time), so it sits with the tools.
+    id: 'poll',
+    // Mods put polls up and end them from chat, like the Subathon Timer's clock.
     kind: 'tool',
-    setupPath: '/setup/subathon-timer',
-    widgetPath: '/widgets/subathon',
-    nameKey: 'widgets.subathon.name',
-    taglineKey: 'widgets.subathon.tagline',
-    Icon: SubathonIcon,
+    setupPath: '/setup/chat-poll',
+    widgetPath: '/widgets/poll',
+    nameKey: 'widgets.poll.name',
+    taglineKey: 'widgets.poll.tagline',
+    Icon: PollIcon,
     platforms: ['twitch', 'kick'],
-    demoUrl: '/widgets/subathon?simulate=1',
-    sourceSize: { width: 800, height: 300 },
+    demoUrl: '/widgets/poll?simulate=1',
+    sourceSize: { width: 640, height: 560 },
   },
   {
     id: 'raffle',
@@ -139,6 +141,19 @@ export const WIDGETS: readonly WidgetEntry[] = [
     demoUrl: null,
     // The winner overlay fires confetti from both screen edges, so it covers the full canvas.
     sourceSize: { width: 1920, height: 1080 },
+  },
+  {
+    id: 'subathon',
+    // Mods run the clock from chat (start, pause, add time), so it sits with the tools.
+    kind: 'tool',
+    setupPath: '/setup/subathon-timer',
+    widgetPath: '/widgets/subathon',
+    nameKey: 'widgets.subathon.name',
+    taglineKey: 'widgets.subathon.tagline',
+    Icon: SubathonIcon,
+    platforms: ['twitch', 'kick'],
+    demoUrl: '/widgets/subathon?simulate=1',
+    sourceSize: { width: 800, height: 300 },
   },
   {
     id: 'obs-bridge',

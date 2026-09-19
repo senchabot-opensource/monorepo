@@ -142,6 +142,7 @@ const TURKISH_PAGES = [
   '/tr/guides/obs-chat-dock',
   '/tr/guides/stream-alerts',
   '/tr/guides/subathon-timer',
+  '/tr/guides/chat-poll',
   '/tr/faq',
   '/tr/changelog',
   '/tr/no-such-page',

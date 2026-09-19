@@ -17,12 +17,12 @@ export const PAGE_META = {
     en: {
       title: 'Free Twitch & Kick Overlays for OBS | Senchabot Extensions',
       description:
-        'Eight free tools for Twitch and Kick streamers: Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Raffle and OBS Bridge. Add to OBS.',
+        'Nine free tools for Twitch and Kick streamers: Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll, Raffle and OBS Bridge.',
     },
     tr: {
       title: "OBS için Ücretsiz Twitch ve Kick Overlay'leri | Senchabot",
       description:
-        'Twitch ve Kick için sekiz ücretsiz yayın aracı: Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Çekiliş ve OBS Bridge.',
+        '9 ücretsiz Twitch ve Kick aracı: Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi, Çekiliş ve OBS Bridge.',
     },
   },
   'chat-box': {
@@ -95,6 +95,18 @@ export const PAGE_META = {
       title: 'Twitch ve Kick için Abone Hedefi Barı (Ücretsiz) | Senchabot',
       description:
         "OBS için ücretsiz abone hedefi barı. Twitch ve Kick'te her abonelik, yenileme ve hediye abonelik 1 ekler, hedefe ulaşınca kupa iner. Modlar sohbetten düzeltir.",
+    },
+  },
+  poll: {
+    en: {
+      title: 'Free Chat Poll Overlay for Twitch & Kick | Senchabot',
+      description:
+        'A free chat poll overlay for OBS. Viewers on Twitch and Kick vote by typing a number, the bars fill live and the winner shows at the end. Mods run it from chat.',
+    },
+    tr: {
+      title: 'Twitch ve Kick için Sohbet Anketi (Ücretsiz) | Senchabot',
+      description:
+        "OBS için ücretsiz sohbet anketi. Twitch ve Kick'te izleyiciler numara yazarak oy verir, barlar canlı dolar, sonunda kazanan çıkar. Modlar sohbetten yönetir.",
     },
   },
   raffle: {
@@ -263,6 +275,30 @@ export const APP_FEATURES: Record<WidgetId, Record<Locale, readonly string[]>> =
       'Yayıncı ve modlar !goal ile abone ekleyip çıkarabilir, sayıyı ayarlayıp sıfırlayabilir',
       "Sayı OBS'te kaydedilir, sayfa yenilense de kaybolmaz",
       'Önerilen Tarayıcı Kaynağı boyutu: 800x260',
+    ],
+  },
+  poll: {
+    en: [
+      'Viewers vote by typing a number, !vote and a number, or the option itself in chat',
+      'Votes from Twitch and Kick go into one poll, and every viewer counts once',
+      'The broadcaster and mods put polls up, add time, end and cancel them with !poll',
+      'A ready-made poll from the setup page starts with !poll start',
+      'Live bars, a countdown, and the winner or a tie at the end',
+      'Optional: subscribers only, sub votes that count 2× or 3×, results hidden until the end',
+      'Late votes from viewers watching behind live still count for a few seconds',
+      'Timed out and banned accounts lose their vote',
+      'Recommended browser source size: 640x560',
+    ],
+    tr: [
+      'İzleyiciler sohbete bir numara, !vote ve numara ya da seçeneğin kendisini yazarak oy verir',
+      "Twitch ve Kick'ten gelen oylar tek ankette toplanır, her izleyici bir kez sayılır",
+      'Yayıncı ve modlar !poll ile anket başlatır, süre ekler, anketi bitirir ya da iptal eder',
+      'Kurulum sayfasındaki hazır anket !poll start ile başlar',
+      'Canlı barlar, geri sayım ve sonunda kazanan ya da beraberlik',
+      'İsteğe bağlı: sadece aboneler, 2× ya da 3× sayılan abone oyları, sona kadar gizli sonuçlar',
+      'Yayını geriden izleyenlerin geç gelen oyları birkaç saniye daha sayılır',
+      'Susturulan ve banlanan hesapların oyu silinir',
+      'Önerilen Tarayıcı Kaynağı boyutu: 640x560',
     ],
   },
   raffle: {

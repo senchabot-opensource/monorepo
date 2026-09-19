@@ -27,7 +27,7 @@ const WIDGETS_MENU = 'header nav button[aria-controls]';
 /**
  * In-page test for "the overlay shows something": chat has message text, the emote wall a
  * loaded image, Sub Sprout an SVG plant, `alert` a Stream Alerts card (its demo shows one every
- * few seconds), `text:x` the text x. Kept as source so it can run in
+ * few seconds), `poll` a Chat Poll card in any language, `text:x` the text x. Kept as source so it can run in
  * the top document and inside iframes alike.
  */
 const READY = `(doc, kind) => {
@@ -40,6 +40,7 @@ const READY = `(doc, kind) => {
     );
   }
   if (kind === 'alert') return Boolean(doc.querySelector('[data-testid="stream-alert"]'));
+  if (kind === 'poll') return Boolean(doc.querySelector('[data-testid="poll-card"]'));
   if (kind.startsWith('text:')) return doc.body.innerText.includes(kind.slice(5));
   return false;
 }`;

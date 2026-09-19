@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import type { TranslationKey } from '#/lib/i18n';
 import { useT } from '#/lib/i18n';
 import type { WidgetId } from '#/lib/widgets';
@@ -11,6 +12,7 @@ export const TOOL_FEATURES: Partial<Record<WidgetId, readonly TranslationKey[]>>
     'home.subathonFeaturePlatforms',
     'home.subathonFeatureSaved',
   ],
+  poll: ['home.pollFeatureVote', 'home.pollFeatureBoth', 'home.pollFeatureLate'],
 };
 
 const CHAT_ROW = { x: 24, width: 172, height: 28, gap: 8 };
@@ -210,9 +212,110 @@ function ObsBridgeVisual() {
   );
 }
 
-/** Static picture of a tool for the landing card; tools have no self-running demo. */
+const VOTES = [
+  { name: 'moonlit', color: '#60a5fa', vote: '2' },
+  { name: 'kappa_kid', color: '#f472b6', vote: '!vote 1' },
+  { name: 'pixelfox', color: '#facc15', vote: '2' },
+  { name: 'nightowl', color: '#a78bfa', vote: '3' },
+];
+const BARS = [
+  { share: 0.28, label: '28%' },
+  { share: 0.51, label: '51%', lead: true },
+  { share: 0.21, label: '21%' },
+];
+
+/** Viewers typing their vote, and the poll's bars with the leader lit up. */
+function PollVisual() {
+  const top = (200 - (VOTES.length * CHAT_ROW.height + (VOTES.length - 1) * CHAT_ROW.gap)) / 2;
+  return (
+    <svg viewBox="0 0 400 200" className="absolute inset-0 size-full" aria-hidden="true">
+      {VOTES.map((entry, index) => {
+        const y = top + index * (CHAT_ROW.height + CHAT_ROW.gap);
+        return (
+          <g key={entry.name}>
+            <rect
+              x={CHAT_ROW.x}
+              y={y}
+              width={CHAT_ROW.width}
+              height={CHAT_ROW.height}
+              rx={8}
+              fill="#ffffff"
+              fillOpacity={0.06}
+            />
+            <text x={CHAT_ROW.x + 12} y={y + 18.5} fontSize={12}>
+              <tspan fill={entry.color} fontWeight={600}>
+                {entry.name}
+              </tspan>
+              <tspan dx={6} fill="#e4e4e7">
+                {entry.vote}
+              </tspan>
+            </text>
+          </g>
+        );
+      })}
+      <Arrow />
+      <rect
+        x={238}
+        y={36}
+        width={140}
+        height={128}
+        rx={12}
+        fill="#18181b"
+        stroke="#a78bfa"
+        strokeOpacity={0.35}
+      />
+      {BARS.map((bar, index) => {
+        const y = 52 + index * 36;
+        return (
+          <g key={bar.label}>
+            <rect x={248} y={y} width={120} height={26} rx={6} fill="#ffffff" fillOpacity={0.07} />
+            <rect
+              x={248}
+              y={y}
+              width={120 * bar.share}
+              height={26}
+              rx={6}
+              fill="#8b5cf6"
+              fillOpacity={bar.lead ? 0.95 : 0.5}
+            />
+            <rect x={253} y={y + 5} width={16} height={16} rx={4} fill="#c4b5fd" />
+            <text
+              x={261}
+              y={y + 17}
+              textAnchor="middle"
+              fontSize={10}
+              fontWeight={800}
+              fill="#18181b"
+            >
+              {index + 1}
+            </text>
+            <text
+              x={362}
+              y={y + 17.5}
+              textAnchor="end"
+              fontSize={11}
+              fontWeight={700}
+              fill="#ffffff"
+            >
+              {bar.label}
+            </text>
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
+const VISUALS: Partial<Record<WidgetId, () => ReactNode>> = {
+  raffle: RaffleVisual,
+  'obs-bridge': ObsBridgeVisual,
+  poll: PollVisual,
+};
+
+export const hasToolVisual = (id: WidgetId) => id in VISUALS;
+
+/** Static picture of a tool for the landing card, for tools whose overlay says little on its own. */
 export function ToolVisual({ id }: { id: WidgetId }) {
-  if (id === 'raffle') return <RaffleVisual />;
-  if (id === 'obs-bridge') return <ObsBridgeVisual />;
-  return null;
+  const Visual = VISUALS[id];
+  return Visual ? <Visual /> : null;
 }

@@ -48,6 +48,7 @@ export const READY_BY_WIDGET = {
   '/widgets/subathon': 'text:SUBATHON',
   '/widgets/stream-alerts': 'alert',
   '/widgets/goal': 'text:SUB GOAL',
+  '/widgets/poll': 'poll',
 };
 
 /**
@@ -97,6 +98,12 @@ export const SETUP_SPECS = {
     expect: ['/widgets/goal?', 'twitch={channel}', 'color=gold'],
     pasteToEdit: true,
   },
+  'chat-poll': {
+    preview: 'iframe',
+    steps: [{ click: 'input[type="radio"][value="gold"]' }],
+    expect: ['/widgets/poll?', 'twitch={channel}', 'color=gold'],
+    pasteToEdit: true,
+  },
   raffle: {
     // Start, Stop and Draw live in the right-hand panel instead of a preview.
     preview: { selector: 'button', min: 3 },
@@ -124,6 +131,8 @@ export const OVERLAYS = [
   { path: '/widgets/subathon?simulate=1', width: 800, height: 300, ready: 'text:SUBATHON' },
   { path: '/widgets/stream-alerts?simulate=1', width: 800, height: 450, ready: 'alert' },
   { path: '/widgets/goal?simulate=1', width: 800, height: 260, ready: 'text:SUB GOAL' },
+  // The first simulated poll comes up after a moment.
+  { path: '/widgets/poll?simulate=1', width: 640, height: 560, ready: 'poll' },
   {
     path: '/widgets/raffle-overlay',
     width: 1920,

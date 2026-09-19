@@ -68,6 +68,13 @@ export const OG_IMAGES = {
       tr: "Abone Hedefi, abonelik ve hediye aboneliklerle dolan hedef barı overlay'i",
     },
   },
+  poll: {
+    path: '/og/poll.png',
+    alt: {
+      en: 'Chat Poll, a poll overlay that Twitch and Kick chat vote in',
+      tr: "Sohbet Anketi, Twitch ve Kick sohbetinin oy verdiği anket overlay'i",
+    },
+  },
   'stream-alerts': {
     path: '/og/stream-alerts.png',
     alt: {

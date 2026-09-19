@@ -28,9 +28,10 @@ describe('getDemoSrc', () => {
     expect(params.get('simulate')).toBe('true');
   });
 
-  it('gives every overlay a demo, and of the tools only the Subathon Timer', () => {
+  it('gives every overlay a demo, and of the tools the Subathon Timer and Chat Poll', () => {
     for (const widget of OVERLAYS) expect(getDemoSrc(widget), widget.id).not.toBe('');
     expect(TOOLS.filter((widget) => getDemoSrc(widget)).map((widget) => widget.id)).toEqual([
+      'poll',
       'subathon',
     ]);
   });
@@ -48,8 +49,8 @@ describe('getDemoSrc', () => {
 });
 
 describe('gallery card shapes', () => {
-  // A tall Chat Box and a wide Subathon strip: the bento the gallery was drawn for.
-  const BENTO = (['chat-box', 'emote-wall', 'sub-sprout', 'subathon'] as const).map(getWidget);
+  // A tall Chat Box and a wide goal strip: the bento the gallery was drawn for.
+  const BENTO = (['chat-box', 'emote-wall', 'sub-sprout', 'goal'] as const).map(getWidget);
   const extra = (id: string, width: number, height: number) =>
     ({ ...getWidget('emote-wall'), id, sourceSize: { width, height } }) as WidgetEntry;
   const OVERLAY_COLUMNS = [2, 3];
@@ -62,10 +63,11 @@ describe('gallery card shapes', () => {
       ['stream-alerts', 'standard'],
       ['goal', 'wide'],
     ]);
-    // Raffle's overlay has a size but no demo, so its card keeps the static picture.
+    // Tools never span, not even the Subathon strip.
     expect(TOOLS.map((widget) => [widget.id, getCardShape(widget)])).toEqual([
-      ['subathon', 'wide'],
+      ['poll', 'standard'],
       ['raffle', 'standard'],
+      ['subathon', 'standard'],
       ['obs-bridge', 'standard'],
     ]);
   });
@@ -85,24 +87,24 @@ describe('gallery card shapes', () => {
       'standard',
       'wide',
     ]);
-    // The tools grid only has two columns, so the Subathon strip spans the row above the others.
-    expect(getGalleryShapes(TOOLS, [2])).toEqual(['wide', 'standard', 'standard']);
+    // The four tools fill the two-column grid as they are: Subathon beside OBS Bridge.
+    expect(getGalleryShapes(TOOLS, [2])).toEqual(Array(4).fill('standard'));
   });
 
   it('drops the wide cards, then the tall one, then every span, when a new overlay would leave a hole', () => {
-    // Five overlays: Chat Box stays tall beside a 2×2 of the rest.
-    const five = [...BENTO, getWidget('stream-alerts')];
-    expect(getGalleryShapes(five, OVERLAY_COLUMNS)).toEqual(['tall', ...Array(4).fill('standard')]);
-    // So do today's: Sub Goal's strip gives up its span.
+    // Five overlays, today's: Chat Box stays tall beside a 2×2 and Sub Goal's strip gives up its span.
     expect(getGalleryShapes(OVERLAYS, OVERLAY_COLUMNS)).toEqual([
       'tall',
       ...Array(4).fill('standard'),
     ]);
     // Two strips and a column: flattening the strips leaves a hole, flattening the column doesn't.
-    const [chat, emote, , subathon] = BENTO;
-    expect(
-      getGalleryShapes([chat, subathon, extra('a', 800, 200), emote], OVERLAY_COLUMNS),
-    ).toEqual(['standard', 'wide', 'wide', 'standard']);
+    const [chat, emote, , goal] = BENTO;
+    expect(getGalleryShapes([chat, goal, extra('a', 800, 200), emote], OVERLAY_COLUMNS)).toEqual([
+      'standard',
+      'wide',
+      'wide',
+      'standard',
+    ]);
     expect(
       getGalleryShapes([...BENTO, extra('a', 800, 200), extra('b', 800, 200)], OVERLAY_COLUMNS),
     ).toEqual(Array(6).fill('standard'));
