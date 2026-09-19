@@ -2035,6 +2035,8 @@ export const en = {
     lead: "New features and bug fixes in Senchabot Extensions, newest first. The list is put together from the project's commit history on [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      deviceTheme:
+        "The site now opens in your device's light or dark theme and keeps following it when that changes. Once you press the theme button in the header, your pick is remembered and the device stops changing it.",
       frames:
         'New Stream Frames: ready-made frames for your camera, your chat and your whole stream screen. Every preset comes with its own art, like a pagoda roof and lanterns in Dynasty or pixel blocks in Blocks.',
       subathonRates:

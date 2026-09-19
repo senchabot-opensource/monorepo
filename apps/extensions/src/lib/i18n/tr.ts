@@ -2033,6 +2033,8 @@ export const tr: typeof en = {
     lead: "Senchabot Extensions'a eklenen özellikler ve düzeltilen hatalar, en yenisi en üstte. Liste projenin [GitHub'daki](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) commit geçmişinden hazırlanıyor.",
     site: 'Site',
     entries: {
+      deviceTheme:
+        'Site artık cihazının açık ya da koyu temasıyla açılıyor, cihazın teması değişince site de değişiyor. Üst menüdeki tema düğmesine bir kez bastın mı senin seçtiğin tema hatırlanıyor, cihaz artık temayı değiştirmiyor.',
       frames:
         "Yeni Yayın Çerçeveleri: kameran, sohbetin ve bütün yayın ekranın için hazır çerçeveler. Her preset kendi çizimleriyle gelir, Dynasty'de pagoda çatısı ve fenerler, Blocks'ta piksel bloklar.",
       subathonRates:
