@@ -120,9 +120,34 @@ describe('OBS Bridge tool', () => {
   });
 
   it('says so when the Kick channel does not exist', async () => {
-    // Without a network the channel lookup fails, as it does for an unknown name.
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response('{}', { status: 404 }));
     await renderRoute(`${TOOL}?kick=nobody&lang=en`);
+    await act(async () => {});
     expect(screen.getByText(en('obsBridge.tool.kickNotFound', { channel: 'nobody' }))).toBeTruthy();
+  });
+
+  it('keeps OBS connected when the Kick lookup answers late', async () => {
+    const kickApi = vi.fn(async (): Promise<Response> => {
+      throw new TypeError('Failed to fetch');
+    });
+    vi.spyOn(globalThis, 'fetch').mockImplementation(async (input) =>
+      String(input).startsWith('https://kick.com/') ? kickApi() : new Response('{}', { status: 500 }),
+    );
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    await renderRoute(`${TOOL}?twitch=streamer&kick=streamer&lang=en`);
+    await act(async () => {});
+    const obs = OBSWebSocket.latest;
+    expect(screen.queryByText(en('obsBridge.tool.kickNotFound', { channel: 'streamer' }))).toBeNull();
+
+    kickApi.mockImplementation(async () =>
+      Response.json({ id: 1, user_id: 2, chatroom: { id: 668 } }),
+    );
+    await act(async () => vi.advanceTimersByTime(5_000));
+    expect(FakeWebSocket.instances.some((ws) => ws.url.startsWith('wss://ws-us2.pusher.com'))).toBe(
+      true,
+    );
+    // Kick joined without a new OBS connection.
+    expect(OBSWebSocket.latest).toBe(obs);
   });
 
   it('connects with the URL and password from the link', async () => {
@@ -130,6 +155,12 @@ describe('OBS Bridge tool', () => {
       `${TOOL}?twitch=streamer&obsWebsocketUrl=ws%3A%2F%2F10.0.0.2%3A4455&obsWebsocketPassword=secret&lang=en`,
     );
     expect(OBSWebSocket.latest.connectArgs[0]).toEqual(['ws://10.0.0.2:4455', 'secret']);
+  });
+
+  it('connects to an address typed without ws://, as OBS shows it', async () => {
+    await renderRoute(`${TOOL}?twitch=streamer&obsWebsocketUrl=192.168.1.5%3A4455&lang=en`);
+    expect(OBSWebSocket.latest.connectArgs[0][0]).toBe('ws://192.168.1.5:4455');
+    expect(screen.getByText(/ws:\/\/192\.168\.1\.5:4455/)).toBeTruthy();
   });
 
   it('lists the OBS scenes and saves Main and BRB picks in the page URL', async () => {
@@ -191,10 +222,31 @@ describe('OBS Bridge tool', () => {
       `✓ ${en('obsBridge.tool.activityScene', { scene: 'AFK' })}`,
     ]);
 
+    // Sent again from Chatterino, which adds an invisible " U+034F" to get past Twitch's block on
+    // repeating a message.
+    say('Mod', 'back \u034F');
+    expect(sceneSwitches().at(-1)).toBe('Main Scene');
+
     // A new BRB pick applies to the running bridge right away.
     await user.click(button(en('obsBridge.tool.setBrb', { scene: 'Gaming' })));
     say('Mod', 'brb');
     expect(sceneSwitches().at(-1)).toBe('Gaming');
+  });
+
+  it('reports a command OBS never answered because the connection closed', async () => {
+    await renderRoute(`${TOOL}?twitch=streamer&commandUser=twitch%3Amod&lang=en`);
+    await connectWithScenes(['Main Scene', 'BRB Scene']);
+    const obs = OBSWebSocket.latest;
+    obs.holdCalls = true;
+    say('Mod', '!startstream');
+    await act(async () => obs.emit('ConnectionClosed', { code: 1006, message: '' }));
+
+    const log = within(
+      screen.getByLabelText(en('obsBridge.tool.activityTitle'), { selector: 'section' }),
+    );
+    expect(log.getByRole('listitem').querySelector('p')?.textContent).toBe(
+      `✕ ${en('obsBridge.tool.activityOffline')}`,
+    );
   });
 
   it('copies the current URL, scene picks included', async () => {

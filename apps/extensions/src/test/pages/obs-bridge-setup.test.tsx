@@ -1,5 +1,5 @@
 import { screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import type { CommandUser } from '#/features/tools/command-users';
 import {
   buildObsBridgeParams,
@@ -83,8 +83,11 @@ describe('OBS Bridge setup', () => {
     await user.click(userPlatform('Kick'));
     await user.type(usersField(), 'kmod{Enter}');
 
-    const frame = screen.getByTitle(en('obsBridge.previewIframeTitle')) as HTMLIFrameElement;
-    expect(frame.getAttribute('src')).toBe(`${urlField().value}&lang=en`);
+    // The preview is the live tool, so it waits for typing to pause before it connects.
+    const frame = (await screen.findByTitle(
+      en('obsBridge.previewIframeTitle'),
+    )) as HTMLIFrameElement;
+    await vi.waitFor(() => expect(frame.getAttribute('src')).toBe(`${urlField().value}&lang=en`));
     expect(
       screen.getByText(en('obsBridge.summaryNotListening', { platform: 'Kick', names: 'kmod' })),
     ).toBeTruthy();

@@ -99,8 +99,10 @@ function loadState(): RaffleState {
           : null,
         startedAt:
           typeof parsed.startedAt === "number" ? parsed.startedAt : null,
-        participants: parsed.participants ?? [],
-        winners: parsed.winners ?? [],
+        // Anything but a list would throw on every render, and the page could only be reset by
+        // clearing site data.
+        participants: Array.isArray(parsed.participants) ? parsed.participants : [],
+        winners: Array.isArray(parsed.winners) ? parsed.winners : [],
       };
     }
   } catch {

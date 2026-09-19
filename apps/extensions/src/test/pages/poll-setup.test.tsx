@@ -140,4 +140,18 @@ describe('Chat Poll setup', () => {
     expect(received[1]).toMatchObject({ event: { kind: 'message', mod: false } });
     listener.close();
   });
+
+  it('sends test votes a subs-only poll takes', async () => {
+    withLayout(800, 700);
+    const user = setupUser();
+    const received: { event: { sub?: boolean } }[] = [];
+    const listener = new BroadcastChannel(PREVIEW_CHANNEL);
+    listener.onmessage = ({ data }) => received.push(data);
+    await renderRoute(PAGE);
+    await user.click(segment(en('poll.voters'), en('poll.votersSubs')));
+    await user.click(button(en('poll.testVotes').replace('{count}', '10')));
+    await vi.waitFor(() => expect(received).toHaveLength(10));
+    expect(received.every(({ event }) => event.sub)).toBe(true);
+    listener.close();
+  });
 });

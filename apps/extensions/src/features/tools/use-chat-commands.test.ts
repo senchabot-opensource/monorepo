@@ -19,6 +19,8 @@ vi.mock('obs-websocket-js', () => ({
     on(event: string, handler: () => void) {
       obs.handlers.set(event, handler);
     }
+    once() {}
+    off() {}
     async connect() {}
     async disconnect() {}
     async call(request: string, data?: unknown) {

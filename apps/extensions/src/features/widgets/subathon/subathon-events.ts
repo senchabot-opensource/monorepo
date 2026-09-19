@@ -1,3 +1,4 @@
+import { withoutBypassSuffix } from '#/lib/chat-text';
 import type { IrcLine } from '#/lib/twitch';
 import { kickSubChannels, kickSubCount } from '../sub-sprout/kick-sub-events';
 
@@ -41,7 +42,7 @@ export type ModMessage = { kind: 'mod'; platform: SubathonPlatform; text: string
 export type SubathonEvent = TimedEvent | RaidEvent | ModMessage;
 
 const modMessage = (platform: SubathonPlatform, text: string): ModMessage | null =>
-  text.trimStart().startsWith('!') ? { kind: 'mod', platform, text } : null;
+  text.trimStart().startsWith('!') ? { kind: 'mod', platform, text: withoutBypassSuffix(text) } : null;
 
 // Twitch's msg-param-sub-plan. Prime is a Tier 1 sub.
 const TIERS: Record<string, SubTier> = { Prime: 1, '1000': 1, '2000': 2, '3000': 3 };

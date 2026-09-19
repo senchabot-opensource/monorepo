@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { type PollSettings, savedPoll } from '#/lib/poll-url';
 import type { SubathonPlatform } from '../subathon/subathon-events';
-import { useKickIds } from '../subathon/use-subathon';
+import { useKickChannel } from '#/hooks/use-kick-channel';
 import type { PollChatEvent } from './poll-chat';
 import { KickPollSource, TwitchPollSource } from './poll-sources';
 import {
@@ -101,7 +101,7 @@ export function usePoll({
   previewId,
 }: UsePollOptions) {
   const key = simulate ? null : storageKey(twitch, kick);
-  const kickIds = useKickIds(kick, !simulate);
+  const kickIds = useKickChannel(kick, !simulate).channel;
   // The preview runs its clock faster, so a poll of any length plays out in a few seconds.
   const [speed] = useState(() =>
     simulate && settings.duration > 0 ? Math.max(1, settings.duration / SIM_POLL_SECONDS) : 1,
@@ -230,14 +230,27 @@ export function usePoll({
       if (!poll || !takesVotes(poll, time, timing)) return;
       const option = parseVote(event.text, poll.options);
       if (option === null || (settings.subsOnly && !event.sub)) return;
-      const vote = { option, weight: event.sub ? settings.subWeight : 1, platform: event.platform };
+      // Sub weight only applies when everyone votes; the setup turns the field off for subs-only.
+      const weight = event.sub && !settings.subsOnly ? settings.subWeight : 1;
+      const vote = { option, weight, platform: event.platform };
       if (castVote(poll, voterKey(event.platform, event.login), vote, settings.change)) {
-        pulse(option);
+        // A flashing row would tell a blind poll's chat where each vote went.
+        if (!settings.blind) pulse(option);
         changed();
       }
     },
     [clock, changed, pulse, runCommand],
   );
+
+  // Closing OBS or hiding the source unloads the page without unmounting React, so a save still
+  // waiting on its throttle is written out here.
+  useEffect(() => {
+    const flush = () => {
+      if (saveTimer.current !== null) save();
+    };
+    window.addEventListener('pagehide', flush);
+    return () => window.removeEventListener('pagehide', flush);
+  }, [save]);
 
   // Timers and a pending save don't outlive the overlay; the save is written out first.
   useEffect(

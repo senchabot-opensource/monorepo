@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { AlertEvent } from '#/lib/alert-config';
-import { ALERT_CONFIG } from '#/lib/alert-config';
+import { ALERT_CONFIG, DISPLAY_DURATION } from '#/lib/alert-config';
 import { useT } from '#/lib/i18n';
 
 interface AlertCardProps {
@@ -50,6 +50,9 @@ function AlertIcon({ type }: { type: AlertEvent['type'] }) {
   }
 }
 
+// Matches the card's duration-300 transition.
+const TRANSITION_MS = 300;
+
 export function AlertCard({ alert, glow = true }: AlertCardProps) {
   const t = useT();
   const [phase, setPhase] = useState<AnimationPhase>('entering');
@@ -59,12 +62,13 @@ export function AlertCard({ alert, glow = true }: AlertCardProps) {
     // Entering -> Visible (after enter animation)
     const enterTimer = setTimeout(() => {
       setPhase('visible');
-    }, 300);
+    }, TRANSITION_MS);
 
-    // Visible -> Exiting (after display duration minus enter time)
+    // Visible -> Exiting, so the fade-out ends as the queue removes the card. Starting it at the
+    // full display duration cut the card off before any of the fade-out showed.
     const exitTimer = setTimeout(() => {
       setPhase('exiting');
-    }, 3000);
+    }, DISPLAY_DURATION - TRANSITION_MS);
 
     return () => {
       clearTimeout(enterTimer);
@@ -143,7 +147,7 @@ export function AlertCard({ alert, glow = true }: AlertCardProps) {
           className="h-full origin-left animate-shrink-width"
           style={{
             backgroundColor: config.color,
-            animationDuration: '3000ms',
+            animationDuration: `${DISPLAY_DURATION}ms`,
           }}
         />
       </div>

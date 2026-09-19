@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { getKickChannelInfo } from '#/lib/kick';
+import { useKickChannel } from '#/hooks/use-kick-channel';
 import type { SubathonSettings, SubathonTimeValues } from '#/lib/subathon-url';
 import type { SubathonEvent, SubathonPlatform, SubTier, TimedEvent } from './subathon-events';
 import { KickEventSource, TwitchEventSource } from './subathon-sources';
@@ -87,13 +87,14 @@ export interface SubathonHit {
 
 /** Setup page buttons talk to the preview on this channel; both pages share the site's origin. */
 export const PREVIEW_CHANNEL = 'senchabot:subathon-preview';
-export type PreviewMessage = { type: 'event'; event: SubathonEvent } | { type: 'toggle' };
+/** `preview` is the id in the preview's URL, so only the preview of the page that sent it plays it. */
+export type PreviewMessage =
+  | { type: 'event'; preview: string; event: SubathonEvent }
+  | { type: 'toggle'; preview: string };
 
 // The preview's fast clock needs smooth steps; on stream the bar moves too slowly to see 100ms.
 const SIM_TICK_MS = 100;
 const LIVE_TICK_MS = 250;
-// OBS can start before the network is up, and a subathon runs for days: keep trying Kick.
-const KICK_LOOKUP_RETRY_MS = [5_000, 15_000, 30_000, 60_000];
 export const POP_MS = 2600;
 const MAX_POPS = 3;
 // The preview drains the bar in about this long, whatever the starting time.
@@ -106,8 +107,8 @@ const SIM_NAMES = ['NightOwl', 'pixelpanda', 'ChatGremlin', 'lunaa', 'GG_Tobi', 
 const pick = <T>(list: readonly T[]) => list[Math.floor(Math.random() * list.length)];
 
 /** A random event the settings give time for, or null when every value is off. */
-function simulatedEvent(values: SubathonValues): TimedEvent | null {
-  const platform = pick<SubathonPlatform>(['twitch', 'kick']);
+function simulatedEvent(values: SubathonValues, only?: SubathonPlatform): TimedEvent | null {
+  const platform = only ?? pick<SubathonPlatform>(['twitch', 'kick']);
   const name = pick(SIM_NAMES);
   const events: TimedEvent[] = [
     { kind: 'sub', platform, name, tier: 1 },
@@ -118,33 +119,6 @@ function simulatedEvent(values: SubathonValues): TimedEvent | null {
   return enabled.length > 0 ? pick(enabled) : null;
 }
 
-/** The Kick chatroom and channel ids, looked up again until kick.com answers. */
-export function useKickIds(kick: string | undefined, enabled: boolean) {
-  const [ids, setIds] = useState<{ chatroomId: string; channelId: string | null } | null>(null);
-  useEffect(() => {
-    setIds(null);
-    if (!enabled || !kick) return;
-    let cancelled = false;
-    let timer: number | undefined;
-    const lookup = async (attempt: number) => {
-      const info = await getKickChannelInfo(kick);
-      if (cancelled) return;
-      if (info.chatroomId) {
-        setIds({ chatroomId: info.chatroomId, channelId: info.channelId });
-        return;
-      }
-      const delay = KICK_LOOKUP_RETRY_MS[Math.min(attempt, KICK_LOOKUP_RETRY_MS.length - 1)];
-      timer = window.setTimeout(() => lookup(attempt + 1), delay);
-    };
-    lookup(0);
-    return () => {
-      cancelled = true;
-      window.clearTimeout(timer);
-    };
-  }, [kick, enabled]);
-  return ids;
-}
-
 interface UseSubathonOptions {
   twitch?: string;
   kick?: string;
@@ -153,6 +127,10 @@ interface UseSubathonOptions {
   simulate?: boolean;
   /** Preview clock speed, e.g. 60 for a minute per second. Without it the bar drains in ~40 s. */
   simSpeed?: number;
+  /** The only platform the preview simulates; both when unset. */
+  simPlatform?: SubathonPlatform;
+  /** Pairs the preview with its setup page's test buttons. */
+  previewId?: string;
 }
 
 export function useSubathon({
@@ -161,6 +139,8 @@ export function useSubathon({
   values,
   simulate = false,
   simSpeed,
+  simPlatform,
+  previewId,
 }: UseSubathonOptions) {
   // The preview runs a fast virtual clock so the bar visibly drains.
   const rate = !simulate
@@ -175,7 +155,7 @@ export function useSubathon({
   );
 
   const key = simulate ? null : storageKey(twitch, kick);
-  const kickIds = useKickIds(kick, !simulate);
+  const kickIds = useKickChannel(kick, !simulate).channel;
   const valuesRef = useRef(values);
   valuesRef.current = values;
   const [state, setState] = useState<SubathonState>(() =>
@@ -279,18 +259,19 @@ export function useSubathon({
         return;
       }
       const quiet = Date.now() - lastTestAt.current < SIM_QUIET_AFTER_TEST_MS;
-      const event = quiet ? null : simulatedEvent(valuesRef.current);
+      const event = quiet ? null : simulatedEvent(valuesRef.current, simPlatform);
       if (event) handleEvent(event);
       timer = window.setTimeout(step, 2200 + Math.random() * 2000);
     };
     timer = window.setTimeout(step, 1200);
     return () => window.clearTimeout(timer);
-  }, [simulate, clock, commit, handleEvent]);
+  }, [simulate, simPlatform, clock, commit, handleEvent]);
 
   useEffect(() => {
-    if (!simulate || typeof BroadcastChannel === 'undefined') return;
+    if (!simulate || !previewId || typeof BroadcastChannel === 'undefined') return;
     const channel = new BroadcastChannel(PREVIEW_CHANNEL);
     channel.onmessage = ({ data }: MessageEvent<PreviewMessage>) => {
+      if (data?.preview !== previewId) return;
       lastTestAt.current = Date.now();
       if (data?.type === 'toggle') {
         const action = stateRef.current.endsAt === null ? 'start' : 'pause';
@@ -300,7 +281,7 @@ export function useSubathon({
       }
     };
     return () => channel.close();
-  }, [simulate, handleEvent]);
+  }, [simulate, previewId, handleEvent]);
 
   return {
     left: timeLeft(state, now),

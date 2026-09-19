@@ -182,11 +182,28 @@ describe('useRaffleChat on Kick', () => {
       channelId: '1',
       userId: '2',
       subscriberBadges: [],
+      notFound: false,
     });
     renderRaffleChat({ platform: 'kick', channel: 'streamer' });
     await act(async () => {});
 
     expect(getKickChannelInfo).toHaveBeenCalledWith('streamer');
+    latest().open();
+    expect(JSON.parse(latest().sent[0]).data.channel).toBe('chatrooms.668.v2');
+  });
+
+  it('keeps looking the channel up while kick.com fails, then reads its chat', async () => {
+    const failed = { chatroomId: null, channelId: null, userId: null, subscriberBadges: [] };
+    vi.mocked(getKickChannelInfo)
+      .mockReset()
+      .mockResolvedValueOnce({ ...failed, notFound: false })
+      .mockResolvedValue({ ...failed, chatroomId: '668', notFound: false });
+    const sockets = FakeWebSocket.instances.length;
+    renderRaffleChat({ platform: 'kick', channel: 'streamer' });
+    await act(async () => {});
+    expect(FakeWebSocket.instances).toHaveLength(sockets);
+
+    await act(async () => vi.advanceTimersByTime(5_000));
     latest().open();
     expect(JSON.parse(latest().sent[0]).data.channel).toBe('chatrooms.668.v2');
   });

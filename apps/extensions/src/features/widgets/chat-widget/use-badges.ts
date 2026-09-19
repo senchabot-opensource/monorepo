@@ -1,4 +1,6 @@
 import React from "react";
+import { useRetryingEffect } from "#/hooks/use-retrying-effect";
+import { fetchJson } from "#/lib/fetch-json";
 
 type TwitchBadgeVersion = {
   id: string;
@@ -13,83 +15,42 @@ type TwitchBadgeSet = {
   versions: TwitchBadgeVersion[];
 };
 
-let globalFetchPromise: Promise<Map<string, string>> | null = null;
-const channelBadgeCaches = new Map<string, Promise<Map<string, string>>>();
+const GLOBAL_BADGES_URL = "https://api.ivr.fi/v2/twitch/badges/global";
+const channelBadgesUrl = (login: string) =>
+  `https://api.ivr.fi/v2/twitch/badges/channel?login=${encodeURIComponent(login)}`;
+
+const toBadgeMap = (sets: TwitchBadgeSet[] | undefined) => {
+  const map = new Map<string, string>();
+  for (const set of Array.isArray(sets) ? sets : []) {
+    for (const version of set.versions ?? []) {
+      map.set(`${set.set_id}/${version.id}`, version.image_url_1x);
+    }
+  }
+  return map;
+};
 
 export const useTwitchBadges = (channelName?: string | null) => {
-  const [badgeMap, setBadgeMap] = React.useState<Map<string, string> | null>(
-    null,
-  );
+  const [badgeMap, setBadgeMap] = React.useState<Map<string, string> | null>(null);
 
-  React.useEffect(() => {
-    if (!globalFetchPromise) {
-      globalFetchPromise = fetch("https://api.ivr.fi/v2/twitch/badges/global", {
-        headers: { Accept: "application/json" },
-      })
-        .then(res => {
-          if (!res.ok) throw new Error("API Error");
-          return res.json();
-        })
-        .then((data: TwitchBadgeSet[]) => {
-          const map = new Map<string, string>();
-          for (const set of data) {
-            for (const version of set.versions) {
-              map.set(`${set.set_id}/${version.id}`, version.image_url_1x);
-            }
-          }
-          return map;
-        })
-        .catch(err => {
-          console.error("Failed to load Twitch global badges:", err);
-          return new Map<string, string>();
+  // Requests that failed are tried again, since OBS can load the source before the network is up.
+  useRetryingEffect(
+    async (isCurrent) => {
+      let failed = false;
+      const get = (url: string) =>
+        fetchJson<TwitchBadgeSet[]>(url).catch(() => {
+          failed = true;
+          return undefined;
         });
-    }
-
-    let channelPromise = Promise.resolve(new Map<string, string>());
-    if (channelName) {
-      const lowerChannel = channelName.toLowerCase();
-      if (!channelBadgeCaches.has(lowerChannel)) {
-        const p = fetch(
-          `https://api.ivr.fi/v2/twitch/badges/channel?login=${encodeURIComponent(lowerChannel)}`,
-          {
-            headers: { Accept: "application/json" },
-          },
-        )
-          .then(res => {
-            if (!res.ok) throw new Error("API Error");
-            return res.json();
-          })
-          .then((data: TwitchBadgeSet[]) => {
-            const map = new Map<string, string>();
-            for (const set of data) {
-              for (const version of set.versions) {
-                map.set(`${set.set_id}/${version.id}`, version.image_url_1x);
-              }
-            }
-            return map;
-          })
-          .catch(err => {
-            console.error("Failed to load Twitch channel badges:", err);
-            return new Map<string, string>();
-          });
-        channelBadgeCaches.set(lowerChannel, p);
-      }
-      channelPromise = channelBadgeCaches.get(lowerChannel)!;
-    }
-
-    let isMounted = true;
-    Promise.all([globalFetchPromise, channelPromise]).then(
-      ([globalMap, channelMap]) => {
-        if (!isMounted) return;
-        const merged = new Map<string, string>([...globalMap, ...channelMap]);
-        setBadgeMap(merged);
-      },
-    );
-
-    return () => {
-      isMounted = false;
-    };
-  }, [channelName]);
+      const login = channelName?.toLowerCase();
+      const [global, channel] = await Promise.all([
+        get(GLOBAL_BADGES_URL),
+        login ? get(channelBadgesUrl(login)) : undefined,
+      ]);
+      if (isCurrent()) setBadgeMap(new Map([...toBadgeMap(global), ...toBadgeMap(channel)]));
+      return failed;
+    },
+    [channelName],
+  );
 
   return badgeMap;
 };

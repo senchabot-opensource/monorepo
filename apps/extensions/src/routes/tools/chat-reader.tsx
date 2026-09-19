@@ -14,8 +14,8 @@ import { useChatReader } from '#/features/tools/chat-reader/use-chat-reader';
 import { useTwitchBadges } from '#/features/widgets/chat-widget/use-badges';
 import { useChannelEmotes } from '#/features/widgets/chat-widget/use-channel-emotes';
 import { parseHighlights } from '#/features/widgets/chat-widget/widget-settings';
+import { useKickChannel } from '#/hooks/use-kick-channel';
 import { useI18n } from '#/lib/i18n';
-import { getKickChannelInfo } from '#/lib/kick';
 import { useTheme } from '#/lib/theme';
 
 // The chat-related subset of the Chat Box widget's parameters, read the same way.
@@ -35,8 +35,6 @@ const searchSchema = z.object({
 export const Route = createFileRoute('/tools/chat-reader')({
   ssr: false,
   validateSearch: (search) => searchSchema.parse(search),
-  loaderDeps: ({ search }) => ({ kick: search.kick?.trim() ?? '' }),
-  loader: ({ deps }) => (deps.kick ? getKickChannelInfo(deps.kick) : null),
   component: ChatReaderPage,
 });
 
@@ -62,14 +60,16 @@ function ChatReaderPage() {
   const { locale, t } = useI18n();
   const { theme } = useTheme();
   const search = Route.useSearch();
-  const kickInfo = Route.useLoaderData();
   const twitchChannel = search.twitch?.trim().toLowerCase() ?? '';
   const kickSlug = search.kick?.trim().toLowerCase() ?? '';
-  const kick = kickInfo?.chatroomId ? { slug: kickSlug, chatroomId: kickInfo.chatroomId } : null;
+  // Retried until kick.com answers, so a dock opened before the network is up still gets Kick.
+  const kickLookup = useKickChannel(kickSlug);
+  const kickInfo = kickLookup.channel;
 
   const { entries, status, downSince, online, retryNow, clearHistory } = useChatReader({
     twitchChannel,
-    kick,
+    kickSlug,
+    kickChatroomId: kickInfo?.chatroomId ?? null,
   });
 
   const [prefs, setPrefs] = useState(readPrefs);
@@ -144,7 +144,7 @@ function ChatReaderPage() {
                 <StatusChips
                   channels={{ twitch: twitchChannel, kick: kickSlug }}
                   status={status}
-                  kickNotFound={Boolean(kickSlug) && !kick}
+                  kickNotFound={kickLookup.notFound}
                 />
               ) : (
                 <p className="text-sm text-red-700 dark:text-red-400">

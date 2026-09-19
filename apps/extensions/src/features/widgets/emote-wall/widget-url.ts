@@ -1,3 +1,4 @@
+import { readCoercedFlag } from '#/lib/url-params';
 import { isEmoteWallMode } from './emote-pops';
 
 export type EmoteWallPlatforms = 'both' | 'twitch' | 'kick';
@@ -82,8 +83,6 @@ export function buildEmoteWallUrl(origin: string, options: EmoteWallUrlOptions):
 
 // The router JSON-parses search values before zod's coerce.boolean, so "false", "0", "null"
 // and an empty value all switch a flag off.
-const FALSY_FLAGS = ['false', '0', 'null', ''];
-
 /**
  * Reverse of buildEmoteWallParams: null for anything that isn't an Emote Wall URL, the widget
  * default for any value it wouldn't accept, and unknown params (`mock`, `lang`) ignored.
@@ -100,7 +99,7 @@ export function parseEmoteWallUrl(text: string): EmoteWallUrlOptions | null {
   const params = url.searchParams;
   const flag = (key: string, fallback: boolean) => {
     const value = params.get(key);
-    return value === null ? fallback : !FALSY_FLAGS.includes(value.trim().toLowerCase());
+    return readCoercedFlag(value, fallback);
   };
   const mode = params.get('mode');
   const twitch = params.get('twitch')?.trim() ?? '';

@@ -2,6 +2,7 @@ import { screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { crossLinkSpan } from '#/components/widget-cross-links';
 import { isAppPath } from '#/lib/i18n/paths';
+import { THEME_INIT_SCRIPT } from '#/lib/theme';
 import { OVERLAYS, TOOLS, WIDGETS } from '#/lib/widgets';
 import { button, en, headings, section, tr } from '#/test/queries';
 import { renderRoute, setupUser } from '#/test/render';
@@ -264,6 +265,38 @@ describe('theme toggle', () => {
     await renderRoute('/setup/chat-widget');
     expect(document.documentElement.classList.contains('dark')).toBe(false);
     expect(document.documentElement.style.colorScheme).toBe('light');
+  });
+
+  // The inline script paints before React. Anything it disagrees with flips at hydration.
+  const paintBeforeReact = (path: string) => {
+    window.history.replaceState(null, '', path);
+    document.documentElement.className = '';
+    new Function(THEME_INIT_SCRIPT)();
+  };
+
+  it('paints the theme the page keeps, whatever the OS prefers', async () => {
+    vi.stubGlobal('matchMedia', (query: string) => ({ matches: false, media: query }));
+    paintBeforeReact('/');
+    expect(document.documentElement.classList.contains('dark')).toBe(true);
+    await renderRoute('/');
+    expect(document.documentElement.classList.contains('dark')).toBe(true);
+    vi.unstubAllGlobals();
+  });
+
+  it('never flashes dark over a saved light theme while the page starts', async () => {
+    localStorage.setItem('theme', 'light');
+    paintBeforeReact('/setup/chat-widget');
+    const html = document.documentElement;
+    const seen: string[] = [];
+    const observer = new MutationObserver((records) => {
+      for (const record of records) seen.push(record.oldValue ?? '');
+    });
+    observer.observe(html, { attributes: true, attributeFilter: ['class'], attributeOldValue: true });
+    await renderRoute('/setup/chat-widget');
+    for (const record of observer.takeRecords()) seen.push(record.oldValue ?? '');
+    observer.disconnect();
+    expect(seen.filter((value) => value.split(' ').includes('dark'))).toEqual([]);
+    expect(html.classList.contains('dark')).toBe(false);
   });
 });
 

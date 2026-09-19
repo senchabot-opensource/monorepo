@@ -300,11 +300,8 @@ export function EmoteWall({
   );
 
   // Live chat -> emote-only detection.
-  React.useEffect(() => {
-    if (mock) return;
-    if (!normalizedTwitch && !normalizedKick) return;
-
-    const handleMessage = (msg: ChatMessagesType) => {
+  const handleMessage = React.useCallback(
+    (msg: ChatMessagesType) => {
       const isSub = isSubscriberMessage(msg);
       if (subsOnlyRef.current && !isSub) return;
       const chatInput = {
@@ -340,20 +337,22 @@ export function EmoteWall({
         fresh.map((src) => ({ src })),
         subDurationX2Ref.current && isSub ? durationSec * 2 : undefined,
       );
-    };
+    },
+    [durationSec, spawnUrls],
+  );
 
-    const clients: { disconnect: () => void }[] = [];
-    if (normalizedTwitch) {
-      clients.push(new TwitchChat(normalizedTwitch, handleMessage));
-    }
-    if (normalizedKick) {
-      clients.push(new KickChat(normalizedKick, handleMessage));
-    }
+  // One connection each, so a Kick id that arrives late (the lookup retries) leaves Twitch be.
+  React.useEffect(() => {
+    if (mock || !normalizedTwitch) return;
+    const client = new TwitchChat(normalizedTwitch, handleMessage);
+    return () => client.disconnect();
+  }, [normalizedTwitch, mock, handleMessage]);
 
-    return () => {
-      for (const c of clients) c.disconnect();
-    };
-  }, [normalizedTwitch, normalizedKick, mock, spawnUrls]);
+  React.useEffect(() => {
+    if (mock || !normalizedKick) return;
+    const client = new KickChat(normalizedKick, handleMessage);
+    return () => client.disconnect();
+  }, [normalizedKick, mock, handleMessage]);
 
   // Mock mode for setup preview / browser-source testing.
   // Honors the 7TV toggle so the preview matches live behavior.

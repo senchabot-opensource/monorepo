@@ -75,11 +75,21 @@ describe('buildSubathonUrl', () => {
 
 describe('buildSubathonPreviewUrl', () => {
   it('simulates without a channel, at the given speed', () => {
-    const url = new URL(buildSubathonPreviewUrl(ORIGIN, CUSTOM, 60));
+    const url = new URL(buildSubathonPreviewUrl(ORIGIN, CUSTOM, 'p1', 60));
     expect(url.searchParams.get('simulate')).toBe('1');
     expect(url.searchParams.get('simspeed')).toBe('60');
     expect(url.searchParams.has('twitch')).toBe(false);
     expect(url.searchParams.get('style')).toBe('ring');
+  });
+
+  it("pairs with its page's test buttons and simulates only the picked platform", () => {
+    const both = new URL(buildSubathonPreviewUrl(ORIGIN, DEFAULT_SUBATHON_SETTINGS, 'p1'));
+    expect(both.searchParams.get('preview')).toBe('p1');
+    expect(both.searchParams.has('simplatform')).toBe(false);
+    const kick = { ...DEFAULT_SUBATHON_SETTINGS, platforms: 'kick' as const };
+    expect(
+      new URL(buildSubathonPreviewUrl(ORIGIN, kick, 'p1')).searchParams.get('simplatform'),
+    ).toBe('kick');
   });
 });
 

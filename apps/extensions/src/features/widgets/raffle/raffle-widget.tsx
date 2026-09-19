@@ -1,5 +1,4 @@
-import confetti from 'canvas-confetti';
-import { type RefObject, useCallback, useEffect, useId, useRef, useState } from 'react';
+import { useCallback, useEffect, useId, useState } from 'react';
 import { CopyUrlField } from '#/components/copy-url-field';
 import { CloseIcon, RaffleIcon } from '#/components/icons';
 import { SetupShell } from '#/components/setup-shell';
@@ -10,6 +9,7 @@ import { Select, type SelectOption } from '#/components/ui/select';
 import { SettingsGroup } from '#/components/ui/settings-group';
 import { Switch } from '#/components/ui/switch';
 import { TextField } from '#/components/ui/text-field';
+import { type BurstOptions, useConfettiBurst } from '#/hooks/use-confetti-burst';
 import { useRaffleChat } from '#/hooks/use-raffle-chat';
 import { useRaffleState } from '#/hooks/use-raffle-state';
 import { useI18n } from '#/lib/i18n';
@@ -36,28 +36,8 @@ const BUTTON_QUIET =
 const LIST_BOX =
   'overflow-y-auto rounded-lg border border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950/40';
 
-function triggerConfetti(rafRef: RefObject<number | null>) {
-  const end = Date.now() + 3000;
-  const frame = () => {
-    // canvas-confetti skips the animation itself when the viewer prefers reduced motion.
-    confetti({
-      particleCount: 3,
-      angle: 60,
-      spread: 55,
-      origin: { x: 0 },
-      disableForReducedMotion: true,
-    });
-    confetti({
-      particleCount: 3,
-      angle: 120,
-      spread: 55,
-      origin: { x: 1 },
-      disableForReducedMotion: true,
-    });
-    if (Date.now() < end) rafRef.current = requestAnimationFrame(frame);
-  };
-  rafRef.current = requestAnimationFrame(frame);
-}
+// canvas-confetti skips the animation itself when the viewer prefers reduced motion.
+const CONFETTI: BurstOptions = { particleCount: 3, disableForReducedMotion: true };
 
 /** Whole-number setting whose field may sit empty while typing; blur shows the saved value again. */
 function IntegerField({
@@ -122,16 +102,13 @@ export function RaffleWidget({
   const { config } = state;
 
   const [overlayUrl, setOverlayUrl] = useState('');
-  const confettiRafRef = useRef<number | null>(null);
+  const fireConfetti = useConfettiBurst(CONFETTI);
   // remainingMs is read from the clock on render, so re-render every second while it counts down.
   const [, setTick] = useState(0);
   const countingDown = remainingMs > 0;
 
   useEffect(() => {
     setOverlayUrl(`${window.location.origin}${WIDGET.widgetPath}`);
-    return () => {
-      if (confettiRafRef.current) cancelAnimationFrame(confettiRafRef.current);
-    };
   }, []);
 
   useEffect(() => {
@@ -143,8 +120,8 @@ export function RaffleWidget({
   useRaffleChat(config, addParticipant, state.status === 'running');
 
   const handleDraw = useCallback(() => {
-    if (drawWinner()) triggerConfetti(confettiRafRef);
-  }, [drawWinner]);
+    if (drawWinner()) fireConfetti();
+  }, [drawWinner, fireConfetti]);
 
   const isRunning = state.status === 'running';
   const locked = state.status !== 'idle';

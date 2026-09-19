@@ -591,3 +591,16 @@ describe('useRaffleState - persistence and prompts', () => {
     expect(confirmSpy).toHaveBeenCalledTimes(1);
   });
 });
+
+describe('saved state', () => {
+  it('starts empty instead of crashing when the saved lists are not lists', () => {
+    localStorage.setItem(
+      'senchabot-raffle-state-v3',
+      JSON.stringify({ status: 'running', participants: { alice: 1 }, winners: 'bob' }),
+    );
+    const { result } = renderHook(() => useRaffleState());
+    expect(result.current.state.participants).toEqual([]);
+    expect(result.current.state.winners).toEqual([]);
+    expect(result.current.eligibleCount).toBe(0);
+  });
+});

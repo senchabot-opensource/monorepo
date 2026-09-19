@@ -1,4 +1,5 @@
 import { getKickSubStatus, isSubscriber } from '#/hooks/use-raffle-chat';
+import { withoutBypassSuffix } from '#/lib/chat-text';
 import { type IrcLine, stripReplyMention } from '#/lib/twitch';
 import type { SubathonPlatform } from '../subathon/subathon-events';
 
@@ -41,7 +42,11 @@ export function twitchPollEvent(line: IrcLine): PollChatEvent | null {
   if (!login || raw === undefined) return null;
   // A reply starts with "@parent ", so "@bob 2" still votes 2.
   const parents = [tags['reply-parent-display-name'], tags['reply-parent-user-login']];
-  const { message } = stripReplyMention(withoutAction(raw).trim(), undefined, parents);
+  const { message } = stripReplyMention(
+    withoutAction(withoutBypassSuffix(raw)).trim(),
+    undefined,
+    parents,
+  );
   const badges = tags.badges ?? '';
   return {
     kind: 'message',
@@ -78,7 +83,7 @@ export function kickPollEvent(eventName: string, data: unknown): PollChatEvent |
         kind: 'message',
         platform: 'kick',
         login,
-        text: text(payload.content).trim(),
+        text: withoutBypassSuffix(text(payload.content)).trim(),
         mod: badges.some((badge) => badge.type === 'broadcaster' || badge.type === 'moderator'),
         sub: getKickSubStatus(badges).isSub,
       };

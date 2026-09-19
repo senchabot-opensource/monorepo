@@ -10,14 +10,9 @@ import { DEFAULT_LOCALE } from '#/lib/i18n/locales';
 import { getPathLocale, isAppPath } from '#/lib/i18n/paths';
 import { getPageHead, ROBOTS_INDEX, ROBOTS_NOINDEX, SITE_META, SITE_NAME } from '#/lib/seo/head';
 import { PAGE_META } from '#/lib/seo/pages';
-import { isOverlayPath, ThemeProvider } from '#/lib/theme';
+import { isOverlayPath, THEME_INIT_SCRIPT, ThemeProvider } from '#/lib/theme';
 
 import appCss from '../styles.css?url';
-
-// Runs before first paint to avoid a flash of the wrong theme/language. Only overlays and tools
-// take the language from ?lang= or storage; site pages render theirs from the path.
-// Skips the theme on overlays (see isOverlayPath in lib/theme).
-const themeInitScript = `(function(){try{var el=document.documentElement;var p=location.pathname;if(p.indexOf("/widgets/")===0||p.indexOf("/tools/")===0){var l=new URLSearchParams(location.search).get("lang")||localStorage.getItem("lang");if(l)el.lang=l}if(p.indexOf("/widgets/")===0)return;var t=localStorage.getItem("theme");var d=t?t==="dark":!window.matchMedia||window.matchMedia("(prefers-color-scheme: dark)").matches;el.classList.toggle("dark",d);el.style.colorScheme=d?"dark":"light";var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute("content",d?"#09090b":"#fafafa")}catch(e){}})();`;
 
 // Overlays run inside streamers' OBS scenes: they keep their old font and never download Geist.
 const isWidgetPath = isOverlayPath;
@@ -117,7 +112,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         {/* biome-ignore lint/security/noDangerouslySetInnerHtml: must redirect before first paint */}
         <script dangerouslySetInnerHTML={{ __html: LANDING_SCRIPT }} />
         {/* biome-ignore lint/security/noDangerouslySetInnerHtml: inline bootstrap script must run before first paint */}
-        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
         <HeadContent />
       </head>
       <body className={`${isWidget ? 'font-widget' : 'font-sans'} antialiased min-h-screen`}>

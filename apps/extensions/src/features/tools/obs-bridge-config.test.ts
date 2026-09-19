@@ -3,8 +3,23 @@ import {
   buildObsBridgeParams,
   DEFAULT_OBS_COMMANDS,
   type ObsBridgeSetup,
+  obsSocketUrl,
   resolveObsCommands,
 } from './obs-bridge-config';
+
+describe('obsSocketUrl', () => {
+  it('adds ws:// to an address typed without a scheme', () => {
+    expect(obsSocketUrl('192.168.1.5:4455')).toBe('ws://192.168.1.5:4455');
+    expect(obsSocketUrl(' localhost:4455 ')).toBe('ws://localhost:4455');
+  });
+
+  it('keeps an address with a scheme, and leaves an empty one to the default', () => {
+    expect(obsSocketUrl('wss://obs.example.com')).toBe('wss://obs.example.com');
+    expect(obsSocketUrl('WS://10.0.0.2:4455')).toBe('WS://10.0.0.2:4455');
+    expect(obsSocketUrl('  ')).toBeUndefined();
+    expect(obsSocketUrl(undefined)).toBeUndefined();
+  });
+});
 
 const setup = (overrides: Partial<ObsBridgeSetup> = {}): ObsBridgeSetup => ({
   twitch: '',

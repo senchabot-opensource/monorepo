@@ -1,20 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { z } from 'zod';
 import { EmoteWall } from '#/features/widgets/emote-wall/emote-wall';
-import { getKickChannelInfo } from '#/lib/kick';
-
-/**
- * Numeric widget params never throw on out-of-range input: garbage falls
- * back to the default and anything else is clamped into range. A mistyped
- * URL must degrade gracefully, never white-screen.
- */
-const clampedNumber = (min: number, max: number, fallback: number) =>
-  z.coerce
-    .number()
-    .catch(fallback)
-    .transform((v) =>
-      Number.isFinite(v) ? Math.min(max, Math.max(min, v)) : fallback,
-    );
+import { useKickChannel } from '#/hooks/use-kick-channel';
+import { clampedNumber } from '#/lib/url-params';
 
 const searchSchema = z.object({
   twitch: z.string().optional(),
@@ -35,28 +23,19 @@ const searchSchema = z.object({
 export const Route = createFileRoute('/widgets/emote-wall')({
   ssr: false,
   validateSearch: (search) => searchSchema.parse(search),
-  loaderDeps: ({ search }) => ({
-    kick: search.kick,
-  }),
-  loader: async ({ deps }) => {
-    if (!deps.kick) {
-      return { kick: null };
-    }
-    const info = await getKickChannelInfo(deps.kick);
-    return { kick: info.chatroomId };
-  },
   component: RouteComponent,
 });
 
 function RouteComponent() {
   const search = Route.useSearch();
-  const { kick } = Route.useLoaderData();
+  // Retried until kick.com answers, instead of a one-off route loader lookup.
+  const kick = useKickChannel(search.kick).channel;
 
   return (
     <div className="size-full min-h-screen bg-transparent">
       <EmoteWall
         twitchChannel={search.twitch}
-        kickChatroomId={kick}
+        kickChatroomId={kick?.chatroomId ?? null}
         sevenTvEnabled={search.sevenTv !== false}
         mode={search.mode}
         subsOnly={search.subsOnly}
@@ -67,7 +46,7 @@ function RouteComponent() {
         emoteSize={search.size}
         durationSec={search.duration}
         maxEmotes={search.max}
-        mock={Boolean(search.mock || (!search.twitch && !kick))}
+        mock={Boolean(search.mock || (!search.twitch && !search.kick?.trim()))}
       />
     </div>
   );

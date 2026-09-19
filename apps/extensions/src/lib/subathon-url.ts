@@ -119,16 +119,21 @@ export function buildSubathonUrl(
 }
 
 /**
- * Plays simulated subs with the same settings and never touches a channel or saved clock.
+ * Plays simulated subs with the same settings and never touches a channel or saved clock. With
+ * one platform picked, it only simulates that one's events. `previewId` pairs it with its setup
+ * page, whose test buttons would otherwise reach every preview and demo open on the site.
  * `speed` runs its clock faster than real time, e.g. 60 for a minute per second.
  */
 export function buildSubathonPreviewUrl(
   origin: string,
   settings: SubathonSettings,
+  previewId: string,
   speed?: number,
 ): string {
   const params = buildParams(settings, '', '');
   params.set('simulate', '1');
+  params.set('preview', previewId);
+  if (settings.platforms !== 'both') params.set('simplatform', settings.platforms);
   if (speed) params.set('simspeed', String(speed));
   return `${origin}${WIDGET_PATH}?${params.toString()}`;
 }

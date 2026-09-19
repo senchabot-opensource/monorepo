@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 import { subsIn } from "../goal/goal-count";
 import { KickEventSource } from "../subathon/subathon-sources";
-import { useKickIds } from "../subathon/use-subathon";
+import { useKickChannel } from "#/hooks/use-kick-channel";
 import { PlantSlot } from "./plant-slot";
 import { SubCountFX, SUB_COUNT_DURATION_MS } from "./fx/sub-count-fx";
 import { VineOverlay } from "./plants/vine-overlay";
@@ -167,7 +167,7 @@ export function SubSproutWidget({
     [],
   );
 
-  const kickIds = useKickIds(kickChannel, simulate !== true);
+  const kickIds = useKickChannel(kickChannel, simulate !== true).channel;
 
   const applyGrowth = useCallback(() => {
     const { targetSlot, perSlot } = distributeGrowth(

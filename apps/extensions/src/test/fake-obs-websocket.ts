@@ -11,6 +11,8 @@ export class OBSWebSocket {
   scenes: string[] = [];
   connectArgs: unknown[][] = [];
   calls: [request: string, data: unknown][] = [];
+  /** Requests other than GetSceneList never get an answer, like when OBS goes away mid-request. */
+  holdCalls = false;
   private handlers = new Map<string, Handler[]>();
   private pending: { resolve: () => void; reject: (error: Error) => void } | null = null;
 
@@ -26,6 +28,21 @@ export class OBSWebSocket {
 
   on(event: string, handler: Handler) {
     this.handlers.set(event, [...(this.handlers.get(event) ?? []), handler]);
+  }
+
+  once(event: string, handler: Handler) {
+    const wrapper: Handler = (...args) => {
+      this.off(event, handler);
+      handler(...args);
+    };
+    this.on(event, Object.assign(wrapper, { original: handler }));
+  }
+
+  off(event: string, handler: Handler) {
+    const kept = (this.handlers.get(event) ?? []).filter(
+      (h) => h !== handler && (h as { original?: Handler }).original !== handler,
+    );
+    this.handlers.set(event, kept);
   }
 
   emit(event: string, ...args: unknown[]) {
@@ -56,6 +73,7 @@ export class OBSWebSocket {
     if (request === 'GetSceneList') {
       return { scenes: this.scenes.map((sceneName) => ({ sceneName })) };
     }
+    if (this.holdCalls) return new Promise<never>(() => {});
     return {};
   }
 

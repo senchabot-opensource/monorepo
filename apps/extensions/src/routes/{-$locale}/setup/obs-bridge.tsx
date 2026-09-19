@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { useDeferredValue, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { CopyUrlField } from '#/components/copy-url-field';
 import { ExternalIcon } from '#/components/icons';
 import { SetupShell } from '#/components/setup-shell';
@@ -14,6 +14,7 @@ import {
   type ObsBridgeCustomCommands,
   type ObsCommandKey,
 } from '#/features/tools/obs-bridge-config';
+import { TYPING_PAUSE_MS, useDebouncedValue } from '#/hooks/use-debounced-value';
 import { type TranslationKey, useI18n } from '#/lib/i18n';
 import { getParamsLocale, withLangParam } from '#/lib/i18n/paths';
 import type { FaqEntry } from '#/lib/i18n/seo';
@@ -87,7 +88,9 @@ function ObsBridgeSetup() {
     });
     return `${window.location.origin}${WIDGET.widgetPath}?${params.toString()}`;
   }, [mounted, twitch, kick, commandUsers, commands, obsWebsocketUrl, obsWebsocketPassword]);
-  const deferredToolUrl = useDeferredValue(toolUrl);
+  // The preview is the live tool, which connects to the channels and OBS in the URL, so it waits
+  // for typing to pause instead of reconnecting on every keystroke.
+  const deferredToolUrl = useDebouncedValue(toolUrl, TYPING_PAUSE_MS);
 
   const users = summarizeCommandUsers(commandUsers, platforms);
   const notListening = (['twitch', 'kick'] as const)

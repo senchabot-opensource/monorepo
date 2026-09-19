@@ -500,7 +500,8 @@ export function MessageList({
     if (pinnedRef.current) scrollToBottom();
   });
 
-  // Emotes and badges load after their row is placed and make it taller.
+  // Emotes and badges load after their row is placed and make it taller. A shorter dock changes
+  // neither the content nor scrollTop, so no scroll event says the newest rows went out of view.
   useEffect(() => {
     const el = scrollRef.current;
     const content = contentRef.current;
@@ -509,6 +510,7 @@ export function MessageList({
       if (pinnedRef.current) el.scrollTop = el.scrollHeight;
     });
     observer.observe(content);
+    observer.observe(el);
     return () => observer.disconnect();
   }, []);
 

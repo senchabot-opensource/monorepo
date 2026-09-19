@@ -190,3 +190,33 @@ describe('Chat Box widget reads every setup URL', () => {
     expect(readWidgetSearch(Route, url('mock=true')).mock).toBe(true);
   });
 });
+
+describe('Chat Box hand-edited URLs', () => {
+  it('load with fallbacks and clamped values instead of an error screen', () => {
+    const search = readWidgetSearch(
+      Route,
+      url(
+        'twitch=a&fontSize=abc&bgOpacity=1.5&duration=0&mockRate=60&font=comic&layout=grid&animation=spin&orientation=diagonal&platformDisplay=big',
+      ),
+    );
+    expect(search).toMatchObject({
+      fontSize: 18,
+      bgOpacity: 1,
+      duration: 1,
+      mockRate: 50,
+      font: 'inter',
+      layout: 'inline',
+      animation: 'slide',
+      orientation: 'vertical',
+      platformDisplay: 'icon',
+    });
+  });
+
+  it.each(['false', '0', 'null', '', 'true', '1', 'yes', 'off'])(
+    'read badges=%s in the setup the way the widget does',
+    (value) => {
+      const pasted = url(`twitch=a&badges=${value}`);
+      expect(parseWidgetUrl(pasted)?.settings.badges).toBe(readWidgetSearch(Route, pasted).badges);
+    },
+  );
+});

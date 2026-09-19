@@ -123,6 +123,12 @@ describe('Raffle setup rules', () => {
     expect(segment(en('raffle.platform'), 'Kick').checked).toBe(true);
   });
 
+  it('opens a Twitch raffle for a link with an unknown platform', async () => {
+    await renderRoute('/setup/raffle?channel=kicker&platform=Kick');
+    expect(textbox(en('raffle.channelName')).value).toBe('kicker');
+    expect(segment(en('raffle.platform'), 'Twitch').checked).toBe(true);
+  });
+
   it('points the overlay URL at the winner overlay', async () => {
     await renderRoute('/setup/raffle');
     expect(textbox(en('raffle.overlayUrl')).value).toBe(

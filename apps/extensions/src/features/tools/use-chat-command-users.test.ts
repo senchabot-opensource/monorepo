@@ -12,6 +12,8 @@ const { obsCall, chat } = vi.hoisted(() => ({
 vi.mock('obs-websocket-js', () => ({
   OBSWebSocket: class {
     on() {}
+    once() {}
+    off() {}
     async connect() {}
     async disconnect() {}
     async call(request: string) {

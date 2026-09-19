@@ -142,9 +142,63 @@ describe('Chat Reader', () => {
     expect(log().textContent).not.toContain('remember me');
   });
 
+  it('keeps the newest rows in view when the dock gets shorter', async () => {
+    const observers: { callback: ResizeObserverCallback; targets: Element[] }[] = [];
+    vi.stubGlobal(
+      'ResizeObserver',
+      class {
+        targets: Element[] = [];
+        constructor(callback: ResizeObserverCallback) {
+          observers.push({ callback, targets: this.targets });
+        }
+        observe(target: Element) {
+          this.targets.push(target);
+        }
+        unobserve() {}
+        disconnect() {}
+      },
+    );
+    await renderRoute(`${TOOL}?twitch=streamer&lang=en`);
+    const list = log();
+    Object.defineProperty(list, 'scrollHeight', { configurable: true, value: 900 });
+    list.scrollTop = 500;
+
+    // Only the dock's own box changed size.
+    for (const { callback, targets } of observers) {
+      if (targets.includes(list)) callback([], {} as ResizeObserver);
+    }
+    expect(list.scrollTop).toBe(900);
+    vi.unstubAllGlobals();
+  });
+
   it('says so when the Kick channel does not exist', async () => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response('{}', { status: 404 }));
     await renderRoute(`${TOOL}?kick=nobody&lang=en`);
+    await act(async () => {});
     expect(screen.getByText(en('chatReader.notFound'))).toBeTruthy();
+  });
+
+  it('keeps looking up a Kick channel while kick.com fails, then reads its chat', async () => {
+    const kickApi = vi.fn(async (): Promise<Response> => {
+      throw new TypeError('Failed to fetch');
+    });
+    vi.spyOn(globalThis, 'fetch').mockImplementation(async (input) =>
+      String(input).startsWith('https://kick.com/') ? kickApi() : new Response('{}', { status: 500 }),
+    );
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    await renderRoute(`${TOOL}?kick=streamer&lang=en`);
+    await act(async () => {});
+    // A failed lookup is not a missing channel.
+    expect(screen.queryByText(en('chatReader.notFound'))).toBeNull();
+    expect(screen.getByText(en('chatReader.statusConnecting'))).toBeTruthy();
+
+    kickApi.mockImplementation(async () =>
+      Response.json({ id: 1, user_id: 2, chatroom: { id: 668 } }),
+    );
+    await act(async () => vi.advanceTimersByTime(5_000));
+    expect(FakeWebSocket.instances.some((ws) => ws.url.startsWith('wss://ws-us2.pusher.com'))).toBe(
+      true,
+    );
   });
 
   it('is opened from the Chat Box setup with the chat settings', async () => {

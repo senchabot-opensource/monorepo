@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { DEFAULT_SUBATHON_SETTINGS, type SubathonSettings } from '#/lib/subathon-url';
 import { FakeWebSocket } from '#/test/browser';
 import { SubathonWidget } from './subathon-widget';
-import { storageKey } from './use-subathon';
+import { PREVIEW_CHANNEL, storageKey } from './use-subathon';
 
 const kickLookup = vi.hoisted(() => vi.fn());
 vi.mock('#/lib/kick', async (importOriginal) => ({
@@ -240,6 +240,24 @@ describe('SubathonWidget', () => {
     receive('twitch', SUB);
     expect(clock()).toContain('01:00:00');
     expect(clock()).not.toContain('+1:00');
+  });
+
+  it('plays only the test buttons of the setup page it previews', async () => {
+    const off = { tsub: 0, ksub: 0, tgift: 0, kgift: 0, bits: 0, kicks: 0 };
+    render(<SubathonWidget settings={settings(off)} simulate simSpeed={1} previewId="mine" />);
+    const running = () => {
+      const before = clock();
+      act(() => vi.advanceTimersByTime(60_000));
+      return clock() !== before;
+    };
+    const wasRunning = running();
+
+    // Another tab's setup page, then this one's: only the second toggles this preview.
+    const pages = new BroadcastChannel(PREVIEW_CHANNEL);
+    pages.postMessage({ type: 'toggle', preview: 'other' });
+    pages.postMessage({ type: 'toggle', preview: 'mine' });
+    await vi.waitFor(() => expect(running()).toBe(!wasRunning));
+    pages.close();
   });
 
   it('never connects or saves in a preview', () => {

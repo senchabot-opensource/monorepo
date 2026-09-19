@@ -55,6 +55,17 @@ export interface ObsBridgeSetup {
   obsWebsocketPassword: string;
 }
 
+/**
+ * The address to open, or undefined for the library's default. OBS's Connect Info shows the IP and
+ * port apart, so "192.168.1.5:4455" is a common entry; without a scheme the browser would resolve
+ * it against the page's own URL.
+ */
+export function obsSocketUrl(url: string | null | undefined): string | undefined {
+  const trimmed = url?.trim();
+  if (!trimmed) return undefined;
+  return /^[a-z][a-z\d+.-]*:\/\//i.test(trimmed) ? trimmed : `ws://${trimmed}`;
+}
+
 /** Search params for /tools/obs-bridge. Defaults and empty values are left out. */
 export function buildObsBridgeParams(setup: ObsBridgeSetup): URLSearchParams {
   const params = new URLSearchParams();

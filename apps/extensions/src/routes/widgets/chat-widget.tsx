@@ -24,8 +24,9 @@ import { type EmoteMap, useChannelEmotes } from '#/features/widgets/chat-widget/
 import { useTwitchBadges } from '#/features/widgets/chat-widget/use-badges';
 import { useUnifiedChat } from '#/features/widgets/chat-widget/use-unified-chat';
 import { parseHighlights } from '#/features/widgets/chat-widget/widget-settings';
+import { useKickChannel } from '#/hooks/use-kick-channel';
+import { clampedNumber } from '#/lib/url-params';
 import { useT } from '#/lib/i18n';
-import { getKickChannelInfo } from '#/lib/kick';
 import { getAccessibleColor } from '#/features/widgets/chat-widget/color-utils';
 
 const DEFAULT_TTL_MS = 30_000;
@@ -56,33 +57,30 @@ const searchSchema = z.object({
   bttv: z.coerce.boolean().optional().default(true),
   ffz: z.coerce.boolean().optional().default(true),
   badges: z.coerce.boolean().optional().default(true),
-  fontSize: z.coerce.number().optional().default(18),
+  // Hand-edited values must never throw: that shows an error screen in OBS.
+  fontSize: z.coerce.number().catch(18),
   background: z.coerce.boolean().optional(),
   itemBackground: z.coerce.boolean().optional(),
   boldUsernames: z.coerce.boolean().optional(),
   boldMessages: z.coerce.boolean().optional(),
-  bgOpacity: z.coerce.number().min(0).max(1).optional().default(0.5),
+  bgOpacity: clampedNumber(0, 1, 0.5),
   platformAccent: z.coerce.boolean().optional(),
-  orientation: z.enum(['vertical', 'horizontal']).optional().default('vertical'),
-  platformDisplay: z.enum(['name', 'icon', 'none']).optional().default('icon'),
+  orientation: z.enum(['vertical', 'horizontal']).catch('vertical'),
+  platformDisplay: z.enum(['name', 'icon', 'none']).catch('icon'),
   timestamp: z.coerce.boolean().optional(),
   keep: z.coerce.boolean().optional(),
   // Seconds a message stays; `keep` wins over it.
-  duration: z.coerce.number().min(1).optional(),
+  duration: clampedNumber(1, Number.POSITIVE_INFINITY, undefined),
   hideBots: z.coerce.boolean().optional(),
   hideCommands: z.coerce.boolean().optional(),
   highlights: z.string().optional(),
-  font: z
-    .enum(['inter', 'roboto', 'nunito', 'mono', 'serif', 'system'])
-    .optional()
-    .default('inter'),
-  layout: z.enum(['inline', 'stacked', 'card', 'compact']).optional().default('inline'),
+  font: z.enum(['inter', 'roboto', 'nunito', 'mono', 'serif', 'system']).catch('inter'),
+  layout: z.enum(['inline', 'stacked', 'card', 'compact']).catch('inline'),
   mock: z.coerce.boolean().optional(),
-  mockRate: z.coerce.number().min(0.1).max(50).optional(),
+  mockRate: clampedNumber(0.1, 50, undefined),
   animation: z
     .enum(['slide', 'smooth', 'pop', 'bounce', 'stagger', 'fade', 'typing', 'none'])
-    .optional()
-    .default('slide'),
+    .catch('slide'),
 });
 
 type FontChoice = z.infer<typeof searchSchema>['font'];
@@ -236,23 +234,10 @@ const GOOGLE_FONTS_PRECONNECT_ID = 'chat-widget-google-fonts-preconnect';
 export const Route = createFileRoute('/widgets/chat-widget')({
   ssr: false,
   validateSearch: (search) => searchSchema.parse(search),
-  loaderDeps: ({ search }) => ({
-    kick: search.kick,
-  }),
   component: RouteComponent,
-  loader: async ({ deps }) => {
-    if (!deps.kick) {
-      return { kick: null, kickUserId: null, kickSubBadges: [] };
-    }
-
-    const info = await getKickChannelInfo(deps.kick);
-    return {
-      kick: info.chatroomId,
-      kickUserId: info.userId,
-      kickSubBadges: info.subscriberBadges || [],
-    };
-  },
 });
+
+const NO_SUB_BADGES: KickSubBadges = [];
 
 function HeaderIcon({ children, filled }: { children: React.ReactNode; filled?: boolean }) {
   return (
@@ -291,14 +276,18 @@ const SparkleIcon = () => (
 
 function RouteComponent() {
   const search = Route.useSearch();
-  const { kick, kickUserId, kickSubBadges } = Route.useLoaderData();
+  // Looked up in the page, not a route loader, so a failed lookup is retried and never holds up
+  // Twitch.
+  const kick = useKickChannel(search.kick).channel;
+  const kickSubBadges = kick?.subscriberBadges ?? NO_SUB_BADGES;
   const twitchBadgeMap = useTwitchBadges(search.twitch);
 
-  const isMock = Boolean(search.mock || (!search.twitch && !kick));
+  // Decided by the link, so a Kick lookup that fails can't swap a streamer's chat for demo chat.
+  const isMock = Boolean(search.mock || (!search.twitch && !search.kick?.trim()));
 
   const showPlatformIndicator = search.platformDisplay !== 'none';
 
-  const emotes = useChannelEmotes(search.twitch, kickUserId, {
+  const emotes = useChannelEmotes(search.twitch, kick?.userId ?? null, {
     sevenTv: search.sevenTv,
     bttv: search.bttv,
     ffz: search.ffz,
@@ -315,7 +304,7 @@ function RouteComponent() {
     [search.highlights],
   );
 
-  useUnifiedChat(search.twitch, kick);
+  useUnifiedChat(search.twitch, kick?.chatroomId);
 
   React.useEffect(() => {
     if (!isMock) return;

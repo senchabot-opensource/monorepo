@@ -36,6 +36,14 @@ describe('parseVote', () => {
     expect(parseVote('!VOTE   3', options)).toBe(2);
   });
 
+  it("reads a vote sent again with a chat client's invisible suffix, and the keycap emoji", () => {
+    // 7TV's and Chatterino's ways past Twitch's "identical message" block.
+    expect(parseVote('1 \u{E0000}', options)).toBe(0);
+    expect(parseVote('2 \u034F', options)).toBe(1);
+    expect(parseVote('Minecraft \u{E0000}', options)).toBe(0);
+    expect(parseVote('3\uFE0F\u20E3', options)).toBe(2);
+  });
+
   it("doesn't count numbers inside other words, extra words or options that don't exist", () => {
     for (const message of [
       '4Head',
@@ -124,6 +132,7 @@ describe('parsePollCommand', () => {
   it('ignores a mistyped command instead of making it a question', () => {
     for (const message of [
       '!poll extend 30 seconds',
+      '!poll extend 30',
       '!poll extend',
       '!poll end now',
       '!poll start 5',

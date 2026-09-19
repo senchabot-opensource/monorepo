@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import type { RaffleConfig, RaffleParticipant } from "#/types/raffle";
 import { BaseChatClient } from "#/lib/basechat";
+import { retryDelay } from "#/lib/fetch-json";
 import { getKickChannelInfo, KICK_PUSHER_URL } from "#/lib/kick";
 import { anonymousJoin, parseIrcLine, TWITCH_IRC_URL } from "#/lib/twitch";
 
@@ -187,6 +188,7 @@ export function useRaffleChat(
     if (!enabled || !config.channel.trim()) return;
 
     let cancelled = false;
+    let lookupTimer: number | undefined;
     const clients: BaseChatClient[] = [];
 
     if (config.platform === "twitch") {
@@ -227,7 +229,7 @@ export function useRaffleChat(
     if (config.platform === "kick") {
       const rawChannel = config.channel.trim();
 
-      const connectKick = async () => {
+      const connectKick = async (attempt: number) => {
         let channelId = rawChannel;
 
         // If not purely numeric chatroom ID, resolve channel name to chatroomId
@@ -235,7 +237,13 @@ export function useRaffleChat(
           const info = await getKickChannelInfo(rawChannel);
           if (cancelled) return;
           if (!info.chatroomId) {
-            console.warn(`[RaffleChat] Could not find Kick chatroom for ${rawChannel}`);
+            if (info.notFound) {
+              console.warn(`[RaffleChat] Could not find Kick chatroom for ${rawChannel}`);
+              return;
+            }
+            // kick.com answers 403/5xx at times: the raffle keeps trying instead of never
+            // taking an entry.
+            lookupTimer = window.setTimeout(() => connectKick(attempt + 1), retryDelay(attempt));
             return;
           }
           channelId = info.chatroomId;
@@ -306,11 +314,12 @@ export function useRaffleChat(
         clients.push(client);
       };
 
-      connectKick();
+      connectKick(0);
     }
 
     return () => {
       cancelled = true;
+      window.clearTimeout(lookupTimer);
       for (const client of clients) {
         client.disconnect();
       }

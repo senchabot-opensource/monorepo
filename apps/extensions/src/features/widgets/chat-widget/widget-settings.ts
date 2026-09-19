@@ -1,3 +1,5 @@
+import { readCoercedFlag } from '#/lib/url-params';
+
 export const PLATFORMS = ['both', 'twitch', 'kick'] as const;
 export const PLATFORM_DISPLAYS = ['name', 'icon', 'none'] as const;
 export const FONTS = ['inter', 'roboto', 'nunito', 'mono', 'serif', 'system'] as const;
@@ -152,10 +154,7 @@ export function parseWidgetUrl(text: string): ParsedWidgetUrl | null {
     const value = params.get(key);
     return values.includes(value as T) ? (value as T) : fallback;
   };
-  const flag = (key: string, fallback: boolean) => {
-    const value = params.get(key);
-    return value === null ? fallback : value !== 'false';
-  };
+  const flag = (key: string, fallback: boolean) => readCoercedFlag(params.get(key), fallback);
   const number = (key: string, fallback: string, isValid: (n: number) => boolean) => {
     const value = params.get(key);
     const n = Number(value);
