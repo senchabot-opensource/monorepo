@@ -9,17 +9,38 @@ export function setReducedMotion(value: boolean) {
   reducedMotion = value;
 }
 
+// The test device prefers dark, the theme site pages have without one stored.
+let prefersDark = true;
+const colorSchemeListeners = new Set<(event: MediaQueryListEvent) => void>();
+
+/** Switches the device theme, live, like an OS that turns dark in the evening. */
+export function setPrefersDark(value: boolean) {
+  prefersDark = value;
+  for (const listener of colorSchemeListeners) {
+    listener({ matches: value, media: '(prefers-color-scheme: dark)' } as MediaQueryListEvent);
+  }
+}
+
 function matchMedia(query: string): MediaQueryList {
+  const colorScheme = query.includes('prefers-color-scheme');
   return {
-    matches: query.includes('prefers-reduced-motion') ? reducedMotion : false,
+    get matches() {
+      if (query.includes('prefers-reduced-motion')) return reducedMotion;
+      if (colorScheme) return query.includes('dark') ? prefersDark : !prefersDark;
+      return false;
+    },
     media: query,
     onchange: null,
-    addEventListener: () => {},
-    removeEventListener: () => {},
+    addEventListener: (_type: string, listener: (event: MediaQueryListEvent) => void) => {
+      if (colorScheme) colorSchemeListeners.add(listener);
+    },
+    removeEventListener: (_type: string, listener: (event: MediaQueryListEvent) => void) => {
+      colorSchemeListeners.delete(listener);
+    },
     addListener: () => {},
     removeListener: () => {},
     dispatchEvent: () => false,
-  };
+  } as unknown as MediaQueryList;
 }
 
 /** Reports every observed element as on screen, like a preview scrolled into view. */
@@ -108,6 +129,8 @@ function createClipboard() {
 
 export function resetBrowserStubs() {
   reducedMotion = false;
+  prefersDark = true;
+  colorSchemeListeners.clear();
   FakeWebSocket.instances = [];
 
   window.matchMedia = matchMedia;
