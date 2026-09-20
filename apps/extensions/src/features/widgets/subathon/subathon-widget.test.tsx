@@ -2,6 +2,7 @@ import { act, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { DEFAULT_SUBATHON_SETTINGS, type SubathonSettings } from '#/lib/subathon-url';
 import { FakeWebSocket } from '#/test/browser';
+import { renderWithProviders } from '#/test/render';
 import { SubathonWidget } from './subathon-widget';
 import { PREVIEW_CHANNEL, storageKey } from './use-subathon';
 
@@ -266,5 +267,78 @@ describe('SubathonWidget', () => {
     act(() => vi.advanceTimersByTime(10_000));
     expect(localStorage.getItem(storageKey('streamer'))).toBeNull();
     expect(kickLookup).not.toHaveBeenCalled();
+  });
+
+  describe('rates', () => {
+    const rates = () => screen.queryByTestId('subathon-rates')?.textContent ?? null;
+    const withRates = (overrides: Partial<SubathonSettings>) =>
+      settings({ rates: true, ...overrides });
+    const DIFFERENT = { tsub: 900, tgift: 600, bits: 1500, ksub: 1800, kgift: 1200, kicks: 1800 };
+
+    it('shows none unless turned on', async () => {
+      await renderWithProviders(
+        <SubathonWidget settings={settings()} simulate />,
+        '/widgets/subathon',
+      );
+      expect(rates()).toBeNull();
+    });
+
+    it('lists what each event adds, in one row when both platforms add the same', async () => {
+      await renderWithProviders(
+        <SubathonWidget settings={withRates({ tsub: 900, ksub: 900 })} simulate />,
+        '/widgets/subathon',
+      );
+      expect(rates()).toContain('Sub +15 min');
+      expect(rates()).toContain('Gift Sub +1 min');
+      expect(rates()).toContain('500 Bits/Kicks +1 min');
+      act(() => vi.advanceTimersByTime(30_000));
+      expect(rates()).toContain('500 Bits/Kicks');
+    });
+
+    it('takes turns between Twitch and Kick when their values differ', async () => {
+      await renderWithProviders(
+        <SubathonWidget settings={withRates(DIFFERENT)} simulate />,
+        '/widgets/subathon',
+      );
+      expect(rates()).toContain('Sub +15 min');
+      expect(rates()).toContain('500 Bits +25 min');
+      act(() => vi.advanceTimersByTime(6000));
+      expect(rates()).toContain('Sub +30 min');
+      expect(rates()).toContain('500 Kicks +30 min');
+      act(() => vi.advanceTimersByTime(6000));
+      expect(rates()).toContain('500 Bits +25 min');
+    });
+
+    it('leaves out events set to 0 and platforms the overlay has no channel for', async () => {
+      await renderWithProviders(
+        <SubathonWidget
+          twitchChannel="streamer"
+          settings={withRates({ ...DIFFERENT, tgift: 0, bits: 3600 })}
+        />,
+        '/widgets/subathon',
+      );
+      expect(rates()).toContain('Sub +15 min');
+      expect(rates()).toContain('500 Bits +1 h');
+      expect(rates()).not.toContain('Gift');
+      act(() => vi.advanceTimersByTime(12_000));
+      expect(rates()).not.toContain('Kicks');
+    });
+
+    it('shows nothing when every event is off', async () => {
+      const off = { tsub: 0, ksub: 0, tgift: 0, kgift: 0, bits: 0, kicks: 0 };
+      await renderWithProviders(
+        <SubathonWidget settings={withRates(off)} simulate />,
+        '/widgets/subathon',
+      );
+      expect(rates()).toBeNull();
+    });
+
+    it("writes the words in the URL's language", async () => {
+      await renderWithProviders(
+        <SubathonWidget settings={withRates(DIFFERENT)} simulate />,
+        '/widgets/subathon?lang=tr',
+      );
+      expect(rates()).toContain('Hediye Sub +10 dk');
+    });
   });
 });
