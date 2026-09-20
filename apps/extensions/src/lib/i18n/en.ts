@@ -25,6 +25,8 @@ export const en = {
     channelTip:
       "Just type the channel name, not the full link. For twitch.tv/senchabot, that's senchabot.",
     previewLoading: 'Loading preview…',
+    scrollMore: 'Scroll down for more',
+    scrollTop: 'Back to top',
     setupGuideTitle: 'How to set it up',
     faqTitle: 'Frequently asked questions',
     moreWidgets: 'More widgets',
@@ -2227,6 +2229,8 @@ export const en = {
     lead: "New features and bug fixes in Senchabot Extensions, newest first. The list is put together from the project's commit history on [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      scrollHint:
+        'Setup panels that are too long for the screen now show a small arrow at the bottom, so it is clear there are more settings below. Press it to jump down, and once you are at the end it turns around and takes you back to the top.',
       chatFonts:
         'Chat Box now has a font box for usernames and another for messages, and both stay open under a preset: keep the two fonts the preset came with, put its heading font on the messages too, or mix either with Inter, Roboto, Nunito, JetBrains Mono, Source Serif 4 or your system font. Bold usernames and bold messages also work now under presets whose font comes in a single weight, like Realm, Dynasty and Blocks.',
       sproutSaved:
