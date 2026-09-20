@@ -191,6 +191,13 @@ URL parameters (all optional, times in seconds):
 | ksub | Kick: time per sub or resub | 60 |
 | kgift | Kick: time per gifted sub | 60 |
 | kicks | Kick: time per 500 Kicks; other amounts add their share | 60 |
+| shift | Threshold for dynamic rates; if > 0 and time left is above this, the tier 2 rates below apply | 0 |
+| tsub2 | Tier 2 Twitch: time per Tier 1 or Prime sub or resub | 60 |
+| tgift2 | Tier 2 Twitch: time per gifted sub | 60 |
+| bits2 | Tier 2 Twitch: time per 500 Bits | 60 |
+| ksub2 | Tier 2 Kick: time per sub or resub | 60 |
+| kgift2 | Tier 2 Kick: time per gifted sub | 60 |
+| kicks2 | Tier 2 Kick: time per 500 Kicks | 60 |
 | autostart | 1 starts the timer when the overlay first loads instead of waiting for !subathon start | 0 |
 | pct | 0 hides the percentage | 1 |
 | pops | 0 hides the floating +1:00 added-time numbers | 1 |

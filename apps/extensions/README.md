@@ -77,7 +77,7 @@ A subathon countdown overlay. It counts down in real time, and subs, gifted subs
 https://extensions.senchabot.com/widgets/subathon?twitch=YOUR_TWITCH_CHANNEL&kick=YOUR_KICK_CHANNEL&style=bar&time=3600&tsub=60&ksub=60
 ```
 
-**URL parameters** (times in seconds): `twitch`, `kick`, `style` (`bar` | `clock` | `ring`), `color` (`hp` | `green` | `purple` | `red` | `gold` | `cyan` | `pink`), `title`, `time` (starting time), `cap` (0 = no limit), Twitch `tsub` (Tier 1 and Prime), `tgift`, `bits` (per 500), `tiers` (`0` | `1`), Kick `ksub`, `kgift`, `kicks` (per 500), `autostart` (`0` | `1`), `pct` (`0` | `1`), `pops` (`0` | `1`), `simulate` (`1` plays simulated subs), `simspeed`.
+**URL parameters** (times in seconds): `twitch`, `kick`, `style` (`bar` | `clock` | `ring`), `color` (`hp` | `green` | `purple` | `red` | `gold` | `cyan` | `pink`), `title`, `time` (starting time), `cap` (0 = no limit), Twitch `tsub` (Tier 1 and Prime), `tgift`, `bits` (per 500), `tiers` (`0` | `1`), Kick `ksub`, `kgift`, `kicks` (per 500), `shift` (threshold for dynamic rates), `tsub2`, `tgift2`, `bits2`, `ksub2`, `kgift2`, `kicks2` (rates above threshold), `autostart` (`0` | `1`), `pct` (`0` | `1`), `pops` (`0` | `1`), `simulate` (`1` plays simulated subs), `simspeed`.
 
 ---
 

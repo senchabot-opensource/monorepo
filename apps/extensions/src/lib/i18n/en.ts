@@ -621,6 +621,11 @@ export const en = {
     startAuto: 'Right Away',
     sectionValues: 'Time Added',
     valuesHint: 'Set any of these to 0 to turn it off.',
+    dynamicRates: 'Adjust rates by time',
+    dynamicRatesTip: 'Use a second set of rates when the clock has enough time left.',
+    shiftAt: 'Threshold',
+    shiftAtTip: 'When the remaining time is above this, the second set of rates is used.',
+    tier2Rates: 'When above threshold',
     perSub: 'Per Sub',
     perSubTip: 'Every new sub and resub. On Twitch this is a Tier 1 or Prime sub.',
     perSubKickTip: 'Every new sub and resub.',
@@ -2229,6 +2234,8 @@ export const en = {
     lead: "New features and bug fixes in Senchabot Extensions, newest first. The list is put together from the project's commit history on [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      subathonDynamicRates:
+        'Subathon Timer now has adjustable rates: set a threshold to drop how much time a sub adds when the clock is already high.',
       scrollHint:
         'Setup panels that are too long for the screen now show a small arrow at the bottom, so it is clear there are more settings below. Press it to jump down, and once you are at the end it turns around and takes you back to the top.',
       chatFonts:

@@ -141,7 +141,7 @@ export function SubathonWidget({
     hit,
     healing,
     ease: healing ? '.6s cubic-bezier(.2,.9,.3,1.1)' : '.25s linear',
-    rates: settings.rates ? rateRows(settings, platforms) : [],
+    rates: settings.rates ? rateRows(settings, platforms, left) : [],
   };
   const View = VIEWS[settings.style];
   const skin = skinFor(settings.preset);
@@ -401,13 +401,19 @@ const RATE_KEYS: Record<SubathonPlatform, Record<RateKind, SubathonTimeKey>> = {
 };
 
 /** One row per platform, or one for both when their values match. Events set to 0 are left out. */
-function rateRows(values: SubathonTimeValues, platforms: SubathonPlatform[]): RateRow[] {
+function rateRows(values: SubathonTimeValues, platforms: SubathonPlatform[], remainingMs: number): RateRow[] {
+  const useTier2 = values.shift > 0 && remainingMs >= values.shift * 1000;
+  const val = (platform: SubathonPlatform, kind: RateKind) => {
+    const key = RATE_KEYS[platform][kind];
+    return useTier2 ? values[`${key}2` as keyof SubathonTimeValues] as number : values[key];
+  };
+
   const rows = platforms
     .map((platform) => ({
       platforms: [platform],
       items: RATE_KINDS.map((kind) => ({
         kind,
-        seconds: values[RATE_KEYS[platform][kind]],
+        seconds: val(platform, kind),
       })).filter((item) => item.seconds > 0),
     }))
     .filter((row) => row.items.length > 0);

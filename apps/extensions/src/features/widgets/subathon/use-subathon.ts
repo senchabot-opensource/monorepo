@@ -34,22 +34,23 @@ const clockOptions = (values: SubathonValues): ClockOptions => ({
 });
 
 /** Seconds an event adds by its platform's values; Twitch tiers weigh in when turned on. */
-function valueFor(event: TimedEvent, values: SubathonValues): number {
+function valueFor(event: TimedEvent, values: SubathonValues, remainingMs: number): number {
   const kick = event.platform === 'kick';
   const weight = kick || event.kind === 'bits' || !values.tiers ? 1 : TIER_WEIGHT[event.tier];
+  const useTier2 = values.shift > 0 && remainingMs >= values.shift * 1000;
   switch (event.kind) {
     case 'sub':
-      return (kick ? values.ksub : values.tsub) * weight;
+      return (kick ? (useTier2 ? values.ksub2 : values.ksub) : (useTier2 ? values.tsub2 : values.tsub)) * weight;
     case 'gift':
-      return (kick ? values.kgift : values.tgift) * event.count * weight;
+      return (kick ? (useTier2 ? values.kgift2 : values.kgift) : (useTier2 ? values.tgift2 : values.tgift)) * event.count * weight;
     case 'bits':
-      return ((kick ? values.kicks : values.bits) * event.amount) / BITS_PER_VALUE;
+      return ((kick ? (useTier2 ? values.kicks2 : values.kicks) : (useTier2 ? values.bits2 : values.bits)) * event.amount) / BITS_PER_VALUE;
   }
 }
 
 /** Time an event adds in ms (a 1 Bit cheer adds its share too); 0 when its value is off. */
-const eventTime = (event: TimedEvent, values: SubathonValues) =>
-  Math.round(valueFor(event, values) * 1000);
+const eventTime = (event: TimedEvent, values: SubathonValues, remainingMs: number) =>
+  Math.round(valueFor(event, values, remainingMs) * 1000);
 
 /** Storage key per channel pair, so every Subathon source for the channel shares one clock. */
 export const storageKey = (twitch = '', kick = '') =>
@@ -107,7 +108,7 @@ const SIM_NAMES = ['NightOwl', 'pixelpanda', 'ChatGremlin', 'lunaa', 'GG_Tobi', 
 const pick = <T>(list: readonly T[]) => list[Math.floor(Math.random() * list.length)];
 
 /** A random event the settings give time for, or null when every value is off. */
-function simulatedEvent(values: SubathonValues, only?: SubathonPlatform): TimedEvent | null {
+function simulatedEvent(values: SubathonValues, remainingMs: number, only?: SubathonPlatform): TimedEvent | null {
   const platform = only ?? pick<SubathonPlatform>(['twitch', 'kick']);
   const name = pick(SIM_NAMES);
   const events: TimedEvent[] = [
@@ -115,7 +116,7 @@ function simulatedEvent(values: SubathonValues, only?: SubathonPlatform): TimedE
     { kind: 'gift', platform, name, tier: 1, count: pick([1, 1, 3, 5]) },
     { kind: 'bits', platform, name, amount: pick([100, 250, 500]) },
   ];
-  const enabled = events.filter((event) => eventTime(event, values) > 0);
+  const enabled = events.filter((event) => eventTime(event, values, remainingMs) > 0);
   return enabled.length > 0 ? pick(enabled) : null;
 }
 
@@ -201,7 +202,8 @@ export function useSubathon({
       // A raid adds no time, and Kick's second word on a sub was counted with the first.
       if (event.kind === 'raid' || (event.kind === 'sub' && event.again)) return;
       if (isEnded(stateRef.current, at)) return;
-      const ms = eventTime(event, current);
+      const remainingMs = timeLeft(stateRef.current, at);
+      const ms = eventTime(event, current, remainingMs);
       // At the cap nothing gets through, so there's nothing to show either.
       const added = ms > 0 ? commit(addTime(stateRef.current, ms, at, current.cap * 1000)) : 0;
       if (added <= 0) return;
@@ -244,7 +246,7 @@ export function useSubathon({
         return;
       }
       const quiet = Date.now() - lastTestAt.current < SIM_QUIET_AFTER_TEST_MS;
-      const event = quiet ? null : simulatedEvent(valuesRef.current, simPlatform);
+      const event = quiet ? null : simulatedEvent(valuesRef.current, timeLeft(stateRef.current, clock()), simPlatform);
       if (event) handleEvent(event);
       timer = window.setTimeout(step, 2200 + Math.random() * 2000);
     };
