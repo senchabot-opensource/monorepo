@@ -30,9 +30,18 @@ export interface SubathonTimeValues {
   kgift: number;
   /** Per 500 Kicks. */
   kicks: number;
+  // Tier 2 rates, used when remaining time is >= shift
+  tsub2: number;
+  tgift2: number;
+  bits2: number;
+  ksub2: number;
+  kgift2: number;
+  kicks2: number;
+  /** Threshold in seconds for Tier 2 rates. 0 means disabled. */
+  shift: number;
 }
 
-const TIME_KEYS = ['tsub', 'tgift', 'bits', 'ksub', 'kgift', 'kicks'] as const;
+const TIME_KEYS = ['tsub', 'tgift', 'bits', 'ksub', 'kgift', 'kicks', 'tsub2', 'tgift2', 'bits2', 'ksub2', 'kgift2', 'kicks2'] as const;
 export type SubathonTimeKey = keyof SubathonTimeValues;
 
 export interface SubathonSettings extends SubathonTimeValues {
@@ -71,6 +80,13 @@ export const DEFAULT_SUBATHON_SETTINGS: SubathonSettings = {
   ksub: 60,
   kgift: 60,
   kicks: 60,
+  tsub2: 60,
+  tgift2: 60,
+  bits2: 60,
+  ksub2: 60,
+  kgift2: 60,
+  kicks2: 60,
+  shift: 0,
   tiers: true,
   autostart: false,
   percent: true,
@@ -88,13 +104,14 @@ export const TITLE_MAX_LENGTH = 32;
 
 const WIDGET_PATH = '/widgets/subathon';
 
-type NumberKey = 'start' | 'cap' | SubathonTimeKey;
+type NumberKey = 'start' | 'cap' | 'shift' | SubathonTimeKey;
 type FlagKey = 'tiers' | 'autostart' | 'percent' | 'pops' | 'rates';
 // URL name of each setting; the time values use their own key.
 const NUMBER_PARAMS: Record<NumberKey, string> = {
   start: 'time',
   cap: 'cap',
-  ...(Object.fromEntries(TIME_KEYS.map((key) => [key, key])) as Record<SubathonTimeKey, string>),
+  shift: 'shift',
+  ...(Object.fromEntries(TIME_KEYS.map((key) => [key, key])) as Record<Exclude<SubathonTimeKey, 'shift'>, string>),
 };
 const FLAG_PARAMS: Record<FlagKey, string> = {
   tiers: 'tiers',

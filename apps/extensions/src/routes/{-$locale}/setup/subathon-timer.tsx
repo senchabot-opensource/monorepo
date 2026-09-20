@@ -179,35 +179,61 @@ function SubathonSetup() {
     </div>
   );
 
-  const valueFields = (platform: SubathonPlatform) => (
-    <div className="space-y-3">
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-        {TIME_FIELDS[platform].map(({ key, label, tip }) => (
-          <div key={key}>
-            <FieldLabel htmlFor={`${id}-${key}`} tip={t(tip)}>
-              {t(label)}
-            </FieldLabel>
-            <MinutesField
-              id={`${id}-${key}`}
-              value={settings[key]}
-              onChange={(value) => update(key, value)}
-              max={MAX_EVENT_SECONDS}
-              unitLabel={t('subathon.unitMinutes')}
-            />
-          </div>
-        ))}
+  const valueFields = (platform: SubathonPlatform) => {
+    const showTier2 = settings.shift > 0;
+    return (
+      <div className="space-y-3">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+          {TIME_FIELDS[platform].map(({ key, label, tip }) => (
+            <div key={key}>
+              <FieldLabel htmlFor={`${id}-${key}`} tip={t(tip)}>
+                {t(label)}
+              </FieldLabel>
+              <MinutesField
+                id={`${id}-${key}`}
+                value={settings[key]}
+                onChange={(value) => update(key, value)}
+                max={MAX_EVENT_SECONDS}
+                unitLabel={t('subathon.unitMinutes')}
+              />
+            </div>
+          ))}
+        </div>
+        {showTier2 && (
+          <>
+            <p className={`${HINT_CLASS} mt-3 mb-1 font-medium text-white`}>
+              {t('subathon.tier2Rates')}
+            </p>
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+              {TIME_FIELDS[platform].map(({ key, label, tip }) => (
+                <div key={`${key}2`}>
+                  <FieldLabel htmlFor={`${id}-${key}2`} tip={t(tip)}>
+                    {t(label)}
+                  </FieldLabel>
+                  <MinutesField
+                    id={`${id}-${key}2`}
+                    value={settings[`${key}2` as keyof SubathonSettings] as number}
+                    onChange={(value) => update(`${key}2` as keyof SubathonSettings, value)}
+                    max={MAX_EVENT_SECONDS}
+                    unitLabel={t('subathon.unitMinutes')}
+                  />
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+        {platform === 'twitch' && (
+          <Switch
+            label={t('subathon.tiers')}
+            tip={t('subathon.tiersTip')}
+            checked={settings.tiers}
+            disabled={settings.tsub === 0 && settings.tgift === 0}
+            onChange={(value) => update('tiers', value)}
+          />
+        )}
       </div>
-      {platform === 'twitch' && (
-        <Switch
-          label={t('subathon.tiers')}
-          tip={t('subathon.tiersTip')}
-          checked={settings.tiers}
-          disabled={settings.tsub === 0 && settings.tgift === 0}
-          onChange={(value) => update('tiers', value)}
-        />
-      )}
-    </div>
-  );
+    );
+  };
   const platformLabel = (platform: SubathonPlatform) => (
     <>
       <span
@@ -324,6 +350,30 @@ function SubathonSetup() {
         ) : (
           valueFields(settings.platforms)
         )}
+        <div>
+          <Switch
+            label={t('subathon.dynamicRates')}
+            tip={t('subathon.dynamicRatesTip')}
+            checked={settings.shift > 0}
+            onChange={(value) => update('shift', value ? 18000 : 0)}
+          />
+          {settings.shift > 0 && (
+            <div className="mt-3">
+              <FieldLabel id={`${id}-shiftAt`} tip={t('subathon.shiftAtTip')}>
+                {t('subathon.shiftAt')}
+              </FieldLabel>
+              <DurationField
+                labelledBy={`${id}-shiftAt`}
+                value={settings.shift}
+                onChange={(value) => update('shift', value)}
+                units={['h', 'm']}
+                unitLabels={hoursMinutes}
+                min={0}
+                max={MAX_SECONDS}
+              />
+            </div>
+          )}
+        </div>
         <Switch
           label={t('subathon.showRates')}
           tip={t('subathon.showRatesTip')}

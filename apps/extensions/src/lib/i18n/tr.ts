@@ -624,6 +624,11 @@ export const tr: typeof en = {
     startAuto: 'Hemen',
     sectionValues: 'Eklenen Süre',
     valuesHint: 'Birini kapatmak için 0 yap.',
+    dynamicRates: 'Süreyi zamana göre ayarla',
+    dynamicRatesTip: 'Saatte yeterli süre kaldığında ikinci bir oran seti kullanır.',
+    shiftAt: 'Eşik',
+    shiftAtTip: 'Kalan süre bunun üzerinde olduğunda, ikinci oran seti kullanılır.',
+    tier2Rates: 'Süre eşiğin üzerinde olduğunda',
     perSub: 'Abonelik Başına',
     perSubTip: "Her yeni abonelik ve yenileme. Twitch'te bu Tier 1 ya da Prime abonelik demek.",
     perSubKickTip: 'Her yeni abonelik ve yenileme.',
@@ -2213,6 +2218,8 @@ export const tr: typeof en = {
     lead: "Senchabot Extensions'a eklenen özellikler ve düzeltilen hatalar, en yenisi en üstte. Liste projenin [GitHub'daki](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) commit geçmişinden hazırlanıyor.",
     site: 'Site',
     entries: {
+      subathonDynamicRates:
+        'Subathon Timer artık zamana bağlı oranlara sahip: saat zaten yüksekken bir aboneliğin ne kadar süre ekleyeceğini düşürmek için bir eşik belirleyin.',
       scrollHint:
         'Ekrana sığmayan kurulum panellerinin altında artık küçük bir ok var, böylece aşağıda başka ayarlar olduğu belli oluyor. Oka basınca aşağı iniyorsun, sona geldiğinde ok yön değiştirip seni başa götürüyor.',
       chatFonts:
