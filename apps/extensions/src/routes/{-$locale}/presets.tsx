@@ -183,7 +183,12 @@ function PresetsPage() {
           {PRESET_WIDGETS.map((widget) => {
             const widgetName = t(widget.nameKey);
             return (
-              <li key={widget.id} className={`${CARD_CLASS} overflow-hidden`}>
+              // The whole card opens the setup page, the way the gallery cards on the home
+              // page do; the link below stretches over it.
+              <li
+                key={widget.id}
+                className={`${CARD_CLASS} group relative overflow-hidden transition-[border-color,box-shadow] hover:border-zinc-300 hover:shadow-md has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-green-500 dark:hover:border-zinc-700`}
+              >
                 <div className="aspect-[16/10]">
                   <PreviewFrame
                     // A new frame per preset, so each one starts its demo from the top.
@@ -204,7 +209,7 @@ function PresetsPage() {
                   <Link
                     to={localizePath(widget.setupPath, locale)}
                     search={isClassic(picked) ? {} : { [PRESET_PARAM]: picked }}
-                    className="shrink-0 rounded-sm text-sm font-medium text-green-700 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 dark:text-green-400"
+                    className="shrink-0 text-sm font-medium text-green-700 after:absolute after:inset-0 after:content-[''] focus-visible:outline-none group-hover:underline dark:text-green-400"
                   >
                     {t('presets.setUp', { widget: widgetName })} →
                   </Link>
