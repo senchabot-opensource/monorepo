@@ -1,110 +1,131 @@
-# Senchabot Monorepo
+# Senchabot
 
-Senchabot is an open-source, multi-platform bot and streamer toolkit. It includes a **Discord bot** (Go), a **Twitch chat bot** (Go), a **web dashboard** (Next.js), and free **browser-source streaming widgets/tools** for OBS.
+Open-source streaming toolkit for **Twitch**, **Kick** and **Discord**. One repository holds a
+Twitch chat bot, a Discord bot, a web dashboard that runs both, and a set of free OBS browser
+source overlays that need no account at all.
 
-## What It Does
+**Live:** [senchabot.com](https://senchabot.com/) — dashboard · [extensions.senchabot.com](https://extensions.senchabot.com/) — overlays and tools
 
-- **Discord Bot** — Twitch livestream announcements, custom slash commands, message purging, and privacy controls for your server.
-- **Twitch Bot** — Custom chat commands, command aliases, repeating timers, shoutouts, clip creation, and moderation tools for your channel.
-- **Web Dashboard** — Manage both bots, configure settings, run chat raffles, create Twitch sub badges, and control sub-sprout overlays from one place.
-- **Streaming Widgets/Tools** — Free OBS overlays: a growing plant for subs, merged Twitch/Kick chat, and chat-based raffle winner announcements.
+| App | What it is | Built with |
+| --- | --- | --- |
+| [`apps/extensions`](./apps/extensions) | Free stream overlays and tools as browser sources, for Twitch and Kick | TanStack Start, Vite, React, Tailwind |
+| [`apps/web`](./apps/web) | Dashboard for the bots, commands and streamer tools | Next.js, Prisma, PostgreSQL |
+| [`apps/twitch-bot`](./apps/twitch-bot) | Twitch chat bot | Go |
+| [`apps/discord-bot`](./apps/discord-bot) | Discord bot | Go |
+| [`apps/command-server`](./apps/command-server) | gRPC server the bots ask for command data | Go |
 
-## Monorepo Structure
+## Free stream overlays and tools — no account, no download
 
-- `apps/` — Application entrypoints (bots, web dashboard, streaming widgets)
-  - `discord-bot/` — Discord bot (Go)
-  - `twitch-bot/` — Twitch chat bot (Go)
-  - `web/` — Next.js dashboard and streamer tools
-  - `extensions/` — OBS browser-source widgets/tools (React + Vite)
-- `pkg/` — Shared Go packages
-- `helper/` — Utility scripts and helpers
-- `service/` — Service layer code
-- `model/` — Data models
-- `config/` — Configuration files
-- `db/` — Database-related files
+[extensions.senchabot.com](https://extensions.senchabot.com/) gives every widget a browser source
+URL you paste into OBS Studio, Streamlabs Desktop, XSplit, vMix, PRISM Live Studio, Twitch Studio
+or anything else that supports browser sources. You configure each one in the browser, copy its
+URL, and it runs on **Twitch and Kick** alike. Nothing to install, nothing to sign up for.
 
-## Prerequisites
+**Overlays**
 
-- Git
-- Go 1.24 or higher
-- Node.js 18 or higher
-- npm, pnpm, or yarn
-- Docker & Docker Compose
+| Overlay | What it does |
+| --- | --- |
+| [Sub Sprout](https://extensions.senchabot.com/setup/sub-growing-plant) | A plant that grows with every sub, resub and gift sub, and starts over at full growth |
+| [Universal Chat](https://extensions.senchabot.com/setup/chat-widget) | Twitch and Kick chat merged into one on-screen feed, with 7TV, BTTV and FFZ emotes and platform badges |
+| [Emote Wall](https://extensions.senchabot.com/setup/emote-wall) | Emote-only messages float across the screen, in Calm, Chaos or Bounce motion |
+| [Stream Alerts](https://extensions.senchabot.com/setup/stream-alerts) | Animated alerts with sound for subs, gift subs, Bits, Kicks and raids |
+| [Sub Goal](https://extensions.senchabot.com/setup/sub-goal) | A goal bar every sub and gift sub fills, with a trophy when the target lands |
+| [Stream Frames](https://extensions.senchabot.com/setup/stream-frames) | Webcam, chat and screen frames drawn in the chosen preset's look, transparent in the middle |
 
-## Getting Started
+**Tools**
 
-1. **Clone the repository**
-   ```sh
-   git clone https://github.com/senchabot-opensource/monorepo.git
-   cd monorepo
-   ```
-2. **Set up environment variables**
-   - Copy `.env.example` files to `.env` in each app or service as needed.
-   - Fill in required values.
-3. **Install dependencies**
-   - For Go apps:
-     ```sh
-     go mod download
-     ```
-   - For web app:
-     ```sh
-     cd apps/web
-     npm install # or pnpm install
-     ```
-4. **Start services**
-   - From the monorepo root, `docker-compose up -d` starts PostgreSQL, pgAdmin, the web dashboard, the Discord bot, and the Twitch bot together:
-     ```sh
-     docker-compose up -d
-     ```
-   - You can also run apps individually. See each app's README for specific instructions.
+| Tool | What it does |
+| --- | --- |
+| [Chat Poll](https://extensions.senchabot.com/setup/chat-poll) | Chat votes by typing a number; live bars, a timer and the winner at the end |
+| [Raffle Picker](https://extensions.senchabot.com/setup/raffle) | Viewers enter with a keyword; the drawn winner lands on a confetti overlay |
+| [Subathon Timer](https://extensions.senchabot.com/setup/subathon-timer) | Subs, gift subs, Bits and Kicks add time, shown as a health bar, a clock or a ring |
+| [OBS Bridge](https://extensions.senchabot.com/setup/obs-bridge) | Chat commands switch scenes and control recording over local OBS WebSocket |
 
-5. **Run apps individually**
-   - See each app's README for specific instructions.
+[Game presets](https://extensions.senchabot.com/presets) restyle the widgets together, every widget
+has a [setup guide](https://extensions.senchabot.com/guides), and the
+[changelog](https://extensions.senchabot.com/changelog) lists what changed.
 
-## Feature Overview
+## Twitch bot
 
-### Discord Bot
-- **Twitch Announcements** — Track Twitch streamers and post embeds when they go live. Supports custom message templates, per-streamer overrides, and category filtering.
-- **Auto Discord Scheduled Events** — Automatically create Discord Scheduled Events when tracked streamers go live. Configure which channels trigger events via `/set-twitch event-channel`.
-- **Custom Slash Commands** — Create guild-specific slash commands with variables. Deployed instantly as real Discord Application Commands.
-- **Moderation** — Bulk delete recent messages by content or author pattern. Clean up bot-created scheduled events.
-- **Privacy Controls** — Users can opt in or out of message content tracking.
+- **Custom chat commands** with placeholders like `{user}`, `{channel}` and `{date}`
+- **Aliases** that map a shortcut onto an existing command
+- **Timers** that repeat a command on an interval, up to three per channel
+- **Shoutouts and clips** on demand, with a custom shoutout format
+- **Cooldowns** per user, and broadcaster-only or moderator-allowed command management
 
-### Twitch Bot
-- **Custom Chat Commands** — Create, update, and delete text commands with placeholders (`{user}`, `{channel}`, `{date}`, etc.).
-- **Command Aliases** — Map shortcuts to existing commands (e.g., `!hello` → `!hi`).
-- **Command Timers** — Auto-repeat a command on a set interval (up to 3 per channel).
-- **Shoutouts & Clips** — Trigger Twitch shoutouts with a custom format and create clips on demand.
-- **Permissions** — Broadcaster-only or moderator-allowed command management (configurable).
-- **Cooldowns** — Per-user cooldowns to prevent command spam.
+## Discord bot
 
-### Web Dashboard
-- **Unified Management** — Manage Discord servers and Twitch channels from one account.
-- **Command Management** — Create, edit, enable/disable, and search custom commands. View system and global command references.
-- **Command Variables** — Define reusable variables to inject into command responses.
-- **Livestream Settings** — Configure Twitch streamer tracking, announcement channels, and event channel linking for Discord.
-- **Streamer Tools** — Run chat raffles with OBS overlay, display a sub-sprout growth animation, and generate Twitch sub badges with background removal.
-- **Public Command Page** — Share your Twitch command list at `/commands/<channel>` without requiring login.
+- **Twitch livestream announcements** with custom templates, per-streamer overrides and category filters
+- **Discord Scheduled Events** created automatically when a tracked streamer goes live
+- **Custom slash commands** per guild, deployed as real Discord Application Commands
+- **Moderation** — bulk delete recent messages by content or author pattern
+- **Privacy controls** — viewers opt in or out of message content tracking
 
-### Streaming Widgets
-All widgets/tools work as OBS Browser Sources. No account required.
+## Web dashboard
 
-- **Sub Sprout** — An SVG plant that grows with each subscription, resub, or gift sub. Supports manual growth via `!grow`. Resets after reaching max stage.
-- **Universal Chat** — Merges Twitch and Kick chat into one overlay with emotes, badges, platform indicators, and auto-fading messages.
-- **Raffle** — Chat-based giveaway tool. Viewers type a keyword to enter. Draw a winner and broadcast their name on an overlay with confetti.
+Manage Discord servers and Twitch channels from one account: create and edit commands and command
+variables, configure livestream tracking and announcement channels, share a public command list at
+`/commands/<channel>`, and open the streamer tools (chat raffle, sub badge generator, Sub Sprout).
+
+## Running it locally
+
+**Prerequisites:** Git · Go 1.25+ (see [`go.mod`](./go.mod)) · Node.js 20.19+ · Docker and Docker
+Compose · a PostgreSQL database (Compose brings one)
+
+Everything at once, from the repository root:
+
+```sh
+docker-compose up -d   # PostgreSQL, pgAdmin, the web app and both bots
+```
+
+Copy each app's `env.example` to `.env` and fill it in first. To run one app on its own:
+
+```sh
+# Twitch or Discord bot, from apps/twitch-bot or apps/discord-bot
+go run ./cmd/main
+
+# Dashboard, from apps/web
+npm install && npm run dev            # http://localhost:3000
+
+# Overlays and tools, from apps/extensions
+npm install && npm run build && npm run preview
+```
+
+Each app's README covers its own environment variables and commands.
+
+## Repository layout
+
+```
+apps/
+  extensions/     overlays and tools (browser sources)
+  web/            dashboard
+  twitch-bot/     Twitch chat bot
+  discord-bot/    Discord bot
+  command-server/ gRPC command server
+command/          bot command handlers
+config/           environment configuration
+db/               PostgreSQL data access
+grpc/             gRPC service for bot commands
+helper/           shared helpers
+model/            data models
+platform/         the platform names the apps share
+twitchapi/        Twitch API client
+```
 
 ## Documentation
 
-- [Web App](./apps/web/README.md) — Dashboard setup, API routes, and streamer tools
-- [Discord Bot](./apps/discord-bot/README.md) — Slash command reference and feature details
-- [Twitch Bot](./apps/twitch-bot/README.md) — Chat command reference and feature details
-- [Extensions](./apps/extensions/README.md) — Widget setup and usage
-
-## Live Instances
-
-- [Dashboard](https://senchabot.com/)
-- [Extensions](https://extensions.senchabot.com/)
+- [Extensions](./apps/extensions/README.md) — every widget's options, browser source sizes, chat commands
+- [Web dashboard](./apps/web/README.md) — pages, API routes and streamer tools
+- [Twitch bot](./apps/twitch-bot/README.md) — chat command reference
+- [Discord bot](./apps/discord-bot/README.md) — slash command reference
 
 ## Contributing
 
-Contributions are always welcome! Please read the [contribution guidelines](./CONTRIBUTING.md) first.
+Issues and pull requests are welcome — see [CONTRIBUTING.md](./CONTRIBUTING.md) for the branch and
+commit conventions, and the [Code of Conduct](./CODE_OF_CONDUCT.md).
+
+## License
+
+[GNU General Public License v3.0](./LICENSE)
+
+Not affiliated with Twitch, Kick or Discord.
