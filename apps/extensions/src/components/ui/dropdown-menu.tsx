@@ -15,6 +15,13 @@ interface DropdownMenuProps {
   label: ReactNode;
   /** Accessible name when `label` is an icon only. */
   ariaLabel?: string;
+  /** Tooltip for a trigger that already reads well, e.g. one whose label is the page title. */
+  triggerTitle?: string;
+  /**
+   * Wraps the button alone, e.g. in the page heading. The panel stays outside the wrapper, so a
+   * heading doesn't swallow the menu's links.
+   */
+  wrapTrigger?: (trigger: ReactNode) => ReactNode;
   /** Trigger look; it always gets a pointer cursor and the open state via `aria-expanded`. */
   triggerClassName: string;
   chevron?: boolean;
@@ -35,11 +42,14 @@ interface DropdownMenuProps {
 
 /**
  * Disclosure-style dropdown of links (not an ARIA menu, so links keep link semantics). The
- * panel stays next to the trigger in the DOM so Tab moves into it naturally.
+ * panel stays next to the trigger in the DOM so Tab moves into it naturally, and a mouse
+ * opens it on hover.
  */
 export function DropdownMenu({
   label,
   ariaLabel,
+  triggerTitle,
+  wrapTrigger,
   triggerClassName,
   chevron = true,
   align = 'start',
@@ -48,24 +58,32 @@ export function DropdownMenu({
   panelClassName = 'w-72 p-1.5',
   children,
 }: DropdownMenuProps) {
-  const { open, buttonProps, panelProps } = useDisclosure();
+  const { open, hoverProps, buttonProps, panelProps } = useDisclosure();
   const position = positionClassName ?? (align === 'end' ? 'right-0' : 'left-0');
+
+  const trigger = (
+    <button
+      {...buttonProps}
+      {...hoverProps}
+      aria-label={ariaLabel}
+      title={triggerTitle ?? ariaLabel}
+      className={`cursor-pointer ${triggerClassName}`}
+    >
+      {label}
+      {chevron && (
+        <ChevronDownIcon
+          className={`size-4 shrink-0 transition-transform ${open ? 'rotate-180' : ''}`}
+        />
+      )}
+    </button>
+  );
 
   const content = (
     <>
-      <button
-        {...buttonProps}
-        aria-label={ariaLabel}
-        title={ariaLabel}
-        className={`cursor-pointer ${triggerClassName}`}
-      >
-        {label}
-        {chevron && (
-          <ChevronDownIcon className={`size-4 transition-transform ${open ? 'rotate-180' : ''}`} />
-        )}
-      </button>
+      {wrapTrigger ? wrapTrigger(trigger) : trigger}
       <div
         {...panelProps}
+        {...hoverProps}
         className={`${DROPDOWN_PANEL_CLASS} absolute top-full z-50 mt-1 max-w-[calc(100vw-2rem)] ${position} ${panelClassName}`}
       >
         {children}
