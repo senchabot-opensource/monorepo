@@ -1,14 +1,38 @@
-## Contributing
-Contributions are welcome! If you have a feature request or find a bug, please open an issue on GitHub.
-If you'd like to contribute code, please fork the repository and submit a pull request.
+# Contributing
 
-### Instructions
+Thanks for helping out. Found a bug or want a feature? Search the existing issues first, then open
+a new one — yours may be a duplicate.
 
-* Fork the repository to your own GitHub account.
-* Clone the forked repository to your local machine.
-* Create a new branch for your contribution.
+## Working on code
 
-#### Please ensure your pull request adheres to the following guidelines:
-* Search previous suggestions before making a new one, as yours may be a duplicate.
-* Make an individual pull request for each suggestion.
-* Please read <https://www.conventionalcommits.org/en/v1.0.0/>
+1. Fork the repository, clone your fork, and add the upstream remote:
+
+   ```sh
+   git clone https://github.com/<your-username>/monorepo.git
+   cd monorepo
+   git remote add upstream https://github.com/senchabot-opensource/monorepo.git
+   ```
+
+2. Create your branch from the current upstream `dev`, not from your last branch:
+
+   ```sh
+   git fetch upstream
+   git switch -c feat/my-change upstream/dev
+   ```
+
+3. Set up the app you're changing — each one has a README, and [AGENTS.md](./AGENTS.md) lists the
+   build, test and lint command of every app.
+
+4. Commit with [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/), in English:
+   `fix(twitch-bot): stop a command timer from firing twice`.
+
+5. Run the build, the tests and the linter for every app you touched. Pull requests are not gated
+   by CI, so this is on you.
+
+6. Open the pull request against `dev`, one per change, and describe what changed, why, and how you
+   verified it.
+
+Using an AI coding agent? Point it at [AGENTS.md](./AGENTS.md) — same rules, in the form agents
+need.
+
+Please be kind: [Code of Conduct](./CODE_OF_CONDUCT.md).
