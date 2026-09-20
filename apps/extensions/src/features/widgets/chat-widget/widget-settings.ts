@@ -5,6 +5,9 @@ import { readCoercedFlag, readWidgetUrl, setChannels } from '#/lib/url-params';
 export const PLATFORMS = ['both', 'twitch', 'kick'] as const;
 export const PLATFORM_DISPLAYS = ['name', 'icon', 'none'] as const;
 export const FONTS = ['inter', 'roboto', 'nunito', 'mono', 'serif', 'system'] as const;
+// A preset brings two fonts of its own; both selects can pick either of them.
+export const PRESET_FONTS = ['presetName', 'presetMessage'] as const;
+export const FONT_CHOICES = [...PRESET_FONTS, ...FONTS] as const;
 export const LAYOUTS = ['inline', 'stacked', 'card', 'compact'] as const;
 export const ORIENTATIONS = ['vertical', 'horizontal'] as const;
 // Order is the URL order too, so the same selection always builds the same URL.
@@ -30,7 +33,7 @@ export const ANIMATIONS = [
 
 export type Platforms = (typeof PLATFORMS)[number];
 export type PlatformDisplay = (typeof PLATFORM_DISPLAYS)[number];
-export type Font = (typeof FONTS)[number];
+export type Font = (typeof FONT_CHOICES)[number];
 export type Layout = (typeof LAYOUTS)[number];
 export type Orientation = (typeof ORIENTATIONS)[number];
 export type Animation = (typeof ANIMATIONS)[number];
@@ -42,7 +45,10 @@ export interface Settings {
   /** Preset id; any preset but classic brings its own fonts, colors and message boxes. */
   preset: string;
   platformDisplay: PlatformDisplay;
+  /** The message font; under a preset it starts as the preset's own message font. */
   font: Font;
+  /** The username font; under a preset it starts as the preset's own name font. */
+  userFont: Font;
   fontSize: string;
   layout: Layout;
   orientation: Orientation;
@@ -70,6 +76,7 @@ export const DEFAULT_SETTINGS: Settings = {
   preset: CLASSIC_PRESET,
   platformDisplay: 'icon',
   font: 'inter',
+  userFont: 'inter',
   fontSize: '18',
   layout: 'inline',
   orientation: 'vertical',
@@ -90,6 +97,17 @@ export const DEFAULT_SETTINGS: Settings = {
   hideCommands: false,
   highlights: [],
 };
+
+/**
+ * What a URL means when it names no font: the preset's own pair, or the classic default twice.
+ * Unchanged from before the username got its own font, so overlays already in OBS keep their
+ * look. The setup page starts a new preset on one font instead, and writes that out.
+ */
+export function defaultFonts(preset: string): { font: Font; userFont: Font } {
+  return isClassic(preset)
+    ? { font: DEFAULT_SETTINGS.font, userFont: DEFAULT_SETTINGS.userFont }
+    : { font: 'presetMessage', userFont: 'presetName' };
+}
 
 export function buildWidgetParams(settings: Settings, twitchChannel: string, kickChannel: string) {
   const params = new URLSearchParams();
@@ -128,8 +146,12 @@ export function buildWidgetParams(settings: Settings, twitchChannel: string, kic
   // Opt-in: URLs from before highlights existed carry no param and must keep looking the same.
   const highlights = HIGHLIGHTS.filter((h) => settings.highlights.includes(h));
   if (highlights.length > 0) params.append('highlights', highlights.join(','));
-  if (isClassic(settings.preset) && settings.font !== DEFAULT_SETTINGS.font)
-    params.append('font', settings.font);
+  const fonts = defaultFonts(settings.preset);
+  if (settings.font !== fonts.font) params.append('font', settings.font);
+  // Before the username got its own font it followed the message font, and classic URLs that
+  // carry only `font` still have to mean that.
+  if (settings.userFont !== (isClassic(settings.preset) ? settings.font : fonts.userFont))
+    params.append('userFont', settings.userFont);
   if (settings.layout !== DEFAULT_SETTINGS.layout) params.append('layout', settings.layout);
   if (settings.animation !== DEFAULT_SETTINGS.animation)
     params.append('animation', settings.animation);
@@ -160,6 +182,12 @@ export function parseWidgetUrl(text: string): ParsedWidgetUrl | null {
     return value && Number.isFinite(n) && isValid(n) ? String(n) : fallback;
   };
 
+  // Only a preset offers its own two fonts, so a classic URL naming one falls back.
+  const preset = readPreset(params);
+  const fonts = defaultFonts(preset);
+  const choices: readonly Font[] = isClassic(preset) ? FONTS : FONT_CHOICES;
+  const font = oneOf('font', choices, fonts.font);
+
   // A single channel means a single platform, unless the URL carries a platform indicator,
   // which buildWidgetParams only writes for 'both'. Either way the rebuilt URL stays the same.
   let platforms: Platforms = 'both';
@@ -173,13 +201,14 @@ export function parseWidgetUrl(text: string): ParsedWidgetUrl | null {
     kickChannel,
     settings: {
       platforms,
-      preset: readPreset(params),
+      preset,
       platformDisplay: oneOf(
         'platformDisplay',
         PLATFORM_DISPLAYS,
         DEFAULT_SETTINGS.platformDisplay,
       ),
-      font: oneOf('font', FONTS, DEFAULT_SETTINGS.font),
+      font,
+      userFont: oneOf('userFont', choices, isClassic(preset) ? font : fonts.userFont),
       fontSize: number('fontSize', DEFAULT_SETTINGS.fontSize, (n) => n > 0),
       layout: oneOf('layout', LAYOUTS, DEFAULT_SETTINGS.layout),
       orientation: oneOf('orientation', ORIENTATIONS, DEFAULT_SETTINGS.orientation),

@@ -51,7 +51,7 @@ describe('Chat Box setup', () => {
       expect(urlField().value).toBe(widgetUrl(settings, 'Streamer', 'KickUser'));
     };
 
-    await pickOption(user, en('chatWidget.font'), 'Roboto');
+    await pickOption(user, en('chatWidget.messageFont'), 'Roboto');
     expectUrl({ font: 'roboto' });
 
     const fontSize = textbox(en('chatWidget.fontSize'));
@@ -103,7 +103,7 @@ describe('Chat Box setup', () => {
       'http://localhost:3000/widgets/chat-widget?twitch=streamer&kick=kickuser&bttv=false' +
         '&fontSize=24&background=true&bgOpacity=0.8&boldUsernames=true&orientation=horizontal' +
         '&platformDisplay=name&keep=true&hideBots=true' +
-        '&highlights=mention%2Creply&font=roboto&layout=card&animation=pop',
+        '&highlights=mention%2Creply&font=roboto&userFont=inter&layout=card&animation=pop',
     );
   });
 
@@ -168,7 +168,7 @@ describe('Chat Box setup', () => {
     expect(kickField().value).toBe('');
     expect(platforms('Twitch').checked).toBe(true);
     expect(kickField().disabled).toBe(true);
-    expect(combobox(en('chatWidget.font')).textContent).toBe('JetBrains Mono');
+    expect(combobox(en('chatWidget.messageFont')).textContent).toBe('JetBrains Mono');
     expect(textbox(en('chatWidget.fontSize')).value).toBe('30');
     expect(segment(en('chatWidget.orientation'), en('chatWidget.horizontal')).checked).toBe(true);
     expect(combobox(en('chatWidget.messageLayout')).textContent).toBe(

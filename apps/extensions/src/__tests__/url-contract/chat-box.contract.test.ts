@@ -21,9 +21,19 @@ const fixture = asFixture<Input, Settings>(json);
 // Highlights went opt-in before they shipped: none on is now the default, so the frozen logic's
 // "all on" default and its highlights=none are the one intended difference. Presets came later
 // and write nothing for the classic look, which every frozen URL has.
-const defaults: Settings = { ...fixture.defaults, highlights: [], preset: 'classic' };
+const defaults: Settings = {
+  ...fixture.defaults,
+  highlights: [],
+  preset: 'classic',
+  userFont: 'inter',
+};
 const expectedUrlOf = (c: FixtureCase<Input>) => c.expectedUrl.replace('&highlights=none', '');
-const settingsOf = (input: Input): Settings => ({ ...defaults, ...input.settings });
+// The username font came after these URLs were frozen: back then it followed the message font,
+// and it still has to, or a frozen `font=mono` URL would gain a userFont param.
+const settingsOf = (input: Input): Settings => {
+  const settings = { ...defaults, ...input.settings };
+  return { ...settings, userFont: input.settings.userFont ?? settings.font };
+};
 
 // Mirrors widgetUrl in routes/setup/chat-widget.tsx, which assembles the URL inline.
 const widgetUrl = (settings: Settings, twitch: string, kick: string) => {
@@ -145,6 +155,7 @@ describe('Chat Box widget reads every setup URL', () => {
       hideCommands: s.hideCommands,
       highlights: HIGHLIGHTS.filter((h) => s.highlights.includes(h)),
       font: s.font,
+      userFont: s.userFont === s.font ? undefined : s.userFont,
       layout: s.layout,
       animation: s.animation,
       mock: undefined,
@@ -173,7 +184,8 @@ describe('Chat Box widget reads every setup URL', () => {
     hideBots: Boolean(search.hideBots),
     hideCommands: Boolean(search.hideCommands),
     highlights: parseHighlights(search.highlights as string | undefined),
-    font: search.font,
+    font: search.font ?? 'inter',
+    userFont: search.userFont,
     layout: search.layout,
     animation: search.animation,
     mock: search.mock,
@@ -205,7 +217,9 @@ describe('Chat Box hand-edited URLs', () => {
       bgOpacity: 1,
       duration: 1,
       mockRate: 50,
-      font: 'inter',
+      // A font the widget doesn't know is dropped, and the component reads a missing one as
+      // the classic default (or the preset's own font).
+      font: undefined,
       layout: 'inline',
       animation: 'slide',
       orientation: 'vertical',
