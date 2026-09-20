@@ -4,6 +4,7 @@ import { CloseIcon, RaffleIcon } from '#/components/icons';
 import { SetupShell } from '#/components/setup-shell';
 import { FieldLabel } from '#/components/ui/field-label';
 import { NumberField } from '#/components/ui/number-field';
+import { ScrollHint } from '#/components/ui/scroll-hint';
 import { SegmentedControl, type SegmentedOption } from '#/components/ui/segmented-control';
 import { Select, type SelectOption } from '#/components/ui/select';
 import { SettingsGroup } from '#/components/ui/settings-group';
@@ -36,8 +37,10 @@ const BUTTON_PRIMARY = `${BUTTON_BASE} bg-green-600 text-white enabled:hover:bg-
 const BUTTON_SECONDARY = `${BUTTON_BASE} border border-zinc-300 bg-white text-zinc-900 enabled:hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white dark:enabled:hover:bg-zinc-800`;
 const BUTTON_QUIET =
   'rounded px-1.5 py-0.5 text-xs font-medium text-zinc-500 transition-colors enabled:hover:bg-zinc-100 enabled:hover:text-zinc-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 disabled:cursor-not-allowed disabled:opacity-50 dark:text-zinc-400 dark:enabled:hover:bg-zinc-800 dark:enabled:hover:text-white';
+// The frame stays put and the list inside it scrolls, so the scroll arrow sits within the border.
 const LIST_BOX =
-  'overflow-y-auto rounded-lg border border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950/40';
+  'flex flex-col rounded-lg border border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950/40';
+const LIST_SCROLL = 'min-h-0 flex-1 overflow-y-auto';
 
 // canvas-confetti skips the animation itself when the viewer prefers reduced motion.
 const CONFETTI: BurstOptions = { particleCount: 3, disableForReducedMotion: true };
@@ -377,7 +380,7 @@ export function RaffleWidget({
             {t('raffle.clear')}
           </button>
         </div>
-        <div className={`${LIST_BOX} max-h-24`}>
+        <ScrollHint className={`${LIST_BOX} max-h-24`} scrollClassName={LIST_SCROLL}>
           {state.winners.length === 0 ? (
             <p className="px-3 py-2 text-xs text-zinc-500">{t('raffle.noWinners')}</p>
           ) : (
@@ -397,7 +400,7 @@ export function RaffleWidget({
               ))}
             </ol>
           )}
-        </div>
+        </ScrollHint>
       </section>
 
       <section aria-labelledby={`${id}-entries`} className="flex min-h-0 flex-1 flex-col">
@@ -418,7 +421,7 @@ export function RaffleWidget({
             {t('raffle.clear')}
           </button>
         </div>
-        <div className={`${LIST_BOX} min-h-16 flex-1 p-2`}>
+        <ScrollHint className={`${LIST_BOX} min-h-16 flex-1 p-2`} scrollClassName={LIST_SCROLL}>
           {state.participants.length === 0 ? (
             <p className="p-1 text-xs text-zinc-500">
               {t('raffle.noParticipants', { keyword: keyword || '!join' })}
@@ -452,7 +455,7 @@ export function RaffleWidget({
               })}
             </ul>
           )}
-        </div>
+        </ScrollHint>
       </section>
     </div>
   );

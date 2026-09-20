@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { ChevronDownIcon } from '#/components/icons';
 import { PANEL_CLASS } from '#/components/setup-shell';
 import { SiteHeader } from '#/components/site-header';
+import { ScrollHint } from '#/components/ui/scroll-hint';
 import { INPUT_CLASS } from '#/components/ui/text-field';
 import type { ChatPlatform } from '#/features/tools/command-users';
 import {
@@ -74,58 +75,60 @@ function SceneList({
 }) {
   const { t } = useI18n();
   return (
-    <ul className="max-h-64 space-y-1 overflow-y-auto">
-      {scenes.map((name) => {
-        const isMain = name === mainScene;
-        const isBrb = name === brbScene;
-        return (
-          <li
-            key={name}
-            className={`flex items-center justify-between gap-2 rounded-md border px-2.5 py-1.5 ${
-              isMain
-                ? 'border-green-500/50 bg-green-500/10'
-                : isBrb
-                  ? 'border-amber-500/50 bg-amber-500/10'
-                  : 'border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950/40'
-            }`}
-          >
-            <span className="min-w-0 truncate text-sm text-zinc-800 dark:text-zinc-200">
-              {name}
-            </span>
-            <span className="flex shrink-0 gap-1">
-              <button
-                type="button"
-                onClick={() => onSetMain(name)}
-                disabled={isMain}
-                aria-pressed={isMain}
-                aria-label={t('obsBridge.tool.setMain', { scene: name })}
-                className={`${SMALL_BUTTON} ${
-                  isMain
-                    ? 'bg-green-600 text-white'
-                    : 'bg-green-600/10 text-green-700 hover:bg-green-600/20 dark:text-green-400'
-                }`}
-              >
-                {t('obsBridge.tool.main')}
-              </button>
-              <button
-                type="button"
-                onClick={() => onSetBrb(name)}
-                disabled={isBrb}
-                aria-pressed={isBrb}
-                aria-label={t('obsBridge.tool.setBrb', { scene: name })}
-                className={`${SMALL_BUTTON} ${
-                  isBrb
-                    ? 'bg-amber-500 text-zinc-950'
-                    : 'bg-amber-500/15 text-amber-800 hover:bg-amber-500/25 dark:text-amber-300'
-                }`}
-              >
-                {t('obsBridge.tool.brb')}
-              </button>
-            </span>
-          </li>
-        );
-      })}
-    </ul>
+    <ScrollHint className="flex max-h-64 flex-col" scrollClassName="min-h-0 flex-1 overflow-y-auto">
+      <ul className="space-y-1">
+        {scenes.map((name) => {
+          const isMain = name === mainScene;
+          const isBrb = name === brbScene;
+          return (
+            <li
+              key={name}
+              className={`flex items-center justify-between gap-2 rounded-md border px-2.5 py-1.5 ${
+                isMain
+                  ? 'border-green-500/50 bg-green-500/10'
+                  : isBrb
+                    ? 'border-amber-500/50 bg-amber-500/10'
+                    : 'border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950/40'
+              }`}
+            >
+              <span className="min-w-0 truncate text-sm text-zinc-800 dark:text-zinc-200">
+                {name}
+              </span>
+              <span className="flex shrink-0 gap-1">
+                <button
+                  type="button"
+                  onClick={() => onSetMain(name)}
+                  disabled={isMain}
+                  aria-pressed={isMain}
+                  aria-label={t('obsBridge.tool.setMain', { scene: name })}
+                  className={`${SMALL_BUTTON} ${
+                    isMain
+                      ? 'bg-green-600 text-white'
+                      : 'bg-green-600/10 text-green-700 hover:bg-green-600/20 dark:text-green-400'
+                  }`}
+                >
+                  {t('obsBridge.tool.main')}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onSetBrb(name)}
+                  disabled={isBrb}
+                  aria-pressed={isBrb}
+                  aria-label={t('obsBridge.tool.setBrb', { scene: name })}
+                  className={`${SMALL_BUTTON} ${
+                    isBrb
+                      ? 'bg-amber-500 text-zinc-950'
+                      : 'bg-amber-500/15 text-amber-800 hover:bg-amber-500/25 dark:text-amber-300'
+                  }`}
+                >
+                  {t('obsBridge.tool.brb')}
+                </button>
+              </span>
+            </li>
+          );
+        })}
+      </ul>
+    </ScrollHint>
   );
 }
 

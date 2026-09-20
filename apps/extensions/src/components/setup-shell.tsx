@@ -4,6 +4,7 @@ import { SiteFooter } from '#/components/site-footer';
 import { SiteHeader } from '#/components/site-header';
 import { StepsList } from '#/components/steps-list';
 import { InfoTip } from '#/components/ui/info-tip';
+import { ScrollHint } from '#/components/ui/scroll-hint';
 import { WidgetCrossLinks } from '#/components/widget-cross-links';
 import { type TranslationKey, useI18n } from '#/lib/i18n';
 import type { FaqEntry } from '#/lib/i18n/seo';
@@ -86,7 +87,12 @@ export function SetupShell({
             {settingsTop && <div className="mb-3 lg:shrink-0">{settingsTop}</div>}
             {/* Scrolling happens on the inner box, so on short screens content is clipped inside the
                 panel padding instead of running under the bottom edge; its p-1 keeps focus rings unclipped. */}
-            <div className="space-y-3 p-1 lg:min-h-0 lg:flex-1 lg:overflow-y-auto">{settings}</div>
+            <ScrollHint
+              className="lg:flex lg:min-h-0 lg:flex-1 lg:flex-col"
+              scrollClassName="space-y-3 p-1 lg:min-h-0 lg:flex-1 lg:overflow-y-auto"
+            >
+              {settings}
+            </ScrollHint>
           </div>
 
           {/* A filling preview stretches to the settings panel, with a floor so an iframe (Chat Box,

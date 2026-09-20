@@ -5,6 +5,7 @@ import { CloseIcon, ExternalIcon, GithubIcon, MenuIcon } from '#/components/icon
 import { LocaleLink } from '#/components/locale-link';
 import { ICON_BUTTON_CLASS, SiteControls } from '#/components/site-controls';
 import { DROPDOWN_ITEM_CLASS, DropdownMenu } from '#/components/ui/dropdown-menu';
+import { ScrollHint } from '#/components/ui/scroll-hint';
 import { useI18n } from '#/lib/i18n';
 import { type SitePath, stripLocale } from '#/lib/i18n/paths';
 import { CONTENT_PATHS, LINKS } from '#/lib/links';
@@ -160,9 +161,11 @@ function WidgetsMenu() {
       triggerClassName={NAV_LINK_CLASS}
       anchor="container"
       positionClassName="left-4"
-      panelClassName="max-h-[calc(100dvh-5rem)] w-[min(44rem,calc(100%-2rem))] overflow-y-auto overscroll-contain p-3"
+      panelClassName="flex max-h-[calc(100dvh-5rem)] w-[min(44rem,calc(100%-2rem))] flex-col overscroll-contain p-3"
     >
-      <WidgetGroups sideBySide />
+      <ScrollHint className="flex min-h-0 flex-col" scrollClassName="min-h-0 overflow-y-auto">
+        <WidgetGroups sideBySide />
+      </ScrollHint>
     </DropdownMenu>
   );
 }
@@ -257,16 +260,24 @@ function MobileMenu() {
               <CloseIcon />
             </button>
           </div>
-          <nav aria-label={t('common.nav.label')} className="flex-1 overflow-y-auto p-3">
-            <p className={`${GROUP_LABEL_CLASS} pt-1`}>{t('common.nav.widgets')}</p>
-            <WidgetGroups sideBySide={false} />
-            <div className="mt-3 flex flex-col border-t border-zinc-200 pt-3 dark:border-zinc-800">
-              <ContentLinks className={NAV_LINK_CLASS} />
-              <ExternalLink href={LINKS.source} className={NAV_LINK_CLASS}>
-                <GithubIcon className="size-4" />
-                {t('common.nav.github')}
-              </ExternalLink>
-            </div>
+          <nav
+            aria-label={t('common.nav.label')}
+            className="flex min-h-0 flex-1 flex-col px-3 pt-3"
+          >
+            <ScrollHint
+              className="flex min-h-0 flex-1 flex-col"
+              scrollClassName="min-h-0 flex-1 overflow-y-auto pb-3"
+            >
+              <p className={`${GROUP_LABEL_CLASS} pt-1`}>{t('common.nav.widgets')}</p>
+              <WidgetGroups sideBySide={false} />
+              <div className="mt-3 flex flex-col border-t border-zinc-200 pt-3 dark:border-zinc-800">
+                <ContentLinks className={NAV_LINK_CLASS} />
+                <ExternalLink href={LINKS.source} className={NAV_LINK_CLASS}>
+                  <GithubIcon className="size-4" />
+                  {t('common.nav.github')}
+                </ExternalLink>
+              </div>
+            </ScrollHint>
           </nav>
         </div>
       </dialog>

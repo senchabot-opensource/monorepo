@@ -25,6 +25,8 @@ export const en = {
     channelTip:
       "Just type the channel name, not the full link. For twitch.tv/senchabot, that's senchabot.",
     previewLoading: 'Loading preview…',
+    scrollMore: 'Scroll down for more',
+    scrollTop: 'Back to top',
     setupGuideTitle: 'How to set it up',
     faqTitle: 'Frequently asked questions',
     moreWidgets: 'More widgets',
@@ -2226,6 +2228,8 @@ export const en = {
     lead: "New features and bug fixes in Senchabot Extensions, newest first. The list is put together from the project's commit history on [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      scrollHint:
+        'Setup panels that are too long for the screen now show a small arrow at the bottom, so it is clear there are more settings below. Press it to jump down, and once you are at the end it turns around and takes you back to the top.',
       sproutSaved:
         'Sub Sprout now keeps its plant through an OBS reload and carries it over to the next stream, instead of starting from the first stage every time. Mods can start it over with !grow reset.',
       countdown:

@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { ScrollHint } from '#/components/ui/scroll-hint';
 import { secondsLeft, useNow } from '#/hooks/use-now';
 import type { ChatConnectionStatus } from '#/lib/basechat';
 import { type TranslationKey, useI18n } from '#/lib/i18n';
@@ -266,37 +267,39 @@ export function ActivityList({ activity }: { activity: ObsActivity[] }) {
     return <p className={DETAIL_CLASS}>{t('obsBridge.tool.activityEmpty')}</p>;
   }
   return (
-    <ol className="max-h-72 space-y-2 overflow-y-auto">
-      {activity.map((entry) => {
-        const ok = entry.outcome.kind === 'done';
-        return (
-          <li key={entry.id} className="text-xs leading-relaxed">
-            <div className="flex min-w-0 items-center gap-1.5">
-              <time
-                dateTime={new Date(entry.at).toISOString()}
-                className="shrink-0 text-zinc-500 tabular-nums"
+    <ScrollHint className="flex max-h-72 flex-col" scrollClassName="min-h-0 flex-1 overflow-y-auto">
+      <ol className="space-y-2">
+        {activity.map((entry) => {
+          const ok = entry.outcome.kind === 'done';
+          return (
+            <li key={entry.id} className="text-xs leading-relaxed">
+              <div className="flex min-w-0 items-center gap-1.5">
+                <time
+                  dateTime={new Date(entry.at).toISOString()}
+                  className="shrink-0 text-zinc-500 tabular-nums"
+                >
+                  {time.format(entry.at)}
+                </time>
+                <PlatformDot platform={entry.platform} />
+                <span className="min-w-0 truncate font-medium text-zinc-800 dark:text-zinc-200">
+                  {entry.user}
+                </span>
+                <code className="min-w-0 truncate rounded bg-zinc-100 px-1 py-px font-mono text-[11px] text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
+                  {entry.text}
+                </code>
+              </div>
+              <p
+                className={
+                  ok ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400'
+                }
               >
-                {time.format(entry.at)}
-              </time>
-              <PlatformDot platform={entry.platform} />
-              <span className="min-w-0 truncate font-medium text-zinc-800 dark:text-zinc-200">
-                {entry.user}
-              </span>
-              <code className="min-w-0 truncate rounded bg-zinc-100 px-1 py-px font-mono text-[11px] text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
-                {entry.text}
-              </code>
-            </div>
-            <p
-              className={
-                ok ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400'
-              }
-            >
-              {ok ? '✓ ' : '✕ '}
-              {outcomeText(t, entry.outcome)}
-            </p>
-          </li>
-        );
-      })}
-    </ol>
+                {ok ? '✓ ' : '✕ '}
+                {outcomeText(t, entry.outcome)}
+              </p>
+            </li>
+          );
+        })}
+      </ol>
+    </ScrollHint>
   );
 }

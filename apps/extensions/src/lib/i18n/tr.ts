@@ -27,6 +27,8 @@ export const tr: typeof en = {
     channelTip:
       'Tam linki değil, sadece kanal adını yaz. Örneğin twitch.tv/senchabot için senchabot.',
     previewLoading: 'Önizleme yükleniyor…',
+    scrollMore: 'Devamı için aşağı kaydır',
+    scrollTop: 'Başa dön',
     setupGuideTitle: 'Nasıl kurulur?',
     faqTitle: 'Sık sorulan sorular',
     moreWidgets: "Diğer widget'lar",
@@ -2210,6 +2212,8 @@ export const tr: typeof en = {
     lead: "Senchabot Extensions'a eklenen özellikler ve düzeltilen hatalar, en yenisi en üstte. Liste projenin [GitHub'daki](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) commit geçmişinden hazırlanıyor.",
     site: 'Site',
     entries: {
+      scrollHint:
+        'Ekrana sığmayan kurulum panellerinin altında artık küçük bir ok var, böylece aşağıda başka ayarlar olduğu belli oluyor. Oka basınca aşağı iniyorsun, sona geldiğinde ok yön değiştirip seni başa götürüyor.',
       sproutSaved:
         "Sub Sprout artık bitkiyi OBS'te saklıyor, kaynağı yenilesen de ertesi yayında da kaldığı aşamadan devam ediyor, eskisi gibi ilk aşamadan başlamıyor. Modlar !grow reset ile bitkiyi baştan başlatabiliyor.",
       countdown:
