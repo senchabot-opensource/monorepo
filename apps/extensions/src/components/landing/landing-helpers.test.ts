@@ -63,6 +63,7 @@ describe('gallery card shapes', () => {
       ['stream-alerts', 'standard'],
       ['goal', 'wide'],
       ['frames', 'standard'],
+      ['countdown', 'standard'],
     ]);
     // Tools never span, not even the Subathon strip.
     expect(TOOLS.map((widget) => [widget.id, getCardShape(widget)])).toEqual([
@@ -70,6 +71,19 @@ describe('gallery card shapes', () => {
       ['raffle', 'standard'],
       ['subathon', 'standard'],
       ['obs-bridge', 'standard'],
+    ]);
+  });
+
+  it("anchors today's overlays on a 2x2 Chat Box, with two strips under it", () => {
+    // Seven overlays: the chat column grown to 2x2 and the countdown widened fill both grids.
+    expect(getGalleryShapes(OVERLAYS, OVERLAY_COLUMNS)).toEqual([
+      'feature',
+      'standard',
+      'standard',
+      'standard',
+      'wide',
+      'standard',
+      'wide',
     ]);
   });
 
@@ -93,8 +107,6 @@ describe('gallery card shapes', () => {
   });
 
   it('drops the wide cards, then the tall one, then every span, when a new overlay would leave a hole', () => {
-    // Six overlays, today's: no span leaves the 2- and 3-column grids even, so every card is standard.
-    expect(getGalleryShapes(OVERLAYS, OVERLAY_COLUMNS)).toEqual(Array(6).fill('standard'));
     // Two strips and a column: flattening the strips leaves a hole, flattening the column doesn't.
     const [chat, emote, , goal] = BENTO;
     expect(getGalleryShapes([chat, goal, extra('a', 800, 200), emote], OVERLAY_COLUMNS)).toEqual([
