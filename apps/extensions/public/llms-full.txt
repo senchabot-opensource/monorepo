@@ -43,7 +43,7 @@ All ten work with Twitch and Kick. Stream Frames reads no chat, so it needs no c
 
 Notes:
 - The background is already transparent. No chroma key, filter or custom CSS is needed.
-- Leave "Shutdown source when not visible" and "Refresh browser when scene becomes active" off. Both reload the page, and the widget forgets what it was showing (Sub Sprout goes back to its first stage, a Raffle winner drawn while the source is off never shows). Subathon Timer, Sub Goal and Chat Poll keep their time, count or poll through a reload but can't see subs or votes while the source is off. Stream Alerts only shows what comes in while the source is running.
+- Leave "Shutdown source when not visible" and "Refresh browser when scene becomes active" off. Both reload the page, and the widget forgets what it was showing (a Raffle winner drawn while the source is off never shows). Sub Sprout, Subathon Timer, Sub Goal and Chat Poll keep their plant, time, count or poll through a reload but can't see subs or votes while the source is off. Stream Alerts only shows what comes in while the source is running.
 - To make Chat Box text bigger, change Font Size on the setup page instead of stretching the source.
 - To change a widget later, copy a new URL from the setup page and paste it over the old one. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll and Stream Frames can load an existing URL: paste it into the Widget URL field on the setup page and all settings come back.
 - If a widget looks empty: check that you typed the channel name, not a link, and that it is spelled right. Chat Box and Emote Wall stay empty until something happens in chat.
@@ -130,8 +130,8 @@ A plant that grows one stage with every new sub, resub or gifted sub on Twitch a
 - Widget URL: https://extensions.senchabot.com/widgets/sub-sprout-widget?twitch=CHANNEL&kick=CHANNEL
 - Demo with simulated subs: https://extensions.senchabot.com/widgets/sub-sprout-widget?simulate=true
 - Recommended size: 800x600.
-- The broadcaster and moderators can type !grow in chat to grow the plant by one stage.
-- Growth is not saved. If the page reloads, the plant starts again from the first stage.
+- The broadcaster and moderators can type !grow in chat to grow the plant by one stage, or !grow reset to start it over.
+- The plant is saved inside OBS. It survives reloads and carries over to the next stream. Picking another plant in the URL starts it over.
 - When the plant is fully grown, the next sub starts it over according to the pick setting.
 
 URL parameters (all optional):
@@ -145,7 +145,7 @@ URL parameters (all optional):
 | water | off, rain, sparkle (plays when the plant grows; vine doesn't show it) | off |
 | countfx | 0 hides the sub count badge (for example x5 for a 5-gift bundle) | shown |
 | potlabel | 1 writes the stage on the pot, like 3/10 (vine doesn't show it) | hidden |
-| simulate | true or 1 grows with simulated subs and doesn't read chat; auto simulates until chat connects | off |
+| simulate | true or 1 grows with simulated subs, doesn't read chat and doesn't save the plant; auto simulates until chat connects | off |
 | channel, platform | older single-channel form (platform is twitch or kick); still read | none |
 
 ## Subathon Timer
