@@ -38,8 +38,9 @@ const bridgeBetween = (trigger: Box, panel: Box): Box => ({
 /**
  * Disclosure button + panel of links (not an ARIA menu, so links keep their normal
  * semantics). A mouse opens it by hovering the trigger or the panel and closes it by leaving
- * them; clicking only opens, so it never shuts under the cursor that just aimed at it. Closes
- * on Escape (focus back on the button), a click outside, focus leaving both, or a link click.
+ * them, the page, or the screen; clicking only opens, so it never shuts under the cursor that
+ * just aimed at it. Closes on Escape (focus back on the button), a click outside, focus leaving
+ * both, or a link click.
  * Arrow keys, Home and End move between the panel's links.
  */
 export function useDisclosure() {
@@ -109,6 +110,34 @@ export function useDisclosure() {
 
     document.addEventListener('pointermove', onPointerMove);
     return () => document.removeEventListener('pointermove', onPointerMove);
+  }, [open, close]);
+
+  // A pointer on its way out of the page reports no move once it is gone, and a tab in the
+  // background reports none at all, so the watcher above never sees the menu being left: it was
+  // still open on the way back, until the mouse happened to move. Losing the pointer, or losing
+  // the screen, counts as leaving too.
+  useEffect(() => {
+    if (!open) return;
+
+    const leave = () => {
+      // The move watcher's two guards: a tap or a key opened this, or focus is parked in the
+      // panel, and it is not the pointer's to close.
+      if (!pointerOpenedRef.current || panelRef.current?.contains(document.activeElement)) return;
+      close();
+    };
+    const onVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') leave();
+    };
+
+    document.documentElement.addEventListener('pointerleave', leave);
+    document.addEventListener('visibilitychange', onVisibilityChange);
+    // Another window took the front while the pointer stayed where it was.
+    window.addEventListener('blur', leave);
+    return () => {
+      document.documentElement.removeEventListener('pointerleave', leave);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+      window.removeEventListener('blur', leave);
+    };
   }, [open, close]);
 
   const onBlur = (e: FocusEvent) => {
