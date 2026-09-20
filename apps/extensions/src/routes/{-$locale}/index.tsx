@@ -217,31 +217,38 @@ function WorksWith() {
   );
 }
 
-// Card shapes come from getGalleryShapes: Chat Box (portrait) anchors the grid as a 2×2 block,
-// the goal strip and the countdown run two columns wide, and the tools are a 2×2 of flat cards.
-// Dense flow backfills if a span can't fit.
+// Card shapes come from getGalleryShapes, solved once per grid width: Chat Box (portrait) stays a
+// single column two rows tall and the other overlays fill in beside and under it, the goal strip
+// runs two columns wide, and the tools are a 2×2 of flat cards. Dense flow backfills a span that
+// can't fit.
 const GALLERY_GROUPS = [
   {
     key: 'overlays',
     widgets: OVERLAYS,
-    shapes: getGalleryShapes(OVERLAYS, [2, 3]),
+    shapes: { sm: getGalleryShapes(OVERLAYS, 2), lg: getGalleryShapes(OVERLAYS, 3) },
     lead: 'home.overlaysLead',
     columns: 'sm:grid-cols-2 lg:grid-cols-3',
   },
   {
     key: 'tools',
     widgets: TOOLS,
-    shapes: getGalleryShapes(TOOLS, [2]),
+    shapes: { sm: getGalleryShapes(TOOLS, 2), lg: getGalleryShapes(TOOLS, 2) },
     lead: 'home.toolsLead',
     columns: 'sm:grid-cols-2',
   },
 ] as const;
 
-const SHAPE_SPAN: Record<CardShape, string> = {
-  standard: '',
-  tall: 'sm:row-span-2',
-  feature: 'sm:col-span-2 sm:row-span-2',
-  wide: 'sm:col-span-2',
+// Each breakpoint names both axes, so the wider grid resets a span the narrower one set.
+const SM_SPAN: Record<CardShape, string> = {
+  standard: 'sm:col-span-1 sm:row-span-1',
+  tall: 'sm:col-span-1 sm:row-span-2',
+  wide: 'sm:col-span-2 sm:row-span-1',
+};
+
+const LG_SPAN: Record<CardShape, string> = {
+  standard: 'lg:col-span-1 lg:row-span-1',
+  tall: 'lg:col-span-1 lg:row-span-2',
+  wide: 'lg:col-span-2 lg:row-span-1',
 };
 
 function Gallery() {
@@ -264,8 +271,15 @@ function Gallery() {
             </div>
             <ul className={`grid grid-flow-row-dense gap-5 ${group.columns}`}>
               {group.widgets.map((widget, index) => (
-                <li key={widget.id} className={`flex ${SHAPE_SPAN[group.shapes[index]]}`}>
-                  <WidgetCard widget={widget} headingLevel="h4" shape={group.shapes[index]} />
+                <li
+                  key={widget.id}
+                  className={`flex ${SM_SPAN[group.shapes.sm[index]]} ${LG_SPAN[group.shapes.lg[index]]}`}
+                >
+                  <WidgetCard
+                    widget={widget}
+                    headingLevel="h4"
+                    shapes={{ sm: group.shapes.sm[index], lg: group.shapes.lg[index] }}
+                  />
                 </li>
               ))}
             </ul>
