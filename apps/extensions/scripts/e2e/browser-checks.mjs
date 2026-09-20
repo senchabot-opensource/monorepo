@@ -525,6 +525,19 @@ export async function runHeaderMenu({ chrome, base, path, setupPaths, check, noi
     if (!closed) throw new Error(`no Widgets menu (${WIDGETS_MENU}) in the header`);
     check('menu starts closed', !closed.open && !closed.expanded, JSON.stringify(closed));
 
+    const at = await page.evaluate((sel) => {
+      const r = document.querySelector(sel).getBoundingClientRect();
+      return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+    }, WIDGETS_MENU);
+    await page.moveMouse(at.x, at.y);
+    const hovered = await page
+      .poll(
+        `(() => { const s = (${menuState})(${JSON.stringify(WIDGETS_MENU)}); return s?.open && s; })()`,
+        { timeout: 3000, what: 'the menu to open on hover' },
+      )
+      .catch((err) => err.message);
+    check('hovering the trigger opens it', typeof hovered !== 'string', hovered);
+
     await page.click(WIDGETS_MENU);
     const opened = await page.poll(
       `(() => { const s = (${menuState})(${JSON.stringify(WIDGETS_MENU)}); return s?.open && s; })()`,
@@ -539,10 +552,21 @@ export async function runHeaderMenu({ chrome, base, path, setupPaths, check, noi
     await page.click(WIDGETS_MENU);
     const afterClick = await page.evaluate(menuState, WIDGETS_MENU);
     check(
-      'second click closes it',
-      !afterClick.open && !afterClick.expanded,
+      'a second click leaves it open',
+      afterClick.open && afterClick.expanded,
       JSON.stringify(afterClick),
     );
+
+    // It is a hover menu: the pointer leaving the trigger, the panel and the gap between them
+    // is what closes it. The bottom left corner is clear of all three.
+    await page.moveMouse(4, await page.evaluate(() => window.innerHeight - 4));
+    const afterLeave = await page
+      .poll(
+        `(() => { const s = (${menuState})(${JSON.stringify(WIDGETS_MENU)}); return !s?.open && s; })()`,
+        { timeout: 3000, what: 'the menu to close when the pointer leaves it' },
+      )
+      .catch((err) => err.message);
+    check('the pointer leaving closes it', typeof afterLeave !== 'string', afterLeave);
 
     await page.evaluate((trigger) => document.querySelector(trigger).focus(), WIDGETS_MENU);
     await page.press('ArrowDown');

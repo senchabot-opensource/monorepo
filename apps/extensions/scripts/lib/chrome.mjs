@@ -180,6 +180,11 @@ export class Page {
     await this.clickAt(point.x, point.y);
   }
 
+  /** Real mouse move, for hover behaviour a click can't reach. */
+  async moveMouse(x, y) {
+    await this.send('Input.dispatchMouseEvent', { type: 'mouseMoved', x, y });
+  }
+
   async clickAt(x, y) {
     await this.send('Input.dispatchMouseEvent', { type: 'mouseMoved', x, y });
     await this.send('Input.dispatchMouseEvent', {
