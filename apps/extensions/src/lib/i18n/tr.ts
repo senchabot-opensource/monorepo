@@ -267,7 +267,8 @@ export const tr: typeof en = {
     badgesTip: 'Kullanıcı adının yanında yayıncı, moderatör, VIP ve abone rozetlerini gösterir.',
     animationTip:
       'Yeni mesajın ekrana nasıl gireceğini belirler. Sohbet hızlandıkça animasyonlar otomatik olarak kısalır.',
-    font: 'Yazı Tipi',
+    usernameFont: 'Kullanıcı Adı Fontu',
+    messageFont: 'Mesaj Fontu',
     fontSystem: 'Sistem Varsayılanı',
     messageLayout: 'Mesaj Düzeni',
     layoutInline: 'Satır içi — Kullanıcı adı: mesaj',
@@ -2214,6 +2215,8 @@ export const tr: typeof en = {
     entries: {
       scrollHint:
         'Ekrana sığmayan kurulum panellerinin altında artık küçük bir ok var, böylece aşağıda başka ayarlar olduğu belli oluyor. Oka basınca aşağı iniyorsun, sona geldiğinde ok yön değiştirip seni başa götürüyor.',
+      chatFonts:
+        "Sohbet Kutusu'nda artık kullanıcı adları için ayrı, mesajlar için ayrı font kutusu var ve preset seçiliyken de ikisi açık kalıyor: preset'in getirdiği iki fontu olduğu gibi bırakabilir, başlık fontunu mesajlara da verebilir ya da ikisini Inter, Roboto, Nunito, JetBrains Mono, Source Serif 4 veya sistem fontuyla karıştırabilirsin. Kalın kullanıcı adları ve kalın mesajlar da fontu tek ağırlıkla gelen preset'lerde (Realm, Dynasty, Blocks) artık çalışıyor.",
       sproutSaved:
         "Sub Sprout artık bitkiyi OBS'te saklıyor, kaynağı yenilesen de ertesi yayında da kaldığı aşamadan devam ediyor, eskisi gibi ilk aşamadan başlamıyor. Modlar !grow reset ile bitkiyi baştan başlatabiliyor.",
       countdown:

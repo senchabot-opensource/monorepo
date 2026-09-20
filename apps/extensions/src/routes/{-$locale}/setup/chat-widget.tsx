@@ -40,6 +40,10 @@ import { getSetupPageHead } from '#/lib/seo/pages';
 import { channelWidgetUrl } from '#/lib/url-params';
 import { getWidget } from '#/lib/widgets';
 
+/** Classic has no preset fonts, so a box left on one falls back to the classic default. */
+const siteFont = (choice: Font): Font =>
+  choice === 'presetName' || choice === 'presetMessage' ? DEFAULT_SETTINGS.font : choice;
+
 export const Route = createFileRoute('/{-$locale}/setup/chat-widget')({
   head: ({ params }) =>
     getSetupPageHead('chat-box', getParamsLocale(params), {
@@ -80,12 +84,19 @@ function ChatWidgetSetup() {
 
   const update = <K extends keyof Settings>(key: K, value: Settings[K]) =>
     setSettings((current) => ({ ...current, [key]: value }));
-  useStartOnSitePreset((preset) => update('preset', preset));
+  // Picking a preset sets both font boxes to its own pair, the way a game runs a display font
+  // over a readable one; the boxes stay open for a streamer who wants a single font in both.
+  // Going back to classic drops the preset's fonts, which no longer exist.
+  const pickPreset = (id: string) =>
+    setSettings((current) => ({
+      ...current,
+      preset: id,
+      ...(findPreset(id)
+        ? { userFont: 'presetName' as const, font: 'presetMessage' as const }
+        : { userFont: siteFont(current.userFont), font: siteFont(current.font) }),
+    }));
+  useStartOnSitePreset(pickPreset);
   const preset = findPreset(settings.preset)?.data;
-  // A preset brings its fonts: names in the first, messages in the second.
-  const presetFonts = preset
-    ? [...new Set([preset.fonts.display.family, preset.fonts.body.family])].join(' + ')
-    : '';
 
   const widgetUrl = useMemo(
     () =>
@@ -127,7 +138,7 @@ function ChatWidgetSetup() {
     { value: 'icon', label: t('chatWidget.platformIcon') },
     { value: 'none', label: t('chatWidget.platformHidden') },
   ];
-  const fontOptions: SelectOption<Font>[] = [
+  const siteFontOptions: SelectOption<Font>[] = [
     { value: 'inter', label: 'Inter' },
     { value: 'roboto', label: 'Roboto' },
     { value: 'nunito', label: 'Nunito' },
@@ -135,6 +146,24 @@ function ChatWidgetSetup() {
     { value: 'serif', label: 'Source Serif 4' },
     { value: 'system', label: t('chatWidget.fontSystem') },
   ];
+  // Each box lists the preset's own font for its role first, then the other one. Blocks draws
+  // both roles in one family, and two entries reading "Jersey 10" would look like a bug.
+  const fontOptions = (own: 'presetName' | 'presetMessage'): SelectOption<Font>[] => {
+    if (!preset) return siteFontOptions;
+    const named = {
+      presetName: preset.fonts.display.family,
+      presetMessage: preset.fonts.body.family,
+    };
+    const other = own === 'presetName' ? 'presetMessage' : 'presetName';
+    const ownFonts: SelectOption<Font>[] =
+      named[own] === named[other]
+        ? [{ value: own, label: named[own] }]
+        : [
+            { value: own, label: named[own] },
+            { value: other, label: named[other] },
+          ];
+    return [...ownFonts, ...siteFontOptions];
+  };
   const orientationOptions: SegmentedOption<Orientation>[] = [
     { value: 'vertical', label: t('chatWidget.vertical') },
     { value: 'horizontal', label: t('chatWidget.horizontal') },
@@ -222,18 +251,28 @@ function ChatWidgetSetup() {
       </SettingsGroup>
 
       <SettingsGroup title={t('common.sectionAppearance')}>
-        <PresetField value={settings.preset} onChange={(value) => update('preset', value)} />
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)_minmax(0,1fr)]">
+        <PresetField value={settings.preset} onChange={pickPreset} />
+        <div className="grid gap-3 sm:grid-cols-2">
           <div>
-            <FieldLabel id={`${id}-font`}>{t('chatWidget.font')}</FieldLabel>
+            <FieldLabel id={`${id}-user-font`}>{t('chatWidget.usernameFont')}</FieldLabel>
+            <Select
+              labelledBy={`${id}-user-font`}
+              value={settings.userFont}
+              onChange={(value) => update('userFont', value)}
+              options={fontOptions('presetName')}
+            />
+          </div>
+          <div>
+            <FieldLabel id={`${id}-font`}>{t('chatWidget.messageFont')}</FieldLabel>
             <Select
               labelledBy={`${id}-font`}
               value={settings.font}
               onChange={(value) => update('font', value)}
-              options={preset ? [{ value: settings.font, label: presetFonts }] : fontOptions}
-              disabled={Boolean(preset)}
+              options={fontOptions('presetMessage')}
             />
           </div>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
           <div>
             <FieldLabel htmlFor={`${id}-font-size`}>{t('chatWidget.fontSize')}</FieldLabel>
             <NumberField

@@ -14,6 +14,7 @@ export interface ChangelogEntry {
 // Alerts is unlisted, so its commits stay out.
 export const CHANGELOG: readonly ChangelogEntry[] = [
   { date: '2026-09-20', key: 'changelog.entries.scrollHint', widgets: [] },
+  { date: '2026-09-20', key: 'changelog.entries.chatFonts', widgets: ['chat-box'] },
   { date: '2026-09-20', key: 'changelog.entries.sproutSaved', widgets: ['sub-sprout'] },
   { date: '2026-09-20', key: 'changelog.entries.countdown', widgets: ['countdown'] },
   { date: '2026-09-20', key: 'changelog.entries.deviceTheme', widgets: [] },

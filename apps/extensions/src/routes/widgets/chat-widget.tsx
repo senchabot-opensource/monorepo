@@ -23,7 +23,13 @@ import { type EmoteMap, useChannelEmotes } from '#/features/widgets/chat-widget/
 import { useTwitchBadges } from '#/features/widgets/chat-widget/use-badges';
 import { useMockChat } from '#/features/widgets/chat-widget/use-mock-chat';
 import { useUnifiedChat } from '#/features/widgets/chat-widget/use-unified-chat';
-import { parseHighlights } from '#/features/widgets/chat-widget/widget-settings';
+import {
+  defaultFonts,
+  type Font,
+  FONT_CHOICES,
+  type FONTS,
+  parseHighlights,
+} from '#/features/widgets/chat-widget/widget-settings';
 import { useKickChannel } from '#/hooks/use-kick-channel';
 import { clampedNumber } from '#/lib/url-params';
 import { useT } from '#/lib/i18n';
@@ -76,7 +82,10 @@ const searchSchema = z.object({
   hideBots: z.coerce.boolean().optional(),
   hideCommands: z.coerce.boolean().optional(),
   highlights: z.string().optional(),
-  font: z.enum(['inter', 'roboto', 'nunito', 'mono', 'serif', 'system']).catch('inter'),
+  // Left open: what a missing font means depends on whether a preset is on, so it is resolved
+  // in the component instead of here. `presetName`/`presetMessage` are the preset's own two.
+  font: z.enum(FONT_CHOICES).optional().catch(undefined),
+  userFont: z.enum(FONT_CHOICES).optional().catch(undefined),
   layout: z.enum(['inline', 'stacked', 'card', 'compact']).catch('inline'),
   mock: z.coerce.boolean().optional(),
   mockRate: clampedNumber(0.1, 50, undefined),
@@ -85,11 +94,11 @@ const searchSchema = z.object({
     .catch('slide'),
 });
 
-type FontChoice = z.infer<typeof searchSchema>['font'];
+type SiteFont = (typeof FONTS)[number];
 type LayoutChoice = z.infer<typeof searchSchema>['layout'];
 type AnimationChoice = z.infer<typeof searchSchema>['animation'];
 
-const FONT_STACKS: Record<FontChoice, string> = {
+const FONT_STACKS: Record<SiteFont, string> = {
   inter: '"Inter", ui-sans-serif, system-ui, sans-serif',
   roboto: '"Roboto", ui-sans-serif, system-ui, sans-serif',
   nunito: '"Nunito", ui-sans-serif, system-ui, sans-serif',
@@ -98,13 +107,20 @@ const FONT_STACKS: Record<FontChoice, string> = {
   system: 'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
 };
 
-const FONT_GOOGLE_FAMILIES: Partial<Record<FontChoice, string>> = {
+const FONT_GOOGLE_FAMILIES: Partial<Record<SiteFont, string>> = {
   inter: 'Inter:wght@400;500;600;700',
   roboto: 'Roboto:wght@400;500;700',
   nunito: 'Nunito:wght@400;600;800',
   mono: 'JetBrains+Mono:wght@400;500',
   serif: 'Source+Serif+4:wght@400;600',
 };
+
+/** The CSS stack for one font choice; a preset's own two need the skin, the rest are static. */
+function fontStack(choice: Font, skin: Skin | null): string {
+  if (choice === 'presetName') return skin ? skin.display : FONT_STACKS.inter;
+  if (choice === 'presetMessage') return skin ? skin.body : FONT_STACKS.inter;
+  return FONT_STACKS[choice];
+}
 
 // `box` is the card's own background and border; a preset draws its own box instead.
 const LAYOUT_CLASSES: Record<
@@ -294,6 +310,10 @@ function RouteComponent() {
 
   const showPlatformIndicator = search.platformDisplay !== 'none';
   const skin = skinFor(search.preset);
+  const fallback = defaultFonts(search.preset ?? '');
+  const messageFont = search.font ?? fallback.font;
+  // Before the username had its own font it followed the message font; classic URLs still do.
+  const userFont = search.userFont ?? (skin ? fallback.userFont : messageFont);
 
   const emotes = useChannelEmotes(search.twitch, kick?.userId ?? null, {
     sevenTv: search.sevenTv,
@@ -322,9 +342,16 @@ function RouteComponent() {
 
   React.useEffect(() => {
     if (typeof document === 'undefined') return;
-    // A preset loads its own fonts through SkinProvider.
-    const family = skin ? undefined : FONT_GOOGLE_FAMILIES[search.font];
-    if (!family) {
+    // A preset's own fonts come from its stylesheet link below; these are the site fonts a
+    // select can pick on top of it, so a preset can still need one.
+    const families = [
+      ...new Set(
+        [userFont, messageFont]
+          .map((choice) => FONT_GOOGLE_FAMILIES[choice as SiteFont])
+          .filter((family) => family !== undefined),
+      ),
+    ];
+    if (families.length === 0) {
       document.getElementById(GOOGLE_FONTS_LINK_ID)?.remove();
       document.getElementById(GOOGLE_FONTS_PRECONNECT_ID)?.remove();
       return;
@@ -338,7 +365,9 @@ function RouteComponent() {
       document.head.appendChild(preconnect);
     }
     let link = document.getElementById(GOOGLE_FONTS_LINK_ID) as HTMLLinkElement | null;
-    const nextHref = `https://fonts.googleapis.com/css2?family=${family}&display=swap`;
+    const nextHref = `https://fonts.googleapis.com/css2?${families
+      .map((family) => `family=${family}`)
+      .join('&')}&display=swap`;
     if (!link) {
       link = document.createElement('link');
       link.id = GOOGLE_FONTS_LINK_ID;
@@ -352,7 +381,7 @@ function RouteComponent() {
       document.getElementById(GOOGLE_FONTS_LINK_ID)?.remove();
       document.getElementById(GOOGLE_FONTS_PRECONNECT_ID)?.remove();
     };
-  }, [search.font, skin]);
+  }, [userFont, messageFont]);
 
   const { data: messages } = useLiveQuery((q) =>
     q
@@ -438,7 +467,7 @@ function RouteComponent() {
       data-preset={skin?.id}
       style={{
         fontSize: `${search.fontSize}px`,
-        fontFamily: skin ? skin.body : FONT_STACKS[search.font],
+        fontFamily: fontStack(messageFont, skin),
         backgroundColor: search.background ? background : 'transparent',
         ...(skin && { color: skin.text, fontSynthesis: 'none' }),
       }}
@@ -471,6 +500,7 @@ function RouteComponent() {
             platformAccent={Boolean(search.platformAccent)}
             boldUsernames={Boolean(search.boldUsernames)}
             boldMessages={Boolean(search.boldMessages)}
+            userFontFamily={fontStack(userFont, skin)}
             highlight={getHighlightKind(msg, channels, highlights)}
             showReply={highlights.has('reply')}
             skin={skin}
@@ -501,6 +531,7 @@ type MessageRowProps = {
   platformAccent: boolean;
   boldUsernames: boolean;
   boldMessages: boolean;
+  userFontFamily: string;
   highlight: HighlightKind | null;
   showReply: boolean;
   skin: Skin | null;
@@ -526,6 +557,7 @@ const MessageRow = React.memo(function MessageRow({
   platformAccent,
   boldUsernames,
   boldMessages,
+  userFontFamily,
   highlight,
   showReply,
   skin,
@@ -595,15 +627,19 @@ const MessageRow = React.memo(function MessageRow({
       textShadow: hardShadow ?? '1px 1px 1px rgba(0, 0, 0)',
       fontSize: compactSize,
       fontWeight: boldUsernames ? 700 : undefined,
-      fontFamily: skin?.display,
+      // Presets switch synthesis off so a one-weight font isn't smeared, but a single-weight
+      // preset font (Marcellus, Zen Antique, Jersey 10) then ignored this box entirely.
+      fontSynthesis: boldUsernames ? 'weight' : undefined,
+      fontFamily: userFontFamily,
     }),
-    [accessibleColor, compactSize, boldUsernames, hardShadow, skin],
+    [accessibleColor, compactSize, boldUsernames, hardShadow, userFontFamily],
   );
   const messageStyle: React.CSSProperties = React.useMemo(
     () => ({
       textShadow: shadowStyle,
       fontSize: compactSize,
       fontWeight: boldMessages ? 600 : undefined,
+      fontSynthesis: boldMessages ? 'weight' : undefined,
     }),
     [compactSize, boldMessages, shadowStyle],
   );

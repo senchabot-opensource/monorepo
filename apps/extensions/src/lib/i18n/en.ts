@@ -263,7 +263,8 @@ export const en = {
     badgesTip: 'Shows broadcaster, moderator, VIP and subscriber badges next to usernames.',
     animationTip:
       'Sets how new messages enter the screen. Animations get shorter automatically as chat speeds up.',
-    font: 'Font',
+    usernameFont: 'Username Font',
+    messageFont: 'Message Font',
     fontSystem: 'System Default',
     messageLayout: 'Message Layout',
     layoutInline: 'Inline — Username: message',
@@ -2230,6 +2231,8 @@ export const en = {
     entries: {
       scrollHint:
         'Setup panels that are too long for the screen now show a small arrow at the bottom, so it is clear there are more settings below. Press it to jump down, and once you are at the end it turns around and takes you back to the top.',
+      chatFonts:
+        'Chat Box now has a font box for usernames and another for messages, and both stay open under a preset: keep the two fonts the preset came with, put its heading font on the messages too, or mix either with Inter, Roboto, Nunito, JetBrains Mono, Source Serif 4 or your system font. Bold usernames and bold messages also work now under presets whose font comes in a single weight, like Realm, Dynasty and Blocks.',
       sproutSaved:
         'Sub Sprout now keeps its plant through an OBS reload and carries it over to the next stream, instead of starting from the first stage every time. Mods can start it over with !grow reset.',
       countdown:
