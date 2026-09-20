@@ -4,6 +4,13 @@ import { subsIn } from "../goal/goal-count";
 import { KickEventSource } from "../subathon/subathon-sources";
 import { useKickChannel } from "#/hooks/use-kick-channel";
 import { PlantSlot } from "./plant-slot";
+import {
+  createSprout,
+  loadSprout,
+  parseGrowCommand,
+  storageKey,
+  type SproutState,
+} from "./sub-sprout-state";
 import { SubCountFX, SUB_COUNT_DURATION_MS } from "./fx/sub-count-fx";
 import { VineOverlay } from "./plants/vine-overlay";
 import {
@@ -89,13 +96,6 @@ function distributeGrowth(
   return { targetSlot: target, perSlot };
 }
 
-function buildSlots(count: number): SlotState[] {
-  return Array.from({ length: count }, () => ({
-    stagesDone: 0,
-    progress: 0,
-  }));
-}
-
 /** "3/10" style pot label: completed stages over total stages. */
 export function formatPotLabel(stage: number, stages: number): string {
   const total = Math.max(1, Math.floor(stages));
@@ -125,21 +125,26 @@ export function SubSproutWidget({
   const waterDurationMs = WATER_EFFECT_DURATION_MS / speed;
   const countDurationMs = SUB_COUNT_DURATION_MS / speed;
 
+  // simulate=1 never touches storage. simulate=auto shares the channel's plant, but only once
+  // real chat has taken over from the simulated subs.
+  const key = simulate === true ? null : storageKey(twitchChannel, kickChannel);
+  const [saved] = useState<SproutState>(() =>
+    loadSprout(simulate ? null : key, safeVariety),
+  );
+  // The URL's plant, read by callbacks that must not be rebuilt when it changes.
+  const settingRef = useRef<PlantId>(safeVariety);
+  settingRef.current = safeVariety;
+
   const [currentVariety, setCurrentVariety] = useState<PlantId>(
-    () => safeVariety,
+    () => saved.variety,
   );
   const currentVarietyRef = useRef<PlantId>(currentVariety);
 
-  useEffect(() => {
-    currentVarietyRef.current = safeVariety;
-    setCurrentVariety(safeVariety);
-  }, [safeVariety]);
-
   const usesNewFeatures = currentVariety !== "classic";
 
-  const [slotStates, setSlotStates] = useState<SlotState[]>(() =>
-    buildSlots(1),
-  );
+  const [slotStates, setSlotStates] = useState<SlotState[]>(() => [
+    { stagesDone: saved.stagesDone, progress: saved.progress },
+  ]);
   const slotStatesRef = useRef<SlotState[]>(slotStates);
   slotStatesRef.current = slotStates;
 
@@ -232,20 +237,77 @@ export function SubSproutWidget({
     if (!countFx) setSubCountFx(null);
   }, [countFx]);
 
-  useEffect(() => {
-    slotStatesRef.current = buildSlots(1);
+  const applySprout = useCallback((state: SproutState) => {
+    currentVarietyRef.current = state.variety;
+    setCurrentVariety(state.variety);
+    slotStatesRef.current = [
+      { stagesDone: state.stagesDone, progress: state.progress },
+    ];
     setSlotStates(slotStatesRef.current);
     cycleRef.current = 0;
-  }, [safeVariety, safePick, safeWater, simulate]);
+    subQueue.current = 0;
+  }, []);
 
-  // In "auto" simulation (setup previews) clear the simulated growth once the
-  // real connection takes over. Regular reconnects must not wipe progress.
+  /** A mod's "!grow reset": back to stage 0 of the plant the URL asks for. */
+  const resetSprout = useCallback(
+    () => applySprout(createSprout(settingRef.current)),
+    [applySprout],
+  );
+
+  // The settings the plant on screen grew under. Only a real change starts it over: on the
+  // first run the saved plant has to stay.
+  const grownUnder = useRef({
+    variety: safeVariety,
+    pick: safePick,
+    water: safeWater,
+    simulate,
+  });
+
+  useEffect(() => {
+    const before = grownUnder.current;
+    if (
+      before.variety === safeVariety &&
+      before.pick === safePick &&
+      before.water === safeWater &&
+      before.simulate === simulate
+    ) {
+      return;
+    }
+    grownUnder.current = {
+      variety: safeVariety,
+      pick: safePick,
+      water: safeWater,
+      simulate,
+    };
+    resetSprout();
+  }, [safeVariety, safePick, safeWater, simulate, resetSprout]);
+
+  // In "auto" simulation (setup previews) drop the simulated growth once the real connection
+  // takes over, and pick the channel's saved plant up instead. Reconnects must not wipe it.
   useEffect(() => {
     if (simulate !== "auto" || !joined) return;
-    slotStatesRef.current = buildSlots(1);
-    setSlotStates(slotStatesRef.current);
-    cycleRef.current = 0;
-  }, [simulate, joined]);
+    applySprout(loadSprout(key, safeVariety));
+  }, [simulate, joined, key, safeVariety, applySprout]);
+
+  // Saved per channel pair, so an OBS refresh or a scene change keeps the plant it grew to.
+  useEffect(() => {
+    if (!key || (simulate === "auto" && !joined)) return;
+    const first = slotStates[0];
+    if (!first) return;
+    try {
+      window.localStorage.setItem(
+        key,
+        JSON.stringify({
+          setting: safeVariety,
+          variety: currentVariety,
+          stagesDone: first.stagesDone,
+          progress: first.progress,
+        } satisfies SproutState),
+      );
+    } catch {
+      // Storage blocked: the plant still grows, it just won't survive a reload.
+    }
+  }, [key, simulate, joined, safeVariety, currentVariety, slotStates]);
 
   // Preview simulation: only x1/x2 subs are shown and the next growth is
   // scheduled after the sub count animation has finished.
@@ -389,10 +451,10 @@ export function SubSproutWidget({
             userstate.mod === true ||
             userstate.mod === 1 ||
             userstate.mod === "1";
-          const command = message.trim().split(/\s+/)[0]?.toLowerCase();
-          if (command === "!grow" && (isMod || isBroadcaster)) {
-            handleSubEvent(1);
-          }
+          if (!isMod && !isBroadcaster) return;
+          const command = parseGrowCommand(message);
+          if (command === "grow") handleSubEvent(1);
+          else if (command === "reset") resetSprout();
         },
       );
 
@@ -413,7 +475,7 @@ export function SubSproutWidget({
     return () => {
       for (const cleanup of cleanups) cleanup();
     };
-  }, [twitchChannel, handleSubEvent]);
+  }, [twitchChannel, handleSubEvent, resetSprout]);
 
   // Its own effect: a Kick lookup that lands later must not restart the Twitch reader.
   const chatroomId = kickIds?.chatroomId;
@@ -424,9 +486,9 @@ export function SubSproutWidget({
     if (simulate === true || !chatroomId) return;
     const source = new KickEventSource(chatroomId, channelId, event => {
       if (event.kind === "mod") {
-        // The first word, as the Twitch reader takes it.
-        const command = event.text.trim().split(/\s+/)[0]?.toLowerCase();
-        if (command === "!grow") handleSubEvent(1);
+        const command = parseGrowCommand(event.text);
+        if (command === "grow") handleSubEvent(1);
+        else if (command === "reset") resetSprout();
         return;
       }
       // Kick's second word on a sub, a resub shared in chat, Kicks and raids add nothing.
@@ -438,7 +500,7 @@ export function SubSproutWidget({
       syncJoined();
     };
     return () => source.disconnect();
-  }, [simulate, chatroomId, channelId, handleSubEvent, syncJoined]);
+  }, [simulate, chatroomId, channelId, handleSubEvent, resetSprout, syncJoined]);
 
   useEffect(() => {
     if (!activeWaterSlot) return;

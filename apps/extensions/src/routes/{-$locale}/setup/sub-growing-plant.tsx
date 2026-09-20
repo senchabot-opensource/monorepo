@@ -50,6 +50,7 @@ const PREVIEW_SPEEDS = [1, 2, 3, 5, 10];
 const FAQ: FaqEntry[] = [
   ['subSprout.faq1Q', 'subSprout.faq1A'],
   ['subSprout.faq2Q', 'subSprout.faq2A'],
+  ['subSprout.faq3Q', 'subSprout.faq3A'],
 ];
 
 function SubSproutSetup() {

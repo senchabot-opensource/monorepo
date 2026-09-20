@@ -53,7 +53,7 @@ const PAGES: PageCase[] = [
       'common.faqTitle',
       'common.moreWidgets',
     ],
-    faq: ['subSprout.faq1Q', 'subSprout.faq2Q'],
+    faq: ['subSprout.faq1Q', 'subSprout.faq2Q', 'subSprout.faq3Q'],
   },
   {
     path: '/setup/subathon-timer',

@@ -563,13 +563,17 @@ export const tr: typeof en = {
       'Yayın yazılımında (OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio vb.) bir Tarayıcı Kaynağı ekle.',
     guideStep2: "Kopyaladığın abone hedefi bitkisi URL'sini yapıştır.",
     guideStep3: 'Genişliği 800 ve yüksekliği 600 olarak ayarla.',
-    guideStep4: 'Yayıncılar ve moderatörler büyümeyi elle tetiklemek için sohbette !grow yazabilir.',
+    guideStep4:
+      'Yayıncılar ve moderatörler büyümeyi elle tetiklemek için sohbette !grow, bitkiyi baştan başlatmak için !grow reset yazabilir.',
     faq1Q: 'Abone hedefi bitkisini kullanmak için giriş yapmam gerekiyor mu?',
     faq1A:
       'Kayıt veya OAuth girişi gerekmez. Sub Sprout, herkese açık sohbet olay dinleyicileri aracılığıyla anonim olarak bağlanır.',
     faq2Q: 'Abone hedefi bitkisi tam büyüklüğe ulaştığında ne olur?',
     faq2A:
       'Bitki tamamen büyüdükten sonra gelen ilk abonelik, Bitki Değişimi ayarına göre bitkiyi baştan başlatır: aynı bitki, sıradaki çeşit ya da rastgele biri.',
+    faq3Q: 'Tarayıcı Kaynağı yenilenince bitki baştan mı başlıyor?',
+    faq3A:
+      "Hayır. Bitki OBS'in içinde kayıtlı, yenilemede, sahne değişiminde ve sonraki yayında kaldığı aşamadan devam ediyor. Baştan başlatmak için bir modun sohbete !grow reset yazması yeterli.",
   },
   subathon: {
     breadcrumb: 'Subathon Timer Kurulumu',
@@ -2206,6 +2210,8 @@ export const tr: typeof en = {
     lead: "Senchabot Extensions'a eklenen özellikler ve düzeltilen hatalar, en yenisi en üstte. Liste projenin [GitHub'daki](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) commit geçmişinden hazırlanıyor.",
     site: 'Site',
     entries: {
+      sproutSaved:
+        "Sub Sprout artık bitkiyi OBS'te saklıyor, kaynağı yenilesen de ertesi yayında da kaldığı aşamadan devam ediyor, eskisi gibi ilk aşamadan başlamıyor. Modlar !grow reset ile bitkiyi baştan başlatabiliyor.",
       countdown:
         "Yayın Geri Sayımı geldi: başlangıç, mola ve bitiş sahnelerin için bir saat. Bir süre ya da yayına geçeceğin saati yaz, preset'ini seç, modların da sohbetten !countdown ile süreyi uzatsın.",
       deviceTheme:
