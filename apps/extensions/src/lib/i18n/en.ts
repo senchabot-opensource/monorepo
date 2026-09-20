@@ -95,6 +95,11 @@ export const en = {
       name: 'Sub Goal',
       tagline: 'A goal bar that every sub and gifted sub fills, with a trophy when you reach it.',
     },
+    frames: {
+      name: 'Stream Frames',
+      tagline:
+        'Ready-made frames for your camera, chat and stream screen, drawn to match your preset.',
+    },
     subathon: {
       name: 'Subathon Timer',
       tagline:
@@ -218,7 +223,7 @@ export const en = {
       'Yes. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal and Chat Poll take a Twitch and a Kick channel in the same URL. OBS Bridge can listen to both chats at once too. Raffle runs on one platform at a time.',
     faq5Q: 'How do I change a widget later?',
     faq5A:
-      'Open its setup page, set it up the way you want and replace the URL in your Browser Source. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal and Chat Poll can also open an existing URL: paste it on the setup page, your settings come back, and you change only what you need.',
+      'Open its setup page, set it up the way you want and replace the URL in your Browser Source. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll and Stream Frames can also open an existing URL: paste it on the setup page, your settings come back, and you change only what you need.',
     faq6Q: 'Will my widget URL keep working after updates?',
     faq6A:
       "Yes. Updates keep existing URL settings and their values working, so a widget that's already in your scene doesn't need a new URL.",
@@ -738,6 +743,78 @@ export const en = {
     faq4A:
       "Not yet. Twitch and Kick don't show new follows to a page that isn't logged in, so the goal counts subs, the same way on both platforms.",
   },
+  frames: {
+    breadcrumb: 'Stream Frames Setup',
+    title: 'Stream Frames Setup',
+    intro:
+      "Ready-made frames for your camera, your chat or your whole stream screen. The preset you pick draws the frame in that game's style, down to its shape, decorations and motion: a pagoda roof, swaying tassels and drifting petals in Dynasty, grass blocks and flickering torches in Blocks. No channel to connect. Add the URL to OBS and put your camera or chat under the frame.",
+    sectionPiece: 'Frame',
+    piece: 'What are you framing?',
+    pieceTip:
+      'Each piece is its own browser source. Add all three with the same preset and everything on screen matches.',
+    pieces: {
+      camera: 'Camera',
+      chat: 'Chat',
+      screen: 'Screen',
+    },
+    pieceHints: {
+      camera: 'A 16:9 frame for your webcam. Fit your camera into the opening in the middle.',
+      cameraPortrait:
+        'A 9:16 frame for a phone camera or a webcam turned on its side. Fit your camera into the opening in the middle.',
+      chat: 'A tall frame with a header for the Chat Box. Place the Chat Box under the header.',
+      screen:
+        "A thin frame along the edges of your whole stream. The decorations stay in the corners so they don't cover your game.",
+    },
+    orientation: 'Orientation',
+    orientations: {
+      landscape: 'Landscape',
+      portrait: 'Portrait',
+    },
+    labelLabel: 'Label',
+    labelTips: {
+      camera:
+        'Shows on the tab above your camera, like your channel name. Leave it empty and the tab keeps just its decoration.',
+      chat:
+        'Shows on the tab above the chat frame. Leave it empty and the tab keeps just its decoration.',
+      screen:
+        'Shows on the plate at the bottom center of the screen. Leave it empty to hide the plate.',
+    },
+    labelPlaceholder: 'No label',
+    color: 'Color',
+    motion: 'Animations',
+    motionTip:
+      'Glowing lines, light sweeps and small touches that depend on the preset, like lanterns, torches or sparks. Turn it off and the frame stays still.',
+    previewTitle: 'Stream Frame Preview',
+    previewIframeTitle: 'Stream Frame Preview',
+    previewHint:
+      'The silhouette and chat lines in the preview are just placeholders. On stream the middle of the frame is transparent, so your camera or chat shows through from underneath.',
+    widgetUrlTip:
+      'Already made a frame? Paste its URL here to load your settings and change what you need.',
+    widgetUrlPlaceholder: 'Paste an existing frame URL to edit it',
+    widgetUrlInvalid: "This isn't a Stream Frames URL.",
+    browserSourceHintSize: ' (recommended size: {width}×{height}).',
+    guideTitle: 'Streaming Software Setup (OBS, Streamlabs, XSplit, etc.)',
+    guideStep1:
+      'Add a Browser Source in your streaming software (OBS Studio, Streamlabs Desktop, XSplit, vMix, etc.) and paste the frame URL.',
+    guideStep2:
+      'Set the width and height to the recommended size. For a square camera, type your own size. The frame fits any size.',
+    guideStep3:
+      'In the Sources list, move the frame above your camera or Chat Box, then place it over them in the scene.',
+    guideStep4:
+      "Make your camera big enough to fill the opening, but keep it inside the frame's outer edge. In a 640 × 360 frame, 590 × 296 fits exactly, and in a 360 × 640 portrait frame, 306 × 572 does.",
+    faq1Q: 'Does the frame show my camera or chat by itself?',
+    faq1A:
+      "No. The middle of the frame is transparent, it's only decoration. You add your camera and Chat Box to OBS as separate sources and put them under the frame.",
+    faq2Q: 'Do I need to connect my Twitch or Kick account?',
+    faq2A:
+      "No. The frame doesn't read chat and doesn't need a channel name. It works the same whether you stream on Twitch, Kick or anywhere else.",
+    faq3Q: 'Can I use the camera frame at a different size?',
+    faq3A:
+      'Yes. For a vertical camera, set Orientation to Portrait and the recommended size becomes 360 × 640. The frame is drawn to fit its browser source, so for a square camera just set the width and height to match, and the decorations scale with it.',
+    faq4Q: 'Is the art in the frames taken from the games?',
+    faq4A:
+      'No. Every drawing, like the pagoda roof, the lanterns or the pixel blocks, was made from scratch, with no game logos or art. The presets are fan-made styles that capture the feel of those games.',
+  },
   poll: {
     breadcrumb: 'Chat Poll Setup',
     title: 'Chat Poll Setup',
@@ -1132,7 +1209,7 @@ export const en = {
     openSetup: 'Open the setup page',
     index: {
       title: 'Guides',
-      lead: "Each guide answers one question step by step: adding a widget to OBS, combining Twitch and Kick chat, reading chat in an OBS dock, adding stream alerts, running a subathon timer, running a chat poll, running a chat raffle and switching scenes from chat. They all cover free tools that don't need a login.",
+      lead: "Each guide answers one question step by step: adding a widget to OBS, combining Twitch and Kick chat, reading chat in an OBS dock, adding stream alerts, running a subathon timer, running a chat poll, framing your camera and chat, running a chat raffle and switching scenes from chat. They all cover free tools that don't need a login.",
       listLabel: 'All guides',
       moreText:
         "For general questions, check the [FAQ](/faq). To see what's changed, head to the [changelog](/changelog).",
@@ -1170,6 +1247,8 @@ export const en = {
             'A vertical chat column. A bigger source fits more messages, the text stays the same size.',
           emoteWall: 'A full 1080p canvas. Emotes show up anywhere on the screen.',
           subSprout: 'The plant and pot grow inside this area.',
+          frames:
+            '640x360 for a camera, 420x720 for chat, 1920x1080 for the screen. The frame fits whatever size you give it.',
           goal: 'A wide strip for the goal bar, with room above it for the +1s to rise into.',
           subathon: 'A wide strip for the health bar, clock or ring. A bigger source scales it up.',
           poll: 'Room for a poll with up to 6 options. It sits at the top or bottom and grows with the options.',
@@ -1212,7 +1291,8 @@ export const en = {
       update: {
         title: 'How do I change a widget later?',
         p1: 'Your settings live inside the widget URL, so changing a setting means a new URL. Change the setting on the setup page, copy the new URL, then double-click the source in OBS and paste it over the old URL in the URL field.',
-        p2: "You don't have to start over with [Chat Box](/setup/chat-widget), [Emote Wall](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Stream Alerts](/setup/stream-alerts), [Sub Goal](/setup/sub-goal) or [Chat Poll](/setup/chat-poll). Paste your current URL into the Widget URL field on the setup page and your channels and all your settings come back. Change what you want and copy the new URL.",
+        p2:
+          "You don't have to start over with [Chat Box](/setup/chat-widget), [Emote Wall](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Stream Alerts](/setup/stream-alerts), [Sub Goal](/setup/sub-goal), [Chat Poll](/setup/chat-poll) or [Stream Frames](/setup/stream-frames). Paste your current URL into the Widget URL field on the setup page and your channels and all your settings come back. Change what you want and copy the new URL.",
         p3: "OBS Bridge has no paste field, so enter your settings again on its setup page and copy the new tool URL. You can also change scene picks and authorized users on the tool page itself and grab the new URL with its Copy Updated URL button. Old URLs keep working, so you don't have to update them.",
       },
       troubleshoot: {
@@ -1629,6 +1709,73 @@ export const en = {
       ctaTitle: 'Set up your chat poll',
       ctaText: 'Put a ready-made poll and the voting rules in one URL, add it to OBS and type !poll in chat.',
     },
+    frames: {
+      title: 'How to add a frame to your camera, chat and screen in OBS',
+      short: 'Add stream frames',
+      summary:
+        'Adding camera, chat and screen frames to OBS, source order, fitting your camera into the frame, and picking a preset and animations.',
+      lead:
+        "Stream Frames puts a ready-made frame around your camera, your chat or your whole stream screen, in the style of the preset you pick. Pick the piece and the preset on the setup page, add the URL to OBS as a Browser Source and place it over your camera or chat. The middle of the frame is transparent, and there's no channel to connect and no login.",
+      setup: {
+        title: 'How do you set up a stream frame?',
+        step1: 'Open the [Stream Frames setup page](/setup/stream-frames).',
+        step2:
+          'Under What are you framing?, pick Camera, Chat or Screen. If you picked Camera, set Orientation to Landscape or Portrait. Each piece is its own Browser Source, so add all three if you like.',
+        step3:
+          'Pick a preset. With Classic you choose the color. The other presets come with their own colors, font and art.',
+        step4:
+          'Type your channel name or any word you like in the Label field. On camera and chat it shows on the tab above the frame, and on screen it shows on the plate at the bottom.',
+        step5:
+          'Copy the URL and add it to OBS as a Browser Source: 640 × 360 for a camera (360 × 640 for a portrait camera), 420 × 720 for chat, 1920 × 1080 for the screen.',
+        p1:
+          "The preview shows the frame with a person's silhouette or sample chat lines. Those are just placeholders. On stream the middle of the frame is empty.",
+      },
+      layers: {
+        title: 'Why is the frame behind my camera?',
+        p1:
+          'In OBS, whatever is higher in the Sources list sits in front in the scene. Move the frame source above your camera (Video Capture Device) or Chat Box. You can also right-click the source and pick Order → Move to Top.',
+        p2:
+          'To move your camera and frame together, select both, right-click and pick Group Selected Items. When you resize the group, both scale together.',
+        p3:
+          'The screen frame should sit in front of the whole scene. Put it at the very top of the list so your game and other sources stay under it.',
+      },
+      fit: {
+        title: 'How do you fit your camera into the frame?',
+        intro:
+          'The opening in the middle of the frame is a little smaller than its outer edge. Your camera should fill the opening but stay inside the outer edge, or the extra shows around the frame. At the recommended sizes, these fit well:',
+        caption: 'Recommended frame sizes and the source that goes inside',
+        colPiece: 'Piece',
+        colFrame: 'Frame size',
+        colInside: 'Source inside',
+        camera: 'Landscape camera',
+        cameraPortrait: 'Portrait camera',
+        chat: 'Chat',
+        screen: 'Screen',
+        cameraInside: 'Camera at 590 × 296, centered on the frame',
+        cameraPortraitInside: 'Camera at 306 × 572, centered on the frame',
+        chatInside: 'Chat Box at 370 × 660, centered on the frame',
+        screenInside: 'Game or screen capture fills the whole scene',
+        p1:
+          "A 16:9 camera scaled to 590 wide is 332 tall, so crop the top and bottom evenly until it's 296. Hold Alt (Option on Mac) and drag the top and bottom edges of the source, or right-click the camera and use the Crop fields in Transform → Edit Transform. For a portrait camera it's the other way around: a 9:16 camera scaled to 572 tall is 322 wide, so crop the left and right evenly until it's 306.",
+        p2:
+          'If you use a bigger frame, these sizes scale with it: in a 1280 × 720 camera frame the camera is 1180 × 592. For a square camera, set the Browser Source width and height to match and the frame is drawn to that shape.',
+      },
+      look: {
+        title: 'What do the preset and animations change?',
+        p1:
+          "The preset sets the frame's shape, art, colors and font: a pagoda roof and tassels in Dynasty, gold trim and turquoise gems in Rift, grass blocks and a hotbar in Blocks. Give your Chat Box, Stream Alerts and Sub Goal the same preset and everything on screen matches.",
+        p2:
+          "With Animations on, light sweeps around the frame, the lines glow, and lanterns, torches or sparks move depending on the preset. They're kept light. Still, if your PC struggles while you game, turn Animations off. That adds `motion=0` to the URL and the frame stays still.",
+        p3: 'All the art was drawn from scratch, with no game logos or artwork.',
+      },
+      change: {
+        title: 'How do I change the frame later?',
+        p1:
+          'Paste the URL from OBS into the Widget URL field on the setup page and your settings come back. Change the preset, piece or label, copy the new URL and paste it over the old one in the Browser Source. To change the preset on all your widgets at once, use the [Presets page](/presets).',
+      },
+      ctaTitle: 'Set up your frame',
+      ctaText: 'Pick the piece and the preset, check the preview, copy the URL.',
+    },
     alerts: {
       title: 'How to add sub, cheer and raid alerts for Twitch and Kick in OBS',
       short: 'Add stream alerts',
@@ -1774,7 +1921,8 @@ export const en = {
     breadcrumb: 'Presets',
     eyebrow: 'Presets',
     title: 'Game presets for your stream overlays',
-    lead: 'Pick a preset and your Chat Box, Stream Alerts, Sub Goal, Subathon Timer, Chat Poll and Raffle winner get the same frame, fonts and colors. Use one on every widget, or a different one on each.',
+    lead:
+      'Pick a preset and your Chat Box, Stream Alerts, Sub Goal, Subathon Timer, Chat Poll, Raffle winner and Stream Frames get the same frame, fonts and colors. Use one on every widget, or a different one on each.',
     pickTitle: 'Pick a preset',
     by: 'by {author}',
     community: 'Community',
@@ -1796,7 +1944,8 @@ export const en = {
       ancient: 'Dark iron frames with bronze corners, a red glow along the bottom and sharp Grenze titles.',
       agent: 'Cut corners, a red edge, slanted bars and tall Teko numbers on dark slate.',
       defuse: 'HUD corner brackets, an amber top line, hazard stripes on the bars and condensed Saira type.',
-      blocks: 'Pixel frames in tooltip purple, green bars split into blocks and the Jersey 10 pixel font.',
+      blocks:
+        'Pixel frames in grass and dirt colors, green bars split into blocks and the Jersey 10 pixel font.',
     },
     existingTitle: 'Already have widgets in OBS?',
     existingText:
@@ -1811,7 +1960,7 @@ export const en = {
     communityLink: 'How to make a preset',
     communityEmpty: 'No community presets yet. Yours could be the first.',
     disclaimer:
-      "Game names are trademarks of their owners. These presets are fan-made color and font styles with no game art, and they aren't affiliated with or endorsed by the game makers.",
+      "Game names are trademarks of their owners. These presets are fan-made color, font and drawing styles with no game art, and they aren't affiliated with or endorsed by the game makers.",
     faqTitle: 'Questions about presets',
     faq1Q: 'Do presets change widgets that are already in OBS?',
     faq1A:
@@ -1821,10 +1970,10 @@ export const en = {
       "Yes. Your default is only where every setup page starts. On any widget's setup page you can pick another preset, and that widget's URL carries it.",
     faq3Q: 'Which widgets take a preset?',
     faq3A:
-      'Chat Box, Stream Alerts, Sub Goal, Subathon Timer, Chat Poll and the Raffle winner overlay. Emote Wall only shows emotes and Sub Sprout draws its own plants, so they keep their look.',
+      'Chat Box, Stream Alerts, Sub Goal, Subathon Timer, Chat Poll, the Raffle winner overlay and Stream Frames. Emote Wall only shows emotes and Sub Sprout draws its own plants, so they keep their look.',
     faq4Q: 'Are these official game themes?',
     faq4A:
-      "No. They're fan-made styles built from colors and free Google Fonts, with no game logos or art, and they aren't affiliated with the game makers.",
+      "No. They're fan-made styles built from colors, free Google Fonts and decorations drawn from scratch, with no game logos or art, and they aren't affiliated with the game makers.",
     field: {
       label: 'Preset',
       tip: 'A ready-made look for this widget: its frame, fonts and colors. Pick the same preset on every widget to make them match.',
@@ -1862,7 +2011,7 @@ export const en = {
       'All nine support both platforms. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal and Chat Poll listen to a Twitch and a Kick channel together in one URL. OBS Bridge listens for commands from both chats, and each authorized user is added with their own platform. Raffle runs on one platform at a time, Twitch or Kick. In Chat Box, 7TV emotes show on both platforms, while BTTV and FFZ emotes show on Twitch only.',
     editQ: 'How do I change a widget later?',
     editA:
-      "Change the settings on the setup page, copy the new URL, and paste it over the old one in the source's URL field in OBS. With Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal and Chat Poll, if you paste your old URL into the Widget URL field on the setup page, all your settings come back and you don't have to start over.",
+      "Change the settings on the setup page, copy the new URL, and paste it over the old one in the source's URL field in OBS. With Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll and Stream Frames, if you paste your old URL into the Widget URL field on the setup page, all your settings come back and you don't have to start over.",
     oldUrlsQ: 'Will my old widget URLs keep working?',
     oldUrlsA:
       "Yes. Updates are made so existing URLs don't break: parameter names, values and defaults stay the same. For example, the old keep=true in Chat Box still means Forever, and Sub Sprout still reads the old channel and platform parameters.",
@@ -1886,6 +2035,8 @@ export const en = {
     lead: "New features and bug fixes in Senchabot Extensions, newest first. The list is put together from the project's commit history on [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      frames:
+        'New Stream Frames: ready-made frames for your camera, your chat and your whole stream screen. Every preset comes with its own art, like a pagoda roof and lanterns in Dynasty or pixel blocks in Blocks.',
       subathonRates:
         'Subathon Timer can now list what a sub, a gifted sub and 500 Bits or Kicks add, right on the timer, so viewers know what their sub is worth.',
       presets:

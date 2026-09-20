@@ -90,6 +90,7 @@ const SUBATHON_HIT = `(() => {
   channel.postMessage({ type: 'event', event: { kind: 'gift', platform: 'twitch', name: 'pixelfox', count: 5, tier: 1 } });
 })()`;
 const OXANIUM_READY = `document.fonts.check('800 20px Oxanium')`;
+const FRAME_READY = `document.fonts.status === 'loaded' && Boolean(document.querySelector('[data-testid="frame-art"] svg path'))`;
 // One test alert over the preview channel; it stays up while the demo's own alerts wait.
 const streamAlert = (alert) =>
   `new BroadcastChannel('senchabot:stream-alerts-preview').postMessage({ type: 'alert', preview: 'og', alert: ${JSON.stringify(alert)} })`;
@@ -206,6 +207,21 @@ const CAPTURES = {
     // The trophy has landed and the burst is on its way out.
     afterTriggerMs: 1300,
     ready: OXANIUM_READY,
+  },
+  // Stills (motion=0), so the art doesn't catch a glint or a petal mid-flight.
+  framesDynasty: {
+    path: '/widgets/frame?demo=1&piece=camera&preset=dynasty&label=senchabot&motion=0',
+    width: 640,
+    height: 360,
+    settleMs: 1500,
+    ready: FRAME_READY,
+  },
+  framesAgent: {
+    path: '/widgets/frame?demo=1&piece=camera&preset=agent&label=senchabot&motion=0',
+    width: 640,
+    height: 360,
+    settleMs: 1500,
+    ready: FRAME_READY,
   },
   poll: {
     path: `/widgets/poll?simulate=1&preview=og&q=${encodeURIComponent('What should we play tonight?')}&o=${encodeURIComponent('Horror game|Speedrun|Viewer games|Just chatting')}`,
@@ -345,6 +361,21 @@ const CARDS = [
       layers: [
         layer('goal', { x: 9, y: 40, width: 520, height: 169 }),
         layer('goalReached', { x: 9, y: 212, width: 520, height: 169 }),
+      ],
+    },
+  },
+  {
+    id: 'frames',
+    eyebrow: { icon: 'frames', label: 'Overlay' },
+    title: en.widgets.frames.name,
+    subtitle: en.widgets.frames.tagline,
+    visual: {
+      kind: 'stage',
+      live: true,
+      // Two 640x360 camera frames in different presets, one over the other's corner.
+      layers: [
+        layer('framesDynasty', { x: 0, y: 8, width: 400, height: 225 }),
+        layer('framesAgent', { x: 138, y: 199, width: 400, height: 225 }),
       ],
     },
   },

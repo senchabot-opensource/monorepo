@@ -48,6 +48,7 @@ export const READY_BY_WIDGET = {
   '/widgets/subathon': 'text:SUBATHON',
   '/widgets/stream-alerts': 'alert',
   '/widgets/goal': 'text:SUB GOAL',
+  '/widgets/frame': 'frame',
   '/widgets/poll': 'poll',
 };
 
@@ -98,6 +99,13 @@ export const SETUP_SPECS = {
     expect: ['/widgets/goal?', 'twitch={channel}', 'color=gold'],
     pasteToEdit: true,
   },
+  'stream-frames': {
+    preview: 'iframe',
+    // Frames read no chat: the "channel" goes into the label, the first text field.
+    steps: [{ click: 'input[type="radio"][value="gold"]' }],
+    expect: ['/widgets/frame?', 'label={channel}', 'color=gold'],
+    pasteToEdit: true,
+  },
   'chat-poll': {
     preview: 'iframe',
     steps: [{ click: 'input[type="radio"][value="gold"]' }],
@@ -131,6 +139,8 @@ export const OVERLAYS = [
   { path: '/widgets/subathon?simulate=1', width: 800, height: 300, ready: 'text:SUBATHON' },
   { path: '/widgets/stream-alerts?simulate=1', width: 800, height: 450, ready: 'alert' },
   { path: '/widgets/goal?simulate=1', width: 800, height: 260, ready: 'text:SUB GOAL' },
+  { path: '/widgets/frame?demo=1&preset=dynasty', width: 1920, height: 1080, ready: 'frame' },
+  { path: '/widgets/frame?piece=camera&label=e2e', width: 640, height: 360, ready: 'text:E2E' },
   // The first simulated poll comes up after a moment.
   { path: '/widgets/poll?simulate=1', width: 640, height: 560, ready: 'poll' },
   {

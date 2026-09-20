@@ -1,6 +1,6 @@
 # Senchabot Extensions: full reference
 
-> Free, open source stream overlays and tools for Twitch and Kick: Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll, Raffle and OBS Bridge. Each one is set up on a web page at https://extensions.senchabot.com and runs from a URL. No login and nothing to install.
+> Free, open source stream overlays and tools for Twitch and Kick: Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Stream Frames, Chat Poll, Raffle and OBS Bridge. Each one is set up on a web page at https://extensions.senchabot.com and runs from a URL. No login and nothing to install.
 
 Short version with links only: https://extensions.senchabot.com/llms.txt
 
@@ -26,12 +26,13 @@ Short version with links only: https://extensions.senchabot.com/llms.txt
 | Sub Sprout | Overlay | /setup/sub-growing-plant | /widgets/sub-sprout-widget | 800x600 |
 | Stream Alerts | Overlay | /setup/stream-alerts | /widgets/stream-alerts | 800x450 |
 | Sub Goal | Overlay | /setup/sub-goal | /widgets/goal | 800x260 |
+| Stream Frames | Overlay | /setup/stream-frames | /widgets/frame | 640x360, 360x640, 420x720 or 1920x1080 |
 | Subathon Timer | Tool | /setup/subathon-timer | /widgets/subathon (run from chat with !subathon) | 800x300 |
 | Chat Poll | Tool | /setup/chat-poll | /widgets/poll (run from chat with !poll) | 640x560 |
 | Raffle | Tool | /setup/raffle | /widgets/raffle-overlay (winner overlay) | 1920x1080 |
 | OBS Bridge | Tool | /setup/obs-bridge | /tools/obs-bridge (tab or OBS dock, not a source) | none |
 
-All nine work with Twitch and Kick. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal and Chat Poll take a Twitch and a Kick channel in the same URL. OBS Bridge listens to both chats at once. Raffle runs on one platform at a time.
+All ten work with Twitch and Kick. Stream Frames reads no chat, so it needs no channel. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal and Chat Poll take a Twitch and a Kick channel in the same URL. OBS Bridge listens to both chats at once. Raffle runs on one platform at a time.
 
 ## How to add a widget to OBS Studio
 
@@ -44,7 +45,7 @@ Notes:
 - The background is already transparent. No chroma key, filter or custom CSS is needed.
 - Leave "Shutdown source when not visible" and "Refresh browser when scene becomes active" off. Both reload the page, and the widget forgets what it was showing (Sub Sprout goes back to its first stage, a Raffle winner drawn while the source is off never shows). Subathon Timer, Sub Goal and Chat Poll keep their time, count or poll through a reload but can't see subs or votes while the source is off. Stream Alerts only shows what comes in while the source is running.
 - To make Chat Box text bigger, change Font Size on the setup page instead of stretching the source.
-- To change a widget later, copy a new URL from the setup page and paste it over the old one. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal and Chat Poll can load an existing URL: paste it into the Widget URL field on the setup page and all settings come back.
+- To change a widget later, copy a new URL from the setup page and paste it over the old one. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll and Stream Frames can load an existing URL: paste it into the Widget URL field on the setup page and all settings come back.
 - If a widget looks empty: check that you typed the channel name, not a link, and that it is spelled right. Chat Box and Emote Wall stay empty until something happens in chat.
 
 ## Chat Box
@@ -256,6 +257,28 @@ URL parameters (all optional):
 | simulate | 1 plays simulated subs, doesn't read chat and doesn't save the count | off |
 | simplatform | twitch or kick: simulate only that platform | both |
 
+## Stream Frames
+
+Ready-made frames for a webcam, a chat or the whole stream. The frame is drawn in the picked preset's look, with its own shape, ornaments and small animations: a temple roof, swaying tassels and drifting plum petals in Dynasty, glowing teal gems in Rift, grass blocks and flickering torches in Blocks. The label sits in a tab on top of the camera and chat frames, and on a plate at the bottom of the screen frame. The middle is transparent, so the webcam or Chat Box under it shows through. It reads no chat and needs no channel.
+
+- Widget URL: https://extensions.senchabot.com/widgets/frame?piece=camera&preset=dynasty&label=CHANNEL
+- Demo with every piece on one canvas: https://extensions.senchabot.com/widgets/frame?demo=1&preset=dynasty
+- Guide: https://extensions.senchabot.com/guides/stream-frames
+- Recommended size: 640x360 for camera, 360x640 for a portrait camera (pick Portrait under Orientation, written as `orientation=portrait`), 420x720 for chat, 1920x1080 for screen. The frame is drawn for whatever size the source has, so a square webcam works too.
+- In OBS, put the frame source above the webcam or Chat Box in the sources list. The opening is a little smaller than the frame's outer edge: in a 640x360 camera frame, a 590x296 webcam (a 16:9 camera cropped evenly at the top and bottom), centered on the frame, fills it without showing around the frame; in a 360x640 portrait camera frame, a 306x572 webcam (a 9:16 camera cropped evenly at the sides); in a 420x720 chat frame, a 370x660 Chat Box. Both scale with the frame.
+- The drawings are original, with no game logos or art.
+
+URL parameters (all optional):
+
+| Parameter | Values | Default |
+| --- | --- | --- |
+| piece | camera, chat, screen | camera |
+| preset | rift, realm, dynasty, ancient, agent, defuse, blocks | classic |
+| color | purple, green, red, gold, cyan, pink (classic only) | purple |
+| label | text in the top tab (camera, chat) or on the bottom plate (screen), up to 32 characters; empty leaves it off | none |
+| motion | 0 turns the animations off | 1 |
+| demo | 1 draws a stand-in webcam or chat; without piece it shows every piece on one canvas | off |
+
 ## Chat Poll
 
 A chat poll for Twitch and Kick. The broadcaster and mods put a poll up from chat, viewers vote by typing a number, and votes from both chats go into one result with live bars, a countdown and the winner at the end. Twitch's own polls can't be read without logging in, so this poll takes votes from chat, the same way on both platforms.
@@ -360,9 +383,9 @@ URL parameters:
 
 A preset gives several widgets the same look: frame, fonts and colors. Page: https://extensions.senchabot.com/presets
 
-- Widgets that take one: Chat Box, Stream Alerts, Sub Goal, Subathon Timer, Chat Poll and the Raffle winner overlay. Emote Wall and Sub Sprout keep their own art.
+- Widgets that take one: Chat Box, Stream Alerts, Sub Goal, Subathon Timer, Chat Poll, the Raffle winner overlay and Stream Frames, whose frame art comes from the preset. Emote Wall and Sub Sprout keep their own art.
 - URL parameter on those widgets: preset, one of rift, realm, dynasty, ancient, agent, defuse, blocks. Missing or unknown means classic, each widget's own look, so URLs from before presets look the same.
-- Built-in presets, each made for a game: Rift (League of Legends), Realm (World of Warcraft), Dynasty (Metin2), Ancient (Dota 2), Agent (Valorant), Defuse (Counter-Strike 2), Blocks (Minecraft). They are fan-made styles from colors and free Google Fonts, with no game art, and aren't affiliated with the game makers.
+- Built-in presets, each made for a game: Rift (League of Legends), Realm (World of Warcraft), Dynasty (Metin2), Ancient (Dota 2), Agent (Valorant), Defuse (Counter-Strike 2), Blocks (Minecraft). They are fan-made styles from colors, free Google Fonts and original drawings, with no game art, and aren't affiliated with the game makers.
 - A preset brings its own colors and fonts: with one set, the color and font parameters and Stream Alerts' theme are ignored. Layout settings (Subathon style, Chat Box layout, poll position and so on) still apply.
 - The presets page can set a default preset that every setup page in that browser starts with. Widgets already in OBS keep their look until they get a new URL; the presets page takes pasted widget URLs and gives them back with the preset added.
 - Community presets are JSON files in the source repository (apps/extensions/src/features/presets/community), added by pull request.
@@ -427,6 +450,7 @@ A: Open an issue at https://github.com/senchabot-opensource/monorepo/issues/new.
 - Guide, stream alerts: https://extensions.senchabot.com/guides/stream-alerts
 - Guide, subathon timer: https://extensions.senchabot.com/guides/subathon-timer
 - Guide, chat poll: https://extensions.senchabot.com/guides/chat-poll
+- Guide, stream frames: https://extensions.senchabot.com/guides/stream-frames
 - FAQ: https://extensions.senchabot.com/faq
 - Changelog: https://extensions.senchabot.com/changelog
 

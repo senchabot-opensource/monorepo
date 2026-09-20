@@ -5,20 +5,24 @@ import { en } from './i18n/en';
 import { type Locale, translate } from './i18n/index';
 import { LOCALES } from './i18n/locales';
 import { tr } from './i18n/tr';
-import { WIDGETS } from './widgets';
+import { WIDGETS, type WidgetEntry } from './widgets';
 
 const DICTS = { en, tr } as const;
 
 // Raffle runs on one platform and keeps its rules in the browser, and OBS Bridge ties each
-// command user to a platform; every other widget takes both channels and reopens a pasted URL.
-const BOTH_CHANNEL_WIDGETS = WIDGETS.filter(
+// command user to a platform; every other widget reopens a pasted URL, and all of those but
+// Stream Frames, which reads no chat, take both channels.
+const PASTE_WIDGETS = WIDGETS.filter(
   (widget) => widget.id !== 'raffle' && widget.id !== 'obs-bridge',
 );
+const BOTH_CHANNEL_WIDGETS = PASTE_WIDGETS.filter((widget) => widget.id !== 'frames');
 
-const namesIn = (text: string, locale: Locale) =>
-  BOTH_CHANNEL_WIDGETS.filter((widget) => !text.includes(translate(locale, widget.nameKey))).map(
-    (widget) => widget.id,
-  );
+const missingIn = (widgets: readonly WidgetEntry[], text: string, locale: Locale) =>
+  widgets
+    .filter((widget) => !text.includes(translate(locale, widget.nameKey)))
+    .map((widget) => widget.id);
+const namesIn = (text: string, locale: Locale) => missingIn(BOTH_CHANNEL_WIDGETS, text, locale);
+const pasteNamesIn = (text: string, locale: Locale) => missingIn(PASTE_WIDGETS, text, locale);
 
 /** A field label without its unit, e.g. "Minimum Duration (s)" → "Minimum Duration". */
 const withoutUnit = (label: string) => label.replace(/\s*\([^)]*\)$/, '');
@@ -32,9 +36,9 @@ describe.each(LOCALES)('guide and FAQ copy in %s', (locale) => {
   });
 
   it('names every widget whose setup page reopens a pasted URL', () => {
-    expect(namesIn(dict.home.faq5A, locale)).toEqual([]);
-    expect(namesIn(dict.faqPage.editA, locale)).toEqual([]);
-    expect(namesIn(dict.guides.obs.update.p2, locale)).toEqual([]);
+    expect(pasteNamesIn(dict.home.faq5A, locale)).toEqual([]);
+    expect(pasteNamesIn(dict.faqPage.editA, locale)).toEqual([]);
+    expect(pasteNamesIn(dict.guides.obs.update.p2, locale)).toEqual([]);
   });
 
   it('names the Raffle rules the way the setup page labels them', () => {
@@ -90,6 +94,10 @@ const INDEX_TOPICS: Record<GuideId, Record<Locale, string>> = {
   'stream-alerts': { en: 'adding stream alerts', tr: 'yayın uyarıları eklemek' },
   'subathon-timer': { en: 'running a subathon timer', tr: 'subathon sayacı kurmak' },
   'chat-poll': { en: 'running a chat poll', tr: 'sohbet anketi yapmak' },
+  'stream-frames': {
+    en: 'framing your camera and chat',
+    tr: 'kameraya ve sohbete çerçeve eklemek',
+  },
   'chat-giveaway': { en: 'running a chat raffle', tr: 'sohbet çekilişi yapmak' },
   'obs-scene-switcher': {
     en: 'switching scenes from chat',

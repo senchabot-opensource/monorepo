@@ -15,6 +15,7 @@ import { Route as ToolsObsBridgeRouteImport } from './routes/tools/obs-bridge'
 import { Route as WidgetsAlertsRouteImport } from './routes/widgets/alerts'
 import { Route as WidgetsChatWidgetRouteImport } from './routes/widgets/chat-widget'
 import { Route as WidgetsEmoteWallRouteImport } from './routes/widgets/emote-wall'
+import { Route as WidgetsFrameRouteImport } from './routes/widgets/frame'
 import { Route as WidgetsGoalRouteImport } from './routes/widgets/goal'
 import { Route as WidgetsPollRouteImport } from './routes/widgets/poll'
 import { Route as WidgetsRaffleOverlayRouteImport } from './routes/widgets/raffle-overlay'
@@ -32,6 +33,7 @@ import { Route as Char123LocaleChar125GuidesObsBrowserSourceRouteImport } from '
 import { Route as Char123LocaleChar125GuidesObsChatDockRouteImport } from './routes/{-$locale}/guides/obs-chat-dock'
 import { Route as Char123LocaleChar125GuidesObsSceneSwitcherRouteImport } from './routes/{-$locale}/guides/obs-scene-switcher'
 import { Route as Char123LocaleChar125GuidesStreamAlertsRouteImport } from './routes/{-$locale}/guides/stream-alerts'
+import { Route as Char123LocaleChar125GuidesStreamFramesRouteImport } from './routes/{-$locale}/guides/stream-frames'
 import { Route as Char123LocaleChar125GuidesSubathonTimerRouteImport } from './routes/{-$locale}/guides/subathon-timer'
 import { Route as Char123LocaleChar125GuidesTwitchKickChatOverlayRouteImport } from './routes/{-$locale}/guides/twitch-kick-chat-overlay'
 import { Route as Char123LocaleChar125SetupChatPollRouteImport } from './routes/{-$locale}/setup/chat-poll'
@@ -40,6 +42,7 @@ import { Route as Char123LocaleChar125SetupEmoteWallRouteImport } from './routes
 import { Route as Char123LocaleChar125SetupObsBridgeRouteImport } from './routes/{-$locale}/setup/obs-bridge'
 import { Route as Char123LocaleChar125SetupRaffleRouteImport } from './routes/{-$locale}/setup/raffle'
 import { Route as Char123LocaleChar125SetupStreamAlertsRouteImport } from './routes/{-$locale}/setup/stream-alerts'
+import { Route as Char123LocaleChar125SetupStreamFramesRouteImport } from './routes/{-$locale}/setup/stream-frames'
 import { Route as Char123LocaleChar125SetupSubGoalRouteImport } from './routes/{-$locale}/setup/sub-goal'
 import { Route as Char123LocaleChar125SetupSubGrowingPlantRouteImport } from './routes/{-$locale}/setup/sub-growing-plant'
 import { Route as Char123LocaleChar125SetupSubathonTimerRouteImport } from './routes/{-$locale}/setup/subathon-timer'
@@ -73,6 +76,11 @@ const WidgetsChatWidgetRoute = WidgetsChatWidgetRouteImport.update({
 const WidgetsEmoteWallRoute = WidgetsEmoteWallRouteImport.update({
   id: '/widgets/emote-wall',
   path: '/widgets/emote-wall',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WidgetsFrameRoute = WidgetsFrameRouteImport.update({
+  id: '/widgets/frame',
+  path: '/widgets/frame',
   getParentRoute: () => rootRouteImport,
 } as any)
 const WidgetsGoalRoute = WidgetsGoalRouteImport.update({
@@ -170,6 +178,12 @@ const Char123LocaleChar125GuidesStreamAlertsRoute =
     path: '/guides/stream-alerts',
     getParentRoute: () => Char123LocaleChar125RouteRoute,
   } as any)
+const Char123LocaleChar125GuidesStreamFramesRoute =
+  Char123LocaleChar125GuidesStreamFramesRouteImport.update({
+    id: '/guides/stream-frames',
+    path: '/guides/stream-frames',
+    getParentRoute: () => Char123LocaleChar125RouteRoute,
+  } as any)
 const Char123LocaleChar125GuidesSubathonTimerRoute =
   Char123LocaleChar125GuidesSubathonTimerRouteImport.update({
     id: '/guides/subathon-timer',
@@ -218,6 +232,12 @@ const Char123LocaleChar125SetupStreamAlertsRoute =
     path: '/setup/stream-alerts',
     getParentRoute: () => Char123LocaleChar125RouteRoute,
   } as any)
+const Char123LocaleChar125SetupStreamFramesRoute =
+  Char123LocaleChar125SetupStreamFramesRouteImport.update({
+    id: '/setup/stream-frames',
+    path: '/setup/stream-frames',
+    getParentRoute: () => Char123LocaleChar125RouteRoute,
+  } as any)
 const Char123LocaleChar125SetupSubGoalRoute =
   Char123LocaleChar125SetupSubGoalRouteImport.update({
     id: '/setup/sub-goal',
@@ -244,6 +264,7 @@ export interface FileRoutesByFullPath {
   '/widgets/alerts': typeof WidgetsAlertsRoute
   '/widgets/chat-widget': typeof WidgetsChatWidgetRoute
   '/widgets/emote-wall': typeof WidgetsEmoteWallRoute
+  '/widgets/frame': typeof WidgetsFrameRoute
   '/widgets/goal': typeof WidgetsGoalRoute
   '/widgets/poll': typeof WidgetsPollRoute
   '/widgets/raffle-overlay': typeof WidgetsRaffleOverlayRoute
@@ -260,6 +281,7 @@ export interface FileRoutesByFullPath {
   '/{-$locale}/guides/obs-chat-dock': typeof Char123LocaleChar125GuidesObsChatDockRoute
   '/{-$locale}/guides/obs-scene-switcher': typeof Char123LocaleChar125GuidesObsSceneSwitcherRoute
   '/{-$locale}/guides/stream-alerts': typeof Char123LocaleChar125GuidesStreamAlertsRoute
+  '/{-$locale}/guides/stream-frames': typeof Char123LocaleChar125GuidesStreamFramesRoute
   '/{-$locale}/guides/subathon-timer': typeof Char123LocaleChar125GuidesSubathonTimerRoute
   '/{-$locale}/guides/twitch-kick-chat-overlay': typeof Char123LocaleChar125GuidesTwitchKickChatOverlayRoute
   '/{-$locale}/setup/chat-poll': typeof Char123LocaleChar125SetupChatPollRoute
@@ -268,6 +290,7 @@ export interface FileRoutesByFullPath {
   '/{-$locale}/setup/obs-bridge': typeof Char123LocaleChar125SetupObsBridgeRoute
   '/{-$locale}/setup/raffle': typeof Char123LocaleChar125SetupRaffleRoute
   '/{-$locale}/setup/stream-alerts': typeof Char123LocaleChar125SetupStreamAlertsRoute
+  '/{-$locale}/setup/stream-frames': typeof Char123LocaleChar125SetupStreamFramesRoute
   '/{-$locale}/setup/sub-goal': typeof Char123LocaleChar125SetupSubGoalRoute
   '/{-$locale}/setup/sub-growing-plant': typeof Char123LocaleChar125SetupSubGrowingPlantRoute
   '/{-$locale}/setup/subathon-timer': typeof Char123LocaleChar125SetupSubathonTimerRoute
@@ -279,6 +302,7 @@ export interface FileRoutesByTo {
   '/widgets/alerts': typeof WidgetsAlertsRoute
   '/widgets/chat-widget': typeof WidgetsChatWidgetRoute
   '/widgets/emote-wall': typeof WidgetsEmoteWallRoute
+  '/widgets/frame': typeof WidgetsFrameRoute
   '/widgets/goal': typeof WidgetsGoalRoute
   '/widgets/poll': typeof WidgetsPollRoute
   '/widgets/raffle-overlay': typeof WidgetsRaffleOverlayRoute
@@ -295,6 +319,7 @@ export interface FileRoutesByTo {
   '/{-$locale}/guides/obs-chat-dock': typeof Char123LocaleChar125GuidesObsChatDockRoute
   '/{-$locale}/guides/obs-scene-switcher': typeof Char123LocaleChar125GuidesObsSceneSwitcherRoute
   '/{-$locale}/guides/stream-alerts': typeof Char123LocaleChar125GuidesStreamAlertsRoute
+  '/{-$locale}/guides/stream-frames': typeof Char123LocaleChar125GuidesStreamFramesRoute
   '/{-$locale}/guides/subathon-timer': typeof Char123LocaleChar125GuidesSubathonTimerRoute
   '/{-$locale}/guides/twitch-kick-chat-overlay': typeof Char123LocaleChar125GuidesTwitchKickChatOverlayRoute
   '/{-$locale}/setup/chat-poll': typeof Char123LocaleChar125SetupChatPollRoute
@@ -303,6 +328,7 @@ export interface FileRoutesByTo {
   '/{-$locale}/setup/obs-bridge': typeof Char123LocaleChar125SetupObsBridgeRoute
   '/{-$locale}/setup/raffle': typeof Char123LocaleChar125SetupRaffleRoute
   '/{-$locale}/setup/stream-alerts': typeof Char123LocaleChar125SetupStreamAlertsRoute
+  '/{-$locale}/setup/stream-frames': typeof Char123LocaleChar125SetupStreamFramesRoute
   '/{-$locale}/setup/sub-goal': typeof Char123LocaleChar125SetupSubGoalRoute
   '/{-$locale}/setup/sub-growing-plant': typeof Char123LocaleChar125SetupSubGrowingPlantRoute
   '/{-$locale}/setup/subathon-timer': typeof Char123LocaleChar125SetupSubathonTimerRoute
@@ -316,6 +342,7 @@ export interface FileRoutesById {
   '/widgets/alerts': typeof WidgetsAlertsRoute
   '/widgets/chat-widget': typeof WidgetsChatWidgetRoute
   '/widgets/emote-wall': typeof WidgetsEmoteWallRoute
+  '/widgets/frame': typeof WidgetsFrameRoute
   '/widgets/goal': typeof WidgetsGoalRoute
   '/widgets/poll': typeof WidgetsPollRoute
   '/widgets/raffle-overlay': typeof WidgetsRaffleOverlayRoute
@@ -332,6 +359,7 @@ export interface FileRoutesById {
   '/{-$locale}/guides/obs-chat-dock': typeof Char123LocaleChar125GuidesObsChatDockRoute
   '/{-$locale}/guides/obs-scene-switcher': typeof Char123LocaleChar125GuidesObsSceneSwitcherRoute
   '/{-$locale}/guides/stream-alerts': typeof Char123LocaleChar125GuidesStreamAlertsRoute
+  '/{-$locale}/guides/stream-frames': typeof Char123LocaleChar125GuidesStreamFramesRoute
   '/{-$locale}/guides/subathon-timer': typeof Char123LocaleChar125GuidesSubathonTimerRoute
   '/{-$locale}/guides/twitch-kick-chat-overlay': typeof Char123LocaleChar125GuidesTwitchKickChatOverlayRoute
   '/{-$locale}/setup/chat-poll': typeof Char123LocaleChar125SetupChatPollRoute
@@ -340,6 +368,7 @@ export interface FileRoutesById {
   '/{-$locale}/setup/obs-bridge': typeof Char123LocaleChar125SetupObsBridgeRoute
   '/{-$locale}/setup/raffle': typeof Char123LocaleChar125SetupRaffleRoute
   '/{-$locale}/setup/stream-alerts': typeof Char123LocaleChar125SetupStreamAlertsRoute
+  '/{-$locale}/setup/stream-frames': typeof Char123LocaleChar125SetupStreamFramesRoute
   '/{-$locale}/setup/sub-goal': typeof Char123LocaleChar125SetupSubGoalRoute
   '/{-$locale}/setup/sub-growing-plant': typeof Char123LocaleChar125SetupSubGrowingPlantRoute
   '/{-$locale}/setup/subathon-timer': typeof Char123LocaleChar125SetupSubathonTimerRoute
@@ -354,6 +383,7 @@ export interface FileRouteTypes {
     | '/widgets/alerts'
     | '/widgets/chat-widget'
     | '/widgets/emote-wall'
+    | '/widgets/frame'
     | '/widgets/goal'
     | '/widgets/poll'
     | '/widgets/raffle-overlay'
@@ -370,6 +400,7 @@ export interface FileRouteTypes {
     | '/{-$locale}/guides/obs-chat-dock'
     | '/{-$locale}/guides/obs-scene-switcher'
     | '/{-$locale}/guides/stream-alerts'
+    | '/{-$locale}/guides/stream-frames'
     | '/{-$locale}/guides/subathon-timer'
     | '/{-$locale}/guides/twitch-kick-chat-overlay'
     | '/{-$locale}/setup/chat-poll'
@@ -378,6 +409,7 @@ export interface FileRouteTypes {
     | '/{-$locale}/setup/obs-bridge'
     | '/{-$locale}/setup/raffle'
     | '/{-$locale}/setup/stream-alerts'
+    | '/{-$locale}/setup/stream-frames'
     | '/{-$locale}/setup/sub-goal'
     | '/{-$locale}/setup/sub-growing-plant'
     | '/{-$locale}/setup/subathon-timer'
@@ -389,6 +421,7 @@ export interface FileRouteTypes {
     | '/widgets/alerts'
     | '/widgets/chat-widget'
     | '/widgets/emote-wall'
+    | '/widgets/frame'
     | '/widgets/goal'
     | '/widgets/poll'
     | '/widgets/raffle-overlay'
@@ -405,6 +438,7 @@ export interface FileRouteTypes {
     | '/{-$locale}/guides/obs-chat-dock'
     | '/{-$locale}/guides/obs-scene-switcher'
     | '/{-$locale}/guides/stream-alerts'
+    | '/{-$locale}/guides/stream-frames'
     | '/{-$locale}/guides/subathon-timer'
     | '/{-$locale}/guides/twitch-kick-chat-overlay'
     | '/{-$locale}/setup/chat-poll'
@@ -413,6 +447,7 @@ export interface FileRouteTypes {
     | '/{-$locale}/setup/obs-bridge'
     | '/{-$locale}/setup/raffle'
     | '/{-$locale}/setup/stream-alerts'
+    | '/{-$locale}/setup/stream-frames'
     | '/{-$locale}/setup/sub-goal'
     | '/{-$locale}/setup/sub-growing-plant'
     | '/{-$locale}/setup/subathon-timer'
@@ -425,6 +460,7 @@ export interface FileRouteTypes {
     | '/widgets/alerts'
     | '/widgets/chat-widget'
     | '/widgets/emote-wall'
+    | '/widgets/frame'
     | '/widgets/goal'
     | '/widgets/poll'
     | '/widgets/raffle-overlay'
@@ -441,6 +477,7 @@ export interface FileRouteTypes {
     | '/{-$locale}/guides/obs-chat-dock'
     | '/{-$locale}/guides/obs-scene-switcher'
     | '/{-$locale}/guides/stream-alerts'
+    | '/{-$locale}/guides/stream-frames'
     | '/{-$locale}/guides/subathon-timer'
     | '/{-$locale}/guides/twitch-kick-chat-overlay'
     | '/{-$locale}/setup/chat-poll'
@@ -449,6 +486,7 @@ export interface FileRouteTypes {
     | '/{-$locale}/setup/obs-bridge'
     | '/{-$locale}/setup/raffle'
     | '/{-$locale}/setup/stream-alerts'
+    | '/{-$locale}/setup/stream-frames'
     | '/{-$locale}/setup/sub-goal'
     | '/{-$locale}/setup/sub-growing-plant'
     | '/{-$locale}/setup/subathon-timer'
@@ -462,6 +500,7 @@ export interface RootRouteChildren {
   WidgetsAlertsRoute: typeof WidgetsAlertsRoute
   WidgetsChatWidgetRoute: typeof WidgetsChatWidgetRoute
   WidgetsEmoteWallRoute: typeof WidgetsEmoteWallRoute
+  WidgetsFrameRoute: typeof WidgetsFrameRoute
   WidgetsGoalRoute: typeof WidgetsGoalRoute
   WidgetsPollRoute: typeof WidgetsPollRoute
   WidgetsRaffleOverlayRoute: typeof WidgetsRaffleOverlayRoute
@@ -512,6 +551,13 @@ declare module '@tanstack/react-router' {
       path: '/widgets/emote-wall'
       fullPath: '/widgets/emote-wall'
       preLoaderRoute: typeof WidgetsEmoteWallRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/widgets/frame': {
+      id: '/widgets/frame'
+      path: '/widgets/frame'
+      fullPath: '/widgets/frame'
+      preLoaderRoute: typeof WidgetsFrameRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/widgets/goal': {
@@ -633,6 +679,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char123LocaleChar125GuidesStreamAlertsRouteImport
       parentRoute: typeof Char123LocaleChar125RouteRoute
     }
+    '/{-$locale}/guides/stream-frames': {
+      id: '/{-$locale}/guides/stream-frames'
+      path: '/guides/stream-frames'
+      fullPath: '/{-$locale}/guides/stream-frames'
+      preLoaderRoute: typeof Char123LocaleChar125GuidesStreamFramesRouteImport
+      parentRoute: typeof Char123LocaleChar125RouteRoute
+    }
     '/{-$locale}/guides/subathon-timer': {
       id: '/{-$locale}/guides/subathon-timer'
       path: '/guides/subathon-timer'
@@ -689,6 +742,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char123LocaleChar125SetupStreamAlertsRouteImport
       parentRoute: typeof Char123LocaleChar125RouteRoute
     }
+    '/{-$locale}/setup/stream-frames': {
+      id: '/{-$locale}/setup/stream-frames'
+      path: '/setup/stream-frames'
+      fullPath: '/{-$locale}/setup/stream-frames'
+      preLoaderRoute: typeof Char123LocaleChar125SetupStreamFramesRouteImport
+      parentRoute: typeof Char123LocaleChar125RouteRoute
+    }
     '/{-$locale}/setup/sub-goal': {
       id: '/{-$locale}/setup/sub-goal'
       path: '/setup/sub-goal'
@@ -724,6 +784,7 @@ interface Char123LocaleChar125RouteRouteChildren {
   Char123LocaleChar125GuidesObsChatDockRoute: typeof Char123LocaleChar125GuidesObsChatDockRoute
   Char123LocaleChar125GuidesObsSceneSwitcherRoute: typeof Char123LocaleChar125GuidesObsSceneSwitcherRoute
   Char123LocaleChar125GuidesStreamAlertsRoute: typeof Char123LocaleChar125GuidesStreamAlertsRoute
+  Char123LocaleChar125GuidesStreamFramesRoute: typeof Char123LocaleChar125GuidesStreamFramesRoute
   Char123LocaleChar125GuidesSubathonTimerRoute: typeof Char123LocaleChar125GuidesSubathonTimerRoute
   Char123LocaleChar125GuidesTwitchKickChatOverlayRoute: typeof Char123LocaleChar125GuidesTwitchKickChatOverlayRoute
   Char123LocaleChar125SetupChatPollRoute: typeof Char123LocaleChar125SetupChatPollRoute
@@ -732,6 +793,7 @@ interface Char123LocaleChar125RouteRouteChildren {
   Char123LocaleChar125SetupObsBridgeRoute: typeof Char123LocaleChar125SetupObsBridgeRoute
   Char123LocaleChar125SetupRaffleRoute: typeof Char123LocaleChar125SetupRaffleRoute
   Char123LocaleChar125SetupStreamAlertsRoute: typeof Char123LocaleChar125SetupStreamAlertsRoute
+  Char123LocaleChar125SetupStreamFramesRoute: typeof Char123LocaleChar125SetupStreamFramesRoute
   Char123LocaleChar125SetupSubGoalRoute: typeof Char123LocaleChar125SetupSubGoalRoute
   Char123LocaleChar125SetupSubGrowingPlantRoute: typeof Char123LocaleChar125SetupSubGrowingPlantRoute
   Char123LocaleChar125SetupSubathonTimerRoute: typeof Char123LocaleChar125SetupSubathonTimerRoute
@@ -756,6 +818,8 @@ const Char123LocaleChar125RouteRouteChildren: Char123LocaleChar125RouteRouteChil
       Char123LocaleChar125GuidesObsSceneSwitcherRoute,
     Char123LocaleChar125GuidesStreamAlertsRoute:
       Char123LocaleChar125GuidesStreamAlertsRoute,
+    Char123LocaleChar125GuidesStreamFramesRoute:
+      Char123LocaleChar125GuidesStreamFramesRoute,
     Char123LocaleChar125GuidesSubathonTimerRoute:
       Char123LocaleChar125GuidesSubathonTimerRoute,
     Char123LocaleChar125GuidesTwitchKickChatOverlayRoute:
@@ -771,6 +835,8 @@ const Char123LocaleChar125RouteRouteChildren: Char123LocaleChar125RouteRouteChil
     Char123LocaleChar125SetupRaffleRoute: Char123LocaleChar125SetupRaffleRoute,
     Char123LocaleChar125SetupStreamAlertsRoute:
       Char123LocaleChar125SetupStreamAlertsRoute,
+    Char123LocaleChar125SetupStreamFramesRoute:
+      Char123LocaleChar125SetupStreamFramesRoute,
     Char123LocaleChar125SetupSubGoalRoute:
       Char123LocaleChar125SetupSubGoalRoute,
     Char123LocaleChar125SetupSubGrowingPlantRoute:
@@ -792,6 +858,7 @@ const rootRouteChildren: RootRouteChildren = {
   WidgetsAlertsRoute: WidgetsAlertsRoute,
   WidgetsChatWidgetRoute: WidgetsChatWidgetRoute,
   WidgetsEmoteWallRoute: WidgetsEmoteWallRoute,
+  WidgetsFrameRoute: WidgetsFrameRoute,
   WidgetsGoalRoute: WidgetsGoalRoute,
   WidgetsPollRoute: WidgetsPollRoute,
   WidgetsRaffleOverlayRoute: WidgetsRaffleOverlayRoute,
