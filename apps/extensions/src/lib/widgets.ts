@@ -1,6 +1,7 @@
 import type { ComponentType } from 'react';
 import {
   ChatBoxIcon,
+  CountdownIcon,
   EmoteWallIcon,
   FramesIcon,
   GoalIcon,
@@ -25,6 +26,7 @@ export type WidgetId =
   | 'poll'
   | 'stream-alerts'
   | 'frames'
+  | 'countdown'
   | 'raffle'
   | 'obs-bridge';
 /** `overlay`: a browser source that runs on its own. `tool`: something the streamer operates. */
@@ -129,6 +131,20 @@ export const WIDGETS: readonly WidgetEntry[] = [
     platforms: ['twitch', 'kick'],
     // Every piece on one canvas; the setup page shows one piece at its own size.
     demoUrl: '/widgets/frame?demo=1',
+    sourceSize: { width: 1920, height: 1080 },
+  },
+  {
+    id: 'countdown',
+    // It runs on its own from the URL; a channel is optional, only for the chat commands.
+    kind: 'overlay',
+    setupPath: '/setup/stream-countdown',
+    widgetPath: '/widgets/countdown',
+    nameKey: 'widgets.countdown.name',
+    taglineKey: 'widgets.countdown.tagline',
+    Icon: CountdownIcon,
+    platforms: ['twitch', 'kick'],
+    demoUrl: '/widgets/countdown?simulate=1',
+    // A whole scene: the clock sits in the middle of it.
     sourceSize: { width: 1920, height: 1080 },
   },
   {

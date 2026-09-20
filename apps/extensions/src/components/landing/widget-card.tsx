@@ -10,10 +10,11 @@ import { hasToolVisual, TOOL_FEATURES, ToolVisual } from './tool-visuals';
 
 /**
  * Card shape in the gallery grid, from the live demo's browser-source size: a portrait source (a
- * chat column) gets a card two rows tall, a strip (a goal bar) one two columns wide. Tools are
- * two by two with a flat picture each, so they never span.
+ * chat column) gets a card two rows tall, a strip (a goal bar) one two columns wide. `feature` is
+ * the tall card grown to two by two, which only getGalleryShapes hands out. Tools are two by two
+ * with a flat picture each, so they never span.
  */
-export type CardShape = 'standard' | 'tall' | 'wide';
+export type CardShape = 'standard' | 'tall' | 'wide' | 'feature';
 
 export function getCardShape(widget: WidgetEntry): CardShape {
   if (widget.kind === 'tool') return 'standard';
@@ -25,32 +26,80 @@ export function getCardShape(widget: WidgetEntry): CardShape {
   return 'standard';
 }
 
-/** True when the cards fill whole rows at every column count the grid uses. */
-const fillsRows = (shapes: CardShape[], columns: readonly number[]) => {
-  const cells = shapes.reduce((sum, shape) => sum + (shape === 'standard' ? 1 : 2), 0);
-  return columns.every((count) => cells % count === 0);
+const SPANS: Record<CardShape, { cols: number; rows: number }> = {
+  standard: { cols: 1, rows: 1 },
+  tall: { cols: 1, rows: 2 },
+  wide: { cols: 2, rows: 1 },
+  feature: { cols: 2, rows: 2 },
 };
 
 /**
- * Shapes for one gallery grid of the given column counts. A set one cell short (four overlays
- * beside the tall chat column) widens its last standard card. One that would still leave a hole
- * drops the wide cards first, then the tall one, then every span, so the grid stays even instead
- * of showing a lone card. The tall chat column goes last: it reads as the gallery's anchor.
+ * Whether the cards leave no empty cell in a grid `columns` wide. It lays them out the way
+ * `grid-flow-row-dense` does, first free block from the top for each card, because counting
+ * cells alone can come out even and still leave holes: three strips in a three-column grid
+ * take a row each and leave the third column empty.
+ */
+function packs(shapes: CardShape[], columns: number): boolean {
+  if (shapes.some((shape) => SPANS[shape].cols > columns)) return false;
+  const rows: boolean[][] = [];
+  const rowAt = (index: number) => (rows[index] ??= Array.from({ length: columns }, () => false));
+  const free = (row: number, col: number, span: { cols: number; rows: number }) =>
+    Array.from({ length: span.rows }, (_, r) => r).every((r) =>
+      Array.from({ length: span.cols }, (_, c) => c).every((c) => !rowAt(row + r)[col + c]),
+    );
+  for (const shape of shapes) {
+    const span = SPANS[shape];
+    let placed = false;
+    for (let row = 0; !placed; row++) {
+      for (let col = 0; col <= columns - span.cols; col++) {
+        if (!free(row, col, span)) continue;
+        for (let r = 0; r < span.rows; r++) {
+          for (let c = 0; c < span.cols; c++) rowAt(row + r)[col + c] = true;
+        }
+        placed = true;
+        break;
+      }
+    }
+  }
+  return rows.every((row) => row.every(Boolean));
+}
+
+/** True when the cards fill whole rows at every column count the grid uses. */
+const fillsRows = (shapes: CardShape[], columns: readonly number[]) =>
+  columns.every((count) => packs(shapes, count));
+
+/** The last standard card widened, e.g. to fill a grid that is one cell short. */
+const widenLast = (shapes: CardShape[]): CardShape[] => {
+  const last = shapes.lastIndexOf('standard');
+  return last < 0 ? shapes : shapes.map((shape, index) => (index === last ? 'wide' : shape));
+};
+
+/** The tall chat column grown into a two by two anchor. */
+const asFeature = (shapes: CardShape[]): CardShape[] =>
+  shapes.map((shape) => (shape === 'tall' ? 'feature' : shape));
+
+/**
+ * Shapes for one gallery grid of the given column counts, the first arrangement that leaves no
+ * hole. A set one cell short (four overlays beside the tall chat column) widens its last standard
+ * card; from seven overlays up, the chat column also grows into a two by two anchor. One that
+ * would still leave a hole drops the wide cards first, then the tall one, then every span, so the
+ * grid stays even instead of showing a lone card.
  */
 export function getGalleryShapes(
   widgets: readonly WidgetEntry[],
   columns: readonly number[],
 ): CardShape[] {
   const shapes = widgets.map(getCardShape);
-  if (fillsRows(shapes, columns)) return shapes;
-  const last = shapes.lastIndexOf('standard');
-  const widened = shapes.map((shape, index) => (index === last ? 'wide' : shape));
-  if (last >= 0 && fillsRows(widened, columns)) return widened;
-  for (const dropped of ['wide', 'tall'] as const) {
-    const fewer = shapes.map((shape) => (shape === dropped ? 'standard' : shape));
-    if (fillsRows(fewer, columns)) return fewer;
-  }
-  return shapes.map(() => 'standard');
+  const tries = [
+    shapes,
+    widenLast(shapes),
+    asFeature(shapes),
+    widenLast(asFeature(shapes)),
+    ...(['wide', 'tall'] as const).map((dropped) =>
+      shapes.map((shape) => (shape === dropped ? 'standard' : shape)),
+    ),
+  ];
+  return tries.find((candidate) => fillsRows(candidate, columns)) ?? shapes.map(() => 'standard');
 }
 
 // Standard overlays are 4:3: Sub Sprout's demo sizes its pot by width, so a flatter box clips it.
@@ -58,6 +107,7 @@ export function getGalleryShapes(
 const PREVIEW_CLASS: Record<CardShape, string> = {
   standard: 'aspect-[4/3]',
   tall: 'aspect-[4/3] sm:aspect-auto sm:flex-1',
+  feature: 'aspect-[4/3] sm:aspect-auto sm:flex-1',
   wide: '',
 };
 
@@ -112,7 +162,9 @@ export function WidgetCard({
         )}
       </div>
 
-      <div className={`flex flex-col p-5 ${shape === 'tall' ? '' : 'flex-1'}`}>
+      <div
+        className={`flex flex-col p-5 ${shape === 'tall' || shape === 'feature' ? '' : 'flex-1'}`}
+      >
         <div className="flex items-center gap-3">
           <span className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-zinc-200 bg-zinc-50 text-green-600 dark:border-zinc-700 dark:bg-zinc-800 dark:text-green-400">
             <widget.Icon className="size-5" />

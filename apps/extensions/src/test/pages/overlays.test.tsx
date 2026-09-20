@@ -15,6 +15,7 @@ const OVERLAYS = [
   '/widgets/stream-alerts?simulate=1',
   '/widgets/goal?simulate=1',
   '/widgets/frame?demo=1&preset=dynasty',
+  '/widgets/countdown?simulate=1',
   '/widgets/poll?simulate=1',
   '/widgets/raffle-overlay',
 ];

@@ -11,6 +11,7 @@ Senchabot Extensions provides 100% free streaming widgets, customizable overlays
 - **Stream Alerts** — Animated alerts with their own sound for subs, gifted subs, Bits, Kicks and raids, in a Neon or a Celestial theme.
 - **Sub Goal** — A goal bar that every sub, resub and gifted sub on Twitch and Kick fills by one, with a trophy when the goal is reached. Mods fix the count from chat.
 - **Stream Frames** — Ready-made webcam, chat and screen frames drawn in the picked preset's look, transparent in the middle.
+- **Stream Countdown** — A countdown for the starting soon, back soon and stream ending scenes, counting down a length or aiming at a time of day, in the picked preset's look.
 - **Chat Poll** — A poll that Twitch and Kick chat vote in by typing a number, with live bars, a timer and the winner at the end. Mods run it from chat.
 - **Universal Chat** — A multi-chat widget and stream chat box overlay that combines Twitch and Kick chat into a single on-screen feed with 7TV emotes, badges, and platform indicators.
 - **Raffle Picker** — A chat-based giveaway and raffle tool. Viewers type a keyword to enter; winners are drawn and announced on a live confetti celebration overlay.
@@ -25,6 +26,7 @@ Senchabot Extensions provides 100% free streaming widgets, customizable overlays
 - [Stream Alerts](https://extensions.senchabot.com/setup/stream-alerts)
 - [Sub Goal](https://extensions.senchabot.com/setup/sub-goal)
 - [Stream Frames](https://extensions.senchabot.com/setup/stream-frames)
+- [Stream Countdown](https://extensions.senchabot.com/setup/stream-countdown)
 - [Chat Poll](https://extensions.senchabot.com/setup/chat-poll)
 - [Universal Chat](https://extensions.senchabot.com/setup/chat-widget)
 - [Raffle Picker](https://extensions.senchabot.com/setup/raffle)
@@ -130,6 +132,26 @@ https://extensions.senchabot.com/widgets/frame?piece=camera&preset=dynasty&label
 ```
 
 **URL parameters:** `piece` (`camera` | `chat` | `screen`), `preset`, `color` (`purple` | `green` | `red` | `gold` | `cyan` | `pink`, classic only), `label` (tab or plate text, empty leaves it off), `motion` (`0` turns animations off), `demo` (`1` draws a stand-in webcam or chat).
+
+---
+
+### Stream Countdown (`/setup/stream-countdown`)
+
+A countdown for the parts of a stream where nothing is happening yet: the minutes before going live, a break in the middle, and the last minutes before signing off.
+
+**How it works:**
+- Three scenes (`starting`, `break`, `ending`) that pick the default headline and icon. Your own headline, note and end message replace them.
+- Counts down a length (`time`), or aims at a time of day (`at=21:00`) read from the clock of the computer running OBS. A time that has already passed today aims at tomorrow.
+- The clock starts when the browser source loads, and nothing is saved. In OBS, tick "Refresh browser when scene becomes active" and the countdown starts over every time you switch to that scene.
+- At zero it shows a message, holds 00:00, or hides itself (`end`).
+- The look comes from the preset, with or without a panel (`look`), and an optional bar that empties with the time.
+- No channel is needed. With one, the broadcaster and mods run `!countdown add 5m`, `remove 2m`, `set 10m`, `pause`, `start` and `reset` from Twitch or Kick chat. It shares the Subathon Timer's clock and duration parsing.
+
+```
+https://extensions.senchabot.com/widgets/countdown?scene=starting&time=600&preset=dynasty
+```
+
+**URL parameters:** `twitch`, `kick` (only for the chat commands), `scene` (`starting` | `break` | `ending`), `time` (seconds, 1 to 86400), `at` (a 24-hour time like `21:00`, replaces `time`), `title`, `done`, `note`, `end` (`text` | `hold` | `hide`), `look` (`card` | `plain`), `preset`, `color` (`purple` | `green` | `red` | `gold` | `cyan` | `pink`, classic only), `bar` (`0` hides it), `motion` (`0` turns animations off), `lang` (`en` | `tr`), `simulate` (`1` runs a fast countdown).
 
 ---
 
@@ -283,6 +305,7 @@ npm run deploy
 │   │   ├── stream-alerts.tsx       # Stream Alerts configuration
 │   │   ├── sub-goal.tsx            # Sub Goal configuration
 │   │   ├── stream-frames.tsx       # Stream Frames configuration
+│   │   ├── stream-countdown.tsx    # Stream Countdown configuration
 │   │   ├── chat-poll.tsx           # Chat Poll configuration
 │   │   ├── chat-widget.tsx         # Universal Chat configuration
 │   │   ├── raffle.tsx              # Raffle configuration
@@ -293,6 +316,7 @@ npm run deploy
 │       ├── stream-alerts.tsx       # Stream Alerts overlay
 │       ├── goal.tsx                # Sub Goal overlay
 │       ├── frame.tsx               # Stream Frames overlay
+│       ├── countdown.tsx           # Stream Countdown overlay
 │       ├── poll.tsx                # Chat Poll overlay
 │       ├── chat-widget.tsx         # Universal Chat overlay
 │       ├── raffle-overlay.tsx      # Raffle winner overlay

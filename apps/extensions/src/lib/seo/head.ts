@@ -75,6 +75,13 @@ export const OG_IMAGES = {
       tr: "Yayın Çerçeveleri, kamera, sohbet ve ekran için preset'li çerçeve overlay'leri",
     },
   },
+  countdown: {
+    path: '/og/countdown.png',
+    alt: {
+      en: 'Stream Countdown, a starting soon, break and ending countdown overlay',
+      tr: "Yayın Geri Sayımı, başlangıç, mola ve bitiş için geri sayım overlay'i",
+    },
+  },
   poll: {
     path: '/og/poll.png',
     alt: {

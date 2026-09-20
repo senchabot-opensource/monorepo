@@ -100,6 +100,22 @@ const PAGES: PageCase[] = [
     faq: ['frames.faq1Q', 'frames.faq2Q', 'frames.faq3Q', 'frames.faq4Q'],
   },
   {
+    path: '/setup/stream-countdown',
+    title: 'countdown.title',
+    sections: [
+      'countdown.sectionCountdown',
+      'common.sectionChannel',
+      'common.sectionAppearance',
+      'countdown.sectionText',
+      'countdown.sectionCommands',
+      'countdown.previewTitle',
+      'countdown.guideTitle',
+      'common.faqTitle',
+      'common.moreWidgets',
+    ],
+    faq: ['countdown.faq1Q', 'countdown.faq2Q', 'countdown.faq3Q', 'countdown.faq4Q'],
+  },
+  {
     path: '/setup/chat-poll',
     title: 'poll.title',
     sections: [

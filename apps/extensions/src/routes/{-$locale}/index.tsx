@@ -217,8 +217,9 @@ function WorksWith() {
   );
 }
 
-// Card shapes come from getGalleryShapes: Chat Box (portrait) spans two rows beside a 2×2 of the
-// other overlays; the tools are a 2×2 of flat cards. Dense flow backfills if a span can't fit.
+// Card shapes come from getGalleryShapes: Chat Box (portrait) anchors the grid as a 2×2 block,
+// the goal strip and the countdown run two columns wide, and the tools are a 2×2 of flat cards.
+// Dense flow backfills if a span can't fit.
 const GALLERY_GROUPS = [
   {
     key: 'overlays',
@@ -239,6 +240,7 @@ const GALLERY_GROUPS = [
 const SHAPE_SPAN: Record<CardShape, string> = {
   standard: '',
   tall: 'sm:row-span-2',
+  feature: 'sm:col-span-2 sm:row-span-2',
   wide: 'sm:col-span-2',
 };
 

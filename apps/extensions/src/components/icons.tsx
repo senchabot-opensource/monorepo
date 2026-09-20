@@ -69,6 +69,16 @@ export function SubathonIcon(props: IconProps) {
   );
 }
 
+export function CountdownIcon(props: IconProps) {
+  return (
+    <StrokeIcon {...props}>
+      <path d="M7 3.5h10M7 20.5h10" />
+      <path d="M8 3.5v3.2c0 1.7 4 3.6 4 5.3 0 1.7-4 3.6-4 5.3v3.2" />
+      <path d="M16 3.5v3.2c0 1.7-4 3.6-4 5.3 0 1.7 4 3.6 4 5.3v3.2" />
+    </StrokeIcon>
+  );
+}
+
 export function GoalIcon(props: IconProps) {
   return (
     <StrokeIcon {...props}>

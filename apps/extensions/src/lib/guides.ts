@@ -11,6 +11,7 @@ export type GuideId =
   | 'subathon-timer'
   | 'chat-poll'
   | 'stream-frames'
+  | 'stream-countdown'
   | 'chat-giveaway'
   | 'obs-scene-switcher';
 
@@ -199,6 +200,29 @@ export const GUIDES: readonly GuideEntry[] = [
     },
   },
   {
+    id: 'stream-countdown',
+    path: '/guides/stream-countdown',
+    titleKey: 'guides.countdown.title',
+    shortKey: 'guides.countdown.short',
+    summaryKey: 'guides.countdown.summary',
+    leadKey: 'guides.countdown.lead',
+    widgets: ['countdown'],
+    related: ['obs-browser-source', 'obs-scene-switcher'],
+    published: '2026-09-20',
+    meta: {
+      en: {
+        title: 'Add a Starting Soon and BRB Countdown in OBS | Senchabot',
+        description:
+          'Add a free countdown to your Twitch or Kick stream: a length or a time of day like 21:00, starting over on every scene switch, and the !countdown commands.',
+      },
+      tr: {
+        title: "OBS'te Başlangıç, Mola ve Bitiş Geri Sayımı Ekle | Senchabot",
+        description:
+          'Twitch ve Kick yayınına ücretsiz geri sayım ekle: süre ya da 21:00 gibi bir saat, her sahne geçişinde baştan başlar, modlar !countdown ile uzatır.',
+      },
+    },
+  },
+  {
     id: 'chat-giveaway',
     path: '/guides/chat-giveaway',
     titleKey: 'guides.raffle.title',
@@ -270,12 +294,12 @@ export const CONTENT_META = {
     en: {
       title: 'Senchabot Extensions FAQ: Free Twitch and Kick Overlays',
       description:
-        'Answers about Senchabot Extensions: free with no login, which of the 10 widgets support Twitch and Kick, where your settings live and how to report a bug.',
+        'Answers about Senchabot Extensions: free with no login, which of the 11 widgets support Twitch and Kick, where your settings live and how to report a bug.',
     },
     tr: {
       title: "Senchabot Extensions SSS: Twitch ve Kick Overlay'leri",
       description:
-        "Senchabot Extensions için kısa cevaplar: ücretsiz ve girişsiz, 10 widget'tan hangisi Twitch ve Kick'te çalışıyor, ayarlar nerede duruyor, hata nasıl bildirilir.",
+        "Senchabot Extensions için kısa cevaplar: ücretsiz ve girişsiz, 11 widget'tan hangisi Twitch ve Kick'te çalışıyor, ayarlar nerede duruyor, hata nasıl bildirilir.",
     },
   },
   presets: {

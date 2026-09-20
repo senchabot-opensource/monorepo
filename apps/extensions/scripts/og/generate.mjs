@@ -91,6 +91,7 @@ const SUBATHON_HIT = `(() => {
 })()`;
 const OXANIUM_READY = `document.fonts.check('800 20px Oxanium')`;
 const FRAME_READY = `document.fonts.status === 'loaded' && Boolean(document.querySelector('[data-testid="frame-art"] svg path'))`;
+const COUNTDOWN_READY = `document.fonts.status === 'loaded' && Boolean(document.querySelector('[data-testid="countdown-clock"]'))`;
 // One test alert over the preview channel; it stays up while the demo's own alerts wait.
 const streamAlert = (alert) =>
   `new BroadcastChannel('senchabot:stream-alerts-preview').postMessage({ type: 'alert', preview: 'og', alert: ${JSON.stringify(alert)} })`;
@@ -222,6 +223,21 @@ const CAPTURES = {
     height: 360,
     settleMs: 1500,
     ready: FRAME_READY,
+  },
+  // A fixed length and no simulate, so the clock reads the same on every run.
+  countdownStarting: {
+    path: '/widgets/countdown?scene=starting&time=752&preset=dynasty&motion=0',
+    width: 1280,
+    height: 720,
+    settleMs: 900,
+    ready: COUNTDOWN_READY,
+  },
+  countdownBreak: {
+    path: '/widgets/countdown?scene=break&time=287&look=plain&motion=0',
+    width: 1280,
+    height: 720,
+    settleMs: 900,
+    ready: COUNTDOWN_READY,
   },
   poll: {
     path: `/widgets/poll?simulate=1&preview=og&q=${encodeURIComponent('What should we play tonight?')}&o=${encodeURIComponent('Horror game|Speedrun|Viewer games|Just chatting')}`,
@@ -376,6 +392,21 @@ const CARDS = [
       layers: [
         layer('framesDynasty', { x: 0, y: 8, width: 400, height: 225 }),
         layer('framesAgent', { x: 138, y: 199, width: 400, height: 225 }),
+      ],
+    },
+  },
+  {
+    id: 'countdown',
+    eyebrow: { icon: 'countdown', label: 'Overlay' },
+    title: en.widgets.countdown.name,
+    subtitle: en.widgets.countdown.tagline,
+    visual: {
+      kind: 'stage',
+      live: true,
+      // Two 1280x720 scenes, the plain one tucked under the panelled one's corner.
+      layers: [
+        layer('countdownStarting', { x: 0, y: 6, width: 420, height: 236 }),
+        layer('countdownBreak', { x: 120, y: 200, width: 420, height: 236 }),
       ],
     },
   },

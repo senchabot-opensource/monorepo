@@ -10,6 +10,7 @@ export const PRESET_WIDGET_IDS = [
   'poll',
   'raffle',
   'frames',
+  'countdown',
 ] as const satisfies readonly WidgetId[];
 
 export const PRESET_WIDGETS: readonly WidgetEntry[] = PRESET_WIDGET_IDS.map(getWidget);

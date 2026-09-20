@@ -50,6 +50,7 @@ export const READY_BY_WIDGET = {
   '/widgets/goal': 'text:SUB GOAL',
   '/widgets/frame': 'frame',
   '/widgets/poll': 'poll',
+  '/widgets/countdown': 'countdown',
 };
 
 /**
@@ -104,6 +105,12 @@ export const SETUP_SPECS = {
     // Frames read no chat: the "channel" goes into the label, the first text field.
     steps: [{ click: 'input[type="radio"][value="gold"]' }],
     expect: ['/widgets/frame?', 'label={channel}', 'color=gold'],
+    pasteToEdit: true,
+  },
+  'stream-countdown': {
+    preview: 'iframe',
+    steps: [{ click: 'input[type="radio"][value="gold"]' }],
+    expect: ['/widgets/countdown?', 'twitch={channel}', 'color=gold'],
     pasteToEdit: true,
   },
   'chat-poll': {

@@ -100,6 +100,11 @@ export const en = {
       tagline:
         'Ready-made frames for your camera, chat and stream screen, drawn to match your preset.',
     },
+    countdown: {
+      name: 'Stream Countdown',
+      tagline:
+        'A countdown for your starting, break and ending scenes, set by length or by clock time.',
+    },
     subathon: {
       name: 'Subathon Timer',
       tagline:
@@ -220,10 +225,10 @@ export const en = {
       'OBS Studio and other apps that support browser sources. Add the widget URL as a Browser Source and use the size shown on the setup page.',
     faq4Q: 'Can I use Twitch and Kick together?',
     faq4A:
-      'Yes. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal and Chat Poll take a Twitch and a Kick channel in the same URL. OBS Bridge can listen to both chats at once too. Raffle runs on one platform at a time.',
+      'Yes. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll and Stream Countdown take a Twitch and a Kick channel in the same URL. OBS Bridge can listen to both chats at once too. Raffle runs on one platform at a time.',
     faq5Q: 'How do I change a widget later?',
     faq5A:
-      'Open its setup page, set it up the way you want and replace the URL in your Browser Source. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll and Stream Frames can also open an existing URL: paste it on the setup page, your settings come back, and you change only what you need.',
+      'Open its setup page, set it up the way you want and replace the URL in your Browser Source. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll, Stream Frames and Stream Countdown can also open an existing URL: paste it on the setup page, your settings come back, and you change only what you need.',
     faq6Q: 'Will my widget URL keep working after updates?',
     faq6A:
       "Yes. Updates keep existing URL settings and their values working, so a widget that's already in your scene doesn't need a new URL.",
@@ -815,6 +820,121 @@ export const en = {
     faq4A:
       'No. Every drawing, like the pagoda roof, the lanterns or the pixel blocks, was made from scratch, with no game logos or art. The presets are fan-made styles that capture the feel of those games.',
   },
+  countdown: {
+    breadcrumb: 'Stream Countdown Setup',
+    title: 'Stream Countdown Setup',
+    intro:
+      'A countdown for the parts of a stream where nothing is happening yet: the minutes before you go live, a break in the middle, and the last minutes before you sign off. Give it a length or the time of day you want to start at, and it takes the look of the preset you pick. No channel needed, but with one your mods can push it back from chat.',
+    scenes: {
+      starting: {
+        label: 'Starting',
+        title: 'Starting Soon',
+        done: "We're live!",
+        hint: 'For the scene you sit on before you go live.',
+      },
+      break: {
+        label: 'Break',
+        title: 'Back Soon',
+        done: "I'm back!",
+        hint: 'For a break in the middle: food, a pause, a quick errand.',
+      },
+      ending: {
+        label: 'Ending',
+        title: 'Stream Ending',
+        done: 'Thanks for watching!',
+        hint: 'For the last minutes, so chat knows how long is left.',
+      },
+    },
+    sectionCountdown: 'Countdown',
+    scene: 'What is it for?',
+    sceneTip: 'This picks the wording and the icon. You can write your own text further down.',
+    mode: 'Count Down To',
+    modes: {
+      duration: 'A length',
+      clock: 'A time of day',
+    },
+    modeTip:
+      'A length starts the moment the browser source loads. A time of day always ends at that time, so you can add the source hours ahead.',
+    duration: 'Length',
+    durationUnit: 'min',
+    durationTip: 'How long the countdown runs, from 1 minute to 24 hours.',
+    atLabel: 'Time of Day',
+    atTip:
+      'A 24-hour time like 21:00, read from the clock on the computer running OBS. If it has already passed today, the countdown aims at tomorrow.',
+    atPlaceholder: '21:00',
+    atInvalid: 'Type a 24-hour time, like 21:00.',
+    ending: 'At Zero',
+    endings: {
+      text: 'Show a message',
+      hold: 'Stay at 00:00',
+      hide: 'Hide it',
+    },
+    endingTip: 'What stays on screen after the countdown runs out, until you switch scenes.',
+    sectionText: 'Text',
+    titleLabel: 'Headline',
+    titleTip: 'Above the clock. Leave it empty to use the wording of the scene you picked.',
+    titlePlaceholder: 'Scene wording',
+    noteLabel: 'Note',
+    noteTip: 'A line under the clock, e.g. what the break is for. Leave it empty to hide it.',
+    notePlaceholder: 'No note',
+    doneLabel: 'Message at Zero',
+    doneTip: 'Replaces the clock when it runs out. Leave it empty to use the wording of the scene.',
+    look: 'Background',
+    looks: {
+      card: 'Panel',
+      plain: 'No panel',
+    },
+    lookTip: 'A panel behind the clock, or the text straight on your scene.',
+    color: 'Color',
+    showBar: 'Progress Bar',
+    showBarTip: 'A bar under the clock that empties as the time runs out.',
+    motion: 'Animations',
+    motionTip: 'The clock pulses over the last minute. Turn it off and everything stays still.',
+    channelsTip:
+      'Only needed for the chat commands. Without a channel the countdown still runs on its own.',
+    sectionCommands: 'Chat Commands',
+    commandsIntro:
+      'With a channel filled in, you and your mods can change the countdown from Twitch or Kick chat, for example to push the start back while you are away from the keyboard.',
+    cmdAdd: 'Adds time: 5m, 90s or 1h30m',
+    cmdRemove: 'Takes time off',
+    cmdSet: 'Sets the time left',
+    cmdPause: 'Pauses it; start runs it again',
+    cmdReset: 'Starts the countdown over',
+    previewTitle: 'Stream Countdown Preview',
+    previewIframeTitle: 'Stream Countdown Preview',
+    previewHint:
+      'The preview runs fast so you see the whole countdown, then starts over. On stream it counts down in real time.',
+    testTitle: 'Try it:',
+    testAdd: '+1 min',
+    testRemove: '-1 min',
+    testPause: 'Pause',
+    testFinish: 'Skip to Zero',
+    widgetUrlTip:
+      'Already made a countdown? Paste its URL here to load your settings and change what you need.',
+    widgetUrlPlaceholder: 'Paste an existing countdown URL to edit it',
+    widgetUrlInvalid: "This isn't a Stream Countdown URL.",
+    browserSourceHintSize: ' (recommended size: 1920\u00d71080).',
+    guideTitle: 'Streaming Software Setup (OBS, Streamlabs, XSplit, etc.)',
+    guideStep1:
+      'Add a Browser Source to your starting, break or ending scene and paste the countdown URL.',
+    guideStep2: 'Set width to 1920 and height to 1080, so the clock sits in the middle of the scene.',
+    guideStep3:
+      'Tick "Refresh browser when scene becomes active", so the countdown starts over every time you switch to that scene.',
+    guideStep4:
+      'Switch to the scene to start it. With a channel filled in, a mod can push it back with !countdown add 5m while you are away.',
+    faq1Q: 'When does the countdown start?',
+    faq1A:
+      'The moment the browser source loads: when OBS opens, or when you switch to the scene with "Refresh browser when scene becomes active" ticked. That way a break countdown starts over every time you go to your BRB scene instead of running out while you are still live.',
+    faq2Q: 'Can it count down to the time I announced, like 21:00?',
+    faq2A:
+      'Yes. Set Count Down To a time of day and type 21:00. It reads the clock on the computer running OBS, so you can add the source hours ahead and it still ends at 21:00. If 21:00 has already passed today, it aims at tomorrow.',
+    faq3Q: 'Do I need to connect my Twitch or Kick account?',
+    faq3A:
+      "No. The countdown runs on its own, with no channel and no login. You only fill in a channel if you want the !countdown commands, and then it reads your public chat the way the other widgets do.",
+    faq4Q: 'What happens when it reaches zero?',
+    faq4A:
+      'Whatever you pick under At Zero: a message like "We\'re live!", the clock sitting at 00:00, or the overlay disappearing so the scene is bare. It never switches scenes for you.',
+  },
   poll: {
     breadcrumb: 'Chat Poll Setup',
     title: 'Chat Poll Setup',
@@ -1209,7 +1329,7 @@ export const en = {
     openSetup: 'Open the setup page',
     index: {
       title: 'Guides',
-      lead: "Each guide answers one question step by step: adding a widget to OBS, combining Twitch and Kick chat, reading chat in an OBS dock, adding stream alerts, running a subathon timer, running a chat poll, framing your camera and chat, running a chat raffle and switching scenes from chat. They all cover free tools that don't need a login.",
+      lead: "Each guide answers one question step by step: adding a widget to OBS, combining Twitch and Kick chat, reading chat in an OBS dock, adding stream alerts, running a subathon timer, running a chat poll, framing your camera and chat, counting down to your stream, running a chat raffle and switching scenes from chat. They all cover free tools that don't need a login.",
       listLabel: 'All guides',
       moreText:
         "For general questions, check the [FAQ](/faq). To see what's changed, head to the [changelog](/changelog).",
@@ -1251,6 +1371,8 @@ export const en = {
             '640x360 for a camera, 420x720 for chat, 1920x1080 for the screen. The frame fits whatever size you give it.',
           goal: 'A wide strip for the goal bar, with room above it for the +1s to rise into.',
           subathon: 'A wide strip for the health bar, clock or ring. A bigger source scales it up.',
+          countdown:
+            'A full 1080p canvas, so the clock lands in the middle of your starting or BRB scene.',
           poll: 'Room for a poll with up to 6 options. It sits at the top or bottom and grows with the options.',
           streamAlerts:
             'One alert at a time, in the middle of this area. A bigger source scales it up.',
@@ -1292,7 +1414,7 @@ export const en = {
         title: 'How do I change a widget later?',
         p1: 'Your settings live inside the widget URL, so changing a setting means a new URL. Change the setting on the setup page, copy the new URL, then double-click the source in OBS and paste it over the old URL in the URL field.',
         p2:
-          "You don't have to start over with [Chat Box](/setup/chat-widget), [Emote Wall](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Stream Alerts](/setup/stream-alerts), [Sub Goal](/setup/sub-goal), [Chat Poll](/setup/chat-poll) or [Stream Frames](/setup/stream-frames). Paste your current URL into the Widget URL field on the setup page and your channels and all your settings come back. Change what you want and copy the new URL.",
+          "You don't have to start over with [Chat Box](/setup/chat-widget), [Emote Wall](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Stream Alerts](/setup/stream-alerts), [Sub Goal](/setup/sub-goal), [Chat Poll](/setup/chat-poll), [Stream Frames](/setup/stream-frames) or [Stream Countdown](/setup/stream-countdown). Paste your current URL into the Widget URL field on the setup page and your channels and all your settings come back. Change what you want and copy the new URL.",
         p3: "OBS Bridge has no paste field, so enter your settings again on its setup page and copy the new tool URL. You can also change scene picks and authorized users on the tool page itself and grab the new URL with its Copy Updated URL button. Old URLs keep working, so you don't have to update them.",
       },
       troubleshoot: {
@@ -1776,6 +1898,71 @@ export const en = {
       ctaTitle: 'Set up your frame',
       ctaText: 'Pick the piece and the preset, check the preview, copy the URL.',
     },
+    countdown: {
+      title: 'How to add a starting soon, BRB and ending countdown in OBS',
+      short: 'Add a countdown',
+      summary:
+        'Setting up a countdown for your starting, break and ending scenes, making it start over on every scene switch, counting down to a time of day, and the chat commands.',
+      lead:
+        "Stream Countdown is a clock for the three scenes where nothing is happening yet: starting soon, back soon and stream ending. Pick the scene and a length on the setup page, add the URL to OBS as a 1920 \u00d7 1080 Browser Source, and tick Refresh browser when scene becomes active so it starts over every time you switch to that scene. No login, and no channel unless you want the chat commands.",
+      setup: {
+        title: 'How do you set up a stream countdown?',
+        step1: 'Open the [Stream Countdown setup page](/setup/stream-countdown).',
+        step2:
+          'Under What is it for?, pick Starting, Break or Ending. That sets the wording and the icon, and each one is its own Browser Source, so you can add all three.',
+        step3:
+          'Under Count Down To, pick A length and set the minutes, or pick A time of day and type a 24-hour time like 21:00.',
+        step4:
+          'Pick a preset, and under At Zero choose what stays on screen when the time runs out: a message, the clock at 00:00, or nothing at all.',
+        step5:
+          'Copy the URL and add it to the scene in OBS as a Browser Source, 1920 \u00d7 1080, so the clock lands in the middle of your scene.',
+        p1:
+          'The preview on the setup page runs fast so you see the whole countdown in a few seconds. On stream it counts down in real time.',
+      },
+      restart: {
+        title: 'Why does my countdown not start over?',
+        p1:
+          "The countdown starts when the browser source loads. If the source loaded when OBS opened, it has been counting down ever since, so by the time you switch to your BRB scene it's already at zero.",
+        p2:
+          'Open the Browser Source properties and tick "Refresh browser when scene becomes active". OBS reloads the page every time you switch to that scene, so the countdown starts from the top each break.',
+        p3:
+          "With a channel filled in you can also type `!countdown reset` in chat, which starts it over without touching OBS. That's the quickest fix when you're already away from the keyboard.",
+      },
+      clock: {
+        title: 'How do you count down to a time of day?',
+        p1:
+          "Pick A time of day and type the time you announced, e.g. 21:00. The countdown reads the clock on the computer running OBS, so it doesn't matter when the source loads: at 18:30 it shows 2:30:00, and at 20:55 it shows 05:00.",
+        p2:
+          "If the time has already passed today, it aims at the same time tomorrow. So a source you leave open overnight is ready for the next stream, and `!countdown reset` re-aims it at the next one.",
+        p3:
+          'Viewers in other countries see your countdown, not their own clock, which is the point: everyone sees the same number of minutes left.',
+      },
+      commands: {
+        title: 'Can mods change the countdown from chat?',
+        p1:
+          'Yes, once you fill in your Twitch or Kick channel on the setup page. Then you and your mods can run these in either chat:',
+        caption: 'The !countdown commands',
+        colCommand: 'Command',
+        colDoes: 'What it does',
+        addDoes: 'Adds 5 minutes; 90s and 1h30m work too',
+        removeDoes: 'Takes 2 minutes off',
+        setDoes: 'Sets the time left to 10 minutes',
+        pauseDoes: 'Pauses the clock where it is',
+        startDoes: 'Runs it again after a pause',
+        resetDoes: 'Starts the countdown over from the top',
+        p2:
+          "Only you and your mods can run them, on both platforms, and a reply in chat never runs a command. The countdown reads your public chat the same way the other widgets do, with no login.",
+      },
+      scenes: {
+        title: 'Which countdown goes on which scene?',
+        p1:
+          'Starting goes on the scene you sit on before you go live, with a length like 10 minutes, or the time of day you announced. Break goes on your BRB scene with a shorter length, usually 5 or 10 minutes. Ending goes on the last scene, so chat can see how long is left before you sign off.',
+        p2:
+          'If you switch scenes from chat with [OBS Bridge](/setup/obs-bridge), your mods can send you to the BRB scene and the countdown starts with it.',
+      },
+      ctaTitle: 'Set up your countdown',
+      ctaText: 'Pick the scene and the length, watch the preview, copy the URL into OBS.',
+    },
     alerts: {
       title: 'How to add sub, cheer and raid alerts for Twitch and Kick in OBS',
       short: 'Add stream alerts',
@@ -2008,10 +2195,10 @@ export const en = {
       'OBS Studio and any other streaming software that supports a browser source. Each widget runs as a web URL, and you paste that URL into the source. Our guides are written for OBS Studio.',
     platformsQ: 'Which widgets support Twitch and which support Kick?',
     platformsA:
-      'All nine support both platforms. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal and Chat Poll listen to a Twitch and a Kick channel together in one URL. OBS Bridge listens for commands from both chats, and each authorized user is added with their own platform. Raffle runs on one platform at a time, Twitch or Kick. In Chat Box, 7TV emotes show on both platforms, while BTTV and FFZ emotes show on Twitch only.',
+      'All eleven support both platforms. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll and Stream Countdown listen to a Twitch and a Kick channel together in one URL. OBS Bridge listens for commands from both chats, and each authorized user is added with their own platform. Raffle runs on one platform at a time, Twitch or Kick. In Chat Box, 7TV emotes show on both platforms, while BTTV and FFZ emotes show on Twitch only.',
     editQ: 'How do I change a widget later?',
     editA:
-      "Change the settings on the setup page, copy the new URL, and paste it over the old one in the source's URL field in OBS. With Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll and Stream Frames, if you paste your old URL into the Widget URL field on the setup page, all your settings come back and you don't have to start over.",
+      "Change the settings on the setup page, copy the new URL, and paste it over the old one in the source's URL field in OBS. With Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll, Stream Frames and Stream Countdown, if you paste your old URL into the Widget URL field on the setup page, all your settings come back and you don't have to start over.",
     oldUrlsQ: 'Will my old widget URLs keep working?',
     oldUrlsA:
       "Yes. Updates are made so existing URLs don't break: parameter names, values and defaults stay the same. For example, the old keep=true in Chat Box still means Forever, and Sub Sprout still reads the old channel and platform parameters.",
@@ -2035,6 +2222,8 @@ export const en = {
     lead: "New features and bug fixes in Senchabot Extensions, newest first. The list is put together from the project's commit history on [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      countdown:
+        'New Stream Countdown: a clock for your starting soon, back soon and stream ending scenes. Set a length or the time of day you go live, pick a preset, and let your mods push it back from chat with !countdown.',
       deviceTheme:
         "The site now opens in your device's light or dark theme and keeps following it when that changes. Once you press the theme button in the header, your pick is remembered and the device stops changing it.",
       frames:

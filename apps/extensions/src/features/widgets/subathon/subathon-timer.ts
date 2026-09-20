@@ -180,10 +180,13 @@ const ACTIONS: Record<string, SubathonCommand['action']> = {
   set: 'set',
 };
 
-/** Reads "!subathon <action> [duration]"; null for anything else or a missing duration. */
-export function parseCommand(message: string): SubathonCommand | null {
-  const [command, word = '', ...rest] = message.trim().split(/\s+/);
-  if (command?.toLowerCase() !== COMMAND) return null;
+/**
+ * Reads "<command> <action> [duration]"; null for anything else or a missing duration. Stream
+ * Countdown runs the same clock, so it reads its own !countdown through this.
+ */
+export function parseCommand(message: string, command = COMMAND): SubathonCommand | null {
+  const [typed, word = '', ...rest] = message.trim().split(/\s+/);
+  if (typed?.toLowerCase() !== command) return null;
   const action = ACTIONS[word.toLowerCase()];
   if (!action) return null;
   if (action === 'start' || action === 'pause' || action === 'reset') return { action };
