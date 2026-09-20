@@ -13,6 +13,7 @@ export interface ChangelogEntry {
 // Written from `git log -- apps/extensions`: user-facing feat/fix commits only, newest first.
 // Alerts is unlisted, so its commits stay out.
 export const CHANGELOG: readonly ChangelogEntry[] = [
+  { date: '2026-09-20', key: 'changelog.entries.deviceTheme', widgets: [] },
   { date: '2026-09-16', key: 'changelog.entries.frames', widgets: ['frames'] },
   { date: '2026-09-16', key: 'changelog.entries.subathonRates', widgets: ['subathon'] },
   {

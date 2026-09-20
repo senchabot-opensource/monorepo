@@ -1,9 +1,10 @@
-import { cleanup, screen, within } from '@testing-library/react';
+import { act, cleanup, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { crossLinkSpan } from '#/components/widget-cross-links';
 import { isAppPath } from '#/lib/i18n/paths';
 import { THEME_INIT_SCRIPT } from '#/lib/theme';
 import { OVERLAYS, TOOLS, WIDGETS } from '#/lib/widgets';
+import { setPrefersDark } from '#/test/browser';
 import { button, en, headings, section, tr } from '#/test/queries';
 import { renderRoute, setupUser } from '#/test/render';
 
@@ -296,29 +297,74 @@ describe('theme toggle', () => {
     new Function(THEME_INIT_SCRIPT)();
   };
 
-  it('paints the theme the page keeps, whatever the OS prefers', async () => {
-    vi.stubGlobal('matchMedia', (query: string) => ({ matches: false, media: query }));
-    paintBeforeReact('/');
-    expect(document.documentElement.classList.contains('dark')).toBe(true);
-    await renderRoute('/');
-    expect(document.documentElement.classList.contains('dark')).toBe(true);
-    vi.unstubAllGlobals();
-  });
+  /** Collects the `dark` classes React replaces while the page starts: each one is a flash. */
+  const watchDarkFlashes = (html: HTMLElement) => {
+    const seen: string[] = [];
+    const observer = new MutationObserver((records) => {
+      for (const record of records) seen.push(record.oldValue ?? '');
+    });
+    observer.observe(html, {
+      attributes: true,
+      attributeFilter: ['class'],
+      attributeOldValue: true,
+    });
+    return () => {
+      for (const record of observer.takeRecords()) seen.push(record.oldValue ?? '');
+      observer.disconnect();
+      return seen.filter((value) => value.split(' ').includes('dark'));
+    };
+  };
 
   it('never flashes dark over a saved light theme while the page starts', async () => {
     localStorage.setItem('theme', 'light');
     paintBeforeReact('/setup/chat-widget');
     const html = document.documentElement;
-    const seen: string[] = [];
-    const observer = new MutationObserver((records) => {
-      for (const record of records) seen.push(record.oldValue ?? '');
-    });
-    observer.observe(html, { attributes: true, attributeFilter: ['class'], attributeOldValue: true });
+    const flashes = watchDarkFlashes(html);
     await renderRoute('/setup/chat-widget');
-    for (const record of observer.takeRecords()) seen.push(record.oldValue ?? '');
-    observer.disconnect();
-    expect(seen.filter((value) => value.split(' ').includes('dark'))).toEqual([]);
+    expect(flashes()).toEqual([]);
     expect(html.classList.contains('dark')).toBe(false);
+  });
+
+  it('starts light on a light device, without flashing dark', async () => {
+    setPrefersDark(false);
+    paintBeforeReact('/');
+    const html = document.documentElement;
+    expect(html.classList.contains('dark')).toBe(false);
+    const flashes = watchDarkFlashes(html);
+    await renderRoute('/');
+    expect(flashes()).toEqual([]);
+    expect(html.classList.contains('dark')).toBe(false);
+    // Nothing is stored: the page is following the device, not a choice.
+    expect(localStorage.getItem('theme')).toBe(null);
+  });
+
+  it('keeps a saved theme when the device prefers the other one', async () => {
+    localStorage.setItem('theme', 'dark');
+    setPrefersDark(false);
+    paintBeforeReact('/');
+    expect(document.documentElement.classList.contains('dark')).toBe(true);
+    await renderRoute('/');
+    expect(document.documentElement.classList.contains('dark')).toBe(true);
+  });
+
+  it('follows the device until the toggle is clicked', async () => {
+    const user = setupUser();
+    paintBeforeReact('/');
+    await renderRoute('/');
+    const html = document.documentElement;
+    expect(html.classList.contains('dark')).toBe(true);
+
+    await act(async () => setPrefersDark(false));
+    expect(html.classList.contains('dark')).toBe(false);
+    expect(localStorage.getItem('theme')).toBe(null);
+
+    // A click is a choice, so the device stops moving the page.
+    await user.click(button(en('common.themeToggle')));
+    expect(html.classList.contains('dark')).toBe(true);
+    expect(localStorage.getItem('theme')).toBe('dark');
+    await act(async () => setPrefersDark(true));
+    await act(async () => setPrefersDark(false));
+    expect(html.classList.contains('dark')).toBe(true);
   });
 });
 
