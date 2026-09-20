@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import { DropdownMenu } from './dropdown-menu';
@@ -21,6 +21,20 @@ const panel = () => document.getElementById(trigger().getAttribute('aria-control
 const expanded = () => trigger().getAttribute('aria-expanded');
 const link = (name: string) => screen.getByRole('link', { name, hidden: true });
 
+/**
+ * jsdom gives every element a zero sized box, so the trigger and the panel get one each: the
+ * trigger above, the panel below it with a gap in between, the way the header lays them out.
+ */
+const layOut = () => {
+  const rect = (x: number, y: number, width: number, height: number) =>
+    ({ left: x, right: x + width, top: y, bottom: y + height, x, y, width, height }) as DOMRect;
+  trigger().getBoundingClientRect = () => rect(100, 0, 100, 40);
+  (panel() as HTMLElement).getBoundingClientRect = () => rect(100, 70, 300, 200);
+};
+
+const movePointer = (clientX: number, clientY: number) =>
+  fireEvent.pointerMove(document, { pointerType: 'mouse', clientX, clientY });
+
 describe('DropdownMenu', () => {
   it('keeps a hidden panel of links mounted, wired to the trigger', () => {
     render(<Menu />);
@@ -29,7 +43,7 @@ describe('DropdownMenu', () => {
     expect(screen.queryByRole('link', { name: 'Chat Box' })).toBeNull();
   });
 
-  it('opens and closes on click', async () => {
+  it('opens on click and a second click leaves it open', async () => {
     const user = userEvent.setup();
     render(<Menu />);
     await user.click(trigger());
@@ -37,7 +51,86 @@ describe('DropdownMenu', () => {
     expect(panel()?.hidden).toBe(false);
     expect(screen.getAllByRole('link')).toHaveLength(3);
 
+    // Clicking a menu you just aimed at must not shut it under the cursor.
     await user.click(trigger());
+    expect(expanded()).toBe('true');
+  });
+
+  it('opens when the mouse hovers the trigger and closes the moment it leaves', async () => {
+    const user = userEvent.setup();
+    render(<Menu />);
+    await user.hover(trigger());
+    expect(expanded()).toBe('true');
+
+    layOut();
+    movePointer(600, 400);
+    expect(expanded()).toBe('false');
+  });
+
+  it('stays open in the gap between the trigger and the panel', async () => {
+    const user = userEvent.setup();
+    render(<Menu />);
+    await user.hover(trigger());
+    layOut();
+
+    // Just under the trigger, on the way down to the panel, and just off its edge.
+    movePointer(150, 55);
+    expect(expanded()).toBe('true');
+    movePointer(350, 200);
+    expect(expanded()).toBe('true');
+    movePointer(405, 200);
+    expect(expanded()).toBe('true');
+  });
+
+  it('closes when the pointer moves to a neighbour in the same row', async () => {
+    const user = userEvent.setup();
+    render(<Menu />);
+    await user.hover(trigger());
+    layOut();
+
+    // Beside the trigger, over the panel's columns but above the panel itself: the next nav
+    // link sits there, and the gap between trigger and panel must not reach it.
+    movePointer(350, 20);
+    expect(expanded()).toBe('false');
+  });
+
+  it('closes on leaving even when a click, not a hover, opened it', () => {
+    render(<Menu />);
+    // The cursor was already resting on the trigger, so no pointerenter ever fires.
+    fireEvent.pointerDown(trigger(), { pointerType: 'mouse' });
+    fireEvent.click(trigger(), { detail: 1 });
+    expect(expanded()).toBe('true');
+
+    layOut();
+    movePointer(600, 400);
+    expect(expanded()).toBe('false');
+  });
+
+  it('lets a tap and the keyboard toggle it, having no hover to leave with', () => {
+    render(<Menu />);
+    fireEvent.pointerDown(trigger(), { pointerType: 'touch' });
+    fireEvent.click(trigger(), { detail: 1 });
+    expect(expanded()).toBe('true');
+    fireEvent.pointerDown(trigger(), { pointerType: 'touch' });
+    fireEvent.click(trigger(), { detail: 1 });
+    expect(expanded()).toBe('false');
+
+    // Enter on the focused button arrives as a click with no pointer behind it.
+    fireEvent.click(trigger(), { detail: 0 });
+    expect(expanded()).toBe('true');
+    fireEvent.click(trigger(), { detail: 0 });
+    expect(expanded()).toBe('false');
+  });
+
+  it('closes a clicked panel too once the pointer leaves it', async () => {
+    const user = userEvent.setup();
+    render(<Menu />);
+    await user.hover(trigger());
+    await user.click(trigger());
+    expect(expanded()).toBe('true');
+
+    layOut();
+    movePointer(600, 400);
     expect(expanded()).toBe('false');
   });
 

@@ -3,7 +3,6 @@ import { useEffect, useId, useRef, useState } from 'react';
 import { ExternalLink } from '#/components/external-link';
 import { CloseIcon, ExternalIcon, GithubIcon, MenuIcon } from '#/components/icons';
 import { LocaleLink } from '#/components/locale-link';
-import { PlatformChips } from '#/components/platform-chips';
 import { ICON_BUTTON_CLASS, SiteControls } from '#/components/site-controls';
 import { DROPDOWN_ITEM_CLASS, DropdownMenu } from '#/components/ui/dropdown-menu';
 import { useI18n } from '#/lib/i18n';
@@ -102,6 +101,7 @@ function WidgetIconTile({ widget, size = 'md' }: { widget: WidgetEntry; size?: '
   );
 }
 
+/** No platform chips here: eleven repeats of the same pair ran the menu off the screen. */
 function WidgetMenuLink({ widget }: { widget: WidgetEntry }) {
   const { t } = useI18n();
   return (
@@ -117,7 +117,6 @@ function WidgetMenuLink({ widget }: { widget: WidgetEntry }) {
         <span className="mt-0.5 block text-xs leading-snug text-zinc-500 dark:text-zinc-400">
           {t(widget.taglineKey)}
         </span>
-        <PlatformChips platforms={widget.platforms} className="mt-1.5" />
       </span>
     </LocaleLink>
   );
@@ -161,7 +160,7 @@ function WidgetsMenu() {
       triggerClassName={NAV_LINK_CLASS}
       anchor="container"
       positionClassName="left-4"
-      panelClassName="w-[min(44rem,calc(100%-2rem))] p-3"
+      panelClassName="max-h-[calc(100dvh-5rem)] w-[min(44rem,calc(100%-2rem))] overflow-y-auto overscroll-contain p-3"
     >
       <WidgetGroups sideBySide />
     </DropdownMenu>
@@ -302,13 +301,20 @@ function FullHeader() {
   );
 }
 
-function WidgetSwitcher({ current }: { current: WidgetId }) {
+/** The page title itself opens the switcher, so the whole heading is the target, not a chevron. */
+function WidgetSwitcher({ current, title }: { current: WidgetEntry; title: string }) {
   const { t } = useI18n();
   return (
     <DropdownMenu
-      label={null}
-      ariaLabel={t('common.nav.switchWidget')}
-      triggerClassName="inline-flex size-8 shrink-0 items-center justify-center rounded-md text-zinc-500 transition-colors hover:bg-zinc-200/70 hover:text-zinc-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 aria-expanded:bg-zinc-200/70 aria-expanded:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-white dark:aria-expanded:bg-zinc-800 dark:aria-expanded:text-white"
+      label={
+        <>
+          <current.Icon className="size-[18px] shrink-0 text-green-600 dark:text-green-400" />
+          <span className="truncate">{title}</span>
+        </>
+      }
+      triggerTitle={t('common.nav.switchWidget')}
+      wrapTrigger={(trigger) => <h1 className="min-w-0">{trigger}</h1>}
+      triggerClassName="-mx-1.5 flex min-w-0 items-center gap-1.5 rounded-md px-1.5 py-1 text-base font-semibold text-zinc-900 transition-colors hover:bg-zinc-200/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 aria-expanded:bg-zinc-200/70 dark:text-white dark:hover:bg-zinc-800 dark:aria-expanded:bg-zinc-800"
       anchor="container"
     >
       {(
@@ -321,7 +327,7 @@ function WidgetSwitcher({ current }: { current: WidgetId }) {
           <p className={`${GROUP_LABEL_CLASS} pt-1`}>{t(`widgets.${group}`)}</p>
           <ul>
             {widgets.map((widget) => {
-              const isCurrent = widget.id === current;
+              const isCurrent = widget.id === current.id;
               return (
                 <li key={widget.id}>
                   <LocaleLink
@@ -365,12 +371,14 @@ function CompactHeader({ title, widgetId }: Extract<SiteHeaderProps, { variant: 
       <span aria-hidden="true" className="text-zinc-300 dark:text-zinc-700">
         /
       </span>
-      <div className="relative flex min-w-0 items-center gap-1.5">
-        {widget && (
-          <widget.Icon className="size-[18px] shrink-0 text-green-600 dark:text-green-400" />
+      <div className="relative flex min-w-0 items-center">
+        {widget ? (
+          <WidgetSwitcher current={widget} title={title} />
+        ) : (
+          <h1 className="truncate text-base font-semibold text-zinc-900 dark:text-white">
+            {title}
+          </h1>
         )}
-        <h1 className="truncate text-base font-semibold text-zinc-900 dark:text-white">{title}</h1>
-        {widget && <WidgetSwitcher current={widget.id} />}
       </div>
       <span className="shrink-0 whitespace-nowrap rounded-full border border-green-500/20 bg-green-500/10 px-2.5 py-0.5 text-xs font-medium text-green-700 max-lg:hidden dark:text-green-400">
         {t('common.freeBadge')}

@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import { LocaleLink } from '#/components/locale-link';
 import { PlatformChips } from '#/components/platform-chips';
 import { PreviewFrame } from '#/components/preview-frame';
@@ -10,11 +11,10 @@ import { hasToolVisual, TOOL_FEATURES, ToolVisual } from './tool-visuals';
 
 /**
  * Card shape in the gallery grid, from the live demo's browser-source size: a portrait source (a
- * chat column) gets a card two rows tall, a strip (a goal bar) one two columns wide. `feature` is
- * the tall card grown to two by two, which only getGalleryShapes hands out. Tools are two by two
- * with a flat picture each, so they never span.
+ * chat column) gets a card two rows tall, a strip (a goal bar) one two columns wide. Tools are
+ * two by two with a flat picture each, so they never span.
  */
-export type CardShape = 'standard' | 'tall' | 'wide' | 'feature';
+export type CardShape = 'standard' | 'tall' | 'wide';
 
 export function getCardShape(widget: WidgetEntry): CardShape {
   if (widget.kind === 'tool') return 'standard';
@@ -30,7 +30,6 @@ const SPANS: Record<CardShape, { cols: number; rows: number }> = {
   standard: { cols: 1, rows: 1 },
   tall: { cols: 1, rows: 2 },
   wide: { cols: 2, rows: 1 },
-  feature: { cols: 2, rows: 2 },
 };
 
 /**
@@ -64,58 +63,56 @@ function packs(shapes: CardShape[], columns: number): boolean {
   return rows.every((row) => row.every(Boolean));
 }
 
-/** True when the cards fill whole rows at every column count the grid uses. */
-const fillsRows = (shapes: CardShape[], columns: readonly number[]) =>
-  columns.every((count) => packs(shapes, count));
-
 /** The last standard card widened, e.g. to fill a grid that is one cell short. */
 const widenLast = (shapes: CardShape[]): CardShape[] => {
   const last = shapes.lastIndexOf('standard');
   return last < 0 ? shapes : shapes.map((shape, index) => (index === last ? 'wide' : shape));
 };
 
-/** The tall chat column grown into a two by two anchor. */
-const asFeature = (shapes: CardShape[]): CardShape[] =>
-  shapes.map((shape) => (shape === 'tall' ? 'feature' : shape));
-
 /**
- * Shapes for one gallery grid of the given column counts, the first arrangement that leaves no
- * hole. A set one cell short (four overlays beside the tall chat column) widens its last standard
- * card; from seven overlays up, the chat column also grows into a two by two anchor. One that
- * would still leave a hole drops the wide cards first, then the tall one, then every span, so the
- * grid stays even instead of showing a lone card.
+ * Shapes for the gallery grid at one column count, the first arrangement that leaves no hole. A
+ * set one cell short (four overlays beside the tall chat column) widens its last standard card;
+ * one that would still leave a hole drops the wide cards first, then the tall one, then every
+ * span, so the grid stays even instead of showing a lone card.
+ *
+ * Each width is solved on its own, because one set of shapes rarely fills both the two and the
+ * three column grid: seven overlays pack exactly into three columns as they are, while two
+ * columns need the last card widened. The grid then swaps the spans per breakpoint.
  */
-export function getGalleryShapes(
-  widgets: readonly WidgetEntry[],
-  columns: readonly number[],
-): CardShape[] {
+export function getGalleryShapes(widgets: readonly WidgetEntry[], columns: number): CardShape[] {
   const shapes = widgets.map(getCardShape);
   const tries = [
     shapes,
     widenLast(shapes),
-    asFeature(shapes),
-    widenLast(asFeature(shapes)),
     ...(['wide', 'tall'] as const).map((dropped) =>
       shapes.map((shape) => (shape === dropped ? 'standard' : shape)),
     ),
   ];
-  return tries.find((candidate) => fillsRows(candidate, columns)) ?? shapes.map(() => 'standard');
+  return tries.find((candidate) => packs(candidate, columns)) ?? shapes.map(() => 'standard');
 }
 
 // Standard overlays are 4:3: Sub Sprout's demo sizes its pot by width, so a flatter box clips it.
-// A tall card fills its two grid rows once there is more than one column.
-const PREVIEW_CLASS: Record<CardShape, string> = {
-  standard: 'aspect-[4/3]',
-  tall: 'aspect-[4/3] sm:aspect-auto sm:flex-1',
-  feature: 'aspect-[4/3] sm:aspect-auto sm:flex-1',
-  wide: '',
+// A tall card fills its two grid rows, a strip keeps its own source ratio, and both are set per
+// breakpoint, because a card can be a strip in the two column grid and a plain cell in the three.
+const PREVIEW_CLASS: Record<'sm' | 'lg', Record<CardShape, string>> = {
+  sm: {
+    standard: 'sm:aspect-[4/3] sm:flex-none',
+    tall: 'sm:aspect-auto sm:flex-1',
+    wide: 'sm:aspect-[var(--source-aspect)] sm:flex-none',
+  },
+  lg: {
+    standard: 'lg:aspect-[4/3] lg:flex-none',
+    tall: 'lg:aspect-auto lg:flex-1',
+    wide: 'lg:aspect-[var(--source-aspect)] lg:flex-none',
+  },
 };
 
 interface WidgetCardProps {
   widget: WidgetEntry;
   /** Level of the widget name heading, to fit the page outline. */
   headingLevel?: 'h2' | 'h3' | 'h4';
-  shape?: CardShape;
+  /** The card's shape in the two and the three column grid; one column is always standard. */
+  shapes?: { sm: CardShape; lg: CardShape };
 }
 
 /**
@@ -125,7 +122,7 @@ interface WidgetCardProps {
 export function WidgetCard({
   widget,
   headingLevel: Heading = 'h3',
-  shape = 'standard',
+  shapes = { sm: 'standard', lg: 'standard' },
 }: WidgetCardProps) {
   const { t } = useI18n();
   // A tool's own picture explains it better than its overlay squeezed into a flat card.
@@ -133,18 +130,19 @@ export function WidgetCard({
   const features = TOOL_FEATURES[widget.id];
   const name = t(widget.nameKey);
   const size = widget.sourceSize;
-  // A wide card shows the strip at its own aspect ratio.
-  const previewStyle =
-    shape === 'wide' && size
-      ? { ...STAGE_STYLE, aspectRatio: `${size.width} / ${size.height}` }
-      : STAGE_STYLE;
+  // Read by the wide shape's class, so the strip keeps its source ratio only where it is one.
+  const previewStyle = size
+    ? ({ ...STAGE_STYLE, '--source-aspect': `${size.width} / ${size.height}` } as CSSProperties)
+    : STAGE_STYLE;
 
   return (
     <article className="group relative flex w-full flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm transition-[border-color,box-shadow] hover:border-zinc-300 hover:shadow-md has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-green-500 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700">
       <div
         className={`relative border-b border-zinc-200 dark:border-zinc-800 ${
           // Tools are flatter, so the four of them take two short rows under the overlays.
-          widget.kind === 'overlay' ? PREVIEW_CLASS[shape] : 'aspect-[2/1] lg:aspect-[5/2]'
+          widget.kind === 'overlay'
+            ? `aspect-[4/3] ${PREVIEW_CLASS.sm[shapes.sm]} ${PREVIEW_CLASS.lg[shapes.lg]}`
+            : 'aspect-[2/1] lg:aspect-[5/2]'
         }`}
         style={previewStyle}
       >
@@ -163,7 +161,9 @@ export function WidgetCard({
       </div>
 
       <div
-        className={`flex flex-col p-5 ${shape === 'tall' || shape === 'feature' ? '' : 'flex-1'}`}
+        className={`flex flex-1 flex-col p-5 ${shapes.sm === 'tall' ? 'sm:flex-none' : 'sm:flex-1'} ${
+          shapes.lg === 'tall' ? 'lg:flex-none' : 'lg:flex-1'
+        }`}
       >
         <div className="flex items-center gap-3">
           <span className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-zinc-200 bg-zinc-50 text-green-600 dark:border-zinc-700 dark:bg-zinc-800 dark:text-green-400">

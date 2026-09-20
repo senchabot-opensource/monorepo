@@ -85,7 +85,8 @@ describe('compact header on setup pages', () => {
       en('emoteWallSetup.title'),
     );
 
-    const switcher = within(banner()).getByRole('button', { name: en('common.nav.switchWidget') });
+    // The heading itself is the switcher trigger, so its name is the page title.
+    const switcher = within(banner()).getByRole('button', { name: en('emoteWallSetup.title') });
     await user.click(switcher);
     const panel = document.getElementById(
       switcher.getAttribute('aria-controls') ?? '',
