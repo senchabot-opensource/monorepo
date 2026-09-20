@@ -42,6 +42,7 @@ const READY = `(doc, kind) => {
   if (kind === 'alert') return Boolean(doc.querySelector('[data-testid="stream-alert"]'));
   if (kind === 'poll') return Boolean(doc.querySelector('[data-testid="poll-card"]'));
   if (kind === 'frame') return Boolean(doc.querySelector('[data-testid="frame-art"] svg path'));
+  if (kind === 'countdown') return Boolean(doc.querySelector('[data-testid="countdown-clock"]'));
   if (kind.startsWith('text:')) return doc.body.innerText.includes(kind.slice(5));
   return false;
 }`;
@@ -670,17 +671,25 @@ export async function runLanguageLanding({ chrome, base, check }) {
 }
 
 /** Setup page flow: type a channel, change a setting, copy, then paste the URL back in. */
+/**
+ * The channel field in a settings panel: the input labelled for Twitch, else the panel's first
+ * text field. Stream Countdown opens with its timer and Stream Frames with a label, so neither
+ * "the first text input" nor "the one labelled Twitch" finds it everywhere on its own.
+ */
+const channelInput = (panel) => {
+  const inputs = [...document.querySelectorAll(`${panel} input[type="text"]:not(:disabled)`)];
+  return inputs.find((el) => /twitch/i.test(el.labels?.[0]?.textContent ?? '')) ?? inputs[0] ?? null;
+};
+
 export async function runSetupFlow({ chrome, base, page: setup, check, noise, origin }) {
   const spec = SETUP_SPECS[setup.slug];
   const tab = await openTab(chrome, { width: 1440, height: 900, theme: 'dark', origin });
   const { page } = tab;
   const url = new URL(setup.path, base).href;
   const fillChannel = async () => {
-    const found = await page.evaluate((panel) => {
-      const input = document.querySelector(`${panel} input[type="text"]:not(:disabled)`);
-      input?.focus();
-      return Boolean(input);
-    }, SETTINGS_PANEL);
+    const found = await page.evaluate(
+      `(() => { const el = (${channelInput})(${JSON.stringify(SETTINGS_PANEL)}); el?.focus(); return Boolean(el); })()`,
+    );
     if (!found) throw new Error('no channel field in the settings panel');
     await page.insertText(TEST_CHANNEL);
   };
@@ -761,13 +770,14 @@ export async function runSetupFlow({ chrome, base, page: setup, check, noise, or
       await page.insertText(finalUrl);
       await sleep(300);
       const after = await page.evaluate(
-        (sel, panel) => ({
-          url: document.querySelector(sel)?.value ?? null,
-          channel: document.querySelector(`${panel} input[type="text"]`)?.value ?? null,
-          invalid: document.querySelector(sel)?.getAttribute('aria-invalid'),
-        }),
-        URL_INPUT,
-        SETTINGS_PANEL,
+        `(() => {
+          const field = document.querySelector(${JSON.stringify(URL_INPUT)});
+          return {
+            url: field?.value ?? null,
+            channel: (${channelInput})(${JSON.stringify(SETTINGS_PANEL)})?.value ?? null,
+            invalid: field?.getAttribute('aria-invalid'),
+          };
+        })()`,
       );
       check(
         'pasting a widget URL loads its settings',
