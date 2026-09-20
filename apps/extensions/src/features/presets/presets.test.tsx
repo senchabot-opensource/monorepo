@@ -140,6 +140,7 @@ describe('applyPresetToUrl', () => {
       '/widgets/poll?simulate=1&preset=rift',
       '/widgets/raffle-overlay?demo=1&preset=rift',
       '/widgets/frame?demo=1&preset=rift',
+      '/widgets/countdown?simulate=1&preset=rift',
     ]);
     expect(presetDemoUrl(PRESET_WIDGETS[0], 'classic')).toBe('/widgets/chat-widget?mock=true');
   });

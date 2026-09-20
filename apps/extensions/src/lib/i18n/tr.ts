@@ -102,6 +102,10 @@ export const tr: typeof en = {
       name: 'Yayın Çerçeveleri',
       tagline: "Kameran, sohbetin ve yayın ekranın için preset'e göre çizilmiş hazır çerçeveler.",
     },
+    countdown: {
+      name: 'Yayın Geri Sayımı',
+      tagline: 'Başlangıç, mola ve bitiş sahnelerin için süreye ya da saate göre bir geri sayım.',
+    },
     subathon: {
       name: 'Subathon Timer',
       tagline:
@@ -225,10 +229,10 @@ export const tr: typeof en = {
       "OBS Studio ve tarayıcı kaynağı destekleyen diğer programlarla. Widget URL'sini Tarayıcı Kaynağı olarak ekle ve kurulum sayfasında yazan boyutu kullan.",
     faq4Q: "Twitch ve Kick'i birlikte kullanabilir miyim?",
     faq4A:
-      "Evet. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi ve Sohbet Anketi tek bir URL'de hem Twitch hem Kick kanalını alır. OBS Bridge da iki sohbeti aynı anda dinleyebilir. Çekiliş ise her seferinde tek bir platformda çalışır.",
+      "Evet. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi ve Yayın Geri Sayımı tek bir URL'de hem Twitch hem Kick kanalını alır. OBS Bridge da iki sohbeti aynı anda dinleyebilir. Çekiliş ise her seferinde tek bir platformda çalışır.",
     faq5Q: "Bir widget'ı sonradan nasıl değiştiririm?",
     faq5A:
-      "Kurulum sayfasını aç, widget'ı istediğin gibi ayarla ve Tarayıcı Kaynağı'ndaki URL'yi yenisiyle değiştir. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi ve Yayın Çerçeveleri mevcut bir URL'yi de açabilir: URL'yi kurulum sayfasına yapıştır, eski ayarların geri gelsin, sadece istediğini değiştir.",
+      "Kurulum sayfasını aç, widget'ı istediğin gibi ayarla ve Tarayıcı Kaynağı'ndaki URL'yi yenisiyle değiştir. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi, Yayın Çerçeveleri ve Yayın Geri Sayımı mevcut bir URL'yi de açabilir: URL'yi kurulum sayfasına yapıştır, eski ayarların geri gelsin, sadece istediğini değiştir.",
     faq6Q: "Güncellemelerden sonra widget URL'm çalışmaya devam eder mi?",
     faq6A:
       'Evet. Güncellemelerde mevcut URL ayarları ve değerleri korunur, yani sahnendeki widget için yeni bir URL almana gerek kalmaz.',
@@ -819,6 +823,121 @@ export const tr: typeof en = {
     faq4A:
       "Hayır. Pagoda çatısı, fenerler ya da piksel bloklar gibi her çizim sıfırdan çizildi, oyun logosu ya da görseli içermez. Preset'ler o oyunların havasını yakalayan hayran yapımı stiller.",
   },
+  countdown: {
+    breadcrumb: 'Yayın Geri Sayımı Kurulumu',
+    title: 'Yayın Geri Sayımı Kurulumu',
+    intro:
+      'Yayında henüz bir şeyin olmadığı anlar için geri sayım: yayına geçmeden önceki dakikalar, ortadaki mola ve kapatmadan önceki son dakikalar. Bir süre ver ya da başlamak istediğin saati yaz, görünümünü de seçtiğin preset belirlesin. Kanal yazmak zorunda değilsin ama yazarsan modların sohbetten süreyi uzatabilir.',
+    scenes: {
+      starting: {
+        label: 'Başlangıç',
+        title: 'Yayın Başlıyor',
+        done: 'Yayındayız!',
+        hint: 'Yayına geçmeden önce açık tuttuğun sahne için.',
+      },
+      break: {
+        label: 'Mola',
+        title: 'Birazdan Dönüyorum',
+        done: 'Geri döndüm!',
+        hint: 'Yayın ortasındaki molalar için: yemek, kısa bir ara, hızlı bir iş.',
+      },
+      ending: {
+        label: 'Bitiş',
+        title: 'Yayın Bitiyor',
+        done: 'İzlediğiniz için teşekkürler!',
+        hint: 'Son dakikalar için, sohbet ne kadar kaldığını görsün.',
+      },
+    },
+    sectionCountdown: 'Geri Sayım',
+    scene: 'Neyin geri sayımı?',
+    sceneTip: 'Yazıyı ve ikonu bu seçim belirler. Kendi yazılarını aşağıda yazabilirsin.',
+    mode: 'Neye Göre Saysın',
+    modes: {
+      duration: 'Süreye göre',
+      clock: 'Saate göre',
+    },
+    modeTip:
+      'Süre, tarayıcı kaynağı yüklendiği anda başlar. Saat seçersen geri sayım hep o saatte biter, kaynağı saatler önce eklesen de olur.',
+    duration: 'Süre',
+    durationUnit: 'dk',
+    durationTip: 'Geri sayımın ne kadar süreceği, 1 dakika ile 24 saat arası.',
+    atLabel: 'Saat',
+    atTip:
+      "21:00 gibi 24 saatlik bir saat. OBS'in çalıştığı bilgisayarın saatinden okunur. O saat bugün geçtiyse geri sayım yarınkini hedefler.",
+    atPlaceholder: '21:00',
+    atInvalid: '21:00 gibi 24 saatlik bir saat yaz.',
+    ending: 'Sıfıra Gelince',
+    endings: {
+      text: 'Mesaj göster',
+      hold: "00:00'da kalsın",
+      hide: 'Gizlensin',
+    },
+    endingTip: 'Süre bitince, sen sahneyi değiştirene kadar ekranda ne kalacağı.',
+    sectionText: 'Yazılar',
+    titleLabel: 'Başlık',
+    titleTip: 'Saatin üstünde görünür. Boş bırakırsan seçtiğin sahnenin hazır yazısı kullanılır.',
+    titlePlaceholder: 'Sahnenin yazısı',
+    noteLabel: 'Not',
+    noteTip: 'Saatin altında tek satır, örneğin molanın sebebi. Boş bırakırsan görünmez.',
+    notePlaceholder: 'Not yok',
+    doneLabel: 'Sıfırdaki Mesaj',
+    doneTip: 'Süre bitince saatin yerine geçer. Boş bırakırsan sahnenin hazır yazısı kullanılır.',
+    look: 'Arka Plan',
+    looks: {
+      card: 'Panel',
+      plain: 'Panelsiz',
+    },
+    lookTip: 'Saatin arkasında bir panel ya da yazılar doğrudan sahnenin üstünde.',
+    color: 'Renk',
+    showBar: 'İlerleme Barı',
+    showBarTip: 'Saatin altında, süre azaldıkça boşalan bir bar.',
+    motion: 'Animasyonlar',
+    motionTip: 'Son dakikada saat nabız gibi atar. Kapatırsan her şey sabit durur.',
+    channelsTip:
+      'Sadece sohbet komutları için gerekli. Kanal yazmasan da geri sayım kendi başına çalışır.',
+    sectionCommands: 'Sohbet Komutları',
+    commandsIntro:
+      'Kanalını yazarsan sen ve modların geri sayımı Twitch ya da Kick sohbetinden değiştirebilirsiniz, örneğin klavye başında değilken başlangıcı biraz ertelemek için.',
+    cmdAdd: 'Süre ekler: 5m, 90s ya da 1h30m',
+    cmdRemove: 'Süreden düşer',
+    cmdSet: 'Kalan süreyi ayarlar',
+    cmdPause: 'Duraklatır, start ile devam eder',
+    cmdReset: 'Geri sayımı baştan başlatır',
+    previewTitle: 'Yayın Geri Sayımı Önizleme',
+    previewIframeTitle: 'Yayın Geri Sayımı Önizleme',
+    previewHint:
+      'Önizleme hızlı akar, bütün geri sayımı görürsün, sonra baştan başlar. Yayında gerçek zamanlı sayar.',
+    testTitle: 'Dene:',
+    testAdd: '+1 dk',
+    testRemove: '−1 dk',
+    testPause: 'Duraklat',
+    testFinish: 'Sıfıra Atla',
+    widgetUrlTip:
+      "Daha önce bir geri sayım oluşturduysan URL'sini buraya yapıştır. Ayarların geri yüklenir, istediğini değiştirebilirsin.",
+    widgetUrlPlaceholder: "Düzenlemek için geri sayım URL'sini yapıştır",
+    widgetUrlInvalid: "Bu bir Yayın Geri Sayımı URL'si değil.",
+    browserSourceHintSize: ' (önerilen boyut: 1920×1080).',
+    guideTitle: 'Yayın Yazılımı Kurulumu (OBS, Streamlabs, XSplit vb.)',
+    guideStep1:
+      "Başlangıç, mola ya da bitiş sahnene bir Tarayıcı Kaynağı ekle ve geri sayım URL'sini yapıştır.",
+    guideStep2: 'Genişliği 1920 ve yüksekliği 1080 olarak ayarla, saat sahnenin ortasında dursun.',
+    guideStep3:
+      '"Sahne etkinleştiğinde tarayıcıyı yenile" seçeneğini işaretle, böylece o sahneye her geçişte geri sayım baştan başlar.',
+    guideStep4:
+      'Başlatmak için sahneye geç. Kanalını yazdıysan sen yokken bir modun !countdown add 5m ile süreyi uzatabilir.',
+    faq1Q: 'Geri sayım ne zaman başlar?',
+    faq1A:
+      'Tarayıcı kaynağı yüklendiği anda: OBS açıldığında ya da "Sahne etkinleştiğinde tarayıcıyı yenile" işaretliyse o sahneye geçtiğinde. Böylece mola geri sayımı sen daha yayındayken bitmez, BRB sahnene her geçişte baştan başlar.',
+    faq2Q: "Duyurduğum saate, mesela 21:00'a geri sayabilir mi?",
+    faq2A:
+      "Evet. Neye Göre Saysın kısmında Saate göre'yi seç ve 21:00 yaz. Saati OBS'in çalıştığı bilgisayardan okur, yani kaynağı saatler önce eklesen de 21:00'da biter. 21:00 bugün geçtiyse yarınkini hedefler.",
+    faq3Q: 'Twitch ya da Kick hesabımı bağlamam gerekiyor mu?',
+    faq3A:
+      "Hayır. Geri sayım kendi başına çalışır, ne kanal ne de giriş gerekir. Kanalı sadece !countdown komutlarını istiyorsan yazarsın, o zaman da diğer widget'lar gibi herkese açık sohbetini okur.",
+    faq4Q: 'Sıfıra gelince ne oluyor?',
+    faq4A:
+      'Sıfıra Gelince kısmında ne seçtiysen o: "Yayındayız!" gibi bir mesaj, 00:00\'da duran saat ya da kaybolup sahneyi boş bırakan overlay. Sahneyi senin yerine değiştirmez.',
+  },
   poll: {
     breadcrumb: 'Sohbet Anketi Kurulumu',
     title: 'Sohbet Anketi Kurulumu',
@@ -1218,7 +1337,7 @@ export const tr: typeof en = {
     openSetup: 'Kurulum sayfasını aç',
     index: {
       title: 'Rehberler',
-      lead: "Her rehber tek bir soruyu adım adım cevaplıyor: OBS'e widget eklemek, Twitch ve Kick sohbetini birleştirmek, sohbeti OBS dock'unda okumak, yayın uyarıları eklemek, subathon sayacı kurmak, sohbet anketi yapmak, kameraya ve sohbete çerçeve eklemek, sohbet çekilişi yapmak ve sohbetten sahne değiştirmek. Hepsi ücretsiz ve giriş istemeyen araçlar için.",
+      lead: "Her rehber tek bir soruyu adım adım cevaplıyor: OBS'e widget eklemek, Twitch ve Kick sohbetini birleştirmek, sohbeti OBS dock'unda okumak, yayın uyarıları eklemek, subathon sayacı kurmak, sohbet anketi yapmak, kameraya ve sohbete çerçeve eklemek, yayın için geri sayım koymak, sohbet çekilişi yapmak ve sohbetten sahne değiştirmek. Hepsi ücretsiz ve giriş istemeyen araçlar için.",
       listLabel: 'Tüm rehberler',
       moreText:
         'Genel sorular için [sık sorulan sorulara](/faq) bak. Nelerin değiştiğini [yenilikler](/changelog) sayfasında bulabilirsin.',
@@ -1252,6 +1371,7 @@ export const tr: typeof en = {
         colNote: 'Not',
         notSource: 'Kaynak değil',
         notes: {
+          countdown: 'Tam 1080p tuval. Saat, başlangıç ya da BRB sahnenin ortasına oturur.',
           chatBox: 'Dikey sohbet sütunu. Kaynak büyüdükçe yazı büyümez, daha çok mesaj sığar.',
           emoteWall: "Tam 1080p tuval. Emote'lar ekranın her yerinde belirir.",
           subSprout: 'Bitki ve saksı bu alanın içinde büyür.',
@@ -1301,7 +1421,7 @@ export const tr: typeof en = {
       update: {
         title: "Widget'ı sonradan nasıl değiştiririm?",
         p1: "Ayarlar widget adresinin içinde durur, yani bir ayarı değiştirmek yeni bir adres demek. Kurulum sayfasında ayarı değiştir, yeni adresi kopyala, sonra OBS'te kaynağa çift tıklayıp URL alanındaki eski adresin yerine yapıştır.",
-        p2: '[Sohbet Kutusu](/setup/chat-widget), [Emote Duvarı](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Yayın Uyarıları](/setup/stream-alerts), [Abone Hedefi](/setup/sub-goal), [Sohbet Anketi](/setup/chat-poll) ve [Yayın Çerçeveleri](/setup/stream-frames) için baştan başlaman gerekmez. Mevcut adresini kurulum sayfasındaki Widget URL alanına yapıştır, kanalların ve bütün ayarların geri yüklenir. Değiştirmek istediğini değiştir ve yeni adresi kopyala.',
+        p2: '[Sohbet Kutusu](/setup/chat-widget), [Emote Duvarı](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Yayın Uyarıları](/setup/stream-alerts), [Abone Hedefi](/setup/sub-goal), [Sohbet Anketi](/setup/chat-poll) , [Yayın Çerçeveleri](/setup/stream-frames) ve [Yayın Geri Sayımı](/setup/stream-countdown) için baştan başlaman gerekmez. Mevcut adresini kurulum sayfasındaki Widget URL alanına yapıştır, kanalların ve bütün ayarların geri yüklenir. Değiştirmek istediğini değiştir ve yeni adresi kopyala.',
         p3: "OBS Bridge'de yapıştırma alanı yok, ayarları kurulum sayfasında yeniden girip yeni araç adresini kopyalarsın. Sahne seçimlerini ve yetkili kullanıcıları araç sayfasında da değiştirebilir, yeni adresi oradaki Copy Updated URL düğmesiyle alabilirsin. Eski adresler çalışmaya devam eder, güncellemek zorunda değilsin.",
       },
       troubleshoot: {
@@ -1775,6 +1895,59 @@ export const tr: typeof en = {
       ctaTitle: 'Çerçeveni hazırla',
       ctaText: "Parçayı ve preset'i seç, önizlemede gör, URL'yi kopyala.",
     },
+    countdown: {
+      title: "OBS'e başlangıç, mola ve bitiş geri sayımı nasıl eklenir?",
+      short: 'Geri sayım ekleme',
+      summary:
+        'Başlangıç, mola ve bitiş sahneleri için geri sayım kurmak, her sahne geçişinde baştan başlatmak, belirli bir saate geri saymak ve sohbet komutları.',
+      lead: "Yayın Geri Sayımı, henüz bir şeyin olmadığı üç sahne için bir saat: yayın başlıyor, birazdan dönüyorum ve yayın bitiyor. Kurulum sayfasında sahneyi ve süreyi seç, URL'yi OBS'e 1920 × 1080 Tarayıcı Kaynağı olarak ekle ve Sahne etkinleştiğinde tarayıcıyı yenile seçeneğini işaretle, böylece o sahneye her geçişte baştan başlar. Giriş yok, sohbet komutlarını istemiyorsan kanal da gerekmez.",
+      setup: {
+        title: 'Yayın geri sayımı nasıl ayarlanır?',
+        step1: '[Yayın Geri Sayımı kurulum sayfasını](/setup/stream-countdown) aç.',
+        step2:
+          'Neyin geri sayımı? kısmında Başlangıç, Mola ya da Bitiş seç. Bu seçim yazıyı ve ikonu belirler. Her biri ayrı bir Tarayıcı Kaynağı, istersen üçünü de ekle.',
+        step3:
+          'Neye Göre Saysın kısmında Süreye göre seçip dakikayı yaz ya da Saate göre seçip 21:00 gibi 24 saatlik bir saat yaz.',
+        step4:
+          "Bir preset seç, Sıfıra Gelince kısmında da süre bitince ekranda ne kalacağını belirle: bir mesaj, 00:00'da duran saat ya da hiçbir şey.",
+        step5:
+          "URL'yi kopyala ve sahneye OBS'te 1920 × 1080 Tarayıcı Kaynağı olarak ekle, saat sahnenin ortasına otursun.",
+        p1: 'Kurulum sayfasındaki önizleme hızlı akar, bütün geri sayımı birkaç saniyede görürsün. Yayında gerçek zamanlı sayar.',
+      },
+      restart: {
+        title: 'Geri sayımım neden baştan başlamıyor?',
+        p1: 'Geri sayım, tarayıcı kaynağı yüklendiğinde başlar. Kaynak OBS açılırken yüklendiyse o zamandan beri sayıyor demektir, sen BRB sahnene geçtiğinde çoktan sıfıra inmiş olur.',
+        p2: 'Tarayıcı Kaynağı özelliklerini aç ve "Sahne etkinleştiğinde tarayıcıyı yenile" seçeneğini işaretle. OBS o sahneye her geçişte sayfayı yeniden yükler, geri sayım da her molada baştan başlar.',
+        p3: "Kanalını yazdıysan sohbete `!countdown reset` de yazabilirsin, OBS'e dokunmadan baştan başlar. Klavye başında değilken en hızlı çözüm bu.",
+      },
+      clock: {
+        title: 'Belirli bir saate nasıl geri sayılır?',
+        p1: "Saate göre'yi seç ve duyurduğun saati yaz, örneğin 21:00. Geri sayım, OBS'in çalıştığı bilgisayarın saatini okur, bu yüzden kaynağın ne zaman yüklendiği fark etmez: 18:30'da 2:30:00, 20:55'te 05:00 gösterir.",
+        p2: 'O saat bugün geçtiyse yarının aynı saatini hedefler. Yani gece açık bıraktığın bir kaynak ertesi yayına hazır olur, `!countdown reset` de onu bir sonrakine yeniden ayarlar.',
+        p3: 'Başka ülkelerdeki izleyiciler kendi saatlerini değil senin geri sayımını görür, zaten olması gereken de bu: herkes aynı kalan süreyi görür.',
+      },
+      commands: {
+        title: 'Modlar geri sayımı sohbetten değiştirebilir mi?',
+        p1: 'Evet, kurulum sayfasında Twitch ya da Kick kanalını yazdığın anda. Sonrasında sen ve modların iki sohbette de şunları yazabilirsiniz:',
+        caption: '!countdown komutları',
+        colCommand: 'Komut',
+        colDoes: 'Ne yapar',
+        addDoes: '5 dakika ekler, 90s ve 1h30m de çalışır',
+        removeDoes: '2 dakika düşer',
+        setDoes: 'Kalan süreyi 10 dakikaya ayarlar',
+        pauseDoes: 'Saati olduğu yerde duraklatır',
+        startDoes: 'Duraklattıktan sonra devam ettirir',
+        resetDoes: 'Geri sayımı baştan başlatır',
+        p2: "Komutları iki platformda da sadece sen ve modların çalıştırabilir, sohbetteki bir yanıt hiçbir zaman komut çalıştırmaz. Geri sayım herkese açık sohbetini diğer widget'lar gibi okur, giriş gerekmez.",
+      },
+      scenes: {
+        title: 'Hangi geri sayım hangi sahneye gider?',
+        p1: 'Başlangıç, yayına geçmeden önce açık tuttuğun sahneye gider, 10 dakika gibi bir süreyle ya da duyurduğun saatle. Mola, BRB sahnene daha kısa bir süreyle gider, genelde 5 ya da 10 dakika. Bitiş ise son sahneye gider, sohbet kapatmana ne kadar kaldığını görsün.',
+        p2: 'Sahneleri sohbetten [OBS Bridge](/setup/obs-bridge) ile değiştiriyorsan modların seni BRB sahnesine alabilir, geri sayım da onunla birlikte başlar.',
+      },
+      ctaTitle: 'Geri sayımını hazırla',
+      ctaText: "Sahneyi ve süreyi seç, önizlemede gör, URL'yi OBS'e kopyala.",
+    },
     alerts: {
       title: "OBS'e Twitch ve Kick için abonelik, cheer ve raid uyarıları nasıl eklenir?",
       short: 'Yayın uyarıları ekleme',
@@ -2006,10 +2179,10 @@ export const tr: typeof en = {
       'OBS Studio ve tarayıcı kaynağı (browser source) destekleyen diğer yayın programlarıyla. Her widget bir web adresi olarak çalışır, kaynağa bu adresi yapıştırırsın. Rehberlerimiz OBS Studio için yazıldı.',
     platformsQ: "Hangi widget'lar Twitch'i, hangileri Kick'i destekliyor?",
     platformsA:
-      "Dokuzu da iki platformu destekliyor. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi ve Sohbet Anketi tek adreste Twitch ve Kick kanalını birlikte dinler. OBS Bridge iki sohbetten gelen komutları dinler ve her yetkili kullanıcı kendi platformuyla eklenir. Çekiliş her seferinde tek platformda çalışır, Twitch ya da Kick. Sohbet Kutusu'nda 7TV emote'ları iki platformda, BTTV ve FFZ emote'ları sadece Twitch'te görünür.",
+      "On biri de iki platformu destekliyor. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi ve Yayın Geri Sayımı tek adreste Twitch ve Kick kanalını birlikte dinler. OBS Bridge iki sohbetten gelen komutları dinler ve her yetkili kullanıcı kendi platformuyla eklenir. Çekiliş her seferinde tek platformda çalışır, Twitch ya da Kick. Sohbet Kutusu'nda 7TV emote'ları iki platformda, BTTV ve FFZ emote'ları sadece Twitch'te görünür.",
     editQ: "Widget'ı sonradan nasıl değiştiririm?",
     editA:
-      "Kurulum sayfasında ayarları değiştir, yeni adresi kopyala ve OBS'te kaynağın URL alanındaki eski adresin yerine yapıştır. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi ve Yayın Çerçeveleri'nde eski adresini kurulum sayfasındaki Widget URL alanına yapıştırırsan bütün ayarların geri yüklenir, baştan başlaman gerekmez.",
+      "Kurulum sayfasında ayarları değiştir, yeni adresi kopyala ve OBS'te kaynağın URL alanındaki eski adresin yerine yapıştır. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi, Yayın Çerçeveleri ve Yayın Geri Sayımı'nda eski adresini kurulum sayfasındaki Widget URL alanına yapıştırırsan bütün ayarların geri yüklenir, baştan başlaman gerekmez.",
     oldUrlsQ: 'Eski widget adreslerim çalışmaya devam eder mi?',
     oldUrlsA:
       "Evet. Güncellemeler mevcut adresleri bozmayacak şekilde yapılır: parametre adları, değerleri ve varsayılanları değişmez. Örneğin Sohbet Kutusu'ndaki eski keep=true hâlâ Süresiz anlamına gelir ve Sub Sprout eski channel ve platform parametrelerini hâlâ okur.",
@@ -2033,6 +2206,8 @@ export const tr: typeof en = {
     lead: "Senchabot Extensions'a eklenen özellikler ve düzeltilen hatalar, en yenisi en üstte. Liste projenin [GitHub'daki](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) commit geçmişinden hazırlanıyor.",
     site: 'Site',
     entries: {
+      countdown:
+        "Yayın Geri Sayımı geldi: başlangıç, mola ve bitiş sahnelerin için bir saat. Bir süre ya da yayına geçeceğin saati yaz, preset'ini seç, modların da sohbetten !countdown ile süreyi uzatsın.",
       deviceTheme:
         'Site artık cihazının açık ya da koyu temasıyla açılıyor, cihazın teması değişince site de değişiyor. Üst menüdeki tema düğmesine bir kez bastın mı senin seçtiğin tema hatırlanıyor, cihaz artık temayı değiştirmiyor.',
       frames:

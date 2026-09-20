@@ -17,12 +17,12 @@ export const PAGE_META = {
     en: {
       title: 'Free Twitch & Kick Overlays for OBS | Senchabot Extensions',
       description:
-        'Nine free tools for Twitch and Kick streamers: Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll, Raffle and OBS Bridge.',
+        'Eleven free overlays and tools for Twitch and Kick streamers: chat box, emote wall, alerts, sub goal, subathon timer, frames, countdown, poll and raffle.',
     },
     tr: {
       title: "OBS için Ücretsiz Twitch ve Kick Overlay'leri | Senchabot",
       description:
-        '9 ücretsiz Twitch ve Kick aracı: Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi, Çekiliş ve OBS Bridge.',
+        "Twitch ve Kick yayıncıları için 11 ücretsiz overlay ve araç: sohbet kutusu, emote duvarı, uyarılar, abone hedefi, subathon, çerçeve, geri sayım, anket, çekiliş.",
     },
   },
   'chat-box': {
@@ -107,6 +107,18 @@ export const PAGE_META = {
       title: 'Twitch ve Kick için Yayın Çerçeveleri (Ücretsiz) | Senchabot',
       description:
         "OBS için ücretsiz kamera, sohbet ve ekran çerçeveleri. Metin2, LoL, WoW, Valorant ve Minecraft havasında preset'ler, hazır çizimlerle. Giriş yok, indirme yok.",
+    },
+  },
+  countdown: {
+    en: {
+      title: 'Free Starting Soon & BRB Countdown for OBS | Senchabot',
+      description:
+        'A free countdown overlay for OBS. Set a length, or the time of day you go live, for your starting, break and ending scenes. Your mods change it from chat.',
+    },
+    tr: {
+      title: 'Twitch ve Kick için Yayın Geri Sayımı | Senchabot',
+      description:
+        "OBS için ücretsiz geri sayım overlay'i. Başlangıç, mola ve bitiş sahnelerin için bir süre ya da 21:00 gibi bir saat belirle, modların sohbetten uzatsın.",
     },
   },
   poll: {
@@ -307,6 +319,28 @@ export const APP_FEATURES: Record<WidgetId, Record<Locale, readonly string[]>> =
       'Kanal adın ya da istediğin bir yazı için sekme',
       'Kaynağın her boyutuna uyar, kare ya da dikey kamera da olur',
       'Kanal bağlamadan Twitch, Kick ve diğer platformlarda çalışır',
+    ],
+  },
+  countdown: {
+    en: [
+      'A countdown for your starting soon, back soon and stream ending scenes',
+      'Counts down a length you set, or to a time of day like 21:00',
+      'At zero: a message, the clock at 00:00, or the overlay hides itself',
+      'Your own headline, note and end message, or the wording of the scene',
+      'Preset looks, with or without a panel, and an optional progress bar',
+      'The broadcaster and mods can add, remove, set, pause and reset the time with !countdown from Twitch or Kick chat',
+      'No channel and no login needed unless you want the chat commands',
+      'Recommended browser source size: 1920x1080',
+    ],
+    tr: [
+      'Başlangıç, mola ve bitiş sahnelerin için geri sayım',
+      'Verdiğin süreyi ya da 21:00 gibi bir saati geri sayar',
+      "Sıfıra gelince: bir mesaj, 00:00'da duran saat ya da gizlenen overlay",
+      'Kendi başlığın, notun ve bitiş mesajın ya da sahnenin hazır yazısı',
+      'Preset görünümleri, panelli ya da panelsiz, isteğe bağlı ilerleme barı',
+      'Yayıncı ve modlar Twitch ya da Kick sohbetinden !countdown ile süre ekleyip çıkarabilir, ayarlayabilir, duraklatıp sıfırlayabilir',
+      'Sohbet komutlarını istemiyorsan ne kanal ne de giriş gerekir',
+      'Önerilen Tarayıcı Kaynağı boyutu: 1920x1080',
     ],
   },
   poll: {
