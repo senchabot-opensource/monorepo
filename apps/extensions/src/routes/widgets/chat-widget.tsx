@@ -9,6 +9,8 @@ import {
   getHighlightKind,
   type HighlightKind,
 } from '#/features/widgets/chat-widget/highlights';
+import { Frame, panelStyle } from '#/features/presets/frame';
+import { rgba, type Skin, skinFor } from '#/features/presets/skin';
 import { isHiddenMessage } from '#/features/widgets/chat-widget/message-filters';
 import {
   type KickSubBadges,
@@ -51,6 +53,8 @@ const getAnimationSpeeds = (messages: ChatMessagesType[]) => {
 const searchSchema = z.object({
   twitch: z.string().optional(),
   kick: z.string().optional(),
+  // Unknown ids fall back to the classic look in skinFor.
+  preset: z.string().optional(),
   sevenTv: z.coerce.boolean().optional().default(true),
   bttv: z.coerce.boolean().optional().default(true),
   ffz: z.coerce.boolean().optional().default(true),
@@ -102,12 +106,14 @@ const FONT_GOOGLE_FAMILIES: Partial<Record<FontChoice, string>> = {
   serif: 'Source+Serif+4:wght@400;600',
 };
 
+// `box` is the card's own background and border; a preset draws its own box instead.
 const LAYOUT_CLASSES: Record<
   LayoutChoice,
-  { wrapper: string; header: string; meta: string; name: string; message: string }
+  { wrapper: string; box: string; header: string; meta: string; name: string; message: string }
 > = {
   inline: {
     wrapper: 'leading-tight whitespace-pre-wrap wrap-break-word text-left',
+    box: '',
     header: 'mb-0.5',
     meta: 'inline-flex items-center gap-1.5 mr-1.5 align-middle select-none',
     name: 'inline',
@@ -115,6 +121,7 @@ const LAYOUT_CLASSES: Record<
   },
   stacked: {
     wrapper: 'grid grid-cols-[auto_minmax(0,1fr)] items-baseline gap-x-1.5 gap-y-0.5 text-left',
+    box: '',
     // Same column as the name and message: the badges are right-aligned, so col 1's left edge
     // would leave the label floating out past them.
     header: 'col-start-2',
@@ -124,7 +131,8 @@ const LAYOUT_CLASSES: Record<
   },
   card: {
     wrapper:
-      'rounded-lg bg-black/40 border border-white/10 px-3 py-2 text-left shadow-sm grid grid-cols-[auto_minmax(0,1fr)] items-baseline gap-x-1.5 gap-y-0.5',
+      'px-3 py-2 text-left grid grid-cols-[auto_minmax(0,1fr)] items-baseline gap-x-1.5 gap-y-0.5',
+    box: 'rounded-lg bg-black/40 border border-white/10 shadow-sm',
     header: 'col-start-2',
     meta: 'flex items-center justify-end gap-1.5 whitespace-nowrap min-w-[96px]',
     name: 'inline leading-none text-sm',
@@ -132,6 +140,7 @@ const LAYOUT_CLASSES: Record<
   },
   compact: {
     wrapper: 'leading-none whitespace-pre-wrap wrap-break-word text-left',
+    box: '',
     header: 'mb-0.5',
     meta: 'inline-flex items-center gap-1.5 mr-1.5 align-middle select-none',
     name: 'inline',
@@ -284,6 +293,7 @@ function RouteComponent() {
   const isMock = Boolean(search.mock || (!search.twitch && !search.kick?.trim()));
 
   const showPlatformIndicator = search.platformDisplay !== 'none';
+  const skin = skinFor(search.preset);
 
   const emotes = useChannelEmotes(search.twitch, kick?.userId ?? null, {
     sevenTv: search.sevenTv,
@@ -312,7 +322,8 @@ function RouteComponent() {
 
   React.useEffect(() => {
     if (typeof document === 'undefined') return;
-    const family = FONT_GOOGLE_FAMILIES[search.font];
+    // A preset loads its own fonts through SkinProvider.
+    const family = skin ? undefined : FONT_GOOGLE_FAMILIES[search.font];
     if (!family) {
       document.getElementById(GOOGLE_FONTS_LINK_ID)?.remove();
       document.getElementById(GOOGLE_FONTS_PRECONNECT_ID)?.remove();
@@ -341,7 +352,7 @@ function RouteComponent() {
       document.getElementById(GOOGLE_FONTS_LINK_ID)?.remove();
       document.getElementById(GOOGLE_FONTS_PRECONNECT_ID)?.remove();
     };
-  }, [search.font]);
+  }, [search.font, skin]);
 
   const { data: messages } = useLiveQuery((q) =>
     q
@@ -418,15 +429,22 @@ function RouteComponent() {
   // a scrollable box would flash a scrollbar while the list is offset during the shift.
   // The list must not shrink: it would narrow to fit the screen while its unwrapping rows
   // spill past the end edge, hiding the newest messages.
+  const background = skin
+    ? rgba(skin.colors.panel2, search.bgOpacity)
+    : `rgba(0, 0, 0, ${search.bgOpacity})`;
   return (
     <div
       className={`flex ${horizontal ? 'flex-row justify-end items-center min-w-full h-screen p-2' : 'flex-col justify-end h-screen w-full p-2.5'} overflow-clip text-white rounded-md`}
+      data-preset={skin?.id}
       style={{
         fontSize: `${search.fontSize}px`,
-        fontFamily: FONT_STACKS[search.font],
-        backgroundColor: search.background ? `rgba(0, 0, 0, ${search.bgOpacity})` : 'transparent',
+        fontFamily: skin ? skin.body : FONT_STACKS[search.font],
+        backgroundColor: search.background ? background : 'transparent',
+        ...(skin && { color: skin.text, fontSynthesis: 'none' }),
       }}
     >
+      {/* React hoists it into <head>; only the URL knows the preset's fonts. */}
+      {skin && <link rel="stylesheet" href={skin.fontHref} precedence="default" />}
       <div
         ref={listRef}
         className={`flex shrink-0 ${horizontal ? 'flex-row items-center space-x-3' : 'flex-col space-y-2'}`}
@@ -455,6 +473,7 @@ function RouteComponent() {
             boldMessages={Boolean(search.boldMessages)}
             highlight={getHighlightKind(msg, channels, highlights)}
             showReply={highlights.has('reply')}
+            skin={skin}
           />
         ))}
       </div>
@@ -484,6 +503,7 @@ type MessageRowProps = {
   boldMessages: boolean;
   highlight: HighlightKind | null;
   showReply: boolean;
+  skin: Skin | null;
 };
 
 const MessageRow = React.memo(function MessageRow({
@@ -508,6 +528,7 @@ const MessageRow = React.memo(function MessageRow({
   boldMessages,
   highlight,
   showReply,
+  skin,
 }: MessageRowProps) {
   const t = useT();
   // Frozen at mount: a moderator deleting the previous message would otherwise change this row's
@@ -518,14 +539,24 @@ const MessageRow = React.memo(function MessageRow({
   const messageAnimClass = ANIMATION_MESSAGE_CLASSES[animation];
   const compactSize = layout === 'compact' ? '0.875em' : undefined;
   const isInlineOrCompact = layout === 'inline' || layout === 'compact';
-  const itemBgClass = itemBackground
-    ? 'rounded-md border border-white/10 px-2.5 py-1'
-    : '';
-  const itemBgStyle: React.CSSProperties | undefined = itemBackground
-    ? { backgroundColor: `rgba(0, 0, 0, ${bgOpacity})` }
-    : undefined;
   // Card and item-background boxes already have horizontal padding; plain rows need room for the stripe.
   const boxed = itemBackground || layout === 'card';
+  // A preset's box keeps the item background's opacity; a card without one is nearly solid.
+  const presetBox =
+    skin && boxed
+      ? { radius: itemBackground ? 6 : 8, opacity: itemBackground ? bgOpacity : 0.85 }
+      : null;
+  const itemBgClass = presetBox
+    ? `relative ${itemBackground ? 'px-2.5 py-1' : ''}`
+    : itemBackground
+      ? 'rounded-md border border-white/10 px-2.5 py-1'
+      : '';
+  const itemBgStyle: React.CSSProperties | undefined =
+    skin && presetBox
+      ? panelStyle(skin, presetBox.radius, 0.5, presetBox.opacity)
+      : itemBackground
+        ? { backgroundColor: `rgba(0, 0, 0, ${bgOpacity})` }
+        : undefined;
   const [highlightFrom, highlightTo] = highlight
     ? getHighlightColors(highlight, msg.announcementColor)
     : [];
@@ -552,17 +583,21 @@ const MessageRow = React.memo(function MessageRow({
     [msg.color],
   );
   const hasAnyBackground = hasBackground || itemBackground;
-  const shadowStyle = hasAnyBackground
-    ? '1px 1px 1px rgba(0, 0, 0)'
-    : '0 1px 1px #000, 1px 1px 1px rgba(0, 0, 0), 1px 1px 1px rgba(0, 0, 0)';
+  const hardShadow = skin?.shadow === 'hard' ? skin.textShadow : null;
+  const shadowStyle =
+    hardShadow ??
+    (hasAnyBackground
+      ? '1px 1px 1px rgba(0, 0, 0)'
+      : '0 1px 1px #000, 1px 1px 1px rgba(0, 0, 0), 1px 1px 1px rgba(0, 0, 0)');
   const userNameStyle: React.CSSProperties = React.useMemo(
     () => ({
       color: accessibleColor,
-      textShadow: '1px 1px 1px rgba(0, 0, 0)',
+      textShadow: hardShadow ?? '1px 1px 1px rgba(0, 0, 0)',
       fontSize: compactSize,
       fontWeight: boldUsernames ? 700 : undefined,
+      fontFamily: skin?.display,
     }),
-    [accessibleColor, compactSize, boldUsernames],
+    [accessibleColor, compactSize, boldUsernames, hardShadow, skin],
   );
   const messageStyle: React.CSSProperties = React.useMemo(
     () => ({
@@ -570,7 +605,7 @@ const MessageRow = React.memo(function MessageRow({
       fontSize: compactSize,
       fontWeight: boldMessages ? 600 : undefined,
     }),
-    [compactSize, boldMessages],
+    [compactSize, boldMessages, shadowStyle],
   );
 
   const parsedContent = React.useMemo(
@@ -625,7 +660,7 @@ const MessageRow = React.memo(function MessageRow({
   );
 
   const timestampNode = showTimestamp && (
-    <span className="text-zinc-400 text-xs">
+    <span className="text-zinc-400 text-xs" style={skin ? { color: skin.muted } : undefined}>
       {msg.timestamp.toLocaleTimeString([], {
         hour: '2-digit',
         minute: '2-digit',
@@ -662,7 +697,7 @@ const MessageRow = React.memo(function MessageRow({
   return (
     <div
       data-msg-id={msg.id}
-      className={`${classes.wrapper} ${itemBgClass} ${animClass} transform-gpu ${orientation === 'horizontal' ? 'flex-shrink-0' : ''}`}
+      className={`${classes.wrapper} ${skin ? '' : classes.box} ${itemBgClass} ${animClass} transform-gpu ${orientation === 'horizontal' ? 'flex-shrink-0' : ''}`}
       style={{ ...wrapperStyle, '--chat-speed': mountSpeed } as React.CSSProperties}
     >
       {headerNode}
@@ -689,6 +724,7 @@ const MessageRow = React.memo(function MessageRow({
         </>
       )}
       {!isInlineOrCompact && messageNode}
+      {skin && presetBox && <Frame skin={skin} radius={presetBox.radius} scale={0.5} />}
     </div>
   );
 });

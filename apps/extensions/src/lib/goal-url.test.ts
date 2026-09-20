@@ -13,6 +13,7 @@ import {
 const ORIGIN = 'https://extensions.senchabot.com';
 const CUSTOM: GoalSettings = {
   platforms: 'both',
+  preset: 'classic',
   color: 'gold',
   title: 'ROAD TO 500',
   start: 431,
@@ -55,6 +56,24 @@ describe('buildGoalUrl', () => {
     expect(url.searchParams.get('target')).toBe('500');
     const kickOnly = new URL(buildGoalPreviewUrl(ORIGIN, { ...CUSTOM, platforms: 'kick' }, 'x'));
     expect(kickOnly.searchParams.get('simplatform')).toBe('kick');
+  });
+
+  it('writes a preset instead of the color, which the preset brings', () => {
+    const url = new URL(buildGoalUrl(ORIGIN, { ...CUSTOM, preset: 'rift' }, 'streamer', ''));
+    expect(url.searchParams.get('preset')).toBe('rift');
+    expect(url.searchParams.has('color')).toBe(false);
+  });
+});
+
+describe('goal presets', () => {
+  it('reads a known preset and drops an unknown one to classic', () => {
+    expect(readGoalSettings(new URLSearchParams('preset=rift')).preset).toBe('rift');
+    expect(readGoalSettings(new URLSearchParams('preset=nope')).preset).toBe('classic');
+  });
+
+  it('keeps the picked color through a preset, for going back to classic', () => {
+    const parsed = parseGoalUrl(`${ORIGIN}/widgets/goal?twitch=s&preset=rift&color=gold`);
+    expect(parsed?.settings).toMatchObject({ preset: 'rift', color: 'gold' });
   });
 });
 

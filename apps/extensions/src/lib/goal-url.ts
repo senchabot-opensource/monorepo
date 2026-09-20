@@ -1,3 +1,5 @@
+import { isClassic } from '#/features/presets/registry';
+import { CLASSIC_PRESET, readPreset, writePreset } from './preset-url';
 import {
   type ChannelPlatforms,
   channelWidgetUrl,
@@ -13,6 +15,8 @@ export type GoalColor = (typeof GOAL_COLORS)[number];
 
 export interface GoalSettings {
   platforms: ChannelPlatforms;
+  /** Preset id; any preset but classic brings its own colors and fonts. */
+  preset: string;
   color: GoalColor;
   /** Shown above the bar; empty hides it. */
   title: string;
@@ -26,6 +30,7 @@ export interface GoalSettings {
 
 export const DEFAULT_GOAL_SETTINGS: GoalSettings = {
   platforms: 'both',
+  preset: CLASSIC_PRESET,
   color: 'purple',
   title: 'SUB GOAL',
   start: 0,
@@ -44,7 +49,9 @@ function buildParams(settings: GoalSettings, twitchChannel: string, kickChannel:
   const params = new URLSearchParams();
   const defaults = DEFAULT_GOAL_SETTINGS;
   setChannels(params, settings.platforms, twitchChannel, kickChannel);
-  if (settings.color !== defaults.color) params.set('color', settings.color);
+  writePreset(params, settings.preset);
+  if (isClassic(settings.preset) && settings.color !== defaults.color)
+    params.set('color', settings.color);
   if (settings.title !== defaults.title) params.set('title', settings.title);
   if (settings.start !== defaults.start) params.set('start', String(settings.start));
   if (settings.target !== defaults.target) params.set('target', String(settings.target));
@@ -79,6 +86,7 @@ export function readGoalSettings(params: URLSearchParams): Omit<GoalSettings, 'p
   const color = params.get('color') as GoalColor;
   const title = params.get('title');
   return {
+    preset: readPreset(params),
     color: GOAL_COLORS.includes(color) ? color : defaults.color,
     title: title === null ? defaults.title : title.slice(0, TITLE_MAX_LENGTH),
     start: readWhole(params.get('start'), defaults.start, { max: MAX_GOAL_COUNT }),

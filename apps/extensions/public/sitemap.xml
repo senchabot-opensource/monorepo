@@ -153,6 +153,14 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://extensions.senchabot.com/presets</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/presets"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/presets"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/presets"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://extensions.senchabot.com/faq</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/faq"/>
     <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/faq"/>
@@ -319,6 +327,14 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/guides/chat-poll"/>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/tr/presets</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/presets"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/presets"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/presets"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://extensions.senchabot.com/tr/faq</loc>

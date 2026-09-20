@@ -13,6 +13,9 @@ import { SegmentedControl } from '#/components/ui/segmented-control';
 import { SettingsGroup } from '#/components/ui/settings-group';
 import { Switch } from '#/components/ui/switch';
 import { TextField } from '#/components/ui/text-field';
+import { PresetField } from '#/features/presets/preset-field';
+import { isClassic } from '#/features/presets/registry';
+import { useStartOnSitePreset } from '#/features/presets/site-preset';
 import type { StreamAlert } from '#/features/widgets/stream-alerts/stream-alert';
 import { alertHue, defaultHeadingKey } from '#/features/widgets/stream-alerts/alert-style';
 import {
@@ -118,6 +121,7 @@ function StreamAlertsSetup() {
 
   const update = <K extends keyof StreamAlertsSettings>(key: K, value: StreamAlertsSettings[K]) =>
     setSettings((current) => ({ ...current, [key]: value }));
+  useStartOnSitePreset((preset) => update('preset', preset));
   const updateKind = <K extends 'enabled' | 'headings'>(
     key: K,
     kind: AlertKind,
@@ -209,35 +213,41 @@ function StreamAlertsSetup() {
       </SettingsGroup>
 
       <SettingsGroup title={t('common.sectionAppearance')}>
-        <div>
-          <FieldLabel id={`${id}-theme`} tip={t('streamAlerts.themeTip')}>
-            {t('streamAlerts.theme')}
-          </FieldLabel>
-          <SegmentedControl
-            labelledBy={`${id}-theme`}
-            value={settings.theme}
-            onChange={(value) => update('theme', value)}
-            options={ALERT_THEMES.map((value) => ({
-              value,
-              label: t(`streamAlerts.themes.${value}`),
-            }))}
-          />
-        </div>
-        <div>
-          <FieldLabel id={`${id}-color`} tip={t('streamAlerts.colorTip')}>
-            {t('streamAlerts.color')}
-          </FieldLabel>
-          <ColorSwatches
-            labelledBy={`${id}-color`}
-            value={settings.color}
-            onChange={(value) => update('color', value)}
-            options={ALERT_COLORS.map((color) => ({
-              value: color,
-              label: t(`streamAlerts.colors.${color}`),
-              background: swatchBackground(color),
-            }))}
-          />
-        </div>
+        <PresetField value={settings.preset} onChange={(value) => update('preset', value)} />
+        {/* A preset draws its own alert card, so the built-in themes and colors step aside. */}
+        {isClassic(settings.preset) && (
+          <>
+            <div>
+              <FieldLabel id={`${id}-theme`} tip={t('streamAlerts.themeTip')}>
+                {t('streamAlerts.theme')}
+              </FieldLabel>
+              <SegmentedControl
+                labelledBy={`${id}-theme`}
+                value={settings.theme}
+                onChange={(value) => update('theme', value)}
+                options={ALERT_THEMES.map((value) => ({
+                  value,
+                  label: t(`streamAlerts.themes.${value}`),
+                }))}
+              />
+            </div>
+            <div>
+              <FieldLabel id={`${id}-color`} tip={t('streamAlerts.colorTip')}>
+                {t('streamAlerts.color')}
+              </FieldLabel>
+              <ColorSwatches
+                labelledBy={`${id}-color`}
+                value={settings.color}
+                onChange={(value) => update('color', value)}
+                options={ALERT_COLORS.map((color) => ({
+                  value: color,
+                  label: t(`streamAlerts.colors.${color}`),
+                  background: swatchBackground(color),
+                }))}
+              />
+            </div>
+          </>
+        )}
         <div>
           <FieldLabel id={`${id}-lang`} tip={t('streamAlerts.languageTip')}>
             {t('streamAlerts.language')}

@@ -570,6 +570,33 @@ export async function runHeaderMenu({ chrome, base, path, setupPaths, check, noi
   }
 }
 
+/** Widths where the full header has the least room: from md (768) up to lg (1024). */
+const HEADER_WIDTHS = [768, 900, 1023, 1024];
+
+/**
+ * The full header keeps every link and button inside the window at the tight widths the page
+ * cases skip. A fifth nav link once pushed the language and theme buttons off at 768–850px.
+ */
+export async function runHeaderFit({ chrome, base, path, check }) {
+  for (const width of HEADER_WIDTHS) {
+    const tab = await openTab(chrome, { width, height: 800, theme: 'dark' });
+    try {
+      await load(tab, new URL(path, base).href);
+      const cut = await tab.page.evaluate(() =>
+        [...document.querySelectorAll('header a, header button')]
+          .filter((el) => el.getClientRects().length)
+          .filter((el) => el.getBoundingClientRect().right > innerWidth + 1)
+          .map((el) => el.textContent.trim() || el.getAttribute('aria-label')),
+      );
+      check(`${width}px: header fits`, cut.length === 0, `cut off: ${JSON.stringify(cut)}`);
+    } catch (err) {
+      check(`${width}px: header fit test ran`, false, err.message);
+    } finally {
+      await tab.close();
+    }
+  }
+}
+
 /**
  * Language landing: each case is a fresh profile with a given browser language and optional
  * saved choice. Visitors must land on their language's URL, explicit /tr links and ?lang= must

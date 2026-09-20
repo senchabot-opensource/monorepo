@@ -1,3 +1,4 @@
+import { isClassic } from '#/features/presets/registry';
 import {
   cleanOptions,
   clip,
@@ -7,6 +8,7 @@ import {
   QUESTION_MAX_LENGTH,
 } from '#/features/widgets/poll/poll-state';
 import { isValidLocale, LANG_PARAM, type Locale } from '#/lib/i18n/locales';
+import { CLASSIC_PRESET, readPreset, writePreset } from '#/lib/preset-url';
 import {
   type ChannelPlatforms,
   channelWidgetUrl,
@@ -25,6 +27,8 @@ export const SUB_WEIGHTS = [1, 2, 3] as const;
 
 export interface PollSettings {
   platforms: ChannelPlatforms;
+  /** Preset id; any preset but classic brings its own colors and fonts. */
+  preset: string;
   /** The ready-made poll `!poll start` puts up. Its options may hold blanks while typing. */
   question: string;
   options: string[];
@@ -48,6 +52,7 @@ export interface PollSettings {
 
 export const DEFAULT_POLL_SETTINGS: PollSettings = {
   platforms: 'both',
+  preset: CLASSIC_PRESET,
   question: '',
   options: ['', ''],
   duration: 60,
@@ -87,6 +92,7 @@ function buildParams(
   const params = new URLSearchParams();
   const defaults = DEFAULT_POLL_SETTINGS;
   setChannels(params, settings.platforms, twitchChannel, kickChannel);
+  writePreset(params, settings.preset);
   const poll = savedPoll(settings);
   if (poll) {
     if (poll.question) params.set('q', poll.question);
@@ -101,7 +107,8 @@ function buildParams(
   if (settings.subWeight !== defaults.subWeight) params.set('subx', String(settings.subWeight));
   if (settings.change !== defaults.change) params.set('change', settings.change ? '1' : '0');
   if (settings.blind !== defaults.blind) params.set('blind', settings.blind ? '1' : '0');
-  if (settings.color !== defaults.color) params.set('color', settings.color);
+  if (isClassic(settings.preset) && settings.color !== defaults.color)
+    params.set('color', settings.color);
   if (settings.position !== defaults.position) params.set('pos', settings.position);
   // Always written: the poll shows words, and OBS shouldn't pick their language.
   params.set(LANG_PARAM, locale);
@@ -139,6 +146,7 @@ export function readPollSettings(params: URLSearchParams): Omit<PollSettings, 'p
   const subWeight = Number(params.get('subx'));
   const options = cleanOptions((params.get('o') ?? '').split(OPTION_SEPARATOR));
   return {
+    preset: readPreset(params),
     question: clip((params.get('q') ?? '').trim(), QUESTION_MAX_LENGTH),
     // The setup page shows at least two boxes.
     options: options.length >= MIN_OPTIONS ? options : [...options, '', ''].slice(0, MIN_OPTIONS),

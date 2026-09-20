@@ -132,6 +132,7 @@ describe('Sub Goal setup', () => {
       window.location.origin,
       {
         platforms: 'both',
+        preset: 'classic',
         color: 'cyan',
         title: 'Road & 100% 🎉',
         start: 431,

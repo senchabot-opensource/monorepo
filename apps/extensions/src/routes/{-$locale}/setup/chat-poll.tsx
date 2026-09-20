@@ -16,6 +16,9 @@ import { SegmentedControl } from '#/components/ui/segmented-control';
 import { SettingsGroup } from '#/components/ui/settings-group';
 import { Switch } from '#/components/ui/switch';
 import { HINT_CLASS, INPUT_CLASS, TextField } from '#/components/ui/text-field';
+import { PresetField } from '#/features/presets/preset-field';
+import { isClassic } from '#/features/presets/registry';
+import { useStartOnSitePreset } from '#/features/presets/site-preset';
 import type { PollChatEvent } from '#/features/widgets/poll/poll-chat';
 import { COMMAND } from '#/features/widgets/poll/poll-state';
 import { PREVIEW_CHANNEL, type PreviewMessage } from '#/features/widgets/poll/use-poll';
@@ -101,6 +104,7 @@ function PollSetup() {
 
   const update = <K extends keyof PollSettings>(key: K, value: PollSettings[K]) =>
     setSettings((current) => ({ ...current, [key]: value }));
+  useStartOnSitePreset((preset) => update('preset', preset));
   const setOptions = (change: (options: string[]) => string[]) =>
     setSettings((current) => ({ ...current, options: change(current.options) }));
 
@@ -299,19 +303,22 @@ function PollSetup() {
       </SettingsGroup>
 
       <SettingsGroup title={t('common.sectionAppearance')}>
-        <div>
-          <FieldLabel id={`${id}-color`}>{t('poll.color')}</FieldLabel>
-          <ColorSwatches
-            labelledBy={`${id}-color`}
-            value={settings.color}
-            onChange={(value) => update('color', value)}
-            options={POLL_COLORS.map((color) => ({
-              value: color,
-              label: t(`subathon.colors.${color}`),
-              background: `hsl(${hueFor(color, 1)} 85% 52%)`,
-            }))}
-          />
-        </div>
+        <PresetField value={settings.preset} onChange={(value) => update('preset', value)} />
+        {isClassic(settings.preset) && (
+          <div>
+            <FieldLabel id={`${id}-color`}>{t('poll.color')}</FieldLabel>
+            <ColorSwatches
+              labelledBy={`${id}-color`}
+              value={settings.color}
+              onChange={(value) => update('color', value)}
+              options={POLL_COLORS.map((color) => ({
+                value: color,
+                label: t(`subathon.colors.${color}`),
+                background: `hsl(${hueFor(color, 1)} 85% 52%)`,
+              }))}
+            />
+          </div>
+        )}
         <div className="grid gap-3 sm:grid-cols-2">
           <div>
             <FieldLabel id={`${id}-position`} tip={t('poll.positionTip')}>

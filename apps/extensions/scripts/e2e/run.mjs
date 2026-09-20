@@ -10,6 +10,7 @@ import { parseArgs } from 'node:util';
 import { launchChrome } from '../lib/chrome.mjs';
 import {
   parseXmlInBrowser,
+  runHeaderFit,
   runHeaderMenu,
   runLanguageLanding,
   runOverlay,
@@ -273,6 +274,9 @@ async function main() {
         .map((p) => p.path);
       job('flow', landing.path, 'dark 1440x900', `${landing.path}  header Widgets menu`, (check) =>
         runHeaderMenu({ chrome, base: BASE, path: landing.path, setupPaths, check, noise }),
+      );
+      job('flow', landing.path, 'dark 768-1024', `${landing.path}  header fits`, (check) =>
+        runHeaderFit({ chrome, base: BASE, path: landing.path, check }),
       );
     }
     if (!only || only === '/') {

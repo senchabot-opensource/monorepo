@@ -1,3 +1,5 @@
+import { isClassic } from '#/features/presets/registry';
+import { CLASSIC_PRESET, readPreset, writePreset } from '#/lib/preset-url';
 import { readCoercedFlag, readWidgetUrl, setChannels } from '#/lib/url-params';
 
 export const PLATFORMS = ['both', 'twitch', 'kick'] as const;
@@ -37,6 +39,8 @@ export type Duration = (typeof DURATIONS)[number];
 
 export interface Settings {
   platforms: Platforms;
+  /** Preset id; any preset but classic brings its own fonts, colors and message boxes. */
+  preset: string;
   platformDisplay: PlatformDisplay;
   font: Font;
   fontSize: string;
@@ -63,6 +67,7 @@ export interface Settings {
 // Mirrors the widget's own defaults, so only changed settings end up in the URL.
 export const DEFAULT_SETTINGS: Settings = {
   platforms: 'both',
+  preset: CLASSIC_PRESET,
   platformDisplay: 'icon',
   font: 'inter',
   fontSize: '18',
@@ -89,6 +94,7 @@ export const DEFAULT_SETTINGS: Settings = {
 export function buildWidgetParams(settings: Settings, twitchChannel: string, kickChannel: string) {
   const params = new URLSearchParams();
   setChannels(params, settings.platforms, twitchChannel, kickChannel);
+  writePreset(params, settings.preset);
   if (!settings.sevenTv) params.append('sevenTv', 'false');
   if (!settings.bttv) params.append('bttv', 'false');
   if (!settings.ffz) params.append('ffz', 'false');
@@ -122,7 +128,8 @@ export function buildWidgetParams(settings: Settings, twitchChannel: string, kic
   // Opt-in: URLs from before highlights existed carry no param and must keep looking the same.
   const highlights = HIGHLIGHTS.filter((h) => settings.highlights.includes(h));
   if (highlights.length > 0) params.append('highlights', highlights.join(','));
-  if (settings.font !== DEFAULT_SETTINGS.font) params.append('font', settings.font);
+  if (isClassic(settings.preset) && settings.font !== DEFAULT_SETTINGS.font)
+    params.append('font', settings.font);
   if (settings.layout !== DEFAULT_SETTINGS.layout) params.append('layout', settings.layout);
   if (settings.animation !== DEFAULT_SETTINGS.animation)
     params.append('animation', settings.animation);
@@ -166,6 +173,7 @@ export function parseWidgetUrl(text: string): ParsedWidgetUrl | null {
     kickChannel,
     settings: {
       platforms,
+      preset: readPreset(params),
       platformDisplay: oneOf(
         'platformDisplay',
         PLATFORM_DISPLAYS,

@@ -6,6 +6,7 @@ export const LINKS = {
   source: `${REPO}/tree/dev/apps/extensions`,
   license: `${REPO}/blob/dev/LICENSE`,
   newIssue: `${REPO}/issues/new`,
+  presetGuide: `${REPO}/tree/dev/apps/extensions/src/features/presets/community`,
   discussions: `${REPO}/discussions`,
   senchabot: 'https://senchabot.com',
   docs: 'https://docs.senchabot.com',
@@ -18,6 +19,7 @@ export const LINKS = {
 
 export const CONTENT_PATHS = {
   guides: '/guides',
+  presets: '/presets',
   faq: '/faq',
   changelog: '/changelog',
 } as const satisfies Record<string, SitePath>;

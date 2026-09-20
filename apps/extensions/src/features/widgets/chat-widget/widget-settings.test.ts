@@ -42,6 +42,7 @@ describe('parseWidgetUrl', () => {
   it('restores every setting the setup page writes', () => {
     const settings: Settings = {
       platforms: 'both',
+      preset: 'classic',
       platformDisplay: 'name',
       font: 'mono',
       fontSize: '24',

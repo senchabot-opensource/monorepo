@@ -1,3 +1,4 @@
+import { isClassic } from '#/features/presets/registry';
 import {
   type ChannelPlatforms,
   channelWidgetUrl,
@@ -7,6 +8,7 @@ import {
   setChannels,
   setPreview,
 } from '#/lib/url-params';
+import { CLASSIC_PRESET, readPreset, writePreset } from './preset-url';
 
 export const SUBATHON_STYLES = ['bar', 'clock', 'ring'] as const;
 export type SubathonStyle = (typeof SUBATHON_STYLES)[number];
@@ -34,6 +36,8 @@ export type SubathonTimeKey = keyof SubathonTimeValues;
 
 export interface SubathonSettings extends SubathonTimeValues {
   platforms: ChannelPlatforms;
+  /** Preset id; any preset but classic brings its own colors and fonts. */
+  preset: string;
   style: SubathonStyle;
   color: SubathonColor;
   /** Shown with the clock; empty hides it. */
@@ -52,6 +56,7 @@ export interface SubathonSettings extends SubathonTimeValues {
 
 export const DEFAULT_SUBATHON_SETTINGS: SubathonSettings = {
   platforms: 'both',
+  preset: CLASSIC_PRESET,
   style: 'bar',
   color: 'hp',
   title: 'SUBATHON',
@@ -99,8 +104,10 @@ function buildParams(settings: SubathonSettings, twitchChannel: string, kickChan
   const params = new URLSearchParams();
   const defaults = DEFAULT_SUBATHON_SETTINGS;
   setChannels(params, settings.platforms, twitchChannel, kickChannel);
+  writePreset(params, settings.preset);
   if (settings.style !== defaults.style) params.set('style', settings.style);
-  if (settings.color !== defaults.color) params.set('color', settings.color);
+  if (isClassic(settings.preset) && settings.color !== defaults.color)
+    params.set('color', settings.color);
   if (settings.title !== defaults.title) params.set('title', settings.title);
   for (const key of NUMBER_KEYS) {
     if (settings[key] !== defaults[key]) params.set(NUMBER_PARAMS[key], String(settings[key]));
@@ -154,6 +161,7 @@ export function readSubathonSettings(params: URLSearchParams): Omit<SubathonSett
     FLAG_KEYS.map((key) => [key, readFlag(params.get(FLAG_PARAMS[key]), defaults[key])]),
   ) as Record<FlagKey, boolean>;
   return {
+    preset: readPreset(params),
     style: SUBATHON_STYLES.includes(style) ? style : defaults.style,
     color: SUBATHON_COLORS.includes(color) ? color : defaults.color,
     title: title === null ? defaults.title : title.slice(0, TITLE_MAX_LENGTH),

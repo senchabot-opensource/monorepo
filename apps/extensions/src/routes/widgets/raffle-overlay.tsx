@@ -1,5 +1,6 @@
 import { RaffleOverlay } from "#/features/widgets/raffle/raffle-overlay";
-import { createFileRoute } from "@tanstack/react-router";
+import { readFlag } from "#/lib/url-params";
+import { createFileRoute, useLocation } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/widgets/raffle-overlay")({
   ssr: false,
@@ -7,9 +8,10 @@ export const Route = createFileRoute("/widgets/raffle-overlay")({
 });
 
 function RouteComponent() {
+  const params = new URLSearchParams(useLocation({ select: (location) => location.searchStr }));
   return (
     <div className="size-full min-h-screen bg-transparent">
-      <RaffleOverlay />
+      <RaffleOverlay preset={params.get("preset")} demo={readFlag(params.get("demo"), false)} />
     </div>
   );
 }

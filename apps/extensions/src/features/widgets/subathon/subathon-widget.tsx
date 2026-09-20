@@ -1,6 +1,10 @@
 import { type CSSProperties, useEffect, useState } from 'react';
+import { barFrameStyle, fillBackground, fillLayers, trackBackground } from '#/features/presets/bar';
+import { Frame, panelStyle } from '#/features/presets/frame';
+import { painter, type Skin, skinCss, skinFor } from '#/features/presets/skin';
+import { SkinProvider, useSkin } from '#/features/presets/skin-context';
 import type { SubathonSettings, SubathonStyle } from '#/lib/subathon-url';
-import { hsl, hueFor, OVERLAY_FONT_FAMILY as FONT_FAMILY, PLATFORM_COLORS } from '../overlay-style';
+import { hueFor, OVERLAY_FONT_FAMILY as FONT_FAMILY, PLATFORM_COLORS } from '../overlay-style';
 import { useFitScale } from '../use-fit-scale';
 import type { SubathonPlatform } from './subathon-events';
 import { formatClock, formatDelta } from './subathon-timer';
@@ -120,14 +124,22 @@ export function SubathonWidget({
     ease: healing ? '.6s cubic-bezier(.2,.9,.3,1.1)' : '.25s linear',
   };
   const View = VIEWS[settings.style];
+  const skin = skinFor(settings.preset);
 
   return (
-    <div className="sa-root" data-testid="subathon" data-style={settings.style}>
-      <style>{CSS}</style>
-      <div className="sa-stage" style={{ transform: `translate(-50%, -50%) scale(${scale})` }}>
-        <View {...view} />
+    <SkinProvider skin={skin}>
+      <div
+        className="sa-root"
+        data-testid="subathon"
+        data-style={settings.style}
+        data-preset={skin?.id}
+      >
+        <style>{CSS + skinCss('sa', skin)}</style>
+        <div className="sa-stage" style={{ transform: `translate(-50%, -50%) scale(${scale})` }}>
+          <View {...view} />
+        </div>
       </div>
-    </div>
+    </SkinProvider>
   );
 }
 
@@ -161,12 +173,13 @@ const VIEWS: Record<SubathonStyle, (props: ViewProps) => React.JSX.Element> = {
 
 
 /** Color of the time left: red and blinking once it's over. */
-const clockColor = (ended: boolean): CSSProperties => ({
-  color: ended ? '#f87171' : '#fff',
+const clockColor = (ended: boolean, skin: Skin | null): CSSProperties => ({
+  color: ended ? '#f87171' : (skin?.text ?? '#fff'),
   animation: ended ? 'sa-blink 1s steps(2) infinite' : undefined,
 });
 
 function HeartIcon({ hue, beat }: { hue: number; beat: number | null }) {
+  const hsl = painter(useSkin(), hue);
   return (
     <svg
       viewBox="0 0 24 24"
@@ -174,13 +187,13 @@ function HeartIcon({ hue, beat }: { hue: number; beat: number | null }) {
       height="26"
       aria-hidden="true"
       style={{
-        filter: `drop-shadow(0 0 8px ${hsl(hue, 90, 55, 0.8)})`,
+        filter: `drop-shadow(0 0 8px ${hsl(90, 55, 0.8)})`,
         animation: beat ? `sa-beat ${beat}s ease-in-out infinite` : undefined,
       }}
     >
       <path
         d="M12 21s-7.5-4.6-10-9.2C.3 8.5 2.2 4 6.3 4c2.4 0 4 1.4 5.7 3.4C13.7 5.4 15.3 4 17.7 4 21.8 4 23.7 8.5 22 11.8 19.5 16.4 12 21 12 21Z"
-        fill={hsl(hue, 90, 58)}
+        fill={hsl(90, 58)}
         stroke="rgba(0,0,0,.55)"
         strokeWidth="1.5"
       />
@@ -189,6 +202,7 @@ function HeartIcon({ hue, beat }: { hue: number; beat: number | null }) {
 }
 
 function PauseChip() {
+  const skin = useSkin();
   return (
     <span
       role="img"
@@ -197,14 +211,14 @@ function PauseChip() {
         display: 'inline-flex',
         gap: 5,
         padding: '7px 10px',
-        borderRadius: 8,
-        background: 'rgba(0,0,0,.6)',
-        border: '1px solid rgba(255,255,255,.18)',
+        borderRadius: skin ? 8 * skin.radius : 8,
+        background: skin ? skin.panel2 : 'rgba(0,0,0,.6)',
+        border: `1px solid ${skin ? skin.frame2 : 'rgba(255,255,255,.18)'}`,
         animation: 'sa-blink 1.6s ease-in-out infinite',
       }}
     >
-      <span style={{ width: 5, height: 16, borderRadius: 2, background: '#fff' }} />
-      <span style={{ width: 5, height: 16, borderRadius: 2, background: '#fff' }} />
+      <span style={{ width: 5, height: 16, borderRadius: 2, background: skin?.text ?? '#fff' }} />
+      <span style={{ width: 5, height: 16, borderRadius: 2, background: skin?.text ?? '#fff' }} />
     </span>
   );
 }
@@ -246,6 +260,7 @@ function HealFlash({
   radius: number | string;
   spread: number;
 }) {
+  const hsl = painter(useSkin(), hue);
   if (!hit || !healing) return null;
   return (
     <div
@@ -254,7 +269,7 @@ function HealFlash({
         position: 'absolute',
         inset: -2,
         borderRadius: radius,
-        boxShadow: `0 0 ${spread * 4}px ${spread}px ${hsl(hue, 100, 70, 0.9)}`,
+        boxShadow: `0 0 ${spread * 4}px ${spread}px ${hsl(100, 70, 0.9)}`,
         animation: 'sa-flash .7s ease-out forwards',
         pointerEvents: 'none',
       }}
@@ -293,6 +308,8 @@ function PopBand({
   x: number;
   height: number;
 }) {
+  const skin = useSkin();
+  const hsl = painter(skin, hue);
   const base = Math.min(70, Math.max(30, x));
   return (
     <div style={{ position: 'absolute', left: 0, right: 0, top: 0, height }}>
@@ -316,8 +333,8 @@ function PopBand({
             style={{
               fontSize: 38,
               fontWeight: 800,
-              color: hsl(hue, 100, 78),
-              WebkitTextStroke: `1.5px ${hsl(hue, 80, 22)}`,
+              color: hsl(100, 78),
+              WebkitTextStroke: `1.5px ${hsl(80, 22)}`,
             }}
           >
             +{formatDelta(pop.ms)}
@@ -333,7 +350,7 @@ function PopBand({
               borderRadius: 999,
               fontSize: 15,
               fontWeight: 700,
-              background: 'rgba(0,0,0,.7)',
+              background: skin ? skin.panel2 : 'rgba(0,0,0,.7)',
               border: `1px solid ${PLATFORM_COLORS[pop.event.platform]}66`,
             }}
           >
@@ -350,6 +367,10 @@ function PopBand({
 
 function HealthBarView(view: ViewProps) {
   const { left, shown, paused, ended, low, critical, hue, title, percent, hit, healing } = view;
+  const skin = useSkin();
+  const hsl = painter(skin, hue);
+  const layers = fillLayers(skin);
+  const glow = `0 0 ${low ? 34 : 22}px ${hsl(90, 50, low ? 0.7 : 0.45)}`;
   const barStyle: CSSProperties = {
     position: 'relative',
     height: BAR_HEIGHT,
@@ -357,7 +378,8 @@ function HealthBarView(view: ViewProps) {
     borderRadius: 6,
     padding: 4,
     background: 'linear-gradient(180deg, #2a2a33 0%, #0c0c10 100%)',
-    boxShadow: `0 0 0 2px rgba(0,0,0,.85), 0 0 ${low ? 34 : 22}px ${hsl(hue, 90, 50, low ? 0.7 : 0.45)}, inset 0 1px 0 rgba(255,255,255,.18)`,
+    boxShadow: `0 0 0 2px rgba(0,0,0,.85), ${glow}, inset 0 1px 0 rgba(255,255,255,.18)`,
+    ...(skin && barFrameStyle(skin, glow)),
     animation: critical
       ? 'sa-shake .45s linear infinite'
       : low
@@ -385,9 +407,10 @@ function HealthBarView(view: ViewProps) {
               position: 'relative',
               height: '100%',
               overflow: 'hidden',
-              borderRadius: 3,
-              background:
-                'repeating-linear-gradient(90deg, rgba(255,255,255,.045) 0 14px, transparent 14px 28px), linear-gradient(180deg, #16161c, #07070a)',
+              borderRadius: skin ? 3 * skin.radius : 3,
+              background: skin
+                ? trackBackground(skin)
+                : 'repeating-linear-gradient(90deg, rgba(255,255,255,.045) 0 14px, transparent 14px 28px), linear-gradient(180deg, #16161c, #07070a)',
             }}
           >
             {hit && (
@@ -411,36 +434,43 @@ function HealthBarView(view: ViewProps) {
                 position: 'absolute',
                 inset: 0,
                 transform: `translateX(${(shown - 1) * 100}%)`,
-                background: `linear-gradient(180deg, ${hsl(hue, 95, 72)} 0%, ${hsl(hue, 88, 52)} 42%, ${hsl(hue, 85, 34)} 100%)`,
-                boxShadow: `inset -3px 0 0 ${hsl(hue, 100, 85)}`,
+                background: skin
+                  ? fillBackground(skin, hsl)
+                  : `linear-gradient(180deg, ${hsl(95, 72)} 0%, ${hsl(88, 52)} 42%, ${hsl(85, 34)} 100%)`,
+                boxShadow: `inset -3px 0 0 ${hsl(100, 85)}`,
                 transition: `transform ${view.ease}, background .4s`,
                 filter: paused ? 'saturate(.35) brightness(.85)' : undefined,
                 overflow: 'hidden',
               }}
             >
-              <div
-                // One tile wider on the left, so sliding it a tile (a transform, unlike moving
-                // background-position) never shows an edge.
-                style={{
-                  position: 'absolute',
-                  inset: '0 0 0 -28px',
-                  background:
-                    'repeating-linear-gradient(115deg, rgba(255,255,255,.14) 0 10px, transparent 10px 20px)',
-                  backgroundSize: '28px 100%',
-                  animation: paused ? undefined : 'sa-stripes 1.2s linear infinite',
-                }}
-              />
-              <div
-                style={{
-                  position: 'absolute',
-                  left: 0,
-                  right: 0,
-                  top: 4,
-                  height: '32%',
-                  background: 'linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,0))',
-                  borderRadius: 2,
-                }}
-              />
+              {layers.stripes && (
+                <div
+                  // One tile wider on the left, so sliding it a tile (a transform, unlike moving
+                  // background-position) never shows an edge.
+                  style={{
+                    position: 'absolute',
+                    inset: '0 0 0 -28px',
+                    background:
+                      'repeating-linear-gradient(115deg, rgba(255,255,255,.14) 0 10px, transparent 10px 20px)',
+                    backgroundSize: '28px 100%',
+                    animation: paused ? undefined : 'sa-stripes 1.2s linear infinite',
+                  }}
+                />
+              )}
+              {layers.gloss && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    left: 0,
+                    right: 0,
+                    top: 4,
+                    height: '32%',
+                    background:
+                      'linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,0))',
+                    borderRadius: 2,
+                  }}
+                />
+              )}
               {hit && healing && (
                 // The fill is shifted left, so start the sweep where it becomes visible.
                 <div
@@ -466,7 +496,7 @@ function HealthBarView(view: ViewProps) {
                   top: 0,
                   bottom: 0,
                   left: `${tick}%`,
-                  width: 2,
+                  width: layers.tickWidth,
                   background: 'rgba(0,0,0,.45)',
                 }}
               />
@@ -478,7 +508,8 @@ function HealthBarView(view: ViewProps) {
                   position: 'absolute',
                   right: 14,
                   top: '50%',
-                  transform: 'translateY(-50%) skewX(14deg)',
+                  // Undoes the bar's slant, so the digits stand upright.
+                  transform: `translateY(-50%) skewX(${skin ? -skin.skew : 14}deg)`,
                   fontSize: 26,
                   fontWeight: 800,
                   WebkitTextStroke: '1px rgba(0,0,0,.6)',
@@ -489,6 +520,7 @@ function HealthBarView(view: ViewProps) {
             )}
           </div>
           <HealFlash hit={hit} healing={healing} hue={hue} radius={8} spread={6} />
+          {skin && <Frame skin={skin} radius={6} />}
           {ended && <KnockOut />}
         </div>
 
@@ -521,7 +553,7 @@ function HealthBarView(view: ViewProps) {
           </div>
           <span
             className="sa-shadow"
-            style={{ fontSize: 44, fontWeight: 800, lineHeight: 1, ...clockColor(ended) }}
+            style={{ fontSize: 44, fontWeight: 800, lineHeight: 1, ...clockColor(ended, skin) }}
           >
             {formatClock(left)}
           </span>
@@ -533,6 +565,10 @@ function HealthBarView(view: ViewProps) {
 
 function ClockView(view: ViewProps) {
   const { left, shown, paused, ended, low, hue, title, percent } = view;
+  const skin = useSkin();
+  const hsl = painter(skin, hue);
+  const glow = `0 0 ${low ? 40 : 26}px ${hsl(90, 50, low ? 0.6 : 0.35)}`;
+  const panel = skin && panelStyle(skin, 22);
   const [h, m, s] = formatClock(left).split(':');
   const colon = (
     <span style={{ opacity: paused ? 0.5 : 0.85, margin: '0 2px', position: 'relative', top: -6 }}>
@@ -555,7 +591,7 @@ function ClockView(view: ViewProps) {
         }}
       >
         {title && (
-          <span className="sa-title sa-shadow" style={{ fontSize: 24, color: hsl(hue, 95, 72) }}>
+          <span className="sa-title sa-shadow" style={{ fontSize: 24, color: hsl(95, 72) }}>
             {title}
           </span>
         )}
@@ -568,8 +604,13 @@ function ClockView(view: ViewProps) {
             padding: '6px 34px 10px',
             borderRadius: 22,
             background: 'linear-gradient(180deg, rgba(24,24,30,.86), rgba(8,8,11,.9))',
-            border: `2px solid ${hsl(hue, 90, 60, 0.55)}`,
-            boxShadow: `0 0 ${low ? 40 : 26}px ${hsl(hue, 90, 50, low ? 0.6 : 0.35)}, inset 0 1px 0 rgba(255,255,255,.12)`,
+            border: `2px solid ${hsl(90, 60, 0.55)}`,
+            boxShadow: `${glow}, inset 0 1px 0 rgba(255,255,255,.12)`,
+            ...(panel && {
+              ...panel,
+              border: undefined,
+              boxShadow: [panel.boxShadow, glow].filter(Boolean).join(','),
+            }),
             animation: low && !paused ? 'sa-pulse .9s ease-in-out infinite' : undefined,
           }}
         >
@@ -580,8 +621,8 @@ function ClockView(view: ViewProps) {
               fontWeight: 800,
               lineHeight: 1.05,
               letterSpacing: '.02em',
-              textShadow: `0 0 22px ${hsl(hue, 90, 55, 0.55)}`,
-              ...clockColor(ended),
+              textShadow: `0 0 22px ${hsl(90, 55, 0.55)}`,
+              ...clockColor(ended, skin),
             }}
           >
             {h}
@@ -591,6 +632,7 @@ function ClockView(view: ViewProps) {
             {s}
           </span>
           <HealFlash hit={view.hit} healing={view.healing} hue={hue} radius={22} spread={8} />
+          {skin && <Frame skin={skin} radius={22} />}
         </div>
         {percent && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, width: 440 }}>
@@ -598,8 +640,8 @@ function ClockView(view: ViewProps) {
               style={{
                 flex: 1,
                 height: 8,
-                borderRadius: 99,
-                background: 'rgba(0,0,0,.6)',
+                borderRadius: skin ? 99 * skin.radius : 99,
+                background: skin ? skin.track : 'rgba(0,0,0,.6)',
                 overflow: 'hidden',
                 boxShadow: '0 0 0 1px rgba(255,255,255,.12)',
               }}
@@ -609,9 +651,9 @@ function ClockView(view: ViewProps) {
                 style={{
                   height: '100%',
                   transform: `translateX(${(shown - 1) * 100}%)`,
-                  borderRadius: 99,
-                  background: `linear-gradient(90deg, ${hsl(hue, 85, 45)}, ${hsl(hue, 95, 68)})`,
-                  boxShadow: `0 0 12px ${hsl(hue, 95, 60, 0.8)}`,
+                  borderRadius: skin ? 99 * skin.radius : 99,
+                  background: `linear-gradient(90deg, ${hsl(85, 45)}, ${hsl(95, 68)})`,
+                  boxShadow: `0 0 12px ${hsl(95, 60, 0.8)}`,
                   transition: `transform ${view.ease}`,
                 }}
               />
@@ -639,6 +681,8 @@ const RING_BOTTOM_ROOM = 16;
 
 function RingView(view: ViewProps) {
   const { left, shown, paused, ended, low, hue, title, percent } = view;
+  const skin = useSkin();
+  const hsl = painter(skin, hue);
   const angle = shown * 2 * Math.PI - Math.PI / 2;
   const center = RING_SIZE / 2;
 
@@ -672,15 +716,17 @@ function RingView(view: ViewProps) {
           >
             <defs>
               <linearGradient id="sa-ring" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0" stopColor={hsl(hue, 95, 72)} />
-                <stop offset="1" stopColor={hsl(hue, 85, 42)} />
+                <stop offset="0" stopColor={hsl(95, 72)} />
+                <stop offset="1" stopColor={hsl(85, 42)} />
               </linearGradient>
             </defs>
             <circle
               cx={center}
               cy={center}
               r={RING_RADIUS + RING_STROKE / 2 + 4}
-              fill="rgba(8,8,11,.82)"
+              fill={skin ? skin.panel2 : 'rgba(8,8,11,.82)'}
+              stroke={skin?.frame}
+              strokeWidth={skin ? 2 : undefined}
             />
             <circle
               cx={center}
@@ -697,12 +743,12 @@ function RingView(view: ViewProps) {
               fill="none"
               stroke="url(#sa-ring)"
               strokeWidth={RING_STROKE}
-              strokeLinecap="round"
+              strokeLinecap={skin && skin.radius === 0 ? 'butt' : 'round'}
               strokeDasharray={RING_LENGTH}
               strokeDashoffset={RING_LENGTH * (1 - shown)}
               transform={`rotate(-90 ${center} ${center})`}
               style={{
-                filter: `drop-shadow(0 0 10px ${hsl(hue, 95, 55, 0.8)})`,
+                filter: `drop-shadow(0 0 10px ${hsl(95, 55, 0.8)})`,
                 transition: `stroke-dashoffset ${view.ease}`,
                 opacity: paused ? 0.55 : 1,
               }}
@@ -713,7 +759,7 @@ function RingView(view: ViewProps) {
                 cy={center + RING_RADIUS * Math.sin(angle)}
                 r={RING_STROKE / 2 - 3}
                 fill="#fff"
-                style={{ filter: `drop-shadow(0 0 6px ${hsl(hue, 100, 75)})` }}
+                style={{ filter: `drop-shadow(0 0 6px ${hsl(100, 75)})` }}
               />
             )}
           </svg>
@@ -741,13 +787,13 @@ function RingView(view: ViewProps) {
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 4, minWidth: 0 }}>
           {title && (
-            <span className="sa-title sa-shadow" style={{ fontSize: 24, color: hsl(hue, 95, 72) }}>
+            <span className="sa-title sa-shadow" style={{ fontSize: 24, color: hsl(95, 72) }}>
               {title}
             </span>
           )}
           <span
             className="sa-shadow"
-            style={{ fontSize: 72, fontWeight: 800, lineHeight: 1, ...clockColor(ended) }}
+            style={{ fontSize: 72, fontWeight: 800, lineHeight: 1, ...clockColor(ended, skin) }}
           >
             {formatClock(left)}
           </span>

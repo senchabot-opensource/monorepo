@@ -1,8 +1,11 @@
 import { type CSSProperties, useEffect, useRef, useState } from 'react';
+import { Frame, panelStyle } from '#/features/presets/frame';
+import { painter, type Skin, shade, skinCss, skinFor } from '#/features/presets/skin';
+import { SkinProvider, useSkin } from '#/features/presets/skin-context';
 import { useI18n } from '#/lib/i18n';
 import type { PollSettings } from '#/lib/poll-url';
 import type { SubathonPlatform } from '../subathon/subathon-events';
-import { hsl, hueFor, OVERLAY_FONT_FAMILY as FONT_FAMILY, PLATFORM_COLORS } from '../overlay-style';
+import { hueFor, OVERLAY_FONT_FAMILY as FONT_FAMILY, PLATFORM_COLORS } from '../overlay-style';
 import { useFitScale } from '../use-fit-scale';
 import { type PollView, usePoll } from './use-poll';
 
@@ -33,6 +36,12 @@ const CSS = `
 @keyframes cp-crown{0%{transform:translateY(-10px) scale(.4) rotate(-20deg);opacity:0}60%{transform:translateY(0) scale(1.2) rotate(6deg);opacity:1}100%{transform:none;opacity:1}}
 `;
 
+/** The winner's pulsing ring in the preset's win color. */
+const presetCss = (skin: Skin | null) =>
+  skin
+    ? `${skinCss('cp', skin)}
+@keyframes cp-win{0%,100%{box-shadow:0 0 0 2px ${shade(skin.win, 62, 0.9)},0 0 14px ${shade(skin.win, 55, 0.45)}}50%{box-shadow:0 0 0 2px ${shade(skin.win, 70)},0 0 30px ${shade(skin.win, 55, 0.8)}}}`
+    : '';
 
 interface PollWidgetProps {
   twitchChannel?: string;
@@ -72,33 +81,41 @@ export function PollWidget({
   });
   const shown = useLeaving(view);
   const bothPlatforms = simulate ? !simPlatform : Boolean(twitchChannel && kickChannel);
+  const skin = skinFor(settings.preset);
 
   return (
-    <div className="cp-root" data-testid="poll" data-phase={view?.phase ?? 'none'}>
-      <style>{CSS}</style>
-      <div className="cp-stage" style={{ transform: `translate(-50%, -50%) scale(${scale})` }}>
-        <div
-          style={{
-            position: 'absolute',
-            inset: 16,
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: settings.position === 'top' ? 'flex-start' : 'flex-end',
-          }}
-        >
-          {shown && (
-            <Card
-              key={shown.view.id}
-              view={shown.view}
-              leaving={shown.leaving}
-              pulses={pulses}
-              settings={settings}
-              bothPlatforms={bothPlatforms}
-            />
-          )}
+    <SkinProvider skin={skin}>
+      <div
+        className="cp-root"
+        data-testid="poll"
+        data-phase={view?.phase ?? 'none'}
+        data-preset={skin?.id}
+      >
+        <style>{CSS + presetCss(skin)}</style>
+        <div className="cp-stage" style={{ transform: `translate(-50%, -50%) scale(${scale})` }}>
+          <div
+            style={{
+              position: 'absolute',
+              inset: 16,
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: settings.position === 'top' ? 'flex-start' : 'flex-end',
+            }}
+          >
+            {shown && (
+              <Card
+                key={shown.view.id}
+                view={shown.view}
+                leaving={shown.leaving}
+                pulses={pulses}
+                settings={settings}
+                bothPlatforms={bothPlatforms}
+              />
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </SkinProvider>
   );
 }
 
@@ -134,7 +151,10 @@ function Card({
   bothPlatforms: boolean;
 }) {
   const { t, locale } = useI18n();
+  const skin = useSkin();
   const hue = hueFor(settings.color, 1);
+  const hsl = painter(skin, hue);
+  const gold = painter(skin, GOLD_HUE, 'win');
   const { tally, phase } = view;
   const final = phase === 'results';
   const hideBars = settings.blind && !final;
@@ -151,7 +171,7 @@ function Card({
         : tie
           ? t('poll.overlay.tie')
           : t('poll.overlay.results');
-  const statusHue = final ? GOLD_HUE : hue;
+  const statusPaint = final ? gold : hsl;
 
   let footer: string;
   if (final) {
@@ -185,8 +205,10 @@ function Card({
         borderRadius: 18,
         padding: '18px 20px 16px',
         background: 'linear-gradient(180deg, rgba(22,22,30,.93) 0%, rgba(9,9,13,.93) 100%)',
-        border: `1px solid ${hsl(hue, 80, 62, 0.35)}`,
-        boxShadow: `0 14px 40px rgba(0,0,0,.45), 0 0 0 1px rgba(0,0,0,.6), 0 0 32px ${hsl(hue, 90, 55, 0.16)}`,
+        border: `1px solid ${hsl(80, 62, 0.35)}`,
+        boxShadow: `0 14px 40px rgba(0,0,0,.45), 0 0 0 1px rgba(0,0,0,.6), 0 0 32px ${hsl(90, 55, 0.16)}`,
+        // Ornaments sit on the frame's edge, so a preset card can't clip them.
+        ...(skin && { ...panelStyle(skin, 18), overflow: undefined, border: undefined }),
         animation: leaving
           ? `cp-out ${LEAVE_MS}ms ease-in forwards`
           : `cp-in-${settings.position} .5s cubic-bezier(.2,.9,.3,1.15) both`,
@@ -197,7 +219,7 @@ function Card({
           position: 'absolute',
           inset: '0 0 auto',
           height: 3,
-          background: `linear-gradient(90deg, transparent, ${hsl(statusHue, 95, 62)}, transparent)`,
+          background: `linear-gradient(90deg, transparent, ${statusPaint(95, 62)}, transparent)`,
         }}
       />
       <div
@@ -215,14 +237,14 @@ function Card({
             alignItems: 'center',
             gap: 8,
             padding: '3px 10px',
-            borderRadius: 999,
             fontSize: 13,
             fontWeight: 800,
             letterSpacing: '.14em',
             textTransform: 'uppercase',
-            color: hsl(statusHue, 100, 80),
-            background: hsl(statusHue, 90, 50, 0.16),
-            border: `1px solid ${hsl(statusHue, 90, 60, 0.35)}`,
+            color: statusPaint(100, 80),
+            background: statusPaint(90, 50, 0.16),
+            border: `1px solid ${statusPaint(90, 60, 0.35)}`,
+            borderRadius: skin ? 999 * skin.radius : 999,
           }}
         >
           {final ? (
@@ -233,7 +255,7 @@ function Card({
                 width: 7,
                 height: 7,
                 borderRadius: '50%',
-                background: phase === 'open' ? '#ef4444' : hsl(hue, 90, 65),
+                background: phase === 'open' ? '#ef4444' : hsl(90, 65),
                 animation: 'cp-dot 1.2s ease-in-out infinite',
               }}
             />
@@ -281,13 +303,13 @@ function Card({
           gap: 12,
           fontSize: 15,
           fontWeight: 600,
-          color: 'rgba(255,255,255,.78)',
+          color: skin ? skin.muted : 'rgba(255,255,255,.78)',
         }}
       >
         <span className="cp-ellipsis" style={{ minWidth: 0 }}>
           {footer}
           {!final && rules.length > 0 && (
-            <span style={{ color: hsl(hue, 100, 78) }}> · {rules.join(' · ')}</span>
+            <span style={{ color: hsl(100, 78) }}> · {rules.join(' · ')}</span>
           )}
         </span>
         <span style={{ display: 'inline-flex', alignItems: 'center', gap: 12, flexShrink: 0 }}>
@@ -297,14 +319,16 @@ function Card({
               <PlatformCount platform="kick" count={number(tally.byPlatform.kick)} />
             </>
           )}
-          <span style={{ color: '#fff', fontWeight: 800 }}>{votes(tally.total)}</span>
+          <span style={{ color: skin?.text ?? '#fff', fontWeight: 800 }}>{votes(tally.total)}</span>
         </span>
       </div>
+      {skin && <Frame skin={skin} radius={18} />}
     </div>
   );
 }
 
 function Clock({ left }: { left: number }) {
+  const skin = useSkin();
   const seconds = Math.ceil(left / 1000);
   const hurry = left <= HURRY_MS && left > 0;
   return (
@@ -313,7 +337,7 @@ function Clock({ left }: { left: number }) {
       style={{
         fontSize: 22,
         fontWeight: 800,
-        color: hurry ? hsl(RED_HUE, 100, 70) : '#fff',
+        color: hurry ? painter(null, RED_HUE)(100, 70) : (skin?.text ?? '#fff'),
         animation: hurry ? 'cp-hurry 1s ease-in-out infinite' : undefined,
       }}
     >
@@ -323,7 +347,9 @@ function Clock({ left }: { left: number }) {
 }
 
 function TimeTrack({ share, hue, hurry }: { share: number; hue: number; hurry: boolean }) {
-  const fill = hurry ? RED_HUE : hue;
+  // The last seconds stay red in every preset.
+  const skin = useSkin();
+  const fill = hurry ? painter(null, RED_HUE) : painter(skin, hue);
   return (
     <div
       style={{
@@ -339,7 +365,7 @@ function TimeTrack({ share, hue, hurry }: { share: number; hue: number; hurry: b
           height: '100%',
           transformOrigin: 'left',
           transform: `scaleX(${share})`,
-          background: `linear-gradient(90deg, ${hsl(fill, 90, 48)}, ${hsl(fill, 100, 66)})`,
+          background: `linear-gradient(90deg, ${fill(90, 48)}, ${fill(100, 66)})`,
           transition: 'transform .25s linear, background .4s',
         }}
       />
@@ -370,14 +396,15 @@ function Row({
   pulse: number;
   number: (n: number) => string;
 }) {
+  const skin = useSkin();
   const share = total > 0 ? count / total : 0;
   const won = final && lead;
   const dim = final && !lead && total > 0;
-  const fillHue = won ? GOLD_HUE : hue;
+  const fill = won ? painter(skin, GOLD_HUE, 'win') : painter(skin, hue);
   const style: CSSProperties = {
     position: 'relative',
     height: 46,
-    borderRadius: 10,
+    borderRadius: skin ? 10 * skin.radius : 10,
     overflow: 'hidden',
     display: 'flex',
     alignItems: 'center',
@@ -399,7 +426,7 @@ function Row({
             inset: 0,
             transformOrigin: 'left',
             transform: `scaleX(${share})`,
-            background: `linear-gradient(90deg, ${hsl(fillHue, 85, 42, lead ? 0.95 : 0.6)}, ${hsl(fillHue, 90, 56, lead ? 0.95 : 0.6)})`,
+            background: `linear-gradient(90deg, ${fill(85, 42, lead ? 0.95 : 0.6)}, ${fill(90, 56, lead ? 0.95 : 0.6)})`,
             transition: 'transform .6s cubic-bezier(.2,.9,.3,1), background .5s',
           }}
         />
@@ -422,13 +449,13 @@ function Row({
           flexShrink: 0,
           width: 30,
           height: 30,
-          borderRadius: 8,
+          borderRadius: skin ? 8 * skin.radius : 8,
           display: 'grid',
           placeItems: 'center',
           fontSize: 18,
           fontWeight: 800,
           color: '#0b0b10',
-          background: hsl(fillHue, 95, won ? 60 : 72),
+          background: fill(95, won ? 60 : 72),
           boxShadow: 'inset 0 -2px 0 rgba(0,0,0,.25)',
         }}
       >
@@ -487,6 +514,7 @@ function PlatformCount({ platform, count }: { platform: SubathonPlatform; count:
 }
 
 function CrownIcon({ size }: { size: number }) {
+  const gold = painter(useSkin(), GOLD_HUE, 'win');
   return (
     <svg
       viewBox="0 0 24 24"
@@ -497,8 +525,8 @@ function CrownIcon({ size }: { size: number }) {
     >
       <path
         d="M3 8.5 7.5 12 12 5l4.5 7L21 8.5 19 18H5Z"
-        fill={hsl(GOLD_HUE, 95, 60)}
-        stroke={hsl(GOLD_HUE, 70, 22)}
+        fill={gold(95, 60)}
+        stroke={gold(70, 22)}
         strokeWidth="1.5"
         strokeLinejoin="round"
       />

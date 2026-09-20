@@ -35,6 +35,7 @@ describe('sitemap.xml', () => {
       ...WIDGETS.map((widget) => widget.setupPath),
       GUIDES_PATH,
       ...GUIDES.map((guide) => guide.path),
+      '/presets',
       '/faq',
       '/changelog',
     ];

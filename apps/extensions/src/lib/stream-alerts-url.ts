@@ -1,4 +1,6 @@
+import { isClassic } from '#/features/presets/registry';
 import { isValidLocale, LANG_PARAM, type Locale } from '#/lib/i18n/locales';
+import { CLASSIC_PRESET, readPreset, writePreset } from '#/lib/preset-url';
 import {
   type ChannelPlatforms,
   channelWidgetUrl,
@@ -22,6 +24,8 @@ export type AlertKind = (typeof ALERT_KINDS)[number];
 
 export interface StreamAlertsSettings {
   platforms: ChannelPlatforms;
+  /** Preset id; any preset but classic draws its own alert card, colors and fonts. */
+  preset: string;
   theme: AlertTheme;
   color: AlertColor;
   /** Which alerts show. */
@@ -47,6 +51,7 @@ export type AlertSettings = Omit<StreamAlertsSettings, 'platforms'>;
 
 export const DEFAULT_STREAM_ALERTS_SETTINGS: StreamAlertsSettings = {
   platforms: 'both',
+  preset: CLASSIC_PRESET,
   theme: 'neon',
   color: 'platform',
   enabled: { sub: true, gift: true, bits: true, raid: true },
@@ -95,8 +100,11 @@ function buildParams(
   const params = new URLSearchParams();
   const defaults = DEFAULT_STREAM_ALERTS_SETTINGS;
   setChannels(params, settings.platforms, twitchChannel, kickChannel);
-  if (settings.theme !== defaults.theme) params.set('theme', settings.theme);
-  if (settings.color !== defaults.color) params.set('color', settings.color);
+  writePreset(params, settings.preset);
+  if (isClassic(settings.preset)) {
+    if (settings.theme !== defaults.theme) params.set('theme', settings.theme);
+    if (settings.color !== defaults.color) params.set('color', settings.color);
+  }
   for (const kind of ALERT_KINDS) {
     if (!settings.enabled[kind]) params.set(kind, '0');
     const heading = settings.headings[kind].trim();
@@ -148,6 +156,7 @@ export function readStreamAlertsSettings(params: URLSearchParams): AlertSettings
   const perKind = <T>(read: (kind: AlertKind) => T) =>
     Object.fromEntries(ALERT_KINDS.map((kind) => [kind, read(kind)])) as Record<AlertKind, T>;
   return {
+    preset: readPreset(params),
     theme: ALERT_THEMES.includes(theme) ? theme : defaults.theme,
     color: ALERT_COLORS.includes(color) ? color : defaults.color,
     enabled: perKind((kind) => readFlag(params.get(kind), true)),

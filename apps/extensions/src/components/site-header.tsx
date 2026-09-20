@@ -173,12 +173,27 @@ function useCurrent(path: SitePath) {
   return pathname === path || pathname.startsWith(`${path}/`) ? ('page' as const) : undefined;
 }
 
-function ContentLinks({ className }: { className: string }) {
+/** `presetsClassName` lets the full header drop Presets where its links would overflow. */
+function ContentLinks({
+  className,
+  presetsClassName = className,
+}: {
+  className: string;
+  presetsClassName?: string;
+}) {
   const { t } = useI18n();
+  const presetsCurrent = useCurrent(CONTENT_PATHS.presets);
   const guidesCurrent = useCurrent(CONTENT_PATHS.guides);
   const faqCurrent = useCurrent(CONTENT_PATHS.faq);
   return (
     <>
+      <LocaleLink
+        to={CONTENT_PATHS.presets}
+        aria-current={presetsCurrent}
+        className={presetsClassName}
+      >
+        {t('common.nav.presets')}
+      </LocaleLink>
       <LocaleLink to={CONTENT_PATHS.guides} aria-current={guidesCurrent} className={className}>
         {t('common.nav.guides')}
       </LocaleLink>
@@ -272,7 +287,11 @@ function FullHeader() {
           className="ml-4 flex items-center gap-0.5 max-md:hidden"
         >
           <WidgetsMenu />
-          <ContentLinks className={NAV_LINK_CLASS} />
+          {/* Below 1024px a fifth link pushes the language and theme buttons off the header. */}
+          <ContentLinks
+            className={NAV_LINK_CLASS}
+            presetsClassName={`${NAV_LINK_CLASS} max-lg:hidden`}
+          />
         </nav>
         <div className="ml-auto flex items-center gap-1.5">
           <SiteControls />

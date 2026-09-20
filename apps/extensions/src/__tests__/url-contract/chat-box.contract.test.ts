@@ -19,8 +19,9 @@ interface Input {
 
 const fixture = asFixture<Input, Settings>(json);
 // Highlights went opt-in before they shipped: none on is now the default, so the frozen logic's
-// "all on" default and its highlights=none are the one intended difference.
-const defaults: Settings = { ...fixture.defaults, highlights: [] };
+// "all on" default and its highlights=none are the one intended difference. Presets came later
+// and write nothing for the classic look, which every frozen URL has.
+const defaults: Settings = { ...fixture.defaults, highlights: [], preset: 'classic' };
 const expectedUrlOf = (c: FixtureCase<Input>) => c.expectedUrl.replace('&highlights=none', '');
 const settingsOf = (input: Input): Settings => ({ ...defaults, ...input.settings });
 

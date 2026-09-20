@@ -12,6 +12,7 @@ import {
 const ORIGIN = 'https://extensions.senchabot.com';
 const CUSTOM: SubathonSettings = {
   platforms: 'both',
+  preset: 'classic',
   style: 'ring',
   color: 'purple',
   title: 'SUB-A-THON 2026',
