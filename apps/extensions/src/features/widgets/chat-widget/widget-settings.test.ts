@@ -45,6 +45,7 @@ describe('parseWidgetUrl', () => {
       preset: 'classic',
       platformDisplay: 'name',
       font: 'mono',
+      userFont: 'serif',
       fontSize: '24',
       layout: 'card',
       orientation: 'horizontal',
@@ -70,6 +71,42 @@ describe('parseWidgetUrl', () => {
       twitchChannel: 'foo',
       kickChannel: 'bar',
     });
+  });
+
+  it('leaves the username font out while it matches the message font', () => {
+    const classic = { ...DEFAULT_SETTINGS, font: 'mono' as const, userFont: 'mono' as const };
+    expect(widgetUrl(classic, 'foo', '')).toBe(
+      `${ORIGIN}/widgets/chat-widget?twitch=foo&font=mono`,
+    );
+    expect(widgetUrl({ ...classic, userFont: 'serif' }, 'foo', '')).toBe(
+      `${ORIGIN}/widgets/chat-widget?twitch=foo&font=mono&userFont=serif`,
+    );
+  });
+
+  it('reads a URL from before the split as the username following the message font', () => {
+    const parsed = parseWidgetUrl(`${ORIGIN}/widgets/chat-widget?twitch=foo&font=mono`)?.settings;
+    expect(parsed).toMatchObject({ font: 'mono', userFont: 'mono' });
+  });
+
+  it("starts a preset URL on the preset's own pair and writes only what differs", () => {
+    const url = `${ORIGIN}/widgets/chat-widget?twitch=foo&preset=rift`;
+    expect(parseWidgetUrl(url)?.settings).toMatchObject({
+      font: 'presetMessage',
+      userFont: 'presetName',
+    });
+    expect(roundTrip(url)).toBe(url);
+    // Both boxes on the preset's name font, for a streamer who wants one font everywhere.
+    const oneFont = `${url}&font=presetName`;
+    expect(parseWidgetUrl(oneFont)?.settings).toMatchObject({
+      font: 'presetName',
+      userFont: 'presetName',
+    });
+    expect(roundTrip(oneFont)).toBe(oneFont);
+  });
+
+  it('ignores a preset font named by a classic URL', () => {
+    const parsed = parseWidgetUrl(`${ORIGIN}/widgets/chat-widget?twitch=foo&font=presetName`);
+    expect(parsed?.settings).toMatchObject({ font: 'inter', userFont: 'inter' });
   });
 
   it('picks the single platform when only one channel is set', () => {

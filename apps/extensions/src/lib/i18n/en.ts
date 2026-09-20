@@ -261,7 +261,8 @@ export const en = {
     badgesTip: 'Shows broadcaster, moderator, VIP and subscriber badges next to usernames.',
     animationTip:
       'Sets how new messages enter the screen. Animations get shorter automatically as chat speeds up.',
-    font: 'Font',
+    usernameFont: 'Username Font',
+    messageFont: 'Message Font',
     fontSystem: 'System Default',
     messageLayout: 'Message Layout',
     layoutInline: 'Inline — Username: message',
@@ -2226,6 +2227,8 @@ export const en = {
     lead: "New features and bug fixes in Senchabot Extensions, newest first. The list is put together from the project's commit history on [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      chatFonts:
+        'Chat Box now has a font box for usernames and another for messages, and both stay open under a preset: keep the two fonts the preset came with, put its heading font on the messages too, or mix either with Inter, Roboto, Nunito, JetBrains Mono, Source Serif 4 or your system font. Bold usernames and bold messages also work now under presets whose font comes in a single weight, like Realm, Dynasty and Blocks.',
       sproutSaved:
         'Sub Sprout now keeps its plant through an OBS reload and carries it over to the next stream, instead of starting from the first stage every time. Mods can start it over with !grow reset.',
       countdown:
