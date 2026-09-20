@@ -3,7 +3,6 @@ import { useEffect, useId, useRef, useState } from 'react';
 import { ExternalLink } from '#/components/external-link';
 import { CloseIcon, ExternalIcon, GithubIcon, MenuIcon } from '#/components/icons';
 import { LocaleLink } from '#/components/locale-link';
-import { PlatformChips } from '#/components/platform-chips';
 import { ICON_BUTTON_CLASS, SiteControls } from '#/components/site-controls';
 import { DROPDOWN_ITEM_CLASS, DropdownMenu } from '#/components/ui/dropdown-menu';
 import { useI18n } from '#/lib/i18n';
@@ -102,6 +101,7 @@ function WidgetIconTile({ widget, size = 'md' }: { widget: WidgetEntry; size?: '
   );
 }
 
+/** No platform chips here: eleven repeats of the same pair ran the menu off the screen. */
 function WidgetMenuLink({ widget }: { widget: WidgetEntry }) {
   const { t } = useI18n();
   return (
@@ -117,7 +117,6 @@ function WidgetMenuLink({ widget }: { widget: WidgetEntry }) {
         <span className="mt-0.5 block text-xs leading-snug text-zinc-500 dark:text-zinc-400">
           {t(widget.taglineKey)}
         </span>
-        <PlatformChips platforms={widget.platforms} className="mt-1.5" />
       </span>
     </LocaleLink>
   );
@@ -161,7 +160,7 @@ function WidgetsMenu() {
       triggerClassName={NAV_LINK_CLASS}
       anchor="container"
       positionClassName="left-4"
-      panelClassName="w-[min(44rem,calc(100%-2rem))] p-3"
+      panelClassName="max-h-[calc(100dvh-5rem)] w-[min(44rem,calc(100%-2rem))] overflow-y-auto overscroll-contain p-3"
     >
       <WidgetGroups sideBySide />
     </DropdownMenu>
