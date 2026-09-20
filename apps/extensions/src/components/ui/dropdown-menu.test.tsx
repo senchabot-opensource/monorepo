@@ -35,6 +35,14 @@ const layOut = () => {
 const movePointer = (clientX: number, clientY: number) =>
   fireEvent.pointerMove(document, { pointerType: 'mouse', clientX, clientY });
 
+/** The tab going to the background: jsdom keeps visibilityState on the prototype. */
+const hide = () => {
+  const visibility = Object.getOwnPropertyDescriptor(Document.prototype, 'visibilityState');
+  Object.defineProperty(document, 'visibilityState', { value: 'hidden', configurable: true });
+  fireEvent(document, new Event('visibilitychange'));
+  if (visibility) Object.defineProperty(document, 'visibilityState', visibility);
+};
+
 describe('DropdownMenu', () => {
   it('keeps a hidden panel of links mounted, wired to the trigger', () => {
     render(<Menu />);
@@ -120,6 +128,58 @@ describe('DropdownMenu', () => {
     expect(expanded()).toBe('true');
     fireEvent.click(trigger(), { detail: 0 });
     expect(expanded()).toBe('false');
+  });
+
+  it('closes when the pointer leaves the page, which reports no move once it is gone', async () => {
+    const user = userEvent.setup();
+    render(<Menu />);
+    await user.hover(trigger());
+    expect(expanded()).toBe('true');
+
+    // Straight up from the trigger into the browser's own chrome: every move until then was
+    // still over the trigger, so only leaving the page says the menu was left.
+    fireEvent.pointerLeave(document.documentElement);
+    expect(expanded()).toBe('false');
+  });
+
+  it('closes when the tab goes to the background, so it is gone on the way back', async () => {
+    const user = userEvent.setup();
+    render(<Menu />);
+    await user.hover(trigger());
+    expect(expanded()).toBe('true');
+
+    hide();
+    expect(expanded()).toBe('false');
+  });
+
+  it('closes when another window takes the front', async () => {
+    const user = userEvent.setup();
+    render(<Menu />);
+    await user.hover(trigger());
+    fireEvent.blur(window);
+    expect(expanded()).toBe('false');
+  });
+
+  it('leaves a tapped menu alone when the page goes away, having no hover to leave with', () => {
+    render(<Menu />);
+    fireEvent.pointerDown(trigger(), { pointerType: 'touch' });
+    fireEvent.click(trigger(), { detail: 1 });
+
+    hide();
+    fireEvent.pointerLeave(document.documentElement);
+    fireEvent.blur(window);
+    expect(expanded()).toBe('true');
+  });
+
+  it('keeps a panel the keyboard has stepped into open, so focus is never stranded', async () => {
+    const user = userEvent.setup();
+    render(<Menu />);
+    await user.hover(trigger());
+    link('Emote Wall').focus();
+
+    hide();
+    fireEvent.pointerLeave(document.documentElement);
+    expect(expanded()).toBe('true');
   });
 
   it('closes a clicked panel too once the pointer leaves it', async () => {
