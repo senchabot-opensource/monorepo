@@ -130,6 +130,6 @@ export const getPlant = (id: PlantId | string | undefined): PlantDefinition => {
   return PLANT_REGISTRY.classic;
 };
 
-export const isValidPlantId = (id: string | undefined): id is PlantId => {
-  return !!id && (PLANT_IDS as string[]).includes(id);
+export const isValidPlantId = (id: unknown): id is PlantId => {
+  return typeof id === "string" && (PLANT_IDS as string[]).includes(id);
 };

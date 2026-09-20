@@ -561,13 +561,17 @@ export const en = {
       'Add a Browser Source in your streaming software (OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio, etc.).',
     guideStep2: 'Paste your copied subscriber goal plant URL.',
     guideStep3: 'Set width to 800 and height to 600.',
-    guideStep4: 'Broadcasters & mods can type !grow in chat to trigger growth manually.',
+    guideStep4:
+      'Broadcasters & mods can type !grow in chat to trigger growth manually, or !grow reset to start the plant over.',
     faq1Q: 'Do I need to sign in to use the subscriber goal plant?',
     faq1A:
       'No sign-up or OAuth login is needed. Sub Sprout connects anonymously via public chat event listeners.',
     faq2Q: 'What happens when the subscriber goal plant reaches full growth?',
     faq2A:
       'Once the plant is fully grown, the next sub starts it over based on your Plant Changing setting: the same plant, the next variety, or a random one.',
+    faq3Q: 'Does the plant start over when the browser source reloads?',
+    faq3A:
+      'No. The plant is saved inside OBS, so it keeps the stage it reached through a reload, a scene change and the next stream. To start it over, have a mod type !grow reset in chat.',
   },
   subathon: {
     breadcrumb: 'Subathon Timer Setup',
@@ -2222,6 +2226,8 @@ export const en = {
     lead: "New features and bug fixes in Senchabot Extensions, newest first. The list is put together from the project's commit history on [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      sproutSaved:
+        'Sub Sprout now keeps its plant through an OBS reload and carries it over to the next stream, instead of starting from the first stage every time. Mods can start it over with !grow reset.',
       countdown:
         'New Stream Countdown: a clock for your starting soon, back soon and stream ending scenes. Set a length or the time of day you go live, pick a preset, and let your mods push it back from chat with !countdown.',
       deviceTheme:

@@ -43,7 +43,8 @@ A visual SVG plant widget and subscriber goal overlay that grows in stages whene
 - Listens to Twitch subs/resubs/gift subs via tmi.js and Kick's Pusher WebSocket — supports both platforms simultaneously in a single browser source.
 - 10 plant varieties (`classic`, `rose`, `sunflower`, `cactus`, `tulip`, `pine`, `lotus`, `lily`, `palm`, `vine`), each with multiple growth stages.
 - When the plant reaches full growth, the next sub resets it according to the plant changing mode (`fixed`, `cycle`, `random`).
-- Mods and the broadcaster can type `!grow` in chat to manually advance the plant.
+- Mods and the broadcaster can type `!grow` in chat to manually advance the plant, or `!grow reset` to start it over.
+- The plant is saved in the browser source, so it survives an OBS reload and carries over to the next stream.
 
 **Setup:**
 1. Go to `/setup/sub-growing-plant`.

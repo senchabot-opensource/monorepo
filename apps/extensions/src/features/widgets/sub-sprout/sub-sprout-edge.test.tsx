@@ -212,6 +212,68 @@ describe('SubSproutWidget growth', () => {
   });
 });
 
+describe('SubSproutWidget saved growth', () => {
+  const kickSays = (text: string) =>
+    pusher('chatrooms.42.v2', 'App\\Events\\ChatMessageEvent', {
+      content: text,
+      type: 'message',
+      sender: { username: 'KickMod', identity: { badges: [{ type: 'moderator' }] } },
+    });
+
+  it('picks the plant up where the last browser source left it', async () => {
+    const first = await renderTwitch();
+    irc(SUB);
+    irc(SUB);
+    grow(2);
+    expect(first.container.textContent).toContain('2/10');
+    first.unmount();
+
+    const again = await renderTwitch();
+    expect(again.container.textContent).toContain('2/10');
+  });
+
+  it('starts fresh when the URL asks for another plant', async () => {
+    const first = await renderTwitch();
+    irc(SUB);
+    grow(1);
+    expect(first.container.textContent).toContain('1/10');
+    first.unmount();
+
+    const again = await renderTwitch({ variety: 'pine' });
+    expect(again.container.textContent).toContain('0/5');
+  });
+
+  it("starts the plant over on a mod's !grow reset and forgets the saved growth", async () => {
+    const view = await renderTwitch();
+    irc(SUB);
+    irc(SUB);
+    grow(2);
+    irc(SAYS('mod', 'badges=moderator/1;mod=1', '!grow reset'));
+    grow(1);
+    expect(view.container.textContent).toContain('0/10');
+    view.unmount();
+
+    const again = await renderTwitch();
+    expect(again.container.textContent).toContain('0/10');
+  });
+
+  it("reads a Kick moderator's !grow reset too", async () => {
+    const { container } = await renderKick();
+    kickSays('!grow');
+    grow(1);
+    expect(container.textContent).toContain('1/10');
+    kickSays('!grow reset');
+    grow(1);
+    expect(container.textContent).toContain('0/10');
+  });
+
+  it('saves nothing a preview grew', async () => {
+    render(<SubSproutWidget twitchChannel="streamer" variety="rose" potLabel simulate />);
+    act(() => vi.advanceTimersByTime(20_000));
+    expect(window.localStorage.length).toBe(0);
+  });
+});
+
 describe('SubSproutWidget cleanup', () => {
   it('closes the Kick socket and stops growing once it unmounts', async () => {
     const view = await renderKick();
