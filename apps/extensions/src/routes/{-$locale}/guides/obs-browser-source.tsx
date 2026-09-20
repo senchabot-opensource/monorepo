@@ -24,6 +24,7 @@ const SIZE_NOTES: Record<WidgetId, TranslationKey> = {
   goal: 'guides.obs.size.notes.goal',
   frames: 'guides.obs.size.notes.frames',
   subathon: 'guides.obs.size.notes.subathon',
+  countdown: 'guides.obs.size.notes.countdown',
   poll: 'guides.obs.size.notes.poll',
   'stream-alerts': 'guides.obs.size.notes.streamAlerts',
   raffle: 'guides.obs.size.notes.raffle',

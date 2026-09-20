@@ -98,6 +98,10 @@ const INDEX_TOPICS: Record<GuideId, Record<Locale, string>> = {
     en: 'framing your camera and chat',
     tr: 'kameraya ve sohbete çerçeve eklemek',
   },
+  'stream-countdown': {
+    en: 'counting down to your stream',
+    tr: 'yayın için geri sayım koymak',
+  },
   'chat-giveaway': { en: 'running a chat raffle', tr: 'sohbet çekilişi yapmak' },
   'obs-scene-switcher': {
     en: 'switching scenes from chat',
