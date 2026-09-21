@@ -583,8 +583,9 @@ export const en = {
       'A subathon timer for Twitch and Kick. It counts down, and every sub, gifted sub, Bits cheer or Kicks gift adds time. Show it as a game-style health bar that drains toward zero, a big clock or a ring, and you decide how much time each one adds.',
     style: 'Style',
     styleTip:
-      'Health Bar drains from 100% toward zero like a game character. Clock shows big numbers. Ring shows a circle that empties.',
+      'Health Bar drains from 100% toward zero like a game character. Thin Bar embeds the title and time inside a slimmer bar. Clock shows big numbers. Ring shows a circle that empties.',
     styleBar: 'Health Bar',
+    styleThin: 'Thin Bar',
     styleClock: 'Clock',
     styleRing: 'Ring',
     color: 'Color',
@@ -713,6 +714,11 @@ export const en = {
     targetTip: 'The bar is full at this count. The count keeps going past it.',
     countsHint:
       'Every sub and resub adds 1, Prime and every tier alike. A gift adds 1 for each sub in it.',
+    style: 'Style',
+    styleTip:
+      'Bar puts the goal title and count above the bar. Thin Bar embeds the title and count directly inside a slimmer bar.',
+    styleBar: 'Bar',
+    styleThin: 'Thin Bar',
     color: 'Color',
     titleLabel: 'Title',
     titleTip: 'Shown above the bar. Leave it empty to show no title.',
@@ -2234,6 +2240,8 @@ export const en = {
     lead: "New features and bug fixes in Senchabot Extensions, newest first. The list is put together from the project's commit history on [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      thinBars:
+        'Subathon Timer and Sub Goal now have a Thin Bar style that embeds the title and time or count directly inside a slimmer progress bar.',
       subathonDynamicRates:
         'Subathon Timer now has adjustable rates: set a threshold to drop how much time a sub adds when the clock is already high.',
       scrollHint:

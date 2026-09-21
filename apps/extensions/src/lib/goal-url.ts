@@ -10,6 +10,9 @@ import {
   setPreview,
 } from './url-params';
 
+export const GOAL_STYLES = ['bar', 'thin'] as const;
+export type GoalStyle = (typeof GOAL_STYLES)[number];
+
 export const GOAL_COLORS = ['purple', 'green', 'red', 'gold', 'cyan', 'pink'] as const;
 export type GoalColor = (typeof GOAL_COLORS)[number];
 
@@ -17,6 +20,7 @@ export interface GoalSettings {
   platforms: ChannelPlatforms;
   /** Preset id; any preset but classic brings its own colors and fonts. */
   preset: string;
+  style: GoalStyle;
   color: GoalColor;
   /** Shown above the bar; empty hides it. */
   title: string;
@@ -31,6 +35,7 @@ export interface GoalSettings {
 export const DEFAULT_GOAL_SETTINGS: GoalSettings = {
   platforms: 'both',
   preset: CLASSIC_PRESET,
+  style: 'bar',
   color: 'purple',
   title: 'SUB GOAL',
   start: 0,
@@ -50,6 +55,8 @@ function buildParams(settings: GoalSettings, twitchChannel: string, kickChannel:
   const defaults = DEFAULT_GOAL_SETTINGS;
   setChannels(params, settings.platforms, twitchChannel, kickChannel);
   writePreset(params, settings.preset);
+  if (settings.style && settings.style !== defaults.style)
+    params.set('style', settings.style);
   if (isClassic(settings.preset) && settings.color !== defaults.color)
     params.set('color', settings.color);
   if (settings.title !== defaults.title) params.set('title', settings.title);
@@ -83,10 +90,12 @@ export function buildGoalPreviewUrl(
 /** Settings from URL params, each falling back to its default when missing or invalid. */
 export function readGoalSettings(params: URLSearchParams): Omit<GoalSettings, 'platforms'> {
   const defaults = DEFAULT_GOAL_SETTINGS;
+  const style = params.get('style') as GoalStyle;
   const color = params.get('color') as GoalColor;
   const title = params.get('title');
   return {
     preset: readPreset(params),
+    style: GOAL_STYLES.includes(style) ? style : defaults.style,
     color: GOAL_COLORS.includes(color) ? color : defaults.color,
     title: title === null ? defaults.title : title.slice(0, TITLE_MAX_LENGTH),
     start: readWhole(params.get('start'), defaults.start, { max: MAX_GOAL_COUNT }),

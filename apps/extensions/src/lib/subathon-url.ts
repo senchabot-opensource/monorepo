@@ -11,7 +11,7 @@ import {
 } from '#/lib/url-params';
 import { CLASSIC_PRESET, readPreset, writePreset } from './preset-url';
 
-export const SUBATHON_STYLES = ['bar', 'clock', 'ring'] as const;
+export const SUBATHON_STYLES = ['bar', 'thin', 'clock', 'ring'] as const;
 export type SubathonStyle = (typeof SUBATHON_STYLES)[number];
 
 /** `hp` shifts from green to red as time runs out; the rest are fixed accents. */

@@ -14,6 +14,7 @@ const ORIGIN = 'https://extensions.senchabot.com';
 const CUSTOM: GoalSettings = {
   platforms: 'both',
   preset: 'classic',
+  style: 'thin',
   color: 'gold',
   title: 'ROAD TO 500',
   start: 431,
@@ -39,6 +40,7 @@ describe('buildGoalUrl', () => {
     const url = new URL(buildGoalUrl(ORIGIN, CUSTOM, 'streamer', ''));
     expect(Object.fromEntries(url.searchParams)).toEqual({
       twitch: 'streamer',
+      style: 'thin',
       color: 'gold',
       title: 'ROAD TO 500',
       start: '431',
