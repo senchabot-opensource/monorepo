@@ -1,7 +1,9 @@
+import { COUNTDOWN_SCENES, type CountdownScene } from '#/lib/countdown-url';
 import {
   type ClockOptions,
   createState,
   parseCommand,
+  parseDuration,
   type SubathonCommand,
   type SubathonState,
 } from '../subathon/subathon-timer';
@@ -12,12 +14,26 @@ import {
  * becomes active" in OBS gives you. Mods put time back with !countdown.
  */
 export type CountdownState = SubathonState;
-export type CountdownCommand = SubathonCommand;
+export type CountdownCommand =
+  | SubathonCommand
+  | { action: 'scene'; scene: CountdownScene; ms: number };
 
 export const COMMAND = '!countdown';
 
-export const parseCountdownCommand = (message: string): CountdownCommand | null =>
-  parseCommand(message, COMMAND);
+export const parseCountdownCommand = (message: string): CountdownCommand | null => {
+  const [typed, word = '', ...rest] = message.trim().split(/\s+/);
+  if (typed?.toLowerCase() !== COMMAND) return null;
+  const lowerWord = word.toLowerCase();
+  
+  if (COUNTDOWN_SCENES.includes(lowerWord as CountdownScene)) {
+    const rawDuration = rest.join('');
+    const ms = rawDuration ? parseDuration(rawDuration) : 600_000;
+    if (ms === null) return null;
+    return { action: 'scene', scene: lowerWord as CountdownScene, ms };
+  }
+  
+  return parseCommand(message, COMMAND);
+};
 
 /** Epoch ms of the next "HH:MM" on this computer's clock; today's if it hasn't passed. */
 export function nextAt(at: string, now: number): number {

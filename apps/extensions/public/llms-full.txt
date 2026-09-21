@@ -296,7 +296,7 @@ A countdown for the parts of a stream where nothing is happening yet: the minute
 - Demo: https://extensions.senchabot.com/widgets/countdown?simulate=1
 - Guide: https://extensions.senchabot.com/guides/stream-countdown
 - Recommended size: 1920x1080, so the clock lands in the middle of the scene. It is drawn for whatever size the source has.
-- Chat commands for the broadcaster and mods, on both platforms: `!countdown add 5m`, `!countdown remove 2m`, `!countdown set 10m`, `!countdown pause`, `!countdown start`, `!countdown reset`. Durations are written as 5m, 90s, 1h30m, 5:00 or a bare number of minutes.
+- Chat commands for the broadcaster and mods, on both platforms: `!countdown {scene} [duration]` (defaults to 10m), `!countdown add 5m`, `!countdown remove 2m`, `!countdown set 10m`, `!countdown pause`, `!countdown start`, `!countdown reset`. Durations are written as 5m, 90s, 1h30m, 5:00 or a bare number of minutes.
 
 URL parameters (all optional):
 

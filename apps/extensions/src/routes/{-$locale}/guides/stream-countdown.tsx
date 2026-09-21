@@ -90,6 +90,7 @@ function StreamCountdownGuide() {
                   [`${COMMAND} pause`, t('guides.countdown.commands.pauseDoes')],
                   [`${COMMAND} start`, t('guides.countdown.commands.startDoes')],
                   [`${COMMAND} reset`, t('guides.countdown.commands.resetDoes')],
+                  [`${COMMAND} break 5m`, t('guides.countdown.commands.sceneDoes')],
                 ]}
               />
               <P k="guides.countdown.commands.p2" />

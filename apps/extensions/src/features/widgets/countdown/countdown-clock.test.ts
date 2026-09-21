@@ -75,4 +75,12 @@ describe('parseCountdownCommand', () => {
     expect(parseCountdownCommand('!countdown add')).toBeNull();
     expect(parseCountdownCommand('!countdown')).toBeNull();
   });
+
+  it('reads a scene name and duration to change the break scene', () => {
+    expect(parseCountdownCommand('!countdown starting 10m')).toEqual({ action: 'scene', scene: 'starting', ms: 600_000 });
+    expect(parseCountdownCommand('!countdown BREAK 5')).toEqual({ action: 'scene', scene: 'break', ms: 300_000 });
+    expect(parseCountdownCommand('!countdown ending 45s')).toEqual({ action: 'scene', scene: 'ending', ms: 45_000 });
+    expect(parseCountdownCommand('!countdown break')).toEqual({ action: 'scene', scene: 'break', ms: 600_000 });
+    expect(parseCountdownCommand('!countdown break foo')).toBeNull();
+  });
 });

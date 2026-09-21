@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { usePreviewReceiver } from '#/hooks/use-preview-channel';
-import type { CountdownSettings } from '#/lib/countdown-url';
+import type { CountdownScene, CountdownSettings } from '#/lib/countdown-url';
 import {
   applyCommand,
   type ClockOptions,
@@ -31,7 +31,7 @@ const SIM_DRAIN_MS = 20_000;
 /** How long the preview holds the end before counting down again. */
 const SIM_RESTART_MS = 3500;
 
-type CountdownValues = Pick<CountdownSettings, 'time' | 'at'>;
+type CountdownValues = Pick<CountdownSettings, 'time' | 'at' | 'scene'>;
 
 interface UseCountdownOptions {
   twitch?: string;
@@ -50,6 +50,7 @@ export interface Countdown {
   progress: number;
   paused: boolean;
   ended: boolean;
+  scene: CountdownScene;
 }
 
 export function useCountdown({
@@ -75,6 +76,7 @@ export function useCountdown({
   const [state, setState] = useState<CountdownState>(() => startCountdown(options, clock()));
   const stateRef = useRef(state);
   const [now, setNow] = useState(clock);
+  const [scene, setScene] = useState<CountdownScene>(values.scene);
 
   const commit = useCallback(
     (next: CountdownState) => {
@@ -87,17 +89,25 @@ export function useCountdown({
 
   // A changed length or target starts the countdown over, so the preview follows the settings
   // panel. In OBS the URL doesn't change while the source runs.
-  const { time, at } = values;
+  const { time, at, scene: propScene } = values;
   useEffect(() => {
     const next = countdownOptions(time, at, Date.now());
     setOptions(next);
     commit(startCountdown(next, clock()));
-  }, [time, at, clock, commit]);
+    setScene(propScene);
+  }, [time, at, propScene, clock, commit]);
 
   const runCommand = useCallback(
     (text: string) => {
       const command = parseCountdownCommand(text);
       if (!command) return;
+      if (command.action === 'scene') {
+        setScene(command.scene);
+        const next = countdownOptions(command.ms / 1000, '', Date.now());
+        setOptions(next);
+        commit(startCountdown(next, clock()));
+        return;
+      }
       // Reset re-reads the time of day, so !countdown reset the next day aims at the next one.
       const options = at ? countdownOptions(time, at, Date.now()) : optionsRef.current;
       commit(applyCommand(stateRef.current, command, clock(), options));
@@ -146,6 +156,7 @@ export function useCountdown({
     progress: healthOf(state, now),
     paused: state.endsAt === null,
     ended,
+    scene,
   };
 }
 

@@ -146,7 +146,7 @@ A countdown for the parts of a stream where nothing is happening yet: the minute
 - The clock starts when the browser source loads, and nothing is saved. In OBS, tick "Refresh browser when scene becomes active" and the countdown starts over every time you switch to that scene.
 - At zero it shows a message, holds 00:00, or hides itself (`end`).
 - The look comes from the preset, with or without a panel (`look`), and an optional bar that empties with the time.
-- No channel is needed. With one, the broadcaster and mods run `!countdown add 5m`, `remove 2m`, `set 10m`, `pause`, `start` and `reset` from Twitch or Kick chat. It shares the Subathon Timer's clock and duration parsing.
+- No channel is needed. With one, the broadcaster and mods run `!countdown {scene} [duration]` (defaults to 10m), `add 5m`, `remove 2m`, `set 10m`, `pause`, `start` and `reset` from Twitch or Kick chat. It shares the Subathon Timer's clock and duration parsing.
 
 ```
 https://extensions.senchabot.com/widgets/countdown?scene=starting&time=600&preset=dynasty
