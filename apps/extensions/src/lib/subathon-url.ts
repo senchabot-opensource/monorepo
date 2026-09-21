@@ -41,7 +41,20 @@ export interface SubathonTimeValues {
   shift: number;
 }
 
-const TIME_KEYS = ['tsub', 'tgift', 'bits', 'ksub', 'kgift', 'kicks', 'tsub2', 'tgift2', 'bits2', 'ksub2', 'kgift2', 'kicks2'] as const;
+const TIME_KEYS = [
+  'tsub',
+  'tgift',
+  'bits',
+  'ksub',
+  'kgift',
+  'kicks',
+  'tsub2',
+  'tgift2',
+  'bits2',
+  'ksub2',
+  'kgift2',
+  'kicks2',
+] as const;
 export type SubathonTimeKey = keyof SubathonTimeValues;
 
 export interface SubathonSettings extends SubathonTimeValues {
@@ -96,6 +109,23 @@ export const DEFAULT_SUBATHON_SETTINGS: SubathonSettings = {
   rates: false,
 };
 
+/**
+ * What "Adjust rates by time" starts with: from 5 hours left, a sub adds less. The URL defaults
+ * stay at a minute, so overlays made before this keep their rates.
+ */
+export const ADJUSTED_RATES: Pick<
+  SubathonTimeValues,
+  'shift' | 'tsub2' | 'tgift2' | 'bits2' | 'ksub2' | 'kgift2' | 'kicks2'
+> = {
+  shift: 5 * 3600,
+  tsub2: 5 * 60,
+  tgift2: 10 * 60,
+  bits2: 20 * 60,
+  ksub2: 10 * 60,
+  kgift2: 10 * 60,
+  kicks2: 10 * 60,
+};
+
 /** Upper bound for every time setting: 30 days. */
 export const MAX_SECONDS = 30 * 24 * 3600;
 // A timer that starts at zero would be over before it began.
@@ -111,7 +141,10 @@ const NUMBER_PARAMS: Record<NumberKey, string> = {
   start: 'time',
   cap: 'cap',
   shift: 'shift',
-  ...(Object.fromEntries(TIME_KEYS.map((key) => [key, key])) as Record<Exclude<SubathonTimeKey, 'shift'>, string>),
+  ...(Object.fromEntries(TIME_KEYS.map((key) => [key, key])) as Record<
+    Exclude<SubathonTimeKey, 'shift'>,
+    string
+  >),
 };
 const FLAG_PARAMS: Record<FlagKey, string> = {
   tiers: 'tiers',

@@ -96,6 +96,28 @@ describe('Subathon Timer setup', () => {
     );
   }, 60_000);
 
+  it('starts Adjust rates by time at 5 hours with lower rates, and clears them when off', async () => {
+    const user = setupUser();
+    await renderRoute(PAGE);
+    await user.type(twitchField(), 'streamer');
+    const base = urlField().value;
+    await user.click(toggle(en('subathon.dynamicRates')));
+    const params = new URL(urlField().value).searchParams;
+    expect(params.get('shift')).toBe('18000');
+    expect(['tsub2', 'tgift2', 'bits2'].map((key) => params.get(key))).toEqual([
+      '300',
+      '600',
+      '1200',
+    ]);
+    expect(['ksub2', 'kgift2', 'kicks2'].map((key) => params.get(key))).toEqual([
+      '600',
+      '600',
+      '600',
+    ]);
+    await user.click(toggle(en('subathon.dynamicRates')));
+    expect(urlField().value).toBe(base);
+  });
+
   it('shows only the picked platform, without tabs', async () => {
     const user = setupUser();
     await renderRoute(PAGE);
