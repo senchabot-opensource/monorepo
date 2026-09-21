@@ -1960,6 +1960,7 @@ export const tr: typeof en = {
         pauseDoes: 'Saati olduğu yerde duraklatır',
         startDoes: 'Duraklattıktan sonra devam ettirir',
         resetDoes: 'Geri sayımı baştan başlatır',
+        sceneDoes: 'Sahneyi break, starting veya ending olarak değiştirir ve süreyi ayarlar (yazılmazsa 10m olur)',
         p2: "Komutları iki platformda da sadece sen ve modların çalıştırabilir, sohbetteki bir yanıt hiçbir zaman komut çalıştırmaz. Geri sayım herkese açık sohbetini diğer widget'lar gibi okur, giriş gerekmez.",
       },
       scenes: {
@@ -2228,6 +2229,8 @@ export const tr: typeof en = {
     lead: "Senchabot Extensions'a eklenen özellikler ve düzeltilen hatalar, en yenisi en üstte. Liste projenin [GitHub'daki](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) commit geçmişinden hazırlanıyor.",
     site: 'Site',
     entries: {
+      countdownSceneCommand:
+        '`!countdown {sahne} {süre}` sohbet komutu eklendi. Modlar artık tek bir komutla geçerli sahneyi (starting, break veya ending) değiştirebilir ve süresini ayarlayabilir.',
       socialsLaunch:
         'Yeni widget: Sosyal Medya. Sosyal medya hesaplarınızı şık bir kaydırma animasyonuyla yayın ekranınızda döndürün.',
       thinBars:

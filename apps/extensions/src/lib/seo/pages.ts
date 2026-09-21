@@ -166,7 +166,7 @@ export const PAGE_META = {
     tr: {
       title: "OBS İçin Ücretsiz Sosyal Medya Widget'ı | Senchabot",
       description:
-        'Sosyal medya hesaplarınızı (Twitter, YouTube, TikTok, vb.) Twitch ve Kick yayınınızda gösterin. Linklerinizi şık bir animasyonla sırayla döndürür.',
+        'Sosyal medya hesaplarınızı (Twitter, YouTube, TikTok, Instagram) Twitch ve Kick yayınınızda gösterin. Linklerinizi şık bir animasyonla sırayla döndürür.',
     },
   },
   notFound: {

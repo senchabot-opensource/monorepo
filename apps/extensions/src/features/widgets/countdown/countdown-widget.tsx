@@ -45,10 +45,10 @@ export function CountdownWidget({
 }: CountdownWidgetProps) {
   const { t } = useI18n();
   const scale = useFitScale(STAGE);
-  const { left, progress, ended } = useCountdown({
+  const { left, progress, ended, scene } = useCountdown({
     twitch: twitchChannel,
     kick: kickChannel,
-    values: { time: settings.time, at: settings.at },
+    values: { time: settings.time, at: settings.at, scene: settings.scene },
     simulate,
     previewId,
   });
@@ -57,8 +57,8 @@ export function CountdownWidget({
   const done = ended && settings.ending === 'text';
 
   const title = done
-    ? settings.done || t(`countdown.scenes.${settings.scene}.done`)
-    : settings.title || t(`countdown.scenes.${settings.scene}.title`);
+    ? settings.done || t(`countdown.scenes.${scene}.done`)
+    : settings.title || t(`countdown.scenes.${scene}.title`);
 
   return (
     <SkinProvider skin={skin}>
@@ -66,7 +66,7 @@ export function CountdownWidget({
         className="cd-root"
         data-testid="countdown"
         data-ended={ended}
-        data-scene={settings.scene}
+        data-scene={scene}
         data-preset={skin?.id}
       >
         <style>{CSS + skinCss('cd', skin)}</style>
@@ -74,7 +74,7 @@ export function CountdownWidget({
         {!(ended && settings.ending === 'hide') && (
           <div className="cd-stage" style={{ transform: `translate(-50%, -50%) scale(${scale})` }}>
             <Card look={settings.look} hue={hue} motion={settings.motion}>
-              <SceneIcon scene={settings.scene} hue={hue} />
+              <SceneIcon scene={scene} hue={hue} />
               {done ? (
                 <span
                   className="cd-title cd-shadow"

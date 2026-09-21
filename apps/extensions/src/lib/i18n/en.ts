@@ -1972,6 +1972,7 @@ export const en = {
         pauseDoes: 'Pauses the clock where it is',
         startDoes: 'Runs it again after a pause',
         resetDoes: 'Starts the countdown over from the top',
+        sceneDoes: 'Changes the scene to break, starting, or ending, and sets the duration (defaults to 10m if omitted)',
         p2:
           "Only you and your mods can run them, on both platforms, and a reply in chat never runs a command. The countdown reads your public chat the same way the other widgets do, with no login.",
       },
@@ -2244,6 +2245,8 @@ export const en = {
     lead: "New features and bug fixes in Senchabot Extensions, newest first. The list is put together from the project's commit history on [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      countdownSceneCommand:
+        'Added the `!countdown {scene} {duration}` chat command. Mods can now change the current scene (starting, break, or ending) and set its duration with a single command.',
       socialsLaunch:
         'New widget: Socials. Rotate your social media links with a slick slide animation.',
       thinBars:
