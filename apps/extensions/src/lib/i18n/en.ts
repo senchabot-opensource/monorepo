@@ -2249,6 +2249,8 @@ export const en = {
         'Added the `!countdown {scene} {duration}` chat command. Mods can now change the current scene (starting, break, or ending) and set its duration with a single command.',
       socialsLaunch:
         'New widget: Socials. Rotate your social media links with a slick slide animation.',
+      thinBarReadable:
+        "The Thin Bar on Subathon Timer and Sub Goal has bigger, outlined text that stays readable on any fill, a smaller glow, and room above the rates.",
       thinBars:
         'Subathon Timer and Sub Goal now have a Thin Bar style that embeds the title and time or count directly inside a slimmer progress bar.',
       subathonDynamicRates:
