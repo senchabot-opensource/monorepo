@@ -56,6 +56,7 @@ describe('parseWidgetUrl', () => {
       platformAccent: true,
       boldUsernames: true,
       boldMessages: true,
+      textShadow: 'strong',
       sevenTv: false,
       bttv: false,
       ffz: false,
@@ -71,6 +72,15 @@ describe('parseWidgetUrl', () => {
       twitchChannel: 'foo',
       kickChannel: 'bar',
     });
+  });
+
+  it('keeps the old shadow for a URL without one, and for one it does not know', () => {
+    expect(widgetUrl(DEFAULT_SETTINGS, 'foo', '')).toBe(`${ORIGIN}/widgets/chat-widget?twitch=foo`);
+    const read = (shadow: string) =>
+      parseWidgetUrl(`${ORIGIN}/widgets/chat-widget?twitch=foo&shadow=${shadow}`)?.settings
+        .textShadow;
+    expect(read('none')).toBe('none');
+    expect(read('huge')).toBe('normal');
   });
 
   it('leaves the username font out while it matches the message font', () => {

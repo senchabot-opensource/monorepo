@@ -31,6 +31,7 @@ import {
   type PlatformDisplay,
   parseWidgetUrl,
   type Settings,
+  type TextShadow,
 } from '#/features/widgets/chat-widget/widget-settings';
 import { TYPING_PAUSE_MS, useDebouncedValue } from '#/hooks/use-debounced-value';
 import { useI18n } from '#/lib/i18n';
@@ -174,6 +175,11 @@ function ChatWidgetSetup() {
     { value: 'card', label: t('chatWidget.layoutCard') },
     { value: 'compact', label: t('chatWidget.layoutCompact') },
   ];
+  const shadowOptions: SelectOption<TextShadow>[] = [
+    { value: 'none', label: t('chatWidget.shadowNone') },
+    { value: 'normal', label: t('chatWidget.shadowNormal') },
+    { value: 'strong', label: t('chatWidget.shadowStrong') },
+  ];
   const animationOptions: SelectOption<Animation>[] = [
     { value: 'slide', label: t('chatWidget.animSlide') },
     { value: 'smooth', label: t('chatWidget.animSmoothSlide') },
@@ -296,14 +302,28 @@ function ChatWidgetSetup() {
             />
           </div>
         </div>
-        <div>
-          <FieldLabel id={`${id}-layout`}>{t('chatWidget.messageLayout')}</FieldLabel>
-          <Select
-            labelledBy={`${id}-layout`}
-            value={settings.layout}
-            onChange={(value) => update('layout', value)}
-            options={layoutOptions}
-          />
+        {/* Side by side, so the shadow adds no row to the panel. */}
+        <div className="grid gap-3 sm:grid-cols-2">
+          <div>
+            <FieldLabel id={`${id}-layout`}>{t('chatWidget.messageLayout')}</FieldLabel>
+            <Select
+              labelledBy={`${id}-layout`}
+              value={settings.layout}
+              onChange={(value) => update('layout', value)}
+              options={layoutOptions}
+            />
+          </div>
+          <div>
+            <FieldLabel id={`${id}-shadow`} tip={t('chatWidget.textShadowTip')}>
+              {t('chatWidget.textShadow')}
+            </FieldLabel>
+            <Select
+              labelledBy={`${id}-shadow`}
+              value={settings.textShadow}
+              onChange={(value) => update('textShadow', value)}
+              options={shadowOptions}
+            />
+          </div>
         </div>
         <div className="grid gap-x-6 gap-y-1 sm:grid-cols-2">
           <Switch

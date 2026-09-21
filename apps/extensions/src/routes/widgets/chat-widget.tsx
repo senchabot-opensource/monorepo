@@ -29,6 +29,8 @@ import {
   FONT_CHOICES,
   type FONTS,
   parseHighlights,
+  TEXT_SHADOWS,
+  type TextShadow,
 } from '#/features/widgets/chat-widget/widget-settings';
 import { useKickChannel } from '#/hooks/use-kick-channel';
 import { clampedNumber } from '#/lib/url-params';
@@ -71,6 +73,7 @@ const searchSchema = z.object({
   itemBackground: z.coerce.boolean().optional(),
   boldUsernames: z.coerce.boolean().optional(),
   boldMessages: z.coerce.boolean().optional(),
+  shadow: z.enum(TEXT_SHADOWS).catch('normal'),
   bgOpacity: clampedNumber(0, 1, 0.5),
   platformAccent: z.coerce.boolean().optional(),
   orientation: z.enum(['vertical', 'horizontal']).catch('vertical'),
@@ -500,6 +503,7 @@ function RouteComponent() {
             platformAccent={Boolean(search.platformAccent)}
             boldUsernames={Boolean(search.boldUsernames)}
             boldMessages={Boolean(search.boldMessages)}
+            textShadow={search.shadow}
             userFontFamily={fontStack(userFont, skin)}
             highlight={getHighlightKind(msg, channels, highlights)}
             showReply={highlights.has('reply')}
@@ -510,6 +514,18 @@ function RouteComponent() {
     </div>
   );
 }
+
+// A hard outline in em, so it grows with the font size; 'none' drops even a preset's shadow.
+const SHADOWS: Record<Exclude<TextShadow, 'normal'>, string> = {
+  none: 'none',
+  strong: [
+    '-0.06em -0.06em 0 rgba(0,0,0,.85)',
+    '0.06em -0.06em 0 rgba(0,0,0,.85)',
+    '-0.06em 0.06em 0 rgba(0,0,0,.85)',
+    '0.06em 0.06em 0 rgba(0,0,0,.85)',
+    '0 0.1em 0.2em rgba(0,0,0,.9)',
+  ].join(','),
+};
 
 type MessageRowProps = {
   msg: ChatMessagesType;
@@ -531,6 +547,7 @@ type MessageRowProps = {
   platformAccent: boolean;
   boldUsernames: boolean;
   boldMessages: boolean;
+  textShadow: TextShadow;
   userFontFamily: string;
   highlight: HighlightKind | null;
   showReply: boolean;
@@ -557,6 +574,7 @@ const MessageRow = React.memo(function MessageRow({
   platformAccent,
   boldUsernames,
   boldMessages,
+  textShadow,
   userFontFamily,
   highlight,
   showReply,
@@ -616,15 +634,18 @@ const MessageRow = React.memo(function MessageRow({
   );
   const hasAnyBackground = hasBackground || itemBackground;
   const hardShadow = skin?.shadow === 'hard' ? skin.textShadow : null;
+  const override = textShadow === 'normal' ? null : SHADOWS[textShadow];
   const shadowStyle =
+    override ??
     hardShadow ??
     (hasAnyBackground
       ? '1px 1px 1px rgba(0, 0, 0)'
       : '0 1px 1px #000, 1px 1px 1px rgba(0, 0, 0), 1px 1px 1px rgba(0, 0, 0)');
+  const nameShadow = override ?? hardShadow ?? '1px 1px 1px rgba(0, 0, 0)';
   const userNameStyle: React.CSSProperties = React.useMemo(
     () => ({
       color: accessibleColor,
-      textShadow: hardShadow ?? '1px 1px 1px rgba(0, 0, 0)',
+      textShadow: nameShadow,
       fontSize: compactSize,
       fontWeight: boldUsernames ? 700 : undefined,
       // Presets switch synthesis off so a one-weight font isn't smeared, but a single-weight
@@ -632,7 +653,7 @@ const MessageRow = React.memo(function MessageRow({
       fontSynthesis: boldUsernames ? 'weight' : undefined,
       fontFamily: userFontFamily,
     }),
-    [accessibleColor, compactSize, boldUsernames, hardShadow, userFontFamily],
+    [accessibleColor, compactSize, boldUsernames, nameShadow, userFontFamily],
   );
   const messageStyle: React.CSSProperties = React.useMemo(
     () => ({

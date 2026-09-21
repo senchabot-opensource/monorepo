@@ -151,6 +151,28 @@ describe('Chat Box overlay', () => {
     expect(texts()).toEqual(['Viewer: hi']);
   });
 
+  it('draws the text shadow the URL asks for, and the old one without it', async () => {
+    const shadows = () =>
+      [...rows()[0].querySelectorAll<HTMLElement>('*')]
+        .map((el) => el.style.textShadow)
+        .filter(Boolean);
+    await openTwitch();
+    say('hi');
+    expect(shadows()).not.toHaveLength(0);
+    expect(shadows().every((shadow) => shadow.includes('1px 1px 1px'))).toBe(true);
+    cleanup();
+
+    await openTwitch('&shadow=none');
+    say('hi');
+    expect(shadows()).not.toHaveLength(0);
+    expect(shadows().every((shadow) => shadow === 'none')).toBe(true);
+    cleanup();
+
+    await openTwitch('&shadow=strong');
+    say('hi');
+    expect(shadows().every((shadow) => shadow.includes('0.06em'))).toBe(true);
+  });
+
   it('lets every message through by default', async () => {
     await openTwitch();
     say('!uptime');
