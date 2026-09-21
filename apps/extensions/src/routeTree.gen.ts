@@ -20,6 +20,7 @@ import { Route as WidgetsFrameRouteImport } from './routes/widgets/frame'
 import { Route as WidgetsGoalRouteImport } from './routes/widgets/goal'
 import { Route as WidgetsPollRouteImport } from './routes/widgets/poll'
 import { Route as WidgetsRaffleOverlayRouteImport } from './routes/widgets/raffle-overlay'
+import { Route as WidgetsSocialsRouteImport } from './routes/widgets/socials'
 import { Route as WidgetsStreamAlertsRouteImport } from './routes/widgets/stream-alerts'
 import { Route as WidgetsSubSproutWidgetRouteImport } from './routes/widgets/sub-sprout-widget'
 import { Route as WidgetsSubathonRouteImport } from './routes/widgets/subathon'
@@ -43,6 +44,7 @@ import { Route as Char123LocaleChar125SetupChatWidgetRouteImport } from './route
 import { Route as Char123LocaleChar125SetupEmoteWallRouteImport } from './routes/{-$locale}/setup/emote-wall'
 import { Route as Char123LocaleChar125SetupObsBridgeRouteImport } from './routes/{-$locale}/setup/obs-bridge'
 import { Route as Char123LocaleChar125SetupRaffleRouteImport } from './routes/{-$locale}/setup/raffle'
+import { Route as Char123LocaleChar125SetupSocialsRouteImport } from './routes/{-$locale}/setup/socials'
 import { Route as Char123LocaleChar125SetupStreamAlertsRouteImport } from './routes/{-$locale}/setup/stream-alerts'
 import { Route as Char123LocaleChar125SetupStreamCountdownRouteImport } from './routes/{-$locale}/setup/stream-countdown'
 import { Route as Char123LocaleChar125SetupStreamFramesRouteImport } from './routes/{-$locale}/setup/stream-frames'
@@ -104,6 +106,11 @@ const WidgetsPollRoute = WidgetsPollRouteImport.update({
 const WidgetsRaffleOverlayRoute = WidgetsRaffleOverlayRouteImport.update({
   id: '/widgets/raffle-overlay',
   path: '/widgets/raffle-overlay',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WidgetsSocialsRoute = WidgetsSocialsRouteImport.update({
+  id: '/widgets/socials',
+  path: '/widgets/socials',
   getParentRoute: () => rootRouteImport,
 } as any)
 const WidgetsStreamAlertsRoute = WidgetsStreamAlertsRouteImport.update({
@@ -240,6 +247,12 @@ const Char123LocaleChar125SetupRaffleRoute =
     path: '/setup/raffle',
     getParentRoute: () => Char123LocaleChar125RouteRoute,
   } as any)
+const Char123LocaleChar125SetupSocialsRoute =
+  Char123LocaleChar125SetupSocialsRouteImport.update({
+    id: '/setup/socials',
+    path: '/setup/socials',
+    getParentRoute: () => Char123LocaleChar125RouteRoute,
+  } as any)
 const Char123LocaleChar125SetupStreamAlertsRoute =
   Char123LocaleChar125SetupStreamAlertsRouteImport.update({
     id: '/setup/stream-alerts',
@@ -289,6 +302,7 @@ export interface FileRoutesByFullPath {
   '/widgets/goal': typeof WidgetsGoalRoute
   '/widgets/poll': typeof WidgetsPollRoute
   '/widgets/raffle-overlay': typeof WidgetsRaffleOverlayRoute
+  '/widgets/socials': typeof WidgetsSocialsRoute
   '/widgets/stream-alerts': typeof WidgetsStreamAlertsRoute
   '/widgets/sub-sprout-widget': typeof WidgetsSubSproutWidgetRoute
   '/widgets/subathon': typeof WidgetsSubathonRoute
@@ -311,6 +325,7 @@ export interface FileRoutesByFullPath {
   '/{-$locale}/setup/emote-wall': typeof Char123LocaleChar125SetupEmoteWallRoute
   '/{-$locale}/setup/obs-bridge': typeof Char123LocaleChar125SetupObsBridgeRoute
   '/{-$locale}/setup/raffle': typeof Char123LocaleChar125SetupRaffleRoute
+  '/{-$locale}/setup/socials': typeof Char123LocaleChar125SetupSocialsRoute
   '/{-$locale}/setup/stream-alerts': typeof Char123LocaleChar125SetupStreamAlertsRoute
   '/{-$locale}/setup/stream-countdown': typeof Char123LocaleChar125SetupStreamCountdownRoute
   '/{-$locale}/setup/stream-frames': typeof Char123LocaleChar125SetupStreamFramesRoute
@@ -330,6 +345,7 @@ export interface FileRoutesByTo {
   '/widgets/goal': typeof WidgetsGoalRoute
   '/widgets/poll': typeof WidgetsPollRoute
   '/widgets/raffle-overlay': typeof WidgetsRaffleOverlayRoute
+  '/widgets/socials': typeof WidgetsSocialsRoute
   '/widgets/stream-alerts': typeof WidgetsStreamAlertsRoute
   '/widgets/sub-sprout-widget': typeof WidgetsSubSproutWidgetRoute
   '/widgets/subathon': typeof WidgetsSubathonRoute
@@ -352,6 +368,7 @@ export interface FileRoutesByTo {
   '/{-$locale}/setup/emote-wall': typeof Char123LocaleChar125SetupEmoteWallRoute
   '/{-$locale}/setup/obs-bridge': typeof Char123LocaleChar125SetupObsBridgeRoute
   '/{-$locale}/setup/raffle': typeof Char123LocaleChar125SetupRaffleRoute
+  '/{-$locale}/setup/socials': typeof Char123LocaleChar125SetupSocialsRoute
   '/{-$locale}/setup/stream-alerts': typeof Char123LocaleChar125SetupStreamAlertsRoute
   '/{-$locale}/setup/stream-countdown': typeof Char123LocaleChar125SetupStreamCountdownRoute
   '/{-$locale}/setup/stream-frames': typeof Char123LocaleChar125SetupStreamFramesRoute
@@ -373,6 +390,7 @@ export interface FileRoutesById {
   '/widgets/goal': typeof WidgetsGoalRoute
   '/widgets/poll': typeof WidgetsPollRoute
   '/widgets/raffle-overlay': typeof WidgetsRaffleOverlayRoute
+  '/widgets/socials': typeof WidgetsSocialsRoute
   '/widgets/stream-alerts': typeof WidgetsStreamAlertsRoute
   '/widgets/sub-sprout-widget': typeof WidgetsSubSproutWidgetRoute
   '/widgets/subathon': typeof WidgetsSubathonRoute
@@ -395,6 +413,7 @@ export interface FileRoutesById {
   '/{-$locale}/setup/emote-wall': typeof Char123LocaleChar125SetupEmoteWallRoute
   '/{-$locale}/setup/obs-bridge': typeof Char123LocaleChar125SetupObsBridgeRoute
   '/{-$locale}/setup/raffle': typeof Char123LocaleChar125SetupRaffleRoute
+  '/{-$locale}/setup/socials': typeof Char123LocaleChar125SetupSocialsRoute
   '/{-$locale}/setup/stream-alerts': typeof Char123LocaleChar125SetupStreamAlertsRoute
   '/{-$locale}/setup/stream-countdown': typeof Char123LocaleChar125SetupStreamCountdownRoute
   '/{-$locale}/setup/stream-frames': typeof Char123LocaleChar125SetupStreamFramesRoute
@@ -417,6 +436,7 @@ export interface FileRouteTypes {
     | '/widgets/goal'
     | '/widgets/poll'
     | '/widgets/raffle-overlay'
+    | '/widgets/socials'
     | '/widgets/stream-alerts'
     | '/widgets/sub-sprout-widget'
     | '/widgets/subathon'
@@ -439,6 +459,7 @@ export interface FileRouteTypes {
     | '/{-$locale}/setup/emote-wall'
     | '/{-$locale}/setup/obs-bridge'
     | '/{-$locale}/setup/raffle'
+    | '/{-$locale}/setup/socials'
     | '/{-$locale}/setup/stream-alerts'
     | '/{-$locale}/setup/stream-countdown'
     | '/{-$locale}/setup/stream-frames'
@@ -458,6 +479,7 @@ export interface FileRouteTypes {
     | '/widgets/goal'
     | '/widgets/poll'
     | '/widgets/raffle-overlay'
+    | '/widgets/socials'
     | '/widgets/stream-alerts'
     | '/widgets/sub-sprout-widget'
     | '/widgets/subathon'
@@ -480,6 +502,7 @@ export interface FileRouteTypes {
     | '/{-$locale}/setup/emote-wall'
     | '/{-$locale}/setup/obs-bridge'
     | '/{-$locale}/setup/raffle'
+    | '/{-$locale}/setup/socials'
     | '/{-$locale}/setup/stream-alerts'
     | '/{-$locale}/setup/stream-countdown'
     | '/{-$locale}/setup/stream-frames'
@@ -500,6 +523,7 @@ export interface FileRouteTypes {
     | '/widgets/goal'
     | '/widgets/poll'
     | '/widgets/raffle-overlay'
+    | '/widgets/socials'
     | '/widgets/stream-alerts'
     | '/widgets/sub-sprout-widget'
     | '/widgets/subathon'
@@ -522,6 +546,7 @@ export interface FileRouteTypes {
     | '/{-$locale}/setup/emote-wall'
     | '/{-$locale}/setup/obs-bridge'
     | '/{-$locale}/setup/raffle'
+    | '/{-$locale}/setup/socials'
     | '/{-$locale}/setup/stream-alerts'
     | '/{-$locale}/setup/stream-countdown'
     | '/{-$locale}/setup/stream-frames'
@@ -543,6 +568,7 @@ export interface RootRouteChildren {
   WidgetsGoalRoute: typeof WidgetsGoalRoute
   WidgetsPollRoute: typeof WidgetsPollRoute
   WidgetsRaffleOverlayRoute: typeof WidgetsRaffleOverlayRoute
+  WidgetsSocialsRoute: typeof WidgetsSocialsRoute
   WidgetsStreamAlertsRoute: typeof WidgetsStreamAlertsRoute
   WidgetsSubSproutWidgetRoute: typeof WidgetsSubSproutWidgetRoute
   WidgetsSubathonRoute: typeof WidgetsSubathonRoute
@@ -625,6 +651,13 @@ declare module '@tanstack/react-router' {
       path: '/widgets/raffle-overlay'
       fullPath: '/widgets/raffle-overlay'
       preLoaderRoute: typeof WidgetsRaffleOverlayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/widgets/socials': {
+      id: '/widgets/socials'
+      path: '/widgets/socials'
+      fullPath: '/widgets/socials'
+      preLoaderRoute: typeof WidgetsSocialsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/widgets/stream-alerts': {
@@ -788,6 +821,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char123LocaleChar125SetupRaffleRouteImport
       parentRoute: typeof Char123LocaleChar125RouteRoute
     }
+    '/{-$locale}/setup/socials': {
+      id: '/{-$locale}/setup/socials'
+      path: '/setup/socials'
+      fullPath: '/{-$locale}/setup/socials'
+      preLoaderRoute: typeof Char123LocaleChar125SetupSocialsRouteImport
+      parentRoute: typeof Char123LocaleChar125RouteRoute
+    }
     '/{-$locale}/setup/stream-alerts': {
       id: '/{-$locale}/setup/stream-alerts'
       path: '/setup/stream-alerts'
@@ -853,6 +893,7 @@ interface Char123LocaleChar125RouteRouteChildren {
   Char123LocaleChar125SetupEmoteWallRoute: typeof Char123LocaleChar125SetupEmoteWallRoute
   Char123LocaleChar125SetupObsBridgeRoute: typeof Char123LocaleChar125SetupObsBridgeRoute
   Char123LocaleChar125SetupRaffleRoute: typeof Char123LocaleChar125SetupRaffleRoute
+  Char123LocaleChar125SetupSocialsRoute: typeof Char123LocaleChar125SetupSocialsRoute
   Char123LocaleChar125SetupStreamAlertsRoute: typeof Char123LocaleChar125SetupStreamAlertsRoute
   Char123LocaleChar125SetupStreamCountdownRoute: typeof Char123LocaleChar125SetupStreamCountdownRoute
   Char123LocaleChar125SetupStreamFramesRoute: typeof Char123LocaleChar125SetupStreamFramesRoute
@@ -897,6 +938,8 @@ const Char123LocaleChar125RouteRouteChildren: Char123LocaleChar125RouteRouteChil
     Char123LocaleChar125SetupObsBridgeRoute:
       Char123LocaleChar125SetupObsBridgeRoute,
     Char123LocaleChar125SetupRaffleRoute: Char123LocaleChar125SetupRaffleRoute,
+    Char123LocaleChar125SetupSocialsRoute:
+      Char123LocaleChar125SetupSocialsRoute,
     Char123LocaleChar125SetupStreamAlertsRoute:
       Char123LocaleChar125SetupStreamAlertsRoute,
     Char123LocaleChar125SetupStreamCountdownRoute:
@@ -929,6 +972,7 @@ const rootRouteChildren: RootRouteChildren = {
   WidgetsGoalRoute: WidgetsGoalRoute,
   WidgetsPollRoute: WidgetsPollRoute,
   WidgetsRaffleOverlayRoute: WidgetsRaffleOverlayRoute,
+  WidgetsSocialsRoute: WidgetsSocialsRoute,
   WidgetsStreamAlertsRoute: WidgetsStreamAlertsRoute,
   WidgetsSubSproutWidgetRoute: WidgetsSubSproutWidgetRoute,
   WidgetsSubathonRoute: WidgetsSubathonRoute,

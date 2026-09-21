@@ -130,6 +130,10 @@ export const tr: typeof en = {
       name: 'OBS Bridge',
       tagline: "Sohbet komutlarıyla OBS'te sahne değiştir, yayını ve kaydı yönet.",
     },
+    socials: {
+      name: 'Sosyal Medya',
+      tagline: 'Sosyal medya hesaplarınızı şık bir animasyonla ekranda döndürün.',
+    },
   },
   home: {
     heroTitle: "Twitch ve Kick için ücretsiz yayın overlay'leri",
@@ -234,7 +238,7 @@ export const tr: typeof en = {
       "Evet. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi ve Yayın Geri Sayımı tek bir URL'de hem Twitch hem Kick kanalını alır. OBS Bridge da iki sohbeti aynı anda dinleyebilir. Çekiliş ise her seferinde tek bir platformda çalışır.",
     faq5Q: "Bir widget'ı sonradan nasıl değiştiririm?",
     faq5A:
-      "Kurulum sayfasını aç, widget'ı istediğin gibi ayarla ve Tarayıcı Kaynağı'ndaki URL'yi yenisiyle değiştir. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi, Yayın Çerçeveleri ve Yayın Geri Sayımı mevcut bir URL'yi de açabilir: URL'yi kurulum sayfasına yapıştır, eski ayarların geri gelsin, sadece istediğini değiştir.",
+      "Kurulum sayfasını aç, widget'ı istediğin gibi ayarla ve Tarayıcı Kaynağı'ndaki URL'yi yenisiyle değiştir. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi, Yayın Çerçeveleri, Sosyal Medya ve Yayın Geri Sayımı mevcut bir URL'yi de açabilir: URL'yi kurulum sayfasına yapıştır, eski ayarların geri gelsin, sadece istediğini değiştir.",
     faq6Q: "Güncellemelerden sonra widget URL'm çalışmaya devam eder mi?",
     faq6A:
       'Evet. Güncellemelerde mevcut URL ayarları ve değerleri korunur, yani sahnendeki widget için yeni bir URL almana gerek kalmaz.',
@@ -1439,7 +1443,7 @@ export const tr: typeof en = {
       update: {
         title: "Widget'ı sonradan nasıl değiştiririm?",
         p1: "Ayarlar widget adresinin içinde durur, yani bir ayarı değiştirmek yeni bir adres demek. Kurulum sayfasında ayarı değiştir, yeni adresi kopyala, sonra OBS'te kaynağa çift tıklayıp URL alanındaki eski adresin yerine yapıştır.",
-        p2: '[Sohbet Kutusu](/setup/chat-widget), [Emote Duvarı](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Yayın Uyarıları](/setup/stream-alerts), [Abone Hedefi](/setup/sub-goal), [Sohbet Anketi](/setup/chat-poll) , [Yayın Çerçeveleri](/setup/stream-frames) ve [Yayın Geri Sayımı](/setup/stream-countdown) için baştan başlaman gerekmez. Mevcut adresini kurulum sayfasındaki Widget URL alanına yapıştır, kanalların ve bütün ayarların geri yüklenir. Değiştirmek istediğini değiştir ve yeni adresi kopyala.',
+        p2: '[Sohbet Kutusu](/setup/chat-widget), [Emote Duvarı](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Yayın Uyarıları](/setup/stream-alerts), [Abone Hedefi](/setup/sub-goal), [Sohbet Anketi](/setup/chat-poll) , [Yayın Çerçeveleri](/setup/stream-frames), [Sosyal Medya](/setup/socials) ve [Yayın Geri Sayımı](/setup/stream-countdown) için baştan başlaman gerekmez. Mevcut adresini kurulum sayfasındaki Widget URL alanına yapıştır, kanalların ve bütün ayarların geri yüklenir. Değiştirmek istediğini değiştir ve yeni adresi kopyala.',
         p3: "OBS Bridge'de yapıştırma alanı yok, ayarları kurulum sayfasında yeniden girip yeni araç adresini kopyalarsın. Sahne seçimlerini ve yetkili kullanıcıları araç sayfasında da değiştirebilir, yeni adresi oradaki Copy Updated URL düğmesiyle alabilirsin. Eski adresler çalışmaya devam eder, güncellemek zorunda değilsin.",
       },
       troubleshoot: {
@@ -2200,7 +2204,7 @@ export const tr: typeof en = {
       "On biri de iki platformu destekliyor. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi ve Yayın Geri Sayımı tek adreste Twitch ve Kick kanalını birlikte dinler. OBS Bridge iki sohbetten gelen komutları dinler ve her yetkili kullanıcı kendi platformuyla eklenir. Çekiliş her seferinde tek platformda çalışır, Twitch ya da Kick. Sohbet Kutusu'nda 7TV emote'ları iki platformda, BTTV ve FFZ emote'ları sadece Twitch'te görünür.",
     editQ: "Widget'ı sonradan nasıl değiştiririm?",
     editA:
-      "Kurulum sayfasında ayarları değiştir, yeni adresi kopyala ve OBS'te kaynağın URL alanındaki eski adresin yerine yapıştır. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi, Yayın Çerçeveleri ve Yayın Geri Sayımı'nda eski adresini kurulum sayfasındaki Widget URL alanına yapıştırırsan bütün ayarların geri yüklenir, baştan başlaman gerekmez.",
+      "Kurulum sayfasında ayarları değiştir, yeni adresi kopyala ve OBS'te kaynağın URL alanındaki eski adresin yerine yapıştır. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi, Yayın Çerçeveleri, Sosyal Medya ve Yayın Geri Sayımı'nda eski adresini kurulum sayfasındaki Widget URL alanına yapıştırırsan bütün ayarların geri yüklenir, baştan başlaman gerekmez.",
     oldUrlsQ: 'Eski widget adreslerim çalışmaya devam eder mi?',
     oldUrlsA:
       "Evet. Güncellemeler mevcut adresleri bozmayacak şekilde yapılır: parametre adları, değerleri ve varsayılanları değişmez. Örneğin Sohbet Kutusu'ndaki eski keep=true hâlâ Süresiz anlamına gelir ve Sub Sprout eski channel ve platform parametrelerini hâlâ okur.",
@@ -2224,6 +2228,8 @@ export const tr: typeof en = {
     lead: "Senchabot Extensions'a eklenen özellikler ve düzeltilen hatalar, en yenisi en üstte. Liste projenin [GitHub'daki](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) commit geçmişinden hazırlanıyor.",
     site: 'Site',
     entries: {
+      socialsLaunch:
+        'Yeni widget: Sosyal Medya. Sosyal medya hesaplarınızı şık bir kaydırma animasyonuyla yayın ekranınızda döndürün.',
       thinBars:
         'Subathon Timer ve Abone Hedefi artık başlık ile süreyi veya sayacı doğrudan daha ince bir ilerleme barının içine yerleştiren İnce Bar stiline sahip.',
       subathonDynamicRates:
@@ -2361,5 +2367,35 @@ export const tr: typeof en = {
       launch:
         'Senchabot Extensions yayında: Twitch ve Kick sohbetini birleştiren bir sohbet kutusu ve Twitch abonelikleriyle büyüyen Sub Sprout ile.',
     },
+  },
+  socials: {
+    breadcrumb: 'Sosyal Medya Kurulumu',
+    title: 'Sosyal Medya Kurulumu',
+    intro: 'Sosyal medya hesaplarınızı yayında gösterin. Widget, doldurduğunuz platformları sırayla tek tek kayarak gösterir.',
+    sectionPlatforms: 'Platformlar',
+    platformsTip: 'Göstermek istediğiniz her platform için kullanıcı adınızı yazın. Diğerlerini boş bırakın.',
+    sectionAppearance: 'Görünüm',
+    rotationInterval: 'Dönüşüm Süresi',
+    intervalSeconds: '{seconds} saniye',
+    textColor: 'Yazı Rengi',
+        animation: 'Animasyon',
+    animSlideUp: 'Yukarı Kaydır',
+    animSlideLeft: 'Sola Kaydır',
+    animScale: 'Büyüt',
+    animFade: 'Karart',
+    pillColor: 'Kutu Arka Plan Rengi',
+    previewTitle: 'Sosyal Medya Önizleme',
+    previewIframeTitle: 'Sosyal Medya Önizleme',
+    previewHint: 'Sosyal medya widget\'ınızın canlı önizlemesi.',
+    widgetUrlTip: 'Zaten bir widget yaptınız mı? URL\'sini buraya yapıştırarak ayarlarınızı yükleyin ve istediklerinizi değiştirin.',
+    widgetUrlPlaceholder: 'Düzenlemek için mevcut bir widget URL\'sini yapıştırın',
+    widgetUrlInvalid: "Bu bir Sosyal Medya widget URL'si değil.",
+    browserSourceHintSize: ' (önerilen boyut: 600×120).',
+    guideTitle: 'Yayın Programı Kurulumu (OBS, Streamlabs, XSplit, vb.)',
+    guideStep1: 'Yayın programınıza (OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio, vb.) bir Tarayıcı Kaynağı ekleyin.',
+    guideStep2: 'Kopyaladığınız Sosyal Medya URL\'sini yapıştırın.',
+    guideStep3: 'Genişliği 600 ve yüksekliği 120 yapın.',
+    faq1Q: 'Kullanıcı adımı değiştirirsem widget güncellenir mi?',
+    faq1A: 'URL\'nizi güncellemeniz gerekir. Bu sayfaya geri dönün, ayarlarınızı yüklemek için mevcut URL\'nizi yapıştırın, yeni kullanıcı adlarınızı yazın ve yeni URL\'yi yayın programınıza kopyalayın.',
   },
 };

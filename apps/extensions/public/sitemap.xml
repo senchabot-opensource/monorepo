@@ -81,6 +81,14 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://extensions.senchabot.com/setup/socials</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/socials"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/socials"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/socials"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://extensions.senchabot.com/setup/obs-bridge</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/obs-bridge"/>
     <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/obs-bridge"/>
@@ -285,6 +293,14 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/raffle"/>
     <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/raffle"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/raffle"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/tr/setup/socials</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/socials"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/socials"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/socials"/>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>

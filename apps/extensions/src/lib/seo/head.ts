@@ -117,6 +117,13 @@ export const OG_IMAGES = {
       tr: "OBS overlay'leri için Senchabot Extensions rehberleri",
     },
   },
+  socials: {
+    path: '/og/socials.png',
+    alt: {
+      en: 'Socials, a social media rotation widget for Twitch and Kick',
+      tr: 'Sosyal Medya, Twitch ve Kick için sosyal medya hesaplarını döndüren araç',
+    },
+  },
 } as const satisfies Record<string, { path: string; alt: Record<Locale, string> }>;
 
 export type OgImage = keyof typeof OG_IMAGES;

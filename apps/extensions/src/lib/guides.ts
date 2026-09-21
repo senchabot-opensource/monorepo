@@ -294,12 +294,12 @@ export const CONTENT_META = {
     en: {
       title: 'Senchabot Extensions FAQ: Free Twitch and Kick Overlays',
       description:
-        'Answers about Senchabot Extensions: free with no login, which of the 11 widgets support Twitch and Kick, where your settings live and how to report a bug.',
+        'Answers about Senchabot Extensions: free with no login, which of the 12 widgets support Twitch and Kick, where your settings live and how to report a bug.',
     },
     tr: {
       title: "Senchabot Extensions SSS: Twitch ve Kick Overlay'leri",
       description:
-        "Senchabot Extensions için kısa cevaplar: ücretsiz ve girişsiz, 11 widget'tan hangisi Twitch ve Kick'te çalışıyor, ayarlar nerede duruyor, hata nasıl bildirilir.",
+        "Senchabot Extensions için kısa cevaplar: ücretsiz ve girişsiz, 12 widget'tan hangisi Twitch ve Kick'te çalışıyor, ayarlar nerede duruyor, hata nasıl bildirilir.",
     },
   },
   presets: {
