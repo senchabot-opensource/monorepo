@@ -15,7 +15,7 @@ const DICTS = { en, tr } as const;
 const PASTE_WIDGETS = WIDGETS.filter(
   (widget) => widget.id !== 'raffle' && widget.id !== 'obs-bridge',
 );
-const BOTH_CHANNEL_WIDGETS = PASTE_WIDGETS.filter((widget) => widget.id !== 'frames');
+const BOTH_CHANNEL_WIDGETS = PASTE_WIDGETS.filter((widget) => widget.id !== 'frames' && widget.id !== 'socials');
 
 const missingIn = (widgets: readonly WidgetEntry[], text: string, locale: Locale) =>
   widgets

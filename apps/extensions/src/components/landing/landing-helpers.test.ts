@@ -65,6 +65,7 @@ describe('gallery card shapes', () => {
       ['goal', 'wide'],
       ['frames', 'standard'],
       ['countdown', 'standard'],
+      ['socials', 'wide'],
     ]);
     // Tools never span, not even the Subathon strip.
     expect(TOOLS.map((widget) => [widget.id, getCardShape(widget)])).toEqual([
@@ -83,7 +84,8 @@ describe('gallery card shapes', () => {
       'standard',
       'standard',
       'standard',
-      'wide',
+      'standard',
+      'standard',
       'standard',
       'standard',
     ]);
@@ -95,6 +97,7 @@ describe('gallery card shapes', () => {
       'standard',
       'wide',
       'standard',
+      'wide',
       'wide',
     ]);
   });

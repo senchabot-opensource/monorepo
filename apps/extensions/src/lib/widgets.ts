@@ -9,6 +9,7 @@ import {
   ObsBridgeIcon,
   PollIcon,
   RaffleIcon,
+  SocialsIcon,
   StreamAlertsIcon,
   SubathonIcon,
   SubSproutIcon,
@@ -28,7 +29,8 @@ export type WidgetId =
   | 'frames'
   | 'countdown'
   | 'raffle'
-  | 'obs-bridge';
+  | 'obs-bridge'
+  | 'socials';
 /** `overlay`: a browser source that runs on its own. `tool`: something the streamer operates. */
 export type WidgetKind = 'overlay' | 'tool';
 export type WidgetPlatform = 'twitch' | 'kick';
@@ -148,6 +150,18 @@ export const WIDGETS: readonly WidgetEntry[] = [
     sourceSize: { width: 1920, height: 1080 },
   },
   {
+    id: 'socials',
+    kind: 'overlay',
+    setupPath: '/setup/socials',
+    widgetPath: '/widgets/socials',
+    nameKey: 'widgets.socials.name',
+    taglineKey: 'widgets.socials.tagline',
+    Icon: SocialsIcon,
+    platforms: ['twitch', 'kick'],
+    demoUrl: '/widgets/socials?demo=1',
+    sourceSize: { width: 600, height: 120 },
+  },
+  {
     id: 'poll',
     // Mods put polls up and end them from chat, like the Subathon Timer's clock.
     kind: 'tool',
@@ -186,6 +200,7 @@ export const WIDGETS: readonly WidgetEntry[] = [
     demoUrl: '/widgets/subathon?simulate=1',
     sourceSize: { width: 800, height: 300 },
   },
+
   {
     id: 'obs-bridge',
     kind: 'tool',

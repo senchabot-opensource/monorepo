@@ -22,7 +22,7 @@ export const PAGE_META = {
     tr: {
       title: "OBS için Ücretsiz Twitch ve Kick Overlay'leri | Senchabot",
       description:
-        "Twitch ve Kick yayıncıları için 11 ücretsiz overlay ve araç: sohbet kutusu, emote duvarı, uyarılar, abone hedefi, subathon, çerçeve, geri sayım, anket, çekiliş.",
+        'Twitch ve Kick yayıncıları için 11 ücretsiz overlay ve araç: sohbet kutusu, emote duvarı, uyarılar, abone hedefi, subathon, çerçeve, geri sayım, anket, çekiliş.',
     },
   },
   'chat-box': {
@@ -155,6 +155,18 @@ export const PAGE_META = {
       title: 'Twitch ve Kick Sohbetinden OBS Sahnesi Değiştir | Senchabot',
       description:
         'Modlar Twitch ya da Kick sohbetinden !scene, brb ve back ile OBS sahnesini değiştirsin, yayını başlatıp durdursun. Tarayıcıda çalışır, obs-websocket 5 kullanır.',
+    },
+  },
+  socials: {
+    en: {
+      title: 'Free Social Media Rotation Widget for OBS | Senchabot',
+      description:
+        'Display your social media handles (Twitter, YouTube, TikTok, Instagram) on your Twitch or Kick stream. Rotates through your links with a slick slide animation.',
+    },
+    tr: {
+      title: "OBS İçin Ücretsiz Sosyal Medya Widget'ı | Senchabot",
+      description:
+        'Sosyal medya hesaplarınızı (Twitter, YouTube, TikTok, vb.) Twitch ve Kick yayınınızda gösterin. Linklerinizi şık bir animasyonla sırayla döndürür.',
     },
   },
   notFound: {
@@ -407,6 +419,22 @@ export const APP_FEATURES: Record<WidgetId, Record<Locale, readonly string[]>> =
       'Her komutun adı değiştirilebilir',
       "obs-websocket 5'e bağlanır (OBS Studio 28 ve sonrası), varsayılan adres ws://127.0.0.1:4455",
       "Bir tarayıcı sekmesinde ya da OBS'nin Özel Tarayıcı Dock'unda çalışır",
+    ],
+  },
+  socials: {
+    en: [
+      'Display your social media handles (Twitter, YouTube, TikTok, Instagram, etc.) on stream',
+      'Rotates through your links with a slick slide-up animation',
+      'Configurable rotation interval',
+      'Adjust text color and pill background color to match your brand',
+      'Recommended browser source size: 600x120',
+    ],
+    tr: [
+      'Sosyal medya hesaplarınızı (Twitter, YouTube, TikTok, Instagram vb.) yayında gösterin',
+      'Linklerinizi şık bir kaydırma animasyonuyla sırayla döndürür',
+      'Ayarlanabilir dönüşüm süresi',
+      'Yazı rengi ve kutu arka plan rengini markanıza uygun ayarlayın',
+      'Önerilen Tarayıcı Kaynağı boyutu: 600x120',
     ],
   },
 };

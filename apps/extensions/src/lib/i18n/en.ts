@@ -128,6 +128,10 @@ export const en = {
       name: 'OBS Bridge',
       tagline: 'Switch OBS scenes and control streaming and recording from chat commands.',
     },
+    socials: {
+      name: 'Socials',
+      tagline: 'Rotate your social media links with a slick animation.',
+    },
   },
   home: {
     heroTitle: 'Free stream overlays for Twitch and Kick',
@@ -230,7 +234,7 @@ export const en = {
       'Yes. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll and Stream Countdown take a Twitch and a Kick channel in the same URL. OBS Bridge can listen to both chats at once too. Raffle runs on one platform at a time.',
     faq5Q: 'How do I change a widget later?',
     faq5A:
-      'Open its setup page, set it up the way you want and replace the URL in your Browser Source. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll, Stream Frames and Stream Countdown can also open an existing URL: paste it on the setup page, your settings come back, and you change only what you need.',
+      'Open its setup page, set it up the way you want and replace the URL in your Browser Source. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll, Stream Frames, Socials and Stream Countdown can also open an existing URL: paste it on the setup page, your settings come back, and you change only what you need.',
     faq6Q: 'Will my widget URL keep working after updates?',
     faq6A:
       "Yes. Updates keep existing URL settings and their values working, so a widget that's already in your scene doesn't need a new URL.",
@@ -1432,7 +1436,7 @@ export const en = {
         title: 'How do I change a widget later?',
         p1: 'Your settings live inside the widget URL, so changing a setting means a new URL. Change the setting on the setup page, copy the new URL, then double-click the source in OBS and paste it over the old URL in the URL field.',
         p2:
-          "You don't have to start over with [Chat Box](/setup/chat-widget), [Emote Wall](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Stream Alerts](/setup/stream-alerts), [Sub Goal](/setup/sub-goal), [Chat Poll](/setup/chat-poll), [Stream Frames](/setup/stream-frames) or [Stream Countdown](/setup/stream-countdown). Paste your current URL into the Widget URL field on the setup page and your channels and all your settings come back. Change what you want and copy the new URL.",
+          "You don't have to start over with [Chat Box](/setup/chat-widget), [Emote Wall](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Stream Alerts](/setup/stream-alerts), [Sub Goal](/setup/sub-goal), [Chat Poll](/setup/chat-poll), [Stream Frames](/setup/stream-frames), [Socials](/setup/socials) or [Stream Countdown](/setup/stream-countdown). Paste your current URL into the Widget URL field on the setup page and your channels and all your settings come back. Change what you want and copy the new URL.",
         p3: "OBS Bridge has no paste field, so enter your settings again on its setup page and copy the new tool URL. You can also change scene picks and authorized users on the tool page itself and grab the new URL with its Copy Updated URL button. Old URLs keep working, so you don't have to update them.",
       },
       troubleshoot: {
@@ -2216,7 +2220,7 @@ export const en = {
       'All eleven support both platforms. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll and Stream Countdown listen to a Twitch and a Kick channel together in one URL. OBS Bridge listens for commands from both chats, and each authorized user is added with their own platform. Raffle runs on one platform at a time, Twitch or Kick. In Chat Box, 7TV emotes show on both platforms, while BTTV and FFZ emotes show on Twitch only.',
     editQ: 'How do I change a widget later?',
     editA:
-      "Change the settings on the setup page, copy the new URL, and paste it over the old one in the source's URL field in OBS. With Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll, Stream Frames and Stream Countdown, if you paste your old URL into the Widget URL field on the setup page, all your settings come back and you don't have to start over.",
+      "Change the settings on the setup page, copy the new URL, and paste it over the old one in the source's URL field in OBS. With Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll, Stream Frames, Socials and Stream Countdown, if you paste your old URL into the Widget URL field on the setup page, all your settings come back and you don't have to start over.",
     oldUrlsQ: 'Will my old widget URLs keep working?',
     oldUrlsA:
       "Yes. Updates are made so existing URLs don't break: parameter names, values and defaults stay the same. For example, the old keep=true in Chat Box still means Forever, and Sub Sprout still reads the old channel and platform parameters.",
@@ -2240,6 +2244,8 @@ export const en = {
     lead: "New features and bug fixes in Senchabot Extensions, newest first. The list is put together from the project's commit history on [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      socialsLaunch:
+        'New widget: Socials. Rotate your social media links with a slick slide animation.',
       thinBars:
         'Subathon Timer and Sub Goal now have a Thin Bar style that embeds the title and time or count directly inside a slimmer progress bar.',
       subathonDynamicRates:
@@ -2375,5 +2381,35 @@ export const en = {
       launch:
         'Senchabot Extensions is live, with a chat box that combines Twitch and Kick chat and Sub Sprout, a plant that grows with Twitch subscriptions.',
     },
+  },
+  socials: {
+    breadcrumb: 'Socials Setup',
+    title: 'Socials Setup',
+    intro: 'Show your social media handles on stream. The widget rotates through the platforms you fill in, showing one at a time with a slide animation.',
+    sectionPlatforms: 'Platforms',
+    platformsTip: 'Type your username for each platform you want to show. Leave the rest empty.',
+    sectionAppearance: 'Appearance',
+    rotationInterval: 'Rotation Interval',
+    intervalSeconds: '{seconds} seconds',
+    textColor: 'Text Color',
+        animation: 'Animation',
+    animSlideUp: 'Slide Up',
+    animSlideLeft: 'Slide Left',
+    animScale: 'Scale',
+    animFade: 'Fade',
+    pillColor: 'Pill Background Color',
+    previewTitle: 'Socials Preview',
+    previewIframeTitle: 'Socials Preview',
+    previewHint: 'Live preview of your social media rotation.',
+    widgetUrlTip: 'Already made a widget? Paste its URL here to load your settings and change what you need.',
+    widgetUrlPlaceholder: 'Paste an existing widget URL to edit it',
+    widgetUrlInvalid: "This isn't a Socials widget URL.",
+    browserSourceHintSize: ' (recommended size: 600×120).',
+    guideTitle: 'Streaming Software Setup (OBS, Streamlabs, XSplit, etc.)',
+    guideStep1: 'Add a Browser Source in your streaming software (OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio, etc.).',
+    guideStep2: 'Paste your copied socials URL.',
+    guideStep3: 'Set width to 600 and height to 120.',
+    faq1Q: 'Does the widget update if I change my usernames?',
+    faq1A: 'You need to update your URL. Come back to this page, paste your existing URL to load your settings, type your new usernames, and copy the new URL into your streaming software.',
   },
 };

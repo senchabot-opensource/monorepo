@@ -137,6 +137,14 @@ export function ObsBridgeIcon(props: IconProps) {
   );
 }
 
+export function SocialsIcon(props: IconProps) {
+  return (
+    <StrokeIcon {...props}>
+      <path d="M12 11c1.657 0 3-1.343 3-3S13.657 5 12 5 9 6.343 9 8s1.343 3 3 3zm0 2c-2.206 0-6.5 1.104-6.5 3.313V19h13v-2.687C18.5 14.104 14.206 13 12 13z" />
+    </StrokeIcon>
+  );
+}
+
 export function ChevronDownIcon(props: IconProps) {
   return (
     <StrokeIcon {...props}>
