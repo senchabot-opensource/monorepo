@@ -179,7 +179,7 @@ URL parameters (all optional, times in seconds):
 | --- | --- | --- |
 | twitch | Twitch channel name | none |
 | kick | Kick channel name | none |
-| style | bar (health bar), clock, ring | bar |
+| style | bar (health bar), thin (compact bar with embedded text), clock, ring | bar |
 | color | hp (green to amber to red as time runs out), green, purple, red, gold, cyan, pink | hp |
 | title | text shown with the timer, up to 32 characters; empty hides it | SUBATHON |
 | time | starting time | 3600 |
@@ -256,6 +256,7 @@ URL parameters (all optional):
 | --- | --- | --- |
 | twitch | Twitch channel name | none |
 | kick | Kick channel name | none |
+| style | bar, thin (compact bar with embedded text) | bar |
 | color | purple, green, red, gold, cyan, pink | purple |
 | title | text shown above the bar, up to 32 characters; empty hides it | SUB GOAL |
 | start | starting count | 0 |

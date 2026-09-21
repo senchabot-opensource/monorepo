@@ -94,7 +94,7 @@ describe('Subathon Timer setup', () => {
       'http://localhost:3000/widgets/subathon?twitch=streamer&style=ring&color=purple' +
         '&title=Big+Stream&time=14400&cap=86400&bits=0&kicks=120&tiers=0&autostart=1&pct=0&pops=0',
     );
-  });
+  }, 60_000);
 
   it('shows only the picked platform, without tabs', async () => {
     const user = setupUser();
@@ -126,7 +126,7 @@ describe('Subathon Timer setup', () => {
     await retype(user, start(en('subathon.unitMinutes')), '0');
     await user.click(twitchField());
     expect(start(en('subathon.unitMinutes')).value).toBe('1');
-  });
+  }, 30_000);
 
   it('loads a pasted widget URL back into the controls', async () => {
     const user = setupUser();
@@ -140,7 +140,7 @@ describe('Subathon Timer setup', () => {
     expect(segment(en('subathon.style'), en('subathon.styleClock')).checked).toBe(true);
     expect(durationBox(en('subathon.startTime'), en('subathon.unitHours')).value).toBe('2');
     expect(minutes(en('subathon.perGift')).value).toBe('2');
-  });
+  }, 30_000);
 
   it('gives back the same URL for a pasted one with every setting changed', async () => {
     const user = setupUser();

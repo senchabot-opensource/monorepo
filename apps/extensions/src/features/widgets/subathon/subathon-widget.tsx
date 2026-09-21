@@ -11,7 +11,7 @@ import type {
   SubathonTimeValues,
 } from '#/lib/subathon-url';
 import { KickIcon, TwitchIcon } from '../chat-widget/message-parts';
-import { hueFor, OVERLAY_FONT_FAMILY as FONT_FAMILY, PLATFORM_COLORS } from '../overlay-style';
+import { OVERLAY_FONT_FAMILY as FONT_FAMILY, hueFor, PLATFORM_COLORS } from '../overlay-style';
 import { useFitScale } from '../use-fit-scale';
 import type { SubathonPlatform } from './subathon-events';
 import { formatClock, formatDelta } from './subathon-timer';
@@ -34,6 +34,8 @@ const INFO_ROW_HEIGHT = 44;
 const BAR_GAP = 12;
 const BAR_HEIGHT = 64;
 const BAR_TOP = STAGE.height - BAR_BOTTOM - INFO_ROW_HEIGHT - BAR_GAP - BAR_HEIGHT;
+const BAR_HEIGHT_THIN = 40;
+const BAR_TOP_THIN = STAGE.height - BAR_BOTTOM - BAR_HEIGHT_THIN;
 
 // Segment lines on the health bar, every 10%.
 const TICKS = [10, 20, 30, 40, 50, 60, 70, 80, 90];
@@ -189,10 +191,10 @@ interface ViewProps {
 
 const VIEWS: Record<SubathonStyle, (props: ViewProps) => React.JSX.Element> = {
   bar: HealthBarView,
+  thin: ThinBarView,
   clock: ClockView,
   ring: RingView,
 };
-
 
 /** Color of the time left: red and blinking once it's over. */
 const clockColor = (ended: boolean, skin: Skin | null): CSSProperties => ({
@@ -200,13 +202,13 @@ const clockColor = (ended: boolean, skin: Skin | null): CSSProperties => ({
   animation: ended ? 'sa-blink 1s steps(2) infinite' : undefined,
 });
 
-function HeartIcon({ hue, beat }: { hue: number; beat: number | null }) {
+function HeartIcon({ hue, beat, size = 26 }: { hue: number; beat: number | null; size?: number }) {
   const hsl = painter(useSkin(), hue);
   return (
     <svg
       viewBox="0 0 24 24"
-      width="26"
-      height="26"
+      width={size}
+      height={size}
       aria-hidden="true"
       style={{
         filter: `drop-shadow(0 0 8px ${hsl(90, 55, 0.8)})`,
@@ -223,7 +225,7 @@ function HeartIcon({ hue, beat }: { hue: number; beat: number | null }) {
   );
 }
 
-function PauseChip() {
+function PauseChip({ compact }: { compact?: boolean } = {}) {
   const skin = useSkin();
   return (
     <span
@@ -231,16 +233,30 @@ function PauseChip() {
       aria-label="Paused"
       style={{
         display: 'inline-flex',
-        gap: 5,
-        padding: '7px 10px',
+        gap: compact ? 3 : 5,
+        padding: compact ? '4px 7px' : '7px 10px',
         borderRadius: skin ? 8 * skin.radius : 8,
         background: skin ? skin.panel2 : 'rgba(0,0,0,.6)',
         border: `1px solid ${skin ? skin.frame2 : 'rgba(255,255,255,.18)'}`,
         animation: 'sa-blink 1.6s ease-in-out infinite',
       }}
     >
-      <span style={{ width: 5, height: 16, borderRadius: 2, background: skin?.text ?? '#fff' }} />
-      <span style={{ width: 5, height: 16, borderRadius: 2, background: skin?.text ?? '#fff' }} />
+      <span
+        style={{
+          width: compact ? 3 : 5,
+          height: compact ? 10 : 16,
+          borderRadius: compact ? 1.5 : 2,
+          background: skin?.text ?? '#fff',
+        }}
+      />
+      <span
+        style={{
+          width: compact ? 3 : 5,
+          height: compact ? 10 : 16,
+          borderRadius: compact ? 1.5 : 2,
+          background: skin?.text ?? '#fff',
+        }}
+      />
     </span>
   );
 }
@@ -298,7 +314,6 @@ function HealFlash({
     />
   );
 }
-
 
 function popDetail({ event }: SubathonPop): string {
   switch (event.kind) {
@@ -401,11 +416,15 @@ const RATE_KEYS: Record<SubathonPlatform, Record<RateKind, SubathonTimeKey>> = {
 };
 
 /** One row per platform, or one for both when their values match. Events set to 0 are left out. */
-function rateRows(values: SubathonTimeValues, platforms: SubathonPlatform[], remainingMs: number): RateRow[] {
+function rateRows(
+  values: SubathonTimeValues,
+  platforms: SubathonPlatform[],
+  remainingMs: number,
+): RateRow[] {
   const useTier2 = values.shift > 0 && remainingMs >= values.shift * 1000;
   const val = (platform: SubathonPlatform, kind: RateKind) => {
     const key = RATE_KEYS[platform][kind];
-    return useTier2 ? values[`${key}2` as keyof SubathonTimeValues] as number : values[key];
+    return useTier2 ? (values[`${key}2` as keyof SubathonTimeValues] as number) : values[key];
   };
 
   const rows = platforms
@@ -691,6 +710,211 @@ function HealthBarView(view: ViewProps) {
           </span>
         </div>
         {/* In the margin under the title row, so the bar stays where it was without them. */}
+        {view.rates.length > 0 && (
+          <div style={{ position: 'absolute', left: 10, bottom: 2 }}>
+            <RateStrip rows={view.rates} />
+          </div>
+        )}
+      </div>
+    </>
+  );
+}
+
+function ThinBarView(view: ViewProps) {
+  const { left, shown, paused, ended, low, critical, hue, title, percent, hit, healing } = view;
+  const skin = useSkin();
+  const hsl = painter(skin, hue);
+  const layers = fillLayers(skin);
+  const glow = `0 0 ${low ? 28 : 18}px ${hsl(90, 50, low ? 0.7 : 0.45)}`;
+  const barStyle: CSSProperties = {
+    position: 'relative',
+    height: BAR_HEIGHT_THIN,
+    transform: 'skewX(-14deg)',
+    borderRadius: 6,
+    padding: 3,
+    background: 'linear-gradient(180deg, #2a2a33 0%, #0c0c10 100%)',
+    boxShadow: `0 0 0 2px rgba(0,0,0,.85), ${glow}, inset 0 1px 0 rgba(255,255,255,.18)`,
+    ...(skin && barFrameStyle(skin, glow)),
+    animation: critical
+      ? 'sa-shake .45s linear infinite'
+      : low
+        ? 'sa-pulse .9s ease-in-out infinite'
+        : undefined,
+  };
+
+  const textUnskew = skin ? -skin.skew : 14;
+
+  return (
+    <>
+      <PopBand pops={view.pops} hue={hue} x={shown * 100} height={BAR_TOP_THIN} />
+      <div
+        style={{
+          position: 'absolute',
+          inset: '0 28px',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'flex-end',
+          paddingBottom: BAR_BOTTOM,
+        }}
+      >
+        <div style={barStyle}>
+          <div
+            style={{
+              position: 'relative',
+              height: '100%',
+              overflow: 'hidden',
+              borderRadius: skin ? 3 * skin.radius : 3,
+              background: skin
+                ? trackBackground(skin)
+                : 'repeating-linear-gradient(90deg, rgba(255,255,255,.045) 0 14px, transparent 14px 28px), linear-gradient(180deg, #16161c, #07070a)',
+            }}
+          >
+            {hit && (
+              <div
+                key={hit.key}
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  bottom: 0,
+                  left: `${Math.min(hit.from, hit.to) * 100}%`,
+                  width: `${Math.abs(hit.to - hit.from) * 100}%`,
+                  background: hit.heal ? '#ffffff' : '#ef4444',
+                  animation: `sa-ghost ${hit.heal ? HEAL_MS : HURT_MS}ms ease-out forwards`,
+                }}
+              />
+            )}
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                transform: `translateX(${(shown - 1) * 100}%)`,
+                background: skin
+                  ? fillBackground(skin, hsl)
+                  : `linear-gradient(180deg, ${hsl(95, 72)} 0%, ${hsl(88, 52)} 42%, ${hsl(85, 34)} 100%)`,
+                boxShadow: `inset -3px 0 0 ${hsl(100, 85)}`,
+                transition: `transform ${view.ease}, background .4s`,
+                filter: paused ? 'saturate(.35) brightness(.85)' : undefined,
+                overflow: 'hidden',
+              }}
+            >
+              {layers.stripes && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    inset: '0 0 0 -28px',
+                    background:
+                      'repeating-linear-gradient(115deg, rgba(255,255,255,.14) 0 10px, transparent 10px 20px)',
+                    backgroundSize: '28px 100%',
+                    animation: paused ? undefined : 'sa-stripes 1.2s linear infinite',
+                  }}
+                />
+              )}
+              {layers.gloss && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    left: 0,
+                    right: 0,
+                    top: 2,
+                    height: '32%',
+                    background:
+                      'linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,0))',
+                    borderRadius: 2,
+                  }}
+                />
+              )}
+              {hit && healing && (
+                <div
+                  key={hit.key}
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    bottom: 0,
+                    left: `${(1 - shown) * 100}%`,
+                    width: `${shown * 40}%`,
+                    background:
+                      'linear-gradient(90deg, transparent, rgba(255,255,255,.75), transparent)',
+                    animation: 'sa-sheen .8s ease-out forwards',
+                  }}
+                />
+              )}
+            </div>
+            {TICKS.map((tick) => (
+              <div
+                key={tick}
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  bottom: 0,
+                  left: `${tick}%`,
+                  width: layers.tickWidth,
+                  background: 'rgba(0,0,0,.45)',
+                }}
+              />
+            ))}
+            {/* Embedded text row inside the thin progress bar */}
+            <div
+              style={{
+                position: 'absolute',
+                inset: '0 14px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: 12,
+                pointerEvents: 'none',
+                zIndex: 2,
+                transform: `skewX(${textUnskew}deg)`,
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, minWidth: 0 }}>
+                <HeartIcon hue={hue} beat={view.beat} size={18} />
+                {title && (
+                  <span
+                    className="sa-title sa-shadow"
+                    style={{
+                      fontSize: 16,
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {title}
+                  </span>
+                )}
+                {paused && !ended && <PauseChip compact />}
+              </div>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
+                <span
+                  className="sa-shadow"
+                  style={{
+                    fontSize: 20,
+                    fontWeight: 800,
+                    lineHeight: 1,
+                    ...clockColor(ended, skin),
+                  }}
+                >
+                  {formatClock(left)}
+                </span>
+                {percent && (
+                  <span
+                    className="sa-shadow"
+                    style={{
+                      fontSize: 14,
+                      fontWeight: 700,
+                      opacity: 0.85,
+                      color: skin?.text ?? '#fff',
+                    }}
+                  >
+                    {percent}
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+          <HealFlash hit={hit} healing={healing} hue={hue} radius={8} spread={5} />
+          {skin && <Frame skin={skin} radius={6} />}
+          {ended && <KnockOut size={42} />}
+        </div>
         {view.rates.length > 0 && (
           <div style={{ position: 'absolute', left: 10, bottom: 2 }}>
             <RateStrip rows={view.rates} />

@@ -585,8 +585,9 @@ export const tr: typeof en = {
       "Twitch ve Kick için subathon sayacı. Geriye doğru sayar, gelen her abonelik, hediye abonelik, Bits cheer'ı ya da Kicks hediyesi süreyi uzatır. Sayacı sıfıra doğru eriyen oyun tarzı bir can barı, büyük bir saat ya da halka olarak göster, hangisinin ne kadar süre ekleyeceğine de sen karar ver.",
     style: 'Stil',
     styleTip:
-      "Can Barı, oyundaki bir karakterin canı gibi %100'den sıfıra iner. Saat süreyi büyük rakamlarla gösterir. Halka ise giderek boşalan bir çemberdir.",
+      "Can Barı, oyundaki bir karakterin canı gibi %100'den sıfıra iner. İnce Bar, başlığı ve saati daha ince bir barın içine yerleştirir. Saat süreyi büyük rakamlarla gösterir. Halka ise giderek boşalan bir çemberdir.",
     styleBar: 'Can Barı',
+    styleThin: 'İnce Bar',
     styleClock: 'Saat',
     styleRing: 'Halka',
     color: 'Renk',
@@ -719,6 +720,11 @@ export const tr: typeof en = {
     targetTip: 'Bar bu sayıda dolar. Sayı hedefi geçince de artmaya devam eder.',
     countsHint:
       'Prime ya da hangi tier olursa olsun, her abonelik ve yenileme 1 ekler. Hediyede içindeki her abonelik için 1 eklenir.',
+    style: 'Stil',
+    styleTip:
+      'Bar hedef başlığını ve sayacı barın üstünde gösterir. İnce Bar başlığı ve sayacı doğrudan daha ince bir barın içine yerleştirir.',
+    styleBar: 'Bar',
+    styleThin: 'İnce Bar',
     color: 'Renk',
     titleLabel: 'Başlık',
     titleTip: 'Barın üstünde görünür. Başlık istemiyorsan boş bırak.',
@@ -2218,6 +2224,8 @@ export const tr: typeof en = {
     lead: "Senchabot Extensions'a eklenen özellikler ve düzeltilen hatalar, en yenisi en üstte. Liste projenin [GitHub'daki](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) commit geçmişinden hazırlanıyor.",
     site: 'Site',
     entries: {
+      thinBars:
+        'Subathon Timer ve Abone Hedefi artık başlık ile süreyi veya sayacı doğrudan daha ince bir ilerleme barının içine yerleştiren İnce Bar stiline sahip.',
       subathonDynamicRates:
         'Subathon Timer artık zamana bağlı oranlara sahip: saat zaten yüksekken bir aboneliğin ne kadar süre ekleyeceğini düşürmek için bir eşik belirleyin.',
       scrollHint:

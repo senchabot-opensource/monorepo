@@ -341,4 +341,28 @@ describe('SubathonWidget', () => {
       expect(rates()).toContain('Hediye Sub +10 dk');
     });
   });
+
+  it('renders in thin style with embedded title and clock', () => {
+    render(
+      <SubathonWidget
+        twitchChannel="streamer"
+        settings={settings({ style: 'thin', title: 'MARATHON', start: 3600 })}
+      />,
+    );
+    expect(screen.getByTestId('subathon').dataset.style).toBe('thin');
+    expect(clock()).toContain('MARATHON');
+    expect(clock()).toContain('01:00:00');
+  });
+
+  it('renders rates in thin style positioned properly', async () => {
+    await renderWithProviders(
+      <SubathonWidget
+        twitchChannel="streamer"
+        settings={settings({ style: 'thin', rates: true, tsub: 300 })}
+      />,
+      '/widgets/subathon?lang=en',
+    );
+    expect(screen.getByTestId('subathon-rates')).toBeDefined();
+    expect(screen.getByTestId('subathon-rates').textContent).toContain('Sub +5 min');
+  });
 });

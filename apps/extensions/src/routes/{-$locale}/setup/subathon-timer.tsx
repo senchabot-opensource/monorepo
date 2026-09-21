@@ -150,6 +150,7 @@ function SubathonSetup() {
 
   const styleOptions: SegmentedOption<SubathonStyle>[] = [
     { value: 'bar', label: t('subathon.styleBar') },
+    { value: 'thin', label: t('subathon.styleThin') },
     { value: 'clock', label: t('subathon.styleClock') },
     { value: 'ring', label: t('subathon.styleRing') },
   ];

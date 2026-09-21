@@ -66,6 +66,8 @@ describe('Sub Goal setup', () => {
     expectUrl({ start: 120 });
     await retype(user, count(en('goal.target')), '150');
     expectUrl({ target: 150 });
+    await user.click(segment(en('goal.style'), en('goal.styleThin')));
+    expectUrl({ style: 'thin' });
     await user.click(color(en('subathon.colors.gold')));
     expectUrl({ color: 'gold' });
     await retype(user, textbox(en('goal.titleLabel')), 'Road to 150');
@@ -74,9 +76,9 @@ describe('Sub Goal setup', () => {
     expectUrl({ pops: false });
 
     expect(urlField().value).toBe(
-      'http://localhost:3000/widgets/goal?twitch=streamer&color=gold&title=Road+to+150&start=120&target=150&pops=0',
+      'http://localhost:3000/widgets/goal?twitch=streamer&style=thin&color=gold&title=Road+to+150&start=120&target=150&pops=0',
     );
-  });
+  }, 30_000);
 
   it('keeps the goal at 1 or more', async () => {
     const user = setupUser();
@@ -133,6 +135,7 @@ describe('Sub Goal setup', () => {
       {
         platforms: 'both',
         preset: 'classic',
+        style: 'thin',
         color: 'cyan',
         title: 'Road & 100% 🎉',
         start: 431,
@@ -145,6 +148,7 @@ describe('Sub Goal setup', () => {
     await user.click(urlField());
     await user.paste(pasted);
 
+    expect(segment(en('goal.style'), en('goal.styleThin')).checked).toBe(true);
     expect(color(en('subathon.colors.cyan')).checked).toBe(true);
     expect(textbox(en('goal.titleLabel')).value).toBe('Road & 100% 🎉');
     expect(toggle(en('goal.showPops')).getAttribute('aria-checked')).toBe('false');

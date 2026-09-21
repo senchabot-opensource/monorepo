@@ -184,4 +184,16 @@ describe('GoalWidget', () => {
     act(() => vi.advanceTimersByTime(2200 + CELEBRATE_MS + 1500));
     expect(shown()).toContain('0/ 3');
   });
+
+  it('renders in thin style with embedded title and count', () => {
+    render(
+      <GoalWidget
+        twitchChannel="streamer"
+        settings={settings({ style: 'thin', title: 'COMMUNITY GOAL', start: 4, target: 10 })}
+      />,
+    );
+    expect(goal().dataset.style).toBe('thin');
+    expect(shown()).toContain('COMMUNITY GOAL');
+    expect(shown()).toContain('4/ 10');
+  });
 });

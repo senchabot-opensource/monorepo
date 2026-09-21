@@ -15,10 +15,13 @@ const STAGE = { width: 800, height: 260 };
 // Bottom up: margin, the bar, a gap, the title and count row; the rising pops use the rest.
 const BAR_BOTTOM = 30;
 const BAR_HEIGHT = 56;
+const BAR_HEIGHT_THIN = 40;
 const BAR_GAP = 10;
 const INFO_ROW_HEIGHT = 44;
 const POP_BAND = STAGE.height - BAR_BOTTOM - BAR_HEIGHT - BAR_GAP - INFO_ROW_HEIGHT;
+const POP_BAND_THIN = STAGE.height - BAR_BOTTOM - BAR_HEIGHT_THIN;
 const BAR_CENTER = STAGE.height - BAR_BOTTOM - BAR_HEIGHT / 2;
+const BAR_CENTER_THIN = STAGE.height - BAR_BOTTOM - BAR_HEIGHT_THIN / 2;
 
 // A small goal gets a segment per sub; past this many, lines every 10%.
 const MAX_SEGMENTS = 20;
@@ -73,13 +76,22 @@ export function GoalWidget({
   });
   const hue = hueFor(settings.color, 1);
   const skin = skinFor(settings.preset);
+  const isThin = settings.style === 'thin';
+  const popBand = isThin ? POP_BAND_THIN : POP_BAND;
+  const barCenter = isThin ? BAR_CENTER_THIN : BAR_CENTER;
 
   return (
     <SkinProvider skin={skin}>
-      <div className="sg-root" data-testid="goal" data-reached={reached} data-preset={skin?.id}>
+      <div
+        className="sg-root"
+        data-testid="goal"
+        data-style={settings.style}
+        data-reached={reached}
+        data-preset={skin?.id}
+      >
         <style>{CSS + skinCss('sg', skin)}</style>
         <div className="sg-stage" style={{ transform: `translate(-50%, -50%) scale(${scale})` }}>
-          {settings.pops && <PopBand pops={pops} hue={hue} x={progress * 100} />}
+          {settings.pops && <PopBand pops={pops} hue={hue} x={progress * 100} height={popBand} />}
           <div
             style={{
               position: 'absolute',
@@ -87,41 +99,56 @@ export function GoalWidget({
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'flex-end',
-              gap: BAR_GAP,
+              gap: isThin ? 0 : BAR_GAP,
               paddingBottom: BAR_BOTTOM,
             }}
           >
-            <InfoRow
-              title={settings.title}
-              count={count}
-              target={settings.target}
-              hue={hue}
-              reached={reached}
-              hit={hit}
-            />
-            <Bar
-              progress={progress}
-              target={settings.target}
-              hue={hue}
-              hit={hit}
-              celebrating={celebration !== null}
-            />
+            {isThin ? (
+              <ThinBar
+                progress={progress}
+                title={settings.title}
+                count={count}
+                target={settings.target}
+                hue={hue}
+                reached={reached}
+                hit={hit}
+                celebrating={celebration !== null}
+              />
+            ) : (
+              <>
+                <InfoRow
+                  title={settings.title}
+                  count={count}
+                  target={settings.target}
+                  hue={hue}
+                  reached={reached}
+                  hit={hit}
+                />
+                <Bar
+                  progress={progress}
+                  target={settings.target}
+                  hue={hue}
+                  hit={hit}
+                  celebrating={celebration !== null}
+                />
+              </>
+            )}
           </div>
-          {celebration !== null && <Celebration key={celebration} />}
+          {celebration !== null && <Celebration key={celebration} centerTop={barCenter} />}
         </div>
       </div>
     </SkinProvider>
   );
 }
 
-function StarIcon({ hue, hit }: { hue: number; hit: GoalHit | null }) {
+function StarIcon({ hue, hit, size = 26 }: { hue: number; hit: GoalHit | null; size?: number }) {
   const hsl = painter(useSkin(), hue);
   return (
     <svg
       key={hit?.up ? hit.key : undefined}
       viewBox="0 0 24 24"
-      width="26"
-      height="26"
+      width={size}
+      height={size}
       aria-hidden="true"
       style={{
         filter: `drop-shadow(0 0 8px ${hsl(90, 55, 0.8)})`,
@@ -366,10 +393,204 @@ function Bar({
   );
 }
 
+function ThinBar({
+  progress,
+  title,
+  count,
+  target,
+  hue,
+  reached,
+  hit,
+  celebrating,
+}: {
+  progress: number;
+  title: string;
+  count: number;
+  target: number;
+  hue: number;
+  reached: boolean;
+  hit: GoalHit | null;
+  celebrating: boolean;
+}) {
+  const skin = useSkin();
+  const hsl = painter(skin, hue);
+  const gold = painter(skin, GOLD_HUE, 'win');
+  const glow = celebrating ? painter(skin, GOLD_HUE, 'win') : hsl;
+  const layers = fillLayers(skin);
+  const segments = target <= MAX_SEGMENTS ? target : 10;
+  const ticks = Array.from({ length: segments - 1 }, (_, index) => ((index + 1) / segments) * 100);
+  const glowShadow = `0 0 ${celebrating ? 32 : 18}px ${glow(90, 50, celebrating ? 0.75 : 0.4)}`;
+  const barStyle: CSSProperties = {
+    position: 'relative',
+    height: BAR_HEIGHT_THIN,
+    transform: 'skewX(-14deg)',
+    borderRadius: 6,
+    padding: 3,
+    background: 'linear-gradient(180deg, #2a2a33 0%, #0c0c10 100%)',
+    boxShadow: `0 0 0 2px rgba(0,0,0,.85), ${glowShadow}, inset 0 1px 0 rgba(255,255,255,.18)`,
+    ...(skin && barFrameStyle(skin, glowShadow)),
+    animation: celebrating ? 'sg-glow .7s ease-in-out 5' : undefined,
+    transition: 'box-shadow .4s',
+  };
+
+  const textUnskew = skin ? -skin.skew : 14;
+
+  return (
+    <div style={barStyle}>
+      <div
+        style={{
+          position: 'relative',
+          height: '100%',
+          overflow: 'hidden',
+          borderRadius: skin ? 3 * skin.radius : 3,
+          background: skin
+            ? trackBackground(skin)
+            : 'repeating-linear-gradient(90deg, rgba(255,255,255,.045) 0 14px, transparent 14px 28px), linear-gradient(180deg, #16161c, #07070a)',
+        }}
+      >
+        {hit && (
+          <div
+            key={hit.key}
+            style={{
+              position: 'absolute',
+              top: 0,
+              bottom: 0,
+              left: `${Math.min(hit.from, hit.to) * 100}%`,
+              width: `${Math.abs(hit.to - hit.from) * 100}%`,
+              background: hit.up ? '#ffffff' : '#ef4444',
+              animation: `sg-ghost ${hit.up ? 900 : 1300}ms ease-out forwards`,
+            }}
+          />
+        )}
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            transform: `translateX(${(progress - 1) * 100}%)`,
+            background: skin
+              ? fillBackground(skin, hsl)
+              : `linear-gradient(180deg, ${hsl(95, 72)} 0%, ${hsl(88, 52)} 42%, ${hsl(85, 34)} 100%)`,
+            boxShadow: `inset -3px 0 0 ${hsl(100, 85)}`,
+            transition: 'transform .7s cubic-bezier(.2,.9,.3,1.1)',
+            overflow: 'hidden',
+          }}
+        >
+          {layers.stripes && (
+            <div
+              style={{
+                position: 'absolute',
+                inset: '0 0 0 -28px',
+                background:
+                  'repeating-linear-gradient(115deg, rgba(255,255,255,.14) 0 10px, transparent 10px 20px)',
+                backgroundSize: '28px 100%',
+                animation: 'sg-stripes 1.6s linear infinite',
+              }}
+            />
+          )}
+          {layers.gloss && (
+            <div
+              style={{
+                position: 'absolute',
+                left: 0,
+                right: 0,
+                top: 2,
+                height: '32%',
+                background: 'linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,0))',
+                borderRadius: 2,
+              }}
+            />
+          )}
+          {hit?.up && (
+            <div
+              key={hit.key}
+              style={{
+                position: 'absolute',
+                top: 0,
+                bottom: 0,
+                left: `${(1 - progress) * 100}%`,
+                width: `${progress * 40}%`,
+                background:
+                  'linear-gradient(90deg, transparent, rgba(255,255,255,.75), transparent)',
+                animation: 'sg-sheen .8s ease-out forwards',
+              }}
+            />
+          )}
+        </div>
+        {ticks.map((tick) => (
+          <div
+            key={tick}
+            style={{
+              position: 'absolute',
+              top: 0,
+              bottom: 0,
+              left: `${tick}%`,
+              width: layers.tickWidth,
+              background: 'rgba(0,0,0,.45)',
+            }}
+          />
+        ))}
+        {/* Embedded text row inside the thin progress bar */}
+        <div
+          style={{
+            position: 'absolute',
+            inset: '0 14px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 12,
+            pointerEvents: 'none',
+            zIndex: 2,
+            transform: `skewX(${textUnskew}deg)`,
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, minWidth: 0 }}>
+            {reached ? (
+              <TrophyIcon size={20} glow={gold(95, 55, 0.8)} />
+            ) : (
+              <StarIcon hue={hue} hit={hit} size={18} />
+            )}
+            {title && (
+              <span
+                className="sg-title sg-shadow"
+                style={{
+                  fontSize: 16,
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {title}
+              </span>
+            )}
+          </div>
+          <span
+            className="sg-shadow"
+            style={{ display: 'flex', alignItems: 'baseline', gap: 4, fontWeight: 800, lineHeight: 1 }}
+          >
+            <span
+              key={hit?.up ? hit.key : undefined}
+              style={{
+                fontSize: 20,
+                color: reached ? gold(100, 72) : (skin?.text ?? '#fff'),
+                transformOrigin: 'right center',
+                animation: hit?.up ? 'sg-bump .5s ease-out' : undefined,
+              }}
+            >
+              {count}
+            </span>
+            <span style={{ fontSize: 14, opacity: 0.75 }}>/ {target}</span>
+          </span>
+        </div>
+      </div>
+      {skin && <Frame skin={skin} radius={6} />}
+    </div>
+  );
+}
+
 /** A trophy that lands on the bar, with a ring and sparks bursting out of it. */
-function Celebration() {
+function Celebration({ centerTop = BAR_CENTER }: { centerTop?: number }) {
   const gold = painter(useSkin(), GOLD_HUE, 'win');
-  const center: CSSProperties = { position: 'absolute', left: '50%', top: BAR_CENTER };
+  const center: CSSProperties = { position: 'absolute', left: '50%', top: centerTop };
   return (
     <div
       aria-hidden="true"
@@ -430,12 +651,22 @@ const POP_OFFSETS = [0, -17, 17];
 const POP_GAP = 12;
 
 /** Floating "+1" numbers with who they came from, rising from the fill's edge. */
-function PopBand({ pops, hue, x }: { pops: GoalPop[]; hue: number; x: number }) {
+function PopBand({
+  pops,
+  hue,
+  x,
+  height,
+}: {
+  pops: GoalPop[];
+  hue: number;
+  x: number;
+  height: number;
+}) {
   const skin = useSkin();
   const hsl = painter(skin, hue);
   const base = Math.min(70, Math.max(30, x));
   return (
-    <div style={{ position: 'absolute', left: 0, right: 0, top: 0, height: POP_BAND - POP_GAP }}>
+    <div style={{ position: 'absolute', left: 0, right: 0, top: 0, height: height - POP_GAP }}>
       {pops.map((pop) => (
         <div
           key={pop.id}

@@ -9,6 +9,10 @@ import { TestButtons } from '#/components/test-buttons';
 import { ColorSwatches } from '#/components/ui/color-swatches';
 import { CountField } from '#/components/ui/count-field';
 import { FieldLabel } from '#/components/ui/field-label';
+import {
+  SegmentedControl,
+  type SegmentedOption,
+} from '#/components/ui/segmented-control';
 import { SettingsGroup } from '#/components/ui/settings-group';
 import { Switch } from '#/components/ui/switch';
 import { HINT_CLASS, TextField } from '#/components/ui/text-field';
@@ -26,6 +30,7 @@ import {
   DEFAULT_GOAL_SETTINGS,
   GOAL_COLORS,
   type GoalSettings,
+  type GoalStyle,
   MAX_GOAL_COUNT,
   parseGoalUrl,
   TITLE_MAX_LENGTH,
@@ -108,6 +113,11 @@ function GoalSetup() {
     </div>
   );
 
+  const styleOptions: SegmentedOption<GoalStyle>[] = [
+    { value: 'bar', label: t('goal.styleBar') },
+    { value: 'thin', label: t('goal.styleThin') },
+  ];
+
   const settingsPanel = (
     <>
       <SettingsGroup title={t('common.sectionChannel')}>
@@ -131,6 +141,17 @@ function GoalSetup() {
 
       <SettingsGroup title={t('common.sectionAppearance')}>
         <PresetField value={settings.preset} onChange={(value) => update('preset', value)} />
+        <div>
+          <FieldLabel id={`${id}-style`} tip={t('goal.styleTip')}>
+            {t('goal.style')}
+          </FieldLabel>
+          <SegmentedControl
+            labelledBy={`${id}-style`}
+            value={settings.style}
+            onChange={(value) => update('style', value)}
+            options={styleOptions}
+          />
+        </div>
         {isClassic(settings.preset) && (
           <div>
             <FieldLabel id={`${id}-color`}>{t('goal.color')}</FieldLabel>
