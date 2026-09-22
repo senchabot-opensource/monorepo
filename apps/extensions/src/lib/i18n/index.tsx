@@ -9,6 +9,9 @@ import {
   useSyncExternalStore,
 } from 'react';
 import { en } from './en';
+import { es } from './es';
+import { fr } from './fr';
+import { ja } from './ja';
 import {
   DEFAULT_LOCALE,
   isValidLocale,
@@ -17,11 +20,19 @@ import {
   type Locale,
 } from './locales';
 import { getPathLocale, isAppPath, localizePath } from './paths';
+import { pt } from './pt';
 import { tr } from './tr';
 
-export { isValidLocale, LANG_PARAM, LOCALE_LABELS, LOCALES, type Locale } from './locales';
+export {
+  isValidLocale,
+  LANG_PARAM,
+  LOCALE_LABELS,
+  LOCALE_NAMES,
+  LOCALES,
+  type Locale,
+} from './locales';
 
-const dictionaries: Record<Locale, typeof en> = { en, tr };
+export const dictionaries: Record<Locale, typeof en> = { en, es, fr, ja, pt, tr };
 
 type Dictionary = typeof en;
 
@@ -74,14 +85,18 @@ function localeFromStorage(): Locale | null {
   }
 }
 
-// Overlays and tools keep the pre-redesign rule (Turkish anywhere in the list) so a scene in OBS
-// doesn't switch language. Site pages pick the first supported language in the landing script.
+// Overlays and tools keep the pre-redesign rule (Turkish anywhere in the list, now any supported
+// language other than English) so a scene in OBS doesn't switch language. Site pages pick the
+// first supported language in the landing script.
 function readBrowserLocale(): Locale {
   if (typeof window === 'undefined') return DEFAULT_LOCALE;
   const candidates =
     window.navigator.languages ?? (window.navigator.language ? [window.navigator.language] : []);
-  const prefersTurkish = candidates.some((tag) => tag?.toLowerCase().startsWith('tr'));
-  return prefersTurkish ? 'tr' : DEFAULT_LOCALE;
+  for (const tag of candidates) {
+    const base = tag?.slice(0, 2).toLowerCase();
+    if (isValidLocale(base) && base !== DEFAULT_LOCALE) return base;
+  }
+  return DEFAULT_LOCALE;
 }
 
 // Overlays and tools only. External store so the locale resolves synchronously after hydration

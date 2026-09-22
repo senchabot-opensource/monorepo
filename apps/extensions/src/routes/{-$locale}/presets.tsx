@@ -79,7 +79,7 @@ function PresetsPage() {
     ? t('presets.descriptions.classic')
     : preset.source === 'builtin'
       ? t(`presets.descriptions.${preset.data.id}` as 'presets.descriptions.rift')
-      : (preset.data.description?.[locale] ?? '');
+      : (preset.data.description?.[locale] ?? preset.data.description?.en ?? '');
 
   return (
     <ContentPage

@@ -10,6 +10,7 @@ import { CountField } from '#/components/ui/count-field';
 import { FieldLabel } from '#/components/ui/field-label';
 import { RangeField } from '#/components/ui/range-field';
 import { SegmentedControl } from '#/components/ui/segmented-control';
+import { Select } from '#/components/ui/select';
 import { SettingsGroup } from '#/components/ui/settings-group';
 import { Switch } from '#/components/ui/switch';
 import { TextField } from '#/components/ui/text-field';
@@ -24,7 +25,14 @@ import {
 } from '#/features/widgets/stream-alerts/use-stream-alerts';
 import type { SubathonPlatform } from '#/features/widgets/subathon/subathon-events';
 import { usePreviewSender } from '#/hooks/use-preview-channel';
-import { LOCALES, type Locale, type TranslationKey, translate, useI18n } from '#/lib/i18n';
+import {
+  LOCALE_NAMES,
+  LOCALES,
+  type Locale,
+  type TranslationKey,
+  translate,
+  useI18n,
+} from '#/lib/i18n';
 import { getParamsLocale } from '#/lib/i18n/paths';
 import type { FaqEntry } from '#/lib/i18n/seo';
 import { getSetupPageHead } from '#/lib/seo/pages';
@@ -89,9 +97,6 @@ const KIND_FIELDS: Record<
     min: { key: 'minRaid', label: 'streamAlerts.minRaid' },
   },
 };
-
-// Each language in its own words, since it names the alerts' language, not the page's.
-const LANGUAGE_NAMES: Record<Locale, string> = { en: 'English', tr: 'Türkçe' };
 
 const TEST_LABELS: Record<AlertKind, TranslationKey> = {
   sub: 'streamAlerts.testSub',
@@ -252,11 +257,11 @@ function StreamAlertsSetup() {
           <FieldLabel id={`${id}-lang`} tip={t('streamAlerts.languageTip')}>
             {t('streamAlerts.language')}
           </FieldLabel>
-          <SegmentedControl
+          <Select
             labelledBy={`${id}-lang`}
             value={alertLocale}
             onChange={setPickedLocale}
-            options={LOCALES.map((value) => ({ value, label: LANGUAGE_NAMES[value] }))}
+            options={LOCALES.map((value) => ({ value, label: LOCALE_NAMES[value] }))}
           />
         </div>
       </SettingsGroup>

@@ -4,6 +4,10 @@
  * listed there; EXTRA_PAGES is the one list to extend for pages the sitemap leaves out.
  */
 import { en } from '../../src/lib/i18n/en.ts';
+import { es } from '../../src/lib/i18n/es.ts';
+import { fr } from '../../src/lib/i18n/fr.ts';
+import { ja } from '../../src/lib/i18n/ja.ts';
+import { pt } from '../../src/lib/i18n/pt.ts';
 import { tr } from '../../src/lib/i18n/tr.ts';
 
 export const THEMES = ['dark', 'light'];
@@ -20,11 +24,11 @@ export const DESKTOP_MIN_WIDTH = 1024;
 /** Pages that aren't in the sitemap but must still work. */
 export const EXTRA_PAGES = [{ path: '/this-page-does-not-exist', status: 404 }];
 
-/** Locale path prefixes; `/tr/setup/raffle` is tested like `/setup/raffle`. */
-export const LOCALE_PREFIXES = ['tr'];
+/** Locale path prefixes (LOCALES minus English); `/tr/setup/raffle` is tested like `/setup/raffle`. */
+export const LOCALE_PREFIXES = ['es', 'fr', 'ja', 'pt', 'tr'];
 
 /** The header theme button, found by its label in any language. */
-export const THEME_TOGGLE = [en, tr]
+export const THEME_TOGGLE = [en, es, fr, ja, pt, tr]
   .map((dict) => `header button[aria-label="${dict.common.themeToggle}"]`)
   .join(', ');
 

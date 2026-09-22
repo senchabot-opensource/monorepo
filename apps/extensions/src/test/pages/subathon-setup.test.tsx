@@ -8,7 +8,17 @@ import {
   type SubathonSettings,
 } from '#/lib/subathon-url';
 import { withLayout } from '#/test/browser';
-import { button, en, retype, segment, slider, textbox, toggle } from '#/test/queries';
+import {
+  button,
+  combobox,
+  en,
+  pickOption,
+  retype,
+  segment,
+  slider,
+  textbox,
+  toggle,
+} from '#/test/queries';
 import { renderRoute, setupUser } from '#/test/render';
 
 const PAGE = '/setup/subathon-timer';
@@ -83,7 +93,7 @@ describe('Subathon Timer setup', () => {
     expectUrl({ percent: false });
     await user.click(toggle(en('subathon.showPops')));
     expectUrl({ pops: false });
-    await user.click(segment(en('subathon.ratesLanguage'), 'Türkçe'));
+    await pickOption(user, en('subathon.ratesLanguage'), 'Türkçe');
     locale = 'tr';
     expectUrl({});
     await user.click(toggle(en('subathon.showRates')));
@@ -183,7 +193,7 @@ describe('Subathon Timer setup', () => {
     await user.click(urlField());
     await user.paste(pasted);
     expect(urlField().value).toBe(pasted);
-    expect(segment(en('subathon.ratesLanguage'), 'Türkçe').checked).toBe(true);
+    expect(combobox(en('subathon.ratesLanguage')).textContent).toBe('Türkçe');
   });
 
   it('sends the remove and reset commands the chat would', async () => {

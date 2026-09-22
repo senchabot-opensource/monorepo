@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { PREVIEW_CHANNEL } from '#/features/widgets/poll/use-poll';
 import { buildPollUrl, DEFAULT_POLL_SETTINGS, type PollSettings } from '#/lib/poll-url';
 import { withLayout } from '#/test/browser';
-import { button, en, retype, segment, textbox, toggle } from '#/test/queries';
+import { button, combobox, en, pickOption, retype, segment, textbox, toggle } from '#/test/queries';
 import { renderRoute, setupUser } from '#/test/render';
 
 const PAGE = '/setup/chat-poll';
@@ -62,7 +62,7 @@ describe('Chat Poll setup', () => {
     expectUrl({ color: 'gold' });
     await user.click(segment(en('poll.position'), en('poll.positionBottom')));
     expectUrl({ position: 'bottom' });
-    await user.click(segment(en('poll.language'), 'Türkçe'));
+    await pickOption(user, en('poll.language'), 'Türkçe');
     expect(urlField().value).toContain('lang=tr');
 
     expect(urlField().value).toBe(
@@ -98,7 +98,7 @@ describe('Chat Poll setup', () => {
     expect(textbox(en('poll.question')).value).toBe('Best map?');
     expect(option(3).value).toBe('Inferno');
     expect(segment(en('poll.subWeight'), '3×').checked).toBe(true);
-    expect(segment(en('poll.language'), 'Türkçe').checked).toBe(true);
+    expect(combobox(en('poll.language')).textContent).toBe('Türkçe');
   });
 
   it("plays the ready-made poll from the overlay's URL through the router", async () => {

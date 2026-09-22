@@ -31,7 +31,7 @@ function visibleFaq(locale: Locale) {
 
 describe.each(LOCALES)('landing page in %s', (locale) => {
   const t = inLocale(locale);
-  const home = locale === 'en' ? '/' : '/tr';
+  const home = locale === 'en' ? '/' : `/${locale}`;
   const localized = (path: string) => (locale === 'en' ? path : `/${locale}${path}`);
 
   it('has the hero, the widget gallery, the steps and the FAQ', async () => {

@@ -132,7 +132,7 @@ export const tr: typeof en = {
     },
     socials: {
       name: 'Sosyal Medya',
-      tagline: 'Sosyal medya hesaplarınızı şık bir animasyonla ekranda döndürün.',
+      tagline: 'Sosyal medya hesaplarını şık bir animasyonla ekranda sırayla göster.',
     },
   },
   home: {
@@ -247,7 +247,7 @@ export const tr: typeof en = {
     breadcrumb: 'Sohbet Kutusu Kurulumu',
     title: 'Sohbet Kutusu Kurulumu',
     intro:
-      "Twitch ve Kick sohbetini tek bir kaplamada birleştiren çoklu sohbet widget'ı. 7TV emote'ları iki platformda da, BTTV ve FFZ emote'ları Twitch'te görünür, rozetler de gösterilir. Düzeni, yazı tipini ve animasyonu sen seçersin.",
+      "Twitch ve Kick sohbetini tek bir overlay'de birleştiren çoklu sohbet widget'ı. 7TV emote'ları iki platformda da, BTTV ve FFZ emote'ları Twitch'te görünür, rozetler de gösterilir. Düzeni, yazı tipini ve animasyonu sen seçersin.",
     platformIndicator: 'Platform Göstergesi',
     platformName: 'Platform Adı',
     platformIcon: 'Platform Simgesi',
@@ -276,13 +276,13 @@ export const tr: typeof en = {
     fontSystem: 'Sistem Varsayılanı',
     textShadow: 'Yazı Gölgesi',
     textShadowTip:
-      'Kullanıcı adlarının ve mesajların arkasındaki koyu kenar. Güçlü her harfin çevresine kontur çizer, açık renkli oyunlarda da sohbet okunur; Kapalı gölgeyi, preset\'in kendi gölgesi dahil, kaldırır.',
+      "Kullanıcı adlarının ve mesajların arkasındaki koyu kenar. Güçlü, her harfin çevresine kontur çizer, açık renkli oyunlarda da sohbet okunur; Kapalı gölgeyi, preset'in kendi gölgesi dahil, kaldırır.",
     shadowNone: 'Kapalı',
     shadowNormal: 'Normal',
     shadowStrong: 'Güçlü',
     messageLayout: 'Mesaj Düzeni',
-    layoutInline: 'Satır içi — Kullanıcı adı: mesaj',
-    layoutStacked: 'Üst üste — kullanıcı adı üstte',
+    layoutInline: 'Satır içi (Kullanıcı adı: mesaj)',
+    layoutStacked: 'Üst üste (kullanıcı adı üstte)',
     layoutCard: 'Kart / Balon',
     layoutCompact: 'Kompakt (Twitch benzeri)',
     newMessageAnimation: 'Yeni Mesaj Animasyonu',
@@ -291,7 +291,7 @@ export const tr: typeof en = {
     animPop: 'Belirerek büyü / ölçeklen',
     animBounce: 'Zıplayarak gir',
     animStagger: 'Sıralı (önce bilgi, sonra mesaj)',
-    animFade: 'Solayarak belir',
+    animFade: 'Solarak belir',
     animTyping: 'Daktilo gibi yaz',
     animNone: 'Animasyon yok',
     orientation: 'Yön',
@@ -324,7 +324,7 @@ export const tr: typeof en = {
     highlightReply: 'Yanıtlanan mesaj',
     highlightFirstMessage: 'Sohbete ilk katılanlar',
     highlightAnnouncement: 'Duyurular',
-    highlightHighlighted: 'Mesajınızı Vurgulayın',
+    highlightHighlighted: 'Mesajımı Vurgula',
     highlightsAll: 'Hepsi',
     highlightsNone: 'Kapalı',
     announcement: 'Duyuru',
@@ -340,7 +340,7 @@ export const tr: typeof en = {
       'Yayın yazılımında (OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio vb.) bir Tarayıcı Kaynağı ekle.',
     guideStep2: "Kopyaladığın çoklu sohbet widget URL'sini yapıştır.",
     guideStep3:
-      'Genişlik ve yüksekliği istediğin sohbet kutusu kaplama boyutlarına ayarla (örn. dikey için 400×600).',
+      "Genişlik ve yüksekliği sohbet kutusu overlay'inin istediğin boyutuna ayarla (örn. dikey için 400×600).",
     browserSourceHintSize: ' (önerilen boyut: sohbet kutusu için 400×600).',
     widgetUrlTip:
       "Daha önce bir widget oluşturduysan URL'sini buraya yapıştır. Ayarların geri yüklenir, istediğini değiştirebilirsin.",
@@ -393,7 +393,7 @@ export const tr: typeof en = {
     breadcrumb: 'OBS Bridge Kurulumu',
     title: 'OBS Bridge Kurulumu',
     intro:
-      "Güvendiğin kişiler Twitch ya da Kick sohbetinden OBS sahneni değiştirsin, yayını ve kaydı başlatıp durdursun. Köprü bir tarayıcı sekmesinde ya da OBS dock'unda çalışır ve OBS'ye doğrudan bağlanır.",
+      "Güvendiğin kişiler Twitch ya da Kick sohbetinden OBS sahneni değiştirsin, yayını ve kaydı başlatıp durdursun. Köprü bir tarayıcı sekmesinde ya da OBS dock'unda çalışır ve OBS'e doğrudan bağlanır.",
     sectionChannels: 'Kanallar',
     sectionUsers: 'Yetkili Kullanıcılar',
     usersLabel: 'Sohbetteki Kullanıcı Adları',
@@ -441,25 +441,25 @@ export const tr: typeof en = {
     wsUrlPlaceholder: 'ws://127.0.0.1:4455 (varsayılan)',
     wsPassword: 'WebSocket Şifresi',
     wsPasswordTip:
-      "OBS'de Araçlar → WebSocket Sunucu Ayarları → Bağlantı Bilgilerini Göster yolunda bulursun. Şifre araç URL'sine yazılır, o linki de şifre gibi sakla.",
+      "OBS'te Araçlar → WebSocket Sunucu Ayarları → Bağlanma Bilgilerini Göster yolunda bulursun. Şifre araç URL'sine yazılır, o linki de şifre gibi sakla.",
     wsPasswordPlaceholder: 'Şifre yoksa boş bırak',
     previewTitle: 'Araç Önizleme',
     previewIframeTitle: 'OBS Bridge Önizleme',
     summaryNotListening: '{platform} kanalı girilmediği için {names} şimdilik komut çalıştıramaz.',
     summaryNoChannel: 'Henüz kanal yok. Önce bir Twitch ya da Kick kanalı gir.',
     openTool: 'Aracı Aç',
-    openToolHint: "Canlı köprüyü yeni sekmede açar. Açılır açılmaz OBS'ye ve sohbetine bağlanır.",
+    openToolHint: "Canlı köprüyü yeni sekmede açar. Açılır açılmaz OBS'e ve sohbetine bağlanır.",
     toolUrlTip: 'İçinde OBS şifren var, onu da şifre gibi sakla. Kimseyle paylaşma, yayında gösterme.',
     toolUrlHint:
-      "Bir tarayıcı sekmesinde ya da OBS'nin Özel Tarayıcı Dock'unda aç, yayın boyunca açık kalsın.",
-    nextOpen: "Bir tarayıcı sekmesinde aç ya da OBS'de bir Özel Tarayıcı Dock'una yapıştır.",
+      "Bir tarayıcı sekmesinde ya da OBS'teki bir Özel Tarayıcı Yuvası'nda aç, yayın boyunca açık kalsın.",
+    nextOpen: "Bir tarayıcı sekmesinde aç ya da OBS'te bir Özel Tarayıcı Yuvası'na yapıştır.",
     nextKeepOpen: 'Orada Ana ve BRB sahneni seç, yayın boyunca sayfayı açık tut.',
     guideStep1:
-      "OBS'de Araçlar → WebSocket Sunucu Ayarları'nı aç, WebSocket sunucusunu etkinleştir ve Bağlantı Bilgilerini Göster'den şifreyi kopyala.",
+      "OBS'te Araçlar → WebSocket Sunucu Ayarları'nı aç, WebSocket sunucusunu etkinleştir ve Bağlanma Bilgilerini Göster'den şifreyi kopyala.",
     guideStep2:
       "Kanalını, komut çalıştırabilecek kişileri ve şifreyi gir, sonra araç URL'sini kopyala.",
     guideStep3:
-      "URL'yi bir tarayıcı sekmesinde ya da OBS'nin Özel Tarayıcı Dock'unda aç, Ana ve BRB sahneni seç.",
+      "URL'yi bir tarayıcı sekmesinde ya da OBS'teki bir Özel Tarayıcı Yuvası'nda aç, Ana ve BRB sahneni seç.",
     guideStep4:
       "Dock kullanıyorsan sahneleri seçtikten sonra Güncel URL'yi Kopyala'ya bas ve dock'a yapıştır. Dock, ilk eklendiği URL'yi açmaya devam eder.",
     faq1Q: '!scene sohbet komutu nasıl çalışır?',
@@ -467,7 +467,7 @@ export const tr: typeof en = {
       'Listendeki biri komutu, bir boşluk ve sahne adını yazar, örneğin !scene Gaming. OBS Bridge önce adı birebir tutan sahneyi arar, büyük küçük harfe bakmaz. Bulamazsa adında o yazı geçen ilk sahneye geçer.',
     faq2Q: 'OBS WebSocket şifrem güvende mi?',
     faq2A:
-      "OBS bağlantısı doğrudan tarayıcından OBS'ye gider. Ama şifre araç URL'sinde kayıtlı, bu URL'yi açtığında sayfa extensions.senchabot.com'dan yüklenir ve şifre de adresle birlikte oraya gider. O yüzden linki şifre gibi sakla. Kimseyle paylaşma, yayında gösterme.",
+      "OBS bağlantısı doğrudan tarayıcından OBS'e gider. Ama şifre araç URL'sinde kayıtlı, bu URL'yi açtığında sayfa extensions.senchabot.com'dan yüklenir ve şifre de adresle birlikte oraya gider. O yüzden linki şifre gibi sakla. Kimseyle paylaşma, yayında gösterme.",
     faq3Q: "Seçtiğim sahneler OBS dock'unda neden kayboldu?",
     faq3A:
       "Sahne seçimleri ve kullanıcı değişiklikleri araç sayfasının URL'sine kaydedilir. Tarayıcı sekmesinde sayfayı yer imlerine eklersen kalırlar, ama OBS dock'u her zaman ilk eklendiği URL'yi açar. Araç sayfasındaki Güncel URL'yi Kopyala'ya bas ve yeni URL'yi dock'a yapıştır.",
@@ -485,7 +485,7 @@ export const tr: typeof en = {
       obsUnreachable:
         "{url} adresinden cevap gelmedi. OBS açık mı, Araçlar → WebSocket Sunucu Ayarları'nda sunucu etkin mi?",
       obsWrongPassword:
-        "OBS şifreyi kabul etmedi. URL'deki şifre, OBS'nin WebSocket şifresiyle aynı olmalı.",
+        "OBS şifreyi kabul etmedi. URL'deki şifre, OBS'in WebSocket şifresiyle aynı olmalı.",
       obsNeedsPassword:
         "OBS bir şifre istiyor ama bu URL'de şifre yok. Kurulum sayfasında WebSocket şifresini girip yeni URL'yi kullan.",
       obsRefused: 'OBS bağlantıyı kabul etmedi: {reason}',
@@ -541,7 +541,7 @@ export const tr: typeof en = {
     breadcrumb: 'Sub Sprout Kurulumu',
     title: 'Sub Sprout Kurulumu',
     intro:
-      "Twitch veya Kick'te her yeni abonelikle seviye atlayan özelleştirilebilir abone hedefi bitkisi kaplaması.",
+      "Twitch veya Kick'te her yeni abonelikle seviye atlayan özelleştirilebilir abone hedefi bitkisi overlay'i.",
     sectionPlant: 'Bitki',
     plantVariety: 'Bitki Çeşidi',
     plantVarietyTip:
@@ -635,7 +635,7 @@ export const tr: typeof en = {
     startAuto: 'Hemen',
     sectionValues: 'Eklenen Süre',
     valuesHint: 'Birini kapatmak için 0 yap.',
-    dynamicRates: 'Süreyi zamana göre ayarla',
+    dynamicRates: 'Oranları kalan süreye göre ayarla',
     dynamicRatesTip: 'Saatte yeterli süre kaldığında ikinci bir oran seti kullanır.',
     shiftAt: 'Eşik',
     shiftAtTip: 'Kalan süre bu değerde ya da üzerindeyken ikinci oran seti kullanılır.',
@@ -732,7 +732,7 @@ export const tr: typeof en = {
       'Prime ya da hangi tier olursa olsun, her abonelik ve yenileme 1 ekler. Hediyede içindeki her abonelik için 1 eklenir.',
     style: 'Stil',
     styleTip:
-      'Bar hedef başlığını ve sayacı barın üstünde gösterir. İnce Bar başlığı ve sayacı doğrudan daha ince bir barın içine yerleştirir.',
+      'Bar hedef başlığını ve sayıyı barın üstünde gösterir. İnce Bar başlığı ve sayıyı doğrudan daha ince bir barın içine yerleştirir.',
     styleBar: 'Bar',
     styleThin: 'İnce Bar',
     color: 'Renk',
@@ -841,7 +841,7 @@ export const tr: typeof en = {
     faq1Q: 'Çerçeve kameramı ya da sohbetimi kendisi mi gösteriyor?',
     faq1A:
       "Hayır. Çerçevenin ortası şeffaf, sadece süsleme. Kameranı ve Sohbet Kutusu'nu OBS'e ayrı kaynak olarak ekleyip çerçevenin altına koyuyorsun.",
-    faq2Q: 'Twitch ve Kick hesabımı bağlamam gerekiyor mu?',
+    faq2Q: 'Twitch ya da Kick hesabımı bağlamam gerekiyor mu?',
     faq2A:
       'Hayır. Çerçeve sohbet okumaz, kanal adı da istemez. Twitch, Kick ya da başka bir platformda yayın yapsan da aynı çalışır.',
     faq3Q: 'Kamera çerçevesini farklı bir boyutta kullanabilir miyim?',
@@ -950,12 +950,12 @@ export const tr: typeof en = {
       "Başlangıç, mola ya da bitiş sahnene bir Tarayıcı Kaynağı ekle ve geri sayım URL'sini yapıştır.",
     guideStep2: 'Genişliği 1920 ve yüksekliği 1080 olarak ayarla, saat sahnenin ortasında dursun.',
     guideStep3:
-      '"Sahne etkinleştiğinde tarayıcıyı yenile" seçeneğini işaretle, böylece o sahneye her geçişte geri sayım baştan başlar.',
+      '"Sahne etkin olduğunda tarayıcıyı yenile" seçeneğini işaretle, böylece o sahneye her geçişte geri sayım baştan başlar.',
     guideStep4:
       'Başlatmak için sahneye geç. Kanalını yazdıysan sen yokken bir modun !countdown add 5m ile süreyi uzatabilir.',
     faq1Q: 'Geri sayım ne zaman başlar?',
     faq1A:
-      'Tarayıcı kaynağı yüklendiği anda: OBS açıldığında ya da "Sahne etkinleştiğinde tarayıcıyı yenile" işaretliyse o sahneye geçtiğinde. Böylece mola geri sayımı sen daha yayındayken bitmez, BRB sahnene her geçişte baştan başlar.',
+      'Tarayıcı kaynağı yüklendiği anda: OBS açıldığında ya da "Sahne etkin olduğunda tarayıcıyı yenile" işaretliyse o sahneye geçtiğinde. Böylece mola geri sayımı sen daha yayındayken bitmez, BRB sahnene her geçişte baştan başlar.',
     faq2Q: "Duyurduğum saate, mesela 21:00'a geri sayabilir mi?",
     faq2A:
       "Evet. Neye Göre Saysın kısmında Saate göre'yi seç ve 21:00 yaz. Saati OBS'in çalıştığı bilgisayardan okur, yani kaynağı saatler önce eklesen de 21:00'da biter. 21:00 bugün geçtiyse yarınkini hedefler.",
@@ -1270,7 +1270,7 @@ export const tr: typeof en = {
       'Nightbot ve StreamElements gibi bilinen botlar zaten sayılmaz. Bunun dışında herhangi bir katılımcıyı adının yanındaki ✕ ile listeden çıkarabilirsin.',
     faq3Q: "Kazanan neden overlay'de görünmüyor?",
     faq3A:
-      "Çekiliş sayfası kazananı BroadcastChannel ile gönderir, bu da sadece aynı tarayıcının içinde çalışır. Sayfa Chrome'da, overlay OBS'de açıksa mesaj hiç ulaşmaz. Çekiliş sayfasını overlay ile aynı uygulamada çalıştır ve yayından önce bir deneme çekilişi yap.",
+      "Çekiliş sayfası kazananı BroadcastChannel ile gönderir, bu da sadece aynı tarayıcının içinde çalışır. Sayfa Chrome'da, overlay OBS'te açıksa mesaj hiç ulaşmaz. Çekiliş sayfasını overlay ile aynı uygulamada çalıştır ve yayından önce bir deneme çekilişi yap.",
     winner: 'Kazanan!',
     subMonthsShort: '{months} ay',
   },
@@ -1278,7 +1278,7 @@ export const tr: typeof en = {
     follow: 'Yeni Takipçi Geldi!',
     sub: 'Yeni Abone Geldi!',
     donate: 'Bağış Yaptı!',
-    raid: 'Baskın Vaar!',
+    raid: 'Raid Geldi!',
   },
   emoteWallSetup: {
     breadcrumb: 'Emote Duvarı Kurulumu',
@@ -1426,7 +1426,7 @@ export const tr: typeof en = {
       },
       settings: {
         title:
-          '"Görünür olmadığında kaynağı kapat" ve "Sahne etkinleştiğinde tarayıcıyı yenile" açık mı olmalı?',
+          '"Görünür değilken kaynağı kapat" ve "Sahne etkin olduğunda tarayıcıyı yenile" açık mı olmalı?',
         intro:
           'Senchabot widget\'larında ikisini de kapalı bırak. OBS\'te İngilizce adları "Shutdown source when not visible" ve "Refresh browser when scene becomes active". İkisi de sayfayı baştan yükler ve widget o ana kadar tuttuğu her şeyi unutur:',
         chatBox:
@@ -1444,13 +1444,13 @@ export const tr: typeof en = {
         emoteWall:
           "Emote Duvarı: emote'lar varsayılan olarak 5 saniye kaldığı için yenilemek bir şey kaybettirmez ama bir faydası da yok.",
         refresh:
-          'Bir widget takılırsa kaynağa çift tıkla ve özellikler penceresindeki "Refresh cache of current page" (geçerli sayfanın önbelleğini yenile) düğmesine bas. Bu, sayfayı bir kez yeniler.',
+          'Bir widget takılırsa kaynağa çift tıkla ve özellikler penceresindeki "Geçerli sayfanın önbelleğini yenile" (Refresh cache of current page) düğmesine bas. Bu, sayfayı bir kez yeniler.',
       },
       update: {
         title: "Widget'ı sonradan nasıl değiştiririm?",
         p1: "Ayarlar widget adresinin içinde durur, yani bir ayarı değiştirmek yeni bir adres demek. Kurulum sayfasında ayarı değiştir, yeni adresi kopyala, sonra OBS'te kaynağa çift tıklayıp URL alanındaki eski adresin yerine yapıştır.",
-        p2: '[Sohbet Kutusu](/setup/chat-widget), [Emote Duvarı](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Yayın Uyarıları](/setup/stream-alerts), [Abone Hedefi](/setup/sub-goal), [Sohbet Anketi](/setup/chat-poll) , [Yayın Çerçeveleri](/setup/stream-frames), [Sosyal Medya](/setup/socials) ve [Yayın Geri Sayımı](/setup/stream-countdown) için baştan başlaman gerekmez. Mevcut adresini kurulum sayfasındaki Widget URL alanına yapıştır, kanalların ve bütün ayarların geri yüklenir. Değiştirmek istediğini değiştir ve yeni adresi kopyala.',
-        p3: "OBS Bridge'de yapıştırma alanı yok, ayarları kurulum sayfasında yeniden girip yeni araç adresini kopyalarsın. Sahne seçimlerini ve yetkili kullanıcıları araç sayfasında da değiştirebilir, yeni adresi oradaki Copy Updated URL düğmesiyle alabilirsin. Eski adresler çalışmaya devam eder, güncellemek zorunda değilsin.",
+        p2: '[Sohbet Kutusu](/setup/chat-widget), [Emote Duvarı](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Yayın Uyarıları](/setup/stream-alerts), [Abone Hedefi](/setup/sub-goal), [Sohbet Anketi](/setup/chat-poll), [Yayın Çerçeveleri](/setup/stream-frames), [Sosyal Medya](/setup/socials) ve [Yayın Geri Sayımı](/setup/stream-countdown) için baştan başlaman gerekmez. Mevcut adresini kurulum sayfasındaki Widget URL alanına yapıştır, kanalların ve bütün ayarların geri yüklenir. Değiştirmek istediğini değiştir ve yeni adresi kopyala.',
+        p3: "OBS Bridge'de yapıştırma alanı yok, ayarları kurulum sayfasında yeniden girip yeni araç adresini kopyalarsın. Sahne seçimlerini ve yetkili kullanıcıları araç sayfasında da değiştirebilir, yeni adresi oradaki Güncel URL'yi Kopyala düğmesiyle alabilirsin. Eski adresler çalışmaya devam eder, güncellemek zorunda değilsin.",
       },
       troubleshoot: {
         title: "Widget OBS'te görünmüyorsa ne yapmalıyım?",
@@ -1507,17 +1507,17 @@ export const tr: typeof en = {
       },
       look: {
         title: 'Hangi düzen, animasyon ve yazı tipleri var?',
-        layoutTitle: 'Mesaj düzeni',
+        layoutTitle: 'Mesaj Düzeni',
         inline: 'Satır içi (varsayılan): kullanıcı adı ve mesaj aynı satırda.',
         stacked: 'Üst üste: kullanıcı adı üstte, mesaj altta.',
         card: 'Kart / Balon: her mesaj yarı saydam bir kartın içinde.',
         compact: "Kompakt: Twitch'e benzeyen sıkı satırlar, yazılar biraz daha küçük.",
         animationTitle: 'Yeni mesaj animasyonu',
         animations:
-          'Sekiz seçenek var: Sağdan kayarak gir (varsayılan), Sağdan yumuşakça kayarak gir, Belirerek büyü, Zıplayarak gir, Sıralı, Solarak belir, Daktilo ve Animasyon yok. Sohbet hızlandığında varsayılan dışındaki animasyonlar kısalır. Mesajlar yarım saniyeden sık gelirse animasyon normal süresinin üçte birine kadar iner, böylece hiçbiri bir sonrakine yetişmekte zorlanmaz.',
+          'Sekiz seçenek var: Sağdan kayarak gir (varsayılan), Sağdan yumuşakça kayarak gir, Belirerek büyü / ölçeklen, Zıplayarak gir, Sıralı, Solarak belir, Daktilo gibi yaz ve Animasyon yok. Sohbet hızlandığında varsayılan dışındaki animasyonlar kısalır. Mesajlar yarım saniyeden sık gelirse animasyon normal süresinin üçte birine kadar iner, böylece hiçbiri bir sonrakine yetişmekte zorlanmaz.',
         fontTitle: 'Yazı tipi ve boyutu',
         fonts:
-          'Inter (varsayılan), Roboto, Nunito, JetBrains Mono, Source Serif 4 ve sistem yazı tipi. Yazı boyutu 8 ile 72 piksel arasında, varsayılan 18. Kalın Kullanıcı Adları ve Kalın Mesajlar ayrı ayrı açılır.',
+          'Inter (varsayılan), Roboto, Nunito, JetBrains Mono, Source Serif 4 ve Sistem Varsayılanı yazı tipi. Yazı boyutu 8 ile 72 piksel arasında, varsayılan 18. Kalın Kullanıcı Adları ve Kalın Mesajlar ayrı ayrı açılır.',
       },
       duration: {
         title: 'Mesajlar ekranda ne kadar kalır?',
@@ -1541,7 +1541,7 @@ export const tr: typeof en = {
         commands:
           'Komutları Gizle, "!" ile başlayan her mesajı gizler; `!discord` ya da `!uptime` gibi komutlar ekranı doldurmaz. Botun komuta verdiği cevabı da saklamak için iki ayarı birlikte aç.',
         highlights:
-          "Bunun tersine bazı mesajları öne çıkarmak için Vurgular var. Varsayılan olarak beşi de kapalı, istediklerini açman yeterli: kanalını etiketleyen ya da sana yanıt veren mesajlar, yanıtların üstündeki kime cevap verildiğini gösteren satır, sohbete ilk kez yazanlar, duyurular ve Mesajınızı Vurgulayın ile gönderilen mesajlar. Son üçü sadece Twitch'te var, çünkü Kick bu bilgileri göndermiyor.",
+          "Bunun tersine bazı mesajları öne çıkarmak için Vurgular var. Varsayılan olarak beşi de kapalı, istediklerini açman yeterli: kanalını etiketleyen ya da sana yanıt veren mesajlar, yanıtların üstündeki kime cevap verildiğini gösteren satır, sohbete ilk kez yazanlar, duyurular ve Mesajımı Vurgula ile gönderilen mesajlar. Son üçü sadece Twitch'te var, çünkü Kick bu bilgileri göndermiyor.",
       },
       horizontal: {
         title: 'Sohbet ekranın altına şerit olarak nasıl konur?',
@@ -1569,10 +1569,10 @@ export const tr: typeof en = {
           '[Çekiliş sayfasını](/setup/raffle) aç ve platformu seç: Twitch ya da Kick. Bir çekiliş tek platformda çalışır.',
         step2: 'Kanal adını yaz. Katılımlar bu kanalın sohbetinden okunur.',
         step3:
-          'Giriş anahtar kelimesini belirle. Varsayılan `!join`, istediğin kelimeyle değiştirebilirsin.',
+          "Katılım Kelimesi'ni belirle. Varsayılan `!join`, istediğin kelimeyle değiştirebilirsin.",
         step4:
           "Kuralları seç, sonra Çekilişi Başlat'a bas. Anahtar kelime boşken bu düğme kapalı kalır.",
-        step5: "Katılanlar listede görünür. Yeterince katılım olunca Kazananı Çek'e bas.",
+        step5: "Katılanlar listede görünür. Yeterince katılım olunca Kazanan Çek'e bas.",
         p1: "Çekiliş başladığında ayarlar kilitlenir, çekiliş sürerken kurallar değişmez. Katılımları kapatmak için Katılımı Kapat'a bas; kapattıktan sonra da kazanan çekebilirsin. Yeni bir çekiliş başlatmak katılımcı listesini sildiği için sayfa önce onay ister.",
       },
       entry: {
@@ -1591,7 +1591,7 @@ export const tr: typeof en = {
         subsOnlyOptions: 'Açık ya da kapalı',
         subsOnlyDefault: 'Kapalı',
         minMonths: 'En Az Abonelik (ay)',
-        minMonthsOptions: '1 ve üstü, sadece Sadece Aboneler açıkken',
+        minMonthsOptions: '1 ve üstü, yalnızca Sadece Aboneler açıkken',
         minMonthsDefault: '1',
         maxWins: 'Kişi Başı Kazanma Sınırı',
         maxWinsOptions: '1 ile 5 arası ya da sınırsız',
@@ -1600,11 +1600,11 @@ export const tr: typeof en = {
         minDurationOptions: '0 ile 300 saniye',
         minDurationDefault: '15 saniye',
         subsText:
-          "Sadece Aboneler açıkken abone rozeti olmayanlar katılamaz. Yayıncı da abone sayılır, En Az Abonelik 1 ay olduğu sürece kendi çekilişine girebilir. Bu alan 1'de kalırsa her abone katılır; 6 yaparsan sadece en az 6 aydır abone olanlar girer. Abonelik süresi Twitch'te ve Kick'te izleyicinin abone rozetinden okunur.",
+          "Sadece Aboneler açıkken abone rozeti olmayanlar katılamaz. Yayıncı da abone sayılır, En Az Abonelik 1 ay olduğu sürece kendi çekilişine sen de girebilirsin. Bu alan 1'de kalırsa her abone katılır; 6 yaparsan sadece en az 6 aydır abone olanlar girer. Abonelik süresi Twitch'te ve Kick'te izleyicinin abone rozetinden okunur.",
         winsText:
           'Çekilen kazanan katılımcı listesinden çıkar ve kazananlar listesine eklenir. Sınır 1 ise aynı çekilişte bir daha kazanamaz. Sınır daha yüksekse ya da sınırsızsa, anahtar kelimeyi yeniden yazarak tekrar katılabilir.',
         durationText:
-          'Kazananı Çek düğmesi, çekiliş başladıktan sonra bu süre dolana kadar kilitli kalır ve kalan saniyeyi gösterir. Geç gören izleyicilerin de katılmaya vakti olur.',
+          'Kazanan Çek düğmesi, çekiliş başladıktan sonra bu süre dolana kadar kilitli kalır ve kalan saniyeyi gösterir. Geç gören izleyicilerin de katılmaya vakti olur.',
         fairText:
           'Kazanan, uygun katılımcılar arasından tarayıcının güvenli rastgele sayı üreticisiyle (`crypto.getRandomValues`) çekilir.',
       },
@@ -1615,10 +1615,10 @@ export const tr: typeof en = {
       },
       overlay: {
         title: 'Kazanan yayında nasıl gösterilir?',
-        p1: "Çekiliş sayfasındaki kazanan overlay adresini (`/widgets/raffle-overlay`) OBS'e 1920 × 1080 boyutunda Tarayıcı Kaynağı olarak ekle. Kazananı Çek'e bastığında overlay kazananın adını ekranın ortasında gösterir, iki kenardan 3 saniye boyunca konfeti patlar ve ad 10 saniye sonra kaybolur.",
+        p1: "Çekiliş sayfasındaki kazanan overlay adresini (`/widgets/raffle-overlay`) OBS'e 1920 × 1080 boyutunda Tarayıcı Kaynağı olarak ekle. Kazanan Çek'e bastığında overlay kazananın adını ekranın ortasında gösterir, iki kenardan 3 saniye boyunca konfeti patlar ve ad 10 saniye sonra kaybolur.",
         warnTitle: 'Yayından önce mutlaka dene',
         warn: "Kazanan overlay'e BroadcastChannel ile gider ve bu sadece aynı tarayıcının içinde çalışır. Çekiliş sayfasını Chrome gibi ayrı bir tarayıcıda açıp overlay'i OBS'e eklersen ikisi farklı uygulamalarda çalışır ve kazanan OBS'e ulaşmaz. Yayına çıkmadan önce bir deneme çekilişi yap ve kazananın OBS'te göründüğünü kontrol et.",
-        p2: 'Overlay\'in bulunduğu sahne açık olsun ve kaynakta "Görünür olmadığında kaynağı kapat" kapalı kalsın; kapalı kaynak kazananı kaçırır. Ayrıntılar [OBS rehberinde](/guides/obs-browser-source). Kazanan her durumda çekiliş sayfasında da konfetiyle görünür, overlay çalışmasa bile adı oradan okuyabilirsin.',
+        p2: 'Overlay\'in bulunduğu sahne açık olsun ve kaynakta "Görünür değilken kaynağı kapat" kapalı kalsın; kapalı kaynak kazananı kaçırır. Ayrıntılar [OBS rehberinde](/guides/obs-browser-source). Kazanan her durumda çekiliş sayfasında da konfetiyle görünür, overlay çalışmasa bile adı oradan okuyabilirsin.',
       },
       ctaTitle: 'Çekilişini hazırla',
       ctaText:
@@ -1634,8 +1634,8 @@ export const tr: typeof en = {
         title: "OBS'te WebSocket nasıl açılır?",
         step1:
           "OBS'te üst menüden Araçlar → WebSocket Sunucu Ayarları'nı aç (Tools → WebSocket Server Settings).",
-        step2: 'WebSocket sunucusunu etkinleştir kutusunu işaretle.',
-        step3: "Kimlik doğrulama açıksa Bağlantı Bilgilerini Göster'e bas ve şifreyi kopyala.",
+        step2: 'WebSocket sunucuyu etkinleştir kutusunu işaretle.',
+        step3: "Kimlik doğrulama açıksa Bağlanma Bilgilerini Göster'e bas ve şifreyi kopyala.",
         step4: "Tamam'a bas.",
         p1: 'OBS Bridge, OBS Studio 28 ve sonrasında yerleşik gelen obs-websocket 5 ile konuşur. Varsayılan olarak `ws://127.0.0.1:4455` adresine bağlanır; OBS aynı bilgisayardaysa WebSocket URL alanını boş bırak. OBS başka bir bilgisayardaysa o bilgisayarın adresini ve portunu yaz, örneğin `ws://192.168.1.20:4455`. Bağlantı kurulamazsa araç 5 saniyede bir yeniden dener.',
       },
@@ -1646,7 +1646,7 @@ export const tr: typeof en = {
         step3: 'Yetkili kullanıcıları ekle. Kimleri ekleyeceğin aşağıda anlatılıyor.',
         step4: "OBS WebSocket şifreni gir, gerekiyorsa WebSocket URL'sini değiştir.",
         step5:
-          "Araç URL'sini kopyala ve bir tarayıcı sekmesinde ya da OBS'te Özel Tarayıcı Dock'u olarak aç.",
+          "Araç URL'sini kopyala ve bir tarayıcı sekmesinde ya da OBS'te Özel Tarayıcı Yuvası olarak aç.",
         step6:
           'Araç sayfası OBS sahnelerini listeler. Ana ve BRB olarak kullanacağın sahnelerin yanındaki Ana ve BRB düğmelerine bas.',
         p1: 'Seçim yapmazsan Ana sahne olarak `Main Scene`, BRB sahnesi olarak `BRB Scene` adlı sahneler aranır. Seçimin araç sayfasının adresine yazılır, bu yüzden seçtikten sonra adresi yeniden kopyalayıp sakla. Bir dahaki açılışta aynı sahneler gelir.',
@@ -1755,7 +1755,7 @@ export const tr: typeof en = {
       saved: {
         title: 'OBS kapanırsa ya da kaynak yeniden yüklenirse ne olur?',
         p1: "Sayaç OBS'in içinde kaydedilir, bu yüzden kaynak yeniden yüklenince ya da OBS yeniden açılınca kaldığı yerden devam eder. OBS kapalıyken de geri sayım durmaz, gerçek bir saat gibi işlemeye devam eder.",
-        p2: 'OBS ya da kaynak kapalıyken sohbetin okunmaz, bu yüzden o arada gelen abonelikler süre eklemez. Bir mod bunları sonradan `!subathon add` ile ekleyebilir. "Görünür olmadığında kaynağı kapat" seçeneğini de bu yüzden kapalı tut, nedenini [OBS rehberi](/guides/obs-browser-source) anlatıyor.',
+        p2: 'OBS ya da kaynak kapalıyken sohbetin okunmaz, bu yüzden o arada gelen abonelikler süre eklemez. Bir mod bunları sonradan `!subathon add` ile ekleyebilir. "Görünür değilken kaynağı kapat" seçeneğini de bu yüzden kapalı tut, nedenini [OBS rehberi](/guides/obs-browser-source) anlatıyor.',
         p3: "Kaydedilen sayaç o OBS'e ve o kanallara ait. URL'deki kanalları değiştirirsen, örneğin subathon'un ortasında Kick'i eklersen, ya da URL'yi başka bir OBS'te veya tarayıcı sekmesinde açarsan sıfırdan yeni bir sayaç başlar.",
       },
       zero: {
@@ -1846,13 +1846,13 @@ export const tr: typeof en = {
         position:
           "Konum: anket Tarayıcı Kaynağı'nın üst ya da alt kısmında durur, seçenek sayısına göre oradan uzar.",
         language:
-          'Anket Dili: anketteki kelimeler için İngilizce ya da Türkçe, örneğin Sonuçlar yazısı ve hızlı anketteki Evet ile Hayır.',
+          'Anket Dili: anketteki kelimeler için İngilizce, İspanyolca, Fransızca, Japonca, Portekizce ya da Türkçe, örneğin Sonuçlar yazısı ve hızlı anketteki Evet ile Hayır.',
         p1: "İki platform da açıksa anket, toplamın yanında oyların kaçının Twitch'ten, kaçının Kick'ten geldiğini gösterir. Kaynak şeffaftır, yayında sadece anket kartı görünür.",
       },
       saved: {
         title: 'OBS kapanırsa ya da kaynak yeniden yüklenirse ne olur?',
         p1: "Anket ve oylar OBS'in içinde kaydedilir, bu yüzden kaynak yeniden yüklenince ya da OBS yeniden açılınca kaldığı yerden devam eder. OBS kapalıyken de süre işlemeye devam eder.",
-        p2: 'OBS ya da kaynak kapalıyken sohbetin okunmaz, bu yüzden o arada yazılan oylar sayılmaz. "Görünür olmadığında kaynağı kapat" seçeneğini de bu yüzden kapalı tut, nedenini [OBS rehberi](/guides/obs-browser-source) anlatıyor. Kaydedilen anket o OBS\'e ve o kanallara ait.',
+        p2: 'OBS ya da kaynak kapalıyken sohbetin okunmaz, bu yüzden o arada yazılan oylar sayılmaz. "Görünür değilken kaynağı kapat" seçeneğini de bu yüzden kapalı tut, nedenini [OBS rehberi](/guides/obs-browser-source) anlatıyor. Kaydedilen anket o OBS\'e ve o kanallara ait.',
       },
       limits: {
         title: 'Sohbet Anketi neleri yapamaz?',
@@ -1928,7 +1928,7 @@ export const tr: typeof en = {
       short: 'Geri sayım ekleme',
       summary:
         'Başlangıç, mola ve bitiş sahneleri için geri sayım kurmak, her sahne geçişinde baştan başlatmak, belirli bir saate geri saymak ve sohbet komutları.',
-      lead: "Yayın Geri Sayımı, henüz bir şeyin olmadığı üç sahne için bir saat: yayın başlıyor, birazdan dönüyorum ve yayın bitiyor. Kurulum sayfasında sahneyi ve süreyi seç, URL'yi OBS'e 1920 × 1080 Tarayıcı Kaynağı olarak ekle ve Sahne etkinleştiğinde tarayıcıyı yenile seçeneğini işaretle, böylece o sahneye her geçişte baştan başlar. Giriş yok, sohbet komutlarını istemiyorsan kanal da gerekmez.",
+      lead: "Yayın Geri Sayımı, henüz bir şeyin olmadığı üç sahne için bir saat: yayın başlıyor, birazdan dönüyorum ve yayın bitiyor. Kurulum sayfasında sahneyi ve süreyi seç, URL'yi OBS'e 1920 × 1080 Tarayıcı Kaynağı olarak ekle ve Sahne etkin olduğunda tarayıcıyı yenile seçeneğini işaretle, böylece o sahneye her geçişte baştan başlar. Giriş yok, sohbet komutlarını istemiyorsan kanal da gerekmez.",
       setup: {
         title: 'Yayın geri sayımı nasıl ayarlanır?',
         step1: '[Yayın Geri Sayımı kurulum sayfasını](/setup/stream-countdown) aç.',
@@ -1945,7 +1945,7 @@ export const tr: typeof en = {
       restart: {
         title: 'Geri sayımım neden baştan başlamıyor?',
         p1: 'Geri sayım, tarayıcı kaynağı yüklendiğinde başlar. Kaynak OBS açılırken yüklendiyse o zamandan beri sayıyor demektir, sen BRB sahnene geçtiğinde çoktan sıfıra inmiş olur.',
-        p2: 'Tarayıcı Kaynağı özelliklerini aç ve "Sahne etkinleştiğinde tarayıcıyı yenile" seçeneğini işaretle. OBS o sahneye her geçişte sayfayı yeniden yükler, geri sayım da her molada baştan başlar.',
+        p2: 'Tarayıcı Kaynağı özelliklerini aç ve "Sahne etkin olduğunda tarayıcıyı yenile" seçeneğini işaretle. OBS o sahneye her geçişte sayfayı yeniden yükler, geri sayım da her molada baştan başlar.',
         p3: "Kanalını yazdıysan sohbete `!countdown reset` de yazabilirsin, OBS'e dokunmadan baştan başlar. Klavye başında değilken en hızlı çözüm bu.",
       },
       clock: {
@@ -2024,7 +2024,7 @@ export const tr: typeof en = {
         neon: 'Neon (varsayılan): synth sesleriyle köşeli, bilim kurgu tarzı bir şerit. Giderken bir neon tabela gibi titreyip söner.',
         celestial: 'Göksel: yıldızların altında lacivert bir kart, ince bir çerçeve ve çan sesleriyle.',
         p1: "Renk, uyarının vurgu rengi. Varsayılan Platform seçeneğinde Twitch uyarıları mor, Kick uyarıları yeşil görünür. İstersen bütün uyarılar için tek bir renk de seçebilirsin: mavi, mor, pembe, kırmızı, altın ya da yeşil. URL'de iki kanal da varsa küçük bir TWITCH ya da KICK etiketi uyarının nereden geldiğini gösterir.",
-        p2: "Her uyarının başlığını en fazla 24 karakter olacak şekilde değiştirebilir ya da boş bırakıp Yeni Abone gibi varsayılanı kullanabilirsin. Neon başlıkları büyük harfle yazar. Uyarı Dili, uyarıdaki kelimelerin dilini belirler: İngilizce ya da Türkçe. Bu seçim URL'de saklanır, OBS hangi dilde olursa olsun değişmez.",
+        p2: "Her uyarının başlığını en fazla 24 karakter olacak şekilde değiştirebilir ya da boş bırakıp Yeni Abone gibi varsayılanı kullanabilirsin. Neon başlıkları büyük harfle yazar. Uyarı Dili, uyarıdaki kelimelerin dilini belirler: İngilizce, İspanyolca, Fransızca, Japonca, Portekizce ya da Türkçe. Bu seçim URL'de saklanır, OBS hangi dilde olursa olsun değişmez.",
       },
       min: {
         title: "Küçük hediye, cheer ve raid'ler nasıl atlanır?",
@@ -2060,7 +2060,7 @@ export const tr: typeof en = {
         p1: 'Kurulum sayfasındaki önizlemede sessiz örnek uyarılar gelir. Altındaki Dene düğmeleri abonelik, hediye, Bits/Kicks ve raid uyarısını seçtiğin ses seviyesinde, sesiyle birlikte oynatır. Böylece temayı seçmeden önce görüp duyabilirsin.',
         warnTitle: "Dene düğmeleri OBS'e ulaşmaz",
         warn: "Sadece kurulum sayfasındaki önizlemede çalışırlar. OBS'teki kaynak yalnızca kanalına gelen gerçek abonelik, hediye, cheer ve raid'leri gösterir, yani ona deneme uyarısı gönderemezsin.",
-        p2: 'Kaynağın olduğu sahne açık kalsın ve "Görünür olmadığında kaynağı kapat" kapalı dursun. Kaynak kapalıyken gelen uyarılar kaçırılır, sonradan da gösterilmez.',
+        p2: 'Kaynağın olduğu sahne açık kalsın ve "Görünür değilken kaynağı kapat" kapalı dursun. Kaynak kapalıyken gelen uyarılar kaçırılır, sonradan da gösterilmez.',
       },
       ctaTitle: "Yayın Uyarıları'nı kur",
       ctaText: "Kanallarını yaz, bir tema seç, URL'yi kopyala. Sıradaki abonen için uyarı hazır.",
@@ -2235,22 +2235,24 @@ export const tr: typeof en = {
     lead: "Senchabot Extensions'a eklenen özellikler ve düzeltilen hatalar, en yenisi en üstte. Liste projenin [GitHub'daki](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) commit geçmişinden hazırlanıyor.",
     site: 'Site',
     entries: {
+      moreLanguages:
+        'Site artık İspanyolca, Fransızca, Japonca ve Portekizce de var. Sohbet Anketi, Yayın Uyarıları ve Subathon Timer oranları da yazılarını bu dillerde gösterebiliyor.',
       countdownSceneCommand:
         '`!countdown {sahne} {süre}` sohbet komutu eklendi. Modlar artık tek bir komutla geçerli sahneyi (starting, break veya ending) değiştirebilir ve süresini ayarlayabilir.',
       socialsLaunch:
-        'Yeni widget: Sosyal Medya. Sosyal medya hesaplarınızı şık bir kaydırma animasyonuyla yayın ekranınızda döndürün.',
+        'Yeni widget: Sosyal Medya. Sosyal medya hesaplarını şık bir kaydırma animasyonuyla yayında sırayla göster.',
       thinBarReadable:
         "Subathon Timer ve Abone Hedefi'ndeki İnce Bar'ın yazıları büyüdü ve her dolgu renginde okunsun diye kontur aldı; parlaması küçüldü ve süre listesiyle arasında boşluk var.",
       thinBars:
-        'Subathon Timer ve Abone Hedefi artık başlık ile süreyi veya sayacı doğrudan daha ince bir ilerleme barının içine yerleştiren İnce Bar stiline sahip.',
+        "Subathon Timer ve Abone Hedefi'ne İnce Bar stili geldi: başlık ile süre ya da sayı doğrudan daha ince bir ilerleme barının içinde duruyor.",
       subathonAdjustedDefaults:
-        "Subathon Timer'da Süreyi zamana göre ayarla artık 5 saatten ve hazır düşük oranlarla başlıyor: Twitch'te abonelik 5 dk, hediye abonelik 10 dk, 500 Bits 20 dk; Kick'te her biri 10 dk.",
+        "Subathon Timer'da Oranları kalan süreye göre ayarla seçeneği artık 5 saatten ve hazır düşük oranlarla başlıyor: Twitch'te abonelik 5 dk, hediye abonelik 10 dk, 500 Bits 20 dk; Kick'te her biri 10 dk.",
       subathonDynamicRates:
-        'Subathon Timer artık zamana bağlı oranlara sahip: saat zaten yüksekken bir aboneliğin ne kadar süre ekleyeceğini düşürmek için bir eşik belirleyin.',
+        "Subathon Timer'da artık oranlar ayarlanabiliyor: saatte zaten çok süre varken bir aboneliğin ne kadar süre ekleyeceğini düşürmek için bir eşik belirle.",
       scrollHint:
         'Ekrana sığmayan kurulum panellerinin altında artık küçük bir ok var, böylece aşağıda başka ayarlar olduğu belli oluyor. Oka basınca aşağı iniyorsun, sona geldiğinde ok yön değiştirip seni başa götürüyor.',
       chatTextShadow:
-        "Chat Box'a Yazı Gölgesi seçimi geldi: Kapalı, Normal (eskisi gibi) ya da Güçlü; Güçlü koyu bir kontur çizer, açık renkli oyunlarda da sohbet okunur.",
+        "Sohbet Kutusu'na Yazı Gölgesi seçimi geldi: Kapalı, Normal (eskisi gibi) ya da Güçlü; Güçlü koyu bir kontur çizer, açık renkli oyunlarda da sohbet okunur.",
       chatFonts:
         "Sohbet Kutusu'nda artık kullanıcı adları için ayrı, mesajlar için ayrı font kutusu var ve preset seçiliyken de ikisi açık kalıyor: preset'in getirdiği iki fontu olduğu gibi bırakabilir, başlık fontunu mesajlara da verebilir ya da ikisini Inter, Roboto, Nunito, JetBrains Mono, Source Serif 4 veya sistem fontuyla karıştırabilirsin. Kalın kullanıcı adları ve kalın mesajlar da fontu tek ağırlıkla gelen preset'lerde (Realm, Dynasty, Blocks) artık çalışıyor.",
       sproutSaved:
@@ -2284,11 +2286,11 @@ export const tr: typeof en = {
       chatNextSteps:
         "Sohbet Kutusu adresini kopyaladığında kurulum sayfası OBS'e ekleme adımlarını önerilen boyutla gösteriyor.",
       raffleMonthsInput:
-        "Çekiliş'te Minimum Abonelik Ayı alanı yazarken silinebiliyor, 6 yazmak isterken 16 çıkmıyor.",
+        "Çekiliş'te En Az Abonelik (ay) alanı yazarken silinebiliyor, 6 yazmak isterken 16 çıkmıyor.",
       raffleKeywordRequired:
-        'Çekiliş, giriş anahtar kelimesi boşken başlatılamıyor. Önceden kimsenin katılamayacağı bir çekiliş açılabiliyordu.',
+        'Çekiliş, katılım kelimesi boşken başlatılamıyor. Önceden kimsenin katılamayacağı bir çekiliş açılabiliyordu.',
       raffleMonthsSubsOnly:
-        'Minimum Abonelik Ayı sadece Sadece Aboneler açıkken uygulanıyor ve yayıncı kendi çekilişine girebiliyor.',
+        'En Az Abonelik (ay) yalnızca Sadece Aboneler açıkken uygulanıyor ve yayıncı kendi çekilişine girebiliyor.',
       sproutPreviewSimulate:
         'Sub Sprout kurulum önizlemesi kanal yazdıktan sonra da büyümeyi canlandırıyor, seçtiğin bitkiyi ve efektleri hemen görüyorsun.',
       sproutPreviewTint:
@@ -2316,7 +2318,7 @@ export const tr: typeof en = {
       chatIrcParsing:
         "Sohbete yazılan bir metin artık Sohbet Kutusu'nu temizleyemiyor. Bir susturma ya da ban sadece o kişinin mesajlarını kaldırıyor.",
       chatHighlights:
-        'Sohbet Kutusu seni etiketleyen mesajları, yanıtları, sohbete ilk katılanları, duyuruları ve Mesajınızı Vurgulayın mesajlarını vurguluyor. Hangilerinin açık olacağını kurulumda seçiyorsun.',
+        'Sohbet Kutusu seni etiketleyen mesajları, yanıtları, sohbete ilk katılanları, duyuruları ve Mesajımı Vurgula mesajlarını vurguluyor. Hangilerinin açık olacağını kurulumda seçiyorsun.',
       chatPasteUrl:
         'Sohbet Kutusu kurulumuna mevcut widget adresini yapıştırınca bütün ayarlar geri yükleniyor.',
       chatSingleScreen:
@@ -2361,7 +2363,7 @@ export const tr: typeof en = {
       chatFontsLayouts:
         "Sohbet Kutusu'na yazı tipi, mesaj düzeni ve animasyon seçimi geldi. Silinen mesajlar ve banlanan kullanıcıların mesajları overlay'den de kalkıyor.",
       raffleHardening:
-        'Çekiliş kazananı güvenli bir rastgele seçimle çekiyor, çekiliş başlayınca kuralları kilitliyor ve Minimum Süre dolmadan kazanan çekilmesine izin vermiyor.',
+        'Çekiliş kazananı güvenli bir rastgele seçimle çekiyor, çekiliş başlayınca kuralları kilitliyor ve En Kısa Süre dolmadan kazanan çekilmesine izin vermiyor.',
       siteTutorial:
         'Kurulum sayfalarına video anlatım bağlantısı eklendi. Çekiliş sayfasında overlay adresi tek tıkla kopyalanıyor.',
       chatPlatformPick:
@@ -2386,31 +2388,31 @@ export const tr: typeof en = {
   socials: {
     breadcrumb: 'Sosyal Medya Kurulumu',
     title: 'Sosyal Medya Kurulumu',
-    intro: 'Sosyal medya hesaplarınızı yayında gösterin. Widget, doldurduğunuz platformları sırayla tek tek kayarak gösterir.',
+    intro: 'Sosyal medya hesaplarını yayında göster. Widget, doldurduğun platformları kayan bir animasyonla sırayla, tek tek gösterir.',
     sectionPlatforms: 'Platformlar',
-    platformsTip: 'Göstermek istediğiniz her platform için kullanıcı adınızı yazın. Diğerlerini boş bırakın.',
+    platformsTip: 'Göstermek istediğin her platform için kullanıcı adını yaz. Diğerlerini boş bırak.',
     sectionAppearance: 'Görünüm',
-    rotationInterval: 'Dönüşüm Süresi',
+    rotationInterval: 'Geçiş Aralığı',
     intervalSeconds: '{seconds} saniye',
     textColor: 'Yazı Rengi',
         animation: 'Animasyon',
     animSlideUp: 'Yukarı Kaydır',
     animSlideLeft: 'Sola Kaydır',
     animScale: 'Büyüt',
-    animFade: 'Karart',
+    animFade: 'Soldur',
     pillColor: 'Kutu Arka Plan Rengi',
     previewTitle: 'Sosyal Medya Önizleme',
     previewIframeTitle: 'Sosyal Medya Önizleme',
-    previewHint: 'Sosyal medya widget\'ınızın canlı önizlemesi.',
-    widgetUrlTip: 'Zaten bir widget yaptınız mı? URL\'sini buraya yapıştırarak ayarlarınızı yükleyin ve istediklerinizi değiştirin.',
-    widgetUrlPlaceholder: 'Düzenlemek için mevcut bir widget URL\'sini yapıştırın',
+    previewHint: "Sosyal medya widget'ının canlı önizlemesi.",
+    widgetUrlTip: "Daha önce bir widget oluşturduysan URL'sini buraya yapıştır. Ayarların geri yüklenir, istediğini değiştirebilirsin.",
+    widgetUrlPlaceholder: "Düzenlemek için widget URL'sini yapıştır",
     widgetUrlInvalid: "Bu bir Sosyal Medya widget URL'si değil.",
     browserSourceHintSize: ' (önerilen boyut: 600×120).',
-    guideTitle: 'Yayın Programı Kurulumu (OBS, Streamlabs, XSplit, vb.)',
-    guideStep1: 'Yayın programınıza (OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio, vb.) bir Tarayıcı Kaynağı ekleyin.',
-    guideStep2: 'Kopyaladığınız Sosyal Medya URL\'sini yapıştırın.',
-    guideStep3: 'Genişliği 600 ve yüksekliği 120 yapın.',
+    guideTitle: 'Yayın Yazılımı Kurulumu (OBS, Streamlabs, XSplit vb.)',
+    guideStep1: 'Yayın yazılımında (OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio vb.) bir Tarayıcı Kaynağı ekle.',
+    guideStep2: "Kopyaladığın Sosyal Medya URL'sini yapıştır.",
+    guideStep3: 'Genişliği 600 ve yüksekliği 120 olarak ayarla.',
     faq1Q: 'Kullanıcı adımı değiştirirsem widget güncellenir mi?',
-    faq1A: 'URL\'nizi güncellemeniz gerekir. Bu sayfaya geri dönün, ayarlarınızı yüklemek için mevcut URL\'nizi yapıştırın, yeni kullanıcı adlarınızı yazın ve yeni URL\'yi yayın programınıza kopyalayın.',
+    faq1A: "URL'ni güncellemen gerekir. Bu sayfaya geri dön, ayarlarını yüklemek için mevcut URL'ni yapıştır, yeni kullanıcı adlarını yaz ve yeni URL'yi yayın programına kopyala.",
   },
 };

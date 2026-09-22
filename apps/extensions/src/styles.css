@@ -26,6 +26,11 @@
   [role="button"][aria-disabled="true"] {
     cursor: not-allowed;
   }
+
+  /* Japanese has no spaces, so headings broke mid-word (無料配 / 信); break them by phrase. */
+  :lang(ja) :is(h1, h2, h3) {
+    word-break: auto-phrase;
+  }
 }
 
 @keyframes fadeInZoom {

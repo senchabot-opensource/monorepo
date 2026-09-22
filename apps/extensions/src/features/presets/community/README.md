@@ -59,7 +59,7 @@ and on every setup page, with your name on it.
 | Key | What it is |
 | --- | --- |
 | `game` | Optional. The game it's made for, shown next to the name. |
-| `description` | One sentence in English and one in Turkish, up to 160 characters each. |
+| `description` | One sentence in English and one in Turkish, up to 160 characters each. Spanish (`es`), French (`fr`), Japanese (`ja`) and Portuguese (`pt`) are optional; pages in those languages show the English one when theirs is missing. |
 | `fonts` | Two [Google Fonts](https://fonts.google.com): `display` for titles, names and numbers, `body` for chat and small text. `weights` is the `wght` axis, a range like `400..900` or a list like `400;700`. Pick fonts with the latin-ext subset, so Turkish letters (ş ğ ı İ) don't fall back to another font. |
 | `colors` | Nine `#rrggbb` colors: `accent` fills bars and glows, `win` marks a reached goal or a poll's winner, `panel` and `panel2` are the panel's top and bottom, `frame` and `frame2` are the frame's light and dark lines, `track` is a bar's empty part. |
 | `panelOpacity` | 0.5 to 1. Below 1 the game shows through the panels a little. |

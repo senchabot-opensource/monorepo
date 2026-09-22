@@ -16,10 +16,18 @@ const COPY = {
   organization: {
     en: 'Senchabot is an open source, multi-platform community bot for Twitch, Discord, Kick and YouTube.',
     tr: 'Senchabot, Twitch, Discord, Kick ve YouTube için açık kaynaklı, çok platformlu bir topluluk botu.',
+    es: 'Senchabot es un bot comunitario de código abierto y multiplataforma para Twitch, Discord, Kick y YouTube.',
+    fr: 'Senchabot est un bot communautaire open source et multiplateforme pour Twitch, Discord, Kick et YouTube.',
+    ja: 'Senchabotは、Twitch、Discord、Kick、YouTube向けの、オープンソースでマルチプラットフォームのコミュニティボットです。',
+    pt: 'Senchabot é um bot de comunidade de código aberto e multiplataforma para Twitch, Discord, Kick e YouTube.',
   },
   website: {
     en: 'Free, open source overlays and stream tools for Twitch and Kick, made by Senchabot. No login.',
     tr: "Senchabot'tan Twitch ve Kick için ücretsiz, açık kaynaklı overlay'ler ve yayın araçları. Giriş yok.",
+    es: 'Overlays y herramientas de stream gratis y de código abierto para Twitch y Kick, hechos por Senchabot. Sin iniciar sesión.',
+    fr: 'Des overlays et outils de stream gratuits et open source pour Twitch et Kick, faits par Senchabot. Sans connexion.',
+    ja: 'Senchabotが作る、TwitchとKick向けの無料でオープンソースのオーバーレイと配信ツール。ログイン不要。',
+    pt: 'Overlays e ferramentas de live grátis e de código aberto para Twitch e Kick, feitos pelo Senchabot. Sem login.',
   },
 } as const satisfies Record<string, Record<Locale, string>>;
 

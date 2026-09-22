@@ -13,6 +13,7 @@ import { CountField } from '#/components/ui/count-field';
 import { DurationField } from '#/components/ui/duration-field';
 import { FieldLabel } from '#/components/ui/field-label';
 import { SegmentedControl } from '#/components/ui/segmented-control';
+import { Select } from '#/components/ui/select';
 import { SettingsGroup } from '#/components/ui/settings-group';
 import { Switch } from '#/components/ui/switch';
 import { HINT_CLASS, INPUT_CLASS, TextField } from '#/components/ui/text-field';
@@ -25,7 +26,7 @@ import { PREVIEW_CHANNEL, type PreviewMessage } from '#/features/widgets/poll/us
 import type { SubathonPlatform } from '#/features/widgets/subathon/subathon-events';
 import { hueFor } from '#/features/widgets/overlay-style';
 import { usePreviewSender } from '#/hooks/use-preview-channel';
-import { LOCALES, type Locale, type TranslationKey, useI18n } from '#/lib/i18n';
+import { LOCALE_NAMES, LOCALES, type Locale, type TranslationKey, useI18n } from '#/lib/i18n';
 import { getParamsLocale } from '#/lib/i18n/paths';
 import type { FaqEntry } from '#/lib/i18n/seo';
 import {
@@ -80,8 +81,6 @@ const COMMANDS: { usage: (question: string) => string; action: TranslationKey }[
   { usage: () => `${COMMAND} cancel`, action: 'poll.cmdCancel' },
 ];
 
-// Each language in its own words, since it names the poll's language, not the page's.
-const LANGUAGE_NAMES: Record<Locale, string> = { en: 'English', tr: 'Türkçe' };
 // The preview's sample poll has three options.
 const SAMPLE_OPTIONS = 3;
 const TEST_VOTES = 10;
@@ -338,11 +337,11 @@ function PollSetup() {
             <FieldLabel id={`${id}-lang`} tip={t('poll.languageTip')}>
               {t('poll.language')}
             </FieldLabel>
-            <SegmentedControl
+            <Select
               labelledBy={`${id}-lang`}
               value={pollLocale}
               onChange={setPickedLocale}
-              options={LOCALES.map((value) => ({ value, label: LANGUAGE_NAMES[value] }))}
+              options={LOCALES.map((value) => ({ value, label: LOCALE_NAMES[value] }))}
             />
           </div>
         </div>

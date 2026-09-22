@@ -12,6 +12,7 @@ import { FieldLabel } from '#/components/ui/field-label';
 import { MinutesField } from '#/components/ui/minutes-field';
 import { RangeField } from '#/components/ui/range-field';
 import { SegmentedControl, type SegmentedOption } from '#/components/ui/segmented-control';
+import { Select } from '#/components/ui/select';
 import { SettingsGroup } from '#/components/ui/settings-group';
 import { Switch } from '#/components/ui/switch';
 import { Tabs } from '#/components/ui/tabs';
@@ -24,7 +25,7 @@ import type { SubathonEvent, SubathonPlatform } from '#/features/widgets/subatho
 import { COMMAND } from '#/features/widgets/subathon/subathon-timer';
 import { PREVIEW_CHANNEL, type PreviewMessage } from '#/features/widgets/subathon/use-subathon';
 import { usePreviewSender } from '#/hooks/use-preview-channel';
-import { LOCALES, type Locale, type TranslationKey, useI18n } from '#/lib/i18n';
+import { LOCALE_NAMES, LOCALES, type Locale, type TranslationKey, useI18n } from '#/lib/i18n';
 import { getParamsLocale } from '#/lib/i18n/paths';
 import type { FaqEntry } from '#/lib/i18n/seo';
 import { getSetupPageHead } from '#/lib/seo/pages';
@@ -85,7 +86,6 @@ const TIME_FIELDS: Record<SubathonPlatform, TimeField[]> = {
 };
 
 const PLATFORM_DOTS: Record<SubathonPlatform, string> = { twitch: '#9146FF', kick: '#53FC18' };
-const LANGUAGE_NAMES: Record<Locale, string> = { en: 'English', tr: 'Türkçe' };
 
 const FAQ: FaqEntry[] = [
   ['subathon.faq1Q', 'subathon.faq1A'],
@@ -399,11 +399,11 @@ function SubathonSetup() {
             <FieldLabel id={`${id}-lang`} tip={t('subathon.ratesLanguageTip')}>
               {t('subathon.ratesLanguage')}
             </FieldLabel>
-            <SegmentedControl
+            <Select
               labelledBy={`${id}-lang`}
               value={ratesLocale}
               onChange={setPickedLocale}
-              options={LOCALES.map((value) => ({ value, label: LANGUAGE_NAMES[value] }))}
+              options={LOCALES.map((value) => ({ value, label: LOCALE_NAMES[value] }))}
             />
           </div>
         )}

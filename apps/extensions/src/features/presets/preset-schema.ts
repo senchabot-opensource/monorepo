@@ -10,6 +10,7 @@ export const FILLS = ['gloss', 'stripes', 'blocks', 'flat'] as const;
 export const SOUNDS = ['neon', 'celestial'] as const;
 
 const hex = z.string().regex(/^#[0-9a-f]{6}$/i, 'a #rrggbb color');
+const blurb = z.string().max(160);
 
 // Names and weights end up in a fonts.googleapis.com URL and a CSS font-family, so only
 // letters, digits and spaces get through.
@@ -29,8 +30,20 @@ export const presetSchema = z.object({
     name: z.string().min(1).max(40),
     url: z.url({ protocol: /^https$/ }).optional(),
   }),
-  /** One sentence per language; built-in presets keep theirs in the locale files instead. */
-  description: z.object({ en: z.string().max(160), tr: z.string().max(160) }).optional(),
+  /**
+   * One sentence per language; built-in presets keep theirs in the locale files instead. English
+   * and Turkish are required, the other languages show English when theirs is missing.
+   */
+  description: z
+    .object({
+      en: blurb,
+      tr: blurb,
+      es: blurb.optional(),
+      fr: blurb.optional(),
+      ja: blurb.optional(),
+      pt: blurb.optional(),
+    })
+    .optional(),
   fonts: z.object({ display: font, body: font }),
   colors: z.object({
     /** Bar fills, glows and highlights. */

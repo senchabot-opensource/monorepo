@@ -132,13 +132,17 @@ describe('OBS Bridge tool', () => {
       throw new TypeError('Failed to fetch');
     });
     vi.spyOn(globalThis, 'fetch').mockImplementation(async (input) =>
-      String(input).startsWith('https://kick.com/') ? kickApi() : new Response('{}', { status: 500 }),
+      String(input).startsWith('https://kick.com/')
+        ? kickApi()
+        : new Response('{}', { status: 500 }),
     );
     vi.useFakeTimers({ shouldAdvanceTime: true });
     await renderRoute(`${TOOL}?twitch=streamer&kick=streamer&lang=en`);
     await act(async () => {});
     const obs = OBSWebSocket.latest;
-    expect(screen.queryByText(en('obsBridge.tool.kickNotFound', { channel: 'streamer' }))).toBeNull();
+    expect(
+      screen.queryByText(en('obsBridge.tool.kickNotFound', { channel: 'streamer' })),
+    ).toBeNull();
 
     kickApi.mockImplementation(async () =>
       Response.json({ id: 1, user_id: 2, chatroom: { id: 668 } }),
@@ -386,12 +390,20 @@ describe('OBS Bridge tool in an OBS dock', () => {
     await renderRoute(`${TOOL}?twitch=streamer&lang=en`);
     const header = document.querySelector('header');
     expect(header).not.toBeNull();
-    // The EN/TR links only swap ?lang= on the same page, so they're the one allowed kind.
+    // The language links only swap ?lang= on the same page, so they're the one allowed kind.
     const leaving = [...(header?.querySelectorAll('a[href]') ?? [])].filter(
       (link) => !link.hasAttribute('hreflang'),
     );
     expect(leaving.map((link) => link.getAttribute('href'))).toEqual([]);
-    expect(header?.querySelector('button[aria-controls]')).toBeNull();
+    // The only menu is the language one, which holds nothing but those links.
+    const menus = [...(header?.querySelectorAll('button[aria-controls]') ?? [])].map((button) =>
+      document.getElementById(button.getAttribute('aria-controls') ?? ''),
+    );
+    for (const panel of menus) {
+      const links = [...(panel?.querySelectorAll('a') ?? [])];
+      expect(links.length).toBeGreaterThan(0);
+      expect(links.every((link) => link.hasAttribute('hreflang'))).toBe(true);
+    }
     expect(document.querySelector('footer')).toBeNull();
   });
 });
