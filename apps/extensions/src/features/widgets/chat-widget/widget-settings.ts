@@ -18,6 +18,8 @@ export const HIGHLIGHTS = [
   'announcement',
   'highlighted',
 ] as const;
+// 'normal' is the shadow every Chat Box had before this choice, so a URL without it keeps it.
+export const TEXT_SHADOWS = ['normal', 'none', 'strong'] as const;
 // Seconds a message stays on screen; 'keep' never removes it.
 export const DURATIONS = ['10', '15', '30', '60', '120', '300', 'keep'] as const;
 export const ANIMATIONS = [
@@ -39,6 +41,7 @@ export type Orientation = (typeof ORIENTATIONS)[number];
 export type Animation = (typeof ANIMATIONS)[number];
 export type Highlight = (typeof HIGHLIGHTS)[number];
 export type Duration = (typeof DURATIONS)[number];
+export type TextShadow = (typeof TEXT_SHADOWS)[number];
 
 export interface Settings {
   platforms: Platforms;
@@ -59,6 +62,7 @@ export interface Settings {
   platformAccent: boolean;
   boldUsernames: boolean;
   boldMessages: boolean;
+  textShadow: TextShadow;
   sevenTv: boolean;
   bttv: boolean;
   ffz: boolean;
@@ -87,6 +91,7 @@ export const DEFAULT_SETTINGS: Settings = {
   platformAccent: false,
   boldUsernames: false,
   boldMessages: false,
+  textShadow: 'normal',
   sevenTv: true,
   bttv: true,
   ffz: true,
@@ -129,6 +134,8 @@ export function buildWidgetParams(settings: Settings, twitchChannel: string, kic
   if (settings.platformAccent) params.append('platformAccent', 'true');
   if (settings.boldUsernames) params.append('boldUsernames', 'true');
   if (settings.boldMessages) params.append('boldMessages', 'true');
+  if (settings.textShadow !== DEFAULT_SETTINGS.textShadow)
+    params.append('shadow', settings.textShadow);
   if (settings.orientation !== DEFAULT_SETTINGS.orientation)
     params.append('orientation', settings.orientation);
   if (
@@ -219,6 +226,7 @@ export function parseWidgetUrl(text: string): ParsedWidgetUrl | null {
       platformAccent: flag('platformAccent', DEFAULT_SETTINGS.platformAccent),
       boldUsernames: flag('boldUsernames', DEFAULT_SETTINGS.boldUsernames),
       boldMessages: flag('boldMessages', DEFAULT_SETTINGS.boldMessages),
+      textShadow: oneOf('shadow', TEXT_SHADOWS, DEFAULT_SETTINGS.textShadow),
       sevenTv: flag('sevenTv', DEFAULT_SETTINGS.sevenTv),
       bttv: flag('bttv', DEFAULT_SETTINGS.bttv),
       ffz: flag('ffz', DEFAULT_SETTINGS.ffz),

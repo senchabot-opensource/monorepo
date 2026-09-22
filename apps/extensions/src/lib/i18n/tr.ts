@@ -274,6 +274,12 @@ export const tr: typeof en = {
     usernameFont: 'Kullanıcı Adı Fontu',
     messageFont: 'Mesaj Fontu',
     fontSystem: 'Sistem Varsayılanı',
+    textShadow: 'Yazı Gölgesi',
+    textShadowTip:
+      'Kullanıcı adlarının ve mesajların arkasındaki koyu kenar. Güçlü her harfin çevresine kontur çizer, açık renkli oyunlarda da sohbet okunur; Kapalı gölgeyi, preset\'in kendi gölgesi dahil, kaldırır.',
+    shadowNone: 'Kapalı',
+    shadowNormal: 'Normal',
+    shadowStrong: 'Güçlü',
     messageLayout: 'Mesaj Düzeni',
     layoutInline: 'Satır içi — Kullanıcı adı: mesaj',
     layoutStacked: 'Üst üste — kullanıcı adı üstte',
@@ -2243,6 +2249,8 @@ export const tr: typeof en = {
         'Subathon Timer artık zamana bağlı oranlara sahip: saat zaten yüksekken bir aboneliğin ne kadar süre ekleyeceğini düşürmek için bir eşik belirleyin.',
       scrollHint:
         'Ekrana sığmayan kurulum panellerinin altında artık küçük bir ok var, böylece aşağıda başka ayarlar olduğu belli oluyor. Oka basınca aşağı iniyorsun, sona geldiğinde ok yön değiştirip seni başa götürüyor.',
+      chatTextShadow:
+        "Chat Box'a Yazı Gölgesi seçimi geldi: Kapalı, Normal (eskisi gibi) ya da Güçlü; Güçlü koyu bir kontur çizer, açık renkli oyunlarda da sohbet okunur.",
       chatFonts:
         "Sohbet Kutusu'nda artık kullanıcı adları için ayrı, mesajlar için ayrı font kutusu var ve preset seçiliyken de ikisi açık kalıyor: preset'in getirdiği iki fontu olduğu gibi bırakabilir, başlık fontunu mesajlara da verebilir ya da ikisini Inter, Roboto, Nunito, JetBrains Mono, Source Serif 4 veya sistem fontuyla karıştırabilirsin. Kalın kullanıcı adları ve kalın mesajlar da fontu tek ağırlıkla gelen preset'lerde (Realm, Dynasty, Blocks) artık çalışıyor.",
       sproutSaved:

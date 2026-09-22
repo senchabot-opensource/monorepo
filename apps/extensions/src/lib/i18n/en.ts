@@ -270,6 +270,12 @@ export const en = {
     usernameFont: 'Username Font',
     messageFont: 'Message Font',
     fontSystem: 'System Default',
+    textShadow: 'Text Shadow',
+    textShadowTip:
+      'A dark edge behind names and messages. Strong outlines each letter so chat stays readable on bright games; None removes it, even a preset\'s own.',
+    shadowNone: 'None',
+    shadowNormal: 'Normal',
+    shadowStrong: 'Strong',
     messageLayout: 'Message Layout',
     layoutInline: 'Inline — Username: message',
     layoutStacked: 'Stacked — username above',
@@ -2259,6 +2265,8 @@ export const en = {
         'Subathon Timer now has adjustable rates: set a threshold to drop how much time a sub adds when the clock is already high.',
       scrollHint:
         'Setup panels that are too long for the screen now show a small arrow at the bottom, so it is clear there are more settings below. Press it to jump down, and once you are at the end it turns around and takes you back to the top.',
+      chatTextShadow:
+        "Chat Box has a Text Shadow choice: None, Normal (as before) or Strong, a dark outline that keeps chat readable on bright games.",
       chatFonts:
         'Chat Box now has a font box for usernames and another for messages, and both stay open under a preset: keep the two fonts the preset came with, put its heading font on the messages too, or mix either with Inter, Roboto, Nunito, JetBrains Mono, Source Serif 4 or your system font. Bold usernames and bold messages also work now under presets whose font comes in a single weight, like Realm, Dynasty and Blocks.',
       sproutSaved:
