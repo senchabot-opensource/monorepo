@@ -578,22 +578,22 @@ export const CONTENT_META = {
     en: {
       title: 'Changelog: New Features and Fixes | Senchabot Extensions',
       description:
-        'Every feature and fix in Senchabot Extensions since the April 2026 launch, newest first, for all nine Twitch and Kick overlays and tools.',
+        'Every feature and fix in Senchabot Extensions since the April 2026 launch, newest first, for all twelve Twitch and Kick overlays and tools.',
     },
     tr: {
       title: 'Yenilikler: Eklenen Özellikler ve Düzeltmeler | Senchabot',
       description:
-        "Senchabot Extensions'taki dokuz Twitch ve Kick overlay'ine ve aracına Nisan 2026'dan beri gelen her özellik ve düzeltme, en yenisi en üstte.",
+        "Senchabot Extensions'taki on iki Twitch ve Kick overlay'ine ve aracına Nisan 2026'dan beri gelen her özellik ve düzeltme, en yenisi en üstte.",
     },
     es: {
       title: 'Novedades: funciones y arreglos | Senchabot Extensions',
       description:
-        'Cada función y arreglo de Senchabot Extensions desde el lanzamiento en abril de 2026, de lo más nuevo a lo más viejo, para los nueve overlays y herramientas.',
+        'Cada función y arreglo de Senchabot Extensions desde el lanzamiento en abril de 2026, de lo más nuevo a lo más viejo, para los doce overlays y herramientas.',
     },
     fr: {
       title: 'Nouveautés et correctifs | Senchabot Extensions',
       description:
-        "Chaque fonctionnalité et correctif de Senchabot Extensions depuis le lancement d'avril 2026, du plus récent au plus ancien, pour les neuf overlays et outils.",
+        "Chaque fonctionnalité et correctif de Senchabot Extensions depuis le lancement d'avril 2026, du plus récent au plus ancien, pour les douze overlays et outils.",
     },
     ja: {
       title: '更新履歴: 新機能と修正 | Senchabot Extensions',

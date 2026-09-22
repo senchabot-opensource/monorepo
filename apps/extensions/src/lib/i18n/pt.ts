@@ -1442,7 +1442,7 @@ export const pt: typeof en = {
       },
       transparent: {
         title: 'Precisa fazer alguma coisa para o fundo ficar transparente?',
-        p1: 'Não. Caixa de Chat, Mural de Emotes, Sub Sprout, Subathon Timer, Alertas de Live, Meta de Subs, Enquete do Chat e o overlay do Sorteio são desenhados em fundo transparente. Você não precisa de chroma key nem de filtro, e pode deixar o campo CSS personalizado do OBS como está.',
+        p1: 'Não. Caixa de Chat, Mural de Emotes, Sub Sprout, Subathon Timer, Alertas de Live, Meta de Subs, Molduras de Live, Contagem Regressiva, Enquete do Chat, Redes Sociais e o overlay do Sorteio são desenhados em fundo transparente. Você não precisa de chroma key nem de filtro, e pode deixar o campo CSS personalizado do OBS como está.',
         p2: 'Se a Caixa de Chat ficar difícil de ler numa cena clara, ligue Fundo escuro. Ele coloca uma camada preta semitransparente atrás do widget, e você pode ajustar a opacidade de 0% a 100% (50% por padrão). Se quiser cada mensagem na sua própria caixa, ligue Caixa de fundo da mensagem.',
       },
       settings: {
@@ -1453,7 +1453,7 @@ export const pt: typeof en = {
         chatBox:
           'Caixa de Chat: as mensagens só chegam enquanto a fonte está rodando. Se a fonte desativa e volta, a tela começa vazia e só mostra as mensagens novas.',
         subSprout:
-          'Sub Sprout: o crescimento da planta não fica salvo em lugar nenhum. Se a página recarregar, a planta volta para o primeiro estágio.',
+          'Sub Sprout: a planta fica salva dentro do OBS, então um recarregamento mantém o estágio que ela alcançou, mas os subs que chegam com a fonte desligada não fazem ela crescer.',
         goal: 'Meta de Subs: a contagem fica salva dentro do OBS, então um recarregamento não perde ela, mas os subs que chegam com a fonte desligada não são contados.',
         poll: 'Enquete do Chat: a enquete e os votos ficam salvos dentro do OBS, então um recarregamento não perde nada, mas os votos digitados com a fonte desligada não são contados.',
         subathon:
@@ -1772,6 +1772,7 @@ export const pt: typeof en = {
       look: {
         title: 'Quais estilos e cores existem?',
         bar: 'Barra de vida (padrão): uma barra estilo game que esvazia de 100% até zero.',
+        thin: 'Barra fina: uma barra mais estreita com o título e o tempo restante dentro.',
         clock: 'Relógio: números grandes em horas, minutos e segundos.',
         ring: 'Anel: um círculo que vai esvaziando conforme o tempo acaba.',
         p1: 'A cor padrão, Vida, vai do verde ao amarelo e ao vermelho conforme o tempo fica curto. Você também pode escolher uma cor fixa: verde, roxo, vermelho, dourado, ciano ou rosa. O título ao lado do timer diz SUBATHON por padrão; troque por qualquer coisa de até 32 caracteres, ou deixe vazio para esconder.',
@@ -2232,7 +2233,7 @@ export const pt: typeof en = {
     },
     freeQ: 'O Senchabot Extensions é grátis?',
     freeA:
-      'Sim. Os nove widgets e ferramentas são grátis: Caixa de Chat, Mural de Emotes, Sub Sprout, Subathon Timer, Alertas de Live, Meta de Subs, Enquete do Chat, Sorteio e OBS Bridge. Não tem plano pago, marca d’água nem conta premium. O código-fonte é aberto no GitHub sob a licença GPL-3.0.',
+      'Sim. Os doze widgets e ferramentas são grátis: Caixa de Chat, Mural de Emotes, Sub Sprout, Subathon Timer, Alertas de Live, Meta de Subs, Molduras de Live, Contagem Regressiva, Enquete do Chat, Redes Sociais, Sorteio e OBS Bridge. Não tem plano pago, marca d’água nem conta premium. O código-fonte é aberto no GitHub sob a licença GPL-3.0.',
     loginQ: 'O que quer dizer "sem login"?',
     loginA:
       'Você não cria conta neste site, não entra com a Twitch nem com a Kick e não baixa nada. Você digita o nome do seu canal e a página de configuração te dá uma URL. Os widgets leem o chat público de forma anônima: na Twitch eles conectam como um espectador anônimo, e na Kick ouvem o feed público do chat. Por isso eles não conseguem escrever no chat, moderar nem acessar informações privadas da sua conta.',
@@ -2244,7 +2245,7 @@ export const pt: typeof en = {
       'OBS Studio e qualquer outro programa de live que aceite fonte de navegador. Cada widget roda como uma URL da web, e você cola essa URL na fonte. Nossos guias são escritos para o OBS Studio.',
     platformsQ: 'Quais widgets funcionam na Twitch e quais funcionam na Kick?',
     platformsA:
-      'Os onze funcionam nas duas plataformas. Caixa de Chat, Mural de Emotes, Sub Sprout, Subathon Timer, Alertas de Live, Meta de Subs, Enquete do Chat e Contagem Regressiva ouvem um canal da Twitch e um da Kick juntos em uma URL. O OBS Bridge ouve comandos dos dois chats, e cada usuário autorizado é adicionado com a sua própria plataforma. O Sorteio roda em uma plataforma por vez, Twitch ou Kick. Na Caixa de Chat, os emotes da 7TV aparecem nas duas plataformas, e os da BTTV e da FFZ só na Twitch.',
+      'Os doze funcionam nas duas plataformas. Caixa de Chat, Mural de Emotes, Sub Sprout, Subathon Timer, Alertas de Live, Meta de Subs, Enquete do Chat e Contagem Regressiva ouvem um canal da Twitch e um da Kick juntos em uma URL. O OBS Bridge ouve comandos dos dois chats, e cada usuário autorizado é adicionado com a sua própria plataforma. O Sorteio roda em uma plataforma por vez, Twitch ou Kick. As Molduras de Live e as Redes Sociais não leem o chat, então funcionam do mesmo jeito em qualquer uma das duas. Na Caixa de Chat, os emotes da 7TV aparecem nas duas plataformas, e os da BTTV e da FFZ só na Twitch.',
     editQ: 'Como mudo um widget depois?',
     editA:
       'Mude as configurações na página de configuração, copie a URL nova e cole por cima da antiga no campo URL da fonte no OBS. Com Caixa de Chat, Mural de Emotes, Sub Sprout, Subathon Timer, Alertas de Live, Meta de Subs, Enquete do Chat, Molduras de Live, Redes Sociais e Contagem Regressiva, se você colar sua URL antiga no campo URL do widget na página de configuração, todas as suas configurações voltam e você não precisa começar do zero.',

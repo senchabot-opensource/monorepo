@@ -1421,7 +1421,7 @@ export const tr: typeof en = {
       },
       transparent: {
         title: 'Arka planı şeffaf yapmak için bir şey gerekiyor mu?',
-        p1: "Hayır. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi ve çekiliş overlay'i şeffaf bir arka planla çizilir. Renk anahtarı (chroma key) ya da filtre eklemen gerekmez, OBS'in Özel CSS alanını da olduğu gibi bırakabilirsin.",
+        p1: "Hayır. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Yayın Çerçeveleri, Yayın Geri Sayımı, Sohbet Anketi, Sosyal Medya ve çekiliş overlay'i şeffaf bir arka planla çizilir. Renk anahtarı (chroma key) ya da filtre eklemen gerekmez, OBS'in Özel CSS alanını da olduğu gibi bırakabilirsin.",
         p2: "Sohbet Kutusu açık renkli bir sahnede zor okunuyorsa Koyu Arka Plan ayarını aç. Widget'ın arkasına yarı saydam siyah bir zemin gelir, saydamlığını %0 ile %100 arasında seçersin (varsayılan %50). Her mesajın ayrı bir kutuda durmasını istersen Mesaj Arka Plan Kutusu'nu aç.",
       },
       settings: {
@@ -1432,7 +1432,7 @@ export const tr: typeof en = {
         chatBox:
           'Sohbet Kutusu: mesajlar sadece kaynak açıkken gelir. Kaynak kapanıp açılırsa ekran boş başlar ve yalnızca yeni mesajları gösterir.',
         subSprout:
-          'Sub Sprout: bitkinin büyümesi hiçbir yere kaydedilmez. Sayfa yeniden yüklenirse bitki ilk aşamaya döner.',
+          "Sub Sprout: bitki OBS'in içinde kaydedilir, sayfa yeniden yüklenince ulaştığı aşamada kalır, ama kaynak kapalıyken gelen abonelikler onu büyütmez.",
         goal: "Abone Hedefi: sayı OBS'in içinde kaydedilir, sayfa yeniden yüklenince kaybolmaz, ama kaynak kapalıyken gelen abonelikler sayılmaz.",
         poll: "Sohbet Anketi: anket ve oylar OBS'in içinde kaydedilir, sayfa yeniden yüklenince kaybolmaz, ama kaynak kapalıyken yazılan oylar sayılmaz.",
         subathon:
@@ -1747,6 +1747,7 @@ export const tr: typeof en = {
       look: {
         title: 'Hangi stiller ve renkler var?',
         bar: "Can Barı (varsayılan): %100'den sıfıra doğru eriyen, oyun tarzı bir bar.",
+        thin: 'İnce Bar: başlığın ve kalan sürenin içinde durduğu daha ince bir bar.',
         clock: 'Saat: saat, dakika ve saniye olarak büyük rakamlar.',
         ring: 'Halka: süre azaldıkça boşalan bir çember.',
         p1: 'Varsayılan renk olan Can, süre azaldıkça yeşilden sarıya, sonra kırmızıya döner. İstersen sabit bir renk de seçebilirsin: yeşil, mor, kırmızı, altın, turkuaz ya da pembe. Sayacın yanındaki başlıkta varsayılan olarak SUBATHON yazar. Bunu en fazla 32 karakterlik istediğin bir yazıyla değiştirebilir ya da boş bırakıp gizleyebilirsin.',
@@ -2196,7 +2197,7 @@ export const tr: typeof en = {
     },
     freeQ: 'Senchabot Extensions ücretsiz mi?',
     freeA:
-      "Evet. Dokuz widget'ın ve aracın hepsi ücretsiz: Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi, Çekiliş ve OBS Bridge. Ücretli paket, filigran ya da premium hesap yok. Kaynak kodu GPL-3.0 lisansıyla GitHub'da açık.",
+      "Evet. On iki widget'ın ve aracın hepsi ücretsiz: Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Yayın Çerçeveleri, Yayın Geri Sayımı, Sohbet Anketi, Sosyal Medya, Çekiliş ve OBS Bridge. Ücretli paket, filigran ya da premium hesap yok. Kaynak kodu GPL-3.0 lisansıyla GitHub'da açık.",
     loginQ: '"Giriş gerektirmez" ne demek?',
     loginA:
       "Bu sitede hesap açmazsın, Twitch ya da Kick ile giriş yapmazsın ve bir şey indirmezsin. Kanal adını yazarsın, kurulum sayfası sana bir adres verir. Widget'lar herkese açık sohbeti anonim olarak okur: Twitch'e isimsiz bir izleyici gibi bağlanır, Kick'te herkese açık sohbet akışını dinler. Bu yüzden sohbete yazamaz, moderasyon yapamaz ve hesabındaki özel bilgilere erişemez.",
@@ -2208,7 +2209,7 @@ export const tr: typeof en = {
       'OBS Studio ve tarayıcı kaynağı (browser source) destekleyen diğer yayın programlarıyla. Her widget bir web adresi olarak çalışır, kaynağa bu adresi yapıştırırsın. Rehberlerimiz OBS Studio için yazıldı.',
     platformsQ: "Hangi widget'lar Twitch'i, hangileri Kick'i destekliyor?",
     platformsA:
-      "On biri de iki platformu destekliyor. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi ve Yayın Geri Sayımı tek adreste Twitch ve Kick kanalını birlikte dinler. OBS Bridge iki sohbetten gelen komutları dinler ve her yetkili kullanıcı kendi platformuyla eklenir. Çekiliş her seferinde tek platformda çalışır, Twitch ya da Kick. Sohbet Kutusu'nda 7TV emote'ları iki platformda, BTTV ve FFZ emote'ları sadece Twitch'te görünür.",
+      "On ikisi de iki platformu destekliyor. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi ve Yayın Geri Sayımı tek adreste Twitch ve Kick kanalını birlikte dinler. OBS Bridge iki sohbetten gelen komutları dinler ve her yetkili kullanıcı kendi platformuyla eklenir. Çekiliş her seferinde tek platformda çalışır, Twitch ya da Kick. Yayın Çerçeveleri ve Sosyal Medya sohbeti okumaz, bu yüzden iki platformda da aynı şekilde çalışır. Sohbet Kutusu'nda 7TV emote'ları iki platformda, BTTV ve FFZ emote'ları sadece Twitch'te görünür.",
     editQ: "Widget'ı sonradan nasıl değiştiririm?",
     editA:
       "Kurulum sayfasında ayarları değiştir, yeni adresi kopyala ve OBS'te kaynağın URL alanındaki eski adresin yerine yapıştır. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi, Yayın Çerçeveleri, Sosyal Medya ve Yayın Geri Sayımı'nda eski adresini kurulum sayfasındaki Widget URL alanına yapıştırırsan bütün ayarların geri yüklenir, baştan başlaman gerekmez.",
