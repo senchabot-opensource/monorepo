@@ -1415,6 +1415,8 @@ export const tr: typeof en = {
             "Kazanan overlay'i. Konfeti ekranın iki kenarından patlar, kazananın adı ortada çıkar.",
           obsBridge:
             "Görünür bir overlay değil. Aracı bir tarayıcı sekmesinde ya da OBS dock'unda açık tut.",
+          socials:
+            'Hesaplar şeridin ortasında tek tek çıkar. Yazı küçülmez, bu yüzden uzun bir kullanıcı adı için kaynağı daha geniş tut.',
         },
         fontNote:
           "Sohbet Kutusu'nda yazıyı büyütmek için kaynağı germe, kurulum sayfasındaki Yazı Boyutu ayarını kullan: 8 ile 72 piksel arası, varsayılan 18.",

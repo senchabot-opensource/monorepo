@@ -1455,6 +1455,8 @@ export const fr: typeof en = {
             "L'overlay du gagnant. Des confettis jaillissent des deux côtés de l'écran et le nom du gagnant apparaît au centre.",
           obsBridge:
             "Pas un overlay visible. Garde l'outil ouvert dans un onglet du navigateur ou un dock OBS.",
+          socials:
+            'Un pseudo à la fois, au centre de cette bande. Le texte garde sa taille, donc un long pseudo demande une source plus large.',
         },
         fontNote:
           "Pour agrandir le texte de la Boîte de chat, n'étire pas la source. Utilise le réglage Taille de police sur la page de configuration : de 8 à 72 pixels, 18 par défaut.",

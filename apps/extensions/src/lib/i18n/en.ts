@@ -1407,6 +1407,8 @@ export const en = {
           raffle:
             "The winner overlay. Confetti bursts from both sides of the screen and the winner's name appears in the middle.",
           obsBridge: 'Not a visible overlay. Keep the tool open in a browser tab or an OBS dock.',
+          socials:
+            'One handle at a time, in the middle of this strip. The text keeps its size, so a long handle needs a wider source.',
         },
         fontNote:
           "To make the Chat Box text bigger, don't stretch the source. Use the Font Size setting on the setup page: 8 to 72 pixels, 18 by default.",

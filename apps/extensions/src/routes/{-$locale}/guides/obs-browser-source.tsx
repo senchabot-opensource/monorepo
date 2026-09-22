@@ -29,6 +29,7 @@ const SIZE_NOTES: Record<WidgetId, TranslationKey> = {
   'stream-alerts': 'guides.obs.size.notes.streamAlerts',
   raffle: 'guides.obs.size.notes.raffle',
   'obs-bridge': 'guides.obs.size.notes.obsBridge',
+  socials: 'guides.obs.size.notes.socials',
 };
 
 function ObsBrowserSourceGuide() {
