@@ -19,9 +19,9 @@ import { HINT_CLASS, TextField } from '#/components/ui/text-field';
 import { PresetField } from '#/features/presets/preset-field';
 import { isClassic } from '#/features/presets/registry';
 import { useStartOnSitePreset } from '#/features/presets/site-preset';
+import { hueFor } from '#/features/widgets/overlay-style';
 import type { SubathonEvent, SubathonPlatform } from '#/features/widgets/subathon/subathon-events';
 import { COMMAND } from '#/features/widgets/subathon/subathon-timer';
-import { hueFor } from '#/features/widgets/overlay-style';
 import { PREVIEW_CHANNEL, type PreviewMessage } from '#/features/widgets/subathon/use-subathon';
 import { usePreviewSender } from '#/hooks/use-preview-channel';
 import { LOCALES, type Locale, type TranslationKey, useI18n } from '#/lib/i18n';
@@ -29,6 +29,7 @@ import { getParamsLocale } from '#/lib/i18n/paths';
 import type { FaqEntry } from '#/lib/i18n/seo';
 import { getSetupPageHead } from '#/lib/seo/pages';
 import {
+  ADJUSTED_RATES,
   buildSubathonPreviewUrl,
   buildSubathonUrl,
   DEFAULT_SUBATHON_SETTINGS,
@@ -356,7 +357,19 @@ function SubathonSetup() {
             label={t('subathon.dynamicRates')}
             tip={t('subathon.dynamicRatesTip')}
             checked={settings.shift > 0}
-            onChange={(value) => update('shift', value ? 18000 : 0)}
+            onChange={(value) =>
+              setSettings((current) => {
+                if (value) return { ...current, ...ADJUSTED_RATES };
+                // Back to the defaults, so a timer without it keeps a short URL.
+                const off = Object.fromEntries(
+                  Object.keys(ADJUSTED_RATES).map((key) => [
+                    key,
+                    DEFAULT_SUBATHON_SETTINGS[key as keyof typeof ADJUSTED_RATES],
+                  ]),
+                );
+                return { ...current, ...off };
+              })
+            }
           />
           {settings.shift > 0 && (
             <div className="mt-3">

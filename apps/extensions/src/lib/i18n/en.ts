@@ -629,7 +629,7 @@ export const en = {
     dynamicRates: 'Adjust rates by time',
     dynamicRatesTip: 'Use a second set of rates when the clock has enough time left.',
     shiftAt: 'Threshold',
-    shiftAtTip: 'When the remaining time is above this, the second set of rates is used.',
+    shiftAtTip: 'While the time left is at or above this, the second set of rates is used.',
     tier2Rates: 'When above threshold',
     perSub: 'Per Sub',
     perSubTip: 'Every new sub and resub. On Twitch this is a Tier 1 or Prime sub.',
@@ -2251,6 +2251,8 @@ export const en = {
         'New widget: Socials. Rotate your social media links with a slick slide animation.',
       thinBars:
         'Subathon Timer and Sub Goal now have a Thin Bar style that embeds the title and time or count directly inside a slimmer progress bar.',
+      subathonAdjustedDefaults:
+        'Adjust rates by time on the Subathon Timer now starts at 5 hours with lower rates filled in: on Twitch 5 min a sub, 10 min a gift sub and 20 min per 500 Bits, on Kick 10 min each.',
       subathonDynamicRates:
         'Subathon Timer now has adjustable rates: set a threshold to drop how much time a sub adds when the clock is already high.',
       scrollHint:
