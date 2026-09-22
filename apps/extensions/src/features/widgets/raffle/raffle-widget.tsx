@@ -306,7 +306,7 @@ export function RaffleWidget({
                   : 'bg-zinc-400 dark:bg-zinc-600'
             }`}
           />
-          <span className="truncate">{statusText}</span>
+          <span>{statusText}</span>
         </p>
         <button
           type="button"
