@@ -55,6 +55,8 @@ export const READY_BY_WIDGET = {
   '/widgets/frame': 'frame',
   '/widgets/poll': 'poll',
   '/widgets/countdown': 'countdown',
+  // The demo's handles are senchabot_<platform>.
+  '/widgets/socials': 'text:senchabot_',
 };
 
 /**
@@ -121,6 +123,16 @@ export const SETUP_SPECS = {
     preview: 'iframe',
     steps: [{ click: 'input[type="radio"][value="gold"]' }],
     expect: ['/widgets/poll?', 'twitch={channel}', 'color=gold'],
+    pasteToEdit: true,
+  },
+  socials: {
+    preview: 'iframe',
+    // Animation is the page's only Select; its second option is anything but the default.
+    steps: [
+      { click: '[role="combobox"]' },
+      { click: '[role="listbox"] [role="option"]:nth-child(2)' },
+    ],
+    expect: ['/widgets/socials?', 'twitch={channel}', 'animation=slideLeft'],
     pasteToEdit: true,
   },
   raffle: {
