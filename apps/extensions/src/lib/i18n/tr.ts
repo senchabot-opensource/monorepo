@@ -2233,6 +2233,8 @@ export const tr: typeof en = {
         '`!countdown {sahne} {süre}` sohbet komutu eklendi. Modlar artık tek bir komutla geçerli sahneyi (starting, break veya ending) değiştirebilir ve süresini ayarlayabilir.',
       socialsLaunch:
         'Yeni widget: Sosyal Medya. Sosyal medya hesaplarınızı şık bir kaydırma animasyonuyla yayın ekranınızda döndürün.',
+      thinBarReadable:
+        "Subathon Timer ve Abone Hedefi'ndeki İnce Bar'ın yazıları büyüdü ve her dolgu renginde okunsun diye kontur aldı; parlaması küçüldü ve süre listesiyle arasında boşluk var.",
       thinBars:
         'Subathon Timer ve Abone Hedefi artık başlık ile süreyi veya sayacı doğrudan daha ince bir ilerleme barının içine yerleştiren İnce Bar stiline sahip.',
       subathonAdjustedDefaults:

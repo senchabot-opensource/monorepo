@@ -4,8 +4,8 @@ import { Frame } from '#/features/presets/frame';
 import { painter, skinCss, skinFor } from '#/features/presets/skin';
 import { SkinProvider, useSkin } from '#/features/presets/skin-context';
 import type { GoalSettings } from '#/lib/goal-url';
+import { OVERLAY_FONT_FAMILY as FONT_FAMILY, hueFor, PLATFORM_COLORS } from '../overlay-style';
 import type { SubathonPlatform } from '../subathon/subathon-events';
-import { hueFor, OVERLAY_FONT_FAMILY as FONT_FAMILY, PLATFORM_COLORS } from '../overlay-style';
 import { useFitScale } from '../use-fit-scale';
 import { CELEBRATE_MS, type GoalHit, type GoalPop, POP_MS, useGoal } from './use-goal';
 
@@ -15,7 +15,7 @@ const STAGE = { width: 800, height: 260 };
 // Bottom up: margin, the bar, a gap, the title and count row; the rising pops use the rest.
 const BAR_BOTTOM = 30;
 const BAR_HEIGHT = 56;
-const BAR_HEIGHT_THIN = 40;
+const BAR_HEIGHT_THIN = 44;
 const BAR_GAP = 10;
 const INFO_ROW_HEIGHT = 44;
 const POP_BAND = STAGE.height - BAR_BOTTOM - BAR_HEIGHT - BAR_GAP - INFO_ROW_HEIGHT;
@@ -34,6 +34,8 @@ const CSS = `
   -webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
 .sg-stage{position:absolute;left:50%;top:50%;width:${STAGE.width}px;height:${STAGE.height}px;transform-origin:center}
 .sg-shadow{text-shadow:0 2px 0 rgba(0,0,0,.55),0 0 18px rgba(0,0,0,.55)}
+/* A hard dark outline: thin-stroked preset fonts (Cinzel) lost a soft shadow on the bright fill. */
+.sg-outline{text-shadow:-1.5px -1.5px 0 rgba(0,0,0,.8),1.5px -1.5px 0 rgba(0,0,0,.8),-1.5px 1.5px 0 rgba(0,0,0,.8),1.5px 1.5px 0 rgba(0,0,0,.8),0 2px 4px rgba(0,0,0,.9),0 0 10px rgba(0,0,0,.55)}
 .sg-title{font-weight:800;letter-spacing:.14em;text-transform:uppercase;font-style:italic}
 @keyframes sg-ghost{0%{opacity:1}100%{opacity:0}}
 @keyframes sg-sheen{0%{transform:translateX(-120%)}100%{transform:translateX(220%)}}
@@ -45,7 +47,6 @@ const CSS = `
 @keyframes sg-ring{0%{transform:translate(-50%,-50%) scale(.2);opacity:.95}100%{transform:translate(-50%,-50%) scale(3.4);opacity:0}}
 @keyframes sg-spark{0%{transform:rotate(var(--a)) translateY(-18px) scale(1);opacity:1}100%{transform:rotate(var(--a)) translateY(var(--d)) scale(.3);opacity:0}}
 `;
-
 
 interface GoalWidgetProps {
   twitchChannel?: string;
@@ -141,8 +142,20 @@ export function GoalWidget({
   );
 }
 
-function StarIcon({ hue, hit, size = 26 }: { hue: number; hit: GoalHit | null; size?: number }) {
-  const hsl = painter(useSkin(), hue);
+/** `plain` draws it in the text color, for a thin bar where it sits on a fill of its own hue. */
+function StarIcon({
+  hue,
+  hit,
+  size = 26,
+  plain = false,
+}: {
+  hue: number;
+  hit: GoalHit | null;
+  size?: number;
+  plain?: boolean;
+}) {
+  const skin = useSkin();
+  const hsl = painter(skin, hue);
   return (
     <svg
       key={hit?.up ? hit.key : undefined}
@@ -151,13 +164,15 @@ function StarIcon({ hue, hit, size = 26 }: { hue: number; hit: GoalHit | null; s
       height={size}
       aria-hidden="true"
       style={{
-        filter: `drop-shadow(0 0 8px ${hsl(90, 55, 0.8)})`,
+        filter: plain
+          ? 'drop-shadow(0 1px 1.5px rgba(0,0,0,.9))'
+          : `drop-shadow(0 0 8px ${hsl(90, 55, 0.8)})`,
         animation: hit?.up ? 'sg-bump .5s ease-out' : undefined,
       }}
     >
       <path
         d="m12 2.5 2.9 6 6.6.8-4.9 4.5 1.3 6.5L12 17l-5.9 3.3 1.3-6.5-4.9-4.5 6.6-.8Z"
-        fill={hsl(90, 60)}
+        fill={plain ? (skin?.text ?? '#fff') : hsl(90, 60)}
         stroke="rgba(0,0,0,.55)"
         strokeWidth="1.5"
         strokeLinejoin="round"
@@ -419,7 +434,8 @@ function ThinBar({
   const layers = fillLayers(skin);
   const segments = target <= MAX_SEGMENTS ? target : 10;
   const ticks = Array.from({ length: segments - 1 }, (_, index) => ((index + 1) / segments) * 100);
-  const glowShadow = `0 0 ${celebrating ? 32 : 18}px ${glow(90, 50, celebrating ? 0.75 : 0.4)}`;
+  // Shadows shrink with the bar: the full bar's glow swamps a 40px one.
+  const glowShadow = `0 0 ${celebrating ? 20 : 10}px ${glow(90, 50, celebrating ? 0.7 : 0.4)}`;
   const barStyle: CSSProperties = {
     position: 'relative',
     height: BAR_HEIGHT_THIN,
@@ -427,8 +443,8 @@ function ThinBar({
     borderRadius: 6,
     padding: 3,
     background: 'linear-gradient(180deg, #2a2a33 0%, #0c0c10 100%)',
-    boxShadow: `0 0 0 2px rgba(0,0,0,.85), ${glowShadow}, inset 0 1px 0 rgba(255,255,255,.18)`,
-    ...(skin && barFrameStyle(skin, glowShadow)),
+    boxShadow: `0 0 0 1.5px rgba(0,0,0,.85), ${glowShadow}, inset 0 1px 0 rgba(255,255,255,.18)`,
+    ...(skin && barFrameStyle(skin, glowShadow, 0.4)),
     animation: celebrating ? 'sg-glow .7s ease-in-out 5' : undefined,
     transition: 'box-shadow .4s',
   };
@@ -545,15 +561,15 @@ function ThinBar({
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, minWidth: 0 }}>
             {reached ? (
-              <TrophyIcon size={20} glow={gold(95, 55, 0.8)} />
+              <TrophyIcon size={22} glow="rgba(0,0,0,.9)" />
             ) : (
-              <StarIcon hue={hue} hit={hit} size={18} />
+              <StarIcon hue={hue} hit={hit} size={20} plain />
             )}
             {title && (
               <span
-                className="sg-title sg-shadow"
+                className="sg-title sg-outline"
                 style={{
-                  fontSize: 16,
+                  fontSize: 19,
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap',
@@ -564,13 +580,19 @@ function ThinBar({
             )}
           </div>
           <span
-            className="sg-shadow"
-            style={{ display: 'flex', alignItems: 'baseline', gap: 4, fontWeight: 800, lineHeight: 1 }}
+            className="sg-outline"
+            style={{
+              display: 'flex',
+              alignItems: 'baseline',
+              gap: 4,
+              fontWeight: 800,
+              lineHeight: 1,
+            }}
           >
             <span
               key={hit?.up ? hit.key : undefined}
               style={{
-                fontSize: 20,
+                fontSize: 25,
                 color: reached ? gold(100, 72) : (skin?.text ?? '#fff'),
                 transformOrigin: 'right center',
                 animation: hit?.up ? 'sg-bump .5s ease-out' : undefined,
@@ -578,7 +600,7 @@ function ThinBar({
             >
               {count}
             </span>
-            <span style={{ fontSize: 14, opacity: 0.75 }}>/ {target}</span>
+            <span style={{ fontSize: 17, opacity: 0.9 }}>/ {target}</span>
           </span>
         </div>
       </div>
@@ -641,7 +663,6 @@ function Celebration({ centerTop = BAR_CENTER }: { centerTop?: number }) {
     </div>
   );
 }
-
 
 // Pops that land close together rise side by side instead of on top of each other. Keyed by
 // pop id, so a pop keeps its spot when an older one disappears.

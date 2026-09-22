@@ -354,6 +354,42 @@ describe('SubathonWidget', () => {
     expect(clock()).toContain('01:00:00');
   });
 
+  it('shakes the thin bar from outside, so the bar keeps its slant under the embedded text', () => {
+    render(
+      <SubathonWidget
+        twitchChannel="streamer"
+        settings={settings({ style: 'thin', start: 600, autostart: true })}
+      />,
+    );
+    const wrapper = screen.getByTestId('subathon-thin-bar');
+    expect(wrapper.style.animation).toBe('');
+    // 7% of 10 minutes left is critical.
+    act(() => vi.advanceTimersByTime(560_000));
+    expect(wrapper.style.animation).toContain('sa-shake');
+    const bar = wrapper.firstElementChild as HTMLElement;
+    expect(bar.style.animation).not.toContain('sa-shake');
+    expect(bar.style.transform).toBe('skewX(-14deg)');
+  });
+
+  it('lifts the thin bar off the rates strip', async () => {
+    const view = await renderWithProviders(
+      <SubathonWidget
+        twitchChannel="streamer"
+        settings={settings({ style: 'thin', rates: true })}
+      />,
+      '/widgets/subathon?lang=en',
+    );
+    const padding = () =>
+      Number.parseInt(
+        (screen.getByTestId('subathon-thin-bar').parentElement as HTMLElement).style.paddingBottom,
+        10,
+      );
+    const withRates = padding();
+    view.unmount();
+    render(<SubathonWidget twitchChannel="streamer" settings={settings({ style: 'thin' })} />);
+    expect(withRates).toBeGreaterThan(padding());
+  });
+
   it('renders rates in thin style positioned properly', async () => {
     await renderWithProviders(
       <SubathonWidget
