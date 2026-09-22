@@ -4,13 +4,17 @@ import type { Skin } from './skin';
 
 type Paint = (s: number, l: number, a?: number) => string;
 
-/** A progress bar's outer box in a preset: its panel, slant and a glow in the fill's color. */
-export function barFrameStyle(skin: Skin, glow: string): CSSProperties {
+/**
+ * A progress bar's outer box in a preset: its panel, slant and a glow in the fill's color.
+ * `shadowScale` shrinks the drop shadow for a thinner bar.
+ */
+export function barFrameStyle(skin: Skin, glow: string, shadowScale = 1): CSSProperties {
   const panel = panelStyle(skin, 6);
+  const shadow = panelStyle(skin, 6, shadowScale).boxShadow;
   return {
     ...panel,
     transform: skin.skew ? `skewX(${skin.skew}deg)` : undefined,
-    boxShadow: [panel.boxShadow, glow].filter(Boolean).join(','),
+    boxShadow: [shadow, glow].filter(Boolean).join(','),
   };
 }
 

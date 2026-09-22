@@ -34,8 +34,10 @@ const INFO_ROW_HEIGHT = 44;
 const BAR_GAP = 12;
 const BAR_HEIGHT = 64;
 const BAR_TOP = STAGE.height - BAR_BOTTOM - INFO_ROW_HEIGHT - BAR_GAP - BAR_HEIGHT;
-const BAR_HEIGHT_THIN = 40;
+const BAR_HEIGHT_THIN = 44;
 const BAR_TOP_THIN = STAGE.height - BAR_BOTTOM - BAR_HEIGHT_THIN;
+// The rates strip fills the bottom margin, so the thin bar moves up to keep a gap above it.
+const THIN_RATES_LIFT = 10;
 
 // Segment lines on the health bar, every 10%.
 const TICKS = [10, 20, 30, 40, 50, 60, 70, 80, 90];
@@ -52,6 +54,8 @@ const CSS = `
   -webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
 .sa-stage{position:absolute;left:50%;top:50%;width:${STAGE.width}px;height:${STAGE.height}px;transform-origin:center}
 .sa-shadow{text-shadow:0 2px 0 rgba(0,0,0,.55),0 0 18px rgba(0,0,0,.55)}
+/* A hard dark outline: thin-stroked preset fonts (Cinzel) lost a soft shadow on the bright fill. */
+.sa-outline{text-shadow:-1.5px -1.5px 0 rgba(0,0,0,.8),1.5px -1.5px 0 rgba(0,0,0,.8),-1.5px 1.5px 0 rgba(0,0,0,.8),1.5px 1.5px 0 rgba(0,0,0,.8),0 2px 4px rgba(0,0,0,.9),0 0 10px rgba(0,0,0,.55)}
 .sa-title{font-weight:800;letter-spacing:.14em;text-transform:uppercase;font-style:italic}
 @keyframes sa-beat{0%,40%,100%{transform:scale(1)}15%{transform:scale(1.28)}28%{transform:scale(1.1)}}
 @keyframes sa-pulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.45)}}
@@ -202,8 +206,20 @@ const clockColor = (ended: boolean, skin: Skin | null): CSSProperties => ({
   animation: ended ? 'sa-blink 1s steps(2) infinite' : undefined,
 });
 
-function HeartIcon({ hue, beat, size = 26 }: { hue: number; beat: number | null; size?: number }) {
-  const hsl = painter(useSkin(), hue);
+/** `plain` draws it in the text color, for a thin bar where it sits on a fill of its own hue. */
+function HeartIcon({
+  hue,
+  beat,
+  size = 26,
+  plain = false,
+}: {
+  hue: number;
+  beat: number | null;
+  size?: number;
+  plain?: boolean;
+}) {
+  const skin = useSkin();
+  const hsl = painter(skin, hue);
   return (
     <svg
       viewBox="0 0 24 24"
@@ -211,13 +227,15 @@ function HeartIcon({ hue, beat, size = 26 }: { hue: number; beat: number | null;
       height={size}
       aria-hidden="true"
       style={{
-        filter: `drop-shadow(0 0 8px ${hsl(90, 55, 0.8)})`,
+        filter: plain
+          ? 'drop-shadow(0 1px 1.5px rgba(0,0,0,.9))'
+          : `drop-shadow(0 0 8px ${hsl(90, 55, 0.8)})`,
         animation: beat ? `sa-beat ${beat}s ease-in-out infinite` : undefined,
       }}
     >
       <path
         d="M12 21s-7.5-4.6-10-9.2C.3 8.5 2.2 4 6.3 4c2.4 0 4 1.4 5.7 3.4C13.7 5.4 15.3 4 17.7 4 21.8 4 23.7 8.5 22 11.8 19.5 16.4 12 21 12 21Z"
-        fill={hsl(90, 58)}
+        fill={plain ? (skin?.text ?? '#fff') : hsl(90, 58)}
         stroke="rgba(0,0,0,.55)"
         strokeWidth="1.5"
       />
@@ -725,7 +743,8 @@ function ThinBarView(view: ViewProps) {
   const skin = useSkin();
   const hsl = painter(skin, hue);
   const layers = fillLayers(skin);
-  const glow = `0 0 ${low ? 28 : 18}px ${hsl(90, 50, low ? 0.7 : 0.45)}`;
+  // Shadows shrink with the bar: the full bar's glow swamps a 40px one.
+  const glow = `0 0 ${low ? 18 : 10}px ${hsl(90, 50, low ? 0.6 : 0.4)}`;
   const barStyle: CSSProperties = {
     position: 'relative',
     height: BAR_HEIGHT_THIN,
@@ -733,20 +752,17 @@ function ThinBarView(view: ViewProps) {
     borderRadius: 6,
     padding: 3,
     background: 'linear-gradient(180deg, #2a2a33 0%, #0c0c10 100%)',
-    boxShadow: `0 0 0 2px rgba(0,0,0,.85), ${glow}, inset 0 1px 0 rgba(255,255,255,.18)`,
-    ...(skin && barFrameStyle(skin, glow)),
-    animation: critical
-      ? 'sa-shake .45s linear infinite'
-      : low
-        ? 'sa-pulse .9s ease-in-out infinite'
-        : undefined,
+    boxShadow: `0 0 0 1.5px rgba(0,0,0,.85), ${glow}, inset 0 1px 0 rgba(255,255,255,.18)`,
+    ...(skin && barFrameStyle(skin, glow, 0.4)),
+    animation: low && !critical ? 'sa-pulse .9s ease-in-out infinite' : undefined,
   };
 
   const textUnskew = skin ? -skin.skew : 14;
+  const lift = view.rates.length > 0 ? THIN_RATES_LIFT : 0;
 
   return (
     <>
-      <PopBand pops={view.pops} hue={hue} x={shown * 100} height={BAR_TOP_THIN} />
+      <PopBand pops={view.pops} hue={hue} x={shown * 100} height={BAR_TOP_THIN - lift} />
       <div
         style={{
           position: 'absolute',
@@ -754,166 +770,172 @@ function ThinBarView(view: ViewProps) {
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'flex-end',
-          paddingBottom: BAR_BOTTOM,
+          paddingBottom: BAR_BOTTOM + lift,
         }}
       >
-        <div style={barStyle}>
-          <div
-            style={{
-              position: 'relative',
-              height: '100%',
-              overflow: 'hidden',
-              borderRadius: skin ? 3 * skin.radius : 3,
-              background: skin
-                ? trackBackground(skin)
-                : 'repeating-linear-gradient(90deg, rgba(255,255,255,.045) 0 14px, transparent 14px 28px), linear-gradient(180deg, #16161c, #07070a)',
-            }}
-          >
-            {hit && (
-              <div
-                key={hit.key}
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  bottom: 0,
-                  left: `${Math.min(hit.from, hit.to) * 100}%`,
-                  width: `${Math.abs(hit.to - hit.from) * 100}%`,
-                  background: hit.heal ? '#ffffff' : '#ef4444',
-                  animation: `sa-ghost ${hit.heal ? HEAL_MS : HURT_MS}ms ease-out forwards`,
-                }}
-              />
-            )}
+        {/* Shakes around the bar: on the bar, the shake's transform would drop its slant while the
+            text inside stays counter-slanted. */}
+        <div
+          data-testid="subathon-thin-bar"
+          style={{ animation: critical ? 'sa-shake .45s linear infinite' : undefined }}
+        >
+          <div style={barStyle}>
             <div
               style={{
-                position: 'absolute',
-                inset: 0,
-                transform: `translateX(${(shown - 1) * 100}%)`,
-                background: skin
-                  ? fillBackground(skin, hsl)
-                  : `linear-gradient(180deg, ${hsl(95, 72)} 0%, ${hsl(88, 52)} 42%, ${hsl(85, 34)} 100%)`,
-                boxShadow: `inset -3px 0 0 ${hsl(100, 85)}`,
-                transition: `transform ${view.ease}, background .4s`,
-                filter: paused ? 'saturate(.35) brightness(.85)' : undefined,
+                position: 'relative',
+                height: '100%',
                 overflow: 'hidden',
+                borderRadius: skin ? 3 * skin.radius : 3,
+                background: skin
+                  ? trackBackground(skin)
+                  : 'repeating-linear-gradient(90deg, rgba(255,255,255,.045) 0 14px, transparent 14px 28px), linear-gradient(180deg, #16161c, #07070a)',
               }}
             >
-              {layers.stripes && (
-                <div
-                  style={{
-                    position: 'absolute',
-                    inset: '0 0 0 -28px',
-                    background:
-                      'repeating-linear-gradient(115deg, rgba(255,255,255,.14) 0 10px, transparent 10px 20px)',
-                    backgroundSize: '28px 100%',
-                    animation: paused ? undefined : 'sa-stripes 1.2s linear infinite',
-                  }}
-                />
-              )}
-              {layers.gloss && (
-                <div
-                  style={{
-                    position: 'absolute',
-                    left: 0,
-                    right: 0,
-                    top: 2,
-                    height: '32%',
-                    background:
-                      'linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,0))',
-                    borderRadius: 2,
-                  }}
-                />
-              )}
-              {hit && healing && (
+              {hit && (
                 <div
                   key={hit.key}
                   style={{
                     position: 'absolute',
                     top: 0,
                     bottom: 0,
-                    left: `${(1 - shown) * 100}%`,
-                    width: `${shown * 40}%`,
-                    background:
-                      'linear-gradient(90deg, transparent, rgba(255,255,255,.75), transparent)',
-                    animation: 'sa-sheen .8s ease-out forwards',
+                    left: `${Math.min(hit.from, hit.to) * 100}%`,
+                    width: `${Math.abs(hit.to - hit.from) * 100}%`,
+                    background: hit.heal ? '#ffffff' : '#ef4444',
+                    animation: `sa-ghost ${hit.heal ? HEAL_MS : HURT_MS}ms ease-out forwards`,
                   }}
                 />
               )}
-            </div>
-            {TICKS.map((tick) => (
               <div
-                key={tick}
                 style={{
                   position: 'absolute',
-                  top: 0,
-                  bottom: 0,
-                  left: `${tick}%`,
-                  width: layers.tickWidth,
-                  background: 'rgba(0,0,0,.45)',
+                  inset: 0,
+                  transform: `translateX(${(shown - 1) * 100}%)`,
+                  background: skin
+                    ? fillBackground(skin, hsl)
+                    : `linear-gradient(180deg, ${hsl(95, 72)} 0%, ${hsl(88, 52)} 42%, ${hsl(85, 34)} 100%)`,
+                  boxShadow: `inset -3px 0 0 ${hsl(100, 85)}`,
+                  transition: `transform ${view.ease}, background .4s`,
+                  filter: paused ? 'saturate(.35) brightness(.85)' : undefined,
+                  overflow: 'hidden',
                 }}
-              />
-            ))}
-            {/* Embedded text row inside the thin progress bar */}
-            <div
-              style={{
-                position: 'absolute',
-                inset: '0 14px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                gap: 12,
-                pointerEvents: 'none',
-                zIndex: 2,
-                transform: `skewX(${textUnskew}deg)`,
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, minWidth: 0 }}>
-                <HeartIcon hue={hue} beat={view.beat} size={18} />
-                {title && (
-                  <span
-                    className="sa-title sa-shadow"
+              >
+                {layers.stripes && (
+                  <div
                     style={{
-                      fontSize: 16,
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      whiteSpace: 'nowrap',
+                      position: 'absolute',
+                      inset: '0 0 0 -28px',
+                      background:
+                        'repeating-linear-gradient(115deg, rgba(255,255,255,.14) 0 10px, transparent 10px 20px)',
+                      backgroundSize: '28px 100%',
+                      animation: paused ? undefined : 'sa-stripes 1.2s linear infinite',
                     }}
-                  >
-                    {title}
-                  </span>
+                  />
                 )}
-                {paused && !ended && <PauseChip compact />}
+                {layers.gloss && (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      left: 0,
+                      right: 0,
+                      top: 2,
+                      height: '32%',
+                      background:
+                        'linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,0))',
+                      borderRadius: 2,
+                    }}
+                  />
+                )}
+                {hit && healing && (
+                  <div
+                    key={hit.key}
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      bottom: 0,
+                      left: `${(1 - shown) * 100}%`,
+                      width: `${shown * 40}%`,
+                      background:
+                        'linear-gradient(90deg, transparent, rgba(255,255,255,.75), transparent)',
+                      animation: 'sa-sheen .8s ease-out forwards',
+                    }}
+                  />
+                )}
               </div>
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
-                <span
-                  className="sa-shadow"
+              {TICKS.map((tick) => (
+                <div
+                  key={tick}
                   style={{
-                    fontSize: 20,
-                    fontWeight: 800,
-                    lineHeight: 1,
-                    ...clockColor(ended, skin),
+                    position: 'absolute',
+                    top: 0,
+                    bottom: 0,
+                    left: `${tick}%`,
+                    width: layers.tickWidth,
+                    background: 'rgba(0,0,0,.45)',
                   }}
-                >
-                  {formatClock(left)}
-                </span>
-                {percent && (
+                />
+              ))}
+              {/* Embedded text row inside the thin progress bar */}
+              <div
+                style={{
+                  position: 'absolute',
+                  inset: '0 14px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: 12,
+                  pointerEvents: 'none',
+                  zIndex: 2,
+                  transform: `skewX(${textUnskew}deg)`,
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, minWidth: 0 }}>
+                  <HeartIcon hue={hue} beat={view.beat} size={20} plain />
+                  {title && (
+                    <span
+                      className="sa-title sa-outline"
+                      style={{
+                        fontSize: 19,
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      {title}
+                    </span>
+                  )}
+                  {paused && !ended && <PauseChip compact />}
+                </div>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
                   <span
-                    className="sa-shadow"
+                    className="sa-outline"
                     style={{
-                      fontSize: 14,
-                      fontWeight: 700,
-                      opacity: 0.85,
-                      color: skin?.text ?? '#fff',
+                      fontSize: 25,
+                      fontWeight: 800,
+                      lineHeight: 1,
+                      ...clockColor(ended, skin),
                     }}
                   >
-                    {percent}
+                    {formatClock(left)}
                   </span>
-                )}
+                  {percent && (
+                    <span
+                      className="sa-outline"
+                      style={{
+                        fontSize: 16,
+                        fontWeight: 700,
+                        color: skin?.text ?? '#fff',
+                      }}
+                    >
+                      {percent}
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
+            <HealFlash hit={hit} healing={healing} hue={hue} radius={8} spread={3} />
+            {skin && <Frame skin={skin} radius={6} />}
+            {ended && <KnockOut size={42} />}
           </div>
-          <HealFlash hit={hit} healing={healing} hue={hue} radius={8} spread={5} />
-          {skin && <Frame skin={skin} radius={6} />}
-          {ended && <KnockOut size={42} />}
         </div>
         {view.rates.length > 0 && (
           <div style={{ position: 'absolute', left: 10, bottom: 2 }}>
