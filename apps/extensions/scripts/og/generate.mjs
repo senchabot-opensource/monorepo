@@ -96,6 +96,7 @@ const COUNTDOWN_READY = `document.fonts.status === 'loaded' && Boolean(document.
 const streamAlert = (alert) =>
   `new BroadcastChannel('senchabot:stream-alerts-preview').postMessage({ type: 'alert', preview: 'og', alert: ${JSON.stringify(alert)} })`;
 const ALERT_READY = `Boolean(document.querySelector('[data-testid="stream-alert"]'))`;
+const SOCIALS_READY = `document.fonts.status === 'loaded' && Boolean(document.querySelector('.rounded-full svg'))`;
 // Sub Goal's preview takes test events over its channel: set the count, then a gift that
 // lands the bar two short of the goal with its +5 on the way up.
 const goalEvents = (...events) =>
@@ -268,6 +269,28 @@ const CAPTURES = {
     afterTriggerMs: 2200,
     ready: `${ALERT_READY} && document.fonts.check('700 20px Cinzel')`,
   },
+  // One handle each, so nothing rotates while the shot is taken.
+  socialsTwitch: {
+    path: '/widgets/socials?twitch=senchabot',
+    width: 600,
+    height: 120,
+    settleMs: 1200,
+    ready: SOCIALS_READY,
+  },
+  socialsYoutube: {
+    path: '/widgets/socials?youtube=senchabot',
+    width: 600,
+    height: 120,
+    settleMs: 1200,
+    ready: SOCIALS_READY,
+  },
+  socialsKick: {
+    path: '/widgets/socials?kick=senchabot',
+    width: 600,
+    height: 120,
+    settleMs: 1200,
+    ready: SOCIALS_READY,
+  },
   // Raffle has no demo mode: the overlay gets the same BroadcastChannel message the setup
   // page sends when you draw a winner.
   raffle: {
@@ -439,6 +462,22 @@ const CARDS = [
     title: en.widgets.obsBridge.name,
     subtitle: en.widgets.obsBridge.tagline,
     visual: { kind: 'obs-bridge', scenesLabel: en.home.visualScenes },
+  },
+  {
+    id: 'socials',
+    eyebrow: { icon: 'socials', label: 'Overlay' },
+    title: en.widgets.socials.name,
+    subtitle: en.widgets.socials.tagline,
+    visual: {
+      kind: 'stage',
+      live: true,
+      // Three 600x120 strips, one handle each, stacked the way the widget cycles through them.
+      layers: [
+        layer('socialsTwitch', { x: 9, y: 50, width: 520, height: 104 }),
+        layer('socialsYoutube', { x: 9, y: 164, width: 520, height: 104 }),
+        layer('socialsKick', { x: 9, y: 278, width: 520, height: 104 }),
+      ],
+    },
   },
   {
     id: 'guides',
