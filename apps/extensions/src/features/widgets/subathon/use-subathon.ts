@@ -2,7 +2,6 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { usePreviewReceiver } from '#/hooks/use-preview-channel';
 import type { SubathonSettings, SubathonTimeValues } from '#/lib/subathon-url';
 import type { SubathonEvent, SubathonPlatform, SubTier, TimedEvent } from './subathon-events';
-import { useSubEvents } from './use-sub-events';
 import {
   addTime,
   applyCommand,
@@ -17,6 +16,7 @@ import {
   type SubathonState,
   timeLeft,
 } from './subathon-timer';
+import { useSubEvents } from './use-sub-events';
 
 type SubathonValues = SubathonTimeValues &
   Pick<SubathonSettings, 'start' | 'cap' | 'autostart' | 'tiers'>;
@@ -33,18 +33,28 @@ const clockOptions = (values: SubathonValues): ClockOptions => ({
   autostart: values.autostart,
 });
 
-/** Seconds an event adds by its platform's values; Twitch tiers weigh in when turned on. */
+const RATE_KEYS = {
+  twitch: { sub: 'tsub', gift: 'tgift', bits: 'bits' },
+  kick: { sub: 'ksub', gift: 'kgift', bits: 'kicks' },
+} as const;
+
+/**
+ * Seconds an event adds by its platform's values; Twitch tiers weigh in when turned on. At or
+ * above the `shift` time left, the second values (`tsub2`…) apply instead.
+ */
 function valueFor(event: TimedEvent, values: SubathonValues, remainingMs: number): number {
   const kick = event.platform === 'kick';
   const weight = kick || event.kind === 'bits' || !values.tiers ? 1 : TIER_WEIGHT[event.tier];
-  const useTier2 = values.shift > 0 && remainingMs >= values.shift * 1000;
+  const key = RATE_KEYS[event.platform][event.kind];
+  const value =
+    values.shift > 0 && remainingMs >= values.shift * 1000 ? values[`${key}2`] : values[key];
   switch (event.kind) {
     case 'sub':
-      return (kick ? (useTier2 ? values.ksub2 : values.ksub) : (useTier2 ? values.tsub2 : values.tsub)) * weight;
+      return value * weight;
     case 'gift':
-      return (kick ? (useTier2 ? values.kgift2 : values.kgift) : (useTier2 ? values.tgift2 : values.tgift)) * event.count * weight;
+      return value * event.count * weight;
     case 'bits':
-      return ((kick ? (useTier2 ? values.kicks2 : values.kicks) : (useTier2 ? values.bits2 : values.bits)) * event.amount) / BITS_PER_VALUE;
+      return (value * event.amount) / BITS_PER_VALUE;
   }
 }
 
@@ -108,7 +118,11 @@ const SIM_NAMES = ['NightOwl', 'pixelpanda', 'ChatGremlin', 'lunaa', 'GG_Tobi', 
 const pick = <T>(list: readonly T[]) => list[Math.floor(Math.random() * list.length)];
 
 /** A random event the settings give time for, or null when every value is off. */
-function simulatedEvent(values: SubathonValues, remainingMs: number, only?: SubathonPlatform): TimedEvent | null {
+function simulatedEvent(
+  values: SubathonValues,
+  remainingMs: number,
+  only?: SubathonPlatform,
+): TimedEvent | null {
   const platform = only ?? pick<SubathonPlatform>(['twitch', 'kick']);
   const name = pick(SIM_NAMES);
   const events: TimedEvent[] = [
@@ -246,7 +260,9 @@ export function useSubathon({
         return;
       }
       const quiet = Date.now() - lastTestAt.current < SIM_QUIET_AFTER_TEST_MS;
-      const event = quiet ? null : simulatedEvent(valuesRef.current, timeLeft(stateRef.current, clock()), simPlatform);
+      const event = quiet
+        ? null
+        : simulatedEvent(valuesRef.current, timeLeft(stateRef.current, clock()), simPlatform);
       if (event) handleEvent(event);
       timer = window.setTimeout(step, 2200 + Math.random() * 2000);
     };

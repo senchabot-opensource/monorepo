@@ -18,6 +18,7 @@ export const CHANGELOG: readonly ChangelogEntry[] = [
     key: 'changelog.entries.thinBarReadable',
     widgets: ['subathon', 'goal'],
   },
+  { date: '2026-09-22', key: 'changelog.entries.subathonAdjustedDefaults', widgets: ['subathon'] },
   { date: '2026-09-22', key: 'changelog.entries.countdownSceneCommand', widgets: ['countdown'] },
   { date: '2026-09-21', key: 'changelog.entries.socialsLaunch', widgets: ['socials'] },
   { date: '2026-09-21', key: 'changelog.entries.thinBars', widgets: ['subathon', 'goal'] },

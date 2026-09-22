@@ -256,6 +256,36 @@ describe('Subathon events', () => {
     expect(text()).toContain('+6:00');
   });
 
+  it('adds the second rates while the time left is at or above the threshold', () => {
+    render(
+      <SubathonWidget
+        twitchChannel="streamer"
+        settings={settings({ start: 5 * 3600, shift: 5 * 3600, tsub: 600, tsub2: 300 })}
+      />,
+    );
+    receive('twitch', SUB);
+    expect(text()).toContain('05:05:00');
+    receive('twitch', MOD_SAYS('!subathon set 4h59m'));
+    receive('twitch', SUB);
+    expect(text()).toContain('05:09:00');
+  });
+
+  it('adds the second rates to Kick subs and Kicks too', async () => {
+    render(
+      <SubathonWidget
+        kickChannel="kicker"
+        settings={settings({ start: 6 * 3600, shift: 5 * 3600, ksub2: 600, kicks2: 600 })}
+      />,
+    );
+    await act(async () => {});
+    act(() => socket('pusher').open());
+    pusher('chatrooms.42.v2', 'App\\Events\\SubscriptionEvent', { username: 'Fan', months: 1 });
+    expect(text()).toContain('06:10:00');
+    const kicks = { gift_transaction_id: 'y', sender: { username: 'K' }, gift: { amount: 500 } };
+    pusher('channel_7', 'KicksGifted', kicks);
+    expect(text()).toContain('06:20:00');
+  });
+
   it('adds nothing for a raid or for a Kick resub shared in chat later', async () => {
     render(<SubathonWidget twitchChannel="streamer" kickChannel="kicker" settings={settings()} />);
     await act(async () => {});

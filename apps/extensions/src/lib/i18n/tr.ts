@@ -632,7 +632,7 @@ export const tr: typeof en = {
     dynamicRates: 'Süreyi zamana göre ayarla',
     dynamicRatesTip: 'Saatte yeterli süre kaldığında ikinci bir oran seti kullanır.',
     shiftAt: 'Eşik',
-    shiftAtTip: 'Kalan süre bunun üzerinde olduğunda, ikinci oran seti kullanılır.',
+    shiftAtTip: 'Kalan süre bu değerde ya da üzerindeyken ikinci oran seti kullanılır.',
     tier2Rates: 'Süre eşiğin üzerinde olduğunda',
     perSub: 'Abonelik Başına',
     perSubTip: "Her yeni abonelik ve yenileme. Twitch'te bu Tier 1 ya da Prime abonelik demek.",
@@ -2237,6 +2237,8 @@ export const tr: typeof en = {
         "Subathon Timer ve Abone Hedefi'ndeki İnce Bar'ın yazıları büyüdü ve her dolgu renginde okunsun diye kontur aldı; parlaması küçüldü ve süre listesiyle arasında boşluk var.",
       thinBars:
         'Subathon Timer ve Abone Hedefi artık başlık ile süreyi veya sayacı doğrudan daha ince bir ilerleme barının içine yerleştiren İnce Bar stiline sahip.',
+      subathonAdjustedDefaults:
+        "Subathon Timer'da Süreyi zamana göre ayarla artık 5 saatten ve hazır düşük oranlarla başlıyor: Twitch'te abonelik 5 dk, hediye abonelik 10 dk, 500 Bits 20 dk; Kick'te her biri 10 dk.",
       subathonDynamicRates:
         'Subathon Timer artık zamana bağlı oranlara sahip: saat zaten yüksekken bir aboneliğin ne kadar süre ekleyeceğini düşürmek için bir eşik belirleyin.',
       scrollHint:
