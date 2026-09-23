@@ -907,6 +907,14 @@ export const en = {
     notePlaceholder: 'No note',
     doneLabel: 'Message at Zero',
     doneTip: 'Replaces the clock when it runs out. Leave it empty to use the wording of the scene.',
+    doneHold: 'Hide After',
+    doneHoldTip: 'How long the message at zero stays on screen. Zero keeps it up until you switch scenes.',
+    doneHoldOff: 'The message stays up until you switch scenes.',
+    iconLabel: 'Custom Icon',
+    iconTip:
+      'An emoji or a few characters for the selected scene instead of its scene icon, e.g. ☕. Leave it empty to use the scene icon.',
+    iconPlaceholder: 'Scene icon',
+    unitSeconds: 'sec',
     look: 'Background',
     looks: {
       card: 'Panel',
@@ -928,6 +936,10 @@ export const en = {
     cmdSet: 'Sets the time left',
     cmdPause: 'Pauses it; start runs it again',
     cmdReset: 'Starts the countdown over',
+    cmdScene:
+      'Switches to starting, break or ending and sets the time (10m when left out); text after it becomes the headline, | note sets the note',
+    cmdTitle: 'Sets the headline; empty clears it back to the setup text',
+    cmdNote: 'Sets the note under the clock; empty clears it back to the setup text',
     previewTitle: 'Stream Countdown Preview',
     previewIframeTitle: 'Stream Countdown Preview',
     previewHint:
@@ -1978,7 +1990,12 @@ export const en = {
         pauseDoes: 'Pauses the clock where it is',
         startDoes: 'Runs it again after a pause',
         resetDoes: 'Starts the countdown over from the top',
-        sceneDoes: 'Changes the scene to break, starting, or ending, and sets the duration (defaults to 10m if omitted)',
+        sceneDoes:
+          'Switches to that scene for 5 minutes (10m when left out); !countdown break 5m Lunch | Back soon also sets the headline and the note',
+        titleDoes:
+          'Replaces the headline until the next scene command; !countdown title with nothing clears it',
+        noteDoes:
+          'Replaces the note under the clock until the next scene command; !countdown note with nothing clears it',
         p2:
           "Only you and your mods can run them, on both platforms, and a reply in chat never runs a command. The countdown reads your public chat the same way the other widgets do, with no login.",
       },
@@ -2251,6 +2268,12 @@ export const en = {
     lead: "New features and bug fixes in Senchabot Extensions, newest first. The list is put together from the project's commit history on [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      countdownSceneIcons:
+        'Stream Countdown now has a separate custom icon for each scene (starting, break, ending), and the message at zero hides itself after 10 seconds by default — set it back to 0 to keep it up.',
+      countdownDoneHoldIcon:
+        'Stream Countdown can now hide the message at zero after a hold time you set, and show your own icon (an emoji or a few characters) instead of the scene icon.',
+      countdownTextCommand:
+        'Stream Countdown mods can now set the headline and note from chat: `!countdown break 5m Lunch | Back soon`, plus `!countdown title` and `!countdown note`. The scene command is now listed on the setup page too.',
       countdownSceneCommand:
         'Added the `!countdown {scene} {duration}` chat command. Mods can now change the current scene (starting, break, or ending) and set its duration with a single command.',
       socialsLaunch:

@@ -3,7 +3,7 @@ import { fillBackground, fillLayers, trackBackground } from '#/features/presets/
 import { Frame, panelStyle } from '#/features/presets/frame';
 import { painter, type Skin, skinCss, skinFor } from '#/features/presets/skin';
 import { SkinProvider, useSkin } from '#/features/presets/skin-context';
-import type { CountdownScene, CountdownSettings } from '#/lib/countdown-url';
+import { type CountdownScene, type CountdownSettings, sceneIcon } from '#/lib/countdown-url';
 import { useI18n } from '#/lib/i18n';
 import { OVERLAY_FONT_FAMILY as FONT_FAMILY, hueFor } from '../overlay-style';
 import { useFitScale } from '../use-fit-scale';
@@ -45,10 +45,23 @@ export function CountdownWidget({
 }: CountdownWidgetProps) {
   const { t } = useI18n();
   const scale = useFitScale(STAGE);
-  const { left, progress, ended, scene } = useCountdown({
+  const {
+    left,
+    progress,
+    ended,
+    doneHidden,
+    scene,
+    title: chatTitle,
+    note: chatNote,
+  } = useCountdown({
     twitch: twitchChannel,
     kick: kickChannel,
-    values: { time: settings.time, at: settings.at, scene: settings.scene },
+    values: {
+      time: settings.time,
+      at: settings.at,
+      scene: settings.scene,
+      doneHold: settings.doneHold,
+    },
     simulate,
     previewId,
   });
@@ -56,9 +69,16 @@ export function CountdownWidget({
   const hue = hueFor(settings.color, 1);
   const done = ended && settings.ending === 'text';
 
+  // Chat text wins when a mod set it; otherwise the setup page text, otherwise the scene wording.
+  const headline = chatTitle ?? settings.title;
+  const note = chatNote ?? settings.note;
   const title = done
     ? settings.done || t(`countdown.scenes.${scene}.done`)
-    : settings.title || t(`countdown.scenes.${scene}.title`);
+    : headline || t(`countdown.scenes.${scene}.title`);
+
+  // The hold time hides the message at zero; `hide` leaves the scene bare right away.
+  const hidden = (ended && settings.ending === 'hide') || (done && doneHidden);
+  const customIcon = sceneIcon(settings, scene);
 
   return (
     <SkinProvider skin={skin}>
@@ -71,10 +91,14 @@ export function CountdownWidget({
       >
         <style>{CSS + skinCss('cd', skin)}</style>
         {/* `hide` leaves the scene bare once the break is over, so nothing sits over the game. */}
-        {!(ended && settings.ending === 'hide') && (
+        {!hidden && (
           <div className="cd-stage" style={{ transform: `translate(-50%, -50%) scale(${scale})` }}>
             <Card look={settings.look} hue={hue} motion={settings.motion}>
-              <SceneIcon scene={scene} hue={hue} />
+              {customIcon ? (
+                <CustomIcon text={customIcon} />
+              ) : (
+                <SceneIcon scene={scene} hue={hue} />
+              )}
               {done ? (
                 <span
                   className="cd-title cd-shadow"
@@ -91,7 +115,7 @@ export function CountdownWidget({
                   {settings.bar && <Bar progress={progress} hue={hue} />}
                 </>
               )}
-              {settings.note && (
+              {note && (
                 <span
                   className="cd-shadow"
                   style={{
@@ -102,7 +126,7 @@ export function CountdownWidget({
                     color: skin?.muted ?? 'rgba(255,255,255,.72)',
                   }}
                 >
-                  {settings.note}
+                  {note}
                 </span>
               )}
             </Card>
@@ -233,6 +257,19 @@ function Bar({ progress, hue }: { progress: number; hue: number }) {
 }
 
 const ICON_SIZE = 72;
+
+/** The streamer's own icon, an emoji or a few characters, instead of the scene's mark. */
+function CustomIcon({ text }: { text: string }) {
+  return (
+    <span
+      data-testid="countdown-icon"
+      aria-hidden="true"
+      style={{ fontSize: ICON_SIZE, lineHeight: 1, textAlign: 'center' }}
+    >
+      {text}
+    </span>
+  );
+}
 
 /** One flat mark per scene: a play button, a mug, a heart. No game or platform art. */
 function SceneIcon({ scene, hue }: { scene: CountdownScene; hue: number }) {
