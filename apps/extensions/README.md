@@ -141,18 +141,18 @@ https://extensions.senchabot.com/widgets/frame?piece=camera&preset=dynasty&label
 A countdown for the parts of a stream where nothing is happening yet: the minutes before going live, a break in the middle, and the last minutes before signing off.
 
 **How it works:**
-- Three scenes (`starting`, `break`, `ending`) that pick the default headline and icon. Your own headline, note and end message replace them.
+- Three scenes (`starting`, `break`, `ending`) that pick the default headline and icon. Your own headline, note, end message and a custom icon per scene (an emoji or a few characters) replace them.
 - Counts down a length (`time`), or aims at a time of day (`at=21:00`) read from the clock of the computer running OBS. A time that has already passed today aims at tomorrow.
 - The clock starts when the browser source loads, and nothing is saved. In OBS, tick "Refresh browser when scene becomes active" and the countdown starts over every time you switch to that scene.
-- At zero it shows a message, holds 00:00, or hides itself (`end`).
+- At zero it shows a message, holds 00:00, or hides itself (`end`). The message hides itself after `doneHold` seconds (10 by default, 0 keeps it up).
 - The look comes from the preset, with or without a panel (`look`), and an optional bar that empties with the time.
-- No channel is needed. With one, the broadcaster and mods run `!countdown {scene} [duration]` (defaults to 10m), `add 5m`, `remove 2m`, `set 10m`, `pause`, `start` and `reset` from Twitch or Kick chat. It shares the Subathon Timer's clock and duration parsing.
+- No channel is needed. With one, the broadcaster and mods run `!countdown {scene} [duration] [headline] [| note]` (defaults to 10m), `add 5m`, `remove 2m`, `set 10m`, `pause`, `start`, `reset`, `title <headline>` and `note <note>` from Twitch or Kick chat. It shares the Subathon Timer's clock and duration parsing.
 
 ```
 https://extensions.senchabot.com/widgets/countdown?scene=starting&time=600&preset=dynasty
 ```
 
-**URL parameters:** `twitch`, `kick` (only for the chat commands), `scene` (`starting` | `break` | `ending`), `time` (seconds, 1 to 86400), `at` (a 24-hour time like `21:00`, replaces `time`), `title`, `done`, `note`, `end` (`text` | `hold` | `hide`), `look` (`card` | `plain`), `preset`, `color` (`purple` | `green` | `red` | `gold` | `cyan` | `pink`, classic only), `bar` (`0` hides it), `motion` (`0` turns animations off), `lang` (`en` | `tr`), `simulate` (`1` runs a fast countdown).
+**URL parameters:** `twitch`, `kick` (only for the chat commands), `scene` (`starting` | `break` | `ending`), `time` (seconds, 1 to 86400), `at` (a 24-hour time like `21:00`, replaces `time`), `title`, `done`, `doneHold` (seconds the message at zero stays up, 10 by default, 0 keeps it up), `note`, `iconStarting`, `iconBreak`, `iconEnding` (an emoji or a few characters instead of that scene's icon), `end` (`text` | `hold` | `hide`), `look` (`card` | `plain`), `preset`, `color` (`purple` | `green` | `red` | `gold` | `cyan` | `pink`, classic only), `bar` (`0` hides it), `motion` (`0` turns animations off), `lang` (`en` | `tr`), `simulate` (`1` runs a fast countdown).
 
 ---
 

@@ -84,13 +84,18 @@ function StreamCountdownGuide() {
                   { label: t('guides.countdown.commands.colDoes') },
                 ]}
                 rows={[
+                  [
+                    `${COMMAND} break 5m Lunch | Back soon`,
+                    t('guides.countdown.commands.sceneDoes'),
+                  ],
                   [`${COMMAND} add 5m`, t('guides.countdown.commands.addDoes')],
                   [`${COMMAND} remove 2m`, t('guides.countdown.commands.removeDoes')],
                   [`${COMMAND} set 10m`, t('guides.countdown.commands.setDoes')],
                   [`${COMMAND} pause`, t('guides.countdown.commands.pauseDoes')],
                   [`${COMMAND} start`, t('guides.countdown.commands.startDoes')],
                   [`${COMMAND} reset`, t('guides.countdown.commands.resetDoes')],
-                  [`${COMMAND} break 5m`, t('guides.countdown.commands.sceneDoes')],
+                  [`${COMMAND} title Lunch break`, t('guides.countdown.commands.titleDoes')],
+                  [`${COMMAND} note Back in 5`, t('guides.countdown.commands.noteDoes')],
                 ]}
               />
               <P k="guides.countdown.commands.p2" />

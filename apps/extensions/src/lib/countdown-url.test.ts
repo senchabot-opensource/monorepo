@@ -4,7 +4,9 @@ import {
   buildCountdownUrl,
   type CountdownSettings,
   DEFAULT_COUNTDOWN_SETTINGS,
+  ICON_MAX_LENGTH,
   MAX_COUNTDOWN_TIME,
+  MAX_DONE_HOLD_SECONDS,
   NOTE_MAX_LENGTH,
   parseCountdownUrl,
   readAtTime,
@@ -135,6 +137,49 @@ describe('readCountdownSettings', () => {
     expect(settings.title).toHaveLength(TITLE_MAX_LENGTH);
     expect(settings.note).toHaveLength(NOTE_MAX_LENGTH);
     expect(settings.done).toHaveLength(TITLE_MAX_LENGTH);
+  });
+
+  it('writes the icons and done hold only when set, and reads them back', () => {
+    expect(params(buildCountdownUrl(ORIGIN, DEFAULT_COUNTDOWN_SETTINGS, '', '', 'en'))).toEqual({
+      scene: 'starting',
+      lang: 'en',
+    });
+    const url = buildCountdownUrl(
+      ORIGIN,
+      {
+        ...DEFAULT_COUNTDOWN_SETTINGS,
+        iconStarting: '🎬',
+        iconBreak: '☕',
+        iconEnding: '💜',
+        doneHold: 90,
+      },
+      '',
+      '',
+      'en',
+    );
+    expect(params(url)).toMatchObject({
+      iconStarting: '🎬',
+      iconBreak: '☕',
+      iconEnding: '💜',
+      doneHold: '90',
+    });
+    expect(parseCountdownUrl(url)?.settings).toMatchObject({
+      iconStarting: '🎬',
+      iconBreak: '☕',
+      iconEnding: '💜',
+      doneHold: 90,
+    });
+  });
+
+  it('clamps the done hold and never splits an emoji icon', () => {
+    const settings = readCountdownSettings(
+      new URLSearchParams(`doneHold=99999&iconStarting=${'🔥'.repeat(20)}`),
+    );
+    expect(settings.doneHold).toBe(MAX_DONE_HOLD_SECONDS);
+    expect(Array.from(settings.iconStarting)).toHaveLength(ICON_MAX_LENGTH);
+    expect(readCountdownSettings(new URLSearchParams('doneHold=-5')).doneHold).toBe(
+      DEFAULT_COUNTDOWN_SETTINGS.doneHold,
+    );
   });
 });
 

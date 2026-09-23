@@ -66,11 +66,49 @@ describe('CountdownWidget', () => {
   });
 
   it('puts the end message where the clock was', async () => {
-    await render(<CountdownWidget settings={settings({ time: 60, scene: 'starting' })} />);
+    await render(
+      <CountdownWidget settings={settings({ time: 60, scene: 'starting', doneHold: 0 })} />,
+    );
     wait(61_000);
     expect(root().dataset.ended).toBe('true');
     expect(clock()).toBeUndefined();
     expect(root().textContent).toContain("We're live!");
+    // Shown always with a zero hold: still there a minute later.
+    wait(60_000);
+    expect(root().querySelector('.cd-stage')).not.toBeNull();
+    expect(root().textContent).toContain("We're live!");
+  });
+
+  it('hides the end message after its hold time', async () => {
+    await render(<CountdownWidget settings={settings({ time: 60, doneHold: 30 })} />);
+    wait(61_000);
+    expect(root().textContent).toContain("We're live!");
+    wait(29_000);
+    expect(root().querySelector('.cd-stage')).not.toBeNull();
+    wait(1000);
+    expect(root().querySelector('.cd-stage')).toBeNull();
+  });
+
+  it('hides the end message after 10 seconds by default', async () => {
+    await render(<CountdownWidget settings={settings({ time: 60 })} />);
+    wait(61_000);
+    expect(root().textContent).toContain("We're live!");
+    wait(10_000);
+    expect(root().querySelector('.cd-stage')).toBeNull();
+  });
+
+  it('shows a custom icon instead of the scene icon', async () => {
+    const { unmount } = await render(
+      <CountdownWidget settings={settings({ scene: 'break', iconBreak: '☕' })} />,
+    );
+    expect(screen.getByTestId('countdown-icon').textContent).toBe('☕');
+    expect(root().querySelector('svg')).toBeNull();
+    unmount();
+
+    // Each scene has its own icon: the break icon doesn't leak into starting.
+    await render(<CountdownWidget settings={settings({ iconBreak: '☕' })} />);
+    expect(screen.queryByTestId('countdown-icon')).toBeNull();
+    expect(root().querySelector('svg')).not.toBeNull();
   });
 
   it('holds the clock at zero, or leaves the scene bare', async () => {
@@ -112,6 +150,29 @@ describe('CountdownWidget', () => {
       ),
     );
     expect(clock()).toBe('10:00');
+  });
+
+  it('lets a mod switch the scene with a headline and note from chat', async () => {
+    await render(<CountdownWidget twitchChannel="streamer" settings={settings({ time: 600 })} />);
+    act(() => twitchSocket().open());
+
+    modSays('!countdown break 5m Lunch | Back soon');
+    expect(root().dataset.scene).toBe('break');
+    expect(clock()).toBe('05:00');
+    expect(root().textContent).toContain('Lunch');
+    expect(root().textContent).toContain('Back soon');
+
+    modSays('!countdown title Dinner');
+    expect(root().textContent).toContain('Dinner');
+
+    modSays('!countdown note Be right back');
+    expect(root().textContent).toContain('Be right back');
+
+    // The next scene command clears the chat text again.
+    modSays('!countdown starting 10m');
+    expect(root().dataset.scene).toBe('starting');
+    expect(root().textContent).toContain('Starting Soon');
+    expect(root().textContent).not.toContain('Dinner');
   });
 
   it('marks the preset it was drawn in', async () => {

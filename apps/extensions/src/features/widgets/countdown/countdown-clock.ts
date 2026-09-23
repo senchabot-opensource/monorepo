@@ -1,4 +1,9 @@
-import { COUNTDOWN_SCENES, type CountdownScene } from '#/lib/countdown-url';
+import {
+  COUNTDOWN_SCENES,
+  type CountdownScene,
+  NOTE_MAX_LENGTH,
+  TITLE_MAX_LENGTH,
+} from '#/lib/countdown-url';
 import {
   type ClockOptions,
   createState,
@@ -16,22 +21,51 @@ import {
 export type CountdownState = SubathonState;
 export type CountdownCommand =
   | SubathonCommand
-  | { action: 'scene'; scene: CountdownScene; ms: number };
+  | { action: 'scene'; scene: CountdownScene; ms: number; title?: string; note?: string }
+  | { action: 'title'; title: string }
+  | { action: 'note'; note: string };
 
 export const COMMAND = '!countdown';
+
+/** Default length for `!countdown <scene>` when no duration is typed. */
+const DEFAULT_SCENE_MS = 600_000;
 
 export const parseCountdownCommand = (message: string): CountdownCommand | null => {
   const [typed, word = '', ...rest] = message.trim().split(/\s+/);
   if (typed?.toLowerCase() !== COMMAND) return null;
   const lowerWord = word.toLowerCase();
-  
+
   if (COUNTDOWN_SCENES.includes(lowerWord as CountdownScene)) {
-    const rawDuration = rest.join('');
-    const ms = rawDuration ? parseDuration(rawDuration) : 600_000;
-    if (ms === null) return null;
-    return { action: 'scene', scene: lowerWord as CountdownScene, ms };
+    const scene = lowerWord as CountdownScene;
+    const remainder = rest.join(' ').trim();
+    if (!remainder) return { action: 'scene', scene, ms: DEFAULT_SCENE_MS };
+    // An optional note follows the first `|`, so `!countdown break 5m Lunch | Back soon`
+    // sets the headline to "Lunch" and the note to "Back soon".
+    const pipe = remainder.indexOf('|');
+    const leftRaw = (pipe >= 0 ? remainder.slice(0, pipe) : remainder).trim();
+    const noteRaw = pipe >= 0 ? remainder.slice(pipe + 1).trim() : undefined;
+    const note = noteRaw ? noteRaw.slice(0, NOTE_MAX_LENGTH) : undefined;
+    if (!leftRaw) return { action: 'scene', scene, ms: DEFAULT_SCENE_MS, note };
+    // The duration comes first when anything follows the scene; anything after it is the
+    // headline. A typo like `!countdown break foo` stays invalid instead of becoming a headline.
+    const tokens = leftRaw.split(/\s+/);
+    for (let take = Math.min(3, tokens.length); take >= 1; take--) {
+      const ms = parseDuration(tokens.slice(0, take).join(''));
+      if (ms !== null) {
+        const title = tokens.slice(take).join(' ').trim().slice(0, TITLE_MAX_LENGTH) || undefined;
+        return { action: 'scene', scene, ms, title, note };
+      }
+    }
+    return null;
   }
-  
+
+  if (lowerWord === 'title' || lowerWord === 'headline') {
+    return { action: 'title', title: rest.join(' ').trim().slice(0, TITLE_MAX_LENGTH) };
+  }
+  if (lowerWord === 'note') {
+    return { action: 'note', note: rest.join(' ').trim().slice(0, NOTE_MAX_LENGTH) };
+  }
+
   return parseCommand(message, COMMAND);
 };
 

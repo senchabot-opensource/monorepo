@@ -910,6 +910,15 @@ export const tr: typeof en = {
     notePlaceholder: 'Not yok',
     doneLabel: 'Sıfırdaki Mesaj',
     doneTip: 'Süre bitince saatin yerine geçer. Boş bırakırsan sahnenin hazır yazısı kullanılır.',
+    doneHold: 'Gizlenme Süresi',
+    doneHoldTip:
+      'Sıfırdaki mesajın ekranda ne kadar kalacağı. Sıfır olursa sahneyi değiştirene kadar kalır.',
+    doneHoldOff: 'Mesaj, sahneyi değiştirene kadar ekranda kalır.',
+    iconLabel: 'Özel İkon',
+    iconTip:
+      'Seçili sahnenin ikonu yerine bir emoji ya da birkaç karakter, örneğin ☕. Boş bırakırsan sahne ikonu kullanılır.',
+    iconPlaceholder: 'Sahne ikonu',
+    unitSeconds: 'sn',
     look: 'Arka Plan',
     looks: {
       card: 'Panel',
@@ -931,6 +940,10 @@ export const tr: typeof en = {
     cmdSet: 'Kalan süreyi ayarlar',
     cmdPause: 'Duraklatır, start ile devam eder',
     cmdReset: 'Geri sayımı baştan başlatır',
+    cmdScene:
+      'Starting, break veya ending sahnesine geçirir ve süreyi ayarlar (yazılmazsa 10m); sonrasındaki yazı başlık, | not ise not olur',
+    cmdTitle: 'Başlığı değiştirir; boş bırakılırsa kurulumdaki yazıya döner',
+    cmdNote: 'Saatin altındaki notu değiştirir; boş bırakılırsa kurulumdaki nota döner',
     previewTitle: 'Yayın Geri Sayımı Önizleme',
     previewIframeTitle: 'Yayın Geri Sayımı Önizleme',
     previewHint:
@@ -1966,7 +1979,12 @@ export const tr: typeof en = {
         pauseDoes: 'Saati olduğu yerde duraklatır',
         startDoes: 'Duraklattıktan sonra devam ettirir',
         resetDoes: 'Geri sayımı baştan başlatır',
-        sceneDoes: 'Sahneyi break, starting veya ending olarak değiştirir ve süreyi ayarlar (yazılmazsa 10m olur)',
+        sceneDoes:
+          'O sahneye geçirir, 5 dakika sayar (yazılmazsa 10m); !countdown break 5m Mola | Birazdan dönüyorum başlığı ve notu da değiştirir',
+        titleDoes:
+          'Başlığı bir sonraki sahne komutuna kadar değiştirir; !countdown title boş yazılırsa kurulumdaki yazıya döner',
+        noteDoes:
+          'Saatin altındaki notu bir sonraki sahne komutuna kadar değiştirir; !countdown note boş yazılırsa kurulumdaki nota döner',
         p2: "Komutları iki platformda da sadece sen ve modların çalıştırabilir, sohbetteki bir yanıt hiçbir zaman komut çalıştırmaz. Geri sayım herkese açık sohbetini diğer widget'lar gibi okur, giriş gerekmez.",
       },
       scenes: {
@@ -2237,6 +2255,12 @@ export const tr: typeof en = {
     entries: {
       moreLanguages:
         'Site artık İspanyolca, Fransızca, Almanca, Japonca ve Portekizce de var. Sohbet Anketi, Yayın Uyarıları ve Subathon Timer oranları da yazılarını bu dillerde gösterebiliyor.',
+      countdownSceneIcons:
+        'Yayın Geri Sayımı artık her sahne (başlangıç, mola, bitiş) için ayrı bir özel ikon destekliyor; sıfırdaki mesaj da varsayılan olarak 10 saniye sonra gizleniyor — hep kalsın istersen 0 yapman yeterli.',
+      countdownDoneHoldIcon:
+        'Yayın Geri Sayımı artık sıfırdaki mesajı ayarladığın süre sonunda gizleyebilir ve sahne ikonu yerine kendi ikonunu (bir emoji ya da birkaç karakter) gösterebilir.',
+      countdownTextCommand:
+        'Yayın Geri Sayımı modları artık başlık ve notu sohbetten değiştirebilir: `!countdown break 5m Mola | Birazdan dönüyorum`, ayrıca `!countdown title` ve `!countdown note`. Sahne komutu kurulum sayfasında da listeleniyor.',
       countdownSceneCommand:
         '`!countdown {sahne} {süre}` sohbet komutu eklendi. Modlar artık tek bir komutla geçerli sahneyi (starting, break veya ending) değiştirebilir ve süresini ayarlayabilir.',
       socialsLaunch:
