@@ -289,14 +289,14 @@ URL parameters (all optional):
 
 ## Stream Countdown
 
-A countdown for the parts of a stream where nothing is happening yet: the minutes before going live, a break in the middle, and the last minutes before signing off. The scene (starting, break, ending) picks the default headline and icon. It counts down a length, or aims at a time of day like 21:00 read from the clock of the computer running OBS, which means the source can be added hours ahead; a time that has already passed today aims at tomorrow. The clock starts when the browser source loads, so ticking "Refresh browser when scene becomes active" in OBS starts it over on every switch to that scene. At zero it shows a message, holds 00:00, or hides itself. It needs no channel; with one, the broadcaster and mods change it from chat with !countdown.
+A countdown for the parts of a stream where nothing is happening yet: the minutes before going live, a break in the middle, and the last minutes before signing off. The scene (starting, break, ending) picks the default headline and icon, or set your own headline, note, end message and a custom icon per scene (an emoji or a few characters). It counts down a length, or aims at a time of day like 21:00 read from the clock of the computer running OBS, which means the source can be added hours ahead; a time that has already passed today aims at tomorrow. The clock starts when the browser source loads, so ticking "Refresh browser when scene becomes active" in OBS starts it over on every switch to that scene. At zero it shows a message (hides itself after `doneHold` seconds, 10 by default), holds 00:00, or hides itself. It needs no channel; with one, the broadcaster and mods change it from chat with !countdown.
 
 - Widget URL: https://extensions.senchabot.com/widgets/countdown?scene=starting&time=600
 - Counting down to a time of day: https://extensions.senchabot.com/widgets/countdown?scene=starting&at=21:00
 - Demo: https://extensions.senchabot.com/widgets/countdown?simulate=1
 - Guide: https://extensions.senchabot.com/guides/stream-countdown
 - Recommended size: 1920x1080, so the clock lands in the middle of the scene. It is drawn for whatever size the source has.
-- Chat commands for the broadcaster and mods, on both platforms: `!countdown {scene} [duration]` (defaults to 10m), `!countdown add 5m`, `!countdown remove 2m`, `!countdown set 10m`, `!countdown pause`, `!countdown start`, `!countdown reset`. Durations are written as 5m, 90s, 1h30m, 5:00 or a bare number of minutes.
+- Chat commands for the broadcaster and mods, on both platforms: `!countdown {scene} [duration] [headline] [| note]` (defaults to 10m, e.g. `!countdown break 5m Lunch | Back soon`), `!countdown add 5m`, `!countdown remove 2m`, `!countdown set 10m`, `!countdown pause`, `!countdown start`, `!countdown reset`, `!countdown title <headline>`, `!countdown note <note>`. Durations are written as 5m, 90s, 1h30m, 5:00 or a bare number of minutes.
 
 URL parameters (all optional):
 
@@ -309,6 +309,10 @@ URL parameters (all optional):
 | at | a 24-hour time of day like 21:00 to count down to; replaces time | none |
 | title | headline above the clock, up to 32 characters | the scene's wording |
 | done | headline at zero, up to 32 characters | the scene's wording |
+| doneHold | seconds the headline at zero stays up, 0 keeps it up | 10 |
+| iconStarting | an emoji or a few characters instead of the starting icon | the scene's icon |
+| iconBreak | an emoji or a few characters instead of the break icon | the scene's icon |
+| iconEnding | an emoji or a few characters instead of the ending icon | the scene's icon |
 | note | a line under the clock, up to 64 characters | none |
 | end | text (a message at zero), hold (stay at 00:00), hide (nothing on screen) | text |
 | look | card (a panel behind the clock), plain (text on the scene) | card |

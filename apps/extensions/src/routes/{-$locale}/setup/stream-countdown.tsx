@@ -7,6 +7,7 @@ import { PreviewFrame } from '#/components/preview-frame';
 import { SetupShell } from '#/components/setup-shell';
 import { TestButtons } from '#/components/test-buttons';
 import { ColorSwatches } from '#/components/ui/color-swatches';
+import { DurationField } from '#/components/ui/duration-field';
 import { FieldLabel } from '#/components/ui/field-label';
 import { MinutesField } from '#/components/ui/minutes-field';
 import { SegmentedControl } from '#/components/ui/segmented-control';
@@ -33,7 +34,9 @@ import {
   COUNTDOWN_SCENES,
   type CountdownSettings,
   DEFAULT_COUNTDOWN_SETTINGS,
+  ICON_MAX_LENGTH,
   MAX_COUNTDOWN_TIME,
+  MAX_DONE_HOLD_SECONDS,
   NOTE_MAX_LENGTH,
   parseCountdownUrl,
   readAtTime,
@@ -66,11 +69,14 @@ const FAQ: FaqEntry[] = [
 ];
 
 const COMMANDS: { usage: string; action: TranslationKey }[] = [
+  { usage: `${COMMAND} break 5m Lunch | Back soon`, action: 'countdown.cmdScene' },
   { usage: `${COMMAND} add 5m`, action: 'countdown.cmdAdd' },
   { usage: `${COMMAND} remove 2m`, action: 'countdown.cmdRemove' },
   { usage: `${COMMAND} set 10m`, action: 'countdown.cmdSet' },
   { usage: `${COMMAND} pause`, action: 'countdown.cmdPause' },
   { usage: `${COMMAND} reset`, action: 'countdown.cmdReset' },
+  { usage: `${COMMAND} title Lunch break`, action: 'countdown.cmdTitle' },
+  { usage: `${COMMAND} note Back in 5`, action: 'countdown.cmdNote' },
 ];
 
 /** The default the clock field starts on, so picking "a time of day" shows a real time. */
@@ -88,6 +94,12 @@ function CountdownSetup() {
   const update = <K extends keyof CountdownSettings>(key: K, value: CountdownSettings[K]) =>
     setSettings((current) => ({ ...current, [key]: value }));
   useStartOnSitePreset((preset) => update('preset', preset));
+
+  // The icon box follows the picked scene: with Starting selected it edits the starting icon.
+  const iconKey = `icon${settings.scene[0].toUpperCase()}${settings.scene.slice(1)}` as
+    | 'iconStarting'
+    | 'iconBreak'
+    | 'iconEnding';
 
   // The mode follows the clock time: with one set, the countdown ends at it instead of running
   // for a length. The field keeps what was typed, so a half-typed time isn't thrown away.
@@ -128,6 +140,15 @@ function CountdownSetup() {
           />
           <p className={HINT_CLASS}>{t(`countdown.scenes.${settings.scene}.hint`)}</p>
         </div>
+
+        <TextField
+          label={t('countdown.iconLabel')}
+          tip={t('countdown.iconTip')}
+          value={settings[iconKey]}
+          onChange={(value) => update(iconKey, value)}
+          placeholder={t('countdown.iconPlaceholder')}
+          maxLength={ICON_MAX_LENGTH}
+        />
 
         <div className="grid gap-3 sm:grid-cols-2">
           <div>
@@ -188,6 +209,22 @@ function CountdownSetup() {
             }))}
           />
         </div>
+        {settings.ending === 'text' && (
+          <div>
+            <FieldLabel id={`${id}-doneHold`} tip={t('countdown.doneHoldTip')}>
+              {t('countdown.doneHold')}
+            </FieldLabel>
+            <DurationField
+              labelledBy={`${id}-doneHold`}
+              value={settings.doneHold}
+              onChange={(value) => update('doneHold', value)}
+              units={['m', 's']}
+              unitLabels={[t('countdown.durationUnit'), t('countdown.unitSeconds')]}
+              max={MAX_DONE_HOLD_SECONDS}
+            />
+            {settings.doneHold === 0 && <p className={HINT_CLASS}>{t('countdown.doneHoldOff')}</p>}
+          </div>
+        )}
       </SettingsGroup>
 
       <SettingsGroup title={t('common.sectionChannel')}>

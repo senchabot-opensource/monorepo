@@ -31,7 +31,7 @@ const SIM_DRAIN_MS = 20_000;
 /** How long the preview holds the end before counting down again. */
 const SIM_RESTART_MS = 3500;
 
-type CountdownValues = Pick<CountdownSettings, 'time' | 'at' | 'scene'>;
+type CountdownValues = Pick<CountdownSettings, 'time' | 'at' | 'scene' | 'doneHold'>;
 
 interface UseCountdownOptions {
   twitch?: string;
@@ -50,7 +50,13 @@ export interface Countdown {
   progress: number;
   paused: boolean;
   ended: boolean;
+  /** The message at zero has hidden itself after its hold time. */
+  doneHidden: boolean;
   scene: CountdownScene;
+  /** Chat-set headline; undefined follows the setup page text. Empty uses the scene wording. */
+  title?: string;
+  /** Chat-set note; undefined follows the setup page text. */
+  note?: string;
 }
 
 export function useCountdown({
@@ -77,6 +83,9 @@ export function useCountdown({
   const stateRef = useRef(state);
   const [now, setNow] = useState(clock);
   const [scene, setScene] = useState<CountdownScene>(values.scene);
+  // Headline and note set from chat; undefined means the setup page text wins.
+  const [title, setTitle] = useState<string | undefined>(undefined);
+  const [note, setNote] = useState<string | undefined>(undefined);
 
   const commit = useCallback(
     (next: CountdownState) => {
@@ -89,12 +98,14 @@ export function useCountdown({
 
   // A changed length or target starts the countdown over, so the preview follows the settings
   // panel. In OBS the URL doesn't change while the source runs.
-  const { time, at, scene: propScene } = values;
+  const { time, at, scene: propScene, doneHold } = values;
   useEffect(() => {
     const next = countdownOptions(time, at, Date.now());
     setOptions(next);
     commit(startCountdown(next, clock()));
     setScene(propScene);
+    setTitle(undefined);
+    setNote(undefined);
   }, [time, at, propScene, clock, commit]);
 
   const runCommand = useCallback(
@@ -103,9 +114,19 @@ export function useCountdown({
       if (!command) return;
       if (command.action === 'scene') {
         setScene(command.scene);
+        setTitle(command.title);
+        setNote(command.note);
         const next = countdownOptions(command.ms / 1000, '', Date.now());
         setOptions(next);
         commit(startCountdown(next, clock()));
+        return;
+      }
+      if (command.action === 'title') {
+        setTitle(command.title || undefined);
+        return;
+      }
+      if (command.action === 'note') {
+        setNote(command.note || undefined);
         return;
       }
       // Reset re-reads the time of day, so !countdown reset the next day aims at the next one.
@@ -146,6 +167,19 @@ export function useCountdown({
     return () => window.clearTimeout(timer);
   }, [simulate, ended, clock, commit]);
 
+  // The message at zero hides itself after its hold time; 0 keeps it up. Back to counting
+  // (a scene command, more time, reset) shows it again next time.
+  const [doneHidden, setDoneHidden] = useState(false);
+  useEffect(() => {
+    if (!ended) {
+      setDoneHidden(false);
+      return;
+    }
+    if (!doneHold) return;
+    const timer = window.setTimeout(() => setDoneHidden(true), doneHold * 1000);
+    return () => window.clearTimeout(timer);
+  }, [ended, doneHold]);
+
   usePreviewReceiver<PreviewMessage>(PREVIEW_CHANNEL, previewId, simulate, (message) => {
     if (message.type !== 'toggle') return runCommand(message.text);
     runCommand(`${COMMAND} ${stateRef.current.endsAt === null ? 'start' : 'pause'}`);
@@ -156,7 +190,10 @@ export function useCountdown({
     progress: healthOf(state, now),
     paused: state.endsAt === null,
     ended,
+    doneHidden,
     scene,
+    title,
+    note,
   };
 }
 

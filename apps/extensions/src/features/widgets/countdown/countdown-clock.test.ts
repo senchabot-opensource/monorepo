@@ -77,10 +77,67 @@ describe('parseCountdownCommand', () => {
   });
 
   it('reads a scene name and duration to change the break scene', () => {
-    expect(parseCountdownCommand('!countdown starting 10m')).toEqual({ action: 'scene', scene: 'starting', ms: 600_000 });
-    expect(parseCountdownCommand('!countdown BREAK 5')).toEqual({ action: 'scene', scene: 'break', ms: 300_000 });
-    expect(parseCountdownCommand('!countdown ending 45s')).toEqual({ action: 'scene', scene: 'ending', ms: 45_000 });
-    expect(parseCountdownCommand('!countdown break')).toEqual({ action: 'scene', scene: 'break', ms: 600_000 });
+    expect(parseCountdownCommand('!countdown starting 10m')).toEqual({
+      action: 'scene',
+      scene: 'starting',
+      ms: 600_000,
+    });
+    expect(parseCountdownCommand('!countdown BREAK 5')).toEqual({
+      action: 'scene',
+      scene: 'break',
+      ms: 300_000,
+    });
+    expect(parseCountdownCommand('!countdown ending 45s')).toEqual({
+      action: 'scene',
+      scene: 'ending',
+      ms: 45_000,
+    });
+    expect(parseCountdownCommand('!countdown break')).toEqual({
+      action: 'scene',
+      scene: 'break',
+      ms: 600_000,
+    });
     expect(parseCountdownCommand('!countdown break foo')).toBeNull();
+  });
+
+  it('reads a headline and note after the scene duration', () => {
+    expect(parseCountdownCommand('!countdown break 5m Lunch | Back soon')).toEqual({
+      action: 'scene',
+      scene: 'break',
+      ms: 300_000,
+      title: 'Lunch',
+      note: 'Back soon',
+    });
+    expect(parseCountdownCommand('!countdown starting 10m Starting Soon')).toEqual({
+      action: 'scene',
+      scene: 'starting',
+      ms: 600_000,
+      title: 'Starting Soon',
+    });
+    expect(parseCountdownCommand('!countdown break | Back soon')).toEqual({
+      action: 'scene',
+      scene: 'break',
+      ms: 600_000,
+      note: 'Back soon',
+    });
+    // Anything after the scene has to start with a duration, so a typo stays invalid.
+    expect(parseCountdownCommand('!countdown break Lunch')).toBeNull();
+  });
+
+  it('reads headline and note commands, clearing on empty', () => {
+    expect(parseCountdownCommand('!countdown title Lunch break')).toEqual({
+      action: 'title',
+      title: 'Lunch break',
+    });
+    expect(parseCountdownCommand('!countdown headline Lunch break')).toEqual({
+      action: 'title',
+      title: 'Lunch break',
+    });
+    expect(parseCountdownCommand('!countdown title')).toEqual({ action: 'title', title: '' });
+    expect(parseCountdownCommand('!countdown note Back in 5')).toEqual({
+      action: 'note',
+      note: 'Back in 5',
+    });
+    expect(parseCountdownCommand('!countdown note')).toEqual({ action: 'note', note: '' });
   });
 });

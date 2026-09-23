@@ -40,6 +40,14 @@ export interface CountdownSettings {
   note: string;
   /** What the headline becomes at zero; empty uses the scene's own wording. */
   done: string;
+  /** Seconds the message at zero stays up; 0 keeps it up until the scene changes. */
+  doneHold: number;
+  /** Custom icon for the starting scene; empty uses the scene icon. */
+  iconStarting: string;
+  /** Custom icon for the break scene; empty uses the scene icon. */
+  iconBreak: string;
+  /** Custom icon for the ending scene; empty uses the scene icon. */
+  iconEnding: string;
   ending: CountdownEnding;
   look: CountdownLook;
   color: CountdownColor;
@@ -58,6 +66,10 @@ export const DEFAULT_COUNTDOWN_SETTINGS: CountdownSettings = {
   title: '',
   note: '',
   done: '',
+  doneHold: 10,
+  iconStarting: '',
+  iconBreak: '',
+  iconEnding: '',
   ending: 'text',
   look: 'card',
   color: 'purple',
@@ -67,10 +79,17 @@ export const DEFAULT_COUNTDOWN_SETTINGS: CountdownSettings = {
 
 export const TITLE_MAX_LENGTH = 32;
 export const NOTE_MAX_LENGTH = 64;
+/** Long enough for a few emoji; cut by code point so one is never split in half. */
+export const ICON_MAX_LENGTH = 8;
+/** How long the message at zero may stay up; 0 means until the scene changes. */
+export const MAX_DONE_HOLD_SECONDS = 600;
 /** A day; past that the clock would pass the same wall-clock time twice. */
 export const MAX_COUNTDOWN_TIME = 24 * 3600;
 
 const AT_PATTERN = /^([01]?\d|2\d):([0-5]\d)$/;
+
+/** Cut to `max` characters by code point, so an emoji at the cut is never split in half. */
+const clip = (text: string, max: number) => Array.from(text).slice(0, max).join('');
 
 /** "9:05" or "21:00" as "09:05"; empty for anything that isn't a time of day. */
 export function readAtTime(value: string | null | undefined): string {
@@ -104,9 +123,17 @@ function buildParams(
   const title = settings.title.trim();
   const note = settings.note.trim();
   const done = settings.done.trim();
+  const icons = {
+    iconStarting: clip(settings.iconStarting.trim(), ICON_MAX_LENGTH),
+    iconBreak: clip(settings.iconBreak.trim(), ICON_MAX_LENGTH),
+    iconEnding: clip(settings.iconEnding.trim(), ICON_MAX_LENGTH),
+  };
   if (title) params.set('title', title);
   if (note) params.set('note', note);
   if (done) params.set('done', done);
+  if (settings.doneHold !== defaults.doneHold)
+    params.set('doneHold', String(Math.min(MAX_DONE_HOLD_SECONDS, Math.max(0, settings.doneHold))));
+  for (const [key, icon] of Object.entries(icons)) if (icon) params.set(key, icon);
   if (settings.ending !== defaults.ending) params.set('end', settings.ending);
   if (!settings.bar) params.set('bar', '0');
   if (!settings.motion) params.set('motion', '0');
@@ -157,12 +184,28 @@ export function readCountdownSettings(
     title: text('title', TITLE_MAX_LENGTH),
     note: text('note', NOTE_MAX_LENGTH),
     done: text('done', TITLE_MAX_LENGTH),
+    doneHold: readWhole(params.get('doneHold'), defaults.doneHold, { max: MAX_DONE_HOLD_SECONDS }),
+    iconStarting: clip((params.get('iconStarting') ?? '').trim(), ICON_MAX_LENGTH),
+    iconBreak: clip((params.get('iconBreak') ?? '').trim(), ICON_MAX_LENGTH),
+    iconEnding: clip((params.get('iconEnding') ?? '').trim(), ICON_MAX_LENGTH),
     ending: COUNTDOWN_ENDINGS.includes(ending) ? ending : defaults.ending,
     look: COUNTDOWN_LOOKS.includes(look) ? look : defaults.look,
     color: COUNTDOWN_COLORS.includes(color) ? color : defaults.color,
     bar: readFlag(params.get('bar'), defaults.bar),
     motion: readFlag(params.get('motion'), defaults.motion),
   };
+}
+
+/** The streamer's custom icon for `scene`, or empty when the scene icon applies. */
+export function sceneIcon(
+  settings: Pick<CountdownSettings, 'iconStarting' | 'iconBreak' | 'iconEnding'>,
+  scene: CountdownScene,
+): string {
+  return scene === 'starting'
+    ? settings.iconStarting
+    : scene === 'break'
+      ? settings.iconBreak
+      : settings.iconEnding;
 }
 
 /** Reverse of buildCountdownUrl; null for anything that isn't a Stream Countdown URL. */
