@@ -180,7 +180,7 @@ describe('Turkish pages', () => {
     );
     // Only the language switcher's links leave the Turkish site.
     expect(leaving.filter((link) => !switcher.includes(link))).toEqual([]);
-    expect(leaving.map((link) => link.hreflang)).toEqual(['en', 'es', 'fr', 'ja', 'pt']);
+    expect(leaving.map((link) => link.hreflang)).toEqual(['en', 'de', 'es', 'fr', 'ja', 'pt']);
   });
 
   it.each([
@@ -215,9 +215,9 @@ describe('Turkish pages', () => {
   ])('%s in English links to no Turkish page except the switcher', async (url) => {
     await renderRoute(url);
     const other = internalLinks().filter((link) =>
-      /^\/(es|fr|ja|pt|tr)(?=$|[/?#])/.test(link.getAttribute('href') ?? ''),
+      /^\/(de|es|fr|ja|pt|tr)(?=$|[/?#])/.test(link.getAttribute('href') ?? ''),
     );
-    expect(other.map((link) => link.hreflang)).toEqual(['es', 'fr', 'ja', 'pt', 'tr']);
+    expect(other.map((link) => link.hreflang)).toEqual(['de', 'es', 'fr', 'ja', 'pt', 'tr']);
     expect(other.every((link) => languageLinks().links.includes(link))).toBe(true);
   });
 });
@@ -229,6 +229,7 @@ describe('language switcher', () => {
     let { enLink, trLink, links } = languageLinks();
     expect(links.map((link) => link.getAttribute('href'))).toEqual([
       '/setup/raffle',
+      '/de/setup/raffle',
       '/es/setup/raffle',
       '/fr/setup/raffle',
       '/ja/setup/raffle',

@@ -44,17 +44,18 @@ describe('landing script: first visit, no saved choice', () => {
 
   it('keeps English, other and unsupported browsers on the English page', () => {
     expect(land({ url: '/', languages: ['en-US'] }).redirect).toBeNull();
-    expect(land({ url: '/faq', languages: ['de-DE', 'it'] }).redirect).toBeNull();
+    expect(land({ url: '/faq', languages: ['it-IT', 'nl'] }).redirect).toBeNull();
     expect(land({ url: '/faq', languages: [] }).redirect).toBeNull();
   });
 
   it('uses the first supported language, not any mention of Turkish', () => {
     expect(land({ url: '/', languages: ['en-GB', 'tr-TR'] }).redirect).toBeNull();
-    expect(land({ url: '/', languages: ['de-DE', 'tr-TR', 'en'] }).redirect).toBe('/tr');
+    expect(land({ url: '/', languages: ['it-IT', 'tr-TR', 'en'] }).redirect).toBe('/tr');
   });
 
   it('sends every other supported language to its own prefix', () => {
     expect(land({ url: '/', languages: ['es-MX'] }).redirect).toBe('/es');
+    expect(land({ url: '/changelog', languages: ['de-AT'] }).redirect).toBe('/de/changelog');
     expect(land({ url: '/faq', languages: ['fr-CA'] }).redirect).toBe('/fr/faq');
     expect(land({ url: '/guides', languages: ['ja'] }).redirect).toBe('/ja/guides');
     expect(land({ url: '/setup/raffle', languages: ['pt-BR'] }).redirect).toBe('/pt/setup/raffle');
@@ -98,7 +99,7 @@ describe('landing script: explicit language in the URL', () => {
   });
 
   it('ignores an unsupported ?lang= value', () => {
-    expect(land({ url: '/?lang=de', languages: ['en-US'] }).redirect).toBeNull();
+    expect(land({ url: '/?lang=it', languages: ['en-US'] }).redirect).toBeNull();
   });
 });
 
@@ -120,9 +121,9 @@ describe('landing script: overlays and tools', () => {
 describe('pickBrowserLocale', () => {
   it('picks the first supported base language and falls back to English', () => {
     expect(pickBrowserLocale(['tr-TR'])).toBe('tr');
-    expect(pickBrowserLocale(['de', 'en-US', 'tr'])).toBe('en');
-    expect(pickBrowserLocale(['de', 'fr'])).toBe('fr');
-    expect(pickBrowserLocale(['de', 'it'])).toBe('en');
+    expect(pickBrowserLocale(['it', 'en-US', 'tr'])).toBe('en');
+    expect(pickBrowserLocale(['it', 'fr'])).toBe('fr');
+    expect(pickBrowserLocale(['it', 'nl'])).toBe('en');
     expect(pickBrowserLocale([])).toBe('en');
   });
 });

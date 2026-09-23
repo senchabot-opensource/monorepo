@@ -3,6 +3,7 @@
  * sitemap.xml, so a new prerendered page (a /tr/... route included) is tested as soon as it is
  * listed there; EXTRA_PAGES is the one list to extend for pages the sitemap leaves out.
  */
+import { de } from '../../src/lib/i18n/de.ts';
 import { en } from '../../src/lib/i18n/en.ts';
 import { es } from '../../src/lib/i18n/es.ts';
 import { fr } from '../../src/lib/i18n/fr.ts';
@@ -25,10 +26,10 @@ export const DESKTOP_MIN_WIDTH = 1024;
 export const EXTRA_PAGES = [{ path: '/this-page-does-not-exist', status: 404 }];
 
 /** Locale path prefixes (LOCALES minus English); `/tr/setup/raffle` is tested like `/setup/raffle`. */
-export const LOCALE_PREFIXES = ['es', 'fr', 'ja', 'pt', 'tr'];
+export const LOCALE_PREFIXES = ['de', 'es', 'fr', 'ja', 'pt', 'tr'];
 
 /** The header theme button, found by its label in any language. */
-export const THEME_TOGGLE = [en, es, fr, ja, pt, tr]
+export const THEME_TOGGLE = [en, de, es, fr, ja, pt, tr]
   .map((dict) => `header button[aria-label="${dict.common.themeToggle}"]`)
   .join(', ');
 
