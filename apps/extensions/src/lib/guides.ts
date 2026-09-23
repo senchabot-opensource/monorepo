@@ -648,7 +648,7 @@ export const CONTENT_META = {
     de: {
       title: 'Changelog: Neue Features und Fixes | Senchabot Extensions',
       description:
-        'Jedes Feature und jeder Fix in Senchabot Extensions seit dem Start im April 2026, das Neueste zuerst, für alle neun Twitch- und Kick-Overlays und Tools.',
+        'Jedes Feature und jeder Fix in Senchabot Extensions seit dem Start im April 2026, das Neueste zuerst, für alle zwölf Twitch- und Kick-Overlays und Tools.',
     },
     tr: {
       title: 'Yenilikler: Eklenen Özellikler ve Düzeltmeler | Senchabot',

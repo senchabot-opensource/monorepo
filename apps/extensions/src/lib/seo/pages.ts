@@ -22,7 +22,7 @@ export const PAGE_META = {
     de: {
       title: 'Kostenlose Twitch- und Kick-Overlays für OBS | Senchabot',
       description:
-        'Elf kostenlose Overlays und Tools für Twitch- und Kick-Streamer: Chat-Box, Emote-Wand, Alerts, Sub-Ziel, Subathon Timer, Rahmen, Countdown, Umfrage, Verlosung.',
+        'Zwölf kostenlose Overlays und Tools für Twitch- und Kick-Streamer: Chat-Box, Emote-Wand, Alerts, Sub-Ziel, Subathon, Rahmen, Countdown, Umfrage, Verlosung.',
     },
     tr: {
       title: "OBS için Ücretsiz Twitch ve Kick Overlay'leri | Senchabot",

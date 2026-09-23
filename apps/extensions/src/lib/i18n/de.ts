@@ -1415,7 +1415,7 @@ export const de: typeof en = {
       },
       transparent: {
         title: 'Musst du etwas tun, damit der Hintergrund transparent ist?',
-        p1: 'Nein. Chat-Box, Emote-Wand, Sub Sprout, Subathon Timer, Stream-Alerts, Sub-Ziel, Chat-Umfrage und das Overlay der Verlosung werden auf transparentem Hintergrund gezeichnet. Du brauchst keinen Chroma Key und keinen Filter, und das Feld Benutzerdefiniertes CSS in OBS kannst du lassen, wie es ist.',
+        p1: 'Nein. Chat-Box, Emote-Wand, Sub Sprout, Subathon Timer, Stream-Alerts, Sub-Ziel, Stream-Rahmen, Stream-Countdown, Chat-Umfrage, Socials und das Overlay der Verlosung werden auf transparentem Hintergrund gezeichnet. Du brauchst keinen Chroma Key und keinen Filter, und das Feld Benutzerdefiniertes CSS in OBS kannst du lassen, wie es ist.',
         p2: 'Ist die Chat-Box auf einer hellen Szene schwer lesbar, schalt Dunkler Hintergrund ein. Das legt eine halbtransparente schwarze Ebene hinter das Widget, und die Deckkraft stellst du irgendwo zwischen 0 % und 100 % ein (standardmäßig 50 %). Soll jede Nachricht ihre eigene Box haben, schalt Box pro Nachricht ein.',
       },
       settings: {
@@ -1426,7 +1426,7 @@ export const de: typeof en = {
         chatBox:
           'Chat-Box: Nachrichten kommen nur rein, solange die Quelle läuft. Wird die Quelle deaktiviert und kommt zurück, startet der Screen leer und zeigt nur neue Nachrichten.',
         subSprout:
-          'Sub Sprout: Das Wachstum der Pflanze wird nirgends gespeichert. Lädt die Seite neu, geht die Pflanze zurück auf die erste Stufe.',
+          'Sub Sprout: Die Pflanze wird in OBS gespeichert, behält bei einem Neuladen also ihre erreichte Stufe, aber Subs, die reinkommen, während die Quelle aus ist, lassen sie nicht wachsen.',
         goal: 'Sub-Ziel: Die Zahl wird in OBS gespeichert, geht bei einem Neuladen also nicht verloren, aber Subs, die reinkommen, während die Quelle aus ist, werden nicht gezählt.',
         poll: 'Chat-Umfrage: Die Umfrage und ihre Stimmen werden in OBS gespeichert, gehen bei einem Neuladen also nicht verloren, aber Stimmen, die geschrieben werden, während die Quelle aus ist, zählen nicht.',
         subathon:
@@ -1742,6 +1742,7 @@ export const de: typeof en = {
       look: {
         title: 'Welche Stile und Farben gibt es?',
         bar: 'Lebensbalken (Standard): ein Balken wie im Game, der sich von 100 % gegen null leert.',
+        thin: 'Schmaler Balken: Titel und Restzeit sitzen in einem dünneren Balken.',
         clock: 'Uhr: große Zahlen in Stunden, Minuten und Sekunden.',
         ring: 'Ring: ein Kreis, der sich leert, während die Zeit abläuft.',
         p1: 'Die Standardfarbe Leben wechselt von Grün über Orange zu Rot, wenn die Zeit knapp wird. Du kannst auch eine feste Farbe wählen: Grün, Lila, Rot, Gold, Cyan oder Pink. Der Titel neben dem Timer lautet standardmäßig SUBATHON. Ändere ihn in alles bis 32 Zeichen, oder lass ihn leer, um ihn auszublenden.',
@@ -2214,7 +2215,7 @@ export const de: typeof en = {
     },
     freeQ: 'Ist Senchabot Extensions kostenlos?',
     freeA:
-      'Ja. Alle neun Widgets und Tools sind kostenlos: Chat-Box, Emote-Wand, Sub Sprout, Subathon Timer, Stream-Alerts, Sub-Ziel, Chat-Umfrage, Verlosung und OBS Bridge. Es gibt kein Bezahl-Abo, kein Wasserzeichen und keinen Premium-Account. Der Quellcode liegt offen auf GitHub unter der GPL-3.0-Lizenz.',
+      'Ja. Alle zwölf Widgets und Tools sind kostenlos: Chat-Box, Emote-Wand, Sub Sprout, Subathon Timer, Stream-Alerts, Sub-Ziel, Stream-Rahmen, Stream-Countdown, Chat-Umfrage, Socials, Verlosung und OBS Bridge. Es gibt kein Bezahl-Abo, kein Wasserzeichen und keinen Premium-Account. Der Quellcode liegt offen auf GitHub unter der GPL-3.0-Lizenz.',
     loginQ: 'Was heißt „kein Login nötig“?',
     loginA:
       'Du legst auf dieser Seite keinen Account an, du loggst dich nicht mit Twitch oder Kick ein, und du lädst nichts herunter. Du gibst deinen Kanalnamen ein, und die Setup-Seite gibt dir eine URL. Die Widgets lesen den öffentlichen Chat anonym: Auf Twitch verbinden sie sich wie ein anonymer Zuschauer, auf Kick hören sie den öffentlichen Chat-Feed mit. Deshalb können sie nicht in den Chat schreiben, nicht moderieren und nicht auf private Infos deines Accounts zugreifen.',
@@ -2226,7 +2227,7 @@ export const de: typeof en = {
       'Mit OBS Studio und jeder anderen Streaming-Software, die eine Browser-Quelle unterstützt. Jedes Widget läuft als Web-URL, und diese URL fügst du in die Quelle ein. Unsere Anleitungen sind für OBS Studio geschrieben.',
     platformsQ: 'Welche Widgets unterstützen Twitch und welche Kick?',
     platformsA:
-      'Alle elf unterstützen beide Plattformen. Chat-Box, Emote-Wand, Sub Sprout, Subathon Timer, Stream-Alerts, Sub-Ziel, Chat-Umfrage und Stream-Countdown hören einem Twitch- und einem Kick-Kanal zusammen in einer URL zu. OBS Bridge hört auf Befehle aus beiden Chats, und jeder berechtigte Nutzer wird mit seiner eigenen Plattform hinzugefügt. Die Verlosung läuft immer auf einer Plattform, Twitch oder Kick. In der Chat-Box erscheinen 7TV-Emotes auf beiden Plattformen, BTTV- und FFZ-Emotes nur auf Twitch.',
+      'Alle zwölf unterstützen beide Plattformen. Chat-Box, Emote-Wand, Sub Sprout, Subathon Timer, Stream-Alerts, Sub-Ziel, Chat-Umfrage und Stream-Countdown hören einem Twitch- und einem Kick-Kanal zusammen in einer URL zu. OBS Bridge hört auf Befehle aus beiden Chats, und jeder berechtigte Nutzer wird mit seiner eigenen Plattform hinzugefügt. Die Verlosung läuft immer auf einer Plattform, Twitch oder Kick. Stream-Rahmen und Socials lesen keinen Chat, sie funktionieren also auf beiden gleich. In der Chat-Box erscheinen 7TV-Emotes auf beiden Plattformen, BTTV- und FFZ-Emotes nur auf Twitch.',
     editQ: 'Wie ändere ich ein Widget später?',
     editA:
       'Ändere die Einstellungen auf der Setup-Seite, kopier die neue URL und füg sie in OBS im Feld URL der Quelle über der alten ein. Bei Chat-Box, Emote-Wand, Sub Sprout, Subathon Timer, Stream-Alerts, Sub-Ziel, Chat-Umfrage, Stream-Rahmen, Socials und Stream-Countdown kannst du deine alte URL auf der Setup-Seite ins Feld Widget-URL einfügen, dann sind alle Einstellungen wieder da, und du musst nicht von vorn anfangen.',
