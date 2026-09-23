@@ -53,6 +53,11 @@ export const GUIDES: readonly GuideEntry[] = [
         description:
           'Add a Senchabot widget to OBS Studio as a Browser Source: paste the URL, set the size (Chat Box is 400×600), keep it transparent and fix an empty source.',
       },
+      de: {
+        title: 'Stream-Widget als Browserquelle in OBS einfügen | Senchabot',
+        description:
+          'Füge ein Senchabot-Widget in OBS Studio als Browserquelle hinzu: URL einfügen, Größe setzen (Chat-Box 400×600), transparent lassen, leere Quelle reparieren.',
+      },
       tr: {
         title: "OBS'e Tarayıcı Kaynağı Olarak Widget Ekleme | Senchabot",
         description:
@@ -95,6 +100,11 @@ export const GUIDES: readonly GuideEntry[] = [
         title: 'Show Twitch and Kick Chat Together in OBS | Senchabot',
         description:
           'Merge Twitch and Kick chat into one OBS overlay with a single Chat Box URL: platform icons, 7TV, BTTV and FFZ emotes, bot filters and a 400×600 source.',
+      },
+      de: {
+        title: 'Twitch- und Kick-Chat zusammen in OBS anzeigen | Senchabot',
+        description:
+          'Führe Twitch- und Kick-Chat mit einer einzigen Chat-Box-URL in einem OBS-Overlay zusammen: Plattform-Icons, 7TV-, BTTV- und FFZ-Emotes, Bot-Filter, 400×600.',
       },
       tr: {
         title: "OBS'te Twitch ve Kick Sohbetini Birlikte Göster | Senchabot",
@@ -140,6 +150,11 @@ export const GUIDES: readonly GuideEntry[] = [
         description:
           'Read Twitch and Kick chat together in a browser tab or an OBS dock. It reconnects on its own, marks every drop and keeps 1000 lines through a refresh.',
       },
+      de: {
+        title: 'Twitch- und Kick-Chat in einem OBS-Dock lesen | Senchabot',
+        description:
+          'Lies Twitch- und Kick-Chat zusammen in einem Browser-Tab oder OBS-Dock. Er verbindet sich selbst neu, markiert Abbrüche und behält 1000 Zeilen beim Neuladen.',
+      },
       tr: {
         title: "Twitch ve Kick Sohbetini OBS Dock'unda Oku | Senchabot",
         description:
@@ -182,6 +197,11 @@ export const GUIDES: readonly GuideEntry[] = [
         title: 'Sub, Cheer and Raid Alerts for Twitch and Kick | Senchabot',
         description:
           'Add free animated alerts for Twitch and Kick subs, gifted subs, Bits, Kicks and raids to OBS: one 800×450 URL, two themes and sound that plays in OBS.',
+      },
+      de: {
+        title: 'Sub-, Cheer- und Raid-Alerts für Twitch und Kick | Senchabot',
+        description:
+          'Kostenlose animierte Alerts für Subs, Gift-Subs, Bits, Kicks und Raids auf Twitch und Kick in OBS: eine 800×450-URL, zwei Themes und Sound direkt in OBS.',
       },
       tr: {
         title: "Twitch ve Kick'te Abone, Cheer ve Raid Uyarıları | Senchabot",
@@ -226,6 +246,11 @@ export const GUIDES: readonly GuideEntry[] = [
         description:
           'Run a free subathon timer on Twitch and Kick: subs, gifts, Bits and Kicks add time, mods use !subathon add or pause, and it survives an OBS restart.',
       },
+      de: {
+        title: 'Subathon Timer auf Twitch und Kick in OBS | Senchabot',
+        description:
+          'Kostenloser Subathon Timer für Twitch und Kick: Subs, Gifts, Bits und Kicks bringen Zeit, Mods nutzen !subathon add oder pause, und er übersteht OBS-Neustarts.',
+      },
       tr: {
         title: "OBS'te Twitch ve Kick için Subathon Sayacı Kur | Senchabot",
         description:
@@ -268,6 +293,11 @@ export const GUIDES: readonly GuideEntry[] = [
         title: 'Run a Chat Poll on Twitch and Kick in OBS | Senchabot',
         description:
           'Run a free chat poll on Twitch and Kick: mods type !poll Question | A | B, viewers vote with a number, and the bars and the winner show in OBS.',
+      },
+      de: {
+        title: 'Chat-Umfrage auf Twitch und Kick in OBS starten | Senchabot',
+        description:
+          'Kostenlose Chat-Umfrage für Twitch und Kick: Mods tippen !poll Frage | A | B, Zuschauer stimmen mit einer Zahl ab, Balken und Gewinner erscheinen in OBS.',
       },
       tr: {
         title: "OBS'te Twitch ve Kick için Sohbet Anketi Yap | Senchabot",
@@ -312,6 +342,11 @@ export const GUIDES: readonly GuideEntry[] = [
         description:
           "Free camera, chat and screen frames for Twitch and Kick, drawn in your preset's style with a transparent middle. One URL in OBS, animations optional.",
       },
+      de: {
+        title: 'Rahmen für Kamera, Chat und Bildschirm in OBS | Senchabot',
+        description:
+          'Kostenlose Rahmen für Kamera, Chat und Bildschirm auf Twitch und Kick, im Stil deines Presets, mit transparenter Mitte. Eine URL in OBS, Animationen optional.',
+      },
       tr: {
         title: "OBS'te Kamera, Sohbet ve Ekran Çerçevesi Ekle | Senchabot",
         description:
@@ -354,6 +389,11 @@ export const GUIDES: readonly GuideEntry[] = [
         title: 'Add a Starting Soon and BRB Countdown in OBS | Senchabot',
         description:
           'Add a free countdown to your Twitch or Kick stream: a length or a time of day like 21:00, starting over on every scene switch, and the !countdown commands.',
+      },
+      de: {
+        title: 'Starting-Soon- und BRB-Countdown in OBS | Senchabot',
+        description:
+          'Kostenloser Countdown für deinen Twitch- oder Kick-Stream: eine Dauer oder eine Uhrzeit wie 21:00, Neustart bei jedem Szenenwechsel und die !countdown-Befehle.',
       },
       tr: {
         title: "OBS'te Başlangıç, Mola ve Bitiş Geri Sayımı Ekle | Senchabot",
@@ -398,6 +438,11 @@ export const GUIDES: readonly GuideEntry[] = [
         description:
           'Run a free chat giveaway on Twitch or Kick: viewers type !join, you set subs-only rules, a win limit and a 15 second minimum, then draw a winner on stream.',
       },
+      de: {
+        title: 'Verlosung im Twitch- oder Kick-Chat mit !join | Senchabot',
+        description:
+          'Kostenlose Verlosung im Twitch- oder Kick-Chat: Zuschauer tippen !join, du legst Sub-Regeln, ein Gewinnlimit und mindestens 15 Sekunden fest und ziehst live.',
+      },
       tr: {
         title: '!join ile Twitch veya Kick Sohbet Çekilişi Yap | Senchabot',
         description:
@@ -440,6 +485,11 @@ export const GUIDES: readonly GuideEntry[] = [
         title: 'Let Mods Switch OBS Scenes from Chat | Senchabot',
         description:
           'Let mods switch OBS scenes from Twitch or Kick chat with !scene, brb and back. Turn on OBS WebSocket (ws://127.0.0.1:4455) and pick who can use them.',
+      },
+      de: {
+        title: 'Mods wechseln OBS-Szenen aus dem Chat | Senchabot',
+        description:
+          'Lass Mods OBS-Szenen aus dem Twitch- oder Kick-Chat mit !scene, brb und back wechseln. Aktiviere OBS WebSocket (ws://127.0.0.1:4455) und wähle, wer darf.',
       },
       tr: {
         title: 'Modlar Sohbetten OBS Sahnesini Değiştirsin | Senchabot',
@@ -484,6 +534,11 @@ export const CONTENT_META = {
       description:
         "Step-by-step guides for Senchabot's free Twitch and Kick overlays: add a widget to OBS, merge two chats, add alerts, run a subathon or a !join giveaway.",
     },
+    de: {
+      title: 'Anleitungen für Twitch- und Kick-Overlays in OBS | Senchabot',
+      description:
+        'Schritt-für-Schritt-Anleitungen für die kostenlosen Twitch- und Kick-Overlays von Senchabot: Widget in OBS, Chats vereinen, Alerts, Subathon, !join-Verlosung.',
+    },
     tr: {
       title: "Twitch ve Kick Overlay'leri için OBS Rehberleri | Senchabot",
       description:
@@ -515,6 +570,11 @@ export const CONTENT_META = {
       title: 'Senchabot Extensions FAQ: Free Twitch and Kick Overlays',
       description:
         'Answers about Senchabot Extensions: free with no login, which of the 12 widgets support Twitch and Kick, where your settings live and how to report a bug.',
+    },
+    de: {
+      title: 'FAQ zu Senchabot Extensions: Twitch- und Kick-Overlays',
+      description:
+        'Antworten zu Senchabot Extensions: kostenlos ohne Login, welche der 12 Widgets Twitch und Kick können, wo deine Einstellungen liegen und wie du Bugs meldest.',
     },
     tr: {
       title: "Senchabot Extensions SSS: Twitch ve Kick Overlay'leri",
@@ -548,6 +608,11 @@ export const CONTENT_META = {
       description:
         'Free game presets for Twitch and Kick overlays: League of Legends, WoW, Metin2, Dota 2, Valorant, CS2 and Minecraft looks for chat, alerts, goals and polls.',
     },
+    de: {
+      title: 'Spiel-Presets für Twitch- und Kick-Overlays | Senchabot',
+      description:
+        'Kostenlose Spiel-Presets für Twitch- und Kick-Overlays: League of Legends, WoW, Metin2, Dota 2, Valorant, CS2 und Minecraft als Look für Chat, Alerts und Ziele.',
+    },
     tr: {
       title: "Twitch ve Kick için Oyun Overlay Preset'leri | Senchabot",
       description:
@@ -579,6 +644,11 @@ export const CONTENT_META = {
       title: 'Changelog: New Features and Fixes | Senchabot Extensions',
       description:
         'Every feature and fix in Senchabot Extensions since the April 2026 launch, newest first, for all nine Twitch and Kick overlays and tools.',
+    },
+    de: {
+      title: 'Changelog: Neue Features und Fixes | Senchabot Extensions',
+      description:
+        'Jedes Feature und jeder Fix in Senchabot Extensions seit dem Start im April 2026, das Neueste zuerst, für alle neun Twitch- und Kick-Overlays und Tools.',
     },
     tr: {
       title: 'Yenilikler: Eklenen Özellikler ve Düzeltmeler | Senchabot',

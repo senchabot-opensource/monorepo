@@ -1848,7 +1848,7 @@ export const tr: typeof en = {
         position:
           "Konum: anket Tarayıcı Kaynağı'nın üst ya da alt kısmında durur, seçenek sayısına göre oradan uzar.",
         language:
-          'Anket Dili: anketteki kelimeler için İngilizce, İspanyolca, Fransızca, Japonca, Portekizce ya da Türkçe, örneğin Sonuçlar yazısı ve hızlı anketteki Evet ile Hayır.',
+          'Anket Dili: anketteki kelimeler için İngilizce, İspanyolca, Fransızca, Almanca, Japonca, Portekizce ya da Türkçe, örneğin Sonuçlar yazısı ve hızlı anketteki Evet ile Hayır.',
         p1: "İki platform da açıksa anket, toplamın yanında oyların kaçının Twitch'ten, kaçının Kick'ten geldiğini gösterir. Kaynak şeffaftır, yayında sadece anket kartı görünür.",
       },
       saved: {
@@ -2026,7 +2026,7 @@ export const tr: typeof en = {
         neon: 'Neon (varsayılan): synth sesleriyle köşeli, bilim kurgu tarzı bir şerit. Giderken bir neon tabela gibi titreyip söner.',
         celestial: 'Göksel: yıldızların altında lacivert bir kart, ince bir çerçeve ve çan sesleriyle.',
         p1: "Renk, uyarının vurgu rengi. Varsayılan Platform seçeneğinde Twitch uyarıları mor, Kick uyarıları yeşil görünür. İstersen bütün uyarılar için tek bir renk de seçebilirsin: mavi, mor, pembe, kırmızı, altın ya da yeşil. URL'de iki kanal da varsa küçük bir TWITCH ya da KICK etiketi uyarının nereden geldiğini gösterir.",
-        p2: "Her uyarının başlığını en fazla 24 karakter olacak şekilde değiştirebilir ya da boş bırakıp Yeni Abone gibi varsayılanı kullanabilirsin. Neon başlıkları büyük harfle yazar. Uyarı Dili, uyarıdaki kelimelerin dilini belirler: İngilizce, İspanyolca, Fransızca, Japonca, Portekizce ya da Türkçe. Bu seçim URL'de saklanır, OBS hangi dilde olursa olsun değişmez.",
+        p2: "Her uyarının başlığını en fazla 24 karakter olacak şekilde değiştirebilir ya da boş bırakıp Yeni Abone gibi varsayılanı kullanabilirsin. Neon başlıkları büyük harfle yazar. Uyarı Dili, uyarıdaki kelimelerin dilini belirler: İngilizce, İspanyolca, Fransızca, Almanca, Japonca, Portekizce ya da Türkçe. Bu seçim URL'de saklanır, OBS hangi dilde olursa olsun değişmez.",
       },
       min: {
         title: "Küçük hediye, cheer ve raid'ler nasıl atlanır?",
@@ -2238,7 +2238,7 @@ export const tr: typeof en = {
     site: 'Site',
     entries: {
       moreLanguages:
-        'Site artık İspanyolca, Fransızca, Japonca ve Portekizce de var. Sohbet Anketi, Yayın Uyarıları ve Subathon Timer oranları da yazılarını bu dillerde gösterebiliyor.',
+        'Site artık İspanyolca, Fransızca, Almanca, Japonca ve Portekizce de var. Sohbet Anketi, Yayın Uyarıları ve Subathon Timer oranları da yazılarını bu dillerde gösterebiliyor.',
       countdownSceneCommand:
         '`!countdown {sahne} {süre}` sohbet komutu eklendi. Modlar artık tek bir komutla geçerli sahneyi (starting, break veya ending) değiştirebilir ve süresini ayarlayabilir.',
       socialsLaunch:

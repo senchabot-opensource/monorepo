@@ -15,6 +15,7 @@ export const getWebsiteId = (locale: Locale) =>
 const COPY = {
   organization: {
     en: 'Senchabot is an open source, multi-platform community bot for Twitch, Discord, Kick and YouTube.',
+    de: 'Senchabot ist ein Open-Source-Community-Bot für mehrere Plattformen: Twitch, Discord, Kick und YouTube.',
     tr: 'Senchabot, Twitch, Discord, Kick ve YouTube için açık kaynaklı, çok platformlu bir topluluk botu.',
     es: 'Senchabot es un bot comunitario de código abierto y multiplataforma para Twitch, Discord, Kick y YouTube.',
     fr: 'Senchabot est un bot communautaire open source et multiplateforme pour Twitch, Discord, Kick et YouTube.',
@@ -23,6 +24,7 @@ const COPY = {
   },
   website: {
     en: 'Free, open source overlays and stream tools for Twitch and Kick, made by Senchabot. No login.',
+    de: 'Kostenlose Open-Source-Overlays und Stream-Tools für Twitch und Kick, gemacht von Senchabot. Ohne Login.',
     tr: "Senchabot'tan Twitch ve Kick için ücretsiz, açık kaynaklı overlay'ler ve yayın araçları. Giriş yok.",
     es: 'Overlays y herramientas de stream gratis y de código abierto para Twitch y Kick, hechos por Senchabot. Sin iniciar sesión.',
     fr: 'Des overlays et outils de stream gratuits et open source pour Twitch et Kick, faits par Senchabot. Sans connexion.',

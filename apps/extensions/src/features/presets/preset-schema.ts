@@ -38,6 +38,7 @@ export const presetSchema = z.object({
     .object({
       en: blurb,
       tr: blurb,
+      de: blurb.optional(),
       es: blurb.optional(),
       fr: blurb.optional(),
       ja: blurb.optional(),

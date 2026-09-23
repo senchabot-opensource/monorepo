@@ -1882,7 +1882,7 @@ export const es: typeof en = {
         position:
           'Posición: la encuesta se coloca arriba o abajo de la fuente de navegador y crece desde ahí según el número de opciones.',
         language:
-          'Idioma de la encuesta: inglés, español, francés, japonés, portugués o turco para las palabras de la encuesta, como Resultados y el Sí y No de una encuesta rápida.',
+          'Idioma de la encuesta: inglés, español, francés, alemán, japonés, portugués o turco para las palabras de la encuesta, como Resultados y el Sí y No de una encuesta rápida.',
         p1: 'Con las dos plataformas activas, la encuesta muestra cuántos votos vinieron de Twitch y cuántos de Kick junto al total. La fuente es transparente, así que en el stream solo se ve la tarjeta de la encuesta.',
       },
       saved: {
@@ -2063,7 +2063,7 @@ export const es: typeof en = {
         celestial:
           'Celestial: una tarjeta azul marino bajo las estrellas con un marco fino y sonido de campanas.',
         p1: 'Color es el acento de la alerta. El predeterminado, Plataforma, muestra las alertas de Twitch en morado y las de Kick en verde. También puedes elegir un color para todas las alertas: azul, morado, rosa, rojo, dorado o verde. Cuando los dos canales están en la URL, una pequeña etiqueta TWITCH o KICK muestra de dónde vino cada alerta.',
-        p2: 'Puedes cambiar el título de cada alerta, hasta 24 caracteres, o dejarlo vacío para mantener el predeterminado, como Nuevo suscriptor. Neon escribe los títulos en mayúsculas. Idioma de las alertas define el idioma de las palabras de la alerta: inglés, español, francés, japonés, portugués o turco. Se queda en la URL esté OBS en el idioma que esté.',
+        p2: 'Puedes cambiar el título de cada alerta, hasta 24 caracteres, o dejarlo vacío para mantener el predeterminado, como Nuevo suscriptor. Neon escribe los títulos en mayúsculas. Idioma de las alertas define el idioma de las palabras de la alerta: inglés, español, francés, alemán, japonés, portugués o turco. Se queda en la URL esté OBS en el idioma que esté.',
       },
       min: {
         title: '¿Cómo te saltas los regalos, cheers y raids pequeños?',
@@ -2284,7 +2284,7 @@ export const es: typeof en = {
     site: 'Sitio',
     entries: {
       moreLanguages:
-        'El sitio ahora también está en español, francés, japonés y portugués, y Encuesta de Chat, Alertas de Stream y los valores del Subathon Timer también pueden mostrar sus textos en esos idiomas.',
+        'El sitio ahora también está en español, francés, alemán, japonés y portugués, y Encuesta de Chat, Alertas de Stream y los valores del Subathon Timer también pueden mostrar sus textos en esos idiomas.',
       countdownSceneCommand:
         'Nuevo comando de chat `!countdown {scene} {duration}`. Ahora los mods pueden cambiar la escena actual (inicio, pausa o cierre) y fijar su duración con un solo comando.',
       socialsLaunch:

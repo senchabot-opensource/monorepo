@@ -3,6 +3,7 @@
   <url>
     <loc>https://extensions.senchabot.com</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja"/>
@@ -15,6 +16,7 @@
   <url>
     <loc>https://extensions.senchabot.com/setup/sub-growing-plant</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/sub-growing-plant"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/sub-growing-plant"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/sub-growing-plant"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/sub-growing-plant"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/sub-growing-plant"/>
@@ -27,6 +29,7 @@
   <url>
     <loc>https://extensions.senchabot.com/setup/subathon-timer</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/subathon-timer"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/subathon-timer"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/subathon-timer"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/subathon-timer"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/subathon-timer"/>
@@ -39,6 +42,7 @@
   <url>
     <loc>https://extensions.senchabot.com/setup/stream-alerts</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/stream-alerts"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/stream-alerts"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/stream-alerts"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/stream-alerts"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/stream-alerts"/>
@@ -51,6 +55,7 @@
   <url>
     <loc>https://extensions.senchabot.com/setup/sub-goal</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/sub-goal"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/sub-goal"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/sub-goal"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/sub-goal"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/sub-goal"/>
@@ -63,6 +68,7 @@
   <url>
     <loc>https://extensions.senchabot.com/setup/stream-frames</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/stream-frames"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/stream-frames"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/stream-frames"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/stream-frames"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/stream-frames"/>
@@ -75,6 +81,7 @@
   <url>
     <loc>https://extensions.senchabot.com/setup/stream-countdown</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/stream-countdown"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/stream-countdown"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/stream-countdown"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/stream-countdown"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/stream-countdown"/>
@@ -87,6 +94,7 @@
   <url>
     <loc>https://extensions.senchabot.com/setup/chat-poll</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/chat-poll"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/chat-poll"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/chat-poll"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/chat-poll"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/chat-poll"/>
@@ -99,6 +107,7 @@
   <url>
     <loc>https://extensions.senchabot.com/setup/chat-widget</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/chat-widget"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/chat-widget"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/chat-widget"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/chat-widget"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/chat-widget"/>
@@ -111,6 +120,7 @@
   <url>
     <loc>https://extensions.senchabot.com/setup/raffle</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/raffle"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/raffle"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/raffle"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/raffle"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/raffle"/>
@@ -123,6 +133,7 @@
   <url>
     <loc>https://extensions.senchabot.com/setup/socials</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/socials"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/socials"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/socials"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/socials"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/socials"/>
@@ -135,6 +146,7 @@
   <url>
     <loc>https://extensions.senchabot.com/setup/obs-bridge</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/obs-bridge"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/obs-bridge"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/obs-bridge"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/obs-bridge"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/obs-bridge"/>
@@ -147,6 +159,7 @@
   <url>
     <loc>https://extensions.senchabot.com/setup/emote-wall</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/emote-wall"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/emote-wall"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/emote-wall"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/emote-wall"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/emote-wall"/>
@@ -159,6 +172,7 @@
   <url>
     <loc>https://extensions.senchabot.com/guides</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides"/>
@@ -171,6 +185,7 @@
   <url>
     <loc>https://extensions.senchabot.com/guides/obs-browser-source</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/obs-browser-source"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/obs-browser-source"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/obs-browser-source"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/obs-browser-source"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/obs-browser-source"/>
@@ -183,6 +198,7 @@
   <url>
     <loc>https://extensions.senchabot.com/guides/twitch-kick-chat-overlay</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/twitch-kick-chat-overlay"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/twitch-kick-chat-overlay"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/twitch-kick-chat-overlay"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/twitch-kick-chat-overlay"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/twitch-kick-chat-overlay"/>
@@ -195,6 +211,7 @@
   <url>
     <loc>https://extensions.senchabot.com/guides/chat-giveaway</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/chat-giveaway"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/chat-giveaway"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/chat-giveaway"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/chat-giveaway"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/chat-giveaway"/>
@@ -207,6 +224,7 @@
   <url>
     <loc>https://extensions.senchabot.com/guides/obs-scene-switcher</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/obs-scene-switcher"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/obs-scene-switcher"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/obs-scene-switcher"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/obs-scene-switcher"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/obs-scene-switcher"/>
@@ -219,6 +237,7 @@
   <url>
     <loc>https://extensions.senchabot.com/guides/obs-chat-dock</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/obs-chat-dock"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/obs-chat-dock"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/obs-chat-dock"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/obs-chat-dock"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/obs-chat-dock"/>
@@ -231,6 +250,7 @@
   <url>
     <loc>https://extensions.senchabot.com/guides/stream-alerts</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/stream-alerts"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/stream-alerts"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/stream-alerts"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/stream-alerts"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/stream-alerts"/>
@@ -243,6 +263,7 @@
   <url>
     <loc>https://extensions.senchabot.com/guides/subathon-timer</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/subathon-timer"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/subathon-timer"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/subathon-timer"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/subathon-timer"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/subathon-timer"/>
@@ -255,6 +276,7 @@
   <url>
     <loc>https://extensions.senchabot.com/guides/chat-poll</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/chat-poll"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/chat-poll"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/chat-poll"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/chat-poll"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/chat-poll"/>
@@ -267,6 +289,7 @@
   <url>
     <loc>https://extensions.senchabot.com/guides/stream-frames</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/stream-frames"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/stream-frames"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/stream-frames"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/stream-frames"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/stream-frames"/>
@@ -279,6 +302,7 @@
   <url>
     <loc>https://extensions.senchabot.com/guides/stream-countdown</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/stream-countdown"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/stream-countdown"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/stream-countdown"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/stream-countdown"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/stream-countdown"/>
@@ -291,6 +315,7 @@
   <url>
     <loc>https://extensions.senchabot.com/presets</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/presets"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/presets"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/presets"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/presets"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/presets"/>
@@ -303,6 +328,7 @@
   <url>
     <loc>https://extensions.senchabot.com/faq</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/faq"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/faq"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/faq"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/faq"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/faq"/>
@@ -315,6 +341,358 @@
   <url>
     <loc>https://extensions.senchabot.com/changelog</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/changelog"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/changelog"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/changelog"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/changelog"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/changelog"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/changelog"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/changelog"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/changelog"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/de</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com"/>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/de/setup/sub-growing-plant</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/sub-growing-plant"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/sub-growing-plant"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/sub-growing-plant"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/sub-growing-plant"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/sub-growing-plant"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/sub-growing-plant"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/sub-growing-plant"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/sub-growing-plant"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/de/setup/subathon-timer</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/subathon-timer"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/subathon-timer"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/subathon-timer"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/subathon-timer"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/subathon-timer"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/subathon-timer"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/subathon-timer"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/subathon-timer"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/de/setup/stream-alerts</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/stream-alerts"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/stream-alerts"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/stream-alerts"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/stream-alerts"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/stream-alerts"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/stream-alerts"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/stream-alerts"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/stream-alerts"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/de/setup/sub-goal</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/sub-goal"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/sub-goal"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/sub-goal"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/sub-goal"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/sub-goal"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/sub-goal"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/sub-goal"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/sub-goal"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/de/setup/stream-frames</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/stream-frames"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/stream-frames"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/stream-frames"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/stream-frames"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/stream-frames"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/stream-frames"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/stream-frames"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/stream-frames"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/de/setup/stream-countdown</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/stream-countdown"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/stream-countdown"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/stream-countdown"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/stream-countdown"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/stream-countdown"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/stream-countdown"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/stream-countdown"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/stream-countdown"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/de/setup/chat-poll</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/chat-poll"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/chat-poll"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/chat-poll"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/chat-poll"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/chat-poll"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/chat-poll"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/chat-poll"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/chat-poll"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/de/setup/chat-widget</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/chat-widget"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/chat-widget"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/chat-widget"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/chat-widget"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/chat-widget"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/chat-widget"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/chat-widget"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/chat-widget"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/de/setup/raffle</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/raffle"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/raffle"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/raffle"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/raffle"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/raffle"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/raffle"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/raffle"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/raffle"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/de/setup/socials</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/socials"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/socials"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/socials"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/socials"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/socials"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/socials"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/socials"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/socials"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/de/setup/obs-bridge</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/obs-bridge"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/obs-bridge"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/obs-bridge"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/obs-bridge"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/obs-bridge"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/obs-bridge"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/obs-bridge"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/obs-bridge"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/de/setup/emote-wall</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/emote-wall"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/emote-wall"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/emote-wall"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/emote-wall"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/emote-wall"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/emote-wall"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/emote-wall"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/emote-wall"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/de/guides</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/guides"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/guides"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/guides"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/de/guides/obs-browser-source</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/obs-browser-source"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/obs-browser-source"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/obs-browser-source"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/obs-browser-source"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/obs-browser-source"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/guides/obs-browser-source"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/guides/obs-browser-source"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/guides/obs-browser-source"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/de/guides/twitch-kick-chat-overlay</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/twitch-kick-chat-overlay"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/twitch-kick-chat-overlay"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/twitch-kick-chat-overlay"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/twitch-kick-chat-overlay"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/twitch-kick-chat-overlay"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/guides/twitch-kick-chat-overlay"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/guides/twitch-kick-chat-overlay"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/guides/twitch-kick-chat-overlay"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/de/guides/chat-giveaway</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/chat-giveaway"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/chat-giveaway"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/chat-giveaway"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/chat-giveaway"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/chat-giveaway"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/guides/chat-giveaway"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/guides/chat-giveaway"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/guides/chat-giveaway"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/de/guides/obs-scene-switcher</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/obs-scene-switcher"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/obs-scene-switcher"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/obs-scene-switcher"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/obs-scene-switcher"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/obs-scene-switcher"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/guides/obs-scene-switcher"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/guides/obs-scene-switcher"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/guides/obs-scene-switcher"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/de/guides/obs-chat-dock</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/obs-chat-dock"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/obs-chat-dock"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/obs-chat-dock"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/obs-chat-dock"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/obs-chat-dock"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/guides/obs-chat-dock"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/guides/obs-chat-dock"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/guides/obs-chat-dock"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/de/guides/stream-alerts</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/stream-alerts"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/stream-alerts"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/stream-alerts"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/stream-alerts"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/stream-alerts"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/guides/stream-alerts"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/guides/stream-alerts"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/guides/stream-alerts"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/de/guides/subathon-timer</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/subathon-timer"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/subathon-timer"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/subathon-timer"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/subathon-timer"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/subathon-timer"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/guides/subathon-timer"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/guides/subathon-timer"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/guides/subathon-timer"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/de/guides/chat-poll</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/chat-poll"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/chat-poll"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/chat-poll"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/chat-poll"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/chat-poll"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/guides/chat-poll"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/guides/chat-poll"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/guides/chat-poll"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/de/guides/stream-frames</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/stream-frames"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/stream-frames"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/stream-frames"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/stream-frames"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/stream-frames"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/guides/stream-frames"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/guides/stream-frames"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/guides/stream-frames"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/de/guides/stream-countdown</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/stream-countdown"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/stream-countdown"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/stream-countdown"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/stream-countdown"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/stream-countdown"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/guides/stream-countdown"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/guides/stream-countdown"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/guides/stream-countdown"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/de/presets</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/presets"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/presets"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/presets"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/presets"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/presets"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/presets"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/presets"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/presets"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/de/faq</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/faq"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/faq"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/faq"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/faq"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/faq"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/faq"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/faq"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/faq"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/de/changelog</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/changelog"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/changelog"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/changelog"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/changelog"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/changelog"/>
@@ -327,6 +705,7 @@
   <url>
     <loc>https://extensions.senchabot.com/es</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja"/>
@@ -339,6 +718,7 @@
   <url>
     <loc>https://extensions.senchabot.com/es/setup/sub-growing-plant</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/sub-growing-plant"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/sub-growing-plant"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/sub-growing-plant"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/sub-growing-plant"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/sub-growing-plant"/>
@@ -351,6 +731,7 @@
   <url>
     <loc>https://extensions.senchabot.com/es/setup/subathon-timer</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/subathon-timer"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/subathon-timer"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/subathon-timer"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/subathon-timer"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/subathon-timer"/>
@@ -363,6 +744,7 @@
   <url>
     <loc>https://extensions.senchabot.com/es/setup/stream-alerts</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/stream-alerts"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/stream-alerts"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/stream-alerts"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/stream-alerts"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/stream-alerts"/>
@@ -375,6 +757,7 @@
   <url>
     <loc>https://extensions.senchabot.com/es/setup/sub-goal</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/sub-goal"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/sub-goal"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/sub-goal"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/sub-goal"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/sub-goal"/>
@@ -387,6 +770,7 @@
   <url>
     <loc>https://extensions.senchabot.com/es/setup/stream-frames</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/stream-frames"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/stream-frames"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/stream-frames"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/stream-frames"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/stream-frames"/>
@@ -399,6 +783,7 @@
   <url>
     <loc>https://extensions.senchabot.com/es/setup/stream-countdown</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/stream-countdown"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/stream-countdown"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/stream-countdown"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/stream-countdown"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/stream-countdown"/>
@@ -411,6 +796,7 @@
   <url>
     <loc>https://extensions.senchabot.com/es/setup/chat-poll</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/chat-poll"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/chat-poll"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/chat-poll"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/chat-poll"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/chat-poll"/>
@@ -423,6 +809,7 @@
   <url>
     <loc>https://extensions.senchabot.com/es/setup/chat-widget</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/chat-widget"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/chat-widget"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/chat-widget"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/chat-widget"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/chat-widget"/>
@@ -435,6 +822,7 @@
   <url>
     <loc>https://extensions.senchabot.com/es/setup/raffle</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/raffle"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/raffle"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/raffle"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/raffle"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/raffle"/>
@@ -447,6 +835,7 @@
   <url>
     <loc>https://extensions.senchabot.com/es/setup/socials</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/socials"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/socials"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/socials"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/socials"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/socials"/>
@@ -459,6 +848,7 @@
   <url>
     <loc>https://extensions.senchabot.com/es/setup/obs-bridge</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/obs-bridge"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/obs-bridge"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/obs-bridge"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/obs-bridge"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/obs-bridge"/>
@@ -471,6 +861,7 @@
   <url>
     <loc>https://extensions.senchabot.com/es/setup/emote-wall</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/emote-wall"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/emote-wall"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/emote-wall"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/emote-wall"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/emote-wall"/>
@@ -483,6 +874,7 @@
   <url>
     <loc>https://extensions.senchabot.com/es/guides</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides"/>
@@ -495,6 +887,7 @@
   <url>
     <loc>https://extensions.senchabot.com/es/guides/obs-browser-source</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/obs-browser-source"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/obs-browser-source"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/obs-browser-source"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/obs-browser-source"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/obs-browser-source"/>
@@ -507,6 +900,7 @@
   <url>
     <loc>https://extensions.senchabot.com/es/guides/twitch-kick-chat-overlay</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/twitch-kick-chat-overlay"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/twitch-kick-chat-overlay"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/twitch-kick-chat-overlay"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/twitch-kick-chat-overlay"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/twitch-kick-chat-overlay"/>
@@ -519,6 +913,7 @@
   <url>
     <loc>https://extensions.senchabot.com/es/guides/chat-giveaway</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/chat-giveaway"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/chat-giveaway"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/chat-giveaway"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/chat-giveaway"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/chat-giveaway"/>
@@ -531,6 +926,7 @@
   <url>
     <loc>https://extensions.senchabot.com/es/guides/obs-scene-switcher</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/obs-scene-switcher"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/obs-scene-switcher"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/obs-scene-switcher"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/obs-scene-switcher"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/obs-scene-switcher"/>
@@ -543,6 +939,7 @@
   <url>
     <loc>https://extensions.senchabot.com/es/guides/obs-chat-dock</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/obs-chat-dock"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/obs-chat-dock"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/obs-chat-dock"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/obs-chat-dock"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/obs-chat-dock"/>
@@ -555,6 +952,7 @@
   <url>
     <loc>https://extensions.senchabot.com/es/guides/stream-alerts</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/stream-alerts"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/stream-alerts"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/stream-alerts"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/stream-alerts"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/stream-alerts"/>
@@ -567,6 +965,7 @@
   <url>
     <loc>https://extensions.senchabot.com/es/guides/subathon-timer</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/subathon-timer"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/subathon-timer"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/subathon-timer"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/subathon-timer"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/subathon-timer"/>
@@ -579,6 +978,7 @@
   <url>
     <loc>https://extensions.senchabot.com/es/guides/chat-poll</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/chat-poll"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/chat-poll"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/chat-poll"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/chat-poll"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/chat-poll"/>
@@ -591,6 +991,7 @@
   <url>
     <loc>https://extensions.senchabot.com/es/guides/stream-frames</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/stream-frames"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/stream-frames"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/stream-frames"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/stream-frames"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/stream-frames"/>
@@ -603,6 +1004,7 @@
   <url>
     <loc>https://extensions.senchabot.com/es/guides/stream-countdown</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/stream-countdown"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/stream-countdown"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/stream-countdown"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/stream-countdown"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/stream-countdown"/>
@@ -615,6 +1017,7 @@
   <url>
     <loc>https://extensions.senchabot.com/es/presets</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/presets"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/presets"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/presets"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/presets"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/presets"/>
@@ -627,6 +1030,7 @@
   <url>
     <loc>https://extensions.senchabot.com/es/faq</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/faq"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/faq"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/faq"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/faq"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/faq"/>
@@ -639,6 +1043,7 @@
   <url>
     <loc>https://extensions.senchabot.com/es/changelog</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/changelog"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/changelog"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/changelog"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/changelog"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/changelog"/>
@@ -651,6 +1056,7 @@
   <url>
     <loc>https://extensions.senchabot.com/fr</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja"/>
@@ -663,6 +1069,7 @@
   <url>
     <loc>https://extensions.senchabot.com/fr/setup/sub-growing-plant</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/sub-growing-plant"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/sub-growing-plant"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/sub-growing-plant"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/sub-growing-plant"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/sub-growing-plant"/>
@@ -675,6 +1082,7 @@
   <url>
     <loc>https://extensions.senchabot.com/fr/setup/subathon-timer</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/subathon-timer"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/subathon-timer"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/subathon-timer"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/subathon-timer"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/subathon-timer"/>
@@ -687,6 +1095,7 @@
   <url>
     <loc>https://extensions.senchabot.com/fr/setup/stream-alerts</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/stream-alerts"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/stream-alerts"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/stream-alerts"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/stream-alerts"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/stream-alerts"/>
@@ -699,6 +1108,7 @@
   <url>
     <loc>https://extensions.senchabot.com/fr/setup/sub-goal</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/sub-goal"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/sub-goal"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/sub-goal"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/sub-goal"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/sub-goal"/>
@@ -711,6 +1121,7 @@
   <url>
     <loc>https://extensions.senchabot.com/fr/setup/stream-frames</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/stream-frames"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/stream-frames"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/stream-frames"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/stream-frames"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/stream-frames"/>
@@ -723,6 +1134,7 @@
   <url>
     <loc>https://extensions.senchabot.com/fr/setup/stream-countdown</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/stream-countdown"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/stream-countdown"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/stream-countdown"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/stream-countdown"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/stream-countdown"/>
@@ -735,6 +1147,7 @@
   <url>
     <loc>https://extensions.senchabot.com/fr/setup/chat-poll</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/chat-poll"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/chat-poll"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/chat-poll"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/chat-poll"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/chat-poll"/>
@@ -747,6 +1160,7 @@
   <url>
     <loc>https://extensions.senchabot.com/fr/setup/chat-widget</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/chat-widget"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/chat-widget"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/chat-widget"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/chat-widget"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/chat-widget"/>
@@ -759,6 +1173,7 @@
   <url>
     <loc>https://extensions.senchabot.com/fr/setup/raffle</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/raffle"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/raffle"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/raffle"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/raffle"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/raffle"/>
@@ -771,6 +1186,7 @@
   <url>
     <loc>https://extensions.senchabot.com/fr/setup/socials</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/socials"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/socials"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/socials"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/socials"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/socials"/>
@@ -783,6 +1199,7 @@
   <url>
     <loc>https://extensions.senchabot.com/fr/setup/obs-bridge</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/obs-bridge"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/obs-bridge"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/obs-bridge"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/obs-bridge"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/obs-bridge"/>
@@ -795,6 +1212,7 @@
   <url>
     <loc>https://extensions.senchabot.com/fr/setup/emote-wall</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/emote-wall"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/emote-wall"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/emote-wall"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/emote-wall"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/emote-wall"/>
@@ -807,6 +1225,7 @@
   <url>
     <loc>https://extensions.senchabot.com/fr/guides</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides"/>
@@ -819,6 +1238,7 @@
   <url>
     <loc>https://extensions.senchabot.com/fr/guides/obs-browser-source</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/obs-browser-source"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/obs-browser-source"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/obs-browser-source"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/obs-browser-source"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/obs-browser-source"/>
@@ -831,6 +1251,7 @@
   <url>
     <loc>https://extensions.senchabot.com/fr/guides/twitch-kick-chat-overlay</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/twitch-kick-chat-overlay"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/twitch-kick-chat-overlay"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/twitch-kick-chat-overlay"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/twitch-kick-chat-overlay"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/twitch-kick-chat-overlay"/>
@@ -843,6 +1264,7 @@
   <url>
     <loc>https://extensions.senchabot.com/fr/guides/chat-giveaway</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/chat-giveaway"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/chat-giveaway"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/chat-giveaway"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/chat-giveaway"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/chat-giveaway"/>
@@ -855,6 +1277,7 @@
   <url>
     <loc>https://extensions.senchabot.com/fr/guides/obs-scene-switcher</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/obs-scene-switcher"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/obs-scene-switcher"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/obs-scene-switcher"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/obs-scene-switcher"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/obs-scene-switcher"/>
@@ -867,6 +1290,7 @@
   <url>
     <loc>https://extensions.senchabot.com/fr/guides/obs-chat-dock</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/obs-chat-dock"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/obs-chat-dock"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/obs-chat-dock"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/obs-chat-dock"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/obs-chat-dock"/>
@@ -879,6 +1303,7 @@
   <url>
     <loc>https://extensions.senchabot.com/fr/guides/stream-alerts</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/stream-alerts"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/stream-alerts"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/stream-alerts"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/stream-alerts"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/stream-alerts"/>
@@ -891,6 +1316,7 @@
   <url>
     <loc>https://extensions.senchabot.com/fr/guides/subathon-timer</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/subathon-timer"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/subathon-timer"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/subathon-timer"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/subathon-timer"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/subathon-timer"/>
@@ -903,6 +1329,7 @@
   <url>
     <loc>https://extensions.senchabot.com/fr/guides/chat-poll</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/chat-poll"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/chat-poll"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/chat-poll"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/chat-poll"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/chat-poll"/>
@@ -915,6 +1342,7 @@
   <url>
     <loc>https://extensions.senchabot.com/fr/guides/stream-frames</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/stream-frames"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/stream-frames"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/stream-frames"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/stream-frames"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/stream-frames"/>
@@ -927,6 +1355,7 @@
   <url>
     <loc>https://extensions.senchabot.com/fr/guides/stream-countdown</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/stream-countdown"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/stream-countdown"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/stream-countdown"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/stream-countdown"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/stream-countdown"/>
@@ -939,6 +1368,7 @@
   <url>
     <loc>https://extensions.senchabot.com/fr/presets</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/presets"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/presets"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/presets"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/presets"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/presets"/>
@@ -951,6 +1381,7 @@
   <url>
     <loc>https://extensions.senchabot.com/fr/faq</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/faq"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/faq"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/faq"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/faq"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/faq"/>
@@ -963,6 +1394,7 @@
   <url>
     <loc>https://extensions.senchabot.com/fr/changelog</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/changelog"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/changelog"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/changelog"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/changelog"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/changelog"/>
@@ -975,6 +1407,7 @@
   <url>
     <loc>https://extensions.senchabot.com/ja</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja"/>
@@ -987,6 +1420,7 @@
   <url>
     <loc>https://extensions.senchabot.com/ja/setup/sub-growing-plant</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/sub-growing-plant"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/sub-growing-plant"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/sub-growing-plant"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/sub-growing-plant"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/sub-growing-plant"/>
@@ -999,6 +1433,7 @@
   <url>
     <loc>https://extensions.senchabot.com/ja/setup/subathon-timer</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/subathon-timer"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/subathon-timer"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/subathon-timer"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/subathon-timer"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/subathon-timer"/>
@@ -1011,6 +1446,7 @@
   <url>
     <loc>https://extensions.senchabot.com/ja/setup/stream-alerts</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/stream-alerts"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/stream-alerts"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/stream-alerts"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/stream-alerts"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/stream-alerts"/>
@@ -1023,6 +1459,7 @@
   <url>
     <loc>https://extensions.senchabot.com/ja/setup/sub-goal</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/sub-goal"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/sub-goal"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/sub-goal"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/sub-goal"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/sub-goal"/>
@@ -1035,6 +1472,7 @@
   <url>
     <loc>https://extensions.senchabot.com/ja/setup/stream-frames</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/stream-frames"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/stream-frames"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/stream-frames"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/stream-frames"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/stream-frames"/>
@@ -1047,6 +1485,7 @@
   <url>
     <loc>https://extensions.senchabot.com/ja/setup/stream-countdown</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/stream-countdown"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/stream-countdown"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/stream-countdown"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/stream-countdown"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/stream-countdown"/>
@@ -1059,6 +1498,7 @@
   <url>
     <loc>https://extensions.senchabot.com/ja/setup/chat-poll</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/chat-poll"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/chat-poll"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/chat-poll"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/chat-poll"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/chat-poll"/>
@@ -1071,6 +1511,7 @@
   <url>
     <loc>https://extensions.senchabot.com/ja/setup/chat-widget</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/chat-widget"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/chat-widget"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/chat-widget"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/chat-widget"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/chat-widget"/>
@@ -1083,6 +1524,7 @@
   <url>
     <loc>https://extensions.senchabot.com/ja/setup/raffle</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/raffle"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/raffle"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/raffle"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/raffle"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/raffle"/>
@@ -1095,6 +1537,7 @@
   <url>
     <loc>https://extensions.senchabot.com/ja/setup/socials</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/socials"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/socials"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/socials"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/socials"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/socials"/>
@@ -1107,6 +1550,7 @@
   <url>
     <loc>https://extensions.senchabot.com/ja/setup/obs-bridge</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/obs-bridge"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/obs-bridge"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/obs-bridge"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/obs-bridge"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/obs-bridge"/>
@@ -1119,6 +1563,7 @@
   <url>
     <loc>https://extensions.senchabot.com/ja/setup/emote-wall</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/emote-wall"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/emote-wall"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/emote-wall"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/emote-wall"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/emote-wall"/>
@@ -1131,6 +1576,7 @@
   <url>
     <loc>https://extensions.senchabot.com/ja/guides</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides"/>
@@ -1143,6 +1589,7 @@
   <url>
     <loc>https://extensions.senchabot.com/ja/guides/obs-browser-source</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/obs-browser-source"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/obs-browser-source"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/obs-browser-source"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/obs-browser-source"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/obs-browser-source"/>
@@ -1155,6 +1602,7 @@
   <url>
     <loc>https://extensions.senchabot.com/ja/guides/twitch-kick-chat-overlay</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/twitch-kick-chat-overlay"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/twitch-kick-chat-overlay"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/twitch-kick-chat-overlay"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/twitch-kick-chat-overlay"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/twitch-kick-chat-overlay"/>
@@ -1167,6 +1615,7 @@
   <url>
     <loc>https://extensions.senchabot.com/ja/guides/chat-giveaway</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/chat-giveaway"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/chat-giveaway"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/chat-giveaway"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/chat-giveaway"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/chat-giveaway"/>
@@ -1179,6 +1628,7 @@
   <url>
     <loc>https://extensions.senchabot.com/ja/guides/obs-scene-switcher</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/obs-scene-switcher"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/obs-scene-switcher"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/obs-scene-switcher"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/obs-scene-switcher"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/obs-scene-switcher"/>
@@ -1191,6 +1641,7 @@
   <url>
     <loc>https://extensions.senchabot.com/ja/guides/obs-chat-dock</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/obs-chat-dock"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/obs-chat-dock"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/obs-chat-dock"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/obs-chat-dock"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/obs-chat-dock"/>
@@ -1203,6 +1654,7 @@
   <url>
     <loc>https://extensions.senchabot.com/ja/guides/stream-alerts</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/stream-alerts"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/stream-alerts"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/stream-alerts"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/stream-alerts"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/stream-alerts"/>
@@ -1215,6 +1667,7 @@
   <url>
     <loc>https://extensions.senchabot.com/ja/guides/subathon-timer</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/subathon-timer"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/subathon-timer"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/subathon-timer"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/subathon-timer"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/subathon-timer"/>
@@ -1227,6 +1680,7 @@
   <url>
     <loc>https://extensions.senchabot.com/ja/guides/chat-poll</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/chat-poll"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/chat-poll"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/chat-poll"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/chat-poll"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/chat-poll"/>
@@ -1239,6 +1693,7 @@
   <url>
     <loc>https://extensions.senchabot.com/ja/guides/stream-frames</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/stream-frames"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/stream-frames"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/stream-frames"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/stream-frames"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/stream-frames"/>
@@ -1251,6 +1706,7 @@
   <url>
     <loc>https://extensions.senchabot.com/ja/guides/stream-countdown</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/stream-countdown"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/stream-countdown"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/stream-countdown"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/stream-countdown"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/stream-countdown"/>
@@ -1263,6 +1719,7 @@
   <url>
     <loc>https://extensions.senchabot.com/ja/presets</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/presets"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/presets"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/presets"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/presets"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/presets"/>
@@ -1275,6 +1732,7 @@
   <url>
     <loc>https://extensions.senchabot.com/ja/faq</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/faq"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/faq"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/faq"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/faq"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/faq"/>
@@ -1287,6 +1745,7 @@
   <url>
     <loc>https://extensions.senchabot.com/ja/changelog</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/changelog"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/changelog"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/changelog"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/changelog"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/changelog"/>
@@ -1299,6 +1758,7 @@
   <url>
     <loc>https://extensions.senchabot.com/pt</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja"/>
@@ -1311,6 +1771,7 @@
   <url>
     <loc>https://extensions.senchabot.com/pt/setup/sub-growing-plant</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/sub-growing-plant"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/sub-growing-plant"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/sub-growing-plant"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/sub-growing-plant"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/sub-growing-plant"/>
@@ -1323,6 +1784,7 @@
   <url>
     <loc>https://extensions.senchabot.com/pt/setup/subathon-timer</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/subathon-timer"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/subathon-timer"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/subathon-timer"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/subathon-timer"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/subathon-timer"/>
@@ -1335,6 +1797,7 @@
   <url>
     <loc>https://extensions.senchabot.com/pt/setup/stream-alerts</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/stream-alerts"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/stream-alerts"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/stream-alerts"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/stream-alerts"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/stream-alerts"/>
@@ -1347,6 +1810,7 @@
   <url>
     <loc>https://extensions.senchabot.com/pt/setup/sub-goal</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/sub-goal"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/sub-goal"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/sub-goal"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/sub-goal"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/sub-goal"/>
@@ -1359,6 +1823,7 @@
   <url>
     <loc>https://extensions.senchabot.com/pt/setup/stream-frames</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/stream-frames"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/stream-frames"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/stream-frames"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/stream-frames"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/stream-frames"/>
@@ -1371,6 +1836,7 @@
   <url>
     <loc>https://extensions.senchabot.com/pt/setup/stream-countdown</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/stream-countdown"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/stream-countdown"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/stream-countdown"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/stream-countdown"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/stream-countdown"/>
@@ -1383,6 +1849,7 @@
   <url>
     <loc>https://extensions.senchabot.com/pt/setup/chat-poll</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/chat-poll"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/chat-poll"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/chat-poll"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/chat-poll"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/chat-poll"/>
@@ -1395,6 +1862,7 @@
   <url>
     <loc>https://extensions.senchabot.com/pt/setup/chat-widget</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/chat-widget"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/chat-widget"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/chat-widget"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/chat-widget"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/chat-widget"/>
@@ -1407,6 +1875,7 @@
   <url>
     <loc>https://extensions.senchabot.com/pt/setup/raffle</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/raffle"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/raffle"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/raffle"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/raffle"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/raffle"/>
@@ -1419,6 +1888,7 @@
   <url>
     <loc>https://extensions.senchabot.com/pt/setup/socials</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/socials"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/socials"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/socials"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/socials"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/socials"/>
@@ -1431,6 +1901,7 @@
   <url>
     <loc>https://extensions.senchabot.com/pt/setup/obs-bridge</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/obs-bridge"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/obs-bridge"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/obs-bridge"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/obs-bridge"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/obs-bridge"/>
@@ -1443,6 +1914,7 @@
   <url>
     <loc>https://extensions.senchabot.com/pt/setup/emote-wall</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/emote-wall"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/emote-wall"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/emote-wall"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/emote-wall"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/emote-wall"/>
@@ -1455,6 +1927,7 @@
   <url>
     <loc>https://extensions.senchabot.com/pt/guides</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides"/>
@@ -1467,6 +1940,7 @@
   <url>
     <loc>https://extensions.senchabot.com/pt/guides/obs-browser-source</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/obs-browser-source"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/obs-browser-source"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/obs-browser-source"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/obs-browser-source"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/obs-browser-source"/>
@@ -1479,6 +1953,7 @@
   <url>
     <loc>https://extensions.senchabot.com/pt/guides/twitch-kick-chat-overlay</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/twitch-kick-chat-overlay"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/twitch-kick-chat-overlay"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/twitch-kick-chat-overlay"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/twitch-kick-chat-overlay"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/twitch-kick-chat-overlay"/>
@@ -1491,6 +1966,7 @@
   <url>
     <loc>https://extensions.senchabot.com/pt/guides/chat-giveaway</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/chat-giveaway"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/chat-giveaway"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/chat-giveaway"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/chat-giveaway"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/chat-giveaway"/>
@@ -1503,6 +1979,7 @@
   <url>
     <loc>https://extensions.senchabot.com/pt/guides/obs-scene-switcher</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/obs-scene-switcher"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/obs-scene-switcher"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/obs-scene-switcher"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/obs-scene-switcher"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/obs-scene-switcher"/>
@@ -1515,6 +1992,7 @@
   <url>
     <loc>https://extensions.senchabot.com/pt/guides/obs-chat-dock</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/obs-chat-dock"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/obs-chat-dock"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/obs-chat-dock"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/obs-chat-dock"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/obs-chat-dock"/>
@@ -1527,6 +2005,7 @@
   <url>
     <loc>https://extensions.senchabot.com/pt/guides/stream-alerts</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/stream-alerts"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/stream-alerts"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/stream-alerts"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/stream-alerts"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/stream-alerts"/>
@@ -1539,6 +2018,7 @@
   <url>
     <loc>https://extensions.senchabot.com/pt/guides/subathon-timer</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/subathon-timer"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/subathon-timer"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/subathon-timer"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/subathon-timer"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/subathon-timer"/>
@@ -1551,6 +2031,7 @@
   <url>
     <loc>https://extensions.senchabot.com/pt/guides/chat-poll</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/chat-poll"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/chat-poll"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/chat-poll"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/chat-poll"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/chat-poll"/>
@@ -1563,6 +2044,7 @@
   <url>
     <loc>https://extensions.senchabot.com/pt/guides/stream-frames</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/stream-frames"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/stream-frames"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/stream-frames"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/stream-frames"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/stream-frames"/>
@@ -1575,6 +2057,7 @@
   <url>
     <loc>https://extensions.senchabot.com/pt/guides/stream-countdown</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/stream-countdown"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/stream-countdown"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/stream-countdown"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/stream-countdown"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/stream-countdown"/>
@@ -1587,6 +2070,7 @@
   <url>
     <loc>https://extensions.senchabot.com/pt/presets</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/presets"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/presets"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/presets"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/presets"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/presets"/>
@@ -1599,6 +2083,7 @@
   <url>
     <loc>https://extensions.senchabot.com/pt/faq</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/faq"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/faq"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/faq"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/faq"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/faq"/>
@@ -1611,6 +2096,7 @@
   <url>
     <loc>https://extensions.senchabot.com/pt/changelog</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/changelog"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/changelog"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/changelog"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/changelog"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/changelog"/>
@@ -1623,6 +2109,7 @@
   <url>
     <loc>https://extensions.senchabot.com/tr</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja"/>
@@ -1635,6 +2122,7 @@
   <url>
     <loc>https://extensions.senchabot.com/tr/setup/sub-growing-plant</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/sub-growing-plant"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/sub-growing-plant"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/sub-growing-plant"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/sub-growing-plant"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/sub-growing-plant"/>
@@ -1647,6 +2135,7 @@
   <url>
     <loc>https://extensions.senchabot.com/tr/setup/subathon-timer</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/subathon-timer"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/subathon-timer"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/subathon-timer"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/subathon-timer"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/subathon-timer"/>
@@ -1659,6 +2148,7 @@
   <url>
     <loc>https://extensions.senchabot.com/tr/setup/stream-alerts</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/stream-alerts"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/stream-alerts"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/stream-alerts"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/stream-alerts"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/stream-alerts"/>
@@ -1671,6 +2161,7 @@
   <url>
     <loc>https://extensions.senchabot.com/tr/setup/sub-goal</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/sub-goal"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/sub-goal"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/sub-goal"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/sub-goal"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/sub-goal"/>
@@ -1683,6 +2174,7 @@
   <url>
     <loc>https://extensions.senchabot.com/tr/setup/stream-frames</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/stream-frames"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/stream-frames"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/stream-frames"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/stream-frames"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/stream-frames"/>
@@ -1695,6 +2187,7 @@
   <url>
     <loc>https://extensions.senchabot.com/tr/setup/stream-countdown</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/stream-countdown"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/stream-countdown"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/stream-countdown"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/stream-countdown"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/stream-countdown"/>
@@ -1707,6 +2200,7 @@
   <url>
     <loc>https://extensions.senchabot.com/tr/setup/chat-poll</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/chat-poll"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/chat-poll"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/chat-poll"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/chat-poll"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/chat-poll"/>
@@ -1719,6 +2213,7 @@
   <url>
     <loc>https://extensions.senchabot.com/tr/setup/chat-widget</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/chat-widget"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/chat-widget"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/chat-widget"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/chat-widget"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/chat-widget"/>
@@ -1731,6 +2226,7 @@
   <url>
     <loc>https://extensions.senchabot.com/tr/setup/raffle</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/raffle"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/raffle"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/raffle"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/raffle"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/raffle"/>
@@ -1743,6 +2239,7 @@
   <url>
     <loc>https://extensions.senchabot.com/tr/setup/socials</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/socials"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/socials"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/socials"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/socials"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/socials"/>
@@ -1755,6 +2252,7 @@
   <url>
     <loc>https://extensions.senchabot.com/tr/setup/obs-bridge</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/obs-bridge"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/obs-bridge"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/obs-bridge"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/obs-bridge"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/obs-bridge"/>
@@ -1767,6 +2265,7 @@
   <url>
     <loc>https://extensions.senchabot.com/tr/setup/emote-wall</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/emote-wall"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/emote-wall"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/emote-wall"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/emote-wall"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/emote-wall"/>
@@ -1779,6 +2278,7 @@
   <url>
     <loc>https://extensions.senchabot.com/tr/guides</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides"/>
@@ -1791,6 +2291,7 @@
   <url>
     <loc>https://extensions.senchabot.com/tr/guides/obs-browser-source</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/obs-browser-source"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/obs-browser-source"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/obs-browser-source"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/obs-browser-source"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/obs-browser-source"/>
@@ -1803,6 +2304,7 @@
   <url>
     <loc>https://extensions.senchabot.com/tr/guides/twitch-kick-chat-overlay</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/twitch-kick-chat-overlay"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/twitch-kick-chat-overlay"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/twitch-kick-chat-overlay"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/twitch-kick-chat-overlay"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/twitch-kick-chat-overlay"/>
@@ -1815,6 +2317,7 @@
   <url>
     <loc>https://extensions.senchabot.com/tr/guides/chat-giveaway</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/chat-giveaway"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/chat-giveaway"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/chat-giveaway"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/chat-giveaway"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/chat-giveaway"/>
@@ -1827,6 +2330,7 @@
   <url>
     <loc>https://extensions.senchabot.com/tr/guides/obs-scene-switcher</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/obs-scene-switcher"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/obs-scene-switcher"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/obs-scene-switcher"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/obs-scene-switcher"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/obs-scene-switcher"/>
@@ -1839,6 +2343,7 @@
   <url>
     <loc>https://extensions.senchabot.com/tr/guides/obs-chat-dock</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/obs-chat-dock"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/obs-chat-dock"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/obs-chat-dock"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/obs-chat-dock"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/obs-chat-dock"/>
@@ -1851,6 +2356,7 @@
   <url>
     <loc>https://extensions.senchabot.com/tr/guides/stream-alerts</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/stream-alerts"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/stream-alerts"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/stream-alerts"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/stream-alerts"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/stream-alerts"/>
@@ -1863,6 +2369,7 @@
   <url>
     <loc>https://extensions.senchabot.com/tr/guides/subathon-timer</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/subathon-timer"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/subathon-timer"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/subathon-timer"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/subathon-timer"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/subathon-timer"/>
@@ -1875,6 +2382,7 @@
   <url>
     <loc>https://extensions.senchabot.com/tr/guides/chat-poll</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/chat-poll"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/chat-poll"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/chat-poll"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/chat-poll"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/chat-poll"/>
@@ -1887,6 +2395,7 @@
   <url>
     <loc>https://extensions.senchabot.com/tr/guides/stream-frames</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/stream-frames"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/stream-frames"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/stream-frames"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/stream-frames"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/stream-frames"/>
@@ -1899,6 +2408,7 @@
   <url>
     <loc>https://extensions.senchabot.com/tr/guides/stream-countdown</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/guides/stream-countdown"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/guides/stream-countdown"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/guides/stream-countdown"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/guides/stream-countdown"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/guides/stream-countdown"/>
@@ -1911,6 +2421,7 @@
   <url>
     <loc>https://extensions.senchabot.com/tr/presets</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/presets"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/presets"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/presets"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/presets"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/presets"/>
@@ -1923,6 +2434,7 @@
   <url>
     <loc>https://extensions.senchabot.com/tr/faq</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/faq"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/faq"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/faq"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/faq"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/faq"/>
@@ -1935,6 +2447,7 @@
   <url>
     <loc>https://extensions.senchabot.com/tr/changelog</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/changelog"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/changelog"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/changelog"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/changelog"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/changelog"/>

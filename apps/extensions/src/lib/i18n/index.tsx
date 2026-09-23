@@ -8,6 +8,7 @@ import {
   useMemo,
   useSyncExternalStore,
 } from 'react';
+import { de } from './de';
 import { en } from './en';
 import { es } from './es';
 import { fr } from './fr';
@@ -32,7 +33,7 @@ export {
   type Locale,
 } from './locales';
 
-export const dictionaries: Record<Locale, typeof en> = { en, es, fr, ja, pt, tr };
+export const dictionaries: Record<Locale, typeof en> = { en, de, es, fr, ja, pt, tr };
 
 type Dictionary = typeof en;
 

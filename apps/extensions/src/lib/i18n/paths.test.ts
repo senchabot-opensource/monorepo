@@ -25,7 +25,7 @@ describe('getParamsLocale', () => {
   it('falls back to English without a locale param', () => {
     expect(getParamsLocale({ locale: 'tr' })).toBe('tr');
     expect(getParamsLocale({})).toBe('en');
-    expect(getParamsLocale({ locale: 'de' })).toBe('en');
+    expect(getParamsLocale({ locale: 'it' })).toBe('en');
   });
 });
 
@@ -110,7 +110,7 @@ describe('getLangRedirect', () => {
   });
 
   it('drops an unknown language without switching pages', () => {
-    expect(getLangRedirect('/tr/faq', '?lang=de&x=1')).toBe('/tr/faq?x=1');
+    expect(getLangRedirect('/tr/faq', '?lang=it&x=1')).toBe('/tr/faq?x=1');
   });
 
   it('does nothing without the param, and never on overlays or tools', () => {
