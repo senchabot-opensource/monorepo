@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { CopyUrlField } from '#/components/copy-url-field';
 import { PreviewFrame } from '#/components/preview-frame';
 import { SetupShell } from '#/components/setup-shell';
-import { Select, type SelectOption } from '#/components/ui/select';
+import { Select } from '#/components/ui/select';
 import { FieldLabel } from '#/components/ui/field-label';
 import { SettingsGroup } from '#/components/ui/settings-group';
 import { TextField } from '#/components/ui/text-field';
