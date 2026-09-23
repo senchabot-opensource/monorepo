@@ -1872,7 +1872,7 @@ export const pt: typeof en = {
         position:
           'Posição: a enquete fica em cima ou embaixo da fonte de navegador e cresce a partir dali conforme o número de opções.',
         language:
-          'Idioma da enquete: inglês, espanhol, francês, japonês, português ou turco para as palavras da enquete, tipo Resultado e o Sim e Não de uma enquete rápida.',
+          'Idioma da enquete: inglês, espanhol, francês, alemão, japonês, português ou turco para as palavras da enquete, tipo Resultado e o Sim e Não de uma enquete rápida.',
         p1: 'Com as duas plataformas ligadas, a enquete mostra quantos votos vieram da Twitch e quantos da Kick ao lado do total. A fonte é transparente, então só o cartão da enquete aparece na live.',
       },
       saved: {
@@ -2053,7 +2053,7 @@ export const pt: typeof en = {
         celestial:
           'Celestial: um cartão azul-marinho sob as estrelas, com moldura fina e som de sinos.',
         p1: 'A cor é o destaque do alerta. A padrão, Plataforma, mostra os alertas da Twitch em roxo e os da Kick em verde. Você também pode escolher uma cor para todos os alertas: azul, roxo, rosa, vermelho, dourado ou verde. Quando os dois canais estão na URL, uma etiquetinha TWITCH ou KICK mostra de onde veio cada alerta.',
-        p2: 'Você pode renomear o título de cada alerta, com até 24 caracteres, ou deixar vazio para manter o padrão, tipo Novo inscrito. O Neon escreve os títulos em maiúsculas. Idioma do alerta define o idioma das palavras do alerta: inglês, espanhol, francês, japonês, português ou turco. Ele fica na URL seja qual for o idioma do OBS.',
+        p2: 'Você pode renomear o título de cada alerta, com até 24 caracteres, ou deixar vazio para manter o padrão, tipo Novo inscrito. O Neon escreve os títulos em maiúsculas. Idioma do alerta define o idioma das palavras do alerta: inglês, espanhol, francês, alemão, japonês, português ou turco. Ele fica na URL seja qual for o idioma do OBS.',
       },
       min: {
         title: 'Como ignorar presentes, Bits e raids pequenos?',
@@ -2273,7 +2273,7 @@ export const pt: typeof en = {
     site: 'Site',
     entries: {
       moreLanguages:
-        'O site agora também está em espanhol, francês, japonês e português, e Enquete do Chat, Alertas de Live e os valores do Subathon Timer também podem mostrar os textos nesses idiomas.',
+        'O site agora também está em espanhol, francês, alemão, japonês e português, e Enquete do Chat, Alertas de Live e os valores do Subathon Timer também podem mostrar os textos nesses idiomas.',
       countdownSceneCommand:
         'Novo comando de chat `!countdown {scene} {duration}`. Os mods agora podem mudar a cena atual (início, pausa ou encerramento) e definir a duração dela com um comando só.',
       socialsLaunch:

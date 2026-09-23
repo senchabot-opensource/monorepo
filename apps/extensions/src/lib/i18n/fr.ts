@@ -1893,7 +1893,7 @@ export const fr: typeof en = {
         position:
           "Position : le sondage se place en haut ou en bas de la source navigateur et grandit à partir de là selon le nombre d'options.",
         language:
-          "Langue du sondage : anglais, espagnol, français, japonais, portugais ou turc pour les mots du sondage, comme Résultats et le Oui et le Non d'un sondage rapide.",
+          "Langue du sondage : anglais, espagnol, français, allemand, japonais, portugais ou turc pour les mots du sondage, comme Résultats et le Oui et le Non d'un sondage rapide.",
         p1: 'Avec les deux plateformes actives, le sondage affiche combien de votes viennent de Twitch et de Kick à côté du total. La source est transparente, donc seule la carte du sondage apparaît sur le stream.',
       },
       saved: {
@@ -2075,7 +2075,7 @@ export const fr: typeof en = {
         celestial:
           'Céleste : une carte bleu nuit sous les étoiles, avec un cadre fin et des carillons.',
         p1: "Couleur est l'accent de l'alerte. La valeur par défaut, Plateforme, affiche les alertes Twitch en violet et les alertes Kick en vert. Tu peux aussi choisir une seule couleur pour toutes les alertes : bleu, violet, rose, rouge, or ou vert. Quand les deux chaînes sont dans l'URL, une petite étiquette TWITCH ou KICK montre d'où vient chaque alerte.",
-        p2: "Tu peux renommer le titre de chaque alerte, jusqu'à 24 caractères, ou le laisser vide pour garder celui par défaut, comme Nouvel abonné. Neon écrit les titres en majuscules. Langue des alertes définit la langue des mots de l'alerte : anglais, espagnol, français, japonais, portugais ou turc. Elle reste dans l'URL quelle que soit la langue d'OBS.",
+        p2: "Tu peux renommer le titre de chaque alerte, jusqu'à 24 caractères, ou le laisser vide pour garder celui par défaut, comme Nouvel abonné. Neon écrit les titres en majuscules. Langue des alertes définit la langue des mots de l'alerte : anglais, espagnol, français, allemand, japonais, portugais ou turc. Elle reste dans l'URL quelle que soit la langue d'OBS.",
       },
       min: {
         title: 'Comment ignorer les petits cadeaux, cheers et raids ?',
@@ -2295,7 +2295,7 @@ export const fr: typeof en = {
     site: 'Site',
     entries: {
       moreLanguages:
-        'Le site est maintenant aussi disponible en espagnol, français, japonais et portugais, et Sondage du chat, Alertes de stream et les valeurs du Subathon Timer peuvent aussi afficher leurs textes dans ces langues.',
+        'Le site est maintenant aussi disponible en espagnol, français, allemand, japonais et portugais, et Sondage du chat, Alertes de stream et les valeurs du Subathon Timer peuvent aussi afficher leurs textes dans ces langues.',
       countdownSceneCommand:
         'Ajout de la commande de chat `!countdown {scene} {duration}`. Les modos peuvent maintenant changer la scène actuelle (début, pause ou fin) et régler sa durée en une seule commande.',
       socialsLaunch:

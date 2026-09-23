@@ -80,6 +80,7 @@ describe.each(LOCALES)('guide and FAQ copy in %s', (locale) => {
 // The word for the broadcaster in each language's raffle rules, lower-cased.
 const BROADCASTER: Record<Locale, string> = {
   en: 'broadcaster',
+  de: 'streamer',
   tr: 'yayıncı',
   es: 'streamer',
   fr: 'streamer',
@@ -91,6 +92,7 @@ const BROADCASTER: Record<Locale, string> = {
 const INDEX_TOPICS: Record<GuideId, Record<Locale, string>> = {
   'obs-browser-source': {
     en: 'adding a widget to OBS',
+    de: 'ein Widget zu OBS hinzufügen',
     tr: "OBS'e widget eklemek",
     es: 'añadir un widget a OBS',
     fr: 'ajouter un widget à OBS',
@@ -99,6 +101,7 @@ const INDEX_TOPICS: Record<GuideId, Record<Locale, string>> = {
   },
   'twitch-kick-chat-overlay': {
     en: 'combining Twitch and Kick chat',
+    de: 'Twitch- und Kick-Chat zusammenführen',
     tr: 'Twitch ve Kick sohbetini birleştirmek',
     es: 'juntar el chat de Twitch y Kick',
     fr: 'réunir les chats Twitch et Kick',
@@ -107,6 +110,7 @@ const INDEX_TOPICS: Record<GuideId, Record<Locale, string>> = {
   },
   'obs-chat-dock': {
     en: 'reading chat in an OBS dock',
+    de: 'den Chat in einem OBS-Dock lesen',
     tr: "sohbeti OBS dock'unda okumak",
     es: 'leer el chat en un panel de OBS',
     fr: 'lire le chat dans un dock OBS',
@@ -115,6 +119,7 @@ const INDEX_TOPICS: Record<GuideId, Record<Locale, string>> = {
   },
   'stream-alerts': {
     en: 'adding stream alerts',
+    de: 'Stream-Alerts einrichten',
     tr: 'yayın uyarıları eklemek',
     es: 'añadir alertas al stream',
     fr: 'ajouter des alertes de stream',
@@ -123,6 +128,7 @@ const INDEX_TOPICS: Record<GuideId, Record<Locale, string>> = {
   },
   'subathon-timer': {
     en: 'running a subathon timer',
+    de: 'einen Subathon Timer starten',
     tr: 'subathon sayacı kurmak',
     es: 'montar un subathon timer',
     fr: 'lancer un timer de subathon',
@@ -131,6 +137,7 @@ const INDEX_TOPICS: Record<GuideId, Record<Locale, string>> = {
   },
   'chat-poll': {
     en: 'running a chat poll',
+    de: 'eine Chat-Umfrage starten',
     tr: 'sohbet anketi yapmak',
     es: 'hacer una encuesta en el chat',
     fr: 'faire un sondage dans le chat',
@@ -139,6 +146,7 @@ const INDEX_TOPICS: Record<GuideId, Record<Locale, string>> = {
   },
   'stream-frames': {
     en: 'framing your camera and chat',
+    de: 'Kamera und Chat einrahmen',
     tr: 'kameraya ve sohbete çerçeve eklemek',
     es: 'enmarcar tu cámara y tu chat',
     fr: 'encadrer ta caméra et ton chat',
@@ -147,6 +155,7 @@ const INDEX_TOPICS: Record<GuideId, Record<Locale, string>> = {
   },
   'stream-countdown': {
     en: 'counting down to your stream',
+    de: 'bis zum Stream-Start herunterzählen',
     tr: 'yayın için geri sayım koymak',
     es: 'poner una cuenta regresiva para tu stream',
     fr: 'lancer un compte à rebours avant ton live',
@@ -155,6 +164,7 @@ const INDEX_TOPICS: Record<GuideId, Record<Locale, string>> = {
   },
   'chat-giveaway': {
     en: 'running a chat raffle',
+    de: 'eine Verlosung im Chat starten',
     tr: 'sohbet çekilişi yapmak',
     es: 'hacer un sorteo en el chat',
     fr: 'organiser un tirage au sort dans le chat',
@@ -163,6 +173,7 @@ const INDEX_TOPICS: Record<GuideId, Record<Locale, string>> = {
   },
   'obs-scene-switcher': {
     en: 'switching scenes from chat',
+    de: 'Szenen aus dem Chat wechseln',
     tr: 'sohbetten sahne değiştirmek',
     es: 'cambiar de escena desde el chat',
     fr: 'changer de scène depuis le chat',

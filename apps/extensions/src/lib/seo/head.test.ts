@@ -92,7 +92,7 @@ describe('getPageHead per locale', () => {
   it('lists the same reciprocal hreflang alternates on both, with x-default in English', () => {
     const alternates = [
       { rel: 'alternate', hrefLang: 'en', href: en },
-      ...['es', 'fr', 'ja', 'pt'].map((lang) => ({
+      ...['de', 'es', 'fr', 'ja', 'pt'].map((lang) => ({
         rel: 'alternate',
         hrefLang: lang,
         href: `https://extensions.senchabot.com/${lang}/setup/raffle`,
@@ -110,6 +110,7 @@ describe('getPageHead per locale', () => {
     expect(home.links.map((link) => link.href)).toEqual([
       'https://extensions.senchabot.com/tr',
       'https://extensions.senchabot.com',
+      'https://extensions.senchabot.com/de',
       'https://extensions.senchabot.com/es',
       'https://extensions.senchabot.com/fr',
       'https://extensions.senchabot.com/ja',
@@ -122,6 +123,7 @@ describe('getPageHead per locale', () => {
   it('sets og:locale to the page language and the other ones as alternates', () => {
     expect(content(heads.en.meta, 'og:locale')).toEqual(['en_US']);
     expect(content(heads.en.meta, 'og:locale:alternate')).toEqual([
+      'de_DE',
       'es_ES',
       'fr_FR',
       'ja_JP',
@@ -131,6 +133,7 @@ describe('getPageHead per locale', () => {
     expect(content(heads.tr.meta, 'og:locale')).toEqual(['tr_TR']);
     expect(content(heads.tr.meta, 'og:locale:alternate')).toEqual([
       'en_US',
+      'de_DE',
       'es_ES',
       'fr_FR',
       'ja_JP',

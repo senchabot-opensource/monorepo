@@ -53,6 +53,7 @@ export const Route = createFileRoute('/{-$locale}/')({
 
 const WIDGET_LIST_NAME: Record<Locale, string> = {
   en: 'Senchabot Extensions overlays and tools',
+  de: 'Overlays und Tools von Senchabot Extensions',
   tr: "Senchabot Extensions overlay'leri ve araçları",
   es: 'Overlays y herramientas de Senchabot Extensions',
   fr: 'Overlays et outils Senchabot Extensions',

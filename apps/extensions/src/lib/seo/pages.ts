@@ -19,6 +19,11 @@ export const PAGE_META = {
       description:
         'Twelve free overlays and tools for Twitch and Kick streamers: chat box, emote wall, alerts, sub goal, subathon timer, frames, countdown, poll and raffle.',
     },
+    de: {
+      title: 'Kostenlose Twitch- und Kick-Overlays für OBS | Senchabot',
+      description:
+        'Elf kostenlose Overlays und Tools für Twitch- und Kick-Streamer: Chat-Box, Emote-Wand, Alerts, Sub-Ziel, Subathon Timer, Rahmen, Countdown, Umfrage, Verlosung.',
+    },
     tr: {
       title: "OBS için Ücretsiz Twitch ve Kick Overlay'leri | Senchabot",
       description:
@@ -50,6 +55,11 @@ export const PAGE_META = {
       title: 'Twitch + Kick Chat Overlay for OBS (Free) | Senchabot',
       description:
         'Merge Twitch and Kick chat into one OBS browser source (400×600). 7TV emotes on both platforms, BTTV and FFZ on Twitch, plus filters for bots and ! commands.',
+    },
+    de: {
+      title: 'Twitch + Kick Chat-Overlay für OBS (kostenlos) | Senchabot',
+      description:
+        'Vereine Twitch- und Kick-Chat in einer OBS-Browserquelle (400×600). 7TV-Emotes auf beiden Plattformen, BTTV und FFZ auf Twitch, Filter für Bots und !-Befehle.',
     },
     tr: {
       title: "Ücretsiz Twitch + Kick Sohbet Overlay'i (OBS) | Senchabot",
@@ -83,6 +93,11 @@ export const PAGE_META = {
       description:
         'Emote-only Twitch and Kick messages pop up on your stream in Calm, Chaos or Bounce mode, 7TV emotes from your Twitch channel included. Free, no login needed.',
     },
+    de: {
+      title: 'Emote-Wand-Overlay für Twitch, Kick und 7TV | Senchabot',
+      description:
+        'Reine Emote-Nachrichten aus Twitch und Kick erscheinen im Stream, im Modus Ruhig, Chaos oder Abprallen, mit 7TV-Emotes deines Twitch-Kanals. Gratis, ohne Login.',
+    },
     tr: {
       title: "Twitch, Kick ve 7TV için Emote Duvarı Overlay'i | Senchabot",
       description:
@@ -114,6 +129,11 @@ export const PAGE_META = {
       title: 'Sub Sprout: Sub Goal Plant Overlay for Twitch & Kick',
       description:
         'A plant overlay that grows one stage with every new sub, resub or gifted sub on Twitch and Kick. Pick one of 10 plants and add rain or sparkles. Free, no login.',
+    },
+    de: {
+      title: 'Sub Sprout: Sub-Ziel-Pflanze für Twitch und Kick',
+      description:
+        'Ein Pflanzen-Overlay, das mit jedem neuen Sub, Resub oder Gift-Sub auf Twitch und Kick eine Stufe wächst. Wähl aus 10 Pflanzen, mit Regen oder Glitzer. Gratis.',
     },
     tr: {
       title: 'Sub Sprout: Twitch ve Kick için Abone Hedefi Bitkisi',
@@ -147,6 +167,11 @@ export const PAGE_META = {
       description:
         'A free subathon timer overlay for OBS. Subs, gifted subs, Bits and Kicks add time. Show it as a health bar, a clock or a ring. Mods control it from chat.',
     },
+    de: {
+      title: 'Subathon Timer für Twitch und Kick (kostenlos) | Senchabot',
+      description:
+        'Ein kostenloser Subathon Timer für OBS. Subs, Gift-Subs, Bits und Kicks geben Zeit dazu. Als Lebensbalken, Uhr oder Ring. Deine Mods steuern ihn aus dem Chat.',
+    },
     tr: {
       title: 'Twitch ve Kick için Subathon Timer (Ücretsiz) | Senchabot',
       description:
@@ -178,6 +203,11 @@ export const PAGE_META = {
       title: 'Animated Stream Alerts for Twitch & Kick (Free) | Senchabot',
       description:
         'Free animated stream alerts for OBS. Subs, gifted subs, Bits, Kicks and raids on Twitch and Kick each get an alert with a sound. No login, no download.',
+    },
+    de: {
+      title: 'Animierte Stream-Alerts für Twitch und Kick | Senchabot',
+      description:
+        'Kostenlose animierte Stream-Alerts für OBS. Subs, Gift-Subs, Bits, Kicks und Raids auf Twitch und Kick lösen je einen Alert mit Sound aus. Kein Login nötig.',
     },
     tr: {
       title: 'Twitch ve Kick için Yayın Uyarıları (Ücretsiz) | Senchabot',
@@ -211,6 +241,11 @@ export const PAGE_META = {
       description:
         'A free sub goal overlay for OBS. Every sub, resub and gifted sub on Twitch and Kick fills the bar, with a trophy when you hit the goal. Mods fix it from chat.',
     },
+    de: {
+      title: 'Kostenloses Sub-Ziel-Overlay für Twitch und Kick | Senchabot',
+      description:
+        'Ein kostenloses Sub-Ziel für OBS. Jeder Sub, Resub und Gift-Sub auf Twitch und Kick füllt den Balken, am Ziel gibt es einen Pokal. Mods korrigieren im Chat.',
+    },
     tr: {
       title: 'Twitch ve Kick için Abone Hedefi Barı (Ücretsiz) | Senchabot',
       description:
@@ -242,6 +277,11 @@ export const PAGE_META = {
       title: 'Free Stream Frame Overlays for Twitch & Kick | Senchabot',
       description:
         'Free camera, chat and screen frames for OBS. Presets with the feel of Metin2, LoL, WoW, Valorant and Minecraft, with the art included. No login, no download.',
+    },
+    de: {
+      title: 'Kostenlose Stream-Rahmen für Twitch und Kick | Senchabot',
+      description:
+        'Kostenlose Rahmen für Kamera, Chat und Bildschirm in OBS. Presets im Stil von Metin2, LoL, WoW, Valorant und Minecraft, Grafiken inklusive. Ohne Login.',
     },
     tr: {
       title: 'Twitch ve Kick için Yayın Çerçeveleri (Ücretsiz) | Senchabot',
@@ -275,6 +315,11 @@ export const PAGE_META = {
       description:
         'A free countdown overlay for OBS. Set a length, or the time of day you go live, for your starting, break and ending scenes. Your mods change it from chat.',
     },
+    de: {
+      title: 'Kostenloser Starting-Soon- und BRB-Countdown | Senchabot',
+      description:
+        'Ein kostenloser Countdown für OBS. Stell eine Dauer oder die Uhrzeit ein, zu der du live gehst, für Start-, Pausen- und Endszene. Deine Mods ändern ihn im Chat.',
+    },
     tr: {
       title: 'Twitch ve Kick için Yayın Geri Sayımı | Senchabot',
       description:
@@ -306,6 +351,11 @@ export const PAGE_META = {
       title: 'Free Chat Poll Overlay for Twitch & Kick | Senchabot',
       description:
         'A free chat poll overlay for OBS. Viewers on Twitch and Kick vote by typing a number, the bars fill live and the winner shows at the end. Mods run it from chat.',
+    },
+    de: {
+      title: 'Kostenlose Chat-Umfrage für Twitch und Kick | Senchabot',
+      description:
+        'Kostenlose Chat-Umfrage für OBS. Twitch- und Kick-Zuschauer stimmen per Zahl ab, Balken füllen sich live, am Ende steht der Gewinner. Mods starten sie im Chat.',
     },
     tr: {
       title: 'Twitch ve Kick için Sohbet Anketi (Ücretsiz) | Senchabot',
@@ -339,6 +389,11 @@ export const PAGE_META = {
       description:
         'Run a chat giveaway on Twitch or Kick: viewers type !join, you set subs-only rules and a win limit, then draw a winner with a secure random pick. No login.',
     },
+    de: {
+      title: 'Verlosung im Twitch- und Kick-Chat (kostenlos) | Senchabot',
+      description:
+        'Verlosung im Twitch- oder Kick-Chat: Zuschauer tippen !join, du setzt Sub-Regeln und ein Gewinnlimit und ziehst per sicherem Zufall den Gewinner. Ohne Login.',
+    },
     tr: {
       title: 'Twitch ve Kick Sohbet Çekilişi Aracı (Ücretsiz) | Senchabot',
       description:
@@ -370,6 +425,11 @@ export const PAGE_META = {
       title: 'Switch OBS Scenes from Twitch & Kick Chat | Senchabot',
       description:
         'Let mods switch OBS scenes from Twitch or Kick chat with !scene, brb and back, or start and stop the stream. Runs in a browser tab and talks to obs-websocket 5.',
+    },
+    de: {
+      title: 'OBS-Szenen per Twitch- und Kick-Chat wechseln | Senchabot',
+      description:
+        'Lass Mods OBS-Szenen im Twitch- oder Kick-Chat mit !scene, brb und back wechseln oder den Stream starten und stoppen. Läuft im Browser-Tab mit obs-websocket 5.',
     },
     tr: {
       title: 'Twitch ve Kick Sohbetinden OBS Sahnesi Değiştir | Senchabot',
@@ -403,6 +463,11 @@ export const PAGE_META = {
       description:
         'Display your social media handles (Twitter, YouTube, TikTok, Instagram) on your Twitch or Kick stream. Rotates through your links with a slick slide animation.',
     },
+    de: {
+      title: 'Kostenloses Social-Media-Widget für OBS | Senchabot',
+      description:
+        'Zeig deine Social-Media-Profile (Twitter, YouTube, TikTok, Instagram) im Twitch- oder Kick-Stream. Deine Links wechseln sich mit einer Slide-Animation ab.',
+    },
     tr: {
       title: "OBS için Ücretsiz Sosyal Medya Widget'ı | Senchabot",
       description:
@@ -434,6 +499,11 @@ export const PAGE_META = {
       title: 'Page Not Found | Senchabot Extensions',
       description:
         "This page doesn't exist on Senchabot Extensions. Pick one of the free Twitch and Kick widgets, like Chat Box or Emote Wall, or go back to the home page.",
+    },
+    de: {
+      title: 'Seite nicht gefunden | Senchabot Extensions',
+      description:
+        'Diese Seite gibt es auf Senchabot Extensions nicht. Wähl ein kostenloses Twitch- und Kick-Widget wie die Chat-Box oder Emote-Wand oder geh zur Startseite.',
     },
     tr: {
       title: 'Sayfa Bulunamadı | Senchabot Extensions',
@@ -475,6 +545,16 @@ export const APP_FEATURES: Record<WidgetId, Record<Locale, readonly string[]>> =
       'Four message layouts, eight entry animations and six fonts',
       'Vertical or horizontal orientation',
       'Recommended browser source size: 400x600',
+    ],
+    de: [
+      'Twitch- und Kick-Chat in einem Overlay vereint',
+      '7TV-Emotes auf Twitch und Kick, BTTV- und FFZ-Emotes auf Twitch',
+      'Blendet bekannte Bots und Nachrichten aus, die mit ! beginnen',
+      'Nachrichten bleiben 10 Sekunden bis 5 Minuten oder für immer',
+      'Hervorhebung von Erwähnungen, Antworten, ersten Nachrichten, Ankündigungen und „Meine Nachricht hervorheben“',
+      'Vier Nachrichten-Layouts, acht Einblend-Animationen und sechs Schriftarten',
+      'Vertikale oder horizontale Ausrichtung',
+      'Empfohlene Größe der Browserquelle: 400x600',
     ],
     tr: [
       "Twitch ve Kick sohbeti tek bir overlay'de birleşir",
@@ -537,6 +617,15 @@ export const APP_FEATURES: Record<WidgetId, Record<Locale, readonly string[]>> =
       'Subscribers only, longer sub emotes, Hype Mode and emote spam blocking',
       'Recommended browser source size: 1920x1080',
     ],
+    de: [
+      'Reine Emote-Nachrichten aus Twitch und Kick erscheinen als Emotes auf dem Bildschirm',
+      'Auf Wunsch kommen auch bis zu 5 Emotes aus normalen Nachrichten dazu',
+      '7TV-Emotes aus dem aktiven Set des Twitch-Kanals, auch im Kick-Chat',
+      'Animationsmodi Ruhig, Chaos und Abprallen',
+      'Emote-Größe 32 bis 256 px, 2 bis 30 Sekunden sichtbar, bis zu 120 gleichzeitig',
+      'Nur Subs, längere Sub-Emotes, Hype-Modus und Schutz vor Emote-Spam',
+      'Empfohlene Größe der Browserquelle: 1920x1080',
+    ],
     tr: [
       "Sadece emote'tan oluşan Twitch ve Kick mesajları ekranda emote olarak belirir",
       "Tüm Emote'ları Göster, normal mesajlardan da en fazla 5 emote alır",
@@ -593,6 +682,16 @@ export const APP_FEATURES: Record<WidgetId, Record<Locale, readonly string[]>> =
       'The broadcaster and mods can type !grow to grow it by hand, or !grow reset to start over',
       'The plant is saved in OBS and carries over to the next stream',
       'Recommended browser source size: 800x600',
+    ],
+    de: [
+      'Wächst mit jedem neuen Sub, Resub oder Gift-Sub auf Twitch und Kick um eine Stufe',
+      '10 Pflanzensorten',
+      'Nach dem vollen Wachstum: dieselbe Pflanze, die nächste in der Reihe oder eine zufällige',
+      'Gießeffekt mit Regen oder Glitzer',
+      'Optional Sub-Zahl und Stufe auf dem Topf',
+      'Streamer und Mods lassen sie mit !grow von Hand wachsen oder starten mit !grow reset neu',
+      'Die Pflanze wird in OBS gespeichert und wächst im nächsten Stream weiter',
+      'Empfohlene Größe der Browserquelle: 800x600',
     ],
     tr: [
       "Twitch ve Kick'te her yeni abonelik, yenileme ya da hediye abonelikle bir aşama büyür",
@@ -656,6 +755,16 @@ export const APP_FEATURES: Record<WidgetId, Record<Locale, readonly string[]>> =
       'The timer is saved in OBS and survives reloads',
       'Recommended browser source size: 800x300',
     ],
+    de: [
+      'Ein Countdown, dem Subs, Gift-Subs, Bits und Kicks auf Twitch und Kick Zeit hinzufügen',
+      'Als Lebensbalken, Uhr oder Ring, mit Lebensfarben oder einer festen Farbe',
+      'Eigene Zeiten für Twitch und Kick: Subs, Gift-Subs und Bits oder Kicks',
+      'Twitch-Subs der Stufe 2 und 3 können als 2 und 5 Subs zählen',
+      'Optionales Zeitlimit und eigener Titel',
+      'Streamer und Mods steuern ihn mit !subathon: starten, pausieren, Zeit hinzufügen, abziehen, setzen und zurücksetzen',
+      'Der Timer wird in OBS gespeichert und übersteht ein Neuladen',
+      'Empfohlene Größe der Browserquelle: 800x300',
+    ],
     tr: [
       "Twitch ve Kick'te abonelik, hediye abonelik, Bits ve Kicks geldikçe uzayan geri sayım",
       'Can barı, saat ya da halka stili, can renkleriyle ya da sabit bir renkle',
@@ -715,8 +824,18 @@ export const APP_FEATURES: Record<WidgetId, Record<Locale, readonly string[]>> =
       'Custom headings and minimum amounts for gifts, cheers and raids',
       "Resub months, and the viewer's message with a resub, Bits or Kicks, without links",
       'Alerts wait their turn and a gift of many subs is a single alert',
-      'Alert text in English, Spanish, French, Japanese, Portuguese or Turkish',
+      'Alert text in English, Spanish, French, German, Japanese, Portuguese or Turkish',
       'Recommended browser source size: 800x450',
+    ],
+    de: [
+      'Alerts für Subs, Gift-Subs, Bits, Kicks und Raids auf Twitch und Kick',
+      'Zwei Themes: Neon mit Synth-Sounds und Sternenhimmel mit Glockenklängen, jeweils mit eigenem Icon pro Alert',
+      'Sieben Farben, darunter eine, die Twitch und Kick unterscheidet',
+      'Eigene Überschriften und Mindestwerte für Gift-Subs, Cheers und Raids',
+      'Resub-Monate und die Nachricht des Zuschauers zu Resub, Bits oder Kicks, ohne Links',
+      'Alerts warten, bis sie dran sind, und viele verschenkte Subs auf einmal ergeben einen einzigen Alert',
+      'Alert-Text auf Englisch, Spanisch, Französisch, Deutsch, Japanisch, Portugiesisch oder Türkisch',
+      'Empfohlene Größe der Browserquelle: 800x450',
     ],
     tr: [
       "Twitch ve Kick'te abonelik, hediye abonelik, Bits, Kicks ve raid uyarıları",
@@ -725,7 +844,7 @@ export const APP_FEATURES: Record<WidgetId, Record<Locale, readonly string[]>> =
       'Özel başlıklar, hediye, cheer ve raid için en az miktar ayarı',
       'Yenilemelerde ay sayısı ve yenileme, Bits ya da Kicks ile gelen izleyici mesajı, linkler olmadan',
       'Uyarılar sırayla çıkar, çoklu hediye abonelik tek bir uyarı olur',
-      'İngilizce, İspanyolca, Fransızca, Japonca, Portekizce ya da Türkçe uyarı metni',
+      'İngilizce, İspanyolca, Fransızca, Almanca, Japonca, Portekizce ya da Türkçe uyarı metni',
       'Önerilen Tarayıcı Kaynağı boyutu: 800x450',
     ],
     es: [
@@ -735,7 +854,7 @@ export const APP_FEATURES: Record<WidgetId, Record<Locale, readonly string[]>> =
       'Títulos a tu gusto y cantidades mínimas para regalos, cheers y raids',
       'Meses de resub, y el mensaje del espectador con una resub, Bits o Kicks, sin enlaces',
       'Las alertas esperan su turno y un regalo de muchas subs es una sola alerta',
-      'Texto de las alertas en inglés, español, francés, japonés, portugués o turco',
+      'Texto de las alertas en inglés, español, francés, alemán, japonés, portugués o turco',
       'Tamaño recomendado de la fuente de navegador: 800x450',
     ],
     fr: [
@@ -745,7 +864,7 @@ export const APP_FEATURES: Record<WidgetId, Record<Locale, readonly string[]>> =
       'Titres personnalisés et montants minimum pour les cadeaux, cheers et raids',
       'Mois de resub, et le message du viewer avec un resub, des Bits ou des Kicks, sans liens',
       "Les alertes attendent leur tour et beaucoup de subs offerts d'un coup font une seule alerte",
-      'Texte des alertes en anglais, espagnol, français, japonais, portugais ou turc',
+      'Texte des alertes en anglais, espagnol, français, allemand, japonais, portugais ou turc',
       'Taille de source navigateur recommandée : 800x450',
     ],
     ja: [
@@ -755,7 +874,7 @@ export const APP_FEATURES: Record<WidgetId, Record<Locale, readonly string[]>> =
       '見出しのカスタマイズと、ギフト、Cheer、レイドの最小数の設定',
       '継続サブスクの月数と、継続サブスク、Bits、Kicksに添えられた視聴者のメッセージ（リンクは除外）',
       'アラートは順番待ちで表示し、大量のギフトサブも1回のアラートに',
-      'アラートの文言は英語、スペイン語、フランス語、日本語、ポルトガル語、トルコ語に対応',
+      'アラートの文言は英語、スペイン語、フランス語、ドイツ語、日本語、ポルトガル語、トルコ語に対応',
       'ブラウザソースの推奨サイズ: 800x450',
     ],
     pt: [
@@ -765,7 +884,7 @@ export const APP_FEATURES: Record<WidgetId, Record<Locale, readonly string[]>> =
       'Títulos personalizados e valores mínimos para presentes, Bits e raids',
       'Meses de resub e a mensagem do espectador com resub, Bits ou Kicks, sem links',
       'Os alertas esperam a vez e um presente de vários subs vira um alerta só',
-      'Texto do alerta em inglês, espanhol, francês, japonês, português ou turco',
+      'Texto do alerta em inglês, espanhol, francês, alemão, japonês, português ou turco',
       'Tamanho recomendado da fonte de navegador: 800x450',
     ],
   },
@@ -779,6 +898,16 @@ export const APP_FEATURES: Record<WidgetId, Record<Locale, readonly string[]>> =
       'The broadcaster and mods can add, remove, set and reset the count with !goal',
       'The count is saved in OBS and survives reloads',
       'Recommended browser source size: 800x260',
+    ],
+    de: [
+      'Ein Zielbalken, den jeder Sub, Resub und Gift-Sub auf Twitch und Kick um eins füllt',
+      'Beide Plattformen zählen in einen gemeinsamen Stand',
+      'Prime und jede Stufe zählen als ein Sub, ein Gift zählt jeden Sub darin',
+      'Start bei deiner aktuellen Sub-Zahl oder bei 0 für diesen Stream',
+      'Eine Pokal-Feier, wenn das Ziel erreicht ist, und der Zähler läuft danach weiter',
+      'Streamer und Mods können den Stand mit !goal erhöhen, senken, setzen und zurücksetzen',
+      'Der Stand wird in OBS gespeichert und übersteht ein Neuladen',
+      'Empfohlene Größe der Browserquelle: 800x260',
     ],
     tr: [
       "Twitch ve Kick'te her abonelik, yenileme ve hediye abonelikle birer birer dolan hedef barı",
@@ -841,6 +970,15 @@ export const APP_FEATURES: Record<WidgetId, Record<Locale, readonly string[]>> =
       'Fits any source size, square or vertical cameras included',
       'Works on Twitch, Kick and other platforms without connecting a channel',
     ],
+    de: [
+      'Drei fertige Rahmen für Kamera, Chat und den ganzen Stream-Bildschirm',
+      'Jedes Preset hat eigene Grafiken: ein Pagodendach mit Laternen, goldene Ornamente, genietete Schilde, Pixelblöcke',
+      'Die Mitte ist transparent, damit deine Kamera oder Chat-Box durchscheint',
+      'Leichte Animationen wie leuchtende Linien, schwingende Quasten und flackernde Fackeln, die du abschalten kannst',
+      'Ein Schild für deinen Kanalnamen oder einen beliebigen Text',
+      'Passt zu jeder Quellgröße, auch zu quadratischen oder vertikalen Kameras',
+      'Läuft auf Twitch, Kick und anderen Plattformen, ohne einen Kanal zu verbinden',
+    ],
     tr: [
       'Kamera, sohbet ve bütün yayın ekranı için üç hazır çerçeve',
       "Her preset'in kendi çizimleri: pagoda çatısı ve fenerler, altın süslemeler, perçinli kalkanlar, piksel bloklar",
@@ -897,6 +1035,16 @@ export const APP_FEATURES: Record<WidgetId, Record<Locale, readonly string[]>> =
       'The broadcaster and mods can add, remove, set, pause and reset the time with !countdown from Twitch or Kick chat',
       'No channel and no login needed unless you want the chat commands',
       'Recommended browser source size: 1920x1080',
+    ],
+    de: [
+      'Ein Countdown für deine Szenen vor dem Start, in der Pause und am Stream-Ende',
+      'Zählt eine eingestellte Dauer herunter oder bis zu einer Uhrzeit wie 21:00',
+      'Bei null: eine Nachricht, die Uhr auf 00:00 oder das Overlay blendet sich aus',
+      'Eigene Überschrift, Notiz und Endnachricht oder die Texte der Szene',
+      'Preset-Looks mit oder ohne Panel und ein optionaler Fortschrittsbalken',
+      'Streamer und Mods können die Zeit mit !countdown aus dem Twitch- oder Kick-Chat erhöhen, senken, setzen, pausieren und zurücksetzen',
+      'Kein Kanal und kein Login nötig, außer du willst die Chat-Befehle',
+      'Empfohlene Größe der Browserquelle: 1920x1080',
     ],
     tr: [
       'Başlangıç, mola ve bitiş sahnelerin için geri sayım',
@@ -960,6 +1108,17 @@ export const APP_FEATURES: Record<WidgetId, Record<Locale, readonly string[]>> =
       'Late votes from viewers watching behind live still count for a few seconds',
       'Timed out and banned accounts lose their vote',
       'Recommended browser source size: 640x560',
+    ],
+    de: [
+      'Zuschauer stimmen im Chat mit einer Zahl, mit !vote und einer Zahl oder mit der Option selbst ab',
+      'Stimmen aus Twitch und Kick landen in einer Umfrage, und jeder Zuschauer zählt einmal',
+      'Streamer und Mods starten Umfragen mit !poll, verlängern, beenden und brechen sie ab',
+      'Eine fertige Umfrage von der Setup-Seite startet mit !poll start',
+      'Live-Balken, ein Countdown und am Ende der Gewinner oder ein Gleichstand',
+      'Optional: nur Subs, Sub-Stimmen zählen 2× oder 3×, Ergebnisse bleiben bis zum Ende verborgen',
+      'Späte Stimmen von Zuschauern mit Stream-Verzögerung zählen noch ein paar Sekunden',
+      'Accounts mit Timeout oder Bann verlieren ihre Stimme',
+      'Empfohlene Größe der Browserquelle: 640x560',
     ],
     tr: [
       'İzleyiciler sohbete bir numara, !vote ve numara ya da seçeneğin kendisini yazarak oy verir',
@@ -1027,6 +1186,15 @@ export const APP_FEATURES: Record<WidgetId, Record<Locale, readonly string[]>> =
       'Known bots are skipped',
       'Winner overlay with confetti, as a 1920x1080 browser source in the same browser or app',
     ],
+    de: [
+      'Zuschauer machen mit, indem sie ein Stichwort in den Chat schreiben, standardmäßig !join',
+      'Läuft auf Twitch oder Kick, eine Plattform pro Verlosung',
+      'Nur Subs, mit einer Mindestzahl an Sub-Monaten',
+      'Maximal 1 bis 5 Gewinne pro Zuschauer oder unbegrenzt',
+      'Mindestzeit vor der Ziehung, 0 bis 300 Sekunden',
+      'Bekannte Bots werden übersprungen',
+      'Gewinner-Overlay mit Konfetti, als 1920x1080-Browserquelle im selben Browser oder in derselben App',
+    ],
     tr: [
       'İzleyiciler sohbete bir kelime yazarak katılır, varsayılanı !join',
       "Twitch ya da Kick'te çalışır, her çekiliş tek platformda",
@@ -1083,6 +1251,15 @@ export const APP_FEATURES: Record<WidgetId, Record<Locale, readonly string[]>> =
       'Connects to obs-websocket 5 (OBS Studio 28 and later), ws://127.0.0.1:4455 by default',
       'Runs in a browser tab or an OBS Custom Browser Dock',
     ],
+    de: [
+      'OBS-Szenen aus dem Twitch- oder Kick-Chat mit !scene und einem Szenennamen wechseln',
+      'brb und back wechseln zu den Szenen BRB und Main',
+      'Stream und Aufnahme aus dem Chat starten und stoppen',
+      'Nur freigegebene Nutzer, jeweils an eine Plattform gebunden, können Befehle ausführen',
+      'Jeder Befehl lässt sich umbenennen',
+      'Verbindet sich mit obs-websocket 5 (OBS Studio 28 und neuer), standardmäßig ws://127.0.0.1:4455',
+      'Läuft in einem Browser-Tab oder einem benutzerdefinierten Browser-Dock in OBS',
+    ],
     tr: [
       'Twitch ya da Kick sohbetinden !scene ve sahne adıyla OBS sahnesi değiştirir',
       'brb ve back, BRB ve Ana sahneye geçirir',
@@ -1136,6 +1313,13 @@ export const APP_FEATURES: Record<WidgetId, Record<Locale, readonly string[]>> =
       'Configurable rotation interval',
       'Adjust text color and pill background color to match your brand',
       'Recommended browser source size: 600x120',
+    ],
+    de: [
+      'Zeig deine Social-Media-Profile (Twitter, YouTube, TikTok, Instagram usw.) im Stream',
+      'Deine Links wechseln sich mit einer sauberen Slide-up-Animation ab',
+      'Einstellbares Wechselintervall',
+      'Passe Textfarbe und Hintergrundfarbe der Pille an deine Marke an',
+      'Empfohlene Größe der Browserquelle: 600x120',
     ],
     tr: [
       'Sosyal medya hesaplarını (Twitter, YouTube, TikTok, Instagram vb.) yayında göster',

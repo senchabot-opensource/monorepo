@@ -24,6 +24,7 @@ export type LocalizedMeta = Record<Locale, PageMeta>;
 
 export const OG_LOCALES: Record<Locale, string> = {
   en: 'en_US',
+  de: 'de_DE',
   es: 'es_ES',
   fr: 'fr_FR',
   ja: 'ja_JP',
@@ -39,6 +40,7 @@ export const OG_IMAGES = {
     path: '/og/home.png',
     alt: {
       en: 'Senchabot Extensions, free Twitch and Kick overlays for OBS',
+      de: 'Senchabot Extensions, kostenlose Twitch- und Kick-Overlays für OBS',
       tr: "Senchabot Extensions, OBS için ücretsiz Twitch ve Kick overlay'leri",
       es: 'Senchabot Extensions, overlays gratis de Twitch y Kick para OBS',
       fr: 'Senchabot Extensions, des overlays Twitch et Kick gratuits pour OBS',
@@ -50,6 +52,7 @@ export const OG_IMAGES = {
     path: '/og/chat-box.png',
     alt: {
       en: 'Chat Box, a Twitch and Kick chat overlay',
+      de: 'Chat-Box, ein Chat-Overlay für Twitch und Kick',
       tr: "Sohbet Kutusu, Twitch ve Kick sohbet overlay'i",
       es: 'Caja de Chat, un overlay de chat para Twitch y Kick',
       fr: 'Boîte de chat, un overlay de chat Twitch et Kick',
@@ -61,6 +64,7 @@ export const OG_IMAGES = {
     path: '/og/emote-wall.png',
     alt: {
       en: 'Emote Wall, an emote overlay for Twitch and Kick',
+      de: 'Emote-Wand, ein Emote-Overlay für Twitch und Kick',
       tr: "Emote Duvarı, Twitch ve Kick için emote overlay'i",
       es: 'Muro de Emotes, un overlay de emotes para Twitch y Kick',
       fr: "Mur d'emotes, un overlay d'emotes pour Twitch et Kick",
@@ -72,6 +76,7 @@ export const OG_IMAGES = {
     path: '/og/sub-sprout.png',
     alt: {
       en: 'Sub Sprout, a plant overlay that grows with subs',
+      de: 'Sub Sprout, ein Pflanzen-Overlay, das mit Subs wächst',
       tr: "Sub Sprout, aboneliklerle büyüyen bitki overlay'i",
       es: 'Sub Sprout, un overlay de planta que crece con las subs',
       fr: 'Sub Sprout, un overlay de plante qui pousse avec les subs',
@@ -83,6 +88,7 @@ export const OG_IMAGES = {
     path: '/og/subathon.png',
     alt: {
       en: 'Subathon Timer, a countdown overlay that subs add time to',
+      de: 'Subathon Timer, ein Countdown-Overlay, dem Subs Zeit hinzufügen',
       tr: "Subathon Timer, aboneliklerle süresi uzayan geri sayım overlay'i",
       es: 'Subathon Timer, un overlay de cuenta regresiva al que las subs le suman tiempo',
       fr: 'Subathon Timer, un overlay de compte à rebours auquel les subs ajoutent du temps',
@@ -94,6 +100,7 @@ export const OG_IMAGES = {
     path: '/og/goal.png',
     alt: {
       en: 'Sub Goal, a goal bar overlay that subs and gifted subs fill',
+      de: 'Sub-Ziel, ein Zielbalken-Overlay, das Subs und Gift-Subs füllen',
       tr: "Abone Hedefi, abonelik ve hediye aboneliklerle dolan hedef barı overlay'i",
       es: 'Meta de Subs, un overlay de barra de meta que llenan las subs y las subs regaladas',
       fr: "Objectif de subs, une barre d'objectif que remplissent les subs et subs offerts",
@@ -105,6 +112,7 @@ export const OG_IMAGES = {
     path: '/og/frames.png',
     alt: {
       en: 'Stream Frames, frame overlays with presets for your camera, chat and screen',
+      de: 'Stream-Rahmen, Rahmen-Overlays mit Presets für Kamera, Chat und Bildschirm',
       tr: "Yayın Çerçeveleri, kamera, sohbet ve ekran için preset'li çerçeve overlay'leri",
       es: 'Marcos de Stream, overlays de marco con presets para tu cámara, tu chat y tu pantalla',
       fr: 'Cadres de stream, des cadres avec presets pour ta caméra, ton chat et ton écran',
@@ -116,6 +124,7 @@ export const OG_IMAGES = {
     path: '/og/countdown.png',
     alt: {
       en: 'Stream Countdown, a starting soon, break and ending countdown overlay',
+      de: 'Stream-Countdown, ein Countdown-Overlay für Start, Pause und Stream-Ende',
       tr: "Yayın Geri Sayımı, başlangıç, mola ve bitiş için geri sayım overlay'i",
       es: 'Cuenta Regresiva, un overlay de cuenta regresiva para el inicio, la pausa y el cierre',
       fr: 'Compte à rebours de stream, pour tes scènes de début, de pause et de fin',
@@ -127,6 +136,7 @@ export const OG_IMAGES = {
     path: '/og/poll.png',
     alt: {
       en: 'Chat Poll, a poll overlay that Twitch and Kick chat vote in',
+      de: 'Chat-Umfrage, ein Umfrage-Overlay, in dem der Twitch- und Kick-Chat abstimmt',
       tr: "Sohbet Anketi, Twitch ve Kick sohbetinin oy verdiği anket overlay'i",
       es: 'Encuesta de Chat, un overlay de encuesta en el que vota el chat de Twitch y Kick',
       fr: 'Sondage du chat, un overlay de sondage où votent les chats Twitch et Kick',
@@ -138,6 +148,7 @@ export const OG_IMAGES = {
     path: '/og/stream-alerts.png',
     alt: {
       en: 'Stream Alerts, animated sub, gift, cheer and raid alerts for Twitch and Kick',
+      de: 'Stream-Alerts, animierte Sub-, Gift-, Cheer- und Raid-Alerts für Twitch und Kick',
       tr: "Yayın Uyarıları, Twitch ve Kick'te abonelik, hediye, cheer ve raid için animasyonlu uyarı overlay'i",
       es: 'Alertas de Stream, alertas animadas de subs, regalos, cheers y raids para Twitch y Kick',
       fr: 'Alertes de stream, des alertes animées de sub, cadeau, cheer et raid pour Twitch et Kick',
@@ -149,6 +160,7 @@ export const OG_IMAGES = {
     path: '/og/raffle.png',
     alt: {
       en: 'Raffle, a chat giveaway picker for Twitch and Kick',
+      de: 'Verlosung, ein Tool für Chat-Giveaways auf Twitch und Kick',
       tr: 'Çekiliş, Twitch ve Kick için sohbet çekilişi aracı',
       es: 'Sorteo, una herramienta para sortear entre el chat de Twitch y Kick',
       fr: 'Tirage au sort, un outil de giveaway dans le chat pour Twitch et Kick',
@@ -160,6 +172,7 @@ export const OG_IMAGES = {
     path: '/og/obs-bridge.png',
     alt: {
       en: 'OBS Bridge, switch OBS scenes from chat',
+      de: 'OBS Bridge, OBS-Szenen aus dem Chat wechseln',
       tr: 'OBS Bridge, sohbetten OBS sahnesi değiştirme aracı',
       es: 'OBS Bridge, cambia escenas de OBS desde el chat',
       fr: 'OBS Bridge, change de scène OBS depuis le chat',
@@ -171,6 +184,7 @@ export const OG_IMAGES = {
     path: '/og/guides.png',
     alt: {
       en: 'Senchabot Extensions guides for OBS overlays',
+      de: 'Anleitungen von Senchabot Extensions für OBS-Overlays',
       tr: "OBS overlay'leri için Senchabot Extensions rehberleri",
       es: 'Guías de Senchabot Extensions para overlays de OBS',
       fr: 'Guides Senchabot Extensions pour les overlays OBS',
@@ -182,6 +196,7 @@ export const OG_IMAGES = {
     path: '/og/socials.png',
     alt: {
       en: 'Socials, a social media rotation widget for Twitch and Kick',
+      de: 'Socials, ein Widget für Twitch und Kick, das deine Social-Media-Profile durchwechselt',
       tr: 'Sosyal Medya, Twitch ve Kick için sosyal medya hesaplarını sırayla gösteren widget',
       es: 'Redes Sociales, un widget que rota tus redes sociales para Twitch y Kick',
       fr: 'Réseaux sociaux, un widget qui fait défiler tes réseaux pour Twitch et Kick',
