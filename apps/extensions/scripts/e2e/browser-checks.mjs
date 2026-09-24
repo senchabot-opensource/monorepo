@@ -626,7 +626,7 @@ export async function runHeaderFit({ chrome, base, path, check }) {
 /**
  * Language landing: each case is a fresh profile with a given browser language and optional
  * saved choice. Visitors must land on their language's URL, explicit /tr links and ?lang= must
- * update the saved choice, and the EN/TR switcher must stick on the next visit.
+ * update the saved choice, and the language switcher must stick on the next visit.
  */
 // No console check here: every case redirects or navigates mid-load, which cancels in-flight
 // font and API requests (net::ERR_SOCKET_NOT_CONNECTED). Page cases already cover console health.
@@ -647,6 +647,7 @@ export async function runLanguageLanding({ chrome, base, check }) {
   const cases = [
     { name: 'Turkish browser opening / lands on /tr', language: 'tr-TR', open: '/', expect: '/tr', lang: 'tr' },
     { name: 'English browser stays on /', language: 'en-US', open: '/', expect: '/', lang: 'en' },
+    { name: 'Japanese browser opening /faq lands on /ja/faq', language: 'ja-JP', open: '/faq', expect: '/ja/faq', lang: 'ja' },
     { name: 'unsupported browser language falls back to English', language: 'de-DE', open: '/faq', expect: '/faq', lang: 'en' },
     { name: 'saved English beats a Turkish browser', language: 'tr-TR', saved: 'en', open: '/guides', expect: '/guides', lang: 'en' },
     { name: 'saved Turkish beats an English browser', language: 'en-US', saved: 'tr', open: '/guides', expect: '/tr/guides', lang: 'tr' },
@@ -682,6 +683,11 @@ export async function runLanguageLanding({ chrome, base, check }) {
     const back = await settle(tab, '/tr');
     check('a /tr link saves Turkish for the next visit', viaLink.saved === 'tr' && back.lang === 'tr', JSON.stringify({ viaLink, back }));
 
+    // The links sit in the language dropdown; open it first.
+    await tab.page.evaluate(() => {
+      const panel = document.querySelector('header a[hreflang="en"]').parentElement;
+      document.querySelector(`header [aria-controls="${panel.id}"]`).click();
+    });
     await tab.page.click('header a[hreflang="en"]');
     const switched = await settle(tab, '/');
     await tab.page.goto(url('/'));

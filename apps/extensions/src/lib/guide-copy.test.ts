@@ -1,13 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { shouldAcceptEntry } from '#/hooks/use-raffle-chat';
 import { GUIDES, type GuideId } from './guides';
-import { en } from './i18n/en';
-import { type Locale, translate } from './i18n/index';
+import { dictionaries, type Locale, translate } from './i18n/index';
 import { LOCALES } from './i18n/locales';
-import { tr } from './i18n/tr';
 import { WIDGETS, type WidgetEntry } from './widgets';
-
-const DICTS = { en, tr } as const;
 
 // Raffle runs on one platform and keeps its rules in the browser, and OBS Bridge ties each
 // command user to a platform; every other widget reopens a pasted URL, and all of those but
@@ -15,7 +11,9 @@ const DICTS = { en, tr } as const;
 const PASTE_WIDGETS = WIDGETS.filter(
   (widget) => widget.id !== 'raffle' && widget.id !== 'obs-bridge',
 );
-const BOTH_CHANNEL_WIDGETS = PASTE_WIDGETS.filter((widget) => widget.id !== 'frames' && widget.id !== 'socials');
+const BOTH_CHANNEL_WIDGETS = PASTE_WIDGETS.filter(
+  (widget) => widget.id !== 'frames' && widget.id !== 'socials',
+);
 
 const missingIn = (widgets: readonly WidgetEntry[], text: string, locale: Locale) =>
   widgets
@@ -28,7 +26,7 @@ const pasteNamesIn = (text: string, locale: Locale) => missingIn(PASTE_WIDGETS, 
 const withoutUnit = (label: string) => label.replace(/\s*\([^)]*\)$/, '');
 
 describe.each(LOCALES)('guide and FAQ copy in %s', (locale) => {
-  const dict = DICTS[locale];
+  const dict = dictionaries[locale];
 
   it('names every widget that takes a Twitch and a Kick channel in one URL', () => {
     expect(namesIn(dict.home.faq4A, locale)).toEqual([]);
@@ -56,11 +54,7 @@ describe.each(LOCALES)('guide and FAQ copy in %s', (locale) => {
   it('points at the buttons and sections by the names the setup pages show', () => {
     expect(dict.guides.raffle.start.p1).toContain(dict.raffle.stopRaffle);
     expect(dict.guides.raffle.rules.subsText).toContain(withoutUnit(dict.raffle.minSubMonths));
-    expect(dict.guides.bridge.commands.p1).toContain(
-      locale === 'en'
-        ? `under ${dict.obsBridge.sectionCommands} on the setup page`
-        : `${dict.obsBridge.sectionCommands} bölümünden`,
-    );
+    expect(dict.guides.bridge.commands.p1).toContain(dict.obsBridge.sectionCommands);
   });
 
   it('lets the broadcaster into a subs-only raffle only at the 1-month minimum, and says so', () => {
@@ -73,7 +67,7 @@ describe.each(LOCALES)('guide and FAQ copy in %s', (locale) => {
     expect([accepts(1), accepts(2)]).toEqual([true, false]);
     const sentence = dict.guides.raffle.rules.subsText
       .split('. ')
-      .find((part) => /broadcaster|Yayıncı/.test(part));
+      .find((part) => part.toLowerCase().includes(BROADCASTER[locale]));
     expect(sentence).toMatch(/\b1\b/);
   });
 
@@ -83,29 +77,108 @@ describe.each(LOCALES)('guide and FAQ copy in %s', (locale) => {
   });
 });
 
+// The word for the broadcaster in each language's raffle rules, lower-cased.
+const BROADCASTER: Record<Locale, string> = {
+  en: 'broadcaster',
+  de: 'streamer',
+  tr: 'yayıncı',
+  es: 'streamer',
+  fr: 'streamer',
+  ja: '配信者',
+  pt: 'streamer',
+};
+
 // A phrase from each guide's topic, as the guides index lead names it.
 const INDEX_TOPICS: Record<GuideId, Record<Locale, string>> = {
-  'obs-browser-source': { en: 'adding a widget to OBS', tr: "OBS'e widget eklemek" },
+  'obs-browser-source': {
+    en: 'adding a widget to OBS',
+    de: 'ein Widget zu OBS hinzufügen',
+    tr: "OBS'e widget eklemek",
+    es: 'añadir un widget a OBS',
+    fr: 'ajouter un widget à OBS',
+    ja: 'OBSにウィジェットを追加する',
+    pt: 'adicionar um widget ao OBS',
+  },
   'twitch-kick-chat-overlay': {
     en: 'combining Twitch and Kick chat',
+    de: 'Twitch- und Kick-Chat zusammenführen',
     tr: 'Twitch ve Kick sohbetini birleştirmek',
+    es: 'juntar el chat de Twitch y Kick',
+    fr: 'réunir les chats Twitch et Kick',
+    ja: 'TwitchとKickのチャットをまとめる',
+    pt: 'juntar o chat da Twitch e da Kick',
   },
-  'obs-chat-dock': { en: 'reading chat in an OBS dock', tr: "sohbeti OBS dock'unda okumak" },
-  'stream-alerts': { en: 'adding stream alerts', tr: 'yayın uyarıları eklemek' },
-  'subathon-timer': { en: 'running a subathon timer', tr: 'subathon sayacı kurmak' },
-  'chat-poll': { en: 'running a chat poll', tr: 'sohbet anketi yapmak' },
+  'obs-chat-dock': {
+    en: 'reading chat in an OBS dock',
+    de: 'den Chat in einem OBS-Dock lesen',
+    tr: "sohbeti OBS dock'unda okumak",
+    es: 'leer el chat en un panel de OBS',
+    fr: 'lire le chat dans un dock OBS',
+    ja: 'OBSのドックでチャットを読む',
+    pt: 'ler o chat em um painel do OBS',
+  },
+  'stream-alerts': {
+    en: 'adding stream alerts',
+    de: 'Stream-Alerts einrichten',
+    tr: 'yayın uyarıları eklemek',
+    es: 'añadir alertas al stream',
+    fr: 'ajouter des alertes de stream',
+    ja: '配信アラートを追加する',
+    pt: 'adicionar alertas de live',
+  },
+  'subathon-timer': {
+    en: 'running a subathon timer',
+    de: 'einen Subathon Timer starten',
+    tr: 'subathon sayacı kurmak',
+    es: 'montar un subathon timer',
+    fr: 'lancer un timer de subathon',
+    ja: 'サブアソンタイマーを動かす',
+    pt: 'montar um subathon timer',
+  },
+  'chat-poll': {
+    en: 'running a chat poll',
+    de: 'eine Chat-Umfrage starten',
+    tr: 'sohbet anketi yapmak',
+    es: 'hacer una encuesta en el chat',
+    fr: 'faire un sondage dans le chat',
+    ja: 'チャット投票を行う',
+    pt: 'fazer uma enquete no chat',
+  },
   'stream-frames': {
     en: 'framing your camera and chat',
+    de: 'Kamera und Chat einrahmen',
     tr: 'kameraya ve sohbete çerçeve eklemek',
+    es: 'enmarcar tu cámara y tu chat',
+    fr: 'encadrer ta caméra et ton chat',
+    ja: 'カメラとチャットにフレームを付ける',
+    pt: 'colocar moldura na câmera e no chat',
   },
   'stream-countdown': {
     en: 'counting down to your stream',
+    de: 'bis zum Stream-Start herunterzählen',
     tr: 'yayın için geri sayım koymak',
+    es: 'poner una cuenta regresiva para tu stream',
+    fr: 'lancer un compte à rebours avant ton live',
+    ja: '配信開始までカウントダウンする',
+    pt: 'fazer a contagem regressiva da live',
   },
-  'chat-giveaway': { en: 'running a chat raffle', tr: 'sohbet çekilişi yapmak' },
+  'chat-giveaway': {
+    en: 'running a chat raffle',
+    de: 'eine Verlosung im Chat starten',
+    tr: 'sohbet çekilişi yapmak',
+    es: 'hacer un sorteo en el chat',
+    fr: 'organiser un tirage au sort dans le chat',
+    ja: 'チャット抽選を行う',
+    pt: 'fazer um sorteio no chat',
+  },
   'obs-scene-switcher': {
     en: 'switching scenes from chat',
+    de: 'Szenen aus dem Chat wechseln',
     tr: 'sohbetten sahne değiştirmek',
+    es: 'cambiar de escena desde el chat',
+    fr: 'changer de scène depuis le chat',
+    ja: 'チャットからシーンを切り替える',
+    pt: 'trocar de cena pelo chat',
   },
 };
 
@@ -113,7 +186,7 @@ describe('guides index lead', () => {
   it('names the topic of every guide in every language', () => {
     expect(Object.keys(INDEX_TOPICS).sort()).toEqual(GUIDES.map((guide) => guide.id).sort());
     for (const locale of LOCALES) {
-      const lead = DICTS[locale].guides.index.lead;
+      const lead = dictionaries[locale].guides.index.lead;
       const missing = GUIDES.filter((guide) => !lead.includes(INDEX_TOPICS[guide.id][locale]));
       expect(
         missing.map((guide) => guide.id),

@@ -2,7 +2,18 @@ import { screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { PREVIEW_CHANNEL } from '#/features/widgets/stream-alerts/use-stream-alerts';
 import { withLayout } from '#/test/browser';
-import { button, en, retype, segment, slider, textbox, toggle, tr } from '#/test/queries';
+import {
+  button,
+  combobox,
+  en,
+  pickOption,
+  retype,
+  segment,
+  slider,
+  textbox,
+  toggle,
+  tr,
+} from '#/test/queries';
 import { renderRoute, setupUser } from '#/test/render';
 
 const PAGE = '/setup/stream-alerts';
@@ -39,7 +50,7 @@ describe('Stream Alerts setup', () => {
     await user.click(toggle(en('streamAlerts.kindRaid')));
     await retype(user, headingBox(en('streamAlerts.kindSub')), 'WELCOME');
     await retype(user, textbox(en('streamAlerts.minBits')), '250');
-    await user.click(segment(en('streamAlerts.language'), 'Türkçe'));
+    await pickOption(user, en('streamAlerts.language'), 'Türkçe');
     await user.click(toggle(en('streamAlerts.showMessage')));
 
     expect(urlField().value).toBe(
@@ -63,7 +74,7 @@ describe('Stream Alerts setup', () => {
     await renderRoute(PAGE);
     const heading = () => headingBox(en('streamAlerts.kindRaid'));
     expect(heading().placeholder).toBe(en('streamAlerts.alert.raidHeading'));
-    await user.click(segment(en('streamAlerts.language'), 'Türkçe'));
+    await pickOption(user, en('streamAlerts.language'), 'Türkçe');
     expect(heading().placeholder).toBe(tr('streamAlerts.alert.raidHeading'));
     expect(previewSrc().searchParams.get('lang')).toBe('tr');
   });
@@ -80,7 +91,7 @@ describe('Stream Alerts setup', () => {
     expect(toggle(en('streamAlerts.kindGift')).getAttribute('aria-checked')).toBe('false');
     expect(textbox(en('streamAlerts.minGift')).value).toBe('5');
     expect(slider(en('streamAlerts.duration')).value).toBe('12');
-    expect(segment(en('streamAlerts.language'), 'Türkçe').checked).toBe(true);
+    expect(combobox(en('streamAlerts.language')).textContent).toBe('Türkçe');
   });
 
   it('previews the picked platform and sends test alerts to the preview', async () => {

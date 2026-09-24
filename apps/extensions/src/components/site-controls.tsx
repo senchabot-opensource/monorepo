@@ -1,8 +1,9 @@
 import { useLocation } from '@tanstack/react-router';
 import type { MouseEvent } from 'react';
 import { ExternalLink } from '#/components/external-link';
-import { GithubIcon, MoonIcon, SunIcon } from '#/components/icons';
-import { LANG_PARAM, LOCALE_LABELS, LOCALES, type Locale, useI18n } from '#/lib/i18n';
+import { GithubIcon, GlobeIcon, MoonIcon, SunIcon } from '#/components/icons';
+import { DROPDOWN_ITEM_CLASS, DropdownMenu } from '#/components/ui/dropdown-menu';
+import { LANG_PARAM, LOCALE_LABELS, LOCALE_NAMES, LOCALES, type Locale, useI18n } from '#/lib/i18n';
 import { isAppPath, localizePath } from '#/lib/i18n/paths';
 import { LINKS } from '#/lib/links';
 import { useTheme } from '#/lib/theme';
@@ -54,9 +55,18 @@ export function LanguageSwitcher() {
   };
 
   return (
-    <fieldset
-      aria-label={t('common.languageToggle')}
-      className="inline-flex shrink-0 items-center rounded-md border border-zinc-200 p-0.5 dark:border-zinc-800"
+    <DropdownMenu
+      label={
+        <>
+          <GlobeIcon className="size-4" />
+          {LOCALE_LABELS[locale]}
+        </>
+      }
+      ariaLabel={`${LOCALE_LABELS[locale]}, ${t('common.languageToggle')}`}
+      triggerTitle={t('common.languageToggle')}
+      triggerClassName="inline-flex h-9 shrink-0 items-center gap-1 rounded-md px-2 text-xs font-semibold text-zinc-600 transition-colors hover:bg-zinc-200/70 hover:text-zinc-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 aria-expanded:bg-zinc-200/70 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-white dark:aria-expanded:bg-zinc-800"
+      align="end"
+      panelClassName="w-44 p-1.5"
     >
       {LOCALES.map((item: Locale) => (
         <a
@@ -65,17 +75,13 @@ export function LanguageSwitcher() {
           hrefLang={item}
           lang={item}
           onClick={(event) => handleClick(event, item)}
-          aria-current={locale === item ? 'true' : undefined}
-          className={`rounded px-2 py-1 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 ${
-            locale === item
-              ? 'bg-green-500/15 text-green-700 dark:bg-green-500/20 dark:text-green-400'
-              : 'text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-100'
-          }`}
+          aria-current={locale === item ? 'page' : undefined}
+          className={DROPDOWN_ITEM_CLASS}
         >
-          {LOCALE_LABELS[item]}
+          {LOCALE_NAMES[item]}
         </a>
       ))}
-    </fieldset>
+    </DropdownMenu>
   );
 }
 

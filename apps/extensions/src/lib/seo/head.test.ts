@@ -3,6 +3,7 @@ import { CONTENT_META, GUIDES } from '#/lib/guides';
 import { LOCALES } from '#/lib/i18n/locales';
 import {
   DESCRIPTION_MAX,
+  JA_DESCRIPTION_MAX,
   getPageHead,
   type LocalizedMeta,
   OG_IMAGES,
@@ -91,6 +92,11 @@ describe('getPageHead per locale', () => {
   it('lists the same reciprocal hreflang alternates on both, with x-default in English', () => {
     const alternates = [
       { rel: 'alternate', hrefLang: 'en', href: en },
+      ...['de', 'es', 'fr', 'ja', 'pt'].map((lang) => ({
+        rel: 'alternate',
+        hrefLang: lang,
+        href: `https://extensions.senchabot.com/${lang}/setup/raffle`,
+      })),
       { rel: 'alternate', hrefLang: 'tr', href: tr },
       { rel: 'alternate', hrefLang: 'x-default', href: en },
     ];
@@ -104,16 +110,35 @@ describe('getPageHead per locale', () => {
     expect(home.links.map((link) => link.href)).toEqual([
       'https://extensions.senchabot.com/tr',
       'https://extensions.senchabot.com',
+      'https://extensions.senchabot.com/de',
+      'https://extensions.senchabot.com/es',
+      'https://extensions.senchabot.com/fr',
+      'https://extensions.senchabot.com/ja',
+      'https://extensions.senchabot.com/pt',
       'https://extensions.senchabot.com/tr',
       'https://extensions.senchabot.com',
     ]);
   });
 
-  it('sets og:locale to the page language and the other one as the alternate', () => {
+  it('sets og:locale to the page language and the other ones as alternates', () => {
     expect(content(heads.en.meta, 'og:locale')).toEqual(['en_US']);
-    expect(content(heads.en.meta, 'og:locale:alternate')).toEqual(['tr_TR']);
+    expect(content(heads.en.meta, 'og:locale:alternate')).toEqual([
+      'de_DE',
+      'es_ES',
+      'fr_FR',
+      'ja_JP',
+      'pt_BR',
+      'tr_TR',
+    ]);
     expect(content(heads.tr.meta, 'og:locale')).toEqual(['tr_TR']);
-    expect(content(heads.tr.meta, 'og:locale:alternate')).toEqual(['en_US']);
+    expect(content(heads.tr.meta, 'og:locale:alternate')).toEqual([
+      'en_US',
+      'de_DE',
+      'es_ES',
+      'fr_FR',
+      'ja_JP',
+      'pt_BR',
+    ]);
   });
 
   it('keeps the English image and translates its alt', () => {
@@ -137,19 +162,23 @@ describe('page meta', () => {
     for (const [page, { title }] of all) expect(title.length, page).toBeLessThanOrEqual(TITLE_MAX);
   });
 
-  it('keeps home, setup and 404 descriptions between 150 and 160 characters', () => {
+  it('keeps home, setup and 404 descriptions between 150 and 160 characters (80 and 120 in Japanese)', () => {
     for (const [page, byLocale] of localized.filter(([id]) => isShortPage(id))) {
       for (const locale of LOCALES) {
         const { length } = byLocale[locale].description;
-        expect(length, `${page} ${locale}`).toBeGreaterThanOrEqual(150);
-        expect(length, `${page} ${locale}`).toBeLessThanOrEqual(DESCRIPTION_MAX);
+        const ja = locale === 'ja';
+        expect(length, `${page} ${locale}`).toBeGreaterThanOrEqual(ja ? 80 : 150);
+        expect(length, `${page} ${locale}`).toBeLessThanOrEqual(
+          ja ? JA_DESCRIPTION_MAX : DESCRIPTION_MAX,
+        );
       }
     }
   });
 
-  it('keeps guide and content descriptions within 160 characters', () => {
+  it('keeps guide and content descriptions within 160 characters (120 in Japanese)', () => {
     for (const [page, { description }] of all) {
-      expect(description.length, page).toBeLessThanOrEqual(DESCRIPTION_MAX);
+      const max = page.endsWith(' ja') ? JA_DESCRIPTION_MAX : DESCRIPTION_MAX;
+      expect(description.length, page).toBeLessThanOrEqual(max);
     }
   });
 

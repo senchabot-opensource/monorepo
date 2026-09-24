@@ -16,6 +16,11 @@ export const CHANGELOG: readonly ChangelogEntry[] = [
   { date: '2026-09-23', key: 'changelog.entries.countdownSceneIcons', widgets: ['countdown'] },
   { date: '2026-09-23', key: 'changelog.entries.countdownDoneHoldIcon', widgets: ['countdown'] },
   { date: '2026-09-23', key: 'changelog.entries.countdownTextCommand', widgets: ['countdown'] },
+  {
+    date: '2026-09-22',
+    key: 'changelog.entries.moreLanguages',
+    widgets: ['poll', 'stream-alerts', 'subathon'],
+  },
   { date: '2026-09-22', key: 'changelog.entries.chatTextShadow', widgets: ['chat-box'] },
   {
     date: '2026-09-22',

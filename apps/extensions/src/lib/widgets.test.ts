@@ -1,9 +1,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { en } from './i18n/en';
-import { resolveKey } from './i18n/index';
-import { tr } from './i18n/tr';
+import { dictionaries, resolveKey } from './i18n/index';
 import { getWidget, OVERLAYS, TOOLS, WIDGETS } from './widgets';
 
 const srcDir = `${resolve(__dirname, '..')}/`;
@@ -46,7 +44,7 @@ describe('widget registry', () => {
 
   it('has a name and tagline in every locale', () => {
     for (const widget of WIDGETS) {
-      for (const dict of [en, tr]) {
+      for (const dict of Object.values(dictionaries)) {
         expect(resolveKey(dict, widget.nameKey), widget.nameKey).toBeTruthy();
         expect(resolveKey(dict, widget.taglineKey), widget.taglineKey).toBeTruthy();
       }

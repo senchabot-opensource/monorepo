@@ -2,8 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { CHANGELOG, groupByMonth } from './changelog';
 import { toUtcDate } from './dates';
 import { en } from './i18n/en';
-import { resolveKey } from './i18n/index';
-import { tr } from './i18n/tr';
+import { dictionaries, resolveKey } from './i18n/index';
 
 describe('changelog data', () => {
   it('uses real YYYY-MM-DD dates, newest first', () => {
@@ -18,8 +17,9 @@ describe('changelog data', () => {
   it('lists each entry once, translated in every locale', () => {
     expect(new Set(CHANGELOG.map((entry) => entry.key)).size).toBe(CHANGELOG.length);
     for (const entry of CHANGELOG) {
-      expect(resolveKey(en, entry.key), entry.key).toBeTruthy();
-      expect(resolveKey(tr, entry.key), entry.key).toBeTruthy();
+      for (const dict of Object.values(dictionaries)) {
+        expect(resolveKey(dict, entry.key), entry.key).toBeTruthy();
+      }
     }
   });
 

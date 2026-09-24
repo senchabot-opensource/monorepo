@@ -12,11 +12,21 @@ vi.mock('obs-websocket-js', () => import('#/test/fake-obs-websocket'));
 
 // Testing Library counts every <header> as a banner; the site header comes first.
 const banner = () => screen.getAllByRole('banner')[0];
+/** The language dropdown's links, found while it's closed too; open it before clicking one. */
 const languageLinks = () => {
   const names = [en('common.languageToggle'), tr('common.languageToggle')];
-  const group = screen.getByRole('group', { name: (name) => names.includes(name) });
-  const [enLink, trLink] = within(group).getAllByRole('link') as HTMLAnchorElement[];
-  return { enLink, trLink };
+  const trigger = screen.getByRole('button', {
+    name: (name) => names.some((label) => name.endsWith(label)),
+  });
+  const panel = document.getElementById(trigger.getAttribute('aria-controls') ?? '') as HTMLElement;
+  const links = within(panel).getAllByRole('link', { hidden: true }) as HTMLAnchorElement[];
+  const byLang = (lang: string) =>
+    links.find((link) => link.hreflang === lang) as HTMLAnchorElement;
+  return { trigger, links, enLink: byLang('en'), trLink: byLang('tr') };
+};
+const pickLanguage = async (user: ReturnType<typeof setupUser>, lang: 'en' | 'tr') => {
+  await user.click(languageLinks().trigger);
+  await user.click(languageLinks()[lang === 'en' ? 'enLink' : 'trLink']);
 };
 
 describe('full header', () => {
@@ -164,13 +174,13 @@ describe('Turkish pages', () => {
     const links = internalLinks();
     expect(links.length).toBeGreaterThan(10);
 
-    const english = links.filter(
+    const switcher = languageLinks().links;
+    const leaving = links.filter(
       (link) => !/^\/tr(?=$|[/?#])/.test(link.getAttribute('href') ?? ''),
     );
-    // Only the language switcher's EN link leaves the Turkish site.
-    expect(
-      english.map((link) => [link.getAttribute('href'), link.getAttribute('hreflang')]),
-    ).toEqual([[english[0]?.getAttribute('href'), 'en']]);
+    // Only the language switcher's links leave the Turkish site.
+    expect(leaving.filter((link) => !switcher.includes(link))).toEqual([]);
+    expect(leaving.map((link) => link.hreflang)).toEqual(['en', 'de', 'es', 'fr', 'ja', 'pt']);
   });
 
   it.each([
@@ -204,8 +214,11 @@ describe('Turkish pages', () => {
     '/guides/chat-giveaway',
   ])('%s in English links to no Turkish page except the switcher', async (url) => {
     await renderRoute(url);
-    const turkish = internalLinks().filter((link) => link.getAttribute('href')?.startsWith('/tr'));
-    expect(turkish.map((link) => link.getAttribute('hreflang'))).toEqual(['tr']);
+    const other = internalLinks().filter((link) =>
+      /^\/(de|es|fr|ja|pt|tr)(?=$|[/?#])/.test(link.getAttribute('href') ?? ''),
+    );
+    expect(other.map((link) => link.hreflang)).toEqual(['de', 'es', 'fr', 'ja', 'pt', 'tr']);
+    expect(other.every((link) => languageLinks().links.includes(link))).toBe(true);
   });
 });
 
@@ -213,19 +226,26 @@ describe('language switcher', () => {
   it('links to the same page in the other language and switches on click', async () => {
     const user = setupUser();
     await renderRoute('/setup/raffle');
-    let { enLink, trLink } = languageLinks();
-    expect(enLink.getAttribute('href')).toBe('/setup/raffle');
-    expect(enLink.getAttribute('aria-current')).toBe('true');
-    expect(trLink.getAttribute('href')).toBe('/tr/setup/raffle');
+    let { enLink, trLink, links } = languageLinks();
+    expect(links.map((link) => link.getAttribute('href'))).toEqual([
+      '/setup/raffle',
+      '/de/setup/raffle',
+      '/es/setup/raffle',
+      '/fr/setup/raffle',
+      '/ja/setup/raffle',
+      '/pt/setup/raffle',
+      '/tr/setup/raffle',
+    ]);
+    expect(enLink.getAttribute('aria-current')).toBe('page');
     expect(trLink.getAttribute('aria-current')).toBeNull();
 
-    await user.click(trLink);
+    await pickLanguage(user, 'tr');
     expect(window.location.pathname).toBe('/tr/setup/raffle');
     expect(headings(1)).toEqual([tr('raffle.title')]);
     expect(document.documentElement.lang).toBe('tr');
     ({ enLink, trLink } = languageLinks());
     expect(enLink.getAttribute('href')).toBe('/setup/raffle');
-    expect(trLink.getAttribute('aria-current')).toBe('true');
+    expect(trLink.getAttribute('aria-current')).toBe('page');
   });
 
   it.each([
@@ -253,7 +273,7 @@ describe('language switcher', () => {
     expect(href.searchParams.get('lang')).toBe('tr');
     expect(href.searchParams.get('mainScene')).toBe('Gaming');
 
-    await user.click(trLink);
+    await pickLanguage(user, 'tr');
     const search = new URLSearchParams(window.location.search);
     expect(window.location.pathname).toBe('/tools/obs-bridge');
     expect(search.get('lang')).toBe('tr');
@@ -392,7 +412,7 @@ describe('language switch keeps the visitor in place', () => {
   it('carries the query and the hash over to the page in the other language', async () => {
     const user = setupUser();
     await renderRoute('/setup/raffle?channel=foo&platform=kick#faq');
-    await user.click(languageLinks().trLink);
+    await pickLanguage(user, 'tr');
     expect(window.location.pathname).toBe('/tr/setup/raffle');
     expect(window.location.search).toBe('?channel=foo&platform=kick');
     expect(window.location.hash).toBe('#faq');
@@ -402,7 +422,7 @@ describe('language switch keeps the visitor in place', () => {
   it('does nothing when the current language is clicked', async () => {
     const user = setupUser();
     await renderRoute('/tr/faq');
-    await user.click(languageLinks().trLink);
+    await pickLanguage(user, 'tr');
     expect(window.location.pathname).toBe('/tr/faq');
     expect(localStorage.getItem('lang')).toBeNull();
   });

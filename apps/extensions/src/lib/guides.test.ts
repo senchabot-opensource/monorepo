@@ -3,20 +3,20 @@ import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { CHANGELOG } from './changelog';
 import { CONTENT_META, GUIDES, getGuide } from './guides';
-import { en } from './i18n/en';
-import { resolveKey, translate } from './i18n/index';
-import { LOCALES } from './i18n/locales';
-import { tr } from './i18n/tr';
+import { dictionaries, resolveKey, translate } from './i18n/index';
+import { type Locale, LOCALES } from './i18n/locales';
 import type { PageMeta } from './seo/head';
 import { WIDGETS } from './widgets';
 
 const srcDir = `${resolve(__dirname, '..')}/`;
 const routeTree = readFileSync(`${srcDir}routeTree.gen.ts`, 'utf8');
 
-const expectMetaFits = (meta: PageMeta, label: string) => {
+// Google cuts Japanese snippets near 120 characters, so Japanese descriptions run shorter.
+const expectMetaFits = (meta: PageMeta, label: string, locale: Locale) => {
+  const ja = locale === 'ja';
   expect(meta.title.length, `${label} title`).toBeLessThanOrEqual(60);
-  expect(meta.description.length, `${label} description`).toBeLessThanOrEqual(160);
-  expect(meta.description.length, `${label} description`).toBeGreaterThan(100);
+  expect(meta.description.length, `${label} description`).toBeLessThanOrEqual(ja ? 120 : 160);
+  expect(meta.description.length, `${label} description`).toBeGreaterThan(ja ? 50 : 100);
 };
 
 describe('guide registry', () => {
@@ -43,17 +43,16 @@ describe('guide registry', () => {
   it('has every key translated in every locale', () => {
     for (const guide of GUIDES) {
       for (const key of [guide.titleKey, guide.shortKey, guide.summaryKey, guide.leadKey]) {
-        expect(resolveKey(en, key), key).toBeTruthy();
-        expect(resolveKey(tr, key), key).toBeTruthy();
+        for (const dict of Object.values(dictionaries)) expect(resolveKey(dict, key), key).toBeTruthy();
       }
     }
   });
 
   it('keeps titles within 60 and descriptions within 160 characters in every locale', () => {
     for (const locale of LOCALES) {
-      for (const guide of GUIDES) expectMetaFits(guide.meta[locale], `${guide.id} ${locale}`);
+      for (const guide of GUIDES) expectMetaFits(guide.meta[locale], `${guide.id} ${locale}`, locale);
       for (const [page, meta] of Object.entries(CONTENT_META)) {
-        expectMetaFits(meta[locale], `${page} ${locale}`);
+        expectMetaFits(meta[locale], `${page} ${locale}`, locale);
       }
     }
   });

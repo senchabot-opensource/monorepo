@@ -3,7 +3,7 @@ import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { GUIDES, GUIDES_PATH } from '#/lib/guides';
 import { LOCALES } from '#/lib/i18n/locales';
-import { getPathLocale, stripLocale } from '#/lib/i18n/paths';
+import { getPathLocale, localizePath, stripLocale } from '#/lib/i18n/paths';
 import { getLocaleLinks } from '#/lib/i18n/seo';
 import { WIDGETS } from '#/lib/widgets';
 import { pageUrl } from './head';
@@ -17,9 +17,12 @@ const entries = [...sitemap.matchAll(/<url>([\s\S]*?)<\/url>/g)].map(([, body]) 
   ].map(([, hrefLang, href]) => ({ rel: 'alternate', hrefLang, href })),
 }));
 const locs = entries.map((entry) => entry.loc);
-const prerendered = [
-  ...readFileSync(`${appDir}/vite.config.ts`, 'utf8').matchAll(/\{ path: '([^']+)' \}/g),
-].map((match) => match[1]);
+const sitePages = readFileSync(`${appDir}/vite.config.ts`, 'utf8').match(
+  /const SITE_PAGES = \[([\s\S]*?)\];/,
+)?.[1];
+const prerendered = LOCALES.flatMap((locale) =>
+  [...(sitePages ?? '').matchAll(/'([^']+)'/g)].map((match) => localizePath(match[1], locale)),
+);
 /** The canonical URL of a prerendered path like `/tr/faq`. */
 const canonical = (path: string) => pageUrl(stripLocale(path), getPathLocale(path));
 
@@ -43,7 +46,7 @@ describe('sitemap.xml', () => {
     expect(locs.sort()).toEqual(urls.sort());
   });
 
-  it('gives every URL the same en, tr and x-default alternates as its page head', () => {
+  it('gives every URL the same language and x-default alternates as its page head', () => {
     for (const { loc = '', alternates } of entries) {
       const path = loc.replace('https://extensions.senchabot.com', '') || '/';
       const links = getLocaleLinks(stripLocale(path), getPathLocale(path));

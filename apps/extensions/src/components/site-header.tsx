@@ -325,7 +325,7 @@ function WidgetSwitcher({ current, title }: { current: WidgetEntry; title: strin
       }
       triggerTitle={t('common.nav.switchWidget')}
       wrapTrigger={(trigger) => <h1 className="min-w-0">{trigger}</h1>}
-      triggerClassName="-mx-1.5 flex min-w-0 items-center gap-1.5 rounded-md px-1.5 py-1 text-base font-semibold text-zinc-900 transition-colors hover:bg-zinc-200/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 aria-expanded:bg-zinc-200/70 dark:text-white dark:hover:bg-zinc-800 dark:aria-expanded:bg-zinc-800"
+      triggerClassName="-mx-1.5 flex min-w-0 max-w-full items-center gap-1.5 rounded-md px-1.5 py-1 text-base font-semibold text-zinc-900 transition-colors hover:bg-zinc-200/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 aria-expanded:bg-zinc-200/70 dark:text-white dark:hover:bg-zinc-800 dark:aria-expanded:bg-zinc-800"
       anchor="container"
     >
       {(

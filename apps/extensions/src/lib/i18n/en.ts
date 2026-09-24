@@ -1851,7 +1851,7 @@ export const en = {
         position:
           'Position: the poll sits at the top or the bottom of the browser source and grows from there with the number of options.',
         language:
-          'Poll Language: English or Turkish for the words on the poll, like Results and the Yes and No of a quick poll.',
+          'Poll Language: English, Spanish, French, German, Japanese, Portuguese or Turkish for the words on the poll, like Results and the Yes and No of a quick poll.',
         p1: 'With both platforms on, the poll shows how many votes came from Twitch and from Kick next to the total. The source is transparent, so only the poll card shows on stream.',
       },
       saved: {
@@ -2056,7 +2056,7 @@ export const en = {
         neon: 'Neon (default): an angular sci-fi banner with synth sounds. When it leaves, it flickers like a neon sign.',
         celestial: 'Celestial: a navy card under the stars with a thin frame and bell chimes.',
         p1: "Color is the alert's accent. The default, Platform, shows Twitch alerts in purple and Kick alerts in green. You can also pick one color for every alert: blue, purple, pink, red, gold or green. When both channels are in the URL, a small TWITCH or KICK tag shows where each alert came from.",
-        p2: "You can rename each alert's heading, up to 24 characters, or leave it empty to keep the default, like New Subscriber. Neon writes headings in capital letters. Alert Language sets the language of the alert's words, English or Turkish, and it stays in the URL whatever language OBS is in.",
+        p2: "You can rename each alert's heading, up to 24 characters, or leave it empty to keep the default, like New Subscriber. Neon writes headings in capital letters. Alert Language sets the language of the alert's words: English, Spanish, French, German, Japanese, Portuguese or Turkish. It stays in the URL whatever language OBS is in.",
       },
       min: {
         title: 'How do you skip small gifts, cheers and raids?',
@@ -2268,6 +2268,8 @@ export const en = {
     lead: "New features and bug fixes in Senchabot Extensions, newest first. The list is put together from the project's commit history on [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      moreLanguages:
+        'The site now also comes in Spanish, French, German, Japanese and Portuguese, and Chat Poll, Stream Alerts and the Subathon Timer rates can show their words in those languages too.',
       countdownSceneIcons:
         'Stream Countdown now has a separate custom icon for each scene (starting, break, ending), and the message at zero hides itself after 10 seconds by default — set it back to 0 to keep it up.',
       countdownDoneHoldIcon:

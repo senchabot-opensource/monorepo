@@ -1,6 +1,24 @@
-export const LOCALES = ['en', 'tr'] as const;
+export const LOCALES = ['en', 'de', 'es', 'fr', 'ja', 'pt', 'tr'] as const;
 export type Locale = (typeof LOCALES)[number];
-export const LOCALE_LABELS: Record<Locale, string> = { en: 'EN', tr: 'TR' };
+export const LOCALE_LABELS: Record<Locale, string> = {
+  en: 'EN',
+  de: 'DE',
+  es: 'ES',
+  fr: 'FR',
+  ja: 'JA',
+  pt: 'PT',
+  tr: 'TR',
+};
+/** Each language in its own words, for pickers that list them all. */
+export const LOCALE_NAMES: Record<Locale, string> = {
+  en: 'English',
+  de: 'Deutsch',
+  es: 'Español',
+  fr: 'Français',
+  ja: '日本語',
+  pt: 'Português',
+  tr: 'Türkçe',
+};
 export const DEFAULT_LOCALE: Locale = 'en';
 export const LANG_PARAM = 'lang';
 /** localStorage key holding the language the visitor picked (or arrived in via a /tr link). */
