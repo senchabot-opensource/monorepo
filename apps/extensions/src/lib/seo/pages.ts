@@ -17,37 +17,37 @@ export const PAGE_META = {
     en: {
       title: 'Free Twitch & Kick Overlays for OBS | Senchabot Extensions',
       description:
-        'Eleven free overlays and tools for Twitch and Kick streamers: chat box, emote wall, alerts, sub goal, subathon timer, frames, countdown, poll and raffle.',
+        'Twelve free overlays and tools for Twitch and Kick streamers: chat box, emote wall, alerts, sub goal, subathon timer, frames, countdown, poll and raffle.',
     },
     de: {
       title: 'Kostenlose Twitch- und Kick-Overlays für OBS | Senchabot',
       description:
-        'Elf kostenlose Overlays und Tools für Twitch- und Kick-Streamer: Chat-Box, Emote-Wand, Alerts, Sub-Ziel, Subathon Timer, Rahmen, Countdown, Umfrage, Verlosung.',
+        'Zwölf kostenlose Overlays und Tools für Twitch- und Kick-Streamer: Chat-Box, Emote-Wand, Alerts, Sub-Ziel, Subathon, Rahmen, Countdown, Umfrage, Verlosung.',
     },
     tr: {
       title: "OBS için Ücretsiz Twitch ve Kick Overlay'leri | Senchabot",
       description:
-        'Twitch ve Kick yayıncıları için 11 ücretsiz overlay ve araç: sohbet kutusu, emote duvarı, uyarılar, abone hedefi, subathon, çerçeve, geri sayım, anket, çekiliş.',
+        'Twitch ve Kick yayıncıları için 12 ücretsiz overlay ve araç: sohbet kutusu, emote duvarı, uyarılar, abone hedefi, subathon, çerçeve, geri sayım, anket, çekiliş.',
     },
     es: {
       title: 'Overlays gratis de Twitch y Kick para OBS | Senchabot',
       description:
-        'Once overlays y herramientas gratis para streamers de Twitch y Kick: caja de chat, muro de emotes, alertas, meta de subs, subathon, marcos, encuestas y sorteos.',
+        'Doce overlays y herramientas gratis para streamers de Twitch y Kick: caja de chat, muro de emotes, alertas, meta de subs, subathon, marcos, encuestas y sorteos.',
     },
     fr: {
       title: 'Overlays Twitch et Kick gratuits pour OBS | Senchabot',
       description:
-        "Onze overlays et outils gratuits pour streamers Twitch et Kick : boîte de chat, mur d'emotes, alertes, objectif de subs, subathon, cadres, sondage et tirage.",
+        "Douze overlays et outils gratuits pour streamers Twitch et Kick : boîte de chat, mur d'emotes, alertes, objectif de subs, subathon, cadres, sondage et tirage.",
     },
     ja: {
       title: 'OBS用の無料Twitch・Kickオーバーレイ | Senchabot Extensions',
       description:
-        'TwitchとKickの配信者向けの無料オーバーレイとツールが11種類。チャットボックス、エモートウォール、アラート、サブスク目標、サブアソンタイマー、フレーム、カウントダウン、投票、抽選。',
+        'TwitchとKickの配信者向けの無料オーバーレイとツールが12種類。チャットボックス、エモートウォール、アラート、サブスク目標、サブアソンタイマー、フレーム、カウントダウン、投票、抽選。',
     },
     pt: {
       title: 'Overlays grátis Twitch e Kick no OBS | Senchabot Extensions',
       description:
-        'Onze overlays e ferramentas grátis para streamers da Twitch e da Kick: chat, emotes, alertas, meta de subs, subathon, molduras, contagem, enquete e sorteio.',
+        'Doze overlays e ferramentas grátis para streamers da Twitch e da Kick: chat, emotes, alertas, meta de subs, subathon, molduras, contagem, enquete e sorteio.',
     },
   },
   'chat-box': {

@@ -117,6 +117,7 @@ function SubathonTimerGuide() {
               <Bullets
                 items={[
                   'guides.subathon.look.bar',
+                  'guides.subathon.look.thin',
                   'guides.subathon.look.clock',
                   'guides.subathon.look.ring',
                 ]}

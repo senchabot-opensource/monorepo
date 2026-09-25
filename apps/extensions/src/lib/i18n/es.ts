@@ -1454,7 +1454,7 @@ export const es: typeof en = {
       },
       transparent: {
         title: '¿Hay que hacer algo para que el fondo sea transparente?',
-        p1: 'No. Caja de Chat, Muro de Emotes, Sub Sprout, Subathon Timer, Alertas de Stream, Meta de Subs, Encuesta de Chat y el overlay de Sorteo se dibujan sobre un fondo transparente. No necesitas chroma key ni ningún filtro, y puedes dejar el campo CSS personalizado de OBS como está.',
+        p1: 'No. Caja de Chat, Muro de Emotes, Sub Sprout, Subathon Timer, Alertas de Stream, Meta de Subs, Marcos de Stream, Cuenta Regresiva, Encuesta de Chat, Redes Sociales y el overlay de Sorteo se dibujan sobre un fondo transparente. No necesitas chroma key ni ningún filtro, y puedes dejar el campo CSS personalizado de OBS como está.',
         p2: 'Si la Caja de Chat se lee mal sobre una escena clara, activa Fondo oscuro. Pone una capa negra semitransparente detrás del widget, y puedes ajustar su opacidad entre 0% y 100% (50% por defecto). Si quieres cada mensaje en su propio recuadro, activa Fondo por mensaje.',
       },
       settings: {
@@ -1465,7 +1465,7 @@ export const es: typeof en = {
         chatBox:
           'Caja de Chat: los mensajes solo llegan mientras la fuente está funcionando. Si la fuente se apaga y vuelve, la pantalla empieza vacía y solo muestra mensajes nuevos.',
         subSprout:
-          'Sub Sprout: el crecimiento de la planta no se guarda en ningún sitio. Si la página se recarga, la planta vuelve a la primera etapa.',
+          'Sub Sprout: la planta se guarda dentro de OBS, así que una recarga conserva la etapa a la que llegó, pero las subs que llegan con la fuente apagada no la hacen crecer.',
         goal: 'Meta de Subs: el conteo se guarda dentro de OBS, así que una recarga no lo pierde, pero las subs que llegan con la fuente apagada no se cuentan.',
         poll: 'Encuesta de Chat: la encuesta y sus votos se guardan dentro de OBS, así que una recarga no los pierde, pero los votos escritos con la fuente apagada no se cuentan.',
         subathon:
@@ -1783,6 +1783,7 @@ export const es: typeof en = {
       look: {
         title: '¿Qué estilos y colores hay?',
         bar: 'Barra de vida (por defecto): una barra de videojuego que se vacía desde el 100% hasta cero.',
+        thin: 'Barra fina: una barra más delgada con el título y el tiempo restante dentro.',
         clock: 'Reloj: números grandes en horas, minutos y segundos.',
         ring: 'Anillo: un círculo que se vacía a medida que se acaba el tiempo.',
         p1: 'El color por defecto, Vida, pasa de verde a ámbar y a rojo a medida que queda poco tiempo. También puedes elegir un color fijo: verde, morado, rojo, dorado, cian o rosa. El título junto al timer dice SUBATHON por defecto; cámbialo por lo que quieras de hasta 32 caracteres, o déjalo vacío para ocultarlo.',
@@ -2244,7 +2245,7 @@ export const es: typeof en = {
     },
     freeQ: '¿Senchabot Extensions es gratis?',
     freeA:
-      'Sí. Los nueve widgets y herramientas son gratis: Caja de Chat, Muro de Emotes, Sub Sprout, Subathon Timer, Alertas de Stream, Meta de Subs, Encuesta de Chat, Sorteo y OBS Bridge. No hay plan de pago, marca de agua ni cuenta premium. El código fuente está abierto en GitHub bajo la licencia GPL-3.0.',
+      'Sí. Los doce widgets y herramientas son gratis: Caja de Chat, Muro de Emotes, Sub Sprout, Subathon Timer, Alertas de Stream, Meta de Subs, Marcos de Stream, Cuenta Regresiva, Encuesta de Chat, Redes Sociales, Sorteo y OBS Bridge. No hay plan de pago, marca de agua ni cuenta premium. El código fuente está abierto en GitHub bajo la licencia GPL-3.0.',
     loginQ: '¿Qué significa "sin iniciar sesión"?',
     loginA:
       'No creas una cuenta en este sitio, no inicias sesión con Twitch ni con Kick y no descargas nada. Escribes el nombre de tu canal y la página de configuración te da una URL. Los widgets leen el chat público de forma anónima: en Twitch se conectan como un espectador anónimo y en Kick escuchan el feed público del chat. Por eso no pueden escribir en el chat, moderar ni acceder a información privada de tu cuenta.',
@@ -2256,7 +2257,7 @@ export const es: typeof en = {
       'Con OBS Studio y cualquier otro programa de streaming que admita una fuente de navegador. Cada widget funciona como una URL web, y pegas esa URL en la fuente. Nuestras guías están escritas para OBS Studio.',
     platformsQ: '¿Qué widgets funcionan con Twitch y cuáles con Kick?',
     platformsA:
-      'Los once funcionan con las dos plataformas. Caja de Chat, Muro de Emotes, Sub Sprout, Subathon Timer, Alertas de Stream, Meta de Subs, Encuesta de Chat y Cuenta Regresiva escuchan un canal de Twitch y uno de Kick juntos en una sola URL. OBS Bridge escucha comandos de los dos chats, y cada usuario autorizado se añade con su propia plataforma. Sorteo funciona en una plataforma a la vez, Twitch o Kick. En Caja de Chat, los emotes de 7TV se ven en las dos plataformas, mientras que los de BTTV y FFZ solo en Twitch.',
+      'Los doce funcionan con las dos plataformas. Caja de Chat, Muro de Emotes, Sub Sprout, Subathon Timer, Alertas de Stream, Meta de Subs, Encuesta de Chat y Cuenta Regresiva escuchan un canal de Twitch y uno de Kick juntos en una sola URL. OBS Bridge escucha comandos de los dos chats, y cada usuario autorizado se añade con su propia plataforma. Sorteo funciona en una plataforma a la vez, Twitch o Kick. Marcos de Stream y Redes Sociales no leen el chat, así que funcionan igual en cualquiera de las dos. En Caja de Chat, los emotes de 7TV se ven en las dos plataformas, mientras que los de BTTV y FFZ solo en Twitch.',
     editQ: '¿Cómo cambio un widget más adelante?',
     editA:
       'Cambia la configuración en la página de configuración, copia la URL nueva y pégala encima de la vieja en el campo URL de la fuente en OBS. Con Caja de Chat, Muro de Emotes, Sub Sprout, Subathon Timer, Alertas de Stream, Meta de Subs, Encuesta de Chat, Marcos de Stream, Redes Sociales y Cuenta Regresiva, si pegas tu URL vieja en el campo URL del widget de la página de configuración, vuelve toda tu configuración y no tienes que empezar de cero.',

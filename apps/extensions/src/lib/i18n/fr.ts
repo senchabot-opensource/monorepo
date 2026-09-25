@@ -1463,7 +1463,7 @@ export const fr: typeof en = {
       },
       transparent: {
         title: 'Faut-il faire quelque chose pour rendre le fond transparent ?',
-        p1: "Non. Boîte de chat, Mur d'emotes, Sub Sprout, Subathon Timer, Alertes de stream, Objectif de subs, Sondage du chat et l'overlay du Tirage au sort sont dessinés sur un fond transparent. Pas besoin de chroma key ni de filtre, et tu peux laisser le champ CSS personnalisé d'OBS tel quel.",
+        p1: "Non. Boîte de chat, Mur d'emotes, Sub Sprout, Subathon Timer, Alertes de stream, Objectif de subs, Cadres de stream, Compte à rebours de stream, Sondage du chat, Réseaux sociaux et l'overlay du Tirage au sort sont dessinés sur un fond transparent. Pas besoin de chroma key ni de filtre, et tu peux laisser le champ CSS personnalisé d'OBS tel quel.",
         p2: 'Si la Boîte de chat est difficile à lire sur une scène claire, active Fond sombre. Ça ajoute une couche noire semi-transparente derrière le widget, et tu peux régler son opacité de 0 % à 100 % (50 % par défaut). Si tu veux chaque message dans sa propre boîte, active Fond par message.',
       },
       settings: {
@@ -1474,7 +1474,7 @@ export const fr: typeof en = {
         chatBox:
           "Boîte de chat : les messages n'arrivent que pendant que la source tourne. Si la source se coupe puis revient, l'écran repart vide et n'affiche que les nouveaux messages.",
         subSprout:
-          "Sub Sprout : la pousse de la plante n'est enregistrée nulle part. Si la page se recharge, la plante revient au premier stade.",
+          "Sub Sprout : la plante est enregistrée dans OBS, donc un rechargement garde le stade qu'elle a atteint, mais les subs qui arrivent pendant que la source est coupée ne la font pas pousser.",
         goal: 'Objectif de subs : le compteur est enregistré dans OBS, donc un rechargement ne le perd pas, mais les subs qui arrivent pendant que la source est coupée ne sont pas comptés.',
         poll: 'Sondage du chat : le sondage et ses votes sont enregistrés dans OBS, donc un rechargement ne les perd pas, mais les votes tapés pendant que la source est coupée ne sont pas comptés.',
         subathon:
@@ -1795,6 +1795,7 @@ export const fr: typeof en = {
       look: {
         title: 'Quels styles et couleurs ?',
         bar: 'Barre de vie (par défaut) : une barre façon jeu vidéo qui se vide de 100 % vers zéro.',
+        thin: "Barre fine : une barre plus mince avec le titre et le temps restant à l'intérieur.",
         clock: 'Horloge : de grands chiffres en heures, minutes et secondes.',
         ring: "Anneau : un cercle qui se vide à mesure que le temps s'écoule.",
         p1: "La couleur par défaut, Vie, passe du vert à l'orange puis au rouge quand le temps baisse. Tu peux aussi choisir une couleur fixe : vert, violet, rouge, or, cyan ou rose. Le titre à côté du timer affiche SUBATHON par défaut ; change-le pour ce que tu veux jusqu'à 32 caractères, ou laisse-le vide pour le masquer.",
@@ -2256,7 +2257,7 @@ export const fr: typeof en = {
     },
     freeQ: 'Senchabot Extensions est-il gratuit ?',
     freeA:
-      "Oui. Les neuf widgets et outils sont gratuits : Boîte de chat, Mur d'emotes, Sub Sprout, Subathon Timer, Alertes de stream, Objectif de subs, Sondage du chat, Tirage au sort et OBS Bridge. Pas d'offre payante, pas de filigrane, pas de compte premium. Le code source est ouvert sur GitHub sous licence GPL-3.0.",
+      "Oui. Les douze widgets et outils sont gratuits : Boîte de chat, Mur d'emotes, Sub Sprout, Subathon Timer, Alertes de stream, Objectif de subs, Cadres de stream, Compte à rebours de stream, Sondage du chat, Réseaux sociaux, Tirage au sort et OBS Bridge. Pas d'offre payante, pas de filigrane, pas de compte premium. Le code source est ouvert sur GitHub sous licence GPL-3.0.",
     loginQ: 'Que veut dire "sans connexion" ?',
     loginA:
       "Tu ne crées pas de compte sur ce site, tu ne te connectes pas avec Twitch ou Kick, et tu ne télécharges rien. Tu tapes le nom de ta chaîne et la page de configuration te donne une URL. Les widgets lisent le chat public anonymement : sur Twitch, ils se connectent comme un viewer anonyme, et sur Kick, ils écoutent le flux public du chat. C'est pour ça qu'ils ne peuvent pas écrire dans le chat, modérer, ni accéder aux infos privées de ton compte.",
@@ -2268,7 +2269,7 @@ export const fr: typeof en = {
       'OBS Studio et tout autre logiciel de stream qui gère une source navigateur. Chaque widget tourne comme une URL web, et tu colles cette URL dans la source. Nos guides sont écrits pour OBS Studio.',
     platformsQ: 'Quels widgets gèrent Twitch et lesquels gèrent Kick ?',
     platformsA:
-      "Les onze gèrent les deux plateformes. Boîte de chat, Mur d'emotes, Sub Sprout, Subathon Timer, Alertes de stream, Objectif de subs, Sondage du chat et Compte à rebours de stream écoutent une chaîne Twitch et une chaîne Kick ensemble dans une seule URL. OBS Bridge écoute les commandes des deux chats, et chaque utilisateur autorisé est ajouté avec sa propre plateforme. Le Tirage au sort fonctionne sur une seule plateforme à la fois, Twitch ou Kick. Dans la Boîte de chat, les emotes 7TV s'affichent sur les deux plateformes, et les emotes BTTV et FFZ seulement sur Twitch.",
+      "Les douze gèrent les deux plateformes. Boîte de chat, Mur d'emotes, Sub Sprout, Subathon Timer, Alertes de stream, Objectif de subs, Sondage du chat et Compte à rebours de stream écoutent une chaîne Twitch et une chaîne Kick ensemble dans une seule URL. OBS Bridge écoute les commandes des deux chats, et chaque utilisateur autorisé est ajouté avec sa propre plateforme. Le Tirage au sort fonctionne sur une seule plateforme à la fois, Twitch ou Kick. Les Cadres de stream et les Réseaux sociaux ne lisent pas le chat, donc ils fonctionnent de la même façon sur les deux. Dans la Boîte de chat, les emotes 7TV s'affichent sur les deux plateformes, et les emotes BTTV et FFZ seulement sur Twitch.",
     editQ: 'Comment modifier un widget plus tard ?',
     editA:
       "Change les réglages sur la page de configuration, copie la nouvelle URL, et colle-la à la place de l'ancienne dans le champ URL de la source dans OBS. Avec Boîte de chat, Mur d'emotes, Sub Sprout, Subathon Timer, Alertes de stream, Objectif de subs, Sondage du chat, Cadres de stream, Réseaux sociaux et Compte à rebours de stream, si tu colles ton ancienne URL dans le champ URL du widget sur la page de configuration, tous tes réglages reviennent et tu n'as pas à tout recommencer.",

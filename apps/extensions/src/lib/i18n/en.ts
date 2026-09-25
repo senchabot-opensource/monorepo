@@ -1427,7 +1427,7 @@ export const en = {
       },
       transparent: {
         title: 'Do you need to do anything to make the background transparent?',
-        p1: "No. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll and the Raffle overlay are drawn on a transparent background. You don't need a chroma key or a filter, and you can leave the Custom CSS field in OBS as it is.",
+        p1: "No. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Stream Frames, Stream Countdown, Chat Poll, Socials and the Raffle overlay are drawn on a transparent background. You don't need a chroma key or a filter, and you can leave the Custom CSS field in OBS as it is.",
         p2: 'If Chat Box is hard to read on a bright scene, turn on Dark Background. It puts a semi-transparent black layer behind the widget, and you can set its opacity anywhere from 0% to 100% (50% by default). If you want each message in its own box, turn on Message Background Box.',
       },
       settings: {
@@ -1438,7 +1438,7 @@ export const en = {
         chatBox:
           'Chat Box: messages only come in while the source is running. If the source shuts down and comes back, the screen starts empty and only shows new messages.',
         subSprout:
-          "Sub Sprout: the plant's growth isn't saved anywhere. If the page reloads, the plant goes back to the first stage.",
+          "Sub Sprout: the plant is saved inside OBS, so a reload keeps the stage it reached, but subs that come in while the source is off don't grow it.",
         goal: "Sub Goal: the count is saved inside OBS, so a reload doesn't lose it, but subs that come in while the source is off aren't counted.",
         poll: "Chat Poll: the poll and its votes are saved inside OBS, so a reload doesn't lose them, but votes typed while the source is off aren't counted.",
         subathon:
@@ -1754,6 +1754,7 @@ export const en = {
       look: {
         title: 'Which styles and colors are there?',
         bar: 'Health Bar (default): a game-style bar that drains from 100% toward zero.',
+        thin: 'Thin Bar: the title and the time left sit inside a slimmer bar.',
         clock: 'Clock: big numbers in hours, minutes and seconds.',
         ring: 'Ring: a circle that empties as the time runs out.',
         p1: 'The default color, Health, goes from green to amber to red as the time runs low. You can also pick one fixed color: green, purple, red, gold, cyan or pink. The title next to the timer says SUBATHON by default; change it to anything up to 32 characters, or leave it empty to hide it.',
@@ -2231,7 +2232,7 @@ export const en = {
     },
     freeQ: 'Is Senchabot Extensions free?',
     freeA:
-      "Yes. All nine widgets and tools are free: Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll, Raffle and OBS Bridge. There's no paid plan, watermark or premium account. The source code is open on GitHub under the GPL-3.0 license.",
+      "Yes. All twelve widgets and tools are free: Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Stream Frames, Stream Countdown, Chat Poll, Socials, Raffle and OBS Bridge. There's no paid plan, watermark or premium account. The source code is open on GitHub under the GPL-3.0 license.",
     loginQ: 'What does "no login required" mean?',
     loginA:
       "You don't create an account on this site, you don't log in with Twitch or Kick, and you don't download anything. You type your channel name and the setup page gives you a URL. The widgets read public chat anonymously: on Twitch they connect like an anonymous viewer, and on Kick they listen to the public chat feed. That's why they can't post in chat, moderate, or access private info on your account.",
@@ -2243,7 +2244,7 @@ export const en = {
       'OBS Studio and any other streaming software that supports a browser source. Each widget runs as a web URL, and you paste that URL into the source. Our guides are written for OBS Studio.',
     platformsQ: 'Which widgets support Twitch and which support Kick?',
     platformsA:
-      'All eleven support both platforms. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll and Stream Countdown listen to a Twitch and a Kick channel together in one URL. OBS Bridge listens for commands from both chats, and each authorized user is added with their own platform. Raffle runs on one platform at a time, Twitch or Kick. In Chat Box, 7TV emotes show on both platforms, while BTTV and FFZ emotes show on Twitch only.',
+      'All twelve support both platforms. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll and Stream Countdown listen to a Twitch and a Kick channel together in one URL. OBS Bridge listens for commands from both chats, and each authorized user is added with their own platform. Raffle runs on one platform at a time, Twitch or Kick. Stream Frames and Socials read no chat, so they work the same on either one. In Chat Box, 7TV emotes show on both platforms, while BTTV and FFZ emotes show on Twitch only.',
     editQ: 'How do I change a widget later?',
     editA:
       "Change the settings on the setup page, copy the new URL, and paste it over the old one in the source's URL field in OBS. With Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll, Stream Frames, Socials and Stream Countdown, if you paste your old URL into the Widget URL field on the setup page, all your settings come back and you don't have to start over.",
