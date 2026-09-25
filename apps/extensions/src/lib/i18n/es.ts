@@ -1446,6 +1446,8 @@ export const es: typeof en = {
             'El overlay del ganador. El confeti sale de los dos lados de la pantalla y el nombre del ganador aparece en el centro.',
           obsBridge:
             'No es un overlay visible. Deja la herramienta abierta en una pestaña del navegador o en un panel de OBS.',
+          socials:
+            'Una cuenta a la vez, en el centro de esta franja. El texto no se achica, así que un nombre de usuario largo necesita una fuente más ancha.',
         },
         fontNote:
           'Para agrandar el texto de la Caja de Chat, no estires la fuente. Usa el ajuste Tamaño de fuente en la página de configuración: de 8 a 72 píxeles, 18 por defecto.',

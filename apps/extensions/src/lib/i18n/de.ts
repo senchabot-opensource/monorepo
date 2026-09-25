@@ -1409,6 +1409,8 @@ export const de: typeof en = {
           raffle:
             'Das Gewinner-Overlay. Konfetti schießt von beiden Seiten des Screens, und der Name des Gewinners erscheint in der Mitte.',
           obsBridge: 'Kein sichtbares Overlay. Lass das Tool in einem Browser-Tab oder einem OBS-Dock offen.',
+          socials:
+            'Ein Nutzername nach dem anderen, in der Mitte dieses Streifens. Der Text bleibt gleich groß, für einen langen Nutzernamen brauchst du also eine breitere Quelle.',
         },
         fontNote:
           'Um den Text der Chat-Box größer zu machen, zieh nicht die Quelle größer. Nimm die Einstellung Schriftgröße auf der Setup-Seite: 8 bis 72 Pixel, standardmäßig 18.',

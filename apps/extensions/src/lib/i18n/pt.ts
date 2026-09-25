@@ -1436,6 +1436,8 @@ export const pt: typeof en = {
             'O overlay do vencedor. Confete estoura dos dois lados da tela e o nome do vencedor aparece no meio.',
           obsBridge:
             'Não é um overlay visível. Deixe a ferramenta aberta em uma aba do navegador ou em um painel do OBS.',
+          socials:
+            'Um perfil por vez, no meio desta faixa. O texto não diminui, então um nome de usuário longo precisa de uma fonte mais larga.',
         },
         fontNote:
           'Para deixar o texto da Caixa de Chat maior, não estique a fonte. Use a opção Tamanho da fonte na página de configuração: de 8 a 72 pixels, 18 por padrão.',
