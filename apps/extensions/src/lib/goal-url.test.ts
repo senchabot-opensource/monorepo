@@ -4,6 +4,7 @@ import {
   buildGoalUrl,
   DEFAULT_GOAL_SETTINGS,
   type GoalSettings,
+  MAX_END_HOLD_SECONDS,
   MAX_GOAL_COUNT,
   parseGoalUrl,
   readGoalSettings,
@@ -19,6 +20,10 @@ const CUSTOM: GoalSettings = {
   title: 'ROAD TO 500',
   start: 431,
   target: 500,
+  end: 'stay',
+  endHold: 0,
+  icon: '',
+  iconUrl: '',
   pops: false,
 };
 
@@ -104,6 +109,55 @@ describe('readGoalSettings', () => {
 
   it('keeps an empty title, which hides it', () => {
     expect(readGoalSettings(new URLSearchParams('title=')).title).toBe('');
+  });
+
+  it('writes the icon and emote image only when set, and reads them back', () => {
+    const url = buildGoalUrl(
+      ORIGIN,
+      {
+        ...DEFAULT_GOAL_SETTINGS,
+        icon: '⭐',
+        iconUrl: 'https://cdn.7tv.app/emote/e1/2x.webp',
+      },
+      'streamer',
+      '',
+    );
+    expect(Object.fromEntries(new URL(url).searchParams)).toMatchObject({
+      icon: '⭐',
+      iconUrl: 'https://cdn.7tv.app/emote/e1/2x.webp',
+    });
+    expect(parseGoalUrl(url)?.settings).toMatchObject({
+      icon: '⭐',
+      iconUrl: 'https://cdn.7tv.app/emote/e1/2x.webp',
+    });
+  });
+  it('writes the end behavior and hold only when set, and reads them back', () => {
+    expect(
+      Object.fromEntries(
+        new URL(buildGoalUrl(ORIGIN, DEFAULT_GOAL_SETTINGS, 'streamer', '')).searchParams,
+      ),
+    ).toEqual({ twitch: 'streamer' });
+    const url = buildGoalUrl(
+      ORIGIN,
+      { ...DEFAULT_GOAL_SETTINGS, end: 'hide', endHold: 90 },
+      'streamer',
+      '',
+    );
+    expect(Object.fromEntries(new URL(url).searchParams)).toMatchObject({
+      end: 'hide',
+      endHold: '90',
+    });
+    expect(parseGoalUrl(url)?.settings).toMatchObject({ end: 'hide', endHold: 90 });
+  });
+
+  it('falls back for a bad end value and clamps the hold', () => {
+    expect(readGoalSettings(new URLSearchParams('end=maybe')).end).toBe('stay');
+    expect(readGoalSettings(new URLSearchParams('endHold=99999')).endHold).toBe(
+      MAX_END_HOLD_SECONDS,
+    );
+    expect(readGoalSettings(new URLSearchParams('endHold=-5')).endHold).toBe(
+      DEFAULT_GOAL_SETTINGS.endHold,
+    );
   });
 });
 

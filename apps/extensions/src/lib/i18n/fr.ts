@@ -756,6 +756,18 @@ export const fr: typeof en = {
     targetTip: 'La barre est pleine à ce nombre. Le compteur continue au-delà.',
     countsHint:
       "Chaque sub et resub ajoute 1, Prime et tous les niveaux pareil. Un cadeau ajoute 1 pour chaque sub qu'il contient.",
+    end: 'Objectif atteint',
+    ends: {
+      stay: 'Garder affiché',
+      hide: 'Masquer',
+    },
+    endTip: "Ce qui reste à l'écran une fois l'objectif atteint.",
+    endHold: 'Masquer après',
+    endHoldTip:
+      "Combien de temps l'objectif terminé reste à l'écran. Zéro le masque immédiatement.",
+    endHoldOff: "Se masque dès que l'objectif est atteint.",
+    unitMinutes: 'min',
+    unitSeconds: 's',
     style: 'Style',
     styleTip:
       "Barre place le titre de l'objectif et le compteur au-dessus de la barre. Barre fine met le titre et le compteur directement dans une barre plus mince.",
@@ -765,6 +777,13 @@ export const fr: typeof en = {
     titleLabel: 'Titre',
     titleTip: 'Affiché au-dessus de la barre. Laisse vide pour ne pas afficher de titre.',
     titlePlaceholder: 'Pas de titre',
+    iconLabel: "Icône de l'objectif",
+    iconTip:
+      "Un emoji pour l'objectif à la place de l'étoile, par ex. ⭐. Laisse vide pour utiliser l'étoile.",
+    iconPlaceholder: 'Étoile',
+    emoteLabel: 'Emote de la chaîne',
+    emoteTip:
+      "L'objectif affiche cette emote de la chaîne à la place de l'encadré d'icône ci-dessus. Liste les emotes d'abonné de chaque chaîne ainsi que ses propres sets 7TV, BTTV et FFZ — aucun pool global ou partagé.",
     showPops: 'Afficher les nouveaux subs',
     showPopsTip:
       'Fait monter un +1 avec le pseudo du viewer pour chaque sub, ou +5 pour 5 subs offerts.',
@@ -942,6 +961,26 @@ export const fr: typeof en = {
     doneLabel: 'Message à zéro',
     doneTip:
       "Remplace l'horloge quand elle arrive à zéro. Laisse vide pour utiliser le texte de la scène.",
+    doneHold: 'Masquer après',
+    doneHoldTip:
+      "Combien de temps le message à zéro reste à l'écran. Zéro le maintient affiché jusqu'à ce que tu changes de scène.",
+    doneHoldOff: "Le message reste affiché jusqu'à ce que tu changes de scène.",
+    iconLabel: 'Icône personnalisée',
+    iconTip:
+      "Un emoji ou quelques caractères pour la scène sélectionnée à la place de son icône de scène, par ex. ☕. Laisse vide pour utiliser l'icône de scène.",
+    iconPlaceholder: 'Icône de scène',
+    emoteLabel: 'Emote de la chaîne',
+    emoteTip:
+      "La scène sélectionnée affiche cette emote de la chaîne à la place de l'encadré d'icône ci-dessus. Liste les emotes d'abonné de chaque chaîne ainsi que ses propres sets 7TV, BTTV et FFZ — aucun pool global ou partagé.",
+    emoteNone: 'Aucune emote',
+    emoteLoading: 'Chargement des emotes…',
+    emoteEmpty: 'Aucune emote de chaîne trouvée pour ces chaînes.',
+    emoteNeedChannel:
+      'Renseigne une chaîne Twitch ou Kick ci-dessus pour charger ses emotes.',
+    emoteSearch: 'Rechercher des emotes',
+    emoteRemove: "Retirer l'emote",
+    emoteClose: 'Fermer',
+    unitSeconds: 's',
     look: 'Fond',
     looks: {
       card: 'Panneau',
@@ -963,6 +1002,13 @@ export const fr: typeof en = {
     cmdSet: 'Définit le temps restant',
     cmdPause: 'Le met en pause ; start le relance',
     cmdReset: 'Relance le compte à rebours depuis le début',
+    cmdCancel:
+      "Annule et masque l'overlay ; n'importe quelle commande le réaffiche",
+    cmdScene:
+      'Bascule vers starting, break ou ending et définit la durée (10m si omis) ; le texte après devient le titre, | note définit la note',
+    cmdTitle: 'Définit le titre ; vide réinitialise avec le texte de configuration',
+    cmdNote:
+      "Définit la note sous l'horloge ; vide réinitialise avec le texte de configuration",
     previewTitle: 'Aperçu du Compte à rebours de stream',
     previewIframeTitle: 'Aperçu du Compte à rebours de stream',
     previewHint:
@@ -2017,8 +2063,14 @@ export const fr: typeof en = {
         pauseDoes: "Met l'horloge en pause là où elle est",
         startDoes: 'La relance après une pause',
         resetDoes: 'Relance le compte à rebours depuis le début',
+        cancelDoes:
+          "Arrête le compte à rebours et masque l'overlay jusqu'à la prochaine commande",
         sceneDoes:
           'Change la scène en pause, début ou fin, et règle la durée (10m par défaut si elle est omise)',
+        titleDoes:
+          "Remplace le titre jusqu'à la prochaine commande de scène ; !countdown title sans rien l'efface",
+        noteDoes:
+          "Remplace la note sous l'horloge jusqu'à la prochaine commande de scène ; !countdown note sans rien l'efface",
         p2: 'Seuls toi et tes modos pouvez les lancer, sur les deux plateformes, et une réponse dans le chat ne lance jamais de commande. Le compte à rebours lit ton chat public comme les autres widgets, sans connexion.',
       },
       scenes: {
@@ -2296,8 +2348,24 @@ export const fr: typeof en = {
     lead: "Les nouvelles fonctionnalités et corrections de bugs de Senchabot Extensions, des plus récentes aux plus anciennes. La liste est tirée de l'historique des commits du projet sur [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      countdownCancel:
+        'Les modos de Stream Countdown peuvent désormais arrêter le compte à rebours et le masquer avec `!countdown cancel`. N’importe quelle autre commande le réaffiche.',
+      goalEmoteIcons:
+        'L’Objectif de subs peut désormais afficher votre propre icône : un emoji ou une emote de votre chaîne à la place de l’étoile.',
+      countdownEmoteIcons:
+        'Stream Countdown peut désormais utiliser les emotes de votre chaîne comme icônes : choisissez-en une par scène via un sélecteur visuel parmi les emotes d’abonné de vos chaînes et vos propres sets 7TV, BTTV et FFZ.',
+      goalCelebrationName:
+        'L’Objectif de subs indique désormais qui l’a complété : lorsqu’un seul sub ou cadeau termine l’objectif, le nom de la personne apparaît sur le trophée.',
+      goalEndHide:
+        'L’Objectif de subs peut désormais se masquer une fois atteint : choisissez Masquer sous Objectif atteint et définissez après combien de minutes et secondes.',
       moreLanguages:
         'Le site est maintenant aussi disponible en espagnol, français, allemand, japonais et portugais, et Sondage du chat, Alertes de stream et les valeurs du Subathon Timer peuvent aussi afficher leurs textes dans ces langues.',
+      countdownSceneIcons:
+        'Stream Countdown dispose désormais d’une icône personnalisée propre à chaque scène (starting, break, ending), et le message à zéro se masque par défaut au bout de 10 secondes — remettez-le à 0 pour le conserver affiché.',
+      countdownDoneHoldIcon:
+        'Stream Countdown peut désormais masquer le message à zéro après un délai défini, et afficher votre propre icône (un emoji ou quelques caractères) au lieu de l’icône de scène.',
+      countdownTextCommand:
+        'Les modos de Stream Countdown peuvent désormais définir le titre et la note depuis le chat : `!countdown break 5m Lunch | Back soon`, ainsi que `!countdown title` et `!countdown note`. La commande de scène est désormais aussi listée sur la page de configuration.',
       countdownSceneCommand:
         'Ajout de la commande de chat `!countdown {scene} {duration}`. Les modos peuvent maintenant changer la scène actuelle (début, pause ou fin) et régler sa durée en une seule commande.',
       socialsLaunch:

@@ -737,6 +737,18 @@ export const ja: typeof en = {
     targetTip: 'このカウントでバーが満タンになります。カウントは目標を超えても続きます。',
     countsHint:
       'サブスクと継続サブスクは、Primeもどのティアも1件ずつ加算されます。ギフトは含まれるサブスク1件ごとに1加算されます。',
+    end: '達成時',
+    ends: {
+      stay: '表示を維持',
+      hide: '非表示',
+    },
+    endTip: '目標達成後に画面に残す内容です。',
+    endHold: '非表示にするまでの時間',
+    endHoldTip:
+      '目標達成後、画面に表示し続ける時間です。0にすると達成時にすぐ非表示になります。',
+    endHoldOff: '目標達成時にすぐ非表示になります。',
+    unitMinutes: '分',
+    unitSeconds: '秒',
     style: 'スタイル',
     styleTip:
       '「バー」は目標のタイトルとカウントをバーの上に表示します。「細いバー」はタイトルとカウントをスリムなバーの中に直接収めます。',
@@ -746,6 +758,13 @@ export const ja: typeof en = {
     titleLabel: 'タイトル',
     titleTip: 'バーの上に表示されます。空欄にするとタイトルは表示されません。',
     titlePlaceholder: 'タイトルなし',
+    iconLabel: '目標アイコン',
+    iconTip:
+      '星の代わりに目標に使う絵文字です（例: ⭐）。空欄にすると星が使われます。',
+    iconPlaceholder: '星',
+    emoteLabel: 'チャンネルエモート',
+    emoteTip:
+      '上のアイコン枠の代わりに、このチャンネルエモートを表示します。各チャンネルのサブスクライバーエモートと独自の7TV、BTTV、FFZセットを一覧表示します（全体プールや共有プールは含まれません）。',
     showPops: '新しいサブスクを表示',
     showPopsTip: 'サブスクのたびに視聴者の名前と +1 が、5件のギフトなら +5 が浮かび上がります。',
     sectionCommands: 'チャットコマンド',
@@ -919,6 +938,26 @@ export const ja: typeof en = {
     notePlaceholder: 'メモなし',
     doneLabel: 'ゼロのときのメッセージ',
     doneTip: '時間切れになると時計の代わりに表示されます。空欄なら、シーンの文言を使います。',
+    doneHold: '非表示にするまでの時間',
+    doneHoldTip:
+      'ゼロのときのメッセージを画面に表示し続ける時間です。0にするとシーンを切り替えるまで表示されます。',
+    doneHoldOff: 'シーンを切り替えるまでメッセージを表示します。',
+    iconLabel: 'カスタムアイコン',
+    iconTip:
+      '選択したシーンのアイコンの代わりに使う絵文字や数文字です（例: ☕）。空欄にするとシーンアイコンが使われます。',
+    iconPlaceholder: 'シーンアイコン',
+    emoteLabel: 'チャンネルエモート',
+    emoteTip:
+      '上のアイコン枠の代わりに、このチャンネルエモートを表示します。各チャンネルのサブスクライバーエモートと独自の7TV、BTTV、FFZセットを一覧表示します（全体プールや共有プールは含まれません）。',
+    emoteNone: 'エモートなし',
+    emoteLoading: 'エモートを読み込み中…',
+    emoteEmpty: 'これらのチャンネルのエモートが見つかりませんでした。',
+    emoteNeedChannel:
+      'エモートを読み込むには、上にTwitchまたはKickのチャンネルを入力してください。',
+    emoteSearch: 'エモートを検索',
+    emoteRemove: 'エモートを削除',
+    emoteClose: '閉じる',
+    unitSeconds: '秒',
     look: '背景',
     looks: {
       card: 'パネル',
@@ -940,6 +979,13 @@ export const ja: typeof en = {
     cmdSet: '残り時間を設定します',
     cmdPause: '一時停止します。start で再開',
     cmdReset: 'カウントダウンを最初からやり直します',
+    cmdCancel:
+      'キャンセルしてオーバーレイを非表示にします。ほかのコマンドで再表示されます',
+    cmdScene:
+      'starting、break、endingに切り替えて時間を設定します（省略時は10m）。後ろに続く文字が見出し、| の後はメモになります',
+    cmdTitle: '見出しを設定します。空欄で実行すると設定ページのテキストに戻ります',
+    cmdNote:
+      '時計の下のメモを設定します。空欄で実行すると設定ページのテキストに戻ります',
     previewTitle: '配信カウントダウンのプレビュー',
     previewIframeTitle: '配信カウントダウンのプレビュー',
     previewHint:
@@ -1975,7 +2021,13 @@ export const ja: typeof en = {
         pauseDoes: '時計をその場で一時停止します',
         startDoes: '一時停止から再開します',
         resetDoes: 'カウントダウンを最初からやり直します',
+        cancelDoes:
+          'カウントダウンを停止し、次のコマンドまでオーバーレイを非表示にします',
         sceneDoes: 'シーンを休憩、開始前、終了に切り替え、長さを設定します（省略すると10m）',
+        titleDoes:
+          '次のシーンコマンドまで見出しを置き換えます。何も指定せずに !countdown title を実行するとリセットされます',
+        noteDoes:
+          '次のシーンコマンドまで時計の下のメモを置き換えます。何も指定せずに !countdown note を実行するとリセットされます',
         p2: '使えるのはどちらのプラットフォームでもあなたとモデレーターだけで、チャットの返信でコマンドが実行されることはありません。カウントダウンは、ほかのウィジェットと同じようにログインなしで公開チャットを読み取ります。',
       },
       scenes: {
@@ -2252,8 +2304,24 @@ export const ja: typeof en = {
     lead: 'Senchabot Extensionsの新機能とバグ修正を、新しい順に並べています。このリストは[GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions)にあるプロジェクトのコミット履歴からまとめています。',
     site: 'サイト',
     entries: {
+      countdownCancel:
+        '配信カウントダウンのモデレーターが `!countdown cancel` でカウントダウンを停止して非表示にできるようになりました。ほかのコマンドを実行すると再び表示されます。',
+      goalEmoteIcons:
+        'サブスク目標で独自のアイコンを表示できるようになりました。星の代わりに絵文字やチャンネルエモートのいずれかを選べます。',
+      countdownEmoteIcons:
+        '配信カウントダウンでチャンネルエモートをアイコンとして使えるようになりました。各チャンネルのサブスクライバーエモートや独自の7TV、BTTV、FFZセットから、シーンごとに視覚的ピッカーで選択できます。',
+      goalCelebrationName:
+        'サブスク目標で目標を達成した人の名前が表示されるようになりました。単一のサブスクやギフトで目標が達成されると、トロフィーに達成者の名前が刻まれます。',
+      goalEndHide:
+        'サブスク目標で目標達成時に自動で非表示にできるようになりました。「達成時」で「非表示」を選び、何分何秒後に非表示にするかを設定できます。',
       moreLanguages:
         'サイトがスペイン語、フランス語、ドイツ語、日本語、ポルトガル語にも対応しました。チャット投票、配信アラート、Subathon Timerのレートも、これらの言語で表示できるようになりました。',
+      countdownSceneIcons:
+        '配信カウントダウンで各シーン（starting、break、ending）ごとに個別のカスタムアイコンを設定できるようになりました。また、ゼロのときのメッセージはデフォルトで10秒後に非表示になります（0に設定すれば表示を維持できます）。',
+      countdownDoneHoldIcon:
+        '配信カウントダウンで、設定した待機時間後にゼロのときのメッセージを非表示にしたり、シーンアイコンの代わりに独自のアイコン（絵文字や数文字）を表示したりできるようになりました。',
+      countdownTextCommand:
+        '配信カウントダウンのモデレーターがチャットから見出しとメモを設定できるようになりました: `!countdown break 5m Lunch | Back soon` に加え、`!countdown title` や `!countdown note` も使えます。シーンコマンドは設定ページにも記載されるようになりました。',
       countdownSceneCommand:
         '`!countdown {scene} {duration}` チャットコマンドを追加しました。モデレーターがひとつのコマンドで、現在のシーン（開始前、休憩、終了）を切り替えて長さを設定できます。',
       socialsLaunch:

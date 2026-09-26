@@ -3,7 +3,12 @@ import { fillBackground, fillLayers, trackBackground } from '#/features/presets/
 import { Frame, panelStyle } from '#/features/presets/frame';
 import { painter, type Skin, skinCss, skinFor } from '#/features/presets/skin';
 import { SkinProvider, useSkin } from '#/features/presets/skin-context';
-import { type CountdownScene, type CountdownSettings, sceneIcon } from '#/lib/countdown-url';
+import {
+  type CountdownScene,
+  type CountdownSettings,
+  sceneIcon,
+  sceneIconUrl,
+} from '#/lib/countdown-url';
 import { useI18n } from '#/lib/i18n';
 import { OVERLAY_FONT_FAMILY as FONT_FAMILY, hueFor } from '../overlay-style';
 import { useFitScale } from '../use-fit-scale';
@@ -50,6 +55,7 @@ export function CountdownWidget({
     progress,
     ended,
     doneHidden,
+    cancelled,
     scene,
     title: chatTitle,
     note: chatNote,
@@ -77,8 +83,10 @@ export function CountdownWidget({
     : headline || t(`countdown.scenes.${scene}.title`);
 
   // The hold time hides the message at zero; `hide` leaves the scene bare right away.
-  const hidden = (ended && settings.ending === 'hide') || (done && doneHidden);
+  // A cancelled countdown stays hidden until the next chat command or settings change.
+  const hidden = cancelled || (ended && settings.ending === 'hide') || (done && doneHidden);
   const customIcon = sceneIcon(settings, scene);
+  const emoteUrl = sceneIconUrl(settings, scene);
 
   return (
     <SkinProvider skin={skin}>
@@ -94,7 +102,17 @@ export function CountdownWidget({
         {!hidden && (
           <div className="cd-stage" style={{ transform: `translate(-50%, -50%) scale(${scale})` }}>
             <Card look={settings.look} hue={hue} motion={settings.motion}>
-              {customIcon ? (
+              {emoteUrl ? (
+                <img
+                  src={emoteUrl}
+                  alt=""
+                  aria-hidden="true"
+                  width={ICON_SIZE}
+                  height={ICON_SIZE}
+                  data-testid="countdown-emote"
+                  style={{ objectFit: 'contain' }}
+                />
+              ) : customIcon ? (
                 <CustomIcon text={customIcon} />
               ) : (
                 <SceneIcon scene={scene} hue={hue} />

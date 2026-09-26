@@ -730,6 +730,17 @@ export const tr: typeof en = {
     targetTip: 'Bar bu sayıda dolar. Sayı hedefi geçince de artmaya devam eder.',
     countsHint:
       'Prime ya da hangi tier olursa olsun, her abonelik ve yenileme 1 ekler. Hediyede içindeki her abonelik için 1 eklenir.',
+    end: 'Tamamlanınca',
+    ends: {
+      stay: 'Ekranda kalsın',
+      hide: 'Gizlensin',
+    },
+    endTip: 'Hedefe ulaşıldığında ekranda ne kalacağı.',
+    endHold: 'Gizlenme Süresi',
+    endHoldTip: 'Tamamlanan hedefin ekranda ne kadar kalacağı. Sıfır olursa ulaşılır ulaşılmaz gizlenir.',
+    endHoldOff: 'Hedefe ulaşılır ulaşılmaz gizlenir.',
+    unitMinutes: 'dk',
+    unitSeconds: 'sn',
     style: 'Stil',
     styleTip:
       'Bar hedef başlığını ve sayıyı barın üstünde gösterir. İnce Bar başlığı ve sayıyı doğrudan daha ince bir barın içine yerleştirir.',
@@ -739,6 +750,13 @@ export const tr: typeof en = {
     titleLabel: 'Başlık',
     titleTip: 'Barın üstünde görünür. Başlık istemiyorsan boş bırak.',
     titlePlaceholder: 'Başlık yok',
+    iconLabel: 'Hedef İkonu',
+    iconTip:
+      'Yıldız yerine hedef için bir emoji, örneğin ⭐. Boş bırakırsan yıldız kullanılır.',
+    iconPlaceholder: 'Yıldız',
+    emoteLabel: 'Kanal Emote',
+    emoteTip:
+      "Hedef, yukarıdaki ikon kutusu yerine bu emote'u gösterir. Her kanalın abone emoteları ile kendi 7TV, BTTV ve FFZ setleri listelenir, genel ya da paylaşılan havuzlar listelenmez.",
     showPops: 'Yeni Aboneleri Göster',
     showPopsTip:
       "Her abonelikte izleyicinin adıyla birlikte +1, 5'li bir hediyede +5 yazısı yukarı süzülür.",
@@ -918,6 +936,16 @@ export const tr: typeof en = {
     iconTip:
       'Seçili sahnenin ikonu yerine bir emoji ya da birkaç karakter, örneğin ☕. Boş bırakırsan sahne ikonu kullanılır.',
     iconPlaceholder: 'Sahne ikonu',
+    emoteLabel: 'Kanal Emote',
+    emoteTip:
+      "Seçili sahne, yukarıdaki ikon kutusu yerine bu emote'u gösterir. Her kanalın abone emoteları ile kendi 7TV, BTTV ve FFZ setleri listelenir, genel ya da paylaşılan havuzlar listelenmez.",
+    emoteNone: 'Emote yok',
+    emoteLoading: "Emote'lar yükleniyor…",
+    emoteEmpty: "Bu kanallar için kanal emote'u bulunamadı.",
+    emoteNeedChannel: "Emote'ları yüklemek için yukarıya bir Twitch ya da Kick kanalı yaz.",
+    emoteSearch: 'Emote ara',
+    emoteRemove: "Emote'u kaldır",
+    emoteClose: 'Kapat',
     unitSeconds: 'sn',
     look: 'Arka Plan',
     looks: {
@@ -940,6 +968,7 @@ export const tr: typeof en = {
     cmdSet: 'Kalan süreyi ayarlar',
     cmdPause: 'Duraklatır, start ile devam eder',
     cmdReset: 'Geri sayımı baştan başlatır',
+    cmdCancel: "İptal edip overlay'i gizler; herhangi bir komut geri getirir",
     cmdScene:
       'Starting, break veya ending sahnesine geçirir ve süreyi ayarlar (yazılmazsa 10m); sonrasındaki yazı başlık, | not ise not olur',
     cmdTitle: 'Başlığı değiştirir; boş bırakılırsa kurulumdaki yazıya döner',
@@ -1982,6 +2011,7 @@ export const tr: typeof en = {
         pauseDoes: 'Saati olduğu yerde duraklatır',
         startDoes: 'Duraklattıktan sonra devam ettirir',
         resetDoes: 'Geri sayımı baştan başlatır',
+        cancelDoes: "Geri sayımı durdurup overlay'i gizler, sonraki komuta kadar",
         sceneDoes:
           'O sahneye geçirir, 5 dakika sayar (yazılmazsa 10m); !countdown break 5m Mola | Birazdan dönüyorum başlığı ve notu da değiştirir',
         titleDoes:
@@ -2256,6 +2286,16 @@ export const tr: typeof en = {
     lead: "Senchabot Extensions'a eklenen özellikler ve düzeltilen hatalar, en yenisi en üstte. Liste projenin [GitHub'daki](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) commit geçmişinden hazırlanıyor.",
     site: 'Site',
     entries: {
+      countdownCancel:
+        'Yayın Geri Sayımı modları artık `!countdown cancel` ile geri sayımı durdurup gizleyebilir. Başka herhangi bir komut geri getirir.',
+      goalEmoteIcons:
+        'Abone Hedefi artık kendi ikonunu gösterebiliyor: yıldız yerine bir emoji ya da kanal emotelarından biri.',
+      countdownEmoteIcons:
+        'Yayın Geri Sayımı artık kanal emotelarını ikon olarak kullanabiliyor: kurulum sayfasındaki görsel seçiciden her sahne için kanallarının abone emoteları ile kendi 7TV, BTTV ve FFZ setlerinden birini seç.',
+      goalCelebrationName:
+        'Abone Hedefi artık hedefi kimin doldurduğunu kupada gösteriyor: hedefi tek bir abonelik ya da hediye tamamlarsa bitirenin adı beliriyor.',
+      goalEndHide:
+        'Abone Hedefi artık hedefe ulaşınca kendini gizleyebiliyor: Tamamlanınca kısmından Gizlensin seçeneğini işaretle ve kaç dakika kaç saniye sonra gizleneceğini ayarla.',
       moreLanguages:
         'Site artık İspanyolca, Fransızca, Almanca, Japonca ve Portekizce de var. Sohbet Anketi, Yayın Uyarıları ve Subathon Timer oranları da yazılarını bu dillerde gösterebiliyor.',
       countdownSceneIcons:

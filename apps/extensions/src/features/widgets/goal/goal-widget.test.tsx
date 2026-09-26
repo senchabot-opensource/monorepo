@@ -97,6 +97,66 @@ describe('GoalWidget', () => {
     expect(celebration()).toBeNull();
   });
 
+  it('keeps the completed goal up by default', () => {
+    render(<GoalWidget twitchChannel="streamer" settings={settings({ start: 5, target: 6 })} />);
+    receive('twitch', SUB);
+    expect(goal().dataset.reached).toBe('true');
+    expect(celebration()).not.toBeNull();
+    act(() => vi.advanceTimersByTime(60_000));
+    expect(goal().querySelector('.sg-stage')).not.toBeNull();
+  });
+
+  it('hides the completed goal after its hold time', () => {
+    render(
+      <GoalWidget
+        twitchChannel="streamer"
+        settings={settings({ start: 15, target: 16, end: 'hide', endHold: 30 })}
+      />,
+    );
+    receive('twitch', SUB);
+    expect(goal().dataset.reached).toBe('true');
+    expect(celebration()).not.toBeNull();
+    act(() => vi.advanceTimersByTime(29_000));
+    expect(goal().querySelector('.sg-stage')).not.toBeNull();
+    act(() => vi.advanceTimersByTime(1000));
+    expect(goal().querySelector('.sg-stage')).toBeNull();
+  });
+
+  it('hides the completed goal right away with a zero hold', () => {
+    render(
+      <GoalWidget
+        twitchChannel="streamer"
+        settings={settings({ start: 25, target: 26, end: 'hide', endHold: 0 })}
+      />,
+    );
+    receive('twitch', SUB);
+    expect(goal().dataset.reached).toBe('true');
+    expect(goal().querySelector('.sg-stage')).toBeNull();
+  });
+
+  it('names who filled it on the cup when one sub completes the goal', () => {
+    render(<GoalWidget twitchChannel="streamer" settings={settings({ start: 59, target: 60 })} />);
+    receive('twitch', SUB);
+    expect(goal().dataset.reached).toBe('true');
+    expect(screen.getByTestId('goal-celebration-name').textContent).toBe('Subber');
+  });
+
+  it('names the gifter on the cup when one gift completes the goal', () => {
+    render(<GoalWidget twitchChannel="streamer" settings={settings({ start: 57, target: 60 })} />);
+    receive('twitch', bundle('submysterygift'));
+    for (let i = 0; i < 3; i++) receive('twitch', bundle('subgift'));
+    expect(goal().dataset.reached).toBe('true');
+    expect(screen.getByTestId('goal-celebration-name').textContent).toBe('Gifter');
+  });
+
+  it('shows no name on the cup when a mod command completes the goal', () => {
+    render(<GoalWidget twitchChannel="streamer" settings={settings({ start: 79, target: 80 })} />);
+    receive('twitch', MOD_SAYS('!goal set 80'));
+    expect(goal().dataset.reached).toBe('true');
+    expect(celebration()).not.toBeNull();
+    expect(screen.queryByTestId('goal-celebration-name')).toBeNull();
+  });
+
   it('takes mod commands to fix the count', () => {
     render(<GoalWidget twitchChannel="streamer" settings={settings({ start: 3 })} />);
     receive('twitch', MOD_SAYS('!goal add 4'));
@@ -163,6 +223,39 @@ describe('GoalWidget', () => {
     render(<GoalWidget twitchChannel="streamer" settings={settings({ pops: false })} />);
     receive('twitch', SUB);
     expect(shown()).not.toContain('Subber');
+  });
+
+  it('shows a custom emoji instead of the star', () => {
+    render(<GoalWidget twitchChannel="streamer" settings={settings({ start: 2, icon: '⭐' })} />);
+    expect(screen.getByTestId('goal-icon').textContent).toBe('⭐');
+  });
+
+  it('shows a channel emote image over the emoji', () => {
+    render(
+      <GoalWidget
+        twitchChannel="streamer"
+        settings={settings({
+          start: 6,
+          icon: '⭐',
+          iconUrl: 'https://cdn.7tv.app/emote/e1/2x.webp',
+        })}
+      />,
+    );
+    const img = screen.getByTestId('goal-icon') as HTMLImageElement;
+    expect(img.tagName).toBe('IMG');
+    expect(img.src).toBe('https://cdn.7tv.app/emote/e1/2x.webp');
+  });
+
+  it('still lands the trophy on a custom icon when the goal is reached', () => {
+    render(
+      <GoalWidget
+        twitchChannel="streamer"
+        settings={settings({ start: 8, target: 9, icon: '⭐' })}
+      />,
+    );
+    receive('twitch', SUB);
+    expect(goal().dataset.reached).toBe('true');
+    expect(celebration()).not.toBeNull();
   });
 
   it('never connects or saves in a preview', () => {

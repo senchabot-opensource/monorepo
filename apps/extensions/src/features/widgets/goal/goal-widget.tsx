@@ -66,11 +66,12 @@ export function GoalWidget({
   previewId,
 }: GoalWidgetProps) {
   const scale = useFitScale(STAGE);
-  const { count, progress, reached, celebration, pops, hit } = useGoal({
+  const { count, progress, reached, completedHidden, celebration, pops, hit } = useGoal({
     twitch: twitchChannel,
     kick: kickChannel,
     start: settings.start,
     target: settings.target,
+    hideAfter: settings.end === 'hide' ? settings.endHold : null,
     simulate,
     simPlatform,
     previewId,
@@ -91,52 +92,65 @@ export function GoalWidget({
         data-preset={skin?.id}
       >
         <style>{CSS + skinCss('sg', skin)}</style>
-        <div className="sg-stage" style={{ transform: `translate(-50%, -50%) scale(${scale})` }}>
-          {settings.pops && <PopBand pops={pops} hue={hue} x={progress * 100} height={popBand} />}
-          <div
-            style={{
-              position: 'absolute',
-              inset: '0 28px',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'flex-end',
-              gap: isThin ? 0 : BAR_GAP,
-              paddingBottom: BAR_BOTTOM,
-            }}
-          >
-            {isThin ? (
-              <ThinBar
-                progress={progress}
-                title={settings.title}
-                count={count}
-                target={settings.target}
-                hue={hue}
-                reached={reached}
-                hit={hit}
-                celebrating={celebration !== null}
-              />
-            ) : (
-              <>
-                <InfoRow
+        {/* `hide` leaves the scene bare once the goal is reached, so nothing sits over the game. */}
+        {!completedHidden && (
+          <div className="sg-stage" style={{ transform: `translate(-50%, -50%) scale(${scale})` }}>
+            {settings.pops && <PopBand pops={pops} hue={hue} x={progress * 100} height={popBand} />}
+            <div
+              style={{
+                position: 'absolute',
+                inset: '0 28px',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'flex-end',
+                gap: isThin ? 0 : BAR_GAP,
+                paddingBottom: BAR_BOTTOM,
+              }}
+            >
+              {isThin ? (
+                <ThinBar
+                  progress={progress}
                   title={settings.title}
                   count={count}
                   target={settings.target}
                   hue={hue}
                   reached={reached}
                   hit={hit}
-                />
-                <Bar
-                  progress={progress}
-                  target={settings.target}
-                  hue={hue}
-                  hit={hit}
                   celebrating={celebration !== null}
+                  icon={settings.icon}
+                  iconUrl={settings.iconUrl}
                 />
-              </>
+              ) : (
+                <>
+                  <InfoRow
+                    title={settings.title}
+                    count={count}
+                    target={settings.target}
+                    hue={hue}
+                    reached={reached}
+                    hit={hit}
+                    icon={settings.icon}
+                    iconUrl={settings.iconUrl}
+                  />
+                  <Bar
+                    progress={progress}
+                    target={settings.target}
+                    hue={hue}
+                    hit={hit}
+                    celebrating={celebration !== null}
+                  />
+                </>
+              )}
+            </div>
+            {celebration !== null && (
+              <Celebration
+                key={celebration.key}
+                centerTop={barCenter}
+                name={celebration.event?.name ?? null}
+              />
             )}
           </div>
-          {celebration !== null && <Celebration key={celebration} centerTop={barCenter} />}
-        </div>
+        )}
       </div>
     </SkinProvider>
   );
@@ -181,6 +195,43 @@ function StarIcon({
   );
 }
 
+/** The goal's mark: a channel emote, a custom emoji, or the star. The trophy still wins on top. */
+function GoalMark({
+  hue,
+  hit,
+  size = 26,
+  plain = false,
+  icon,
+  iconUrl,
+}: {
+  hue: number;
+  hit: GoalHit | null;
+  size?: number;
+  plain?: boolean;
+  icon: string;
+  iconUrl: string;
+}) {
+  if (iconUrl)
+    return (
+      <img
+        src={iconUrl}
+        alt=""
+        aria-hidden="true"
+        width={size}
+        height={size}
+        data-testid="goal-icon"
+        style={{ objectFit: 'contain' }}
+      />
+    );
+  if (icon)
+    return (
+      <span data-testid="goal-icon" aria-hidden="true" style={{ fontSize: size, lineHeight: 1 }}>
+        {icon}
+      </span>
+    );
+  return <StarIcon hue={hue} hit={hit} size={size} plain={plain} />;
+}
+
 function TrophyIcon({ size, glow }: { size: number; glow: string }) {
   const gold = painter(useSkin(), GOLD_HUE, 'win');
   return (
@@ -210,6 +261,8 @@ function InfoRow({
   hue,
   reached,
   hit,
+  icon,
+  iconUrl,
 }: {
   title: string;
   count: number;
@@ -217,6 +270,8 @@ function InfoRow({
   hue: number;
   reached: boolean;
   hit: GoalHit | null;
+  icon: string;
+  iconUrl: string;
 }) {
   const skin = useSkin();
   const gold = painter(skin, GOLD_HUE, 'win');
@@ -235,7 +290,7 @@ function InfoRow({
         {reached ? (
           <TrophyIcon size={28} glow={gold(95, 55, 0.8)} />
         ) : (
-          <StarIcon hue={hue} hit={hit} />
+          <GoalMark hue={hue} hit={hit} icon={icon} iconUrl={iconUrl} />
         )}
         {title && (
           <span
@@ -417,6 +472,8 @@ function ThinBar({
   reached,
   hit,
   celebrating,
+  icon,
+  iconUrl,
 }: {
   progress: number;
   title: string;
@@ -426,6 +483,8 @@ function ThinBar({
   reached: boolean;
   hit: GoalHit | null;
   celebrating: boolean;
+  icon: string;
+  iconUrl: string;
 }) {
   const skin = useSkin();
   const hsl = painter(skin, hue);
@@ -563,7 +622,7 @@ function ThinBar({
             {reached ? (
               <TrophyIcon size={22} glow="rgba(0,0,0,.9)" />
             ) : (
-              <StarIcon hue={hue} hit={hit} size={20} plain />
+              <GoalMark hue={hue} hit={hit} size={20} plain icon={icon} iconUrl={iconUrl} />
             )}
             {title && (
               <span
@@ -610,7 +669,14 @@ function ThinBar({
 }
 
 /** A trophy that lands on the bar, with a ring and sparks bursting out of it. */
-function Celebration({ centerTop = BAR_CENTER }: { centerTop?: number }) {
+function Celebration({
+  centerTop = BAR_CENTER,
+  name,
+}: {
+  centerTop?: number;
+  /** Who completed the goal; shown on the cup. Null for a mod command or a reload. */
+  name?: string | null;
+}) {
   const gold = painter(useSkin(), GOLD_HUE, 'win');
   const center: CSSProperties = { position: 'absolute', left: '50%', top: centerTop };
   return (
@@ -659,6 +725,33 @@ function Celebration({ centerTop = BAR_CENTER }: { centerTop?: number }) {
         }}
       >
         <TrophyIcon size={104} glow={gold(100, 55, 0.9)} />
+        {name && (
+          <span
+            data-testid="goal-celebration-name"
+            style={{
+              position: 'absolute',
+              left: '50%',
+              // Across the cup's lower half, like a ribbon; stays inside the 260px stage.
+              top: 30,
+              transform: 'translateX(-50%)',
+              maxWidth: 300,
+              padding: '3px 16px',
+              borderRadius: 999,
+              fontSize: 22,
+              fontWeight: 800,
+              lineHeight: 1.2,
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              color: '#fff',
+              background: 'rgba(0,0,0,.72)',
+              border: `2px solid ${gold(100, 70)}`,
+              boxShadow: `0 0 16px ${gold(100, 60, 0.7)}`,
+            }}
+          >
+            {name}
+          </span>
+        )}
       </div>
     </div>
   );

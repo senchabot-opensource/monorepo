@@ -726,6 +726,18 @@ export const de: typeof en = {
     targetTip: 'Bei dieser Zahl ist der Balken voll. Die Zählung läuft danach weiter.',
     countsHint:
       'Jeder Sub und Resub zählt 1, egal ob Prime oder welches Tier. Ein Gift zählt 1 für jeden Sub darin.',
+    end: 'Bei Abschluss',
+    ends: {
+      stay: 'Weiter anzeigen',
+      hide: 'Ausblenden',
+    },
+    endTip: 'Was nach Erreichen des Ziels auf dem Screen bleibt.',
+    endHold: 'Ausblenden nach',
+    endHoldTip:
+      'Wie lange das erreichte Ziel auf dem Screen bleibt. Null blendet es sofort aus.',
+    endHoldOff: 'Blendet sich aus, sobald das Ziel erreicht ist.',
+    unitMinutes: 'Min.',
+    unitSeconds: 'Sek.',
     style: 'Stil',
     styleTip:
       'Balken zeigt Titel und Zahl über dem Balken. Schmaler Balken packt Titel und Zahl direkt in einen dünneren Balken.',
@@ -735,6 +747,13 @@ export const de: typeof en = {
     titleLabel: 'Titel',
     titleTip: 'Steht über dem Balken. Leer lassen, wenn du keinen Titel willst.',
     titlePlaceholder: 'Kein Titel',
+    iconLabel: 'Ziel-Icon',
+    iconTip:
+      'Ein Emoji für das Ziel statt dem Stern, z. B. ⭐. Leer lassen, um den Stern zu nutzen.',
+    iconPlaceholder: 'Stern',
+    emoteLabel: 'Kanal-Emote',
+    emoteTip:
+      'Das Ziel zeigt dieses Kanal-Emote statt der Icon-Box oben. Listet Abonnenten-Emotes jedes Kanals sowie dessen eigene 7TV-, BTTV- und FFZ-Sets auf — keine globalen oder geteilten Pools.',
     showPops: 'Neue Subs zeigen',
     showPopsTip: 'Lässt bei jedem Sub +1 mit dem Namen des Zuschauers aufsteigen, oder +5 bei 5 Gift-Subs.',
     sectionCommands: 'Chatbefehle',
@@ -909,6 +928,25 @@ export const de: typeof en = {
     notePlaceholder: 'Keine Notiz',
     doneLabel: 'Nachricht bei null',
     doneTip: 'Ersetzt die Uhr, wenn sie abgelaufen ist. Leer lassen, um den Text der Szene zu nutzen.',
+    doneHold: 'Ausblenden nach',
+    doneHoldTip:
+      'Wie lange die Nachricht bei null auf dem Screen bleibt. Null lässt sie stehen, bis du die Szene wechselst.',
+    doneHoldOff: 'Die Nachricht bleibt stehen, bis du die Szene wechselst.',
+    iconLabel: 'Eigenes Icon',
+    iconTip:
+      'Ein Emoji oder ein paar Zeichen für die gewählte Szene statt ihres Szenen-Icons, z. B. ☕. Leer lassen, um das Szenen-Icon zu nutzen.',
+    iconPlaceholder: 'Szenen-Icon',
+    emoteLabel: 'Kanal-Emote',
+    emoteTip:
+      'Die gewählte Szene zeigt dieses Kanal-Emote statt der Icon-Box oben. Listet Abonnenten-Emotes jedes Kanals sowie dessen eigene 7TV-, BTTV- und FFZ-Sets auf — keine globalen oder geteilten Pools.',
+    emoteNone: 'Kein Emote',
+    emoteLoading: 'Emotes werden geladen…',
+    emoteEmpty: 'Keine Kanal-Emotes für diese Kanäle gefunden.',
+    emoteNeedChannel: 'Trage oben einen Twitch- oder Kick-Kanal ein, um seine Emotes zu laden.',
+    emoteSearch: 'Emotes suchen',
+    emoteRemove: 'Emote entfernen',
+    emoteClose: 'Schließen',
+    unitSeconds: 'Sek.',
     look: 'Hintergrund',
     looks: {
       card: 'Panel',
@@ -930,6 +968,11 @@ export const de: typeof en = {
     cmdSet: 'Setzt die Restzeit',
     cmdPause: 'Pausiert ihn, start lässt ihn weiterlaufen',
     cmdReset: 'Startet den Countdown neu',
+    cmdCancel: 'Bricht ab und blendet das Overlay aus; jeder Befehl bringt es zurück',
+    cmdScene:
+      'Wechselt zu starting, break oder ending und setzt die Zeit (ohne Angabe 10m); Text danach wird zur Überschrift, | Notiz setzt die Notiz',
+    cmdTitle: 'Setzt die Überschrift; leer setzt sie auf den Setup-Text zurück',
+    cmdNote: 'Setzt die Notiz unter der Uhr; leer setzt sie auf den Setup-Text zurück',
     previewTitle: 'Vorschau des Stream-Countdowns',
     previewIframeTitle: 'Vorschau des Stream-Countdowns',
     previewHint:
@@ -1983,7 +2026,14 @@ export const de: typeof en = {
         pauseDoes: 'Hält die Uhr an, wo sie gerade ist',
         startDoes: 'Lässt sie nach einer Pause weiterlaufen',
         resetDoes: 'Startet den Countdown von vorn',
-        sceneDoes: 'Wechselt die Szene auf break, starting oder ending und setzt die Dauer (ohne Angabe 10m)',
+        cancelDoes:
+          'Stoppt den Countdown und blendet das Overlay bis zum nächsten Befehl aus',
+        sceneDoes:
+          'Wechselt die Szene auf break, starting oder ending und setzt die Dauer (ohne Angabe 10m)',
+        titleDoes:
+          'Ersetzt die Überschrift bis zum nächsten Szenen-Befehl; !countdown title ohne Text setzt sie zurück',
+        noteDoes:
+          'Ersetzt die Notiz unter der Uhr bis zum nächsten Szenen-Befehl; !countdown note ohne Text setzt sie zurück',
         p2:
           'Nur du und deine Mods können sie nutzen, auf beiden Plattformen, und eine Antwort im Chat löst nie einen Befehl aus. Der Countdown liest deinen öffentlichen Chat genauso wie die anderen Widgets, ohne Login.',
       },
@@ -2256,8 +2306,24 @@ export const de: typeof en = {
     lead: 'Neue Features und Bugfixes in Senchabot Extensions, das Neueste zuerst. Die Liste ist aus der Commit-Historie des Projekts auf [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) zusammengestellt.',
     site: 'Website',
     entries: {
+      countdownCancel:
+        'Stream-Countdown-Mods können den Countdown jetzt mit `!countdown cancel` stoppen und ausblenden. Jeder andere Befehl bringt ihn zurück.',
+      goalEmoteIcons:
+        'Das Sub-Ziel kann jetzt ein eigenes Icon zeigen: ein Emoji oder eines deiner Kanal-Emotes statt des Sterns.',
+      countdownEmoteIcons:
+        'Der Stream-Countdown kann jetzt deine Kanal-Emotes als Icons nutzen: Wähle pro Szene ein Emote aus einer visuellen Auswahl der Abonnenten-Emotes deiner Kanäle und eigener 7TV-, BTTV- und FFZ-Sets.',
+      goalCelebrationName:
+        'Das Sub-Ziel nennt jetzt, wer es vollendet hat: Wenn ein einzelner Sub oder Gift-Sub das Ziel abschließt, landet der Name des Vollenders auf dem Pokal.',
+      goalEndHide:
+        'Das Sub-Ziel kann sich jetzt nach Erreichen des Ziels selbst ausblenden: Wähle Ausblenden unter Bei Abschluss und lege fest, nach wie vielen Minuten und Sekunden.',
       moreLanguages:
         'Die Website gibt es jetzt auch auf Spanisch, Französisch, Deutsch, Japanisch und Portugiesisch, und Chat-Umfrage, Stream-Alerts und die Werte des Subathon Timers können ihre Wörter auch in diesen Sprachen zeigen.',
+      countdownSceneIcons:
+        'Der Stream-Countdown hat jetzt ein separates eigenes Icon für jede Szene (starting, break, ending), und die Nachricht bei null blendet sich standardmäßig nach 10 Sekunden aus — setze sie auf 0 zurück, um sie dauerhaft zu behalten.',
+      countdownDoneHoldIcon:
+        'Der Stream-Countdown kann die Nachricht bei null jetzt nach einer von dir festgelegten Haltezeit ausblenden und ein eigenes Icon (ein Emoji oder ein paar Zeichen) statt des Szenen-Icons anzeigen.',
+      countdownTextCommand:
+        'Stream-Countdown-Mods können Überschrift und Notiz jetzt aus dem Chat festlegen: `!countdown break 5m Lunch | Back soon`, plus `!countdown title` und `!countdown note`. Der Szenen-Befehl wird nun auch auf der Setup-Seite aufgeführt.',
       countdownSceneCommand:
         'Neuer Chatbefehl `!countdown {scene} {duration}`. Mods können jetzt mit einem einzigen Befehl die aktuelle Szene wechseln (starting, break oder ending) und ihre Dauer festlegen.',
       socialsLaunch:

@@ -1,5 +1,5 @@
 import { createFileRoute, useHydrated } from '@tanstack/react-router';
-import { useId, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { ChannelFields } from '#/components/channel-fields';
 import { ChatCommandsCard } from '#/components/chat-commands-card';
 import { CopyUrlField } from '#/components/copy-url-field';
@@ -8,29 +8,36 @@ import { SetupShell } from '#/components/setup-shell';
 import { TestButtons } from '#/components/test-buttons';
 import { ColorSwatches } from '#/components/ui/color-swatches';
 import { CountField } from '#/components/ui/count-field';
+import { DurationField } from '#/components/ui/duration-field';
 import { FieldLabel } from '#/components/ui/field-label';
-import {
-  SegmentedControl,
-  type SegmentedOption,
-} from '#/components/ui/segmented-control';
+import { SegmentedControl, type SegmentedOption } from '#/components/ui/segmented-control';
 import { SettingsGroup } from '#/components/ui/settings-group';
 import { Switch } from '#/components/ui/switch';
 import { HINT_CLASS, TextField } from '#/components/ui/text-field';
 import { PresetField } from '#/features/presets/preset-field';
 import { isClassic } from '#/features/presets/registry';
 import { useStartOnSitePreset } from '#/features/presets/site-preset';
+import {
+  type ChannelEmote,
+  loadChannelEmotes,
+} from '#/features/widgets/countdown/countdown-emotes';
+import { EmotePicker } from '#/features/widgets/countdown/emote-picker';
 import { COMMAND } from '#/features/widgets/goal/goal-count';
 import { PREVIEW_CHANNEL, type PreviewMessage } from '#/features/widgets/goal/use-goal';
-import type { SubathonEvent, SubathonPlatform } from '#/features/widgets/subathon/subathon-events';
 import { hueFor } from '#/features/widgets/overlay-style';
+import type { SubathonEvent, SubathonPlatform } from '#/features/widgets/subathon/subathon-events';
 import { usePreviewSender } from '#/hooks/use-preview-channel';
 import {
   buildGoalPreviewUrl,
   buildGoalUrl,
   DEFAULT_GOAL_SETTINGS,
   GOAL_COLORS,
+  GOAL_ENDS,
+  type GoalEnd,
   type GoalSettings,
   type GoalStyle,
+  ICON_MAX_LENGTH,
+  MAX_END_HOLD_SECONDS,
   MAX_GOAL_COUNT,
   parseGoalUrl,
   TITLE_MAX_LENGTH,
@@ -82,6 +89,32 @@ function GoalSetup() {
     setSettings((current) => ({ ...current, [key]: value }));
   useStartOnSitePreset((preset) => update('preset', preset));
 
+  // The channel's own emotes for the picker, reloaded a moment after the channel boxes settle.
+  const [emotes, setEmotes] = useState<ChannelEmote[] | null>(null);
+  const [emotesLoading, setEmotesLoading] = useState(false);
+  useEffect(() => {
+    const twitch = twitchChannel.trim();
+    const kick = kickChannel.trim();
+    if (!twitch && !kick) {
+      setEmotes(null);
+      setEmotesLoading(false);
+      return;
+    }
+    let live = true;
+    setEmotesLoading(true);
+    const timer = window.setTimeout(() => {
+      loadChannelEmotes(twitch, kick).then((list) => {
+        if (!live) return;
+        setEmotes(list);
+        setEmotesLoading(false);
+      });
+    }, 500);
+    return () => {
+      live = false;
+      window.clearTimeout(timer);
+    };
+  }, [twitchChannel, kickChannel]);
+
   const sendEvent = (event: SubathonEvent) => send({ type: 'event', event });
 
   // Gated on mount so the prerendered input and the first client render agree.
@@ -118,6 +151,11 @@ function GoalSetup() {
     { value: 'thin', label: t('goal.styleThin') },
   ];
 
+  const endOptions: SegmentedOption<GoalEnd>[] = GOAL_ENDS.map((end) => ({
+    value: end,
+    label: t(`goal.ends.${end}`),
+  }));
+
   const settingsPanel = (
     <>
       <SettingsGroup title={t('common.sectionChannel')}>
@@ -137,6 +175,33 @@ function GoalSetup() {
           {countField('target', 'goal.target', 'goal.targetTip')}
         </div>
         <p className={`${HINT_CLASS} mt-0`}>{t('goal.countsHint')}</p>
+        <div>
+          <FieldLabel id={`${id}-end`} tip={t('goal.endTip')}>
+            {t('goal.end')}
+          </FieldLabel>
+          <SegmentedControl
+            labelledBy={`${id}-end`}
+            value={settings.end}
+            onChange={(value) => update('end', value)}
+            options={endOptions}
+          />
+        </div>
+        {settings.end === 'hide' && (
+          <div>
+            <FieldLabel id={`${id}-endHold`} tip={t('goal.endHoldTip')}>
+              {t('goal.endHold')}
+            </FieldLabel>
+            <DurationField
+              labelledBy={`${id}-endHold`}
+              value={settings.endHold}
+              onChange={(value) => update('endHold', value)}
+              units={['m', 's']}
+              unitLabels={[t('goal.unitMinutes'), t('goal.unitSeconds')]}
+              max={MAX_END_HOLD_SECONDS}
+            />
+            {settings.endHold === 0 && <p className={HINT_CLASS}>{t('goal.endHoldOff')}</p>}
+          </div>
+        )}
       </SettingsGroup>
 
       <SettingsGroup title={t('common.sectionAppearance')}>
@@ -177,6 +242,14 @@ function GoalSetup() {
             maxLength={TITLE_MAX_LENGTH}
             spellCheck={false}
           />
+          <TextField
+            label={t('goal.iconLabel')}
+            tip={t('goal.iconTip')}
+            value={settings.icon}
+            onChange={(value) => update('icon', value)}
+            placeholder={t('goal.iconPlaceholder')}
+            maxLength={ICON_MAX_LENGTH}
+          />
           <div className="flex flex-col justify-end">
             <Switch
               label={t('goal.showPops')}
@@ -185,6 +258,32 @@ function GoalSetup() {
               onChange={(value) => update('pops', value)}
             />
           </div>
+        </div>
+        <div>
+          <FieldLabel id={`${id}-emote`} tip={t('goal.emoteTip')}>
+            {t('goal.emoteLabel')}
+          </FieldLabel>
+          {!twitchChannel.trim() && !kickChannel.trim() ? (
+            <p className={HINT_CLASS}>{t('countdown.emoteNeedChannel')}</p>
+          ) : emotesLoading || emotes === null ? (
+            <EmotePicker
+              labelledBy={`${id}-emote`}
+              emotes={[]}
+              value=""
+              onChange={() => {}}
+              disabled
+              disabledLabel={t('countdown.emoteLoading')}
+            />
+          ) : emotes.length === 0 ? (
+            <p className={HINT_CLASS}>{t('countdown.emoteEmpty')}</p>
+          ) : (
+            <EmotePicker
+              labelledBy={`${id}-emote`}
+              emotes={emotes}
+              value={emotes.some((emote) => emote.url === settings.iconUrl) ? settings.iconUrl : ''}
+              onChange={(value) => update('iconUrl', value)}
+            />
+          )}
         </div>
       </SettingsGroup>
     </>

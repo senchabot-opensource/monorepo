@@ -109,13 +109,15 @@ A sub goal bar. Every new sub, resub and gifted sub from Twitch and Kick adds to
 - Listens to Twitch IRC anonymously and Kick's Pusher WebSocket, both in one browser source.
 - A sub or resub adds 1 (Prime and every tier alike) and a gift adds 1 per sub in it. Kick can't tell a new sub from a renewal on the client, so resubs count on both platforms. Twitch gift-sub continuations and Prime upgrades aren't counted: that person is already subscribed.
 - Neither platform shows a channel's sub count to a page that isn't logged in, so the count starts at the number in the URL and is saved in the browser source's `localStorage`. A new starting count in the URL starts it over.
-- The broadcaster and mods fix it from chat: `!goal add 3`, `remove 1` (the number defaults to 1), `set 25`, `reset`.
+ - The broadcaster and mods fix it from chat: `!goal add 3`, `remove 1` (the number defaults to 1), `set 25`, `reset`.
+ - When the goal is reached it stays up by default; `end` (`hide`) hides it after `endHold` seconds (0 hides it right away).
+ - When one sub or gift completes the goal, the trophy names who filled it.
 
 ```
 https://extensions.senchabot.com/widgets/goal?twitch=YOUR_TWITCH_CHANNEL&kick=YOUR_KICK_CHANNEL&start=120&target=150
 ```
 
-**URL parameters:** `twitch`, `kick`, `style` (`bar` | `thin`), `color` (`purple` | `green` | `red` | `gold` | `cyan` | `pink`), `title` (empty hides it), `start` (starting count), `target` (the goal, 1 or more), `pops` (`0` hides the rising +1s), `simulate` (`1` plays simulated subs), `simplatform` (`twitch` | `kick`).
+**URL parameters:** `twitch`, `kick`, `style` (`bar` | `thin`), `color` (`purple` | `green` | `red` | `gold` | `cyan` | `pink`), `title` (empty hides it), `icon` (an emoji instead of the star), `iconUrl` (a channel emote image instead of the star, picked on the setup page), `start` (starting count), `target` (the goal, 1 or more), `end` (`stay` | `hide`: what stays on screen once the goal is reached), `endHold` (seconds the completed goal stays up, 0 hides it right away), `pops` (`0` hides the rising +1s), `simulate` (`1` plays simulated subs), `simplatform` (`twitch` | `kick`).
 
 ---
 
@@ -141,18 +143,18 @@ https://extensions.senchabot.com/widgets/frame?piece=camera&preset=dynasty&label
 A countdown for the parts of a stream where nothing is happening yet: the minutes before going live, a break in the middle, and the last minutes before signing off.
 
 **How it works:**
-- Three scenes (`starting`, `break`, `ending`) that pick the default headline and icon. Your own headline, note, end message and a custom icon per scene (an emoji or a few characters) replace them.
+- Three scenes (`starting`, `break`, `ending`) that pick the default headline and icon. Your own headline, note, end message and a custom icon per scene (an emoji, a few characters, or one of the channels' subscriber emotes from the setup page picker) replace them.
 - Counts down a length (`time`), or aims at a time of day (`at=21:00`) read from the clock of the computer running OBS. A time that has already passed today aims at tomorrow.
 - The clock starts when the browser source loads, and nothing is saved. In OBS, tick "Refresh browser when scene becomes active" and the countdown starts over every time you switch to that scene.
 - At zero it shows a message, holds 00:00, or hides itself (`end`). The message hides itself after `doneHold` seconds (10 by default, 0 keeps it up).
 - The look comes from the preset, with or without a panel (`look`), and an optional bar that empties with the time.
-- No channel is needed. With one, the broadcaster and mods run `!countdown {scene} [duration] [headline] [| note]` (defaults to 10m), `add 5m`, `remove 2m`, `set 10m`, `pause`, `start`, `reset`, `title <headline>` and `note <note>` from Twitch or Kick chat. It shares the Subathon Timer's clock and duration parsing.
+- No channel is needed. With one, the broadcaster and mods run `!countdown {scene} [duration] [headline] [| note]` (defaults to 10m), `add 5m`, `remove 2m`, `set 10m`, `pause`, `start`, `reset`, `cancel` (stops and hides it until the next command), `title <headline>` and `note <note>` from Twitch or Kick chat. It shares the Subathon Timer's clock and duration parsing.
 
 ```
 https://extensions.senchabot.com/widgets/countdown?scene=starting&time=600&preset=dynasty
 ```
 
-**URL parameters:** `twitch`, `kick` (only for the chat commands), `scene` (`starting` | `break` | `ending`), `time` (seconds, 1 to 86400), `at` (a 24-hour time like `21:00`, replaces `time`), `title`, `done`, `doneHold` (seconds the message at zero stays up, 10 by default, 0 keeps it up), `note`, `iconStarting`, `iconBreak`, `iconEnding` (an emoji or a few characters instead of that scene's icon), `end` (`text` | `hold` | `hide`), `look` (`card` | `plain`), `preset`, `color` (`purple` | `green` | `red` | `gold` | `cyan` | `pink`, classic only), `bar` (`0` hides it), `motion` (`0` turns animations off), `lang` (`en` | `tr`), `simulate` (`1` runs a fast countdown).
+**URL parameters:** `twitch`, `kick` (only for the chat commands), `scene` (`starting` | `break` | `ending`), `time` (seconds, 1 to 86400), `at` (a 24-hour time like `21:00`, replaces `time`), `title`, `done`, `doneHold` (seconds the message at zero stays up, 10 by default, 0 keeps it up), `note`, `iconStarting`, `iconBreak`, `iconEnding` (an emoji or a few characters instead of that scene's icon), `iconUrlStarting`, `iconUrlBreak`, `iconUrlEnding` (a channel emote image instead of that scene's icon, picked on the setup page), `end` (`text` | `hold` | `hide`), `look` (`card` | `plain`), `preset`, `color` (`purple` | `green` | `red` | `gold` | `cyan` | `pink`, classic only), `bar` (`0` hides it), `motion` (`0` turns animations off), `lang` (`en` | `tr`), `simulate` (`1` runs a fast countdown).
 
 ---
 

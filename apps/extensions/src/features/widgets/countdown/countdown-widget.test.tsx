@@ -111,6 +111,22 @@ describe('CountdownWidget', () => {
     expect(root().querySelector('svg')).not.toBeNull();
   });
 
+  it('shows a channel emote image over the text icon', async () => {
+    await render(
+      <CountdownWidget
+        settings={settings({
+          scene: 'break',
+          iconBreak: '☕',
+          iconUrlBreak: 'https://cdn.7tv.app/emote/e1/2x.webp',
+        })}
+      />,
+    );
+    const img = screen.getByTestId('countdown-emote') as HTMLImageElement;
+    expect(img.src).toBe('https://cdn.7tv.app/emote/e1/2x.webp');
+    expect(screen.queryByTestId('countdown-icon')).toBeNull();
+    expect(root().querySelector('svg')).toBeNull();
+  });
+
   it('holds the clock at zero, or leaves the scene bare', async () => {
     const { unmount } = await render(
       <CountdownWidget settings={settings({ time: 60, ending: 'hold' })} />,
@@ -138,6 +154,24 @@ describe('CountdownWidget', () => {
     expect(clock()).toBe('15:00');
 
     modSays('!countdown reset');
+    expect(clock()).toBe('10:00');
+  });
+
+  it('lets a mod cancel and hide it, and bring it back with the next command', async () => {
+    await render(<CountdownWidget twitchChannel="streamer" settings={settings({ time: 600 })} />);
+    act(() => twitchSocket().open());
+
+    modSays('!countdown cancel');
+    expect(root().querySelector('.cd-stage')).toBeNull();
+    // Cancelled mid-run, the clock holds where it was.
+    modSays('!countdown start');
+    expect(root().querySelector('.cd-stage')).not.toBeNull();
+    expect(clock()).toBe('10:00');
+
+    modSays('!countdown cancel');
+    expect(root().querySelector('.cd-stage')).toBeNull();
+    modSays('!countdown reset');
+    expect(root().querySelector('.cd-stage')).not.toBeNull();
     expect(clock()).toBe('10:00');
   });
 

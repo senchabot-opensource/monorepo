@@ -23,7 +23,8 @@ export type CountdownCommand =
   | SubathonCommand
   | { action: 'scene'; scene: CountdownScene; ms: number; title?: string; note?: string }
   | { action: 'title'; title: string }
-  | { action: 'note'; note: string };
+  | { action: 'note'; note: string }
+  | { action: 'cancel' };
 
 export const COMMAND = '!countdown';
 
@@ -64,6 +65,9 @@ export const parseCountdownCommand = (message: string): CountdownCommand | null 
   }
   if (lowerWord === 'note') {
     return { action: 'note', note: rest.join(' ').trim().slice(0, NOTE_MAX_LENGTH) };
+  }
+  if (lowerWord === 'cancel') {
+    return { action: 'cancel' };
   }
 
   return parseCommand(message, COMMAND);

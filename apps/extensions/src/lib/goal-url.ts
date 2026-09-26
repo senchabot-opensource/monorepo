@@ -16,6 +16,10 @@ export type GoalStyle = (typeof GOAL_STYLES)[number];
 export const GOAL_COLORS = ['purple', 'green', 'red', 'gold', 'cyan', 'pink'] as const;
 export type GoalColor = (typeof GOAL_COLORS)[number];
 
+/** What stays on screen once the goal is reached. */
+export const GOAL_ENDS = ['stay', 'hide'] as const;
+export type GoalEnd = (typeof GOAL_ENDS)[number];
+
 export interface GoalSettings {
   platforms: ChannelPlatforms;
   /** Preset id; any preset but classic brings its own colors and fonts. */
@@ -24,10 +28,18 @@ export interface GoalSettings {
   color: GoalColor;
   /** Shown above the bar; empty hides it. */
   title: string;
+  /** An emoji for the goal instead of the star; empty uses the star. */
+  icon: string;
+  /** A channel emote image for the goal; empty falls back to the icon above. */
+  iconUrl: string;
   /** Where the count starts, e.g. the sub count the streamer's dashboard shows. */
   start: number;
   /** The count the goal is reached at. */
   target: number;
+  /** What stays on screen once the goal is reached. */
+  end: GoalEnd;
+  /** Seconds the completed goal stays up before hiding; 0 hides it right away. */
+  endHold: number;
   /** A rising "+1" with the viewer's name for every sub and gift. */
   pops: boolean;
 }
@@ -38,14 +50,24 @@ export const DEFAULT_GOAL_SETTINGS: GoalSettings = {
   style: 'bar',
   color: 'purple',
   title: 'SUB GOAL',
+  icon: '',
+  iconUrl: '',
   start: 0,
   target: 10,
+  end: 'stay',
+  endHold: 0,
   pops: true,
 };
 
 /** Upper bound for every count: bigger than any channel's subs, small enough to stay exact. */
 export const MAX_GOAL_COUNT = 1_000_000;
 export const TITLE_MAX_LENGTH = 32;
+/** Long enough for a few emoji; cut by code point so one is never split in half. */
+export const ICON_MAX_LENGTH = 8;
+/** Cap for an emote image URL: long enough for any CDN link, short enough to stay sane. */
+const ICON_URL_MAX_LENGTH = 500;
+/** How long the completed goal may stay up. */
+export const MAX_END_HOLD_SECONDS = 600;
 
 const WIDGET_PATH = '/widgets/goal';
 
@@ -55,13 +77,19 @@ function buildParams(settings: GoalSettings, twitchChannel: string, kickChannel:
   const defaults = DEFAULT_GOAL_SETTINGS;
   setChannels(params, settings.platforms, twitchChannel, kickChannel);
   writePreset(params, settings.preset);
-  if (settings.style && settings.style !== defaults.style)
-    params.set('style', settings.style);
+  if (settings.style && settings.style !== defaults.style) params.set('style', settings.style);
   if (isClassic(settings.preset) && settings.color !== defaults.color)
     params.set('color', settings.color);
   if (settings.title !== defaults.title) params.set('title', settings.title);
+  const icon = Array.from(settings.icon.trim()).slice(0, ICON_MAX_LENGTH).join('');
+  if (icon) params.set('icon', icon);
+  const iconUrl = settings.iconUrl.trim().slice(0, ICON_URL_MAX_LENGTH);
+  if (iconUrl) params.set('iconUrl', iconUrl);
   if (settings.start !== defaults.start) params.set('start', String(settings.start));
   if (settings.target !== defaults.target) params.set('target', String(settings.target));
+  if (settings.end !== defaults.end) params.set('end', settings.end);
+  if (settings.endHold !== defaults.endHold)
+    params.set('endHold', String(Math.min(MAX_END_HOLD_SECONDS, Math.max(0, settings.endHold))));
   if (settings.pops !== defaults.pops) params.set('pops', settings.pops ? '1' : '0');
   return params;
 }
@@ -92,15 +120,22 @@ export function readGoalSettings(params: URLSearchParams): Omit<GoalSettings, 'p
   const defaults = DEFAULT_GOAL_SETTINGS;
   const style = params.get('style') as GoalStyle;
   const color = params.get('color') as GoalColor;
+  const end = params.get('end') as GoalEnd;
   const title = params.get('title');
   return {
     preset: readPreset(params),
     style: GOAL_STYLES.includes(style) ? style : defaults.style,
     color: GOAL_COLORS.includes(color) ? color : defaults.color,
     title: title === null ? defaults.title : title.slice(0, TITLE_MAX_LENGTH),
+    icon: Array.from((params.get('icon') ?? '').trim())
+      .slice(0, ICON_MAX_LENGTH)
+      .join(''),
+    iconUrl: (params.get('iconUrl') ?? '').trim().slice(0, ICON_URL_MAX_LENGTH),
     start: readWhole(params.get('start'), defaults.start, { max: MAX_GOAL_COUNT }),
     // A goal of 0 would be reached before it began.
     target: readWhole(params.get('target'), defaults.target, { min: 1, max: MAX_GOAL_COUNT }),
+    end: GOAL_ENDS.includes(end) ? end : defaults.end,
+    endHold: readWhole(params.get('endHold'), defaults.endHold, { max: MAX_END_HOLD_SECONDS }),
     pops: readFlag(params.get('pops'), defaults.pops),
   };
 }

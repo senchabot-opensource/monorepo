@@ -6,6 +6,7 @@ import {
   type ClockOptions,
   healthOf,
   isEnded,
+  pause,
   timeLeft,
 } from '../subathon/subathon-timer';
 import { useSubEvents } from '../subathon/use-sub-events';
@@ -52,6 +53,8 @@ export interface Countdown {
   ended: boolean;
   /** The message at zero has hidden itself after its hold time. */
   doneHidden: boolean;
+  /** A mod cancelled the countdown from chat; any other command shows it again. */
+  cancelled: boolean;
   scene: CountdownScene;
   /** Chat-set headline; undefined follows the setup page text. Empty uses the scene wording. */
   title?: string;
@@ -86,6 +89,7 @@ export function useCountdown({
   // Headline and note set from chat; undefined means the setup page text wins.
   const [title, setTitle] = useState<string | undefined>(undefined);
   const [note, setNote] = useState<string | undefined>(undefined);
+  const [cancelled, setCancelled] = useState(false);
 
   const commit = useCallback(
     (next: CountdownState) => {
@@ -106,12 +110,20 @@ export function useCountdown({
     setScene(propScene);
     setTitle(undefined);
     setNote(undefined);
+    setCancelled(false);
   }, [time, at, propScene, clock, commit]);
 
   const runCommand = useCallback(
     (text: string) => {
       const command = parseCountdownCommand(text);
       if (!command) return;
+      if (command.action === 'cancel') {
+        commit(pause(stateRef.current, clock()));
+        setCancelled(true);
+        return;
+      }
+      // Any other valid command brings a cancelled countdown back.
+      setCancelled(false);
       if (command.action === 'scene') {
         setScene(command.scene);
         setTitle(command.title);
@@ -191,6 +203,7 @@ export function useCountdown({
     paused: state.endsAt === null,
     ended,
     doneHidden,
+    cancelled,
     scene,
     title,
     note,
