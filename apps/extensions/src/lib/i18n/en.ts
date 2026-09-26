@@ -724,6 +724,17 @@ export const en = {
     targetTip: 'The bar is full at this count. The count keeps going past it.',
     countsHint:
       'Every sub and resub adds 1, Prime and every tier alike. A gift adds 1 for each sub in it.',
+    end: 'On Complete',
+    ends: {
+      stay: 'Keep showing',
+      hide: 'Hide it',
+    },
+    endTip: 'What stays on screen after the goal is reached.',
+    endHold: 'Hide After',
+    endHoldTip: 'How long the completed goal stays on screen. Zero hides it right away.',
+    endHoldOff: 'Hides as soon as the goal is reached.',
+    unitMinutes: 'min',
+    unitSeconds: 'sec',
     style: 'Style',
     styleTip:
       'Bar puts the goal title and count above the bar. Thin Bar embeds the title and count directly inside a slimmer bar.',
@@ -733,6 +744,12 @@ export const en = {
     titleLabel: 'Title',
     titleTip: 'Shown above the bar. Leave it empty to show no title.',
     titlePlaceholder: 'No title',
+    iconLabel: 'Goal Icon',
+    iconTip: 'An emoji for the goal instead of the star, e.g. ⭐. Leave it empty to use the star.',
+    iconPlaceholder: 'Star',
+    emoteLabel: 'Channel Emote',
+    emoteTip:
+      'The goal shows this channel emote instead of the icon box above. Lists each channel’s subscriber emotes plus its own 7TV, BTTV and FFZ sets — no global or shared pools.',
     showPops: 'Show New Subs',
     showPopsTip: "Floats up +1 with the viewer's name for every sub, or +5 for a gift of 5.",
     sectionCommands: 'Chat Commands',
@@ -914,6 +931,16 @@ export const en = {
     iconTip:
       'An emoji or a few characters for the selected scene instead of its scene icon, e.g. ☕. Leave it empty to use the scene icon.',
     iconPlaceholder: 'Scene icon',
+    emoteLabel: 'Channel Emote',
+    emoteTip:
+      'The selected scene shows this channel emote instead of the icon box above. Lists each channel’s subscriber emotes plus its own 7TV, BTTV and FFZ sets — no global or shared pools.',
+    emoteNone: 'No emote',
+    emoteLoading: 'Loading emotes…',
+    emoteEmpty: 'No channel emotes found for these channels.',
+    emoteNeedChannel: 'Fill in a Twitch or Kick channel above to load its emotes.',
+    emoteSearch: 'Search emotes',
+    emoteRemove: 'Remove emote',
+    emoteClose: 'Close',
     unitSeconds: 'sec',
     look: 'Background',
     looks: {
@@ -936,6 +963,7 @@ export const en = {
     cmdSet: 'Sets the time left',
     cmdPause: 'Pauses it; start runs it again',
     cmdReset: 'Starts the countdown over',
+    cmdCancel: 'Cancels it and hides the overlay; any command brings it back',
     cmdScene:
       'Switches to starting, break or ending and sets the time (10m when left out); text after it becomes the headline, | note sets the note',
     cmdTitle: 'Sets the headline; empty clears it back to the setup text',
@@ -1993,6 +2021,7 @@ export const en = {
         pauseDoes: 'Pauses the clock where it is',
         startDoes: 'Runs it again after a pause',
         resetDoes: 'Starts the countdown over from the top',
+        cancelDoes: 'Stops the countdown and hides the overlay until the next command',
         sceneDoes:
           'Switches to that scene for 5 minutes (10m when left out); !countdown break 5m Lunch | Back soon also sets the headline and the note',
         titleDoes:
@@ -2271,6 +2300,16 @@ export const en = {
     lead: "New features and bug fixes in Senchabot Extensions, newest first. The list is put together from the project's commit history on [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      countdownCancel:
+        'Stream Countdown mods can now stop the countdown and hide it with `!countdown cancel`. Any other command brings it back.',
+      goalEmoteIcons:
+        'Sub Goal can now show your own icon: an emoji or one of your channel emotes instead of the star.',
+      countdownEmoteIcons:
+        'Stream Countdown can now use your channel emotes as icons: pick one per scene from a visual picker of your channels’ subscriber emotes and own 7TV, BTTV and FFZ sets.',
+      goalCelebrationName:
+        "Sub Goal now names who filled it: when a single sub or gift completes the goal, the finisher's name lands on the trophy.",
+      goalEndHide:
+        'Sub Goal can now hide itself once the goal is reached: pick Hide it under On Complete and set after how many minutes and seconds.',
       moreLanguages:
         'The site now also comes in Spanish, French, German, Japanese and Portuguese, and Chat Poll, Stream Alerts and the Subathon Timer rates can show their words in those languages too.',
       countdownSceneIcons:

@@ -94,6 +94,7 @@ function StreamCountdownGuide() {
                   [`${COMMAND} pause`, t('guides.countdown.commands.pauseDoes')],
                   [`${COMMAND} start`, t('guides.countdown.commands.startDoes')],
                   [`${COMMAND} reset`, t('guides.countdown.commands.resetDoes')],
+                  [`${COMMAND} cancel`, t('guides.countdown.commands.cancelDoes')],
                   [`${COMMAND} title Lunch break`, t('guides.countdown.commands.titleDoes')],
                   [`${COMMAND} note Back in 5`, t('guides.countdown.commands.noteDoes')],
                 ]}

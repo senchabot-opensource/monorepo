@@ -1,4 +1,4 @@
-import { screen, within } from '@testing-library/react';
+import { screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { PREVIEW_CHANNEL } from '#/features/widgets/goal/use-goal';
 import { buildGoalUrl, DEFAULT_GOAL_SETTINGS, type GoalSettings } from '#/lib/goal-url';
@@ -21,6 +21,7 @@ const previewSrc = () =>
 
 afterEach(() => {
   vi.restoreAllMocks();
+  vi.unstubAllGlobals();
 });
 
 describe('Sub Goal overlay route', () => {
@@ -140,6 +141,10 @@ describe('Sub Goal setup', () => {
         title: 'Road & 100% 🎉',
         start: 431,
         target: 500,
+        end: 'stay',
+        endHold: 0,
+        icon: '',
+        iconUrl: '',
         pops: false,
       },
       'streamer',
@@ -193,5 +198,36 @@ describe('Sub Goal setup', () => {
     expect(received.slice(0, 2).map((m) => m.event.platform)).toEqual(['kick', 'kick']);
     expect(received[2].event.text).toBe('!goal set 42');
     listener.close();
+  });
+
+  it('saves the icon box and a channel emote', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (url: string) => {
+        if (url.startsWith('https://api.ivr.fi/')) return Response.json([{ id: '1' }]);
+        if (url === 'https://7tv.io/v3/users/twitch/1')
+          return Response.json({ emote_set: { emotes: [{ id: 'e1', name: 'catJAM' }] } });
+        return new Response('{}', { status: 404 });
+      }),
+    );
+    const user = setupUser();
+    await renderRoute(PAGE);
+    await user.type(twitchField(), 'streamer');
+
+    await retype(user, textbox(en('goal.iconLabel')), '⭐');
+    expect(new URL(urlField().value).searchParams.get('icon')).toBe('⭐');
+
+    const picker = await screen.findByRole(
+      'button',
+      { name: (name) => name.includes(en('countdown.emoteNone')) },
+      { timeout: 5000 },
+    );
+    await user.click(picker);
+    await user.click(screen.getByRole('button', { name: (name) => name.startsWith('catJAM') }));
+    await waitFor(() =>
+      expect(new URL(urlField().value).searchParams.get('iconUrl')).toBe(
+        'https://cdn.7tv.app/emote/e1/2x.webp',
+      ),
+    );
   });
 });

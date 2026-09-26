@@ -140,4 +140,10 @@ describe('parseCountdownCommand', () => {
     });
     expect(parseCountdownCommand('!countdown note')).toEqual({ action: 'note', note: '' });
   });
+
+  it('reads cancel, which stops the countdown and hides it', () => {
+    expect(parseCountdownCommand('!countdown cancel')).toEqual({ action: 'cancel' });
+    expect(parseCountdownCommand('!COUNTDOWN Cancel')).toEqual({ action: 'cancel' });
+    expect(parseCountdownCommand('!countdown')).toBeNull();
+  });
 });

@@ -74,6 +74,8 @@ interface UseGoalOptions {
   kick?: string;
   start: number;
   target: number;
+  /** Seconds the completed goal stays up; null keeps it up. */
+  hideAfter: number | null;
   /** Preview mode: simulated subs, no chat and no saved count. */
   simulate?: boolean;
   /** The only platform the preview simulates; both when unset. */
@@ -87,6 +89,7 @@ export function useGoal({
   kick,
   start,
   target,
+  hideAfter,
   simulate = false,
   simPlatform,
   previewId,
@@ -98,13 +101,16 @@ export function useGoal({
   const stateRef = useRef(state);
   const [pops, setPops] = useState<GoalPop[]>([]);
   const [hit, setHit] = useState<GoalHit | null>(null);
-  // Set while the goal-reached celebration plays; a new key replays it.
-  const [celebration, setCelebration] = useState<number | null>(null);
+  // Set while the goal-reached celebration plays; a new key replays it. The event is the
+  // sub or gift that completed the goal, so the trophy can name who filled it.
+  const [celebration, setCelebration] = useState<{ key: number; event: SubEvent | null } | null>(
+    null,
+  );
   const popId = useRef(0);
   const lastTestAt = useRef(0);
 
   /** Makes `next` the count and returns how many subs that added (negative when removed). */
-  const commit = useCallback((next: GoalState): number => {
+  const commit = useCallback((next: GoalState, event?: SubEvent): number => {
     const previous = stateRef.current;
     stateRef.current = next;
     setState(next);
@@ -118,7 +124,8 @@ export function useGoal({
         up: added > 0,
       });
     }
-    if (previous.count < target && next.count >= target) setCelebration(Date.now());
+    if (previous.count < target && next.count >= target)
+      setCelebration({ key: Date.now(), event: event ?? null });
     return added;
   }, []);
 
@@ -132,7 +139,7 @@ export function useGoal({
       if (event.kind !== 'sub' && event.kind !== 'gift') return;
       const amount = subsIn(event);
       // At the top of the scale nothing gets through, so there's nothing to show either.
-      const added = amount > 0 ? commit(addToGoal(stateRef.current, amount)) : 0;
+      const added = amount > 0 ? commit(addToGoal(stateRef.current, amount), event) : 0;
       if (added <= 0) return;
       const id = ++popId.current;
       setPops((list) => [...list.slice(-(MAX_POPS - 1)), { id, amount: added, event }]);
@@ -155,6 +162,23 @@ export function useGoal({
     const timer = window.setTimeout(() => setCelebration(null), CELEBRATE_MS);
     return () => window.clearTimeout(timer);
   }, [celebration]);
+
+  const reached = state.count >= target;
+  // The completed goal hides itself after its hold time; falling back under the goal
+  // (a remove or set) or turning the behavior off shows it again.
+  const [completedHidden, setCompletedHidden] = useState(false);
+  useEffect(() => {
+    if (!reached || hideAfter === null) {
+      setCompletedHidden(false);
+      return;
+    }
+    if (hideAfter <= 0) {
+      setCompletedHidden(true);
+      return;
+    }
+    const timer = window.setTimeout(() => setCompletedHidden(true), hideAfter * 1000);
+    return () => window.clearTimeout(timer);
+  }, [reached, hideAfter]);
 
   useSubEvents(twitch, kick, !simulate, handleEvent);
 
@@ -187,7 +211,8 @@ export function useGoal({
   return {
     count: state.count,
     progress: progressOf(state.count, target),
-    reached: state.count >= target,
+    reached,
+    completedHidden,
     celebration,
     pops,
     hit,

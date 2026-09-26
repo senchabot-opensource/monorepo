@@ -246,7 +246,8 @@ A sub goal bar for Twitch and Kick. Every new sub, resub and gifted sub from bot
 - Recommended size: 800x260. The rising +1s use the space above the bar; the overlay scales to any source size.
 - A sub or resub adds 1, Prime and every tier alike. A gift adds 1 for each sub in it. On Twitch a resub counts when the viewer shares it in chat, on Kick when it renews. Twitch gift-sub continuations and Prime upgrades don't count, since that viewer is already subscribed.
 - Neither platform shows a channel's sub count to a page that isn't logged in, so the count starts at the starting count in the URL and is saved inside OBS. It survives reloads and carries over to the next stream. A new starting count in the URL starts it over.
-- The count keeps going past the goal; the bar stays full.
+- The count keeps going past the goal; the bar stays full. Set `end` to `hide` and the completed goal hides itself after `endHold` seconds instead (0 hides it right away).
+- When one sub or gift completes the goal, the trophy names who filled it.
 - The broadcaster and mods fix the count from chat: !goal add 3, !goal remove 1 (add and remove take 1 when the number is left out), !goal set 25, !goal reset (back to the starting count).
 - There is no follower goal: Twitch and Kick don't show follows to a page that isn't logged in.
 
@@ -259,8 +260,12 @@ URL parameters (all optional):
 | style | bar, thin (compact bar with embedded text) | bar |
 | color | purple, green, red, gold, cyan, pink | purple |
 | title | text shown above the bar, up to 32 characters; empty hides it | SUB GOAL |
+| icon | an emoji instead of the star | none |
+| iconUrl | a channel emote image instead of the star, picked on the setup page | none |
 | start | starting count | 0 |
 | target | the goal, 1 or more | 10 |
+| end | stay (keep showing) or hide (hide the completed goal) | stay |
+| endHold | seconds the completed goal stays up, 0 hides it right away | 0 |
 | pops | 0 hides the rising +1 with the viewer's name | 1 |
 | simulate | 1 plays simulated subs, doesn't read chat and doesn't save the count | off |
 | simplatform | twitch or kick: simulate only that platform | both |
@@ -289,14 +294,14 @@ URL parameters (all optional):
 
 ## Stream Countdown
 
-A countdown for the parts of a stream where nothing is happening yet: the minutes before going live, a break in the middle, and the last minutes before signing off. The scene (starting, break, ending) picks the default headline and icon, or set your own headline, note, end message and a custom icon per scene (an emoji or a few characters). It counts down a length, or aims at a time of day like 21:00 read from the clock of the computer running OBS, which means the source can be added hours ahead; a time that has already passed today aims at tomorrow. The clock starts when the browser source loads, so ticking "Refresh browser when scene becomes active" in OBS starts it over on every switch to that scene. At zero it shows a message (hides itself after `doneHold` seconds, 10 by default), holds 00:00, or hides itself. It needs no channel; with one, the broadcaster and mods change it from chat with !countdown.
+A countdown for the parts of a stream where nothing is happening yet: the minutes before going live, a break in the middle, and the last minutes before signing off. The scene (starting, break, ending) picks the default headline and icon, or set your own headline, note, end message and a custom icon per scene (an emoji, a few characters, or one of the channels' subscriber emotes from the setup page picker). It counts down a length, or aims at a time of day like 21:00 read from the clock of the computer running OBS, which means the source can be added hours ahead; a time that has already passed today aims at tomorrow. The clock starts when the browser source loads, so ticking "Refresh browser when scene becomes active" in OBS starts it over on every switch to that scene. At zero it shows a message (hides itself after `doneHold` seconds, 10 by default), holds 00:00, or hides itself. It needs no channel; with one, the broadcaster and mods change it from chat with !countdown.
 
 - Widget URL: https://extensions.senchabot.com/widgets/countdown?scene=starting&time=600
 - Counting down to a time of day: https://extensions.senchabot.com/widgets/countdown?scene=starting&at=21:00
 - Demo: https://extensions.senchabot.com/widgets/countdown?simulate=1
 - Guide: https://extensions.senchabot.com/guides/stream-countdown
 - Recommended size: 1920x1080, so the clock lands in the middle of the scene. It is drawn for whatever size the source has.
-- Chat commands for the broadcaster and mods, on both platforms: `!countdown {scene} [duration] [headline] [| note]` (defaults to 10m, e.g. `!countdown break 5m Lunch | Back soon`), `!countdown add 5m`, `!countdown remove 2m`, `!countdown set 10m`, `!countdown pause`, `!countdown start`, `!countdown reset`, `!countdown title <headline>`, `!countdown note <note>`. Durations are written as 5m, 90s, 1h30m, 5:00 or a bare number of minutes.
+- Chat commands for the broadcaster and mods, on both platforms: `!countdown {scene} [duration] [headline] [| note]` (defaults to 10m, e.g. `!countdown break 5m Lunch | Back soon`), `!countdown add 5m`, `!countdown remove 2m`, `!countdown set 10m`, `!countdown pause`, `!countdown start`, `!countdown reset`, `!countdown cancel` (stops and hides it until the next command), `!countdown title <headline>`, `!countdown note <note>`. Durations are written as 5m, 90s, 1h30m, 5:00 or a bare number of minutes.
 
 URL parameters (all optional):
 
@@ -313,6 +318,9 @@ URL parameters (all optional):
 | iconStarting | an emoji or a few characters instead of the starting icon | the scene's icon |
 | iconBreak | an emoji or a few characters instead of the break icon | the scene's icon |
 | iconEnding | an emoji or a few characters instead of the ending icon | the scene's icon |
+| iconUrlStarting | a channel emote image instead of the starting icon, picked on the setup page | none |
+| iconUrlBreak | a channel emote image instead of the break icon, picked on the setup page | none |
+| iconUrlEnding | a channel emote image instead of the ending icon, picked on the setup page | none |
 | note | a line under the clock, up to 64 characters | none |
 | end | text (a message at zero), hold (stay at 00:00), hide (nothing on screen) | text |
 | look | card (a panel behind the clock), plain (text on the scene) | card |

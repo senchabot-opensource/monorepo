@@ -48,6 +48,12 @@ export interface CountdownSettings {
   iconBreak: string;
   /** Custom icon for the ending scene; empty uses the scene icon. */
   iconEnding: string;
+  /** Channel emote image for the starting scene; empty falls back to the icon above. */
+  iconUrlStarting: string;
+  /** Channel emote image for the break scene; empty falls back to the icon above. */
+  iconUrlBreak: string;
+  /** Channel emote image for the ending scene; empty falls back to the icon above. */
+  iconUrlEnding: string;
   ending: CountdownEnding;
   look: CountdownLook;
   color: CountdownColor;
@@ -70,6 +76,9 @@ export const DEFAULT_COUNTDOWN_SETTINGS: CountdownSettings = {
   iconStarting: '',
   iconBreak: '',
   iconEnding: '',
+  iconUrlStarting: '',
+  iconUrlBreak: '',
+  iconUrlEnding: '',
   ending: 'text',
   look: 'card',
   color: 'purple',
@@ -87,6 +96,9 @@ export const MAX_DONE_HOLD_SECONDS = 600;
 export const MAX_COUNTDOWN_TIME = 24 * 3600;
 
 const AT_PATTERN = /^([01]?\d|2\d):([0-5]\d)$/;
+
+/** Cap for an emote image URL: long enough for any CDN link, short enough to stay sane. */
+const ICON_URL_MAX_LENGTH = 500;
 
 /** Cut to `max` characters by code point, so an emoji at the cut is never split in half. */
 const clip = (text: string, max: number) => Array.from(text).slice(0, max).join('');
@@ -134,6 +146,13 @@ function buildParams(
   if (settings.doneHold !== defaults.doneHold)
     params.set('doneHold', String(Math.min(MAX_DONE_HOLD_SECONDS, Math.max(0, settings.doneHold))));
   for (const [key, icon] of Object.entries(icons)) if (icon) params.set(key, icon);
+  const iconUrls = {
+    iconUrlStarting: settings.iconUrlStarting.trim(),
+    iconUrlBreak: settings.iconUrlBreak.trim(),
+    iconUrlEnding: settings.iconUrlEnding.trim(),
+  };
+  for (const [key, url] of Object.entries(iconUrls))
+    if (url) params.set(key, url.slice(0, ICON_URL_MAX_LENGTH));
   if (settings.ending !== defaults.ending) params.set('end', settings.ending);
   if (!settings.bar) params.set('bar', '0');
   if (!settings.motion) params.set('motion', '0');
@@ -188,6 +207,9 @@ export function readCountdownSettings(
     iconStarting: clip((params.get('iconStarting') ?? '').trim(), ICON_MAX_LENGTH),
     iconBreak: clip((params.get('iconBreak') ?? '').trim(), ICON_MAX_LENGTH),
     iconEnding: clip((params.get('iconEnding') ?? '').trim(), ICON_MAX_LENGTH),
+    iconUrlStarting: (params.get('iconUrlStarting') ?? '').trim().slice(0, ICON_URL_MAX_LENGTH),
+    iconUrlBreak: (params.get('iconUrlBreak') ?? '').trim().slice(0, ICON_URL_MAX_LENGTH),
+    iconUrlEnding: (params.get('iconUrlEnding') ?? '').trim().slice(0, ICON_URL_MAX_LENGTH),
     ending: COUNTDOWN_ENDINGS.includes(ending) ? ending : defaults.ending,
     look: COUNTDOWN_LOOKS.includes(look) ? look : defaults.look,
     color: COUNTDOWN_COLORS.includes(color) ? color : defaults.color,
@@ -206,6 +228,18 @@ export function sceneIcon(
     : scene === 'break'
       ? settings.iconBreak
       : settings.iconEnding;
+}
+
+/** The streamer's channel emote image for `scene`, or empty when the text icon applies. */
+export function sceneIconUrl(
+  settings: Pick<CountdownSettings, 'iconUrlStarting' | 'iconUrlBreak' | 'iconUrlEnding'>,
+  scene: CountdownScene,
+): string {
+  return scene === 'starting'
+    ? settings.iconUrlStarting
+    : scene === 'break'
+      ? settings.iconUrlBreak
+      : settings.iconUrlEnding;
 }
 
 /** Reverse of buildCountdownUrl; null for anything that isn't a Stream Countdown URL. */

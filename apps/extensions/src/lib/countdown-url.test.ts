@@ -181,6 +181,21 @@ describe('readCountdownSettings', () => {
       DEFAULT_COUNTDOWN_SETTINGS.doneHold,
     );
   });
+
+  it('writes the emote image only when set, and reads it back', () => {
+    const url = buildCountdownUrl(
+      ORIGIN,
+      { ...DEFAULT_COUNTDOWN_SETTINGS, iconUrlBreak: 'https://cdn.7tv.app/emote/e1/2x.webp' },
+      '',
+      '',
+      'en',
+    );
+    expect(params(url)).toMatchObject({ iconUrlBreak: 'https://cdn.7tv.app/emote/e1/2x.webp' });
+    expect(parseCountdownUrl(url)?.settings).toMatchObject({
+      iconUrlBreak: 'https://cdn.7tv.app/emote/e1/2x.webp',
+      iconUrlStarting: '',
+    });
+  });
 });
 
 describe('parseCountdownUrl', () => {

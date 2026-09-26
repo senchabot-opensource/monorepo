@@ -744,6 +744,18 @@ export const pt: typeof en = {
     targetTip: 'A barra fica cheia nesse número. A contagem continua depois dele.',
     countsHint:
       'Cada sub e resub soma 1, seja Prime ou qualquer tier. Um presente soma 1 para cada sub dentro dele.',
+    end: 'Ao completar',
+    ends: {
+      stay: 'Continuar mostrando',
+      hide: 'Ocultar',
+    },
+    endTip: 'O que fica na tela depois que a meta for alcançada.',
+    endHold: 'Ocultar após',
+    endHoldTip:
+      'Quanto tempo a meta concluída fica na tela. Zero oculta na mesma hora.',
+    endHoldOff: 'Oculta assim que a meta for alcançada.',
+    unitMinutes: 'min',
+    unitSeconds: 's',
     style: 'Estilo',
     styleTip:
       'Barra coloca o título da meta e a contagem acima da barra. Barra fina coloca o título e a contagem direto dentro de uma barra mais estreita.',
@@ -753,6 +765,13 @@ export const pt: typeof en = {
     titleLabel: 'Título',
     titleTip: 'Aparece acima da barra. Deixe vazio para não mostrar título.',
     titlePlaceholder: 'Sem título',
+    iconLabel: 'Ícone da meta',
+    iconTip:
+      'Um emoji para a meta em vez da estrela, ex.: ⭐. Deixe vazio para usar a estrela.',
+    iconPlaceholder: 'Estrela',
+    emoteLabel: 'Emote do canal',
+    emoteTip:
+      'A meta mostra esse emote do canal em vez do quadro de ícone acima. Lista os emotes de inscrito de cada canal mais os próprios conjuntos 7TV, BTTV e FFZ — sem grupos globais ou compartilhados.',
     showPops: 'Mostrar novos subs',
     showPopsTip:
       'Faz subir um +1 com o nome do espectador a cada sub, ou +5 para um presente de 5.',
@@ -927,6 +946,26 @@ export const pt: typeof en = {
     notePlaceholder: 'Sem nota',
     doneLabel: 'Mensagem no zero',
     doneTip: 'Substitui o relógio quando o tempo acaba. Deixe vazio para usar o texto da cena.',
+    doneHold: 'Ocultar após',
+    doneHoldTip:
+      'Quanto tempo a mensagem no zero fica na tela. Zero mantém até você trocar de cena.',
+    doneHoldOff: 'A mensagem fica na tela até você trocar de cena.',
+    iconLabel: 'Ícone personalizado',
+    iconTip:
+      'Um emoji ou alguns caracteres para a cena selecionada em vez do ícone da cena, ex.: ☕. Deixe vazio para usar o ícone da cena.',
+    iconPlaceholder: 'Ícone da cena',
+    emoteLabel: 'Emote do canal',
+    emoteTip:
+      'A cena selecionada mostra esse emote do canal em vez do quadro de ícone acima. Lista os emotes de inscrito de cada canal mais os próprios conjuntos 7TV, BTTV e FFZ — sem grupos globais ou compartilhados.',
+    emoteNone: 'Nenhum emote',
+    emoteLoading: 'Carregando emotes…',
+    emoteEmpty: 'Nenhum emote de canal encontrado para estes canais.',
+    emoteNeedChannel:
+      'Preencha um canal da Twitch ou Kick acima para carregar os emotes.',
+    emoteSearch: 'Buscar emotes',
+    emoteRemove: 'Remover emote',
+    emoteClose: 'Fechar',
+    unitSeconds: 's',
     look: 'Fundo',
     looks: {
       card: 'Painel',
@@ -948,6 +987,11 @@ export const pt: typeof en = {
     cmdSet: 'Define o tempo restante',
     cmdPause: 'Pausa; start faz voltar a correr',
     cmdReset: 'Recomeça a contagem',
+    cmdCancel: 'Cancela e oculta o overlay; qualquer comando traz de volta',
+    cmdScene:
+      'Muda para starting, break ou ending e define a duração (10m se omitido); o texto depois vira o título, | nota define a nota',
+    cmdTitle: 'Define o título; vazio volta para o texto da configuração',
+    cmdNote: 'Define a nota embaixo do relógio; vazio volta para o texto da configuração',
     previewTitle: 'Prévia da Contagem Regressiva',
     previewIframeTitle: 'Prévia da Contagem Regressiva',
     previewHint:
@@ -1995,8 +2039,14 @@ export const pt: typeof en = {
         pauseDoes: 'Pausa o relógio onde está',
         startDoes: 'Volta a correr depois de uma pausa',
         resetDoes: 'Recomeça a contagem do início',
+        cancelDoes:
+          'Para a contagem e oculta o overlay até o próximo comando',
         sceneDoes:
           'Muda a cena para pausa (break), início (starting) ou encerramento (ending) e define a duração (10m se você não colocar)',
+        titleDoes:
+          'Substitui o título até o próximo comando de cena; !countdown title sem nada limpa',
+        noteDoes:
+          'Substitui a nota embaixo do relógio até o próximo comando de cena; !countdown note sem nada limpa',
         p2: 'Só você e seus mods podem usar, nas duas plataformas, e uma resposta no chat nunca roda um comando. A contagem lê seu chat público do mesmo jeito que os outros widgets, sem login.',
       },
       scenes: {
@@ -2274,8 +2324,24 @@ export const pt: typeof en = {
     lead: 'Recursos novos e correções de bugs no Senchabot Extensions, dos mais novos para os mais antigos. A lista é montada a partir do histórico de commits do projeto no [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).',
     site: 'Site',
     entries: {
+      countdownCancel:
+        'Mods do Stream Countdown agora podem parar a contagem e ocultá-la com `!countdown cancel`. Qualquer outro comando traz de volta.',
+      goalEmoteIcons:
+        'A Meta de Subs agora pode mostrar seu próprio ícone: um emoji ou um dos emotes do seu canal em vez da estrela.',
+      countdownEmoteIcons:
+        'O Stream Countdown agora pode usar os emotes do seu canal como ícones: escolha um por cena em um seletor visual com os emotes de inscrito dos seus canais e conjuntos próprios da 7TV, BTTV e FFZ.',
+      goalCelebrationName:
+        'A Meta de Subs agora mostra quem a completou: quando uma única inscrição ou presente completa a meta, o nome de quem completou aparece no troféu.',
+      goalEndHide:
+        'A Meta de Subs agora pode se ocultar sozinha após a meta ser alcançada: escolha Ocultar em Ao completar e defina após quantos minutos e segundos.',
       moreLanguages:
         'O site agora também está em espanhol, francês, alemão, japonês e português, e Enquete do Chat, Alertas de Live e os valores do Subathon Timer também podem mostrar os textos nesses idiomas.',
+      countdownSceneIcons:
+        'O Stream Countdown agora tem um ícone personalizado individual para cada cena (starting, break, ending), e a mensagem no zero se oculta sozinha após 10 segundos por padrão — mude para 0 para manter visível.',
+      countdownDoneHoldIcon:
+        'O Stream Countdown agora pode ocultar a mensagem no zero após um tempo de espera definido por você, e exibir seu próprio ícone (um emoji ou alguns caracteres) em vez do ícone da cena.',
+      countdownTextCommand:
+        'Mods do Stream Countdown agora podem definir o título e a nota pelo chat: `!countdown break 5m Lunch | Back soon`, além de `!countdown title` e `!countdown note`. O comando de cena agora também está listado na página de configuração.',
       countdownSceneCommand:
         'Novo comando de chat `!countdown {scene} {duration}`. Os mods agora podem mudar a cena atual (início, pausa ou encerramento) e definir a duração dela com um comando só.',
       socialsLaunch:

@@ -1,5 +1,5 @@
 import { createFileRoute, useHydrated } from '@tanstack/react-router';
-import { useId, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { ChannelFields } from '#/components/channel-fields';
 import { ChatCommandsCard } from '#/components/chat-commands-card';
 import { CopyUrlField } from '#/components/copy-url-field';
@@ -18,6 +18,11 @@ import { HINT_CLASS, TextField } from '#/components/ui/text-field';
 import { PresetField } from '#/features/presets/preset-field';
 import { isClassic } from '#/features/presets/registry';
 import { useStartOnSitePreset } from '#/features/presets/site-preset';
+import {
+  type ChannelEmote,
+  loadChannelEmotes,
+} from '#/features/widgets/countdown/countdown-emotes';
+import { EmotePicker } from '#/features/widgets/countdown/emote-picker';
 import {
   COMMAND,
   PREVIEW_CHANNEL,
@@ -75,6 +80,7 @@ const COMMANDS: { usage: string; action: TranslationKey }[] = [
   { usage: `${COMMAND} set 10m`, action: 'countdown.cmdSet' },
   { usage: `${COMMAND} pause`, action: 'countdown.cmdPause' },
   { usage: `${COMMAND} reset`, action: 'countdown.cmdReset' },
+  { usage: `${COMMAND} cancel`, action: 'countdown.cmdCancel' },
   { usage: `${COMMAND} title Lunch break`, action: 'countdown.cmdTitle' },
   { usage: `${COMMAND} note Back in 5`, action: 'countdown.cmdNote' },
 ];
@@ -100,6 +106,36 @@ function CountdownSetup() {
     | 'iconStarting'
     | 'iconBreak'
     | 'iconEnding';
+  const iconUrlKey = `iconUrl${settings.scene[0].toUpperCase()}${settings.scene.slice(1)}` as
+    | 'iconUrlStarting'
+    | 'iconUrlBreak'
+    | 'iconUrlEnding';
+
+  // The channel's own emotes for the picker, reloaded a moment after the channel boxes settle.
+  const [emotes, setEmotes] = useState<ChannelEmote[] | null>(null);
+  const [emotesLoading, setEmotesLoading] = useState(false);
+  useEffect(() => {
+    const twitch = twitchChannel.trim();
+    const kick = kickChannel.trim();
+    if (!twitch && !kick) {
+      setEmotes(null);
+      setEmotesLoading(false);
+      return;
+    }
+    let live = true;
+    setEmotesLoading(true);
+    const timer = window.setTimeout(() => {
+      loadChannelEmotes(twitch, kick).then((list) => {
+        if (!live) return;
+        setEmotes(list);
+        setEmotesLoading(false);
+      });
+    }, 500);
+    return () => {
+      live = false;
+      window.clearTimeout(timer);
+    };
+  }, [twitchChannel, kickChannel]);
 
   // The mode follows the clock time: with one set, the countdown ends at it instead of running
   // for a length. The field keeps what was typed, so a half-typed time isn't thrown away.
@@ -149,6 +185,37 @@ function CountdownSetup() {
           placeholder={t('countdown.iconPlaceholder')}
           maxLength={ICON_MAX_LENGTH}
         />
+
+        <div>
+          <FieldLabel id={`${id}-emote`} tip={t('countdown.emoteTip')}>
+            {t('countdown.emoteLabel')}
+          </FieldLabel>
+          {!twitchChannel.trim() && !kickChannel.trim() ? (
+            <p className={HINT_CLASS}>{t('countdown.emoteNeedChannel')}</p>
+          ) : emotesLoading || emotes === null ? (
+            <EmotePicker
+              labelledBy={`${id}-emote`}
+              emotes={[]}
+              value=""
+              onChange={() => {}}
+              disabled
+              disabledLabel={t('countdown.emoteLoading')}
+            />
+          ) : emotes.length === 0 ? (
+            <p className={HINT_CLASS}>{t('countdown.emoteEmpty')}</p>
+          ) : (
+            <EmotePicker
+              labelledBy={`${id}-emote`}
+              emotes={emotes}
+              value={
+                emotes.some((emote) => emote.url === settings[iconUrlKey])
+                  ? settings[iconUrlKey]
+                  : ''
+              }
+              onChange={(value) => update(iconUrlKey, value)}
+            />
+          )}
+        </div>
 
         <div className="grid gap-3 sm:grid-cols-2">
           <div>
