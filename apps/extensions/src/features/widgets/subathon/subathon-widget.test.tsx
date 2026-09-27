@@ -401,4 +401,20 @@ describe('SubathonWidget', () => {
     expect(screen.getByTestId('subathon-rates')).toBeDefined();
     expect(screen.getByTestId('subathon-rates').textContent).toContain('Sub +5 min');
   });
+
+  it('shows a custom emoji instead of the heart', () => {
+    render(<SubathonWidget settings={settings({ icon: '❤️' })} />);
+    expect(screen.getByTestId('subathon-icon').textContent).toBe('❤️');
+  });
+
+  it('shows a channel emote image over the emoji', () => {
+    render(
+      <SubathonWidget
+        settings={settings({ icon: '❤️', iconUrl: 'https://cdn.7tv.app/emote/e1/2x.webp' })}
+      />,
+    );
+    const img = screen.getByTestId('subathon-icon') as HTMLImageElement;
+    expect(img.tagName).toBe('IMG');
+    expect(img.src).toBe('https://cdn.7tv.app/emote/e1/2x.webp');
+  });
 });

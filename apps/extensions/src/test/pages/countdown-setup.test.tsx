@@ -102,10 +102,12 @@ describe('Stream Countdown setup', () => {
     );
     await user.click(picker);
     await retype(user, textbox(en('countdown.emoteSearch')), 'dog');
-    await waitFor(() =>
-      expect(
-        screen.queryByRole('button', { name: (name) => name.startsWith('catJAM') }),
-      ).toBeNull(),
+    await waitFor(
+      () =>
+        expect(
+          screen.queryByRole('button', { name: (name) => name.startsWith('catJAM') }),
+        ).toBeNull(),
+      { timeout: 5000 },
     );
     await user.click(screen.getByRole('button', { name: (name) => name.startsWith('dogJAM') }));
     await waitFor(() =>

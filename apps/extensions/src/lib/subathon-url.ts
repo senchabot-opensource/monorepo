@@ -65,6 +65,10 @@ export interface SubathonSettings extends SubathonTimeValues {
   color: SubathonColor;
   /** Shown with the clock; empty hides it. */
   title: string;
+  /** An emoji for the timer instead of the heart; empty uses the heart. */
+  icon: string;
+  /** A channel emote image for the timer; empty falls back to the icon above. */
+  iconUrl: string;
   /** Starting time, seconds. */
   start: number;
   /** Most time the clock can hold, seconds; 0 means no limit. */
@@ -85,6 +89,8 @@ export const DEFAULT_SUBATHON_SETTINGS: SubathonSettings = {
   style: 'bar',
   color: 'hp',
   title: 'SUBATHON',
+  icon: '',
+  iconUrl: '',
   start: 3600,
   cap: 0,
   tsub: 60,
@@ -131,6 +137,10 @@ export const MAX_SECONDS = 30 * 24 * 3600;
 // A timer that starts at zero would be over before it began.
 const MIN_START_SECONDS = 60;
 export const TITLE_MAX_LENGTH = 32;
+/** Long enough for a few emoji; cut by code point so one is never split in half. */
+export const ICON_MAX_LENGTH = 8;
+/** Cap for an emote image URL: long enough for any CDN link, short enough to stay sane. */
+const ICON_URL_MAX_LENGTH = 500;
 
 const WIDGET_PATH = '/widgets/subathon';
 
@@ -171,6 +181,10 @@ function buildParams(
   if (isClassic(settings.preset) && settings.color !== defaults.color)
     params.set('color', settings.color);
   if (settings.title !== defaults.title) params.set('title', settings.title);
+  const icon = Array.from(settings.icon.trim()).slice(0, ICON_MAX_LENGTH).join('');
+  if (icon) params.set('icon', icon);
+  const iconUrl = settings.iconUrl.trim().slice(0, ICON_URL_MAX_LENGTH);
+  if (iconUrl) params.set('iconUrl', iconUrl);
   for (const key of NUMBER_KEYS) {
     if (settings[key] !== defaults[key]) params.set(NUMBER_PARAMS[key], String(settings[key]));
   }
@@ -235,6 +249,10 @@ export function readSubathonSettings(params: URLSearchParams): Omit<SubathonSett
     style: SUBATHON_STYLES.includes(style) ? style : defaults.style,
     color: SUBATHON_COLORS.includes(color) ? color : defaults.color,
     title: title === null ? defaults.title : title.slice(0, TITLE_MAX_LENGTH),
+    icon: Array.from((params.get('icon') ?? '').trim())
+      .slice(0, ICON_MAX_LENGTH)
+      .join(''),
+    iconUrl: (params.get('iconUrl') ?? '').trim().slice(0, ICON_URL_MAX_LENGTH),
     ...numbers,
     start: Math.max(MIN_START_SECONDS, numbers.start),
     ...flags,

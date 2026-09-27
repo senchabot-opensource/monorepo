@@ -142,6 +142,8 @@ export function SubathonWidget({
     beat: beatFor(health, paused, ended),
     hue: hueFor(settings.color, health),
     title: settings.title,
+    icon: settings.icon,
+    iconUrl: settings.iconUrl,
     percent: settings.percent ? `${ended ? 0 : Math.max(1, Math.ceil(health * 100))}%` : null,
     pops: settings.pops ? pops : [],
     hit,
@@ -181,6 +183,8 @@ interface ViewProps {
   beat: number | null;
   hue: number;
   title: string;
+  icon: string;
+  iconUrl: string;
   /** "72%", or null when the percentage is turned off. */
   percent: string | null;
   pops: SubathonPop[];
@@ -241,6 +245,47 @@ function HeartIcon({
       />
     </svg>
   );
+}
+
+/** The timer's mark: a channel emote, a custom emoji, or the heart. */
+function TimerMark({
+  hue,
+  beat,
+  size = 26,
+  plain = false,
+  icon,
+  iconUrl,
+}: {
+  hue: number;
+  beat: number | null;
+  size?: number;
+  plain?: boolean;
+  icon: string;
+  iconUrl: string;
+}) {
+  if (iconUrl)
+    return (
+      <img
+        src={iconUrl}
+        alt=""
+        aria-hidden="true"
+        width={size}
+        height={size}
+        data-testid="subathon-icon"
+        style={{ objectFit: 'contain' }}
+      />
+    );
+  if (icon)
+    return (
+      <span
+        data-testid="subathon-icon"
+        aria-hidden="true"
+        style={{ fontSize: size, lineHeight: 1 }}
+      >
+        {icon}
+      </span>
+    );
+  return <HeartIcon hue={hue} beat={beat} size={size} plain={plain} />;
 }
 
 function PauseChip({ compact }: { compact?: boolean } = {}) {
@@ -535,7 +580,21 @@ function RateStrip({ rows }: { rows: RateRow[] }) {
 }
 
 function HealthBarView(view: ViewProps) {
-  const { left, shown, paused, ended, low, critical, hue, title, percent, hit, healing } = view;
+  const {
+    left,
+    shown,
+    paused,
+    ended,
+    low,
+    critical,
+    hue,
+    title,
+    icon,
+    iconUrl,
+    percent,
+    hit,
+    healing,
+  } = view;
   const skin = useSkin();
   const hsl = painter(skin, hue);
   const layers = fillLayers(skin);
@@ -704,7 +763,7 @@ function HealthBarView(view: ViewProps) {
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
-            <HeartIcon hue={hue} beat={view.beat} />
+            <TimerMark hue={hue} beat={view.beat} icon={icon} iconUrl={iconUrl} />
             {title && (
               <span
                 className="sa-title sa-shadow"
@@ -739,7 +798,21 @@ function HealthBarView(view: ViewProps) {
 }
 
 function ThinBarView(view: ViewProps) {
-  const { left, shown, paused, ended, low, critical, hue, title, percent, hit, healing } = view;
+  const {
+    left,
+    shown,
+    paused,
+    ended,
+    low,
+    critical,
+    hue,
+    title,
+    icon,
+    iconUrl,
+    percent,
+    hit,
+    healing,
+  } = view;
   const skin = useSkin();
   const hsl = painter(skin, hue);
   const layers = fillLayers(skin);
@@ -889,7 +962,14 @@ function ThinBarView(view: ViewProps) {
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, minWidth: 0 }}>
-                  <HeartIcon hue={hue} beat={view.beat} size={20} plain />
+                  <TimerMark
+                    hue={hue}
+                    beat={view.beat}
+                    size={20}
+                    plain
+                    icon={icon}
+                    iconUrl={iconUrl}
+                  />
                   {title && (
                     <span
                       className="sa-title sa-outline"
@@ -948,7 +1028,7 @@ function ThinBarView(view: ViewProps) {
 }
 
 function ClockView(view: ViewProps) {
-  const { left, shown, paused, ended, low, hue, title, percent } = view;
+  const { left, shown, paused, ended, low, hue, title, icon, iconUrl, percent } = view;
   const skin = useSkin();
   const hsl = painter(skin, hue);
   const glow = `0 0 ${low ? 40 : 26}px ${hsl(90, 50, low ? 0.6 : 0.35)}`;
@@ -976,8 +1056,20 @@ function ClockView(view: ViewProps) {
           gap: compact ? 6 : 10,
         }}
       >
-        {title && (
-          <span className="sa-title sa-shadow" style={{ fontSize: 24, color: hsl(95, 72) }}>
+        {(title || icon || iconUrl) && (
+          <span
+            className="sa-title sa-shadow"
+            style={{
+              fontSize: 24,
+              color: hsl(95, 72),
+              display: 'flex',
+              alignItems: 'center',
+              gap: 10,
+            }}
+          >
+            {(icon || iconUrl) && (
+              <TimerMark hue={hue} beat={null} size={24} icon={icon} iconUrl={iconUrl} />
+            )}
             {title}
           </span>
         )}
@@ -1067,7 +1159,7 @@ const RING_LENGTH = 2 * Math.PI * RING_RADIUS;
 const RING_BOTTOM_ROOM = 16;
 
 function RingView(view: ViewProps) {
-  const { left, shown, paused, ended, low, hue, title, percent } = view;
+  const { left, shown, paused, ended, low, hue, title, icon, iconUrl, percent } = view;
   const skin = useSkin();
   const hsl = painter(skin, hue);
   const angle = shown * 2 * Math.PI - Math.PI / 2;
@@ -1166,7 +1258,7 @@ function RingView(view: ViewProps) {
                 {percent}
               </span>
             ) : (
-              <HeartIcon hue={hue} beat={view.beat} />
+              <TimerMark hue={hue} beat={view.beat} icon={icon} iconUrl={iconUrl} />
             )}
           </div>
           <HealFlash hit={view.hit} healing={view.healing} hue={hue} radius="50%" spread={10} />

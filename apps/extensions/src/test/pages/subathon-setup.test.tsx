@@ -271,4 +271,36 @@ describe('Subathon Timer setup', () => {
     await retype(user, minutes(en('subathon.perSub')), '0');
     expect(button(en('subathon.testSub')).disabled).toBe(true);
   });
+
+  it('saves the icon box and a channel emote', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (url: string) => {
+        if (url.startsWith('https://api.ivr.fi/')) return Response.json([{ id: '1' }]);
+        if (url === 'https://7tv.io/v3/users/twitch/1')
+          return Response.json({ emote_set: { emotes: [{ id: 'e1', name: 'catJAM' }] } });
+        return new Response('{}', { status: 404 });
+      }),
+    );
+    const user = setupUser();
+    await renderRoute(PAGE);
+    await user.type(twitchField(), 'streamer');
+
+    await retype(user, textbox(en('subathon.iconLabel')), '❤️');
+    expect(new URL(urlField().value).searchParams.get('icon')).toBe('❤️');
+
+    const picker = await screen.findByRole(
+      'button',
+      { name: (name) => name.includes(en('countdown.emoteNone')) },
+      { timeout: 5000 },
+    );
+    await user.click(picker);
+    await user.click(screen.getByRole('button', { name: (name) => name.startsWith('catJAM') }));
+    await vi.waitFor(() =>
+      expect(new URL(urlField().value).searchParams.get('iconUrl')).toBe(
+        'https://cdn.7tv.app/emote/e1/2x.webp',
+      ),
+    );
+    vi.unstubAllGlobals();
+  });
 });

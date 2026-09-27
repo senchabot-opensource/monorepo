@@ -623,6 +623,11 @@ export const ja: typeof en = {
     titleLabel: 'タイトル',
     titleTip: 'タイマーの横に表示されます。空欄にするとタイトルは表示されません。',
     titlePlaceholder: 'タイトルなし',
+    iconLabel: 'need to translate',
+    iconTip: 'need to translate',
+    iconPlaceholder: 'need to translate',
+    emoteLabel: 'need to translate',
+    emoteTip: 'need to translate',
     showPercent: 'パーセントを表示',
     showPercentTip:
       'タイマーがどれだけ埋まっているかを表示します。100%はこれまでで最も時間が多かった時点なので、100%を超えることはありません。',
@@ -2304,6 +2309,7 @@ export const ja: typeof en = {
     lead: 'Senchabot Extensionsの新機能とバグ修正を、新しい順に並べています。このリストは[GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions)にあるプロジェクトのコミット履歴からまとめています。',
     site: 'サイト',
     entries: {
+      subathonEmoteIcons: 'need to translate',
       countdownRestartOnShow:
         '配信カウントダウンが、OBSでそのシーンに戻るたびに最初からやり直すようになりました。',
       countdownCancel:
