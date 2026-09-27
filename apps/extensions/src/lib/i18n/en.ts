@@ -992,7 +992,7 @@ export const en = {
       'Switch to the scene to start it. With a channel filled in, a mod can push it back with !countdown add 5m while you are away.',
     faq1Q: 'When does the countdown start?',
     faq1A:
-      'The moment the browser source loads: when OBS opens, or when you switch to the scene with "Refresh browser when scene becomes active" ticked. That way a break countdown starts over every time you go to your BRB scene instead of running out while you are still live.',
+      'The moment the browser source loads: when OBS opens, or when you switch to the scene with "Refresh browser when scene becomes active" ticked. That way a break countdown starts over every time you go to your BRB scene instead of running out while you are still live. Come back to the scene later and the countdown starts over from the top instead of continuing.',
     faq2Q: 'Can it count down to the time I announced, like 21:00?',
     faq2A:
       'Yes. Set Count Down To a time of day and type 21:00. It reads the clock on the computer running OBS, so you can add the source hours ahead and it still ends at 21:00. If 21:00 has already passed today, it aims at tomorrow.',
@@ -2300,6 +2300,8 @@ export const en = {
     lead: "New features and bug fixes in Senchabot Extensions, newest first. The list is put together from the project's commit history on [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      countdownRestartOnShow:
+        'Stream Countdown now starts over from the top every time you switch back to its scene in OBS.',
       countdownCancel:
         'Stream Countdown mods can now stop the countdown and hide it with `!countdown cancel`. Any other command brings it back.',
       goalEmoteIcons:

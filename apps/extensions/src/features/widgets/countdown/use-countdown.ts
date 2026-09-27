@@ -103,15 +103,21 @@ export function useCountdown({
   // A changed length or target starts the countdown over, so the preview follows the settings
   // panel. In OBS the URL doesn't change while the source runs.
   const { time, at, scene: propScene, doneHold } = values;
+  const restart = useCallback(
+    (scene: CountdownScene) => {
+      const next = countdownOptions(time, at, Date.now());
+      setOptions(next);
+      commit(startCountdown(next, clock()));
+      setScene(scene);
+      setTitle(undefined);
+      setNote(undefined);
+      setCancelled(false);
+    },
+    [time, at, clock, commit],
+  );
   useEffect(() => {
-    const next = countdownOptions(time, at, Date.now());
-    setOptions(next);
-    commit(startCountdown(next, clock()));
-    setScene(propScene);
-    setTitle(undefined);
-    setNote(undefined);
-    setCancelled(false);
-  }, [time, at, propScene, clock, commit]);
+    restart(propScene);
+  }, [restart, propScene]);
 
   const runCommand = useCallback(
     (text: string) => {
@@ -191,6 +197,19 @@ export function useCountdown({
     const timer = window.setTimeout(() => setDoneHidden(true), doneHold * 1000);
     return () => window.clearTimeout(timer);
   }, [ended, doneHold]);
+
+  // OBS unloads the page with "Shutdown source when not visible", which already starts
+  // over on show. Without that tick the page keeps running while its scene is off, so when
+  // it comes back the countdown starts over from the top instead of continuing — on the
+  // scene from its URL, whatever chat changed meanwhile.
+  useEffect(() => {
+    const onVisibility = () => {
+      if (document.visibilityState === 'hidden') return;
+      restart(propScene);
+    };
+    document.addEventListener('visibilitychange', onVisibility);
+    return () => document.removeEventListener('visibilitychange', onVisibility);
+  }, [restart, propScene]);
 
   usePreviewReceiver<PreviewMessage>(PREVIEW_CHANNEL, previewId, simulate, (message) => {
     if (message.type !== 'toggle') return runCommand(message.text);

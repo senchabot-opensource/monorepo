@@ -1021,7 +1021,7 @@ export const es: typeof en = {
       'Cambia a la escena para arrancarla. Con un canal puesto, un mod puede retrasarla con !countdown add 5m mientras no estás.',
     faq1Q: '¿Cuándo empieza la cuenta regresiva?',
     faq1A:
-      'En cuanto se carga la fuente de navegador: cuando se abre OBS, o cuando cambias a la escena con "Actualizar el navegador cuando la escena se active" marcado. Así una cuenta regresiva de pausa vuelve a empezar cada vez que vas a tu escena BRB, en lugar de agotarse mientras sigues en directo.',
+      'En cuanto se carga la fuente de navegador: cuando se abre OBS, o cuando cambias a la escena con "Actualizar el navegador cuando la escena se active" marcado. Así una cuenta regresiva de pausa vuelve a empezar cada vez que vas a tu escena BRB, en lugar de agotarse mientras sigues en directo. Si vuelves a la escena más tarde, la cuenta regresiva vuelve a empezar desde arriba en lugar de continuar.',
     faq2Q: '¿Puede contar hasta la hora que anuncié, como las 21:00?',
     faq2A:
       'Sí. Pon Contar hasta en una hora del día y escribe 21:00. Lee el reloj del equipo donde corre OBS, así que puedes añadir la fuente con horas de antelación y aun así termina a las 21:00. Si las 21:00 ya pasaron hoy, apunta a mañana.',
@@ -2333,6 +2333,8 @@ export const es: typeof en = {
     lead: 'Funciones nuevas y errores corregidos en Senchabot Extensions, de lo más nuevo a lo más viejo. La lista sale del historial de commits del proyecto en [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).',
     site: 'Sitio',
     entries: {
+      countdownRestartOnShow:
+        'Stream Countdown ahora vuelve a empezar desde el principio cada vez que regresas a su escena en OBS.',
       countdownCancel:
         'Los mods de Stream Countdown ahora pueden detener la cuenta regresiva y ocultarla con `!countdown cancel`. Cualquier otro comando la recupera.',
       goalEmoteIcons:

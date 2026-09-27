@@ -997,7 +997,7 @@ export const de: typeof en = {
       'Wechsle zur Szene, um ihn zu starten. Mit eingetragenem Kanal kann ein Mod ihn mit !countdown add 5m verlängern, während du weg bist.',
     faq1Q: 'Wann startet der Countdown?',
     faq1A:
-      'Sobald die Browser-Quelle lädt: wenn OBS startet oder wenn du zur Szene wechselst und „Browser bei Szenenaktivierung aktualisieren“ angehakt ist. So startet ein Pausen-Countdown jedes Mal neu, wenn du in deine BRB-Szene gehst, statt abzulaufen, während du noch live bist.',
+      'Sobald die Browser-Quelle lädt: wenn OBS startet oder wenn du zur Szene wechselst und „Browser bei Szenenaktivierung aktualisieren“ angehakt ist. So startet ein Pausen-Countdown jedes Mal neu, wenn du in deine BRB-Szene gehst, statt abzulaufen, während du noch live bist. Kehrst du später zur Szene zurück, startet der Countdown von vorn, statt weiterzulaufen.',
     faq2Q: 'Kann er bis zur angekündigten Uhrzeit runterzählen, z. B. 21:00?',
     faq2A:
       'Ja. Stell Countdown-Art auf Uhrzeit und gib 21:00 ein. Er liest die Uhr des PCs, auf dem OBS läuft, du kannst die Quelle also Stunden vorher hinzufügen, und er endet trotzdem um 21:00. Ist 21:00 heute schon vorbei, zielt er auf morgen.',
@@ -2306,6 +2306,8 @@ export const de: typeof en = {
     lead: 'Neue Features und Bugfixes in Senchabot Extensions, das Neueste zuerst. Die Liste ist aus der Commit-Historie des Projekts auf [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) zusammengestellt.',
     site: 'Website',
     entries: {
+      countdownRestartOnShow:
+        'Der Stream-Countdown startet jetzt jedes Mal von vorn, wenn du in OBS zu seiner Szene zurückkehrst.',
       countdownCancel:
         'Stream-Countdown-Mods können den Countdown jetzt mit `!countdown cancel` stoppen und ausblenden. Jeder andere Befehl bringt ihn zurück.',
       goalEmoteIcons:

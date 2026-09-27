@@ -175,6 +175,71 @@ describe('CountdownWidget', () => {
     expect(clock()).toBe('10:00');
   });
 
+  it('starts the countdown over whenever the source is shown again', async () => {
+    const visibility = Object.getOwnPropertyDescriptor(Document.prototype, 'visibilityState');
+    const setVisible = (visible: boolean) => {
+      Object.defineProperty(document, 'visibilityState', {
+        value: visible ? 'visible' : 'hidden',
+        configurable: true,
+      });
+      act(() => {
+        document.dispatchEvent(new Event('visibilitychange'));
+      });
+    };
+    try {
+      await render(
+        <CountdownWidget
+          twitchChannel="streamer"
+          settings={settings({ time: 60, scene: 'break' })}
+        />,
+      );
+      act(() => twitchSocket().open());
+      expect(root().dataset.scene).toBe('break');
+
+      // A running countdown starts over on its own scene instead of continuing.
+      wait(10_000);
+      setVisible(false);
+      setVisible(true);
+      expect(root().dataset.scene).toBe('break');
+      expect(root().textContent).toContain('Back Soon');
+      expect(clock()).toBe('01:00');
+
+      // A scene changed from chat returns to the URL scene.
+      modSays('!countdown ending 5m');
+      expect(root().dataset.scene).toBe('ending');
+      setVisible(false);
+      setVisible(true);
+      expect(root().dataset.scene).toBe('break');
+      expect(clock()).toBe('01:00');
+
+      // A paused one does not resume either.
+      modSays('!countdown pause');
+      wait(10_000);
+      setVisible(false);
+      setVisible(true);
+      expect(root().querySelector('.cd-stage')).not.toBeNull();
+      expect(clock()).toBe('01:00');
+
+      // A finished countdown restarts from the top.
+      wait(61_000);
+      expect(clock()).toBeUndefined();
+      setVisible(false);
+      setVisible(true);
+      expect(clock()).toBe('01:00');
+
+      // A cancelled countdown restarts too.
+      modSays('!countdown cancel');
+      expect(root().querySelector('.cd-stage')).toBeNull();
+      setVisible(false);
+      setVisible(true);
+      expect(root().querySelector('.cd-stage')).not.toBeNull();
+      expect(clock()).toBe('01:00');
+    } finally {
+      if (visibility) Object.defineProperty(document, 'visibilityState', visibility);
+      else delete (document as { visibilityState?: string }).visibilityState;
+    }
+  });
+
   it('ignores a countdown command from someone who is not a mod', async () => {
     await render(<CountdownWidget twitchChannel="streamer" settings={settings({ time: 600 })} />);
     act(() => twitchSocket().open());
