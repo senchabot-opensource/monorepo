@@ -258,6 +258,46 @@ describe('GoalWidget', () => {
     expect(celebration()).not.toBeNull();
   });
 
+  it('flies the emote icon from its spot to the bar on every sub', () => {
+    render(
+      <GoalWidget
+        twitchChannel="streamer"
+        settings={settings({
+          start: 119,
+          target: 120,
+          iconUrl: 'https://cdn.7tv.app/emote/e1/2x.webp',
+        })}
+      />,
+    );
+    expect(screen.queryByTestId('goal-fly')).toBeNull();
+    receive('twitch', SUB);
+    const fly = screen.getByTestId('goal-fly');
+    expect((fly.querySelector('img') as HTMLImageElement).src).toBe(
+      'https://cdn.7tv.app/emote/e1/2x.webp',
+    );
+    // From the icon spot (52, 142) to the full bar's edge (772, 202).
+    expect(fly.style.getPropertyValue('--dx')).toBe('720px');
+    expect(fly.style.getPropertyValue('--dy')).toBe('60px');
+  });
+
+  it('flies the emoji icon too, and the star without an icon', () => {
+    const { unmount } = render(
+      <GoalWidget
+        twitchChannel="streamer"
+        settings={settings({ start: 139, target: 140, icon: '⭐' })}
+      />,
+    );
+    receive('twitch', SUB);
+    expect(screen.getByTestId('goal-fly').textContent).toBe('⭐');
+    unmount();
+
+    render(
+      <GoalWidget twitchChannel="streamer" settings={settings({ start: 149, target: 150 })} />,
+    );
+    receive('twitch', SUB);
+    expect(screen.getByTestId('goal-fly').querySelector('svg')).not.toBeNull();
+  });
+
   it('never connects or saves in a preview', () => {
     render(<GoalWidget twitchChannel="streamer" settings={settings()} simulate />);
     expect(FakeWebSocket.instances).toHaveLength(0);

@@ -77,7 +77,7 @@ A subathon countdown overlay. It counts down in real time, and subs, gifted subs
 https://extensions.senchabot.com/widgets/subathon?twitch=YOUR_TWITCH_CHANNEL&kick=YOUR_KICK_CHANNEL&style=bar&time=3600&tsub=60&ksub=60
 ```
 
-**URL parameters** (times in seconds): `twitch`, `kick`, `style` (`bar` | `thin` | `clock` | `ring`), `color` (`hp` | `green` | `purple` | `red` | `gold` | `cyan` | `pink`), `title`, `time` (starting time), `cap` (0 = no limit), Twitch `tsub` (Tier 1 and Prime), `tgift`, `bits` (per 500), `tiers` (`0` | `1`), Kick `ksub`, `kgift`, `kicks` (per 500), `shift` (threshold for dynamic rates), `tsub2`, `tgift2`, `bits2`, `ksub2`, `kgift2`, `kicks2` (rates above threshold), `autostart` (`0` | `1`), `pct` (`0` | `1`), `pops` (`0` | `1`), `simulate` (`1` plays simulated subs), `simspeed`.
+**URL parameters** (times in seconds): `twitch`, `kick`, `style` (`bar` | `thin` | `clock` | `ring`), `color` (`hp` | `green` | `purple` | `red` | `gold` | `cyan` | `pink`), `title`, `icon` (an emoji instead of the heart), `iconUrl` (a channel emote image instead of the heart, picked on the setup page), `time` (starting time), `cap` (0 = no limit), Twitch `tsub` (Tier 1 and Prime), `tgift`, `bits` (per 500), `tiers` (`0` | `1`), Kick `ksub`, `kgift`, `kicks` (per 500), `shift` (threshold for dynamic rates), `tsub2`, `tgift2`, `bits2`, `ksub2`, `kgift2`, `kicks2` (rates above threshold), `autostart` (`0` | `1`), `pct` (`0` | `1`), `pops` (`0` | `1`), `simulate` (`1` plays simulated subs), `simspeed`.
 
 ---
 
@@ -112,12 +112,13 @@ A sub goal bar. Every new sub, resub and gifted sub from Twitch and Kick adds to
  - The broadcaster and mods fix it from chat: `!goal add 3`, `remove 1` (the number defaults to 1), `set 25`, `reset`.
  - When the goal is reached it stays up by default; `end` (`hide`) hides it after `endHold` seconds (0 hides it right away).
  - When one sub or gift completes the goal, the trophy names who filled it.
+ - On every sub, the star — or the picked emoji or emote — flies from its spot to the bar's fill edge.
 
 ```
 https://extensions.senchabot.com/widgets/goal?twitch=YOUR_TWITCH_CHANNEL&kick=YOUR_KICK_CHANNEL&start=120&target=150
 ```
 
-**URL parameters:** `twitch`, `kick`, `style` (`bar` | `thin`), `color` (`purple` | `green` | `red` | `gold` | `cyan` | `pink`), `title` (empty hides it), `icon` (an emoji instead of the star), `iconUrl` (a channel emote image instead of the star, picked on the setup page), `start` (starting count), `target` (the goal, 1 or more), `end` (`stay` | `hide`: what stays on screen once the goal is reached), `endHold` (seconds the completed goal stays up, 0 hides it right away), `pops` (`0` hides the rising +1s), `simulate` (`1` plays simulated subs), `simplatform` (`twitch` | `kick`).
+**URL parameters:** `twitch`, `kick`, `style` (`bar` | `thin`), `color` (`purple` | `green` | `red` | `gold` | `cyan` | `pink`), `title` (empty hides it), `icon` (an emoji instead of the star), `iconUrl` (a channel emote image instead of the star, picked on the setup page; it flies to the bar on every sub), `start` (starting count), `target` (the goal, 1 or more), `end` (`stay` | `hide`: what stays on screen once the goal is reached), `endHold` (seconds the completed goal stays up, 0 hides it right away), `pops` (`0` hides the rising +1s), `simulate` (`1` plays simulated subs), `simplatform` (`twitch` | `kick`).
 
 ---
 

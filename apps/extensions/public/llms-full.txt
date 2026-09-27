@@ -182,6 +182,8 @@ URL parameters (all optional, times in seconds):
 | style | bar (health bar), thin (compact bar with embedded text), clock, ring | bar |
 | color | hp (green to amber to red as time runs out), green, purple, red, gold, cyan, pink | hp |
 | title | text shown with the timer, up to 32 characters; empty hides it | SUBATHON |
+| icon | an emoji instead of the heart | none |
+| iconUrl | a channel emote image instead of the heart, picked on the setup page | none |
 | time | starting time | 3600 |
 | cap | most time the timer can hold; 0 means no limit | 0 |
 | tsub | Twitch: time per Tier 1 or Prime sub or resub | 60 |
@@ -261,7 +263,8 @@ URL parameters (all optional):
 | color | purple, green, red, gold, cyan, pink | purple |
 | title | text shown above the bar, up to 32 characters; empty hides it | SUB GOAL |
 | icon | an emoji instead of the star | none |
-| iconUrl | a channel emote image instead of the star, picked on the setup page | none |
+| iconUrl | a channel emote image instead of the star, picked on the setup page; it flies to the bar on every sub | none |
+| start | starting count | 0 |
 | start | starting count | 0 |
 | target | the goal, 1 or more | 10 |
 | end | stay (keep showing) or hide (hide the completed goal) | stay |

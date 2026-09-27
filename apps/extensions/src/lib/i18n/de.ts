@@ -615,6 +615,11 @@ export const de: typeof en = {
     titleLabel: 'Titel',
     titleTip: 'Steht neben dem Timer. Leer lassen, wenn du keinen Titel willst.',
     titlePlaceholder: 'Kein Titel',
+    iconLabel: 'need to translate',
+    iconTip: 'need to translate',
+    iconPlaceholder: 'need to translate',
+    emoteLabel: 'need to translate',
+    emoteTip: 'need to translate',
     showPercent: 'Prozent zeigen',
     showPercentTip:
       'Zeigt, wie voll der Timer ist. 100 % ist die meiste Zeit, die er bisher hatte, er geht also nie darüber.',
@@ -2306,6 +2311,7 @@ export const de: typeof en = {
     lead: 'Neue Features und Bugfixes in Senchabot Extensions, das Neueste zuerst. Die Liste ist aus der Commit-Historie des Projekts auf [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) zusammengestellt.',
     site: 'Website',
     entries: {
+      subathonEmoteIcons: 'need to translate',
       countdownRestartOnShow:
         'Der Stream-Countdown startet jetzt jedes Mal von vorn, wenn du in OBS zu seiner Szene zurückkehrst.',
       countdownCancel:

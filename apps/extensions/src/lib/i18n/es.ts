@@ -630,6 +630,11 @@ export const es: typeof en = {
     titleLabel: 'Título',
     titleTip: 'Se muestra junto al timer. Déjalo vacío para no mostrar título.',
     titlePlaceholder: 'Sin título',
+    iconLabel: 'need to translate',
+    iconTip: 'need to translate',
+    iconPlaceholder: 'need to translate',
+    emoteLabel: 'need to translate',
+    emoteTip: 'need to translate',
     showPercent: 'Mostrar porcentaje',
     showPercentTip:
       'Muestra qué tan lleno está el timer. El 100% es el máximo de tiempo que ha tenido hasta ahora, así que nunca se pasa.',
@@ -2333,6 +2338,7 @@ export const es: typeof en = {
     lead: 'Funciones nuevas y errores corregidos en Senchabot Extensions, de lo más nuevo a lo más viejo. La lista sale del historial de commits del proyecto en [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).',
     site: 'Sitio',
     entries: {
+      subathonEmoteIcons: 'need to translate',
       countdownRestartOnShow:
         'Stream Countdown ahora vuelve a empezar desde el principio cada vez que regresas a su escena en OBS.',
       countdownCancel:

@@ -615,6 +615,12 @@ export const tr: typeof en = {
     titleLabel: 'Başlık',
     titleTip: 'Sayacın yanında görünür. Başlık istemiyorsan boş bırak.',
     titlePlaceholder: 'Başlık yok',
+    iconLabel: 'Sayaç İkonu',
+    iconTip: 'Kalp yerine sayaç için bir emoji, örneğin ❤️. Boş bırakırsan kalp kullanılır.',
+    iconPlaceholder: 'Kalp',
+    emoteLabel: 'Kanal Emote',
+    emoteTip:
+      "Sayaç, yukarıdaki ikon kutusu yerine bu emote'u gösterir. Her kanalın abone emoteları ile kendi 7TV, BTTV ve FFZ setleri listelenir, genel ya da paylaşılan havuzlar listelenmez.",
     showPercent: 'Yüzdeyi Göster',
     showPercentTip:
       "Sayacın ne kadar dolu olduğunu gösterir. %100, sayacın şimdiye kadar ulaştığı en uzun süre demek, yani yüzde hiçbir zaman 100'ü geçmez.",
@@ -2286,6 +2292,8 @@ export const tr: typeof en = {
     lead: "Senchabot Extensions'a eklenen özellikler ve düzeltilen hatalar, en yenisi en üstte. Liste projenin [GitHub'daki](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) commit geçmişinden hazırlanıyor.",
     site: 'Site',
     entries: {
+      subathonEmoteIcons:
+        'Subathon Timer artık kendi ikonunu gösterebiliyor: kalp yerine bir emoji ya da kanal emotelarından biri.',
       countdownRestartOnShow:
         'Yayın Geri Sayımı artık OBS’te sahnesine her döndüğünde baştan başlıyor.',
       countdownCancel:

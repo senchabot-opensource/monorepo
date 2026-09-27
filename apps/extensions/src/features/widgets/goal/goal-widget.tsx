@@ -46,6 +46,7 @@ const CSS = `
 @keyframes sg-trophy{0%{transform:translate(-50%,-50%) scale(2.6) rotate(-14deg);opacity:0}45%{transform:translate(-50%,-50%) scale(.9) rotate(4deg);opacity:1}60%{transform:translate(-50%,-50%) scale(1.08) rotate(-2deg)}75%{transform:translate(-50%,-50%) scale(1) rotate(0)}88%{opacity:1}100%{transform:translate(-50%,-62%) scale(.9);opacity:0}}
 @keyframes sg-ring{0%{transform:translate(-50%,-50%) scale(.2);opacity:.95}100%{transform:translate(-50%,-50%) scale(3.4);opacity:0}}
 @keyframes sg-spark{0%{transform:rotate(var(--a)) translateY(-18px) scale(1);opacity:1}100%{transform:rotate(var(--a)) translateY(var(--d)) scale(.3);opacity:0}}
+@keyframes sg-fly{0%{transform:translate(-50%,-50%) scale(.5);opacity:0}18%{transform:translate(-50%,-50%) scale(1.12);opacity:1}100%{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(.85);opacity:0}}
 `;
 
 interface GoalWidgetProps {
@@ -149,6 +150,25 @@ export function GoalWidget({
                 name={celebration.event?.name ?? null}
               />
             )}
+            {hit?.up && (
+              <FlyEmote
+                // Namespaced: hit and celebration keys both come from Date.now().
+                key={`fly-${hit.key}`}
+                start={
+                  isThin
+                    ? { x: 58, y: BAR_CENTER_THIN }
+                    : {
+                        x: 52,
+                        y: STAGE.height - (BAR_BOTTOM + BAR_HEIGHT + BAR_GAP + INFO_ROW_HEIGHT / 2),
+                      }
+                }
+                end={{ x: 28 + progress * (STAGE.width - 56), y: barCenter }}
+                hue={hue}
+                hit={hit}
+                icon={settings.icon}
+                iconUrl={settings.iconUrl}
+              />
+            )}
           </div>
         )}
       </div>
@@ -211,18 +231,21 @@ function GoalMark({
   icon: string;
   iconUrl: string;
 }) {
-  if (iconUrl)
+  if (iconUrl) {
+    // Images read smaller than glyphs at the same size, so the emote gets extra room.
+    const image = size + 10;
     return (
       <img
         src={iconUrl}
         alt=""
         aria-hidden="true"
-        width={size}
-        height={size}
+        width={image}
+        height={image}
         data-testid="goal-icon"
         style={{ objectFit: 'contain' }}
       />
     );
+  }
   if (icon)
     return (
       <span data-testid="goal-icon" aria-hidden="true" style={{ fontSize: size, lineHeight: 1 }}>
@@ -664,6 +687,56 @@ function ThinBar({
         </div>
       </div>
       {skin && <Frame skin={skin} radius={6} />}
+    </div>
+  );
+}
+
+/** The goal's mark flying from its spot to the bar's fill edge on every sub. */
+function FlyEmote({
+  start,
+  end,
+  hue,
+  hit,
+  icon,
+  iconUrl,
+}: {
+  start: { x: number; y: number };
+  end: { x: number; y: number };
+  hue: number;
+  hit: GoalHit | null;
+  icon: string;
+  iconUrl: string;
+}) {
+  return (
+    <div
+      aria-hidden="true"
+      data-testid="goal-fly"
+      style={
+        {
+          position: 'absolute',
+          left: start.x,
+          top: start.y,
+          pointerEvents: 'none',
+          '--dx': `${end.x - start.x}px`,
+          '--dy': `${end.y - start.y}px`,
+          animation: 'sg-fly 1000ms ease-out forwards',
+        } as CSSProperties
+      }
+    >
+      {iconUrl ? (
+        <img
+          src={iconUrl}
+          alt=""
+          aria-hidden="true"
+          width={44}
+          height={44}
+          style={{ objectFit: 'contain', display: 'block' }}
+        />
+      ) : icon ? (
+        <span style={{ fontSize: 30, lineHeight: 1 }}>{icon}</span>
+      ) : (
+        <StarIcon hue={hue} hit={hit} size={34} />
+      )}
     </div>
   );
 }

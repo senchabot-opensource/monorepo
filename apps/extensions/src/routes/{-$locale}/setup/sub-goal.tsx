@@ -250,14 +250,6 @@ function GoalSetup() {
             placeholder={t('goal.iconPlaceholder')}
             maxLength={ICON_MAX_LENGTH}
           />
-          <div className="flex flex-col justify-end">
-            <Switch
-              label={t('goal.showPops')}
-              tip={t('goal.showPopsTip')}
-              checked={settings.pops}
-              onChange={(value) => update('pops', value)}
-            />
-          </div>
         </div>
         <div>
           <FieldLabel id={`${id}-emote`} tip={t('goal.emoteTip')}>
@@ -284,6 +276,14 @@ function GoalSetup() {
               onChange={(value) => update('iconUrl', value)}
             />
           )}
+        </div>
+        <div className="flex flex-col justify-end">
+          <Switch
+            label={t('goal.showPops')}
+            tip={t('goal.showPopsTip')}
+            checked={settings.pops}
+            onChange={(value) => update('pops', value)}
+          />
         </div>
       </SettingsGroup>
     </>

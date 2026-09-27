@@ -613,6 +613,12 @@ export const en = {
     titleLabel: 'Title',
     titleTip: 'Shown next to the timer. Leave it empty to show no title.',
     titlePlaceholder: 'No title',
+    iconLabel: 'Timer Icon',
+    iconTip: 'An emoji for the timer instead of the heart, e.g. ❤️. Leave it empty to use the heart.',
+    iconPlaceholder: 'Heart',
+    emoteLabel: 'Channel Emote',
+    emoteTip:
+      'The timer shows this channel emote instead of the icon box above. Lists each channel’s subscriber emotes plus its own 7TV, BTTV and FFZ sets — no global or shared pools.',
     showPercent: 'Show Percentage',
     showPercentTip:
       'Shows how full the timer is. 100% is the most time it has held so far, so it never goes over.',
@@ -2300,6 +2306,8 @@ export const en = {
     lead: "New features and bug fixes in Senchabot Extensions, newest first. The list is put together from the project's commit history on [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      subathonEmoteIcons:
+        'Subathon Timer can now show your own icon: an emoji or one of your channel emotes instead of the heart.',
       countdownRestartOnShow:
         'Stream Countdown now starts over from the top every time you switch back to its scene in OBS.',
       countdownCancel:

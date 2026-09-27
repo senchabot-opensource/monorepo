@@ -1,5 +1,5 @@
 import { createFileRoute, useHydrated } from '@tanstack/react-router';
-import { useId, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { ChannelFields } from '#/components/channel-fields';
 import { ChatCommandsCard } from '#/components/chat-commands-card';
 import { CopyUrlField } from '#/components/copy-url-field';
@@ -20,6 +20,11 @@ import { HINT_CLASS, TextField } from '#/components/ui/text-field';
 import { PresetField } from '#/features/presets/preset-field';
 import { isClassic } from '#/features/presets/registry';
 import { useStartOnSitePreset } from '#/features/presets/site-preset';
+import {
+  type ChannelEmote,
+  loadChannelEmotes,
+} from '#/features/widgets/countdown/countdown-emotes';
+import { EmotePicker } from '#/features/widgets/countdown/emote-picker';
 import { hueFor } from '#/features/widgets/overlay-style';
 import type { SubathonEvent, SubathonPlatform } from '#/features/widgets/subathon/subathon-events';
 import { COMMAND } from '#/features/widgets/subathon/subathon-timer';
@@ -34,6 +39,7 @@ import {
   buildSubathonPreviewUrl,
   buildSubathonUrl,
   DEFAULT_SUBATHON_SETTINGS,
+  ICON_MAX_LENGTH,
   MAX_SECONDS,
   parseSubathonUrl,
   SUBATHON_COLORS,
@@ -127,6 +133,32 @@ function SubathonSetup() {
   const update = <K extends keyof SubathonSettings>(key: K, value: SubathonSettings[K]) =>
     setSettings((current) => ({ ...current, [key]: value }));
   useStartOnSitePreset((preset) => update('preset', preset));
+
+  // The channel's own emotes for the picker, reloaded a moment after the channel boxes settle.
+  const [emotes, setEmotes] = useState<ChannelEmote[] | null>(null);
+  const [emotesLoading, setEmotesLoading] = useState(false);
+  useEffect(() => {
+    const twitch = twitchChannel.trim();
+    const kick = kickChannel.trim();
+    if (!twitch && !kick) {
+      setEmotes(null);
+      setEmotesLoading(false);
+      return;
+    }
+    let live = true;
+    setEmotesLoading(true);
+    const timer = window.setTimeout(() => {
+      loadChannelEmotes(twitch, kick).then((list) => {
+        if (!live) return;
+        setEmotes(list);
+        setEmotesLoading(false);
+      });
+    }, 500);
+    return () => {
+      live = false;
+      window.clearTimeout(timer);
+    };
+  }, [twitchChannel, kickChannel]);
 
   const sendEvent = (event: SubathonEvent) => send({ type: 'event', event });
 
@@ -300,20 +332,54 @@ function SubathonSetup() {
             maxLength={TITLE_MAX_LENGTH}
             spellCheck={false}
           />
-          <div className="flex flex-col justify-end gap-1">
-            <Switch
-              label={t('subathon.showPercent')}
-              tip={t('subathon.showPercentTip')}
-              checked={settings.percent}
-              onChange={(value) => update('percent', value)}
+          <TextField
+            label={t('subathon.iconLabel')}
+            tip={t('subathon.iconTip')}
+            value={settings.icon}
+            onChange={(value) => update('icon', value)}
+            placeholder={t('subathon.iconPlaceholder')}
+            maxLength={ICON_MAX_LENGTH}
+          />
+        </div>
+        <div>
+          <FieldLabel id={`${id}-emote`} tip={t('subathon.emoteTip')}>
+            {t('subathon.emoteLabel')}
+          </FieldLabel>
+          {!twitchChannel.trim() && !kickChannel.trim() ? (
+            <p className={HINT_CLASS}>{t('countdown.emoteNeedChannel')}</p>
+          ) : emotesLoading || emotes === null ? (
+            <EmotePicker
+              labelledBy={`${id}-emote`}
+              emotes={[]}
+              value=""
+              onChange={() => {}}
+              disabled
+              disabledLabel={t('countdown.emoteLoading')}
             />
-            <Switch
-              label={t('subathon.showPops')}
-              tip={t('subathon.showPopsTip')}
-              checked={settings.pops}
-              onChange={(value) => update('pops', value)}
+          ) : emotes.length === 0 ? (
+            <p className={HINT_CLASS}>{t('countdown.emoteEmpty')}</p>
+          ) : (
+            <EmotePicker
+              labelledBy={`${id}-emote`}
+              emotes={emotes}
+              value={emotes.some((emote) => emote.url === settings.iconUrl) ? settings.iconUrl : ''}
+              onChange={(value) => update('iconUrl', value)}
             />
-          </div>
+          )}
+        </div>
+        <div className="flex flex-col justify-end gap-1">
+          <Switch
+            label={t('subathon.showPercent')}
+            tip={t('subathon.showPercentTip')}
+            checked={settings.percent}
+            onChange={(value) => update('percent', value)}
+          />
+          <Switch
+            label={t('subathon.showPops')}
+            tip={t('subathon.showPopsTip')}
+            checked={settings.pops}
+            onChange={(value) => update('pops', value)}
+          />
         </div>
       </SettingsGroup>
 

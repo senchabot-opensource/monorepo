@@ -16,6 +16,8 @@ const CUSTOM: SubathonSettings = {
   style: 'ring',
   color: 'purple',
   title: 'SUB-A-THON 2026',
+  icon: '',
+  iconUrl: '',
   start: 7200,
   cap: 86400,
   tsub: 120,
@@ -101,6 +103,28 @@ describe('buildSubathonUrl', () => {
       buildSubathonUrl(ORIGIN, { ...DEFAULT_SUBATHON_SETTINGS, title: '' }, 'streamer', '', 'en'),
     );
     expect(url.searchParams.get('title')).toBe('');
+  });
+
+  it('writes the icon and emote image only when set, and reads them back', () => {
+    const url = buildSubathonUrl(
+      ORIGIN,
+      {
+        ...DEFAULT_SUBATHON_SETTINGS,
+        icon: '❤️',
+        iconUrl: 'https://cdn.7tv.app/emote/e1/2x.webp',
+      },
+      'streamer',
+      '',
+      'en',
+    );
+    expect(Object.fromEntries(new URL(url).searchParams)).toMatchObject({
+      icon: '❤️',
+      iconUrl: 'https://cdn.7tv.app/emote/e1/2x.webp',
+    });
+    expect(parseSubathonUrl(url)?.settings).toMatchObject({
+      icon: '❤️',
+      iconUrl: 'https://cdn.7tv.app/emote/e1/2x.webp',
+    });
   });
 });
 
