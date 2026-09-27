@@ -1034,7 +1034,7 @@ export const fr: typeof en = {
       'Passe sur la scène pour le lancer. Avec une chaîne renseignée, un modo peut le repousser avec !countdown add 5m pendant ton absence.',
     faq1Q: 'Quand le compte à rebours démarre-t-il ?',
     faq1A:
-      'Dès que la source navigateur se charge : à l\'ouverture d\'OBS, ou quand tu passes sur la scène avec "Rafraîchir le navigateur lorsque la scène devient active" coché. Comme ça, un compte à rebours de pause recommence chaque fois que tu vas sur ta scène BRB au lieu de se terminer pendant que tu es encore en live.',
+      'Dès que la source navigateur se charge : à l\'ouverture d\'OBS, ou quand tu passes sur la scène avec "Rafraîchir le navigateur lorsque la scène devient active" coché. Comme ça, un compte à rebours de pause recommence chaque fois que tu vas sur ta scène BRB au lieu de se terminer pendant que tu es encore en live. Si tu reviens sur la scène plus tard, le compte à rebours recommence depuis le début au lieu de continuer.',
     faq2Q: "Il peut décompter jusqu'à l'heure que j'ai annoncée, comme 21:00 ?",
     faq2A:
       "Oui. Règle Décompter sur Une heure précise et tape 21:00. Il lit l'horloge de l'ordinateur qui fait tourner OBS, donc tu peux ajouter la source des heures à l'avance et il finira quand même à 21:00. Si 21:00 est déjà passé aujourd'hui, il vise demain.",
@@ -2348,6 +2348,8 @@ export const fr: typeof en = {
     lead: "Les nouvelles fonctionnalités et corrections de bugs de Senchabot Extensions, des plus récentes aux plus anciennes. La liste est tirée de l'historique des commits du projet sur [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      countdownRestartOnShow:
+        'Stream Countdown recommence désormais depuis le début chaque fois que tu reviens sur sa scène dans OBS.',
       countdownCancel:
         'Les modos de Stream Countdown peuvent désormais arrêter le compte à rebours et le masquer avec `!countdown cancel`. N’importe quelle autre commande le réaffiche.',
       goalEmoteIcons:

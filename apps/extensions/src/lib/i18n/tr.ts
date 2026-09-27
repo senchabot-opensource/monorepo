@@ -997,7 +997,7 @@ export const tr: typeof en = {
       'Başlatmak için sahneye geç. Kanalını yazdıysan sen yokken bir modun !countdown add 5m ile süreyi uzatabilir.',
     faq1Q: 'Geri sayım ne zaman başlar?',
     faq1A:
-      'Tarayıcı kaynağı yüklendiği anda: OBS açıldığında ya da "Sahne etkin olduğunda tarayıcıyı yenile" işaretliyse o sahneye geçtiğinde. Böylece mola geri sayımı sen daha yayındayken bitmez, BRB sahnene her geçişte baştan başlar.',
+      'Tarayıcı kaynağı yüklendiği anda: OBS açıldığında ya da "Sahne etkin olduğunda tarayıcıyı yenile" işaretliyse o sahneye geçtiğinde. Böylece mola geri sayımı sen daha yayındayken bitmez, BRB sahnene her geçişte baştan başlar. Sahneye sonra döndüğünde geri sayım kaldığı yerden devam etmez, baştan başlar.',
     faq2Q: "Duyurduğum saate, mesela 21:00'a geri sayabilir mi?",
     faq2A:
       "Evet. Neye Göre Saysın kısmında Saate göre'yi seç ve 21:00 yaz. Saati OBS'in çalıştığı bilgisayardan okur, yani kaynağı saatler önce eklesen de 21:00'da biter. 21:00 bugün geçtiyse yarınkini hedefler.",
@@ -2286,6 +2286,8 @@ export const tr: typeof en = {
     lead: "Senchabot Extensions'a eklenen özellikler ve düzeltilen hatalar, en yenisi en üstte. Liste projenin [GitHub'daki](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) commit geçmişinden hazırlanıyor.",
     site: 'Site',
     entries: {
+      countdownRestartOnShow:
+        'Yayın Geri Sayımı artık OBS’te sahnesine her döndüğünde baştan başlıyor.',
       countdownCancel:
         'Yayın Geri Sayımı modları artık `!countdown cancel` ile geri sayımı durdurup gizleyebilir. Başka herhangi bir komut geri getirir.',
       goalEmoteIcons:

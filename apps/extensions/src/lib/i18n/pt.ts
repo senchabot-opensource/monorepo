@@ -1017,7 +1017,7 @@ export const pt: typeof en = {
       'Troque para a cena para começar. Com um canal preenchido, um mod pode adiar com !countdown add 5m enquanto você está fora.',
     faq1Q: 'Quando a contagem começa?',
     faq1A:
-      'No momento em que a fonte de navegador carrega: quando o OBS abre, ou quando você troca para a cena com "Atualizar o navegador quando a cena se tornar ativa" marcado. Assim, uma contagem de pausa recomeça toda vez que você vai para a cena BRB, em vez de acabar enquanto você ainda está ao vivo.',
+      'No momento em que a fonte de navegador carrega: quando o OBS abre, ou quando você troca para a cena com "Atualizar o navegador quando a cena se tornar ativa" marcado. Assim, uma contagem de pausa recomeça toda vez que você vai para a cena BRB, em vez de acabar enquanto você ainda está ao vivo. Se você voltar para a cena mais tarde, a contagem recomeça do início em vez de continuar.',
     faq2Q: 'Dá para contar até o horário que eu anunciei, tipo 21:00?',
     faq2A:
       'Sim. Coloque Contar até em Um horário e digite 21:00. Ela lê o relógio do computador que roda o OBS, então você pode adicionar a fonte horas antes e ela ainda termina às 21:00. Se 21:00 já passou hoje, ela mira no dia seguinte.',
@@ -2324,6 +2324,8 @@ export const pt: typeof en = {
     lead: 'Recursos novos e correções de bugs no Senchabot Extensions, dos mais novos para os mais antigos. A lista é montada a partir do histórico de commits do projeto no [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).',
     site: 'Site',
     entries: {
+      countdownRestartOnShow:
+        'O Stream Countdown agora recomeça do início toda vez que você volta para a cena dele no OBS.',
       countdownCancel:
         'Mods do Stream Countdown agora podem parar a contagem e ocultá-la com `!countdown cancel`. Qualquer outro comando traz de volta.',
       goalEmoteIcons:
