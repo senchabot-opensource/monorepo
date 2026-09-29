@@ -72,6 +72,7 @@ A subathon countdown overlay. It counts down in real time, and subs, gifted subs
 - Separate times for Twitch and Kick: per sub, per gifted sub, and per 500 Bits or 500 Kicks. Any of them can be turned off. Twitch Tier 2 and 3 subs can count as 2 and 5 subs.
 - The timer is saved in the browser source's `localStorage`, stored as its end time, so a reload or an OBS restart doesn't lose it.
 - The broadcaster and mods control it from chat: `!subathon start`, `pause`, `add 10m`, `remove 5m`, `set 2h`, `reset`.
+- On every heal, the heart — or the picked emoji or emote — flies from its spot to the bar's fill edge (bar and thin styles).
 
 ```
 https://extensions.senchabot.com/widgets/subathon?twitch=YOUR_TWITCH_CHANNEL&kick=YOUR_KICK_CHANNEL&style=bar&time=3600&tsub=60&ksub=60

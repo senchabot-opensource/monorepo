@@ -158,6 +158,7 @@ A subathon countdown for Twitch and Kick. Subs, gifted subs, Bits (Twitch) and K
 - The timer is saved in the browser source (OBS keeps it across reloads and restarts). While OBS is closed it keeps counting down, but subs in that time can't be seen.
 - The health bar's 100% is the most time the timer has held, so the bar never goes over 100%.
 - Once it reaches zero, subs no longer add time. A mod can bring it back with add or set, or start over with reset.
+- On every heal, the heart (or the picked emoji or emote) flies from its spot to the bar's fill edge in the bar and thin styles.
 - On Kick a sub is counted from SubscriptionEvent or ChannelSubscriptionEvent, whichever arrives, once per subscriber.
 
 Chat commands for the broadcaster and moderators, on Twitch and Kick:

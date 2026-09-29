@@ -2307,7 +2307,7 @@ export const en = {
     site: 'Site',
     entries: {
       subathonEmoteIcons:
-        'Subathon Timer can now show your own icon: an emoji or one of your channel emotes instead of the heart.',
+        'Subathon Timer can now show your own icon instead of the heart — an emoji or one of your channel emotes — and it flies to the bar on every heal.',
       countdownRestartOnShow:
         'Stream Countdown now starts over from the top every time you switch back to its scene in OBS.',
       countdownCancel:
