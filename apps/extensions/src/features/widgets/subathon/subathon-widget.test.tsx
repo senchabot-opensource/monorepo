@@ -417,4 +417,28 @@ describe('SubathonWidget', () => {
     expect(img.tagName).toBe('IMG');
     expect(img.src).toBe('https://cdn.7tv.app/emote/e1/2x.webp');
   });
+
+  it('flies the heart from its spot to the bar on every heal', () => {
+    render(<SubathonWidget twitchChannel="streamer" settings={settings()} />);
+    expect(screen.queryByTestId('subathon-fly')).toBeNull();
+    receive('twitch', SUB);
+    const fly = screen.getByTestId('subathon-fly');
+    expect(fly.querySelector('svg')).not.toBeNull();
+    // From the mark spot below the bar (51, 242) up to the fill edge.
+    expect(fly.style.getPropertyValue('--dx')).not.toBe('');
+    expect(fly.style.getPropertyValue('--dy')).toBe('-66px');
+  });
+
+  it('flies the picked emote instead', () => {
+    render(
+      <SubathonWidget
+        twitchChannel="streamer"
+        settings={settings({ iconUrl: 'https://cdn.7tv.app/emote/e1/2x.webp' })}
+      />,
+    );
+    receive('twitch', SUB);
+    expect((screen.getByTestId('subathon-fly').querySelector('img') as HTMLImageElement).src).toBe(
+      'https://cdn.7tv.app/emote/e1/2x.webp',
+    );
+  });
 });

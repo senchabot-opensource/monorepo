@@ -2293,7 +2293,7 @@ export const tr: typeof en = {
     site: 'Site',
     entries: {
       subathonEmoteIcons:
-        'Subathon Timer artık kendi ikonunu gösterebiliyor: kalp yerine bir emoji ya da kanal emotelarından biri.',
+        'Subathon Timer artık kalp yerine kendi ikonunu gösterebiliyor — bir emoji ya da kanal emotelarından biri — ve her süre eklenişinde bara doğru uçuyor.',
       countdownRestartOnShow:
         'Yayın Geri Sayımı artık OBS’te sahnesine her döndüğünde baştan başlıyor.',
       countdownCancel:

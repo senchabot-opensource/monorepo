@@ -67,6 +67,7 @@ const CSS = `
 @keyframes sa-ko{0%{transform:translate(-50%,-50%) scale(3) rotate(-8deg);opacity:0}55%{transform:translate(-50%,-50%) scale(.92) rotate(-8deg);opacity:1}70%{transform:translate(-50%,-50%) scale(1.06) rotate(-8deg)}100%{transform:translate(-50%,-50%) scale(1) rotate(-8deg);opacity:1}}
 @keyframes sa-blink{0%,100%{opacity:1}50%{opacity:.35}}
 @keyframes sa-stripes{0%{transform:translateX(0)}100%{transform:translateX(28px)}}
+@keyframes sa-fly{0%{transform:translate(-50%,-50%) scale(.5);opacity:0}18%{transform:translate(-50%,-50%) scale(1.12);opacity:1}100%{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(.85);opacity:0}}
 @keyframes sa-rates-in{0%{opacity:0;transform:translateY(6px)}100%{opacity:1;transform:none}}
 `;
 
@@ -153,6 +154,37 @@ export function SubathonWidget({
   };
   const View = VIEWS[settings.style];
   const skin = skinFor(settings.preset);
+  // The mark's flight on every heal, for the bar styles: from its spot below the bar
+  // (bar) or inside it (thin) to the fill's edge. Clock and ring have no fill edge to fly to.
+  const fly =
+    hit?.heal && (settings.style === 'bar' || settings.style === 'thin') ? (
+      <FlyMark
+        // Namespaced: hit keys come from Date.now(), like the hit flashes' do.
+        key={`fly-${hit.key}`}
+        start={
+          settings.style === 'thin'
+            ? { x: 58, y: STAGE.height - BAR_BOTTOM - BAR_HEIGHT_THIN / 2 }
+            : {
+                x: 51,
+                y: STAGE.height - (BAR_BOTTOM + INFO_ROW_HEIGHT / 2),
+              }
+        }
+        end={
+          settings.style === 'thin'
+            ? {
+                x: 28 + shown * (STAGE.width - 56),
+                y: STAGE.height - BAR_BOTTOM - BAR_HEIGHT_THIN / 2,
+              }
+            : {
+                x: 28 + shown * (STAGE.width - 56),
+                y: STAGE.height - (BAR_BOTTOM + INFO_ROW_HEIGHT + BAR_GAP + BAR_HEIGHT / 2),
+              }
+        }
+        hue={hueFor(settings.color, health)}
+        icon={settings.icon}
+        iconUrl={settings.iconUrl}
+      />
+    ) : null;
 
   return (
     <SkinProvider skin={skin}>
@@ -165,6 +197,7 @@ export function SubathonWidget({
         <style>{CSS + skinCss('sa', skin)}</style>
         <div className="sa-stage" style={{ transform: `translate(-50%, -50%) scale(${scale})` }}>
           <View {...view} />
+          {fly}
         </div>
       </div>
     </SkinProvider>
@@ -286,6 +319,54 @@ function TimerMark({
       </span>
     );
   return <HeartIcon hue={hue} beat={beat} size={size} plain={plain} />;
+}
+
+/** The timer's mark flying from its spot to the bar's fill edge on every heal. */
+function FlyMark({
+  start,
+  end,
+  hue,
+  icon,
+  iconUrl,
+}: {
+  start: { x: number; y: number };
+  end: { x: number; y: number };
+  hue: number;
+  icon: string;
+  iconUrl: string;
+}) {
+  return (
+    <div
+      aria-hidden="true"
+      data-testid="subathon-fly"
+      style={
+        {
+          position: 'absolute',
+          left: start.x,
+          top: start.y,
+          pointerEvents: 'none',
+          '--dx': `${end.x - start.x}px`,
+          '--dy': `${end.y - start.y}px`,
+          animation: 'sa-fly 1000ms ease-out forwards',
+        } as CSSProperties
+      }
+    >
+      {iconUrl ? (
+        <img
+          src={iconUrl}
+          alt=""
+          aria-hidden="true"
+          width={40}
+          height={40}
+          style={{ objectFit: 'contain', display: 'block' }}
+        />
+      ) : icon ? (
+        <span style={{ fontSize: 30, lineHeight: 1 }}>{icon}</span>
+      ) : (
+        <HeartIcon hue={hue} beat={null} size={34} />
+      )}
+    </div>
+  );
 }
 
 function PauseChip({ compact }: { compact?: boolean } = {}) {
