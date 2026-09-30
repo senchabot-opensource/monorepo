@@ -165,11 +165,44 @@ describe('EmoteWall', () => {
     expect(vi.getTimerCount()).toBe(0);
   });
 
-  it.each(['chaos', 'bounce'] as const)('removes %s emotes once they are done', (mode) => {
+  it.each(['chaos', 'bounce', 'glide', 'spin', 'burst'] as const)('removes %s emotes once they are done', (mode) => {
     mount({ mode, durationSec: 2 });
     say('Alice', 'Kappa', '25:0-4');
     expect(images()).toHaveLength(1);
     wait(2000 + 1000);
     expect(images()).toHaveLength(0);
+  });
+
+  it('sways glide emotes side to side while they fall', () => {
+    mount({ mode: 'glide' });
+    say('Alice', 'Kappa', '25:0-4');
+    const sway = document.querySelector('.emote-glide-sway') as HTMLElement | null;
+    expect(sway).toBeTruthy();
+    expect(sway?.style.animationDuration).toMatch(/^\d+ms$/);
+    expect(sway?.style.getPropertyValue('--sway-x')).toMatch(/^\d+px$/);
+  });
+
+  it('fades spin emotes in, spins them, and fades them out in place', () => {
+    mount({ mode: 'spin' });
+    say('Alice', 'Kappa', '25:0-4');
+    const faded = document.querySelector('.emote-wall-spin') as HTMLElement | null;
+    expect(faded).toBeTruthy();
+    expect(faded?.style.getPropertyValue('--spin')).toMatch(/^-?\d+deg$/);
+  });
+
+  it('bursts emotes on a canvas after they appear', () => {
+    mount({ mode: 'burst' });
+    say('Alice', 'Kappa', '25:0-4');
+    expect(images()).toHaveLength(1);
+    expect(document.querySelector('canvas')).toBeTruthy();
+  });
+
+  it('keeps burst emotes drifting until they pop mid-motion', () => {
+    mount({ mode: 'burst' });
+    say('Alice', 'Kappa', '25:0-4');
+    wait(100);
+    const wrapper = document.querySelector('canvas')?.parentElement as HTMLElement | null;
+    expect(wrapper?.style.transform).toMatch(/^translate\(-?\d+px, -?\d+px\)$/);
+    expect(wrapper?.style.transition).toMatch(/^transform \d+ms linear$/);
   });
 });

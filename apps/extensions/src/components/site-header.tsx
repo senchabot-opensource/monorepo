@@ -78,6 +78,7 @@ function SkipLink() {
 
 function HomeLink({ showName }: { showName: boolean }) {
   const { t } = useI18n();
+  const [base, ...rest] = t('common.siteName').split(' ');
   return (
     <LocaleLink
       to="/"
@@ -85,7 +86,11 @@ function HomeLink({ showName }: { showName: boolean }) {
       className="flex shrink-0 items-center gap-2 rounded-md text-sm font-semibold text-zinc-900 transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 dark:text-white"
     >
       <img src="/senchabot-logo.svg" alt="" width={28} height={28} className="size-7" />
-      {showName && <span className="whitespace-nowrap">{t('common.siteName')}</span>}
+      {showName && (
+        <span className="whitespace-nowrap">
+          {base} <span className="text-green-600 dark:text-green-400">{rest.join(' ')}</span>
+        </span>
+      )}
     </LocaleLink>
   );
 }

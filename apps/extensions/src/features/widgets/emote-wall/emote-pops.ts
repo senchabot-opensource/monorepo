@@ -1,7 +1,14 @@
-export type EmoteWallMode = 'calm' | 'chaos' | 'bounce';
+export type EmoteWallMode = 'calm' | 'chaos' | 'bounce' | 'glide' | 'spin' | 'burst';
 
 export function isEmoteWallMode(value: unknown): value is EmoteWallMode {
-  return value === 'calm' || value === 'chaos' || value === 'bounce';
+  return (
+    value === 'calm' ||
+    value === 'chaos' ||
+    value === 'bounce' ||
+    value === 'glide' ||
+    value === 'spin' ||
+    value === 'burst'
+  );
 }
 
 /** Calm: pops up at a random spot, drifts gently, fades out. */
@@ -42,7 +49,71 @@ export type ChaosPop = {
   vanishAt: number;
 };
 
-export type EmotePop = CalmPop | ChaosPop | BouncePop;
+/**
+ * Glide: drifts down from the top of the screen, swaying slightly
+ * side to side, and vanishes near the bottom. Same linear flight shape
+ * as Chaos, but always top -> bottom with an added sway.
+ */
+export type GlidePop = {
+  kind: 'glide';
+  id: string;
+  src: string;
+  /** Human-readable emote name for alt text (when known). */
+  name?: string;
+  size: number;
+  startXPct: number;
+  startYPct: number;
+  /** Travel vector in viewport units so it stays correct at any canvas size. */
+  dxVw: number;
+  dyVh: number;
+  /** Full top-to-bottom travel time in ms (linear motion). */
+  travelMs: number;
+  /** Fraction of travelMs at which the emote starts fading out (0.75 - 1). */
+  vanishAt: number;
+  /** Side-to-side sway amplitude in px. */
+  swayPx: number;
+  /** One full sway cycle in ms. */
+  swayMs: number;
+};
+
+/** Spin: fades in, spins around itself once or twice, then fades out. */
+export type SpinPop = {
+  kind: 'spin';
+  id: string;
+  src: string;
+  /** Human-readable emote name for alt text (when known). */
+  name?: string;
+  xPct: number;
+  yPct: number;
+  size: number;
+  /** Total spin around itself in degrees (1-2 full turns, either direction). */
+  rotation: number;
+  duration: number;
+};
+
+/**
+ * Burst: appears, lingers, then pops into emote fragments and colored
+ * sparks before its time ends. Occasionally just fades out instead.
+ */
+export type BurstPop = {
+  kind: 'burst';
+  id: string;
+  src: string;
+  /** Human-readable emote name for alt text (when known). */
+  name?: string;
+  xPct: number;
+  yPct: number;
+  size: number;
+  /** Time in ms before the burst (or fade) starts. */
+  lingerMs: number;
+  /** False when this pop rolls a plain fade-out ending instead. */
+  burst: boolean;
+  /** Steady drift over lingerMs in px, so it bursts mid-motion. */
+  dx: number;
+  dy: number;
+};
+
+export type EmotePop = CalmPop | ChaosPop | BouncePop | GlidePop | SpinPop | BurstPop;
 
 export const randomIn = (min: number, max: number) =>
   min + Math.random() * (max - min);
@@ -194,4 +265,145 @@ export function createChaosPop(
     default: // bottom -> top
       return { src, size, startXPct: along, startYPct: 106, dxVw: lateral, dyVh: -135, travelMs, vanishAt };
   }
+}
+
+export function createGlidePop(
+  src: string,
+  baseSize: number,
+  durationSec: number,
+): Omit<GlidePop, 'id' | 'kind'> {
+  const size = Math.round(baseSize * randomIn(0.8, 1.3));
+  return {
+    src,
+    size,
+    startXPct: randomIn(2, 98),
+    startYPct: -14,
+    // Gentle sideways drift while falling straight down off the bottom.
+    dxVw: randomIn(-18, 18),
+    dyVh: 135,
+    // The fall lasts roughly the visible-duration setting.
+    travelMs: Math.round(durationSec * 1000 * randomIn(0.85, 1.15)),
+    // Fades out near the bottom edge.
+    vanishAt: randomIn(0.75, 1),
+    // Sway scales with the emote so it stays slight at any size.
+    swayPx: Math.max(8, Math.round(size * randomIn(0.12, 0.3))),
+    swayMs: Math.round(randomIn(1400, 2600)),
+  };
+}
+
+export function createSpinPop(
+  src: string,
+  baseSize: number,
+  duration: number,
+): Omit<SpinPop, 'id' | 'kind'> {
+  const turns = randomIn(1, 2);
+  const direction = Math.random() < 0.5 ? -1 : 1;
+  return {
+    src,
+    // Keep a safe margin so large emotes never spawn half off-screen.
+    xPct: randomIn(4, 86),
+    yPct: randomIn(8, 70),
+    size: Math.round(baseSize * randomIn(0.8, 1.3)),
+    // One to two full spins around itself, in either direction.
+    rotation: Math.round(turns * 360) * direction,
+    duration,
+  };
+}
+
+export type BurstParticle = {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  rot: number;
+  vr: number;
+  life: number;
+  maxLife: number;
+  size: number;
+  spark: boolean;
+  color: string;
+  img: HTMLImageElement | null;
+};
+
+export const BURST_SHRAPNEL_COUNT = 14;
+export const BURST_SPARK_COUNT = 10;
+
+/** Random ending roll: true = burst into pieces, false = fade out. */
+export function rollBurst(chance = 0.5): boolean {
+  return Math.random() < chance;
+}
+
+const BURST_SPARK_COLORS = ['#ffffff', '#ffd54a', '#ff6b6b', '#7cf29c', '#6cb8ff'];
+
+/**
+ * Explosion shrapnel for one burst: emote fragments flying outward plus
+ * colored sparks. Pure data — rendering lives in the widget's canvas loop.
+ * `inherit` adds the bursting emote's own velocity (px/s) so fragments keep
+ * moving with it instead of starting dead.
+ */
+export function createBurstParticles(
+  cx: number,
+  cy: number,
+  size: number,
+  img: HTMLImageElement | null,
+  inherit: { vx: number; vy: number } = { vx: 0, vy: 0 },
+): BurstParticle[] {
+  const parts: BurstParticle[] = [];
+  for (let i = 0; i < BURST_SHRAPNEL_COUNT; i++) {
+    const a = Math.random() * Math.PI * 2;
+    const sp = size * randomIn(1.2, 3.4);
+    parts.push({
+      x: cx,
+      y: cy,
+      vx: Math.cos(a) * sp + inherit.vx,
+      vy: Math.sin(a) * sp - size * 0.6 + inherit.vy,
+      rot: randomIn(0, Math.PI * 2),
+      vr: randomIn(-6, 6),
+      life: 0,
+      maxLife: randomIn(0.55, 0.95),
+      size: Math.max(4, size * randomIn(0.1, 0.22)),
+      spark: false,
+      color: '',
+      img,
+    });
+  }
+  for (let i = 0; i < BURST_SPARK_COUNT; i++) {
+    const a = Math.random() * Math.PI * 2;
+    const sp = size * randomIn(1.5, 4);
+    parts.push({
+      x: cx,
+      y: cy,
+      vx: Math.cos(a) * sp + inherit.vx,
+      vy: Math.sin(a) * sp - size * 0.6 + inherit.vy,
+      rot: 0,
+      vr: 0,
+      life: 0,
+      maxLife: randomIn(0.4, 0.7),
+      size: Math.max(2, size * randomIn(0.04, 0.1)),
+      spark: true,
+      color: BURST_SPARK_COLORS[i % BURST_SPARK_COLORS.length],
+      img: null,
+    });
+  }
+  return parts;
+}
+
+export function createBurstPop(
+  src: string,
+  baseSize: number,
+  durationSec: number,
+): Omit<BurstPop, 'id' | 'kind'> {
+  return {
+    src,
+    // Keep a safe margin so large emotes never spawn half off-screen.
+    xPct: randomIn(4, 86),
+    yPct: randomIn(8, 70),
+    size: Math.round(baseSize * randomIn(0.8, 1.3)),
+    // Appears, lingers, then pops before the visible duration ends.
+    lingerMs: Math.round(durationSec * 1000 * randomIn(0.6, 0.8)),
+    burst: rollBurst(0.7),
+    // Steady upward drift it keeps until the pop, so it bursts mid-motion.
+    dx: Math.round(randomIn(-60, 60)),
+    dy: Math.round(randomIn(-160, -40)),
+  };
 }

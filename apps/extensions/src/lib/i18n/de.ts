@@ -1326,7 +1326,7 @@ export const de: typeof en = {
     breadcrumb: 'Emote-Wand einrichten',
     title: 'Emote-Wand einrichten',
     intro:
-      'Nachrichten, die nur aus Emotes bestehen (Twitch, Kick und die 7TV-Emotes deines Twitch-Kanals), tauchen als Emotes auf dem Screen auf. Normale Textnachrichten werden standardmäßig übersprungen, und Alle Emotes zeigen holt die Emotes auch da raus. Ruhig lässt sie an zufälligen Stellen aufploppen, treiben und verblassen, Chaos schießt sie vom Rand quer über den Screen, und Abprallen lässt sie von den Bildschirmrändern abprallen.',
+      'Nachrichten, die nur aus Emotes bestehen (Twitch, Kick und die 7TV-Emotes deines Twitch-Kanals), tauchen als Emotes auf dem Screen auf. Normale Textnachrichten werden standardmäßig übersprungen, und Alle Emotes zeigen holt die Emotes auch da raus. Ruhig lässt sie an zufälligen Stellen aufploppen, treiben und verblassen, Chaos schießt sie vom Rand quer über den Screen, Abprallen lässt sie von den Bildschirmrändern abprallen, Gleiten lässt sie seitlich pendelnd von oben nach unten über den Screen schweben, Drehung lässt sie einblenden, ein bis zwei Mal um sich selbst rotieren und wieder ausblenden, und Explosion lässt sie vor Ablauf ihrer Zeit in Fragmente und Funken zerbersten.',
     sectionAnimation: 'Animation',
     sectionFilters: 'Filter',
     sevenTvEmotes: '7TV-Emotes',
@@ -1336,12 +1336,15 @@ export const de: typeof en = {
     modeCalm: 'Ruhig',
     modeChaos: 'Chaos',
     modeBounce: 'Abprallen',
+    modeGlide: 'Gleiten',
+    modeSpin: 'Drehung',
+    modeBurst: 'Explosion',
     modeTip:
-      'Ruhig: ploppt an einer zufälligen Stelle auf, treibt und blendet aus. Chaos: fliegt von einem zufälligen Rand rein und verschwindet irgendwo zwischen der Mitte und der anderen Seite. Abprallen: prallt von den Rändern ab und wird bei jedem Treffer schneller.',
+      'Ruhig: ploppt an einer zufälligen Stelle auf, treibt und blendet aus. Chaos: fliegt von einem zufälligen Rand rein und verschwindet irgendwo zwischen der Mitte und der anderen Seite. Abprallen: prallt von den Rändern ab und wird bei jedem Treffer schneller. Gleiten: schwebt seitlich pendelnd von oben nach unten und blendet am unteren Rand aus. Drehung: blendet an einer zufälligen Stelle ein, rotiert ein bis zwei Mal um sich selbst und blendet wieder aus. Explosion: blendet ein und zerberstet vor Ablauf der Zeit in Emote-Fragmente und farbige Funken (manchmal blendet es nur aus).',
     emoteSize: 'Emote-Größe',
     duration: 'Anzeigedauer (Sek.)',
     durationTip:
-      'Wie lange jedes Emote auf dem Screen bleibt. Bei Chaos fliegen die Emotes in einem Teil dieser Zeit über den Screen und verschwinden früher.',
+      'Wie lange jedes Emote auf dem Screen bleibt. Bei Chaos fliegen die Emotes in einem Teil dieser Zeit über den Screen und verschwinden früher; bei Gleiten schweben sie in ungefähr dieser Zeit nach unten; bei Explosion zerbersten sie, bevor diese Zeit um ist.',
     maxEmotes: 'Max. Emotes gleichzeitig',
     maxEmotesTip: 'Sind mehr Emotes auf dem Screen, fliegen die ältesten raus.',
     subsOnly: 'Nur Subs',
@@ -2431,6 +2434,12 @@ export const de: typeof en = {
         'Die Plattform-Icons der Chat-Box sind größer, und du kannst links neben jeder Nachricht einen Streifen in der Farbe der Plattform hinzufügen.',
       emoteWallModes:
         'Die Emote-Wand bekommt einen Abprallen-Modus, der Emotes von den Rändern abprallen lässt, einen Hype-Modus und Schutz gegen Emote-Spam.',
+      emoteWallGlide:
+        'Die Emote-Wand bekommt einen Gleiten-Modus, der Emotes von oben nach unten schweben lässt.',
+      emoteWallSpin:
+        'Die Emote-Wand bekommt einen Dreh-Modus, der Emotes einblendet, ein bis zwei Mal um sich selbst rotieren lässt und wieder ausblendet, und Gleiten-Emotes pendeln beim Sinken jetzt seitlich.',
+      emoteWallBurst:
+        'Die Emote-Wand bekommt einen Explosions-Modus, in dem Emotes vor Ablauf ihrer Zeit in Fragmente und Funken zerbersten.',
       sproutPotLabel: 'Sub Sprout kann über dem Topf die Stufe anzeigen, z. B. 3/10.',
       emoteWallLaunch:
         'Die Emote-Wand ist da: Twitch- und Kick-Nachrichten nur aus Emotes fliegen im Modus Ruhig oder Chaos über den Screen.',

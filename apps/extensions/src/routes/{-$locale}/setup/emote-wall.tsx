@@ -70,6 +70,9 @@ function EmoteWallSetup() {
     { value: 'calm', label: t('emoteWallSetup.modeCalm') },
     { value: 'chaos', label: t('emoteWallSetup.modeChaos') },
     { value: 'bounce', label: t('emoteWallSetup.modeBounce') },
+    { value: 'glide', label: t('emoteWallSetup.modeGlide') },
+    { value: 'spin', label: t('emoteWallSetup.modeSpin') },
+    { value: 'burst', label: t('emoteWallSetup.modeBurst') },
   ];
 
   const settingsPanel = (
