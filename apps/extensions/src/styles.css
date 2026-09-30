@@ -198,6 +198,56 @@
   filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.55));
 }
 
+/* Emote wall spin mode: fade in, spin around its own center once or twice,
+   fading out smoothly while still spinning. Rotation interpolates
+   numerically, so a --spin of 720deg really spins twice instead of taking
+   the shortest path. Rotation fractions track time fractions, so the spin
+   stays at a constant speed from appear to disappear. */
+@keyframes emoteWallSpin {
+  0% {
+    opacity: 0;
+    transform: scale(0.6) rotate(0deg);
+  }
+  15% {
+    opacity: 1;
+    transform: scale(1) rotate(calc(var(--spin, 720deg) * 0.15));
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1) rotate(calc(var(--spin, 720deg) * 0.7));
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.95) rotate(var(--spin, 720deg));
+  }
+}
+
+.emote-wall-spin {
+  animation: emoteWallSpin var(--spin-duration, 5s) linear forwards;
+  will-change: transform, opacity;
+  transform-origin: center;
+}
+
+/* Emote wall glide mode: sway side to side while the wrapper falls.
+   The sway lives on the inner img so it composes with the wrapper's
+   falling transform; both stay on transform/opacity only. */
+@keyframes emoteGlideSway {
+  0%,
+  100% {
+    transform: translateX(calc(var(--sway-x, 16px) * -1));
+  }
+  50% {
+    transform: translateX(var(--sway-x, 16px));
+  }
+}
+
+.emote-glide-sway {
+  animation-name: emoteGlideSway;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}
+
 /* Alert animations */
 @keyframes slideInUp {
   from {

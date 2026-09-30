@@ -3,17 +3,27 @@ import {
   BOUNCE_BOOST,
   BOUNCE_MAX_SPEED,
   bounceStep,
+  BURST_SHRAPNEL_COUNT,
+  BURST_SPARK_COUNT,
   createBouncePop,
+  createBurstParticles,
+  createBurstPop,
   createCalmPop,
   createChaosPop,
+  createGlidePop,
+  createSpinPop,
   isEmoteWallMode,
+  rollBurst,
 } from './emote-pops';
 
 describe('isEmoteWallMode', () => {
-  it('accepts calm, chaos and bounce only', () => {
+  it('accepts calm, chaos, bounce, glide, spin and burst only', () => {
     expect(isEmoteWallMode('calm')).toBe(true);
     expect(isEmoteWallMode('chaos')).toBe(true);
     expect(isEmoteWallMode('bounce')).toBe(true);
+    expect(isEmoteWallMode('glide')).toBe(true);
+    expect(isEmoteWallMode('spin')).toBe(true);
+    expect(isEmoteWallMode('burst')).toBe(true);
     expect(isEmoteWallMode('wild')).toBe(false);
     expect(isEmoteWallMode(undefined)).toBe(false);
   });
@@ -96,6 +106,133 @@ describe('createBouncePop', () => {
       expect(pop.speed).toBeGreaterThanOrEqual(140);
       expect(pop.speed).toBeLessThanOrEqual(260);
       expect(pop.visibleMs).toBe(5000);
+    }
+  });
+});
+
+describe('createGlidePop', () => {
+  it('starts above the screen and falls past the bottom edge', () => {
+    for (let i = 0; i < 50; i++) {
+      const pop = createGlidePop('src', 112, 5);
+      expect(pop.startYPct).toBeLessThan(0);
+      expect(pop.startXPct).toBeGreaterThanOrEqual(2);
+      expect(pop.startXPct).toBeLessThanOrEqual(98);
+      // Falls straight down off the bottom with only a gentle sideways drift.
+      expect(pop.startYPct + pop.dyVh).toBeGreaterThan(100);
+      expect(Math.abs(pop.dxVw)).toBeLessThanOrEqual(18);
+    }
+  });
+
+  it('falls for roughly the visible duration and vanishes near the bottom', () => {
+    for (let i = 0; i < 50; i++) {
+      const pop = createGlidePop('src', 112, 5);
+      expect(pop.travelMs).toBeGreaterThan(0);
+      expect(pop.travelMs).toBeGreaterThanOrEqual(Math.round(5 * 1000 * 0.85));
+      expect(pop.travelMs).toBeLessThanOrEqual(Math.round(5 * 1000 * 1.15));
+      expect(pop.vanishAt).toBeGreaterThanOrEqual(0.75);
+      expect(pop.vanishAt).toBeLessThanOrEqual(1);
+    }
+  });
+
+  it('sways slightly side to side on a 1 to 3 second cycle', () => {
+    for (let i = 0; i < 50; i++) {
+      const pop = createGlidePop('src', 112, 5);
+      expect(pop.swayPx).toBeGreaterThanOrEqual(8);
+      expect(pop.swayPx).toBeLessThanOrEqual(60);
+      expect(pop.swayMs).toBeGreaterThanOrEqual(1400);
+      expect(pop.swayMs).toBeLessThanOrEqual(2600);
+    }
+  });
+});
+
+describe('createSpinPop', () => {
+  it('spawns inside safe margins and stays for the full duration', () => {
+    for (let i = 0; i < 50; i++) {
+      const pop = createSpinPop('src', 112, 5);
+      expect(pop.xPct).toBeGreaterThanOrEqual(4);
+      expect(pop.xPct).toBeLessThanOrEqual(86);
+      expect(pop.yPct).toBeGreaterThanOrEqual(8);
+      expect(pop.yPct).toBeLessThanOrEqual(70);
+      expect(pop.duration).toBe(5);
+    }
+  });
+
+  it('spins around itself once or twice, in either direction', () => {
+    let clockwise = false;
+    let counterClockwise = false;
+    for (let i = 0; i < 50; i++) {
+      const pop = createSpinPop('src', 112, 5);
+      const magnitude = Math.abs(pop.rotation);
+      expect(magnitude).toBeGreaterThanOrEqual(360);
+      expect(magnitude).toBeLessThanOrEqual(720);
+      if (pop.rotation > 0) clockwise = true;
+      if (pop.rotation < 0) counterClockwise = true;
+    }
+    expect(clockwise).toBe(true);
+    expect(counterClockwise).toBe(true);
+  });
+});
+
+describe('rollBurst', () => {
+  it('always bursts at chance 1 and never at chance 0', () => {
+    for (let i = 0; i < 20; i++) {
+      expect(rollBurst(1)).toBe(true);
+      expect(rollBurst(0)).toBe(false);
+    }
+  });
+
+  it('rolls both endings over many samples', () => {
+    const results = new Set(Array.from({ length: 100 }, () => rollBurst(0.7)));
+    expect(results).toEqual(new Set([true, false]));
+  });
+});
+
+describe('createBurstParticles', () => {
+  it('bursts into shrapnel plus colored sparks', () => {
+    const parts = createBurstParticles(100, 100, 112, null);
+    expect(parts).toHaveLength(BURST_SHRAPNEL_COUNT + BURST_SPARK_COUNT);
+    const shrapnel = parts.filter((p) => !p.spark);
+    const sparks = parts.filter((p) => p.spark);
+    expect(shrapnel).toHaveLength(BURST_SHRAPNEL_COUNT);
+    expect(sparks).toHaveLength(BURST_SPARK_COUNT);
+    for (const p of shrapnel) {
+      expect(p.maxLife).toBeGreaterThanOrEqual(0.55);
+      expect(p.maxLife).toBeLessThanOrEqual(0.95);
+      expect(p.size).toBeGreaterThanOrEqual(4);
+      expect(p.life).toBe(0);
+    }
+    for (const p of sparks) {
+      expect(p.maxLife).toBeGreaterThanOrEqual(0.4);
+      expect(p.maxLife).toBeLessThanOrEqual(0.7);
+      expect(p.color).toMatch(/^#[0-9a-f]{6}$/);
+      expect(p.img).toBeNull();
+    }
+  });
+
+  it('carries the bursting emote velocity into every fragment', () => {
+    const parts = createBurstParticles(100, 100, 112, null, { vx: 1000, vy: -500 });
+    expect(parts).toHaveLength(BURST_SHRAPNEL_COUNT + BURST_SPARK_COUNT);
+    // Fastest own speed is size * 4, so a +1000 boost keeps every vx positive.
+    for (const p of parts) expect(p.vx).toBeGreaterThan(0);
+  });
+});
+
+describe('createBurstPop', () => {
+  it('spawns inside safe margins and lingers before popping', () => {
+    for (let i = 0; i < 50; i++) {
+      const pop = createBurstPop('src', 112, 5);
+      expect(pop.xPct).toBeGreaterThanOrEqual(4);
+      expect(pop.xPct).toBeLessThanOrEqual(86);
+      expect(pop.yPct).toBeGreaterThanOrEqual(8);
+      expect(pop.yPct).toBeLessThanOrEqual(70);
+      // Pops before the visible duration ends, leaving room for the burst.
+      expect(pop.lingerMs).toBeGreaterThanOrEqual(Math.round(5 * 1000 * 0.6));
+      expect(pop.lingerMs).toBeLessThanOrEqual(Math.round(5 * 1000 * 0.8));
+      // Steady upward drift it keeps until the pop.
+      expect(pop.dx).toBeGreaterThanOrEqual(-60);
+      expect(pop.dx).toBeLessThanOrEqual(60);
+      expect(pop.dy).toBeGreaterThanOrEqual(-160);
+      expect(pop.dy).toBeLessThanOrEqual(-40);
     }
   });
 });

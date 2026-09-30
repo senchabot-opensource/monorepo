@@ -1353,7 +1353,7 @@ export const pt: typeof en = {
     breadcrumb: 'Configurar Mural de Emotes',
     title: 'Configurar Mural de Emotes',
     intro:
-      'Mensagens feitas só de emotes (da Twitch, da Kick e os emotes da 7TV do seu canal da Twitch) aparecem como emotes na tela. Mensagens de texto normais são ignoradas por padrão, e Mostrar todos os emotes puxa os emotes delas também. Calmo faz os emotes surgirem em pontos aleatórios, flutuarem e sumirem, Caos faz eles voarem de uma borda pela tela, e Quicar faz eles quicarem nas bordas da tela.',
+      'Mensagens feitas só de emotes (da Twitch, da Kick e os emotes da 7TV do seu canal da Twitch) aparecem como emotes na tela. Mensagens de texto normais são ignoradas por padrão, e Mostrar todos os emotes puxa os emotes delas também. Calmo faz os emotes surgirem em pontos aleatórios, flutuarem e sumirem, Caos faz eles voarem de uma borda pela tela, Quicar faz eles quicarem nas bordas da tela, Deslize faz eles descerem deslizando do topo da tela balançando para os lados, Giro faz eles aparecerem, girarem uma ou duas voltas no lugar e sumirem, e Explosão faz eles explodirem em fragmentos e faíscas antes do fim do tempo.',
     sectionAnimation: 'Animação',
     sectionFilters: 'Filtros',
     sevenTvEmotes: 'Emotes da 7TV',
@@ -1363,12 +1363,15 @@ export const pt: typeof en = {
     modeCalm: 'Calmo',
     modeChaos: 'Caos',
     modeBounce: 'Quicar',
+    modeGlide: 'Deslize',
+    modeSpin: 'Giro',
+    modeBurst: 'Explosão',
     modeTip:
-      'Calmo: surge em um ponto aleatório, flutua e some. Caos: voa de uma borda aleatória e desaparece em algum ponto entre o meio e o outro lado. Quicar: ricocheteia nas bordas e acelera a cada batida.',
+      'Calmo: surge em um ponto aleatório, flutua e some. Caos: voa de uma borda aleatória e desaparece em algum ponto entre o meio e o outro lado. Quicar: ricocheteia nas bordas e acelera a cada batida. Deslize: desce deslizando do topo balançando para os lados e some perto da base. Giro: aparece em um ponto aleatório, gira uma ou duas voltas no lugar e some. Explosão: aparece e, antes do fim do tempo, explode em fragmentos do emote e faíscas coloridas (às vezes só some).',
     emoteSize: 'Tamanho do emote',
     duration: 'Tempo na tela (s)',
     durationTip:
-      'Quanto tempo cada emote fica na tela. No Caos, os emotes atravessam a tela em parte desse tempo e somem antes.',
+      'Quanto tempo cada emote fica na tela. No Caos, os emotes atravessam a tela em parte desse tempo e somem antes; no Deslize, eles descem durante aproximadamente esse tempo; na Explosão, eles explodem antes do fim desse tempo.',
     maxEmotes: 'Máx. de emotes ao mesmo tempo',
     maxEmotesTip: 'Quando há mais emotes que isso na tela, os mais antigos saem.',
     subsOnly: 'Só inscritos',
@@ -2451,6 +2454,12 @@ export const pt: typeof en = {
         'Os ícones de plataforma da Caixa de Chat ficaram maiores, e você pode colocar uma faixa com a cor da plataforma à esquerda de cada mensagem.',
       emoteWallModes:
         'O Mural de Emotes ganha o modo Quicar, que faz os emotes quicarem nas bordas, um modo só de hype e proteção contra spam de emotes.',
+      emoteWallGlide:
+        'O Mural de Emotes ganha o modo Deslize, que faz os emotes descerem do topo da tela.',
+      emoteWallSpin:
+        'O Mural de Emotes ganha o modo Giro, que mostra os emotes, faz eles girarem uma ou duas voltas no lugar e sumirem, e os emotes no Deslize agora balançam para os lados ao descer.',
+      emoteWallBurst:
+        'O Mural de Emotes ganha o modo Explosão, em que os emotes explodem em fragmentos e faíscas antes do fim do tempo.',
       sproutPotLabel: 'O Sub Sprout pode mostrar um rótulo de estágio tipo 3/10 acima do vaso.',
       emoteWallLaunch:
         'Chegou o Mural de Emotes: mensagens só de emotes da Twitch e da Kick voam pela tela no modo Calmo ou Caos.',

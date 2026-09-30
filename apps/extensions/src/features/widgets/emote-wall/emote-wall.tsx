@@ -16,12 +16,18 @@ import {
 import {
   bounceStep,
   createBouncePop,
+  createBurstParticles,
+  createBurstPop,
   createCalmPop,
   createChaosPop,
+  createGlidePop,
+  createSpinPop,
   type BouncePop,
+  type BurstPop,
   type ChaosPop,
   type EmotePop,
   type EmoteWallMode,
+  type GlidePop,
 } from './emote-pops';
 
 export type { EmoteWallMode };
@@ -57,6 +63,9 @@ const MOCK_EMOTES: { name: string; src: string; source: 'twitch' | '7tv' }[] = [
 
 const CHAOS_FADE_MS = 350;
 const BOUNCE_FADE_MS = 400;
+const GLIDE_FADE_MS = 350;
+const BURST_DONE_BUFFER_MS = 1150;
+const BURST_FADE_MS = 350;
 
 // NOTE: animated emotes intentionally have no CSS `filter` (e.g.
 // drop-shadow). Transform/opacity animations composite for free, but any
@@ -124,6 +133,209 @@ const ChaosEmote = React.memo(function ChaosEmote({
         willChange: 'transform, opacity',
       }}
     />
+  );
+});
+
+/**
+ * Glide flight: drifts down from the top edge on mount, swaying slightly
+ * side to side, fades out near the bottom, then reports completion. The
+ * fall lives on the wrapper while the inner img sways, so both transforms
+ * compose without repaints. Memoized for the same reason as ChaosEmote.
+ */
+const GlideEmote = React.memo(function GlideEmote({
+  pop,
+  onDone,
+}: {
+  pop: GlidePop;
+  onDone: (id: string) => void;
+}) {
+  const [launched, setLaunched] = React.useState(false);
+  const [fading, setFading] = React.useState(false);
+
+  React.useEffect(() => {
+    let raf2 = 0;
+    const raf1 = requestAnimationFrame(() => {
+      raf2 = requestAnimationFrame(() => setLaunched(true));
+    });
+    const fadeAt = pop.travelMs * pop.vanishAt;
+    const fadeTimer = setTimeout(() => setFading(true), fadeAt);
+    const doneTimer = setTimeout(() => onDone(pop.id), fadeAt + GLIDE_FADE_MS + 50);
+    return () => {
+      cancelAnimationFrame(raf1);
+      cancelAnimationFrame(raf2);
+      clearTimeout(fadeTimer);
+      clearTimeout(doneTimer);
+    };
+  }, [pop.id, pop.travelMs, pop.vanishAt, onDone]);
+
+  return (
+    <div
+      className="absolute select-none"
+      style={{
+        left: `${pop.startXPct}%`,
+        top: `${pop.startYPct}%`,
+        width: pop.size,
+        height: pop.size,
+        opacity: fading ? 0 : launched ? 1 : 0,
+        transform: launched
+          ? `translate(${pop.dxVw}vw, ${pop.dyVh}vh)`
+          : 'translate(0, 0)',
+        transition: `transform ${pop.travelMs}ms linear, opacity 300ms ease-out`,
+        willChange: 'transform, opacity',
+      }}
+    >
+      <img
+        src={pop.src}
+        alt={pop.name ?? ''}
+        draggable={false}
+        decoding="async"
+        className="emote-glide-sway object-contain"
+        style={
+          {
+            width: '100%',
+            height: '100%',
+            ['--sway-x' as string]: `${pop.swayPx}px`,
+            animationDuration: `${pop.swayMs}ms`,
+          } as React.CSSProperties
+        }
+      />
+    </div>
+  );
+});
+
+/**
+ * Burst flight: fades in at a random spot, lingers, then pops into emote
+ * fragments and colored sparks before its time ends (or, on a losing roll,
+ * just fades out). Fragments render on a small transient canvas with a
+ * per-pop rAF loop; lifecycle timers own removal so a stuck frame can never
+ * leave a pop behind. Memoized like the other flights.
+ */
+const BurstEmote = React.memo(function BurstEmote({
+  pop,
+  onDone,
+}: {
+  pop: BurstPop;
+  onDone: (id: string) => void;
+}) {
+  const imgRef = React.useRef<HTMLImageElement>(null);
+  const canvasRef = React.useRef<HTMLCanvasElement>(null);
+  const [launched, setLaunched] = React.useState(false);
+  const [bursting, setBursting] = React.useState(false);
+  const [fading, setFading] = React.useState(false);
+  // Wide enough to contain the fastest fragments for their whole life.
+  const side = Math.ceil(pop.size * 4);
+
+  React.useEffect(() => {
+    const showTimer = setTimeout(() => setLaunched(true), 30);
+    const burstTimer = setTimeout(() => {
+      if (pop.burst) setBursting(true);
+      else setFading(true);
+    }, pop.lingerMs);
+    const doneTimer = setTimeout(
+      () => onDone(pop.id),
+      pop.lingerMs + (pop.burst ? BURST_DONE_BUFFER_MS : BURST_FADE_MS + 100),
+    );
+    return () => {
+      clearTimeout(showTimer);
+      clearTimeout(burstTimer);
+      clearTimeout(doneTimer);
+    };
+  }, [pop, onDone]);
+
+  React.useEffect(() => {
+    if (!bursting) return;
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext('2d');
+    if (!canvas || !ctx) return;
+    const source = imgRef.current;
+    // Without a loaded image there is nothing to fragment; sparks fly alone.
+    const img = source?.complete && source.naturalWidth > 0 ? source : null;
+    // Fragments inherit the drift so the burst keeps moving with the emote.
+    const driftBoost = { vx: (pop.dx / pop.lingerMs) * 1000, vy: (pop.dy / pop.lingerMs) * 1000 };
+    const parts = createBurstParticles(side / 2, side / 2, pop.size, img, driftBoost);
+    const gravity = pop.size * 4;
+    let raf = 0;
+    let last = performance.now();
+    const frame = (t: number) => {
+      const dt = Math.min((t - last) / 1000, 0.05);
+      last = t;
+      ctx.clearRect(0, 0, side, side);
+      let alive = false;
+      for (const p of parts) {
+        p.life += dt;
+        if (p.life >= p.maxLife) continue;
+        alive = true;
+        p.x += p.vx * dt;
+        p.y += p.vy * dt;
+        p.vy += gravity * dt;
+        p.rot += p.vr * dt;
+        const alpha = 1 - p.life / p.maxLife;
+        if (p.spark) {
+          ctx.globalAlpha = alpha;
+          ctx.fillStyle = p.color;
+          ctx.fillRect(p.x - p.size / 2, p.y - p.size / 2, p.size, p.size);
+        } else if (p.img) {
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.rot);
+          ctx.globalAlpha = alpha;
+          ctx.drawImage(p.img, -p.size / 2, -p.size / 2, p.size, p.size);
+          ctx.restore();
+        }
+      }
+      ctx.globalAlpha = 1;
+      if (alive) raf = requestAnimationFrame(frame);
+    };
+    raf = requestAnimationFrame(frame);
+    return () => cancelAnimationFrame(raf);
+  }, [bursting, pop, side]);
+
+  return (
+    <div
+      className="absolute select-none"
+      style={{
+        left: `${pop.xPct}%`,
+        top: `${pop.yPct}%`,
+        width: pop.size,
+        height: pop.size,
+        // Steady linear drift for the whole linger, so the burst happens
+        // mid-motion where the emote drifted to (the canvas rides along).
+        transform: launched ? `translate(${pop.dx}px, ${pop.dy}px)` : 'translate(0, 0)',
+        transition: `transform ${pop.lingerMs}ms linear`,
+        willChange: 'transform',
+      }}
+    >
+      <img
+        ref={imgRef}
+        src={pop.src}
+        alt={pop.name ?? ''}
+        draggable={false}
+        decoding="async"
+        className="object-contain"
+        style={{
+          width: '100%',
+          height: '100%',
+          opacity: bursting || fading ? 0 : launched ? 1 : 0,
+          transform: launched && !bursting ? 'scale(1)' : 'scale(0.6)',
+          transition: 'opacity 300ms ease-out, transform 300ms ease-out',
+          willChange: 'transform, opacity',
+        }}
+      />
+      <canvas
+        ref={canvasRef}
+        width={side}
+        height={side}
+        aria-hidden
+        className="pointer-events-none absolute"
+        style={{
+          left: '50%',
+          top: '50%',
+          width: side,
+          height: side,
+          transform: 'translate(-50%, -50%)',
+        }}
+      />
+    </div>
   );
 });
 
@@ -271,23 +483,32 @@ export function EmoteWall({
         if (mode === 'bounce') {
           return { kind: 'bounce', id, name, ...createBouncePop(src, emoteSize, effectiveDuration) };
         }
+        if (mode === 'glide') {
+          return { kind: 'glide', id, name, ...createGlidePop(src, emoteSize, effectiveDuration) };
+        }
+        if (mode === 'spin') {
+          return { kind: 'spin', id, name, ...createSpinPop(src, emoteSize, effectiveDuration) };
+        }
+        if (mode === 'burst') {
+          return { kind: 'burst', id, name, ...createBurstPop(src, emoteSize, effectiveDuration) };
+        }
         return { kind: 'calm', id, name, ...createCalmPop(src, emoteSize, effectiveDuration) };
       });
 
       setPops((prev) => {
         const next = [...prev, ...fresh];
-        // Drop oldest (chaos/bounce timers clean themselves up on unmount).
+        // Drop oldest (chaos/bounce/glide/burst timers clean themselves up on unmount).
         if (next.length > maxEmotes) {
           return next.slice(next.length - maxEmotes);
         }
         return next;
       });
 
-      // Calm pops are removed by a fixed timer; chaos/bounce pops remove
-      // themselves via their flight components once they vanish.
-      if (mode === 'calm') {
+      // Calm and spin pops are removed by a fixed timer; chaos/bounce/glide
+      // and burst pops remove themselves via their flight components.
+      if (mode === 'calm' || mode === 'spin') {
         for (const pop of fresh) {
-          if (pop.kind !== 'calm') continue;
+          if (pop.kind !== 'calm' && pop.kind !== 'spin') continue;
           const t = setTimeout(() => {
             timeoutsRef.current.delete(t);
             removePop(pop.id);
@@ -321,7 +542,7 @@ export function EmoteWall({
       // emote messages in a short time gets filtered out.
       let fresh = urls;
       if (spamBlockRef.current) {
-        fresh = filterSpam(spamRef.current, userLower, urls, now);
+        fresh = filterSpam(spamRef.current, userLower, fresh, now);
         if (fresh.length === 0) return;
       }
 
@@ -360,7 +581,9 @@ export function EmoteWall({
   // Mock bypasses hype/spam gates (no user identity) to keep previewing visuals.
   React.useEffect(() => {
     if (!mock) return;
-    const fast = mode !== 'calm';
+    // Calm, spin and burst emotes linger for most of the visible duration,
+    // so the preview spawns them at the slow ambient pace.
+    const fast = mode !== 'calm' && mode !== 'spin' && mode !== 'burst';
     const pool = sevenTvEnabled
       ? MOCK_EMOTES
       : MOCK_EMOTES.filter((e) => e.source !== '7tv');
@@ -436,6 +659,8 @@ export function EmoteWall({
       {pops.map((pop) =>
         pop.kind === 'chaos' ? (
           <ChaosEmote key={pop.id} pop={pop} onDone={removePop} />
+        ) : pop.kind === 'glide' ? (
+          <GlideEmote key={pop.id} pop={pop} onDone={removePop} />
         ) : pop.kind === 'bounce' ? (
           <BounceEmote
             key={pop.id}
@@ -443,6 +668,27 @@ export function EmoteWall({
             onDone={removePop}
             registry={bounceRegistry}
           />
+        ) : pop.kind === 'spin' ? (
+          <img
+            key={pop.id}
+            src={pop.src}
+            alt={pop.name ?? ''}
+            draggable={false}
+            decoding="async"
+            className="emote-wall-spin absolute object-contain select-none"
+            style={
+              {
+                left: `${pop.xPct}%`,
+                top: `${pop.yPct}%`,
+                width: pop.size,
+                height: pop.size,
+                ['--spin-duration' as string]: `${pop.duration}s`,
+                ['--spin' as string]: `${pop.rotation}deg`,
+              } as React.CSSProperties
+            }
+          />
+        ) : pop.kind === 'burst' ? (
+          <BurstEmote key={pop.id} pop={pop} onDone={removePop} />
         ) : (
           <img
             key={pop.id}

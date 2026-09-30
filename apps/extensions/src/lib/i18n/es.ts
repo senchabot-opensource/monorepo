@@ -1359,7 +1359,7 @@ export const es: typeof en = {
     breadcrumb: 'Configurar Muro de Emotes',
     title: 'Configurar Muro de Emotes',
     intro:
-      'Los mensajes hechos solo de emotes (de Twitch, de Kick y los emotes de 7TV de tu canal de Twitch) aparecen como emotes en pantalla. Los mensajes de texto normales se saltan por defecto, y Mostrar todos los emotes también saca los emotes de esos mensajes. Tranquilo los hace aparecer en puntos al azar para flotar y desvanecerse, Caos los lanza desde un borde a través de la pantalla y Rebote los hace rebotar en los bordes de la pantalla.',
+      'Los mensajes hechos solo de emotes (de Twitch, de Kick y los emotes de 7TV de tu canal de Twitch) aparecen como emotes en pantalla. Los mensajes de texto normales se saltan por defecto, y Mostrar todos los emotes también saca los emotes de esos mensajes. Tranquilo los hace aparecer en puntos al azar para flotar y desvanecerse, Caos los lanza desde un borde a través de la pantalla, Rebote los hace rebotar en los bordes de la pantalla, Planeo los desliza hacia abajo desde la parte superior balanceándose a los lados, Giro los muestra, los hace girar sobre sí mismos una o dos vueltas y los desvanece en el sitio, y Estallido los hace explotar en fragmentos y chispas antes de que acabe su tiempo.',
     sectionAnimation: 'Animación',
     sectionFilters: 'Filtros',
     sevenTvEmotes: 'Emotes de 7TV',
@@ -1369,12 +1369,15 @@ export const es: typeof en = {
     modeCalm: 'Tranquilo',
     modeChaos: 'Caos',
     modeBounce: 'Rebote',
+    modeGlide: 'Planeo',
+    modeSpin: 'Giro',
+    modeBurst: 'Estallido',
     modeTip:
-      'Tranquilo: aparece en un punto al azar, flota y se desvanece. Caos: entra volando desde un borde al azar y desaparece entre la mitad y el lado opuesto. Rebote: rebota en los bordes y acelera con cada golpe.',
+      'Tranquilo: aparece en un punto al azar, flota y se desvanece. Caos: entra volando desde un borde al azar y desaparece entre la mitad y el lado opuesto. Rebote: rebota en los bordes y acelera con cada golpe. Planeo: se desliza hacia abajo desde arriba balanceándose a los lados y se desvanece cerca de la parte inferior. Giro: aparece en un punto al azar, gira sobre sí mismo una o dos vueltas y se desvanece. Estallido: aparece y, antes de que acabe su tiempo, explota en fragmentos del emote y chispas de colores (a veces solo se desvanece).',
     emoteSize: 'Tamaño de los emotes',
     duration: 'Tiempo visible (s)',
     durationTip:
-      'Cuánto tiempo se queda cada emote en pantalla. En Caos, los emotes cruzan la pantalla en parte de ese tiempo y desaparecen antes.',
+      'Cuánto tiempo se queda cada emote en pantalla. En Caos, los emotes cruzan la pantalla en parte de ese tiempo y desaparecen antes; en Planeo, bajan durante aproximadamente ese tiempo; en Estallido, los emotes explotan antes de que acabe ese tiempo.',
     maxEmotes: 'Máx. de emotes a la vez',
     maxEmotesTip: 'Cuando hay más emotes que este número en pantalla, se quitan los más viejos.',
     subsOnly: 'Solo suscriptores',
@@ -2459,6 +2462,12 @@ export const es: typeof en = {
         'Los iconos de plataforma de Caja de Chat son más grandes, y puedes añadir una franja del color de la plataforma a la izquierda de cada mensaje.',
       emoteWallModes:
         'Muro de Emotes estrena un modo Rebote que hace rebotar los emotes en los bordes, un modo solo para hype y protección contra spam de emotes.',
+      emoteWallGlide:
+        'El Muro de Emotes estrena un modo Planeo que desliza los emotes hacia abajo desde la parte superior.',
+      emoteWallSpin:
+        'El Muro de Emotes estrena un modo Giro que muestra los emotes, los hace girar una o dos vueltas y los desvanece en el sitio, y los emotes en Planeo ahora se balancean al caer.',
+      emoteWallBurst:
+        'El Muro de Emotes estrena un modo Estallido en el que los emotes explotan en fragmentos y chispas antes de que acabe su tiempo.',
       sproutPotLabel:
         'Sub Sprout puede mostrar una etiqueta de etapa como 3/10 encima de la maceta.',
       emoteWallLaunch:

@@ -10,7 +10,7 @@ Senchabot Extensions provides 100% free customizable stream overlays, multi-chat
 - **Universal Chat** — A 100% free multi-chat widget and stream chat box overlay (no login required) that combines Twitch and Kick chat into a single on-screen feed with 7TV emotes, badges, and customizable stream overlay styles.
 - **Raffle** — A 100% free chat-based giveaway tool and raffle picker (no login required) with custom keyword entry and a live confetti winner celebration overlay for OBS Studio, Streamlabs Desktop, XSplit, and more.
 - **OBS Bridge** — A 100% free chat-controlled OBS scene switcher and recording broadcast tool (no login required) with custom command trigger naming via local OBS WebSocket.
-- **Emote Wall** — A 100% free floating emote overlay (no login required) that turns emote-only Twitch, Kick, and 7TV chat messages into floating on-screen emotes with Calm, Chaos or Bounce animations.
+- **Emote Wall** — A 100% free floating emote overlay (no login required) that turns emote-only Twitch, Kick, and 7TV chat messages into floating on-screen emotes with Calm, Chaos, Bounce, Glide, Spin or Burst animations.
 
 ## Tech Stack
 
@@ -60,8 +60,8 @@ Senchabot Extensions provides 100% free customizable stream overlays, multi-chat
 │       │   ├── raffle-widget.tsx   # Raffle setup UI & state manager
 │       │   └── raffle-overlay.tsx  # Winner celebration overlay (canvas-confetti)
 │       └── emote-wall/
-│           ├── emote-wall.tsx      # Floating emote overlay (Calm/Chaos/Bounce)
-│           ├── emote-pops.ts       # Calm/Chaos/Bounce spawn & flight factories
+│           ├── emote-wall.tsx      # Floating emote overlay (Calm/Chaos/Bounce/Glide/Spin/Burst)
+│           ├── emote-pops.ts       # Calm/Chaos/Bounce/Glide/Spin/Burst spawn & flight factories
 │           └── emote-utils.ts      # Emote-only message detection (Twitch/Kick/7TV)
 ├── src/hooks/
 │   ├── use-raffle-state.ts         # localStorage-based raffle state
@@ -204,6 +204,9 @@ A floating emote overlay that turns emote-only Twitch, Kick, and 7TV chat messag
   - `calm` (default): emotes pop up at random screen positions with a fade-in, drift gently away from the spawn point, then fade out.
   - `chaos`: emotes zip in from random screen borders (left, right, top, bottom), travel linearly across the canvas, and vanish randomly once halfway or when reaching the far side.
   - `bounce`: emotes ricochet around like a screensaver, reflecting off the screen edges with a speed boost on every hit.
+  - `glide`: emotes drift down from the top of the screen, swaying slightly side to side, and fade out near the bottom.
+  - `spin`: emotes fade in at a random spot, spin around themselves once or twice, then fade away.
+  - `burst`: emotes appear and, before their time ends, pop into emote fragments and colored sparks on a canvas (occasionally they just fade out).
 - **Direct URL examples**:
   - Twitch only: `https://extensions.senchabot.com/widgets/emote-wall?twitch=senchabot`
   - Kick only: `https://extensions.senchabot.com/widgets/emote-wall?kick=senchabot`
@@ -212,7 +215,7 @@ A floating emote overlay that turns emote-only Twitch, Kick, and 7TV chat messag
 - **URL Query Parameters**:
   - `twitch` (string, Twitch channel name), `kick` (string, Kick channel name)
   - `sevenTv` (`true` | `false`, default `true`)
-  - `mode` (`calm` | `chaos` | `bounce`, default `calm`)
+  - `mode` (`calm` | `chaos` | `bounce` | `glide` | `spin` | `burst`, default `calm`)
   - `subsOnly` (`true` | `false`, default `false`, only subscriber emotes appear)
   - `subDurationX2` (`true` | `false`, default `false`, subscriber emotes stay 2x longer)
   - `showAllEmotes` (`true` | `false`, default `false`, also show emotes mixed into normal text messages)

@@ -1322,7 +1322,7 @@ export const en = {
     breadcrumb: 'Emote Wall Setup',
     title: 'Emote Wall Setup',
     intro:
-      "Messages made only of emotes (Twitch, Kick and your Twitch channel's 7TV emotes) pop up as emotes on screen. Normal text messages are skipped by default, and Show All Emotes pulls the emotes out of those too. Calm pops them up at random spots to drift and fade, Chaos flies them in from an edge across the screen, and Bounce bounces them off the screen edges.",
+      "Messages made only of emotes (Twitch, Kick and your Twitch channel's 7TV emotes) pop up as emotes on screen. Normal text messages are skipped by default, and Show All Emotes pulls the emotes out of those too. Calm pops them up at random spots to drift and fade, Chaos flies them in from an edge across the screen, Bounce bounces them off the screen edges, Glide drifts them down from the top of the screen while swaying side to side, Spin fades them in, spins them around once or twice, then fades them out in place, and Burst pops them into fragments and sparks before their time ends.",
     sectionAnimation: 'Animation',
     sectionFilters: 'Filters',
     sevenTvEmotes: '7TV Emotes',
@@ -1332,12 +1332,15 @@ export const en = {
     modeCalm: 'Calm',
     modeChaos: 'Chaos',
     modeBounce: 'Bounce',
+    modeGlide: 'Glide',
+    modeSpin: 'Spin',
+    modeBurst: 'Burst',
     modeTip:
-      'Calm: pops up at a random spot, drifts and fades out. Chaos: flies in from a random edge and vanishes somewhere between halfway and the far side. Bounce: ricochets off the edges and speeds up on every hit.',
+      'Calm: pops up at a random spot, drifts and fades out. Chaos: flies in from a random edge and vanishes somewhere between halfway and the far side. Bounce: ricochets off the edges and speeds up on every hit. Glide: drifts down from the top of the screen, swaying side to side, and fades out near the bottom. Spin: fades in at a random spot, spins around once or twice, then fades out. Burst: appears, then pops into emote fragments and colored sparks before its time ends (sometimes it just fades out).',
     emoteSize: 'Emote Size',
     duration: 'Visible Duration (sec)',
     durationTip:
-      'How long each emote stays on screen. In Chaos, emotes cross the screen in part of this time and vanish sooner.',
+      'How long each emote stays on screen. In Chaos, emotes cross the screen in part of this time and vanish sooner; in Glide, emotes drift down over roughly this time; in Burst, emotes pop before this time ends.',
     maxEmotes: 'Max Simultaneous Emotes',
     maxEmotesTip: 'When more emotes than this are on screen, the oldest ones are removed.',
     subsOnly: 'Subscribers Only',
@@ -2427,6 +2430,12 @@ export const en = {
         "Chat Box platform icons are bigger, and you can add a stripe in the platform's color to the left of each message.",
       emoteWallModes:
         'Emote Wall gets a Bounce mode that bounces emotes off the edges, a hype-only mode and emote spam protection.',
+      emoteWallGlide:
+        'Emote Wall gets a Glide mode that drifts emotes down from the top of the screen.',
+      emoteWallSpin:
+        'Emote Wall gets a Spin mode that fades emotes in, spins them around once or twice, then fades them out in place, and Glide emotes now sway side to side as they fall.',
+      emoteWallBurst:
+        'Emote Wall gets a Burst mode where emotes pop into fragments and sparks before their time ends.',
       sproutPotLabel: 'Sub Sprout can show a stage label like 3/10 above the pot.',
       emoteWallLaunch:
         'Emote Wall is here: emote-only Twitch and Kick messages fly across the screen in Calm or Chaos mode.',
