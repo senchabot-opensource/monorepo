@@ -23,6 +23,7 @@ export interface EmoteWallUrlOptions {
   showAllEmotes: boolean;
   hypeMode: boolean;
   spamBlock: boolean;
+  subEmotes: boolean;
   /** Raw input values; empty or non-numeric means "use the widget default". */
   size: string;
   duration: string;
@@ -50,6 +51,7 @@ export const DEFAULT_EMOTE_WALL_OPTIONS: EmoteWallUrlOptions = {
   showAllEmotes: false,
   hypeMode: false,
   spamBlock: true,
+  subEmotes: false,
   size: String(EMOTE_WALL_RANGES.size.fallback),
   duration: String(EMOTE_WALL_RANGES.duration.fallback),
   max: String(EMOTE_WALL_RANGES.max.fallback),
@@ -72,6 +74,7 @@ export function buildEmoteWallParams(options: EmoteWallUrlOptions): URLSearchPar
   if (options.showAllEmotes) params.append('showAllEmotes', 'true');
   if (options.hypeMode) params.append('hypeMode', 'true');
   if (!options.spamBlock) params.append('spamBlock', 'false');
+  if (options.subEmotes) params.append('subEmotes', 'true');
   for (const key of ['size', 'duration', 'max'] as const) {
     const value = clampParam(options[key], key);
     if (value !== String(EMOTE_WALL_RANGES[key].fallback)) params.append(key, value);
@@ -110,6 +113,7 @@ export function parseEmoteWallUrl(text: string): EmoteWallUrlOptions | null {
     showAllEmotes: flag('showAllEmotes', defaults.showAllEmotes),
     hypeMode: flag('hypeMode', defaults.hypeMode),
     spamBlock: flag('spamBlock', defaults.spamBlock),
+    subEmotes: flag('subEmotes', defaults.subEmotes),
     size: clampParam(params.get('size') ?? '', 'size'),
     duration: clampParam(params.get('duration') ?? '', 'duration'),
     max: clampParam(params.get('max') ?? '', 'max'),

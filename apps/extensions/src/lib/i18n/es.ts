@@ -1396,6 +1396,9 @@ export const es: typeof en = {
     spamBlock: 'Bloquear spam de emotes',
     spamBlockTip:
       'Si alguien envía más de 3 mensajes de emotes en 10 segundos, los que sobran se saltan. El mismo emote más de dos veces en 10 segundos salta solo ese emote. La vista previa lo ignora.',
+    subEmotes: 'Mostrar solo emotes de subs',
+    subEmotesTip:
+      'Muestra solo los emotes de suscriptor de tus canales. Los globales, los de 7TV y otros se saltan. La vista previa lo ignora.',
     previewTitle: 'Vista previa del Muro de Emotes',
     previewIframeTitle: 'Vista previa del Muro de Emotes',
     previewHint:
@@ -2471,6 +2474,8 @@ export const es: typeof en = {
         'El Muro de Emotes estrena un modo Estallido en el que los emotes explotan en fragmentos y chispas antes de que acabe su tiempo.',
       emoteWallRandom:
         'El Muro de Emotes estrena un modo Aleatorio que mezcla las seis animaciones.',
+      emoteWallSubEmotes:
+        'El Muro de Emotes estrena la opción Mostrar solo emotes de subs, que muestra solo los emotes de suscriptor de tus canales.',
       sproutPotLabel:
         'Sub Sprout puede mostrar una etiqueta de etapa como 3/10 encima de la maceta.',
       emoteWallLaunch:

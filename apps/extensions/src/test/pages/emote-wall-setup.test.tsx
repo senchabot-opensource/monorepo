@@ -66,10 +66,12 @@ describe('Emote Wall setup', () => {
     expectUrl({ hypeMode: true });
     await user.click(toggle(en('emoteWallSetup.spamBlock')));
     expectUrl({ spamBlock: false });
+    await user.click(toggle(en('emoteWallSetup.subEmotes')));
+    expectUrl({ subEmotes: true });
 
     expect(urlField().value).toBe(
       'http://localhost:3000/widgets/emote-wall?twitch=streamer&kick=kicker&sevenTv=false' +
-        '&mode=chaos&subsOnly=true&hypeMode=true&spamBlock=false&size=160&duration=12&max=24',
+        '&mode=chaos&subsOnly=true&hypeMode=true&spamBlock=false&subEmotes=true&size=160&duration=12&max=24',
     );
   });
 

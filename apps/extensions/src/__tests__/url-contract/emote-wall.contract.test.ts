@@ -17,16 +17,21 @@ import {
 import json from './fixtures/emote-wall.json';
 
 const fixture = asFixture<Partial<EmoteWallUrlOptions>, EmoteWallUrlOptions>(json);
+// subEmotes postdates the frozen reference, so the golden fixture cannot
+// know it: fixture inputs never set it and behave as false.
 const optionsOf = ({ input }: FixtureCase<Partial<EmoteWallUrlOptions>>): EmoteWallUrlOptions => ({
   ...fixture.defaults,
   ...input,
+  subEmotes: input.subEmotes ?? false,
 });
 
 const url = (query: string) => `${fixture.origin}/widgets/emote-wall?${query}`;
 
 describe('Emote Wall setup URL', () => {
   it('keeps the setup defaults the old URLs were built from', () => {
-    expect(DEFAULT_EMOTE_WALL_OPTIONS).toEqual(fixture.defaults);
+    // subEmotes postdates the frozen reference; the golden fixture pins the
+    // legacy defaults, and named tests cover the new param.
+    expect(DEFAULT_EMOTE_WALL_OPTIONS).toEqual({ ...fixture.defaults, subEmotes: false });
   });
 
   it.each(GROUPS)('builds the pre-redesign URL for every "%s" fixture', (group) => {
@@ -114,6 +119,7 @@ describe('Emote Wall widget reads every setup URL', () => {
       showAllEmotes: o.showAllEmotes,
       hypeMode: o.hypeMode,
       spamBlock: o.spamBlock,
+      subEmotes: o.subEmotes,
       size: clamp(o.size, 32, 256, 112),
       duration: clamp(o.duration, 2, 30, 5),
       max: clamp(o.max, 1, 120, 25),

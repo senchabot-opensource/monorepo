@@ -1,3 +1,4 @@
+import type { ChannelEmote } from '#/features/widgets/countdown/countdown-emotes';
 import { parseTwitchEmoteRanges } from '#/lib/twitch-emotes';
 export const KICK_EMOTE_RE = /\[emote:(\d+):([\w\d\-_]+)\]/g;
 
@@ -9,6 +10,32 @@ export const twitchEmoteUrl = (id: string, size: '1.0' | '2.0' | '3.0' = '3.0') 
 
 export const sevenTvEmoteUrl = (id: string) =>
   `https://cdn.7tv.app/emote/${id}/4x.webp`;
+
+// Twitch CDN and Kick CDN urls carry the native emote id: either numeric
+// ("25") or new-format ("emotesv2_9563d7c..."). 7TV urls (`/emote/` singular)
+// never match, so third-party emotes fall out on their own.
+/** `platform:id` for a native chat emote url, or null when it has none. */
+const NATIVE_EMOTE_ID_RE = /\/(?:emoticons\/v2|emotes)\/(emotesv2_[0-9a-fA-F]+|\d+)(?:\/|$)/;
+
+export function nativeEmoteKey(platform: 'twitch' | 'kick', url: string): string | null {
+  const id = NATIVE_EMOTE_ID_RE.exec(url)?.[1];
+  return id ? `${platform}:${id}` : null;
+}
+
+/**
+ * Lookup keys for a channel's subscriber emotes: the channel's native Twitch
+ * set plus the subscriber-only Kick emotes. 7TV/BTTV/FFZ sets stay out on
+ * purpose: anyone may use them, so they are not subscriber emotes.
+ */
+export function channelSubEmoteKeys(emotes: readonly ChannelEmote[]): Set<string> {
+  const keys = new Set<string>();
+  for (const emote of emotes) {
+    if (emote.provider !== 'Twitch' && !(emote.provider === 'Kick' && emote.subOnly)) continue;
+    const id = NATIVE_EMOTE_ID_RE.exec(emote.url)?.[1];
+    if (id) keys.add(`${emote.platform}:${id}`);
+  }
+  return keys;
+}
 
 export type SubscriberChatInput = {
   platform: 'twitch' | 'kick';

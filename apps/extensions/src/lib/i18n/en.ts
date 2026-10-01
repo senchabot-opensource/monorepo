@@ -1359,6 +1359,9 @@ export const en = {
     spamBlock: 'Block Emote Spam',
     spamBlockTip:
       'If a chatter sends more than 3 emote messages in 10 seconds, the extra ones are skipped. The same emote more than twice in 10 seconds skips just that emote. The preview ignores this.',
+    subEmotes: 'Show Sub Emotes Only',
+    subEmotesTip:
+      "Show only your channels' subscriber emotes. Global, 7TV and other emotes are skipped. The preview ignores this.",
     previewTitle: 'Emote Wall Preview',
     previewIframeTitle: 'Emote Wall Preview',
     previewHint: 'The preview shows sample emotes. On stream, the emotes come from your chat.',
@@ -2437,6 +2440,8 @@ export const en = {
         'Emote Wall gets a Spin mode that fades emotes in, spins them around once or twice, then fades them out in place, and Glide emotes now sway side to side as they fall.',
       emoteWallRandom:
         'Emote Wall gets a Random mode that mixes all six animations.',
+      emoteWallSubEmotes:
+        "Emote Wall gets a Show Sub Emotes Only option showing only your channels' subscriber emotes.",
       emoteWallBurst:
         'Emote Wall gets a Burst mode where emotes pop into fragments and sparks before their time ends.',
       sproutPotLabel: 'Sub Sprout can show a stage label like 3/10 above the pot.',

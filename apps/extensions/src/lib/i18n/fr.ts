@@ -1409,6 +1409,9 @@ export const fr: typeof en = {
     spamBlock: "Bloquer le spam d'emotes",
     spamBlockTip:
       "Si un viewer envoie plus de 3 messages d'emotes en 10 secondes, les suivants sont ignorés. La même emote plus de deux fois en 10 secondes n'ignore que cette emote. L'aperçu l'ignore.",
+    subEmotes: 'Afficher uniquement les emotes de subs',
+    subEmotesTip:
+      "Affiche uniquement les emotes d'abonnés de tes chaînes. Les globales, 7TV et autres sont ignorées. L'aperçu l'ignore.",
     previewTitle: "Aperçu du Mur d'emotes",
     previewIframeTitle: "Aperçu du Mur d'emotes",
     previewHint:
@@ -2487,6 +2490,8 @@ export const fr: typeof en = {
         "Le Mur d'emotes a un mode Explosion où les emotes éclatent en fragments et étincelles avant la fin de leur temps.",
       emoteWallRandom:
         "Le Mur d'emotes a un mode Aléatoire qui mélange les six animations.",
+      emoteWallSubEmotes:
+        "Le Mur d'emotes a une option Afficher uniquement les emotes de subs qui ne montre que les emotes d'abonnés de tes chaînes.",
       sproutPotLabel:
         'Sub Sprout peut afficher une étiquette de stade comme 3/10 au-dessus du pot.',
       emoteWallLaunch:

@@ -1390,6 +1390,9 @@ export const pt: typeof en = {
     spamBlock: 'Bloquear spam de emotes',
     spamBlockTip:
       'Se alguém manda mais de 3 mensagens de emote em 10 segundos, as extras são ignoradas. O mesmo emote mais de duas vezes em 10 segundos ignora só aquele emote. A prévia ignora isso.',
+    subEmotes: 'Mostrar só emotes de subs',
+    subEmotesTip:
+      'Mostra só emotes de inscritos dos seus canais. Globais, 7TV e outros são ignorados. A prévia ignora isso.',
     previewTitle: 'Prévia do Mural de Emotes',
     previewIframeTitle: 'Prévia do Mural de Emotes',
     previewHint: 'A prévia mostra emotes de exemplo. Na live, os emotes vêm do seu chat.',
@@ -2463,6 +2466,8 @@ export const pt: typeof en = {
         'O Mural de Emotes ganha o modo Explosão, em que os emotes explodem em fragmentos e faíscas antes do fim do tempo.',
       emoteWallRandom:
         'O Mural de Emotes ganha o modo Aleatório, que mistura as seis animações.',
+      emoteWallSubEmotes:
+        'O Mural de Emotes ganha a opção Mostrar só emotes de subs, que mostra só os emotes de inscritos dos seus canais.',
       sproutPotLabel: 'O Sub Sprout pode mostrar um rótulo de estágio tipo 3/10 acima do vaso.',
       emoteWallLaunch:
         'Chegou o Mural de Emotes: mensagens só de emotes da Twitch e da Kick voam pela tela no modo Calmo ou Caos.',

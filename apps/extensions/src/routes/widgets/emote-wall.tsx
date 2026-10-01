@@ -14,6 +14,7 @@ const searchSchema = z.object({
   showAllEmotes: z.coerce.boolean().optional().default(false),
   hypeMode: z.coerce.boolean().optional().default(false),
   spamBlock: z.coerce.boolean().optional().default(true),
+  subEmotes: z.coerce.boolean().optional().default(false),
   size: clampedNumber(32, 256, 112),
   duration: clampedNumber(2, 30, 5),
   max: clampedNumber(1, 120, 25),
@@ -35,6 +36,7 @@ function RouteComponent() {
     <div className="size-full min-h-screen bg-transparent">
       <EmoteWall
         twitchChannel={search.twitch}
+        kickChannel={search.kick ?? null}
         kickChatroomId={kick?.chatroomId ?? null}
         sevenTvEnabled={search.sevenTv !== false}
         mode={search.mode}
@@ -43,6 +45,7 @@ function RouteComponent() {
         showAllEmotes={search.showAllEmotes}
         hypeMode={search.hypeMode}
         spamBlock={search.spamBlock}
+        subEmotes={search.subEmotes}
         emoteSize={search.size}
         durationSec={search.duration}
         maxEmotes={search.max}

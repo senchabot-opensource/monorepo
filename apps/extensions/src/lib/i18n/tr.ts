@@ -1369,6 +1369,9 @@ export const tr: typeof en = {
     spamBlock: 'Emote Spamını Engelle',
     spamBlockTip:
       "Biri 10 saniyede 3'ten fazla emote mesajı atarsa fazlası atlanır. Aynı emote'u 10 saniyede 2'den fazla atarsa sadece o emote atlanır. Önizlemeye yansımaz.",
+    subEmotes: "Sadece Abone Emote'ları Göster",
+    subEmotesTip:
+      "Sadece kanallarının abone emote'ları göster. Global, 7TV ve diğer emote'lar atlanır. Önizlemeye yansımaz.",
     previewTitle: 'Emote Duvarı Önizleme',
     previewIframeTitle: 'Emote Duvarı Önizleme',
     previewHint: "Önizlemede örnek emote'lar uçuşur. Yayında emote'lar kendi sohbetinden gelir.",
@@ -2425,6 +2428,8 @@ export const tr: typeof en = {
         "Emote Duvarı'na emote'ların süresi dolmadan patlayıp parçalara ve kıvılcımlara ayrıldığı Patlama modu eklendi.",
       emoteWallRandom:
         "Emote Duvarı'na altı animasyonu karıştıran Rastgele modu eklendi.",
+      emoteWallSubEmotes:
+        "Emote Duvarı'na sadece kanallarının abone emote'larını gösteren Sadece Abone Emote'ları Göster seçeneği eklendi.",
       sproutPotLabel: 'Sub Sprout saksının üstünde 3/10 gibi bir aşama etiketi gösterebiliyor.',
       emoteWallLaunch:
         "Emote Duvarı geldi: sadece emote'tan oluşan Twitch ve Kick mesajları Sakin ya da Kaos modunda ekranda uçuşuyor.",

@@ -614,7 +614,7 @@ export const APP_FEATURES: Record<WidgetId, Record<Locale, readonly string[]>> =
       "7TV emotes from the Twitch channel's active set, in Kick chat too",
       'Calm, Chaos, Bounce, Glide, Spin, Burst and Random animation modes',
       'Emote size 32 to 256 px, 2 to 30 seconds on screen, up to 120 at once',
-      'Subscribers only, longer sub emotes, Hype Mode and emote spam blocking',
+      'Subscribers only, sub emotes only, longer sub emotes, Hype Mode and emote spam blocking',
       'Recommended browser source size: 1920x1080',
     ],
     de: [
@@ -623,7 +623,7 @@ export const APP_FEATURES: Record<WidgetId, Record<Locale, readonly string[]>> =
       '7TV-Emotes aus dem aktiven Set des Twitch-Kanals, auch im Kick-Chat',
       'Animationsmodi Ruhig, Chaos, Abprallen, Gleiten, Drehung, Explosion und Zufällig',
       'Emote-Größe 32 bis 256 px, 2 bis 30 Sekunden sichtbar, bis zu 120 gleichzeitig',
-      'Nur Subs, längere Sub-Emotes, Hype-Modus und Schutz vor Emote-Spam',
+      'Nur Subs, nur Sub-Emotes, längere Sub-Emotes, Hype-Modus und Schutz vor Emote-Spam',
       'Empfohlene Größe der Browserquelle: 1920x1080',
     ],
     tr: [
@@ -632,7 +632,7 @@ export const APP_FEATURES: Record<WidgetId, Record<Locale, readonly string[]>> =
       "Twitch kanalının aktif 7TV setindeki emote'lar, Kick sohbetinde de",
       'Sakin, Kaos, Sekme, Süzülme, Dönme, Patlama ve Rastgele animasyon modları',
       '32 ile 256 px arası emote boyutu, ekranda 2 ile 30 saniye, aynı anda en fazla 120 emote',
-      "Sadece aboneler, abone emote'larına uzun süre, Hype Modu ve emote spamı engelleme",
+      "Sadece aboneler, sadece abone emote'ları, abone emote'larına uzun süre, Hype Modu ve emote spamı engelleme",
       'Önerilen Tarayıcı Kaynağı boyutu: 1920x1080',
     ],
     es: [
@@ -641,7 +641,7 @@ export const APP_FEATURES: Record<WidgetId, Record<Locale, readonly string[]>> =
       'Emotes de 7TV del set activo del canal de Twitch, también en el chat de Kick',
       'Modos de animación Tranquilo, Caos, Rebote, Planeo, Giro, Estallido y Aleatorio',
       'Emotes de 32 a 256 px, de 2 a 30 segundos en pantalla, hasta 120 a la vez',
-      'Solo suscriptores, emotes de subs más largos, modo hype y bloqueo de spam de emotes',
+      'Solo suscriptores, solo emotes de subs, emotes de subs más largos, modo hype y bloqueo de spam de emotes',
       'Tamaño recomendado de la fuente de navegador: 1920x1080',
     ],
     fr: [
@@ -650,7 +650,7 @@ export const APP_FEATURES: Record<WidgetId, Record<Locale, readonly string[]>> =
       'Emotes 7TV du set actif de la chaîne Twitch, dans le chat Kick aussi',
       "Modes d'animation Calme, Chaos, Rebond, Glissade, Rotation, Explosion et Aléatoire",
       "Emotes de 32 à 256 px, de 2 à 30 secondes à l'écran, jusqu'à 120 à la fois",
-      "Abonnés uniquement, emotes des subs plus longues, Mode hype et blocage du spam d'emotes",
+      "Abonnés uniquement, emotes de subs uniquement, emotes des subs plus longues, Mode hype et blocage du spam d'emotes",
       'Taille de source navigateur recommandée : 1920x1080',
     ],
     ja: [
@@ -659,7 +659,7 @@ export const APP_FEATURES: Record<WidgetId, Record<Locale, readonly string[]>> =
       'Twitchチャンネルのアクティブなセットの7TVエモートを、Kickのチャットでも表示',
       'おだやか、カオス、バウンス、グライド、スピン、バースト、ランダムの7つのアニメーションモード',
       'エモートのサイズは32から256px、表示時間は2から30秒、同時表示は最大120個',
-      'サブスク限定、サブスクのエモートを長く表示、ハイプモード、エモートスパムのブロック',
+      'サブスク限定、サブスクのエモートのみ、サブスクのエモートを長く表示、ハイプモード、エモートスパムのブロック',
       'ブラウザソースの推奨サイズ: 1920x1080',
     ],
     pt: [
@@ -668,7 +668,7 @@ export const APP_FEATURES: Record<WidgetId, Record<Locale, readonly string[]>> =
       'Emotes da 7TV do conjunto ativo do canal da Twitch, no chat da Kick também',
       'Modos de animação Calmo, Caos, Quicar, Deslize, Giro, Explosão e Aleatório',
       'Emotes de 32 a 256 px, de 2 a 30 segundos na tela, até 120 ao mesmo tempo',
-      'Só inscritos, emotes de sub por mais tempo, Modo hype e bloqueio de spam de emotes',
+      'Só inscritos, só emotes de subs, emotes de sub por mais tempo, Modo hype e bloqueio de spam de emotes',
       'Tamanho recomendado da fonte de navegador: 1920x1080',
     ],
   },
