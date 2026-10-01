@@ -1,5 +1,6 @@
 import { act, render } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import type { ChannelEmote } from '#/features/widgets/countdown/countdown-emotes';
 import { FakeWebSocket } from '#/test/browser';
 import { kickEmoteUrl, sevenTvEmoteUrl, twitchEmoteUrl } from './emote-utils';
 import { EmoteWall } from './emote-wall';
@@ -7,6 +8,13 @@ import { EmoteWall } from './emote-wall';
 const sevenTv = vi.hoisted(() => ({ map: new Map<string, string>() }));
 vi.mock('#/features/widgets/chat-widget/use-7tv-emotes', () => ({
   use7tvEmotes: (channel: string | null) => (channel ? sevenTv.map : new Map()),
+}));
+
+const channelEmotesLoad = vi.hoisted(() => ({
+  load: vi.fn(async (_twitch: string, _kick: string): Promise<ChannelEmote[]> => []),
+}));
+vi.mock('#/features/widgets/countdown/countdown-emotes', () => ({
+  loadChannelEmotes: channelEmotesLoad.load,
 }));
 
 const socket = (host: string) => {
@@ -212,5 +220,83 @@ describe('EmoteWall', () => {
     const wrapper = document.querySelector('canvas')?.parentElement as HTMLElement | null;
     expect(wrapper?.style.transform).toMatch(/^translate\(-?\d+px, -?\d+px\)$/);
     expect(wrapper?.style.transition).toMatch(/^transform \d+ms linear$/);
+  });
+
+  it('shows only the channels subscriber emotes with Sub Emotes Only on', async () => {
+    channelEmotesLoad.load.mockResolvedValue([
+      { name: 'SubWow', url: twitchEmoteUrl('12345'), thumb: twitchEmoteUrl('12345'), platform: 'twitch', provider: 'Twitch' },
+      { name: 'KickSub', url: kickEmoteUrl('999'), thumb: kickEmoteUrl('999'), platform: 'kick', provider: 'Kick', subOnly: true },
+      { name: 'KickFree', url: kickEmoteUrl('1000'), thumb: kickEmoteUrl('1000'), platform: 'kick', provider: 'Kick', subOnly: false },
+    ]);
+    sevenTv.map = new Map([['KEKW', 's2']]);
+    mount({ subEmotes: true });
+    await act(async () => {});
+    say('Alice', 'Kappa', '25:0-4');
+    say('Bob', 'SubWow', '12345:0-5');
+    say('Carol', 'KEKW');
+    expect(images()).toEqual([twitchEmoteUrl('12345')]);
+  });
+
+  it('shows only subscriber-only Kick emotes with Sub Emotes Only on', async () => {
+    channelEmotesLoad.load.mockResolvedValue([
+      { name: 'KickSub', url: kickEmoteUrl('999'), thumb: kickEmoteUrl('999'), platform: 'kick', provider: 'Kick', subOnly: true },
+      { name: 'KickFree', url: kickEmoteUrl('1000'), thumb: kickEmoteUrl('1000'), platform: 'kick', provider: 'Kick', subOnly: false },
+    ]);
+    render(<EmoteWall kickChannel="kicker" kickChatroomId="42" subEmotes />);
+    act(() => socket('pusher').open());
+    await act(async () => {});
+    kickSay('fan', '[emote:999:KickSub]');
+    kickSay('fan2', '[emote:1000:KickFree]');
+    expect(images()).toEqual([kickEmoteUrl('999')]);
+  });
+
+  it('shows new-format sub emotes with Sub Emotes Only on', async () => {
+    const id = 'emotesv2_9563d7c198dd422e8253c38cb1249cdd';
+    channelEmotesLoad.load.mockResolvedValue([
+      { name: 'NewSub', url: twitchEmoteUrl(id), thumb: twitchEmoteUrl(id), platform: 'twitch', provider: 'Twitch' },
+    ]);
+    mount({ subEmotes: true });
+    await act(async () => {});
+    say('Alice', 'Kappa', '25:0-4');
+    say('Bob', 'NewSub', `${id}:0-5`);
+    expect(images()).toEqual([twitchEmoteUrl(id)]);
+  });
+
+  it('recovers a channel whose first lookup comes back empty', async () => {
+    const twitchEntry = {
+      name: 'SubWow',
+      url: twitchEmoteUrl('12345'),
+      thumb: twitchEmoteUrl('12345'),
+      platform: 'twitch',
+      provider: 'Twitch',
+    } as const;
+    const kickEntry = {
+      name: 'KickSub',
+      url: kickEmoteUrl('999'),
+      thumb: kickEmoteUrl('999'),
+      platform: 'kick',
+      provider: 'Kick',
+      subOnly: true,
+    } as const;
+    // Kick loads fine while Twitch comes back empty. The old single lookup
+    // saw the non-empty combined set and never retried, so Twitch stayed
+    // dark behind the Kick keys forever; per-channel loading recovers it.
+    let twitchReady = false;
+    channelEmotesLoad.load.mockImplementation(async (twitch: string, kick: string) => {
+      if (twitch && kick) return [kickEntry];
+      if (twitch) return twitchReady ? [twitchEntry] : [];
+      return [kickEntry];
+    });
+    render(<EmoteWall twitchChannel="streamer" kickChannel="kicker" subEmotes />);
+    act(() => socket('twitch').open());
+    await act(async () => {});
+    say('Bob', 'SubWow', '12345:0-5');
+    expect(images()).toEqual([]);
+    twitchReady = true;
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(5000);
+    });
+    say('Bob', 'SubWow', '12345:0-5');
+    expect(images()).toEqual([twitchEmoteUrl('12345')]);
   });
 });

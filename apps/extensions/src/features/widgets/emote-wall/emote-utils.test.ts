@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
+import type { ChannelEmote } from '#/features/widgets/countdown/countdown-emotes';
 import {
+  channelSubEmoteKeys,
   checkHype,
   createSpamState,
   filterSpam,
@@ -9,8 +11,53 @@ import {
   getSevenTvEmoteOnlyUrls,
   getTwitchNativeEmoteOnlyUrls,
   isSubscriberMessage,
+  kickEmoteUrl,
+  nativeEmoteKey,
+  sevenTvEmoteUrl,
+  twitchEmoteUrl,
   type HypeState,
 } from './emote-utils';
+
+describe('nativeEmoteKey', () => {
+  it('keys native urls and rejects the rest', () => {
+    expect(nativeEmoteKey('twitch', twitchEmoteUrl('25'))).toBe('twitch:25');
+    expect(nativeEmoteKey('kick', kickEmoteUrl('37226'))).toBe('kick:37226');
+    expect(nativeEmoteKey('twitch', sevenTvEmoteUrl('s1'))).toBeNull();
+    expect(nativeEmoteKey('twitch', '')).toBeNull();
+  });
+
+  it('keys new-format emotesv2 ids', () => {
+    const id = 'emotesv2_9563d7c198dd422e8253c38cb1249cdd';
+    expect(nativeEmoteKey('twitch', twitchEmoteUrl(id))).toBe(`twitch:${id}`);
+  });
+});
+
+describe('channelSubEmoteKeys', () => {
+  const entry = (
+    platform: ChannelEmote['platform'],
+    provider: ChannelEmote['provider'],
+    url: string,
+    subOnly = false,
+  ): ChannelEmote => ({ name: 'E', url, thumb: url, platform, provider, subOnly });
+
+  it('keeps Twitch channel ids and subscriber-only Kick ids', () => {
+    expect(
+      channelSubEmoteKeys([
+        entry('twitch', 'Twitch', twitchEmoteUrl('1')),
+        entry('twitch', 'Twitch', twitchEmoteUrl('emotesv2_9563d7c198dd422e8253c38cb1249cdd')),
+        entry('kick', 'Kick', kickEmoteUrl('11'), true),
+        entry('kick', 'Kick', kickEmoteUrl('12'), false),
+        entry('twitch', '7TV', sevenTvEmoteUrl('e1')),
+      ]),
+    ).toEqual(new Set(['twitch:1', 'twitch:emotesv2_9563d7c198dd422e8253c38cb1249cdd', 'kick:11']));
+  });
+
+  it('skips entries whose id cannot be read', () => {
+    expect(
+      channelSubEmoteKeys([entry('twitch', 'Twitch', 'https://example.com/e.png')]),
+    ).toEqual(new Set());
+  });
+});
 
 describe('getKickEmoteOnlyUrls', () => {
   it('detects a single kick emote-only message', () => {

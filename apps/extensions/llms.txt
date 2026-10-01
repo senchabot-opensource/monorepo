@@ -222,6 +222,7 @@ A floating emote overlay that turns emote-only Twitch, Kick, and 7TV chat messag
   - `showAllEmotes` (`true` | `false`, default `false`, also show emotes mixed into normal text messages)
   - `hypeMode` (`true` | `false`, default `false`, only show an emote after 2+ distinct users send it within 15s)
   - `spamBlock` (`true` | `false`, default `true`, block rapid same-emote repeats from one user)
+  - `subEmotes` (`true` | `false`, default `false`, only the channels' subscriber emotes appear)
   - `size` (number 32–256, default `112`), `duration` (seconds 2–30, default `5`), `max` (1–120 simultaneous emotes, default `25`)
   - `mock` (`true` | `false`, simulated emotes for preview/testing)
 

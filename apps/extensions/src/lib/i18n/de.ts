@@ -1363,6 +1363,9 @@ export const de: typeof en = {
     spamBlock: 'Emote-Spam blocken',
     spamBlockTip:
       'Schickt ein Chatter mehr als 3 Emote-Nachrichten in 10 Sekunden, werden die zusätzlichen übersprungen. Dasselbe Emote mehr als zweimal in 10 Sekunden überspringt nur dieses Emote. Die Vorschau ignoriert das.',
+    subEmotes: 'Nur Sub-Emotes zeigen',
+    subEmotesTip:
+      'Zeige nur Sub-Emotes deiner Kanäle. Globale, 7TV- und andere Emotes werden übersprungen. Die Vorschau ignoriert das.',
     previewTitle: 'Vorschau der Emote-Wand',
     previewIframeTitle: 'Vorschau der Emote-Wand',
     previewHint: 'Die Vorschau zeigt Beispiel-Emotes. Im Stream kommen die Emotes aus deinem Chat.',
@@ -2443,6 +2446,8 @@ export const de: typeof en = {
         'Die Emote-Wand bekommt einen Explosions-Modus, in dem Emotes vor Ablauf ihrer Zeit in Fragmente und Funken zerbersten.',
       emoteWallRandom:
         'Die Emote-Wand bekommt einen Zufällig-Modus, der alle sechs Animationen mischt.',
+      emoteWallSubEmotes:
+        'Die Emote-Wand bekommt eine Nur-Sub-Emotes-zeigen-Option, die nur die Sub-Emotes deiner Kanäle zeigt.',
       sproutPotLabel: 'Sub Sprout kann über dem Topf die Stufe anzeigen, z. B. 3/10.',
       emoteWallLaunch:
         'Die Emote-Wand ist da: Twitch- und Kick-Nachrichten nur aus Emotes fliegen im Modus Ruhig oder Chaos über den Screen.',

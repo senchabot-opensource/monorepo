@@ -121,6 +121,7 @@ URL parameters (all optional; numbers out of range are clamped, invalid ones use
 | showAllEmotes | true also uses emotes inside normal messages | false |
 | hypeMode | true shows an emote only after 2 or more chatters send it within 15 seconds, then at most once every 15 seconds | false |
 | spamBlock | true skips a chatter's emote messages beyond 3 in 10 seconds, and the same emote beyond 2 in 10 seconds | true |
+| subEmotes | true shows only the channels' subscriber emotes | false |
 | mock | true plays sample emotes | false |
 
 ## Sub Sprout

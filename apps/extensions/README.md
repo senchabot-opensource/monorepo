@@ -255,7 +255,7 @@ You can also build the widget URL directly without the setup page:
 https://extensions.senchabot.com/widgets/emote-wall?twitch=YOUR_TWITCH_CHANNEL&kick=YOUR_KICK_CHANNEL&mode=chaos
 ```
 
-**URL parameters:** `twitch`, `kick`, `sevenTv` (`true` | `false`), `mode` (`calm` | `chaos` | `bounce` | `glide` | `spin` | `burst` | `random`), `subsOnly` (`true` | `false`), `subDurationX2` (`true` | `false`, sub emotes stay 2x longer), `showAllEmotes` (`true` | `false`, also show emotes in normal messages), `hypeMode` (`true` | `false`, only show emotes doubled by 2+ users), `spamBlock` (`true` | `false`, default on, block same-user emote spam), `size` (32–256), `duration` (2–30 seconds), `max` (1–120), `mock` (`true` | `false`).
+**URL parameters:** `twitch`, `kick`, `sevenTv` (`true` | `false`), `mode` (`calm` | `chaos` | `bounce` | `glide` | `spin` | `burst` | `random`), `subsOnly` (`true` | `false`), `subDurationX2` (`true` | `false`, sub emotes stay 2x longer), `showAllEmotes` (`true` | `false`, also show emotes in normal messages), `hypeMode` (`true` | `false`, only show emotes doubled by 2+ users), `spamBlock` (`true` | `false`, default on, block same-user emote spam), `subEmotes` (`true` | `false`, only the channels' subscriber emotes), `size` (32–256), `duration` (2–30 seconds), `max` (1–120), `mock` (`true` | `false`).
 
 ## Getting Started (Local Development)
 

@@ -1,15 +1,19 @@
 import React from 'react';
 import { use7tvEmotes } from '#/features/widgets/chat-widget/use-7tv-emotes';
+import { loadChannelEmotes } from '#/features/widgets/countdown/countdown-emotes';
+import { useRetryingEffect } from '#/hooks/use-retrying-effect';
 import { KickChat } from '#/lib/kick';
 import { TwitchChat } from '#/lib/twitch';
 import type { ChatMessagesType } from '#/features/widgets/chat-widget/chat-messages';
 import {
+  channelSubEmoteKeys,
   checkHype,
   createSpamState,
   filterSpam,
   getAnyEmoteUrls,
   getEmoteOnlyUrls,
   isSubscriberMessage,
+  nativeEmoteKey,
   type HypeState,
   type SpamState,
 } from './emote-utils';
@@ -34,6 +38,7 @@ import {
 export type { EmoteWallMode };
 export type EmoteWallProps = {
   twitchChannel?: string | null;
+  kickChannel?: string | null;
   kickChatroomId?: string | null;
   sevenTvEnabled?: boolean;
   emoteSize?: number;
@@ -46,6 +51,7 @@ export type EmoteWallProps = {
   showAllEmotes?: boolean;
   hypeMode?: boolean;
   spamBlock?: boolean;
+  subEmotes?: boolean;
 };
 
 const MOCK_EMOTES: { name: string; src: string; source: 'twitch' | '7tv' }[] = [
@@ -416,6 +422,7 @@ const BounceEmote = React.memo(function BounceEmote({
 
 export function EmoteWall({
   twitchChannel,
+  kickChannel,
   kickChatroomId,
   sevenTvEnabled = true,
   emoteSize = 112,
@@ -428,9 +435,11 @@ export function EmoteWall({
   showAllEmotes = false,
   hypeMode = false,
   spamBlock = true,
+  subEmotes = false,
 }: EmoteWallProps) {
   const normalizedTwitch = twitchChannel?.trim() || null;
-  const normalizedKick = kickChatroomId?.trim() || null;
+  const normalizedKick = kickChannel?.trim() || null;
+  const normalizedKickChatroom = kickChatroomId?.trim() || null;
 
   const sevenTvMap = use7tvEmotes(
     sevenTvEnabled ? normalizedTwitch : null,
@@ -446,13 +455,42 @@ export function EmoteWall({
   const showAllEmotesRef = React.useRef(showAllEmotes);
   const hypeModeRef = React.useRef(hypeMode);
   const spamBlockRef = React.useRef(spamBlock);
+  const subEmotesRef = React.useRef(subEmotes);
+  // `platform:id` keys of the channels' subscriber emotes, empty until the
+  // channel lookup resolves (like the 7TV map, matching nothing until then).
+  const subKeysRef = React.useRef<Set<string>>(new Set());
   React.useEffect(() => {
     subsOnlyRef.current = subsOnly;
     subDurationX2Ref.current = subDurationX2;
     showAllEmotesRef.current = showAllEmotes;
     hypeModeRef.current = hypeMode;
     spamBlockRef.current = spamBlock;
-  }, [subsOnly, subDurationX2, showAllEmotes, hypeMode, spamBlock]);
+    subEmotesRef.current = subEmotes;
+  }, [subsOnly, subDurationX2, showAllEmotes, hypeMode, spamBlock, subEmotes]);
+
+  // Subscriber emote keys for the Sub Emotes Only filter, from the same
+  // channel lookup the goal widgets' icon picker uses. Each channel loads
+  // and retries on its own, so a Twitch hiccup never stays hidden behind
+  // loaded Kick keys (or vice versa). Retried while empty: failed requests
+  // are not cached, so a bad minute recovers, while a genuinely empty set
+  // resolves from cache without network traffic.
+  useRetryingEffect(
+    async (isCurrent) => {
+      if (!subEmotes) return false;
+      const [twitchList, kickList] = await Promise.all([
+        normalizedTwitch ? loadChannelEmotes(normalizedTwitch, '') : [],
+        normalizedKick ? loadChannelEmotes('', normalizedKick) : [],
+      ]);
+      if (!isCurrent()) return false;
+      const twitchKeys = channelSubEmoteKeys(twitchList);
+      const kickKeys = channelSubEmoteKeys(kickList);
+      subKeysRef.current = new Set([...twitchKeys, ...kickKeys]);
+      return (
+        (!!normalizedTwitch && twitchKeys.size === 0) || (!!normalizedKick && kickKeys.size === 0)
+      );
+    },
+    [normalizedTwitch, normalizedKick, subEmotes],
+  );
 
   const hypeRef = React.useRef<HypeState>(new Map());
   const spamRef = React.useRef<SpamState>(createSpamState());
@@ -537,12 +575,22 @@ export function EmoteWall({
         : getEmoteOnlyUrls(chatInput, sevenTvRef.current);
       if (urls.length === 0) return;
 
+      // Sub Emotes Only: keep native emotes whose id is in the channels'
+      // subscriber sets. 7TV and other urls have no native id and drop out.
+      let fresh = urls;
+      if (subEmotesRef.current) {
+        fresh = urls.filter((url) => {
+          const key = nativeEmoteKey(chatInput.platform, url);
+          return key !== null && subKeysRef.current.has(key);
+        });
+        if (fresh.length === 0) return;
+      }
+
       const userLower = msg.user.toLowerCase();
       const now = Date.now();
 
       // General spam prevention: same user flooding the same emote or
       // emote messages in a short time gets filtered out.
-      let fresh = urls;
       if (spamBlockRef.current) {
         fresh = filterSpam(spamRef.current, userLower, fresh, now);
         if (fresh.length === 0) return;
@@ -572,10 +620,10 @@ export function EmoteWall({
   }, [normalizedTwitch, mock, handleMessage]);
 
   React.useEffect(() => {
-    if (mock || !normalizedKick) return;
-    const client = new KickChat(normalizedKick, handleMessage);
+    if (mock || !normalizedKickChatroom) return;
+    const client = new KickChat(normalizedKickChatroom, handleMessage);
     return () => client.disconnect();
-  }, [normalizedKick, mock, handleMessage]);
+  }, [normalizedKickChatroom, mock, handleMessage]);
 
   // Mock mode for setup preview / browser-source testing.
   // Honors the 7TV toggle so the preview matches live behavior.

@@ -20,6 +20,7 @@ const defaults: EmoteWallUrlOptions = {
   showAllEmotes: false,
   hypeMode: false,
   spamBlock: true,
+  subEmotes: false,
   size: '112',
   duration: '5',
   max: '25',
@@ -72,6 +73,7 @@ describe('buildEmoteWallUrl', () => {
         showAllEmotes: true,
         hypeMode: true,
         spamBlock: false,
+        subEmotes: true,
         size: '160',
         duration: '12',
         max: '40',
@@ -79,7 +81,7 @@ describe('buildEmoteWallUrl', () => {
     ).toBe(
       `${ORIGIN}/widgets/emote-wall?twitch=sencha&kick=somekick&sevenTv=false&mode=bounce` +
         '&subsOnly=true&subDurationX2=true&showAllEmotes=true&hypeMode=true&spamBlock=false' +
-        '&size=160&duration=12&max=40',
+        '&subEmotes=true&size=160&duration=12&max=40',
     );
   });
 
@@ -161,6 +163,7 @@ describe('parseEmoteWallUrl', () => {
       showAllEmotes: true,
       hypeMode: true,
       spamBlock: false,
+      subEmotes: true,
       size: '200',
       duration: '12',
       max: '60',
@@ -195,6 +198,7 @@ describe('parseEmoteWallUrl', () => {
       `${ORIGIN}/widgets/emote-wall?twitch=foo&kick=bar&subsOnly=true&subDurationX2=true&size=160`,
       `${ORIGIN}/widgets/emote-wall?twitch=foo&showAllEmotes=true&hypeMode=true&spamBlock=false`,
       `${ORIGIN}/widgets/emote-wall?kick=bar&mode=chaos&duration=12&max=40`,
+      `${ORIGIN}/widgets/emote-wall?twitch=foo&subEmotes=true`,
       `${ORIGIN}/widgets/emote-wall?twitch=foo&kick=bar&sevenTv=false&mode=bounce&subsOnly=true&subDurationX2=true&showAllEmotes=true&hypeMode=true&spamBlock=false&size=256&duration=30&max=120`,
     ];
     for (const url of urls) expect(roundTrip(url)).toBe(url);

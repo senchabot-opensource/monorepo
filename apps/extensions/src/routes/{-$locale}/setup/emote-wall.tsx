@@ -187,6 +187,12 @@ function EmoteWallSetup() {
             checked={options.spamBlock}
             onChange={(value) => update('spamBlock', value)}
           />
+          <Switch
+            label={t('emoteWallSetup.subEmotes')}
+            tip={t('emoteWallSetup.subEmotesTip')}
+            checked={options.subEmotes}
+            onChange={(value) => update('subEmotes', value)}
+          />
         </div>
       </SettingsGroup>
     </>
