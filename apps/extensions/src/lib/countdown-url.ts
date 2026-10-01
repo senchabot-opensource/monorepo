@@ -11,7 +11,7 @@ import {
 } from './url-params';
 
 /** Which break the countdown covers; it only picks the default wording and icon. */
-export const COUNTDOWN_SCENES = ['starting', 'break', 'ending'] as const;
+export const COUNTDOWN_SCENES = ['starting', 'break', 'ending', 'pomodoro'] as const;
 export type CountdownScene = (typeof COUNTDOWN_SCENES)[number];
 
 export const COUNTDOWN_COLORS = ['purple', 'green', 'red', 'gold', 'cyan', 'pink'] as const;
@@ -48,12 +48,16 @@ export interface CountdownSettings {
   iconBreak: string;
   /** Custom icon for the ending scene; empty uses the scene icon. */
   iconEnding: string;
+  /** Custom icon for the pomodoro scene; empty uses the scene icon. */
+  iconPomodoro: string;
   /** Channel emote image for the starting scene; empty falls back to the icon above. */
   iconUrlStarting: string;
   /** Channel emote image for the break scene; empty falls back to the icon above. */
   iconUrlBreak: string;
   /** Channel emote image for the ending scene; empty falls back to the icon above. */
   iconUrlEnding: string;
+  /** Channel emote image for the pomodoro scene; empty falls back to the icon above. */
+  iconUrlPomodoro: string;
   ending: CountdownEnding;
   look: CountdownLook;
   color: CountdownColor;
@@ -76,9 +80,11 @@ export const DEFAULT_COUNTDOWN_SETTINGS: CountdownSettings = {
   iconStarting: '',
   iconBreak: '',
   iconEnding: '',
+  iconPomodoro: '',
   iconUrlStarting: '',
   iconUrlBreak: '',
   iconUrlEnding: '',
+  iconUrlPomodoro: '',
   ending: 'text',
   look: 'card',
   color: 'purple',
@@ -139,6 +145,7 @@ function buildParams(
     iconStarting: clip(settings.iconStarting.trim(), ICON_MAX_LENGTH),
     iconBreak: clip(settings.iconBreak.trim(), ICON_MAX_LENGTH),
     iconEnding: clip(settings.iconEnding.trim(), ICON_MAX_LENGTH),
+    iconPomodoro: clip(settings.iconPomodoro.trim(), ICON_MAX_LENGTH),
   };
   if (title) params.set('title', title);
   if (note) params.set('note', note);
@@ -150,6 +157,7 @@ function buildParams(
     iconUrlStarting: settings.iconUrlStarting.trim(),
     iconUrlBreak: settings.iconUrlBreak.trim(),
     iconUrlEnding: settings.iconUrlEnding.trim(),
+    iconUrlPomodoro: settings.iconUrlPomodoro.trim(),
   };
   for (const [key, url] of Object.entries(iconUrls))
     if (url) params.set(key, url.slice(0, ICON_URL_MAX_LENGTH));
@@ -207,9 +215,11 @@ export function readCountdownSettings(
     iconStarting: clip((params.get('iconStarting') ?? '').trim(), ICON_MAX_LENGTH),
     iconBreak: clip((params.get('iconBreak') ?? '').trim(), ICON_MAX_LENGTH),
     iconEnding: clip((params.get('iconEnding') ?? '').trim(), ICON_MAX_LENGTH),
+    iconPomodoro: clip((params.get('iconPomodoro') ?? '').trim(), ICON_MAX_LENGTH),
     iconUrlStarting: (params.get('iconUrlStarting') ?? '').trim().slice(0, ICON_URL_MAX_LENGTH),
     iconUrlBreak: (params.get('iconUrlBreak') ?? '').trim().slice(0, ICON_URL_MAX_LENGTH),
     iconUrlEnding: (params.get('iconUrlEnding') ?? '').trim().slice(0, ICON_URL_MAX_LENGTH),
+    iconUrlPomodoro: (params.get('iconUrlPomodoro') ?? '').trim().slice(0, ICON_URL_MAX_LENGTH),
     ending: COUNTDOWN_ENDINGS.includes(ending) ? ending : defaults.ending,
     look: COUNTDOWN_LOOKS.includes(look) ? look : defaults.look,
     color: COUNTDOWN_COLORS.includes(color) ? color : defaults.color,
@@ -220,26 +230,39 @@ export function readCountdownSettings(
 
 /** The streamer's custom icon for `scene`, or empty when the scene icon applies. */
 export function sceneIcon(
-  settings: Pick<CountdownSettings, 'iconStarting' | 'iconBreak' | 'iconEnding'>,
+  settings: Pick<CountdownSettings, 'iconStarting' | 'iconBreak' | 'iconEnding' | 'iconPomodoro'>,
   scene: CountdownScene,
 ): string {
-  return scene === 'starting'
-    ? settings.iconStarting
-    : scene === 'break'
-      ? settings.iconBreak
-      : settings.iconEnding;
+  switch (scene) {
+    case 'starting':
+      return settings.iconStarting;
+    case 'break':
+      return settings.iconBreak;
+    case 'ending':
+      return settings.iconEnding;
+    case 'pomodoro':
+      return settings.iconPomodoro;
+  }
 }
 
 /** The streamer's channel emote image for `scene`, or empty when the text icon applies. */
 export function sceneIconUrl(
-  settings: Pick<CountdownSettings, 'iconUrlStarting' | 'iconUrlBreak' | 'iconUrlEnding'>,
+  settings: Pick<
+    CountdownSettings,
+    'iconUrlStarting' | 'iconUrlBreak' | 'iconUrlEnding' | 'iconUrlPomodoro'
+  >,
   scene: CountdownScene,
 ): string {
-  return scene === 'starting'
-    ? settings.iconUrlStarting
-    : scene === 'break'
-      ? settings.iconUrlBreak
-      : settings.iconUrlEnding;
+  switch (scene) {
+    case 'starting':
+      return settings.iconUrlStarting;
+    case 'break':
+      return settings.iconUrlBreak;
+    case 'ending':
+      return settings.iconUrlEnding;
+    case 'pomodoro':
+      return settings.iconUrlPomodoro;
+  }
 }
 
 /** Reverse of buildCountdownUrl; null for anything that isn't a Stream Countdown URL. */

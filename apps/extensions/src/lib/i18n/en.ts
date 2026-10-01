@@ -895,6 +895,12 @@ export const en = {
         done: 'Thanks for watching!',
         hint: 'For the last minutes, so chat knows how long is left.',
       },
+      pomodoro: {
+        label: 'Pomodoro',
+        title: 'Pomodoro',
+        done: 'Take a break!',
+        hint: 'For focused work blocks: 25 minutes on, then a break.',
+      },
     },
     sectionCountdown: 'Countdown',
     scene: 'What is it for?',
@@ -914,6 +920,14 @@ export const en = {
       'A 24-hour time like 21:00, read from the clock on the computer running OBS. If it has already passed today, the countdown aims at tomorrow.',
     atPlaceholder: '21:00',
     atInvalid: 'Type a 24-hour time, like 21:00.',
+    templatesLabel: 'Templates',
+    templatesTip:
+      'Fill in a common length and headline with one click. You can still edit them after.',
+    templates: {
+      pomodoro: 'Pomodoro',
+      shortBreak: 'Short break',
+      longBreak: 'Long break',
+    },
     ending: 'At Zero',
     endings: {
       text: 'Show a message',
@@ -963,7 +977,7 @@ export const en = {
       'Only needed for the chat commands. Without a channel the countdown still runs on its own.',
     sectionCommands: 'Chat Commands',
     commandsIntro:
-      'With a channel filled in, you and your mods can change the countdown from Twitch or Kick chat, for example to push the start back while you are away from the keyboard.',
+      'With a channel filled in, you and your mods can change the countdown from Twitch or Kick chat, for example to push the start back while you are away from the keyboard. `!cd` works wherever `!countdown` does.',
     cmdAdd: 'Adds time: 5m, 90s or 1h30m',
     cmdRemove: 'Takes time off',
     cmdSet: 'Sets the time left',
@@ -971,7 +985,7 @@ export const en = {
     cmdReset: 'Starts the countdown over',
     cmdCancel: 'Cancels it and hides the overlay; any command brings it back',
     cmdScene:
-      'Switches to starting, break or ending and sets the time (10m when left out); text after it becomes the headline, | note sets the note',
+      'Switches to starting, break, ending or pomodoro and sets the time (10m when left out, 25m for pomodoro); text after it becomes the headline, | note sets the note',
     cmdTitle: 'Sets the headline; empty clears it back to the setup text',
     cmdNote: 'Sets the note under the clock; empty clears it back to the setup text',
     previewTitle: 'Stream Countdown Preview',
@@ -1988,12 +2002,12 @@ export const en = {
       summary:
         'Setting up a countdown for your starting, break and ending scenes, making it start over on every scene switch, counting down to a time of day, and the chat commands.',
       lead:
-        "Stream Countdown is a clock for the three scenes where nothing is happening yet: starting soon, back soon and stream ending. Pick the scene and a length on the setup page, add the URL to OBS as a 1920 \u00d7 1080 Browser Source, and tick Refresh browser when scene becomes active so it starts over every time you switch to that scene. No login, and no channel unless you want the chat commands.",
+        "Stream Countdown is a clock for starting soon, back soon, stream ending and pomodoro scenes. Pick the scene and a length on the setup page, add the URL to OBS as a 1920 \u00d7 1080 Browser Source, and tick Refresh browser when scene becomes active so it starts over every time you switch to that scene. No login, and no channel unless you want the chat commands.",
       setup: {
         title: 'How do you set up a stream countdown?',
         step1: 'Open the [Stream Countdown setup page](/setup/stream-countdown).',
         step2:
-          'Under What is it for?, pick Starting, Break or Ending. That sets the wording and the icon, and each one is its own Browser Source, so you can add all three.',
+          'Under What is it for?, pick Starting, Break, Ending or Pomodoro. That sets the wording and the icon, and each one is its own Browser Source, so you can add all four.',
         step3:
           'Under Count Down To, pick A length and set the minutes, or pick A time of day and type a 24-hour time like 21:00.',
         step4:
@@ -2047,7 +2061,7 @@ export const en = {
       scenes: {
         title: 'Which countdown goes on which scene?',
         p1:
-          'Starting goes on the scene you sit on before you go live, with a length like 10 minutes, or the time of day you announced. Break goes on your BRB scene with a shorter length, usually 5 or 10 minutes. Ending goes on the last scene, so chat can see how long is left before you sign off.',
+          'Starting goes on the scene you sit on before you go live, with a length like 10 minutes, or the time of day you announced. Break goes on your BRB scene with a shorter length, usually 5 or 10 minutes. Ending goes on the last scene, so chat can see how long is left before you sign off. Pomodoro sits over what you are doing, counting down a 25-minute focus block before the break.',
         p2:
           'If you switch scenes from chat with [OBS Bridge](/setup/obs-bridge), your mods can send you to the BRB scene and the countdown starts with it.',
       },
@@ -2313,6 +2327,12 @@ export const en = {
     lead: "New features and bug fixes in Senchabot Extensions, newest first. The list is put together from the project's commit history on [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      countdownPomodoroScene:
+        'Stream Countdown gets a fourth What is it for? purpose: Pomodoro, with its own wording, a tomato mark and a 25-minute chat default.',
+      countdownCommandAlias:
+        'Stream Countdown mods can now use the shorter `!cd` wherever `!countdown` works.',
+      countdownTemplates:
+        'Stream Countdown setup gets one-click length templates: Pomodoro, short break and long break.',
       subathonEmoteIcons:
         'Subathon Timer can now show your own icon instead of the heart — an emoji or one of your channel emotes — and it flies to the bar on every heal.',
       countdownRestartOnShow:

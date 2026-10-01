@@ -899,6 +899,12 @@ export const tr: typeof en = {
         done: 'İzlediğiniz için teşekkürler!',
         hint: 'Son dakikalar için, sohbet ne kadar kaldığını görsün.',
       },
+      pomodoro: {
+        label: 'Pomodoro',
+        title: 'Pomodoro',
+        done: 'Mola zamanı!',
+        hint: 'Odaklanma blokları için: 25 dakika çalışma, sonra mola.',
+      },
     },
     sectionCountdown: 'Geri Sayım',
     scene: 'Neyin geri sayımı?',
@@ -918,6 +924,13 @@ export const tr: typeof en = {
       "21:00 gibi 24 saatlik bir saat. OBS'in çalıştığı bilgisayarın saatinden okunur. O saat bugün geçtiyse geri sayım yarınkini hedefler.",
     atPlaceholder: '21:00',
     atInvalid: '21:00 gibi 24 saatlik bir saat yaz.',
+    templatesLabel: 'Şablonlar',
+    templatesTip: 'Tek tıkla yaygın bir süreyi ve başlığı doldur. Sonrasında değiştirebilirsin.',
+    templates: {
+      pomodoro: 'Pomodoro',
+      shortBreak: 'Kısa mola',
+      longBreak: 'Uzun mola',
+    },
     ending: 'Sıfıra Gelince',
     endings: {
       text: 'Mesaj göster',
@@ -968,7 +981,7 @@ export const tr: typeof en = {
       'Sadece sohbet komutları için gerekli. Kanal yazmasan da geri sayım kendi başına çalışır.',
     sectionCommands: 'Sohbet Komutları',
     commandsIntro:
-      'Kanalını yazarsan sen ve modların geri sayımı Twitch ya da Kick sohbetinden değiştirebilirsiniz, örneğin klavye başında değilken başlangıcı biraz ertelemek için.',
+      'Kanalını yazarsan sen ve modların geri sayımı Twitch ya da Kick sohbetinden değiştirebilirsiniz, örneğin klavye başında değilken başlangıcı biraz ertelemek için. `!cd`, `!countdown` yazılabilen her yerde çalışır.',
     cmdAdd: 'Süre ekler: 5m, 90s ya da 1h30m',
     cmdRemove: 'Süreden düşer',
     cmdSet: 'Kalan süreyi ayarlar',
@@ -976,7 +989,7 @@ export const tr: typeof en = {
     cmdReset: 'Geri sayımı baştan başlatır',
     cmdCancel: "İptal edip overlay'i gizler; herhangi bir komut geri getirir",
     cmdScene:
-      'Starting, break veya ending sahnesine geçirir ve süreyi ayarlar (yazılmazsa 10m); sonrasındaki yazı başlık, | not ise not olur',
+      'Starting, break, ending veya pomodoro sahnesine geçirir ve süreyi ayarlar (yazılmazsa 10m, pomodoro için 25m); sonrasındaki yazı başlık, | not ise not olur',
     cmdTitle: 'Başlığı değiştirir; boş bırakılırsa kurulumdaki yazıya döner',
     cmdNote: 'Saatin altındaki notu değiştirir; boş bırakılırsa kurulumdaki nota döner',
     previewTitle: 'Yayın Geri Sayımı Önizleme',
@@ -1986,12 +1999,12 @@ export const tr: typeof en = {
       short: 'Geri sayım ekleme',
       summary:
         'Başlangıç, mola ve bitiş sahneleri için geri sayım kurmak, her sahne geçişinde baştan başlatmak, belirli bir saate geri saymak ve sohbet komutları.',
-      lead: "Yayın Geri Sayımı, henüz bir şeyin olmadığı üç sahne için bir saat: yayın başlıyor, birazdan dönüyorum ve yayın bitiyor. Kurulum sayfasında sahneyi ve süreyi seç, URL'yi OBS'e 1920 × 1080 Tarayıcı Kaynağı olarak ekle ve Sahne etkin olduğunda tarayıcıyı yenile seçeneğini işaretle, böylece o sahneye her geçişte baştan başlar. Giriş yok, sohbet komutlarını istemiyorsan kanal da gerekmez.",
+      lead: "Yayın Geri Sayımı, yayın başlıyor, birazdan dönüyorum, yayın bitiyor ve pomodoro sahneleri için bir saat. Kurulum sayfasında sahneyi ve süreyi seç, URL'yi OBS'e 1920 × 1080 Tarayıcı Kaynağı olarak ekle ve Sahne etkin olduğunda tarayıcıyı yenile seçeneğini işaretle, böylece o sahneye her geçişte baştan başlar. Giriş yok, sohbet komutlarını istemiyorsan kanal da gerekmez.",
       setup: {
         title: 'Yayın geri sayımı nasıl ayarlanır?',
         step1: '[Yayın Geri Sayımı kurulum sayfasını](/setup/stream-countdown) aç.',
         step2:
-          'Neyin geri sayımı? kısmında Başlangıç, Mola ya da Bitiş seç. Bu seçim yazıyı ve ikonu belirler. Her biri ayrı bir Tarayıcı Kaynağı, istersen üçünü de ekle.',
+          'Neyin geri sayımı? kısmında Başlangıç, Mola, Bitiş ya da Pomodoro seç. Bu seçim yazıyı ve ikonu belirler. Her biri ayrı bir Tarayıcı Kaynağı, istersen dördünü de ekle.',
         step3:
           'Neye Göre Saysın kısmında Süreye göre seçip dakikayı yaz ya da Saate göre seçip 21:00 gibi 24 saatlik bir saat yaz.',
         step4:
@@ -2035,7 +2048,7 @@ export const tr: typeof en = {
       },
       scenes: {
         title: 'Hangi geri sayım hangi sahneye gider?',
-        p1: 'Başlangıç, yayına geçmeden önce açık tuttuğun sahneye gider, 10 dakika gibi bir süreyle ya da duyurduğun saatle. Mola, BRB sahnene daha kısa bir süreyle gider, genelde 5 ya da 10 dakika. Bitiş ise son sahneye gider, sohbet kapatmana ne kadar kaldığını görsün.',
+        p1: 'Başlangıç, yayına geçmeden önce açık tuttuğun sahneye gider, 10 dakika gibi bir süreyle ya da duyurduğun saatle. Mola, BRB sahnene daha kısa bir süreyle gider, genelde 5 ya da 10 dakika. Bitiş ise son sahneye gider, sohbet kapatmana ne kadar kaldığını görsün. Pomodoro, neyle uğraşıyorsan onun üstünde durur, moladan önce 25 dakikalık bir odak bloğunu sayar.',
         p2: 'Sahneleri sohbetten [OBS Bridge](/setup/obs-bridge) ile değiştiriyorsan modların seni BRB sahnesine alabilir, geri sayım da onunla birlikte başlar.',
       },
       ctaTitle: 'Geri sayımını hazırla',
@@ -2299,6 +2312,12 @@ export const tr: typeof en = {
     lead: "Senchabot Extensions'a eklenen özellikler ve düzeltilen hatalar, en yenisi en üstte. Liste projenin [GitHub'daki](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) commit geçmişinden hazırlanıyor.",
     site: 'Site',
     entries: {
+      countdownPomodoroScene:
+        "Yayın Geri Sayımı'na dördüncü bir amaç eklendi: Pomodoro; kendi yazıları, domates ikonu ve 25 dakikalık sohbet varsayılanıyla.",
+      countdownCommandAlias:
+        'Yayın Geri Sayımı modları artık `!countdown` yerine kısa `!cd` komutunu kullanabilir.',
+      countdownTemplates:
+        'Yayın Geri Sayımı kurulumuna tek tıkla süre dolduran şablonlar eklendi: Pomodoro, kısa mola ve uzun mola.',
       subathonEmoteIcons:
         'Subathon Timer artık kalp yerine kendi ikonunu gösterebiliyor — bir emoji ya da kanal emotelarından biri — ve her süre eklenişinde bara doğru uçuyor.',
       countdownRestartOnShow:

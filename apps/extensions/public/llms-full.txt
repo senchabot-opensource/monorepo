@@ -299,7 +299,7 @@ URL parameters (all optional):
 
 ## Stream Countdown
 
-A countdown for the parts of a stream where nothing is happening yet: the minutes before going live, a break in the middle, and the last minutes before signing off. The scene (starting, break, ending) picks the default headline and icon, or set your own headline, note, end message and a custom icon per scene (an emoji, a few characters, or one of the channels' subscriber emotes from the setup page picker). It counts down a length, or aims at a time of day like 21:00 read from the clock of the computer running OBS, which means the source can be added hours ahead; a time that has already passed today aims at tomorrow. The clock starts when the browser source loads, so ticking "Refresh browser when scene becomes active" in OBS starts it over on every switch to that scene. At zero it shows a message (hides itself after `doneHold` seconds, 10 by default), holds 00:00, or hides itself. It needs no channel; with one, the broadcaster and mods change it from chat with !countdown.
+A countdown for the parts of a stream where nothing is happening yet: the minutes before going live, a break in the middle, and the last minutes before signing off. The purpose (starting, break, ending, pomodoro) picks the default headline and icon, or set your own headline, note, end message and a custom icon per scene (an emoji, a few characters, or one of the channels' subscriber emotes from the setup page picker). It counts down a length, or aims at a time of day like 21:00 read from the clock of the computer running OBS, which means the source can be added hours ahead; a time that has already passed today aims at tomorrow. The clock starts when the browser source loads, so ticking "Refresh browser when scene becomes active" in OBS starts it over on every switch to that scene. At zero it shows a message (hides itself after `doneHold` seconds, 10 by default), holds 00:00, or hides itself. It needs no channel; with one, the broadcaster and mods change it from chat with !countdown.
 
 - Widget URL: https://extensions.senchabot.com/widgets/countdown?scene=starting&time=600
 - Counting down to a time of day: https://extensions.senchabot.com/widgets/countdown?scene=starting&at=21:00
@@ -314,7 +314,7 @@ URL parameters (all optional):
 | --- | --- | --- |
 | twitch | Twitch channel, only for the !countdown commands | none |
 | kick | Kick channel, only for the !countdown commands | none |
-| scene | starting, break, ending | starting |
+| scene | starting, break, ending, pomodoro | starting |
 | time | seconds to count down, 1 to 86400 | 600 |
 | at | a 24-hour time of day like 21:00 to count down to; replaces time | none |
 | title | headline above the clock, up to 32 characters | the scene's wording |
@@ -323,9 +323,11 @@ URL parameters (all optional):
 | iconStarting | an emoji or a few characters instead of the starting icon | the scene's icon |
 | iconBreak | an emoji or a few characters instead of the break icon | the scene's icon |
 | iconEnding | an emoji or a few characters instead of the ending icon | the scene's icon |
+| iconPomodoro | an emoji or a few characters instead of the pomodoro icon | the scene's icon |
 | iconUrlStarting | a channel emote image instead of the starting icon, picked on the setup page | none |
 | iconUrlBreak | a channel emote image instead of the break icon, picked on the setup page | none |
 | iconUrlEnding | a channel emote image instead of the ending icon, picked on the setup page | none |
+| iconUrlPomodoro | a channel emote image instead of the pomodoro icon, picked on the setup page | none |
 | note | a line under the clock, up to 64 characters | none |
 | end | text (a message at zero), hold (stay at 00:00), hide (nothing on screen) | text |
 | look | card (a panel behind the clock), plain (text on the scene) | card |

@@ -898,6 +898,12 @@ export const de: typeof en = {
         done: 'Danke fürs Zuschauen!',
         hint: 'Für die letzten Minuten, damit der Chat weiß, wie lange es noch geht.',
       },
+      pomodoro: {
+        label: 'Pomodoro',
+        title: 'Pomodoro',
+        done: 'Pause machen!',
+        hint: 'Für fokussierte Arbeitsblöcke: 25 Minuten ran, dann Pause.',
+      },
     },
     sectionCountdown: 'Countdown',
     scene: 'Wofür ist er?',
@@ -917,6 +923,14 @@ export const de: typeof en = {
       'Eine Uhrzeit im 24-Stunden-Format wie 21:00, nach der Uhr des PCs, auf dem OBS läuft. Ist sie heute schon vorbei, zielt der Countdown auf morgen.',
     atPlaceholder: '21:00',
     atInvalid: 'Gib eine Uhrzeit im 24-Stunden-Format ein, z. B. 21:00.',
+    templatesLabel: 'Vorlagen',
+    templatesTip:
+      'Füllt mit einem Klick eine gängige Dauer und Überschrift ein. Danach kannst du sie noch ändern.',
+    templates: {
+      pomodoro: 'Pomodoro',
+      shortBreak: 'Kurze Pause',
+      longBreak: 'Lange Pause',
+    },
     ending: 'Bei null',
     endings: {
       text: 'Nachricht zeigen',
@@ -967,7 +981,7 @@ export const de: typeof en = {
       'Nur für die Chatbefehle nötig. Ohne Kanal läuft der Countdown trotzdem von selbst.',
     sectionCommands: 'Chatbefehle',
     commandsIntro:
-      'Mit eingetragenem Kanal können du und deine Mods den Countdown im Twitch- oder Kick-Chat ändern, z. B. um den Start zu verschieben, während du AFK bist.',
+      'Mit eingetragenem Kanal können du und deine Mods den Countdown im Twitch- oder Kick-Chat ändern, z. B. um den Start zu verschieben, während du AFK bist. `!cd` funktioniert überall dort, wo `!countdown` steht.',
     cmdAdd: 'Gibt Zeit dazu: 5m, 90s oder 1h30m',
     cmdRemove: 'Zieht Zeit ab',
     cmdSet: 'Setzt die Restzeit',
@@ -975,7 +989,7 @@ export const de: typeof en = {
     cmdReset: 'Startet den Countdown neu',
     cmdCancel: 'Bricht ab und blendet das Overlay aus; jeder Befehl bringt es zurück',
     cmdScene:
-      'Wechselt zu starting, break oder ending und setzt die Zeit (ohne Angabe 10m); Text danach wird zur Überschrift, | Notiz setzt die Notiz',
+      'Wechselt zu starting, break, ending oder pomodoro und setzt die Zeit (ohne Angabe 10m, für pomodoro 25m); Text danach wird zur Überschrift, | Notiz setzt die Notiz',
     cmdTitle: 'Setzt die Überschrift; leer setzt sie auf den Setup-Text zurück',
     cmdNote: 'Setzt die Notiz unter der Uhr; leer setzt sie auf den Setup-Text zurück',
     previewTitle: 'Vorschau des Stream-Countdowns',
@@ -1992,12 +2006,12 @@ export const de: typeof en = {
       summary:
         'Einen Countdown für deine Start-, Pausen- und Endszene einrichten, ihn bei jedem Szenenwechsel neu starten lassen, bis zu einer Uhrzeit runterzählen und die Chatbefehle.',
       lead:
-        "Der Stream-Countdown ist eine Uhr für die drei Szenen, in denen noch nichts passiert: Gleich geht's los, Gleich zurück und Stream endet. Wähl auf der Setup-Seite Szene und Dauer, füg die URL in OBS als 1920 × 1080-Browser-Quelle hinzu und hak Browser bei Szenenaktivierung aktualisieren an, damit er jedes Mal neu startet, wenn du zu dieser Szene wechselst. Kein Login, und kein Kanal, außer du willst die Chatbefehle.",
+        "Der Stream-Countdown ist eine Uhr für Gleich geht's los, Gleich zurück, Stream endet und Pomodoro: Gleich geht's los, Gleich zurück und Stream endet. Wähl auf der Setup-Seite Szene und Dauer, füg die URL in OBS als 1920 × 1080-Browser-Quelle hinzu und hak Browser bei Szenenaktivierung aktualisieren an, damit er jedes Mal neu startet, wenn du zu dieser Szene wechselst. Kein Login, und kein Kanal, außer du willst die Chatbefehle.",
       setup: {
         title: 'Wie richtest du einen Stream-Countdown ein?',
         step1: 'Öffne die [Setup-Seite des Stream-Countdowns](/setup/stream-countdown).',
         step2:
-          'Wähl unter Wofür ist er? Start, Pause oder Ende. Das bestimmt Text und Icon, und jede ist eine eigene Browser-Quelle, du kannst also alle drei hinzufügen.',
+          'Wähl unter Wofür ist er? Start, Pause, Ende oder Pomodoro. Das bestimmt Text und Icon, und jede ist eine eigene Browser-Quelle, du kannst also alle vier hinzufügen.',
         step3:
           'Wähl unter Countdown-Art die Option Dauer und stell die Minuten ein, oder wähl Uhrzeit und gib eine Uhrzeit im 24-Stunden-Format ein, z. B. 21:00.',
         step4:
@@ -2052,7 +2066,7 @@ export const de: typeof en = {
       scenes: {
         title: 'Welcher Countdown kommt in welche Szene?',
         p1:
-          'Start kommt in die Szene, auf der du vor dem Livegang wartest, mit einer Dauer wie 10 Minuten oder der angekündigten Uhrzeit. Pause kommt in deine BRB-Szene mit kürzerer Dauer, meistens 5 oder 10 Minuten. Ende kommt in die letzte Szene, damit der Chat sieht, wie lange es noch bis zum Schluss geht.',
+          'Start kommt in die Szene, auf der du vor dem Livegang wartest, mit einer Dauer wie 10 Minuten oder der angekündigten Uhrzeit. Pause kommt in deine BRB-Szene mit kürzerer Dauer, meistens 5 oder 10 Minuten. Ende kommt in die letzte Szene, damit der Chat sieht, wie lange es noch bis zum Schluss geht. Pomodoro liegt über dem, was du gerade machst, und zählt einen 25-Minuten-Fokusblock bis zur Pause runter.',
         p2:
           'Wechselst du Szenen mit [OBS Bridge](/setup/obs-bridge) aus dem Chat, können deine Mods dich in die BRB-Szene schicken, und der Countdown startet gleich mit.',
       },
@@ -2318,6 +2332,12 @@ export const de: typeof en = {
     lead: 'Neue Features und Bugfixes in Senchabot Extensions, das Neueste zuerst. Die Liste ist aus der Commit-Historie des Projekts auf [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) zusammengestellt.',
     site: 'Website',
     entries: {
+      countdownPomodoroScene:
+        'Der Stream-Countdown bekommt einen vierten Zweck: Pomodoro, mit eigenem Text, Tomaten-Icon und 25 Minuten als Chat-Standard.',
+      countdownCommandAlias:
+        'Stream-Countdown-Mods können jetzt überall statt `!countdown` das kurze `!cd` nehmen.',
+      countdownTemplates:
+        'Das Stream-Countdown-Setup bekommt Vorlagen für die Dauer per Klick: Pomodoro, kurze und lange Pause.',
       subathonEmoteIcons: 'need to translate',
       countdownRestartOnShow:
         'Der Stream-Countdown startet jetzt jedes Mal von vorn, wenn du in OBS zu seiner Szene zurückkehrst.',
