@@ -13,19 +13,31 @@ import {
   createGlidePop,
   createSpinPop,
   isEmoteWallMode,
+  randomWallMode,
+  RANDOM_WALL_MODES,
   rollBurst,
 } from './emote-pops';
 
 describe('isEmoteWallMode', () => {
-  it('accepts calm, chaos, bounce, glide, spin and burst only', () => {
+  it('accepts every animation plus random', () => {
     expect(isEmoteWallMode('calm')).toBe(true);
     expect(isEmoteWallMode('chaos')).toBe(true);
     expect(isEmoteWallMode('bounce')).toBe(true);
     expect(isEmoteWallMode('glide')).toBe(true);
     expect(isEmoteWallMode('spin')).toBe(true);
     expect(isEmoteWallMode('burst')).toBe(true);
+    expect(isEmoteWallMode('random')).toBe(true);
     expect(isEmoteWallMode('wild')).toBe(false);
     expect(isEmoteWallMode(undefined)).toBe(false);
+  });
+});
+
+describe('randomWallMode', () => {
+  it('picks a concrete animation, never itself', () => {
+    expect(RANDOM_WALL_MODES).toHaveLength(6);
+    expect(RANDOM_WALL_MODES).not.toContain('random');
+    const seen = new Set(Array.from({ length: 200 }, () => randomWallMode()));
+    expect(seen).toEqual(new Set(['calm', 'chaos', 'bounce', 'glide', 'spin', 'burst']));
   });
 });
 

@@ -1332,7 +1332,7 @@ export const tr: typeof en = {
     breadcrumb: 'Emote Duvarı Kurulumu',
     title: 'Emote Duvarı Kurulumu',
     intro:
-      "Sadece emote'tan oluşan mesajlar (Twitch, Kick ve Twitch kanalının 7TV emote'ları) ekranda emote olarak belirir. Normal yazılı mesajlar varsayılan olarak atlanır, Tüm Emote'ları Göster açıksa onların içindeki emote'lar da çıkar. Sakin modda emote'lar rastgele bir noktada belirip süzülür ve kaybolur, Kaos modunda ekranın kenarından girip karşıya fırlar, Sekme modunda ekranın kenarlarından seker, Süzülme modunda iki yana sallanarak ekranın üstünden aşağı süzülür, Dönme modunda belirip kendi etrafında bir iki tur dönerek kaybolur, Patlama modunda emote'lar süreleri dolmadan patlayıp parçalara ayrılır.",
+      "Sadece emote'tan oluşan mesajlar (Twitch, Kick ve Twitch kanalının 7TV emote'ları) ekranda emote olarak belirir. Normal yazılı mesajlar varsayılan olarak atlanır, Tüm Emote'ları Göster açıksa onların içindeki emote'lar da çıkar. Sakin modda emote'lar rastgele bir noktada belirip süzülür ve kaybolur, Kaos modunda ekranın kenarından girip karşıya fırlar, Sekme modunda ekranın kenarlarından seker, Süzülme modunda iki yana sallanarak ekranın üstünden aşağı süzülür, Dönme modunda belirip kendi etrafında bir iki tur dönerek kaybolur, Patlama modunda emote'lar süreleri dolmadan patlayıp parçalara ayrılır, Rastgele modunda her emote'a altı moddan biri gelir.",
     sectionAnimation: 'Animasyon',
     sectionFilters: 'Filtreler',
     sevenTvEmotes: "7TV Emote'ları",
@@ -1345,8 +1345,9 @@ export const tr: typeof en = {
     modeGlide: 'Süzülme',
     modeSpin: 'Dönme',
     modeBurst: 'Patlama',
+    modeRandom: 'Rastgele',
     modeTip:
-      'Sakin: emote rastgele bir yerde belirir, süzülür ve solar. Kaos: rastgele bir kenardan fırlar, ekranın ortasıyla karşı kenar arasında bir yerde kaybolur. Sekme: kenarlardan seker, her çarpışta biraz daha hızlanır. Süzülme: iki yana sallanarak ekranın üstünden aşağı süzülür, alta varınca solar. Dönme: emote rastgele bir yerde belirir, kendi etrafında bir iki tur döner, sonra solar. Patlama: emote belirir, süresi dolmadan parçalara ve renkli kıvılcımlara ayrılarak patlar (bazen de sadece solar).',
+      'Sakin: emote rastgele bir yerde belirir, süzülür ve solar. Kaos: rastgele bir kenardan fırlar, ekranın ortasıyla karşı kenar arasında bir yerde kaybolur. Sekme: kenarlardan seker, her çarpışta biraz daha hızlanır. Süzülme: iki yana sallanarak ekranın üstünden aşağı süzülür, alta varınca solar. Dönme: emote rastgele bir yerde belirir, kendi etrafında bir iki tur döner, sonra solar. Patlama: emote belirir, süresi dolmadan parçalara ve renkli kıvılcımlara ayrılarak patlar (bazen de sadece solar). Rastgele: her emote altı moddan rastgele biriyle belirir.',
     emoteSize: 'Emote Boyutu',
     duration: 'Görünür Süre (sn)',
     durationTip:
@@ -2422,6 +2423,8 @@ export const tr: typeof en = {
         "Emote Duvarı'na emote'ları belirip kendi etrafında bir iki tur döndükten sonra solduran Dönme modu eklendi, Süzülme emote'ları düşerken artık iki yana sallanıyor.",
       emoteWallBurst:
         "Emote Duvarı'na emote'ların süresi dolmadan patlayıp parçalara ve kıvılcımlara ayrıldığı Patlama modu eklendi.",
+      emoteWallRandom:
+        "Emote Duvarı'na altı animasyonu karıştıran Rastgele modu eklendi.",
       sproutPotLabel: 'Sub Sprout saksının üstünde 3/10 gibi bir aşama etiketi gösterebiliyor.',
       emoteWallLaunch:
         "Emote Duvarı geldi: sadece emote'tan oluşan Twitch ve Kick mesajları Sakin ya da Kaos modunda ekranda uçuşuyor.",

@@ -22,6 +22,7 @@ import {
   createChaosPop,
   createGlidePop,
   createSpinPop,
+  randomWallMode,
   type BouncePop,
   type BurstPop,
   type ChaosPop,
@@ -477,19 +478,21 @@ export function EmoteWall({
       const now = Date.now();
       const fresh: EmotePop[] = items.map(({ src, name }, i): EmotePop => {
         const id = `emote-${now}-${counterRef.current++}-${i}`;
-        if (mode === 'chaos') {
+        // Random rolls a fresh animation for every single emote.
+        const m = mode === 'random' ? randomWallMode() : mode;
+        if (m === 'chaos') {
           return { kind: 'chaos', id, name, ...createChaosPop(src, emoteSize, effectiveDuration) };
         }
-        if (mode === 'bounce') {
+        if (m === 'bounce') {
           return { kind: 'bounce', id, name, ...createBouncePop(src, emoteSize, effectiveDuration) };
         }
-        if (mode === 'glide') {
+        if (m === 'glide') {
           return { kind: 'glide', id, name, ...createGlidePop(src, emoteSize, effectiveDuration) };
         }
-        if (mode === 'spin') {
+        if (m === 'spin') {
           return { kind: 'spin', id, name, ...createSpinPop(src, emoteSize, effectiveDuration) };
         }
-        if (mode === 'burst') {
+        if (m === 'burst') {
           return { kind: 'burst', id, name, ...createBurstPop(src, emoteSize, effectiveDuration) };
         }
         return { kind: 'calm', id, name, ...createCalmPop(src, emoteSize, effectiveDuration) };
@@ -505,16 +508,15 @@ export function EmoteWall({
       });
 
       // Calm and spin pops are removed by a fixed timer; chaos/bounce/glide
-      // and burst pops remove themselves via their flight components.
-      if (mode === 'calm' || mode === 'spin') {
-        for (const pop of fresh) {
-          if (pop.kind !== 'calm' && pop.kind !== 'spin') continue;
-          const t = setTimeout(() => {
-            timeoutsRef.current.delete(t);
-            removePop(pop.id);
-          }, pop.duration * 1000 + 150);
-          timeoutsRef.current.add(t);
-        }
+      // and burst pops remove themselves via their flight components. Looping
+      // over the fresh pops (instead of the mode) also covers Random mixes.
+      for (const pop of fresh) {
+        if (pop.kind !== 'calm' && pop.kind !== 'spin') continue;
+        const t = setTimeout(() => {
+          timeoutsRef.current.delete(t);
+          removePop(pop.id);
+        }, pop.duration * 1000 + 150);
+        timeoutsRef.current.add(t);
       }
     },
     [emoteSize, durationSec, maxEmotes, mode, removePop],

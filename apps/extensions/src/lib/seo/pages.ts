@@ -91,37 +91,37 @@ export const PAGE_META = {
     en: {
       title: 'Emote Wall Overlay for Twitch, Kick & 7TV | Senchabot',
       description:
-        'Emote-only Twitch and Kick messages pop up on stream in Calm, Chaos, Bounce, Glide, Spin or Burst mode, 7TV emotes from your channel included. Free, no login.',
+        'Emote-only Twitch and Kick messages pop up on stream in Calm, Chaos, Bounce, Glide, Spin, Burst or Random mode, with 7TV emotes included. Free, no login.',
     },
     de: {
       title: 'Emote-Wand-Overlay für Twitch, Kick und 7TV | Senchabot',
       description:
-        'Emote-Nachrichten aus Twitch und Kick laufen im Modus Ruhig, Chaos, Abprallen, Gleiten, Drehung oder Explosion, mit 7TV-Emotes. Gratis und ohne Login.',
+        'Nachrichten aus Twitch und Kick laufen im Modus Ruhig, Chaos, Abprallen, Gleiten, Drehung, Explosion oder Zufällig, mit 7TV-Emotes. Gratis, ohne Login.',
     },
     tr: {
       title: "Twitch, Kick ve 7TV için Emote Duvarı Overlay'i | Senchabot",
       description:
-        "Sadece emote'tan oluşan Twitch ve Kick mesajları yayında Sakin, Kaos, Sekme, Süzülme, Dönme ya da Patlama modunda uçuşur. 7TV emote'ları dahil. Ücretsiz.",
+        "Sadece emote'tan oluşan Twitch ve Kick mesajları Sakin, Kaos, Sekme, Süzülme, Dönme, Patlama ya da Rastgele modunda uçuşur. 7TV emote'ları dahil. Ücretsiz.",
     },
     es: {
       title: 'Muro de Emotes para Twitch, Kick y 7TV | Senchabot',
       description:
-        'Los emotes solo de Twitch y Kick en tu stream en modo Tranquilo, Caos, Rebote, Planeo, Giro o Estallido, con los emotes 7TV del canal. Gratis, sin login.',
+        'Emotes solo de Twitch y Kick en stream en modo Tranquilo, Caos, Rebote, Planeo, Giro, Estallido o Aleatorio, con los emotes 7TV del canal. Gratis, sin login.',
     },
     fr: {
       title: "Mur d'emotes pour Twitch, Kick et 7TV | Senchabot",
       description:
-        'Emotes Twitch et Kick passent sur ton stream en mode Calme, Chaos, Rebond, Glissade, Rotation ou Explosion, 7TV de ta chaîne incluses. Gratuit, sans login.',
+        'Emotes Twitch et Kick passent sur le stream en mode Calme, Chaos, Rebond, Glissade, Rotation, Explosion ou Aléatoire, 7TV incluses. Gratuit, sans login.',
     },
     ja: {
       title: 'Twitch・Kick・7TV対応のエモートウォール | Senchabot',
       description:
-        'TwitchとKickのエモートだけのメッセージが、おだやか、カオス、バウンス、グライド、スピン、バーストのモードで配信画面に飛び出します。Twitchチャンネルの7TVエモートにも対応。無料でログイン不要。',
+        'TwitchとKickのエモートだけのメッセージが、おだやか、カオス、バウンス、グライド、スピン、バースト、ランダムのモードで配信画面に飛び出します。Twitchチャンネルの7TVエモートにも対応。無料でログイン不要。',
     },
     pt: {
       title: 'Mural de Emotes para Twitch, Kick e 7TV | Senchabot',
       description:
-        'Emotes de Twitch e Kick aparecem na sua live no modo Calmo, Caos, Quicar, Deslize, Giro ou Explosão, com os emotes 7TV do seu canal. Grátis, sem login.',
+        'Emotes de Twitch e Kick aparecem na live no modo Calmo, Caos, Quicar, Deslize, Giro, Explosão ou Aleatório, com os emotes 7TV do seu canal. Grátis, sem login.',
     },
   },
   'sub-sprout': {
@@ -612,7 +612,7 @@ export const APP_FEATURES: Record<WidgetId, Record<Locale, readonly string[]>> =
       'Emote-only Twitch and Kick messages appear as emotes on screen',
       'Show All Emotes also picks up to 5 emotes out of normal messages',
       "7TV emotes from the Twitch channel's active set, in Kick chat too",
-      'Calm, Chaos, Bounce, Glide, Spin and Burst animation modes',
+      'Calm, Chaos, Bounce, Glide, Spin, Burst and Random animation modes',
       'Emote size 32 to 256 px, 2 to 30 seconds on screen, up to 120 at once',
       'Subscribers only, longer sub emotes, Hype Mode and emote spam blocking',
       'Recommended browser source size: 1920x1080',
@@ -621,7 +621,7 @@ export const APP_FEATURES: Record<WidgetId, Record<Locale, readonly string[]>> =
       'Reine Emote-Nachrichten aus Twitch und Kick erscheinen als Emotes auf dem Bildschirm',
       'Auf Wunsch kommen auch bis zu 5 Emotes aus normalen Nachrichten dazu',
       '7TV-Emotes aus dem aktiven Set des Twitch-Kanals, auch im Kick-Chat',
-      'Animationsmodi Ruhig, Chaos, Abprallen, Gleiten, Drehung und Explosion',
+      'Animationsmodi Ruhig, Chaos, Abprallen, Gleiten, Drehung, Explosion und Zufällig',
       'Emote-Größe 32 bis 256 px, 2 bis 30 Sekunden sichtbar, bis zu 120 gleichzeitig',
       'Nur Subs, längere Sub-Emotes, Hype-Modus und Schutz vor Emote-Spam',
       'Empfohlene Größe der Browserquelle: 1920x1080',
@@ -630,7 +630,7 @@ export const APP_FEATURES: Record<WidgetId, Record<Locale, readonly string[]>> =
       "Sadece emote'tan oluşan Twitch ve Kick mesajları ekranda emote olarak belirir",
       "Tüm Emote'ları Göster, normal mesajlardan da en fazla 5 emote alır",
       "Twitch kanalının aktif 7TV setindeki emote'lar, Kick sohbetinde de",
-      'Sakin, Kaos, Sekme, Süzülme, Dönme ve Patlama animasyon modları',
+      'Sakin, Kaos, Sekme, Süzülme, Dönme, Patlama ve Rastgele animasyon modları',
       '32 ile 256 px arası emote boyutu, ekranda 2 ile 30 saniye, aynı anda en fazla 120 emote',
       "Sadece aboneler, abone emote'larına uzun süre, Hype Modu ve emote spamı engelleme",
       'Önerilen Tarayıcı Kaynağı boyutu: 1920x1080',
@@ -639,7 +639,7 @@ export const APP_FEATURES: Record<WidgetId, Record<Locale, readonly string[]>> =
       'Los mensajes de solo emotes de Twitch y Kick aparecen como emotes en pantalla',
       'Mostrar todos los emotes también saca hasta 5 emotes de los mensajes normales',
       'Emotes de 7TV del set activo del canal de Twitch, también en el chat de Kick',
-      'Modos de animación Tranquilo, Caos, Rebote, Planeo, Giro y Estallido',
+      'Modos de animación Tranquilo, Caos, Rebote, Planeo, Giro, Estallido y Aleatorio',
       'Emotes de 32 a 256 px, de 2 a 30 segundos en pantalla, hasta 120 a la vez',
       'Solo suscriptores, emotes de subs más largos, modo hype y bloqueo de spam de emotes',
       'Tamaño recomendado de la fuente de navegador: 1920x1080',
@@ -648,7 +648,7 @@ export const APP_FEATURES: Record<WidgetId, Record<Locale, readonly string[]>> =
       "Les messages d'emotes Twitch et Kick s'affichent en emotes à l'écran",
       "Toutes les emotes récupère aussi jusqu'à 5 emotes dans les messages normaux",
       'Emotes 7TV du set actif de la chaîne Twitch, dans le chat Kick aussi',
-      "Modes d'animation Calme, Chaos, Rebond, Glissade, Rotation et Explosion",
+      "Modes d'animation Calme, Chaos, Rebond, Glissade, Rotation, Explosion et Aléatoire",
       "Emotes de 32 à 256 px, de 2 à 30 secondes à l'écran, jusqu'à 120 à la fois",
       "Abonnés uniquement, emotes des subs plus longues, Mode hype et blocage du spam d'emotes",
       'Taille de source navigateur recommandée : 1920x1080',
@@ -657,7 +657,7 @@ export const APP_FEATURES: Record<WidgetId, Record<Locale, readonly string[]>> =
       'TwitchとKickのエモートだけのメッセージが、画面にエモートとして表示',
       '「すべてのエモートを表示」で、普通のメッセージからもエモートを5個まで表示',
       'Twitchチャンネルのアクティブなセットの7TVエモートを、Kickのチャットでも表示',
-      'おだやか、カオス、バウンス、グライド、スピン、バーストの6つのアニメーションモード',
+      'おだやか、カオス、バウンス、グライド、スピン、バースト、ランダムの7つのアニメーションモード',
       'エモートのサイズは32から256px、表示時間は2から30秒、同時表示は最大120個',
       'サブスク限定、サブスクのエモートを長く表示、ハイプモード、エモートスパムのブロック',
       'ブラウザソースの推奨サイズ: 1920x1080',
@@ -666,7 +666,7 @@ export const APP_FEATURES: Record<WidgetId, Record<Locale, readonly string[]>> =
       'Mensagens só de emotes da Twitch e da Kick aparecem como emotes na tela',
       'Mostrar todos os emotes também pega até 5 emotes de mensagens normais',
       'Emotes da 7TV do conjunto ativo do canal da Twitch, no chat da Kick também',
-      'Modos de animação Calmo, Caos, Quicar, Deslize, Giro e Explosão',
+      'Modos de animação Calmo, Caos, Quicar, Deslize, Giro, Explosão e Aleatório',
       'Emotes de 32 a 256 px, de 2 a 30 segundos na tela, até 120 ao mesmo tempo',
       'Só inscritos, emotes de sub por mais tempo, Modo hype e bloqueio de spam de emotes',
       'Tamanho recomendado da fonte de navegador: 1920x1080',

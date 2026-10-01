@@ -1372,7 +1372,7 @@ export const fr: typeof en = {
     breadcrumb: "Configuration du Mur d'emotes",
     title: "Configuration du Mur d'emotes",
     intro:
-      "Les messages faits uniquement d'emotes (Twitch, Kick et les emotes 7TV de ta chaîne Twitch) apparaissent en emotes à l'écran. Les messages texte normaux sont ignorés par défaut, et Toutes les emotes récupère aussi les emotes qu'ils contiennent. Calme les fait apparaître à des endroits au hasard où elles dérivent et s'effacent, Chaos les fait traverser l'écran depuis un bord, Rebond les fait rebondir sur les bords de l'écran, Glissade les fait descendre en glissant depuis le haut de l'écran en se balançant, Rotation les fait apparaître, tourner une ou deux fois sur place, puis disparaître, et Explosion les fait éclater en fragments et étincelles avant la fin.",
+      "Les messages faits uniquement d'emotes (Twitch, Kick et les emotes 7TV de ta chaîne Twitch) apparaissent en emotes à l'écran. Les messages texte normaux sont ignorés par défaut, et Toutes les emotes récupère aussi les emotes qu'ils contiennent. Calme les fait apparaître à des endroits au hasard où elles dérivent et s'effacent, Chaos les fait traverser l'écran depuis un bord, Rebond les fait rebondir sur les bords de l'écran, Glissade les fait descendre en glissant depuis le haut de l'écran en se balançant, Rotation les fait apparaître, tourner une ou deux fois sur place, puis disparaître, et Explosion les fait éclater en fragments et étincelles avant la fin, et Aléatoire mélange les six animations.",
     sectionAnimation: 'Animation',
     sectionFilters: 'Filtres',
     sevenTvEmotes: 'Emotes 7TV',
@@ -1385,8 +1385,9 @@ export const fr: typeof en = {
     modeGlide: 'Glissade',
     modeSpin: 'Rotation',
     modeBurst: 'Explosion',
+    modeRandom: 'Aléatoire',
     modeTip:
-      "Calme : apparaît à un endroit au hasard, dérive et s'efface. Chaos : arrive d'un bord au hasard et disparaît quelque part entre le milieu et le côté opposé. Rebond : ricoche sur les bords et accélère à chaque choc. Glissade : descend en glissant depuis le haut en se balançant et s'efface près du bas. Rotation : apparaît à un endroit au hasard, tourne une ou deux fois sur lui-même puis s'efface. Explosion : apparaît puis éclate en fragments d'emote et étincelles colorées avant la fin (parfois elle s'efface simplement).",
+      "Calme : apparaît à un endroit au hasard, dérive et s'efface. Chaos : arrive d'un bord au hasard et disparaît quelque part entre le milieu et le côté opposé. Rebond : ricoche sur les bords et accélère à chaque choc. Glissade : descend en glissant depuis le haut en se balançant et s'efface près du bas. Rotation : apparaît à un endroit au hasard, tourne une ou deux fois sur lui-même puis s'efface. Explosion : apparaît puis éclate en fragments d'emote et étincelles colorées avant la fin (parfois elle s'efface simplement). Aléatoire : donne à chaque emote une animation au hasard.",
     emoteSize: 'Taille des emotes',
     duration: "Durée d'affichage (s)",
     durationTip:
@@ -2484,6 +2485,8 @@ export const fr: typeof en = {
         "Le Mur d'emotes a un mode Rotation qui fait apparaître les emotes, les fait tourner une ou deux fois sur place puis disparaître, et les emotes en Glissade se balancent désormais en descendant.",
       emoteWallBurst:
         "Le Mur d'emotes a un mode Explosion où les emotes éclatent en fragments et étincelles avant la fin de leur temps.",
+      emoteWallRandom:
+        "Le Mur d'emotes a un mode Aléatoire qui mélange les six animations.",
       sproutPotLabel:
         'Sub Sprout peut afficher une étiquette de stade comme 3/10 au-dessus du pot.',
       emoteWallLaunch:

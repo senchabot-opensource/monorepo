@@ -1322,7 +1322,7 @@ export const en = {
     breadcrumb: 'Emote Wall Setup',
     title: 'Emote Wall Setup',
     intro:
-      "Messages made only of emotes (Twitch, Kick and your Twitch channel's 7TV emotes) pop up as emotes on screen. Normal text messages are skipped by default, and Show All Emotes pulls the emotes out of those too. Calm pops them up at random spots to drift and fade, Chaos flies them in from an edge across the screen, Bounce bounces them off the screen edges, Glide drifts them down from the top of the screen while swaying side to side, Spin fades them in, spins them around once or twice, then fades them out in place, and Burst pops them into fragments and sparks before their time ends.",
+      "Messages made only of emotes (Twitch, Kick and your Twitch channel's 7TV emotes) pop up as emotes on screen. Normal text messages are skipped by default, and Show All Emotes pulls the emotes out of those too. Calm pops them up at random spots to drift and fade, Chaos flies them in from an edge across the screen, Bounce bounces them off the screen edges, Glide drifts them down from the top of the screen while swaying side to side, Spin fades them in, spins them around once or twice, then fades them out in place, and Burst pops them into fragments and sparks before their time ends, and Random mixes all six animations.",
     sectionAnimation: 'Animation',
     sectionFilters: 'Filters',
     sevenTvEmotes: '7TV Emotes',
@@ -1335,8 +1335,9 @@ export const en = {
     modeGlide: 'Glide',
     modeSpin: 'Spin',
     modeBurst: 'Burst',
+    modeRandom: 'Random',
     modeTip:
-      'Calm: pops up at a random spot, drifts and fades out. Chaos: flies in from a random edge and vanishes somewhere between halfway and the far side. Bounce: ricochets off the edges and speeds up on every hit. Glide: drifts down from the top of the screen, swaying side to side, and fades out near the bottom. Spin: fades in at a random spot, spins around once or twice, then fades out. Burst: appears, then pops into emote fragments and colored sparks before its time ends (sometimes it just fades out).',
+      'Calm: pops up at a random spot, drifts and fades out. Chaos: flies in from a random edge and vanishes somewhere between halfway and the far side. Bounce: ricochets off the edges and speeds up on every hit. Glide: drifts down from the top of the screen, swaying side to side, and fades out near the bottom. Spin: fades in at a random spot, spins around once or twice, then fades out. Burst: appears, then pops into emote fragments and colored sparks before its time ends (sometimes it just fades out). Random: gives every emote a random animation.',
     emoteSize: 'Emote Size',
     duration: 'Visible Duration (sec)',
     durationTip:
@@ -2434,6 +2435,8 @@ export const en = {
         'Emote Wall gets a Glide mode that drifts emotes down from the top of the screen.',
       emoteWallSpin:
         'Emote Wall gets a Spin mode that fades emotes in, spins them around once or twice, then fades them out in place, and Glide emotes now sway side to side as they fall.',
+      emoteWallRandom:
+        'Emote Wall gets a Random mode that mixes all six animations.',
       emoteWallBurst:
         'Emote Wall gets a Burst mode where emotes pop into fragments and sparks before their time ends.',
       sproutPotLabel: 'Sub Sprout can show a stage label like 3/10 above the pot.',
