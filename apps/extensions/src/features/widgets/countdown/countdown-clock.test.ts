@@ -146,4 +146,37 @@ describe('parseCountdownCommand', () => {
     expect(parseCountdownCommand('!COUNTDOWN Cancel')).toEqual({ action: 'cancel' });
     expect(parseCountdownCommand('!countdown')).toBeNull();
   });
+
+  it('reads the !cd short trigger like the full command', () => {
+    expect(parseCountdownCommand('!cd add 5m')).toEqual({ action: 'add', ms: 300_000 });
+    expect(parseCountdownCommand('!CD break 5m Lunch')).toEqual({
+      action: 'scene',
+      scene: 'break',
+      ms: 300_000,
+      title: 'Lunch',
+    });
+    expect(parseCountdownCommand('!cd title Dinner')).toEqual({ action: 'title', title: 'Dinner' });
+    expect(parseCountdownCommand('!cd cancel')).toEqual({ action: 'cancel' });
+    expect(parseCountdownCommand('!cd')).toBeNull();
+    expect(parseCountdownCommand('!cdown add 5m')).toBeNull();
+  });
+
+  it('defaults a bare pomodoro scene to 25 minutes', () => {
+    expect(parseCountdownCommand('!countdown pomodoro')).toEqual({
+      action: 'scene',
+      scene: 'pomodoro',
+      ms: 1_500_000,
+    });
+    expect(parseCountdownCommand('!cd pomodoro 5m Focus')).toEqual({
+      action: 'scene',
+      scene: 'pomodoro',
+      ms: 300_000,
+      title: 'Focus',
+    });
+    expect(parseCountdownCommand('!countdown break')).toEqual({
+      action: 'scene',
+      scene: 'break',
+      ms: 600_000,
+    });
+  });
 });

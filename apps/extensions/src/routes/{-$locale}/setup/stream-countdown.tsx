@@ -6,6 +6,7 @@ import { CopyUrlField } from '#/components/copy-url-field';
 import { PreviewFrame } from '#/components/preview-frame';
 import { SetupShell } from '#/components/setup-shell';
 import { TestButtons } from '#/components/test-buttons';
+import { BUTTON_TEST } from '#/components/ui/button-styles';
 import { ColorSwatches } from '#/components/ui/color-swatches';
 import { DurationField } from '#/components/ui/duration-field';
 import { FieldLabel } from '#/components/ui/field-label';
@@ -88,6 +89,13 @@ const COMMANDS: { usage: string; action: TranslationKey }[] = [
 /** The default the clock field starts on, so picking "a time of day" shows a real time. */
 const DEFAULT_AT = '21:00';
 
+/** One-click lengths that fill the duration input, in seconds. */
+const TIME_TEMPLATES = [
+  { id: 'pomodoro', seconds: 25 * 60 },
+  { id: 'shortBreak', seconds: 5 * 60 },
+  { id: 'longBreak', seconds: 15 * 60 },
+] as const;
+
 function CountdownSetup() {
   const { t, locale } = useI18n();
   const [twitchChannel, setTwitchChannel] = useState('');
@@ -105,11 +113,13 @@ function CountdownSetup() {
   const iconKey = `icon${settings.scene[0].toUpperCase()}${settings.scene.slice(1)}` as
     | 'iconStarting'
     | 'iconBreak'
-    | 'iconEnding';
+    | 'iconEnding'
+    | 'iconPomodoro';
   const iconUrlKey = `iconUrl${settings.scene[0].toUpperCase()}${settings.scene.slice(1)}` as
     | 'iconUrlStarting'
     | 'iconUrlBreak'
-    | 'iconUrlEnding';
+    | 'iconUrlEnding'
+    | 'iconUrlPomodoro';
 
   // The channel's own emotes for the picker, reloaded a moment after the channel boxes settle.
   const [emotes, setEmotes] = useState<ChannelEmote[] | null>(null);
@@ -261,6 +271,31 @@ function CountdownSetup() {
             />
           )}
         </div>
+
+        {settings.scene === 'pomodoro' && (
+          <div>
+            <FieldLabel id={`${id}-templates`} tip={t('countdown.templatesTip')}>
+              {t('countdown.templatesLabel')}
+            </FieldLabel>
+            <fieldset aria-labelledby={`${id}-templates`} className="flex flex-wrap gap-1.5">
+              {TIME_TEMPLATES.map((template) => (
+                <button
+                  key={template.id}
+                  type="button"
+                  onClick={() => {
+                    update('time', template.seconds);
+                    update('at', '');
+                    update('title', t(`countdown.templates.${template.id}`));
+                  }}
+                  className={BUTTON_TEST}
+                >
+                  {t(`countdown.templates.${template.id}`)} · {template.seconds / 60}{' '}
+                  {t('countdown.durationUnit')}
+                </button>
+              ))}
+            </fieldset>
+          </div>
+        )}
 
         <div>
           <FieldLabel id={`${id}-ending`} tip={t('countdown.endingTip')}>

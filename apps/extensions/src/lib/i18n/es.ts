@@ -919,6 +919,12 @@ export const es: typeof en = {
         done: '¡Gracias por ver el stream!',
         hint: 'Para los últimos minutos, así el chat sabe cuánto queda.',
       },
+      pomodoro: {
+        label: 'Pomodoro',
+        title: 'Pomodoro',
+        done: '¡Hora del descanso!',
+        hint: 'Para bloques de concentración: 25 minutos y después un descanso.',
+      },
     },
     sectionCountdown: 'Cuenta regresiva',
     scene: '¿Para qué es?',
@@ -938,6 +944,14 @@ export const es: typeof en = {
       'Una hora en formato 24 h como 21:00, leída del reloj del equipo donde corre OBS. Si ya pasó hoy, la cuenta regresiva apunta a mañana.',
     atPlaceholder: '21:00',
     atInvalid: 'Escribe una hora en formato 24 h, como 21:00.',
+    templatesLabel: 'Plantillas',
+    templatesTip:
+      'Rellena una duración y un titular habituales con un clic. Después los puedes cambiar.',
+    templates: {
+      pomodoro: 'Pomodoro',
+      shortBreak: 'Descanso corto',
+      longBreak: 'Descanso largo',
+    },
     ending: 'Al llegar a cero',
     endings: {
       text: 'Mostrar un mensaje',
@@ -990,7 +1004,7 @@ export const es: typeof en = {
       'Solo hace falta para los comandos del chat. Sin canal, la cuenta regresiva funciona igual por su cuenta.',
     sectionCommands: 'Comandos del chat',
     commandsIntro:
-      'Con un canal puesto, tú y tus mods pueden cambiar la cuenta regresiva desde el chat de Twitch o Kick, por ejemplo para retrasar el inicio mientras estás lejos del teclado.',
+      'Con un canal puesto, tú y tus mods pueden cambiar la cuenta regresiva desde el chat de Twitch o Kick, por ejemplo para retrasar el inicio mientras estás lejos del teclado. `!cd` funciona dondequiera que vaya `!countdown`.',
     cmdAdd: 'Suma tiempo: 5m, 90s o 1h30m',
     cmdRemove: 'Quita tiempo',
     cmdSet: 'Fija el tiempo restante',
@@ -998,7 +1012,7 @@ export const es: typeof en = {
     cmdReset: 'Reinicia la cuenta regresiva',
     cmdCancel: 'Cancela y oculta la superposición; cualquier comando la recupera',
     cmdScene:
-      'Cambia a starting, break o ending y ajusta el tiempo (10m si no se indica); el texto después se convierte en titular, | nota define la nota',
+      'Cambia a starting, break, ending o pomodoro y ajusta el tiempo (10m si no se indica, 25m para pomodoro); el texto después se convierte en titular, | nota define la nota',
     cmdTitle: 'Fija el titular; dejarlo vacío vuelve al texto de configuración',
     cmdNote: 'Fija la nota debajo del reloj; dejarlo vacío vuelve al texto de configuración',
     previewTitle: 'Vista previa de Cuenta Regresiva',
@@ -2021,12 +2035,12 @@ export const es: typeof en = {
       short: 'Añadir una cuenta regresiva',
       summary:
         'Configurar una cuenta regresiva para tus escenas de inicio, pausa y cierre, hacer que vuelva a empezar en cada cambio de escena, contar hasta una hora del día y los comandos del chat.',
-      lead: 'Cuenta Regresiva es un reloj para las tres escenas en las que todavía no pasa nada: empezamos pronto, vuelvo pronto y fin del stream. Elige la escena y una duración en la página de configuración, añade la URL a OBS como fuente de navegador de 1920 × 1080 y marca Actualizar el navegador cuando la escena se active para que vuelva a empezar cada vez que cambias a esa escena. Sin iniciar sesión, y sin canal salvo que quieras los comandos del chat.',
+      lead: 'Cuenta Regresiva es un reloj para las escenas de empezamos pronto, vuelvo pronto, fin del stream y pomodoro. Elige la escena y una duración en la página de configuración, añade la URL a OBS como fuente de navegador de 1920 × 1080 y marca Actualizar el navegador cuando la escena se active para que vuelva a empezar cada vez que cambias a esa escena. Sin iniciar sesión, y sin canal salvo que quieras los comandos del chat.',
       setup: {
         title: '¿Cómo se configura una cuenta regresiva para el stream?',
         step1: 'Abre la [página de configuración de Cuenta Regresiva](/setup/stream-countdown).',
         step2:
-          'En ¿Para qué es?, elige Inicio, Pausa o Cierre. Eso define el texto y el icono, y cada una es su propia fuente de navegador, así que puedes añadir las tres.',
+          'En ¿Para qué es?, elige Inicio, Pausa, Cierre o Pomodoro. Eso define el texto y el icono, y cada una es su propia fuente de navegador, así que puedes añadir las cuatro.',
         step3:
           'En Contar hasta, elige Una duración y pon los minutos, o elige Una hora del día y escribe una hora en formato 24 h como 21:00.',
         step4:
@@ -2071,7 +2085,7 @@ export const es: typeof en = {
       },
       scenes: {
         title: '¿Qué cuenta regresiva va en cada escena?',
-        p1: 'Inicio va en la escena que tienes puesta antes de empezar el directo, con una duración como 10 minutos o la hora que anunciaste. Pausa va en tu escena BRB con una duración más corta, normalmente 5 o 10 minutos. Cierre va en la última escena, para que el chat vea cuánto queda antes de que te despidas.',
+        p1: 'Inicio va en la escena que tienes puesta antes de empezar el directo, con una duración como 10 minutos o la hora que anunciaste. Pausa va en tu escena BRB con una duración más corta, normalmente 5 o 10 minutos. Cierre va en la última escena, para que el chat vea cuánto queda antes de que te despidas. Pomodoro va sobre lo que estás haciendo, descontando un bloque de concentración de 25 minutos antes del descanso.',
         p2: 'Si cambias de escena desde el chat con [OBS Bridge](/setup/obs-bridge), tus mods pueden mandarte a la escena BRB y la cuenta regresiva empieza con ella.',
       },
       ctaTitle: 'Configura tu cuenta regresiva',
@@ -2345,6 +2359,12 @@ export const es: typeof en = {
     lead: 'Funciones nuevas y errores corregidos en Senchabot Extensions, de lo más nuevo a lo más viejo. La lista sale del historial de commits del proyecto en [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).',
     site: 'Sitio',
     entries: {
+      countdownPomodoroScene:
+        'Stream Countdown estrena un cuarto propósito: Pomodoro, con su texto, su icono de tomate y 25 minutos por defecto en el chat.',
+      countdownCommandAlias:
+        'Los mods de Stream Countdown ahora pueden usar el corto `!cd` dondequiera que vaya `!countdown`.',
+      countdownTemplates:
+        'La configuración de Stream Countdown estrena plantillas de duración en un clic: Pomodoro, descanso corto y largo.',
       subathonEmoteIcons: 'need to translate',
       countdownRestartOnShow:
         'Stream Countdown ahora vuelve a empezar desde el principio cada vez que regresas a su escena en OBS.',

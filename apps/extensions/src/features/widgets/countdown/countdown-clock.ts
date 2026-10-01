@@ -27,26 +27,37 @@ export type CountdownCommand =
   | { action: 'cancel' };
 
 export const COMMAND = '!countdown';
+/** Short triggers that parse exactly like the full command. */
+export const COMMAND_ALIASES = ['!cd'];
 
-/** Default length for `!countdown <scene>` when no duration is typed. */
-const DEFAULT_SCENE_MS = 600_000;
+/** Default length for `!countdown <scene>` when no duration is typed; pomodoro runs 25 minutes. */
+const DEFAULT_SCENE_MS: Record<CountdownScene, number> = {
+  starting: 600_000,
+  break: 600_000,
+  ending: 600_000,
+  pomodoro: 1_500_000,
+};
 
 export const parseCountdownCommand = (message: string): CountdownCommand | null => {
-  const [typed, word = '', ...rest] = message.trim().split(/\s+/);
-  if (typed?.toLowerCase() !== COMMAND) return null;
+  const [typed] = message.trim().split(/\s+/);
+  const head = typed?.toLowerCase() ?? '';
+  if (head !== COMMAND && !COMMAND_ALIASES.includes(head)) return null;
+  // A short trigger parses exactly like the full command.
+  const text = head === COMMAND ? message : message.replace(/^\s*\S+/, COMMAND);
+  const [, word = '', ...rest] = text.trim().split(/\s+/);
   const lowerWord = word.toLowerCase();
 
   if (COUNTDOWN_SCENES.includes(lowerWord as CountdownScene)) {
     const scene = lowerWord as CountdownScene;
     const remainder = rest.join(' ').trim();
-    if (!remainder) return { action: 'scene', scene, ms: DEFAULT_SCENE_MS };
+    if (!remainder) return { action: 'scene', scene, ms: DEFAULT_SCENE_MS[scene] };
     // An optional note follows the first `|`, so `!countdown break 5m Lunch | Back soon`
     // sets the headline to "Lunch" and the note to "Back soon".
     const pipe = remainder.indexOf('|');
     const leftRaw = (pipe >= 0 ? remainder.slice(0, pipe) : remainder).trim();
     const noteRaw = pipe >= 0 ? remainder.slice(pipe + 1).trim() : undefined;
     const note = noteRaw ? noteRaw.slice(0, NOTE_MAX_LENGTH) : undefined;
-    if (!leftRaw) return { action: 'scene', scene, ms: DEFAULT_SCENE_MS, note };
+    if (!leftRaw) return { action: 'scene', scene, ms: DEFAULT_SCENE_MS[scene], note };
     // The duration comes first when anything follows the scene; anything after it is the
     // headline. A typo like `!countdown break foo` stays invalid instead of becoming a headline.
     const tokens = leftRaw.split(/\s+/);
@@ -70,7 +81,7 @@ export const parseCountdownCommand = (message: string): CountdownCommand | null 
     return { action: 'cancel' };
   }
 
-  return parseCommand(message, COMMAND);
+  return parseCommand(text, COMMAND);
 };
 
 /** Epoch ms of the next "HH:MM" on this computer's clock; today's if it hasn't passed. */

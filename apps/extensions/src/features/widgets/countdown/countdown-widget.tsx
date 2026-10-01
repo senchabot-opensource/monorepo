@@ -289,7 +289,7 @@ function CustomIcon({ text }: { text: string }) {
   );
 }
 
-/** One flat mark per scene: a play button, a mug, a heart. No game or platform art. */
+/** One flat mark per scene: a play button, a mug, a heart, a tomato. No game or platform art. */
 function SceneIcon({ scene, hue }: { scene: CountdownScene; hue: number }) {
   const skin: Skin | null = useSkin();
   const hsl = painter(skin, hue);
@@ -340,6 +340,19 @@ function SceneIcon({ scene, hue }: { scene: CountdownScene; hue: number }) {
         strokeWidth="1.3"
         strokeLinejoin="round"
       />
+    ),
+    pomodoro: (
+      <>
+        <circle cx="12" cy="13.6" r="7.4" fill={fill} stroke={stroke} strokeWidth="1.3" />
+        <path d="M12 6.6V4" fill="none" stroke={fill} strokeWidth="1.6" strokeLinecap="round" />
+        <path
+          d="M12 4.8 10.2 7h3.6Z"
+          fill={fill}
+          stroke={stroke}
+          strokeWidth="1"
+          strokeLinejoin="round"
+        />
+      </>
     ),
   };
   return (

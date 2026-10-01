@@ -65,6 +65,19 @@ describe('CountdownWidget', () => {
     expect(root().textContent).toContain('5 dakika');
   });
 
+  it('renders the pomodoro scene with its own wording and tomato mark', async () => {
+    await render(<CountdownWidget settings={settings({ scene: 'pomodoro' })} />);
+    expect(root().textContent).toContain('Pomodoro');
+    expect(root().dataset.scene).toBe('pomodoro');
+  });
+
+  it('shows a custom icon for the pomodoro scene instead of the tomato', async () => {
+    await render(
+      <CountdownWidget settings={settings({ scene: 'pomodoro', iconPomodoro: '🍅' })} />,
+    );
+    expect(screen.queryByTestId('countdown-icon')?.textContent).toBe('🍅');
+  });
+
   it('puts the end message where the clock was', async () => {
     await render(
       <CountdownWidget settings={settings({ time: 60, scene: 'starting', doneHold: 0 })} />,
@@ -149,11 +162,11 @@ describe('CountdownWidget', () => {
     modSays('!countdown add 5m');
     expect(clock()).toBe('15:00');
 
-    modSays('!countdown pause');
+    modSays('!cd pause');
     wait(30_000);
     expect(clock()).toBe('15:00');
 
-    modSays('!countdown reset');
+    modSays('!cd reset');
     expect(clock()).toBe('10:00');
   });
 

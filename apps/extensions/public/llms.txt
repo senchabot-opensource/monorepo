@@ -17,7 +17,7 @@ Every page is also in German, Spanish, French, Japanese, Portuguese and Turkish 
 - [Sub Goal](https://extensions.senchabot.com/setup/sub-goal): A goal bar that every sub, resub and gifted sub on Twitch and Kick fills by one, with a trophy when the goal is reached. Mods fix the count with !goal. Browser source size 800x260.
 - [Stream Frames](https://extensions.senchabot.com/setup/stream-frames): Ready-made frames for a webcam, a chat or the whole stream, drawn in the look of the picked preset, with its own shape and small animations (a temple roof and swaying tassels in Dynasty, grass blocks and flickering torches in Blocks). Transparent in the middle, no channel needed. Browser source size 640x360 (camera), 360x640 (portrait camera), 420x720 (chat) or 1920x1080 (screen).
 - [Socials](https://extensions.senchabot.com/setup/socials): Rotate your social media links on stream with a slick slide-up animation. Browser source size 600x120.
-- [Stream Countdown](https://extensions.senchabot.com/setup/stream-countdown): A countdown for the starting soon, back soon and stream ending scenes. It counts down a length you set or aims at a time of day like 21:00, takes the picked preset's look, and at zero shows a message, holds 00:00 or hides itself. No channel needed; with one, mods change it with !countdown. Browser source size 1920x1080.
+- [Stream Countdown](https://extensions.senchabot.com/setup/stream-countdown): A countdown for the starting soon, back soon, stream ending and pomodoro scenes. It counts down a length you set or aims at a time of day like 21:00, takes the picked preset's look, and at zero shows a message, holds 00:00 or hides itself. No channel needed; with one, mods change it with !countdown (or !cd). Browser source size 1920x1080.
 
 ## Tools
 
@@ -38,7 +38,7 @@ Every page is also in German, Spanish, French, Japanese, Portuguese and Turkish 
 - [Run a subathon timer on Twitch and Kick](https://extensions.senchabot.com/guides/subathon-timer): Time per sub, gift, Bits and Kicks, the !subathon commands and what happens when OBS closes.
 - [Run a chat poll on Twitch and Kick](https://extensions.senchabot.com/guides/chat-poll): The !poll commands, the ways viewers vote, one vote per viewer, stream delay and what happens when time runs out.
 - [Add camera, chat and screen frames in OBS](https://extensions.senchabot.com/guides/stream-frames): Adding the three frame pieces, putting the frame above the camera in the source list, fitting and cropping the camera to the opening, presets and turning animations off.
-- [Add a starting soon, BRB and ending countdown in OBS](https://extensions.senchabot.com/guides/stream-countdown): Setting up the three countdown scenes, making the countdown start over on every scene switch, counting down to a time of day and the !countdown commands.
+- [Add a starting soon, BRB and ending countdown in OBS](https://extensions.senchabot.com/guides/stream-countdown): Setting up the starting soon, BRB, ending and pomodoro countdown scenes, making the countdown start over on every scene switch, counting down to a time of day and the !countdown commands.
 
 ## Information
 

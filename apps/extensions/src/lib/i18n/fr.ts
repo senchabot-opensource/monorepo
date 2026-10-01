@@ -929,6 +929,12 @@ export const fr: typeof en = {
         done: "Merci d'avoir regardé !",
         hint: 'Pour les dernières minutes, pour que le chat sache combien de temps il reste.',
       },
+      pomodoro: {
+        label: 'Pomodoro',
+        title: 'Pomodoro',
+        done: 'Pause !',
+        hint: 'Pour travailler par blocs : 25 minutes, puis une pause.',
+      },
     },
     sectionCountdown: 'Compte à rebours',
     scene: "C'est pour quoi ?",
@@ -948,6 +954,14 @@ export const fr: typeof en = {
       "Une heure au format 24 h comme 21:00, lue sur l'horloge de l'ordinateur qui fait tourner OBS. Si elle est déjà passée aujourd'hui, le compte à rebours vise demain.",
     atPlaceholder: '21:00',
     atInvalid: 'Tape une heure au format 24 h, comme 21:00.',
+    templatesLabel: 'Modèles',
+    templatesTip:
+      'Remplit une durée et un titre courants en un clic. Tu peux encore les modifier après.',
+    templates: {
+      pomodoro: 'Pomodoro',
+      shortBreak: 'Petite pause',
+      longBreak: 'Pause longue',
+    },
     ending: 'À zéro',
     endings: {
       text: 'Afficher un message',
@@ -1001,7 +1015,7 @@ export const fr: typeof en = {
       'Utile seulement pour les commandes du chat. Sans chaîne, le compte à rebours tourne quand même tout seul.',
     sectionCommands: 'Commandes du chat',
     commandsIntro:
-      'Avec une chaîne renseignée, toi et tes modos pouvez modifier le compte à rebours depuis le chat Twitch ou Kick, par exemple pour repousser le début pendant que tu es AFK.',
+      'Avec une chaîne renseignée, toi et tes modos pouvez modifier le compte à rebours depuis le chat Twitch ou Kick, par exemple pour repousser le début pendant que tu es AFK. `!cd` marche partout où va `!countdown`.',
     cmdAdd: 'Ajoute du temps : 5m, 90s ou 1h30m',
     cmdRemove: 'Retire du temps',
     cmdSet: 'Définit le temps restant',
@@ -1010,7 +1024,7 @@ export const fr: typeof en = {
     cmdCancel:
       "Annule et masque l'overlay ; n'importe quelle commande le réaffiche",
     cmdScene:
-      'Bascule vers starting, break ou ending et définit la durée (10m si omis) ; le texte après devient le titre, | note définit la note',
+      'Bascule vers starting, break, ending ou pomodoro et définit la durée (10m si omis, 25m pour pomodoro) ; le texte après devient le titre, | note définit la note',
     cmdTitle: 'Définit le titre ; vide réinitialise avec le texte de configuration',
     cmdNote:
       "Définit la note sous l'horloge ; vide réinitialise avec le texte de configuration",
@@ -2036,13 +2050,13 @@ export const fr: typeof en = {
       short: 'Ajouter un compte à rebours',
       summary:
         "Configurer un compte à rebours pour tes scènes de début, de pause et de fin, le faire recommencer à chaque changement de scène, décompter jusqu'à une heure précise, et les commandes du chat.",
-      lead: "Le Compte à rebours de stream est une horloge pour les trois scènes où il ne se passe encore rien : ça commence bientôt, je reviens vite et fin du stream. Choisis la scène et une durée sur la page de configuration, ajoute l'URL à OBS comme source Navigateur web en 1920 × 1080, et coche Rafraîchir le navigateur lorsque la scène devient active pour qu'il recommence chaque fois que tu passes sur cette scène. Pas de connexion, et pas de chaîne sauf si tu veux les commandes du chat.",
+      lead: "Le Compte à rebours de stream est une horloge pour les scènes ça commence bientôt, je reviens vite, fin du stream et pomodoro. Choisis la scène et une durée sur la page de configuration, ajoute l'URL à OBS comme source Navigateur web en 1920 × 1080, et coche Rafraîchir le navigateur lorsque la scène devient active pour qu'il recommence chaque fois que tu passes sur cette scène. Pas de connexion, et pas de chaîne sauf si tu veux les commandes du chat.",
       setup: {
         title: 'Comment configurer un compte à rebours de stream ?',
         step1:
           'Ouvre la [page de configuration du Compte à rebours de stream](/setup/stream-countdown).',
         step2:
-          "Sous C'est pour quoi ?, choisis Début, Pause ou Fin. Ça définit le texte et l'icône, et chacun est sa propre source Navigateur web, donc tu peux ajouter les trois.",
+          "Sous C'est pour quoi ?, choisis Début, Pause, Fin ou Pomodoro. Ça définit le texte et l'icône, et chacun est sa propre source Navigateur web, donc tu peux ajouter les quatre.",
         step3:
           'Sous Décompter, choisis Une durée et règle les minutes, ou choisis Une heure précise et tape une heure au format 24 h comme 21:00.',
         step4:
@@ -2087,7 +2101,7 @@ export const fr: typeof en = {
       },
       scenes: {
         title: 'Quel compte à rebours sur quelle scène ?',
-        p1: "Début va sur la scène où tu restes avant ton live, avec une durée comme 10 minutes, ou l'heure que tu as annoncée. Pause va sur ta scène BRB avec une durée plus courte, en général 5 ou 10 minutes. Fin va sur la dernière scène, pour que le chat voie combien de temps il reste avant que tu coupes.",
+        p1: "Début va sur la scène où tu restes avant ton live, avec une durée comme 10 minutes, ou l'heure que tu as annoncée. Pause va sur ta scène BRB avec une durée plus courte, en général 5 ou 10 minutes. Fin va sur la dernière scène, pour que le chat voie combien de temps il reste avant que tu coupes. Pomodoro se met sur ce que tu fais, égrenant un bloc de concentration de 25 minutes avant la pause.",
         p2: "Si tu changes de scène depuis le chat avec [OBS Bridge](/setup/obs-bridge), tes modos peuvent t'envoyer sur la scène BRB et le compte à rebours démarre avec.",
       },
       ctaTitle: 'Configure ton compte à rebours',
@@ -2360,6 +2374,12 @@ export const fr: typeof en = {
     lead: "Les nouvelles fonctionnalités et corrections de bugs de Senchabot Extensions, des plus récentes aux plus anciennes. La liste est tirée de l'historique des commits du projet sur [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      countdownPomodoroScene:
+        'Le Stream Countdown a un quatrième usage : Pomodoro, avec son texte, son icône tomate et 25 minutes par défaut dans le chat.',
+      countdownCommandAlias:
+        'Les modos de Stream Countdown peuvent désormais utiliser le `!cd` court partout où va `!countdown`.',
+      countdownTemplates:
+        'La configuration du Stream Countdown a des modèles de durée en un clic : Pomodoro, petite pause et pause longue.',
       subathonEmoteIcons: 'need to translate',
       countdownRestartOnShow:
         'Stream Countdown recommence désormais depuis le début chaque fois que tu reviens sur sa scène dans OBS.',

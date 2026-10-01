@@ -313,37 +313,37 @@ export const PAGE_META = {
     en: {
       title: 'Free Starting Soon & BRB Countdown for OBS | Senchabot',
       description:
-        'A free countdown overlay for OBS. Set a length, or the time of day you go live, for your starting, break and ending scenes. Your mods change it from chat.',
+        'A free countdown for OBS. Set a length, or the time of day you go live, for your starting, break, ending and pomodoro scenes. Your mods change it from chat.',
     },
     de: {
       title: 'Kostenloser Starting-Soon- und BRB-Countdown | Senchabot',
       description:
-        'Ein kostenloser Countdown für OBS. Stell eine Dauer oder die Uhrzeit ein, zu der du live gehst, für Start-, Pausen- und Endszene. Deine Mods ändern ihn im Chat.',
+        'Ein kostenloser Countdown für OBS. Stell eine Dauer oder die Uhrzeit deines Streams ein, für Start-, Pausen-, End- und Pomodoro-Szene. Mods ändern ihn im Chat.',
     },
     tr: {
       title: 'Twitch ve Kick için Yayın Geri Sayımı | Senchabot',
       description:
-        "OBS için ücretsiz geri sayım overlay'i. Başlangıç, mola ve bitiş sahnelerin için bir süre ya da 21:00 gibi bir saat belirle, modların sohbetten uzatsın.",
+        "OBS için ücretsiz geri sayım overlay'i. Başlangıç, mola, bitiş ve pomodoro sahnelerin için bir süre ya da 21:00 gibi bir saat belirle, modların uzatsın.",
     },
     es: {
       title: 'Cuenta regresiva gratis para OBS | Senchabot',
       description:
-        'Una cuenta regresiva gratis para OBS. Pon una duración, o la hora a la que empiezas, en tus escenas de inicio, pausa y cierre. Tus mods la cambian en el chat.',
+        'Cuenta regresiva gratis para OBS. Pon una duración, o la hora a la que empiezas, en tus escenas de inicio, pausa, cierre y pomodoro. Tus mods la cambian.',
     },
     fr: {
       title: 'Compte à rebours de début et BRB pour OBS | Senchabot',
       description:
-        "Un compte à rebours gratuit pour OBS. Règle une durée, ou l'heure de ton live, pour tes scènes de début, de pause et de fin. Tes modos le changent en chat.",
+        "Compte à rebours gratuit pour OBS. Règle une durée, ou l'heure de ton live, pour tes scènes de début, de pause, de fin et de pomodoro. Tes modos le changent.",
     },
     ja: {
       title: 'OBS用の無料の開始前・BRBカウントダウン | Senchabot',
       description:
-        'OBS用の無料カウントダウンオーバーレイ。開始前、休憩、終了のシーンに、時間の長さか配信を始める時刻を設定できます。モデレーターはチャットから時間を変更できます。',
+        'OBS用の無料カウントダウンオーバーレイ。開始前、休憩、終了、ポモドーロのシーンに、時間の長さか配信を始める時刻を設定できます。モデレーターはチャットから時間を変更できます。',
     },
     pt: {
       title: 'Contagem de início e BRB grátis para OBS | Senchabot',
       description:
-        'Contagem regressiva grátis para o OBS. Defina uma duração, ou o horário em que você entra ao vivo, nas cenas de início, pausa e fim. Os mods mudam pelo chat.',
+        'Contagem regressiva grátis para o OBS. Defina uma duração, ou o horário em que você entra ao vivo, nas cenas de início, pausa, fim e pomodoro. Os mods mudam.',
     },
   },
   poll: {

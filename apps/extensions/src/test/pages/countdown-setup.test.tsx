@@ -43,6 +43,24 @@ describe('Stream Countdown setup', () => {
     expect(iconBox().value).toBe('🎬');
   });
 
+  it('keeps a separate icon box for the pomodoro scene', async () => {
+    const user = setupUser();
+    await renderRoute(PAGE);
+
+    let settings: CountdownSettings = { ...DEFAULT_COUNTDOWN_SETTINGS };
+    const expectUrl = (patch: Partial<CountdownSettings>) => {
+      settings = { ...settings, ...patch };
+      expect(urlField().value).toBe(
+        buildCountdownUrl(window.location.origin, settings, '', '', 'en'),
+      );
+    };
+
+    await user.click(segment(en('countdown.scene'), en('countdown.scenes.pomodoro.label')));
+    expect(iconBox().value).toBe('');
+    await retype(user, iconBox(), '🍅');
+    expectUrl({ scene: 'pomodoro', iconPomodoro: '🍅' });
+  });
+
   it('picks a channel emote for the picked scene', async () => {
     vi.stubGlobal(
       'fetch',
@@ -72,6 +90,45 @@ describe('Stream Countdown setup', () => {
         `iconUrlStarting=${encodeURIComponent('https://cdn.7tv.app/emote/e1/2x.webp')}`,
       ),
     );
+  });
+
+  it('shows templates for pomodoro and fills in length and headline', async () => {
+    const user = setupUser();
+    await renderRoute(PAGE);
+
+    let settings: CountdownSettings = { ...DEFAULT_COUNTDOWN_SETTINGS };
+    const expectUrl = (patch: Partial<CountdownSettings>) => {
+      settings = { ...settings, ...patch };
+      expect(urlField().value).toBe(
+        buildCountdownUrl(window.location.origin, settings, '', '', 'en'),
+      );
+    };
+    const template = (name: 'pomodoro' | 'shortBreak' | 'longBreak', minutes: number) =>
+      `${en(`countdown.templates.${name}`)} · ${minutes} ${en('countdown.durationUnit')}`;
+
+    // Templates are pomodoro related, so other purposes hide them.
+    expect(screen.queryByRole('button', { name: template('pomodoro', 25) })).toBeNull();
+
+    await user.click(segment(en('countdown.scene'), en('countdown.scenes.pomodoro.label')));
+    expectUrl({ scene: 'pomodoro' });
+
+    await user.click(screen.getByRole('button', { name: template('pomodoro', 25) }));
+    expect(textbox(en('countdown.duration')).value).toBe('25');
+    expect(textbox(en('countdown.titleLabel')).value).toBe(en('countdown.templates.pomodoro'));
+    expectUrl({ time: 1500, title: 'Pomodoro' });
+
+    // A template switches back from a time of day to a length.
+    await user.click(segment(en('countdown.mode'), en('countdown.modes.clock')));
+    expect(textbox(en('countdown.atLabel')).value).toBe('21:00');
+    expectUrl({ at: '21:00' });
+    await user.click(screen.getByRole('button', { name: template('shortBreak', 5) }));
+    expect(textbox(en('countdown.duration')).value).toBe('5');
+    expect(textbox(en('countdown.titleLabel')).value).toBe(en('countdown.templates.shortBreak'));
+    const params = new URL(urlField().value).searchParams;
+    expect(params.get('time')).toBe('300');
+    expect(params.get('title')).toBe('Short break');
+    expect(params.get('at')).toBeNull();
+    expectUrl({ time: 300, title: 'Short break', at: '' });
   });
 
   it('finds a channel emote through the picker search', async () => {

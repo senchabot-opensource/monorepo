@@ -916,6 +916,12 @@ export const pt: typeof en = {
         done: 'Valeu por assistir!',
         hint: 'Para os últimos minutos, para o chat saber quanto falta.',
       },
+      pomodoro: {
+        label: 'Pomodoro',
+        title: 'Pomodoro',
+        done: 'Hora da pausa!',
+        hint: 'Para blocos de foco: 25 minutos e depois uma pausa.',
+      },
     },
     sectionCountdown: 'Contagem',
     scene: 'Para que é?',
@@ -935,6 +941,14 @@ export const pt: typeof en = {
       'Um horário de 24 horas tipo 21:00, lido do relógio do computador que roda o OBS. Se já passou hoje, a contagem mira no dia seguinte.',
     atPlaceholder: '21:00',
     atInvalid: 'Digite um horário de 24 horas, tipo 21:00.',
+    templatesLabel: 'Modelos',
+    templatesTip:
+      'Preenche uma duração e um título comuns com um clique. Você ainda pode mudar depois.',
+    templates: {
+      pomodoro: 'Pomodoro',
+      shortBreak: 'Pausa curta',
+      longBreak: 'Pausa longa',
+    },
     ending: 'No zero',
     endings: {
       text: 'Mostrar mensagem',
@@ -986,7 +1000,7 @@ export const pt: typeof en = {
       'Só precisa para os comandos do chat. Sem canal, a contagem roda sozinha do mesmo jeito.',
     sectionCommands: 'Comandos do chat',
     commandsIntro:
-      'Com um canal preenchido, você e seus mods podem mudar a contagem pelo chat da Twitch ou da Kick, por exemplo para adiar o início enquanto você está longe do teclado.',
+      'Com um canal preenchido, você e seus mods podem mudar a contagem pelo chat da Twitch ou da Kick, por exemplo para adiar o início enquanto você está longe do teclado. `!cd` funciona em todo lugar onde `!countdown` for.',
     cmdAdd: 'Adiciona tempo: 5m, 90s ou 1h30m',
     cmdRemove: 'Tira tempo',
     cmdSet: 'Define o tempo restante',
@@ -994,7 +1008,7 @@ export const pt: typeof en = {
     cmdReset: 'Recomeça a contagem',
     cmdCancel: 'Cancela e oculta o overlay; qualquer comando traz de volta',
     cmdScene:
-      'Muda para starting, break ou ending e define a duração (10m se omitido); o texto depois vira o título, | nota define a nota',
+      'Muda para starting, break, ending ou pomodoro e define a duração (10m se omitido, 25m para pomodoro); o texto depois vira o título, | nota define a nota',
     cmdTitle: 'Define o título; vazio volta para o texto da configuração',
     cmdNote: 'Define a nota embaixo do relógio; vazio volta para o texto da configuração',
     previewTitle: 'Prévia da Contagem Regressiva',
@@ -2013,12 +2027,12 @@ export const pt: typeof en = {
       short: 'Adicionar uma contagem regressiva',
       summary:
         'Configurar uma contagem regressiva para as cenas de início, pausa e encerramento, fazer ela recomeçar a cada troca de cena, contar até um horário e os comandos do chat.',
-      lead: 'A Contagem Regressiva é um relógio para as três cenas em que nada está rolando ainda: começando em breve, já volto e fim da live. Escolha a cena e uma duração na página de configuração, adicione a URL no OBS como fonte de navegador de 1920 × 1080 e marque Atualizar o navegador quando a cena se tornar ativa, para ela recomeçar toda vez que você trocar para essa cena. Sem login, e sem canal, a não ser que você queira os comandos do chat.',
+      lead: 'A Contagem Regressiva é um relógio para as cenas começando em breve, já volto, fim da live e pomodoro. Escolha a cena e uma duração na página de configuração, adicione a URL no OBS como fonte de navegador de 1920 × 1080 e marque Atualizar o navegador quando a cena se tornar ativa, para ela recomeçar toda vez que você trocar para essa cena. Sem login, e sem canal, a não ser que você queira os comandos do chat.',
       setup: {
         title: 'Como configurar uma contagem regressiva?',
         step1: 'Abra a [página de configuração da Contagem Regressiva](/setup/stream-countdown).',
         step2:
-          'Em Para que é?, escolha Início, Pausa ou Encerramento. Isso define o texto e o ícone, e cada um é uma fonte de navegador separada, então você pode adicionar os três.',
+          'Em Para que é?, escolha Início, Pausa, Encerramento ou Pomodoro. Isso define o texto e o ícone, e cada um é uma fonte de navegador separada, então você pode adicionar os quatro.',
         step3:
           'Em Contar até, escolha Uma duração e defina os minutos, ou escolha Um horário e digite um horário de 24 horas tipo 21:00.',
         step4:
@@ -2063,7 +2077,7 @@ export const pt: typeof en = {
       },
       scenes: {
         title: 'Qual contagem vai em qual cena?',
-        p1: 'Início vai na cena em que você fica antes de entrar ao vivo, com uma duração tipo 10 minutos, ou o horário que você anunciou. Pausa vai na sua cena BRB com uma duração menor, normalmente 5 ou 10 minutos. Encerramento vai na última cena, para o chat ver quanto falta antes de você encerrar.',
+        p1: 'Início vai na cena em que você fica antes de entrar ao vivo, com uma duração tipo 10 minutos, ou o horário que você anunciou. Pausa vai na sua cena BRB com uma duração menor, normalmente 5 ou 10 minutos. Encerramento vai na última cena, para o chat ver quanto falta antes de você encerrar. Pomodoro fica sobre o que você está fazendo, contando um bloco de foco de 25 minutos antes da pausa.',
         p2: 'Se você troca de cena pelo chat com o [OBS Bridge](/setup/obs-bridge), seus mods podem te mandar para a cena BRB e a contagem começa junto.',
       },
       ctaTitle: 'Configure sua contagem',
@@ -2336,6 +2350,12 @@ export const pt: typeof en = {
     lead: 'Recursos novos e correções de bugs no Senchabot Extensions, dos mais novos para os mais antigos. A lista é montada a partir do histórico de commits do projeto no [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).',
     site: 'Site',
     entries: {
+      countdownPomodoroScene:
+        'O Stream Countdown ganha um quarto propósito: Pomodoro, com texto próprio, ícone de tomate e 25 minutos de padrão no chat.',
+      countdownCommandAlias:
+        'Mods do Stream Countdown agora podem usar o curto `!cd` em todo lugar onde `!countdown` for.',
+      countdownTemplates:
+        'A configuração do Stream Countdown ganha modelos de duração em um clique: Pomodoro, pausa curta e longa.',
       subathonEmoteIcons: 'need to translate',
       countdownRestartOnShow:
         'O Stream Countdown agora recomeça do início toda vez que você volta para a cena dele no OBS.',
