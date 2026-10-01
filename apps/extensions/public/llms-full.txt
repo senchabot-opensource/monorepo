@@ -103,7 +103,7 @@ Shows emotes from chat on screen, anywhere on a full canvas.
 - Recommended size: 1920x1080, placed above the gameplay.
 - By default only messages made entirely of emotes count. With showAllEmotes=true, up to 5 emotes are also taken from normal text messages.
 - 7TV: the emotes in the Twitch channel's active 7TV set, used in Kick chat too. It needs the Twitch channel in the URL.
-- Modes: calm (pops up at a random spot, drifts and fades out), chaos (flies in from a random edge and vanishes between halfway and the far side), bounce (bounces off the edges and speeds up on every hit), glide (drifts down from the top of the screen, swaying side to side, and fades out near the bottom), spin (fades in at a random spot, spins around once or twice, then fades away), burst (appears, then pops into emote fragments and colored sparks before its time ends).
+- Modes: calm (pops up at a random spot, drifts and fades out), chaos (flies in from a random edge and vanishes between halfway and the far side), bounce (bounces off the edges and speeds up on every hit), glide (drifts down from the top of the screen, swaying side to side, and fades out near the bottom), spin (fades in at a random spot, spins around once or twice, then fades away), burst (appears, then pops into emote fragments and colored sparks before its time ends), random (every emote gets a random animation).
 
 URL parameters (all optional; numbers out of range are clamped, invalid ones use the default):
 
@@ -112,7 +112,7 @@ URL parameters (all optional; numbers out of range are clamped, invalid ones use
 | twitch | Twitch channel name | none |
 | kick | Kick channel name | none |
 | sevenTv | true, false | true |
-| mode | calm, chaos, bounce, glide, spin, burst | calm |
+| mode | calm, chaos, bounce, glide, spin, burst, random | calm |
 | size | emote size in pixels, 32 to 256 | 112 |
 | duration | seconds on screen, 2 to 30 | 5 |
 | max | emotes on screen at once, 1 to 120 (oldest removed first) | 25 |

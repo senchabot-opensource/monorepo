@@ -173,6 +173,14 @@ describe('EmoteWall', () => {
     expect(images()).toHaveLength(0);
   });
 
+  it('mixes animations and clears them all in random mode', () => {
+    mount({ mode: 'random', durationSec: 2, spamBlock: false });
+    say('Alice', 'Kappa Kappa Kappa', '25:0-4,6-10,12-16');
+    expect(images().length).toBeGreaterThan(0);
+    wait(2000 + 1000);
+    expect(images()).toHaveLength(0);
+  });
+
   it('sways glide emotes side to side while they fall', () => {
     mount({ mode: 'glide' });
     say('Alice', 'Kappa', '25:0-4');

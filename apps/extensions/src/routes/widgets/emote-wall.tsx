@@ -8,7 +8,7 @@ const searchSchema = z.object({
   twitch: z.string().optional(),
   kick: z.string().optional(),
   sevenTv: z.coerce.boolean().optional().default(true),
-  mode: z.enum(['calm', 'chaos', 'bounce', 'glide', 'spin', 'burst']).catch('calm'),
+  mode: z.enum(['calm', 'chaos', 'bounce', 'glide', 'spin', 'burst', 'random']).catch('calm'),
   subsOnly: z.coerce.boolean().optional().default(false),
   subDurationX2: z.coerce.boolean().optional().default(false),
   showAllEmotes: z.coerce.boolean().optional().default(false),

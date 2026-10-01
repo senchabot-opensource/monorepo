@@ -1,4 +1,4 @@
-export type EmoteWallMode = 'calm' | 'chaos' | 'bounce' | 'glide' | 'spin' | 'burst';
+export type EmoteWallMode = 'calm' | 'chaos' | 'bounce' | 'glide' | 'spin' | 'burst' | 'random';
 
 export function isEmoteWallMode(value: unknown): value is EmoteWallMode {
   return (
@@ -7,8 +7,23 @@ export function isEmoteWallMode(value: unknown): value is EmoteWallMode {
     value === 'bounce' ||
     value === 'glide' ||
     value === 'spin' ||
-    value === 'burst'
+    value === 'burst' ||
+    value === 'random'
   );
+}
+
+/** Concrete flights Random can pick (never itself). */
+export const RANDOM_WALL_MODES: Exclude<EmoteWallMode, 'random'>[] = [
+  'calm',
+  'chaos',
+  'bounce',
+  'glide',
+  'spin',
+  'burst',
+];
+
+export function randomWallMode(): (typeof RANDOM_WALL_MODES)[number] {
+  return RANDOM_WALL_MODES[Math.floor(Math.random() * RANDOM_WALL_MODES.length)];
 }
 
 /** Calm: pops up at a random spot, drifts gently, fades out. */

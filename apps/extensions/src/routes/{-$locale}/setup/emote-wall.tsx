@@ -73,6 +73,7 @@ function EmoteWallSetup() {
     { value: 'glide', label: t('emoteWallSetup.modeGlide') },
     { value: 'spin', label: t('emoteWallSetup.modeSpin') },
     { value: 'burst', label: t('emoteWallSetup.modeBurst') },
+    { value: 'random', label: t('emoteWallSetup.modeRandom') },
   ];
 
   const settingsPanel = (
