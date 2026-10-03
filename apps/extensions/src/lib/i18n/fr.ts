@@ -1007,6 +1007,8 @@ export const fr: typeof en = {
     },
     lookTip: "Un panneau derrière l'horloge, ou le texte directement sur ta scène.",
     color: 'Couleur',
+    zoom: 'Zoom',
+    zoomTip: 'Rend tout plus grand ou plus petit. Choisis 150 % ou 200 % pour l’afficher en grand.',
     showBar: 'Barre de progression',
     showBarTip: "Une barre sous l'horloge qui se vide à mesure que le temps s'écoule.",
     motion: 'Animations',
@@ -2374,6 +2376,8 @@ export const fr: typeof en = {
     lead: "Les nouvelles fonctionnalités et corrections de bugs de Senchabot Extensions, des plus récentes aux plus anciennes. La liste est tirée de l'historique des commits du projet sur [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      countdownZoom:
+        'Le Stream Countdown a des options de zoom : affiche-le en grand à 125 %, 150 % ou 200 %, ou plus petit à 75 %.',
       countdownPomodoroScene:
         'Le Stream Countdown a un quatrième usage : Pomodoro, avec son texte, son icône tomate et 25 minutes par défaut dans le chat.',
       countdownCommandAlias:

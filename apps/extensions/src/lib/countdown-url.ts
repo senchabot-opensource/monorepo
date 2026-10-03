@@ -25,6 +25,10 @@ export type CountdownLook = (typeof COUNTDOWN_LOOKS)[number];
 export const COUNTDOWN_ENDINGS = ['text', 'hold', 'hide'] as const;
 export type CountdownEnding = (typeof COUNTDOWN_ENDINGS)[number];
 
+/** Zoom levels in percent; 100 fills the browser source as before, higher shows it big. */
+export const COUNTDOWN_ZOOMS = [75, 100, 125, 150, 200] as const;
+export type CountdownZoom = (typeof COUNTDOWN_ZOOMS)[number];
+
 export interface CountdownSettings {
   platforms: ChannelPlatforms;
   /** Preset id; any preset but classic brings its own colors, fonts and frame. */
@@ -61,6 +65,8 @@ export interface CountdownSettings {
   ending: CountdownEnding;
   look: CountdownLook;
   color: CountdownColor;
+  /** Zoom in percent; multiplies the fit-to-source scale, so 150 shows it big. */
+  zoom: CountdownZoom;
   /** A bar under the clock that drains with the time left. */
   bar: boolean;
   /** The clock's pulse in the last minute and the preset's own small motion. */
@@ -88,6 +94,7 @@ export const DEFAULT_COUNTDOWN_SETTINGS: CountdownSettings = {
   ending: 'text',
   look: 'card',
   color: 'purple',
+  zoom: 100,
   bar: true,
   motion: true,
 };
@@ -162,6 +169,7 @@ function buildParams(
   for (const [key, url] of Object.entries(iconUrls))
     if (url) params.set(key, url.slice(0, ICON_URL_MAX_LENGTH));
   if (settings.ending !== defaults.ending) params.set('end', settings.ending);
+  if (settings.zoom !== defaults.zoom) params.set('zoom', String(settings.zoom));
   if (!settings.bar) params.set('bar', '0');
   if (!settings.motion) params.set('motion', '0');
   // Always written: the countdown is mostly words, and OBS shouldn't pick their language.
@@ -201,6 +209,7 @@ export function readCountdownSettings(
   const color = params.get('color') as CountdownColor;
   const look = params.get('look') as CountdownLook;
   const ending = params.get('end') as CountdownEnding;
+  const zoom = Number(params.get('zoom'));
   const text = (key: string, max: number) => (params.get(key) ?? '').trim().slice(0, max);
   return {
     preset: readPreset(params),
@@ -223,6 +232,9 @@ export function readCountdownSettings(
     ending: COUNTDOWN_ENDINGS.includes(ending) ? ending : defaults.ending,
     look: COUNTDOWN_LOOKS.includes(look) ? look : defaults.look,
     color: COUNTDOWN_COLORS.includes(color) ? color : defaults.color,
+    zoom: (COUNTDOWN_ZOOMS as readonly number[]).includes(zoom)
+      ? (zoom as CountdownZoom)
+      : defaults.zoom,
     bar: readFlag(params.get('bar'), defaults.bar),
     motion: readFlag(params.get('motion'), defaults.motion),
   };

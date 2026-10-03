@@ -973,6 +973,8 @@ export const tr: typeof en = {
     },
     lookTip: 'Saatin arkasında bir panel ya da yazılar doğrudan sahnenin üstünde.',
     color: 'Renk',
+    zoom: 'Yakınlaştırma',
+    zoomTip: 'Her şeyi büyütür ya da küçültür. Büyük göstermek için %150 ya da %200 seç.',
     showBar: 'İlerleme Barı',
     showBarTip: 'Saatin altında, süre azaldıkça boşalan bir bar.',
     motion: 'Animasyonlar',
@@ -2312,6 +2314,8 @@ export const tr: typeof en = {
     lead: "Senchabot Extensions'a eklenen özellikler ve düzeltilen hatalar, en yenisi en üstte. Liste projenin [GitHub'daki](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) commit geçmişinden hazırlanıyor.",
     site: 'Site',
     entries: {
+      countdownZoom:
+        "Yayın Geri Sayımı'na Yakınlaştırma seçenekleri eklendi: %125, %150 ya da %200 ile büyük, %75 ile küçük göster.",
       countdownPomodoroScene:
         "Yayın Geri Sayımı'na dördüncü bir amaç eklendi: Pomodoro; kendi yazıları, domates ikonu ve 25 dakikalık sohbet varsayılanıyla.",
       countdownCommandAlias:

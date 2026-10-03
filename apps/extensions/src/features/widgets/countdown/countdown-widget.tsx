@@ -49,7 +49,9 @@ export function CountdownWidget({
   previewId,
 }: CountdownWidgetProps) {
   const { t } = useI18n();
-  const scale = useFitScale(STAGE);
+  const fitScale = useFitScale(STAGE);
+  const zoom = settings.zoom ?? 100;
+  const scale = (fitScale * zoom) / 100;
   const {
     left,
     progress,
@@ -96,6 +98,7 @@ export function CountdownWidget({
         data-ended={ended}
         data-scene={scene}
         data-preset={skin?.id}
+        data-zoom={zoom}
       >
         <style>{CSS + skinCss('cd', skin)}</style>
         {/* `hide` leaves the scene bare once the break is over, so nothing sits over the game. */}
