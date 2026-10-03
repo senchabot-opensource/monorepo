@@ -204,6 +204,18 @@ export const OG_IMAGES = {
       pt: 'Redes Sociais, um widget de rodízio de redes sociais para Twitch e Kick',
     },
   },
+  'spin-wheel': {
+    path: '/og/spin-wheel.png',
+    alt: {
+      en: 'Spin Wheel, a decision wheel tool that spins your typed options',
+      de: 'Glücksrad, ein Entscheidungs-Tool, das deine getippten Optionen dreht',
+      tr: 'Çark, yazdığın seçenekleri çeviren karar aracı',
+      es: 'Ruleta, una herramienta que gira las opciones que escribes',
+      fr: 'Roue, un outil qui fait tourner les options que tu tapes',
+      ja: 'ルーレット：入力した選択肢を回す抽選ツール',
+      pt: 'Roleta, uma ferramenta que gira as opções que você digita',
+    },
+  },
 } as const satisfies Record<string, { path: string; alt: Record<Locale, string> }>;
 
 export type OgImage = keyof typeof OG_IMAGES;

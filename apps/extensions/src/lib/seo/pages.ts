@@ -17,37 +17,37 @@ export const PAGE_META = {
     en: {
       title: 'Free Twitch & Kick Overlays for OBS | Senchabot Extensions',
       description:
-        'Twelve free overlays and tools for Twitch and Kick streamers: chat box, emote wall, alerts, sub goal, subathon timer, frames, countdown, poll and raffle.',
+        'Thirteen free overlays and tools for Twitch and Kick streamers: chat box, emote wall, alerts, sub goal, subathon, frames, countdown, poll, raffle and wheel.',
     },
     de: {
       title: 'Kostenlose Twitch- und Kick-Overlays für OBS | Senchabot',
       description:
-        'Zwölf kostenlose Overlays und Tools für Twitch- und Kick-Streamer: Chat-Box, Emote-Wand, Alerts, Sub-Ziel, Subathon, Rahmen, Countdown, Umfrage, Verlosung.',
+        'Dreizehn Overlays und Tools für Twitch- und Kick-Streamer: Chat-Box, Emote-Wand, Alerts, Sub-Ziel, Subathon, Rahmen, Countdown, Umfrage, Verlosung, Glücksrad.',
     },
     tr: {
       title: "OBS için Ücretsiz Twitch ve Kick Overlay'leri | Senchabot",
       description:
-        'Twitch ve Kick yayıncıları için 12 ücretsiz overlay ve araç: sohbet kutusu, emote duvarı, uyarılar, abone hedefi, subathon, çerçeve, geri sayım, anket, çekiliş.',
+        'Twitch ve Kick yayıncıları için 13 ücretsiz overlay ve araç: sohbet, emote duvarı, uyarılar, abone hedefi, subathon, geri sayım, anket, çekiliş ve çark.',
     },
     es: {
       title: 'Overlays gratis de Twitch y Kick para OBS | Senchabot',
       description:
-        'Doce overlays y herramientas gratis para streamers de Twitch y Kick: caja de chat, muro de emotes, alertas, meta de subs, subathon, marcos, encuestas y sorteos.',
+        'Trece overlays y herramientas gratis para streamers de Twitch y Kick: chat, emotes, alertas, meta de subs, subathon, marcos, encuestas, sorteos y ruleta.',
     },
     fr: {
       title: 'Overlays Twitch et Kick gratuits pour OBS | Senchabot',
       description:
-        "Douze overlays et outils gratuits pour streamers Twitch et Kick : boîte de chat, mur d'emotes, alertes, objectif de subs, subathon, cadres, sondage et tirage.",
+        "Treize overlays et outils pour streamers Twitch et Kick : boîte de chat, mur d'emotes, alertes, objectif de subs, subathon, cadres, sondage, tirage et roue.",
     },
     ja: {
       title: 'OBS用の無料Twitch・Kickオーバーレイ | Senchabot Extensions',
       description:
-        'TwitchとKickの配信者向けの無料オーバーレイとツールが12種類。チャットボックス、エモートウォール、アラート、サブスク目標、サブアソンタイマー、フレーム、カウントダウン、投票、抽選。',
+        'TwitchとKickの配信者向けの無料オーバーレイとツールが13種類。チャットボックス、エモートウォール、アラート、目標、サブアソン、フレーム、投票、抽選、ルーレット。',
     },
     pt: {
       title: 'Overlays grátis Twitch e Kick no OBS | Senchabot Extensions',
       description:
-        'Doze overlays e ferramentas grátis para streamers da Twitch e da Kick: chat, emotes, alertas, meta de subs, subathon, molduras, contagem, enquete e sorteio.',
+        'Treze overlays e ferramentas grátis para streamers Twitch e Kick: chat, emotes, alertas, meta de subs, subathon, molduras, contagem, enquete, sorteio e roleta.',
     },
   },
   'chat-box': {
@@ -492,6 +492,43 @@ export const PAGE_META = {
       title: 'Widget grátis de redes sociais para OBS | Senchabot',
       description:
         'Mostre seus perfis (Twitter, YouTube, TikTok, Instagram) na sua live da Twitch ou da Kick. Os links se revezam na tela com uma animação caprichada de deslizar.',
+    },
+  },
+  'spin-wheel': {
+    en: {
+      title: 'Free Spin Wheel Tool for Streamers | Senchabot',
+      description:
+        'Viewers type !spin in Twitch or Kick chat and the wheel spins live in your OBS overlay at 800x800, behind one global cooldown for everyone. No login needed.',
+    },
+    de: {
+      title: 'Glücksrad Tool für Streamer (kostenlos) | Senchabot',
+      description:
+        'Zuschauer tippen !spin in den Twitch- oder Kick-Chat und das Rad dreht live in deinem OBS-Overlay bei 800x800, mit einem globalen Cooldown für alle. Ohne Login.',
+    },
+    tr: {
+      title: 'Yayıncılar için Ücretsiz Çark Aracı | Senchabot',
+      description:
+        'İzleyiciler Twitch ya da Kick sohbetine !spin yazar, çark OBS overlay’inde 800x800 canlı döner; herkes için tek bir bekleme süresi vardır. Giriş gerekmez.',
+    },
+    es: {
+      title: 'Ruleta gratis para streamers | Senchabot',
+      description:
+        'Tus espectadores escriben !spin en el chat de Twitch o Kick y la ruleta gira en vivo en tu overlay de OBS a 800x800, con un enfriamiento global. Sin login.',
+    },
+    fr: {
+      title: 'Roue gratuite pour streamers | Senchabot',
+      description:
+        'Tes viewers tapent !spin dans le chat Twitch ou Kick et la roue tourne en direct dans ton overlay OBS en 800x800, avec un seul cooldown global. Sans connexion.',
+    },
+    ja: {
+      title: '無料の配信ルーレットツール | Senchabot',
+      description:
+        '視聴者がTwitchやKickのチャットで!spinと入力すると、800x800のOBSオーバーレイでルーレットが回ります。共通クールダウン付きでログイン不要です。',
+    },
+    pt: {
+      title: 'Roleta grátis para streamers | Senchabot',
+      description:
+        'Seus espectadores digitam !spin no chat da Twitch ou da Kick e a roleta gira ao vivo no seu overlay do OBS em 800x800, com um cooldown global. Sem login.',
     },
   },
   notFound: {
@@ -1357,6 +1394,64 @@ export const APP_FEATURES: Record<WidgetId, Record<Locale, readonly string[]>> =
       'Intervalo de troca configurável',
       'Ajuste a cor do texto e a cor de fundo da pílula para combinar com a sua marca',
       'Tamanho recomendado da fonte de navegador: 600x120',
+    ],
+  },
+  'spin-wheel': {
+    en: [
+      'One option per line, the wheel updates as you type',
+      'Viewers spin it from Twitch and Kick chat with !spin',
+      'Everyone, subs-only or mods-only spinning',
+      'One global cooldown, counted down on screen',
+      'OBS overlay with sound, confetti and a winner card',
+      'Secure random pick with a live spinning animation',
+    ],
+    de: [
+      'Eine Option pro Zeile, das Rad folgt beim Tippen',
+      'Zuschauer drehen es per !spin aus Twitch- und Kick-Chat',
+      'Alle, nur Subs oder nur Mods dürfen drehen',
+      'Ein globaler Cooldown, auf dem Bildschirm heruntergezählt',
+      'OBS-Overlay mit Sound, Konfetti und Gewinner-Karte',
+      'Sichere Zufallsziehung mit Live-Dreh-Animation',
+    ],
+    tr: [
+      'Her satıra bir seçenek, çark yazarken güncellenir',
+      'İzleyiciler Twitch ve Kick sohbetinden !spin ile çevirir',
+      'Herkes, sadece aboneler ya da sadece modlar çevirebilir',
+      'Ekranda geri sayılan tek bir genel bekleme süresi',
+      'Ses, konfeti ve kazanan kartıyla OBS overlay’i',
+      'Canlı dönüş animasyonuyla güvenli rastgele seçim',
+    ],
+    es: [
+      'Una opción por línea, la ruleta se actualiza al escribir',
+      'Tus espectadores la giran con !spin desde Twitch y Kick',
+      'Giros para todos, solo subs o solo mods',
+      'Un enfriamiento global contado en pantalla',
+      'Overlay para OBS con sonido, confeti y tarjeta de ganador',
+      'Sorteo aleatorio seguro con animación de giro en vivo',
+    ],
+    fr: [
+      'Une option par ligne, la roue suit pendant la frappe',
+      'Tes viewers la tournent avec !spin depuis Twitch et Kick',
+      'Tout le monde, subs seuls ou modos seuls',
+      'Un seul cooldown global, décompté à l’écran',
+      'Overlay OBS avec son, confettis et carte de gagnant',
+      'Tirage aléatoire sécurisé avec animation en direct',
+    ],
+    ja: [
+      '1行に1つずつ入力、入力に合わせて更新',
+      '視聴者はTwitchやKickのチャットで!spinと入力して回す',
+      '全員・サブスク限定・モデレーター限定を選べる',
+      '画面にカウント表示される共通クールダウン',
+      '効果音・紙吹雪・当選カード付きのOBSオーバーレイ',
+      'ライブアニメーション付きの安全なランダム抽選',
+    ],
+    pt: [
+      'Uma opção por linha, a roleta atualiza ao digitar',
+      'Seus espectadores giram com !spin pela Twitch e Kick',
+      'Giros para todos, só subs ou só mods',
+      'Um cooldown global contado na tela',
+      'Overlay para OBS com som, confete e cartão de vencedor',
+      'Sorteio aleatório seguro com animação ao vivo',
     ],
   },
 };

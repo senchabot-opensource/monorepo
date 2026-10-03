@@ -180,6 +180,28 @@ const PAGES: PageCase[] = [
     sections: ['obsBridge.tool.scenesTitle', 'obsBridge.tool.commands'],
     faq: [],
   },
+  {
+    path: '/setup/spin-wheel',
+    title: 'spinWheel.title',
+    sections: [
+      'common.sectionChannel',
+      'spinWheel.sectionOptions',
+      'spinWheel.sectionChat',
+      'spinWheel.sectionSound',
+      'spinWheel.sectionCommands',
+      'spinWheel.previewTitle',
+      'common.setupGuideTitle',
+      'common.faqTitle',
+      'common.moreWidgets',
+    ],
+    faq: ['spinWheel.faq1Q', 'spinWheel.faq2Q', 'spinWheel.faq3Q', 'spinWheel.faq4Q'],
+  },
+  {
+    path: '/tools/spin-wheel',
+    title: 'spinWheel.toolTitle',
+    sections: ['spinWheel.sectionOptions'],
+    faq: [],
+  },
 ];
 
 const urlFor = (path: string, locale: string) =>

@@ -13,6 +13,11 @@ export const TOOL_FEATURES: Partial<Record<WidgetId, readonly TranslationKey[]>>
     'home.subathonFeatureSaved',
   ],
   poll: ['home.pollFeatureVote', 'home.pollFeatureBoth', 'home.pollFeatureLate'],
+  'spin-wheel': [
+    'home.spinWheelFeatureOptions',
+    'home.spinWheelFeatureLocal',
+    'home.spinWheelFeatureHistory',
+  ],
 };
 
 const CHAT_ROW = { x: 24, width: 172, height: 28, gap: 8 };
@@ -306,10 +311,67 @@ function PollVisual() {
   );
 }
 
+/** A viewer typing !spin, and the wheel it spins. */
+function SpinWheelVisual() {
+  const slices = [
+    '#FF4500',
+    '#9146FF',
+    '#00D4AA',
+    '#FFD700',
+    '#00BFFF',
+    '#FF1493',
+    '#10B981',
+    '#8B5CF6',
+  ];
+  const cx = 308;
+  const cy = 100;
+  const r = 68;
+  const pt = (deg: number): [number, number] => [
+    cx + r * Math.cos((deg * Math.PI) / 180),
+    cy + r * Math.sin((deg * Math.PI) / 180),
+  ];
+  return (
+    <svg viewBox="0 0 400 200" className="absolute inset-0 size-full" aria-hidden="true">
+      <rect x={24} y={86} width={172} height={28} rx={8} fill="#ffffff" fillOpacity={0.06} />
+      <text x={36} y={104.5} fontSize={12}>
+        <tspan fill="#facc15" fontWeight={600}>
+          pixelfox
+        </tspan>
+        <tspan dx={6} fill="#fafafa" fontWeight={600}>
+          !spin
+        </tspan>
+      </text>
+      <Arrow />
+      {slices.map((color, index) => {
+        const start = -90 + index * 45;
+        const end = start + 45;
+        const [x1, y1] = pt(start);
+        const [x2, y2] = pt(end);
+        return (
+          <path
+            key={color}
+            d={`M${cx} ${cy} L${x1.toFixed(1)} ${y1.toFixed(1)} A${r} ${r} 0 0 1 ${x2.toFixed(1)} ${y2.toFixed(1)} Z`}
+            fill={color}
+          />
+        );
+      })}
+      <circle cx={cx} cy={cy} r={r + 6} fill="none" stroke="#D4AF37" strokeWidth={5} />
+      <circle cx={cx} cy={cy} r={11} fill="#111827" stroke="#D4AF37" strokeWidth={3} />
+      <path
+        d={`M${cx - 9} ${cy - r - 16} L${cx + 9} ${cy - r - 16} L${cx} ${cy - r + 2} Z`}
+        fill="#EF4444"
+        stroke="#ffffff"
+        strokeWidth={1.5}
+      />
+    </svg>
+  );
+}
+
 const VISUALS: Partial<Record<WidgetId, () => ReactNode>> = {
   raffle: RaffleVisual,
   'obs-bridge': ObsBridgeVisual,
   poll: PollVisual,
+  'spin-wheel': SpinWheelVisual,
 };
 
 export const hasToolVisual = (id: WidgetId) => id in VISUALS;

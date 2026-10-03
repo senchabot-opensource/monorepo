@@ -1,6 +1,6 @@
 # Senchabot Extensions
 
-> Free, open source stream overlays and tools for Twitch and Kick: Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Stream Frames, Stream Countdown, Chat Poll, Raffle and OBS Bridge. You set one up on its web page, copy the URL and add it to OBS Studio (or another app that supports browser sources) as a Browser Source. No login and nothing to install.
+> Free, open source stream overlays and tools for Twitch and Kick: Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Stream Frames, Stream Countdown, Chat Poll, Raffle, OBS Bridge and Spin Wheel. You set one up on its web page, copy the URL and add it to OBS Studio (or another app that supports browser sources) as a Browser Source. No login and nothing to install.
 
 Senchabot Extensions is made by Senchabot (https://senchabot.com), an open source, multi-platform community bot for Twitch, Discord, Kick and YouTube. The code is GPL-3.0 licensed at https://github.com/senchabot-opensource/monorepo (folder apps/extensions). It is not affiliated with Twitch or Kick.
 
@@ -25,6 +25,7 @@ Every page is also in German, Spanish, French, Japanese, Portuguese and Turkish 
 - [Chat Poll](https://extensions.senchabot.com/setup/chat-poll): A poll that Twitch and Kick chat vote in by typing a number, with live bars, a timer and the winner at the end. Mods run it with !poll. Browser source size 640x560.
 - [Raffle](https://extensions.senchabot.com/setup/raffle): Chat giveaways on Twitch or Kick. Viewers enter with a keyword like !join and you draw the winner.
 - [OBS Bridge](https://extensions.senchabot.com/setup/obs-bridge): People you authorize switch OBS scenes and start or stop the stream and recording from Twitch or Kick chat.
+- [Spin Wheel](https://extensions.senchabot.com/setup/spin-wheel): Viewers type !spin in Twitch or Kick chat and the wheel spins live in the OBS overlay, behind one global cooldown shown on screen. Browser source size 800x800.
 
 ## Guides
 

@@ -134,6 +134,10 @@ export const tr: typeof en = {
       name: 'Sosyal Medya',
       tagline: 'Sosyal medya hesaplarını şık bir animasyonla ekranda sırayla göster.',
     },
+    spinWheel: {
+      name: 'Çark',
+      tagline: 'İzleyiciler çarkı sohbetten !spin ile çevirir. Giriş gerekmez.',
+    },
   },
   home: {
     heroTitle: "Twitch ve Kick için ücretsiz yayın overlay'leri",
@@ -171,6 +175,9 @@ export const tr: typeof en = {
     pollFeatureVote: 'İzleyiciler numara yazarak oy verir',
     pollFeatureBoth: 'Twitch ve Kick oyları tek ankette',
     pollFeatureLate: 'Son saniye oyları gecikmeye rağmen sayılır',
+    spinWheelFeatureOptions: 'Her satıra bir seçenek',
+    spinWheelFeatureLocal: '!spin ile sohbetten çevirme',
+    spinWheelFeatureHistory: 'Bekleme ekranda sayılır',
     pollSpotlight: {
       eyebrow: 'Yeni: Sohbet Anketi',
       title: 'Kararı sohbetin versin',
@@ -235,10 +242,10 @@ export const tr: typeof en = {
       "OBS Studio ve tarayıcı kaynağı destekleyen diğer programlarla. Widget URL'sini Tarayıcı Kaynağı olarak ekle ve kurulum sayfasında yazan boyutu kullan.",
     faq4Q: "Twitch ve Kick'i birlikte kullanabilir miyim?",
     faq4A:
-      "Evet. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi ve Yayın Geri Sayımı tek bir URL'de hem Twitch hem Kick kanalını alır. OBS Bridge da iki sohbeti aynı anda dinleyebilir. Çekiliş ise her seferinde tek bir platformda çalışır.",
+      "Evet. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi, Yayın Geri Sayımı ve Çark tek bir URL'de hem Twitch hem Kick kanalını alır. OBS Bridge da iki sohbeti aynı anda dinleyebilir. Çekiliş ise her seferinde tek bir platformda çalışır.",
     faq5Q: "Bir widget'ı sonradan nasıl değiştiririm?",
     faq5A:
-      "Kurulum sayfasını aç, widget'ı istediğin gibi ayarla ve Tarayıcı Kaynağı'ndaki URL'yi yenisiyle değiştir. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi, Yayın Çerçeveleri, Sosyal Medya ve Yayın Geri Sayımı mevcut bir URL'yi de açabilir: URL'yi kurulum sayfasına yapıştır, eski ayarların geri gelsin, sadece istediğini değiştir.",
+      "Kurulum sayfasını aç, widget'ı istediğin gibi ayarla ve Tarayıcı Kaynağı'ndaki URL'yi yenisiyle değiştir. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi, Yayın Çerçeveleri, Sosyal Medya, Yayın Geri Sayımı ve Çark mevcut bir URL'yi de açabilir: URL'yi kurulum sayfasına yapıştır, eski ayarların geri gelsin, sadece istediğini değiştir.",
     faq6Q: "Güncellemelerden sonra widget URL'm çalışmaya devam eder mi?",
     faq6A:
       'Evet. Güncellemelerde mevcut URL ayarları ve değerleri korunur, yani sahnendeki widget için yeni bir URL almana gerek kalmaz.',
@@ -1337,6 +1344,82 @@ export const tr: typeof en = {
     winner: 'Kazanan!',
     subMonthsShort: '{months} ay',
   },
+  spinWheel: {
+    breadcrumb: 'Çark Kurulumu',
+    title: 'Çark Kurulumu',
+    toolTitle: 'Çark',
+    toolLocalNote:
+      'Buradaki çevirmeler bu sayfada kalır, OBS overlay’ine asla ulaşmaz. Overlay’i yalnızca sohbetten gelen !spin çevirir.',
+    intro:
+      'Yayınların için dönen bir karar çarkı: izleyiciler Twitch ya da Kick sohbetine !spin yazar, çark OBS overlay’inde canlı döner; herkes için tek bir bekleme süresi vardır. Kanalsız hızlı sürümü istersen araç sayfasında çevir.',
+    sectionOptions: 'Seçenekler',
+    optionsLabel: 'Çark seçenekleri',
+    optionsTip: 'Her satıra bir seçenek. Satıra 2x, 3x … ile başla, o seçenekten fazla dilim olur.',
+    optionsPlaceholder: 'Zelda\nMario Kart\nTetris\nMinecraft',
+    count: '{count} seçenek',
+    shuffle: 'Karıştır',
+    clear: 'Temizle',
+    sectionChat: 'Sohbet çevirmeleri',
+    permissionLabel: 'Kim çevirebilir',
+    permissionTip: 'Burada ne seçersen seç, modlar ve yayıncı her zaman çevirebilir.',
+    permAll: 'Herkes',
+    permSubs: 'Sadece aboneler',
+    permMods: 'Sadece modlar',
+    cooldownLabel: 'Çevirmeler arası bekleme',
+    cooldownTip:
+      'Tüm sohbet için tek sayaç. Sayaç işlerken overlay beklemeyi gösterir, yeni !spin mesajları atlanır.',
+    cooldownOff: '0 beklemeyi kapatır: her !spin hemen çevirir.',
+    sectionSound: 'Ses',
+    soundTip: 'Overlay’de tik ve kazanan sesleri. Sessiz çevirmek için kapat.',
+    previewTitle: 'Çark',
+    previewTip: 'Seçeneklerinle simüle çevirmeler. Sohbet burada kapalı; aşağıdaki düğmeyle çevir.',
+    previewIframeTitle: 'Çark önizlemesi',
+    testTitle: 'Dene',
+    testSpin: 'Deneme çevirmesi',
+    spin: 'Çarkı çevir',
+    spinning: 'Dönüyor…',
+    needTwo: 'Çevirmek için en az iki seçenek yaz.',
+    soundOn: 'Ses açık',
+    soundOff: 'Ses kapalı',
+    winnerTitle: 'Kazanan!',
+    history: 'Son kazananlar ({count})',
+    clearHistory: 'Temizle',
+    noHistory: 'Henüz çevirme yok. Kazananlar burada görünür.',
+    overlayUrl: 'Overlay Adresi',
+    widgetUrlTip: 'Bu adresi OBS’te Tarayıcı Kaynağı olarak ekle.',
+    widgetUrlHint: 'Kanalların, seçeneklerin, iznin ve bekleme süren bu adreste durur.',
+    browserSourceHintSize: ' (önerilen boyut: 800×800).',
+    widgetUrlPlaceholder: 'Düzenlemek için mevcut bir çark adresi yapıştır',
+    widgetUrlInvalid: 'Bu bir Çark overlay adresi değil.',
+    overlayNextStep: 'Çarkı yayında çevirmek için sohbete !spin yaz.',
+    sectionCommands: 'Sohbet komutları',
+    commandsIntro: 'İzleyiciler çarkı sohbetten çevirir. Modlar ve yayıncı her zaman çevirebilir.',
+    cmdSpin: 'Çarkı çevirir. Çark dönerken ya da bekleme işlerken atlanır.',
+    commandsCooldownNote:
+      'Kabul edilen her sohbet çevirmesinden sonra genel bekleme başlar. Overlay beklemeyi ekranda sayar.',
+    cooldownWait: 'Sonraki çevirmeye {seconds} sn',
+    overlayNeedTwo: 'Çevirmek için kurulum sayfasına en az iki seçenek yaz.',
+    guideStep1: 'Twitch ve/veya Kick kanalını yaz.',
+    guideStep2: 'Seçeneklerini Seçenekler kutusuna her satıra bir tane yaz.',
+    guideStep3: 'Overlay adresini kopyala, OBS’e Tarayıcı Kaynağı olarak ekle (800×800).',
+    guideStep4: 'İzleyiciler sohbete !spin yazar. Bekleme işlerken overlay beklemeyi gösterir.',
+    faq1Q: 'Çarkı kim çevirebilir?',
+    faq1A:
+      'İzin verdiğin herkes: herkes, sadece aboneler ya da sadece modlar. Modlar ve yayıncı her zaman çevirebilir, kabul edilen her !spin genel beklemeyi başlatır.',
+    faq2Q: 'Çarkı yayında nasıl gösteririm?',
+    faq2A:
+      'Overlay adresini kopyala, OBS’e 800×800 Tarayıcı Kaynağı olarak ekle. Çark orada !spin ile döner, beklemeyi ekranda sayar.',
+    faq3Q: 'Seçeneklerim nerede saklanır?',
+    faq3A:
+      'Overlay adresinde; kanalların, iznin ve bekleme sürenle birlikte. Düzenlemek için adresi kurulum sayfasına geri yapıştır. Hızlı araç, tarayıcında ayrı bir liste tutar.',
+    faq4Q: 'Giriş yapmam ya da bir şey bağlamam gerekir mi?',
+    faq4A:
+      'Hayır. Overlay, her izleyici gibi Twitch ve Kick herkese açık sohbetini anonim okur. Hesap yok, bağlanacak bir şey yok.',
+    advancedTitle: 'Kanal puanlı gelişmiş bir çark mı istiyorsun?',
+    advancedText:
+      'Twitch ve Kick kanal puanlarıyla izleyicilerin çevirebildiği gelişmiş bir sürüm istersen, Senchabot panelindeki çarkı kullan.',
+    advancedCta: 'Paneldeki çarkı aç',
+  },
   alerts: {
     follow: 'Yeni Takipçi Geldi!',
     sub: 'Yeni Abone Geldi!',
@@ -1485,6 +1568,8 @@ export const tr: typeof en = {
             "Kazanan overlay'i. Konfeti ekranın iki kenarından patlar, kazananın adı ortada çıkar.",
           obsBridge:
             "Görünür bir overlay değil. Aracı bir tarayıcı sekmesinde ya da OBS dock'unda açık tut.",
+          spinWheel:
+            'Çark, sohbetten gelen !spin ile 800×800 döner. Genel bekleme ekranda sayılır, çarkın üstündeki bekleme yazısına yer bırak.',
           socials:
             'Hesaplar şeridin ortasında tek tek çıkar. Yazı küçülmez, bu yüzden uzun bir kullanıcı adı için kaynağı daha geniş tut.',
         },
@@ -1493,7 +1578,7 @@ export const tr: typeof en = {
       },
       transparent: {
         title: 'Arka planı şeffaf yapmak için bir şey gerekiyor mu?',
-        p1: "Hayır. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Yayın Çerçeveleri, Yayın Geri Sayımı, Sohbet Anketi, Sosyal Medya ve çekiliş overlay'i şeffaf bir arka planla çizilir. Renk anahtarı (chroma key) ya da filtre eklemen gerekmez, OBS'in Özel CSS alanını da olduğu gibi bırakabilirsin.",
+        p1: "Hayır. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Yayın Çerçeveleri, Yayın Geri Sayımı, Sohbet Anketi, Sosyal Medya, Çark overlay'i ve çekiliş overlay'i şeffaf bir arka planla çizilir. Renk anahtarı (chroma key) ya da filtre eklemen gerekmez, OBS'in Özel CSS alanını da olduğu gibi bırakabilirsin.",
         p2: "Sohbet Kutusu açık renkli bir sahnede zor okunuyorsa Koyu Arka Plan ayarını aç. Widget'ın arkasına yarı saydam siyah bir zemin gelir, saydamlığını %0 ile %100 arasında seçersin (varsayılan %50). Her mesajın ayrı bir kutuda durmasını istersen Mesaj Arka Plan Kutusu'nu aç.",
       },
       settings: {
@@ -1521,7 +1606,7 @@ export const tr: typeof en = {
       update: {
         title: "Widget'ı sonradan nasıl değiştiririm?",
         p1: "Ayarlar widget adresinin içinde durur, yani bir ayarı değiştirmek yeni bir adres demek. Kurulum sayfasında ayarı değiştir, yeni adresi kopyala, sonra OBS'te kaynağa çift tıklayıp URL alanındaki eski adresin yerine yapıştır.",
-        p2: '[Sohbet Kutusu](/setup/chat-widget), [Emote Duvarı](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Yayın Uyarıları](/setup/stream-alerts), [Abone Hedefi](/setup/sub-goal), [Sohbet Anketi](/setup/chat-poll), [Yayın Çerçeveleri](/setup/stream-frames), [Sosyal Medya](/setup/socials) ve [Yayın Geri Sayımı](/setup/stream-countdown) için baştan başlaman gerekmez. Mevcut adresini kurulum sayfasındaki Widget URL alanına yapıştır, kanalların ve bütün ayarların geri yüklenir. Değiştirmek istediğini değiştir ve yeni adresi kopyala.',
+        p2: '[Sohbet Kutusu](/setup/chat-widget), [Emote Duvarı](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Yayın Uyarıları](/setup/stream-alerts), [Abone Hedefi](/setup/sub-goal), [Sohbet Anketi](/setup/chat-poll), [Yayın Çerçeveleri](/setup/stream-frames), [Sosyal Medya](/setup/socials), [Yayın Geri Sayımı](/setup/stream-countdown) ya da [Çark](/setup/spin-wheel) için baştan başlaman gerekmez. Mevcut adresini kurulum sayfasındaki Widget URL alanına yapıştır, kanalların ve bütün ayarların geri yüklenir. Değiştirmek istediğini değiştir ve yeni adresi kopyala.',
         p3: "OBS Bridge'de yapıştırma alanı yok, ayarları kurulum sayfasında yeniden girip yeni araç adresini kopyalarsın. Sahne seçimlerini ve yetkili kullanıcıları araç sayfasında da değiştirebilir, yeni adresi oradaki Güncel URL'yi Kopyala düğmesiyle alabilirsin. Eski adresler çalışmaya devam eder, güncellemek zorunda değilsin.",
       },
       troubleshoot: {
@@ -2275,7 +2360,7 @@ export const tr: typeof en = {
     },
     freeQ: 'Senchabot Extensions ücretsiz mi?',
     freeA:
-      "Evet. On iki widget'ın ve aracın hepsi ücretsiz: Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Yayın Çerçeveleri, Yayın Geri Sayımı, Sohbet Anketi, Sosyal Medya, Çekiliş ve OBS Bridge. Ücretli paket, filigran ya da premium hesap yok. Kaynak kodu GPL-3.0 lisansıyla GitHub'da açık.",
+      "Evet. On üç widget'ın ve aracın hepsi ücretsiz: Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Yayın Çerçeveleri, Yayın Geri Sayımı, Sohbet Anketi, Sosyal Medya, Çekiliş, OBS Bridge ve Çark. Ücretli paket, filigran ya da premium hesap yok. Kaynak kodu GPL-3.0 lisansıyla GitHub'da açık.",
     loginQ: '"Giriş gerektirmez" ne demek?',
     loginA:
       "Bu sitede hesap açmazsın, Twitch ya da Kick ile giriş yapmazsın ve bir şey indirmezsin. Kanal adını yazarsın, kurulum sayfası sana bir adres verir. Widget'lar herkese açık sohbeti anonim olarak okur: Twitch'e isimsiz bir izleyici gibi bağlanır, Kick'te herkese açık sohbet akışını dinler. Bu yüzden sohbete yazamaz, moderasyon yapamaz ve hesabındaki özel bilgilere erişemez.",
@@ -2287,10 +2372,10 @@ export const tr: typeof en = {
       'OBS Studio ve tarayıcı kaynağı (browser source) destekleyen diğer yayın programlarıyla. Her widget bir web adresi olarak çalışır, kaynağa bu adresi yapıştırırsın. Rehberlerimiz OBS Studio için yazıldı.',
     platformsQ: "Hangi widget'lar Twitch'i, hangileri Kick'i destekliyor?",
     platformsA:
-      "On ikisi de iki platformu destekliyor. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi ve Yayın Geri Sayımı tek adreste Twitch ve Kick kanalını birlikte dinler. OBS Bridge iki sohbetten gelen komutları dinler ve her yetkili kullanıcı kendi platformuyla eklenir. Çekiliş her seferinde tek platformda çalışır, Twitch ya da Kick. Yayın Çerçeveleri ve Sosyal Medya sohbeti okumaz, bu yüzden iki platformda da aynı şekilde çalışır. Sohbet Kutusu'nda 7TV emote'ları iki platformda, BTTV ve FFZ emote'ları sadece Twitch'te görünür.",
+      "On üçü de iki platformu destekliyor. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi, Yayın Geri Sayımı ve Çark tek adreste Twitch ve Kick kanalını birlikte dinler. OBS Bridge iki sohbetten gelen komutları dinler ve her yetkili kullanıcı kendi platformuyla eklenir. Çekiliş her seferinde tek platformda çalışır, Twitch ya da Kick. Yayın Çerçeveleri ve Sosyal Medya sohbeti okumaz, bu yüzden iki platformda da aynı şekilde çalışır. Sohbet Kutusu'nda 7TV emote'ları iki platformda, BTTV ve FFZ emote'ları sadece Twitch'te görünür.",
     editQ: "Widget'ı sonradan nasıl değiştiririm?",
     editA:
-      "Kurulum sayfasında ayarları değiştir, yeni adresi kopyala ve OBS'te kaynağın URL alanındaki eski adresin yerine yapıştır. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi, Yayın Çerçeveleri, Sosyal Medya ve Yayın Geri Sayımı'nda eski adresini kurulum sayfasındaki Widget URL alanına yapıştırırsan bütün ayarların geri yüklenir, baştan başlaman gerekmez.",
+      "Kurulum sayfasında ayarları değiştir, yeni adresi kopyala ve OBS'te kaynağın URL alanındaki eski adresin yerine yapıştır. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi, Yayın Çerçeveleri, Sosyal Medya, Yayın Geri Sayımı ve Çark'ta eski adresini kurulum sayfasındaki Widget URL alanına yapıştırırsan bütün ayarların geri yüklenir, baştan başlaman gerekmez.",
     oldUrlsQ: 'Eski widget adreslerim çalışmaya devam eder mi?',
     oldUrlsA:
       "Evet. Güncellemeler mevcut adresleri bozmayacak şekilde yapılır: parametre adları, değerleri ve varsayılanları değişmez. Örneğin Sohbet Kutusu'ndaki eski keep=true hâlâ Süresiz anlamına gelir ve Sub Sprout eski channel ve platform parametrelerini hâlâ okur.",
@@ -2314,6 +2399,14 @@ export const tr: typeof en = {
     lead: "Senchabot Extensions'a eklenen özellikler ve düzeltilen hatalar, en yenisi en üstte. Liste projenin [GitHub'daki](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) commit geçmişinden hazırlanıyor.",
     site: 'Site',
     entries: {
+      spinWheelWeights:
+        'Çark seçeneklerine ağırlık geldi: satıra `2x`, `3x` … ile başla, o seçenek o kadar fazla dilimle o kadar sık kazanır.',
+      spinWheelChat:
+        'Çark’a Twitch ve Kick kanalları geldi: izleyiciler `!spin` ile çeviriyor; herkes, sadece aboneler ya da sadece modlar seçeneği ve ekranda sayılan genel beklemeyle yeni OBS overlay’inde.',
+      spinWheelAdvancedLink:
+        'Çark artık Twitch ve Kick kanal puanlı gelişmiş Senchabot panel çarkına bağlıyor.',
+      spinWheelLaunch:
+        'Yeni Çark aracı: her satıra bir seçenek yazıp çarkı sayfada canlı çevir; ses, konfeti ve kazanan geçmişiyle.',
       countdownZoom:
         "Yayın Geri Sayımı'na Yakınlaştırma seçenekleri eklendi: %125, %150 ya da %200 ile büyük, %75 ile küçük göster.",
       countdownPomodoroScene:

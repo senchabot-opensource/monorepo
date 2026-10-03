@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as Char123LocaleChar125RouteRouteImport } from './routes/{-$locale}/route'
 import { Route as ToolsChatReaderRouteImport } from './routes/tools/chat-reader'
 import { Route as ToolsObsBridgeRouteImport } from './routes/tools/obs-bridge'
+import { Route as ToolsSpinWheelRouteImport } from './routes/tools/spin-wheel'
 import { Route as WidgetsAlertsRouteImport } from './routes/widgets/alerts'
 import { Route as WidgetsChatWidgetRouteImport } from './routes/widgets/chat-widget'
 import { Route as WidgetsCountdownRouteImport } from './routes/widgets/countdown'
@@ -21,6 +22,7 @@ import { Route as WidgetsGoalRouteImport } from './routes/widgets/goal'
 import { Route as WidgetsPollRouteImport } from './routes/widgets/poll'
 import { Route as WidgetsRaffleOverlayRouteImport } from './routes/widgets/raffle-overlay'
 import { Route as WidgetsSocialsRouteImport } from './routes/widgets/socials'
+import { Route as WidgetsSpinWheelRouteImport } from './routes/widgets/spin-wheel'
 import { Route as WidgetsStreamAlertsRouteImport } from './routes/widgets/stream-alerts'
 import { Route as WidgetsSubSproutWidgetRouteImport } from './routes/widgets/sub-sprout-widget'
 import { Route as WidgetsSubathonRouteImport } from './routes/widgets/subathon'
@@ -45,6 +47,7 @@ import { Route as Char123LocaleChar125SetupEmoteWallRouteImport } from './routes
 import { Route as Char123LocaleChar125SetupObsBridgeRouteImport } from './routes/{-$locale}/setup/obs-bridge'
 import { Route as Char123LocaleChar125SetupRaffleRouteImport } from './routes/{-$locale}/setup/raffle'
 import { Route as Char123LocaleChar125SetupSocialsRouteImport } from './routes/{-$locale}/setup/socials'
+import { Route as Char123LocaleChar125SetupSpinWheelRouteImport } from './routes/{-$locale}/setup/spin-wheel'
 import { Route as Char123LocaleChar125SetupStreamAlertsRouteImport } from './routes/{-$locale}/setup/stream-alerts'
 import { Route as Char123LocaleChar125SetupStreamCountdownRouteImport } from './routes/{-$locale}/setup/stream-countdown'
 import { Route as Char123LocaleChar125SetupStreamFramesRouteImport } from './routes/{-$locale}/setup/stream-frames'
@@ -66,6 +69,11 @@ const ToolsChatReaderRoute = ToolsChatReaderRouteImport.update({
 const ToolsObsBridgeRoute = ToolsObsBridgeRouteImport.update({
   id: '/tools/obs-bridge',
   path: '/tools/obs-bridge',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsSpinWheelRoute = ToolsSpinWheelRouteImport.update({
+  id: '/tools/spin-wheel',
+  path: '/tools/spin-wheel',
   getParentRoute: () => rootRouteImport,
 } as any)
 const WidgetsAlertsRoute = WidgetsAlertsRouteImport.update({
@@ -111,6 +119,11 @@ const WidgetsRaffleOverlayRoute = WidgetsRaffleOverlayRouteImport.update({
 const WidgetsSocialsRoute = WidgetsSocialsRouteImport.update({
   id: '/widgets/socials',
   path: '/widgets/socials',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WidgetsSpinWheelRoute = WidgetsSpinWheelRouteImport.update({
+  id: '/widgets/spin-wheel',
+  path: '/widgets/spin-wheel',
   getParentRoute: () => rootRouteImport,
 } as any)
 const WidgetsStreamAlertsRoute = WidgetsStreamAlertsRouteImport.update({
@@ -253,6 +266,12 @@ const Char123LocaleChar125SetupSocialsRoute =
     path: '/setup/socials',
     getParentRoute: () => Char123LocaleChar125RouteRoute,
   } as any)
+const Char123LocaleChar125SetupSpinWheelRoute =
+  Char123LocaleChar125SetupSpinWheelRouteImport.update({
+    id: '/setup/spin-wheel',
+    path: '/setup/spin-wheel',
+    getParentRoute: () => Char123LocaleChar125RouteRoute,
+  } as any)
 const Char123LocaleChar125SetupStreamAlertsRoute =
   Char123LocaleChar125SetupStreamAlertsRouteImport.update({
     id: '/setup/stream-alerts',
@@ -294,6 +313,7 @@ export interface FileRoutesByFullPath {
   '/{-$locale}': typeof Char123LocaleChar125RouteRouteWithChildren
   '/tools/chat-reader': typeof ToolsChatReaderRoute
   '/tools/obs-bridge': typeof ToolsObsBridgeRoute
+  '/tools/spin-wheel': typeof ToolsSpinWheelRoute
   '/widgets/alerts': typeof WidgetsAlertsRoute
   '/widgets/chat-widget': typeof WidgetsChatWidgetRoute
   '/widgets/countdown': typeof WidgetsCountdownRoute
@@ -303,6 +323,7 @@ export interface FileRoutesByFullPath {
   '/widgets/poll': typeof WidgetsPollRoute
   '/widgets/raffle-overlay': typeof WidgetsRaffleOverlayRoute
   '/widgets/socials': typeof WidgetsSocialsRoute
+  '/widgets/spin-wheel': typeof WidgetsSpinWheelRoute
   '/widgets/stream-alerts': typeof WidgetsStreamAlertsRoute
   '/widgets/sub-sprout-widget': typeof WidgetsSubSproutWidgetRoute
   '/widgets/subathon': typeof WidgetsSubathonRoute
@@ -326,6 +347,7 @@ export interface FileRoutesByFullPath {
   '/{-$locale}/setup/obs-bridge': typeof Char123LocaleChar125SetupObsBridgeRoute
   '/{-$locale}/setup/raffle': typeof Char123LocaleChar125SetupRaffleRoute
   '/{-$locale}/setup/socials': typeof Char123LocaleChar125SetupSocialsRoute
+  '/{-$locale}/setup/spin-wheel': typeof Char123LocaleChar125SetupSpinWheelRoute
   '/{-$locale}/setup/stream-alerts': typeof Char123LocaleChar125SetupStreamAlertsRoute
   '/{-$locale}/setup/stream-countdown': typeof Char123LocaleChar125SetupStreamCountdownRoute
   '/{-$locale}/setup/stream-frames': typeof Char123LocaleChar125SetupStreamFramesRoute
@@ -337,6 +359,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/tools/chat-reader': typeof ToolsChatReaderRoute
   '/tools/obs-bridge': typeof ToolsObsBridgeRoute
+  '/tools/spin-wheel': typeof ToolsSpinWheelRoute
   '/widgets/alerts': typeof WidgetsAlertsRoute
   '/widgets/chat-widget': typeof WidgetsChatWidgetRoute
   '/widgets/countdown': typeof WidgetsCountdownRoute
@@ -346,6 +369,7 @@ export interface FileRoutesByTo {
   '/widgets/poll': typeof WidgetsPollRoute
   '/widgets/raffle-overlay': typeof WidgetsRaffleOverlayRoute
   '/widgets/socials': typeof WidgetsSocialsRoute
+  '/widgets/spin-wheel': typeof WidgetsSpinWheelRoute
   '/widgets/stream-alerts': typeof WidgetsStreamAlertsRoute
   '/widgets/sub-sprout-widget': typeof WidgetsSubSproutWidgetRoute
   '/widgets/subathon': typeof WidgetsSubathonRoute
@@ -369,6 +393,7 @@ export interface FileRoutesByTo {
   '/{-$locale}/setup/obs-bridge': typeof Char123LocaleChar125SetupObsBridgeRoute
   '/{-$locale}/setup/raffle': typeof Char123LocaleChar125SetupRaffleRoute
   '/{-$locale}/setup/socials': typeof Char123LocaleChar125SetupSocialsRoute
+  '/{-$locale}/setup/spin-wheel': typeof Char123LocaleChar125SetupSpinWheelRoute
   '/{-$locale}/setup/stream-alerts': typeof Char123LocaleChar125SetupStreamAlertsRoute
   '/{-$locale}/setup/stream-countdown': typeof Char123LocaleChar125SetupStreamCountdownRoute
   '/{-$locale}/setup/stream-frames': typeof Char123LocaleChar125SetupStreamFramesRoute
@@ -382,6 +407,7 @@ export interface FileRoutesById {
   '/{-$locale}': typeof Char123LocaleChar125RouteRouteWithChildren
   '/tools/chat-reader': typeof ToolsChatReaderRoute
   '/tools/obs-bridge': typeof ToolsObsBridgeRoute
+  '/tools/spin-wheel': typeof ToolsSpinWheelRoute
   '/widgets/alerts': typeof WidgetsAlertsRoute
   '/widgets/chat-widget': typeof WidgetsChatWidgetRoute
   '/widgets/countdown': typeof WidgetsCountdownRoute
@@ -391,6 +417,7 @@ export interface FileRoutesById {
   '/widgets/poll': typeof WidgetsPollRoute
   '/widgets/raffle-overlay': typeof WidgetsRaffleOverlayRoute
   '/widgets/socials': typeof WidgetsSocialsRoute
+  '/widgets/spin-wheel': typeof WidgetsSpinWheelRoute
   '/widgets/stream-alerts': typeof WidgetsStreamAlertsRoute
   '/widgets/sub-sprout-widget': typeof WidgetsSubSproutWidgetRoute
   '/widgets/subathon': typeof WidgetsSubathonRoute
@@ -414,6 +441,7 @@ export interface FileRoutesById {
   '/{-$locale}/setup/obs-bridge': typeof Char123LocaleChar125SetupObsBridgeRoute
   '/{-$locale}/setup/raffle': typeof Char123LocaleChar125SetupRaffleRoute
   '/{-$locale}/setup/socials': typeof Char123LocaleChar125SetupSocialsRoute
+  '/{-$locale}/setup/spin-wheel': typeof Char123LocaleChar125SetupSpinWheelRoute
   '/{-$locale}/setup/stream-alerts': typeof Char123LocaleChar125SetupStreamAlertsRoute
   '/{-$locale}/setup/stream-countdown': typeof Char123LocaleChar125SetupStreamCountdownRoute
   '/{-$locale}/setup/stream-frames': typeof Char123LocaleChar125SetupStreamFramesRoute
@@ -428,6 +456,7 @@ export interface FileRouteTypes {
     | '/{-$locale}'
     | '/tools/chat-reader'
     | '/tools/obs-bridge'
+    | '/tools/spin-wheel'
     | '/widgets/alerts'
     | '/widgets/chat-widget'
     | '/widgets/countdown'
@@ -437,6 +466,7 @@ export interface FileRouteTypes {
     | '/widgets/poll'
     | '/widgets/raffle-overlay'
     | '/widgets/socials'
+    | '/widgets/spin-wheel'
     | '/widgets/stream-alerts'
     | '/widgets/sub-sprout-widget'
     | '/widgets/subathon'
@@ -460,6 +490,7 @@ export interface FileRouteTypes {
     | '/{-$locale}/setup/obs-bridge'
     | '/{-$locale}/setup/raffle'
     | '/{-$locale}/setup/socials'
+    | '/{-$locale}/setup/spin-wheel'
     | '/{-$locale}/setup/stream-alerts'
     | '/{-$locale}/setup/stream-countdown'
     | '/{-$locale}/setup/stream-frames'
@@ -471,6 +502,7 @@ export interface FileRouteTypes {
   to:
     | '/tools/chat-reader'
     | '/tools/obs-bridge'
+    | '/tools/spin-wheel'
     | '/widgets/alerts'
     | '/widgets/chat-widget'
     | '/widgets/countdown'
@@ -480,6 +512,7 @@ export interface FileRouteTypes {
     | '/widgets/poll'
     | '/widgets/raffle-overlay'
     | '/widgets/socials'
+    | '/widgets/spin-wheel'
     | '/widgets/stream-alerts'
     | '/widgets/sub-sprout-widget'
     | '/widgets/subathon'
@@ -503,6 +536,7 @@ export interface FileRouteTypes {
     | '/{-$locale}/setup/obs-bridge'
     | '/{-$locale}/setup/raffle'
     | '/{-$locale}/setup/socials'
+    | '/{-$locale}/setup/spin-wheel'
     | '/{-$locale}/setup/stream-alerts'
     | '/{-$locale}/setup/stream-countdown'
     | '/{-$locale}/setup/stream-frames'
@@ -515,6 +549,7 @@ export interface FileRouteTypes {
     | '/{-$locale}'
     | '/tools/chat-reader'
     | '/tools/obs-bridge'
+    | '/tools/spin-wheel'
     | '/widgets/alerts'
     | '/widgets/chat-widget'
     | '/widgets/countdown'
@@ -524,6 +559,7 @@ export interface FileRouteTypes {
     | '/widgets/poll'
     | '/widgets/raffle-overlay'
     | '/widgets/socials'
+    | '/widgets/spin-wheel'
     | '/widgets/stream-alerts'
     | '/widgets/sub-sprout-widget'
     | '/widgets/subathon'
@@ -547,6 +583,7 @@ export interface FileRouteTypes {
     | '/{-$locale}/setup/obs-bridge'
     | '/{-$locale}/setup/raffle'
     | '/{-$locale}/setup/socials'
+    | '/{-$locale}/setup/spin-wheel'
     | '/{-$locale}/setup/stream-alerts'
     | '/{-$locale}/setup/stream-countdown'
     | '/{-$locale}/setup/stream-frames'
@@ -560,6 +597,7 @@ export interface RootRouteChildren {
   Char123LocaleChar125RouteRoute: typeof Char123LocaleChar125RouteRouteWithChildren
   ToolsChatReaderRoute: typeof ToolsChatReaderRoute
   ToolsObsBridgeRoute: typeof ToolsObsBridgeRoute
+  ToolsSpinWheelRoute: typeof ToolsSpinWheelRoute
   WidgetsAlertsRoute: typeof WidgetsAlertsRoute
   WidgetsChatWidgetRoute: typeof WidgetsChatWidgetRoute
   WidgetsCountdownRoute: typeof WidgetsCountdownRoute
@@ -569,6 +607,7 @@ export interface RootRouteChildren {
   WidgetsPollRoute: typeof WidgetsPollRoute
   WidgetsRaffleOverlayRoute: typeof WidgetsRaffleOverlayRoute
   WidgetsSocialsRoute: typeof WidgetsSocialsRoute
+  WidgetsSpinWheelRoute: typeof WidgetsSpinWheelRoute
   WidgetsStreamAlertsRoute: typeof WidgetsStreamAlertsRoute
   WidgetsSubSproutWidgetRoute: typeof WidgetsSubSproutWidgetRoute
   WidgetsSubathonRoute: typeof WidgetsSubathonRoute
@@ -595,6 +634,13 @@ declare module '@tanstack/react-router' {
       path: '/tools/obs-bridge'
       fullPath: '/tools/obs-bridge'
       preLoaderRoute: typeof ToolsObsBridgeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/spin-wheel': {
+      id: '/tools/spin-wheel'
+      path: '/tools/spin-wheel'
+      fullPath: '/tools/spin-wheel'
+      preLoaderRoute: typeof ToolsSpinWheelRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/widgets/alerts': {
@@ -658,6 +704,13 @@ declare module '@tanstack/react-router' {
       path: '/widgets/socials'
       fullPath: '/widgets/socials'
       preLoaderRoute: typeof WidgetsSocialsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/widgets/spin-wheel': {
+      id: '/widgets/spin-wheel'
+      path: '/widgets/spin-wheel'
+      fullPath: '/widgets/spin-wheel'
+      preLoaderRoute: typeof WidgetsSpinWheelRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/widgets/stream-alerts': {
@@ -828,6 +881,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char123LocaleChar125SetupSocialsRouteImport
       parentRoute: typeof Char123LocaleChar125RouteRoute
     }
+    '/{-$locale}/setup/spin-wheel': {
+      id: '/{-$locale}/setup/spin-wheel'
+      path: '/setup/spin-wheel'
+      fullPath: '/{-$locale}/setup/spin-wheel'
+      preLoaderRoute: typeof Char123LocaleChar125SetupSpinWheelRouteImport
+      parentRoute: typeof Char123LocaleChar125RouteRoute
+    }
     '/{-$locale}/setup/stream-alerts': {
       id: '/{-$locale}/setup/stream-alerts'
       path: '/setup/stream-alerts'
@@ -894,6 +954,7 @@ interface Char123LocaleChar125RouteRouteChildren {
   Char123LocaleChar125SetupObsBridgeRoute: typeof Char123LocaleChar125SetupObsBridgeRoute
   Char123LocaleChar125SetupRaffleRoute: typeof Char123LocaleChar125SetupRaffleRoute
   Char123LocaleChar125SetupSocialsRoute: typeof Char123LocaleChar125SetupSocialsRoute
+  Char123LocaleChar125SetupSpinWheelRoute: typeof Char123LocaleChar125SetupSpinWheelRoute
   Char123LocaleChar125SetupStreamAlertsRoute: typeof Char123LocaleChar125SetupStreamAlertsRoute
   Char123LocaleChar125SetupStreamCountdownRoute: typeof Char123LocaleChar125SetupStreamCountdownRoute
   Char123LocaleChar125SetupStreamFramesRoute: typeof Char123LocaleChar125SetupStreamFramesRoute
@@ -940,6 +1001,8 @@ const Char123LocaleChar125RouteRouteChildren: Char123LocaleChar125RouteRouteChil
     Char123LocaleChar125SetupRaffleRoute: Char123LocaleChar125SetupRaffleRoute,
     Char123LocaleChar125SetupSocialsRoute:
       Char123LocaleChar125SetupSocialsRoute,
+    Char123LocaleChar125SetupSpinWheelRoute:
+      Char123LocaleChar125SetupSpinWheelRoute,
     Char123LocaleChar125SetupStreamAlertsRoute:
       Char123LocaleChar125SetupStreamAlertsRoute,
     Char123LocaleChar125SetupStreamCountdownRoute:
@@ -964,6 +1027,7 @@ const rootRouteChildren: RootRouteChildren = {
   Char123LocaleChar125RouteRoute: Char123LocaleChar125RouteRouteWithChildren,
   ToolsChatReaderRoute: ToolsChatReaderRoute,
   ToolsObsBridgeRoute: ToolsObsBridgeRoute,
+  ToolsSpinWheelRoute: ToolsSpinWheelRoute,
   WidgetsAlertsRoute: WidgetsAlertsRoute,
   WidgetsChatWidgetRoute: WidgetsChatWidgetRoute,
   WidgetsCountdownRoute: WidgetsCountdownRoute,
@@ -973,6 +1037,7 @@ const rootRouteChildren: RootRouteChildren = {
   WidgetsPollRoute: WidgetsPollRoute,
   WidgetsRaffleOverlayRoute: WidgetsRaffleOverlayRoute,
   WidgetsSocialsRoute: WidgetsSocialsRoute,
+  WidgetsSpinWheelRoute: WidgetsSpinWheelRoute,
   WidgetsStreamAlertsRoute: WidgetsStreamAlertsRoute,
   WidgetsSubSproutWidgetRoute: WidgetsSubSproutWidgetRoute,
   WidgetsSubathonRoute: WidgetsSubathonRoute,

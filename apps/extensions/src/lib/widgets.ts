@@ -10,6 +10,7 @@ import {
   PollIcon,
   RaffleIcon,
   SocialsIcon,
+  SpinWheelIcon,
   StreamAlertsIcon,
   SubathonIcon,
   SubSproutIcon,
@@ -30,6 +31,7 @@ export type WidgetId =
   | 'countdown'
   | 'raffle'
   | 'obs-bridge'
+  | 'spin-wheel'
   | 'socials';
 /** `overlay`: a browser source that runs on its own. `tool`: something the streamer operates. */
 export type WidgetKind = 'overlay' | 'tool';
@@ -212,6 +214,18 @@ export const WIDGETS: readonly WidgetEntry[] = [
     platforms: ['twitch', 'kick'],
     demoUrl: null,
     sourceSize: null,
+  },
+  {
+    id: 'spin-wheel',
+    kind: 'tool',
+    setupPath: '/setup/spin-wheel',
+    widgetPath: '/widgets/spin-wheel',
+    nameKey: 'widgets.spinWheel.name',
+    taglineKey: 'widgets.spinWheel.tagline',
+    Icon: SpinWheelIcon,
+    platforms: ['twitch', 'kick'],
+    demoUrl: null,
+    sourceSize: { width: 800, height: 800 },
   },
 ];
 
