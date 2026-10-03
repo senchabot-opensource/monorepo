@@ -9,7 +9,7 @@ import { type IrcLine, isTwitchReply, parseIrcLine } from "#/lib/twitch";
 
 type OnParticipant = (participant: RaffleParticipant) => void;
 
-const KNOWN_BOTS = new Set([
+export const KNOWN_BOTS = new Set([
   "nightbot",
   "streamelements",
   "streamlabs",

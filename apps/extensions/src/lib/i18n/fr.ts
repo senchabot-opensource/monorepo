@@ -140,6 +140,10 @@ export const fr: typeof en = {
       name: 'Réseaux sociaux',
       tagline: 'Fais défiler tes liens de réseaux sociaux avec une animation soignée.',
     },
+    spinWheel: {
+      name: 'Roue',
+      tagline: 'Tes viewers tournent la roue avec !spin depuis le chat. Sans connexion.',
+    },
   },
   home: {
     heroTitle: 'Des overlays de stream gratuits pour Twitch et Kick',
@@ -178,6 +182,9 @@ export const fr: typeof en = {
     pollFeatureVote: 'Les viewers votent en tapant un numéro',
     pollFeatureBoth: 'Les votes Twitch et Kick dans un seul sondage',
     pollFeatureLate: 'Les votes de dernière seconde comptent malgré le délai du stream',
+    spinWheelFeatureOptions: 'Options tapées une par ligne',
+    spinWheelFeatureLocal: '!spin la tourne depuis le chat',
+    spinWheelFeatureHistory: 'Cooldown décompté à l’écran',
     pollSpotlight: {
       eyebrow: 'Nouveau : Sondage du chat',
       title: 'Laisse ton chat décider',
@@ -244,10 +251,10 @@ export const fr: typeof en = {
       "OBS Studio et les autres logiciels qui gèrent les sources navigateur. Ajoute l'URL du widget comme source Navigateur web et utilise la taille indiquée sur la page de configuration.",
     faq4Q: 'Je peux utiliser Twitch et Kick ensemble ?',
     faq4A:
-      "Oui. Boîte de chat, Mur d'emotes, Sub Sprout, Subathon Timer, Alertes de stream, Objectif de subs, Sondage du chat et Compte à rebours de stream prennent une chaîne Twitch et une chaîne Kick dans la même URL. OBS Bridge peut aussi écouter les deux chats à la fois. Le Tirage au sort fonctionne sur une seule plateforme à la fois.",
+      "Oui. Boîte de chat, Mur d'emotes, Sub Sprout, Subathon Timer, Alertes de stream, Objectif de subs, Sondage du chat, Compte à rebours de stream et Roue prennent une chaîne Twitch et une chaîne Kick dans la même URL. OBS Bridge peut aussi écouter les deux chats à la fois. Le Tirage au sort fonctionne sur une seule plateforme à la fois.",
     faq5Q: 'Comment modifier un widget plus tard ?',
     faq5A:
-      "Ouvre sa page de configuration, règle-le comme tu veux et remplace l'URL dans ta source Navigateur web. Boîte de chat, Mur d'emotes, Sub Sprout, Subathon Timer, Alertes de stream, Objectif de subs, Sondage du chat, Cadres de stream, Réseaux sociaux et Compte à rebours de stream peuvent aussi ouvrir une URL existante : colle-la sur la page de configuration, tes réglages reviennent, et tu ne changes que ce dont tu as besoin.",
+      "Ouvre sa page de configuration, règle-le comme tu veux et remplace l'URL dans ta source Navigateur web. Boîte de chat, Mur d'emotes, Sub Sprout, Subathon Timer, Alertes de stream, Objectif de subs, Sondage du chat, Cadres de stream, Réseaux sociaux, Compte à rebours de stream et Roue peuvent aussi ouvrir une URL existante : colle-la sur la page de configuration, tes réglages reviennent, et tu ne changes que ce dont tu as besoin.",
     faq6Q: 'Mon URL de widget marchera toujours après les mises à jour ?',
     faq6A:
       "Oui. Les mises à jour gardent les réglages d'URL existants et leurs valeurs, donc un widget déjà dans ta scène n'a pas besoin d'une nouvelle URL.",
@@ -1378,6 +1385,82 @@ export const fr: typeof en = {
     winner: 'Gagnant !',
     subMonthsShort: '{months} mois',
   },
+  spinWheel: {
+    breadcrumb: 'Configuration de la Roue',
+    title: 'Configuration de la Roue',
+    toolTitle: 'Roue',
+    toolLocalNote:
+      'Les tours ici restent sur cette page et n’atteignent jamais l’overlay OBS. Seul !spin depuis le chat fait tourner l’overlay.',
+    intro:
+      'Une roue qui tourne pour ton stream : tes viewers tapent !spin dans le chat Twitch ou Kick et la roue tourne en direct dans ton overlay OBS, avec un seul cooldown global pour tout le monde. Tu préfères la version rapide sans chaîne ? Tourne-la sur la page de l’outil.',
+    sectionOptions: 'Options',
+    optionsLabel: 'Options de la roue',
+    optionsTip: 'Une option par ligne. Commence une ligne par 2x, 3x … pour des parts en plus et plus de chances.',
+    optionsPlaceholder: 'Zelda\nMario Kart\nTetris\nMinecraft',
+    count: '{count} options',
+    shuffle: 'Mélanger',
+    clear: 'Effacer',
+    sectionChat: 'Tours du chat',
+    permissionLabel: 'Qui peut tourner',
+    permissionTip: 'Les modos et le streamer peuvent toujours tourner, quoi que tu choisisses.',
+    permAll: 'Tout le monde',
+    permSubs: 'Subs seuls',
+    permMods: 'Modos seuls',
+    cooldownLabel: 'Cooldown entre les tours',
+    cooldownTip:
+      'Un seul minuteur pour tout le chat. Pendant qu’il tourne, l’overlay affiche l’attente et les nouveaux !spin sont ignorés.',
+    cooldownOff: '0 coupe le cooldown : chaque !spin tourne aussitôt.',
+    sectionSound: 'Son',
+    soundTip: 'Sons de rotation et de victoire sur l’overlay. Coupe pour tourner en silence.',
+    previewTitle: 'Roue',
+    previewTip: 'Tours simulés avec tes options. Le chat reste coupé ici ; tourne avec le bouton ci-dessous.',
+    previewIframeTitle: 'Aperçu de la roue',
+    testTitle: 'Essayer',
+    testSpin: 'Tour d’essai',
+    spin: 'Tourner la roue',
+    spinning: 'Ça tourne…',
+    needTwo: 'Tape au moins deux options pour tourner.',
+    soundOn: 'Son activé',
+    soundOff: 'Son coupé',
+    winnerTitle: 'Gagnant !',
+    history: 'Gagnants récents ({count})',
+    clearHistory: 'Effacer',
+    noHistory: 'Aucun tour pour l’instant. Les gagnants apparaissent ici.',
+    overlayUrl: 'URL de l’overlay',
+    widgetUrlTip: 'Colle cette URL comme source navigateur dans OBS.',
+    widgetUrlHint: 'Tes chaînes, options, permission et cooldown vivent tous dans cette URL.',
+    browserSourceHintSize: ' (taille recommandée : 800×800).',
+    widgetUrlPlaceholder: 'Colle une URL de roue existante pour la modifier',
+    widgetUrlInvalid: 'Ça n’est pas une URL d’overlay de Roue.',
+    overlayNextStep: 'Tape !spin dans le chat pour tourner la roue sur le stream.',
+    sectionCommands: 'Commandes du chat',
+    commandsIntro: 'Tes viewers tournent la roue depuis le chat. Les modos et le streamer peuvent toujours tourner.',
+    cmdSpin: 'Tourne la roue. Ignoré pendant qu’elle tourne ou que le cooldown court.',
+    commandsCooldownNote:
+      'Après chaque tour accepté, le cooldown global démarre. L’overlay le décompte à l’écran.',
+    cooldownWait: 'Prochain tour dans {seconds} s',
+    overlayNeedTwo: 'Ajoute au moins deux options sur la page de configuration pour tourner.',
+    guideStep1: 'Tape ta chaîne Twitch et/ou Kick.',
+    guideStep2: 'Tape tes options dans la case Options, une par ligne.',
+    guideStep3: 'Copie l’URL de l’overlay et ajoute-la comme source navigateur dans OBS (800×800).',
+    guideStep4: 'Tes viewers tapent !spin dans le chat. L’overlay affiche l’attente pendant le cooldown.',
+    faq1Q: 'Qui peut tourner la roue ?',
+    faq1A:
+      'Qui tu autorises : tout le monde, subs seuls ou modos seuls. Les modos et le streamer peuvent toujours tourner, et chaque !spin accepté lance le cooldown global.',
+    faq2Q: 'Comment montrer la roue sur le stream ?',
+    faq2A:
+      'Copie l’URL de l’overlay et ajoute-la comme source navigateur dans OBS en 800×800. La roue y tourne sur !spin et décompte le cooldown à l’écran.',
+    faq3Q: 'Où sont enregistrées mes options ?',
+    faq3A:
+      'Dans l’URL de l’overlay, avec tes chaînes, ta permission et ton cooldown. Recolle cette URL sur la page de configuration pour la modifier. L’outil rapide garde une liste à part dans ton navigateur.',
+    faq4Q: 'Faut-il se connecter ou brancher quelque chose ?',
+    faq4A:
+      'Non. L’overlay lit le chat public Twitch et Kick de façon anonyme, comme n’importe quel viewer. Pas de compte, rien à brancher.',
+    advancedTitle: 'Une roue avancée avec points de chaîne ?',
+    advancedText:
+      'Si tu veux une version avec les points de chaîne Twitch et Kick pour tes viewers, utilise la roue du tableau de bord Senchabot.',
+    advancedCta: 'Ouvrir la roue du tableau de bord',
+  },
   alerts: {
     follow: 'Nouveau follower !',
     sub: 'Nouvel abonné !',
@@ -1529,6 +1612,8 @@ export const fr: typeof en = {
             "L'overlay du gagnant. Des confettis jaillissent des deux côtés de l'écran et le nom du gagnant apparaît au centre.",
           obsBridge:
             "Pas un overlay visible. Garde l'outil ouvert dans un onglet du navigateur ou un dock OBS.",
+          spinWheel:
+            'La roue tourne sur !spin depuis le chat en 800×800. Le cooldown global se décompte à l’écran, alors garde de la place pour l’attente au-dessus de la roue.',
           socials:
             'Un pseudo à la fois, au centre de cette bande. Le texte garde sa taille, donc un long pseudo demande une source plus large.',
         },
@@ -1537,7 +1622,7 @@ export const fr: typeof en = {
       },
       transparent: {
         title: 'Faut-il faire quelque chose pour rendre le fond transparent ?',
-        p1: "Non. Boîte de chat, Mur d'emotes, Sub Sprout, Subathon Timer, Alertes de stream, Objectif de subs, Cadres de stream, Compte à rebours de stream, Sondage du chat, Réseaux sociaux et l'overlay du Tirage au sort sont dessinés sur un fond transparent. Pas besoin de chroma key ni de filtre, et tu peux laisser le champ CSS personnalisé d'OBS tel quel.",
+        p1: "Non. Boîte de chat, Mur d'emotes, Sub Sprout, Subathon Timer, Alertes de stream, Objectif de subs, Cadres de stream, Compte à rebours de stream, Sondage du chat, Réseaux sociaux, l'overlay de la Roue et l'overlay du Tirage au sort sont dessinés sur un fond transparent. Pas besoin de chroma key ni de filtre, et tu peux laisser le champ CSS personnalisé d'OBS tel quel.",
         p2: 'Si la Boîte de chat est difficile à lire sur une scène claire, active Fond sombre. Ça ajoute une couche noire semi-transparente derrière le widget, et tu peux régler son opacité de 0 % à 100 % (50 % par défaut). Si tu veux chaque message dans sa propre boîte, active Fond par message.',
       },
       settings: {
@@ -1565,7 +1650,7 @@ export const fr: typeof en = {
       update: {
         title: 'Comment modifier un widget plus tard ?',
         p1: "Tes réglages sont dans l'URL du widget, donc changer un réglage veut dire une nouvelle URL. Change le réglage sur la page de configuration, copie la nouvelle URL, puis double-clique sur la source dans OBS et colle-la à la place de l'ancienne dans le champ URL.",
-        p2: "Pas besoin de tout recommencer avec [Boîte de chat](/setup/chat-widget), [Mur d'emotes](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Alertes de stream](/setup/stream-alerts), [Objectif de subs](/setup/sub-goal), [Sondage du chat](/setup/chat-poll), [Cadres de stream](/setup/stream-frames), [Réseaux sociaux](/setup/socials) ou [Compte à rebours de stream](/setup/stream-countdown). Colle ton URL actuelle dans le champ URL du widget sur la page de configuration et tes chaînes et tous tes réglages reviennent. Change ce que tu veux et copie la nouvelle URL.",
+        p2: "Pas besoin de tout recommencer avec [Boîte de chat](/setup/chat-widget), [Mur d'emotes](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Alertes de stream](/setup/stream-alerts), [Objectif de subs](/setup/sub-goal), [Sondage du chat](/setup/chat-poll), [Cadres de stream](/setup/stream-frames), [Réseaux sociaux](/setup/socials), [Compte à rebours de stream](/setup/stream-countdown) ou [Roue](/setup/spin-wheel). Colle ton URL actuelle dans le champ URL du widget sur la page de configuration et tes chaînes et tous tes réglages reviennent. Change ce que tu veux et copie la nouvelle URL.",
         p3: "OBS Bridge n'a pas de champ pour coller une URL, donc saisis à nouveau tes réglages sur sa page de configuration et copie la nouvelle URL de l'outil. Tu peux aussi changer les choix de scènes et les utilisateurs autorisés directement sur la page de l'outil et récupérer la nouvelle URL avec son bouton Copier l'URL à jour. Les anciennes URL continuent de marcher, donc pas besoin de les mettre à jour.",
       },
       troubleshoot: {
@@ -2337,7 +2422,7 @@ export const fr: typeof en = {
     },
     freeQ: 'Senchabot Extensions est-il gratuit ?',
     freeA:
-      "Oui. Les douze widgets et outils sont gratuits : Boîte de chat, Mur d'emotes, Sub Sprout, Subathon Timer, Alertes de stream, Objectif de subs, Cadres de stream, Compte à rebours de stream, Sondage du chat, Réseaux sociaux, Tirage au sort et OBS Bridge. Pas d'offre payante, pas de filigrane, pas de compte premium. Le code source est ouvert sur GitHub sous licence GPL-3.0.",
+      "Oui. Les treize widgets et outils sont gratuits : Boîte de chat, Mur d'emotes, Sub Sprout, Subathon Timer, Alertes de stream, Objectif de subs, Cadres de stream, Compte à rebours de stream, Sondage du chat, Réseaux sociaux, Tirage au sort, OBS Bridge et Roue. Pas d'offre payante, pas de filigrane, pas de compte premium. Le code source est ouvert sur GitHub sous licence GPL-3.0.",
     loginQ: 'Que veut dire "sans connexion" ?',
     loginA:
       "Tu ne crées pas de compte sur ce site, tu ne te connectes pas avec Twitch ou Kick, et tu ne télécharges rien. Tu tapes le nom de ta chaîne et la page de configuration te donne une URL. Les widgets lisent le chat public anonymement : sur Twitch, ils se connectent comme un viewer anonyme, et sur Kick, ils écoutent le flux public du chat. C'est pour ça qu'ils ne peuvent pas écrire dans le chat, modérer, ni accéder aux infos privées de ton compte.",
@@ -2349,10 +2434,10 @@ export const fr: typeof en = {
       'OBS Studio et tout autre logiciel de stream qui gère une source navigateur. Chaque widget tourne comme une URL web, et tu colles cette URL dans la source. Nos guides sont écrits pour OBS Studio.',
     platformsQ: 'Quels widgets gèrent Twitch et lesquels gèrent Kick ?',
     platformsA:
-      "Les douze gèrent les deux plateformes. Boîte de chat, Mur d'emotes, Sub Sprout, Subathon Timer, Alertes de stream, Objectif de subs, Sondage du chat et Compte à rebours de stream écoutent une chaîne Twitch et une chaîne Kick ensemble dans une seule URL. OBS Bridge écoute les commandes des deux chats, et chaque utilisateur autorisé est ajouté avec sa propre plateforme. Le Tirage au sort fonctionne sur une seule plateforme à la fois, Twitch ou Kick. Les Cadres de stream et les Réseaux sociaux ne lisent pas le chat, donc ils fonctionnent de la même façon sur les deux. Dans la Boîte de chat, les emotes 7TV s'affichent sur les deux plateformes, et les emotes BTTV et FFZ seulement sur Twitch.",
+      "Les treize gèrent les deux plateformes. Boîte de chat, Mur d'emotes, Sub Sprout, Subathon Timer, Alertes de stream, Objectif de subs, Sondage du chat, Compte à rebours de stream et Roue écoutent une chaîne Twitch et une chaîne Kick ensemble dans une seule URL. OBS Bridge écoute les commandes des deux chats, et chaque utilisateur autorisé est ajouté avec sa propre plateforme. Le Tirage au sort fonctionne sur une seule plateforme à la fois, Twitch ou Kick. Les Cadres de stream et les Réseaux sociaux ne lisent pas le chat, donc ils fonctionnent de la même façon sur les deux. Dans la Boîte de chat, les emotes 7TV s'affichent sur les deux plateformes, et les emotes BTTV et FFZ seulement sur Twitch.",
     editQ: 'Comment modifier un widget plus tard ?',
     editA:
-      "Change les réglages sur la page de configuration, copie la nouvelle URL, et colle-la à la place de l'ancienne dans le champ URL de la source dans OBS. Avec Boîte de chat, Mur d'emotes, Sub Sprout, Subathon Timer, Alertes de stream, Objectif de subs, Sondage du chat, Cadres de stream, Réseaux sociaux et Compte à rebours de stream, si tu colles ton ancienne URL dans le champ URL du widget sur la page de configuration, tous tes réglages reviennent et tu n'as pas à tout recommencer.",
+      "Change les réglages sur la page de configuration, copie la nouvelle URL, et colle-la à la place de l'ancienne dans le champ URL de la source dans OBS. Avec Boîte de chat, Mur d'emotes, Sub Sprout, Subathon Timer, Alertes de stream, Objectif de subs, Sondage du chat, Cadres de stream, Réseaux sociaux, Compte à rebours de stream et Roue, si tu colles ton ancienne URL dans le champ URL du widget sur la page de configuration, tous tes réglages reviennent et tu n'as pas à tout recommencer.",
     oldUrlsQ: 'Mes anciennes URL de widgets vont-elles continuer de marcher ?',
     oldUrlsA:
       "Oui. Les mises à jour sont faites pour ne pas casser les URL existantes : les noms de paramètres, les valeurs et les valeurs par défaut restent les mêmes. Par exemple, l'ancien keep=true de la Boîte de chat veut toujours dire Pour toujours, et Sub Sprout lit toujours les anciens paramètres channel et platform.",
@@ -2378,6 +2463,14 @@ export const fr: typeof en = {
     entries: {
       countdownZoom:
         'Le Stream Countdown a des options de zoom : affiche-le en grand à 125 %, 150 % ou 200 %, ou plus petit à 75 %.',
+      spinWheelWeights:
+        'La Roue accepte les poids : commence une ligne par `2x`, `3x`… pour des parts en plus qui gagnent d’autant plus souvent.',
+      spinWheelChat:
+        'La Roue a maintenant des chaînes Twitch et Kick : tes viewers tournent avec `!spin`, pour tout le monde, subs seuls ou modos seuls, avec un cooldown global décompté sur le nouvel overlay OBS.',
+      spinWheelAdvancedLink:
+        'La Roue renvoie désormais vers la roue avancée du tableau de bord Senchabot avec les points de chaîne Twitch et Kick.',
+      spinWheelLaunch:
+        'Nouvel outil Roue : tape une option par ligne et fais tourner la roue en direct sur la page, avec son, confettis et historique des gagnants.',
       countdownPomodoroScene:
         'Le Stream Countdown a un quatrième usage : Pomodoro, avec son texte, son icône tomate et 25 minutes par défaut dans le chat.',
       countdownCommandAlias:

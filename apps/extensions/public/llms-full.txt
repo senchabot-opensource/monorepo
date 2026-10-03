@@ -1,6 +1,6 @@
 # Senchabot Extensions: full reference
 
-> Free, open source stream overlays and tools for Twitch and Kick: Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Stream Frames, Stream Countdown, Chat Poll, Raffle and OBS Bridge. Each one is set up on a web page at https://extensions.senchabot.com and runs from a URL. No login and nothing to install.
+> Free, open source stream overlays and tools for Twitch and Kick: Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Stream Frames, Stream Countdown, Chat Poll, Raffle, OBS Bridge and Spin Wheel. Each one is set up on a web page at https://extensions.senchabot.com and runs from a URL. No login and nothing to install.
 
 Short version with links only: https://extensions.senchabot.com/llms.txt
 
@@ -31,8 +31,9 @@ Short version with links only: https://extensions.senchabot.com/llms.txt
 | Chat Poll | Tool | /setup/chat-poll | /widgets/poll (run from chat with !poll) | 640x560 |
 | Raffle | Tool | /setup/raffle | /widgets/raffle-overlay (winner overlay) | 1920x1080 |
 | OBS Bridge | Tool | /setup/obs-bridge | /tools/obs-bridge (tab or OBS dock, not a source) | none |
+| Spin Wheel | Tool | /setup/spin-wheel | /widgets/spin-wheel (spun from chat with !spin) | 800x800 |
 
-All ten work with Twitch and Kick. Stream Frames reads no chat, so it needs no channel. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal and Chat Poll take a Twitch and a Kick channel in the same URL. OBS Bridge listens to both chats at once. Raffle runs on one platform at a time.
+All eleven work with Twitch and Kick. Stream Frames reads no chat, so it needs no channel. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll and Spin Wheel take a Twitch and a Kick channel in the same URL. OBS Bridge listens to both chats at once. Raffle runs on one platform at a time.
 
 ## How to add a widget to OBS Studio
 
@@ -438,6 +439,20 @@ URL parameters:
 | cmdStartRecord | command text | !startrecord |
 | cmdStopRecord | command text | !stoprecord |
 
+## Spin Wheel
+
+A chat-driven spinning wheel for game names, challenges or any list of choices. The setup page builds the overlay: https://extensions.senchabot.com/setup/spin-wheel, and the overlay runs at https://extensions.senchabot.com/widgets/spin-wheel. The quick manual tool still runs at https://extensions.senchabot.com/tools/spin-wheel.
+
+- Type one option per line. The wheel updates as you type, up to 100 slices.
+- Start a line with 2x, 3x, ... for extra slices: 2x Tetris wins twice as often.
+- Viewers type !spin in Twitch or Kick chat to spin. Who may spin is a setting: everyone, subs only, or mods only (mods and the broadcaster can always spin).
+- One global cooldown for the whole chat (30 seconds by default, 0 turns it off). While it runs, the overlay counts the wait down on screen and new !spin messages are skipped.
+- Press Spin: the winner is picked with the browser's secure random number generator (crypto.getRandomValues) and lands with a live spinning animation, tick sounds, a victory jingle and confetti.
+- Options, channels, permission and cooldown all live in the overlay URL. Paste it back on the setup page to edit it.
+- No login: the overlay reads public chat anonymously.
+- Spins on the tool page stay on that page; only !spin spins the overlay.
+- URL parameters: twitch, kick, o (options joined with |), cd (cooldown seconds, 0-300, default 30), perm (all, subs, mods; default all), sound (1 or 0, default 1), lang.
+
 ## Presets
 
 A preset gives several widgets the same look: frame, fonts and colors. Page: https://extensions.senchabot.com/presets
@@ -452,7 +467,7 @@ A preset gives several widgets the same look: frame, fonts and colors. Page: htt
 ## FAQ
 
 Q: Is Senchabot Extensions free?
-A: Yes. All nine widgets and tools are free: Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll, Raffle and OBS Bridge. There's no paid plan, watermark or premium account. The source code is open on GitHub under the GPL-3.0 license.
+A: Yes. All thirteen widgets and tools are free: Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Stream Frames, Stream Countdown, Chat Poll, Socials, Raffle, OBS Bridge and Spin Wheel. There's no paid plan, watermark or premium account. The source code is open on GitHub under the GPL-3.0 license.
 
 Q: What does "no login required" mean?
 A: You don't create an account on the site, you don't log in with Twitch or Kick, and you don't download anything. You type your channel name and the setup page gives you a URL. The widgets read public chat anonymously, so they can't post in chat, moderate, or access private info on your account.
@@ -464,10 +479,10 @@ Q: Which streaming software does it work with?
 A: OBS Studio and any other streaming software that supports a browser source. Each widget runs as a web URL that you paste into the source.
 
 Q: Which widgets support Twitch and which support Kick?
-A: All nine support both. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal and Chat Poll listen to a Twitch and a Kick channel in one URL. OBS Bridge listens for commands from both chats. Raffle runs on one platform at a time. In Chat Box, 7TV emotes show on both platforms, BTTV and FFZ emotes on Twitch only.
+A: All thirteen support both. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal and Chat Poll listen to a Twitch and a Kick channel in one URL. Spin Wheel does too. OBS Bridge listens for commands from both chats. Raffle runs on one platform at a time. Stream Frames and Socials read no chat. In Chat Box, 7TV emotes show on both platforms, BTTV and FFZ emotes on Twitch only.
 
 Q: How do I change a widget later?
-A: Change the settings on the setup page, copy the new URL and paste it over the old one in OBS. With Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal and Chat Poll you can paste your old URL into the Widget URL field on the setup page to get all your settings back.
+A: Change the settings on the setup page, copy the new URL and paste it over the old one in OBS. With Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll and Spin Wheel you can paste your old URL into the Widget URL field on the setup page to get all your settings back.
 
 Q: Will my old widget URLs keep working?
 A: Yes. Parameter names, values and defaults stay the same. For example the old keep=true in Chat Box still means Forever, and Sub Sprout still reads the old channel and platform parameters.
@@ -499,6 +514,9 @@ A: Open an issue at https://github.com/senchabot-opensource/monorepo/issues/new.
 - Chat Poll setup: https://extensions.senchabot.com/setup/chat-poll
 - Raffle: https://extensions.senchabot.com/setup/raffle
 - OBS Bridge setup: https://extensions.senchabot.com/setup/obs-bridge
+- Spin Wheel setup: https://extensions.senchabot.com/setup/spin-wheel
+- Spin Wheel overlay: https://extensions.senchabot.com/widgets/spin-wheel
+- Spin Wheel tool: https://extensions.senchabot.com/tools/spin-wheel
 - Presets: https://extensions.senchabot.com/presets
 - Guides: https://extensions.senchabot.com/guides
 - Guide, add a widget to OBS: https://extensions.senchabot.com/guides/obs-browser-source

@@ -138,6 +138,10 @@ export const pt: typeof en = {
       name: 'Redes Sociais',
       tagline: 'Mostre suas redes sociais em rodízio com uma animação caprichada.',
     },
+    spinWheel: {
+      name: 'Roleta',
+      tagline: 'Seus espectadores giram a roleta com !spin pelo chat. Sem login.',
+    },
   },
   home: {
     heroTitle: 'Overlays grátis para lives na Twitch e na Kick',
@@ -175,6 +179,9 @@ export const pt: typeof en = {
     pollFeatureVote: 'O chat vota digitando um número',
     pollFeatureBoth: 'Votos da Twitch e da Kick na mesma enquete',
     pollFeatureLate: 'Votos do último segundo contam, mesmo com o atraso da live',
+    spinWheelFeatureOptions: 'Opções digitadas uma por linha',
+    spinWheelFeatureLocal: '!spin gira pelo chat',
+    spinWheelFeatureHistory: 'Cooldown contado na tela',
     pollSpotlight: {
       eyebrow: 'Novo: Enquete do Chat',
       title: 'Deixe o chat decidir',
@@ -239,10 +246,10 @@ export const pt: typeof en = {
       'OBS Studio e outros programas que aceitam fontes de navegador. Adicione a URL do widget como fonte de navegador e use o tamanho mostrado na página de configuração.',
     faq4Q: 'Posso usar Twitch e Kick juntas?',
     faq4A:
-      'Sim. Caixa de Chat, Mural de Emotes, Sub Sprout, Subathon Timer, Alertas de Live, Meta de Subs, Enquete do Chat e Contagem Regressiva aceitam um canal da Twitch e um da Kick na mesma URL. O OBS Bridge também consegue ouvir os dois chats ao mesmo tempo. O Sorteio roda em uma plataforma por vez.',
+      'Sim. Caixa de Chat, Mural de Emotes, Sub Sprout, Subathon Timer, Alertas de Live, Meta de Subs, Enquete do Chat, Contagem Regressiva e Roleta aceitam um canal da Twitch e um da Kick na mesma URL. O OBS Bridge também consegue ouvir os dois chats ao mesmo tempo. O Sorteio roda em uma plataforma por vez.',
     faq5Q: 'Como mudo um widget depois?',
     faq5A:
-      'Abra a página de configuração dele, deixe do jeito que você quer e troque a URL na sua fonte de navegador. Caixa de Chat, Mural de Emotes, Sub Sprout, Subathon Timer, Alertas de Live, Meta de Subs, Enquete do Chat, Molduras de Live, Redes Sociais e Contagem Regressiva também abrem uma URL que você já tem: cole na página de configuração, suas configurações voltam e você muda só o que precisa.',
+      'Abra a página de configuração dele, deixe do jeito que você quer e troque a URL na sua fonte de navegador. Caixa de Chat, Mural de Emotes, Sub Sprout, Subathon Timer, Alertas de Live, Meta de Subs, Enquete do Chat, Molduras de Live, Redes Sociais, Contagem Regressiva e Roleta também abrem uma URL que você já tem: cole na página de configuração, suas configurações voltam e você muda só o que precisa.',
     faq6Q: 'A URL do meu widget continua funcionando depois das atualizações?',
     faq6A:
       'Sim. As atualizações mantêm funcionando as configurações e os valores das URLs que já existem, então um widget que já está na sua cena não precisa de URL nova.',
@@ -1359,6 +1366,82 @@ export const pt: typeof en = {
     winner: 'Vencedor!',
     subMonthsShort: '{months} m',
   },
+  spinWheel: {
+    breadcrumb: 'Configuração da Roleta',
+    title: 'Configuração da Roleta',
+    toolTitle: 'Roleta',
+    toolLocalNote:
+      'Os giros aqui ficam nesta página e nunca chegam ao overlay do OBS. Só !spin pelo chat gira o overlay.',
+    intro:
+      'Uma roleta giratória para a sua live: seus espectadores digitam !spin no chat da Twitch ou da Kick e a roleta gira ao vivo no seu overlay do OBS, com um único cooldown global para todos. Prefere a versão rápida sem canal? Gire na página da ferramenta.',
+    sectionOptions: 'Opções',
+    optionsLabel: 'Opções da roleta',
+    optionsTip: 'Uma opção por linha. Comece uma linha com 2x, 3x … para fatias extras com mais chance.',
+    optionsPlaceholder: 'Zelda\nMario Kart\nTetris\nMinecraft',
+    count: '{count} opções',
+    shuffle: 'Embaralhar',
+    clear: 'Limpar',
+    sectionChat: 'Giros do chat',
+    permissionLabel: 'Quem pode girar',
+    permissionTip: 'Moderadores e o streamer sempre podem girar, não importa o que você escolha.',
+    permAll: 'Todos',
+    permSubs: 'Só subs',
+    permMods: 'Só mods',
+    cooldownLabel: 'Cooldown entre giros',
+    cooldownTip:
+      'Um único cronômetro para o chat todo. Enquanto ele roda, o overlay mostra a espera e novos !spin são ignorados.',
+    cooldownOff: '0 desliga o cooldown: cada !spin gira na hora.',
+    sectionSound: 'Som',
+    soundTip: 'Sons de giro e vitória no overlay. Desligue para girar em silêncio.',
+    previewTitle: 'Roleta',
+    previewTip: 'Giros simulados com suas opções. O chat fica desligado aqui; gire pelo botão abaixo.',
+    previewIframeTitle: 'Prévia da roleta',
+    testTitle: 'Testar',
+    testSpin: 'Giro de teste',
+    spin: 'Girar a roleta',
+    spinning: 'Girando…',
+    needTwo: 'Digite pelo menos duas opções para girar.',
+    soundOn: 'Som ligado',
+    soundOff: 'Som desligado',
+    winnerTitle: 'Vencedor!',
+    history: 'Vencedores recentes ({count})',
+    clearHistory: 'Limpar',
+    noHistory: 'Nenhum giro ainda. Os vencedores aparecem aqui.',
+    overlayUrl: 'URL do overlay',
+    widgetUrlTip: 'Cole esta URL como fonte de navegador no OBS.',
+    widgetUrlHint: 'Seus canais, opções, permissão e cooldown vivem nesta URL.',
+    browserSourceHintSize: ' (tamanho recomendado: 800×800).',
+    widgetUrlPlaceholder: 'Cole uma URL de roleta existente para editar',
+    widgetUrlInvalid: 'Esta não é uma URL de overlay da Roleta.',
+    overlayNextStep: 'Digite !spin no chat para girar a roleta na live.',
+    sectionCommands: 'Comandos do chat',
+    commandsIntro: 'Seus espectadores giram a roleta pelo chat. Moderadores e o streamer sempre podem girar.',
+    cmdSpin: 'Gira a roleta. Ignorado enquanto gira ou o cooldown roda.',
+    commandsCooldownNote:
+      'Depois de cada giro aceito começa o cooldown global. O overlay conta na tela.',
+    cooldownWait: 'Próximo giro em {seconds} s',
+    overlayNeedTwo: 'Adicione pelo menos duas opções na página de configuração para girar.',
+    guideStep1: 'Digite seu canal da Twitch e/ou da Kick.',
+    guideStep2: 'Digite suas opções na caixa Opções, uma por linha.',
+    guideStep3: 'Copie a URL do overlay e adicione como fonte de navegador no OBS (800×800).',
+    guideStep4: 'Seus espectadores digitam !spin no chat. O overlay mostra a espera enquanto o cooldown roda.',
+    faq1Q: 'Quem pode girar a roleta?',
+    faq1A:
+      'Quem você permitir: todos, só inscritos ou só moderadores. Moderadores e o streamer sempre podem girar, e cada !spin aceito inicia o cooldown global.',
+    faq2Q: 'Como mostro a roleta na live?',
+    faq2A:
+      'Copie a URL do overlay e adicione como fonte de navegador no OBS em 800×800. A roleta gira lá com !spin e conta o cooldown na tela.',
+    faq3Q: 'Onde minhas opções ficam salvas?',
+    faq3A:
+      'Na URL do overlay, junto com seus canais, permissão e cooldown. Cole essa URL de volta na página de configuração para editar. A ferramenta rápida guarda outra lista separada no seu navegador.',
+    faq4Q: 'Preciso fazer login ou conectar algo?',
+    faq4A:
+      'Não. O overlay lê o chat público da Twitch e da Kick de forma anônima, como qualquer espectador. Sem conta, nada para conectar.',
+    advancedTitle: 'Quer uma roleta avançada com pontos de canal?',
+    advancedText:
+      'Se quiser uma versão com pontos de canal da Twitch e da Kick para seus espectadores, use a roleta do painel da Senchabot.',
+    advancedCta: 'Abrir a roleta do painel',
+  },
   alerts: {
     follow: 'Novo seguidor!',
     sub: 'Novo inscrito!',
@@ -1508,6 +1591,8 @@ export const pt: typeof en = {
             'O overlay do vencedor. Confete estoura dos dois lados da tela e o nome do vencedor aparece no meio.',
           obsBridge:
             'Não é um overlay visível. Deixe a ferramenta aberta em uma aba do navegador ou em um painel do OBS.',
+          spinWheel:
+            'A roleta gira com !spin do chat em 800×800. O cooldown global é contado na tela, então deixe espaço para o aviso acima da roleta.',
           socials:
             'Um perfil por vez, no meio desta faixa. O texto não diminui, então um nome de usuário longo precisa de uma fonte mais larga.',
         },
@@ -1516,7 +1601,7 @@ export const pt: typeof en = {
       },
       transparent: {
         title: 'Precisa fazer alguma coisa para o fundo ficar transparente?',
-        p1: 'Não. Caixa de Chat, Mural de Emotes, Sub Sprout, Subathon Timer, Alertas de Live, Meta de Subs, Molduras de Live, Contagem Regressiva, Enquete do Chat, Redes Sociais e o overlay do Sorteio são desenhados em fundo transparente. Você não precisa de chroma key nem de filtro, e pode deixar o campo CSS personalizado do OBS como está.',
+        p1: 'Não. Caixa de Chat, Mural de Emotes, Sub Sprout, Subathon Timer, Alertas de Live, Meta de Subs, Molduras de Live, Contagem Regressiva, Enquete do Chat, Redes Sociais, o overlay da Roleta e o overlay do Sorteio são desenhados em fundo transparente. Você não precisa de chroma key nem de filtro, e pode deixar o campo CSS personalizado do OBS como está.',
         p2: 'Se a Caixa de Chat ficar difícil de ler numa cena clara, ligue Fundo escuro. Ele coloca uma camada preta semitransparente atrás do widget, e você pode ajustar a opacidade de 0% a 100% (50% por padrão). Se quiser cada mensagem na sua própria caixa, ligue Caixa de fundo da mensagem.',
       },
       settings: {
@@ -1544,7 +1629,7 @@ export const pt: typeof en = {
       update: {
         title: 'Como mudo um widget depois?',
         p1: 'Suas configurações ficam dentro da URL do widget, então mudar uma configuração quer dizer uma URL nova. Mude a configuração na página de configuração, copie a URL nova, depois clique duas vezes na fonte no OBS e cole por cima da URL antiga no campo URL.',
-        p2: 'Você não precisa começar do zero com [Caixa de Chat](/setup/chat-widget), [Mural de Emotes](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Alertas de Live](/setup/stream-alerts), [Meta de Subs](/setup/sub-goal), [Enquete do Chat](/setup/chat-poll), [Molduras de Live](/setup/stream-frames), [Redes Sociais](/setup/socials) ou [Contagem Regressiva](/setup/stream-countdown). Cole sua URL atual no campo URL do widget da página de configuração e seus canais e todas as suas configurações voltam. Mude o que quiser e copie a URL nova.',
+        p2: 'Você não precisa começar do zero com [Caixa de Chat](/setup/chat-widget), [Mural de Emotes](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Alertas de Live](/setup/stream-alerts), [Meta de Subs](/setup/sub-goal), [Enquete do Chat](/setup/chat-poll), [Molduras de Live](/setup/stream-frames), [Redes Sociais](/setup/socials), [Contagem Regressiva](/setup/stream-countdown) ou [Roleta](/setup/spin-wheel). Cole sua URL atual no campo URL do widget da página de configuração e seus canais e todas as suas configurações voltam. Mude o que quiser e copie a URL nova.',
         p3: 'O OBS Bridge não tem campo para colar, então coloque suas configurações de novo na página de configuração dele e copie a nova URL da ferramenta. Você também pode mudar as cenas escolhidas e os usuários autorizados na própria página da ferramenta e pegar a URL nova com o botão Copiar URL atualizada. As URLs antigas continuam funcionando, então você não precisa atualizá-las.',
       },
       troubleshoot: {
@@ -2313,7 +2398,7 @@ export const pt: typeof en = {
     },
     freeQ: 'O Senchabot Extensions é grátis?',
     freeA:
-      'Sim. Os doze widgets e ferramentas são grátis: Caixa de Chat, Mural de Emotes, Sub Sprout, Subathon Timer, Alertas de Live, Meta de Subs, Molduras de Live, Contagem Regressiva, Enquete do Chat, Redes Sociais, Sorteio e OBS Bridge. Não tem plano pago, marca d’água nem conta premium. O código-fonte é aberto no GitHub sob a licença GPL-3.0.',
+      'Sim. Os treze widgets e ferramentas são grátis: Caixa de Chat, Mural de Emotes, Sub Sprout, Subathon Timer, Alertas de Live, Meta de Subs, Molduras de Live, Contagem Regressiva, Enquete do Chat, Redes Sociais, Sorteio, OBS Bridge e Roleta. Não tem plano pago, marca d’água nem conta premium. O código-fonte é aberto no GitHub sob a licença GPL-3.0.',
     loginQ: 'O que quer dizer "sem login"?',
     loginA:
       'Você não cria conta neste site, não entra com a Twitch nem com a Kick e não baixa nada. Você digita o nome do seu canal e a página de configuração te dá uma URL. Os widgets leem o chat público de forma anônima: na Twitch eles conectam como um espectador anônimo, e na Kick ouvem o feed público do chat. Por isso eles não conseguem escrever no chat, moderar nem acessar informações privadas da sua conta.',
@@ -2325,10 +2410,10 @@ export const pt: typeof en = {
       'OBS Studio e qualquer outro programa de live que aceite fonte de navegador. Cada widget roda como uma URL da web, e você cola essa URL na fonte. Nossos guias são escritos para o OBS Studio.',
     platformsQ: 'Quais widgets funcionam na Twitch e quais funcionam na Kick?',
     platformsA:
-      'Os doze funcionam nas duas plataformas. Caixa de Chat, Mural de Emotes, Sub Sprout, Subathon Timer, Alertas de Live, Meta de Subs, Enquete do Chat e Contagem Regressiva ouvem um canal da Twitch e um da Kick juntos em uma URL. O OBS Bridge ouve comandos dos dois chats, e cada usuário autorizado é adicionado com a sua própria plataforma. O Sorteio roda em uma plataforma por vez, Twitch ou Kick. As Molduras de Live e as Redes Sociais não leem o chat, então funcionam do mesmo jeito em qualquer uma das duas. Na Caixa de Chat, os emotes da 7TV aparecem nas duas plataformas, e os da BTTV e da FFZ só na Twitch.',
+      'Os treze funcionam nas duas plataformas. Caixa de Chat, Mural de Emotes, Sub Sprout, Subathon Timer, Alertas de Live, Meta de Subs, Enquete do Chat, Contagem Regressiva e Roleta ouvem um canal da Twitch e um da Kick juntos em uma URL. O OBS Bridge ouve comandos dos dois chats, e cada usuário autorizado é adicionado com a sua própria plataforma. O Sorteio roda em uma plataforma por vez, Twitch ou Kick. As Molduras de Live e as Redes Sociais não leem o chat, então funcionam do mesmo jeito em qualquer uma das duas. Na Caixa de Chat, os emotes da 7TV aparecem nas duas plataformas, e os da BTTV e da FFZ só na Twitch.',
     editQ: 'Como mudo um widget depois?',
     editA:
-      'Mude as configurações na página de configuração, copie a URL nova e cole por cima da antiga no campo URL da fonte no OBS. Com Caixa de Chat, Mural de Emotes, Sub Sprout, Subathon Timer, Alertas de Live, Meta de Subs, Enquete do Chat, Molduras de Live, Redes Sociais e Contagem Regressiva, se você colar sua URL antiga no campo URL do widget na página de configuração, todas as suas configurações voltam e você não precisa começar do zero.',
+      'Mude as configurações na página de configuração, copie a URL nova e cole por cima da antiga no campo URL da fonte no OBS. Com Caixa de Chat, Mural de Emotes, Sub Sprout, Subathon Timer, Alertas de Live, Meta de Subs, Enquete do Chat, Molduras de Live, Redes Sociais, Contagem Regressiva e Roleta, se você colar sua URL antiga no campo URL do widget na página de configuração, todas as suas configurações voltam e você não precisa começar do zero.',
     oldUrlsQ: 'As URLs antigas dos meus widgets continuam funcionando?',
     oldUrlsA:
       'Sim. As atualizações são feitas para as URLs existentes não quebrarem: nomes de parâmetros, valores e padrões continuam os mesmos. Por exemplo, o antigo keep=true da Caixa de Chat ainda quer dizer Para sempre, e o Sub Sprout ainda lê os parâmetros antigos channel e platform.',
@@ -2354,6 +2439,14 @@ export const pt: typeof en = {
     entries: {
       countdownZoom:
         'O Stream Countdown ganha opções de zoom: mostre em grande a 125%, 150% ou 200%, ou menor a 75%.',
+      spinWheelWeights:
+        'A Roleta agora aceita pesos: comece uma linha com `2x`, `3x`… para fatias extras que ganham nessa proporção.',
+      spinWheelChat:
+        'A Roleta agora tem canais da Twitch e da Kick: seus espectadores giram com `!spin`, com giros para todos, só subs ou só mods e um cooldown global contado no novo overlay do OBS.',
+      spinWheelAdvancedLink:
+        'A Roleta agora leva para a roleta avançada do painel da Senchabot com pontos de canal da Twitch e da Kick.',
+      spinWheelLaunch:
+        'Nova ferramenta Roleta: digite uma opção por linha e gire a roleta ao vivo na página, com som, confete e histórico de vencedores.',
       countdownPomodoroScene:
         'O Stream Countdown ganha um quarto propósito: Pomodoro, com texto próprio, ícone de tomate e 25 minutos de padrão no chat.',
       countdownCommandAlias:

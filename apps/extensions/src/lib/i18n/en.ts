@@ -132,6 +132,10 @@ export const en = {
       name: 'Socials',
       tagline: 'Rotate your social media links with a slick animation.',
     },
+    spinWheel: {
+      name: 'Spin Wheel',
+      tagline: 'Viewers spin the wheel from chat with !spin. No login needed.',
+    },
   },
   home: {
     heroTitle: 'Free stream overlays for Twitch and Kick',
@@ -168,6 +172,9 @@ export const en = {
     pollFeatureVote: 'Viewers vote by typing a number',
     pollFeatureBoth: 'Twitch and Kick votes in one poll',
     pollFeatureLate: 'Last-second votes count despite stream delay',
+    spinWheelFeatureOptions: 'Options typed one per line',
+    spinWheelFeatureLocal: '!spin spins it from chat',
+    spinWheelFeatureHistory: 'Cooldown counted down on screen',
     pollSpotlight: {
       eyebrow: 'New: Chat Poll',
       title: 'Let your chat decide',
@@ -231,10 +238,10 @@ export const en = {
       'OBS Studio and other apps that support browser sources. Add the widget URL as a Browser Source and use the size shown on the setup page.',
     faq4Q: 'Can I use Twitch and Kick together?',
     faq4A:
-      'Yes. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll and Stream Countdown take a Twitch and a Kick channel in the same URL. OBS Bridge can listen to both chats at once too. Raffle runs on one platform at a time.',
+      'Yes. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll, Stream Countdown and Spin Wheel take a Twitch and a Kick channel in the same URL. OBS Bridge can listen to both chats at once too. Raffle runs on one platform at a time.',
     faq5Q: 'How do I change a widget later?',
     faq5A:
-      'Open its setup page, set it up the way you want and replace the URL in your Browser Source. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll, Stream Frames, Socials and Stream Countdown can also open an existing URL: paste it on the setup page, your settings come back, and you change only what you need.',
+      'Open its setup page, set it up the way you want and replace the URL in your Browser Source. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll, Stream Frames, Socials, Stream Countdown and Spin Wheel can also open an existing URL: paste it on the setup page, your settings come back, and you change only what you need.',
     faq6Q: 'Will my widget URL keep working after updates?',
     faq6A:
       "Yes. Updates keep existing URL settings and their values working, so a widget that's already in your scene doesn't need a new URL.",
@@ -1328,6 +1335,82 @@ export const en = {
     winner: 'Winner!',
     subMonthsShort: '{months}mo',
   },
+  spinWheel: {
+    breadcrumb: 'Spin Wheel Setup',
+    title: 'Spin Wheel Setup',
+    toolTitle: 'Spin Wheel',
+    toolLocalNote:
+      'Spins here stay on this page and never reach the OBS overlay. Only !spin from chat spins the overlay.',
+    intro:
+      'A spinning decision wheel for your stream: viewers type !spin in Twitch or Kick chat and the wheel spins live in your OBS overlay, behind one global cooldown for everyone. Prefer the quick version with no channel? Spin it on the tool page instead.',
+    sectionOptions: 'Options',
+    optionsLabel: 'Wheel options',
+    optionsTip: 'One option per line. Start a line with 2x, 3x … for extra slices and better odds.',
+    optionsPlaceholder: 'Zelda\nMario Kart\nTetris\nMinecraft',
+    count: '{count} options',
+    shuffle: 'Shuffle',
+    clear: 'Clear',
+    sectionChat: 'Chat spins',
+    permissionLabel: 'Who can spin',
+    permissionTip: 'Moderators and the broadcaster can always spin, whatever you pick here.',
+    permAll: 'Everyone',
+    permSubs: 'Subs only',
+    permMods: 'Mods only',
+    cooldownLabel: 'Cooldown between spins',
+    cooldownTip:
+      'One timer for the whole chat. While it runs, the overlay shows the wait and new !spin messages are skipped.',
+    cooldownOff: '0 turns the cooldown off: every !spin spins right away.',
+    sectionSound: 'Sound',
+    soundTip: 'Tick and victory sounds on the overlay. Turn off to spin silently.',
+    previewTitle: 'Wheel',
+    previewTip: 'Simulated spins with your options. Chat stays off here; spin it with the button below.',
+    previewIframeTitle: 'Spin Wheel preview',
+    testTitle: 'Try it',
+    testSpin: 'Test spin',
+    spin: 'Spin the wheel',
+    spinning: 'Spinning…',
+    needTwo: 'Type at least two options to spin.',
+    soundOn: 'Sound on',
+    soundOff: 'Sound off',
+    winnerTitle: 'Winner!',
+    history: 'Recent winners ({count})',
+    clearHistory: 'Clear',
+    noHistory: 'No spins yet. Winners show up here.',
+    overlayUrl: 'Overlay URL',
+    widgetUrlTip: 'Paste this URL as a Browser Source in OBS.',
+    widgetUrlHint: 'Your channels, options, permission and cooldown all live in this URL.',
+    browserSourceHintSize: ' (recommended size: 800×800).',
+    widgetUrlPlaceholder: 'Paste an existing wheel URL to edit it',
+    widgetUrlInvalid: "This isn't a Spin Wheel overlay URL.",
+    overlayNextStep: 'Type !spin in chat to spin the wheel on stream.',
+    sectionCommands: 'Chat commands',
+    commandsIntro: 'Viewers spin the wheel from chat. Moderators and the broadcaster can always spin.',
+    cmdSpin: 'Spins the wheel. Skipped while the wheel spins or the cooldown runs.',
+    commandsCooldownNote:
+      'After every accepted chat spin the global cooldown starts. The overlay counts it down on screen.',
+    cooldownWait: 'Next spin in {seconds}s',
+    overlayNeedTwo: 'Add at least two options on the setup page to spin.',
+    guideStep1: 'Enter your Twitch and/or Kick channel.',
+    guideStep2: 'Type your options in the Options box, one per line.',
+    guideStep3: 'Copy the overlay URL and add it as a Browser Source in OBS (800×800).',
+    guideStep4: 'Viewers type !spin in chat. The overlay shows the wait while the cooldown runs.',
+    faq1Q: 'Who can spin the wheel?',
+    faq1A:
+      'Anyone you allow: everyone, subscribers only, or moderators only. Moderators and the broadcaster can always spin, and every accepted !spin starts the global cooldown.',
+    faq2Q: 'How do I show the wheel on stream?',
+    faq2A:
+      'Copy the overlay URL and add it as a Browser Source in OBS at 800×800. The wheel spins there on !spin and counts the cooldown down on screen.',
+    faq3Q: 'Where are my options saved?',
+    faq3A:
+      'In the overlay URL, next to your channels, permission and cooldown. Paste that URL back on the setup page to edit it. The quick tool keeps a separate list in your browser.',
+    faq4Q: 'Do I need to log in or connect anything?',
+    faq4A:
+      'No. The overlay reads public Twitch and Kick chat anonymously, like any viewer would. There is no account and nothing to connect.',
+    advancedTitle: 'Want an advanced wheel with channel points?',
+    advancedText:
+      'If you want a Twitch and Kick channel-points version with viewer redemptions, use the Senchabot dashboard wheel.',
+    advancedCta: 'Open dashboard wheel',
+  },
   alerts: {
     follow: 'New Follower!',
     sub: 'New Subscriber!',
@@ -1476,6 +1559,8 @@ export const en = {
           raffle:
             "The winner overlay. Confetti bursts from both sides of the screen and the winner's name appears in the middle.",
           obsBridge: 'Not a visible overlay. Keep the tool open in a browser tab or an OBS dock.',
+          spinWheel:
+            'The wheel spins on !spin from chat at 800×800. The global cooldown counts down on screen, so leave room for the wait pill above the wheel.',
           socials:
             'One handle at a time, in the middle of this strip. The text keeps its size, so a long handle needs a wider source.',
         },
@@ -1484,7 +1569,7 @@ export const en = {
       },
       transparent: {
         title: 'Do you need to do anything to make the background transparent?',
-        p1: "No. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Stream Frames, Stream Countdown, Chat Poll, Socials and the Raffle overlay are drawn on a transparent background. You don't need a chroma key or a filter, and you can leave the Custom CSS field in OBS as it is.",
+        p1: "No. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Stream Frames, Stream Countdown, Chat Poll, Socials, the Spin Wheel overlay and the Raffle overlay are drawn on a transparent background. You don't need a chroma key or a filter, and you can leave the Custom CSS field in OBS as it is.",
         p2: 'If Chat Box is hard to read on a bright scene, turn on Dark Background. It puts a semi-transparent black layer behind the widget, and you can set its opacity anywhere from 0% to 100% (50% by default). If you want each message in its own box, turn on Message Background Box.',
       },
       settings: {
@@ -1513,7 +1598,7 @@ export const en = {
         title: 'How do I change a widget later?',
         p1: 'Your settings live inside the widget URL, so changing a setting means a new URL. Change the setting on the setup page, copy the new URL, then double-click the source in OBS and paste it over the old URL in the URL field.',
         p2:
-          "You don't have to start over with [Chat Box](/setup/chat-widget), [Emote Wall](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Stream Alerts](/setup/stream-alerts), [Sub Goal](/setup/sub-goal), [Chat Poll](/setup/chat-poll), [Stream Frames](/setup/stream-frames), [Socials](/setup/socials) or [Stream Countdown](/setup/stream-countdown). Paste your current URL into the Widget URL field on the setup page and your channels and all your settings come back. Change what you want and copy the new URL.",
+          "You don't have to start over with [Chat Box](/setup/chat-widget), [Emote Wall](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Stream Alerts](/setup/stream-alerts), [Sub Goal](/setup/sub-goal), [Chat Poll](/setup/chat-poll), [Stream Frames](/setup/stream-frames), [Socials](/setup/socials), [Stream Countdown](/setup/stream-countdown) or [Spin Wheel](/setup/spin-wheel). Paste your current URL into the Widget URL field on the setup page and your channels and all your settings come back. Change what you want and copy the new URL.",
         p3: "OBS Bridge has no paste field, so enter your settings again on its setup page and copy the new tool URL. You can also change scene picks and authorized users on the tool page itself and grab the new URL with its Copy Updated URL button. Old URLs keep working, so you don't have to update them.",
       },
       troubleshoot: {
@@ -2290,7 +2375,7 @@ export const en = {
     },
     freeQ: 'Is Senchabot Extensions free?',
     freeA:
-      "Yes. All twelve widgets and tools are free: Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Stream Frames, Stream Countdown, Chat Poll, Socials, Raffle and OBS Bridge. There's no paid plan, watermark or premium account. The source code is open on GitHub under the GPL-3.0 license.",
+      "Yes. All thirteen widgets and tools are free: Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Stream Frames, Stream Countdown, Chat Poll, Socials, Raffle, OBS Bridge and Spin Wheel. There's no paid plan, watermark or premium account. The source code is open on GitHub under the GPL-3.0 license.",
     loginQ: 'What does "no login required" mean?',
     loginA:
       "You don't create an account on this site, you don't log in with Twitch or Kick, and you don't download anything. You type your channel name and the setup page gives you a URL. The widgets read public chat anonymously: on Twitch they connect like an anonymous viewer, and on Kick they listen to the public chat feed. That's why they can't post in chat, moderate, or access private info on your account.",
@@ -2302,10 +2387,10 @@ export const en = {
       'OBS Studio and any other streaming software that supports a browser source. Each widget runs as a web URL, and you paste that URL into the source. Our guides are written for OBS Studio.',
     platformsQ: 'Which widgets support Twitch and which support Kick?',
     platformsA:
-      'All twelve support both platforms. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll and Stream Countdown listen to a Twitch and a Kick channel together in one URL. OBS Bridge listens for commands from both chats, and each authorized user is added with their own platform. Raffle runs on one platform at a time, Twitch or Kick. Stream Frames and Socials read no chat, so they work the same on either one. In Chat Box, 7TV emotes show on both platforms, while BTTV and FFZ emotes show on Twitch only.',
+      'All thirteen support both platforms. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll, Stream Countdown and Spin Wheel listen to a Twitch and a Kick channel together in one URL. OBS Bridge listens for commands from both chats, and each authorized user is added with their own platform. Raffle runs on one platform at a time, Twitch or Kick. Stream Frames and Socials read no chat, so they work the same on either one. In Chat Box, 7TV emotes show on both platforms, while BTTV and FFZ emotes show on Twitch only.',
     editQ: 'How do I change a widget later?',
     editA:
-      "Change the settings on the setup page, copy the new URL, and paste it over the old one in the source's URL field in OBS. With Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll, Stream Frames, Socials and Stream Countdown, if you paste your old URL into the Widget URL field on the setup page, all your settings come back and you don't have to start over.",
+      "Change the settings on the setup page, copy the new URL, and paste it over the old one in the source's URL field in OBS. With Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll, Stream Frames, Socials, Stream Countdown and Spin Wheel, if you paste your old URL into the Widget URL field on the setup page, all your settings come back and you don't have to start over.",
     oldUrlsQ: 'Will my old widget URLs keep working?',
     oldUrlsA:
       "Yes. Updates are made so existing URLs don't break: parameter names, values and defaults stay the same. For example, the old keep=true in Chat Box still means Forever, and Sub Sprout still reads the old channel and platform parameters.",
@@ -2331,6 +2416,14 @@ export const en = {
     entries: {
       countdownZoom:
         'Stream Countdown gets Zoom options: show it big at 125%, 150% or 200%, or smaller at 75%.',
+      spinWheelWeights:
+        'Spin Wheel options take weights: start a line with `2x`, `3x` and so on for extra slices that win that much more often.',
+      spinWheelChat:
+        'Spin Wheel gets Twitch and Kick channels: viewers spin with `!spin`, with everyone, subs-only or mods-only spinning and one global cooldown counted down on the new OBS overlay.',
+      spinWheelAdvancedLink:
+        'Spin Wheel now links to the advanced Senchabot dashboard wheel with Twitch and Kick channel-points integration.',
+      spinWheelLaunch:
+        'New Spin Wheel tool: type one option per line and spin the wheel live on the page, with sound, confetti and a winner history.',
       countdownPomodoroScene:
         'Stream Countdown gets a fourth What is it for? purpose: Pomodoro, with its own wording, a tomato mark and a 25-minute chat default.',
       countdownCommandAlias:

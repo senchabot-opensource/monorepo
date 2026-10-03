@@ -73,6 +73,7 @@ describe('gallery card shapes', () => {
       ['raffle', 'standard'],
       ['subathon', 'standard'],
       ['obs-bridge', 'standard'],
+      ['spin-wheel', 'standard'],
     ]);
   });
 
@@ -123,8 +124,8 @@ describe('gallery card shapes', () => {
         'wide',
       ]);
     }
-    // The four tools fill the two-column grid as they are: Subathon beside OBS Bridge.
-    expect(getGalleryShapes(TOOLS, 2)).toEqual(Array(4).fill('standard'));
+    // The five tools leave one cell short in two columns, so the last widens.
+    expect(getGalleryShapes(TOOLS, 2)).toEqual([...Array(4).fill('standard'), 'wide']);
   });
 
   it('drops the wide cards, then the tall one, then every span, when a new overlay would leave a hole', () => {

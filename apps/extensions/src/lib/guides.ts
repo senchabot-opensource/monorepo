@@ -569,37 +569,37 @@ export const CONTENT_META = {
     en: {
       title: 'Senchabot Extensions FAQ: Free Twitch and Kick Overlays',
       description:
-        'Answers about Senchabot Extensions: free with no login, which of the 12 widgets support Twitch and Kick, where your settings live and how to report a bug.',
+        'Answers about Senchabot Extensions: free with no login, which of the 13 widgets support Twitch and Kick, where your settings live and how to report a bug.',
     },
     de: {
       title: 'FAQ zu Senchabot Extensions: Twitch- und Kick-Overlays',
       description:
-        'Antworten zu Senchabot Extensions: kostenlos ohne Login, welche der 12 Widgets Twitch und Kick können, wo deine Einstellungen liegen und wie du Bugs meldest.',
+        'Antworten zu Senchabot Extensions: kostenlos ohne Login, welche der 13 Widgets Twitch und Kick können, wo deine Einstellungen liegen und wie du Bugs meldest.',
     },
     tr: {
       title: "Senchabot Extensions SSS: Twitch ve Kick Overlay'leri",
       description:
-        "Senchabot Extensions için kısa cevaplar: ücretsiz ve girişsiz, 12 widget'tan hangisi Twitch ve Kick'te çalışıyor, ayarlar nerede duruyor, hata nasıl bildirilir.",
+        "Senchabot Extensions için kısa cevaplar: ücretsiz ve girişsiz, 13 widget'tan hangisi Twitch ve Kick'te çalışıyor, ayarlar nerede duruyor, hata nasıl bildirilir.",
     },
     es: {
       title: 'Preguntas frecuentes de Senchabot Extensions',
       description:
-        'Respuestas sobre Senchabot Extensions: gratis y sin login, cuáles de los 12 widgets van con Twitch y Kick, dónde vive tu configuración y cómo reportar un error.',
+        'Respuestas sobre Senchabot Extensions: gratis y sin login, cuáles de los 13 widgets van con Twitch y Kick, dónde vive tu configuración y cómo reportar un error.',
     },
     fr: {
       title: 'FAQ Senchabot Extensions : overlays Twitch et Kick gratuits',
       description:
-        'Tout sur Senchabot Extensions : gratuit et sans connexion, lesquels des 12 widgets gèrent Twitch et Kick, où sont tes réglages et comment signaler un bug.',
+        'Tout sur Senchabot Extensions : gratuit et sans connexion, lesquels des 13 widgets gèrent Twitch et Kick, où sont tes réglages et comment signaler un bug.',
     },
     ja: {
       title: 'よくある質問: 無料のTwitch・Kickオーバーレイ | Senchabot',
       description:
-        'Senchabot Extensionsについての回答。ログイン不要で無料、12個のウィジェットのどれがTwitchとKickに対応しているか、設定の保存場所、バグの報告方法。',
+        'Senchabot Extensionsについての回答。ログイン不要で無料、13個のウィジェットのどれがTwitchとKickに対応しているか、設定の保存場所、バグの報告方法。',
     },
     pt: {
       title: 'FAQ do Senchabot Extensions: overlays grátis Twitch e Kick',
       description:
-        'Respostas sobre o Senchabot Extensions: grátis e sem login, quais dos 12 widgets funcionam na Twitch e na Kick, onde ficam as configurações e como relatar bugs.',
+        'Respostas sobre o Senchabot Extensions: grátis e sem login, quais dos 13 widgets funcionam na Twitch e na Kick, onde ficam as configurações e como relatar bugs.',
     },
   },
   presets: {
@@ -643,27 +643,27 @@ export const CONTENT_META = {
     en: {
       title: 'Changelog: New Features and Fixes | Senchabot Extensions',
       description:
-        'Every feature and fix in Senchabot Extensions since the April 2026 launch, newest first, for all twelve Twitch and Kick overlays and tools.',
+        'Every feature and fix in Senchabot Extensions since the April 2026 launch, newest first, for all thirteen Twitch and Kick overlays and tools.',
     },
     de: {
       title: 'Changelog: Neue Features und Fixes | Senchabot Extensions',
       description:
-        'Jedes Feature und jeder Fix in Senchabot Extensions seit dem Start im April 2026, das Neueste zuerst, für alle zwölf Twitch- und Kick-Overlays und Tools.',
+        'Jedes Feature und jeder Fix in Senchabot Extensions seit dem Start im April 2026, das Neueste zuerst, für alle dreizehn Twitch- und Kick-Overlays und Tools.',
     },
     tr: {
       title: 'Yenilikler: Eklenen Özellikler ve Düzeltmeler | Senchabot',
       description:
-        "Senchabot Extensions'taki on iki Twitch ve Kick overlay'ine ve aracına Nisan 2026'dan beri gelen her özellik ve düzeltme, en yenisi en üstte.",
+        "Senchabot Extensions'taki on üç Twitch ve Kick overlay'ine ve aracına Nisan 2026'dan beri gelen her özellik ve düzeltme, en yenisi en üstte.",
     },
     es: {
       title: 'Novedades: funciones y arreglos | Senchabot Extensions',
       description:
-        'Cada función y arreglo de Senchabot Extensions desde el lanzamiento en abril de 2026, de lo más nuevo a lo más viejo, para los doce overlays y herramientas.',
+        'Cada función y arreglo de Senchabot Extensions desde el lanzamiento en abril de 2026, de lo más nuevo a lo más viejo, para los trece overlays y herramientas.',
     },
     fr: {
       title: 'Nouveautés et correctifs | Senchabot Extensions',
       description:
-        "Chaque fonctionnalité et correctif de Senchabot Extensions depuis le lancement d'avril 2026, du plus récent au plus ancien, pour les douze overlays et outils.",
+        "Chaque fonctionnalité et correctif de Senchabot Extensions depuis le lancement d'avril 2026, du plus récent au plus ancien, pour les treize overlays et outils.",
     },
     ja: {
       title: '更新履歴: 新機能と修正 | Senchabot Extensions',

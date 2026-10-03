@@ -21,6 +21,7 @@ const SITE_PAGES = [
   '/setup/chat-widget',
   '/setup/raffle',
   '/setup/obs-bridge',
+  '/setup/spin-wheel',
   '/setup/emote-wall',
   '/setup/socials',
   '/guides',

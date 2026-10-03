@@ -9,6 +9,7 @@ export const LINKS = {
   presetGuide: `${REPO}/tree/dev/apps/extensions/src/features/presets/community`,
   discussions: `${REPO}/discussions`,
   senchabot: 'https://senchabot.com',
+  dashboardWheel: 'https://senchabot.com/dashboard/tools/wheel',
   docs: 'https://docs.senchabot.com',
   discord: 'https://discord.com/invite/qUxwcjRzND',
   x: 'https://x.com/senchabot',

@@ -16,6 +16,7 @@ Senchabot Extensions provides 100% free streaming widgets, customizable overlays
 - **Universal Chat** — A multi-chat widget and stream chat box overlay that combines Twitch and Kick chat into a single on-screen feed with 7TV emotes, badges, and platform indicators.
 - **Raffle Picker** — A chat-based giveaway and raffle tool. Viewers type a keyword to enter; winners are drawn and announced on a live confetti celebration overlay.
 - **OBS Bridge** — A chat-controlled scene switching and stream control tool connecting over local OBS WebSocket.
+- **Spin Wheel** — A chat-driven spinning wheel. Viewers type !spin in Twitch or Kick chat and the wheel spins live in the OBS overlay, behind one global cooldown shown on screen.
 - **Emote Wall** — A floating emote overlay that turns emote-only Twitch, Kick, and 7TV chat messages into floating on-screen emotes with Calm, Chaos, Bounce, Glide, Spin, Burst or Random animations.
 
 ## Live URLs
@@ -31,6 +32,7 @@ Senchabot Extensions provides 100% free streaming widgets, customizable overlays
 - [Universal Chat](https://extensions.senchabot.com/setup/chat-widget)
 - [Raffle Picker](https://extensions.senchabot.com/setup/raffle)
 - [OBS Bridge](https://extensions.senchabot.com/setup/obs-bridge)
+- [Spin Wheel](https://extensions.senchabot.com/setup/spin-wheel)
 - [Emote Wall](https://extensions.senchabot.com/setup/emote-wall)
 
 ## Widget & Tool Usage
@@ -231,6 +233,29 @@ A local WebSocket bridge that lets streamers and moderators control OBS Studio s
 1. Go to `/setup/obs-bridge`.
 2. Enter your channel and local OBS WebSocket port/password.
 3. Keep the tool open in a tab or add as a Browser Source / Custom Dock in OBS Studio or Streamlabs Desktop.
+
+---
+
+### Spin Wheel (`/setup/spin-wheel`)
+
+A chat-driven spinning wheel for game names, challenges or any list of choices. Viewers type `!spin` in Twitch or Kick chat; the wheel spins live in the OBS overlay at 800×800.
+
+**How it works:**
+- Type one option per line. The wheel updates as you type, up to 100 slices.
+- Start a line with `2x`, `3x`, … for extra slices: `2x Tetris` wins twice as often.
+- Connects to Twitch IRC anonymously and Kick's Pusher WebSocket — supports both platforms simultaneously in a single browser source.
+- `!spin` spins the wheel. Who may spin is a setting: everyone, subs only, or mods only (mods and the broadcaster can always spin).
+- One global cooldown for the whole chat (30 seconds by default, 0 turns it off). While it runs, the overlay counts the wait down on screen and new `!spin` messages are skipped.
+- The winner is picked with the browser's secure random number generator and lands with a spinning animation, tick sounds, a victory jingle and confetti.
+- Options, channels, permission and cooldown all live in the overlay URL. Paste it back on the setup page to edit it.
+- The quick tool at `/tools/spin-wheel` still spins a separate browser-only list with no channel.
+
+**Setup:**
+1. Go to `/setup/spin-wheel`.
+2. Enter your Twitch and/or Kick channel.
+3. Type your options, one per line.
+4. Pick who can spin and the cooldown between spins.
+5. Copy the overlay URL and add it as a **Browser Source** in OBS Studio, Streamlabs Desktop, XSplit, or your preferred streaming software (800×800).
 
 ---
 

@@ -134,6 +134,10 @@ export const de: typeof en = {
       name: 'Socials',
       tagline: 'Zeig deine Social-Media-Links abwechselnd mit einer schicken Animation.',
     },
+    spinWheel: {
+      name: 'Glücksrad',
+      tagline: 'Zuschauer drehen das Rad per !spin aus dem Chat. Ohne Login.',
+    },
   },
   home: {
     heroTitle: 'Kostenlose Stream-Overlays für Twitch und Kick',
@@ -170,6 +174,9 @@ export const de: typeof en = {
     pollFeatureVote: 'Zuschauer stimmen per Zahl ab',
     pollFeatureBoth: 'Twitch- und Kick-Stimmen in einer Umfrage',
     pollFeatureLate: 'Stimmen in letzter Sekunde zählen trotz Stream-Delay',
+    spinWheelFeatureOptions: 'Optionen Zeile für Zeile tippen',
+    spinWheelFeatureLocal: '!spin dreht es aus dem Chat',
+    spinWheelFeatureHistory: 'Cooldown läuft auf dem Bildschirm',
     pollSpotlight: {
       eyebrow: 'Neu: Chat-Umfrage',
       title: 'Lass deinen Chat entscheiden',
@@ -233,10 +240,10 @@ export const de: typeof en = {
       'Mit OBS Studio und anderen Apps, die Browser-Quellen unterstützen. Füge die Widget-URL als Browser-Quelle hinzu und nimm die Größe, die auf der Setup-Seite steht.',
     faq4Q: 'Kann ich Twitch und Kick zusammen nutzen?',
     faq4A:
-      'Ja. Chat-Box, Emote-Wand, Sub Sprout, Subathon Timer, Stream-Alerts, Sub-Ziel, Chat-Umfrage und Stream-Countdown nehmen einen Twitch- und einen Kick-Kanal in derselben URL. OBS Bridge kann auch beiden Chats gleichzeitig zuhören. Die Verlosung läuft immer auf einer Plattform.',
+      'Ja. Chat-Box, Emote-Wand, Sub Sprout, Subathon Timer, Stream-Alerts, Sub-Ziel, Chat-Umfrage, Stream-Countdown und Glücksrad nehmen einen Twitch- und einen Kick-Kanal in derselben URL. OBS Bridge kann auch beiden Chats gleichzeitig zuhören. Die Verlosung läuft immer auf einer Plattform.',
     faq5Q: 'Wie ändere ich ein Widget später?',
     faq5A:
-      'Öffne seine Setup-Seite, stell alles so ein, wie du willst, und ersetz die URL in deiner Browser-Quelle. Chat-Box, Emote-Wand, Sub Sprout, Subathon Timer, Stream-Alerts, Sub-Ziel, Chat-Umfrage, Stream-Rahmen, Socials und Stream-Countdown können auch eine bestehende URL öffnen: Füg sie auf der Setup-Seite ein, deine Einstellungen sind wieder da, und du änderst nur, was du brauchst.',
+      'Öffne seine Setup-Seite, stell alles so ein, wie du willst, und ersetz die URL in deiner Browser-Quelle. Chat-Box, Emote-Wand, Sub Sprout, Subathon Timer, Stream-Alerts, Sub-Ziel, Chat-Umfrage, Stream-Rahmen, Socials, Stream-Countdown und Glücksrad können auch eine bestehende URL öffnen: Füg sie auf der Setup-Seite ein, deine Einstellungen sind wieder da, und du änderst nur, was du brauchst.',
     faq6Q: 'Funktioniert meine Widget-URL nach Updates weiter?',
     faq6A:
       'Ja. Updates lassen bestehende URL-Einstellungen und ihre Werte funktionieren, ein Widget, das schon in deiner Szene ist, braucht also keine neue URL.',
@@ -1332,6 +1339,82 @@ export const de: typeof en = {
     winner: 'Gewinner!',
     subMonthsShort: '{months} Mon.',
   },
+  spinWheel: {
+    breadcrumb: 'Glücksrad-Setup',
+    title: 'Glücksrad-Setup',
+    toolTitle: 'Glücksrad',
+    toolLocalNote:
+      'Drehs hier bleiben auf dieser Seite und erreichen nie das OBS-Overlay. Nur !spin aus dem Chat dreht das Overlay.',
+    intro:
+      'Ein sich drehendes Entscheidungsrad für deinen Stream: Zuschauer tippen !spin in den Twitch- oder Kick-Chat und das Rad dreht live in deinem OBS-Overlay, mit einem globalen Cooldown für alle. Lieber schnell ohne Kanal? Dreh es auf der Tool-Seite.',
+    sectionOptions: 'Optionen',
+    optionsLabel: 'Rad-Optionen',
+    optionsTip: 'Eine Option pro Zeile. Starte eine Zeile mit 2x, 3x … für extra Felder mit besseren Chancen.',
+    optionsPlaceholder: 'Zelda\nMario Kart\nTetris\nMinecraft',
+    count: '{count} Optionen',
+    shuffle: 'Mischen',
+    clear: 'Leeren',
+    sectionChat: 'Chat-Drehs',
+    permissionLabel: 'Wer darf drehen',
+    permissionTip: 'Mods und der Broadcaster dürfen immer drehen, egal was du hier wählst.',
+    permAll: 'Alle',
+    permSubs: 'Nur Subs',
+    permMods: 'Nur Mods',
+    cooldownLabel: 'Cooldown zwischen Drehs',
+    cooldownTip:
+      'Ein Timer für den ganzen Chat. Während er läuft, zeigt das Overlay die Wartezeit und neue !spin-Nachrichten werden übersprungen.',
+    cooldownOff: '0 schaltet den Cooldown aus: Jedes !spin dreht sofort.',
+    sectionSound: 'Ton',
+    soundTip: 'Tick- und Gewinn-Sounds im Overlay. Ausschalten für stille Drehs.',
+    previewTitle: 'Rad',
+    previewTip: 'Simulierte Drehs mit deinen Optionen. Chat bleibt hier aus; dreh unten per Knopf.',
+    previewIframeTitle: 'Glücksrad-Vorschau',
+    testTitle: 'Ausprobieren',
+    testSpin: 'Testdreh',
+    spin: 'Rad drehen',
+    spinning: 'Dreht…',
+    needTwo: 'Tipp mindestens zwei Optionen, um zu drehen.',
+    soundOn: 'Ton an',
+    soundOff: 'Ton aus',
+    winnerTitle: 'Gewinner!',
+    history: 'Letzte Gewinner ({count})',
+    clearHistory: 'Leeren',
+    noHistory: 'Noch keine Drehung. Gewinner erscheinen hier.',
+    overlayUrl: 'Overlay-URL',
+    widgetUrlTip: 'Füg diese URL in OBS als Browserquelle ein.',
+    widgetUrlHint: 'Kanäle, Optionen, Berechtigung und Cooldown stecken alle in dieser URL.',
+    browserSourceHintSize: ' (empfohlene Größe: 800×800).',
+    widgetUrlPlaceholder: 'Bestehende Rad-URL zum Bearbeiten einfügen',
+    widgetUrlInvalid: 'Das ist keine Glücksrad-Overlay-URL.',
+    overlayNextStep: 'Tipp !spin in den Chat, um das Rad im Stream zu drehen.',
+    sectionCommands: 'Chat-Befehle',
+    commandsIntro: 'Zuschauer drehen das Rad aus dem Chat. Mods und der Broadcaster dürfen immer drehen.',
+    cmdSpin: 'Dreht das Rad. Wird übersprungen, während sich das Rad dreht oder der Cooldown läuft.',
+    commandsCooldownNote:
+      'Nach jedem angenommenen Chat-Dreh startet der globale Cooldown. Das Overlay zählt ihn auf dem Bildschirm herunter.',
+    cooldownWait: 'Nächster Dreh in {seconds} Sek.',
+    overlayNeedTwo: 'Trag auf der Setup-Seite mindestens zwei Optionen ein, um zu drehen.',
+    guideStep1: 'Trag deinen Twitch- und/oder Kick-Kanal ein.',
+    guideStep2: 'Tipp deine Optionen ins Optionen-Feld, eine pro Zeile.',
+    guideStep3: 'Kopier die Overlay-URL und füg sie in OBS als Browserquelle ein (800×800).',
+    guideStep4: 'Zuschauer tippen !spin in den Chat. Das Overlay zeigt die Wartezeit, solange der Cooldown läuft.',
+    faq1Q: 'Wer darf das Rad drehen?',
+    faq1A:
+      'Wen du lässt: alle, nur Abonnenten oder nur Mods. Mods und der Broadcaster dürfen immer drehen, und jedes angenommene !spin startet den globalen Cooldown.',
+    faq2Q: 'Wie zeige ich das Rad im Stream?',
+    faq2A:
+      'Kopier die Overlay-URL und füg sie in OBS als Browserquelle mit 800×800 ein. Das Rad dreht dort per !spin und zählt den Cooldown auf dem Bildschirm herunter.',
+    faq3Q: 'Wo werden meine Optionen gespeichert?',
+    faq3A:
+      'In der Overlay-URL, zusammen mit Kanälen, Berechtigung und Cooldown. Füg die URL zum Bearbeiten wieder auf der Setup-Seite ein. Das schnelle Tool behält eine eigene Liste in deinem Browser.',
+    faq4Q: 'Brauche ich einen Login oder muss ich etwas verbinden?',
+    faq4A:
+      'Nein. Das Overlay liest den öffentlichen Twitch- und Kick-Chat anonym mit, wie jeder Zuschauer. Kein Account, nichts zu verbinden.',
+    advancedTitle: 'Profi-Rad mit Channel-Punkten gesucht?',
+    advancedText:
+      'Wenn du eine Twitch- und Kick-Channel-Punkte-Version mit Einlösungen deiner Zuschauer willst, nutz das Rad im Senchabot-Dashboard.',
+    advancedCta: 'Dashboard-Rad öffnen',
+  },
   alerts: {
     follow: 'Neuer Follower!',
     sub: 'Neuer Sub!',
@@ -1480,6 +1563,8 @@ export const de: typeof en = {
           raffle:
             'Das Gewinner-Overlay. Konfetti schießt von beiden Seiten des Screens, und der Name des Gewinners erscheint in der Mitte.',
           obsBridge: 'Kein sichtbares Overlay. Lass das Tool in einem Browser-Tab oder einem OBS-Dock offen.',
+          spinWheel:
+            'Das Rad dreht per !spin aus dem Chat auf 800×800. Der globale Cooldown zählt auf dem Bildschirm herunter, lass also Platz für die Warteanzeige über dem Rad.',
           socials:
             'Ein Nutzername nach dem anderen, in der Mitte dieses Streifens. Der Text bleibt gleich groß, für einen langen Nutzernamen brauchst du also eine breitere Quelle.',
         },
@@ -1488,7 +1573,7 @@ export const de: typeof en = {
       },
       transparent: {
         title: 'Musst du etwas tun, damit der Hintergrund transparent ist?',
-        p1: 'Nein. Chat-Box, Emote-Wand, Sub Sprout, Subathon Timer, Stream-Alerts, Sub-Ziel, Stream-Rahmen, Stream-Countdown, Chat-Umfrage, Socials und das Overlay der Verlosung werden auf transparentem Hintergrund gezeichnet. Du brauchst keinen Chroma Key und keinen Filter, und das Feld Benutzerdefiniertes CSS in OBS kannst du lassen, wie es ist.',
+        p1: 'Nein. Chat-Box, Emote-Wand, Sub Sprout, Subathon Timer, Stream-Alerts, Sub-Ziel, Stream-Rahmen, Stream-Countdown, Chat-Umfrage, Socials, das Glücksrad-Overlay und das Overlay der Verlosung werden auf transparentem Hintergrund gezeichnet. Du brauchst keinen Chroma Key und keinen Filter, und das Feld Benutzerdefiniertes CSS in OBS kannst du lassen, wie es ist.',
         p2: 'Ist die Chat-Box auf einer hellen Szene schwer lesbar, schalt Dunkler Hintergrund ein. Das legt eine halbtransparente schwarze Ebene hinter das Widget, und die Deckkraft stellst du irgendwo zwischen 0 % und 100 % ein (standardmäßig 50 %). Soll jede Nachricht ihre eigene Box haben, schalt Box pro Nachricht ein.',
       },
       settings: {
@@ -1517,7 +1602,7 @@ export const de: typeof en = {
         title: 'Wie ändere ich ein Widget später?',
         p1: 'Deine Einstellungen stecken in der Widget-URL, eine geänderte Einstellung heißt also eine neue URL. Ändere die Einstellung auf der Setup-Seite, kopier die neue URL, doppelklick dann die Quelle in OBS und füg sie im Feld URL über der alten URL ein.',
         p2:
-          'Bei [Chat-Box](/setup/chat-widget), [Emote-Wand](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Stream-Alerts](/setup/stream-alerts), [Sub-Ziel](/setup/sub-goal), [Chat-Umfrage](/setup/chat-poll), [Stream-Rahmen](/setup/stream-frames), [Socials](/setup/socials) und [Stream-Countdown](/setup/stream-countdown) musst du nicht von vorn anfangen. Füg deine aktuelle URL auf der Setup-Seite ins Feld Widget-URL ein, und deine Kanäle und alle Einstellungen sind wieder da. Ändere, was du willst, und kopier die neue URL.',
+          'Bei [Chat-Box](/setup/chat-widget), [Emote-Wand](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Stream-Alerts](/setup/stream-alerts), [Sub-Ziel](/setup/sub-goal), [Chat-Umfrage](/setup/chat-poll), [Stream-Rahmen](/setup/stream-frames), [Socials](/setup/socials), [Stream-Countdown](/setup/stream-countdown) und [Glücksrad](/setup/spin-wheel) musst du nicht von vorn anfangen. Füg deine aktuelle URL auf der Setup-Seite ins Feld Widget-URL ein, und deine Kanäle und alle Einstellungen sind wieder da. Ändere, was du willst, und kopier die neue URL.',
         p3: 'OBS Bridge hat kein Feld zum Einfügen, gib deine Einstellungen also auf der Setup-Seite nochmal ein und kopier die neue Tool-URL. Szenenwahl und berechtigte Nutzer kannst du auch direkt auf der Tool-Seite ändern und die neue URL mit dem Button Aktuelle URL kopieren holen. Alte URLs funktionieren weiter, du musst sie also nicht austauschen.',
       },
       troubleshoot: {
@@ -2295,7 +2380,7 @@ export const de: typeof en = {
     },
     freeQ: 'Ist Senchabot Extensions kostenlos?',
     freeA:
-      'Ja. Alle zwölf Widgets und Tools sind kostenlos: Chat-Box, Emote-Wand, Sub Sprout, Subathon Timer, Stream-Alerts, Sub-Ziel, Stream-Rahmen, Stream-Countdown, Chat-Umfrage, Socials, Verlosung und OBS Bridge. Es gibt kein Bezahl-Abo, kein Wasserzeichen und keinen Premium-Account. Der Quellcode liegt offen auf GitHub unter der GPL-3.0-Lizenz.',
+      'Ja. Alle dreizehn Widgets und Tools sind kostenlos: Chat-Box, Emote-Wand, Sub Sprout, Subathon Timer, Stream-Alerts, Sub-Ziel, Stream-Rahmen, Stream-Countdown, Chat-Umfrage, Socials, Verlosung, OBS Bridge und Glücksrad. Es gibt kein Bezahl-Abo, kein Wasserzeichen und keinen Premium-Account. Der Quellcode liegt offen auf GitHub unter der GPL-3.0-Lizenz.',
     loginQ: 'Was heißt „kein Login nötig“?',
     loginA:
       'Du legst auf dieser Seite keinen Account an, du loggst dich nicht mit Twitch oder Kick ein, und du lädst nichts herunter. Du gibst deinen Kanalnamen ein, und die Setup-Seite gibt dir eine URL. Die Widgets lesen den öffentlichen Chat anonym: Auf Twitch verbinden sie sich wie ein anonymer Zuschauer, auf Kick hören sie den öffentlichen Chat-Feed mit. Deshalb können sie nicht in den Chat schreiben, nicht moderieren und nicht auf private Infos deines Accounts zugreifen.',
@@ -2307,10 +2392,10 @@ export const de: typeof en = {
       'Mit OBS Studio und jeder anderen Streaming-Software, die eine Browser-Quelle unterstützt. Jedes Widget läuft als Web-URL, und diese URL fügst du in die Quelle ein. Unsere Anleitungen sind für OBS Studio geschrieben.',
     platformsQ: 'Welche Widgets unterstützen Twitch und welche Kick?',
     platformsA:
-      'Alle zwölf unterstützen beide Plattformen. Chat-Box, Emote-Wand, Sub Sprout, Subathon Timer, Stream-Alerts, Sub-Ziel, Chat-Umfrage und Stream-Countdown hören einem Twitch- und einem Kick-Kanal zusammen in einer URL zu. OBS Bridge hört auf Befehle aus beiden Chats, und jeder berechtigte Nutzer wird mit seiner eigenen Plattform hinzugefügt. Die Verlosung läuft immer auf einer Plattform, Twitch oder Kick. Stream-Rahmen und Socials lesen keinen Chat, sie funktionieren also auf beiden gleich. In der Chat-Box erscheinen 7TV-Emotes auf beiden Plattformen, BTTV- und FFZ-Emotes nur auf Twitch.',
+      'Alle dreizehn unterstützen beide Plattformen. Chat-Box, Emote-Wand, Sub Sprout, Subathon Timer, Stream-Alerts, Sub-Ziel, Chat-Umfrage, Stream-Countdown und Glücksrad hören einem Twitch- und einem Kick-Kanal zusammen in einer URL zu. OBS Bridge hört auf Befehle aus beiden Chats, und jeder berechtigte Nutzer wird mit seiner eigenen Plattform hinzugefügt. Die Verlosung läuft immer auf einer Plattform, Twitch oder Kick. Stream-Rahmen und Socials lesen keinen Chat, sie funktionieren also auf beiden gleich. In der Chat-Box erscheinen 7TV-Emotes auf beiden Plattformen, BTTV- und FFZ-Emotes nur auf Twitch.',
     editQ: 'Wie ändere ich ein Widget später?',
     editA:
-      'Ändere die Einstellungen auf der Setup-Seite, kopier die neue URL und füg sie in OBS im Feld URL der Quelle über der alten ein. Bei Chat-Box, Emote-Wand, Sub Sprout, Subathon Timer, Stream-Alerts, Sub-Ziel, Chat-Umfrage, Stream-Rahmen, Socials und Stream-Countdown kannst du deine alte URL auf der Setup-Seite ins Feld Widget-URL einfügen, dann sind alle Einstellungen wieder da, und du musst nicht von vorn anfangen.',
+      'Ändere die Einstellungen auf der Setup-Seite, kopier die neue URL und füg sie in OBS im Feld URL der Quelle über der alten ein. Bei Chat-Box, Emote-Wand, Sub Sprout, Subathon Timer, Stream-Alerts, Sub-Ziel, Chat-Umfrage, Stream-Rahmen, Socials, Stream-Countdown und Glücksrad kannst du deine alte URL auf der Setup-Seite ins Feld Widget-URL einfügen, dann sind alle Einstellungen wieder da, und du musst nicht von vorn anfangen.',
     oldUrlsQ: 'Funktionieren meine alten Widget-URLs weiter?',
     oldUrlsA:
       'Ja. Updates werden so gebaut, dass bestehende URLs nicht kaputtgehen: Parameternamen, Werte und Standards bleiben gleich. Das alte keep=true in der Chat-Box heißt z. B. immer noch Für immer, und Sub Sprout liest immer noch die alten Parameter channel und platform.',
@@ -2336,6 +2421,14 @@ export const de: typeof en = {
     entries: {
       countdownZoom:
         'Der Stream-Countdown bekommt Zoom-Optionen: groß mit 125 %, 150 % oder 200 %, oder kleiner mit 75 %.',
+      spinWheelWeights:
+        'Das Glücksrad kann Gewichtung: Starte eine Zeile mit `2x`, `3x` usw. für extra Felder, die entsprechend öfter gewinnen.',
+      spinWheelChat:
+        'Das Glücksrad bekommt Twitch- und Kick-Kanäle: Zuschauer drehen per `!spin`, mit Alle-, Nur-Subs- oder Nur-Mods-Auswahl und einem globalen Cooldown, der auf dem neuen OBS-Overlay herunterzählt.',
+      spinWheelAdvancedLink:
+        'Das Glücksrad verlinkt jetzt auf das Profi-Rad im Senchabot-Dashboard mit Twitch- und Kick-Channel-Punkten.',
+      spinWheelLaunch:
+        'Neues Glücksrad-Tool: Eine Option pro Zeile tippen und das Rad live auf der Seite drehen, mit Sound, Konfetti und Gewinner-Verlauf.',
       countdownPomodoroScene:
         'Der Stream-Countdown bekommt einen vierten Zweck: Pomodoro, mit eigenem Text, Tomaten-Icon und 25 Minuten als Chat-Standard.',
       countdownCommandAlias:

@@ -145,6 +145,16 @@ export function SocialsIcon(props: IconProps) {
   );
 }
 
+export function SpinWheelIcon(props: IconProps) {
+  return (
+    <StrokeIcon {...props}>
+      <circle cx="12" cy="13" r="8" />
+      <circle cx="12" cy="13" r="1.6" />
+      <path d="M12 5v6.4M4.5 9l5.6 3.2M4.5 17l5.6-3.2M19.5 9l-5.6 3.2M19.5 17l-5.6-3.2M12 1.5 10.2 4h3.6Z" />
+    </StrokeIcon>
+  );
+}
+
 export function ChevronDownIcon(props: IconProps) {
   return (
     <StrokeIcon {...props}>
