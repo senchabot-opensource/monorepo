@@ -969,6 +969,8 @@ export const en = {
     },
     lookTip: 'A panel behind the clock, or the text straight on your scene.',
     color: 'Color',
+    zoom: 'Zoom',
+    zoomTip: 'Makes everything bigger or smaller. Pick 150% or 200% to show it big.',
     showBar: 'Progress Bar',
     showBarTip: 'A bar under the clock that empties as the time runs out.',
     motion: 'Animations',
@@ -2327,6 +2329,8 @@ export const en = {
     lead: "New features and bug fixes in Senchabot Extensions, newest first. The list is put together from the project's commit history on [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      countdownZoom:
+        'Stream Countdown gets Zoom options: show it big at 125%, 150% or 200%, or smaller at 75%.',
       countdownPomodoroScene:
         'Stream Countdown gets a fourth What is it for? purpose: Pomodoro, with its own wording, a tomato mark and a 25-minute chat default.',
       countdownCommandAlias:

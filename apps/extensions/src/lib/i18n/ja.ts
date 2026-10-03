@@ -983,6 +983,8 @@ export const ja: typeof en = {
     },
     lookTip: '時計の後ろにパネルを敷くか、テキストをシーンに直接表示するかを選びます。',
     color: 'カラー',
+    zoom: 'ズーム',
+    zoomTip: '全体を大きくしたり小さくしたりします。大きく見せたいときは150%か200%を選んでください。',
     showBar: 'プログレスバー',
     showBarTip: '時計の下に、残り時間とともに減っていくバーを表示します。',
     motion: 'アニメーション',
@@ -2329,6 +2331,8 @@ export const ja: typeof en = {
     lead: 'Senchabot Extensionsの新機能とバグ修正を、新しい順に並べています。このリストは[GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions)にあるプロジェクトのコミット履歴からまとめています。',
     site: 'サイト',
     entries: {
+      countdownZoom:
+        'Stream Countdownにズーム設定が加わりました。125%・150%・200%で大きく、75%で小さく表示できます。',
       countdownPomodoroScene:
         'Stream Countdownに4つ目の用途「ポモドーロ」が加わりました。専用の文言、トマトのアイコン、チャットの25分デフォルト付きです。',
       countdownCommandAlias:

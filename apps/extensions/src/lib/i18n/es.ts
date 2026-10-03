@@ -996,6 +996,8 @@ export const es: typeof en = {
     },
     lookTip: 'Un panel detrás del reloj, o el texto directamente sobre tu escena.',
     color: 'Color',
+    zoom: 'Zoom',
+    zoomTip: 'Hace todo más grande o más pequeño. Elige 150 % o 200 % para mostrarlo en grande.',
     showBar: 'Barra de progreso',
     showBarTip: 'Una barra debajo del reloj que se vacía a medida que se acaba el tiempo.',
     motion: 'Animaciones',
@@ -2359,6 +2361,8 @@ export const es: typeof en = {
     lead: 'Funciones nuevas y errores corregidos en Senchabot Extensions, de lo más nuevo a lo más viejo. La lista sale del historial de commits del proyecto en [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).',
     site: 'Sitio',
     entries: {
+      countdownZoom:
+        'Stream Countdown estrena opciones de zoom: muéstralo en grande al 125 %, 150 % o 200 %, o más pequeño al 75 %.',
       countdownPomodoroScene:
         'Stream Countdown estrena un cuarto propósito: Pomodoro, con su texto, su icono de tomate y 25 minutos por defecto en el chat.',
       countdownCommandAlias:

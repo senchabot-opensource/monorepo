@@ -38,7 +38,9 @@ import {
   COUNTDOWN_ENDINGS,
   COUNTDOWN_LOOKS,
   COUNTDOWN_SCENES,
+  COUNTDOWN_ZOOMS,
   type CountdownSettings,
+  type CountdownZoom,
   DEFAULT_COUNTDOWN_SETTINGS,
   ICON_MAX_LENGTH,
   MAX_COUNTDOWN_TIME,
@@ -370,6 +372,20 @@ function CountdownSetup() {
             options={COUNTDOWN_LOOKS.map((look) => ({
               value: look,
               label: t(`countdown.looks.${look}`),
+            }))}
+          />
+        </div>
+        <div>
+          <FieldLabel id={`${id}-zoom`} tip={t('countdown.zoomTip')}>
+            {t('countdown.zoom')}
+          </FieldLabel>
+          <SegmentedControl
+            labelledBy={`${id}-zoom`}
+            value={String(settings.zoom)}
+            onChange={(value) => update('zoom', Number(value) as CountdownZoom)}
+            options={COUNTDOWN_ZOOMS.map((zoom) => ({
+              value: String(zoom),
+              label: `${zoom}%`,
             }))}
           />
         </div>
