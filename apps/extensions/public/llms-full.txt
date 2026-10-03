@@ -82,6 +82,7 @@ URL parameters (all optional):
 | background | true, false (semi-transparent black background) | false |
 | bgOpacity | 0 to 1, used with background=true | 0.5 |
 | itemBackground | true, false (a box behind each message) | false |
+| chatBackground | true, false (one backdrop behind all messages) | false |
 | boldUsernames | true, false | false |
 | boldMessages | true, false | false |
 | timestamp | true, false | false |

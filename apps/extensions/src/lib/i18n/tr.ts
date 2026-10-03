@@ -319,6 +319,8 @@ export const tr: typeof en = {
     backgroundOpacity: 'Arka Plan Saydamlığı',
     messageBackgroundBox: 'Mesaj Arka Plan Kutusu',
     messageBackgroundHint: 'Her mesaj kendi çerçeveli arka plan kutusunu alır.',
+    chatBackground: 'Sohbet Arka Planı',
+    chatBackgroundHint: 'Her mesajda ayrı kutu yerine tüm mesajların arkasında tek bir zemin.',
     platformAccent: 'Platform Renk Şeridi',
     platformAccentHint:
       'Her mesajın solundaki Twitch moru ya da Kick yeşili şerit, mesajın nereden geldiğini gösterir.',
@@ -2399,6 +2401,8 @@ export const tr: typeof en = {
     lead: "Senchabot Extensions'a eklenen özellikler ve düzeltilen hatalar, en yenisi en üstte. Liste projenin [GitHub'daki](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) commit geçmişinden hazırlanıyor.",
     site: 'Site',
     entries: {
+      chatSharedBackground:
+        'Sohbet Kutusu’na Sohbet Arka Planı geldi: her mesaja kutu koymak istemeyenler için tüm mesajların arkasında tek bir zemin.',
       spinWheelWeights:
         'Çark seçeneklerine ağırlık geldi: satıra `2x`, `3x` … ile başla, o seçenek o kadar fazla dilimle o kadar sık kazanır.',
       spinWheelChat:

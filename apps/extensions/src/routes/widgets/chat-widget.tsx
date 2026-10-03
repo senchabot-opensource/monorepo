@@ -71,6 +71,7 @@ const searchSchema = z.object({
   fontSize: z.coerce.number().catch(18),
   background: z.coerce.boolean().optional(),
   itemBackground: z.coerce.boolean().optional(),
+  chatBackground: z.coerce.boolean().optional(),
   boldUsernames: z.coerce.boolean().optional(),
   boldMessages: z.coerce.boolean().optional(),
   shadow: z.enum(TEXT_SHADOWS).catch('normal'),
@@ -479,7 +480,10 @@ function RouteComponent() {
       {skin && <link rel="stylesheet" href={skin.fontHref} precedence="default" />}
       <div
         ref={listRef}
-        className={`flex shrink-0 ${horizontal ? 'flex-row items-center space-x-3' : 'flex-col space-y-2'}`}
+        className={`flex shrink-0 ${horizontal ? 'flex-row items-center space-x-3' : 'flex-col space-y-2'} ${
+          search.chatBackground ? 'rounded-lg p-2' : ''
+        }`}
+        style={search.chatBackground ? { backgroundColor: background } : undefined}
       >
         {visibleMessages.map((msg) => (
           <MessageRow
@@ -499,6 +503,7 @@ function RouteComponent() {
             showBadges={Boolean(search.badges)}
             hasBackground={Boolean(search.background)}
             itemBackground={Boolean(search.itemBackground)}
+            chatBackground={Boolean(search.chatBackground)}
             bgOpacity={search.bgOpacity}
             platformAccent={Boolean(search.platformAccent)}
             boldUsernames={Boolean(search.boldUsernames)}
@@ -543,6 +548,7 @@ type MessageRowProps = {
   showBadges: boolean;
   hasBackground: boolean;
   itemBackground: boolean;
+  chatBackground: boolean;
   bgOpacity: number;
   platformAccent: boolean;
   boldUsernames: boolean;
@@ -570,6 +576,7 @@ const MessageRow = React.memo(function MessageRow({
   showBadges,
   hasBackground,
   itemBackground,
+  chatBackground,
   bgOpacity,
   platformAccent,
   boldUsernames,
@@ -632,7 +639,7 @@ const MessageRow = React.memo(function MessageRow({
     () => getAccessibleColor(msg.color, true) || msg.color || 'unset',
     [msg.color],
   );
-  const hasAnyBackground = hasBackground || itemBackground;
+  const hasAnyBackground = hasBackground || itemBackground || chatBackground;
   const hardShadow = skin?.shadow === 'hard' ? skin.textShadow : null;
   const override = textShadow === 'normal' ? null : SHADOWS[textShadow];
   const shadowStyle =

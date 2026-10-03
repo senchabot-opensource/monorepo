@@ -323,6 +323,8 @@ export const pt: typeof en = {
     backgroundOpacity: 'Opacidade do fundo',
     messageBackgroundBox: 'Caixa de fundo da mensagem',
     messageBackgroundHint: 'Cada mensagem ganha sua própria caixa de fundo com borda.',
+    chatBackground: 'Fundo do chat',
+    chatBackgroundHint: 'Um único fundo atrás de todas as mensagens, em vez de uma caixa em cada uma.',
     platformAccent: 'Faixa com a cor da plataforma',
     platformAccentHint:
       'Uma faixa roxa da Twitch ou verde da Kick à esquerda mostra de onde veio cada mensagem.',
@@ -2437,6 +2439,8 @@ export const pt: typeof en = {
     lead: 'Recursos novos e correções de bugs no Senchabot Extensions, dos mais novos para os mais antigos. A lista é montada a partir do histórico de commits do projeto no [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).',
     site: 'Site',
     entries: {
+      chatSharedBackground:
+        'A Caixa de Chat agora tem Fundo do chat: um único fundo atrás de todas as mensagens, sem caixa em cada uma.',
       countdownZoom:
         'O Stream Countdown ganha opções de zoom: mostre em grande a 125%, 150% ou 200%, ou menor a 75%.',
       spinWheelWeights:

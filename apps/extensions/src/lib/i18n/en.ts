@@ -315,6 +315,8 @@ export const en = {
     backgroundOpacity: 'Background Opacity',
     messageBackgroundBox: 'Message Background Box',
     messageBackgroundHint: 'Each message gets its own bordered background box.',
+    chatBackground: 'Chat Background',
+    chatBackgroundHint: 'One shared backdrop behind all messages, instead of a box on each one.',
     platformAccent: 'Platform Color Stripe',
     platformAccentHint: 'A Twitch purple or Kick green stripe on the left shows where each message came from.',
     boldUsernames: 'Bold Usernames',
@@ -2414,6 +2416,8 @@ export const en = {
     lead: "New features and bug fixes in Senchabot Extensions, newest first. The list is put together from the project's commit history on [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      chatSharedBackground:
+        'Chat Box gets a Chat Background: one shared backdrop behind all messages, for streamers who want readability without a box on each message.',
       countdownZoom:
         'Stream Countdown gets Zoom options: show it big at 125%, 150% or 200%, or smaller at 75%.',
       spinWheelWeights:
