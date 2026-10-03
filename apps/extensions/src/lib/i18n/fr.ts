@@ -328,6 +328,8 @@ export const fr: typeof en = {
     backgroundOpacity: 'Opacité du fond',
     messageBackgroundBox: 'Fond par message',
     messageBackgroundHint: 'Chaque message a son propre fond avec une bordure.',
+    chatBackground: 'Fond du chat',
+    chatBackgroundHint: 'Un seul fond derrière tous les messages, plutôt qu’un cadre sur chacun.',
     platformAccent: 'Bande de couleur de la plateforme',
     platformAccentHint:
       "Une bande violette Twitch ou verte Kick à gauche montre d'où vient chaque message.",
@@ -2461,6 +2463,8 @@ export const fr: typeof en = {
     lead: "Les nouvelles fonctionnalités et corrections de bugs de Senchabot Extensions, des plus récentes aux plus anciennes. La liste est tirée de l'historique des commits du projet sur [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      chatSharedBackground:
+        'La Boîte de chat a un Fond du chat : un seul fond derrière tous les messages, sans cadre sur chacun.',
       countdownZoom:
         'Le Stream Countdown a des options de zoom : affiche-le en grand à 125 %, 150 % ou 200 %, ou plus petit à 75 %.',
       spinWheelWeights:

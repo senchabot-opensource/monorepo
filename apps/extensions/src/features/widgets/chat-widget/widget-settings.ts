@@ -59,6 +59,8 @@ export interface Settings {
   background: boolean;
   bgOpacity: string;
   itemBackground: boolean;
+  /** One shared backdrop behind the message list, instead of a box on each message. */
+  chatBackground: boolean;
   platformAccent: boolean;
   boldUsernames: boolean;
   boldMessages: boolean;
@@ -88,6 +90,7 @@ export const DEFAULT_SETTINGS: Settings = {
   background: false,
   bgOpacity: '0.5',
   itemBackground: false,
+  chatBackground: false,
   platformAccent: false,
   boldUsernames: false,
   boldMessages: false,
@@ -131,6 +134,7 @@ export function buildWidgetParams(settings: Settings, twitchChannel: string, kic
       params.append('bgOpacity', settings.bgOpacity);
   }
   if (settings.itemBackground) params.append('itemBackground', 'true');
+  if (settings.chatBackground) params.append('chatBackground', 'true');
   if (settings.platformAccent) params.append('platformAccent', 'true');
   if (settings.boldUsernames) params.append('boldUsernames', 'true');
   if (settings.boldMessages) params.append('boldMessages', 'true');
@@ -223,6 +227,7 @@ export function parseWidgetUrl(text: string): ParsedWidgetUrl | null {
       background: flag('background', DEFAULT_SETTINGS.background),
       bgOpacity: number('bgOpacity', DEFAULT_SETTINGS.bgOpacity, (n) => n >= 0 && n <= 1),
       itemBackground: flag('itemBackground', DEFAULT_SETTINGS.itemBackground),
+      chatBackground: flag('chatBackground', DEFAULT_SETTINGS.chatBackground),
       platformAccent: flag('platformAccent', DEFAULT_SETTINGS.platformAccent),
       boldUsernames: flag('boldUsernames', DEFAULT_SETTINGS.boldUsernames),
       boldMessages: flag('boldMessages', DEFAULT_SETTINGS.boldMessages),

@@ -317,6 +317,8 @@ export const de: typeof en = {
     backgroundOpacity: 'Hintergrund-Deckkraft',
     messageBackgroundBox: 'Box pro Nachricht',
     messageBackgroundHint: 'Jede Nachricht bekommt ihre eigene Box mit Rahmen.',
+    chatBackground: 'Chat-Hintergrund',
+    chatBackgroundHint: 'Ein gemeinsamer Hintergrund hinter allen Nachrichten, statt einer Box pro Nachricht.',
     platformAccent: 'Plattform-Farbstreifen',
     platformAccentHint: 'Ein lila Twitch- oder grüner Kick-Streifen links zeigt, woher jede Nachricht kommt.',
     boldUsernames: 'Namen fett',
@@ -2419,6 +2421,8 @@ export const de: typeof en = {
     lead: 'Neue Features und Bugfixes in Senchabot Extensions, das Neueste zuerst. Die Liste ist aus der Commit-Historie des Projekts auf [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) zusammengestellt.',
     site: 'Website',
     entries: {
+      chatSharedBackground:
+        'Die Chat-Box bekommt einen Chat-Hintergrund: ein gemeinsamer Hintergrund hinter allen Nachrichten, ganz ohne Box pro Nachricht.',
       countdownZoom:
         'Der Stream-Countdown bekommt Zoom-Optionen: groß mit 125 %, 150 % oder 200 %, oder kleiner mit 75 %.',
       spinWheelWeights:

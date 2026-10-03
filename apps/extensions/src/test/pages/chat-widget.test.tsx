@@ -173,6 +173,18 @@ describe('Chat Box overlay', () => {
     expect(shadows().every((shadow) => shadow.includes('0.06em'))).toBe(true);
   });
 
+  it('paints one shared backdrop behind the list with chatBackground', async () => {
+    const listOf = () => rows()[0].parentElement as HTMLElement;
+    await openTwitch('&chatBackground=true');
+    say('hi');
+    expect(listOf().style.backgroundColor).toBe('rgba(0, 0, 0, 0.5)');
+    cleanup();
+
+    await openTwitch();
+    say('hi');
+    expect(listOf().style.backgroundColor).toBe('');
+  });
+
   it('lets every message through by default', async () => {
     await openTwitch();
     say('!uptime');

@@ -338,7 +338,7 @@ function ChatWidgetSetup() {
             min={0}
             max={1}
             step={0.1}
-            disabled={!settings.background}
+            disabled={!settings.background && !settings.chatBackground}
             value={settings.bgOpacity}
             onChange={(value) => update('bgOpacity', value)}
             format={(value) => `${Math.round(value * 100)}%`}
@@ -348,6 +348,12 @@ function ChatWidgetSetup() {
             tip={t('chatWidget.messageBackgroundHint')}
             checked={settings.itemBackground}
             onChange={(value) => update('itemBackground', value)}
+          />
+          <Switch
+            label={t('chatWidget.chatBackground')}
+            tip={t('chatWidget.chatBackgroundHint')}
+            checked={settings.chatBackground}
+            onChange={(value) => update('chatBackground', value)}
           />
           <Switch
             label={t('chatWidget.platformAccent')}

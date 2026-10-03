@@ -53,6 +53,7 @@ describe('parseWidgetUrl', () => {
       background: true,
       bgOpacity: '0.8',
       itemBackground: true,
+      chatBackground: true,
       platformAccent: true,
       boldUsernames: true,
       boldMessages: true,

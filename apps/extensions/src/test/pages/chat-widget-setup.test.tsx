@@ -107,6 +107,23 @@ describe('Chat Box setup', () => {
     );
   });
 
+  it('enables one shared backdrop without per-message boxes', async () => {
+    const user = setupUser();
+    await renderRoute(PAGE);
+    await user.type(twitchField(), 'streamer');
+
+    const opacity = slider(en('chatWidget.backgroundOpacity'));
+    expect(opacity.disabled).toBe(true);
+    await user.click(toggle(en('chatWidget.chatBackground')));
+    expect(urlField().value).toBe(
+      'http://localhost:3000/widgets/chat-widget?twitch=streamer&chatBackground=true',
+    );
+    expect(opacity.disabled).toBe(false);
+    expect(toggle(en('chatWidget.messageBackgroundBox')).getAttribute('aria-checked')).toBe(
+      'false',
+    );
+  });
+
   it('disables the settings that the chosen platforms rule out', async () => {
     const user = setupUser();
     await renderRoute(PAGE);

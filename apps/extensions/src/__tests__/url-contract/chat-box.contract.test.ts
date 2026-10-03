@@ -28,6 +28,8 @@ const defaults: Settings = {
   preset: 'classic',
   textShadow: 'normal',
   userFont: 'inter',
+  // The shared chat backdrop came after the freeze, like the settings above.
+  chatBackground: false,
 };
 const expectedUrlOf = (c: FixtureCase<Input>) => c.expectedUrl.replace('&highlights=none', '');
 // The username font came after these URLs were frozen: back then it followed the message font,

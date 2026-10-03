@@ -319,6 +319,8 @@ export const ja: typeof en = {
     backgroundOpacity: '背景の不透明度',
     messageBackgroundBox: 'メッセージごとの背景ボックス',
     messageBackgroundHint: 'メッセージごとに枠付きの背景ボックスが付きます。',
+    chatBackground: 'チャット全体の背景',
+    chatBackgroundHint: 'メッセージごとのボックスではなく、全メッセージの後ろにひとつの背景を付けます。',
     platformAccent: 'プラットフォームカラーのライン',
     platformAccentHint:
       '左側にTwitchの紫かKickの緑のラインが付き、各メッセージの送信元がひと目でわかります。',
@@ -2416,6 +2418,8 @@ export const ja: typeof en = {
     lead: 'Senchabot Extensionsの新機能とバグ修正を、新しい順に並べています。このリストは[GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions)にあるプロジェクトのコミット履歴からまとめています。',
     site: 'サイト',
     entries: {
+      chatSharedBackground:
+        'チャットボックスに「チャット全体の背景」が加わりました。メッセージごとのボックスなしで読みやすくできます。',
       countdownZoom:
         'Stream Countdownにズーム設定が加わりました。125%・150%・200%で大きく、75%で小さく表示できます。',
       spinWheelWeights:
