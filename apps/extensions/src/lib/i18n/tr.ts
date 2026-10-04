@@ -22,6 +22,7 @@ export const tr: typeof en = {
     platformsTip:
       "Hangi platformu dinleyeceğini seç. Twitch ve Kick'te aynı anda yayın yapıyorsan ikisini birden seç.",
     platformBoth: 'İkisi',
+    platformAll: 'Hepsi',
     twitchChannel: 'Twitch Kanalı',
     kickChannel: 'Kick Kanalı',
     channelTip:

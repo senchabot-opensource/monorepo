@@ -4,6 +4,8 @@ import { buildWidgetParams, type Settings } from '#/features/widgets/chat-widget
 const READER_PARAMS = new Set([
   'twitch',
   'kick',
+  'youtube',
+  'token',
   'sevenTv',
   'bttv',
   'ffz',
@@ -19,11 +21,19 @@ export function buildReaderUrl(
   settings: Settings,
   twitchChannel: string,
   kickChannel: string,
+  youtubeChannel?: string,
+  token?: string,
 ): string {
   const params = new URLSearchParams();
-  for (const [key, value] of buildWidgetParams(settings, twitchChannel, kickChannel)) {
+  for (const [key, value] of buildWidgetParams(
+    settings,
+    twitchChannel,
+    kickChannel,
+    youtubeChannel,
+    token,
+  )) {
     if (READER_PARAMS.has(key)) params.append(key, value);
   }
-  if (!params.has('twitch') && !params.has('kick')) return '';
+  if (!params.has('twitch') && !params.has('kick') && !params.has('youtube')) return '';
   return `${origin}/tools/chat-reader?${params.toString()}`;
 }

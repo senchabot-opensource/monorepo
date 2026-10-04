@@ -1,5 +1,6 @@
 import { createFileRoute, useHydrated } from '@tanstack/react-router';
 import { useId, useMemo, useState } from 'react';
+import { z } from 'zod';
 import { ChannelFields } from '#/components/channel-fields';
 import { CopyUrlField } from '#/components/copy-url-field';
 import { ExternalIcon } from '#/components/icons';
@@ -45,7 +46,16 @@ import { getWidget } from '#/lib/widgets';
 const siteFont = (choice: Font): Font =>
   choice === 'presetName' || choice === 'presetMessage' ? DEFAULT_SETTINGS.font : choice;
 
+const setupSearchSchema = z.object({
+  twitch: z.string().optional(),
+  kick: z.string().optional(),
+  youtube: z.string().optional(),
+  token: z.string().optional(),
+  lang: z.string().optional(),
+});
+
 export const Route = createFileRoute('/{-$locale}/setup/chat-widget')({
+  validateSearch: (search) => setupSearchSchema.parse(search),
   head: ({ params }) =>
     getSetupPageHead('chat-box', getParamsLocale(params), {
       breadcrumb: 'chatWidget.breadcrumb',
@@ -71,9 +81,24 @@ const READER_BUTTON =
 
 function ChatWidgetSetup() {
   const { locale, t } = useI18n();
-  const [twitchChannel, setTwitchChannel] = useState('');
-  const [kickChannel, setKickChannel] = useState('');
-  const [settings, setSettings] = useState(DEFAULT_SETTINGS);
+  const search = Route.useSearch();
+  const [twitchChannel, setTwitchChannel] = useState(search.twitch ?? '');
+  const [kickChannel, setKickChannel] = useState(search.kick ?? '');
+  const [youtubeChannel, setYoutubeChannel] = useState(search.youtube ?? '');
+  const [token, setToken] = useState(search.token ?? '');
+  const [settings, setSettings] = useState<Settings>(() => {
+    let platforms = DEFAULT_SETTINGS.platforms;
+    if (search.youtube && (search.twitch || search.kick)) {
+      platforms = 'both';
+    } else if (search.youtube) {
+      platforms = 'youtube';
+    } else if (search.twitch && !search.kick) {
+      platforms = 'twitch';
+    } else if (search.kick && !search.twitch) {
+      platforms = 'kick';
+    }
+    return { ...DEFAULT_SETTINGS, platforms };
+  });
   const [previewRateIndex, setPreviewRateIndex] = useState(0);
   const mounted = useHydrated();
   const id = useId();
@@ -82,6 +107,7 @@ function ChatWidgetSetup() {
   // reloading, and looking up a Kick name, on every keystroke.
   const deferredTwitch = useDebouncedValue(twitchChannel, TYPING_PAUSE_MS);
   const deferredKick = useDebouncedValue(kickChannel, TYPING_PAUSE_MS);
+  const deferredYoutube = useDebouncedValue(youtubeChannel, TYPING_PAUSE_MS);
 
   const update = <K extends keyof Settings>(key: K, value: Settings[K]) =>
     setSettings((current) => ({ ...current, [key]: value }));
@@ -105,25 +131,41 @@ function ChatWidgetSetup() {
         ? channelWidgetUrl(
             window.location.origin,
             '/widgets/chat-widget',
-            buildWidgetParams(settings, twitchChannel, kickChannel),
+            buildWidgetParams(settings, twitchChannel, kickChannel, youtubeChannel, token),
           )
         : '',
-    [mounted, settings, twitchChannel, kickChannel],
+    [mounted, settings, twitchChannel, kickChannel, youtubeChannel, token],
   );
 
   const readerUrl = useMemo(
-    () => (mounted ? buildReaderUrl(window.location.origin, settings, twitchChannel, kickChannel) : ''),
-    [mounted, settings, twitchChannel, kickChannel],
+    () =>
+      mounted
+        ? buildReaderUrl(
+            window.location.origin,
+            settings,
+            twitchChannel,
+            kickChannel,
+            youtubeChannel,
+            token,
+          )
+        : '',
+    [mounted, settings, twitchChannel, kickChannel, youtubeChannel, token],
   );
 
   const previewUrl = useMemo(() => {
     if (!mounted) return '';
-    const params = buildWidgetParams(settings, deferredTwitch, deferredKick);
+    const params = buildWidgetParams(
+      settings,
+      deferredTwitch,
+      deferredKick,
+      deferredYoutube,
+      token,
+    );
     params.append('mock', 'true');
     if (previewRateIndex > 0) params.append('mockRate', String(PREVIEW_RATES[previewRateIndex]));
     // PreviewFrame adds the page's language.
     return `${window.location.origin}/widgets/chat-widget?${params.toString()}`;
-  }, [mounted, settings, deferredTwitch, deferredKick, previewRateIndex]);
+  }, [mounted, settings, deferredTwitch, deferredKick, deferredYoutube, token, previewRateIndex]);
 
   const applyWidgetUrl = (text: string) => {
     const parsed = parseWidgetUrl(text);
@@ -131,6 +173,8 @@ function ChatWidgetSetup() {
     setSettings(parsed.settings);
     setTwitchChannel(parsed.twitchChannel);
     setKickChannel(parsed.kickChannel);
+    setYoutubeChannel(parsed.youtubeChannel ?? '');
+    if (parsed.token) setToken(parsed.token);
     return true;
   };
 
@@ -239,6 +283,8 @@ function ChatWidgetSetup() {
           onTwitchChange={setTwitchChannel}
           kick={kickChannel}
           onKickChange={setKickChannel}
+          youtube={youtubeChannel}
+          onYoutubeChange={setYoutubeChannel}
           aside={
             <div>
               <FieldLabel id={`${id}-indicator`} tip={t('chatWidget.platformIndicatorTip')}>
@@ -254,6 +300,11 @@ function ChatWidgetSetup() {
             </div>
           }
         />
+        {youtubeChannel && !token && (
+          <p className="mt-2 text-xs text-amber-500 dark:text-amber-400">
+            Tip: Launch this setup from your Senchabot Dashboard Tools page so your YouTube live chat authorization token is included.
+          </p>
+        )}
       </SettingsGroup>
 
       <SettingsGroup title={t('common.sectionAppearance')}>

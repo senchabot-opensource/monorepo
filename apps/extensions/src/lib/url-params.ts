@@ -20,7 +20,7 @@ export function readCoercedFlag(value: string | null, fallback: boolean): boolea
 }
 
 /** Which chats a widget reads. */
-export type ChannelPlatforms = 'both' | 'twitch' | 'kick';
+export type ChannelPlatforms = 'both' | 'twitch' | 'kick' | 'youtube';
 
 /** Writes the channels of the picked platforms, trimmed and lowercased, before any other param. */
 export function setChannels(
@@ -28,16 +28,25 @@ export function setChannels(
   platforms: ChannelPlatforms,
   twitchChannel: string,
   kickChannel: string,
+  youtubeChannel?: string,
+  token?: string,
 ) {
   const twitch = twitchChannel.trim().toLowerCase();
   const kick = kickChannel.trim().toLowerCase();
-  if (platforms !== 'kick' && twitch) params.set('twitch', twitch);
-  if (platforms !== 'twitch' && kick) params.set('kick', kick);
+  const youtube = youtubeChannel?.trim() ?? '';
+  const tok = token?.trim() ?? '';
+
+  if (platforms !== 'kick' && platforms !== 'youtube' && twitch) params.set('twitch', twitch);
+  if (platforms !== 'twitch' && platforms !== 'youtube' && kick) params.set('kick', kick);
+  if (platforms !== 'twitch' && platforms !== 'kick' && youtube) params.set('youtube', youtube);
+  if (tok && (platforms === 'youtube' || platforms === 'both' || youtube)) {
+    params.set('token', tok);
+  }
 }
 
 /** The widget URL for OBS. Empty until a channel on a picked platform is filled in. */
 export function channelWidgetUrl(origin: string, path: string, params: URLSearchParams): string {
-  if (!params.has('twitch') && !params.has('kick')) return '';
+  if (!params.has('twitch') && !params.has('kick') && !params.has('youtube')) return '';
   return `${origin}${path}?${params.toString()}`;
 }
 
@@ -53,8 +62,20 @@ export function setPreview(params: URLSearchParams, platforms: ChannelPlatforms,
 }
 
 /** One channel means one platform. */
-export const platformsOf = (twitchChannel: string, kickChannel: string): ChannelPlatforms =>
-  twitchChannel && !kickChannel ? 'twitch' : kickChannel && !twitchChannel ? 'kick' : 'both';
+export const platformsOf = (
+  twitchChannel: string,
+  kickChannel: string,
+  youtubeChannel?: string,
+): ChannelPlatforms => {
+  const hasTwitch = Boolean(twitchChannel?.trim());
+  const hasKick = Boolean(kickChannel?.trim());
+  const hasYoutube = Boolean(youtubeChannel?.trim());
+
+  if (hasTwitch && !hasKick && !hasYoutube) return 'twitch';
+  if (hasKick && !hasTwitch && !hasYoutube) return 'kick';
+  if (hasYoutube && !hasTwitch && !hasKick) return 'youtube';
+  return 'both';
+};
 
 /** A pasted URL of the widget at `path`, with its channels; null for anything else. */
 export function readWidgetUrl(text: string, path: string) {
@@ -67,11 +88,15 @@ export function readWidgetUrl(text: string, path: string) {
   if (!url.pathname.replace(/\/+$/, '').endsWith(path)) return null;
   const twitchChannel = url.searchParams.get('twitch')?.trim() ?? '';
   const kickChannel = url.searchParams.get('kick')?.trim() ?? '';
+  const youtubeChannel = url.searchParams.get('youtube')?.trim() ?? '';
+  const token = url.searchParams.get('token')?.trim() ?? '';
   return {
     params: url.searchParams,
     twitchChannel,
     kickChannel,
-    platforms: platformsOf(twitchChannel, kickChannel),
+    youtubeChannel,
+    token,
+    platforms: platformsOf(twitchChannel, kickChannel, youtubeChannel),
   };
 }
 

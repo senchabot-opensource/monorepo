@@ -37,7 +37,7 @@ const renderTwitchEmotes = (text: string, emotesTag?: string) => {
   return elements;
 };
 
-export const parseEmotes = (text: string, platform: 'twitch' | 'kick', emotes?: string) => {
+export const parseEmotes = (text: string, platform: 'twitch' | 'kick' | 'youtube', emotes?: string) => {
   if (platform === 'kick') {
     const kickEmoteRegex = /\[emote:(\d+):([\w\d\-_]+)\]/g;
 
@@ -145,6 +145,18 @@ export function MessageBadges({
     <span className="inline-flex shrink-0 items-center gap-1 align-middle select-none">
       {msg.badges.map((badge, idx) => {
         const isTwitch = msg.platform === 'twitch';
+        const isYouTube = msg.platform === 'youtube';
+
+        if (isYouTube) {
+          const badgeType =
+            badge === 'owner' ? 'broadcaster' : badge === 'sponsor' ? 'subscriber' : badge;
+          return (
+            <span key={`${msg.id}-badge-${idx}`} title={badge} className="inline-flex items-center">
+              <KickBadge type={badgeType} className="inline-block h-[1em] w-[1em] object-contain" />
+            </span>
+          );
+        }
+
         if (!isTwitch) {
           return (
             <span key={`${msg.id}-badge-${idx}`} title={badge} className="inline-flex items-center">
@@ -204,9 +216,27 @@ export function KickIcon({ className, ...props }: React.SVGProps<SVGSVGElement>)
   );
 }
 
-export function PlatformIcon({ platform }: { platform: 'twitch' | 'kick' }) {
+export function YouTubeIcon({ className, ...props }: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      role="img"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className={`inline-block h-[1em] w-auto ${className ?? ''}`}
+      {...props}
+    >
+      <title>YouTube</title>
+      <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+    </svg>
+  );
+}
+
+export function PlatformIcon({ platform }: { platform: 'twitch' | 'kick' | 'youtube' }) {
   if (platform === 'twitch') {
     return <TwitchIcon />;
+  }
+  if (platform === 'youtube') {
+    return <YouTubeIcon />;
   }
 
   return <KickIcon />;

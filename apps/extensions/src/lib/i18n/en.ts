@@ -20,6 +20,7 @@ export const en = {
     platformsTip:
       'Pick the platform to listen to. Streaming on Twitch and Kick at the same time? Pick Both.',
     platformBoth: 'Both',
+    platformAll: 'All',
     twitchChannel: 'Twitch Channel',
     kickChannel: 'Kick Channel',
     channelTip:

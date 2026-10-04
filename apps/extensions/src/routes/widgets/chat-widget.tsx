@@ -61,6 +61,8 @@ const getAnimationSpeeds = (messages: ChatMessagesType[]) => {
 const searchSchema = z.object({
   twitch: z.string().optional(),
   kick: z.string().optional(),
+  youtube: z.string().optional(),
+  token: z.string().optional(),
   // Unknown ids fall back to the classic look in skinFor.
   preset: z.string().optional(),
   sevenTv: z.coerce.boolean().optional().default(true),
@@ -250,9 +252,10 @@ function TypedContent({ nodes, speed }: { nodes: React.ReactNode[]; speed: numbe
   );
 }
 
-const PLATFORM_COLORS: Record<'twitch' | 'kick', string> = {
+const PLATFORM_COLORS: Record<'twitch' | 'kick' | 'youtube', string> = {
   twitch: '#9146FF',
   kick: '#53FC18',
+  youtube: '#FF0000',
 };
 
 const GOOGLE_FONTS_LINK_ID = 'chat-widget-google-fonts';
@@ -310,7 +313,9 @@ function RouteComponent() {
   const twitchBadgeMap = useTwitchBadges(search.twitch);
 
   // Decided by the link, so a Kick lookup that fails can't swap a streamer's chat for demo chat.
-  const isMock = Boolean(search.mock || (!search.twitch && !search.kick?.trim()));
+  const isMock = Boolean(
+    search.mock || (!search.twitch && !search.kick?.trim() && !search.youtube?.trim()),
+  );
 
   const showPlatformIndicator = search.platformDisplay !== 'none';
   const skin = skinFor(search.preset);
@@ -327,16 +332,18 @@ function RouteComponent() {
 
   // Mentions of these names get highlighted. A mock preview without channels mentions Senchabot.
   const channels = React.useMemo(() => {
-    const names = [search.twitch, search.kick].filter((name): name is string => Boolean(name));
+    const names = [search.twitch, search.kick, search.youtube].filter(
+      (name): name is string => Boolean(name),
+    );
     return names.length > 0 || !isMock ? names : ['senchabot'];
-  }, [search.twitch, search.kick, isMock]);
+  }, [search.twitch, search.kick, search.youtube, isMock]);
   const mockChannel = channels[0] ?? 'senchabot';
   const highlights = React.useMemo(
     () => new Set(parseHighlights(search.highlights)),
     [search.highlights],
   );
 
-  useUnifiedChat(search.twitch, kick?.chatroomId);
+  useUnifiedChat(search.twitch, kick?.chatroomId, search.youtube, search.token);
 
   useMockChat(isMock, mockChannel, search.mockRate);
 

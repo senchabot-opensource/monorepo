@@ -22,6 +22,7 @@ export const fr: typeof en = {
     platformsTip:
       'Choisis la plateforme à écouter. Tu streames sur Twitch et Kick en même temps ? Choisis Les deux.',
     platformBoth: 'Les deux',
+    platformAll: 'Toutes',
     twitchChannel: 'Chaîne Twitch',
     kickChannel: 'Chaîne Kick',
     channelTip:

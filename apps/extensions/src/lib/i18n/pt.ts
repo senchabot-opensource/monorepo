@@ -22,6 +22,7 @@ export const pt: typeof en = {
     platformsTip:
       'Escolha a plataforma que o widget vai ouvir. Faz live na Twitch e na Kick ao mesmo tempo? Escolha Ambas.',
     platformBoth: 'Ambas',
+    platformAll: 'Todas',
     twitchChannel: 'Canal da Twitch',
     kickChannel: 'Canal da Kick',
     channelTip:

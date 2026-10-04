@@ -2,6 +2,7 @@ import React from 'react';
 import { type ChatMessagesType, chatMessagesCollection } from './chat-messages';
 import { TwitchChat } from '#/lib/twitch';
 import { KickChat } from '#/lib/kick';
+import { YouTubeChat } from '#/lib/youtube';
 
 const MAX_CHAT_HISTORY = 100;
 
@@ -124,7 +125,12 @@ function createChatStore() {
   return { pushToMessages, deleteMessage, banUser, clearAll };
 }
 
-export const useUnifiedChat = (twitchChannel?: string | null, kickChannelId?: string | null) => {
+export const useUnifiedChat = (
+  twitchChannel?: string | null,
+  kickChannelId?: string | null,
+  youtubeChannel?: string | null,
+  token?: string | null,
+) => {
   const store = React.useMemo(createChatStore, []);
 
   // One connection each, so a Kick id that arrives late (the lookup retries) leaves Twitch be.
@@ -153,4 +159,19 @@ export const useUnifiedChat = (twitchChannel?: string | null, kickChannelId?: st
     );
     return () => client.disconnect();
   }, [kickChannelId, store]);
+
+  React.useEffect(() => {
+    const channel = youtubeChannel?.trim();
+    const tok = token?.trim();
+    if (!channel || !tok) return;
+    const client = new YouTubeChat(
+      channel,
+      tok,
+      store.pushToMessages,
+      store.deleteMessage,
+      store.banUser('youtube'),
+      store.clearAll('youtube'),
+    );
+    return () => client.disconnect();
+  }, [youtubeChannel, token, store]);
 };

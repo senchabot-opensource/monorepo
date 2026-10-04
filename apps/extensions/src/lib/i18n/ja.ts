@@ -22,6 +22,7 @@ export const ja: typeof en = {
     platformsTip:
       '読み込むプラットフォームを選びます。TwitchとKickで同時配信しているなら「両方」を選んでください。',
     platformBoth: '両方',
+    platformAll: 'すべて',
     twitchChannel: 'Twitchチャンネル',
     kickChannel: 'Kickチャンネル',
     channelTip:

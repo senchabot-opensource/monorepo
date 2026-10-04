@@ -2,7 +2,7 @@ import { isClassic } from '#/features/presets/registry';
 import { CLASSIC_PRESET, readPreset, writePreset } from '#/lib/preset-url';
 import { readCoercedFlag, readWidgetUrl, setChannels } from '#/lib/url-params';
 
-export const PLATFORMS = ['both', 'twitch', 'kick'] as const;
+export const PLATFORMS = ['both', 'twitch', 'kick', 'youtube'] as const;
 export const PLATFORM_DISPLAYS = ['name', 'icon', 'none'] as const;
 export const FONTS = ['inter', 'roboto', 'nunito', 'mono', 'serif', 'system'] as const;
 // A preset brings two fonts of its own; both selects can pick either of them.
@@ -117,9 +117,15 @@ export function defaultFonts(preset: string): { font: Font; userFont: Font } {
     : { font: 'presetMessage', userFont: 'presetName' };
 }
 
-export function buildWidgetParams(settings: Settings, twitchChannel: string, kickChannel: string) {
+export function buildWidgetParams(
+  settings: Settings,
+  twitchChannel: string,
+  kickChannel: string,
+  youtubeChannel?: string,
+  token?: string,
+) {
   const params = new URLSearchParams();
-  setChannels(params, settings.platforms, twitchChannel, kickChannel);
+  setChannels(params, settings.platforms, twitchChannel, kickChannel, youtubeChannel, token);
   writePreset(params, settings.preset);
   if (!settings.sevenTv) params.append('sevenTv', 'false');
   if (!settings.bttv) params.append('bttv', 'false');
@@ -173,6 +179,8 @@ export interface ParsedWidgetUrl {
   settings: Settings;
   twitchChannel: string;
   kickChannel: string;
+  youtubeChannel?: string;
+  token?: string;
 }
 
 // Reverse of buildWidgetParams: returns null for anything that isn't a chat widget URL, and falls
@@ -181,7 +189,7 @@ export function parseWidgetUrl(text: string): ParsedWidgetUrl | null {
   const pasted = readWidgetUrl(text, '/widgets/chat-widget');
   if (!pasted) return null;
 
-  const { params, twitchChannel, kickChannel } = pasted;
+  const { params, twitchChannel, kickChannel, youtubeChannel, token } = pasted;
   const oneOf = <T extends string>(key: string, values: readonly T[], fallback: T): T => {
     const value = params.get(key);
     return values.includes(value as T) ? (value as T) : fallback;
@@ -203,13 +211,16 @@ export function parseWidgetUrl(text: string): ParsedWidgetUrl | null {
   // which buildWidgetParams only writes for 'both'. Either way the rebuilt URL stays the same.
   let platforms: Platforms = 'both';
   if (!params.has('platformDisplay')) {
-    if (twitchChannel && !kickChannel) platforms = 'twitch';
-    else if (kickChannel && !twitchChannel) platforms = 'kick';
+    if (twitchChannel && !kickChannel && !youtubeChannel) platforms = 'twitch';
+    else if (kickChannel && !twitchChannel && !youtubeChannel) platforms = 'kick';
+    else if (youtubeChannel && !twitchChannel && !kickChannel) platforms = 'youtube';
   }
 
   return {
     twitchChannel,
     kickChannel,
+    youtubeChannel,
+    token,
     settings: {
       platforms,
       preset,
