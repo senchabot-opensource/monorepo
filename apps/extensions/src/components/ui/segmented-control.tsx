@@ -33,19 +33,21 @@ export function SegmentedControl<T extends string>({
       {options.map((option) => (
         <label
           key={option.value}
-          className={`flex min-w-0 flex-1 items-center justify-center truncate rounded px-2 text-xs font-medium text-zinc-500 transition-colors has-checked:bg-white has-checked:text-zinc-900 has-checked:shadow-sm has-focus-visible:ring-2 has-focus-visible:ring-green-500 dark:text-zinc-400 dark:has-checked:bg-zinc-600 dark:has-checked:text-white ${
+          className={`relative flex min-w-0 flex-1 items-center justify-center truncate rounded px-2 text-xs font-medium text-zinc-500 transition-colors has-checked:bg-white has-checked:text-zinc-900 has-checked:shadow-sm has-focus-visible:ring-2 has-focus-visible:ring-green-500 dark:text-zinc-400 dark:has-checked:bg-zinc-600 dark:has-checked:text-white ${
             disabled
               ? 'cursor-not-allowed'
               : 'cursor-pointer hover:text-zinc-900 dark:hover:text-zinc-100'
           }`}
         >
+          {/* Stretched over the label instead of sr-only: focusing a clipped
+              1px input makes the browser scroll the page trying to reveal it. */}
           <input
             type="radio"
             name={name}
             value={option.value}
             checked={option.value === value}
             onChange={() => onChange(option.value)}
-            className="sr-only"
+            className="absolute inset-0 h-full w-full cursor-[inherit] opacity-0"
           />
           {option.label}
         </label>
