@@ -28,6 +28,8 @@ export function ColorSwatches<T extends string>({
           title={option.label}
           className="relative flex size-8 cursor-pointer items-center justify-center rounded-full ring-offset-2 ring-offset-white has-checked:ring-2 has-checked:ring-zinc-900 has-focus-visible:ring-2 has-focus-visible:ring-green-500 dark:ring-offset-zinc-900 dark:has-checked:ring-white"
         >
+          {/* Stretched over the label instead of sr-only: focusing a clipped
+              1px input makes the browser scroll the page trying to reveal it. */}
           <input
             type="radio"
             name={name}
@@ -35,7 +37,7 @@ export function ColorSwatches<T extends string>({
             checked={value === option.value}
             onChange={() => onChange(option.value)}
             aria-label={option.label}
-            className="sr-only"
+            className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
           />
           <span
             aria-hidden="true"

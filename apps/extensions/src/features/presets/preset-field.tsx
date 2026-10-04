@@ -53,15 +53,17 @@ export function PresetField({
         {OPTIONS.map((option) => (
           <label
             key={option.id}
-            className="cursor-pointer rounded-lg border border-zinc-200 bg-white p-1.5 transition-colors hover:border-zinc-300 has-checked:border-transparent has-checked:ring-2 has-checked:ring-green-500 has-focus-visible:ring-2 has-focus-visible:ring-green-500 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700"
+            className="relative cursor-pointer rounded-lg border border-zinc-200 bg-white p-1.5 transition-colors hover:border-zinc-300 has-checked:border-transparent has-checked:ring-2 has-checked:ring-green-500 has-focus-visible:ring-2 has-focus-visible:ring-green-500 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700"
           >
+            {/* Stretched over the label instead of sr-only: focusing a clipped
+                1px input makes the browser scroll the page trying to reveal it. */}
             <input
               type="radio"
               name={id}
               value={option.id}
               checked={value === option.id}
               onChange={() => onChange(option.id)}
-              className="sr-only"
+              className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
             />
             <PresetSwatch preset={option.data} />
             <span className="mt-1.5 block truncate px-0.5 text-xs font-semibold text-zinc-900 dark:text-white">
