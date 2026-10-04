@@ -38,6 +38,7 @@ import {
   COUNTDOWN_ENDINGS,
   COUNTDOWN_LOOKS,
   COUNTDOWN_SCENES,
+  COUNTDOWN_SOUNDS,
   COUNTDOWN_ZOOMS,
   type CountdownSettings,
   type CountdownZoom,
@@ -329,6 +330,32 @@ function CountdownSetup() {
             {settings.doneHold === 0 && <p className={HINT_CLASS}>{t('countdown.doneHoldOff')}</p>}
           </div>
         )}
+
+        <div>
+          <FieldLabel id={`${id}-sound`} tip={t('countdown.soundTip')}>
+            {t('countdown.sound')}
+          </FieldLabel>
+          <div className="flex gap-1.5">
+            <div className="min-w-0 flex-1">
+              <Select
+                labelledBy={`${id}-sound`}
+                value={settings.sound}
+                onChange={(value) => update('sound', value)}
+                options={COUNTDOWN_SOUNDS.map((sound) => ({
+                  value: sound,
+                  label: t(`countdown.sounds.${sound}`),
+                }))}
+              />
+            </div>
+            <button
+              type="button"
+              onClick={() => send({ type: 'sound' })}
+              className={`${BUTTON_TEST} shrink-0 self-center`}
+            >
+              {t('countdown.testSound')}
+            </button>
+          </div>
+        </div>
       </SettingsGroup>
 
       <SettingsGroup title={t('common.sectionChannel')}>
@@ -451,7 +478,12 @@ function CountdownSetup() {
       previewTip={t('countdown.previewHint')}
       previewAspect={16 / 9}
       preview={
-        <PreviewFrame src={previewUrl} title={t('countdown.previewIframeTitle')} canvas={CANVAS} />
+        <PreviewFrame
+          src={previewUrl}
+          title={t('countdown.previewIframeTitle')}
+          canvas={CANVAS}
+          allow="autoplay"
+        />
       }
       previewFooter={
         <TestButtons title={t('countdown.testTitle')} layout="two-four" buttons={testButtons} />

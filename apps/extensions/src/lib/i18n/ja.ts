@@ -998,6 +998,16 @@ export const ja: typeof en = {
     showBarTip: '時計の下に、残り時間とともに減っていくバーを表示します。',
     motion: 'アニメーション',
     motionTip: '最後の1分間、時計が脈打つように動きます。オフにするとすべて静止します。',
+    sound: 'サウンド',
+    sounds: {
+      chime: 'チャイム',
+      bell: 'ベル',
+      digital: 'デジタル',
+      off: 'オフ',
+    },
+    soundTip:
+      '残り数秒でチクタク音、ゼロでメロディを鳴らします。デフォルトはオフ。OBSではブラウザソースの音声から再生されます。',
+    testSound: 'サウンドを試す',
     channelsTip:
       'チャットコマンドを使う場合にだけ必要です。チャンネルがなくても、カウントダウン自体は動きます。',
     sectionCommands: 'チャットコマンド',
@@ -2418,6 +2428,9 @@ export const ja: typeof en = {
     lead: 'Senchabot Extensionsの新機能とバグ修正を、新しい順に並べています。このリストは[GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions)にあるプロジェクトのコミット履歴からまとめています。',
     site: 'サイト',
     entries: {
+      countdownSounds:
+        'Stream Countdownで残り数秒のチクタク音とゼロでのメロディを選べるようになりました。チャイム・ベル・デジタルから選択。デフォルトはオフなので、既存のオーバーレイは無音のままです。',
+      presetScrollFix: '設定ページでプリセットを選んでもページがスクロールしなくなりました。',
       chatSharedBackground:
         'チャットボックスに「チャット全体の背景」が加わりました。メッセージごとのボックスなしで読みやすくできます。',
       countdownZoom:

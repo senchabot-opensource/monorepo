@@ -1,8 +1,9 @@
-import type { CSSProperties, ReactNode } from 'react';
+import { type CSSProperties, type ReactNode, useEffect, useRef } from 'react';
 import { fillBackground, fillLayers, trackBackground } from '#/features/presets/bar';
 import { Frame, panelStyle } from '#/features/presets/frame';
 import { painter, type Skin, skinCss, skinFor } from '#/features/presets/skin';
 import { SkinProvider, useSkin } from '#/features/presets/skin-context';
+import { usePreviewReceiver } from '#/hooks/use-preview-channel';
 import {
   type CountdownScene,
   type CountdownSettings,
@@ -13,7 +14,8 @@ import { useI18n } from '#/lib/i18n';
 import { OVERLAY_FONT_FAMILY as FONT_FAMILY, hueFor } from '../overlay-style';
 import { useFitScale } from '../use-fit-scale';
 import { formatCountdown } from './countdown-clock';
-import { useCountdown } from './use-countdown';
+import { COUNTDOWN_SOUND_VOLUME, playCountdownSound, playCountdownTick } from './countdown-sound';
+import { PREVIEW_CHANNEL, type PreviewMessage, useCountdown } from './use-countdown';
 
 /** Design size; the overlay scales to fill whatever browser source size it gets. */
 const STAGE = { width: 1280, height: 720 };
@@ -55,6 +57,7 @@ export function CountdownWidget({
   const {
     left,
     progress,
+    paused,
     ended,
     doneHidden,
     cancelled,
@@ -72,6 +75,19 @@ export function CountdownWidget({
     },
     simulate,
     previewId,
+  });
+  useEndSound({
+    left,
+    paused,
+    ended,
+    cancelled,
+    sound: settings.sound,
+    simulate,
+  });
+  // The setup page's Test sound button: the only sound the preview ever makes.
+  usePreviewReceiver<PreviewMessage>(PREVIEW_CHANNEL, previewId, !!simulate, (message) => {
+    if (message.type !== 'sound' || settings.sound === 'off') return;
+    playCountdownSound(settings.sound, COUNTDOWN_SOUND_VOLUME);
   });
   const skin = skinFor(settings.preset);
   const hue = hueFor(settings.color, 1);
@@ -156,6 +172,53 @@ export function CountdownWidget({
       </div>
     </SkinProvider>
   );
+}
+
+/** Seconds before zero that tick, so the end never comes silently. */
+const TICK_SECONDS = 5;
+
+/**
+ * Ending sounds: ticks in the last seconds and a motif at zero, synthesized at runtime.
+ * Off by default, so existing overlays stay silent. The setup preview stays silent too —
+ * it restarts on its own — and the setup page's Test sound button plays the motif instead.
+ */
+function useEndSound({
+  left,
+  paused,
+  ended,
+  cancelled,
+  sound,
+  simulate,
+}: {
+  left: number;
+  paused: boolean;
+  ended: boolean;
+  cancelled: boolean;
+  sound: CountdownSettings['sound'];
+  simulate?: boolean;
+}) {
+  const endedRef = useRef(ended);
+  const tickRef = useRef(0);
+  useEffect(() => {
+    const audible = sound !== 'off' && !simulate;
+    const wasEnded = endedRef.current;
+    endedRef.current = ended;
+    if (!audible) {
+      tickRef.current = 0;
+      return;
+    }
+    if (ended) {
+      tickRef.current = 0;
+      if (!wasEnded && !cancelled) playCountdownSound(sound, COUNTDOWN_SOUND_VOLUME);
+      return;
+    }
+    if (paused || cancelled) return;
+    const remaining = Math.ceil(left / 1000);
+    if (remaining >= 1 && remaining <= TICK_SECONDS && remaining !== tickRef.current) {
+      tickRef.current = remaining;
+      playCountdownTick(COUNTDOWN_SOUND_VOLUME);
+    }
+  }, [left, paused, ended, cancelled, sound, simulate]);
 }
 
 /** The panel everything sits in, or nothing at all with the plain look. */

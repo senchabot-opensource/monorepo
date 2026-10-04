@@ -988,6 +988,16 @@ export const de: typeof en = {
     showBarTip: 'Ein Balken unter der Uhr, der sich leert, während die Zeit abläuft.',
     motion: 'Animationen',
     motionTip: 'Die Uhr pulsiert in der letzten Minute. Schalt es aus, dann bleibt alles still.',
+    sound: 'Ton',
+    sounds: {
+      chime: 'Klang',
+      bell: 'Glocke',
+      digital: 'Digital',
+      off: 'Aus',
+    },
+    soundTip:
+      'Tickt in den letzten Sekunden und spielt bei null eine Melodie. Standardmäßig aus; in OBS kommt der Ton über das Audio der Browserquelle.',
+    testSound: 'Ton testen',
     channelsTip:
       'Nur für die Chatbefehle nötig. Ohne Kanal läuft der Countdown trotzdem von selbst.',
     sectionCommands: 'Chatbefehle',
@@ -2421,6 +2431,9 @@ export const de: typeof en = {
     lead: 'Neue Features und Bugfixes in Senchabot Extensions, das Neueste zuerst. Die Liste ist aus der Commit-Historie des Projekts auf [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) zusammengestellt.',
     site: 'Website',
     entries: {
+      countdownSounds:
+        'Der Stream-Countdown kann jetzt in den letzten Sekunden ticken und bei null eine Melodie spielen — wähl Klang, Glocke oder Digital. Standardmäßig aus, bestehende Overlays bleiben stumm.',
+      presetScrollFix: 'Die Preset-Auswahl auf einer Setup-Seite versetzt die Seite nicht mehr.',
       chatSharedBackground:
         'Die Chat-Box bekommt einen Chat-Hintergrund: ein gemeinsamer Hintergrund hinter allen Nachrichten, ganz ohne Box pro Nachricht.',
       countdownZoom:

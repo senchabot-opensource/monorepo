@@ -182,6 +182,25 @@ describe('readCountdownSettings', () => {
     );
   });
 
+  it('writes the pomodoro sound only when set, and falls back for garbage', () => {
+    expect(params(buildCountdownUrl(ORIGIN, DEFAULT_COUNTDOWN_SETTINGS, '', '', 'en'))).toEqual({
+      scene: 'starting',
+      lang: 'en',
+    });
+    const url = buildCountdownUrl(
+      ORIGIN,
+      { ...DEFAULT_COUNTDOWN_SETTINGS, sound: 'bell' },
+      '',
+      '',
+      'en',
+    );
+    expect(params(url)).toMatchObject({ sound: 'bell' });
+    expect(parseCountdownUrl(url)?.settings).toMatchObject({ sound: 'bell' });
+    expect(readCountdownSettings(new URLSearchParams('sound=loud')).sound).toBe(
+      DEFAULT_COUNTDOWN_SETTINGS.sound,
+    );
+  });
+
   it('writes the emote image only when set, and reads it back', () => {
     const url = buildCountdownUrl(
       ORIGIN,
