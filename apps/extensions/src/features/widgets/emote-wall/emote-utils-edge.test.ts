@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  bttvEmoteUrl,
   checkHype,
   createSpamState,
   filterSpam,
@@ -7,6 +8,7 @@ import {
   getEmoteOnlyUrls,
   getKickEmoteOnlyUrls,
   getSevenTvEmoteOnlyUrls,
+  getThirdPartyEmoteOnlyUrls,
   getTwitchNativeEmoteOnlyUrls,
   type HypeState,
   isSubscriberMessage,
@@ -16,10 +18,11 @@ import {
   twitchEmoteUrl,
 } from './emote-utils';
 
+// Name -> image URL, like the chat widget's merged provider map.
 const SEVEN = new Map([
-  ['PEPE', 's1'],
-  ['KEKW', 's2'],
-  ['RainTime', 's3'],
+  ['PEPE', sevenTvEmoteUrl('s1')],
+  ['KEKW', sevenTvEmoteUrl('s2')],
+  ['RainTime', sevenTvEmoteUrl('s3')],
 ]);
 
 describe('emote-only detection', () => {
@@ -103,6 +106,18 @@ describe('emote-only detection', () => {
     ]);
   });
 
+  it('mixes BTTV and FFZ emotes with native ones in message order', () => {
+    const map = new Map([
+      [':tf:', bttvEmoteUrl('b1')],
+      ['ZrehplaR', 'https://cdn.frankerfacez.com/emote/9/2'],
+    ]);
+    expect(getEmoteOnlyUrls({ message: ':tf: ZrehplaR', platform: 'twitch' }, map)).toEqual([
+      bttvEmoteUrl('b1'),
+      'https://cdn.frankerfacez.com/emote/9/2',
+    ]);
+    expect(getThirdPartyEmoteOnlyUrls(':tf: nope', map)).toBeNull();
+  });
+
   it('is not fooled by text shaped like a Kick emote on Twitch', () => {
     expect(getEmoteOnlyUrls({ message: '[emote:1:a]', platform: 'twitch' }, SEVEN)).toEqual([]);
   });
@@ -114,7 +129,7 @@ describe('emote-only detection', () => {
   });
 
   it('skips a 7TV emote whose name is also the Twitch native emote there', () => {
-    const map = new Map([['Kappa', 'sevenKappa']]);
+    const map = new Map([['Kappa', sevenTvEmoteUrl('sevenKappa')]]);
     expect(
       getAnyEmoteUrls({ message: 'hi Kappa', platform: 'twitch', emotes: '25:3-7' }, map),
     ).toEqual([twitchEmoteUrl('25')]);

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { ChannelEmote } from '#/features/widgets/countdown/countdown-emotes';
 import {
+  bttvEmoteUrl,
   channelSubEmoteKeys,
   checkHype,
   createSpamState,
@@ -9,6 +10,7 @@ import {
   getEmoteOnlyUrls,
   getKickEmoteOnlyUrls,
   getSevenTvEmoteOnlyUrls,
+  getThirdPartyEmoteOnlyUrls,
   getTwitchNativeEmoteOnlyUrls,
   isSubscriberMessage,
   kickEmoteUrl,
@@ -117,28 +119,44 @@ describe('getTwitchNativeEmoteOnlyUrls', () => {
   });
 });
 
-describe('getSevenTvEmoteOnlyUrls', () => {
+describe('getThirdPartyEmoteOnlyUrls', () => {
   const map = new Map([
-    ['PEPE', 'abc123'],
-    ['DANCE', 'def456'],
+    ['PEPE', sevenTvEmoteUrl('abc123')],
+    ['DANCE', sevenTvEmoteUrl('def456')],
+    [':tf:', bttvEmoteUrl('bttv1')],
+    ['ZrehplaR', 'https://cdn.frankerfacez.com/emote/9/2'],
   ]);
 
-  it('detects single 7tv emote', () => {
-    expect(getSevenTvEmoteOnlyUrls('PEPE', map)).toEqual([
+  it('detects a single emote', () => {
+    expect(getThirdPartyEmoteOnlyUrls('PEPE', map)).toEqual([
       'https://cdn.7tv.app/emote/abc123/4x.webp',
     ]);
   });
 
-  it('detects multiple 7tv emotes', () => {
-    expect(getSevenTvEmoteOnlyUrls('PEPE DANCE', map)).toHaveLength(2);
+  it('detects multiple emotes', () => {
+    expect(getThirdPartyEmoteOnlyUrls('PEPE DANCE', map)).toHaveLength(2);
+  });
+
+  it('detects BTTV and FFZ emotes too', () => {
+    expect(getThirdPartyEmoteOnlyUrls(':tf:', map)).toEqual([bttvEmoteUrl('bttv1')]);
+    expect(getThirdPartyEmoteOnlyUrls('ZrehplaR :tf:', map)).toEqual([
+      'https://cdn.frankerfacez.com/emote/9/2',
+      bttvEmoteUrl('bttv1'),
+    ]);
   });
 
   it('rejects unknown words', () => {
-    expect(getSevenTvEmoteOnlyUrls('PEPE hello', map)).toBeNull();
+    expect(getThirdPartyEmoteOnlyUrls('PEPE hello', map)).toBeNull();
   });
 
   it('requires exact word match', () => {
-    expect(getSevenTvEmoteOnlyUrls('PEPE!', map)).toBeNull();
+    expect(getThirdPartyEmoteOnlyUrls('PEPE!', map)).toBeNull();
+  });
+
+  it('keeps the 7TV-only name working', () => {
+    expect(getSevenTvEmoteOnlyUrls('PEPE', map)).toEqual([
+      'https://cdn.7tv.app/emote/abc123/4x.webp',
+    ]);
   });
 });
 
@@ -162,10 +180,23 @@ describe('getEmoteOnlyUrls', () => {
   });
 
   it('falls back to 7tv for twitch', () => {
-    const map = new Map([['PEPE', '1']]);
+    const map = new Map([['PEPE', sevenTvEmoteUrl('1')]]);
     expect(
       getEmoteOnlyUrls({ message: 'PEPE', platform: 'twitch' }, map),
     ).toHaveLength(1);
+  });
+
+  it('falls back to bttv and ffz for twitch', () => {
+    const map = new Map([
+      [':tf:', bttvEmoteUrl('b1')],
+      ['ZrehplaR', 'https://cdn.frankerfacez.com/emote/9/2'],
+    ]);
+    expect(getEmoteOnlyUrls({ message: ':tf:', platform: 'twitch' }, map)).toEqual([
+      bttvEmoteUrl('b1'),
+    ]);
+    expect(
+      getEmoteOnlyUrls({ message: 'ZrehplaR :tf:', platform: 'twitch' }, map),
+    ).toEqual(['https://cdn.frankerfacez.com/emote/9/2', bttvEmoteUrl('b1')]);
   });
 
   it('returns empty for normal chat', () => {
@@ -175,13 +206,13 @@ describe('getEmoteOnlyUrls', () => {
     expect(
       getEmoteOnlyUrls(
         { message: 'hello world', platform: 'kick' },
-        new Map([['PEPE', '1']]),
+        new Map([['PEPE', sevenTvEmoteUrl('1')]]),
       ),
     ).toEqual([]);
   });
 
   it('handles mixed twitch native + 7tv', () => {
-    const map = new Map([['PEPE', 'seven1']]);
+    const map = new Map([['PEPE', sevenTvEmoteUrl('seven1')]]);
     // "Kappa PEPE": Kappa 0-4, space at 5, PEPE 6-9
     const urls = getEmoteOnlyUrls(
       { message: 'Kappa PEPE', platform: 'twitch', emotes: '25:0-4' },
@@ -190,8 +221,18 @@ describe('getEmoteOnlyUrls', () => {
     expect(urls).toHaveLength(2);
   });
 
+  it('handles mixed twitch native + bttv', () => {
+    const map = new Map([[':tf:', bttvEmoteUrl('b1')]]);
+    expect(
+      getEmoteOnlyUrls(
+        { message: 'Kappa :tf:', platform: 'twitch', emotes: '25:0-4' },
+        map,
+      ),
+    ).toEqual([twitchEmoteUrl('25'), bttvEmoteUrl('b1')]);
+  });
+
   it('rejects mixed emote + normal text', () => {
-    const map = new Map([['PEPE', 'seven1']]);
+    const map = new Map([['PEPE', sevenTvEmoteUrl('seven1')]]);
     expect(
       getEmoteOnlyUrls(
         { message: 'Kappa hello', platform: 'twitch', emotes: '25:0-4' },
@@ -268,14 +309,24 @@ describe('getAnyEmoteUrls', () => {
   });
 
   it('extracts 7tv emotes mixed with text', () => {
-    const map = new Map([['PEPE', 'abc123']]);
+    const map = new Map([['PEPE', sevenTvEmoteUrl('abc123')]]);
     expect(
       getAnyEmoteUrls({ message: 'hello PEPE lol', platform: 'twitch' }, map),
     ).toEqual(['https://cdn.7tv.app/emote/abc123/4x.webp']);
   });
 
+  it('extracts bttv and ffz emotes mixed with text', () => {
+    const map = new Map([
+      [':tf:', bttvEmoteUrl('b1')],
+      ['ZrehplaR', 'https://cdn.frankerfacez.com/emote/9/2'],
+    ]);
+    expect(
+      getAnyEmoteUrls({ message: 'hello :tf: and ZrehplaR', platform: 'twitch' }, map),
+    ).toEqual([bttvEmoteUrl('b1'), 'https://cdn.frankerfacez.com/emote/9/2']);
+  });
+
   it('extracts mixed native + 7tv from text messages', () => {
-    const map = new Map([['PEPE', 'seven1']]);
+    const map = new Map([['PEPE', sevenTvEmoteUrl('seven1')]]);
     const urls = getAnyEmoteUrls(
       { message: 'hi Kappa and PEPE bye', platform: 'twitch', emotes: '25:3-7' },
       map,
@@ -290,7 +341,7 @@ describe('getAnyEmoteUrls', () => {
     expect(
       getAnyEmoteUrls(
         { message: 'just chatting', platform: 'kick' },
-        new Map([['PEPE', '1']]),
+        new Map([['PEPE', sevenTvEmoteUrl('1')]]),
       ),
     ).toEqual([]);
     expect(getAnyEmoteUrls({ message: '   ', platform: 'kick' }, null)).toEqual(

@@ -2,12 +2,29 @@ import { act, render } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ChannelEmote } from '#/features/widgets/countdown/countdown-emotes';
 import { FakeWebSocket } from '#/test/browser';
-import { kickEmoteUrl, sevenTvEmoteUrl, twitchEmoteUrl } from './emote-utils';
+import { bttvEmoteUrl, kickEmoteUrl, sevenTvEmoteUrl, twitchEmoteUrl } from './emote-utils';
 import { EmoteWall } from './emote-wall';
 
-const sevenTv = vi.hoisted(() => ({ map: new Map<string, string>() }));
-vi.mock('#/features/widgets/chat-widget/use-7tv-emotes', () => ({
-  use7tvEmotes: (channel: string | null) => (channel ? sevenTv.map : new Map()),
+// Name -> image URL per platform, like the chat widget's merged provider map.
+// lastProviders records what the wall asked for, so the toggle wiring is testable.
+const channelEmotes = vi.hoisted(() => ({
+  twitch: new Map<string, string>(),
+  kick: new Map<string, string>(),
+  lastProviders: null as null | { sevenTv: boolean; bttv: boolean; ffz: boolean },
+}));
+vi.mock('#/features/widgets/chat-widget/use-channel-emotes', () => ({
+  useChannelEmotes: (
+    _twitch: unknown,
+    _kickUserId: unknown,
+    providers: { sevenTv: boolean; bttv: boolean; ffz: boolean },
+  ) => {
+    channelEmotes.lastProviders = providers;
+    return {
+      twitch: channelEmotes.twitch,
+      kick: channelEmotes.kick,
+      youtube: new Map<string, string>(),
+    };
+  },
 }));
 
 const channelEmotesLoad = vi.hoisted(() => ({
@@ -53,7 +70,9 @@ beforeEach(() => {
   vi.useFakeTimers();
   vi.spyOn(console, 'log').mockImplementation(() => {});
   vi.spyOn(console, 'debug').mockImplementation(() => {});
-  sevenTv.map = new Map();
+  channelEmotes.twitch = new Map();
+  channelEmotes.kick = new Map();
+  channelEmotes.lastProviders = null;
 });
 
 afterEach(() => {
@@ -149,16 +168,50 @@ describe('EmoteWall', () => {
     expect(images()).toEqual([kickEmoteUrl('37226'), kickEmoteUrl('39261')]);
   });
 
-  it("uses the Twitch channel's 7TV emotes in Kick chat too", () => {
-    sevenTv.map = new Map([['PEPE', 's1']]);
+  it("uses Kick's third-party emotes in Kick chat", () => {
+    channelEmotes.kick = new Map([['PEPE', sevenTvEmoteUrl('s1')]]);
     render(<EmoteWall twitchChannel="streamer" kickChatroomId="42" />);
     act(() => socket('pusher').open());
     kickSay('fan', 'PEPE [emote:1:x]');
     expect(images()).toEqual([sevenTvEmoteUrl('s1'), kickEmoteUrl('1')]);
   });
 
+  it('shows BTTV and FFZ emote-only rows on Twitch', () => {
+    channelEmotes.twitch = new Map([
+      [':tf:', bttvEmoteUrl('b1')],
+      ['ZrehplaR', 'https://cdn.frankerfacez.com/emote/9/2'],
+    ]);
+    mount({ bttvEnabled: true, ffzEnabled: true });
+    say('Alice', ':tf:');
+    say('Bob', 'ZrehplaR ZrehplaR');
+    say('Carol', 'Kappa :tf:', '25:0-4');
+    expect(images()).toEqual([
+      bttvEmoteUrl('b1'),
+      'https://cdn.frankerfacez.com/emote/9/2',
+      'https://cdn.frankerfacez.com/emote/9/2',
+      twitchEmoteUrl('25'),
+      bttvEmoteUrl('b1'),
+    ]);
+  });
+
+  it('shows BTTV emotes in Kick chat from the Kick map', () => {
+    channelEmotes.kick = new Map([[':tf:', bttvEmoteUrl('b1')]]);
+    render(<EmoteWall kickChatroomId="42" bttvEnabled />);
+    act(() => socket('pusher').open());
+    kickSay('fan', ':tf:');
+    expect(images()).toEqual([bttvEmoteUrl('b1')]);
+  });
+
+  it('asks the channel emote hook for exactly the ticked providers', () => {
+    const { unmount } = mount();
+    expect(channelEmotes.lastProviders).toEqual({ sevenTv: true, bttv: false, ffz: false });
+    unmount();
+    mount({ sevenTvEnabled: false, bttvEnabled: true, ffzEnabled: true });
+    expect(channelEmotes.lastProviders).toEqual({ sevenTv: false, bttv: true, ffz: true });
+  });
+
   it("doesn't take a 7TV row that ends in text as emote-only", () => {
-    sevenTv.map = new Map([['KEKW', 's2']]);
+    channelEmotes.twitch = new Map([['KEKW', sevenTvEmoteUrl('s2')]]);
     mount();
     say('Alice', 'KEKW KEKW KEKW KEKW KEKW KEKW that was funny');
     expect(images()).toEqual([]);
@@ -228,7 +281,7 @@ describe('EmoteWall', () => {
       { name: 'KickSub', url: kickEmoteUrl('999'), thumb: kickEmoteUrl('999'), platform: 'kick', provider: 'Kick', subOnly: true },
       { name: 'KickFree', url: kickEmoteUrl('1000'), thumb: kickEmoteUrl('1000'), platform: 'kick', provider: 'Kick', subOnly: false },
     ]);
-    sevenTv.map = new Map([['KEKW', 's2']]);
+    channelEmotes.twitch = new Map([['KEKW', sevenTvEmoteUrl('s2')]]);
     mount({ subEmotes: true });
     await act(async () => {});
     say('Alice', 'Kappa', '25:0-4');

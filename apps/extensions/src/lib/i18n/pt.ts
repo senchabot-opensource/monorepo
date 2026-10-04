@@ -1468,9 +1468,10 @@ export const pt: typeof en = {
       'Mensagens feitas só de emotes (da Twitch, da Kick e os emotes da 7TV do seu canal da Twitch) aparecem como emotes na tela. Mensagens de texto normais são ignoradas por padrão, e Mostrar todos os emotes puxa os emotes delas também. Calmo faz os emotes surgirem em pontos aleatórios, flutuarem e sumirem, Caos faz eles voarem de uma borda pela tela, Quicar faz eles quicarem nas bordas da tela, Deslize faz eles descerem deslizando do topo da tela balançando para os lados, Giro faz eles aparecerem, girarem uma ou duas voltas no lugar e sumirem, e Explosão faz eles explodirem em fragmentos e faíscas antes do fim do tempo, e Aleatório mistura as seis animações.',
     sectionAnimation: 'Animação',
     sectionFilters: 'Filtros',
-    sevenTvEmotes: 'Emotes da 7TV',
-    sevenTvTip:
-      'Mostra os emotes da 7TV do seu canal da Twitch, no chat da Kick também. Precisa do seu canal da Twitch.',
+    emotes: 'Emotes',
+    emotesTip:
+      'Os provedores marcados aparecem como imagens no mural. 7TV funciona na Twitch e na Kick, BTTV e FFZ só na Twitch. Precisa do seu canal da Twitch.',
+    emotesNone: 'Desligado',
     mode: 'Modo de animação',
     modeCalm: 'Calmo',
     modeChaos: 'Caos',
@@ -2603,6 +2604,8 @@ export const pt: typeof en = {
         'O Mural de Emotes ganha o modo Aleatório, que mistura as seis animações.',
       emoteWallSubEmotes:
         'O Mural de Emotes ganha a opção Mostrar só emotes de subs, que mostra só os emotes de inscritos dos seus canais.',
+      emoteWallBttvFfz:
+        'O Mural de Emotes pode mostrar emotes BTTV e FFZ do seu canal da Twitch. Marque-os em Emotes durante a configuração; senão, ficam desligados.',
       sproutPotLabel: 'O Sub Sprout pode mostrar um rótulo de estágio tipo 3/10 acima do vaso.',
       emoteWallLaunch:
         'Chegou o Mural de Emotes: mensagens só de emotes da Twitch e da Kick voam pela tela no modo Calmo ou Caos.',

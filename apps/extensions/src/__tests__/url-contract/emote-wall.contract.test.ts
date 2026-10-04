@@ -17,21 +17,28 @@ import {
 import json from './fixtures/emote-wall.json';
 
 const fixture = asFixture<Partial<EmoteWallUrlOptions>, EmoteWallUrlOptions>(json);
-// subEmotes postdates the frozen reference, so the golden fixture cannot
-// know it: fixture inputs never set it and behave as false.
+// subEmotes, bttv and ffz postdate the frozen reference, so the golden fixture
+// cannot know them: fixture inputs never set them and behave as false.
 const optionsOf = ({ input }: FixtureCase<Partial<EmoteWallUrlOptions>>): EmoteWallUrlOptions => ({
   ...fixture.defaults,
   ...input,
   subEmotes: input.subEmotes ?? false,
+  bttv: input.bttv ?? false,
+  ffz: input.ffz ?? false,
 });
 
 const url = (query: string) => `${fixture.origin}/widgets/emote-wall?${query}`;
 
 describe('Emote Wall setup URL', () => {
   it('keeps the setup defaults the old URLs were built from', () => {
-    // subEmotes postdates the frozen reference; the golden fixture pins the
-    // legacy defaults, and named tests cover the new param.
-    expect(DEFAULT_EMOTE_WALL_OPTIONS).toEqual({ ...fixture.defaults, subEmotes: false });
+    // subEmotes, bttv and ffz postdate the frozen reference; the golden
+    // fixture pins the legacy defaults, and named tests cover the new params.
+    expect(DEFAULT_EMOTE_WALL_OPTIONS).toEqual({
+      ...fixture.defaults,
+      subEmotes: false,
+      bttv: false,
+      ffz: false,
+    });
   });
 
   it.each(GROUPS)('builds the pre-redesign URL for every "%s" fixture', (group) => {
@@ -113,6 +120,8 @@ describe('Emote Wall widget reads every setup URL', () => {
       twitch: channel(o.twitch, o.platforms === 'kick'),
       kick: channel(o.kick, o.platforms === 'twitch'),
       sevenTv: o.sevenTv,
+      bttv: o.bttv,
+      ffz: o.ffz,
       mode: o.mode,
       subsOnly: o.subsOnly,
       subDurationX2: o.subDurationX2,

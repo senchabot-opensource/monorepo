@@ -1443,12 +1443,13 @@ export const tr: typeof en = {
     breadcrumb: 'Emote Duvarı Kurulumu',
     title: 'Emote Duvarı Kurulumu',
     intro:
-      "Sadece emote'tan oluşan mesajlar (Twitch, Kick ve Twitch kanalının 7TV emote'ları) ekranda emote olarak belirir. Normal yazılı mesajlar varsayılan olarak atlanır, Tüm Emote'ları Göster açıksa onların içindeki emote'lar da çıkar. Sakin modda emote'lar rastgele bir noktada belirip süzülür ve kaybolur, Kaos modunda ekranın kenarından girip karşıya fırlar, Sekme modunda ekranın kenarlarından seker, Süzülme modunda iki yana sallanarak ekranın üstünden aşağı süzülür, Dönme modunda belirip kendi etrafında bir iki tur dönerek kaybolur, Patlama modunda emote'lar süreleri dolmadan patlayıp parçalara ayrılır, Rastgele modunda her emote'a altı moddan biri gelir.",
+      "Sadece emote'tan oluşan mesajlar (Twitch, Kick ve Twitch kanalının 7TV, BTTV ve FFZ emote'ları) ekranda emote olarak belirir. Normal yazılı mesajlar varsayılan olarak atlanır, Tüm Emote'ları Göster açıksa onların içindeki emote'lar da çıkar. Sakin modda emote'lar rastgele bir noktada belirip süzülür ve kaybolur, Kaos modunda ekranın kenarından girip karşıya fırlar, Sekme modunda ekranın kenarlarından seker, Süzülme modunda iki yana sallanarak ekranın üstünden aşağı süzülür, Dönme modunda belirip kendi etrafında bir iki tur dönerek kaybolur, Patlama modunda emote'lar süreleri dolmadan patlayıp parçalara ayrılır, Rastgele modunda her emote'a altı moddan biri gelir.",
     sectionAnimation: 'Animasyon',
     sectionFilters: 'Filtreler',
-    sevenTvEmotes: "7TV Emote'ları",
-    sevenTvTip:
-      "Twitch kanalındaki 7TV emote'larını gösterir, Kick sohbetinde de. Bunun için Twitch kanalını girmen gerekir.",
+    emotes: "Emote'lar",
+    emotesTip:
+      "İşaretli sağlayıcılar duvarda resim olarak çıkar. 7TV Twitch ve Kick'te, BTTV ve FFZ yalnızca Twitch'te çalışır. Twitch kanalın gerekli.",
+    emotesNone: 'Kapalı',
     mode: 'Animasyon Modu',
     modeCalm: 'Sakin',
     modeChaos: 'Kaos',
@@ -1482,7 +1483,7 @@ export const tr: typeof en = {
       "Biri 10 saniyede 3'ten fazla emote mesajı atarsa fazlası atlanır. Aynı emote'u 10 saniyede 2'den fazla atarsa sadece o emote atlanır. Önizlemeye yansımaz.",
     subEmotes: "Sadece Abone Emote'ları Göster",
     subEmotesTip:
-      "Sadece kanallarının abone emote'ları göster. Global, 7TV ve diğer emote'lar atlanır. Önizlemeye yansımaz.",
+      "Sadece kanallarının abone emote'ları göster. Global, 7TV, BTTV ve FFZ emote'lar atlanır. Önizlemeye yansımaz.",
     previewTitle: 'Emote Duvarı Önizleme',
     previewIframeTitle: 'Emote Duvarı Önizleme',
     previewHint: "Önizlemede örnek emote'lar uçuşur. Yayında emote'lar kendi sohbetinden gelir.",
@@ -1499,7 +1500,7 @@ export const tr: typeof en = {
     browserSourceHintSize: ' (önerilen boyut: 1920×1080 tam tuval).',
     faq1Q: 'Hangi mesajlar yüzen emote tetikler?',
     faq1A:
-      "Sadece emote'tan oluşan mesajlar: tek bir Kappa, arka arkaya emote'lar ya da Twitch, Kick ve 7TV emote'larının karışımı. Normal yazı mesajları, Tüm Emote'ları Göster açık değilse yok sayılır.",
+      "Sadece emote'tan oluşan mesajlar: tek bir Kappa, arka arkaya emote'lar ya da Twitch, Kick, 7TV, BTTV ve FFZ emote'larının karışımı. Normal yazı mesajları, Tüm Emote'ları Göster açık değilse yok sayılır.",
     faq2Q: 'Emote duvarını kullanmak için giriş yapmam gerekiyor mu?',
     faq2A:
       'Giriş gerekmez. Emote Duvarı, her iki platformun herkese açık sohbet akışlarını anonim olarak dinler.',
@@ -2564,6 +2565,8 @@ export const tr: typeof en = {
         "Emote Duvarı'na altı animasyonu karıştıran Rastgele modu eklendi.",
       emoteWallSubEmotes:
         "Emote Duvarı'na sadece kanallarının abone emote'larını gösteren Sadece Abone Emote'ları Göster seçeneği eklendi.",
+      emoteWallBttvFfz:
+        "Emote Duvarı Twitch kanalındaki BTTV ve FFZ emote'larını gösterebiliyor. Kurulumda Emote'lar başlığından işaretle; işaretlemedikçe kapalı kalırlar.",
       sproutPotLabel: 'Sub Sprout saksının üstünde 3/10 gibi bir aşama etiketi gösterebiliyor.',
       emoteWallLaunch:
         "Emote Duvarı geldi: sadece emote'tan oluşan Twitch ve Kick mesajları Sakin ya da Kaos modunda ekranda uçuşuyor.",

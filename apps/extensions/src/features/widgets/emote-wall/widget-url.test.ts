@@ -14,6 +14,8 @@ const defaults: EmoteWallUrlOptions = {
   kick: '',
   platforms: 'both',
   sevenTv: true,
+  bttv: false,
+  ffz: false,
   mode: 'calm',
   subsOnly: false,
   subDurationX2: false,
@@ -62,11 +64,20 @@ describe('buildEmoteWallUrl', () => {
     expect(high.get('max')).toBe('120');
   });
 
+  it('writes bttv and ffz only when they are on, sevenTv only when it is off', () => {
+    expect(new URL(url({})).searchParams.has('bttv')).toBe(false);
+    expect(new URL(url({})).searchParams.has('ffz')).toBe(false);
+    expect(new URL(url({ bttv: true })).searchParams.get('bttv')).toBe('true');
+    expect(new URL(url({ ffz: true })).searchParams.get('ffz')).toBe('true');
+  });
+
   it('keeps the existing param contract for non-default values', () => {
     expect(
       url({
         kick: ' SomeKick ',
         sevenTv: false,
+        bttv: true,
+        ffz: true,
         mode: 'bounce',
         subsOnly: true,
         subDurationX2: true,
@@ -79,7 +90,7 @@ describe('buildEmoteWallUrl', () => {
         max: '40',
       }),
     ).toBe(
-      `${ORIGIN}/widgets/emote-wall?twitch=sencha&kick=somekick&sevenTv=false&mode=bounce` +
+      `${ORIGIN}/widgets/emote-wall?twitch=sencha&kick=somekick&sevenTv=false&bttv=true&ffz=true&mode=bounce` +
         '&subsOnly=true&subDurationX2=true&showAllEmotes=true&hypeMode=true&spamBlock=false' +
         '&subEmotes=true&size=160&duration=12&max=40',
     );
@@ -157,6 +168,8 @@ describe('parseEmoteWallUrl', () => {
       kick: 'bar',
       platforms: 'both',
       sevenTv: false,
+      bttv: true,
+      ffz: true,
       mode: 'chaos',
       subsOnly: true,
       subDurationX2: true,
@@ -175,6 +188,8 @@ describe('parseEmoteWallUrl', () => {
     const flagsOf = (query: string) => parseEmoteWallUrl(`${ORIGIN}/widgets/emote-wall?${query}`);
     expect(flagsOf('sevenTv=0&spamBlock=')).toMatchObject({ sevenTv: false, spamBlock: false });
     expect(flagsOf('subsOnly=1&hypeMode=yes')).toMatchObject({ subsOnly: true, hypeMode: true });
+    expect(flagsOf('bttv=1&ffz=yes')).toMatchObject({ bttv: true, ffz: true });
+    expect(flagsOf('bttv=0&ffz=')).toMatchObject({ bttv: false, ffz: false });
   });
 
   it('falls back to defaults or clamps values the widget would not accept', () => {
@@ -195,6 +210,7 @@ describe('parseEmoteWallUrl', () => {
     const urls = [
       `${ORIGIN}/widgets/emote-wall?twitch=foo`,
       `${ORIGIN}/widgets/emote-wall?kick=bar&sevenTv=false&mode=bounce`,
+      `${ORIGIN}/widgets/emote-wall?twitch=foo&bttv=true&ffz=true`,
       `${ORIGIN}/widgets/emote-wall?twitch=foo&kick=bar&subsOnly=true&subDurationX2=true&size=160`,
       `${ORIGIN}/widgets/emote-wall?twitch=foo&showAllEmotes=true&hypeMode=true&spamBlock=false`,
       `${ORIGIN}/widgets/emote-wall?kick=bar&mode=chaos&duration=12&max=40`,

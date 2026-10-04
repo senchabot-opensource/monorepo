@@ -17,7 +17,7 @@ const emotes = () => document.querySelectorAll('img');
 
 describe('/widgets/emote-wall', () => {
   it.each([
-    'mock=true&size=abc&duration=-5&max=1e9&mode=zoom&sevenTv=nope',
+    'mock=true&size=abc&duration=-5&max=1e9&mode=zoom&sevenTv=nope&bttv=nope&ffz=nope',
     'mock=true&size=&duration=&max=&mode=&subsOnly=&hypeMode=null&spamBlock=0',
     'mock=true&size=[1]&duration={}&max=%22x%22&mode=123&twitch=',
     'mock=1&size=Infinity&duration=NaN&max=-Infinity',

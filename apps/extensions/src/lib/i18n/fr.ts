@@ -1487,9 +1487,10 @@ export const fr: typeof en = {
       "Les messages faits uniquement d'emotes (Twitch, Kick et les emotes 7TV de ta chaîne Twitch) apparaissent en emotes à l'écran. Les messages texte normaux sont ignorés par défaut, et Toutes les emotes récupère aussi les emotes qu'ils contiennent. Calme les fait apparaître à des endroits au hasard où elles dérivent et s'effacent, Chaos les fait traverser l'écran depuis un bord, Rebond les fait rebondir sur les bords de l'écran, Glissade les fait descendre en glissant depuis le haut de l'écran en se balançant, Rotation les fait apparaître, tourner une ou deux fois sur place, puis disparaître, et Explosion les fait éclater en fragments et étincelles avant la fin, et Aléatoire mélange les six animations.",
     sectionAnimation: 'Animation',
     sectionFilters: 'Filtres',
-    sevenTvEmotes: 'Emotes 7TV',
-    sevenTvTip:
-      'Affiche les emotes 7TV de ta chaîne Twitch, dans le chat Kick aussi. Nécessite ta chaîne Twitch.',
+    emotes: 'Emotes',
+    emotesTip:
+      "Les fournisseurs cochés s'affichent en images sur le mur. 7TV marche sur Twitch et Kick, BTTV et FFZ seulement sur Twitch. Nécessite ta chaîne Twitch.",
+    emotesNone: 'Désactivées',
     mode: "Mode d'animation",
     modeCalm: 'Calme',
     modeChaos: 'Chaos',
@@ -2627,6 +2628,8 @@ export const fr: typeof en = {
         "Le Mur d'emotes a un mode Aléatoire qui mélange les six animations.",
       emoteWallSubEmotes:
         "Le Mur d'emotes a une option Afficher uniquement les emotes de subs qui ne montre que les emotes d'abonnés de tes chaînes.",
+      emoteWallBttvFfz:
+        "Le Mur d'emotes peut afficher les emotes BTTV et FFZ de ta chaîne Twitch. Coche-les sous Emotes pendant la configuration, sinon elles restent désactivées.",
       sproutPotLabel:
         'Sub Sprout peut afficher une étiquette de stade comme 3/10 au-dessus du pot.',
       emoteWallLaunch:

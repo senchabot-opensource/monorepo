@@ -1434,12 +1434,13 @@ export const en = {
     breadcrumb: 'Emote Wall Setup',
     title: 'Emote Wall Setup',
     intro:
-      "Messages made only of emotes (Twitch, Kick and your Twitch channel's 7TV emotes) pop up as emotes on screen. Normal text messages are skipped by default, and Show All Emotes pulls the emotes out of those too. Calm pops them up at random spots to drift and fade, Chaos flies them in from an edge across the screen, Bounce bounces them off the screen edges, Glide drifts them down from the top of the screen while swaying side to side, Spin fades them in, spins them around once or twice, then fades them out in place, and Burst pops them into fragments and sparks before their time ends, and Random mixes all six animations.",
+      "Messages made only of emotes (Twitch, Kick and your Twitch channel's 7TV, BTTV and FFZ emotes) pop up as emotes on screen. Normal text messages are skipped by default, and Show All Emotes pulls the emotes out of those too. Calm pops them up at random spots to drift and fade, Chaos flies them in from an edge across the screen, Bounce bounces them off the screen edges, Glide drifts them down from the top of the screen while swaying side to side, Spin fades them in, spins them around once or twice, then fades them out in place, and Burst pops them into fragments and sparks before their time ends, and Random mixes all six animations.",
     sectionAnimation: 'Animation',
     sectionFilters: 'Filters',
-    sevenTvEmotes: '7TV Emotes',
-    sevenTvTip:
-      'Shows the 7TV emotes of your Twitch channel, in Kick chat too. Needs your Twitch channel.',
+    emotes: 'Emotes',
+    emotesTip:
+      'Ticked providers show as images on the wall. 7TV works on Twitch and Kick, BTTV and FFZ only on Twitch. Needs your Twitch channel.',
+    emotesNone: 'Off',
     mode: 'Animation Mode',
     modeCalm: 'Calm',
     modeChaos: 'Chaos',
@@ -1473,7 +1474,7 @@ export const en = {
       'If a chatter sends more than 3 emote messages in 10 seconds, the extra ones are skipped. The same emote more than twice in 10 seconds skips just that emote. The preview ignores this.',
     subEmotes: 'Show Sub Emotes Only',
     subEmotesTip:
-      "Show only your channels' subscriber emotes. Global, 7TV and other emotes are skipped. The preview ignores this.",
+      "Show only your channels' subscriber emotes. Global, 7TV, BTTV and FFZ emotes are skipped. The preview ignores this.",
     previewTitle: 'Emote Wall Preview',
     previewIframeTitle: 'Emote Wall Preview',
     previewHint: 'The preview shows sample emotes. On stream, the emotes come from your chat.',
@@ -1490,7 +1491,7 @@ export const en = {
     browserSourceHintSize: ' (recommended size: 1920×1080 full canvas).',
     faq1Q: 'Which messages trigger a floating emote?',
     faq1A:
-      'Messages made only of emotes, like a single Kappa, a row of emotes, or a mix of Twitch, Kick and 7TV emotes. Normal text messages are ignored unless Show All Emotes is on.',
+      'Messages made only of emotes, like a single Kappa, a row of emotes, or a mix of Twitch, Kick, 7TV, BTTV and FFZ emotes. Normal text messages are ignored unless Show All Emotes is on.',
     faq2Q: 'Do I need to sign in to use the emote wall?',
     faq2A:
       'No login is required. Emote Wall listens anonymously to public chat streams for both platforms.',
@@ -2577,6 +2578,8 @@ export const en = {
         'Emote Wall gets a Random mode that mixes all six animations.',
       emoteWallSubEmotes:
         "Emote Wall gets a Show Sub Emotes Only option showing only your channels' subscriber emotes.",
+      emoteWallBttvFfz:
+        'Emote Wall can show BTTV and FFZ emotes from your Twitch channel. Tick them under Emotes during setup; they stay off unless you do.',
       emoteWallBurst:
         'Emote Wall gets a Burst mode where emotes pop into fragments and sparks before their time ends.',
       sproutPotLabel: 'Sub Sprout can show a stage label like 3/10 above the pot.',

@@ -5,6 +5,7 @@ import { CopyUrlField } from '#/components/copy-url-field';
 import { PreviewFrame } from '#/components/preview-frame';
 import { SetupShell } from '#/components/setup-shell';
 import { FieldLabel } from '#/components/ui/field-label';
+import { MultiSelect, type MultiSelectOption } from '#/components/ui/multi-select';
 import { NumberField } from '#/components/ui/number-field';
 import { RangeField } from '#/components/ui/range-field';
 import { SegmentedControl, type SegmentedOption } from '#/components/ui/segmented-control';
@@ -43,6 +44,8 @@ const FAQ: FaqEntry[] = [
   ['emoteWallSetup.faq2Q', 'emoteWallSetup.faq2A'],
 ];
 
+type EmoteProvider = 'sevenTv' | 'bttv' | 'ffz';
+
 function EmoteWallSetup() {
   const { t } = useI18n();
   const [options, setOptions] = useState(DEFAULT_EMOTE_WALL_OPTIONS);
@@ -76,6 +79,22 @@ function EmoteWallSetup() {
     { value: 'random', label: t('emoteWallSetup.modeRandom') },
   ];
 
+  const emoteOptions: MultiSelectOption<EmoteProvider>[] = [
+    { value: 'sevenTv', label: '7TV', hint: 'Twitch, Kick' },
+    { value: 'bttv', label: 'BTTV', hint: 'Twitch' },
+    { value: 'ffz', label: 'FFZ', hint: 'Twitch' },
+  ];
+  const emoteValue = emoteOptions
+    .map((option) => option.value)
+    .filter((provider) => options[provider]);
+  const emotesSummary =
+    emoteValue.length > 0
+      ? emoteOptions
+          .filter((option) => emoteValue.includes(option.value))
+          .map((option) => option.label)
+          .join(', ')
+      : t('emoteWallSetup.emotesNone');
+
   const settingsPanel = (
     <>
       <SettingsGroup title={t('common.sectionChannel')}>
@@ -87,15 +106,26 @@ function EmoteWallSetup() {
           kick={options.kick}
           onKickChange={(value) => update('kick', value)}
           aside={
-            // The widget loads 7TV from the Twitch channel only, so Kick alone has none.
+            // Third-party emotes come from the Twitch channel, so Kick alone has none.
             <div className="flex items-end sm:pb-1">
               <div className="w-full">
-                <Switch
-                  label={t('emoteWallSetup.sevenTvEmotes')}
-                  tip={t('emoteWallSetup.sevenTvTip')}
-                  checked={options.sevenTv}
-                  onChange={(value) => update('sevenTv', value)}
+                <FieldLabel id={`${id}-emotes`} tip={t('emoteWallSetup.emotesTip')}>
+                  {t('emoteWallSetup.emotes')}
+                </FieldLabel>
+                <MultiSelect
+                  labelledBy={`${id}-emotes`}
                   disabled={options.platforms === 'kick'}
+                  value={emoteValue}
+                  onChange={(value) =>
+                    setOptions((current) => ({
+                      ...current,
+                      sevenTv: value.includes('sevenTv'),
+                      bttv: value.includes('bttv'),
+                      ffz: value.includes('ffz'),
+                    }))
+                  }
+                  options={emoteOptions}
+                  summary={emotesSummary}
                 />
               </div>
             </div>

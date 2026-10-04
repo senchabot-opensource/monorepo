@@ -11,9 +11,13 @@ export const twitchEmoteUrl = (id: string, size: '1.0' | '2.0' | '3.0' = '3.0') 
 export const sevenTvEmoteUrl = (id: string) =>
   `https://cdn.7tv.app/emote/${id}/4x.webp`;
 
+export const bttvEmoteUrl = (id: string) =>
+  `https://cdn.betterttv.net/emote/${id}/3x.webp`;
+
 // Twitch CDN and Kick CDN urls carry the native emote id: either numeric
-// ("25") or new-format ("emotesv2_9563d7c..."). 7TV urls (`/emote/` singular)
-// never match, so third-party emotes fall out on their own.
+// ("25") or new-format ("emotesv2_9563d7c..."). Third-party urls
+// (`cdn.7tv.app/emote/`, `cdn.betterttv.net/emote/`, `cdn.frankerfacez.com/emote/`,
+// all `/emote/` singular) never match, so third-party emotes fall out on their own.
 /** `platform:id` for a native chat emote url, or null when it has none. */
 const NATIVE_EMOTE_ID_RE = /\/(?:emoticons\/v2|emotes)\/(emotesv2_[0-9a-fA-F]+|\d+)(?:\/|$)/;
 
@@ -252,10 +256,12 @@ export function getTwitchNativeEmoteOnlyUrls(
 }
 
 /**
- * 7TV: message is emote-only when every whitespace-separated
- * token is a known emote name.
+ * Third-party (7TV/BTTV/FFZ): message is emote-only when every
+ * whitespace-separated token is a known emote name. The map holds
+ * name -> image URL, merged the chat widget's way (FFZ < BTTV < 7TV,
+ * channel over global).
  */
-export function getSevenTvEmoteOnlyUrls(
+export function getThirdPartyEmoteOnlyUrls(
   message: string,
   emoteMap: Map<string, string>,
 ): string[] | null {
@@ -265,12 +271,15 @@ export function getSevenTvEmoteOnlyUrls(
   const tokens = trimmed.split(/\s+/);
   const urls: string[] = [];
   for (const token of tokens) {
-    const id = emoteMap.get(token);
-    if (!id) return null;
-    urls.push(sevenTvEmoteUrl(id));
+    const url = emoteMap.get(token);
+    if (!url) return null;
+    urls.push(url);
   }
   return urls.length > 0 ? urls.slice(0, MAX_EMOTES_PER_MESSAGE) : null;
 }
+
+/** The 7TV-only name for the shared third-party check (BTTV/FFZ match the same way). */
+export const getSevenTvEmoteOnlyUrls = getThirdPartyEmoteOnlyUrls;
 
 export type EmoteChatInput = {
   message: string;
@@ -280,12 +289,12 @@ export type EmoteChatInput = {
 
 /**
  * Mixed check: supports messages like one native Twitch emote +
- * one 7TV emote, or Kick native + 7TV mix. Each token must be
- * either a native emote or a known 7TV emote.
+ * one third-party emote, or Kick native + third-party mix. Each token
+ * must be either a native emote or a known third-party emote.
  */
 export function getEmoteOnlyUrls(
   input: EmoteChatInput,
-  sevenTvMap?: Map<string, string> | null,
+  thirdPartyMap?: Map<string, string> | null,
 ): string[] {
   const { message, platform } = input;
   const trimmed = message.trim();
@@ -300,12 +309,12 @@ export function getEmoteOnlyUrls(
     if (twitchOnly) return twitchOnly;
   }
 
-  if (sevenTvMap && sevenTvMap.size > 0) {
-    const sevenOnly = getSevenTvEmoteOnlyUrls(message, sevenTvMap);
-    if (sevenOnly) return sevenOnly;
+  if (thirdPartyMap && thirdPartyMap.size > 0) {
+    const thirdPartyOnly = getThirdPartyEmoteOnlyUrls(message, thirdPartyMap);
+    if (thirdPartyOnly) return thirdPartyOnly;
   }
 
-  // Mixed native + 7TV token check.
+  // Mixed native + third-party token check.
   const tokens = trimmed.split(/\s+/);
   if (tokens.length <= 1) return [];
 
@@ -324,9 +333,9 @@ export function getEmoteOnlyUrls(
     const urls: string[] = [];
     const consumed = new Map<string, number>();
     for (const token of tokens) {
-      const sevenId = sevenTvMap?.get(token);
-      if (sevenId) {
-        urls.push(sevenTvEmoteUrl(sevenId));
+      const thirdPartyUrl = thirdPartyMap?.get(token);
+      if (thirdPartyUrl) {
+        urls.push(thirdPartyUrl);
         continue;
       }
       const ids = nativeTexts.get(token);
@@ -343,7 +352,7 @@ export function getEmoteOnlyUrls(
     return urls.slice(0, MAX_EMOTES_PER_MESSAGE);
   }
 
-  // Kick mixed: tokens are either [emote:id:name] or 7TV names.
+  // Kick mixed: tokens are either [emote:id:name] or third-party names.
   const urls: string[] = [];
   for (const token of tokens) {
     KICK_EMOTE_RE.lastIndex = 0;
@@ -354,9 +363,9 @@ export function getEmoteOnlyUrls(
       urls.push(kickEmoteUrl(single[1]));
       continue;
     }
-    const sevenId = sevenTvMap?.get(token);
-    if (sevenId) {
-      urls.push(sevenTvEmoteUrl(sevenId));
+    const thirdPartyUrl = thirdPartyMap?.get(token);
+    if (thirdPartyUrl) {
+      urls.push(thirdPartyUrl);
       continue;
     }
     return [];
@@ -373,7 +382,7 @@ export function getEmoteOnlyUrls(
  */
 export function getAnyEmoteUrls(
   input: EmoteChatInput,
-  sevenTvMap?: Map<string, string> | null,
+  thirdPartyMap?: Map<string, string> | null,
 ): string[] {
   const { message, platform } = input;
   const trimmed = message.trim();
@@ -397,7 +406,7 @@ export function getAnyEmoteUrls(
     }
   }
 
-  if (urls.length < MAX_EMOTES_PER_MESSAGE && sevenTvMap && sevenTvMap.size > 0) {
+  if (urls.length < MAX_EMOTES_PER_MESSAGE && thirdPartyMap && thirdPartyMap.size > 0) {
     // Skip tokens already covered by a native emote to avoid doubles.
     const nativeTexts = new Set<string>();
     if (platform === 'twitch') {
@@ -408,9 +417,9 @@ export function getAnyEmoteUrls(
     }
     for (const token of trimmed.split(/\s+/)) {
       if (nativeTexts.has(token)) continue;
-      const id = sevenTvMap.get(token);
-      if (id) {
-        urls.push(sevenTvEmoteUrl(id));
+      const url = thirdPartyMap.get(token);
+      if (url) {
+        urls.push(url);
         if (urls.length >= MAX_EMOTES_PER_MESSAGE) break;
       }
     }

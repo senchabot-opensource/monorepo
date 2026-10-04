@@ -6,7 +6,17 @@ import {
   type EmoteWallUrlOptions,
 } from '#/features/widgets/emote-wall/widget-url';
 import { withLayout } from '#/test/browser';
-import { en, retype, segment, slider, steppers, textbox, toggle } from '#/test/queries';
+import {
+  combobox,
+  en,
+  retype,
+  segment,
+  slider,
+  steppers,
+  textbox,
+  toggle,
+  toggleOptions,
+} from '#/test/queries';
 import { renderRoute, setupUser } from '#/test/render';
 
 const PAGE = '/setup/emote-wall';
@@ -16,7 +26,7 @@ const twitchField = () => textbox(en('common.twitchChannel'));
 const kickField = () => textbox(en('common.kickChannel'));
 const platforms = (option: string) => segment(en('common.platforms'), option);
 const mode = (option: string) => segment(en('emoteWallSetup.mode'), option);
-const sevenTv = () => toggle(en('emoteWallSetup.sevenTvEmotes'));
+const emotes = () => combobox(en('emoteWallSetup.emotes'));
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -58,8 +68,14 @@ describe('Emote Wall setup', () => {
     await user.click(steppers(max).minus);
     expectUrl({ max: '24' });
 
-    await user.click(sevenTv());
+    await toggleOptions(user, en('emoteWallSetup.emotes'), ['BTTV', 'FFZ']);
+    expectUrl({ bttv: true, ffz: true });
+    expect(emotes().textContent).toBe('7TV, BTTV, FFZ');
+
+    await toggleOptions(user, en('emoteWallSetup.emotes'), ['7TV']);
     expectUrl({ sevenTv: false });
+    expect(emotes().textContent).toBe('BTTV, FFZ');
+
     await user.click(toggle(en('emoteWallSetup.subsOnly')));
     expectUrl({ subsOnly: true });
     await user.click(toggle(en('emoteWallSetup.hypeMode')));
@@ -70,24 +86,24 @@ describe('Emote Wall setup', () => {
     expectUrl({ subEmotes: true });
 
     expect(urlField().value).toBe(
-      'http://localhost:3000/widgets/emote-wall?twitch=streamer&kick=kicker&sevenTv=false' +
+      'http://localhost:3000/widgets/emote-wall?twitch=streamer&kick=kicker&sevenTv=false&bttv=true&ffz=true' +
         '&mode=chaos&subsOnly=true&hypeMode=true&spamBlock=false&subEmotes=true&size=160&duration=12&max=24',
     );
   });
 
-  it('turns 7TV off for Kick alone, since 7TV comes from the Twitch channel', async () => {
+  it('turns the emote providers off for Kick alone, since they come from the Twitch channel', async () => {
     const user = setupUser();
     await renderRoute(PAGE);
     await user.type(twitchField(), 'streamer');
     await user.type(kickField(), 'kicker');
 
     await user.click(platforms('Kick'));
-    expect(sevenTv().disabled).toBe(true);
+    expect(emotes().disabled).toBe(true);
     expect(twitchField().disabled).toBe(true);
     expect(urlField().value).toBe('http://localhost:3000/widgets/emote-wall?kick=kicker');
 
     await user.click(platforms('Twitch'));
-    expect(sevenTv().disabled).toBe(false);
+    expect(emotes().disabled).toBe(false);
     expect(kickField().disabled).toBe(true);
     expect(urlField().value).toBe('http://localhost:3000/widgets/emote-wall?twitch=streamer');
   });
@@ -99,6 +115,8 @@ describe('Emote Wall setup', () => {
       ...DEFAULT_EMOTE_WALL_OPTIONS,
       kick: 'kicker',
       platforms: 'kick',
+      bttv: true,
+      ffz: true,
       mode: 'bounce',
       subDurationX2: true,
       showAllEmotes: true,
@@ -114,7 +132,8 @@ describe('Emote Wall setup', () => {
     expect(kickField().value).toBe('kicker');
     expect(twitchField().value).toBe('');
     expect(platforms('Kick').checked).toBe(true);
-    expect(sevenTv().disabled).toBe(true);
+    expect(emotes().disabled).toBe(true);
+    expect(emotes().textContent).toBe('7TV, BTTV, FFZ');
     expect(mode(en('emoteWallSetup.modeBounce')).checked).toBe(true);
     expect(slider(en('emoteWallSetup.emoteSize')).value).toBe('64');
     expect(textbox(en('emoteWallSetup.duration')).value).toBe('30');
@@ -147,12 +166,14 @@ describe('Emote Wall setup', () => {
     await renderRoute(PAGE);
     await user.type(twitchField(), 'streamer');
     await user.click(mode(en('emoteWallSetup.modeBounce')));
+    await toggleOptions(user, en('emoteWallSetup.emotes'), ['BTTV']);
     const preview = new URL(
       (screen.getByTitle(en('emoteWallSetup.previewIframeTitle')) as HTMLIFrameElement).src,
     );
     expect(preview.pathname).toBe('/widgets/emote-wall');
     expect(preview.searchParams.get('mock')).toBe('true');
     expect(preview.searchParams.get('mode')).toBe('bounce');
+    expect(preview.searchParams.get('bttv')).toBe('true');
     expect(preview.searchParams.has('twitch')).toBe(false);
   });
 
@@ -161,16 +182,16 @@ describe('Emote Wall setup', () => {
     await renderRoute(PAGE);
     await user.click(urlField());
     await user.paste(
-      'http://localhost:3000/widgets/emote-wall?twitch=streamer&size=9999&duration=0&max=abc&sevenTv=0&spamBlock=null',
+      'http://localhost:3000/widgets/emote-wall?twitch=streamer&size=9999&duration=0&max=abc&sevenTv=0&bttv=1&spamBlock=null',
     );
     await user.tab();
     expect(slider(en('emoteWallSetup.emoteSize')).value).toBe('256');
     expect(textbox(en('emoteWallSetup.duration')).value).toBe('2');
     expect(textbox(en('emoteWallSetup.maxEmotes')).value).toBe('25');
-    expect(sevenTv().getAttribute('aria-checked')).toBe('false');
+    expect(emotes().textContent).toBe('BTTV');
     expect(toggle(en('emoteWallSetup.spamBlock')).getAttribute('aria-checked')).toBe('false');
     expect(urlField().value).toBe(
-      'http://localhost:3000/widgets/emote-wall?twitch=streamer&sevenTv=false&spamBlock=false&size=256&duration=2',
+      'http://localhost:3000/widgets/emote-wall?twitch=streamer&sevenTv=false&bttv=true&spamBlock=false&size=256&duration=2',
     );
   });
 });
