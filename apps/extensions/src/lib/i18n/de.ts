@@ -1441,9 +1441,10 @@ export const de: typeof en = {
       'Nachrichten, die nur aus Emotes bestehen (Twitch, Kick und die 7TV-Emotes deines Twitch-Kanals), tauchen als Emotes auf dem Screen auf. Normale Textnachrichten werden standardmäßig übersprungen, und Alle Emotes zeigen holt die Emotes auch da raus. Ruhig lässt sie an zufälligen Stellen aufploppen, treiben und verblassen, Chaos schießt sie vom Rand quer über den Screen, Abprallen lässt sie von den Bildschirmrändern abprallen, Gleiten lässt sie seitlich pendelnd von oben nach unten über den Screen schweben, Drehung lässt sie einblenden, ein bis zwei Mal um sich selbst rotieren und wieder ausblenden, und Explosion lässt sie vor Ablauf ihrer Zeit in Fragmente und Funken zerbersten, und Zufällig mischt alle sechs Animationen.',
     sectionAnimation: 'Animation',
     sectionFilters: 'Filter',
-    sevenTvEmotes: '7TV-Emotes',
-    sevenTvTip:
-      'Zeigt die 7TV-Emotes deines Twitch-Kanals, auch im Kick-Chat. Braucht deinen Twitch-Kanal.',
+    emotes: 'Emotes',
+    emotesTip:
+      'Angekreuzte Anbieter erscheinen als Bilder an der Wand. 7TV funktioniert auf Twitch und Kick, BTTV und FFZ nur auf Twitch. Braucht deinen Twitch-Kanal.',
+    emotesNone: 'Aus',
     mode: 'Animationsmodus',
     modeCalm: 'Ruhig',
     modeChaos: 'Chaos',
@@ -2583,6 +2584,8 @@ export const de: typeof en = {
         'Die Emote-Wand bekommt einen Zufällig-Modus, der alle sechs Animationen mischt.',
       emoteWallSubEmotes:
         'Die Emote-Wand bekommt eine Nur-Sub-Emotes-zeigen-Option, die nur die Sub-Emotes deiner Kanäle zeigt.',
+      emoteWallBttvFfz:
+        'Die Emote-Wand kann BTTV- und FFZ-Emotes deines Twitch-Kanals zeigen. Beim Einrichten unter Emotes ankreuzen, sonst bleiben sie aus.',
       sproutPotLabel: 'Sub Sprout kann über dem Topf die Stufe anzeigen, z. B. 3/10.',
       emoteWallLaunch:
         'Die Emote-Wand ist da: Twitch- und Kick-Nachrichten nur aus Emotes fliegen im Modus Ruhig oder Chaos über den Screen.',

@@ -1,11 +1,12 @@
 import React from 'react';
-import { use7tvEmotes } from '#/features/widgets/chat-widget/use-7tv-emotes';
+import { useChannelEmotes } from '#/features/widgets/chat-widget/use-channel-emotes';
 import { loadChannelEmotes } from '#/features/widgets/countdown/countdown-emotes';
 import { useRetryingEffect } from '#/hooks/use-retrying-effect';
 import { KickChat } from '#/lib/kick';
 import { TwitchChat } from '#/lib/twitch';
 import type { ChatMessagesType } from '#/features/widgets/chat-widget/chat-messages';
 import {
+  bttvEmoteUrl,
   channelSubEmoteKeys,
   checkHype,
   createSpamState,
@@ -40,7 +41,10 @@ export type EmoteWallProps = {
   twitchChannel?: string | null;
   kickChannel?: string | null;
   kickChatroomId?: string | null;
+  kickUserId?: string | null;
   sevenTvEnabled?: boolean;
+  bttvEnabled?: boolean;
+  ffzEnabled?: boolean;
   emoteSize?: number;
   durationSec?: number;
   maxEmotes?: number;
@@ -54,7 +58,7 @@ export type EmoteWallProps = {
   subEmotes?: boolean;
 };
 
-const MOCK_EMOTES: { name: string; src: string; source: 'twitch' | '7tv' }[] = [
+const MOCK_EMOTES: { name: string; src: string; source: 'twitch' | '7tv' | 'bttv' | 'ffz' }[] = [
   // Verified Twitch globals (emote 88/PogChamp was removed by Twitch -> 404).
   { name: 'Kappa', src: 'https://static-cdn.jtvnw.net/emoticons/v2/25/default/dark/3.0', source: 'twitch' },
   { name: 'Keepo', src: 'https://static-cdn.jtvnw.net/emoticons/v2/1902/default/dark/3.0', source: 'twitch' },
@@ -66,6 +70,9 @@ const MOCK_EMOTES: { name: string; src: string; source: 'twitch' | '7tv' }[] = [
   { name: 'peepoHappy', src: 'https://cdn.7tv.app/emote/01GAZ199Z8000FEWHS6AT5QZV0/4x.webp', source: '7tv' },
   { name: 'FeelsDankMan', src: 'https://cdn.7tv.app/emote/01GB9W8JN80004CKF2H1TWA99H/4x.webp', source: '7tv' },
   { name: 'PartyParrot', src: 'https://cdn.7tv.app/emote/01FKSDK14G0008TM5NY9QEG0QV/4x.webp', source: '7tv' },
+  // Verified BTTV/FFZ globals (shapes trimmed from live API responses) for their previews.
+  { name: ':tf:', src: bttvEmoteUrl('54fa8f1401e468494b85b537'), source: 'bttv' },
+  { name: 'ZrehplaR', src: 'https://cdn.frankerfacez.com/emote/9/2', source: 'ffz' },
 ];
 
 const CHAOS_FADE_MS = 350;
@@ -424,7 +431,10 @@ export function EmoteWall({
   twitchChannel,
   kickChannel,
   kickChatroomId,
+  kickUserId,
   sevenTvEnabled = true,
+  bttvEnabled = false,
+  ffzEnabled = false,
   emoteSize = 112,
   durationSec = 5,
   maxEmotes = 25,
@@ -440,14 +450,19 @@ export function EmoteWall({
   const normalizedTwitch = twitchChannel?.trim() || null;
   const normalizedKick = kickChannel?.trim() || null;
   const normalizedKickChatroom = kickChatroomId?.trim() || null;
+  const normalizedKickUserId = kickUserId?.trim() || null;
 
-  const sevenTvMap = use7tvEmotes(
-    sevenTvEnabled ? normalizedTwitch : null,
-  );
-  const sevenTvRef = React.useRef(sevenTvMap);
+  // Same provider maps as the chat widget: 7TV/BTTV/FFZ on Twitch, 7TV on
+  // Kick (the set linked to the Kick account, else the Twitch one, else global).
+  const emoteMaps = useChannelEmotes(normalizedTwitch, normalizedKickUserId, {
+    sevenTv: sevenTvEnabled,
+    bttv: bttvEnabled,
+    ffz: ffzEnabled,
+  });
+  const emoteMapsRef = React.useRef(emoteMaps);
   React.useEffect(() => {
-    sevenTvRef.current = sevenTvMap;
-  }, [sevenTvMap]);
+    emoteMapsRef.current = emoteMaps;
+  }, [emoteMaps]);
 
   // Read live inside the chat callback so toggles apply without reconnecting.
   const subsOnlyRef = React.useRef(subsOnly);
@@ -563,20 +578,23 @@ export function EmoteWall({
   // Live chat -> emote-only detection.
   const handleMessage = React.useCallback(
     (msg: ChatMessagesType) => {
-      const isSub = isSubscriberMessage(msg);
-      if (subsOnlyRef.current && !isSub) return;
+      // The wall only listens to Twitch and Kick; a YouTube row would have no map.
+      if (msg.platform !== 'twitch' && msg.platform !== 'kick') return;
       const chatInput = {
         message: msg.message,
         platform: msg.platform,
         emotes: msg.emotes,
       };
+      const isSub = isSubscriberMessage({ platform: chatInput.platform, badges: msg.badges });
+      if (subsOnlyRef.current && !isSub) return;
+      const thirdPartyMap = emoteMapsRef.current[msg.platform];
       const urls = showAllEmotesRef.current
-        ? getAnyEmoteUrls(chatInput, sevenTvRef.current)
-        : getEmoteOnlyUrls(chatInput, sevenTvRef.current);
+        ? getAnyEmoteUrls(chatInput, thirdPartyMap)
+        : getEmoteOnlyUrls(chatInput, thirdPartyMap);
       if (urls.length === 0) return;
 
       // Sub Emotes Only: keep native emotes whose id is in the channels'
-      // subscriber sets. 7TV and other urls have no native id and drop out.
+      // subscriber sets. Third-party urls have no native id and drop out.
       let fresh = urls;
       if (subEmotesRef.current) {
         fresh = urls.filter((url) => {
@@ -626,7 +644,7 @@ export function EmoteWall({
   }, [normalizedKickChatroom, mock, handleMessage]);
 
   // Mock mode for setup preview / browser-source testing.
-  // Honors the 7TV toggle so the preview matches live behavior.
+  // Honors the provider toggles so the preview matches live behavior.
   // Mock emotes count as subscriber emotes so subsOnly previews stay alive.
   // Mock bypasses hype/spam gates (no user identity) to keep previewing visuals.
   React.useEffect(() => {
@@ -634,9 +652,13 @@ export function EmoteWall({
     // Calm, spin and burst emotes linger for most of the visible duration,
     // so the preview spawns them at the slow ambient pace.
     const fast = mode !== 'calm' && mode !== 'spin' && mode !== 'burst';
-    const pool = sevenTvEnabled
-      ? MOCK_EMOTES
-      : MOCK_EMOTES.filter((e) => e.source !== '7tv');
+    const pool = MOCK_EMOTES.filter(
+      (e) =>
+        e.source === 'twitch' ||
+        (e.source === '7tv' && sevenTvEnabled) ||
+        (e.source === 'bttv' && bttvEnabled) ||
+        (e.source === 'ffz' && ffzEnabled),
+    );
     const spawnMock = () => {
       const count = fast
         ? 1 + Math.floor(Math.random() * 3)
@@ -657,7 +679,7 @@ export function EmoteWall({
       clearTimeout(first);
       clearInterval(interval);
     };
-  }, [mock, mode, sevenTvEnabled, subDurationX2, durationSec, spawnUrls]);
+  }, [mock, mode, sevenTvEnabled, bttvEnabled, ffzEnabled, subDurationX2, durationSec, spawnUrls]);
 
   React.useEffect(
     () => () => {

@@ -8,6 +8,8 @@ const searchSchema = z.object({
   twitch: z.string().optional(),
   kick: z.string().optional(),
   sevenTv: z.coerce.boolean().optional().default(true),
+  bttv: z.coerce.boolean().optional().default(false),
+  ffz: z.coerce.boolean().optional().default(false),
   mode: z.enum(['calm', 'chaos', 'bounce', 'glide', 'spin', 'burst', 'random']).catch('calm'),
   subsOnly: z.coerce.boolean().optional().default(false),
   subDurationX2: z.coerce.boolean().optional().default(false),
@@ -38,7 +40,10 @@ function RouteComponent() {
         twitchChannel={search.twitch}
         kickChannel={search.kick ?? null}
         kickChatroomId={kick?.chatroomId ?? null}
+        kickUserId={kick?.userId ?? null}
         sevenTvEnabled={search.sevenTv !== false}
+        bttvEnabled={search.bttv}
+        ffzEnabled={search.ffz}
         mode={search.mode}
         subsOnly={search.subsOnly}
         subDurationX2={search.subDurationX2}

@@ -10,6 +10,7 @@ import { type EmoteWallMode, isEmoteWallMode } from './emote-pops';
 export type EmoteWallPlatforms = ChannelPlatforms;
 
 const WIDGET_PATH = '/widgets/emote-wall';
+
 export type { EmoteWallMode };
 
 export interface EmoteWallUrlOptions {
@@ -17,6 +18,8 @@ export interface EmoteWallUrlOptions {
   kick: string;
   platforms: EmoteWallPlatforms;
   sevenTv: boolean;
+  bttv: boolean;
+  ffz: boolean;
   mode: EmoteWallMode;
   subsOnly: boolean;
   subDurationX2: boolean;
@@ -45,6 +48,8 @@ export const DEFAULT_EMOTE_WALL_OPTIONS: EmoteWallUrlOptions = {
   kick: '',
   platforms: 'both',
   sevenTv: true,
+  bttv: false,
+  ffz: false,
   mode: 'calm',
   subsOnly: false,
   subDurationX2: false,
@@ -68,6 +73,8 @@ export function buildEmoteWallParams(options: EmoteWallUrlOptions): URLSearchPar
   const params = new URLSearchParams();
   setChannels(params, options.platforms, options.twitch, options.kick);
   if (!options.sevenTv) params.append('sevenTv', 'false');
+  if (options.bttv) params.append('bttv', 'true');
+  if (options.ffz) params.append('ffz', 'true');
   if (options.mode !== 'calm') params.append('mode', options.mode);
   if (options.subsOnly) params.append('subsOnly', 'true');
   if (options.subDurationX2) params.append('subDurationX2', 'true');
@@ -107,6 +114,8 @@ export function parseEmoteWallUrl(text: string): EmoteWallUrlOptions | null {
     kick: pasted.kickChannel,
     platforms,
     sevenTv: flag('sevenTv', defaults.sevenTv),
+    bttv: flag('bttv', defaults.bttv),
+    ffz: flag('ffz', defaults.ffz),
     mode: isEmoteWallMode(mode) ? mode : defaults.mode,
     subsOnly: flag('subsOnly', defaults.subsOnly),
     subDurationX2: flag('subDurationX2', defaults.subDurationX2),
