@@ -1007,6 +1007,16 @@ export const pt: typeof en = {
     showBarTip: 'Uma barra embaixo do relógio que vai esvaziando conforme o tempo acaba.',
     motion: 'Animações',
     motionTip: 'O relógio pulsa no último minuto. Desligue e tudo fica parado.',
+    sound: 'Som',
+    sounds: {
+      chime: 'Melodia',
+      bell: 'Sino',
+      digital: 'Digital',
+      off: 'Desligado',
+    },
+    soundTip:
+      'Tique-taque nos últimos segundos e uma melodia ao zerar. Desligado por padrão; no OBS o som sai pelo áudio da fonte de navegador.',
+    testSound: 'Testar som',
     channelsTip:
       'Só precisa para os comandos do chat. Sem canal, a contagem roda sozinha do mesmo jeito.',
     sectionCommands: 'Comandos do chat',
@@ -2439,6 +2449,9 @@ export const pt: typeof en = {
     lead: 'Recursos novos e correções de bugs no Senchabot Extensions, dos mais novos para os mais antigos. A lista é montada a partir do histórico de commits do projeto no [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).',
     site: 'Site',
     entries: {
+      countdownSounds:
+        'O Stream Countdown agora pode fazer tique-taque nos últimos segundos e tocar uma melodia ao zerar — escolha Melodia, Sino ou Digital. Desligado por padrão, os overlays existentes continuam silenciosos.',
+      presetScrollFix: 'Escolher um preset na página de configuração não move mais a rolagem da página.',
       chatSharedBackground:
         'A Caixa de Chat agora tem Fundo do chat: um único fundo atrás de todas as mensagens, sem caixa em cada uma.',
       countdownZoom:

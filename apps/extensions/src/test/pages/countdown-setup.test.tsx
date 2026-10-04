@@ -5,7 +5,7 @@ import {
   type CountdownSettings,
   DEFAULT_COUNTDOWN_SETTINGS,
 } from '#/lib/countdown-url';
-import { en, retype, segment, textbox } from '#/test/queries';
+import { button, combobox, en, pickOption, retype, segment, textbox } from '#/test/queries';
 import { renderRoute, setupUser } from '#/test/render';
 
 const PAGE = '/setup/stream-countdown';
@@ -129,6 +129,28 @@ describe('Stream Countdown setup', () => {
     expect(params.get('title')).toBe('Short break');
     expect(params.get('at')).toBeNull();
     expectUrl({ time: 300, title: 'Short break', at: '' });
+  });
+
+  it('shows the sound picker and writes it to the URL', async () => {
+    const user = setupUser();
+    await renderRoute(PAGE);
+
+    let settings: CountdownSettings = { ...DEFAULT_COUNTDOWN_SETTINGS };
+    const expectUrl = (patch: Partial<CountdownSettings>) => {
+      settings = { ...settings, ...patch };
+      expect(urlField().value).toBe(
+        buildCountdownUrl(window.location.origin, settings, '', '', 'en'),
+      );
+    };
+
+    // Off by default, shown for every scene.
+    expect(combobox(en('countdown.sound')).textContent).toBe(en('countdown.sounds.off'));
+
+    await pickOption(user, en('countdown.sound'), en('countdown.sounds.bell'));
+    expectUrl({ sound: 'bell' });
+
+    // The test button reaches the preview with its own id.
+    await user.click(button(en('countdown.testSound')));
   });
 
   it('finds a channel emote through the picker search', async () => {

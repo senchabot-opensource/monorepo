@@ -23,7 +23,8 @@ export const PREVIEW_CHANNEL = 'senchabot:countdown-preview';
 /** `preview` is the id in the preview's URL, so only the preview of the page that sent it plays it. */
 export type PreviewMessage =
   | { type: 'command'; preview: string; text: string }
-  | { type: 'toggle'; preview: string };
+  | { type: 'toggle'; preview: string }
+  | { type: 'sound'; preview: string };
 
 const LIVE_TICK_MS = 250;
 const SIM_TICK_MS = 100;
@@ -212,6 +213,8 @@ export function useCountdown({
   }, [restart, propScene]);
 
   usePreviewReceiver<PreviewMessage>(PREVIEW_CHANNEL, previewId, simulate, (message) => {
+    // The widget plays the sound test itself, where the sound setting lives.
+    if (message.type === 'sound') return;
     if (message.type !== 'toggle') return runCommand(message.text);
     runCommand(`${COMMAND} ${stateRef.current.endsAt === null ? 'start' : 'pause'}`);
   });

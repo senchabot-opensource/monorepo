@@ -984,6 +984,16 @@ export const en = {
     showBarTip: 'A bar under the clock that empties as the time runs out.',
     motion: 'Animations',
     motionTip: 'The clock pulses over the last minute. Turn it off and everything stays still.',
+    sound: 'Sound',
+    sounds: {
+      chime: 'Chime',
+      bell: 'Bell',
+      digital: 'Digital',
+      off: 'Off',
+    },
+    soundTip:
+      'Ticks in the last seconds and a motif at zero. Off by default; in OBS the sound plays through the browser source audio.',
+    testSound: 'Test sound',
     channelsTip:
       'Only needed for the chat commands. Without a channel the countdown still runs on its own.',
     sectionCommands: 'Chat Commands',
@@ -2416,6 +2426,9 @@ export const en = {
     lead: "New features and bug fixes in Senchabot Extensions, newest first. The list is put together from the project's commit history on [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      countdownSounds:
+        'Stream Countdown can now tick in the last seconds and play a motif at zero — pick Chime, Bell or Digital. Off by default, so existing overlays stay silent.',
+      presetScrollFix: 'Picking a preset on a setup page no longer jumps the page scroll.',
       chatSharedBackground:
         'Chat Box gets a Chat Background: one shared backdrop behind all messages, for streamers who want readability without a box on each message.',
       countdownZoom:

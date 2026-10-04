@@ -1022,6 +1022,16 @@ export const fr: typeof en = {
     showBarTip: "Une barre sous l'horloge qui se vide à mesure que le temps s'écoule.",
     motion: 'Animations',
     motionTip: "L'horloge pulse pendant la dernière minute. Désactive-les et tout reste immobile.",
+    sound: 'Son',
+    sounds: {
+      chime: 'Carillon',
+      bell: 'Cloche',
+      digital: 'Digital',
+      off: 'Désactivé',
+    },
+    soundTip:
+      'Tic-tac dans les dernières secondes et un motif à zéro. Désactivé par défaut ; dans OBS, le son passe par l’audio de la source navigateur.',
+    testSound: 'Tester le son',
     channelsTip:
       'Utile seulement pour les commandes du chat. Sans chaîne, le compte à rebours tourne quand même tout seul.',
     sectionCommands: 'Commandes du chat',
@@ -2463,6 +2473,9 @@ export const fr: typeof en = {
     lead: "Les nouvelles fonctionnalités et corrections de bugs de Senchabot Extensions, des plus récentes aux plus anciennes. La liste est tirée de l'historique des commits du projet sur [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      countdownSounds:
+        'Stream Countdown peut désormais faire tic-tac dans les dernières secondes et jouer un motif à zéro — choisis Carillon, Cloche ou Digital. Désactivé par défaut, les overlays existants restent silencieux.',
+      presetScrollFix: 'Choisir un preset sur une page de configuration ne fait plus sauter le scroll de la page.',
       chatSharedBackground:
         'La Boîte de chat a un Fond du chat : un seul fond derrière tous les messages, sans cadre sur chacun.',
       countdownZoom:

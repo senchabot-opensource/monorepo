@@ -988,6 +988,16 @@ export const tr: typeof en = {
     showBarTip: 'Saatin altında, süre azaldıkça boşalan bir bar.',
     motion: 'Animasyonlar',
     motionTip: 'Son dakikada saat nabız gibi atar. Kapatırsan her şey sabit durur.',
+    sound: 'Ses',
+    sounds: {
+      chime: 'Melodi',
+      bell: 'Zil',
+      digital: 'Dijital',
+      off: 'Kapalı',
+    },
+    soundTip:
+      'Son saniyelerde tiktak ve sıfırda bir melodi. Varsayılan olarak kapalı; OBS’te ses, tarayıcı kaynağının sesi üzerinden çalar.',
+    testSound: 'Sesi dene',
     channelsTip:
       'Sadece sohbet komutları için gerekli. Kanal yazmasan da geri sayım kendi başına çalışır.',
     sectionCommands: 'Sohbet Komutları',
@@ -2401,6 +2411,9 @@ export const tr: typeof en = {
     lead: "Senchabot Extensions'a eklenen özellikler ve düzeltilen hatalar, en yenisi en üstte. Liste projenin [GitHub'daki](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) commit geçmişinden hazırlanıyor.",
     site: 'Site',
     entries: {
+      countdownSounds:
+        'Yayın Geri Sayımı artık son saniyelerde tikleyip sıfırda bir melodi çalabiliyor — Melodi, Zil ya da Dijital seç. Varsayılan olarak kapalı, mevcut overlay’ler sessiz kalır.',
+      presetScrollFix: 'Kurulum sayfasında preset seçmek artık sayfayı kaydırmıyor.',
       chatSharedBackground:
         'Sohbet Kutusu’na Sohbet Arka Planı geldi: her mesaja kutu koymak istemeyenler için tüm mesajların arkasında tek bir zemin.',
       spinWheelWeights:

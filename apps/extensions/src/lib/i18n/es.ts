@@ -1011,6 +1011,16 @@ export const es: typeof en = {
     showBarTip: 'Una barra debajo del reloj que se vacía a medida que se acaba el tiempo.',
     motion: 'Animaciones',
     motionTip: 'El reloj late durante el último minuto. Desactívalo y todo se queda quieto.',
+    sound: 'Sonido',
+    sounds: {
+      chime: 'Melodía',
+      bell: 'Campana',
+      digital: 'Digital',
+      off: 'Desactivado',
+    },
+    soundTip:
+      'Tictac en los últimos segundos y una melodía al llegar a cero. Desactivado por defecto; en OBS el sonido sale por el audio de la fuente de navegador.',
+    testSound: 'Probar sonido',
     channelsTip:
       'Solo hace falta para los comandos del chat. Sin canal, la cuenta regresiva funciona igual por su cuenta.',
     sectionCommands: 'Comandos del chat',
@@ -2448,6 +2458,9 @@ export const es: typeof en = {
     lead: 'Funciones nuevas y errores corregidos en Senchabot Extensions, de lo más nuevo a lo más viejo. La lista sale del historial de commits del proyecto en [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).',
     site: 'Sitio',
     entries: {
+      countdownSounds:
+        'Stream Countdown ahora puede hacer tictac en los últimos segundos y sonar una melodía al cero — elige Melodía, Campana o Digital. Desactivado por defecto, los overlays existentes siguen en silencio.',
+      presetScrollFix: 'Elegir un preset en una página de configuración ya no mueve el scroll de la página.',
       chatSharedBackground:
         'La Caja de Chat ya tiene Fondo del chat: un único fondo detrás de todos los mensajes, sin recuadro en cada uno.',
       countdownZoom:

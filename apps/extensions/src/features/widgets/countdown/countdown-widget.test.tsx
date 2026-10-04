@@ -3,7 +3,15 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { type CountdownSettings, DEFAULT_COUNTDOWN_SETTINGS } from '#/lib/countdown-url';
 import { FakeWebSocket } from '#/test/browser';
 import { renderWithProviders } from '#/test/render';
+import { COUNTDOWN_SOUND_VOLUME, playCountdownSound, playCountdownTick } from './countdown-sound';
 import { CountdownWidget } from './countdown-widget';
+import { PREVIEW_CHANNEL } from './use-countdown';
+
+vi.mock('./countdown-sound', () => ({
+  playCountdownSound: vi.fn(),
+  playCountdownTick: vi.fn(),
+  COUNTDOWN_SOUND_VOLUME: 0.5,
+}));
 
 const { platforms: _platforms, ...DEFAULTS } = DEFAULT_COUNTDOWN_SETTINGS;
 const settings = (overrides: Partial<CountdownSettings> = {}) => ({ ...DEFAULTS, ...overrides });
@@ -170,6 +178,27 @@ describe('CountdownWidget', () => {
     expect(clock()).toBe('10:00');
   });
 
+  it('lets a mod add time, pause and reset on the pomodoro scene too', async () => {
+    await render(
+      <CountdownWidget
+        twitchChannel="streamer"
+        settings={settings({ scene: 'pomodoro', time: 1500, sound: 'off' })}
+      />,
+    );
+    act(() => twitchSocket().open());
+    expect(clock()).toBe('25:00');
+
+    modSays('!countdown add 5m');
+    expect(clock()).toBe('30:00');
+
+    modSays('!cd pause');
+    wait(30_000);
+    expect(clock()).toBe('30:00');
+
+    modSays('!countdown reset');
+    expect(clock()).toBe('25:00');
+  });
+
   it('lets a mod cancel and hide it, and bring it back with the next command', async () => {
     await render(<CountdownWidget twitchChannel="streamer" settings={settings({ time: 600 })} />);
     act(() => twitchSocket().open());
@@ -290,5 +319,97 @@ describe('CountdownWidget', () => {
   it('marks the preset it was drawn in', async () => {
     await render(<CountdownWidget settings={settings({ preset: 'dynasty' })} />);
     expect(root().dataset.preset).toBe('dynasty');
+  });
+
+  it('ticks the last seconds and plays the motif when a pomodoro timer ends', async () => {
+    vi.mocked(playCountdownSound).mockClear();
+    vi.mocked(playCountdownTick).mockClear();
+    await render(
+      <CountdownWidget
+        settings={settings({ scene: 'pomodoro', time: 6, doneHold: 0, sound: 'chime' })}
+      />,
+    );
+    expect(clock()).toBe('00:06');
+    expect(playCountdownTick).not.toHaveBeenCalled();
+
+    // Fake timers batch each step into one render, so step second by second.
+    for (const second of [5, 4, 3, 2, 1]) {
+      wait(1000);
+      expect(clock()).toBe(`00:0${second}`);
+    }
+    expect(playCountdownTick).toHaveBeenCalledTimes(5);
+    expect(playCountdownTick).toHaveBeenCalledWith(COUNTDOWN_SOUND_VOLUME);
+    expect(playCountdownSound).not.toHaveBeenCalled();
+
+    wait(1000);
+    expect(root().dataset.ended).toBe('true');
+    expect(playCountdownSound).toHaveBeenCalledTimes(1);
+    expect(playCountdownSound).toHaveBeenCalledWith('chime', COUNTDOWN_SOUND_VOLUME);
+
+    // The end motif plays once, not on every render after.
+    wait(5000);
+    expect(playCountdownSound).toHaveBeenCalledTimes(1);
+  });
+
+  it('stays silent when muted, and off by default', async () => {
+    vi.mocked(playCountdownSound).mockClear();
+    vi.mocked(playCountdownTick).mockClear();
+    const { unmount } = await render(
+      <CountdownWidget settings={settings({ scene: 'pomodoro', time: 60, sound: 'off' })} />,
+    );
+    wait(61_000);
+    expect(root().dataset.ended).toBe('true');
+    expect(playCountdownSound).not.toHaveBeenCalled();
+    expect(playCountdownTick).not.toHaveBeenCalled();
+    unmount();
+
+    // The default is off, so an existing overlay without the param stays silent.
+    await render(<CountdownWidget settings={settings({ scene: 'pomodoro', time: 60 })} />);
+    wait(61_000);
+    expect(root().dataset.ended).toBe('true');
+    expect(playCountdownSound).not.toHaveBeenCalled();
+    expect(playCountdownTick).not.toHaveBeenCalled();
+  });
+
+  it('plays the motif for starting, break and ending too', async () => {
+    vi.mocked(playCountdownSound).mockClear();
+    vi.mocked(playCountdownTick).mockClear();
+    await render(
+      <CountdownWidget
+        settings={settings({ scene: 'break', time: 6, doneHold: 0, sound: 'bell' })}
+      />,
+    );
+    for (const second of [5, 4, 3, 2, 1]) {
+      wait(1000);
+      expect(clock()).toBe(`00:0${second}`);
+    }
+    expect(playCountdownTick).toHaveBeenCalledTimes(5);
+    wait(1000);
+    expect(root().dataset.ended).toBe('true');
+    expect(playCountdownSound).toHaveBeenCalledTimes(1);
+    expect(playCountdownSound).toHaveBeenCalledWith('bell', COUNTDOWN_SOUND_VOLUME);
+  });
+
+  it('stays silent in the preview, and plays its sound test on demand', async () => {
+    vi.mocked(playCountdownSound).mockClear();
+    await render(
+      <CountdownWidget
+        settings={settings({ scene: 'pomodoro', time: 600, sound: 'bell' })}
+        simulate
+        previewId="p1"
+      />,
+    );
+    // The fast preview clock runs the timer out on its own, without a sound.
+    wait(25_000);
+    expect(playCountdownSound).not.toHaveBeenCalled();
+
+    // The setup page's Test sound button plays the picked motif instead.
+    const channel = new BroadcastChannel(PREVIEW_CHANNEL);
+    channel.postMessage({ type: 'sound', preview: 'p2' });
+    expect(playCountdownSound).not.toHaveBeenCalled();
+    channel.postMessage({ type: 'sound', preview: 'p1' });
+    await vi.waitFor(() => expect(playCountdownSound).toHaveBeenCalledTimes(1));
+    expect(playCountdownSound).toHaveBeenCalledWith('bell', COUNTDOWN_SOUND_VOLUME);
+    channel.close();
   });
 });

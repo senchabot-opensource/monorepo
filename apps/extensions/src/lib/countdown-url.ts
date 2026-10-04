@@ -29,6 +29,10 @@ export type CountdownEnding = (typeof COUNTDOWN_ENDINGS)[number];
 export const COUNTDOWN_ZOOMS = [75, 100, 125, 150, 200] as const;
 export type CountdownZoom = (typeof COUNTDOWN_ZOOMS)[number];
 
+/** End sound; `off` stays silent. Ticks in the last seconds follow the same switch. */
+export const COUNTDOWN_SOUNDS = ['chime', 'bell', 'digital', 'off'] as const;
+export type CountdownSound = (typeof COUNTDOWN_SOUNDS)[number];
+
 export interface CountdownSettings {
   platforms: ChannelPlatforms;
   /** Preset id; any preset but classic brings its own colors, fonts and frame. */
@@ -67,6 +71,8 @@ export interface CountdownSettings {
   color: CountdownColor;
   /** Zoom in percent; multiplies the fit-to-source scale, so 150 shows it big. */
   zoom: CountdownZoom;
+  /** End sound for the countdown; off by default, so existing overlays stay silent. */
+  sound: CountdownSound;
   /** A bar under the clock that drains with the time left. */
   bar: boolean;
   /** The clock's pulse in the last minute and the preset's own small motion. */
@@ -95,6 +101,7 @@ export const DEFAULT_COUNTDOWN_SETTINGS: CountdownSettings = {
   look: 'card',
   color: 'purple',
   zoom: 100,
+  sound: 'off',
   bar: true,
   motion: true,
 };
@@ -170,6 +177,7 @@ function buildParams(
     if (url) params.set(key, url.slice(0, ICON_URL_MAX_LENGTH));
   if (settings.ending !== defaults.ending) params.set('end', settings.ending);
   if (settings.zoom !== defaults.zoom) params.set('zoom', String(settings.zoom));
+  if (settings.sound !== defaults.sound) params.set('sound', settings.sound);
   if (!settings.bar) params.set('bar', '0');
   if (!settings.motion) params.set('motion', '0');
   // Always written: the countdown is mostly words, and OBS shouldn't pick their language.
@@ -210,6 +218,7 @@ export function readCountdownSettings(
   const look = params.get('look') as CountdownLook;
   const ending = params.get('end') as CountdownEnding;
   const zoom = Number(params.get('zoom'));
+  const sound = params.get('sound') as CountdownSound;
   const text = (key: string, max: number) => (params.get(key) ?? '').trim().slice(0, max);
   return {
     preset: readPreset(params),
@@ -235,6 +244,7 @@ export function readCountdownSettings(
     zoom: (COUNTDOWN_ZOOMS as readonly number[]).includes(zoom)
       ? (zoom as CountdownZoom)
       : defaults.zoom,
+    sound: COUNTDOWN_SOUNDS.includes(sound) ? sound : defaults.sound,
     bar: readFlag(params.get('bar'), defaults.bar),
     motion: readFlag(params.get('motion'), defaults.motion),
   };
