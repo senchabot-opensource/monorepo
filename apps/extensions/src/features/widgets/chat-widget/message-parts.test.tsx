@@ -71,6 +71,12 @@ describe('renderThirdPartyEmotes', () => {
   it('does not match a name inherited from Object', () => {
     expect(emoteIds(renderThirdPartyEmotes('constructor toString', map))).toEqual([]);
   });
+
+  it('safely handles empty, undefined, or null emoteMap without crashing', () => {
+    expect(renderThirdPartyEmotes('hello world', undefined)).toEqual(['hello world']);
+    expect(renderThirdPartyEmotes('hello world', null)).toEqual(['hello world']);
+    expect(renderThirdPartyEmotes('hello world', new Map())).toEqual(['hello world']);
+  });
 });
 
 describe('MessageBadges', () => {

@@ -125,7 +125,7 @@ export function buildWidgetParams(
   token?: string,
 ) {
   const params = new URLSearchParams();
-  setChannels(params, settings.platforms, twitchChannel, kickChannel, youtubeChannel, token);
+  setChannels(params, settings.platforms, twitchChannel, kickChannel, youtubeChannel);
   writePreset(params, settings.preset);
   if (!settings.sevenTv) params.append('sevenTv', 'false');
   if (!settings.bttv) params.append('bttv', 'false');
@@ -172,6 +172,10 @@ export function buildWidgetParams(
   if (settings.layout !== DEFAULT_SETTINGS.layout) params.append('layout', settings.layout);
   if (settings.animation !== DEFAULT_SETTINGS.animation)
     params.append('animation', settings.animation);
+  const tok = token?.trim();
+  if (tok && (settings.platforms === 'youtube' || settings.platforms === 'both' || youtubeChannel?.trim())) {
+    params.append('token', tok);
+  }
   return params;
 }
 

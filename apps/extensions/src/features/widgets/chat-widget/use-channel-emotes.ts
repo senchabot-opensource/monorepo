@@ -89,13 +89,17 @@ async function loadKickEmotes(fetchJson: Get, kickUserId: string | null, twitchS
   return mergeEmotes(parse7tvSet(global), channel);
 }
 
-const EMPTY: Record<'twitch' | 'kick', EmoteMap> = { twitch: new Map(), kick: new Map() };
+const EMPTY: Record<'twitch' | 'kick' | 'youtube', EmoteMap> = {
+  twitch: new Map(),
+  kick: new Map(),
+  youtube: new Map(),
+};
 
 export function useChannelEmotes(
   twitchChannel: string | null | undefined,
   kickUserId: string | null | undefined,
   providers: EmoteProviders,
-): Record<'twitch' | 'kick', EmoteMap> {
+): Record<'twitch' | 'kick' | 'youtube', EmoteMap> {
   const [emotes, setEmotes] = useState(EMPTY);
   const { sevenTv, bttv, ffz } = providers;
 
@@ -115,7 +119,7 @@ export function useChannelEmotes(
       const kick = sevenTv
         ? await loadKickEmotes(get, kickUserId ?? null, twitch.sevenTvChannel)
         : new Map<string, string>();
-      if (isCurrent()) setEmotes({ twitch: twitch.map, kick });
+      if (isCurrent()) setEmotes({ twitch: twitch.map, kick, youtube: new Map() });
       return failed;
     },
     [twitchChannel, kickUserId, sevenTv, bttv, ffz],
