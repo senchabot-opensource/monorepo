@@ -2568,6 +2568,8 @@ export const tr: typeof en = {
       emoteWallBttvFfz:
         "Emote Duvarı Twitch kanalındaki BTTV ve FFZ emote'larını gösterebiliyor. Kurulumda Emote'lar başlığından işaretle; işaretlemedikçe kapalı kalırlar.",
       sproutPotLabel: 'Sub Sprout saksının üstünde 3/10 gibi bir aşama etiketi gösterebiliyor.',
+      sproutVarietyCards:
+        'Sub Sprout bitki çeşidi artık her çeşidi tam büyümüş haliyle gösteren bir kart seçici.',
       emoteWallLaunch:
         "Emote Duvarı geldi: sadece emote'tan oluşan Twitch ve Kick mesajları Sakin ya da Kaos modunda ekranda uçuşuyor.",
       sproutBothPlatforms:

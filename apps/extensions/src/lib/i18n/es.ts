@@ -2616,6 +2616,8 @@ export const es: typeof en = {
         'El Muro de Emotes puede mostrar emotes de BTTV y FFZ de tu canal de Twitch. Márcalos en Emotes durante la configuración; si no, quedan apagados.',
       sproutPotLabel:
         'Sub Sprout puede mostrar una etiqueta de etapa como 3/10 encima de la maceta.',
+      sproutVarietyCards:
+        'La variedad de Sub Sprout ahora se elige en tarjetas que muestran cada variedad crecida del todo.',
       emoteWallLaunch:
         'Llega Muro de Emotes: los mensajes de solo emotes de Twitch y Kick vuelan por la pantalla en modo Tranquilo o Caos.',
       sproutBothPlatforms:

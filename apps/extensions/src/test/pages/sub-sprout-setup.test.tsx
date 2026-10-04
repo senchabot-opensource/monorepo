@@ -1,4 +1,4 @@
-import { fireEvent, screen } from '@testing-library/react';
+import { fireEvent, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   buildSubSproutUrl,
@@ -16,6 +16,7 @@ const twitchField = () => textbox(en('common.twitchChannel'));
 const kickField = () => textbox(en('common.kickChannel'));
 const platforms = (option: string) => segment(en('common.platforms'), option);
 const pick = (option: string) => segment(en('subSprout.selectionMode'), option);
+const variety = (option: string) => segment(en('subSprout.plantVariety'), option);
 const water = () => combobox(en('subSprout.wateringEffect'));
 const potLabel = () => toggle(en('subSprout.showPotLabel'));
 
@@ -72,11 +73,9 @@ describe('Sub Sprout setup', () => {
     await user.type(kickField(), 'kicker');
     expectUrl({});
 
-    await pickOption(user, en('subSprout.plantVariety'), en('plants.sunflower'));
+    await user.click(variety(en('plants.sunflower')));
     expectUrl({ variety: 'sunflower' });
-    expect(combobox(en('subSprout.plantVariety')).textContent).toBe(
-      `${en('plants.sunflower')}${en('subSprout.stagesSuffix', { stages: 7 })}`,
-    );
+    expect(variety(en('plants.sunflower')).checked).toBe(true);
 
     await pickOption(user, en('subSprout.wateringEffect'), en('plants.waterRain'));
     expectUrl({ water: 'rain' });
@@ -95,11 +94,15 @@ describe('Sub Sprout setup', () => {
     );
   });
 
-  it('lists the Classic Sprout with the ten stages it draws, 0 to 9', async () => {
+  it('lists every variety as a card showing its full-grown plant', async () => {
     await renderRoute(PAGE);
-    expect(combobox(en('subSprout.plantVariety')).textContent).toBe(
-      `${en('plants.classic')}${en('subSprout.stagesSuffix', { stages: 10 })}`,
-    );
+    const group = variety(en('plants.classic')).closest('fieldset') as HTMLElement;
+    // Classic first and picked, one card radio with a plant drawing each.
+    expect(variety(en('plants.classic')).checked).toBe(true);
+    expect(within(group).getAllByRole('radio')).toHaveLength(10);
+    // One thumbnail drawing per card (the vine nests its overlay svg inside).
+    expect(group.querySelectorAll(':scope > label > svg')).toHaveLength(10);
+    expect(within(group).getByRole('radio', { name: en('plants.sunflower') })).toBeTruthy();
   });
 
   it('disables water and the pot label for a fixed Climbing Vine, which draws neither', async () => {
@@ -107,7 +110,7 @@ describe('Sub Sprout setup', () => {
     await renderRoute(PAGE);
     await user.type(twitchField(), 'streamer');
 
-    await pickOption(user, en('subSprout.plantVariety'), en('plants.vine'));
+    await user.click(variety(en('plants.vine')));
     expect(pick(en('subSprout.fixed')).checked).toBe(true);
     expect(water().disabled).toBe(true);
     expect(potLabel().disabled).toBe(true);
@@ -118,7 +121,7 @@ describe('Sub Sprout setup', () => {
     expect(potLabel().disabled).toBe(false);
 
     await user.click(pick(en('subSprout.fixed')));
-    await pickOption(user, en('subSprout.plantVariety'), en('plants.rose'));
+    await user.click(variety(en('plants.rose')));
     expect(water().disabled).toBe(false);
     expect(potLabel().disabled).toBe(false);
   });
@@ -174,7 +177,7 @@ describe('Sub Sprout setup', () => {
     expect(urlField().value).toBe(pasted);
     expect(twitchField().value).toBe('streamer');
     expect(platforms('Twitch').checked).toBe(true);
-    expect(combobox(en('subSprout.plantVariety')).textContent).toContain(en('plants.lotus'));
+    expect(variety(en('plants.lotus')).checked).toBe(true);
     expect(water().textContent).toBe(en('plants.waterSparkle'));
     expect(pick(en('subSprout.cycle')).checked).toBe(true);
     expect(toggle(en('subSprout.showSubCountEffect')).getAttribute('aria-checked')).toBe('false');

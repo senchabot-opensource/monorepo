@@ -2587,6 +2587,8 @@ export const ja: typeof en = {
         'エモートウォールでTwitchチャンネルのBTTV・FFZエモートを表示できるようになりました。設定の「エモート」でチェックしてください。チェックしなければオフのままです。',
       sproutPotLabel:
         'Sub Sproutが、鉢の上に 3/10 のような段階のラベルを表示できるようになりました。',
+      sproutVarietyCards:
+        'Sub Sproutの品種選びがカード式になり、それぞれ大きく育った姿で表示されます。',
       emoteWallLaunch:
         'エモートウォールが登場しました。TwitchとKickのエモートだけのメッセージが、「おだやか」か「カオス」のモードで画面を飛び交います。',
       sproutBothPlatforms:

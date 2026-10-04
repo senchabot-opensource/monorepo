@@ -2587,6 +2587,8 @@ export const de: typeof en = {
       emoteWallBttvFfz:
         'Die Emote-Wand kann BTTV- und FFZ-Emotes deines Twitch-Kanals zeigen. Beim Einrichten unter Emotes ankreuzen, sonst bleiben sie aus.',
       sproutPotLabel: 'Sub Sprout kann über dem Topf die Stufe anzeigen, z. B. 3/10.',
+      sproutVarietyCards:
+        'Die Sub-Sprout-Pflanzenauswahl ist jetzt eine Kartenauswahl, die jede Sorte ausgewachsen zeigt.',
       emoteWallLaunch:
         'Die Emote-Wand ist da: Twitch- und Kick-Nachrichten nur aus Emotes fliegen im Modus Ruhig oder Chaos über den Screen.',
       sproutBothPlatforms:
