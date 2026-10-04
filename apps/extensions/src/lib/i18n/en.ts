@@ -2583,6 +2583,8 @@ export const en = {
       emoteWallBurst:
         'Emote Wall gets a Burst mode where emotes pop into fragments and sparks before their time ends.',
       sproutPotLabel: 'Sub Sprout can show a stage label like 3/10 above the pot.',
+      sproutVarietyCards:
+        'Sub Sprout plant variety is now a card picker showing each variety as its full-grown plant.',
       emoteWallLaunch:
         'Emote Wall is here: emote-only Twitch and Kick messages fly across the screen in Calm or Chaos mode.',
       sproutBothPlatforms:

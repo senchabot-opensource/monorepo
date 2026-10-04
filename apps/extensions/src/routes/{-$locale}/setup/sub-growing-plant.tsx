@@ -11,11 +11,7 @@ import { Select, type SelectOption } from '#/components/ui/select';
 import { SettingsGroup } from '#/components/ui/settings-group';
 import { Switch } from '#/components/ui/switch';
 import { YoutubeTutorial } from '#/components/youtube-tutorial';
-import {
-  PLANT_IDS,
-  PLANT_REGISTRY,
-  type PlantId,
-} from '#/features/widgets/sub-sprout/plants/registry';
+import { PlantVarietyField } from '#/features/widgets/sub-sprout/plant-variety-field';
 import type { WaterEffectType } from '#/features/widgets/sub-sprout/water/watering-fx';
 import { useI18n } from '#/lib/i18n';
 import { getParamsLocale } from '#/lib/i18n/paths';
@@ -85,11 +81,6 @@ function SubSproutSetup() {
   // plant is never the vine, so both settings still apply there.
   const vineOnly = settings.variety === 'vine' && settings.pick === 'fixed';
 
-  const varietyOptions: SelectOption<PlantId>[] = PLANT_IDS.map((plant) => ({
-    value: plant,
-    label: t(`plants.${plant}`),
-    hint: t('subSprout.stagesSuffix', { stages: PLANT_REGISTRY[plant].stages }),
-  }));
   const pickOptions: SegmentedOption<PickMode>[] = [
     { value: 'fixed', label: t('subSprout.fixed') },
     { value: 'cycle', label: t('subSprout.cycle') },
@@ -115,30 +106,27 @@ function SubSproutSetup() {
       </SettingsGroup>
 
       <SettingsGroup title={t('subSprout.sectionPlant')}>
-        <div className="grid gap-3 sm:grid-cols-2">
-          <div>
-            <FieldLabel id={`${id}-variety`} tip={t('subSprout.plantVarietyTip')}>
-              {t('subSprout.plantVariety')}
-            </FieldLabel>
-            <Select
-              labelledBy={`${id}-variety`}
-              value={settings.variety}
-              onChange={(value) => update('variety', value)}
-              options={varietyOptions}
-            />
-          </div>
-          <div>
-            <FieldLabel id={`${id}-water`} tip={t('subSprout.wateringEffectTip')}>
-              {t('subSprout.wateringEffect')}
-            </FieldLabel>
-            <Select
-              labelledBy={`${id}-water`}
-              disabled={vineOnly}
-              value={settings.water}
-              onChange={(value) => update('water', value)}
-              options={waterOptions}
-            />
-          </div>
+        <div>
+          <FieldLabel id={`${id}-variety`} tip={t('subSprout.plantVarietyTip')}>
+            {t('subSprout.plantVariety')}
+          </FieldLabel>
+          <PlantVarietyField
+            labelledBy={`${id}-variety`}
+            value={settings.variety}
+            onChange={(value) => update('variety', value)}
+          />
+        </div>
+        <div>
+          <FieldLabel id={`${id}-water`} tip={t('subSprout.wateringEffectTip')}>
+            {t('subSprout.wateringEffect')}
+          </FieldLabel>
+          <Select
+            labelledBy={`${id}-water`}
+            disabled={vineOnly}
+            value={settings.water}
+            onChange={(value) => update('water', value)}
+            options={waterOptions}
+          />
         </div>
         <div>
           <FieldLabel id={`${id}-pick`} tip={t('subSprout.selectionModeTip')}>
