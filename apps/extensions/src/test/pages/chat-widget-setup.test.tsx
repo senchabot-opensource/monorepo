@@ -145,7 +145,7 @@ describe('Chat Box setup', () => {
     expect(indicator().disabled).toBe(true);
     expect(urlField().value).toBe('http://localhost:3000/widgets/chat-widget?kick=kicker');
 
-    await user.click(platforms(en('common.platformBoth')));
+    await user.click(platforms(en('common.platformAll')));
     expect(indicator().disabled).toBe(false);
     expect(urlField().value).toBe(
       'http://localhost:3000/widgets/chat-widget?twitch=streamer&kick=kicker&platformDisplay=name',

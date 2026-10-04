@@ -7,7 +7,7 @@ const schema = z.object({
   id: z.string(),
   user: z.string(),
   message: z.string(),
-  platform: z.enum(['twitch', 'kick']),
+  platform: z.enum(['twitch', 'kick', 'youtube']),
   timestamp: z.date(),
   color: z.string().optional(),
   badges: z.array(z.string()).optional(),

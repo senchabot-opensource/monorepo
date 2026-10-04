@@ -22,6 +22,7 @@ export const de: typeof en = {
     platformsTip:
       'Wähle die Plattform, auf die das Widget hören soll. Du streamst gleichzeitig auf Twitch und Kick? Dann nimm Beide.',
     platformBoth: 'Beide',
+    platformAll: 'Alle',
     twitchChannel: 'Twitch-Kanal',
     kickChannel: 'Kick-Kanal',
     channelTip:

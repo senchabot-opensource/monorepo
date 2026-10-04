@@ -5,7 +5,7 @@ import { type AnnouncementColor, chatMessagesCollection } from './chat-messages'
 const MOCK_MESSAGES: Array<{
   user: string;
   color: string;
-  platform: 'twitch' | 'kick';
+  platform: 'twitch' | 'kick' | 'youtube';
   badges?: string[];
   message: string;
   replyTo?: { user: string; message: string };
@@ -19,6 +19,13 @@ const MOCK_MESSAGES: Array<{
     platform: 'twitch',
     badges: ['broadcaster'],
     message: 'GOMU GOMU NO... GG! 🍖🏴‍☠️',
+  },
+  {
+    user: 'Saitama',
+    color: '#EF4444',
+    platform: 'youtube',
+    badges: ['verified', 'sponsor'],
+    message: 'Just an ordinary streamer for fun! 🥊🔥',
   },
   {
     user: 'Goku',

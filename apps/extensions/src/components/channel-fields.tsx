@@ -14,6 +14,8 @@ interface ChannelFieldsProps {
   onTwitchChange: (channel: string) => void;
   kick: string;
   onKickChange: (channel: string) => void;
+  youtube?: string;
+  onYoutubeChange?: (channel: string) => void;
   /** Replaces the generic Platforms tip with a widget-specific one. */
   platformsTip?: string;
   /** Cell beside Platforms, e.g. Chat Box's Platform Indicator. Without it Platforms spans the row. */
@@ -23,7 +25,7 @@ interface ChannelFieldsProps {
 }
 
 /**
- * Platforms picker plus the Twitch and Kick channel inputs. The input for a platform that
+ * Platforms picker plus the Twitch, Kick, and optional YouTube channel inputs. The input for a platform that
  * isn't picked is disabled, not hidden, so the layout never jumps.
  */
 export function ChannelFields({
@@ -33,17 +35,26 @@ export function ChannelFields({
   onTwitchChange,
   kick,
   onKickChange,
+  youtube,
+  onYoutubeChange,
   platformsTip,
   aside,
   disabled,
 }: ChannelFieldsProps) {
   const { t } = useI18n();
   const id = useId();
-  const options: SegmentedOption<ChannelPlatforms>[] = [
-    { value: 'both', label: t('common.platformBoth') },
-    { value: 'twitch', label: 'Twitch' },
-    { value: 'kick', label: 'Kick' },
-  ];
+  const options: SegmentedOption<ChannelPlatforms>[] = onYoutubeChange
+    ? [
+        { value: 'both', label: t('common.platformAll') },
+        { value: 'twitch', label: 'Twitch' },
+        { value: 'kick', label: 'Kick' },
+        { value: 'youtube', label: 'YouTube' },
+      ]
+    : [
+        { value: 'both', label: t('common.platformBoth') },
+        { value: 'twitch', label: 'Twitch' },
+        { value: 'kick', label: 'Kick' },
+      ];
 
   return (
     <div className="grid gap-3 sm:grid-cols-2">
@@ -66,7 +77,7 @@ export function ChannelFields({
         value={twitch}
         onChange={onTwitchChange}
         placeholder={t('common.channelPlaceholder')}
-        disabled={disabled || platforms === 'kick'}
+        disabled={disabled || platforms === 'kick' || platforms === 'youtube'}
         autoComplete="off"
         spellCheck={false}
       />
@@ -76,10 +87,24 @@ export function ChannelFields({
         value={kick}
         onChange={onKickChange}
         placeholder={t('common.channelPlaceholder')}
-        disabled={disabled || platforms === 'twitch'}
+        disabled={disabled || platforms === 'twitch' || platforms === 'youtube'}
         autoComplete="off"
         spellCheck={false}
       />
+      {onYoutubeChange && (
+        <div className="sm:col-span-2">
+          <TextField
+            label="YouTube Channel"
+            tip="YouTube Channel ID (e.g. UC...) or handle (@channel)"
+            value={youtube ?? ''}
+            onChange={onYoutubeChange}
+            placeholder="e.g. @YourChannel or UC..."
+            disabled={disabled || platforms === 'twitch' || platforms === 'kick'}
+            autoComplete="off"
+            spellCheck={false}
+          />
+        </div>
+      )}
     </div>
   );
 }
