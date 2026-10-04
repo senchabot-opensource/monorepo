@@ -67,8 +67,8 @@ export const parseEmotes = (text: string, platform: 'twitch' | 'kick' | 'youtube
 };
 
 // 7TV, BTTV and FFZ emotes are plain words in the text, matched against the channel's emote map.
-export const renderThirdPartyEmotes = (nodes: React.ReactNode, emoteMap: EmoteMap): React.ReactNode[] => {
-  if (emoteMap.size === 0) {
+export const renderThirdPartyEmotes = (nodes: React.ReactNode, emoteMap?: EmoteMap | null): React.ReactNode[] => {
+  if (!emoteMap || emoteMap.size === 0) {
     return Array.isArray(nodes) ? nodes : [nodes];
   }
 

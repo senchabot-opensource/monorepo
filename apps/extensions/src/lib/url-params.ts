@@ -29,19 +29,14 @@ export function setChannels(
   twitchChannel: string,
   kickChannel: string,
   youtubeChannel?: string,
-  token?: string,
 ) {
   const twitch = twitchChannel.trim().toLowerCase();
   const kick = kickChannel.trim().toLowerCase();
   const youtube = youtubeChannel?.trim() ?? '';
-  const tok = token?.trim() ?? '';
 
   if (platforms !== 'kick' && platforms !== 'youtube' && twitch) params.set('twitch', twitch);
   if (platforms !== 'twitch' && platforms !== 'youtube' && kick) params.set('kick', kick);
   if (platforms !== 'twitch' && platforms !== 'kick' && youtube) params.set('youtube', youtube);
-  if (tok && (platforms === 'youtube' || platforms === 'both' || youtube)) {
-    params.set('token', tok);
-  }
 }
 
 /** The widget URL for OBS. Empty until a channel on a picked platform is filled in. */

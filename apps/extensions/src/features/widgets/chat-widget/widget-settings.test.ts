@@ -162,6 +162,22 @@ describe('parseWidgetUrl', () => {
     expect(durationOf('duration=7')).toBe(DEFAULT_SETTINGS.duration);
   });
 
+  it('appends token at the very end of the parameters', () => {
+    const params = buildWidgetParams(
+      DEFAULT_SETTINGS,
+      'streamer_twitch',
+      'streamer_kick',
+      'UC123456789',
+      'eyJhbGciOiJIUzI1NiJ9.sample-token',
+    );
+    const keys = Array.from(params.keys());
+    expect(keys[keys.length - 1]).toBe('token');
+    expect(params.get('token')).toBe('eyJhbGciOiJIUzI1NiJ9.sample-token');
+    expect(keys[0]).toBe('twitch');
+    expect(keys[1]).toBe('kick');
+    expect(keys[2]).toBe('youtube');
+  });
+
   it('rebuilds the same URL it was given', () => {
     const urls = [
       `${ORIGIN}/widgets/chat-widget?twitch=foo`,
