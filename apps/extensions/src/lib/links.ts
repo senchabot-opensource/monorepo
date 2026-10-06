@@ -10,6 +10,7 @@ export const LINKS = {
   discussions: `${REPO}/discussions`,
   senchabot: 'https://senchabot.com',
   dashboardWheel: 'https://senchabot.com/dashboard/tools/wheel',
+  dashboardChatWidget: 'https://senchabot.com/dashboard/tools',
   docs: 'https://docs.senchabot.com',
   discord: 'https://discord.com/invite/qUxwcjRzND',
   x: 'https://x.com/senchabot',
@@ -17,6 +18,16 @@ export const LINKS = {
   youtube: 'https://www.youtube.com/@senchabot',
   reddit: 'https://reddit.com/r/Senchabot/',
 } as const;
+
+export function resolveDashboardChatWidgetUrl(): string {
+  if (
+    typeof window !== 'undefined' &&
+    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+  ) {
+    return 'http://localhost:3000/dashboard/tools';
+  }
+  return LINKS.dashboardChatWidget;
+}
 
 export const CONTENT_PATHS = {
   guides: '/guides',

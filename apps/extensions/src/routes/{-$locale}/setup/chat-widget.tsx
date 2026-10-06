@@ -38,8 +38,10 @@ import { TYPING_PAUSE_MS, useDebouncedValue } from '#/hooks/use-debounced-value'
 import { useI18n } from '#/lib/i18n';
 import { getParamsLocale, withLangParam } from '#/lib/i18n/paths';
 import type { FaqEntry } from '#/lib/i18n/seo';
+import { resolveDashboardChatWidgetUrl } from '#/lib/links';
 import { getSetupPageHead } from '#/lib/seo/pages';
 import { channelWidgetUrl } from '#/lib/url-params';
+import { detectYouTubeChannelId } from '#/lib/youtube';
 import { getWidget } from '#/lib/widgets';
 
 /** Classic has no preset fonts, so a box left on one falls back to the classic default. */
@@ -82,15 +84,17 @@ const READER_BUTTON =
 function ChatWidgetSetup() {
   const { locale, t } = useI18n();
   const search = Route.useSearch();
+  const detectedChannelId = detectYouTubeChannelId(search.youtube);
+  const hasDetectedYoutube = Boolean(detectedChannelId);
   const [twitchChannel, setTwitchChannel] = useState(search.twitch ?? '');
   const [kickChannel, setKickChannel] = useState(search.kick ?? '');
-  const [youtubeChannel, setYoutubeChannel] = useState(search.youtube ?? '');
+  const [youtubeChannel, setYoutubeChannel] = useState(hasDetectedYoutube ? (detectedChannelId ?? '') : '');
   const [token, setToken] = useState(search.token ?? '');
   const [settings, setSettings] = useState<Settings>(() => {
     let platforms = DEFAULT_SETTINGS.platforms;
-    if (search.youtube && (search.twitch || search.kick)) {
+    if (hasDetectedYoutube && search.youtube && (search.twitch || search.kick)) {
       platforms = 'both';
-    } else if (search.youtube) {
+    } else if (hasDetectedYoutube && search.youtube) {
       platforms = 'youtube';
     } else if (search.twitch && !search.kick) {
       platforms = 'twitch';
@@ -108,6 +112,10 @@ function ChatWidgetSetup() {
   const deferredTwitch = useDebouncedValue(twitchChannel, TYPING_PAUSE_MS);
   const deferredKick = useDebouncedValue(kickChannel, TYPING_PAUSE_MS);
   const deferredYoutube = useDebouncedValue(youtubeChannel, TYPING_PAUSE_MS);
+
+  const effectiveYoutube = hasDetectedYoutube ? youtubeChannel : '';
+  const effectiveDeferredYoutube = hasDetectedYoutube ? deferredYoutube : '';
+  const effectiveToken = hasDetectedYoutube ? token : '';
 
   const update = <K extends keyof Settings>(key: K, value: Settings[K]) =>
     setSettings((current) => ({ ...current, [key]: value }));
@@ -131,10 +139,10 @@ function ChatWidgetSetup() {
         ? channelWidgetUrl(
             window.location.origin,
             '/widgets/chat-widget',
-            buildWidgetParams(settings, twitchChannel, kickChannel, youtubeChannel, token),
+            buildWidgetParams(settings, twitchChannel, kickChannel, effectiveYoutube, effectiveToken),
           )
         : '',
-    [mounted, settings, twitchChannel, kickChannel, youtubeChannel, token],
+    [mounted, settings, twitchChannel, kickChannel, effectiveYoutube, effectiveToken],
   );
 
   const readerUrl = useMemo(
@@ -145,11 +153,11 @@ function ChatWidgetSetup() {
             settings,
             twitchChannel,
             kickChannel,
-            youtubeChannel,
-            token,
+            effectiveYoutube,
+            effectiveToken,
           )
         : '',
-    [mounted, settings, twitchChannel, kickChannel, youtubeChannel, token],
+    [mounted, settings, twitchChannel, kickChannel, effectiveYoutube, effectiveToken],
   );
 
   const previewUrl = useMemo(() => {
@@ -158,23 +166,33 @@ function ChatWidgetSetup() {
       settings,
       deferredTwitch,
       deferredKick,
-      deferredYoutube,
-      token,
+      effectiveDeferredYoutube,
+      effectiveToken,
     );
     params.append('mock', 'true');
     if (previewRateIndex > 0) params.append('mockRate', String(PREVIEW_RATES[previewRateIndex]));
     // PreviewFrame adds the page's language.
     return `${window.location.origin}/widgets/chat-widget?${params.toString()}`;
-  }, [mounted, settings, deferredTwitch, deferredKick, deferredYoutube, token, previewRateIndex]);
+  }, [mounted, settings, deferredTwitch, deferredKick, effectiveDeferredYoutube, effectiveToken, previewRateIndex]);
 
   const applyWidgetUrl = (text: string) => {
     const parsed = parseWidgetUrl(text);
     if (!parsed) return false;
+    const detectedYt = detectYouTubeChannelId(parsed.youtubeChannel);
+    const hasValidYt = Boolean(detectedYt);
     setSettings(parsed.settings);
     setTwitchChannel(parsed.twitchChannel);
     setKickChannel(parsed.kickChannel);
-    setYoutubeChannel(parsed.youtubeChannel ?? '');
-    if (parsed.token) setToken(parsed.token);
+    if (hasValidYt) {
+      setYoutubeChannel(detectedYt ?? '');
+      setToken(parsed.token ?? '');
+    } else {
+      setYoutubeChannel('');
+      setToken('');
+      if (parsed.settings.platforms === 'youtube') {
+        setSettings((prev) => ({ ...prev, platforms: 'both' }));
+      }
+    }
     return true;
   };
 
@@ -285,6 +303,23 @@ function ChatWidgetSetup() {
           onKickChange={setKickChannel}
           youtube={youtubeChannel}
           onYoutubeChange={setYoutubeChannel}
+          hasYoutubeChannel={hasDetectedYoutube}
+          youtubeNotice={
+            !hasDetectedYoutube ? (
+              <div className="mt-2 flex flex-col gap-1 rounded-md border border-amber-300 bg-amber-50 p-3 text-xs text-amber-800 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-300">
+                <span className="font-semibold">YouTube channel required</span>
+                <span>
+                  YouTube live chat requires a connected YouTube channel. Connect your YouTube account in the Senchabot Dashboard and launch this setup from the Tools page to enable YouTube chat.
+                </span>
+                <a
+                  href={resolveDashboardChatWidgetUrl()}
+                  className="mt-2 inline-flex items-center gap-1.5 self-start rounded-md bg-amber-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:bg-amber-700 dark:bg-amber-500 dark:text-zinc-950 dark:hover:bg-amber-400"
+                >
+                  Connect YouTube in Senchabot Dashboard &rarr;
+                </a>
+              </div>
+            ) : null
+          }
           aside={
             <div>
               <FieldLabel id={`${id}-indicator`} tip={t('chatWidget.platformIndicatorTip')}>
@@ -300,11 +335,6 @@ function ChatWidgetSetup() {
             </div>
           }
         />
-        {youtubeChannel && !token && (
-          <p className="mt-2 text-xs text-amber-500 dark:text-amber-400">
-            Tip: Launch this setup from your Senchabot Dashboard Tools page so your YouTube live chat authorization token is included.
-          </p>
-        )}
       </SettingsGroup>
 
       <SettingsGroup title={t('common.sectionAppearance')}>
