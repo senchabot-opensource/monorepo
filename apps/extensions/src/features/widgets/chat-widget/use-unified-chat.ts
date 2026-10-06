@@ -2,7 +2,7 @@ import React from 'react';
 import { type ChatMessagesType, chatMessagesCollection } from './chat-messages';
 import { TwitchChat } from '#/lib/twitch';
 import { KickChat } from '#/lib/kick';
-import { YouTubeChat } from '#/lib/youtube';
+import { detectYouTubeChannelId, YouTubeChat } from '#/lib/youtube';
 
 const MAX_CHAT_HISTORY = 100;
 
@@ -161,11 +161,11 @@ export const useUnifiedChat = (
   }, [kickChannelId, store]);
 
   React.useEffect(() => {
-    const channel = youtubeChannel?.trim();
+    const channelId = detectYouTubeChannelId(youtubeChannel);
     const tok = token?.trim();
-    if (!channel || !tok) return;
+    if (!channelId || !tok) return;
     const client = new YouTubeChat(
-      channel,
+      channelId,
       tok,
       store.pushToMessages,
       store.deleteMessage,

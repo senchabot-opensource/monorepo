@@ -1,9 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ChatMessagesType } from '#/features/widgets/chat-widget/chat-messages';
-import { YouTubeChat } from './youtube';
+import { detectYouTubeChannelId, isYouTubeChannelId, YouTubeChat } from './youtube';
 
 class FakeWebSocket {
-  static last: FakeWebSocket;
+  static last: FakeWebSocket | undefined;
   url: string;
   onopen: (() => void) | null = null;
   onmessage: ((event: { data: string }) => void) | null = null;
@@ -32,12 +32,36 @@ const moderation = {
 
 beforeEach(() => {
   received = [];
+  FakeWebSocket.last = undefined;
   vi.clearAllMocks();
   vi.stubGlobal('WebSocket', FakeWebSocket);
 });
 
 afterEach(() => {
   vi.unstubAllGlobals();
+});
+
+describe('YouTube Channel ID detection', () => {
+  it('detects valid canonical 24-char channel IDs starting with UC', () => {
+    expect(isYouTubeChannelId('UC_x5XG1OV2P6uZZ5FSM9Ttw')).toBe(true);
+    expect(isYouTubeChannelId('UC1234567890123456789012')).toBe(true);
+    expect(detectYouTubeChannelId('UC_x5XG1OV2P6uZZ5FSM9Ttw')).toBe('UC_x5XG1OV2P6uZZ5FSM9Ttw');
+  });
+
+  it('extracts channel ID from full YouTube URLs', () => {
+    expect(
+      detectYouTubeChannelId('https://www.youtube.com/channel/UC_x5XG1OV2P6uZZ5FSM9Ttw'),
+    ).toBe('UC_x5XG1OV2P6uZZ5FSM9Ttw');
+  });
+
+  it('rejects invalid channel IDs or handles', () => {
+    expect(isYouTubeChannelId('@mychannel')).toBe(false);
+    expect(isYouTubeChannelId('not-a-channel')).toBe(false);
+    expect(isYouTubeChannelId('')).toBe(false);
+    expect(isYouTubeChannelId(null)).toBe(false);
+    expect(detectYouTubeChannelId('@mychannel')).toBeNull();
+    expect(detectYouTubeChannelId(null)).toBeNull();
+  });
 });
 
 describe('YouTubeChat', () => {
@@ -52,8 +76,8 @@ describe('YouTubeChat', () => {
     );
 
     expect(FakeWebSocket.last).toBeDefined();
-    expect(FakeWebSocket.last.url).toContain('token=test-token-jwt');
-    expect(FakeWebSocket.last.url).toContain('channel=UC1234567890');
+    expect(FakeWebSocket.last!.url).toContain('token=test-token-jwt');
+    expect(FakeWebSocket.last!.url).toContain('channel=UC1234567890');
     client.disconnect();
   });
 
@@ -67,7 +91,7 @@ describe('YouTubeChat', () => {
       moderation.clearAll,
     );
 
-    FakeWebSocket.last.onmessage?.({
+    FakeWebSocket.last!.onmessage?.({
       data: JSON.stringify({
         type: 'message',
         id: 'yt-msg-1',
@@ -105,7 +129,7 @@ describe('YouTubeChat', () => {
       moderation.clearAll,
     );
 
-    FakeWebSocket.last.onmessage?.({
+    FakeWebSocket.last!.onmessage?.({
       data: JSON.stringify({
         type: 'delete',
         deletedMessageId: 'yt-msg-999',
@@ -126,7 +150,7 @@ describe('YouTubeChat', () => {
       moderation.clearAll,
     );
 
-    FakeWebSocket.last.onmessage?.({
+    FakeWebSocket.last!.onmessage?.({
       data: JSON.stringify({
         type: 'ban',
         bannedUserChannel: 'spammer123',
@@ -148,7 +172,7 @@ describe('YouTubeChat', () => {
     );
 
     expect(() => {
-      FakeWebSocket.last.onmessage?.({
+      FakeWebSocket.last!.onmessage?.({
         data: JSON.stringify({
           type: 'status',
           status: 'offline',

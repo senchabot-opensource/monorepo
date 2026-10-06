@@ -26,6 +26,33 @@ export function resolveWsBaseUrl(): string {
   return 'wss://senchabot.com/api/ws/youtube-chat';
 }
 
+/**
+ * Simple YouTube Channel ID detection.
+ * Canonical YouTube channel IDs start with "UC" and are 24 characters long.
+ * Example: UC_x5XG1OV2P6uZZ5FSM9Ttw
+ */
+export function isYouTubeChannelId(channelId?: string | null): boolean {
+  if (!channelId) return false;
+  return /^UC[\w-]{22}$/.test(channelId.trim());
+}
+
+/**
+ * Detects and extracts a valid YouTube Channel ID from either a raw channel ID
+ * or a YouTube channel URL.
+ */
+export function detectYouTubeChannelId(input?: string | null): string | null {
+  if (!input) return null;
+  const trimmed = input.trim();
+  if (/^UC[\w-]{22}$/.test(trimmed)) {
+    return trimmed;
+  }
+  const match = trimmed.match(/(?:channel\/|\/c\/|\/user\/)?(UC[\w-]{22})/);
+  if (match) {
+    return match[1];
+  }
+  return null;
+}
+
 export class YouTubeChat extends BaseChatClient {
   private readonly channel: string;
   private readonly token: string;

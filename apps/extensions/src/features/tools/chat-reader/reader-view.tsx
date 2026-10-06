@@ -40,6 +40,7 @@ export function formatDuration(ms: number, t: Translate) {
 const PLATFORM_TEXT: Record<ChatPlatform, string> = {
   twitch: 'text-[#9146FF]',
   kick: 'text-green-600 dark:text-[#53FC18]',
+  youtube: 'text-red-600 dark:text-[#FF0000]',
 };
 
 const DOT: Record<ChatConnectionStatus['state'] | 'missing', string> = {

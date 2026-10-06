@@ -16,6 +16,12 @@ interface ChannelFieldsProps {
   onKickChange: (channel: string) => void;
   youtube?: string;
   onYoutubeChange?: (channel: string) => void;
+  /** Whether a valid YouTube channel is present/detected. When false, YouTube input is disabled. */
+  hasYoutubeChannel?: boolean;
+  /** Legacy alias for hasYoutubeChannel. */
+  hasYoutubeToken?: boolean;
+  /** Optional notice shown beneath the YouTube field when authorization or connection is required. */
+  youtubeNotice?: ReactNode;
   /** Replaces the generic Platforms tip with a widget-specific one. */
   platformsTip?: string;
   /** Cell beside Platforms, e.g. Chat Box's Platform Indicator. Without it Platforms spans the row. */
@@ -37,10 +43,14 @@ export function ChannelFields({
   onKickChange,
   youtube,
   onYoutubeChange,
+  hasYoutubeChannel,
+  hasYoutubeToken,
+  youtubeNotice,
   platformsTip,
   aside,
   disabled,
 }: ChannelFieldsProps) {
+  const hasValidChannel = hasYoutubeChannel ?? hasYoutubeToken ?? true;
   const { t } = useI18n();
   const id = useId();
   const options: SegmentedOption<ChannelPlatforms>[] = onYoutubeChange
@@ -95,14 +105,23 @@ export function ChannelFields({
         <div className="sm:col-span-2">
           <TextField
             label="YouTube Channel"
-            tip="YouTube Channel ID (e.g. UC...) or handle (@channel)"
-            value={youtube ?? ''}
-            onChange={onYoutubeChange}
-            placeholder="e.g. @YourChannel or UC..."
-            disabled={disabled || platforms === 'twitch' || platforms === 'kick'}
+            tip={
+              hasValidChannel
+                ? 'Connected YouTube channel from Senchabot Dashboard'
+                : 'Connected YouTube channel required from Senchabot Dashboard Tools'
+            }
+            value={hasValidChannel ? (youtube ?? '') : ''}
+            onChange={() => {}}
+            placeholder={
+              hasValidChannel
+                ? 'Connected via Senchabot'
+                : 'Connect YouTube in Senchabot Dashboard to enable'
+            }
+            disabled={true}
             autoComplete="off"
             spellCheck={false}
           />
+          {youtubeNotice}
         </div>
       )}
     </div>

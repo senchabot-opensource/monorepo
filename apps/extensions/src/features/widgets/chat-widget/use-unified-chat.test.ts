@@ -9,11 +9,12 @@ type Callbacks = {
   ban: (userLower: string) => void;
   clear: () => void;
   channel: string;
+  token?: string;
   disconnected: boolean;
 };
 
-const { clients, fakeClient } = vi.hoisted(() => {
-  const clients = {} as Record<'twitch' | 'kick', Callbacks>;
+const { clients, fakeClient, fakeYouTube } = vi.hoisted(() => {
+  const clients = {} as Record<'twitch' | 'kick' | 'youtube', Callbacks>;
   const fakeClient = (platform: 'twitch' | 'kick') =>
     class {
       private callbacks: Callbacks;
@@ -31,11 +32,35 @@ const { clients, fakeClient } = vi.hoisted(() => {
         this.callbacks.disconnected = true;
       }
     };
-  return { clients, fakeClient };
+  const fakeYouTube = class {
+    private callbacks: Callbacks;
+    constructor(
+      channel: string,
+      token: string,
+      message: Callbacks['message'],
+      remove: Callbacks['remove'],
+      ban: Callbacks['ban'],
+      clear: Callbacks['clear'],
+    ) {
+      this.callbacks = { message, remove, ban, clear, channel, token, disconnected: false };
+      clients.youtube = this.callbacks;
+    }
+    disconnect() {
+      this.callbacks.disconnected = true;
+    }
+  };
+  return { clients, fakeClient, fakeYouTube };
 });
 
 vi.mock('#/lib/twitch', () => ({ TwitchChat: fakeClient('twitch') }));
 vi.mock('#/lib/kick', () => ({ KickChat: fakeClient('kick') }));
+vi.mock('#/lib/youtube', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('#/lib/youtube')>();
+  return {
+    ...actual,
+    YouTubeChat: fakeYouTube,
+  };
+});
 
 const say = (platform: 'twitch' | 'kick', id: string, user: string, userLower?: string) =>
   clients[platform].message({
@@ -52,7 +77,7 @@ const shown = (...ids: string[]) => ids.filter((id) => chatMessagesCollection.ha
 
 afterEach(() => {
   for (const key of [...chatMessagesCollection.keys()]) chatMessagesCollection.delete(key);
-  for (const platform of ['twitch', 'kick'] as const) delete clients[platform];
+  for (const platform of ['twitch', 'kick', 'youtube'] as const) delete clients[platform];
 });
 
 describe('useUnifiedChat moderation', () => {
@@ -180,5 +205,24 @@ describe('useUnifiedChat store', () => {
     unmount();
     expect(twitch.disconnected).toBe(true);
     expect(kick.disconnected).toBe(true);
+  });
+
+  it('connects to YouTube only with valid channel ID and token, and disconnects on unmount', () => {
+    const { rerender, unmount } = renderHook(
+      ({ yt, tok }: { yt?: string; tok?: string }) => useUnifiedChat(null, null, yt, tok),
+      { initialProps: { yt: 'invalid-channel', tok: 'jwt-token' } },
+    );
+    expect(clients.youtube).toBeUndefined();
+
+    rerender({ yt: 'UC_x5XG1OV2P6uZZ5FSM9Ttw', tok: '' });
+    expect(clients.youtube).toBeUndefined();
+
+    rerender({ yt: 'UC_x5XG1OV2P6uZZ5FSM9Ttw', tok: 'valid-jwt-token' });
+    expect(clients.youtube).toBeDefined();
+    expect(clients.youtube.channel).toBe('UC_x5XG1OV2P6uZZ5FSM9Ttw');
+    expect(clients.youtube.token).toBe('valid-jwt-token');
+
+    unmount();
+    expect(clients.youtube.disconnected).toBe(true);
   });
 });

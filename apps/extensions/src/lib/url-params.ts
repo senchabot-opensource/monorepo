@@ -83,14 +83,14 @@ export function readWidgetUrl(text: string, path: string) {
   if (!url.pathname.replace(/\/+$/, '').endsWith(path)) return null;
   const twitchChannel = url.searchParams.get('twitch')?.trim() ?? '';
   const kickChannel = url.searchParams.get('kick')?.trim() ?? '';
-  const youtubeChannel = url.searchParams.get('youtube')?.trim() ?? '';
-  const token = url.searchParams.get('token')?.trim() ?? '';
+  const youtubeChannel = url.searchParams.get('youtube')?.trim();
+  const token = url.searchParams.get('token')?.trim();
   return {
     params: url.searchParams,
     twitchChannel,
     kickChannel,
-    youtubeChannel,
-    token,
+    ...(youtubeChannel ? { youtubeChannel } : {}),
+    ...(token ? { token } : {}),
     platforms: platformsOf(twitchChannel, kickChannel, youtubeChannel),
   };
 }
