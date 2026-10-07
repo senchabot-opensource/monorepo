@@ -741,7 +741,7 @@ const MessageRow = React.memo(function MessageRow({
 
   const platformNode = showPlatformIndicator && (
     <span
-      className="inline-flex items-center data-[platform=twitch]:text-purple-500 data-[platform=kick]:text-green-500"
+      className="inline-flex items-center data-[platform=twitch]:text-purple-500 data-[platform=kick]:text-green-500 data-[platform=youtube]:text-[#FF0000]"
       data-platform={msg.platform}
     >
       {platformDisplay === 'icon' ? <PlatformIcon platform={msg.platform} /> : `[${msg.platform}]`}

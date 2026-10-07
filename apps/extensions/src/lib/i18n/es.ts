@@ -365,6 +365,16 @@ export const es: typeof en = {
     openReader: 'Abrir Lector de Chat',
     openReaderHint:
       'Lee tu propio chat en una pestaña del navegador o en un panel de OBS. Se reconecta solo, marca cada corte y conserva tu historial al recargar.',
+    youtubeChannel: 'YouTube Channel',
+    youtubeConnectedTip: 'Connected YouTube channel from Senchabot Dashboard',
+    youtubeMissingTip: 'Connected YouTube channel required from Senchabot Dashboard Tools',
+    youtubeConnectedPlaceholder: 'Connected via Senchabot',
+    youtubeMissingPlaceholder: 'Connect YouTube in Senchabot Dashboard to enable',
+    youtubeRequiredTitle: 'YouTube channel required if you want YouTube too',
+    youtubeRequiredText:
+      'YouTube live chat requires a connected YouTube channel. Connect your YouTube account in the Senchabot Dashboard and launch this setup from the Tools page to enable YouTube chat.',
+    youtubeConnectCta: 'Connect YouTube in Senchabot Dashboard',
+    youtubeIgnoreHint: 'If you only want Twitch and Kick, you can safely ignore this.',
     faq1Q: '¿Necesito iniciar sesión en Twitch o Kick para usar la caja de chat?',
     faq1A:
       'No hace falta iniciar sesión. Caja de Chat escucha de forma anónima el chat público de ambas plataformas.',

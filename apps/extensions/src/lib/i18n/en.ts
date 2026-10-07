@@ -258,7 +258,7 @@ export const en = {
     platformHidden: 'Hide Platform',
     sectionMessages: 'Messages',
     platformsTip:
-      'Pick which platforms to pull chat from. Select both to merge Twitch and Kick messages into a single feed.',
+      'Pick which platforms to pull chat from. Select All to merge Twitch, Kick and YouTube messages into a single feed, or pick one platform for only its chat.',
     platformIndicatorTip:
       'When both platforms are on, shows where each message came from: the platform name, its icon, or nothing.',
     orientationTip:
@@ -354,6 +354,16 @@ export const en = {
     openReader: 'Open Chat Reader',
     openReaderHint:
       'Read your own chat in a browser tab or an OBS dock. It reconnects on its own, marks every drop, and keeps your history through a refresh.',
+    youtubeChannel: 'YouTube Channel',
+    youtubeConnectedTip: 'Connected YouTube channel from Senchabot Dashboard',
+    youtubeMissingTip: 'Connected YouTube channel required from Senchabot Dashboard Tools',
+    youtubeConnectedPlaceholder: 'Connected via Senchabot',
+    youtubeMissingPlaceholder: 'Connect YouTube in Senchabot Dashboard to enable',
+    youtubeRequiredTitle: 'YouTube channel required if you want YouTube too',
+    youtubeRequiredText:
+      'YouTube live chat requires a connected YouTube channel. Connect your YouTube account in the Senchabot Dashboard and launch this setup from the Tools page to enable YouTube chat.',
+    youtubeConnectCta: 'Connect YouTube in Senchabot Dashboard',
+    youtubeIgnoreHint: 'If you only want Twitch and Kick, you can safely ignore this.',
     faq1Q: 'Do I need to sign in to Twitch or Kick to use the chat box?',
     faq1A:
       'No login is required. Chat Box listens anonymously to public chat streams for both platforms.',

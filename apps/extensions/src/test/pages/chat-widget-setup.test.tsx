@@ -272,4 +272,43 @@ describe('Chat Box setup', () => {
     expect(urlField().value).toBe(before);
     expect(screen.queryByText(en('chatWidget.widgetUrlInvalid'))).toBeNull();
   });
+
+  it('offers each platform individually and only asks for YouTube when it is picked', async () => {
+    const user = setupUser();
+    await renderRoute(PAGE);
+    const requiredTitle = en('chatWidget.youtubeRequiredTitle');
+    const youtubeField = () => textbox(en('chatWidget.youtubeChannel'));
+
+    // All (the default) includes YouTube, so a fresh page asks for the connection.
+    expect(platforms(en('common.platformAll')).checked).toBe(true);
+    expect(screen.getByText(requiredTitle)).toBeTruthy();
+    expect(youtubeField().disabled).toBe(true);
+
+    await user.click(platforms('Twitch'));
+    expect(kickField().disabled).toBe(true);
+    expect(twitchField().disabled).toBe(false);
+    expect(screen.queryByText(requiredTitle)).toBeNull();
+
+    await user.click(platforms('Kick'));
+    expect(twitchField().disabled).toBe(true);
+    expect(kickField().disabled).toBe(false);
+    expect(screen.queryByText(requiredTitle)).toBeNull();
+
+    await user.click(platforms('YouTube'));
+    expect(twitchField().disabled).toBe(true);
+    expect(kickField().disabled).toBe(true);
+    expect(screen.getByText(requiredTitle)).toBeTruthy();
+    expect(screen.getByText(en('chatWidget.youtubeRequiredText'))).toBeTruthy();
+    expect(screen.getByText(en('chatWidget.youtubeIgnoreHint'))).toBeTruthy();
+
+    await user.click(platforms(en('common.platformAll')));
+    expect(screen.getByText(requiredTitle)).toBeTruthy();
+  });
+
+  it('hides the YouTube required card once a channel is connected', async () => {
+    await renderRoute(`${PAGE}?youtube=UC_x5XG1OV2P6uZZ5FSM9Ttw&token=test-token`);
+    expect(screen.queryByText(en('chatWidget.youtubeRequiredTitle'))).toBeNull();
+    expect(textbox(en('chatWidget.youtubeChannel')).value).toBe('UC_x5XG1OV2P6uZZ5FSM9Ttw');
+    expect(platforms('YouTube').checked).toBe(true);
+  });
 });

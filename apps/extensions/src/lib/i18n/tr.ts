@@ -262,7 +262,7 @@ export const tr: typeof en = {
     platformHidden: 'Platformu Gizle',
     sectionMessages: 'Mesajlar',
     platformsTip:
-      'Sohbeti hangi platformlardan alacağını seç. İkisini seçersen Twitch ve Kick mesajları tek akışta birleşir.',
+      'Sohbeti hangi platformlardan alacağını seç. Hepsini seçersen Twitch, Kick ve YouTube mesajları tek akışta birleşir, tek platform seçersen sadece onun sohbeti gelir.',
     platformIndicatorTip:
       'İki platform birlikteyken her mesajın yanında nereden geldiğini gösterir: platform adı, simgesi ya da hiçbir şey.',
     orientationTip:
@@ -359,6 +359,16 @@ export const tr: typeof en = {
     openReader: "Sohbet Okuyucu'yu Aç",
     openReaderHint:
       "Kendi sohbetini bir tarayıcı sekmesinde ya da OBS dock'unda oku. Bağlantı koparsa kendi kendine yeniden bağlanır, her kopmayı sohbete not düşer. Sayfayı yenilesen de geçmişin kaybolmaz.",
+    youtubeChannel: 'YouTube Kanalı',
+    youtubeConnectedTip: 'Senchabot Panelinden bağlı YouTube kanalı',
+    youtubeMissingTip: 'Senchabot Paneli Araçlar bölümünden bağlı YouTube kanalı gerekli',
+    youtubeConnectedPlaceholder: 'Senchabot ile bağlı',
+    youtubeMissingPlaceholder: 'Etkinleştirmek için Panelde YouTube bağla',
+    youtubeRequiredTitle: 'YouTube da istiyorsan YouTube kanalı gerekli',
+    youtubeRequiredText:
+      'YouTube canlı sohbeti için bağlı bir YouTube kanalı gerekir. Senchabot Panelinde YouTube hesabını bağla ve bu kurulumu Araçlar sayfasından açarak YouTube sohbetini etkinleştir.',
+    youtubeConnectCta: 'Senchabot Panelinde YouTube bağla',
+    youtubeIgnoreHint: 'Yalnızca Twitch ve Kick istiyorsan bunu görmezden gelebilirsin.',
     faq1Q: "Sohbet kutusunu kullanmak için Twitch veya Kick'e giriş yapmam gerekiyor mu?",
     faq1A:
       'Giriş gerekmez. Sohbet Kutusu, her iki platformun herkese açık sohbet akışlarını anonim olarak dinler.',

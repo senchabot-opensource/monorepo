@@ -359,6 +359,16 @@ export const ja: typeof en = {
     openReader: 'チャットリーダーを開く',
     openReaderHint:
       '自分のチャットをブラウザのタブやOBSのドックで読めます。切断されても自動で再接続し、途切れた箇所をすべて記録して、ページを更新しても履歴が残ります。',
+    youtubeChannel: 'YouTube Channel',
+    youtubeConnectedTip: 'Connected YouTube channel from Senchabot Dashboard',
+    youtubeMissingTip: 'Connected YouTube channel required from Senchabot Dashboard Tools',
+    youtubeConnectedPlaceholder: 'Connected via Senchabot',
+    youtubeMissingPlaceholder: 'Connect YouTube in Senchabot Dashboard to enable',
+    youtubeRequiredTitle: 'YouTube channel required if you want YouTube too',
+    youtubeRequiredText:
+      'YouTube live chat requires a connected YouTube channel. Connect your YouTube account in the Senchabot Dashboard and launch this setup from the Tools page to enable YouTube chat.',
+    youtubeConnectCta: 'Connect YouTube in Senchabot Dashboard',
+    youtubeIgnoreHint: 'If you only want Twitch and Kick, you can safely ignore this.',
     faq1Q: 'チャットボックスを使うのに、TwitchやKickへのサインインは必要ですか？',
     faq1A:
       'ログインは不要です。チャットボックスは両プラットフォームの公開チャットを匿名で読み取ります。',
