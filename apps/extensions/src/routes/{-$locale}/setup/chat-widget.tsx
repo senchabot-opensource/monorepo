@@ -305,17 +305,17 @@ function ChatWidgetSetup() {
           onYoutubeChange={setYoutubeChannel}
           hasYoutubeChannel={hasDetectedYoutube}
           youtubeNotice={
-            !hasDetectedYoutube ? (
+            !hasDetectedYoutube &&
+            (settings.platforms === 'youtube' || settings.platforms === 'both') ? (
               <div className="mt-2 flex flex-col gap-1 rounded-md border border-amber-300 bg-amber-50 p-3 text-xs text-amber-800 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-300">
-                <span className="font-semibold">YouTube channel required</span>
-                <span>
-                  YouTube live chat requires a connected YouTube channel. Connect your YouTube account in the Senchabot Dashboard and launch this setup from the Tools page to enable YouTube chat.
-                </span>
+                <span className="font-semibold">{t('chatWidget.youtubeRequiredTitle')}</span>
+                <span>{t('chatWidget.youtubeRequiredText')}</span>
+                <span className="opacity-80">{t('chatWidget.youtubeIgnoreHint')}</span>
                 <a
                   href={resolveDashboardChatWidgetUrl()}
                   className="mt-2 inline-flex items-center gap-1.5 self-start rounded-md bg-amber-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:bg-amber-700 dark:bg-amber-500 dark:text-zinc-950 dark:hover:bg-amber-400"
                 >
-                  Connect YouTube in Senchabot Dashboard &rarr;
+                  {t('chatWidget.youtubeConnectCta')} &rarr;
                 </a>
               </div>
             ) : null

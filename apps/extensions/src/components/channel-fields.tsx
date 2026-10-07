@@ -104,18 +104,18 @@ export function ChannelFields({
       {onYoutubeChange && (
         <div className="sm:col-span-2">
           <TextField
-            label="YouTube Channel"
+            label={t('chatWidget.youtubeChannel')}
             tip={
               hasValidChannel
-                ? 'Connected YouTube channel from Senchabot Dashboard'
-                : 'Connected YouTube channel required from Senchabot Dashboard Tools'
+                ? t('chatWidget.youtubeConnectedTip')
+                : t('chatWidget.youtubeMissingTip')
             }
             value={hasValidChannel ? (youtube ?? '') : ''}
             onChange={() => {}}
             placeholder={
               hasValidChannel
-                ? 'Connected via Senchabot'
-                : 'Connect YouTube in Senchabot Dashboard to enable'
+                ? t('chatWidget.youtubeConnectedPlaceholder')
+                : t('chatWidget.youtubeMissingPlaceholder')
             }
             disabled={true}
             autoComplete="off"
