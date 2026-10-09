@@ -1073,7 +1073,7 @@ export const tr: typeof en = {
       'İzleyiciler bir seçeneğin yanındaki numarayı ya da seçeneğin kendisini yazarak oy verir. En fazla 6 seçenek.',
     optionLabel: 'Seçenek {n}',
     optionPlaceholder: 'Seçenek {n}',
-    removeOption: '{n}. seçeneği kaldır',
+    removeOption: '{n} seçeneğini kaldır',
     addOption: '+ Seçenek Ekle',
     pollHint:
       "URL'de saklanır. Sohbete {command} yazınca ekrana gelir. Modlar da istedikleri an sohbetten yeni bir anket yazabilir.",
@@ -1102,6 +1102,11 @@ export const tr: typeof en = {
     blind: 'Sonuçları Sona Kadar Gizle',
     blindTip:
       'Oylama açıkken barlar gizli kalır, böylece ilk oylar diğerlerini etkilemez. Sadece oy sayısı görünür.',
+    labels: 'Oy Biçimi',
+    labelsTip:
+      'İzleyicilerin oy vermek için yazdığı ve ankette her seçeneğin yanında görünen işaret: 1 2 3 ya da A B C.',
+    labelsNumbers: '1 2 3',
+    labelsLetters: 'A B C',
     color: 'Renk',
     position: 'Konum',
     positionTip: "Anketin Tarayıcı Kaynağı'nda duracağı yer. Seçenek sayısına göre oradan uzar.",
@@ -1170,8 +1175,9 @@ export const tr: typeof en = {
       winner: 'Kazanan: {option}',
       noVotes: 'Oy gelmedi',
       hidden: 'Sonuçlar oylama bitince görünür',
-      howTo: 'Sohbete 1 ile {last} arası yaz',
-      howToTwo: 'Sohbete 1 ya da 2 yaz',
+      howTo: 'Sohbete {first} ile {last} arası yaz',
+      howToTwo: 'Sohbete {first} ya da {second} yaz',
+      howToLetters: 'Sohbete {first} ile {last} arası bir harf yaz',
       subsOnly: 'Sadece aboneler',
       subBonus: 'Abone oyu ×{n}',
       votes: '{count} oy',
@@ -1977,7 +1983,7 @@ export const tr: typeof en = {
         step3:
           'Yayından önce hazır bir anket istiyorsan Hazır Anket bölümüne bir soru ve 2 ile 6 arası seçenek yaz. Bu anket `!poll start` ile ekrana gelir.',
         step4:
-          "Anket Süresi'ni (varsayılan 1 dakika), sonuçların ekranda ne kadar kalacağını ve kimlerin oy verebileceğini ayarla.",
+          "Anket Süresi'ni (varsayılan 3 dakika), sonuçların ekranda ne kadar kalacağını ve kimlerin oy verebileceğini ayarla.",
         step5:
           "Bir renk, konum ve anket dili seç, URL'yi kopyala ve OBS'e 640 × 560 boyutunda Tarayıcı Kaynağı olarak ekle.",
         p1: "Kurulum sayfasındaki önizleme, sahte izleyicilerin oy verdiği bir anketi gerçek zamandan hızlı oynatır, bitince sıradakini başlatır. Dene düğmeleri 10 oy ekler, 30 saniye ekler, anketi bitirir ve yeni bir anket başlatır. Bu düğmeler sadece önizlemeyi değiştirir, OBS'teki ankete hiç dokunmaz.",
@@ -2017,7 +2023,7 @@ export const tr: typeof en = {
       timing: {
         title: 'Süre bitince ne olur?',
         p1: 'İzleyiciler yayınını sohbetin birkaç saniye gerisinden izler, yani onların ekranında 1 saniye kaldığında anket sohbette çoktan kapanmıştır. Süre bittikten sonra oylar Yayın Gecikmesi kadar daha sayılır (varsayılan 5 saniye), bu sırada ankette Son oylar yazar. Bunu izleyicilerinin ne kadar geriden izlediğine göre ayarla, Twitch ve Kick genelde 2 ile 10 saniye geriden gelir.',
-        p2: 'Ardından kazanan taçla birlikte altın renginde parlar, diğer seçenekler soluklaşır. İki ya da daha fazla seçenek en çok oyda eşit kalırsa ankette Berabere yazar. Sonuçlar Sonuç Gösterim Süresi boyunca ekranda kalır (varsayılan 30 saniye), sonra anket yavaşça kaybolur. Sonuçların bir sonraki ankete ya da `!poll cancel` yazılana kadar kalması için 0 yap.',
+        p2: 'Ardından kazanan taçla birlikte altın renginde parlar, diğer seçenekler soluklaşır. İki ya da daha fazla seçenek en çok oyda eşit kalırsa ankette Berabere yazar. Sonuçlar Sonuç Gösterim Süresi boyunca ekranda kalır (varsayılan 45 saniye), sonra anket yavaşça kaybolur. Sonuçların bir sonraki ankete ya da `!poll cancel` yazılana kadar kalması için 0 yap.',
         p3: 'Anket Süresi 0 olursa ankette süre olmaz, anket bir mod `!poll end` yazana kadar açık kalır. `!poll extend` sadece süresi olan bir ankete süre ekler.',
       },
       look: {
@@ -2425,6 +2431,10 @@ export const tr: typeof en = {
     entries: {
       countdownSounds:
         'Yayın Geri Sayımı artık son saniyelerde tikleyip sıfırda bir melodi çalabiliyor — Melodi, Zil ya da Dijital seç. Varsayılan olarak kapalı, mevcut overlay’ler sessiz kalır.',
+      pollLongerDefaults:
+        'Yeni Sohbet Anketleri 3 dakika oylama ve 45 saniye sonuç gösterimiyle başlıyor. OBS\'teki mevcut anketler kendi sürelerini koruyor.',
+      pollLetterLabels:
+        'Sohbet Anketi seçenekleri 1 2 3 yerine A B C ile gösterebiliyor; izleyiciler harfi yazarak oy veriyor.',
       presetScrollFix: 'Kurulum sayfasında preset seçmek artık sayfayı kaydırmıyor.',
       chatSharedBackground:
         'Sohbet Kutusu’na Sohbet Arka Planı geldi: her mesaja kutu koymak istemeyenler için tüm mesajların arkasında tek bir zemin.',

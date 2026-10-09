@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useKickChannel } from '#/hooks/use-kick-channel';
 import { usePreviewReceiver } from '#/hooks/use-preview-channel';
 import { type PollSettings, savedPoll } from '#/lib/poll-url';
 import type { SubathonPlatform } from '../subathon/subathon-events';
-import { useKickChannel } from '#/hooks/use-kick-channel';
 import type { PollChatEvent } from './poll-chat';
 import { KickPollSource, TwitchPollSource } from './poll-sources';
 import {
@@ -12,6 +12,7 @@ import {
   endPoll,
   extendPoll,
   fromSaved,
+  optionLabel,
   type PollCommand,
   type PollPhase,
   type PollState,
@@ -229,7 +230,7 @@ export function usePoll({
         }
       }
       if (!poll || !takesVotes(poll, time, timing)) return;
-      const option = parseVote(event.text, poll.options);
+      const option = parseVote(event.text, poll.options, settings.labels);
       if (option === null || (settings.subsOnly && !event.sub)) return;
       // Sub weight only applies when everyone votes; the setup turns the field off for subs-only.
       const weight = event.sub && !settings.subsOnly ? settings.subWeight : 1;
@@ -329,7 +330,7 @@ export function usePoll({
           kind: 'message',
           platform: simPlatform ?? (Math.random() < 0.55 ? 'twitch' : 'kick'),
           login,
-          text: String(option + 1),
+          text: optionLabel(option, optionsRef.current.settings.labels),
           mod: false,
           sub: Math.random() < 0.3,
         });

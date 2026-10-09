@@ -1101,6 +1101,11 @@ export const de: typeof en = {
     blind: 'Ergebnisse bis zum Ende verbergen',
     blindTip:
       'Die Balken bleiben versteckt, solange abgestimmt wird, damit frühe Stimmen den Rest nicht beeinflussen. Nur die Zahl der Stimmen ist zu sehen.',
+    labels: 'Abstimmen mit',
+    labelsTip:
+      'Was Zuschauer zum Abstimmen schreiben und was die Umfrage neben jeder Option zeigt: 1 2 3 oder A B C.',
+    labelsNumbers: '1 2 3',
+    labelsLetters: 'A B C',
     color: 'Farbe',
     position: 'Position',
     positionTip:
@@ -1170,8 +1175,9 @@ export const de: typeof en = {
       winner: 'Gewinner: {option}',
       noVotes: 'Keine Stimmen',
       hidden: 'Ergebnisse kommen am Ende',
-      howTo: 'Schreib 1 bis {last} in den Chat',
-      howToTwo: 'Schreib 1 oder 2 in den Chat',
+      howTo: 'Schreib {first} bis {last} in den Chat',
+      howToTwo: 'Schreib {first} oder {second} in den Chat',
+      howToLetters: 'Schreib einen Buchstaben von {first} bis {last} in den Chat',
       subsOnly: 'Nur Subs',
       subBonus: 'Sub-Stimmen ×{n}',
       votes: '{count} Stimmen',
@@ -1973,7 +1979,7 @@ export const de: typeof en = {
         step3:
           'Willst du vor dem Stream schon eine Umfrage parat haben, gib unter Fertige Umfrage eine Frage und 2 bis 6 Optionen ein. Sie startet mit `!poll start`.',
         step4:
-          'Stell die Umfragedauer ein (standardmäßig 1 Minute), wie lange die Ergebnisse stehen bleiben und wer abstimmen darf.',
+          'Stell die Umfragedauer ein (standardmäßig 3 Minuten), wie lange die Ergebnisse stehen bleiben und wer abstimmen darf.',
         step5:
           'Wähl Farbe, Position und Umfragesprache, kopier die URL und füg sie in OBS als Browser-Quelle mit 640 × 560 hinzu.',
         p1: 'Die Vorschau auf der Setup-Seite spielt eine Umfrage mit simulierten Stimmen ab, schneller als in Echtzeit, und startet dann die nächste. Die Buttons unter Probier es aus geben 10 Stimmen und 30 Sekunden dazu, beenden die Umfrage und starten eine neue. Sie ändern nur die Vorschau, nie die Umfrage in OBS.',
@@ -2013,7 +2019,7 @@ export const de: typeof en = {
       timing: {
         title: 'Was passiert, wenn die Zeit abläuft?',
         p1: 'Zuschauer sehen deinen Stream ein paar Sekunden hinter dem Chat, wenn ihr Screen also noch 1 Sekunde zeigt, ist die Umfrage im Chat schon zu. Stimmen zählen nach Ablauf des Timers noch für die Dauer des Stream-Delays weiter, standardmäßig 5 Sekunden, und die Umfrage zeigt so lange Letzte Stimmen. Stell es darauf ein, wie weit deine Zuschauer hinterher sind. Twitch und Kick hängen meistens 2 bis 10 Sekunden hinterher.',
-        p2: 'Dann leuchtet der Gewinner mit Krone in Gold auf, und die anderen Optionen werden blasser. Haben zwei oder mehr Optionen gleich viele Stimmen, zeigt die Umfrage einen Gleichstand. Die Ergebnisse bleiben so lange stehen, wie Ergebnisse sichtbar festlegt, standardmäßig 30 Sekunden, dann blendet die Umfrage aus. Stell es auf 0, damit sie bis zur nächsten Umfrage oder bis `!poll cancel` stehen bleiben.',
+        p2: 'Dann leuchtet der Gewinner mit Krone in Gold auf, und die anderen Optionen werden blasser. Haben zwei oder mehr Optionen gleich viele Stimmen, zeigt die Umfrage einen Gleichstand. Die Ergebnisse bleiben so lange stehen, wie Ergebnisse sichtbar festlegt, standardmäßig 45 Sekunden, dann blendet die Umfrage aus. Stell es auf 0, damit sie bis zur nächsten Umfrage oder bis `!poll cancel` stehen bleiben.',
         p3: 'Mit Umfragedauer auf 0 hat die Umfrage keinen Timer und bleibt offen, bis ein Mod `!poll end` schreibt. `!poll extend` gibt nur einer Umfrage mit Timer mehr Zeit.',
       },
       look: {
@@ -2445,6 +2451,10 @@ export const de: typeof en = {
     entries: {
       countdownSounds:
         'Der Stream-Countdown kann jetzt in den letzten Sekunden ticken und bei null eine Melodie spielen — wähl Klang, Glocke oder Digital. Standardmäßig aus, bestehende Overlays bleiben stumm.',
+      pollLongerDefaults:
+        'Neue Chat-Umfragen starten mit 3 Minuten Abstimmung und 45 Sekunden Ergebnisanzeige. Overlays, die schon in OBS sind, behalten ihre Zeiten.',
+      pollLetterLabels:
+        'Die Chat-Umfrage kann ihre Optionen mit A B C statt 1 2 3 beschriften, Zuschauer stimmen dann mit dem Buchstaben ab.',
       presetScrollFix: 'Die Preset-Auswahl auf einer Setup-Seite versetzt die Seite nicht mehr.',
       chatSharedBackground:
         'Die Chat-Box bekommt einen Chat-Hintergrund: ein gemeinsamer Hintergrund hinter allen Nachrichten, ganz ohne Box pro Nachricht.',

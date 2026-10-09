@@ -1140,6 +1140,11 @@ export const fr: typeof en = {
     blind: "Masquer les résultats jusqu'à la fin",
     blindTip:
       "Les barres restent cachées pendant le vote, pour que les premiers votes n'influencent pas les autres. Seul le nombre de votes s'affiche.",
+    labels: 'Voter avec',
+    labelsTip:
+      'Ce que les viewers tapent pour voter, et ce que le sondage affiche à côté de chaque option : 1 2 3 ou A B C.',
+    labelsNumbers: '1 2 3',
+    labelsLetters: 'A B C',
     color: 'Couleur',
     position: 'Position',
     positionTip:
@@ -1209,8 +1214,9 @@ export const fr: typeof en = {
       winner: 'Gagnant : {option}',
       noVotes: 'Aucun vote',
       hidden: 'Résultats à la fin du vote',
-      howTo: 'Tape de 1 à {last} dans le chat',
-      howToTwo: 'Tape 1 ou 2 dans le chat',
+      howTo: 'Tape de {first} à {last} dans le chat',
+      howToTwo: 'Tape {first} ou {second} dans le chat',
+      howToLetters: 'Tape une lettre de {first} à {last} dans le chat',
       subsOnly: 'Subs uniquement',
       subBonus: 'Votes des subs ×{n}',
       votes: '{count} votes',
@@ -2027,7 +2033,7 @@ export const fr: typeof en = {
         step3:
           'Si tu veux un sondage prêt avant le stream, tape une question et 2 à 6 options sous Sondage prêt. Il se lance avec `!poll start`.',
         step4:
-          "Règle la Durée du sondage (1 minute par défaut), combien de temps les résultats restent à l'écran et qui peut voter.",
+          "Règle la Durée du sondage (3 minutes par défaut), combien de temps les résultats restent à l'écran et qui peut voter.",
         step5:
           "Choisis une couleur, une position et la langue du sondage, copie l'URL et ajoute-la à OBS comme source Navigateur web en 640 × 560.",
         p1: "L'aperçu sur la page de configuration joue un sondage avec des votants simulés, plus vite qu'en vrai, puis lance le suivant. Les boutons Teste ajoutent 10 votes, ajoutent 30 secondes, terminent le sondage et en lancent un nouveau. Ils ne changent que l'aperçu, jamais le sondage dans OBS.",
@@ -2067,7 +2073,7 @@ export const fr: typeof en = {
       timing: {
         title: 'Que se passe-t-il quand le temps est écoulé ?',
         p1: 'Les viewers regardent ton stream avec quelques secondes de retard sur le chat, donc quand leur écran affiche 1 seconde restante, le sondage est déjà fermé dans le chat. Les votes continuent de compter pendant le Délai du stream après la fin du timer, 5 secondes par défaut, pendant que le sondage affiche Derniers votes. Règle-le selon le retard de tes viewers ; Twitch et Kick ont en général 2 à 10 secondes de retard.',
-        p2: "Ensuite, le gagnant s'allume en doré avec une couronne et les autres options s'assombrissent. Quand deux options ou plus ont le plus de votes, le sondage annonce une égalité. Les résultats restent affichés pendant Résultats à l'écran, 30 secondes par défaut, puis le sondage s'efface. Mets 0 pour les garder jusqu'au sondage suivant ou `!poll cancel`.",
+        p2: "Ensuite, le gagnant s'allume en doré avec une couronne et les autres options s'assombrissent. Quand deux options ou plus ont le plus de votes, le sondage annonce une égalité. Les résultats restent affichés pendant Résultats à l'écran, 45 secondes par défaut, puis le sondage s'efface. Mets 0 pour les garder jusqu'au sondage suivant ou `!poll cancel`.",
         p3: "Avec Durée du sondage à 0, le sondage n'a pas de timer et reste ouvert jusqu'à ce qu'un modo tape `!poll end`. `!poll extend` n'ajoute du temps qu'à un sondage qui a un timer.",
       },
       look: {
@@ -2487,6 +2493,10 @@ export const fr: typeof en = {
     entries: {
       countdownSounds:
         'Stream Countdown peut désormais faire tic-tac dans les dernières secondes et jouer un motif à zéro — choisis Carillon, Cloche ou Digital. Désactivé par défaut, les overlays existants restent silencieux.',
+      pollLongerDefaults:
+        'Les nouveaux Sondages du chat démarrent avec 3 minutes de vote et 45 secondes de résultats à l\'écran. Les overlays déjà dans OBS gardent leurs durées.',
+      pollLetterLabels:
+        'Le Sondage du chat peut marquer ses options A B C au lieu de 1 2 3, et les viewers votent en tapant la lettre.',
       presetScrollFix: 'Choisir un preset sur une page de configuration ne fait plus sauter le scroll de la page.',
       chatSharedBackground:
         'La Boîte de chat a un Fond du chat : un seul fond derrière tous les messages, sans cadre sur chacun.',

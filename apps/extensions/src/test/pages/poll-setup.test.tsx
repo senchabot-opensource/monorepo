@@ -10,7 +10,7 @@ const PAGE = '/setup/chat-poll';
 
 const urlField = () => textbox(en('common.widgetUrl'));
 const twitchField = () => textbox(en('common.twitchChannel'));
-const option = (n: number) => textbox(en('poll.optionLabel').replace('{n}', String(n)));
+const option = (n: number | string) => textbox(en('poll.optionLabel').replace('{n}', String(n)));
 const removeOption = (n: number) => button(en('poll.removeOption').replace('{n}', String(n)));
 const color = (name: string) =>
   within(screen.getByLabelText(en('poll.color'), { selector: 'fieldset' })).getByLabelText(
@@ -38,7 +38,9 @@ describe('Chat Poll setup', () => {
     };
 
     await user.type(twitchField(), 'Streamer');
-    expect(urlField().value).toBe('http://localhost:3000/widgets/poll?twitch=streamer&lang=en');
+    expect(urlField().value).toBe(
+      'http://localhost:3000/widgets/poll?twitch=streamer&dur=180&hold=45&lang=en',
+    );
 
     await retype(user, textbox(en('poll.question')), 'Next game?');
     expectUrl({ question: 'Next game?' });
@@ -56,6 +58,8 @@ describe('Chat Poll setup', () => {
     expectUrl({ change: false });
     await user.click(toggle(en('poll.blind')));
     expectUrl({ blind: true });
+    await user.click(segment(en('poll.labels'), en('poll.labelsLetters')));
+    expectUrl({ labels: 'letters' });
     await retype(user, textbox(en('poll.delay')), '12');
     expectUrl({ delay: 12 });
     await user.click(color(en('subathon.colors.gold')));
@@ -66,7 +70,7 @@ describe('Chat Poll setup', () => {
     expect(urlField().value).toContain('lang=tr');
 
     expect(urlField().value).toBe(
-      'http://localhost:3000/widgets/poll?twitch=streamer&q=Next+game%3F&o=Minecraft%7CGTA&delay=12&subs=1&change=0&blind=1&color=gold&pos=bottom&lang=tr',
+      'http://localhost:3000/widgets/poll?twitch=streamer&q=Next+game%3F&o=Minecraft%7CGTA&dur=180&delay=12&hold=45&subs=1&change=0&blind=1&labels=letters&color=gold&pos=bottom&lang=tr',
     );
   });
 
@@ -194,6 +198,24 @@ describe('Chat Poll setup', () => {
     expect(urlField().value).toBe(
       'http://localhost:3000/widgets/poll?twitch=streamer&o=A%7CB%7CC%7CD%7CE%7CF&dur=0&delay=12&hold=0&subs=1&change=0&blind=1&color=gold&pos=bottom&lang=en',
     );
+  });
+
+  it('labels the option rows A B C and sends letter test votes with letter labels', async () => {
+    withLayout(800, 700);
+    const user = setupUser();
+    const received: { event: { text?: string } }[] = [];
+    const listener = new BroadcastChannel(PREVIEW_CHANNEL);
+    listener.onmessage = ({ data }) => received.push(data);
+    await renderRoute(PAGE);
+    await user.click(segment(en('poll.labels'), en('poll.labelsLetters')));
+    await retype(user, option('A'), 'Minecraft');
+    await retype(user, option('B'), 'Valorant');
+    expect(option('A').getAttribute('placeholder')).toBe('Option A');
+    for (let i = 0; i < 3; i++)
+      await user.click(button(en('poll.testVotes').replace('{count}', '10')));
+    await vi.waitFor(() => expect(received).toHaveLength(30));
+    expect(new Set(received.map(({ event }) => event.text))).toEqual(new Set(['A', 'B']));
+    listener.close();
   });
 
   it('sends test votes only for the options the ready-made poll has', async () => {

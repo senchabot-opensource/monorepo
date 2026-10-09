@@ -73,6 +73,23 @@ describe('PollWidget', () => {
     expect(shown()).toMatch(/Mirage2\s*67%/);
   });
 
+  it('labels options A B C and takes letter votes when set to letters', async () => {
+    await render(
+      <PollWidget twitchChannel="streamer" settings={settings({ labels: 'letters' })} />,
+    );
+    mod('!poll Best map? | Dust | Mirage | Inferno');
+    expect(shown()).toContain('Type a letter from A to C in chat');
+    say('a', 'a');
+    say('b', '!B');
+    say('c', '!vote b');
+    say('d', '1');
+    say('e', 'd');
+    await settle();
+    expect(shown()).toContain('3 votes');
+    expect(shown()).toMatch(/ADust1\s*33%/);
+    expect(shown()).toMatch(/BMirage2\s*67%/);
+  });
+
   it('lets viewers change their vote only when that is on', async () => {
     const { unmount } = await render(
       <PollWidget twitchChannel="streamer" settings={settings({ change: false })} />,
@@ -199,7 +216,7 @@ describe('PollWidget', () => {
     expect(shown()).toMatch(/B2\s*67%/);
   });
 
-  it("counts a sub once in a subs-only poll, whatever weight the URL kept", async () => {
+  it('counts a sub once in a subs-only poll, whatever weight the URL kept', async () => {
     await render(
       <PollWidget twitchChannel="streamer" settings={settings({ subsOnly: true, subWeight: 3 })} />,
     );
@@ -401,7 +418,7 @@ describe('PollWidget', () => {
       say('a', '2');
       await settle();
       expect(phase()).toBe('open');
-      expect(shown()).toContain('1:00');
+      expect(shown()).toContain('3:00');
       expect(shown()).toMatch(/B1\s*100%/);
     });
 

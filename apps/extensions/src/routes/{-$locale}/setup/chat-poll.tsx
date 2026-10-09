@@ -20,11 +20,11 @@ import { HINT_CLASS, INPUT_CLASS, TextField } from '#/components/ui/text-field';
 import { PresetField } from '#/features/presets/preset-field';
 import { isClassic } from '#/features/presets/registry';
 import { useStartOnSitePreset } from '#/features/presets/site-preset';
+import { hueFor } from '#/features/widgets/overlay-style';
 import type { PollChatEvent } from '#/features/widgets/poll/poll-chat';
-import { COMMAND } from '#/features/widgets/poll/poll-state';
+import { COMMAND, optionLabel } from '#/features/widgets/poll/poll-state';
 import { PREVIEW_CHANNEL, type PreviewMessage } from '#/features/widgets/poll/use-poll';
 import type { SubathonPlatform } from '#/features/widgets/subathon/subathon-events';
-import { hueFor } from '#/features/widgets/overlay-style';
 import { usePreviewSender } from '#/hooks/use-preview-channel';
 import { LOCALE_NAMES, LOCALES, type Locale, type TranslationKey, useI18n } from '#/lib/i18n';
 import { getParamsLocale } from '#/lib/i18n/paths';
@@ -39,6 +39,7 @@ import {
   MAX_OPTIONS,
   OPTION_MAX_LENGTH,
   POLL_COLORS,
+  POLL_LABELS,
   POLL_POSITIONS,
   type PollSettings,
   parsePollUrl,
@@ -155,40 +156,43 @@ function PollSetup() {
         {t('poll.options')}
       </FieldLabel>
       <ol aria-labelledby={`${id}-options`} className="space-y-2">
-        {settings.options.map((option, index) => (
-          // biome-ignore lint/suspicious/noArrayIndexKey: an option's place is its number in chat.
-          <li key={index} className="flex items-center gap-2">
-            <span
-              aria-hidden="true"
-              className="grid size-7 shrink-0 place-items-center rounded-md bg-zinc-200 text-xs font-bold text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
-            >
-              {index + 1}
-            </span>
-            <input
-              type="text"
-              value={option}
-              onChange={(event) => {
-                const value = event.target.value;
-                setOptions((options) => options.map((old, at) => (at === index ? value : old)));
-              }}
-              aria-label={t('poll.optionLabel', { n: index + 1 })}
-              placeholder={t('poll.optionPlaceholder', { n: index + 1 })}
-              maxLength={OPTION_MAX_LENGTH}
-              spellCheck={false}
-              className={INPUT_CLASS}
-            />
-            <button
-              type="button"
-              onClick={() => setOptions((options) => options.filter((_, at) => at !== index))}
-              disabled={settings.options.length <= 2}
-              aria-label={t('poll.removeOption', { n: index + 1 })}
-              title={t('poll.removeOption', { n: index + 1 })}
-              className={BUTTON_QUIET}
-            >
-              <CloseIcon className="size-4" />
-            </button>
-          </li>
-        ))}
+        {settings.options.map((option, index) => {
+          const n = optionLabel(index, settings.labels);
+          return (
+            // biome-ignore lint/suspicious/noArrayIndexKey: an option's place is its number in chat.
+            <li key={index} className="flex items-center gap-2">
+              <span
+                aria-hidden="true"
+                className="grid size-7 shrink-0 place-items-center rounded-md bg-zinc-200 text-xs font-bold text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
+              >
+                {n}
+              </span>
+              <input
+                type="text"
+                value={option}
+                onChange={(event) => {
+                  const value = event.target.value;
+                  setOptions((options) => options.map((old, at) => (at === index ? value : old)));
+                }}
+                aria-label={t('poll.optionLabel', { n })}
+                placeholder={t('poll.optionPlaceholder', { n })}
+                maxLength={OPTION_MAX_LENGTH}
+                spellCheck={false}
+                className={INPUT_CLASS}
+              />
+              <button
+                type="button"
+                onClick={() => setOptions((options) => options.filter((_, at) => at !== index))}
+                disabled={settings.options.length <= 2}
+                aria-label={t('poll.removeOption', { n })}
+                title={t('poll.removeOption', { n })}
+                className={BUTTON_QUIET}
+              >
+                <CloseIcon className="size-4" />
+              </button>
+            </li>
+          );
+        })}
       </ol>
       <button
         type="button"
@@ -224,6 +228,20 @@ function PollSetup() {
           maxLength={QUESTION_MAX_LENGTH}
           spellCheck={false}
         />
+        <div>
+          <FieldLabel id={`${id}-labels`} tip={t('poll.labelsTip')}>
+            {t('poll.labels')}
+          </FieldLabel>
+          <SegmentedControl
+            labelledBy={`${id}-labels`}
+            value={settings.labels}
+            onChange={(value) => update('labels', value)}
+            options={POLL_LABELS.map((value) => ({
+              value,
+              label: t(value === 'letters' ? 'poll.labelsLetters' : 'poll.labelsNumbers'),
+            }))}
+          />
+        </div>
         {optionsEditor}
         <p className={`${HINT_CLASS} mt-0`}>
           {t('poll.pollHint', { command: `${COMMAND} start` })}
@@ -364,7 +382,7 @@ function PollSetup() {
             kind: 'message',
             platform: testPlatform(),
             login: `tester${testVoter.current++}`,
-            text: String(1 + Math.floor(Math.random() * optionCount)),
+            text: optionLabel(Math.floor(Math.random() * optionCount), settings.labels),
             mod: false,
             // A subs-only poll turns everyone else's votes away.
             sub: settings.subsOnly,

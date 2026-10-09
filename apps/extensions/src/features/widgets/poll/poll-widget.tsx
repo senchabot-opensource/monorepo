@@ -4,9 +4,10 @@ import { painter, type Skin, shade, skinCss, skinFor } from '#/features/presets/
 import { SkinProvider, useSkin } from '#/features/presets/skin-context';
 import { useI18n } from '#/lib/i18n';
 import type { PollSettings } from '#/lib/poll-url';
+import { OVERLAY_FONT_FAMILY as FONT_FAMILY, hueFor, PLATFORM_COLORS } from '../overlay-style';
 import type { SubathonPlatform } from '../subathon/subathon-events';
-import { hueFor, OVERLAY_FONT_FAMILY as FONT_FAMILY, PLATFORM_COLORS } from '../overlay-style';
 import { useFitScale } from '../use-fit-scale';
+import { optionLabel } from './poll-state';
 import { type PollView, usePoll } from './use-poll';
 
 /** Design size; the overlay scales to fill whatever browser source size it gets. Fits 6 options. */
@@ -184,10 +185,14 @@ function Card({
   } else if (hideBars) {
     footer = t('poll.overlay.hidden');
   } else {
+    const label = (index: number) => optionLabel(index, settings.labels);
     footer =
       view.options.length === 2
-        ? t('poll.overlay.howToTwo')
-        : t('poll.overlay.howTo', { last: view.options.length });
+        ? t('poll.overlay.howToTwo', { first: label(0), second: label(1) })
+        : t(settings.labels === 'letters' ? 'poll.overlay.howToLetters' : 'poll.overlay.howTo', {
+            first: label(0),
+            last: label(view.options.length - 1),
+          });
   }
   const rules = [
     settings.subsOnly && t('poll.overlay.subsOnly'),
@@ -282,6 +287,7 @@ function Card({
             key={index}
             index={index}
             label={option}
+            tag={optionLabel(index, settings.labels)}
             count={tally.counts[index]}
             total={tally.total}
             hue={hue}
@@ -376,6 +382,7 @@ function TimeTrack({ share, hue, hurry }: { share: number; hue: number; hurry: b
 function Row({
   index,
   label,
+  tag,
   count,
   total,
   hue,
@@ -387,6 +394,8 @@ function Row({
 }: {
   index: number;
   label: string;
+  /** "1" or "A": what chat types to vote for it. */
+  tag: string;
   count: number;
   total: number;
   hue: number;
@@ -459,7 +468,7 @@ function Row({
           boxShadow: 'inset 0 -2px 0 rgba(0,0,0,.25)',
         }}
       >
-        {index + 1}
+        {tag}
       </span>
       <span
         className="cp-ellipsis cp-shadow"
