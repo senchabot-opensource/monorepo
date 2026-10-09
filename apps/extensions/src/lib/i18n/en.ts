@@ -1097,6 +1097,11 @@ export const en = {
     blind: 'Hide Results Until the End',
     blindTip:
       "The bars stay hidden while voting is open, so early votes don't sway the rest. Only the vote count shows.",
+    labels: 'Vote With',
+    labelsTip:
+      'What viewers type to vote, and what the poll shows next to each option: 1 2 3 or A B C.',
+    labelsNumbers: '1 2 3',
+    labelsLetters: 'A B C',
     color: 'Color',
     position: 'Position',
     positionTip:
@@ -1166,8 +1171,9 @@ export const en = {
       winner: 'Winner: {option}',
       noVotes: 'No votes',
       hidden: 'Results show when voting ends',
-      howTo: 'Type 1 to {last} in chat',
-      howToTwo: 'Type 1 or 2 in chat',
+      howTo: 'Type {first} to {last} in chat',
+      howToTwo: 'Type {first} or {second} in chat',
+      howToLetters: 'Type a letter from {first} to {last} in chat',
       subsOnly: 'Subs only',
       subBonus: 'Sub votes ×{n}',
       votes: '{count} votes',
@@ -1969,7 +1975,7 @@ export const en = {
         step3:
           'If you want a poll ready before the stream, type a question and 2 to 6 options under Ready-Made Poll. It goes up with `!poll start`.',
         step4:
-          'Set the Poll Length (1 minute by default), how long the results stay on screen and who can vote.',
+          'Set the Poll Length (3 minutes by default), how long the results stay on screen and who can vote.',
         step5:
           'Pick a color, a position and the poll language, copy the URL and add it to OBS as a Browser Source at 640 × 560.',
         p1: 'The preview on the setup page plays a poll with simulated voters, faster than real time, then starts the next one. The Try it buttons add 10 votes, add 30 seconds, end the poll and start a new one. They only change the preview, never the poll in OBS.',
@@ -2009,7 +2015,7 @@ export const en = {
       timing: {
         title: 'What happens when the time runs out?',
         p1: 'Viewers watch your stream a few seconds behind chat, so when their screen shows 1 second left, the poll has already closed in chat. Votes keep counting for the Stream Delay after the timer ends, 5 seconds by default, while the poll shows Last votes. Set it to how far behind your viewers are; Twitch and Kick are usually 2 to 10 seconds behind.',
-        p2: 'Then the winner lights up in gold with a crown and the other options dim. When two or more options share the most votes, the poll calls it a tie. The results stay up for Results On Screen, 30 seconds by default, then the poll fades out. Set it to 0 to keep them up until the next poll or `!poll cancel`.',
+        p2: 'Then the winner lights up in gold with a crown and the other options dim. When two or more options share the most votes, the poll calls it a tie. The results stay up for Results On Screen, 45 seconds by default, then the poll fades out. Set it to 0 to keep them up until the next poll or `!poll cancel`.',
         p3: 'With Poll Length at 0 the poll has no timer and stays open until a mod types `!poll end`. `!poll extend` only adds time to a poll that has a timer.',
       },
       look: {
@@ -2440,6 +2446,10 @@ export const en = {
     entries: {
       countdownSounds:
         'Stream Countdown can now tick in the last seconds and play a motif at zero — pick Chime, Bell or Digital. Off by default, so existing overlays stay silent.',
+      pollLongerDefaults:
+        'New Chat Polls start at 3 minutes of voting with results on screen for 45 seconds. Overlays already in OBS keep their timing.',
+      pollLetterLabels:
+        'Chat Poll can label its options A B C instead of 1 2 3, and viewers vote by typing the letter.',
       presetScrollFix: 'Picking a preset on a setup page no longer jumps the page scroll.',
       chatSharedBackground:
         'Chat Box gets a Chat Background: one shared backdrop behind all messages, for streamers who want readability without a box on each message.',

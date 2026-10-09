@@ -1123,6 +1123,11 @@ export const pt: typeof en = {
     blind: 'Esconder resultado até o fim',
     blindTip:
       'As barras ficam escondidas enquanto a votação está aberta, para os primeiros votos não influenciarem o resto. Só aparece o total de votos.',
+    labels: 'Votar com',
+    labelsTip:
+      'O que os espectadores digitam para votar e o que a enquete mostra ao lado de cada opção: 1 2 3 ou A B C.',
+    labelsNumbers: '1 2 3',
+    labelsLetters: 'A B C',
     color: 'Cor',
     position: 'Posição',
     positionTip:
@@ -1192,8 +1197,9 @@ export const pt: typeof en = {
       winner: 'Vencedor: {option}',
       noVotes: 'Sem votos',
       hidden: 'O resultado aparece quando a votação acabar',
-      howTo: 'Digite de 1 a {last} no chat',
-      howToTwo: 'Digite 1 ou 2 no chat',
+      howTo: 'Digite de {first} a {last} no chat',
+      howToTwo: 'Digite {first} ou {second} no chat',
+      howToLetters: 'Digite uma letra de {first} a {last} no chat',
       subsOnly: 'Só inscritos',
       subBonus: 'Voto de sub ×{n}',
       votes: '{count} votos',
@@ -2004,7 +2010,7 @@ export const pt: typeof en = {
         step3:
           'Se quiser uma enquete pronta antes da live, digite uma pergunta e de 2 a 6 opções em Enquete pronta. Ela entra com `!poll start`.',
         step4:
-          'Defina a Duração da enquete (1 minuto por padrão), quanto tempo o resultado fica na tela e quem pode votar.',
+          'Defina a Duração da enquete (3 minutos por padrão), quanto tempo o resultado fica na tela e quem pode votar.',
         step5:
           'Escolha uma cor, uma posição e o idioma da enquete, copie a URL e adicione no OBS como fonte de navegador em 640 × 560.',
         p1: 'A prévia na página de configuração toca uma enquete com votos simulados, mais rápido que o tempo real, e depois começa a próxima. Os botões de Teste adicionam 10 votos, adicionam 30 segundos, encerram a enquete e começam uma nova. Eles só mudam a prévia, nunca a enquete no OBS.',
@@ -2044,7 +2050,7 @@ export const pt: typeof en = {
       timing: {
         title: 'O que acontece quando o tempo acaba?',
         p1: 'O pessoal assiste sua live alguns segundos atrás do chat, então quando a tela deles mostra 1 segundo, a enquete já fechou no chat. Os votos continuam contando pelo Atraso da live depois que o timer acaba, 5 segundos por padrão, enquanto a enquete mostra Últimos votos. Ajuste para o atraso dos seus espectadores; Twitch e Kick costumam ter de 2 a 10 segundos de atraso.',
-        p2: 'Aí o vencedor acende em dourado com uma coroa e as outras opções escurecem. Quando duas ou mais opções empatam com mais votos, a enquete declara empate. O resultado fica na tela pelo tempo de Resultado na tela, 30 segundos por padrão, depois a enquete some. Coloque 0 para deixar na tela até a próxima enquete ou `!poll cancel`.',
+        p2: 'Aí o vencedor acende em dourado com uma coroa e as outras opções escurecem. Quando duas ou mais opções empatam com mais votos, a enquete declara empate. O resultado fica na tela pelo tempo de Resultado na tela, 45 segundos por padrão, depois a enquete some. Coloque 0 para deixar na tela até a próxima enquete ou `!poll cancel`.',
         p3: 'Com Duração da enquete em 0, a enquete não tem timer e fica aberta até um mod digitar `!poll end`. `!poll extend` só adiciona tempo a uma enquete que tem timer.',
       },
       look: {
@@ -2463,6 +2469,10 @@ export const pt: typeof en = {
     entries: {
       countdownSounds:
         'O Stream Countdown agora pode fazer tique-taque nos últimos segundos e tocar uma melodia ao zerar — escolha Melodia, Sino ou Digital. Desligado por padrão, os overlays existentes continuam silenciosos.',
+      pollLongerDefaults:
+        'Novas Enquetes do Chat começam com 3 minutos de votação e 45 segundos de resultado na tela. Overlays que já estão no OBS mantêm seus tempos.',
+      pollLetterLabels:
+        'A Enquete do Chat pode marcar as opções com A B C em vez de 1 2 3, e os espectadores votam digitando a letra.',
       presetScrollFix: 'Escolher um preset na página de configuração não move mais a rolagem da página.',
       chatSharedBackground:
         'A Caixa de Chat agora tem Fundo do chat: um único fundo atrás de todas as mensagens, sem caixa em cada uma.',

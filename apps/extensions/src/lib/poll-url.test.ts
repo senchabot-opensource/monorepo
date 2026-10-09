@@ -8,6 +8,7 @@ import {
   parsePollUrl,
   readPollSettings,
   savedPoll,
+  URL_DEFAULTS,
 } from './poll-url';
 
 const ORIGIN = 'https://extensions.senchabot.com';
@@ -23,9 +24,17 @@ describe('buildPollUrl', () => {
   });
 
   it('writes only what differs from the defaults, and always the language', () => {
-    expect(buildPollUrl(ORIGIN, settings(), ' Streamer ', 'kicker', 'tr')).toBe(
+    expect(buildPollUrl(ORIGIN, settings(URL_DEFAULTS), ' Streamer ', 'kicker', 'tr')).toBe(
       `${ORIGIN}/widgets/poll?twitch=streamer&kick=kicker&lang=tr`,
     );
+  });
+
+  it('writes the 3 minute length and 45 second results the setup page starts with', () => {
+    // A URL without them means 60 and 30 seconds, as it did before these became the defaults.
+    const params = new URL(buildPollUrl(ORIGIN, settings(), 's', '', 'en')).searchParams;
+    expect(params.get('dur')).toBe('180');
+    expect(params.get('hold')).toBe('45');
+    expect(readPollSettings(new URLSearchParams('twitch=s'))).toMatchObject(URL_DEFAULTS);
   });
 
   it('writes the ready-made poll without blank or repeated options', () => {
@@ -44,7 +53,7 @@ describe('buildPollUrl', () => {
   it('leaves out a ready-made poll with fewer than two options', () => {
     const url = buildPollUrl(
       ORIGIN,
-      settings({ question: 'Q', options: ['A', ' '] }),
+      settings({ question: 'Q', options: ['A', ' '], ...URL_DEFAULTS }),
       's',
       '',
       'en',
@@ -66,6 +75,7 @@ describe('poll URL round trip', () => {
       subWeight: 3,
       change: false,
       blind: true,
+      labels: 'letters',
       color: 'gold',
       position: 'bottom',
     });
@@ -92,15 +102,18 @@ describe('poll URL round trip', () => {
 describe('readPollSettings', () => {
   it('falls back to the defaults for bad values and caps the rest', () => {
     const read = readPollSettings(
-      new URLSearchParams('dur=-5&hold=abc&delay=999&subx=7&color=blue&pos=left&o=Only|'),
+      new URLSearchParams(
+        'dur=-5&hold=abc&delay=999&subx=7&color=blue&pos=left&labels=roman&o=Only|',
+      ),
     );
     expect(read).toMatchObject({
-      duration: DEFAULT_POLL_SETTINGS.duration,
-      hold: DEFAULT_POLL_SETTINGS.hold,
+      duration: URL_DEFAULTS.duration,
+      hold: URL_DEFAULTS.hold,
       delay: 30,
       subWeight: 1,
       color: DEFAULT_POLL_SETTINGS.color,
       position: 'top',
+      labels: 'numbers',
       // One option isn't a poll, but the setup page still gets its two boxes.
       options: ['Only', ''],
     });

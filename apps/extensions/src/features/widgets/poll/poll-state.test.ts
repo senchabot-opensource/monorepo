@@ -8,6 +8,7 @@ import {
   foldText,
   fromSaved,
   MAX_POLL_MS,
+  optionLabel,
   parsePollCommand,
   parseVote,
   phaseOf,
@@ -72,6 +73,38 @@ describe('parseVote', () => {
   it("prefers an option's text over its number", () => {
     expect(parseVote('5', ['3', '5'])).toBe(1);
     expect(parseVote('2', ['3', '5'])).toBe(1);
+  });
+
+  it('reads a letter, !letter and !vote letter in any case with letter labels', () => {
+    expect(parseVote('a', options, 'letters')).toBe(0);
+    expect(parseVote('B', options, 'letters')).toBe(1);
+    expect(parseVote('!c', options, 'letters')).toBe(2);
+    expect(parseVote('!vote b', options, 'letters')).toBe(1);
+    expect(parseVote('b \u{E0000}', options, 'letters')).toBe(1);
+    expect(parseVote('valorant', options, 'letters')).toBe(1);
+  });
+
+  it('takes neither numbers, letters past the last option nor longer words with letter labels', () => {
+    for (const message of ['1', '!2', 'd', '!z', 'ab', 'a b', 'a!']) {
+      expect(parseVote(message, options, 'letters')).toBeNull();
+    }
+  });
+
+  it("doesn't take letters with number labels", () => {
+    expect(parseVote('a', options)).toBeNull();
+    expect(parseVote('!b', options)).toBeNull();
+    expect(parseVote('!a', ['a', 'b'])).toBeNull();
+  });
+
+  it("prefers an option's text over its letter", () => {
+    expect(parseVote('b', ['x', 'y', 'b'], 'letters')).toBe(2);
+  });
+});
+
+describe('optionLabel', () => {
+  it('numbers from 1 or letters from A', () => {
+    expect([0, 1, 5].map((index) => optionLabel(index, 'numbers'))).toEqual(['1', '2', '6']);
+    expect([0, 1, 5].map((index) => optionLabel(index, 'letters'))).toEqual(['A', 'B', 'F']);
   });
 });
 

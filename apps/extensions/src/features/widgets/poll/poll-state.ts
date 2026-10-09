@@ -146,20 +146,37 @@ export const foldText = (text: string) =>
     .replace(/\s+/g, ' ')
     .trim();
 
+/** How options are labeled on screen and voted for in chat: 1 2 3 or A B C. */
+export type PollLabels = 'numbers' | 'letters';
+
+/** The label of the option at `index`: "1" or "A". */
+export const optionLabel = (index: number, labels: PollLabels) =>
+  labels === 'letters' ? String.fromCharCode(65 + index) : String(index + 1);
+
 /**
  * The option a chat message votes for, or null. The whole message has to be the vote: "2",
- * "!2", "!vote 2", or an option's own text. So "4Head" and "1 more game" aren't votes. An
- * option's text wins over its number, so in "3 | 4 | 5" typing 3 votes for "3", not the third.
+ * "!2", "!vote 2", or an option's own text; with letter labels "b", "!b" or "!vote B" instead
+ * of the number. So "4Head" and "1 more game" aren't votes. An option's text wins over its
+ * label, so in "3 | 4 | 5" typing 3 votes for "3", not the third.
  */
-export function parseVote(message: string, options: readonly string[]): number | null {
+export function parseVote(
+  message: string,
+  options: readonly string[],
+  labels: PollLabels = 'numbers',
+): number | null {
   let body = message.trim();
   const command = /^!vote\s+/i.exec(body);
   if (command) body = body.slice(command[0].length);
-  else if (/^!\d+$/.test(body)) body = body.slice(1);
+  else if ((labels === 'letters' ? /^![a-z]$/i : /^!\d+$/).test(body)) body = body.slice(1);
   const folded = foldText(body);
   if (!folded) return null;
   const byText = options.findIndex((option) => foldText(option) === folded);
   if (byText >= 0) return byText;
+  if (labels === 'letters') {
+    if (!/^[a-z]$/.test(folded)) return null;
+    const letter = folded.charCodeAt(0) - 97;
+    return letter < options.length ? letter : null;
+  }
   // Folded, so "1 " plus a chat client's invisible suffix, or the keycap emoji 1️⃣, is still 1.
   if (!/^\d{1,2}$/.test(folded)) return null;
   const number = Number(folded);

@@ -1128,6 +1128,11 @@ export const es: typeof en = {
     blind: 'Ocultar resultados hasta el final',
     blindTip:
       'Las barras se quedan ocultas mientras la votación está abierta, para que los primeros votos no influyan en el resto. Solo se ve el número de votos.',
+    labels: 'Votar con',
+    labelsTip:
+      'Lo que los espectadores escriben para votar y lo que la encuesta muestra junto a cada opción: 1 2 3 o A B C.',
+    labelsNumbers: '1 2 3',
+    labelsLetters: 'A B C',
     color: 'Color',
     position: 'Posición',
     positionTip:
@@ -1197,8 +1202,9 @@ export const es: typeof en = {
       winner: 'Ganador: {option}',
       noVotes: 'Sin votos',
       hidden: 'Los resultados se ven al cerrar la votación',
-      howTo: 'Escribe de 1 a {last} en el chat',
-      howToTwo: 'Escribe 1 o 2 en el chat',
+      howTo: 'Escribe de {first} a {last} en el chat',
+      howToTwo: 'Escribe {first} o {second} en el chat',
+      howToLetters: 'Escribe una letra de la {first} a la {last} en el chat',
       subsOnly: 'Solo subs',
       subBonus: 'Votos de sub ×{n}',
       votes: '{count} votos',
@@ -2012,7 +2018,7 @@ export const es: typeof en = {
         step3:
           'Si quieres una encuesta lista antes del stream, escribe una pregunta y de 2 a 6 opciones en Encuesta preparada. Se lanza con `!poll start`.',
         step4:
-          'Define la Duración de la encuesta (1 minuto por defecto), cuánto tiempo se quedan los resultados en pantalla y quién puede votar.',
+          'Define la Duración de la encuesta (3 minutos por defecto), cuánto tiempo se quedan los resultados en pantalla y quién puede votar.',
         step5:
           'Elige un color, una posición y el idioma de la encuesta, copia la URL y añádela a OBS como fuente de navegador a 640 × 560.',
         p1: 'La vista previa de la página de configuración reproduce una encuesta con votantes simulados, más rápido que en tiempo real, y luego empieza la siguiente. Los botones de Pruébalo suman 10 votos, suman 30 segundos, terminan la encuesta y empiezan una nueva. Solo cambian la vista previa, nunca la encuesta de OBS.',
@@ -2052,7 +2058,7 @@ export const es: typeof en = {
       timing: {
         title: '¿Qué pasa cuando se acaba el tiempo?',
         p1: 'Los espectadores ven tu stream unos segundos por detrás del chat, así que cuando su pantalla marca 1 segundo, la encuesta ya se cerró en el chat. Los votos siguen contando durante el Retraso del stream después de que termina el tiempo, 5 segundos por defecto, mientras la encuesta muestra Últimos votos. Ajústalo a lo retrasados que vayan tus espectadores; Twitch y Kick suelen ir de 2 a 10 segundos por detrás.',
-        p2: 'Después el ganador se ilumina en dorado con una corona y las otras opciones se atenúan. Cuando dos o más opciones empatan con más votos, la encuesta lo marca como empate. Los resultados se quedan durante Resultados en pantalla, 30 segundos por defecto, y luego la encuesta se desvanece. Ponlo en 0 para dejarlos hasta la siguiente encuesta o hasta `!poll cancel`.',
+        p2: 'Después el ganador se ilumina en dorado con una corona y las otras opciones se atenúan. Cuando dos o más opciones empatan con más votos, la encuesta lo marca como empate. Los resultados se quedan durante Resultados en pantalla, 45 segundos por defecto, y luego la encuesta se desvanece. Ponlo en 0 para dejarlos hasta la siguiente encuesta o hasta `!poll cancel`.',
         p3: 'Con Duración de la encuesta en 0 la encuesta no tiene tiempo límite y sigue abierta hasta que un mod escribe `!poll end`. `!poll extend` solo suma tiempo a una encuesta que tiene tiempo límite.',
       },
       look: {
@@ -2472,6 +2478,10 @@ export const es: typeof en = {
     entries: {
       countdownSounds:
         'Stream Countdown ahora puede hacer tictac en los últimos segundos y sonar una melodía al cero — elige Melodía, Campana o Digital. Desactivado por defecto, los overlays existentes siguen en silencio.',
+      pollLongerDefaults:
+        'Las nuevas Encuestas de Chat empiezan con 3 minutos de votación y 45 segundos de resultados en pantalla. Los overlays que ya están en OBS mantienen sus tiempos.',
+      pollLetterLabels:
+        'La Encuesta de Chat puede marcar sus opciones con A B C en lugar de 1 2 3, y los espectadores votan escribiendo la letra.',
       presetScrollFix: 'Elegir un preset en una página de configuración ya no mueve el scroll de la página.',
       chatSharedBackground:
         'La Caja de Chat ya tiene Fondo del chat: un único fondo detrás de todos los mensajes, sin recuadro en cada uno.',

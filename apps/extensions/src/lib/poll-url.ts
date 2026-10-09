@@ -5,6 +5,7 @@ import {
   MAX_OPTIONS,
   MIN_OPTIONS,
   OPTION_MAX_LENGTH,
+  type PollLabels,
   QUESTION_MAX_LENGTH,
 } from '#/features/widgets/poll/poll-state';
 import { isValidLocale, LANG_PARAM, type Locale } from '#/lib/i18n/locales';
@@ -24,6 +25,7 @@ export type PollColor = (typeof POLL_COLORS)[number];
 export const POLL_POSITIONS = ['top', 'bottom'] as const;
 export type PollPosition = (typeof POLL_POSITIONS)[number];
 export const SUB_WEIGHTS = [1, 2, 3] as const;
+export const POLL_LABELS: readonly PollLabels[] = ['numbers', 'letters'];
 
 export interface PollSettings {
   platforms: ChannelPlatforms;
@@ -45,6 +47,8 @@ export interface PollSettings {
   change: boolean;
   /** Hides the bars until voting closes, so early votes don't sway the rest. */
   blind: boolean;
+  /** Options are shown and voted for as 1 2 3, or as A B C. */
+  labels: PollLabels;
   color: PollColor;
   /** Where the poll sits in the browser source. */
   position: PollPosition;
@@ -55,13 +59,14 @@ export const DEFAULT_POLL_SETTINGS: PollSettings = {
   preset: CLASSIC_PRESET,
   question: '',
   options: ['', ''],
-  duration: 60,
+  duration: 180,
   delay: 5,
-  hold: 30,
+  hold: 45,
   subsOnly: false,
   subWeight: 1,
   change: true,
   blind: false,
+  labels: 'numbers',
   color: 'purple',
   position: 'top',
 };
@@ -72,6 +77,11 @@ export const MAX_HOLD_SECONDS = 600;
 export { MAX_OPTIONS, OPTION_MAX_LENGTH, QUESTION_MAX_LENGTH };
 
 const WIDGET_PATH = '/widgets/poll';
+/**
+ * What a URL without `dur` or `hold` means: the defaults before they became 3 minutes and 45
+ * seconds. OBS URLs made until then left them out, and those overlays must keep their timing.
+ */
+export const URL_DEFAULTS = { duration: 60, hold: 30 };
 const OPTION_SEPARATOR = '|';
 
 /** The ready-made poll, or null while it has fewer than two options. */
@@ -100,13 +110,14 @@ function buildParams(
     // can't hold a "|" since chat commands split on it.
     params.set('o', poll.options.join(OPTION_SEPARATOR));
   }
-  if (settings.duration !== defaults.duration) params.set('dur', String(settings.duration));
+  if (settings.duration !== URL_DEFAULTS.duration) params.set('dur', String(settings.duration));
   if (settings.delay !== defaults.delay) params.set('delay', String(settings.delay));
-  if (settings.hold !== defaults.hold) params.set('hold', String(settings.hold));
+  if (settings.hold !== URL_DEFAULTS.hold) params.set('hold', String(settings.hold));
   if (settings.subsOnly !== defaults.subsOnly) params.set('subs', settings.subsOnly ? '1' : '0');
   if (settings.subWeight !== defaults.subWeight) params.set('subx', String(settings.subWeight));
   if (settings.change !== defaults.change) params.set('change', settings.change ? '1' : '0');
   if (settings.blind !== defaults.blind) params.set('blind', settings.blind ? '1' : '0');
+  if (settings.labels !== defaults.labels) params.set('labels', settings.labels);
   if (isClassic(settings.preset) && settings.color !== defaults.color)
     params.set('color', settings.color);
   if (settings.position !== defaults.position) params.set('pos', settings.position);
@@ -123,7 +134,11 @@ export function buildPollUrl(
   kickChannel: string,
   locale: Locale,
 ): string {
-  return channelWidgetUrl(origin, WIDGET_PATH, buildParams(settings, twitchChannel, kickChannel, locale));
+  return channelWidgetUrl(
+    origin,
+    WIDGET_PATH,
+    buildParams(settings, twitchChannel, kickChannel, locale),
+  );
 }
 
 /** Plays simulated polls with the same settings and never touches a channel or saved poll. */
@@ -144,21 +159,23 @@ export function readPollSettings(params: URLSearchParams): Omit<PollSettings, 'p
   const color = params.get('color') as PollColor;
   const position = params.get('pos') as PollPosition;
   const subWeight = Number(params.get('subx'));
+  const labels = params.get('labels') as PollLabels;
   const options = cleanOptions((params.get('o') ?? '').split(OPTION_SEPARATOR));
   return {
     preset: readPreset(params),
     question: clip((params.get('q') ?? '').trim(), QUESTION_MAX_LENGTH),
     // The setup page shows at least two boxes.
     options: options.length >= MIN_OPTIONS ? options : [...options, '', ''].slice(0, MIN_OPTIONS),
-    duration: readWhole(params.get('dur'), defaults.duration, { max: MAX_DURATION_SECONDS }),
+    duration: readWhole(params.get('dur'), URL_DEFAULTS.duration, { max: MAX_DURATION_SECONDS }),
     delay: readWhole(params.get('delay'), defaults.delay, { max: MAX_DELAY_SECONDS }),
-    hold: readWhole(params.get('hold'), defaults.hold, { max: MAX_HOLD_SECONDS }),
+    hold: readWhole(params.get('hold'), URL_DEFAULTS.hold, { max: MAX_HOLD_SECONDS }),
     subsOnly: readFlag(params.get('subs'), defaults.subsOnly),
     subWeight: (SUB_WEIGHTS as readonly number[]).includes(subWeight)
       ? subWeight
       : defaults.subWeight,
     change: readFlag(params.get('change'), defaults.change),
     blind: readFlag(params.get('blind'), defaults.blind),
+    labels: POLL_LABELS.includes(labels) ? labels : defaults.labels,
     color: POLL_COLORS.includes(color) ? color : defaults.color,
     position: POLL_POSITIONS.includes(position) ? position : defaults.position,
   };
