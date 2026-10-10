@@ -3,6 +3,7 @@ import type { en } from './en';
 export const pt: typeof en = {
   common: {
     freeBadge: '100% grátis · Sem login',
+    freeOnlyBadge: '100% grátis',
     copy: 'Copiar',
     copied: 'Copiado!',
     home: 'Início',
@@ -101,6 +102,11 @@ export const pt: typeof en = {
       name: 'Meta de Subs',
       tagline:
         'Uma barra de meta que cada sub e sub de presente enche, com um troféu quando você bate a meta.',
+    },
+    followerGoal: {
+      name: 'Meta de Seguidores',
+      tagline:
+        'Uma barra de meta que cada novo follow enche em tempo real, com um troféu quando você bate a meta.',
     },
     frames: {
       name: 'Molduras de Live',
@@ -829,7 +835,88 @@ export const pt: typeof en = {
       'Sim. Cada sub novo e resub soma 1, e um presente soma 1 para cada sub dentro dele, então um presente de 5 soma 5. Na Twitch, o resub conta quando o espectador compartilha no chat, e na Kick, quando renova.',
     faq4Q: 'Dá para fazer uma meta de seguidores?',
     faq4A:
-      'Ainda não. A Twitch e a Kick não mostram os novos follows para uma página sem login, então a meta conta subs, do mesmo jeito nas duas plataformas.',
+      'Sim! Use nosso overlay de Meta de Seguidores para acompanhar novos seguidores ao vivo na live da Twitch e da Kick.',
+  },
+  followerGoal: {
+    breadcrumb: 'Configurar Meta de Seguidores',
+    title: 'Configurar Meta de Seguidores',
+    intro:
+      'Uma barra de meta de seguidores para Twitch e Kick. Cada novo follow enche um de cada vez ao vivo na live, e um troféu aparece quando você atinge a meta. Escolha onde a contagem começa e a meta, e seus moderadores podem ajustar a contagem pelo chat.',
+    sectionGoal: 'Meta',
+    start: 'Contagem Inicial',
+    startTip:
+      'Onde a contagem começa: o número de seguidores no seu painel ou 0 para contar apenas esta live. Mudar depois reinicia a contagem a partir do novo número.',
+    target: 'Meta',
+    targetTip: 'A barra fica cheia nesta contagem. A contagem continua avançando depois.',
+    countsHint: 'Cada novo follow na Twitch ou Kick adiciona 1 à contagem ao vivo na live.',
+    end: 'Ao Completar',
+    ends: {
+      stay: 'Continuar mostrando',
+      hide: 'Ocultar',
+    },
+    endTip: 'O que fica na tela depois que a meta é atingida.',
+    endHold: 'Ocultar Depois de',
+    endHoldTip: 'Quanto tempo a meta concluída fica na tela. Zero oculta imediatamente.',
+    endHoldOff: 'Oculta assim que a meta é atingida.',
+    unitMinutes: 'min',
+    unitSeconds: 's',
+    style: 'Estilo',
+    styleTip:
+      'Barra coloca o título e a contagem acima da barra. Barra Fina embute o título e a contagem diretamente dentro de uma barra mais fina.',
+    styleBar: 'Barra',
+    styleThin: 'Barra Fina',
+    color: 'Cor',
+    titleLabel: 'Título',
+    titleTip: 'Mostrado acima da barra. Deixe vazio para não mostrar título.',
+    titlePlaceholder: 'Sem título',
+    iconLabel: 'Ícone da Meta',
+    iconTip: 'Um emoji para a meta em vez da estrela, ex.: ⭐. Deixe vazio para usar a estrela.',
+    iconPlaceholder: 'Estrela',
+    emoteLabel: 'Emote do Canal',
+    emoteTip:
+      'A meta mostra este emote do canal em vez do ícone acima. Lista emotes de assinante e pacotes da 7TV, BTTV e FFZ.',
+    showPops: 'Mostrar Novos Seguidores',
+    showPopsTip: 'Sobe um +1 com o nome do espectador a cada novo follow.',
+    sectionCommands: 'Comandos do Chat',
+    commandsIntro:
+      'Você e seus moderadores podem corrigir a contagem pelo chat da Twitch ou Kick, por exemplo para adicionar follows que chegaram com o OBS fechado.',
+    cmdAdd: 'Adiciona seguidores à contagem, 1 se você não colocar o número',
+    cmdRemove: 'Remove seguidores da contagem, 1 se você não colocar o número',
+    cmdSet: 'Define a contagem',
+    cmdReset: 'Volta para a contagem inicial',
+    previewTitle: 'Prévia da Meta de Seguidores',
+    previewIframeTitle: 'Prévia da Meta de Seguidores',
+    previewHint:
+      'A prévia reproduz seguidores simulados até atingir a meta e recomeça. Na live, follows reais aumentarão a contagem.',
+    testTitle: 'Experimente:',
+    testViewer: 'Você',
+    testFollow: '+1 Follow',
+    testReach: 'Bater a Meta',
+    testReset: 'Redefinir',
+    tokenNoticeTitle: 'Conexão com o Senchabot necessária',
+    tokenNoticeDesc:
+      'A Meta de Seguidores requer um canal da Twitch ou Kick conectado pelo Senchabot. Conecte seu canal no painel do Senchabot e abra esta configuração pela página Ferramentas para configurar seu overlay.',
+    tokenNoticeButton: 'Abrir Ferramentas do Senchabot →',
+    widgetUrlTip:
+      'Já fez um widget? Cole a URL aqui para carregar suas configurações e alterar o que precisar.',
+    widgetUrlPlaceholder: 'Cole a URL de um widget existente para editar',
+    widgetUrlInvalid: 'Esta não é uma URL de Meta de Seguidores.',
+    browserSourceHintSize: ' (tamanho recomendado: 800×260).',
+    guideTitle: 'Configuração no programa de live (OBS, Streamlabs, XSplit etc.)',
+    guideStep1:
+      'Adicione uma fonte de navegador no seu programa de live (OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio etc.).',
+    guideStep2: 'Cole a URL copiada da meta de seguidores.',
+    guideStep3: 'Coloque a largura em 800 e a altura em 260.',
+    guideStep4: 'Se a contagem sair errada, corrija com !fgoal set no chat.',
+    faq1Q: 'Como a barra se atualiza quando alguém segue?',
+    faq1A:
+      'A Twitch e a Kick exigem uma conta conectada para receber eventos de follow. Quando conectado pelo Senchabot, novos seguidores são detectados imediatamente e enviados diretamente para seu overlay no OBS em tempo real.',
+    faq2Q: 'O que acontece se o OBS fechar ou a fonte de navegador recarregar?',
+    faq2A:
+      'A contagem fica salva no OBS e volta de onde parou. Follows com o OBS fechado podem ser adicionados por moderadores com !fgoal add.',
+    faq3Q: 'Posso usar a Meta de Subs e a Meta de Seguidores ao mesmo tempo?',
+    faq3A:
+      'Sim! Ambas as metas mantêm contagens independentes no armazenamento do OBS e utilizam endpoints de URL separados.',
   },
   frames: {
     breadcrumb: 'Configurar Molduras de Live',

@@ -22,6 +22,7 @@ const SIZE_NOTES: Record<WidgetId, TranslationKey> = {
   'emote-wall': 'guides.obs.size.notes.emoteWall',
   'sub-sprout': 'guides.obs.size.notes.subSprout',
   goal: 'guides.obs.size.notes.goal',
+  'follower-goal': 'guides.obs.size.notes.goal',
   frames: 'guides.obs.size.notes.frames',
   subathon: 'guides.obs.size.notes.subathon',
   countdown: 'guides.obs.size.notes.countdown',

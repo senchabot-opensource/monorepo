@@ -3,6 +3,7 @@ import type { en } from './en';
 export const es: typeof en = {
   common: {
     freeBadge: '100% gratis · Sin iniciar sesión',
+    freeOnlyBadge: '100% gratis',
     copy: 'Copiar',
     copied: '¡Copiado!',
     home: 'Inicio',
@@ -101,6 +102,11 @@ export const es: typeof en = {
       name: 'Meta de Subs',
       tagline:
         'Una barra que se llena con cada sub y cada sub regalada, con un trofeo al llegar a la meta.',
+    },
+    followerGoal: {
+      name: 'Meta de Seguidores',
+      tagline:
+        'Una barra que se llena con cada nuevo seguidor en tiempo real, con un trofeo al llegar a la meta.',
     },
     frames: {
       name: 'Marcos de Stream',
@@ -832,7 +838,88 @@ export const es: typeof en = {
       'Sí. Cada sub nueva y resub suma 1, y un regalo suma 1 por cada sub que incluye, así que un regalo de 5 suma 5. En Twitch una resub cuenta cuando el espectador la comparte en el chat, y en Kick cuando se renueva.',
     faq4Q: '¿Puedo hacer una meta de seguidores?',
     faq4A:
-      'Todavía no. Twitch y Kick no muestran los follows nuevos a una página sin sesión iniciada, así que la meta cuenta subs, igual en las dos plataformas.',
+      '¡Sí! Usa nuestro overlay de Meta de Seguidores para seguir nuevos seguidores en directo desde Twitch y Kick.',
+  },
+  followerGoal: {
+    breadcrumb: 'Configurar Meta de Seguidores',
+    title: 'Configurar Meta de Seguidores',
+    intro:
+      'Una barra de meta de seguidores para Twitch y Kick. Cada nuevo seguidor la llena de uno en uno en directo, y un trofeo aparece al alcanzar la meta. Elige dónde empieza el conteo y cuál es la meta, y tus moderadores pueden ajustar el conteo desde el chat.',
+    sectionGoal: 'Meta',
+    start: 'Conteo Inicial',
+    startTip:
+      'Dónde empieza el conteo: los seguidores en tu panel de control, o 0 para contar solo este stream. Cambiarlo más tarde reinicia el conteo desde el nuevo número.',
+    target: 'Meta',
+    targetTip: 'La barra está llena en este número. El conteo sigue aumentando después.',
+    countsHint: 'Cada nuevo seguidor en Twitch o Kick suma 1 al conteo en directo.',
+    end: 'Al Completar',
+    ends: {
+      stay: 'Seguir mostrando',
+      hide: 'Ocultar',
+    },
+    endTip: 'Qué se queda en pantalla una vez alcanzada la meta.',
+    endHold: 'Ocultar Después de',
+    endHoldTip: 'Cuánto tiempo permanece visible la meta completada. Cero la oculta de inmediato.',
+    endHoldOff: 'Se oculta en cuanto se alcanza la meta.',
+    unitMinutes: 'min',
+    unitSeconds: 'seg',
+    style: 'Estilo',
+    styleTip:
+      'Barra coloca el título y conteo sobre la barra. Barra Fina integra título y conteo directamente dentro de una barra más delgada.',
+    styleBar: 'Barra',
+    styleThin: 'Barra Fina',
+    color: 'Color',
+    titleLabel: 'Título',
+    titleTip: 'Se muestra sobre la barra. Déjalo vacío para no mostrar título.',
+    titlePlaceholder: 'Sin título',
+    iconLabel: 'Icono de Meta',
+    iconTip: 'Un emoji para la meta en vez de la estrella, ej. ⭐. Déjalo vacío para usar la estrella.',
+    iconPlaceholder: 'Estrella',
+    emoteLabel: 'Emote del Canal',
+    emoteTip:
+      'La meta muestra este emote de canal en vez del icono anterior. Lista emotes de suscriptor y conjuntos de 7TV, BTTV y FFZ.',
+    showPops: 'Mostrar Nuevos Seguidores',
+    showPopsTip: 'Muestra un +1 flotante con el nombre del espectador por cada nuevo seguidor.',
+    sectionCommands: 'Comandos de Chat',
+    commandsIntro:
+      'Tú y tus mods pueden corregir el conteo desde el chat de Twitch o Kick, por ejemplo para añadir seguidores que llegaron con OBS cerrado.',
+    cmdAdd: 'Añade seguidores al conteo, 1 si no especificas número',
+    cmdRemove: 'Resta seguidores al conteo, 1 si no especificas número',
+    cmdSet: 'Establece el conteo',
+    cmdReset: 'Vuelve al conteo inicial',
+    previewTitle: 'Vista Previa de Meta de Seguidores',
+    previewIframeTitle: 'Vista Previa de Meta de Seguidores',
+    previewHint:
+      'La vista previa reproduce seguidores simulados hasta alcanzar la meta y luego reinicia. En stream, los seguidores reales sumarán al conteo.',
+    testTitle: 'Pruébalo:',
+    testViewer: 'Tú',
+    testFollow: '+1 Seguidor',
+    testReach: 'Llegar a la meta',
+    testReset: 'Reiniciar',
+    tokenNoticeTitle: 'Conexión con Senchabot requerida',
+    tokenNoticeDesc:
+      'La Meta de Seguidores requiere un canal de Twitch o Kick conectado desde Senchabot. Conecta tu canal en el panel de Senchabot e inicia esta configuración desde la página de Herramientas para configurar tu overlay.',
+    tokenNoticeButton: 'Abrir Herramientas de Senchabot →',
+    widgetUrlTip:
+      '¿Ya hiciste un widget? Pega su URL aquí para cargar tu configuración y cambiar lo que necesites.',
+    widgetUrlPlaceholder: 'Pega la URL de un widget existente para editarlo',
+    widgetUrlInvalid: 'Esta no es una URL de Meta de Seguidores.',
+    browserSourceHintSize: ' (tamaño recomendado: 800×260).',
+    guideTitle: 'Configuración en tu programa de streaming (OBS, Streamlabs, XSplit, etc.)',
+    guideStep1:
+      'Añade una fuente de navegador en tu programa de streaming (OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio, etc.).',
+    guideStep2: 'Pega la URL copiada de la meta de seguidores.',
+    guideStep3: 'Pon el ancho en 800 y el alto en 260.',
+    guideStep4: 'Si el conteo no coincide, arréglalo con !fgoal set en el chat.',
+    faq1Q: '¿Cómo se actualiza cuando alguien te sigue?',
+    faq1A:
+      'Twitch y Kick requieren una cuenta conectada para recibir eventos de seguimiento. Al conectarte mediante Senchabot, los nuevos seguidores se detectan de inmediato y se envían directamente a tu overlay de OBS en tiempo real.',
+    faq2Q: '¿Qué pasa si OBS se cierra o se recarga la fuente de navegador?',
+    faq2A:
+      'El conteo se guarda dentro de OBS y se recupera exactamente donde estaba. Los seguidores mientras OBS estuvo cerrado pueden ser agregados con !fgoal add.',
+    faq3Q: '¿Puedo usar una Meta de Subs y una Meta de Seguidores al mismo tiempo?',
+    faq3A:
+      '¡Sí! Ambas metas mantienen conteos independientes en el almacenamiento de OBS y utilizan rutas URL separadas.',
   },
   frames: {
     breadcrumb: 'Configurar Marcos de Stream',

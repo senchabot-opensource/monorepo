@@ -1,6 +1,7 @@
 export const en = {
   common: {
     freeBadge: '100% Free · No Login Required',
+    freeOnlyBadge: '100% Free',
     copy: 'Copy',
     copied: 'Copied!',
     home: 'Home',
@@ -97,6 +98,10 @@ export const en = {
     goal: {
       name: 'Sub Goal',
       tagline: 'A goal bar that every sub and gifted sub fills, with a trophy when you reach it.',
+    },
+    followerGoal: {
+      name: 'Follower Goal',
+      tagline: 'A goal bar that every new follow fills in real time, with a trophy when you reach it.',
     },
     frames: {
       name: 'Stream Frames',
@@ -807,7 +812,89 @@ export const en = {
       'Yes. Every new sub and resub adds 1, and a gift adds 1 for each sub in it, so a gift of 5 adds 5. On Twitch a resub counts when the viewer shares it in chat, and on Kick when it renews.',
     faq4Q: 'Can I make a follower goal?',
     faq4A:
-      "Not yet. Twitch and Kick don't show new follows to a page that isn't logged in, so the goal counts subs, the same way on both platforms.",
+      'Yes! Use our Follower Goal overlay to track new followers live on stream from Twitch and Kick.',
+  },
+  followerGoal: {
+    breadcrumb: 'Follower Goal Setup',
+    title: 'Follower Goal Setup',
+    intro:
+      'A follower goal bar for Twitch and Kick. Every new follow fills it by one live on stream, and a trophy lands on the bar when you reach the goal. Pick where the count starts and where the goal is, and your mods can fix the count from chat.',
+    sectionGoal: 'Goal',
+    start: 'Starting Count',
+    startTip:
+      'Where the count starts: the follower count on your dashboard, or 0 to count this stream only. Changing it later starts the count over from the new number.',
+    target: 'Goal',
+    targetTip: 'The bar is full at this count. The count keeps going past it.',
+    countsHint:
+      'Every new follow on Twitch or Kick adds 1 to the count live on stream.',
+    end: 'On Complete',
+    ends: {
+      stay: 'Keep showing',
+      hide: 'Hide it',
+    },
+    endTip: 'What stays on screen after the goal is reached.',
+    endHold: 'Hide After',
+    endHoldTip: 'How long the completed goal stays on screen. Zero hides it right away.',
+    endHoldOff: 'Hides as soon as the goal is reached.',
+    unitMinutes: 'min',
+    unitSeconds: 'sec',
+    style: 'Style',
+    styleTip:
+      'Bar puts the goal title and count above the bar. Thin Bar embeds the title and count directly inside a slimmer bar.',
+    styleBar: 'Bar',
+    styleThin: 'Thin Bar',
+    color: 'Color',
+    titleLabel: 'Title',
+    titleTip: 'Shown above the bar. Leave it empty to show no title.',
+    titlePlaceholder: 'No title',
+    iconLabel: 'Goal Icon',
+    iconTip: 'An emoji for the goal instead of the star, e.g. ⭐. Leave it empty to use the star.',
+    iconPlaceholder: 'Star',
+    emoteLabel: 'Channel Emote',
+    emoteTip:
+      'The goal shows this channel emote instead of the icon box above. Lists each channel’s subscriber emotes plus 7TV, BTTV and FFZ sets.',
+    showPops: 'Show New Follows',
+    showPopsTip: "Floats up +1 with the viewer's name for every new follow.",
+    sectionCommands: 'Chat Commands',
+    commandsIntro:
+      'You and your mods can fix the count from Twitch or Kick chat, for example to add follows that came in while OBS was closed.',
+    cmdAdd: 'Adds follows to the count, 1 if you leave the number out',
+    cmdRemove: 'Takes follows off the count, 1 if you leave the number out',
+    cmdSet: 'Sets the count',
+    cmdReset: 'Goes back to the starting count',
+    previewTitle: 'Follower Goal Preview',
+    previewIframeTitle: 'Follower Goal Preview',
+    previewHint:
+      'The preview plays simulated follows until the goal is reached, then starts over. On stream real follows add to the count.',
+    testTitle: 'Try it:',
+    testViewer: 'You',
+    testFollow: '+1 Follow',
+    testReach: 'Reach Goal',
+    testReset: 'Reset',
+    tokenNoticeTitle: 'Senchabot Connection Required',
+    tokenNoticeDesc:
+      'Follower Goal requires a connected Twitch or Kick channel from Senchabot. Connect your channel in the Senchabot Dashboard and launch this setup from the Tools page to configure your overlay.',
+    tokenNoticeButton: 'Open Senchabot Dashboard Tools →',
+    widgetUrlTip:
+      'Already made a widget? Paste its URL here to load your settings and change what you need.',
+    widgetUrlPlaceholder: 'Paste an existing widget URL to edit it',
+    widgetUrlInvalid: "This isn't a Follower Goal URL.",
+    browserSourceHintSize: ' (recommended size: 800×260).',
+    guideTitle: 'Streaming Software Setup (OBS, Streamlabs, XSplit, etc.)',
+    guideStep1:
+      'Add a Browser Source in your streaming software (OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio, etc.).',
+    guideStep2: 'Paste your copied follower goal URL.',
+    guideStep3: 'Set width to 800 and height to 260.',
+    guideStep4: 'If the count is ever off, you or a mod can fix it with !fgoal set in chat.',
+    faq1Q: 'How does it update when someone follows?',
+    faq1A:
+      'Twitch and Kick require a connected account to receive follow events. When connected through Senchabot, new follows are detected immediately and sent directly to your OBS overlay in real time.',
+    faq2Q: 'What happens if OBS closes or the browser source reloads?',
+    faq2A:
+      'The count is saved inside OBS so it restores exactly where it was. Follows that happened while OBS was completely closed can be added by mods with !fgoal add.',
+    faq3Q: 'Can I run both a Sub Goal and a Follower Goal at the same time?',
+    faq3A:
+      'Yes! Sub Goal and Follower Goal maintain independent counts in OBS localStorage and use separate URL endpoints.',
   },
   frames: {
     breadcrumb: 'Stream Frames Setup',

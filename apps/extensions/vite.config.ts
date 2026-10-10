@@ -15,6 +15,7 @@ const SITE_PAGES = [
   '/setup/subathon-timer',
   '/setup/stream-alerts',
   '/setup/sub-goal',
+  '/setup/follower-goal',
   '/setup/stream-frames',
   '/setup/stream-countdown',
   '/setup/chat-poll',

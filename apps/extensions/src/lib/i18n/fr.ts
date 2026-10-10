@@ -3,6 +3,7 @@ import type { en } from './en';
 export const fr: typeof en = {
   common: {
     freeBadge: '100 % gratuit · Sans connexion',
+    freeOnlyBadge: '100 % gratuit',
     copy: 'Copier',
     copied: 'Copié !',
     home: 'Accueil',
@@ -102,6 +103,11 @@ export const fr: typeof en = {
       name: 'Objectif de subs',
       tagline:
         "Une barre d'objectif que chaque sub et sub offert remplit, avec un trophée quand tu l'atteins.",
+    },
+    followerGoal: {
+      name: 'Objectif de followers',
+      tagline:
+        "Une barre d'objectif que chaque nouveau follow remplit en temps réel, avec un trophée quand tu l'atteins.",
     },
     frames: {
       name: 'Cadres de stream',
@@ -842,7 +848,88 @@ export const fr: typeof en = {
       "Oui. Chaque nouveau sub et resub ajoute 1, et un cadeau ajoute 1 pour chaque sub qu'il contient, donc 5 subs offerts ajoutent 5. Sur Twitch, un resub compte quand le viewer le partage dans le chat, et sur Kick quand il se renouvelle.",
     faq4Q: 'Je peux faire un objectif de followers ?',
     faq4A:
-      "Pas encore. Twitch et Kick ne montrent pas les nouveaux follows à une page non connectée, donc l'objectif compte les subs, de la même façon sur les deux plateformes.",
+      'Oui ! Utilise notre overlay Objectif de followers pour suivre les nouveaux followers en direct depuis Twitch et Kick.',
+  },
+  followerGoal: {
+    breadcrumb: 'Configuration de l’Objectif de followers',
+    title: 'Configuration de l’Objectif de followers',
+    intro:
+      'Une barre d’objectif de followers pour Twitch et Kick. Chaque nouveau follow la remplit d’un cran en direct, et un trophée apparaît lorsque tu atteins ton objectif. Choisis le compteur de départ et l’objectif, et tes modérateurs peuvent ajuster le total depuis le chat.',
+    sectionGoal: 'Objectif',
+    start: 'Compteur de départ',
+    startTip:
+      'Où commence le compteur : le nombre de followers sur ton tableau de bord, ou 0 pour compter uniquement ce stream. Le modifier plus tard réinitialise le compteur à ce nouveau nombre.',
+    target: 'Objectif',
+    targetTip: 'La barre est pleine à ce nombre. Le compteur continue au-delà.',
+    countsHint: 'Chaque nouveau follow sur Twitch ou Kick ajoute 1 au compteur en direct.',
+    end: 'Une fois atteint',
+    ends: {
+      stay: 'Garder affiché',
+      hide: 'Masquer',
+    },
+    endTip: 'Ce qui reste à l’écran une fois l’objectif atteint.',
+    endHold: 'Masquer après',
+    endHoldTip: 'Combien de temps l’objectif complété reste affiché. Zéro le masque immédiatement.',
+    endHoldOff: 'Se masque dès que l’objectif est atteint.',
+    unitMinutes: 'min',
+    unitSeconds: 'sec',
+    style: 'Style',
+    styleTip:
+      'Barre place le titre et le compteur au-dessus de la barre. Barre fine intègre le titre et le compteur directement dans une barre plus mince.',
+    styleBar: 'Barre',
+    styleThin: 'Barre fine',
+    color: 'Couleur',
+    titleLabel: 'Titre',
+    titleTip: 'Affiché au-dessus de la barre. Laisse vide pour ne pas afficher de titre.',
+    titlePlaceholder: 'Sans titre',
+    iconLabel: 'Icône de l’objectif',
+    iconTip: 'Un emoji pour l’objectif au lieu de l’étoile, par ex. ⭐. Laisse vide pour utiliser l’étoile.',
+    iconPlaceholder: 'Étoile',
+    emoteLabel: 'Émote de la chaîne',
+    emoteTip:
+      'L’objectif affiche cette émote de chaîne au lieu de la boîte d’icône ci-dessus. Liste les émotes d’abonnés ainsi que les packs 7TV, BTTV et FFZ.',
+    showPops: 'Afficher les nouveaux followers',
+    showPopsTip: 'Fait flotter un +1 avec le nom du viewer à chaque nouveau follow.',
+    sectionCommands: 'Commandes du chat',
+    commandsIntro:
+      'Toi et tes modos pouvez corriger le compteur depuis le chat Twitch ou Kick, par exemple pour ajouter des follows arrivés pendant qu’OBS était fermé.',
+    cmdAdd: 'Ajoute des followers au compteur, 1 si tu omets le nombre',
+    cmdRemove: 'Retire des followers du compteur, 1 si tu omets le nombre',
+    cmdSet: 'Définit le compteur',
+    cmdReset: 'Revient au compteur de départ',
+    previewTitle: 'Aperçu de l’Objectif de followers',
+    previewIframeTitle: 'Aperçu de l’Objectif de followers',
+    previewHint:
+      'L’aperçu simule des follows jusqu’à ce que l’objectif soit atteint, puis recommence. En stream, les vrais follows alimenteront le compteur.',
+    testTitle: 'Essayer :',
+    testViewer: 'Toi',
+    testFollow: '+1 Follow',
+    testReach: 'Atteindre l’objectif',
+    testReset: 'Réinitialiser',
+    tokenNoticeTitle: 'Connexion Senchabot requise',
+    tokenNoticeDesc:
+      'L’Objectif de followers nécessite une chaîne Twitch ou Kick connectée depuis Senchabot. Connecte ta chaîne dans le tableau de bord Senchabot et lance cette configuration depuis la page Outils pour configurer ton overlay.',
+    tokenNoticeButton: 'Ouvrir les Outils Senchabot →',
+    widgetUrlTip:
+      'Tu as déjà créé un widget ? Colle son URL ici pour charger tes réglages et modifier ce dont tu as besoin.',
+    widgetUrlPlaceholder: 'Colle l’URL d’un widget existant pour le modifier',
+    widgetUrlInvalid: 'Ce n’est pas une URL d’Objectif de followers.',
+    browserSourceHintSize: ' (taille recommandée : 800×260).',
+    guideTitle: 'Configuration dans le logiciel de streaming (OBS, Streamlabs, XSplit, etc.)',
+    guideStep1:
+      'Ajoute une source navigateur dans ton logiciel de streaming (OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio, etc.).',
+    guideStep2: 'Colle l’URL copiée de l’objectif de followers.',
+    guideStep3: 'Règle la largeur sur 800 et la hauteur sur 260.',
+    guideStep4: 'Si le compteur est décalé, corrige-le avec !fgoal set dans le chat.',
+    faq1Q: 'Comment se met-il à jour quand quelqu’un follow ?',
+    faq1A:
+      'Twitch et Kick nécessitent un compte connecté pour recevoir les événements de follow. Lorsque tu es connecté via Senchabot, les nouveaux follows sont détectés immédiatement et envoyés directement à ton overlay OBS en temps réel.',
+    faq2Q: 'Que se passe-t-il si OBS se ferme ou si la source navigateur se recharge ?',
+    faq2A:
+      'Le compteur est sauvegardé dans OBS et reprend exactement là où il s’était arrêté. Les follows manqués peuvent être ajoutés par les modos avec !fgoal add.',
+    faq3Q: 'Puis-je utiliser un Objectif de subs et un Objectif de followers en même temps ?',
+    faq3A:
+      'Oui ! Les deux objectifs conservent des compteurs indépendants dans le stockage local d’OBS et utilisent des URL séparées.',
   },
   frames: {
     breadcrumb: 'Configuration des Cadres de stream',

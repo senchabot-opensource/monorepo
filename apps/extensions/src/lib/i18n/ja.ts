@@ -3,6 +3,7 @@ import type { en } from './en';
 export const ja: typeof en = {
   common: {
     freeBadge: '100%無料・ログイン不要',
+    freeOnlyBadge: '100%無料',
     copy: 'コピー',
     copied: 'コピーしました！',
     home: 'ホーム',
@@ -101,6 +102,11 @@ export const ja: typeof en = {
       name: 'サブスク目標',
       tagline:
         'サブスクとギフトサブのたびに埋まっていく目標バー。達成するとトロフィーが登場します。',
+    },
+    followerGoal: {
+      name: 'フォロワー目標',
+      tagline:
+        '新しいフォローが入るたびにリアルタイムで埋まっていく目標バー。達成するとトロフィーが登場します。',
     },
     frames: {
       name: '配信フレーム',
@@ -822,7 +828,88 @@ export const ja: typeof en = {
       'はい。新規サブスクと継続サブスクは1件ずつ、ギフトは含まれるサブスク1件ごとに1加算されるので、5件のギフトなら5増えます。Twitchでは視聴者が継続サブスクをチャットでシェアしたとき、Kickでは更新されたときにカウントされます。',
     faq4Q: 'フォロワー目標は作れますか？',
     faq4A:
-      'まだできません。TwitchもKickも、ログインしていないページには新しいフォローを見せないため、この目標はどちらのプラットフォームでも同じようにサブスクを数えます。',
+      'はい！TwitchやKickの新規フォロワーを配信でリアルタイムに追跡できるフォロワー目標オーバーレイをご利用ください。',
+  },
+  followerGoal: {
+    breadcrumb: 'フォロワー目標の設定',
+    title: 'フォロワー目標の設定',
+    intro:
+      'TwitchとKick対応のフォロワー目標バー。新しいフォローが入るたびに配信でリアルタイムに1ずつ加算され、目標を達成するとトロフィーが登場します。開始カウントと目標を設定でき、モデレーターがチャットから修正することも可能です。',
+    sectionGoal: '目標',
+    start: '開始カウント',
+    startTip:
+      'カウントの開始点：ダッシュボードのフォロワー数、または今回の配信だけを数えるなら0。あとで変更すると、その新しい数字からカウントを再開します。',
+    target: '目標',
+    targetTip: 'このカウントでバーがいっぱいになります。カウントはこれを超えても進み続けます。',
+    countsHint: 'TwitchまたはKickで新しいフォローがあるたびに、配信画面でリアルタイムに1加算されます。',
+    end: '達成時',
+    ends: {
+      stay: '表示したままにする',
+      hide: '非表示にする',
+    },
+    endTip: '目標を達成したあとに画面へ何を残すか設定します。',
+    endHold: '非表示までの時間',
+    endHoldTip: '達成した目標を画面に残す時間。0秒にするとすぐに隠れます。',
+    endHoldOff: '目標を達成するとすぐに非表示になります。',
+    unitMinutes: '分',
+    unitSeconds: '秒',
+    style: 'スタイル',
+    styleTip:
+      '「バー」はタイトルとカウントをバーの上に配置します。「細いバー」はスリムなバーの内側に直接タイトルとカウントを埋め込みます。',
+    styleBar: 'バー',
+    styleThin: '細いバー',
+    color: 'カラー',
+    titleLabel: 'タイトル',
+    titleTip: 'バーの上に表示されます。空欄にするとタイトルなしになります。',
+    titlePlaceholder: 'タイトルなし',
+    iconLabel: '目標アイコン',
+    iconTip: '星の代わりの絵文字（例：⭐）。空欄にすると星が使われます。',
+    iconPlaceholder: '星',
+    emoteLabel: 'チャンネルエモート',
+    emoteTip:
+      '上記のアイコンの代わりにこのチャンネルエモートを表示します。サブスクエモートや7TV、BTTV、FFZのセットから選べます。',
+    showPops: '新しいフォローを表示',
+    showPopsTip: '新しいフォローごとに視聴者名と「+1」が浮かび上がります。',
+    sectionCommands: 'チャットコマンド',
+    commandsIntro:
+      'OBSが閉じていたあいだに入ったフォローなど、TwitchまたはKickのチャットからあなたやモデレーターがカウントを修正できます。',
+    cmdAdd: 'フォロー数を加算します（数字を省略すると1）',
+    cmdRemove: 'フォロー数を減算します（数字を省略すると1）',
+    cmdSet: 'カウントを設定します',
+    cmdReset: '開始カウントに戻します',
+    previewTitle: 'フォロワー目標プレビュー',
+    previewIframeTitle: 'フォロワー目標プレビュー',
+    previewHint:
+      'プレビューでは目標に達するまで模擬フォローを再生し、最初から繰り返します。実際の配信では本物のフォローが加算されます。',
+    testTitle: 'お試しテスト：',
+    testViewer: 'あなた',
+    testFollow: '+1 フォロー',
+    testReach: '目標達成',
+    testReset: 'リセット',
+    tokenNoticeTitle: 'Senchabotの連携が必要です',
+    tokenNoticeDesc:
+      'フォロワー目標にはSenchabotに連携されたTwitchまたはKickチャンネルが必要です。Senchabotダッシュボードでチャンネルを連携し、Toolsページからこの設定を開いてオーバーレイを設定してください。',
+    tokenNoticeButton: 'Senchabot Toolsを開く →',
+    widgetUrlTip:
+      'すでにウィジェットを作りましたか？ そのURLをここに貼り付けると、設定を読み込んで変更できます。',
+    widgetUrlPlaceholder: '既存のウィジェットURLを貼り付けて編集',
+    widgetUrlInvalid: 'フォロワー目標のURLではありません。',
+    browserSourceHintSize: '（推奨サイズ：800×260）。',
+    guideTitle: '配信ソフトの設定（OBS、Streamlabs、XSplitなど）',
+    guideStep1:
+      '配信ソフト（OBS Studio、Streamlabs Desktop、XSplit、vMix、Lightstream、PRISM Live Studioなど）でブラウザソースを追加します。',
+    guideStep2: 'コピーしたフォロワー目標のURLを貼り付けます。',
+    guideStep3: '幅を800、高さを260に設定します。',
+    guideStep4: 'カウントがずれたときは、チャットで !fgoal set を使って修正できます。',
+    faq1Q: '誰かがフォローしたとき、どのように更新されますか？',
+    faq1A:
+      'TwitchとKickではフォローイベントの受信に連携アカウントが必要です。Senchabotを通じて連携すると、新しいフォローが即座に検知され、リアルタイムでOBSオーバーレイに直接送信されます。',
+    faq2Q: 'OBSを閉じたりブラウザソースを再読み込みしたりするとどうなりますか？',
+    faq2A:
+      'カウントはOBS内に保存されているため、正確に再開されます。OBS停止中のフォローはモデレーターが !fgoal add で追加可能です。',
+    faq3Q: 'サブスク目標とフォロワー目標を同時に実行できますか？',
+    faq3A:
+      'はい！サブスク目標とフォロワー目標はOBSのlocalStorageで独立してカウントを保持し、別々のURLを使用します。',
   },
   frames: {
     breadcrumb: '配信フレームの設定',
