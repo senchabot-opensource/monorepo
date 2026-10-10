@@ -3,6 +3,7 @@ import type { en } from './en';
 export const tr: typeof en = {
   common: {
     freeBadge: '%100 Ücretsiz · Giriş Gerektirmez',
+    freeOnlyBadge: '%100 Ücretsiz',
     copy: 'Kopyala',
     copied: 'Kopyalandı!',
     home: 'Anasayfa',
@@ -100,6 +101,10 @@ export const tr: typeof en = {
     goal: {
       name: 'Abone Hedefi',
       tagline: 'Her abonelik ve hediye abonelikle dolan bir bar, hedefe ulaşınca üstüne kupa iner.',
+    },
+    followerGoal: {
+      name: 'Takipçi Hedefi',
+      tagline: 'Her yeni takipçiyle gerçek zamanlı dolan bir bar, hedefe ulaşınca üstüne kupa iner.',
     },
     frames: {
       name: 'Yayın Çerçeveleri',
@@ -825,7 +830,88 @@ export const tr: typeof en = {
       "Evet. Her yeni abonelik ve yenileme 1 ekler, hediyede ise içindeki her abonelik için 1 eklenir, yani 5'li bir hediye 5 ekler. Twitch'te yenileme, izleyici bunu sohbette paylaştığında sayılır, Kick'te ise abonelik yenilendiğinde.",
     faq4Q: 'Takipçi hedefi yapabilir miyim?',
     faq4A:
-      'Şimdilik hayır. Twitch ve Kick, giriş yapılmamış bir sayfaya yeni takipçileri göstermiyor, bu yüzden hedef iki platformda da aynı şekilde abonelikleri sayıyor.',
+      'Evet! Twitch ve Kick’teki yeni takipçileri yayında canlı olarak takip etmek için Takipçi Hedefi overlay’imizi kullanabilirsiniz.',
+  },
+  followerGoal: {
+    breadcrumb: 'Takipçi Hedefi Kurulumu',
+    title: 'Takipçi Hedefi Kurulumu',
+    intro:
+      'Twitch ve Kick için takipçi hedefi çubuğu. Her yeni takipçi yayında canlı olarak çubuğu 1 doldurur ve hedefe ulaştığınızda çubuğa bir kupa iner. Başlangıç sayısını ve hedefi belirleyin; modlarınız sayıyı sohbetten düzeltebilir.',
+    sectionGoal: 'Hedef',
+    start: 'Başlangıç Sayısı',
+    startTip:
+      'Sayımın başladığı yer: kontrol panelinizdeki takipçi sayısı veya sadece bu yayını saymak için 0. Daha sonra değiştirmek sayımı yeni sayıdan yeniden başlatır.',
+    target: 'Hedef',
+    targetTip: 'Çubuk bu sayıda dolar. Sayım hedefin ötesinde de devam eder.',
+    countsHint: 'Twitch veya Kick’teki her yeni takipçi yayında canlı olarak sayıya 1 ekler.',
+    end: 'Tamamlandığında',
+    ends: {
+      stay: 'Göstermeye devam et',
+      hide: 'Gizle',
+    },
+    endTip: 'Hedefe ulaşıldıktan sonra ekranda ne kalacağı.',
+    endHold: 'Şu Süre Sonra Gizle',
+    endHoldTip: 'Tamamlanan hedefin ekranda ne kadar kalacağı. Sıfır hemen gizler.',
+    endHoldOff: 'Hedefe ulaşılır ulaşılmaz gizlenir.',
+    unitMinutes: 'dk',
+    unitSeconds: 'sn',
+    style: 'Stil',
+    styleTip:
+      'Çubuk, başlığı ve sayımı çubuğun üzerine yerleştirir. İnce Çubuk ise başlığı ve sayımı daha ince bir çubuğun içine gömer.',
+    styleBar: 'Çubuk',
+    styleThin: 'İnce Çubuk',
+    color: 'Renk',
+    titleLabel: 'Başlık',
+    titleTip: 'Çubuğun üzerinde gösterilir. Başlık göstermemek için boş bırakın.',
+    titlePlaceholder: 'Başlık yok',
+    iconLabel: 'Hedef İkonu',
+    iconTip: 'Yıldız yerine hedef için bir emoji, örn. ⭐. Yıldızı kullanmak için boş bırakın.',
+    iconPlaceholder: 'Yıldız',
+    emoteLabel: 'Kanal İfadesi',
+    emoteTip:
+      'Hedef yukarıdaki ikon kutusu yerine bu kanal ifadesini gösterir. Abone ifadeleri ile 7TV, BTTV ve FFZ setlerini listeler.',
+    showPops: 'Yeni Takipçileri Göster',
+    showPopsTip: 'Her yeni takipçi için izleyicinin adıyla birlikte +1 animasyonu yükselir.',
+    sectionCommands: 'Sohbet Komutları',
+    commandsIntro:
+      'OBS kapalıyken gelen takipçileri eklemek gibi durumlar için siz ve modlarınız sayıyı Twitch veya Kick sohbetinden düzeltebilirsiniz.',
+    cmdAdd: 'Sayıya takipçi ekler, sayı yazılmazsa 1',
+    cmdRemove: 'Sayıdan takipçi çıkarır, sayı yazılmazsa 1',
+    cmdSet: 'Sayımı ayarlar',
+    cmdReset: 'Başlangıç sayısına döner',
+    previewTitle: 'Takipçi Hedefi Önizlemesi',
+    previewIframeTitle: 'Takipçi Hedefi Önizlemesi',
+    previewHint:
+      'Önizleme hedefe ulaşana kadar simüle edilmiş takipçileri oynatır ve baştan başlar. Yayında gerçek takipçiler sayıya eklenir.',
+    testTitle: 'Dene:',
+    testViewer: 'Sen',
+    testFollow: '+1 Takip',
+    testReach: 'Hedefe Ulaş',
+    testReset: 'Sıfırla',
+    tokenNoticeTitle: 'Senchabot Bağlantısı Gerekli',
+    tokenNoticeDesc:
+      'Takipçi Hedefi, Senchabot’a bağlı bir Twitch veya Kick kanalı gerektirir. Overlay’inizi yapılandırmak için kanalınızı Senchabot Kontrol Panelinde bağlayın ve bu kurulumu Araçlar sayfasından başlatın.',
+    tokenNoticeButton: 'Senchabot Dashboard Araçlarını Aç →',
+    widgetUrlTip:
+      'Zaten bir widget oluşturdunuz mu? Ayarlarınızı yüklemek ve düzenlemek için URL’sini buraya yapıştırın.',
+    widgetUrlPlaceholder: 'Düzenlemek için mevcut bir widget URL’si yapıştırın',
+    widgetUrlInvalid: 'Bu bir Takipçi Hedefi URL’si değil.',
+    browserSourceHintSize: ' (önerilen boyut: 800×260).',
+    guideTitle: 'Yayın Yazılımı Kurulumu (OBS, Streamlabs, XSplit vb.)',
+    guideStep1:
+      'Yayın yazılımınıza (OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio vb.) bir Tarayıcı Kaynağı ekleyin.',
+    guideStep2: 'Kopyaladığınız takipçi hedefi URL’sini yapıştırın.',
+    guideStep3: 'Genişliği 800, yüksekliği 260 olarak ayarlayın.',
+    guideStep4: 'Sayıda bir hata olursa siz veya bir mod sohbette !fgoal set komutuyla düzeltebilirsiniz.',
+    faq1Q: 'Biri takip ettiğinde nasıl güncellenir?',
+    faq1A:
+      'Twitch ve Kick, takip etkinliklerini almak için bağlı bir hesap gerektirir. Senchabot üzerinden bağlandığında, yeni takipçiler anında algılanır ve gerçek zamanlı olarak doğrudan OBS overlay’inize gönderilir.',
+    faq2Q: 'OBS kapanırsa veya tarayıcı kaynağı yenilenirse ne olur?',
+    faq2A:
+      'Sayı OBS içinde saklanır ve tam kaldığı yerden devam eder. OBS kapalıyken gelen takipçiler modlar tarafından !fgoal add ile eklenebilir.',
+    faq3Q: 'Aynı anda hem Abone Hedefi hem de Takipçi Hedefi çalıştırabilir miyim?',
+    faq3A:
+      'Evet! Abone Hedefi ve Takipçi Hedefi OBS depolamasında bağımsız sayımlar tutar ve ayrı URL uç noktaları kullanır.',
   },
   frames: {
     breadcrumb: 'Yayın Çerçeveleri Kurulumu',

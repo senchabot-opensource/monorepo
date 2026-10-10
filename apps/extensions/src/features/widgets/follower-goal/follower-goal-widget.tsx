@@ -1,0 +1,933 @@
+import type { CSSProperties } from 'react';
+import { barFrameStyle, fillBackground, fillLayers, trackBackground } from '#/features/presets/bar';
+import { Frame } from '#/features/presets/frame';
+import { painter, skinCss, skinFor } from '#/features/presets/skin';
+import { SkinProvider, useSkin } from '#/features/presets/skin-context';
+import type { SubathonPlatform } from '#/features/widgets/subathon/subathon-events';
+import { useFitScale } from '#/features/widgets/use-fit-scale';
+import type { FollowerGoalSettings } from '#/lib/follower-goal-url';
+import { OVERLAY_FONT_FAMILY as FONT_FAMILY, hueFor, PLATFORM_COLORS } from '../overlay-style';
+import {
+  CELEBRATE_MS,
+  type FollowerGoalPop,
+  type GoalHit,
+  POP_MS,
+  useFollowerGoal,
+} from './use-follower-goal';
+
+const STAGE = { width: 800, height: 260 };
+
+const BAR_BOTTOM = 30;
+const BAR_HEIGHT = 56;
+const BAR_HEIGHT_THIN = 44;
+const BAR_GAP = 10;
+const INFO_ROW_HEIGHT = 44;
+const POP_BAND = STAGE.height - BAR_BOTTOM - BAR_HEIGHT - BAR_GAP - INFO_ROW_HEIGHT;
+const POP_BAND_THIN = STAGE.height - BAR_BOTTOM - BAR_HEIGHT_THIN;
+const BAR_CENTER = STAGE.height - BAR_BOTTOM - BAR_HEIGHT / 2;
+const BAR_CENTER_THIN = STAGE.height - BAR_BOTTOM - BAR_HEIGHT_THIN / 2;
+
+const MAX_SEGMENTS = 20;
+const GOLD_HUE = 42;
+const SPARK_COUNT = 14;
+const SPARKS = Array.from({ length: SPARK_COUNT }, (_, index) => index);
+
+const CSS = `
+.sg-root{position:fixed;inset:0;overflow:hidden;font-family:${FONT_FAMILY};color:#fff;
+  -webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
+.sg-stage{position:absolute;left:50%;top:50%;width:${STAGE.width}px;height:${STAGE.height}px;transform-origin:center}
+.sg-shadow{text-shadow:0 2px 0 rgba(0,0,0,.55),0 0 18px rgba(0,0,0,.55)}
+.sg-outline{text-shadow:-1.5px -1.5px 0 rgba(0,0,0,.8),1.5px -1.5px 0 rgba(0,0,0,.8),-1.5px 1.5px 0 rgba(0,0,0,.8),1.5px 1.5px 0 rgba(0,0,0,.8),0 2px 4px rgba(0,0,0,.9),0 0 10px rgba(0,0,0,.55)}
+.sg-title{font-weight:800;letter-spacing:.14em;text-transform:uppercase;font-style:italic}
+@keyframes sg-ghost{0%{opacity:1}100%{opacity:0}}
+@keyframes sg-sheen{0%{transform:translateX(-120%)}100%{transform:translateX(220%)}}
+@keyframes sg-stripes{0%{transform:translateX(0)}100%{transform:translateX(28px)}}
+@keyframes sg-bump{0%{transform:scale(1)}30%{transform:scale(1.22)}100%{transform:scale(1)}}
+@keyframes sg-pop{0%{transform:translate(-50%,12px) scale(.6);opacity:0}12%{transform:translate(-50%,-6px) scale(1.12);opacity:1}24%{transform:translate(-50%,-12px) scale(1)}78%{opacity:1}100%{transform:translate(-50%,-40px) scale(.96);opacity:0}}
+@keyframes sg-glow{0%,100%{filter:brightness(1)}50%{filter:brightness(1.5)}}
+@keyframes sg-trophy{0%{transform:translate(-50%,-50%) scale(2.6) rotate(-14deg);opacity:0}45%{transform:translate(-50%,-50%) scale(.9) rotate(4deg);opacity:1}60%{transform:translate(-50%,-50%) scale(1.08) rotate(-2deg)}75%{transform:translate(-50%,-50%) scale(1) rotate(0)}88%{opacity:1}100%{transform:translate(-50%,-62%) scale(.9);opacity:0}}
+@keyframes sg-ring{0%{transform:translate(-50%,-50%) scale(.2);opacity:.95}100%{transform:translate(-50%,-50%) scale(3.4);opacity:0}}
+@keyframes sg-spark{0%{transform:rotate(var(--a)) translateY(-18px) scale(1);opacity:1}100%{transform:rotate(var(--a)) translateY(var(--d)) scale(.3);opacity:0}}
+@keyframes sg-fly{0%{transform:translate(-50%,-50%) scale(.5);opacity:0}18%{transform:translate(-50%,-50%) scale(1.12);opacity:1}100%{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(.85);opacity:0}}
+`;
+
+interface FollowerGoalWidgetProps {
+  twitchChannel?: string;
+  kickChannel?: string;
+  token?: string;
+  settings: Omit<FollowerGoalSettings, 'platforms'>;
+  simulate?: boolean;
+  simPlatform?: SubathonPlatform;
+  previewId?: string;
+}
+
+export function FollowerGoalWidget({
+  twitchChannel,
+  kickChannel,
+  token,
+  settings,
+  simulate,
+  simPlatform,
+  previewId,
+}: FollowerGoalWidgetProps) {
+  const scale = useFitScale(STAGE);
+  const { count, progress, reached, completedHidden, celebration, pops, hit } = useFollowerGoal({
+    twitch: twitchChannel,
+    kick: kickChannel,
+    token,
+    start: settings.start,
+    target: settings.target,
+    hideAfter: settings.end === 'hide' ? settings.endHold : null,
+    simulate,
+    simPlatform,
+    previewId,
+  });
+  const hue = hueFor(settings.color, 1);
+  const skin = skinFor(settings.preset);
+  const isThin = settings.style === 'thin';
+  const popBand = isThin ? POP_BAND_THIN : POP_BAND;
+  const barCenter = isThin ? BAR_CENTER_THIN : BAR_CENTER;
+
+  return (
+    <SkinProvider skin={skin}>
+      <div
+        className="sg-root"
+        data-testid="follower-goal"
+        data-style={settings.style}
+        data-reached={reached}
+        data-preset={skin?.id}
+      >
+        <style>{CSS + skinCss('sg', skin)}</style>
+        {!completedHidden && (
+          <div
+            className="sg-stage"
+            style={{ transform: `translate(-50%, -50%) scale(${scale})` }}
+          >
+            {settings.pops && (
+              <PopBand pops={pops} hue={hue} x={progress * 100} height={popBand} />
+            )}
+            <div
+              style={{
+                position: 'absolute',
+                inset: '0 28px',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'flex-end',
+                gap: isThin ? 0 : BAR_GAP,
+                paddingBottom: BAR_BOTTOM,
+              }}
+            >
+              {isThin ? (
+                <ThinBar
+                  progress={progress}
+                  title={settings.title}
+                  count={count}
+                  target={settings.target}
+                  hue={hue}
+                  reached={reached}
+                  hit={hit}
+                  celebrating={celebration !== null}
+                  icon={settings.icon}
+                  iconUrl={settings.iconUrl}
+                />
+              ) : (
+                <>
+                  <InfoRow
+                    title={settings.title}
+                    count={count}
+                    target={settings.target}
+                    hue={hue}
+                    reached={reached}
+                    hit={hit}
+                    icon={settings.icon}
+                    iconUrl={settings.iconUrl}
+                  />
+                  <Bar
+                    progress={progress}
+                    target={settings.target}
+                    hue={hue}
+                    hit={hit}
+                    celebrating={celebration !== null}
+                  />
+                </>
+              )}
+            </div>
+            {celebration !== null && (
+              <Celebration
+                key={celebration.key}
+                centerTop={barCenter}
+                name={celebration.event?.name ?? null}
+              />
+            )}
+            {hit?.up && (
+              <FlyEmote
+                key={`fly-${hit.key}`}
+                start={
+                  isThin
+                    ? { x: 58, y: BAR_CENTER_THIN }
+                    : {
+                        x: 52,
+                        y:
+                          STAGE.height -
+                          (BAR_BOTTOM + BAR_HEIGHT + BAR_GAP + INFO_ROW_HEIGHT / 2),
+                      }
+                }
+                end={{ x: 28 + progress * (STAGE.width - 56), y: barCenter }}
+                hue={hue}
+                hit={hit}
+                icon={settings.icon}
+                iconUrl={settings.iconUrl}
+              />
+            )}
+          </div>
+        )}
+      </div>
+    </SkinProvider>
+  );
+}
+
+function StarIcon({
+  hue,
+  hit,
+  size = 26,
+  plain = false,
+}: {
+  hue: number;
+  hit: GoalHit | null;
+  size?: number;
+  plain?: boolean;
+}) {
+  const skin = useSkin();
+  const hsl = painter(skin, hue);
+  return (
+    <svg
+      key={hit?.up ? hit.key : undefined}
+      viewBox="0 0 24 24"
+      width={size}
+      height={size}
+      aria-hidden="true"
+      style={{
+        filter: plain
+          ? 'drop-shadow(0 1px 1.5px rgba(0,0,0,.9))'
+          : `drop-shadow(0 0 8px ${hsl(90, 55, 0.8)})`,
+        animation: hit?.up ? 'sg-bump .5s ease-out' : undefined,
+      }}
+    >
+      <path
+        d="m12 2.5 2.9 6 6.6.8-4.9 4.5 1.3 6.5L12 17l-5.9 3.3 1.3-6.5-4.9-4.5 6.6-.8Z"
+        fill={plain ? (skin?.text ?? '#fff') : hsl(90, 60)}
+        stroke="rgba(0,0,0,.55)"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function GoalMark({
+  hue,
+  hit,
+  size = 26,
+  plain = false,
+  icon,
+  iconUrl,
+}: {
+  hue: number;
+  hit: GoalHit | null;
+  size?: number;
+  plain?: boolean;
+  icon: string;
+  iconUrl: string;
+}) {
+  if (iconUrl) {
+    const image = size + 10;
+    return (
+      <img
+        src={iconUrl}
+        alt=""
+        aria-hidden="true"
+        width={image}
+        height={image}
+        data-testid="goal-icon"
+        style={{ objectFit: 'contain' }}
+      />
+    );
+  }
+  if (icon)
+    return (
+      <span
+        data-testid="goal-icon"
+        aria-hidden="true"
+        style={{ fontSize: size, lineHeight: 1 }}
+      >
+        {icon}
+      </span>
+    );
+  return <StarIcon hue={hue} hit={hit} size={size} plain={plain} />;
+}
+
+function TrophyIcon({ size, glow }: { size: number; glow: string }) {
+  const gold = painter(useSkin(), GOLD_HUE, 'win');
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      width={size}
+      height={size}
+      aria-hidden="true"
+      style={{ filter: `drop-shadow(0 0 ${size / 4}px ${glow})`, overflow: 'visible' }}
+    >
+      <path
+        d="M7 3.5h10v5a5 5 0 0 1-10 0Zm0 1.5H3.5v1.5A3.5 3.5 0 0 0 7 10m10-5h3.5v1.5A3.5 3.5 0 0 1 17 10m-5 3.5v3.5m-4 3.5h8l-1-3.5H9Z"
+        fill={gold(95, 58)}
+        stroke={gold(70, 22)}
+        strokeWidth="1.4"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M9.5 5.5v3"
+        stroke="rgba(255,255,255,.7)"
+        strokeWidth="1.3"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function InfoRow({
+  title,
+  count,
+  target,
+  hue,
+  reached,
+  hit,
+  icon,
+  iconUrl,
+}: {
+  title: string;
+  count: number;
+  target: number;
+  hue: number;
+  reached: boolean;
+  hit: GoalHit | null;
+  icon: string;
+  iconUrl: string;
+}) {
+  const skin = useSkin();
+  const gold = painter(skin, GOLD_HUE, 'win');
+  return (
+    <div
+      style={{
+        height: INFO_ROW_HEIGHT,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        gap: 16,
+        padding: '0 10px',
+      }}
+    >
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
+        {reached ? (
+          <TrophyIcon size={28} glow={gold(95, 55, 0.8)} />
+        ) : (
+          <GoalMark hue={hue} hit={hit} icon={icon} iconUrl={iconUrl} />
+        )}
+        {title && (
+          <span
+            className="sg-title sg-shadow"
+            style={{
+              fontSize: 26,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {title}
+          </span>
+        )}
+      </div>
+      <div
+        className="sg-shadow"
+        style={{
+          display: 'flex',
+          alignItems: 'baseline',
+          gap: 6,
+          fontWeight: 800,
+          whiteSpace: 'nowrap',
+        }}
+      >
+        <span
+          key={hit?.up ? hit.key : undefined}
+          data-testid="follower-goal-count"
+          style={{
+            fontSize: 34,
+            display: 'inline-block',
+            animation: hit?.up ? 'sg-bump .5s ease-out' : undefined,
+          }}
+        >
+          {count}
+        </span>
+        <span style={{ fontSize: 22, opacity: 0.65 }}>/</span>
+        <span data-testid="follower-goal-target" style={{ fontSize: 24, opacity: 0.85 }}>
+          {target}
+        </span>
+        <span
+          style={{
+            marginLeft: 8,
+            fontSize: 18,
+            fontWeight: 700,
+            opacity: 0.75,
+          }}
+        >
+          ({Math.round((count / target) * 100)}%)
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function Bar({
+  progress,
+  target,
+  hue,
+  hit,
+  celebrating,
+}: {
+  progress: number;
+  target: number;
+  hue: number;
+  hit: GoalHit | null;
+  celebrating: boolean;
+}) {
+  const skin = useSkin();
+  const hsl = painter(skin, hue);
+  const layers = fillLayers(skin);
+  const glowShadow = `0 0 24px ${hsl(85, 45, 0.45)}`;
+  const ticks = Array.from(
+    { length: Math.min(target, MAX_SEGMENTS) - 1 },
+    (_, index) => ((index + 1) / Math.min(target, MAX_SEGMENTS)) * 100,
+  );
+
+  const barStyle: CSSProperties = {
+    position: 'relative',
+    height: BAR_HEIGHT,
+    borderRadius: skin ? 3 * skin.radius : 4,
+    boxShadow: `0 0 0 2px rgba(0,0,0,.85), ${glowShadow}, inset 0 1px 0 rgba(255,255,255,.18)`,
+    ...(skin && barFrameStyle(skin, glowShadow)),
+    animation: celebrating ? 'sg-glow .7s ease-in-out 5' : undefined,
+    transition: 'box-shadow .4s',
+  };
+
+  return (
+    <div style={barStyle}>
+      <div
+        style={{
+          position: 'relative',
+          height: '100%',
+          overflow: 'hidden',
+          borderRadius: skin ? 3 * skin.radius : 3,
+          background: skin
+            ? trackBackground(skin)
+            : 'repeating-linear-gradient(90deg, rgba(255,255,255,.045) 0 14px, transparent 14px 28px), linear-gradient(180deg, #16161c, #07070a)',
+        }}
+      >
+        {hit && (
+          <div
+            key={hit.key}
+            style={{
+              position: 'absolute',
+              top: 0,
+              bottom: 0,
+              left: `${Math.min(hit.from, hit.to) * 100}%`,
+              width: `${Math.abs(hit.to - hit.from) * 100}%`,
+              background: hit.up ? '#ffffff' : '#ef4444',
+              animation: `sg-ghost ${hit.up ? 900 : 1300}ms ease-out forwards`,
+            }}
+          />
+        )}
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            transform: `translateX(${(progress - 1) * 100}%)`,
+            background: skin
+              ? fillBackground(skin, hsl)
+              : `linear-gradient(180deg, ${hsl(95, 72)} 0%, ${hsl(88, 52)} 42%, ${hsl(85, 34)} 100%)`,
+            boxShadow: `inset -3px 0 0 ${hsl(100, 85)}`,
+            transition: 'transform .7s cubic-bezier(.2,.9,.3,1.1)',
+            overflow: 'hidden',
+          }}
+        >
+          {layers.stripes && (
+            <div
+              style={{
+                position: 'absolute',
+                inset: '0 0 0 -28px',
+                background:
+                  'repeating-linear-gradient(115deg, rgba(255,255,255,.14) 0 10px, transparent 10px 20px)',
+                backgroundSize: '28px 100%',
+                animation: 'sg-stripes 1.6s linear infinite',
+              }}
+            />
+          )}
+          {layers.gloss && (
+            <div
+              style={{
+                position: 'absolute',
+                left: 0,
+                right: 0,
+                top: 4,
+                height: '32%',
+                background:
+                  'linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,0))',
+                borderRadius: 2,
+              }}
+            />
+          )}
+          {hit?.up && (
+            <div
+              key={hit.key}
+              style={{
+                position: 'absolute',
+                top: 0,
+                bottom: 0,
+                left: `${(1 - progress) * 100}%`,
+                width: `${progress * 40}%`,
+                background:
+                  'linear-gradient(90deg, transparent, rgba(255,255,255,.75), transparent)',
+                animation: 'sg-sheen .8s ease-out forwards',
+              }}
+            />
+          )}
+        </div>
+        {ticks.map((tick) => (
+          <div
+            key={tick}
+            style={{
+              position: 'absolute',
+              top: 0,
+              bottom: 0,
+              left: `${tick}%`,
+              width: layers.tickWidth,
+              background: 'rgba(0,0,0,.45)',
+            }}
+          />
+        ))}
+      </div>
+      {skin && <Frame skin={skin} radius={6} />}
+    </div>
+  );
+}
+
+function ThinBar({
+  progress,
+  title,
+  count,
+  target,
+  hue,
+  reached,
+  hit,
+  celebrating,
+  icon,
+  iconUrl,
+}: {
+  progress: number;
+  title: string;
+  count: number;
+  target: number;
+  hue: number;
+  reached: boolean;
+  hit: GoalHit | null;
+  celebrating: boolean;
+  icon: string;
+  iconUrl: string;
+}) {
+  const skin = useSkin();
+  const hsl = painter(skin, hue);
+  const layers = fillLayers(skin);
+  const glowShadow = `0 0 20px ${hsl(85, 45, 0.45)}`;
+  const ticks = Array.from(
+    { length: Math.min(target, MAX_SEGMENTS) - 1 },
+    (_, index) => ((index + 1) / Math.min(target, MAX_SEGMENTS)) * 100,
+  );
+  const barSkew = -14;
+  const textUnskew = 14;
+
+  const barStyle: CSSProperties = {
+    position: 'relative',
+    height: BAR_HEIGHT_THIN,
+    borderRadius: skin ? 3 * skin.radius : 4,
+    transform: barSkew ? `skewX(${barSkew}deg)` : undefined,
+    boxShadow: `0 0 0 2px rgba(0,0,0,.85), ${glowShadow}, inset 0 1px 0 rgba(255,255,255,.18)`,
+    ...(skin && barFrameStyle(skin, glowShadow)),
+    animation: celebrating ? 'sg-glow .7s ease-in-out 5' : undefined,
+    transition: 'box-shadow .4s',
+  };
+
+  return (
+    <div style={barStyle}>
+      <div
+        style={{
+          position: 'relative',
+          height: '100%',
+          overflow: 'hidden',
+          borderRadius: skin ? 3 * skin.radius : 3,
+          background: skin
+            ? trackBackground(skin)
+            : 'repeating-linear-gradient(90deg, rgba(255,255,255,.045) 0 14px, transparent 14px 28px), linear-gradient(180deg, #16161c, #07070a)',
+        }}
+      >
+        {hit && (
+          <div
+            key={hit.key}
+            style={{
+              position: 'absolute',
+              top: 0,
+              bottom: 0,
+              left: `${Math.min(hit.from, hit.to) * 100}%`,
+              width: `${Math.abs(hit.to - hit.from) * 100}%`,
+              background: hit.up ? '#ffffff' : '#ef4444',
+              animation: `sg-ghost ${hit.up ? 900 : 1300}ms ease-out forwards`,
+            }}
+          />
+        )}
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            transform: `translateX(${(progress - 1) * 100}%)`,
+            background: skin
+              ? fillBackground(skin, hsl)
+              : `linear-gradient(180deg, ${hsl(95, 72)} 0%, ${hsl(88, 52)} 42%, ${hsl(85, 34)} 100%)`,
+            boxShadow: `inset -3px 0 0 ${hsl(100, 85)}`,
+            transition: 'transform .7s cubic-bezier(.2,.9,.3,1.1)',
+            overflow: 'hidden',
+          }}
+        >
+          {layers.stripes && (
+            <div
+              style={{
+                position: 'absolute',
+                inset: '0 0 0 -28px',
+                background:
+                  'repeating-linear-gradient(115deg, rgba(255,255,255,.14) 0 10px, transparent 10px 20px)',
+                backgroundSize: '28px 100%',
+                animation: 'sg-stripes 1.6s linear infinite',
+              }}
+            />
+          )}
+          {layers.gloss && (
+            <div
+              style={{
+                position: 'absolute',
+                left: 0,
+                right: 0,
+                top: 4,
+                height: '32%',
+                background:
+                  'linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,0))',
+                borderRadius: 2,
+              }}
+            />
+          )}
+          {hit?.up && (
+            <div
+              key={hit.key}
+              style={{
+                position: 'absolute',
+                top: 0,
+                bottom: 0,
+                left: `${(1 - progress) * 100}%`,
+                width: `${progress * 40}%`,
+                background:
+                  'linear-gradient(90deg, transparent, rgba(255,255,255,.75), transparent)',
+                animation: 'sg-sheen .8s ease-out forwards',
+              }}
+            />
+          )}
+        </div>
+        {ticks.map((tick) => (
+          <div
+            key={tick}
+            style={{
+              position: 'absolute',
+              top: 0,
+              bottom: 0,
+              left: `${tick}%`,
+              width: layers.tickWidth,
+              background: 'rgba(0,0,0,.45)',
+            }}
+          />
+        ))}
+        <div
+          style={{
+            position: 'absolute',
+            inset: '0 14px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 12,
+            pointerEvents: 'none',
+            zIndex: 2,
+            transform: `skewX(${textUnskew}deg)`,
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, minWidth: 0 }}>
+            {reached ? (
+              <TrophyIcon size={22} glow="rgba(0,0,0,.9)" />
+            ) : (
+              <GoalMark hue={hue} hit={hit} size={20} plain icon={icon} iconUrl={iconUrl} />
+            )}
+            {title && (
+              <span
+                className="sg-title sg-outline"
+                style={{
+                  fontSize: 19,
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {title}
+              </span>
+            )}
+          </div>
+          <div
+            className="sg-outline"
+            style={{
+              display: 'flex',
+              alignItems: 'baseline',
+              gap: 4,
+              fontWeight: 800,
+              whiteSpace: 'nowrap',
+            }}
+          >
+            <span
+              key={hit?.up ? hit.key : undefined}
+              data-testid="follower-goal-count"
+              style={{
+                fontSize: 24,
+                display: 'inline-block',
+                animation: hit?.up ? 'sg-bump .5s ease-out' : undefined,
+              }}
+            >
+              {count}
+            </span>
+            <span style={{ fontSize: 16, opacity: 0.75 }}>/</span>
+            <span data-testid="follower-goal-target" style={{ fontSize: 18, opacity: 0.9 }}>
+              {target}
+            </span>
+          </div>
+        </div>
+      </div>
+      {skin && <Frame skin={skin} radius={6} />}
+    </div>
+  );
+}
+
+function FlyEmote({
+  start,
+  end,
+  hue,
+  hit,
+  icon,
+  iconUrl,
+}: {
+  start: { x: number; y: number };
+  end: { x: number; y: number };
+  hue: number;
+  hit: GoalHit | null;
+  icon: string;
+  iconUrl: string;
+}) {
+  return (
+    <div
+      aria-hidden="true"
+      data-testid="goal-fly"
+      style={
+        {
+          position: 'absolute',
+          left: start.x,
+          top: start.y,
+          pointerEvents: 'none',
+          '--dx': `${end.x - start.x}px`,
+          '--dy': `${end.y - start.y}px`,
+          animation: 'sg-fly 1000ms ease-out forwards',
+        } as CSSProperties
+      }
+    >
+      {iconUrl ? (
+        <img
+          src={iconUrl}
+          alt=""
+          aria-hidden="true"
+          width={44}
+          height={44}
+          style={{ objectFit: 'contain', display: 'block' }}
+        />
+      ) : icon ? (
+        <span style={{ fontSize: 30, lineHeight: 1 }}>{icon}</span>
+      ) : (
+        <StarIcon hue={hue} hit={hit} size={34} />
+      )}
+    </div>
+  );
+}
+
+function Celebration({
+  centerTop = BAR_CENTER,
+  name,
+}: {
+  centerTop?: number;
+  name?: string | null;
+}) {
+  const gold = painter(useSkin(), GOLD_HUE, 'win');
+  const center: CSSProperties = { position: 'absolute', left: '50%', top: centerTop };
+  return (
+    <div
+      aria-hidden="true"
+      style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}
+      data-testid="follower-goal-celebration"
+    >
+      <div
+        style={{
+          ...center,
+          width: 80,
+          height: 80,
+          borderRadius: 999,
+          border: `3px solid ${gold(95, 60, 0.95)}`,
+          boxShadow: `0 0 24px ${gold(95, 55, 0.9)}`,
+          animation: 'sg-ring 900ms ease-out forwards',
+        }}
+      />
+      {SPARKS.map((index) => {
+        const deg = (index / SPARK_COUNT) * 360;
+        const dist = 70 + (index % 3) * 22;
+        return (
+          <div
+            key={index}
+            style={
+              {
+                ...center,
+                width: 10,
+                height: 10,
+                borderRadius: 999,
+                background: gold(95, index % 2 === 0 ? 60 : 75),
+                boxShadow: `0 0 10px ${gold(100, 60)}`,
+                '--a': `${deg}deg`,
+                '--d': `${dist}px`,
+                animation: 'sg-spark 850ms ease-out forwards',
+              } as CSSProperties
+            }
+          />
+        );
+      })}
+      <div
+        style={{
+          ...center,
+          animation: `sg-trophy ${CELEBRATE_MS}ms cubic-bezier(.2,.8,.2,1) forwards`,
+        }}
+      >
+        <TrophyIcon size={104} glow={gold(100, 55, 0.9)} />
+        {name && (
+          <span
+            data-testid="follower-goal-celebration-name"
+            style={{
+              position: 'absolute',
+              left: '50%',
+              top: 30,
+              transform: 'translateX(-50%)',
+              maxWidth: 300,
+              padding: '3px 16px',
+              borderRadius: 999,
+              fontSize: 22,
+              fontWeight: 800,
+              lineHeight: 1.2,
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              color: '#fff',
+              background: 'rgba(0,0,0,.72)',
+              border: `2px solid ${gold(100, 70)}`,
+              boxShadow: `0 0 16px ${gold(100, 60, 0.7)}`,
+            }}
+          >
+            {name}
+          </span>
+        )}
+      </div>
+    </div>
+  );
+}
+
+const POP_OFFSETS = [0, -17, 17];
+const POP_GAP = 12;
+
+function PopBand({
+  pops,
+  hue,
+  x,
+  height,
+}: {
+  pops: FollowerGoalPop[];
+  hue: number;
+  x: number;
+  height: number;
+}) {
+  const skin = useSkin();
+  const hsl = painter(skin, hue);
+  const base = Math.min(70, Math.max(30, x));
+  return (
+    <div style={{ position: 'absolute', left: 0, right: 0, top: 0, height: height - POP_GAP }}>
+      {pops.map((pop) => (
+        <div
+          key={pop.id}
+          style={{
+            position: 'absolute',
+            left: `${base + POP_OFFSETS[pop.id % POP_OFFSETS.length]}%`,
+            bottom: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            whiteSpace: 'nowrap',
+            animation: `sg-pop ${POP_MS}ms cubic-bezier(.2,.8,.3,1) both`,
+            pointerEvents: 'none',
+          }}
+        >
+          <span
+            className="sg-shadow"
+            style={{
+              fontSize: 38,
+              fontWeight: 800,
+              color: hsl(100, 78),
+              WebkitTextStroke: `1.5px ${hsl(80, 22)}`,
+            }}
+          >
+            +{pop.amount}
+          </span>
+          <span
+            style={{
+              marginTop: 2,
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 6,
+              maxWidth: 260,
+              padding: '3px 10px',
+              borderRadius: 999,
+              fontSize: 15,
+              fontWeight: 700,
+              background: skin ? skin.panel2 : 'rgba(0,0,0,.7)',
+              border: `1px solid ${PLATFORM_COLORS[pop.event.platform]}66`,
+            }}
+          >
+            <span style={{ color: PLATFORM_COLORS[pop.event.platform] }}>★</span>
+            {pop.event.name && (
+              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                {pop.event.name}
+              </span>
+            )}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}

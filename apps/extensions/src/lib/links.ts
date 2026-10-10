@@ -11,6 +11,7 @@ export const LINKS = {
   senchabot: 'https://senchabot.com',
   dashboardWheel: 'https://senchabot.com/dashboard/tools/wheel',
   dashboardChatWidget: 'https://senchabot.com/dashboard/tools',
+  dashboardFollowerGoal: 'https://senchabot.com/dashboard/tools/follower-goal',
   docs: 'https://docs.senchabot.com',
   discord: 'https://discord.com/invite/qUxwcjRzND',
   x: 'https://x.com/senchabot',
@@ -27,6 +28,16 @@ export function resolveDashboardChatWidgetUrl(): string {
     return 'http://localhost:3000/dashboard/tools';
   }
   return LINKS.dashboardChatWidget;
+}
+
+export function resolveDashboardFollowerGoalUrl(): string {
+  if (
+    typeof window !== 'undefined' &&
+    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+  ) {
+    return 'http://localhost:3000/dashboard/tools/follower-goal';
+  }
+  return LINKS.dashboardFollowerGoal;
 }
 
 export const CONTENT_PATHS = {

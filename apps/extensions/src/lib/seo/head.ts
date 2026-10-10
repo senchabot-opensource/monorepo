@@ -108,6 +108,18 @@ export const OG_IMAGES = {
       pt: 'Meta de Subs, um overlay de barra de meta que subs e subs de presente enchem',
     },
   },
+  'follower-goal': {
+    path: '/og/goal.png',
+    alt: {
+      en: 'Follower Goal, a goal bar overlay that new follows fill in real time',
+      de: 'Follower-Ziel, ein Zielbalken-Overlay, das neue Follower in Echtzeit füllen',
+      tr: "Takipçi Hedefi, yeni takipçilerle gerçek zamanlı dolan hedef barı overlay'i",
+      es: 'Meta de Seguidores, un overlay de barra de meta que llenan nuevos seguidores en tiempo real',
+      fr: "Objectif de followers, une barre d'objectif que remplissent les nouveaux followers en temps réel",
+      ja: 'フォロワー目標: 新しいフォローでリアルタイムに埋まる目標バーのオーバーレイ',
+      pt: 'Meta de Seguidores, um overlay de barra de meta que novos seguidores enchem em tempo real',
+    },
+  },
   frames: {
     path: '/og/frames.png',
     alt: {

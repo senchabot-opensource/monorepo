@@ -397,7 +397,7 @@ function CompactHeader({ title, widgetId }: Extract<SiteHeaderProps, { variant: 
         )}
       </div>
       <span className="shrink-0 whitespace-nowrap rounded-full border border-green-500/20 bg-green-500/10 px-2.5 py-0.5 text-xs font-medium text-green-700 max-lg:hidden dark:text-green-400">
-        {t('common.freeBadge')}
+        {widgetId === 'follower-goal' ? t('common.freeOnlyBadge') : t('common.freeBadge')}
       </span>
       <div className="ml-auto">
         <SiteControls />

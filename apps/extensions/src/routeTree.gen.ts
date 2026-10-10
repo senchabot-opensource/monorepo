@@ -17,6 +17,7 @@ import { Route as WidgetsAlertsRouteImport } from './routes/widgets/alerts'
 import { Route as WidgetsChatWidgetRouteImport } from './routes/widgets/chat-widget'
 import { Route as WidgetsCountdownRouteImport } from './routes/widgets/countdown'
 import { Route as WidgetsEmoteWallRouteImport } from './routes/widgets/emote-wall'
+import { Route as WidgetsFollowerGoalRouteImport } from './routes/widgets/follower-goal'
 import { Route as WidgetsFrameRouteImport } from './routes/widgets/frame'
 import { Route as WidgetsGoalRouteImport } from './routes/widgets/goal'
 import { Route as WidgetsPollRouteImport } from './routes/widgets/poll'
@@ -44,6 +45,7 @@ import { Route as Char123LocaleChar125GuidesTwitchKickChatOverlayRouteImport } f
 import { Route as Char123LocaleChar125SetupChatPollRouteImport } from './routes/{-$locale}/setup/chat-poll'
 import { Route as Char123LocaleChar125SetupChatWidgetRouteImport } from './routes/{-$locale}/setup/chat-widget'
 import { Route as Char123LocaleChar125SetupEmoteWallRouteImport } from './routes/{-$locale}/setup/emote-wall'
+import { Route as Char123LocaleChar125SetupFollowerGoalRouteImport } from './routes/{-$locale}/setup/follower-goal'
 import { Route as Char123LocaleChar125SetupObsBridgeRouteImport } from './routes/{-$locale}/setup/obs-bridge'
 import { Route as Char123LocaleChar125SetupRaffleRouteImport } from './routes/{-$locale}/setup/raffle'
 import { Route as Char123LocaleChar125SetupSocialsRouteImport } from './routes/{-$locale}/setup/socials'
@@ -94,6 +96,11 @@ const WidgetsCountdownRoute = WidgetsCountdownRouteImport.update({
 const WidgetsEmoteWallRoute = WidgetsEmoteWallRouteImport.update({
   id: '/widgets/emote-wall',
   path: '/widgets/emote-wall',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WidgetsFollowerGoalRoute = WidgetsFollowerGoalRouteImport.update({
+  id: '/widgets/follower-goal',
+  path: '/widgets/follower-goal',
   getParentRoute: () => rootRouteImport,
 } as any)
 const WidgetsFrameRoute = WidgetsFrameRouteImport.update({
@@ -248,6 +255,12 @@ const Char123LocaleChar125SetupEmoteWallRoute =
     path: '/setup/emote-wall',
     getParentRoute: () => Char123LocaleChar125RouteRoute,
   } as any)
+const Char123LocaleChar125SetupFollowerGoalRoute =
+  Char123LocaleChar125SetupFollowerGoalRouteImport.update({
+    id: '/setup/follower-goal',
+    path: '/setup/follower-goal',
+    getParentRoute: () => Char123LocaleChar125RouteRoute,
+  } as any)
 const Char123LocaleChar125SetupObsBridgeRoute =
   Char123LocaleChar125SetupObsBridgeRouteImport.update({
     id: '/setup/obs-bridge',
@@ -318,6 +331,7 @@ export interface FileRoutesByFullPath {
   '/widgets/chat-widget': typeof WidgetsChatWidgetRoute
   '/widgets/countdown': typeof WidgetsCountdownRoute
   '/widgets/emote-wall': typeof WidgetsEmoteWallRoute
+  '/widgets/follower-goal': typeof WidgetsFollowerGoalRoute
   '/widgets/frame': typeof WidgetsFrameRoute
   '/widgets/goal': typeof WidgetsGoalRoute
   '/widgets/poll': typeof WidgetsPollRoute
@@ -344,6 +358,7 @@ export interface FileRoutesByFullPath {
   '/{-$locale}/setup/chat-poll': typeof Char123LocaleChar125SetupChatPollRoute
   '/{-$locale}/setup/chat-widget': typeof Char123LocaleChar125SetupChatWidgetRoute
   '/{-$locale}/setup/emote-wall': typeof Char123LocaleChar125SetupEmoteWallRoute
+  '/{-$locale}/setup/follower-goal': typeof Char123LocaleChar125SetupFollowerGoalRoute
   '/{-$locale}/setup/obs-bridge': typeof Char123LocaleChar125SetupObsBridgeRoute
   '/{-$locale}/setup/raffle': typeof Char123LocaleChar125SetupRaffleRoute
   '/{-$locale}/setup/socials': typeof Char123LocaleChar125SetupSocialsRoute
@@ -364,6 +379,7 @@ export interface FileRoutesByTo {
   '/widgets/chat-widget': typeof WidgetsChatWidgetRoute
   '/widgets/countdown': typeof WidgetsCountdownRoute
   '/widgets/emote-wall': typeof WidgetsEmoteWallRoute
+  '/widgets/follower-goal': typeof WidgetsFollowerGoalRoute
   '/widgets/frame': typeof WidgetsFrameRoute
   '/widgets/goal': typeof WidgetsGoalRoute
   '/widgets/poll': typeof WidgetsPollRoute
@@ -390,6 +406,7 @@ export interface FileRoutesByTo {
   '/{-$locale}/setup/chat-poll': typeof Char123LocaleChar125SetupChatPollRoute
   '/{-$locale}/setup/chat-widget': typeof Char123LocaleChar125SetupChatWidgetRoute
   '/{-$locale}/setup/emote-wall': typeof Char123LocaleChar125SetupEmoteWallRoute
+  '/{-$locale}/setup/follower-goal': typeof Char123LocaleChar125SetupFollowerGoalRoute
   '/{-$locale}/setup/obs-bridge': typeof Char123LocaleChar125SetupObsBridgeRoute
   '/{-$locale}/setup/raffle': typeof Char123LocaleChar125SetupRaffleRoute
   '/{-$locale}/setup/socials': typeof Char123LocaleChar125SetupSocialsRoute
@@ -412,6 +429,7 @@ export interface FileRoutesById {
   '/widgets/chat-widget': typeof WidgetsChatWidgetRoute
   '/widgets/countdown': typeof WidgetsCountdownRoute
   '/widgets/emote-wall': typeof WidgetsEmoteWallRoute
+  '/widgets/follower-goal': typeof WidgetsFollowerGoalRoute
   '/widgets/frame': typeof WidgetsFrameRoute
   '/widgets/goal': typeof WidgetsGoalRoute
   '/widgets/poll': typeof WidgetsPollRoute
@@ -438,6 +456,7 @@ export interface FileRoutesById {
   '/{-$locale}/setup/chat-poll': typeof Char123LocaleChar125SetupChatPollRoute
   '/{-$locale}/setup/chat-widget': typeof Char123LocaleChar125SetupChatWidgetRoute
   '/{-$locale}/setup/emote-wall': typeof Char123LocaleChar125SetupEmoteWallRoute
+  '/{-$locale}/setup/follower-goal': typeof Char123LocaleChar125SetupFollowerGoalRoute
   '/{-$locale}/setup/obs-bridge': typeof Char123LocaleChar125SetupObsBridgeRoute
   '/{-$locale}/setup/raffle': typeof Char123LocaleChar125SetupRaffleRoute
   '/{-$locale}/setup/socials': typeof Char123LocaleChar125SetupSocialsRoute
@@ -461,6 +480,7 @@ export interface FileRouteTypes {
     | '/widgets/chat-widget'
     | '/widgets/countdown'
     | '/widgets/emote-wall'
+    | '/widgets/follower-goal'
     | '/widgets/frame'
     | '/widgets/goal'
     | '/widgets/poll'
@@ -487,6 +507,7 @@ export interface FileRouteTypes {
     | '/{-$locale}/setup/chat-poll'
     | '/{-$locale}/setup/chat-widget'
     | '/{-$locale}/setup/emote-wall'
+    | '/{-$locale}/setup/follower-goal'
     | '/{-$locale}/setup/obs-bridge'
     | '/{-$locale}/setup/raffle'
     | '/{-$locale}/setup/socials'
@@ -507,6 +528,7 @@ export interface FileRouteTypes {
     | '/widgets/chat-widget'
     | '/widgets/countdown'
     | '/widgets/emote-wall'
+    | '/widgets/follower-goal'
     | '/widgets/frame'
     | '/widgets/goal'
     | '/widgets/poll'
@@ -533,6 +555,7 @@ export interface FileRouteTypes {
     | '/{-$locale}/setup/chat-poll'
     | '/{-$locale}/setup/chat-widget'
     | '/{-$locale}/setup/emote-wall'
+    | '/{-$locale}/setup/follower-goal'
     | '/{-$locale}/setup/obs-bridge'
     | '/{-$locale}/setup/raffle'
     | '/{-$locale}/setup/socials'
@@ -554,6 +577,7 @@ export interface FileRouteTypes {
     | '/widgets/chat-widget'
     | '/widgets/countdown'
     | '/widgets/emote-wall'
+    | '/widgets/follower-goal'
     | '/widgets/frame'
     | '/widgets/goal'
     | '/widgets/poll'
@@ -580,6 +604,7 @@ export interface FileRouteTypes {
     | '/{-$locale}/setup/chat-poll'
     | '/{-$locale}/setup/chat-widget'
     | '/{-$locale}/setup/emote-wall'
+    | '/{-$locale}/setup/follower-goal'
     | '/{-$locale}/setup/obs-bridge'
     | '/{-$locale}/setup/raffle'
     | '/{-$locale}/setup/socials'
@@ -602,6 +627,7 @@ export interface RootRouteChildren {
   WidgetsChatWidgetRoute: typeof WidgetsChatWidgetRoute
   WidgetsCountdownRoute: typeof WidgetsCountdownRoute
   WidgetsEmoteWallRoute: typeof WidgetsEmoteWallRoute
+  WidgetsFollowerGoalRoute: typeof WidgetsFollowerGoalRoute
   WidgetsFrameRoute: typeof WidgetsFrameRoute
   WidgetsGoalRoute: typeof WidgetsGoalRoute
   WidgetsPollRoute: typeof WidgetsPollRoute
@@ -669,6 +695,13 @@ declare module '@tanstack/react-router' {
       path: '/widgets/emote-wall'
       fullPath: '/widgets/emote-wall'
       preLoaderRoute: typeof WidgetsEmoteWallRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/widgets/follower-goal': {
+      id: '/widgets/follower-goal'
+      path: '/widgets/follower-goal'
+      fullPath: '/widgets/follower-goal'
+      preLoaderRoute: typeof WidgetsFollowerGoalRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/widgets/frame': {
@@ -860,6 +893,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char123LocaleChar125SetupEmoteWallRouteImport
       parentRoute: typeof Char123LocaleChar125RouteRoute
     }
+    '/{-$locale}/setup/follower-goal': {
+      id: '/{-$locale}/setup/follower-goal'
+      path: '/setup/follower-goal'
+      fullPath: '/{-$locale}/setup/follower-goal'
+      preLoaderRoute: typeof Char123LocaleChar125SetupFollowerGoalRouteImport
+      parentRoute: typeof Char123LocaleChar125RouteRoute
+    }
     '/{-$locale}/setup/obs-bridge': {
       id: '/{-$locale}/setup/obs-bridge'
       path: '/setup/obs-bridge'
@@ -951,6 +991,7 @@ interface Char123LocaleChar125RouteRouteChildren {
   Char123LocaleChar125SetupChatPollRoute: typeof Char123LocaleChar125SetupChatPollRoute
   Char123LocaleChar125SetupChatWidgetRoute: typeof Char123LocaleChar125SetupChatWidgetRoute
   Char123LocaleChar125SetupEmoteWallRoute: typeof Char123LocaleChar125SetupEmoteWallRoute
+  Char123LocaleChar125SetupFollowerGoalRoute: typeof Char123LocaleChar125SetupFollowerGoalRoute
   Char123LocaleChar125SetupObsBridgeRoute: typeof Char123LocaleChar125SetupObsBridgeRoute
   Char123LocaleChar125SetupRaffleRoute: typeof Char123LocaleChar125SetupRaffleRoute
   Char123LocaleChar125SetupSocialsRoute: typeof Char123LocaleChar125SetupSocialsRoute
@@ -996,6 +1037,8 @@ const Char123LocaleChar125RouteRouteChildren: Char123LocaleChar125RouteRouteChil
       Char123LocaleChar125SetupChatWidgetRoute,
     Char123LocaleChar125SetupEmoteWallRoute:
       Char123LocaleChar125SetupEmoteWallRoute,
+    Char123LocaleChar125SetupFollowerGoalRoute:
+      Char123LocaleChar125SetupFollowerGoalRoute,
     Char123LocaleChar125SetupObsBridgeRoute:
       Char123LocaleChar125SetupObsBridgeRoute,
     Char123LocaleChar125SetupRaffleRoute: Char123LocaleChar125SetupRaffleRoute,
@@ -1032,6 +1075,7 @@ const rootRouteChildren: RootRouteChildren = {
   WidgetsChatWidgetRoute: WidgetsChatWidgetRoute,
   WidgetsCountdownRoute: WidgetsCountdownRoute,
   WidgetsEmoteWallRoute: WidgetsEmoteWallRoute,
+  WidgetsFollowerGoalRoute: WidgetsFollowerGoalRoute,
   WidgetsFrameRoute: WidgetsFrameRoute,
   WidgetsGoalRoute: WidgetsGoalRoute,
   WidgetsPollRoute: WidgetsPollRoute,

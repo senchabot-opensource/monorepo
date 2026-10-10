@@ -272,6 +272,43 @@ export const PAGE_META = {
         'Meta de subs grátis no OBS. Todo sub, resub e sub de presente na Twitch e na Kick enche a barra, com um troféu quando você bate a meta. Os mods ajustam no chat.',
     },
   },
+  'follower-goal': {
+    en: {
+      title: 'Free Follower Goal Overlay for Twitch & Kick | Senchabot',
+      description:
+        'A free follower goal overlay for OBS with real-time updates. Every new follow on Twitch and Kick fills the bar live on stream, with a celebratory trophy when you hit the goal.',
+    },
+    de: {
+      title: 'Kostenloses Follower-Ziel-Overlay für Twitch und Kick | Senchabot',
+      description:
+        'Ein kostenloses Follower-Ziel für OBS mit Echtzeit-Updates. Jeder neue Follower auf Twitch und Kick füllt den Balken live im Stream, am Ziel gibt es einen Pokal.',
+    },
+    tr: {
+      title: 'Twitch ve Kick için Takipçi Hedefi Barı (Ücretsiz) | Senchabot',
+      description:
+        "OBS için gerçek zamanlı güncellemelerle çalışan ücretsiz takipçi hedefi barı. Twitch ve Kick'te her yeni takipçi yayında canlı olarak 1 ekler, hedefe ulaşınca kupa iner.",
+    },
+    es: {
+      title: 'Meta de seguidores gratis para Twitch y Kick | Senchabot',
+      description:
+        'Una meta de seguidores gratis para OBS con actualizaciones en tiempo real. Cada nuevo seguidor de Twitch y Kick llena la barra en directo, con un trofeo al llegar a la meta.',
+    },
+    fr: {
+      title: 'Objectif de followers gratuit pour Twitch et Kick | Senchabot',
+      description:
+        'Un objectif de followers gratuit pour OBS avec mises à jour en temps réel. Chaque nouveau follow sur Twitch et Kick remplit la barre en direct, avec un trophée au but.',
+    },
+    ja: {
+      title: 'TwitchとKickの無料フォロワー目標オーバーレイ | Senchabot',
+      description:
+        'OBS用のリアルタイム更新対応無料フォロワー目標オーバーレイ。TwitchとKickの新しいフォローでバーが埋まり、達成するとトロフィーが登場します。',
+    },
+    pt: {
+      title: 'Meta de seguidores grátis para Twitch e Kick | Senchabot',
+      description:
+        'Meta de seguidores grátis no OBS com atualizações em tempo real. Cada novo seguidor na Twitch e na Kick enche a barra ao vivo, com um troféu quando você bate a meta.',
+    },
+  },
   frames: {
     en: {
       title: 'Free Stream Frame Overlays for Twitch & Kick | Senchabot',
@@ -995,6 +1032,75 @@ export const APP_FEATURES: Record<WidgetId, Record<Locale, readonly string[]>> =
       'Comece do seu número de subs atual, ou do 0 para esta live',
       'Um troféu de comemoração quando a meta é batida, e a contagem continua depois',
       'O streamer e os mods podem somar, tirar, definir e zerar a contagem com !goal',
+      'A contagem fica salva no OBS e sobrevive a recarregamentos',
+      'Tamanho recomendado da fonte de navegador: 800x260',
+    ],
+  },
+  'follower-goal': {
+    en: [
+      'A follower goal bar that every new follow on Twitch and Kick fills by one in real time',
+      'Connected live to Senchabot for automatic real-time follow tracking',
+      'Both platforms add into one shared count',
+      'Start from your current follower count, or from 0 for this stream',
+      'A trophy celebration naming who filled it when the goal is reached, and the count keeps going past it',
+      'The completed goal stays up, or hides itself after a hold time you set',
+      'Floating +1 pops with viewer names and platform badges',
+      'The count is saved in OBS and survives reloads',
+      'Recommended browser source size: 800x260',
+    ],
+    de: [
+      'Ein Follower-Zielbalken, den jeder neue Follower auf Twitch und Kick in Echtzeit füllt',
+      'Live mit Senchabot verbunden für automatische Echtzeit-Follow-Erfassung',
+      'Beide Plattformen zählen in einen gemeinsamen Stand',
+      'Start bei deiner aktuellen Follower-Zahl oder bei 0 für diesen Stream',
+      'Eine Pokal-Feier, wenn das Ziel erreicht ist, und der Zähler läuft danach weiter',
+      'Der Stand wird in OBS gespeichert und übersteht ein Neuladen',
+      'Empfohlene Größe der Browserquelle: 800x260',
+    ],
+    tr: [
+      "Twitch ve Kick'te her yeni takipçiyle gerçek zamanlı dolan takipçi hedef barı",
+      'Otomatik ve canlı takipçi takibi için Senchabot ile entegre çalışır',
+      'İki platformdan gelen takipçiler tek bir sayıda toplanır',
+      "Mevcut takipçi sayısından ya da sadece bu yayın için 0'dan başlar",
+      'Hedefe ulaşınca dolduranın adını yazan kupa kutlaması, sayı hedefi geçince de artmaya devam eder',
+      'Tamamlanan hedef ekranda kalır ya da ayarladığın süre sonunda gizlenir',
+      "Takipçinin adı ve platform simgesiyle süzülen +1 animasyonları",
+      "Sayı OBS'te kaydedilir, sayfa yenilense de kaybolmaz",
+      'Önerilen Tarayıcı Kaynağı boyutu: 800x260',
+    ],
+    es: [
+      'Una barra de meta de seguidores que cada nuevo seguidor de Twitch y Kick llena en tiempo real',
+      'Conectado en directo a Senchabot para seguimiento automático de seguidores',
+      'Las dos plataformas suman en un solo conteo',
+      'Empieza desde tu número actual de seguidores, o desde 0 para este stream',
+      'Celebración con trofeo al llegar a la meta, y el conteo sigue después',
+      'El conteo se guarda en OBS y aguanta las recargas',
+      'Tamaño recomendado de la fuente de navegador: 800x260',
+    ],
+    fr: [
+      "Une barre d'objectif que chaque nouveau follow sur Twitch et Kick remplit en temps réel",
+      'Connecté en direct à Senchabot pour un suivi automatique des followers',
+      "Les deux plateformes s'additionnent dans un seul compteur",
+      'Démarre de ton nombre de followers actuel, ou de 0 pour ce stream',
+      "Un trophée quand l'objectif est atteint, et le compteur continue au-delà",
+      'Le compteur est enregistré dans OBS et survit aux rechargements',
+      'Taille de source navigateur recommandée : 800x260',
+    ],
+    ja: [
+      'TwitchとKickの新しいフォローがリアルタイムに1件ずつ埋めていく目標バー',
+      'Senchabotとの連携により新しいフォローを自動でリアルタイム検出',
+      '両方のプラットフォームの数をひとつのカウントに合算',
+      '今のフォロワー数から、またはこの配信の0からスタート',
+      '目標達成でトロフィーの演出。達成後もカウントは継続',
+      'カウントはOBSに保存され、再読み込みしても保持',
+      'ブラウザソースの推奨サイズ: 800x260',
+    ],
+    pt: [
+      'Uma barra de meta que cada novo seguidor na Twitch e na Kick enche em tempo real',
+      'Conectado ao vivo com o Senchabot para detecção automática de novos seguidores',
+      'As duas plataformas somam na mesma contagem',
+      'Comece do seu número de seguidores atual, ou do 0 para esta live',
+      'Um troféu de comemoração quando a meta é batida, e a contagem continua depois',
       'A contagem fica salva no OBS e sobrevive a recarregamentos',
       'Tamanho recomendado da fonte de navegador: 800x260',
     ],

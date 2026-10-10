@@ -3,6 +3,7 @@ import type { en } from './en';
 export const de: typeof en = {
   common: {
     freeBadge: '100 % kostenlos · Kein Login nötig',
+    freeOnlyBadge: '100 % kostenlos',
     copy: 'Kopieren',
     copied: 'Kopiert!',
     home: 'Start',
@@ -99,6 +100,10 @@ export const de: typeof en = {
     goal: {
       name: 'Sub-Ziel',
       tagline: 'Ein Zielbalken, den jeder Sub und Gift-Sub füllt, mit Pokal, wenn du es schaffst.',
+    },
+    followerGoal: {
+      name: 'Follower-Ziel',
+      tagline: 'Ein Zielbalken, den jeder neue Follow in Echtzeit füllt, mit Pokal, wenn du es schaffst.',
     },
     frames: {
       name: 'Stream-Rahmen',
@@ -820,7 +825,88 @@ export const de: typeof en = {
       'Ja. Jeder neue Sub und Resub zählt 1, und ein Gift zählt 1 für jeden Sub darin, 5 Gift-Subs zählen also 5. Auf Twitch zählt ein Resub, wenn der Zuschauer ihn im Chat teilt, und auf Kick, wenn er verlängert wird.',
     faq4Q: 'Kann ich ein Follower-Ziel machen?',
     faq4A:
-      'Noch nicht. Twitch und Kick zeigen neue Follows keiner Seite, die nicht eingeloggt ist, also zählt das Ziel Subs, auf beiden Plattformen gleich.',
+      'Ja! Nutze unser Follower-Ziel-Overlay, um neue Follower von Twitch und Kick live im Stream zu zählen.',
+  },
+  followerGoal: {
+    breadcrumb: 'Follower-Ziel einrichten',
+    title: 'Follower-Ziel einrichten',
+    intro:
+      'Ein Follower-Zielbalken für Twitch und Kick. Jeder neue Follow füllt ihn live im Stream um eins, und ein Pokal landet auf dem Balken, wenn du das Ziel erreichst. Wähle deinen Startwert und dein Ziel, und deine Mods können den Stand im Chat anpassen.',
+    sectionGoal: 'Ziel',
+    start: 'Startwert',
+    startTip:
+      'Wo der Zähler beginnt: die Follower-Zahl auf deinem Dashboard oder 0, um nur diesen Stream zu zählen. Späteres Ändern setzt den Zähler auf die neue Zahl zurück.',
+    target: 'Ziel',
+    targetTip: 'Bei diesem Wert ist der Balken voll. Der Zähler läuft darüber hinaus weiter.',
+    countsHint: 'Jeder neue Follow auf Twitch oder Kick erhöht den Zähler live im Stream um 1.',
+    end: 'Bei Erreichen',
+    ends: {
+      stay: 'Weiter anzeigen',
+      hide: 'Ausblenden',
+    },
+    endTip: 'Was auf dem Bildschirm bleibt, nachdem das Ziel erreicht wurde.',
+    endHold: 'Ausblenden nach',
+    endHoldTip: 'Wie lange das erreichte Ziel sichtbar bleibt. Null blendet es sofort aus.',
+    endHoldOff: 'Blendet sofort aus, sobald das Ziel erreicht ist.',
+    unitMinutes: 'Min.',
+    unitSeconds: 'Sek.',
+    style: 'Stil',
+    styleTip:
+      'Balken platziert Titel und Zähler über dem Balken. Schmaler Balken bettet Titel und Zähler direkt im schlankeren Balken ein.',
+    styleBar: 'Balken',
+    styleThin: 'Schmaler Balken',
+    color: 'Farbe',
+    titleLabel: 'Titel',
+    titleTip: 'Wird über dem Balken angezeigt. Leer lassen für keinen Titel.',
+    titlePlaceholder: 'Kein Titel',
+    iconLabel: 'Ziel-Icon',
+    iconTip: 'Ein Emoji für das Ziel statt des Sterns, z. B. ⭐. Leer lassen für den Stern.',
+    iconPlaceholder: 'Stern',
+    emoteLabel: 'Kanal-Emote',
+    emoteTip:
+      'Das Ziel zeigt dieses Kanal-Emote anstelle der Icon-Box oben. Listet Abonnenten-Emotes sowie 7TV-, BTTV- und FFZ-Sets auf.',
+    showPops: 'Neue Follows anzeigen',
+    showPopsTip: 'Lässt für jeden neuen Follow ein +1 mit dem Namen des Zuschauers aufsteigen.',
+    sectionCommands: 'Chat-Befehle',
+    commandsIntro:
+      'Du und deine Mods können den Stand aus dem Twitch- oder Kick-Chat korrigieren, z. B. für Follows während OBS geschlossen war.',
+    cmdAdd: 'Fügt Follows hinzu, 1 wenn keine Zahl angegeben ist',
+    cmdRemove: 'Zieht Follows ab, 1 wenn keine Zahl angegeben ist',
+    cmdSet: 'Setzt den Zählerstand',
+    cmdReset: 'Setzt auf den Startwert zurück',
+    previewTitle: 'Follower-Ziel Vorschau',
+    previewIframeTitle: 'Follower-Ziel Vorschau',
+    previewHint:
+      'Die Vorschau simuliert Follows bis zum Ziel und beginnt dann von vorn. Im Stream zählen echte Follows dazu.',
+    testTitle: 'Ausprobieren:',
+    testViewer: 'Du',
+    testFollow: '+1 Follow',
+    testReach: 'Ziel erreichen',
+    testReset: 'Zurücksetzen',
+    tokenNoticeTitle: 'Senchabot-Verbindung erforderlich',
+    tokenNoticeDesc:
+      'Für das Follower-Ziel ist ein verknüpfter Twitch- oder Kick-Kanal von Senchabot erforderlich. Verbinde deinen Kanal im Senchabot-Dashboard und starte dieses Setup über die Tools-Seite, um dein Overlay einzurichten.',
+    tokenNoticeButton: 'Senchabot Dashboard Tools öffnen →',
+    widgetUrlTip:
+      'Schon ein Widget gebaut? Füge seine URL hier ein, um Einstellungen zu laden und zu ändern.',
+    widgetUrlPlaceholder: 'Bestehende Widget-URL zum Bearbeiten einfügen',
+    widgetUrlInvalid: 'Das ist keine Follower-Ziel-URL.',
+    browserSourceHintSize: ' (empfohlene Größe: 800×260).',
+    guideTitle: 'Einrichtung in der Streaming-Software (OBS, Streamlabs, XSplit usw.)',
+    guideStep1:
+      'Füge in deiner Streaming-Software eine Browser-Quelle hinzu (OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio usw.).',
+    guideStep2: 'Füge deine kopierte Follower-Ziel-URL ein.',
+    guideStep3: 'Stelle die Breite auf 800 und die Höhe auf 260.',
+    guideStep4: 'Wenn die Zahl nicht stimmt, passe sie mit !fgoal set im Chat an.',
+    faq1Q: 'Wie aktualisiert es sich, wenn jemand folgt?',
+    faq1A:
+      'Twitch und Kick erfordern ein verbundenes Konto, um Follow-Events zu empfangen. Wenn du über Senchabot verbunden bist, werden neue Follows sofort erkannt und in Echtzeit direkt an dein OBS-Overlay gesendet.',
+    faq2Q: 'Was passiert, wenn OBS schließt oder die Browser-Quelle neu lädt?',
+    faq2A:
+      'Der Zählerstand wird in OBS gespeichert und bleibt exakt erhalten. Follows bei geschlossenem OBS können Mods mit !fgoal add nachtragen.',
+    faq3Q: 'Kann ich Sub-Ziel und Follower-Ziel gleichzeitig nutzen?',
+    faq3A:
+      'Ja! Sub-Ziel und Follower-Ziel verwalten unabhängige Zähler im OBS-Speicher und nutzen separate Endpunkte.',
   },
   frames: {
     breadcrumb: 'Stream-Rahmen einrichten',

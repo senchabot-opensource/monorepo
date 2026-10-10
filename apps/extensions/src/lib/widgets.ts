@@ -24,6 +24,7 @@ export type WidgetId =
   | 'emote-wall'
   | 'sub-sprout'
   | 'goal'
+  | 'follower-goal'
   | 'subathon'
   | 'poll'
   | 'stream-alerts'
@@ -122,6 +123,18 @@ export const WIDGETS: readonly WidgetEntry[] = [
     Icon: GoalIcon,
     platforms: ['twitch', 'kick'],
     demoUrl: '/widgets/goal?simulate=1',
+    sourceSize: { width: 800, height: 260 },
+  },
+  {
+    id: 'follower-goal',
+    kind: 'overlay',
+    setupPath: '/setup/follower-goal',
+    widgetPath: '/widgets/follower-goal',
+    nameKey: 'widgets.followerGoal.name',
+    taglineKey: 'widgets.followerGoal.tagline',
+    Icon: GoalIcon,
+    platforms: ['twitch', 'kick'],
+    demoUrl: '/widgets/follower-goal?simulate=1',
     sourceSize: { width: 800, height: 260 },
   },
   {
