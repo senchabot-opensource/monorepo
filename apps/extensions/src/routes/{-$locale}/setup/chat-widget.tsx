@@ -41,8 +41,8 @@ import type { FaqEntry } from '#/lib/i18n/seo';
 import { resolveDashboardChatWidgetUrl } from '#/lib/links';
 import { getSetupPageHead } from '#/lib/seo/pages';
 import { channelWidgetUrl } from '#/lib/url-params';
-import { detectYouTubeChannelId } from '#/lib/youtube';
 import { getWidget } from '#/lib/widgets';
+import { detectYouTubeChannelId } from '#/lib/youtube';
 
 /** Classic has no preset fonts, so a box left on one falls back to the classic default. */
 const siteFont = (choice: Font): Font =>
@@ -88,7 +88,9 @@ function ChatWidgetSetup() {
   const hasDetectedYoutube = Boolean(detectedChannelId);
   const [twitchChannel, setTwitchChannel] = useState(search.twitch ?? '');
   const [kickChannel, setKickChannel] = useState(search.kick ?? '');
-  const [youtubeChannel, setYoutubeChannel] = useState(hasDetectedYoutube ? (detectedChannelId ?? '') : '');
+  const [youtubeChannel, setYoutubeChannel] = useState(
+    hasDetectedYoutube ? (detectedChannelId ?? '') : '',
+  );
   const [token, setToken] = useState(search.token ?? '');
   const [settings, setSettings] = useState<Settings>(() => {
     let platforms = DEFAULT_SETTINGS.platforms;
@@ -139,7 +141,13 @@ function ChatWidgetSetup() {
         ? channelWidgetUrl(
             window.location.origin,
             '/widgets/chat-widget',
-            buildWidgetParams(settings, twitchChannel, kickChannel, effectiveYoutube, effectiveToken),
+            buildWidgetParams(
+              settings,
+              twitchChannel,
+              kickChannel,
+              effectiveYoutube,
+              effectiveToken,
+            ),
           )
         : '',
     [mounted, settings, twitchChannel, kickChannel, effectiveYoutube, effectiveToken],
@@ -173,7 +181,15 @@ function ChatWidgetSetup() {
     if (previewRateIndex > 0) params.append('mockRate', String(PREVIEW_RATES[previewRateIndex]));
     // PreviewFrame adds the page's language.
     return `${window.location.origin}/widgets/chat-widget?${params.toString()}`;
-  }, [mounted, settings, deferredTwitch, deferredKick, effectiveDeferredYoutube, effectiveToken, previewRateIndex]);
+  }, [
+    mounted,
+    settings,
+    deferredTwitch,
+    deferredKick,
+    effectiveDeferredYoutube,
+    effectiveToken,
+    previewRateIndex,
+  ]);
 
   const applyWidgetUrl = (text: string) => {
     const parsed = parseWidgetUrl(text);
@@ -295,272 +311,278 @@ function ChatWidgetSetup() {
             .map((option) => option.label)
             .join(', ');
 
-  const settingsPanel = (
-    <>
-      <SettingsGroup title={t('common.sectionChannel')}>
-        <ChannelFields
-          platforms={settings.platforms}
-          onPlatformsChange={(value) => update('platforms', value)}
-          platformsTip={t('chatWidget.platformsTip')}
-          twitch={twitchChannel}
-          onTwitchChange={setTwitchChannel}
-          kick={kickChannel}
-          onKickChange={setKickChannel}
-          youtube={youtubeChannel}
-          onYoutubeChange={setYoutubeChannel}
-          hasYoutubeChannel={hasDetectedYoutube}
-          youtubeNotice={
-            !hasDetectedYoutube &&
-            (settings.platforms === 'youtube' || settings.platforms === 'both') ? (
-              <div className="mt-2 flex flex-col gap-1 rounded-md border border-amber-300 bg-amber-50 p-3 text-xs text-amber-800 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-300">
-                <span className="font-semibold">{t('chatWidget.youtubeRequiredTitle')}</span>
-                <span>{t('chatWidget.youtubeRequiredText')}</span>
-                <span className="opacity-80">{t('chatWidget.youtubeIgnoreHint')}</span>
-                <a
-                  href={resolveDashboardChatWidgetUrl(mounted)}
-                  className="mt-2 inline-flex items-center gap-1.5 self-start rounded-md bg-amber-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:bg-amber-700 dark:bg-amber-500 dark:text-zinc-950 dark:hover:bg-amber-400"
-                >
-                  {t('chatWidget.youtubeConnectCta')} &rarr;
-                </a>
-              </div>
-            ) : null
-          }
-          aside={
-            <div>
-              <FieldLabel id={`${id}-indicator`} tip={t('chatWidget.platformIndicatorTip')}>
-                {t('chatWidget.platformIndicator')}
-              </FieldLabel>
-              <Select
-                labelledBy={`${id}-indicator`}
-                disabled={settings.platforms !== 'both'}
-                value={settings.platformDisplay}
-                onChange={(value) => update('platformDisplay', value)}
-                options={platformDisplayOptions}
-              />
+  const channelGroup = (
+    <SettingsGroup title={t('common.sectionChannel')}>
+      <ChannelFields
+        platforms={settings.platforms}
+        onPlatformsChange={(value) => update('platforms', value)}
+        platformsTip={t('chatWidget.platformsTip')}
+        twitch={twitchChannel}
+        onTwitchChange={setTwitchChannel}
+        kick={kickChannel}
+        onKickChange={setKickChannel}
+        youtube={youtubeChannel}
+        onYoutubeChange={setYoutubeChannel}
+        hasYoutubeChannel={hasDetectedYoutube}
+        youtubeNotice={
+          !hasDetectedYoutube &&
+          (settings.platforms === 'youtube' || settings.platforms === 'both') ? (
+            <div className="mt-2 flex flex-col gap-1 rounded-md border border-amber-300 bg-amber-50 p-3 text-xs text-amber-800 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-300">
+              <span className="font-semibold">{t('chatWidget.youtubeRequiredTitle')}</span>
+              <span>{t('chatWidget.youtubeRequiredText')}</span>
+              <span className="opacity-80">{t('chatWidget.youtubeIgnoreHint')}</span>
+              <a
+                href={resolveDashboardChatWidgetUrl(mounted)}
+                className="mt-2 inline-flex items-center gap-1.5 self-start rounded-md bg-amber-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:bg-amber-700 dark:bg-amber-500 dark:text-zinc-950 dark:hover:bg-amber-400"
+              >
+                {t('chatWidget.youtubeConnectCta')} &rarr;
+              </a>
             </div>
-          }
+          ) : null
+        }
+      />
+    </SettingsGroup>
+  );
+
+  const appearanceTab = (
+    <SettingsGroup title={t('common.sectionAppearance')} hideTitle>
+      <PresetField value={settings.preset} onChange={pickPreset} />
+      <div className="grid gap-3 sm:grid-cols-2">
+        <div>
+          <FieldLabel id={`${id}-user-font`}>{t('chatWidget.usernameFont')}</FieldLabel>
+          <Select
+            labelledBy={`${id}-user-font`}
+            value={settings.userFont}
+            onChange={(value) => update('userFont', value)}
+            options={fontOptions('presetName')}
+          />
+        </div>
+        <div>
+          <FieldLabel id={`${id}-font`}>{t('chatWidget.messageFont')}</FieldLabel>
+          <Select
+            labelledBy={`${id}-font`}
+            value={settings.font}
+            onChange={(value) => update('font', value)}
+            options={fontOptions('presetMessage')}
+          />
+        </div>
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <FieldLabel htmlFor={`${id}-font-size`}>{t('chatWidget.fontSize')}</FieldLabel>
+          <NumberField
+            id={`${id}-font-size`}
+            value={settings.fontSize}
+            onChange={(value) => update('fontSize', value)}
+            min={8}
+            max={72}
+            fallback={Number(DEFAULT_SETTINGS.fontSize)}
+          />
+        </div>
+        <div className="col-span-2 sm:col-span-1">
+          <FieldLabel id={`${id}-orientation`} tip={t('chatWidget.orientationTip')}>
+            {t('chatWidget.orientation')}
+          </FieldLabel>
+          <SegmentedControl
+            labelledBy={`${id}-orientation`}
+            value={settings.orientation}
+            onChange={(value) => update('orientation', value)}
+            options={orientationOptions}
+          />
+        </div>
+      </div>
+      {/* Side by side, so the shadow adds no row to the panel. */}
+      <div className="grid gap-3 sm:grid-cols-2">
+        <div>
+          <FieldLabel id={`${id}-layout`}>{t('chatWidget.messageLayout')}</FieldLabel>
+          <Select
+            labelledBy={`${id}-layout`}
+            value={settings.layout}
+            onChange={(value) => update('layout', value)}
+            options={layoutOptions}
+          />
+        </div>
+        <div>
+          <FieldLabel id={`${id}-shadow`} tip={t('chatWidget.textShadowTip')}>
+            {t('chatWidget.textShadow')}
+          </FieldLabel>
+          <Select
+            labelledBy={`${id}-shadow`}
+            value={settings.textShadow}
+            onChange={(value) => update('textShadow', value)}
+            options={shadowOptions}
+          />
+        </div>
+      </div>
+      <div className="grid gap-x-6 gap-y-1 sm:grid-cols-2">
+        <Switch
+          label={t('chatWidget.darkBackground')}
+          tip={t('chatWidget.darkBackgroundTip')}
+          checked={settings.background}
+          onChange={(value) => update('background', value)}
         />
-      </SettingsGroup>
+        <RangeField
+          hideLabel
+          label={t('chatWidget.backgroundOpacity')}
+          min={0}
+          max={1}
+          step={0.1}
+          disabled={!settings.background && !settings.chatBackground}
+          value={settings.bgOpacity}
+          onChange={(value) => update('bgOpacity', value)}
+          format={(value) => `${Math.round(value * 100)}%`}
+        />
+        <Switch
+          label={t('chatWidget.messageBackgroundBox')}
+          tip={t('chatWidget.messageBackgroundHint')}
+          checked={settings.itemBackground}
+          onChange={(value) => update('itemBackground', value)}
+        />
+        <Switch
+          label={t('chatWidget.chatBackground')}
+          tip={t('chatWidget.chatBackgroundHint')}
+          checked={settings.chatBackground}
+          onChange={(value) => update('chatBackground', value)}
+        />
+        <Switch
+          label={t('chatWidget.platformAccent')}
+          tip={t('chatWidget.platformAccentHint')}
+          checked={settings.platformAccent}
+          onChange={(value) => update('platformAccent', value)}
+        />
+        <Switch
+          label={t('chatWidget.boldUsernames')}
+          checked={settings.boldUsernames}
+          onChange={(value) => update('boldUsernames', value)}
+        />
+        <Switch
+          label={t('chatWidget.boldMessages')}
+          checked={settings.boldMessages}
+          onChange={(value) => update('boldMessages', value)}
+        />
+      </div>
+    </SettingsGroup>
+  );
 
-      <SettingsGroup title={t('common.sectionAppearance')}>
-        <PresetField value={settings.preset} onChange={pickPreset} />
-        <div className="grid gap-3 sm:grid-cols-2">
-          <div>
-            <FieldLabel id={`${id}-user-font`}>{t('chatWidget.usernameFont')}</FieldLabel>
-            <Select
-              labelledBy={`${id}-user-font`}
-              value={settings.userFont}
-              onChange={(value) => update('userFont', value)}
-              options={fontOptions('presetName')}
-            />
-          </div>
-          <div>
-            <FieldLabel id={`${id}-font`}>{t('chatWidget.messageFont')}</FieldLabel>
-            <Select
-              labelledBy={`${id}-font`}
-              value={settings.font}
-              onChange={(value) => update('font', value)}
-              options={fontOptions('presetMessage')}
-            />
-          </div>
-        </div>
-        <div className="grid grid-cols-2 gap-3">
-          <div>
-            <FieldLabel htmlFor={`${id}-font-size`}>{t('chatWidget.fontSize')}</FieldLabel>
-            <NumberField
-              id={`${id}-font-size`}
-              value={settings.fontSize}
-              onChange={(value) => update('fontSize', value)}
-              min={8}
-              max={72}
-              fallback={Number(DEFAULT_SETTINGS.fontSize)}
-            />
-          </div>
-          <div className="col-span-2 sm:col-span-1">
-            <FieldLabel id={`${id}-orientation`} tip={t('chatWidget.orientationTip')}>
-              {t('chatWidget.orientation')}
-            </FieldLabel>
-            <SegmentedControl
-              labelledBy={`${id}-orientation`}
-              value={settings.orientation}
-              onChange={(value) => update('orientation', value)}
-              options={orientationOptions}
-            />
-          </div>
-        </div>
-        {/* Side by side, so the shadow adds no row to the panel. */}
-        <div className="grid gap-3 sm:grid-cols-2">
-          <div>
-            <FieldLabel id={`${id}-layout`}>{t('chatWidget.messageLayout')}</FieldLabel>
-            <Select
-              labelledBy={`${id}-layout`}
-              value={settings.layout}
-              onChange={(value) => update('layout', value)}
-              options={layoutOptions}
-            />
-          </div>
-          <div>
-            <FieldLabel id={`${id}-shadow`} tip={t('chatWidget.textShadowTip')}>
-              {t('chatWidget.textShadow')}
-            </FieldLabel>
-            <Select
-              labelledBy={`${id}-shadow`}
-              value={settings.textShadow}
-              onChange={(value) => update('textShadow', value)}
-              options={shadowOptions}
-            />
-          </div>
-        </div>
-        <div className="grid gap-x-6 gap-y-1 sm:grid-cols-2">
-          <Switch
-            label={t('chatWidget.darkBackground')}
-            tip={t('chatWidget.darkBackgroundTip')}
-            checked={settings.background}
-            onChange={(value) => update('background', value)}
-          />
-          <RangeField
-            hideLabel
-            label={t('chatWidget.backgroundOpacity')}
-            min={0}
-            max={1}
-            step={0.1}
-            disabled={!settings.background && !settings.chatBackground}
-            value={settings.bgOpacity}
-            onChange={(value) => update('bgOpacity', value)}
-            format={(value) => `${Math.round(value * 100)}%`}
-          />
-          <Switch
-            label={t('chatWidget.messageBackgroundBox')}
-            tip={t('chatWidget.messageBackgroundHint')}
-            checked={settings.itemBackground}
-            onChange={(value) => update('itemBackground', value)}
-          />
-          <Switch
-            label={t('chatWidget.chatBackground')}
-            tip={t('chatWidget.chatBackgroundHint')}
-            checked={settings.chatBackground}
-            onChange={(value) => update('chatBackground', value)}
-          />
-          <Switch
-            label={t('chatWidget.platformAccent')}
-            tip={t('chatWidget.platformAccentHint')}
-            checked={settings.platformAccent}
-            onChange={(value) => update('platformAccent', value)}
-          />
-          <Switch
-            label={t('chatWidget.boldUsernames')}
-            checked={settings.boldUsernames}
-            onChange={(value) => update('boldUsernames', value)}
-          />
-          <Switch
-            label={t('chatWidget.boldMessages')}
-            checked={settings.boldMessages}
-            onChange={(value) => update('boldMessages', value)}
-          />
-        </div>
-      </SettingsGroup>
-
-      <SettingsGroup title={t('chatWidget.sectionMessages')}>
-        {/* Highlights share the animation row: one more row would make the panel scroll
+  const messagesTab = (
+    <SettingsGroup title={t('chatWidget.sectionMessages')} hideTitle>
+      {/* Highlights share the animation row: one more row would make the panel scroll
             at 1366×768. */}
-        <div className="grid gap-3 sm:grid-cols-2">
-          <div>
-            <FieldLabel id={`${id}-animation`} tip={t('chatWidget.animationTip')}>
-              {t('chatWidget.newMessageAnimation')}
-            </FieldLabel>
-            <Select
-              labelledBy={`${id}-animation`}
-              value={settings.animation}
-              onChange={(value) => update('animation', value)}
-              options={animationOptions}
-            />
-          </div>
-          <div>
-            <FieldLabel id={`${id}-highlights`} tip={t('chatWidget.highlightsTip')}>
-              {t('chatWidget.highlights')}
-            </FieldLabel>
-            <MultiSelect
-              labelledBy={`${id}-highlights`}
-              value={settings.highlights}
-              onChange={(value) => update('highlights', value)}
-              options={highlightOptions}
-              summary={highlightsSummary}
-            />
-          </div>
-        </div>
-        <div className="grid gap-3 sm:grid-cols-2">
-          <div>
-            <FieldLabel id={`${id}-emotes`} tip={t('chatWidget.emotesTip')}>
-              {t('chatWidget.emotes')}
-            </FieldLabel>
-            <MultiSelect
-              labelledBy={`${id}-emotes`}
-              value={emoteValue}
-              onChange={(value) =>
-                setSettings((current) => ({
-                  ...current,
-                  sevenTv: value.includes('sevenTv'),
-                  bttv: value.includes('bttv'),
-                  ffz: value.includes('ffz'),
-                }))
-              }
-              options={emoteOptions}
-              summary={
-                emoteValue.length > 0
-                  ? emoteOptions
-                      .filter((option) => emoteValue.includes(option.value))
-                      .map((option) => option.label)
-                      .join(', ')
-                  : t('chatWidget.emotesNone')
-              }
-            />
-          </div>
-          <div>
-            <FieldLabel id={`${id}-duration`} tip={t('chatWidget.messageDurationTip')}>
-              {t('chatWidget.messageDuration')}
-            </FieldLabel>
-            <Select
-              labelledBy={`${id}-duration`}
-              value={settings.duration}
-              onChange={(value) => update('duration', value)}
-              options={durationOptions}
-            />
-          </div>
-        </div>
-        <div className="grid gap-x-6 gap-y-1 sm:grid-cols-2">
-          <Switch
-            label={t('chatWidget.showBadges')}
-            tip={t('chatWidget.badgesTip')}
-            checked={settings.badges}
-            onChange={(value) => update('badges', value)}
-          />
-          <Switch
-            label={t('chatWidget.showMessageTime')}
-            checked={settings.timestamp}
-            onChange={(value) => update('timestamp', value)}
-          />
-          <Switch
-            label={t('chatWidget.hideBots')}
-            tip={t('chatWidget.hideBotsTip')}
-            checked={settings.hideBots}
-            onChange={(value) => update('hideBots', value)}
-          />
-          <Switch
-            label={t('chatWidget.hideCommands')}
-            tip={t('chatWidget.hideCommandsTip')}
-            checked={settings.hideCommands}
-            onChange={(value) => update('hideCommands', value)}
+      <div className="grid gap-3 sm:grid-cols-2">
+        <div>
+          <FieldLabel id={`${id}-animation`} tip={t('chatWidget.animationTip')}>
+            {t('chatWidget.newMessageAnimation')}
+          </FieldLabel>
+          <Select
+            labelledBy={`${id}-animation`}
+            value={settings.animation}
+            onChange={(value) => update('animation', value)}
+            options={animationOptions}
           />
         </div>
-      </SettingsGroup>
-    </>
+        <div>
+          <FieldLabel id={`${id}-highlights`} tip={t('chatWidget.highlightsTip')}>
+            {t('chatWidget.highlights')}
+          </FieldLabel>
+          <MultiSelect
+            labelledBy={`${id}-highlights`}
+            value={settings.highlights}
+            onChange={(value) => update('highlights', value)}
+            options={highlightOptions}
+            summary={highlightsSummary}
+          />
+        </div>
+      </div>
+      <div className="grid gap-3 sm:grid-cols-2">
+        <div>
+          <FieldLabel id={`${id}-emotes`} tip={t('chatWidget.emotesTip')}>
+            {t('chatWidget.emotes')}
+          </FieldLabel>
+          <MultiSelect
+            labelledBy={`${id}-emotes`}
+            value={emoteValue}
+            onChange={(value) =>
+              setSettings((current) => ({
+                ...current,
+                sevenTv: value.includes('sevenTv'),
+                bttv: value.includes('bttv'),
+                ffz: value.includes('ffz'),
+              }))
+            }
+            options={emoteOptions}
+            summary={
+              emoteValue.length > 0
+                ? emoteOptions
+                    .filter((option) => emoteValue.includes(option.value))
+                    .map((option) => option.label)
+                    .join(', ')
+                : t('chatWidget.emotesNone')
+            }
+          />
+        </div>
+        <div>
+          <FieldLabel id={`${id}-duration`} tip={t('chatWidget.messageDurationTip')}>
+            {t('chatWidget.messageDuration')}
+          </FieldLabel>
+          <Select
+            labelledBy={`${id}-duration`}
+            value={settings.duration}
+            onChange={(value) => update('duration', value)}
+            options={durationOptions}
+          />
+        </div>
+      </div>
+      <div className="grid gap-x-6 gap-y-1 sm:grid-cols-2">
+        <Switch
+          label={t('chatWidget.showBadges')}
+          tip={t('chatWidget.badgesTip')}
+          checked={settings.badges}
+          onChange={(value) => update('badges', value)}
+        />
+        <Switch
+          label={t('chatWidget.showMessageTime')}
+          checked={settings.timestamp}
+          onChange={(value) => update('timestamp', value)}
+        />
+        <Switch
+          label={t('chatWidget.hideBots')}
+          tip={t('chatWidget.hideBotsTip')}
+          checked={settings.hideBots}
+          onChange={(value) => update('hideBots', value)}
+        />
+        <Switch
+          label={t('chatWidget.hideCommands')}
+          tip={t('chatWidget.hideCommandsTip')}
+          checked={settings.hideCommands}
+          onChange={(value) => update('hideCommands', value)}
+        />
+      </div>
+      {/* Marks each message, like badges and timestamps; it only works with every platform on,
+            which the pinned channel fields above make plain. */}
+      <div>
+        <FieldLabel id={`${id}-indicator`} tip={t('chatWidget.platformIndicatorTip')}>
+          {t('chatWidget.platformIndicator')}
+        </FieldLabel>
+        <Select
+          labelledBy={`${id}-indicator`}
+          disabled={settings.platforms !== 'both'}
+          value={settings.platformDisplay}
+          onChange={(value) => update('platformDisplay', value)}
+          options={platformDisplayOptions}
+        />
+      </div>
+    </SettingsGroup>
   );
 
   return (
     <SetupShell
       widgetId={WIDGET.id}
       title={t('chatWidget.title')}
-      settings={settingsPanel}
+      settingsPinned={channelGroup}
+      settingsTabs={[
+        { id: 'appearance', label: t('common.sectionAppearance'), content: appearanceTab },
+        { id: 'messages', label: t('chatWidget.sectionMessages'), content: messagesTab },
+      ]}
       previewTitle={t('chatWidget.previewTitle')}
       previewTip={t('chatWidget.previewHint')}
       preview={<PreviewFrame src={previewUrl} title={t('chatWidget.previewIframeTitle')} />}
@@ -602,7 +624,11 @@ function ChatWidgetSetup() {
                 <span className="sr-only"> {t('common.newTab')}</span>
               </a>
             ) : (
-              <button type="button" disabled className={`${READER_BUTTON} cursor-not-allowed opacity-50`}>
+              <button
+                type="button"
+                disabled
+                className={`${READER_BUTTON} cursor-not-allowed opacity-50`}
+              >
                 {t('chatWidget.openReader')}
                 <ExternalIcon className="size-4 text-zinc-500" />
               </button>

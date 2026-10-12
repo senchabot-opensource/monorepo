@@ -103,3 +103,10 @@ export const showPresetsButton = () =>
   screen
     .getByText(en('presets.field.show', { count: PRESETS.length }))
     .closest('button') as HTMLButtonElement;
+
+/**
+ * A long setup page's settings tab, by its label. Role queries skip the controls on tabs that
+ * aren't open, so a test opens the tab first, the way a user would.
+ */
+export const settingsTab = (label: string) =>
+  screen.getByText(label, { selector: '[role="tab"]' }) as HTMLButtonElement;

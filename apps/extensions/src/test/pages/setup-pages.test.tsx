@@ -1,3 +1,4 @@
+import { screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { LOCALES, type TranslationKey } from '#/lib/i18n';
 import { headings, inLocale, section } from '#/test/queries';
@@ -9,6 +10,8 @@ interface PageCase {
   /** English path; Turkish pages get the /tr prefix, the tool page ?lang=tr. */
   path: string;
   title: TranslationKey;
+  /** The settings tabs in order, on a page too long for one screen; the rest have none. */
+  tabs?: TranslationKey[];
   sections: TranslationKey[];
   faq: TranslationKey[];
 }
@@ -17,6 +20,7 @@ const PAGES: PageCase[] = [
   {
     path: '/setup/chat-widget',
     title: 'chatWidget.title',
+    tabs: ['common.sectionAppearance', 'chatWidget.sectionMessages'],
     sections: [
       'common.sectionChannel',
       'common.sectionAppearance',
@@ -58,6 +62,7 @@ const PAGES: PageCase[] = [
   {
     path: '/setup/subathon-timer',
     title: 'subathon.title',
+    tabs: ['common.sectionAppearance', 'subathon.sectionTimer', 'subathon.sectionValues'],
     sections: [
       'common.sectionChannel',
       'common.sectionAppearance',
@@ -89,9 +94,16 @@ const PAGES: PageCase[] = [
   {
     path: '/setup/irl-hud',
     title: 'irlHud.title',
+    tabs: [
+      'common.sectionAppearance',
+      'irlHud.sectionMap',
+      'irlHud.sectionMoney',
+      'irlHud.sectionMarket',
+    ],
     sections: [
       'common.sectionChannel',
       'common.sectionAppearance',
+      'irlHud.sectionMap',
       'irlHud.sectionMoney',
       'irlHud.sectionMarket',
       'irlHud.sectionCommands',
@@ -126,6 +138,7 @@ const PAGES: PageCase[] = [
   {
     path: '/setup/stream-countdown',
     title: 'countdown.title',
+    tabs: ['countdown.sectionCountdown', 'countdown.sectionText', 'common.sectionAppearance'],
     sections: [
       'countdown.sectionCountdown',
       'common.sectionChannel',
@@ -142,6 +155,7 @@ const PAGES: PageCase[] = [
   {
     path: '/setup/chat-poll',
     title: 'poll.title',
+    tabs: ['poll.sectionPoll', 'poll.sectionVoting', 'common.sectionAppearance'],
     sections: [
       'common.sectionChannel',
       'poll.sectionPoll',
@@ -158,6 +172,7 @@ const PAGES: PageCase[] = [
   {
     path: '/setup/stream-alerts',
     title: 'streamAlerts.title',
+    tabs: ['common.sectionAppearance', 'streamAlerts.sectionAlerts', 'streamAlerts.sectionTiming'],
     sections: [
       'common.sectionChannel',
       'common.sectionAppearance',
@@ -207,6 +222,7 @@ const PAGES: PageCase[] = [
   {
     path: '/setup/spin-wheel',
     title: 'spinWheel.title',
+    tabs: ['spinWheel.sectionOptions', 'common.sectionAppearance', 'spinWheel.sectionChat'],
     sections: [
       'common.sectionChannel',
       'spinWheel.sectionOptions',
@@ -247,6 +263,19 @@ describe.each(LOCALES)('setup and tool pages in %s', (locale) => {
 
     const h2s = headings(2);
     for (const key of page.sections) expect(h2s).toContain(t(key));
+
+    const settingsTabs = [...document.querySelectorAll('[role="tablist"]')].find(
+      (list) => list.getAttribute('aria-label') === t('common.settingsSections'),
+    );
+    if (page.tabs) {
+      const labels = [...(settingsTabs?.querySelectorAll('[role="tab"]') ?? [])];
+      expect(labels.map((tab) => tab.textContent)).toEqual(page.tabs.map((key) => t(key)));
+      // The channel boxes sit above the tabs, shown with every one of them.
+      const channel = screen.getByLabelText(t('common.twitchChannel'), { selector: 'input' });
+      expect(channel.closest('[role="tabpanel"]')).toBeNull();
+    } else {
+      expect(settingsTabs).toBeUndefined();
+    }
 
     // Settings use the house controls only.
     expect(document.querySelectorAll('select, input[type="checkbox"]')).toHaveLength(0);

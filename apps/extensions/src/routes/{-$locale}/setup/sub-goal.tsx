@@ -291,7 +291,7 @@ function GoalSetup() {
 
   // With both platforms on, test subs take turns, so both platforms' pops get shown.
   const testPlatform = (): SubathonPlatform => {
-    if (settings.platforms !== 'both') return settings.platforms;
+    if (settings.platforms !== 'both') return settings.platforms === 'kick' ? 'kick' : 'twitch';
     const platform = nextPlatform.current;
     nextPlatform.current = platform === 'twitch' ? 'kick' : 'twitch';
     return platform;

@@ -30,6 +30,7 @@ export const tr: typeof en = {
       'Tam linki değil, sadece kanal adını yaz. Örneğin twitch.tv/senchabot için senchabot.',
     previewLoading: 'Önizleme yükleniyor…',
     scrollMore: 'Devamı için aşağı kaydır',
+    settingsSections: 'Ayar bölümleri',
     scrollTop: 'Başa dön',
     setupGuideTitle: 'Nasıl kurulur?',
     faqTitle: 'Sık sorulan sorular',
@@ -1032,6 +1033,7 @@ export const tr: typeof en = {
     tiers: 'Tier 2 ve 3 Daha Çok Sayılır',
     tiersTip:
       "Twitch'te Tier 2 abonelik 2, Tier 3 abonelik 5 abonelik kadar para ekler, fiyatlarıyla orantılı.",
+    sectionMap: 'Mini Harita',
     sectionMarket: 'Market',
     marketHint:
       'Sen ve modlarının sohbetten !hud buy ve ürünün adıyla satın aldığı ürünler. Fiyatı paradan düşer; para yetmezse hiçbir şey alınmaz.',
@@ -2736,6 +2738,8 @@ export const tr: typeof en = {
     lead: "Senchabot Extensions'a eklenen özellikler ve düzeltilen hatalar, en yenisi en üstte. Liste projenin [GitHub'daki](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) commit geçmişinden hazırlanıyor.",
     site: 'Site',
     entries: {
+      settingsTabs:
+        "IRL HUD, Yayın Geri Sayımı, Subathon Timer, Yayın Uyarıları, Sohbet Anketi, Sohbet Kutusu ve Çark ayarlarını kanal kutularının altında sekmelere ayırıyor. Her sekme tek ekrana sığıyor, telefonda da önizleme ve widget URL'si çok daha yukarıda.",
       presetPickerFolded:
         "Kurulum sayfalarında preset'ler seçili olanın adını gösteren bir çubuğun altına katlanıyor, tek tıkla açılıp kapanıyor. Widget klasik görünümdeyken kapalı geliyor.",
       irlHudMarket:

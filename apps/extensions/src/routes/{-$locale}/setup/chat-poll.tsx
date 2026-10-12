@@ -205,174 +205,178 @@ function PollSetup() {
     </div>
   );
 
-  const settingsPanel = (
-    <>
-      <SettingsGroup title={t('common.sectionChannel')}>
-        <ChannelFields
-          platforms={settings.platforms}
-          onPlatformsChange={(value) => update('platforms', value)}
-          twitch={twitchChannel}
-          onTwitchChange={setTwitchChannel}
-          kick={kickChannel}
-          onKickChange={setKickChannel}
-        />
-      </SettingsGroup>
+  const channelGroup = (
+    <SettingsGroup title={t('common.sectionChannel')}>
+      <ChannelFields
+        platforms={settings.platforms}
+        onPlatformsChange={(value) => update('platforms', value)}
+        twitch={twitchChannel}
+        onTwitchChange={setTwitchChannel}
+        kick={kickChannel}
+        onKickChange={setKickChannel}
+      />
+    </SettingsGroup>
+  );
 
-      <SettingsGroup title={t('poll.sectionPoll')}>
-        <TextField
-          label={t('poll.question')}
-          tip={t('poll.questionTip')}
-          value={settings.question}
-          onChange={(value) => update('question', value)}
-          placeholder={t('poll.questionPlaceholder')}
-          maxLength={QUESTION_MAX_LENGTH}
-          spellCheck={false}
+  const pollTab = (
+    <SettingsGroup title={t('poll.sectionPoll')} hideTitle>
+      <TextField
+        label={t('poll.question')}
+        tip={t('poll.questionTip')}
+        value={settings.question}
+        onChange={(value) => update('question', value)}
+        placeholder={t('poll.questionPlaceholder')}
+        maxLength={QUESTION_MAX_LENGTH}
+        spellCheck={false}
+      />
+      <div>
+        <FieldLabel id={`${id}-labels`} tip={t('poll.labelsTip')}>
+          {t('poll.labels')}
+        </FieldLabel>
+        <SegmentedControl
+          labelledBy={`${id}-labels`}
+          value={settings.labels}
+          onChange={(value) => update('labels', value)}
+          options={POLL_LABELS.map((value) => ({
+            value,
+            label: t(value === 'letters' ? 'poll.labelsLetters' : 'poll.labelsNumbers'),
+          }))}
         />
+      </div>
+      {optionsEditor}
+      <p className={`${HINT_CLASS} mt-0`}>{t('poll.pollHint', { command: `${COMMAND} start` })}</p>
+    </SettingsGroup>
+  );
+
+  const votingTab = (
+    <SettingsGroup title={t('poll.sectionVoting')} hideTitle>
+      <div className="grid gap-3 sm:grid-cols-2">
+        {durationField(
+          'duration',
+          'poll.duration',
+          'poll.durationTip',
+          MAX_DURATION_SECONDS,
+          'poll.durationOff',
+        )}
+        {durationField('hold', 'poll.hold', 'poll.holdTip', MAX_HOLD_SECONDS, 'poll.holdOff')}
         <div>
-          <FieldLabel id={`${id}-labels`} tip={t('poll.labelsTip')}>
-            {t('poll.labels')}
+          <FieldLabel htmlFor={`${id}-delay`} tip={t('poll.delayTip')}>
+            {t('poll.delay')}
+          </FieldLabel>
+          <div className="flex items-center gap-1.5">
+            <div className="min-w-0 flex-1">
+              <CountField
+                id={`${id}-delay`}
+                value={settings.delay}
+                onChange={(value) => update('delay', value)}
+                min={0}
+                max={MAX_DELAY_SECONDS}
+              />
+            </div>
+            <span className="shrink-0 text-xs text-zinc-500">{seconds}</span>
+          </div>
+        </div>
+        <div>
+          <FieldLabel id={`${id}-voters`} tip={t('poll.votersTip')}>
+            {t('poll.voters')}
           </FieldLabel>
           <SegmentedControl
-            labelledBy={`${id}-labels`}
-            value={settings.labels}
-            onChange={(value) => update('labels', value)}
-            options={POLL_LABELS.map((value) => ({
-              value,
-              label: t(value === 'letters' ? 'poll.labelsLetters' : 'poll.labelsNumbers'),
+            labelledBy={`${id}-voters`}
+            value={settings.subsOnly ? 'subs' : 'all'}
+            onChange={(value) => update('subsOnly', value === 'subs')}
+            options={[
+              { value: 'all', label: t('poll.votersAll') },
+              { value: 'subs', label: t('poll.votersSubs') },
+            ]}
+          />
+        </div>
+        <div>
+          <FieldLabel id={`${id}-weight`} tip={t('poll.subWeightTip')}>
+            {t('poll.subWeight')}
+          </FieldLabel>
+          <SegmentedControl
+            labelledBy={`${id}-weight`}
+            value={String(settings.subWeight)}
+            onChange={(value) => update('subWeight', Number(value))}
+            options={SUB_WEIGHTS.map((weight) => ({
+              value: String(weight),
+              label: t('poll.subWeightValue', { n: weight }),
+            }))}
+            disabled={settings.subsOnly}
+          />
+        </div>
+      </div>
+      <Switch
+        label={t('poll.change')}
+        tip={t('poll.changeTip')}
+        checked={settings.change}
+        onChange={(value) => update('change', value)}
+      />
+      <Switch
+        label={t('poll.blind')}
+        tip={t('poll.blindTip')}
+        checked={settings.blind}
+        onChange={(value) => update('blind', value)}
+      />
+    </SettingsGroup>
+  );
+
+  const appearanceTab = (
+    <SettingsGroup title={t('common.sectionAppearance')} hideTitle>
+      <PresetField value={settings.preset} onChange={(value) => update('preset', value)} />
+      {isClassic(settings.preset) && (
+        <div>
+          <FieldLabel id={`${id}-color`}>{t('poll.color')}</FieldLabel>
+          <ColorSwatches
+            labelledBy={`${id}-color`}
+            value={settings.color}
+            onChange={(value) => update('color', value)}
+            options={POLL_COLORS.map((color) => ({
+              value: color,
+              label: t(`subathon.colors.${color}`),
+              background: `hsl(${hueFor(color, 1)} 85% 52%)`,
             }))}
           />
         </div>
-        {optionsEditor}
-        <p className={`${HINT_CLASS} mt-0`}>
-          {t('poll.pollHint', { command: `${COMMAND} start` })}
-        </p>
-      </SettingsGroup>
-
-      <SettingsGroup title={t('poll.sectionVoting')}>
-        <div className="grid gap-3 sm:grid-cols-2">
-          {durationField(
-            'duration',
-            'poll.duration',
-            'poll.durationTip',
-            MAX_DURATION_SECONDS,
-            'poll.durationOff',
-          )}
-          {durationField('hold', 'poll.hold', 'poll.holdTip', MAX_HOLD_SECONDS, 'poll.holdOff')}
-          <div>
-            <FieldLabel htmlFor={`${id}-delay`} tip={t('poll.delayTip')}>
-              {t('poll.delay')}
-            </FieldLabel>
-            <div className="flex items-center gap-1.5">
-              <div className="min-w-0 flex-1">
-                <CountField
-                  id={`${id}-delay`}
-                  value={settings.delay}
-                  onChange={(value) => update('delay', value)}
-                  min={0}
-                  max={MAX_DELAY_SECONDS}
-                />
-              </div>
-              <span className="shrink-0 text-xs text-zinc-500">{seconds}</span>
-            </div>
-          </div>
-          <div>
-            <FieldLabel id={`${id}-voters`} tip={t('poll.votersTip')}>
-              {t('poll.voters')}
-            </FieldLabel>
-            <SegmentedControl
-              labelledBy={`${id}-voters`}
-              value={settings.subsOnly ? 'subs' : 'all'}
-              onChange={(value) => update('subsOnly', value === 'subs')}
-              options={[
-                { value: 'all', label: t('poll.votersAll') },
-                { value: 'subs', label: t('poll.votersSubs') },
-              ]}
-            />
-          </div>
-          <div>
-            <FieldLabel id={`${id}-weight`} tip={t('poll.subWeightTip')}>
-              {t('poll.subWeight')}
-            </FieldLabel>
-            <SegmentedControl
-              labelledBy={`${id}-weight`}
-              value={String(settings.subWeight)}
-              onChange={(value) => update('subWeight', Number(value))}
-              options={SUB_WEIGHTS.map((weight) => ({
-                value: String(weight),
-                label: t('poll.subWeightValue', { n: weight }),
-              }))}
-              disabled={settings.subsOnly}
-            />
-          </div>
+      )}
+      <div className="grid gap-3 sm:grid-cols-2">
+        <div>
+          <FieldLabel id={`${id}-position`} tip={t('poll.positionTip')}>
+            {t('poll.position')}
+          </FieldLabel>
+          <SegmentedControl
+            labelledBy={`${id}-position`}
+            value={settings.position}
+            onChange={(value) => update('position', value)}
+            options={POLL_POSITIONS.map((value) => ({
+              value,
+              label: t(value === 'top' ? 'poll.positionTop' : 'poll.positionBottom'),
+            }))}
+          />
         </div>
-        <Switch
-          label={t('poll.change')}
-          tip={t('poll.changeTip')}
-          checked={settings.change}
-          onChange={(value) => update('change', value)}
-        />
-        <Switch
-          label={t('poll.blind')}
-          tip={t('poll.blindTip')}
-          checked={settings.blind}
-          onChange={(value) => update('blind', value)}
-        />
-      </SettingsGroup>
-
-      <SettingsGroup title={t('common.sectionAppearance')}>
-        <PresetField value={settings.preset} onChange={(value) => update('preset', value)} />
-        {isClassic(settings.preset) && (
-          <div>
-            <FieldLabel id={`${id}-color`}>{t('poll.color')}</FieldLabel>
-            <ColorSwatches
-              labelledBy={`${id}-color`}
-              value={settings.color}
-              onChange={(value) => update('color', value)}
-              options={POLL_COLORS.map((color) => ({
-                value: color,
-                label: t(`subathon.colors.${color}`),
-                background: `hsl(${hueFor(color, 1)} 85% 52%)`,
-              }))}
-            />
-          </div>
-        )}
-        <div className="grid gap-3 sm:grid-cols-2">
-          <div>
-            <FieldLabel id={`${id}-position`} tip={t('poll.positionTip')}>
-              {t('poll.position')}
-            </FieldLabel>
-            <SegmentedControl
-              labelledBy={`${id}-position`}
-              value={settings.position}
-              onChange={(value) => update('position', value)}
-              options={POLL_POSITIONS.map((value) => ({
-                value,
-                label: t(value === 'top' ? 'poll.positionTop' : 'poll.positionBottom'),
-              }))}
-            />
-          </div>
-          <div>
-            <FieldLabel id={`${id}-lang`} tip={t('poll.languageTip')}>
-              {t('poll.language')}
-            </FieldLabel>
-            <Select
-              labelledBy={`${id}-lang`}
-              value={pollLocale}
-              onChange={setPickedLocale}
-              options={LOCALES.map((value) => ({ value, label: LOCALE_NAMES[value] }))}
-            />
-          </div>
+        <div>
+          <FieldLabel id={`${id}-lang`} tip={t('poll.languageTip')}>
+            {t('poll.language')}
+          </FieldLabel>
+          <Select
+            labelledBy={`${id}-lang`}
+            value={pollLocale}
+            onChange={setPickedLocale}
+            options={LOCALES.map((value) => ({ value, label: LOCALE_NAMES[value] }))}
+          />
         </div>
-      </SettingsGroup>
-    </>
+      </div>
+    </SettingsGroup>
   );
 
   const sendEvent = (event: PollChatEvent) => send({ type: 'event', event });
   const mod = (text: string) =>
     sendEvent({ kind: 'message', platform: 'twitch', login: 'you', text, mod: true, sub: true });
   const optionCount = savedPoll(settings)?.options.length ?? SAMPLE_OPTIONS;
-  const testPlatform = (): SubathonPlatform =>
-    settings.platforms === 'both' ? (Math.random() < 0.5 ? 'twitch' : 'kick') : settings.platforms;
+  const testPlatform = (): SubathonPlatform => {
+    if (settings.platforms === 'both') return Math.random() < 0.5 ? 'twitch' : 'kick';
+    return settings.platforms === 'kick' ? 'kick' : 'twitch';
+  };
   const testButtons: { label: string; run: () => void }[] = [
     {
       label: t('poll.testVotes', { count: TEST_VOTES }),
@@ -413,7 +417,12 @@ function PollSetup() {
     <SetupShell
       widgetId={WIDGET.id}
       title={t('poll.title')}
-      settings={settingsPanel}
+      settingsPinned={channelGroup}
+      settingsTabs={[
+        { id: 'poll', label: t('poll.sectionPoll'), content: pollTab },
+        { id: 'voting', label: t('poll.sectionVoting'), content: votingTab },
+        { id: 'appearance', label: t('common.sectionAppearance'), content: appearanceTab },
+      ]}
       previewTitle={t('poll.previewTitle')}
       previewTip={t('poll.previewHint')}
       previewAspect={CANVAS.width / CANVAS.height}

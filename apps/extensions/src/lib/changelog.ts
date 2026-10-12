@@ -15,6 +15,19 @@ export interface ChangelogEntry {
 export const CHANGELOG: readonly ChangelogEntry[] = [
   {
     date: '2026-10-12',
+    key: 'changelog.entries.settingsTabs',
+    widgets: [
+      'irl-hud',
+      'countdown',
+      'subathon',
+      'stream-alerts',
+      'poll',
+      'chat-box',
+      'spin-wheel',
+    ],
+  },
+  {
+    date: '2026-10-12',
     key: 'changelog.entries.presetPickerFolded',
     widgets: [
       'chat-box',

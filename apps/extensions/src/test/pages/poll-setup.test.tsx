@@ -3,7 +3,17 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { PREVIEW_CHANNEL } from '#/features/widgets/poll/use-poll';
 import { buildPollUrl, DEFAULT_POLL_SETTINGS, type PollSettings } from '#/lib/poll-url';
 import { withLayout } from '#/test/browser';
-import { button, combobox, en, pickOption, retype, segment, textbox, toggle } from '#/test/queries';
+import {
+  button,
+  combobox,
+  en,
+  pickOption,
+  retype,
+  segment,
+  settingsTab,
+  textbox,
+  toggle,
+} from '#/test/queries';
 import { renderRoute, setupUser } from '#/test/render';
 
 const PAGE = '/setup/chat-poll';
@@ -163,6 +173,7 @@ describe('Chat Poll setup', () => {
     const user = setupUser();
     await renderRoute(PAGE);
     await user.type(twitchField(), 'streamer');
+    await user.click(settingsTab(en('poll.sectionVoting')));
     const box = (label: string, unit: string) =>
       within(screen.getByRole('group', { name: label })).getByLabelText(unit) as HTMLInputElement;
     await retype(user, box(en('poll.duration'), en('poll.unitMinutes')), '2');

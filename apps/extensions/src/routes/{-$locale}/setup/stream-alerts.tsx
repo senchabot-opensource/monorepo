@@ -17,8 +17,8 @@ import { TextField } from '#/components/ui/text-field';
 import { PresetField } from '#/features/presets/preset-field';
 import { isClassic } from '#/features/presets/registry';
 import { useStartOnSitePreset } from '#/features/presets/site-preset';
-import type { StreamAlert } from '#/features/widgets/stream-alerts/stream-alert';
 import { alertHue, defaultHeadingKey } from '#/features/widgets/stream-alerts/alert-style';
+import type { StreamAlert } from '#/features/widgets/stream-alerts/stream-alert';
 import {
   PREVIEW_CHANNEL,
   type PreviewMessage,
@@ -204,108 +204,112 @@ function StreamAlertsSetup() {
     );
   };
 
-  const settingsPanel = (
-    <>
-      <SettingsGroup title={t('common.sectionChannel')}>
-        <ChannelFields
-          platforms={settings.platforms}
-          onPlatformsChange={(value) => update('platforms', value)}
-          twitch={twitchChannel}
-          onTwitchChange={setTwitchChannel}
-          kick={kickChannel}
-          onKickChange={setKickChannel}
-        />
-      </SettingsGroup>
+  const channelGroup = (
+    <SettingsGroup title={t('common.sectionChannel')}>
+      <ChannelFields
+        platforms={settings.platforms}
+        onPlatformsChange={(value) => update('platforms', value)}
+        twitch={twitchChannel}
+        onTwitchChange={setTwitchChannel}
+        kick={kickChannel}
+        onKickChange={setKickChannel}
+      />
+    </SettingsGroup>
+  );
 
-      <SettingsGroup title={t('common.sectionAppearance')}>
-        <PresetField value={settings.preset} onChange={(value) => update('preset', value)} />
-        {/* A preset draws its own alert card, so the built-in themes and colors step aside. */}
-        {isClassic(settings.preset) && (
-          <>
-            <div>
-              <FieldLabel id={`${id}-theme`} tip={t('streamAlerts.themeTip')}>
-                {t('streamAlerts.theme')}
-              </FieldLabel>
-              <SegmentedControl
-                labelledBy={`${id}-theme`}
-                value={settings.theme}
-                onChange={(value) => update('theme', value)}
-                options={ALERT_THEMES.map((value) => ({
-                  value,
-                  label: t(`streamAlerts.themes.${value}`),
-                }))}
-              />
-            </div>
-            <div>
-              <FieldLabel id={`${id}-color`} tip={t('streamAlerts.colorTip')}>
-                {t('streamAlerts.color')}
-              </FieldLabel>
-              <ColorSwatches
-                labelledBy={`${id}-color`}
-                value={settings.color}
-                onChange={(value) => update('color', value)}
-                options={ALERT_COLORS.map((color) => ({
-                  value: color,
-                  label: t(`streamAlerts.colors.${color}`),
-                  background: swatchBackground(color),
-                }))}
-              />
-            </div>
-          </>
-        )}
-        <div>
-          <FieldLabel id={`${id}-lang`} tip={t('streamAlerts.languageTip')}>
-            {t('streamAlerts.language')}
-          </FieldLabel>
-          <Select
-            labelledBy={`${id}-lang`}
-            value={alertLocale}
-            onChange={setPickedLocale}
-            options={LOCALES.map((value) => ({ value, label: LOCALE_NAMES[value] }))}
-          />
-        </div>
-      </SettingsGroup>
+  const appearanceTab = (
+    <SettingsGroup title={t('common.sectionAppearance')} hideTitle>
+      <PresetField value={settings.preset} onChange={(value) => update('preset', value)} />
+      {/* A preset draws its own alert card, so the built-in themes and colors step aside. */}
+      {isClassic(settings.preset) && (
+        <>
+          <div>
+            <FieldLabel id={`${id}-theme`} tip={t('streamAlerts.themeTip')}>
+              {t('streamAlerts.theme')}
+            </FieldLabel>
+            <SegmentedControl
+              labelledBy={`${id}-theme`}
+              value={settings.theme}
+              onChange={(value) => update('theme', value)}
+              options={ALERT_THEMES.map((value) => ({
+                value,
+                label: t(`streamAlerts.themes.${value}`),
+              }))}
+            />
+          </div>
+          <div>
+            <FieldLabel id={`${id}-color`} tip={t('streamAlerts.colorTip')}>
+              {t('streamAlerts.color')}
+            </FieldLabel>
+            <ColorSwatches
+              labelledBy={`${id}-color`}
+              value={settings.color}
+              onChange={(value) => update('color', value)}
+              options={ALERT_COLORS.map((color) => ({
+                value: color,
+                label: t(`streamAlerts.colors.${color}`),
+                background: swatchBackground(color),
+              }))}
+            />
+          </div>
+        </>
+      )}
+      <div>
+        <FieldLabel id={`${id}-lang`} tip={t('streamAlerts.languageTip')}>
+          {t('streamAlerts.language')}
+        </FieldLabel>
+        <Select
+          labelledBy={`${id}-lang`}
+          value={alertLocale}
+          onChange={setPickedLocale}
+          options={LOCALES.map((value) => ({ value, label: LOCALE_NAMES[value] }))}
+        />
+      </div>
+    </SettingsGroup>
+  );
 
-      <SettingsGroup title={t('streamAlerts.sectionAlerts')}>
-        <div className="space-y-4">{ALERT_KINDS.map(kindFields)}</div>
-      </SettingsGroup>
+  const alertsTab = (
+    <SettingsGroup title={t('streamAlerts.sectionAlerts')} hideTitle>
+      <div className="space-y-4">{ALERT_KINDS.map(kindFields)}</div>
+    </SettingsGroup>
+  );
 
-      <SettingsGroup title={t('streamAlerts.sectionTiming')}>
-        <RangeField
-          label={t('streamAlerts.duration')}
-          tip={t('streamAlerts.durationTip')}
-          min={MIN_DURATION}
-          max={MAX_DURATION}
-          value={settings.duration}
-          onChange={(value) => update('duration', Number(value))}
-          format={(value) => t('streamAlerts.seconds', { value })}
-          readoutClassName="w-10"
-        />
-        <RangeField
-          label={t('streamAlerts.volume')}
-          tip={t('streamAlerts.volumeTip')}
-          min={0}
-          max={100}
-          step={5}
-          value={settings.volume}
-          onChange={(value) => update('volume', Number(value))}
-          format={(value) => (value === 0 ? t('streamAlerts.volumeOff') : `${value}%`)}
-          readoutClassName="w-10"
-        />
-        <Switch
-          label={t('streamAlerts.showMessage')}
-          tip={t('streamAlerts.showMessageTip')}
-          checked={settings.message}
-          disabled={!settings.enabled.sub && !settings.enabled.bits}
-          onChange={(value) => update('message', value)}
-        />
-      </SettingsGroup>
-    </>
+  const timingTab = (
+    <SettingsGroup title={t('streamAlerts.sectionTiming')} hideTitle>
+      <RangeField
+        label={t('streamAlerts.duration')}
+        tip={t('streamAlerts.durationTip')}
+        min={MIN_DURATION}
+        max={MAX_DURATION}
+        value={settings.duration}
+        onChange={(value) => update('duration', Number(value))}
+        format={(value) => t('streamAlerts.seconds', { value })}
+        readoutClassName="w-10"
+      />
+      <RangeField
+        label={t('streamAlerts.volume')}
+        tip={t('streamAlerts.volumeTip')}
+        min={0}
+        max={100}
+        step={5}
+        value={settings.volume}
+        onChange={(value) => update('volume', Number(value))}
+        format={(value) => (value === 0 ? t('streamAlerts.volumeOff') : `${value}%`)}
+        readoutClassName="w-10"
+      />
+      <Switch
+        label={t('streamAlerts.showMessage')}
+        tip={t('streamAlerts.showMessageTip')}
+        checked={settings.message}
+        disabled={!settings.enabled.sub && !settings.enabled.bits}
+        onChange={(value) => update('message', value)}
+      />
+    </SettingsGroup>
   );
 
   // With both platforms, each click takes turns so both platforms' words get shown.
   const testPlatform = (): SubathonPlatform => {
-    if (settings.platforms !== 'both') return settings.platforms;
+    if (settings.platforms !== 'both') return settings.platforms === 'kick' ? 'kick' : 'twitch';
     const platform = nextPlatform.current;
     nextPlatform.current = platform === 'twitch' ? 'kick' : 'twitch';
     return platform;
@@ -349,7 +353,12 @@ function StreamAlertsSetup() {
     <SetupShell
       widgetId={WIDGET.id}
       title={t('streamAlerts.title')}
-      settings={settingsPanel}
+      settingsPinned={channelGroup}
+      settingsTabs={[
+        { id: 'appearance', label: t('common.sectionAppearance'), content: appearanceTab },
+        { id: 'alerts', label: t('streamAlerts.sectionAlerts'), content: alertsTab },
+        { id: 'timing', label: t('streamAlerts.sectionTiming'), content: timingTab },
+      ]}
       previewTitle={t('streamAlerts.previewTitle')}
       previewTip={t('streamAlerts.previewHint')}
       previewAspect={16 / 9}

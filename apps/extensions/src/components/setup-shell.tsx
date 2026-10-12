@@ -1,10 +1,11 @@
-import { type CSSProperties, type ReactNode, useId } from 'react';
+import { type CSSProperties, type ReactNode, useId, useRef, useState } from 'react';
 import { FaqList } from '#/components/faq-list';
 import { SiteFooter } from '#/components/site-footer';
 import { SiteHeader } from '#/components/site-header';
 import { StepsList } from '#/components/steps-list';
 import { InfoTip } from '#/components/ui/info-tip';
 import { ScrollHint } from '#/components/ui/scroll-hint';
+import { Tabs } from '#/components/ui/tabs';
 import { WidgetCrossLinks } from '#/components/widget-cross-links';
 import { type TranslationKey, useI18n } from '#/lib/i18n';
 import type { FaqEntry } from '#/lib/i18n/seo';
@@ -15,14 +16,40 @@ export const PANEL_CLASS =
 
 /** One desktop screen under the 3rem header and the grid's 1rem bottom padding, but not below 576px. */
 const SCREEN_MAX_H = 'lg:max-h-[max(576px,calc(100dvh-4rem))]';
+const SCREEN_H = 'lg:h-[max(576px,calc(100dvh-4rem))]';
 
-export interface SetupShellProps {
+/** One tab of a long settings panel: its label and the SettingsGroup blocks it holds. */
+export interface SettingsTab {
+  id: string;
+  label: string;
+  content: ReactNode;
+}
+
+export type SetupShellProps = SetupShellBaseProps &
+  (
+    | {
+        /** Settings panel body, usually SettingsGroup blocks. Desktop: fits it up to one screen, then scrolls. */
+        settings: ReactNode;
+        settingsPinned?: never;
+        settingsTabs?: never;
+      }
+    | {
+        settings?: never;
+        /** Above the tabs and shown with every one of them: the channel fields. */
+        settingsPinned: ReactNode;
+        /**
+         * For settings too long for one screen: one tab per part of the widget, the first one
+         * open. Every tab stays mounted, so a half-filled field survives a switch.
+         */
+        settingsTabs: readonly SettingsTab[];
+      }
+  );
+
+interface SetupShellBaseProps {
   /** Registry id: picks the header icon and switcher entry and the "more widgets" row. */
   widgetId: WidgetId;
   /** Page H1, shown in the compact header. */
   title: string;
-  /** Settings panel body, usually SettingsGroup blocks. Desktop: fits it up to one screen, then scrolls. */
-  settings: ReactNode;
   /** Pinned above the scrolling settings, e.g. Raffle's "configuration locked" banner. */
   settingsTop?: ReactNode;
   /** Heading of the right panel. */
@@ -57,6 +84,8 @@ export function SetupShell({
   widgetId,
   title,
   settings,
+  settingsPinned,
+  settingsTabs,
   settingsTop,
   previewTitle,
   previewTip,
@@ -81,8 +110,13 @@ export function SetupShell({
         {/* Panels are as tall as their content, so short forms and wide previews don't leave
             empty space, but never taller than one screen. */}
         <div className="mx-auto grid max-w-6xl gap-5 px-4 pb-4 lg:grid-cols-[34rem_minmax(0,1fr)]">
+          {/* Switching tabs changes how tall the settings are. A preview that fills the panel's
+              height would resize with every switch, so next to one the tabbed panel keeps the
+              full screen height. */}
           <div
-            className={`${PANEL_CLASS} p-4 lg:flex lg:min-h-0 lg:flex-col lg:self-start ${SCREEN_MAX_H}`}
+            className={`${PANEL_CLASS} p-4 lg:flex lg:min-h-0 lg:flex-col lg:self-start ${
+              settingsTabs && !previewAspect ? SCREEN_H : SCREEN_MAX_H
+            }`}
           >
             {settingsTop && <div className="mb-3 lg:shrink-0">{settingsTop}</div>}
             {/* Scrolling happens on the inner box, so on short screens content is clipped inside the
@@ -91,7 +125,11 @@ export function SetupShell({
               className="lg:flex lg:min-h-0 lg:flex-1 lg:flex-col"
               scrollClassName="space-y-3 p-1 lg:min-h-0 lg:flex-1 lg:overflow-y-auto"
             >
-              {settings}
+              {settingsTabs ? (
+                <TabbedSettings pinned={settingsPinned} tabs={settingsTabs} />
+              ) : (
+                settings
+              )}
             </ScrollHint>
           </div>
 
@@ -191,5 +229,32 @@ export function SetupShell({
       </main>
       <SiteFooter />
     </div>
+  );
+}
+
+function TabbedSettings({ pinned, tabs }: { pinned: ReactNode; tabs: readonly SettingsTab[] }) {
+  const { t } = useI18n();
+  const [tab, setTab] = useState(tabs[0].id);
+  const topRef = useRef<HTMLDivElement>(null);
+
+  return (
+    <>
+      {pinned}
+      <div ref={topRef} />
+      <Tabs
+        tabs={tabs.map(({ id, label }) => ({ value: id, label }))}
+        value={tab}
+        onChange={(next) => {
+          setTab(next);
+          // The bar sticks while a long tab scrolls under it; the next tab starts at its top.
+          topRef.current?.scrollIntoView({ block: 'nearest' });
+        }}
+        label={t('common.settingsSections')}
+        scrollable
+        // The scroller's p-1 keeps focus rings unclipped; the bar covers it so nothing shows through.
+        listClassName="sticky top-0 z-10 -mx-1 bg-white px-1 dark:bg-zinc-900"
+        panels={Object.fromEntries(tabs.map(({ id, content }) => [id, content]))}
+      />
+    </>
   );
 }

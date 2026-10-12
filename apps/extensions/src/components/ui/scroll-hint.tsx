@@ -49,10 +49,17 @@ export function ScrollHint({ className, scrollClassName, children }: ScrollHintP
     // unscrollable and no resize is reported when it opens. Coming into view is that signal.
     const visible = new IntersectionObserver(measure);
     visible.observe(el);
-    // The box keeps its own size when a group folds open or a conditional setting appears, so the
-    // content has to be watched as well or the arrow goes stale.
+    // The box keeps its own size when a group folds open, a conditional setting appears or a tab
+    // hides one panel for another, so the content has to be watched as well or the arrow goes
+    // stale.
     const mutate = new MutationObserver(measure);
-    mutate.observe(el, { childList: true, subtree: true, characterData: true });
+    mutate.observe(el, {
+      childList: true,
+      subtree: true,
+      characterData: true,
+      attributes: true,
+      attributeFilter: ['hidden'],
+    });
 
     return () => {
       el.removeEventListener('scroll', measure);

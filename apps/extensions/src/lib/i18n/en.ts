@@ -28,6 +28,7 @@ export const en = {
       "Just type the channel name, not the full link. For twitch.tv/senchabot, that's senchabot.",
     previewLoading: 'Loading preview…',
     scrollMore: 'Scroll down for more',
+    settingsSections: 'Settings sections',
     scrollTop: 'Back to top',
     setupGuideTitle: 'How to set it up',
     faqTitle: 'Frequently asked questions',
@@ -1024,6 +1025,7 @@ export const en = {
     tiers: 'Tier 2 and 3 Count More',
     tiersTip:
       'On Twitch a Tier 2 sub adds 2 subs worth of cash and a Tier 3 sub 5, in line with their price.',
+    sectionMap: 'Mini-Map',
     sectionMarket: 'Market',
     marketHint:
       "Items you and your mods buy from chat with !hud buy and the item's name. The price comes off the cash; without enough cash, nothing is bought.",
@@ -2751,6 +2753,8 @@ export const en = {
     lead: "New features and bug fixes in Senchabot Extensions, newest first. The list is put together from the project's commit history on [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      settingsTabs:
+        'IRL HUD, Stream Countdown, Subathon Timer, Stream Alerts, Chat Poll, Chat Box and Spin Wheel split their settings into tabs under the channel boxes, so each tab fits on one screen and, on a phone, the preview and widget URL sit much closer to the top.',
       presetPickerFolded:
         'Setup pages fold the presets behind a bar that names the one picked: a click opens or folds them, and they start folded while a widget keeps its classic look.',
       irlHudMarket:

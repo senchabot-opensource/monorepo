@@ -30,6 +30,7 @@ export const de: typeof en = {
       'Gib nur den Kanalnamen ein, nicht den ganzen Link. Bei twitch.tv/senchabot ist das senchabot.',
     previewLoading: 'Vorschau lädt…',
     scrollMore: 'Runterscrollen für mehr',
+    settingsSections: 'Einstellungsbereiche',
     scrollTop: 'Nach oben',
     setupGuideTitle: 'So richtest du es ein',
     faqTitle: 'Häufige Fragen',
@@ -1031,6 +1032,7 @@ export const de: typeof en = {
     tiers: 'Tier 2 und 3 zählen mehr',
     tiersTip:
       'Auf Twitch bringt ein Tier-2-Sub das Geld von 2 Subs und ein Tier-3-Sub das von 5, passend zum Preis.',
+    sectionMap: 'Minikarte',
     sectionMarket: 'Markt',
     marketHint:
       'Items, die du und deine Mods im Chat mit !hud buy und dem Namen des Items kaufen. Der Preis wird vom Geld abgezogen; reicht das Geld nicht, wird nichts gekauft.',
@@ -2760,6 +2762,8 @@ export const de: typeof en = {
     lead: 'Neue Features und Bugfixes in Senchabot Extensions, das Neueste zuerst. Die Liste ist aus der Commit-Historie des Projekts auf [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) zusammengestellt.',
     site: 'Website',
     entries: {
+      settingsTabs:
+        'IRL-HUD, Stream-Countdown, Subathon Timer, Stream-Alerts, Chat-Umfrage, Chat-Box und Glücksrad teilen ihre Einstellungen unter den Kanalfeldern in Tabs auf. So passt jeder Tab auf einen Bildschirm, und auf dem Handy stehen Vorschau und Widget-URL viel weiter oben.',
       presetPickerFolded:
         'Auf Setup-Seiten klappen die Presets hinter eine Leiste mit dem gewählten Preset zusammen, ein Klick öffnet oder schließt sie, und beim klassischen Look starten sie zugeklappt.',
       irlHudMarket:

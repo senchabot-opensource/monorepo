@@ -30,6 +30,7 @@ export const pt: typeof en = {
       'Digite só o nome do canal, não o link inteiro. Para twitch.tv/senchabot, é senchabot.',
     previewLoading: 'Carregando prévia…',
     scrollMore: 'Role para ver mais',
+    settingsSections: 'Seções das configurações',
     scrollTop: 'Voltar ao topo',
     setupGuideTitle: 'Como configurar',
     faqTitle: 'Perguntas frequentes',
@@ -1050,6 +1051,7 @@ export const pt: typeof en = {
     tiers: 'Tier 2 e 3 valem mais',
     tiersTip:
       'Na Twitch, um sub Tier 2 soma o dinheiro de 2 subs e um Tier 3 o de 5, de acordo com o preço.',
+    sectionMap: 'Minimapa',
     sectionMarket: 'Mercado',
     marketHint:
       'Itens que você e seus mods compram pelo chat com !hud buy e o nome do item. O preço sai do dinheiro; sem dinheiro suficiente, nada é comprado.',
@@ -2777,6 +2779,8 @@ export const pt: typeof en = {
     lead: 'Recursos novos e correções de bugs no Senchabot Extensions, dos mais novos para os mais antigos. A lista é montada a partir do histórico de commits do projeto no [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).',
     site: 'Site',
     entries: {
+      settingsTabs:
+        'IRL HUD, Contagem Regressiva, Subathon Timer, Alertas de Live, Enquete do Chat, Caixa de Chat e Roleta dividem as configurações em abas abaixo dos campos do canal. Assim cada aba cabe em uma tela e, no celular, a prévia e a URL do widget ficam bem mais para cima.',
       presetPickerFolded:
         'Nas páginas de configuração, os presets se recolhem atrás de uma barra com o escolhido, um clique abre ou fecha, e eles começam recolhidos quando o widget está no visual clássico.',
       irlHudMarket:
