@@ -6,6 +6,7 @@ import { GoalWidget } from '#/features/widgets/goal/goal-widget';
 import { PresetAlert } from '#/features/widgets/stream-alerts/themes/preset';
 import { DEFAULT_GOAL_SETTINGS } from '#/lib/goal-url';
 import { dictionaries, resolveKey } from '#/lib/i18n';
+import { getWidget } from '#/lib/widgets';
 import { BUILTIN_PRESETS } from './builtin-presets';
 import { Frame } from './frame';
 import { type PresetData, presetSchema } from './preset-schema';
@@ -161,9 +162,15 @@ describe('applyPresetToUrl', () => {
       '/widgets/frame?demo=1&preset=rift',
       '/widgets/countdown?simulate=1&preset=rift',
       '/widgets/socials?demo=1&preset=rift',
-      '/widgets/spin-wheel?demo=1&preset=rift',
+      '/widgets/spin-wheel?demo=1&sound=0&preset=rift',
     ]);
     expect(presetDemoUrl(PRESET_WIDGETS[0], 'classic')).toBe('/widgets/chat-widget?mock=true');
+  });
+
+  it('plays the Spin Wheel demo without sound, in the classic look too', () => {
+    expect(presetDemoUrl(getWidget('spin-wheel'), 'classic')).toBe(
+      '/widgets/spin-wheel?demo=1&sound=0',
+    );
   });
 });
 
