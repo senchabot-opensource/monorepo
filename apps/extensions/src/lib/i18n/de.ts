@@ -296,11 +296,16 @@ export const de: typeof en = {
     layoutStacked: 'Gestapelt (Name oben)',
     layoutCard: 'Karte / Blase',
     layoutCompact: 'Kompakt (wie Twitch)',
+    layoutPlain: 'Schlicht (Name Nachricht)',
     newMessageAnimation: 'Animation für neue Nachrichten',
     animSlide: 'Von rechts gleiten + einblenden',
+    animSlideLeft: 'Von links gleiten + einblenden',
     animSmoothSlide: 'Weich von rechts gleiten',
-    animPop: 'Aufploppen / Skalieren',
-    animBounce: 'Reinhüpfen',
+    animSmoothSlideLeft: 'Weich von links gleiten',
+    animPop: 'Aufploppen / Skalieren von rechts',
+    animPopLeft: 'Aufploppen / Skalieren von links',
+    animBounce: 'Von rechts reinhüpfen',
+    animBounceLeft: 'Von links reinhüpfen',
     animStagger: 'Versetzt (erst Name, dann Nachricht)',
     animFade: 'Einblenden',
     animTyping: 'Schreibmaschine',
@@ -1782,9 +1787,10 @@ export const de: typeof en = {
         stacked: 'Gestapelt: Name oben, Nachricht darunter.',
         card: 'Karte / Blase: Jede Nachricht sitzt in einer halbtransparenten Karte.',
         compact: 'Kompakt: enge Zeilen wie bei Twitch mit etwas kleinerem Text.',
+        plain: 'Schlicht: wie Inline, nur mit einem Leerzeichen zwischen Abzeichen, Name und Nachricht und ohne Doppelpunkt nach dem Namen.',
         animationTitle: 'Animation für neue Nachrichten',
         animations:
-          'Es gibt acht Optionen: Von rechts gleiten (Standard), Weich von rechts gleiten, Aufploppen / Skalieren, Reinhüpfen, Versetzt, Einblenden, Schreibmaschine und Keine Animation. Wird der Chat schneller, werden alle Animationen außer dem Standard kürzer. Kommen Nachrichten schneller als eine pro halbe Sekunde, schrumpft die Animation auf bis zu ein Drittel ihrer normalen Länge, damit keine mit der nächsten ins Straucheln kommt.',
+          'Es gibt zwölf Optionen: Von rechts gleiten (Standard), Von links gleiten, Weich von rechts gleiten, Weich von links gleiten, Aufploppen / Skalieren von rechts, Aufploppen / Skalieren von links, Von rechts reinhüpfen, Von links reinhüpfen, Versetzt, Einblenden, Schreibmaschine und Keine Animation. Wird der Chat schneller, werden alle Animationen außer Von rechts gleiten und Von links gleiten kürzer. Kommen Nachrichten schneller als eine pro halbe Sekunde, schrumpft die Animation auf bis zu ein Drittel ihrer normalen Länge, damit keine mit der nächsten ins Straucheln kommt.',
         fontTitle: 'Schrift und Größe',
         fonts:
           'Inter (Standard), Roboto, Nunito, JetBrains Mono, Source Serif 4 und die Systemschrift. Die Schriftgröße geht von 8 bis 72 Pixel, standardmäßig 18. Namen fett und Nachrichten fett sind getrennte Schalter.',
@@ -2535,6 +2541,10 @@ export const de: typeof en = {
     lead: 'Neue Features und Bugfixes in Senchabot Extensions, das Neueste zuerst. Die Liste ist aus der Commit-Historie des Projekts auf [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) zusammengestellt.',
     site: 'Website',
     entries: {
+      chatLeftAnimations:
+        'Die Chat-Box bekommt ihre Einstiegsanimationen auch von links: Von links gleiten + einblenden, Weich von links gleiten, Aufploppen / Skalieren von links und Von links reinhüpfen.',
+      chatPlainLayout:
+        'Die Chat-Box bekommt das Layout Schlicht: Abzeichen, Name und Nachricht durch Leerzeichen getrennt, ohne Doppelpunkt nach dem Namen.',
       countdownSounds:
         'Der Stream-Countdown kann jetzt in den letzten Sekunden ticken und bei null eine Melodie spielen — wähl Klang, Glocke oder Digital. Standardmäßig aus, bestehende Overlays bleiben stumm.',
       pollLongerDefaults:

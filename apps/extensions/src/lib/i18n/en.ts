@@ -294,11 +294,16 @@ export const en = {
     layoutStacked: 'Stacked — username above',
     layoutCard: 'Card / Bubble',
     layoutCompact: 'Compact (Twitch-like)',
+    layoutPlain: 'Plain — Username message',
     newMessageAnimation: 'New Message Animation',
     animSlide: 'Slide from right + fade',
+    animSlideLeft: 'Slide from left + fade',
     animSmoothSlide: 'Smooth slide from right',
-    animPop: 'Pop / scale-in',
-    animBounce: 'Bounce in',
+    animSmoothSlideLeft: 'Smooth slide from left',
+    animPop: 'Pop / scale-in from right',
+    animPopLeft: 'Pop / scale-in from left',
+    animBounce: 'Bounce in from right',
+    animBounceLeft: 'Bounce in from left',
     animStagger: 'Stagger (meta first, then message)',
     animFade: 'Fade in',
     animTyping: 'Typewriter',
@@ -1779,9 +1784,10 @@ export const en = {
         stacked: 'Stacked: username on top, message below.',
         card: 'Card / Bubble: each message sits in a semi-transparent card.',
         compact: 'Compact: tight, Twitch-style lines with slightly smaller text.',
+        plain: 'Plain: like Inline, with just a space between the badges, username and message, and no colon after the name.',
         animationTitle: 'New message animation',
         animations:
-          'There are eight options: Slide from right (default), Smooth slide from right, Pop / scale-in, Bounce in, Stagger, Fade in, Typewriter and No animation. When chat speeds up, every animation except the default gets shorter. If messages come in faster than one every half second, the animation drops to as little as a third of its normal length, so none of them struggle to keep up with the next one.',
+          'There are twelve options: Slide from right (default), Slide from left, Smooth slide from right, Smooth slide from left, Pop / scale-in from right, Pop / scale-in from left, Bounce in from right, Bounce in from left, Stagger, Fade in, Typewriter and No animation. When chat speeds up, every animation except Slide from right and Slide from left gets shorter. If messages come in faster than one every half second, the animation drops to as little as a third of its normal length, so none of them struggle to keep up with the next one.',
         fontTitle: 'Font and size',
         fonts:
           'Inter (default), Roboto, Nunito, JetBrains Mono, Source Serif 4 and the System Default font. Font size goes from 8 to 72 pixels, 18 by default. Bold Usernames and Bold Messages are separate toggles.',
@@ -2531,6 +2537,10 @@ export const en = {
     lead: "New features and bug fixes in Senchabot Extensions, newest first. The list is put together from the project's commit history on [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      chatLeftAnimations:
+        'Chat Box gets left-hand versions of its entry animations: Slide from left + fade, Smooth slide from left, Pop / scale-in from left and Bounce in from left.',
+      chatPlainLayout:
+        'Chat Box gets a Plain message layout: badges, username and message separated by spaces, with no colon after the name.',
       countdownSounds:
         'Stream Countdown can now tick in the last seconds and play a motif at zero — pick Chime, Bell or Digital. Off by default, so existing overlays stay silent.',
       pollLongerDefaults:

@@ -133,6 +133,23 @@ describe('parseWidgetUrl', () => {
     expect(roundTrip(url)).toBe(url);
   });
 
+  it.each([
+    'slideLeft',
+    'smoothLeft',
+    'popLeft',
+    'bounceLeft',
+  ])('reads and writes animation=%s', (animation) => {
+    const url = `${ORIGIN}/widgets/chat-widget?twitch=foo&animation=${animation}`;
+    expect(parseWidgetUrl(url)?.settings.animation).toBe(animation);
+    expect(roundTrip(url)).toBe(url);
+  });
+
+  it('reads and writes the plain layout', () => {
+    const url = `${ORIGIN}/widgets/chat-widget?twitch=foo&layout=plain`;
+    expect(parseWidgetUrl(url)?.settings.layout).toBe('plain');
+    expect(roundTrip(url)).toBe(url);
+  });
+
   it('falls back to defaults for values the widget would not accept', () => {
     const parsed = parseWidgetUrl(
       `${ORIGIN}/widgets/chat-widget?twitch=foo&font=comic&fontSize=0&bgOpacity=3&layout=grid`,

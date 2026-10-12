@@ -63,6 +63,26 @@
   animation: chatBounceIn calc(500ms * var(--chat-speed, 1)) ease-out forwards;
 }
 
+/* The left-hand versions mirror the right-hand ones, offsets and overshoot flipped. */
+@keyframes chatBounceInLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-40px) scale(0.9);
+  }
+  60% {
+    opacity: 1;
+    transform: translateX(6px) scale(1.03);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+.animate-chat-bounce-in-left {
+  animation: chatBounceInLeft calc(500ms * var(--chat-speed, 1)) ease-out forwards;
+}
+
 @keyframes chatSlideIn {
   0% {
     opacity: 0;
@@ -78,9 +98,29 @@
   animation: chatSlideIn 200ms ease-out both;
 }
 
+@keyframes chatSlideInLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-chat-slide-in-left {
+  animation: chatSlideInLeft 200ms ease-out both;
+}
+
 /* --chat-speed is set per row from how busy chat is (1 = calm); see getAnimationSpeeds. */
 .animate-chat-smooth-slide-in {
   animation: chatSlideIn calc(380ms * var(--chat-speed, 1)) cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-chat-smooth-slide-in-left {
+  animation: chatSlideInLeft calc(380ms * var(--chat-speed, 1)) cubic-bezier(0.22, 1, 0.36, 1)
+    both;
 }
 
 /* The easing already overshoots, so a mid-keyframe overshoot would double it. */
@@ -98,6 +138,11 @@
 .animate-chat-pop-in {
   animation: chatPopIn calc(380ms * var(--chat-speed, 1)) cubic-bezier(0.34, 1.56, 0.64, 1) both;
   transform-origin: right center;
+}
+
+.animate-chat-pop-in-left {
+  animation: chatPopIn calc(380ms * var(--chat-speed, 1)) cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  transform-origin: left center;
 }
 
 @keyframes chatStaggerMeta {

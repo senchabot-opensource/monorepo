@@ -303,11 +303,16 @@ export const pt: typeof en = {
     layoutStacked: 'Empilhado (nome em cima)',
     layoutCard: 'Cartão / Balão',
     layoutCompact: 'Compacto (estilo Twitch)',
+    layoutPlain: 'Simples (nome mensagem)',
     newMessageAnimation: 'Animação de nova mensagem',
     animSlide: 'Deslizar da direita + fade',
+    animSlideLeft: 'Deslizar da esquerda + fade',
     animSmoothSlide: 'Deslizar suave da direita',
-    animPop: 'Pop / crescer',
-    animBounce: 'Quicar',
+    animSmoothSlideLeft: 'Deslizar suave da esquerda',
+    animPop: 'Pop / crescer da direita',
+    animPopLeft: 'Pop / crescer da esquerda',
+    animBounce: 'Quicar da direita',
+    animBounceLeft: 'Quicar da esquerda',
     animStagger: 'Escalonado (info primeiro, depois a mensagem)',
     animFade: 'Fade in',
     animTyping: 'Máquina de escrever',
@@ -1810,9 +1815,10 @@ export const pt: typeof en = {
         stacked: 'Empilhado: nome em cima, mensagem embaixo.',
         card: 'Cartão / Balão: cada mensagem fica em um cartão semitransparente.',
         compact: 'Compacto: linhas apertadas, no estilo da Twitch, com texto um pouco menor.',
+        plain: 'Simples: como Em linha, só com um espaço entre os emblemas, o nome e a mensagem, e sem dois-pontos depois do nome.',
         animationTitle: 'Animação de nova mensagem',
         animations:
-          'São oito opções: Deslizar da direita (padrão), Deslizar suave da direita, Pop / crescer, Quicar, Escalonado, Fade in, Máquina de escrever e Sem animação. Quando o chat acelera, toda animação menos a padrão fica mais curta. Se as mensagens chegam mais rápido que uma a cada meio segundo, a animação cai para até um terço da duração normal, para nenhuma se enrolar tentando acompanhar a próxima.',
+          'São doze opções: Deslizar da direita (padrão), Deslizar da esquerda, Deslizar suave da direita, Deslizar suave da esquerda, Pop / crescer da direita, Pop / crescer da esquerda, Quicar da direita, Quicar da esquerda, Escalonado, Fade in, Máquina de escrever e Sem animação. Quando o chat acelera, toda animação menos Deslizar da direita e Deslizar da esquerda fica mais curta. Se as mensagens chegam mais rápido que uma a cada meio segundo, a animação cai para até um terço da duração normal, para nenhuma se enrolar tentando acompanhar a próxima.',
         fontTitle: 'Fonte e tamanho',
         fonts:
           'Inter (padrão), Roboto, Nunito, JetBrains Mono, Source Serif 4 e a fonte Padrão do sistema. O tamanho da fonte vai de 8 a 72 pixels, 18 por padrão. Nomes em negrito e Mensagens em negrito são opções separadas.',
@@ -2554,6 +2560,10 @@ export const pt: typeof en = {
     lead: 'Recursos novos e correções de bugs no Senchabot Extensions, dos mais novos para os mais antigos. A lista é montada a partir do histórico de commits do projeto no [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).',
     site: 'Site',
     entries: {
+      chatLeftAnimations:
+        'A Caixa de Chat ganha versões da esquerda das animações de entrada: Deslizar da esquerda + fade, Deslizar suave da esquerda, Pop / crescer da esquerda e Quicar da esquerda.',
+      chatPlainLayout:
+        'A Caixa de Chat ganha o layout Simples: emblemas, nome e mensagem separados por espaços, sem dois-pontos depois do nome.',
       countdownSounds:
         'O Stream Countdown agora pode fazer tique-taque nos últimos segundos e tocar uma melodia ao zerar — escolha Melodia, Sino ou Digital. Desligado por padrão, os overlays existentes continuam silenciosos.',
       pollLongerDefaults:

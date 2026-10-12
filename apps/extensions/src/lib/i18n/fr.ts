@@ -308,11 +308,16 @@ export const fr: typeof en = {
     layoutStacked: 'Empilée (pseudo au-dessus)',
     layoutCard: 'Carte / Bulle',
     layoutCompact: 'Compacte (style Twitch)',
+    layoutPlain: 'Simple (pseudo message)',
     newMessageAnimation: 'Animation des nouveaux messages',
     animSlide: 'Glissement depuis la droite + fondu',
+    animSlideLeft: 'Glissement depuis la gauche + fondu',
     animSmoothSlide: 'Glissement doux depuis la droite',
-    animPop: 'Pop / zoom',
-    animBounce: 'Rebond',
+    animSmoothSlideLeft: 'Glissement doux depuis la gauche',
+    animPop: 'Pop / zoom depuis la droite',
+    animPopLeft: 'Pop / zoom depuis la gauche',
+    animBounce: 'Rebond depuis la droite',
+    animBounceLeft: 'Rebond depuis la gauche',
     animStagger: 'Décalé (infos puis message)',
     animFade: 'Fondu',
     animTyping: 'Machine à écrire',
@@ -1831,9 +1836,10 @@ export const fr: typeof en = {
         stacked: 'Empilée : pseudo au-dessus, message en dessous.',
         card: 'Carte / Bulle : chaque message est dans une carte semi-transparente.',
         compact: 'Compacte : des lignes serrées, style Twitch, avec un texte un peu plus petit.',
+        plain: 'Simple : comme En ligne, avec juste une espace entre les badges, le pseudo et le message, et sans deux-points après le pseudo.',
         animationTitle: 'Animation des nouveaux messages',
         animations:
-          "Il y a huit options : Glissement depuis la droite (par défaut), Glissement doux depuis la droite, Pop / zoom, Rebond, Décalé, Fondu, Machine à écrire et Aucune animation. Quand le chat s'accélère, toutes les animations sauf celle par défaut raccourcissent. Si les messages arrivent plus vite qu'un toutes les demi-secondes, l'animation descend jusqu'à un tiers de sa durée normale, pour qu'aucune ne peine à suivre la suivante.",
+          "Il y a douze options : Glissement depuis la droite (par défaut), Glissement depuis la gauche, Glissement doux depuis la droite, Glissement doux depuis la gauche, Pop / zoom depuis la droite, Pop / zoom depuis la gauche, Rebond depuis la droite, Rebond depuis la gauche, Décalé, Fondu, Machine à écrire et Aucune animation. Quand le chat s'accélère, toutes les animations sauf Glissement depuis la droite et Glissement depuis la gauche raccourcissent. Si les messages arrivent plus vite qu'un toutes les demi-secondes, l'animation descend jusqu'à un tiers de sa durée normale, pour qu'aucune ne peine à suivre la suivante.",
         fontTitle: 'Police et taille',
         fonts:
           'Inter (par défaut), Roboto, Nunito, JetBrains Mono, Source Serif 4 et la Police du système. La taille de police va de 8 à 72 pixels, 18 par défaut. Pseudos en gras et Messages en gras sont deux options séparées.',
@@ -2578,6 +2584,10 @@ export const fr: typeof en = {
     lead: "Les nouvelles fonctionnalités et corrections de bugs de Senchabot Extensions, des plus récentes aux plus anciennes. La liste est tirée de l'historique des commits du projet sur [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      chatLeftAnimations:
+        'La Boîte de chat a ses animations d’entrée depuis la gauche : Glissement depuis la gauche + fondu, Glissement doux depuis la gauche, Pop / zoom depuis la gauche et Rebond depuis la gauche.',
+      chatPlainLayout:
+        'La Boîte de chat a une mise en page Simple : badges, pseudo et message séparés par des espaces, sans deux-points après le pseudo.',
       countdownSounds:
         'Stream Countdown peut désormais faire tic-tac dans les dernières secondes et jouer un motif à zéro — choisis Carillon, Cloche ou Digital. Désactivé par défaut, les overlays existants restent silencieux.',
       pollLongerDefaults:

@@ -236,6 +236,7 @@ function ChatWidgetSetup() {
     { value: 'stacked', label: t('chatWidget.layoutStacked') },
     { value: 'card', label: t('chatWidget.layoutCard') },
     { value: 'compact', label: t('chatWidget.layoutCompact') },
+    { value: 'plain', label: t('chatWidget.layoutPlain') },
   ];
   const shadowOptions: SelectOption<TextShadow>[] = [
     { value: 'none', label: t('chatWidget.shadowNone') },
@@ -244,9 +245,13 @@ function ChatWidgetSetup() {
   ];
   const animationOptions: SelectOption<Animation>[] = [
     { value: 'slide', label: t('chatWidget.animSlide') },
+    { value: 'slideLeft', label: t('chatWidget.animSlideLeft') },
     { value: 'smooth', label: t('chatWidget.animSmoothSlide') },
+    { value: 'smoothLeft', label: t('chatWidget.animSmoothSlideLeft') },
     { value: 'pop', label: t('chatWidget.animPop') },
+    { value: 'popLeft', label: t('chatWidget.animPopLeft') },
     { value: 'bounce', label: t('chatWidget.animBounce') },
+    { value: 'bounceLeft', label: t('chatWidget.animBounceLeft') },
     { value: 'stagger', label: t('chatWidget.animStagger') },
     { value: 'fade', label: t('chatWidget.animFade') },
     { value: 'typing', label: t('chatWidget.animTyping') },
@@ -312,7 +317,7 @@ function ChatWidgetSetup() {
                 <span>{t('chatWidget.youtubeRequiredText')}</span>
                 <span className="opacity-80">{t('chatWidget.youtubeIgnoreHint')}</span>
                 <a
-                  href={resolveDashboardChatWidgetUrl()}
+                  href={resolveDashboardChatWidgetUrl(mounted)}
                   className="mt-2 inline-flex items-center gap-1.5 self-start rounded-md bg-amber-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:bg-amber-700 dark:bg-amber-500 dark:text-zinc-950 dark:hover:bg-amber-400"
                 >
                   {t('chatWidget.youtubeConnectCta')} &rarr;

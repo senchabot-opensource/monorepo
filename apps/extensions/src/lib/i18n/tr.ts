@@ -298,11 +298,16 @@ export const tr: typeof en = {
     layoutStacked: 'Üst üste (kullanıcı adı üstte)',
     layoutCard: 'Kart / Balon',
     layoutCompact: 'Kompakt (Twitch benzeri)',
+    layoutPlain: 'Sade (Kullanıcı adı mesaj)',
     newMessageAnimation: 'Yeni Mesaj Animasyonu',
     animSlide: 'Sağdan kayarak gir + solma',
+    animSlideLeft: 'Soldan kayarak gir + solma',
     animSmoothSlide: 'Sağdan yumuşakça kayarak gir',
-    animPop: 'Belirerek büyü / ölçeklen',
-    animBounce: 'Zıplayarak gir',
+    animSmoothSlideLeft: 'Soldan yumuşakça kayarak gir',
+    animPop: 'Sağdan belirerek büyü / ölçeklen',
+    animPopLeft: 'Soldan belirerek büyü / ölçeklen',
+    animBounce: 'Sağdan zıplayarak gir',
+    animBounceLeft: 'Soldan zıplayarak gir',
     animStagger: 'Sıralı (önce bilgi, sonra mesaj)',
     animFade: 'Solarak belir',
     animTyping: 'Daktilo gibi yaz',
@@ -1785,9 +1790,10 @@ export const tr: typeof en = {
         stacked: 'Üst üste: kullanıcı adı üstte, mesaj altta.',
         card: 'Kart / Balon: her mesaj yarı saydam bir kartın içinde.',
         compact: "Kompakt: Twitch'e benzeyen sıkı satırlar, yazılar biraz daha küçük.",
+        plain: 'Sade: Satır içi gibi, ama rozetler, kullanıcı adı ve mesaj arasında yalnızca bir boşluk var, addan sonra iki nokta yok.',
         animationTitle: 'Yeni mesaj animasyonu',
         animations:
-          'Sekiz seçenek var: Sağdan kayarak gir (varsayılan), Sağdan yumuşakça kayarak gir, Belirerek büyü / ölçeklen, Zıplayarak gir, Sıralı, Solarak belir, Daktilo gibi yaz ve Animasyon yok. Sohbet hızlandığında varsayılan dışındaki animasyonlar kısalır. Mesajlar yarım saniyeden sık gelirse animasyon normal süresinin üçte birine kadar iner, böylece hiçbiri bir sonrakine yetişmekte zorlanmaz.',
+          'On iki seçenek var: Sağdan kayarak gir (varsayılan), Soldan kayarak gir, Sağdan yumuşakça kayarak gir, Soldan yumuşakça kayarak gir, Sağdan belirerek büyü / ölçeklen, Soldan belirerek büyü / ölçeklen, Sağdan zıplayarak gir, Soldan zıplayarak gir, Sıralı, Solarak belir, Daktilo gibi yaz ve Animasyon yok. Sohbet hızlandığında Sağdan kayarak gir ile Soldan kayarak gir dışındaki animasyonlar kısalır. Mesajlar yarım saniyeden sık gelirse animasyon normal süresinin üçte birine kadar iner, böylece hiçbiri bir sonrakine yetişmekte zorlanmaz.',
         fontTitle: 'Yazı tipi ve boyutu',
         fonts:
           'Inter (varsayılan), Roboto, Nunito, JetBrains Mono, Source Serif 4 ve Sistem Varsayılanı yazı tipi. Yazı boyutu 8 ile 72 piksel arasında, varsayılan 18. Kalın Kullanıcı Adları ve Kalın Mesajlar ayrı ayrı açılır.',
@@ -2515,6 +2521,10 @@ export const tr: typeof en = {
     lead: "Senchabot Extensions'a eklenen özellikler ve düzeltilen hatalar, en yenisi en üstte. Liste projenin [GitHub'daki](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) commit geçmişinden hazırlanıyor.",
     site: 'Site',
     entries: {
+      chatLeftAnimations:
+        'Sohbet Kutusu’na giriş animasyonlarının soldan gelen sürümleri eklendi: Soldan kayarak gir + solma, Soldan yumuşakça kayarak gir, Soldan belirerek büyü / ölçeklen ve Soldan zıplayarak gir.',
+      chatPlainLayout:
+        'Sohbet Kutusu’na Sade mesaj düzeni geldi: rozetler, kullanıcı adı ve mesaj boşlukla ayrılır, addan sonra iki nokta yok.',
       countdownSounds:
         'Yayın Geri Sayımı artık son saniyelerde tikleyip sıfırda bir melodi çalabiliyor — Melodi, Zil ya da Dijital seç. Varsayılan olarak kapalı, mevcut overlay’ler sessiz kalır.',
       pollLongerDefaults:
