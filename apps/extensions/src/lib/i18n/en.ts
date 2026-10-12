@@ -2424,7 +2424,7 @@ export const en = {
     eyebrow: 'Presets',
     title: 'Game presets for your stream overlays',
     lead:
-      'Pick a preset and your Chat Box, Stream Alerts, Sub Goal, Subathon Timer, Chat Poll, Raffle winner and Stream Frames get the same frame, fonts and colors. Use one on every widget, or a different one on each.',
+      'Pick a preset and your Chat Box, Stream Alerts, Sub Goal, Subathon Timer, Chat Poll, Raffle winner, Stream Frames, Stream Countdown and Socials get the same frame, fonts and colors. Use one on every widget, or a different one on each.',
     pickTitle: 'Pick a preset',
     by: 'by {author}',
     community: 'Community',
@@ -2472,7 +2472,7 @@ export const en = {
       "Yes. Your default is only where every setup page starts. On any widget's setup page you can pick another preset, and that widget's URL carries it.",
     faq3Q: 'Which widgets take a preset?',
     faq3A:
-      'Chat Box, Stream Alerts, Sub Goal, Subathon Timer, Chat Poll, the Raffle winner overlay and Stream Frames. Emote Wall only shows emotes and Sub Sprout draws its own plants, so they keep their look.',
+      'Chat Box, Stream Alerts, Sub Goal, Subathon Timer, Chat Poll, the Raffle winner overlay, Stream Frames, Stream Countdown and Socials. Emote Wall only shows emotes and Sub Sprout draws its own plants, so they keep their look.',
     faq4Q: 'Are these official game themes?',
     faq4A:
       "No. They're fan-made styles built from colors, free Google Fonts and decorations drawn from scratch, with no game logos or art, and they aren't affiliated with the game makers.",
@@ -2537,6 +2537,10 @@ export const en = {
     lead: "New features and bug fixes in Senchabot Extensions, newest first. The list is put together from the project's commit history on [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      socialsEdgeAlign:
+        'Socials can stick to the left or right edge of the browser source, with square corners on that side, instead of floating in the middle.',
+      socialsPresets:
+        "Socials takes a preset: the bubble gets the preset's frame, fonts and colors.",
       chatLeftAnimations:
         'Chat Box gets left-hand versions of its entry animations: Slide from left + fade, Smooth slide from left, Pop / scale-in from left and Bounce in from left.',
       chatPlainLayout:
@@ -2764,6 +2768,14 @@ export const en = {
     animScale: 'Scale',
     animFade: 'Fade',
     pillColor: 'Pill Background Color',
+    align: 'Position',
+    alignTip:
+      'Center floats the bubble in the middle. Left and Right stick it to that edge of the browser source, with square corners on that side, for a source placed against the edge of your scene.',
+    aligns: {
+      center: 'Center',
+      left: 'Left',
+      right: 'Right',
+    },
     previewTitle: 'Socials Preview',
     previewIframeTitle: 'Socials Preview',
     previewHint: 'Live preview of your social media rotation.',

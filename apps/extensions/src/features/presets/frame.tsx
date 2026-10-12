@@ -102,8 +102,19 @@ const CORNERS = ['tl', 'tr', 'bl', 'br'] as const;
 /**
  * The preset's frame drawn over a panel: borders and ornaments on a layer that ignores the
  * pointer. Put it last inside an element styled with panelStyle, at the same radius and scale.
+ * `studs: false` leaves out the ornate frame's corner rivets and top gem, e.g. on a pill.
  */
-export function Frame({ skin, radius, scale = 1 }: { skin: Skin; radius: number; scale?: number }) {
+export function Frame({
+  skin,
+  radius,
+  scale = 1,
+  studs = true,
+}: {
+  skin: Skin;
+  radius: number;
+  scale?: number;
+  studs?: boolean;
+}) {
   const r = radius * skin.radius;
   const px = (n: number) => Math.max(1, Math.round(n * scale));
   const fill: CSSProperties = { ...layer, inset: 0, borderRadius: r };
@@ -149,23 +160,26 @@ export function Frame({ skin, radius, scale = 1 }: { skin: Skin; radius: number;
               boxShadow: `inset 0 0 0 1px ${skin.frame}, 0 0 0 1px rgba(0,0,0,.85), inset 0 ${px(3)}px ${px(6)}px rgba(0,0,0,.5)`,
             }}
           />
-          {CORNERS.map((corner) => (
+          {studs &&
+            CORNERS.map((corner) => (
+              <span
+                key={corner}
+                data-stud=""
+                style={{
+                  ...layer,
+                  width: px(10),
+                  height: px(10),
+                  borderRadius: '50%',
+                  [corner[0] === 't' ? 'top' : 'bottom']: -px(3),
+                  [corner[1] === 'l' ? 'left' : 'right']: -px(3),
+                  background: `radial-gradient(circle at 35% 30%, #fff8e0 0, ${skin.frame} 35%, ${skin.frame2} 100%)`,
+                  boxShadow: '0 0 0 1px rgba(0,0,0,.8)',
+                }}
+              />
+            ))}
+          {studs && scale >= 0.8 && (
             <span
-              key={corner}
-              style={{
-                ...layer,
-                width: px(10),
-                height: px(10),
-                borderRadius: '50%',
-                [corner[0] === 't' ? 'top' : 'bottom']: -px(3),
-                [corner[1] === 'l' ? 'left' : 'right']: -px(3),
-                background: `radial-gradient(circle at 35% 30%, #fff8e0 0, ${skin.frame} 35%, ${skin.frame2} 100%)`,
-                boxShadow: '0 0 0 1px rgba(0,0,0,.8)',
-              }}
-            />
-          ))}
-          {scale >= 0.8 && (
-            <span
+              data-stud=""
               style={{
                 ...layer,
                 left: '50%',

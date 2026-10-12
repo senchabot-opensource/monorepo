@@ -6,6 +6,7 @@ import { GoalWidget } from '#/features/widgets/goal/goal-widget';
 import { PresetAlert } from '#/features/widgets/stream-alerts/themes/preset';
 import { DEFAULT_GOAL_SETTINGS } from '#/lib/goal-url';
 import { BUILTIN_PRESETS } from './builtin-presets';
+import { Frame } from './frame';
 import { type PresetData, presetSchema } from './preset-schema';
 import { applyPresetToUrl, PRESET_WIDGETS, presetDemoUrl } from './preset-widgets';
 import { findPreset, loadCommunityPresets, normalizePresetId, PRESETS } from './registry';
@@ -141,6 +142,7 @@ describe('applyPresetToUrl', () => {
       '/widgets/raffle-overlay?demo=1&preset=rift',
       '/widgets/frame?demo=1&preset=rift',
       '/widgets/countdown?simulate=1&preset=rift',
+      '/widgets/socials?demo=1&preset=rift',
     ]);
     expect(presetDemoUrl(PRESET_WIDGETS[0], 'classic')).toBe('/widgets/chat-widget?mock=true');
   });
@@ -169,6 +171,14 @@ describe('overlays in a preset', () => {
     unmount();
     render(<GoalWidget simulate settings={goal} />);
     expect(screen.getByTestId('goal').dataset.preset).toBeUndefined();
+  });
+
+  it("keep the ornate frame's rivets and top gem unless an overlay leaves them out", () => {
+    const realm = skinFor('realm') as NonNullable<ReturnType<typeof skinFor>>;
+    const { container, rerender } = render(<Frame skin={realm} radius={20} />);
+    expect(container.querySelectorAll('[data-stud]')).toHaveLength(5);
+    rerender(<Frame skin={realm} radius={20} studs={false} />);
+    expect(container.querySelectorAll('[data-stud]')).toHaveLength(0);
   });
 
   it("draw Stream Alerts' preset card with the alert's words", () => {

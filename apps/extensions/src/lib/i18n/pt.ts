@@ -2444,7 +2444,7 @@ export const pt: typeof en = {
     breadcrumb: 'Presets',
     eyebrow: 'Presets',
     title: 'Presets de jogos para os overlays da sua live',
-    lead: 'Escolha um preset e sua Caixa de Chat, Alertas de Live, Meta de Subs, Subathon Timer, Enquete do Chat, vencedor do Sorteio e Molduras de Live ganham a mesma moldura, fontes e cores. Use um em todos os widgets, ou um diferente em cada.',
+    lead: 'Escolha um preset e sua Caixa de Chat, Alertas de Live, Meta de Subs, Subathon Timer, Enquete do Chat, vencedor do Sorteio, Molduras de Live, Contagem Regressiva e Redes Sociais ganham a mesma moldura, fontes e cores. Use um em todos os widgets, ou um diferente em cada.',
     pickTitle: 'Escolha um preset',
     by: 'por {author}',
     community: 'Comunidade',
@@ -2495,7 +2495,7 @@ export const pt: typeof en = {
       'Sim. Seu padrão é só o ponto de partida de cada página de configuração. Na página de configuração de qualquer widget você pode escolher outro preset, e a URL daquele widget leva ele junto.',
     faq3Q: 'Quais widgets aceitam preset?',
     faq3A:
-      'Caixa de Chat, Alertas de Live, Meta de Subs, Subathon Timer, Enquete do Chat, o overlay do vencedor do Sorteio e Molduras de Live. O Mural de Emotes só mostra emotes e o Sub Sprout desenha suas próprias plantas, então os dois mantêm o visual deles.',
+      'Caixa de Chat, Alertas de Live, Meta de Subs, Subathon Timer, Enquete do Chat, o overlay do vencedor do Sorteio, Molduras de Live, Contagem Regressiva e Redes Sociais. O Mural de Emotes só mostra emotes e o Sub Sprout desenha suas próprias plantas, então os dois mantêm o visual deles.',
     faq4Q: 'Estes são temas oficiais dos jogos?',
     faq4A:
       'Não. São estilos feitos por fãs a partir de cores, Google Fonts gratuitas e enfeites desenhados do zero, sem logos nem arte dos jogos, e não têm vínculo com as empresas dos jogos.',
@@ -2560,6 +2560,10 @@ export const pt: typeof en = {
     lead: 'Recursos novos e correções de bugs no Senchabot Extensions, dos mais novos para os mais antigos. A lista é montada a partir do histórico de commits do projeto no [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).',
     site: 'Site',
     entries: {
+      socialsEdgeAlign:
+        'Redes Sociais pode grudar na borda esquerda ou direita da fonte de navegador, com cantos retos desse lado, em vez de flutuar no meio.',
+      socialsPresets:
+        'Redes Sociais aceita presets: a pílula ganha a moldura, as fontes e as cores do preset.',
       chatLeftAnimations:
         'A Caixa de Chat ganha versões da esquerda das animações de entrada: Deslizar da esquerda + fade, Deslizar suave da esquerda, Pop / crescer da esquerda e Quicar da esquerda.',
       chatPlainLayout:
@@ -2793,6 +2797,14 @@ export const pt: typeof en = {
     animScale: 'Crescer',
     animFade: 'Fade',
     pillColor: 'Cor de fundo da pílula',
+    align: 'Posição',
+    alignTip:
+      'Centro deixa a pílula flutuando no meio. Esquerda e Direita grudam a pílula nessa borda da fonte de navegador, com cantos retos desse lado, para uma fonte colocada na borda da sua cena.',
+    aligns: {
+      center: 'Centro',
+      left: 'Esquerda',
+      right: 'Direita',
+    },
     previewTitle: 'Prévia das Redes Sociais',
     previewIframeTitle: 'Prévia das Redes Sociais',
     previewHint: 'Prévia ao vivo do rodízio das suas redes sociais.',

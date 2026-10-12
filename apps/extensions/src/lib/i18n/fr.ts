@@ -2468,7 +2468,7 @@ export const fr: typeof en = {
     breadcrumb: 'Presets',
     eyebrow: 'Presets',
     title: 'Des presets de jeux pour tes overlays de stream',
-    lead: 'Choisis un preset et ta Boîte de chat, tes Alertes de stream, ton Objectif de subs, ton Subathon Timer, ton Sondage du chat, le gagnant du Tirage au sort et tes Cadres de stream ont le même cadre, les mêmes polices et les mêmes couleurs. Mets-en un sur tous les widgets, ou un différent sur chacun.',
+    lead: 'Choisis un preset et ta Boîte de chat, tes Alertes de stream, ton Objectif de subs, ton Subathon Timer, ton Sondage du chat, le gagnant du Tirage au sort, tes Cadres de stream, ton Compte à rebours de stream et tes Réseaux sociaux ont le même cadre, les mêmes polices et les mêmes couleurs. Mets-en un sur tous les widgets, ou un différent sur chacun.',
     pickTitle: 'Choisis un preset',
     by: 'par {author}',
     community: 'Communauté',
@@ -2519,7 +2519,7 @@ export const fr: typeof en = {
       "Oui. Ton preset par défaut, c'est seulement là où démarre chaque page de configuration. Sur la page de configuration de n'importe quel widget, tu peux choisir un autre preset, et l'URL de ce widget le garde.",
     faq3Q: 'Quels widgets prennent un preset ?',
     faq3A:
-      "Boîte de chat, Alertes de stream, Objectif de subs, Subathon Timer, Sondage du chat, l'overlay du gagnant du Tirage au sort et Cadres de stream. Le Mur d'emotes n'affiche que des emotes et Sub Sprout dessine ses propres plantes, donc ils gardent leur style.",
+      "Boîte de chat, Alertes de stream, Objectif de subs, Subathon Timer, Sondage du chat, l'overlay du gagnant du Tirage au sort, Cadres de stream, Compte à rebours de stream et Réseaux sociaux. Le Mur d'emotes n'affiche que des emotes et Sub Sprout dessine ses propres plantes, donc ils gardent leur style.",
     faq4Q: 'Ce sont des thèmes officiels des jeux ?',
     faq4A:
       'Non. Ce sont des styles faits par des fans, à partir de couleurs, de Google Fonts gratuites et de décorations dessinées de zéro, sans logo ni visuel de jeu, et ils ne sont pas affiliés aux éditeurs des jeux.',
@@ -2584,6 +2584,10 @@ export const fr: typeof en = {
     lead: "Les nouvelles fonctionnalités et corrections de bugs de Senchabot Extensions, des plus récentes aux plus anciennes. La liste est tirée de l'historique des commits du projet sur [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      socialsEdgeAlign:
+        'Réseaux sociaux peut se coller au bord gauche ou droit de la source Navigateur web, avec des coins droits de ce côté, au lieu de flotter au milieu.',
+      socialsPresets:
+        'Réseaux sociaux prend un preset : la pastille reçoit le cadre, les polices et les couleurs du preset.',
       chatLeftAnimations:
         'La Boîte de chat a ses animations d’entrée depuis la gauche : Glissement depuis la gauche + fondu, Glissement doux depuis la gauche, Pop / zoom depuis la gauche et Rebond depuis la gauche.',
       chatPlainLayout:
@@ -2818,6 +2822,14 @@ export const fr: typeof en = {
     animScale: 'Zoom',
     animFade: 'Fondu',
     pillColor: 'Couleur de fond de la pastille',
+    align: 'Position',
+    alignTip:
+      'Centre fait flotter la pastille au milieu. Gauche et Droite la collent à ce bord de la source Navigateur web, avec des coins droits de ce côté, pour une source placée contre le bord de ta scène.',
+    aligns: {
+      center: 'Centre',
+      left: 'Gauche',
+      right: 'Droite',
+    },
     previewTitle: 'Aperçu des Réseaux sociaux',
     previewIframeTitle: 'Aperçu des Réseaux sociaux',
     previewHint: 'Aperçu en direct de la rotation de tes réseaux sociaux.',
