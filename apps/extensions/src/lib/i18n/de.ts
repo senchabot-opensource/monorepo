@@ -2701,6 +2701,8 @@ export const de: typeof en = {
       label: 'Preset',
       tip: 'Ein fertiger Look für dieses Widget: Rahmen, Schriften und Farben. Wähl bei jedem Widget dasselbe Preset, damit alles zusammenpasst.',
       browse: 'Alle Presets',
+      show: '{count} Presets anzeigen',
+      hide: 'Presets ausblenden',
       owns: 'Farben und Schriften kommen von {name}.',
       makeDefault: '{name} als Standard',
       makeDefaultTip: 'Jede Setup-Seite in diesem Browser startet dann damit.',
@@ -2758,6 +2760,8 @@ export const de: typeof en = {
     lead: 'Neue Features und Bugfixes in Senchabot Extensions, das Neueste zuerst. Die Liste ist aus der Commit-Historie des Projekts auf [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) zusammengestellt.',
     site: 'Website',
     entries: {
+      presetPickerFolded:
+        'Auf Setup-Seiten klappen die Presets hinter eine Leiste mit dem gewählten Preset zusammen, ein Klick öffnet oder schließt sie, und beim klassischen Look starten sie zugeklappt.',
       irlHudMarket:
         'Das IRL-HUD bekommt einen Markt: Füg Items mit Preisen hinzu, und !hud buy wasser zieht den Preis vom Geld ab. Mods halten den Pfeil auf der Minikarte außerdem mit !hud stay an und lassen ihn mit !hud walk und !hud run wieder laufen.',
       irlHudPlaces:

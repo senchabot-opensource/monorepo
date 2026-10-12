@@ -2677,6 +2677,8 @@ export const tr: typeof en = {
       label: 'Preset',
       tip: "Bu widget için hazır bir görünüm, yani çerçeve, yazı tipleri ve renkler. Widget'ların birbirine uysun istiyorsan hepsinde aynı preset'i seç.",
       browse: "Tüm preset'ler",
+      show: "{count} preset'i göster",
+      hide: "Preset'leri gizle",
       owns: "Renkler ve yazı tipleri {name} preset'inden geliyor.",
       makeDefault: "{name} preset'ini varsayılan yap",
       makeDefaultTip: "Bu tarayıcıdaki bütün kurulum sayfaları bu preset'le açılır.",
@@ -2734,6 +2736,8 @@ export const tr: typeof en = {
     lead: "Senchabot Extensions'a eklenen özellikler ve düzeltilen hatalar, en yenisi en üstte. Liste projenin [GitHub'daki](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) commit geçmişinden hazırlanıyor.",
     site: 'Site',
     entries: {
+      presetPickerFolded:
+        "Kurulum sayfalarında preset'ler seçili olanın adını gösteren bir çubuğun altına katlanıyor, tek tıkla açılıp kapanıyor. Widget klasik görünümdeyken kapalı geliyor.",
       irlHudMarket:
         "IRL HUD'a market geldi: fiyatlı ürünler ekle, !hud buy su fiyatı paradan düşsün. Modlar mini haritadaki oku da !hud stay, !hud walk ve !hud run ile durdurup yürütür.",
       irlHudPlaces:

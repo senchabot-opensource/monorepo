@@ -2692,6 +2692,8 @@ export const en = {
       label: 'Preset',
       tip: 'A ready-made look for this widget: its frame, fonts and colors. Pick the same preset on every widget to make them match.',
       browse: 'All presets',
+      show: 'Show {count} presets',
+      hide: 'Hide presets',
       owns: 'Colors and fonts come from {name}.',
       makeDefault: 'Make {name} my default',
       makeDefaultTip: 'Every setup page on this browser will start with it.',
@@ -2749,6 +2751,8 @@ export const en = {
     lead: "New features and bug fixes in Senchabot Extensions, newest first. The list is put together from the project's commit history on [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      presetPickerFolded:
+        'Setup pages fold the presets behind a bar that names the one picked: a click opens or folds them, and they start folded while a widget keeps its classic look.',
       irlHudMarket:
         'IRL HUD gets a market: add items with prices, and !hud buy water takes the price off the cash. Mods also stop and start the mini-map arrow with !hud stay, !hud walk and !hud run.',
       irlHudPlaces:

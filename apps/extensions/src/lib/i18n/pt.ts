@@ -2718,6 +2718,8 @@ export const pt: typeof en = {
       label: 'Preset',
       tip: 'Um visual pronto para este widget: moldura, fontes e cores. Escolha o mesmo preset em todos os widgets para eles combinarem.',
       browse: 'Todos os presets',
+      show: 'Mostrar {count} presets',
+      hide: 'Ocultar presets',
       owns: 'Cores e fontes vêm de {name}.',
       makeDefault: 'Deixar {name} como meu padrão',
       makeDefaultTip: 'Toda página de configuração neste navegador vai começar com ele.',
@@ -2775,6 +2777,8 @@ export const pt: typeof en = {
     lead: 'Recursos novos e correções de bugs no Senchabot Extensions, dos mais novos para os mais antigos. A lista é montada a partir do histórico de commits do projeto no [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).',
     site: 'Site',
     entries: {
+      presetPickerFolded:
+        'Nas páginas de configuração, os presets se recolhem atrás de uma barra com o escolhido, um clique abre ou fecha, e eles começam recolhidos quando o widget está no visual clássico.',
       irlHudMarket:
         'O HUD IRL ganha um mercado: adicione itens com preço, e !hud buy água tira o preço do dinheiro. Os mods também param a seta do minimapa e a fazem andar com !hud stay, !hud walk e !hud run.',
       irlHudPlaces:

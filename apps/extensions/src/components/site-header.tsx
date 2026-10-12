@@ -17,7 +17,10 @@ export type SiteHeaderProps =
       variant?: 'full';
     }
   | {
-      /** One 48px row for setup and tool pages; it holds the page's H1. Not sticky. */
+      /**
+       * One 48px row for setup and tool pages; it holds the page's H1. Not sticky, so it can
+       * grow on a phone where the title needs more than one line.
+       */
       variant: 'compact';
       /** The page H1. */
       title: string;
@@ -317,20 +320,26 @@ function FullHeader() {
   );
 }
 
-/** The page title itself opens the switcher, so the whole heading is the target, not a chevron. */
+/**
+ * The page title itself opens the switcher, so the whole heading is the target, not a chevron.
+ * Below a tablet a long name (French ones run past 40 characters) has no room on one line next
+ * to the controls, so it wraps instead of losing its end, and a phone drops the icon for room.
+ */
 function WidgetSwitcher({ current, title }: { current: WidgetEntry; title: string }) {
   const { t } = useI18n();
   return (
     <DropdownMenu
       label={
         <>
-          <current.Icon className="size-[18px] shrink-0 text-green-600 dark:text-green-400" />
-          <span className="truncate">{title}</span>
+          <current.Icon className="size-[18px] shrink-0 text-green-600 max-sm:hidden dark:text-green-400" />
+          <span className="md:truncate">{title}</span>
         </>
       }
       triggerTitle={t('common.nav.switchWidget')}
-      wrapTrigger={(trigger) => <h1 className="min-w-0">{trigger}</h1>}
-      triggerClassName="-mx-1.5 flex min-w-0 max-w-full items-center gap-1.5 rounded-md px-1.5 py-1 text-base font-semibold text-zinc-900 transition-colors hover:bg-zinc-200/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 aria-expanded:bg-zinc-200/70 dark:text-white dark:hover:bg-zinc-800 dark:aria-expanded:bg-zinc-800"
+      // The bleed sits on the heading, not the button: a button with both it and max-w-full is
+      // capped at the heading's width, which the bleed made 12px narrower than the button.
+      wrapTrigger={(trigger) => <h1 className="-mx-1.5 min-w-0">{trigger}</h1>}
+      triggerClassName="flex min-w-0 max-w-full items-center gap-1.5 rounded-md px-1.5 py-1 text-left text-base font-semibold max-sm:text-sm max-sm:leading-tight text-zinc-900 transition-colors hover:bg-zinc-200/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 aria-expanded:bg-zinc-200/70 dark:text-white dark:hover:bg-zinc-800 dark:aria-expanded:bg-zinc-800"
       anchor="container"
     >
       {(
@@ -381,7 +390,7 @@ function CompactHeader({ title, widgetId }: Extract<SiteHeaderProps, { variant: 
   const widget = widgetId ? getWidget(widgetId) : null;
 
   return (
-    <header className="mx-auto flex h-12 w-full max-w-6xl items-center gap-2 px-4">
+    <header className="mx-auto flex min-h-12 w-full max-w-6xl items-center gap-2 px-4">
       <SkipLink />
       <HomeLink showName={false} />
       <span aria-hidden="true" className="text-zinc-300 dark:text-zinc-700">
