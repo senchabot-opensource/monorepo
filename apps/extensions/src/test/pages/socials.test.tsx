@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
 import { buildSocialsUrl, DEFAULT_SOCIALS_SETTINGS } from '#/lib/socials-url';
-import { en, segment, textbox } from '#/test/queries';
+import { en, segment, showPresetsButton, textbox } from '#/test/queries';
 import { renderRoute, setupUser } from '#/test/render';
 
 const OVERLAY = '/widgets/socials';
@@ -90,6 +90,7 @@ describe('Socials setup', () => {
     await renderRoute('/setup/socials');
     expect(textbox(en('socials.pillColor'))).toBeTruthy();
 
+    await user.click(showPresetsButton());
     await user.click(presetRadio('dynasty'));
     expect(screen.queryByLabelText(en('socials.pillColor'), { selector: 'input' })).toBeNull();
     expect(urlField().value).toContain('preset=dynasty');

@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { en, textbox, toggle } from '#/test/queries';
+import { en, showPresetsButton, textbox, toggle } from '#/test/queries';
 import { renderRoute, setupUser } from '#/test/render';
 
 // Confetti draws on a canvas, which jsdom doesn't have.
@@ -45,6 +45,7 @@ describe('Spin Wheel setup', () => {
     await user.type(textbox(en('common.twitchChannel')), 'streamer');
     expect(urlField().value).not.toContain('preset=');
 
+    await user.click(showPresetsButton());
     await user.click(presetRadio('storm'));
     expect(urlField().value).toContain('preset=storm');
 
@@ -70,6 +71,7 @@ describe('Spin Wheel setup', () => {
     const twoColors = () => toggle(en('spinWheel.twoColors')).getAttribute('aria-checked');
     expect(twoColors()).toBe('false');
 
+    await user.click(showPresetsButton());
     await user.click(presetRadio('rift'));
     expect(twoColors()).toBe('true');
     expect(urlField().value).not.toContain('colors=');

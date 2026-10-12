@@ -1,4 +1,5 @@
-import { useId } from 'react';
+import { useId, useState } from 'react';
+import { ChevronDownIcon } from '#/components/icons';
 import { LocaleLink } from '#/components/locale-link';
 import { FieldLabel } from '#/components/ui/field-label';
 import { useT } from '#/lib/i18n';
@@ -19,7 +20,9 @@ export function usePresetName() {
 
 /**
  * Preset picker for a setup page's Appearance group: one swatch per preset, and a way to make
- * the picked one the preset every setup page starts with.
+ * the picked one the preset every setup page starts with. The swatches fold away behind a bar
+ * naming the pick, and start folded while the widget keeps its classic look, so the panel
+ * doesn't open on a dozen of them.
  */
 export function PresetField({
   value,
@@ -33,11 +36,16 @@ export function PresetField({
   const nameOf = usePresetName();
   const [sitePreset, setSitePreset] = useSitePreset();
   const name = nameOf(value);
+  // Null until the bar is clicked or a swatch picked: until then the grid is open for a preset
+  // (one from a pasted URL or the site default) and folded for classic. A pick keeps it open,
+  // so choosing Classic doesn't fold the grid away under the pointer.
+  const [unfolded, setUnfolded] = useState<boolean | null>(null);
+  const open = unfolded ?? !isClassic(value);
 
   return (
     <div>
       {/* No precedence: React would hold the page back until Google Fonts answers. */}
-      <link rel="stylesheet" href={SWATCH_FONT_HREF} />
+      {open && <link rel="stylesheet" href={SWATCH_FONT_HREF} />}
       <div className="flex items-center justify-between gap-3">
         <FieldLabel id={`${id}-label`} tip={t('presets.field.tip')}>
           {t('presets.field.label')}
@@ -49,7 +57,34 @@ export function PresetField({
           {t('presets.field.browse')}
         </LocaleLink>
       </div>
-      <fieldset aria-labelledby={`${id}-label`} className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+      <button
+        type="button"
+        aria-expanded={open}
+        aria-controls={`${id}-grid`}
+        aria-describedby={`${id}-label`}
+        onClick={() => setUnfolded(!open)}
+        className="flex w-full cursor-pointer items-center justify-between gap-3 rounded-lg border border-zinc-200 bg-white px-3 py-2 text-left transition-colors hover:border-zinc-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700"
+      >
+        <span className="min-w-0">
+          <span className="block truncate text-xs font-semibold text-zinc-900 dark:text-white">
+            {name}
+          </span>
+          <span className="block truncate text-[11px] text-zinc-500 dark:text-zinc-400">
+            {findPreset(value)?.data.game ?? t('presets.classicTag')}
+          </span>
+        </span>
+        <span className="flex shrink-0 items-center gap-1 text-xs font-medium text-green-700 dark:text-green-400">
+          {open ? t('presets.field.hide') : t('presets.field.show', { count: PRESETS.length })}
+          <ChevronDownIcon className={`size-4 transition-transform ${open ? 'rotate-180' : ''}`} />
+        </span>
+      </button>
+      {/* Stays mounted, so the bar's aria-controls always resolves. */}
+      <fieldset
+        id={`${id}-grid`}
+        aria-labelledby={`${id}-label`}
+        hidden={!open}
+        className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-4"
+      >
         {OPTIONS.map((option) => (
           <label
             key={option.id}
@@ -62,7 +97,10 @@ export function PresetField({
               name={id}
               value={option.id}
               checked={value === option.id}
-              onChange={() => onChange(option.id)}
+              onChange={() => {
+                setUnfolded(true);
+                onChange(option.id);
+              }}
               className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
             />
             <PresetSwatch preset={option.data} />

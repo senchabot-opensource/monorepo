@@ -2697,6 +2697,8 @@ export const ja: typeof en = {
       label: 'プリセット',
       tip: 'このウィジェット用のすぐ使える見た目です。フレーム、フォント、カラーが決まります。すべてのウィジェットで同じプリセットを選べば、見た目がそろいます。',
       browse: 'すべてのプリセット',
+      show: '{count}個のプリセットを表示',
+      hide: 'プリセットを閉じる',
       owns: 'カラーとフォントは{name}のものを使います。',
       makeDefault: '{name}をデフォルトにする',
       makeDefaultTip: 'このブラウザでは、どの設定ページもこのプリセットで始まります。',
@@ -2754,6 +2756,8 @@ export const ja: typeof en = {
     lead: 'Senchabot Extensionsの新機能とバグ修正を、新しい順に並べています。このリストは[GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions)にあるプロジェクトのコミット履歴からまとめています。',
     site: 'サイト',
     entries: {
+      presetPickerFolded:
+        '設定ページのプリセットを、選んだプリセット名のバーの下に折りたためるようになりました。クリックで開閉でき、ウィジェットがクラシックな見た目のときは折りたたまれた状態で始まります。',
       irlHudMarket:
         'IRL HUDにマーケットが登場：値段付きのアイテムを追加でき、!hud buy 水 でその値段が所持金から引かれます。モデレーターは !hud stay、!hud walk、!hud run でミニマップの矢印を止めたり動かしたりもできます。',
       irlHudPlaces:

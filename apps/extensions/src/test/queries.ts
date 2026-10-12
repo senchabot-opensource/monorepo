@@ -1,5 +1,6 @@
 import { screen, within } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
+import { PRESETS } from '#/features/presets/registry';
 import { type Locale, type TranslationKey, translate } from '#/lib/i18n';
 
 /**
@@ -96,3 +97,9 @@ export async function retype(user: UserEvent, input: HTMLElement, text: string) 
   await user.clear(input);
   if (text) await user.type(input, text);
 }
+
+/** The button a setup page's preset picker waits behind while the widget keeps its classic look. */
+export const showPresetsButton = () =>
+  screen
+    .getByText(en('presets.field.show', { count: PRESETS.length }))
+    .closest('button') as HTMLButtonElement;
