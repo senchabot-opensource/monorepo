@@ -20,23 +20,19 @@ export const LINKS = {
   reddit: 'https://reddit.com/r/Senchabot/',
 } as const;
 
-export function resolveDashboardChatWidgetUrl(): string {
-  if (
-    typeof window !== 'undefined' &&
-    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-  ) {
-    return 'http://localhost:3000/dashboard/tools';
-  }
+// On localhost the dashboard runs locally too. Pass `useHydrated()`: the server renders the
+// production URL, and the hydrating render has to match it or React reports a mismatch.
+const onLocalhost = (hydrated: boolean) =>
+  hydrated &&
+  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+
+export function resolveDashboardChatWidgetUrl(hydrated: boolean): string {
+  if (onLocalhost(hydrated)) return 'http://localhost:3000/dashboard/tools';
   return LINKS.dashboardChatWidget;
 }
 
-export function resolveDashboardFollowerGoalUrl(): string {
-  if (
-    typeof window !== 'undefined' &&
-    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-  ) {
-    return 'http://localhost:3000/dashboard/tools/follower-goal';
-  }
+export function resolveDashboardFollowerGoalUrl(hydrated: boolean): string {
+  if (onLocalhost(hydrated)) return 'http://localhost:3000/dashboard/tools/follower-goal';
   return LINKS.dashboardFollowerGoal;
 }
 

@@ -195,7 +195,7 @@ function FollowerGoalSetup() {
             {t('followerGoal.tokenNoticeDesc')}
           </div>
           <a
-            href={resolveDashboardFollowerGoalUrl()}
+            href={resolveDashboardFollowerGoalUrl(mounted)}
             target="_blank"
             rel="noreferrer"
             className="mt-3 inline-flex items-center gap-1.5 self-start rounded-md bg-amber-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:bg-amber-700 dark:bg-amber-400 dark:text-zinc-950 dark:hover:bg-amber-300"
