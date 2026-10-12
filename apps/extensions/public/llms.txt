@@ -44,7 +44,7 @@ Every page is also in German, Spanish, French, Japanese, Portuguese and Turkish 
 ## Information
 
 - [Home](https://extensions.senchabot.com): Overview of every widget and tool.
-- [Presets](https://extensions.senchabot.com/presets): Game presets (League of Legends, World of Warcraft, Metin2, Dota 2, Valorant, Counter-Strike 2, Minecraft) that give Chat Box, Stream Alerts, Sub Goal, Subathon Timer, Chat Poll, the Raffle winner, Stream Frames, Stream Countdown and Socials the same look.
+- [Presets](https://extensions.senchabot.com/presets): Game presets (League of Legends, World of Warcraft, Metin2, Dota 2, Valorant, Counter-Strike 2, Minecraft, Clash of Clans, Fortnite, Rocket League, PUBG) that give Chat Box, Stream Alerts, Sub Goal, Subathon Timer, Chat Poll, the Raffle winner, Stream Frames, Stream Countdown and Socials the same look.
 - [FAQ](https://extensions.senchabot.com/faq): Pricing, login, supported platforms, widget URLs and privacy.
 - [Changelog](https://extensions.senchabot.com/changelog): New features and fixes, newest first.
 

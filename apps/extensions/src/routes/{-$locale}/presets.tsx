@@ -94,10 +94,14 @@ function PresetsPage() {
       <section aria-labelledby={`${id}-pick`} className="mt-10">
         <h2
           id={`${id}-pick`}
-          className="mb-4 text-xl font-bold tracking-tight text-zinc-900 dark:text-white"
+          className="text-xl font-bold tracking-tight text-zinc-900 dark:text-white"
         >
           {t('presets.pickTitle')}
         </h2>
+        {/* Full names with the short ones people search, which the cards and meta have no room for. */}
+        <p className="mt-2 mb-4 max-w-[42rem] text-sm leading-6 text-zinc-600 dark:text-zinc-400">
+          {t('presets.pickText')}
+        </p>
         <fieldset
           aria-labelledby={`${id}-pick`}
           className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-8"

@@ -606,37 +606,37 @@ export const CONTENT_META = {
     en: {
       title: 'Game Presets for Twitch and Kick Overlays | Senchabot',
       description:
-        'Free game presets for Twitch and Kick overlays: League of Legends, WoW, Metin2, Dota 2, Valorant, CS2 and Minecraft looks for chat, alerts, goals and polls.',
+        'Free Twitch and Kick overlay presets: League of Legends, WoW, Metin2, Dota 2, Valorant, CS2, Fortnite, PUBG, Rocket League, Clash of Clans and Minecraft looks.',
     },
     de: {
       title: 'Spiel-Presets für Twitch- und Kick-Overlays | Senchabot',
       description:
-        'Kostenlose Spiel-Presets für Twitch- und Kick-Overlays: League of Legends, WoW, Metin2, Dota 2, Valorant, CS2 und Minecraft als Look für Chat, Alerts und Ziele.',
+        'Gratis-Presets für Twitch- und Kick-Overlays: League of Legends, WoW, Metin2, Dota 2, Valorant, CS2, Fortnite, PUBG, Rocket League, Clash of Clans, Minecraft.',
     },
     tr: {
       title: "Twitch ve Kick için Oyun Overlay Preset'leri | Senchabot",
       description:
-        "Twitch ve Kick için ücretsiz oyun preset'leri. Sohbet, uyarı, hedef ve anket overlay'lerine LoL, WoW, Metin2, Dota 2, Valorant, CS2 ya da Minecraft havası kat.",
+        "Ücretsiz preset'lerle Twitch ve Kick overlay'lerine LoL, WoW, Metin2, Dota 2, Valorant, CS2, Fortnite, PUBG, Rocket League, Clash of Clans, Minecraft havası.",
     },
     es: {
       title: 'Presets de juegos para overlays de Twitch y Kick | Senchabot',
       description:
-        'Presets de juegos gratis para overlays de Twitch y Kick: League of Legends, WoW, Metin2, Dota 2, Valorant, CS2 y Minecraft en chat, alertas, metas y encuestas.',
+        'Presets gratis para overlays de Twitch y Kick: League of Legends, WoW, Metin2, Dota 2, Valorant, CS2, Fortnite, PUBG, Rocket League, Clash of Clans y Minecraft.',
     },
     fr: {
       title: 'Presets de jeux pour overlays Twitch et Kick | Senchabot',
       description:
-        'Des presets de jeux gratuits pour tes overlays : League of Legends, WoW, Metin2, Dota 2, Valorant, CS2 et Minecraft pour chat, alertes, objectifs et sondages.',
+        'Presets de jeux gratuits pour tes overlays : League of Legends, WoW, Metin2, Dota 2, Valorant, CS2, Fortnite, PUBG, Rocket League, Clash of Clans et Minecraft.',
     },
     ja: {
       title: 'TwitchとKickオーバーレイのゲームプリセット | Senchabot',
       description:
-        'TwitchとKickのオーバーレイ用の無料ゲームプリセット。League of Legends、WoW、Metin2、Dota 2、Valorant、CS2、Minecraft風の見た目を、チャット、アラート、目標、投票に。',
+        'Twitch・Kickのオーバーレイ用の無料ゲームプリセット。LoL、WoW、Metin2、Dota 2、Valorant、CS2、Fortnite、PUBG、Rocket League、Clash of Clans、Minecraft風。',
     },
     pt: {
       title: 'Presets de jogos para overlays da Twitch e Kick | Senchabot',
       description:
-        'Presets de jogos grátis para overlays da Twitch e Kick: visuais de League of Legends, WoW, Metin2, Dota 2, Valorant, CS2 e Minecraft para chat, alertas e metas.',
+        'Presets grátis para overlays da Twitch e Kick: League of Legends, WoW, Metin2, Dota 2, Valorant, CS2, Fortnite, PUBG, Rocket League, Clash of Clans e Minecraft.',
     },
   },
   changelog: {

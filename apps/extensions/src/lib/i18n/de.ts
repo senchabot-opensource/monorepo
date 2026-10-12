@@ -2430,6 +2430,8 @@ export const de: typeof en = {
     lead:
       'Wähl ein Preset, und deine Chat-Box, Stream-Alerts, Sub-Ziel, Subathon Timer, Chat-Umfrage, der Gewinner der Verlosung, die Stream-Rahmen, der Stream-Countdown und Socials bekommen denselben Rahmen, dieselben Schriften und Farben. Nimm eins für alle Widgets oder für jedes ein anderes.',
     pickTitle: 'Such dir ein Preset aus',
+    pickText:
+      'Fertige Presets für League of Legends (LoL), World of Warcraft (WoW), Metin2, Dota 2, Valorant, Counter-Strike 2 (CS2), Minecraft, Clash of Clans, Fortnite, Rocket League und PUBG: Battlegrounds.',
     by: 'von {author}',
     community: 'Community',
     makeDefault: '{name} für alle Widgets nutzen',
@@ -2452,6 +2454,14 @@ export const de: typeof en = {
       defuse: 'HUD-Eckklammern, eine bernsteinfarbene Linie oben, Warnstreifen auf den Balken und schmale Saira-Schrift.',
       blocks:
         'Pixelrahmen in Gras- und Erdfarben, grüne Balken in Blöcken und die Pixelschrift Jersey 10.',
+      village:
+        'Abgerundete Goldrahmen mit Edelsteinnieten, warme Holzpanels und pinke Elixierbalken, mit kräftigen Titeln in Lilita One.',
+      storm:
+        'Abgeschrägte Ecken und gelbe Klammern auf blau-violetten Panels, schräge himmelblaue Balken und hohe Titel in Anton.',
+      boost:
+        'HUD-Klammern und eine leuchtend blaue Linie oben auf Mitternachtsblau, schräge blaue Balken, Orange für den Sieger und Titel in Russo One.',
+      airdrop:
+        'HUD-Eckklammern und eine gelbe Linie oben auf olivschwarzen Panels, flache gelbe Balken und Titel in Saira Stencil One.',
     },
     existingTitle: 'Hast du schon Widgets in OBS?',
     existingText:
@@ -2541,6 +2551,8 @@ export const de: typeof en = {
     lead: 'Neue Features und Bugfixes in Senchabot Extensions, das Neueste zuerst. Die Liste ist aus der Commit-Historie des Projekts auf [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) zusammengestellt.',
     site: 'Website',
     entries: {
+      morePresets:
+        'Vier neue Spiel-Presets für jedes Widget, das eines nimmt: Village (Clash of Clans), Storm (Fortnite), Boost (Rocket League) und Airdrop (PUBG).',
       socialsEdgeAlign:
         'Socials kann am linken oder rechten Rand der Browser-Quelle kleben, mit eckigen Ecken auf dieser Seite, statt in der Mitte zu schweben.',
       socialsPresets:

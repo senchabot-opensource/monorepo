@@ -2470,6 +2470,8 @@ export const fr: typeof en = {
     title: 'Des presets de jeux pour tes overlays de stream',
     lead: 'Choisis un preset et ta Boîte de chat, tes Alertes de stream, ton Objectif de subs, ton Subathon Timer, ton Sondage du chat, le gagnant du Tirage au sort, tes Cadres de stream, ton Compte à rebours de stream et tes Réseaux sociaux ont le même cadre, les mêmes polices et les mêmes couleurs. Mets-en un sur tous les widgets, ou un différent sur chacun.',
     pickTitle: 'Choisis un preset',
+    pickText:
+      'Des presets prêts pour League of Legends (LoL), World of Warcraft (WoW), Metin2, Dota 2, Valorant, Counter-Strike 2 (CS2), Minecraft, Clash of Clans, Fortnite, Rocket League et PUBG: Battlegrounds.',
     by: 'par {author}',
     community: 'Communauté',
     makeDefault: 'Utiliser {name} sur tous les widgets',
@@ -2495,6 +2497,14 @@ export const fr: typeof en = {
         'Des coins de HUD, une ligne orangée en haut, des bandes de danger sur les barres et la police condensée Saira.',
       blocks:
         'Des cadres en pixels couleur herbe et terre, des barres vertes découpées en blocs et la police pixel Jersey 10.',
+      village:
+        'Des cadres dorés arrondis sertis de gemmes, des panneaux de bois chaud et des barres rose élixir, avec des titres épais en Lilita One.',
+      storm:
+        'Des coins coupés et des équerres jaunes sur des panneaux du bleu au violet, des barres bleu ciel inclinées et de grands titres en Anton.',
+      boost:
+        "Des coins de HUD et une ligne bleue lumineuse en haut sur bleu nuit, des barres bleues inclinées, de l'orange pour le gagnant et des titres en Russo One.",
+      airdrop:
+        'Des coins de HUD et une ligne jaune en haut sur des panneaux noir olive, des barres jaunes plates et des titres en Saira Stencil One.',
     },
     existingTitle: 'Tu as déjà des widgets dans OBS ?',
     existingText:
@@ -2584,6 +2594,8 @@ export const fr: typeof en = {
     lead: "Les nouvelles fonctionnalités et corrections de bugs de Senchabot Extensions, des plus récentes aux plus anciennes. La liste est tirée de l'historique des commits du projet sur [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      morePresets:
+        'Quatre nouveaux presets de jeux pour chaque widget qui en prend un : Village (Clash of Clans), Storm (Fortnite), Boost (Rocket League) et Airdrop (PUBG).',
       socialsEdgeAlign:
         'Réseaux sociaux peut se coller au bord gauche ou droit de la source Navigateur web, avec des coins droits de ce côté, au lieu de flotter au milieu.',
       socialsPresets:

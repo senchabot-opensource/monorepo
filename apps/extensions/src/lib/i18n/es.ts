@@ -2455,6 +2455,8 @@ export const es: typeof en = {
     title: 'Presets de juegos para los overlays de tu stream',
     lead: 'Elige un preset y tu Caja de Chat, tus Alertas de Stream, tu Meta de Subs, tu Subathon Timer, tu Encuesta de Chat, el ganador del Sorteo, tus Marcos de Stream, tu Cuenta Regresiva y tus Redes Sociales tendrán el mismo marco, las mismas fuentes y los mismos colores. Usa uno en todos los widgets o uno distinto en cada uno.',
     pickTitle: 'Elige un preset',
+    pickText:
+      'Presets listos para League of Legends (LoL), World of Warcraft (WoW), Metin2, Dota 2, Valorant, Counter-Strike 2 (CS2), Minecraft, Clash of Clans, Fortnite, Rocket League y PUBG: Battlegrounds.',
     by: 'por {author}',
     community: 'Comunidad',
     makeDefault: 'Usar {name} en todos los widgets',
@@ -2480,6 +2482,14 @@ export const es: typeof en = {
         'Esquineras de HUD, una línea superior ámbar, franjas de peligro en las barras y letra condensada Saira.',
       blocks:
         'Marcos de píxeles en colores de césped y tierra, barras verdes divididas en bloques y la fuente pixelada Jersey 10.',
+      village:
+        'Marcos dorados redondeados con gemas, paneles de madera cálida y barras rosa elixir, con títulos gruesos en Lilita One.',
+      storm:
+        'Esquinas cortadas y esquineras amarillas sobre paneles de azul a morado, barras celestes inclinadas y títulos altos en Anton.',
+      boost:
+        'Esquineras de HUD y una línea superior azul brillante sobre azul medianoche, barras azules inclinadas, naranja para el ganador y títulos en Russo One.',
+      airdrop:
+        'Esquineras de HUD y una línea superior amarilla sobre paneles negro oliva, barras amarillas planas y títulos en Saira Stencil One.',
     },
     existingTitle: '¿Ya tienes widgets en OBS?',
     existingText:
@@ -2569,6 +2579,8 @@ export const es: typeof en = {
     lead: 'Funciones nuevas y errores corregidos en Senchabot Extensions, de lo más nuevo a lo más viejo. La lista sale del historial de commits del proyecto en [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).',
     site: 'Sitio',
     entries: {
+      morePresets:
+        'Cuatro presets de juegos nuevos para cada widget que acepta uno: Village (Clash of Clans), Storm (Fortnite), Boost (Rocket League) y Airdrop (PUBG).',
       socialsEdgeAlign:
         'Redes Sociales puede pegarse al borde izquierdo o derecho de la fuente de navegador, con esquinas rectas de ese lado, en vez de flotar en el medio.',
       socialsPresets:

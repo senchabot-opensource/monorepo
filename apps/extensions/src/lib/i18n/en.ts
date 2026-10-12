@@ -2426,6 +2426,8 @@ export const en = {
     lead:
       'Pick a preset and your Chat Box, Stream Alerts, Sub Goal, Subathon Timer, Chat Poll, Raffle winner, Stream Frames, Stream Countdown and Socials get the same frame, fonts and colors. Use one on every widget, or a different one on each.',
     pickTitle: 'Pick a preset',
+    pickText:
+      'Ready-made presets for League of Legends (LoL), World of Warcraft (WoW), Metin2, Dota 2, Valorant, Counter-Strike 2 (CS2), Minecraft, Clash of Clans, Fortnite, Rocket League and PUBG: Battlegrounds.',
     by: 'by {author}',
     community: 'Community',
     makeDefault: 'Use {name} on every widget',
@@ -2448,6 +2450,14 @@ export const en = {
       defuse: 'HUD corner brackets, an amber top line, hazard stripes on the bars and condensed Saira type.',
       blocks:
         'Pixel frames in grass and dirt colors, green bars split into blocks and the Jersey 10 pixel font.',
+      village:
+        'Rounded gold frames with gem studs, warm wood panels and pink elixir bars, with chunky Lilita One titles.',
+      storm:
+        'Cut corners and yellow brackets on blue-to-purple panels, slanted sky-blue bars and tall Anton titles.',
+      boost:
+        'HUD brackets and a glowing blue top line on midnight navy, slanted blue bars, orange for the winner and Russo One titles.',
+      airdrop:
+        'HUD corner brackets and a yellow top line on olive-black panels, flat yellow bars and Saira Stencil One titles.',
     },
     existingTitle: 'Already have widgets in OBS?',
     existingText:
@@ -2537,6 +2547,8 @@ export const en = {
     lead: "New features and bug fixes in Senchabot Extensions, newest first. The list is put together from the project's commit history on [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      morePresets:
+        'Four new game presets for every widget that takes one: Village (Clash of Clans), Storm (Fortnite), Boost (Rocket League) and Airdrop (PUBG).',
       socialsEdgeAlign:
         'Socials can stick to the left or right edge of the browser source, with square corners on that side, instead of floating in the middle.',
       socialsPresets:

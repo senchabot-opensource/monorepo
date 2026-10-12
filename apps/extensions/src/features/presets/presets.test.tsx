@@ -5,6 +5,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { GoalWidget } from '#/features/widgets/goal/goal-widget';
 import { PresetAlert } from '#/features/widgets/stream-alerts/themes/preset';
 import { DEFAULT_GOAL_SETTINGS } from '#/lib/goal-url';
+import { dictionaries, resolveKey } from '#/lib/i18n';
 import { BUILTIN_PRESETS } from './builtin-presets';
 import { Frame } from './frame';
 import { type PresetData, presetSchema } from './preset-schema';
@@ -22,6 +23,23 @@ describe('built-in presets', () => {
     const ids = PRESETS.map((entry) => entry.data.id);
     expect(new Set(ids).size).toBe(ids.length);
     expect(ids).not.toContain('classic');
+  });
+
+  it('have a description in every locale', () => {
+    for (const preset of BUILTIN_PRESETS) {
+      for (const [locale, dict] of Object.entries(dictionaries)) {
+        const key = `presets.descriptions.${preset.id}`;
+        expect(resolveKey(dict, key), `${preset.id} ${locale}`).toBeTruthy();
+      }
+    }
+  });
+
+  it("are named by game in the presets page's intro, in every locale", () => {
+    for (const [locale, dict] of Object.entries(dictionaries)) {
+      for (const preset of BUILTIN_PRESETS) {
+        expect(dict.presets.pickText, `${preset.game} ${locale}`).toContain(preset.game);
+      }
+    }
   });
 
   it('asks Google Fonts for each font once, with its weights', () => {
