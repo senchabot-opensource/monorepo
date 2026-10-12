@@ -1467,6 +1467,9 @@ export const en = {
     sectionOptions: 'Options',
     optionsLabel: 'Wheel options',
     optionsTip: 'One option per line. Start a line with 2x, 3x … for extra slices and better odds.',
+    twoColors: 'Two colors',
+    twoColorsTip:
+      "Slices take turns between two colors instead of the full set: the classic orange and purple, or the preset's accent and panel color. On by default with a preset. With an odd number of slices, the first and last slice share a color.",
     optionsPlaceholder: 'Zelda\nMario Kart\nTetris\nMinecraft',
     count: '{count} options',
     shuffle: 'Shuffle',
@@ -2424,7 +2427,7 @@ export const en = {
     eyebrow: 'Presets',
     title: 'Game presets for your stream overlays',
     lead:
-      'Pick a preset and your Chat Box, Stream Alerts, Sub Goal, Subathon Timer, Chat Poll, Raffle winner, Stream Frames, Stream Countdown and Socials get the same frame, fonts and colors. Use one on every widget, or a different one on each.',
+      'Pick a preset and your Chat Box, Stream Alerts, Sub Goal, Subathon Timer, Chat Poll, Raffle winner, Stream Frames, Stream Countdown, Socials and Spin Wheel get the same frame, fonts and colors. Use one on every widget, or a different one on each.',
     pickTitle: 'Pick a preset',
     pickText:
       'Ready-made presets for League of Legends (LoL), World of Warcraft (WoW), Metin2, Dota 2, Valorant, Counter-Strike 2 (CS2), Minecraft, Clash of Clans, Fortnite, Rocket League and PUBG: Battlegrounds.',
@@ -2482,7 +2485,7 @@ export const en = {
       "Yes. Your default is only where every setup page starts. On any widget's setup page you can pick another preset, and that widget's URL carries it.",
     faq3Q: 'Which widgets take a preset?',
     faq3A:
-      'Chat Box, Stream Alerts, Sub Goal, Subathon Timer, Chat Poll, the Raffle winner overlay, Stream Frames, Stream Countdown and Socials. Emote Wall only shows emotes and Sub Sprout draws its own plants, so they keep their look.',
+      'Chat Box, Stream Alerts, Sub Goal, Subathon Timer, Chat Poll, the Raffle winner overlay, Stream Frames, Stream Countdown, Socials and Spin Wheel. Emote Wall only shows emotes and Sub Sprout draws its own plants, so they keep their look.',
     faq4Q: 'Are these official game themes?',
     faq4A:
       "No. They're fan-made styles built from colors, free Google Fonts and decorations drawn from scratch, with no game logos or art, and they aren't affiliated with the game makers.",
@@ -2547,6 +2550,10 @@ export const en = {
     lead: "New features and bug fixes in Senchabot Extensions, newest first. The list is put together from the project's commit history on [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      spinWheelTwoColors:
+        "Spin Wheel can paint its slices in just two colors, taking turns slice by slice: orange and purple in the classic look, or the accent and panel color of the picked preset, where it's on by default.",
+      spinWheelPresets:
+        "Spin Wheel takes a preset: the wheel's rim, slices and labels, the winner card and the cooldown note get the preset's colors, fonts and frame.",
       morePresets:
         'Four new game presets for every widget that takes one: Village (Clash of Clans), Storm (Fortnite), Boost (Rocket League) and Airdrop (PUBG).',
       socialsEdgeAlign:

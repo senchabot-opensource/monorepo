@@ -1517,6 +1517,9 @@ export const fr: typeof en = {
     sectionOptions: 'Options',
     optionsLabel: 'Options de la roue',
     optionsTip: 'Une option par ligne. Commence une ligne par 2x, 3x … pour des parts en plus et plus de chances.',
+    twoColors: 'Deux couleurs',
+    twoColorsTip:
+      "Les parts alternent entre deux couleurs au lieu de toutes : orange et violet dans le style classique, ou la couleur d'accent et de panneau du preset. Activé par défaut avec un preset. Avec un nombre impair de parts, la première et la dernière ont la même couleur.",
     optionsPlaceholder: 'Zelda\nMario Kart\nTetris\nMinecraft',
     count: '{count} options',
     shuffle: 'Mélanger',
@@ -2468,7 +2471,7 @@ export const fr: typeof en = {
     breadcrumb: 'Presets',
     eyebrow: 'Presets',
     title: 'Des presets de jeux pour tes overlays de stream',
-    lead: 'Choisis un preset et ta Boîte de chat, tes Alertes de stream, ton Objectif de subs, ton Subathon Timer, ton Sondage du chat, le gagnant du Tirage au sort, tes Cadres de stream, ton Compte à rebours de stream et tes Réseaux sociaux ont le même cadre, les mêmes polices et les mêmes couleurs. Mets-en un sur tous les widgets, ou un différent sur chacun.',
+    lead: 'Choisis un preset et ta Boîte de chat, tes Alertes de stream, ton Objectif de subs, ton Subathon Timer, ton Sondage du chat, le gagnant du Tirage au sort, tes Cadres de stream, ton Compte à rebours de stream, tes Réseaux sociaux et ta Roue ont le même cadre, les mêmes polices et les mêmes couleurs. Mets-en un sur tous les widgets, ou un différent sur chacun.',
     pickTitle: 'Choisis un preset',
     pickText:
       'Des presets prêts pour League of Legends (LoL), World of Warcraft (WoW), Metin2, Dota 2, Valorant, Counter-Strike 2 (CS2), Minecraft, Clash of Clans, Fortnite, Rocket League et PUBG: Battlegrounds.',
@@ -2529,7 +2532,7 @@ export const fr: typeof en = {
       "Oui. Ton preset par défaut, c'est seulement là où démarre chaque page de configuration. Sur la page de configuration de n'importe quel widget, tu peux choisir un autre preset, et l'URL de ce widget le garde.",
     faq3Q: 'Quels widgets prennent un preset ?',
     faq3A:
-      "Boîte de chat, Alertes de stream, Objectif de subs, Subathon Timer, Sondage du chat, l'overlay du gagnant du Tirage au sort, Cadres de stream, Compte à rebours de stream et Réseaux sociaux. Le Mur d'emotes n'affiche que des emotes et Sub Sprout dessine ses propres plantes, donc ils gardent leur style.",
+      "Boîte de chat, Alertes de stream, Objectif de subs, Subathon Timer, Sondage du chat, l'overlay du gagnant du Tirage au sort, Cadres de stream, Compte à rebours de stream, Réseaux sociaux et Roue. Le Mur d'emotes n'affiche que des emotes et Sub Sprout dessine ses propres plantes, donc ils gardent leur style.",
     faq4Q: 'Ce sont des thèmes officiels des jeux ?',
     faq4A:
       'Non. Ce sont des styles faits par des fans, à partir de couleurs, de Google Fonts gratuites et de décorations dessinées de zéro, sans logo ni visuel de jeu, et ils ne sont pas affiliés aux éditeurs des jeux.',
@@ -2594,6 +2597,10 @@ export const fr: typeof en = {
     lead: "Les nouvelles fonctionnalités et corrections de bugs de Senchabot Extensions, des plus récentes aux plus anciennes. La liste est tirée de l'historique des commits du projet sur [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      spinWheelTwoColors:
+        "La Roue peut peindre ses parts en deux couleurs seulement, en alternant d'une part à l'autre : orange et violet dans le style classique, ou la couleur d'accent et de panneau du preset choisi, où c'est activé par défaut.",
+      spinWheelPresets:
+        "La Roue prend un preset : le bord, les parts et les textes de la roue, la carte du gagnant et l'avis de cooldown reçoivent les couleurs, les polices et le cadre du preset.",
       morePresets:
         'Quatre nouveaux presets de jeux pour chaque widget qui en prend un : Village (Clash of Clans), Storm (Fortnite), Boost (Rocket League) et Airdrop (PUBG).',
       socialsEdgeAlign:

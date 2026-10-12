@@ -186,6 +186,7 @@ const PAGES: PageCase[] = [
     sections: [
       'common.sectionChannel',
       'spinWheel.sectionOptions',
+      'common.sectionAppearance',
       'spinWheel.sectionChat',
       'spinWheel.sectionSound',
       'spinWheel.sectionCommands',

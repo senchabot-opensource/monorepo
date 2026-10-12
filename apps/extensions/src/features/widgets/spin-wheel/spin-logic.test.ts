@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   assignColors,
+  assignPresetColors,
   buildSpin,
   MAX_LABEL_LENGTH,
   MAX_SLICES,
@@ -9,6 +10,7 @@ import {
   parseWeightedLabel,
   shuffleLines,
   sliceAtAngle,
+  wheelSlices,
 } from './spin-logic';
 
 describe('parseOptions', () => {
@@ -75,6 +77,43 @@ describe('assignColors', () => {
     expect(slices).toHaveLength(MAX_SLICES);
     expect(slices.filter((s) => s.label === 'Tetris')).toHaveLength(99);
     expect(slices.at(-1)?.label).toBe('Zelda');
+  });
+});
+
+describe('slice colors in a look', () => {
+  const colors = { accent: '#0ac8b9', panel: '#0a1428', win: '#c8aa6e', frame2: '#785a28' };
+  const colorsOf = (count: number) =>
+    assignPresetColors(
+      Array.from({ length: count }, (_, i) => `opt ${i}`),
+      colors,
+    ).map((slice) => slice.color);
+
+  it('takes turns between light and dark preset colors', () => {
+    expect(colorsOf(4)).toEqual(['#0ac8b9', '#0a1428', '#c8aa6e', '#785a28']);
+  });
+
+  it('takes turns between two colors on a two-color wheel, classic or preset', () => {
+    const labels = ['a', 'b', 'c', 'd', 'e'];
+    const classic = wheelSlices(labels, { twoColors: true }).map((slice) => slice.color);
+    expect(classic).toEqual(['#FF4500', '#9146FF', '#FF4500', '#9146FF', '#FF4500']);
+    const preset = wheelSlices(labels, { preset: colors, twoColors: true }).map((s) => s.color);
+    expect(preset).toEqual(['#0ac8b9', '#0a1428', '#0ac8b9', '#0a1428', '#0ac8b9']);
+  });
+
+  it('keeps every color without the two-color switch', () => {
+    expect(wheelSlices(['a', 'b', 'c'], {})).toEqual(assignColors(['a', 'b', 'c']));
+    expect(wheelSlices(['a', 'b', 'c'], { preset: colors })).toEqual(
+      assignPresetColors(['a', 'b', 'c'], colors),
+    );
+  });
+
+  it('never gives two touching slices one color, the last and the first included', () => {
+    for (let count = 2; count <= 13; count++) {
+      const ring = colorsOf(count);
+      ring.forEach((color, i) => {
+        expect(color, `${count} slices, slice ${i}`).not.toBe(ring[(i + 1) % count]);
+      });
+    }
   });
 });
 

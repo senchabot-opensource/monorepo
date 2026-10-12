@@ -1470,6 +1470,9 @@ export const de: typeof en = {
     sectionOptions: 'Optionen',
     optionsLabel: 'Rad-Optionen',
     optionsTip: 'Eine Option pro Zeile. Starte eine Zeile mit 2x, 3x … für extra Felder mit besseren Chancen.',
+    twoColors: 'Zwei Farben',
+    twoColorsTip:
+      'Die Felder wechseln zwischen zwei Farben statt allen: im klassischen Look Orange und Lila, mit einem Preset seine Akzent- und Panelfarbe. Mit einem Preset standardmäßig an. Bei einer ungeraden Zahl von Feldern haben das erste und das letzte dieselbe Farbe.',
     optionsPlaceholder: 'Zelda\nMario Kart\nTetris\nMinecraft',
     count: '{count} Optionen',
     shuffle: 'Mischen',
@@ -2428,7 +2431,7 @@ export const de: typeof en = {
     eyebrow: 'Presets',
     title: 'Game-Presets für deine Stream-Overlays',
     lead:
-      'Wähl ein Preset, und deine Chat-Box, Stream-Alerts, Sub-Ziel, Subathon Timer, Chat-Umfrage, der Gewinner der Verlosung, die Stream-Rahmen, der Stream-Countdown und Socials bekommen denselben Rahmen, dieselben Schriften und Farben. Nimm eins für alle Widgets oder für jedes ein anderes.',
+      'Wähl ein Preset, und deine Chat-Box, Stream-Alerts, Sub-Ziel, Subathon Timer, Chat-Umfrage, der Gewinner der Verlosung, die Stream-Rahmen, der Stream-Countdown, Socials und das Glücksrad bekommen denselben Rahmen, dieselben Schriften und Farben. Nimm eins für alle Widgets oder für jedes ein anderes.',
     pickTitle: 'Such dir ein Preset aus',
     pickText:
       'Fertige Presets für League of Legends (LoL), World of Warcraft (WoW), Metin2, Dota 2, Valorant, Counter-Strike 2 (CS2), Minecraft, Clash of Clans, Fortnite, Rocket League und PUBG: Battlegrounds.',
@@ -2486,7 +2489,7 @@ export const de: typeof en = {
       'Ja. Dein Standard ist nur der Startpunkt jeder Setup-Seite. Auf der Setup-Seite jedes Widgets kannst du ein anderes Preset wählen, und die URL dieses Widgets trägt es.',
     faq3Q: 'Welche Widgets nehmen ein Preset?',
     faq3A:
-      'Chat-Box, Stream-Alerts, Sub-Ziel, Subathon Timer, Chat-Umfrage, das Gewinner-Overlay der Verlosung, Stream-Rahmen, Stream-Countdown und Socials. Die Emote-Wand zeigt nur Emotes und Sub Sprout zeichnet eigene Pflanzen, deshalb behalten die beiden ihren Look.',
+      'Chat-Box, Stream-Alerts, Sub-Ziel, Subathon Timer, Chat-Umfrage, das Gewinner-Overlay der Verlosung, Stream-Rahmen, Stream-Countdown, Socials und Glücksrad. Die Emote-Wand zeigt nur Emotes und Sub Sprout zeichnet eigene Pflanzen, deshalb behalten die beiden ihren Look.',
     faq4Q: 'Sind das offizielle Game-Themes?',
     faq4A:
       'Nein. Es sind Fan-Styles aus Farben, kostenlosen Google Fonts und selbst gezeichneter Deko, ohne Game-Logos oder Grafiken, und sie sind nicht mit den Spieleherstellern verbunden.',
@@ -2551,6 +2554,10 @@ export const de: typeof en = {
     lead: 'Neue Features und Bugfixes in Senchabot Extensions, das Neueste zuerst. Die Liste ist aus der Commit-Historie des Projekts auf [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) zusammengestellt.',
     site: 'Website',
     entries: {
+      spinWheelTwoColors:
+        'Das Glücksrad kann seine Felder in nur zwei Farben färben, Feld für Feld im Wechsel: Orange und Lila im klassischen Look oder die Akzent- und Panelfarbe des gewählten Presets, wo es standardmäßig an ist.',
+      spinWheelPresets:
+        'Das Glücksrad nimmt ein Preset: Rand, Felder und Beschriftung des Rads, die Gewinnerkarte und der Cooldown-Hinweis bekommen Farben, Schriften und Rahmen des Presets.',
       morePresets:
         'Vier neue Spiel-Presets für jedes Widget, das eines nimmt: Village (Clash of Clans), Storm (Fortnite), Boost (Rocket League) und Airdrop (PUBG).',
       socialsEdgeAlign:

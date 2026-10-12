@@ -103,6 +103,17 @@ describe('gallery card shapes', () => {
     ]);
   });
 
+  it('gives Socials a plain card and Stream Alerts the wide one in the gallery', () => {
+    const socials = OVERLAYS.findIndex((widget) => widget.id === 'socials');
+    const alerts = OVERLAYS.findIndex((widget) => widget.id === 'stream-alerts');
+    expect(socials).toBeLessThan(alerts);
+    for (const columns of OVERLAY_COLUMNS) {
+      const shapes = getGalleryShapes(OVERLAYS, columns);
+      expect(shapes[socials], `${columns} columns`).toBe('standard');
+      expect(shapes[alerts], `${columns} columns`).toBe('wide');
+    }
+  });
+
   it('keeps the bento spans while the overlays fill whole rows', () => {
     for (const columns of OVERLAY_COLUMNS) {
       expect(getGalleryShapes(BENTO, columns), `${columns} columns`).toEqual(

@@ -452,13 +452,15 @@ A chat-driven spinning wheel for game names, challenges or any list of choices. 
 - Options, channels, permission and cooldown all live in the overlay URL. Paste it back on the setup page to edit it.
 - No login: the overlay reads public chat anonymously.
 - Spins on the tool page stay on that page; only !spin spins the overlay.
-- URL parameters: twitch, kick, o (options joined with |), cd (cooldown seconds, 0-300, default 30), perm (all, subs, mods; default all), sound (1 or 0, default 1), lang.
+- With a preset, the wheel's rim, slices and labels, the winner card and the cooldown note take the preset's colors, fonts and frame.
+- Two colors: the slices take turns between two colors instead of the full set, the classic orange and purple or the preset's accent and panel color. On by default with a preset. With an odd number of slices, the first and last share a color.
+- URL parameters: twitch, kick, o (options joined with |), cd (cooldown seconds, 0-300, default 30), perm (all, subs, mods; default all), sound (1 or 0, default 1), colors (2 for the two-color wheel, all for every color; default 2 with a preset, all in the classic look), preset (see Presets; default classic, the gold wheel), lang.
 
 ## Presets
 
 A preset gives several widgets the same look: frame, fonts and colors. Page: https://extensions.senchabot.com/presets
 
-- Widgets that take one: Chat Box, Stream Alerts, Sub Goal, Subathon Timer, Chat Poll, the Raffle winner overlay, Stream Countdown, Socials and Stream Frames, whose frame art comes from the preset. Emote Wall and Sub Sprout keep their own art.
+- Widgets that take one: Chat Box, Stream Alerts, Sub Goal, Subathon Timer, Chat Poll, the Raffle winner overlay, Stream Countdown, Socials, Spin Wheel and Stream Frames, whose frame art comes from the preset. Emote Wall and Sub Sprout keep their own art.
 - URL parameter on those widgets: preset, one of rift, realm, dynasty, ancient, agent, defuse, blocks, village, storm, boost, airdrop. Missing or unknown means classic, each widget's own look, so URLs from before presets look the same.
 - Built-in presets, each made for a game: Rift (League of Legends), Realm (World of Warcraft), Dynasty (Metin2), Ancient (Dota 2), Agent (Valorant), Defuse (Counter-Strike 2), Blocks (Minecraft), Village (Clash of Clans), Storm (Fortnite), Boost (Rocket League), Airdrop (PUBG). They are fan-made styles from colors, free Google Fonts and original drawings, with no game art, and aren't affiliated with the game makers.
 - A preset brings its own colors and fonts: with one set, the color and font parameters and Stream Alerts' theme are ignored. Layout settings (Subathon style, Chat Box layout, poll position and so on) still apply.

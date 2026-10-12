@@ -12,6 +12,7 @@ export const PRESET_WIDGET_IDS = [
   'frames',
   'countdown',
   'socials',
+  'spin-wheel',
 ] as const satisfies readonly WidgetId[];
 
 export const PRESET_WIDGETS: readonly WidgetEntry[] = PRESET_WIDGET_IDS.map(getWidget);
@@ -19,10 +20,12 @@ export const PRESET_WIDGETS: readonly WidgetEntry[] = PRESET_WIDGET_IDS.map(getW
 const PRESET_PATHS = new Set<string>(PRESET_WIDGETS.map((widget) => widget.widgetPath));
 
 // Chat Box and the raffle winner fill any size, and at their OBS size they'd be a speck in a
-// 16:10 card, so the presets page gives them a card-shaped canvas instead.
+// 16:10 card, so the presets page gives them a card-shaped canvas instead. Spin Wheel's square
+// source would leave the wheel small; its 560px wheel and cooldown pill fit 650px high.
 const CARD_CANVAS: Partial<Record<WidgetId, SourceSize>> = {
   'chat-box': { width: 520, height: 325 },
   raffle: { width: 1120, height: 700 },
+  'spin-wheel': { width: 1040, height: 650 },
 };
 
 /** The size a preview card renders the widget at. */

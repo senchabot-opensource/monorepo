@@ -12,6 +12,8 @@ import { SegmentedControl, type SegmentedOption } from '#/components/ui/segmente
 import { SettingsGroup } from '#/components/ui/settings-group';
 import { Switch } from '#/components/ui/switch';
 import { HINT_CLASS, INPUT_CLASS } from '#/components/ui/text-field';
+import { PresetField } from '#/features/presets/preset-field';
+import { useStartOnSitePreset } from '#/features/presets/site-preset';
 import { assignColors, shuffleLines } from '#/features/widgets/spin-wheel/spin-logic';
 import {
   PREVIEW_CHANNEL,
@@ -30,8 +32,10 @@ import {
   DEFAULT_SPIN_WHEEL_SETTINGS,
   MAX_COOLDOWN_SECONDS,
   parseSpinWheelUrl,
+  SAMPLE_SPIN_OPTIONS,
   SPIN_COMMAND,
   type SpinPermission,
+  twoColorsByDefault,
 } from '#/lib/spin-wheel-url';
 import type { ChannelPlatforms } from '#/lib/url-params';
 import { getWidget } from '#/lib/widgets';
@@ -51,7 +55,7 @@ const COMMANDS: { usage: string; action: TranslationKey }[] = [
   { usage: SPIN_COMMAND, action: 'spinWheel.cmdSpin' },
 ];
 
-const SAMPLE_TEXT = ['Zelda', 'Mario Kart', 'Tetris', 'Minecraft'].join('\n');
+const SAMPLE_TEXT = SAMPLE_SPIN_OPTIONS.join('\n');
 
 const BUTTON_QUIET =
   'rounded px-1.5 py-0.5 text-xs font-medium text-zinc-500 transition-colors enabled:hover:bg-zinc-100 enabled:hover:text-zinc-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 disabled:cursor-not-allowed disabled:opacity-50 dark:text-zinc-400 dark:enabled:hover:bg-zinc-800 dark:enabled:hover:text-white';
@@ -102,6 +106,17 @@ function SpinWheelSetup() {
     DEFAULT_SPIN_WHEEL_SETTINGS.permission,
   );
   const [soundEnabled, setSoundEnabled] = useState(DEFAULT_SPIN_WHEEL_SETTINGS.sound);
+  const [twoColors, setTwoColors] = useState(DEFAULT_SPIN_WHEEL_SETTINGS.twoColors);
+  const [preset, setPreset] = useState(DEFAULT_SPIN_WHEEL_SETTINGS.preset);
+  // Going from the classic look to a preset or back resets Two colors to that look's default;
+  // from one preset to another it stays as the streamer set it.
+  const pickPreset = (next: string) => {
+    if (twoColorsByDefault(next) !== twoColorsByDefault(preset)) {
+      setTwoColors(twoColorsByDefault(next));
+    }
+    setPreset(next);
+  };
+  useStartOnSitePreset(pickPreset);
   const mounted = useHydrated();
   const { previewId, send } = usePreviewSender<PreviewMessage>(PREVIEW_CHANNEL);
 
@@ -111,6 +126,8 @@ function SpinWheelSetup() {
     permission,
     sound: soundEnabled,
     options: text.split('\n'),
+    twoColors,
+    preset,
   };
   // Slices on the wheel: a `2x Tetris` line counts twice.
   const optionCount = assignColors(cleanSpinOptions(settings.options)).length;
@@ -132,6 +149,8 @@ function SpinWheelSetup() {
     setCooldownSec(parsed.settings.cooldownSec);
     setPermission(parsed.settings.permission);
     setSoundEnabled(parsed.settings.sound);
+    setTwoColors(parsed.settings.twoColors);
+    setPreset(parsed.settings.preset);
     return true;
   };
 
@@ -202,6 +221,16 @@ function SpinWheelSetup() {
             </div>
           </div>
         </div>
+        <Switch
+          label={t('spinWheel.twoColors')}
+          tip={t('spinWheel.twoColorsTip')}
+          checked={twoColors}
+          onChange={setTwoColors}
+        />
+      </SettingsGroup>
+
+      <SettingsGroup title={t('common.sectionAppearance')}>
+        <PresetField value={preset} onChange={pickPreset} />
       </SettingsGroup>
 
       <SettingsGroup title={t('spinWheel.sectionChat')}>

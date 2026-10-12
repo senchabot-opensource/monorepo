@@ -68,6 +68,66 @@ describe('buildSpinWheelUrl', () => {
   });
 });
 
+describe('two-color wheel', () => {
+  const colorsParam = (overrides: Partial<SpinWheelSettings>) =>
+    new URL(buildSpinWheelUrl(ORIGIN, settings(overrides), 's', '', 'en')).searchParams.get(
+      'colors',
+    );
+
+  it('is off in the classic look and on with a preset, unless the URL says otherwise', () => {
+    expect(readSpinWheelSettings(new URLSearchParams('')).twoColors).toBe(false);
+    expect(readSpinWheelSettings(new URLSearchParams('preset=rift')).twoColors).toBe(true);
+    expect(readSpinWheelSettings(new URLSearchParams('colors=2')).twoColors).toBe(true);
+    expect(readSpinWheelSettings(new URLSearchParams('preset=rift&colors=all')).twoColors).toBe(
+      false,
+    );
+    // An unknown preset is classic, so it keeps every color.
+    expect(readSpinWheelSettings(new URLSearchParams('preset=gone')).twoColors).toBe(false);
+    expect(readSpinWheelSettings(new URLSearchParams('preset=rift&colors=3')).twoColors).toBe(true);
+  });
+
+  it("writes colors only against the look's default", () => {
+    expect(colorsParam({})).toBeNull();
+    expect(colorsParam({ twoColors: true })).toBe('2');
+    expect(colorsParam({ preset: 'rift', twoColors: true })).toBeNull();
+    expect(colorsParam({ preset: 'rift', twoColors: false })).toBe('all');
+  });
+
+  it('reads back either choice with a preset', () => {
+    for (const twoColors of [true, false]) {
+      const url = buildSpinWheelUrl(
+        ORIGIN,
+        settings({ preset: 'storm', twoColors }),
+        's',
+        '',
+        'en',
+      );
+      expect(parseSpinWheelUrl(url)?.settings.twoColors).toBe(twoColors);
+    }
+  });
+});
+
+describe('spin wheel presets', () => {
+  it('writes a preset, and nothing for classic', () => {
+    const url = new URL(buildSpinWheelUrl(ORIGIN, settings({ preset: 'rift' }), 's', '', 'en'));
+    expect(url.searchParams.get('preset')).toBe('rift');
+    expect(buildSpinWheelUrl(ORIGIN, settings(), 's', '', 'en')).not.toContain('preset=');
+  });
+
+  it('reads a known preset and drops an unknown one to classic', () => {
+    expect(readSpinWheelSettings(new URLSearchParams('preset=Blocks')).preset).toBe('blocks');
+    expect(readSpinWheelSettings(new URLSearchParams('preset=nope')).preset).toBe('classic');
+    expect(
+      parseSpinWheelUrl(`${ORIGIN}/widgets/spin-wheel?twitch=s&preset=agent`)?.settings,
+    ).toMatchObject({ preset: 'agent' });
+  });
+
+  it('carries the preset into the preview', () => {
+    const url = buildSpinWheelPreviewUrl(ORIGIN, settings({ preset: 'storm' }), 'en', 'abc');
+    expect(new URL(url).searchParams.get('preset')).toBe('storm');
+  });
+});
+
 describe('spin wheel URL round trip', () => {
   it('reads back every setting', () => {
     const custom = settings({
@@ -76,6 +136,8 @@ describe('spin wheel URL round trip', () => {
       cooldownSec: 60,
       permission: 'mods',
       sound: false,
+      twoColors: true,
+      preset: 'village',
     });
     const url = buildSpinWheelUrl(ORIGIN, custom, 'streamer', '', 'tr');
     expect(parseSpinWheelUrl(url)).toEqual({
@@ -93,6 +155,8 @@ describe('spin wheel URL round trip', () => {
       cooldownSec: DEFAULT_SPIN_WHEEL_SETTINGS.cooldownSec,
       permission: 'all',
       sound: true,
+      twoColors: false,
+      preset: 'classic',
     });
   });
 

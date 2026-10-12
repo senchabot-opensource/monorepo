@@ -58,17 +58,52 @@ export function parseOptions(text: string): string[] {
  * weight (`2x Tetris`) becomes that many same-labeled slices in a row, like
  * typing the line that often; the wheel holds MAX_SLICES slices at most.
  */
-export function assignColors(labels: string[]): SpinSlice[] {
+export function assignColors(
+  labels: string[],
+  palette: readonly string[] = SLICE_COLORS,
+): SpinSlice[] {
   const slices: SpinSlice[] = [];
   for (const raw of labels) {
     const { label, weight } = parseWeightedLabel(raw);
     for (let n = 0; n < weight && slices.length < MAX_SLICES; n++) {
       const id = slices.length;
-      slices.push({ id, label, color: SLICE_COLORS[id % SLICE_COLORS.length] ?? '#3b82f6' });
+      slices.push({ id, label, color: palette[id % palette.length] ?? '#3b82f6' });
     }
     if (slices.length >= MAX_SLICES) break;
   }
   return slices;
+}
+
+/**
+ * Slices in a preset's colors, light and dark in turn: accent, panel, win, dark frame. Four
+ * colors come round again quickly, so when the last slice would match the first one it touches,
+ * it takes the panel color instead.
+ */
+export function assignPresetColors(labels: string[], colors: PresetSliceColors): SpinSlice[] {
+  const palette = [colors.accent, colors.panel, colors.win, colors.frame2];
+  const slices = assignColors(labels, palette);
+  const last = slices.at(-1);
+  if (slices.length > 2 && last && last.color === slices[0]?.color) last.color = colors.panel;
+  return slices;
+}
+
+type PresetSliceColors = { accent: string; panel: string; win: string; frame2: string };
+
+/**
+ * The wheel's slices in its look: a preset's colors, or the classic palette without one.
+ * `twoColors` takes turns between the look's first two colors only, so with an odd number of
+ * slices the last one matches the first.
+ */
+export function wheelSlices(
+  labels: string[],
+  { preset, twoColors = false }: { preset?: PresetSliceColors | null; twoColors?: boolean },
+): SpinSlice[] {
+  if (preset) {
+    return twoColors
+      ? assignColors(labels, [preset.accent, preset.panel])
+      : assignPresetColors(labels, preset);
+  }
+  return assignColors(labels, twoColors ? SLICE_COLORS.slice(0, 2) : SLICE_COLORS);
 }
 
 /**

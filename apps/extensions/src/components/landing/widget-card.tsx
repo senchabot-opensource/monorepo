@@ -3,7 +3,7 @@ import { LocaleLink } from '#/components/locale-link';
 import { PlatformChips } from '#/components/platform-chips';
 import { PreviewFrame } from '#/components/preview-frame';
 import { useI18n } from '#/lib/i18n';
-import type { WidgetEntry } from '#/lib/widgets';
+import type { WidgetEntry, WidgetId } from '#/lib/widgets';
 import { getDemoSrc } from './demo-url';
 import { ArrowRightIcon, CheckIcon } from './landing-icons';
 import { FLUSH_FRAME_CLASS, STAGE_STYLE } from './stream-scene';
@@ -25,6 +25,21 @@ export function getCardShape(widget: WidgetEntry): CardShape {
   if (ratio >= 2) return 'wide';
   return 'standard';
 }
+
+// The gallery gives Socials a plain card and Stream Alerts a wide one, the reverse of what their
+// source sizes give: Socials sits near the top beside Sub Goal, and Stream Alerts ends the last row.
+const GALLERY_SHAPES: Partial<Record<WidgetId, CardShape>> = {
+  socials: 'standard',
+  'stream-alerts': 'wide',
+};
+
+// A wide card holding a 16:9 alert, instead of a strip, is cut to a plain card's height, so the
+// row beside it doesn't stretch.
+const PREVIEW_ASPECT: Partial<Record<WidgetId, string>> = { 'stream-alerts': '11 / 4' };
+
+// Demos drawn at a fixed size rather than to fit their page: at the card's own width the Socials
+// bubble runs past both edges, so it renders at its source size and is scaled down to fit.
+const SCALED_DEMOS: ReadonlySet<WidgetId> = new Set(['socials']);
 
 const SPANS: Record<CardShape, { cols: number; rows: number }> = {
   standard: { cols: 1, rows: 1 },
@@ -80,7 +95,7 @@ const widenLast = (shapes: CardShape[]): CardShape[] => {
  * columns need the last card widened. The grid then swaps the spans per breakpoint.
  */
 export function getGalleryShapes(widgets: readonly WidgetEntry[], columns: number): CardShape[] {
-  const shapes = widgets.map(getCardShape);
+  const shapes = widgets.map((widget) => GALLERY_SHAPES[widget.id] ?? getCardShape(widget));
   const tries = [
     shapes,
     widenLast(shapes),
@@ -132,7 +147,10 @@ export function WidgetCard({
   const size = widget.sourceSize;
   // Read by the wide shape's class, so the strip keeps its source ratio only where it is one.
   const previewStyle = size
-    ? ({ ...STAGE_STYLE, '--source-aspect': `${size.width} / ${size.height}` } as CSSProperties)
+    ? ({
+        ...STAGE_STYLE,
+        '--source-aspect': PREVIEW_ASPECT[widget.id] ?? `${size.width} / ${size.height}`,
+      } as CSSProperties)
     : STAGE_STYLE;
 
   return (
@@ -151,6 +169,7 @@ export function WidgetCard({
             <PreviewFrame
               src={getDemoSrc(widget, 'card')}
               title={t('home.demoTitle', { name })}
+              canvas={SCALED_DEMOS.has(widget.id) ? (size ?? undefined) : undefined}
               backgroundClassName="bg-transparent"
               className={FLUSH_FRAME_CLASS}
             />
