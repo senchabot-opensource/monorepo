@@ -126,6 +126,31 @@ describe('walker', () => {
     }
   });
 
+  it('takes the ways it likes more far more often', () => {
+    // A cross: east is a footpath the walk likes 10 times as much as the other two ways on.
+    const graph: MapGraph = { tile: null, nodes: [{ x: 0, y: 0, links: [] }] };
+    for (const [x, y, weight] of [
+      [0, 50, 1],
+      [-50, 0, 1],
+      [50, 0, 10],
+      [0, -50, 1],
+    ]) {
+      const end = graph.nodes.push({ x, y, links: [] }) - 1;
+      const there = { x, y };
+      graph.nodes[0].links.push({ to: end, dx: 0, dy: 0, points: [{ x: 0, y: 0 }, there], weight });
+      graph.nodes[end].links.push({ to: 0, dx: 0, dy: 0, points: [there, { x: 0, y: 0 }], weight });
+    }
+    let east = 0;
+    for (let seed = 0; seed < 200; seed++) {
+      // From the south end the walk reaches the cross heading north, then picks a way.
+      const walker = createWalker(graph, 1, seededRandom(seed));
+      if (!walker) throw new Error('no walker');
+      for (let frame = 0; frame < 40; frame++) stepWalker(walker, 0.05, 40);
+      if (stepWalker(walker, 0, 40).x > 1) east++;
+    }
+    expect(east).toBeGreaterThan(140);
+  });
+
   it("can't start where no way leads", () => {
     expect(createWalker({ tile: null, nodes: [{ x: 0, y: 0, links: [] }] }, 0)).toBeNull();
     expect(createWalker({ tile: null, nodes: [] }, 0)).toBeNull();

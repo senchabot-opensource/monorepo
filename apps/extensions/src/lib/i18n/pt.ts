@@ -977,27 +977,55 @@ export const pt: typeof en = {
       'O minimapa e o dinheiro estão no mesmo canto, então um fica por cima do outro.',
     map: 'Estilo do minimapa',
     mapTip:
-      'Cidade desenha ruas entre quarteirões. Parque desenha caminhos sinuosos entre gramados, árvores e lagos. Lugar real desenha as ruas em volta de um lugar que você escolher, a partir do OpenStreetMap.',
+      'Cidade desenha ruas entre quarteirões. Parque desenha caminhos sinuosos entre gramados, árvores e lagos. Lugar real desenha as ruas em volta do primeiro lugar que você salvou, a partir do OpenStreetMap.',
     maps: {
       urban: 'Cidade',
       park: 'Parque',
       real: 'Lugar real',
     },
-    place: 'Lugar',
+    place: 'Encontrar um lugar',
     placeTip:
-      'Busque uma rua, praça, parque ou bairro, ou cole coordenadas como 41.0256, 28.9744. O minimapa desenha as ruas e os caminhos num raio de uns 500 m em volta dele.',
+      'Busque uma rua, praça, parque ou bairro, ou cole coordenadas como 41.0256, 28.9744, e escolha um resultado para salvá-lo. O minimapa desenha as ruas e os caminhos num raio de uns 350 m em volta dele.',
     placePlaceholder: 'Busque um lugar ou cole coordenadas',
     placeSearch: 'Buscar',
     placeSearching: 'Buscando…',
     placeResults: 'Lugares encontrados',
     placeNone: 'Nenhum lugar encontrado. Tente outro nome ou cole coordenadas.',
     placeError: 'A busca não respondeu. Tente de novo daqui a pouco ou cole coordenadas.',
-    placePicked: 'Centro do minimapa: {place}',
     placeNeeded:
-      'Escolha um lugar para desenhar as ruas dele. Até lá, o minimapa desenha a cidade inventada.',
+      'Salve um lugar abaixo para desenhar as ruas dele. Até lá, o minimapa desenha a cidade inventada.',
     placePrivacy:
       'Os espectadores veem as ruas em volta desse lugar, então escolha uma área geral em vez da sua casa.',
     placeCredit: 'Busca de lugares e dados do mapa © colaboradores do OpenStreetMap',
+    places: 'Lugares salvos',
+    placesTip:
+      'Lugares que o minimapa pode mostrar, cada um com um nome de uma palavra. Os mods trocam entre eles pelo chat com !hud map e o nome. Com Lugar real, o minimapa começa no primeiro.',
+    placesEmpty: 'Nenhum lugar salvo ainda. Adicione um abaixo para trocar para ele pelo chat.',
+    placesFull: 'Você pode salvar até {count} lugares.',
+    placeName: 'Nome',
+    placeNameTip:
+      'A palavra que os mods digitam depois de !hud map: letras, números, - ou _, até 20. Se deixar vazio, o lugar recebe o nome do que você escolher.',
+    placeNamePlaceholder: 'park1',
+    placeNameInvalid:
+      'Use uma palavra de até 20 letras, números, - ou _. urban, park e reset já são usados pelo comando.',
+    placeNameTaken: 'Outro lugar salvo já tem esse nome.',
+    placeStartsHere: 'Começa aqui',
+    placeStartHere: 'Começar aqui',
+    placeStartHereLabel: 'Começar o minimapa em {name}',
+    placePreview: 'Prévia',
+    placePreviewLabel: 'Mostrar {name} na prévia',
+    placeRemove: 'Remover',
+    placeRemoveLabel: 'Remover {name}',
+    placesCommand:
+      'Os mods trocam o minimapa pelo chat: !hud map park1 para um lugar salvo, !hud map urban ou !hud map park para os mapas inventados, !hud map reset para voltar.',
+    move: 'Seta',
+    moveTip:
+      'Como a seta do minimapa se move quando o overlay começa. Você e seus mods mudam isso pelo chat com !hud walk, !hud run e !hud stay.',
+    moves: {
+      walk: 'Andando',
+      run: 'Correndo',
+      stay: 'Parada',
+    },
     showPops: 'Mostrar dinheiro ganho',
     showPopsTip:
       'Faz subir um +$100 com o nome do espectador ao lado do dinheiro toda vez que ele aumenta.',
@@ -1022,12 +1050,38 @@ export const pt: typeof en = {
     tiers: 'Tier 2 e 3 valem mais',
     tiersTip:
       'Na Twitch, um sub Tier 2 soma o dinheiro de 2 subs e um Tier 3 o de 5, de acordo com o preço.',
+    sectionMarket: 'Mercado',
+    marketHint:
+      'Itens que você e seus mods compram pelo chat com !hud buy e o nome do item. O preço sai do dinheiro; sem dinheiro suficiente, nada é comprado.',
+    items: 'Itens',
+    itemsTip:
+      'O que o mercado vende. O chat digita o nome depois de !hud buy, em maiúsculas ou minúsculas, e um número depois dele compra essa quantidade.',
+    itemsEmpty: 'Nenhum item ainda. Adicione um abaixo, tipo água por $100.',
+    itemsFull: 'Você pode adicionar até {count} itens.',
+    itemName: 'Item',
+    itemNameTip:
+      'O que o chat digita depois de !hud buy: letras, números, espaços, - e _, até 24 caracteres.',
+    itemNamePlaceholder: 'água',
+    itemPrice: 'Preço',
+    itemAdd: 'Adicionar',
+    itemNameInvalid: 'Use até 24 letras, números, espaços, - ou _, com pelo menos uma letra.',
+    itemNameTaken: 'Outro item já tem esse nome.',
+    itemTry: 'Comprar',
+    itemTryLabel: 'Comprar {name} na prévia',
+    itemRemoveLabel: 'Remover {name}',
     sectionCommands: 'Comandos do chat',
     commandsIntro: 'Você e seus mods controlam o HUD pelo chat da Twitch ou da Kick com !hud.',
     cmdAdd: 'Soma dinheiro',
     cmdRemove: 'Tira dinheiro, mesmo abaixo de $0',
     cmdSet: 'Define o dinheiro',
     cmdReset: 'Volta para o dinheiro inicial',
+    cmdMapPlace: 'Troca o minimapa para um lugar salvo',
+    cmdMapMadeUp: 'Troca para a cidade inventada; !hud map park para o parque inventado',
+    cmdMapReset: 'Volta para o minimapa definido na URL',
+    cmdWalk: 'Faz a seta andar; !hud run faz a seta correr',
+    cmdStay: 'Para a seta onde ela está',
+    cmdBuy: 'Compra um item: o preço sai do dinheiro',
+    cmdBuyMany: 'Compra três unidades',
     commandsAmounts:
       'Escreva os valores como 500, 1,500, 2.5k ou 1m. !hud cash add 500 e !hud cash remove 500 também funcionam.',
     previewTitle: 'Prévia do HUD IRL',
@@ -1042,7 +1096,7 @@ export const pt: typeof en = {
     testRaid: 'Raid de 25',
     testAdd: '+$1,000',
     testRemove: '−$500',
-    testSet: 'Definir $10,000',
+    testMove: 'Parar / Andar',
     testReset: 'Reiniciar',
     widgetUrlTip:
       'Já fez um widget? Cole a URL dele aqui para carregar suas configurações e mudar o que precisar.',
@@ -1072,6 +1126,12 @@ export const pt: typeof en = {
     faq5Q: 'Preciso fazer login ou conectar minha conta?',
     faq5A:
       'Não. O HUD lê subs, presentes, Bits, Kicks, raids e comandos dos mods no seu chat público da Twitch e da Kick, do jeito que um espectador deslogado vê.',
+    faq6Q: 'Posso trocar de lugar durante a live?',
+    faq6A:
+      'Sim. Salve cada lugar com um nome curto, tipo park1 e park2. Você e seus mods digitam !hud map park1 no chat da Twitch ou da Kick para trocar, !hud map urban ou !hud map park para os mapas inventados, e !hud map reset para voltar ao minimapa da URL. A escolha fica salva no OBS.',
+    faq7Q: 'Como funciona o mercado?',
+    faq7A:
+      'Adicione itens com um preço na página de configuração, tipo água por $100. Você e seus mods digitam !hud buy água no chat da Twitch ou da Kick, ou !hud buy água 3 para comprar três, e o preço sai do dinheiro com o nome do item ao lado. Se o dinheiro não der, nada é comprado e o preço aparece com um X.',
   },
   frames: {
     breadcrumb: 'Configurar Molduras de Live',
@@ -2715,6 +2775,10 @@ export const pt: typeof en = {
     lead: 'Recursos novos e correções de bugs no Senchabot Extensions, dos mais novos para os mais antigos. A lista é montada a partir do histórico de commits do projeto no [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).',
     site: 'Site',
     entries: {
+      irlHudMarket:
+        'O HUD IRL ganha um mercado: adicione itens com preço, e !hud buy água tira o preço do dinheiro. Os mods também param a seta do minimapa e a fazem andar com !hud stay, !hud walk e !hud run.',
+      irlHudPlaces:
+        'O HUD IRL salva vários lugares para o minimapa, e os mods trocam entre eles pelo chat com !hud map. Os lugares reais aparecem mais de perto, e a caminhada segue os caminhos em volta deles.',
       irlHudLaunch:
         'Overlay novo: HUD IRL, um HUD estilo videogame para lives IRL. Subs, subs de presente, Bits, Kicks e raids somam o dinheiro que você definir num contador embaixo de um relógio no seu fuso horário, ao lado de um minimapa onde uma seta anda por uma cidade ou um parque inventados, ou pelas ruas de verdade em volta de um lugar que você escolher. Os mods mudam o dinheiro com !hud cash.',
       spinWheelTwoColors:

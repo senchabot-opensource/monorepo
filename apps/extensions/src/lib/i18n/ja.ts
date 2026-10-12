@@ -969,15 +969,15 @@ export const ja: typeof en = {
     radarSameCorner: 'ミニマップと所持金が同じ隅にあるため、重なってしまいます。',
     map: 'ミニマップの種類',
     mapTip:
-      '「街」は街区のあいだを走る通りを描きます。「公園」は芝生や木々、池のあいだを曲がりくねる小道を描きます。「実在の場所」は、あなたが選んだ場所の周りの通りをOpenStreetMapのデータから描きます。',
+      '「街」は街区のあいだを走る通りを描きます。「公園」は芝生や木々、池のあいだを曲がりくねる小道を描きます。「実在の場所」は、最初に保存した場所の周りの通りをOpenStreetMapのデータから描きます。',
     maps: {
       urban: '街',
       park: '公園',
       real: '実在の場所',
     },
-    place: '場所',
+    place: '場所を探す',
     placeTip:
-      '通り、広場、公園、地区の名前で検索するか、41.0256, 28.9744 のような座標を貼り付けてください。ミニマップには、その場所からおよそ500 m以内の通りや小道が描かれます。',
+      '通り、広場、公園、地区の名前で検索するか、41.0256, 28.9744 のような座標を貼り付けて、結果を選ぶと保存されます。ミニマップには、その場所からおよそ350 m以内の通りや小道が描かれます。',
     placePlaceholder: '場所を検索、または座標を貼り付け',
     placeSearch: '検索',
     placeSearching: '検索中…',
@@ -985,13 +985,41 @@ export const ja: typeof en = {
     placeNone: '場所が見つかりませんでした。別の名前で試すか、座標を貼り付けてください。',
     placeError:
       '検索から応答がありませんでした。少し待ってからもう一度試すか、座標を貼り付けてください。',
-    placePicked: 'ミニマップの中心: {place}',
     placeNeeded:
-      '場所を選ぶと、その周りの通りが描かれます。選ぶまでは、ミニマップには架空の街が描かれます。',
+      '下で場所を保存すると、その周りの通りが描かれます。保存するまでは、ミニマップには架空の街が描かれます。',
     placePrivacy:
       '視聴者にはこの場所の周りの通りが見えるので、自宅ではなく大まかなエリアを選んでください。',
     placeCredit: '場所の検索と地図データ © OpenStreetMap 協力者',
-    showPops: '増えた金額を表示',
+    places: '保存した場所',
+    placesTip:
+      'ミニマップに表示できる場所で、それぞれに1語の名前を付けます。モデレーターはチャットで !hud map と名前を打って切り替えます。「実在の場所」では、ミニマップは最初の場所から始まります。',
+    placesEmpty: '保存した場所はまだありません。下で追加すると、チャットから切り替えられます。',
+    placesFull: '場所は最大{count}件まで保存できます。',
+    placeName: '名前',
+    placeNameTip:
+      'モデレーターが !hud map のあとに打つ語です。文字、数字、- または _ を20文字まで使えます。空欄のままにすると、選んだ場所の名前が付きます。',
+    placeNamePlaceholder: 'park1',
+    placeNameInvalid:
+      '文字、数字、- または _ だけの、20文字までの1語にしてください。urban、park、reset はコマンドで使われています。',
+    placeNameTaken: 'この名前はほかの保存した場所ですでに使われています。',
+    placeStartsHere: '開始地点',
+    placeStartHere: '開始地点にする',
+    placeStartHereLabel: 'ミニマップを{name}から始める',
+    placePreview: 'プレビュー',
+    placePreviewLabel: '{name}をプレビューに表示',
+    placeRemove: '削除',
+    placeRemoveLabel: '{name}を削除',
+    placesCommand:
+      'モデレーターはチャットからミニマップを切り替えられます。保存した場所なら !hud map park1、架空の地図なら !hud map urban または !hud map park、元に戻すなら !hud map reset です。',
+    move: '矢印',
+    moveTip:
+      'オーバーレイが始まったときの、ミニマップの矢印の動き方です。あなたとモデレーターは、チャットから !hud walk、!hud run、!hud stay で変えられます。',
+    moves: {
+      walk: '歩く',
+      run: '走る',
+      stay: '止まる',
+    },
+    showPops:'増えた金額を表示',
     showPopsTip: '所持金が増えるたびに、視聴者の名前と +$100 が所持金の横に浮かび上がります。',
     sectionMoney: '所持金',
     start: '開始時の所持金',
@@ -1014,12 +1042,39 @@ export const ja: typeof en = {
     tiers: 'Tier 2と3を多めにカウント',
     tiersTip:
       'TwitchではTier 2のサブスクはサブスク2件分、Tier 3は5件分の金額を加算します。価格に合わせた比率です。',
-    sectionCommands: 'チャットコマンド',
+    sectionMarket: 'マーケット',
+    marketHint:
+      'あなたとモデレーターが、チャットで !hud buy とアイテム名を打って買うアイテムです。値段は所持金から引かれ、所持金が足りなければ何も買われません。',
+    items: 'アイテム',
+    itemsTip:
+      'マーケットで売るものです。チャットでは !hud buy のあとに名前を打ちます。大文字と小文字は区別されず、名前のあとに数を付けるとその数だけ買えます。',
+    itemsEmpty: 'アイテムはまだありません。$100の水のように、下で追加してください。',
+    itemsFull: 'アイテムは最大{count}個まで追加できます。',
+    itemName: 'アイテム',
+    itemNameTip:
+      'チャットで !hud buy のあとに打つ名前です。文字、数字、スペース、- と _ を24文字まで使えます。',
+    itemNamePlaceholder: '水',
+    itemPrice: '値段',
+    itemAdd: '追加',
+    itemNameInvalid:
+      '文字、数字、スペース、- または _ を24文字までで、文字を1つ以上含めてください。',
+    itemNameTaken: 'この名前はほかのアイテムですでに使われています。',
+    itemTry: '購入',
+    itemTryLabel: '{name}をプレビューで購入',
+    itemRemoveLabel: '{name}を削除',
+    sectionCommands:'チャットコマンド',
     commandsIntro: 'あなたとモデレーターは、TwitchやKickのチャットから !hud でHUDを操作できます。',
     cmdAdd: '所持金を増やします',
     cmdRemove: '所持金を減らします。$0より下にもなります',
     cmdSet: '所持金を設定します',
     cmdReset: '開始時の所持金に戻します',
+    cmdMapPlace: 'ミニマップを保存した場所に切り替えます',
+    cmdMapMadeUp: '架空の街に切り替えます。!hud map park なら架空の公園です',
+    cmdMapReset: 'URLで設定したミニマップに戻します',
+    cmdWalk: '矢印を歩かせます。!hud run なら走ります',
+    cmdStay: '矢印をその場で止めます',
+    cmdBuy: 'アイテムを買います。値段は所持金から引かれます',
+    cmdBuyMany: '同じアイテムを3個買います',
     commandsAmounts:
       '金額は 500、1,500、2.5k、1m のように書きます。!hud cash add 500 や !hud cash remove 500 も使えます。',
     previewTitle: 'IRL HUDのプレビュー',
@@ -1034,7 +1089,7 @@ export const ja: typeof en = {
     testRaid: '25人のレイド',
     testAdd: '+$1,000',
     testRemove: '−$500',
-    testSet: '$10,000に設定',
+    testMove: '止まる / 歩く',
     testReset: 'リセット',
     widgetUrlTip:
       '作成済みのウィジェットがありますか？ここにURLを貼り付けると設定が読み込まれ、必要なところだけ変更できます。',
@@ -1064,6 +1119,12 @@ export const ja: typeof en = {
     faq5Q: 'ログインやアカウント連携は必要ですか？',
     faq5A:
       'いいえ。HUDはサブスク、ギフト、Bits、Kicks、レイド、モデレーターのコマンドを、TwitchとKickの公開チャットから、ログインしていない視聴者と同じように読み取ります。',
+    faq6Q: '配信中に場所を切り替えられますか？',
+    faq6A:
+      'はい。それぞれの場所を park1 や park2 のような短い名前で保存してください。あなたとモデレーターがTwitchやKickのチャットで !hud map park1 と打つと切り替わり、!hud map urban や !hud map park なら架空の地図に、!hud map reset ならURLで設定したミニマップに戻ります。選んだ地図はOBSに保存されます。',
+    faq7Q: 'マーケットはどういう仕組みですか？',
+    faq7A:
+      '設定ページで、$100の水のように値段を付けてアイテムを追加します。あなたとモデレーターがTwitchやKickのチャットで !hud buy 水 と打つか、3個なら !hud buy 水 3 と打つと、値段が所持金から引かれ、その横にアイテム名が表示されます。所持金が足りなければ何も買われず、値段がバツ印付きで表示されます。',
   },
   frames: {
     breadcrumb: '配信フレームの設定',
@@ -2693,6 +2754,10 @@ export const ja: typeof en = {
     lead: 'Senchabot Extensionsの新機能とバグ修正を、新しい順に並べています。このリストは[GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions)にあるプロジェクトのコミット履歴からまとめています。',
     site: 'サイト',
     entries: {
+      irlHudMarket:
+        'IRL HUDにマーケットが登場：値段付きのアイテムを追加でき、!hud buy 水 でその値段が所持金から引かれます。モデレーターは !hud stay、!hud walk、!hud run でミニマップの矢印を止めたり動かしたりもできます。',
+      irlHudPlaces:
+        'IRL HUDでミニマップ用の場所を複数保存できるようになり、モデレーターはチャットから !hud map で切り替えられます。実在の場所はより近くから描かれ、矢印はその周りの道から外れずに歩きます。',
       irlHudLaunch:
         '新オーバーレイ「IRL HUD」：IRL配信向けのゲーム風HUD。サブスク、ギフトサブ、Bits、Kicks、レイドで設定した金額が、あなたのタイムゾーンの時計の下にあるカウンターに加算されます。隣のミニマップでは、矢印が架空の街や公園、またはあなたが選んだ場所の実際の通りを歩きます。モデレーターは !hud cash で所持金を変更できます。',
       spinWheelTwoColors:

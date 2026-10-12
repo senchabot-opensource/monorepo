@@ -960,25 +960,55 @@ export const tr: typeof en = {
     radarSameCorner: 'Mini harita ve para aynı köşede, bu yüzden üst üste biner.',
     map: 'Mini Harita Türü',
     mapTip:
-      "Şehir, bloklar arasındaki sokakları çizer. Park, çimenler, ağaçlar ve göletler arasında kıvrılan yolları çizer. Gerçek Yer, seçtiğin bir yerin etrafındaki sokakları OpenStreetMap'ten çizer.",
+      "Şehir, bloklar arasındaki sokakları çizer. Park, çimenler, ağaçlar ve göletler arasında kıvrılan yolları çizer. Gerçek Yer, kaydettiğin ilk yerin etrafındaki sokakları OpenStreetMap'ten çizer.",
     maps: {
       urban: 'Şehir',
       park: 'Park',
       real: 'Gerçek Yer',
     },
-    place: 'Yer',
+    place:
+      'Yer Bul',
     placeTip:
-      "Bir sokak, meydan, park ya da semt ara, ya da 41.0256, 28.9744 gibi koordinat yapıştır. Mini harita etrafındaki yaklaşık 500 m'lik sokak ve yolları çizer.",
+      "Bir sokak, meydan, park ya da semt ara, ya da 41.0256, 28.9744 gibi koordinat yapıştır, sonra kaydetmek için seç. Mini harita etrafındaki yaklaşık 350 m'lik sokak ve yolları çizer.",
     placePlaceholder: 'Yer ara ya da koordinat yapıştır',
     placeSearch: 'Ara',
     placeSearching: 'Aranıyor…',
     placeResults: 'Bulunan yerler',
     placeNone: 'Yer bulunamadı. Başka bir isim dene ya da koordinat yapıştır.',
     placeError: 'Arama cevap vermedi. Biraz sonra tekrar dene ya da koordinat yapıştır.',
-    placePicked: 'Mini harita merkezi: {place}',
-    placeNeeded: 'Sokaklarını çizmek için bir yer seç. O zamana kadar mini harita hayali şehri çizer.',
+    placeNeeded:
+      'Sokaklarını çizmek için aşağıdan bir yer kaydet. O zamana kadar mini harita hayali şehri çizer.',
     placePrivacy: 'İzleyiciler bu yerin etrafındaki sokakları görür, bu yüzden evini değil genel bir bölgeyi seç.',
     placeCredit: 'Yer arama ve harita verisi © OpenStreetMap katkıcıları',
+    places: 'Kayıtlı Yerler',
+    placesTip:
+      "Mini haritanın gösterebileceği, her biri tek kelimelik bir adı olan yerler. Modlar sohbetten !hud map ve adıyla aralarında geçiş yapar. Gerçek Yer'de mini harita ilk yerden başlar.",
+    placesEmpty: 'Henüz kayıtlı yer yok. Sohbetten geçiş yapmak için aşağıdan bir tane ekle.',
+    placesFull: 'En çok {count} yer kaydedebilirsin.',
+    placeName: 'Ad',
+    placeNameTip:
+      "Modların !hud map'ten sonra yazacağı kelime: harf, rakam, - ya da _, en çok 20 karakter. Boş bırakırsan yer, seçtiğin yerin adını alır.",
+    placeNamePlaceholder: 'park1',
+    placeNameInvalid:
+      'En çok 20 harf, rakam, - ya da _ içeren tek bir kelime kullan. urban, park ve reset komutta kullanılıyor.',
+    placeNameTaken: 'Bu adla kayıtlı başka bir yer var.',
+    placeStartsHere: 'Buradan başlar',
+    placeStartHere: 'Buradan başlat',
+    placeStartHereLabel: 'Mini haritayı {name} yerinden başlat',
+    placePreview: 'Önizle',
+    placePreviewLabel: '{name} yerini önizlemede göster',
+    placeRemove: 'Kaldır',
+    placeRemoveLabel: '{name} yerini kaldır',
+    placesCommand:
+      'Modlar mini haritayı sohbetten değiştirir: kayıtlı bir yer için !hud map park1, hayali haritalar için !hud map urban ya da !hud map park, geri dönmek için !hud map reset.',
+    move: 'Ok',
+    moveTip:
+      'Overlay açıldığında mini haritadaki okun nasıl hareket ettiği. Sen ve modların sohbetten !hud walk, !hud run ve !hud stay ile değiştirirsiniz.',
+    moves: {
+      walk: 'Yürüyor',
+      run: 'Koşuyor',
+      stay: 'Duruyor',
+    },
     showPops: 'Kazancı Göster',
     showPopsTip: 'Para her arttığında paranın yanında izleyicinin adıyla +$100 belirir.',
     sectionMoney: 'Para',
@@ -1002,12 +1032,38 @@ export const tr: typeof en = {
     tiers: 'Tier 2 ve 3 Daha Çok Sayılır',
     tiersTip:
       "Twitch'te Tier 2 abonelik 2, Tier 3 abonelik 5 abonelik kadar para ekler, fiyatlarıyla orantılı.",
+    sectionMarket: 'Market',
+    marketHint:
+      'Sen ve modlarının sohbetten !hud buy ve ürünün adıyla satın aldığı ürünler. Fiyatı paradan düşer; para yetmezse hiçbir şey alınmaz.',
+    items: 'Ürünler',
+    itemsTip:
+      "Marketin sattıkları. Sohbet adı !hud buy'dan sonra yazar, büyük küçük harf fark etmez; sonuna bir sayı yazılırsa o kadar alınır.",
+    itemsEmpty: "Henüz ürün yok. Aşağıdan bir tane ekle, örneğin $100'a su.",
+    itemsFull: 'En çok {count} ürün ekleyebilirsin.',
+    itemName: 'Ürün',
+    itemNameTip:
+      "Sohbetin !hud buy'dan sonra yazacağı ad: harf, rakam, boşluk, - ve _, en çok 24 karakter.",
+    itemNamePlaceholder: 'su',
+    itemPrice: 'Fiyat',
+    itemAdd: 'Ekle',
+    itemNameInvalid: 'En az bir harf içeren, en çok 24 harf, rakam, boşluk, - ya da _ kullan.',
+    itemNameTaken: 'Bu adla başka bir ürün var.',
+    itemTry: 'Satın al',
+    itemTryLabel: '{name} ürününü önizlemede satın al',
+    itemRemoveLabel: '{name} ürününü kaldır',
     sectionCommands: 'Sohbet Komutları',
     commandsIntro: "HUD'u sen ve modların Twitch ya da Kick sohbetinden !hud ile yönetirsiniz.",
     cmdAdd: 'Para ekler',
     cmdRemove: "Para düşer, $0'ın altına da inebilir",
     cmdSet: 'Parayı ayarlar',
     cmdReset: 'Başlangıç parasına döner',
+    cmdMapPlace: 'Mini haritayı kayıtlı bir yere geçirir',
+    cmdMapMadeUp: 'Hayali şehre geçirir; hayali park için !hud map park',
+    cmdMapReset: "URL'de ayarlı mini haritaya döner",
+    cmdWalk: 'Oku yürütür; !hud run koşturur',
+    cmdStay: 'Oku olduğu yerde durdurur',
+    cmdBuy: 'Bir ürün satın alır: fiyatı paradan düşer',
+    cmdBuyMany: 'Ondan üç tane alır',
     commandsAmounts:
       'Miktarları 500, 1,500, 2.5k ya da 1m gibi yaz. !hud cash add 500 ve !hud cash remove 500 da çalışır.',
     previewTitle: 'IRL HUD Önizleme',
@@ -1022,7 +1078,8 @@ export const tr: typeof en = {
     testRaid: '25 Kişilik Raid',
     testAdd: '+$1,000',
     testRemove: '−$500',
-    testSet: "$10,000'a Ayarla",
+    testMove:
+      'Dur / Yürü',
     testReset: 'Sıfırla',
     widgetUrlTip:
       "Daha önce bir widget oluşturduysan URL'sini buraya yapıştır. Ayarların geri yüklenir, istediğini değiştirebilirsin.",
@@ -1052,6 +1109,12 @@ export const tr: typeof en = {
     faq5Q: 'Giriş yapmam ya da hesabımı bağlamam gerekiyor mu?',
     faq5A:
       "Hayır. HUD abonelikleri, hediyeleri, Bits'i, Kicks'i, raid'leri ve mod komutlarını herkese açık Twitch ve Kick sohbetinden, giriş yapmamış bir izleyicinin gördüğü gibi okur.",
+    faq6Q: 'Yayın sırasında yerler arasında geçiş yapabilir miyim?',
+    faq6A:
+      "Evet. Her yeri park1 ve park2 gibi kısa bir adla kaydet. Sen ve modların geçiş yapmak için Twitch ya da Kick sohbetine !hud map park1, hayali haritalar için !hud map urban ya da !hud map park, URL'deki mini haritaya dönmek için !hud map reset yazarsınız. Seçim OBS'te kaydedilir.",
+    faq7Q: 'Market nasıl çalışıyor?',
+    faq7A:
+      "Kurulum sayfasında fiyatıyla ürünler ekle, örneğin $100'a su. Sen ve modların Twitch ya da Kick sohbetine !hud buy su, üç tane için !hud buy su 3 yazarsınız; fiyat paradan düşer ve yanında ürünün adı görünür. Para yetmezse hiçbir şey alınmaz ve fiyat çarpıyla görünür.",
   },
   frames: {
     breadcrumb: 'Yayın Çerçeveleri Kurulumu',
@@ -2671,6 +2734,10 @@ export const tr: typeof en = {
     lead: "Senchabot Extensions'a eklenen özellikler ve düzeltilen hatalar, en yenisi en üstte. Liste projenin [GitHub'daki](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) commit geçmişinden hazırlanıyor.",
     site: 'Site',
     entries: {
+      irlHudMarket:
+        "IRL HUD'a market geldi: fiyatlı ürünler ekle, !hud buy su fiyatı paradan düşsün. Modlar mini haritadaki oku da !hud stay, !hud walk ve !hud run ile durdurup yürütür.",
+      irlHudPlaces:
+        'IRL HUD mini harita için birden çok yer kaydeder, modlar da sohbetten !hud map ile aralarında geçiş yapar. Gerçek yerler daha yakından görünür, yürüyüş de etraflarındaki yollarda kalır.',
       irlHudLaunch:
         "Yeni overlay: IRL HUD, IRL yayınlar için oyun tarzı bir HUD. Abonelikler, hediye abonelikler, Bits, Kicks ve raid'ler belirlediğin parayı senin saat dilimindeki saatin altındaki sayaca ekler; yanında bir okun hayali bir şehirde, parkta ya da seçtiğin yerin gerçek sokaklarında yürüdüğü bir mini harita durur. Modlar parayı !hud cash ile değiştirir.",
       spinWheelTwoColors:

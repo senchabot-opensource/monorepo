@@ -953,25 +953,55 @@ export const en = {
     radarSameCorner: 'The mini-map and the cash share this corner, so they overlap.',
     map: 'Mini-Map Style',
     mapTip:
-      'Urban draws city streets between blocks. Park draws winding paths between lawns, trees and ponds. Real Place draws the streets around a place you pick, from OpenStreetMap.',
+      'Urban draws city streets between blocks. Park draws winding paths between lawns, trees and ponds. Real Place draws the streets around your first saved place, from OpenStreetMap.',
     maps: {
       urban: 'Urban',
       park: 'Park',
       real: 'Real Place',
     },
-    place: 'Place',
+    place:
+      'Find a Place',
     placeTip:
-      'Search for a street, square, park or neighborhood, or paste coordinates like 41.0256, 28.9744. The mini-map draws the streets and paths within about 500 m of it.',
+      'Search for a street, square, park or neighborhood, or paste coordinates like 41.0256, 28.9744, then pick it to save it. The mini-map draws the streets and paths within about 350 m of it.',
     placePlaceholder: 'Search a place or paste coordinates',
     placeSearch: 'Search',
     placeSearching: 'Searching…',
     placeResults: 'Places found',
     placeNone: 'No places found. Try another name, or paste coordinates.',
     placeError: "The search didn't answer. Try again in a moment, or paste coordinates.",
-    placePicked: 'Mini-map center: {place}',
-    placeNeeded: 'Pick a place to draw its streets. Until then the mini-map draws the made-up city.',
+    placeNeeded:
+      'Save a place below to draw its streets. Until then the mini-map draws the made-up city.',
     placePrivacy: 'Viewers see the streets around this place, so pick a general area rather than your home.',
     placeCredit: 'Place search and map data © OpenStreetMap contributors',
+    places: 'Saved Places',
+    placesTip:
+      'Places the mini-map can show, each with a one-word name. Mods switch between them from chat with !hud map and the name. With Real Place, the mini-map starts at the first one.',
+    placesEmpty: 'No saved places yet. Add one below to switch to it from chat.',
+    placesFull: 'You can save up to {count} places.',
+    placeName: 'Name',
+    placeNameTip:
+      'The word mods type after !hud map: letters, numbers, - or _, up to 20. Leave it empty and the place is named after what you pick.',
+    placeNamePlaceholder: 'park1',
+    placeNameInvalid:
+      'Use one word of up to 20 letters, numbers, - or _. urban, park and reset are taken by the command.',
+    placeNameTaken: 'Another saved place already has this name.',
+    placeStartsHere: 'Starts here',
+    placeStartHere: 'Start here',
+    placeStartHereLabel: 'Start the mini-map at {name}',
+    placePreview: 'Preview',
+    placePreviewLabel: 'Show {name} in the preview',
+    placeRemove: 'Remove',
+    placeRemoveLabel: 'Remove {name}',
+    placesCommand:
+      'Mods switch the mini-map from chat: !hud map park1 for a saved place, !hud map urban or !hud map park for the made-up maps, !hud map reset to go back.',
+    move: 'Arrow',
+    moveTip:
+      'How the arrow on the mini-map moves when the overlay starts. You and your mods change it from chat with !hud walk, !hud run and !hud stay.',
+    moves: {
+      walk: 'Walking',
+      run: 'Running',
+      stay: 'Standing',
+    },
     showPops: 'Show Cash Gains',
     showPopsTip: "Floats +$100 with the viewer's name next to the cash every time it goes up.",
     sectionMoney: 'Cash',
@@ -994,12 +1024,38 @@ export const en = {
     tiers: 'Tier 2 and 3 Count More',
     tiersTip:
       'On Twitch a Tier 2 sub adds 2 subs worth of cash and a Tier 3 sub 5, in line with their price.',
+    sectionMarket: 'Market',
+    marketHint:
+      "Items you and your mods buy from chat with !hud buy and the item's name. The price comes off the cash; without enough cash, nothing is bought.",
+    items: 'Items',
+    itemsTip:
+      'What the market sells. Chat types the name after !hud buy, in any case, and a number after it buys that many.',
+    itemsEmpty: 'No items yet. Add one below, like water for $100.',
+    itemsFull: 'You can add up to {count} items.',
+    itemName: 'Item',
+    itemNameTip:
+      'What chat types after !hud buy: letters, numbers, spaces, - and _, up to 24 characters.',
+    itemNamePlaceholder: 'water',
+    itemPrice: 'Price',
+    itemAdd: 'Add',
+    itemNameInvalid: 'Use up to 24 letters, numbers, spaces, - or _, with at least one letter.',
+    itemNameTaken: 'Another item already has this name.',
+    itemTry: 'Buy',
+    itemTryLabel: 'Buy {name} in the preview',
+    itemRemoveLabel: 'Remove {name}',
     sectionCommands: 'Chat Commands',
     commandsIntro: 'You and your mods control the HUD from Twitch or Kick chat with !hud.',
     cmdAdd: 'Adds cash',
     cmdRemove: 'Takes cash away, even below $0',
     cmdSet: 'Sets the cash',
     cmdReset: 'Goes back to the starting cash',
+    cmdMapPlace: 'Switches the mini-map to a saved place',
+    cmdMapMadeUp: 'Switches to the made-up city; !hud map park to the made-up park',
+    cmdMapReset: 'Goes back to the mini-map set in the URL',
+    cmdWalk: 'Starts the arrow walking; !hud run makes it run',
+    cmdStay: 'Stops the arrow where it is',
+    cmdBuy: 'Buys an item: its price comes off the cash',
+    cmdBuyMany: 'Buys three of it',
     commandsAmounts:
       'Write amounts like 500, 1,500, 2.5k or 1m. !hud cash add 500 and !hud cash remove 500 work too.',
     previewTitle: 'IRL HUD Preview',
@@ -1014,7 +1070,8 @@ export const en = {
     testRaid: 'Raid of 25',
     testAdd: '+$1,000',
     testRemove: '−$500',
-    testSet: 'Set $10,000',
+    testMove:
+      'Stop / Walk',
     testReset: 'Reset',
     widgetUrlTip:
       'Already made a widget? Paste its URL here to load your settings and change what you need.',
@@ -1044,6 +1101,12 @@ export const en = {
     faq5Q: 'Do I need to log in or connect my account?',
     faq5A:
       'No. The HUD reads subs, gifts, Bits, Kicks, raids and mod commands from your public Twitch and Kick chat, the way a logged-out viewer sees them.',
+    faq6Q: 'Can I switch between places during the stream?',
+    faq6A:
+      'Yes. Save each place with a short name, like park1 and park2. You and your mods type !hud map park1 in Twitch or Kick chat to switch, !hud map urban or !hud map park for the made-up maps, and !hud map reset to go back to the mini-map in the URL. The choice is saved in OBS.',
+    faq7Q: 'How does the market work?',
+    faq7A:
+      "Add items with a price on the setup page, like water for $100. You and your mods type !hud buy water in Twitch or Kick chat, or !hud buy water 3 for three, and the price comes off the cash with the item's name next to it. If the cash is short, nothing is bought and the price shows with a cross.",
   },
   frames: {
     breadcrumb: 'Stream Frames Setup',
@@ -2686,6 +2749,10 @@ export const en = {
     lead: "New features and bug fixes in Senchabot Extensions, newest first. The list is put together from the project's commit history on [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      irlHudMarket:
+        'IRL HUD gets a market: add items with prices, and !hud buy water takes the price off the cash. Mods also stop and start the mini-map arrow with !hud stay, !hud walk and !hud run.',
+      irlHudPlaces:
+        'IRL HUD saves several places for the mini-map, and mods switch between them from chat with !hud map. Real places show up closer, and the walk keeps to the paths around them.',
       irlHudLaunch:
         'New overlay: IRL HUD, a game-style HUD for IRL streams. Subs, gifted subs, Bits, Kicks and raids add the cash you set to a counter under a clock in your time zone, next to a mini-map where an arrow walks a made-up city or park, or the real streets around a place you pick. Mods change it with !hud cash.',
       spinWheelTwoColors:

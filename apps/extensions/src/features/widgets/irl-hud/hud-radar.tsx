@@ -15,8 +15,6 @@ import { loadRealMap, type RealMap, realGraph, stayNearMiddle } from './map-osm'
 
 /** The mini-map's width at 100% on a 1080p scene. */
 export const RADAR_SIZE = 280;
-/** How fast the arrow walks, in px a second. */
-export const WALK_SPEED = 14;
 // A real place's art reaches past its 450 px radius where roads run on; this box holds it all.
 const REAL_BOX = 1200;
 
@@ -183,7 +181,7 @@ function parkScene(seed: number, palette: Palette, pattern: string): Scene {
   return { art, graph, start: 0, tile: TILE, credit: false };
 }
 
-const ROAD_WIDTH = { major: 9, minor: 6, path: 3 } as const;
+const ROAD_WIDTH = { major: 14, minor: 9, path: 5 } as const;
 
 function realScene(map: RealMap, palette: Palette): Scene {
   const areas = (kind: RealMap['areas'][number]['kind']) =>
@@ -270,6 +268,8 @@ interface HudRadarProps {
   /** The real place, for `map: 'real'`. */
   lat: number | null;
   lon: number | null;
+  /** How fast the arrow goes, in px a second; 0 stands still. */
+  speed: number;
   place: CSSProperties;
 }
 
@@ -280,7 +280,7 @@ const mod = (n: number, m: number) => ((n % m) + m) % m;
  * turning under it so the arrow always points ahead. Urban and Park are made up, so they give
  * nothing of the stream's location away; Real Place draws the streets around a picked spot.
  */
-export function HudRadar({ style, map, seed, lat, lon, place }: HudRadarProps) {
+export function HudRadar({ style, map, seed, lat, lon, speed, place }: HudRadarProps) {
   const look = LOOKS[style];
   const pattern = `ih-map-${useId().replace(/[^a-zA-Z0-9]/g, '')}`;
   const wantsReal = map === 'real' && lat !== null && lon !== null;
@@ -293,6 +293,9 @@ export function HudRadar({ style, map, seed, lat, lon, place }: HudRadarProps) {
     return null;
   }, [kind, seed, look.palette, pattern, real.map]);
 
+  // Read on every frame, so walking, running and stopping don't start the walk over.
+  const speedRef = useRef(speed);
+  speedRef.current = speed;
   const spinRef = useRef<HTMLDivElement>(null);
   const panRef = useRef<HTMLDivElement>(null);
   const northRef = useRef<HTMLSpanElement>(null);
@@ -303,7 +306,7 @@ export function HudRadar({ style, map, seed, lat, lon, place }: HudRadarProps) {
     let last: number | null = null;
     let frame = 0;
     const tick = (now: number) => {
-      const pose = stepWalker(walker, last === null ? 0 : (now - last) / 1000, WALK_SPEED);
+      const pose = stepWalker(walker, last === null ? 0 : (now - last) / 1000, speedRef.current);
       last = now;
       const x = scene.tile ? mod(pose.x, scene.tile) : pose.x;
       const y = scene.tile ? mod(pose.y, scene.tile) : pose.y;

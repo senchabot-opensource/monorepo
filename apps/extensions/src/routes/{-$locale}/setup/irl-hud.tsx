@@ -15,8 +15,11 @@ import { SettingsGroup } from '#/components/ui/settings-group';
 import { Switch } from '#/components/ui/switch';
 import { Tabs } from '#/components/ui/tabs';
 import { HINT_CLASS } from '#/components/ui/text-field';
+import { MAP_SUBCOMMAND } from '#/features/widgets/irl-hud/hud-map';
+import { BUY_SUBCOMMAND } from '#/features/widgets/irl-hud/hud-market';
 import { CASH_SUBCOMMAND, COMMAND } from '#/features/widgets/irl-hud/hud-money';
-import { PlaceField } from '#/features/widgets/irl-hud/place-field';
+import { MarketField } from '#/features/widgets/irl-hud/market-field';
+import { PlacesField } from '#/features/widgets/irl-hud/place-field';
 import { PREVIEW_CHANNEL, type PreviewMessage } from '#/features/widgets/irl-hud/use-irl-hud';
 import type { SubathonEvent, SubathonPlatform } from '#/features/widgets/subathon/subathon-events';
 import { usePreviewSender } from '#/hooks/use-preview-channel';
@@ -29,9 +32,11 @@ import {
   DEFAULT_HUD_SETTINGS,
   HUD_CORNERS,
   HUD_MAPS,
+  HUD_MOVES,
   type HudCorner,
   type HudMap,
   type HudMoneyKey,
+  type HudMove,
   type HudSettings,
   type HudStyle,
   MAX_EVENT_MONEY,
@@ -86,15 +91,26 @@ const FAQ: FaqEntry[] = [
   ['irlHud.faq3Q', 'irlHud.faq3A'],
   ['irlHud.faq4Q', 'irlHud.faq4A'],
   ['irlHud.faq5Q', 'irlHud.faq5A'],
+  ['irlHud.faq6Q', 'irlHud.faq6A'],
+  ['irlHud.faq7Q', 'irlHud.faq7A'],
 ];
 
 const CASH = `${COMMAND} ${CASH_SUBCOMMAND}`;
+const MAP = `${COMMAND} ${MAP_SUBCOMMAND}`;
+const BUY = `${COMMAND} ${BUY_SUBCOMMAND}`;
 
 const COMMANDS: { usage: string; action: TranslationKey }[] = [
   { usage: `${CASH} +500`, action: 'irlHud.cmdAdd' },
   { usage: `${CASH} -200`, action: 'irlHud.cmdRemove' },
   { usage: `${CASH} 10000`, action: 'irlHud.cmdSet' },
   { usage: `${CASH} reset`, action: 'irlHud.cmdReset' },
+  { usage: `${MAP} park1`, action: 'irlHud.cmdMapPlace' },
+  { usage: `${MAP} urban`, action: 'irlHud.cmdMapMadeUp' },
+  { usage: `${MAP} reset`, action: 'irlHud.cmdMapReset' },
+  { usage: `${COMMAND} walk`, action: 'irlHud.cmdWalk' },
+  { usage: `${COMMAND} stay`, action: 'irlHud.cmdStay' },
+  { usage: `${BUY} water`, action: 'irlHud.cmdBuy' },
+  { usage: `${BUY} water 3`, action: 'irlHud.cmdBuyMany' },
 ];
 
 /** "Istanbul · Europe" from "Europe/Istanbul", so typing a city finds it. */
@@ -132,11 +148,10 @@ function IrlHudSetup() {
   const [kickChannel, setKickChannel] = useState('');
   const [settings, setSettings] = useState(DEFAULT_HUD_SETTINGS);
   const [valuesTab, setValuesTab] = useState<SubathonPlatform>('twitch');
-  // The searched place's name; a pasted URL only has coordinates, so they show instead.
-  const [placeName, setPlaceName] = useState<string | null>(null);
   const mounted = useHydrated();
   const { previewId, send } = usePreviewSender<PreviewMessage>(PREVIEW_CHANNEL);
   const nextPlatform = useRef<SubathonPlatform>('twitch');
+  const previewWalking = useRef(true);
   const id = useId();
   // Only listed once the page runs: the offsets are the viewer's "now", not the build's.
   const zones = useMemo(() => (mounted ? timeZones() : []), [mounted]);
@@ -155,7 +170,6 @@ function IrlHudSetup() {
     const parsed = parseHudUrl(text);
     if (!parsed) return false;
     setSettings(parsed.settings);
-    setPlaceName(null);
     setTwitchChannel(parsed.twitchChannel);
     setKickChannel(parsed.kickChannel);
     return true;
@@ -168,6 +182,10 @@ function IrlHudSetup() {
   const cornerOptions: SegmentedOption<HudCorner>[] = HUD_CORNERS.map((corner) => ({
     value: corner,
     label: t(`irlHud.corners.${corner}`),
+  }));
+  const moveOptions: SegmentedOption<HudMove>[] = HUD_MOVES.map((move) => ({
+    value: move,
+    label: t(`irlHud.moves.${move}`),
   }));
   const mapOptions: SegmentedOption<HudMap>[] = HUD_MAPS.map((map) => ({
     value: map,
@@ -339,16 +357,26 @@ function IrlHudSetup() {
             />
           </div>
         )}
-        {settings.radar && settings.map === 'real' && (
-          <PlaceField
-            lat={settings.lat}
-            lon={settings.lon}
-            name={placeName}
-            onPick={(place) => {
-              setSettings((current) => ({ ...current, lat: place.lat, lon: place.lon }));
-              setPlaceName(place.name);
-            }}
+        {settings.radar && (
+          <PlacesField
+            places={settings.places}
+            onChange={(places) => update('places', places)}
+            startsAtFirst={settings.map === 'real'}
+            onPreview={(name) => sendEvent(mod(`${MAP} ${name}`))}
           />
+        )}
+        {settings.radar && (
+          <div>
+            <FieldLabel id={`${id}-move`} tip={t('irlHud.moveTip')}>
+              {t('irlHud.move')}
+            </FieldLabel>
+            <SegmentedControl
+              labelledBy={`${id}-move`}
+              value={settings.move}
+              onChange={(value) => update('move', value)}
+              options={moveOptions}
+            />
+          </div>
         )}
       </SettingsGroup>
 
@@ -383,6 +411,15 @@ function IrlHudSetup() {
         ) : (
           moneyFields(settings.platforms === 'kick' ? 'kick' : 'twitch')
         )}
+      </SettingsGroup>
+
+      <SettingsGroup title={t('irlHud.sectionMarket')}>
+        <p className={`${HINT_CLASS} mt-0`}>{t('irlHud.marketHint')}</p>
+        <MarketField
+          items={settings.items}
+          onChange={(items) => update('items', items)}
+          onTry={(name) => sendEvent(mod(`${BUY} ${name}`))}
+        />
       </SettingsGroup>
     </>
   );
@@ -439,7 +476,15 @@ function IrlHudSetup() {
     },
     { label: t('irlHud.testAdd'), event: () => mod(`${CASH} +1000`) },
     { label: t('irlHud.testRemove'), event: () => mod(`${CASH} -500`) },
-    { label: t('irlHud.testSet'), event: () => mod(`${CASH} 10000`) },
+    {
+      label: t('irlHud.testMove'),
+      // Takes turns: the preview's arrow stops, then walks again.
+      event: () => {
+        const stop = previewWalking.current;
+        previewWalking.current = !stop;
+        return mod(`${COMMAND} ${stop ? 'stay' : 'walk'}`);
+      },
+    },
     { label: t('irlHud.testReset'), event: () => mod(`${CASH} reset`) },
   ];
 

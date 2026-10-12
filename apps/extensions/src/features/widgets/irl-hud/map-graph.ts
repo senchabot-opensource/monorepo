@@ -14,6 +14,8 @@ export interface MapLink {
   dx: number;
   dy: number;
   points: Pt[];
+  /** How much the walk likes this way at a junction (a footpath over a street); 1 when unset. */
+  weight?: number;
 }
 
 export interface MapNode extends Pt {
@@ -33,8 +35,8 @@ export interface WalkerPose {
   heading: number;
 }
 
-/** Weighs the ways out of a junction; the real map uses it to keep the walk near its middle. */
-export type Steer = (from: Pt, direction: Pt) => number;
+/** Weighs a way out of a junction by where it ends; the real map keeps the walk near its middle. */
+export type Steer = (from: Pt, to: Pt) => number;
 
 interface Walker {
   graph: MapGraph;
@@ -75,6 +77,8 @@ function lastStep(link: MapLink): Pt {
 const STRAIGHT_COS = Math.cos((35 * Math.PI) / 180);
 const STRAIGHT_WEIGHT = 3;
 const TURN_WEIGHT = 1.5;
+// A steer weight below this all but closes a way.
+const STEER_OPEN = 0.5;
 
 /** Picks the way on from the walker's junction: anything but back, unless it's a dead end. */
 function chooseLink(walker: Walker, incoming: Pt | null): MapLink {
@@ -83,13 +87,18 @@ function chooseLink(walker: Walker, incoming: Pt | null): MapLink {
   const onward = node.links.filter(
     (link) => !back || link.to !== back.node || link.dx !== back.dx || link.dy !== back.dy,
   );
-  const options = onward.length > 0 ? onward : node.links;
   const here = { x: node.x, y: node.y };
+  const endOf = (link: MapLink) => link.points[link.points.length - 1];
+  // Turning back is for dead ends, and for the edge of where the walk may go: when the steer
+  // all but closes every way on, the way back is open too.
+  const { steer } = walker;
+  const boxedIn = steer && onward.every((link) => steer(here, endOf(link)) < STEER_OPEN);
+  const options = onward.length > 0 && !boxedIn ? onward : node.links;
   const weights = options.map((link) => {
     const out = firstStep(link);
     const turn = incoming ? out.x * incoming.x + out.y * incoming.y : 1;
     const weight = turn >= STRAIGHT_COS ? STRAIGHT_WEIGHT : TURN_WEIGHT;
-    return weight * (walker.steer ? walker.steer(here, out) : 1);
+    return weight * (link.weight ?? 1) * (steer ? steer(here, endOf(link)) : 1);
   });
   const total = weights.reduce((sum, weight) => sum + weight, 0);
   let roll = walker.random() * total;

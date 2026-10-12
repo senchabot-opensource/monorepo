@@ -1,8 +1,16 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { usePreviewReceiver } from '#/hooks/use-preview-channel';
-import type { HudMoneyValues } from '#/lib/irl-hud-url';
+import {
+  HUD_MOVES,
+  type HudItem,
+  type HudMoneyValues,
+  type HudMove,
+  type HudPlace,
+} from '#/lib/irl-hud-url';
 import type { SubathonEvent, SubathonPlatform } from '../subathon/subathon-events';
 import { useSubEvents } from '../subathon/use-sub-events';
+import { chosenView, MAP_RESET, parseMapCommand, parseMoveCommand } from './hud-map';
+import { parseBuyCommand } from './hud-market';
 import {
   applyCashCommand,
   clampMoney,
@@ -30,12 +38,16 @@ function loadState(key: string | null, start: number): HudState {
   return createHud(start);
 }
 
-/** A "+$100" next to the money: `name` is who sent it, empty for a mod's !hud cash. */
+/**
+ * A "+$100" next to the money: `name` is who sent it, or what was bought, and empty for a mod's
+ * !hud cash. `declined` is a purchase the cash was short for: its price shows crossed out.
+ */
 export interface HudPop {
   id: number;
   amount: number;
   name: string;
   platform: SubathonPlatform;
+  declined?: boolean;
 }
 
 /** Setup page buttons talk to the preview on this channel; both pages share the site's origin. */
@@ -72,6 +84,14 @@ interface UseIrlHudOptions {
   kick?: string;
   start: number;
   values: HudValues;
+  /** Saved places, which !hud map can switch the mini-map to. */
+  places: HudPlace[];
+  /** The URL's starting mini-map (see startKey); a choice made over another one is dropped. */
+  startMap: string;
+  /** The URL's starting movement; a chat choice made over another one is dropped. */
+  startMove: HudMove;
+  /** The market, for !hud buy. */
+  items: HudItem[];
   /** Preview mode: simulated events, no chat and no saved money. */
   simulate?: boolean;
   /** The only platform the preview simulates; both when unset. */
@@ -85,13 +105,17 @@ export function useIrlHud({
   kick,
   start,
   values,
+  places,
+  startMap,
+  startMove,
+  items,
   simulate = false,
   simPlatform,
   previewId,
 }: UseIrlHudOptions) {
   const key = simulate ? null : storageKey(twitch, kick);
-  const settingsRef = useRef({ start, values });
-  settingsRef.current = { start, values };
+  const settingsRef = useRef({ start, values, places, startMap, startMove, items });
+  settingsRef.current = { start, values, places, startMap, startMove, items };
   const [state, setState] = useState<HudState>(() => loadState(key, start));
   const stateRef = useRef(state);
   const [pops, setPops] = useState<HudPop[]>([]);
@@ -105,16 +129,53 @@ export function useIrlHud({
     return next.money - previous.money;
   }, []);
 
-  const pop = useCallback((amount: number, name: string, platform: SubathonPlatform) => {
-    const id = ++nextId.current;
-    setPops((list) => [...list.slice(-(MAX_POPS - 1)), { id, amount, name, platform }]);
-    window.setTimeout(() => setPops((list) => list.filter((item) => item.id !== id)), POP_MS);
-  }, []);
+  const pop = useCallback(
+    (amount: number, name: string, platform: SubathonPlatform, declined = false) => {
+      const id = ++nextId.current;
+      setPops((list) => [
+        ...list.slice(-(MAX_POPS - 1)),
+        { id, amount, name, platform, ...(declined ? { declined } : {}) },
+      ]);
+      window.setTimeout(() => setPops((list) => list.filter((item) => item.id !== id)), POP_MS);
+    },
+    [],
+  );
 
   const handleEvent = useCallback(
     (event: SubathonEvent) => {
       const current = settingsRef.current;
       if (event.kind === 'mod') {
+        const move = parseMoveCommand(event.text);
+        if (move) {
+          commit({ ...stateRef.current, move: { choice: move, from: current.startMove } });
+          return;
+        }
+        const purchase = parseBuyCommand(event.text, current.items);
+        if (purchase) {
+          const label =
+            // A plain x: the HUD's font has no ×.
+            purchase.count > 1 ? `${purchase.item.name} x${purchase.count}` : purchase.item.name;
+          const wallet = stateRef.current;
+          // Like a shop: without the cash for it, nothing is bought, and the price shows refused.
+          if (wallet.money < purchase.total) {
+            pop(-purchase.total, label, event.platform, true);
+            return;
+          }
+          commit({ ...wallet, money: clampMoney(wallet.money - purchase.total) });
+          pop(-purchase.total, label, event.platform);
+          return;
+        }
+        const choice = parseMapCommand(event.text);
+        if (choice === MAP_RESET) {
+          commit({ ...stateRef.current, map: undefined });
+          return;
+        }
+        if (choice !== null) {
+          // A word that names no saved place or made-up map is ignored, like a typo.
+          if (chosenView(choice, current.places))
+            commit({ ...stateRef.current, map: { choice, from: current.startMap } });
+          return;
+        }
         const command = parseCashCommand(event.text);
         if (!command) return;
         const changed = commit(applyCashCommand(stateRef.current, command, current.start));
@@ -164,5 +225,10 @@ export function useIrlHud({
     handleEvent(message.event);
   });
 
-  return { money: state.money, pops };
+  // A choice made over another starting map no longer applies once the URL changed it.
+  const mapChoice = state.map?.from === startMap ? state.map.choice : null;
+  // Saved in OBS, so checked: only a known movement over the URL's current one applies.
+  const savedMove = state.move?.from === startMove ? state.move.choice : null;
+  const moveChoice = HUD_MOVES.find((move) => move === savedMove) ?? null;
+  return { money: state.money, pops, mapChoice, move: moveChoice ?? startMove };
 }

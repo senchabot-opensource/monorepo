@@ -98,6 +98,8 @@ describe('parseCashCommand', () => {
     expect(parseCashCommand('!hud coins +5')).toBeNull();
     expect(parseCashCommand('!hudcash +5')).toBeNull();
     expect(parseCashCommand('!cash +5')).toBeNull();
+    expect(parseCashCommand('!hud cash constructor 5')).toBeNull();
+    expect(parseCashCommand('!hud cash toString 5')).toBeNull();
   });
 });
 
@@ -117,16 +119,20 @@ describe('applyCashCommand', () => {
 });
 
 describe('saved state', () => {
-  it('follows a new starting amount', () => {
-    const saved = { money: 900, start: 0 };
+  it('follows a new starting amount, keeping the chosen mini-map', () => {
+    const saved = { money: 900, start: 0, map: { choice: 'park1', from: 'urban' } };
     expect(followStart(saved, 0)).toBe(saved);
-    expect(followStart(saved, 350)).toEqual({ money: 350, start: 350 });
+    expect(followStart(saved, 350)).toEqual({ money: 350, start: 350, map: saved.map });
   });
 
   it('accepts only whole numbers', () => {
     expect(isHudState({ money: -20, start: 0 })).toBe(true);
     expect(isHudState({ money: 1.5, start: 0 })).toBe(false);
     expect(isHudState({ money: 1 })).toBe(false);
+    expect(isHudState({ money: 1, start: 0, map: { choice: 'park1', from: 'urban' } })).toBe(true);
+    expect(isHudState({ money: 1, start: 0, map: { choice: 3 } })).toBe(false);
+    expect(isHudState({ money: 1, start: 0, move: { choice: 'stay', from: 'walk' } })).toBe(true);
+    expect(isHudState({ money: 1, start: 0, move: 'stay' })).toBe(false);
     expect(isHudState(null)).toBe(false);
   });
 });

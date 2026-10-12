@@ -19,6 +19,23 @@ export type HudStyle = (typeof HUD_STYLES)[number];
 export const HUD_MAPS = ['urban', 'park', 'real'] as const;
 export type HudMap = (typeof HUD_MAPS)[number];
 
+/** How the mini-map's arrow moves; mods change it with !hud walk, !hud run and !hud stay. */
+export const HUD_MOVES = ['walk', 'run', 'stay'] as const;
+export type HudMove = (typeof HUD_MOVES)[number];
+
+/** Something mods buy from chat with !hud buy and its name; `price` comes off the cash. */
+export interface HudItem {
+  name: string;
+  price: number;
+}
+
+/** A real place the mini-map can draw; mods switch to it from chat by `name`. */
+export interface HudPlace {
+  name: string;
+  lat: number;
+  lon: number;
+}
+
 /** A corner of the scene, for the money and for the mini-map. */
 export const HUD_CORNERS = ['tr', 'tl', 'br', 'bl'] as const;
 export type HudCorner = (typeof HUD_CORNERS)[number];
@@ -62,10 +79,14 @@ export interface HudSettings extends HudMoneyValues {
   radar: boolean;
   /** Where the mini-map sits. */
   radarCorner: HudCorner;
+  /** What the mini-map starts with; `real` starts at the first saved place. */
   map: HudMap;
-  /** The real place's latitude and longitude for `map: 'real'`; null until one is picked. */
-  lat: number | null;
-  lon: number | null;
+  /** Saved real places, for `map: 'real'` and for switching from chat with !hud map. */
+  places: HudPlace[];
+  /** How the arrow moves when the overlay starts. */
+  move: HudMove;
+  /** The market: what !hud buy can buy, and for how much. */
+  items: HudItem[];
   /** Floats "+$100" with the viewer's name next to the money. */
   pops: boolean;
 }
@@ -91,8 +112,9 @@ export const DEFAULT_HUD_SETTINGS: HudSettings = {
   radar: true,
   radarCorner: 'bl',
   map: 'urban',
-  lat: null,
-  lon: null,
+  places: [],
+  move: 'walk',
+  items: [],
   pops: true,
 };
 
@@ -107,6 +129,22 @@ export const MAX_SIZE = 200;
 const TZ_MAX_LENGTH = 64;
 // Five decimals is about a meter: plenty for the middle of a map, and a short URL.
 const COORD_DECIMALS = 5;
+export const MAX_PLACES = 10;
+const PLACE_NAME_MAX = 20;
+// One word mods can type after !hud map: letters in any script, digits, - and _.
+const PLACE_NAME = new RegExp(`^[\\p{L}\\p{N}_-]{1,${PLACE_NAME_MAX}}$`, 'u');
+/** Words !hud map already means something by, so no place can be called them. */
+export const RESERVED_PLACE_NAMES = ['urban', 'park', 'reset'];
+// A place written into the URL as "name:lat,lon"; places are joined with ";".
+const PLACE_SEPARATOR = ';';
+// Old URLs had one real place as lat and lon; it reads back as a place with this name.
+const LEGACY_PLACE_NAME = 'place1';
+export const MAX_ITEMS = 20;
+export const ITEM_NAME_MAX = 24;
+// Words with spaces between them, - and _, and at least one letter so "3" stays a count.
+const ITEM_NAME = new RegExp(`^(?=.*\\p{L})[\\p{L}\\p{N} _-]{1,${ITEM_NAME_MAX}}$`, 'u');
+// Items written into the URL as "name:price", joined with ";".
+const ITEM_SEPARATOR = ';';
 
 const WIDGET_PATH = '/widgets/irl-hud';
 
@@ -146,6 +184,56 @@ function readCoord(value: string | null, max: number): number | null {
   return Number.isFinite(n) && Math.abs(n) <= max ? roundCoord(n) : null;
 }
 
+/** Whether `name` can name a place: one short word that isn't a !hud map word. */
+export const isPlaceName = (name: string) =>
+  PLACE_NAME.test(name) && !RESERVED_PLACE_NAMES.includes(name.toLowerCase());
+
+/** Places as "park1:41.02561,28.97436;park2:…". */
+const writePlaces = (places: HudPlace[]) =>
+  places
+    .map((place) => `${place.name}:${roundCoord(place.lat)},${roundCoord(place.lon)}`)
+    .join(PLACE_SEPARATOR);
+
+/** Places back from the URL: the valid ones, each name once (in any case), up to the limit. */
+function readPlaces(value: string | null): HudPlace[] {
+  const places: HudPlace[] = [];
+  for (const part of (value ?? '').split(PLACE_SEPARATOR)) {
+    const match = part.trim().match(/^(.+):([^:,]+),([^:,]+)$/);
+    if (!match || places.length >= MAX_PLACES) continue;
+    const [, name, latText, lonText] = match;
+    const lat = readCoord(latText, 90);
+    const lon = readCoord(lonText, 180);
+    const taken = places.some((place) => place.name.toLowerCase() === name.toLowerCase());
+    if (isPlaceName(name) && lat !== null && lon !== null && !taken)
+      places.push({ name, lat, lon });
+  }
+  return places;
+}
+
+/** An item name, trimmed and with single spaces, as the URL keeps it and chat matches it. */
+export const tidyItemName = (name: string) => name.trim().replace(/\s+/g, ' ');
+
+/** Whether `name` (tidied) can name a market item. */
+export const isItemName = (name: string) => ITEM_NAME.test(tidyItemName(name));
+
+const writeItems = (items: HudItem[]) =>
+  items.map((item) => `${item.name}:${item.price}`).join(ITEM_SEPARATOR);
+
+/** Items back from the URL: valid names with a price of $1 or more, each name once. */
+function readItems(value: string | null): HudItem[] {
+  const items: HudItem[] = [];
+  for (const part of (value ?? '').split(ITEM_SEPARATOR)) {
+    const match = part.match(/^(.+):(\d+)$/);
+    if (!match || items.length >= MAX_ITEMS) continue;
+    const name = tidyItemName(match[1]);
+    const price = Number(match[2]);
+    const taken = items.some((item) => item.name.toLowerCase() === name.toLowerCase());
+    if (isItemName(name) && price >= 1 && price <= MAX_EVENT_MONEY && !taken)
+      items.push({ name, price });
+  }
+  return items;
+}
+
 /** Only settings that differ from the defaults are written, so URLs stay short. */
 function buildParams(settings: HudSettings, twitchChannel: string, kickChannel: string) {
   const params = new URLSearchParams();
@@ -166,11 +254,10 @@ function buildParams(settings: HudSettings, twitchChannel: string, kickChannel: 
     if (settings.radarCorner !== defaults.radarCorner)
       params.set('radarCorner', settings.radarCorner);
     if (settings.map !== defaults.map) params.set('map', settings.map);
-    if (settings.map === 'real' && settings.lat !== null && settings.lon !== null) {
-      params.set('lat', String(roundCoord(settings.lat)));
-      params.set('lon', String(roundCoord(settings.lon)));
-    }
+    if (settings.places.length > 0) params.set('places', writePlaces(settings.places));
+    if (settings.move !== defaults.move) params.set('move', settings.move);
   }
+  if (settings.items.length > 0) params.set('items', writeItems(settings.items));
   return params;
 }
 
@@ -203,8 +290,14 @@ export function readHudSettings(params: URLSearchParams): Omit<HudSettings, 'pla
   const defaults = DEFAULT_HUD_SETTINGS;
   const style = params.get('style') as HudStyle;
   const map = params.get('map') as HudMap;
+  const move = params.get('move') as HudMove;
   const lat = readCoord(params.get('lat'), 90);
   const lon = readCoord(params.get('lon'), 180);
+  const places = params.has('places')
+    ? readPlaces(params.get('places'))
+    : lat !== null && lon !== null
+      ? [{ name: LEGACY_PLACE_NAME, lat, lon }]
+      : [];
   const tz = (params.get('tz') ?? '').trim().slice(0, TZ_MAX_LENGTH);
   const money = Object.fromEntries(
     MONEY_KEYS.map((key) => [key, readClamped(params.get(key), defaults[key], 0, MAX_EVENT_MONEY)]),
@@ -222,9 +315,9 @@ export function readHudSettings(params: URLSearchParams): Omit<HudSettings, 'pla
     tz: isTimeZone(tz) ? tz : '',
     radarCorner: readCorner(params.get('radarCorner'), defaults.radarCorner),
     map: HUD_MAPS.includes(map) ? map : defaults.map,
-    // Both or neither: half a place is no place.
-    lat: lat !== null && lon !== null ? lat : null,
-    lon: lat !== null && lon !== null ? lon : null,
+    places,
+    move: HUD_MOVES.includes(move) ? move : defaults.move,
+    items: readItems(params.get('items')),
   };
 }
 
