@@ -133,6 +133,10 @@ export const tr: typeof en = {
       name: 'IRL HUD',
       tagline: "IRL yayınlar için oyun tarzı HUD: abonelik, hediye, cheer ve raid'ler para ekler, mini haritayla.",
     },
+    weather: {
+      name: 'Hava Durumu',
+      tagline: 'Seçtiğin her yerin canlı hava durumu: simge, sıcaklık ve tahmin.',
+    },
     raffle: {
       name: 'Çekiliş',
       tagline: 'İzleyiciler !join gibi bir komutla katılır, kazananı sen çekersin.',
@@ -256,7 +260,7 @@ export const tr: typeof en = {
       "Evet. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi, Yayın Geri Sayımı, IRL HUD ve Çark tek bir URL'de hem Twitch hem Kick kanalını alır. OBS Bridge da iki sohbeti aynı anda dinleyebilir. Çekiliş ise her seferinde tek bir platformda çalışır.",
     faq5Q: "Bir widget'ı sonradan nasıl değiştiririm?",
     faq5A:
-      "Kurulum sayfasını aç, widget'ı istediğin gibi ayarla ve Tarayıcı Kaynağı'ndaki URL'yi yenisiyle değiştir. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi, Yayın Çerçeveleri, Sosyal Medya, Yayın Geri Sayımı, IRL HUD ve Çark mevcut bir URL'yi de açabilir: URL'yi kurulum sayfasına yapıştır, eski ayarların geri gelsin, sadece istediğini değiştir.",
+      "Kurulum sayfasını aç, widget'ı istediğin gibi ayarla ve Tarayıcı Kaynağı'ndaki URL'yi yenisiyle değiştir. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi, Yayın Çerçeveleri, Sosyal Medya, Yayın Geri Sayımı, IRL HUD, Hava Durumu ve Çark mevcut bir URL'yi de açabilir: URL'yi kurulum sayfasına yapıştır, eski ayarların geri gelsin, sadece istediğini değiştir.",
     faq6Q: "Güncellemelerden sonra widget URL'm çalışmaya devam eder mi?",
     faq6A:
       'Evet. Güncellemelerde mevcut URL ayarları ve değerleri korunur, yani sahnendeki widget için yeni bir URL almana gerek kalmaz.',
@@ -1118,6 +1122,131 @@ export const tr: typeof en = {
     faq7A:
       "Kurulum sayfasında fiyatıyla ürünler ekle, örneğin $100'a su. Sen ve modların Twitch ya da Kick sohbetine !hud buy su, üç tane için !hud buy su 3 yazarsınız; fiyat paradan düşer ve yanında ürünün adı görünür. Para yetmezse hiçbir şey alınmaz ve fiyat çarpıyla görünür.",
   },
+  weather: {
+    breadcrumb: 'Hava Durumu Kurulumu',
+    title: 'Hava Durumu Kurulumu',
+    intro:
+      'Seçtiğin her yerin canlı hava durumu yayınında: bir simge, sıcaklık ve havanın yazıyla anlatımı; yanında rüzgâr, nem ve önümüzdeki saatlerin ya da günlerin tahmini. Kendi kendine güncellenir; Twitch, Kick ya da başka herhangi bir platformla çalışır, kanal, hesap ya da API anahtarı istemez.',
+    sectionPlace: 'Yer',
+    place: 'Yer Bul',
+    placeTip:
+      'Bir şehir, ilçe ya da semt ara veya 41.0082, 28.9784 gibi koordinat yapıştır. Hava durumu o noktanındır ve orada kalır, seni takip etmez.',
+    placePlaceholder: 'Şehir ara ya da koordinat yapıştır',
+    placePicked: '{coords} için hava durumu.',
+    placeNeeded:
+      "Widget URL'ini almak için bir yer seç. O zamana kadar önizleme örnek bir hava durumu gösterir.",
+    placeName: 'Yayında Görünen Ad',
+    placeNameTip:
+      "Overlay'in hava durumuyla birlikte gösterdiği ad. Yer seçince kendiliğinden dolar; değiştirebilir ya da hiç ad göstermemek için boş bırakabilirsin.",
+    placeNamePlaceholder: 'ör. İstanbul',
+    placePrivacy: 'İzleyiciler bu adı ve hava durumunu görür, koordinatları asla görmez.',
+    layout: 'Düzen',
+    layoutTip:
+      'Kart; yeri, büyük bir simgeyi ve sıcaklığı, altında rüzgâr, nem ve tahminle gösterir. Tek Satır; simgeyi, sıcaklığı, havayı ve yeri bir satıra sığdırır.',
+    layouts: {
+      card: 'Kart',
+      pill: 'Tek Satır',
+    },
+    theme: 'Arka Plan',
+    themeTip:
+      'Hava durumunun arkasında koyu ya da açık bir panel, ya da hiçbiri: gölgeli beyaz yazı, doğrudan sahnenin üstünde.',
+    themes: {
+      dark: 'Koyu',
+      light: 'Açık',
+      clear: 'Yok',
+    },
+    corner: 'Konum',
+    cornerTip: 'Hava durumunun sahnede durduğu köşe.',
+    size: 'Boyut',
+    sizeTip:
+      "Hava durumunun büyüklüğü. %100'de 1080p bir sahneye oturur ve tarayıcı kaynağıyla birlikte ölçeklenir.",
+    language: 'Dil',
+    languageTip: "Overlay'in havayı ve günleri yazdığı dil.",
+    sectionForecast: 'Tahmin',
+    units: 'Birimler',
+    unitsTip: 'Santigrat ve km/sa ya da Fahrenhayt ve mph.',
+    unitOptions: {
+      metric: '°C, km/sa',
+      imperial: '°F, mph',
+    },
+    details: 'Rüzgâr ve Nem',
+    detailsTip: 'Sıcaklığın altında rüzgâr hızı (estiği yönü gösteren bir okla) ve nem.',
+    forecast: 'Tahmin Satırı',
+    forecastTip:
+      'Hava durumunun altında: üçer saat arayla önümüzdeki saatler ya da bugün ve sonraki üç gün, en yüksek ve en düşük sıcaklıklarıyla.',
+    forecasts: {
+      hours: 'Saatler',
+      days: 'Günler',
+      off: 'Kapalı',
+    },
+    clock12: '12 Saatlik Saat',
+    clock12Tip: '15:00 yerine 3 PM gösterir.',
+    timeZone: 'Saat Dilimi',
+    timeZoneTip:
+      'Tahminin saatleri ve günleri bu saate göre yazılır. IRL yayında OBS çoğu zaman başka bir yerde, örneğin bir bulut sunucusunda ya da evdeki bilgisayarda çalışır, o yüzden bulunduğun yeri seç.',
+    dataCredit:
+      "Hava durumu verisi Norveç Meteoroloji Enstitüsü MET Norway'den gelir ve CC BY 4.0 lisansıyla ücretsizdir. Lisansın istediği gibi overlay kaynağı küçük yazıyla belirtir.",
+    dataLicense: 'Veri lisansı',
+    conditions: {
+      sunny: 'Güneşli',
+      clear: 'Açık',
+      mostlySunny: 'Çoğunlukla güneşli',
+      mostlyClear: 'Çoğunlukla açık',
+      partlyCloudy: 'Parçalı bulutlu',
+      cloudy: 'Bulutlu',
+      fog: 'Sisli',
+      lightRain: 'Hafif yağmur',
+      rain: 'Yağmurlu',
+      heavyRain: 'Kuvvetli yağmur',
+      showers: 'Sağanak',
+      sleet: 'Karla karışık yağmur',
+      snow: 'Karlı',
+      thunder: 'Gök gürültülü fırtına',
+    },
+    today: 'Bugün',
+    wind: 'Rüzgâr',
+    humidity: 'Nem',
+    credit: 'Veri: {source}',
+    previewTitle: 'Hava Durumu Önizleme',
+    previewIframeTitle: 'Hava Durumu Önizleme',
+    previewHint:
+      'Bir yer seçince gerçek hava durumunu, o zamana kadar örnek bir hava durumunu gösterir. Aşağıdaki düğmeler örnek havalar gösterir; Gerçek Hava seninkini geri getirir.',
+    testTitle: 'Dene:',
+    testSun: 'Güneşli',
+    testClouds: 'Bulutlu',
+    testRain: 'Yağmur',
+    testStorm: 'Fırtına',
+    testSnow: 'Kar',
+    testNight: 'Gece',
+    testLive: 'Gerçek Hava',
+    widgetUrlTip:
+      "Daha önce bir widget oluşturduysan URL'sini buraya yapıştır. Ayarların geri yüklenir, istediğini değiştirebilirsin.",
+    widgetUrlPlaceholder: "Düzenlemek için widget URL'sini yapıştır",
+    widgetUrlInvalid: "Bu bir Hava Durumu URL'si değil.",
+    browserSourceHintSize: ' (önerilen boyut: 1920×1080, sahnenin tamamı).',
+    guideTitle: 'Yayın Yazılımı Kurulumu (OBS, Streamlabs, XSplit vb.)',
+    guideStep1:
+      'Yayın yazılımında (OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio vb.) bir Tarayıcı Kaynağı ekle.',
+    guideStep2: "Kopyaladığın Hava Durumu URL'sini yapıştır.",
+    guideStep3:
+      'Genişliği 1920, yüksekliği 1080 yap, yani sahnenin boyutu. Hava durumu seçtiğin köşede durur.',
+    guideStep4: 'Yayına başla. Hava durumu kendi kendine, yaklaşık yarım saatte bir güncellenir.',
+    faq1Q: 'Hava durumu nereden geliyor?',
+    faq1A:
+      "Tahminleri bütün dünyayı kapsayan Norveç Meteoroloji Enstitüsü MET Norway'den. Verisi, kaynak belirtildiği sürece para kazanılan yayınlarda da ücretsiz kullanılabilir; bu yüzden overlay küçük yazıyla MET Norway'i anar. Kurulacak bir hesap ya da API anahtarı yok.",
+    faq2Q: 'Ne sıklıkla güncellenir?',
+    faq2A:
+      "OBS, MET Norway yeni tahminin hazır olduğunu söylediğinde, yaklaşık yarım saatte bir yeni tahmin ister; overlay de kendiliğinden tahminin bir sonraki saatine geçer. Tahmin OBS'te kaydedilir, bu yüzden sayfa yenilenince ya da sahne değişince hava durumu hemen görünür.",
+    faq3Q: 'Nerede olduğumu gösterir mi?',
+    faq3A:
+      'Yalnızca verdiğin adı gösterir. Hava durumu seçtiğin yerindir, seni takip etmez ve overlay koordinatları asla göstermez. IRL yayında bulunduğun şehri seç, yolculuk ettiğinde yeni bir URL yapıştır.',
+    faq4Q: 'IRL HUD ile birlikte kullanabilir miyim?',
+    faq4A:
+      "Evet. İkisini de aynı sahneye ekle. Hava durumu sol üst köşede başlar; HUD'un sağ üstteki parasıyla ve sol alttaki mini haritasıyla çakışmaz.",
+    faq5Q: 'Fahrenhayt gösterebilir mi?',
+    faq5A:
+      "Evet. Birimler'de °F, mph seç. Tahmin satırı 12 saatlik saat de gösterebilir ve overlay havayı sitenin yedi dilinden herhangi birinde yazabilir.",
+  },
   frames: {
     breadcrumb: 'Yayın Çerçeveleri Kurulumu',
     title: 'Yayın Çerçeveleri Kurulumu',
@@ -1890,6 +2019,8 @@ export const tr: typeof en = {
             'Uyarılar bu alanın ortasında tek tek çıkar. Kaynağı büyütürsen uyarı da büyür.',
           irlHud:
             'Tam 1080p bir tuval. Para ve mini harita seçtiğin köşelerde durur, dikey bir tuvale de sığar.',
+          weather:
+            'Tam bir 1080p tuval. Hava durumu seçtiğin köşede durur, dikey bir tuvale de sığar.',
           raffle:
             "Kazanan overlay'i. Konfeti ekranın iki kenarından patlar, kazananın adı ortada çıkar.",
           obsBridge:
@@ -1932,7 +2063,7 @@ export const tr: typeof en = {
       update: {
         title: "Widget'ı sonradan nasıl değiştiririm?",
         p1: "Ayarlar widget adresinin içinde durur, yani bir ayarı değiştirmek yeni bir adres demek. Kurulum sayfasında ayarı değiştir, yeni adresi kopyala, sonra OBS'te kaynağa çift tıklayıp URL alanındaki eski adresin yerine yapıştır.",
-        p2: '[Sohbet Kutusu](/setup/chat-widget), [Emote Duvarı](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Yayın Uyarıları](/setup/stream-alerts), [Abone Hedefi](/setup/sub-goal), [Sohbet Anketi](/setup/chat-poll), [Yayın Çerçeveleri](/setup/stream-frames), [Sosyal Medya](/setup/socials), [Yayın Geri Sayımı](/setup/stream-countdown), [IRL HUD](/setup/irl-hud) ya da [Çark](/setup/spin-wheel) için baştan başlaman gerekmez. Mevcut adresini kurulum sayfasındaki Widget URL alanına yapıştır, kanalların ve bütün ayarların geri yüklenir. Değiştirmek istediğini değiştir ve yeni adresi kopyala.',
+        p2: '[Sohbet Kutusu](/setup/chat-widget), [Emote Duvarı](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Yayın Uyarıları](/setup/stream-alerts), [Abone Hedefi](/setup/sub-goal), [Sohbet Anketi](/setup/chat-poll), [Yayın Çerçeveleri](/setup/stream-frames), [Sosyal Medya](/setup/socials), [Yayın Geri Sayımı](/setup/stream-countdown), [IRL HUD](/setup/irl-hud), [Hava Durumu](/setup/weather) ya da [Çark](/setup/spin-wheel) için baştan başlaman gerekmez. Mevcut adresini kurulum sayfasındaki Widget URL alanına yapıştır, kanalların ve bütün ayarların geri yüklenir. Değiştirmek istediğini değiştir ve yeni adresi kopyala.',
         p3: "OBS Bridge'de yapıştırma alanı yok, ayarları kurulum sayfasında yeniden girip yeni araç adresini kopyalarsın. Sahne seçimlerini ve yetkili kullanıcıları araç sayfasında da değiştirebilir, yeni adresi oradaki Güncel URL'yi Kopyala düğmesiyle alabilirsin. Eski adresler çalışmaya devam eder, güncellemek zorunda değilsin.",
       },
       troubleshoot: {
@@ -2711,10 +2842,10 @@ export const tr: typeof en = {
       'OBS Studio ve tarayıcı kaynağı (browser source) destekleyen diğer yayın programlarıyla. Her widget bir web adresi olarak çalışır, kaynağa bu adresi yapıştırırsın. Rehberlerimiz OBS Studio için yazıldı.',
     platformsQ: "Hangi widget'lar Twitch'i, hangileri Kick'i destekliyor?",
     platformsA:
-      "On üçü de iki platformu destekliyor. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi, Yayın Geri Sayımı, IRL HUD ve Çark tek adreste Twitch ve Kick kanalını birlikte dinler. OBS Bridge iki sohbetten gelen komutları dinler ve her yetkili kullanıcı kendi platformuyla eklenir. Çekiliş her seferinde tek platformda çalışır, Twitch ya da Kick. Yayın Çerçeveleri ve Sosyal Medya sohbeti okumaz, bu yüzden iki platformda da aynı şekilde çalışır. Sohbet Kutusu'nda 7TV emote'ları iki platformda, BTTV ve FFZ emote'ları sadece Twitch'te görünür.",
+      "On üçü de iki platformu destekliyor. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi, Yayın Geri Sayımı, IRL HUD ve Çark tek adreste Twitch ve Kick kanalını birlikte dinler. OBS Bridge iki sohbetten gelen komutları dinler ve her yetkili kullanıcı kendi platformuyla eklenir. Çekiliş her seferinde tek platformda çalışır, Twitch ya da Kick. Yayın Çerçeveleri, Sosyal Medya ve Hava Durumu sohbeti okumaz, bu yüzden iki platformda da aynı şekilde çalışır. Sohbet Kutusu'nda 7TV emote'ları iki platformda, BTTV ve FFZ emote'ları sadece Twitch'te görünür.",
     editQ: "Widget'ı sonradan nasıl değiştiririm?",
     editA:
-      "Kurulum sayfasında ayarları değiştir, yeni adresi kopyala ve OBS'te kaynağın URL alanındaki eski adresin yerine yapıştır. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi, Yayın Çerçeveleri, Sosyal Medya, Yayın Geri Sayımı, IRL HUD ve Çark'ta eski adresini kurulum sayfasındaki Widget URL alanına yapıştırırsan bütün ayarların geri yüklenir, baştan başlaman gerekmez.",
+      "Kurulum sayfasında ayarları değiştir, yeni adresi kopyala ve OBS'te kaynağın URL alanındaki eski adresin yerine yapıştır. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi, Yayın Çerçeveleri, Sosyal Medya, Yayın Geri Sayımı, IRL HUD, Hava Durumu ve Çark'ta eski adresini kurulum sayfasındaki Widget URL alanına yapıştırırsan bütün ayarların geri yüklenir, baştan başlaman gerekmez.",
     oldUrlsQ: 'Eski widget adreslerim çalışmaya devam eder mi?',
     oldUrlsA:
       "Evet. Güncellemeler mevcut adresleri bozmayacak şekilde yapılır: parametre adları, değerleri ve varsayılanları değişmez. Örneğin Sohbet Kutusu'ndaki eski keep=true hâlâ Süresiz anlamına gelir ve Sub Sprout eski channel ve platform parametrelerini hâlâ okur.",
@@ -2738,6 +2869,8 @@ export const tr: typeof en = {
     lead: "Senchabot Extensions'a eklenen özellikler ve düzeltilen hatalar, en yenisi en üstte. Liste projenin [GitHub'daki](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) commit geçmişinden hazırlanıyor.",
     site: 'Site',
     entries: {
+      weatherLaunch:
+        "Yeni overlay: Hava Durumu, seçtiğin her yerin canlı hava durumu. Bir kart ya da tek satırlık bir şerit; simgeyi, sıcaklığı ve havayı yazıyla gösterir, altında rüzgâr, nem ve önümüzdeki saatlerin ya da günlerin tahmini olur, °C ya da °F olarak. Veri MET Norway'den ücretsiz gelir; hesap ya da API anahtarı gerekmez.",
       settingsTabs:
         "IRL HUD, Yayın Geri Sayımı, Subathon Timer, Yayın Uyarıları, Sohbet Anketi, Sohbet Kutusu ve Çark ayarlarını kanal kutularının altında sekmelere ayırıyor. Her sekme tek ekrana sığıyor, telefonda da önizleme ve widget URL'si çok daha yukarıda.",
       presetPickerFolded:

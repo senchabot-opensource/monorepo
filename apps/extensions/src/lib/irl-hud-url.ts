@@ -1,3 +1,4 @@
+import { isTimeZone } from '#/lib/time-zones';
 import {
   type ChannelPlatforms,
   channelWidgetUrl,
@@ -161,17 +162,6 @@ export const MONEY_KEYS = [
 
 type FlagKey = 'tiers' | 'clock' | 'h12' | 'radar' | 'pops';
 const FLAG_KEYS: FlagKey[] = ['tiers', 'clock', 'h12', 'radar', 'pops'];
-
-/** Whether `zone` is a time zone this browser can show the time in. */
-export function isTimeZone(zone: string): boolean {
-  if (!zone) return false;
-  try {
-    new Intl.DateTimeFormat('en-US', { timeZone: zone });
-    return true;
-  } catch {
-    return false;
-  }
-}
 
 /** A latitude or longitude rounded to about a meter. */
 export const roundCoord = (value: number) =>

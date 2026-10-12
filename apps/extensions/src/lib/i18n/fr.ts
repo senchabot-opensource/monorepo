@@ -139,6 +139,11 @@ export const fr: typeof en = {
       tagline:
         "Un HUD façon jeu vidéo pour l'IRL : subs, cadeaux, cheers et raids rapportent du cash, avec mini-carte.",
     },
+    weather: {
+      name: 'Météo',
+      tagline:
+        'La météo en direct du lieu de ton choix, avec une icône, la température et des prévisions.',
+    },
     raffle: {
       name: 'Tirage au sort',
       tagline:
@@ -267,7 +272,7 @@ export const fr: typeof en = {
       "Oui. Boîte de chat, Mur d'emotes, Sub Sprout, Subathon Timer, Alertes de stream, Objectif de subs, Sondage du chat, Compte à rebours de stream, HUD IRL et Roue prennent une chaîne Twitch et une chaîne Kick dans la même URL. OBS Bridge peut aussi écouter les deux chats à la fois. Le Tirage au sort fonctionne sur une seule plateforme à la fois.",
     faq5Q: 'Comment modifier un widget plus tard ?',
     faq5A:
-      "Ouvre sa page de configuration, règle-le comme tu veux et remplace l'URL dans ta source Navigateur web. Boîte de chat, Mur d'emotes, Sub Sprout, Subathon Timer, Alertes de stream, Objectif de subs, Sondage du chat, Cadres de stream, Réseaux sociaux, Compte à rebours de stream, HUD IRL et Roue peuvent aussi ouvrir une URL existante : colle-la sur la page de configuration, tes réglages reviennent, et tu ne changes que ce dont tu as besoin.",
+      "Ouvre sa page de configuration, règle-le comme tu veux et remplace l'URL dans ta source Navigateur web. Boîte de chat, Mur d'emotes, Sub Sprout, Subathon Timer, Alertes de stream, Objectif de subs, Sondage du chat, Cadres de stream, Réseaux sociaux, Compte à rebours de stream, HUD IRL, Météo et Roue peuvent aussi ouvrir une URL existante : colle-la sur la page de configuration, tes réglages reviennent, et tu ne changes que ce dont tu as besoin.",
     faq6Q: 'Mon URL de widget marchera toujours après les mises à jour ?',
     faq6A:
       "Oui. Les mises à jour gardent les réglages d'URL existants et leurs valeurs, donc un widget déjà dans ta scène n'a pas besoin d'une nouvelle URL.",
@@ -1152,6 +1157,133 @@ export const fr: typeof en = {
     faq7A:
       "Ajoute des objets avec un prix sur la page de configuration, comme eau à $100. Toi et tes modos tapez !hud buy eau dans le chat Twitch ou Kick, ou !hud buy eau 3 pour en acheter trois, et le prix est retiré de l'argent avec le nom de l'objet à côté. S'il n'y a pas assez d'argent, rien n'est acheté et le prix s'affiche avec une croix.",
   },
+  weather: {
+    breadcrumb: 'Configuration de la Météo',
+    title: 'Configuration de la Météo',
+    intro:
+      "La météo en direct sur ton stream pour le lieu de ton choix : une icône, la température et le temps en toutes lettres, avec le vent, l'humidité et des prévisions pour les heures ou les jours à venir. Elle se met à jour toute seule, marche avec Twitch, Kick ou n'importe quelle autre plateforme, et ne demande ni chaîne, ni compte, ni clé d'API.",
+    sectionPlace: 'Lieu',
+    place: 'Trouver un lieu',
+    placeTip:
+      'Cherche une ville, un village ou un quartier, ou colle des coordonnées comme 41.0082, 28.9784. La météo est celle de cet endroit et y reste : elle ne te suit pas.',
+    placePlaceholder: 'Cherche une ville ou colle des coordonnées',
+    placePicked: 'Météo pour {coords}.',
+    placeNeeded:
+      "Choisis un lieu pour obtenir l'URL de ton widget. En attendant, l'aperçu montre une météo d'exemple.",
+    placeName: 'Nom affiché',
+    placeNameTip:
+      "Le nom que l'overlay affiche avec la météo. Il se remplit quand tu choisis un lieu ; change-le, ou laisse-le vide pour n'afficher aucun nom.",
+    placeNamePlaceholder: 'ex. Istanbul',
+    placePrivacy: 'Les viewers voient ce nom et la météo, jamais les coordonnées.',
+    layout: 'Disposition',
+    layoutTip:
+      "Carte montre le lieu, une grande icône et la température, avec le vent, l'humidité et les prévisions en dessous. Bandeau tient l'icône, la température, le temps et le lieu sur une seule ligne.",
+    layouts: {
+      card: 'Carte',
+      pill: 'Bandeau',
+    },
+    theme: 'Fond',
+    themeTip:
+      'Un panneau sombre ou clair derrière la météo, ou aucun : du texte blanc avec une ombre, directement sur ta scène.',
+    themes: {
+      dark: 'Sombre',
+      light: 'Clair',
+      clear: 'Aucun',
+    },
+    corner: 'Position',
+    cornerTip: 'Le coin de la scène où se place la météo.',
+    size: 'Taille',
+    sizeTip:
+      'La taille de la météo. À 100 %, elle tient dans une scène 1080p, et elle suit la taille de la source navigateur.',
+    language: 'Langue',
+    languageTip: "La langue dans laquelle l'overlay écrit le temps et les jours.",
+    sectionForecast: 'Prévisions',
+    units: 'Unités',
+    unitsTip: 'Celsius et km/h, ou Fahrenheit et mph.',
+    unitOptions: {
+      metric: '°C, km/h',
+      imperial: '°F, mph',
+    },
+    details: 'Vent et humidité',
+    detailsTip:
+      "Sous la température : la vitesse du vent, avec une flèche dans le sens où il souffle, et l'humidité.",
+    forecast: 'Ligne de prévisions',
+    forecastTip:
+      "Sous la météo : les prochaines heures, toutes les trois heures, ou aujourd'hui et les trois jours suivants avec leurs maximales et minimales.",
+    forecasts: {
+      hours: 'Heures',
+      days: 'Jours',
+      off: 'Désactivé',
+    },
+    clock12: 'Heures sur 12',
+    clock12Tip: 'Affiche 3 PM au lieu de 15:00.',
+    timeZone: 'Fuseau horaire',
+    timeZoneTip:
+      "Les heures et les jours des prévisions suivent cette horloge. En stream IRL, OBS tourne souvent ailleurs, sur un serveur cloud ou l'ordinateur de la maison, alors choisis l'endroit où tu es.",
+    dataCredit:
+      "Données météo de MET Norway, l'Institut météorologique norvégien, gratuites sous licence CC BY 4.0. L'overlay le mentionne en petit, comme le demande la licence.",
+    dataLicense: 'Licence des données',
+    conditions: {
+      sunny: 'Ensoleillé',
+      clear: 'Dégagé',
+      mostlySunny: 'Plutôt ensoleillé',
+      mostlyClear: 'Plutôt dégagé',
+      partlyCloudy: 'Partiellement nuageux',
+      cloudy: 'Nuageux',
+      fog: 'Brouillard',
+      lightRain: 'Pluie faible',
+      rain: 'Pluie',
+      heavyRain: 'Forte pluie',
+      showers: 'Averses',
+      sleet: 'Pluie et neige',
+      snow: 'Neige',
+      thunder: 'Orage',
+    },
+    today: 'Auj.',
+    wind: 'Vent',
+    humidity: 'Humidité',
+    credit: 'Données : {source}',
+    previewTitle: 'Aperçu de la Météo',
+    previewIframeTitle: 'Aperçu de la Météo',
+    previewHint:
+      "Montre la vraie météo une fois le lieu choisi, et une météo d'exemple avant. Les boutons ci-dessous montrent des météos d'exemple ; Vraie météo remet la tienne.",
+    testTitle: 'Teste :',
+    testSun: 'Soleil',
+    testClouds: 'Nuages',
+    testRain: 'Pluie',
+    testStorm: 'Orage',
+    testSnow: 'Neige',
+    testNight: 'Nuit',
+    testLive: 'Vraie météo',
+    widgetUrlTip:
+      'Tu as déjà un widget ? Colle son URL ici pour charger tes réglages et changer ce dont tu as besoin.',
+    widgetUrlPlaceholder: 'Colle une URL de widget existante pour la modifier',
+    widgetUrlInvalid: "Ce n'est pas une URL de Météo.",
+    browserSourceHintSize: ' (taille recommandée : 1920×1080, toute la scène).',
+    guideTitle: 'Installation dans ton logiciel de stream (OBS, Streamlabs, XSplit, etc.)',
+    guideStep1:
+      'Ajoute une source Navigateur web dans ton logiciel de stream (OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio, etc.).',
+    guideStep2: "Colle l'URL de la Météo que tu as copiée.",
+    guideStep3:
+      'Mets la largeur à 1920 et la hauteur à 1080, la taille de ta scène. La météo se place dans le coin que tu as choisi.',
+    guideStep4:
+      'Lance ton live. La météo se met à jour toute seule, environ toutes les demi-heures.',
+    faq1Q: "D'où vient la météo ?",
+    faq1A:
+      "De MET Norway, l'Institut météorologique norvégien, dont les prévisions couvrent le monde entier. Ses données sont libres d'utilisation, y compris sur un stream monétisé, tant que la source est citée : c'est pour ça que l'overlay mentionne MET Norway en petit. Il n'y a ni compte ni clé d'API à configurer.",
+    faq2Q: 'À quelle fréquence se met-elle à jour ?',
+    faq2A:
+      "OBS demande de nouvelles prévisions quand MET Norway en annonce, environ toutes les demi-heures, et l'overlay passe tout seul à l'heure suivante. Les prévisions sont enregistrées dans OBS, donc après un rechargement ou un changement de scène la météo s'affiche tout de suite.",
+    faq3Q: 'Est-ce que ça montre où je suis ?',
+    faq3A:
+      "Seulement le nom que tu lui donnes. La météo est celle du lieu choisi et ne te suit pas, et l'overlay n'affiche jamais de coordonnées. En stream IRL, choisis la ville où tu es et colle une nouvelle URL quand tu voyages.",
+    faq4Q: "Je peux l'utiliser avec le HUD IRL ?",
+    faq4A:
+      "Oui. Ajoute les deux à la même scène. La météo démarre en haut à gauche, loin de l'argent du HUD en haut à droite et de sa mini-carte en bas à gauche.",
+    faq5Q: 'Elle peut afficher des Fahrenheit ?',
+    faq5A:
+      "Oui. Choisis °F, mph dans Unités. La ligne de prévisions peut aussi afficher les heures sur 12, et l'overlay peut écrire le temps dans n'importe laquelle des sept langues du site.",
+  },
   frames: {
     breadcrumb: 'Configuration des Cadres de stream',
     title: 'Configuration des Cadres de stream',
@@ -1941,6 +2073,8 @@ export const fr: typeof en = {
             "Une alerte à la fois, au centre de cette zone. Une source plus grande l'agrandit.",
           irlHud:
             "Un canevas 1080p complet. L'argent et la mini-carte se placent chacun dans le coin que tu as choisi, et s'adaptent aussi à un canevas vertical.",
+          weather:
+            'Une zone 1080p complète. La météo se place dans le coin choisi et tient aussi sur une zone verticale.',
           raffle:
             "L'overlay du gagnant. Des confettis jaillissent des deux côtés de l'écran et le nom du gagnant apparaît au centre.",
           obsBridge:
@@ -1983,7 +2117,7 @@ export const fr: typeof en = {
       update: {
         title: 'Comment modifier un widget plus tard ?',
         p1: "Tes réglages sont dans l'URL du widget, donc changer un réglage veut dire une nouvelle URL. Change le réglage sur la page de configuration, copie la nouvelle URL, puis double-clique sur la source dans OBS et colle-la à la place de l'ancienne dans le champ URL.",
-        p2: "Pas besoin de tout recommencer avec [Boîte de chat](/setup/chat-widget), [Mur d'emotes](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Alertes de stream](/setup/stream-alerts), [Objectif de subs](/setup/sub-goal), [Sondage du chat](/setup/chat-poll), [Cadres de stream](/setup/stream-frames), [Réseaux sociaux](/setup/socials), [Compte à rebours de stream](/setup/stream-countdown), [HUD IRL](/setup/irl-hud) ou [Roue](/setup/spin-wheel). Colle ton URL actuelle dans le champ URL du widget sur la page de configuration et tes chaînes et tous tes réglages reviennent. Change ce que tu veux et copie la nouvelle URL.",
+        p2: "Pas besoin de tout recommencer avec [Boîte de chat](/setup/chat-widget), [Mur d'emotes](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Alertes de stream](/setup/stream-alerts), [Objectif de subs](/setup/sub-goal), [Sondage du chat](/setup/chat-poll), [Cadres de stream](/setup/stream-frames), [Réseaux sociaux](/setup/socials), [Compte à rebours de stream](/setup/stream-countdown), [HUD IRL](/setup/irl-hud), [Météo](/setup/weather) ou [Roue](/setup/spin-wheel). Colle ton URL actuelle dans le champ URL du widget sur la page de configuration et tes chaînes et tous tes réglages reviennent. Change ce que tu veux et copie la nouvelle URL.",
         p3: "OBS Bridge n'a pas de champ pour coller une URL, donc saisis à nouveau tes réglages sur sa page de configuration et copie la nouvelle URL de l'outil. Tu peux aussi changer les choix de scènes et les utilisateurs autorisés directement sur la page de l'outil et récupérer la nouvelle URL avec son bouton Copier l'URL à jour. Les anciennes URL continuent de marcher, donc pas besoin de les mettre à jour.",
       },
       troubleshoot: {
@@ -2780,10 +2914,10 @@ export const fr: typeof en = {
       'OBS Studio et tout autre logiciel de stream qui gère une source navigateur. Chaque widget tourne comme une URL web, et tu colles cette URL dans la source. Nos guides sont écrits pour OBS Studio.',
     platformsQ: 'Quels widgets gèrent Twitch et lesquels gèrent Kick ?',
     platformsA:
-      "Les treize gèrent les deux plateformes. Boîte de chat, Mur d'emotes, Sub Sprout, Subathon Timer, Alertes de stream, Objectif de subs, Sondage du chat, Compte à rebours de stream, HUD IRL et Roue écoutent une chaîne Twitch et une chaîne Kick ensemble dans une seule URL. OBS Bridge écoute les commandes des deux chats, et chaque utilisateur autorisé est ajouté avec sa propre plateforme. Le Tirage au sort fonctionne sur une seule plateforme à la fois, Twitch ou Kick. Les Cadres de stream et les Réseaux sociaux ne lisent pas le chat, donc ils fonctionnent de la même façon sur les deux. Dans la Boîte de chat, les emotes 7TV s'affichent sur les deux plateformes, et les emotes BTTV et FFZ seulement sur Twitch.",
+      "Les treize gèrent les deux plateformes. Boîte de chat, Mur d'emotes, Sub Sprout, Subathon Timer, Alertes de stream, Objectif de subs, Sondage du chat, Compte à rebours de stream, HUD IRL et Roue écoutent une chaîne Twitch et une chaîne Kick ensemble dans une seule URL. OBS Bridge écoute les commandes des deux chats, et chaque utilisateur autorisé est ajouté avec sa propre plateforme. Le Tirage au sort fonctionne sur une seule plateforme à la fois, Twitch ou Kick. Les Cadres de stream, les Réseaux sociaux et la Météo ne lisent pas le chat, donc ils fonctionnent de la même façon sur les deux. Dans la Boîte de chat, les emotes 7TV s'affichent sur les deux plateformes, et les emotes BTTV et FFZ seulement sur Twitch.",
     editQ: 'Comment modifier un widget plus tard ?',
     editA:
-      "Change les réglages sur la page de configuration, copie la nouvelle URL, et colle-la à la place de l'ancienne dans le champ URL de la source dans OBS. Avec Boîte de chat, Mur d'emotes, Sub Sprout, Subathon Timer, Alertes de stream, Objectif de subs, Sondage du chat, Cadres de stream, Réseaux sociaux, Compte à rebours de stream, HUD IRL et Roue, si tu colles ton ancienne URL dans le champ URL du widget sur la page de configuration, tous tes réglages reviennent et tu n'as pas à tout recommencer.",
+      "Change les réglages sur la page de configuration, copie la nouvelle URL, et colle-la à la place de l'ancienne dans le champ URL de la source dans OBS. Avec Boîte de chat, Mur d'emotes, Sub Sprout, Subathon Timer, Alertes de stream, Objectif de subs, Sondage du chat, Cadres de stream, Réseaux sociaux, Compte à rebours de stream, HUD IRL, Météo et Roue, si tu colles ton ancienne URL dans le champ URL du widget sur la page de configuration, tous tes réglages reviennent et tu n'as pas à tout recommencer.",
     oldUrlsQ: 'Mes anciennes URL de widgets vont-elles continuer de marcher ?',
     oldUrlsA:
       "Oui. Les mises à jour sont faites pour ne pas casser les URL existantes : les noms de paramètres, les valeurs et les valeurs par défaut restent les mêmes. Par exemple, l'ancien keep=true de la Boîte de chat veut toujours dire Pour toujours, et Sub Sprout lit toujours les anciens paramètres channel et platform.",
@@ -2807,6 +2941,8 @@ export const fr: typeof en = {
     lead: "Les nouvelles fonctionnalités et corrections de bugs de Senchabot Extensions, des plus récentes aux plus anciennes. La liste est tirée de l'historique des commits du projet sur [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      weatherLaunch:
+        "Nouvel overlay : Météo, la météo en direct du lieu de ton choix. Une carte ou un bandeau d'une ligne affiche une icône, la température et le temps en toutes lettres, avec le vent, l'humidité et des prévisions pour les heures ou les jours à venir, en °C ou °F. Les données viennent gratuitement de MET Norway, sans compte ni clé d'API.",
       settingsTabs:
         "IRL HUD, Compte à rebours, Subathon Timer, Alertes de stream, Sondage du chat, Boîte de chat et Roue rangent leurs réglages dans des onglets sous les champs de la chaîne. Chaque onglet tient sur un écran et, sur téléphone, l'aperçu et l'URL du widget sont bien plus haut.",
       presetPickerFolded:

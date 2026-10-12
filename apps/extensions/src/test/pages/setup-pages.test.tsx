@@ -123,6 +123,20 @@ const PAGES: PageCase[] = [
     ],
   },
   {
+    path: '/setup/weather',
+    title: 'weather.title',
+    sections: [
+      'weather.sectionPlace',
+      'common.sectionAppearance',
+      'weather.sectionForecast',
+      'weather.previewTitle',
+      'weather.guideTitle',
+      'common.faqTitle',
+      'common.moreWidgets',
+    ],
+    faq: ['weather.faq1Q', 'weather.faq2Q', 'weather.faq3Q', 'weather.faq4Q', 'weather.faq5Q'],
+  },
+  {
     path: '/setup/stream-frames',
     title: 'frames.title',
     sections: [

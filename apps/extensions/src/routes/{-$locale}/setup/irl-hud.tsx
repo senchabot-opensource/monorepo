@@ -1,5 +1,5 @@
 import { createFileRoute, useHydrated } from '@tanstack/react-router';
-import { useId, useMemo, useRef, useState } from 'react';
+import { useId, useRef, useState } from 'react';
 import { ChannelFields } from '#/components/channel-fields';
 import { ChatCommandsCard } from '#/components/chat-commands-card';
 import { CopyUrlField } from '#/components/copy-url-field';
@@ -10,11 +10,11 @@ import { CountField } from '#/components/ui/count-field';
 import { FieldLabel } from '#/components/ui/field-label';
 import { RangeField } from '#/components/ui/range-field';
 import { SegmentedControl, type SegmentedOption } from '#/components/ui/segmented-control';
-import { Select, type SelectOption } from '#/components/ui/select';
 import { SettingsGroup } from '#/components/ui/settings-group';
 import { Switch } from '#/components/ui/switch';
 import { Tabs } from '#/components/ui/tabs';
 import { HINT_CLASS } from '#/components/ui/text-field';
+import { TimeZoneSelect } from '#/components/ui/time-zone-select';
 import { MAP_SUBCOMMAND } from '#/features/widgets/irl-hud/hud-map';
 import { BUY_SUBCOMMAND } from '#/features/widgets/irl-hud/hud-market';
 import { CASH_SUBCOMMAND, COMMAND } from '#/features/widgets/irl-hud/hud-money';
@@ -113,35 +113,6 @@ const COMMANDS: { usage: string; action: TranslationKey }[] = [
   { usage: `${BUY} water 3`, action: 'irlHud.cmdBuyMany' },
 ];
 
-/** "Istanbul · Europe" from "Europe/Istanbul", so typing a city finds it. */
-function zoneLabel(zone: string): string {
-  const parts = zone.split('/');
-  const city = (parts.pop() ?? zone).replaceAll('_', ' ');
-  return parts.length > 0 ? `${city} · ${parts.join('/').replaceAll('_', ' ')}` : city;
-}
-
-/** "GMT+3" for a zone right now; empty when the browser can't tell. */
-function zoneOffset(zone: string): string {
-  try {
-    const parts = new Intl.DateTimeFormat('en-US', {
-      timeZone: zone,
-      timeZoneName: 'shortOffset',
-    }).formatToParts(new Date());
-    return parts.find((part) => part.type === 'timeZoneName')?.value ?? '';
-  } catch {
-    return '';
-  }
-}
-
-/** Every time zone the browser knows, by city; empty in one too old to list them. */
-function timeZones(): SelectOption<string>[] {
-  const supported = (Intl as { supportedValuesOf?: (key: string) => string[] }).supportedValuesOf;
-  const zones = typeof supported === 'function' ? supported('timeZone') : [];
-  return zones
-    .map((zone) => ({ value: zone, label: zoneLabel(zone), hint: zoneOffset(zone) }))
-    .sort((a, b) => a.label.localeCompare(b.label));
-}
-
 function IrlHudSetup() {
   const { t } = useI18n();
   const [twitchChannel, setTwitchChannel] = useState('');
@@ -153,8 +124,6 @@ function IrlHudSetup() {
   const nextPlatform = useRef<SubathonPlatform>('twitch');
   const previewWalking = useRef(true);
   const id = useId();
-  // Only listed once the page runs: the offsets are the viewer's "now", not the build's.
-  const zones = useMemo(() => (mounted ? timeZones() : []), [mounted]);
 
   const update = <K extends keyof HudSettings>(key: K, value: HudSettings[K]) =>
     setSettings((current) => ({ ...current, [key]: value }));
@@ -191,14 +160,6 @@ function IrlHudSetup() {
     value: map,
     label: t(`irlHud.maps.${map}`),
   }));
-  const zoneOptions: SelectOption<string>[] = [
-    { value: '', label: t('irlHud.timeZoneLocal') },
-    // A zone from a pasted URL stays listed even where the browser can't list them all.
-    ...(settings.tz && !zones.some((zone) => zone.value === settings.tz)
-      ? [{ value: settings.tz, label: zoneLabel(settings.tz) }]
-      : []),
-    ...zones,
-  ];
 
   const moneyFields = (platform: SubathonPlatform) => (
     <div className="space-y-3">
@@ -315,11 +276,11 @@ function IrlHudSetup() {
           <FieldLabel id={`${id}-tz`} tip={t('irlHud.timeZoneTip')}>
             {t('irlHud.timeZone')}
           </FieldLabel>
-          <Select
+          <TimeZoneSelect
             labelledBy={`${id}-tz`}
             value={settings.tz}
             onChange={(value) => update('tz', value)}
-            options={zoneOptions}
+            localLabel={t('irlHud.timeZoneLocal')}
           />
         </div>
       )}

@@ -19,6 +19,7 @@ const SITE_PAGES = [
   '/setup/stream-frames',
   '/setup/stream-countdown',
   '/setup/irl-hud',
+  '/setup/weather',
   '/setup/chat-poll',
   '/setup/chat-widget',
   '/setup/raffle',

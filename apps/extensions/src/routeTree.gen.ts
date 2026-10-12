@@ -28,6 +28,7 @@ import { Route as WidgetsSpinWheelRouteImport } from './routes/widgets/spin-whee
 import { Route as WidgetsStreamAlertsRouteImport } from './routes/widgets/stream-alerts'
 import { Route as WidgetsSubSproutWidgetRouteImport } from './routes/widgets/sub-sprout-widget'
 import { Route as WidgetsSubathonRouteImport } from './routes/widgets/subathon'
+import { Route as WidgetsWeatherRouteImport } from './routes/widgets/weather'
 import { Route as Char123LocaleChar125IndexRouteImport } from './routes/{-$locale}/index'
 import { Route as Char123LocaleChar125ChangelogRouteImport } from './routes/{-$locale}/changelog'
 import { Route as Char123LocaleChar125FaqRouteImport } from './routes/{-$locale}/faq'
@@ -58,6 +59,7 @@ import { Route as Char123LocaleChar125SetupStreamFramesRouteImport } from './rou
 import { Route as Char123LocaleChar125SetupSubGoalRouteImport } from './routes/{-$locale}/setup/sub-goal'
 import { Route as Char123LocaleChar125SetupSubGrowingPlantRouteImport } from './routes/{-$locale}/setup/sub-growing-plant'
 import { Route as Char123LocaleChar125SetupSubathonTimerRouteImport } from './routes/{-$locale}/setup/subathon-timer'
+import { Route as Char123LocaleChar125SetupWeatherRouteImport } from './routes/{-$locale}/setup/weather'
 
 const Char123LocaleChar125RouteRoute =
   Char123LocaleChar125RouteRouteImport.update({
@@ -153,6 +155,11 @@ const WidgetsSubSproutWidgetRoute = WidgetsSubSproutWidgetRouteImport.update({
 const WidgetsSubathonRoute = WidgetsSubathonRouteImport.update({
   id: '/widgets/subathon',
   path: '/widgets/subathon',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WidgetsWeatherRoute = WidgetsWeatherRouteImport.update({
+  id: '/widgets/weather',
+  path: '/widgets/weather',
   getParentRoute: () => rootRouteImport,
 } as any)
 const Char123LocaleChar125IndexRoute =
@@ -334,6 +341,12 @@ const Char123LocaleChar125SetupSubathonTimerRoute =
     path: '/setup/subathon-timer',
     getParentRoute: () => Char123LocaleChar125RouteRoute,
   } as any)
+const Char123LocaleChar125SetupWeatherRoute =
+  Char123LocaleChar125SetupWeatherRouteImport.update({
+    id: '/setup/weather',
+    path: '/setup/weather',
+    getParentRoute: () => Char123LocaleChar125RouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/{-$locale}': typeof Char123LocaleChar125RouteRouteWithChildren
@@ -355,6 +368,7 @@ export interface FileRoutesByFullPath {
   '/widgets/stream-alerts': typeof WidgetsStreamAlertsRoute
   '/widgets/sub-sprout-widget': typeof WidgetsSubSproutWidgetRoute
   '/widgets/subathon': typeof WidgetsSubathonRoute
+  '/widgets/weather': typeof WidgetsWeatherRoute
   '/{-$locale}/changelog': typeof Char123LocaleChar125ChangelogRoute
   '/{-$locale}/faq': typeof Char123LocaleChar125FaqRoute
   '/{-$locale}/presets': typeof Char123LocaleChar125PresetsRoute
@@ -384,6 +398,7 @@ export interface FileRoutesByFullPath {
   '/{-$locale}/setup/sub-goal': typeof Char123LocaleChar125SetupSubGoalRoute
   '/{-$locale}/setup/sub-growing-plant': typeof Char123LocaleChar125SetupSubGrowingPlantRoute
   '/{-$locale}/setup/subathon-timer': typeof Char123LocaleChar125SetupSubathonTimerRoute
+  '/{-$locale}/setup/weather': typeof Char123LocaleChar125SetupWeatherRoute
   '/{-$locale}/guides/': typeof Char123LocaleChar125GuidesIndexRoute
 }
 export interface FileRoutesByTo {
@@ -405,6 +420,7 @@ export interface FileRoutesByTo {
   '/widgets/stream-alerts': typeof WidgetsStreamAlertsRoute
   '/widgets/sub-sprout-widget': typeof WidgetsSubSproutWidgetRoute
   '/widgets/subathon': typeof WidgetsSubathonRoute
+  '/widgets/weather': typeof WidgetsWeatherRoute
   '/{-$locale}/changelog': typeof Char123LocaleChar125ChangelogRoute
   '/{-$locale}/faq': typeof Char123LocaleChar125FaqRoute
   '/{-$locale}/presets': typeof Char123LocaleChar125PresetsRoute
@@ -434,6 +450,7 @@ export interface FileRoutesByTo {
   '/{-$locale}/setup/sub-goal': typeof Char123LocaleChar125SetupSubGoalRoute
   '/{-$locale}/setup/sub-growing-plant': typeof Char123LocaleChar125SetupSubGrowingPlantRoute
   '/{-$locale}/setup/subathon-timer': typeof Char123LocaleChar125SetupSubathonTimerRoute
+  '/{-$locale}/setup/weather': typeof Char123LocaleChar125SetupWeatherRoute
   '/{-$locale}/guides': typeof Char123LocaleChar125GuidesIndexRoute
 }
 export interface FileRoutesById {
@@ -457,6 +474,7 @@ export interface FileRoutesById {
   '/widgets/stream-alerts': typeof WidgetsStreamAlertsRoute
   '/widgets/sub-sprout-widget': typeof WidgetsSubSproutWidgetRoute
   '/widgets/subathon': typeof WidgetsSubathonRoute
+  '/widgets/weather': typeof WidgetsWeatherRoute
   '/{-$locale}/changelog': typeof Char123LocaleChar125ChangelogRoute
   '/{-$locale}/faq': typeof Char123LocaleChar125FaqRoute
   '/{-$locale}/presets': typeof Char123LocaleChar125PresetsRoute
@@ -486,6 +504,7 @@ export interface FileRoutesById {
   '/{-$locale}/setup/sub-goal': typeof Char123LocaleChar125SetupSubGoalRoute
   '/{-$locale}/setup/sub-growing-plant': typeof Char123LocaleChar125SetupSubGrowingPlantRoute
   '/{-$locale}/setup/subathon-timer': typeof Char123LocaleChar125SetupSubathonTimerRoute
+  '/{-$locale}/setup/weather': typeof Char123LocaleChar125SetupWeatherRoute
   '/{-$locale}/guides/': typeof Char123LocaleChar125GuidesIndexRoute
 }
 export interface FileRouteTypes {
@@ -510,6 +529,7 @@ export interface FileRouteTypes {
     | '/widgets/stream-alerts'
     | '/widgets/sub-sprout-widget'
     | '/widgets/subathon'
+    | '/widgets/weather'
     | '/{-$locale}/changelog'
     | '/{-$locale}/faq'
     | '/{-$locale}/presets'
@@ -539,6 +559,7 @@ export interface FileRouteTypes {
     | '/{-$locale}/setup/sub-goal'
     | '/{-$locale}/setup/sub-growing-plant'
     | '/{-$locale}/setup/subathon-timer'
+    | '/{-$locale}/setup/weather'
     | '/{-$locale}/guides/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -560,6 +581,7 @@ export interface FileRouteTypes {
     | '/widgets/stream-alerts'
     | '/widgets/sub-sprout-widget'
     | '/widgets/subathon'
+    | '/widgets/weather'
     | '/{-$locale}/changelog'
     | '/{-$locale}/faq'
     | '/{-$locale}/presets'
@@ -589,6 +611,7 @@ export interface FileRouteTypes {
     | '/{-$locale}/setup/sub-goal'
     | '/{-$locale}/setup/sub-growing-plant'
     | '/{-$locale}/setup/subathon-timer'
+    | '/{-$locale}/setup/weather'
     | '/{-$locale}/guides'
   id:
     | '__root__'
@@ -611,6 +634,7 @@ export interface FileRouteTypes {
     | '/widgets/stream-alerts'
     | '/widgets/sub-sprout-widget'
     | '/widgets/subathon'
+    | '/widgets/weather'
     | '/{-$locale}/changelog'
     | '/{-$locale}/faq'
     | '/{-$locale}/presets'
@@ -640,6 +664,7 @@ export interface FileRouteTypes {
     | '/{-$locale}/setup/sub-goal'
     | '/{-$locale}/setup/sub-growing-plant'
     | '/{-$locale}/setup/subathon-timer'
+    | '/{-$locale}/setup/weather'
     | '/{-$locale}/guides/'
   fileRoutesById: FileRoutesById
 }
@@ -663,6 +688,7 @@ export interface RootRouteChildren {
   WidgetsStreamAlertsRoute: typeof WidgetsStreamAlertsRoute
   WidgetsSubSproutWidgetRoute: typeof WidgetsSubSproutWidgetRoute
   WidgetsSubathonRoute: typeof WidgetsSubathonRoute
+  WidgetsWeatherRoute: typeof WidgetsWeatherRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -798,6 +824,13 @@ declare module '@tanstack/react-router' {
       path: '/widgets/subathon'
       fullPath: '/widgets/subathon'
       preLoaderRoute: typeof WidgetsSubathonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/widgets/weather': {
+      id: '/widgets/weather'
+      path: '/widgets/weather'
+      fullPath: '/widgets/weather'
+      preLoaderRoute: typeof WidgetsWeatherRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/{-$locale}/': {
@@ -1010,6 +1043,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char123LocaleChar125SetupSubathonTimerRouteImport
       parentRoute: typeof Char123LocaleChar125RouteRoute
     }
+    '/{-$locale}/setup/weather': {
+      id: '/{-$locale}/setup/weather'
+      path: '/setup/weather'
+      fullPath: '/{-$locale}/setup/weather'
+      preLoaderRoute: typeof Char123LocaleChar125SetupWeatherRouteImport
+      parentRoute: typeof Char123LocaleChar125RouteRoute
+    }
   }
 }
 
@@ -1043,6 +1083,7 @@ interface Char123LocaleChar125RouteRouteChildren {
   Char123LocaleChar125SetupSubGoalRoute: typeof Char123LocaleChar125SetupSubGoalRoute
   Char123LocaleChar125SetupSubGrowingPlantRoute: typeof Char123LocaleChar125SetupSubGrowingPlantRoute
   Char123LocaleChar125SetupSubathonTimerRoute: typeof Char123LocaleChar125SetupSubathonTimerRoute
+  Char123LocaleChar125SetupWeatherRoute: typeof Char123LocaleChar125SetupWeatherRoute
   Char123LocaleChar125GuidesIndexRoute: typeof Char123LocaleChar125GuidesIndexRoute
 }
 
@@ -1100,6 +1141,8 @@ const Char123LocaleChar125RouteRouteChildren: Char123LocaleChar125RouteRouteChil
       Char123LocaleChar125SetupSubGrowingPlantRoute,
     Char123LocaleChar125SetupSubathonTimerRoute:
       Char123LocaleChar125SetupSubathonTimerRoute,
+    Char123LocaleChar125SetupWeatherRoute:
+      Char123LocaleChar125SetupWeatherRoute,
     Char123LocaleChar125GuidesIndexRoute: Char123LocaleChar125GuidesIndexRoute,
   }
 
@@ -1128,6 +1171,7 @@ const rootRouteChildren: RootRouteChildren = {
   WidgetsStreamAlertsRoute: WidgetsStreamAlertsRoute,
   WidgetsSubSproutWidgetRoute: WidgetsSubSproutWidgetRoute,
   WidgetsSubathonRoute: WidgetsSubathonRoute,
+  WidgetsWeatherRoute: WidgetsWeatherRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

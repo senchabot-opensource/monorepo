@@ -1,6 +1,7 @@
 import { type CSSProperties, useEffect, useMemo, useRef, useState } from 'react';
 import type { HudCorner, HudSettings, HudStyle } from '#/lib/irl-hud-url';
 import type { SubathonPlatform } from '../subathon/subathon-events';
+import { useShortSideScale } from '../use-fit-scale';
 import { chosenView, MOVE_SPEED, startingView, startKey } from './hud-map';
 import { formatChange, formatMoney } from './hud-money';
 import { HudRadar, RADAR_CSS } from './hud-radar';
@@ -90,19 +91,6 @@ const cornerPlace = (corner: HudCorner, scale: number, zoom: number): CSSPropert
   transform: `scale(${zoom})`,
   transformOrigin: CORNER_ORIGIN[corner],
 });
-
-/** Scale for the browser source's short side, so a vertical canvas gets a HUD its size too. */
-function useShortSideScale(): number {
-  const [scale, setScale] = useState(1);
-  useEffect(() => {
-    const measure = () =>
-      setScale(Math.min(window.innerWidth, window.innerHeight) / DESIGN_SHORT_SIDE);
-    measure();
-    window.addEventListener('resize', measure);
-    return () => window.removeEventListener('resize', measure);
-  }, []);
-  return scale;
-}
 
 /** Counts up (or down) to `target` like an arcade counter, instead of jumping. */
 function useRolling(target: number): number {
@@ -286,7 +274,7 @@ export function IrlHudWidget({
   // A mod's !hud map choice, while it still names a saved place or a made-up map; else the URL's.
   const view = (mapChoice && chosenView(mapChoice, settings.places)) || startingView(settings);
   const place = view.map === 'real' ? view.place : null;
-  const scale = useShortSideScale();
+  const scale = useShortSideScale(DESIGN_SHORT_SIDE);
   const look = LOOKS[settings.style];
   const zoom = (scale * settings.size) / 100;
   const { corner } = settings;

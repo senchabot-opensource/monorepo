@@ -15,6 +15,7 @@ import {
   StreamAlertsIcon,
   SubathonIcon,
   SubSproutIcon,
+  WeatherIcon,
 } from '#/components/icons';
 import type { TranslationKey } from '#/lib/i18n';
 import type { SitePath } from '#/lib/i18n/paths';
@@ -30,6 +31,7 @@ export type WidgetId =
   | 'poll'
   | 'stream-alerts'
   | 'irl-hud'
+  | 'weather'
   | 'frames'
   | 'countdown'
   | 'raffle'
@@ -113,6 +115,20 @@ export const WIDGETS: readonly WidgetEntry[] = [
     platforms: ['twitch', 'kick'],
     demoUrl: '/widgets/irl-hud?simulate=1',
     // A whole scene: the money and the mini-map each sit in a corner of it.
+    sourceSize: { width: 1920, height: 1080 },
+  },
+  {
+    id: 'weather',
+    // It reads no chat: the place and the look are all in the URL.
+    kind: 'overlay',
+    setupPath: '/setup/weather',
+    widgetPath: '/widgets/weather',
+    nameKey: 'widgets.weather.name',
+    taglineKey: 'widgets.weather.tagline',
+    Icon: WeatherIcon,
+    platforms: ['twitch', 'kick'],
+    demoUrl: '/widgets/weather?demo=1',
+    // A whole scene: the weather sits in a corner of it.
     sourceSize: { width: 1920, height: 1080 },
   },
   {

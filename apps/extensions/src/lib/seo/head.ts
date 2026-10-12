@@ -144,6 +144,18 @@ export const OG_IMAGES = {
       pt: 'HUD IRL, um overlay de contador de dinheiro e minimapa que subs, cheers e raids enchem',
     },
   },
+  weather: {
+    path: '/og/weather.png',
+    alt: {
+      en: 'Weather, a live weather overlay with the temperature, an icon and a forecast',
+      de: 'Wetter, ein Live-Wetter-Overlay mit Temperatur, Symbol und Vorhersage',
+      tr: "Hava Durumu, sıcaklık, simge ve tahmin gösteren canlı hava durumu overlay'i",
+      es: 'Clima, un overlay de clima en vivo con la temperatura, un ícono y el pronóstico',
+      fr: 'Météo, un overlay météo en direct avec la température, une icône et les prévisions',
+      ja: '天気: 気温、アイコン、予報を表示するリアルタイムの天気オーバーレイ',
+      pt: 'Clima, um overlay de clima ao vivo com a temperatura, um ícone e a previsão',
+    },
+  },
   countdown: {
     path: '/og/countdown.png',
     alt: {

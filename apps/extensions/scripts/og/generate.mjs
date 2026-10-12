@@ -117,6 +117,11 @@ const HUD_HIT = hudEvents(
 );
 const ANTON_READY = `document.fonts.check('20px Anton')`;
 
+// Weather demos run on sample weather; the setup page's test buttons switch it over this channel.
+const WEATHER_READY = `document.fonts.check('20px Outfit') && Boolean(document.querySelector('[data-testid="weather-temp"]'))`;
+const weatherSky = (sky) =>
+  `new BroadcastChannel('senchabot:weather-preview').postMessage({ type: 'sky', sky: '${sky}', preview: 'og' })`;
+
 // Chat Poll's preview takes chat messages over its channel: a mod puts the poll from the URL up,
 // then viewers on both platforms vote. Test messages pause the simulated voters for a few seconds.
 const POLL_VOTES = [12, 27, 18, 7];
@@ -241,6 +246,24 @@ const CAPTURES = {
     trigger: HUD_HIT,
     afterTriggerMs: 1500,
     ready: ANTON_READY,
+  },
+  // The stage's own size, so each layer lies 1:1: a dark card in the top left corner and a
+  // light pill in the bottom right, both at the biggest size.
+  weatherCard: {
+    path: '/widgets/weather?demo=1&size=200&tz=Europe/Istanbul',
+    width: STAGE.width,
+    height: STAGE.height,
+    settleMs: 900,
+    ready: WEATHER_READY,
+  },
+  weatherPill: {
+    path: '/widgets/weather?demo=1&size=200&layout=pill&theme=light&corner=br&preview=og',
+    width: STAGE.width,
+    height: STAGE.height,
+    settleMs: 600,
+    trigger: weatherSky('sun'),
+    afterTriggerMs: 900,
+    ready: WEATHER_READY,
   },
   // Stills (motion=0), so the art doesn't catch a glint or a petal mid-flight.
   framesDynasty: {
@@ -447,6 +470,21 @@ const CARDS = [
       layers: [
         layer('hudRetro', { x: 9, y: -6, width: 520, height: 293 }),
         layer('hudModern', { x: 9, y: 196, width: 520, height: 293 }),
+      ],
+    },
+  },
+  {
+    id: 'weather',
+    eyebrow: { icon: 'weather', label: 'Overlay' },
+    title: en.widgets.weather.name,
+    subtitle: en.widgets.weather.tagline,
+    visual: {
+      kind: 'stage',
+      live: true,
+      // Each layer is a whole stage; the card's sits lower so the Live badge clears it.
+      layers: [
+        layer('weatherCard', { x: 6, y: 34, width: STAGE.width, height: STAGE.height }),
+        layer('weatherPill', { x: 0, y: 0, width: STAGE.width, height: STAGE.height }),
       ],
     },
   },
