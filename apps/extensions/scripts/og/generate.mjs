@@ -104,6 +104,19 @@ const goalEvents = (...events) =>
     .map((event) => `channel.postMessage({ type: 'event', preview: 'og', event: ${JSON.stringify(event)} });`)
     .join(' ')} })()`;
 
+// The HUD's preview takes test events over its channel: set the money, then a sub and a raid,
+// so the counter has rolled and the +$ pops are still up. They also pause the simulated events.
+const hudEvents = (...events) =>
+  `(() => { const channel = new BroadcastChannel('senchabot:irl-hud-preview'); ${events
+    .map((event) => `channel.postMessage({ type: 'event', preview: 'og', event: ${JSON.stringify(event)} });`)
+    .join(' ')} })()`;
+const HUD_HIT = hudEvents(
+  { kind: 'mod', platform: 'twitch', text: '!hud cash 48150' },
+  { kind: 'sub', platform: 'kick', name: 'pixelfox', tier: 1 },
+  { kind: 'raid', platform: 'twitch', name: 'lunaa', viewers: 25 },
+);
+const ANTON_READY = `document.fonts.check('20px Anton')`;
+
 // Chat Poll's preview takes chat messages over its channel: a mod puts the poll from the URL up,
 // then viewers on both platforms vote. Test messages pause the simulated voters for a few seconds.
 const POLL_VOTES = [12, 27, 18, 7];
@@ -209,6 +222,25 @@ const CAPTURES = {
     // The trophy has landed and the burst is on its way out.
     afterTriggerMs: 1300,
     ready: OXANIUM_READY,
+  },
+  // 16:9 scenes at the biggest size, so the HUD in their corners reads on the card.
+  hudRetro: {
+    path: '/widgets/irl-hud?simulate=1&preview=og&size=200&tz=Europe/Istanbul',
+    width: 800,
+    height: 450,
+    settleMs: 600,
+    trigger: HUD_HIT,
+    afterTriggerMs: 1500,
+    ready: ANTON_READY,
+  },
+  hudModern: {
+    path: '/widgets/irl-hud?simulate=1&preview=og&size=200&style=modern&clock=0&radar=0',
+    width: 800,
+    height: 450,
+    settleMs: 600,
+    trigger: HUD_HIT,
+    afterTriggerMs: 1500,
+    ready: ANTON_READY,
   },
   // Stills (motion=0), so the art doesn't catch a glint or a petal mid-flight.
   framesDynasty: {
@@ -400,6 +432,21 @@ const CARDS = [
       layers: [
         layer('goal', { x: 9, y: 40, width: 520, height: 169 }),
         layer('goalReached', { x: 9, y: 212, width: 520, height: 169 }),
+      ],
+    },
+  },
+  {
+    id: 'irl-hud',
+    eyebrow: { icon: 'irl-hud', label: 'Overlay' },
+    title: en.widgets.irlHud.name,
+    subtitle: en.widgets.irlHud.tagline,
+    visual: {
+      kind: 'stage',
+      live: true,
+      // Two 800x450 scenes: Retro with the mini-map, Modern under it with just the money.
+      layers: [
+        layer('hudRetro', { x: 9, y: -6, width: 520, height: 293 }),
+        layer('hudModern', { x: 9, y: 196, width: 520, height: 293 }),
       ],
     },
   },

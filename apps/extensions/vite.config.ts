@@ -18,6 +18,7 @@ const SITE_PAGES = [
   '/setup/follower-goal',
   '/setup/stream-frames',
   '/setup/stream-countdown',
+  '/setup/irl-hud',
   '/setup/chat-poll',
   '/setup/chat-widget',
   '/setup/raffle',

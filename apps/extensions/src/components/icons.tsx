@@ -69,6 +69,15 @@ export function SubathonIcon(props: IconProps) {
   );
 }
 
+export function IrlHudIcon(props: IconProps) {
+  return (
+    <StrokeIcon {...props}>
+      <circle cx="12" cy="12" r="8.5" />
+      <path d="M12 7.5 15.5 16 12 14l-3.5 2Z" />
+    </StrokeIcon>
+  );
+}
+
 export function CountdownIcon(props: IconProps) {
   return (
     <StrokeIcon {...props}>

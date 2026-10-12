@@ -20,6 +20,7 @@ import { Route as WidgetsEmoteWallRouteImport } from './routes/widgets/emote-wal
 import { Route as WidgetsFollowerGoalRouteImport } from './routes/widgets/follower-goal'
 import { Route as WidgetsFrameRouteImport } from './routes/widgets/frame'
 import { Route as WidgetsGoalRouteImport } from './routes/widgets/goal'
+import { Route as WidgetsIrlHudRouteImport } from './routes/widgets/irl-hud'
 import { Route as WidgetsPollRouteImport } from './routes/widgets/poll'
 import { Route as WidgetsRaffleOverlayRouteImport } from './routes/widgets/raffle-overlay'
 import { Route as WidgetsSocialsRouteImport } from './routes/widgets/socials'
@@ -46,6 +47,7 @@ import { Route as Char123LocaleChar125SetupChatPollRouteImport } from './routes/
 import { Route as Char123LocaleChar125SetupChatWidgetRouteImport } from './routes/{-$locale}/setup/chat-widget'
 import { Route as Char123LocaleChar125SetupEmoteWallRouteImport } from './routes/{-$locale}/setup/emote-wall'
 import { Route as Char123LocaleChar125SetupFollowerGoalRouteImport } from './routes/{-$locale}/setup/follower-goal'
+import { Route as Char123LocaleChar125SetupIrlHudRouteImport } from './routes/{-$locale}/setup/irl-hud'
 import { Route as Char123LocaleChar125SetupObsBridgeRouteImport } from './routes/{-$locale}/setup/obs-bridge'
 import { Route as Char123LocaleChar125SetupRaffleRouteImport } from './routes/{-$locale}/setup/raffle'
 import { Route as Char123LocaleChar125SetupSocialsRouteImport } from './routes/{-$locale}/setup/socials'
@@ -111,6 +113,11 @@ const WidgetsFrameRoute = WidgetsFrameRouteImport.update({
 const WidgetsGoalRoute = WidgetsGoalRouteImport.update({
   id: '/widgets/goal',
   path: '/widgets/goal',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WidgetsIrlHudRoute = WidgetsIrlHudRouteImport.update({
+  id: '/widgets/irl-hud',
+  path: '/widgets/irl-hud',
   getParentRoute: () => rootRouteImport,
 } as any)
 const WidgetsPollRoute = WidgetsPollRouteImport.update({
@@ -261,6 +268,12 @@ const Char123LocaleChar125SetupFollowerGoalRoute =
     path: '/setup/follower-goal',
     getParentRoute: () => Char123LocaleChar125RouteRoute,
   } as any)
+const Char123LocaleChar125SetupIrlHudRoute =
+  Char123LocaleChar125SetupIrlHudRouteImport.update({
+    id: '/setup/irl-hud',
+    path: '/setup/irl-hud',
+    getParentRoute: () => Char123LocaleChar125RouteRoute,
+  } as any)
 const Char123LocaleChar125SetupObsBridgeRoute =
   Char123LocaleChar125SetupObsBridgeRouteImport.update({
     id: '/setup/obs-bridge',
@@ -334,6 +347,7 @@ export interface FileRoutesByFullPath {
   '/widgets/follower-goal': typeof WidgetsFollowerGoalRoute
   '/widgets/frame': typeof WidgetsFrameRoute
   '/widgets/goal': typeof WidgetsGoalRoute
+  '/widgets/irl-hud': typeof WidgetsIrlHudRoute
   '/widgets/poll': typeof WidgetsPollRoute
   '/widgets/raffle-overlay': typeof WidgetsRaffleOverlayRoute
   '/widgets/socials': typeof WidgetsSocialsRoute
@@ -359,6 +373,7 @@ export interface FileRoutesByFullPath {
   '/{-$locale}/setup/chat-widget': typeof Char123LocaleChar125SetupChatWidgetRoute
   '/{-$locale}/setup/emote-wall': typeof Char123LocaleChar125SetupEmoteWallRoute
   '/{-$locale}/setup/follower-goal': typeof Char123LocaleChar125SetupFollowerGoalRoute
+  '/{-$locale}/setup/irl-hud': typeof Char123LocaleChar125SetupIrlHudRoute
   '/{-$locale}/setup/obs-bridge': typeof Char123LocaleChar125SetupObsBridgeRoute
   '/{-$locale}/setup/raffle': typeof Char123LocaleChar125SetupRaffleRoute
   '/{-$locale}/setup/socials': typeof Char123LocaleChar125SetupSocialsRoute
@@ -382,6 +397,7 @@ export interface FileRoutesByTo {
   '/widgets/follower-goal': typeof WidgetsFollowerGoalRoute
   '/widgets/frame': typeof WidgetsFrameRoute
   '/widgets/goal': typeof WidgetsGoalRoute
+  '/widgets/irl-hud': typeof WidgetsIrlHudRoute
   '/widgets/poll': typeof WidgetsPollRoute
   '/widgets/raffle-overlay': typeof WidgetsRaffleOverlayRoute
   '/widgets/socials': typeof WidgetsSocialsRoute
@@ -407,6 +423,7 @@ export interface FileRoutesByTo {
   '/{-$locale}/setup/chat-widget': typeof Char123LocaleChar125SetupChatWidgetRoute
   '/{-$locale}/setup/emote-wall': typeof Char123LocaleChar125SetupEmoteWallRoute
   '/{-$locale}/setup/follower-goal': typeof Char123LocaleChar125SetupFollowerGoalRoute
+  '/{-$locale}/setup/irl-hud': typeof Char123LocaleChar125SetupIrlHudRoute
   '/{-$locale}/setup/obs-bridge': typeof Char123LocaleChar125SetupObsBridgeRoute
   '/{-$locale}/setup/raffle': typeof Char123LocaleChar125SetupRaffleRoute
   '/{-$locale}/setup/socials': typeof Char123LocaleChar125SetupSocialsRoute
@@ -432,6 +449,7 @@ export interface FileRoutesById {
   '/widgets/follower-goal': typeof WidgetsFollowerGoalRoute
   '/widgets/frame': typeof WidgetsFrameRoute
   '/widgets/goal': typeof WidgetsGoalRoute
+  '/widgets/irl-hud': typeof WidgetsIrlHudRoute
   '/widgets/poll': typeof WidgetsPollRoute
   '/widgets/raffle-overlay': typeof WidgetsRaffleOverlayRoute
   '/widgets/socials': typeof WidgetsSocialsRoute
@@ -457,6 +475,7 @@ export interface FileRoutesById {
   '/{-$locale}/setup/chat-widget': typeof Char123LocaleChar125SetupChatWidgetRoute
   '/{-$locale}/setup/emote-wall': typeof Char123LocaleChar125SetupEmoteWallRoute
   '/{-$locale}/setup/follower-goal': typeof Char123LocaleChar125SetupFollowerGoalRoute
+  '/{-$locale}/setup/irl-hud': typeof Char123LocaleChar125SetupIrlHudRoute
   '/{-$locale}/setup/obs-bridge': typeof Char123LocaleChar125SetupObsBridgeRoute
   '/{-$locale}/setup/raffle': typeof Char123LocaleChar125SetupRaffleRoute
   '/{-$locale}/setup/socials': typeof Char123LocaleChar125SetupSocialsRoute
@@ -483,6 +502,7 @@ export interface FileRouteTypes {
     | '/widgets/follower-goal'
     | '/widgets/frame'
     | '/widgets/goal'
+    | '/widgets/irl-hud'
     | '/widgets/poll'
     | '/widgets/raffle-overlay'
     | '/widgets/socials'
@@ -508,6 +528,7 @@ export interface FileRouteTypes {
     | '/{-$locale}/setup/chat-widget'
     | '/{-$locale}/setup/emote-wall'
     | '/{-$locale}/setup/follower-goal'
+    | '/{-$locale}/setup/irl-hud'
     | '/{-$locale}/setup/obs-bridge'
     | '/{-$locale}/setup/raffle'
     | '/{-$locale}/setup/socials'
@@ -531,6 +552,7 @@ export interface FileRouteTypes {
     | '/widgets/follower-goal'
     | '/widgets/frame'
     | '/widgets/goal'
+    | '/widgets/irl-hud'
     | '/widgets/poll'
     | '/widgets/raffle-overlay'
     | '/widgets/socials'
@@ -556,6 +578,7 @@ export interface FileRouteTypes {
     | '/{-$locale}/setup/chat-widget'
     | '/{-$locale}/setup/emote-wall'
     | '/{-$locale}/setup/follower-goal'
+    | '/{-$locale}/setup/irl-hud'
     | '/{-$locale}/setup/obs-bridge'
     | '/{-$locale}/setup/raffle'
     | '/{-$locale}/setup/socials'
@@ -580,6 +603,7 @@ export interface FileRouteTypes {
     | '/widgets/follower-goal'
     | '/widgets/frame'
     | '/widgets/goal'
+    | '/widgets/irl-hud'
     | '/widgets/poll'
     | '/widgets/raffle-overlay'
     | '/widgets/socials'
@@ -605,6 +629,7 @@ export interface FileRouteTypes {
     | '/{-$locale}/setup/chat-widget'
     | '/{-$locale}/setup/emote-wall'
     | '/{-$locale}/setup/follower-goal'
+    | '/{-$locale}/setup/irl-hud'
     | '/{-$locale}/setup/obs-bridge'
     | '/{-$locale}/setup/raffle'
     | '/{-$locale}/setup/socials'
@@ -630,6 +655,7 @@ export interface RootRouteChildren {
   WidgetsFollowerGoalRoute: typeof WidgetsFollowerGoalRoute
   WidgetsFrameRoute: typeof WidgetsFrameRoute
   WidgetsGoalRoute: typeof WidgetsGoalRoute
+  WidgetsIrlHudRoute: typeof WidgetsIrlHudRoute
   WidgetsPollRoute: typeof WidgetsPollRoute
   WidgetsRaffleOverlayRoute: typeof WidgetsRaffleOverlayRoute
   WidgetsSocialsRoute: typeof WidgetsSocialsRoute
@@ -716,6 +742,13 @@ declare module '@tanstack/react-router' {
       path: '/widgets/goal'
       fullPath: '/widgets/goal'
       preLoaderRoute: typeof WidgetsGoalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/widgets/irl-hud': {
+      id: '/widgets/irl-hud'
+      path: '/widgets/irl-hud'
+      fullPath: '/widgets/irl-hud'
+      preLoaderRoute: typeof WidgetsIrlHudRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/widgets/poll': {
@@ -900,6 +933,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char123LocaleChar125SetupFollowerGoalRouteImport
       parentRoute: typeof Char123LocaleChar125RouteRoute
     }
+    '/{-$locale}/setup/irl-hud': {
+      id: '/{-$locale}/setup/irl-hud'
+      path: '/setup/irl-hud'
+      fullPath: '/{-$locale}/setup/irl-hud'
+      preLoaderRoute: typeof Char123LocaleChar125SetupIrlHudRouteImport
+      parentRoute: typeof Char123LocaleChar125RouteRoute
+    }
     '/{-$locale}/setup/obs-bridge': {
       id: '/{-$locale}/setup/obs-bridge'
       path: '/setup/obs-bridge'
@@ -992,6 +1032,7 @@ interface Char123LocaleChar125RouteRouteChildren {
   Char123LocaleChar125SetupChatWidgetRoute: typeof Char123LocaleChar125SetupChatWidgetRoute
   Char123LocaleChar125SetupEmoteWallRoute: typeof Char123LocaleChar125SetupEmoteWallRoute
   Char123LocaleChar125SetupFollowerGoalRoute: typeof Char123LocaleChar125SetupFollowerGoalRoute
+  Char123LocaleChar125SetupIrlHudRoute: typeof Char123LocaleChar125SetupIrlHudRoute
   Char123LocaleChar125SetupObsBridgeRoute: typeof Char123LocaleChar125SetupObsBridgeRoute
   Char123LocaleChar125SetupRaffleRoute: typeof Char123LocaleChar125SetupRaffleRoute
   Char123LocaleChar125SetupSocialsRoute: typeof Char123LocaleChar125SetupSocialsRoute
@@ -1039,6 +1080,7 @@ const Char123LocaleChar125RouteRouteChildren: Char123LocaleChar125RouteRouteChil
       Char123LocaleChar125SetupEmoteWallRoute,
     Char123LocaleChar125SetupFollowerGoalRoute:
       Char123LocaleChar125SetupFollowerGoalRoute,
+    Char123LocaleChar125SetupIrlHudRoute: Char123LocaleChar125SetupIrlHudRoute,
     Char123LocaleChar125SetupObsBridgeRoute:
       Char123LocaleChar125SetupObsBridgeRoute,
     Char123LocaleChar125SetupRaffleRoute: Char123LocaleChar125SetupRaffleRoute,
@@ -1078,6 +1120,7 @@ const rootRouteChildren: RootRouteChildren = {
   WidgetsFollowerGoalRoute: WidgetsFollowerGoalRoute,
   WidgetsFrameRoute: WidgetsFrameRoute,
   WidgetsGoalRoute: WidgetsGoalRoute,
+  WidgetsIrlHudRoute: WidgetsIrlHudRoute,
   WidgetsPollRoute: WidgetsPollRoute,
   WidgetsRaffleOverlayRoute: WidgetsRaffleOverlayRoute,
   WidgetsSocialsRoute: WidgetsSocialsRoute,

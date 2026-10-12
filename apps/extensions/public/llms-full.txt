@@ -1,6 +1,6 @@
 # Senchabot Extensions: full reference
 
-> Free, open source stream overlays and tools for Twitch and Kick: Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Stream Frames, Stream Countdown, Chat Poll, Raffle, OBS Bridge and Spin Wheel. Each one is set up on a web page at https://extensions.senchabot.com and runs from a URL. No login and nothing to install.
+> Free, open source stream overlays and tools for Twitch and Kick: Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Stream Frames, Stream Countdown, IRL HUD, Chat Poll, Raffle, OBS Bridge and Spin Wheel. Each one is set up on a web page at https://extensions.senchabot.com and runs from a URL. No login and nothing to install.
 
 Short version with links only: https://extensions.senchabot.com/llms.txt
 
@@ -27,6 +27,7 @@ Short version with links only: https://extensions.senchabot.com/llms.txt
 | Stream Alerts | Overlay | /setup/stream-alerts | /widgets/stream-alerts | 800x450 |
 | Sub Goal | Overlay | /setup/sub-goal | /widgets/goal | 800x260 |
 | Stream Frames | Overlay | /setup/stream-frames | /widgets/frame | 640x360, 360x640, 420x720 or 1920x1080 |
+| IRL HUD | Overlay | /setup/irl-hud | /widgets/irl-hud | 1920x1080 |
 | Subathon Timer | Tool | /setup/subathon-timer | /widgets/subathon (run from chat with !subathon) | 800x300 |
 | Chat Poll | Tool | /setup/chat-poll | /widgets/poll (run from chat with !poll) | 640x560 |
 | Raffle | Tool | /setup/raffle | /widgets/raffle-overlay (winner overlay) | 1920x1080 |
@@ -340,6 +341,57 @@ URL parameters (all optional):
 | lang | en, tr (the wording of the scene) | the browser's language |
 | simulate | 1 runs a fast countdown that starts over | off |
 
+## IRL HUD
+
+A game-style HUD for Twitch and Kick, made for IRL streams. Subs, gifted subs, Bits (Twitch), Kicks (Kick) and raids add the dollar amounts the streamer sets, with separate values per platform, and the cash counter rolls up to the new amount. Above it runs the time of day, in a picked time zone for OBS running on a cloud server or a computer at home. A mini-map shows an arrow walking streets or paths, turning at the corners, with the map turning under it so the arrow always points ahead. It draws a made-up city (Urban) or park (Park), picked by the channel name, or the real streets, paths, buildings, parks and water within about 500 m of a place the streamer picks (Real Place), from OpenStreetMap data (© OpenStreetMap contributors) loaded once from the Overpass API and kept in the browser source for 14 days. The setup page finds the place with OpenStreetMap's Nominatim search, or takes pasted coordinates.
+
+- Widget URL: https://extensions.senchabot.com/widgets/irl-hud?twitch=CHANNEL&kick=CHANNEL
+- Demo with simulated subs: https://extensions.senchabot.com/widgets/irl-hud?simulate=1
+- Recommended size: 1920x1080, the whole scene. The money and the mini-map each sit in a picked corner and are sized for the source's short side, so a vertical canvas works too.
+- The cash is saved in the browser source (OBS keeps it across reloads and restarts). Subs while OBS is closed can't be seen.
+- A new starting amount in the URL starts the counter over from it; until then the money earned is kept.
+- Bits and Kicks values are per 100, raids per viewer they bring. Twitch Tier 2 and 3 subs can count as 2 and 5 subs.
+
+Chat commands for the broadcaster and moderators, on Twitch and Kick:
+
+| Command | What it does |
+| --- | --- |
+| !hud cash +500 (or !hud cash add 500) | Adds cash |
+| !hud cash -200 (or !hud cash remove 200) | Takes cash away, down to a debt shown in red |
+| !hud cash 10000 (or !hud cash set 10000) | Sets the cash |
+| !hud cash reset | Goes back to the starting cash |
+
+`!hud money` works the same as `!hud cash`.
+
+Amounts can be written as 500, 1,500, $1500, 2.5k or 1m.
+
+URL parameters (all optional):
+
+| Parameter | Values | Default |
+| --- | --- | --- |
+| twitch | Twitch channel | none |
+| kick | Kick channel | none |
+| style | retro (green $00000350 under a grey clock, round mini-map), modern (white $1,250, rounded square mini-map) | retro |
+| corner | tr, tl, br, bl: where the cash and clock sit | tr |
+| size | 50 to 200, percent | 100 |
+| start | starting cash, 0 to 999999999 | 0 |
+| tsub, tgift | dollars per Twitch sub (Tier 1 and Prime) and per gifted sub | 100 |
+| bits | dollars per 100 Bits | 25 |
+| traid | dollars per viewer a Twitch raid brings | 10 |
+| ksub, kgift | dollars per Kick sub and per gifted sub | 100 |
+| kicks | dollars per 100 Kicks | 25 |
+| kraid | dollars per viewer a Kick raid (host) brings | 10 |
+| tiers | 0 counts Twitch Tier 2 and 3 subs as one sub | 1 |
+| clock | 0 hides the clock | 1 |
+| h12 | 1 shows a 12-hour clock | 0 |
+| tz | an IANA time zone like Europe/Istanbul for the clock | the OBS computer's |
+| radar | 0 hides the mini-map | 1 |
+| radarCorner | tr, tl, br, bl: where the mini-map sits | bl |
+| map | urban, park, real: what the mini-map draws | urban |
+| lat, lon | the real place's latitude and longitude, for map=real (rounded to 5 decimals) | none |
+| pops | 0 hides the +$100 that floats up with the viewer's name | 1 |
+| simulate | 1 plays simulated subs, doesn't read chat and doesn't save | off |
+
 ## Chat Poll
 
 A chat poll for Twitch and Kick. The broadcaster and mods put a poll up from chat, viewers vote by typing a number, and votes from both chats go into one result with live bars, a countdown and the winner at the end. Twitch's own polls can't be read without logging in, so this poll takes votes from chat, the same way on both platforms.
@@ -514,6 +566,7 @@ A: Open an issue at https://github.com/senchabot-opensource/monorepo/issues/new.
 - Subathon Timer setup: https://extensions.senchabot.com/setup/subathon-timer
 - Stream Alerts setup: https://extensions.senchabot.com/setup/stream-alerts
 - Sub Goal setup: https://extensions.senchabot.com/setup/sub-goal
+- IRL HUD setup: https://extensions.senchabot.com/setup/irl-hud
 - Chat Poll setup: https://extensions.senchabot.com/setup/chat-poll
 - Raffle: https://extensions.senchabot.com/setup/raffle
 - OBS Bridge setup: https://extensions.senchabot.com/setup/obs-bridge

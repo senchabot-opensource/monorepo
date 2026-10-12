@@ -15,6 +15,8 @@ const DEMO_PARAMS: DemoParams = {
 // near full size, and the chat runs faster to fill the column before the visitor scrolls past.
 const CARD_PARAMS: DemoParams = {
   'chat-box': { fontSize: '15', mockRate: '1.5' },
+  // The HUD is sized for the card's short side, so in a strip it runs at its biggest.
+  'irl-hud': { size: '200' },
 };
 
 /**
