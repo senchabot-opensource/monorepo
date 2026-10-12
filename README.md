@@ -4,6 +4,9 @@ Open-source streaming toolkit for **Twitch**, **Kick** and **Discord**. One repo
 Twitch chat bot, a Discord bot, a web dashboard that runs both, and a set of free OBS browser
 source overlays that need no account at all.
 
+> **This is the public version of Senchabot.** Another version of Senchabot also includes the Kick
+> and YouTube bots and their integrations; those are not part of this repository.
+
 **Live:** [senchabot.com](https://senchabot.com/) — dashboard · [extensions.senchabot.com](https://extensions.senchabot.com/) — overlays and tools
 
 | App | What it is | Built with |
@@ -30,7 +33,11 @@ URL, and it runs on **Twitch and Kick** alike. Nothing to install, nothing to si
 | [Emote Wall](https://extensions.senchabot.com/setup/emote-wall) | Emote-only messages float across the screen, in Calm, Chaos or Bounce motion |
 | [Stream Alerts](https://extensions.senchabot.com/setup/stream-alerts) | Animated alerts with sound for subs, gift subs, Bits, Kicks and raids |
 | [Sub Goal](https://extensions.senchabot.com/setup/sub-goal) | A goal bar every sub and gift sub fills, with a trophy when the target lands |
+| [Follower Goal](https://extensions.senchabot.com/setup/follower-goal) | A goal bar every new follow fills, with a trophy when the target lands |
 | [Stream Frames](https://extensions.senchabot.com/setup/stream-frames) | Webcam, chat and screen frames drawn in the chosen preset's look, transparent in the middle |
+| [Stream Countdown](https://extensions.senchabot.com/setup/stream-countdown) | A countdown for the starting soon, break and ending scenes, set by length or by clock time |
+| [IRL HUD](https://extensions.senchabot.com/setup/irl-hud) | A game-style HUD for IRL streams: subs, gift subs, Bits, Kicks and raids add cash, beside a clock and a mini-map |
+| [Socials](https://extensions.senchabot.com/setup/socials) | Your social media handles, shown one at a time with a slide animation |
 
 **Tools**
 
@@ -38,6 +45,7 @@ URL, and it runs on **Twitch and Kick** alike. Nothing to install, nothing to si
 | --- | --- |
 | [Chat Poll](https://extensions.senchabot.com/setup/chat-poll) | Chat votes by typing a number; live bars, a timer and the winner at the end |
 | [Raffle Picker](https://extensions.senchabot.com/setup/raffle) | Viewers enter with a keyword; the drawn winner lands on a confetti overlay |
+| [Spin Wheel](https://extensions.senchabot.com/setup/spin-wheel) | Chat spins the wheel with `!spin`, behind one shared cooldown shown on screen |
 | [Subathon Timer](https://extensions.senchabot.com/setup/subathon-timer) | Subs, gift subs, Bits and Kicks add time, shown as a health bar, a clock or a ring |
 | [OBS Bridge](https://extensions.senchabot.com/setup/obs-bridge) | Chat commands switch scenes and control recording over local OBS WebSocket |
 

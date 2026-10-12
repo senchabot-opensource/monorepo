@@ -35,6 +35,8 @@ export const presetCanvas = (widget: WidgetEntry): SourceSize | undefined =>
 /** A self-running demo of the widget in a preset. Raffle has no demo of its own, only this one. */
 export function presetDemoUrl(widget: WidgetEntry, preset: string): string {
   const url = new URL(widget.demoUrl ?? `${widget.widgetPath}?demo=1`, 'http://demo.invalid');
+  // The wheel spins on repeat in its card, and its ticks and jingle would play every time.
+  if (widget.id === 'spin-wheel') url.searchParams.set('sound', '0');
   if (!isClassic(preset)) url.searchParams.set(PRESET_PARAM, preset);
   return `${url.pathname}${url.search}`;
 }
