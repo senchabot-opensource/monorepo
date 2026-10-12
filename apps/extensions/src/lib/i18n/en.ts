@@ -131,6 +131,11 @@ export const en = {
       name: 'IRL HUD',
       tagline: 'A game-style HUD for IRL streams: subs, gifts, cheers and raids add cash, with a mini-map.',
     },
+    weather: {
+      name: 'Weather',
+      tagline:
+        'The live weather for any place you pick, with an icon, the temperature and a forecast.',
+    },
     raffle: {
       name: 'Raffle',
       tagline: 'Viewers join with a chat keyword like !join, and you draw the winner.',
@@ -252,7 +257,7 @@ export const en = {
       'Yes. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll, Stream Countdown, IRL HUD and Spin Wheel take a Twitch and a Kick channel in the same URL. OBS Bridge can listen to both chats at once too. Raffle runs on one platform at a time.',
     faq5Q: 'How do I change a widget later?',
     faq5A:
-      'Open its setup page, set it up the way you want and replace the URL in your Browser Source. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll, Stream Frames, Socials, Stream Countdown, IRL HUD and Spin Wheel can also open an existing URL: paste it on the setup page, your settings come back, and you change only what you need.',
+      'Open its setup page, set it up the way you want and replace the URL in your Browser Source. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll, Stream Frames, Socials, Stream Countdown, IRL HUD, Weather and Spin Wheel can also open an existing URL: paste it on the setup page, your settings come back, and you change only what you need.',
     faq6Q: 'Will my widget URL keep working after updates?',
     faq6A:
       "Yes. Updates keep existing URL settings and their values working, so a widget that's already in your scene doesn't need a new URL.",
@@ -1110,6 +1115,132 @@ export const en = {
     faq7A:
       "Add items with a price on the setup page, like water for $100. You and your mods type !hud buy water in Twitch or Kick chat, or !hud buy water 3 for three, and the price comes off the cash with the item's name next to it. If the cash is short, nothing is bought and the price shows with a cross.",
   },
+  weather: {
+    breadcrumb: 'Weather Setup',
+    title: 'Weather Setup',
+    intro:
+      'Live weather on your stream for any place you pick: an icon, the temperature and the weather in words, with wind, humidity and a forecast for the coming hours or days. It updates on its own, works with Twitch, Kick or any other platform, and needs no channel, account or API key.',
+    sectionPlace: 'Place',
+    place: 'Find a Place',
+    placeTip:
+      "Search for a city, town or neighborhood, or paste coordinates like 41.0082, 28.9784. The weather is for that spot and stays there; it doesn't follow you.",
+    placePlaceholder: 'Search a city or paste coordinates',
+    placePicked: 'Weather for {coords}.',
+    placeNeeded:
+      'Pick a place to get your widget URL. Until then the preview shows sample weather.',
+    placeName: 'Name on Stream',
+    placeNameTip:
+      'The name the overlay shows with the weather. Picking a place fills it in; change it, or leave it empty to show no name.',
+    placeNamePlaceholder: 'e.g. Istanbul',
+    placePrivacy: 'Viewers see this name and the weather, never the coordinates.',
+    layout: 'Layout',
+    layoutTip:
+      'Card shows the place, a big icon and the temperature, with wind, humidity and a forecast under them. Pill fits the icon, the temperature, the weather and the place on one line.',
+    layouts: {
+      card: 'Card',
+      pill: 'Pill',
+    },
+    theme: 'Background',
+    themeTip:
+      'A dark or light panel behind the weather, or none: white text with a shadow, right on your scene.',
+    themes: {
+      dark: 'Dark',
+      light: 'Light',
+      clear: 'None',
+    },
+    corner: 'Position',
+    cornerTip: 'The corner of the scene the weather sits in.',
+    size: 'Size',
+    sizeTip:
+      'How big the weather is. At 100% it fits a 1080p scene, and it scales with the browser source.',
+    language: 'Language',
+    languageTip: 'The language the overlay names the weather and the days in.',
+    sectionForecast: 'Forecast',
+    units: 'Units',
+    unitsTip: 'Celsius and km/h, or Fahrenheit and mph.',
+    unitOptions: {
+      metric: '°C, km/h',
+      imperial: '°F, mph',
+    },
+    details: 'Wind and Humidity',
+    detailsTip:
+      'The wind speed, with an arrow pointing where it blows, and the humidity, under the temperature.',
+    forecast: 'Forecast Row',
+    forecastTip:
+      'Under the weather: the next hours, three hours apart, or today and the next three days with their highs and lows.',
+    forecasts: {
+      hours: 'Hours',
+      days: 'Days',
+      off: 'Off',
+    },
+    clock12: '12-Hour Times',
+    clock12Tip: 'Shows 3 PM instead of 15:00.',
+    timeZone: 'Time Zone',
+    timeZoneTip:
+      "The forecast's hours and days follow this clock. On an IRL stream OBS often runs somewhere else, like a cloud server or a computer at home, so pick where you are.",
+    dataCredit:
+      'Weather data from MET Norway, the Norwegian Meteorological Institute, free under CC BY 4.0. The overlay credits it in small print, as the license asks.',
+    dataLicense: 'Data license',
+    conditions: {
+      sunny: 'Sunny',
+      clear: 'Clear',
+      mostlySunny: 'Mostly sunny',
+      mostlyClear: 'Mostly clear',
+      partlyCloudy: 'Partly cloudy',
+      cloudy: 'Cloudy',
+      fog: 'Fog',
+      lightRain: 'Light rain',
+      rain: 'Rain',
+      heavyRain: 'Heavy rain',
+      showers: 'Showers',
+      sleet: 'Sleet',
+      snow: 'Snow',
+      thunder: 'Thunderstorm',
+    },
+    today: 'Today',
+    wind: 'Wind',
+    humidity: 'Humidity',
+    credit: 'Data: {source}',
+    previewTitle: 'Weather Preview',
+    previewIframeTitle: 'Weather Preview',
+    previewHint:
+      'Shows the real weather once you pick a place, and sample weather until then. The buttons below show sample weather; Real Weather brings yours back.',
+    testTitle: 'Try it:',
+    testSun: 'Sunny',
+    testClouds: 'Cloudy',
+    testRain: 'Rain',
+    testStorm: 'Storm',
+    testSnow: 'Snow',
+    testNight: 'Night',
+    testLive: 'Real Weather',
+    widgetUrlTip:
+      'Already made a widget? Paste its URL here to load your settings and change what you need.',
+    widgetUrlPlaceholder: 'Paste an existing widget URL to edit it',
+    widgetUrlInvalid: "This isn't a Weather URL.",
+    browserSourceHintSize: ' (recommended size: 1920×1080, the whole scene).',
+    guideTitle: 'Streaming Software Setup (OBS, Streamlabs, XSplit, etc.)',
+    guideStep1:
+      'Add a Browser Source in your streaming software (OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio, etc.).',
+    guideStep2: 'Paste your copied Weather URL.',
+    guideStep3:
+      'Set width to 1920 and height to 1080, the size of your scene. The weather sits in the corner you picked.',
+    guideStep4: 'Go live. The weather updates on its own, about every half hour.',
+    faq1Q: 'Where does the weather come from?',
+    faq1A:
+      "From MET Norway, the Norwegian Meteorological Institute, whose forecasts cover the whole world. Its data is free to use, on monetized streams too, as long as it's credited, so the overlay names MET Norway in small print. There's no account or API key to set up.",
+    faq2Q: 'How often does it update?',
+    faq2A:
+      'OBS asks for a new forecast when MET Norway says one is due, about every half hour, and the overlay moves on to the next hour of it on its own. The forecast is saved in OBS, so after a reload or a scene switch the weather shows at once.',
+    faq3Q: 'Does it show where I am?',
+    faq3A:
+      "Only the name you give it. The weather is for the place you pick and doesn't follow you, and the overlay never shows coordinates. On an IRL stream, pick the city you're in, and paste a new URL when you travel.",
+    faq4Q: 'Can I use it with the IRL HUD?',
+    faq4A:
+      "Yes. Add both to the same scene. The weather starts in the top left corner, clear of the HUD's cash in the top right and its mini-map in the bottom left.",
+    faq5Q: 'Can it show Fahrenheit?',
+    faq5A:
+      "Yes. Pick °F, mph under Units. The forecast row can show 12-hour times too, and the overlay can name the weather in any of the site's seven languages.",
+  },
   frames: {
     breadcrumb: 'Stream Frames Setup',
     title: 'Stream Frames Setup',
@@ -1882,6 +2013,8 @@ export const en = {
             'One alert at a time, in the middle of this area. A bigger source scales it up.',
           irlHud:
             'A full 1080p canvas. The money and the mini-map each sit in a corner you picked, and fit a vertical canvas too.',
+          weather:
+            'A full 1080p canvas. The weather sits in the corner you picked, and fits a vertical canvas too.',
           raffle:
             "The winner overlay. Confetti bursts from both sides of the screen and the winner's name appears in the middle.",
           obsBridge: 'Not a visible overlay. Keep the tool open in a browser tab or an OBS dock.',
@@ -1924,7 +2057,7 @@ export const en = {
         title: 'How do I change a widget later?',
         p1: 'Your settings live inside the widget URL, so changing a setting means a new URL. Change the setting on the setup page, copy the new URL, then double-click the source in OBS and paste it over the old URL in the URL field.',
         p2:
-          "You don't have to start over with [Chat Box](/setup/chat-widget), [Emote Wall](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Stream Alerts](/setup/stream-alerts), [Sub Goal](/setup/sub-goal), [Chat Poll](/setup/chat-poll), [Stream Frames](/setup/stream-frames), [Socials](/setup/socials), [Stream Countdown](/setup/stream-countdown), [IRL HUD](/setup/irl-hud) or [Spin Wheel](/setup/spin-wheel). Paste your current URL into the Widget URL field on the setup page and your channels and all your settings come back. Change what you want and copy the new URL.",
+          "You don't have to start over with [Chat Box](/setup/chat-widget), [Emote Wall](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Stream Alerts](/setup/stream-alerts), [Sub Goal](/setup/sub-goal), [Chat Poll](/setup/chat-poll), [Stream Frames](/setup/stream-frames), [Socials](/setup/socials), [Stream Countdown](/setup/stream-countdown), [IRL HUD](/setup/irl-hud), [Weather](/setup/weather) or [Spin Wheel](/setup/spin-wheel). Paste your current URL into the Widget URL field on the setup page and your channels and all your settings come back. Change what you want and copy the new URL.",
         p3: "OBS Bridge has no paste field, so enter your settings again on its setup page and copy the new tool URL. You can also change scene picks and authorized users on the tool page itself and grab the new URL with its Copy Updated URL button. Old URLs keep working, so you don't have to update them.",
       },
       troubleshoot: {
@@ -2726,10 +2859,10 @@ export const en = {
       'OBS Studio and any other streaming software that supports a browser source. Each widget runs as a web URL, and you paste that URL into the source. Our guides are written for OBS Studio.',
     platformsQ: 'Which widgets support Twitch and which support Kick?',
     platformsA:
-      'All thirteen support both platforms. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll, Stream Countdown, IRL HUD and Spin Wheel listen to a Twitch and a Kick channel together in one URL. OBS Bridge listens for commands from both chats, and each authorized user is added with their own platform. Raffle runs on one platform at a time, Twitch or Kick. Stream Frames and Socials read no chat, so they work the same on either one. In Chat Box, 7TV emotes show on both platforms, while BTTV and FFZ emotes show on Twitch only.',
+      'All thirteen support both platforms. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll, Stream Countdown, IRL HUD and Spin Wheel listen to a Twitch and a Kick channel together in one URL. OBS Bridge listens for commands from both chats, and each authorized user is added with their own platform. Raffle runs on one platform at a time, Twitch or Kick. Stream Frames, Socials and Weather read no chat, so they work the same on either one. In Chat Box, 7TV emotes show on both platforms, while BTTV and FFZ emotes show on Twitch only.',
     editQ: 'How do I change a widget later?',
     editA:
-      "Change the settings on the setup page, copy the new URL, and paste it over the old one in the source's URL field in OBS. With Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll, Stream Frames, Socials, Stream Countdown, IRL HUD and Spin Wheel, if you paste your old URL into the Widget URL field on the setup page, all your settings come back and you don't have to start over.",
+      "Change the settings on the setup page, copy the new URL, and paste it over the old one in the source's URL field in OBS. With Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll, Stream Frames, Socials, Stream Countdown, IRL HUD, Weather and Spin Wheel, if you paste your old URL into the Widget URL field on the setup page, all your settings come back and you don't have to start over.",
     oldUrlsQ: 'Will my old widget URLs keep working?',
     oldUrlsA:
       "Yes. Updates are made so existing URLs don't break: parameter names, values and defaults stay the same. For example, the old keep=true in Chat Box still means Forever, and Sub Sprout still reads the old channel and platform parameters.",
@@ -2753,6 +2886,8 @@ export const en = {
     lead: "New features and bug fixes in Senchabot Extensions, newest first. The list is put together from the project's commit history on [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      weatherLaunch:
+        'New overlay: Weather, the live weather for any place you pick. A card or a one-line pill shows an icon, the temperature and the weather in words, with wind, humidity and a forecast for the coming hours or days, in °C or °F. The data comes free from MET Norway, with no account or API key.',
       settingsTabs:
         'IRL HUD, Stream Countdown, Subathon Timer, Stream Alerts, Chat Poll, Chat Box and Spin Wheel split their settings into tabs under the channel boxes, so each tab fits on one screen and, on a phone, the preview and widget URL sit much closer to the top.',
       presetPickerFolded:

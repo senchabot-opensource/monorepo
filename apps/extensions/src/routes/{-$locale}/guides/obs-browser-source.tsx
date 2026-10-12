@@ -23,6 +23,7 @@ const SIZE_NOTES: Record<WidgetId, TranslationKey> = {
   'sub-sprout': 'guides.obs.size.notes.subSprout',
   goal: 'guides.obs.size.notes.goal',
   'irl-hud': 'guides.obs.size.notes.irlHud',
+  weather: 'guides.obs.size.notes.weather',
   'follower-goal': 'guides.obs.size.notes.goal',
   frames: 'guides.obs.size.notes.frames',
   subathon: 'guides.obs.size.notes.subathon',

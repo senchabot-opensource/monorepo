@@ -134,6 +134,11 @@ export const de: typeof en = {
       tagline:
         'Ein HUD im Game-Look für IRL-Streams: Subs, Gifts, Cheers und Raids bringen Geld, mit Minikarte.',
     },
+    weather: {
+      name: 'Wetter',
+      tagline:
+        'Das Live-Wetter für jeden Ort, den du wählst, mit Symbol, Temperatur und Vorhersage.',
+    },
     raffle: {
       name: 'Verlosung',
       tagline: 'Zuschauer machen mit einem Keyword wie !join mit, und du ziehst den Gewinner.',
@@ -255,7 +260,7 @@ export const de: typeof en = {
       'Ja. Chat-Box, Emote-Wand, Sub Sprout, Subathon Timer, Stream-Alerts, Sub-Ziel, Chat-Umfrage, Stream-Countdown, IRL-HUD und Glücksrad nehmen einen Twitch- und einen Kick-Kanal in derselben URL. OBS Bridge kann auch beiden Chats gleichzeitig zuhören. Die Verlosung läuft immer auf einer Plattform.',
     faq5Q: 'Wie ändere ich ein Widget später?',
     faq5A:
-      'Öffne seine Setup-Seite, stell alles so ein, wie du willst, und ersetz die URL in deiner Browser-Quelle. Chat-Box, Emote-Wand, Sub Sprout, Subathon Timer, Stream-Alerts, Sub-Ziel, Chat-Umfrage, Stream-Rahmen, Socials, Stream-Countdown, IRL-HUD und Glücksrad können auch eine bestehende URL öffnen: Füg sie auf der Setup-Seite ein, deine Einstellungen sind wieder da, und du änderst nur, was du brauchst.',
+      'Öffne seine Setup-Seite, stell alles so ein, wie du willst, und ersetz die URL in deiner Browser-Quelle. Chat-Box, Emote-Wand, Sub Sprout, Subathon Timer, Stream-Alerts, Sub-Ziel, Chat-Umfrage, Stream-Rahmen, Socials, Stream-Countdown, IRL-HUD, Wetter und Glücksrad können auch eine bestehende URL öffnen: Füg sie auf der Setup-Seite ein, deine Einstellungen sind wieder da, und du änderst nur, was du brauchst.',
     faq6Q: 'Funktioniert meine Widget-URL nach Updates weiter?',
     faq6A:
       'Ja. Updates lassen bestehende URL-Einstellungen und ihre Werte funktionieren, ein Widget, das schon in deiner Szene ist, braucht also keine neue URL.',
@@ -1117,6 +1122,132 @@ export const de: typeof en = {
     faq7A:
       'Füg auf der Einrichtungsseite Items mit einem Preis hinzu, etwa Wasser für $100. Du und deine Mods schreiben !hud buy wasser in den Twitch- oder Kick-Chat oder !hud buy wasser 3 für drei, und der Preis wird vom Geld abgezogen, mit dem Namen des Items daneben. Reicht das Geld nicht, wird nichts gekauft, und der Preis erscheint mit einem Kreuz davor.',
   },
+  weather: {
+    breadcrumb: 'Wetter einrichten',
+    title: 'Wetter einrichten',
+    intro:
+      'Das Live-Wetter für jeden Ort, den du wählst, in deinem Stream: ein Symbol, die Temperatur und das Wetter in Worten, dazu Wind, Luftfeuchtigkeit und eine Vorhersage für die nächsten Stunden oder Tage. Es aktualisiert sich von selbst, funktioniert mit Twitch, Kick und jeder anderen Plattform und braucht keinen Kanal, kein Konto und keinen API-Schlüssel.',
+    sectionPlace: 'Ort',
+    place: 'Ort finden',
+    placeTip:
+      'Such nach einer Stadt, einem Ort oder einem Viertel, oder füg Koordinaten wie 41.0082, 28.9784 ein. Das Wetter gilt für diesen Punkt und bleibt dort; es folgt dir nicht.',
+    placePlaceholder: 'Stadt suchen oder Koordinaten einfügen',
+    placePicked: 'Wetter für {coords}.',
+    placeNeeded:
+      'Wähl einen Ort, um deine Widget-URL zu bekommen. Bis dahin zeigt die Vorschau Beispielwetter.',
+    placeName: 'Name im Stream',
+    placeNameTip:
+      'Der Name, den das Overlay zum Wetter zeigt. Er wird beim Wählen eines Orts ausgefüllt; ändere ihn, oder lass ihn leer, dann steht kein Name da.',
+    placeNamePlaceholder: 'z. B. Istanbul',
+    placePrivacy: 'Zuschauer sehen diesen Namen und das Wetter, nie die Koordinaten.',
+    layout: 'Layout',
+    layoutTip:
+      'Karte zeigt den Ort, ein großes Symbol und die Temperatur, darunter Wind, Luftfeuchtigkeit und eine Vorhersage. Leiste bringt Symbol, Temperatur, Wetter und Ort in eine Zeile.',
+    layouts: {
+      card: 'Karte',
+      pill: 'Leiste',
+    },
+    theme: 'Hintergrund',
+    themeTip:
+      'Ein dunkles oder helles Feld hinter dem Wetter, oder keins: weiße Schrift mit Schatten, direkt auf deiner Szene.',
+    themes: {
+      dark: 'Dunkel',
+      light: 'Hell',
+      clear: 'Keiner',
+    },
+    corner: 'Position',
+    cornerTip: 'Die Ecke der Szene, in der das Wetter steht.',
+    size: 'Größe',
+    sizeTip:
+      'Wie groß das Wetter ist. Bei 100 % passt es in eine 1080p-Szene und skaliert mit der Browser-Quelle.',
+    language: 'Sprache',
+    languageTip: 'Die Sprache, in der das Overlay das Wetter und die Tage benennt.',
+    sectionForecast: 'Vorhersage',
+    units: 'Einheiten',
+    unitsTip: 'Celsius und km/h oder Fahrenheit und mph.',
+    unitOptions: {
+      metric: '°C, km/h',
+      imperial: '°F, mph',
+    },
+    details: 'Wind und Luftfeuchtigkeit',
+    detailsTip:
+      'Unter der Temperatur: die Windgeschwindigkeit mit einem Pfeil in Windrichtung und die Luftfeuchtigkeit.',
+    forecast: 'Vorhersagezeile',
+    forecastTip:
+      'Unter dem Wetter: die nächsten Stunden im Abstand von drei Stunden, oder heute und die nächsten drei Tage mit Höchst- und Tiefstwerten.',
+    forecasts: {
+      hours: 'Stunden',
+      days: 'Tage',
+      off: 'Aus',
+    },
+    clock12: '12-Stunden-Zeit',
+    clock12Tip: 'Zeigt 3 PM statt 15:00.',
+    timeZone: 'Zeitzone',
+    timeZoneTip:
+      'Stunden und Tage der Vorhersage richten sich nach dieser Uhr. Bei IRL-Streams läuft OBS oft woanders, etwa auf einem Cloud-Server oder dem Computer zu Hause, also wähl, wo du bist.',
+    dataCredit:
+      'Wetterdaten von MET Norway, dem Norwegischen Meteorologischen Institut, kostenlos unter CC BY 4.0. Das Overlay nennt die Quelle klein gedruckt, wie es die Lizenz verlangt.',
+    dataLicense: 'Datenlizenz',
+    conditions: {
+      sunny: 'Sonnig',
+      clear: 'Klar',
+      mostlySunny: 'Überwiegend sonnig',
+      mostlyClear: 'Überwiegend klar',
+      partlyCloudy: 'Teilweise bewölkt',
+      cloudy: 'Bewölkt',
+      fog: 'Nebel',
+      lightRain: 'Leichter Regen',
+      rain: 'Regen',
+      heavyRain: 'Starker Regen',
+      showers: 'Schauer',
+      sleet: 'Schneeregen',
+      snow: 'Schnee',
+      thunder: 'Gewitter',
+    },
+    today: 'Heute',
+    wind: 'Wind',
+    humidity: 'Luftfeuchtigkeit',
+    credit: 'Daten: {source}',
+    previewTitle: 'Vorschau des Wetters',
+    previewIframeTitle: 'Vorschau des Wetters',
+    previewHint:
+      'Zeigt das echte Wetter, sobald du einen Ort gewählt hast, und bis dahin Beispielwetter. Die Knöpfe unten zeigen Beispielwetter; Echtes Wetter holt deins zurück.',
+    testTitle: 'Probier es aus:',
+    testSun: 'Sonnig',
+    testClouds: 'Bewölkt',
+    testRain: 'Regen',
+    testStorm: 'Gewitter',
+    testSnow: 'Schnee',
+    testNight: 'Nacht',
+    testLive: 'Echtes Wetter',
+    widgetUrlTip:
+      'Schon ein Widget gebaut? Füg seine URL hier ein, um deine Einstellungen zu laden und nur das zu ändern, was du brauchst.',
+    widgetUrlPlaceholder: 'Bestehende Widget-URL zum Bearbeiten einfügen',
+    widgetUrlInvalid: 'Das ist keine URL für das Wetter.',
+    browserSourceHintSize: ' (empfohlene Größe: 1920×1080, die ganze Szene).',
+    guideTitle: 'Einrichtung in der Streaming-Software (OBS, Streamlabs, XSplit usw.)',
+    guideStep1:
+      'Füge in deiner Streaming-Software eine Browser-Quelle hinzu (OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio usw.).',
+    guideStep2: 'Füge die kopierte Wetter-URL ein.',
+    guideStep3:
+      'Setz die Breite auf 1920 und die Höhe auf 1080, die Größe deiner Szene. Das Wetter steht in der Ecke, die du gewählt hast.',
+    guideStep4: 'Geh live. Das Wetter aktualisiert sich von selbst, etwa jede halbe Stunde.',
+    faq1Q: 'Woher kommt das Wetter?',
+    faq1A:
+      'Von MET Norway, dem Norwegischen Meteorologischen Institut, dessen Vorhersagen die ganze Welt abdecken. Die Daten sind kostenlos nutzbar, auch in monetarisierten Streams, solange die Quelle genannt wird, deshalb nennt das Overlay MET Norway klein gedruckt. Du musst kein Konto und keinen API-Schlüssel einrichten.',
+    faq2Q: 'Wie oft aktualisiert es sich?',
+    faq2A:
+      'OBS holt eine neue Vorhersage, sobald MET Norway eine ankündigt, etwa jede halbe Stunde, und das Overlay springt von selbst zur nächsten Stunde. Die Vorhersage wird in OBS gespeichert, daher ist das Wetter nach einem Neuladen oder Szenenwechsel sofort da.',
+    faq3Q: 'Zeigt es, wo ich bin?',
+    faq3A:
+      'Nur den Namen, den du angibst. Das Wetter gilt für den gewählten Ort und folgt dir nicht, und das Overlay zeigt nie Koordinaten. Wähl bei IRL-Streams die Stadt, in der du bist, und füg auf Reisen eine neue URL ein.',
+    faq4Q: 'Kann ich es zusammen mit dem IRL-HUD nutzen?',
+    faq4A:
+      'Ja. Füg beide derselben Szene hinzu. Das Wetter startet oben links, weg vom Geld des HUDs oben rechts und seiner Minikarte unten links.',
+    faq5Q: 'Kann es Fahrenheit zeigen?',
+    faq5A:
+      'Ja. Wähl unter Einheiten °F, mph. Die Vorhersagezeile kann auch 12-Stunden-Zeiten zeigen, und das Overlay kann das Wetter in jeder der sieben Sprachen der Seite benennen.',
+  },
   frames: {
     breadcrumb: 'Stream-Rahmen einrichten',
     title: 'Stream-Rahmen einrichten',
@@ -1890,6 +2021,8 @@ export const de: typeof en = {
             'Ein Alert nach dem anderen, in der Mitte dieser Fläche. Eine größere Quelle skaliert ihn hoch.',
           irlHud:
             'Eine volle 1080p-Canvas. Geld und Minikarte sitzen jeweils in der Ecke, die du gewählt hast, und passen auch auf eine vertikale Canvas.',
+          weather:
+            'Eine volle 1080p-Fläche. Das Wetter steht in der gewählten Ecke und passt auch auf eine vertikale Fläche.',
           raffle:
             'Das Gewinner-Overlay. Konfetti schießt von beiden Seiten des Screens, und der Name des Gewinners erscheint in der Mitte.',
           obsBridge: 'Kein sichtbares Overlay. Lass das Tool in einem Browser-Tab oder einem OBS-Dock offen.',
@@ -1932,7 +2065,7 @@ export const de: typeof en = {
         title: 'Wie ändere ich ein Widget später?',
         p1: 'Deine Einstellungen stecken in der Widget-URL, eine geänderte Einstellung heißt also eine neue URL. Ändere die Einstellung auf der Setup-Seite, kopier die neue URL, doppelklick dann die Quelle in OBS und füg sie im Feld URL über der alten URL ein.',
         p2:
-          'Bei [Chat-Box](/setup/chat-widget), [Emote-Wand](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Stream-Alerts](/setup/stream-alerts), [Sub-Ziel](/setup/sub-goal), [Chat-Umfrage](/setup/chat-poll), [Stream-Rahmen](/setup/stream-frames), [Socials](/setup/socials), [Stream-Countdown](/setup/stream-countdown), [IRL-HUD](/setup/irl-hud) und [Glücksrad](/setup/spin-wheel) musst du nicht von vorn anfangen. Füg deine aktuelle URL auf der Setup-Seite ins Feld Widget-URL ein, und deine Kanäle und alle Einstellungen sind wieder da. Ändere, was du willst, und kopier die neue URL.',
+          'Bei [Chat-Box](/setup/chat-widget), [Emote-Wand](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Stream-Alerts](/setup/stream-alerts), [Sub-Ziel](/setup/sub-goal), [Chat-Umfrage](/setup/chat-poll), [Stream-Rahmen](/setup/stream-frames), [Socials](/setup/socials), [Stream-Countdown](/setup/stream-countdown), [IRL-HUD](/setup/irl-hud), [Wetter](/setup/weather) und [Glücksrad](/setup/spin-wheel) musst du nicht von vorn anfangen. Füg deine aktuelle URL auf der Setup-Seite ins Feld Widget-URL ein, und deine Kanäle und alle Einstellungen sind wieder da. Ändere, was du willst, und kopier die neue URL.',
         p3: 'OBS Bridge hat kein Feld zum Einfügen, gib deine Einstellungen also auf der Setup-Seite nochmal ein und kopier die neue Tool-URL. Szenenwahl und berechtigte Nutzer kannst du auch direkt auf der Tool-Seite ändern und die neue URL mit dem Button Aktuelle URL kopieren holen. Alte URLs funktionieren weiter, du musst sie also nicht austauschen.',
       },
       troubleshoot: {
@@ -2735,10 +2868,10 @@ export const de: typeof en = {
       'Mit OBS Studio und jeder anderen Streaming-Software, die eine Browser-Quelle unterstützt. Jedes Widget läuft als Web-URL, und diese URL fügst du in die Quelle ein. Unsere Anleitungen sind für OBS Studio geschrieben.',
     platformsQ: 'Welche Widgets unterstützen Twitch und welche Kick?',
     platformsA:
-      'Alle dreizehn unterstützen beide Plattformen. Chat-Box, Emote-Wand, Sub Sprout, Subathon Timer, Stream-Alerts, Sub-Ziel, Chat-Umfrage, Stream-Countdown, IRL-HUD und Glücksrad hören einem Twitch- und einem Kick-Kanal zusammen in einer URL zu. OBS Bridge hört auf Befehle aus beiden Chats, und jeder berechtigte Nutzer wird mit seiner eigenen Plattform hinzugefügt. Die Verlosung läuft immer auf einer Plattform, Twitch oder Kick. Stream-Rahmen und Socials lesen keinen Chat, sie funktionieren also auf beiden gleich. In der Chat-Box erscheinen 7TV-Emotes auf beiden Plattformen, BTTV- und FFZ-Emotes nur auf Twitch.',
+      'Alle dreizehn unterstützen beide Plattformen. Chat-Box, Emote-Wand, Sub Sprout, Subathon Timer, Stream-Alerts, Sub-Ziel, Chat-Umfrage, Stream-Countdown, IRL-HUD und Glücksrad hören einem Twitch- und einem Kick-Kanal zusammen in einer URL zu. OBS Bridge hört auf Befehle aus beiden Chats, und jeder berechtigte Nutzer wird mit seiner eigenen Plattform hinzugefügt. Die Verlosung läuft immer auf einer Plattform, Twitch oder Kick. Stream-Rahmen, Socials und Wetter lesen keinen Chat, sie funktionieren also auf beiden gleich. In der Chat-Box erscheinen 7TV-Emotes auf beiden Plattformen, BTTV- und FFZ-Emotes nur auf Twitch.',
     editQ: 'Wie ändere ich ein Widget später?',
     editA:
-      'Ändere die Einstellungen auf der Setup-Seite, kopier die neue URL und füg sie in OBS im Feld URL der Quelle über der alten ein. Bei Chat-Box, Emote-Wand, Sub Sprout, Subathon Timer, Stream-Alerts, Sub-Ziel, Chat-Umfrage, Stream-Rahmen, Socials, Stream-Countdown, IRL-HUD und Glücksrad kannst du deine alte URL auf der Setup-Seite ins Feld Widget-URL einfügen, dann sind alle Einstellungen wieder da, und du musst nicht von vorn anfangen.',
+      'Ändere die Einstellungen auf der Setup-Seite, kopier die neue URL und füg sie in OBS im Feld URL der Quelle über der alten ein. Bei Chat-Box, Emote-Wand, Sub Sprout, Subathon Timer, Stream-Alerts, Sub-Ziel, Chat-Umfrage, Stream-Rahmen, Socials, Stream-Countdown, IRL-HUD, Wetter und Glücksrad kannst du deine alte URL auf der Setup-Seite ins Feld Widget-URL einfügen, dann sind alle Einstellungen wieder da, und du musst nicht von vorn anfangen.',
     oldUrlsQ: 'Funktionieren meine alten Widget-URLs weiter?',
     oldUrlsA:
       'Ja. Updates werden so gebaut, dass bestehende URLs nicht kaputtgehen: Parameternamen, Werte und Standards bleiben gleich. Das alte keep=true in der Chat-Box heißt z. B. immer noch Für immer, und Sub Sprout liest immer noch die alten Parameter channel und platform.',
@@ -2762,6 +2895,8 @@ export const de: typeof en = {
     lead: 'Neue Features und Bugfixes in Senchabot Extensions, das Neueste zuerst. Die Liste ist aus der Commit-Historie des Projekts auf [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) zusammengestellt.',
     site: 'Website',
     entries: {
+      weatherLaunch:
+        'Neues Overlay: Wetter, das Live-Wetter für jeden Ort, den du wählst. Eine Karte oder eine einzeilige Leiste zeigt Symbol, Temperatur und Wetter in Worten, dazu Wind, Luftfeuchtigkeit und eine Vorhersage für die nächsten Stunden oder Tage, in °C oder °F. Die Daten kommen kostenlos von MET Norway, ohne Konto oder API-Schlüssel.',
       settingsTabs:
         'IRL-HUD, Stream-Countdown, Subathon Timer, Stream-Alerts, Chat-Umfrage, Chat-Box und Glücksrad teilen ihre Einstellungen unter den Kanalfeldern in Tabs auf. So passt jeder Tab auf einen Bildschirm, und auf dem Handy stehen Vorschau und Widget-URL viel weiter oben.',
       presetPickerFolded:

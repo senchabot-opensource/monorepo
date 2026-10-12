@@ -13,6 +13,7 @@ Senchabot Extensions provides 100% free streaming widgets, customizable overlays
 - **Stream Frames** — Ready-made webcam, chat and screen frames drawn in the picked preset's look, transparent in the middle.
 - **Stream Countdown** — A countdown for the starting soon, back soon and stream ending scenes, counting down a length or aiming at a time of day, in the picked preset's look.
 - **IRL HUD** — A game-style HUD for IRL streams: subs, gifted subs, Bits, Kicks and raids add cash to a Retro or Modern cash counter, under a clock in your time zone, next to a mini-map where an arrow walks a made-up city or park, or the real streets around a place you pick.
+- **Weather** — Live weather for any place you pick, with an icon, the temperature, wind, humidity and a forecast for the coming hours or days. The data comes free from MET Norway, with no account or API key.
 - **Chat Poll** — A poll that Twitch and Kick chat vote in by typing a number, with live bars, a timer and the winner at the end. Mods run it from chat.
 - **Universal Chat** — A multi-chat widget and stream chat box overlay that combines Twitch and Kick chat into a single on-screen feed with 7TV emotes, badges, and platform indicators.
 - **Raffle Picker** — A chat-based giveaway and raffle tool. Viewers type a keyword to enter; winners are drawn and announced on a live confetti celebration overlay.
@@ -30,6 +31,7 @@ Senchabot Extensions provides 100% free streaming widgets, customizable overlays
 - [Stream Frames](https://extensions.senchabot.com/setup/stream-frames)
 - [Stream Countdown](https://extensions.senchabot.com/setup/stream-countdown)
 - [IRL HUD](https://extensions.senchabot.com/setup/irl-hud)
+- [Weather](https://extensions.senchabot.com/setup/weather)
 - [Chat Poll](https://extensions.senchabot.com/setup/chat-poll)
 - [Universal Chat](https://extensions.senchabot.com/setup/chat-widget)
 - [Raffle Picker](https://extensions.senchabot.com/setup/raffle)
@@ -184,6 +186,26 @@ https://extensions.senchabot.com/widgets/irl-hud?twitch=YOUR_TWITCH_CHANNEL&kick
 ```
 
 **URL parameters:** `twitch`, `kick`, `style` (`retro` | `modern`), `corner` (`tr` | `tl` | `br` | `bl`), `size` (50 to 200, percent), `start` (starting cash), Twitch `tsub` (Tier 1 and Prime), `tgift`, `bits` (per 100), `traid` (per raider), `tiers` (`0` | `1`), Kick `ksub`, `kgift`, `kicks` (per 100), `kraid` (per raider), `clock` (`0` | `1`), `h12` (`0` | `1`), `tz` (IANA time zone), `radar` (`0` | `1`), `radarCorner` (`tr` | `tl` | `br` | `bl`), `map` (`urban` | `park` | `real`), `places` (saved places as `name:lat,lon` joined by `;`, up to 10; older URLs with `lat` and `lon` read as one place named `place1`), `move` (`walk` | `run` | `stay`), `items` (market items as `name:price` joined by `;`, up to 20), `pops` (`0` | `1`), `simulate` (`1` plays simulated subs).
+
+---
+
+### Weather (`/setup/weather`)
+
+Live weather for any place you pick: an icon, the temperature and the weather in words, with wind, humidity and a forecast for the coming hours or days. It reads no chat and needs no channel.
+
+**How it works:**
+- The data is MET Norway's [Locationforecast](https://api.met.no/weatherapi/locationforecast/2.0/documentation) (the Norwegian Meteorological Institute): free, no key, under CC BY 4.0, so the overlay credits MET Norway in small print. The browser source asks MET straight from the page with a plain GET (no custom headers, so no CORS preflight), which MET's terms allow for low-volume sites; the page's `Origin` identifies it.
+- It asks again when MET's `Expires` header says, kept between 10 minutes and an hour, and saves the forecast in `localStorage`, so a reload or a scene switch shows the weather at once without asking early. Network errors and 5xx/429 retry with backoff; a refusal (4xx) waits half an hour. A forecast older than a day isn't shown as "now".
+- MET's 41 weather symbols are read into 14 conditions with their own words in every language, and drawn as one SVG icon built from parts: the sun or moon, clouds, rain, sleet, snow, lightning and fog.
+- The forecast row shows every third hour on the local clock, or today and the next three days with highs and lows and the 6-hour symbol closest to noon. Hours and days follow a picked IANA time zone, or the OBS computer's.
+- The setup page finds the place with OpenStreetMap's Nominatim, on an explicit search only (the IRL HUD's search), or takes pasted coordinates. Coordinates are written with at most 4 decimals, as MET asks. The overlay shows only the name you give the place.
+- A card or a one-line pill on a dark, light or no panel, in a corner of a 1920x1080 scene, sized for the source's short side so a vertical canvas works too. The font is Outfit from Google Fonts.
+
+```
+https://extensions.senchabot.com/widgets/weather?lat=41.0082&lon=28.9784&place=Istanbul&lang=en
+```
+
+**URL parameters:** `lat`, `lon` (the place; nothing shows without them), `place` (the name shown, up to 40 characters), `units` (`metric` | `imperial`), `layout` (`card` | `pill`), `theme` (`dark` | `light` | `clear`), `corner` (`tr` | `tl` | `br` | `bl`, `tl` by default), `size` (50 to 200, percent), `details` (`0` hides wind and humidity), `forecast` (`hours` | `days` | `off`), `h12` (`1` shows 3 PM instead of 15:00), `tz` (IANA time zone), `lang` (`en` | `de` | `es` | `fr` | `ja` | `pt` | `tr`), `demo` (`1` shows sample weather without asking MET).
 
 ---
 
@@ -364,6 +386,7 @@ npm run deploy
 │   │   ├── stream-frames.tsx       # Stream Frames configuration
 │   │   ├── stream-countdown.tsx    # Stream Countdown configuration
 │   │   ├── irl-hud.tsx             # IRL HUD configuration
+│   │   ├── weather.tsx             # Weather configuration
 │   │   ├── chat-poll.tsx           # Chat Poll configuration
 │   │   ├── chat-widget.tsx         # Universal Chat configuration
 │   │   ├── raffle.tsx              # Raffle configuration
@@ -376,6 +399,7 @@ npm run deploy
 │       ├── frame.tsx               # Stream Frames overlay
 │       ├── countdown.tsx           # Stream Countdown overlay
 │       ├── irl-hud.tsx             # IRL HUD overlay
+│       ├── weather.tsx             # Weather overlay
 │       ├── poll.tsx                # Chat Poll overlay
 │       ├── chat-widget.tsx         # Universal Chat overlay
 │       ├── raffle-overlay.tsx      # Raffle winner overlay

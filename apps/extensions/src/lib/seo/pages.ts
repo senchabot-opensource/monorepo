@@ -383,6 +383,43 @@ export const PAGE_META = {
         'Um HUD IRL grátis para o OBS. Subs, subs de presente, Bits, Kicks e raids somam dinheiro na Twitch e na Kick, com relógio no seu fuso horário e um minimapa.',
     },
   },
+  weather: {
+    en: {
+      title: 'Free Weather Overlay for OBS, Twitch & Kick | Senchabot',
+      description:
+        'A free live weather overlay for OBS. Pick any place and show its temperature, an icon and a forecast on Twitch, Kick or anywhere. No login or API key needed.',
+    },
+    de: {
+      title: 'Kostenloses Wetter-Overlay für OBS, Twitch, Kick | Senchabot',
+      description:
+        'Ein kostenloses Live-Wetter-Overlay für OBS. Wähl einen Ort und zeig Temperatur, Symbol und Vorhersage auf Twitch, Kick und überall. Ohne Login und API-Key.',
+    },
+    tr: {
+      title: "OBS için Ücretsiz Hava Durumu Overlay'i | Senchabot",
+      description:
+        "OBS için ücretsiz canlı hava durumu overlay'i. Bir yer seç; sıcaklığı, simgeyi ve tahmini Twitch, Kick ya da her yerde göster. Giriş, API anahtarı gerekmez.",
+    },
+    es: {
+      title: 'Overlay de clima gratis para OBS, Twitch y Kick | Senchabot',
+      description:
+        'Un overlay de clima en vivo gratis para OBS. Elige cualquier lugar y muestra su temperatura, un ícono y el pronóstico en Twitch, Kick o donde sea. Sin login.',
+    },
+    fr: {
+      title: 'Overlay météo gratuit pour OBS, Twitch et Kick | Senchabot',
+      description:
+        'Un overlay météo en direct gratuit pour OBS. Choisis un lieu et affiche sa température, une icône et les prévisions sur Twitch, Kick ou ailleurs. Sans compte.',
+    },
+    ja: {
+      title: 'OBS用の無料天気オーバーレイ（Twitch・Kick） | Senchabot',
+      description:
+        'OBS用の無料の天気オーバーレイ。好きな場所を選んで、気温、天気のアイコン、風、予報をTwitchやKickの配信に表示できます。ログインもAPIキーも不要です。',
+    },
+    pt: {
+      title: 'Overlay de clima grátis para OBS, Twitch e Kick | Senchabot',
+      description:
+        'Um overlay de clima ao vivo grátis para o OBS. Escolha qualquer lugar e mostre a temperatura, um ícone e a previsão na Twitch, na Kick ou onde for. Sem login.',
+    },
+  },
   countdown: {
     en: {
       title: 'Free Starting Soon & BRB Countdown for OBS | Senchabot',
@@ -1290,6 +1327,78 @@ export const APP_FEATURES: Record<WidgetId, Record<Locale, readonly string[]>> =
       'O streamer e os mods mudam o dinheiro com !hud cash +100, -100, um valor novo ou reset',
       'Um mercado de itens com preço que o !hud buy desconta do dinheiro, e uma seta que anda, corre ou para sob comando',
       'O dinheiro fica salvo no OBS e sobrevive a recarregamentos',
+      'Tamanho recomendado da fonte de navegador: 1920x1080',
+    ],
+  },
+  weather: {
+    en: [
+      'The live weather for any place you pick, found by name or pasted as coordinates',
+      'An icon, the temperature and the weather in words, with wind and humidity',
+      'A forecast row for the next hours or the next days, with highs and lows',
+      'A card or a one-line pill on a dark, light or no background, in any corner and at any size',
+      '°C and km/h or °F and mph, with forecast times in your own time zone',
+      'Weather data from MET Norway, free, with no account or API key',
+      'Updates on its own and is saved in OBS, so it shows at once after a reload',
+      'Recommended browser source size: 1920x1080',
+    ],
+    de: [
+      'Das Live-Wetter für jeden Ort, den du wählst, per Suche oder als eingefügte Koordinaten',
+      'Ein Symbol, die Temperatur und das Wetter in Worten, dazu Wind und Luftfeuchtigkeit',
+      'Eine Vorhersagezeile für die nächsten Stunden oder Tage, mit Höchst- und Tiefstwerten',
+      'Eine Karte oder eine einzeilige Leiste auf dunklem, hellem oder ohne Hintergrund, in jeder Ecke und jeder Größe',
+      '°C und km/h oder °F und mph, mit Vorhersagezeiten in deiner eigenen Zeitzone',
+      'Wetterdaten von MET Norway, kostenlos, ohne Konto und API-Schlüssel',
+      'Aktualisiert sich von selbst und wird in OBS gespeichert, daher nach einem Neuladen sofort da',
+      'Empfohlene Größe der Browserquelle: 1920x1080',
+    ],
+    tr: [
+      'Seçtiğin her yerin canlı hava durumu; adıyla bulunur ya da koordinatla yapıştırılır',
+      'Simge, sıcaklık ve havanın yazıyla anlatımı, yanında rüzgâr ve nem',
+      'Önümüzdeki saatler ya da günler için en yüksek ve en düşük sıcaklıklarla tahmin satırı',
+      'Koyu, açık ya da arka plansız bir kart veya tek satır; istediğin köşede ve istediğin boyutta',
+      '°C ve km/sa ya da °F ve mph; tahmin saatleri kendi saat diliminde',
+      "MET Norway'den ücretsiz hava durumu verisi; hesap ya da API anahtarı gerekmez",
+      "Kendi kendine güncellenir ve OBS'te kaydedilir, sayfa yenilense de hemen görünür",
+      'Önerilen Tarayıcı Kaynağı boyutu: 1920x1080',
+    ],
+    es: [
+      'El clima en vivo de cualquier lugar que elijas, buscado por nombre o pegado como coordenadas',
+      'Un ícono, la temperatura y el clima en palabras, con viento y humedad',
+      'Una fila de pronóstico para las próximas horas o días, con máximas y mínimas',
+      'Una tarjeta o una barra de una línea con fondo oscuro, claro o sin fondo, en cualquier esquina y del tamaño que quieras',
+      '°C y km/h o °F y mph, con las horas del pronóstico en tu propia zona horaria',
+      'Datos del clima de MET Norway, gratis, sin cuenta ni clave de API',
+      'Se actualiza solo y se guarda en OBS, así que aparece al instante tras recargar',
+      'Tamaño recomendado de la fuente de navegador: 1920x1080',
+    ],
+    fr: [
+      'La météo en direct du lieu de ton choix, trouvé par son nom ou collé en coordonnées',
+      "Une icône, la température et le temps en toutes lettres, avec le vent et l'humidité",
+      'Une ligne de prévisions pour les prochaines heures ou les prochains jours, avec maximales et minimales',
+      "Une carte ou un bandeau d'une ligne sur fond sombre, clair ou sans fond, dans le coin et à la taille de ton choix",
+      '°C et km/h ou °F et mph, avec les heures des prévisions dans ton propre fuseau horaire',
+      "Données météo de MET Norway, gratuites, sans compte ni clé d'API",
+      "Se met à jour toute seule et est enregistrée dans OBS, donc s'affiche tout de suite après un rechargement",
+      'Taille de source navigateur recommandée : 1920x1080',
+    ],
+    ja: [
+      '選んだ場所のリアルタイムの天気。名前で検索するか座標を貼り付けて指定',
+      'アイコン、気温、天気の説明に加えて風と湿度も表示',
+      'この先の時間帯または数日間の予報を最高気温と最低気温つきで表示',
+      'カードか1行のバーを、ダーク、ライト、背景なしで、好きな隅に好きなサイズで配置',
+      '°Cとkm/hまたは°Fとmph。予報の時刻は自分のタイムゾーンで表示',
+      'MET Norwayの天気データを無料で使用。アカウントやAPIキーは不要',
+      '自動で更新され、OBSに保存されるので再読み込みしてもすぐに表示',
+      'ブラウザソースの推奨サイズ: 1920x1080',
+    ],
+    pt: [
+      'O clima ao vivo de qualquer lugar que você escolher, buscado pelo nome ou colado como coordenadas',
+      'Um ícone, a temperatura e o tempo por extenso, com vento e umidade',
+      'Uma linha de previsão para as próximas horas ou dias, com máximas e mínimas',
+      'Um cartão ou uma barra de uma linha com fundo escuro, claro ou sem fundo, em qualquer canto e do tamanho que quiser',
+      '°C e km/h ou °F e mph, com os horários da previsão no seu próprio fuso horário',
+      'Dados do clima do MET Norway, grátis, sem conta nem chave de API',
+      'Atualiza sozinho e fica salvo no OBS, então aparece na hora depois de recarregar',
       'Tamanho recomendado da fonte de navegador: 1920x1080',
     ],
   },

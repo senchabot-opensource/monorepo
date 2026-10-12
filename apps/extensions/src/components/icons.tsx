@@ -78,6 +78,16 @@ export function IrlHudIcon(props: IconProps) {
   );
 }
 
+export function WeatherIcon(props: IconProps) {
+  return (
+    <StrokeIcon {...props}>
+      <path d="M9 2.8v1.4M2.8 9h1.4M4.6 4.6l1 1M13.4 4.6l-1 1" />
+      <path d="M6.2 10.6A3.2 3.2 0 1 1 12 7.9" />
+      <path d="M8 19h9.5a3.5 3.5 0 0 0 .2-7 5 5 0 0 0-9.6 1.4A2.8 2.8 0 0 0 8 19Z" />
+    </StrokeIcon>
+  );
+}
+
 export function CountdownIcon(props: IconProps) {
   return (
     <StrokeIcon {...props}>

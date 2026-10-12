@@ -137,6 +137,10 @@ export const ja: typeof en = {
       tagline:
         'IRL配信向けのゲーム風HUD。サブスク、ギフト、Cheer、レイドで所持金が増え、ミニマップも表示されます。',
     },
+    weather: {
+      name: '天気',
+      tagline: '選んだ場所のリアルタイムの天気を、アイコン、気温、予報で表示。',
+    },
     raffle: {
       name: '抽選',
       tagline:
@@ -258,7 +262,7 @@ export const ja: typeof en = {
       'はい。チャットボックス、エモートウォール、Sub Sprout、Subathon Timer、配信アラート、サブスク目標、チャット投票、配信カウントダウン、IRL HUD、ルーレットは、ひとつのURLにTwitchとKickのチャンネルを両方指定できます。OBS Bridgeも両方のチャットを同時に聞き取れます。抽選は一度にひとつのプラットフォームで動きます。',
     faq5Q: 'あとからウィジェットを変更するには？',
     faq5A:
-      '設定ページを開いて好きなように設定し、ブラウザソースのURLを差し替えてください。チャットボックス、エモートウォール、Sub Sprout、Subathon Timer、配信アラート、サブスク目標、チャット投票、配信フレーム、SNSリンク、配信カウントダウン、IRL HUD、ルーレットは既存のURLも開けます。設定ページに貼り付ければ設定が戻ってくるので、変えたいところだけ変更できます。',
+      '設定ページを開いて好きなように設定し、ブラウザソースのURLを差し替えてください。チャットボックス、エモートウォール、Sub Sprout、Subathon Timer、配信アラート、サブスク目標、チャット投票、配信フレーム、SNSリンク、配信カウントダウン、IRL HUD、天気、ルーレットは既存のURLも開けます。設定ページに貼り付ければ設定が戻ってくるので、変えたいところだけ変更できます。',
     faq6Q: 'アップデート後もウィジェットURLは使えますか？',
     faq6A:
       'はい。アップデートしても既存のURLの設定項目と値はそのまま使えるので、シーンに置いてあるウィジェットのURLを新しくする必要はありません。',
@@ -1128,6 +1132,118 @@ export const ja: typeof en = {
     faq7A:
       '設定ページで、$100の水のように値段を付けてアイテムを追加します。あなたとモデレーターがTwitchやKickのチャットで !hud buy 水 と打つか、3個なら !hud buy 水 3 と打つと、値段が所持金から引かれ、その横にアイテム名が表示されます。所持金が足りなければ何も買われず、値段がバツ印付きで表示されます。',
   },
+  weather: {
+    breadcrumb: '天気の設定',
+    title: '天気の設定',
+    intro:
+      '選んだ場所のリアルタイムの天気を配信に表示します。アイコン、気温、天気の説明に加えて、風、湿度、この先数時間または数日の予報も出せます。自動で更新され、Twitch、Kick、その他どのプラットフォームでも使えて、チャンネル、アカウント、APIキーは不要です。',
+    sectionPlace: '場所',
+    place: '場所を探す',
+    placeTip: '都市、町、地区を検索するか、41.0082, 28.9784 のような座標を貼り付けてください。天気はその地点のもので、あなたを追いかけることはありません。',
+    placePlaceholder: '都市を検索、または座標を貼り付け',
+    placePicked: '{coords} の天気',
+    placeNeeded: '場所を選ぶとウィジェットURLが作られます。それまではプレビューにサンプルの天気が表示されます。',
+    placeName: '配信に出す名前',
+    placeNameTip: 'オーバーレイが天気と一緒に表示する名前です。場所を選ぶと自動で入ります。変更するか、空欄にすると名前は表示されません。',
+    placeNamePlaceholder: '例: 東京',
+    placePrivacy: '視聴者に見えるのはこの名前と天気だけで、座標は表示されません。',
+    layout: 'レイアウト',
+    layoutTip: 'カードは場所、大きなアイコン、気温を表示し、その下に風、湿度、予報を並べます。バーはアイコン、気温、天気、場所を1行に収めます。',
+    layouts: {
+      card: 'カード',
+      pill: 'バー',
+    },
+    theme: '背景',
+    themeTip: '天気の後ろに暗いパネルか明るいパネルを置くか、なしにして影付きの白い文字をシーンに直接表示します。',
+    themes: {
+      dark: 'ダーク',
+      light: 'ライト',
+      clear: 'なし',
+    },
+    corner: '位置',
+    cornerTip: '天気を置くシーンの隅です。',
+    size: 'サイズ',
+    sizeTip: '天気の大きさです。100%で1080pのシーンに合い、ブラウザソースの大きさに合わせて拡大縮小します。',
+    language: '言語',
+    languageTip: 'オーバーレイが天気と曜日を表示する言語です。',
+    sectionForecast: '予報',
+    units: '単位',
+    unitsTip: '摂氏とkm/h、または華氏とmphです。',
+    unitOptions: {
+      metric: '°C, km/h',
+      imperial: '°F, mph',
+    },
+    details: '風と湿度',
+    detailsTip: '気温の下に、風の向きを示す矢印付きの風速と湿度を表示します。',
+    forecast: '予報の行',
+    forecastTip: '天気の下に、3時間おきのこの先の時間帯、または今日から3日後までの最高気温と最低気温を表示します。',
+    forecasts: {
+      hours: '時間',
+      days: '日',
+      off: 'オフ',
+    },
+    clock12: '12時間表示',
+    clock12Tip: '15:00の代わりに午後3時と表示します。',
+    timeZone: 'タイムゾーン',
+    timeZoneTip:
+      '予報の時刻と曜日はこの時計に合わせます。IRL配信ではOBSがクラウドサーバーや自宅のパソコンなど別の場所で動いていることが多いので、今いる場所を選んでください。',
+    dataCredit: '天気データはノルウェー気象研究所（MET Norway）が提供し、CC BY 4.0で無料で使えます。ライセンスに従い、オーバーレイに小さく出典を表示します。',
+    dataLicense: 'データのライセンス',
+    conditions: {
+      sunny: '晴れ',
+      clear: '晴れ',
+      mostlySunny: 'おおむね晴れ',
+      mostlyClear: 'おおむね晴れ',
+      partlyCloudy: '晴れ時々曇り',
+      cloudy: '曇り',
+      fog: '霧',
+      lightRain: '小雨',
+      rain: '雨',
+      heavyRain: '大雨',
+      showers: 'にわか雨',
+      sleet: 'みぞれ',
+      snow: '雪',
+      thunder: '雷雨',
+    },
+    today: '今日',
+    wind: '風',
+    humidity: '湿度',
+    credit: 'データ: {source}',
+    previewTitle: '天気のプレビュー',
+    previewIframeTitle: '天気のプレビュー',
+    previewHint: '場所を選ぶと実際の天気を、それまではサンプルの天気を表示します。下のボタンでサンプルの天気を表示でき、「実際の天気」で元に戻ります。',
+    testTitle: '試してみる:',
+    testSun: '晴れ',
+    testClouds: '曇り',
+    testRain: '雨',
+    testStorm: '雷雨',
+    testSnow: '雪',
+    testNight: '夜',
+    testLive: '実際の天気',
+    widgetUrlTip: '作成済みのウィジェットがありますか？ここにURLを貼り付けると設定が読み込まれ、必要なところだけ変更できます。',
+    widgetUrlPlaceholder: '既存のウィジェットURLを貼り付けて編集',
+    widgetUrlInvalid: '天気のURLではありません。',
+    browserSourceHintSize: '（推奨サイズ: 1920×1080、シーン全体）。',
+    guideTitle: '配信ソフトでの設定（OBS、Streamlabs、XSplitなど）',
+    guideStep1:
+      '配信ソフト（OBS Studio、Streamlabs Desktop、XSplit、vMix、Lightstream、PRISM Live Studioなど）でブラウザソースを追加します。',
+    guideStep2: 'コピーした天気のURLを貼り付けます。',
+    guideStep3: '幅を1920、高さを1080（シーンのサイズ）にします。天気は選んだ隅に表示されます。',
+    guideStep4: '配信を始めましょう。天気はおよそ30分ごとに自動で更新されます。',
+    faq1Q: '天気のデータはどこから来ていますか？',
+    faq1A:
+      '全世界の予報を出しているノルウェー気象研究所（MET Norway）からです。出典を示せば収益化している配信でも無料で使えるため、オーバーレイに小さくMET Norwayと表示しています。アカウントやAPIキーの設定は不要です。',
+    faq2Q: 'どのくらいの頻度で更新されますか？',
+    faq2A:
+      'MET Norwayが新しい予報を出すタイミング（およそ30分ごと）でOBSが予報を取り直し、オーバーレイは自動で次の時間帯に進みます。予報はOBSに保存されるので、再読み込みやシーン切り替えのあともすぐに天気が表示されます。',
+    faq3Q: '自分の居場所がわかってしまいますか？',
+    faq3A:
+      '表示されるのは入力した名前だけです。天気は選んだ場所のもので、あなたを追いかけません。座標が表示されることもありません。IRL配信では今いる都市を選び、移動したら新しいURLを貼り付けてください。',
+    faq4Q: 'IRL HUDと一緒に使えますか？',
+    faq4A: 'はい。両方を同じシーンに追加してください。天気は左上から始まり、右上のHUDの所持金や左下のミニマップと重なりません。',
+    faq5Q: '華氏で表示できますか？',
+    faq5A: 'はい。「単位」で°F, mphを選んでください。予報の行は12時間表示にもでき、オーバーレイはサイトの7つの言語のどれでも天気を表示できます。',
+  },
   frames: {
     breadcrumb: '配信フレームの設定',
     title: '配信フレームの設定',
@@ -1903,6 +2019,7 @@ export const ja: typeof en = {
             'この範囲の中央にアラートを1つずつ表示します。ソースを大きくすると拡大されます。',
           irlHud:
             '1080pのキャンバス全体。所持金とミニマップはそれぞれ選んだ隅に表示され、縦長のキャンバスにも収まります。',
+          weather: '1080pのキャンバス全体です。天気は選んだ隅に表示され、縦長のキャンバスにも収まります。',
           raffle:
             '当選者オーバーレイ。画面の両側から紙吹雪が飛び出し、中央に当選者の名前が表示されます。',
           obsBridge:
@@ -1945,7 +2062,7 @@ export const ja: typeof en = {
       update: {
         title: 'あとからウィジェットを変更するには？',
         p1: '設定はウィジェットURLの中にあるので、設定を変えるとURLも新しくなります。設定ページで設定を変えて新しいURLをコピーしたら、OBSでソースをダブルクリックし、URL欄の古いURLに上書きして貼り付けてください。',
-        p2: '[チャットボックス](/setup/chat-widget)、[エモートウォール](/setup/emote-wall)、[Sub Sprout](/setup/sub-growing-plant)、[Subathon Timer](/setup/subathon-timer)、[配信アラート](/setup/stream-alerts)、[サブスク目標](/setup/sub-goal)、[チャット投票](/setup/chat-poll)、[配信フレーム](/setup/stream-frames)、[SNSリンク](/setup/socials)、[配信カウントダウン](/setup/stream-countdown)、[IRL HUD](/setup/irl-hud)、[ルーレット](/setup/spin-wheel)なら、一からやり直す必要はありません。設定ページの「ウィジェットURL」欄に今のURLを貼り付ければ、チャンネルとすべての設定が戻ってきます。変えたいところを変えて、新しいURLをコピーしてください。',
+        p2: '[チャットボックス](/setup/chat-widget)、[エモートウォール](/setup/emote-wall)、[Sub Sprout](/setup/sub-growing-plant)、[Subathon Timer](/setup/subathon-timer)、[配信アラート](/setup/stream-alerts)、[サブスク目標](/setup/sub-goal)、[チャット投票](/setup/chat-poll)、[配信フレーム](/setup/stream-frames)、[SNSリンク](/setup/socials)、[配信カウントダウン](/setup/stream-countdown)、[IRL HUD](/setup/irl-hud)、[天気](/setup/weather)、[ルーレット](/setup/spin-wheel)なら、一からやり直す必要はありません。設定ページの「ウィジェットURL」欄に今のURLを貼り付ければ、チャンネルとすべての設定が戻ってきます。変えたいところを変えて、新しいURLをコピーしてください。',
         p3: 'OBS Bridgeには貼り付け欄がないので、設定ページで設定を入力し直して、新しいツールURLをコピーしてください。シーンの選択や許可ユーザーはツールページ上でも変更でき、「更新済みURLをコピー」ボタンで新しいURLを取得できます。古いURLもそのまま使えるので、更新は必須ではありません。',
       },
       troubleshoot: {
@@ -2731,10 +2848,10 @@ export const ja: typeof en = {
       'OBS Studioをはじめ、ブラウザソースに対応した配信ソフトならどれでも使えます。各ウィジェットはウェブのURLとして動き、そのURLをソースに貼り付けるだけです。ガイドはOBS Studio向けに書いています。',
     platformsQ: 'どのウィジェットがTwitchに、どれがKickに対応していますか？',
     platformsA:
-      '13個すべてが両方のプラットフォームに対応しています。チャットボックス、エモートウォール、Sub Sprout、Subathon Timer、配信アラート、サブスク目標、チャット投票、配信カウントダウン、IRL HUD、ルーレットは、ひとつのURLでTwitchとKickのチャンネルを同時に聞き取ります。OBS Bridgeは両方のチャットからコマンドを受け取り、許可ユーザーはそれぞれのプラットフォームと一緒に追加します。抽選は一度にひとつのプラットフォーム（TwitchかKick）で動きます。配信フレームとSNSリンクはチャットを読まないので、どちらのプラットフォームでも同じように動きます。チャットボックスでは、7TVのエモートは両方のプラットフォームで、BTTVとFFZのエモートはTwitchでのみ表示されます。',
+      '13個すべてが両方のプラットフォームに対応しています。チャットボックス、エモートウォール、Sub Sprout、Subathon Timer、配信アラート、サブスク目標、チャット投票、配信カウントダウン、IRL HUD、ルーレットは、ひとつのURLでTwitchとKickのチャンネルを同時に聞き取ります。OBS Bridgeは両方のチャットからコマンドを受け取り、許可ユーザーはそれぞれのプラットフォームと一緒に追加します。抽選は一度にひとつのプラットフォーム（TwitchかKick）で動きます。配信フレーム、SNSリンク、天気はチャットを読まないので、どちらのプラットフォームでも同じように動きます。チャットボックスでは、7TVのエモートは両方のプラットフォームで、BTTVとFFZのエモートはTwitchでのみ表示されます。',
     editQ: 'あとからウィジェットを変更するには？',
     editA:
-      '設定ページで設定を変えて新しいURLをコピーし、OBSのソースのURL欄にある古いURLに上書きして貼り付けます。チャットボックス、エモートウォール、Sub Sprout、Subathon Timer、配信アラート、サブスク目標、チャット投票、配信フレーム、SNSリンク、配信カウントダウン、IRL HUD、ルーレットなら、古いURLを設定ページの「ウィジェットURL」欄に貼り付けると設定がすべて戻ってくるので、一からやり直す必要はありません。',
+      '設定ページで設定を変えて新しいURLをコピーし、OBSのソースのURL欄にある古いURLに上書きして貼り付けます。チャットボックス、エモートウォール、Sub Sprout、Subathon Timer、配信アラート、サブスク目標、チャット投票、配信フレーム、SNSリンク、配信カウントダウン、IRL HUD、天気、ルーレットなら、古いURLを設定ページの「ウィジェットURL」欄に貼り付けると設定がすべて戻ってくるので、一からやり直す必要はありません。',
     oldUrlsQ: '古いウィジェットURLは使い続けられますか？',
     oldUrlsA:
       'はい。アップデートは既存のURLが壊れないように行っています。パラメータ名、値、初期設定は変わりません。たとえば、チャットボックスの古い keep=true は今も「ずっと表示」を意味し、Sub Sproutも古い channel と platform のパラメータを読み取ります。',
@@ -2758,6 +2875,8 @@ export const ja: typeof en = {
     lead: 'Senchabot Extensionsの新機能とバグ修正を、新しい順に並べています。このリストは[GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions)にあるプロジェクトのコミット履歴からまとめています。',
     site: 'サイト',
     entries: {
+      weatherLaunch:
+        '新しいオーバーレイ「天気」：選んだ場所のリアルタイムの天気です。カードか1行のバーで、アイコン、気温、天気を表示し、風、湿度、この先数時間または数日の予報も°Cか°Fで出せます。データはMET Norwayから無料で取得し、アカウントやAPIキーは不要です。',
       settingsTabs:
         'IRL HUD、配信カウントダウン、Subathon Timer、配信アラート、チャット投票、チャットボックス、ルーレットの設定を、チャンネル欄の下のタブに分けました。どのタブも1画面に収まり、スマートフォンではプレビューとウィジェットURLがずっと上に表示されます。',
       presetPickerFolded:

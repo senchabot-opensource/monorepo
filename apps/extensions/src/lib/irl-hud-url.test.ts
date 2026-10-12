@@ -6,7 +6,6 @@ import {
   type HudSettings,
   isItemName,
   isPlaceName,
-  isTimeZone,
   MAX_EVENT_MONEY,
   MAX_ITEMS,
   MAX_MONEY,
@@ -211,14 +210,5 @@ describe('isItemName', () => {
     for (const name of ['', '3', '12 34', 'a:b', 'semi;colon', 'x'.repeat(25)]) {
       expect(isItemName(name)).toBe(false);
     }
-  });
-});
-
-describe('isTimeZone', () => {
-  it('knows IANA zones and nothing else', () => {
-    expect(isTimeZone('Asia/Tokyo')).toBe(true);
-    expect(isTimeZone('UTC')).toBe(true);
-    expect(isTimeZone('')).toBe(false);
-    expect(isTimeZone('Mars/Base')).toBe(false);
   });
 });

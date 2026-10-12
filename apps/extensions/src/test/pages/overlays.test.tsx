@@ -17,6 +17,7 @@ const OVERLAYS = [
   '/widgets/frame?demo=1&preset=dynasty',
   '/widgets/countdown?simulate=1',
   '/widgets/poll?simulate=1',
+  '/widgets/weather?demo=1',
   '/widgets/raffle-overlay',
 ];
 

@@ -1,6 +1,6 @@
 # Senchabot Extensions: full reference
 
-> Free, open source stream overlays and tools for Twitch and Kick: Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Stream Frames, Stream Countdown, IRL HUD, Chat Poll, Raffle, OBS Bridge and Spin Wheel. Each one is set up on a web page at https://extensions.senchabot.com and runs from a URL. No login and nothing to install.
+> Free, open source stream overlays and tools for Twitch and Kick: Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Stream Frames, Stream Countdown, IRL HUD, Weather, Chat Poll, Raffle, OBS Bridge and Spin Wheel. Each one is set up on a web page at https://extensions.senchabot.com and runs from a URL. No login and nothing to install.
 
 Short version with links only: https://extensions.senchabot.com/llms.txt
 
@@ -28,6 +28,7 @@ Short version with links only: https://extensions.senchabot.com/llms.txt
 | Sub Goal | Overlay | /setup/sub-goal | /widgets/goal | 800x260 |
 | Stream Frames | Overlay | /setup/stream-frames | /widgets/frame | 640x360, 360x640, 420x720 or 1920x1080 |
 | IRL HUD | Overlay | /setup/irl-hud | /widgets/irl-hud | 1920x1080 |
+| Weather | Overlay | /setup/weather | /widgets/weather | 1920x1080 |
 | Subathon Timer | Tool | /setup/subathon-timer | /widgets/subathon (run from chat with !subathon) | 800x300 |
 | Chat Poll | Tool | /setup/chat-poll | /widgets/poll (run from chat with !poll) | 640x560 |
 | Raffle | Tool | /setup/raffle | /widgets/raffle-overlay (winner overlay) | 1920x1080 |
@@ -410,6 +411,32 @@ URL parameters (all optional):
 | pops | 0 hides the +$100 that floats up with the viewer's name | 1 |
 | simulate | 1 plays simulated subs, doesn't read chat and doesn't save | off |
 
+## Weather
+
+Live weather for any place the streamer picks: an icon, the temperature and the weather in words (Sunny, Light rain, Thunderstorm and so on), with wind and humidity, and a forecast row for the coming hours (every third hour on the clock) or for today and the next three days with highs and lows. It comes as a card or a one-line pill, on a dark, light or no panel. The data is MET Norway's Locationforecast (the Norwegian Meteorological Institute), free under CC BY 4.0 with no account or API key; the overlay credits MET Norway in small print. The browser source asks for a new forecast when MET's Expires header says, about every half hour, and saves it in the browser source, so a reload shows the weather at once. It reads no chat and needs no channel. The setup page finds the place with OpenStreetMap's Nominatim search or takes pasted coordinates; the overlay shows only the name the streamer gives the place, never the coordinates.
+
+- Widget URL: https://extensions.senchabot.com/widgets/weather?lat=41.0082&lon=28.9784&place=Istanbul&lang=en
+- Demo with sample weather: https://extensions.senchabot.com/widgets/weather?demo=1
+- Recommended size: 1920x1080, the whole scene. The weather sits in a picked corner and is sized for the source's short side, so a vertical canvas works too. Its default corner, top left, stays clear of the IRL HUD's.
+
+URL parameters:
+
+| Parameter | Values | Default |
+| --- | --- | --- |
+| lat, lon | the place, with at most 4 decimals; nothing shows without them | none |
+| place | the name shown with the weather, up to 40 characters | none |
+| units | metric (°C, km/h), imperial (°F, mph) | metric |
+| layout | card, pill (one line, no forecast) | card |
+| theme | dark, light, clear (no panel, white text with a shadow) | dark |
+| corner | tr, tl, br, bl | tl |
+| size | 50 to 200, percent | 100 |
+| details | 0 hides wind and humidity | 1 |
+| forecast | hours, days, off | hours |
+| h12 | 1 shows forecast hours as 3 PM instead of 15:00 | 0 |
+| tz | an IANA time zone like Europe/Istanbul for the forecast's hours and days | the OBS computer's |
+| lang | en, de, es, fr, ja, pt, tr: the language of the weather words and weekdays | written by the setup page |
+| demo | 1 shows sample weather and doesn't ask MET | off |
+
 ## Chat Poll
 
 A chat poll for Twitch and Kick. The broadcaster and mods put a poll up from chat, viewers vote by typing a number, and votes from both chats go into one result with live bars, a countdown and the winner at the end. Twitch's own polls can't be read without logging in, so this poll takes votes from chat, the same way on both platforms.
@@ -585,6 +612,7 @@ A: Open an issue at https://github.com/senchabot-opensource/monorepo/issues/new.
 - Stream Alerts setup: https://extensions.senchabot.com/setup/stream-alerts
 - Sub Goal setup: https://extensions.senchabot.com/setup/sub-goal
 - IRL HUD setup: https://extensions.senchabot.com/setup/irl-hud
+- Weather setup: https://extensions.senchabot.com/setup/weather
 - Chat Poll setup: https://extensions.senchabot.com/setup/chat-poll
 - Raffle: https://extensions.senchabot.com/setup/raffle
 - OBS Bridge setup: https://extensions.senchabot.com/setup/obs-bridge

@@ -105,6 +105,19 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://extensions.senchabot.com/setup/weather</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/weather"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/weather"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/weather"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/weather"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/weather"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/weather"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/weather"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/weather"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://extensions.senchabot.com/setup/chat-poll</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/chat-poll"/>
     <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/chat-poll"/>
@@ -560,6 +573,19 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://extensions.senchabot.com/de/setup/weather</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/weather"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/weather"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/weather"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/weather"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/weather"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/weather"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/weather"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/weather"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://extensions.senchabot.com/de/setup/chat-poll</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/chat-poll"/>
     <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/chat-poll"/>
@@ -920,6 +946,19 @@
     <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/irl-hud"/>
     <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/irl-hud"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/irl-hud"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/es/setup/weather</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/weather"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/weather"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/weather"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/weather"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/weather"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/weather"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/weather"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/weather"/>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -1288,6 +1327,19 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://extensions.senchabot.com/fr/setup/weather</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/weather"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/weather"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/weather"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/weather"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/weather"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/weather"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/weather"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/weather"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://extensions.senchabot.com/fr/setup/chat-poll</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/chat-poll"/>
     <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/chat-poll"/>
@@ -1648,6 +1700,19 @@
     <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/irl-hud"/>
     <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/irl-hud"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/irl-hud"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/ja/setup/weather</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/weather"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/weather"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/weather"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/weather"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/weather"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/weather"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/weather"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/weather"/>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -2016,6 +2081,19 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://extensions.senchabot.com/pt/setup/weather</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/weather"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/weather"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/weather"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/weather"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/weather"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/weather"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/weather"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/weather"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://extensions.senchabot.com/pt/setup/chat-poll</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/chat-poll"/>
     <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/chat-poll"/>
@@ -2376,6 +2454,19 @@
     <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/irl-hud"/>
     <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/irl-hud"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/irl-hud"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/tr/setup/weather</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/weather"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/weather"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/weather"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/weather"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/weather"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/weather"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/weather"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/weather"/>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
