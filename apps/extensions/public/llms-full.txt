@@ -293,7 +293,7 @@ URL parameters (all optional):
 | Parameter | Values | Default |
 | --- | --- | --- |
 | piece | camera, chat, screen | camera |
-| preset | rift, realm, dynasty, ancient, agent, defuse, blocks | classic |
+| preset | rift, realm, dynasty, ancient, agent, defuse, blocks, village, storm, boost, airdrop | classic |
 | color | purple, green, red, gold, cyan, pink (classic only) | purple |
 | label | text in the top tab (camera, chat) or on the bottom plate (screen), up to 32 characters; empty leaves it off | none |
 | motion | 0 turns the animations off | 1 |
@@ -333,7 +333,7 @@ URL parameters (all optional):
 | note | a line under the clock, up to 64 characters | none |
 | end | text (a message at zero), hold (stay at 00:00), hide (nothing on screen) | text |
 | look | card (a panel behind the clock), plain (text on the scene) | card |
-| preset | rift, realm, dynasty, ancient, agent, defuse, blocks | classic |
+| preset | rift, realm, dynasty, ancient, agent, defuse, blocks, village, storm, boost, airdrop | classic |
 | color | purple, green, red, gold, cyan, pink (classic only) | purple |
 | bar | 0 hides the bar that empties under the clock | 1 |
 | motion | 0 turns the animations off | 1 |
@@ -459,8 +459,8 @@ A chat-driven spinning wheel for game names, challenges or any list of choices. 
 A preset gives several widgets the same look: frame, fonts and colors. Page: https://extensions.senchabot.com/presets
 
 - Widgets that take one: Chat Box, Stream Alerts, Sub Goal, Subathon Timer, Chat Poll, the Raffle winner overlay, Stream Countdown, Socials and Stream Frames, whose frame art comes from the preset. Emote Wall and Sub Sprout keep their own art.
-- URL parameter on those widgets: preset, one of rift, realm, dynasty, ancient, agent, defuse, blocks. Missing or unknown means classic, each widget's own look, so URLs from before presets look the same.
-- Built-in presets, each made for a game: Rift (League of Legends), Realm (World of Warcraft), Dynasty (Metin2), Ancient (Dota 2), Agent (Valorant), Defuse (Counter-Strike 2), Blocks (Minecraft). They are fan-made styles from colors, free Google Fonts and original drawings, with no game art, and aren't affiliated with the game makers.
+- URL parameter on those widgets: preset, one of rift, realm, dynasty, ancient, agent, defuse, blocks, village, storm, boost, airdrop. Missing or unknown means classic, each widget's own look, so URLs from before presets look the same.
+- Built-in presets, each made for a game: Rift (League of Legends), Realm (World of Warcraft), Dynasty (Metin2), Ancient (Dota 2), Agent (Valorant), Defuse (Counter-Strike 2), Blocks (Minecraft), Village (Clash of Clans), Storm (Fortnite), Boost (Rocket League), Airdrop (PUBG). They are fan-made styles from colors, free Google Fonts and original drawings, with no game art, and aren't affiliated with the game makers.
 - A preset brings its own colors and fonts: with one set, the color and font parameters and Stream Alerts' theme are ignored. Layout settings (Subathon style, Chat Box layout, poll position and so on) still apply.
 - The presets page can set a default preset that every setup page in that browser starts with. Widgets already in OBS keep their look until they get a new URL; the presets page takes pasted widget URLs and gives them back with the preset added.
 - Community presets are JSON files in the source repository (apps/extensions/src/features/presets/community), added by pull request.

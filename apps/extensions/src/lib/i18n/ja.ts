@@ -2426,6 +2426,8 @@ export const ja: typeof en = {
     title: '配信オーバーレイ用のゲームプリセット',
     lead: 'プリセットを選ぶと、チャットボックス、配信アラート、サブスク目標、Subathon Timer、チャット投票、抽選の当選者、配信フレーム、配信カウントダウン、SNSリンクが、同じフレーム、フォント、カラーでそろいます。すべてのウィジェットに同じものを使っても、ウィジェットごとに変えてもかまいません。',
     pickTitle: 'プリセットを選ぶ',
+    pickText:
+      'League of Legends（LoL）、World of Warcraft（WoW）、Metin2、Dota 2、Valorant、Counter-Strike 2（CS2）、Minecraft、Clash of Clans、Fortnite、Rocket League、PUBG: Battlegrounds向けのプリセットを用意しています。',
     by: '作者: {author}',
     community: 'コミュニティ',
     makeDefault: 'すべてのウィジェットで{name}を使う',
@@ -2449,6 +2451,14 @@ export const ja: typeof en = {
         'HUD風のコーナーブラケット、琥珀色のトップライン、バーの警告ストライプ、詰まったSairaの書体。',
       blocks:
         '草と土の色のピクセルフレーム、ブロックに分かれた緑のバー、ピクセルフォントのJersey 10。',
+      village:
+        '宝石をはめた丸い金のフレーム、温かみのある木のパネル、ピンクのエリクサーのバー。タイトルは太いLilita One。',
+      storm:
+        '青から紫へのパネルに切り欠いた角と黄色のブラケット、斜めの空色のバー、縦長のAntonのタイトル。',
+      boost:
+        'ミッドナイトネイビーにHUD風のブラケットと光る青のトップライン、斜めの青いバー、勝者はオレンジ。タイトルはRusso One。',
+      airdrop:
+        'オリーブブラックのパネルにHUD風のコーナーブラケットと黄色のトップライン、フラットな黄色のバー。タイトルはSaira Stencil One。',
     },
     existingTitle: 'OBSにもうウィジェットがありますか？',
     existingText:
@@ -2539,6 +2549,8 @@ export const ja: typeof en = {
     lead: 'Senchabot Extensionsの新機能とバグ修正を、新しい順に並べています。このリストは[GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions)にあるプロジェクトのコミット履歴からまとめています。',
     site: 'サイト',
     entries: {
+      morePresets:
+        'プリセットに対応したすべてのウィジェットに、新しいゲームプリセットを4つ追加しました。Village（Clash of Clans）、Storm（Fortnite）、Boost（Rocket League）、Airdrop（PUBG）。',
       socialsEdgeAlign:
         'SNSリンクを、真ん中に浮かせる代わりにブラウザソースの左端か右端にくっつけられるようになりました。その側の角は四角になります。',
       socialsPresets:

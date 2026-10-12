@@ -2411,6 +2411,8 @@ export const tr: typeof en = {
     title: "Yayın overlay'lerin için oyun preset'leri",
     lead: "Seçtiğin preset'le Sohbet Kutusu, Yayın Uyarıları, Abone Hedefi, Subathon Timer, Sohbet Anketi, Çekiliş kazanan overlay'i, Yayın Çerçeveleri, Yayın Geri Sayımı ve Sosyal Medya aynı çerçeveyi, yazı tiplerini ve renkleri alır. İstersen hepsinde aynısını kullan, istersen her birinde başka birini.",
     pickTitle: 'Bir preset seç',
+    pickText:
+      "League of Legends (LoL), World of Warcraft (WoW), Metin2, Dota 2, Valorant, Counter-Strike 2 (CS2), Minecraft, Clash of Clans, Fortnite, Rocket League ve PUBG: Battlegrounds için hazır preset'ler.",
     by: 'Hazırlayan: {author}',
     community: 'Topluluk',
     makeDefault: "{name} preset'ini her widget'ta kullan",
@@ -2432,6 +2434,14 @@ export const tr: typeof en = {
       agent: 'Koyu antrasit zeminde kesik köşeler, kırmızı bir kenar, eğik barlar ve uzun Teko rakamları.',
       defuse: 'HUD tarzı köşe işaretleri, kehribar rengi bir üst çizgi, barlarda ikaz şeritleri ve dar Saira yazı tipi.',
       blocks: 'Çimen ve toprak renginde piksel çerçeveler, bloklara bölünmüş yeşil barlar ve Jersey 10 piksel yazı tipi.',
+      village:
+        'Mücevher süslemeli yuvarlak altın çerçeveler, sıcak ahşap paneller, pembe iksir barları ve kalın Lilita One başlıklar.',
+      storm:
+        'Maviden mora dönen panellerde kesik köşeler ve sarı köşe işaretleri, eğik gök mavisi barlar ve uzun Anton başlıklar.',
+      boost:
+        'Gece lacivertinde HUD köşe işaretleri, parlayan mavi bir üst çizgi, eğik mavi barlar, kazanan için turuncu ve Russo One başlıklar.',
+      airdrop:
+        'Koyu zeytin yeşili panellerde HUD köşe işaretleri, sarı bir üst çizgi, düz sarı barlar ve Saira Stencil One başlıklar.',
     },
     existingTitle: "OBS'te zaten widget'ların var mı?",
     existingText:
@@ -2521,6 +2531,8 @@ export const tr: typeof en = {
     lead: "Senchabot Extensions'a eklenen özellikler ve düzeltilen hatalar, en yenisi en üstte. Liste projenin [GitHub'daki](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) commit geçmişinden hazırlanıyor.",
     site: 'Site',
     entries: {
+      morePresets:
+        "Preset alan her widget için dört yeni oyun preset'i: Village (Clash of Clans), Storm (Fortnite), Boost (Rocket League) ve Airdrop (PUBG).",
       socialsEdgeAlign:
         'Sosyal Medya artık ortada havada durmak yerine tarayıcı kaynağının sol ya da sağ kenarına yapışabilir; o taraftaki köşeler düz olur.',
       socialsPresets:
