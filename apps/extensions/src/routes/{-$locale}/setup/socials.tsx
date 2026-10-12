@@ -1,12 +1,16 @@
 import { createFileRoute, useHydrated } from '@tanstack/react-router';
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { CopyUrlField } from '#/components/copy-url-field';
 import { PreviewFrame } from '#/components/preview-frame';
 import { SetupShell } from '#/components/setup-shell';
-import { Select } from '#/components/ui/select';
 import { FieldLabel } from '#/components/ui/field-label';
+import { SegmentedControl } from '#/components/ui/segmented-control';
+import { Select } from '#/components/ui/select';
 import { SettingsGroup } from '#/components/ui/settings-group';
 import { TextField } from '#/components/ui/text-field';
+import { PresetField } from '#/features/presets/preset-field';
+import { isClassic } from '#/features/presets/registry';
+import { useStartOnSitePreset } from '#/features/presets/site-preset';
 import { useI18n } from '#/lib/i18n';
 import { getParamsLocale } from '#/lib/i18n/paths';
 import type { FaqEntry } from '#/lib/i18n/seo';
@@ -16,6 +20,7 @@ import {
   buildSocialsUrl,
   DEFAULT_SOCIALS_SETTINGS,
   parseSocialsUrl,
+  SOCIALS_ALIGNS,
   type SocialsSettings,
 } from '#/lib/socials-url';
 import { getWidget } from '#/lib/widgets';
@@ -51,11 +56,14 @@ const PLATFORM_KEYS = [
 
 function SocialsSetup() {
   const { t } = useI18n();
+  const id = useId();
   const [settings, setSettings] = useState(DEFAULT_SOCIALS_SETTINGS);
   const mounted = useHydrated();
 
   const update = <K extends keyof SocialsSettings>(key: K, value: SocialsSettings[K]) =>
     setSettings((current) => ({ ...current, [key]: value }));
+
+  useStartOnSitePreset((preset) => update('preset', preset));
 
   const origin = mounted ? window.location.origin : '';
   const widgetUrl = mounted ? buildSocialsUrl(origin, settings) : '';
@@ -89,19 +97,34 @@ function SocialsSetup() {
       </SettingsGroup>
 
       <SettingsGroup title={t('socials.sectionAppearance')}>
+        <PresetField value={settings.preset} onChange={(value) => update('preset', value)} />
+        <div>
+          <FieldLabel id={`${id}-align`} tip={t('socials.alignTip')}>
+            {t('socials.align')}
+          </FieldLabel>
+          <SegmentedControl
+            labelledBy={`${id}-align`}
+            value={settings.align}
+            onChange={(value) => update('align', value)}
+            options={SOCIALS_ALIGNS.map((align) => ({
+              value: align,
+              label: t(`socials.aligns.${align}`),
+            }))}
+          />
+        </div>
         <div className="grid gap-3 sm:grid-cols-2">
           <div className="flex flex-col gap-1">
             <FieldLabel id="animation-label">{t('socials.animation')}</FieldLabel>
             <Select
               labelledBy="animation-label"
               value={settings.animation}
-            onChange={(value) => update('animation', value)}
-            options={[
-              { value: 'slideUp', label: t('socials.animSlideUp') },
-              { value: 'slideLeft', label: t('socials.animSlideLeft') },
-              { value: 'scale', label: t('socials.animScale') },
-              { value: 'fade', label: t('socials.animFade') },
-            ]}
+              onChange={(value) => update('animation', value)}
+              options={[
+                { value: 'slideUp', label: t('socials.animSlideUp') },
+                { value: 'slideLeft', label: t('socials.animSlideLeft') },
+                { value: 'scale', label: t('socials.animScale') },
+                { value: 'fade', label: t('socials.animFade') },
+              ]}
             />
           </div>
           <TextField
@@ -110,18 +133,23 @@ function SocialsSetup() {
             onChange={(value) => update('interval', value)}
             placeholder="10"
           />
-          <TextField
-            label={t('socials.textColor')}
-            value={settings.textColor}
-            onChange={(value) => update('textColor', value)}
-            placeholder="#ffffff"
-          />
-          <TextField
-            label={t('socials.pillColor')}
-            value={settings.pillColor}
-            onChange={(value) => update('pillColor', value)}
-            placeholder="rgba(0, 0, 0, 0.5)"
-          />
+          {/* A preset brings its own colors. */}
+          {isClassic(settings.preset) && (
+            <>
+              <TextField
+                label={t('socials.textColor')}
+                value={settings.textColor}
+                onChange={(value) => update('textColor', value)}
+                placeholder="#ffffff"
+              />
+              <TextField
+                label={t('socials.pillColor')}
+                value={settings.pillColor}
+                onChange={(value) => update('pillColor', value)}
+                placeholder="rgba(0, 0, 0, 0.5)"
+              />
+            </>
+          )}
         </div>
       </SettingsGroup>
     </>

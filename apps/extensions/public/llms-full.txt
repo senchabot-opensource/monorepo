@@ -458,7 +458,7 @@ A chat-driven spinning wheel for game names, challenges or any list of choices. 
 
 A preset gives several widgets the same look: frame, fonts and colors. Page: https://extensions.senchabot.com/presets
 
-- Widgets that take one: Chat Box, Stream Alerts, Sub Goal, Subathon Timer, Chat Poll, the Raffle winner overlay and Stream Frames, whose frame art comes from the preset. Emote Wall and Sub Sprout keep their own art.
+- Widgets that take one: Chat Box, Stream Alerts, Sub Goal, Subathon Timer, Chat Poll, the Raffle winner overlay, Stream Countdown, Socials and Stream Frames, whose frame art comes from the preset. Emote Wall and Sub Sprout keep their own art.
 - URL parameter on those widgets: preset, one of rift, realm, dynasty, ancient, agent, defuse, blocks. Missing or unknown means classic, each widget's own look, so URLs from before presets look the same.
 - Built-in presets, each made for a game: Rift (League of Legends), Realm (World of Warcraft), Dynasty (Metin2), Ancient (Dota 2), Agent (Valorant), Defuse (Counter-Strike 2), Blocks (Minecraft). They are fan-made styles from colors, free Google Fonts and original drawings, with no game art, and aren't affiliated with the game makers.
 - A preset brings its own colors and fonts: with one set, the color and font parameters and Stream Alerts' theme are ignored. Layout settings (Subathon style, Chat Box layout, poll position and so on) still apply.

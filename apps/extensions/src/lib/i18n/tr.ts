@@ -2409,7 +2409,7 @@ export const tr: typeof en = {
     breadcrumb: "Preset'ler",
     eyebrow: "Preset'ler",
     title: "Yayın overlay'lerin için oyun preset'leri",
-    lead: "Seçtiğin preset'le Sohbet Kutusu, Yayın Uyarıları, Abone Hedefi, Subathon Timer, Sohbet Anketi, Çekiliş kazanan overlay'i ve Yayın Çerçeveleri aynı çerçeveyi, yazı tiplerini ve renkleri alır. İstersen hepsinde aynısını kullan, istersen her birinde başka birini.",
+    lead: "Seçtiğin preset'le Sohbet Kutusu, Yayın Uyarıları, Abone Hedefi, Subathon Timer, Sohbet Anketi, Çekiliş kazanan overlay'i, Yayın Çerçeveleri, Yayın Geri Sayımı ve Sosyal Medya aynı çerçeveyi, yazı tiplerini ve renkleri alır. İstersen hepsinde aynısını kullan, istersen her birinde başka birini.",
     pickTitle: 'Bir preset seç',
     by: 'Hazırlayan: {author}',
     community: 'Topluluk',
@@ -2456,7 +2456,7 @@ export const tr: typeof en = {
       "Evet. Varsayılan preset sadece kurulum sayfalarının hangi preset'le açılacağını belirler. Herhangi bir widget'ın kurulum sayfasında başka bir preset seçebilirsin, o preset de o widget'ın URL'sine yazılır.",
     faq3Q: "Hangi widget'lar preset destekliyor?",
     faq3A:
-      "Sohbet Kutusu, Yayın Uyarıları, Abone Hedefi, Subathon Timer, Sohbet Anketi, Çekiliş kazanan overlay'i ve Yayın Çerçeveleri. Emote Duvarı sadece emote gösterdiği, Sub Sprout da kendi bitkilerini çizdiği için ikisi kendi görünümünde kalır.",
+      "Sohbet Kutusu, Yayın Uyarıları, Abone Hedefi, Subathon Timer, Sohbet Anketi, Çekiliş kazanan overlay'i, Yayın Çerçeveleri, Yayın Geri Sayımı ve Sosyal Medya. Emote Duvarı sadece emote gösterdiği, Sub Sprout da kendi bitkilerini çizdiği için ikisi kendi görünümünde kalır.",
     faq4Q: 'Bunlar oyunların resmi görünümleri mi?',
     faq4A:
       'Hayır. Renklerden, ücretsiz Google Fonts yazı tiplerinden ve sıfırdan çizilmiş süslemelerden oluşan hayran yapımı stiller. Oyun logosu ya da görseli içermezler, oyun yapımcılarıyla da bir bağlantıları yok.',
@@ -2521,6 +2521,10 @@ export const tr: typeof en = {
     lead: "Senchabot Extensions'a eklenen özellikler ve düzeltilen hatalar, en yenisi en üstte. Liste projenin [GitHub'daki](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) commit geçmişinden hazırlanıyor.",
     site: 'Site',
     entries: {
+      socialsEdgeAlign:
+        'Sosyal Medya artık ortada havada durmak yerine tarayıcı kaynağının sol ya da sağ kenarına yapışabilir; o taraftaki köşeler düz olur.',
+      socialsPresets:
+        "Sosyal Medya'ya preset geldi: kutu, preset'in çerçevesini, yazı tiplerini ve renklerini alır.",
       chatLeftAnimations:
         'Sohbet Kutusu’na giriş animasyonlarının soldan gelen sürümleri eklendi: Soldan kayarak gir + solma, Soldan yumuşakça kayarak gir, Soldan belirerek büyü / ölçeklen ve Soldan zıplayarak gir.',
       chatPlainLayout:
@@ -2750,6 +2754,14 @@ export const tr: typeof en = {
     animScale: 'Büyüt',
     animFade: 'Soldur',
     pillColor: 'Kutu Arka Plan Rengi',
+    align: 'Konum',
+    alignTip:
+      'Orta, kutuyu ortada havada gösterir. Sol ve Sağ, kutuyu tarayıcı kaynağının o kenarına yapıştırır ve o taraftaki köşeleri düz yapar; kaynağı sahnenin kenarına koyduğunda kullan.',
+    aligns: {
+      center: 'Orta',
+      left: 'Sol',
+      right: 'Sağ',
+    },
     previewTitle: 'Sosyal Medya Önizleme',
     previewIframeTitle: 'Sosyal Medya Önizleme',
     previewHint: "Sosyal medya widget'ının canlı önizlemesi.",

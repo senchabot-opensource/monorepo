@@ -2453,7 +2453,7 @@ export const es: typeof en = {
     breadcrumb: 'Presets',
     eyebrow: 'Presets',
     title: 'Presets de juegos para los overlays de tu stream',
-    lead: 'Elige un preset y tu Caja de Chat, tus Alertas de Stream, tu Meta de Subs, tu Subathon Timer, tu Encuesta de Chat, el ganador del Sorteo y tus Marcos de Stream tendrán el mismo marco, las mismas fuentes y los mismos colores. Usa uno en todos los widgets o uno distinto en cada uno.',
+    lead: 'Elige un preset y tu Caja de Chat, tus Alertas de Stream, tu Meta de Subs, tu Subathon Timer, tu Encuesta de Chat, el ganador del Sorteo, tus Marcos de Stream, tu Cuenta Regresiva y tus Redes Sociales tendrán el mismo marco, las mismas fuentes y los mismos colores. Usa uno en todos los widgets o uno distinto en cada uno.',
     pickTitle: 'Elige un preset',
     by: 'por {author}',
     community: 'Comunidad',
@@ -2504,7 +2504,7 @@ export const es: typeof en = {
       'Sí. Tu predeterminado es solo el punto de partida de cada página de configuración. En la página de configuración de cualquier widget puedes elegir otro preset, y la URL de ese widget lo lleva.',
     faq3Q: '¿Qué widgets admiten preset?',
     faq3A:
-      'Caja de Chat, Alertas de Stream, Meta de Subs, Subathon Timer, Encuesta de Chat, el overlay de ganador del Sorteo y Marcos de Stream. Muro de Emotes solo muestra emotes y Sub Sprout dibuja sus propias plantas, así que mantienen su aspecto.',
+      'Caja de Chat, Alertas de Stream, Meta de Subs, Subathon Timer, Encuesta de Chat, el overlay de ganador del Sorteo, Marcos de Stream, Cuenta Regresiva y Redes Sociales. Muro de Emotes solo muestra emotes y Sub Sprout dibuja sus propias plantas, así que mantienen su aspecto.',
     faq4Q: '¿Son temas oficiales de los juegos?',
     faq4A:
       'No. Son estilos hechos por fans a partir de colores, Google Fonts gratuitas y adornos dibujados desde cero, sin logos ni arte de los juegos, y no tienen relación con los creadores de los juegos.',
@@ -2569,6 +2569,10 @@ export const es: typeof en = {
     lead: 'Funciones nuevas y errores corregidos en Senchabot Extensions, de lo más nuevo a lo más viejo. La lista sale del historial de commits del proyecto en [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).',
     site: 'Sitio',
     entries: {
+      socialsEdgeAlign:
+        'Redes Sociales puede pegarse al borde izquierdo o derecho de la fuente de navegador, con esquinas rectas de ese lado, en vez de flotar en el medio.',
+      socialsPresets:
+        'Redes Sociales acepta presets: la píldora toma el marco, las fuentes y los colores del preset.',
       chatLeftAnimations:
         'La Caja de Chat estrena versiones desde la izquierda de sus animaciones de entrada: Deslizar desde la izquierda + fundido, Deslizado suave desde la izquierda, Pop / escalado desde la izquierda y Rebote desde la izquierda.',
       chatPlainLayout:
@@ -2803,6 +2807,14 @@ export const es: typeof en = {
     animScale: 'Escalar',
     animFade: 'Fundido',
     pillColor: 'Color de fondo de la píldora',
+    align: 'Posición',
+    alignTip:
+      'Centro deja la píldora flotando en el medio. Izquierda y Derecha la pegan a ese borde de la fuente de navegador, con esquinas rectas de ese lado, para una fuente colocada contra el borde de tu escena.',
+    aligns: {
+      center: 'Centro',
+      left: 'Izquierda',
+      right: 'Derecha',
+    },
     previewTitle: 'Vista previa de Redes Sociales',
     previewIframeTitle: 'Vista previa de Redes Sociales',
     previewHint: 'Vista previa en vivo de la rotación de tus redes sociales.',

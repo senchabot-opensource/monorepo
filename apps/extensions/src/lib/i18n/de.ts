@@ -2428,7 +2428,7 @@ export const de: typeof en = {
     eyebrow: 'Presets',
     title: 'Game-Presets für deine Stream-Overlays',
     lead:
-      'Wähl ein Preset, und deine Chat-Box, Stream-Alerts, Sub-Ziel, Subathon Timer, Chat-Umfrage, der Gewinner der Verlosung und die Stream-Rahmen bekommen denselben Rahmen, dieselben Schriften und Farben. Nimm eins für alle Widgets oder für jedes ein anderes.',
+      'Wähl ein Preset, und deine Chat-Box, Stream-Alerts, Sub-Ziel, Subathon Timer, Chat-Umfrage, der Gewinner der Verlosung, die Stream-Rahmen, der Stream-Countdown und Socials bekommen denselben Rahmen, dieselben Schriften und Farben. Nimm eins für alle Widgets oder für jedes ein anderes.',
     pickTitle: 'Such dir ein Preset aus',
     by: 'von {author}',
     community: 'Community',
@@ -2476,7 +2476,7 @@ export const de: typeof en = {
       'Ja. Dein Standard ist nur der Startpunkt jeder Setup-Seite. Auf der Setup-Seite jedes Widgets kannst du ein anderes Preset wählen, und die URL dieses Widgets trägt es.',
     faq3Q: 'Welche Widgets nehmen ein Preset?',
     faq3A:
-      'Chat-Box, Stream-Alerts, Sub-Ziel, Subathon Timer, Chat-Umfrage, das Gewinner-Overlay der Verlosung und Stream-Rahmen. Die Emote-Wand zeigt nur Emotes und Sub Sprout zeichnet eigene Pflanzen, deshalb behalten die beiden ihren Look.',
+      'Chat-Box, Stream-Alerts, Sub-Ziel, Subathon Timer, Chat-Umfrage, das Gewinner-Overlay der Verlosung, Stream-Rahmen, Stream-Countdown und Socials. Die Emote-Wand zeigt nur Emotes und Sub Sprout zeichnet eigene Pflanzen, deshalb behalten die beiden ihren Look.',
     faq4Q: 'Sind das offizielle Game-Themes?',
     faq4A:
       'Nein. Es sind Fan-Styles aus Farben, kostenlosen Google Fonts und selbst gezeichneter Deko, ohne Game-Logos oder Grafiken, und sie sind nicht mit den Spieleherstellern verbunden.',
@@ -2541,6 +2541,10 @@ export const de: typeof en = {
     lead: 'Neue Features und Bugfixes in Senchabot Extensions, das Neueste zuerst. Die Liste ist aus der Commit-Historie des Projekts auf [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) zusammengestellt.',
     site: 'Website',
     entries: {
+      socialsEdgeAlign:
+        'Socials kann am linken oder rechten Rand der Browser-Quelle kleben, mit eckigen Ecken auf dieser Seite, statt in der Mitte zu schweben.',
+      socialsPresets:
+        'Socials nimmt ein Preset: Die Pille bekommt Rahmen, Schriften und Farben des Presets.',
       chatLeftAnimations:
         'Die Chat-Box bekommt ihre Einstiegsanimationen auch von links: Von links gleiten + einblenden, Weich von links gleiten, Aufploppen / Skalieren von links und Von links reinhüpfen.',
       chatPlainLayout:
@@ -2767,6 +2771,14 @@ export const de: typeof en = {
     animScale: 'Skalieren',
     animFade: 'Einblenden',
     pillColor: 'Hintergrundfarbe der Pille',
+    align: 'Position',
+    alignTip:
+      'Mitte lässt die Pille in der Mitte schweben. Links und Rechts kleben sie an diesen Rand der Browser-Quelle, mit eckigen Ecken auf dieser Seite – für eine Quelle am Rand deiner Szene.',
+    aligns: {
+      center: 'Mitte',
+      left: 'Links',
+      right: 'Rechts',
+    },
     previewTitle: 'Vorschau der Socials',
     previewIframeTitle: 'Vorschau der Socials',
     previewHint: 'Live-Vorschau deiner wechselnden Social-Media-Links.',
