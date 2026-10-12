@@ -78,6 +78,7 @@ function TwitchKickChatGuide() {
                   'guides.chat.look.stacked',
                   'guides.chat.look.card',
                   'guides.chat.look.compact',
+                  'guides.chat.look.plain',
                 ]}
               />
               <h3>{t('guides.chat.look.animationTitle')}</h3>

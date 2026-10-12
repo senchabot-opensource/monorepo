@@ -92,11 +92,24 @@ const searchSchema = z.object({
   // in the component instead of here. `presetName`/`presetMessage` are the preset's own two.
   font: z.enum(FONT_CHOICES).optional().catch(undefined),
   userFont: z.enum(FONT_CHOICES).optional().catch(undefined),
-  layout: z.enum(['inline', 'stacked', 'card', 'compact']).catch('inline'),
+  layout: z.enum(['inline', 'stacked', 'card', 'compact', 'plain']).catch('inline'),
   mock: z.coerce.boolean().optional(),
   mockRate: clampedNumber(0.1, 50, undefined),
   animation: z
-    .enum(['slide', 'smooth', 'pop', 'bounce', 'stagger', 'fade', 'typing', 'none'])
+    .enum([
+      'slide',
+      'slideLeft',
+      'smooth',
+      'smoothLeft',
+      'pop',
+      'popLeft',
+      'bounce',
+      'bounceLeft',
+      'stagger',
+      'fade',
+      'typing',
+      'none',
+    ])
     .catch('slide'),
 });
 
@@ -129,6 +142,11 @@ function fontStack(choice: Font, skin: Skin | null): string {
 }
 
 // `box` is the card's own background and border; a preset draws its own box instead.
+// The badges are centred on the middle of the name's capitals. `align-middle` centres them on the
+// lowercase letters instead, 0.09em lower in Inter (0.06em with compact's smaller text), so the
+// inline rows nudge them up; the nudge moves the paint, not the line box. Stacked and card centre
+// both cells of the grid row: baseline alignment took the first badge's bottom edge, or the
+// timestamp's baseline when shown, and in Inter the middle of a `leading-none` box is cap height.
 const LAYOUT_CLASSES: Record<
   LayoutChoice,
   { wrapper: string; box: string; header: string; meta: string; name: string; message: string }
@@ -137,12 +155,12 @@ const LAYOUT_CLASSES: Record<
     wrapper: 'leading-tight whitespace-pre-wrap wrap-break-word text-left',
     box: '',
     header: 'mb-0.5',
-    meta: 'inline-flex items-center gap-1.5 mr-1.5 align-middle select-none',
+    meta: 'relative -top-[0.09em] inline-flex items-center gap-1.5 mr-1.5 align-middle select-none',
     name: 'inline',
     message: 'inline',
   },
   stacked: {
-    wrapper: 'grid grid-cols-[auto_minmax(0,1fr)] items-baseline gap-x-1.5 gap-y-0.5 text-left',
+    wrapper: 'grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-1.5 gap-y-0.5 text-left',
     box: '',
     // Same column as the name and message: the badges are right-aligned, so col 1's left edge
     // would leave the label floating out past them.
@@ -153,7 +171,7 @@ const LAYOUT_CLASSES: Record<
   },
   card: {
     wrapper:
-      'px-3 py-2 text-left grid grid-cols-[auto_minmax(0,1fr)] items-baseline gap-x-1.5 gap-y-0.5',
+      'px-3 py-2 text-left grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-1.5 gap-y-0.5',
     box: 'rounded-lg bg-black/40 border border-white/10 shadow-sm',
     header: 'col-start-2',
     meta: 'flex items-center justify-end gap-1.5 whitespace-nowrap min-w-[96px]',
@@ -164,8 +182,18 @@ const LAYOUT_CLASSES: Record<
     wrapper: 'leading-none whitespace-pre-wrap wrap-break-word text-left',
     box: '',
     header: 'mb-0.5',
-    meta: 'inline-flex items-center gap-1.5 mr-1.5 align-middle select-none',
+    meta: 'relative -top-[0.06em] inline-flex items-center gap-1.5 mr-1.5 align-middle select-none',
     name: 'inline',
+    message: 'inline',
+  },
+  // Inline without the colon. A bare space is too narrow to part the name from the message, so
+  // the badges and the name each get an em margin on top of theirs; an empty meta takes none.
+  plain: {
+    wrapper: 'leading-tight whitespace-pre-wrap wrap-break-word text-left',
+    box: '',
+    header: 'mb-0.5',
+    meta: 'relative -top-[0.09em] inline-flex items-center gap-1.5 mr-[0.3em] align-middle select-none empty:hidden',
+    name: 'inline mr-[0.3em]',
     message: 'inline',
   },
 };
@@ -175,9 +203,13 @@ const ANIMATION_CLASSES: Record<
   (orientation: 'vertical' | 'horizontal') => string
 > = {
   slide: () => 'animate-chat-slide-in',
+  slideLeft: () => 'animate-chat-slide-in-left',
   smooth: () => 'animate-chat-smooth-slide-in',
+  smoothLeft: () => 'animate-chat-smooth-slide-in-left',
   pop: () => 'animate-chat-pop-in',
+  popLeft: () => 'animate-chat-pop-in-left',
   bounce: () => 'animate-chat-bounce-in',
+  bounceLeft: () => 'animate-chat-bounce-in-left',
   stagger: () => 'animate-chat-stagger-meta',
   fade: () => 'animate-chat-fade-in',
   typing: () => 'animate-chat-fade-in',
@@ -186,9 +218,13 @@ const ANIMATION_CLASSES: Record<
 
 const ANIMATION_MESSAGE_CLASSES: Record<AnimationChoice, string> = {
   slide: '',
+  slideLeft: '',
   smooth: '',
+  smoothLeft: '',
   pop: '',
+  popLeft: '',
   bounce: '',
+  bounceLeft: '',
   stagger: 'animate-chat-stagger-message',
   fade: '',
   typing: '',
@@ -409,8 +445,9 @@ function RouteComponent() {
     ? shownMessages
     : shownMessages.filter((msg) => now - getReceivedAtMs(msg) < ttlMs);
   // `slide` is the original default and must look exactly as it always did, so the shift and
-  // fade-out only come with the other animations.
-  const animatesLayout = search.animation !== 'none' && search.animation !== 'slide';
+  // fade-out only come with the other animations. `slideLeft` is its mirror and matches it.
+  const animatesLayout =
+    search.animation !== 'none' && search.animation !== 'slide' && search.animation !== 'slideLeft';
   const fadeOut = !search.keep && animatesLayout;
   const speeds = React.useMemo(() => getAnimationSpeeds(shownMessages), [shownMessages]);
 
@@ -602,7 +639,7 @@ const MessageRow = React.memo(function MessageRow({
   const animClass = exiting ? 'animate-chat-fade-out' : ANIMATION_CLASSES[animation](orientation);
   const messageAnimClass = ANIMATION_MESSAGE_CLASSES[animation];
   const compactSize = layout === 'compact' ? '0.875em' : undefined;
-  const isInlineOrCompact = layout === 'inline' || layout === 'compact';
+  const isInline = layout === 'inline' || layout === 'compact' || layout === 'plain';
   // Card and item-background boxes already have horizontal padding; plain rows need room for the stripe.
   const boxed = itemBackground || layout === 'card';
   // A preset's box keeps the item background's opacity; a card without one is nearly solid.
@@ -750,13 +787,16 @@ const MessageRow = React.memo(function MessageRow({
 
   const userNameNode = (
     <span className={`${classes.name}`} style={userNameStyle}>
-      {msg.user}:
+      {msg.user}
+      {layout === 'plain' ? null : ':'}
     </span>
   );
+  // `whitespace-pre-wrap` keeps a leading space, so `plain` adds its space only after something.
+  const hasMeta = Boolean(timestampNode || platformNode || (badgesNode && msg.badges?.length));
 
   const messageNode = (
     <span className={`${classes.message} ${messageAnimClass}`} style={messageStyle}>
-      {layout === 'inline' || layout === 'compact' ? ' ' : null}
+      {isInline ? ' ' : null}
       {animation === 'typing' ? (
         <TypedContent nodes={parsedContent} speed={mountSpeed} />
       ) : (
@@ -772,13 +812,14 @@ const MessageRow = React.memo(function MessageRow({
       style={{ ...wrapperStyle, '--chat-speed': mountSpeed } as React.CSSProperties}
     >
       {headerNode}
-      {isInlineOrCompact ? (
+      {isInline ? (
         <>
           <div className={classes.meta}>
             {timestampNode}
             {platformNode}
             {badgesNode}
           </div>
+          {layout === 'plain' && hasMeta ? ' ' : null}
           <span>
             {userNameNode}
             {messageNode}
@@ -794,7 +835,7 @@ const MessageRow = React.memo(function MessageRow({
           {userNameNode}
         </>
       )}
-      {!isInlineOrCompact && messageNode}
+      {!isInline && messageNode}
       {skin && presetBox && <Frame skin={skin} radius={presetBox.radius} scale={0.5} />}
     </div>
   );

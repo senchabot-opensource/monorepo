@@ -91,6 +91,16 @@ describe('Chat Box overlay', () => {
     expect(texts()).toEqual(['Viewer: hello there']);
   });
 
+  it('drops the colon with layout=plain, and spaces the badges off only when there are some', async () => {
+    await openTwitch('&layout=plain&platformDisplay=none');
+    say('hello there');
+    say('hi', { name: 'Mod', tags: ';badges=moderator/1' });
+    const [plain, badged] = rows();
+    expect(plain.textContent).toBe('Viewer hello there');
+    expect(badged.textContent).toBe(' Mod hi');
+    expect(badged.querySelector('img[alt="moderator/1"]')).not.toBeNull();
+  });
+
   it('keeps the order messages arrived in, within one millisecond too', async () => {
     await openTwitch('&keep=true');
     vi.useFakeTimers({ now: Date.now() });
@@ -219,6 +229,31 @@ describe('Chat Box overlay', () => {
     expect(texts()).toEqual(['Viewer: back again']);
     await act(async () => vi.advanceTimersByTime(11_000));
     expect(texts()).toEqual([]);
+  });
+
+  it.each([
+    ['slideLeft', 'animate-chat-slide-in-left'],
+    ['smoothLeft', 'animate-chat-smooth-slide-in-left'],
+    ['popLeft', 'animate-chat-pop-in-left'],
+    ['bounceLeft', 'animate-chat-bounce-in-left'],
+  ])('brings a message in from the left with animation=%s', async (animation, className) => {
+    await openTwitch(`&animation=${animation}`);
+    say('hi');
+    expect(rows()[0].classList).toContain(className);
+  });
+
+  // Slide keeps the original default's look, which has no fade-out; its mirror matches it.
+  it.each([
+    ['slide', false],
+    ['slideLeft', false],
+    ['smooth', true],
+    ['smoothLeft', true],
+  ])('fades out in the last second with animation=%s: %s', async (animation, fades) => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    await openTwitch(`&duration=10&animation=${animation}`);
+    say('short lived');
+    await act(async () => vi.advanceTimersByTime(9_200));
+    expect(rows()[0].classList.contains('animate-chat-fade-out')).toBe(fades);
   });
 
   it('shows Kick chat, emotes and moderation', async () => {

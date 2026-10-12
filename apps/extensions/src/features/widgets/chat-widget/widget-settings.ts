@@ -8,7 +8,7 @@ export const FONTS = ['inter', 'roboto', 'nunito', 'mono', 'serif', 'system'] as
 // A preset brings two fonts of its own; both selects can pick either of them.
 export const PRESET_FONTS = ['presetName', 'presetMessage'] as const;
 export const FONT_CHOICES = [...PRESET_FONTS, ...FONTS] as const;
-export const LAYOUTS = ['inline', 'stacked', 'card', 'compact'] as const;
+export const LAYOUTS = ['inline', 'stacked', 'card', 'compact', 'plain'] as const;
 export const ORIENTATIONS = ['vertical', 'horizontal'] as const;
 // Order is the URL order too, so the same selection always builds the same URL.
 export const HIGHLIGHTS = [
@@ -24,9 +24,13 @@ export const TEXT_SHADOWS = ['normal', 'none', 'strong'] as const;
 export const DURATIONS = ['10', '15', '30', '60', '120', '300', 'keep'] as const;
 export const ANIMATIONS = [
   'slide',
+  'slideLeft',
   'smooth',
+  'smoothLeft',
   'pop',
+  'popLeft',
   'bounce',
+  'bounceLeft',
   'stagger',
   'fade',
   'typing',
