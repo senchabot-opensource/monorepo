@@ -102,4 +102,19 @@ describe('ScrollHint', () => {
     await notify();
     expect(arrow()?.getAttribute('aria-label')).toBe('Scroll down for more');
   });
+
+  // Tabs keep every panel in the box and hide all but one, so a switch changes how much there is
+  // to scroll without adding or removing anything.
+  it('measures again when a panel inside is hidden or shown', async () => {
+    withScrollGeometry(400, 400);
+    const box = await renderHint();
+    expect(arrow()).toBeNull();
+
+    vi.restoreAllMocks();
+    withScrollGeometry(400, 900);
+    box.querySelector('p')?.setAttribute('hidden', '');
+    await vi.waitFor(() =>
+      expect(arrow()?.getAttribute('aria-label')).toBe('Scroll down for more'),
+    );
+  });
 });

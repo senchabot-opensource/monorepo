@@ -30,6 +30,7 @@ export const ja: typeof en = {
       'URL全体ではなく、チャンネル名だけを入力してください。twitch.tv/senchabot なら senchabot です。',
     previewLoading: 'プレビューを読み込み中…',
     scrollMore: '下にスクロールすると続きがあります',
+    settingsSections: '設定のセクション',
     scrollTop: 'トップに戻る',
     setupGuideTitle: '設定方法',
     faqTitle: 'よくある質問',
@@ -1042,6 +1043,7 @@ export const ja: typeof en = {
     tiers: 'Tier 2と3を多めにカウント',
     tiersTip:
       'TwitchではTier 2のサブスクはサブスク2件分、Tier 3は5件分の金額を加算します。価格に合わせた比率です。',
+    sectionMap: 'ミニマップ',
     sectionMarket: 'マーケット',
     marketHint:
       'あなたとモデレーターが、チャットで !hud buy とアイテム名を打って買うアイテムです。値段は所持金から引かれ、所持金が足りなければ何も買われません。',
@@ -2756,6 +2758,8 @@ export const ja: typeof en = {
     lead: 'Senchabot Extensionsの新機能とバグ修正を、新しい順に並べています。このリストは[GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions)にあるプロジェクトのコミット履歴からまとめています。',
     site: 'サイト',
     entries: {
+      settingsTabs:
+        'IRL HUD、配信カウントダウン、Subathon Timer、配信アラート、チャット投票、チャットボックス、ルーレットの設定を、チャンネル欄の下のタブに分けました。どのタブも1画面に収まり、スマートフォンではプレビューとウィジェットURLがずっと上に表示されます。',
       presetPickerFolded:
         '設定ページのプリセットを、選んだプリセット名のバーの下に折りたためるようになりました。クリックで開閉でき、ウィジェットがクラシックな見た目のときは折りたたまれた状態で始まります。',
       irlHudMarket:

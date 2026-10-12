@@ -1,6 +1,7 @@
 import { screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { button, en, segment, textbox } from '#/test/queries';
+import type { TranslationKey } from '#/lib/i18n';
+import { button, en, segment, settingsTab, textbox } from '#/test/queries';
 import { renderRoute, setupUser } from '#/test/render';
 
 const PAGE = '/setup/irl-hud';
@@ -15,10 +16,11 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-async function openPage() {
+async function openPage(tab: TranslationKey = 'irlHud.sectionMap') {
   const user = setupUser();
   await renderRoute(PAGE);
   await user.type(textbox(en('common.twitchChannel')), 'streamer');
+  await user.click(settingsTab(en(tab)));
   return user;
 }
 
@@ -101,7 +103,7 @@ describe('IRL HUD setup', () => {
   });
 
   it('builds the market from item names and prices', async () => {
-    const user = await openPage();
+    const user = await openPage('irlHud.sectionMarket');
     expect(screen.getByText(en('irlHud.itemsEmpty'))).toBeTruthy();
     await user.type(textbox(en('irlHud.itemName')), 'water');
     await user.click(button(en('irlHud.itemAdd')));
@@ -129,5 +131,39 @@ describe('IRL HUD setup', () => {
     const user = await openPage();
     await user.type(findField(), 'nowhere at all{Enter}');
     expect(await screen.findByText(en('irlHud.placeNone'))).toBeTruthy();
+  });
+
+  it('splits the settings into tabs under the channel boxes', async () => {
+    await openPage('common.sectionAppearance');
+    const keys: TranslationKey[] = [
+      'common.sectionAppearance',
+      'irlHud.sectionMap',
+      'irlHud.sectionMoney',
+      'irlHud.sectionMarket',
+    ];
+    const list = screen.getByRole('tablist', { name: en('common.settingsSections') });
+    const tabs = [...list.querySelectorAll('[role="tab"]')].map((tab) => tab.textContent);
+    expect(tabs).toEqual(keys.map((key) => en(key)));
+    expect(textbox(en('common.twitchChannel')).closest('[role="tabpanel"]')).toBeNull();
+  });
+
+  it('keeps a half-typed place search across a tab switch', async () => {
+    const user = await openPage();
+    await user.type(findField(), 'galata');
+    await user.click(settingsTab(en('irlHud.sectionMarket')));
+    await user.click(settingsTab(en('irlHud.sectionMap')));
+    expect(findField().value).toBe('galata');
+  });
+
+  it("warns about the map's corner under both corner pickers", async () => {
+    const user = await openPage('common.sectionAppearance');
+    const warnings = () => screen.queryAllByText(en('irlHud.radarSameCorner'));
+    expect(warnings()).toHaveLength(0);
+    // The map starts bottom left, so moving the HUD there puts them in the same corner.
+    await user.click(segment(en('irlHud.corner'), en('irlHud.corners.bl')));
+    const hidden = warnings().map((warning) =>
+      warning.closest('[role="tabpanel"]')?.hasAttribute('hidden'),
+    );
+    expect(hidden).toEqual([false, true]);
   });
 });

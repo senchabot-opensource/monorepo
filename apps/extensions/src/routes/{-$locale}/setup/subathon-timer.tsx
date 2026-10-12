@@ -279,202 +279,206 @@ function SubathonSetup() {
     </>
   );
 
-  const settingsPanel = (
-    <>
-      <SettingsGroup title={t('common.sectionChannel')}>
-        <ChannelFields
-          platforms={settings.platforms}
-          onPlatformsChange={(value) => update('platforms', value)}
-          twitch={twitchChannel}
-          onTwitchChange={setTwitchChannel}
-          kick={kickChannel}
-          onKickChange={setKickChannel}
+  const channelGroup = (
+    <SettingsGroup title={t('common.sectionChannel')}>
+      <ChannelFields
+        platforms={settings.platforms}
+        onPlatformsChange={(value) => update('platforms', value)}
+        twitch={twitchChannel}
+        onTwitchChange={setTwitchChannel}
+        kick={kickChannel}
+        onKickChange={setKickChannel}
+      />
+    </SettingsGroup>
+  );
+
+  const appearanceTab = (
+    <SettingsGroup title={t('common.sectionAppearance')} hideTitle>
+      <PresetField value={settings.preset} onChange={(value) => update('preset', value)} />
+      <div>
+        <FieldLabel id={`${id}-style`} tip={t('subathon.styleTip')}>
+          {t('subathon.style')}
+        </FieldLabel>
+        <SegmentedControl
+          labelledBy={`${id}-style`}
+          value={settings.style}
+          onChange={(value) => update('style', value)}
+          options={styleOptions}
         />
-      </SettingsGroup>
-
-      <SettingsGroup title={t('common.sectionAppearance')}>
-        <PresetField value={settings.preset} onChange={(value) => update('preset', value)} />
+      </div>
+      {isClassic(settings.preset) && (
         <div>
-          <FieldLabel id={`${id}-style`} tip={t('subathon.styleTip')}>
-            {t('subathon.style')}
+          <FieldLabel id={`${id}-color`} tip={t('subathon.colorTip')}>
+            {t('subathon.color')}
           </FieldLabel>
-          <SegmentedControl
-            labelledBy={`${id}-style`}
-            value={settings.style}
-            onChange={(value) => update('style', value)}
-            options={styleOptions}
-          />
-        </div>
-        {isClassic(settings.preset) && (
-          <div>
-            <FieldLabel id={`${id}-color`} tip={t('subathon.colorTip')}>
-              {t('subathon.color')}
-            </FieldLabel>
-            <ColorSwatches
-              labelledBy={`${id}-color`}
-              value={settings.color}
-              onChange={(value) => update('color', value)}
-              options={SUBATHON_COLORS.map((color) => ({
-                value: color,
-                label: t(`subathon.colors.${color}`),
-                background: swatchBackground(color),
-              }))}
-            />
-          </div>
-        )}
-        <div className="grid gap-3 sm:grid-cols-2">
-          <TextField
-            label={t('subathon.titleLabel')}
-            tip={t('subathon.titleTip')}
-            value={settings.title}
-            onChange={(value) => update('title', value)}
-            placeholder={t('subathon.titlePlaceholder')}
-            maxLength={TITLE_MAX_LENGTH}
-            spellCheck={false}
-          />
-          <TextField
-            label={t('subathon.iconLabel')}
-            tip={t('subathon.iconTip')}
-            value={settings.icon}
-            onChange={(value) => update('icon', value)}
-            placeholder={t('subathon.iconPlaceholder')}
-            maxLength={ICON_MAX_LENGTH}
-          />
-        </div>
-        <div>
-          <FieldLabel id={`${id}-emote`} tip={t('subathon.emoteTip')}>
-            {t('subathon.emoteLabel')}
-          </FieldLabel>
-          {!twitchChannel.trim() && !kickChannel.trim() ? (
-            <p className={HINT_CLASS}>{t('countdown.emoteNeedChannel')}</p>
-          ) : emotesLoading || emotes === null ? (
-            <EmotePicker
-              labelledBy={`${id}-emote`}
-              emotes={[]}
-              value=""
-              onChange={() => {}}
-              disabled
-              disabledLabel={t('countdown.emoteLoading')}
-            />
-          ) : emotes.length === 0 ? (
-            <p className={HINT_CLASS}>{t('countdown.emoteEmpty')}</p>
-          ) : (
-            <EmotePicker
-              labelledBy={`${id}-emote`}
-              emotes={emotes}
-              value={emotes.some((emote) => emote.url === settings.iconUrl) ? settings.iconUrl : ''}
-              onChange={(value) => update('iconUrl', value)}
-            />
-          )}
-        </div>
-        <div className="flex flex-col justify-end gap-1">
-          <Switch
-            label={t('subathon.showPercent')}
-            tip={t('subathon.showPercentTip')}
-            checked={settings.percent}
-            onChange={(value) => update('percent', value)}
-          />
-          <Switch
-            label={t('subathon.showPops')}
-            tip={t('subathon.showPopsTip')}
-            checked={settings.pops}
-            onChange={(value) => update('pops', value)}
-          />
-        </div>
-      </SettingsGroup>
-
-      <SettingsGroup title={t('subathon.sectionTimer')}>
-        <div className="grid gap-3 sm:grid-cols-2">
-          {timerField('start', 'subathon.startTime', 'subathon.startTimeTip')}
-          {timerField('cap', 'subathon.maxTime', 'subathon.maxTimeTip')}
-        </div>
-        <div>
-          <FieldLabel id={`${id}-autostart`} tip={t('subathon.startModeTip')}>
-            {t('subathon.startMode')}
-          </FieldLabel>
-          <SegmentedControl
-            labelledBy={`${id}-autostart`}
-            value={settings.autostart ? 'auto' : 'command'}
-            onChange={(value) => update('autostart', value === 'auto')}
-            options={startOptions}
-          />
-        </div>
-      </SettingsGroup>
-
-      <SettingsGroup title={t('subathon.sectionValues')}>
-        <p className={`${HINT_CLASS} mt-0`}>{t('subathon.valuesHint')}</p>
-        {settings.platforms === 'both' ? (
-          <Tabs
-            label={t('common.platforms')}
-            value={valuesTab}
-            onChange={setValuesTab}
-            tabs={(['twitch', 'kick'] as const).map((platform) => ({
-              value: platform,
-              label: platformLabel(platform),
+          <ColorSwatches
+            labelledBy={`${id}-color`}
+            value={settings.color}
+            onChange={(value) => update('color', value)}
+            options={SUBATHON_COLORS.map((color) => ({
+              value: color,
+              label: t(`subathon.colors.${color}`),
+              background: swatchBackground(color),
             }))}
-          >
-            {valueFields(valuesTab)}
-          </Tabs>
-        ) : (
-          valueFields(settings.platforms)
-        )}
-        <div>
-          <Switch
-            label={t('subathon.dynamicRates')}
-            tip={t('subathon.dynamicRatesTip')}
-            checked={settings.shift > 0}
-            onChange={(value) =>
-              setSettings((current) => {
-                if (value) return { ...current, ...ADJUSTED_RATES };
-                // Back to the defaults, so a timer without it keeps a short URL.
-                const off = Object.fromEntries(
-                  Object.keys(ADJUSTED_RATES).map((key) => [
-                    key,
-                    DEFAULT_SUBATHON_SETTINGS[key as keyof typeof ADJUSTED_RATES],
-                  ]),
-                );
-                return { ...current, ...off };
-              })
-            }
           />
-          {settings.shift > 0 && (
-            <div className="mt-3">
-              <FieldLabel id={`${id}-shiftAt`} tip={t('subathon.shiftAtTip')}>
-                {t('subathon.shiftAt')}
-              </FieldLabel>
-              <DurationField
-                labelledBy={`${id}-shiftAt`}
-                value={settings.shift}
-                onChange={(value) => update('shift', value)}
-                units={['h', 'm']}
-                unitLabels={hoursMinutes}
-                min={0}
-                max={MAX_SECONDS}
-              />
-            </div>
-          )}
         </div>
-        <Switch
-          label={t('subathon.showRates')}
-          tip={t('subathon.showRatesTip')}
-          checked={settings.rates}
-          onChange={(value) => update('rates', value)}
+      )}
+      <div className="grid gap-3 sm:grid-cols-2">
+        <TextField
+          label={t('subathon.titleLabel')}
+          tip={t('subathon.titleTip')}
+          value={settings.title}
+          onChange={(value) => update('title', value)}
+          placeholder={t('subathon.titlePlaceholder')}
+          maxLength={TITLE_MAX_LENGTH}
+          spellCheck={false}
         />
-        {settings.rates && (
-          <div>
-            <FieldLabel id={`${id}-lang`} tip={t('subathon.ratesLanguageTip')}>
-              {t('subathon.ratesLanguage')}
+        <TextField
+          label={t('subathon.iconLabel')}
+          tip={t('subathon.iconTip')}
+          value={settings.icon}
+          onChange={(value) => update('icon', value)}
+          placeholder={t('subathon.iconPlaceholder')}
+          maxLength={ICON_MAX_LENGTH}
+        />
+      </div>
+      <div>
+        <FieldLabel id={`${id}-emote`} tip={t('subathon.emoteTip')}>
+          {t('subathon.emoteLabel')}
+        </FieldLabel>
+        {!twitchChannel.trim() && !kickChannel.trim() ? (
+          <p className={HINT_CLASS}>{t('countdown.emoteNeedChannel')}</p>
+        ) : emotesLoading || emotes === null ? (
+          <EmotePicker
+            labelledBy={`${id}-emote`}
+            emotes={[]}
+            value=""
+            onChange={() => {}}
+            disabled
+            disabledLabel={t('countdown.emoteLoading')}
+          />
+        ) : emotes.length === 0 ? (
+          <p className={HINT_CLASS}>{t('countdown.emoteEmpty')}</p>
+        ) : (
+          <EmotePicker
+            labelledBy={`${id}-emote`}
+            emotes={emotes}
+            value={emotes.some((emote) => emote.url === settings.iconUrl) ? settings.iconUrl : ''}
+            onChange={(value) => update('iconUrl', value)}
+          />
+        )}
+      </div>
+      <div className="flex flex-col justify-end gap-1">
+        <Switch
+          label={t('subathon.showPercent')}
+          tip={t('subathon.showPercentTip')}
+          checked={settings.percent}
+          onChange={(value) => update('percent', value)}
+        />
+        <Switch
+          label={t('subathon.showPops')}
+          tip={t('subathon.showPopsTip')}
+          checked={settings.pops}
+          onChange={(value) => update('pops', value)}
+        />
+      </div>
+    </SettingsGroup>
+  );
+
+  const timerTab = (
+    <SettingsGroup title={t('subathon.sectionTimer')} hideTitle>
+      <div className="grid gap-3 sm:grid-cols-2">
+        {timerField('start', 'subathon.startTime', 'subathon.startTimeTip')}
+        {timerField('cap', 'subathon.maxTime', 'subathon.maxTimeTip')}
+      </div>
+      <div>
+        <FieldLabel id={`${id}-autostart`} tip={t('subathon.startModeTip')}>
+          {t('subathon.startMode')}
+        </FieldLabel>
+        <SegmentedControl
+          labelledBy={`${id}-autostart`}
+          value={settings.autostart ? 'auto' : 'command'}
+          onChange={(value) => update('autostart', value === 'auto')}
+          options={startOptions}
+        />
+      </div>
+    </SettingsGroup>
+  );
+
+  const timeAddedTab = (
+    <SettingsGroup title={t('subathon.sectionValues')} hideTitle>
+      <p className={`${HINT_CLASS} mt-0`}>{t('subathon.valuesHint')}</p>
+      {settings.platforms === 'both' ? (
+        <Tabs
+          label={t('common.platforms')}
+          value={valuesTab}
+          onChange={setValuesTab}
+          tabs={(['twitch', 'kick'] as const).map((platform) => ({
+            value: platform,
+            label: platformLabel(platform),
+          }))}
+        >
+          {valueFields(valuesTab)}
+        </Tabs>
+      ) : (
+        valueFields(settings.platforms === 'kick' ? 'kick' : 'twitch')
+      )}
+      <div>
+        <Switch
+          label={t('subathon.dynamicRates')}
+          tip={t('subathon.dynamicRatesTip')}
+          checked={settings.shift > 0}
+          onChange={(value) =>
+            setSettings((current) => {
+              if (value) return { ...current, ...ADJUSTED_RATES };
+              // Back to the defaults, so a timer without it keeps a short URL.
+              const off = Object.fromEntries(
+                Object.keys(ADJUSTED_RATES).map((key) => [
+                  key,
+                  DEFAULT_SUBATHON_SETTINGS[key as keyof typeof ADJUSTED_RATES],
+                ]),
+              );
+              return { ...current, ...off };
+            })
+          }
+        />
+        {settings.shift > 0 && (
+          <div className="mt-3">
+            <FieldLabel id={`${id}-shiftAt`} tip={t('subathon.shiftAtTip')}>
+              {t('subathon.shiftAt')}
             </FieldLabel>
-            <Select
-              labelledBy={`${id}-lang`}
-              value={ratesLocale}
-              onChange={setPickedLocale}
-              options={LOCALES.map((value) => ({ value, label: LOCALE_NAMES[value] }))}
+            <DurationField
+              labelledBy={`${id}-shiftAt`}
+              value={settings.shift}
+              onChange={(value) => update('shift', value)}
+              units={['h', 'm']}
+              unitLabels={hoursMinutes}
+              min={0}
+              max={MAX_SECONDS}
             />
           </div>
         )}
-      </SettingsGroup>
-    </>
+      </div>
+      <Switch
+        label={t('subathon.showRates')}
+        tip={t('subathon.showRatesTip')}
+        checked={settings.rates}
+        onChange={(value) => update('rates', value)}
+      />
+      {settings.rates && (
+        <div>
+          <FieldLabel id={`${id}-lang`} tip={t('subathon.ratesLanguageTip')}>
+            {t('subathon.ratesLanguage')}
+          </FieldLabel>
+          <Select
+            labelledBy={`${id}-lang`}
+            value={ratesLocale}
+            onChange={setPickedLocale}
+            options={LOCALES.map((value) => ({ value, label: LOCALE_NAMES[value] }))}
+          />
+        </div>
+      )}
+    </SettingsGroup>
   );
 
   // The test buttons use a picked platform whose value is on, so a click always shows something.
@@ -540,7 +544,12 @@ function SubathonSetup() {
     <SetupShell
       widgetId={WIDGET.id}
       title={t('subathon.title')}
-      settings={settingsPanel}
+      settingsPinned={channelGroup}
+      settingsTabs={[
+        { id: 'appearance', label: t('common.sectionAppearance'), content: appearanceTab },
+        { id: 'timer', label: t('subathon.sectionTimer'), content: timerTab },
+        { id: 'values', label: t('subathon.sectionValues'), content: timeAddedTab },
+      ]}
       previewTitle={t('subathon.previewTitle')}
       previewTip={t('subathon.previewHint')}
       // A 16:9 box, like a stream frame, so the band the +time pops rise into shows too.

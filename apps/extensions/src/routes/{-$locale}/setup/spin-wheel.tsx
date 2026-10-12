@@ -160,20 +160,22 @@ function SpinWheelSetup() {
     { value: 'mods', label: t('spinWheel.permMods') },
   ];
 
-  const settingsPanel = (
-    <>
-      <SettingsGroup title={t('common.sectionChannel')}>
-        <ChannelFields
-          platforms={platforms}
-          onPlatformsChange={setPlatforms}
-          twitch={twitchChannel}
-          onTwitchChange={setTwitchChannel}
-          kick={kickChannel}
-          onKickChange={setKickChannel}
-        />
-      </SettingsGroup>
+  const channelGroup = (
+    <SettingsGroup title={t('common.sectionChannel')}>
+      <ChannelFields
+        platforms={platforms}
+        onPlatformsChange={setPlatforms}
+        twitch={twitchChannel}
+        onTwitchChange={setTwitchChannel}
+        kick={kickChannel}
+        onKickChange={setKickChannel}
+      />
+    </SettingsGroup>
+  );
 
-      <SettingsGroup title={t('spinWheel.sectionOptions')}>
+  const optionsTab = (
+    <>
+      <SettingsGroup title={t('spinWheel.sectionOptions')} hideTitle>
         <div>
           <FieldLabel htmlFor={`${id}-options`} tip={t('spinWheel.optionsTip')}>
             {t('spinWheel.optionsLabel')}
@@ -221,48 +223,6 @@ function SpinWheelSetup() {
             </div>
           </div>
         </div>
-        <Switch
-          label={t('spinWheel.twoColors')}
-          tip={t('spinWheel.twoColorsTip')}
-          checked={twoColors}
-          onChange={setTwoColors}
-        />
-      </SettingsGroup>
-
-      <SettingsGroup title={t('common.sectionAppearance')}>
-        <PresetField value={preset} onChange={pickPreset} />
-      </SettingsGroup>
-
-      <SettingsGroup title={t('spinWheel.sectionChat')}>
-        <div>
-          <FieldLabel id={`${id}-permission`} tip={t('spinWheel.permissionTip')}>
-            {t('spinWheel.permissionLabel')}
-          </FieldLabel>
-          <SegmentedControl
-            labelledBy={`${id}-permission`}
-            value={permission}
-            onChange={setPermission}
-            options={permissionOptions}
-          />
-        </div>
-        <div>
-          <FieldLabel htmlFor={`${id}-cooldown`} tip={t('spinWheel.cooldownTip')}>
-            {t('spinWheel.cooldownLabel')}
-          </FieldLabel>
-          <div className="flex items-center gap-1.5">
-            <div className="min-w-0 flex-1">
-              <IntegerField
-                id={`${id}-cooldown`}
-                value={cooldownSec}
-                onChange={setCooldownSec}
-                min={0}
-                max={MAX_COOLDOWN_SECONDS}
-              />
-            </div>
-            <span className="shrink-0 text-xs text-zinc-500">{t('poll.unitSeconds')}</span>
-          </div>
-          {cooldownSec === 0 && <p className={HINT_CLASS}>{t('spinWheel.cooldownOff')}</p>}
-        </div>
       </SettingsGroup>
 
       <SettingsGroup title={t('spinWheel.sectionSound')}>
@@ -274,6 +234,53 @@ function SpinWheelSetup() {
         />
       </SettingsGroup>
     </>
+  );
+
+  const appearanceTab = (
+    <SettingsGroup title={t('common.sectionAppearance')} hideTitle>
+      <PresetField value={preset} onChange={pickPreset} />
+      {/* Next to the preset picker: moving between classic and a preset turns it on or off. */}
+      <Switch
+        label={t('spinWheel.twoColors')}
+        tip={t('spinWheel.twoColorsTip')}
+        checked={twoColors}
+        onChange={setTwoColors}
+      />
+    </SettingsGroup>
+  );
+
+  const chatTab = (
+    <SettingsGroup title={t('spinWheel.sectionChat')} hideTitle>
+      <div>
+        <FieldLabel id={`${id}-permission`} tip={t('spinWheel.permissionTip')}>
+          {t('spinWheel.permissionLabel')}
+        </FieldLabel>
+        <SegmentedControl
+          labelledBy={`${id}-permission`}
+          value={permission}
+          onChange={setPermission}
+          options={permissionOptions}
+        />
+      </div>
+      <div>
+        <FieldLabel htmlFor={`${id}-cooldown`} tip={t('spinWheel.cooldownTip')}>
+          {t('spinWheel.cooldownLabel')}
+        </FieldLabel>
+        <div className="flex items-center gap-1.5">
+          <div className="min-w-0 flex-1">
+            <IntegerField
+              id={`${id}-cooldown`}
+              value={cooldownSec}
+              onChange={setCooldownSec}
+              min={0}
+              max={MAX_COOLDOWN_SECONDS}
+            />
+          </div>
+          <span className="shrink-0 text-xs text-zinc-500">{t('poll.unitSeconds')}</span>
+        </div>
+        {cooldownSec === 0 && <p className={HINT_CLASS}>{t('spinWheel.cooldownOff')}</p>}
+      </div>
+    </SettingsGroup>
   );
 
   const commands = (
@@ -293,7 +300,12 @@ function SpinWheelSetup() {
     <SetupShell
       widgetId={WIDGET.id}
       title={t('spinWheel.title')}
-      settings={settingsPanel}
+      settingsPinned={channelGroup}
+      settingsTabs={[
+        { id: 'options', label: t('spinWheel.sectionOptions'), content: optionsTab },
+        { id: 'appearance', label: t('common.sectionAppearance'), content: appearanceTab },
+        { id: 'chat', label: t('spinWheel.sectionChat'), content: chatTab },
+      ]}
       previewTitle={t('spinWheel.previewTitle')}
       previewTip={t('spinWheel.previewTip')}
       previewAspect={CANVAS.width / CANVAS.height}

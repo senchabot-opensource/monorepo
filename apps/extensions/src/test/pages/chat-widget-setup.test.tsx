@@ -12,6 +12,7 @@ import {
   pickOption,
   retype,
   segment,
+  settingsTab,
   slider,
   steppers,
   textbox,
@@ -77,6 +78,7 @@ describe('Chat Box setup', () => {
     await user.click(toggle(en('chatWidget.boldUsernames')));
     expectUrl({ boldUsernames: true });
 
+    await user.click(settingsTab(en('chatWidget.sectionMessages')));
     await pickOption(user, en('chatWidget.newMessageAnimation'), en('chatWidget.animPop'));
     expectUrl({ animation: 'pop' });
 
@@ -129,6 +131,7 @@ describe('Chat Box setup', () => {
     await renderRoute(PAGE);
     await user.type(twitchField(), 'streamer');
     await user.type(kickField(), 'kicker');
+    await user.click(settingsTab(en('chatWidget.sectionMessages')));
     const indicator = () => combobox(en('chatWidget.platformIndicator'));
     await pickOption(user, en('chatWidget.platformIndicator'), en('chatWidget.platformName'));
     expect(urlField().value).toContain('platformDisplay=name');
@@ -303,6 +306,8 @@ describe('Chat Box setup', () => {
 
     await user.click(platforms(en('common.platformAll')));
     expect(screen.getByText(requiredTitle)).toBeTruthy();
+    // Pinned with the channel boxes it explains, so it shows whatever tab is open.
+    expect(screen.getByText(requiredTitle).closest('[role="tabpanel"]')).toBeNull();
   });
 
   it('hides the YouTube required card once a channel is connected', async () => {

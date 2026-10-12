@@ -15,6 +15,7 @@ import {
   pickOption,
   retype,
   segment,
+  settingsTab,
   slider,
   textbox,
   toggle,
@@ -71,6 +72,7 @@ describe('Subathon Timer setup', () => {
     await retype(user, textbox(en('subathon.titleLabel')), 'Big Stream');
     expectUrl({ title: 'Big Stream' });
 
+    await user.click(settingsTab(en('subathon.sectionTimer')));
     await retype(user, durationBox(en('subathon.startTime'), en('subathon.unitHours')), '4');
     expectUrl({ start: 4 * 3600 });
     await retype(user, durationBox(en('subathon.maxTime'), en('subathon.unitHours')), '24');
@@ -79,6 +81,7 @@ describe('Subathon Timer setup', () => {
     expectUrl({ autostart: true });
 
     // Twitch values show first; Kick's are one tab over.
+    await user.click(settingsTab(en('subathon.sectionValues')));
     await retype(user, minutes(en('subathon.perBits')), '0');
     expectUrl({ bits: 0 });
     await user.click(toggle(en('subathon.tiers')));
@@ -89,10 +92,12 @@ describe('Subathon Timer setup', () => {
     await retype(user, minutes(en('subathon.perKicks')), '2');
     expectUrl({ kicks: 120 });
 
+    await user.click(settingsTab(en('common.sectionAppearance')));
     await user.click(toggle(en('subathon.showPercent')));
     expectUrl({ percent: false });
     await user.click(toggle(en('subathon.showPops')));
     expectUrl({ pops: false });
+    await user.click(settingsTab(en('subathon.sectionValues')));
     await pickOption(user, en('subathon.ratesLanguage'), 'Türkçe');
     locale = 'tr';
     expectUrl({});
@@ -132,23 +137,28 @@ describe('Subathon Timer setup', () => {
     const user = setupUser();
     await renderRoute(PAGE);
     await user.click(segment(en('common.platforms'), 'Kick'));
-    expect(screen.queryByRole('tab')).toBeNull();
+    await user.click(settingsTab(en('subathon.sectionValues')));
+    expect(screen.queryByRole('tab', { name: 'Twitch' })).toBeNull();
+    expect(screen.queryByRole('tab', { name: 'Kick' })).toBeNull();
     expect(minutes(en('subathon.perKicks'))).toBeTruthy();
     expect(screen.queryByLabelText(en('subathon.perBits'))).toBeNull();
   });
 
-  it('moves between the platform tabs with the arrow keys', async () => {
+  it('moves between the platform tabs with the arrow keys, and leaves the page tab alone', async () => {
     const user = setupUser();
     await renderRoute(PAGE);
+    await user.click(settingsTab(en('subathon.sectionValues')));
     tab('Twitch').focus();
     await user.keyboard('{ArrowRight}');
     expect(tab('Kick').getAttribute('aria-selected')).toBe('true');
     expect(document.activeElement).toBe(tab('Kick'));
+    expect(settingsTab(en('subathon.sectionValues')).getAttribute('aria-selected')).toBe('true');
   });
 
   it('carries minutes over into hours, and starts at least a minute in', async () => {
     const user = setupUser();
     await renderRoute(PAGE);
+    await user.click(settingsTab(en('subathon.sectionTimer')));
     const start = (unit: string) => durationBox(en('subathon.startTime'), unit);
     await retype(user, start(en('subathon.unitMinutes')), '90');
     expect(start(en('subathon.unitHours')).value).toBe('2');
@@ -170,6 +180,7 @@ describe('Subathon Timer setup', () => {
 
     expect(textbox(en('common.kickChannel')).value).toBe('kicker');
     expect(segment(en('subathon.style'), en('subathon.styleClock')).checked).toBe(true);
+    await user.click(settingsTab(en('subathon.sectionTimer')));
     expect(durationBox(en('subathon.startTime'), en('subathon.unitHours')).value).toBe('2');
     expect(minutes(en('subathon.perGift')).value).toBe('2');
   }, 30_000);
@@ -267,6 +278,7 @@ describe('Subathon Timer setup', () => {
     await renderRoute(PAGE);
     await retype(user, minutes(en('subathon.perSub')), '0');
     expect(button(en('subathon.testSub')).disabled).toBe(false);
+    await user.click(settingsTab(en('subathon.sectionValues')));
     await user.click(tab('Kick'));
     await retype(user, minutes(en('subathon.perSub')), '0');
     expect(button(en('subathon.testSub')).disabled).toBe(true);

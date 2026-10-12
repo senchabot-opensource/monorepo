@@ -9,6 +9,7 @@ import {
   pickOption,
   retype,
   segment,
+  settingsTab,
   slider,
   textbox,
   toggle,
@@ -47,10 +48,13 @@ describe('Stream Alerts setup', () => {
     );
 
     await user.click(color(en('streamAlerts.colors.gold')));
+    await user.click(settingsTab(en('streamAlerts.sectionAlerts')));
     await user.click(toggle(en('streamAlerts.kindRaid')));
     await retype(user, headingBox(en('streamAlerts.kindSub')), 'WELCOME');
     await retype(user, textbox(en('streamAlerts.minBits')), '250');
+    await user.click(settingsTab(en('common.sectionAppearance')));
     await pickOption(user, en('streamAlerts.language'), 'Türkçe');
+    await user.click(settingsTab(en('streamAlerts.sectionTiming')));
     await user.click(toggle(en('streamAlerts.showMessage')));
 
     expect(urlField().value).toBe(
@@ -62,6 +66,7 @@ describe('Stream Alerts setup', () => {
   it('turns off the fields of an alert that is off', async () => {
     const user = setupUser();
     await renderRoute(PAGE);
+    await user.click(settingsTab(en('streamAlerts.sectionAlerts')));
     await user.click(toggle(en('streamAlerts.kindGift')));
     expect(headingBox(en('streamAlerts.kindGift')).disabled).toBe(true);
     expect((textbox(en('streamAlerts.minGift')) as HTMLInputElement).disabled).toBe(true);
@@ -73,8 +78,11 @@ describe('Stream Alerts setup', () => {
     const user = setupUser();
     await renderRoute(PAGE);
     const heading = () => headingBox(en('streamAlerts.kindRaid'));
+    await user.click(settingsTab(en('streamAlerts.sectionAlerts')));
     expect(heading().placeholder).toBe(en('streamAlerts.alert.raidHeading'));
+    await user.click(settingsTab(en('common.sectionAppearance')));
     await pickOption(user, en('streamAlerts.language'), 'Türkçe');
+    await user.click(settingsTab(en('streamAlerts.sectionAlerts')));
     expect(heading().placeholder).toBe(tr('streamAlerts.alert.raidHeading'));
     expect(previewSrc().searchParams.get('lang')).toBe('tr');
   });
@@ -124,6 +132,7 @@ describe('Stream Alerts setup', () => {
     await user.paste(pasted);
     await user.tab();
     expect(urlField().value).toBe(pasted);
+    await user.click(settingsTab(en('streamAlerts.sectionAlerts')));
     expect(headingBox(en('streamAlerts.kindSub')).value).toBe('A&B');
     expect(color(en('streamAlerts.colors.pink')).checked).toBe(true);
     expect(slider(en('streamAlerts.volume')).value).toBe('0');
@@ -148,6 +157,7 @@ describe('Stream Alerts setup', () => {
     await renderRoute(PAGE);
     await user.type(twitchField(), 'streamer');
     await user.click(segment(en('streamAlerts.theme'), en('streamAlerts.themes.celestial')));
+    await user.click(settingsTab(en('streamAlerts.sectionAlerts')));
     await retype(user, headingBox(en('streamAlerts.kindRaid')), 'Raid!');
     const params = previewSrc().searchParams;
     expect(params.get('theme')).toBe('celestial');

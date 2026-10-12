@@ -240,188 +240,201 @@ function IrlHudSetup() {
     </>
   );
 
-  const settingsPanel = (
-    <>
-      <SettingsGroup title={t('common.sectionChannel')}>
-        <ChannelFields
-          platforms={settings.platforms}
-          onPlatformsChange={(value) => update('platforms', value)}
-          twitch={twitchChannel}
-          onTwitchChange={setTwitchChannel}
-          kick={kickChannel}
-          onKickChange={setKickChannel}
-        />
-      </SettingsGroup>
+  // The map's corner warning shows under both corner pickers, which sit in different tabs.
+  const sameCorner = settings.radar && settings.radarCorner === settings.corner && (
+    <p className={HINT_CLASS}>{t('irlHud.radarSameCorner')}</p>
+  );
 
-      <SettingsGroup title={t('common.sectionAppearance')}>
+  const channelGroup = (
+    <SettingsGroup title={t('common.sectionChannel')}>
+      <ChannelFields
+        platforms={settings.platforms}
+        onPlatformsChange={(value) => update('platforms', value)}
+        twitch={twitchChannel}
+        onTwitchChange={setTwitchChannel}
+        kick={kickChannel}
+        onKickChange={setKickChannel}
+      />
+    </SettingsGroup>
+  );
+
+  const appearanceTab = (
+    <SettingsGroup title={t('common.sectionAppearance')} hideTitle>
+      <div>
+        <FieldLabel id={`${id}-style`} tip={t('irlHud.styleTip')}>
+          {t('irlHud.style')}
+        </FieldLabel>
+        <SegmentedControl
+          labelledBy={`${id}-style`}
+          value={settings.style}
+          onChange={(value) => update('style', value)}
+          options={styleOptions}
+        />
+      </div>
+      <div>
+        <FieldLabel id={`${id}-corner`} tip={t('irlHud.cornerTip')}>
+          {t('irlHud.corner')}
+        </FieldLabel>
+        <SegmentedControl
+          labelledBy={`${id}-corner`}
+          value={settings.corner}
+          onChange={(value) => update('corner', value)}
+          options={cornerOptions}
+        />
+        {sameCorner}
+      </div>
+      <RangeField
+        label={t('irlHud.size')}
+        tip={t('irlHud.sizeTip')}
+        min={MIN_SIZE}
+        max={MAX_SIZE}
+        step={SIZE_STEP}
+        value={settings.size}
+        onChange={(value) => update('size', Number(value))}
+        format={(size) => t('irlHud.sizeValue', { size })}
+        readoutClassName="w-12"
+      />
+      <div className="flex flex-col gap-1">
+        <Switch
+          label={t('irlHud.showClock')}
+          tip={t('irlHud.showClockTip')}
+          checked={settings.clock}
+          onChange={(value) => update('clock', value)}
+        />
+        {settings.clock && (
+          <Switch
+            label={t('irlHud.clock12')}
+            tip={t('irlHud.clock12Tip')}
+            checked={settings.h12}
+            onChange={(value) => update('h12', value)}
+          />
+        )}
+      </div>
+      {settings.clock && (
         <div>
-          <FieldLabel id={`${id}-style`} tip={t('irlHud.styleTip')}>
-            {t('irlHud.style')}
+          <FieldLabel id={`${id}-tz`} tip={t('irlHud.timeZoneTip')}>
+            {t('irlHud.timeZone')}
           </FieldLabel>
-          <SegmentedControl
-            labelledBy={`${id}-style`}
-            value={settings.style}
-            onChange={(value) => update('style', value)}
-            options={styleOptions}
+          <Select
+            labelledBy={`${id}-tz`}
+            value={settings.tz}
+            onChange={(value) => update('tz', value)}
+            options={zoneOptions}
           />
         </div>
+      )}
+      <Switch
+        label={t('irlHud.showPops')}
+        tip={t('irlHud.showPopsTip')}
+        checked={settings.pops}
+        onChange={(value) => update('pops', value)}
+      />
+    </SettingsGroup>
+  );
+
+  const mapTab = (
+    <SettingsGroup title={t('irlHud.sectionMap')} hideTitle>
+      <Switch
+        label={t('irlHud.showRadar')}
+        tip={t('irlHud.showRadarTip')}
+        checked={settings.radar}
+        onChange={(value) => update('radar', value)}
+      />
+      {settings.radar && (
         <div>
-          <FieldLabel id={`${id}-corner`} tip={t('irlHud.cornerTip')}>
-            {t('irlHud.corner')}
+          <FieldLabel id={`${id}-radarCorner`} tip={t('irlHud.radarCornerTip')}>
+            {t('irlHud.radarCorner')}
           </FieldLabel>
           <SegmentedControl
-            labelledBy={`${id}-corner`}
-            value={settings.corner}
-            onChange={(value) => update('corner', value)}
+            labelledBy={`${id}-radarCorner`}
+            value={settings.radarCorner}
+            onChange={(value) => update('radarCorner', value)}
             options={cornerOptions}
           />
+          {sameCorner}
         </div>
-        <RangeField
-          label={t('irlHud.size')}
-          tip={t('irlHud.sizeTip')}
-          min={MIN_SIZE}
-          max={MAX_SIZE}
-          step={SIZE_STEP}
-          value={settings.size}
-          onChange={(value) => update('size', Number(value))}
-          format={(size) => t('irlHud.sizeValue', { size })}
-          readoutClassName="w-12"
-        />
-        <div className="flex flex-col gap-1">
-          <Switch
-            label={t('irlHud.showClock')}
-            tip={t('irlHud.showClockTip')}
-            checked={settings.clock}
-            onChange={(value) => update('clock', value)}
+      )}
+      {settings.radar && (
+        <div>
+          <FieldLabel id={`${id}-map`} tip={t('irlHud.mapTip')}>
+            {t('irlHud.map')}
+          </FieldLabel>
+          <SegmentedControl
+            labelledBy={`${id}-map`}
+            value={settings.map}
+            onChange={(value) => update('map', value)}
+            options={mapOptions}
           />
-          {settings.clock && (
-            <Switch
-              label={t('irlHud.clock12')}
-              tip={t('irlHud.clock12Tip')}
-              checked={settings.h12}
-              onChange={(value) => update('h12', value)}
-            />
-          )}
         </div>
-        {settings.clock && (
-          <div>
-            <FieldLabel id={`${id}-tz`} tip={t('irlHud.timeZoneTip')}>
-              {t('irlHud.timeZone')}
-            </FieldLabel>
-            <Select
-              labelledBy={`${id}-tz`}
-              value={settings.tz}
-              onChange={(value) => update('tz', value)}
-              options={zoneOptions}
-            />
-          </div>
-        )}
-        <Switch
-          label={t('irlHud.showPops')}
-          tip={t('irlHud.showPopsTip')}
-          checked={settings.pops}
-          onChange={(value) => update('pops', value)}
+      )}
+      {settings.radar && (
+        <PlacesField
+          places={settings.places}
+          onChange={(places) => update('places', places)}
+          startsAtFirst={settings.map === 'real'}
+          onPreview={(name) => sendEvent(mod(`${MAP} ${name}`))}
         />
-        <Switch
-          label={t('irlHud.showRadar')}
-          tip={t('irlHud.showRadarTip')}
-          checked={settings.radar}
-          onChange={(value) => update('radar', value)}
-        />
-        {settings.radar && (
-          <div>
-            <FieldLabel id={`${id}-radarCorner`} tip={t('irlHud.radarCornerTip')}>
-              {t('irlHud.radarCorner')}
-            </FieldLabel>
-            <SegmentedControl
-              labelledBy={`${id}-radarCorner`}
-              value={settings.radarCorner}
-              onChange={(value) => update('radarCorner', value)}
-              options={cornerOptions}
-            />
-            {settings.radarCorner === settings.corner && (
-              <p className={HINT_CLASS}>{t('irlHud.radarSameCorner')}</p>
-            )}
-          </div>
-        )}
-        {settings.radar && (
-          <div>
-            <FieldLabel id={`${id}-map`} tip={t('irlHud.mapTip')}>
-              {t('irlHud.map')}
-            </FieldLabel>
-            <SegmentedControl
-              labelledBy={`${id}-map`}
-              value={settings.map}
-              onChange={(value) => update('map', value)}
-              options={mapOptions}
-            />
-          </div>
-        )}
-        {settings.radar && (
-          <PlacesField
-            places={settings.places}
-            onChange={(places) => update('places', places)}
-            startsAtFirst={settings.map === 'real'}
-            onPreview={(name) => sendEvent(mod(`${MAP} ${name}`))}
+      )}
+      {settings.radar && (
+        <div>
+          <FieldLabel id={`${id}-move`} tip={t('irlHud.moveTip')}>
+            {t('irlHud.move')}
+          </FieldLabel>
+          <SegmentedControl
+            labelledBy={`${id}-move`}
+            value={settings.move}
+            onChange={(value) => update('move', value)}
+            options={moveOptions}
           />
-        )}
-        {settings.radar && (
-          <div>
-            <FieldLabel id={`${id}-move`} tip={t('irlHud.moveTip')}>
-              {t('irlHud.move')}
-            </FieldLabel>
-            <SegmentedControl
-              labelledBy={`${id}-move`}
-              value={settings.move}
-              onChange={(value) => update('move', value)}
-              options={moveOptions}
-            />
-          </div>
-        )}
-      </SettingsGroup>
-
-      <SettingsGroup title={t('irlHud.sectionMoney')}>
-        <div className="grid gap-3 sm:grid-cols-2">
-          <div>
-            <FieldLabel htmlFor={`${id}-start`} tip={t('irlHud.startTip')}>
-              {t('irlHud.start')}
-            </FieldLabel>
-            <CountField
-              id={`${id}-start`}
-              value={settings.start}
-              onChange={(value) => update('start', value)}
-              min={0}
-              max={MAX_MONEY}
-            />
-          </div>
         </div>
-        <p className={`${HINT_CLASS} mt-0`}>{t('irlHud.valuesHint')}</p>
-        {settings.platforms === 'both' ? (
-          <Tabs
-            label={t('common.platforms')}
-            value={valuesTab}
-            onChange={setValuesTab}
-            tabs={(['twitch', 'kick'] as const).map((platform) => ({
-              value: platform,
-              label: platformLabel(platform),
-            }))}
-          >
-            {moneyFields(valuesTab)}
-          </Tabs>
-        ) : (
-          moneyFields(settings.platforms === 'kick' ? 'kick' : 'twitch')
-        )}
-      </SettingsGroup>
+      )}
+    </SettingsGroup>
+  );
 
-      <SettingsGroup title={t('irlHud.sectionMarket')}>
-        <p className={`${HINT_CLASS} mt-0`}>{t('irlHud.marketHint')}</p>
-        <MarketField
-          items={settings.items}
-          onChange={(items) => update('items', items)}
-          onTry={(name) => sendEvent(mod(`${BUY} ${name}`))}
-        />
-      </SettingsGroup>
-    </>
+  const cashTab = (
+    <SettingsGroup title={t('irlHud.sectionMoney')} hideTitle>
+      <div className="grid gap-3 sm:grid-cols-2">
+        <div>
+          <FieldLabel htmlFor={`${id}-start`} tip={t('irlHud.startTip')}>
+            {t('irlHud.start')}
+          </FieldLabel>
+          <CountField
+            id={`${id}-start`}
+            value={settings.start}
+            onChange={(value) => update('start', value)}
+            min={0}
+            max={MAX_MONEY}
+          />
+        </div>
+      </div>
+      <p className={`${HINT_CLASS} mt-0`}>{t('irlHud.valuesHint')}</p>
+      {settings.platforms === 'both' ? (
+        <Tabs
+          label={t('common.platforms')}
+          value={valuesTab}
+          onChange={setValuesTab}
+          tabs={(['twitch', 'kick'] as const).map((platform) => ({
+            value: platform,
+            label: platformLabel(platform),
+          }))}
+        >
+          {moneyFields(valuesTab)}
+        </Tabs>
+      ) : (
+        moneyFields(settings.platforms === 'kick' ? 'kick' : 'twitch')
+      )}
+    </SettingsGroup>
+  );
+
+  const marketTab = (
+    <SettingsGroup title={t('irlHud.sectionMarket')} hideTitle>
+      <p className={`${HINT_CLASS} mt-0`}>{t('irlHud.marketHint')}</p>
+      <MarketField
+        items={settings.items}
+        onChange={(items) => update('items', items)}
+        onTry={(name) => sendEvent(mod(`${BUY} ${name}`))}
+      />
+    </SettingsGroup>
   );
 
   // The test buttons use a picked platform whose value is on, so a click always shows something.
@@ -501,7 +514,13 @@ function IrlHudSetup() {
     <SetupShell
       widgetId={WIDGET.id}
       title={t('irlHud.title')}
-      settings={settingsPanel}
+      settingsPinned={channelGroup}
+      settingsTabs={[
+        { id: 'appearance', label: t('common.sectionAppearance'), content: appearanceTab },
+        { id: 'map', label: t('irlHud.sectionMap'), content: mapTab },
+        { id: 'cash', label: t('irlHud.sectionMoney'), content: cashTab },
+        { id: 'market', label: t('irlHud.sectionMarket'), content: marketTab },
+      ]}
       previewTitle={t('irlHud.previewTitle')}
       previewTip={t('irlHud.previewHint')}
       previewAspect={16 / 9}

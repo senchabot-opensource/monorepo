@@ -171,294 +171,296 @@ function CountdownSetup() {
     return true;
   };
 
-  const settingsPanel = (
-    <>
-      <SettingsGroup title={t('countdown.sectionCountdown')}>
+  const channelGroup = (
+    <SettingsGroup title={t('common.sectionChannel')}>
+      <ChannelFields
+        platforms={settings.platforms}
+        onPlatformsChange={(value) => update('platforms', value)}
+        platformsTip={t('countdown.channelsTip')}
+        twitch={twitchChannel}
+        onTwitchChange={setTwitchChannel}
+        kick={kickChannel}
+        onKickChange={setKickChannel}
+      />
+      <p className={`${HINT_CLASS} mt-0`}>{t('countdown.channelsTip')}</p>
+    </SettingsGroup>
+  );
+
+  const countdownTab = (
+    <SettingsGroup title={t('countdown.sectionCountdown')} hideTitle>
+      <div>
+        <FieldLabel id={`${id}-scene`} tip={t('countdown.sceneTip')}>
+          {t('countdown.scene')}
+        </FieldLabel>
+        <SegmentedControl
+          labelledBy={`${id}-scene`}
+          value={settings.scene}
+          onChange={(value) => update('scene', value)}
+          options={COUNTDOWN_SCENES.map((scene) => ({
+            value: scene,
+            label: t(`countdown.scenes.${scene}.label`),
+          }))}
+        />
+        <p className={HINT_CLASS}>{t(`countdown.scenes.${settings.scene}.hint`)}</p>
+      </div>
+
+      <TextField
+        label={t('countdown.iconLabel')}
+        tip={t('countdown.iconTip')}
+        value={settings[iconKey]}
+        onChange={(value) => update(iconKey, value)}
+        placeholder={t('countdown.iconPlaceholder')}
+        maxLength={ICON_MAX_LENGTH}
+      />
+
+      <div>
+        <FieldLabel id={`${id}-emote`} tip={t('countdown.emoteTip')}>
+          {t('countdown.emoteLabel')}
+        </FieldLabel>
+        {!twitchChannel.trim() && !kickChannel.trim() ? (
+          <p className={HINT_CLASS}>{t('countdown.emoteNeedChannel')}</p>
+        ) : emotesLoading || emotes === null ? (
+          <EmotePicker
+            labelledBy={`${id}-emote`}
+            emotes={[]}
+            value=""
+            onChange={() => {}}
+            disabled
+            disabledLabel={t('countdown.emoteLoading')}
+          />
+        ) : emotes.length === 0 ? (
+          <p className={HINT_CLASS}>{t('countdown.emoteEmpty')}</p>
+        ) : (
+          <EmotePicker
+            labelledBy={`${id}-emote`}
+            emotes={emotes}
+            value={
+              emotes.some((emote) => emote.url === settings[iconUrlKey]) ? settings[iconUrlKey] : ''
+            }
+            onChange={(value) => update(iconUrlKey, value)}
+          />
+        )}
+      </div>
+
+      <div className="grid gap-3 sm:grid-cols-2">
         <div>
-          <FieldLabel id={`${id}-scene`} tip={t('countdown.sceneTip')}>
-            {t('countdown.scene')}
+          <FieldLabel id={`${id}-mode`} tip={t('countdown.modeTip')}>
+            {t('countdown.mode')}
           </FieldLabel>
           <SegmentedControl
-            labelledBy={`${id}-scene`}
-            value={settings.scene}
-            onChange={(value) => update('scene', value)}
-            options={COUNTDOWN_SCENES.map((scene) => ({
-              value: scene,
-              label: t(`countdown.scenes.${scene}.label`),
-            }))}
-          />
-          <p className={HINT_CLASS}>{t(`countdown.scenes.${settings.scene}.hint`)}</p>
-        </div>
-
-        <TextField
-          label={t('countdown.iconLabel')}
-          tip={t('countdown.iconTip')}
-          value={settings[iconKey]}
-          onChange={(value) => update(iconKey, value)}
-          placeholder={t('countdown.iconPlaceholder')}
-          maxLength={ICON_MAX_LENGTH}
-        />
-
-        <div>
-          <FieldLabel id={`${id}-emote`} tip={t('countdown.emoteTip')}>
-            {t('countdown.emoteLabel')}
-          </FieldLabel>
-          {!twitchChannel.trim() && !kickChannel.trim() ? (
-            <p className={HINT_CLASS}>{t('countdown.emoteNeedChannel')}</p>
-          ) : emotesLoading || emotes === null ? (
-            <EmotePicker
-              labelledBy={`${id}-emote`}
-              emotes={[]}
-              value=""
-              onChange={() => {}}
-              disabled
-              disabledLabel={t('countdown.emoteLoading')}
-            />
-          ) : emotes.length === 0 ? (
-            <p className={HINT_CLASS}>{t('countdown.emoteEmpty')}</p>
-          ) : (
-            <EmotePicker
-              labelledBy={`${id}-emote`}
-              emotes={emotes}
-              value={
-                emotes.some((emote) => emote.url === settings[iconUrlKey])
-                  ? settings[iconUrlKey]
-                  : ''
-              }
-              onChange={(value) => update(iconUrlKey, value)}
-            />
-          )}
-        </div>
-
-        <div className="grid gap-3 sm:grid-cols-2">
-          <div>
-            <FieldLabel id={`${id}-mode`} tip={t('countdown.modeTip')}>
-              {t('countdown.mode')}
-            </FieldLabel>
-            <SegmentedControl
-              labelledBy={`${id}-mode`}
-              value={mode}
-              onChange={(value) => update('at', value === 'clock' ? DEFAULT_AT : '')}
-              options={[
-                { value: 'duration', label: t('countdown.modes.duration') },
-                { value: 'clock', label: t('countdown.modes.clock') },
-              ]}
-            />
-          </div>
-          {mode === 'duration' ? (
-            <div>
-              <FieldLabel htmlFor={`${id}-time`} tip={t('countdown.durationTip')}>
-                {t('countdown.duration')}
-              </FieldLabel>
-              <MinutesField
-                id={`${id}-time`}
-                value={settings.time}
-                onChange={(seconds) => update('time', Math.max(60, seconds))}
-                max={MAX_COUNTDOWN_TIME}
-                unitLabel={t('countdown.durationUnit')}
-              />
-            </div>
-          ) : (
-            <TextField
-              id={`${id}-at`}
-              label={t('countdown.atLabel')}
-              tip={t('countdown.atTip')}
-              value={settings.at}
-              onChange={(value) => update('at', value)}
-              placeholder={t('countdown.atPlaceholder')}
-              hint={atValid ? undefined : t('countdown.atInvalid')}
-              maxLength={5}
-              inputMode="numeric"
-              autoComplete="off"
-              spellCheck={false}
-            />
-          )}
-        </div>
-
-        {settings.scene === 'pomodoro' && (
-          <div>
-            <FieldLabel id={`${id}-templates`} tip={t('countdown.templatesTip')}>
-              {t('countdown.templatesLabel')}
-            </FieldLabel>
-            <fieldset aria-labelledby={`${id}-templates`} className="flex flex-wrap gap-1.5">
-              {TIME_TEMPLATES.map((template) => (
-                <button
-                  key={template.id}
-                  type="button"
-                  onClick={() => {
-                    update('time', template.seconds);
-                    update('at', '');
-                    update('title', t(`countdown.templates.${template.id}`));
-                  }}
-                  className={BUTTON_TEST}
-                >
-                  {t(`countdown.templates.${template.id}`)} · {template.seconds / 60}{' '}
-                  {t('countdown.durationUnit')}
-                </button>
-              ))}
-            </fieldset>
-          </div>
-        )}
-
-        <div>
-          <FieldLabel id={`${id}-ending`} tip={t('countdown.endingTip')}>
-            {t('countdown.ending')}
-          </FieldLabel>
-          <Select
-            labelledBy={`${id}-ending`}
-            value={settings.ending}
-            onChange={(value) => update('ending', value)}
-            options={COUNTDOWN_ENDINGS.map((ending) => ({
-              value: ending,
-              label: t(`countdown.endings.${ending}`),
-            }))}
+            labelledBy={`${id}-mode`}
+            value={mode}
+            onChange={(value) => update('at', value === 'clock' ? DEFAULT_AT : '')}
+            options={[
+              { value: 'duration', label: t('countdown.modes.duration') },
+              { value: 'clock', label: t('countdown.modes.clock') },
+            ]}
           />
         </div>
-        {settings.ending === 'text' && (
+        {mode === 'duration' ? (
           <div>
-            <FieldLabel id={`${id}-doneHold`} tip={t('countdown.doneHoldTip')}>
-              {t('countdown.doneHold')}
+            <FieldLabel htmlFor={`${id}-time`} tip={t('countdown.durationTip')}>
+              {t('countdown.duration')}
             </FieldLabel>
-            <DurationField
-              labelledBy={`${id}-doneHold`}
-              value={settings.doneHold}
-              onChange={(value) => update('doneHold', value)}
-              units={['m', 's']}
-              unitLabels={[t('countdown.durationUnit'), t('countdown.unitSeconds')]}
-              max={MAX_DONE_HOLD_SECONDS}
+            <MinutesField
+              id={`${id}-time`}
+              value={settings.time}
+              onChange={(seconds) => update('time', Math.max(60, seconds))}
+              max={MAX_COUNTDOWN_TIME}
+              unitLabel={t('countdown.durationUnit')}
             />
-            {settings.doneHold === 0 && <p className={HINT_CLASS}>{t('countdown.doneHoldOff')}</p>}
           </div>
+        ) : (
+          <TextField
+            id={`${id}-at`}
+            label={t('countdown.atLabel')}
+            tip={t('countdown.atTip')}
+            value={settings.at}
+            onChange={(value) => update('at', value)}
+            placeholder={t('countdown.atPlaceholder')}
+            hint={atValid ? undefined : t('countdown.atInvalid')}
+            maxLength={5}
+            inputMode="numeric"
+            autoComplete="off"
+            spellCheck={false}
+          />
         )}
+      </div>
 
+      {settings.scene === 'pomodoro' && (
         <div>
-          <FieldLabel id={`${id}-sound`} tip={t('countdown.soundTip')}>
-            {t('countdown.sound')}
+          <FieldLabel id={`${id}-templates`} tip={t('countdown.templatesTip')}>
+            {t('countdown.templatesLabel')}
           </FieldLabel>
-          <div className="flex gap-1.5">
-            <div className="min-w-0 flex-1">
-              <Select
-                labelledBy={`${id}-sound`}
-                value={settings.sound}
-                onChange={(value) => update('sound', value)}
-                options={COUNTDOWN_SOUNDS.map((sound) => ({
-                  value: sound,
-                  label: t(`countdown.sounds.${sound}`),
-                }))}
-              />
-            </div>
-            <button
-              type="button"
-              onClick={() => send({ type: 'sound' })}
-              className={`${BUTTON_TEST} shrink-0 self-center`}
-            >
-              {t('countdown.testSound')}
-            </button>
-          </div>
+          <fieldset aria-labelledby={`${id}-templates`} className="flex flex-wrap gap-1.5">
+            {TIME_TEMPLATES.map((template) => (
+              <button
+                key={template.id}
+                type="button"
+                onClick={() => {
+                  update('time', template.seconds);
+                  update('at', '');
+                  update('title', t(`countdown.templates.${template.id}`));
+                }}
+                className={BUTTON_TEST}
+              >
+                {t(`countdown.templates.${template.id}`)} · {template.seconds / 60}{' '}
+                {t('countdown.durationUnit')}
+              </button>
+            ))}
+          </fieldset>
         </div>
-      </SettingsGroup>
+      )}
 
-      <SettingsGroup title={t('common.sectionChannel')}>
-        <ChannelFields
-          platforms={settings.platforms}
-          onPlatformsChange={(value) => update('platforms', value)}
-          platformsTip={t('countdown.channelsTip')}
-          twitch={twitchChannel}
-          onTwitchChange={setTwitchChannel}
-          kick={kickChannel}
-          onKickChange={setKickChannel}
+      <div>
+        <FieldLabel id={`${id}-ending`} tip={t('countdown.endingTip')}>
+          {t('countdown.ending')}
+        </FieldLabel>
+        <Select
+          labelledBy={`${id}-ending`}
+          value={settings.ending}
+          onChange={(value) => update('ending', value)}
+          options={COUNTDOWN_ENDINGS.map((ending) => ({
+            value: ending,
+            label: t(`countdown.endings.${ending}`),
+          }))}
         />
-        <p className={`${HINT_CLASS} mt-0`}>{t('countdown.channelsTip')}</p>
-      </SettingsGroup>
+      </div>
+      {settings.ending === 'text' && (
+        <div>
+          <FieldLabel id={`${id}-doneHold`} tip={t('countdown.doneHoldTip')}>
+            {t('countdown.doneHold')}
+          </FieldLabel>
+          <DurationField
+            labelledBy={`${id}-doneHold`}
+            value={settings.doneHold}
+            onChange={(value) => update('doneHold', value)}
+            units={['m', 's']}
+            unitLabels={[t('countdown.durationUnit'), t('countdown.unitSeconds')]}
+            max={MAX_DONE_HOLD_SECONDS}
+          />
+          {settings.doneHold === 0 && <p className={HINT_CLASS}>{t('countdown.doneHoldOff')}</p>}
+        </div>
+      )}
 
-      <SettingsGroup title={t('common.sectionAppearance')}>
-        <PresetField value={settings.preset} onChange={(value) => update('preset', value)} />
-        {isClassic(settings.preset) && (
-          <div>
-            <FieldLabel id={`${id}-color`}>{t('countdown.color')}</FieldLabel>
-            <ColorSwatches
-              labelledBy={`${id}-color`}
-              value={settings.color}
-              onChange={(value) => update('color', value)}
-              options={COUNTDOWN_COLORS.map((color) => ({
-                value: color,
-                label: t(`subathon.colors.${color}`),
-                background: `hsl(${hueFor(color, 1)} 85% 52%)`,
+      <div>
+        <FieldLabel id={`${id}-sound`} tip={t('countdown.soundTip')}>
+          {t('countdown.sound')}
+        </FieldLabel>
+        <div className="flex gap-1.5">
+          <div className="min-w-0 flex-1">
+            <Select
+              labelledBy={`${id}-sound`}
+              value={settings.sound}
+              onChange={(value) => update('sound', value)}
+              options={COUNTDOWN_SOUNDS.map((sound) => ({
+                value: sound,
+                label: t(`countdown.sounds.${sound}`),
               }))}
             />
           </div>
-        )}
-        <div>
-          <FieldLabel id={`${id}-look`} tip={t('countdown.lookTip')}>
-            {t('countdown.look')}
-          </FieldLabel>
-          <SegmentedControl
-            labelledBy={`${id}-look`}
-            value={settings.look}
-            onChange={(value) => update('look', value)}
-            options={COUNTDOWN_LOOKS.map((look) => ({
-              value: look,
-              label: t(`countdown.looks.${look}`),
-            }))}
-          />
+          <button
+            type="button"
+            onClick={() => send({ type: 'sound' })}
+            className={`${BUTTON_TEST} shrink-0 self-center`}
+          >
+            {t('countdown.testSound')}
+          </button>
         </div>
-        <div>
-          <FieldLabel id={`${id}-zoom`} tip={t('countdown.zoomTip')}>
-            {t('countdown.zoom')}
-          </FieldLabel>
-          <SegmentedControl
-            labelledBy={`${id}-zoom`}
-            value={String(settings.zoom)}
-            onChange={(value) => update('zoom', Number(value) as CountdownZoom)}
-            options={COUNTDOWN_ZOOMS.map((zoom) => ({
-              value: String(zoom),
-              label: `${zoom}%`,
-            }))}
-          />
-        </div>
-        <div className="grid gap-3 sm:grid-cols-2">
-          <Switch
-            label={t('countdown.showBar')}
-            tip={t('countdown.showBarTip')}
-            checked={settings.bar}
-            onChange={(value) => update('bar', value)}
-          />
-          <Switch
-            label={t('countdown.motion')}
-            tip={t('countdown.motionTip')}
-            checked={settings.motion}
-            onChange={(value) => update('motion', value)}
-          />
-        </div>
-      </SettingsGroup>
+      </div>
+    </SettingsGroup>
+  );
 
-      <SettingsGroup title={t('countdown.sectionText')}>
-        <TextField
-          label={t('countdown.titleLabel')}
-          tip={t('countdown.titleTip')}
-          value={settings.title}
-          onChange={(value) => update('title', value)}
-          placeholder={t(`countdown.scenes.${settings.scene}.title`)}
-          maxLength={TITLE_MAX_LENGTH}
+  const textTab = (
+    <SettingsGroup title={t('countdown.sectionText')} hideTitle>
+      <TextField
+        label={t('countdown.titleLabel')}
+        tip={t('countdown.titleTip')}
+        value={settings.title}
+        onChange={(value) => update('title', value)}
+        placeholder={t(`countdown.scenes.${settings.scene}.title`)}
+        maxLength={TITLE_MAX_LENGTH}
+      />
+      <TextField
+        label={t('countdown.doneLabel')}
+        tip={t('countdown.doneTip')}
+        value={settings.done}
+        onChange={(value) => update('done', value)}
+        placeholder={t(`countdown.scenes.${settings.scene}.done`)}
+        maxLength={TITLE_MAX_LENGTH}
+      />
+      <TextField
+        label={t('countdown.noteLabel')}
+        tip={t('countdown.noteTip')}
+        value={settings.note}
+        onChange={(value) => update('note', value)}
+        placeholder={t('countdown.notePlaceholder')}
+        maxLength={NOTE_MAX_LENGTH}
+      />
+    </SettingsGroup>
+  );
+
+  const appearanceTab = (
+    <SettingsGroup title={t('common.sectionAppearance')} hideTitle>
+      <PresetField value={settings.preset} onChange={(value) => update('preset', value)} />
+      {isClassic(settings.preset) && (
+        <div>
+          <FieldLabel id={`${id}-color`}>{t('countdown.color')}</FieldLabel>
+          <ColorSwatches
+            labelledBy={`${id}-color`}
+            value={settings.color}
+            onChange={(value) => update('color', value)}
+            options={COUNTDOWN_COLORS.map((color) => ({
+              value: color,
+              label: t(`subathon.colors.${color}`),
+              background: `hsl(${hueFor(color, 1)} 85% 52%)`,
+            }))}
+          />
+        </div>
+      )}
+      <div>
+        <FieldLabel id={`${id}-look`} tip={t('countdown.lookTip')}>
+          {t('countdown.look')}
+        </FieldLabel>
+        <SegmentedControl
+          labelledBy={`${id}-look`}
+          value={settings.look}
+          onChange={(value) => update('look', value)}
+          options={COUNTDOWN_LOOKS.map((look) => ({
+            value: look,
+            label: t(`countdown.looks.${look}`),
+          }))}
         />
-        <TextField
-          label={t('countdown.doneLabel')}
-          tip={t('countdown.doneTip')}
-          value={settings.done}
-          onChange={(value) => update('done', value)}
-          placeholder={t(`countdown.scenes.${settings.scene}.done`)}
-          maxLength={TITLE_MAX_LENGTH}
+      </div>
+      <div>
+        <FieldLabel id={`${id}-zoom`} tip={t('countdown.zoomTip')}>
+          {t('countdown.zoom')}
+        </FieldLabel>
+        <SegmentedControl
+          labelledBy={`${id}-zoom`}
+          value={String(settings.zoom)}
+          onChange={(value) => update('zoom', Number(value) as CountdownZoom)}
+          options={COUNTDOWN_ZOOMS.map((zoom) => ({
+            value: String(zoom),
+            label: `${zoom}%`,
+          }))}
         />
-        <TextField
-          label={t('countdown.noteLabel')}
-          tip={t('countdown.noteTip')}
-          value={settings.note}
-          onChange={(value) => update('note', value)}
-          placeholder={t('countdown.notePlaceholder')}
-          maxLength={NOTE_MAX_LENGTH}
+      </div>
+      <div className="grid gap-3 sm:grid-cols-2">
+        <Switch
+          label={t('countdown.showBar')}
+          tip={t('countdown.showBarTip')}
+          checked={settings.bar}
+          onChange={(value) => update('bar', value)}
         />
-      </SettingsGroup>
-    </>
+        <Switch
+          label={t('countdown.motion')}
+          tip={t('countdown.motionTip')}
+          checked={settings.motion}
+          onChange={(value) => update('motion', value)}
+        />
+      </div>
+    </SettingsGroup>
   );
 
   const command = (text: string) => () => send({ type: 'command', text });
@@ -473,7 +475,12 @@ function CountdownSetup() {
     <SetupShell
       widgetId={WIDGET.id}
       title={t('countdown.title')}
-      settings={settingsPanel}
+      settingsPinned={channelGroup}
+      settingsTabs={[
+        { id: 'countdown', label: t('countdown.sectionCountdown'), content: countdownTab },
+        { id: 'text', label: t('countdown.sectionText'), content: textTab },
+        { id: 'appearance', label: t('common.sectionAppearance'), content: appearanceTab },
+      ]}
       previewTitle={t('countdown.previewTitle')}
       previewTip={t('countdown.previewHint')}
       previewAspect={16 / 9}
