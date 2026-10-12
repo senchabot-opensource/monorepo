@@ -346,6 +346,43 @@ export const PAGE_META = {
         'Molduras grátis de câmera, chat e tela para o OBS. Presets com a vibe de Metin2, LoL, WoW, Valorant e Minecraft, com a arte incluída. Sem login, sem download.',
     },
   },
+  'irl-hud': {
+    en: {
+      title: 'IRL HUD with Cash Counter and Mini-Map (Free) | Senchabot',
+      description:
+        'A free IRL HUD overlay for OBS. Subs, gifted subs, Bits, Kicks and raids add cash on Twitch and Kick, with a clock in your time zone and a mini-map radar.',
+    },
+    de: {
+      title: 'IRL-HUD mit Geldzähler und Minikarte (kostenlos) | Senchabot',
+      description:
+        'Ein kostenloses IRL-HUD-Overlay für OBS. Subs, Gift-Subs, Bits, Kicks und Raids bringen Geld auf Twitch und Kick, mit Uhr in deiner Zeitzone und Minikarte.',
+    },
+    tr: {
+      title: 'Para Sayaçlı ve Mini Haritalı IRL HUD (Ücretsiz) | Senchabot',
+      description:
+        "OBS için ücretsiz IRL HUD overlay'i. Twitch ve Kick'te abonelik, hediye abonelik, Bits, Kicks ve raid'ler para ekler; saat diliminde saat ve mini harita da var.",
+    },
+    es: {
+      title: 'HUD IRL con contador y minimapa (gratis) | Senchabot',
+      description:
+        'Un HUD IRL gratis para OBS. Las subs, subs regaladas, Bits, Kicks y raids suman dinero en Twitch y Kick, con un reloj en tu zona horaria y un minimapa radar.',
+    },
+    fr: {
+      title: "HUD IRL avec compteur d'argent et mini-carte | Senchabot",
+      description:
+        "Un HUD IRL gratuit pour OBS. Subs, subs offerts, Bits, Kicks et raids ajoutent de l'argent sur Twitch et Kick, avec une horloge à ton heure et une mini-carte.",
+    },
+    ja: {
+      title: 'IRL HUD: 所持金カウンターとミニマップ（無料） | Senchabot',
+      description:
+        'OBS用の無料IRL HUDオーバーレイ。TwitchとKickのサブスク、ギフトサブ、Bits、Kicks、レイドで所持金が増えます。自分のタイムゾーンの時計とミニマップも表示できます。',
+    },
+    pt: {
+      title: 'HUD IRL com contador e minimapa (grátis) | Senchabot',
+      description:
+        'Um HUD IRL grátis para o OBS. Subs, subs de presente, Bits, Kicks e raids somam dinheiro na Twitch e na Kick, com relógio no seu fuso horário e um minimapa.',
+    },
+  },
   countdown: {
     en: {
       title: 'Free Starting Soon & BRB Countdown for OBS | Senchabot',
@@ -1168,6 +1205,85 @@ export const APP_FEATURES: Record<WidgetId, Record<Locale, readonly string[]>> =
       'Uma aba para o nome do seu canal ou qualquer texto',
       'Se ajusta a qualquer tamanho de fonte, incluindo câmeras quadradas ou verticais',
       'Funciona na Twitch, na Kick e em outras plataformas sem conectar um canal',
+    ],
+  },
+  'irl-hud': {
+    en: [
+      'A game-style cash counter that subs, gifted subs, Bits, Kicks and raids add to, on Twitch and Kick',
+      'A mini-map where an arrow walks a made-up city or park, or the real streets of a place you pick from OpenStreetMap',
+      'Retro or Modern look, with the cash and the mini-map in any corner and at any size',
+      'Separate dollar amounts for Twitch and Kick: subs, gifted subs, Bits or Kicks, and every raider',
+      'Twitch Tier 2 and Tier 3 subs can count as 2 and 5 subs',
+      'A clock in your own time zone for IRL streams, as 24 or 12 hours',
+      'The broadcaster and mods change the cash with !hud cash +100, -100, a new amount or reset',
+      'The cash is saved in OBS and survives reloads',
+      'Recommended browser source size: 1920x1080',
+    ],
+    de: [
+      'Ein Geldzähler im Game-Stil, dem Subs, Gift-Subs, Bits, Kicks und Raids auf Twitch und Kick Geld bringen',
+      'Eine Minikarte, auf der ein Pfeil durch eine erfundene Stadt, einen Park oder die echten Straßen eines Orts aus OpenStreetMap läuft',
+      'Retro- oder Modern-Look, Geld und Minikarte in jeder Ecke und in jeder Größe',
+      'Eigene Dollarbeträge für Twitch und Kick: Subs, Gift-Subs, Bits oder Kicks und jeder Raider',
+      'Twitch-Subs der Stufe 2 und 3 können als 2 und 5 Subs zählen',
+      'Eine Uhr in deiner eigenen Zeitzone für IRL-Streams, mit 24 oder 12 Stunden',
+      'Streamer und Mods ändern das Geld mit !hud cash +100, -100, einem neuen Betrag oder reset',
+      'Das Geld wird in OBS gespeichert und übersteht ein Neuladen',
+      'Empfohlene Größe der Browserquelle: 1920x1080',
+    ],
+    tr: [
+      "Twitch ve Kick'te abonelik, hediye abonelik, Bits, Kicks ve raid geldikçe para eklenen oyun tarzı sayaç",
+      "Okun hayali bir şehirde, parkta ya da OpenStreetMap'ten seçtiğin bir yerin gerçek sokaklarında yürüdüğü mini harita",
+      'Retro ya da Modern görünüm, para ve mini harita istediğin köşede ve istediğin boyutta',
+      'Twitch ve Kick için ayrı dolar miktarları: abonelik, hediye abonelik, Bits ya da Kicks ve her raid izleyicisi',
+      "Twitch'te Tier 2 ve Tier 3 abonelikler 2 ve 5 abonelik sayılabilir",
+      'IRL yayınlar için kendi saat diliminde, 24 ya da 12 saatlik saat',
+      'Yayıncı ve modlar parayı !hud cash +100, -100, yeni bir miktar ya da reset ile değiştirir',
+      "Para OBS'te kaydedilir, sayfa yenilense de kaybolmaz",
+      'Önerilen Tarayıcı Kaynağı boyutu: 1920x1080',
+    ],
+    es: [
+      'Un contador de dinero estilo videojuego al que las subs, las subs regaladas, los Bits, los Kicks y las raids suman dinero, en Twitch y Kick',
+      'Un minimapa donde una flecha recorre una ciudad o un parque inventados, o las calles reales de un lugar que elijas en OpenStreetMap',
+      'Estilo Retro o Moderno, con el dinero y el minimapa en cualquier esquina y del tamaño que quieras',
+      'Cantidades separadas para Twitch y Kick: subs, subs regaladas, Bits o Kicks, y cada espectador de una raid',
+      'Las subs de Nivel 2 y Nivel 3 de Twitch pueden contar como 2 y 5 subs',
+      'Un reloj en tu propia zona horaria para streams IRL, de 24 o 12 horas',
+      'El streamer y los mods cambian el dinero con !hud cash +100, -100, una cantidad nueva o reset',
+      'El dinero se guarda en OBS y aguanta las recargas',
+      'Tamaño recomendado de la fuente de navegador: 1920x1080',
+    ],
+    fr: [
+      "Un compteur d'argent façon jeu vidéo auquel les subs, subs offerts, Bits, Kicks et raids ajoutent de l'argent, sur Twitch et Kick",
+      "Une mini-carte où une flèche parcourt une ville ou un parc inventés, ou les vraies rues d'un lieu choisi sur OpenStreetMap",
+      "Look Rétro ou Moderne, avec l'argent et la mini-carte dans le coin et à la taille de ton choix",
+      'Montants séparés pour Twitch et Kick : subs, subs offerts, Bits ou Kicks, et chaque viewer de raid',
+      'Les subs Twitch Niveau 2 et Niveau 3 peuvent compter comme 2 et 5 subs',
+      'Une horloge dans ton propre fuseau horaire pour les streams IRL, sur 24 ou 12 heures',
+      "Le streamer et les modos changent l'argent avec !hud cash +100, -100, un nouveau montant ou reset",
+      "L'argent est enregistré dans OBS et survit aux rechargements",
+      'Taille de source navigateur recommandée : 1920x1080',
+    ],
+    ja: [
+      'TwitchとKickのサブスク、ギフトサブ、Bits、Kicks、レイドで所持金が増えるゲーム風カウンター',
+      '矢印が架空の街や公園、またはOpenStreetMapで選んだ場所の実際の道を歩くミニマップ',
+      'レトロかモダンの見た目。所持金とミニマップをシーンの好きな角に好きなサイズで配置',
+      'サブスク、ギフトサブ、BitsまたはKicks、レイド参加者1人あたりの金額をTwitchとKickで別々に設定',
+      'TwitchのTier 2とTier 3のサブスクを、サブスク2件分と5件分としてカウント可能',
+      'IRL配信向けに自分のタイムゾーンで表示できる24時間・12時間の時計',
+      '配信者とモデレーターは !hud cash +100、-100、新しい金額、reset で所持金を変更',
+      '所持金はOBSに保存され、再読み込みしても保持',
+      'ブラウザソースの推奨サイズ: 1920x1080',
+    ],
+    pt: [
+      'Um contador de dinheiro estilo videogame que ganha dinheiro com subs, subs de presente, Bits, Kicks e raids, na Twitch e na Kick',
+      'Um minimapa onde uma seta anda por uma cidade ou um parque inventados, ou pelas ruas reais de um lugar escolhido no OpenStreetMap',
+      'Visual Retrô ou Moderno, com o dinheiro e o minimapa em qualquer canto e do tamanho que quiser',
+      'Valores separados para Twitch e Kick: subs, subs de presente, Bits ou Kicks, e cada espectador de raid',
+      'Subs Tier 2 e Tier 3 da Twitch podem valer 2 e 5 subs',
+      'Um relógio no seu próprio fuso horário para lives IRL, em 24 ou 12 horas',
+      'O streamer e os mods mudam o dinheiro com !hud cash +100, -100, um valor novo ou reset',
+      'O dinheiro fica salvo no OBS e sobrevive a recarregamentos',
+      'Tamanho recomendado da fonte de navegador: 1920x1080',
     ],
   },
   countdown: {

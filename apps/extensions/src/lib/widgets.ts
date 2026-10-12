@@ -6,6 +6,7 @@ import {
   FramesIcon,
   GoalIcon,
   type IconProps,
+  IrlHudIcon,
   ObsBridgeIcon,
   PollIcon,
   RaffleIcon,
@@ -28,6 +29,7 @@ export type WidgetId =
   | 'subathon'
   | 'poll'
   | 'stream-alerts'
+  | 'irl-hud'
   | 'frames'
   | 'countdown'
   | 'raffle'
@@ -99,6 +101,19 @@ export const WIDGETS: readonly WidgetEntry[] = [
     platforms: ['twitch', 'kick'],
     demoUrl: '/widgets/sub-sprout-widget?simulate=true',
     sourceSize: { width: 800, height: 600 },
+  },
+  {
+    id: 'irl-hud',
+    kind: 'overlay',
+    setupPath: '/setup/irl-hud',
+    widgetPath: '/widgets/irl-hud',
+    nameKey: 'widgets.irlHud.name',
+    taglineKey: 'widgets.irlHud.tagline',
+    Icon: IrlHudIcon,
+    platforms: ['twitch', 'kick'],
+    demoUrl: '/widgets/irl-hud?simulate=1',
+    // A whole scene: the money and the mini-map each sit in a corner of it.
+    sourceSize: { width: 1920, height: 1080 },
   },
   {
     id: 'socials',

@@ -126,6 +126,10 @@ export const en = {
       name: 'Stream Alerts',
       tagline: 'An animated alert with a sound for every sub, gifted sub, Bits, Kicks and raid.',
     },
+    irlHud: {
+      name: 'IRL HUD',
+      tagline: 'A game-style HUD for IRL streams: subs, gifts, cheers and raids add cash, with a mini-map.',
+    },
     raffle: {
       name: 'Raffle',
       tagline: 'Viewers join with a chat keyword like !join, and you draw the winner.',
@@ -244,10 +248,10 @@ export const en = {
       'OBS Studio and other apps that support browser sources. Add the widget URL as a Browser Source and use the size shown on the setup page.',
     faq4Q: 'Can I use Twitch and Kick together?',
     faq4A:
-      'Yes. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll, Stream Countdown and Spin Wheel take a Twitch and a Kick channel in the same URL. OBS Bridge can listen to both chats at once too. Raffle runs on one platform at a time.',
+      'Yes. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll, Stream Countdown, IRL HUD and Spin Wheel take a Twitch and a Kick channel in the same URL. OBS Bridge can listen to both chats at once too. Raffle runs on one platform at a time.',
     faq5Q: 'How do I change a widget later?',
     faq5A:
-      'Open its setup page, set it up the way you want and replace the URL in your Browser Source. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll, Stream Frames, Socials, Stream Countdown and Spin Wheel can also open an existing URL: paste it on the setup page, your settings come back, and you change only what you need.',
+      'Open its setup page, set it up the way you want and replace the URL in your Browser Source. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll, Stream Frames, Socials, Stream Countdown, IRL HUD and Spin Wheel can also open an existing URL: paste it on the setup page, your settings come back, and you change only what you need.',
     faq6Q: 'Will my widget URL keep working after updates?',
     faq6A:
       "Yes. Updates keep existing URL settings and their values working, so a widget that's already in your scene doesn't need a new URL.",
@@ -910,6 +914,136 @@ export const en = {
     faq3Q: 'Can I run both a Sub Goal and a Follower Goal at the same time?',
     faq3A:
       'Yes! Sub Goal and Follower Goal maintain independent counts in OBS localStorage and use separate URL endpoints.',
+  },
+  irlHud: {
+    breadcrumb: 'IRL HUD Setup',
+    title: 'IRL HUD Setup',
+    intro:
+      'A game-style HUD for Twitch and Kick, made for IRL streams. Every sub, gifted sub, Bits cheer, Kicks gift and raid adds cash to the counter by the amounts you set, under a clock in your time zone, next to a mini-map where an arrow walks city streets, park paths or the real streets around a place you pick.',
+    style: 'Style',
+    styleTip:
+      'Retro shows green $00000350 cash under a grey clock in a thick outline, with a round mini-map. Modern shows white $1,250 cash with a soft shadow and gains in green, with a rounded square mini-map.',
+    styleRetro: 'Retro',
+    styleModern: 'Modern',
+    corner: 'Cash Position',
+    cornerTip: 'The corner of the scene the cash and the clock sit in.',
+    corners: {
+      tr: 'Top Right',
+      tl: 'Top Left',
+      br: 'Bottom Right',
+      bl: 'Bottom Left',
+    },
+    size: 'Size',
+    sizeTip:
+      'How big the cash, the clock and the mini-map are. At 100% they fit a 1080p scene, and they scale with the browser source.',
+    sizeValue: '{size}%',
+    showClock: 'Show Clock',
+    showClockTip: 'The time of day above the cash.',
+    clock12: '12-Hour Clock',
+    clock12Tip: 'Shows 2:30 PM instead of 14:30.',
+    timeZone: 'Time Zone',
+    timeZoneTip:
+      'On an IRL stream OBS often runs somewhere else, like a cloud server or a computer at home. Pick where you are, and the clock shows your local time.',
+    timeZoneLocal: "The OBS computer's time",
+    showRadar: 'Mini-Map',
+    showRadarTip:
+      'A radar in a corner of the scene, with an arrow walking its streets or paths and turning at the corners. The map turns with it, so the arrow always points ahead.',
+    radarCorner: 'Mini-Map Position',
+    radarCornerTip: 'The corner of the scene the mini-map sits in. Pick a different one from the cash.',
+    radarSameCorner: 'The mini-map and the cash share this corner, so they overlap.',
+    map: 'Mini-Map Style',
+    mapTip:
+      'Urban draws city streets between blocks. Park draws winding paths between lawns, trees and ponds. Real Place draws the streets around a place you pick, from OpenStreetMap.',
+    maps: {
+      urban: 'Urban',
+      park: 'Park',
+      real: 'Real Place',
+    },
+    place: 'Place',
+    placeTip:
+      'Search for a street, square, park or neighborhood, or paste coordinates like 41.0256, 28.9744. The mini-map draws the streets and paths within about 500 m of it.',
+    placePlaceholder: 'Search a place or paste coordinates',
+    placeSearch: 'Search',
+    placeSearching: 'Searching…',
+    placeResults: 'Places found',
+    placeNone: 'No places found. Try another name, or paste coordinates.',
+    placeError: "The search didn't answer. Try again in a moment, or paste coordinates.",
+    placePicked: 'Mini-map center: {place}',
+    placeNeeded: 'Pick a place to draw its streets. Until then the mini-map draws the made-up city.',
+    placePrivacy: 'Viewers see the streets around this place, so pick a general area rather than your home.',
+    placeCredit: 'Place search and map data © OpenStreetMap contributors',
+    showPops: 'Show Cash Gains',
+    showPopsTip: "Floats +$100 with the viewer's name next to the cash every time it goes up.",
+    sectionMoney: 'Cash',
+    start: 'Starting Cash',
+    startTip:
+      'The cash the HUD starts with. A new amount here starts the counter over from it; until then, the cash earned on stream is kept.',
+    valuesHint: 'Dollars each one adds. Set any of these to 0 to turn it off.',
+    perSub: 'Per Sub',
+    perSubTip: 'Every new sub and resub. On Twitch this is a Tier 1 or Prime sub.',
+    perSubKickTip: 'Every new sub and resub.',
+    perGift: 'Per Gifted Sub',
+    perGiftTip: 'Counted for every sub in a gift, so a gift of 5 adds this five times.',
+    perBits: 'Per 100 Bits',
+    perBitsTip: 'Other amounts add their share, so 500 Bits adds this five times.',
+    perKicks: 'Per 100 Kicks',
+    perKicksTip: 'Other amounts add their share, so 500 Kicks adds this five times.',
+    perRaider: 'Per Raider',
+    perRaiderTip:
+      'Counted for every viewer a raid brings, so a raid of 50 adds this fifty times. Kick calls a raid a host.',
+    tiers: 'Tier 2 and 3 Count More',
+    tiersTip:
+      'On Twitch a Tier 2 sub adds 2 subs worth of cash and a Tier 3 sub 5, in line with their price.',
+    sectionCommands: 'Chat Commands',
+    commandsIntro: 'You and your mods control the HUD from Twitch or Kick chat with !hud.',
+    cmdAdd: 'Adds cash',
+    cmdRemove: 'Takes cash away, even below $0',
+    cmdSet: 'Sets the cash',
+    cmdReset: 'Goes back to the starting cash',
+    commandsAmounts:
+      'Write amounts like 500, 1,500, 2.5k or 1m. !hud cash add 500 and !hud cash remove 500 work too.',
+    previewTitle: 'IRL HUD Preview',
+    previewIframeTitle: 'IRL HUD Preview',
+    previewHint:
+      'The preview plays simulated subs, gifts, cheers and raids. On stream only your chat adds cash.',
+    testTitle: 'Try it:',
+    testViewer: 'You',
+    testSub: '+1 Sub',
+    testGift: '+5 Gifted',
+    testBits: '+500 Bits/Kicks',
+    testRaid: 'Raid of 25',
+    testAdd: '+$1,000',
+    testRemove: '−$500',
+    testSet: 'Set $10,000',
+    testReset: 'Reset',
+    widgetUrlTip:
+      'Already made a widget? Paste its URL here to load your settings and change what you need.',
+    widgetUrlPlaceholder: 'Paste an existing widget URL to edit it',
+    widgetUrlInvalid: "This isn't an IRL HUD URL.",
+    browserSourceHintSize: ' (recommended size: 1920×1080, the whole scene).',
+    guideTitle: 'Streaming Software Setup (OBS, Streamlabs, XSplit, etc.)',
+    guideStep1:
+      'Add a Browser Source in your streaming software (OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio, etc.).',
+    guideStep2: 'Paste your copied HUD URL.',
+    guideStep3:
+      'Set width to 1920 and height to 1080, the size of your scene. The cash and the mini-map sit in the corners you picked.',
+    guideStep4:
+      'Go live. Subs, gifts, cheers and raids add cash on their own, and mods can set it right with !hud cash.',
+    faq1Q: 'What happens if OBS closes or the browser source reloads?',
+    faq1A:
+      "The cash is saved inside OBS, so it comes back where it was. Subs that come in while OBS is closed can't be seen, so a mod can add them with !hud cash +500.",
+    faq2Q: 'Does it work on IRL streams?',
+    faq2A:
+      'Yes, that is what it is made for. Add it to the scene your IRL feed plays in. If OBS runs on a cloud server or a computer at home, pick your time zone so the clock shows the time where you are. The HUD fits any canvas, vertical ones too.',
+    faq3Q: 'Does the mini-map show where I am?',
+    faq3A:
+      "Only if you want it to. Urban and Park are made-up maps, picked by your channel name. Real Place draws the streets around the place you pick, from OpenStreetMap; it stays on that spot and doesn't follow you, so pick a general area rather than your home.",
+    faq4Q: 'How do I start over or change the cash?',
+    faq4A:
+      'Type !hud cash reset in chat to go back to the starting cash, !hud cash 5000 for any amount, or !hud cash +100 and !hud cash -100 to add or take some. A new starting cash in the URL starts the counter over too.',
+    faq5Q: 'Do I need to log in or connect my account?',
+    faq5A:
+      'No. The HUD reads subs, gifts, Bits, Kicks, raids and mod commands from your public Twitch and Kick chat, the way a logged-out viewer sees them.',
   },
   frames: {
     breadcrumb: 'Stream Frames Setup',
@@ -1681,6 +1815,8 @@ export const en = {
           poll: 'Room for a poll with up to 6 options. It sits at the top or bottom and grows with the options.',
           streamAlerts:
             'One alert at a time, in the middle of this area. A bigger source scales it up.',
+          irlHud:
+            'A full 1080p canvas. The money and the mini-map each sit in a corner you picked, and fit a vertical canvas too.',
           raffle:
             "The winner overlay. Confetti bursts from both sides of the screen and the winner's name appears in the middle.",
           obsBridge: 'Not a visible overlay. Keep the tool open in a browser tab or an OBS dock.',
@@ -1723,7 +1859,7 @@ export const en = {
         title: 'How do I change a widget later?',
         p1: 'Your settings live inside the widget URL, so changing a setting means a new URL. Change the setting on the setup page, copy the new URL, then double-click the source in OBS and paste it over the old URL in the URL field.',
         p2:
-          "You don't have to start over with [Chat Box](/setup/chat-widget), [Emote Wall](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Stream Alerts](/setup/stream-alerts), [Sub Goal](/setup/sub-goal), [Chat Poll](/setup/chat-poll), [Stream Frames](/setup/stream-frames), [Socials](/setup/socials), [Stream Countdown](/setup/stream-countdown) or [Spin Wheel](/setup/spin-wheel). Paste your current URL into the Widget URL field on the setup page and your channels and all your settings come back. Change what you want and copy the new URL.",
+          "You don't have to start over with [Chat Box](/setup/chat-widget), [Emote Wall](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Stream Alerts](/setup/stream-alerts), [Sub Goal](/setup/sub-goal), [Chat Poll](/setup/chat-poll), [Stream Frames](/setup/stream-frames), [Socials](/setup/socials), [Stream Countdown](/setup/stream-countdown), [IRL HUD](/setup/irl-hud) or [Spin Wheel](/setup/spin-wheel). Paste your current URL into the Widget URL field on the setup page and your channels and all your settings come back. Change what you want and copy the new URL.",
         p3: "OBS Bridge has no paste field, so enter your settings again on its setup page and copy the new tool URL. You can also change scene picks and authorized users on the tool page itself and grab the new URL with its Copy Updated URL button. Old URLs keep working, so you don't have to update them.",
       },
       troubleshoot: {
@@ -2523,10 +2659,10 @@ export const en = {
       'OBS Studio and any other streaming software that supports a browser source. Each widget runs as a web URL, and you paste that URL into the source. Our guides are written for OBS Studio.',
     platformsQ: 'Which widgets support Twitch and which support Kick?',
     platformsA:
-      'All thirteen support both platforms. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll, Stream Countdown and Spin Wheel listen to a Twitch and a Kick channel together in one URL. OBS Bridge listens for commands from both chats, and each authorized user is added with their own platform. Raffle runs on one platform at a time, Twitch or Kick. Stream Frames and Socials read no chat, so they work the same on either one. In Chat Box, 7TV emotes show on both platforms, while BTTV and FFZ emotes show on Twitch only.',
+      'All thirteen support both platforms. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll, Stream Countdown, IRL HUD and Spin Wheel listen to a Twitch and a Kick channel together in one URL. OBS Bridge listens for commands from both chats, and each authorized user is added with their own platform. Raffle runs on one platform at a time, Twitch or Kick. Stream Frames and Socials read no chat, so they work the same on either one. In Chat Box, 7TV emotes show on both platforms, while BTTV and FFZ emotes show on Twitch only.',
     editQ: 'How do I change a widget later?',
     editA:
-      "Change the settings on the setup page, copy the new URL, and paste it over the old one in the source's URL field in OBS. With Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll, Stream Frames, Socials, Stream Countdown and Spin Wheel, if you paste your old URL into the Widget URL field on the setup page, all your settings come back and you don't have to start over.",
+      "Change the settings on the setup page, copy the new URL, and paste it over the old one in the source's URL field in OBS. With Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll, Stream Frames, Socials, Stream Countdown, IRL HUD and Spin Wheel, if you paste your old URL into the Widget URL field on the setup page, all your settings come back and you don't have to start over.",
     oldUrlsQ: 'Will my old widget URLs keep working?',
     oldUrlsA:
       "Yes. Updates are made so existing URLs don't break: parameter names, values and defaults stay the same. For example, the old keep=true in Chat Box still means Forever, and Sub Sprout still reads the old channel and platform parameters.",
@@ -2550,6 +2686,8 @@ export const en = {
     lead: "New features and bug fixes in Senchabot Extensions, newest first. The list is put together from the project's commit history on [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      irlHudLaunch:
+        'New overlay: IRL HUD, a game-style HUD for IRL streams. Subs, gifted subs, Bits, Kicks and raids add the cash you set to a counter under a clock in your time zone, next to a mini-map where an arrow walks a made-up city or park, or the real streets around a place you pick. Mods change it with !hud cash.',
       spinWheelTwoColors:
         "Spin Wheel can paint its slices in just two colors, taking turns slice by slice: orange and purple in the classic look, or the accent and panel color of the picked preset, where it's on by default.",
       spinWheelPresets:

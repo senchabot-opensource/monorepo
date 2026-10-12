@@ -31,11 +31,16 @@ export function getCardShape(widget: WidgetEntry): CardShape {
 const GALLERY_SHAPES: Partial<Record<WidgetId, CardShape>> = {
   socials: 'standard',
   'stream-alerts': 'wide',
+  // A whole scene with the HUD in its corners: a strip shows it bigger than a plain card would.
+  'irl-hud': 'wide',
 };
 
 // A wide card holding a 16:9 alert, instead of a strip, is cut to a plain card's height, so the
 // row beside it doesn't stretch.
-const PREVIEW_ASPECT: Partial<Record<WidgetId, string>> = { 'stream-alerts': '11 / 4' };
+const PREVIEW_ASPECT: Partial<Record<WidgetId, string>> = {
+  'stream-alerts': '11 / 4',
+  'irl-hud': '11 / 4',
+};
 
 // Demos drawn at a fixed size rather than to fit their page: at the card's own width the Socials
 // bubble runs past both edges, so it renders at its source size and is scaled down to fit.

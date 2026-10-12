@@ -132,6 +132,18 @@ export const OG_IMAGES = {
       pt: 'Molduras de Live, overlays de moldura com presets para sua câmera, chat e tela',
     },
   },
+  'irl-hud': {
+    path: '/og/irl-hud.png',
+    alt: {
+      en: 'IRL HUD, a cash counter and mini-map overlay that subs, cheers and raids fill',
+      de: 'IRL-HUD, ein Overlay mit Geldzähler und Minikarte, das Subs, Cheers und Raids füllen',
+      tr: "IRL HUD, abonelik, cheer ve raid'lerle dolan para sayacı ve mini harita overlay'i",
+      es: 'HUD IRL, un overlay de contador de dinero y minimapa que llenan subs, cheers y raids',
+      fr: "HUD IRL, un overlay compteur d'argent et mini-carte que remplissent subs, cheers et raids",
+      ja: 'IRL HUD: サブスク、Cheer、レイドで増える所持金カウンターとミニマップのオーバーレイ',
+      pt: 'HUD IRL, um overlay de contador de dinheiro e minimapa que subs, cheers e raids enchem',
+    },
+  },
   countdown: {
     path: '/og/countdown.png',
     alt: {

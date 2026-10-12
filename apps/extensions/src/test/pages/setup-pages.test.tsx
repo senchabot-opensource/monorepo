@@ -87,6 +87,21 @@ const PAGES: PageCase[] = [
     faq: ['goal.faq1Q', 'goal.faq2Q', 'goal.faq3Q', 'goal.faq4Q'],
   },
   {
+    path: '/setup/irl-hud',
+    title: 'irlHud.title',
+    sections: [
+      'common.sectionChannel',
+      'common.sectionAppearance',
+      'irlHud.sectionMoney',
+      'irlHud.sectionCommands',
+      'irlHud.previewTitle',
+      'irlHud.guideTitle',
+      'common.faqTitle',
+      'common.moreWidgets',
+    ],
+    faq: ['irlHud.faq1Q', 'irlHud.faq2Q', 'irlHud.faq3Q', 'irlHud.faq4Q', 'irlHud.faq5Q'],
+  },
+  {
     path: '/setup/stream-frames',
     title: 'frames.title',
     sections: [

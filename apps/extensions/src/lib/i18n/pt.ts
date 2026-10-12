@@ -132,6 +132,11 @@ export const pt: typeof en = {
       name: 'Alertas de Live',
       tagline: 'Um alerta animado com som para cada sub, sub de presente, Bits, Kicks e raid.',
     },
+    irlHud: {
+      name: 'HUD IRL',
+      tagline:
+        'Um HUD estilo videogame para lives IRL: subs, presentes, cheers e raids dão grana, com minimapa.',
+    },
     raffle: {
       name: 'Sorteio',
       tagline:
@@ -253,10 +258,10 @@ export const pt: typeof en = {
       'OBS Studio e outros programas que aceitam fontes de navegador. Adicione a URL do widget como fonte de navegador e use o tamanho mostrado na página de configuração.',
     faq4Q: 'Posso usar Twitch e Kick juntas?',
     faq4A:
-      'Sim. Caixa de Chat, Mural de Emotes, Sub Sprout, Subathon Timer, Alertas de Live, Meta de Subs, Enquete do Chat, Contagem Regressiva e Roleta aceitam um canal da Twitch e um da Kick na mesma URL. O OBS Bridge também consegue ouvir os dois chats ao mesmo tempo. O Sorteio roda em uma plataforma por vez.',
+      'Sim. Caixa de Chat, Mural de Emotes, Sub Sprout, Subathon Timer, Alertas de Live, Meta de Subs, Enquete do Chat, Contagem Regressiva, HUD IRL e Roleta aceitam um canal da Twitch e um da Kick na mesma URL. O OBS Bridge também consegue ouvir os dois chats ao mesmo tempo. O Sorteio roda em uma plataforma por vez.',
     faq5Q: 'Como mudo um widget depois?',
     faq5A:
-      'Abra a página de configuração dele, deixe do jeito que você quer e troque a URL na sua fonte de navegador. Caixa de Chat, Mural de Emotes, Sub Sprout, Subathon Timer, Alertas de Live, Meta de Subs, Enquete do Chat, Molduras de Live, Redes Sociais, Contagem Regressiva e Roleta também abrem uma URL que você já tem: cole na página de configuração, suas configurações voltam e você muda só o que precisa.',
+      'Abra a página de configuração dele, deixe do jeito que você quer e troque a URL na sua fonte de navegador. Caixa de Chat, Mural de Emotes, Sub Sprout, Subathon Timer, Alertas de Live, Meta de Subs, Enquete do Chat, Molduras de Live, Redes Sociais, Contagem Regressiva, HUD IRL e Roleta também abrem uma URL que você já tem: cole na página de configuração, suas configurações voltam e você muda só o que precisa.',
     faq6Q: 'A URL do meu widget continua funcionando depois das atualizações?',
     faq6A:
       'Sim. As atualizações mantêm funcionando as configurações e os valores das URLs que já existem, então um widget que já está na sua cena não precisa de URL nova.',
@@ -932,6 +937,141 @@ export const pt: typeof en = {
     faq3Q: 'Posso usar a Meta de Subs e a Meta de Seguidores ao mesmo tempo?',
     faq3A:
       'Sim! Ambas as metas mantêm contagens independentes no armazenamento do OBS e utilizam endpoints de URL separados.',
+  },
+  irlHud: {
+    breadcrumb: 'Configurar HUD IRL',
+    title: 'Configurar HUD IRL',
+    intro:
+      'Um HUD estilo videogame para Twitch e Kick, feito para lives IRL. Cada sub, sub de presente, cheer de Bits, envio de Kicks e raid soma dinheiro no contador nos valores que você definir, embaixo de um relógio no seu fuso horário, ao lado de um minimapa onde uma seta anda pelas ruas de uma cidade, pelos caminhos de um parque ou pelas ruas de verdade em volta de um lugar que você escolher.',
+    style: 'Estilo',
+    styleTip:
+      'Retrô mostra o dinheiro em verde, tipo $00000350, embaixo de um relógio cinza com contorno grosso, e um minimapa redondo. Moderno mostra o dinheiro em branco, tipo $1,250, com uma sombra suave e os ganhos em verde, e um minimapa quadrado de cantos arredondados.',
+    styleRetro: 'Retrô',
+    styleModern: 'Moderno',
+    corner: 'Posição do dinheiro',
+    cornerTip: 'O canto da cena onde ficam o dinheiro e o relógio.',
+    corners: {
+      tr: 'Superior direito',
+      tl: 'Superior esquerdo',
+      br: 'Inferior direito',
+      bl: 'Inferior esquerdo',
+    },
+    size: 'Tamanho',
+    sizeTip:
+      'O tamanho do dinheiro, do relógio e do minimapa. Em 100%, eles cabem numa cena 1080p e acompanham o tamanho da fonte de navegador.',
+    sizeValue: '{size}%',
+    showClock: 'Mostrar relógio',
+    showClockTip: 'A hora do dia acima do dinheiro.',
+    clock12: 'Relógio de 12 horas',
+    clock12Tip: 'Mostra 2:30 PM em vez de 14:30.',
+    timeZone: 'Fuso horário',
+    timeZoneTip:
+      'Numa live IRL, o OBS muitas vezes roda em outro lugar, tipo um servidor na nuvem ou um computador em casa. Escolha onde você está, e o relógio mostra a sua hora local.',
+    timeZoneLocal: 'O horário do computador do OBS',
+    showRadar: 'Minimapa',
+    showRadarTip:
+      'Um radar num canto da cena, com uma seta andando pelas ruas ou pelos caminhos e virando nas esquinas. O mapa gira junto, então a seta sempre aponta para a frente.',
+    radarCorner: 'Posição do minimapa',
+    radarCornerTip: 'O canto da cena onde o minimapa fica. Escolha um canto diferente do dinheiro.',
+    radarSameCorner:
+      'O minimapa e o dinheiro estão no mesmo canto, então um fica por cima do outro.',
+    map: 'Estilo do minimapa',
+    mapTip:
+      'Cidade desenha ruas entre quarteirões. Parque desenha caminhos sinuosos entre gramados, árvores e lagos. Lugar real desenha as ruas em volta de um lugar que você escolher, a partir do OpenStreetMap.',
+    maps: {
+      urban: 'Cidade',
+      park: 'Parque',
+      real: 'Lugar real',
+    },
+    place: 'Lugar',
+    placeTip:
+      'Busque uma rua, praça, parque ou bairro, ou cole coordenadas como 41.0256, 28.9744. O minimapa desenha as ruas e os caminhos num raio de uns 500 m em volta dele.',
+    placePlaceholder: 'Busque um lugar ou cole coordenadas',
+    placeSearch: 'Buscar',
+    placeSearching: 'Buscando…',
+    placeResults: 'Lugares encontrados',
+    placeNone: 'Nenhum lugar encontrado. Tente outro nome ou cole coordenadas.',
+    placeError: 'A busca não respondeu. Tente de novo daqui a pouco ou cole coordenadas.',
+    placePicked: 'Centro do minimapa: {place}',
+    placeNeeded:
+      'Escolha um lugar para desenhar as ruas dele. Até lá, o minimapa desenha a cidade inventada.',
+    placePrivacy:
+      'Os espectadores veem as ruas em volta desse lugar, então escolha uma área geral em vez da sua casa.',
+    placeCredit: 'Busca de lugares e dados do mapa © colaboradores do OpenStreetMap',
+    showPops: 'Mostrar dinheiro ganho',
+    showPopsTip:
+      'Faz subir um +$100 com o nome do espectador ao lado do dinheiro toda vez que ele aumenta.',
+    sectionMoney: 'Dinheiro',
+    start: 'Dinheiro inicial',
+    startTip:
+      'O dinheiro com que o HUD começa. Um valor novo aqui recomeça o contador a partir dele; até lá, o dinheiro ganho na live fica guardado.',
+    valuesHint: 'Quantos dólares cada um soma. Coloque qualquer um em 0 para desligar.',
+    perSub: 'Por sub',
+    perSubTip: 'Cada sub novo e resub. Na Twitch, é um sub Tier 1 ou Prime.',
+    perSubKickTip: 'Cada sub novo e resub.',
+    perGift: 'Por sub de presente',
+    perGiftTip: 'Conta cada sub do presente, então um presente de 5 soma isso cinco vezes.',
+    perBits: 'A cada 100 Bits',
+    perBitsTip: 'Outros valores somam a parte proporcional, então 500 Bits somam isso cinco vezes.',
+    perKicks: 'A cada 100 Kicks',
+    perKicksTip:
+      'Outros valores somam a parte proporcional, então 500 Kicks somam isso cinco vezes.',
+    perRaider: 'Por espectador do raid',
+    perRaiderTip:
+      'Conta cada espectador que um raid traz, então um raid de 50 soma isso cinquenta vezes. Na Kick, o raid se chama host.',
+    tiers: 'Tier 2 e 3 valem mais',
+    tiersTip:
+      'Na Twitch, um sub Tier 2 soma o dinheiro de 2 subs e um Tier 3 o de 5, de acordo com o preço.',
+    sectionCommands: 'Comandos do chat',
+    commandsIntro: 'Você e seus mods controlam o HUD pelo chat da Twitch ou da Kick com !hud.',
+    cmdAdd: 'Soma dinheiro',
+    cmdRemove: 'Tira dinheiro, mesmo abaixo de $0',
+    cmdSet: 'Define o dinheiro',
+    cmdReset: 'Volta para o dinheiro inicial',
+    commandsAmounts:
+      'Escreva os valores como 500, 1,500, 2.5k ou 1m. !hud cash add 500 e !hud cash remove 500 também funcionam.',
+    previewTitle: 'Prévia do HUD IRL',
+    previewIframeTitle: 'Prévia do HUD IRL',
+    previewHint:
+      'A prévia toca subs, presentes, cheers e raids simulados. Na live, só o seu chat soma dinheiro.',
+    testTitle: 'Teste:',
+    testViewer: 'Você',
+    testSub: '+1 sub',
+    testGift: '+5 de presente',
+    testBits: '+500 Bits/Kicks',
+    testRaid: 'Raid de 25',
+    testAdd: '+$1,000',
+    testRemove: '−$500',
+    testSet: 'Definir $10,000',
+    testReset: 'Reiniciar',
+    widgetUrlTip:
+      'Já fez um widget? Cole a URL dele aqui para carregar suas configurações e mudar o que precisar.',
+    widgetUrlPlaceholder: 'Cole a URL de um widget para editar',
+    widgetUrlInvalid: 'Esta não é uma URL do HUD IRL.',
+    browserSourceHintSize: ' (tamanho recomendado: 1920×1080, a cena inteira).',
+    guideTitle: 'Configuração no programa de live (OBS, Streamlabs, XSplit etc.)',
+    guideStep1:
+      'Adicione uma fonte de navegador no seu programa de live (OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio etc.).',
+    guideStep2: 'Cole a URL do HUD que você copiou.',
+    guideStep3:
+      'Coloque a largura em 1920 e a altura em 1080, o tamanho da sua cena. O dinheiro e o minimapa ficam nos cantos que você escolheu.',
+    guideStep4:
+      'Entre ao vivo. Subs, presentes, cheers e raids somam dinheiro sozinhos, e os mods podem acertar o valor com !hud cash.',
+    faq1Q: 'O que acontece se o OBS fechar ou a fonte de navegador recarregar?',
+    faq1A:
+      'O dinheiro fica salvo dentro do OBS, então volta de onde parou. Os subs que chegam com o OBS fechado não são vistos, então um mod pode somá-los com !hud cash +500.',
+    faq2Q: 'Funciona em live IRL?',
+    faq2A:
+      'Sim, ele foi feito para isso. Adicione o HUD na cena em que passa o seu feed IRL. Se o OBS roda num servidor na nuvem ou num computador em casa, escolha o seu fuso horário para o relógio mostrar a hora de onde você está. O HUD se ajusta a qualquer tela, inclusive as verticais.',
+    faq3Q: 'O minimapa mostra onde eu estou?',
+    faq3A:
+      'Só se você quiser. Cidade e Parque são mapas inventados, escolhidos pelo nome do seu canal. Lugar real desenha as ruas em volta do lugar que você escolher, a partir do OpenStreetMap; o mapa fica fixo ali e não acompanha você, então escolha uma área geral em vez da sua casa.',
+    faq4Q: 'Como recomeço ou mudo o dinheiro?',
+    faq4A:
+      'Digite !hud cash reset no chat para voltar ao dinheiro inicial, !hud cash 5000 para qualquer valor, ou !hud cash +100 e !hud cash -100 para somar ou tirar um pouco. Um novo dinheiro inicial na URL também recomeça o contador.',
+    faq5Q: 'Preciso fazer login ou conectar minha conta?',
+    faq5A:
+      'Não. O HUD lê subs, presentes, Bits, Kicks, raids e comandos dos mods no seu chat público da Twitch e da Kick, do jeito que um espectador deslogado vê.',
   },
   frames: {
     breadcrumb: 'Configurar Molduras de Live',
@@ -1712,6 +1852,8 @@ export const pt: typeof en = {
             'Uma tela 1080p inteira, para o relógio cair no meio da sua cena de início ou BRB.',
           poll: 'Espaço para uma enquete com até 6 opções. Ela fica em cima ou embaixo e cresce com as opções.',
           streamAlerts: 'Um alerta por vez, no meio desta área. Uma fonte maior aumenta o alerta.',
+          irlHud:
+            'Uma tela 1080p inteira. O dinheiro e o minimapa ficam cada um num canto que você escolheu, e também cabem numa tela vertical.',
           raffle:
             'O overlay do vencedor. Confete estoura dos dois lados da tela e o nome do vencedor aparece no meio.',
           obsBridge:
@@ -1754,7 +1896,7 @@ export const pt: typeof en = {
       update: {
         title: 'Como mudo um widget depois?',
         p1: 'Suas configurações ficam dentro da URL do widget, então mudar uma configuração quer dizer uma URL nova. Mude a configuração na página de configuração, copie a URL nova, depois clique duas vezes na fonte no OBS e cole por cima da URL antiga no campo URL.',
-        p2: 'Você não precisa começar do zero com [Caixa de Chat](/setup/chat-widget), [Mural de Emotes](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Alertas de Live](/setup/stream-alerts), [Meta de Subs](/setup/sub-goal), [Enquete do Chat](/setup/chat-poll), [Molduras de Live](/setup/stream-frames), [Redes Sociais](/setup/socials), [Contagem Regressiva](/setup/stream-countdown) ou [Roleta](/setup/spin-wheel). Cole sua URL atual no campo URL do widget da página de configuração e seus canais e todas as suas configurações voltam. Mude o que quiser e copie a URL nova.',
+        p2: 'Você não precisa começar do zero com [Caixa de Chat](/setup/chat-widget), [Mural de Emotes](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Alertas de Live](/setup/stream-alerts), [Meta de Subs](/setup/sub-goal), [Enquete do Chat](/setup/chat-poll), [Molduras de Live](/setup/stream-frames), [Redes Sociais](/setup/socials), [Contagem Regressiva](/setup/stream-countdown), [HUD IRL](/setup/irl-hud) ou [Roleta](/setup/spin-wheel). Cole sua URL atual no campo URL do widget da página de configuração e seus canais e todas as suas configurações voltam. Mude o que quiser e copie a URL nova.',
         p3: 'O OBS Bridge não tem campo para colar, então coloque suas configurações de novo na página de configuração dele e copie a nova URL da ferramenta. Você também pode mudar as cenas escolhidas e os usuários autorizados na própria página da ferramenta e pegar a URL nova com o botão Copiar URL atualizada. As URLs antigas continuam funcionando, então você não precisa atualizá-las.',
       },
       troubleshoot: {
@@ -2546,10 +2688,10 @@ export const pt: typeof en = {
       'OBS Studio e qualquer outro programa de live que aceite fonte de navegador. Cada widget roda como uma URL da web, e você cola essa URL na fonte. Nossos guias são escritos para o OBS Studio.',
     platformsQ: 'Quais widgets funcionam na Twitch e quais funcionam na Kick?',
     platformsA:
-      'Os treze funcionam nas duas plataformas. Caixa de Chat, Mural de Emotes, Sub Sprout, Subathon Timer, Alertas de Live, Meta de Subs, Enquete do Chat, Contagem Regressiva e Roleta ouvem um canal da Twitch e um da Kick juntos em uma URL. O OBS Bridge ouve comandos dos dois chats, e cada usuário autorizado é adicionado com a sua própria plataforma. O Sorteio roda em uma plataforma por vez, Twitch ou Kick. As Molduras de Live e as Redes Sociais não leem o chat, então funcionam do mesmo jeito em qualquer uma das duas. Na Caixa de Chat, os emotes da 7TV aparecem nas duas plataformas, e os da BTTV e da FFZ só na Twitch.',
+      'Os treze funcionam nas duas plataformas. Caixa de Chat, Mural de Emotes, Sub Sprout, Subathon Timer, Alertas de Live, Meta de Subs, Enquete do Chat, Contagem Regressiva, HUD IRL e Roleta ouvem um canal da Twitch e um da Kick juntos em uma URL. O OBS Bridge ouve comandos dos dois chats, e cada usuário autorizado é adicionado com a sua própria plataforma. O Sorteio roda em uma plataforma por vez, Twitch ou Kick. As Molduras de Live e as Redes Sociais não leem o chat, então funcionam do mesmo jeito em qualquer uma das duas. Na Caixa de Chat, os emotes da 7TV aparecem nas duas plataformas, e os da BTTV e da FFZ só na Twitch.',
     editQ: 'Como mudo um widget depois?',
     editA:
-      'Mude as configurações na página de configuração, copie a URL nova e cole por cima da antiga no campo URL da fonte no OBS. Com Caixa de Chat, Mural de Emotes, Sub Sprout, Subathon Timer, Alertas de Live, Meta de Subs, Enquete do Chat, Molduras de Live, Redes Sociais, Contagem Regressiva e Roleta, se você colar sua URL antiga no campo URL do widget na página de configuração, todas as suas configurações voltam e você não precisa começar do zero.',
+      'Mude as configurações na página de configuração, copie a URL nova e cole por cima da antiga no campo URL da fonte no OBS. Com Caixa de Chat, Mural de Emotes, Sub Sprout, Subathon Timer, Alertas de Live, Meta de Subs, Enquete do Chat, Molduras de Live, Redes Sociais, Contagem Regressiva, HUD IRL e Roleta, se você colar sua URL antiga no campo URL do widget na página de configuração, todas as suas configurações voltam e você não precisa começar do zero.',
     oldUrlsQ: 'As URLs antigas dos meus widgets continuam funcionando?',
     oldUrlsA:
       'Sim. As atualizações são feitas para as URLs existentes não quebrarem: nomes de parâmetros, valores e padrões continuam os mesmos. Por exemplo, o antigo keep=true da Caixa de Chat ainda quer dizer Para sempre, e o Sub Sprout ainda lê os parâmetros antigos channel e platform.',
@@ -2573,6 +2715,8 @@ export const pt: typeof en = {
     lead: 'Recursos novos e correções de bugs no Senchabot Extensions, dos mais novos para os mais antigos. A lista é montada a partir do histórico de commits do projeto no [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).',
     site: 'Site',
     entries: {
+      irlHudLaunch:
+        'Overlay novo: HUD IRL, um HUD estilo videogame para lives IRL. Subs, subs de presente, Bits, Kicks e raids somam o dinheiro que você definir num contador embaixo de um relógio no seu fuso horário, ao lado de um minimapa onde uma seta anda por uma cidade ou um parque inventados, ou pelas ruas de verdade em volta de um lugar que você escolher. Os mods mudam o dinheiro com !hud cash.',
       spinWheelTwoColors:
         'A Roleta pode pintar as fatias com só duas cores, alternando fatia a fatia: laranja e roxo no visual clássico, ou a cor de destaque e a de painel do preset escolhido, onde vem ligado.',
       spinWheelPresets:

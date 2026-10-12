@@ -128,6 +128,10 @@ export const tr: typeof en = {
       tagline:
         'Her abonelik, hediye abonelik, Bits, Kicks ve raid için sesli, animasyonlu bir uyarı.',
     },
+    irlHud: {
+      name: 'IRL HUD',
+      tagline: "IRL yayınlar için oyun tarzı HUD: abonelik, hediye, cheer ve raid'ler para ekler, mini haritayla.",
+    },
     raffle: {
       name: 'Çekiliş',
       tagline: 'İzleyiciler !join gibi bir komutla katılır, kazananı sen çekersin.',
@@ -248,10 +252,10 @@ export const tr: typeof en = {
       "OBS Studio ve tarayıcı kaynağı destekleyen diğer programlarla. Widget URL'sini Tarayıcı Kaynağı olarak ekle ve kurulum sayfasında yazan boyutu kullan.",
     faq4Q: "Twitch ve Kick'i birlikte kullanabilir miyim?",
     faq4A:
-      "Evet. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi, Yayın Geri Sayımı ve Çark tek bir URL'de hem Twitch hem Kick kanalını alır. OBS Bridge da iki sohbeti aynı anda dinleyebilir. Çekiliş ise her seferinde tek bir platformda çalışır.",
+      "Evet. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi, Yayın Geri Sayımı, IRL HUD ve Çark tek bir URL'de hem Twitch hem Kick kanalını alır. OBS Bridge da iki sohbeti aynı anda dinleyebilir. Çekiliş ise her seferinde tek bir platformda çalışır.",
     faq5Q: "Bir widget'ı sonradan nasıl değiştiririm?",
     faq5A:
-      "Kurulum sayfasını aç, widget'ı istediğin gibi ayarla ve Tarayıcı Kaynağı'ndaki URL'yi yenisiyle değiştir. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi, Yayın Çerçeveleri, Sosyal Medya, Yayın Geri Sayımı ve Çark mevcut bir URL'yi de açabilir: URL'yi kurulum sayfasına yapıştır, eski ayarların geri gelsin, sadece istediğini değiştir.",
+      "Kurulum sayfasını aç, widget'ı istediğin gibi ayarla ve Tarayıcı Kaynağı'ndaki URL'yi yenisiyle değiştir. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi, Yayın Çerçeveleri, Sosyal Medya, Yayın Geri Sayımı, IRL HUD ve Çark mevcut bir URL'yi de açabilir: URL'yi kurulum sayfasına yapıştır, eski ayarların geri gelsin, sadece istediğini değiştir.",
     faq6Q: "Güncellemelerden sonra widget URL'm çalışmaya devam eder mi?",
     faq6A:
       'Evet. Güncellemelerde mevcut URL ayarları ve değerleri korunur, yani sahnendeki widget için yeni bir URL almana gerek kalmaz.',
@@ -917,6 +921,137 @@ export const tr: typeof en = {
     faq3Q: 'Aynı anda hem Abone Hedefi hem de Takipçi Hedefi çalıştırabilir miyim?',
     faq3A:
       'Evet! Abone Hedefi ve Takipçi Hedefi OBS depolamasında bağımsız sayımlar tutar ve ayrı URL uç noktaları kullanır.',
+  },
+  irlHud: {
+    breadcrumb: 'IRL HUD Kurulumu',
+    title: 'IRL HUD Kurulumu',
+    intro:
+      "Twitch ve Kick için, IRL yayınlara göre yapılmış oyun tarzı bir HUD. Her abonelik, hediye abonelik, Bits cheer'ı, Kicks hediyesi ve raid, belirlediğin miktarda parayı sayaca ekler; üstünde senin saat dilimindeki saat, yanında da bir okun şehir sokaklarında, park yollarında ya da seçtiğin bir yerin gerçek sokaklarında yürüdüğü bir mini harita durur.",
+    style: 'Stil',
+    styleTip:
+      'Retro, gri saatin altında kalın çerçeveli yeşil $00000350 parayı ve yuvarlak bir mini haritayı gösterir. Modern, yumuşak gölgeli beyaz $1,250 parayı, yeşil kazançları ve köşeleri yuvarlatılmış kare bir mini haritayı gösterir.',
+    styleRetro: 'Retro',
+    styleModern: 'Modern',
+    corner: 'Para Konumu',
+    cornerTip: 'Paranın ve saatin sahnenin hangi köşesinde duracağı.',
+    corners: {
+      tr: 'Sağ Üst',
+      tl: 'Sol Üst',
+      br: 'Sağ Alt',
+      bl: 'Sol Alt',
+    },
+    size: 'Boyut',
+    sizeTip:
+      "Paranın, saatin ve mini haritanın büyüklüğü. %100'de 1080p bir sahneye oturur, Tarayıcı Kaynağı'nın boyutuyla birlikte ölçeklenir.",
+    sizeValue: '%{size}',
+    showClock: 'Saati Göster',
+    showClockTip: 'Paranın üstünde günün saati.',
+    clock12: '12 Saatlik Saat',
+    clock12Tip: '14:30 yerine 2:30 PM gösterir.',
+    timeZone: 'Saat Dilimi',
+    timeZoneTip:
+      'IRL yayında OBS çoğu zaman başka bir yerde çalışır, örneğin bir bulut sunucusunda ya da evdeki bilgisayarda. Bulunduğun yeri seç, saat senin yerel saatini göstersin.',
+    timeZoneLocal: 'OBS bilgisayarının saati',
+    showRadar: 'Mini Harita',
+    showRadarTip:
+      'Sahnenin bir köşesinde, okun sokaklarda ya da yollarda yürüyüp köşelerde döndüğü bir radar. Harita okla birlikte döner, bu yüzden ok hep ileriyi gösterir.',
+    radarCorner: 'Mini Harita Konumu',
+    radarCornerTip: 'Mini haritanın sahnenin hangi köşesinde duracağı. Paradan farklı bir köşe seç.',
+    radarSameCorner: 'Mini harita ve para aynı köşede, bu yüzden üst üste biner.',
+    map: 'Mini Harita Türü',
+    mapTip:
+      "Şehir, bloklar arasındaki sokakları çizer. Park, çimenler, ağaçlar ve göletler arasında kıvrılan yolları çizer. Gerçek Yer, seçtiğin bir yerin etrafındaki sokakları OpenStreetMap'ten çizer.",
+    maps: {
+      urban: 'Şehir',
+      park: 'Park',
+      real: 'Gerçek Yer',
+    },
+    place: 'Yer',
+    placeTip:
+      "Bir sokak, meydan, park ya da semt ara, ya da 41.0256, 28.9744 gibi koordinat yapıştır. Mini harita etrafındaki yaklaşık 500 m'lik sokak ve yolları çizer.",
+    placePlaceholder: 'Yer ara ya da koordinat yapıştır',
+    placeSearch: 'Ara',
+    placeSearching: 'Aranıyor…',
+    placeResults: 'Bulunan yerler',
+    placeNone: 'Yer bulunamadı. Başka bir isim dene ya da koordinat yapıştır.',
+    placeError: 'Arama cevap vermedi. Biraz sonra tekrar dene ya da koordinat yapıştır.',
+    placePicked: 'Mini harita merkezi: {place}',
+    placeNeeded: 'Sokaklarını çizmek için bir yer seç. O zamana kadar mini harita hayali şehri çizer.',
+    placePrivacy: 'İzleyiciler bu yerin etrafındaki sokakları görür, bu yüzden evini değil genel bir bölgeyi seç.',
+    placeCredit: 'Yer arama ve harita verisi © OpenStreetMap katkıcıları',
+    showPops: 'Kazancı Göster',
+    showPopsTip: 'Para her arttığında paranın yanında izleyicinin adıyla +$100 belirir.',
+    sectionMoney: 'Para',
+    start: 'Başlangıç Parası',
+    startTip:
+      "HUD'un başladığı para. Burada yeni bir miktar girersen sayaç bu miktardan baştan başlar; o zamana kadar yayında kazanılan para saklanır.",
+    valuesHint: 'Her birinin eklediği dolar. Birini kapatmak için 0 yap.',
+    perSub: 'Abonelik Başına',
+    perSubTip: "Her yeni abonelik ve yenileme. Twitch'te bu Tier 1 ya da Prime abonelik demek.",
+    perSubKickTip: 'Her yeni abonelik ve yenileme.',
+    perGift: 'Hediye Abonelik Başına',
+    perGiftTip:
+      "Hediyedeki her abonelik ayrı sayılır, yani 5'li bir hediye bu miktarı beş kez ekler.",
+    perBits: '100 Bits Başına',
+    perBitsTip: 'Diğer miktarlar oranına göre ekler, yani 500 Bits bu miktarı beş kez ekler.',
+    perKicks: '100 Kicks Başına',
+    perKicksTip: 'Diğer miktarlar oranına göre ekler, yani 500 Kicks bu miktarı beş kez ekler.',
+    perRaider: 'Raid İzleyicisi Başına',
+    perRaiderTip:
+      "Raid'in getirdiği her izleyici için sayılır, yani 50 kişilik bir raid bu miktarı elli kez ekler. Kick'te raid'e host denir.",
+    tiers: 'Tier 2 ve 3 Daha Çok Sayılır',
+    tiersTip:
+      "Twitch'te Tier 2 abonelik 2, Tier 3 abonelik 5 abonelik kadar para ekler, fiyatlarıyla orantılı.",
+    sectionCommands: 'Sohbet Komutları',
+    commandsIntro: "HUD'u sen ve modların Twitch ya da Kick sohbetinden !hud ile yönetirsiniz.",
+    cmdAdd: 'Para ekler',
+    cmdRemove: "Para düşer, $0'ın altına da inebilir",
+    cmdSet: 'Parayı ayarlar',
+    cmdReset: 'Başlangıç parasına döner',
+    commandsAmounts:
+      'Miktarları 500, 1,500, 2.5k ya da 1m gibi yaz. !hud cash add 500 ve !hud cash remove 500 da çalışır.',
+    previewTitle: 'IRL HUD Önizleme',
+    previewIframeTitle: 'IRL HUD Önizleme',
+    previewHint:
+      "Önizlemede sahte abonelikler, hediyeler, cheer'lar ve raid'ler gelir. Yayında parayı sadece kendi sohbetin ekler.",
+    testTitle: 'Dene:',
+    testViewer: 'Sen',
+    testSub: '+1 Abone',
+    testGift: '+5 Hediye',
+    testBits: '+500 Bits/Kicks',
+    testRaid: '25 Kişilik Raid',
+    testAdd: '+$1,000',
+    testRemove: '−$500',
+    testSet: "$10,000'a Ayarla",
+    testReset: 'Sıfırla',
+    widgetUrlTip:
+      "Daha önce bir widget oluşturduysan URL'sini buraya yapıştır. Ayarların geri yüklenir, istediğini değiştirebilirsin.",
+    widgetUrlPlaceholder: "Düzenlemek için widget URL'sini yapıştır",
+    widgetUrlInvalid: "Bu bir IRL HUD URL'si değil.",
+    browserSourceHintSize: ' (önerilen boyut: 1920×1080, sahnenin tamamı).',
+    guideTitle: 'Yayın Yazılımı Kurulumu (OBS, Streamlabs, XSplit vb.)',
+    guideStep1:
+      'Yayın yazılımında (OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio vb.) bir Tarayıcı Kaynağı ekle.',
+    guideStep2: "Kopyaladığın HUD URL'sini yapıştır.",
+    guideStep3:
+      'Genişliği 1920 ve yüksekliği 1080 olarak ayarla, yani sahnenin boyutu. Para ve mini harita seçtiğin köşelerde durur.',
+    guideStep4:
+      "Yayına geç. Abonelikler, hediyeler, cheer'lar ve raid'ler parayı kendiliğinden ekler, modlar da !hud cash ile düzeltebilir.",
+    faq1Q: 'OBS kapanırsa ya da Tarayıcı Kaynağı yenilenirse ne olur?',
+    faq1A:
+      "Para OBS'in içinde kayıtlı, bu yüzden kaldığı yerden geri gelir. OBS kapalıyken gelen abonelikleri göremez, onları bir mod !hud cash +500 ile ekleyebilir.",
+    faq2Q: 'IRL yayınlarda çalışır mı?',
+    faq2A:
+      'Evet, zaten bunun için yapıldı. IRL görüntünün aktığı sahneye ekle. OBS bir bulut sunucusunda ya da evdeki bilgisayarda çalışıyorsa saat dilimini seç, saat bulunduğun yerin saatini göstersin. HUD dikey olanlar dahil her tuvale sığar.',
+    faq3Q: 'Mini harita nerede olduğumu gösteriyor mu?',
+    faq3A:
+      "Sadece sen istersen. Şehir ve Park, kanal adına göre seçilen hayali haritalardır. Gerçek Yer, seçtiğin yerin etrafındaki sokakları OpenStreetMap'ten çizer; o noktada kalır, seni takip etmez, bu yüzden evini değil genel bir bölgeyi seç.",
+    faq4Q: 'Nasıl baştan başlarım ya da parayı nasıl değiştiririm?',
+    faq4A:
+      "Başlangıç parasına dönmek için sohbete !hud cash reset, istediğin bir miktar için !hud cash 5000, biraz eklemek ya da düşmek için !hud cash +100 ve !hud cash -100 yaz. URL'de yeni bir başlangıç parası da sayacı baştan başlatır.",
+    faq5Q: 'Giriş yapmam ya da hesabımı bağlamam gerekiyor mu?',
+    faq5A:
+      "Hayır. HUD abonelikleri, hediyeleri, Bits'i, Kicks'i, raid'leri ve mod komutlarını herkese açık Twitch ve Kick sohbetinden, giriş yapmamış bir izleyicinin gördüğü gibi okur.",
   },
   frames: {
     breadcrumb: 'Yayın Çerçeveleri Kurulumu',
@@ -1688,6 +1823,8 @@ export const tr: typeof en = {
           poll: 'En fazla 6 seçenekli bir anket için alan. Üstte ya da altta durur, seçenek arttıkça uzar.',
           streamAlerts:
             'Uyarılar bu alanın ortasında tek tek çıkar. Kaynağı büyütürsen uyarı da büyür.',
+          irlHud:
+            'Tam 1080p bir tuval. Para ve mini harita seçtiğin köşelerde durur, dikey bir tuvale de sığar.',
           raffle:
             "Kazanan overlay'i. Konfeti ekranın iki kenarından patlar, kazananın adı ortada çıkar.",
           obsBridge:
@@ -1730,7 +1867,7 @@ export const tr: typeof en = {
       update: {
         title: "Widget'ı sonradan nasıl değiştiririm?",
         p1: "Ayarlar widget adresinin içinde durur, yani bir ayarı değiştirmek yeni bir adres demek. Kurulum sayfasında ayarı değiştir, yeni adresi kopyala, sonra OBS'te kaynağa çift tıklayıp URL alanındaki eski adresin yerine yapıştır.",
-        p2: '[Sohbet Kutusu](/setup/chat-widget), [Emote Duvarı](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Yayın Uyarıları](/setup/stream-alerts), [Abone Hedefi](/setup/sub-goal), [Sohbet Anketi](/setup/chat-poll), [Yayın Çerçeveleri](/setup/stream-frames), [Sosyal Medya](/setup/socials), [Yayın Geri Sayımı](/setup/stream-countdown) ya da [Çark](/setup/spin-wheel) için baştan başlaman gerekmez. Mevcut adresini kurulum sayfasındaki Widget URL alanına yapıştır, kanalların ve bütün ayarların geri yüklenir. Değiştirmek istediğini değiştir ve yeni adresi kopyala.',
+        p2: '[Sohbet Kutusu](/setup/chat-widget), [Emote Duvarı](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Yayın Uyarıları](/setup/stream-alerts), [Abone Hedefi](/setup/sub-goal), [Sohbet Anketi](/setup/chat-poll), [Yayın Çerçeveleri](/setup/stream-frames), [Sosyal Medya](/setup/socials), [Yayın Geri Sayımı](/setup/stream-countdown), [IRL HUD](/setup/irl-hud) ya da [Çark](/setup/spin-wheel) için baştan başlaman gerekmez. Mevcut adresini kurulum sayfasındaki Widget URL alanına yapıştır, kanalların ve bütün ayarların geri yüklenir. Değiştirmek istediğini değiştir ve yeni adresi kopyala.',
         p3: "OBS Bridge'de yapıştırma alanı yok, ayarları kurulum sayfasında yeniden girip yeni araç adresini kopyalarsın. Sahne seçimlerini ve yetkili kullanıcıları araç sayfasında da değiştirebilir, yeni adresi oradaki Güncel URL'yi Kopyala düğmesiyle alabilirsin. Eski adresler çalışmaya devam eder, güncellemek zorunda değilsin.",
       },
       troubleshoot: {
@@ -2507,10 +2644,10 @@ export const tr: typeof en = {
       'OBS Studio ve tarayıcı kaynağı (browser source) destekleyen diğer yayın programlarıyla. Her widget bir web adresi olarak çalışır, kaynağa bu adresi yapıştırırsın. Rehberlerimiz OBS Studio için yazıldı.',
     platformsQ: "Hangi widget'lar Twitch'i, hangileri Kick'i destekliyor?",
     platformsA:
-      "On üçü de iki platformu destekliyor. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi, Yayın Geri Sayımı ve Çark tek adreste Twitch ve Kick kanalını birlikte dinler. OBS Bridge iki sohbetten gelen komutları dinler ve her yetkili kullanıcı kendi platformuyla eklenir. Çekiliş her seferinde tek platformda çalışır, Twitch ya da Kick. Yayın Çerçeveleri ve Sosyal Medya sohbeti okumaz, bu yüzden iki platformda da aynı şekilde çalışır. Sohbet Kutusu'nda 7TV emote'ları iki platformda, BTTV ve FFZ emote'ları sadece Twitch'te görünür.",
+      "On üçü de iki platformu destekliyor. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi, Yayın Geri Sayımı, IRL HUD ve Çark tek adreste Twitch ve Kick kanalını birlikte dinler. OBS Bridge iki sohbetten gelen komutları dinler ve her yetkili kullanıcı kendi platformuyla eklenir. Çekiliş her seferinde tek platformda çalışır, Twitch ya da Kick. Yayın Çerçeveleri ve Sosyal Medya sohbeti okumaz, bu yüzden iki platformda da aynı şekilde çalışır. Sohbet Kutusu'nda 7TV emote'ları iki platformda, BTTV ve FFZ emote'ları sadece Twitch'te görünür.",
     editQ: "Widget'ı sonradan nasıl değiştiririm?",
     editA:
-      "Kurulum sayfasında ayarları değiştir, yeni adresi kopyala ve OBS'te kaynağın URL alanındaki eski adresin yerine yapıştır. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi, Yayın Çerçeveleri, Sosyal Medya, Yayın Geri Sayımı ve Çark'ta eski adresini kurulum sayfasındaki Widget URL alanına yapıştırırsan bütün ayarların geri yüklenir, baştan başlaman gerekmez.",
+      "Kurulum sayfasında ayarları değiştir, yeni adresi kopyala ve OBS'te kaynağın URL alanındaki eski adresin yerine yapıştır. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi, Yayın Çerçeveleri, Sosyal Medya, Yayın Geri Sayımı, IRL HUD ve Çark'ta eski adresini kurulum sayfasındaki Widget URL alanına yapıştırırsan bütün ayarların geri yüklenir, baştan başlaman gerekmez.",
     oldUrlsQ: 'Eski widget adreslerim çalışmaya devam eder mi?',
     oldUrlsA:
       "Evet. Güncellemeler mevcut adresleri bozmayacak şekilde yapılır: parametre adları, değerleri ve varsayılanları değişmez. Örneğin Sohbet Kutusu'ndaki eski keep=true hâlâ Süresiz anlamına gelir ve Sub Sprout eski channel ve platform parametrelerini hâlâ okur.",
@@ -2534,6 +2671,8 @@ export const tr: typeof en = {
     lead: "Senchabot Extensions'a eklenen özellikler ve düzeltilen hatalar, en yenisi en üstte. Liste projenin [GitHub'daki](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) commit geçmişinden hazırlanıyor.",
     site: 'Site',
     entries: {
+      irlHudLaunch:
+        "Yeni overlay: IRL HUD, IRL yayınlar için oyun tarzı bir HUD. Abonelikler, hediye abonelikler, Bits, Kicks ve raid'ler belirlediğin parayı senin saat dilimindeki saatin altındaki sayaca ekler; yanında bir okun hayali bir şehirde, parkta ya da seçtiğin yerin gerçek sokaklarında yürüdüğü bir mini harita durur. Modlar parayı !hud cash ile değiştirir.",
       spinWheelTwoColors:
         "Çark dilimlerini sadece iki renkle, dilim dilim sırayla boyayabiliyor: klasik görünümde turuncu ve mor, seçili preset'te onun vurgu ve panel rengi; preset'le varsayılan olarak açık.",
       spinWheelPresets:

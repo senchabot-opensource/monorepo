@@ -12,6 +12,7 @@ Senchabot Extensions provides 100% free streaming widgets, customizable overlays
 - **Sub Goal** — A goal bar that every sub, resub and gifted sub on Twitch and Kick fills by one, with a trophy when the goal is reached. Mods fix the count from chat.
 - **Stream Frames** — Ready-made webcam, chat and screen frames drawn in the picked preset's look, transparent in the middle.
 - **Stream Countdown** — A countdown for the starting soon, back soon and stream ending scenes, counting down a length or aiming at a time of day, in the picked preset's look.
+- **IRL HUD** — A game-style HUD for IRL streams: subs, gifted subs, Bits, Kicks and raids add cash to a Retro or Modern cash counter, under a clock in your time zone, next to a mini-map where an arrow walks a made-up city or park, or the real streets around a place you pick.
 - **Chat Poll** — A poll that Twitch and Kick chat vote in by typing a number, with live bars, a timer and the winner at the end. Mods run it from chat.
 - **Universal Chat** — A multi-chat widget and stream chat box overlay that combines Twitch and Kick chat into a single on-screen feed with 7TV emotes, badges, and platform indicators.
 - **Raffle Picker** — A chat-based giveaway and raffle tool. Viewers type a keyword to enter; winners are drawn and announced on a live confetti celebration overlay.
@@ -28,6 +29,7 @@ Senchabot Extensions provides 100% free streaming widgets, customizable overlays
 - [Sub Goal](https://extensions.senchabot.com/setup/sub-goal)
 - [Stream Frames](https://extensions.senchabot.com/setup/stream-frames)
 - [Stream Countdown](https://extensions.senchabot.com/setup/stream-countdown)
+- [IRL HUD](https://extensions.senchabot.com/setup/irl-hud)
 - [Chat Poll](https://extensions.senchabot.com/setup/chat-poll)
 - [Universal Chat](https://extensions.senchabot.com/setup/chat-widget)
 - [Raffle Picker](https://extensions.senchabot.com/setup/raffle)
@@ -159,6 +161,28 @@ https://extensions.senchabot.com/widgets/countdown?scene=starting&time=600&prese
 ```
 
 **URL parameters:** `twitch`, `kick` (only for the chat commands), `scene` (`starting` | `break` | `ending` | `pomodoro`), `time` (seconds, 1 to 86400), `at` (a 24-hour time like `21:00`, replaces `time`), `title`, `done`, `doneHold` (seconds the message at zero stays up, 10 by default, 0 keeps it up), `note`, `iconStarting`, `iconBreak`, `iconEnding`, `iconPomodoro` (an emoji or a few characters instead of that scene's icon), `iconUrlStarting`, `iconUrlBreak`, `iconUrlEnding`, `iconUrlPomodoro` (a channel emote image instead of that scene's icon, picked on the setup page), `end` (`text` | `hold` | `hide`), `look` (`card` | `plain`), `preset`, `color` (`purple` | `green` | `red` | `gold` | `cyan` | `pink`, classic only), `bar` (`0` hides it), `motion` (`0` turns animations off), `lang` (`en` | `tr`), `simulate` (`1` runs a fast countdown).
+
+---
+
+### IRL HUD (`/setup/irl-hud`)
+
+A game-style HUD overlay made for IRL streams. Subs, gifted subs, Bits (Twitch), Kicks (Kick) and raids add the dollar amounts you set, and the cash counter rolls up to the new amount.
+
+**How it works:**
+- Listens to Twitch IRC anonymously and Kick's Pusher WebSocket, both in one browser source, through the same event readers as the Subathon Timer.
+- Two styles: `retro` (green `$00000350` under a grey clock in a thick outline, round mini-map) and `modern` (white `$1,250` with a soft shadow, gains in green, rounded square mini-map). The font is Anton from Google Fonts.
+- Separate dollar amounts for Twitch and Kick: per sub, per gifted sub, per 100 Bits or 100 Kicks, and per raider. Any of them can be turned off. Twitch Tier 2 and 3 subs can count as 2 and 5 subs.
+- The clock shows the OBS computer's time, or a picked IANA time zone for OBS running on a cloud server or at home.
+- The mini-map shows an arrow walking streets or paths and turning at the corners, with the map turning under it. It draws a made-up city (`urban`) or park (`park`), seeded by the channel name, or the real streets, paths, buildings, parks and water within about 500 m of a picked place (`real`), from OpenStreetMap data (© OpenStreetMap contributors). The overlay asks the Overpass API once and keeps the result in `localStorage` for 14 days; the setup page finds the place with Nominatim, on an explicit search only, or takes pasted coordinates.
+- The cash is saved in the browser source's `localStorage`, keyed by channel, so a reload or an OBS restart doesn't lose it.
+- The broadcaster and mods change the cash from chat: `!hud cash +500` (`add 500`), `-200` (`remove 200`, can go into a red debt), `10000` (`set 10000`) and `reset`. `!hud money` works the same.
+- The cash and the mini-map are sized for the browser source's short side and anchored to their corners, so a vertical IRL canvas works too.
+
+```
+https://extensions.senchabot.com/widgets/irl-hud?twitch=YOUR_TWITCH_CHANNEL&kick=YOUR_KICK_CHANNEL&style=retro&tz=Europe/Istanbul
+```
+
+**URL parameters:** `twitch`, `kick`, `style` (`retro` | `modern`), `corner` (`tr` | `tl` | `br` | `bl`), `size` (50 to 200, percent), `start` (starting cash), Twitch `tsub` (Tier 1 and Prime), `tgift`, `bits` (per 100), `traid` (per raider), `tiers` (`0` | `1`), Kick `ksub`, `kgift`, `kicks` (per 100), `kraid` (per raider), `clock` (`0` | `1`), `h12` (`0` | `1`), `tz` (IANA time zone), `radar` (`0` | `1`), `radarCorner` (`tr` | `tl` | `br` | `bl`), `map` (`urban` | `park` | `real`), `lat`, `lon` (the real place, for `map=real`), `pops` (`0` | `1`), `simulate` (`1` plays simulated subs).
 
 ---
 
@@ -338,6 +362,7 @@ npm run deploy
 │   │   ├── sub-goal.tsx            # Sub Goal configuration
 │   │   ├── stream-frames.tsx       # Stream Frames configuration
 │   │   ├── stream-countdown.tsx    # Stream Countdown configuration
+│   │   ├── irl-hud.tsx             # IRL HUD configuration
 │   │   ├── chat-poll.tsx           # Chat Poll configuration
 │   │   ├── chat-widget.tsx         # Universal Chat configuration
 │   │   ├── raffle.tsx              # Raffle configuration
@@ -349,6 +374,7 @@ npm run deploy
 │       ├── goal.tsx                # Sub Goal overlay
 │       ├── frame.tsx               # Stream Frames overlay
 │       ├── countdown.tsx           # Stream Countdown overlay
+│       ├── irl-hud.tsx             # IRL HUD overlay
 │       ├── poll.tsx                # Chat Poll overlay
 │       ├── chat-widget.tsx         # Universal Chat overlay
 │       ├── raffle-overlay.tsx      # Raffle winner overlay
