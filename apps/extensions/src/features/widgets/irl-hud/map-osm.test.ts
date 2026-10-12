@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { RetryableFetchError } from '#/lib/fetch-json';
+import { createWalker, seededRandom, stepWalker } from './map-graph';
 import {
   cacheKey,
   loadRealMap,
@@ -107,18 +108,50 @@ describe('realGraph', () => {
     expect(graph.nodes.some((node) => Math.abs(node.y + 200 * PX_PER_M) < 1)).toBe(false);
   });
 
+  it('likes footpaths best and big roads least', () => {
+    const { graph, start } = realGraph(parseOverpass(OVERPASS, LAT, LON));
+    const east = graph.nodes.find(
+      (node) => Math.abs(node.x - 100 * PX_PER_M) < 1 && Math.abs(node.y) < 1,
+    );
+    const weights = east?.links.map((link) => link.weight).sort();
+    // From the east end: back along the street (1) or on along the footway (2.5).
+    expect(weights).toEqual([1, 2.5]);
+    const crossing = graph.nodes[start].links.map((link) => link.weight).sort();
+    expect(crossing).toEqual([0.4, 0.4, 1, 1]);
+  });
+
   it('has nowhere to start without walkable roads', () => {
     expect(realGraph({ roads: [], areas: [] }).start).toBe(-1);
   });
 });
 
 describe('stayNearMiddle', () => {
-  it('lets the walk go anywhere near the middle and pulls it back from the edge', () => {
-    expect(stayNearMiddle({ x: 10, y: 0 }, { x: 1, y: 0 })).toBe(1);
-    const edge = { x: MAP_RADIUS_M * PX_PER_M * 0.8, y: 0 };
-    expect(stayNearMiddle(edge, { x: -1, y: 0 })).toBeGreaterThan(
-      stayNearMiddle(edge, { x: 1, y: 0 }) * 10,
-    );
+  it('lets the walk go anywhere near the place, and back in, but hardly further out', () => {
+    const m = (meters: number) => meters * PX_PER_M;
+    expect(stayNearMiddle({ x: m(10), y: 0 }, { x: m(100), y: 0 })).toBe(1);
+    expect(stayNearMiddle({ x: m(200), y: 0 }, { x: m(180), y: 0 })).toBe(1);
+    expect(stayNearMiddle({ x: m(120), y: 0 }, { x: m(0), y: m(-200) })).toBeLessThan(0.1);
+    expect(stayNearMiddle({ x: m(200), y: 0 }, { x: m(250), y: 0 })).toBeLessThan(0.1);
+  });
+
+  it('keeps a long walk near the place on a real map', () => {
+    // A grid of streets 60 m apart, 600 m wide: plenty of ways to wander off.
+    const step = 60;
+    const lines = Array.from({ length: 11 }, (_, i) => (i - 5) * step);
+    const elements = lines.flatMap((at) => [
+      way({ highway: 'residential' }, ...lines.map((x): [number, number] => [x, at])),
+      way({ highway: 'residential' }, ...lines.map((y): [number, number] => [at, y])),
+    ]);
+    const { graph, start } = realGraph(parseOverpass({ elements }, LAT, LON));
+    const walker = createWalker(graph, start, seededRandom(3), stayNearMiddle);
+    if (!walker) throw new Error('no walker');
+    let farthest = 0;
+    for (let frame = 0; frame < 30 * 600; frame++) {
+      const pose = stepWalker(walker, 1 / 30, 14);
+      farthest = Math.max(farthest, Math.hypot(pose.x, pose.y));
+    }
+    // 10 minutes of walking stays within the limit plus one block.
+    expect(farthest / PX_PER_M).toBeLessThan(140 + step * 1.5);
   });
 });
 

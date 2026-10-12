@@ -343,7 +343,7 @@ URL parameters (all optional):
 
 ## IRL HUD
 
-A game-style HUD for Twitch and Kick, made for IRL streams. Subs, gifted subs, Bits (Twitch), Kicks (Kick) and raids add the dollar amounts the streamer sets, with separate values per platform, and the cash counter rolls up to the new amount. Above it runs the time of day, in a picked time zone for OBS running on a cloud server or a computer at home. A mini-map shows an arrow walking streets or paths, turning at the corners, with the map turning under it so the arrow always points ahead. It draws a made-up city (Urban) or park (Park), picked by the channel name, or the real streets, paths, buildings, parks and water within about 500 m of a place the streamer picks (Real Place), from OpenStreetMap data (© OpenStreetMap contributors) loaded once from the Overpass API and kept in the browser source for 14 days. The setup page finds the place with OpenStreetMap's Nominatim search, or takes pasted coordinates.
+A game-style HUD for Twitch and Kick, made for IRL streams. Subs, gifted subs, Bits (Twitch), Kicks (Kick) and raids add the dollar amounts the streamer sets, with separate values per platform, and the cash counter rolls up to the new amount. Above it runs the time of day, in a picked time zone for OBS running on a cloud server or a computer at home. A mini-map shows an arrow walking streets or paths, turning at the corners, with the map turning under it so the arrow always points ahead. It draws a made-up city (Urban) or park (Park), picked by the channel name, or the real streets, paths, buildings, parks and water within about 350 m of a place the streamer saves (Real Place, starting at the first saved place), from OpenStreetMap data (© OpenStreetMap contributors) loaded once per place from the Overpass API and kept in the browser source for 14 days. On a real place the walk prefers footpaths and stays near the place. The setup page finds places with OpenStreetMap's Nominatim search, or takes pasted coordinates; each saved place has a one-word name mods switch to from chat.
 
 - Widget URL: https://extensions.senchabot.com/widgets/irl-hud?twitch=CHANNEL&kick=CHANNEL
 - Demo with simulated subs: https://extensions.senchabot.com/widgets/irl-hud?simulate=1
@@ -362,6 +362,22 @@ Chat commands for the broadcaster and moderators, on Twitch and Kick:
 | !hud cash reset | Goes back to the starting cash |
 
 `!hud money` works the same as `!hud cash`.
+
+| Command | What it does |
+| --- | --- |
+| !hud map park1 | Switches the mini-map to the saved place named park1 |
+| !hud map urban / !hud map park | Switches to the made-up city or park |
+| !hud map reset | Goes back to the mini-map set in the URL |
+
+The chosen mini-map is saved in the browser source until the URL's starting map changes.
+
+| Command | What it does |
+| --- | --- |
+| !hud walk / !hud run / !hud stay (or stop) | Starts the mini-map arrow walking or running, or stops it |
+| !hud buy water | Buys the market item named water: its price comes off the cash |
+| !hud buy water 3 | Buys three of it |
+
+Market items and prices are set on the setup page. Without enough cash nothing is bought and the price shows with a cross.
 
 Amounts can be written as 500, 1,500, $1500, 2.5k or 1m.
 
@@ -388,7 +404,9 @@ URL parameters (all optional):
 | radar | 0 hides the mini-map | 1 |
 | radarCorner | tr, tl, br, bl: where the mini-map sits | bl |
 | map | urban, park, real: what the mini-map draws | urban |
-| lat, lon | the real place's latitude and longitude, for map=real (rounded to 5 decimals) | none |
+| places | saved places as name:lat,lon joined by ; (one-word names, up to 10, not urban, park or reset); older URLs with lat and lon read as one place named place1 | none |
+| move | walk, run, stay: how the mini-map arrow moves at the start | walk |
+| items | market items as name:price joined by ; (up to 20, prices from 1 to 1000000) | none |
 | pops | 0 hides the +$100 that floats up with the viewer's name | 1 |
 | simulate | 1 plays simulated subs, doesn't read chat and doesn't save | off |
 

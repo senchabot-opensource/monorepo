@@ -16,14 +16,18 @@ export const OVERPASS_URLS = [
   'https://maps.mail.ru/osm/tools/overpass/api/interpreter',
 ];
 /** How far around the point the map reaches, in meters. */
-export const MAP_RADIUS_M = 500;
-/** px per meter: the mini-map shows about 300 m across. */
-export const PX_PER_M = 0.9;
-const MAP_RADIUS_PX = MAP_RADIUS_M * PX_PER_M;
-// Past this share of the radius the walk turns back toward the middle, so the mini-map never
-// runs off the edge of what was loaded.
-const STAY_WITHIN = 0.55;
-const CACHE_PREFIX = 'senchabot.irl-hud.osm:';
+export const MAP_RADIUS_M = 350;
+/** px per meter: the mini-map shows about 175 m across, close enough to follow a park's paths. */
+export const PX_PER_M = 1.6;
+// Past this distance from the place the walk turns back toward it, so the place stays on the
+// mini-map (and the mini-map never runs off the edge of what was loaded).
+const STAY_WITHIN_M = 140;
+const STAY_WITHIN_PX = STAY_WITHIN_M * PX_PER_M;
+// The walk keeps to footpaths where it can, like someone strolling a park, and shies from big
+// roads.
+const ROAD_PREFERENCE: Record<RoadClass, number> = { path: 2.5, minor: 1, major: 0.4 };
+// osm2: maps saved since the zoom-in; older entries were drawn at another scale.
+const CACHE_PREFIX = 'senchabot.irl-hud.osm2:';
 const CACHE_DAYS = 14;
 const FETCH_TIMEOUT_MS = 40_000;
 // A dense city center has thousands; past this the mini-map is a solid grey block anyway.
@@ -188,8 +192,9 @@ export function realGraph(map: RealMap): { graph: MapGraph; start: number } {
       if (!end && (uses.get(key(x, y)) ?? 0) < 2) continue;
       const to = nodeAt(x, y);
       if (points.length >= 2 && to !== from) {
-        nodes[from].links.push({ to, dx: 0, dy: 0, points });
-        nodes[to].links.push({ to: from, dx: 0, dy: 0, points: [...points].reverse() });
+        const weight = ROAD_PREFERENCE[road.cls];
+        nodes[from].links.push({ to, dx: 0, dy: 0, points, weight });
+        nodes[to].links.push({ to: from, dx: 0, dy: 0, points: [...points].reverse(), weight });
       }
       from = to;
       points = [{ x, y }];
@@ -230,12 +235,15 @@ export function realGraph(map: RealMap): { graph: MapGraph; start: number } {
   return { graph: { nodes, tile: null }, start };
 }
 
-/** Keeps the walk near the middle: past the limit, ways that head back in weigh more. */
-export const stayNearMiddle: Steer = (from, direction) => {
-  const distance = Math.hypot(from.x, from.y);
-  if (distance < MAP_RADIUS_PX * STAY_WITHIN) return 1;
-  const inward = -(from.x * direction.x + from.y * direction.y) / (distance || 1);
-  return Math.max(0.05, inward + 1.05) ** 2;
+/**
+ * Keeps the walk near the place: a way that ends within the limit, or closer in than here, is
+ * fine; past the limit, ways that end farther out are all but closed. Judged by where a way ends,
+ * as a winding park path's first step says little about where it goes.
+ */
+export const stayNearMiddle: Steer = (from, to) => {
+  const end = Math.hypot(to.x, to.y);
+  if (end <= STAY_WITHIN_PX || end < Math.hypot(from.x, from.y)) return 1;
+  return 0.02;
 };
 
 /** Storage key per point, rounded like the URL keeps it. */

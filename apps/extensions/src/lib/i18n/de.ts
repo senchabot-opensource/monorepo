@@ -957,15 +957,15 @@ export const de: typeof en = {
     radarSameCorner: 'Minikarte und Geld teilen sich diese Ecke und überlappen sich deshalb.',
     map: 'Stil der Minikarte',
     mapTip:
-      'Stadt zeichnet Straßen zwischen Häuserblocks. Park zeichnet verschlungene Wege zwischen Wiesen, Bäumen und Teichen. Echter Ort zeichnet die Straßen rund um einen Ort deiner Wahl, aus OpenStreetMap.',
+      'Stadt zeichnet Straßen zwischen Häuserblocks. Park zeichnet verschlungene Wege zwischen Wiesen, Bäumen und Teichen. Echter Ort zeichnet die Straßen rund um deinen ersten gespeicherten Ort, aus OpenStreetMap.',
     maps: {
       urban: 'Stadt',
       park: 'Park',
       real: 'Echter Ort',
     },
-    place: 'Ort',
+    place: 'Ort finden',
     placeTip:
-      'Such nach einer Straße, einem Platz, einem Park oder einem Viertel, oder füg Koordinaten wie 41.0256, 28.9744 ein. Die Minikarte zeichnet die Straßen und Wege im Umkreis von etwa 500 m.',
+      'Such nach einer Straße, einem Platz, einem Park oder einem Viertel, oder füg Koordinaten wie 41.0256, 28.9744 ein, und wähl dann ein Ergebnis aus, um es zu speichern. Die Minikarte zeichnet die Straßen und Wege im Umkreis von etwa 350 m.',
     placePlaceholder: 'Ort suchen oder Koordinaten einfügen',
     placeSearch: 'Suchen',
     placeSearching: 'Suche läuft…',
@@ -973,12 +973,41 @@ export const de: typeof en = {
     placeNone: 'Keine Orte gefunden. Versuch einen anderen Namen oder füg Koordinaten ein.',
     placeError:
       'Die Suche hat nicht geantwortet. Versuch es gleich noch mal oder füg Koordinaten ein.',
-    placePicked: 'Mitte der Minikarte: {place}',
     placeNeeded:
-      'Wähl einen Ort, um seine Straßen zu zeichnen. Bis dahin zeichnet die Minikarte die erfundene Stadt.',
+      'Speichere unten einen Ort, um seine Straßen zu zeichnen. Bis dahin zeichnet die Minikarte die erfundene Stadt.',
     placePrivacy:
       'Zuschauer sehen die Straßen rund um diesen Ort, wähl also lieber eine allgemeine Gegend als dein Zuhause.',
     placeCredit: 'Ortssuche und Kartendaten © OpenStreetMap-Mitwirkende',
+    places: 'Gespeicherte Orte',
+    placesTip:
+      'Orte, die die Minikarte zeigen kann, jeder mit einem Namen aus einem Wort. Mods wechseln im Chat mit !hud map und dem Namen zwischen ihnen. Bei Echter Ort startet die Minikarte beim ersten.',
+    placesEmpty:
+      'Noch keine gespeicherten Orte. Füg unten einen hinzu, um im Chat zu ihm zu wechseln.',
+    placesFull: 'Du kannst bis zu {count} Orte speichern.',
+    placeName: 'Name',
+    placeNameTip:
+      'Das Wort, das Mods nach !hud map schreiben: Buchstaben, Zahlen, - oder _, bis zu 20. Lässt du es leer, wird der Ort nach deiner Auswahl benannt.',
+    placeNamePlaceholder: 'park1',
+    placeNameInvalid:
+      'Nimm ein Wort mit bis zu 20 Buchstaben, Zahlen, - oder _. urban, park und reset gehören schon zum Befehl.',
+    placeNameTaken: 'Ein anderer gespeicherter Ort hat schon diesen Namen.',
+    placeStartsHere: 'Startet hier',
+    placeStartHere: 'Hier starten',
+    placeStartHereLabel: 'Minikarte bei {name} starten',
+    placePreview: 'Vorschau',
+    placePreviewLabel: '{name} in der Vorschau zeigen',
+    placeRemove: 'Entfernen',
+    placeRemoveLabel: '{name} entfernen',
+    placesCommand:
+      'Mods wechseln die Minikarte im Chat: !hud map park1 für einen gespeicherten Ort, !hud map urban oder !hud map park für die erfundenen Karten, !hud map reset, um zurückzuspringen.',
+    move: 'Pfeil',
+    moveTip:
+      'Wie sich der Pfeil auf der Minikarte bewegt, wenn das Overlay startet. Du und deine Mods ändern das im Chat mit !hud walk, !hud run und !hud stay.',
+    moves: {
+      walk: 'Gehen',
+      run: 'Rennen',
+      stay: 'Stehen',
+    },
     showPops: 'Geldzuwachs zeigen',
     showPopsTip:
       'Lässt jedes Mal, wenn das Geld steigt, +$100 mit dem Namen des Zuschauers neben dem Geld aufsteigen.',
@@ -1002,12 +1031,39 @@ export const de: typeof en = {
     tiers: 'Tier 2 und 3 zählen mehr',
     tiersTip:
       'Auf Twitch bringt ein Tier-2-Sub das Geld von 2 Subs und ein Tier-3-Sub das von 5, passend zum Preis.',
+    sectionMarket: 'Markt',
+    marketHint:
+      'Items, die du und deine Mods im Chat mit !hud buy und dem Namen des Items kaufen. Der Preis wird vom Geld abgezogen; reicht das Geld nicht, wird nichts gekauft.',
+    items: 'Items',
+    itemsTip:
+      'Was der Markt verkauft. Der Chat schreibt den Namen nach !hud buy, egal ob groß oder klein, und eine Zahl dahinter kauft so viele davon.',
+    itemsEmpty: 'Noch keine Items. Füg unten eins hinzu, etwa Wasser für $100.',
+    itemsFull: 'Du kannst bis zu {count} Items hinzufügen.',
+    itemName: 'Item',
+    itemNameTip:
+      'Was der Chat nach !hud buy schreibt: Buchstaben, Zahlen, Leerzeichen, - und _, bis zu 24 Zeichen.',
+    itemNamePlaceholder: 'wasser',
+    itemPrice: 'Preis',
+    itemAdd: 'Hinzufügen',
+    itemNameInvalid:
+      'Nimm bis zu 24 Buchstaben, Zahlen, Leerzeichen, - oder _, mit mindestens einem Buchstaben.',
+    itemNameTaken: 'Ein anderes Item hat schon diesen Namen.',
+    itemTry: 'Kaufen',
+    itemTryLabel: '{name} in der Vorschau kaufen',
+    itemRemoveLabel: '{name} entfernen',
     sectionCommands: 'Chatbefehle',
     commandsIntro: 'Du und deine Mods steuern das HUD mit !hud aus dem Twitch- oder Kick-Chat.',
     cmdAdd: 'Gibt Geld dazu',
     cmdRemove: 'Zieht Geld ab, auch unter $0',
     cmdSet: 'Setzt das Geld',
     cmdReset: 'Springt aufs Startgeld zurück',
+    cmdMapPlace: 'Wechselt die Minikarte zu einem gespeicherten Ort',
+    cmdMapMadeUp: 'Wechselt zur erfundenen Stadt; !hud map park zum erfundenen Park',
+    cmdMapReset: 'Springt zur Minikarte aus der URL zurück',
+    cmdWalk: 'Lässt den Pfeil gehen; !hud run lässt ihn rennen',
+    cmdStay: 'Hält den Pfeil an, wo er ist',
+    cmdBuy: 'Kauft ein Item: Sein Preis wird vom Geld abgezogen',
+    cmdBuyMany: 'Kauft drei davon',
     commandsAmounts:
       'Beträge schreibst du wie 500, 1,500, 2.5k oder 1m. !hud cash add 500 und !hud cash remove 500 gehen auch.',
     previewTitle: 'Vorschau des IRL-HUDs',
@@ -1022,7 +1078,7 @@ export const de: typeof en = {
     testRaid: 'Raid mit 25',
     testAdd: '+$1,000',
     testRemove: '−$500',
-    testSet: '$10,000 setzen',
+    testMove: 'Stopp / Gehen',
     testReset: 'Reset',
     widgetUrlTip:
       'Schon ein Widget gebaut? Füg seine URL hier ein, um deine Einstellungen zu laden und nur das zu ändern, was du brauchst.',
@@ -1052,6 +1108,12 @@ export const de: typeof en = {
     faq5Q: 'Muss ich mich einloggen oder meinen Account verbinden?',
     faq5A:
       'Nein. Das HUD liest Subs, Gifts, Bits, Kicks, Raids und Mod-Befehle aus deinem öffentlichen Twitch- und Kick-Chat, so wie ein ausgeloggter Zuschauer sie sieht.',
+    faq6Q: 'Kann ich während des Streams zwischen Orten wechseln?',
+    faq6A:
+      'Ja. Speichere jeden Ort mit einem kurzen Namen, etwa park1 und park2. Du und deine Mods schreiben !hud map park1 in den Twitch- oder Kick-Chat, um zu wechseln, !hud map urban oder !hud map park für die erfundenen Karten und !hud map reset, um zur Minikarte aus der URL zurückzuspringen. Die Auswahl wird in OBS gespeichert.',
+    faq7Q: 'Wie funktioniert der Markt?',
+    faq7A:
+      'Füg auf der Einrichtungsseite Items mit einem Preis hinzu, etwa Wasser für $100. Du und deine Mods schreiben !hud buy wasser in den Twitch- oder Kick-Chat oder !hud buy wasser 3 für drei, und der Preis wird vom Geld abgezogen, mit dem Namen des Items daneben. Reicht das Geld nicht, wird nichts gekauft, und der Preis erscheint mit einem Kreuz davor.',
   },
   frames: {
     breadcrumb: 'Stream-Rahmen einrichten',
@@ -2696,6 +2758,10 @@ export const de: typeof en = {
     lead: 'Neue Features und Bugfixes in Senchabot Extensions, das Neueste zuerst. Die Liste ist aus der Commit-Historie des Projekts auf [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) zusammengestellt.',
     site: 'Website',
     entries: {
+      irlHudMarket:
+        'Das IRL-HUD bekommt einen Markt: Füg Items mit Preisen hinzu, und !hud buy wasser zieht den Preis vom Geld ab. Mods halten den Pfeil auf der Minikarte außerdem mit !hud stay an und lassen ihn mit !hud walk und !hud run wieder laufen.',
+      irlHudPlaces:
+        'Das IRL-HUD speichert mehrere Orte für die Minikarte, und Mods wechseln im Chat mit !hud map zwischen ihnen. Echte Orte sind näher herangezoomt, und der Pfeil hält sich an die Wege rund um sie.',
       irlHudLaunch:
         'Neues Overlay: IRL-HUD, ein HUD im Game-Look für IRL-Streams. Subs, Gift-Subs, Bits, Kicks und Raids bringen so viel Geld auf einen Zähler, wie du festlegst, unter einer Uhr in deiner Zeitzone, neben einer Minikarte, auf der ein Pfeil durch eine erfundene Stadt, einen Park oder die echten Straßen rund um einen Ort deiner Wahl läuft. Mods ändern das Geld mit !hud cash.',
       spinWheelTwoColors:

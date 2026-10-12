@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { NOMINATIM_URL, parseCoordinates, searchPlaces } from './place-field';
+import { NOMINATIM_URL, parseCoordinates, searchPlaces, suggestName } from './place-field';
 
 afterEach(() => vi.unstubAllGlobals());
 
@@ -49,5 +49,24 @@ describe('searchPlaces', () => {
   it('throws when Nominatim does not answer, so the field can say so', async () => {
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new TypeError('offline')));
     await expect(searchPlaces('Galata', 'en')).rejects.toThrow();
+  });
+});
+
+describe('suggestName', () => {
+  const taken = [
+    { name: 'galata-tower', lat: 1, lon: 2 },
+    { name: 'place2', lat: 1, lon: 2 },
+  ];
+
+  it('names a found place after the first part of its name', () => {
+    expect(suggestName('Gülhane Parkı, Fatih, İstanbul', [])).toBe('gülhane-parkı');
+    expect(suggestName('Central Park, New York', [])).toBe('central-park');
+  });
+
+  it('falls back to a free placeN for coordinates, a taken name or one that will not do', () => {
+    expect(suggestName(null, [])).toBe('place1');
+    expect(suggestName('Galata Tower, Istanbul', taken)).toBe('place3');
+    expect(suggestName('Park, somewhere', [])).toBe('place1');
+    expect(suggestName('!!!', [])).toBe('place1');
   });
 });

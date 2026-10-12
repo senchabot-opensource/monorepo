@@ -159,7 +159,7 @@ describe('IrlHudWidget', () => {
     render(
       <IrlHudWidget
         twitchChannel="streamer"
-        settings={settings({ map: 'real', lat: 41, lon: 29 })}
+        settings={settings({ map: 'real', places: [{ name: 'home', lat: 41, lon: 29 }] })}
       />,
     );
     expect(radar().dataset.map).toBe('loading');
@@ -175,7 +175,7 @@ describe('IrlHudWidget', () => {
     const first = render(
       <IrlHudWidget
         twitchChannel="streamer"
-        settings={settings({ map: 'real', lat: 40, lon: 30 })}
+        settings={settings({ map: 'real', places: [{ name: 'home', lat: 40, lon: 30 }] })}
       />,
     );
     await act(async () => {});
@@ -193,7 +193,7 @@ describe('IrlHudWidget', () => {
     render(
       <IrlHudWidget
         twitchChannel="streamer"
-        settings={settings({ map: 'real', lat: 39, lon: 32 })}
+        settings={settings({ map: 'real', places: [{ name: 'home', lat: 39, lon: 32 }] })}
       />,
     );
     await act(async () => {});
@@ -208,6 +208,107 @@ describe('IrlHudWidget', () => {
     });
     expect(fetchMock).toHaveBeenCalledTimes(4);
     vi.unstubAllGlobals();
+  });
+
+  it('switches the mini-map from chat to a saved place or a made-up map, and back', async () => {
+    const answer = {
+      elements: [
+        {
+          type: 'way',
+          tags: { highway: 'footway' },
+          geometry: [
+            { lat: 41.0256, lon: 28.9741 },
+            { lat: 41.0258, lon: 28.9746 },
+          ],
+        },
+      ],
+    };
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify(answer)));
+    vi.stubGlobal('fetch', fetchMock);
+    const places = [{ name: 'Galata', lat: 41.0256, lon: 28.9744 }];
+    render(<IrlHudWidget twitchChannel="streamer" settings={settings({ places })} />);
+    expect(radar().dataset.map).toBe('urban');
+
+    receive('twitch', VIEWER_SAYS('!hud map galata'));
+    expect(radar().dataset.map).toBe('urban');
+    receive('twitch', MOD_SAYS('!hud map galata'));
+    await act(async () => {});
+    expect(radar().dataset.map).toBe('real');
+    expect(String(fetchMock.mock.calls[0][0])).toContain(encodeURIComponent('41.0256,28.9744'));
+
+    receive('twitch', MOD_SAYS('!hud map nowhere'));
+    expect(radar().dataset.map).toBe('real');
+    receive('twitch', MOD_SAYS('!hud map park'));
+    expect(radar().dataset.map).toBe('park');
+    receive('twitch', MOD_SAYS('!hud map reset'));
+    expect(radar().dataset.map).toBe('urban');
+    vi.unstubAllGlobals();
+  });
+
+  it('buys from the market when the cash covers it, and refuses when it does not', () => {
+    const items = [
+      { name: 'water', price: 100 },
+      { name: 'Energy Drink', price: 400 },
+    ];
+    render(<IrlHudWidget twitchChannel="streamer" settings={settings({ start: 500, items })} />);
+
+    receive('twitch', VIEWER_SAYS('!hud buy water'));
+    expect(money()).toBe(500);
+    receive('twitch', MOD_SAYS('!hud buy WATER'));
+    expect(money()).toBe(400);
+    expect(pops()).toContain('-$100');
+    expect(pops()).toContain('water');
+
+    receive('twitch', MOD_SAYS('!hud buy energy drink 2'));
+    expect(money()).toBe(400);
+    const refused = document.querySelector<HTMLElement>('[data-declined]');
+    expect(refused?.textContent).toContain('✕ $800');
+    expect(refused?.textContent).toContain('Energy Drink x2');
+
+    receive('twitch', MOD_SAYS('!hud buy water 4'));
+    expect(money()).toBe(0);
+    receive('twitch', MOD_SAYS('!hud buy pizza'));
+    expect(money()).toBe(0);
+  });
+
+  it('walks, runs and stays on command, and keeps that through a reload', () => {
+    const first = render(<IrlHudWidget twitchChannel="streamer" settings={settings()} />);
+    expect(hud().dataset.move).toBe('walk');
+    receive('twitch', MOD_SAYS('!hud run'));
+    expect(hud().dataset.move).toBe('run');
+    receive('twitch', MOD_SAYS('!hud stop'));
+    expect(hud().dataset.move).toBe('stay');
+    receive('twitch', VIEWER_SAYS('!hud walk'));
+    expect(hud().dataset.move).toBe('stay');
+    first.unmount();
+
+    const again = render(<IrlHudWidget twitchChannel="streamer" settings={settings()} />);
+    expect(hud().dataset.move).toBe('stay');
+    again.unmount();
+
+    // The setup now starts the arrow standing still: the old chat choice no longer applies.
+    render(<IrlHudWidget twitchChannel="streamer" settings={settings({ move: 'stay' })} />);
+    expect(hud().dataset.move).toBe('stay');
+    receive('twitch', MOD_SAYS('!hud walk'));
+    expect(hud().dataset.move).toBe('walk');
+  });
+
+  it('keeps the chosen mini-map through a reload, until the URL starts on another one', () => {
+    const places = [{ name: 'park1', lat: 41, lon: 29 }];
+    const first = render(<IrlHudWidget twitchChannel="streamer" settings={settings({ places })} />);
+    receive('twitch', MOD_SAYS('!hud map park'));
+    first.unmount();
+
+    const again = render(<IrlHudWidget twitchChannel="streamer" settings={settings({ places })} />);
+    expect(radar().dataset.map).toBe('park');
+    expect(saved().map).toEqual({ choice: 'park', from: 'urban' });
+    again.unmount();
+
+    // The setup now starts the mini-map on the park itself: the old chat choice no longer applies.
+    render(<IrlHudWidget twitchChannel="streamer" settings={settings({ places, map: 'park' })} />);
+    expect(radar().dataset.map).toBe('park');
+    receive('twitch', MOD_SAYS('!hud map urban'));
+    expect(radar().dataset.map).toBe('urban');
   });
 
   it('draws Modern cash with commas and moves the mini-map to its corner', () => {

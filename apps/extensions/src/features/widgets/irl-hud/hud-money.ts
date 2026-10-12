@@ -9,6 +9,10 @@ export interface HudState {
   money: number;
   /** The URL's starting amount this one was built on. */
   start: number;
+  /** The mini-map a mod picked with !hud map, and the URL's starting map it was picked over. */
+  map?: { choice: string; from: string };
+  /** The arrow's movement a mod picked with !hud walk/run/stay, and the URL's it replaced. */
+  move?: { choice: string; from: string };
 }
 
 export const clampMoney = (n: number) => Math.max(MIN_MONEY, Math.min(MAX_MONEY, Math.round(n)));
@@ -20,12 +24,25 @@ export const createHud = (start: number): HudState => ({ money: clampMoney(start
  * amount means "the money is this now".
  */
 export const followStart = (saved: HudState, start: number): HudState =>
-  saved.start === start ? saved : createHud(start);
+  saved.start === start ? saved : { ...createHud(start), map: saved.map, move: saved.move };
 
 export function isHudState(value: unknown): value is HudState {
   if (!value || typeof value !== 'object') return false;
   const s = value as Record<string, unknown>;
-  return Number.isInteger(s.money) && Number.isInteger(s.start);
+  // A choice saved with its starting value: { choice, from }, both strings; or nothing.
+  const choiceOk = (value: unknown) => {
+    if (value === undefined) return true;
+    const c = value as Record<string, unknown> | null;
+    return (
+      typeof c === 'object' &&
+      c !== null &&
+      typeof c.choice === 'string' &&
+      typeof c.from === 'string'
+    );
+  };
+  return (
+    Number.isInteger(s.money) && Number.isInteger(s.start) && choiceOk(s.map) && choiceOk(s.move)
+  );
 }
 
 // Tier 2 and Tier 3 cost about 2x and 5x a Tier 1 sub.
@@ -107,7 +124,8 @@ export function parseCashCommand(message: string): CashCommand | null {
   if (typed?.toLowerCase() !== COMMAND || !CASH_WORDS.has(part.toLowerCase())) return null;
   const lower = word.toLowerCase();
   if (lower === 'reset') return { action: 'reset' };
-  const named = CASH_ACTIONS[lower];
+  // Own words only: "!hud cash constructor 5" names no action.
+  const named = Object.hasOwn(CASH_ACTIONS, lower) ? CASH_ACTIONS[lower] : undefined;
   if (named) {
     const amount = parseAmount(rest.join(''));
     return amount === null ? null : { action: named, amount };

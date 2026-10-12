@@ -990,27 +990,56 @@ export const fr: typeof en = {
     radarSameCorner: "La mini-carte et l'argent partagent ce coin, donc ils se chevauchent.",
     map: 'Style de la mini-carte',
     mapTip:
-      "Ville dessine les rues d'une ville entre des pâtés de maisons. Parc dessine des allées sinueuses entre des pelouses, des arbres et des étangs. Lieu réel dessine les rues autour d'un lieu que tu choisis, à partir d'OpenStreetMap.",
+      "Ville dessine les rues d'une ville entre des pâtés de maisons. Parc dessine des allées sinueuses entre des pelouses, des arbres et des étangs. Lieu réel dessine les rues autour de ton premier lieu enregistré, à partir d'OpenStreetMap.",
     maps: {
       urban: 'Ville',
       park: 'Parc',
       real: 'Lieu réel',
     },
-    place: 'Lieu',
+    place: 'Trouver un lieu',
     placeTip:
-      "Cherche une rue, une place, un parc ou un quartier, ou colle des coordonnées comme 41.0256, 28.9744. La mini-carte dessine les rues et les allées dans un rayon d'environ 500 m autour.",
+      "Cherche une rue, une place, un parc ou un quartier, ou colle des coordonnées comme 41.0256, 28.9744, puis choisis un résultat pour l'enregistrer. La mini-carte dessine les rues et les allées dans un rayon d'environ 350 m autour.",
     placePlaceholder: 'Cherche un lieu ou colle des coordonnées',
     placeSearch: 'Rechercher',
     placeSearching: 'Recherche en cours…',
     placeResults: 'Lieux trouvés',
     placeNone: 'Aucun lieu trouvé. Essaie un autre nom, ou colle des coordonnées.',
     placeError: "La recherche n'a pas répondu. Réessaie dans un instant, ou colle des coordonnées.",
-    placePicked: 'Centre de la mini-carte : {place}',
     placeNeeded:
-      "Choisis un lieu pour dessiner ses rues. D'ici là, la mini-carte dessine la ville imaginaire.",
+      "Enregistre un lieu ci-dessous pour dessiner ses rues. D'ici là, la mini-carte dessine la ville imaginaire.",
     placePrivacy:
       'Les viewers voient les rues autour de ce lieu, alors choisis une zone générale plutôt que ton domicile.',
     placeCredit: 'Recherche de lieux et données cartographiques © contributeurs OpenStreetMap',
+    places: 'Lieux enregistrés',
+    placesTip:
+      "Les lieux que la mini-carte peut afficher, chacun avec un nom d'un seul mot. Les modos passent de l'un à l'autre depuis le chat avec !hud map et le nom. Avec Lieu réel, la mini-carte démarre sur le premier.",
+    placesEmpty:
+      "Aucun lieu enregistré pour l'instant. Ajoutes-en un ci-dessous pour y passer depuis le chat.",
+    placesFull: "Tu peux enregistrer jusqu'à {count} lieux.",
+    placeName: 'Nom',
+    placeNameTip:
+      "Le mot que les modos tapent après !hud map : des lettres, des chiffres, - ou _, jusqu'à 20. Laisse-le vide et le lieu prend le nom de ce que tu choisis.",
+    placeNamePlaceholder: 'park1',
+    placeNameInvalid:
+      'Utilise un seul mot de 20 lettres, chiffres, - ou _ au maximum. urban, park et reset sont réservés à la commande.',
+    placeNameTaken: 'Un autre lieu enregistré porte déjà ce nom.',
+    placeStartsHere: 'Point de départ',
+    placeStartHere: 'Démarrer ici',
+    placeStartHereLabel: 'Démarrer la mini-carte sur {name}',
+    placePreview: 'Aperçu',
+    placePreviewLabel: "Afficher {name} dans l'aperçu",
+    placeRemove: 'Retirer',
+    placeRemoveLabel: 'Retirer {name}',
+    placesCommand:
+      'Les modos changent la mini-carte depuis le chat : !hud map park1 pour un lieu enregistré, !hud map urban ou !hud map park pour les cartes imaginaires, !hud map reset pour revenir en arrière.',
+    move: 'Flèche',
+    moveTip:
+      "Comment la flèche de la mini-carte se déplace au lancement de l'overlay. Toi et tes modos la changez depuis le chat avec !hud walk, !hud run et !hud stay.",
+    moves: {
+      walk: 'Marche',
+      run: 'Course',
+      stay: "À l'arrêt",
+    },
     showPops: 'Afficher les gains',
     showPopsTip:
       "Fait monter un +$100 avec le pseudo du viewer à côté de l'argent chaque fois qu'il augmente.",
@@ -1037,12 +1066,39 @@ export const fr: typeof en = {
     tiers: 'Niveaux 2 et 3 comptent plus',
     tiersTip:
       "Sur Twitch, un sub Niveau 2 ajoute l'argent de 2 subs et un sub Niveau 3 celui de 5, en fonction de leur prix.",
+    sectionMarket: 'Marché',
+    marketHint:
+      "Des objets que toi et tes modos achetez depuis le chat avec !hud buy et le nom de l'objet. Le prix est retiré de l'argent ; sans assez d'argent, rien n'est acheté.",
+    items: 'Objets',
+    itemsTip:
+      'Ce que vend le marché. Le chat tape le nom après !hud buy, en majuscules ou en minuscules, et un nombre derrière en achète autant.',
+    itemsEmpty: "Aucun objet pour l'instant. Ajoutes-en un ci-dessous, comme eau à $100.",
+    itemsFull: "Tu peux ajouter jusqu'à {count} objets.",
+    itemName: 'Objet',
+    itemNameTip:
+      "Ce que le chat tape après !hud buy : des lettres, des chiffres, des espaces, - et _, jusqu'à 24 caractères.",
+    itemNamePlaceholder: 'eau',
+    itemPrice: 'Prix',
+    itemAdd: 'Ajouter',
+    itemNameInvalid:
+      "Utilise jusqu'à 24 lettres, chiffres, espaces, - ou _, avec au moins une lettre.",
+    itemNameTaken: 'Un autre objet porte déjà ce nom.',
+    itemTry: 'Acheter',
+    itemTryLabel: "Acheter {name} dans l'aperçu",
+    itemRemoveLabel: 'Retirer {name}',
     sectionCommands: 'Commandes du chat',
     commandsIntro: 'Toi et tes modos pilotez le HUD depuis le chat Twitch ou Kick avec !hud.',
     cmdAdd: "Ajoute de l'argent",
     cmdRemove: "Retire de l'argent, même en dessous de $0",
     cmdSet: "Définit l'argent",
     cmdReset: "Revient à l'argent de départ",
+    cmdMapPlace: 'Passe la mini-carte sur un lieu enregistré',
+    cmdMapMadeUp: 'Passe à la ville imaginaire ; !hud map park au parc imaginaire',
+    cmdMapReset: "Revient à la mini-carte définie dans l'URL",
+    cmdWalk: 'Fait marcher la flèche ; !hud run la fait courir',
+    cmdStay: 'Arrête la flèche là où elle est',
+    cmdBuy: "Achète un objet : son prix est retiré de l'argent",
+    cmdBuyMany: 'En achète trois',
     commandsAmounts:
       'Écris les montants comme 500, 1,500, 2.5k ou 1m. !hud cash add 500 et !hud cash remove 500 marchent aussi.',
     previewTitle: 'Aperçu du HUD IRL',
@@ -1057,7 +1113,7 @@ export const fr: typeof en = {
     testRaid: 'Raid de 25',
     testAdd: '+$1,000',
     testRemove: '−$500',
-    testSet: 'Mettre à $10,000',
+    testMove: 'Arrêter / Marcher',
     testReset: 'Réinitialiser',
     widgetUrlTip:
       'Tu as déjà un widget ? Colle son URL ici pour charger tes réglages et changer ce dont tu as besoin.',
@@ -1087,6 +1143,12 @@ export const fr: typeof en = {
     faq5Q: 'Faut-il me connecter ou relier mon compte ?',
     faq5A:
       'Non. Le HUD lit les subs, les subs offerts, les Bits, les Kicks, les raids et les commandes des modos dans ton chat public Twitch et Kick, comme les voit un viewer non connecté.',
+    faq6Q: "Est-ce que je peux passer d'un lieu à l'autre pendant le stream ?",
+    faq6A:
+      "Oui. Enregistre chaque lieu avec un nom court, comme park1 et park2. Toi et tes modos tapez !hud map park1 dans le chat Twitch ou Kick pour changer, !hud map urban ou !hud map park pour les cartes imaginaires, et !hud map reset pour revenir à la mini-carte de l'URL. Le choix est enregistré dans OBS.",
+    faq7Q: 'Comment fonctionne le marché ?',
+    faq7A:
+      "Ajoute des objets avec un prix sur la page de configuration, comme eau à $100. Toi et tes modos tapez !hud buy eau dans le chat Twitch ou Kick, ou !hud buy eau 3 pour en acheter trois, et le prix est retiré de l'argent avec le nom de l'objet à côté. S'il n'y a pas assez d'argent, rien n'est acheté et le prix s'affiche avec une croix.",
   },
   frames: {
     breadcrumb: 'Configuration des Cadres de stream',
@@ -2741,6 +2803,10 @@ export const fr: typeof en = {
     lead: "Les nouvelles fonctionnalités et corrections de bugs de Senchabot Extensions, des plus récentes aux plus anciennes. La liste est tirée de l'historique des commits du projet sur [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      irlHudMarket:
+        "Le HUD IRL a maintenant un marché : ajoute des objets avec un prix, et !hud buy eau retire le prix de l'argent. Les modos arrêtent et relancent aussi la flèche de la mini-carte avec !hud stay, !hud walk et !hud run.",
+      irlHudPlaces:
+        "Le HUD IRL enregistre plusieurs lieux pour la mini-carte, et les modos passent de l'un à l'autre depuis le chat avec !hud map. Les lieux réels s'affichent de plus près, et la flèche reste sur les chemins autour d'eux.",
       irlHudLaunch:
         "Nouvel overlay : le HUD IRL, un HUD façon jeu vidéo pour les streams IRL. Les subs, subs offerts, Bits, Kicks et raids ajoutent les montants que tu choisis à un compteur d'argent sous une horloge à ton fuseau horaire, à côté d'une mini-carte où une flèche parcourt une ville ou un parc imaginaires, ou les vraies rues autour d'un lieu de ton choix. Les modos changent l'argent avec !hud cash.",
       spinWheelTwoColors:

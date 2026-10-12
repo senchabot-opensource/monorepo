@@ -1,6 +1,7 @@
 import { type CSSProperties, useEffect, useMemo, useRef, useState } from 'react';
 import type { HudCorner, HudSettings, HudStyle } from '#/lib/irl-hud-url';
 import type { SubathonPlatform } from '../subathon/subathon-events';
+import { chosenView, MOVE_SPEED, startingView, startKey } from './hud-map';
 import { formatChange, formatMoney } from './hud-money';
 import { HudRadar, RADAR_CSS } from './hud-radar';
 import { hashSeed } from './map-graph';
@@ -211,10 +212,14 @@ function Pops({ pops, look, corner }: { pops: HudPop[]; look: StyleLook; corner:
           key={pop.id}
           className="ih-pop"
           data-platform={pop.platform}
-          style={{ flexDirection: right ? 'row-reverse' : 'row' }}
+          data-declined={pop.declined || undefined}
+          style={{ flexDirection: right ? 'row-reverse' : 'row', opacity: pop.declined ? 0.75 : 1 }}
         >
           <Outlined
-            text={formatChange(pop.amount)}
+            // A refused purchase shows its price behind a cross: nothing came off the cash.
+            text={
+              pop.declined ? `✕ ${formatChange(-pop.amount).slice(1)}` : formatChange(pop.amount)
+            }
             color={pop.amount < 0 ? look.loss : look.gain}
             size={look.popSize}
             outline={look.outline}
@@ -264,16 +269,23 @@ export function IrlHudWidget({
   simPlatform,
   previewId,
 }: IrlHudWidgetProps) {
-  const { money, pops } = useIrlHud({
+  const { money, pops, mapChoice, move } = useIrlHud({
     twitch: twitchChannel,
     kick: kickChannel,
     start: settings.start,
     values: settings,
+    places: settings.places,
+    startMap: startKey(settings),
+    startMove: settings.move,
+    items: settings.items,
     simulate,
     simPlatform,
     previewId,
   });
   const shown = useRolling(money);
+  // A mod's !hud map choice, while it still names a saved place or a made-up map; else the URL's.
+  const view = (mapChoice && chosenView(mapChoice, settings.places)) || startingView(settings);
+  const place = view.map === 'real' ? view.place : null;
   const scale = useShortSideScale();
   const look = LOOKS[settings.style];
   const zoom = (scale * settings.size) / 100;
@@ -286,6 +298,7 @@ export function IrlHudWidget({
       data-style={settings.style}
       data-corner={corner}
       data-money={money}
+      data-move={move}
     >
       <style>{CSS}</style>
       <div
@@ -309,10 +322,11 @@ export function IrlHudWidget({
       {settings.radar && (
         <HudRadar
           style={settings.style}
-          map={settings.map}
+          map={view.map}
           seed={hashSeed(twitchChannel || kickChannel || 'senchabot')}
-          lat={settings.lat}
-          lon={settings.lon}
+          lat={place?.lat ?? null}
+          lon={place?.lon ?? null}
+          speed={MOVE_SPEED[move]}
           place={cornerPlace(settings.radarCorner, scale, zoom)}
         />
       )}
