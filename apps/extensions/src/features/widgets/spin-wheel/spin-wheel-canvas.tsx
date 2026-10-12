@@ -1,6 +1,9 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Frame, panelStyle } from '#/features/presets/frame';
+import { findPreset } from '#/features/presets/registry';
+import { rgba, type Skin, shade, titleStyle } from '#/features/presets/skin';
 import type { SpinSlice } from './spin-logic';
 
 export interface StandaloneSpin {
@@ -18,27 +21,106 @@ interface SpinWheelCanvasProps {
   soundEnabled?: boolean;
   winnerTitle?: string;
   showWinnerCard?: boolean;
+  /** A preset's look; null keeps the classic gold trim. */
+  skin?: Skin | null;
+}
+
+interface WheelTheme {
+  rimBase: string;
+  rimColor: string;
+  studColor: string;
+  studBorder: string;
+  hubFill: string;
+  hubBorder: string;
+  hubBadge: string;
+  pointerColor: string;
+  pointerBorder: string;
+  sliceBorder: string;
+  /** Label colors on dark and on light slices. */
+  lightText: string;
+  darkText: string;
+  /** Label weight and font stack, as the canvas `font` takes them. */
+  fontWeight: string;
+  fontFamily: string;
 }
 
 /** Fixed gold-trim look ported from the dashboard wheel theme. */
-const THEME = {
+const CLASSIC_THEME: WheelTheme = {
   rimBase: '#1E1E24',
   rimColor: '#D4AF37',
   studColor: '#FFF8DC',
   studBorder: '#8B6508',
+  hubFill: '#111827',
   hubBorder: '#D4AF37',
   hubBadge: '#D4AF37',
   pointerColor: '#EF4444',
   pointerBorder: '#FFFFFF',
-} as const;
+  sliceBorder: 'rgba(255, 255, 255, 0.4)',
+  lightText: '#FFFFFF',
+  darkText: '#111827',
+  fontWeight: 'bold',
+  fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+};
 
-function getContrastTextColor(hexColor: string): string {
+/**
+ * The boldest weight up to 700 that a preset's font ships, from its Google Fonts `wght` spec
+ * ("400..900" or "400;700"): asking a canvas for a weight the font lacks makes it fake one.
+ */
+export function labelWeight(weights: string): number {
+  const [low, high] = weights.split('..').map(Number);
+  if (high !== undefined) return Math.max(low ?? 400, Math.min(700, high));
+  const listed = weights.split(';').map(Number);
+  const fitting = listed.filter((weight) => weight <= 700);
+  return fitting.length > 0 ? Math.max(...fitting) : Math.min(...listed);
+}
+
+/** The wheel in a preset: its frame metal for the rim and studs, its accent for the pointer. */
+function themeFor(skin: Skin): WheelTheme {
+  const { colors } = skin;
+  const weights = findPreset(skin.id)?.data.fonts.display.weights ?? '400';
+  return {
+    rimBase: colors.panel2,
+    rimColor: skin.frame,
+    studColor: skin.frame,
+    studBorder: skin.frame2,
+    hubFill: colors.panel2,
+    hubBorder: skin.frame,
+    hubBadge: shade(skin.accent, 55),
+    pointerColor: shade(skin.accent, 55),
+    pointerBorder: skin.frame,
+    sliceBorder: rgba(skin.frame, 0.45),
+    lightText: skin.text,
+    darkText: colors.panel2,
+    fontWeight: String(labelWeight(weights)),
+    fontFamily: skin.display,
+  };
+}
+
+/** How tall a font's lowercase letters stand, as a share of its size; 0 when it can't tell. */
+function xHeight(ctx: CanvasRenderingContext2D, weight: string, family: string): number {
+  ctx.font = `${weight} 100px ${family}`;
+  return (ctx.measureText('x').actualBoundingBoxAscent || 0) / 100;
+}
+
+/**
+ * How much bigger a preset's labels are set so their letters stand as tall as the classic
+ * font's: condensed and pixel display fonts like Teko and Jersey 10 run small at one size.
+ */
+function labelScale(ctx: CanvasRenderingContext2D, theme: WheelTheme): number {
+  if (theme === CLASSIC_THEME) return 1;
+  const own = xHeight(ctx, theme.fontWeight, theme.fontFamily);
+  const classic = xHeight(ctx, CLASSIC_THEME.fontWeight, CLASSIC_THEME.fontFamily);
+  return own > 0 && classic > 0 ? Math.min(1.4, Math.max(1, classic / own)) : 1;
+}
+
+/** Whether a slice color is light enough to want dark text. */
+function isLight(hexColor: string): boolean {
   const hex = hexColor.replace('#', '');
-  if (hex.length !== 6) return '#FFFFFF';
+  if (hex.length !== 6) return false;
   const r = Number.parseInt(hex.substring(0, 2), 16);
   const g = Number.parseInt(hex.substring(2, 4), 16);
   const b = Number.parseInt(hex.substring(4, 6), 16);
-  return (r * 299 + g * 587 + b * 114) / 1000 >= 140 ? '#111827' : '#FFFFFF';
+  return (r * 299 + g * 587 + b * 114) / 1000 >= 140;
 }
 
 class WheelAudio {
@@ -109,7 +191,9 @@ export function SpinWheelCanvas({
   soundEnabled = true,
   winnerTitle = 'Winner!',
   showWinnerCard = true,
+  skin = null,
 }: SpinWheelCanvasProps) {
+  const theme = useMemo(() => (skin ? themeFor(skin) : CLASSIC_THEME), [skin]);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const currentAngleRef = useRef(0);
   const animFrameRef = useRef<number | null>(null);
@@ -158,16 +242,17 @@ export function SpinWheelCanvas({
       const radius = center - 24 * dpr;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const labelBoost = labelScale(ctx, theme);
       ctx.save();
       ctx.translate(center, center);
       ctx.rotate((rotationAngleDegrees * Math.PI) / 180);
 
       ctx.beginPath();
       ctx.arc(0, 0, radius + 10 * dpr, 0, 2 * Math.PI);
-      ctx.fillStyle = THEME.rimBase;
+      ctx.fillStyle = theme.rimBase;
       ctx.fill();
       ctx.lineWidth = 8 * dpr;
-      ctx.strokeStyle = THEME.rimColor;
+      ctx.strokeStyle = theme.rimColor;
       ctx.stroke();
 
       if (slices.length === 0) {
@@ -187,7 +272,7 @@ export function SpinWheelCanvas({
           ctx.fillStyle = item.color;
           ctx.fill();
           ctx.lineWidth = 2 * dpr;
-          ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+          ctx.strokeStyle = theme.sliceBorder;
           ctx.stroke();
 
           ctx.save();
@@ -195,10 +280,9 @@ export function SpinWheelCanvas({
           ctx.textAlign = 'right';
           ctx.textBaseline = 'middle';
 
-          const textColor = getContrastTextColor(item.color);
-          ctx.fillStyle = textColor;
-          ctx.shadowColor =
-            textColor === '#FFFFFF' ? 'rgba(0, 0, 0, 0.55)' : 'rgba(255, 255, 255, 0.45)';
+          const light = isLight(item.color);
+          ctx.fillStyle = light ? theme.darkText : theme.lightText;
+          ctx.shadowColor = light ? 'rgba(255, 255, 255, 0.45)' : 'rgba(0, 0, 0, 0.55)';
           ctx.shadowBlur = 2 * dpr;
           ctx.shadowOffsetY = 1 * dpr;
 
@@ -211,19 +295,17 @@ export function SpinWheelCanvas({
             Math.floor(innerLimit * Math.sin(sliceAngle / 2) * 1.8),
           );
           let currentFontSize = Math.min(
-            Math.max(11, Math.min(18, Math.floor(radius / 11))) * dpr,
+            Math.max(11, Math.min(18, Math.floor(radius / 11))) * dpr * labelBoost,
             maxFontForArc,
           );
-          const fontStack =
-            'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-          ctx.font = `bold ${currentFontSize}px ${fontStack}`;
+          ctx.font = `${theme.fontWeight} ${currentFontSize}px ${theme.fontFamily}`;
 
           let label = item.label.trim() || 'Option';
           const minFontSize = 10 * dpr;
           if (ctx.measureText(label).width > maxTextWidth && currentFontSize > minFontSize) {
             const scale = maxTextWidth / ctx.measureText(label).width;
             currentFontSize = Math.max(minFontSize, Math.floor(currentFontSize * scale));
-            ctx.font = `bold ${currentFontSize}px ${fontStack}`;
+            ctx.font = `${theme.fontWeight} ${currentFontSize}px ${theme.fontFamily}`;
           }
           if (ctx.measureText(label).width > maxTextWidth) {
             let truncated = label;
@@ -248,10 +330,10 @@ export function SpinWheelCanvas({
           0,
           2 * Math.PI,
         );
-        ctx.fillStyle = THEME.studColor;
+        ctx.fillStyle = theme.studColor;
         ctx.fill();
         ctx.lineWidth = 1.5 * dpr;
-        ctx.strokeStyle = THEME.studBorder;
+        ctx.strokeStyle = theme.studBorder;
         ctx.stroke();
       }
 
@@ -264,14 +346,14 @@ export function SpinWheelCanvas({
       ctx.shadowOffsetY = 2 * dpr;
       ctx.beginPath();
       ctx.arc(center, center, hubRadius, 0, 2 * Math.PI);
-      ctx.fillStyle = '#111827';
+      ctx.fillStyle = theme.hubFill;
       ctx.fill();
       ctx.lineWidth = 3.5 * dpr;
-      ctx.strokeStyle = THEME.hubBorder;
+      ctx.strokeStyle = theme.hubBorder;
       ctx.stroke();
       ctx.beginPath();
       ctx.arc(center, center, 16 * dpr, 0, 2 * Math.PI);
-      ctx.fillStyle = THEME.hubBadge;
+      ctx.fillStyle = theme.hubBadge;
       ctx.fill();
       ctx.restore();
 
@@ -287,14 +369,14 @@ export function SpinWheelCanvas({
       ctx.shadowColor = 'rgba(0, 0, 0, 0.6)';
       ctx.shadowBlur = 8 * dpr;
       ctx.shadowOffsetY = 4 * dpr;
-      ctx.fillStyle = THEME.pointerColor;
+      ctx.fillStyle = theme.pointerColor;
       ctx.fill();
       ctx.lineWidth = 2.5 * dpr;
-      ctx.strokeStyle = THEME.pointerBorder;
+      ctx.strokeStyle = theme.pointerBorder;
       ctx.stroke();
       ctx.restore();
     },
-    [slices, numSlices, size, sliceAngle],
+    [slices, numSlices, size, sliceAngle, theme],
   );
 
   const drawWheelRef = useRef(drawWheel);
@@ -312,6 +394,15 @@ export function SpinWheelCanvas({
   useEffect(() => {
     drawWheel(currentAngleRef.current);
   }, [drawWheel]);
+
+  // A canvas paints with whatever font is there and never repaints when a web font arrives, so
+  // the wheel redraws each time the page finishes loading fonts.
+  useEffect(() => {
+    if (!skin || typeof document === 'undefined' || !document.fonts) return;
+    const redraw = () => drawWheelRef.current(currentAngleRef.current);
+    document.fonts.addEventListener('loadingdone', redraw);
+    return () => document.fonts.removeEventListener('loadingdone', redraw);
+  }, [skin]);
 
   const spinKey = useMemo(
     () => (currentSpinId ? `${currentSpinId}:${currentTargetAngle ?? 0}` : null),
@@ -373,7 +464,45 @@ export function SpinWheelCanvas({
         style={{ width: `${size}px`, height: `${size}px`, maxWidth: '100%' }}
         className="drop-shadow-2xl h-auto aspect-square"
       />
-      {showWinnerCard && winner && !isSpinning && (
+      {skin && (
+        // Only text on the page makes the browser fetch a font, and only the subsets its letters
+        // need, so the labels are set here unseen; the wheel redraws once they've loaded.
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute opacity-0"
+          style={{ fontFamily: theme.fontFamily, fontWeight: theme.fontWeight }}
+        >
+          {slices.map((slice) => slice.label).join(' ')}
+        </span>
+      )}
+      {showWinnerCard && winner && !isSpinning && skin && (
+        <div className="absolute inset-0 flex items-center justify-center p-4 pointer-events-none">
+          <div
+            className="relative flex max-w-[90%] flex-col items-center px-8 pt-5 pb-6"
+            style={{
+              ...panelStyle(skin, 16),
+              color: skin.text,
+              fontFamily: skin.display,
+              fontSynthesis: 'none',
+            }}
+          >
+            <span
+              className="text-sm font-bold"
+              style={{ ...titleStyle(skin), color: shade(skin.win, 68) }}
+            >
+              {winnerTitle}
+            </span>
+            <span
+              className="mt-1 max-w-xs text-center text-3xl font-extrabold break-words"
+              style={{ textShadow: skin.textShadow }}
+            >
+              {winner.label}
+            </span>
+            <Frame skin={skin} radius={16} />
+          </div>
+        </div>
+      )}
+      {showWinnerCard && winner && !isSpinning && !skin && (
         <div className="absolute inset-0 flex items-center justify-center p-4 pointer-events-none">
           <div
             className="flex flex-col items-center rounded-2xl border-2 bg-zinc-950/90 px-6 py-5 shadow-2xl backdrop-blur-md max-w-[90%]"

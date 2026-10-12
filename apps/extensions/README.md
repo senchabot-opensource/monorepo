@@ -248,6 +248,8 @@ A chat-driven spinning wheel for game names, challenges or any list of choices. 
 - One global cooldown for the whole chat (30 seconds by default, 0 turns it off). While it runs, the overlay counts the wait down on screen and new `!spin` messages are skipped.
 - The winner is picked with the browser's secure random number generator and lands with a spinning animation, tick sounds, a victory jingle and confetti.
 - Options, channels, permission and cooldown all live in the overlay URL. Paste it back on the setup page to edit it.
+- With a preset (`preset` in the URL), the wheel's rim, slices and labels, the winner card and the cooldown note take the preset's colors, fonts and frame.
+- **Two colors** paints the slices in two colors, taking turns: the classic orange and purple, or the preset's accent and panel color. It's on by default with a preset; `colors=2` turns it on in the classic look and `colors=all` turns it off with a preset.
 - The quick tool at `/tools/spin-wheel` still spins a separate browser-only list with no channel.
 
 **Setup:**

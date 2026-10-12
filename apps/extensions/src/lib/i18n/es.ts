@@ -1504,6 +1504,9 @@ export const es: typeof en = {
     sectionOptions: 'Opciones',
     optionsLabel: 'Opciones de la ruleta',
     optionsTip: 'Una opción por línea. Empieza una línea con 2x, 3x … para más porciones con mejor probabilidad.',
+    twoColors: 'Dos colores',
+    twoColorsTip:
+      'Las porciones se turnan entre dos colores en vez de todos: naranja y morado en el aspecto clásico, o el color de acento y de panel del preset. Activado por defecto con un preset. Con un número impar de porciones, la primera y la última comparten color.',
     optionsPlaceholder: 'Zelda\nMario Kart\nTetris\nMinecraft',
     count: '{count} opciones',
     shuffle: 'Mezclar',
@@ -2453,7 +2456,7 @@ export const es: typeof en = {
     breadcrumb: 'Presets',
     eyebrow: 'Presets',
     title: 'Presets de juegos para los overlays de tu stream',
-    lead: 'Elige un preset y tu Caja de Chat, tus Alertas de Stream, tu Meta de Subs, tu Subathon Timer, tu Encuesta de Chat, el ganador del Sorteo, tus Marcos de Stream, tu Cuenta Regresiva y tus Redes Sociales tendrán el mismo marco, las mismas fuentes y los mismos colores. Usa uno en todos los widgets o uno distinto en cada uno.',
+    lead: 'Elige un preset y tu Caja de Chat, tus Alertas de Stream, tu Meta de Subs, tu Subathon Timer, tu Encuesta de Chat, el ganador del Sorteo, tus Marcos de Stream, tu Cuenta Regresiva, tus Redes Sociales y tu Ruleta tendrán el mismo marco, las mismas fuentes y los mismos colores. Usa uno en todos los widgets o uno distinto en cada uno.',
     pickTitle: 'Elige un preset',
     pickText:
       'Presets listos para League of Legends (LoL), World of Warcraft (WoW), Metin2, Dota 2, Valorant, Counter-Strike 2 (CS2), Minecraft, Clash of Clans, Fortnite, Rocket League y PUBG: Battlegrounds.',
@@ -2514,7 +2517,7 @@ export const es: typeof en = {
       'Sí. Tu predeterminado es solo el punto de partida de cada página de configuración. En la página de configuración de cualquier widget puedes elegir otro preset, y la URL de ese widget lo lleva.',
     faq3Q: '¿Qué widgets admiten preset?',
     faq3A:
-      'Caja de Chat, Alertas de Stream, Meta de Subs, Subathon Timer, Encuesta de Chat, el overlay de ganador del Sorteo, Marcos de Stream, Cuenta Regresiva y Redes Sociales. Muro de Emotes solo muestra emotes y Sub Sprout dibuja sus propias plantas, así que mantienen su aspecto.',
+      'Caja de Chat, Alertas de Stream, Meta de Subs, Subathon Timer, Encuesta de Chat, el overlay de ganador del Sorteo, Marcos de Stream, Cuenta Regresiva, Redes Sociales y Ruleta. Muro de Emotes solo muestra emotes y Sub Sprout dibuja sus propias plantas, así que mantienen su aspecto.',
     faq4Q: '¿Son temas oficiales de los juegos?',
     faq4A:
       'No. Son estilos hechos por fans a partir de colores, Google Fonts gratuitas y adornos dibujados desde cero, sin logos ni arte de los juegos, y no tienen relación con los creadores de los juegos.',
@@ -2579,6 +2582,10 @@ export const es: typeof en = {
     lead: 'Funciones nuevas y errores corregidos en Senchabot Extensions, de lo más nuevo a lo más viejo. La lista sale del historial de commits del proyecto en [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).',
     site: 'Sitio',
     entries: {
+      spinWheelTwoColors:
+        'La Ruleta puede pintar sus porciones con solo dos colores, alternando porción a porción: naranja y morado en el aspecto clásico, o el color de acento y de panel del preset elegido, donde viene activado.',
+      spinWheelPresets:
+        'La Ruleta acepta presets: el borde, las porciones y los textos de la ruleta, la tarjeta del ganador y el aviso de enfriamiento toman los colores, las fuentes y el marco del preset.',
       morePresets:
         'Cuatro presets de juegos nuevos para cada widget que acepta uno: Village (Clash of Clans), Storm (Fortnite), Boost (Rocket League) y Airdrop (PUBG).',
       socialsEdgeAlign:

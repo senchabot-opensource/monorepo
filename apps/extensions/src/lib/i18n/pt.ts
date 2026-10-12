@@ -1498,6 +1498,9 @@ export const pt: typeof en = {
     sectionOptions: 'Opções',
     optionsLabel: 'Opções da roleta',
     optionsTip: 'Uma opção por linha. Comece uma linha com 2x, 3x … para fatias extras com mais chance.',
+    twoColors: 'Duas cores',
+    twoColorsTip:
+      'As fatias alternam entre duas cores em vez de todas: laranja e roxo no visual clássico, ou a cor de destaque e a de painel do preset. Ligado por padrão com um preset. Com um número ímpar de fatias, a primeira e a última têm a mesma cor.',
     optionsPlaceholder: 'Zelda\nMario Kart\nTetris\nMinecraft',
     count: '{count} opções',
     shuffle: 'Embaralhar',
@@ -2444,7 +2447,7 @@ export const pt: typeof en = {
     breadcrumb: 'Presets',
     eyebrow: 'Presets',
     title: 'Presets de jogos para os overlays da sua live',
-    lead: 'Escolha um preset e sua Caixa de Chat, Alertas de Live, Meta de Subs, Subathon Timer, Enquete do Chat, vencedor do Sorteio, Molduras de Live, Contagem Regressiva e Redes Sociais ganham a mesma moldura, fontes e cores. Use um em todos os widgets, ou um diferente em cada.',
+    lead: 'Escolha um preset e sua Caixa de Chat, Alertas de Live, Meta de Subs, Subathon Timer, Enquete do Chat, vencedor do Sorteio, Molduras de Live, Contagem Regressiva, Redes Sociais e Roleta ganham a mesma moldura, fontes e cores. Use um em todos os widgets, ou um diferente em cada.',
     pickTitle: 'Escolha um preset',
     pickText:
       'Presets prontos para League of Legends (LoL), World of Warcraft (WoW), Metin2, Dota 2, Valorant, Counter-Strike 2 (CS2), Minecraft, Clash of Clans, Fortnite, Rocket League e PUBG: Battlegrounds.',
@@ -2505,7 +2508,7 @@ export const pt: typeof en = {
       'Sim. Seu padrão é só o ponto de partida de cada página de configuração. Na página de configuração de qualquer widget você pode escolher outro preset, e a URL daquele widget leva ele junto.',
     faq3Q: 'Quais widgets aceitam preset?',
     faq3A:
-      'Caixa de Chat, Alertas de Live, Meta de Subs, Subathon Timer, Enquete do Chat, o overlay do vencedor do Sorteio, Molduras de Live, Contagem Regressiva e Redes Sociais. O Mural de Emotes só mostra emotes e o Sub Sprout desenha suas próprias plantas, então os dois mantêm o visual deles.',
+      'Caixa de Chat, Alertas de Live, Meta de Subs, Subathon Timer, Enquete do Chat, o overlay do vencedor do Sorteio, Molduras de Live, Contagem Regressiva, Redes Sociais e Roleta. O Mural de Emotes só mostra emotes e o Sub Sprout desenha suas próprias plantas, então os dois mantêm o visual deles.',
     faq4Q: 'Estes são temas oficiais dos jogos?',
     faq4A:
       'Não. São estilos feitos por fãs a partir de cores, Google Fonts gratuitas e enfeites desenhados do zero, sem logos nem arte dos jogos, e não têm vínculo com as empresas dos jogos.',
@@ -2570,6 +2573,10 @@ export const pt: typeof en = {
     lead: 'Recursos novos e correções de bugs no Senchabot Extensions, dos mais novos para os mais antigos. A lista é montada a partir do histórico de commits do projeto no [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).',
     site: 'Site',
     entries: {
+      spinWheelTwoColors:
+        'A Roleta pode pintar as fatias com só duas cores, alternando fatia a fatia: laranja e roxo no visual clássico, ou a cor de destaque e a de painel do preset escolhido, onde vem ligado.',
+      spinWheelPresets:
+        'A Roleta aceita presets: a borda, as fatias e os textos da roleta, o cartão do vencedor e o aviso de cooldown ganham as cores, as fontes e a moldura do preset.',
       morePresets:
         'Quatro presets de jogos novos para todo widget que aceita um: Village (Clash of Clans), Storm (Fortnite), Boost (Rocket League) e Airdrop (PUBG).',
       socialsEdgeAlign:

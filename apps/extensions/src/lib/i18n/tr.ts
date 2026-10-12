@@ -1475,6 +1475,9 @@ export const tr: typeof en = {
     sectionOptions: 'Seçenekler',
     optionsLabel: 'Çark seçenekleri',
     optionsTip: 'Her satıra bir seçenek. Satıra 2x, 3x … ile başla, o seçenekten fazla dilim olur.',
+    twoColors: 'İki renk',
+    twoColorsTip:
+      "Dilimler tüm renkler yerine iki renk arasında sırayla değişir: klasik görünümde turuncu ve mor, preset'te onun vurgu ve panel rengi. Preset seçiliyken varsayılan olarak açık. Dilim sayısı tekse ilk ve son dilim aynı renkte olur.",
     optionsPlaceholder: 'Zelda\nMario Kart\nTetris\nMinecraft',
     count: '{count} seçenek',
     shuffle: 'Karıştır',
@@ -2409,7 +2412,7 @@ export const tr: typeof en = {
     breadcrumb: "Preset'ler",
     eyebrow: "Preset'ler",
     title: "Yayın overlay'lerin için oyun preset'leri",
-    lead: "Seçtiğin preset'le Sohbet Kutusu, Yayın Uyarıları, Abone Hedefi, Subathon Timer, Sohbet Anketi, Çekiliş kazanan overlay'i, Yayın Çerçeveleri, Yayın Geri Sayımı ve Sosyal Medya aynı çerçeveyi, yazı tiplerini ve renkleri alır. İstersen hepsinde aynısını kullan, istersen her birinde başka birini.",
+    lead: "Seçtiğin preset'le Sohbet Kutusu, Yayın Uyarıları, Abone Hedefi, Subathon Timer, Sohbet Anketi, Çekiliş kazanan overlay'i, Yayın Çerçeveleri, Yayın Geri Sayımı, Sosyal Medya ve Çark aynı çerçeveyi, yazı tiplerini ve renkleri alır. İstersen hepsinde aynısını kullan, istersen her birinde başka birini.",
     pickTitle: 'Bir preset seç',
     pickText:
       "League of Legends (LoL), World of Warcraft (WoW), Metin2, Dota 2, Valorant, Counter-Strike 2 (CS2), Minecraft, Clash of Clans, Fortnite, Rocket League ve PUBG: Battlegrounds için hazır preset'ler.",
@@ -2466,7 +2469,7 @@ export const tr: typeof en = {
       "Evet. Varsayılan preset sadece kurulum sayfalarının hangi preset'le açılacağını belirler. Herhangi bir widget'ın kurulum sayfasında başka bir preset seçebilirsin, o preset de o widget'ın URL'sine yazılır.",
     faq3Q: "Hangi widget'lar preset destekliyor?",
     faq3A:
-      "Sohbet Kutusu, Yayın Uyarıları, Abone Hedefi, Subathon Timer, Sohbet Anketi, Çekiliş kazanan overlay'i, Yayın Çerçeveleri, Yayın Geri Sayımı ve Sosyal Medya. Emote Duvarı sadece emote gösterdiği, Sub Sprout da kendi bitkilerini çizdiği için ikisi kendi görünümünde kalır.",
+      "Sohbet Kutusu, Yayın Uyarıları, Abone Hedefi, Subathon Timer, Sohbet Anketi, Çekiliş kazanan overlay'i, Yayın Çerçeveleri, Yayın Geri Sayımı, Sosyal Medya ve Çark. Emote Duvarı sadece emote gösterdiği, Sub Sprout da kendi bitkilerini çizdiği için ikisi kendi görünümünde kalır.",
     faq4Q: 'Bunlar oyunların resmi görünümleri mi?',
     faq4A:
       'Hayır. Renklerden, ücretsiz Google Fonts yazı tiplerinden ve sıfırdan çizilmiş süslemelerden oluşan hayran yapımı stiller. Oyun logosu ya da görseli içermezler, oyun yapımcılarıyla da bir bağlantıları yok.',
@@ -2531,6 +2534,10 @@ export const tr: typeof en = {
     lead: "Senchabot Extensions'a eklenen özellikler ve düzeltilen hatalar, en yenisi en üstte. Liste projenin [GitHub'daki](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) commit geçmişinden hazırlanıyor.",
     site: 'Site',
     entries: {
+      spinWheelTwoColors:
+        "Çark dilimlerini sadece iki renkle, dilim dilim sırayla boyayabiliyor: klasik görünümde turuncu ve mor, seçili preset'te onun vurgu ve panel rengi; preset'le varsayılan olarak açık.",
+      spinWheelPresets:
+        "Çark'a preset geldi: çarkın kenarı, dilimleri ve yazıları, kazanan kartı ve bekleme notu preset'in renklerini, yazı tiplerini ve çerçevesini alır.",
       morePresets:
         "Preset alan her widget için dört yeni oyun preset'i: Village (Clash of Clans), Storm (Fortnite), Boost (Rocket League) ve Airdrop (PUBG).",
       socialsEdgeAlign:

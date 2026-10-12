@@ -1485,6 +1485,9 @@ export const ja: typeof en = {
     sectionOptions: '選択肢',
     optionsLabel: 'ルーレットの選択肢',
     optionsTip: '1行に1つずつ入力。行頭に2x、3x…と付けると、その選択肢が増えて当たりやすくなります。',
+    twoColors: '2色',
+    twoColorsTip:
+      'すべての色ではなく2色を交互に使います。クラシックではオレンジと紫、プリセットではそのアクセントカラーとパネルカラー。プリセットを選ぶと最初からオンになります。区切りの数が奇数のときは、最初と最後の区切りが同じ色になります。',
     optionsPlaceholder: 'Zelda\nMario Kart\nTetris\nMinecraft',
     count: '{count}件',
     shuffle: 'シャッフル',
@@ -2424,7 +2427,7 @@ export const ja: typeof en = {
     breadcrumb: 'プリセット',
     eyebrow: 'プリセット',
     title: '配信オーバーレイ用のゲームプリセット',
-    lead: 'プリセットを選ぶと、チャットボックス、配信アラート、サブスク目標、Subathon Timer、チャット投票、抽選の当選者、配信フレーム、配信カウントダウン、SNSリンクが、同じフレーム、フォント、カラーでそろいます。すべてのウィジェットに同じものを使っても、ウィジェットごとに変えてもかまいません。',
+    lead: 'プリセットを選ぶと、チャットボックス、配信アラート、サブスク目標、Subathon Timer、チャット投票、抽選の当選者、配信フレーム、配信カウントダウン、SNSリンク、ルーレットが、同じフレーム、フォント、カラーでそろいます。すべてのウィジェットに同じものを使っても、ウィジェットごとに変えてもかまいません。',
     pickTitle: 'プリセットを選ぶ',
     pickText:
       'League of Legends（LoL）、World of Warcraft（WoW）、Metin2、Dota 2、Valorant、Counter-Strike 2（CS2）、Minecraft、Clash of Clans、Fortnite、Rocket League、PUBG: Battlegrounds向けのプリセットを用意しています。',
@@ -2484,7 +2487,7 @@ export const ja: typeof en = {
       'はい。デフォルトは、各設定ページの最初の状態を決めるだけです。どのウィジェットの設定ページでも別のプリセットを選べ、そのウィジェットのURLに反映されます。',
     faq3Q: 'プリセットに対応しているウィジェットは？',
     faq3A:
-      'チャットボックス、配信アラート、サブスク目標、Subathon Timer、チャット投票、抽選の当選者オーバーレイ、配信フレーム、配信カウントダウン、SNSリンクです。エモートウォールはエモートを表示するだけで、Sub Sproutは独自の植物を描くので、見た目はそのままです。',
+      'チャットボックス、配信アラート、サブスク目標、Subathon Timer、チャット投票、抽選の当選者オーバーレイ、配信フレーム、配信カウントダウン、SNSリンク、ルーレットです。エモートウォールはエモートを表示するだけで、Sub Sproutは独自の植物を描くので、見た目はそのままです。',
     faq4Q: 'これらは公式のゲームテーマですか？',
     faq4A:
       'いいえ。カラー、無料のGoogle Fonts、ゼロから描いた装飾で作ったファンメイドのスタイルで、ゲームのロゴやアートは使っておらず、ゲームメーカーとも提携していません。',
@@ -2549,6 +2552,10 @@ export const ja: typeof en = {
     lead: 'Senchabot Extensionsの新機能とバグ修正を、新しい順に並べています。このリストは[GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions)にあるプロジェクトのコミット履歴からまとめています。',
     site: 'サイト',
     entries: {
+      spinWheelTwoColors:
+        'ルーレットの区切りを2色だけで交互に塗れるようになりました。クラシックではオレンジと紫、プリセットを選んでいるときはそのアクセントカラーとパネルカラーで、最初からオンになります。',
+      spinWheelPresets:
+        'ルーレットでプリセットを使えるようになりました。ホイールの縁、区切り、文字、当選カード、抽選の間隔の表示にプリセットのカラー、フォント、フレームが付きます。',
       morePresets:
         'プリセットに対応したすべてのウィジェットに、新しいゲームプリセットを4つ追加しました。Village（Clash of Clans）、Storm（Fortnite）、Boost（Rocket League）、Airdrop（PUBG）。',
       socialsEdgeAlign:

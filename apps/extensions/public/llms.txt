@@ -25,7 +25,7 @@ Every page is also in German, Spanish, French, Japanese, Portuguese and Turkish 
 - [Chat Poll](https://extensions.senchabot.com/setup/chat-poll): A poll that Twitch and Kick chat vote in by typing a number, with live bars, a timer and the winner at the end. Mods run it with !poll. Browser source size 640x560.
 - [Raffle](https://extensions.senchabot.com/setup/raffle): Chat giveaways on Twitch or Kick. Viewers enter with a keyword like !join and you draw the winner.
 - [OBS Bridge](https://extensions.senchabot.com/setup/obs-bridge): People you authorize switch OBS scenes and start or stop the stream and recording from Twitch or Kick chat.
-- [Spin Wheel](https://extensions.senchabot.com/setup/spin-wheel): Viewers type !spin in Twitch or Kick chat and the wheel spins live in the OBS overlay, behind one global cooldown shown on screen. Browser source size 800x800.
+- [Spin Wheel](https://extensions.senchabot.com/setup/spin-wheel): Viewers type !spin in Twitch or Kick chat and the wheel spins live in the OBS overlay, behind one global cooldown shown on screen, in the picked preset's look. Browser source size 800x800.
 
 ## Guides
 
@@ -44,7 +44,7 @@ Every page is also in German, Spanish, French, Japanese, Portuguese and Turkish 
 ## Information
 
 - [Home](https://extensions.senchabot.com): Overview of every widget and tool.
-- [Presets](https://extensions.senchabot.com/presets): Game presets (League of Legends, World of Warcraft, Metin2, Dota 2, Valorant, Counter-Strike 2, Minecraft, Clash of Clans, Fortnite, Rocket League, PUBG) that give Chat Box, Stream Alerts, Sub Goal, Subathon Timer, Chat Poll, the Raffle winner, Stream Frames, Stream Countdown and Socials the same look.
+- [Presets](https://extensions.senchabot.com/presets): Game presets (League of Legends, World of Warcraft, Metin2, Dota 2, Valorant, Counter-Strike 2, Minecraft, Clash of Clans, Fortnite, Rocket League, PUBG) that give Chat Box, Stream Alerts, Sub Goal, Subathon Timer, Chat Poll, the Raffle winner, Stream Frames, Stream Countdown, Socials and Spin Wheel the same look.
 - [FAQ](https://extensions.senchabot.com/faq): Pricing, login, supported platforms, widget URLs and privacy.
 - [Changelog](https://extensions.senchabot.com/changelog): New features and fixes, newest first.
 

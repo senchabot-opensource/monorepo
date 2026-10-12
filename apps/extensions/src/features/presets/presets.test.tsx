@@ -161,6 +161,7 @@ describe('applyPresetToUrl', () => {
       '/widgets/frame?demo=1&preset=rift',
       '/widgets/countdown?simulate=1&preset=rift',
       '/widgets/socials?demo=1&preset=rift',
+      '/widgets/spin-wheel?demo=1&preset=rift',
     ]);
     expect(presetDemoUrl(PRESET_WIDGETS[0], 'classic')).toBe('/widgets/chat-widget?mock=true');
   });
