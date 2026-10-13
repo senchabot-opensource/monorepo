@@ -31,9 +31,12 @@ describe('Weather setup', () => {
 
     await user.type(findField(), '41.008238, 28.978359{Enter}');
     expect(fetchMock).not.toHaveBeenCalled();
+    // The page starts on the pill, which the URL spells out: without `layout` it means the card.
+    expect(segment(en('weather.layout'), en('weather.layouts.pill')).checked).toBe(true);
     expect(Object.fromEntries(widgetUrl().searchParams)).toEqual({
       lat: '41.0082',
       lon: '28.9784',
+      layout: 'pill',
       lang: 'en',
     });
     expect(
@@ -81,7 +84,11 @@ describe('Weather setup', () => {
   it('writes the look and the forecast into the URL, and hides what a pill has no room for', async () => {
     const user = await openPage();
     await user.type(findField(), '41.0082, 28.9784{Enter}');
+    expect(screen.queryByText(en('weather.forecast'))).toBeNull();
+    expect(screen.queryByText(en('weather.details'))).toBeNull();
 
+    await user.click(segment(en('weather.layout'), en('weather.layouts.card')));
+    expect(widgetUrl().searchParams.get('layout')).toBeNull();
     await user.click(segment(en('weather.units'), en('weather.unitOptions.imperial')));
     await user.click(segment(en('weather.theme'), en('weather.themes.light')));
     await user.click(segment(en('weather.corner'), en('irlHud.corners.br')));

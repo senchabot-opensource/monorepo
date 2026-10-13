@@ -70,6 +70,15 @@ export const DEFAULT_WEATHER_SETTINGS: WeatherSettings = {
   tz: '',
 };
 
+/**
+ * Where the setup page starts: the one-line pill. A URL without `layout` still means the card, as
+ * it has since the overlay launched, so the pill is always written out.
+ */
+export const WEATHER_SETUP_SETTINGS: WeatherSettings = {
+  ...DEFAULT_WEATHER_SETTINGS,
+  layout: 'pill',
+};
+
 export const PLACE_MAX_LENGTH = 40;
 export const MIN_SIZE = 50;
 export const MAX_SIZE = 200;

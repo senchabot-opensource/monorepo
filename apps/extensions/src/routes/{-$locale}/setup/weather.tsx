@@ -24,7 +24,6 @@ import { getSetupPageHead } from '#/lib/seo/pages';
 import {
   buildWeatherPreviewUrl,
   buildWeatherUrl,
-  DEFAULT_WEATHER_SETTINGS,
   MAX_SIZE,
   MIN_SIZE,
   PLACE_MAX_LENGTH,
@@ -32,6 +31,7 @@ import {
   WEATHER_CORNERS,
   WEATHER_FORECASTS,
   WEATHER_LAYOUTS,
+  WEATHER_SETUP_SETTINGS,
   WEATHER_STYLES,
   WEATHER_THEMES,
   WEATHER_UNITS,
@@ -75,7 +75,7 @@ const MET_TERMS_URL = 'https://api.met.no/doc/License';
 
 function WeatherSetup() {
   const { t, locale } = useI18n();
-  const [settings, setSettings] = useState(DEFAULT_WEATHER_SETTINGS);
+  const [settings, setSettings] = useState(WEATHER_SETUP_SETTINGS);
   // The overlay's own language: the page's until one is picked. The OBS URL always carries it.
   const [pickedLocale, setPickedLocale] = useState<Locale | null>(null);
   const overlayLocale = pickedLocale ?? locale;
