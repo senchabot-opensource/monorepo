@@ -1,7 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ChatMessagesType } from '#/features/widgets/chat-widget/chat-messages';
 import { FakeWebSocket } from '#/test/browser';
-import { getKickChannelInfo, KickChat } from './kick';
+import { getKickChannelInfo, KickChat, resetKickPusherApp } from './kick';
+import { getKickPusherApp, parseKickPusherApp } from './kick-pusher-app';
 
 // Payloads below follow what Kick's Pusher sent on 2026-09-15 (60 channels, 32039 messages),
 // names replaced.
@@ -166,6 +167,107 @@ describe('KickChat', () => {
       }),
     );
     expect(received[0].replyTo).toEqual({ user: 'Parent_1', message: 'yes?' });
+  });
+});
+
+describe("Kick's Pusher app", () => {
+  // What Pusher sent on 2026-10-13 to a socket with Kick's retired key, right before closing it.
+  const refusal = JSON.stringify({
+    event: 'pusher:error',
+    data: {
+      code: 4001,
+      message:
+        'App key 32cbd69e4b950bf97679 not in this cluster. Did you forget to specify the cluster?',
+    },
+  });
+  const settle = () => new Promise((resolve) => setTimeout(resolve, 0));
+
+  afterEach(() => resetKickPusherApp());
+
+  it('connects to the built-in app first', () => {
+    expect(socket().url).toBe(
+      'wss://ws-us2.pusher.com/app/34bf7a0ff419a2a775b9?protocol=7&client=js&version=8.4.0&flash=false',
+    );
+  });
+
+  it('asks for the app Kick uses now when Pusher refuses the key, and moves to it at once', async () => {
+    vi.mocked(getKickPusherApp).mockResolvedValueOnce({
+      key: 'f00dfeedf00dfeedf00d',
+      cluster: 'eu',
+    });
+    const refused = socket();
+    refused.receive(refusal);
+    await settle();
+
+    expect(getKickPusherApp).toHaveBeenCalledOnce();
+    expect(refused.onmessage).toBeNull();
+    expect(socket().url).toMatch(/^wss:\/\/ws-eu\.pusher\.com\/app\/f00dfeedf00dfeedf00d\?/);
+    socket().open();
+    expect(JSON.parse(socket().sent[0])).toEqual({
+      event: 'pusher:subscribe',
+      data: { channel: 'chatrooms.1.v2' },
+    });
+  });
+
+  it('leaves the reconnect to its backoff when Kick names no other app', async () => {
+    const refused = socket();
+    refused.receive(refusal);
+    await settle();
+    expect(getKickPusherApp).toHaveBeenCalledOnce();
+    expect(socket()).toBe(refused);
+  });
+
+  it('asks at most once a minute', async () => {
+    socket().receive(refusal);
+    await settle();
+    socket().receive(refusal);
+    await settle();
+    expect(getKickPusherApp).toHaveBeenCalledOnce();
+  });
+
+  it('does not ask on a Pusher error a plain reconnect fixes', async () => {
+    socket().receive(
+      JSON.stringify({
+        event: 'pusher:error',
+        data: { code: 4201, message: 'Pong reply not received' },
+      }),
+    );
+    await settle();
+    expect(getKickPusherApp).not.toHaveBeenCalled();
+  });
+
+  it("reads the Pusher app out of Kick's answer, and nothing that could leave pusher.com", () => {
+    // Kick's answer on 2026-10-13, with only Pusher accepted and with Centrifugo accepted too.
+    const pusher = {
+      credentials: { app_key: '34bf7a0ff419a2a775b9', cluster: 'us2' },
+      provider: 'pusher',
+    };
+    const centrifugo = {
+      credentials: { url: 'wss://realtime.us-east-1.platform.kick.com/connection/websocket' },
+      provider: 'centrifugo',
+    };
+    const answer = (...connections: unknown[]) => ({
+      data: { connections, mode: 'websocket' },
+      message: 'success',
+    });
+    expect(parseKickPusherApp(answer(pusher))).toEqual({
+      key: '34bf7a0ff419a2a775b9',
+      cluster: 'us2',
+    });
+    expect(parseKickPusherApp(answer(centrifugo))).toBeNull();
+    expect(
+      parseKickPusherApp(
+        answer({
+          ...pusher,
+          credentials: { app_key: '34bf7a0ff419a2a775b9', cluster: 'x.evil.com/' },
+        }),
+      ),
+    ).toBeNull();
+    expect(
+      parseKickPusherApp(answer({ ...pusher, credentials: { app_key: '../app', cluster: 'us2' } })),
+    ).toBeNull();
+    expect(parseKickPusherApp({ data: { type: 'Bad Request' } })).toBeNull();
+    expect(parseKickPusherApp(null)).toBeNull();
   });
 });
 

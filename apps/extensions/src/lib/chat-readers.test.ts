@@ -1,6 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { FakeWebSocket } from '#/test/browser';
 import { KickPusherReader, kickChatroomChannel, TwitchIrcReader } from './chat-readers';
+import { resetKickPusherApp } from './kick';
+import { getKickPusherApp } from './kick-pusher-app';
 import type { IrcLine } from './twitch';
 
 let reader: { disconnect: () => void } | null;
@@ -73,6 +75,7 @@ describe('TwitchIrcReader', () => {
 
 describe('KickPusherReader', () => {
   const events: [string, unknown][] = [];
+  afterEach(() => resetKickPusherApp());
   const open = (channels = [kickChatroomChannel('9'), 'channel_8']) => {
     events.length = 0;
     reader = new KickPusherReader(
@@ -101,6 +104,21 @@ describe('KickPusherReader', () => {
       ['App\\Events\\A', { x: 1 }],
       ['App\\Events\\B', { y: 2 }],
     ]);
+  });
+
+  it('moves to the Pusher app Kick uses now when Pusher refuses the key', async () => {
+    vi.mocked(getKickPusherApp).mockResolvedValueOnce({
+      key: 'f00dfeedf00dfeedf00d',
+      cluster: 'eu',
+    });
+    open();
+    const refused = latest();
+    refused.receive(
+      JSON.stringify({ event: 'pusher:error', data: { code: 4001, message: 'unknown key' } }),
+    );
+    await vi.waitFor(() => expect(latest()).not.toBe(refused));
+    expect(latest().url).toMatch(/^wss:\/\/ws-eu\.pusher\.com\/app\/f00dfeedf00dfeedf00d\?/);
+    expect(events).toEqual([]);
   });
 
   it('ignores frames that are not JSON, or have no event name', () => {

@@ -18,6 +18,9 @@ const HEARTBEAT_TIMEOUT_MS = 10000;
 const HEARTBEAT_CHECK_MS = 5000;
 // With the router up but no internet, an attempt can hang for minutes before it fails.
 const CONNECT_TIMEOUT_MS = 10000;
+// A server that refuses the client after the handshake (Pusher with an unknown app key) closes the
+// socket within a second or two. Only a connection that held this long starts the backoff over.
+const STABLE_CONNECTION_MS = 10000;
 
 export type ChatConnectionStatus =
   | { state: "connecting" | "connected" }
@@ -26,7 +29,7 @@ export type ChatConnectionStatus =
 export class BaseChatClient implements Disconnectable {
   protected ws: WebSocket | null = null;
 
-  private url: string | null = null;
+  private url: string | (() => string) | null = null;
   private handlers: {
     onOpen?: () => void;
     onMessage: (event: MessageEvent) => void;
@@ -38,6 +41,7 @@ export class BaseChatClient implements Disconnectable {
   private heartbeatTimer: ReturnType<typeof setInterval> | null = null;
   private lastFrameAt = 0;
   private pingSentAt: number | null = null;
+  private openedAt: number | null = null;
 
   /** Connection state for pages that show it (the OBS Bridge tool); set after construction. */
   onStatus?: (status: ChatConnectionStatus) => void;
@@ -55,8 +59,9 @@ export class BaseChatClient implements Disconnectable {
     return null;
   }
 
+  /** `url` can be a function, read again before every attempt, for a server that can move. */
   protected connect(
-    url: string,
+    url: string | (() => string),
     handlers: {
       onOpen?: () => void;
       onMessage: (event: MessageEvent) => void;
@@ -78,7 +83,9 @@ export class BaseChatClient implements Disconnectable {
     }
 
     this.onStatus?.({ state: "connecting" });
-    const ws = new WebSocket(this.url);
+    const ws = new WebSocket(
+      typeof this.url === "function" ? this.url() : this.url,
+    );
     this.ws = ws;
     const handlers = this.handlers;
     this.connectTimer = setTimeout(() => {
@@ -94,7 +101,7 @@ export class BaseChatClient implements Disconnectable {
         return;
       }
       this.clearConnectTimer();
-      this.reconnectAttempts = 0;
+      this.openedAt = Date.now();
       this.startHeartbeat();
       this.onStatus?.({ state: "connected" });
       handlers.onOpen?.();
@@ -118,8 +125,20 @@ export class BaseChatClient implements Disconnectable {
       console.log(`${this.label} chat connection closed.`);
       this.clearConnectTimer();
       this.stopHeartbeat();
+      this.endConnection();
       this.scheduleReconnect();
     };
+  }
+
+  /** Starts the backoff over if the connection that just ended had held, not if it failed at once. */
+  private endConnection() {
+    if (
+      this.openedAt !== null &&
+      Date.now() - this.openedAt >= STABLE_CONNECTION_MS
+    ) {
+      this.reconnectAttempts = 0;
+    }
+    this.openedAt = null;
   }
 
   private clearConnectTimer() {
@@ -173,6 +192,7 @@ export class BaseChatClient implements Disconnectable {
   private dropSocket() {
     this.clearConnectTimer();
     this.stopHeartbeat();
+    this.endConnection();
     const ws = this.ws;
     this.ws = null;
     if (ws) {

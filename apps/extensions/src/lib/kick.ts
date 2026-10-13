@@ -7,6 +7,7 @@ import {
   type DeleteMessageCallback,
 } from './basechat';
 import { withoutBypassSuffix } from './chat-text';
+import { getKickPusherApp, type KickPusherApp } from './kick-pusher-app';
 
 export interface KickChannelInfo {
   chatroomId: string | null;
@@ -51,9 +52,74 @@ export const getKickChannelInfo = async (username: string): Promise<KickChannelI
   }
 };
 
-/** Kick's public Pusher app, the one kick.com's own pages connect to. */
-export const KICK_PUSHER_URL =
-  'wss://ws-us2.pusher.com/app/32cbd69e4b950bf97679?protocol=7&client=js&version=8.4.0&flash=false';
+// The app kick.com's pages were given on 2026-10-13. Kick changes it from time to time; when Pusher
+// refuses it, the clients ask the site's server for the current one.
+const BUILT_IN_APP: KickPusherApp = { key: '34bf7a0ff419a2a775b9', cluster: 'us2' };
+const APP_LOOKUP_INTERVAL_MS = 60_000;
+const APP_LOOKUP_TIMEOUT_MS = 10_000;
+
+let pusherApp = BUILT_IN_APP;
+let appLookup: Promise<boolean> | null = null;
+let appLookupAt = Number.NEGATIVE_INFINITY;
+
+/** The socket URL of the Pusher app Kick's chat runs on, as far as this page knows. */
+export const kickPusherUrl = () =>
+  `wss://ws-${pusherApp.cluster}.pusher.com/app/${pusherApp.key}?protocol=7&client=js&version=8.4.0&flash=false`;
+
+/**
+ * Asks for the app Kick uses now, at most once a minute for the whole page; true when it differs
+ * from the one in use, which every later attempt then connects to.
+ */
+export function refreshKickPusherApp(): Promise<boolean> {
+  if (appLookup) return appLookup;
+  if (Date.now() - appLookupAt < APP_LOOKUP_INTERVAL_MS) return Promise.resolve(false);
+  appLookupAt = Date.now();
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const timeout = new Promise<null>((resolve) => {
+    timer = setTimeout(resolve, APP_LOOKUP_TIMEOUT_MS, null);
+  });
+  appLookup = Promise.race([getKickPusherApp(), timeout])
+    .then(
+      (app) => {
+        if (!app || (app.key === pusherApp.key && app.cluster === pusherApp.cluster)) return false;
+        console.log(`Kick chat moved to Pusher app ${app.key} (${app.cluster}).`);
+        pusherApp = app;
+        return true;
+      },
+      () => false,
+    )
+    .finally(() => {
+      clearTimeout(timer);
+      appLookup = null;
+    });
+  return appLookup;
+}
+
+/** Puts the built-in app back and forgets the last lookup. For tests. */
+export function resetKickPusherApp() {
+  pusherApp = BUILT_IN_APP;
+  appLookup = null;
+  appLookupAt = Number.NEGATIVE_INFINITY;
+}
+
+/**
+ * True for a pusher:error frame that refuses the connection itself. Pusher's 4000–4099 codes mean
+ * the same settings will never connect: 4001 is an app key it doesn't know.
+ */
+export function isKickPusherRefusal(message: { event?: unknown; data?: unknown }): boolean {
+  if (message.event !== 'pusher:error') return false;
+  const data = typeof message.data === 'string' ? safeJson(message.data) : message.data;
+  const code = (data as { code?: unknown } | null)?.code;
+  return typeof code === 'number' && code >= 4000 && code <= 4099;
+}
+
+function safeJson(text: string): unknown {
+  try {
+    return JSON.parse(text);
+  } catch {
+    return null;
+  }
+}
 
 export class KickChat extends BaseChatClient {
   private readonly channelId: string;
@@ -67,7 +133,7 @@ export class KickChat extends BaseChatClient {
   ) {
     super('Kick', onMessage, onDeleteMessage, onBanUser, onClearAll);
     this.channelId = channelId.trim();
-    this.connect(KICK_PUSHER_URL, {
+    this.connect(kickPusherUrl, {
       onOpen: () => {
         this.send(
           JSON.stringify({
@@ -105,6 +171,10 @@ export class KickChat extends BaseChatClient {
       event?: string;
       data?: string;
     };
+    if (isKickPusherRefusal(response)) {
+      void refreshKickPusherApp().then((moved) => moved && this.restart());
+      return;
+    }
     if (!response.event || typeof response.data !== 'string') {
       return;
     }

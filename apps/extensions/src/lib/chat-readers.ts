@@ -1,5 +1,5 @@
 import { BaseChatClient } from './basechat';
-import { KICK_PUSHER_URL } from './kick';
+import { isKickPusherRefusal, kickPusherUrl, refreshKickPusherApp } from './kick';
 import { anonymousJoin, type IrcLine, parseIrcLine, TWITCH_IRC_URL } from './twitch';
 
 /**
@@ -60,7 +60,7 @@ export class KickPusherReader<T> extends BaseChatClient {
     label = 'Kick',
   ) {
     super(label, () => {});
-    this.connect(KICK_PUSHER_URL, {
+    this.connect(kickPusherUrl, {
       onOpen: () => {
         for (const channel of channels) {
           this.send(JSON.stringify({ event: 'pusher:subscribe', data: { channel } }));
@@ -81,6 +81,10 @@ export class KickPusherReader<T> extends BaseChatClient {
     let data: unknown;
     try {
       const message = JSON.parse(event.data);
+      if (isKickPusherRefusal(message)) {
+        void refreshKickPusherApp().then((moved) => moved && this.restart());
+        return;
+      }
       name = message.event;
       data = typeof message.data === 'string' ? JSON.parse(message.data) : message.data;
     } catch {

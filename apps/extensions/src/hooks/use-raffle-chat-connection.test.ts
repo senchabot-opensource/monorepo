@@ -154,7 +154,7 @@ describe('useRaffleChat on Kick', () => {
   it('subscribes to a numeric chatroom and turns a keyword message into a participant', () => {
     renderRaffleChat({ platform: 'kick', channel: '668' });
     const socket = latest();
-    expect(socket.url).toContain('wss://ws-us2.pusher.com/app/32cbd69e4b950bf97679');
+    expect(socket.url).toContain('wss://ws-us2.pusher.com/app/34bf7a0ff419a2a775b9');
     socket.open();
     expect(JSON.parse(socket.sent[0])).toEqual({
       event: 'pusher:subscribe',

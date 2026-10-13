@@ -4,6 +4,11 @@ import { FakeWebSocket, resetBrowserStubs } from './browser';
 
 // The alerts route pulls in a Cloudflare server function, and the route tree imports every route.
 vi.mock('#/lib/pusher-auth', () => ({ pusherAuth: vi.fn() }));
+// The Kick Pusher app lookup is a server function that calls web.kick.com; tests stay offline.
+vi.mock('#/lib/kick-pusher-app', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('#/lib/kick-pusher-app')>()),
+  getKickPusherApp: vi.fn(async () => null),
+}));
 // Vitest resolves the root route's `?url` stylesheet import to "", which React warns about.
 vi.mock('../styles.css?url', () => ({ default: '/styles.css' }));
 
