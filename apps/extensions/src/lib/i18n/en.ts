@@ -128,7 +128,7 @@ export const en = {
       tagline: 'An animated alert with a sound for every sub, gifted sub, Bits, Kicks and raid.',
     },
     irlHud: {
-      name: 'IRL HUD',
+      name: 'IRL HUD Overlay',
       tagline: 'A game-style HUD for IRL streams: subs, gifts, cheers and raids add cash, with a mini-map.',
     },
     weather: {
@@ -254,10 +254,10 @@ export const en = {
       'OBS Studio and other apps that support browser sources. Add the widget URL as a Browser Source and use the size shown on the setup page.',
     faq4Q: 'Can I use Twitch and Kick together?',
     faq4A:
-      'Yes. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll, Stream Countdown, IRL HUD and Spin Wheel take a Twitch and a Kick channel in the same URL. OBS Bridge can listen to both chats at once too. Raffle runs on one platform at a time.',
+      'Yes. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll, Stream Countdown, IRL HUD Overlay and Spin Wheel take a Twitch and a Kick channel in the same URL. OBS Bridge can listen to both chats at once too. Raffle runs on one platform at a time.',
     faq5Q: 'How do I change a widget later?',
     faq5A:
-      'Open its setup page, set it up the way you want and replace the URL in your Browser Source. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll, Stream Frames, Socials, Stream Countdown, IRL HUD, Weather and Spin Wheel can also open an existing URL: paste it on the setup page, your settings come back, and you change only what you need.',
+      'Open its setup page, set it up the way you want and replace the URL in your Browser Source. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll, Stream Frames, Socials, Stream Countdown, IRL HUD Overlay, Weather and Spin Wheel can also open an existing URL: paste it on the setup page, your settings come back, and you change only what you need.',
     faq6Q: 'Will my widget URL keep working after updates?',
     faq6A:
       "Yes. Updates keep existing URL settings and their values working, so a widget that's already in your scene doesn't need a new URL.",
@@ -922,8 +922,8 @@ export const en = {
       'Yes! Sub Goal and Follower Goal maintain independent counts in OBS localStorage and use separate URL endpoints.',
   },
   irlHud: {
-    breadcrumb: 'IRL HUD Setup',
-    title: 'IRL HUD Setup',
+    breadcrumb: 'IRL HUD Overlay Setup',
+    title: 'IRL HUD Overlay Setup',
     intro:
       'A game-style HUD for Twitch and Kick, made for IRL streams. Every sub, gifted sub, Bits cheer, Kicks gift and raid adds cash to the counter by the amounts you set, under a clock in your time zone, next to a mini-map where an arrow walks city streets, park paths or the real streets around a place you pick.',
     style: 'Style',
@@ -1061,12 +1061,15 @@ export const en = {
     cmdMapReset: 'Goes back to the mini-map set in the URL',
     cmdWalk: 'Starts the arrow walking; !hud run makes it run',
     cmdStay: 'Stops the arrow where it is',
+    cmdIndoor:
+      'On the Urban and Park mini-maps, puts the arrow inside the nearest building, walking within its walls',
+    cmdOutdoor: 'Takes it back out to the streets',
     cmdBuy: 'Buys an item: its price comes off the cash',
     cmdBuyMany: 'Buys three of it',
     commandsAmounts:
       'Write amounts like 500, 1,500, 2.5k or 1m. !hud cash add 500 and !hud cash remove 500 work too.',
-    previewTitle: 'IRL HUD Preview',
-    previewIframeTitle: 'IRL HUD Preview',
+    previewTitle: 'IRL HUD Overlay Preview',
+    previewIframeTitle: 'IRL HUD Overlay Preview',
     previewHint:
       'The preview plays simulated subs, gifts, cheers and raids. On stream only your chat adds cash.',
     testTitle: 'Try it:',
@@ -1079,11 +1082,12 @@ export const en = {
     testRemove: '−$500',
     testMove:
       'Stop / Walk',
+    testIndoor: 'Inside / Outside',
     testReset: 'Reset',
     widgetUrlTip:
       'Already made a widget? Paste its URL here to load your settings and change what you need.',
     widgetUrlPlaceholder: 'Paste an existing widget URL to edit it',
-    widgetUrlInvalid: "This isn't an IRL HUD URL.",
+    widgetUrlInvalid: "This isn't an IRL HUD Overlay URL.",
     browserSourceHintSize: ' (recommended size: 1920×1080, the whole scene).',
     guideTitle: 'Streaming Software Setup (OBS, Streamlabs, XSplit, etc.)',
     guideStep1:
@@ -1234,7 +1238,7 @@ export const en = {
     faq3Q: 'Does it show where I am?',
     faq3A:
       "Only the name you give it. The weather is for the place you pick and doesn't follow you, and the overlay never shows coordinates. On an IRL stream, pick the city you're in, and paste a new URL when you travel.",
-    faq4Q: 'Can I use it with the IRL HUD?',
+    faq4Q: 'Can I use it with the IRL HUD Overlay?',
     faq4A:
       "Yes. Add both to the same scene. The weather starts in the top left corner, clear of the HUD's cash in the top right and its mini-map in the bottom left.",
     faq5Q: 'Can it show Fahrenheit?',
@@ -2057,7 +2061,7 @@ export const en = {
         title: 'How do I change a widget later?',
         p1: 'Your settings live inside the widget URL, so changing a setting means a new URL. Change the setting on the setup page, copy the new URL, then double-click the source in OBS and paste it over the old URL in the URL field.',
         p2:
-          "You don't have to start over with [Chat Box](/setup/chat-widget), [Emote Wall](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Stream Alerts](/setup/stream-alerts), [Sub Goal](/setup/sub-goal), [Chat Poll](/setup/chat-poll), [Stream Frames](/setup/stream-frames), [Socials](/setup/socials), [Stream Countdown](/setup/stream-countdown), [IRL HUD](/setup/irl-hud), [Weather](/setup/weather) or [Spin Wheel](/setup/spin-wheel). Paste your current URL into the Widget URL field on the setup page and your channels and all your settings come back. Change what you want and copy the new URL.",
+          "You don't have to start over with [Chat Box](/setup/chat-widget), [Emote Wall](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Stream Alerts](/setup/stream-alerts), [Sub Goal](/setup/sub-goal), [Chat Poll](/setup/chat-poll), [Stream Frames](/setup/stream-frames), [Socials](/setup/socials), [Stream Countdown](/setup/stream-countdown), [IRL HUD Overlay](/setup/irl-hud), [Weather](/setup/weather) or [Spin Wheel](/setup/spin-wheel). Paste your current URL into the Widget URL field on the setup page and your channels and all your settings come back. Change what you want and copy the new URL.",
         p3: "OBS Bridge has no paste field, so enter your settings again on its setup page and copy the new tool URL. You can also change scene picks and authorized users on the tool page itself and grab the new URL with its Copy Updated URL button. Old URLs keep working, so you don't have to update them.",
       },
       troubleshoot: {
@@ -2859,10 +2863,10 @@ export const en = {
       'OBS Studio and any other streaming software that supports a browser source. Each widget runs as a web URL, and you paste that URL into the source. Our guides are written for OBS Studio.',
     platformsQ: 'Which widgets support Twitch and which support Kick?',
     platformsA:
-      'All thirteen support both platforms. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll, Stream Countdown, IRL HUD and Spin Wheel listen to a Twitch and a Kick channel together in one URL. OBS Bridge listens for commands from both chats, and each authorized user is added with their own platform. Raffle runs on one platform at a time, Twitch or Kick. Stream Frames, Socials and Weather read no chat, so they work the same on either one. In Chat Box, 7TV emotes show on both platforms, while BTTV and FFZ emotes show on Twitch only.',
+      'All thirteen support both platforms. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll, Stream Countdown, IRL HUD Overlay and Spin Wheel listen to a Twitch and a Kick channel together in one URL. OBS Bridge listens for commands from both chats, and each authorized user is added with their own platform. Raffle runs on one platform at a time, Twitch or Kick. Stream Frames, Socials and Weather read no chat, so they work the same on either one. In Chat Box, 7TV emotes show on both platforms, while BTTV and FFZ emotes show on Twitch only.',
     editQ: 'How do I change a widget later?',
     editA:
-      "Change the settings on the setup page, copy the new URL, and paste it over the old one in the source's URL field in OBS. With Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll, Stream Frames, Socials, Stream Countdown, IRL HUD, Weather and Spin Wheel, if you paste your old URL into the Widget URL field on the setup page, all your settings come back and you don't have to start over.",
+      "Change the settings on the setup page, copy the new URL, and paste it over the old one in the source's URL field in OBS. With Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll, Stream Frames, Socials, Stream Countdown, IRL HUD Overlay, Weather and Spin Wheel, if you paste your old URL into the Widget URL field on the setup page, all your settings come back and you don't have to start over.",
     oldUrlsQ: 'Will my old widget URLs keep working?',
     oldUrlsA:
       "Yes. Updates are made so existing URLs don't break: parameter names, values and defaults stay the same. For example, the old keep=true in Chat Box still means Forever, and Sub Sprout still reads the old channel and platform parameters.",
@@ -2886,18 +2890,20 @@ export const en = {
     lead: "New features and bug fixes in Senchabot Extensions, newest first. The list is put together from the project's commit history on [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      irlHudIndoor:
+        'IRL HUD Overlay: mods take the mini-map indoors with !hud indoor. On the Urban and Park maps the arrow goes into the building nearest it and walks around within its walls while the map zooms in on it and dims the rest, until !hud outdoor takes it back out to the streets. Real Place maps stay outdoors.',
       weatherLaunch:
         'New overlay: Weather, the live weather for any place you pick. A card or a one-line pill shows an icon, the temperature and the weather in words, with wind, humidity and a forecast for the coming hours or days, in °C or °F. The data comes free from MET Norway, with no account or API key.',
       settingsTabs:
-        'IRL HUD, Stream Countdown, Subathon Timer, Stream Alerts, Chat Poll, Chat Box and Spin Wheel split their settings into tabs under the channel boxes, so each tab fits on one screen and, on a phone, the preview and widget URL sit much closer to the top.',
+        'IRL HUD Overlay, Stream Countdown, Subathon Timer, Stream Alerts, Chat Poll, Chat Box and Spin Wheel split their settings into tabs under the channel boxes, so each tab fits on one screen and, on a phone, the preview and widget URL sit much closer to the top.',
       presetPickerFolded:
         'Setup pages fold the presets behind a bar that names the one picked: a click opens or folds them, and they start folded while a widget keeps its classic look.',
       irlHudMarket:
-        'IRL HUD gets a market: add items with prices, and !hud buy water takes the price off the cash. Mods also stop and start the mini-map arrow with !hud stay, !hud walk and !hud run.',
+        'IRL HUD Overlay gets a market: add items with prices, and !hud buy water takes the price off the cash. Mods also stop and start the mini-map arrow with !hud stay, !hud walk and !hud run.',
       irlHudPlaces:
-        'IRL HUD saves several places for the mini-map, and mods switch between them from chat with !hud map. Real places show up closer, and the walk keeps to the paths around them.',
+        'IRL HUD Overlay saves several places for the mini-map, and mods switch between them from chat with !hud map. Real places show up closer, and the walk keeps to the paths around them.',
       irlHudLaunch:
-        'New overlay: IRL HUD, a game-style HUD for IRL streams. Subs, gifted subs, Bits, Kicks and raids add the cash you set to a counter under a clock in your time zone, next to a mini-map where an arrow walks a made-up city or park, or the real streets around a place you pick. Mods change it with !hud cash.',
+        'New: IRL HUD Overlay, a game-style HUD for IRL streams. Subs, gifted subs, Bits, Kicks and raids add the cash you set to a counter under a clock in your time zone, next to a mini-map where an arrow walks a made-up city or park, or the real streets around a place you pick. Mods change it with !hud cash.',
       spinWheelTwoColors:
         "Spin Wheel can paint its slices in just two colors, taking turns slice by slice: orange and purple in the classic look, or the accent and panel color of the picked preset, where it's on by default.",
       spinWheelPresets:

@@ -8,7 +8,7 @@
   `#09090b`, sized to stay inside the maskable safe zone
 
 The overlay pictures are screenshots of the real widget demos (`?mock=true`, `?simulate=true`, and
-the Raffle overlay, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll and IRL HUD fed events over their BroadcastChannels, and Weather switched to sunny over its own), laid onto `template.html`. Titles and
+the Raffle overlay, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll and IRL HUD Overlay fed events over their BroadcastChannels, and Weather switched to sunny over its own), laid onto `template.html`. Titles and
 taglines come from `src/lib/i18n/en.ts`, so rerun the script when that copy changes.
 
 ## Regenerate

@@ -135,7 +135,7 @@ export const fr: typeof en = {
       tagline: 'Une alerte animée avec un son pour chaque sub, sub offert, Bits, Kicks et raid.',
     },
     irlHud: {
-      name: 'HUD IRL',
+      name: 'Overlay HUD IRL',
       tagline:
         "Un HUD façon jeu vidéo pour l'IRL : subs, cadeaux, cheers et raids rapportent du cash, avec mini-carte.",
     },
@@ -269,10 +269,10 @@ export const fr: typeof en = {
       "OBS Studio et les autres logiciels qui gèrent les sources navigateur. Ajoute l'URL du widget comme source Navigateur web et utilise la taille indiquée sur la page de configuration.",
     faq4Q: 'Je peux utiliser Twitch et Kick ensemble ?',
     faq4A:
-      "Oui. Boîte de chat, Mur d'emotes, Sub Sprout, Subathon Timer, Alertes de stream, Objectif de subs, Sondage du chat, Compte à rebours de stream, HUD IRL et Roue prennent une chaîne Twitch et une chaîne Kick dans la même URL. OBS Bridge peut aussi écouter les deux chats à la fois. Le Tirage au sort fonctionne sur une seule plateforme à la fois.",
+      "Oui. Boîte de chat, Mur d'emotes, Sub Sprout, Subathon Timer, Alertes de stream, Objectif de subs, Sondage du chat, Compte à rebours de stream, Overlay HUD IRL et Roue prennent une chaîne Twitch et une chaîne Kick dans la même URL. OBS Bridge peut aussi écouter les deux chats à la fois. Le Tirage au sort fonctionne sur une seule plateforme à la fois.",
     faq5Q: 'Comment modifier un widget plus tard ?',
     faq5A:
-      "Ouvre sa page de configuration, règle-le comme tu veux et remplace l'URL dans ta source Navigateur web. Boîte de chat, Mur d'emotes, Sub Sprout, Subathon Timer, Alertes de stream, Objectif de subs, Sondage du chat, Cadres de stream, Réseaux sociaux, Compte à rebours de stream, HUD IRL, Météo et Roue peuvent aussi ouvrir une URL existante : colle-la sur la page de configuration, tes réglages reviennent, et tu ne changes que ce dont tu as besoin.",
+      "Ouvre sa page de configuration, règle-le comme tu veux et remplace l'URL dans ta source Navigateur web. Boîte de chat, Mur d'emotes, Sub Sprout, Subathon Timer, Alertes de stream, Objectif de subs, Sondage du chat, Cadres de stream, Réseaux sociaux, Compte à rebours de stream, Overlay HUD IRL, Météo et Roue peuvent aussi ouvrir une URL existante : colle-la sur la page de configuration, tes réglages reviennent, et tu ne changes que ce dont tu as besoin.",
     faq6Q: 'Mon URL de widget marchera toujours après les mises à jour ?',
     faq6A:
       "Oui. Les mises à jour gardent les réglages d'URL existants et leurs valeurs, donc un widget déjà dans ta scène n'a pas besoin d'une nouvelle URL.",
@@ -958,8 +958,8 @@ export const fr: typeof en = {
       'Oui ! Les deux objectifs conservent des compteurs indépendants dans le stockage local d’OBS et utilisent des URL séparées.',
   },
   irlHud: {
-    breadcrumb: 'Configuration du HUD IRL',
-    title: 'Configuration du HUD IRL',
+    breadcrumb: "Configuration de l'Overlay HUD IRL",
+    title: "Configuration de l'Overlay HUD IRL",
     intro:
       "Un HUD façon jeu vidéo pour Twitch et Kick, pensé pour les streams IRL. Chaque sub, sub offert, cheer de Bits, envoi de Kicks et raid ajoute de l'argent au compteur selon les montants que tu choisis, sous une horloge à ton fuseau horaire, à côté d'une mini-carte où une flèche parcourt les rues d'une ville, les allées d'un parc ou les vraies rues autour d'un lieu de ton choix.",
     style: 'Style',
@@ -1104,12 +1104,15 @@ export const fr: typeof en = {
     cmdMapReset: "Revient à la mini-carte définie dans l'URL",
     cmdWalk: 'Fait marcher la flèche ; !hud run la fait courir',
     cmdStay: 'Arrête la flèche là où elle est',
+    cmdIndoor:
+      'Sur les mini-cartes Ville et Parc, fait entrer la flèche dans le bâtiment le plus proche, où elle se déplace entre ses murs',
+    cmdOutdoor: 'La ramène dans la rue',
     cmdBuy: "Achète un objet : son prix est retiré de l'argent",
     cmdBuyMany: 'En achète trois',
     commandsAmounts:
       'Écris les montants comme 500, 1,500, 2.5k ou 1m. !hud cash add 500 et !hud cash remove 500 marchent aussi.',
-    previewTitle: 'Aperçu du HUD IRL',
-    previewIframeTitle: 'Aperçu du HUD IRL',
+    previewTitle: "Aperçu de l'Overlay HUD IRL",
+    previewIframeTitle: "Aperçu de l'Overlay HUD IRL",
     previewHint:
       "L'aperçu joue des subs, des subs offerts, des cheers et des raids simulés. En stream, seul ton chat ajoute de l'argent.",
     testTitle: 'Teste :',
@@ -1121,11 +1124,12 @@ export const fr: typeof en = {
     testAdd: '+$1,000',
     testRemove: '−$500',
     testMove: 'Arrêter / Marcher',
+    testIndoor: 'Entrer / Sortir',
     testReset: 'Réinitialiser',
     widgetUrlTip:
       'Tu as déjà un widget ? Colle son URL ici pour charger tes réglages et changer ce dont tu as besoin.',
     widgetUrlPlaceholder: 'Colle une URL de widget existante pour la modifier',
-    widgetUrlInvalid: "Ce n'est pas une URL de HUD IRL.",
+    widgetUrlInvalid: "Ce n'est pas une URL d'Overlay HUD IRL.",
     browserSourceHintSize: ' (taille recommandée : 1920×1080, toute la scène).',
     guideTitle: 'Installation dans ton logiciel de stream (OBS, Streamlabs, XSplit, etc.)',
     guideStep1:
@@ -1277,7 +1281,7 @@ export const fr: typeof en = {
     faq3Q: 'Est-ce que ça montre où je suis ?',
     faq3A:
       "Seulement le nom que tu lui donnes. La météo est celle du lieu choisi et ne te suit pas, et l'overlay n'affiche jamais de coordonnées. En stream IRL, choisis la ville où tu es et colle une nouvelle URL quand tu voyages.",
-    faq4Q: "Je peux l'utiliser avec le HUD IRL ?",
+    faq4Q: "Je peux l'utiliser avec l'Overlay HUD IRL ?",
     faq4A:
       "Oui. Ajoute les deux à la même scène. La météo démarre en haut à gauche, loin de l'argent du HUD en haut à droite et de sa mini-carte en bas à gauche.",
     faq5Q: 'Elle peut afficher des Fahrenheit ?',
@@ -2117,7 +2121,8 @@ export const fr: typeof en = {
       update: {
         title: 'Comment modifier un widget plus tard ?',
         p1: "Tes réglages sont dans l'URL du widget, donc changer un réglage veut dire une nouvelle URL. Change le réglage sur la page de configuration, copie la nouvelle URL, puis double-clique sur la source dans OBS et colle-la à la place de l'ancienne dans le champ URL.",
-        p2: "Pas besoin de tout recommencer avec [Boîte de chat](/setup/chat-widget), [Mur d'emotes](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Alertes de stream](/setup/stream-alerts), [Objectif de subs](/setup/sub-goal), [Sondage du chat](/setup/chat-poll), [Cadres de stream](/setup/stream-frames), [Réseaux sociaux](/setup/socials), [Compte à rebours de stream](/setup/stream-countdown), [HUD IRL](/setup/irl-hud), [Météo](/setup/weather) ou [Roue](/setup/spin-wheel). Colle ton URL actuelle dans le champ URL du widget sur la page de configuration et tes chaînes et tous tes réglages reviennent. Change ce que tu veux et copie la nouvelle URL.",
+        p2:
+          "Pas besoin de tout recommencer avec [Boîte de chat](/setup/chat-widget), [Mur d'emotes](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Alertes de stream](/setup/stream-alerts), [Objectif de subs](/setup/sub-goal), [Sondage du chat](/setup/chat-poll), [Cadres de stream](/setup/stream-frames), [Réseaux sociaux](/setup/socials), [Compte à rebours de stream](/setup/stream-countdown), [Overlay HUD IRL](/setup/irl-hud), [Météo](/setup/weather) ou [Roue](/setup/spin-wheel). Colle ton URL actuelle dans le champ URL du widget sur la page de configuration et tes chaînes et tous tes réglages reviennent. Change ce que tu veux et copie la nouvelle URL.",
         p3: "OBS Bridge n'a pas de champ pour coller une URL, donc saisis à nouveau tes réglages sur sa page de configuration et copie la nouvelle URL de l'outil. Tu peux aussi changer les choix de scènes et les utilisateurs autorisés directement sur la page de l'outil et récupérer la nouvelle URL avec son bouton Copier l'URL à jour. Les anciennes URL continuent de marcher, donc pas besoin de les mettre à jour.",
       },
       troubleshoot: {
@@ -2914,10 +2919,10 @@ export const fr: typeof en = {
       'OBS Studio et tout autre logiciel de stream qui gère une source navigateur. Chaque widget tourne comme une URL web, et tu colles cette URL dans la source. Nos guides sont écrits pour OBS Studio.',
     platformsQ: 'Quels widgets gèrent Twitch et lesquels gèrent Kick ?',
     platformsA:
-      "Les treize gèrent les deux plateformes. Boîte de chat, Mur d'emotes, Sub Sprout, Subathon Timer, Alertes de stream, Objectif de subs, Sondage du chat, Compte à rebours de stream, HUD IRL et Roue écoutent une chaîne Twitch et une chaîne Kick ensemble dans une seule URL. OBS Bridge écoute les commandes des deux chats, et chaque utilisateur autorisé est ajouté avec sa propre plateforme. Le Tirage au sort fonctionne sur une seule plateforme à la fois, Twitch ou Kick. Les Cadres de stream, les Réseaux sociaux et la Météo ne lisent pas le chat, donc ils fonctionnent de la même façon sur les deux. Dans la Boîte de chat, les emotes 7TV s'affichent sur les deux plateformes, et les emotes BTTV et FFZ seulement sur Twitch.",
+      "Les treize gèrent les deux plateformes. Boîte de chat, Mur d'emotes, Sub Sprout, Subathon Timer, Alertes de stream, Objectif de subs, Sondage du chat, Compte à rebours de stream, Overlay HUD IRL et Roue écoutent une chaîne Twitch et une chaîne Kick ensemble dans une seule URL. OBS Bridge écoute les commandes des deux chats, et chaque utilisateur autorisé est ajouté avec sa propre plateforme. Le Tirage au sort fonctionne sur une seule plateforme à la fois, Twitch ou Kick. Les Cadres de stream, les Réseaux sociaux et la Météo ne lisent pas le chat, donc ils fonctionnent de la même façon sur les deux. Dans la Boîte de chat, les emotes 7TV s'affichent sur les deux plateformes, et les emotes BTTV et FFZ seulement sur Twitch.",
     editQ: 'Comment modifier un widget plus tard ?',
     editA:
-      "Change les réglages sur la page de configuration, copie la nouvelle URL, et colle-la à la place de l'ancienne dans le champ URL de la source dans OBS. Avec Boîte de chat, Mur d'emotes, Sub Sprout, Subathon Timer, Alertes de stream, Objectif de subs, Sondage du chat, Cadres de stream, Réseaux sociaux, Compte à rebours de stream, HUD IRL, Météo et Roue, si tu colles ton ancienne URL dans le champ URL du widget sur la page de configuration, tous tes réglages reviennent et tu n'as pas à tout recommencer.",
+      "Change les réglages sur la page de configuration, copie la nouvelle URL, et colle-la à la place de l'ancienne dans le champ URL de la source dans OBS. Avec Boîte de chat, Mur d'emotes, Sub Sprout, Subathon Timer, Alertes de stream, Objectif de subs, Sondage du chat, Cadres de stream, Réseaux sociaux, Compte à rebours de stream, Overlay HUD IRL, Météo et Roue, si tu colles ton ancienne URL dans le champ URL du widget sur la page de configuration, tous tes réglages reviennent et tu n'as pas à tout recommencer.",
     oldUrlsQ: 'Mes anciennes URL de widgets vont-elles continuer de marcher ?',
     oldUrlsA:
       "Oui. Les mises à jour sont faites pour ne pas casser les URL existantes : les noms de paramètres, les valeurs et les valeurs par défaut restent les mêmes. Par exemple, l'ancien keep=true de la Boîte de chat veut toujours dire Pour toujours, et Sub Sprout lit toujours les anciens paramètres channel et platform.",
@@ -2941,18 +2946,20 @@ export const fr: typeof en = {
     lead: "Les nouvelles fonctionnalités et corrections de bugs de Senchabot Extensions, des plus récentes aux plus anciennes. La liste est tirée de l'historique des commits du projet sur [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      irlHudIndoor:
+        "Overlay HUD IRL : les modos passent la mini-carte en intérieur avec !hud indoor. Sur les cartes Ville et Parc, la flèche entre dans le bâtiment le plus proche et se déplace entre ses murs pendant que la carte zoome dessus et assombrit le reste, jusqu'à ce que !hud outdoor la ramène dans la rue. Les cartes d'un lieu réel restent dehors.",
       weatherLaunch:
         "Nouvel overlay : Météo, la météo en direct du lieu de ton choix. Une carte ou un bandeau d'une ligne affiche une icône, la température et le temps en toutes lettres, avec le vent, l'humidité et des prévisions pour les heures ou les jours à venir, en °C ou °F. Les données viennent gratuitement de MET Norway, sans compte ni clé d'API.",
       settingsTabs:
-        "IRL HUD, Compte à rebours, Subathon Timer, Alertes de stream, Sondage du chat, Boîte de chat et Roue rangent leurs réglages dans des onglets sous les champs de la chaîne. Chaque onglet tient sur un écran et, sur téléphone, l'aperçu et l'URL du widget sont bien plus haut.",
+        "Overlay HUD IRL, Compte à rebours, Subathon Timer, Alertes de stream, Sondage du chat, Boîte de chat et Roue rangent leurs réglages dans des onglets sous les champs de la chaîne. Chaque onglet tient sur un écran et, sur téléphone, l'aperçu et l'URL du widget sont bien plus haut.",
       presetPickerFolded:
         'Sur les pages de configuration, les presets se replient derrière une barre qui affiche le choix, un clic les ouvre ou les referme, et ils démarrent repliés avec le style classique.',
       irlHudMarket:
-        "Le HUD IRL a maintenant un marché : ajoute des objets avec un prix, et !hud buy eau retire le prix de l'argent. Les modos arrêtent et relancent aussi la flèche de la mini-carte avec !hud stay, !hud walk et !hud run.",
+        "L'Overlay HUD IRL a maintenant un marché : ajoute des objets avec un prix, et !hud buy eau retire le prix de l'argent. Les modos arrêtent et relancent aussi la flèche de la mini-carte avec !hud stay, !hud walk et !hud run.",
       irlHudPlaces:
-        "Le HUD IRL enregistre plusieurs lieux pour la mini-carte, et les modos passent de l'un à l'autre depuis le chat avec !hud map. Les lieux réels s'affichent de plus près, et la flèche reste sur les chemins autour d'eux.",
+        "L'Overlay HUD IRL enregistre plusieurs lieux pour la mini-carte, et les modos passent de l'un à l'autre depuis le chat avec !hud map. Les lieux réels s'affichent de plus près, et la flèche reste sur les chemins autour d'eux.",
       irlHudLaunch:
-        "Nouvel overlay : le HUD IRL, un HUD façon jeu vidéo pour les streams IRL. Les subs, subs offerts, Bits, Kicks et raids ajoutent les montants que tu choisis à un compteur d'argent sous une horloge à ton fuseau horaire, à côté d'une mini-carte où une flèche parcourt une ville ou un parc imaginaires, ou les vraies rues autour d'un lieu de ton choix. Les modos changent l'argent avec !hud cash.",
+        "Nouveau : l'Overlay HUD IRL, un HUD façon jeu vidéo pour les streams IRL. Les subs, subs offerts, Bits, Kicks et raids ajoutent les montants que tu choisis à un compteur d'argent sous une horloge à ton fuseau horaire, à côté d'une mini-carte où une flèche parcourt une ville ou un parc imaginaires, ou les vraies rues autour d'un lieu de ton choix. Les modos changent l'argent avec !hud cash.",
       spinWheelTwoColors:
         "La Roue peut peindre ses parts en deux couleurs seulement, en alternant d'une part à l'autre : orange et violet dans le style classique, ou la couleur d'accent et de panneau du preset choisi, où c'est activé par défaut.",
       spinWheelPresets:

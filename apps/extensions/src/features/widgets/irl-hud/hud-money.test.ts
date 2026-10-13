@@ -125,6 +125,13 @@ describe('saved state', () => {
     expect(followStart(saved, 350)).toEqual({ money: 350, start: 350, map: saved.map });
   });
 
+  it('keeps the arrow indoors through a new starting amount', () => {
+    expect(followStart({ money: 900, start: 0, indoor: true }, 350)).toMatchObject({
+      money: 350,
+      indoor: true,
+    });
+  });
+
   it('accepts only whole numbers', () => {
     expect(isHudState({ money: -20, start: 0 })).toBe(true);
     expect(isHudState({ money: 1.5, start: 0 })).toBe(false);
@@ -133,6 +140,8 @@ describe('saved state', () => {
     expect(isHudState({ money: 1, start: 0, map: { choice: 3 } })).toBe(false);
     expect(isHudState({ money: 1, start: 0, move: { choice: 'stay', from: 'walk' } })).toBe(true);
     expect(isHudState({ money: 1, start: 0, move: 'stay' })).toBe(false);
+    expect(isHudState({ money: 1, start: 0, indoor: true })).toBe(true);
+    expect(isHudState({ money: 1, start: 0, indoor: 'yes' })).toBe(false);
     expect(isHudState(null)).toBe(false);
   });
 });

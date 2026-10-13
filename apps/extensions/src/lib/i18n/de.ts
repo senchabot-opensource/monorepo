@@ -130,7 +130,7 @@ export const de: typeof en = {
       tagline: 'Ein animierter Alert mit Sound für jeden Sub, Gift-Sub, Bits, Kicks und Raid.',
     },
     irlHud: {
-      name: 'IRL-HUD',
+      name: 'IRL-HUD-Overlay',
       tagline:
         'Ein HUD im Game-Look für IRL-Streams: Subs, Gifts, Cheers und Raids bringen Geld, mit Minikarte.',
     },
@@ -257,10 +257,10 @@ export const de: typeof en = {
       'Mit OBS Studio und anderen Apps, die Browser-Quellen unterstützen. Füge die Widget-URL als Browser-Quelle hinzu und nimm die Größe, die auf der Setup-Seite steht.',
     faq4Q: 'Kann ich Twitch und Kick zusammen nutzen?',
     faq4A:
-      'Ja. Chat-Box, Emote-Wand, Sub Sprout, Subathon Timer, Stream-Alerts, Sub-Ziel, Chat-Umfrage, Stream-Countdown, IRL-HUD und Glücksrad nehmen einen Twitch- und einen Kick-Kanal in derselben URL. OBS Bridge kann auch beiden Chats gleichzeitig zuhören. Die Verlosung läuft immer auf einer Plattform.',
+      'Ja. Chat-Box, Emote-Wand, Sub Sprout, Subathon Timer, Stream-Alerts, Sub-Ziel, Chat-Umfrage, Stream-Countdown, IRL-HUD-Overlay und Glücksrad nehmen einen Twitch- und einen Kick-Kanal in derselben URL. OBS Bridge kann auch beiden Chats gleichzeitig zuhören. Die Verlosung läuft immer auf einer Plattform.',
     faq5Q: 'Wie ändere ich ein Widget später?',
     faq5A:
-      'Öffne seine Setup-Seite, stell alles so ein, wie du willst, und ersetz die URL in deiner Browser-Quelle. Chat-Box, Emote-Wand, Sub Sprout, Subathon Timer, Stream-Alerts, Sub-Ziel, Chat-Umfrage, Stream-Rahmen, Socials, Stream-Countdown, IRL-HUD, Wetter und Glücksrad können auch eine bestehende URL öffnen: Füg sie auf der Setup-Seite ein, deine Einstellungen sind wieder da, und du änderst nur, was du brauchst.',
+      'Öffne seine Setup-Seite, stell alles so ein, wie du willst, und ersetz die URL in deiner Browser-Quelle. Chat-Box, Emote-Wand, Sub Sprout, Subathon Timer, Stream-Alerts, Sub-Ziel, Chat-Umfrage, Stream-Rahmen, Socials, Stream-Countdown, IRL-HUD-Overlay, Wetter und Glücksrad können auch eine bestehende URL öffnen: Füg sie auf der Setup-Seite ein, deine Einstellungen sind wieder da, und du änderst nur, was du brauchst.',
     faq6Q: 'Funktioniert meine Widget-URL nach Updates weiter?',
     faq6A:
       'Ja. Updates lassen bestehende URL-Einstellungen und ihre Werte funktionieren, ein Widget, das schon in deiner Szene ist, braucht also keine neue URL.',
@@ -925,8 +925,8 @@ export const de: typeof en = {
       'Ja! Sub-Ziel und Follower-Ziel verwalten unabhängige Zähler im OBS-Speicher und nutzen separate Endpunkte.',
   },
   irlHud: {
-    breadcrumb: 'IRL-HUD einrichten',
-    title: 'IRL-HUD einrichten',
+    breadcrumb: 'IRL-HUD-Overlay einrichten',
+    title: 'IRL-HUD-Overlay einrichten',
     intro:
       'Ein HUD im Game-Look für Twitch und Kick, gemacht für IRL-Streams. Jeder Sub, Gift-Sub, Bits-Cheer, Kicks-Gift und Raid bringt so viel Geld auf den Zähler, wie du festlegst, unter einer Uhr in deiner Zeitzone, neben einer Minikarte, auf der ein Pfeil durch Stadtstraßen, Parkwege oder die echten Straßen rund um einen Ort deiner Wahl läuft.',
     style: 'Stil',
@@ -1069,12 +1069,15 @@ export const de: typeof en = {
     cmdMapReset: 'Springt zur Minikarte aus der URL zurück',
     cmdWalk: 'Lässt den Pfeil gehen; !hud run lässt ihn rennen',
     cmdStay: 'Hält den Pfeil an, wo er ist',
+    cmdIndoor:
+      'Setzt den Pfeil auf den Minikarten Stadt und Park ins nächste Gebäude, wo er innerhalb der Wände herumläuft',
+    cmdOutdoor: 'Bringt ihn zurück auf die Straße',
     cmdBuy: 'Kauft ein Item: Sein Preis wird vom Geld abgezogen',
     cmdBuyMany: 'Kauft drei davon',
     commandsAmounts:
       'Beträge schreibst du wie 500, 1,500, 2.5k oder 1m. !hud cash add 500 und !hud cash remove 500 gehen auch.',
-    previewTitle: 'Vorschau des IRL-HUDs',
-    previewIframeTitle: 'Vorschau des IRL-HUDs',
+    previewTitle: 'Vorschau des IRL-HUD-Overlays',
+    previewIframeTitle: 'Vorschau des IRL-HUD-Overlays',
     previewHint:
       'Die Vorschau spielt simulierte Subs, Gifts, Cheers und Raids ab. Im Stream gibt nur dein Chat Geld dazu.',
     testTitle: 'Probier es aus:',
@@ -1086,11 +1089,12 @@ export const de: typeof en = {
     testAdd: '+$1,000',
     testRemove: '−$500',
     testMove: 'Stopp / Gehen',
+    testIndoor: 'Rein / Raus',
     testReset: 'Reset',
     widgetUrlTip:
       'Schon ein Widget gebaut? Füg seine URL hier ein, um deine Einstellungen zu laden und nur das zu ändern, was du brauchst.',
     widgetUrlPlaceholder: 'Bestehende Widget-URL zum Bearbeiten einfügen',
-    widgetUrlInvalid: 'Das ist keine URL für das IRL-HUD.',
+    widgetUrlInvalid: 'Das ist keine URL für das IRL-HUD-Overlay.',
     browserSourceHintSize: ' (empfohlene Größe: 1920×1080, die ganze Szene).',
     guideTitle: 'Einrichtung in der Streaming-Software (OBS, Streamlabs, XSplit usw.)',
     guideStep1:
@@ -1241,7 +1245,7 @@ export const de: typeof en = {
     faq3Q: 'Zeigt es, wo ich bin?',
     faq3A:
       'Nur den Namen, den du angibst. Das Wetter gilt für den gewählten Ort und folgt dir nicht, und das Overlay zeigt nie Koordinaten. Wähl bei IRL-Streams die Stadt, in der du bist, und füg auf Reisen eine neue URL ein.',
-    faq4Q: 'Kann ich es zusammen mit dem IRL-HUD nutzen?',
+    faq4Q: 'Kann ich es zusammen mit dem IRL-HUD-Overlay nutzen?',
     faq4A:
       'Ja. Füg beide derselben Szene hinzu. Das Wetter startet oben links, weg vom Geld des HUDs oben rechts und seiner Minikarte unten links.',
     faq5Q: 'Kann es Fahrenheit zeigen?',
@@ -2065,7 +2069,7 @@ export const de: typeof en = {
         title: 'Wie ändere ich ein Widget später?',
         p1: 'Deine Einstellungen stecken in der Widget-URL, eine geänderte Einstellung heißt also eine neue URL. Ändere die Einstellung auf der Setup-Seite, kopier die neue URL, doppelklick dann die Quelle in OBS und füg sie im Feld URL über der alten URL ein.',
         p2:
-          'Bei [Chat-Box](/setup/chat-widget), [Emote-Wand](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Stream-Alerts](/setup/stream-alerts), [Sub-Ziel](/setup/sub-goal), [Chat-Umfrage](/setup/chat-poll), [Stream-Rahmen](/setup/stream-frames), [Socials](/setup/socials), [Stream-Countdown](/setup/stream-countdown), [IRL-HUD](/setup/irl-hud), [Wetter](/setup/weather) und [Glücksrad](/setup/spin-wheel) musst du nicht von vorn anfangen. Füg deine aktuelle URL auf der Setup-Seite ins Feld Widget-URL ein, und deine Kanäle und alle Einstellungen sind wieder da. Ändere, was du willst, und kopier die neue URL.',
+          'Bei [Chat-Box](/setup/chat-widget), [Emote-Wand](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Stream-Alerts](/setup/stream-alerts), [Sub-Ziel](/setup/sub-goal), [Chat-Umfrage](/setup/chat-poll), [Stream-Rahmen](/setup/stream-frames), [Socials](/setup/socials), [Stream-Countdown](/setup/stream-countdown), [IRL-HUD-Overlay](/setup/irl-hud), [Wetter](/setup/weather) und [Glücksrad](/setup/spin-wheel) musst du nicht von vorn anfangen. Füg deine aktuelle URL auf der Setup-Seite ins Feld Widget-URL ein, und deine Kanäle und alle Einstellungen sind wieder da. Ändere, was du willst, und kopier die neue URL.',
         p3: 'OBS Bridge hat kein Feld zum Einfügen, gib deine Einstellungen also auf der Setup-Seite nochmal ein und kopier die neue Tool-URL. Szenenwahl und berechtigte Nutzer kannst du auch direkt auf der Tool-Seite ändern und die neue URL mit dem Button Aktuelle URL kopieren holen. Alte URLs funktionieren weiter, du musst sie also nicht austauschen.',
       },
       troubleshoot: {
@@ -2868,10 +2872,10 @@ export const de: typeof en = {
       'Mit OBS Studio und jeder anderen Streaming-Software, die eine Browser-Quelle unterstützt. Jedes Widget läuft als Web-URL, und diese URL fügst du in die Quelle ein. Unsere Anleitungen sind für OBS Studio geschrieben.',
     platformsQ: 'Welche Widgets unterstützen Twitch und welche Kick?',
     platformsA:
-      'Alle dreizehn unterstützen beide Plattformen. Chat-Box, Emote-Wand, Sub Sprout, Subathon Timer, Stream-Alerts, Sub-Ziel, Chat-Umfrage, Stream-Countdown, IRL-HUD und Glücksrad hören einem Twitch- und einem Kick-Kanal zusammen in einer URL zu. OBS Bridge hört auf Befehle aus beiden Chats, und jeder berechtigte Nutzer wird mit seiner eigenen Plattform hinzugefügt. Die Verlosung läuft immer auf einer Plattform, Twitch oder Kick. Stream-Rahmen, Socials und Wetter lesen keinen Chat, sie funktionieren also auf beiden gleich. In der Chat-Box erscheinen 7TV-Emotes auf beiden Plattformen, BTTV- und FFZ-Emotes nur auf Twitch.',
+      'Alle dreizehn unterstützen beide Plattformen. Chat-Box, Emote-Wand, Sub Sprout, Subathon Timer, Stream-Alerts, Sub-Ziel, Chat-Umfrage, Stream-Countdown, IRL-HUD-Overlay und Glücksrad hören einem Twitch- und einem Kick-Kanal zusammen in einer URL zu. OBS Bridge hört auf Befehle aus beiden Chats, und jeder berechtigte Nutzer wird mit seiner eigenen Plattform hinzugefügt. Die Verlosung läuft immer auf einer Plattform, Twitch oder Kick. Stream-Rahmen, Socials und Wetter lesen keinen Chat, sie funktionieren also auf beiden gleich. In der Chat-Box erscheinen 7TV-Emotes auf beiden Plattformen, BTTV- und FFZ-Emotes nur auf Twitch.',
     editQ: 'Wie ändere ich ein Widget später?',
     editA:
-      'Ändere die Einstellungen auf der Setup-Seite, kopier die neue URL und füg sie in OBS im Feld URL der Quelle über der alten ein. Bei Chat-Box, Emote-Wand, Sub Sprout, Subathon Timer, Stream-Alerts, Sub-Ziel, Chat-Umfrage, Stream-Rahmen, Socials, Stream-Countdown, IRL-HUD, Wetter und Glücksrad kannst du deine alte URL auf der Setup-Seite ins Feld Widget-URL einfügen, dann sind alle Einstellungen wieder da, und du musst nicht von vorn anfangen.',
+      'Ändere die Einstellungen auf der Setup-Seite, kopier die neue URL und füg sie in OBS im Feld URL der Quelle über der alten ein. Bei Chat-Box, Emote-Wand, Sub Sprout, Subathon Timer, Stream-Alerts, Sub-Ziel, Chat-Umfrage, Stream-Rahmen, Socials, Stream-Countdown, IRL-HUD-Overlay, Wetter und Glücksrad kannst du deine alte URL auf der Setup-Seite ins Feld Widget-URL einfügen, dann sind alle Einstellungen wieder da, und du musst nicht von vorn anfangen.',
     oldUrlsQ: 'Funktionieren meine alten Widget-URLs weiter?',
     oldUrlsA:
       'Ja. Updates werden so gebaut, dass bestehende URLs nicht kaputtgehen: Parameternamen, Werte und Standards bleiben gleich. Das alte keep=true in der Chat-Box heißt z. B. immer noch Für immer, und Sub Sprout liest immer noch die alten Parameter channel und platform.',
@@ -2895,18 +2899,20 @@ export const de: typeof en = {
     lead: 'Neue Features und Bugfixes in Senchabot Extensions, das Neueste zuerst. Die Liste ist aus der Commit-Historie des Projekts auf [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) zusammengestellt.',
     site: 'Website',
     entries: {
+      irlHudIndoor:
+        'IRL-HUD-Overlay: Mods holen die Minikarte mit !hud indoor nach drinnen. Auf den Karten Stadt und Park geht der Pfeil ins nächste Gebäude und läuft innerhalb seiner Wände herum, während die Karte heranzoomt und den Rest abdunkelt, bis !hud outdoor ihn zurück auf die Straße bringt. Karten eines echten Orts bleiben draußen.',
       weatherLaunch:
         'Neues Overlay: Wetter, das Live-Wetter für jeden Ort, den du wählst. Eine Karte oder eine einzeilige Leiste zeigt Symbol, Temperatur und Wetter in Worten, dazu Wind, Luftfeuchtigkeit und eine Vorhersage für die nächsten Stunden oder Tage, in °C oder °F. Die Daten kommen kostenlos von MET Norway, ohne Konto oder API-Schlüssel.',
       settingsTabs:
-        'IRL-HUD, Stream-Countdown, Subathon Timer, Stream-Alerts, Chat-Umfrage, Chat-Box und Glücksrad teilen ihre Einstellungen unter den Kanalfeldern in Tabs auf. So passt jeder Tab auf einen Bildschirm, und auf dem Handy stehen Vorschau und Widget-URL viel weiter oben.',
+        'IRL-HUD-Overlay, Stream-Countdown, Subathon Timer, Stream-Alerts, Chat-Umfrage, Chat-Box und Glücksrad teilen ihre Einstellungen unter den Kanalfeldern in Tabs auf. So passt jeder Tab auf einen Bildschirm, und auf dem Handy stehen Vorschau und Widget-URL viel weiter oben.',
       presetPickerFolded:
         'Auf Setup-Seiten klappen die Presets hinter eine Leiste mit dem gewählten Preset zusammen, ein Klick öffnet oder schließt sie, und beim klassischen Look starten sie zugeklappt.',
       irlHudMarket:
-        'Das IRL-HUD bekommt einen Markt: Füg Items mit Preisen hinzu, und !hud buy wasser zieht den Preis vom Geld ab. Mods halten den Pfeil auf der Minikarte außerdem mit !hud stay an und lassen ihn mit !hud walk und !hud run wieder laufen.',
+        'Das IRL-HUD-Overlay bekommt einen Markt: Füg Items mit Preisen hinzu, und !hud buy wasser zieht den Preis vom Geld ab. Mods halten den Pfeil auf der Minikarte außerdem mit !hud stay an und lassen ihn mit !hud walk und !hud run wieder laufen.',
       irlHudPlaces:
-        'Das IRL-HUD speichert mehrere Orte für die Minikarte, und Mods wechseln im Chat mit !hud map zwischen ihnen. Echte Orte sind näher herangezoomt, und der Pfeil hält sich an die Wege rund um sie.',
+        'Das IRL-HUD-Overlay speichert mehrere Orte für die Minikarte, und Mods wechseln im Chat mit !hud map zwischen ihnen. Echte Orte sind näher herangezoomt, und der Pfeil hält sich an die Wege rund um sie.',
       irlHudLaunch:
-        'Neues Overlay: IRL-HUD, ein HUD im Game-Look für IRL-Streams. Subs, Gift-Subs, Bits, Kicks und Raids bringen so viel Geld auf einen Zähler, wie du festlegst, unter einer Uhr in deiner Zeitzone, neben einer Minikarte, auf der ein Pfeil durch eine erfundene Stadt, einen Park oder die echten Straßen rund um einen Ort deiner Wahl läuft. Mods ändern das Geld mit !hud cash.',
+        'Neu: IRL-HUD-Overlay, ein HUD im Game-Look für IRL-Streams. Subs, Gift-Subs, Bits, Kicks und Raids bringen so viel Geld auf einen Zähler, wie du festlegst, unter einer Uhr in deiner Zeitzone, neben einer Minikarte, auf der ein Pfeil durch eine erfundene Stadt, einen Park oder die echten Straßen rund um einen Ort deiner Wahl läuft. Mods ändern das Geld mit !hud cash.',
       spinWheelTwoColors:
         'Das Glücksrad kann seine Felder in nur zwei Farben färben, Feld für Feld im Wechsel: Orange und Lila im klassischen Look oder die Akzent- und Panelfarbe des gewählten Presets, wo es standardmäßig an ist.',
       spinWheelPresets:

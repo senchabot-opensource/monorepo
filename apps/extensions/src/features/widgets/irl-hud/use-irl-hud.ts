@@ -3,13 +3,23 @@ import { usePreviewReceiver } from '#/hooks/use-preview-channel';
 import {
   HUD_MOVES,
   type HudItem,
+  type HudMap,
   type HudMoneyValues,
   type HudMove,
   type HudPlace,
 } from '#/lib/irl-hud-url';
 import type { SubathonEvent, SubathonPlatform } from '../subathon/subathon-events';
 import { useSubEvents } from '../subathon/use-sub-events';
-import { chosenView, MAP_RESET, parseMapCommand, parseMoveCommand } from './hud-map';
+import {
+  type ArrowSource,
+  canGoIndoors,
+  chosenView,
+  MAP_RESET,
+  mapNow,
+  parseIndoorCommand,
+  parseMapCommand,
+  parseMoveCommand,
+} from './hud-map';
 import { parseBuyCommand } from './hud-market';
 import {
   applyCashCommand,
@@ -92,6 +102,8 @@ interface UseIrlHudOptions {
   startMove: HudMove;
   /** The market, for !hud buy. */
   items: HudItem[];
+  /** What moves the arrow; a real place can only go indoors when it's GPS. */
+  arrowSource?: ArrowSource;
   /** Preview mode: simulated events, no chat and no saved money. */
   simulate?: boolean;
   /** The only platform the preview simulates; both when unset. */
@@ -109,13 +121,14 @@ export function useIrlHud({
   startMap,
   startMove,
   items,
+  arrowSource = 'walk',
   simulate = false,
   simPlatform,
   previewId,
 }: UseIrlHudOptions) {
   const key = simulate ? null : storageKey(twitch, kick);
-  const settingsRef = useRef({ start, values, places, startMap, startMove, items });
-  settingsRef.current = { start, values, places, startMap, startMove, items };
+  const settingsRef = useRef({ start, values, places, startMap, startMove, items, arrowSource });
+  settingsRef.current = { start, values, places, startMap, startMove, items, arrowSource };
   const [state, setState] = useState<HudState>(() => loadState(key, start));
   const stateRef = useRef(state);
   const [pops, setPops] = useState<HudPop[]>([]);
@@ -145,6 +158,14 @@ export function useIrlHud({
     (event: SubathonEvent) => {
       const current = settingsRef.current;
       if (event.kind === 'mod') {
+        const indoor = parseIndoorCommand(event.text);
+        if (indoor !== null) {
+          // Where the arrow can't go indoors (a walked real place), the command does nothing.
+          const map = mapNow(stateRef.current.map, current.places, current.startMap);
+          if (!indoor || canGoIndoors(map, current.arrowSource))
+            commit({ ...stateRef.current, indoor });
+          return;
+        }
         const move = parseMoveCommand(event.text);
         if (move) {
           commit({ ...stateRef.current, move: { choice: move, from: current.startMove } });
@@ -166,14 +187,23 @@ export function useIrlHud({
           return;
         }
         const choice = parseMapCommand(event.text);
+        // Going to a map the arrow can't be indoors on (a walked real place) leaves the building.
+        const outdoors = (map: HudMap) =>
+          canGoIndoors(map, current.arrowSource) ? {} : { indoor: false };
         if (choice === MAP_RESET) {
-          commit({ ...stateRef.current, map: undefined });
+          const map = mapNow(undefined, current.places, current.startMap);
+          commit({ ...stateRef.current, map: undefined, ...outdoors(map) });
           return;
         }
         if (choice !== null) {
           // A word that names no saved place or made-up map is ignored, like a typo.
-          if (chosenView(choice, current.places))
-            commit({ ...stateRef.current, map: { choice, from: current.startMap } });
+          const view = chosenView(choice, current.places);
+          if (view)
+            commit({
+              ...stateRef.current,
+              map: { choice, from: current.startMap },
+              ...outdoors(view.map),
+            });
           return;
         }
         const command = parseCashCommand(event.text);
@@ -230,5 +260,11 @@ export function useIrlHud({
   // Saved in OBS, so checked: only a known movement over the URL's current one applies.
   const savedMove = state.move?.from === startMove ? state.move.choice : null;
   const moveChoice = HUD_MOVES.find((move) => move === savedMove) ?? null;
-  return { money: state.money, pops, mapChoice, move: moveChoice ?? startMove };
+  return {
+    money: state.money,
+    pops,
+    mapChoice,
+    move: moveChoice ?? startMove,
+    indoor: state.indoor === true,
+  };
 }

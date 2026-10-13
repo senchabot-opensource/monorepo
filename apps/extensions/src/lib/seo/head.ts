@@ -135,13 +135,13 @@ export const OG_IMAGES = {
   'irl-hud': {
     path: '/og/irl-hud.png',
     alt: {
-      en: 'IRL HUD, a cash counter and mini-map overlay that subs, cheers and raids fill',
-      de: 'IRL-HUD, ein Overlay mit Geldzähler und Minikarte, das Subs, Cheers und Raids füllen',
-      tr: "IRL HUD, abonelik, cheer ve raid'lerle dolan para sayacı ve mini harita overlay'i",
-      es: 'HUD IRL, un overlay de contador de dinero y minimapa que llenan subs, cheers y raids',
-      fr: "HUD IRL, un overlay compteur d'argent et mini-carte que remplissent subs, cheers et raids",
-      ja: 'IRL HUD: サブスク、Cheer、レイドで増える所持金カウンターとミニマップのオーバーレイ',
-      pt: 'HUD IRL, um overlay de contador de dinheiro e minimapa que subs, cheers e raids enchem',
+      en: 'IRL HUD Overlay, a cash counter and mini-map that subs, cheers and raids fill',
+      de: 'IRL-HUD-Overlay mit Geldzähler und Minikarte, das Subs, Cheers und Raids füllen',
+      tr: "IRL HUD Overlay, abonelik, cheer ve raid'lerle dolan para sayacı ve mini harita",
+      es: 'Overlay HUD IRL, un contador de dinero y minimapa que llenan subs, cheers y raids',
+      fr: "Overlay HUD IRL, un compteur d'argent et une mini-carte que remplissent subs, cheers et raids",
+      ja: 'IRL HUDオーバーレイ: サブスク、Cheer、レイドで増える所持金カウンターとミニマップ',
+      pt: 'Overlay HUD IRL, um contador de dinheiro e minimapa que subs, cheers e raids enchem',
     },
   },
   weather: {
