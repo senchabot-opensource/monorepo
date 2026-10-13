@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { DEFAULT_HUD_SETTINGS, type HudSettings } from '#/lib/irl-hud-url';
 import { FakeWebSocket } from '#/test/browser';
 import { IrlHudWidget } from './irl-hud-widget';
+import { parseOverpass } from './map-osm';
 import { storageKey } from './use-irl-hud';
 
 const kickLookup = vi.hoisted(() => vi.fn());
@@ -163,8 +164,11 @@ describe('IrlHudWidget', () => {
       />,
     );
     expect(radar().dataset.map).toBe('loading');
+    // A radar sweep turns while the streets load, then gives way to them.
+    expect(screen.getByTestId('irl-hud-loading')).toBeTruthy();
     await act(async () => {});
     expect(radar().dataset.map).toBe('real');
+    expect(screen.queryByTestId('irl-hud-loading')).toBeNull();
     expect(screen.getByText('© OpenStreetMap')).toBeTruthy();
     expect(fetchMock).toHaveBeenCalledTimes(1);
     vi.unstubAllGlobals();
@@ -291,6 +295,138 @@ describe('IrlHudWidget', () => {
     expect(hud().dataset.move).toBe('stay');
     receive('twitch', MOD_SAYS('!hud walk'));
     expect(hud().dataset.move).toBe('walk');
+  });
+
+  it('goes into the nearest building and back out on command, and keeps that through a reload', () => {
+    const first = render(<IrlHudWidget twitchChannel="streamer" settings={settings()} />);
+    const frames = () => act(() => vi.advanceTimersByTime(100));
+    frames();
+    expect(radar().dataset.indoor).toBe('false');
+    receive('twitch', VIEWER_SAYS('!hud indoor'));
+    frames();
+    expect(hud().dataset.indoor).toBe('false');
+
+    receive('twitch', MOD_SAYS('!hud indoor'));
+    frames();
+    expect(hud().dataset.indoor).toBe('true');
+    expect(radar().dataset.indoor).toBe('true');
+    // The made-up city's building, lit over the dimmed map.
+    expect(screen.getByTestId('irl-hud-room').getAttribute('d')).toMatch(/^M.+Z$/);
+    first.unmount();
+
+    render(<IrlHudWidget twitchChannel="streamer" settings={settings()} />);
+    frames();
+    expect(radar().dataset.indoor).toBe('true');
+    receive('twitch', MOD_SAYS('!hud outside'));
+    frames();
+    expect(hud().dataset.indoor).toBe('false');
+    expect(radar().dataset.indoor).toBe('false');
+    expect(screen.queryByTestId('irl-hud-room')).toBeNull();
+  });
+
+  it('keeps a real place outdoors, and leaves the building when the map goes to one', () => {
+    // Overpass doesn't answer: the made-up city stands in, but it's still the real place's map.
+    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new TypeError('Failed to fetch')));
+    const places = [{ name: 'galata', lat: 41.0256, lon: 28.9744 }];
+    render(<IrlHudWidget twitchChannel="streamer" settings={settings({ map: 'real', places })} />);
+    const frames = () => act(() => vi.advanceTimersByTime(100));
+    receive('twitch', MOD_SAYS('!hud indoor'));
+    frames();
+    expect(hud().dataset.indoor).toBe('false');
+    expect(radar().dataset.indoor).toBe('false');
+
+    // The made-up city takes it indoors.
+    receive('twitch', MOD_SAYS('!hud map urban'));
+    receive('twitch', MOD_SAYS('!hud indoor'));
+    frames();
+    expect(radar().dataset.indoor).toBe('true');
+
+    // Back to the real place: outdoors, and still outdoors back on the made-up city.
+    receive('twitch', MOD_SAYS('!hud map galata'));
+    frames();
+    expect(hud().dataset.indoor).toBe('false');
+    expect(radar().dataset.indoor).toBe('false');
+    receive('twitch', MOD_SAYS('!hud map urban'));
+    frames();
+    expect(radar().dataset.indoor).toBe('false');
+    vi.unstubAllGlobals();
+  });
+
+  it('takes a real place indoors, into the real building, once GPS moves the arrow', async () => {
+    // A street and a building at its west end, where the arrow starts out.
+    const street = {
+      type: 'way',
+      tags: { highway: 'residential' },
+      geometry: [
+        { lat: 41, lon: 28.999 },
+        { lat: 41, lon: 29.001 },
+      ],
+    };
+    const answer = {
+      elements: [
+        street,
+        {
+          type: 'way',
+          tags: { building: 'yes' },
+          geometry: [
+            { lat: 41.0001, lon: 28.9989 },
+            { lat: 41.0001, lon: 28.9991 },
+            { lat: 41.0002, lon: 28.9991 },
+            { lat: 41.0002, lon: 28.9989 },
+            { lat: 41.0001, lon: 28.9989 },
+          ],
+        },
+      ],
+    };
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(JSON.stringify(answer))));
+    const real = settings({ map: 'real', places: [{ name: 'home', lat: 41, lon: 29 }] });
+    const frames = () => act(() => vi.advanceTimersByTime(100));
+    const walked = render(<IrlHudWidget twitchChannel="streamer" settings={real} />);
+    await act(async () => {});
+    receive('twitch', MOD_SAYS('!hud indoor'));
+    frames();
+    expect(radar().dataset.indoor).toBe('false');
+    walked.unmount();
+
+    render(<IrlHudWidget twitchChannel="streamer" settings={real} arrowSource="gps" />);
+    await act(async () => {});
+    receive('twitch', MOD_SAYS('!hud indoor'));
+    frames();
+    expect(radar().dataset.indoor).toBe('true');
+    // The real building's outline as OpenStreetMap drew it, not a stand-in.
+    const building = parseOverpass(answer, 41, 29).areas.find((area) => area.kind === 'building');
+    const pts = building?.pts ?? [];
+    const outline = Array.from(
+      { length: pts.length / 2 },
+      (_, k) => `${pts[2 * k]} ${pts[2 * k + 1]}`,
+    );
+    expect(screen.getByTestId('irl-hud-room').getAttribute('d')).toBe(`M${outline.join('L')}Z`);
+    vi.unstubAllGlobals();
+  });
+
+  it('puts up no stand-in building on a real place: with none near, it stays outdoors', async () => {
+    const answer = {
+      elements: [
+        {
+          type: 'way',
+          tags: { highway: 'residential' },
+          geometry: [
+            { lat: 41, lon: 28.999 },
+            { lat: 41, lon: 29.001 },
+          ],
+        },
+      ],
+    };
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(JSON.stringify(answer))));
+    const real = settings({ map: 'real', places: [{ name: 'home', lat: 41, lon: 29 }] });
+    render(<IrlHudWidget twitchChannel="streamer" settings={real} arrowSource="gps" />);
+    await act(async () => {});
+    receive('twitch', MOD_SAYS('!hud indoor'));
+    act(() => vi.advanceTimersByTime(2500));
+    expect(hud().dataset.indoor).toBe('true');
+    expect(radar().dataset.indoor).toBe('false');
+    expect(screen.queryByTestId('irl-hud-room')).toBeNull();
+    vi.unstubAllGlobals();
   });
 
   it('keeps the chosen mini-map through a reload, until the URL starts on another one', () => {

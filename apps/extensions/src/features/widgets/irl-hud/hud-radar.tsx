@@ -9,7 +9,28 @@ import {
 } from 'react';
 import { RetryableFetchError } from '#/lib/fetch-json';
 import type { HudMap, HudStyle } from '#/lib/irl-hud-url';
-import { createWalker, type MapGraph, type Pt, type Steer, stepWalker } from './map-graph';
+import {
+  createWalker,
+  type MapGraph,
+  type Pt,
+  type Steer,
+  stepWalker,
+  type WalkerPose,
+} from './map-graph';
+import {
+  createExitWalk,
+  createRoomWalker,
+  INDOOR_SPEED,
+  nearestNode,
+  nearestRoom,
+  type Room,
+  type RoomWalker,
+  roomFor,
+  roomZoom,
+  type StraightWalk,
+  stepExitWalk,
+  stepRoomWalker,
+} from './map-indoor';
 import { cityTile, parkTile, TILE } from './map-made-up';
 import { loadRealMap, type RealMap, realGraph, stayNearMiddle } from './map-osm';
 
@@ -29,10 +50,15 @@ interface Palette {
   lawn: string;
   tree: string;
   water: string;
+  /** Indoors: the floor of the building the arrow is in, and its walls. */
+  floor: string;
+  wall: string;
 }
 
 interface RadarLook {
   palette: Palette;
+  /** The sweep and the pings while a real place loads. */
+  scan: string;
   /** Corner radius: a round map or a rounded square. */
   radius: string;
   border: string;
@@ -49,9 +75,12 @@ const LOOKS: Record<HudStyle, RadarLook> = {
       lawn: '#46743c',
       tree: '#2a5226',
       water: '#2f5e86',
+      floor: '#4f5c63',
+      wall: '#e3dcc0',
     },
     radius: '50%',
     border: '0 0 0 3px #8d969c, 0 0 0 9px #000',
+    scan: '132 214 140',
   },
   modern: {
     palette: {
@@ -63,9 +92,12 @@ const LOOKS: Record<HudStyle, RadarLook> = {
       lawn: '#2a5a3b',
       tree: '#173b26',
       water: '#1b4a73',
+      floor: '#2a3a47',
+      wall: '#cfe7ff',
     },
     radius: '22px',
     border: '0 0 0 2px rgba(255,255,255,.35), 0 6px 18px rgba(0,0,0,.55)',
+    scan: '150 205 255',
   },
 };
 
@@ -77,6 +109,19 @@ export const RADAR_CSS = `
 .ih-north{position:absolute;left:-13px;top:${-RADAR_SIZE / 2 + 8}px;width:26px;height:26px;border-radius:50%;
   background:#000;color:#fff;font-size:17px;display:grid;place-items:center}
 .ih-player{position:absolute;left:50%;top:50%;transform:translate(-50%,-55%)}
+/* While a real place loads: a radar sweep turning, rings, and pings from the middle. */
+.ih-loading{position:absolute;inset:0;pointer-events:none}
+.ih-sweep{position:absolute;inset:-25%;
+  background:conic-gradient(from 0deg,transparent 0 280deg,rgb(var(--ih-scan)/.32) 360deg);
+  animation:ih-sweep-turn 1.8s linear infinite}
+.ih-ring{position:absolute;left:50%;top:50%;border-radius:50%;border:1px solid rgb(var(--ih-scan)/.18);
+  transform:translate(-50%,-50%)}
+.ih-ping{position:absolute;left:50%;top:50%;width:10px;height:10px;transform:translate(-50%,-50%);
+  border-radius:50%;border:2px solid rgb(var(--ih-scan)/.7);animation:ih-ping-grow 1.8s ease-out infinite}
+.ih-ping+.ih-ping{animation-delay:.9s}
+@keyframes ih-sweep-turn{to{transform:rotate(360deg)}}
+@keyframes ih-ping-grow{from{width:10px;height:10px;opacity:1}to{width:240px;height:240px;opacity:0}}
+@media (prefers-reduced-motion:reduce){.ih-sweep,.ih-ping{animation:none}}
 .ih-credit{position:absolute;left:0;right:0;bottom:7px;text-align:center;
   font:600 10px/1 ui-sans-serif,system-ui,sans-serif;color:#fff;text-shadow:0 0 3px #000,0 0 3px #000}
 `;
@@ -103,6 +148,10 @@ interface Scene {
   tile: number | null;
   /** Real places credit OpenStreetMap, as its license asks. */
   credit: boolean;
+  /** The buildings the arrow can go into, in map px. */
+  rooms: Room[];
+  /** Whether a building may go up around the arrow where there's none: made-up maps only. */
+  standIn: boolean;
 }
 
 const OFFSETS = [-TILE, 0, TILE];
@@ -138,7 +187,21 @@ function urbanScene(seed: number, palette: Palette, pattern: string): Scene {
       ))}
     </>,
   );
-  return { art, graph, start: 0, tile: TILE, credit: false };
+  // Every copy around the middle tile, so the arrow walks into the building nearest it even
+  // across a tile edge.
+  const rooms = blocks
+    .filter((block) => block.kind === 'building')
+    .flatMap((block) =>
+      OFFSETS.flatMap((ox) =>
+        OFFSETS.map((oy) => [
+          { x: block.x + ox, y: block.y + oy },
+          { x: block.x + block.w + ox, y: block.y + oy },
+          { x: block.x + block.w + ox, y: block.y + block.h + oy },
+          { x: block.x + ox, y: block.y + block.h + oy },
+        ]),
+      ),
+    );
+  return { art, graph, start: 0, tile: TILE, credit: false, rooms, standIn: true };
 }
 
 function parkScene(seed: number, palette: Palette, pattern: string): Scene {
@@ -178,7 +241,8 @@ function parkScene(seed: number, palette: Palette, pattern: string): Scene {
       ))}
     </>,
   );
-  return { art, graph, start: 0, tile: TILE, credit: false };
+  // No buildings in the park: indoors, a stand-in one goes up around the arrow.
+  return { art, graph, start: 0, tile: TILE, credit: false, rooms: [], standIn: true };
 }
 
 const ROAD_WIDTH = { major: 14, minor: 9, path: 5 } as const;
@@ -213,7 +277,26 @@ function realScene(map: RealMap, palette: Palette): Scene {
     </>
   );
   const { graph, start } = realGraph(map);
-  return { art, graph, start, steer: stayNearMiddle, tile: null, credit: true };
+  // The real buildings, for when GPS says which one the streamer is in. The walk around a picked
+  // spot can't, so the widget keeps a walked real place outdoors.
+  const rooms = map.areas
+    .filter((area) => area.kind === 'building')
+    .map((area) => {
+      const points: Pt[] = [];
+      for (let k = 0; k + 1 < area.pts.length; k += 2)
+        points.push({ x: area.pts[k], y: area.pts[k + 1] });
+      return points;
+    });
+  return {
+    art,
+    graph,
+    start,
+    steer: stayNearMiddle,
+    tile: null,
+    credit: true,
+    rooms,
+    standIn: false,
+  };
 }
 
 type RealState = { map: RealMap | null; failed: boolean };
@@ -270,17 +353,47 @@ interface HudRadarProps {
   lon: number | null;
   /** How fast the arrow goes, in px a second; 0 stands still. */
   speed: number;
+  /**
+   * Inside the building nearest the arrow, walking within its walls (!hud indoor). The widget
+   * sets it on a real place only when GPS moves the arrow.
+   */
+  indoor?: boolean;
   place: CSSProperties;
 }
 
 const mod = (n: number, m: number) => ((n % m) + m) % m;
+
+// Too long a frame (a hidden source) jumps ahead in one go, like the walk outside does.
+const MAX_STEP_SECONDS = 0.25;
+/** How quickly the map zooms in on a building and back out, a share a second. */
+const ZOOM_RATE = 2.5;
+/** The lit walls of the building the arrow is in, in screen px. */
+const WALL_WIDTH = 3;
+/** How often a real place looks again for a building near the arrow, in ms. */
+const ROOM_RETRY_MS = 1000;
+
+/** "M x y L x y … Z" for a room's walls. */
+const roomPath = (room: Room) =>
+  pathData(
+    room.flatMap((p) => [p.x, p.y]),
+    true,
+  );
 
 /**
  * The mini-map: an arrow walking streets or park paths, turning at the corners, with the map
  * turning under it so the arrow always points ahead. Urban and Park are made up, so they give
  * nothing of the stream's location away; Real Place draws the streets around a picked spot.
  */
-export function HudRadar({ style, map, seed, lat, lon, speed, place }: HudRadarProps) {
+export function HudRadar({
+  style,
+  map,
+  seed,
+  lat,
+  lon,
+  speed,
+  indoor = false,
+  place,
+}: HudRadarProps) {
   const look = LOOKS[style];
   const pattern = `ih-map-${useId().replace(/[^a-zA-Z0-9]/g, '')}`;
   const wantsReal = map === 'real' && lat !== null && lon !== null;
@@ -296,28 +409,87 @@ export function HudRadar({ style, map, seed, lat, lon, speed, place }: HudRadarP
   // Read on every frame, so walking, running and stopping don't start the walk over.
   const speedRef = useRef(speed);
   speedRef.current = speed;
+  const indoorRef = useRef(indoor);
+  indoorRef.current = indoor;
+  // The building the arrow is in, drawn lit over the dimmed map; null outdoors.
+  const [room, setRoom] = useState<Room | null>(null);
   const spinRef = useRef<HTMLDivElement>(null);
   const panRef = useRef<HTMLDivElement>(null);
   const northRef = useRef<HTMLSpanElement>(null);
+  const wallsRef = useRef<SVGPathElement>(null);
   useEffect(() => {
-    if (!scene?.graph || typeof requestAnimationFrame === 'undefined') return;
-    const walker = createWalker(scene.graph, scene.start, Math.random, scene.steer);
-    if (!walker) return;
+    if (!scene || typeof requestAnimationFrame === 'undefined') return;
+    const { graph, tile } = scene;
+    let walker = graph ? createWalker(graph, scene.start, Math.random, scene.steer) : null;
+    let pose: WalkerPose = walker ? stepWalker(walker, 0, 0) : { x: 0, y: 0, heading: 0 };
+    // Indoors: walking inside a building. Leaving it: walking out to the street's nearest junction.
+    let inRoom: RoomWalker | null = null;
+    let leaving: { walk: StraightWalk; node: number } | null = null;
+    let zoom = 1;
+    // When a real place last had no building near the arrow.
+    let missedAt = Number.NEGATIVE_INFINITY;
     let last: number | null = null;
     let frame = 0;
     const tick = (now: number) => {
-      const pose = stepWalker(walker, last === null ? 0 : (now - last) / 1000, speedRef.current);
+      const dt = last === null ? 0 : Math.min(MAX_STEP_SECONDS, (now - last) / 1000);
       last = now;
-      const x = scene.tile ? mod(pose.x, scene.tile) : pose.x;
-      const y = scene.tile ? mod(pose.y, scene.tile) : pose.y;
+      const speed = speedRef.current;
+      if (indoorRef.current && !inRoom && now - missedAt >= ROOM_RETRY_MS) {
+        // Into the building nearest the arrow, on the map tile it shows. A made-up map puts up a
+        // stand-in where there's none; a real place only has its real buildings, so with none
+        // near it stays outdoors and looks again in a moment, as a GPS position moves on.
+        const at = tile ? { ...pose, x: mod(pose.x, tile), y: mod(pose.y, tile) } : pose;
+        const building = scene.standIn ? roomFor(scene.rooms, at) : nearestRoom(scene.rooms, at);
+        if (building) {
+          inRoom = createRoomWalker(building, at);
+          // Standing still, it can't walk in, so it's just inside.
+          if (speed <= 0) Object.assign(inRoom, inRoom.target);
+          leaving = null;
+          setRoom(building);
+        } else {
+          missedAt = now;
+        }
+      } else if (!indoorRef.current && inRoom) {
+        inRoom = null;
+        setRoom(null);
+        if (graph) {
+          const street = nearestNode(graph, pose);
+          if (street.node >= 0) leaving = { walk: createExitWalk(pose, street), node: street.node };
+        }
+      }
+      // Speeds are on the screen; zoomed in, the same steps cover less of the map.
+      if (inRoom) {
+        pose = stepRoomWalker(inRoom, dt, (speed * INDOOR_SPEED) / zoom);
+      } else if (leaving && graph) {
+        const out = stepExitWalk(leaving.walk, dt, speed / zoom);
+        pose = out.pose;
+        if (out.done) {
+          walker = createWalker(graph, leaving.node, Math.random, scene.steer);
+          if (walker) walker.heading = pose.heading;
+          leaving = null;
+        }
+      } else if (walker) {
+        pose = stepWalker(walker, dt, speed);
+      }
+      const wanted = inRoom ? roomZoom(inRoom.room, RADAR_SIZE) : 1;
+      zoom += (wanted - zoom) * Math.min(1, dt * ZOOM_RATE);
+      // Indoors the map stays on the building's own copy, which is drawn lit.
+      const x = tile && !inRoom ? mod(pose.x, tile) : pose.x;
+      const y = tile && !inRoom ? mod(pose.y, tile) : pose.y;
       // The map turns against the walk, so the arrow always points ahead; N keeps upright.
       if (spinRef.current) spinRef.current.style.transform = `rotate(${-pose.heading}deg)`;
-      if (panRef.current) panRef.current.style.transform = `translate(${-x}px,${-y}px)`;
+      if (panRef.current)
+        panRef.current.style.transform = `scale(${zoom}) translate(${-x}px,${-y}px)`;
       if (northRef.current) northRef.current.style.transform = `rotate(${pose.heading}deg)`;
+      // The zoom scales the walls with the map; they keep their width on screen instead.
+      if (wallsRef.current) wallsRef.current.style.strokeWidth = String(WALL_WIDTH / zoom);
       frame = requestAnimationFrame(tick);
     };
     frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
+    return () => {
+      cancelAnimationFrame(frame);
+      setRoom(null);
+    };
   }, [scene]);
 
   const box = scene?.tile
@@ -329,6 +501,7 @@ export function HudRadar({ style, map, seed, lat, lon, speed, place }: HudRadarP
       className="ih-radar"
       data-testid="irl-hud-radar"
       data-map={kind}
+      data-indoor={room ? 'true' : 'false'}
       style={{ ...place, borderRadius: look.radius, boxShadow: look.border, background: ground }}
     >
       <div className="ih-spin" ref={spinRef}>
@@ -342,6 +515,24 @@ export function HudRadar({ style, map, seed, lat, lon, speed, place }: HudRadarP
               style={{ left: box.at, top: box.at }}
             >
               {scene.art}
+              {room && (
+                <>
+                  <path
+                    d={`M${box.at} ${box.at}h${box.size}v${box.size}h${-box.size}Z${roomPath(room)}`}
+                    fillRule="evenodd"
+                    fill="rgba(0,0,0,.55)"
+                  />
+                  <path
+                    ref={wallsRef}
+                    data-testid="irl-hud-room"
+                    d={roomPath(room)}
+                    fill={look.palette.floor}
+                    stroke={look.palette.wall}
+                    strokeWidth={WALL_WIDTH}
+                    strokeLinejoin="round"
+                  />
+                </>
+              )}
             </svg>
           )}
         </div>
@@ -349,6 +540,20 @@ export function HudRadar({ style, map, seed, lat, lon, speed, place }: HudRadarP
           <span ref={northRef}>N</span>
         </div>
       </div>
+      {kind === 'loading' && (
+        <div
+          className="ih-loading"
+          data-testid="irl-hud-loading"
+          aria-hidden="true"
+          style={{ '--ih-scan': look.scan } as CSSProperties}
+        >
+          <span className="ih-ring" style={{ width: RADAR_SIZE / 3, height: RADAR_SIZE / 3 }} />
+          <span className="ih-ring" style={{ width: RADAR_SIZE / 1.5, height: RADAR_SIZE / 1.5 }} />
+          <span className="ih-sweep" />
+          <span className="ih-ping" />
+          <span className="ih-ping" />
+        </div>
+      )}
       <svg className="ih-player" width="30" height="34" viewBox="0 0 30 34" aria-hidden="true">
         <path
           d="M15 2 28 31 15 24 2 31Z"

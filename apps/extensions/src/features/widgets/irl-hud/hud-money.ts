@@ -13,6 +13,8 @@ export interface HudState {
   map?: { choice: string; from: string };
   /** The arrow's movement a mod picked with !hud walk/run/stay, and the URL's it replaced. */
   move?: { choice: string; from: string };
+  /** Inside the nearest building on the mini-map, after a mod's !hud indoor. */
+  indoor?: boolean;
 }
 
 export const clampMoney = (n: number) => Math.max(MIN_MONEY, Math.min(MAX_MONEY, Math.round(n)));
@@ -24,7 +26,9 @@ export const createHud = (start: number): HudState => ({ money: clampMoney(start
  * amount means "the money is this now".
  */
 export const followStart = (saved: HudState, start: number): HudState =>
-  saved.start === start ? saved : { ...createHud(start), map: saved.map, move: saved.move };
+  saved.start === start
+    ? saved
+    : { ...createHud(start), map: saved.map, move: saved.move, indoor: saved.indoor };
 
 export function isHudState(value: unknown): value is HudState {
   if (!value || typeof value !== 'object') return false;
@@ -41,7 +45,11 @@ export function isHudState(value: unknown): value is HudState {
     );
   };
   return (
-    Number.isInteger(s.money) && Number.isInteger(s.start) && choiceOk(s.map) && choiceOk(s.move)
+    Number.isInteger(s.money) &&
+    Number.isInteger(s.start) &&
+    choiceOk(s.map) &&
+    choiceOk(s.move) &&
+    (s.indoor === undefined || typeof s.indoor === 'boolean')
   );
 }
 

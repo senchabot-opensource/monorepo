@@ -133,7 +133,7 @@ export const ja: typeof en = {
         'サブスク、ギフトサブ、Bits、Kicks、レイドのたびに、効果音付きのアニメーションアラート。',
     },
     irlHud: {
-      name: 'IRL HUD',
+      name: 'IRL HUDオーバーレイ',
       tagline:
         'IRL配信向けのゲーム風HUD。サブスク、ギフト、Cheer、レイドで所持金が増え、ミニマップも表示されます。',
     },
@@ -259,10 +259,10 @@ export const ja: typeof en = {
       'OBS Studioをはじめ、ブラウザソースに対応したソフトで使えます。ウィジェットURLをブラウザソースとして追加し、設定ページに表示されるサイズにしてください。',
     faq4Q: 'TwitchとKickを同時に使えますか？',
     faq4A:
-      'はい。チャットボックス、エモートウォール、Sub Sprout、Subathon Timer、配信アラート、サブスク目標、チャット投票、配信カウントダウン、IRL HUD、ルーレットは、ひとつのURLにTwitchとKickのチャンネルを両方指定できます。OBS Bridgeも両方のチャットを同時に聞き取れます。抽選は一度にひとつのプラットフォームで動きます。',
+      'はい。チャットボックス、エモートウォール、Sub Sprout、Subathon Timer、配信アラート、サブスク目標、チャット投票、配信カウントダウン、IRL HUDオーバーレイ、ルーレットは、ひとつのURLにTwitchとKickのチャンネルを両方指定できます。OBS Bridgeも両方のチャットを同時に聞き取れます。抽選は一度にひとつのプラットフォームで動きます。',
     faq5Q: 'あとからウィジェットを変更するには？',
     faq5A:
-      '設定ページを開いて好きなように設定し、ブラウザソースのURLを差し替えてください。チャットボックス、エモートウォール、Sub Sprout、Subathon Timer、配信アラート、サブスク目標、チャット投票、配信フレーム、SNSリンク、配信カウントダウン、IRL HUD、天気、ルーレットは既存のURLも開けます。設定ページに貼り付ければ設定が戻ってくるので、変えたいところだけ変更できます。',
+      '設定ページを開いて好きなように設定し、ブラウザソースのURLを差し替えてください。チャットボックス、エモートウォール、Sub Sprout、Subathon Timer、配信アラート、サブスク目標、チャット投票、配信フレーム、SNSリンク、配信カウントダウン、IRL HUDオーバーレイ、天気、ルーレットは既存のURLも開けます。設定ページに貼り付ければ設定が戻ってくるので、変えたいところだけ変更できます。',
     faq6Q: 'アップデート後もウィジェットURLは使えますか？',
     faq6A:
       'はい。アップデートしても既存のURLの設定項目と値はそのまま使えるので、シーンに置いてあるウィジェットのURLを新しくする必要はありません。',
@@ -937,8 +937,8 @@ export const ja: typeof en = {
       'はい！サブスク目標とフォロワー目標はOBSのlocalStorageで独立してカウントを保持し、別々のURLを使用します。',
   },
   irlHud: {
-    breadcrumb: 'IRL HUDの設定',
-    title: 'IRL HUDの設定',
+    breadcrumb: 'IRL HUDオーバーレイの設定',
+    title: 'IRL HUDオーバーレイの設定',
     intro:
       'TwitchとKick向けの、IRL配信のためのゲーム風HUD。サブスク、ギフトサブ、BitsのCheer、Kicksのギフト、レイドが入るたびに、設定した金額があなたのタイムゾーンの時計の下にあるカウンターに加算されます。その隣のミニマップでは、矢印が街の通りや公園の小道、あなたが選んだ場所の実際の通りを歩いていきます。',
     style: 'スタイル',
@@ -1079,12 +1079,14 @@ export const ja: typeof en = {
     cmdMapReset: 'URLで設定したミニマップに戻します',
     cmdWalk: '矢印を歩かせます。!hud run なら走ります',
     cmdStay: '矢印をその場で止めます',
+    cmdIndoor: '「街」と「公園」のミニマップで、矢印を一番近い建物の中に入れ、壁の内側を歩かせます',
+    cmdOutdoor: '矢印を通りに戻します',
     cmdBuy: 'アイテムを買います。値段は所持金から引かれます',
     cmdBuyMany: '同じアイテムを3個買います',
     commandsAmounts:
       '金額は 500、1,500、2.5k、1m のように書きます。!hud cash add 500 や !hud cash remove 500 も使えます。',
-    previewTitle: 'IRL HUDのプレビュー',
-    previewIframeTitle: 'IRL HUDのプレビュー',
+    previewTitle: 'IRL HUDオーバーレイのプレビュー',
+    previewIframeTitle: 'IRL HUDオーバーレイのプレビュー',
     previewHint:
       'プレビューでは模擬のサブスク、ギフト、Cheer、レイドが流れます。配信では、所持金を増やすのはあなたのチャットだけです。',
     testTitle: '試してみる:',
@@ -1096,11 +1098,12 @@ export const ja: typeof en = {
     testAdd: '+$1,000',
     testRemove: '−$500',
     testMove: '止まる / 歩く',
+    testIndoor: '入る / 出る',
     testReset: 'リセット',
     widgetUrlTip:
       '作成済みのウィジェットがありますか？ここにURLを貼り付けると設定が読み込まれ、必要なところだけ変更できます。',
     widgetUrlPlaceholder: '既存のウィジェットURLを貼り付けて編集',
-    widgetUrlInvalid: 'IRL HUDのURLではありません。',
+    widgetUrlInvalid: 'IRL HUDオーバーレイのURLではありません。',
     browserSourceHintSize: '（推奨サイズ: 1920×1080、シーン全体）。',
     guideTitle: '配信ソフトでの設定（OBS、Streamlabs、XSplitなど）',
     guideStep1:
@@ -1239,7 +1242,7 @@ export const ja: typeof en = {
     faq3Q: '自分の居場所がわかってしまいますか？',
     faq3A:
       '表示されるのは入力した名前だけです。天気は選んだ場所のもので、あなたを追いかけません。座標が表示されることもありません。IRL配信では今いる都市を選び、移動したら新しいURLを貼り付けてください。',
-    faq4Q: 'IRL HUDと一緒に使えますか？',
+    faq4Q: 'IRL HUDオーバーレイと一緒に使えますか？',
     faq4A: 'はい。両方を同じシーンに追加してください。天気は左上から始まり、右上のHUDの所持金や左下のミニマップと重なりません。',
     faq5Q: '華氏で表示できますか？',
     faq5A: 'はい。「単位」で°F, mphを選んでください。予報の行は12時間表示にもでき、オーバーレイはサイトの7つの言語のどれでも天気を表示できます。',
@@ -2062,7 +2065,8 @@ export const ja: typeof en = {
       update: {
         title: 'あとからウィジェットを変更するには？',
         p1: '設定はウィジェットURLの中にあるので、設定を変えるとURLも新しくなります。設定ページで設定を変えて新しいURLをコピーしたら、OBSでソースをダブルクリックし、URL欄の古いURLに上書きして貼り付けてください。',
-        p2: '[チャットボックス](/setup/chat-widget)、[エモートウォール](/setup/emote-wall)、[Sub Sprout](/setup/sub-growing-plant)、[Subathon Timer](/setup/subathon-timer)、[配信アラート](/setup/stream-alerts)、[サブスク目標](/setup/sub-goal)、[チャット投票](/setup/chat-poll)、[配信フレーム](/setup/stream-frames)、[SNSリンク](/setup/socials)、[配信カウントダウン](/setup/stream-countdown)、[IRL HUD](/setup/irl-hud)、[天気](/setup/weather)、[ルーレット](/setup/spin-wheel)なら、一からやり直す必要はありません。設定ページの「ウィジェットURL」欄に今のURLを貼り付ければ、チャンネルとすべての設定が戻ってきます。変えたいところを変えて、新しいURLをコピーしてください。',
+        p2:
+          '[チャットボックス](/setup/chat-widget)、[エモートウォール](/setup/emote-wall)、[Sub Sprout](/setup/sub-growing-plant)、[Subathon Timer](/setup/subathon-timer)、[配信アラート](/setup/stream-alerts)、[サブスク目標](/setup/sub-goal)、[チャット投票](/setup/chat-poll)、[配信フレーム](/setup/stream-frames)、[SNSリンク](/setup/socials)、[配信カウントダウン](/setup/stream-countdown)、[IRL HUDオーバーレイ](/setup/irl-hud)、[天気](/setup/weather)、[ルーレット](/setup/spin-wheel)なら、一からやり直す必要はありません。設定ページの「ウィジェットURL」欄に今のURLを貼り付ければ、チャンネルとすべての設定が戻ってきます。変えたいところを変えて、新しいURLをコピーしてください。',
         p3: 'OBS Bridgeには貼り付け欄がないので、設定ページで設定を入力し直して、新しいツールURLをコピーしてください。シーンの選択や許可ユーザーはツールページ上でも変更でき、「更新済みURLをコピー」ボタンで新しいURLを取得できます。古いURLもそのまま使えるので、更新は必須ではありません。',
       },
       troubleshoot: {
@@ -2848,10 +2852,10 @@ export const ja: typeof en = {
       'OBS Studioをはじめ、ブラウザソースに対応した配信ソフトならどれでも使えます。各ウィジェットはウェブのURLとして動き、そのURLをソースに貼り付けるだけです。ガイドはOBS Studio向けに書いています。',
     platformsQ: 'どのウィジェットがTwitchに、どれがKickに対応していますか？',
     platformsA:
-      '13個すべてが両方のプラットフォームに対応しています。チャットボックス、エモートウォール、Sub Sprout、Subathon Timer、配信アラート、サブスク目標、チャット投票、配信カウントダウン、IRL HUD、ルーレットは、ひとつのURLでTwitchとKickのチャンネルを同時に聞き取ります。OBS Bridgeは両方のチャットからコマンドを受け取り、許可ユーザーはそれぞれのプラットフォームと一緒に追加します。抽選は一度にひとつのプラットフォーム（TwitchかKick）で動きます。配信フレーム、SNSリンク、天気はチャットを読まないので、どちらのプラットフォームでも同じように動きます。チャットボックスでは、7TVのエモートは両方のプラットフォームで、BTTVとFFZのエモートはTwitchでのみ表示されます。',
+      '13個すべてが両方のプラットフォームに対応しています。チャットボックス、エモートウォール、Sub Sprout、Subathon Timer、配信アラート、サブスク目標、チャット投票、配信カウントダウン、IRL HUDオーバーレイ、ルーレットは、ひとつのURLでTwitchとKickのチャンネルを同時に聞き取ります。OBS Bridgeは両方のチャットからコマンドを受け取り、許可ユーザーはそれぞれのプラットフォームと一緒に追加します。抽選は一度にひとつのプラットフォーム（TwitchかKick）で動きます。配信フレーム、SNSリンク、天気はチャットを読まないので、どちらのプラットフォームでも同じように動きます。チャットボックスでは、7TVのエモートは両方のプラットフォームで、BTTVとFFZのエモートはTwitchでのみ表示されます。',
     editQ: 'あとからウィジェットを変更するには？',
     editA:
-      '設定ページで設定を変えて新しいURLをコピーし、OBSのソースのURL欄にある古いURLに上書きして貼り付けます。チャットボックス、エモートウォール、Sub Sprout、Subathon Timer、配信アラート、サブスク目標、チャット投票、配信フレーム、SNSリンク、配信カウントダウン、IRL HUD、天気、ルーレットなら、古いURLを設定ページの「ウィジェットURL」欄に貼り付けると設定がすべて戻ってくるので、一からやり直す必要はありません。',
+      '設定ページで設定を変えて新しいURLをコピーし、OBSのソースのURL欄にある古いURLに上書きして貼り付けます。チャットボックス、エモートウォール、Sub Sprout、Subathon Timer、配信アラート、サブスク目標、チャット投票、配信フレーム、SNSリンク、配信カウントダウン、IRL HUDオーバーレイ、天気、ルーレットなら、古いURLを設定ページの「ウィジェットURL」欄に貼り付けると設定がすべて戻ってくるので、一からやり直す必要はありません。',
     oldUrlsQ: '古いウィジェットURLは使い続けられますか？',
     oldUrlsA:
       'はい。アップデートは既存のURLが壊れないように行っています。パラメータ名、値、初期設定は変わりません。たとえば、チャットボックスの古い keep=true は今も「ずっと表示」を意味し、Sub Sproutも古い channel と platform のパラメータを読み取ります。',
@@ -2875,18 +2879,20 @@ export const ja: typeof en = {
     lead: 'Senchabot Extensionsの新機能とバグ修正を、新しい順に並べています。このリストは[GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions)にあるプロジェクトのコミット履歴からまとめています。',
     site: 'サイト',
     entries: {
+      irlHudIndoor:
+        'IRL HUDオーバーレイ: モデレーターが !hud indoor でミニマップを屋内モードにできるようになりました。「街」と「公園」のマップでは、矢印が一番近い建物に入り、マップがその建物にズームして周りを暗くするなか、壁の内側を歩きます。!hud outdoor で通りに戻ります。実在の場所のマップは屋外のままです。',
       weatherLaunch:
         '新しいオーバーレイ「天気」：選んだ場所のリアルタイムの天気です。カードか1行のバーで、アイコン、気温、天気を表示し、風、湿度、この先数時間または数日の予報も°Cか°Fで出せます。データはMET Norwayから無料で取得し、アカウントやAPIキーは不要です。',
       settingsTabs:
-        'IRL HUD、配信カウントダウン、Subathon Timer、配信アラート、チャット投票、チャットボックス、ルーレットの設定を、チャンネル欄の下のタブに分けました。どのタブも1画面に収まり、スマートフォンではプレビューとウィジェットURLがずっと上に表示されます。',
+        'IRL HUDオーバーレイ、配信カウントダウン、Subathon Timer、配信アラート、チャット投票、チャットボックス、ルーレットの設定を、チャンネル欄の下のタブに分けました。どのタブも1画面に収まり、スマートフォンではプレビューとウィジェットURLがずっと上に表示されます。',
       presetPickerFolded:
         '設定ページのプリセットを、選んだプリセット名のバーの下に折りたためるようになりました。クリックで開閉でき、ウィジェットがクラシックな見た目のときは折りたたまれた状態で始まります。',
       irlHudMarket:
-        'IRL HUDにマーケットが登場：値段付きのアイテムを追加でき、!hud buy 水 でその値段が所持金から引かれます。モデレーターは !hud stay、!hud walk、!hud run でミニマップの矢印を止めたり動かしたりもできます。',
+        'IRL HUDオーバーレイにマーケットが登場：値段付きのアイテムを追加でき、!hud buy 水 でその値段が所持金から引かれます。モデレーターは !hud stay、!hud walk、!hud run でミニマップの矢印を止めたり動かしたりもできます。',
       irlHudPlaces:
-        'IRL HUDでミニマップ用の場所を複数保存できるようになり、モデレーターはチャットから !hud map で切り替えられます。実在の場所はより近くから描かれ、矢印はその周りの道から外れずに歩きます。',
+        'IRL HUDオーバーレイでミニマップ用の場所を複数保存できるようになり、モデレーターはチャットから !hud map で切り替えられます。実在の場所はより近くから描かれ、矢印はその周りの道から外れずに歩きます。',
       irlHudLaunch:
-        '新オーバーレイ「IRL HUD」：IRL配信向けのゲーム風HUD。サブスク、ギフトサブ、Bits、Kicks、レイドで設定した金額が、あなたのタイムゾーンの時計の下にあるカウンターに加算されます。隣のミニマップでは、矢印が架空の街や公園、またはあなたが選んだ場所の実際の通りを歩きます。モデレーターは !hud cash で所持金を変更できます。',
+        '新登場「IRL HUDオーバーレイ」：IRL配信向けのゲーム風HUD。サブスク、ギフトサブ、Bits、Kicks、レイドで設定した金額が、あなたのタイムゾーンの時計の下にあるカウンターに加算されます。隣のミニマップでは、矢印が架空の街や公園、またはあなたが選んだ場所の実際の通りを歩きます。モデレーターは !hud cash で所持金を変更できます。',
       spinWheelTwoColors:
         'ルーレットの区切りを2色だけで交互に塗れるようになりました。クラシックではオレンジと紫、プリセットを選んでいるときはそのアクセントカラーとパネルカラーで、最初からオンになります。',
       spinWheelPresets:

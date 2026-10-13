@@ -2,7 +2,14 @@ import { type CSSProperties, useEffect, useMemo, useRef, useState } from 'react'
 import type { HudCorner, HudSettings, HudStyle } from '#/lib/irl-hud-url';
 import type { SubathonPlatform } from '../subathon/subathon-events';
 import { useShortSideScale } from '../use-fit-scale';
-import { chosenView, MOVE_SPEED, startingView, startKey } from './hud-map';
+import {
+  type ArrowSource,
+  canGoIndoors,
+  chosenView,
+  MOVE_SPEED,
+  startingView,
+  startKey,
+} from './hud-map';
 import { formatChange, formatMoney } from './hud-money';
 import { HudRadar, RADAR_CSS } from './hud-radar';
 import { hashSeed } from './map-graph';
@@ -247,6 +254,11 @@ interface IrlHudWidgetProps {
   simulate?: boolean;
   simPlatform?: SubathonPlatform;
   previewId?: string;
+  /**
+   * What moves the mini-map's arrow. Today it always walks; a GPS integration would pass `gps`,
+   * and a real place could then go indoors into the real building the streamer is in.
+   */
+  arrowSource?: ArrowSource;
 }
 
 export function IrlHudWidget({
@@ -256,8 +268,9 @@ export function IrlHudWidget({
   simulate,
   simPlatform,
   previewId,
+  arrowSource = 'walk',
 }: IrlHudWidgetProps) {
-  const { money, pops, mapChoice, move } = useIrlHud({
+  const { money, pops, mapChoice, move, indoor } = useIrlHud({
     twitch: twitchChannel,
     kick: kickChannel,
     start: settings.start,
@@ -266,6 +279,7 @@ export function IrlHudWidget({
     startMap: startKey(settings),
     startMove: settings.move,
     items: settings.items,
+    arrowSource,
     simulate,
     simPlatform,
     previewId,
@@ -274,6 +288,8 @@ export function IrlHudWidget({
   // A mod's !hud map choice, while it still names a saved place or a made-up map; else the URL's.
   const view = (mapChoice && chosenView(mapChoice, settings.places)) || startingView(settings);
   const place = view.map === 'real' ? view.place : null;
+  // A walked real place stays outdoors, even with indoors saved from a made-up map earlier.
+  const inside = indoor && canGoIndoors(view.map, arrowSource);
   const scale = useShortSideScale(DESIGN_SHORT_SIDE);
   const look = LOOKS[settings.style];
   const zoom = (scale * settings.size) / 100;
@@ -287,6 +303,7 @@ export function IrlHudWidget({
       data-corner={corner}
       data-money={money}
       data-move={move}
+      data-indoor={inside}
     >
       <style>{CSS}</style>
       <div
@@ -315,6 +332,7 @@ export function IrlHudWidget({
           lat={place?.lat ?? null}
           lon={place?.lon ?? null}
           speed={MOVE_SPEED[move]}
+          indoor={inside}
           place={cornerPlace(settings.radarCorner, scale, zoom)}
         />
       )}

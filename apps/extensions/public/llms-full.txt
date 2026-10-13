@@ -1,6 +1,6 @@
 # Senchabot Extensions: full reference
 
-> Free, open source stream overlays and tools for Twitch and Kick: Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Stream Frames, Stream Countdown, IRL HUD, Weather, Chat Poll, Raffle, OBS Bridge and Spin Wheel. Each one is set up on a web page at https://extensions.senchabot.com and runs from a URL. No login and nothing to install.
+> Free, open source stream overlays and tools for Twitch and Kick: Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Stream Frames, Stream Countdown, IRL HUD Overlay, Weather, Chat Poll, Raffle, OBS Bridge and Spin Wheel. Each one is set up on a web page at https://extensions.senchabot.com and runs from a URL. No login and nothing to install.
 
 Short version with links only: https://extensions.senchabot.com/llms.txt
 
@@ -27,7 +27,7 @@ Short version with links only: https://extensions.senchabot.com/llms.txt
 | Stream Alerts | Overlay | /setup/stream-alerts | /widgets/stream-alerts | 800x450 |
 | Sub Goal | Overlay | /setup/sub-goal | /widgets/goal | 800x260 |
 | Stream Frames | Overlay | /setup/stream-frames | /widgets/frame | 640x360, 360x640, 420x720 or 1920x1080 |
-| IRL HUD | Overlay | /setup/irl-hud | /widgets/irl-hud | 1920x1080 |
+| IRL HUD Overlay | Overlay | /setup/irl-hud | /widgets/irl-hud | 1920x1080 |
 | Weather | Overlay | /setup/weather | /widgets/weather | 1920x1080 |
 | Subathon Timer | Tool | /setup/subathon-timer | /widgets/subathon (run from chat with !subathon) | 800x300 |
 | Chat Poll | Tool | /setup/chat-poll | /widgets/poll (run from chat with !poll) | 640x560 |
@@ -342,9 +342,9 @@ URL parameters (all optional):
 | lang | en, tr (the wording of the scene) | the browser's language |
 | simulate | 1 runs a fast countdown that starts over | off |
 
-## IRL HUD
+## IRL HUD Overlay
 
-A game-style HUD for Twitch and Kick, made for IRL streams. Subs, gifted subs, Bits (Twitch), Kicks (Kick) and raids add the dollar amounts the streamer sets, with separate values per platform, and the cash counter rolls up to the new amount. Above it runs the time of day, in a picked time zone for OBS running on a cloud server or a computer at home. A mini-map shows an arrow walking streets or paths, turning at the corners, with the map turning under it so the arrow always points ahead. It draws a made-up city (Urban) or park (Park), picked by the channel name, or the real streets, paths, buildings, parks and water within about 350 m of a place the streamer saves (Real Place, starting at the first saved place), from OpenStreetMap data (© OpenStreetMap contributors) loaded once per place from the Overpass API and kept in the browser source for 14 days. On a real place the walk prefers footpaths and stays near the place. The setup page finds places with OpenStreetMap's Nominatim search, or takes pasted coordinates; each saved place has a one-word name mods switch to from chat.
+A game-style HUD for Twitch and Kick, made for IRL streams. Subs, gifted subs, Bits (Twitch), Kicks (Kick) and raids add the dollar amounts the streamer sets, with separate values per platform, and the cash counter rolls up to the new amount. Above it runs the time of day, in a picked time zone for OBS running on a cloud server or a computer at home. A mini-map shows an arrow walking streets or paths, turning at the corners, with the map turning under it so the arrow always points ahead. It draws a made-up city (Urban) or park (Park), picked by the channel name, or the real streets, paths, buildings, parks and water within about 350 m of a place the streamer saves (Real Place, starting at the first saved place), from OpenStreetMap data (© OpenStreetMap contributors) loaded once per place from the Overpass API and kept in the browser source for 14 days; a radar sweep turns on the mini-map while it loads. On a real place the walk prefers footpaths and stays near the place. The setup page finds places with OpenStreetMap's Nominatim search, or takes pasted coordinates; each saved place has a one-word name mods switch to from chat.
 
 - Widget URL: https://extensions.senchabot.com/widgets/irl-hud?twitch=CHANNEL&kick=CHANNEL
 - Demo with simulated subs: https://extensions.senchabot.com/widgets/irl-hud?simulate=1
@@ -375,6 +375,8 @@ The chosen mini-map is saved in the browser source until the URL's starting map 
 | Command | What it does |
 | --- | --- |
 | !hud walk / !hud run / !hud stay (or stop) | Starts the mini-map arrow walking or running, or stops it |
+| !hud indoor (or inside) | Urban and Park maps only: takes the arrow into the building nearest it, where it walks within the walls while the map zooms in and dims the rest; the made-up park gets a stand-in building. A real place stays outdoors, and switching to one leaves the building |
+| !hud outdoor (or outside) | Walks the arrow back out to the nearest street |
 | !hud buy water | Buys the market item named water: its price comes off the cash |
 | !hud buy water 3 | Buys three of it |
 
@@ -417,7 +419,7 @@ Live weather for any place the streamer picks: an icon, the temperature and the 
 
 - Widget URL: https://extensions.senchabot.com/widgets/weather?lat=41.0082&lon=28.9784&place=Istanbul&lang=en
 - Demo with sample weather: https://extensions.senchabot.com/widgets/weather?demo=1
-- Recommended size: 1920x1080, the whole scene. The weather sits in a picked corner and is sized for the source's short side, so a vertical canvas works too. Its default corner, top left, stays clear of the IRL HUD's.
+- Recommended size: 1920x1080, the whole scene. The weather sits in a picked corner and is sized for the source's short side, so a vertical canvas works too. Its default corner, top left, stays clear of the IRL HUD Overlay's.
 
 URL parameters:
 
@@ -611,7 +613,7 @@ A: Open an issue at https://github.com/senchabot-opensource/monorepo/issues/new.
 - Subathon Timer setup: https://extensions.senchabot.com/setup/subathon-timer
 - Stream Alerts setup: https://extensions.senchabot.com/setup/stream-alerts
 - Sub Goal setup: https://extensions.senchabot.com/setup/sub-goal
-- IRL HUD setup: https://extensions.senchabot.com/setup/irl-hud
+- IRL HUD Overlay setup: https://extensions.senchabot.com/setup/irl-hud
 - Weather setup: https://extensions.senchabot.com/setup/weather
 - Chat Poll setup: https://extensions.senchabot.com/setup/chat-poll
 - Raffle: https://extensions.senchabot.com/setup/raffle

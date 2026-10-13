@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { TranslationKey } from '#/lib/i18n';
-import { button, en, segment, settingsTab, textbox } from '#/test/queries';
+import { button, en, section, segment, settingsTab, textbox } from '#/test/queries';
 import { renderRoute, setupUser } from '#/test/render';
 
 const PAGE = '/setup/irl-hud';
@@ -153,6 +153,21 @@ describe('IRL HUD setup', () => {
     await user.click(settingsTab(en('irlHud.sectionMarket')));
     await user.click(settingsTab(en('irlHud.sectionMap')));
     expect(findField().value).toBe('galata');
+  });
+
+  it('lists the indoor commands, and tries them in the preview with one button', async () => {
+    await openPage();
+    const commands = section(en('irlHud.sectionCommands'));
+    expect(commands.textContent).toContain('!hud indoor');
+    expect(commands.textContent).toContain(en('irlHud.cmdIndoor'));
+    expect(commands.textContent).toContain('!hud outdoor');
+    expect(button(en('irlHud.testIndoor')).disabled).toBe(false);
+  });
+
+  it('turns the indoor test off on a real place, which stays outdoors', async () => {
+    const user = await openPage();
+    await user.click(segment(en('irlHud.map'), en('irlHud.maps.real')));
+    expect(button(en('irlHud.testIndoor')).disabled).toBe(true);
   });
 
   it("warns about the map's corner under both corner pickers", async () => {

@@ -348,39 +348,39 @@ export const PAGE_META = {
   },
   'irl-hud': {
     en: {
-      title: 'IRL HUD with Cash Counter and Mini-Map (Free) | Senchabot',
+      title: 'Free IRL HUD Overlay: Cash Counter & Mini-Map | Senchabot',
       description:
-        'A free IRL HUD overlay for OBS. Subs, gifted subs, Bits, Kicks and raids add cash on Twitch and Kick, with a clock in your time zone and a mini-map radar.',
+        'A free IRL HUD Overlay for OBS. Subs, gifted subs, Bits, Kicks and raids add cash on Twitch and Kick, with a clock in your time zone and a mini-map radar.',
     },
     de: {
-      title: 'IRL-HUD mit Geldzähler und Minikarte (kostenlos) | Senchabot',
+      title: 'Gratis IRL-HUD-Overlay: Geldzähler & Minikarte | Senchabot',
       description:
         'Ein kostenloses IRL-HUD-Overlay für OBS. Subs, Gift-Subs, Bits, Kicks und Raids bringen Geld auf Twitch und Kick, mit Uhr in deiner Zeitzone und Minikarte.',
     },
     tr: {
-      title: 'Para Sayaçlı ve Mini Haritalı IRL HUD (Ücretsiz) | Senchabot',
+      title: 'Ücretsiz IRL HUD Overlay: Para ve Mini Harita | Senchabot',
       description:
-        "OBS için ücretsiz IRL HUD overlay'i. Twitch ve Kick'te abonelik, hediye abonelik, Bits, Kicks ve raid'ler para ekler; saat diliminde saat ve mini harita da var.",
+        "OBS için ücretsiz IRL HUD Overlay. Twitch ve Kick'te abonelik, hediye abonelik, Bits, Kicks ve raid'ler para ekler; saat diliminde saat ve mini harita da var.",
     },
     es: {
-      title: 'HUD IRL con contador y minimapa (gratis) | Senchabot',
+      title: 'Overlay HUD IRL con contador y minimapa (gratis) | Senchabot',
       description:
-        'Un HUD IRL gratis para OBS. Las subs, subs regaladas, Bits, Kicks y raids suman dinero en Twitch y Kick, con un reloj en tu zona horaria y un minimapa radar.',
+        'Un Overlay HUD IRL gratis para OBS. Subs, subs regaladas, Bits, Kicks y raids suman dinero en Twitch y Kick, con un reloj en tu zona horaria y un minimapa.',
     },
     fr: {
-      title: "HUD IRL avec compteur d'argent et mini-carte | Senchabot",
+      title: "Overlay HUD IRL, compteur d'argent et mini-carte | Senchabot",
       description:
-        "Un HUD IRL gratuit pour OBS. Subs, subs offerts, Bits, Kicks et raids ajoutent de l'argent sur Twitch et Kick, avec une horloge à ton heure et une mini-carte.",
+        "Un Overlay HUD IRL gratuit pour OBS. Subs, subs offerts, Bits, Kicks et raids ajoutent de l'argent sur Twitch et Kick, avec une horloge et une mini-carte.",
     },
     ja: {
-      title: 'IRL HUD: 所持金カウンターとミニマップ（無料） | Senchabot',
+      title: 'IRL HUDオーバーレイ: 所持金カウンターとミニマップ（無料） | Senchabot',
       description:
         'OBS用の無料IRL HUDオーバーレイ。TwitchとKickのサブスク、ギフトサブ、Bits、Kicks、レイドで所持金が増えます。自分のタイムゾーンの時計とミニマップも表示できます。',
     },
     pt: {
-      title: 'HUD IRL com contador e minimapa (grátis) | Senchabot',
+      title: 'Overlay HUD IRL com contador e minimapa (grátis) | Senchabot',
       description:
-        'Um HUD IRL grátis para o OBS. Subs, subs de presente, Bits, Kicks e raids somam dinheiro na Twitch e na Kick, com relógio no seu fuso horário e um minimapa.',
+        'Um Overlay HUD IRL grátis para o OBS. Subs, subs de presente, Bits, Kicks e raids somam dinheiro na Twitch e na Kick, com relógio no seu fuso e um minimapa.',
     },
   },
   weather: {

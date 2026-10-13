@@ -109,6 +109,8 @@ const COMMANDS: { usage: string; action: TranslationKey }[] = [
   { usage: `${MAP} reset`, action: 'irlHud.cmdMapReset' },
   { usage: `${COMMAND} walk`, action: 'irlHud.cmdWalk' },
   { usage: `${COMMAND} stay`, action: 'irlHud.cmdStay' },
+  { usage: `${COMMAND} indoor`, action: 'irlHud.cmdIndoor' },
+  { usage: `${COMMAND} outdoor`, action: 'irlHud.cmdOutdoor' },
   { usage: `${BUY} water`, action: 'irlHud.cmdBuy' },
   { usage: `${BUY} water 3`, action: 'irlHud.cmdBuyMany' },
 ];
@@ -123,6 +125,7 @@ function IrlHudSetup() {
   const { previewId, send } = usePreviewSender<PreviewMessage>(PREVIEW_CHANNEL);
   const nextPlatform = useRef<SubathonPlatform>('twitch');
   const previewWalking = useRef(true);
+  const previewIndoor = useRef(false);
   const id = useId();
 
   const update = <K extends keyof HudSettings>(key: K, value: HudSettings[K]) =>
@@ -459,6 +462,17 @@ function IrlHudSetup() {
         return mod(`${COMMAND} ${stop ? 'stay' : 'walk'}`);
       },
     },
+    {
+      label: t('irlHud.testIndoor'),
+      // A real place stays outdoors.
+      disabled: settings.map === 'real',
+      // Takes turns too: into the nearest building, then back out.
+      event: () => {
+        const enter = !previewIndoor.current;
+        previewIndoor.current = enter;
+        return mod(`${COMMAND} ${enter ? 'indoor' : 'outdoor'}`);
+      },
+    },
     { label: t('irlHud.testReset'), event: () => mod(`${CASH} reset`) },
   ];
 
@@ -491,7 +505,7 @@ function IrlHudSetup() {
       previewFooter={
         <TestButtons
           title={t('irlHud.testTitle')}
-          layout="two-four"
+          layout="three"
           buttons={testButtons.map((button) => ({
             label: button.label,
             disabled: button.disabled,

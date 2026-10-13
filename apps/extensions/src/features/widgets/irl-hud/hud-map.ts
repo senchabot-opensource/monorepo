@@ -1,4 +1,4 @@
-import type { HudMove, HudPlace, HudSettings } from '#/lib/irl-hud-url';
+import type { HudMap, HudMove, HudPlace, HudSettings } from '#/lib/irl-hud-url';
 import { COMMAND } from './hud-money';
 
 /** `!hud map park1` switches the mini-map; the word after it is a saved place or a made-up map. */
@@ -56,6 +56,50 @@ export function parseMoveCommand(message: string): HudMove | null {
   const lower = word.toLowerCase();
   // Own words only: "constructor" and the like aren't movements.
   return Object.hasOwn(MOVE_WORDS, lower) ? MOVE_WORDS[lower] : null;
+}
+
+/** The mini-map shown now: the chat choice made over this starting map while it names one, else the URL's. */
+export function mapNow(
+  choice: { choice: string; from: string } | undefined,
+  places: HudPlace[],
+  start: string,
+): HudMap {
+  const picked = choice?.from === start ? chosenView(choice.choice, places) : null;
+  if (picked) return picked.map;
+  // startKey: "urban", "park", or "real:" and the first place's name.
+  return start.startsWith('real:') ? 'real' : start === 'park' ? 'park' : 'urban';
+}
+
+/**
+ * Where the arrow's position comes from: the walk the HUD makes up, or the streamer's own GPS. Only
+ * the walk exists today; a GPS feed would drive the arrow and pass `gps`.
+ */
+export type ArrowSource = 'walk' | 'gps';
+
+/**
+ * Whether !hud indoor can take the arrow into a building. On the made-up maps it's part of the
+ * game. On a real place only a real position can say which building the streamer is in: a walk
+ * around a picked spot can't, so a real place stays outdoors until GPS drives the arrow.
+ */
+export const canGoIndoors = (map: HudMap, source: ArrowSource) =>
+  map !== 'real' || source === 'gps';
+
+// The words !hud takes for going into the nearest building and back out to the street.
+const INDOOR_WORDS: Record<string, boolean> = {
+  indoor: true,
+  indoors: true,
+  inside: true,
+  outdoor: false,
+  outdoors: false,
+  outside: false,
+};
+
+/** True for "!hud indoor" (or "inside"), false for "!hud outdoor" (or "outside"); null otherwise. */
+export function parseIndoorCommand(message: string): boolean | null {
+  const [typed, word = '', ...rest] = message.trim().split(/\s+/);
+  if (typed?.toLowerCase() !== COMMAND || rest.length > 0) return null;
+  const lower = word.toLowerCase();
+  return Object.hasOwn(INDOOR_WORDS, lower) ? INDOOR_WORDS[lower] : null;
 }
 
 /** How fast the arrow goes for each movement, in px a second. */

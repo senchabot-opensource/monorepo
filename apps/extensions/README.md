@@ -12,7 +12,7 @@ Senchabot Extensions provides 100% free streaming widgets, customizable overlays
 - **Sub Goal** — A goal bar that every sub, resub and gifted sub on Twitch and Kick fills by one, with a trophy when the goal is reached. Mods fix the count from chat.
 - **Stream Frames** — Ready-made webcam, chat and screen frames drawn in the picked preset's look, transparent in the middle.
 - **Stream Countdown** — A countdown for the starting soon, back soon and stream ending scenes, counting down a length or aiming at a time of day, in the picked preset's look.
-- **IRL HUD** — A game-style HUD for IRL streams: subs, gifted subs, Bits, Kicks and raids add cash to a Retro or Modern cash counter, under a clock in your time zone, next to a mini-map where an arrow walks a made-up city or park, or the real streets around a place you pick.
+- **IRL HUD Overlay** — A game-style HUD for IRL streams: subs, gifted subs, Bits, Kicks and raids add cash to a Retro or Modern cash counter, under a clock in your time zone, next to a mini-map where an arrow walks a made-up city or park, or the real streets around a place you pick.
 - **Weather** — Live weather for any place you pick, with an icon, the temperature, wind, humidity and a forecast for the coming hours or days. The data comes free from MET Norway, with no account or API key.
 - **Chat Poll** — A poll that Twitch and Kick chat vote in by typing a number, with live bars, a timer and the winner at the end. Mods run it from chat.
 - **Universal Chat** — A multi-chat widget and stream chat box overlay that combines Twitch and Kick chat into a single on-screen feed with 7TV emotes, badges, and platform indicators.
@@ -30,7 +30,7 @@ Senchabot Extensions provides 100% free streaming widgets, customizable overlays
 - [Sub Goal](https://extensions.senchabot.com/setup/sub-goal)
 - [Stream Frames](https://extensions.senchabot.com/setup/stream-frames)
 - [Stream Countdown](https://extensions.senchabot.com/setup/stream-countdown)
-- [IRL HUD](https://extensions.senchabot.com/setup/irl-hud)
+- [IRL HUD Overlay](https://extensions.senchabot.com/setup/irl-hud)
 - [Weather](https://extensions.senchabot.com/setup/weather)
 - [Chat Poll](https://extensions.senchabot.com/setup/chat-poll)
 - [Universal Chat](https://extensions.senchabot.com/setup/chat-widget)
@@ -166,7 +166,7 @@ https://extensions.senchabot.com/widgets/countdown?scene=starting&time=600&prese
 
 ---
 
-### IRL HUD (`/setup/irl-hud`)
+### IRL HUD Overlay (`/setup/irl-hud`)
 
 A game-style HUD overlay made for IRL streams. Subs, gifted subs, Bits (Twitch), Kicks (Kick) and raids add the dollar amounts you set, and the cash counter rolls up to the new amount.
 
@@ -175,9 +175,9 @@ A game-style HUD overlay made for IRL streams. Subs, gifted subs, Bits (Twitch),
 - Two styles: `retro` (green `$00000350` under a grey clock in a thick outline, round mini-map) and `modern` (white `$1,250` with a soft shadow, gains in green, rounded square mini-map). The font is Anton from Google Fonts.
 - Separate dollar amounts for Twitch and Kick: per sub, per gifted sub, per 100 Bits or 100 Kicks, and per raider. Any of them can be turned off. Twitch Tier 2 and 3 subs can count as 2 and 5 subs.
 - The clock shows the OBS computer's time, or a picked IANA time zone for OBS running on a cloud server or at home.
-- The mini-map shows an arrow walking streets or paths and turning at the corners, with the map turning under it. It draws a made-up city (`urban`) or park (`park`), seeded by the channel name, or the real streets, paths, buildings, parks and water within about 350 m of a saved place (`real`, starting at the first one), from OpenStreetMap data (© OpenStreetMap contributors). On a real place the walk prefers footpaths and stays within about 140 m of it. The overlay asks the Overpass API once per place and keeps the result in `localStorage` for 14 days; the setup page finds places with Nominatim, on an explicit search only, or takes pasted coordinates.
+- The mini-map shows an arrow walking streets or paths and turning at the corners, with the map turning under it. It draws a made-up city (`urban`) or park (`park`), seeded by the channel name, or the real streets, paths, buildings, parks and water within about 350 m of a saved place (`real`, starting at the first one), from OpenStreetMap data (© OpenStreetMap contributors). On a real place the walk prefers footpaths and stays within about 140 m of it. The overlay asks the Overpass API once per place and keeps the result in `localStorage` for 14 days, with a radar sweep turning on the mini-map while it loads; the setup page finds places with Nominatim, on an explicit search only, or takes pasted coordinates.
 - The cash is saved in the browser source's `localStorage`, keyed by channel, so a reload or an OBS restart doesn't lose it.
-- The broadcaster and mods change the cash from chat: `!hud cash +500` (`add 500`), `-200` (`remove 200`, can go into a red debt), `10000` (`set 10000`) and `reset`. `!hud money` works the same. They switch the mini-map with `!hud map <name>` for a saved place, `!hud map urban` or `!hud map park` for the made-up maps, and `!hud map reset` for the one in the URL; the choice is saved in OBS until the URL's starting map changes. `!hud walk`, `!hud run` and `!hud stay` (or `stop`) set how the arrow moves.
+- The broadcaster and mods change the cash from chat: `!hud cash +500` (`add 500`), `-200` (`remove 200`, can go into a red debt), `10000` (`set 10000`) and `reset`. `!hud money` works the same. They switch the mini-map with `!hud map <name>` for a saved place, `!hud map urban` or `!hud map park` for the made-up maps, and `!hud map reset` for the one in the URL; the choice is saved in OBS until the URL's starting map changes. `!hud walk`, `!hud run` and `!hud stay` (or `stop`) set how the arrow moves. On the made-up maps, `!hud indoor` (or `inside`) takes the arrow into the building nearest it (a stand-in one in the park), where it walks around within the walls while the map zooms in on the building and dims the rest; `!hud outdoor` (or `outside`) walks it back to the nearest street. Indoors is saved in OBS too. A real place stays outdoors while the arrow walks around a picked spot, since which real building it walks into isn't the streamer's to pick: there the command does nothing, and switching to one leaves the building. The real building outlines are kept for a GPS feed (`arrowSource="gps"` on the widget): with the arrow at a real position it goes into the real building there, and stays outdoors where there's none, with no stand-in.
 - A market: items with prices set on the setup page. `!hud buy water` (or `!hud buy water 3`) takes the price off the cash and shows it with the item's name; without enough cash nothing is bought and the price shows with a cross.
 - The cash and the mini-map are sized for the browser source's short side and anchored to their corners, so a vertical IRL canvas works too.
 
@@ -198,7 +198,7 @@ Live weather for any place you pick: an icon, the temperature and the weather in
 - It asks again when MET's `Expires` header says, kept between 10 minutes and an hour, and saves the forecast in `localStorage`, so a reload or a scene switch shows the weather at once without asking early. Network errors and 5xx/429 retry with backoff; a refusal (4xx) waits half an hour. A forecast older than a day isn't shown as "now".
 - MET's 41 weather symbols are read into 14 conditions with their own words in every language, and drawn as one SVG icon built from parts: the sun or moon, clouds, rain, sleet, snow, lightning and fog.
 - The forecast row shows every third hour on the local clock, or today and the next three days with highs and lows and the 6-hour symbol closest to noon. Hours and days follow a picked IANA time zone, or the OBS computer's.
-- The setup page finds the place with OpenStreetMap's Nominatim, on an explicit search only (the IRL HUD's search), or takes pasted coordinates. Coordinates are written with at most 4 decimals, as MET asks. The overlay shows only the name you give the place.
+- The setup page finds the place with OpenStreetMap's Nominatim, on an explicit search only (the IRL HUD Overlay's search), or takes pasted coordinates. Coordinates are written with at most 4 decimals, as MET asks. The overlay shows only the name you give the place.
 - A card or a one-line pill on a dark, light or no panel, in a corner of a 1920x1080 scene, sized for the source's short side so a vertical canvas works too. The font is Outfit from Google Fonts.
 
 ```
@@ -385,7 +385,7 @@ npm run deploy
 │   │   ├── sub-goal.tsx            # Sub Goal configuration
 │   │   ├── stream-frames.tsx       # Stream Frames configuration
 │   │   ├── stream-countdown.tsx    # Stream Countdown configuration
-│   │   ├── irl-hud.tsx             # IRL HUD configuration
+│   │   ├── irl-hud.tsx             # IRL HUD Overlay configuration
 │   │   ├── weather.tsx             # Weather configuration
 │   │   ├── chat-poll.tsx           # Chat Poll configuration
 │   │   ├── chat-widget.tsx         # Universal Chat configuration
@@ -398,7 +398,7 @@ npm run deploy
 │       ├── goal.tsx                # Sub Goal overlay
 │       ├── frame.tsx               # Stream Frames overlay
 │       ├── countdown.tsx           # Stream Countdown overlay
-│       ├── irl-hud.tsx             # IRL HUD overlay
+│       ├── irl-hud.tsx             # IRL HUD Overlay
 │       ├── weather.tsx             # Weather overlay
 │       ├── poll.tsx                # Chat Poll overlay
 │       ├── chat-widget.tsx         # Universal Chat overlay
