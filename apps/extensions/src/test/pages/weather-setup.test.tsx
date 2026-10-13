@@ -106,17 +106,36 @@ describe('Weather setup', () => {
     expect(screen.queryByText(en('weather.details'))).toBeNull();
   });
 
+  it("offers the IRL HUD's styles, which have no background to pick", async () => {
+    const user = await openPage();
+    await user.type(findField(), '41.0082, 28.9784{Enter}');
+    expect(segment(en('weather.style'), en('weather.styles.app')).checked).toBe(true);
+    expect(widgetUrl().searchParams.get('style')).toBeNull();
+
+    await user.click(segment(en('weather.style'), en('weather.styles.retro')));
+    expect(widgetUrl().searchParams.get('style')).toBe('retro');
+    expect(screen.queryByText(en('weather.theme'))).toBeNull();
+    await user.click(segment(en('weather.style'), en('weather.styles.modern')));
+    expect(widgetUrl().searchParams.get('style')).toBe('modern');
+
+    await user.click(segment(en('weather.style'), en('weather.styles.app')));
+    expect(widgetUrl().searchParams.get('style')).toBeNull();
+    expect(segment(en('weather.theme'), en('weather.themes.dark')).checked).toBe(true);
+  });
+
   it('opens an existing URL with its settings and language', async () => {
     const user = await openPage();
     await user.click(urlField());
     await user.paste(
-      `${window.location.origin}/widgets/weather?lat=35.6762&lon=139.6503&place=Tokyo&layout=pill&lang=ja`,
+      `${window.location.origin}/widgets/weather?lat=35.6762&lon=139.6503&place=Tokyo&style=retro&layout=pill&lang=ja`,
     );
     expect(nameField().value).toBe('Tokyo');
+    expect(segment(en('weather.style'), en('weather.styles.retro')).checked).toBe(true);
     expect(segment(en('weather.layout'), en('weather.layouts.pill')).checked).toBe(true);
     expect(Object.fromEntries(widgetUrl().searchParams)).toMatchObject({
       lat: '35.6762',
       lon: '139.6503',
+      style: 'retro',
       lang: 'ja',
     });
   });

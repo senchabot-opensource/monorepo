@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { type ReactNode, useId } from 'react';
 import { type Intensity, readSymbol, type Sky } from './weather-symbols';
 
 /**
@@ -137,7 +137,37 @@ function Picture({ sky }: { sky: Sky }) {
   );
 }
 
-export function ConditionIcon({ symbol, size }: { symbol: string | null; size: number }) {
+/**
+ * A black outline `width` grid units wide around the whole picture, like the IRL HUD's text has:
+ * the picture's shape grown by that much, filled black, under the picture.
+ */
+function OutlineFilter({ id, width }: { id: string; width: number }) {
+  return (
+    <filter id={id} x="-25%" y="-25%" width="150%" height="150%">
+      <feMorphology in="SourceAlpha" operator="dilate" radius={width} result="grown" />
+      <feFlood floodColor="#000" />
+      <feComposite in2="grown" operator="in" result="outline" />
+      <feMerge>
+        <feMergeNode in="outline" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  );
+}
+
+export function ConditionIcon({
+  symbol,
+  size,
+  outline = 0,
+}: {
+  symbol: string | null;
+  size: number;
+  /** A black outline this many grid units wide, for the IRL HUD styles; 0 draws none. */
+  outline?: number;
+}) {
+  // useId's colons would end the url(#…) reference early.
+  const filterId = `wx-outline${useId().replace(/[^\w-]/g, '')}`;
+  const picture = symbol && <Picture sky={readSymbol(symbol).sky} />;
   return (
     <svg
       className="wx-icon"
@@ -147,7 +177,16 @@ export function ConditionIcon({ symbol, size }: { symbol: string | null; size: n
       aria-hidden="true"
       data-symbol={symbol ?? undefined}
     >
-      {symbol && <Picture sky={readSymbol(symbol).sky} />}
+      {outline > 0 ? (
+        <>
+          <defs>
+            <OutlineFilter id={filterId} width={outline} />
+          </defs>
+          <g filter={`url(#${filterId})`}>{picture}</g>
+        </>
+      ) : (
+        picture
+      )}
     </svg>
   );
 }

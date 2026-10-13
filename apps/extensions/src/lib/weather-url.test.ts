@@ -37,6 +37,7 @@ describe('buildWeatherUrl', () => {
       settings({
         place: '  Kadıköy ',
         units: 'imperial',
+        style: 'retro',
         layout: 'pill',
         theme: 'clear',
         corner: 'br',
@@ -53,6 +54,7 @@ describe('buildWeatherUrl', () => {
       lon: '28.9784',
       place: 'Kadıköy',
       units: 'imperial',
+      style: 'retro',
       layout: 'pill',
       theme: 'clear',
       corner: 'br',
@@ -92,11 +94,12 @@ describe('readWeatherSettings', () => {
   it('falls back on garbage and clamps the size', () => {
     const read = readWeatherSettings(
       new URLSearchParams(
-        `units=kelvin&layout=huge&theme=neon&corner=middle&forecast=weeks&size=999&tz=Mars/Base&place=${'x'.repeat(60)}`,
+        `units=kelvin&style=gold&layout=huge&theme=neon&corner=middle&forecast=weeks&size=999&tz=Mars/Base&place=${'x'.repeat(60)}`,
       ),
     );
     expect(read).toMatchObject({
       units: 'metric',
+      style: 'app',
       layout: 'card',
       theme: 'dark',
       corner: 'tl',
@@ -110,7 +113,13 @@ describe('readWeatherSettings', () => {
 
 describe('parseWeatherUrl', () => {
   it('reads back what buildWeatherUrl wrote, language included', () => {
-    const picked = settings({ place: 'Kadıköy', units: 'imperial', forecast: 'off', h12: true });
+    const picked = settings({
+      place: 'Kadıköy',
+      units: 'imperial',
+      style: 'modern',
+      forecast: 'off',
+      h12: true,
+    });
     expect(parseWeatherUrl(buildWeatherUrl(ORIGIN, picked, 'ja'))).toEqual({
       settings: picked,
       locale: 'ja',

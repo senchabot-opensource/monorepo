@@ -1,10 +1,18 @@
 import { isValidLocale, LANG_PARAM, type Locale } from '#/lib/i18n/locales';
+import { HUD_STYLES } from '#/lib/irl-hud-url';
 import { isTimeZone } from '#/lib/time-zones';
 import { readFlag, readWhole } from '#/lib/url-params';
 
 /** `card`: the place, a big icon and the temperature over a forecast row. `pill`: one line. */
 export const WEATHER_LAYOUTS = ['card', 'pill'] as const;
 export type WeatherLayout = (typeof WEATHER_LAYOUTS)[number];
+
+/**
+ * `app`: round figures on the `theme`'s background, like a weather app. `retro` and `modern`: the
+ * IRL HUD's styles, outlined text right on the scene, so the weather matches a HUD beside it.
+ */
+export const WEATHER_STYLES = ['app', ...HUD_STYLES] as const;
+export type WeatherStyle = (typeof WEATHER_STYLES)[number];
 
 /** A dark or light panel, or `clear`: no panel, white text with a shadow. */
 export const WEATHER_THEMES = ['dark', 'light', 'clear'] as const;
@@ -29,7 +37,9 @@ export interface WeatherSettings {
   /** The place's name as the overlay shows it; empty shows none. */
   place: string;
   units: WeatherUnits;
+  style: WeatherStyle;
   layout: WeatherLayout;
+  /** The background in the `app` style; the HUD styles have none. */
   theme: WeatherTheme;
   corner: WeatherCorner;
   /** Size in percent of the design size, which fits a 1080p scene. */
@@ -48,6 +58,7 @@ export const DEFAULT_WEATHER_SETTINGS: WeatherSettings = {
   lon: null,
   place: '',
   units: 'metric',
+  style: 'app',
   layout: 'card',
   theme: 'dark',
   // Clear of the IRL HUD's cash (top right) and mini-map (bottom left), so both fit one scene.
@@ -92,6 +103,7 @@ function buildParams(settings: WeatherSettings, locale: Locale) {
   const place = settings.place.trim();
   if (place) params.set('place', place);
   if (settings.units !== defaults.units) params.set('units', settings.units);
+  if (settings.style !== defaults.style) params.set('style', settings.style);
   if (settings.layout !== defaults.layout) params.set('layout', settings.layout);
   if (settings.theme !== defaults.theme) params.set('theme', settings.theme);
   if (settings.corner !== defaults.corner) params.set('corner', settings.corner);
@@ -143,6 +155,7 @@ export function readWeatherSettings(params: URLSearchParams): WeatherSettings {
     lon: lat === null ? null : lon,
     place: (params.get('place') ?? '').trim().slice(0, PLACE_MAX_LENGTH),
     units: readChoice(params.get('units'), WEATHER_UNITS, defaults.units),
+    style: readChoice(params.get('style'), WEATHER_STYLES, defaults.style),
     layout: readChoice(params.get('layout'), WEATHER_LAYOUTS, defaults.layout),
     theme: readChoice(params.get('theme'), WEATHER_THEMES, defaults.theme),
     corner: readChoice(params.get('corner'), WEATHER_CORNERS, defaults.corner),

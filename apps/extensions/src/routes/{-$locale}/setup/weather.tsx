@@ -32,6 +32,7 @@ import {
   WEATHER_CORNERS,
   WEATHER_FORECASTS,
   WEATHER_LAYOUTS,
+  WEATHER_STYLES,
   WEATHER_THEMES,
   WEATHER_UNITS,
   type WeatherSettings,
@@ -102,6 +103,8 @@ function WeatherSetup() {
   };
 
   const card = settings.layout === 'card';
+  // The HUD styles draw outlined text right on the scene, with no background to pick.
+  const app = settings.style === 'app';
 
   const settingsPanel = (
     <>
@@ -137,6 +140,20 @@ function WeatherSetup() {
 
       <SettingsGroup title={t('common.sectionAppearance')}>
         <div>
+          <FieldLabel id={`${id}-style`} tip={t('weather.styleTip')}>
+            {t('weather.style')}
+          </FieldLabel>
+          <SegmentedControl
+            labelledBy={`${id}-style`}
+            value={settings.style}
+            onChange={(value) => update('style', value)}
+            options={WEATHER_STYLES.map((style) => ({
+              value: style,
+              label: t(`weather.styles.${style}`),
+            }))}
+          />
+        </div>
+        <div>
           <FieldLabel id={`${id}-layout`} tip={t('weather.layoutTip')}>
             {t('weather.layout')}
           </FieldLabel>
@@ -150,20 +167,22 @@ function WeatherSetup() {
             }))}
           />
         </div>
-        <div>
-          <FieldLabel id={`${id}-theme`} tip={t('weather.themeTip')}>
-            {t('weather.theme')}
-          </FieldLabel>
-          <SegmentedControl
-            labelledBy={`${id}-theme`}
-            value={settings.theme}
-            onChange={(value) => update('theme', value)}
-            options={WEATHER_THEMES.map((theme) => ({
-              value: theme,
-              label: t(`weather.themes.${theme}`),
-            }))}
-          />
-        </div>
+        {app && (
+          <div>
+            <FieldLabel id={`${id}-theme`} tip={t('weather.themeTip')}>
+              {t('weather.theme')}
+            </FieldLabel>
+            <SegmentedControl
+              labelledBy={`${id}-theme`}
+              value={settings.theme}
+              onChange={(value) => update('theme', value)}
+              options={WEATHER_THEMES.map((theme) => ({
+                value: theme,
+                label: t(`weather.themes.${theme}`),
+              }))}
+            />
+          </div>
+        )}
         <div>
           <FieldLabel id={`${id}-corner`} tip={t('weather.cornerTip')}>
             {t('weather.corner')}

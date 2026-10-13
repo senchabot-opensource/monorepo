@@ -1179,6 +1179,14 @@ export const fr: typeof en = {
       "Le nom que l'overlay affiche avec la météo. Il se remplit quand tu choisis un lieu ; change-le, ou laisse-le vide pour n'afficher aucun nom.",
     placeNamePlaceholder: 'ex. Istanbul',
     placePrivacy: 'Les viewers voient ce nom et la météo, jamais les coordonnées.',
+    style: 'Style',
+    styleTip:
+      "Appli météo affiche des chiffres ronds sur le fond de ton choix. HUD rétro et HUD moderne reprennent les styles de l'Overlay HUD IRL : du texte avec un contour noir, directement sur ta scène, pour que la météo aille avec le HUD à côté.",
+    styles: {
+      app: 'Appli météo',
+      retro: 'HUD rétro',
+      modern: 'HUD moderne',
+    },
     layout: 'Disposition',
     layoutTip:
       "Carte montre le lieu, une grande icône et la température, avec le vent, l'humidité et les prévisions en dessous. Bandeau tient l'icône, la température, le temps et le lieu sur une seule ligne.",

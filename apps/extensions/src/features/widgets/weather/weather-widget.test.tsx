@@ -50,8 +50,18 @@ const settings = (overrides: Partial<WeatherSettings> = {}): WeatherSettings => 
 });
 const render = (ui: React.ReactNode) => renderWithProviders(ui, '/widgets/weather?lang=en');
 const temp = () => screen.queryByTestId('weather-temp')?.textContent ?? null;
+/** HUD text is drawn twice, its outline under its fill, so it is read from its data-value. */
+const hudText = (testId: string) =>
+  screen.queryByTestId(testId)?.getAttribute('data-value') ?? null;
+/** The fill color of the outlined text that reads `text`. */
+const fill = (text: string) =>
+  (document.querySelector(`.ih-text[data-value="${text}"] > span:last-child`) as HTMLElement | null)
+    ?.style.color;
 const forecastRow = () => screen.queryByTestId('weather-forecast');
 const wait = (ms: number) => act(() => vi.advanceTimersByTimeAsync(ms));
+/** A distance from the scene's edge, in px at 1080p: the overlay scales with the window. */
+const edge = (px: string) =>
+  (Number.parseFloat(px) * 1080) / Math.min(window.innerWidth, window.innerHeight);
 
 let fetchMock: ReturnType<typeof vi.fn>;
 
@@ -181,6 +191,56 @@ describe('WeatherWidget', () => {
     channel.postMessage({ type: 'sky', sky: null, preview: 'p1' });
     await vi.waitFor(() => expect(temp()).toBe('12°C'));
     channel.close();
+  });
+
+  it("draws the IRL HUD's Retro style: outlined text in its colors, with no background", async () => {
+    await render(<WeatherWidget settings={settings({ style: 'retro', theme: 'light' })} />);
+    await vi.waitFor(() => expect(hudText('weather-temp')).toBe('12°C'));
+    const root = screen.getByTestId('weather');
+    expect(root.className).toBe('wx-root wx-hud ih-retro');
+    // The grey of the HUD's clock, and the green of its cash for the weather in words.
+    expect(fill('12°C')).toBe('rgb(225, 225, 225)');
+    expect(fill(en('weather.conditions.lightRain'))).toBe('rgb(84, 142, 88)');
+    expect(fill('Istanbul')).toBe('rgb(240, 240, 240)');
+    expect(fill('18 km/h')).toBe('rgb(240, 240, 240)');
+    expect(forecastRow()?.querySelectorAll('.wx-hud-slot')).toHaveLength(4);
+    // Every weather icon in a black outline, like the text.
+    const icons = [...root.querySelectorAll('svg.wx-icon')];
+    expect(icons).toHaveLength(5);
+    for (const icon of icons) {
+      const id = icon.querySelector('filter')?.id;
+      expect(id).toMatch(/^wx-outline[\w-]+$/);
+      expect(icon.querySelector('g')?.getAttribute('filter')).toBe(`url(#${id})`);
+    }
+    expect(
+      screen.getByText(en('weather.credit', { source: 'MET Norway' }), {
+        selector: 'span:last-child',
+      }),
+    ).toBeTruthy();
+  });
+
+  it("fits the IRL HUD's Modern style on one line as a pill, lined up on its corner", async () => {
+    await render(
+      <WeatherWidget settings={settings({ style: 'modern', layout: 'pill', corner: 'tr' })} />,
+    );
+    await vi.waitFor(() => expect(hudText('weather-temp')).toBe('12°C'));
+    expect(screen.getByTestId('weather').className).toBe('wx-root wx-hud ih-modern');
+    expect(fill('12°C')).toBe('rgb(240, 240, 240)');
+    expect(fill(en('weather.conditions.lightRain'))).toBe('rgb(114, 204, 114)');
+    expect(forecastRow()).toBeNull();
+    const box = screen.getByTestId('weather').querySelector('.wx-box') as HTMLElement;
+    expect(box.style.getPropertyValue('--wx-align')).toBe('flex-end');
+    // The IRL HUD's distance from the edges, so the two line up.
+    expect(edge(box.style.right)).toBeCloseTo(72);
+  });
+
+  it('keeps the weather app look by default, on its background and without outlines', async () => {
+    await render(<WeatherWidget settings={settings()} />);
+    await vi.waitFor(() => expect(temp()).toBe('12°C'));
+    const root = screen.getByTestId('weather');
+    expect(root.className).toBe('wx-root wx-dark');
+    expect(root.querySelector('.ih-text, filter')).toBeNull();
+    expect(edge((root.querySelector('.wx-box') as HTMLElement).style.left)).toBeCloseTo(64);
   });
 
   it('shows nothing until there is a place', async () => {
