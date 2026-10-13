@@ -51,9 +51,13 @@ export const getKickChannelInfo = async (username: string): Promise<KickChannelI
   }
 };
 
-/** Kick's public Pusher app, the one kick.com's own pages connect to. */
+/**
+ * Kick's public Pusher app. kick.com no longer hardcodes it: its pages ask
+ * web.kick.com/api/v1/realtime/channels/{id}/chat/connection, and with only Pusher accepted that
+ * answers with this key. Kick rotated it once already, and the old key now fails with 4001.
+ */
 export const KICK_PUSHER_URL =
-  'wss://ws-us2.pusher.com/app/32cbd69e4b950bf97679?protocol=7&client=js&version=8.4.0&flash=false';
+  'wss://ws-us2.pusher.com/app/34bf7a0ff419a2a775b9?protocol=7&client=js&version=8.4.0&flash=false';
 
 export class KickChat extends BaseChatClient {
   private readonly channelId: string;

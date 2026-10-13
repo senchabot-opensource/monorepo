@@ -121,26 +121,39 @@ describe('chat reconnects', () => {
     expect(FakeWebSocket.instances).toHaveLength(2);
   });
 
-  it('waits twice as long after each failed attempt, up to 30s, and starts over once connected', () => {
+  /** Closes the latest socket and returns how long the client waits before opening the next. */
+  const waitAfterClose = () => {
+    const before = FakeWebSocket.instances.length;
+    latest().onclose?.(new CloseEvent('close'));
+    let waited = 0;
+    while (FakeWebSocket.instances.length === before) {
+      vi.advanceTimersByTime(500);
+      waited += 500;
+    }
+    return waited;
+  };
+
+  it('waits twice as long after each failed attempt, up to 30s, and starts over once a connection held', () => {
     connectTwitch();
     const waits: number[] = [];
-    for (let i = 0; i < 7; i++) {
-      const before = FakeWebSocket.instances.length;
-      latest().onclose?.(new CloseEvent('close'));
-      let waited = 0;
-      while (FakeWebSocket.instances.length === before) {
-        vi.advanceTimersByTime(500);
-        waited += 500;
-      }
-      waits.push(waited);
-    }
+    for (let i = 0; i < 7; i++) waits.push(waitAfterClose());
     expect(waits).toEqual([1_000, 2_000, 4_000, 8_000, 16_000, 30_000, 30_000]);
 
     latest().open();
-    const before = FakeWebSocket.instances.length;
-    latest().onclose?.(new CloseEvent('close'));
-    vi.advanceTimersByTime(1_000);
-    expect(FakeWebSocket.instances).toHaveLength(before + 1);
+    vi.advanceTimersByTime(10_000);
+    expect(waitAfterClose()).toBe(1_000);
+  });
+
+  it('keeps backing off when the server closes each connection right after it opens', () => {
+    // What Kick's Pusher did on 2026-10-13 once it no longer knew the app key: accept, then close.
+    connectTwitch();
+    const waits: number[] = [];
+    for (let i = 0; i < 5; i++) {
+      waits.push(waitAfterClose());
+      latest().open();
+      vi.advanceTimersByTime(700);
+    }
+    expect(waits).toEqual([1_000, 2_000, 4_000, 8_000, 16_000]);
   });
 
   it('never keeps two sockets alive, whatever order drops, pings and network events come in', () => {
