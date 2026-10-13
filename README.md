@@ -37,6 +37,7 @@ URL, and it runs on **Twitch and Kick** alike. Nothing to install, nothing to si
 | [Stream Frames](https://extensions.senchabot.com/setup/stream-frames) | Webcam, chat and screen frames drawn in the chosen preset's look, transparent in the middle |
 | [Stream Countdown](https://extensions.senchabot.com/setup/stream-countdown) | A countdown for the starting soon, break and ending scenes, set by length or by clock time |
 | [IRL HUD](https://extensions.senchabot.com/setup/irl-hud) | A game-style HUD for IRL streams: subs, gift subs, Bits, Kicks and raids add cash, beside a clock and a mini-map |
+| [Weather](https://extensions.senchabot.com/setup/weather) | Live weather for any place you pick: an icon, the temperature, wind, humidity and a forecast, from MET Norway with no API key |
 | [Socials](https://extensions.senchabot.com/setup/socials) | Your social media handles, shown one at a time with a slide animation |
 
 **Tools**
