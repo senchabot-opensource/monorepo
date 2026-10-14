@@ -1,4 +1,4 @@
-import { type CSSProperties, useEffect, useMemo, useRef, useState } from 'react';
+import { type CSSProperties, type ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import type { HudCorner, HudSettings } from '#/lib/irl-hud-url';
 import type { SubathonPlatform } from '../subathon/subathon-events';
 import { useShortSideScale } from '../use-fit-scale';
@@ -151,6 +151,21 @@ function Pops({ pops, look, corner }: { pops: HudPop[]; look: HudLook; corner: H
   );
 }
 
+/**
+ * A part a mod can hide from chat: it fades out where it stands, so the parts beside it keep
+ * their places, and fades back in the same way.
+ */
+function Part({ hidden, children }: { hidden: boolean; children: ReactNode }) {
+  return (
+    <div
+      aria-hidden={hidden || undefined}
+      style={{ opacity: hidden ? 0 : 1, transition: 'opacity 400ms ease-out' }}
+    >
+      {children}
+    </div>
+  );
+}
+
 function Clock({ look, timeZone, h12 }: { look: HudLook; timeZone: string; h12: boolean }) {
   const text = useClockText(timeZone, h12);
   return (
@@ -188,7 +203,7 @@ export function IrlHudWidget({
   previewId,
   arrowSource = 'walk',
 }: IrlHudWidgetProps) {
-  const { money, pops, mapChoice, move, indoor } = useIrlHud({
+  const { money, pops, mapChoice, move, indoor, hidden } = useIrlHud({
     twitch: twitchChannel,
     kick: kickChannel,
     start: settings.start,
@@ -222,6 +237,7 @@ export function IrlHudWidget({
       data-money={money}
       data-move={move}
       data-indoor={inside}
+      data-hidden={hidden.join(' ') || undefined}
     >
       <style>{CSS}</style>
       <div
@@ -231,28 +247,36 @@ export function IrlHudWidget({
           alignItems: isRight(corner) ? 'flex-end' : 'flex-start',
         }}
       >
-        {settings.clock && <Clock look={look} timeZone={settings.tz} h12={settings.h12} />}
-        <Outlined
-          text={formatMoney(shown, settings.style)}
-          color={shown < 0 ? look.debt : look.money}
-          size={look.moneySize}
-          outline={look.outline}
-          fixedDigits
-          testId="irl-hud-money"
-        />
-        {settings.pops && <Pops pops={pops} look={look} corner={corner} />}
+        {settings.clock && (
+          <Part hidden={hidden.includes('time')}>
+            <Clock look={look} timeZone={settings.tz} h12={settings.h12} />
+          </Part>
+        )}
+        <Part hidden={hidden.includes('cash')}>
+          <Outlined
+            text={formatMoney(shown, settings.style)}
+            color={shown < 0 ? look.debt : look.money}
+            size={look.moneySize}
+            outline={look.outline}
+            fixedDigits
+            testId="irl-hud-money"
+          />
+          {settings.pops && <Pops pops={pops} look={look} corner={corner} />}
+        </Part>
       </div>
       {settings.radar && (
-        <HudRadar
-          style={settings.style}
-          map={view.map}
-          seed={hashSeed(twitchChannel || kickChannel || 'senchabot')}
-          lat={place?.lat ?? null}
-          lon={place?.lon ?? null}
-          speed={MOVE_SPEED[move]}
-          indoor={inside}
-          place={cornerPlace(settings.radarCorner, scale, zoom)}
-        />
+        <Part hidden={hidden.includes('map')}>
+          <HudRadar
+            style={settings.style}
+            map={view.map}
+            seed={hashSeed(twitchChannel || kickChannel || 'senchabot')}
+            lat={place?.lat ?? null}
+            lon={place?.lon ?? null}
+            speed={MOVE_SPEED[move]}
+            indoor={inside}
+            place={cornerPlace(settings.radarCorner, scale, zoom)}
+          />
+        </Part>
       )}
     </div>
   );

@@ -15,6 +15,8 @@ export interface HudState {
   move?: { choice: string; from: string };
   /** Inside the nearest building on the mini-map, after a mod's !hud indoor. */
   indoor?: boolean;
+  /** The parts a mod hid with a plain !hud cash, !hud time or !hud map; all shown by default. */
+  hidden?: ('cash' | 'time' | 'map')[];
 }
 
 export const clampMoney = (n: number) => Math.max(MIN_MONEY, Math.min(MAX_MONEY, Math.round(n)));
@@ -28,7 +30,13 @@ export const createHud = (start: number): HudState => ({ money: clampMoney(start
 export const followStart = (saved: HudState, start: number): HudState =>
   saved.start === start
     ? saved
-    : { ...createHud(start), map: saved.map, move: saved.move, indoor: saved.indoor };
+    : {
+        ...createHud(start),
+        map: saved.map,
+        move: saved.move,
+        indoor: saved.indoor,
+        hidden: saved.hidden,
+      };
 
 export function isHudState(value: unknown): value is HudState {
   if (!value || typeof value !== 'object') return false;
@@ -49,7 +57,10 @@ export function isHudState(value: unknown): value is HudState {
     Number.isInteger(s.start) &&
     choiceOk(s.map) &&
     choiceOk(s.move) &&
-    (s.indoor === undefined || typeof s.indoor === 'boolean')
+    (s.indoor === undefined || typeof s.indoor === 'boolean') &&
+    (s.hidden === undefined ||
+      (Array.isArray(s.hidden) &&
+        s.hidden.every((part) => part === 'cash' || part === 'time' || part === 'map')))
   );
 }
 
@@ -91,6 +102,14 @@ export function eventMoney(
 }
 
 export const COMMAND = '!hud';
+/** The same commands in short, quicker to type on the move: "!h cash +500". */
+export const SHORT_COMMAND = '!h';
+
+/** Whether a chat message's first word is the HUD's command, long or short. */
+export function isHudCommand(word: string | undefined): boolean {
+  const lower = word?.toLowerCase();
+  return lower === COMMAND || lower === SHORT_COMMAND;
+}
 /** What `!hud cash` changes; the command leaves room for more HUD parts later. */
 export const CASH_SUBCOMMAND = 'cash';
 // "money" works too, for mods who reach for that word.
@@ -129,7 +148,7 @@ export function parseAmount(text: string): number | null {
  */
 export function parseCashCommand(message: string): CashCommand | null {
   const [typed, part = '', word = '', ...rest] = message.trim().split(/\s+/);
-  if (typed?.toLowerCase() !== COMMAND || !CASH_WORDS.has(part.toLowerCase())) return null;
+  if (!isHudCommand(typed) || !CASH_WORDS.has(part.toLowerCase())) return null;
   const lower = word.toLowerCase();
   if (lower === 'reset') return { action: 'reset' };
   // Own words only: "!hud cash constructor 5" names no action.

@@ -17,6 +17,10 @@ Senchabot Extensions provides 100% free streaming widgets, customizable overlays
 - **Top Supporters** — A leaderboard of your top gifters or top Bits and Kicks givers from Twitch and Kick, or labels for the latest sub, gift, cheer and raid.
 - **Lower Thirds** — An animated name and topic bar for a corner of the scene, with lines that take turns, always up or on a timer. Mods change it with !lt.
 - **Task List** — A co-working task list: you and your viewers add tasks from Twitch or Kick chat with !task and tick them off with !done.
+- **Featured Message** — Mods put a viewer's last message on screen with `!feature @name`, and viewers ask questions with `!q` that mods bring up one at a time.
+- **Emote Combo** — When chatters on Twitch and Kick post the same emote, a big combo counter shows how many joined in.
+- **Bits & Kicks Goal** — A goal bar that every Bits cheer and Kicks gift fills, with its own `!bitsgoal` command and count.
+- **Now Playing** — The song you're listening to, with its cover art, from ListenBrainz (Spotify works through it) or Last.fm.
 - **Stream Frames** — Ready-made webcam, chat and screen frames drawn in the picked preset's look, transparent in the middle.
 - **Stream Countdown** — A countdown for the starting soon, back soon and stream ending scenes, counting down a length or aiming at a time of day, in the picked preset's look.
 - **IRL HUD Overlay** — A game-style HUD for IRL streams: subs, gifted subs, Bits, Kicks and raids add cash to a Retro or Modern cash counter, under a clock in your time zone, next to a mini-map where an arrow walks a made-up city or park, or the real streets around a place you pick.
@@ -42,6 +46,10 @@ Senchabot Extensions provides 100% free streaming widgets, customizable overlays
 - [Top Supporters](https://extensions.senchabot.com/setup/top-supporters)
 - [Lower Thirds](https://extensions.senchabot.com/setup/lower-thirds)
 - [Task List](https://extensions.senchabot.com/setup/task-list)
+- [Featured Message](https://extensions.senchabot.com/setup/featured-message)
+- [Emote Combo](https://extensions.senchabot.com/setup/emote-combo)
+- [Bits & Kicks Goal](https://extensions.senchabot.com/setup/bits-goal)
+- [Now Playing](https://extensions.senchabot.com/setup/now-playing)
 - [Stream Frames](https://extensions.senchabot.com/setup/stream-frames)
 - [Stream Countdown](https://extensions.senchabot.com/setup/stream-countdown)
 - [IRL HUD Overlay](https://extensions.senchabot.com/setup/irl-hud)
@@ -263,6 +271,73 @@ https://extensions.senchabot.com/widgets/tasks?twitch=YOUR_TWITCH_CHANNEL&kick=Y
 
 ---
 
+### Featured Message (`/setup/featured-message`)
+
+Put a viewer's words on screen from Twitch or Kick chat: a featured message, or questions waiting in line for a Q&A.
+
+**How it works:**
+- `!feature @name` (mods and the broadcaster) shows that viewer's last message from either chat, with name color, badges and emotes, 7TV, BTTV and FFZ included. `!feature` or `!feature off` hides it. The last message of up to 500 chatters is kept in memory; bots, replies and commands aren't.
+- Viewers ask with `!q <question>` (up to 200 characters, one open question each; asking again replaces it). Mods: `!q next` shows the oldest, `!q skip` drops it, `!q clear` empties the line, `!q off` hides what's on screen.
+- A ban, a timeout or a deleted message takes that viewer's message and questions off. The line and what's on screen are saved in `localStorage`.
+
+```
+https://extensions.senchabot.com/widgets/featured?twitch=YOUR_TWITCH_CHANNEL&kick=YOUR_KICK_CHANNEL&lang=en
+```
+
+**URL parameters:** `twitch`, `kick`, `mode` (`both` | `feature` | `qa`), `hide` (seconds on screen, 0 keeps it up, up to 600), `waiting` (`0` hides the questions-waiting badge), `size` (50 to 150, percent), `preset`, `color` (`purple` | `green` | `red` | `gold` | `cyan` | `pink`, classic only), `lang`, `simulate`.
+
+---
+
+### Emote Combo (`/setup/emote-combo`)
+
+When chatters post the same emote, a big combo counter shows the emote and how many joined in, Twitch and Kick together.
+
+**How it works:**
+- Each chatter counts once per combo, in any message with the emote. The combo shows from `min` chatters and keeps going while new chatters join within `window` seconds; then the final count stays up a moment and fades.
+- Native Twitch and Kick emotes count per platform; 7TV, BTTV and FFZ emotes count by name, so the same 7TV emote in both chats makes one combo. Known bots don't count.
+- The stream's best combo shows under the counter and is saved in `localStorage` for 12 hours. Mods clear it with `!combo reset`.
+
+```
+https://extensions.senchabot.com/widgets/emote-combo?twitch=YOUR_TWITCH_CHANNEL&kick=YOUR_KICK_CHANNEL&lang=en
+```
+
+**URL parameters:** `twitch`, `kick`, `window` (3 to 30 seconds), `min` (2 to 20 chatters), `size` (50 to 150, percent), `best` (`0` hides the best combo), `sevenTv`, `bttv`, `ffz` (`0` | `1`, which emote sets count; 7TV is on by default), `preset`, `color` (`gold` | `purple` | `green` | `red` | `cyan` | `pink`, classic only), `lang`, `simulate`.
+
+---
+
+### Bits & Kicks Goal (`/setup/bits-goal`)
+
+A goal bar that every Twitch Bits cheer and Kick Kicks gift fills, with a trophy when the target lands.
+
+**How it works:**
+- The Sub Goal overlay with `type=bits`: Bits and Kicks add their amount 1:1 (both are about a US cent each); subs, gift subs and raids add nothing. Pops show the amount, and the trophy names whoever crossed the target.
+- Its own count, saved in `localStorage` apart from the Sub Goal's, and its own command: `!bitsgoal`, with the same actions as the Sub Goal's `!goal`. A Sub Goal and a Bits & Kicks Goal run side by side on the same channels.
+
+```
+https://extensions.senchabot.com/widgets/goal?twitch=YOUR_TWITCH_CHANNEL&kick=YOUR_KICK_CHANNEL&type=bits
+```
+
+**URL parameters:** the Sub Goal's, plus `type` (`bits`). The target starts at 1000 and the title at BITS & KICKS GOAL.
+
+---
+
+### Now Playing (`/setup/now-playing`)
+
+The song you're listening to right now, with its cover art, title and artist. It reads no chat, so it works the same for Twitch and Kick streamers.
+
+**How it works:**
+- `source=listenbrainz` (the default) asks ListenBrainz's public playing-now API, which needs no key. Connect Spotify in ListenBrainz, or use any scrobbler that sends playing-now. Covers come from the Cover Art Archive when the song has a release ID.
+- `source=lastfm` asks Last.fm for the recent tracks, which update almost at once. It needs a Last.fm API key built into the site (`VITE_LASTFM_API_KEY` at build time); without one, the setup page offers ListenBrainz only.
+- The overlay asks every 12 seconds and backs off while a service is busy. When the music stops, the card dims, then slides out after `hide` seconds.
+
+```
+https://extensions.senchabot.com/widgets/now-playing?user=YOUR_LISTENBRAINZ_USERNAME&lang=en
+```
+
+**URL parameters:** `source` (`listenbrainz` | `lastfm`), `user`, `layout` (`card` | `pill`), `art` (`0` hides the cover), `album` (`0` hides the album line), `hide` (seconds before it slides out when nothing plays, 0 keeps it up dimmed, up to 60), `preset`, `color` (`green` | `purple` | `red` | `gold` | `cyan` | `pink`, classic only), `lang`, `demo`.
+
+---
+
 ### Stream Frames (`/setup/stream-frames`)
 
 Ready-made frames for a webcam, a chat or the whole stream, drawn in the picked preset's look with its own shape, ornaments and small animations (a temple roof and swaying tassels in Dynasty, grass blocks and flickering torches in Blocks). The middle is transparent, so the webcam or Chat Box under it shows through.
@@ -313,6 +388,8 @@ A game-style HUD overlay made for IRL streams. Subs, gifted subs, Bits (Twitch),
 - The cash is saved in the browser source's `localStorage`, keyed by channel, so a reload or an OBS restart doesn't lose it.
 - The broadcaster and mods change the cash from chat: `!hud cash +500` (`add 500`), `-200` (`remove 200`, can go into a red debt), `10000` (`set 10000`) and `reset`. `!hud money` works the same. They switch the mini-map with `!hud map <name>` for a saved place, `!hud map urban` or `!hud map park` for the made-up maps, and `!hud map reset` for the one in the URL; the choice is saved in OBS until the URL's starting map changes. `!hud walk`, `!hud run` and `!hud stay` (or `stop`) set how the arrow moves. On the made-up maps, `!hud indoor` (or `inside`) takes the arrow into the building nearest it (a stand-in one in the park), where it walks around within the walls while the map zooms in on the building and dims the rest; `!hud outdoor` (or `outside`) walks it back to the nearest street. Indoors is saved in OBS too. A real place stays outdoors while the arrow walks around a picked spot, since which real building it walks into isn't the streamer's to pick: there the command does nothing, and switching to one leaves the building. The real building outlines are kept for a GPS feed (`arrowSource="gps"` on the widget): with the arrow at a real position it goes into the real building there, and stays outdoors where there's none, with no stand-in.
 - A market: items with prices set on the setup page. `!hud buy water` (or `!hud buy water 3`) takes the price off the cash and shows it with the item's name; without enough cash nothing is bought and the price shows with a cross.
+- Every command also works in short, `!h` in place of `!hud`: `!h cash +500`, `!h map park1`, `!h walk`.
+- A plain `!h map`, `!h cash` (or `money`) and `!h time` (or `clock`) hide that part of the HUD, and the same command shows it again; the part fades out where it stands, and the choice is saved in OBS. `!h weather` does the same for the Weather overlay when it has the channel.
 - The cash and the mini-map are sized for the browser source's short side and anchored to their corners, so a vertical IRL canvas works too.
 
 ```
@@ -325,7 +402,7 @@ https://extensions.senchabot.com/widgets/irl-hud?twitch=YOUR_TWITCH_CHANNEL&kick
 
 ### Weather (`/setup/weather`)
 
-Live weather for any place you pick: an icon, the temperature and the weather in words, with wind, humidity and a forecast for the coming hours or days. It reads no chat and needs no channel.
+Live weather for any place you pick: an icon, the temperature and the weather in words, with wind, humidity and a forecast for the coming hours or days. It needs no channel. With one (`twitch`, `kick`), you and your mods hide it and show it again from chat with `!h weather` (or `!hud weather`, the IRL HUD Overlay's command), saved in OBS.
 
 **How it works:**
 - The data is MET Norway's [Locationforecast](https://api.met.no/weatherapi/locationforecast/2.0/documentation) (the Norwegian Meteorological Institute): free, no key, under CC BY 4.0, so the overlay credits MET Norway in small print. The browser source asks MET straight from the page with a plain GET (no custom headers, so no CORS preflight), which MET's terms allow for low-volume sites; the page's `Origin` identifies it.
@@ -339,7 +416,7 @@ Live weather for any place you pick: an icon, the temperature and the weather in
 https://extensions.senchabot.com/widgets/weather?lat=41.0082&lon=28.9784&place=Istanbul&lang=en
 ```
 
-**URL parameters:** `lat`, `lon` (the place; nothing shows without them), `place` (the name shown, up to 40 characters), `units` (`metric` | `imperial`), `layout` (`card` | `pill`), `theme` (`dark` | `light` | `clear`), `corner` (`tr` | `tl` | `br` | `bl`, `tl` by default), `size` (50 to 200, percent), `details` (`0` hides wind and humidity), `forecast` (`hours` | `days` | `off`), `h12` (`1` shows 3 PM instead of 15:00), `tz` (IANA time zone), `lang` (`en` | `de` | `es` | `fr` | `ja` | `pt` | `tr`), `demo` (`1` shows sample weather without asking MET).
+**URL parameters:** `twitch`, `kick` (optional, only for `!h weather`), `lat`, `lon` (the place; nothing shows without them), `place` (the name shown, up to 40 characters), `units` (`metric` | `imperial`), `layout` (`card` | `pill`), `theme` (`dark` | `light` | `clear`), `corner` (`tr` | `tl` | `br` | `bl`, `tl` by default), `size` (50 to 200, percent), `details` (`0` hides wind and humidity), `forecast` (`hours` | `days` | `off`), `h12` (`1` shows 3 PM instead of 15:00), `tz` (IANA time zone), `lang` (`en` | `de` | `es` | `fr` | `ja` | `pt` | `tr`), `demo` (`1` shows sample weather without asking MET).
 
 ---
 
@@ -524,6 +601,10 @@ npm run deploy
 │   │   ├── top-supporters.tsx      # Top Supporters configuration
 │   │   ├── lower-thirds.tsx        # Lower Thirds configuration
 │   │   ├── task-list.tsx           # Task List configuration
+│   │   ├── featured-message.tsx    # Featured Message configuration
+│   │   ├── emote-combo.tsx         # Emote Combo configuration
+│   │   ├── bits-goal.tsx           # Bits & Kicks Goal configuration
+│   │   ├── now-playing.tsx         # Now Playing configuration
 │   │   ├── stream-frames.tsx       # Stream Frames configuration
 │   │   ├── stream-countdown.tsx    # Stream Countdown configuration
 │   │   ├── irl-hud.tsx             # IRL HUD Overlay configuration
@@ -544,6 +625,9 @@ npm run deploy
 │       ├── leaderboard.tsx         # Top Supporters overlay
 │       ├── lower-third.tsx         # Lower Thirds overlay
 │       ├── tasks.tsx               # Task List overlay
+│       ├── featured.tsx            # Featured Message overlay
+│       ├── emote-combo.tsx         # Emote Combo overlay
+│       ├── now-playing.tsx         # Now Playing overlay
 │       ├── frame.tsx               # Stream Frames overlay
 │       ├── countdown.tsx           # Stream Countdown overlay
 │       ├── irl-hud.tsx             # IRL HUD Overlay

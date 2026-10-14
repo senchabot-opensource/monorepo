@@ -938,10 +938,446 @@ export const PAGE_META = {
         'Esta página não existe no Senchabot Extensions. Escolha um dos widgets grátis para Twitch e Kick, como a Caixa de Chat ou o Mural de Emotes, ou volte ao início.',
     },
   },
+  'now-playing': {
+    en: {
+      title: 'Free Now Playing Overlay for Spotify and OBS | Senchabot',
+      description:
+        'A free now playing overlay for OBS: the song you’re listening to, with its cover art, from Spotify and more through ListenBrainz or Last.fm. Twitch or Kick.',
+    },
+    de: {
+      title: 'Kostenloses Song-Overlay für Spotify und OBS | Senchabot',
+      description:
+        'Ein kostenloses Now-Playing-Overlay für OBS: der Song, den du gerade hörst, mit Cover, von Spotify und mehr über ListenBrainz oder Last.fm. Für Twitch und Kick.',
+    },
+    tr: {
+      title: "Spotify ve OBS için Şimdi Çalıyor Overlay'i | Senchabot",
+      description:
+        "OBS için ücretsiz şimdi çalıyor overlay'i: dinlediğin şarkı kapak görseliyle. Spotify ve dahası ListenBrainz veya Last.fm üzerinden; Twitch ve Kick'te çalışır.",
+    },
+    es: {
+      title: 'Overlay de canción actual para Spotify y OBS | Senchabot',
+      description:
+        'Un overlay gratis para OBS con la canción que estás escuchando y su portada, de Spotify y más a través de ListenBrainz o Last.fm. Para Twitch y Kick. Sin login.',
+    },
+    fr: {
+      title: 'Overlay du titre en cours pour Spotify et OBS | Senchabot',
+      description:
+        "Un overlay gratuit pour OBS avec le morceau que tu écoutes et sa pochette, depuis Spotify et d'autres via ListenBrainz ou Last.fm. Twitch, Kick, sans connexion.",
+    },
+    ja: {
+      title: '再生中の曲を表示するOBSオーバーレイ（Spotify対応） | Senchabot',
+      description:
+        'OBS用の無料オーバーレイ。今聴いている曲をジャケット画像つきで配信画面に表示します。SpotifyなどにListenBrainzやLast.fm経由で対応。TwitchとKickで使え、ログイン不要です。',
+    },
+    pt: {
+      title: 'Overlay da música atual para Spotify e OBS | Senchabot',
+      description:
+        'Um overlay grátis no OBS com a música que você está ouvindo e a capa, do Spotify e outros pelo ListenBrainz ou Last.fm. Para a Twitch e a Kick. Sem login.',
+    },
+  },
+  'emote-combo': {
+    en: {
+      title: 'Emote Combo Counter for Twitch & Kick | Senchabot',
+      description:
+        'A free emote combo counter for OBS: when Twitch and Kick chat spam the same emote, it shows big on stream and counts every chatter. 7TV included. No login.',
+    },
+    de: {
+      title: 'Emote-Combo-Zähler für Twitch und Kick | Senchabot',
+      description:
+        'Kostenloser Emote-Combo-Zähler für OBS: Spammt der Twitch- oder Kick-Chat dasselbe Emote, zeigt er es groß im Stream und zählt jeden Zuschauer. Mit 7TV.',
+    },
+    tr: {
+      title: 'Twitch ve Kick için Emote Kombo Sayacı | Senchabot',
+      description:
+        "OBS için ücretsiz emote kombo sayacı: Twitch ya da Kick sohbeti aynı emote'u art arda atınca yayında büyükçe belirir, her izleyiciyle sayı artar. 7TV dahil.",
+    },
+    es: {
+      title: 'Contador de combos de emotes para Twitch y Kick | Senchabot',
+      description:
+        'Un contador de combos de emotes gratis para OBS: cuando el chat de Twitch o Kick manda el mismo emote, sale en grande y suma a cada espectador. Con 7TV.',
+    },
+    fr: {
+      title: "Compteur de combos d'emotes Twitch et Kick | Senchabot",
+      description:
+        "Compteur de combos d'emotes gratuit pour OBS : quand le chat Twitch ou Kick enchaîne la même emote, elle apparaît en grand et compte chaque viewer. 7TV inclus.",
+    },
+    ja: {
+      title: 'Twitch・Kick対応のエモートコンボカウンター | Senchabot',
+      description:
+        'OBS用の無料エモートコンボカウンター。TwitchやKickのチャットで同じエモートが連打されると、配信画面に大きく表示して1人ずつ数えます。7TVにも対応。ログイン不要。',
+    },
+    pt: {
+      title: 'Contador de combo de emotes na Twitch e Kick | Senchabot',
+      description:
+        'Um contador de combo de emotes grátis no OBS: quando o chat da Twitch ou da Kick manda o mesmo emote, ele aparece grandão na live e conta cada pessoa. Com 7TV.',
+    },
+  },
+  featured: {
+    en: {
+      title: 'Featured Chat Message & Q&A for Twitch and Kick | Senchabot',
+      description:
+        'A free OBS overlay: mods type !feature in Twitch or Kick chat to put a viewer’s message on stream with its emotes, and viewers ask questions with !q. No login.',
+    },
+    de: {
+      title: 'Chat-Highlights & Fragerunde für Twitch und Kick | Senchabot',
+      description:
+        'Kostenloses OBS-Overlay: Mods tippen !feature im Twitch- oder Kick-Chat und blenden die Nachricht eines Zuschauers mit Emotes ein. Fragen per !q. Ohne Login.',
+    },
+    tr: {
+      title: 'Twitch ve Kick için Öne Çıkan Mesaj, Soru-Cevap | Senchabot',
+      description:
+        "OBS için ücretsiz overlay: modlar Twitch ya da Kick sohbetine !feature yazıp bir izleyicinin mesajını emote'larıyla ekrana çıkarır, izleyiciler !q ile sorar.",
+    },
+    es: {
+      title: 'Mensaje destacado y preguntas para Twitch y Kick | Senchabot',
+      description:
+        'Overlay gratis para OBS: los mods escriben !feature en el chat de Twitch o Kick para mostrar el mensaje de un espectador con emotes, y el chat pregunta con !q.',
+    },
+    fr: {
+      title: 'Message mis en avant et questions Twitch et Kick | Senchabot',
+      description:
+        "Overlay OBS gratuit : tes modos tapent !feature sur Twitch ou Kick pour afficher le message d'un viewer et ses emotes, et le chat pose ses questions avec !q.",
+    },
+    ja: {
+      title: 'TwitchとKickのコメント表示とQ&Aオーバーレイ | Senchabot',
+      description:
+        'OBS用の無料オーバーレイ。モデレーターがTwitchやKickのチャットで !feature と打つと、視聴者のメッセージをエモートつきで配信画面に表示。視聴者は !q で質問でき、Q&Aにも使えます。ログイン不要。',
+    },
+    pt: {
+      title: 'Mensagem em destaque e Q&A para Twitch e Kick | Senchabot',
+      description:
+        'Overlay grátis para o OBS: os mods digitam !feature no chat da Twitch ou da Kick para mostrar a mensagem de um espectador com emotes, e o chat pergunta com !q.',
+    },
+  },
+  'bits-goal': {
+    en: {
+      title: 'Free Bits & Kicks Goal Overlay for Twitch & Kick | Senchabot',
+      description:
+        'A free Bits and Kicks goal overlay for OBS. Twitch cheers and Kick gifts fill one bar by their amount, and a trophy names who hit the goal. Mods fix it in chat.',
+    },
+    de: {
+      title: 'Bits- und Kicks-Ziel für Twitch und Kick, gratis | Senchabot',
+      description:
+        'Ein kostenloses Bits- und Kicks-Ziel für OBS. Cheers auf Twitch und Kicks auf Kick füllen einen Balken um ihren Betrag, ein Pokal nennt, wer das Ziel erreicht.',
+    },
+    tr: {
+      title: 'Twitch ve Kick için Ücretsiz Bits & Kicks Hedefi | Senchabot',
+      description:
+        "OBS için ücretsiz Bits ve Kicks hedefi. Twitch cheer'ları ve Kick hediyeleri barı miktarı kadar doldurur, hedefi tamamlayanın adı kupada yazar. Modlar düzeltir.",
+    },
+    es: {
+      title: 'Meta de Bits y Kicks gratis para Twitch y Kick | Senchabot',
+      description:
+        'Una meta de Bits y Kicks gratis para OBS. Los cheers de Twitch y los regalos de Kick llenan la barra según su cantidad, y un trofeo nombra a quien la completó.',
+    },
+    fr: {
+      title: 'Objectif de Bits et Kicks gratuit, Twitch & Kick | Senchabot',
+      description:
+        "Un objectif de Bits et Kicks gratuit pour OBS. Les cheers Twitch et les cadeaux Kick remplissent la barre de leur montant, et un trophée nomme qui l'a atteint.",
+    },
+    ja: {
+      title: 'TwitchとKickの無料Bits・Kicks目標オーバーレイ | Senchabot',
+      description:
+        'OBS用の無料Bits・Kicks目標オーバーレイ。TwitchのCheerとKickのギフトがその数だけバーを埋め、達成させた視聴者の名前をトロフィーに表示。モデレーターはチャットから修正できます。',
+    },
+    pt: {
+      title: 'Meta de Bits e Kicks grátis para Twitch e Kick | Senchabot',
+      description:
+        'Meta de Bits e Kicks grátis no OBS. Cheers da Twitch e presentes da Kick enchem a barra pela sua quantidade, e um troféu mostra quem bateu a meta. Mods ajustam.',
+    },
+  },
 } as const satisfies Record<WidgetId | 'home' | 'notFound', LocalizedMeta>;
 
 /** featureList of each setup page's WebApplication: facts the page itself shows. */
 export const APP_FEATURES: Record<WidgetId, Record<Locale, readonly string[]>> = {
+  'now-playing': {
+    en: [
+      'The song you’re listening to now, with its title, artist, album and cover art',
+      'Reads it from ListenBrainz or Last.fm, so Spotify and most music players work',
+      'A card or a one-line pill, in a preset’s look or a color you pick',
+      'New songs slide in on their own, with bars that bounce while the music plays',
+      'Slides away when the music stops, or stays up dimmed',
+      'Works the same on Twitch, Kick or any other platform, with no chat to read',
+      'No login and no API key: just your ListenBrainz or Last.fm username',
+      'Recommended browser source size: 640x160',
+    ],
+    de: [
+      'Der Song, den du gerade hörst, mit Titel, Künstler, Album und Cover',
+      'Liest ihn aus ListenBrainz oder Last.fm, also klappt es mit Spotify und den meisten Musikplayern',
+      'Eine Karte oder eine einzeilige Leiste, im Look eines Presets oder in einer Farbe deiner Wahl',
+      'Neue Songs gleiten von selbst herein, mit Balken, die zur laufenden Musik hüpfen',
+      'Gleitet hinaus, wenn die Musik stoppt, oder bleibt abgedunkelt stehen',
+      'Funktioniert auf Twitch, Kick und jeder anderen Plattform gleich, ganz ohne Chat',
+      'Ohne Login und ohne API-Key: nur dein Benutzername bei ListenBrainz oder Last.fm',
+      'Empfohlene Größe der Browserquelle: 640x160',
+    ],
+    tr: [
+      'Şu an dinlediğin şarkı; adı, sanatçısı, albümü ve kapak görseliyle',
+      "Şarkıyı ListenBrainz ya da Last.fm'den okur; Spotify ve çoğu müzik çalar çalışır",
+      "Bir kart ya da tek satır; bir preset'in görünümünde ya da seçtiğin renkte",
+      'Yeni şarkılar kendiliğinden kayarak gelir, müzik çalarken çubuklar zıplar',
+      'Müzik durunca kayarak çekilir ya da soluk halde ekranda kalır',
+      'Sohbet okumadığı için Twitch, Kick ve diğer platformlarda aynı şekilde çalışır',
+      'Giriş ya da API anahtarı yok: sadece ListenBrainz veya Last.fm kullanıcı adın',
+      'Önerilen Tarayıcı Kaynağı boyutu: 640x160',
+    ],
+    es: [
+      'La canción que estás escuchando ahora, con título, artista, álbum y portada',
+      'La lee de ListenBrainz o Last.fm, así que funciona con Spotify y la mayoría de reproductores',
+      'Una tarjeta o una barra de una línea, con el aspecto de un preset o el color que elijas',
+      'Las canciones nuevas entran deslizándose solas, con barras que se mueven mientras suena la música',
+      'Se va cuando para la música, o se queda atenuada',
+      'Funciona igual en Twitch, Kick o cualquier otra plataforma, sin leer el chat',
+      'Sin login ni clave de API: solo tu usuario de ListenBrainz o Last.fm',
+      'Tamaño recomendado de la fuente de navegador: 640x160',
+    ],
+    fr: [
+      'Le morceau que tu écoutes en ce moment, avec son titre, son artiste, son album et sa pochette',
+      'Lu depuis ListenBrainz ou Last.fm, donc ça marche avec Spotify et la plupart des lecteurs',
+      "Une carte ou un bandeau d'une ligne, au look d'un preset ou dans la couleur de ton choix",
+      "Les nouveaux morceaux glissent à l'écran tout seuls, avec des barres qui bougent pendant la musique",
+      "S'en va quand la musique s'arrête, ou reste affiché, assombri",
+      'Fonctionne pareil sur Twitch, Kick ou toute autre plateforme, sans lire le chat',
+      "Sans connexion ni clé d'API : juste ton nom d'utilisateur ListenBrainz ou Last.fm",
+      'Taille de source navigateur recommandée : 640x160',
+    ],
+    ja: [
+      '今聴いている曲を、曲名、アーティスト、アルバム、ジャケット画像つきで表示',
+      'ListenBrainzやLast.fmから読み込むので、Spotifyやほとんどの音楽プレーヤーに対応',
+      'カードか1行のバーを、プリセットの見た目か好きな色で表示',
+      '新しい曲は自動でスライドして表示され、再生中はバーが動く',
+      '音楽が止まるとスライドして消えるか、暗くなったまま残る',
+      'チャットを読まないので、Twitch、Kick、そのほかのプラットフォームで同じように動作',
+      'ログインもAPIキーも不要。ListenBrainzかLast.fmのユーザー名だけでOK',
+      'ブラウザソースの推奨サイズ: 640x160',
+    ],
+    pt: [
+      'A música que você está ouvindo agora, com título, artista, álbum e capa',
+      'Lê a música do ListenBrainz ou do Last.fm, então funciona com o Spotify e a maioria dos players',
+      'Um cartão ou uma barra de uma linha, no visual de um preset ou na cor que você escolher',
+      'Músicas novas entram deslizando sozinhas, com barras que se mexem enquanto a música toca',
+      'Sai quando a música para, ou fica na tela escurecido',
+      'Funciona igual na Twitch, na Kick ou em qualquer outra plataforma, sem ler o chat',
+      'Sem login nem chave de API: só o seu usuário do ListenBrainz ou do Last.fm',
+      'Tamanho recomendado da fonte de navegador: 640x160',
+    ],
+  },
+  'emote-combo': {
+    en: [
+      'Counts everyone who posts the same emote, in Twitch and Kick chat together',
+      'Each chatter counts once per combo, and bots never count',
+      '7TV, BTTV and FFZ emotes count, and the same 7TV emote in both chats is one combo',
+      'A combo window of 3 to 30 seconds and 2 to 20 chatters before it shows',
+      "The stream's best combo under the counter, saved in OBS; mods reset it with !combo reset",
+      'The picked preset’s fonts and colors, or one of six colors, at 50 to 150% size',
+      'Recommended browser source size: 600x400',
+    ],
+    de: [
+      'Zählt alle, die dasselbe Emote schicken, im Twitch- und Kick-Chat zusammen',
+      'Jeder Zuschauer zählt pro Combo einmal, Bots zählen nie',
+      '7TV-, BTTV- und FFZ-Emotes zählen, und dasselbe 7TV-Emote in beiden Chats ist eine Combo',
+      'Combo-Fenster von 3 bis 30 Sekunden und 2 bis 20 Zuschauer bis zur Anzeige',
+      'Die beste Combo des Streams unter dem Zähler, in OBS gespeichert; Mods setzen sie mit !combo reset zurück',
+      'Schriften und Farben des gewählten Presets oder eine von sechs Farben, in 50 bis 150 % Größe',
+      'Empfohlene Größe der Browserquelle: 600x400',
+    ],
+    tr: [
+      "Aynı emote'u atan herkesi Twitch ve Kick sohbetinde birlikte sayar",
+      'Her izleyici bir komboda bir kez sayılır, botlar hiç sayılmaz',
+      "7TV, BTTV ve FFZ emote'ları da sayılır; aynı 7TV emote'u iki sohbette tek kombodur",
+      '3 ile 30 saniye arası kombo süresi, görünmesi için 2 ile 20 arası izleyici',
+      "Yayının en iyi kombosu sayacın altında, OBS'te kayıtlı; modlar !combo reset ile sıfırlar",
+      "Seçilen preset'in yazı tipleri ve renkleri ya da altı renkten biri, %50 ile %150 arası boyutta",
+      'Önerilen Tarayıcı Kaynağı boyutu: 600x400',
+    ],
+    es: [
+      'Cuenta a todos los que mandan el mismo emote, en los chats de Twitch y Kick a la vez',
+      'Cada espectador cuenta una vez por combo y los bots nunca cuentan',
+      'Los emotes de 7TV, BTTV y FFZ cuentan, y el mismo emote de 7TV en los dos chats es un solo combo',
+      'Ventana del combo de 3 a 30 segundos y de 2 a 20 espectadores para mostrarlo',
+      'El mejor combo del stream debajo del contador, guardado en OBS; los mods lo borran con !combo reset',
+      'Las fuentes y los colores del preset elegido, o uno de seis colores, a un tamaño del 50 al 150 %',
+      'Tamaño recomendado de la fuente de navegador: 600x400',
+    ],
+    fr: [
+      'Compte tous ceux qui envoient la même emote, dans les chats Twitch et Kick ensemble',
+      'Chaque viewer compte une fois par combo, et les bots ne comptent jamais',
+      'Les emotes 7TV, BTTV et FFZ comptent, et la même emote 7TV dans les deux chats fait un seul combo',
+      "Fenêtre du combo de 3 à 30 secondes et de 2 à 20 viewers avant l'affichage",
+      "Le meilleur combo du stream sous le compteur, enregistré dans OBS ; les modos l'effacent avec !combo reset",
+      'Les polices et les couleurs du preset choisi, ou une de six couleurs, de 50 à 150 % de taille',
+      'Taille de source navigateur recommandée : 600x400',
+    ],
+    ja: [
+      '同じエモートを送った人を、TwitchとKickのチャットで合算してカウント',
+      '1つのコンボで数えるのは1人1回、ボットは数えない',
+      '7TV、BTTV、FFZのエモートも対象。両方のチャットの同じ7TVエモートは1つのコンボに',
+      'コンボの受付時間は3から30秒、表示までの人数は2から20人',
+      '配信のベストコンボをカウンターの下に表示し、OBSに保存。モデレーターは !combo reset でリセット',
+      '選んだプリセットのフォントと色、または6色から1色を使い、サイズは50から150%',
+      'ブラウザソースの推奨サイズ: 600x400',
+    ],
+    pt: [
+      'Conta todo mundo que manda o mesmo emote, no chat da Twitch e da Kick juntos',
+      'Cada pessoa conta uma vez por combo, e bots nunca contam',
+      'Emotes da 7TV, BTTV e FFZ contam, e o mesmo emote da 7TV nos dois chats é um combo só',
+      'Janela do combo de 3 a 30 segundos e de 2 a 20 pessoas para aparecer',
+      'O melhor combo da live embaixo do contador, salvo no OBS; os mods zeram com !combo reset',
+      'As fontes e as cores do preset escolhido, ou uma de seis cores, em tamanho de 50 a 150%',
+      'Tamanho recomendado da fonte de navegador: 600x400',
+    ],
+  },
+  featured: {
+    en: [
+      'Mods put any chatter’s last message on screen with !feature @name',
+      'Reads Twitch and Kick chat, with name colors, badges and emotes',
+      '7TV, BTTV and FFZ emotes as well as Twitch and Kick ones',
+      'Viewers ask questions with !q, one open question each',
+      'Mods show the next question with !q next, or skip and clear them',
+      'An optional hide timer and a questions waiting badge',
+      'Questions are saved in OBS and survive reloads',
+      'Recommended browser source size: 720x240',
+    ],
+    de: [
+      'Mods blenden mit !feature @name die letzte Nachricht jedes Chatters ein',
+      'Liest den Twitch- und Kick-Chat, mit Namensfarben, Badges und Emotes',
+      '7TV-, BTTV- und FFZ-Emotes, dazu die von Twitch und Kick',
+      'Zuschauer stellen mit !q Fragen, jeder eine offene Frage',
+      'Mods zeigen mit !q next die nächste Frage, überspringen und leeren sie',
+      'Optionaler Ausblende-Timer und ein Badge für wartende Fragen',
+      'Die Fragen werden in OBS gespeichert und überstehen ein Neuladen',
+      'Empfohlene Größe der Browserquelle: 720x240',
+    ],
+    tr: [
+      'Modlar !feature @isim ile herhangi birinin son mesajını ekrana çıkarır',
+      "Twitch ve Kick sohbetini okur; isim renkleri, rozetler ve emote'larla",
+      "Twitch ve Kick emote'larının yanında 7TV, BTTV ve FFZ emote'ları",
+      'İzleyiciler !q ile soru sorar, herkesin tek bir açık sorusu olur',
+      'Modlar !q next ile sıradaki soruyu gösterir, soruları atlar ya da temizler',
+      'İsteğe bağlı gizleme süresi ve bekleyen soru rozeti',
+      "Sorular OBS'te kaydedilir, sayfa yenilense de kaybolmaz",
+      'Önerilen Tarayıcı Kaynağı boyutu: 720x240',
+    ],
+    es: [
+      'Los mods muestran el último mensaje de cualquiera con !feature @nombre',
+      'Lee el chat de Twitch y Kick, con colores de nombre, insignias y emotes',
+      'Emotes de 7TV, BTTV y FFZ, además de los de Twitch y Kick',
+      'Los espectadores preguntan con !q, una pregunta abierta cada uno',
+      'Los mods muestran la siguiente pregunta con !q next, o las descartan y vacían',
+      'Temporizador opcional para ocultar y una insignia de preguntas en espera',
+      'Las preguntas se guardan en OBS y aguantan las recargas',
+      'Tamaño recomendado de la fuente de navegador: 720x240',
+    ],
+    fr: [
+      "Les modos affichent le dernier message de n'importe qui avec !feature @pseudo",
+      'Lit le chat Twitch et Kick, avec les couleurs de pseudo, les badges et les emotes',
+      'Les emotes 7TV, BTTV et FFZ en plus de celles de Twitch et Kick',
+      'Les viewers posent leurs questions avec !q, une question ouverte chacun',
+      'Les modos affichent la question suivante avec !q next, ou les écartent et vident la file',
+      'Un minuteur de masquage en option et un badge des questions en attente',
+      'Les questions sont enregistrées dans OBS et survivent aux rechargements',
+      'Taille de source navigateur recommandée : 720x240',
+    ],
+    ja: [
+      'モデレーターは !feature @名前 でチャットした人の最新のメッセージを表示',
+      'TwitchとKickのチャットを読み、名前の色、バッジ、エモートも表示',
+      'TwitchとKickのエモートに加えて、7TV、BTTV、FFZのエモートにも対応',
+      '視聴者は !q で質問。待っている質問はひとり1つ',
+      'モデレーターは !q next で次の質問を表示。飛ばす、すべて消すことも可能',
+      '自動で消すタイマーと質問待ちバッジ（任意）',
+      '質問はOBSに保存され、再読み込みしても保持',
+      'ブラウザソースの推奨サイズ: 720x240',
+    ],
+    pt: [
+      'Os mods mostram a última mensagem de qualquer pessoa com !feature @nome',
+      'Lê o chat da Twitch e da Kick, com cores de nome, emblemas e emotes',
+      'Emotes do 7TV, BTTV e FFZ, além dos da Twitch e da Kick',
+      'O pessoal pergunta com !q, uma pergunta em aberto por pessoa',
+      'Os mods mostram a próxima pergunta com !q next, ou descartam e limpam a fila',
+      'Um timer opcional para esconder e um selo de perguntas na fila',
+      'As perguntas ficam salvas no OBS e sobrevivem a recarregamentos',
+      'Tamanho recomendado da fonte de navegador: 720x240',
+    ],
+  },
+  'bits-goal': {
+    en: [
+      'A goal bar that every Bits cheer on Twitch and Kicks gift on Kick fills by its amount',
+      'Bits and Kicks count one for one, as each is worth about a US cent',
+      'Both platforms add into one count',
+      'Start from 0, or from what has already come in toward the goal',
+      'A trophy celebration naming who reached the goal, and the count keeps going past it',
+      'The broadcaster and mods can add, remove, set and reset the count with !bitsgoal',
+      'Runs next to a Sub Goal, with its own count and its own command',
+      'The count is saved in OBS and survives reloads',
+      'Recommended browser source size: 800x260',
+    ],
+    de: [
+      'Ein Zielbalken, den jeder Bits-Cheer auf Twitch und jedes Kicks-Geschenk auf Kick um seinen Betrag füllt',
+      'Bits und Kicks zählen eins zu eins, beide sind etwa einen US-Cent wert',
+      'Beide Plattformen zählen in einen gemeinsamen Stand',
+      'Start bei 0 oder bei dem, was schon für das Ziel reingekommen ist',
+      'Eine Pokal-Feier mit dem Namen dessen, der das Ziel erreicht hat, und der Zähler läuft danach weiter',
+      'Streamer und Mods können den Stand mit !bitsgoal erhöhen, senken, setzen und zurücksetzen',
+      'Läuft neben einem Sub-Ziel, mit eigenem Stand und eigenem Befehl',
+      'Der Stand wird in OBS gespeichert und übersteht ein Neuladen',
+      'Empfohlene Größe der Browserquelle: 800x260',
+    ],
+    tr: [
+      "Twitch'te her Bits cheer'ı ve Kick'te her Kicks hediyesiyle miktarı kadar dolan hedef barı",
+      'Bits ve Kicks bire bir sayılır, ikisi de yaklaşık birer ABD senti değerindedir',
+      'İki platformdan gelenler tek bir sayıda toplanır',
+      "0'dan ya da bu hedefe şimdiye kadar gelen miktardan başlar",
+      'Hedefe ulaşınca tamamlayanın adını yazan kupa kutlaması, sayı hedefi geçince de artmaya devam eder',
+      'Yayıncı ve modlar !bitsgoal ile miktar ekleyip çıkarabilir, sayıyı ayarlayıp sıfırlayabilir',
+      'Kendi sayısı ve kendi komutuyla bir Abone Hedefi yanında çalışır',
+      "Sayı OBS'te kaydedilir, sayfa yenilense de kaybolmaz",
+      'Önerilen Tarayıcı Kaynağı boyutu: 800x260',
+    ],
+    es: [
+      'Una barra de meta que cada cheer de Bits en Twitch y cada regalo de Kicks en Kick llena según su cantidad',
+      'Los Bits y los Kicks cuentan uno por uno, ya que cada uno vale cerca de un centavo de dólar',
+      'Las dos plataformas suman en un solo conteo',
+      'Empieza desde 0, o desde lo que ya llevas para la meta',
+      'Celebración con trofeo que nombra a quien llegó a la meta, y el conteo sigue después',
+      'El streamer y los mods pueden sumar, quitar, fijar y reiniciar el conteo con !bitsgoal',
+      'Funciona al lado de una Meta de Subs, con su propio conteo y su propio comando',
+      'El conteo se guarda en OBS y aguanta las recargas',
+      'Tamaño recomendado de la fuente de navegador: 800x260',
+    ],
+    fr: [
+      "Une barre d'objectif que chaque cheer de Bits sur Twitch et chaque cadeau de Kicks sur Kick remplit de son montant",
+      'Les Bits et les Kicks comptent un pour un, chacun valant environ un cent américain',
+      "Les deux plateformes s'additionnent dans un seul compteur",
+      "Démarre de 0, ou de ce qui est déjà arrivé pour l'objectif",
+      "Un trophée qui nomme qui a atteint l'objectif, et le compteur continue au-delà",
+      'Le streamer et les modos peuvent ajouter, retirer, définir et réinitialiser le compteur avec !bitsgoal',
+      "Tourne à côté d'un Objectif de subs, avec son propre compteur et sa propre commande",
+      'Le compteur est enregistré dans OBS et survit aux rechargements',
+      'Taille de source navigateur recommandée : 800x260',
+    ],
+    ja: [
+      'TwitchのBitsのCheerとKickのKicksのギフトが、その数だけ埋めていく目標バー',
+      'BitsとKicksはどちらも約1米セントの価値なので1対1でカウント',
+      '両方のプラットフォームの数をひとつのカウントに合算',
+      '0から、またはこの目標にすでに集まった数からスタート',
+      '目標を達成させた視聴者の名前を表示するトロフィーの演出。達成後もカウントは継続',
+      '配信者とモデレーターは !bitsgoal でカウントを追加、削除、設定、リセット',
+      '専用のカウントとコマンドで、サブスク目標と並べて使える',
+      'カウントはOBSに保存され、再読み込みしても保持',
+      'ブラウザソースの推奨サイズ: 800x260',
+    ],
+    pt: [
+      'Uma barra de meta que cada cheer de Bits na Twitch e cada presente de Kicks na Kick enche pela sua quantidade',
+      'Bits e Kicks contam um para um, já que cada um vale mais ou menos um centavo de dólar',
+      'As duas plataformas somam na mesma contagem',
+      'Começa do 0, ou do que já entrou para a meta',
+      'Comemoração com troféu mostrando quem bateu a meta, e a contagem continua depois',
+      'O streamer e os mods podem somar, tirar, definir e reiniciar a contagem com !bitsgoal',
+      'Roda ao lado de uma Meta de Subs, com contagem e comando próprios',
+      'A contagem fica salva no OBS e aguenta recarregamentos',
+      'Tamanho recomendado da fonte de navegador: 800x260',
+    ],
+  },
   'chat-box': {
     en: [
       'Twitch and Kick chat merged into one overlay',

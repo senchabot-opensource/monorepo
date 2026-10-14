@@ -20,6 +20,14 @@ describe('parseBuyCommand', () => {
     });
   });
 
+  it('takes !h, the short command, as well as !hud', () => {
+    const items = [{ name: 'Water', price: 100 }];
+    expect(parseBuyCommand('!h buy water 2', items)).toEqual(
+      parseBuyCommand('!hud buy water 2', items),
+    );
+    expect(parseBuyCommand('!h buy water', items)).not.toBeNull();
+  });
+
   it('ignores unknown items, other commands and silly counts', () => {
     expect(parseBuyCommand('!hud buy pizza', items)).toBeNull();
     expect(parseBuyCommand('!hud buy', items)).toBeNull();

@@ -51,6 +51,8 @@ export const pt: typeof en = {
     setupGuideTitle: 'Como configurar',
     faqTitle: 'Perguntas frequentes',
     moreWidgets: 'Mais widgets',
+    filterWidgets: 'Filtrar widgets por categoria',
+    filterShowing: 'Mostrando {count} de {total} widgets',
     nextSteps: {
       title: 'Agora adicione no seu programa de live',
       addSource:
@@ -103,6 +105,15 @@ export const pt: typeof en = {
   widgets: {
     overlays: 'Overlays',
     tools: 'Ferramentas',
+    categories: {
+      all: 'Todos',
+      chat: 'Chat',
+      alerts: 'Alertas',
+      goals: 'Metas e timers',
+      interactive: 'Interativos',
+      scene: 'Cena',
+      irl: 'IRL',
+    },
     chatBox: {
       name: 'Caixa de Chat',
       tagline: 'O chat da Twitch e da Kick juntos em um overlay, com emotes da 7TV, BTTV e FFZ.',
@@ -193,6 +204,25 @@ export const pt: typeof en = {
       name: 'Lista de Tarefas',
       tagline:
         'Uma lista de tarefas de coworking que o seu chat preenche com !task e risca com !done.',
+    },
+    nowPlaying: {
+      name: 'Tocando Agora',
+      tagline: 'A música que você está ouvindo, com a capa, pelo ListenBrainz ou Last.fm.',
+    },
+    emoteCombo: {
+      name: 'Combo de Emotes',
+      tagline:
+        'Quando o chat manda o mesmo emote sem parar, um contador de combo gigante mostra quantos entraram.',
+    },
+    featured: {
+      name: 'Mensagem em Destaque',
+      tagline:
+        'Coloque na tela a mensagem ou a pergunta de um espectador, direto do chat da Twitch ou da Kick.',
+    },
+    bitsGoal: {
+      name: 'Meta de Bits e Kicks',
+      tagline:
+        'Uma barra de meta que cheers de Bits e presentes de Kicks enchem, com um troféu no final.',
     },
     raffle: {
       name: 'Sorteio',
@@ -324,10 +354,10 @@ export const pt: typeof en = {
       'OBS Studio e outros programas que aceitam fontes de navegador. Adicione a URL do widget como fonte de navegador e use o tamanho mostrado na página de configuração.',
     faq4Q: 'Posso usar Twitch e Kick juntas?',
     faq4A:
-      'Sim. Caixa de Chat, Mural de Emotes, Sub Sprout, Subathon Timer, Alertas de Live, Meta de Subs, Contador, Lista de Eventos, Créditos Finais, Fila de Espectadores, Top Apoiadores, Tarjas, Lista de Tarefas, Enquete do Chat, Contagem Regressiva, Overlay HUD IRL e Roleta aceitam um canal da Twitch e um da Kick na mesma URL. O OBS Bridge também consegue ouvir os dois chats ao mesmo tempo. O Sorteio roda em uma plataforma por vez.',
+      'Sim. Caixa de Chat, Mural de Emotes, Sub Sprout, Subathon Timer, Alertas de Live, Meta de Subs, Contador, Lista de Eventos, Créditos Finais, Fila de Espectadores, Top Apoiadores, Tarjas, Lista de Tarefas, Combo de Emotes, Mensagem em Destaque, Meta de Bits e Kicks, Clima, Enquete do Chat, Contagem Regressiva, Overlay HUD IRL e Roleta aceitam um canal da Twitch e um da Kick na mesma URL. O OBS Bridge também consegue ouvir os dois chats ao mesmo tempo. O Sorteio roda em uma plataforma por vez.',
     faq5Q: 'Como mudo um widget depois?',
     faq5A:
-      'Abra a página de configuração dele, deixe do jeito que você quer e troque a URL na sua fonte de navegador. Caixa de Chat, Mural de Emotes, Sub Sprout, Subathon Timer, Alertas de Live, Meta de Subs, Contador, Lista de Eventos, Créditos Finais, Fila de Espectadores, Top Apoiadores, Tarjas, Lista de Tarefas, Enquete do Chat, Molduras de Live, Redes Sociais, Contagem Regressiva, Overlay HUD IRL, Clima e Roleta também abrem uma URL que você já tem: cole na página de configuração, suas configurações voltam e você muda só o que precisa.',
+      'Abra a página de configuração dele, deixe do jeito que você quer e troque a URL na sua fonte de navegador. Caixa de Chat, Mural de Emotes, Sub Sprout, Subathon Timer, Alertas de Live, Meta de Subs, Contador, Lista de Eventos, Créditos Finais, Fila de Espectadores, Top Apoiadores, Tarjas, Lista de Tarefas, Combo de Emotes, Mensagem em Destaque, Meta de Bits e Kicks, Tocando Agora, Enquete do Chat, Molduras de Live, Redes Sociais, Contagem Regressiva, Overlay HUD IRL, Clima e Roleta também abrem uma URL que você já tem: cole na página de configuração, suas configurações voltam e você muda só o que precisa.',
     faq6Q: 'A URL do meu widget continua funcionando depois das atualizações?',
     faq6A:
       'Sim. As atualizações mantêm funcionando as configurações e os valores das URLs que já existem, então um widget que já está na sua cena não precisa de URL nova.',
@@ -1154,6 +1184,14 @@ export const pt: typeof en = {
     cmdBuyMany: 'Compra três unidades',
     commandsAmounts:
       'Escreva os valores como 500, 1,500, 2.5k ou 1m. !hud cash add 500 e !hud cash remove 500 também funcionam.',
+    commandsShort: 'Todo comando também funciona com !h no lugar de !hud, como !h cash +500.',
+    cmdToggleMap: 'Esconde o minimapa ou mostra de novo',
+    cmdToggleCash: 'Esconde o dinheiro ou mostra de novo',
+    cmdToggleTime: 'Esconde o relógio ou mostra de novo',
+    cmdToggleWeather: 'Esconde o overlay de Clima ou mostra de novo, se ele tiver o seu canal',
+    testToggleMap: 'Mapa liga/desliga',
+    testToggleCash: 'Dinheiro liga/desliga',
+    testToggleTime: 'Relógio liga/desliga',
     previewTitle: 'Prévia do Overlay HUD IRL',
     previewIframeTitle: 'Prévia do Overlay HUD IRL',
     previewHint:
@@ -1289,6 +1327,243 @@ export const pt: typeof en = {
     faq4Q: 'Outro bot de chat já usa !wins. O que eu faço?',
     faq4A:
       'Dê ao contador um comando próprio, como !wincount, na caixa Comando do chat, e cole a URL nova no OBS. As contagens ficam salvas por comando, então um comando novo começa da contagem inicial.',
+  },
+  nowPlaying: {
+    breadcrumb: 'Configurar Tocando Agora',
+    title: 'Configurar Tocando Agora',
+    intro:
+      'Mostre na live a música que você está ouvindo, com capa, título e artista. Ele lê a música do ListenBrainz ou do Last.fm, então funciona com o Spotify e a maioria dos players, na Twitch, na Kick ou em qualquer outra plataforma. Músicas novas entram deslizando sozinhas, e o cartão sai quando a música para. Sem login, sem chat e sem chave de API.',
+    sectionSource: 'Fonte da música',
+    source: 'Serviço',
+    sourceTip:
+      'De onde o overlay lê a sua música. O ListenBrainz se conecta ao Spotify e é grátis e aberto. Escolha o Last.fm se você já faz scrobble por lá.',
+    user: 'Usuário',
+    userTip:
+      'Seu usuário do ListenBrainz, como em listenbrainz.org/user/seunome. Também dá para colar o link do seu perfil.',
+    userTipLastfm:
+      'Seu usuário do Last.fm, como em last.fm/user/seunome. Também dá para colar o link do seu perfil.',
+    userPlaceholder: 'ex.: seunome',
+    userNeeded:
+      'Digite seu usuário para pegar a URL do seu widget. Até lá, a prévia toca músicas de exemplo.',
+    check: 'Verificar',
+    checking: 'Verificando…',
+    checkPlaying: 'Tocando agora: {title}, de {artist}.',
+    checkPlayingTitle: 'Tocando agora: {title}.',
+    checkQuiet:
+      '{user} existe no {service}, mas nada está tocando agora. Coloque uma música e verifique de novo.',
+    checkMissing: 'Não encontramos {user} no {service}. Confira como está escrito.',
+    checkError: 'Não foi possível acessar o {service}. Tente de novo daqui a pouco.',
+    listenbrainzHint: 'Ouve no Spotify? Conecte ele primeiro à sua conta grátis do ListenBrainz.',
+    listenbrainzConnect: 'Conectar o Spotify',
+    lastfmHint:
+      'O Last.fm só compartilha suas músicas enquanto as suas reproduções recentes forem públicas. O overlay dá crédito ao Last.fm em letras pequenas.',
+    lastfmPrivacy: 'Configurações de privacidade',
+    sectionDisplay: 'Exibição',
+    layout: 'Layout',
+    layoutTip:
+      'Cartão mostra a capa ao lado do título, do artista e do álbum. Barra põe a capa, o título e o artista numa linha só.',
+    layouts: {
+      card: 'Cartão',
+      pill: 'Barra',
+    },
+    art: 'Capa',
+    artTip: 'A capa do álbum ao lado da música. Quando não tem, aparece uma nota musical.',
+    album: 'Nome do álbum',
+    albumTip: 'O álbum embaixo do artista, quando o serviço sabe qual é.',
+    hideStopped: 'Esconder quando a música parar',
+    hideStoppedTip:
+      'O overlay sai deslizando assim que a música para. Desligado, a última música fica na tela, escurecida, até a próxima tocar.',
+    hideAfter: 'Esconder depois de',
+    hideAfterTip:
+      'Quanto tempo a última música fica na tela depois que tudo para, para uma pausa curta entre duas músicas não escondê-la.',
+    previewTitle: 'Prévia do Tocando Agora',
+    previewIframeTitle: 'Prévia do Tocando Agora',
+    previewHint:
+      'A prévia toca músicas de exemplo. Digite seu usuário e aperte Sua música para ver o que você está ouvindo agora.',
+    testNext: 'Próxima música',
+    testStop: 'Parar a música',
+    testLive: 'Sua música',
+    guideStep3: 'Coloque a largura em 640 e a altura em 160.',
+    guideStep4: 'Coloque uma música. Ela aparece em poucos segundos, com a capa quando tiver.',
+    overlay: {
+      label: 'Tocando agora',
+    },
+    faq1Q: 'Como mostro músicas do Spotify?',
+    faq1A:
+      'Crie uma conta grátis no ListenBrainz, conecte o Spotify nas configurações, em Connect services, e digite aqui o seu usuário do ListenBrainz. Já faz scrobble no Last.fm? O Spotify também se conecta lá: escolha Last.fm e digite o seu usuário do Last.fm.',
+    faq2Q: 'Quais players funcionam?',
+    faq2A:
+      'Qualquer player que conte ao ListenBrainz ou ao Last.fm o que está tocando quando uma música começa. O Spotify se conecta aos dois pelas configurações deles. Para YouTube Music, Apple Music, SoundCloud, Deezer e outros no navegador, a extensão grátis Web Scrobbler faz isso, e a maioria dos players de computador e de celular tem um plugin ou app de scrobble.',
+    faq3Q: 'Por que uma música nova demora para aparecer?',
+    faq3A:
+      'O overlay pergunta pela sua música a cada 12 segundos, e o seu player ou o Spotify avisa o ListenBrainz ou o Last.fm com um atraso próprio, então uma música nova pode levar até um minuto para aparecer. Quando a música para, o overlay sai depois do tempo que você escolheu, ou fica escurecido se você desligou o esconder.',
+    faq4Q: 'O que eu ouço é público?',
+    faq4A:
+      'Sim. O overlay lê o mesmo perfil público que qualquer pessoa pode abrir no ListenBrainz ou no Last.fm, e o seu usuário fica na URL do widget. Ele mostra só a música que está tocando agora, nunca o seu histórico. No Last.fm, se você esconder as reproduções recentes nas configurações de privacidade, o overlay também não vê.',
+  },
+  emoteCombo: {
+    breadcrumb: 'Configuração do Combo de Emotes',
+    title: 'Configuração do Combo de Emotes',
+    intro:
+      'Um contador de combos para o chat da Twitch e da Kick. Quando o pessoal manda o mesmo emote um atrás do outro, ele aparece grandão na live com a contagem, ×3, ×4, ×5, que pula a cada pessoa nova. Cada um conta uma vez, os chats da Twitch e da Kick contam juntos e os emotes da 7TV, BTTV e FFZ também contam. Quando o chat muda de assunto, a contagem final fica um instante na tela e some, com o melhor combo da live embaixo.',
+    sectionCombo: 'Combo',
+    emotes: 'Emotes',
+    emotesTip:
+      'Os emotes dos provedores marcados contam junto com os da Twitch e da Kick. A 7TV funciona no chat da Twitch e no da Kick, BTTV e FFZ só no da Twitch. O mesmo emote da 7TV nos dois chats faz um combo só.',
+    emotesNone: 'Desligados',
+    window: 'Janela do combo',
+    windowTip:
+      'Quanto tempo o combo espera pela próxima pessoa. Se ninguém novo entrar a tempo, o combo acaba e mostra a contagem final.',
+    seconds: '{n} s',
+    min: 'Pessoas para aparecer',
+    minTip: 'Quantas pessoas diferentes precisam mandar o emote antes de o combo aparecer.',
+    best: 'Melhor combo',
+    bestTip:
+      'Mostra o melhor combo da live embaixo do contador. Ele recomeça depois de 12 horas sem combo ou quando um mod digita !combo reset.',
+    size: 'Tamanho',
+    sizeTip: 'O tamanho do emote e da contagem.',
+    sectionCommands: 'Comandos do chat',
+    commandsIntro: 'Para você e os seus mods, pelo chat da Twitch ou da Kick.',
+    cmdReset: 'Zera o melhor combo',
+    previewTitle: 'Prévia do Combo de Emotes',
+    previewIframeTitle: 'Prévia do Combo de Emotes',
+    previewHint:
+      'A prévia toca combos com emotes de exemplo. Na live, só o seu chat começa os combos.',
+    testStart: 'Começar combo',
+    testChatter: 'Somar pessoa',
+    testReset: 'Zerar o melhor',
+    guideStep3: 'Coloque a largura em 600 e a altura em 400.',
+    guideStep4:
+      'Peça para algumas pessoas mandarem o mesmo emote. O combo aparece quando entra gente suficiente.',
+    overlay: {
+      combo: 'COMBO',
+      best: 'Melhor',
+      newBest: 'Novo recorde!',
+    },
+    faq1Q: 'O que conta para um combo?',
+    faq1A:
+      'Toda mensagem do chat com o emote, sozinho ou no meio de uma frase. Cada pessoa conta uma vez por combo, então mandar de novo não aumenta a contagem, e bots como o Nightbot nunca contam. O combo continua enquanto alguém novo entra dentro da janela do combo, 8 segundos por padrão. Com dois combos ao mesmo tempo, aparece na tela o maior.',
+    faq2Q: 'Quais emotes funcionam?',
+    faq2A:
+      'Os emotes da Twitch e da Kick, sejam globais, do canal ou de inscritos, e os da 7TV, BTTV e FFZ quando estão marcados em Emotes. A 7TV funciona nos dois chats; BTTV e FFZ precisam do seu canal da Twitch.',
+    faq3Q: 'A Twitch e a Kick contam juntas?',
+    faq3A:
+      'Sim. Preencha os dois canais e o pessoal dos dois chats conta para o mesmo combo. Os emotes da 7TV, BTTV e FFZ valem pelo nome, então o mesmo emote da 7TV nos dois chats faz um combo só. Os emotes próprios da Twitch e da Kick são diferentes em cada plataforma e fazem combos separados.',
+    faq4Q: 'Como zero o melhor combo?',
+    faq4A:
+      'Você ou um mod digita !combo reset no chat da Twitch ou da Kick. O melhor combo também recomeça sozinho depois de 12 horas sem combo, assim cada live começa do zero.',
+  },
+  featured: {
+    breadcrumb: 'Configurar Mensagem em Destaque',
+    title: 'Configurar Mensagem em Destaque',
+    intro:
+      'Leve as palavras do seu chat para a live, direto da Twitch e da Kick. Os mods digitam !feature e um nome para mostrar a última mensagem daquele espectador com a cor do nome, os emblemas e os emotes, e o pessoal pergunta com !q numa rodada de perguntas que você conduz com !q next.',
+    sectionMessages: 'Mensagens',
+    mode: 'Comandos',
+    modeTip:
+      'Quais comandos do chat funcionam: !feature para os mods mostrarem uma mensagem, !q para o pessoal fazer perguntas, ou os dois.',
+    modes: {
+      both: 'Ambos',
+      feature: 'Destaque',
+      qa: 'Perguntas',
+    },
+    hide: 'Esconder após',
+    hideTip:
+      'Quanto tempo uma mensagem fica na tela antes de sumir sozinha. Com 0, ela fica até um mod tirar ou mostrar outra.',
+    hideOff: 'Fica na tela até um mod tirar ou mostrar outra.',
+    waiting: 'Selo de perguntas na fila',
+    waitingTip: 'Mostra quantas perguntas estão esperando, ao lado da mensagem na tela ou sozinho.',
+    sizeTip:
+      'O tamanho do nome e da mensagem. Uma mensagem longa ainda diminui para caber no card.',
+    sectionCommands: 'Comandos do chat',
+    commandsIntro:
+      'Digite no chat da Twitch ou da Kick. Cada um diz quem pode usar: qualquer pessoa, ou você e seus mods.',
+    cmdNameExample: 'nome',
+    cmdQuestionExample: 'qual o próximo jogo?',
+    cmdFeature: 'Mods: mostra a última mensagem daquele espectador',
+    cmdFeatureOff: 'Mods: tira da tela',
+    cmdAsk: 'Todos: faz uma pergunta ou troca a que já fez',
+    cmdNext: 'Mods: mostra a pergunta mais antiga na fila',
+    cmdSkip: 'Mods: descarta a pergunta mais antiga sem mostrar',
+    cmdClear: 'Mods: esvazia as perguntas na fila',
+    cmdOff: 'Mods: tira a pergunta da tela',
+    previewTitle: 'Prévia da Mensagem em Destaque',
+    previewIframeTitle: 'Prévia da Mensagem em Destaque',
+    previewHint:
+      'A prévia mostra um chat simulado. Na live, só você e seus mods colocam mensagens na tela.',
+    testFeature: 'Destacar mensagem',
+    testAsk: 'Fazer pergunta',
+    testNext: 'Próxima pergunta',
+    testHide: 'Esconder',
+    testMessage: 'Oi, chat! É assim que uma mensagem em destaque aparece na live.',
+    testQuestion: 'Qual jogo vamos jogar depois?',
+    guideStep3: 'Coloque a largura em 720 e a altura em 240.',
+    guideStep4:
+      'Escreva algo no seu chat e depois digite !feature e o seu nome para colocar na tela.',
+    overlay: {
+      question: 'Pergunta',
+      waitingOne: '1 pergunta na fila',
+      waitingMany: '{count} perguntas na fila',
+    },
+    faq1Q: 'Como os mods destacam uma mensagem?',
+    faq1A:
+      'Eles digitam !feature e o nome do espectador, tipo !feature @senchabot, no chat da Twitch ou da Kick. A última mensagem daquele espectador aparece com a cor do nome, os emblemas e os emotes, venha de qual chat vier. Digitar só !feature tira da tela.',
+    faq2Q: 'Como funciona a rodada de perguntas?',
+    faq2A:
+      'O pessoal digita !q e a pergunta, com até 200 caracteres. Cada um tem uma pergunta na fila por vez, e perguntar de novo troca a anterior. Você ou um mod digita !q next para mostrar a mais antiga, !q skip para descartar e !q clear para esvaziar a fila.',
+    faq3Q: 'Quais mensagens dá para destacar?',
+    faq3A:
+      'A última mensagem de cada uma das últimas 500 pessoas que falaram no chat desde que a fonte de navegador carregou. Comandos, respostas e bots ficam de fora, e um timeout, um ban ou uma mensagem apagada também tira da tela.',
+    faq4Q: 'O que acontece se o OBS fechar ou a fonte de navegador recarregar?',
+    faq4A:
+      'As perguntas na fila e a mensagem na tela ficam salvas dentro do OBS, então voltam do jeito que estavam. Para começar do zero, digite !q clear.',
+  },
+  bitsGoal: {
+    breadcrumb: 'Configurar Meta de Bits e Kicks',
+    title: 'Configurar Meta de Bits e Kicks',
+    intro:
+      'Uma barra de meta de Bits e Kicks para Twitch e Kick. Cada cheer de Bits e cada presente de Kicks dos dois chats enche a barra pela sua quantidade, e quando você bate a meta um troféu cai na barra com o nome do espectador que completou. Escolha de onde a contagem começa e onde fica a meta, e seus mods podem corrigir a contagem pelo chat.',
+    defaultTitle: 'META DE BITS E KICKS',
+    defaultTitleBits: 'META DE BITS',
+    defaultTitleKicks: 'META DE KICKS',
+    startTip:
+      'De onde a contagem começa: 0 para uma meta nova, ou os Bits e Kicks que já entraram para ela. Mudar isso depois recomeça a contagem a partir do novo número.',
+    countsHint:
+      'Um cheer soma seus Bits e um presente seus Kicks, um para um: 500 Bits somam 500, e 500 Kicks também. Subs e subs de presente não somam aqui.',
+    iconTip: 'Um emoji para a meta em vez da gema, ex.: 💎. Deixe vazio para usar a gema.',
+    iconPlaceholder: 'Gema',
+    showPops: 'Mostrar novos cheers',
+    showPopsTip:
+      'Faz subir a quantidade com o nome do espectador a cada cheer ou presente de Kicks, ex.: +500.',
+    commandsIntro:
+      'Você e seus mods podem corrigir a contagem pelo chat da Twitch ou da Kick, por exemplo para somar Bits que chegaram com o OBS fechado. O comando é !bitsgoal, então uma Meta de Subs no !goal pode rodar ao lado.',
+    cmdAdd: 'Soma Bits e Kicks à contagem, 1 se você não colocar o número',
+    cmdRemove: 'Tira Bits e Kicks da contagem, 1 se você não colocar o número',
+    previewTitle: 'Prévia da Meta de Bits e Kicks',
+    previewIframeTitle: 'Prévia da Meta de Bits e Kicks',
+    previewHint:
+      'A prévia toca cheers e Kicks simulados até bater a meta, depois recomeça. Na live, só o seu chat soma na contagem.',
+    testCheer: 'Cheer de {count} Bits',
+    testKicks: 'Enviar {count} Kicks',
+    widgetUrlInvalid: 'Esta não é uma URL da Meta de Bits e Kicks.',
+    subGoalUrl: 'Esta é uma URL da Meta de Subs. Edite na página de configuração da Meta de Subs.',
+    bitsGoalUrl:
+      'Esta é uma URL da Meta de Bits e Kicks. Edite na página de configuração da Meta de Bits e Kicks.',
+    guideStep2: 'Cole a URL da meta de Bits e Kicks que você copiou.',
+    guideStep4:
+      'Se a contagem sair errada, você ou um mod pode corrigir com !bitsgoal set no chat.',
+    faq1Q: 'O que conta para a meta?',
+    faq1A:
+      'Cada cheer de Bits no seu chat da Twitch e cada presente de Kicks no seu canal da Kick soma a sua quantidade, então um cheer de 500 Bits soma 500. Subs, subs de presente e raids não somam aqui; os subs ficam com a Meta de Subs.',
+    faq2Q: 'Por que Bits e Kicks valem o mesmo?',
+    faq2A:
+      'Um Bit e um Kick rendem ao streamer mais ou menos um centavo de dólar cada, então a meta conta os dois um para um: 100 Bits e 100 Kicks somam 100. Os espectadores pagam um pouco mais ao comprar, e o valor exato depende das condições de cada plataforma.',
+    faq3Q: 'Como reinicio a meta?',
+    faq3A:
+      'Digite !bitsgoal reset no chat da Twitch ou da Kick para voltar à contagem inicial. Você ou um mod também podem colocar qualquer número com !bitsgoal set, e uma contagem inicial nova na URL recomeça a meta.',
+    faq4Q: 'Posso usar uma Meta de Subs e uma Meta de Bits e Kicks ao mesmo tempo?',
+    faq4A:
+      'Sim. Adicione cada uma como uma fonte de navegador própria. Elas têm contagens separadas e cada uma ouve o próprio comando: !goal para a Meta de Subs e !bitsgoal para esta, então corrigir uma nunca muda a outra.',
   },
   eventList: {
     breadcrumb: 'Configurar Lista de Eventos',
@@ -1767,6 +2042,15 @@ export const pt: typeof en = {
     testSnow: 'Neve',
     testNight: 'Noite',
     testLive: 'Clima real',
+    sectionChat: 'Chat (opcional)',
+    channelHint:
+      'O clima não precisa de canal. Com um, você e seus mods podem esconder e mostrar de novo pelo chat com !h weather.',
+    sectionCommands: 'Comandos do chat',
+    commandsIntro:
+      'Com um canal na URL, você e seus mods digitam isto no chat da Twitch ou da Kick. Se os espectadores digitarem, nada muda.',
+    cmdToggle: 'Esconde o clima ou mostra de novo',
+    cmdToggleLong: 'O mesmo, na forma longa do Overlay HUD IRL',
+    testToggle: 'Esconder / mostrar',
     widgetUrlTip:
       'Já fez um widget? Cole a URL dele aqui para carregar suas configurações e mudar o que precisar.',
     widgetUrlPlaceholder: 'Cole a URL de um widget para editar',
@@ -2561,6 +2845,14 @@ export const pt: typeof en = {
         colNote: 'Observação',
         notSource: 'Não é uma fonte',
         notes: {
+          nowPlaying:
+            'Uma faixa larga para o cartão ou a barra de uma linha. Uma fonte maior aumenta o tamanho.',
+          emoteCombo:
+            'Espaço para um emote grande e a contagem, com o melhor combo embaixo. Fica vazio até o chat começar um combo.',
+          featured:
+            'Uma faixa larga para uma mensagem por vez. Uma longa diminui para caber, e uma fonte maior aumenta tudo.',
+          bitsGoal:
+            'A mesma faixa da Meta de Subs: a barra de meta, com espaço em cima para a quantidade de cada cheer subir.',
           chatBox:
             'Uma coluna de chat vertical. Uma fonte maior cabe mais mensagens, o texto continua do mesmo tamanho.',
           emoteWall: 'Uma tela 1080p inteira. Os emotes aparecem em qualquer lugar da tela.',
@@ -2633,7 +2925,7 @@ export const pt: typeof en = {
         title: 'Como mudo um widget depois?',
         p1: 'Suas configurações ficam dentro da URL do widget, então mudar uma configuração quer dizer uma URL nova. Mude a configuração na página de configuração, copie a URL nova, depois clique duas vezes na fonte no OBS e cole por cima da URL antiga no campo URL.',
         p2:
-          'Você não precisa começar do zero com [Caixa de Chat](/setup/chat-widget), [Mural de Emotes](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Alertas de Live](/setup/stream-alerts), [Meta de Subs](/setup/sub-goal), [Contador](/setup/counter), [Lista de Eventos](/setup/event-list), [Créditos Finais](/setup/end-credits), [Fila de Espectadores](/setup/viewer-queue), [Top Apoiadores](/setup/top-supporters), [Tarjas](/setup/lower-thirds), [Lista de Tarefas](/setup/task-list), [Enquete do Chat](/setup/chat-poll), [Molduras de Live](/setup/stream-frames), [Redes Sociais](/setup/socials), [Contagem Regressiva](/setup/stream-countdown), [Overlay HUD IRL](/setup/irl-hud), [Clima](/setup/weather) ou [Roleta](/setup/spin-wheel). Cole sua URL atual no campo URL do widget da página de configuração e seus canais e todas as suas configurações voltam. Mude o que quiser e copie a URL nova.',
+          'Você não precisa começar do zero com [Caixa de Chat](/setup/chat-widget), [Mural de Emotes](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Alertas de Live](/setup/stream-alerts), [Meta de Subs](/setup/sub-goal), [Contador](/setup/counter), [Lista de Eventos](/setup/event-list), [Créditos Finais](/setup/end-credits), [Fila de Espectadores](/setup/viewer-queue), [Top Apoiadores](/setup/top-supporters), [Tarjas](/setup/lower-thirds), [Lista de Tarefas](/setup/task-list), [Combo de Emotes](/setup/emote-combo), [Mensagem em Destaque](/setup/featured-message), [Meta de Bits e Kicks](/setup/bits-goal), [Tocando Agora](/setup/now-playing), [Enquete do Chat](/setup/chat-poll), [Molduras de Live](/setup/stream-frames), [Redes Sociais](/setup/socials), [Contagem Regressiva](/setup/stream-countdown), [Overlay HUD IRL](/setup/irl-hud), [Clima](/setup/weather) ou [Roleta](/setup/spin-wheel). Cole sua URL atual no campo URL do widget da página de configuração e seus canais e todas as suas configurações voltam. Mude o que quiser e copie a URL nova.',
         p3: 'O OBS Bridge não tem campo para colar, então coloque suas configurações de novo na página de configuração dele e copie a nova URL da ferramenta. Você também pode mudar as cenas escolhidas e os usuários autorizados na própria página da ferramenta e pegar a URL nova com o botão Copiar URL atualizada. As URLs antigas continuam funcionando, então você não precisa atualizá-las.',
       },
       troubleshoot: {
@@ -3326,7 +3618,7 @@ export const pt: typeof en = {
     breadcrumb: 'Presets',
     eyebrow: 'Presets',
     title: 'Presets de jogos para os overlays da sua live',
-    lead: 'Escolha um preset e sua Caixa de Chat, Alertas de Live, Meta de Subs, Contador, Lista de Eventos, Créditos Finais, Fila de Espectadores, Top Apoiadores, Tarjas, Lista de Tarefas, Subathon Timer, Enquete do Chat, vencedor do Sorteio, Molduras de Live, Contagem Regressiva, Redes Sociais e Roleta ganham a mesma moldura, fontes e cores. Use um em todos os widgets, ou um diferente em cada.',
+    lead: 'Escolha um preset e sua Caixa de Chat, Alertas de Live, Meta de Subs, Contador, Lista de Eventos, Créditos Finais, Fila de Espectadores, Top Apoiadores, Tarjas, Lista de Tarefas, Mensagem em Destaque, Combo de Emotes, Meta de Bits e Kicks, Tocando Agora, Subathon Timer, Enquete do Chat, vencedor do Sorteio, Molduras de Live, Contagem Regressiva, Redes Sociais e Roleta ganham a mesma moldura, fontes e cores. Use um em todos os widgets, ou um diferente em cada.',
     pickTitle: 'Escolha um preset',
     pickText:
       'Presets prontos para League of Legends (LoL), World of Warcraft (WoW), Metin2, Dota 2, Valorant, Counter-Strike 2 (CS2), Minecraft, Clash of Clans, Fortnite, Rocket League e PUBG: Battlegrounds.',
@@ -3427,10 +3719,10 @@ export const pt: typeof en = {
       'OBS Studio e qualquer outro programa de live que aceite fonte de navegador. Cada widget roda como uma URL da web, e você cola essa URL na fonte. Nossos guias são escritos para o OBS Studio.',
     platformsQ: 'Quais widgets funcionam na Twitch e quais funcionam na Kick?',
     platformsA:
-      'Os treze funcionam nas duas plataformas. Caixa de Chat, Mural de Emotes, Sub Sprout, Subathon Timer, Alertas de Live, Meta de Subs, Contador, Lista de Eventos, Créditos Finais, Fila de Espectadores, Top Apoiadores, Tarjas, Lista de Tarefas, Enquete do Chat, Contagem Regressiva, Overlay HUD IRL e Roleta ouvem um canal da Twitch e um da Kick juntos em uma URL. O OBS Bridge ouve comandos dos dois chats, e cada usuário autorizado é adicionado com a sua própria plataforma. O Sorteio roda em uma plataforma por vez, Twitch ou Kick. As Molduras de Live, as Redes Sociais e o Clima não leem o chat, então funcionam do mesmo jeito em qualquer uma das duas. Na Caixa de Chat, os emotes da 7TV aparecem nas duas plataformas, e os da BTTV e da FFZ só na Twitch.',
+      'Os 27 funcionam nas duas plataformas. Caixa de Chat, Mural de Emotes, Sub Sprout, Subathon Timer, Alertas de Live, Meta de Subs, Contador, Lista de Eventos, Créditos Finais, Fila de Espectadores, Top Apoiadores, Tarjas, Lista de Tarefas, Combo de Emotes, Mensagem em Destaque, Meta de Bits e Kicks, Clima, Enquete do Chat, Contagem Regressiva, Overlay HUD IRL e Roleta ouvem um canal da Twitch e um da Kick juntos em uma URL. O OBS Bridge ouve comandos dos dois chats, e cada usuário autorizado é adicionado com a sua própria plataforma. O Sorteio roda em uma plataforma por vez, Twitch ou Kick. As Molduras de Live, as Redes Sociais e o Tocando Agora não leem o chat, então funcionam do mesmo jeito em qualquer uma das duas. Na Caixa de Chat, os emotes da 7TV aparecem nas duas plataformas, e os da BTTV e da FFZ só na Twitch.',
     editQ: 'Como mudo um widget depois?',
     editA:
-      'Mude as configurações na página de configuração, copie a URL nova e cole por cima da antiga no campo URL da fonte no OBS. Com Caixa de Chat, Mural de Emotes, Sub Sprout, Subathon Timer, Alertas de Live, Meta de Subs, Contador, Lista de Eventos, Créditos Finais, Fila de Espectadores, Top Apoiadores, Tarjas, Lista de Tarefas, Enquete do Chat, Molduras de Live, Redes Sociais, Contagem Regressiva, Overlay HUD IRL, Clima e Roleta, se você colar sua URL antiga no campo URL do widget na página de configuração, todas as suas configurações voltam e você não precisa começar do zero.',
+      'Mude as configurações na página de configuração, copie a URL nova e cole por cima da antiga no campo URL da fonte no OBS. Com Caixa de Chat, Mural de Emotes, Sub Sprout, Subathon Timer, Alertas de Live, Meta de Subs, Contador, Lista de Eventos, Créditos Finais, Fila de Espectadores, Top Apoiadores, Tarjas, Lista de Tarefas, Combo de Emotes, Mensagem em Destaque, Meta de Bits e Kicks, Tocando Agora, Enquete do Chat, Molduras de Live, Redes Sociais, Contagem Regressiva, Overlay HUD IRL, Clima e Roleta, se você colar sua URL antiga no campo URL do widget na página de configuração, todas as suas configurações voltam e você não precisa começar do zero.',
     oldUrlsQ: 'As URLs antigas dos meus widgets continuam funcionando?',
     oldUrlsA:
       'Sim. As atualizações são feitas para as URLs existentes não quebrarem: nomes de parâmetros, valores e padrões continuam os mesmos. Por exemplo, o antigo keep=true da Caixa de Chat ainda quer dizer Para sempre, e o Sub Sprout ainda lê os parâmetros antigos channel e platform.',
@@ -3454,6 +3746,18 @@ export const pt: typeof en = {
     lead: 'Recursos novos e correções de bugs no Senchabot Extensions, dos mais novos para os mais antigos. A lista é montada a partir do histórico de commits do projeto no [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).',
     site: 'Site',
     entries: {
+      hudToggles:
+        'Overlay HUD IRL e Clima: o minimapa, o dinheiro, o relógio e o clima agora podem ser escondidos e mostrados de novo pelo chat com !h map, !h cash, !h time e !h weather. O Clima só lê o chat se você adicionar o seu canal.',
+      irlHudShortCommand:
+        'Overlay HUD IRL: todo comando do chat agora também funciona na forma curta, !h no lugar de !hud, como !h cash +500.',
+      nowPlayingLaunch:
+        'Novo overlay: Tocando Agora. Ele mostra a música que você está ouvindo, com capa, título e artista, lida do ListenBrainz ou do Last.fm, então funciona com o Spotify e a maioria dos players. Músicas novas entram deslizando sozinhas, e ele sai quando a música para.',
+      emoteComboLaunch:
+        'Novo overlay: Combo de Emotes. Quando o pessoal manda o mesmo emote um atrás do outro, ele aparece grandão na live com uma contagem de combo que pula a cada pessoa nova, dos chats da Twitch e da Kick juntos e também com emotes da 7TV, BTTV e FFZ. Embaixo aparece o melhor combo da live, e os mods zeram com !combo reset.',
+      featuredLaunch:
+        'Novo overlay: Mensagem em Destaque, para levar o chat para a live. Os mods digitam !feature e um nome no chat da Twitch ou da Kick para mostrar a última mensagem daquele espectador com a cor do nome, os emblemas e os emotes, e o pessoal pergunta com !q numa rodada de perguntas que os mods conduzem com !q next.',
+      bitsGoalLaunch:
+        'Novo overlay: Meta de Bits e Kicks, uma barra de meta que os Bits da Twitch e os Kicks da Kick enchem pela sua quantidade, um para um. Um troféu mostra o espectador que bateu a meta, a contagem fica salva no OBS e os mods corrigem pelo chat com !bitsgoal, separado do !goal da Meta de Subs.',
       tasksLaunch:
         'Novo overlay: Lista de Tarefas, para lives de coworking e de estudo. Os espectadores adicionam as tarefas deles pelo chat da Twitch ou da Kick com !task e riscam com !done, ao lado das suas. A lista aparece na live, rola quando fica longa, e os mods limpam pelo chat.',
       lowerThirdLaunch:

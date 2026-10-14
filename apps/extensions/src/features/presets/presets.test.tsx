@@ -154,8 +154,11 @@ describe('applyPresetToUrl', () => {
   it('covers every widget whose overlay reads a preset, with a demo for each', () => {
     expect(PRESET_WIDGETS.map((widget) => presetDemoUrl(widget, 'rift'))).toEqual([
       '/widgets/chat-widget?mock=true&preset=rift',
+      '/widgets/featured?simulate=1&preset=rift',
+      '/widgets/emote-combo?simulate=1&preset=rift',
       '/widgets/stream-alerts?simulate=1&preset=rift',
       '/widgets/goal?simulate=1&preset=rift',
+      '/widgets/goal?simulate=1&type=bits&preset=rift',
       `${getWidget('counter').demoUrl}&preset=rift`,
       '/widgets/subathon?simulate=1&preset=rift',
       '/widgets/poll?simulate=1&preset=rift',
@@ -163,6 +166,7 @@ describe('applyPresetToUrl', () => {
       '/widgets/frame?demo=1&preset=rift',
       '/widgets/countdown?simulate=1&preset=rift',
       '/widgets/socials?demo=1&preset=rift',
+      '/widgets/now-playing?demo=1&preset=rift',
       '/widgets/spin-wheel?demo=1&sound=0&preset=rift',
       '/widgets/event-list?simulate=1&preset=rift',
       '/widgets/credits?simulate=1&preset=rift',

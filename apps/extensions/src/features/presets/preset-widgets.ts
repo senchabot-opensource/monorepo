@@ -4,8 +4,11 @@ import { isClassic, PRESET_PARAM } from './registry';
 /** Widgets whose overlay reads a preset; Emote Wall and Sub Sprout keep their own art. */
 export const PRESET_WIDGET_IDS = [
   'chat-box',
+  'featured',
+  'emote-combo',
   'stream-alerts',
   'goal',
+  'bits-goal',
   'counter',
   'subathon',
   'poll',
@@ -13,6 +16,7 @@ export const PRESET_WIDGET_IDS = [
   'frames',
   'countdown',
   'socials',
+  'now-playing',
   'spin-wheel',
   'event-list',
   'credits',

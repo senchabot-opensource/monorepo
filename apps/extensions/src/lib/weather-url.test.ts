@@ -144,6 +144,22 @@ describe('parseWeatherUrl', () => {
     expect(parseWeatherUrl(buildWeatherUrl(ORIGIN, picked, 'ja'))).toEqual({
       settings: picked,
       locale: 'ja',
+      channels: { platforms: 'both', twitch: '', kick: '' },
+    });
+  });
+
+  it("names the channels first when there are any, for the mods' !h weather", () => {
+    const url = buildWeatherUrl(ORIGIN, settings(), 'en', {
+      platforms: 'twitch',
+      twitch: ' Streamer ',
+      kick: 'other',
+    });
+    expect(new URL(url).search).toMatch(/^\?twitch=streamer&lat=/);
+    expect(new URL(url).searchParams.has('kick')).toBe(false);
+    expect(parseWeatherUrl(url)?.channels).toEqual({
+      platforms: 'twitch',
+      twitch: 'streamer',
+      kick: '',
     });
   });
 

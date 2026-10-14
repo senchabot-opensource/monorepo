@@ -28,6 +28,7 @@ import {
   hourlySteps,
 } from './met-forecast';
 import { useMinute, useWeather } from './use-weather';
+import { useWeatherToggle } from './use-weather-toggle';
 import { readSymbol } from './weather-symbols';
 
 /** Outfit: round, even figures that read well at a glance, like a weather app's. */
@@ -330,10 +331,26 @@ interface WeatherWidgetProps {
   demo?: boolean;
   /** Pairs a setup page's preview with its test buttons. */
   previewId?: string;
+  /** Channels whose mods hide and show it with !h weather; it needs none to show the weather. */
+  twitchChannel?: string;
+  kickChannel?: string;
 }
 
-export function WeatherWidget({ settings, demo = false, previewId }: WeatherWidgetProps) {
+/** Fades the weather out where it stands after a mod's !h weather, and back in on the next. */
+const toggled = (hidden: boolean): CSSProperties => ({
+  opacity: hidden ? 0 : 1,
+  transition: 'opacity 400ms ease-out',
+});
+
+export function WeatherWidget({
+  settings,
+  demo = false,
+  previewId,
+  twitchChannel,
+  kickChannel,
+}: WeatherWidgetProps) {
   const forecast = useWeather({ lat: settings.lat, lon: settings.lon, demo, previewId });
+  const hidden = useWeatherToggle({ twitch: twitchChannel, kick: kickChannel, previewId });
   const time = useMinute();
   const scale = useShortSideScale();
   const now = forecast && currentStep(forecast, time);
@@ -344,14 +361,19 @@ export function WeatherWidget({ settings, demo = false, previewId }: WeatherWidg
 
   if (hudStyle) {
     return (
-      <div className={`wx-root wx-hud ih-${hudStyle}`} data-testid="weather" data-style={hudStyle}>
+      <div
+        className={`wx-root wx-hud ih-${hudStyle}`}
+        data-testid="weather"
+        data-style={hudStyle}
+        data-hidden={hidden || undefined}
+      >
         <style>{CSS}</style>
         {forecast && now && (
           <div
             className="wx-box wx-pill"
             // What a gallery preview frames (PreviewFrame's fitBox).
             data-preview-box
-            style={cornerPlace(settings.corner, scale, zoom, true)}
+            style={{ ...cornerPlace(settings.corner, scale, zoom, true), ...toggled(hidden) }}
           >
             <HudPill
               forecast={forecast}
@@ -369,13 +391,17 @@ export function WeatherWidget({ settings, demo = false, previewId }: WeatherWidg
 
   const View = settings.layout === 'pill' ? Pill : Card;
   return (
-    <div className={`wx-root wx-${settings.theme}`} data-testid="weather">
+    <div
+      className={`wx-root wx-${settings.theme}`}
+      data-testid="weather"
+      data-hidden={hidden || undefined}
+    >
       <style>{CSS}</style>
       {forecast && now && (
         <div
           className={`wx-box wx-${settings.layout}`}
           data-preview-box
-          style={cornerPlace(settings.corner, scale, zoom, false)}
+          style={{ ...cornerPlace(settings.corner, scale, zoom, false), ...toggled(hidden) }}
         >
           <View forecast={forecast} now={now} settings={settings} place={place} time={time} />
         </div>

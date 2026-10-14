@@ -49,6 +49,8 @@ export const en = {
     setupGuideTitle: 'How to set it up',
     faqTitle: 'Frequently asked questions',
     moreWidgets: 'More widgets',
+    filterWidgets: 'Filter widgets by category',
+    filterShowing: 'Showing {count} of {total} widgets',
     nextSteps: {
       title: 'Now add it to your streaming app',
       addSource: 'Add a new Browser Source in OBS Studio or any app that supports browser sources.',
@@ -100,6 +102,15 @@ export const en = {
   widgets: {
     overlays: 'Overlays',
     tools: 'Tools',
+    categories: {
+      all: 'All',
+      chat: 'Chat',
+      alerts: 'Alerts',
+      goals: 'Goals & timers',
+      interactive: 'Interactive',
+      scene: 'Scene',
+      irl: 'IRL',
+    },
     chatBox: {
       name: 'Chat Box',
       tagline: 'Twitch and Kick chat together in one overlay, with 7TV, BTTV and FFZ emotes.',
@@ -183,6 +194,23 @@ export const en = {
     tasks: {
       name: 'Task List',
       tagline: 'A co-working task list your chat fills with !task and ticks off with !done.',
+    },
+    nowPlaying: {
+      name: 'Now Playing',
+      tagline:
+        'The song you’re listening to, with its cover art, read from ListenBrainz or Last.fm.',
+    },
+    emoteCombo: {
+      name: 'Emote Combo',
+      tagline: 'When chat spams the same emote, a big combo counter shows how many joined in.',
+    },
+    featured: {
+      name: 'Featured Message',
+      tagline: "Put a viewer's message or question on screen, from Twitch or Kick chat.",
+    },
+    bitsGoal: {
+      name: 'Bits & Kicks Goal',
+      tagline: 'A goal bar that every Bits cheer and Kicks gift fills, with a trophy at the end.',
     },
     raffle: {
       name: 'Raffle',
@@ -311,10 +339,10 @@ export const en = {
       'OBS Studio and other apps that support browser sources. Add the widget URL as a Browser Source and use the size shown on the setup page.',
     faq4Q: 'Can I use Twitch and Kick together?',
     faq4A:
-      'Yes. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Counter, Event List, End Credits, Viewer Queue, Top Supporters, Lower Thirds, Task List, Chat Poll, Stream Countdown, IRL HUD Overlay and Spin Wheel take a Twitch and a Kick channel in the same URL. OBS Bridge can listen to both chats at once too. Raffle runs on one platform at a time.',
+      'Yes. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Counter, Event List, End Credits, Viewer Queue, Top Supporters, Lower Thirds, Task List, Emote Combo, Featured Message, Bits & Kicks Goal, Weather, Chat Poll, Stream Countdown, IRL HUD Overlay and Spin Wheel take a Twitch and a Kick channel in the same URL. OBS Bridge can listen to both chats at once too. Raffle runs on one platform at a time.',
     faq5Q: 'How do I change a widget later?',
     faq5A:
-      'Open its setup page, set it up the way you want and replace the URL in your Browser Source. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Counter, Event List, End Credits, Viewer Queue, Top Supporters, Lower Thirds, Task List, Chat Poll, Stream Frames, Socials, Stream Countdown, IRL HUD Overlay, Weather and Spin Wheel can also open an existing URL: paste it on the setup page, your settings come back, and you change only what you need.',
+      'Open its setup page, set it up the way you want and replace the URL in your Browser Source. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Counter, Event List, End Credits, Viewer Queue, Top Supporters, Lower Thirds, Task List, Emote Combo, Featured Message, Bits & Kicks Goal, Now Playing, Chat Poll, Stream Frames, Socials, Stream Countdown, IRL HUD Overlay, Weather and Spin Wheel can also open an existing URL: paste it on the setup page, your settings come back, and you change only what you need.',
     faq6Q: 'Will my widget URL keep working after updates?',
     faq6A:
       "Yes. Updates keep existing URL settings and their values working, so a widget that's already in your scene doesn't need a new URL.",
@@ -1125,6 +1153,14 @@ export const en = {
     cmdBuyMany: 'Buys three of it',
     commandsAmounts:
       'Write amounts like 500, 1,500, 2.5k or 1m. !hud cash add 500 and !hud cash remove 500 work too.',
+    commandsShort: 'Every command works with !h in place of !hud too, like !h cash +500.',
+    cmdToggleMap: 'Hides the mini-map, or shows it again',
+    cmdToggleCash: 'Hides the cash, or shows it again',
+    cmdToggleTime: 'Hides the clock, or shows it again',
+    cmdToggleWeather: 'Hides the Weather overlay, or shows it again, when it has your channel',
+    testToggleMap: 'Map on/off',
+    testToggleCash: 'Cash on/off',
+    testToggleTime: 'Clock on/off',
     previewTitle: 'IRL HUD Overlay Preview',
     previewIframeTitle: 'IRL HUD Overlay Preview',
     previewHint:
@@ -1259,6 +1295,242 @@ export const en = {
     faq4Q: 'Another chat bot already uses !wins. What do I do?',
     faq4A:
       'Give the counter a command of its own, like !wincount, in its Chat Command box, then paste the new URL into OBS. Counts are saved per command, so a new command starts from the starting count.',
+  },
+  nowPlaying: {
+    breadcrumb: 'Now Playing Setup',
+    title: 'Now Playing Setup',
+    intro:
+      'Show the song you’re listening to on stream, with its cover art, title and artist. It reads what you play from ListenBrainz or Last.fm, so Spotify and most music players work, on Twitch, Kick or any other platform. New songs slide in on their own, and the card slides away when the music stops. No login, no chat and no API key.',
+    sectionSource: 'Music Source',
+    source: 'Service',
+    sourceTip:
+      'Where the overlay reads your song from. ListenBrainz connects to Spotify and is free and open. Pick Last.fm if you already scrobble there.',
+    user: 'Username',
+    userTip:
+      'Your ListenBrainz username, as in listenbrainz.org/user/yourname. Pasting your profile link works too.',
+    userTipLastfm:
+      'Your Last.fm username, as in last.fm/user/yourname. Pasting your profile link works too.',
+    userPlaceholder: 'e.g. yourname',
+    userNeeded:
+      'Type your username to get your widget URL. Until then the preview plays sample songs.',
+    check: 'Check',
+    checking: 'Checking…',
+    checkPlaying: 'Playing now: {title} by {artist}.',
+    checkPlayingTitle: 'Playing now: {title}.',
+    checkQuiet:
+      'Found {user} on {service}, but nothing is playing right now. Play a song and check again.',
+    checkMissing: 'Couldn’t find {user} on {service}. Check the spelling.',
+    checkError: 'Couldn’t reach {service}. Try again in a moment.',
+    listenbrainzHint: 'Listening on Spotify? Connect it to your free ListenBrainz account first.',
+    listenbrainzConnect: 'Connect Spotify',
+    lastfmHint:
+      'Last.fm only shares your songs while your recent listening is public. The overlay credits Last.fm in small print.',
+    lastfmPrivacy: 'Privacy settings',
+    sectionDisplay: 'Display',
+    layout: 'Layout',
+    layoutTip:
+      'Card shows the cover beside the title, artist and album. Pill fits the cover, the title and the artist on one line.',
+    layouts: {
+      card: 'Card',
+      pill: 'Pill',
+    },
+    art: 'Cover Art',
+    artTip: 'The album cover beside the song. When there’s none, a music note fills in.',
+    album: 'Album Name',
+    albumTip: 'The album under the artist, when the service knows it.',
+    hideStopped: 'Hide When the Music Stops',
+    hideStoppedTip:
+      'The song slides away once the music stops. Off, the last song stays on screen, dimmed, until the next one plays.',
+    hideAfter: 'Hide After',
+    hideAfterTip:
+      'How long the last song stays up once the music stops, so a short pause between songs doesn’t hide it.',
+    previewTitle: 'Now Playing Preview',
+    previewIframeTitle: 'Now Playing Preview',
+    previewHint:
+      'The preview plays sample songs. Fill in your username and press Your Music to see what you’re playing now.',
+    testNext: 'Next Song',
+    testStop: 'Music Stops',
+    testLive: 'Your Music',
+    guideStep3: 'Set width to 640 and height to 160.',
+    guideStep4:
+      'Play a song. It shows up within a few seconds, with its cover art when there is one.',
+    overlay: {
+      label: 'Now playing',
+    },
+    faq1Q: 'How do I show songs from Spotify?',
+    faq1A:
+      'Make a free ListenBrainz account, connect Spotify in its settings under Connect services, and type your ListenBrainz username here. Already scrobbling to Last.fm? Spotify connects there too: pick Last.fm and type your Last.fm username instead.',
+    faq2Q: 'Which music players work?',
+    faq2A:
+      'Any player that tells ListenBrainz or Last.fm what’s playing as a song starts. Spotify connects to both in their settings. For YouTube Music, Apple Music, SoundCloud, Deezer and others in the browser, the free Web Scrobbler extension does it, and most desktop and phone players have a scrobbler plugin or app.',
+    faq3Q: 'Why does a new song show up late?',
+    faq3A:
+      'The overlay asks for your song every 12 seconds, and your player or Spotify tells ListenBrainz or Last.fm with a delay of its own, so a new song can take up to a minute to show. When the music stops, the song slides away after the time you set, or stays up dimmed if you turned hiding off.',
+    faq4Q: 'Is what I listen to public?',
+    faq4A:
+      'Yes. The overlay reads the same public profile anyone can open on ListenBrainz or Last.fm, and your username is in the widget URL. It shows only the song playing now, never your history. On Last.fm, hiding your recent listening in its privacy settings hides it from the overlay too.',
+  },
+  emoteCombo: {
+    breadcrumb: 'Emote Combo Setup',
+    title: 'Emote Combo Setup',
+    intro:
+      "A combo counter for Twitch and Kick chat. When chatters post the same emote one after another, it shows up big on stream with its count, ×3, ×4, ×5, popping with every new chatter. Each chatter counts once, Twitch and Kick chat count together, and 7TV, BTTV and FFZ emotes count too. When chat moves on, the final count stays up for a moment and fades, with the stream's best combo underneath.",
+    sectionCombo: 'Combo',
+    emotes: 'Emotes',
+    emotesTip:
+      'Ticked providers count along with Twitch and Kick emotes. 7TV works in Twitch and Kick chat, BTTV and FFZ only in Twitch chat. The same 7TV emote in both chats makes one combo.',
+    emotesNone: 'Off',
+    window: 'Combo Window',
+    windowTip:
+      'How long the combo waits for the next chatter. When nobody new joins in time, the combo ends and shows its final count.',
+    seconds: '{n}s',
+    min: 'Chatters to Show',
+    minTip: 'How many different chatters have to post the emote before the combo shows up.',
+    best: 'Best Combo',
+    bestTip:
+      'Shows the best combo of the stream under the counter. It starts over after 12 hours without a combo, or when a mod types !combo reset.',
+    size: 'Size',
+    sizeTip: 'How big the emote and the count are.',
+    sectionCommands: 'Chat Commands',
+    commandsIntro: 'For you and your mods, from Twitch or Kick chat.',
+    cmdReset: 'Clears the best combo',
+    previewTitle: 'Emote Combo Preview',
+    previewIframeTitle: 'Emote Combo Preview',
+    previewHint:
+      'The preview plays combos with sample emotes. On stream, only your chat starts them.',
+    testStart: 'Start a Combo',
+    testChatter: 'Add a Chatter',
+    testReset: 'Reset Best',
+    guideStep3: 'Set width to 600 and height to 400.',
+    guideStep4:
+      'Have a few chatters post the same emote. The combo shows up once enough of them join in.',
+    overlay: {
+      combo: 'COMBO',
+      best: 'Best',
+      newBest: 'New best!',
+    },
+    faq1Q: 'What counts toward a combo?',
+    faq1A:
+      "Every chat message with the emote in it, on its own or in a sentence. Each chatter counts once per combo, so sending it again doesn't raise the count, and bots like Nightbot never count. The combo goes on while someone new joins within the combo window, 8 seconds by default. With two combos going, the bigger one is on screen.",
+    faq2Q: 'Which emotes work?',
+    faq2A:
+      "Twitch and Kick emotes, global, channel and subscriber ones alike, plus 7TV, BTTV and FFZ emotes when they're ticked under Emotes. 7TV works in both chats; BTTV and FFZ need your Twitch channel.",
+    faq3Q: 'Do Twitch and Kick count together?',
+    faq3A:
+      "Yes. Fill in both channels and chatters from both count toward the same combo. 7TV, BTTV and FFZ emotes go by their name, so the same 7TV emote in both chats makes one combo. Twitch's and Kick's own emotes are different on each platform, so they make combos of their own.",
+    faq4Q: 'How do I reset the best combo?',
+    faq4A:
+      'You or a mod types !combo reset in Twitch or Kick chat. The best combo also starts over on its own after 12 hours without a combo, so each stream starts fresh.',
+  },
+  featured: {
+    breadcrumb: 'Featured Message Setup',
+    title: 'Featured Message Setup',
+    intro:
+      'Put your viewers’ words on stream, from Twitch and Kick chat. Mods type !feature and a name to show that viewer’s last message with their name color, badges and emotes, and viewers ask questions with !q for a Q&A you run with !q next.',
+    sectionMessages: 'Messages',
+    mode: 'Commands',
+    modeTip:
+      'Which chat commands work: !feature for mods to put a viewer’s message up, !q for viewers to ask questions, or both.',
+    modes: {
+      both: 'Both',
+      feature: 'Feature',
+      qa: 'Q&A',
+    },
+    hide: 'Hide After',
+    hideTip:
+      'How long a message stays on screen before it goes by itself. At 0 it stays until a mod takes it down or puts up another one.',
+    hideOff: 'Stays up until a mod takes it down or puts up another one.',
+    waiting: 'Questions Waiting Badge',
+    waitingTip:
+      'Shows how many questions are waiting, next to the message on screen or on its own.',
+    sizeTip: 'How big the name and the message are. A long message still shrinks to fit the card.',
+    sectionCommands: 'Chat Commands',
+    commandsIntro:
+      'Type them in Twitch or Kick chat. Each one says who can use it: anyone, or you and your mods.',
+    cmdNameExample: 'name',
+    cmdQuestionExample: 'what game is next?',
+    cmdFeature: 'Mods: puts that viewer’s last message on screen',
+    cmdFeatureOff: 'Mods: takes it off the screen',
+    cmdAsk: 'Anyone: asks a question, or replaces the one they asked',
+    cmdNext: 'Mods: shows the oldest question waiting',
+    cmdSkip: 'Mods: drops the oldest question without showing it',
+    cmdClear: 'Mods: empties the questions waiting',
+    cmdOff: 'Mods: takes the question off the screen',
+    previewTitle: 'Featured Message Preview',
+    previewIframeTitle: 'Featured Message Preview',
+    previewHint:
+      'The preview plays simulated chat. On stream only you and your mods put messages up.',
+    testFeature: 'Feature a Message',
+    testAsk: 'Ask a Question',
+    testNext: 'Next Question',
+    testHide: 'Hide',
+    testMessage: 'Hi from chat! This is how a featured message looks on stream.',
+    testQuestion: 'What are we playing next?',
+    guideStep3: 'Set width to 720 and height to 240.',
+    guideStep4:
+      'Write something in your chat, then type !feature and your name to put it on screen.',
+    overlay: {
+      question: 'Question',
+      waitingOne: '1 question waiting',
+      waitingMany: '{count} questions waiting',
+    },
+    faq1Q: 'How do mods feature a message?',
+    faq1A:
+      'They type !feature and the viewer’s name, like !feature @senchabot, in Twitch or Kick chat. That viewer’s last message shows up with their name color, badges and emotes, whichever chat it came from. !feature on its own takes it down.',
+    faq2Q: 'How does the Q&A work?',
+    faq2A:
+      'Viewers type !q and their question, up to 200 characters. Each viewer has one question waiting at a time, and asking again replaces it. You or a mod types !q next to show the oldest one, !q skip to drop it and !q clear to empty the line.',
+    faq3Q: 'Which messages can be featured?',
+    faq3A:
+      'The last message of each of the last 500 people who chatted since the browser source loaded. Commands, replies and bots are left out, and a timeout, a ban or a deleted message takes it off the screen too.',
+    faq4Q: 'What happens if OBS closes or the browser source reloads?',
+    faq4A:
+      'The questions waiting and the message on screen are saved inside OBS, so they come back as they were. Type !q clear to start fresh.',
+  },
+  bitsGoal: {
+    breadcrumb: 'Bits & Kicks Goal Setup',
+    title: 'Bits & Kicks Goal Setup',
+    intro:
+      'A Bits and Kicks goal bar for Twitch and Kick. Every Bits cheer and every Kicks gift from both chats fills it by its amount, and when the goal is reached a trophy lands on the bar with the name of the viewer who got it there. Pick where the count starts and where the goal is, and your mods can fix the count from chat.',
+    defaultTitle: 'BITS & KICKS GOAL',
+    defaultTitleBits: 'BITS GOAL',
+    defaultTitleKicks: 'KICKS GOAL',
+    startTip:
+      'Where the count starts: 0 for a new goal, or the Bits and Kicks already in toward it. Changing it later starts the count over from the new number.',
+    countsHint:
+      'A cheer adds its Bits and a gift its Kicks, one for one: 500 Bits add 500, and so do 500 Kicks. Subs and gifted subs add nothing here.',
+    iconTip: 'An emoji for the goal instead of the gem, e.g. 💎. Leave it empty to use the gem.',
+    iconPlaceholder: 'Gem',
+    showPops: 'Show New Cheers',
+    showPopsTip:
+      "Floats up the amount with the viewer's name for every cheer or Kicks gift, e.g. +500.",
+    commandsIntro:
+      'You and your mods can fix the count from Twitch or Kick chat, for example to add Bits that came in while OBS was closed. The command is !bitsgoal, so a Sub Goal on !goal can run next to it.',
+    cmdAdd: 'Adds Bits and Kicks to the count, 1 if you leave the number out',
+    cmdRemove: 'Takes Bits and Kicks off the count, 1 if you leave the number out',
+    previewTitle: 'Bits & Kicks Goal Preview',
+    previewIframeTitle: 'Bits & Kicks Goal Preview',
+    previewHint:
+      'The preview plays simulated cheers and Kicks until the goal is reached, then starts over. On stream only your chat adds to the count.',
+    testCheer: 'Cheer {count} Bits',
+    testKicks: 'Send {count} Kicks',
+    widgetUrlInvalid: "This isn't a Bits & Kicks Goal URL.",
+    subGoalUrl: "That's a Sub Goal URL. Edit it on the Sub Goal setup page.",
+    bitsGoalUrl: "That's a Bits & Kicks Goal URL. Edit it on the Bits & Kicks Goal setup page.",
+    guideStep2: 'Paste your copied Bits & Kicks goal URL.',
+    guideStep4: 'If the count is ever off, you or a mod can fix it with !bitsgoal set in chat.',
+    faq1Q: 'What counts toward the goal?',
+    faq1A:
+      'Every Bits cheer in your Twitch chat and every Kicks gift on your Kick channel adds its amount, so a cheer of 500 Bits adds 500. Subs, gifted subs and raids add nothing here; the Sub Goal counts subs.',
+    faq2Q: 'Why do Bits and Kicks count the same?',
+    faq2A:
+      "A Bit and a Kick are each worth roughly one US cent to the streamer, so the goal counts them one for one: 100 Bits and 100 Kicks both add 100. Viewers pay a little more when they buy them, and the exact payout depends on each platform's terms.",
+    faq3Q: 'How do I reset the goal?',
+    faq3A:
+      'Type !bitsgoal reset in Twitch or Kick chat to go back to your starting count. You or a mod can also set any count with !bitsgoal set, and a new starting count in the URL starts the goal over.',
+    faq4Q: 'Can I run a Sub Goal and a Bits & Kicks Goal together?',
+    faq4A:
+      'Yes. Add each as its own browser source. They keep separate counts, and each listens to its own command: !goal for the Sub Goal and !bitsgoal for this one, so fixing one never changes the other.',
   },
   eventList: {
     breadcrumb: 'Event List Setup',
@@ -1732,6 +2004,15 @@ export const en = {
     testSnow: 'Snow',
     testNight: 'Night',
     testLive: 'Real Weather',
+    sectionChat: 'Chat (optional)',
+    channelHint:
+      'No channel needed for the weather. With one, you and your mods can hide it and show it again from chat with !h weather.',
+    sectionCommands: 'Chat Commands',
+    commandsIntro:
+      'With a channel in the URL, you and your mods type this in Twitch or Kick chat. Viewers typing it change nothing.',
+    cmdToggle: 'Hides the weather, or shows it again',
+    cmdToggleLong: "The same, in the IRL HUD Overlay's long form",
+    testToggle: 'Hide / show',
     widgetUrlTip:
       'Already made a widget? Paste its URL here to load your settings and change what you need.',
     widgetUrlPlaceholder: 'Paste an existing widget URL to edit it',
@@ -2517,6 +2798,14 @@ export const en = {
         colNote: 'Note',
         notSource: 'Not a source',
         notes: {
+          nowPlaying:
+            'A wide strip for the card or the one-line pill. A bigger source scales it up.',
+          emoteCombo:
+            'Room for a big emote and its count, with the best combo under them. It stays clear until chat starts a combo.',
+          featured:
+            'A wide strip for one message at a time. A long one shrinks to fit, and a bigger source scales it up.',
+          bitsGoal:
+            "The Sub Goal's strip: the goal bar, with room above it for each cheer's amount to rise into.",
           chatBox:
             'A vertical chat column. A bigger source fits more messages, the text stays the same size.',
           emoteWall: 'A full 1080p canvas. Emotes show up anywhere on the screen.',
@@ -2585,7 +2874,7 @@ export const en = {
         title: 'How do I change a widget later?',
         p1: 'Your settings live inside the widget URL, so changing a setting means a new URL. Change the setting on the setup page, copy the new URL, then double-click the source in OBS and paste it over the old URL in the URL field.',
         p2:
-          "You don't have to start over with [Chat Box](/setup/chat-widget), [Emote Wall](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Stream Alerts](/setup/stream-alerts), [Sub Goal](/setup/sub-goal), [Counter](/setup/counter), [Event List](/setup/event-list), [End Credits](/setup/end-credits), [Viewer Queue](/setup/viewer-queue), [Top Supporters](/setup/top-supporters), [Lower Thirds](/setup/lower-thirds), [Task List](/setup/task-list), [Chat Poll](/setup/chat-poll), [Stream Frames](/setup/stream-frames), [Socials](/setup/socials), [Stream Countdown](/setup/stream-countdown), [IRL HUD Overlay](/setup/irl-hud), [Weather](/setup/weather) or [Spin Wheel](/setup/spin-wheel). Paste your current URL into the Widget URL field on the setup page and your channels and all your settings come back. Change what you want and copy the new URL.",
+          "You don't have to start over with [Chat Box](/setup/chat-widget), [Emote Wall](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Stream Alerts](/setup/stream-alerts), [Sub Goal](/setup/sub-goal), [Counter](/setup/counter), [Event List](/setup/event-list), [End Credits](/setup/end-credits), [Viewer Queue](/setup/viewer-queue), [Top Supporters](/setup/top-supporters), [Lower Thirds](/setup/lower-thirds), [Task List](/setup/task-list), [Emote Combo](/setup/emote-combo), [Featured Message](/setup/featured-message), [Bits & Kicks Goal](/setup/bits-goal), [Now Playing](/setup/now-playing), [Chat Poll](/setup/chat-poll), [Stream Frames](/setup/stream-frames), [Socials](/setup/socials), [Stream Countdown](/setup/stream-countdown), [IRL HUD Overlay](/setup/irl-hud), [Weather](/setup/weather) or [Spin Wheel](/setup/spin-wheel). Paste your current URL into the Widget URL field on the setup page and your channels and all your settings come back. Change what you want and copy the new URL.",
         p3: "OBS Bridge has no paste field, so enter your settings again on its setup page and copy the new tool URL. You can also change scene picks and authorized users on the tool page itself and grab the new URL with its Copy Updated URL button. Old URLs keep working, so you don't have to update them.",
       },
       troubleshoot: {
@@ -3289,7 +3578,7 @@ export const en = {
     eyebrow: 'Presets',
     title: 'Game presets for your stream overlays',
     lead:
-      'Pick a preset and your Chat Box, Stream Alerts, Sub Goal, Counter, Event List, End Credits, Viewer Queue, Top Supporters, Lower Thirds, Task List, Subathon Timer, Chat Poll, Raffle winner, Stream Frames, Stream Countdown, Socials and Spin Wheel get the same frame, fonts and colors. Use one on every widget, or a different one on each.',
+      'Pick a preset and your Chat Box, Stream Alerts, Sub Goal, Counter, Event List, End Credits, Viewer Queue, Top Supporters, Lower Thirds, Task List, Featured Message, Emote Combo, Bits & Kicks Goal, Now Playing, Subathon Timer, Chat Poll, Raffle winner, Stream Frames, Stream Countdown, Socials and Spin Wheel get the same frame, fonts and colors. Use one on every widget, or a different one on each.',
     pickTitle: 'Pick a preset',
     pickText:
       'Ready-made presets for League of Legends (LoL), World of Warcraft (WoW), Metin2, Dota 2, Valorant, Counter-Strike 2 (CS2), Minecraft, Clash of Clans, Fortnite, Rocket League and PUBG: Battlegrounds.',
@@ -3387,10 +3676,10 @@ export const en = {
       'OBS Studio and any other streaming software that supports a browser source. Each widget runs as a web URL, and you paste that URL into the source. Our guides are written for OBS Studio.',
     platformsQ: 'Which widgets support Twitch and which support Kick?',
     platformsA:
-      'All thirteen support both platforms. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Counter, Event List, End Credits, Viewer Queue, Top Supporters, Lower Thirds, Task List, Chat Poll, Stream Countdown, IRL HUD Overlay and Spin Wheel listen to a Twitch and a Kick channel together in one URL. OBS Bridge listens for commands from both chats, and each authorized user is added with their own platform. Raffle runs on one platform at a time, Twitch or Kick. Stream Frames, Socials and Weather read no chat, so they work the same on either one. In Chat Box, 7TV emotes show on both platforms, while BTTV and FFZ emotes show on Twitch only.',
+      'All 27 support both platforms. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Counter, Event List, End Credits, Viewer Queue, Top Supporters, Lower Thirds, Task List, Emote Combo, Featured Message, Bits & Kicks Goal, Weather, Chat Poll, Stream Countdown, IRL HUD Overlay and Spin Wheel listen to a Twitch and a Kick channel together in one URL. OBS Bridge listens for commands from both chats, and each authorized user is added with their own platform. Raffle runs on one platform at a time, Twitch or Kick. Stream Frames, Socials and Now Playing read no chat, so they work the same on either one. In Chat Box, 7TV emotes show on both platforms, while BTTV and FFZ emotes show on Twitch only.',
     editQ: 'How do I change a widget later?',
     editA:
-      "Change the settings on the setup page, copy the new URL, and paste it over the old one in the source's URL field in OBS. With Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Counter, Event List, End Credits, Viewer Queue, Top Supporters, Lower Thirds, Task List, Chat Poll, Stream Frames, Socials, Stream Countdown, IRL HUD Overlay, Weather and Spin Wheel, if you paste your old URL into the Widget URL field on the setup page, all your settings come back and you don't have to start over.",
+      "Change the settings on the setup page, copy the new URL, and paste it over the old one in the source's URL field in OBS. With Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Counter, Event List, End Credits, Viewer Queue, Top Supporters, Lower Thirds, Task List, Emote Combo, Featured Message, Bits & Kicks Goal, Now Playing, Chat Poll, Stream Frames, Socials, Stream Countdown, IRL HUD Overlay, Weather and Spin Wheel, if you paste your old URL into the Widget URL field on the setup page, all your settings come back and you don't have to start over.",
     oldUrlsQ: 'Will my old widget URLs keep working?',
     oldUrlsA:
       "Yes. Updates are made so existing URLs don't break: parameter names, values and defaults stay the same. For example, the old keep=true in Chat Box still means Forever, and Sub Sprout still reads the old channel and platform parameters.",
@@ -3414,6 +3703,18 @@ export const en = {
     lead: "New features and bug fixes in Senchabot Extensions, newest first. The list is put together from the project's commit history on [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      hudToggles:
+        'IRL HUD Overlay and Weather: hide the mini-map, the cash, the clock and the weather from chat and show them again with !h map, !h cash, !h time and !h weather. Weather reads chat only when you add your channel.',
+      irlHudShortCommand:
+        'IRL HUD Overlay: every chat command now also works in short, !h in place of !hud, like !h cash +500.',
+      nowPlayingLaunch:
+        'New overlay: Now Playing. It shows the song you’re listening to, with its cover art, title and artist, read from ListenBrainz or Last.fm, so Spotify and most music players work. New songs slide in on their own, and it slides away when the music stops.',
+      emoteComboLaunch:
+        "New overlay: Emote Combo. When chatters post the same emote one after another, it shows up big on stream with a combo count that pops with every new chatter, from Twitch and Kick chat together and with 7TV, BTTV and FFZ emotes too. The stream's best combo shows underneath, and mods reset it with !combo reset.",
+      featuredLaunch:
+        'New overlay: Featured Message, for putting chat on stream. Mods type !feature and a name in Twitch or Kick chat to show that viewer’s last message with their name color, badges and emotes, and viewers ask with !q for a Q&A that mods run with !q next.',
+      bitsGoalLaunch:
+        'New overlay: Bits & Kicks Goal, a goal bar that Twitch Bits and Kick Kicks fill by their amount, one for one. A trophy names the viewer who reached the goal, the count is saved in OBS, and mods fix it from chat with !bitsgoal, apart from the Sub Goal’s !goal.',
       tasksLaunch:
         'New overlay: Task List, for co-working and study streams. Viewers add their tasks from Twitch or Kick chat with !task and tick them off with !done, next to yours. The list shows on stream, scrolls when it runs long, and mods clear it from chat.',
       lowerThirdLaunch:

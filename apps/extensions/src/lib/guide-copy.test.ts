@@ -7,11 +7,12 @@ import { WIDGETS, type WidgetEntry } from './widgets';
 
 // Raffle runs on one platform and keeps its rules in the browser, and OBS Bridge ties each
 // command user to a platform; every other widget reopens a pasted URL, and all of those but
-// Stream Frames, Socials and Weather, which read no chat, take both channels.
+// Stream Frames, Socials and Now Playing, which read no chat, take both channels. Weather takes
+// them too, only for the mods' !h weather.
 const PASTE_WIDGETS = WIDGETS.filter(
   (widget) => widget.id !== 'raffle' && widget.id !== 'obs-bridge',
 );
-const NO_CHAT: readonly string[] = ['frames', 'socials', 'weather'];
+const NO_CHAT: readonly string[] = ['frames', 'socials', 'now-playing'];
 const BOTH_CHANNEL_WIDGETS = PASTE_WIDGETS.filter((widget) => !NO_CHAT.includes(widget.id));
 
 const missingIn = (widgets: readonly WidgetEntry[], text: string, locale: Locale) =>

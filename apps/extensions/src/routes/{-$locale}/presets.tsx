@@ -201,6 +201,7 @@ function PresetsPage() {
                     title={t('presets.previewIframeTitle', { widget: widgetName, name })}
                     canvas={presetCanvas(widget)}
                     backgroundClassName={SCENE_CLASS}
+                    showLoading
                     lang={locale}
                   />
                 </div>

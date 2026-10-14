@@ -113,6 +113,10 @@ const COMMANDS: { usage: string; action: TranslationKey }[] = [
   { usage: `${COMMAND} outdoor`, action: 'irlHud.cmdOutdoor' },
   { usage: `${BUY} water`, action: 'irlHud.cmdBuy' },
   { usage: `${BUY} water 3`, action: 'irlHud.cmdBuyMany' },
+  { usage: `${COMMAND} map`, action: 'irlHud.cmdToggleMap' },
+  { usage: `${COMMAND} cash`, action: 'irlHud.cmdToggleCash' },
+  { usage: `${COMMAND} time`, action: 'irlHud.cmdToggleTime' },
+  { usage: `${COMMAND} weather`, action: 'irlHud.cmdToggleWeather' },
 ];
 
 function IrlHudSetup() {
@@ -474,6 +478,17 @@ function IrlHudSetup() {
       },
     },
     { label: t('irlHud.testReset'), event: () => mod(`${CASH} reset`) },
+    {
+      label: t('irlHud.testToggleMap'),
+      disabled: !settings.radar,
+      event: () => mod(`${COMMAND} map`),
+    },
+    { label: t('irlHud.testToggleCash'), event: () => mod(`${COMMAND} cash`) },
+    {
+      label: t('irlHud.testToggleTime'),
+      disabled: !settings.clock,
+      event: () => mod(`${COMMAND} time`),
+    },
   ];
 
   const commands = (
@@ -481,7 +496,12 @@ function IrlHudSetup() {
       title={t('irlHud.sectionCommands')}
       intro={t('irlHud.commandsIntro')}
       commands={COMMANDS.map((command) => ({ usage: command.usage, action: t(command.action) }))}
-      footer={<p className={`${HINT_CLASS} mt-3`}>{t('irlHud.commandsAmounts')}</p>}
+      footer={
+        <>
+          <p className={`${HINT_CLASS} mt-3`}>{t('irlHud.commandsAmounts')}</p>
+          <p className={`${HINT_CLASS} mt-2`}>{t('irlHud.commandsShort')}</p>
+        </>
+      }
     />
   );
 

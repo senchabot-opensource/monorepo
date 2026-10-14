@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { usePreviewReceiver } from '#/hooks/use-preview-channel';
+import type { GoalType } from '#/lib/goal-url';
 import type { SubathonEvent, SubathonPlatform, TimedEvent } from '../subathon/subathon-events';
 import { useSubEvents } from '../subathon/use-sub-events';
 import {
@@ -8,15 +9,21 @@ import {
   createGoal,
   followStart,
   type GoalState,
+  goalAmountIn,
+  goalCommand,
   isGoalState,
   parseGoalCommand,
   progressOf,
-  subsIn,
 } from './goal-count';
 
-/** Storage key per channel pair, so every Sub Goal source for the channel shares one count. */
-export const storageKey = (twitch = '', kick = '') =>
-  `senchabot.goal:${twitch.trim().toLowerCase()}:${kick.trim().toLowerCase()}`;
+/**
+ * Storage key per channel pair, so every Sub Goal source for the channel shares one count. A
+ * Bits & Kicks Goal keeps its own, so the two never add into each other.
+ */
+export const storageKey = (twitch = '', kick = '', type: GoalType = 'subs') => {
+  const channels = `${twitch.trim().toLowerCase()}:${kick.trim().toLowerCase()}`;
+  return type === 'bits' ? `senchabot.goal:bits:${channels}` : `senchabot.goal:${channels}`;
+};
 
 /** The saved count, or a new one at the starting count. */
 function loadState(key: string | null, start: number): GoalState {
@@ -31,11 +38,13 @@ function loadState(key: string | null, start: number): GoalState {
 }
 
 export type SubEvent = Extract<TimedEvent, { kind: 'sub' | 'gift' }>;
+/** What can fill a goal: a sub or gift for a Sub Goal, a cheer for a Bits & Kicks Goal. */
+export type GoalEvent = SubEvent | Extract<TimedEvent, { kind: 'bits' }>;
 
 export interface GoalPop {
   id: number;
   amount: number;
-  event: SubEvent;
+  event: GoalEvent;
 }
 
 /** A change to show: `from` and `to` are progress before and after, `up` whether subs came in. */
@@ -60,23 +69,28 @@ const SIM_RESTART_MS = CELEBRATE_MS + 1500;
 const SIM_QUIET_AFTER_TEST_MS = 8000;
 const SIM_NAMES = ['NightOwl', 'pixelpanda', 'ChatGremlin', 'lunaa', 'GG_Tobi', 'mochi', 'Rook'];
 const pick = <T>(list: readonly T[]) => list[Math.floor(Math.random() * list.length)];
+// The preview's cheers: a small one, a medium one and a big one, in Bits or Kicks.
+const SIM_CHEERS = [100, 500, 1000];
 
-function simulatedEvent(only?: SubathonPlatform): SubEvent {
+function simulatedEvent(only: SubathonPlatform | undefined, type: GoalType): GoalEvent {
   const platform = only ?? pick<SubathonPlatform>(['twitch', 'kick']);
   const name = pick(SIM_NAMES);
+  if (type === 'bits') return { kind: 'bits', platform, name, amount: pick(SIM_CHEERS) };
   return Math.random() < 0.7
     ? { kind: 'sub', platform, name, tier: 1 }
     : { kind: 'gift', platform, name, tier: 1, count: pick([1, 3, 5]) };
 }
 
 interface UseGoalOptions {
+  /** What fills it; a Sub Goal when unset. */
+  type?: GoalType;
   twitch?: string;
   kick?: string;
   start: number;
   target: number;
   /** Seconds the completed goal stays up; null keeps it up. */
   hideAfter: number | null;
-  /** Preview mode: simulated subs, no chat and no saved count. */
+  /** Preview mode: simulated subs (or cheers), no chat and no saved count. */
   simulate?: boolean;
   /** The only platform the preview simulates; both when unset. */
   simPlatform?: SubathonPlatform;
@@ -85,6 +99,7 @@ interface UseGoalOptions {
 }
 
 export function useGoal({
+  type = 'subs',
   twitch,
   kick,
   start,
@@ -94,7 +109,7 @@ export function useGoal({
   simPlatform,
   previewId,
 }: UseGoalOptions) {
-  const key = simulate ? null : storageKey(twitch, kick);
+  const key = simulate ? null : storageKey(twitch, kick, type);
   const settingsRef = useRef({ start, target });
   settingsRef.current = { start, target };
   const [state, setState] = useState<GoalState>(() => loadState(key, start));
@@ -102,15 +117,15 @@ export function useGoal({
   const [pops, setPops] = useState<GoalPop[]>([]);
   const [hit, setHit] = useState<GoalHit | null>(null);
   // Set while the goal-reached celebration plays; a new key replays it. The event is the
-  // sub or gift that completed the goal, so the trophy can name who filled it.
-  const [celebration, setCelebration] = useState<{ key: number; event: SubEvent | null } | null>(
+  // sub, gift or cheer that completed the goal, so the trophy can name who filled it.
+  const [celebration, setCelebration] = useState<{ key: number; event: GoalEvent | null } | null>(
     null,
   );
   const popId = useRef(0);
   const lastTestAt = useRef(0);
 
-  /** Makes `next` the count and returns how many subs that added (negative when removed). */
-  const commit = useCallback((next: GoalState, event?: SubEvent): number => {
+  /** Makes `next` the count and returns how much that added (negative when removed). */
+  const commit = useCallback((next: GoalState, event?: GoalEvent): number => {
     const previous = stateRef.current;
     stateRef.current = next;
     setState(next);
@@ -132,12 +147,13 @@ export function useGoal({
   const handleEvent = useCallback(
     (event: SubathonEvent) => {
       if (event.kind === 'mod') {
-        const command = parseGoalCommand(event.text);
+        const command = parseGoalCommand(event.text, goalCommand(type));
         if (command) commit(applyGoalCommand(stateRef.current, command, settingsRef.current.start));
         return;
       }
-      if (event.kind !== 'sub' && event.kind !== 'gift') return;
-      const amount = subsIn(event);
+      if (event.kind !== 'sub' && event.kind !== 'gift' && event.kind !== 'bits') return;
+      // Subs and gifts add nothing to a Bits & Kicks Goal, and cheers nothing to a Sub Goal.
+      const amount = goalAmountIn(type, event);
       // At the top of the scale nothing gets through, so there's nothing to show either.
       const added = amount > 0 ? commit(addToGoal(stateRef.current, amount), event) : 0;
       if (added <= 0) return;
@@ -145,7 +161,7 @@ export function useGoal({
       setPops((list) => [...list.slice(-(MAX_POPS - 1)), { id, amount: added, event }]);
       window.setTimeout(() => setPops((list) => list.filter((pop) => pop.id !== id)), POP_MS);
     },
-    [commit],
+    [commit, type],
   );
 
   useEffect(() => {
@@ -182,7 +198,8 @@ export function useGoal({
 
   useSubEvents(twitch, kick, !simulate, handleEvent);
 
-  // Preview: a sub or gift every few seconds; once the goal is reached, celebrate and start over.
+  // Preview: a sub, gift or cheer every few seconds; once the goal is reached, celebrate and
+  // start over.
   useEffect(() => {
     if (!simulate) return;
     let timer: number;
@@ -195,12 +212,12 @@ export function useGoal({
         return;
       }
       const quiet = Date.now() - lastTestAt.current < SIM_QUIET_AFTER_TEST_MS;
-      if (!quiet) handleEvent(simulatedEvent(simPlatform));
+      if (!quiet) handleEvent(simulatedEvent(simPlatform, type));
       timer = window.setTimeout(step, 2200 + Math.random() * 2000);
     };
     timer = window.setTimeout(step, 1200);
     return () => window.clearTimeout(timer);
-  }, [simulate, simPlatform, commit, handleEvent]);
+  }, [simulate, simPlatform, type, commit, handleEvent]);
 
   usePreviewReceiver<PreviewMessage>(PREVIEW_CHANNEL, previewId, simulate, (message) => {
     if (message.type !== 'event') return;

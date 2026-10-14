@@ -157,6 +157,18 @@ describe('Weather setup', () => {
     });
   });
 
+  it("needs no channel, and names one for the mods' !h weather when you fill it in", async () => {
+    const user = await openPage();
+    await user.click(urlField());
+    await user.paste(`${window.location.origin}/widgets/weather?twitch=streamer&lat=41&lon=29`);
+    expect(textbox(en('common.twitchChannel')).value).toBe('streamer');
+    expect(widgetUrl().searchParams.get('twitch')).toBe('streamer');
+    expect(widgetUrl().searchParams.get('lat')).toBe('41');
+    await user.clear(textbox(en('common.twitchChannel')));
+    expect(widgetUrl().searchParams.has('twitch')).toBe(false);
+    expect(widgetUrl().searchParams.get('lat')).toBe('41');
+  });
+
   it('turns down a URL of another widget', async () => {
     const user = await openPage();
     await user.click(urlField());

@@ -43,6 +43,7 @@ const READY = `(doc, kind) => {
   if (kind === 'poll') return Boolean(doc.querySelector('[data-testid="poll-card"]'));
   if (kind === 'frame') return Boolean(doc.querySelector('[data-testid="frame-art"] svg path'));
   if (kind === 'countdown') return Boolean(doc.querySelector('[data-testid="countdown-clock"]'));
+  if (kind === 'goal') return Boolean(doc.querySelector('[data-testid="goal"]')?.textContent?.trim());
   if (kind === 'counter') return Boolean(doc.querySelector('[data-testid="counter-value"]'));
   if (kind === 'event-list') return Boolean(doc.querySelector('[data-testid="event-row"]'));
   if (kind === 'credits') return Boolean(doc.querySelector('[data-testid="credits-roll"]'));
@@ -50,6 +51,9 @@ const READY = `(doc, kind) => {
   if (kind === 'leaderboard') return Boolean(doc.querySelector('[data-testid="leaderboard-row"]'));
   if (kind === 'lower-third') return Boolean(doc.querySelector('[data-testid="lower-third-title"]'));
   if (kind === 'tasks') return Boolean(doc.querySelector('[data-testid="tasks-task"]'));
+  if (kind === 'now-playing') return Boolean(doc.querySelector('[data-testid="now-playing-title"]'));
+  if (kind === 'emote-combo') return Boolean(doc.querySelector('[data-testid="combo-count"]'));
+  if (kind === 'featured') return Boolean(doc.querySelector('[data-testid="featured-card"]'));
   if (kind.startsWith('text:')) return doc.body.innerText.includes(kind.slice(5));
   return false;
 }`;

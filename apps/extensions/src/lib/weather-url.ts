@@ -1,7 +1,13 @@
 import { isValidLocale, LANG_PARAM, type Locale } from '#/lib/i18n/locales';
 import { HUD_STYLES, type HudStyle } from '#/lib/irl-hud-url';
 import { isTimeZone } from '#/lib/time-zones';
-import { readFlag, readWhole } from '#/lib/url-params';
+import {
+  type ChannelPlatforms,
+  platformsOf,
+  readFlag,
+  readWhole,
+  setChannels,
+} from '#/lib/url-params';
 
 /** `card`: the place, a big icon and the temperature over a forecast row. `pill`: one line. */
 export const WEATHER_LAYOUTS = ['card', 'pill'] as const;
@@ -133,10 +139,30 @@ function buildParams(settings: WeatherSettings, locale: Locale) {
   return params;
 }
 
-/** The URL for OBS. Empty until a place is picked; it reads no chat, so it needs no channel. */
-export function buildWeatherUrl(origin: string, settings: WeatherSettings, locale: Locale): string {
+/** The channels a Weather URL may name: only for the mods' !h weather, never for the weather. */
+export interface WeatherChannels {
+  platforms: ChannelPlatforms;
+  twitch: string;
+  kick: string;
+}
+
+const NO_CHANNELS: WeatherChannels = { platforms: 'both', twitch: '', kick: '' };
+
+/**
+ * The URL for OBS. Empty until a place is picked. It needs no channel; one lets you and your
+ * mods hide and show it from chat.
+ */
+export function buildWeatherUrl(
+  origin: string,
+  settings: WeatherSettings,
+  locale: Locale,
+  channels: WeatherChannels = NO_CHANNELS,
+): string {
   if (!hasPlace(settings)) return '';
-  return `${origin}${WIDGET_PATH}?${buildParams(settings, locale).toString()}`;
+  const params = new URLSearchParams();
+  setChannels(params, channels.platforms, channels.twitch, channels.kick);
+  for (const [key, value] of buildParams(settings, locale)) params.append(key, value);
+  return `${origin}${WIDGET_PATH}?${params.toString()}`;
 }
 
 /**
@@ -188,9 +214,11 @@ export function readWeatherSettings(params: URLSearchParams): WeatherSettings {
 }
 
 /** Reverse of buildWeatherUrl; null for anything that isn't a Weather URL. */
-export function parseWeatherUrl(
-  text: string,
-): { settings: WeatherSettings; locale: Locale | null } | null {
+export function parseWeatherUrl(text: string): {
+  settings: WeatherSettings;
+  locale: Locale | null;
+  channels: WeatherChannels;
+} | null {
   let url: URL;
   try {
     url = new URL(text.trim());
@@ -199,8 +227,11 @@ export function parseWeatherUrl(
   }
   if (!url.pathname.replace(/\/+$/, '').endsWith(WIDGET_PATH)) return null;
   const lang = url.searchParams.get(LANG_PARAM);
+  const twitch = (url.searchParams.get('twitch') ?? '').trim();
+  const kick = (url.searchParams.get('kick') ?? '').trim();
   return {
     settings: readWeatherSettings(url.searchParams),
     locale: isValidLocale(lang) ? lang : null,
+    channels: { platforms: platformsOf(twitch, kick), twitch, kick },
   };
 }

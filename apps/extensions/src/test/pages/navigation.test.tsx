@@ -68,6 +68,42 @@ describe('full header', () => {
     ).toBe('/faq');
   });
 
+  it('narrows the Widgets menu to one category, dropping a group with nothing left', async () => {
+    const user = setupUser();
+    await renderRoute('/');
+    const nav = within(banner()).getAllByRole('navigation', { name: en('common.nav.label') })[0];
+    const menu = within(nav).getByRole('button', { name: en('common.nav.widgets') });
+    await user.click(menu);
+    const panel = document.getElementById(menu.getAttribute('aria-controls') ?? '') as HTMLElement;
+    const hrefs = () =>
+      within(panel)
+        .getAllByRole('link')
+        .map((link) => link.getAttribute('href'));
+
+    await user.click(
+      within(panel).getByRole('radio', {
+        name: (name) => name.startsWith(`${en('widgets.categories.goals')} `),
+      }),
+    );
+    expect(hrefs()).toEqual(
+      WIDGETS.filter((widget) => widget.categories.includes('goals')).map(
+        (widget) => widget.setupPath,
+      ),
+    );
+    // The Subathon Timer is the one goal or timer among the tools.
+    expect(within(panel).getByRole('list', { name: en('widgets.tools') })).toBeTruthy();
+
+    await user.click(
+      within(panel).getByRole('radio', {
+        name: (name) => name.startsWith(`${en('widgets.categories.irl')} `),
+      }),
+    );
+    expect(hrefs()).toEqual(['/setup/irl-hud', '/setup/weather']);
+    expect(within(panel).queryByRole('list', { name: en('widgets.tools') })).toBeNull();
+    // Picking a category leaves the menu open.
+    expect(menu.getAttribute('aria-expanded')).toBe('true');
+  });
+
   it('marks the current content page and links the skip link to the main landmark', async () => {
     await renderRoute('/faq');
     const nav = within(banner()).getAllByRole('navigation', { name: en('common.nav.label') })[0];
@@ -122,6 +158,33 @@ describe('compact header on setup pages', () => {
     expect(hrefs).toEqual(
       WIDGETS.filter((widget) => widget.id !== 'raffle').map((widget) => widget.setupPath),
     );
+  });
+
+  it('narrows More widgets to one category, and never lists this page', async () => {
+    const user = setupUser();
+    await renderRoute('/setup/weather');
+    const more = section(en('common.moreWidgets'));
+    const hrefs = () =>
+      within(more)
+        .getAllByRole('link')
+        .map((link) => link.getAttribute('href'));
+    const pick = (key: 'all' | 'irl' | 'alerts') =>
+      user.click(
+        within(more).getByRole('radio', {
+          name: (name) => name.startsWith(`${en(`widgets.categories.${key}`)} `),
+        }),
+      );
+    // Weather is the other IRL widget, so the IRL HUD is all that's left.
+    await pick('irl');
+    expect(hrefs()).toEqual(['/setup/irl-hud']);
+    await pick('alerts');
+    expect(hrefs()).toEqual(
+      WIDGETS.filter((widget) => widget.categories.includes('alerts')).map(
+        (widget) => widget.setupPath,
+      ),
+    );
+    await pick('all');
+    expect(hrefs()).toHaveLength(WIDGETS.length - 1);
   });
 
   it('widens the cards of a short last row so the grid has no hole', () => {

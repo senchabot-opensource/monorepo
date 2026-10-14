@@ -18,6 +18,10 @@ export const Route = createFileRoute('/{-$locale}/guides/obs-browser-source')({
 });
 
 const SIZE_NOTES: Record<WidgetId, TranslationKey> = {
+  'now-playing': 'guides.obs.size.notes.nowPlaying',
+  'emote-combo': 'guides.obs.size.notes.emoteCombo',
+  featured: 'guides.obs.size.notes.featured',
+  'bits-goal': 'guides.obs.size.notes.bitsGoal',
   'chat-box': 'guides.obs.size.notes.chatBox',
   'emote-wall': 'guides.obs.size.notes.emoteWall',
   'sub-sprout': 'guides.obs.size.notes.subSprout',

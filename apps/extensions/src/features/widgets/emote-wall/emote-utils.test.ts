@@ -9,6 +9,7 @@ import {
   getAnyEmoteUrls,
   getEmoteOnlyUrls,
   getKickEmoteOnlyUrls,
+  getMessageEmotes,
   getSevenTvEmoteOnlyUrls,
   getThirdPartyEmoteOnlyUrls,
   getTwitchNativeEmoteOnlyUrls,
@@ -436,5 +437,77 @@ describe('filterSpam', () => {
 
   it('passes through empty input', () => {
     expect(filterSpam(createSpamState(), 'alice', [], 1000)).toEqual([]);
+  });
+});
+
+describe('getMessageEmotes', () => {
+  const thirdParty = new Map([
+    ['PepePls', sevenTvEmoteUrl('pepe')],
+    ['Kappa', sevenTvEmoteUrl('fake-kappa')],
+    [':tf:', bttvEmoteUrl('tf')],
+  ]);
+
+  it('keys Twitch emotes by id, with their names, in a sentence too', () => {
+    // "Kappa nice Keepo Kappa": Kappa at 0-4 and 17-21, Keepo at 11-15.
+    expect(
+      getMessageEmotes({
+        platform: 'twitch',
+        message: 'Kappa nice Keepo Kappa',
+        emotes: '1902:11-15/25:0-4,17-21',
+      }),
+    ).toEqual([
+      { key: 'twitch:25', name: 'Kappa', url: twitchEmoteUrl('25') },
+      { key: 'twitch:1902', name: 'Keepo', url: twitchEmoteUrl('1902') },
+    ]);
+  });
+
+  it('keys Kick emotes by id, with their names, even with no space between them', () => {
+    expect(
+      getMessageEmotes({
+        platform: 'kick',
+        message: 'gg [emote:37226:KEKW][emote:39261:kkHuh] [emote:37226:KEKW]',
+      }),
+    ).toEqual([
+      { key: 'kick:37226', name: 'KEKW', url: kickEmoteUrl('37226') },
+      { key: 'kick:39261', name: 'kkHuh', url: kickEmoteUrl('39261') },
+    ]);
+  });
+
+  it('keys 7TV, BTTV and FFZ emotes by name, so both chats share them', () => {
+    const twitch = getMessageEmotes(
+      { platform: 'twitch', message: 'PepePls :tf: lol' },
+      thirdParty,
+    );
+    const kick = getMessageEmotes(
+      { platform: 'kick', message: '[emote:1:Wave]PepePls PepePls' },
+      thirdParty,
+    );
+    expect(twitch.map((emote) => emote.key)).toEqual(['name:PepePls', 'name::tf:']);
+    expect(kick.map((emote) => emote.key)).toEqual(['kick:1', 'name:PepePls']);
+    expect(kick[1]).toEqual(twitch[0]);
+  });
+
+  it('never reads a native emote again as a third-party one of the same name', () => {
+    expect(
+      getMessageEmotes({ platform: 'twitch', message: 'Kappa', emotes: '25:0-4' }, thirdParty),
+    ).toEqual([{ key: 'twitch:25', name: 'Kappa', url: twitchEmoteUrl('25') }]);
+  });
+
+  it('finds nothing in plain text or an empty message', () => {
+    expect(getMessageEmotes({ platform: 'twitch', message: 'hello chat' }, thirdParty)).toEqual([]);
+    expect(getMessageEmotes({ platform: 'kick', message: '' }, null)).toEqual([]);
+  });
+
+  it('counts emote positions in code points, past an emoji', () => {
+    // "🔥 Kappa": the emoji is one position in Twitch's ranges.
+    expect(
+      getMessageEmotes({ platform: 'twitch', message: '🔥 Kappa', emotes: '25:2-6' })[0].name,
+    ).toBe('Kappa');
+  });
+
+  it('keeps no cap, unlike the wall', () => {
+    const names = Array.from({ length: 8 }, (_, i) => `E${i}`);
+    const map = new Map(names.map((name) => [name, sevenTvEmoteUrl(name)]));
+    expect(getMessageEmotes({ platform: 'twitch', message: names.join(' ') }, map)).toHaveLength(8);
   });
 });

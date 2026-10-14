@@ -73,6 +73,13 @@ describe('parseAmount', () => {
 });
 
 describe('parseCashCommand', () => {
+  it('takes !h, the short command, as well as !hud', () => {
+    expect(parseCashCommand('!h cash +500')).toEqual({ action: 'add', amount: 500 });
+    expect(parseCashCommand('!H money reset')).toEqual({ action: 'reset' });
+    expect(parseCashCommand('!hu cash +500')).toBeNull();
+    expect(parseCashCommand('!hh cash +500')).toBeNull();
+  });
+
   it('also takes "money" for "cash"', () => {
     expect(parseCashCommand('!hud money +100')).toEqual({ action: 'add', amount: 100 });
     expect(parseCashCommand('!HUD MONEY reset')).toEqual({ action: 'reset' });
@@ -132,6 +139,13 @@ describe('saved state', () => {
     });
   });
 
+  it('keeps the parts hidden from chat through a new starting amount', () => {
+    expect(followStart({ money: 900, start: 0, hidden: ['map'] }, 350)).toMatchObject({
+      money: 350,
+      hidden: ['map'],
+    });
+  });
+
   it('accepts only whole numbers', () => {
     expect(isHudState({ money: -20, start: 0 })).toBe(true);
     expect(isHudState({ money: 1.5, start: 0 })).toBe(false);
@@ -142,6 +156,9 @@ describe('saved state', () => {
     expect(isHudState({ money: 1, start: 0, move: 'stay' })).toBe(false);
     expect(isHudState({ money: 1, start: 0, indoor: true })).toBe(true);
     expect(isHudState({ money: 1, start: 0, indoor: 'yes' })).toBe(false);
+    expect(isHudState({ money: 1, start: 0, hidden: ['map', 'cash', 'time'] })).toBe(true);
+    expect(isHudState({ money: 1, start: 0, hidden: ['weather'] })).toBe(false);
+    expect(isHudState({ money: 1, start: 0, hidden: 'map' })).toBe(false);
     expect(isHudState(null)).toBe(false);
   });
 });

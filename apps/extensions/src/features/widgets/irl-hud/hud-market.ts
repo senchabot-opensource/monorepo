@@ -1,5 +1,5 @@
 import { type HudItem, tidyItemName } from '#/lib/irl-hud-url';
-import { COMMAND } from './hud-money';
+import { isHudCommand } from './hud-money';
 
 /** `!hud buy water` buys an item from the market: its price comes off the cash. */
 export const BUY_SUBCOMMAND = 'buy';
@@ -19,7 +19,7 @@ export interface Purchase {
  */
 export function parseBuyCommand(message: string, items: HudItem[]): Purchase | null {
   const [typed, part = '', ...words] = message.trim().split(/\s+/);
-  if (typed?.toLowerCase() !== COMMAND || part.toLowerCase() !== BUY_SUBCOMMAND) return null;
+  if (!isHudCommand(typed) || part.toLowerCase() !== BUY_SUBCOMMAND) return null;
   const last = words[words.length - 1] ?? '';
   const counted = /^\d+$/.test(last) && words.length > 1;
   const count = counted ? Number(last) : 1;

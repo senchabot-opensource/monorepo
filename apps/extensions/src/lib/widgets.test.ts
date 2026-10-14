@@ -2,7 +2,15 @@ import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { dictionaries, resolveKey } from './i18n/index';
-import { getWidget, OVERLAYS, TOOLS, WIDGETS } from './widgets';
+import {
+  getWidget,
+  inCategory,
+  OVERLAYS,
+  readCategory,
+  TOOLS,
+  WIDGET_CATEGORIES,
+  WIDGETS,
+} from './widgets';
 
 const srcDir = `${resolve(__dirname, '..')}/`;
 const routeTree = readFileSync(`${srcDir}routeTree.gen.ts`, 'utf8');
@@ -54,6 +62,26 @@ describe('widget registry', () => {
 
   it('never lists the unpromoted alerts widget', () => {
     expect(WIDGETS.some((w) => w.widgetPath === '/widgets/alerts')).toBe(false);
+  });
+
+  it('puts every widget in one or two categories, and every category to use', () => {
+    for (const widget of WIDGETS) {
+      expect(widget.categories.length, widget.id).toBeGreaterThanOrEqual(1);
+      expect(widget.categories.length, widget.id).toBeLessThanOrEqual(2);
+      expect(new Set(widget.categories).size, widget.id).toBe(widget.categories.length);
+    }
+    for (const category of WIDGET_CATEGORIES) {
+      expect(inCategory(WIDGETS, category).length, category).toBeGreaterThanOrEqual(2);
+    }
+    expect(inCategory(WIDGETS, 'all')).toBe(WIDGETS);
+  });
+
+  it('reads a category filter from text', () => {
+    expect(readCategory('irl')).toBe('irl');
+    expect(readCategory('IRL')).toBe('all');
+    expect(readCategory('')).toBe('all');
+    expect(readCategory(null)).toBe('all');
+    expect(readCategory('toString')).toBe('all');
   });
 
   it('looks widgets up by id', () => {

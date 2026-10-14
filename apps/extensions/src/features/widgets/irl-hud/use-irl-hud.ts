@@ -31,6 +31,7 @@ import {
   isHudState,
   parseCashCommand,
 } from './hud-money';
+import { parseToggleCommand, togglePart } from './hud-parts';
 
 /** Storage key per channel pair, so every HUD source for the channel shares one wallet. */
 export const storageKey = (twitch = '', kick = '') =>
@@ -158,6 +159,11 @@ export function useIrlHud({
     (event: SubathonEvent) => {
       const current = settingsRef.current;
       if (event.kind === 'mod') {
+        const part = parseToggleCommand(event.text);
+        if (part) {
+          commit({ ...stateRef.current, hidden: togglePart(stateRef.current.hidden, part) });
+          return;
+        }
         const indoor = parseIndoorCommand(event.text);
         if (indoor !== null) {
           // Where the arrow can't go indoors (a walked real place), the command does nothing.
@@ -266,5 +272,6 @@ export function useIrlHud({
     mapChoice,
     move: moveChoice ?? startMove,
     indoor: state.indoor === true,
+    hidden: state.hidden ?? [],
   };
 }

@@ -52,7 +52,9 @@ export const READY_BY_WIDGET = {
   '/widgets/sub-sprout-widget': 'plant',
   '/widgets/subathon': 'text:SUBATHON',
   '/widgets/stream-alerts': 'alert',
-  '/widgets/goal': 'text:SUB GOAL',
+  // Sub Goal and the Bits & Kicks Goal share this overlay, and their titles follow the page
+  // language and the platforms (SUB GOAL, BITS GOAL, KICKS HEDEFİ…), so no title text fits all.
+  '/widgets/goal': 'goal',
   '/widgets/counter': 'counter',
   '/widgets/event-list': 'event-list',
   '/widgets/credits': 'credits',
@@ -60,6 +62,9 @@ export const READY_BY_WIDGET = {
   '/widgets/leaderboard': 'leaderboard',
   '/widgets/lower-third': 'lower-third',
   '/widgets/tasks': 'tasks',
+  '/widgets/now-playing': 'now-playing',
+  '/widgets/emote-combo': 'emote-combo',
+  '/widgets/featured': 'featured',
   '/widgets/frame': 'frame',
   '/widgets/poll': 'poll',
   '/widgets/countdown': 'countdown',
@@ -156,6 +161,32 @@ export const SETUP_SPECS = {
     expect: ['/widgets/tasks?', 'twitch={channel}', 'color=gold'],
     pasteToEdit: true,
   },
+  'now-playing': {
+    preview: 'iframe',
+    // The first text field is the username, which takes the place of a channel here.
+    steps: [{ click: 'input[type="radio"][value="pill"]' }],
+    expect: ['/widgets/now-playing?', 'user={channel}', 'layout=pill'],
+    pasteToEdit: true,
+  },
+  'emote-combo': {
+    preview: 'iframe',
+    // Gold is this widget's default color, so the check picks another.
+    steps: [{ click: 'input[type="radio"][value="cyan"]' }],
+    expect: ['/widgets/emote-combo?', 'twitch={channel}', 'color=cyan'],
+    pasteToEdit: true,
+  },
+  'featured-message': {
+    preview: 'iframe',
+    steps: [{ click: 'input[type="radio"][value="gold"]' }],
+    expect: ['/widgets/featured?', 'twitch={channel}', 'color=gold'],
+    pasteToEdit: true,
+  },
+  'bits-goal': {
+    preview: 'iframe',
+    steps: [{ click: 'input[type="radio"][value="gold"]' }],
+    expect: ['/widgets/goal?', 'twitch={channel}', 'type=bits', 'color=gold'],
+    pasteToEdit: true,
+  },
   'stream-frames': {
     preview: 'iframe',
     // Frames read no chat: the "channel" goes into the label, the first text field.
@@ -219,6 +250,15 @@ export const OVERLAYS = [
   { path: '/widgets/leaderboard?simulate=1', width: 440, height: 380, ready: 'leaderboard' },
   { path: '/widgets/lower-third?simulate=1&title=E2E', width: 1920, height: 1080, ready: 'text:E2E' },
   { path: '/widgets/tasks?simulate=1', width: 480, height: 720, ready: 'tasks' },
+  { path: '/widgets/now-playing?demo=1', width: 640, height: 160, ready: 'now-playing' },
+  { path: '/widgets/emote-combo?simulate=1', width: 600, height: 400, ready: 'emote-combo' },
+  { path: '/widgets/featured?simulate=1', width: 720, height: 240, ready: 'featured' },
+  {
+    path: '/widgets/goal?simulate=1&type=bits',
+    width: 800,
+    height: 260,
+    ready: 'text:BITS & KICKS GOAL',
+  },
   { path: '/widgets/frame?demo=1&preset=dynasty', width: 1920, height: 1080, ready: 'frame' },
   { path: '/widgets/frame?piece=camera&label=e2e', width: 640, height: 360, ready: 'text:E2E' },
   // The first simulated poll comes up after a moment.

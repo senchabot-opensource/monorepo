@@ -46,6 +46,10 @@ URL, and it runs on **Twitch and Kick** alike. Nothing to install, nothing to si
 | [Top Supporters](https://extensions.senchabot.com/setup/top-supporters) | A leaderboard of the top gifters or cheerers, or a label with the latest sub, gift, cheer or raid |
 | [Lower Thirds](https://extensions.senchabot.com/setup/lower-thirds) | An animated name and topic bar in a corner, with lines that take turns; mods change it with `!lt` |
 | [Task List](https://extensions.senchabot.com/setup/task-list) | A co-working task list viewers fill with `!task` and tick off with `!done` |
+| [Featured Message](https://extensions.senchabot.com/setup/featured-message) | Mods put a viewer's last message on screen with `!feature @name`; viewers ask with `!q` and mods bring the questions up one at a time |
+| [Emote Combo](https://extensions.senchabot.com/setup/emote-combo) | A big combo counter when Twitch and Kick chatters post the same emote, with the stream's best combo |
+| [Bits & Kicks Goal](https://extensions.senchabot.com/setup/bits-goal) | A goal bar that every Bits cheer and Kicks gift fills, with its own `!bitsgoal` command and count |
+| [Now Playing](https://extensions.senchabot.com/setup/now-playing) | The song you're listening to, with its cover art, from ListenBrainz (Spotify works through it) or Last.fm |
 
 **Tools**
 

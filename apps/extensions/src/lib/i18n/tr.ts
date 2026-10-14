@@ -51,6 +51,8 @@ export const tr: typeof en = {
     setupGuideTitle: 'Nasıl kurulur?',
     faqTitle: 'Sık sorulan sorular',
     moreWidgets: "Diğer widget'lar",
+    filterWidgets: 'Widgetları kategoriye göre filtrele',
+    filterShowing: '{total} widgettan {count} tanesi gösteriliyor',
     nextSteps: {
       title: 'Şimdi yayın programına ekle',
       addSource:
@@ -103,6 +105,15 @@ export const tr: typeof en = {
   widgets: {
     overlays: "Overlay'ler",
     tools: 'Araçlar',
+    categories: {
+      all: 'Tümü',
+      chat: 'Sohbet',
+      alerts: 'Uyarılar',
+      goals: 'Hedefler ve zamanlayıcılar',
+      interactive: 'Etkileşim',
+      scene: 'Sahne',
+      irl: 'IRL',
+    },
     chatBox: {
       name: 'Sohbet Kutusu',
       tagline: "Twitch ve Kick sohbeti tek bir overlay'de, 7TV, BTTV ve FFZ emote'larıyla birlikte.",
@@ -187,6 +198,23 @@ export const tr: typeof en = {
       name: 'Görev Listesi',
       tagline:
         'Co-working yayınları için görev listesi: sohbetin !task ile ekler, !done ile tamamlar.',
+    },
+    nowPlaying: {
+      name: 'Şimdi Çalıyor',
+      tagline: 'Dinlediğin şarkı, kapak görseliyle; ListenBrainz ya da Last.fm üzerinden.',
+    },
+    emoteCombo: {
+      name: 'Emote Kombosu',
+      tagline:
+        "Sohbet aynı emote'u art arda atınca, büyük bir kombo sayacı kaç kişinin katıldığını gösterir.",
+    },
+    featured: {
+      name: 'Öne Çıkan Mesaj',
+      tagline: 'Twitch veya Kick sohbetinden bir izleyicinin mesajını ya da sorusunu ekrana çıkar.',
+    },
+    bitsGoal: {
+      name: 'Bits & Kicks Hedefi',
+      tagline: "Her Bits cheer'ı ve Kicks hediyesiyle dolan, sonunda kupa inen hedef barı.",
     },
     raffle: {
       name: 'Çekiliş',
@@ -317,10 +345,10 @@ export const tr: typeof en = {
       "OBS Studio ve tarayıcı kaynağı destekleyen diğer programlarla. Widget URL'sini Tarayıcı Kaynağı olarak ekle ve kurulum sayfasında yazan boyutu kullan.",
     faq4Q: "Twitch ve Kick'i birlikte kullanabilir miyim?",
     faq4A:
-      "Evet. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sayaç, Etkinlik Listesi, Kapanış Jeneriği, İzleyici Sırası, Destekçi Sıralaması, Alt Bant, Görev Listesi, Sohbet Anketi, Yayın Geri Sayımı, IRL HUD Overlay ve Çark tek bir URL'de hem Twitch hem Kick kanalını alır. OBS Bridge da iki sohbeti aynı anda dinleyebilir. Çekiliş ise her seferinde tek bir platformda çalışır.",
+      "Evet. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sayaç, Etkinlik Listesi, Kapanış Jeneriği, İzleyici Sırası, Destekçi Sıralaması, Alt Bant, Görev Listesi, Emote Kombosu, Öne Çıkan Mesaj, Bits & Kicks Hedefi, Hava Durumu, Sohbet Anketi, Yayın Geri Sayımı, IRL HUD Overlay ve Çark tek bir URL'de hem Twitch hem Kick kanalını alır. OBS Bridge da iki sohbeti aynı anda dinleyebilir. Çekiliş ise her seferinde tek bir platformda çalışır.",
     faq5Q: "Bir widget'ı sonradan nasıl değiştiririm?",
     faq5A:
-      "Kurulum sayfasını aç, widget'ı istediğin gibi ayarla ve Tarayıcı Kaynağı'ndaki URL'yi yenisiyle değiştir. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sayaç, Etkinlik Listesi, Kapanış Jeneriği, İzleyici Sırası, Destekçi Sıralaması, Alt Bant, Görev Listesi, Sohbet Anketi, Yayın Çerçeveleri, Sosyal Medya, Yayın Geri Sayımı, IRL HUD Overlay, Hava Durumu ve Çark mevcut bir URL'yi de açabilir: URL'yi kurulum sayfasına yapıştır, eski ayarların geri gelsin, sadece istediğini değiştir.",
+      "Kurulum sayfasını aç, widget'ı istediğin gibi ayarla ve Tarayıcı Kaynağı'ndaki URL'yi yenisiyle değiştir. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sayaç, Etkinlik Listesi, Kapanış Jeneriği, İzleyici Sırası, Destekçi Sıralaması, Alt Bant, Görev Listesi, Emote Kombosu, Öne Çıkan Mesaj, Bits & Kicks Hedefi, Şimdi Çalıyor, Sohbet Anketi, Yayın Çerçeveleri, Sosyal Medya, Yayın Geri Sayımı, IRL HUD Overlay, Hava Durumu ve Çark mevcut bir URL'yi de açabilir: URL'yi kurulum sayfasına yapıştır, eski ayarların geri gelsin, sadece istediğini değiştir.",
     faq6Q: "Güncellemelerden sonra widget URL'm çalışmaya devam eder mi?",
     faq6A:
       'Evet. Güncellemelerde mevcut URL ayarları ve değerleri korunur, yani sahnendeki widget için yeni bir URL almana gerek kalmaz.',
@@ -1135,6 +1163,14 @@ export const tr: typeof en = {
     cmdBuyMany: 'Ondan üç tane alır',
     commandsAmounts:
       'Miktarları 500, 1,500, 2.5k ya da 1m gibi yaz. !hud cash add 500 ve !hud cash remove 500 da çalışır.',
+    commandsShort: 'Her komut !hud yerine !h ile de çalışır, örneğin !h cash +500.',
+    cmdToggleMap: 'Mini haritayı gizler ya da yeniden gösterir',
+    cmdToggleCash: 'Parayı gizler ya da yeniden gösterir',
+    cmdToggleTime: 'Saati gizler ya da yeniden gösterir',
+    cmdToggleWeather: "Kanalın ekliyse Hava Durumu overlay'ini gizler ya da yeniden gösterir",
+    testToggleMap: 'Harita aç/kapat',
+    testToggleCash: 'Para aç/kapat',
+    testToggleTime: 'Saat aç/kapat',
     previewTitle: 'IRL HUD Overlay Önizleme',
     previewIframeTitle: 'IRL HUD Overlay Önizleme',
     previewHint:
@@ -1271,6 +1307,241 @@ export const tr: typeof en = {
     faq4Q: 'Başka bir sohbet botu zaten !wins kullanıyor. Ne yapmalıyım?',
     faq4A:
       "Sayaca Sohbet Komutu kutusundan !wincount gibi kendine ait bir komut ver, sonra yeni URL'yi OBS'e yapıştır. Sayılar komut başına kaydedilir, bu yüzden yeni komut başlangıç sayısından başlar.",
+  },
+  nowPlaying: {
+    breadcrumb: 'Şimdi Çalıyor Kurulumu',
+    title: 'Şimdi Çalıyor Kurulumu',
+    intro:
+      'Dinlediğin şarkıyı kapak görseli, adı ve sanatçısıyla yayında göster. Ne çaldığını ListenBrainz ya da Last.fm üzerinden okur; böylece Spotify ve çoğu müzik çalar çalışır, Twitch, Kick ya da başka bir platformda fark etmez. Yeni şarkılar kendiliğinden kayarak gelir, müzik durunca kart da kayarak çekilir. Giriş, sohbet ya da API anahtarı gerekmez.',
+    sectionSource: 'Müzik Kaynağı',
+    source: 'Servis',
+    sourceTip:
+      "Overlay'in şarkını nereden okuyacağı. ListenBrainz Spotify'a bağlanır, ücretsiz ve açık kaynaklıdır. Zaten Last.fm'e scrobble ediyorsan Last.fm'i seç.",
+    user: 'Kullanıcı Adı',
+    userTip:
+      'ListenBrainz kullanıcı adın; listenbrainz.org/user/kullaniciadin adresindeki gibi. Profil bağlantını yapıştırman da olur.',
+    userTipLastfm:
+      'Last.fm kullanıcı adın; last.fm/user/kullaniciadin adresindeki gibi. Profil bağlantını yapıştırman da olur.',
+    userPlaceholder: 'örn. kullaniciadin',
+    userNeeded:
+      "Widget URL'ni almak için kullanıcı adını yaz. O zamana kadar önizlemede örnek şarkılar çalar.",
+    check: 'Kontrol Et',
+    checking: 'Kontrol ediliyor…',
+    checkPlaying: 'Şu an çalıyor: {title} ({artist}).',
+    checkPlayingTitle: 'Şu an çalıyor: {title}.',
+    checkQuiet:
+      '{service} kullanıcısı {user} bulundu ama şu an bir şey çalmıyor. Bir şarkı aç ve tekrar kontrol et.',
+    checkMissing: '{service} üzerinde {user} bulunamadı. Yazımını kontrol et.',
+    checkError: '{service} servisine ulaşılamadı. Birazdan tekrar dene.',
+    listenbrainzHint: "Spotify'da mı dinliyorsun? Önce onu ücretsiz ListenBrainz hesabına bağla.",
+    listenbrainzConnect: "Spotify'ı bağla",
+    lastfmHint:
+      "Last.fm şarkılarını sadece son dinlediklerin herkese açıkken paylaşır. Overlay, Last.fm'i küçük bir yazıyla anar.",
+    lastfmPrivacy: 'Gizlilik ayarları',
+    sectionDisplay: 'Gösterim',
+    layout: 'Düzen',
+    layoutTip:
+      'Kart, kapağı şarkı adı, sanatçı ve albümün yanında gösterir. Tek Satır; kapağı, şarkı adını ve sanatçıyı bir satıra sığdırır.',
+    layouts: {
+      card: 'Kart',
+      pill: 'Tek Satır',
+    },
+    art: 'Kapak Görseli',
+    artTip: 'Şarkının yanında albüm kapağı. Kapak yoksa yerine bir nota çıkar.',
+    album: 'Albüm Adı',
+    albumTip: 'Servis biliyorsa, sanatçının altında albümün adı.',
+    hideStopped: 'Müzik Durunca Gizle',
+    hideStoppedTip:
+      'Müzik durunca şarkı kayarak çekilir. Kapalıysa son şarkı, sıradaki çalana kadar soluk halde ekranda kalır.',
+    hideAfter: 'Gizleme Süresi',
+    hideAfterTip:
+      'Müzik durduktan sonra son şarkının ne kadar ekranda kalacağı; böylece iki şarkı arasındaki kısa bir duraklama onu gizlemez.',
+    previewTitle: 'Şimdi Çalıyor Önizlemesi',
+    previewIframeTitle: 'Şimdi Çalıyor Önizlemesi',
+    previewHint:
+      'Önizlemede örnek şarkılar çalar. Kullanıcı adını yazıp Senin Müziğin düğmesine bas, şu an ne çaldığını gör.',
+    testNext: 'Sonraki Şarkı',
+    testStop: 'Müzik Dursun',
+    testLive: 'Senin Müziğin',
+    guideStep3: 'Genişliği 640 ve yüksekliği 160 olarak ayarla.',
+    guideStep4: 'Bir şarkı aç. Birkaç saniye içinde, varsa kapak görseliyle birlikte görünür.',
+    overlay: {
+      label: 'Şimdi çalıyor',
+    },
+    faq1Q: "Spotify'daki şarkıları nasıl gösteririm?",
+    faq1A:
+      "Ücretsiz bir ListenBrainz hesabı aç, ayarlarındaki Connect services bölümünden Spotify'ı bağla ve buraya ListenBrainz kullanıcı adını yaz. Zaten Last.fm'e scrobble ediyor musun? Spotify oraya da bağlanır: Last.fm'i seç ve Last.fm kullanıcı adını yaz.",
+    faq2Q: 'Hangi müzik çalarlar çalışır?',
+    faq2A:
+      "Bir şarkı başlarken ne çaldığını ListenBrainz'e ya da Last.fm'e bildiren her çalar. Spotify ikisine de kendi ayarlarından bağlanır. Tarayıcıdaki YouTube Music, Apple Music, SoundCloud, Deezer ve diğerleri için bu işi ücretsiz Web Scrobbler eklentisi yapar; çoğu masaüstü ve telefon çaların da bir scrobbler eklentisi ya da uygulaması vardır.",
+    faq3Q: 'Yeni şarkı neden geç görünüyor?',
+    faq3A:
+      "Overlay şarkını 12 saniyede bir sorar; çaların ya da Spotify da ListenBrainz'e veya Last.fm'e kendi gecikmesiyle haber verir. Bu yüzden yeni bir şarkının görünmesi bir dakikayı bulabilir. Müzik durunca şarkı, belirlediğin sürenin ardından kayarak çekilir; gizlemeyi kapattıysan soluk halde ekranda kalır.",
+    faq4Q: 'Dinlediklerim herkese açık mı?',
+    faq4A:
+      "Evet. Overlay, ListenBrainz ya da Last.fm'de herkesin açabildiği aynı açık profili okur ve kullanıcı adın widget URL'sinde yer alır. Sadece şu an çalan şarkıyı gösterir, geçmişini asla. Last.fm'de gizlilik ayarlarından son dinlediklerini gizlersen overlay de onları göremez.",
+  },
+  emoteCombo: {
+    breadcrumb: 'Emote Kombosu Kurulumu',
+    title: 'Emote Kombosu Kurulumu',
+    intro:
+      "Twitch ve Kick sohbeti için bir kombo sayacı. İzleyiciler aynı emote'u art arda attığında emote yayında büyükçe belirir, yanında ×3, ×4, ×5 diye artan sayısıyla; her yeni izleyicide sayı zıplar. Herkes bir kez sayılır, Twitch ve Kick sohbetleri birlikte sayılır, 7TV, BTTV ve FFZ emote'ları da sayılır. Sohbet başka bir şeye geçince son sayı bir süre ekranda kalıp kaybolur, altında da yayının en iyi kombosu görünür.",
+    sectionCombo: 'Kombo',
+    emotes: "Emote'lar",
+    emotesTip:
+      "İşaretli sağlayıcıların emote'ları da Twitch ve Kick emote'larıyla birlikte sayılır. 7TV hem Twitch hem Kick sohbetinde, BTTV ve FFZ sadece Twitch sohbetinde çalışır. Aynı 7TV emote'u iki sohbette tek bir kombo yapar.",
+    emotesNone: 'Kapalı',
+    window: 'Kombo Süresi',
+    windowTip:
+      'Kombonun bir sonraki izleyiciyi ne kadar beklediği. Bu sürede yeni kimse katılmazsa kombo biter ve son sayısını gösterir.',
+    seconds: '{n} sn',
+    min: 'Görünmesi İçin Gereken Kişi',
+    minTip: "Kombonun ekrana gelmesi için emote'u kaç farklı izleyicinin atması gerektiği.",
+    best: 'En İyi Kombo',
+    bestTip:
+      'Yayının en iyi kombosunu sayacın altında gösterir. Kombo olmadan 12 saat geçince ya da bir mod !combo reset yazınca sıfırlanır.',
+    size: 'Boyut',
+    sizeTip: "Emote'un ve sayının ne kadar büyük olduğu.",
+    sectionCommands: 'Sohbet Komutları',
+    commandsIntro: 'Sen ve modların için, Twitch ya da Kick sohbetinden.',
+    cmdReset: 'En iyi komboyu sıfırlar',
+    previewTitle: 'Emote Kombosu Önizlemesi',
+    previewIframeTitle: 'Emote Kombosu Önizlemesi',
+    previewHint:
+      "Önizlemede örnek emote'larla kombolar oynar. Yayında komboları sadece senin sohbetin başlatır.",
+    testStart: 'Kombo Başlat',
+    testChatter: 'İzleyici Ekle',
+    testReset: 'En İyiyi Sıfırla',
+    guideStep3: 'Genişliği 600 ve yüksekliği 400 olarak ayarla.',
+    guideStep4:
+      "Birkaç izleyici aynı emote'u atsın. Yeterince kişi katılınca kombo ekranda belirir.",
+    overlay: {
+      combo: 'KOMBO',
+      best: 'En iyi',
+      newBest: 'Yeni rekor!',
+    },
+    faq1Q: 'Komboya ne sayılır?',
+    faq1A:
+      "İçinde emote geçen her sohbet mesajı; emote tek başına da olabilir, bir cümlenin içinde de. Her izleyici bir komboda bir kez sayılır, yani aynı emote'u tekrar atmak sayıyı artırmaz; Nightbot gibi botlar hiç sayılmaz. Kombo, kombo süresi içinde (varsayılan 8 saniye) yeni biri katıldıkça devam eder. Aynı anda iki kombo varsa ekranda büyük olan görünür.",
+    faq2Q: "Hangi emote'lar çalışır?",
+    faq2A:
+      "Twitch ve Kick emote'ları, genel, kanal ya da abone emote'u fark etmez. Emote'lar altında işaretliyse 7TV, BTTV ve FFZ emote'ları da çalışır. 7TV iki sohbette de çalışır; BTTV ve FFZ için Twitch kanalın gerekir.",
+    faq3Q: 'Twitch ve Kick birlikte mi sayılır?',
+    faq3A:
+      "Evet. İki kanalı da yazarsan iki sohbetteki izleyiciler aynı komboya sayılır. 7TV, BTTV ve FFZ emote'ları adlarıyla tanınır, bu yüzden aynı 7TV emote'u iki sohbette tek bir kombo yapar. Twitch'in ve Kick'in kendi emote'ları her platformda farklıdır, onlar kendi kombolarını yapar.",
+    faq4Q: 'En iyi komboyu nasıl sıfırlarım?',
+    faq4A:
+      'Sen ya da bir mod Twitch veya Kick sohbetine !combo reset yazar. En iyi kombo, kombo olmadan 12 saat geçince de kendiliğinden sıfırlanır; böylece her yayın sıfırdan başlar.',
+  },
+  featured: {
+    breadcrumb: 'Öne Çıkan Mesaj Kurulumu',
+    title: 'Öne Çıkan Mesaj Kurulumu',
+    intro:
+      "İzleyicilerinin sözlerini Twitch ve Kick sohbetinden yayına taşı. Modlar !feature ve bir isim yazınca o izleyicinin son mesajı isim rengi, rozetleri ve emote'larıyla ekranda görünür; izleyiciler de !q ile soru sorar, sen de !q next ile soru-cevap yaparsın.",
+    sectionMessages: 'Mesajlar',
+    mode: 'Komutlar',
+    modeTip:
+      'Hangi sohbet komutlarının çalışacağı: modların bir mesajı ekrana çıkardığı !feature, izleyicilerin soru sorduğu !q ya da ikisi birden.',
+    modes: {
+      both: 'İkisi de',
+      feature: 'Öne çıkar',
+      qa: 'Soru-Cevap',
+    },
+    hide: 'Gizleme Süresi',
+    hideTip:
+      'Mesajın kendiliğinden kaybolmadan önce ekranda ne kadar kalacağı. 0 olursa bir mod kaldırana ya da yenisini çıkarana kadar ekranda kalır.',
+    hideOff: 'Bir mod kaldırana ya da yenisini çıkarana kadar ekranda kalır.',
+    waiting: 'Bekleyen Soru Rozeti',
+    waitingTip: 'Kaç sorunun beklediğini ekrandaki mesajın yanında ya da tek başına gösterir.',
+    sizeTip: 'İsmin ve mesajın büyüklüğü. Uzun bir mesaj yine de karta sığacak kadar küçülür.',
+    sectionCommands: 'Sohbet Komutları',
+    commandsIntro:
+      'Twitch ya da Kick sohbetine yazılır. Her komutun yanında kimin kullanabileceği yazar: herkes ya da sen ve modların.',
+    cmdNameExample: 'isim',
+    cmdQuestionExample: 'sıradaki oyun ne?',
+    cmdFeature: 'Modlar: o izleyicinin son mesajını ekrana çıkarır',
+    cmdFeatureOff: 'Modlar: mesajı ekrandan kaldırır',
+    cmdAsk: 'Herkes: soru sorar ya da sorduğu soruyu değiştirir',
+    cmdNext: 'Modlar: bekleyen en eski soruyu gösterir',
+    cmdSkip: 'Modlar: en eski soruyu göstermeden atlar',
+    cmdClear: 'Modlar: bekleyen soruları temizler',
+    cmdOff: 'Modlar: soruyu ekrandan kaldırır',
+    previewTitle: 'Öne Çıkan Mesaj Önizlemesi',
+    previewIframeTitle: 'Öne Çıkan Mesaj Önizlemesi',
+    previewHint:
+      'Önizlemede sahte bir sohbet oynar. Yayında mesajları sadece sen ve modların ekrana çıkarırsınız.',
+    testFeature: 'Mesajı Öne Çıkar',
+    testAsk: 'Soru Sor',
+    testNext: 'Sıradaki Soru',
+    testHide: 'Gizle',
+    testMessage: 'Sohbetten selamlar! Öne çıkan bir mesaj yayında böyle görünür.',
+    testQuestion: 'Sırada hangi oyunu oynayacağız?',
+    guideStep3: 'Genişliği 720 ve yüksekliği 240 olarak ayarla.',
+    guideStep4: 'Sohbete bir şey yaz, sonra ekrana çıkarmak için !feature ve kendi adını yaz.',
+    overlay: {
+      question: 'Soru',
+      waitingOne: '1 soru bekliyor',
+      waitingMany: '{count} soru bekliyor',
+    },
+    faq1Q: 'Modlar bir mesajı nasıl öne çıkarır?',
+    faq1A:
+      "Twitch ya da Kick sohbetine !feature ve izleyicinin adını yazarlar, örneğin !feature @senchabot. O izleyicinin son mesajı, hangi sohbetten gelirse gelsin, isim rengi, rozetleri ve emote'larıyla ekranda görünür. Tek başına !feature mesajı kaldırır.",
+    faq2Q: 'Soru-cevap nasıl çalışır?',
+    faq2A:
+      'İzleyiciler !q ve sorularını en fazla 200 karakter olarak yazar. Her izleyicinin aynı anda tek bir bekleyen sorusu olur, tekrar sorarsa yenisi eskisinin yerini alır. Sen ya da bir mod !q next ile en eski soruyu gösterir, !q skip ile atlar, !q clear ile sırayı boşaltırsınız.',
+    faq3Q: 'Hangi mesajlar öne çıkarılabilir?',
+    faq3A:
+      'Tarayıcı Kaynağı yüklendiğinden beri sohbet eden son 500 kişinin her birinin son mesajı. Komutlar, yanıtlar ve botlar sayılmaz; zaman aşımı, ban ya da silinen bir mesaj onu ekrandan da kaldırır.',
+    faq4Q: 'OBS kapanırsa ya da Tarayıcı Kaynağı yenilenirse ne olur?',
+    faq4A:
+      "Bekleyen sorular ve ekrandaki mesaj OBS'in içinde kaydedilir, bu yüzden olduğu gibi geri gelir. Sıfırdan başlamak için !q clear yaz.",
+  },
+  bitsGoal: {
+    breadcrumb: 'Bits & Kicks Hedefi Kurulumu',
+    title: 'Bits & Kicks Hedefi Kurulumu',
+    intro:
+      "Twitch ve Kick için Bits ve Kicks hedefi barı. İki sohbetten gelen her Bits cheer'ı ve her Kicks hediyesi bara kendi miktarı kadar ekler, hedefe ulaşınca barın üstüne hedefi tamamlayan izleyicinin adıyla bir kupa iner. Sayının nereden başlayacağını ve hedefi sen belirle, modların da sayıyı sohbetten düzeltebilsin.",
+    defaultTitle: 'BITS & KICKS HEDEFİ',
+    defaultTitleBits: 'BITS HEDEFİ',
+    defaultTitleKicks: 'KICKS HEDEFİ',
+    startTip:
+      'Sayının başlayacağı yer: yeni bir hedef için 0 ya da bu hedefe şimdiye kadar gelen Bits ve Kicks. Sonradan değiştirirsen sayı yeni değerden baştan başlar.',
+    countsHint:
+      "Cheer Bits'i, hediye de Kicks'i kadar bire bir ekler: 500 Bits 500 ekler, 500 Kicks de öyle. Abonelikler ve hediye abonelikler burada sayılmaz.",
+    iconTip:
+      'Mücevher yerine hedef için bir emoji, örneğin 💎. Boş bırakırsan mücevher kullanılır.',
+    iconPlaceholder: 'Mücevher',
+    showPops: "Yeni Cheer'ları Göster",
+    showPopsTip:
+      "Her cheer'da ve Kicks hediyesinde izleyicinin adıyla birlikte miktarı yukarı süzülür, örneğin +500.",
+    commandsIntro:
+      "Sayıyı sen ve modların Twitch ya da Kick sohbetinden düzeltebilirsiniz, örneğin OBS kapalıyken gelen Bits'leri eklemek için. Komut !bitsgoal, bu yüzden !goal ile çalışan bir Abone Hedefi yanında sorunsuz çalışır.",
+    cmdAdd: 'Sayıya Bits ve Kicks ekler, miktarı yazmazsan 1 ekler',
+    cmdRemove: 'Sayıdan Bits ve Kicks düşer, miktarı yazmazsan 1 düşer',
+    previewTitle: 'Bits & Kicks Hedefi Önizleme',
+    previewIframeTitle: 'Bits & Kicks Hedefi Önizleme',
+    previewHint:
+      "Önizlemede hedefe ulaşana kadar sahte cheer'lar ve Kicks hediyeleri gelir, sonra baştan başlar. Yayında sayıyı sadece kendi sohbetin artırır.",
+    testCheer: '{count} Bits Cheer',
+    testKicks: '{count} Kicks Gönder',
+    widgetUrlInvalid: "Bu bir Bits & Kicks Hedefi URL'si değil.",
+    subGoalUrl: "Bu bir Abone Hedefi URL'si. Onu Abone Hedefi kurulum sayfasında düzenle.",
+    bitsGoalUrl:
+      "Bu bir Bits & Kicks Hedefi URL'si. Onu Bits & Kicks Hedefi kurulum sayfasında düzenle.",
+    guideStep2: "Kopyaladığın Bits & Kicks hedefi URL'sini yapıştır.",
+    guideStep4: 'Sayı tutmazsa sen ya da bir mod sohbete !bitsgoal set yazarak düzeltebilirsiniz.',
+    faq1Q: 'Hedefe neler sayılıyor?',
+    faq1A:
+      "Twitch sohbetindeki her Bits cheer'ı ve Kick kanalındaki her Kicks hediyesi kendi miktarını ekler, yani 500 Bits'lik bir cheer 500 ekler. Abonelikler, hediye abonelikler ve raid'ler burada bir şey eklemez; abonelikleri Abone Hedefi sayar.",
+    faq2Q: 'Bits ve Kicks neden aynı sayılıyor?',
+    faq2A:
+      'Bir Bit de bir Kick de yayıncıya kabaca birer ABD senti kazandırır, bu yüzden hedef ikisini bire bir sayar: 100 Bits de 100 Kicks de 100 ekler. İzleyiciler satın alırken biraz daha fazla öder, kesin kazanç da her platformun kendi koşullarına bağlıdır.',
+    faq3Q: 'Hedefi nasıl sıfırlarım?',
+    faq3A:
+      "Başlangıç sayısına dönmek için Twitch ya da Kick sohbetine !bitsgoal reset yaz. Sen ya da bir mod !bitsgoal set ile istediğiniz sayıyı da ayarlayabilirsiniz, URL'deki başlangıç sayısını değiştirmek de hedefi baştan başlatır.",
+    faq4Q: 'Abone Hedefi ile Bits & Kicks Hedefi aynı anda kullanılabilir mi?',
+    faq4A:
+      'Evet. İkisini ayrı Tarayıcı Kaynakları olarak ekle. Sayıları ayrı tutulur ve her biri kendi komutunu dinler: Abone Hedefi !goal, bu hedef !bitsgoal, yani birini düzeltmek diğerini değiştirmez.',
   },
   eventList: {
     breadcrumb: 'Etkinlik Listesi Kurulumu',
@@ -1749,6 +2020,15 @@ export const tr: typeof en = {
     testSnow: 'Kar',
     testNight: 'Gece',
     testLive: 'Gerçek Hava',
+    sectionChat: 'Sohbet (isteğe bağlı)',
+    channelHint:
+      'Hava durumu için kanal gerekmez. Kanal eklersen sen ve modların sohbete !h weather yazarak onu gizleyip yeniden gösterebilirsiniz.',
+    sectionCommands: 'Sohbet Komutları',
+    commandsIntro:
+      "URL'de kanal varsa sen ve modların bunu Twitch ya da Kick sohbetine yazarsınız. İzleyiciler yazarsa hiçbir şey değişmez.",
+    cmdToggle: 'Hava durumunu gizler ya da yeniden gösterir',
+    cmdToggleLong: "Aynısı, IRL HUD Overlay'in uzun yazımıyla",
+    testToggle: 'Gizle / göster',
     widgetUrlTip:
       "Daha önce bir widget oluşturduysan URL'sini buraya yapıştır. Ayarların geri yüklenir, istediğini değiştirebilirsin.",
     widgetUrlPlaceholder: "Düzenlemek için widget URL'sini yapıştır",
@@ -2535,6 +2815,14 @@ export const tr: typeof en = {
         colNote: 'Not',
         notSource: 'Kaynak değil',
         notes: {
+          nowPlaying:
+            'Kart ya da tek satır için geniş bir şerit. Daha büyük bir kaynak onu orantılı olarak büyütür.',
+          emoteCombo:
+            'Büyük bir emote ve sayısı için yer, altında da en iyi kombo. Sohbet bir kombo başlatana kadar boş kalır.',
+          featured:
+            'Tek seferde bir mesaj için geniş bir şerit. Uzun bir mesaj sığacak kadar küçülür, daha büyük bir kaynak da onu büyütür.',
+          bitsGoal:
+            "Abone Hedefi'yle aynı şerit: hedef barı ve üstünde her cheer'ın miktarının yükseleceği boşluk.",
           countdown: 'Tam 1080p tuval. Saat, başlangıç ya da BRB sahnenin ortasına oturur.',
           chatBox: 'Dikey sohbet sütunu. Kaynak büyüdükçe yazı büyümez, daha çok mesaj sığar.',
           emoteWall: "Tam 1080p tuval. Emote'lar ekranın her yerinde belirir.",
@@ -2605,7 +2893,7 @@ export const tr: typeof en = {
         title: "Widget'ı sonradan nasıl değiştiririm?",
         p1: "Ayarlar widget adresinin içinde durur, yani bir ayarı değiştirmek yeni bir adres demek. Kurulum sayfasında ayarı değiştir, yeni adresi kopyala, sonra OBS'te kaynağa çift tıklayıp URL alanındaki eski adresin yerine yapıştır.",
         p2:
-          '[Sohbet Kutusu](/setup/chat-widget), [Emote Duvarı](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Yayın Uyarıları](/setup/stream-alerts), [Abone Hedefi](/setup/sub-goal), [Sayaç](/setup/counter), [Etkinlik Listesi](/setup/event-list), [Kapanış Jeneriği](/setup/end-credits), [İzleyici Sırası](/setup/viewer-queue), [Destekçi Sıralaması](/setup/top-supporters), [Alt Bant](/setup/lower-thirds), [Görev Listesi](/setup/task-list), [Sohbet Anketi](/setup/chat-poll), [Yayın Çerçeveleri](/setup/stream-frames), [Sosyal Medya](/setup/socials), [Yayın Geri Sayımı](/setup/stream-countdown), [IRL HUD Overlay](/setup/irl-hud), [Hava Durumu](/setup/weather) ya da [Çark](/setup/spin-wheel) için baştan başlaman gerekmez. Mevcut adresini kurulum sayfasındaki Widget URL alanına yapıştır, kanalların ve bütün ayarların geri yüklenir. Değiştirmek istediğini değiştir ve yeni adresi kopyala.',
+          '[Sohbet Kutusu](/setup/chat-widget), [Emote Duvarı](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Yayın Uyarıları](/setup/stream-alerts), [Abone Hedefi](/setup/sub-goal), [Sayaç](/setup/counter), [Etkinlik Listesi](/setup/event-list), [Kapanış Jeneriği](/setup/end-credits), [İzleyici Sırası](/setup/viewer-queue), [Destekçi Sıralaması](/setup/top-supporters), [Alt Bant](/setup/lower-thirds), [Görev Listesi](/setup/task-list), [Emote Kombosu](/setup/emote-combo), [Öne Çıkan Mesaj](/setup/featured-message), [Bits & Kicks Hedefi](/setup/bits-goal), [Şimdi Çalıyor](/setup/now-playing), [Sohbet Anketi](/setup/chat-poll), [Yayın Çerçeveleri](/setup/stream-frames), [Sosyal Medya](/setup/socials), [Yayın Geri Sayımı](/setup/stream-countdown), [IRL HUD Overlay](/setup/irl-hud), [Hava Durumu](/setup/weather) ya da [Çark](/setup/spin-wheel) için baştan başlaman gerekmez. Mevcut adresini kurulum sayfasındaki Widget URL alanına yapıştır, kanalların ve bütün ayarların geri yüklenir. Değiştirmek istediğini değiştir ve yeni adresi kopyala.',
         p3: "OBS Bridge'de yapıştırma alanı yok, ayarları kurulum sayfasında yeniden girip yeni araç adresini kopyalarsın. Sahne seçimlerini ve yetkili kullanıcıları araç sayfasında da değiştirebilir, yeni adresi oradaki Güncel URL'yi Kopyala düğmesiyle alabilirsin. Eski adresler çalışmaya devam eder, güncellemek zorunda değilsin.",
       },
       troubleshoot: {
@@ -3287,7 +3575,7 @@ export const tr: typeof en = {
     breadcrumb: "Preset'ler",
     eyebrow: "Preset'ler",
     title: "Yayın overlay'lerin için oyun preset'leri",
-    lead: "Seçtiğin preset'le Sohbet Kutusu, Yayın Uyarıları, Abone Hedefi, Sayaç, Etkinlik Listesi, Kapanış Jeneriği, İzleyici Sırası, Destekçi Sıralaması, Alt Bant, Görev Listesi, Subathon Timer, Sohbet Anketi, Çekiliş kazanan overlay'i, Yayın Çerçeveleri, Yayın Geri Sayımı, Sosyal Medya ve Çark aynı çerçeveyi, yazı tiplerini ve renkleri alır. İstersen hepsinde aynısını kullan, istersen her birinde başka birini.",
+    lead: "Seçtiğin preset'le Sohbet Kutusu, Yayın Uyarıları, Abone Hedefi, Sayaç, Etkinlik Listesi, Kapanış Jeneriği, İzleyici Sırası, Destekçi Sıralaması, Alt Bant, Görev Listesi, Öne Çıkan Mesaj, Emote Kombosu, Bits & Kicks Hedefi, Şimdi Çalıyor, Subathon Timer, Sohbet Anketi, Çekiliş kazanan overlay'i, Yayın Çerçeveleri, Yayın Geri Sayımı, Sosyal Medya ve Çark aynı çerçeveyi, yazı tiplerini ve renkleri alır. İstersen hepsinde aynısını kullan, istersen her birinde başka birini.",
     pickTitle: 'Bir preset seç',
     pickText:
       "League of Legends (LoL), World of Warcraft (WoW), Metin2, Dota 2, Valorant, Counter-Strike 2 (CS2), Minecraft, Clash of Clans, Fortnite, Rocket League ve PUBG: Battlegrounds için hazır preset'ler.",
@@ -3384,10 +3672,10 @@ export const tr: typeof en = {
       'OBS Studio ve tarayıcı kaynağı (browser source) destekleyen diğer yayın programlarıyla. Her widget bir web adresi olarak çalışır, kaynağa bu adresi yapıştırırsın. Rehberlerimiz OBS Studio için yazıldı.',
     platformsQ: "Hangi widget'lar Twitch'i, hangileri Kick'i destekliyor?",
     platformsA:
-      "On üçü de iki platformu destekliyor. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sayaç, Etkinlik Listesi, Kapanış Jeneriği, İzleyici Sırası, Destekçi Sıralaması, Alt Bant, Görev Listesi, Sohbet Anketi, Yayın Geri Sayımı, IRL HUD Overlay ve Çark tek adreste Twitch ve Kick kanalını birlikte dinler. OBS Bridge iki sohbetten gelen komutları dinler ve her yetkili kullanıcı kendi platformuyla eklenir. Çekiliş her seferinde tek platformda çalışır, Twitch ya da Kick. Yayın Çerçeveleri, Sosyal Medya ve Hava Durumu sohbeti okumaz, bu yüzden iki platformda da aynı şekilde çalışır. Sohbet Kutusu'nda 7TV emote'ları iki platformda, BTTV ve FFZ emote'ları sadece Twitch'te görünür.",
+      "27'si de iki platformu destekliyor. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sayaç, Etkinlik Listesi, Kapanış Jeneriği, İzleyici Sırası, Destekçi Sıralaması, Alt Bant, Görev Listesi, Emote Kombosu, Öne Çıkan Mesaj, Bits & Kicks Hedefi, Hava Durumu, Sohbet Anketi, Yayın Geri Sayımı, IRL HUD Overlay ve Çark tek adreste Twitch ve Kick kanalını birlikte dinler. OBS Bridge iki sohbetten gelen komutları dinler ve her yetkili kullanıcı kendi platformuyla eklenir. Çekiliş her seferinde tek platformda çalışır, Twitch ya da Kick. Yayın Çerçeveleri, Sosyal Medya ve Şimdi Çalıyor sohbeti okumaz, bu yüzden iki platformda da aynı şekilde çalışır. Sohbet Kutusu'nda 7TV emote'ları iki platformda, BTTV ve FFZ emote'ları sadece Twitch'te görünür.",
     editQ: "Widget'ı sonradan nasıl değiştiririm?",
     editA:
-      "Kurulum sayfasında ayarları değiştir, yeni adresi kopyala ve OBS'te kaynağın URL alanındaki eski adresin yerine yapıştır. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sayaç, Etkinlik Listesi, Kapanış Jeneriği, İzleyici Sırası, Destekçi Sıralaması, Alt Bant, Görev Listesi, Sohbet Anketi, Yayın Çerçeveleri, Sosyal Medya, Yayın Geri Sayımı, IRL HUD Overlay, Hava Durumu ve Çark'ta eski adresini kurulum sayfasındaki Widget URL alanına yapıştırırsan bütün ayarların geri yüklenir, baştan başlaman gerekmez.",
+      "Kurulum sayfasında ayarları değiştir, yeni adresi kopyala ve OBS'te kaynağın URL alanındaki eski adresin yerine yapıştır. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sayaç, Etkinlik Listesi, Kapanış Jeneriği, İzleyici Sırası, Destekçi Sıralaması, Alt Bant, Görev Listesi, Emote Kombosu, Öne Çıkan Mesaj, Bits & Kicks Hedefi, Şimdi Çalıyor, Sohbet Anketi, Yayın Çerçeveleri, Sosyal Medya, Yayın Geri Sayımı, IRL HUD Overlay, Hava Durumu ve Çark'ta eski adresini kurulum sayfasındaki Widget URL alanına yapıştırırsan bütün ayarların geri yüklenir, baştan başlaman gerekmez.",
     oldUrlsQ: 'Eski widget adreslerim çalışmaya devam eder mi?',
     oldUrlsA:
       "Evet. Güncellemeler mevcut adresleri bozmayacak şekilde yapılır: parametre adları, değerleri ve varsayılanları değişmez. Örneğin Sohbet Kutusu'ndaki eski keep=true hâlâ Süresiz anlamına gelir ve Sub Sprout eski channel ve platform parametrelerini hâlâ okur.",
@@ -3411,6 +3699,18 @@ export const tr: typeof en = {
     lead: "Senchabot Extensions'a eklenen özellikler ve düzeltilen hatalar, en yenisi en üstte. Liste projenin [GitHub'daki](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) commit geçmişinden hazırlanıyor.",
     site: 'Site',
     entries: {
+      hudToggles:
+        'IRL HUD Overlay ve Hava Durumu: mini harita, para, saat ve hava durumu artık sohbetten !h map, !h cash, !h time ve !h weather ile gizlenip yeniden gösterilebiliyor. Hava Durumu sohbeti sadece kanalını eklersen okur.',
+      irlHudShortCommand:
+        'IRL HUD Overlay: tüm sohbet komutları artık kısa haliyle de çalışıyor, !hud yerine !h, örneğin !h cash +500.',
+      nowPlayingLaunch:
+        'Yeni overlay: Şimdi Çalıyor. Dinlediğin şarkıyı kapak görseli, adı ve sanatçısıyla gösterir; şarkıyı ListenBrainz ya da Last.fm üzerinden okuduğu için Spotify ve çoğu müzik çalar çalışır. Yeni şarkılar kendiliğinden kayarak gelir, müzik durunca da kayarak çekilir.',
+      emoteComboLaunch:
+        "Yeni overlay: Emote Kombosu. İzleyiciler aynı emote'u art arda attığında emote yayında büyükçe belirir, yanında her yeni izleyicide zıplayan bir kombo sayısıyla. Twitch ve Kick sohbetleri birlikte sayılır, 7TV, BTTV ve FFZ emote'ları da. Altında yayının en iyi kombosu görünür, modlar da onu !combo reset ile sıfırlar.",
+      featuredLaunch:
+        "Yeni overlay: Öne Çıkan Mesaj, sohbeti yayına taşımak için. Modlar Twitch ya da Kick sohbetine !feature ve bir isim yazınca o izleyicinin son mesajı isim rengi, rozetleri ve emote'larıyla ekranda görünür; izleyiciler de !q ile soru sorar, modlar !q next ile soru-cevabı yürütür.",
+      bitsGoalLaunch:
+        "Yeni overlay: Bits & Kicks Hedefi, Twitch Bits'leri ve Kick Kicks'leriyle miktarları kadar, bire bir dolan bir hedef barı. Hedefe ulaştıran izleyicinin adı kupada yazar, sayı OBS'te kaydedilir ve modlar sayıyı Abone Hedefi'nin !goal komutundan ayrı olarak !bitsgoal ile sohbetten düzeltir.",
       tasksLaunch:
         'Yeni overlay: Görev Listesi, co-working ve ders çalışma yayınları için. İzleyiciler görevlerini Twitch ya da Kick sohbetinden !task ile ekler, !done ile tamamlar; senin görevlerin de aynı listede yer alır. Liste yayında görünür, uzayınca kayar, modlar da sohbetten temizler.',
       lowerThirdLaunch:

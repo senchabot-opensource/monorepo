@@ -12,7 +12,7 @@ import { hasToolVisual, TOOL_FEATURES, ToolVisual } from './tool-visuals';
 /**
  * Card shape in the gallery grid, from the live demo's browser-source size: a portrait source (a
  * chat column) gets a card two rows tall, a strip (a goal bar) one two columns wide. Tools are
- * two by two with a flat picture each, so they never span.
+ * flat cards two to a row, so they never span.
  */
 export type CardShape = 'standard' | 'tall' | 'wide';
 
@@ -26,16 +26,22 @@ export function getCardShape(widget: WidgetEntry): CardShape {
   return 'standard';
 }
 
-// The gallery gives Socials a plain card and Stream Alerts a wide one, the reverse of what their
-// source sizes give: Socials sits near the top beside Sub Goal, and Stream Alerts ends the last row.
+// The gallery's own shapes where a source size would pick another, laid out row by row at three
+// columns: Event List, Emote Wall, Emote Combo and Sub Sprout beside the Chat Box; the IRL HUD strip
+// and Weather; the Follower Goal, the Bits & Kicks Goal and Top Supporters; the Stream Alerts strip
+// and End Credits; Socials and the Counter strip; the Sub Goal strip and Stream Countdown. A card
+// drawn plain here is never widened again to fill a short grid.
 const GALLERY_SHAPES: Partial<Record<WidgetId, CardShape>> = {
+  'event-list': 'standard',
   socials: 'standard',
-  'stream-alerts': 'wide',
-  // A whole scene with the HUD in its corners: a strip shows it bigger than a plain card would.
+  // Whole scenes, cut to a strip: the HUD in its corners, an alert in the middle.
   'irl-hud': 'wide',
-  // A portrait panel like the Event List, but a second tall card would leave the grid a cell
-  // short; as a plain card the overlays fill whole rows at two and three columns.
+  'stream-alerts': 'wide',
+  'follower-goal': 'standard',
+  'bits-goal': 'standard',
+  // Portrait and strip demos that the rows above have no room for at their own shape.
   tasks: 'standard',
+  featured: 'standard',
 };
 
 // A wide card holding a 16:9 alert, instead of a strip, is cut to a plain card's height, so the
@@ -90,9 +96,37 @@ function packs(shapes: CardShape[], columns: number): boolean {
   return rows.every((row) => row.every(Boolean));
 }
 
-/** The last standard card widened, e.g. to fill a grid that is one cell short. */
-const widenLast = (shapes: CardShape[]): CardShape[] => {
-  const last = shapes.lastIndexOf('standard');
+/**
+ * The last card the gallery widened itself, back at its own shape: a grid one cell over, like
+ * the three column rows at two columns, keeps every other span.
+ */
+const narrowLast = (shapes: CardShape[], widgets: readonly WidgetEntry[]): CardShape[] => {
+  let last = -1;
+  shapes.forEach((shape, index) => {
+    if (shape === 'wide' && getCardShape(widgets[index]) !== 'wide') last = index;
+  });
+  return last < 0
+    ? shapes
+    : shapes.map((shape, index) => (index === last ? getCardShape(widgets[index]) : shape));
+};
+
+/**
+ * Whether a card looks right two columns wide: a tool's flat picture, a strip, or a scene the
+ * card cuts to a strip. A wide 16:9 or 4:3 demo keeps its own ratio and stretches its row.
+ */
+function widens(widget: WidgetEntry): boolean {
+  if (GALLERY_SHAPES[widget.id]) return false;
+  if (widget.kind === 'tool' || PREVIEW_ASPECT[widget.id]) return true;
+  const size = widget.sourceSize;
+  return Boolean(size && size.width / size.height >= 2);
+}
+
+/** The last standard card that can be widened, widened: fills a grid that is one cell short. */
+const widenLast = (shapes: CardShape[], widgets: readonly WidgetEntry[]): CardShape[] => {
+  let last = -1;
+  shapes.forEach((shape, index) => {
+    if (shape === 'standard' && widens(widgets[index])) last = index;
+  });
   return last < 0 ? shapes : shapes.map((shape, index) => (index === last ? 'wide' : shape));
 };
 
@@ -110,7 +144,8 @@ export function getGalleryShapes(widgets: readonly WidgetEntry[], columns: numbe
   const shapes = widgets.map((widget) => GALLERY_SHAPES[widget.id] ?? getCardShape(widget));
   const tries = [
     shapes,
-    widenLast(shapes),
+    widenLast(shapes, widgets),
+    narrowLast(shapes, widgets),
     ...(['wide', 'tall'] as const).map((dropped) =>
       shapes.map((shape) => (shape === dropped ? 'standard' : shape)),
     ),
@@ -169,7 +204,7 @@ export function WidgetCard({
     <article className="group relative flex w-full flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm transition-[border-color,box-shadow] hover:border-zinc-300 hover:shadow-md has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-green-500 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700">
       <div
         className={`relative border-b border-zinc-200 dark:border-zinc-800 ${
-          // Tools are flatter, so the four of them take two short rows under the overlays.
+          // Tools are flatter, two to a row in short rows under the overlays.
           widget.kind === 'overlay'
             ? `aspect-[4/3] ${PREVIEW_CLASS.sm[shapes.sm]} ${PREVIEW_CLASS.lg[shapes.lg]}`
             : 'aspect-[2/1] lg:aspect-[5/2]'

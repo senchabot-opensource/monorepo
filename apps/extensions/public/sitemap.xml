@@ -196,6 +196,58 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://extensions.senchabot.com/setup/now-playing</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/now-playing"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/now-playing"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/now-playing"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/now-playing"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/now-playing"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/now-playing"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/now-playing"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/now-playing"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/setup/emote-combo</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/emote-combo"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/emote-combo"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/emote-combo"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/emote-combo"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/emote-combo"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/emote-combo"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/emote-combo"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/emote-combo"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/setup/featured-message</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/featured-message"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/featured-message"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/featured-message"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/featured-message"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/featured-message"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/featured-message"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/featured-message"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/featured-message"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/setup/bits-goal</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/bits-goal"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/bits-goal"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/bits-goal"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/bits-goal"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/bits-goal"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/bits-goal"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/bits-goal"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/bits-goal"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://extensions.senchabot.com/setup/weather</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/weather"/>
     <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/weather"/>
@@ -755,6 +807,58 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://extensions.senchabot.com/de/setup/now-playing</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/now-playing"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/now-playing"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/now-playing"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/now-playing"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/now-playing"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/now-playing"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/now-playing"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/now-playing"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/de/setup/emote-combo</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/emote-combo"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/emote-combo"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/emote-combo"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/emote-combo"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/emote-combo"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/emote-combo"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/emote-combo"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/emote-combo"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/de/setup/featured-message</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/featured-message"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/featured-message"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/featured-message"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/featured-message"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/featured-message"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/featured-message"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/featured-message"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/featured-message"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/de/setup/bits-goal</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/bits-goal"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/bits-goal"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/bits-goal"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/bits-goal"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/bits-goal"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/bits-goal"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/bits-goal"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/bits-goal"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://extensions.senchabot.com/de/setup/weather</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/weather"/>
     <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/weather"/>
@@ -1219,6 +1323,58 @@
     <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/task-list"/>
     <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/task-list"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/task-list"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/es/setup/now-playing</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/now-playing"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/now-playing"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/now-playing"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/now-playing"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/now-playing"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/now-playing"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/now-playing"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/now-playing"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/es/setup/emote-combo</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/emote-combo"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/emote-combo"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/emote-combo"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/emote-combo"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/emote-combo"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/emote-combo"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/emote-combo"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/emote-combo"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/es/setup/featured-message</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/featured-message"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/featured-message"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/featured-message"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/featured-message"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/featured-message"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/featured-message"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/featured-message"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/featured-message"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/es/setup/bits-goal</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/bits-goal"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/bits-goal"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/bits-goal"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/bits-goal"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/bits-goal"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/bits-goal"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/bits-goal"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/bits-goal"/>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -1691,6 +1847,58 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://extensions.senchabot.com/fr/setup/now-playing</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/now-playing"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/now-playing"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/now-playing"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/now-playing"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/now-playing"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/now-playing"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/now-playing"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/now-playing"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/fr/setup/emote-combo</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/emote-combo"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/emote-combo"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/emote-combo"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/emote-combo"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/emote-combo"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/emote-combo"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/emote-combo"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/emote-combo"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/fr/setup/featured-message</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/featured-message"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/featured-message"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/featured-message"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/featured-message"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/featured-message"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/featured-message"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/featured-message"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/featured-message"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/fr/setup/bits-goal</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/bits-goal"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/bits-goal"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/bits-goal"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/bits-goal"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/bits-goal"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/bits-goal"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/bits-goal"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/bits-goal"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://extensions.senchabot.com/fr/setup/weather</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/weather"/>
     <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/weather"/>
@@ -2155,6 +2363,58 @@
     <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/task-list"/>
     <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/task-list"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/task-list"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/ja/setup/now-playing</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/now-playing"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/now-playing"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/now-playing"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/now-playing"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/now-playing"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/now-playing"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/now-playing"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/now-playing"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/ja/setup/emote-combo</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/emote-combo"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/emote-combo"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/emote-combo"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/emote-combo"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/emote-combo"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/emote-combo"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/emote-combo"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/emote-combo"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/ja/setup/featured-message</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/featured-message"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/featured-message"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/featured-message"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/featured-message"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/featured-message"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/featured-message"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/featured-message"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/featured-message"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/ja/setup/bits-goal</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/bits-goal"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/bits-goal"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/bits-goal"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/bits-goal"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/bits-goal"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/bits-goal"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/bits-goal"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/bits-goal"/>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -2627,6 +2887,58 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://extensions.senchabot.com/pt/setup/now-playing</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/now-playing"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/now-playing"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/now-playing"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/now-playing"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/now-playing"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/now-playing"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/now-playing"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/now-playing"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/pt/setup/emote-combo</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/emote-combo"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/emote-combo"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/emote-combo"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/emote-combo"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/emote-combo"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/emote-combo"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/emote-combo"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/emote-combo"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/pt/setup/featured-message</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/featured-message"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/featured-message"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/featured-message"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/featured-message"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/featured-message"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/featured-message"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/featured-message"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/featured-message"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/pt/setup/bits-goal</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/bits-goal"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/bits-goal"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/bits-goal"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/bits-goal"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/bits-goal"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/bits-goal"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/bits-goal"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/bits-goal"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://extensions.senchabot.com/pt/setup/weather</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/weather"/>
     <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/weather"/>
@@ -3091,6 +3403,58 @@
     <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/task-list"/>
     <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/task-list"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/task-list"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/tr/setup/now-playing</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/now-playing"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/now-playing"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/now-playing"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/now-playing"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/now-playing"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/now-playing"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/now-playing"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/now-playing"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/tr/setup/emote-combo</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/emote-combo"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/emote-combo"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/emote-combo"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/emote-combo"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/emote-combo"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/emote-combo"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/emote-combo"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/emote-combo"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/tr/setup/featured-message</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/featured-message"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/featured-message"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/featured-message"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/featured-message"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/featured-message"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/featured-message"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/featured-message"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/featured-message"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/tr/setup/bits-goal</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/bits-goal"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/bits-goal"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/bits-goal"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/bits-goal"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/bits-goal"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/bits-goal"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/bits-goal"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/bits-goal"/>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
