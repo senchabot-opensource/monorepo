@@ -8,6 +8,7 @@ import {
   readWeatherSettings,
   WEATHER_SETUP_SETTINGS,
   type WeatherSettings,
+  weatherHudStyle,
 } from './weather-url';
 
 const ORIGIN = 'https://extensions.senchabot.com';
@@ -66,6 +67,13 @@ describe('buildWeatherUrl', () => {
       tz: 'Europe/Istanbul',
       lang: 'tr',
     });
+  });
+
+  it('leaves the style out for a card, which always looks like a weather app', () => {
+    const card = settings({ style: 'retro' });
+    expect(params(buildWeatherUrl(ORIGIN, card, 'en')).style).toBeUndefined();
+    expect(weatherHudStyle(card)).toBeNull();
+    expect(weatherHudStyle({ ...card, layout: 'pill' })).toBe('retro');
   });
 });
 
@@ -129,6 +137,7 @@ describe('parseWeatherUrl', () => {
       place: 'Kadıköy',
       units: 'imperial',
       style: 'modern',
+      layout: 'pill',
       forecast: 'off',
       h12: true,
     });

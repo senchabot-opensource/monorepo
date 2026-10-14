@@ -29,6 +29,8 @@ export const es: typeof en = {
     channelTip:
       'Escribe solo el nombre del canal, no el enlace completo. Para twitch.tv/senchabot, sería senchabot.',
     previewLoading: 'Cargando vista previa…',
+    previewZoom: 'Zoom de la vista previa',
+    previewDrag: 'Arrastra para mirar alrededor',
     scrollMore: 'Desplázate para ver más',
     settingsSections: 'Secciones de ajustes',
     scrollTop: 'Volver arriba',

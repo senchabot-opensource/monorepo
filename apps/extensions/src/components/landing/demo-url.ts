@@ -17,8 +17,9 @@ const CARD_PARAMS: DemoParams = {
   'chat-box': { fontSize: '15', mockRate: '1.5' },
   // The HUD is sized for the card's short side, so in a strip it runs at its biggest.
   'irl-hud': { size: '200' },
-  // The weather card is drawn for a 1080p scene, so in a gallery card it runs at its biggest.
-  weather: { size: '200' },
+  // The one-line pill, the setup page's first look, drawn for a 1080p scene, so in a gallery
+  // card it runs at its biggest.
+  weather: { layout: 'pill', size: '200' },
 };
 
 /**

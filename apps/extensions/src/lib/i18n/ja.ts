@@ -29,6 +29,8 @@ export const ja: typeof en = {
     channelTip:
       'URL全体ではなく、チャンネル名だけを入力してください。twitch.tv/senchabot なら senchabot です。',
     previewLoading: 'プレビューを読み込み中…',
+    previewZoom: 'プレビューの拡大',
+    previewDrag: 'ドラッグして見回す',
     scrollMore: '下にスクロールすると続きがあります',
     settingsSections: '設定のセクション',
     scrollTop: 'トップに戻る',

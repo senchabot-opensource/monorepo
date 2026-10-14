@@ -46,6 +46,11 @@ describe('getDemoSrc', () => {
     const wall = getWidget('emote-wall');
     expect(getDemoSrc(wall, 'card')).toBe(getDemoSrc(wall));
   });
+
+  it('shows the weather as the pill in its gallery card, as the setup page starts', () => {
+    const weather = new URL(getDemoSrc(getWidget('weather'), 'card'), 'https://x').searchParams;
+    expect(Object.fromEntries(weather)).toEqual({ demo: '1', layout: 'pill', size: '200' });
+  });
 });
 
 describe('gallery card shapes', () => {
