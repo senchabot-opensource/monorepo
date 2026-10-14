@@ -12,6 +12,8 @@ interface PageCase {
   title: TranslationKey;
   /** The settings tabs in order, on a page too long for one screen; the rest have none. */
   tabs?: TranslationKey[];
+  /** The field above the tabs, shown with every one of them; the Twitch channel unless set. */
+  pinned?: TranslationKey;
   sections: TranslationKey[];
   faq: TranslationKey[];
 }
@@ -202,6 +204,70 @@ const PAGES: PageCase[] = [
       'common.moreWidgets',
     ],
     faq: ['tasks.faq1Q', 'tasks.faq2Q', 'tasks.faq3Q', 'tasks.faq4Q'],
+  },
+  {
+    path: '/setup/now-playing',
+    title: 'nowPlaying.title',
+    tabs: ['nowPlaying.sectionDisplay', 'common.sectionAppearance'],
+    // It reads no chat: the music profile's username takes the channel boxes' place.
+    pinned: 'nowPlaying.user',
+    sections: [
+      'nowPlaying.sectionSource',
+      'nowPlaying.sectionDisplay',
+      'common.sectionAppearance',
+      'nowPlaying.previewTitle',
+      'common.setup.guideTitle',
+      'common.faqTitle',
+      'common.moreWidgets',
+    ],
+    faq: ['nowPlaying.faq1Q', 'nowPlaying.faq2Q', 'nowPlaying.faq3Q', 'nowPlaying.faq4Q'],
+  },
+  {
+    path: '/setup/emote-combo',
+    title: 'emoteCombo.title',
+    tabs: ['emoteCombo.sectionCombo', 'common.sectionAppearance'],
+    sections: [
+      'common.sectionChannel',
+      'emoteCombo.sectionCombo',
+      'common.sectionAppearance',
+      'emoteCombo.sectionCommands',
+      'emoteCombo.previewTitle',
+      'common.setup.guideTitle',
+      'common.faqTitle',
+      'common.moreWidgets',
+    ],
+    faq: ['emoteCombo.faq1Q', 'emoteCombo.faq2Q', 'emoteCombo.faq3Q', 'emoteCombo.faq4Q'],
+  },
+  {
+    path: '/setup/featured-message',
+    title: 'featured.title',
+    tabs: ['featured.sectionMessages', 'common.sectionAppearance'],
+    sections: [
+      'common.sectionChannel',
+      'featured.sectionMessages',
+      'common.sectionAppearance',
+      'featured.sectionCommands',
+      'featured.previewTitle',
+      'common.setup.guideTitle',
+      'common.faqTitle',
+      'common.moreWidgets',
+    ],
+    faq: ['featured.faq1Q', 'featured.faq2Q', 'featured.faq3Q', 'featured.faq4Q'],
+  },
+  {
+    path: '/setup/bits-goal',
+    title: 'bitsGoal.title',
+    sections: [
+      'common.sectionChannel',
+      'goal.sectionGoal',
+      'common.sectionAppearance',
+      'goal.sectionCommands',
+      'bitsGoal.previewTitle',
+      'goal.guideTitle',
+      'common.faqTitle',
+      'common.moreWidgets',
+    ],
+    faq: ['bitsGoal.faq1Q', 'bitsGoal.faq2Q', 'bitsGoal.faq3Q', 'bitsGoal.faq4Q'],
   },
   {
     path: '/setup/irl-hud',
@@ -397,8 +463,10 @@ describe.each(LOCALES)('setup and tool pages in %s', (locale) => {
       const labels = [...(settingsTabs?.querySelectorAll('[role="tab"]') ?? [])];
       expect(labels.map((tab) => tab.textContent)).toEqual(page.tabs.map((key) => t(key)));
       // The channel boxes sit above the tabs, shown with every one of them.
-      const channel = screen.getByLabelText(t('common.twitchChannel'), { selector: 'input' });
-      expect(channel.closest('[role="tabpanel"]')).toBeNull();
+      const pinned = screen.getByLabelText(t(page.pinned ?? 'common.twitchChannel'), {
+        selector: 'input',
+      });
+      expect(pinned.closest('[role="tabpanel"]')).toBeNull();
     } else {
       expect(settingsTabs).toBeUndefined();
     }

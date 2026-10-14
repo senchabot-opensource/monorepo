@@ -17,6 +17,10 @@ Senchabot Extensions provides 100% free streaming widgets, customizable overlays
 - **Top Supporters** — A leaderboard of your top gifters or top Bits and Kicks givers from Twitch and Kick, or labels for the latest sub, gift, cheer and raid.
 - **Lower Thirds** — An animated name and topic bar for a corner of the scene, with lines that take turns, always up or on a timer. Mods change it with !lt.
 - **Task List** — A co-working task list: you and your viewers add tasks from Twitch or Kick chat with !task and tick them off with !done.
+- **Featured Message** — Mods put a viewer's last message on screen with `!feature @name`, and viewers ask questions with `!q` that mods bring up one at a time.
+- **Emote Combo** — When chatters on Twitch and Kick post the same emote, a big combo counter shows how many joined in.
+- **Bits & Kicks Goal** — A goal bar that every Bits cheer and Kicks gift fills, with its own `!bitsgoal` command and count.
+- **Now Playing** — The song you're listening to, with its cover art, from ListenBrainz (Spotify works through it) or Last.fm.
 - **Stream Frames** — Ready-made webcam, chat and screen frames drawn in the picked preset's look, transparent in the middle.
 - **Stream Countdown** — A countdown for the starting soon, back soon and stream ending scenes, counting down a length or aiming at a time of day, in the picked preset's look.
 - **IRL HUD Overlay** — A game-style HUD for IRL streams: subs, gifted subs, Bits, Kicks and raids add cash to a Retro or Modern cash counter, under a clock in your time zone, next to a mini-map where an arrow walks a made-up city or park, or the real streets around a place you pick.
@@ -42,6 +46,10 @@ Senchabot Extensions provides 100% free streaming widgets, customizable overlays
 - [Top Supporters](https://extensions.senchabot.com/setup/top-supporters)
 - [Lower Thirds](https://extensions.senchabot.com/setup/lower-thirds)
 - [Task List](https://extensions.senchabot.com/setup/task-list)
+- [Featured Message](https://extensions.senchabot.com/setup/featured-message)
+- [Emote Combo](https://extensions.senchabot.com/setup/emote-combo)
+- [Bits & Kicks Goal](https://extensions.senchabot.com/setup/bits-goal)
+- [Now Playing](https://extensions.senchabot.com/setup/now-playing)
 - [Stream Frames](https://extensions.senchabot.com/setup/stream-frames)
 - [Stream Countdown](https://extensions.senchabot.com/setup/stream-countdown)
 - [IRL HUD Overlay](https://extensions.senchabot.com/setup/irl-hud)
@@ -260,6 +268,73 @@ https://extensions.senchabot.com/widgets/tasks?twitch=YOUR_TWITCH_CHANNEL&kick=Y
 ```
 
 **URL parameters:** `twitch`, `kick`, `title`, `max` (open tasks per viewer, 1 to 5), `done` (`0` takes finished tasks off at once), `speed` (scroll speed, 10 to 80 px a second), `preset`, `color` (`green` | `purple` | `red` | `gold` | `cyan` | `pink`, classic only), `lang`, `simulate`.
+
+---
+
+### Featured Message (`/setup/featured-message`)
+
+Put a viewer's words on screen from Twitch or Kick chat: a featured message, or questions waiting in line for a Q&A.
+
+**How it works:**
+- `!feature @name` (mods and the broadcaster) shows that viewer's last message from either chat, with name color, badges and emotes, 7TV, BTTV and FFZ included. `!feature` or `!feature off` hides it. The last message of up to 500 chatters is kept in memory; bots, replies and commands aren't.
+- Viewers ask with `!q <question>` (up to 200 characters, one open question each; asking again replaces it). Mods: `!q next` shows the oldest, `!q skip` drops it, `!q clear` empties the line, `!q off` hides what's on screen.
+- A ban, a timeout or a deleted message takes that viewer's message and questions off. The line and what's on screen are saved in `localStorage`.
+
+```
+https://extensions.senchabot.com/widgets/featured?twitch=YOUR_TWITCH_CHANNEL&kick=YOUR_KICK_CHANNEL&lang=en
+```
+
+**URL parameters:** `twitch`, `kick`, `mode` (`both` | `feature` | `qa`), `hide` (seconds on screen, 0 keeps it up, up to 600), `waiting` (`0` hides the questions-waiting badge), `size` (50 to 150, percent), `preset`, `color` (`purple` | `green` | `red` | `gold` | `cyan` | `pink`, classic only), `lang`, `simulate`.
+
+---
+
+### Emote Combo (`/setup/emote-combo`)
+
+When chatters post the same emote, a big combo counter shows the emote and how many joined in, Twitch and Kick together.
+
+**How it works:**
+- Each chatter counts once per combo, in any message with the emote. The combo shows from `min` chatters and keeps going while new chatters join within `window` seconds; then the final count stays up a moment and fades.
+- Native Twitch and Kick emotes count per platform; 7TV, BTTV and FFZ emotes count by name, so the same 7TV emote in both chats makes one combo. Known bots don't count.
+- The stream's best combo shows under the counter and is saved in `localStorage` for 12 hours. Mods clear it with `!combo reset`.
+
+```
+https://extensions.senchabot.com/widgets/emote-combo?twitch=YOUR_TWITCH_CHANNEL&kick=YOUR_KICK_CHANNEL&lang=en
+```
+
+**URL parameters:** `twitch`, `kick`, `window` (3 to 30 seconds), `min` (2 to 20 chatters), `size` (50 to 150, percent), `best` (`0` hides the best combo), `sevenTv`, `bttv`, `ffz` (`0` | `1`, which emote sets count; 7TV is on by default), `preset`, `color` (`gold` | `purple` | `green` | `red` | `cyan` | `pink`, classic only), `lang`, `simulate`.
+
+---
+
+### Bits & Kicks Goal (`/setup/bits-goal`)
+
+A goal bar that every Twitch Bits cheer and Kick Kicks gift fills, with a trophy when the target lands.
+
+**How it works:**
+- The Sub Goal overlay with `type=bits`: Bits and Kicks add their amount 1:1 (both are about a US cent each); subs, gift subs and raids add nothing. Pops show the amount, and the trophy names whoever crossed the target.
+- Its own count, saved in `localStorage` apart from the Sub Goal's, and its own command: `!bitsgoal`, with the same actions as the Sub Goal's `!goal`. A Sub Goal and a Bits & Kicks Goal run side by side on the same channels.
+
+```
+https://extensions.senchabot.com/widgets/goal?twitch=YOUR_TWITCH_CHANNEL&kick=YOUR_KICK_CHANNEL&type=bits
+```
+
+**URL parameters:** the Sub Goal's, plus `type` (`bits`). The target starts at 1000 and the title at BITS & KICKS GOAL.
+
+---
+
+### Now Playing (`/setup/now-playing`)
+
+The song you're listening to right now, with its cover art, title and artist. It reads no chat, so it works the same for Twitch and Kick streamers.
+
+**How it works:**
+- `source=listenbrainz` (the default) asks ListenBrainz's public playing-now API, which needs no key. Connect Spotify in ListenBrainz, or use any scrobbler that sends playing-now. Covers come from the Cover Art Archive when the song has a release ID.
+- `source=lastfm` asks Last.fm for the recent tracks, which update almost at once. It needs a Last.fm API key built into the site (`VITE_LASTFM_API_KEY` at build time); without one, the setup page offers ListenBrainz only.
+- The overlay asks every 12 seconds and backs off while a service is busy. When the music stops, the card dims, then slides out after `hide` seconds.
+
+```
+https://extensions.senchabot.com/widgets/now-playing?user=YOUR_LISTENBRAINZ_USERNAME&lang=en
+```
+
+**URL parameters:** `source` (`listenbrainz` | `lastfm`), `user`, `layout` (`card` | `pill`), `art` (`0` hides the cover), `album` (`0` hides the album line), `hide` (seconds before it slides out when nothing plays, 0 keeps it up dimmed, up to 60), `preset`, `color` (`green` | `purple` | `red` | `gold` | `cyan` | `pink`, classic only), `lang`, `demo`.
 
 ---
 
@@ -524,6 +599,10 @@ npm run deploy
 │   │   ├── top-supporters.tsx      # Top Supporters configuration
 │   │   ├── lower-thirds.tsx        # Lower Thirds configuration
 │   │   ├── task-list.tsx           # Task List configuration
+│   │   ├── featured-message.tsx    # Featured Message configuration
+│   │   ├── emote-combo.tsx         # Emote Combo configuration
+│   │   ├── bits-goal.tsx           # Bits & Kicks Goal configuration
+│   │   ├── now-playing.tsx         # Now Playing configuration
 │   │   ├── stream-frames.tsx       # Stream Frames configuration
 │   │   ├── stream-countdown.tsx    # Stream Countdown configuration
 │   │   ├── irl-hud.tsx             # IRL HUD Overlay configuration
@@ -544,6 +623,9 @@ npm run deploy
 │       ├── leaderboard.tsx         # Top Supporters overlay
 │       ├── lower-third.tsx         # Lower Thirds overlay
 │       ├── tasks.tsx               # Task List overlay
+│       ├── featured.tsx            # Featured Message overlay
+│       ├── emote-combo.tsx         # Emote Combo overlay
+│       ├── now-playing.tsx         # Now Playing overlay
 │       ├── frame.tsx               # Stream Frames overlay
 │       ├── countdown.tsx           # Stream Countdown overlay
 │       ├── irl-hud.tsx             # IRL HUD Overlay

@@ -18,14 +18,17 @@ import { Route as WidgetsChatWidgetRouteImport } from './routes/widgets/chat-wid
 import { Route as WidgetsCountdownRouteImport } from './routes/widgets/countdown'
 import { Route as WidgetsCounterRouteImport } from './routes/widgets/counter'
 import { Route as WidgetsCreditsRouteImport } from './routes/widgets/credits'
+import { Route as WidgetsEmoteComboRouteImport } from './routes/widgets/emote-combo'
 import { Route as WidgetsEmoteWallRouteImport } from './routes/widgets/emote-wall'
 import { Route as WidgetsEventListRouteImport } from './routes/widgets/event-list'
+import { Route as WidgetsFeaturedRouteImport } from './routes/widgets/featured'
 import { Route as WidgetsFollowerGoalRouteImport } from './routes/widgets/follower-goal'
 import { Route as WidgetsFrameRouteImport } from './routes/widgets/frame'
 import { Route as WidgetsGoalRouteImport } from './routes/widgets/goal'
 import { Route as WidgetsIrlHudRouteImport } from './routes/widgets/irl-hud'
 import { Route as WidgetsLeaderboardRouteImport } from './routes/widgets/leaderboard'
 import { Route as WidgetsLowerThirdRouteImport } from './routes/widgets/lower-third'
+import { Route as WidgetsNowPlayingRouteImport } from './routes/widgets/now-playing'
 import { Route as WidgetsPollRouteImport } from './routes/widgets/poll'
 import { Route as WidgetsQueueRouteImport } from './routes/widgets/queue'
 import { Route as WidgetsRaffleOverlayRouteImport } from './routes/widgets/raffle-overlay'
@@ -51,15 +54,19 @@ import { Route as Char123LocaleChar125GuidesStreamCountdownRouteImport } from '.
 import { Route as Char123LocaleChar125GuidesStreamFramesRouteImport } from './routes/{-$locale}/guides/stream-frames'
 import { Route as Char123LocaleChar125GuidesSubathonTimerRouteImport } from './routes/{-$locale}/guides/subathon-timer'
 import { Route as Char123LocaleChar125GuidesTwitchKickChatOverlayRouteImport } from './routes/{-$locale}/guides/twitch-kick-chat-overlay'
+import { Route as Char123LocaleChar125SetupBitsGoalRouteImport } from './routes/{-$locale}/setup/bits-goal'
 import { Route as Char123LocaleChar125SetupChatPollRouteImport } from './routes/{-$locale}/setup/chat-poll'
 import { Route as Char123LocaleChar125SetupChatWidgetRouteImport } from './routes/{-$locale}/setup/chat-widget'
 import { Route as Char123LocaleChar125SetupCounterRouteImport } from './routes/{-$locale}/setup/counter'
+import { Route as Char123LocaleChar125SetupEmoteComboRouteImport } from './routes/{-$locale}/setup/emote-combo'
 import { Route as Char123LocaleChar125SetupEmoteWallRouteImport } from './routes/{-$locale}/setup/emote-wall'
 import { Route as Char123LocaleChar125SetupEndCreditsRouteImport } from './routes/{-$locale}/setup/end-credits'
 import { Route as Char123LocaleChar125SetupEventListRouteImport } from './routes/{-$locale}/setup/event-list'
+import { Route as Char123LocaleChar125SetupFeaturedMessageRouteImport } from './routes/{-$locale}/setup/featured-message'
 import { Route as Char123LocaleChar125SetupFollowerGoalRouteImport } from './routes/{-$locale}/setup/follower-goal'
 import { Route as Char123LocaleChar125SetupIrlHudRouteImport } from './routes/{-$locale}/setup/irl-hud'
 import { Route as Char123LocaleChar125SetupLowerThirdsRouteImport } from './routes/{-$locale}/setup/lower-thirds'
+import { Route as Char123LocaleChar125SetupNowPlayingRouteImport } from './routes/{-$locale}/setup/now-playing'
 import { Route as Char123LocaleChar125SetupObsBridgeRouteImport } from './routes/{-$locale}/setup/obs-bridge'
 import { Route as Char123LocaleChar125SetupRaffleRouteImport } from './routes/{-$locale}/setup/raffle'
 import { Route as Char123LocaleChar125SetupSocialsRouteImport } from './routes/{-$locale}/setup/socials'
@@ -121,6 +128,11 @@ const WidgetsCreditsRoute = WidgetsCreditsRouteImport.update({
   path: '/widgets/credits',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WidgetsEmoteComboRoute = WidgetsEmoteComboRouteImport.update({
+  id: '/widgets/emote-combo',
+  path: '/widgets/emote-combo',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const WidgetsEmoteWallRoute = WidgetsEmoteWallRouteImport.update({
   id: '/widgets/emote-wall',
   path: '/widgets/emote-wall',
@@ -129,6 +141,11 @@ const WidgetsEmoteWallRoute = WidgetsEmoteWallRouteImport.update({
 const WidgetsEventListRoute = WidgetsEventListRouteImport.update({
   id: '/widgets/event-list',
   path: '/widgets/event-list',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WidgetsFeaturedRoute = WidgetsFeaturedRouteImport.update({
+  id: '/widgets/featured',
+  path: '/widgets/featured',
   getParentRoute: () => rootRouteImport,
 } as any)
 const WidgetsFollowerGoalRoute = WidgetsFollowerGoalRouteImport.update({
@@ -159,6 +176,11 @@ const WidgetsLeaderboardRoute = WidgetsLeaderboardRouteImport.update({
 const WidgetsLowerThirdRoute = WidgetsLowerThirdRouteImport.update({
   id: '/widgets/lower-third',
   path: '/widgets/lower-third',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WidgetsNowPlayingRoute = WidgetsNowPlayingRouteImport.update({
+  id: '/widgets/now-playing',
+  path: '/widgets/now-playing',
   getParentRoute: () => rootRouteImport,
 } as any)
 const WidgetsPollRoute = WidgetsPollRouteImport.update({
@@ -300,6 +322,12 @@ const Char123LocaleChar125GuidesTwitchKickChatOverlayRoute =
     path: '/guides/twitch-kick-chat-overlay',
     getParentRoute: () => Char123LocaleChar125RouteRoute,
   } as any)
+const Char123LocaleChar125SetupBitsGoalRoute =
+  Char123LocaleChar125SetupBitsGoalRouteImport.update({
+    id: '/setup/bits-goal',
+    path: '/setup/bits-goal',
+    getParentRoute: () => Char123LocaleChar125RouteRoute,
+  } as any)
 const Char123LocaleChar125SetupChatPollRoute =
   Char123LocaleChar125SetupChatPollRouteImport.update({
     id: '/setup/chat-poll',
@@ -316,6 +344,12 @@ const Char123LocaleChar125SetupCounterRoute =
   Char123LocaleChar125SetupCounterRouteImport.update({
     id: '/setup/counter',
     path: '/setup/counter',
+    getParentRoute: () => Char123LocaleChar125RouteRoute,
+  } as any)
+const Char123LocaleChar125SetupEmoteComboRoute =
+  Char123LocaleChar125SetupEmoteComboRouteImport.update({
+    id: '/setup/emote-combo',
+    path: '/setup/emote-combo',
     getParentRoute: () => Char123LocaleChar125RouteRoute,
   } as any)
 const Char123LocaleChar125SetupEmoteWallRoute =
@@ -336,6 +370,12 @@ const Char123LocaleChar125SetupEventListRoute =
     path: '/setup/event-list',
     getParentRoute: () => Char123LocaleChar125RouteRoute,
   } as any)
+const Char123LocaleChar125SetupFeaturedMessageRoute =
+  Char123LocaleChar125SetupFeaturedMessageRouteImport.update({
+    id: '/setup/featured-message',
+    path: '/setup/featured-message',
+    getParentRoute: () => Char123LocaleChar125RouteRoute,
+  } as any)
 const Char123LocaleChar125SetupFollowerGoalRoute =
   Char123LocaleChar125SetupFollowerGoalRouteImport.update({
     id: '/setup/follower-goal',
@@ -352,6 +392,12 @@ const Char123LocaleChar125SetupLowerThirdsRoute =
   Char123LocaleChar125SetupLowerThirdsRouteImport.update({
     id: '/setup/lower-thirds',
     path: '/setup/lower-thirds',
+    getParentRoute: () => Char123LocaleChar125RouteRoute,
+  } as any)
+const Char123LocaleChar125SetupNowPlayingRoute =
+  Char123LocaleChar125SetupNowPlayingRouteImport.update({
+    id: '/setup/now-playing',
+    path: '/setup/now-playing',
     getParentRoute: () => Char123LocaleChar125RouteRoute,
   } as any)
 const Char123LocaleChar125SetupObsBridgeRoute =
@@ -449,14 +495,17 @@ export interface FileRoutesByFullPath {
   '/widgets/countdown': typeof WidgetsCountdownRoute
   '/widgets/counter': typeof WidgetsCounterRoute
   '/widgets/credits': typeof WidgetsCreditsRoute
+  '/widgets/emote-combo': typeof WidgetsEmoteComboRoute
   '/widgets/emote-wall': typeof WidgetsEmoteWallRoute
   '/widgets/event-list': typeof WidgetsEventListRoute
+  '/widgets/featured': typeof WidgetsFeaturedRoute
   '/widgets/follower-goal': typeof WidgetsFollowerGoalRoute
   '/widgets/frame': typeof WidgetsFrameRoute
   '/widgets/goal': typeof WidgetsGoalRoute
   '/widgets/irl-hud': typeof WidgetsIrlHudRoute
   '/widgets/leaderboard': typeof WidgetsLeaderboardRoute
   '/widgets/lower-third': typeof WidgetsLowerThirdRoute
+  '/widgets/now-playing': typeof WidgetsNowPlayingRoute
   '/widgets/poll': typeof WidgetsPollRoute
   '/widgets/queue': typeof WidgetsQueueRoute
   '/widgets/raffle-overlay': typeof WidgetsRaffleOverlayRoute
@@ -481,15 +530,19 @@ export interface FileRoutesByFullPath {
   '/{-$locale}/guides/stream-frames': typeof Char123LocaleChar125GuidesStreamFramesRoute
   '/{-$locale}/guides/subathon-timer': typeof Char123LocaleChar125GuidesSubathonTimerRoute
   '/{-$locale}/guides/twitch-kick-chat-overlay': typeof Char123LocaleChar125GuidesTwitchKickChatOverlayRoute
+  '/{-$locale}/setup/bits-goal': typeof Char123LocaleChar125SetupBitsGoalRoute
   '/{-$locale}/setup/chat-poll': typeof Char123LocaleChar125SetupChatPollRoute
   '/{-$locale}/setup/chat-widget': typeof Char123LocaleChar125SetupChatWidgetRoute
   '/{-$locale}/setup/counter': typeof Char123LocaleChar125SetupCounterRoute
+  '/{-$locale}/setup/emote-combo': typeof Char123LocaleChar125SetupEmoteComboRoute
   '/{-$locale}/setup/emote-wall': typeof Char123LocaleChar125SetupEmoteWallRoute
   '/{-$locale}/setup/end-credits': typeof Char123LocaleChar125SetupEndCreditsRoute
   '/{-$locale}/setup/event-list': typeof Char123LocaleChar125SetupEventListRoute
+  '/{-$locale}/setup/featured-message': typeof Char123LocaleChar125SetupFeaturedMessageRoute
   '/{-$locale}/setup/follower-goal': typeof Char123LocaleChar125SetupFollowerGoalRoute
   '/{-$locale}/setup/irl-hud': typeof Char123LocaleChar125SetupIrlHudRoute
   '/{-$locale}/setup/lower-thirds': typeof Char123LocaleChar125SetupLowerThirdsRoute
+  '/{-$locale}/setup/now-playing': typeof Char123LocaleChar125SetupNowPlayingRoute
   '/{-$locale}/setup/obs-bridge': typeof Char123LocaleChar125SetupObsBridgeRoute
   '/{-$locale}/setup/raffle': typeof Char123LocaleChar125SetupRaffleRoute
   '/{-$locale}/setup/socials': typeof Char123LocaleChar125SetupSocialsRoute
@@ -515,14 +568,17 @@ export interface FileRoutesByTo {
   '/widgets/countdown': typeof WidgetsCountdownRoute
   '/widgets/counter': typeof WidgetsCounterRoute
   '/widgets/credits': typeof WidgetsCreditsRoute
+  '/widgets/emote-combo': typeof WidgetsEmoteComboRoute
   '/widgets/emote-wall': typeof WidgetsEmoteWallRoute
   '/widgets/event-list': typeof WidgetsEventListRoute
+  '/widgets/featured': typeof WidgetsFeaturedRoute
   '/widgets/follower-goal': typeof WidgetsFollowerGoalRoute
   '/widgets/frame': typeof WidgetsFrameRoute
   '/widgets/goal': typeof WidgetsGoalRoute
   '/widgets/irl-hud': typeof WidgetsIrlHudRoute
   '/widgets/leaderboard': typeof WidgetsLeaderboardRoute
   '/widgets/lower-third': typeof WidgetsLowerThirdRoute
+  '/widgets/now-playing': typeof WidgetsNowPlayingRoute
   '/widgets/poll': typeof WidgetsPollRoute
   '/widgets/queue': typeof WidgetsQueueRoute
   '/widgets/raffle-overlay': typeof WidgetsRaffleOverlayRoute
@@ -547,15 +603,19 @@ export interface FileRoutesByTo {
   '/{-$locale}/guides/stream-frames': typeof Char123LocaleChar125GuidesStreamFramesRoute
   '/{-$locale}/guides/subathon-timer': typeof Char123LocaleChar125GuidesSubathonTimerRoute
   '/{-$locale}/guides/twitch-kick-chat-overlay': typeof Char123LocaleChar125GuidesTwitchKickChatOverlayRoute
+  '/{-$locale}/setup/bits-goal': typeof Char123LocaleChar125SetupBitsGoalRoute
   '/{-$locale}/setup/chat-poll': typeof Char123LocaleChar125SetupChatPollRoute
   '/{-$locale}/setup/chat-widget': typeof Char123LocaleChar125SetupChatWidgetRoute
   '/{-$locale}/setup/counter': typeof Char123LocaleChar125SetupCounterRoute
+  '/{-$locale}/setup/emote-combo': typeof Char123LocaleChar125SetupEmoteComboRoute
   '/{-$locale}/setup/emote-wall': typeof Char123LocaleChar125SetupEmoteWallRoute
   '/{-$locale}/setup/end-credits': typeof Char123LocaleChar125SetupEndCreditsRoute
   '/{-$locale}/setup/event-list': typeof Char123LocaleChar125SetupEventListRoute
+  '/{-$locale}/setup/featured-message': typeof Char123LocaleChar125SetupFeaturedMessageRoute
   '/{-$locale}/setup/follower-goal': typeof Char123LocaleChar125SetupFollowerGoalRoute
   '/{-$locale}/setup/irl-hud': typeof Char123LocaleChar125SetupIrlHudRoute
   '/{-$locale}/setup/lower-thirds': typeof Char123LocaleChar125SetupLowerThirdsRoute
+  '/{-$locale}/setup/now-playing': typeof Char123LocaleChar125SetupNowPlayingRoute
   '/{-$locale}/setup/obs-bridge': typeof Char123LocaleChar125SetupObsBridgeRoute
   '/{-$locale}/setup/raffle': typeof Char123LocaleChar125SetupRaffleRoute
   '/{-$locale}/setup/socials': typeof Char123LocaleChar125SetupSocialsRoute
@@ -583,14 +643,17 @@ export interface FileRoutesById {
   '/widgets/countdown': typeof WidgetsCountdownRoute
   '/widgets/counter': typeof WidgetsCounterRoute
   '/widgets/credits': typeof WidgetsCreditsRoute
+  '/widgets/emote-combo': typeof WidgetsEmoteComboRoute
   '/widgets/emote-wall': typeof WidgetsEmoteWallRoute
   '/widgets/event-list': typeof WidgetsEventListRoute
+  '/widgets/featured': typeof WidgetsFeaturedRoute
   '/widgets/follower-goal': typeof WidgetsFollowerGoalRoute
   '/widgets/frame': typeof WidgetsFrameRoute
   '/widgets/goal': typeof WidgetsGoalRoute
   '/widgets/irl-hud': typeof WidgetsIrlHudRoute
   '/widgets/leaderboard': typeof WidgetsLeaderboardRoute
   '/widgets/lower-third': typeof WidgetsLowerThirdRoute
+  '/widgets/now-playing': typeof WidgetsNowPlayingRoute
   '/widgets/poll': typeof WidgetsPollRoute
   '/widgets/queue': typeof WidgetsQueueRoute
   '/widgets/raffle-overlay': typeof WidgetsRaffleOverlayRoute
@@ -615,15 +678,19 @@ export interface FileRoutesById {
   '/{-$locale}/guides/stream-frames': typeof Char123LocaleChar125GuidesStreamFramesRoute
   '/{-$locale}/guides/subathon-timer': typeof Char123LocaleChar125GuidesSubathonTimerRoute
   '/{-$locale}/guides/twitch-kick-chat-overlay': typeof Char123LocaleChar125GuidesTwitchKickChatOverlayRoute
+  '/{-$locale}/setup/bits-goal': typeof Char123LocaleChar125SetupBitsGoalRoute
   '/{-$locale}/setup/chat-poll': typeof Char123LocaleChar125SetupChatPollRoute
   '/{-$locale}/setup/chat-widget': typeof Char123LocaleChar125SetupChatWidgetRoute
   '/{-$locale}/setup/counter': typeof Char123LocaleChar125SetupCounterRoute
+  '/{-$locale}/setup/emote-combo': typeof Char123LocaleChar125SetupEmoteComboRoute
   '/{-$locale}/setup/emote-wall': typeof Char123LocaleChar125SetupEmoteWallRoute
   '/{-$locale}/setup/end-credits': typeof Char123LocaleChar125SetupEndCreditsRoute
   '/{-$locale}/setup/event-list': typeof Char123LocaleChar125SetupEventListRoute
+  '/{-$locale}/setup/featured-message': typeof Char123LocaleChar125SetupFeaturedMessageRoute
   '/{-$locale}/setup/follower-goal': typeof Char123LocaleChar125SetupFollowerGoalRoute
   '/{-$locale}/setup/irl-hud': typeof Char123LocaleChar125SetupIrlHudRoute
   '/{-$locale}/setup/lower-thirds': typeof Char123LocaleChar125SetupLowerThirdsRoute
+  '/{-$locale}/setup/now-playing': typeof Char123LocaleChar125SetupNowPlayingRoute
   '/{-$locale}/setup/obs-bridge': typeof Char123LocaleChar125SetupObsBridgeRoute
   '/{-$locale}/setup/raffle': typeof Char123LocaleChar125SetupRaffleRoute
   '/{-$locale}/setup/socials': typeof Char123LocaleChar125SetupSocialsRoute
@@ -652,14 +719,17 @@ export interface FileRouteTypes {
     | '/widgets/countdown'
     | '/widgets/counter'
     | '/widgets/credits'
+    | '/widgets/emote-combo'
     | '/widgets/emote-wall'
     | '/widgets/event-list'
+    | '/widgets/featured'
     | '/widgets/follower-goal'
     | '/widgets/frame'
     | '/widgets/goal'
     | '/widgets/irl-hud'
     | '/widgets/leaderboard'
     | '/widgets/lower-third'
+    | '/widgets/now-playing'
     | '/widgets/poll'
     | '/widgets/queue'
     | '/widgets/raffle-overlay'
@@ -684,15 +754,19 @@ export interface FileRouteTypes {
     | '/{-$locale}/guides/stream-frames'
     | '/{-$locale}/guides/subathon-timer'
     | '/{-$locale}/guides/twitch-kick-chat-overlay'
+    | '/{-$locale}/setup/bits-goal'
     | '/{-$locale}/setup/chat-poll'
     | '/{-$locale}/setup/chat-widget'
     | '/{-$locale}/setup/counter'
+    | '/{-$locale}/setup/emote-combo'
     | '/{-$locale}/setup/emote-wall'
     | '/{-$locale}/setup/end-credits'
     | '/{-$locale}/setup/event-list'
+    | '/{-$locale}/setup/featured-message'
     | '/{-$locale}/setup/follower-goal'
     | '/{-$locale}/setup/irl-hud'
     | '/{-$locale}/setup/lower-thirds'
+    | '/{-$locale}/setup/now-playing'
     | '/{-$locale}/setup/obs-bridge'
     | '/{-$locale}/setup/raffle'
     | '/{-$locale}/setup/socials'
@@ -718,14 +792,17 @@ export interface FileRouteTypes {
     | '/widgets/countdown'
     | '/widgets/counter'
     | '/widgets/credits'
+    | '/widgets/emote-combo'
     | '/widgets/emote-wall'
     | '/widgets/event-list'
+    | '/widgets/featured'
     | '/widgets/follower-goal'
     | '/widgets/frame'
     | '/widgets/goal'
     | '/widgets/irl-hud'
     | '/widgets/leaderboard'
     | '/widgets/lower-third'
+    | '/widgets/now-playing'
     | '/widgets/poll'
     | '/widgets/queue'
     | '/widgets/raffle-overlay'
@@ -750,15 +827,19 @@ export interface FileRouteTypes {
     | '/{-$locale}/guides/stream-frames'
     | '/{-$locale}/guides/subathon-timer'
     | '/{-$locale}/guides/twitch-kick-chat-overlay'
+    | '/{-$locale}/setup/bits-goal'
     | '/{-$locale}/setup/chat-poll'
     | '/{-$locale}/setup/chat-widget'
     | '/{-$locale}/setup/counter'
+    | '/{-$locale}/setup/emote-combo'
     | '/{-$locale}/setup/emote-wall'
     | '/{-$locale}/setup/end-credits'
     | '/{-$locale}/setup/event-list'
+    | '/{-$locale}/setup/featured-message'
     | '/{-$locale}/setup/follower-goal'
     | '/{-$locale}/setup/irl-hud'
     | '/{-$locale}/setup/lower-thirds'
+    | '/{-$locale}/setup/now-playing'
     | '/{-$locale}/setup/obs-bridge'
     | '/{-$locale}/setup/raffle'
     | '/{-$locale}/setup/socials'
@@ -785,14 +866,17 @@ export interface FileRouteTypes {
     | '/widgets/countdown'
     | '/widgets/counter'
     | '/widgets/credits'
+    | '/widgets/emote-combo'
     | '/widgets/emote-wall'
     | '/widgets/event-list'
+    | '/widgets/featured'
     | '/widgets/follower-goal'
     | '/widgets/frame'
     | '/widgets/goal'
     | '/widgets/irl-hud'
     | '/widgets/leaderboard'
     | '/widgets/lower-third'
+    | '/widgets/now-playing'
     | '/widgets/poll'
     | '/widgets/queue'
     | '/widgets/raffle-overlay'
@@ -817,15 +901,19 @@ export interface FileRouteTypes {
     | '/{-$locale}/guides/stream-frames'
     | '/{-$locale}/guides/subathon-timer'
     | '/{-$locale}/guides/twitch-kick-chat-overlay'
+    | '/{-$locale}/setup/bits-goal'
     | '/{-$locale}/setup/chat-poll'
     | '/{-$locale}/setup/chat-widget'
     | '/{-$locale}/setup/counter'
+    | '/{-$locale}/setup/emote-combo'
     | '/{-$locale}/setup/emote-wall'
     | '/{-$locale}/setup/end-credits'
     | '/{-$locale}/setup/event-list'
+    | '/{-$locale}/setup/featured-message'
     | '/{-$locale}/setup/follower-goal'
     | '/{-$locale}/setup/irl-hud'
     | '/{-$locale}/setup/lower-thirds'
+    | '/{-$locale}/setup/now-playing'
     | '/{-$locale}/setup/obs-bridge'
     | '/{-$locale}/setup/raffle'
     | '/{-$locale}/setup/socials'
@@ -853,14 +941,17 @@ export interface RootRouteChildren {
   WidgetsCountdownRoute: typeof WidgetsCountdownRoute
   WidgetsCounterRoute: typeof WidgetsCounterRoute
   WidgetsCreditsRoute: typeof WidgetsCreditsRoute
+  WidgetsEmoteComboRoute: typeof WidgetsEmoteComboRoute
   WidgetsEmoteWallRoute: typeof WidgetsEmoteWallRoute
   WidgetsEventListRoute: typeof WidgetsEventListRoute
+  WidgetsFeaturedRoute: typeof WidgetsFeaturedRoute
   WidgetsFollowerGoalRoute: typeof WidgetsFollowerGoalRoute
   WidgetsFrameRoute: typeof WidgetsFrameRoute
   WidgetsGoalRoute: typeof WidgetsGoalRoute
   WidgetsIrlHudRoute: typeof WidgetsIrlHudRoute
   WidgetsLeaderboardRoute: typeof WidgetsLeaderboardRoute
   WidgetsLowerThirdRoute: typeof WidgetsLowerThirdRoute
+  WidgetsNowPlayingRoute: typeof WidgetsNowPlayingRoute
   WidgetsPollRoute: typeof WidgetsPollRoute
   WidgetsQueueRoute: typeof WidgetsQueueRoute
   WidgetsRaffleOverlayRoute: typeof WidgetsRaffleOverlayRoute
@@ -938,6 +1029,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WidgetsCreditsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/widgets/emote-combo': {
+      id: '/widgets/emote-combo'
+      path: '/widgets/emote-combo'
+      fullPath: '/widgets/emote-combo'
+      preLoaderRoute: typeof WidgetsEmoteComboRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/widgets/emote-wall': {
       id: '/widgets/emote-wall'
       path: '/widgets/emote-wall'
@@ -950,6 +1048,13 @@ declare module '@tanstack/react-router' {
       path: '/widgets/event-list'
       fullPath: '/widgets/event-list'
       preLoaderRoute: typeof WidgetsEventListRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/widgets/featured': {
+      id: '/widgets/featured'
+      path: '/widgets/featured'
+      fullPath: '/widgets/featured'
+      preLoaderRoute: typeof WidgetsFeaturedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/widgets/follower-goal': {
@@ -992,6 +1097,13 @@ declare module '@tanstack/react-router' {
       path: '/widgets/lower-third'
       fullPath: '/widgets/lower-third'
       preLoaderRoute: typeof WidgetsLowerThirdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/widgets/now-playing': {
+      id: '/widgets/now-playing'
+      path: '/widgets/now-playing'
+      fullPath: '/widgets/now-playing'
+      preLoaderRoute: typeof WidgetsNowPlayingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/widgets/poll': {
@@ -1169,6 +1281,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char123LocaleChar125GuidesTwitchKickChatOverlayRouteImport
       parentRoute: typeof Char123LocaleChar125RouteRoute
     }
+    '/{-$locale}/setup/bits-goal': {
+      id: '/{-$locale}/setup/bits-goal'
+      path: '/setup/bits-goal'
+      fullPath: '/{-$locale}/setup/bits-goal'
+      preLoaderRoute: typeof Char123LocaleChar125SetupBitsGoalRouteImport
+      parentRoute: typeof Char123LocaleChar125RouteRoute
+    }
     '/{-$locale}/setup/chat-poll': {
       id: '/{-$locale}/setup/chat-poll'
       path: '/setup/chat-poll'
@@ -1188,6 +1307,13 @@ declare module '@tanstack/react-router' {
       path: '/setup/counter'
       fullPath: '/{-$locale}/setup/counter'
       preLoaderRoute: typeof Char123LocaleChar125SetupCounterRouteImport
+      parentRoute: typeof Char123LocaleChar125RouteRoute
+    }
+    '/{-$locale}/setup/emote-combo': {
+      id: '/{-$locale}/setup/emote-combo'
+      path: '/setup/emote-combo'
+      fullPath: '/{-$locale}/setup/emote-combo'
+      preLoaderRoute: typeof Char123LocaleChar125SetupEmoteComboRouteImport
       parentRoute: typeof Char123LocaleChar125RouteRoute
     }
     '/{-$locale}/setup/emote-wall': {
@@ -1211,6 +1337,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char123LocaleChar125SetupEventListRouteImport
       parentRoute: typeof Char123LocaleChar125RouteRoute
     }
+    '/{-$locale}/setup/featured-message': {
+      id: '/{-$locale}/setup/featured-message'
+      path: '/setup/featured-message'
+      fullPath: '/{-$locale}/setup/featured-message'
+      preLoaderRoute: typeof Char123LocaleChar125SetupFeaturedMessageRouteImport
+      parentRoute: typeof Char123LocaleChar125RouteRoute
+    }
     '/{-$locale}/setup/follower-goal': {
       id: '/{-$locale}/setup/follower-goal'
       path: '/setup/follower-goal'
@@ -1230,6 +1363,13 @@ declare module '@tanstack/react-router' {
       path: '/setup/lower-thirds'
       fullPath: '/{-$locale}/setup/lower-thirds'
       preLoaderRoute: typeof Char123LocaleChar125SetupLowerThirdsRouteImport
+      parentRoute: typeof Char123LocaleChar125RouteRoute
+    }
+    '/{-$locale}/setup/now-playing': {
+      id: '/{-$locale}/setup/now-playing'
+      path: '/setup/now-playing'
+      fullPath: '/{-$locale}/setup/now-playing'
+      preLoaderRoute: typeof Char123LocaleChar125SetupNowPlayingRouteImport
       parentRoute: typeof Char123LocaleChar125RouteRoute
     }
     '/{-$locale}/setup/obs-bridge': {
@@ -1348,15 +1488,19 @@ interface Char123LocaleChar125RouteRouteChildren {
   Char123LocaleChar125GuidesStreamFramesRoute: typeof Char123LocaleChar125GuidesStreamFramesRoute
   Char123LocaleChar125GuidesSubathonTimerRoute: typeof Char123LocaleChar125GuidesSubathonTimerRoute
   Char123LocaleChar125GuidesTwitchKickChatOverlayRoute: typeof Char123LocaleChar125GuidesTwitchKickChatOverlayRoute
+  Char123LocaleChar125SetupBitsGoalRoute: typeof Char123LocaleChar125SetupBitsGoalRoute
   Char123LocaleChar125SetupChatPollRoute: typeof Char123LocaleChar125SetupChatPollRoute
   Char123LocaleChar125SetupChatWidgetRoute: typeof Char123LocaleChar125SetupChatWidgetRoute
   Char123LocaleChar125SetupCounterRoute: typeof Char123LocaleChar125SetupCounterRoute
+  Char123LocaleChar125SetupEmoteComboRoute: typeof Char123LocaleChar125SetupEmoteComboRoute
   Char123LocaleChar125SetupEmoteWallRoute: typeof Char123LocaleChar125SetupEmoteWallRoute
   Char123LocaleChar125SetupEndCreditsRoute: typeof Char123LocaleChar125SetupEndCreditsRoute
   Char123LocaleChar125SetupEventListRoute: typeof Char123LocaleChar125SetupEventListRoute
+  Char123LocaleChar125SetupFeaturedMessageRoute: typeof Char123LocaleChar125SetupFeaturedMessageRoute
   Char123LocaleChar125SetupFollowerGoalRoute: typeof Char123LocaleChar125SetupFollowerGoalRoute
   Char123LocaleChar125SetupIrlHudRoute: typeof Char123LocaleChar125SetupIrlHudRoute
   Char123LocaleChar125SetupLowerThirdsRoute: typeof Char123LocaleChar125SetupLowerThirdsRoute
+  Char123LocaleChar125SetupNowPlayingRoute: typeof Char123LocaleChar125SetupNowPlayingRoute
   Char123LocaleChar125SetupObsBridgeRoute: typeof Char123LocaleChar125SetupObsBridgeRoute
   Char123LocaleChar125SetupRaffleRoute: typeof Char123LocaleChar125SetupRaffleRoute
   Char123LocaleChar125SetupSocialsRoute: typeof Char123LocaleChar125SetupSocialsRoute
@@ -1400,23 +1544,31 @@ const Char123LocaleChar125RouteRouteChildren: Char123LocaleChar125RouteRouteChil
       Char123LocaleChar125GuidesSubathonTimerRoute,
     Char123LocaleChar125GuidesTwitchKickChatOverlayRoute:
       Char123LocaleChar125GuidesTwitchKickChatOverlayRoute,
+    Char123LocaleChar125SetupBitsGoalRoute:
+      Char123LocaleChar125SetupBitsGoalRoute,
     Char123LocaleChar125SetupChatPollRoute:
       Char123LocaleChar125SetupChatPollRoute,
     Char123LocaleChar125SetupChatWidgetRoute:
       Char123LocaleChar125SetupChatWidgetRoute,
     Char123LocaleChar125SetupCounterRoute:
       Char123LocaleChar125SetupCounterRoute,
+    Char123LocaleChar125SetupEmoteComboRoute:
+      Char123LocaleChar125SetupEmoteComboRoute,
     Char123LocaleChar125SetupEmoteWallRoute:
       Char123LocaleChar125SetupEmoteWallRoute,
     Char123LocaleChar125SetupEndCreditsRoute:
       Char123LocaleChar125SetupEndCreditsRoute,
     Char123LocaleChar125SetupEventListRoute:
       Char123LocaleChar125SetupEventListRoute,
+    Char123LocaleChar125SetupFeaturedMessageRoute:
+      Char123LocaleChar125SetupFeaturedMessageRoute,
     Char123LocaleChar125SetupFollowerGoalRoute:
       Char123LocaleChar125SetupFollowerGoalRoute,
     Char123LocaleChar125SetupIrlHudRoute: Char123LocaleChar125SetupIrlHudRoute,
     Char123LocaleChar125SetupLowerThirdsRoute:
       Char123LocaleChar125SetupLowerThirdsRoute,
+    Char123LocaleChar125SetupNowPlayingRoute:
+      Char123LocaleChar125SetupNowPlayingRoute,
     Char123LocaleChar125SetupObsBridgeRoute:
       Char123LocaleChar125SetupObsBridgeRoute,
     Char123LocaleChar125SetupRaffleRoute: Char123LocaleChar125SetupRaffleRoute,
@@ -1462,14 +1614,17 @@ const rootRouteChildren: RootRouteChildren = {
   WidgetsCountdownRoute: WidgetsCountdownRoute,
   WidgetsCounterRoute: WidgetsCounterRoute,
   WidgetsCreditsRoute: WidgetsCreditsRoute,
+  WidgetsEmoteComboRoute: WidgetsEmoteComboRoute,
   WidgetsEmoteWallRoute: WidgetsEmoteWallRoute,
   WidgetsEventListRoute: WidgetsEventListRoute,
+  WidgetsFeaturedRoute: WidgetsFeaturedRoute,
   WidgetsFollowerGoalRoute: WidgetsFollowerGoalRoute,
   WidgetsFrameRoute: WidgetsFrameRoute,
   WidgetsGoalRoute: WidgetsGoalRoute,
   WidgetsIrlHudRoute: WidgetsIrlHudRoute,
   WidgetsLeaderboardRoute: WidgetsLeaderboardRoute,
   WidgetsLowerThirdRoute: WidgetsLowerThirdRoute,
+  WidgetsNowPlayingRoute: WidgetsNowPlayingRoute,
   WidgetsPollRoute: WidgetsPollRoute,
   WidgetsQueueRoute: WidgetsQueueRoute,
   WidgetsRaffleOverlayRoute: WidgetsRaffleOverlayRoute,

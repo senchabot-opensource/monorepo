@@ -29,6 +29,13 @@ const GOLD_HUE = 42;
 const SPARK_COUNT = 14;
 const SPARKS = Array.from({ length: SPARK_COUNT }, (_, index) => index);
 
+/** The goal's own mark when no icon is picked: a star for subs, a gem for Bits and Kicks. */
+type MarkShape = 'star' | 'gem';
+const STAR_PATH = 'm12 2.5 2.9 6 6.6.8-4.9 4.5 1.3 6.5L12 17l-5.9 3.3 1.3-6.5-4.9-4.5 6.6-.8Z';
+const GEM_PATH = 'M7 3.5h10l4.5 6L12 21 2.5 9.5Z';
+// The girdle and the facets running down to the point.
+const GEM_FACETS = 'M2.5 9.5h19M9.5 3.5 8 9.5l4 11.5m2.5-17.5 1.5 6L12 21';
+
 const CSS = `
 .sg-root{position:fixed;inset:0;overflow:hidden;font-family:${FONT_FAMILY};color:#fff;
   -webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
@@ -67,7 +74,10 @@ export function GoalWidget({
   previewId,
 }: GoalWidgetProps) {
   const scale = useFitScale(STAGE);
+  const type = settings.type ?? 'subs';
+  const shape: MarkShape = type === 'bits' ? 'gem' : 'star';
   const { count, progress, reached, completedHidden, celebration, pops, hit } = useGoal({
+    type,
     twitch: twitchChannel,
     kick: kickChannel,
     start: settings.start,
@@ -88,6 +98,7 @@ export function GoalWidget({
       <div
         className="sg-root"
         data-testid="goal"
+        data-type={type === 'bits' ? type : undefined}
         data-style={settings.style}
         data-reached={reached}
         data-preset={skin?.id}
@@ -120,6 +131,7 @@ export function GoalWidget({
                   celebrating={celebration !== null}
                   icon={settings.icon}
                   iconUrl={settings.iconUrl}
+                  shape={shape}
                 />
               ) : (
                 <>
@@ -132,6 +144,7 @@ export function GoalWidget({
                     hit={hit}
                     icon={settings.icon}
                     iconUrl={settings.iconUrl}
+                    shape={shape}
                   />
                   <Bar
                     progress={progress}
@@ -167,6 +180,7 @@ export function GoalWidget({
                 hit={hit}
                 icon={settings.icon}
                 iconUrl={settings.iconUrl}
+                shape={shape}
               />
             )}
           </div>
@@ -177,16 +191,18 @@ export function GoalWidget({
 }
 
 /** `plain` draws it in the text color, for a thin bar where it sits on a fill of its own hue. */
-function StarIcon({
+function MarkIcon({
   hue,
   hit,
   size = 26,
   plain = false,
+  shape,
 }: {
   hue: number;
   hit: GoalHit | null;
   size?: number;
   plain?: boolean;
+  shape: MarkShape;
 }) {
   const skin = useSkin();
   const hsl = painter(skin, hue);
@@ -205,17 +221,51 @@ function StarIcon({
       }}
     >
       <path
-        d="m12 2.5 2.9 6 6.6.8-4.9 4.5 1.3 6.5L12 17l-5.9 3.3 1.3-6.5-4.9-4.5 6.6-.8Z"
+        d={shape === 'gem' ? GEM_PATH : STAR_PATH}
         fill={plain ? (skin?.text ?? '#fff') : hsl(90, 60)}
         stroke="rgba(0,0,0,.55)"
         strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+      {shape === 'gem' && (
+        <path
+          d={GEM_FACETS}
+          fill="none"
+          stroke="rgba(0,0,0,.4)"
+          strokeWidth="1"
+          strokeLinejoin="round"
+        />
+      )}
+    </svg>
+  );
+}
+
+/** A small gem in the current color, for a cheer's pop. */
+function GemGlyph({ size }: { size: number }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      width={size}
+      height={size}
+      aria-hidden="true"
+      style={{ display: 'block' }}
+    >
+      <path d={GEM_PATH} fill="currentColor" />
+      <path
+        d={GEM_FACETS}
+        fill="none"
+        stroke="rgba(0,0,0,.45)"
+        strokeWidth="1.4"
         strokeLinejoin="round"
       />
     </svg>
   );
 }
 
-/** The goal's mark: a channel emote, a custom emoji, or the star. The trophy still wins on top. */
+/**
+ * The goal's mark: a channel emote, a custom emoji, or the star (the gem for Bits and Kicks). The
+ * trophy still wins on top.
+ */
 function GoalMark({
   hue,
   hit,
@@ -223,6 +273,7 @@ function GoalMark({
   plain = false,
   icon,
   iconUrl,
+  shape,
 }: {
   hue: number;
   hit: GoalHit | null;
@@ -230,6 +281,7 @@ function GoalMark({
   plain?: boolean;
   icon: string;
   iconUrl: string;
+  shape: MarkShape;
 }) {
   if (iconUrl) {
     // Images read smaller than glyphs at the same size, so the emote gets extra room.
@@ -252,7 +304,7 @@ function GoalMark({
         {icon}
       </span>
     );
-  return <StarIcon hue={hue} hit={hit} size={size} plain={plain} />;
+  return <MarkIcon hue={hue} hit={hit} size={size} plain={plain} shape={shape} />;
 }
 
 function TrophyIcon({ size, glow }: { size: number; glow: string }) {
@@ -286,6 +338,7 @@ function InfoRow({
   hit,
   icon,
   iconUrl,
+  shape,
 }: {
   title: string;
   count: number;
@@ -295,6 +348,7 @@ function InfoRow({
   hit: GoalHit | null;
   icon: string;
   iconUrl: string;
+  shape: MarkShape;
 }) {
   const skin = useSkin();
   const gold = painter(skin, GOLD_HUE, 'win');
@@ -313,7 +367,7 @@ function InfoRow({
         {reached ? (
           <TrophyIcon size={28} glow={gold(95, 55, 0.8)} />
         ) : (
-          <GoalMark hue={hue} hit={hit} icon={icon} iconUrl={iconUrl} />
+          <GoalMark hue={hue} hit={hit} icon={icon} iconUrl={iconUrl} shape={shape} />
         )}
         {title && (
           <span
@@ -497,6 +551,7 @@ function ThinBar({
   celebrating,
   icon,
   iconUrl,
+  shape,
 }: {
   progress: number;
   title: string;
@@ -508,6 +563,7 @@ function ThinBar({
   celebrating: boolean;
   icon: string;
   iconUrl: string;
+  shape: MarkShape;
 }) {
   const skin = useSkin();
   const hsl = painter(skin, hue);
@@ -645,7 +701,15 @@ function ThinBar({
             {reached ? (
               <TrophyIcon size={22} glow="rgba(0,0,0,.9)" />
             ) : (
-              <GoalMark hue={hue} hit={hit} size={20} plain icon={icon} iconUrl={iconUrl} />
+              <GoalMark
+                hue={hue}
+                hit={hit}
+                size={20}
+                plain
+                icon={icon}
+                iconUrl={iconUrl}
+                shape={shape}
+              />
             )}
             {title && (
               <span
@@ -691,7 +755,7 @@ function ThinBar({
   );
 }
 
-/** The goal's mark flying from its spot to the bar's fill edge on every sub. */
+/** The goal's mark flying from its spot to the bar's fill edge on every sub or cheer. */
 function FlyEmote({
   start,
   end,
@@ -699,6 +763,7 @@ function FlyEmote({
   hit,
   icon,
   iconUrl,
+  shape,
 }: {
   start: { x: number; y: number };
   end: { x: number; y: number };
@@ -706,6 +771,7 @@ function FlyEmote({
   hit: GoalHit | null;
   icon: string;
   iconUrl: string;
+  shape: MarkShape;
 }) {
   return (
     <div
@@ -735,7 +801,7 @@ function FlyEmote({
       ) : icon ? (
         <span style={{ fontSize: 30, lineHeight: 1 }}>{icon}</span>
       ) : (
-        <StarIcon hue={hue} hit={hit} size={34} />
+        <MarkIcon hue={hue} hit={hit} size={34} shape={shape} />
       )}
     </div>
   );
@@ -837,7 +903,7 @@ const POP_OFFSETS = [0, -17, 17];
 // A pop starts 12px below where it settles; this gap keeps it off the count row under the band.
 const POP_GAP = 12;
 
-/** Floating "+1" numbers with who they came from, rising from the fill's edge. */
+/** Floating "+1" (or "+500" Bits) numbers with who they came from, rising from the fill's edge. */
 function PopBand({
   pops,
   hue,
@@ -895,9 +961,18 @@ function PopBand({
               border: `1px solid ${PLATFORM_COLORS[pop.event.platform]}66`,
             }}
           >
-            <span style={{ color: PLATFORM_COLORS[pop.event.platform] }}>
-              {pop.event.kind === 'gift' ? '🎁' : '★'}
-            </span>
+            {pop.event.kind === 'bits' ? (
+              <span
+                data-testid="goal-pop-gem"
+                style={{ color: PLATFORM_COLORS[pop.event.platform], display: 'inline-flex' }}
+              >
+                <GemGlyph size={15} />
+              </span>
+            ) : (
+              <span style={{ color: PLATFORM_COLORS[pop.event.platform] }}>
+                {pop.event.kind === 'gift' ? '🎁' : '★'}
+              </span>
+            )}
             {pop.event.name && (
               <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{pop.event.name}</span>
             )}

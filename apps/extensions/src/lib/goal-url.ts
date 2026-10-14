@@ -10,6 +10,13 @@ import {
   setPreview,
 } from './url-params';
 
+/**
+ * What fills the goal: subs, or Bits and Kicks. Only `bits` is written to the URL; every goal URL
+ * from before the Bits & Kicks Goal has no type and stays a Sub Goal.
+ */
+export const GOAL_TYPES = ['subs', 'bits'] as const;
+export type GoalType = (typeof GOAL_TYPES)[number];
+
 export const GOAL_STYLES = ['bar', 'thin'] as const;
 export type GoalStyle = (typeof GOAL_STYLES)[number];
 
@@ -21,6 +28,8 @@ export const GOAL_ENDS = ['stay', 'hide'] as const;
 export type GoalEnd = (typeof GOAL_ENDS)[number];
 
 export interface GoalSettings {
+  /** Left out for a Sub Goal; `bits` for a Bits & Kicks Goal. */
+  type?: GoalType;
   platforms: ChannelPlatforms;
   /** Preset id; any preset but classic brings its own colors and fonts. */
   preset: string;
@@ -59,6 +68,18 @@ export const DEFAULT_GOAL_SETTINGS: GoalSettings = {
   pops: true,
 };
 
+/** A Bits & Kicks Goal: its own title, and a target counted in Bits and Kicks. */
+export const DEFAULT_BITS_GOAL_SETTINGS: GoalSettings = {
+  ...DEFAULT_GOAL_SETTINGS,
+  type: 'bits',
+  title: 'BITS & KICKS GOAL',
+  target: 1000,
+};
+
+/** The defaults a URL of this type falls back to. */
+export const goalDefaults = (type: GoalType = 'subs'): GoalSettings =>
+  type === 'bits' ? DEFAULT_BITS_GOAL_SETTINGS : DEFAULT_GOAL_SETTINGS;
+
 /** Upper bound for every count: bigger than any channel's subs, small enough to stay exact. */
 export const MAX_GOAL_COUNT = 1_000_000;
 export const TITLE_MAX_LENGTH = 32;
@@ -74,8 +95,9 @@ const WIDGET_PATH = '/widgets/goal';
 /** Only settings that differ from the defaults are written, so URLs stay short. */
 function buildParams(settings: GoalSettings, twitchChannel: string, kickChannel: string) {
   const params = new URLSearchParams();
-  const defaults = DEFAULT_GOAL_SETTINGS;
+  const defaults = goalDefaults(settings.type);
   setChannels(params, settings.platforms, twitchChannel, kickChannel);
+  if (settings.type === 'bits') params.set('type', 'bits');
   writePreset(params, settings.preset);
   if (settings.style && settings.style !== defaults.style) params.set('style', settings.style);
   if (isClassic(settings.preset) && settings.color !== defaults.color)
@@ -104,7 +126,7 @@ export function buildGoalUrl(
   return channelWidgetUrl(origin, WIDGET_PATH, buildParams(settings, twitchChannel, kickChannel));
 }
 
-/** Plays simulated subs with the same settings and never touches a channel or saved count. */
+/** Plays simulated subs (or cheers) with the same settings and never touches a channel or saved count. */
 export function buildGoalPreviewUrl(
   origin: string,
   settings: GoalSettings,
@@ -115,14 +137,21 @@ export function buildGoalPreviewUrl(
   return `${origin}${WIDGET_PATH}?${params.toString()}`;
 }
 
+/** The goal type a URL's params name; anything but `bits` is a Sub Goal, as before types. */
+export const readGoalType = (params: URLSearchParams): GoalType =>
+  params.get('type') === 'bits' ? 'bits' : 'subs';
+
 /** Settings from URL params, each falling back to its default when missing or invalid. */
 export function readGoalSettings(params: URLSearchParams): Omit<GoalSettings, 'platforms'> {
-  const defaults = DEFAULT_GOAL_SETTINGS;
+  const type = readGoalType(params);
+  const defaults = goalDefaults(type);
   const style = params.get('style') as GoalStyle;
   const color = params.get('color') as GoalColor;
   const end = params.get('end') as GoalEnd;
   const title = params.get('title');
   return {
+    // A Sub Goal's settings carry no type, exactly as they did before there were types.
+    ...(type === 'bits' ? { type } : {}),
     preset: readPreset(params),
     style: GOAL_STYLES.includes(style) ? style : defaults.style,
     color: GOAL_COLORS.includes(color) ? color : defaults.color,
@@ -140,12 +169,22 @@ export function readGoalSettings(params: URLSearchParams): Omit<GoalSettings, 'p
   };
 }
 
-/** Reverse of buildGoalUrl; null for anything that isn't a Sub Goal URL. */
+/** The type of a pasted goal URL; null for text that isn't a goal URL at all. */
+export function goalUrlType(text: string): GoalType | null {
+  const pasted = readWidgetUrl(text, WIDGET_PATH);
+  return pasted ? readGoalType(pasted.params) : null;
+}
+
+/**
+ * Reverse of buildGoalUrl; null for anything that isn't a goal URL of `type` (a Sub Goal by
+ * default), so a Sub Goal page never loads a Bits & Kicks Goal and the other way round.
+ */
 export function parseGoalUrl(
   text: string,
+  type: GoalType = 'subs',
 ): { settings: GoalSettings; twitchChannel: string; kickChannel: string } | null {
   const pasted = readWidgetUrl(text, WIDGET_PATH);
-  if (!pasted) return null;
+  if (!pasted || readGoalType(pasted.params) !== type) return null;
   const { params, platforms, ...channels } = pasted;
   return { ...channels, settings: { platforms, ...readGoalSettings(params) } };
 }

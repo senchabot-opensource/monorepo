@@ -1,6 +1,14 @@
+import { useState } from 'react';
 import { LocaleLink } from '#/components/locale-link';
+import { WidgetFilter } from '#/components/widget-filter';
 import { useI18n } from '#/lib/i18n';
-import { WIDGETS, type WidgetId } from '#/lib/widgets';
+import {
+  type CategoryFilter,
+  inCategory,
+  WIDGETS,
+  type WidgetEntry,
+  type WidgetId,
+} from '#/lib/widgets';
 
 /**
  * Grid span for card `index` of `count`: three per row on wide screens, two on tablets, and the
@@ -15,10 +23,24 @@ export function crossLinkSpan(index: number, count: number): string {
   return classes.join(' ');
 }
 
-/** Cards linking to the setup page of every registry widget except `exclude`. */
+/**
+ * Cards linking to the setup page of every registry widget except `exclude`, under category
+ * pills that narrow them down.
+ */
 export function WidgetCrossLinks({ exclude }: { exclude?: WidgetId }) {
+  const [category, setCategory] = useState<CategoryFilter>('all');
+  const others = WIDGETS.filter((widget) => widget.id !== exclude);
+  const widgets = inCategory(others, category);
+  return (
+    <>
+      <WidgetFilter widgets={others} value={category} onChange={setCategory} className="mb-4" />
+      <CrossLinkGrid widgets={widgets} />
+    </>
+  );
+}
+
+function CrossLinkGrid({ widgets }: { widgets: readonly WidgetEntry[] }) {
   const { t } = useI18n();
-  const widgets = WIDGETS.filter((widget) => widget.id !== exclude);
   return (
     <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
       {widgets.map((widget, index) => (

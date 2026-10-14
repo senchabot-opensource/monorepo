@@ -72,27 +72,35 @@ describe('gallery card shapes', () => {
   // A tall Chat Box and a wide goal strip: the bento the gallery was drawn for.
   const BENTO = (['chat-box', 'emote-wall', 'sub-sprout', 'goal'] as const).map(getWidget);
   const extra = (id: string, width: number, height: number) =>
-    ({ ...getWidget('emote-wall'), id, sourceSize: { width, height } }) as WidgetEntry;
+    ({
+      ...getWidget('emote-wall'),
+      id,
+      sourceSize: { width, height },
+    }) as WidgetEntry;
   // The overlay grid is two columns from sm and three from lg; each width is solved on its own.
   const OVERLAY_COLUMNS = [2, 3] as const;
 
   it('derives the shape from the live demo source size', () => {
     expect(OVERLAYS.map((widget) => [widget.id, getCardShape(widget)])).toEqual([
       ['chat-box', 'tall'],
+      ['event-list', 'tall'],
       ['emote-wall', 'standard'],
+      ['emote-combo', 'standard'],
       ['sub-sprout', 'standard'],
       ['irl-hud', 'standard'],
-      ['counter', 'wide'],
       ['weather', 'standard'],
-      ['socials', 'wide'],
-      ['goal', 'wide'],
       ['follower-goal', 'wide'],
-      ['frames', 'standard'],
-      ['countdown', 'standard'],
-      ['stream-alerts', 'standard'],
-      ['event-list', 'tall'],
-      ['credits', 'standard'],
+      ['bits-goal', 'wide'],
       ['leaderboard', 'standard'],
+      ['stream-alerts', 'standard'],
+      ['credits', 'standard'],
+      ['socials', 'wide'],
+      ['counter', 'wide'],
+      ['goal', 'wide'],
+      ['countdown', 'standard'],
+      ['featured', 'wide'],
+      ['now-playing', 'wide'],
+      ['frames', 'standard'],
       ['lower-third', 'standard'],
       ['tasks', 'tall'],
     ]);
@@ -107,42 +115,42 @@ describe('gallery card shapes', () => {
     ]);
   });
 
-  it("keeps today's overlays on a one column, two row Chat Box", () => {
-    // Two chat-like columns, five strips and ten plain cards make 24 cells: eight rows of three
-    // or twelve of two, so every span stays at both widths. (Socials and Stream Alerts swap
-    // shapes, and the Task List's portrait card is drawn plain.)
-    const shapes = [
-      'tall',
-      'standard',
-      'standard',
-      'wide',
-      'wide',
-      'standard',
-      'standard',
-      'wide',
-      'wide',
-      'standard',
-      'standard',
-      'wide',
-      'tall',
-      'standard',
-      'standard',
-      'standard',
-      'standard',
+  it("lays today's overlays out in the gallery's rows", () => {
+    // At three columns, row by row: the Chat Box column with Event List, Emote Wall, Emote Combo and
+    // Sub Sprout beside it; the IRL HUD strip and Weather; the Follower Goal, Bits & Kicks Goal and
+    // Top Supporters; the Stream Alerts strip and End Credits; Socials and the Counter strip; the
+    // Sub Goal strip and Stream Countdown; Featured Message and the Now Playing strip; Stream
+    // Frames, Lower Thirds and Task List. 27 cells, nine full rows.
+    const rows = [
+      ['chat-box', 'tall'],
+      ['event-list', 'standard'],
+      ['emote-wall', 'standard'],
+      ['emote-combo', 'standard'],
+      ['sub-sprout', 'standard'],
+      ['irl-hud', 'wide'],
+      ['weather', 'standard'],
+      ['follower-goal', 'standard'],
+      ['bits-goal', 'standard'],
+      ['leaderboard', 'standard'],
+      ['stream-alerts', 'wide'],
+      ['credits', 'standard'],
+      ['socials', 'standard'],
+      ['counter', 'wide'],
+      ['goal', 'wide'],
+      ['countdown', 'standard'],
+      ['featured', 'standard'],
+      ['now-playing', 'wide'],
+      ['frames', 'standard'],
+      ['lower-third', 'standard'],
+      ['tasks', 'standard'],
     ];
-    expect(getGalleryShapes(OVERLAYS, 3)).toEqual(shapes);
-    expect(getGalleryShapes(OVERLAYS, 2)).toEqual(shapes);
-  });
-
-  it('gives Socials a plain card and Stream Alerts the wide one in the gallery', () => {
-    const socials = OVERLAYS.findIndex((widget) => widget.id === 'socials');
-    const alerts = OVERLAYS.findIndex((widget) => widget.id === 'stream-alerts');
-    expect(socials).toBeLessThan(alerts);
-    for (const columns of OVERLAY_COLUMNS) {
-      const shapes = getGalleryShapes(OVERLAYS, columns);
-      expect(shapes[socials], `${columns} columns`).toBe('standard');
-      expect(shapes[alerts], `${columns} columns`).toBe('wide');
-    }
+    const shapes = (columns: number) =>
+      getGalleryShapes(OVERLAYS, columns).map((shape, index) => [OVERLAYS[index].id, shape]);
+    expect(shapes(3)).toEqual(rows);
+    // Two columns are a cell over, so Stream Alerts goes back to its own plain card there.
+    expect(shapes(2)).toEqual(
+      rows.map(([id, shape]) => [id, id === 'stream-alerts' ? 'standard' : shape]),
+    );
   });
 
   it('keeps the bento spans while the overlays fill whole rows', () => {
@@ -154,7 +162,7 @@ describe('gallery card shapes', () => {
   });
 
   it('widens the last standard card when the grid is one cell short', () => {
-    // The four overlays before Sub Goal: Chat Box and three standard cards.
+    // Chat Box, two plain cards and the Stream Alerts strip fill two rows at either width.
     const four = (['chat-box', 'emote-wall', 'sub-sprout', 'stream-alerts'] as const).map(
       getWidget,
     );
@@ -169,6 +177,12 @@ describe('gallery card shapes', () => {
     // Five tools would leave two columns a cell short, so the last widens; six fill them.
     expect(getGalleryShapes(TOOLS.slice(0, 5), 2)).toEqual([...Array(4).fill('standard'), 'wide']);
     expect(getGalleryShapes(TOOLS, 2)).toEqual(Array(6).fill('standard'));
+  });
+
+  it('never widens a card whose demo would stretch its row', () => {
+    // One cell short, but every standard card here is a 16:9 or square demo with no strip cut.
+    const short = (['chat-box', 'emote-wall', 'sub-sprout', 'credits'] as const).map(getWidget);
+    expect(getGalleryShapes(short, 3)).not.toContain('wide');
   });
 
   it('drops the wide cards, then the tall one, then every span, when a new overlay would leave a hole', () => {

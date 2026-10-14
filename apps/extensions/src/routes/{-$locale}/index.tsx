@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router';
-import type { ComponentType } from 'react';
+import { type ComponentType, useEffect, useMemo, useState } from 'react';
 import { CtaBand } from '#/components/cta-band';
 import { ExternalLink } from '#/components/external-link';
 import { FaqList } from '#/components/faq-list';
@@ -20,6 +20,7 @@ import { type CardShape, getGalleryShapes, WidgetCard } from '#/components/landi
 import { SiteLayout } from '#/components/site-layout';
 import { StepsList } from '#/components/steps-list';
 import { BUTTON_PRIMARY, BUTTON_SECONDARY } from '#/components/ui/button-styles';
+import { WidgetFilter } from '#/components/widget-filter';
 import { type Locale, type TranslationKey, translate, useI18n } from '#/lib/i18n';
 import { getParamsLocale } from '#/lib/i18n/paths';
 import type { FaqEntry } from '#/lib/i18n/seo';
@@ -27,7 +28,16 @@ import { LINKS } from '#/lib/links';
 import { pageUrl } from '#/lib/seo/head';
 import { getSeoHead, PAGE_META } from '#/lib/seo/pages';
 import { getItemListNode } from '#/lib/seo/structured-data';
-import { OVERLAYS, TOOLS, WIDGETS, type WidgetPlatform } from '#/lib/widgets';
+import {
+  CATEGORY_PARAM,
+  type CategoryFilter,
+  inCategory,
+  OVERLAYS,
+  readCategory,
+  TOOLS,
+  WIDGETS,
+  type WidgetPlatform,
+} from '#/lib/widgets';
 
 export const Route = createFileRoute('/{-$locale}/')({
   head: ({ params }) => {
@@ -221,22 +231,22 @@ function WorksWith() {
   );
 }
 
-// Card shapes come from getGalleryShapes, solved once per grid width: Chat Box (portrait) stays a
-// single column two rows tall and the other overlays fill in beside and under it, the goal strip
-// runs two columns wide, and the tools are a 2×2 of flat cards. Dense flow backfills a span that
-// can't fit.
+// Card shapes come from getGalleryShapes, solved per grid width for the cards on show: Chat Box
+// (portrait) stays a single column two rows tall and the other overlays fill in beside and under
+// it, the goal strips run two columns wide, and the tools are flat cards, two to a row. Dense flow
+// backfills a span that can't fit. A category filter leaves fewer cards, so they're solved again.
 const GALLERY_GROUPS = [
   {
     key: 'overlays',
     widgets: OVERLAYS,
-    shapes: { sm: getGalleryShapes(OVERLAYS, 2), lg: getGalleryShapes(OVERLAYS, 3) },
+    lgColumns: 3,
     lead: 'home.overlaysLead',
     columns: 'sm:grid-cols-2 lg:grid-cols-3',
   },
   {
     key: 'tools',
     widgets: TOOLS,
-    shapes: { sm: getGalleryShapes(TOOLS, 2), lg: getGalleryShapes(TOOLS, 2) },
+    lgColumns: 2,
     lead: 'home.toolsLead',
     columns: 'sm:grid-cols-2',
   },
@@ -257,6 +267,32 @@ const LG_SPAN: Record<CardShape, string> = {
 
 function Gallery() {
   const { t } = useI18n();
+  const [category, setCategory] = useState<CategoryFilter>('all');
+  // A shared link's filter, read after mount so the prerendered page and the first render agree.
+  useEffect(() => {
+    setCategory(readCategory(new URLSearchParams(window.location.search).get(CATEGORY_PARAM)));
+  }, []);
+  const choose = (next: CategoryFilter) => {
+    setCategory(next);
+    // Kept in the address bar, so the filtered gallery can be shared; "All" is the plain page.
+    const url = new URL(window.location.href);
+    if (next === 'all') url.searchParams.delete(CATEGORY_PARAM);
+    else url.searchParams.set(CATEGORY_PARAM, next);
+    window.history.replaceState(window.history.state, '', url);
+  };
+  const groups = useMemo(
+    () =>
+      GALLERY_GROUPS.map((group) => {
+        const widgets = inCategory(group.widgets, category);
+        const shapes = {
+          sm: getGalleryShapes(widgets, 2),
+          lg: getGalleryShapes(widgets, group.lgColumns),
+        };
+        return { ...group, widgets, shapes };
+      }).filter((group) => group.widgets.length > 0),
+    [category],
+  );
+
   return (
     <section id="widgets" aria-labelledby="widgets-title" className="scroll-mt-20">
       <SectionHeading
@@ -264,8 +300,9 @@ function Gallery() {
         title={t('home.galleryTitle')}
         lead={t('home.galleryLead')}
       />
+      <WidgetFilter widgets={WIDGETS} value={category} onChange={choose} className="mt-8" />
       <div className="mt-10 space-y-14">
-        {GALLERY_GROUPS.map((group) => (
+        {groups.map((group) => (
           <div key={group.key}>
             <div className="mb-5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
               <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">

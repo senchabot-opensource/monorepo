@@ -29,6 +29,22 @@ export const RESERVED_COMMANDS: readonly string[] = [
   'stopstream',
   'startrecord',
   'stoprecord',
+  'events',
+  'credits',
+  'top',
+  'lt',
+  'task',
+  'tasks',
+  'done',
+  'edit',
+  'remove',
+  'leave',
+  'next',
+  'queue',
+  'combo',
+  'feature',
+  'q',
+  'bitsgoal',
 ];
 
 const ACTIONS: Record<string, 'add' | 'remove' | 'set' | 'reset'> = {

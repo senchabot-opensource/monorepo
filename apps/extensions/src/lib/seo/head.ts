@@ -36,6 +36,54 @@ export const OG_IMAGE_SIZE = { width: 1200, height: 630 } as const;
 
 // The images are in English on both versions of a page; only their alt text is translated.
 export const OG_IMAGES = {
+  'now-playing': {
+    path: '/og/socials.png',
+    alt: {
+      en: 'Now Playing, a song overlay with the cover art, title and artist of the music you’re playing',
+      de: 'Aktueller Song, ein Song-Overlay mit Cover, Titel und Künstler der Musik, die du gerade hörst',
+      tr: "Şimdi Çalıyor, dinlediğin müziğin kapak görselini, adını ve sanatçısını gösteren şarkı overlay'i",
+      es: 'Sonando Ahora, un overlay con la portada, el título y el artista de la música que estás escuchando',
+      fr: "En écoute, un overlay avec la pochette, le titre et l'artiste de la musique que tu écoutes",
+      ja: '再生中の曲: 今聴いている音楽のジャケット画像、曲名、アーティストを表示するオーバーレイ',
+      pt: 'Tocando Agora, um overlay com a capa, o título e o artista da música que você está ouvindo',
+    },
+  },
+  'emote-combo': {
+    path: '/og/emote-wall.png',
+    alt: {
+      en: 'Emote Combo, a combo counter overlay for emotes in Twitch and Kick chat',
+      de: 'Emote-Combo, ein Combo-Zähler-Overlay für Emotes im Twitch- und Kick-Chat',
+      tr: "Emote Kombosu, Twitch ve Kick sohbetindeki emote'lar için kombo sayacı overlay'i",
+      es: 'Combo de Emotes, un overlay contador de combos de emotes del chat de Twitch y Kick',
+      fr: "Combo d'emotes, un overlay qui compte les combos d'emotes du chat Twitch et Kick",
+      ja: 'エモートコンボ: TwitchとKickのチャットのエモートを数えるコンボカウンターオーバーレイ',
+      pt: 'Combo de Emotes, um overlay que conta combos de emotes no chat da Twitch e da Kick',
+    },
+  },
+  featured: {
+    path: '/og/chat-box.png',
+    alt: {
+      en: 'Featured Message, a chat highlight and Q&A overlay for Twitch and Kick',
+      de: 'Hervorgehobene Nachricht, ein Overlay für Chat-Highlights und Fragerunden auf Twitch und Kick',
+      tr: "Öne Çıkan Mesaj, Twitch ve Kick sohbeti için mesaj ve soru-cevap overlay'i",
+      es: 'Mensaje Destacado, un overlay de mensajes del chat y preguntas para Twitch y Kick',
+      fr: 'Message mis en avant, un overlay de messages du chat et de questions pour Twitch et Kick',
+      ja: '注目メッセージ: TwitchとKickのチャットのメッセージと質問を表示するオーバーレイ',
+      pt: 'Mensagem em Destaque, um overlay de mensagens do chat e perguntas para Twitch e Kick',
+    },
+  },
+  'bits-goal': {
+    path: '/og/goal.png',
+    alt: {
+      en: 'Bits & Kicks Goal, a goal bar overlay that Twitch Bits and Kick Kicks fill',
+      de: 'Bits- und Kicks-Ziel, ein Zielbalken-Overlay, das Twitch-Bits und Kick-Kicks füllen',
+      tr: "Bits & Kicks Hedefi, Twitch Bits'leri ve Kick Kicks'leriyle dolan hedef barı overlay'i",
+      es: 'Meta de Bits y Kicks, un overlay de barra de meta que llenan los Bits de Twitch y los Kicks de Kick',
+      fr: "Objectif de Bits et Kicks, une barre d'objectif que remplissent les Bits de Twitch et les Kicks de Kick",
+      ja: 'Bits・Kicks目標: TwitchのBitsとKickのKicksで埋まる目標バーのオーバーレイ',
+      pt: 'Meta de Bits e Kicks, um overlay de barra de meta que os Bits da Twitch e os Kicks da Kick enchem',
+    },
+  },
   home: {
     path: '/og/home.png',
     alt: {

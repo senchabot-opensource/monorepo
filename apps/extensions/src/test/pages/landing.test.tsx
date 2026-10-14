@@ -1,9 +1,9 @@
 import { within } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { LOCALES, type Locale, translate } from '#/lib/i18n';
-import { getWidget, WIDGETS } from '#/lib/widgets';
-import { headings, inLocale, section } from '#/test/queries';
-import { renderRoute } from '#/test/render';
+import { getWidget, inCategory, WIDGETS } from '#/lib/widgets';
+import { en, headings, inLocale, section } from '#/test/queries';
+import { renderRoute, setupUser } from '#/test/render';
 
 interface JsonLdNode {
   '@type': string;
@@ -104,5 +104,43 @@ describe.each(LOCALES)('landing page in %s', (locale) => {
     expect(faq.mainEntity?.map((entry) => [entry.name, entry.acceptedAnswer.text])).toEqual(
       visibleFaq(locale),
     );
+  });
+});
+
+describe('landing page widget filter', () => {
+  const gallery = () => section(en('home.galleryTitle'));
+  const names = () =>
+    [...gallery().querySelectorAll('article h4')].map((heading) => heading.textContent);
+  const pick = (user: ReturnType<typeof setupUser>, key: 'all' | 'irl' | 'chat') =>
+    user.click(
+      within(gallery()).getByRole('radio', {
+        name: (name) => name.startsWith(`${en(`widgets.categories.${key}`)} `),
+      }),
+    );
+
+  it('shows one category at a time, hides an empty group and keeps the pick in the URL', async () => {
+    const user = setupUser();
+    await renderRoute('/');
+    await pick(user, 'irl');
+    expect(names()).toEqual([en('widgets.irlHud.name'), en('widgets.weather.name')]);
+    // No tool is an IRL widget, so the Tools heading goes too.
+    expect(within(gallery()).queryByRole('heading', { name: en('widgets.tools') })).toBeNull();
+    expect(new URL(window.location.href).searchParams.get('category')).toBe('irl');
+
+    await pick(user, 'all');
+    expect(names()).toHaveLength(WIDGETS.length);
+    expect(window.location.search).toBe('');
+  });
+
+  it('opens on the category of a shared link, and ignores one it does not know', async () => {
+    await renderRoute('/?category=chat');
+    await vi.waitFor(() =>
+      expect(names()).toEqual(inCategory(WIDGETS, 'chat').map((widget) => en(widget.nameKey))),
+    );
+  });
+
+  it('shows everything for an unknown category', async () => {
+    await renderRoute('/?category=nope');
+    expect(names()).toHaveLength(WIDGETS.length);
   });
 });

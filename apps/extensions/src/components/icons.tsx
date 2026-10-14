@@ -164,6 +164,48 @@ export function EventListIcon(props: IconProps) {
   );
 }
 
+/** A pair of eighth notes. */
+export function NowPlayingIcon(props: IconProps) {
+  return (
+    <StrokeIcon {...props}>
+      <path d="M9 18V5.5l11-2V16" />
+      <circle cx="6.5" cy="18" r="2.5" />
+      <circle cx="17.5" cy="16" r="2.5" />
+    </StrokeIcon>
+  );
+}
+
+/** A grinning face with a spark beside it: the same emote, again and again. */
+export function EmoteComboIcon(props: IconProps) {
+  return (
+    <StrokeIcon {...props}>
+      <circle cx="10.5" cy="13" r="7" />
+      <path d="M7.5 15a4 4 0 0 0 6 0M8.5 11h.01M12.5 11h.01" />
+      <path d="M19 2.5v4M17 4.5h4" />
+    </StrokeIcon>
+  );
+}
+
+/** A chat bubble with a star in it: one message picked out. */
+export function FeaturedIcon(props: IconProps) {
+  return (
+    <StrokeIcon {...props}>
+      <path d="M5 4.5h14A1.5 1.5 0 0 1 20.5 6v9a1.5 1.5 0 0 1-1.5 1.5h-8.5L6 20v-3.5H5A1.5 1.5 0 0 1 3.5 15V6A1.5 1.5 0 0 1 5 4.5Z" />
+      <path d="m12 7.3.95 1.95 2.15.3-1.55 1.5.37 2.15L12 12.2l-1.92 1 .37-2.15-1.55-1.5 2.15-.3Z" />
+    </StrokeIcon>
+  );
+}
+
+/** A cut gem, like a Bits cheer. */
+export function BitsGoalIcon(props: IconProps) {
+  return (
+    <StrokeIcon {...props}>
+      <path d="M7 4h10l4 5-9 11L3 9Z" />
+      <path d="M3 9h18M9 4l3 5 3-5M12 9v11" />
+    </StrokeIcon>
+  );
+}
+
 /** Tally marks: four strokes and the one across them. */
 export function CounterIcon(props: IconProps) {
   return (

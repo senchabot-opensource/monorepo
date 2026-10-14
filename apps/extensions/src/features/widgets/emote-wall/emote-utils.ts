@@ -427,3 +427,64 @@ export function getAnyEmoteUrls(
 
   return urls.slice(0, MAX_EMOTES_PER_MESSAGE);
 }
+
+/** One emote in a chat message, with the key that tells it apart from every other emote. */
+export type MessageEmote = {
+  /**
+   * `twitch:<id>` or `kick:<id>` for a platform's own emotes, which are told apart by id on
+   * their platform. `name:<name>` for 7TV, BTTV and FFZ emotes, which go by their name on both
+   * platforms, so the same 7TV emote in Twitch and Kick chat has one key.
+   */
+  key: string;
+  name: string;
+  url: string;
+};
+
+// Kick writes a native emote as [emote:id:name]; the name is anything up to the bracket.
+const KICK_EMOTE_TOKEN_RE = /\[emote:(\d+):([^\]\s]*)\]/g;
+
+/**
+ * Every distinct emote in a message, emote-only or not, with its name: the platform's own
+ * emotes first, in order, then the 7TV/BTTV/FFZ ones. Each emote comes once however often the
+ * message repeats it, and there's no cap. Text a native emote covers is never read again as a
+ * third-party name.
+ */
+export function getMessageEmotes(
+  input: EmoteChatInput,
+  thirdPartyMap?: Map<string, string> | null,
+): MessageEmote[] {
+  const found = new Map<string, MessageEmote>();
+  const add = (key: string, name: string, url: string) => {
+    if (!found.has(key)) found.set(key, { key, name, url });
+  };
+
+  let rest: string;
+  if (input.platform === 'kick') {
+    rest = input.message.replace(KICK_EMOTE_TOKEN_RE, (_, id: string, name: string) => {
+      add(`kick:${id}`, name, kickEmoteUrl(id));
+      return ' ';
+    });
+  } else {
+    const chars = [...input.message];
+    const covered = new Array<boolean>(chars.length).fill(false);
+    for (const range of parseTwitchEmoteRanges(input.emotes)) {
+      add(
+        `twitch:${range.id}`,
+        chars.slice(Math.max(0, range.start), range.end + 1).join(''),
+        twitchEmoteUrl(range.id),
+      );
+      for (let i = Math.max(0, range.start); i <= range.end && i < chars.length; i++) {
+        covered[i] = true;
+      }
+    }
+    rest = chars.map((char, i) => (covered[i] ? ' ' : char)).join('');
+  }
+
+  if (thirdPartyMap && thirdPartyMap.size > 0) {
+    for (const token of rest.split(/\s+/)) {
+      const url = token ? thirdPartyMap.get(token) : undefined;
+      if (url) add(`name:${token}`, token, url);
+    }
+  }
+  return [...found.values()];
+}

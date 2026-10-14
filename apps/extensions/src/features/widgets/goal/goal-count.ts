@@ -1,9 +1,10 @@
-import { MAX_GOAL_COUNT } from '#/lib/goal-url';
+import { type GoalType, MAX_GOAL_COUNT } from '#/lib/goal-url';
 import type { SubathonEvent } from '../subathon/subathon-events';
 
 /**
  * The count saved in OBS. Neither platform tells a logged-out page how many subs a channel has,
- * so the count is ours: the streamer's starting number plus every sub and gift seen since.
+ * so the count is ours: the streamer's starting number plus every sub and gift seen since (or,
+ * for a Bits & Kicks Goal, every Bit and Kick).
  */
 export interface GoalState {
   count: number;
@@ -48,7 +49,24 @@ export function subsIn(event: SubathonEvent): number {
   return 0;
 }
 
+/**
+ * How many a cheer adds to a Bits & Kicks Goal: its amount, Twitch Bits and Kick Kicks alike,
+ * since each is worth about a US cent. Subs, gifts and raids add none.
+ */
+export function bitsIn(event: SubathonEvent): number {
+  return event.kind === 'bits' ? event.amount : 0;
+}
+
+/** What an event adds to a goal of this type. */
+export const goalAmountIn = (type: GoalType, event: SubathonEvent): number =>
+  type === 'bits' ? bitsIn(event) : subsIn(event);
+
 export const COMMAND = '!goal';
+/** The Bits & Kicks Goal's own command, so it and a Sub Goal on the same channel never mix. */
+export const BITS_COMMAND = '!bitsgoal';
+
+/** The chat command a goal of this type answers to. */
+export const goalCommand = (type: GoalType) => (type === 'bits' ? BITS_COMMAND : COMMAND);
 
 export type GoalCommand =
   | { action: 'add' | 'remove' | 'set'; amount: number }
@@ -64,12 +82,13 @@ const ACTIONS: Record<string, GoalCommand['action']> = {
 };
 
 /**
- * Reads "!goal add|remove [n]", "!goal set <n>" or "!goal reset". Add and remove take 1 when the
- * number is left out. Null for anything else, or a number past MAX_GOAL_COUNT.
+ * Reads "!goal add|remove [n]", "!goal set <n>" or "!goal reset" (or the same after `name`, e.g.
+ * !bitsgoal). Add and remove take 1 when the number is left out. Null for anything else, or a
+ * number past MAX_GOAL_COUNT.
  */
-export function parseGoalCommand(message: string): GoalCommand | null {
+export function parseGoalCommand(message: string, name = COMMAND): GoalCommand | null {
   const [command, word = '', amount, ...rest] = message.trim().split(/\s+/);
-  if (command?.toLowerCase() !== COMMAND || rest.length > 0) return null;
+  if (command?.toLowerCase() !== name || rest.length > 0) return null;
   const action = ACTIONS[word.toLowerCase()];
   if (!action) return null;
   if (action === 'reset') return amount === undefined ? { action } : null;

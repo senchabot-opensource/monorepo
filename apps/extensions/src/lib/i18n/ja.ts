@@ -50,6 +50,8 @@ export const ja: typeof en = {
     setupGuideTitle: '設定方法',
     faqTitle: 'よくある質問',
     moreWidgets: 'ほかのウィジェット',
+    filterWidgets: 'カテゴリでウィジェットを絞り込む',
+    filterShowing: '{total}個中{count}個のウィジェットを表示',
     nextSteps: {
       title: '配信ソフトに追加しましょう',
       addSource:
@@ -102,6 +104,15 @@ export const ja: typeof en = {
   widgets: {
     overlays: 'オーバーレイ',
     tools: 'ツール',
+    categories: {
+      all: 'すべて',
+      chat: 'チャット',
+      alerts: 'アラート',
+      goals: '目標・タイマー',
+      interactive: 'インタラクティブ',
+      scene: 'シーン',
+      irl: 'IRL',
+    },
     chatBox: {
       name: 'チャットボックス',
       tagline: 'TwitchとKickのチャットをひとつのオーバーレイに。7TV、BTTV、FFZのエモートにも対応。',
@@ -183,6 +194,24 @@ export const ja: typeof en = {
     tasks: {
       name: 'タスクリスト',
       tagline: '作業配信向けのタスクリスト。チャットで !task と打って追加し、!done でチェックを付けます。',
+    },
+    nowPlaying: {
+      name: '再生中の曲',
+      tagline:
+        '今聴いている曲をジャケット画像つきで表示。ListenBrainzまたはLast.fmから読み込みます。',
+    },
+    emoteCombo: {
+      name: 'エモートコンボ',
+      tagline:
+        'チャットで同じエモートが連打されると、何人が乗ったかを大きなコンボカウンターで表示します。',
+    },
+    featured: {
+      name: '注目メッセージ',
+      tagline: 'TwitchやKickのチャットから、視聴者のメッセージや質問を配信画面に表示します。',
+    },
+    bitsGoal: {
+      name: 'Bits・Kicks目標',
+      tagline: 'BitsのCheerとKicksのギフトで埋まり、最後にトロフィーが登場する目標バー。',
     },
     raffle: {
       name: '抽選',
@@ -310,10 +339,10 @@ export const ja: typeof en = {
       'OBS Studioをはじめ、ブラウザソースに対応したソフトで使えます。ウィジェットURLをブラウザソースとして追加し、設定ページに表示されるサイズにしてください。',
     faq4Q: 'TwitchとKickを同時に使えますか？',
     faq4A:
-      'はい。チャットボックス、エモートウォール、Sub Sprout、Subathon Timer、配信アラート、サブスク目標、カウンター、イベントリスト、エンドロール、参加待ちリスト、トップサポーター、テロップ、タスクリスト、チャット投票、配信カウントダウン、IRL HUDオーバーレイ、ルーレットは、ひとつのURLにTwitchとKickのチャンネルを両方指定できます。OBS Bridgeも両方のチャットを同時に聞き取れます。抽選は一度にひとつのプラットフォームで動きます。',
+      'はい。チャットボックス、エモートウォール、Sub Sprout、Subathon Timer、配信アラート、サブスク目標、カウンター、イベントリスト、エンドロール、参加待ちリスト、トップサポーター、テロップ、タスクリスト、エモートコンボ、注目メッセージ、Bits・Kicks目標、チャット投票、配信カウントダウン、IRL HUDオーバーレイ、ルーレットは、ひとつのURLにTwitchとKickのチャンネルを両方指定できます。OBS Bridgeも両方のチャットを同時に聞き取れます。抽選は一度にひとつのプラットフォームで動きます。',
     faq5Q: 'あとからウィジェットを変更するには？',
     faq5A:
-      '設定ページを開いて好きなように設定し、ブラウザソースのURLを差し替えてください。チャットボックス、エモートウォール、Sub Sprout、Subathon Timer、配信アラート、サブスク目標、カウンター、イベントリスト、エンドロール、参加待ちリスト、トップサポーター、テロップ、タスクリスト、チャット投票、配信フレーム、SNSリンク、配信カウントダウン、IRL HUDオーバーレイ、天気、ルーレットは既存のURLも開けます。設定ページに貼り付ければ設定が戻ってくるので、変えたいところだけ変更できます。',
+      '設定ページを開いて好きなように設定し、ブラウザソースのURLを差し替えてください。チャットボックス、エモートウォール、Sub Sprout、Subathon Timer、配信アラート、サブスク目標、カウンター、イベントリスト、エンドロール、参加待ちリスト、トップサポーター、テロップ、タスクリスト、エモートコンボ、注目メッセージ、Bits・Kicks目標、再生中の曲、チャット投票、配信フレーム、SNSリンク、配信カウントダウン、IRL HUDオーバーレイ、天気、ルーレットは既存のURLも開けます。設定ページに貼り付ければ設定が戻ってくるので、変えたいところだけ変更できます。',
     faq6Q: 'アップデート後もウィジェットURLは使えますか？',
     faq6A:
       'はい。アップデートしても既存のURLの設定項目と値はそのまま使えるので、シーンに置いてあるウィジェットのURLを新しくする必要はありません。',
@@ -1261,6 +1290,240 @@ export const ja: typeof en = {
     faq4Q: '別のチャットボットがすでに !wins を使っています。どうすればいいですか？',
     faq4A:
       '「チャットコマンド」欄でカウンターに !wincount のような専用のコマンドを付け、新しいURLをOBSに貼り付けてください。数はコマンドごとに保存されるので、新しいコマンドは開始カウントから始まります。',
+  },
+  nowPlaying: {
+    breadcrumb: '再生中の曲の設定',
+    title: '再生中の曲の設定',
+    intro:
+      '今聴いている曲を、ジャケット画像、曲名、アーティスト名とともに配信画面に表示します。曲はListenBrainzまたはLast.fmから読み込むので、Spotifyやほとんどの音楽プレーヤーで使え、Twitch、Kick、そのほかのプラットフォームでも同じように動きます。新しい曲は自動でスライドして表示され、音楽が止まるとカードがスライドして消えます。ログイン、チャット、APIキーは不要です。',
+    sectionSource: '音楽の取得元',
+    source: 'サービス',
+    sourceTip:
+      'オーバーレイが曲を読み込む場所です。ListenBrainzはSpotifyと連携でき、無料のオープンなサービスです。すでにLast.fmでscrobbleしているならLast.fmを選んでください。',
+    user: 'ユーザー名',
+    userTip:
+      'ListenBrainzのユーザー名です。listenbrainz.org/user/yourname の yourname の部分です。プロフィールのリンクを貼り付けてもかまいません。',
+    userTipLastfm:
+      'Last.fmのユーザー名です。last.fm/user/yourname の yourname の部分です。プロフィールのリンクを貼り付けてもかまいません。',
+    userPlaceholder: '例: yourname',
+    userNeeded:
+      'ユーザー名を入力するとウィジェットURLが作成されます。それまでプレビューではサンプルの曲が流れます。',
+    check: '確認',
+    checking: '確認中…',
+    checkPlaying: '再生中: {artist}「{title}」',
+    checkPlayingTitle: '再生中: 「{title}」',
+    checkQuiet:
+      '{service}に{user}は見つかりましたが、今は何も再生されていません。曲を再生してからもう一度確認してください。',
+    checkMissing: '{service}に{user}が見つかりません。つづりを確認してください。',
+    checkError: '{service}に接続できません。少したってからもう一度お試しください。',
+    listenbrainzHint:
+      'Spotifyで聴いていますか？先に無料のListenBrainzアカウントと連携してください。',
+    listenbrainzConnect: 'Spotifyを連携する',
+    lastfmHint:
+      'Last.fmは、最近聴いた曲が公開されている間だけ曲を共有します。オーバーレイには小さくLast.fmのクレジットが表示されます。',
+    lastfmPrivacy: 'プライバシー設定',
+    sectionDisplay: '表示',
+    layout: 'レイアウト',
+    layoutTip:
+      'カードはジャケット画像の横に曲名、アーティスト、アルバムを表示します。バーはジャケット画像、曲名、アーティストを1行に収めます。',
+    layouts: {
+      card: 'カード',
+      pill: 'バー',
+    },
+    art: 'ジャケット画像',
+    artTip:
+      '曲の横に表示するアルバムのジャケット画像です。画像がないときは音符のアイコンが入ります。',
+    album: 'アルバム名',
+    albumTip: 'サービスがアルバムを把握している場合、アーティストの下に表示します。',
+    hideStopped: '音楽が止まったら隠す',
+    hideStoppedTip:
+      '音楽が止まると曲がスライドして消えます。オフにすると、次の曲が始まるまで最後の曲が暗くなったまま表示されます。',
+    hideAfter: '隠すまでの時間',
+    hideAfterTip:
+      '音楽が止まってから最後の曲を表示しておく時間です。曲と曲の間の短い切れ目で消えないようにします。',
+    previewTitle: '再生中の曲のプレビュー',
+    previewIframeTitle: '再生中の曲のプレビュー',
+    previewHint:
+      'プレビューではサンプルの曲が流れます。ユーザー名を入力して「あなたの音楽」を押すと、今再生中の曲を確認できます。',
+    testNext: '次の曲',
+    testStop: '音楽を止める',
+    testLive: 'あなたの音楽',
+    guideStep3: '幅を640、高さを160に設定します。',
+    guideStep4: '曲を再生します。数秒で表示され、ジャケット画像があれば一緒に表示されます。',
+    overlay: {
+      label: '再生中',
+    },
+    faq1Q: 'Spotifyの曲を表示するには？',
+    faq1A:
+      '無料のListenBrainzアカウントを作り、設定のConnect servicesでSpotifyを連携してから、ここにListenBrainzのユーザー名を入力します。すでにLast.fmでscrobbleしている場合は、SpotifyをLast.fmに連携することもできます。その場合はLast.fmを選び、Last.fmのユーザー名を入力してください。',
+    faq2Q: 'どの音楽プレーヤーで使えますか？',
+    faq2A:
+      '曲が始まったときに、再生中の曲をListenBrainzやLast.fmに送るプレーヤーならどれでも使えます。Spotifyはどちらのサービスとも設定から連携できます。ブラウザで聴くYouTube Music、Apple Music、SoundCloud、Deezerなどは、無料の拡張機能Web Scrobblerで送れます。パソコンやスマホのプレーヤーの多くにも、scrobble用のプラグインやアプリがあります。',
+    faq3Q: '新しい曲の表示が遅れるのはなぜですか？',
+    faq3A:
+      'オーバーレイは12秒ごとに曲を確認しますが、プレーヤーやSpotifyがListenBrainzやLast.fmに知らせるまでにも時間がかかるため、新しい曲が表示されるまで最大1分ほどかかることがあります。音楽が止まると、設定した時間のあとに曲がスライドして消えます。隠す設定をオフにしている場合は、暗くなったまま残ります。',
+    faq4Q: '聴いている曲は公開されますか？',
+    faq4A:
+      'はい。オーバーレイは、誰でもListenBrainzやLast.fmで見られるのと同じ公開プロフィールを読み込み、ユーザー名はウィジェットURLに含まれます。表示するのは今再生中の曲だけで、履歴は表示しません。Last.fmのプライバシー設定で最近聴いた曲を非公開にすると、オーバーレイからも見えなくなります。',
+  },
+  emoteCombo: {
+    breadcrumb: 'エモートコンボの設定',
+    title: 'エモートコンボの設定',
+    intro:
+      'TwitchとKickのチャット向けのコンボカウンターです。視聴者が同じエモートを次々に送ると、そのエモートが配信画面に大きく表示され、×3、×4、×5と新しい人が加わるたびにカウントが弾みます。1人1回だけ数え、TwitchとKickのチャットは合算され、7TV、BTTV、FFZのエモートも数えます。チャットの流れが変わると最終カウントが少しのあいだ残ってからフェードアウトし、その下に配信のベストコンボが表示されます。',
+    sectionCombo: 'コンボ',
+    emotes: 'エモート',
+    emotesTip:
+      'チェックしたプロバイダーのエモートも、TwitchとKickのエモートと一緒に数えます。7TVはTwitchとKickの両方のチャット、BTTVとFFZはTwitchのチャットのみで使えます。両方のチャットの同じ7TVエモートは1つのコンボになります。',
+    emotesNone: 'オフ',
+    window: 'コンボの受付時間',
+    windowTip:
+      'コンボが次の人を待つ時間です。この時間内に新しい人が加わらないとコンボは終わり、最終カウントを表示します。',
+    seconds: '{n}秒',
+    min: '表示までの人数',
+    minTip: 'コンボが表示されるまでに、何人の視聴者がそのエモートを送る必要があるかです。',
+    best: 'ベストコンボ',
+    bestTip:
+      '配信のベストコンボをカウンターの下に表示します。コンボのないまま12時間たつか、モデレーターが !combo reset と打つとリセットされます。',
+    size: 'サイズ',
+    sizeTip: 'エモートとカウントの大きさです。',
+    sectionCommands: 'チャットコマンド',
+    commandsIntro: 'あなたとモデレーターが、TwitchかKickのチャットで使えます。',
+    cmdReset: 'ベストコンボをリセット',
+    previewTitle: 'エモートコンボのプレビュー',
+    previewIframeTitle: 'エモートコンボのプレビュー',
+    previewHint:
+      'プレビューではサンプルのエモートでコンボを再生しています。配信では、あなたのチャットだけがコンボを始めます。',
+    testStart: 'コンボ開始',
+    testChatter: '1人追加',
+    testReset: 'ベストをリセット',
+    guideStep3: '幅を600、高さを400に設定します。',
+    guideStep4:
+      '何人かの視聴者に同じエモートを送ってもらいましょう。十分な人数がそろうとコンボが表示されます。',
+    overlay: {
+      combo: 'コンボ',
+      best: 'ベスト',
+      newBest: '新記録！',
+    },
+    faq1Q: 'コンボには何が数えられますか？',
+    faq1A:
+      'そのエモートが入ったチャットメッセージすべてです。エモートだけでも、文の中にあってもかまいません。1つのコンボで数えるのは1人1回なので、同じ人がもう一度送ってもカウントは増えず、Nightbotのようなボットは数えません。コンボの受付時間（初期設定は8秒）の中で新しい人が加わる限り、コンボは続きます。2つのコンボが同時に進むときは、大きいほうが表示されます。',
+    faq2Q: 'どのエモートが使えますか？',
+    faq2A:
+      'TwitchとKickのエモートなら、グローバル、チャンネル、サブスク用のどれでも使えます。「エモート」でチェックしていれば、7TV、BTTV、FFZのエモートも使えます。7TVは両方のチャットで使え、BTTVとFFZにはTwitchチャンネルが必要です。',
+    faq3Q: 'TwitchとKickは合算されますか？',
+    faq3A:
+      'はい。両方のチャンネルを入力すると、両方のチャットの視聴者が同じコンボに数えられます。7TV、BTTV、FFZのエモートは名前で区別するので、両方のチャットの同じ7TVエモートは1つのコンボになります。TwitchとKick独自のエモートはプラットフォームごとに別物なので、それぞれのコンボになります。',
+    faq4Q: 'ベストコンボをリセットするには？',
+    faq4A:
+      'あなたかモデレーターが、TwitchかKickのチャットで !combo reset と打ちます。コンボのないまま12時間たつとベストコンボは自動でリセットされるので、配信ごとに新しく始まります。',
+  },
+  featured: {
+    breadcrumb: '注目メッセージの設定',
+    title: '注目メッセージの設定',
+    intro:
+      'TwitchとKickのチャットから、視聴者の言葉を配信画面に映せます。モデレーターが !feature と名前を打つと、その視聴者の最新のメッセージが名前の色やバッジ、エモートつきで表示されます。視聴者は !q で質問でき、!q next で順番に取り上げるQ&Aにも使えます。',
+    sectionMessages: 'メッセージ',
+    mode: 'コマンド',
+    modeTip:
+      '使えるチャットコマンドです。モデレーターがメッセージを表示する !feature、視聴者が質問する !q、またはその両方を選べます。',
+    modes: {
+      both: '両方',
+      feature: 'ピックアップ',
+      qa: 'Q&A',
+    },
+    hide: '自動で消すまで',
+    hideTip:
+      'メッセージが自動で消えるまでの時間です。0にすると、モデレーターが消すか次のメッセージを出すまで表示されたままになります。',
+    hideOff: 'モデレーターが消すか、次のメッセージを出すまで表示されたままです。',
+    waiting: '質問待ちバッジ',
+    waitingTip: '待っている質問の数を、表示中のメッセージの横か、単独で表示します。',
+    sizeTip:
+      '名前とメッセージの大きさです。長いメッセージはカードに収まるよう自動で小さくなります。',
+    sectionCommands: 'チャットコマンド',
+    commandsIntro:
+      'TwitchかKickのチャットで打ちます。それぞれ、誰でも使えるか、配信者とモデレーターだけが使えるかを示しています。',
+    cmdNameExample: '名前',
+    cmdQuestionExample: '次は何のゲーム？',
+    cmdFeature: 'モデレーター：その視聴者の最新のメッセージを表示します',
+    cmdFeatureOff: 'モデレーター：表示を消します',
+    cmdAsk: '誰でも：質問します。もう一度打つと質問を差し替えます',
+    cmdNext: 'モデレーター：いちばん古い質問を表示します',
+    cmdSkip: 'モデレーター：いちばん古い質問を表示せずに飛ばします',
+    cmdClear: 'モデレーター：待っている質問をすべて消します',
+    cmdOff: 'モデレーター：表示中の質問を消します',
+    previewTitle: '注目メッセージのプレビュー',
+    previewIframeTitle: '注目メッセージのプレビュー',
+    previewHint:
+      'プレビューでは模擬のチャットが流れます。配信では、あなたとモデレーターだけがメッセージを表示できます。',
+    testFeature: 'メッセージを表示',
+    testAsk: '質問する',
+    testNext: '次の質問',
+    testHide: '消す',
+    testMessage: 'チャットからこんにちは！注目メッセージは配信画面でこう見えます。',
+    testQuestion: '次は何のゲームをしますか？',
+    guideStep3: '幅を720、高さを240に設定します。',
+    guideStep4: 'チャットに何か書いてから、!feature と自分の名前を打って画面に出してみてください。',
+    overlay: {
+      question: '質問',
+      waitingOne: '質問 1件待ち',
+      waitingMany: '質問 {count}件待ち',
+    },
+    faq1Q: 'モデレーターはどうやってメッセージを表示しますか？',
+    faq1A:
+      'TwitchかKickのチャットで、!feature @senchabot のように !feature と視聴者の名前を打ちます。どちらのチャットのメッセージでも、その視聴者の最新のメッセージが名前の色、バッジ、エモートつきで表示されます。!feature だけを打つと消えます。',
+    faq2Q: 'Q&Aはどう使いますか？',
+    faq2A:
+      '視聴者は !q のあとに質問を200文字まで打ちます。待っている質問はひとり1つで、もう一度打つと差し替わります。配信者かモデレーターが !q next でいちばん古い質問を表示し、!q skip で飛ばし、!q clear ですべて消します。',
+    faq3Q: 'どのメッセージを表示できますか？',
+    faq3A:
+      'ブラウザソースを読み込んでからチャットした最新500人それぞれの、最後のメッセージです。コマンド、返信、ボットは除かれ、タイムアウト、BAN、削除されたメッセージは画面からも消えます。',
+    faq4Q: 'OBSを閉じたり、ブラウザソースを再読み込みしたりするとどうなりますか？',
+    faq4A:
+      '待っている質問と表示中のメッセージはOBSの中に保存されるので、そのままの状態で戻ります。最初からやり直すには !q clear と打ってください。',
+  },
+  bitsGoal: {
+    breadcrumb: 'Bits・Kicks目標の設定',
+    title: 'Bits・Kicks目標の設定',
+    intro:
+      'TwitchとKick向けのBits・Kicks目標バー。両方のチャットのBitsのCheerとKicksのギフトが、その数だけバーを埋めます。目標を達成すると、達成させた視聴者の名前とともにトロフィーがバーに降ってきます。カウントの開始値と目標を決めれば、モデレーターがチャットからカウントを修正できます。',
+    defaultTitle: 'BITS・KICKS目標',
+    startTip:
+      'カウントの開始値です。新しい目標なら0、すでに集まっているBitsとKicksがあればその数を入れます。あとで変えると、新しい数からカウントし直します。',
+    countsHint:
+      'CheerはそのBits数、ギフトはそのKicks数を1対1で加算します。500 Bitsも500 Kicksも500加算です。サブスクとギフトサブはここでは加算されません。',
+    iconTip: '宝石の代わりに目標に使う絵文字です（例: 💎）。空欄にすると宝石が使われます。',
+    iconPlaceholder: '宝石',
+    showPops: '新しいCheerを表示',
+    showPopsTip: 'CheerやKicksのギフトのたびに、視聴者の名前と数（例: +500）が浮かび上がります。',
+    commandsIntro:
+      '配信者とモデレーターは、TwitchやKickのチャットからカウントを修正できます。たとえば、OBSを閉じていたあいだに入ったBitsを追加するときに使います。コマンドは !bitsgoal なので、!goal を使うサブスク目標と並べて使えます。',
+    cmdAdd: 'カウントにBitsとKicksを追加します。数を省略すると1',
+    cmdRemove: 'カウントからBitsとKicksを減らします。数を省略すると1',
+    previewTitle: 'Bits・Kicks目標のプレビュー',
+    previewIframeTitle: 'Bits・Kicks目標のプレビュー',
+    previewHint:
+      'プレビューでは目標に届くまで模擬のCheerとKicksが流れ、達成すると最初からやり直します。配信では、カウントを増やすのはあなたのチャットだけです。',
+    testCheer: '{count} BitsでCheer',
+    testKicks: '{count} Kicksを送る',
+    widgetUrlInvalid: 'Bits・Kicks目標のURLではありません。',
+    subGoalUrl: 'これはサブスク目標のURLです。サブスク目標の設定ページで編集してください。',
+    bitsGoalUrl: 'これはBits・Kicks目標のURLです。Bits・Kicks目標の設定ページで編集してください。',
+    guideStep2: 'コピーしたBits・Kicks目標のURLを貼り付けます。',
+    guideStep4:
+      'カウントがずれたときは、あなたかモデレーターがチャットで !bitsgoal set を使って直せます。',
+    faq1Q: '何が目標にカウントされますか？',
+    faq1A:
+      'TwitchチャットのBitsのCheerと、KickチャンネルのKicksのギフトが、それぞれの数だけ加算されます。500 BitsのCheerなら500です。サブスク、ギフトサブ、レイドはここでは加算されません。サブスクはサブスク目標で数えます。',
+    faq2Q: 'なぜBitsとKicksは同じ扱いなのですか？',
+    faq2A:
+      '1 Bitも1 Kickも、配信者にとってはおよそ1米セントの価値なので、目標では1対1で数えます。100 Bitsも100 Kicksも100加算です。視聴者が購入するときの価格は少し高く、実際の受取額は各プラットフォームの条件によって異なります。',
+    faq3Q: '目標をリセットするには？',
+    faq3A:
+      'TwitchかKickのチャットで !bitsgoal reset と入力すると開始値に戻ります。あなたかモデレーターが !bitsgoal set で好きな数にすることもでき、URLの開始値を変えると目標が最初からやり直しになります。',
+    faq4Q: 'サブスク目標とBits・Kicks目標を同時に使えますか？',
+    faq4A:
+      'はい。それぞれを別のブラウザソースとして追加してください。カウントは別々で、それぞれ自分のコマンドだけに反応します。サブスク目標は !goal、こちらは !bitsgoal なので、片方を直してももう片方は変わりません。',
   },
   eventList: {
     breadcrumb: 'イベントリストの設定',
@@ -2481,6 +2744,13 @@ export const ja: typeof en = {
         colNote: '備考',
         notSource: 'ソースではありません',
         notes: {
+          nowPlaying: 'カードや1行のバー用の横長のエリアです。ソースを大きくすると拡大されます。',
+          emoteCombo:
+            '大きなエモートとカウント、その下のベストコンボが入るサイズ。チャットがコンボを始めるまでは何も表示されません。',
+          featured:
+            'メッセージを1件ずつ表示する横長の帯。長いメッセージは収まるように小さくなり、ソースを大きくすると拡大されます。',
+          bitsGoal:
+            'サブスク目標と同じ横長の帯です。目標バーの上に、Cheerの数が浮かび上がる余白があります。',
           chatBox:
             '縦長のチャット欄。ソースを大きくすると表示できるメッセージが増え、文字サイズは変わりません。',
           emoteWall: '1080pのキャンバス全体。エモートは画面のどこにでも現れます。',
@@ -2546,7 +2816,7 @@ export const ja: typeof en = {
         title: 'あとからウィジェットを変更するには？',
         p1: '設定はウィジェットURLの中にあるので、設定を変えるとURLも新しくなります。設定ページで設定を変えて新しいURLをコピーしたら、OBSでソースをダブルクリックし、URL欄の古いURLに上書きして貼り付けてください。',
         p2:
-          '[チャットボックス](/setup/chat-widget)、[エモートウォール](/setup/emote-wall)、[Sub Sprout](/setup/sub-growing-plant)、[Subathon Timer](/setup/subathon-timer)、[配信アラート](/setup/stream-alerts)、[サブスク目標](/setup/sub-goal)、[カウンター](/setup/counter)、[イベントリスト](/setup/event-list)、[エンドロール](/setup/end-credits)、[参加待ちリスト](/setup/viewer-queue)、[トップサポーター](/setup/top-supporters)、[テロップ](/setup/lower-thirds)、[タスクリスト](/setup/task-list)、[チャット投票](/setup/chat-poll)、[配信フレーム](/setup/stream-frames)、[SNSリンク](/setup/socials)、[配信カウントダウン](/setup/stream-countdown)、[IRL HUDオーバーレイ](/setup/irl-hud)、[天気](/setup/weather)、[ルーレット](/setup/spin-wheel)なら、一からやり直す必要はありません。設定ページの「ウィジェットURL」欄に今のURLを貼り付ければ、チャンネルとすべての設定が戻ってきます。変えたいところを変えて、新しいURLをコピーしてください。',
+          '[チャットボックス](/setup/chat-widget)、[エモートウォール](/setup/emote-wall)、[Sub Sprout](/setup/sub-growing-plant)、[Subathon Timer](/setup/subathon-timer)、[配信アラート](/setup/stream-alerts)、[サブスク目標](/setup/sub-goal)、[カウンター](/setup/counter)、[イベントリスト](/setup/event-list)、[エンドロール](/setup/end-credits)、[参加待ちリスト](/setup/viewer-queue)、[トップサポーター](/setup/top-supporters)、[テロップ](/setup/lower-thirds)、[タスクリスト](/setup/task-list)、[エモートコンボ](/setup/emote-combo)、[注目メッセージ](/setup/featured-message)、[Bits・Kicks目標](/setup/bits-goal)、[再生中の曲](/setup/now-playing)、[チャット投票](/setup/chat-poll)、[配信フレーム](/setup/stream-frames)、[SNSリンク](/setup/socials)、[配信カウントダウン](/setup/stream-countdown)、[IRL HUDオーバーレイ](/setup/irl-hud)、[天気](/setup/weather)、[ルーレット](/setup/spin-wheel)なら、一からやり直す必要はありません。設定ページの「ウィジェットURL」欄に今のURLを貼り付ければ、チャンネルとすべての設定が戻ってきます。変えたいところを変えて、新しいURLをコピーしてください。',
         p3: 'OBS Bridgeには貼り付け欄がないので、設定ページで設定を入力し直して、新しいツールURLをコピーしてください。シーンの選択や許可ユーザーはツールページ上でも変更でき、「更新済みURLをコピー」ボタンで新しいURLを取得できます。古いURLもそのまま使えるので、更新は必須ではありません。',
       },
       troubleshoot: {
@@ -3232,7 +3502,7 @@ export const ja: typeof en = {
     breadcrumb: 'プリセット',
     eyebrow: 'プリセット',
     title: '配信オーバーレイ用のゲームプリセット',
-    lead: 'プリセットを選ぶと、チャットボックス、配信アラート、サブスク目標、カウンター、イベントリスト、エンドロール、参加待ちリスト、トップサポーター、テロップ、タスクリスト、Subathon Timer、チャット投票、抽選の当選者、配信フレーム、配信カウントダウン、SNSリンク、ルーレットが、同じフレーム、フォント、カラーでそろいます。すべてのウィジェットに同じものを使っても、ウィジェットごとに変えてもかまいません。',
+    lead: 'プリセットを選ぶと、チャットボックス、配信アラート、サブスク目標、カウンター、イベントリスト、エンドロール、参加待ちリスト、トップサポーター、テロップ、タスクリスト、注目メッセージ、エモートコンボ、Bits・Kicks目標、再生中の曲、Subathon Timer、チャット投票、抽選の当選者、配信フレーム、配信カウントダウン、SNSリンク、ルーレットが、同じフレーム、フォント、カラーでそろいます。すべてのウィジェットに同じものを使っても、ウィジェットごとに変えてもかまいません。',
     pickTitle: 'プリセットを選ぶ',
     pickText:
       'League of Legends（LoL）、World of Warcraft（WoW）、Metin2、Dota 2、Valorant、Counter-Strike 2（CS2）、Minecraft、Clash of Clans、Fortnite、Rocket League、PUBG: Battlegrounds向けのプリセットを用意しています。',
@@ -3332,10 +3602,10 @@ export const ja: typeof en = {
       'OBS Studioをはじめ、ブラウザソースに対応した配信ソフトならどれでも使えます。各ウィジェットはウェブのURLとして動き、そのURLをソースに貼り付けるだけです。ガイドはOBS Studio向けに書いています。',
     platformsQ: 'どのウィジェットがTwitchに、どれがKickに対応していますか？',
     platformsA:
-      '13個すべてが両方のプラットフォームに対応しています。チャットボックス、エモートウォール、Sub Sprout、Subathon Timer、配信アラート、サブスク目標、カウンター、イベントリスト、エンドロール、参加待ちリスト、トップサポーター、テロップ、タスクリスト、チャット投票、配信カウントダウン、IRL HUDオーバーレイ、ルーレットは、ひとつのURLでTwitchとKickのチャンネルを同時に聞き取ります。OBS Bridgeは両方のチャットからコマンドを受け取り、許可ユーザーはそれぞれのプラットフォームと一緒に追加します。抽選は一度にひとつのプラットフォーム（TwitchかKick）で動きます。配信フレーム、SNSリンク、天気はチャットを読まないので、どちらのプラットフォームでも同じように動きます。チャットボックスでは、7TVのエモートは両方のプラットフォームで、BTTVとFFZのエモートはTwitchでのみ表示されます。',
+      '27個すべてが両方のプラットフォームに対応しています。チャットボックス、エモートウォール、Sub Sprout、Subathon Timer、配信アラート、サブスク目標、カウンター、イベントリスト、エンドロール、参加待ちリスト、トップサポーター、テロップ、タスクリスト、エモートコンボ、注目メッセージ、Bits・Kicks目標、チャット投票、配信カウントダウン、IRL HUDオーバーレイ、ルーレットは、ひとつのURLでTwitchとKickのチャンネルを同時に聞き取ります。OBS Bridgeは両方のチャットからコマンドを受け取り、許可ユーザーはそれぞれのプラットフォームと一緒に追加します。抽選は一度にひとつのプラットフォーム（TwitchかKick）で動きます。配信フレーム、SNSリンク、天気、再生中の曲はチャットを読まないので、どちらのプラットフォームでも同じように動きます。チャットボックスでは、7TVのエモートは両方のプラットフォームで、BTTVとFFZのエモートはTwitchでのみ表示されます。',
     editQ: 'あとからウィジェットを変更するには？',
     editA:
-      '設定ページで設定を変えて新しいURLをコピーし、OBSのソースのURL欄にある古いURLに上書きして貼り付けます。チャットボックス、エモートウォール、Sub Sprout、Subathon Timer、配信アラート、サブスク目標、カウンター、イベントリスト、エンドロール、参加待ちリスト、トップサポーター、テロップ、タスクリスト、チャット投票、配信フレーム、SNSリンク、配信カウントダウン、IRL HUDオーバーレイ、天気、ルーレットなら、古いURLを設定ページの「ウィジェットURL」欄に貼り付けると設定がすべて戻ってくるので、一からやり直す必要はありません。',
+      '設定ページで設定を変えて新しいURLをコピーし、OBSのソースのURL欄にある古いURLに上書きして貼り付けます。チャットボックス、エモートウォール、Sub Sprout、Subathon Timer、配信アラート、サブスク目標、カウンター、イベントリスト、エンドロール、参加待ちリスト、トップサポーター、テロップ、タスクリスト、エモートコンボ、注目メッセージ、Bits・Kicks目標、再生中の曲、チャット投票、配信フレーム、SNSリンク、配信カウントダウン、IRL HUDオーバーレイ、天気、ルーレットなら、古いURLを設定ページの「ウィジェットURL」欄に貼り付けると設定がすべて戻ってくるので、一からやり直す必要はありません。',
     oldUrlsQ: '古いウィジェットURLは使い続けられますか？',
     oldUrlsA:
       'はい。アップデートは既存のURLが壊れないように行っています。パラメータ名、値、初期設定は変わりません。たとえば、チャットボックスの古い keep=true は今も「ずっと表示」を意味し、Sub Sproutも古い channel と platform のパラメータを読み取ります。',
@@ -3359,6 +3629,14 @@ export const ja: typeof en = {
     lead: 'Senchabot Extensionsの新機能とバグ修正を、新しい順に並べています。このリストは[GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions)にあるプロジェクトのコミット履歴からまとめています。',
     site: 'サイト',
     entries: {
+      nowPlayingLaunch:
+        '新しいオーバーレイ「再生中の曲」：今聴いている曲を、ジャケット画像、曲名、アーティスト名とともに表示します。曲はListenBrainzまたはLast.fmから読み込むので、Spotifyやほとんどの音楽プレーヤーで使えます。新しい曲は自動でスライドして表示され、音楽が止まるとスライドして消えます。',
+      emoteComboLaunch:
+        '新しいオーバーレイ「エモートコンボ」：視聴者が同じエモートを次々に送ると、そのエモートが配信画面に大きく表示され、新しい人が加わるたびにコンボ数が弾みます。TwitchとKickのチャットを合算し、7TV、BTTV、FFZのエモートにも対応。その下に配信のベストコンボが表示され、モデレーターは !combo reset でリセットできます。',
+      featuredLaunch:
+        '新しいオーバーレイ「注目メッセージ」：チャットを配信画面に映すためのオーバーレイです。モデレーターがTwitchやKickのチャットで !feature と名前を打つと、その視聴者の最新のメッセージが名前の色、バッジ、エモートつきで表示されます。視聴者は !q で質問でき、モデレーターが !q next で進めるQ&Aにも使えます。',
+      bitsGoalLaunch:
+        '新しいオーバーレイ: Bits・Kicks目標。TwitchのBitsとKickのKicksが、その数だけ1対1で埋めていく目標バーです。目標を達成させた視聴者の名前をトロフィーに表示し、カウントはOBSに保存されます。モデレーターはサブスク目標の !goal とは別の !bitsgoal でチャットから修正できます。',
       tasksLaunch:
         '新しいオーバーレイ「タスクリスト」：作業配信や勉強配信向けのタスクリストです。視聴者はTwitchやKickのチャットから !task で自分のタスクを追加し、!done でチェックを付けられ、あなたのタスクと同じリストに並びます。リストは配信画面に表示され、長くなるとスクロールし、モデレーターがチャットから消去できます。',
       lowerThirdLaunch:

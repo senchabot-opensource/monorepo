@@ -6,10 +6,20 @@ import { LocaleLink } from '#/components/locale-link';
 import { ICON_BUTTON_CLASS, SiteControls } from '#/components/site-controls';
 import { DROPDOWN_ITEM_CLASS, DropdownMenu } from '#/components/ui/dropdown-menu';
 import { ScrollHint } from '#/components/ui/scroll-hint';
+import { WidgetFilter } from '#/components/widget-filter';
 import { useI18n } from '#/lib/i18n';
 import { type SitePath, stripLocale } from '#/lib/i18n/paths';
 import { CONTENT_PATHS, LINKS } from '#/lib/links';
-import { getWidget, OVERLAYS, TOOLS, type WidgetEntry, type WidgetId } from '#/lib/widgets';
+import {
+  type CategoryFilter,
+  getWidget,
+  inCategory,
+  OVERLAYS,
+  TOOLS,
+  WIDGETS,
+  type WidgetEntry,
+  type WidgetId,
+} from '#/lib/widgets';
 
 export type SiteHeaderProps =
   | {
@@ -132,30 +142,44 @@ function WidgetMenuLink({ widget }: { widget: WidgetEntry }) {
 }
 
 /** Overlays and Tools lists, shared by the desktop menu (side by side) and the mobile sheet. */
+/** Overlays and tools, narrowed to one category; a group with nothing left is dropped. */
+function useWidgetGroups() {
+  const [category, setCategory] = useState<CategoryFilter>('all');
+  const groups = (
+    [
+      ['overlays', OVERLAYS],
+      ['tools', TOOLS],
+    ] as const
+  )
+    .map(([group, widgets]) => [group, inCategory(widgets, category)] as const)
+    .filter(([, widgets]) => widgets.length > 0);
+  const filter = <WidgetFilter widgets={WIDGETS} value={category} onChange={setCategory} compact />;
+  return { groups, filter };
+}
+
 function WidgetGroups({ sideBySide }: { sideBySide: boolean }) {
   const { t } = useI18n();
   const id = useId();
+  const { groups, filter } = useWidgetGroups();
   return (
-    <div className={`grid gap-3 ${sideBySide ? 'grid-cols-2' : ''}`}>
-      {(
-        [
-          ['overlays', OVERLAYS],
-          ['tools', TOOLS],
-        ] as const
-      ).map(([group, widgets]) => (
-        <div key={group}>
-          <p id={`${id}-${group}`} className={GROUP_LABEL_CLASS}>
-            {t(`widgets.${group}`)}
-          </p>
-          <ul aria-labelledby={`${id}-${group}`}>
-            {widgets.map((widget) => (
-              <li key={widget.id}>
-                <WidgetMenuLink widget={widget} />
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
+    <div className="flex flex-col gap-3">
+      <div className="px-1">{filter}</div>
+      <div className={`grid gap-3 ${sideBySide && groups.length > 1 ? 'grid-cols-2' : ''}`}>
+        {groups.map(([group, widgets]) => (
+          <div key={group}>
+            <p id={`${id}-${group}`} className={GROUP_LABEL_CLASS}>
+              {t(`widgets.${group}`)}
+            </p>
+            <ul aria-labelledby={`${id}-${group}`}>
+              {widgets.map((widget) => (
+                <li key={widget.id}>
+                  <WidgetMenuLink widget={widget} />
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -327,6 +351,7 @@ function FullHeader() {
  */
 function WidgetSwitcher({ current, title }: { current: WidgetEntry; title: string }) {
   const { t } = useI18n();
+  const { groups, filter } = useWidgetGroups();
   return (
     <DropdownMenu
       label={
@@ -342,12 +367,8 @@ function WidgetSwitcher({ current, title }: { current: WidgetEntry; title: strin
       triggerClassName="flex min-w-0 max-w-full items-center gap-1.5 rounded-md px-1.5 py-1 text-left text-base font-semibold max-sm:text-sm max-sm:leading-tight text-zinc-900 transition-colors hover:bg-zinc-200/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 aria-expanded:bg-zinc-200/70 dark:text-white dark:hover:bg-zinc-800 dark:aria-expanded:bg-zinc-800"
       anchor="container"
     >
-      {(
-        [
-          ['overlays', OVERLAYS],
-          ['tools', TOOLS],
-        ] as const
-      ).map(([group, widgets]) => (
+      <div className="px-1 pt-1 pb-2">{filter}</div>
+      {groups.map(([group, widgets]) => (
         <div key={group} className="py-1">
           <p className={`${GROUP_LABEL_CLASS} pt-1`}>{t(`widgets.${group}`)}</p>
           <ul>

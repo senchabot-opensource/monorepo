@@ -1,6 +1,6 @@
 # Senchabot Extensions: full reference
 
-> Free, open source stream overlays and tools for Twitch and Kick: Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Counter, Event List, End Credits, Viewer Queue, Top Supporters, Lower Thirds, Task List, Stream Frames, Stream Countdown, IRL HUD Overlay, Weather, Chat Poll, Raffle, OBS Bridge and Spin Wheel. Each one is set up on a web page at https://extensions.senchabot.com and runs from a URL. No login and nothing to install.
+> Free, open source stream overlays and tools for Twitch and Kick: Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Counter, Event List, End Credits, Viewer Queue, Top Supporters, Lower Thirds, Task List, Featured Message, Emote Combo, Bits & Kicks Goal, Now Playing, Stream Frames, Stream Countdown, IRL HUD Overlay, Weather, Chat Poll, Raffle, OBS Bridge and Spin Wheel. Each one is set up on a web page at https://extensions.senchabot.com and runs from a URL. No login and nothing to install.
 
 Short version with links only: https://extensions.senchabot.com/llms.txt
 
@@ -32,6 +32,10 @@ Short version with links only: https://extensions.senchabot.com/llms.txt
 | Top Supporters | Overlay | /setup/top-supporters | /widgets/leaderboard | 440x380 |
 | Lower Thirds | Overlay | /setup/lower-thirds | /widgets/lower-third | 1920x1080 |
 | Task List | Overlay | /setup/task-list | /widgets/tasks | 480x720 |
+| Featured Message | Overlay | /setup/featured-message | /widgets/featured | 720x240 |
+| Emote Combo | Overlay | /setup/emote-combo | /widgets/emote-combo | 600x400 |
+| Bits & Kicks Goal | Overlay | /setup/bits-goal | /widgets/goal?type=bits | 800x260 |
+| Now Playing | Overlay | /setup/now-playing | /widgets/now-playing | 640x160 |
 | Counter | Overlay | /setup/counter | /widgets/counter (changed from chat with its own commands) | 800x260, or 440x400 stacked |
 | Stream Frames | Overlay | /setup/stream-frames | /widgets/frame | 640x360, 360x640, 420x720 or 1920x1080 |
 | IRL HUD Overlay | Overlay | /setup/irl-hud | /widgets/irl-hud | 1920x1080 |
@@ -379,6 +383,49 @@ A co-working task list for study and work streams: you and your viewers add task
 - The broadcaster's tasks come first; the panel shows done and total tasks, and a long list scrolls down and back up. The list is saved in `localStorage`.
 - URL parameters: `twitch`, `kick`, `title`, `max` (open tasks per viewer, 1 to 5), `done` (`0` takes finished tasks off at once), `speed` (scroll speed, 10 to 80 px a second), `preset`, `color` (`green` | `purple` | `red` | `gold` | `cyan` | `pink`, classic only), `lang`, `simulate`.
 
+## Featured Message
+
+Puts a viewer's words on screen from Twitch or Kick chat: mods type !feature @name to show that viewer's last message with name color, badges and emotes (7TV, BTTV and FFZ too), and viewers ask with !q while mods run the line with !q next, !q skip, !q clear and !q off. Browser source size 720x240.
+
+- Widget URL: https://extensions.senchabot.com/widgets/featured?twitch=YOUR_TWITCH_CHANNEL&kick=YOUR_KICK_CHANNEL&lang=en
+- Demo: https://extensions.senchabot.com/widgets/featured?simulate=1
+- `!feature @name` (mods and the broadcaster) shows that viewer's last message from either chat, with name color, badges and emotes, 7TV, BTTV and FFZ included. `!feature` or `!feature off` hides it. The last message of up to 500 chatters is kept in memory; bots, replies and commands aren't.
+- Viewers ask with `!q <question>` (up to 200 characters, one open question each; asking again replaces it). Mods: `!q next` shows the oldest, `!q skip` drops it, `!q clear` empties the line, `!q off` hides what's on screen.
+- A ban, a timeout or a deleted message takes that viewer's message and questions off. The line and what's on screen are saved in `localStorage`.
+- URL parameters: `twitch`, `kick`, `mode` (`both` | `feature` | `qa`), `hide` (seconds on screen, 0 keeps it up, up to 600), `waiting` (`0` hides the questions-waiting badge), `size` (50 to 150, percent), `preset`, `color` (`purple` | `green` | `red` | `gold` | `cyan` | `pink`, classic only), `lang`, `simulate`.
+
+## Emote Combo
+
+When chatters post the same emote, a big combo counter shows the emote and how many chatters joined in, Twitch and Kick together, with 7TV, BTTV and FFZ emotes. It keeps the stream's best combo, which mods clear with !combo reset. Browser source size 600x400.
+
+- Widget URL: https://extensions.senchabot.com/widgets/emote-combo?twitch=YOUR_TWITCH_CHANNEL&kick=YOUR_KICK_CHANNEL&lang=en
+- Demo: https://extensions.senchabot.com/widgets/emote-combo?simulate=1
+- Each chatter counts once per combo, in any message with the emote. The combo shows from `min` chatters and keeps going while new chatters join within `window` seconds; then the final count stays up a moment and fades.
+- Native Twitch and Kick emotes count per platform; 7TV, BTTV and FFZ emotes count by name, so the same 7TV emote in both chats makes one combo. Known bots don't count.
+- The stream's best combo shows under the counter and is saved in `localStorage` for 12 hours. Mods clear it with `!combo reset`.
+- URL parameters: `twitch`, `kick`, `window` (3 to 30 seconds), `min` (2 to 20 chatters), `size` (50 to 150, percent), `best` (`0` hides the best combo), `sevenTv`, `bttv`, `ffz` (`0` | `1`, which emote sets count; 7TV is on by default), `preset`, `color` (`gold` | `purple` | `green` | `red` | `cyan` | `pink`, classic only), `lang`, `simulate`.
+
+## Bits & Kicks Goal
+
+A goal bar that every Twitch Bits cheer and Kick Kicks gift fills, 1:1, with a trophy when the target lands. It is the Sub Goal overlay with type=bits, with its own count and its own !bitsgoal command, so it runs beside a Sub Goal. Browser source size 800x260.
+
+- Widget URL: https://extensions.senchabot.com/widgets/goal?twitch=YOUR_TWITCH_CHANNEL&kick=YOUR_KICK_CHANNEL&type=bits
+- Demo: https://extensions.senchabot.com/widgets/goal?simulate=1&type=bits
+- The Sub Goal overlay with `type=bits`: Bits and Kicks add their amount 1:1 (both are about a US cent each); subs, gift subs and raids add nothing. Pops show the amount, and the trophy names whoever crossed the target.
+- Its own count, saved in `localStorage` apart from the Sub Goal's, and its own command: `!bitsgoal`, with the same actions as the Sub Goal's `!goal`. A Sub Goal and a Bits & Kicks Goal run side by side on the same channels.
+- URL parameters: the Sub Goal's, plus `type` (`bits`). The target starts at 1000 and the title at BITS & KICKS GOAL.
+
+## Now Playing
+
+Shows the song the streamer is listening to, with its cover art, title and artist, from ListenBrainz (Spotify connects there) or Last.fm. It reads no chat, so it works the same for Twitch and Kick streamers. Browser source size 640x160.
+
+- Widget URL: https://extensions.senchabot.com/widgets/now-playing?user=YOUR_LISTENBRAINZ_USERNAME&lang=en
+- Demo: https://extensions.senchabot.com/widgets/now-playing?demo=1
+- `source=listenbrainz` (the default) asks ListenBrainz's public playing-now API, which needs no key. Connect Spotify in ListenBrainz, or use any scrobbler that sends playing-now. Covers come from the Cover Art Archive when the song has a release ID.
+- `source=lastfm` asks Last.fm for the recent tracks, which update almost at once. It needs a Last.fm API key built into the site (`VITE_LASTFM_API_KEY` at build time); without one, the setup page offers ListenBrainz only.
+- The overlay asks every 12 seconds and backs off while a service is busy. When the music stops, the card dims, then slides out after `hide` seconds.
+- URL parameters: `source` (`listenbrainz` | `lastfm`), `user`, `layout` (`card` | `pill`), `art` (`0` hides the cover), `album` (`0` hides the album line), `hide` (seconds before it slides out when nothing plays, 0 keeps it up dimmed, up to 60), `preset`, `color` (`green` | `purple` | `red` | `gold` | `cyan` | `pink`, classic only), `lang`, `demo`.
+
 ## Stream Frames
 
 Ready-made frames for a webcam, a chat or the whole stream. The frame is drawn in the picked preset's look, with its own shape, ornaments and small animations: a temple roof, swaying tassels and drifting plum petals in Dynasty, glowing teal gems in Rift, grass blocks and flickering torches in Blocks. The label sits in a tab on top of the camera and chat frames, and on a plate at the bottom of the screen frame. The middle is transparent, so the webcam or Chat Box under it shows through. It reads no chat and needs no channel.
@@ -659,7 +706,7 @@ A chat-driven spinning wheel for game names, challenges or any list of choices. 
 
 A preset gives several widgets the same look: frame, fonts and colors. Page: https://extensions.senchabot.com/presets
 
-- Widgets that take one: Chat Box, Stream Alerts, Sub Goal, Counter, Event List, End Credits, Viewer Queue, Top Supporters, Lower Thirds, Task List, Subathon Timer, Chat Poll, the Raffle winner overlay, Stream Countdown, Socials, Spin Wheel and Stream Frames, whose frame art comes from the preset. Emote Wall and Sub Sprout keep their own art.
+- Widgets that take one: Chat Box, Stream Alerts, Sub Goal, Counter, Event List, End Credits, Viewer Queue, Top Supporters, Lower Thirds, Task List, Featured Message, Emote Combo, Bits & Kicks Goal, Now Playing, Subathon Timer, Chat Poll, the Raffle winner overlay, Stream Countdown, Socials, Spin Wheel and Stream Frames, whose frame art comes from the preset. Emote Wall and Sub Sprout keep their own art.
 - URL parameter on those widgets: preset, one of rift, realm, dynasty, ancient, agent, defuse, blocks, village, storm, boost, airdrop. Missing or unknown means classic, each widget's own look, so URLs from before presets look the same.
 - Built-in presets, each made for a game: Rift (League of Legends), Realm (World of Warcraft), Dynasty (Metin2), Ancient (Dota 2), Agent (Valorant), Defuse (Counter-Strike 2), Blocks (Minecraft), Village (Clash of Clans), Storm (Fortnite), Boost (Rocket League), Airdrop (PUBG). They are fan-made styles from colors, free Google Fonts and original drawings, with no game art, and aren't affiliated with the game makers.
 - A preset brings its own colors and fonts: with one set, the color and font parameters and Stream Alerts' theme are ignored. Layout settings (Subathon style, Chat Box layout, poll position and so on) still apply.
@@ -720,6 +767,10 @@ A: Open an issue at https://github.com/senchabot-opensource/monorepo/issues/new.
 - Top Supporters setup: https://extensions.senchabot.com/setup/top-supporters
 - Lower Thirds setup: https://extensions.senchabot.com/setup/lower-thirds
 - Task List setup: https://extensions.senchabot.com/setup/task-list
+- Featured Message setup: https://extensions.senchabot.com/setup/featured-message
+- Emote Combo setup: https://extensions.senchabot.com/setup/emote-combo
+- Bits & Kicks Goal setup: https://extensions.senchabot.com/setup/bits-goal
+- Now Playing setup: https://extensions.senchabot.com/setup/now-playing
 - IRL HUD Overlay setup: https://extensions.senchabot.com/setup/irl-hud
 - Weather setup: https://extensions.senchabot.com/setup/weather
 - Chat Poll setup: https://extensions.senchabot.com/setup/chat-poll
