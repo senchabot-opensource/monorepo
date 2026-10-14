@@ -347,7 +347,12 @@ export function WeatherWidget({ settings, demo = false, previewId }: WeatherWidg
       <div className={`wx-root wx-hud ih-${hudStyle}`} data-testid="weather" data-style={hudStyle}>
         <style>{CSS}</style>
         {forecast && now && (
-          <div className="wx-box wx-pill" style={cornerPlace(settings.corner, scale, zoom, true)}>
+          <div
+            className="wx-box wx-pill"
+            // What a gallery preview frames (PreviewFrame's fitBox).
+            data-preview-box
+            style={cornerPlace(settings.corner, scale, zoom, true)}
+          >
             <HudPill
               forecast={forecast}
               now={now}
@@ -369,6 +374,7 @@ export function WeatherWidget({ settings, demo = false, previewId }: WeatherWidg
       {forecast && now && (
         <div
           className={`wx-box wx-${settings.layout}`}
+          data-preview-box
           style={cornerPlace(settings.corner, scale, zoom, false)}
         >
           <View forecast={forecast} now={now} settings={settings} place={place} time={time} />

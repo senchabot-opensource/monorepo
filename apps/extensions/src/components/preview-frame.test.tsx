@@ -1,4 +1,4 @@
-import { fireEvent, screen } from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { useState } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { withLayout } from '#/test/browser';
@@ -109,6 +109,80 @@ describe('PreviewFrame zoom', () => {
     await user.click(screen.getByRole('button', { name: 'Bottom right' }));
     expect(frame().style.transform).toBe(
       'translate(-50%, -50%) translate(-480px, -270px) scale(1)',
+    );
+  });
+});
+
+describe('PreviewFrame loading', () => {
+  const landing = (props: { fitBox?: boolean } = {}) => (
+    <PreviewFrame
+      src="/widgets/weather?demo=1"
+      title="Overlay preview"
+      canvas={CANVAS}
+      showLoading
+      {...props}
+    />
+  );
+  /** Puts the box a fitted preview looks for into the frame's page, at this canvas rect. */
+  const markBox = (rect: { x: number; y: number; width: number; height: number }) => {
+    const doc = frame().contentDocument;
+    if (!doc) throw new Error('no document in the frame');
+    const box = doc.createElement('div');
+    box.setAttribute('data-preview-box', '');
+    box.getBoundingClientRect = () => rect as DOMRect;
+    // jsdom leaves the frame's document empty, without even a root element.
+    (doc.documentElement ?? doc.appendChild(doc.createElement('html'))).append(box);
+  };
+
+  it('shows no spinner unless asked', async () => {
+    withLayout(960, 540);
+    renderWithProviders(preview());
+    await screen.findByTitle('Overlay preview');
+    expect(screen.queryByTestId('preview-loading')).toBeNull();
+    expect(frame().className).not.toContain('opacity-0');
+  });
+
+  it('shows a spinner and hides the page until the page has loaded', async () => {
+    withLayout(960, 540);
+    renderWithProviders(landing());
+    await screen.findByTitle('Overlay preview');
+    expect(screen.getByTestId('preview-loading')).toBeTruthy();
+    expect(frame().className).toContain('opacity-0');
+
+    fireEvent.load(frame());
+    expect(screen.queryByTestId('preview-loading')).toBeNull();
+    expect(frame().className).toContain('opacity-100');
+  });
+
+  it('frames the box the page marks, centered and scaled to fill the frame', async () => {
+    withLayout(960, 540);
+    renderWithProviders(landing({ fitBox: true }));
+    await screen.findByTitle('Overlay preview');
+    fireEvent.load(frame());
+    // Loaded, but no box yet: still hidden, so it never jumps from its corner to the middle.
+    expect(screen.getByTestId('preview-loading')).toBeTruthy();
+
+    markBox({ x: 0, y: 0, width: 1600, height: 200 });
+    // 84% of the frame's width over the box's: 806.4 / 1600, and its middle at the frame's.
+    await waitFor(() =>
+      expect(frame().style.transform).toBe(
+        'translate(-50%, -50%) translate(81px, 222px) scale(0.504)',
+      ),
+    );
+    expect(screen.queryByTestId('preview-loading')).toBeNull();
+    expect(frame().className).toContain('opacity-100');
+  });
+
+  it('never scales a small box past its own size', async () => {
+    withLayout(960, 540);
+    renderWithProviders(landing({ fitBox: true }));
+    await screen.findByTitle('Overlay preview');
+    markBox({ x: 100, y: 50, width: 200, height: 40 });
+    fireEvent.load(frame());
+    await waitFor(() =>
+      expect(frame().style.transform).toBe(
+        'translate(-50%, -50%) translate(760px, 470px) scale(1)',
+      ),
     );
   });
 });

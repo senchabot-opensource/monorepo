@@ -156,6 +156,7 @@ describe('applyPresetToUrl', () => {
       '/widgets/chat-widget?mock=true&preset=rift',
       '/widgets/stream-alerts?simulate=1&preset=rift',
       '/widgets/goal?simulate=1&preset=rift',
+      `${getWidget('counter').demoUrl}&preset=rift`,
       '/widgets/subathon?simulate=1&preset=rift',
       '/widgets/poll?simulate=1&preset=rift',
       '/widgets/raffle-overlay?demo=1&preset=rift',
@@ -163,6 +164,12 @@ describe('applyPresetToUrl', () => {
       '/widgets/countdown?simulate=1&preset=rift',
       '/widgets/socials?demo=1&preset=rift',
       '/widgets/spin-wheel?demo=1&sound=0&preset=rift',
+      '/widgets/event-list?simulate=1&preset=rift',
+      '/widgets/credits?simulate=1&preset=rift',
+      '/widgets/queue?simulate=1&preset=rift',
+      '/widgets/leaderboard?simulate=1&preset=rift',
+      `${getWidget('lower-third').demoUrl}&preset=rift`,
+      '/widgets/tasks?simulate=1&preset=rift',
     ]);
     expect(presetDemoUrl(PRESET_WIDGETS[0], 'classic')).toBe('/widgets/chat-widget?mock=true');
   });

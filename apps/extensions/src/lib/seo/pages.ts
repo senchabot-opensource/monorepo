@@ -383,6 +383,265 @@ export const PAGE_META = {
         'Um Overlay HUD IRL grátis para o OBS. Subs, subs de presente, Bits, Kicks e raids somam dinheiro na Twitch e na Kick, com relógio no seu fuso e um minimapa.',
     },
   },
+  counter: {
+    en: {
+      title: 'Free Win Counter Overlay for Twitch & Kick | Senchabot',
+      description:
+        'A free win counter for OBS: show wins, losses or any count on Twitch and Kick, up to four at once. You and your mods change them from chat. No login needed.',
+    },
+    de: {
+      title: 'Kostenloser Siegzähler für Twitch und Kick | Senchabot',
+      description:
+        'Ein kostenloser Siegzähler für OBS: Siege, Niederlagen oder jede andere Zahl auf Twitch und Kick, bis zu vier auf einmal. Du und deine Mods ändert sie im Chat.',
+    },
+    tr: {
+      title: 'Twitch ve Kick için Galibiyet Sayacı (Ücretsiz) | Senchabot',
+      description:
+        "OBS için ücretsiz galibiyet sayacı: Twitch ve Kick'te galibiyetleri, mağlubiyetleri ya da her sayıyı dörde kadar göster. Modların sohbetten değiştirir.",
+    },
+    es: {
+      title: 'Contador de victorias gratis para Twitch y Kick | Senchabot',
+      description:
+        'Un contador de victorias gratis para OBS: victorias, derrotas o cualquier número en Twitch y Kick, hasta cuatro a la vez. Tus mods lo cambian en el chat.',
+    },
+    fr: {
+      title: 'Compteur de victoires pour Twitch et Kick | Senchabot',
+      description:
+        "Compteur de victoires gratuit pour OBS : victoires, défaites ou tout autre nombre sur Twitch et Kick, jusqu'à quatre à la fois. Tes modos le règlent en chat.",
+    },
+    ja: {
+      title: 'TwitchとKickの無料勝敗カウンターオーバーレイ | Senchabot',
+      description:
+        'OBS用の無料カウンター。TwitchとKickで勝ち、負けなど好きな数を最大4つまで同時に表示。配信者とモデレーターはチャットのコマンドで数を変更できます。ログイン不要。',
+    },
+    pt: {
+      title: 'Contador de vitórias grátis para Twitch e Kick | Senchabot',
+      description:
+        'Um contador de vitórias grátis no OBS: vitórias, derrotas ou qualquer número na Twitch e na Kick, até quatro de uma vez. Os mods mudam pelo chat. Sem login.',
+    },
+  },
+  tasks: {
+    en: {
+      title: 'Free Co-working Task List for Twitch & Kick | Senchabot',
+      description:
+        'A free co-working task list for OBS: viewers add tasks from Twitch or Kick chat with !task and tick them off with !done. Made for study streams. No login.',
+    },
+    de: {
+      title: 'Co-Working-Aufgabenliste für Twitch und Kick | Senchabot',
+      description:
+        'Kostenlose Co-Working-Aufgabenliste für OBS: Zuschauer tragen Aufgaben mit !task im Twitch- oder Kick-Chat ein und haken sie mit !done ab. Für Lern-Streams.',
+    },
+    tr: {
+      title: 'Twitch ve Kick için Co-working Görev Listesi | Senchabot',
+      description:
+        'OBS için ücretsiz co-working görev listesi: izleyiciler Twitch ya da Kick sohbetinden !task ile görev ekler, !done ile tamamlar. Ders çalışma yayınları için.',
+    },
+    es: {
+      title: 'Lista de tareas de coworking para Twitch y Kick | Senchabot',
+      description:
+        'Una lista de tareas de coworking gratis para OBS: los espectadores añaden tareas desde el chat de Twitch o Kick con !task y las tachan con !done. Sin login.',
+    },
+    fr: {
+      title: 'Liste de tâches coworking pour Twitch et Kick | Senchabot',
+      description:
+        'Une liste de tâches de coworking gratuite pour OBS : les viewers ajoutent leurs tâches depuis le chat Twitch ou Kick avec !task et les cochent avec !done.',
+    },
+    ja: {
+      title: '作業配信向けの無料タスクリスト（Twitch・Kick） | Senchabot',
+      description:
+        'OBS用の無料タスクリスト。視聴者はTwitchやKickのチャットで !task と打ってタスクを追加し、!done でチェックを付けます。作業配信や勉強配信に。ログイン不要。',
+    },
+    pt: {
+      title: 'Lista de tarefas de coworking na Twitch e Kick | Senchabot',
+      description:
+        'Uma lista de tarefas de coworking grátis no OBS: o pessoal adiciona tarefas pelo chat da Twitch ou da Kick com !task e risca com !done. Para lives de estudo.',
+    },
+  },
+  'lower-third': {
+    en: {
+      title: 'Free Lower Thirds Overlay for Twitch & Kick | Senchabot',
+      description:
+        'Free animated lower thirds for OBS: your name or show title with lines that take turns, in a preset’s look, always on or on a timer. Mods change it with !lt.',
+    },
+    de: {
+      title: 'Kostenlose Bauchbinde für Twitch und Kick | Senchabot',
+      description:
+        'Kostenlose animierte Bauchbinden für OBS: dein Name oder Showtitel mit wechselnden Zeilen im Preset-Look, immer an oder per Timer. Mods ändern sie mit !lt.',
+    },
+    tr: {
+      title: 'Twitch ve Kick için Alt Bant (Ücretsiz) | Senchabot',
+      description:
+        'OBS için ücretsiz animasyonlu alt bant: adın ya da programın, sırayla değişen satırlarla, preset görünümüyle. Sürekli ya da süreli; modlar !lt ile değiştirir.',
+    },
+    es: {
+      title: 'Rótulos animados gratis para Twitch y Kick | Senchabot',
+      description:
+        'Rótulos animados gratis para OBS (lower thirds): tu nombre o programa con líneas que rotan, al estilo de un preset, fijos o temporizados. Tus mods usan !lt.',
+    },
+    fr: {
+      title: 'Bandeau animé gratuit pour Twitch et Kick | Senchabot',
+      description:
+        "Bandeau animé gratuit pour OBS (lower third) : ton nom avec des lignes qui se relaient, au look d'un preset, fixe ou minuté. Tes modos le changent avec !lt.",
+    },
+    ja: {
+      title: 'TwitchとKickの無料テロップオーバーレイ | Senchabot',
+      description:
+        'OBS用の無料テロップ（ローワーサード）。名前や番組タイトルと順番に切り替わる行を、プリセットの見た目で表示します。常時表示もタイマー表示もでき、モデレーターは !lt で変更できます。',
+    },
+    pt: {
+      title: 'Tarjas animadas grátis para Twitch e Kick | Senchabot',
+      description:
+        'Tarjas animadas grátis no OBS (lower thirds): seu nome ou programa com linhas que se revezam, no visual do preset, fixas ou num timer. Os mods mudam com !lt.',
+    },
+  },
+  leaderboard: {
+    en: {
+      title: 'Free Top Gifters Leaderboard for Twitch & Kick | Senchabot',
+      description:
+        'A free leaderboard for OBS: your top gifters or top Bits and Kicks givers from Twitch and Kick, or labels for the latest sub, gift, cheer and raid. No login.',
+    },
+    de: {
+      title: 'Gratis Top-Gifter-Rangliste für Twitch und Kick | Senchabot',
+      description:
+        'Kostenlose Rangliste für OBS: Top-Gifter oder Top-Cheerer mit Bits und Kicks von Twitch und Kick, oder Labels für den letzten Sub, Gift-Sub, Cheer und Raid.',
+    },
+    tr: {
+      title: 'Twitch ve Kick için Hediye Sıralaması (Ücretsiz) | Senchabot',
+      description:
+        "OBS için ücretsiz liderlik tablosu: Twitch ve Kick'te en çok abonelik hediye edenler ya da Bits ve Kicks gönderenler, veya son abonelik, hediye, cheer ve raid.",
+    },
+    es: {
+      title: 'Top regaladores de subs para Twitch y Kick | Senchabot',
+      description:
+        'Un ranking gratis para OBS: quienes más subs regalan o más Bits y Kicks envían en Twitch y Kick, o lo último en subs, regalos, cheers y raids. Sin login.',
+    },
+    fr: {
+      title: 'Classement des subs offerts pour Twitch et Kick | Senchabot',
+      description:
+        'Classement gratuit pour OBS : ceux qui offrent le plus de subs ou de Bits et Kicks sur Twitch et Kick, ou des labels pour le dernier sub, cadeau, cheer et raid.',
+    },
+    ja: {
+      title: 'TwitchとKickのギフトサブランキング（無料） | Senchabot',
+      description:
+        'OBS用の無料ランキング。TwitchとKickでギフトサブやBits、Kicksを多く贈った人を順位で表示し、最新のサブスク、ギフト、Cheer、レイドのラベルにもなります。ログイン不要。',
+    },
+    pt: {
+      title: 'Ranking de subs de presente para Twitch e Kick | Senchabot',
+      description:
+        'Ranking grátis no OBS: quem mais dá subs de presente ou manda Bits e Kicks na Twitch e na Kick, ou rótulos com o último sub, presente, cheer e raid. Sem login.',
+    },
+  },
+  queue: {
+    en: {
+      title: 'Free Viewer Queue for Twitch & Kick Streams | Senchabot',
+      description:
+        'A free viewer queue for OBS: viewers type !join in Twitch or Kick chat to play with you, and mods call them up with !next. The queue shows on stream. No login.',
+    },
+    de: {
+      title: 'Zuschauer-Warteschlange für Twitch und Kick | Senchabot',
+      description:
+        'Eine kostenlose Zuschauer-Warteschlange für OBS: Zuschauer tippen !join im Twitch- oder Kick-Chat zum Mitspielen, und Mods rufen sie mit !next auf. Ohne Login.',
+    },
+    tr: {
+      title: 'Twitch ve Kick için İzleyici Sırası (Ücretsiz) | Senchabot',
+      description:
+        'OBS için ücretsiz izleyici sırası: izleyiciler seninle oynamak için Twitch ya da Kick sohbetine !join yazar, modlar !next ile çağırır. Sıra yayında görünür.',
+    },
+    es: {
+      title: 'Fila de espectadores para Twitch y Kick (gratis) | Senchabot',
+      description:
+        'Fila de espera gratis para OBS: los espectadores escriben !join en el chat de Twitch o Kick para jugar contigo, y tus mods los llaman con !next. Sin login.',
+    },
+    fr: {
+      title: "File d'attente de viewers pour Twitch et Kick | Senchabot",
+      description:
+        "File d'attente gratuite pour OBS : les viewers tapent !join dans le chat Twitch ou Kick pour jouer avec toi, et tes modos les appellent avec !next. Sans login.",
+    },
+    ja: {
+      title: 'TwitchとKickの参加型配信で使える参加待ちリスト | Senchabot',
+      description:
+        'OBS用の無料の参加待ちリスト。視聴者はTwitchやKickのチャットで !join と打って並び、モデレーターが !next で一緒に遊ぶ人を呼び出します。リストは配信画面に表示。ログイン不要。',
+    },
+    pt: {
+      title: 'Fila de espectadores para Twitch e Kick (grátis) | Senchabot',
+      description:
+        'Uma fila de espectadores grátis para o OBS: o pessoal digita !join no chat da Twitch ou da Kick para jogar com você, e os mods chamam com !next. Sem login.',
+    },
+  },
+  credits: {
+    en: {
+      title: 'Free End Credits Overlay for Twitch & Kick | Senchabot',
+      description:
+        'Free end credits for OBS: subs, gifted subs, Bits, Kicks, raiders, mods and chatters from Twitch and Kick roll like a movie when your ending scene goes live.',
+    },
+    de: {
+      title: 'Kostenloses Abspann-Overlay für Twitch und Kick | Senchabot',
+      description:
+        'Ein kostenloser Abspann für OBS: Subs, Gift-Subs, Bits, Kicks, Raider, Mods und Chatter von Twitch und Kick laufen wie im Kino, sobald deine Endszene live geht.',
+    },
+    tr: {
+      title: 'Twitch ve Kick için Kapanış Jeneriği (Ücretsiz) | Senchabot',
+      description:
+        "OBS için ücretsiz kapanış jeneriği: Twitch ve Kick'ten aboneler, hediyeler, Bits, Kicks, raid'ler, modlar ve sohbet edenler bitiş sahnende film gibi akar.",
+    },
+    es: {
+      title: 'Créditos finales gratis para Twitch y Kick | Senchabot',
+      description:
+        'Créditos finales gratis para OBS: subs, subs regaladas, Bits, Kicks, raids, mods y tu chat de Twitch y Kick desfilan como en el cine en tu escena de cierre.',
+    },
+    fr: {
+      title: 'Générique de fin gratuit pour Twitch et Kick | Senchabot',
+      description:
+        'Un générique de fin gratuit pour OBS : subs, subs offerts, Bits, Kicks, raids, modos et viewers de Twitch et Kick défilent comme au cinéma sur ta scène de fin.',
+    },
+    ja: {
+      title: 'TwitchとKickの無料エンドロールオーバーレイ | Senchabot',
+      description:
+        'OBS用の無料エンドロール。TwitchとKickのサブスク、ギフトサブ、Bits、Kicks、レイド、モデレーター、チャットした人の名前が、終了シーンに切り替えると映画のように流れます。',
+    },
+    pt: {
+      title: 'Créditos finais grátis para Twitch e Kick | Senchabot',
+      description:
+        'Créditos finais grátis no OBS: subs, subs de presente, Bits, Kicks, raids, mods e quem conversou no chat da Twitch e da Kick rolam como no cinema na cena final.',
+    },
+  },
+  'event-list': {
+    en: {
+      title: 'Free Event List Overlay for Twitch & Kick | Senchabot',
+      description:
+        'A free recent events list for OBS: subs, resubs, gifted subs, Bits, Kicks and raids from Twitch and Kick in one list, newest first. No login, no download.',
+    },
+    de: {
+      title: 'Kostenlose Event-Liste für Twitch und Kick | Senchabot',
+      description:
+        'Kostenlose Liste der letzten Events für OBS: Subs, Resubs, Gift-Subs, Bits, Kicks und Raids von Twitch und Kick in einer Liste, das Neueste zuerst. Ohne Login.',
+    },
+    tr: {
+      title: 'Twitch ve Kick için Etkinlik Listesi (Ücretsiz) | Senchabot',
+      description:
+        "OBS için ücretsiz son etkinlikler listesi: Twitch ve Kick'ten abonelik, yenileme, hediye abonelik, Bits, Kicks ve raid'ler tek listede. Giriş yok, indirme yok.",
+    },
+    es: {
+      title: 'Lista de eventos gratis para Twitch y Kick | Senchabot',
+      description:
+        'Una lista gratis de eventos recientes para OBS: subs, resubs, subs regaladas, Bits, Kicks y raids de Twitch y Kick juntos, lo más nuevo primero. Sin login.',
+    },
+    fr: {
+      title: "Liste d'événements gratuite pour Twitch et Kick | Senchabot",
+      description:
+        'Une liste gratuite des derniers événements pour OBS : subs, resubs, subs offerts, Bits, Kicks et raids de Twitch et Kick dans une seule liste. Sans connexion.',
+    },
+    ja: {
+      title: 'TwitchとKickの無料イベントリストオーバーレイ | Senchabot',
+      description:
+        'OBS用の無料イベントリスト。TwitchとKickのサブスク、継続サブスク、ギフトサブ、Bits、Kicks、レイドを新しい順にひとつのリストで表示。ログインもダウンロードも不要。',
+    },
+    pt: {
+      title: 'Lista de eventos grátis para Twitch e Kick | Senchabot',
+      description:
+        'Uma lista de eventos recentes grátis no OBS: subs, resubs, subs de presente, Bits, Kicks e raids da Twitch e da Kick juntos, os mais novos primeiro. Sem login.',
+    },
+  },
   weather: {
     en: {
       title: 'Free Weather Overlay for OBS, Twitch & Kick | Senchabot',
@@ -1328,6 +1587,510 @@ export const APP_FEATURES: Record<WidgetId, Record<Locale, readonly string[]>> =
       'Um mercado de itens com preço que o !hud buy desconta do dinheiro, e uma seta que anda, corre ou para sob comando',
       'O dinheiro fica salvo no OBS e sobrevive a recarregamentos',
       'Tamanho recomendado da fonte de navegador: 1920x1080',
+    ],
+  },
+  counter: {
+    en: [
+      'A win and loss record, or any other count you keep on stream',
+      'Up to four counters in one browser source, side by side or stacked',
+      'Each counter has its own label, icon or channel emote, starting count and chat command',
+      'The broadcaster and mods change them from Twitch or Kick chat: add, remove, set and reset',
+      'Viewers typing the commands change nothing',
+      "A rising +1 or −1 on every change, in the picked preset's look",
+      'Every count is saved in OBS and survives reloads',
+      'Recommended browser source size: 800x260, or 440x400 stacked',
+    ],
+    de: [
+      'Eine Bilanz aus Siegen und Niederlagen oder jede andere Zahl im Stream',
+      'Bis zu vier Zähler in einer Browser-Quelle, nebeneinander oder untereinander',
+      'Jeder Zähler hat eigene Beschriftung, eigenes Icon oder Kanal-Emote, Startwert und Chatbefehl',
+      'Streamer und Mods ändern sie im Twitch- oder Kick-Chat: hinzufügen, abziehen, setzen und zurücksetzen',
+      'Tippen Zuschauer die Befehle, ändert sich nichts',
+      'Ein aufsteigendes +1 oder −1 bei jeder Änderung, im Look des gewählten Presets',
+      'Jeder Stand wird in OBS gespeichert und übersteht ein Neuladen',
+      'Empfohlene Größe der Browserquelle: 800x260, untereinander 440x400',
+    ],
+    tr: [
+      'Galibiyet ve mağlubiyet sayısı ya da yayında tuttuğun başka her sayı',
+      'Tek bir tarayıcı kaynağında dört sayaca kadar, yan yana ya da alt alta',
+      "Her sayacın kendi etiketi, simgesi ya da kanal emote'u, başlangıç sayısı ve sohbet komutu var",
+      'Yayıncı ve modlar Twitch ya da Kick sohbetinden ekler, çıkarır, ayarlar ve sıfırlar',
+      'İzleyiciler komutları yazarsa hiçbir şey değişmez',
+      "Her değişiklikte yükselen bir +1 ya da −1, seçilen preset'in görünümüyle",
+      "Her sayı OBS'te kaydedilir, sayfa yenilense de kaybolmaz",
+      'Önerilen Tarayıcı Kaynağı boyutu: 800x260, alt alta için 440x400',
+    ],
+    es: [
+      'Un récord de victorias y derrotas o cualquier otro número de tu stream',
+      'Hasta cuatro contadores en una fuente de navegador, en fila o apilados',
+      'Cada contador tiene su etiqueta, icono o emote del canal, conteo inicial y comando del chat',
+      'El streamer y los mods los cambian desde el chat de Twitch o Kick: sumar, restar, fijar y reiniciar',
+      'Si los espectadores escriben los comandos, no cambia nada',
+      'Un +1 o −1 que sube con cada cambio, con el aspecto del preset elegido',
+      'Cada conteo se guarda en OBS y aguanta las recargas',
+      'Tamaño recomendado de la fuente de navegador: 800x260, o 440x400 apilados',
+    ],
+    fr: [
+      'Un bilan de victoires et de défaites ou tout autre nombre de ton stream',
+      "Jusqu'à quatre compteurs dans une source navigateur, côte à côte ou empilés",
+      'Chaque compteur a son libellé, son icône ou une emote de la chaîne, son compte de départ et sa commande',
+      'Le streamer et les modos les changent depuis le chat Twitch ou Kick : ajouter, retirer, définir et réinitialiser',
+      'Si les viewers tapent les commandes, rien ne change',
+      'Un +1 ou −1 qui monte à chaque changement, avec le look du preset choisi',
+      'Chaque compte est enregistré dans OBS et survit aux rechargements',
+      'Taille de source navigateur recommandée : 800x260, ou 440x400 empilés',
+    ],
+    ja: [
+      '勝敗の記録や、そのほか配信で数えたいものに',
+      'ひとつのブラウザソースに最大4つのカウンター。横並びか縦並び',
+      'カウンターごとにラベル、アイコンまたはチャンネルエモート、開始カウント、チャットコマンドを設定',
+      '配信者とモデレーターはTwitchやKickのチャットから追加、削除、設定、リセット',
+      '視聴者がコマンドを入力しても何も変わりません',
+      '変化のたびに +1 や −1 が浮かび上がり、選んだプリセットの見た目で表示',
+      'カウントはOBSに保存され、再読み込みしても保持',
+      'ブラウザソースの推奨サイズ: 800x260（縦並びは440x400）',
+    ],
+    pt: [
+      'Um placar de vitórias e derrotas ou qualquer outro número da sua live',
+      'Até quatro contadores em uma fonte de navegador, lado a lado ou empilhados',
+      'Cada contador tem o próprio rótulo, ícone ou emote do canal, contagem inicial e comando do chat',
+      'O streamer e os mods mudam pelo chat da Twitch ou da Kick: somar, tirar, definir e zerar',
+      'Se os espectadores digitarem os comandos, nada muda',
+      'Um +1 ou −1 que sobe a cada mudança, com o visual do preset escolhido',
+      'A contagem fica salva no OBS e sobrevive a recarregamentos',
+      'Tamanho recomendado da fonte de navegador: 800x260, ou 440x400 empilhados',
+    ],
+  },
+  tasks: {
+    en: [
+      'Viewers add tasks from Twitch or Kick chat with !task',
+      '!done ticks a task off, !edit changes it and !remove takes it off',
+      'The broadcaster’s own tasks come first',
+      'Shows how many tasks everyone has done at a glance',
+      'A long list scrolls by itself, at a speed you pick',
+      'Mods clear finished tasks or the whole list from chat',
+      'The list is saved in OBS and survives reloads',
+      'Recommended browser source size: 480x720',
+    ],
+    de: [
+      'Zuschauer tragen Aufgaben mit !task im Twitch- oder Kick-Chat ein',
+      '!done hakt eine Aufgabe ab, !edit ändert sie und !remove nimmt sie von der Liste',
+      'Die eigenen Aufgaben des Streamers stehen oben',
+      'Zeigt auf einen Blick, wie viele Aufgaben alle erledigt haben',
+      'Eine lange Liste scrollt von selbst, in einem Tempo deiner Wahl',
+      'Mods leeren erledigte Aufgaben oder die ganze Liste im Chat',
+      'Die Liste wird in OBS gespeichert und übersteht ein Neuladen',
+      'Empfohlene Größe der Browserquelle: 480x720',
+    ],
+    tr: [
+      'İzleyiciler Twitch ya da Kick sohbetinden !task ile görev ekler',
+      '!done görevi tamamlar, !edit değiştirir, !remove siler',
+      'Yayıncının kendi görevleri en başta durur',
+      'Herkesin kaç görev bitirdiği bir bakışta görünür',
+      'Uzun bir liste, seçtiğin hızda kendiliğinden kayar',
+      'Modlar biten görevleri ya da bütün listeyi sohbetten temizler',
+      "Liste OBS'te kaydedilir, sayfa yenilense de kaybolmaz",
+      'Önerilen Tarayıcı Kaynağı boyutu: 480x720',
+    ],
+    es: [
+      'Los espectadores añaden tareas desde el chat de Twitch o Kick con !task',
+      '!done tacha una tarea, !edit la cambia y !remove la quita',
+      'Las tareas del streamer van primero',
+      'Muestra de un vistazo cuántas tareas ha terminado cada uno',
+      'Una lista larga se desplaza sola, a la velocidad que elijas',
+      'Los mods quitan las tareas terminadas o vacían la lista desde el chat',
+      'La lista se guarda en OBS y aguanta las recargas',
+      'Tamaño recomendado de la fuente de navegador: 480x720',
+    ],
+    fr: [
+      'Les viewers ajoutent des tâches depuis le chat Twitch ou Kick avec !task',
+      '!done coche une tâche, !edit la modifie et !remove la retire',
+      'Les tâches du streamer passent en premier',
+      "Montre d'un coup d'œil combien de tâches chacun a terminées",
+      'Une longue liste défile toute seule, à la vitesse de ton choix',
+      'Les modos retirent les tâches terminées ou vident toute la liste depuis le chat',
+      'La liste est enregistrée dans OBS et survit aux rechargements',
+      'Taille de source navigateur recommandée : 480x720',
+    ],
+    ja: [
+      '視聴者はTwitchやKickのチャットから !task でタスクを追加',
+      '!done でチェック、!edit で書き換え、!remove で削除',
+      '配信者自身のタスクが一番上に表示',
+      '全員が完了したタスクの数がひと目でわかる',
+      '長いリストは選んだ速さで自動スクロール',
+      'モデレーターは完了したタスクやリスト全体をチャットから消去',
+      'リストはOBSに保存され、再読み込みしても保持',
+      'ブラウザソースの推奨サイズ: 480x720',
+    ],
+    pt: [
+      'Os espectadores adicionam tarefas pelo chat da Twitch ou da Kick com !task',
+      '!done risca uma tarefa, !edit muda e !remove tira da lista',
+      'As tarefas do streamer vêm primeiro',
+      'Mostra num relance quantas tarefas cada um já terminou',
+      'Uma lista longa rola sozinha, na velocidade que você escolher',
+      'Os mods limpam as tarefas feitas ou a lista inteira pelo chat',
+      'A lista fica salva no OBS e sobrevive a recarregamentos',
+      'Tamanho recomendado da fonte de navegador: 480x720',
+    ],
+  },
+  'lower-third': {
+    en: [
+      'An animated bar with a title and up to 6 lines that take turns',
+      'Stays up, or slides in and out on a timer you set',
+      'Any corner of the scene, at 50 to 200 percent of its size',
+      'Takes the picked preset’s frame, fonts and colors',
+      'Needs no channel; with one, mods put up a line of their own with !lt',
+      'Mods hide it and bring it back from Twitch or Kick chat',
+      'All settings live in the URL, nothing to install',
+      'Recommended browser source size: 1920x1080',
+    ],
+    de: [
+      'Eine animierte Leiste mit Titel und bis zu 6 Zeilen, die sich abwechseln',
+      'Bleibt stehen oder gleitet per Timer herein und hinaus',
+      'In jeder Ecke der Szene, mit 50 bis 200 Prozent ihrer Größe',
+      'Übernimmt Rahmen, Schriften und Farben des gewählten Presets',
+      'Braucht keinen Kanal; mit Kanal blenden Mods mit !lt eine eigene Zeile ein',
+      'Mods blenden sie im Twitch- oder Kick-Chat aus und wieder ein',
+      'Alle Einstellungen stecken in der URL, nichts zu installieren',
+      'Empfohlene Größe der Browserquelle: 1920x1080',
+    ],
+    tr: [
+      'Bir başlık ve sırayla değişen en fazla 6 satırla animasyonlu bir bant',
+      'Sürekli ekranda kalır ya da belirlediğin sürelerle kayarak girip çıkar',
+      'Sahnenin istediğin köşesinde, %50 ile %200 arası boyutta',
+      "Seçilen preset'in çerçevesini, yazı tiplerini ve renklerini alır",
+      'Kanal gerekmez; kanal yazılırsa modlar !lt ile kendi satırlarını gösterir',
+      'Modlar Twitch ya da Kick sohbetinden gizleyip geri getirir',
+      "Bütün ayarlar URL'de, kurulacak bir şey yok",
+      'Önerilen Tarayıcı Kaynağı boyutu: 1920x1080',
+    ],
+    es: [
+      'Una barra animada con un título y hasta 6 líneas que van rotando',
+      'Se queda fijo, o entra y sale deslizándose con el temporizador que elijas',
+      'En cualquier esquina de la escena, del 50 al 200 por ciento de su tamaño',
+      'Toma el marco, las fuentes y los colores del preset elegido',
+      'No necesita canal; con uno, los mods muestran una línea propia con !lt',
+      'Los mods lo ocultan y lo vuelven a mostrar desde el chat de Twitch o Kick',
+      'Toda la configuración va en la URL, no hay nada que instalar',
+      'Tamaño recomendado de la fuente de navegador: 1920x1080',
+    ],
+    fr: [
+      "Une barre animée avec un titre et jusqu'à 6 lignes qui se relaient",
+      'Reste affiché, ou entre et sort en glissant avec un minuteur que tu règles',
+      "Dans n'importe quel coin de la scène, de 50 à 200 % de sa taille",
+      'Prend le cadre, les polices et les couleurs du preset choisi',
+      'Aucune chaîne requise ; avec une chaîne, les modos affichent leur propre ligne avec !lt',
+      'Les modos le masquent et le réaffichent depuis le chat Twitch ou Kick',
+      "Tous les réglages sont dans l'URL, rien à installer",
+      'Taille de source navigateur recommandée : 1920x1080',
+    ],
+    ja: [
+      'タイトルと、順番に切り替わる最大6行を表示するアニメーション付きのバー',
+      'ずっと表示、または設定したタイマーでスライドして出入り',
+      'シーンのどの隅にも、50%から200%のサイズで配置',
+      '選んだプリセットのフレーム、フォント、色を使用',
+      'チャンネルは不要。入力すればモデレーターが !lt で自分の行を表示',
+      'モデレーターはTwitchやKickのチャットから非表示と再表示が可能',
+      '設定はすべてURLに入っていて、インストール不要',
+      'ブラウザソースの推奨サイズ: 1920x1080',
+    ],
+    pt: [
+      'Uma barra animada com um título e até 6 linhas que se revezam',
+      'Fica fixa, ou entra e sai deslizando num timer que você define',
+      'Em qualquer canto da cena, de 50 a 200 por cento do tamanho',
+      'Pega a moldura, as fontes e as cores do preset escolhido',
+      'Não precisa de canal; com um, os mods colocam uma linha própria com !lt',
+      'Os mods escondem e trazem de volta pelo chat da Twitch ou da Kick',
+      'Todas as configurações ficam na URL, nada para instalar',
+      'Tamanho recomendado da fonte de navegador: 1920x1080',
+    ],
+  },
+  leaderboard: {
+    en: [
+      'Ranks top gifters or top Bits and Kicks givers from Twitch and Kick',
+      'Stream labels for the latest sub, gifted sub, cheer and raid',
+      'Shows 3 to 10 places, with gold, silver and bronze for the top three',
+      'Each name marked with its platform color',
+      'Totals keep counting from stream to stream until you reset them',
+      'The broadcaster and mods reset the board with !top reset',
+      'Saved in OBS, so a reload keeps every total',
+      'Recommended browser source size: 440x380',
+    ],
+    de: [
+      'Rangliste der Top-Gifter oder der meisten Bits und Kicks von Twitch und Kick',
+      'Stream-Labels für den letzten Sub, Gift-Sub, Cheer und Raid',
+      'Zeigt 3 bis 10 Plätze, mit Gold, Silber und Bronze für die ersten drei',
+      'Jeder Name in der Farbe seiner Plattform markiert',
+      'Die Summen zählen von Stream zu Stream weiter, bis du sie zurücksetzt',
+      'Streamer und Mods setzen die Rangliste mit !top reset zurück',
+      'In OBS gespeichert, ein Neuladen behält also jede Summe',
+      'Empfohlene Größe der Browserquelle: 440x380',
+    ],
+    tr: [
+      "Twitch ve Kick'te en çok abonelik hediye edenleri ya da en çok Bits ve Kicks gönderenleri sıralar",
+      'Son abonelik, hediye abonelik, cheer ve raid için yayın etiketleri',
+      '3 ile 10 arası sıra gösterir, ilk üç altın, gümüş ve bronz renkte',
+      'Her isim kendi platformunun rengiyle işaretli',
+      'Toplamlar sen sıfırlayana kadar yayından yayına saymaya devam eder',
+      'Yayıncı ve modlar tabloyu !top reset ile sıfırlar',
+      "OBS'te kaydedilir, sayfa yenilense de hiçbir toplam kaybolmaz",
+      'Önerilen Tarayıcı Kaynağı boyutu: 440x380',
+    ],
+    es: [
+      'Ordena a quienes más subs regalan o más Bits y Kicks envían en Twitch y Kick',
+      'Etiquetas para el stream con lo último en subs, subs regaladas, cheers y raids',
+      'Muestra de 3 a 10 puestos, con oro, plata y bronce para los tres primeros',
+      'Cada nombre lleva el color de su plataforma',
+      'Los totales siguen sumando de un stream a otro hasta que los reinicies',
+      'El streamer y los mods reinician la tabla con !top reset',
+      'Se guarda en OBS, así que una recarga conserva todos los totales',
+      'Tamaño recomendado de la fuente de navegador: 440x380',
+    ],
+    fr: [
+      'Classe ceux qui offrent le plus de subs ou envoient le plus de Bits et de Kicks sur Twitch et Kick',
+      'Des labels de stream pour le dernier sub, sub offert, cheer et raid',
+      "Affiche de 3 à 10 places, avec l'or, l'argent et le bronze pour les trois premiers",
+      'Chaque pseudo marqué de la couleur de sa plateforme',
+      "Les totaux continuent d'un stream à l'autre jusqu'à ce que tu les réinitialises",
+      'Le streamer et les modos réinitialisent le classement avec !top reset',
+      'Enregistré dans OBS, donc un rechargement garde chaque total',
+      'Taille de source navigateur recommandée : 440x380',
+    ],
+    ja: [
+      'TwitchとKickでギフトサブ、またはBitsとKicksを多く贈った人をランキング表示',
+      '最新のサブスク、ギフトサブ、Cheer、レイドを配信用のラベルとして表示',
+      '表示する順位は3〜10位。上位3人は金・銀・銅',
+      '各名前にプラットフォームの色',
+      '合計はリセットするまで配信をまたいで加算',
+      '配信者とモデレーターは !top reset でランキングをリセット',
+      'OBSに保存され、再読み込みしてもすべての合計を保持',
+      'ブラウザソースの推奨サイズ: 440x380',
+    ],
+    pt: [
+      'Ranking de quem mais dá subs de presente ou manda Bits e Kicks na Twitch e na Kick',
+      'Rótulos para a live com o último sub, sub de presente, cheer e raid',
+      'Mostra de 3 a 10 posições, com ouro, prata e bronze para os três primeiros',
+      'Cada nome marcado com a cor da sua plataforma',
+      'Os totais continuam somando de uma live para outra até você zerar',
+      'O streamer e os mods zeram o ranking com !top reset',
+      'Fica salvo no OBS, então uma recarga mantém todos os totais',
+      'Tamanho recomendado da fonte de navegador: 440x380',
+    ],
+  },
+  queue: {
+    en: [
+      'Viewers join from Twitch or Kick chat with !join, or a join word you pick',
+      'A note after the join word, like an in-game name, shows next to the name',
+      'Mods call viewers up with !next, one or more at a time',
+      'Mods open, close and clear the queue and take viewers out from chat',
+      'A subscribers-only mode and an optional queue limit',
+      'Shows who is playing now, who is next and how many are waiting',
+      'The queue is saved in OBS and survives reloads',
+      'Recommended browser source size: 440x600',
+    ],
+    de: [
+      'Zuschauer stellen sich im Twitch- oder Kick-Chat mit !join an, oder mit einem Keyword deiner Wahl',
+      'Eine Notiz nach dem Keyword, etwa ein Ingame-Name, steht neben dem Namen',
+      'Mods rufen Zuschauer mit !next auf, einzeln oder mehrere auf einmal',
+      'Mods öffnen, schließen und leeren die Warteschlange und nehmen Zuschauer im Chat raus',
+      'Ein Nur-Subs-Modus und ein optionales Limit für die Warteschlange',
+      'Zeigt, wer gerade spielt, wer als Nächstes dran ist und wie viele warten',
+      'Die Warteschlange wird in OBS gespeichert und übersteht ein Neuladen',
+      'Empfohlene Größe der Browserquelle: 440x600',
+    ],
+    tr: [
+      'İzleyiciler Twitch ya da Kick sohbetinden !join ya da senin seçtiğin bir kelimeyle sıraya girer',
+      'Katılım kelimesinden sonra yazılan not, örneğin oyun içi ad, ismin yanında görünür',
+      'Modlar !next ile izleyicileri tek tek ya da birkaç kişi birden çağırır',
+      'Modlar sohbetten sırayı açar, kapatır, temizler ve izleyicileri sıradan çıkarır',
+      'Sadece aboneler modu ve isteğe bağlı sıra sınırı',
+      'Şu an kimin oynadığını, sırada kimin olduğunu ve kaç kişinin beklediğini gösterir',
+      "Sıra OBS'te kaydedilir, sayfa yenilense de kaybolmaz",
+      'Önerilen Tarayıcı Kaynağı boyutu: 440x600',
+    ],
+    es: [
+      'Los espectadores entran desde el chat de Twitch o Kick con !join, o con la palabra clave que elijas',
+      'Una nota tras la palabra clave, como el nombre en el juego, aparece junto al nombre',
+      'Los mods llaman espectadores con !next, de uno en uno o varios a la vez',
+      'Los mods abren, cierran y vacían la fila y sacan espectadores desde el chat',
+      'Modo solo suscriptores y un límite opcional para la fila',
+      'Muestra quién juega ahora, quién sigue y cuántos esperan',
+      'La fila se guarda en OBS y aguanta las recargas',
+      'Tamaño recomendado de la fuente de navegador: 440x600',
+    ],
+    fr: [
+      'Les viewers rejoignent la file depuis le chat Twitch ou Kick avec !join, ou un mot-clé de ton choix',
+      "Une note après le mot-clé, comme un pseudo en jeu, s'affiche à côté du nom",
+      'Les modos appellent les viewers avec !next, un par un ou plusieurs à la fois',
+      'Les modos ouvrent, ferment et vident la file et retirent des viewers depuis le chat',
+      'Un mode abonnés uniquement et une limite de file en option',
+      'Affiche qui joue en ce moment, qui passe ensuite et combien attendent',
+      'La file est enregistrée dans OBS et survit aux rechargements',
+      'Taille de source navigateur recommandée : 440x600',
+    ],
+    ja: [
+      '視聴者はTwitchやKickのチャットで !join か、好きな参加キーワードを打って参加',
+      '参加キーワードのあとのメモ（ゲーム内の名前など）を名前の横に表示',
+      'モデレーターは !next で視聴者を呼び出し。1人ずつでも複数人まとめてでも',
+      'モデレーターはチャットから受付の開始と締め切り、リストのクリア、視聴者の削除',
+      'サブスク限定モードと、任意のリスト上限',
+      'プレイ中の人、次の順番、待っている人数を表示',
+      'リストはOBSに保存され、再読み込みしても保持',
+      'ブラウザソースの推奨サイズ: 440x600',
+    ],
+    pt: [
+      'O pessoal entra pelo chat da Twitch ou da Kick com !join, ou com uma palavra-chave que você escolher',
+      'Uma nota depois da palavra-chave, tipo o nick no jogo, aparece ao lado do nome',
+      'Os mods chamam espectadores com !next, um de cada vez ou vários juntos',
+      'Os mods abrem, fecham e limpam a fila e tiram espectadores pelo chat',
+      'Modo só inscritos e um limite de fila opcional',
+      'Mostra quem está jogando agora, quem é o próximo e quantos estão esperando',
+      'A fila fica salva no OBS e sobrevive a recarregamentos',
+      'Tamanho recomendado da fonte de navegador: 440x600',
+    ],
+  },
+  credits: {
+    en: [
+      'Movie-style credits that roll when the ending scene goes live in OBS',
+      'Subscribers, gifted subs, Bits and Kicks, raiders, moderators and chatters from Twitch and Kick',
+      'Biggest gifters and cheerers first, each name marked with its platform',
+      'Bots and the broadcaster are left out of the chat list',
+      'Your own first and last lines, three speeds and an optional loop',
+      'The broadcaster and mods roll, stop and reset them with !credits',
+      'The names are saved in OBS, and a new stream starts fresh',
+      'Recommended browser source size: 1920x1080',
+    ],
+    de: [
+      'Ein Abspann wie im Kino, der beim Wechsel zur Endszene in OBS läuft',
+      'Abonnenten, Gift-Subs, Bits und Kicks, Raider, Moderatoren und Chatter von Twitch und Kick',
+      'Die größten Gifts und Cheers zuerst, jeder Name mit seiner Plattform markiert',
+      'Bots und der Streamer bleiben aus der Chat-Liste raus',
+      'Eigene erste und letzte Zeile, drei Tempostufen und optionale Wiederholung',
+      'Streamer und Mods starten, stoppen und leeren ihn mit !credits',
+      'Die Namen werden in OBS gespeichert, ein neuer Stream startet leer',
+      'Empfohlene Größe der Browserquelle: 1920x1080',
+    ],
+    tr: [
+      "OBS'te bitiş sahnesine geçince akan film tarzı bir jenerik",
+      "Twitch ve Kick'ten aboneler, hediye abonelikler, Bits ve Kicks, raid atanlar, moderatörler ve sohbet edenler",
+      'En çok hediye ve cheer gönderenler önce gelir, her isim platformuyla işaretlenir',
+      'Botlar ve yayıncı sohbet listesine girmez',
+      'Kendi ilk ve son satırın, üç hız ve isteğe bağlı tekrar',
+      'Yayıncı ve modlar !credits ile jeneriği başlatır, durdurur ve sıfırlar',
+      "İsimler OBS'te kaydedilir, yeni bir yayın boş bir jenerikle başlar",
+      'Önerilen Tarayıcı Kaynağı boyutu: 1920x1080',
+    ],
+    es: [
+      'Créditos de película que desfilan al cambiar a la escena de cierre en OBS',
+      'Suscriptores, subs regaladas, Bits y Kicks, raids, moderadores y chat de Twitch y Kick',
+      'Los mayores regalos y cheers primero, cada nombre marcado con su plataforma',
+      'Los bots y el streamer quedan fuera de la lista del chat',
+      'Tu propia primera y última línea, tres velocidades y repetición opcional',
+      'El streamer y los mods los lanzan, detienen y reinician con !credits',
+      'Los nombres se guardan en OBS, y un nuevo stream empieza de cero',
+      'Tamaño recomendado de la fuente de navegador: 1920x1080',
+    ],
+    fr: [
+      'Un générique façon film qui défile quand tu passes sur la scène de fin dans OBS',
+      'Abonnés, subs offerts, Bits et Kicks, raids, modérateurs et viewers du chat de Twitch et Kick',
+      'Les plus gros cadeaux et cheers en premier, chaque nom marqué de sa plateforme',
+      'Les bots et le streamer sont exclus de la liste du chat',
+      'Ta propre première et dernière ligne, trois vitesses et une boucle en option',
+      "Le streamer et les modos le lancent, l'arrêtent et le vident avec !credits",
+      'Les noms sont enregistrés dans OBS, et un nouveau stream repart de zéro',
+      'Taille de source navigateur recommandée : 1920x1080',
+    ],
+    ja: [
+      'OBSで終了シーンに切り替えると流れる、映画のようなエンドロール',
+      'TwitchとKickのサブスクライバー、ギフトサブ、Bits & Kicks、レイド、モデレーター、チャット参加者',
+      'ギフトやCheerの多い人から順に並び、各名前にプラットフォームの目印を表示',
+      'ボットと配信者自身はチャットのリストから除外',
+      '最初と最後の行を自由に設定でき、速度は3段階、繰り返しも選択可能',
+      '配信者とモデレーターは !credits で再生、停止、リセット',
+      '名前はOBSに保存され、新しい配信は空の状態から開始',
+      'ブラウザソースの推奨サイズ: 1920x1080',
+    ],
+    pt: [
+      'Créditos estilo filme que rolam quando você troca para a cena de encerramento no OBS',
+      'Inscritos, subs de presente, Bits e Kicks, raids, moderadores e quem conversou no chat da Twitch e da Kick',
+      'Os maiores presentes, Bits e Kicks primeiro, cada nome marcado com a sua plataforma',
+      'Os bots e o streamer ficam de fora da lista do chat',
+      'Sua própria primeira e última linha, três velocidades e repetição opcional',
+      'O streamer e os mods rolam, param e zeram os créditos com !credits',
+      'Os nomes ficam salvos no OBS, e uma nova live começa do zero',
+      'Tamanho recomendado da fonte de navegador: 1920x1080',
+    ],
+  },
+  'event-list': {
+    en: [
+      'Subs, resubs, gifted subs, Bits, Kicks and raids from Twitch and Kick in one list',
+      'Each row marked with its platform color',
+      'Shows 3 to 10 events, newest on top or at the bottom',
+      'Turn kinds of events off, and set the smallest cheer and raid that count',
+      'Rows can fade out after a time you set',
+      'The broadcaster and mods clear the list with !events clear',
+      'The list is saved in OBS and survives reloads',
+      'Recommended browser source size: 420x520',
+    ],
+    de: [
+      'Subs, Resubs, Gift-Subs, Bits, Kicks und Raids von Twitch und Kick in einer Liste',
+      'Jede Zeile in der Farbe ihrer Plattform markiert',
+      'Zeigt 3 bis 10 Events, das neueste oben oder unten',
+      'Event-Arten abschalten und festlegen, ab welchem Cheer und Raid sie zählen',
+      'Zeilen können nach einer Zeit, die du festlegst, ausgeblendet werden',
+      'Streamer und Mods leeren die Liste mit !events clear',
+      'Die Liste wird in OBS gespeichert und übersteht ein Neuladen',
+      'Empfohlene Größe der Browserquelle: 420x520',
+    ],
+    tr: [
+      "Twitch ve Kick'ten abonelik, yenileme, hediye abonelik, Bits, Kicks ve raid'ler tek bir listede",
+      'Her satır kendi platformunun rengiyle işaretli',
+      '3 ile 10 arası etkinlik gösterir, en yenisi üstte ya da altta',
+      "Etkinlik türlerini kapatabilir, sayılacak en küçük cheer ve raid'i belirleyebilirsin",
+      'Satırlar ayarladığın süre sonunda kaybolabilir',
+      'Yayıncı ve modlar listeyi !events clear ile temizler',
+      "Liste OBS'te kaydedilir, sayfa yenilense de kaybolmaz",
+      'Önerilen Tarayıcı Kaynağı boyutu: 420x520',
+    ],
+    es: [
+      'Subs, resubs, subs regaladas, Bits, Kicks y raids de Twitch y Kick en una sola lista',
+      'Cada fila lleva el color de su plataforma',
+      'Muestra de 3 a 10 eventos, los nuevos arriba o abajo',
+      'Desactiva tipos de eventos y fija el cheer y el raid mínimos que cuentan',
+      'Las filas pueden desvanecerse tras el tiempo que elijas',
+      'El streamer y los mods vacían la lista con !events clear',
+      'La lista se guarda en OBS y aguanta las recargas',
+      'Tamaño recomendado de la fuente de navegador: 420x520',
+    ],
+    fr: [
+      'Subs, resubs, subs offerts, Bits, Kicks et raids de Twitch et Kick dans une seule liste',
+      'Chaque ligne marquée de la couleur de sa plateforme',
+      'Affiche de 3 à 10 événements, les plus récents en haut ou en bas',
+      "Désactive des types d'événements et fixe le plus petit cheer et raid qui comptent",
+      "Les lignes peuvent s'effacer après un délai que tu choisis",
+      'Le streamer et les modos vident la liste avec !events clear',
+      'La liste est enregistrée dans OBS et survit aux rechargements',
+      'Taille de source navigateur recommandée : 420x520',
+    ],
+    ja: [
+      'TwitchとKickのサブスク、継続サブスク、ギフトサブ、Bits、Kicks、レイドをひとつのリストに',
+      '各行にプラットフォームの色',
+      '表示するイベントは3〜10件。新しいイベントは上か下に',
+      'イベントの種類ごとのオンオフと、カウントするCheerとレイドの最小値の設定',
+      '設定した時間が過ぎると行がフェードアウト',
+      '配信者とモデレーターは !events clear でリストを消去',
+      'リストはOBSに保存され、再読み込みしても保持',
+      'ブラウザソースの推奨サイズ: 420x520',
+    ],
+    pt: [
+      'Subs, resubs, subs de presente, Bits, Kicks e raids da Twitch e da Kick numa lista só',
+      'Cada linha marcada com a cor da sua plataforma',
+      'Mostra de 3 a 10 eventos, os mais novos em cima ou embaixo',
+      'Desligue tipos de eventos e defina o menor cheer e raid que contam',
+      'As linhas podem sumir depois de um tempo que você define',
+      'O streamer e os mods limpam a lista com !events clear',
+      'A lista fica salva no OBS e sobrevive a recarregamentos',
+      'Tamanho recomendado da fonte de navegador: 420x520',
     ],
   },
   weather: {

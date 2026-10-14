@@ -16,18 +16,25 @@ import { Route as ToolsSpinWheelRouteImport } from './routes/tools/spin-wheel'
 import { Route as WidgetsAlertsRouteImport } from './routes/widgets/alerts'
 import { Route as WidgetsChatWidgetRouteImport } from './routes/widgets/chat-widget'
 import { Route as WidgetsCountdownRouteImport } from './routes/widgets/countdown'
+import { Route as WidgetsCounterRouteImport } from './routes/widgets/counter'
+import { Route as WidgetsCreditsRouteImport } from './routes/widgets/credits'
 import { Route as WidgetsEmoteWallRouteImport } from './routes/widgets/emote-wall'
+import { Route as WidgetsEventListRouteImport } from './routes/widgets/event-list'
 import { Route as WidgetsFollowerGoalRouteImport } from './routes/widgets/follower-goal'
 import { Route as WidgetsFrameRouteImport } from './routes/widgets/frame'
 import { Route as WidgetsGoalRouteImport } from './routes/widgets/goal'
 import { Route as WidgetsIrlHudRouteImport } from './routes/widgets/irl-hud'
+import { Route as WidgetsLeaderboardRouteImport } from './routes/widgets/leaderboard'
+import { Route as WidgetsLowerThirdRouteImport } from './routes/widgets/lower-third'
 import { Route as WidgetsPollRouteImport } from './routes/widgets/poll'
+import { Route as WidgetsQueueRouteImport } from './routes/widgets/queue'
 import { Route as WidgetsRaffleOverlayRouteImport } from './routes/widgets/raffle-overlay'
 import { Route as WidgetsSocialsRouteImport } from './routes/widgets/socials'
 import { Route as WidgetsSpinWheelRouteImport } from './routes/widgets/spin-wheel'
 import { Route as WidgetsStreamAlertsRouteImport } from './routes/widgets/stream-alerts'
 import { Route as WidgetsSubSproutWidgetRouteImport } from './routes/widgets/sub-sprout-widget'
 import { Route as WidgetsSubathonRouteImport } from './routes/widgets/subathon'
+import { Route as WidgetsTasksRouteImport } from './routes/widgets/tasks'
 import { Route as WidgetsWeatherRouteImport } from './routes/widgets/weather'
 import { Route as Char123LocaleChar125IndexRouteImport } from './routes/{-$locale}/index'
 import { Route as Char123LocaleChar125ChangelogRouteImport } from './routes/{-$locale}/changelog'
@@ -46,9 +53,13 @@ import { Route as Char123LocaleChar125GuidesSubathonTimerRouteImport } from './r
 import { Route as Char123LocaleChar125GuidesTwitchKickChatOverlayRouteImport } from './routes/{-$locale}/guides/twitch-kick-chat-overlay'
 import { Route as Char123LocaleChar125SetupChatPollRouteImport } from './routes/{-$locale}/setup/chat-poll'
 import { Route as Char123LocaleChar125SetupChatWidgetRouteImport } from './routes/{-$locale}/setup/chat-widget'
+import { Route as Char123LocaleChar125SetupCounterRouteImport } from './routes/{-$locale}/setup/counter'
 import { Route as Char123LocaleChar125SetupEmoteWallRouteImport } from './routes/{-$locale}/setup/emote-wall'
+import { Route as Char123LocaleChar125SetupEndCreditsRouteImport } from './routes/{-$locale}/setup/end-credits'
+import { Route as Char123LocaleChar125SetupEventListRouteImport } from './routes/{-$locale}/setup/event-list'
 import { Route as Char123LocaleChar125SetupFollowerGoalRouteImport } from './routes/{-$locale}/setup/follower-goal'
 import { Route as Char123LocaleChar125SetupIrlHudRouteImport } from './routes/{-$locale}/setup/irl-hud'
+import { Route as Char123LocaleChar125SetupLowerThirdsRouteImport } from './routes/{-$locale}/setup/lower-thirds'
 import { Route as Char123LocaleChar125SetupObsBridgeRouteImport } from './routes/{-$locale}/setup/obs-bridge'
 import { Route as Char123LocaleChar125SetupRaffleRouteImport } from './routes/{-$locale}/setup/raffle'
 import { Route as Char123LocaleChar125SetupSocialsRouteImport } from './routes/{-$locale}/setup/socials'
@@ -59,6 +70,9 @@ import { Route as Char123LocaleChar125SetupStreamFramesRouteImport } from './rou
 import { Route as Char123LocaleChar125SetupSubGoalRouteImport } from './routes/{-$locale}/setup/sub-goal'
 import { Route as Char123LocaleChar125SetupSubGrowingPlantRouteImport } from './routes/{-$locale}/setup/sub-growing-plant'
 import { Route as Char123LocaleChar125SetupSubathonTimerRouteImport } from './routes/{-$locale}/setup/subathon-timer'
+import { Route as Char123LocaleChar125SetupTaskListRouteImport } from './routes/{-$locale}/setup/task-list'
+import { Route as Char123LocaleChar125SetupTopSupportersRouteImport } from './routes/{-$locale}/setup/top-supporters'
+import { Route as Char123LocaleChar125SetupViewerQueueRouteImport } from './routes/{-$locale}/setup/viewer-queue'
 import { Route as Char123LocaleChar125SetupWeatherRouteImport } from './routes/{-$locale}/setup/weather'
 
 const Char123LocaleChar125RouteRoute =
@@ -97,9 +111,24 @@ const WidgetsCountdownRoute = WidgetsCountdownRouteImport.update({
   path: '/widgets/countdown',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WidgetsCounterRoute = WidgetsCounterRouteImport.update({
+  id: '/widgets/counter',
+  path: '/widgets/counter',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WidgetsCreditsRoute = WidgetsCreditsRouteImport.update({
+  id: '/widgets/credits',
+  path: '/widgets/credits',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const WidgetsEmoteWallRoute = WidgetsEmoteWallRouteImport.update({
   id: '/widgets/emote-wall',
   path: '/widgets/emote-wall',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WidgetsEventListRoute = WidgetsEventListRouteImport.update({
+  id: '/widgets/event-list',
+  path: '/widgets/event-list',
   getParentRoute: () => rootRouteImport,
 } as any)
 const WidgetsFollowerGoalRoute = WidgetsFollowerGoalRouteImport.update({
@@ -122,9 +151,24 @@ const WidgetsIrlHudRoute = WidgetsIrlHudRouteImport.update({
   path: '/widgets/irl-hud',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WidgetsLeaderboardRoute = WidgetsLeaderboardRouteImport.update({
+  id: '/widgets/leaderboard',
+  path: '/widgets/leaderboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WidgetsLowerThirdRoute = WidgetsLowerThirdRouteImport.update({
+  id: '/widgets/lower-third',
+  path: '/widgets/lower-third',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const WidgetsPollRoute = WidgetsPollRouteImport.update({
   id: '/widgets/poll',
   path: '/widgets/poll',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WidgetsQueueRoute = WidgetsQueueRouteImport.update({
+  id: '/widgets/queue',
+  path: '/widgets/queue',
   getParentRoute: () => rootRouteImport,
 } as any)
 const WidgetsRaffleOverlayRoute = WidgetsRaffleOverlayRouteImport.update({
@@ -155,6 +199,11 @@ const WidgetsSubSproutWidgetRoute = WidgetsSubSproutWidgetRouteImport.update({
 const WidgetsSubathonRoute = WidgetsSubathonRouteImport.update({
   id: '/widgets/subathon',
   path: '/widgets/subathon',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WidgetsTasksRoute = WidgetsTasksRouteImport.update({
+  id: '/widgets/tasks',
+  path: '/widgets/tasks',
   getParentRoute: () => rootRouteImport,
 } as any)
 const WidgetsWeatherRoute = WidgetsWeatherRouteImport.update({
@@ -263,10 +312,28 @@ const Char123LocaleChar125SetupChatWidgetRoute =
     path: '/setup/chat-widget',
     getParentRoute: () => Char123LocaleChar125RouteRoute,
   } as any)
+const Char123LocaleChar125SetupCounterRoute =
+  Char123LocaleChar125SetupCounterRouteImport.update({
+    id: '/setup/counter',
+    path: '/setup/counter',
+    getParentRoute: () => Char123LocaleChar125RouteRoute,
+  } as any)
 const Char123LocaleChar125SetupEmoteWallRoute =
   Char123LocaleChar125SetupEmoteWallRouteImport.update({
     id: '/setup/emote-wall',
     path: '/setup/emote-wall',
+    getParentRoute: () => Char123LocaleChar125RouteRoute,
+  } as any)
+const Char123LocaleChar125SetupEndCreditsRoute =
+  Char123LocaleChar125SetupEndCreditsRouteImport.update({
+    id: '/setup/end-credits',
+    path: '/setup/end-credits',
+    getParentRoute: () => Char123LocaleChar125RouteRoute,
+  } as any)
+const Char123LocaleChar125SetupEventListRoute =
+  Char123LocaleChar125SetupEventListRouteImport.update({
+    id: '/setup/event-list',
+    path: '/setup/event-list',
     getParentRoute: () => Char123LocaleChar125RouteRoute,
   } as any)
 const Char123LocaleChar125SetupFollowerGoalRoute =
@@ -279,6 +346,12 @@ const Char123LocaleChar125SetupIrlHudRoute =
   Char123LocaleChar125SetupIrlHudRouteImport.update({
     id: '/setup/irl-hud',
     path: '/setup/irl-hud',
+    getParentRoute: () => Char123LocaleChar125RouteRoute,
+  } as any)
+const Char123LocaleChar125SetupLowerThirdsRoute =
+  Char123LocaleChar125SetupLowerThirdsRouteImport.update({
+    id: '/setup/lower-thirds',
+    path: '/setup/lower-thirds',
     getParentRoute: () => Char123LocaleChar125RouteRoute,
   } as any)
 const Char123LocaleChar125SetupObsBridgeRoute =
@@ -341,6 +414,24 @@ const Char123LocaleChar125SetupSubathonTimerRoute =
     path: '/setup/subathon-timer',
     getParentRoute: () => Char123LocaleChar125RouteRoute,
   } as any)
+const Char123LocaleChar125SetupTaskListRoute =
+  Char123LocaleChar125SetupTaskListRouteImport.update({
+    id: '/setup/task-list',
+    path: '/setup/task-list',
+    getParentRoute: () => Char123LocaleChar125RouteRoute,
+  } as any)
+const Char123LocaleChar125SetupTopSupportersRoute =
+  Char123LocaleChar125SetupTopSupportersRouteImport.update({
+    id: '/setup/top-supporters',
+    path: '/setup/top-supporters',
+    getParentRoute: () => Char123LocaleChar125RouteRoute,
+  } as any)
+const Char123LocaleChar125SetupViewerQueueRoute =
+  Char123LocaleChar125SetupViewerQueueRouteImport.update({
+    id: '/setup/viewer-queue',
+    path: '/setup/viewer-queue',
+    getParentRoute: () => Char123LocaleChar125RouteRoute,
+  } as any)
 const Char123LocaleChar125SetupWeatherRoute =
   Char123LocaleChar125SetupWeatherRouteImport.update({
     id: '/setup/weather',
@@ -356,18 +447,25 @@ export interface FileRoutesByFullPath {
   '/widgets/alerts': typeof WidgetsAlertsRoute
   '/widgets/chat-widget': typeof WidgetsChatWidgetRoute
   '/widgets/countdown': typeof WidgetsCountdownRoute
+  '/widgets/counter': typeof WidgetsCounterRoute
+  '/widgets/credits': typeof WidgetsCreditsRoute
   '/widgets/emote-wall': typeof WidgetsEmoteWallRoute
+  '/widgets/event-list': typeof WidgetsEventListRoute
   '/widgets/follower-goal': typeof WidgetsFollowerGoalRoute
   '/widgets/frame': typeof WidgetsFrameRoute
   '/widgets/goal': typeof WidgetsGoalRoute
   '/widgets/irl-hud': typeof WidgetsIrlHudRoute
+  '/widgets/leaderboard': typeof WidgetsLeaderboardRoute
+  '/widgets/lower-third': typeof WidgetsLowerThirdRoute
   '/widgets/poll': typeof WidgetsPollRoute
+  '/widgets/queue': typeof WidgetsQueueRoute
   '/widgets/raffle-overlay': typeof WidgetsRaffleOverlayRoute
   '/widgets/socials': typeof WidgetsSocialsRoute
   '/widgets/spin-wheel': typeof WidgetsSpinWheelRoute
   '/widgets/stream-alerts': typeof WidgetsStreamAlertsRoute
   '/widgets/sub-sprout-widget': typeof WidgetsSubSproutWidgetRoute
   '/widgets/subathon': typeof WidgetsSubathonRoute
+  '/widgets/tasks': typeof WidgetsTasksRoute
   '/widgets/weather': typeof WidgetsWeatherRoute
   '/{-$locale}/changelog': typeof Char123LocaleChar125ChangelogRoute
   '/{-$locale}/faq': typeof Char123LocaleChar125FaqRoute
@@ -385,9 +483,13 @@ export interface FileRoutesByFullPath {
   '/{-$locale}/guides/twitch-kick-chat-overlay': typeof Char123LocaleChar125GuidesTwitchKickChatOverlayRoute
   '/{-$locale}/setup/chat-poll': typeof Char123LocaleChar125SetupChatPollRoute
   '/{-$locale}/setup/chat-widget': typeof Char123LocaleChar125SetupChatWidgetRoute
+  '/{-$locale}/setup/counter': typeof Char123LocaleChar125SetupCounterRoute
   '/{-$locale}/setup/emote-wall': typeof Char123LocaleChar125SetupEmoteWallRoute
+  '/{-$locale}/setup/end-credits': typeof Char123LocaleChar125SetupEndCreditsRoute
+  '/{-$locale}/setup/event-list': typeof Char123LocaleChar125SetupEventListRoute
   '/{-$locale}/setup/follower-goal': typeof Char123LocaleChar125SetupFollowerGoalRoute
   '/{-$locale}/setup/irl-hud': typeof Char123LocaleChar125SetupIrlHudRoute
+  '/{-$locale}/setup/lower-thirds': typeof Char123LocaleChar125SetupLowerThirdsRoute
   '/{-$locale}/setup/obs-bridge': typeof Char123LocaleChar125SetupObsBridgeRoute
   '/{-$locale}/setup/raffle': typeof Char123LocaleChar125SetupRaffleRoute
   '/{-$locale}/setup/socials': typeof Char123LocaleChar125SetupSocialsRoute
@@ -398,6 +500,9 @@ export interface FileRoutesByFullPath {
   '/{-$locale}/setup/sub-goal': typeof Char123LocaleChar125SetupSubGoalRoute
   '/{-$locale}/setup/sub-growing-plant': typeof Char123LocaleChar125SetupSubGrowingPlantRoute
   '/{-$locale}/setup/subathon-timer': typeof Char123LocaleChar125SetupSubathonTimerRoute
+  '/{-$locale}/setup/task-list': typeof Char123LocaleChar125SetupTaskListRoute
+  '/{-$locale}/setup/top-supporters': typeof Char123LocaleChar125SetupTopSupportersRoute
+  '/{-$locale}/setup/viewer-queue': typeof Char123LocaleChar125SetupViewerQueueRoute
   '/{-$locale}/setup/weather': typeof Char123LocaleChar125SetupWeatherRoute
   '/{-$locale}/guides/': typeof Char123LocaleChar125GuidesIndexRoute
 }
@@ -408,18 +513,25 @@ export interface FileRoutesByTo {
   '/widgets/alerts': typeof WidgetsAlertsRoute
   '/widgets/chat-widget': typeof WidgetsChatWidgetRoute
   '/widgets/countdown': typeof WidgetsCountdownRoute
+  '/widgets/counter': typeof WidgetsCounterRoute
+  '/widgets/credits': typeof WidgetsCreditsRoute
   '/widgets/emote-wall': typeof WidgetsEmoteWallRoute
+  '/widgets/event-list': typeof WidgetsEventListRoute
   '/widgets/follower-goal': typeof WidgetsFollowerGoalRoute
   '/widgets/frame': typeof WidgetsFrameRoute
   '/widgets/goal': typeof WidgetsGoalRoute
   '/widgets/irl-hud': typeof WidgetsIrlHudRoute
+  '/widgets/leaderboard': typeof WidgetsLeaderboardRoute
+  '/widgets/lower-third': typeof WidgetsLowerThirdRoute
   '/widgets/poll': typeof WidgetsPollRoute
+  '/widgets/queue': typeof WidgetsQueueRoute
   '/widgets/raffle-overlay': typeof WidgetsRaffleOverlayRoute
   '/widgets/socials': typeof WidgetsSocialsRoute
   '/widgets/spin-wheel': typeof WidgetsSpinWheelRoute
   '/widgets/stream-alerts': typeof WidgetsStreamAlertsRoute
   '/widgets/sub-sprout-widget': typeof WidgetsSubSproutWidgetRoute
   '/widgets/subathon': typeof WidgetsSubathonRoute
+  '/widgets/tasks': typeof WidgetsTasksRoute
   '/widgets/weather': typeof WidgetsWeatherRoute
   '/{-$locale}/changelog': typeof Char123LocaleChar125ChangelogRoute
   '/{-$locale}/faq': typeof Char123LocaleChar125FaqRoute
@@ -437,9 +549,13 @@ export interface FileRoutesByTo {
   '/{-$locale}/guides/twitch-kick-chat-overlay': typeof Char123LocaleChar125GuidesTwitchKickChatOverlayRoute
   '/{-$locale}/setup/chat-poll': typeof Char123LocaleChar125SetupChatPollRoute
   '/{-$locale}/setup/chat-widget': typeof Char123LocaleChar125SetupChatWidgetRoute
+  '/{-$locale}/setup/counter': typeof Char123LocaleChar125SetupCounterRoute
   '/{-$locale}/setup/emote-wall': typeof Char123LocaleChar125SetupEmoteWallRoute
+  '/{-$locale}/setup/end-credits': typeof Char123LocaleChar125SetupEndCreditsRoute
+  '/{-$locale}/setup/event-list': typeof Char123LocaleChar125SetupEventListRoute
   '/{-$locale}/setup/follower-goal': typeof Char123LocaleChar125SetupFollowerGoalRoute
   '/{-$locale}/setup/irl-hud': typeof Char123LocaleChar125SetupIrlHudRoute
+  '/{-$locale}/setup/lower-thirds': typeof Char123LocaleChar125SetupLowerThirdsRoute
   '/{-$locale}/setup/obs-bridge': typeof Char123LocaleChar125SetupObsBridgeRoute
   '/{-$locale}/setup/raffle': typeof Char123LocaleChar125SetupRaffleRoute
   '/{-$locale}/setup/socials': typeof Char123LocaleChar125SetupSocialsRoute
@@ -450,6 +566,9 @@ export interface FileRoutesByTo {
   '/{-$locale}/setup/sub-goal': typeof Char123LocaleChar125SetupSubGoalRoute
   '/{-$locale}/setup/sub-growing-plant': typeof Char123LocaleChar125SetupSubGrowingPlantRoute
   '/{-$locale}/setup/subathon-timer': typeof Char123LocaleChar125SetupSubathonTimerRoute
+  '/{-$locale}/setup/task-list': typeof Char123LocaleChar125SetupTaskListRoute
+  '/{-$locale}/setup/top-supporters': typeof Char123LocaleChar125SetupTopSupportersRoute
+  '/{-$locale}/setup/viewer-queue': typeof Char123LocaleChar125SetupViewerQueueRoute
   '/{-$locale}/setup/weather': typeof Char123LocaleChar125SetupWeatherRoute
   '/{-$locale}/guides': typeof Char123LocaleChar125GuidesIndexRoute
 }
@@ -462,18 +581,25 @@ export interface FileRoutesById {
   '/widgets/alerts': typeof WidgetsAlertsRoute
   '/widgets/chat-widget': typeof WidgetsChatWidgetRoute
   '/widgets/countdown': typeof WidgetsCountdownRoute
+  '/widgets/counter': typeof WidgetsCounterRoute
+  '/widgets/credits': typeof WidgetsCreditsRoute
   '/widgets/emote-wall': typeof WidgetsEmoteWallRoute
+  '/widgets/event-list': typeof WidgetsEventListRoute
   '/widgets/follower-goal': typeof WidgetsFollowerGoalRoute
   '/widgets/frame': typeof WidgetsFrameRoute
   '/widgets/goal': typeof WidgetsGoalRoute
   '/widgets/irl-hud': typeof WidgetsIrlHudRoute
+  '/widgets/leaderboard': typeof WidgetsLeaderboardRoute
+  '/widgets/lower-third': typeof WidgetsLowerThirdRoute
   '/widgets/poll': typeof WidgetsPollRoute
+  '/widgets/queue': typeof WidgetsQueueRoute
   '/widgets/raffle-overlay': typeof WidgetsRaffleOverlayRoute
   '/widgets/socials': typeof WidgetsSocialsRoute
   '/widgets/spin-wheel': typeof WidgetsSpinWheelRoute
   '/widgets/stream-alerts': typeof WidgetsStreamAlertsRoute
   '/widgets/sub-sprout-widget': typeof WidgetsSubSproutWidgetRoute
   '/widgets/subathon': typeof WidgetsSubathonRoute
+  '/widgets/tasks': typeof WidgetsTasksRoute
   '/widgets/weather': typeof WidgetsWeatherRoute
   '/{-$locale}/changelog': typeof Char123LocaleChar125ChangelogRoute
   '/{-$locale}/faq': typeof Char123LocaleChar125FaqRoute
@@ -491,9 +617,13 @@ export interface FileRoutesById {
   '/{-$locale}/guides/twitch-kick-chat-overlay': typeof Char123LocaleChar125GuidesTwitchKickChatOverlayRoute
   '/{-$locale}/setup/chat-poll': typeof Char123LocaleChar125SetupChatPollRoute
   '/{-$locale}/setup/chat-widget': typeof Char123LocaleChar125SetupChatWidgetRoute
+  '/{-$locale}/setup/counter': typeof Char123LocaleChar125SetupCounterRoute
   '/{-$locale}/setup/emote-wall': typeof Char123LocaleChar125SetupEmoteWallRoute
+  '/{-$locale}/setup/end-credits': typeof Char123LocaleChar125SetupEndCreditsRoute
+  '/{-$locale}/setup/event-list': typeof Char123LocaleChar125SetupEventListRoute
   '/{-$locale}/setup/follower-goal': typeof Char123LocaleChar125SetupFollowerGoalRoute
   '/{-$locale}/setup/irl-hud': typeof Char123LocaleChar125SetupIrlHudRoute
+  '/{-$locale}/setup/lower-thirds': typeof Char123LocaleChar125SetupLowerThirdsRoute
   '/{-$locale}/setup/obs-bridge': typeof Char123LocaleChar125SetupObsBridgeRoute
   '/{-$locale}/setup/raffle': typeof Char123LocaleChar125SetupRaffleRoute
   '/{-$locale}/setup/socials': typeof Char123LocaleChar125SetupSocialsRoute
@@ -504,6 +634,9 @@ export interface FileRoutesById {
   '/{-$locale}/setup/sub-goal': typeof Char123LocaleChar125SetupSubGoalRoute
   '/{-$locale}/setup/sub-growing-plant': typeof Char123LocaleChar125SetupSubGrowingPlantRoute
   '/{-$locale}/setup/subathon-timer': typeof Char123LocaleChar125SetupSubathonTimerRoute
+  '/{-$locale}/setup/task-list': typeof Char123LocaleChar125SetupTaskListRoute
+  '/{-$locale}/setup/top-supporters': typeof Char123LocaleChar125SetupTopSupportersRoute
+  '/{-$locale}/setup/viewer-queue': typeof Char123LocaleChar125SetupViewerQueueRoute
   '/{-$locale}/setup/weather': typeof Char123LocaleChar125SetupWeatherRoute
   '/{-$locale}/guides/': typeof Char123LocaleChar125GuidesIndexRoute
 }
@@ -517,18 +650,25 @@ export interface FileRouteTypes {
     | '/widgets/alerts'
     | '/widgets/chat-widget'
     | '/widgets/countdown'
+    | '/widgets/counter'
+    | '/widgets/credits'
     | '/widgets/emote-wall'
+    | '/widgets/event-list'
     | '/widgets/follower-goal'
     | '/widgets/frame'
     | '/widgets/goal'
     | '/widgets/irl-hud'
+    | '/widgets/leaderboard'
+    | '/widgets/lower-third'
     | '/widgets/poll'
+    | '/widgets/queue'
     | '/widgets/raffle-overlay'
     | '/widgets/socials'
     | '/widgets/spin-wheel'
     | '/widgets/stream-alerts'
     | '/widgets/sub-sprout-widget'
     | '/widgets/subathon'
+    | '/widgets/tasks'
     | '/widgets/weather'
     | '/{-$locale}/changelog'
     | '/{-$locale}/faq'
@@ -546,9 +686,13 @@ export interface FileRouteTypes {
     | '/{-$locale}/guides/twitch-kick-chat-overlay'
     | '/{-$locale}/setup/chat-poll'
     | '/{-$locale}/setup/chat-widget'
+    | '/{-$locale}/setup/counter'
     | '/{-$locale}/setup/emote-wall'
+    | '/{-$locale}/setup/end-credits'
+    | '/{-$locale}/setup/event-list'
     | '/{-$locale}/setup/follower-goal'
     | '/{-$locale}/setup/irl-hud'
+    | '/{-$locale}/setup/lower-thirds'
     | '/{-$locale}/setup/obs-bridge'
     | '/{-$locale}/setup/raffle'
     | '/{-$locale}/setup/socials'
@@ -559,6 +703,9 @@ export interface FileRouteTypes {
     | '/{-$locale}/setup/sub-goal'
     | '/{-$locale}/setup/sub-growing-plant'
     | '/{-$locale}/setup/subathon-timer'
+    | '/{-$locale}/setup/task-list'
+    | '/{-$locale}/setup/top-supporters'
+    | '/{-$locale}/setup/viewer-queue'
     | '/{-$locale}/setup/weather'
     | '/{-$locale}/guides/'
   fileRoutesByTo: FileRoutesByTo
@@ -569,18 +716,25 @@ export interface FileRouteTypes {
     | '/widgets/alerts'
     | '/widgets/chat-widget'
     | '/widgets/countdown'
+    | '/widgets/counter'
+    | '/widgets/credits'
     | '/widgets/emote-wall'
+    | '/widgets/event-list'
     | '/widgets/follower-goal'
     | '/widgets/frame'
     | '/widgets/goal'
     | '/widgets/irl-hud'
+    | '/widgets/leaderboard'
+    | '/widgets/lower-third'
     | '/widgets/poll'
+    | '/widgets/queue'
     | '/widgets/raffle-overlay'
     | '/widgets/socials'
     | '/widgets/spin-wheel'
     | '/widgets/stream-alerts'
     | '/widgets/sub-sprout-widget'
     | '/widgets/subathon'
+    | '/widgets/tasks'
     | '/widgets/weather'
     | '/{-$locale}/changelog'
     | '/{-$locale}/faq'
@@ -598,9 +752,13 @@ export interface FileRouteTypes {
     | '/{-$locale}/guides/twitch-kick-chat-overlay'
     | '/{-$locale}/setup/chat-poll'
     | '/{-$locale}/setup/chat-widget'
+    | '/{-$locale}/setup/counter'
     | '/{-$locale}/setup/emote-wall'
+    | '/{-$locale}/setup/end-credits'
+    | '/{-$locale}/setup/event-list'
     | '/{-$locale}/setup/follower-goal'
     | '/{-$locale}/setup/irl-hud'
+    | '/{-$locale}/setup/lower-thirds'
     | '/{-$locale}/setup/obs-bridge'
     | '/{-$locale}/setup/raffle'
     | '/{-$locale}/setup/socials'
@@ -611,6 +769,9 @@ export interface FileRouteTypes {
     | '/{-$locale}/setup/sub-goal'
     | '/{-$locale}/setup/sub-growing-plant'
     | '/{-$locale}/setup/subathon-timer'
+    | '/{-$locale}/setup/task-list'
+    | '/{-$locale}/setup/top-supporters'
+    | '/{-$locale}/setup/viewer-queue'
     | '/{-$locale}/setup/weather'
     | '/{-$locale}/guides'
   id:
@@ -622,18 +783,25 @@ export interface FileRouteTypes {
     | '/widgets/alerts'
     | '/widgets/chat-widget'
     | '/widgets/countdown'
+    | '/widgets/counter'
+    | '/widgets/credits'
     | '/widgets/emote-wall'
+    | '/widgets/event-list'
     | '/widgets/follower-goal'
     | '/widgets/frame'
     | '/widgets/goal'
     | '/widgets/irl-hud'
+    | '/widgets/leaderboard'
+    | '/widgets/lower-third'
     | '/widgets/poll'
+    | '/widgets/queue'
     | '/widgets/raffle-overlay'
     | '/widgets/socials'
     | '/widgets/spin-wheel'
     | '/widgets/stream-alerts'
     | '/widgets/sub-sprout-widget'
     | '/widgets/subathon'
+    | '/widgets/tasks'
     | '/widgets/weather'
     | '/{-$locale}/changelog'
     | '/{-$locale}/faq'
@@ -651,9 +819,13 @@ export interface FileRouteTypes {
     | '/{-$locale}/guides/twitch-kick-chat-overlay'
     | '/{-$locale}/setup/chat-poll'
     | '/{-$locale}/setup/chat-widget'
+    | '/{-$locale}/setup/counter'
     | '/{-$locale}/setup/emote-wall'
+    | '/{-$locale}/setup/end-credits'
+    | '/{-$locale}/setup/event-list'
     | '/{-$locale}/setup/follower-goal'
     | '/{-$locale}/setup/irl-hud'
+    | '/{-$locale}/setup/lower-thirds'
     | '/{-$locale}/setup/obs-bridge'
     | '/{-$locale}/setup/raffle'
     | '/{-$locale}/setup/socials'
@@ -664,6 +836,9 @@ export interface FileRouteTypes {
     | '/{-$locale}/setup/sub-goal'
     | '/{-$locale}/setup/sub-growing-plant'
     | '/{-$locale}/setup/subathon-timer'
+    | '/{-$locale}/setup/task-list'
+    | '/{-$locale}/setup/top-supporters'
+    | '/{-$locale}/setup/viewer-queue'
     | '/{-$locale}/setup/weather'
     | '/{-$locale}/guides/'
   fileRoutesById: FileRoutesById
@@ -676,18 +851,25 @@ export interface RootRouteChildren {
   WidgetsAlertsRoute: typeof WidgetsAlertsRoute
   WidgetsChatWidgetRoute: typeof WidgetsChatWidgetRoute
   WidgetsCountdownRoute: typeof WidgetsCountdownRoute
+  WidgetsCounterRoute: typeof WidgetsCounterRoute
+  WidgetsCreditsRoute: typeof WidgetsCreditsRoute
   WidgetsEmoteWallRoute: typeof WidgetsEmoteWallRoute
+  WidgetsEventListRoute: typeof WidgetsEventListRoute
   WidgetsFollowerGoalRoute: typeof WidgetsFollowerGoalRoute
   WidgetsFrameRoute: typeof WidgetsFrameRoute
   WidgetsGoalRoute: typeof WidgetsGoalRoute
   WidgetsIrlHudRoute: typeof WidgetsIrlHudRoute
+  WidgetsLeaderboardRoute: typeof WidgetsLeaderboardRoute
+  WidgetsLowerThirdRoute: typeof WidgetsLowerThirdRoute
   WidgetsPollRoute: typeof WidgetsPollRoute
+  WidgetsQueueRoute: typeof WidgetsQueueRoute
   WidgetsRaffleOverlayRoute: typeof WidgetsRaffleOverlayRoute
   WidgetsSocialsRoute: typeof WidgetsSocialsRoute
   WidgetsSpinWheelRoute: typeof WidgetsSpinWheelRoute
   WidgetsStreamAlertsRoute: typeof WidgetsStreamAlertsRoute
   WidgetsSubSproutWidgetRoute: typeof WidgetsSubSproutWidgetRoute
   WidgetsSubathonRoute: typeof WidgetsSubathonRoute
+  WidgetsTasksRoute: typeof WidgetsTasksRoute
   WidgetsWeatherRoute: typeof WidgetsWeatherRoute
 }
 
@@ -742,11 +924,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WidgetsCountdownRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/widgets/counter': {
+      id: '/widgets/counter'
+      path: '/widgets/counter'
+      fullPath: '/widgets/counter'
+      preLoaderRoute: typeof WidgetsCounterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/widgets/credits': {
+      id: '/widgets/credits'
+      path: '/widgets/credits'
+      fullPath: '/widgets/credits'
+      preLoaderRoute: typeof WidgetsCreditsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/widgets/emote-wall': {
       id: '/widgets/emote-wall'
       path: '/widgets/emote-wall'
       fullPath: '/widgets/emote-wall'
       preLoaderRoute: typeof WidgetsEmoteWallRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/widgets/event-list': {
+      id: '/widgets/event-list'
+      path: '/widgets/event-list'
+      fullPath: '/widgets/event-list'
+      preLoaderRoute: typeof WidgetsEventListRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/widgets/follower-goal': {
@@ -777,11 +980,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WidgetsIrlHudRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/widgets/leaderboard': {
+      id: '/widgets/leaderboard'
+      path: '/widgets/leaderboard'
+      fullPath: '/widgets/leaderboard'
+      preLoaderRoute: typeof WidgetsLeaderboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/widgets/lower-third': {
+      id: '/widgets/lower-third'
+      path: '/widgets/lower-third'
+      fullPath: '/widgets/lower-third'
+      preLoaderRoute: typeof WidgetsLowerThirdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/widgets/poll': {
       id: '/widgets/poll'
       path: '/widgets/poll'
       fullPath: '/widgets/poll'
       preLoaderRoute: typeof WidgetsPollRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/widgets/queue': {
+      id: '/widgets/queue'
+      path: '/widgets/queue'
+      fullPath: '/widgets/queue'
+      preLoaderRoute: typeof WidgetsQueueRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/widgets/raffle-overlay': {
@@ -824,6 +1048,13 @@ declare module '@tanstack/react-router' {
       path: '/widgets/subathon'
       fullPath: '/widgets/subathon'
       preLoaderRoute: typeof WidgetsSubathonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/widgets/tasks': {
+      id: '/widgets/tasks'
+      path: '/widgets/tasks'
+      fullPath: '/widgets/tasks'
+      preLoaderRoute: typeof WidgetsTasksRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/widgets/weather': {
@@ -952,11 +1183,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char123LocaleChar125SetupChatWidgetRouteImport
       parentRoute: typeof Char123LocaleChar125RouteRoute
     }
+    '/{-$locale}/setup/counter': {
+      id: '/{-$locale}/setup/counter'
+      path: '/setup/counter'
+      fullPath: '/{-$locale}/setup/counter'
+      preLoaderRoute: typeof Char123LocaleChar125SetupCounterRouteImport
+      parentRoute: typeof Char123LocaleChar125RouteRoute
+    }
     '/{-$locale}/setup/emote-wall': {
       id: '/{-$locale}/setup/emote-wall'
       path: '/setup/emote-wall'
       fullPath: '/{-$locale}/setup/emote-wall'
       preLoaderRoute: typeof Char123LocaleChar125SetupEmoteWallRouteImport
+      parentRoute: typeof Char123LocaleChar125RouteRoute
+    }
+    '/{-$locale}/setup/end-credits': {
+      id: '/{-$locale}/setup/end-credits'
+      path: '/setup/end-credits'
+      fullPath: '/{-$locale}/setup/end-credits'
+      preLoaderRoute: typeof Char123LocaleChar125SetupEndCreditsRouteImport
+      parentRoute: typeof Char123LocaleChar125RouteRoute
+    }
+    '/{-$locale}/setup/event-list': {
+      id: '/{-$locale}/setup/event-list'
+      path: '/setup/event-list'
+      fullPath: '/{-$locale}/setup/event-list'
+      preLoaderRoute: typeof Char123LocaleChar125SetupEventListRouteImport
       parentRoute: typeof Char123LocaleChar125RouteRoute
     }
     '/{-$locale}/setup/follower-goal': {
@@ -971,6 +1223,13 @@ declare module '@tanstack/react-router' {
       path: '/setup/irl-hud'
       fullPath: '/{-$locale}/setup/irl-hud'
       preLoaderRoute: typeof Char123LocaleChar125SetupIrlHudRouteImport
+      parentRoute: typeof Char123LocaleChar125RouteRoute
+    }
+    '/{-$locale}/setup/lower-thirds': {
+      id: '/{-$locale}/setup/lower-thirds'
+      path: '/setup/lower-thirds'
+      fullPath: '/{-$locale}/setup/lower-thirds'
+      preLoaderRoute: typeof Char123LocaleChar125SetupLowerThirdsRouteImport
       parentRoute: typeof Char123LocaleChar125RouteRoute
     }
     '/{-$locale}/setup/obs-bridge': {
@@ -1043,6 +1302,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char123LocaleChar125SetupSubathonTimerRouteImport
       parentRoute: typeof Char123LocaleChar125RouteRoute
     }
+    '/{-$locale}/setup/task-list': {
+      id: '/{-$locale}/setup/task-list'
+      path: '/setup/task-list'
+      fullPath: '/{-$locale}/setup/task-list'
+      preLoaderRoute: typeof Char123LocaleChar125SetupTaskListRouteImport
+      parentRoute: typeof Char123LocaleChar125RouteRoute
+    }
+    '/{-$locale}/setup/top-supporters': {
+      id: '/{-$locale}/setup/top-supporters'
+      path: '/setup/top-supporters'
+      fullPath: '/{-$locale}/setup/top-supporters'
+      preLoaderRoute: typeof Char123LocaleChar125SetupTopSupportersRouteImport
+      parentRoute: typeof Char123LocaleChar125RouteRoute
+    }
+    '/{-$locale}/setup/viewer-queue': {
+      id: '/{-$locale}/setup/viewer-queue'
+      path: '/setup/viewer-queue'
+      fullPath: '/{-$locale}/setup/viewer-queue'
+      preLoaderRoute: typeof Char123LocaleChar125SetupViewerQueueRouteImport
+      parentRoute: typeof Char123LocaleChar125RouteRoute
+    }
     '/{-$locale}/setup/weather': {
       id: '/{-$locale}/setup/weather'
       path: '/setup/weather'
@@ -1070,9 +1350,13 @@ interface Char123LocaleChar125RouteRouteChildren {
   Char123LocaleChar125GuidesTwitchKickChatOverlayRoute: typeof Char123LocaleChar125GuidesTwitchKickChatOverlayRoute
   Char123LocaleChar125SetupChatPollRoute: typeof Char123LocaleChar125SetupChatPollRoute
   Char123LocaleChar125SetupChatWidgetRoute: typeof Char123LocaleChar125SetupChatWidgetRoute
+  Char123LocaleChar125SetupCounterRoute: typeof Char123LocaleChar125SetupCounterRoute
   Char123LocaleChar125SetupEmoteWallRoute: typeof Char123LocaleChar125SetupEmoteWallRoute
+  Char123LocaleChar125SetupEndCreditsRoute: typeof Char123LocaleChar125SetupEndCreditsRoute
+  Char123LocaleChar125SetupEventListRoute: typeof Char123LocaleChar125SetupEventListRoute
   Char123LocaleChar125SetupFollowerGoalRoute: typeof Char123LocaleChar125SetupFollowerGoalRoute
   Char123LocaleChar125SetupIrlHudRoute: typeof Char123LocaleChar125SetupIrlHudRoute
+  Char123LocaleChar125SetupLowerThirdsRoute: typeof Char123LocaleChar125SetupLowerThirdsRoute
   Char123LocaleChar125SetupObsBridgeRoute: typeof Char123LocaleChar125SetupObsBridgeRoute
   Char123LocaleChar125SetupRaffleRoute: typeof Char123LocaleChar125SetupRaffleRoute
   Char123LocaleChar125SetupSocialsRoute: typeof Char123LocaleChar125SetupSocialsRoute
@@ -1083,6 +1367,9 @@ interface Char123LocaleChar125RouteRouteChildren {
   Char123LocaleChar125SetupSubGoalRoute: typeof Char123LocaleChar125SetupSubGoalRoute
   Char123LocaleChar125SetupSubGrowingPlantRoute: typeof Char123LocaleChar125SetupSubGrowingPlantRoute
   Char123LocaleChar125SetupSubathonTimerRoute: typeof Char123LocaleChar125SetupSubathonTimerRoute
+  Char123LocaleChar125SetupTaskListRoute: typeof Char123LocaleChar125SetupTaskListRoute
+  Char123LocaleChar125SetupTopSupportersRoute: typeof Char123LocaleChar125SetupTopSupportersRoute
+  Char123LocaleChar125SetupViewerQueueRoute: typeof Char123LocaleChar125SetupViewerQueueRoute
   Char123LocaleChar125SetupWeatherRoute: typeof Char123LocaleChar125SetupWeatherRoute
   Char123LocaleChar125GuidesIndexRoute: typeof Char123LocaleChar125GuidesIndexRoute
 }
@@ -1117,11 +1404,19 @@ const Char123LocaleChar125RouteRouteChildren: Char123LocaleChar125RouteRouteChil
       Char123LocaleChar125SetupChatPollRoute,
     Char123LocaleChar125SetupChatWidgetRoute:
       Char123LocaleChar125SetupChatWidgetRoute,
+    Char123LocaleChar125SetupCounterRoute:
+      Char123LocaleChar125SetupCounterRoute,
     Char123LocaleChar125SetupEmoteWallRoute:
       Char123LocaleChar125SetupEmoteWallRoute,
+    Char123LocaleChar125SetupEndCreditsRoute:
+      Char123LocaleChar125SetupEndCreditsRoute,
+    Char123LocaleChar125SetupEventListRoute:
+      Char123LocaleChar125SetupEventListRoute,
     Char123LocaleChar125SetupFollowerGoalRoute:
       Char123LocaleChar125SetupFollowerGoalRoute,
     Char123LocaleChar125SetupIrlHudRoute: Char123LocaleChar125SetupIrlHudRoute,
+    Char123LocaleChar125SetupLowerThirdsRoute:
+      Char123LocaleChar125SetupLowerThirdsRoute,
     Char123LocaleChar125SetupObsBridgeRoute:
       Char123LocaleChar125SetupObsBridgeRoute,
     Char123LocaleChar125SetupRaffleRoute: Char123LocaleChar125SetupRaffleRoute,
@@ -1141,6 +1436,12 @@ const Char123LocaleChar125RouteRouteChildren: Char123LocaleChar125RouteRouteChil
       Char123LocaleChar125SetupSubGrowingPlantRoute,
     Char123LocaleChar125SetupSubathonTimerRoute:
       Char123LocaleChar125SetupSubathonTimerRoute,
+    Char123LocaleChar125SetupTaskListRoute:
+      Char123LocaleChar125SetupTaskListRoute,
+    Char123LocaleChar125SetupTopSupportersRoute:
+      Char123LocaleChar125SetupTopSupportersRoute,
+    Char123LocaleChar125SetupViewerQueueRoute:
+      Char123LocaleChar125SetupViewerQueueRoute,
     Char123LocaleChar125SetupWeatherRoute:
       Char123LocaleChar125SetupWeatherRoute,
     Char123LocaleChar125GuidesIndexRoute: Char123LocaleChar125GuidesIndexRoute,
@@ -1159,18 +1460,25 @@ const rootRouteChildren: RootRouteChildren = {
   WidgetsAlertsRoute: WidgetsAlertsRoute,
   WidgetsChatWidgetRoute: WidgetsChatWidgetRoute,
   WidgetsCountdownRoute: WidgetsCountdownRoute,
+  WidgetsCounterRoute: WidgetsCounterRoute,
+  WidgetsCreditsRoute: WidgetsCreditsRoute,
   WidgetsEmoteWallRoute: WidgetsEmoteWallRoute,
+  WidgetsEventListRoute: WidgetsEventListRoute,
   WidgetsFollowerGoalRoute: WidgetsFollowerGoalRoute,
   WidgetsFrameRoute: WidgetsFrameRoute,
   WidgetsGoalRoute: WidgetsGoalRoute,
   WidgetsIrlHudRoute: WidgetsIrlHudRoute,
+  WidgetsLeaderboardRoute: WidgetsLeaderboardRoute,
+  WidgetsLowerThirdRoute: WidgetsLowerThirdRoute,
   WidgetsPollRoute: WidgetsPollRoute,
+  WidgetsQueueRoute: WidgetsQueueRoute,
   WidgetsRaffleOverlayRoute: WidgetsRaffleOverlayRoute,
   WidgetsSocialsRoute: WidgetsSocialsRoute,
   WidgetsSpinWheelRoute: WidgetsSpinWheelRoute,
   WidgetsStreamAlertsRoute: WidgetsStreamAlertsRoute,
   WidgetsSubSproutWidgetRoute: WidgetsSubSproutWidgetRoute,
   WidgetsSubathonRoute: WidgetsSubathonRoute,
+  WidgetsTasksRoute: WidgetsTasksRoute,
   WidgetsWeatherRoute: WidgetsWeatherRoute,
 }
 export const routeTree = rootRouteImport

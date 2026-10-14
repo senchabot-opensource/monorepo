@@ -38,12 +38,20 @@ URL, and it runs on **Twitch and Kick** alike. Nothing to install, nothing to si
 | [Stream Countdown](https://extensions.senchabot.com/setup/stream-countdown) | A countdown for the starting soon, break and ending scenes, set by length or by clock time |
 | [IRL HUD](https://extensions.senchabot.com/setup/irl-hud) | A game-style HUD for IRL streams: subs, gift subs, Bits, Kicks and raids add cash, beside a clock and a mini-map |
 | [Socials](https://extensions.senchabot.com/setup/socials) | Your social media handles, shown one at a time with a slide animation |
+| [Weather](https://extensions.senchabot.com/setup/weather) | The live weather for any place you pick, as a card with a forecast or a one-line pill that can take the IRL HUD's look |
+| [Counter](https://extensions.senchabot.com/setup/counter) | Up to four counts on screen, like wins, losses or jump scares, that mods change from chat |
+| [Event List](https://extensions.senchabot.com/setup/event-list) | The latest subs, gift subs, Bits, Kicks and raids from both chats in one list |
+| [End Credits](https://extensions.senchabot.com/setup/end-credits) | Movie-style credits for everyone who subbed, cheered, raided and chatted, rolling as soon as their scene goes live |
+| [Top Supporters](https://extensions.senchabot.com/setup/top-supporters) | A leaderboard of the top gifters or cheerers, or a label with the latest sub, gift, cheer or raid |
+| [Lower Thirds](https://extensions.senchabot.com/setup/lower-thirds) | An animated name and topic bar in a corner, with lines that take turns; mods change it with `!lt` |
+| [Task List](https://extensions.senchabot.com/setup/task-list) | A co-working task list viewers fill with `!task` and tick off with `!done` |
 
 **Tools**
 
 | Tool | What it does |
 | --- | --- |
 | [Chat Poll](https://extensions.senchabot.com/setup/chat-poll) | Chat votes by typing a number; live bars, a timer and the winner at the end |
+| [Viewer Queue](https://extensions.senchabot.com/setup/viewer-queue) | Viewers line up with `!join` in either chat, and you and your mods call the next ones up with `!next` |
 | [Raffle Picker](https://extensions.senchabot.com/setup/raffle) | Viewers enter with a keyword; the drawn winner lands on a confetti overlay |
 | [Spin Wheel](https://extensions.senchabot.com/setup/spin-wheel) | Chat spins the wheel with `!spin`, behind one shared cooldown shown on screen |
 | [Subathon Timer](https://extensions.senchabot.com/setup/subathon-timer) | Subs, gift subs, Bits and Kicks add time, shown as a health bar, a clock or a ring |

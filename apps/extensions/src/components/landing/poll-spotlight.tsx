@@ -102,7 +102,7 @@ export function PollSpotlight() {
                 <PreviewFrame
                   src={getDemoSrc(WIDGET)}
                   title={t('home.demoTitle', { name })}
-                  placeholder={<span />}
+                  showLoading
                   backgroundClassName="bg-transparent"
                   className={FLUSH_FRAME_CLASS}
                 />

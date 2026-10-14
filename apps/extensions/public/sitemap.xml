@@ -105,6 +105,97 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://extensions.senchabot.com/setup/counter</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/counter"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/counter"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/counter"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/counter"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/counter"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/counter"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/counter"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/counter"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/setup/event-list</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/event-list"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/event-list"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/event-list"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/event-list"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/event-list"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/event-list"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/event-list"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/event-list"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/setup/end-credits</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/end-credits"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/end-credits"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/end-credits"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/end-credits"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/end-credits"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/end-credits"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/end-credits"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/end-credits"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/setup/viewer-queue</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/viewer-queue"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/viewer-queue"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/viewer-queue"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/viewer-queue"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/viewer-queue"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/viewer-queue"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/viewer-queue"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/viewer-queue"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/setup/top-supporters</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/top-supporters"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/top-supporters"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/top-supporters"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/top-supporters"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/top-supporters"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/top-supporters"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/top-supporters"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/top-supporters"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/setup/lower-thirds</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/lower-thirds"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/lower-thirds"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/lower-thirds"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/lower-thirds"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/lower-thirds"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/lower-thirds"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/lower-thirds"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/lower-thirds"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/setup/task-list</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/task-list"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/task-list"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/task-list"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/task-list"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/task-list"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/task-list"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/task-list"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/task-list"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://extensions.senchabot.com/setup/weather</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/weather"/>
     <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/weather"/>
@@ -573,6 +664,97 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://extensions.senchabot.com/de/setup/counter</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/counter"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/counter"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/counter"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/counter"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/counter"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/counter"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/counter"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/counter"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/de/setup/event-list</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/event-list"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/event-list"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/event-list"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/event-list"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/event-list"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/event-list"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/event-list"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/event-list"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/de/setup/end-credits</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/end-credits"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/end-credits"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/end-credits"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/end-credits"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/end-credits"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/end-credits"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/end-credits"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/end-credits"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/de/setup/viewer-queue</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/viewer-queue"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/viewer-queue"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/viewer-queue"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/viewer-queue"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/viewer-queue"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/viewer-queue"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/viewer-queue"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/viewer-queue"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/de/setup/top-supporters</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/top-supporters"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/top-supporters"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/top-supporters"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/top-supporters"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/top-supporters"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/top-supporters"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/top-supporters"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/top-supporters"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/de/setup/lower-thirds</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/lower-thirds"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/lower-thirds"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/lower-thirds"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/lower-thirds"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/lower-thirds"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/lower-thirds"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/lower-thirds"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/lower-thirds"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/de/setup/task-list</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/task-list"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/task-list"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/task-list"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/task-list"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/task-list"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/task-list"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/task-list"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/task-list"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://extensions.senchabot.com/de/setup/weather</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/weather"/>
     <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/weather"/>
@@ -946,6 +1128,97 @@
     <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/irl-hud"/>
     <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/irl-hud"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/irl-hud"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/es/setup/counter</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/counter"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/counter"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/counter"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/counter"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/counter"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/counter"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/counter"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/counter"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/es/setup/event-list</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/event-list"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/event-list"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/event-list"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/event-list"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/event-list"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/event-list"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/event-list"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/event-list"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/es/setup/end-credits</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/end-credits"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/end-credits"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/end-credits"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/end-credits"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/end-credits"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/end-credits"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/end-credits"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/end-credits"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/es/setup/viewer-queue</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/viewer-queue"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/viewer-queue"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/viewer-queue"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/viewer-queue"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/viewer-queue"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/viewer-queue"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/viewer-queue"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/viewer-queue"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/es/setup/top-supporters</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/top-supporters"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/top-supporters"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/top-supporters"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/top-supporters"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/top-supporters"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/top-supporters"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/top-supporters"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/top-supporters"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/es/setup/lower-thirds</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/lower-thirds"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/lower-thirds"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/lower-thirds"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/lower-thirds"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/lower-thirds"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/lower-thirds"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/lower-thirds"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/lower-thirds"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/es/setup/task-list</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/task-list"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/task-list"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/task-list"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/task-list"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/task-list"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/task-list"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/task-list"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/task-list"/>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -1327,6 +1600,97 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://extensions.senchabot.com/fr/setup/counter</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/counter"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/counter"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/counter"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/counter"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/counter"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/counter"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/counter"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/counter"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/fr/setup/event-list</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/event-list"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/event-list"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/event-list"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/event-list"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/event-list"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/event-list"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/event-list"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/event-list"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/fr/setup/end-credits</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/end-credits"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/end-credits"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/end-credits"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/end-credits"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/end-credits"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/end-credits"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/end-credits"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/end-credits"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/fr/setup/viewer-queue</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/viewer-queue"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/viewer-queue"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/viewer-queue"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/viewer-queue"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/viewer-queue"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/viewer-queue"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/viewer-queue"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/viewer-queue"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/fr/setup/top-supporters</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/top-supporters"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/top-supporters"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/top-supporters"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/top-supporters"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/top-supporters"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/top-supporters"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/top-supporters"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/top-supporters"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/fr/setup/lower-thirds</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/lower-thirds"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/lower-thirds"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/lower-thirds"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/lower-thirds"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/lower-thirds"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/lower-thirds"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/lower-thirds"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/lower-thirds"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/fr/setup/task-list</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/task-list"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/task-list"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/task-list"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/task-list"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/task-list"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/task-list"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/task-list"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/task-list"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://extensions.senchabot.com/fr/setup/weather</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/weather"/>
     <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/weather"/>
@@ -1700,6 +2064,97 @@
     <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/irl-hud"/>
     <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/irl-hud"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/irl-hud"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/ja/setup/counter</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/counter"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/counter"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/counter"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/counter"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/counter"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/counter"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/counter"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/counter"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/ja/setup/event-list</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/event-list"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/event-list"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/event-list"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/event-list"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/event-list"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/event-list"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/event-list"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/event-list"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/ja/setup/end-credits</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/end-credits"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/end-credits"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/end-credits"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/end-credits"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/end-credits"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/end-credits"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/end-credits"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/end-credits"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/ja/setup/viewer-queue</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/viewer-queue"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/viewer-queue"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/viewer-queue"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/viewer-queue"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/viewer-queue"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/viewer-queue"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/viewer-queue"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/viewer-queue"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/ja/setup/top-supporters</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/top-supporters"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/top-supporters"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/top-supporters"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/top-supporters"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/top-supporters"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/top-supporters"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/top-supporters"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/top-supporters"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/ja/setup/lower-thirds</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/lower-thirds"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/lower-thirds"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/lower-thirds"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/lower-thirds"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/lower-thirds"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/lower-thirds"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/lower-thirds"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/lower-thirds"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/ja/setup/task-list</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/task-list"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/task-list"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/task-list"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/task-list"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/task-list"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/task-list"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/task-list"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/task-list"/>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -2081,6 +2536,97 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://extensions.senchabot.com/pt/setup/counter</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/counter"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/counter"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/counter"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/counter"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/counter"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/counter"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/counter"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/counter"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/pt/setup/event-list</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/event-list"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/event-list"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/event-list"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/event-list"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/event-list"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/event-list"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/event-list"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/event-list"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/pt/setup/end-credits</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/end-credits"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/end-credits"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/end-credits"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/end-credits"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/end-credits"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/end-credits"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/end-credits"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/end-credits"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/pt/setup/viewer-queue</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/viewer-queue"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/viewer-queue"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/viewer-queue"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/viewer-queue"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/viewer-queue"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/viewer-queue"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/viewer-queue"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/viewer-queue"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/pt/setup/top-supporters</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/top-supporters"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/top-supporters"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/top-supporters"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/top-supporters"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/top-supporters"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/top-supporters"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/top-supporters"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/top-supporters"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/pt/setup/lower-thirds</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/lower-thirds"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/lower-thirds"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/lower-thirds"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/lower-thirds"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/lower-thirds"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/lower-thirds"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/lower-thirds"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/lower-thirds"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/pt/setup/task-list</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/task-list"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/task-list"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/task-list"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/task-list"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/task-list"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/task-list"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/task-list"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/task-list"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://extensions.senchabot.com/pt/setup/weather</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/weather"/>
     <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/weather"/>
@@ -2454,6 +3000,97 @@
     <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/irl-hud"/>
     <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/irl-hud"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/irl-hud"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/tr/setup/counter</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/counter"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/counter"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/counter"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/counter"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/counter"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/counter"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/counter"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/counter"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/tr/setup/event-list</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/event-list"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/event-list"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/event-list"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/event-list"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/event-list"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/event-list"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/event-list"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/event-list"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/tr/setup/end-credits</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/end-credits"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/end-credits"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/end-credits"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/end-credits"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/end-credits"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/end-credits"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/end-credits"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/end-credits"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/tr/setup/viewer-queue</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/viewer-queue"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/viewer-queue"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/viewer-queue"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/viewer-queue"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/viewer-queue"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/viewer-queue"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/viewer-queue"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/viewer-queue"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/tr/setup/top-supporters</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/top-supporters"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/top-supporters"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/top-supporters"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/top-supporters"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/top-supporters"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/top-supporters"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/top-supporters"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/top-supporters"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/tr/setup/lower-thirds</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/lower-thirds"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/lower-thirds"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/lower-thirds"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/lower-thirds"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/lower-thirds"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/lower-thirds"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/lower-thirds"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/lower-thirds"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://extensions.senchabot.com/tr/setup/task-list</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extensions.senchabot.com/setup/task-list"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://extensions.senchabot.com/de/setup/task-list"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://extensions.senchabot.com/es/setup/task-list"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://extensions.senchabot.com/fr/setup/task-list"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://extensions.senchabot.com/ja/setup/task-list"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://extensions.senchabot.com/pt/setup/task-list"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://extensions.senchabot.com/tr/setup/task-list"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extensions.senchabot.com/setup/task-list"/>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>

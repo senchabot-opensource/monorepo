@@ -13,6 +13,7 @@ export const TOOL_FEATURES: Partial<Record<WidgetId, readonly TranslationKey[]>>
     'home.subathonFeatureSaved',
   ],
   poll: ['home.pollFeatureVote', 'home.pollFeatureBoth', 'home.pollFeatureLate'],
+  queue: ['home.queueFeatureJoin', 'home.queueFeatureNext', 'home.queueFeatureBoth'],
   'spin-wheel': [
     'home.spinWheelFeatureOptions',
     'home.spinWheelFeatureLocal',

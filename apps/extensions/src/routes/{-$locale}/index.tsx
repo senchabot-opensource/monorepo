@@ -4,6 +4,7 @@ import { CtaBand } from '#/components/cta-band';
 import { ExternalLink } from '#/components/external-link';
 import { FaqList } from '#/components/faq-list';
 import { GithubIcon, type IconProps } from '#/components/icons';
+import { BetterTogether } from '#/components/landing/better-together';
 import { CommunityLinks } from '#/components/landing/community-links';
 import {
   ArrowRightIcon,
@@ -71,8 +72,6 @@ const FAQ: FaqEntry[] = [
 ];
 
 const HOW_STEPS: TranslationKey[] = ['home.howStep1', 'home.howStep2', 'home.howStep3'];
-
-const SIZED_WIDGETS = WIDGETS.filter((widget) => widget.sourceSize);
 
 const PLATFORM_MARKS: { platform: WidgetPlatform; label: string; color: string }[] = [
   { platform: 'twitch', label: 'Twitch', color: '#9146FF' },
@@ -308,38 +307,7 @@ function HowItWorks() {
           <StepsList steps={HOW_STEPS} />
         </div>
       </div>
-      <div className={`${CARD_CLASS} p-6`}>
-        <h3 className="text-base font-semibold text-zinc-900 dark:text-white">
-          {t('home.sizesTitle')}
-        </h3>
-        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">{t('home.sizesNote')}</p>
-        <table className="mt-4 w-full text-sm">
-          <thead className="sr-only">
-            <tr>
-              <th scope="col">{t('home.sizesWidget')}</th>
-              <th scope="col">{t('home.sizesValue')}</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
-            {SIZED_WIDGETS.map((widget) => (
-              <tr key={widget.id}>
-                <th
-                  scope="row"
-                  className="py-3 text-left font-medium text-zinc-800 dark:text-zinc-200"
-                >
-                  <span className="flex items-center gap-2.5">
-                    <widget.Icon className="size-4 shrink-0 text-green-600 dark:text-green-400" />
-                    {t(widget.nameKey)}
-                  </span>
-                </th>
-                <td className="py-3 text-right font-mono text-[13px] text-zinc-600 tabular-nums dark:text-zinc-400">
-                  {widget.sourceSize?.width} × {widget.sourceSize?.height}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <BetterTogether className={CARD_CLASS} />
     </section>
   );
 }

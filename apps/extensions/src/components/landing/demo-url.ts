@@ -18,21 +18,34 @@ const CARD_PARAMS: DemoParams = {
   // The HUD is sized for the card's short side, so in a strip it runs at its biggest.
   'irl-hud': { size: '200' },
   // The one-line pill, the setup page's first look, drawn for a 1080p scene, so in a gallery
-  // card it runs at its biggest.
-  weather: { layout: 'pill', size: '200' },
+  // card it runs at its biggest; in the Modern HUD style, outlined text right on the scene.
+  weather: { layout: 'pill', size: '200', style: 'modern' },
 };
+
+// "Better together" puts the IRL HUD and the Weather pill in one scene, both in the Modern HUD
+// style so they match, drawn large enough to read in a half-width card.
+const TOGETHER_PARAMS: DemoParams = {
+  'irl-hud': { style: 'modern', size: '170' },
+  weather: { layout: 'pill', style: 'modern', size: '170' },
+};
+
+const PLACE_PARAMS = { card: CARD_PARAMS, together: TOGETHER_PARAMS };
 
 /**
  * The widget's self-running demo URL tuned for small previews; empty when it has no demo.
- * `card` is the gallery card, `scene` the hero's stream scene.
+ * `card` is the gallery card, `scene` the hero's stream scene, `together` the scene that shows
+ * widgets used side by side.
  */
-export function getDemoSrc(widget: WidgetEntry, place: 'scene' | 'card' = 'scene'): string {
+export function getDemoSrc(
+  widget: WidgetEntry,
+  place: 'scene' | 'card' | 'together' = 'scene',
+): string {
   if (!widget.demoUrl) return '';
   const [path, query = ''] = widget.demoUrl.split('?');
   const params = new URLSearchParams(query);
   const overrides = {
     ...DEMO_PARAMS[widget.id],
-    ...(place === 'card' ? CARD_PARAMS[widget.id] : undefined),
+    ...(place === 'scene' ? undefined : PLACE_PARAMS[place][widget.id]),
   };
   for (const [key, value] of Object.entries(overrides)) params.set(key, value);
   return `${path}?${params.toString()}`;
