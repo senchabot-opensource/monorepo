@@ -1137,6 +1137,14 @@ export const en = {
       'The name the overlay shows with the weather. Picking a place fills it in; change it, or leave it empty to show no name.',
     placeNamePlaceholder: 'e.g. Istanbul',
     placePrivacy: 'Viewers see this name and the weather, never the coordinates.',
+    style: 'Style',
+    styleTip:
+      "Weather App shows round figures on the background you pick. Retro HUD and Modern HUD take the IRL HUD Overlay's styles, outlined text right on your scene, so the weather matches the HUD beside it.",
+    styles: {
+      app: 'Weather App',
+      retro: 'Retro HUD',
+      modern: 'Modern HUD',
+    },
     layout: 'Layout',
     layoutTip:
       'Card shows the place, a big icon and the temperature, with wind, humidity and a forecast under them. Pill fits the icon, the temperature, the weather and the place on one line.',

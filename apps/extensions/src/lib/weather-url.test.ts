@@ -6,6 +6,7 @@ import {
   MAX_SIZE,
   parseWeatherUrl,
   readWeatherSettings,
+  WEATHER_SETUP_SETTINGS,
   type WeatherSettings,
 } from './weather-url';
 
@@ -37,6 +38,7 @@ describe('buildWeatherUrl', () => {
       settings({
         place: '  Kadıköy ',
         units: 'imperial',
+        style: 'retro',
         layout: 'pill',
         theme: 'clear',
         corner: 'br',
@@ -53,6 +55,7 @@ describe('buildWeatherUrl', () => {
       lon: '28.9784',
       place: 'Kadıköy',
       units: 'imperial',
+      style: 'retro',
       layout: 'pill',
       theme: 'clear',
       corner: 'br',
@@ -81,6 +84,17 @@ describe('readWeatherSettings', () => {
     expect(readWeatherSettings(new URLSearchParams())).toEqual(DEFAULT_WEATHER_SETTINGS);
   });
 
+  it('keeps a URL without a layout on the card, while the setup page starts on the pill', () => {
+    // URLs made before the setup page started on the pill have no `layout` and show a card.
+    expect(readWeatherSettings(new URLSearchParams('lat=41.0082&lon=28.9784')).layout).toBe('card');
+    const url = buildWeatherUrl(ORIGIN, { ...WEATHER_SETUP_SETTINGS, ...ISTANBUL }, 'en');
+    expect(params(url).layout).toBe('pill');
+    expect(readWeatherSettings(new URL(url).searchParams)).toEqual({
+      ...WEATHER_SETUP_SETTINGS,
+      ...ISTANBUL,
+    });
+  });
+
   it('never half-reads a place', () => {
     const read = (query: string) => readWeatherSettings(new URLSearchParams(query));
     expect(read('lat=41.0082')).toMatchObject({ lat: null, lon: null });
@@ -92,11 +106,12 @@ describe('readWeatherSettings', () => {
   it('falls back on garbage and clamps the size', () => {
     const read = readWeatherSettings(
       new URLSearchParams(
-        `units=kelvin&layout=huge&theme=neon&corner=middle&forecast=weeks&size=999&tz=Mars/Base&place=${'x'.repeat(60)}`,
+        `units=kelvin&style=gold&layout=huge&theme=neon&corner=middle&forecast=weeks&size=999&tz=Mars/Base&place=${'x'.repeat(60)}`,
       ),
     );
     expect(read).toMatchObject({
       units: 'metric',
+      style: 'app',
       layout: 'card',
       theme: 'dark',
       corner: 'tl',
@@ -110,7 +125,13 @@ describe('readWeatherSettings', () => {
 
 describe('parseWeatherUrl', () => {
   it('reads back what buildWeatherUrl wrote, language included', () => {
-    const picked = settings({ place: 'Kadıköy', units: 'imperial', forecast: 'off', h12: true });
+    const picked = settings({
+      place: 'Kadıköy',
+      units: 'imperial',
+      style: 'modern',
+      forecast: 'off',
+      h12: true,
+    });
     expect(parseWeatherUrl(buildWeatherUrl(ORIGIN, picked, 'ja'))).toEqual({
       settings: picked,
       locale: 'ja',

@@ -24,7 +24,6 @@ import { getSetupPageHead } from '#/lib/seo/pages';
 import {
   buildWeatherPreviewUrl,
   buildWeatherUrl,
-  DEFAULT_WEATHER_SETTINGS,
   MAX_SIZE,
   MIN_SIZE,
   PLACE_MAX_LENGTH,
@@ -32,6 +31,8 @@ import {
   WEATHER_CORNERS,
   WEATHER_FORECASTS,
   WEATHER_LAYOUTS,
+  WEATHER_SETUP_SETTINGS,
+  WEATHER_STYLES,
   WEATHER_THEMES,
   WEATHER_UNITS,
   type WeatherSettings,
@@ -74,7 +75,7 @@ const MET_TERMS_URL = 'https://api.met.no/doc/License';
 
 function WeatherSetup() {
   const { t, locale } = useI18n();
-  const [settings, setSettings] = useState(DEFAULT_WEATHER_SETTINGS);
+  const [settings, setSettings] = useState(WEATHER_SETUP_SETTINGS);
   // The overlay's own language: the page's until one is picked. The OBS URL always carries it.
   const [pickedLocale, setPickedLocale] = useState<Locale | null>(null);
   const overlayLocale = pickedLocale ?? locale;
@@ -102,6 +103,8 @@ function WeatherSetup() {
   };
 
   const card = settings.layout === 'card';
+  // The HUD styles draw outlined text right on the scene, with no background to pick.
+  const app = settings.style === 'app';
 
   const settingsPanel = (
     <>
@@ -137,6 +140,20 @@ function WeatherSetup() {
 
       <SettingsGroup title={t('common.sectionAppearance')}>
         <div>
+          <FieldLabel id={`${id}-style`} tip={t('weather.styleTip')}>
+            {t('weather.style')}
+          </FieldLabel>
+          <SegmentedControl
+            labelledBy={`${id}-style`}
+            value={settings.style}
+            onChange={(value) => update('style', value)}
+            options={WEATHER_STYLES.map((style) => ({
+              value: style,
+              label: t(`weather.styles.${style}`),
+            }))}
+          />
+        </div>
+        <div>
           <FieldLabel id={`${id}-layout`} tip={t('weather.layoutTip')}>
             {t('weather.layout')}
           </FieldLabel>
@@ -150,20 +167,22 @@ function WeatherSetup() {
             }))}
           />
         </div>
-        <div>
-          <FieldLabel id={`${id}-theme`} tip={t('weather.themeTip')}>
-            {t('weather.theme')}
-          </FieldLabel>
-          <SegmentedControl
-            labelledBy={`${id}-theme`}
-            value={settings.theme}
-            onChange={(value) => update('theme', value)}
-            options={WEATHER_THEMES.map((theme) => ({
-              value: theme,
-              label: t(`weather.themes.${theme}`),
-            }))}
-          />
-        </div>
+        {app && (
+          <div>
+            <FieldLabel id={`${id}-theme`} tip={t('weather.themeTip')}>
+              {t('weather.theme')}
+            </FieldLabel>
+            <SegmentedControl
+              labelledBy={`${id}-theme`}
+              value={settings.theme}
+              onChange={(value) => update('theme', value)}
+              options={WEATHER_THEMES.map((theme) => ({
+                value: theme,
+                label: t(`weather.themes.${theme}`),
+              }))}
+            />
+          </div>
+        )}
         <div>
           <FieldLabel id={`${id}-corner`} tip={t('weather.cornerTip')}>
             {t('weather.corner')}

@@ -1162,6 +1162,14 @@ export const pt: typeof en = {
       'O nome que o overlay mostra junto com o clima. Ele é preenchido quando você escolhe um lugar; mude, ou deixe vazio para não mostrar nenhum nome.',
     placeNamePlaceholder: 'ex.: São Paulo',
     placePrivacy: 'Os espectadores veem esse nome e o clima, nunca as coordenadas.',
+    style: 'Estilo',
+    styleTip:
+      'App de clima mostra números arredondados no fundo que você escolher. HUD retrô e HUD moderno usam os estilos do Overlay HUD IRL: texto com contorno direto na sua cena, para o clima combinar com o HUD do lado.',
+    styles: {
+      app: 'App de clima',
+      retro: 'HUD retrô',
+      modern: 'HUD moderno',
+    },
     layout: 'Layout',
     layoutTip:
       'Cartão mostra o lugar, um ícone grande e a temperatura, com vento, umidade e previsão embaixo. Barra coloca o ícone, a temperatura, o tempo e o lugar em uma linha só.',

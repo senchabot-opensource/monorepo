@@ -1144,6 +1144,14 @@ export const tr: typeof en = {
       "Overlay'in hava durumuyla birlikte gösterdiği ad. Yer seçince kendiliğinden dolar; değiştirebilir ya da hiç ad göstermemek için boş bırakabilirsin.",
     placeNamePlaceholder: 'ör. İstanbul',
     placePrivacy: 'İzleyiciler bu adı ve hava durumunu görür, koordinatları asla görmez.',
+    style: 'Stil',
+    styleTip:
+      "Hava Uygulaması, seçtiğin arka planın üstünde yuvarlak rakamlar gösterir. Retro HUD ve Modern HUD, IRL HUD Overlay'in stillerini kullanır: doğrudan sahnenin üstünde çerçeveli yazı, böylece hava durumu yanındaki HUD'a uyar.",
+    styles: {
+      app: 'Hava Uygulaması',
+      retro: 'Retro HUD',
+      modern: 'Modern HUD',
+    },
     layout: 'Düzen',
     layoutTip:
       'Kart; yeri, büyük bir simgeyi ve sıcaklığı, altında rüzgâr, nem ve tahminle gösterir. Tek Satır; simgeyi, sıcaklığı, havayı ve yeri bir satıra sığdırır.',

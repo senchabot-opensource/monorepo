@@ -1,5 +1,6 @@
 import { createFileRoute, useLocation } from '@tanstack/react-router';
-import { HUD_FONT_URL, IrlHudWidget } from '#/features/widgets/irl-hud/irl-hud-widget';
+import { HUD_FONT_URL } from '#/features/widgets/irl-hud/hud-text';
+import { IrlHudWidget } from '#/features/widgets/irl-hud/irl-hud-widget';
 import { readHudSettings } from '#/lib/irl-hud-url';
 import { readFlag } from '#/lib/url-params';
 

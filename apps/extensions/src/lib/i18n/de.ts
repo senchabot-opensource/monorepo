@@ -1144,6 +1144,14 @@ export const de: typeof en = {
       'Der Name, den das Overlay zum Wetter zeigt. Er wird beim Wählen eines Orts ausgefüllt; ändere ihn, oder lass ihn leer, dann steht kein Name da.',
     placeNamePlaceholder: 'z. B. Istanbul',
     placePrivacy: 'Zuschauer sehen diesen Namen und das Wetter, nie die Koordinaten.',
+    style: 'Stil',
+    styleTip:
+      'Wetter-App zeigt runde Ziffern auf dem Hintergrund deiner Wahl. Retro-HUD und Modernes HUD übernehmen die Stile des IRL-HUD-Overlays: umrandete Schrift direkt auf deiner Szene, damit das Wetter zum HUD daneben passt.',
+    styles: {
+      app: 'Wetter-App',
+      retro: 'Retro-HUD',
+      modern: 'Modernes HUD',
+    },
     layout: 'Layout',
     layoutTip:
       'Karte zeigt den Ort, ein großes Symbol und die Temperatur, darunter Wind, Luftfeuchtigkeit und eine Vorhersage. Leiste bringt Symbol, Temperatur, Wetter und Ort in eine Zeile.',
