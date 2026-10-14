@@ -297,6 +297,33 @@ describe('IrlHudWidget', () => {
     expect(hud().dataset.move).toBe('walk');
   });
 
+  it('hides and shows the mini-map, the cash and the clock on a plain !h, and keeps that through a reload', () => {
+    const first = render(<IrlHudWidget twitchChannel="streamer" settings={settings()} />);
+    expect(hud().dataset.hidden).toBeUndefined();
+    receive('twitch', VIEWER_SAYS('!h map'));
+    expect(hud().dataset.hidden).toBeUndefined();
+    receive('twitch', MOD_SAYS('!h map'));
+    receive('twitch', MOD_SAYS('!hud cash'));
+    receive('twitch', MOD_SAYS('!h clock'));
+    expect(hud().dataset.hidden).toBe('map cash time');
+    expect(radar().closest('[aria-hidden="true"]')).not.toBeNull();
+    expect(saved().hidden).toEqual(['map', 'cash', 'time']);
+    // A command with more after it is another command, and the weather isn't the HUD's.
+    receive('twitch', MOD_SAYS('!h map park'));
+    receive('twitch', MOD_SAYS('!h weather'));
+    expect(hud().dataset.hidden).toBe('map cash time');
+    first.unmount();
+
+    render(<IrlHudWidget twitchChannel="streamer" settings={settings()} />);
+    expect(hud().dataset.hidden).toBe('map cash time');
+    receive('twitch', MOD_SAYS('!h map'));
+    receive('twitch', MOD_SAYS('!H MONEY'));
+    expect(hud().dataset.hidden).toBe('time');
+    receive('twitch', MOD_SAYS('!hud time'));
+    expect(hud().dataset.hidden).toBeUndefined();
+    expect(radar().closest('[aria-hidden="true"]')).toBeNull();
+  });
+
   it('goes into the nearest building and back out on command, and keeps that through a reload', () => {
     const first = render(<IrlHudWidget twitchChannel="streamer" settings={settings()} />);
     const frames = () => act(() => vi.advanceTimersByTime(100));

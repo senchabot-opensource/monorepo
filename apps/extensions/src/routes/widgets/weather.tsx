@@ -26,6 +26,9 @@ function RouteComponent() {
       settings={readWeatherSettings(params)}
       demo={readFlag(params.get('demo'), false)}
       previewId={params.get('preview')?.trim() || undefined}
+      // Only for the mods' !h weather; the weather itself needs no channel.
+      twitchChannel={params.get('twitch')?.trim() || undefined}
+      kickChannel={params.get('kick')?.trim() || undefined}
     />
   );
 }

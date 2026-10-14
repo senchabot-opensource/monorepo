@@ -37,7 +37,7 @@ export const OG_IMAGE_SIZE = { width: 1200, height: 630 } as const;
 // The images are in English on both versions of a page; only their alt text is translated.
 export const OG_IMAGES = {
   'now-playing': {
-    path: '/og/socials.png',
+    path: '/og/now-playing.png',
     alt: {
       en: 'Now Playing, a song overlay with the cover art, title and artist of the music you’re playing',
       de: 'Aktueller Song, ein Song-Overlay mit Cover, Titel und Künstler der Musik, die du gerade hörst',
@@ -49,7 +49,7 @@ export const OG_IMAGES = {
     },
   },
   'emote-combo': {
-    path: '/og/emote-wall.png',
+    path: '/og/emote-combo.png',
     alt: {
       en: 'Emote Combo, a combo counter overlay for emotes in Twitch and Kick chat',
       de: 'Emote-Combo, ein Combo-Zähler-Overlay für Emotes im Twitch- und Kick-Chat',
@@ -61,7 +61,7 @@ export const OG_IMAGES = {
     },
   },
   featured: {
-    path: '/og/chat-box.png',
+    path: '/og/featured.png',
     alt: {
       en: 'Featured Message, a chat highlight and Q&A overlay for Twitch and Kick',
       de: 'Hervorgehobene Nachricht, ein Overlay für Chat-Highlights und Fragerunden auf Twitch und Kick',
@@ -73,7 +73,7 @@ export const OG_IMAGES = {
     },
   },
   'bits-goal': {
-    path: '/og/goal.png',
+    path: '/og/bits-goal.png',
     alt: {
       en: 'Bits & Kicks Goal, a goal bar overlay that Twitch Bits and Kick Kicks fill',
       de: 'Bits- und Kicks-Ziel, ein Zielbalken-Overlay, das Twitch-Bits und Kick-Kicks füllen',
@@ -157,7 +157,7 @@ export const OG_IMAGES = {
     },
   },
   'follower-goal': {
-    path: '/og/goal.png',
+    path: '/og/follower-goal.png',
     alt: {
       en: 'Follower Goal, a goal bar overlay that new follows fill in real time',
       de: 'Follower-Ziel, ein Zielbalken-Overlay, das neue Follower in Echtzeit füllen',
@@ -193,7 +193,7 @@ export const OG_IMAGES = {
     },
   },
   counter: {
-    path: '/og/goal.png',
+    path: '/og/counter.png',
     alt: {
       en: 'Counter, a win and loss counter overlay that mods change from chat',
       de: 'Zähler, ein Overlay für Siege und Niederlagen, das Mods im Chat ändern',
@@ -205,7 +205,7 @@ export const OG_IMAGES = {
     },
   },
   tasks: {
-    path: '/og/countdown.png',
+    path: '/og/tasks.png',
     alt: {
       en: 'Task List, a co-working task list overlay that chat fills with !task',
       de: 'Aufgabenliste, ein Co-Working-Overlay mit Aufgaben, die der Chat per !task einträgt',
@@ -217,7 +217,7 @@ export const OG_IMAGES = {
     },
   },
   'lower-third': {
-    path: '/og/frames.png',
+    path: '/og/lower-third.png',
     alt: {
       en: 'Lower Thirds, an animated name and topic bar overlay for streams',
       de: 'Bauchbinde, ein Overlay mit animierter Namens- und Themenleiste für Streams',
@@ -229,7 +229,7 @@ export const OG_IMAGES = {
     },
   },
   leaderboard: {
-    path: '/og/goal.png',
+    path: '/og/leaderboard.png',
     alt: {
       en: 'Top Supporters, a leaderboard of top gifters and cheerers for Twitch and Kick',
       de: 'Top-Supporter, eine Rangliste der Top-Gifter und Top-Cheerer für Twitch und Kick',
@@ -241,7 +241,7 @@ export const OG_IMAGES = {
     },
   },
   queue: {
-    path: '/og/raffle.png',
+    path: '/og/queue.png',
     alt: {
       en: 'Viewer Queue, a play-with-viewers queue for Twitch and Kick chat',
       de: 'Zuschauer-Warteschlange, eine Warteschlange zum Mitspielen für den Twitch- und Kick-Chat',
@@ -253,7 +253,7 @@ export const OG_IMAGES = {
     },
   },
   credits: {
-    path: '/og/countdown.png',
+    path: '/og/credits.png',
     alt: {
       en: 'End Credits, a movie-style credits overlay for Twitch and Kick streams',
       de: 'Abspann, ein Abspann-Overlay im Kino-Stil für Twitch- und Kick-Streams',
@@ -265,7 +265,7 @@ export const OG_IMAGES = {
     },
   },
   'event-list': {
-    path: '/og/stream-alerts.png',
+    path: '/og/event-list.png',
     alt: {
       en: 'Event List, a recent events overlay for Twitch and Kick subs, gifts, cheers and raids',
       de: 'Event-Liste, ein Overlay mit den letzten Subs, Gifts, Cheers und Raids von Twitch und Kick',

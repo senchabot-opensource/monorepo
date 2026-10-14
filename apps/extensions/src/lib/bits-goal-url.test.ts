@@ -82,6 +82,27 @@ describe('Bits & Kicks Goal URL', () => {
     });
   });
 
+  it('names only what its platforms send in its default title', () => {
+    const title = (query: string) => readGoalSettings(new URLSearchParams(query)).title;
+    expect(title('type=bits&twitch=a&kick=b')).toBe('BITS & KICKS GOAL');
+    expect(title('type=bits&twitch=a')).toBe('BITS GOAL');
+    expect(title('type=bits&kick=b')).toBe('KICKS GOAL');
+    // A preview names no channel, only the platform it plays.
+    expect(title('type=bits&simulate=1&simplatform=kick')).toBe('KICKS GOAL');
+    expect(title('type=bits&simulate=1')).toBe('BITS & KICKS GOAL');
+    // A Sub Goal's title never changes with its platforms.
+    expect(title('twitch=a')).toBe('SUB GOAL');
+
+    const twitchOnly = { ...DEFAULT_BITS_GOAL_SETTINGS, platforms: 'twitch' as const };
+    const url = (title: string, kick = '') =>
+      new URL(buildGoalUrl(ORIGIN, { ...twitchOnly, title }, 'streamer', kick)).searchParams;
+    expect(url('BITS GOAL').has('title')).toBe(false);
+    expect(url('BITS & KICKS GOAL').get('title')).toBe('BITS & KICKS GOAL');
+    // Both picked but one channel typed: the overlay gets one platform, so the title says so.
+    const both = { ...DEFAULT_BITS_GOAL_SETTINGS, title: 'KICKS GOAL' };
+    expect(new URL(buildGoalUrl(ORIGIN, both, '', 'kicker')).searchParams.has('title')).toBe(false);
+  });
+
   it('keeps type=bits in the preview, so the preview plays cheers', () => {
     const url = new URL(buildGoalPreviewUrl(ORIGIN, BITS, 'abc123'));
     expect(url.searchParams.get('type')).toBe('bits');

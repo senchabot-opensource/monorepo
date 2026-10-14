@@ -353,7 +353,7 @@ export const es: typeof en = {
       'Con OBS Studio y otros programas que admiten fuentes de navegador. Añade la URL del widget como fuente de navegador y usa el tamaño que aparece en la página de configuración.',
     faq4Q: '¿Puedo usar Twitch y Kick juntos?',
     faq4A:
-      'Sí. Caja de Chat, Muro de Emotes, Sub Sprout, Subathon Timer, Alertas de Stream, Meta de Subs, Contador, Lista de Eventos, Créditos Finales, Fila de Espectadores, Ranking de Apoyos, Rótulos, Lista de Tareas, Combo de Emotes, Mensaje Destacado, Meta de Bits y Kicks, Encuesta de Chat, Cuenta Regresiva, Overlay HUD IRL y Ruleta aceptan un canal de Twitch y uno de Kick en la misma URL. OBS Bridge también puede escuchar los dos chats a la vez. Sorteo funciona en una sola plataforma a la vez.',
+      'Sí. Caja de Chat, Muro de Emotes, Sub Sprout, Subathon Timer, Alertas de Stream, Meta de Subs, Contador, Lista de Eventos, Créditos Finales, Fila de Espectadores, Ranking de Apoyos, Rótulos, Lista de Tareas, Combo de Emotes, Mensaje Destacado, Meta de Bits y Kicks, Clima, Encuesta de Chat, Cuenta Regresiva, Overlay HUD IRL y Ruleta aceptan un canal de Twitch y uno de Kick en la misma URL. OBS Bridge también puede escuchar los dos chats a la vez. Sorteo funciona en una sola plataforma a la vez.',
     faq5Q: '¿Cómo cambio un widget más adelante?',
     faq5A:
       'Abre su página de configuración, déjalo como quieras y reemplaza la URL en tu fuente de navegador. Caja de Chat, Muro de Emotes, Sub Sprout, Subathon Timer, Alertas de Stream, Meta de Subs, Contador, Lista de Eventos, Créditos Finales, Fila de Espectadores, Ranking de Apoyos, Rótulos, Lista de Tareas, Combo de Emotes, Mensaje Destacado, Meta de Bits y Kicks, Sonando Ahora, Encuesta de Chat, Marcos de Stream, Redes Sociales, Cuenta Regresiva, Overlay HUD IRL, Clima y Ruleta también pueden abrir una URL existente: pégala en la página de configuración, tu configuración vuelve y cambias solo lo que necesites.',
@@ -1186,6 +1186,15 @@ export const es: typeof en = {
     cmdBuyMany: 'Compra tres unidades',
     commandsAmounts:
       'Escribe las cantidades como 500, 1,500, 2.5k o 1m. !hud cash add 500 y !hud cash remove 500 también funcionan.',
+    commandsShort:
+      'Todos los comandos funcionan también con !h en lugar de !hud, como !h cash +500.',
+    cmdToggleMap: 'Oculta el minimapa o lo vuelve a mostrar',
+    cmdToggleCash: 'Oculta el dinero o lo vuelve a mostrar',
+    cmdToggleTime: 'Oculta el reloj o lo vuelve a mostrar',
+    cmdToggleWeather: 'Oculta el overlay de Clima o lo vuelve a mostrar, si tiene tu canal',
+    testToggleMap: 'Mapa sí/no',
+    testToggleCash: 'Dinero sí/no',
+    testToggleTime: 'Reloj sí/no',
     previewTitle: 'Vista previa del Overlay HUD IRL',
     previewIframeTitle: 'Vista previa del Overlay HUD IRL',
     previewHint:
@@ -1518,6 +1527,8 @@ export const es: typeof en = {
     intro:
       'Una barra de meta de Bits y Kicks para Twitch y Kick. Cada cheer de Bits y cada regalo de Kicks de los dos chats la llena según su cantidad, y al llegar a la meta un trofeo cae sobre la barra con el nombre del espectador que la completó. Elige dónde empieza el conteo y dónde está la meta, y tus mods pueden corregir el conteo desde el chat.',
     defaultTitle: 'META DE BITS Y KICKS',
+    defaultTitleBits: 'META DE BITS',
+    defaultTitleKicks: 'META DE KICKS',
     startTip:
       'Dónde empieza el conteo: 0 para una meta nueva, o los Bits y Kicks que ya llevas para ella. Si lo cambias después, el conteo vuelve a empezar desde el número nuevo.',
     countsHint:
@@ -2039,6 +2050,15 @@ export const es: typeof en = {
     testSnow: 'Nieve',
     testNight: 'Noche',
     testLive: 'Clima real',
+    sectionChat: 'Chat (opcional)',
+    channelHint:
+      'El clima no necesita canal. Con uno, tú y tus mods pueden ocultarlo y volver a mostrarlo desde el chat con !h weather.',
+    sectionCommands: 'Comandos del chat',
+    commandsIntro:
+      'Con un canal en la URL, tú y tus mods escriben esto en el chat de Twitch o Kick. Si los espectadores lo escriben, no cambia nada.',
+    cmdToggle: 'Oculta el clima o lo vuelve a mostrar',
+    cmdToggleLong: 'Lo mismo, con la forma larga del Overlay HUD IRL',
+    testToggle: 'Ocultar / mostrar',
     widgetUrlTip:
       '¿Ya hiciste un widget? Pega su URL aquí para cargar tu configuración y cambiar lo que necesites.',
     widgetUrlPlaceholder: 'Pega la URL de un widget existente para editarlo',
@@ -3712,7 +3732,7 @@ export const es: typeof en = {
       'Con OBS Studio y cualquier otro programa de streaming que admita una fuente de navegador. Cada widget funciona como una URL web, y pegas esa URL en la fuente. Nuestras guías están escritas para OBS Studio.',
     platformsQ: '¿Qué widgets funcionan con Twitch y cuáles con Kick?',
     platformsA:
-      'Los 27 funcionan con las dos plataformas. Caja de Chat, Muro de Emotes, Sub Sprout, Subathon Timer, Alertas de Stream, Meta de Subs, Contador, Lista de Eventos, Créditos Finales, Fila de Espectadores, Ranking de Apoyos, Rótulos, Lista de Tareas, Combo de Emotes, Mensaje Destacado, Meta de Bits y Kicks, Encuesta de Chat, Cuenta Regresiva, Overlay HUD IRL y Ruleta escuchan un canal de Twitch y uno de Kick juntos en una sola URL. OBS Bridge escucha comandos de los dos chats, y cada usuario autorizado se añade con su propia plataforma. Sorteo funciona en una plataforma a la vez, Twitch o Kick. Marcos de Stream, Redes Sociales, Clima y Sonando Ahora no leen el chat, así que funcionan igual en cualquiera de las dos. En Caja de Chat, los emotes de 7TV se ven en las dos plataformas, mientras que los de BTTV y FFZ solo en Twitch.',
+      'Los 27 funcionan con las dos plataformas. Caja de Chat, Muro de Emotes, Sub Sprout, Subathon Timer, Alertas de Stream, Meta de Subs, Contador, Lista de Eventos, Créditos Finales, Fila de Espectadores, Ranking de Apoyos, Rótulos, Lista de Tareas, Combo de Emotes, Mensaje Destacado, Meta de Bits y Kicks, Clima, Encuesta de Chat, Cuenta Regresiva, Overlay HUD IRL y Ruleta escuchan un canal de Twitch y uno de Kick juntos en una sola URL. OBS Bridge escucha comandos de los dos chats, y cada usuario autorizado se añade con su propia plataforma. Sorteo funciona en una plataforma a la vez, Twitch o Kick. Marcos de Stream, Redes Sociales y Sonando Ahora no leen el chat, así que funcionan igual en cualquiera de las dos. En Caja de Chat, los emotes de 7TV se ven en las dos plataformas, mientras que los de BTTV y FFZ solo en Twitch.',
     editQ: '¿Cómo cambio un widget más adelante?',
     editA:
       'Cambia la configuración en la página de configuración, copia la URL nueva y pégala encima de la vieja en el campo URL de la fuente en OBS. Con Caja de Chat, Muro de Emotes, Sub Sprout, Subathon Timer, Alertas de Stream, Meta de Subs, Contador, Lista de Eventos, Créditos Finales, Fila de Espectadores, Ranking de Apoyos, Rótulos, Lista de Tareas, Combo de Emotes, Mensaje Destacado, Meta de Bits y Kicks, Sonando Ahora, Encuesta de Chat, Marcos de Stream, Redes Sociales, Cuenta Regresiva, Overlay HUD IRL, Clima y Ruleta, si pegas tu URL vieja en el campo URL del widget de la página de configuración, vuelve toda tu configuración y no tienes que empezar de cero.',
@@ -3739,6 +3759,10 @@ export const es: typeof en = {
     lead: 'Funciones nuevas y errores corregidos en Senchabot Extensions, de lo más nuevo a lo más viejo. La lista sale del historial de commits del proyecto en [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).',
     site: 'Sitio',
     entries: {
+      hudToggles:
+        'Overlay HUD IRL y Clima: el minimapa, el dinero, el reloj y el clima ya se pueden ocultar y volver a mostrar desde el chat con !h map, !h cash, !h time y !h weather. Clima solo lee el chat si añades tu canal.',
+      irlHudShortCommand:
+        'Overlay HUD IRL: todos los comandos del chat funcionan ahora también en corto, !h en lugar de !hud, como !h cash +500.',
       nowPlayingLaunch:
         'Nuevo overlay: Sonando Ahora. Muestra la canción que estás escuchando, con su portada, título y artista, leída de ListenBrainz o Last.fm, así que funciona con Spotify y la mayoría de reproductores. Las canciones nuevas entran solas, y se va cuando para la música.',
       emoteComboLaunch:

@@ -36,7 +36,8 @@ describe('Bits & Kicks Goal overlay route', () => {
     await renderRoute('/widgets/goal?twitch=streamer&type=bits&start=250');
     const goal = screen.getByTestId('goal');
     expect(goal.dataset.type).toBe('bits');
-    expect(goal.textContent).toContain('BITS & KICKS GOAL250/ 1000');
+    // Twitch alone sends Bits, so the default title names Bits only.
+    expect(goal.textContent).toContain('BITS GOAL250/ 1000');
     const twitch = FakeWebSocket.instances.find((ws) => ws.url.includes('twitch'));
     twitch?.open();
     expect(twitch?.sent).toContain('JOIN #streamer');
@@ -69,7 +70,11 @@ describe('Bits & Kicks Goal setup', () => {
     };
 
     await user.type(twitchField(), 'Streamer');
-    expect(urlField().value).toBe(`${ORIGIN}/widgets/goal?twitch=streamer&type=bits`);
+    // Both platforms are picked, so the title names Bits and Kicks. With only a Twitch channel
+    // the overlay would say BITS GOAL on its own, so the URL spells out what the page shows.
+    expect(urlField().value).toBe(
+      `${ORIGIN}/widgets/goal?twitch=streamer&type=bits&title=BITS+%26+KICKS+GOAL`,
+    );
 
     await retype(user, count(en('goal.start')), '1200');
     expectUrl({ start: 1200 });
@@ -136,9 +141,26 @@ describe('Bits & Kicks Goal setup', () => {
     await retype(user, textbox(en('goal.titleLabel')), 'Something else');
     await user.click(urlField());
     await user.paste('https://extensions.senchabot.com/widgets/goal?kick=kicker&type=bits');
-    expect(textbox(en('goal.titleLabel')).value).toBe('BITS & KICKS GOAL');
+    expect(textbox(en('goal.titleLabel')).value).toBe(en('bitsGoal.defaultTitleKicks'));
     expect(count(en('goal.target')).value).toBe('1000');
     expect(segment(en('common.platforms'), 'Kick').checked).toBe(true);
+  });
+
+  it('names only the picked platform’s currency in the title, until one is typed in', async () => {
+    const user = setupUser();
+    await renderRoute(PAGE);
+    const title = () => textbox(en('goal.titleLabel')).value;
+    expect(title()).toBe(en('bitsGoal.defaultTitle'));
+    await user.click(segment(en('common.platforms'), 'Twitch'));
+    expect(title()).toBe(en('bitsGoal.defaultTitleBits'));
+    await user.click(segment(en('common.platforms'), 'Kick'));
+    expect(title()).toBe(en('bitsGoal.defaultTitleKicks'));
+    await user.click(segment(en('common.platforms'), en('common.platformBoth')));
+    expect(title()).toBe(en('bitsGoal.defaultTitle'));
+
+    await retype(user, textbox(en('goal.titleLabel')), 'Road to 10k');
+    await user.click(segment(en('common.platforms'), 'Kick'));
+    expect(title()).toBe('Road to 10k');
   });
 
   it('turns down a Sub Goal URL and says where it belongs', async () => {

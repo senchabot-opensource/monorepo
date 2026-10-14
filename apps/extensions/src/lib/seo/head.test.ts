@@ -1,12 +1,16 @@
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { CONTENT_META, GUIDES } from '#/lib/guides';
 import { LOCALES } from '#/lib/i18n/locales';
+import { WIDGETS } from '#/lib/widgets';
 import {
   DESCRIPTION_MAX,
-  JA_DESCRIPTION_MAX,
   getPageHead,
+  JA_DESCRIPTION_MAX,
   type LocalizedMeta,
   OG_IMAGES,
+  type OgImage,
   type PageMeta,
   TITLE_MAX,
 } from './head';
@@ -195,5 +199,13 @@ describe('page meta', () => {
 
   it('serves every Open Graph image from /og as a PNG', () => {
     for (const { path } of Object.values(OG_IMAGES)) expect(path).toMatch(/^\/og\/[a-z-]+\.png$/);
+  });
+
+  it("gives every widget a card of its own, not another widget's or a copy of one", () => {
+    const publicDir = resolve(__dirname, '../../../public');
+    for (const { id } of WIDGETS) expect(OG_IMAGES[id as OgImage]?.path, id).toBe(`/og/${id}.png`);
+    const files = [...new Set(Object.values(OG_IMAGES).map(({ path }) => path))];
+    const pictures = files.map((path) => readFileSync(`${publicDir}${path}`).toString('base64'));
+    expect(new Set(pictures).size).toBe(files.length);
   });
 });

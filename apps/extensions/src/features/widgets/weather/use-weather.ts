@@ -14,8 +14,13 @@ import {
 /** The setup page's test buttons reach its preview on this channel. */
 export const PREVIEW_CHANNEL = 'senchabot:weather-preview';
 
-/** Sample weather to show instead of the real one; null goes back to the real weather. */
-export type PreviewMessage = { type: 'sky'; sky: DemoSky | null; preview: string };
+/**
+ * `sky`: sample weather to show instead of the real one; null goes back to the real weather.
+ * `toggle`: hides the weather or shows it again, like a mod's !h weather.
+ */
+export type PreviewMessage =
+  | { type: 'sky'; sky: DemoSky | null; preview: string }
+  | { type: 'toggle'; preview: string };
 
 const MINUTE = 60_000;
 

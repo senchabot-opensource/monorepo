@@ -347,7 +347,7 @@ export const de: typeof en = {
       'Mit OBS Studio und anderen Apps, die Browser-Quellen unterstützen. Füge die Widget-URL als Browser-Quelle hinzu und nimm die Größe, die auf der Setup-Seite steht.',
     faq4Q: 'Kann ich Twitch und Kick zusammen nutzen?',
     faq4A:
-      'Ja. Chat-Box, Emote-Wand, Sub Sprout, Subathon Timer, Stream-Alerts, Sub-Ziel, Zähler, Event-Liste, Abspann, Zuschauer-Warteschlange, Top-Supporter, Bauchbinde, Aufgabenliste, Emote-Combo, Hervorgehobene Nachricht, Bits- und Kicks-Ziel, Chat-Umfrage, Stream-Countdown, IRL-HUD-Overlay und Glücksrad nehmen einen Twitch- und einen Kick-Kanal in derselben URL. OBS Bridge kann auch beiden Chats gleichzeitig zuhören. Die Verlosung läuft immer auf einer Plattform.',
+      'Ja. Chat-Box, Emote-Wand, Sub Sprout, Subathon Timer, Stream-Alerts, Sub-Ziel, Zähler, Event-Liste, Abspann, Zuschauer-Warteschlange, Top-Supporter, Bauchbinde, Aufgabenliste, Emote-Combo, Hervorgehobene Nachricht, Bits- und Kicks-Ziel, Wetter, Chat-Umfrage, Stream-Countdown, IRL-HUD-Overlay und Glücksrad nehmen einen Twitch- und einen Kick-Kanal in derselben URL. OBS Bridge kann auch beiden Chats gleichzeitig zuhören. Die Verlosung läuft immer auf einer Plattform.',
     faq5Q: 'Wie ändere ich ein Widget später?',
     faq5A:
       'Öffne seine Setup-Seite, stell alles so ein, wie du willst, und ersetz die URL in deiner Browser-Quelle. Chat-Box, Emote-Wand, Sub Sprout, Subathon Timer, Stream-Alerts, Sub-Ziel, Zähler, Event-Liste, Abspann, Zuschauer-Warteschlange, Top-Supporter, Bauchbinde, Aufgabenliste, Emote-Combo, Hervorgehobene Nachricht, Bits- und Kicks-Ziel, Aktueller Song, Chat-Umfrage, Stream-Rahmen, Socials, Stream-Countdown, IRL-HUD-Overlay, Wetter und Glücksrad können auch eine bestehende URL öffnen: Füg sie auf der Setup-Seite ein, deine Einstellungen sind wieder da, und du änderst nur, was du brauchst.',
@@ -1166,6 +1166,14 @@ export const de: typeof en = {
     cmdBuyMany: 'Kauft drei davon',
     commandsAmounts:
       'Beträge schreibst du wie 500, 1,500, 2.5k oder 1m. !hud cash add 500 und !hud cash remove 500 gehen auch.',
+    commandsShort: 'Jeder Befehl klappt auch mit !h statt !hud, etwa !h cash +500.',
+    cmdToggleMap: 'Blendet die Minikarte aus oder wieder ein',
+    cmdToggleCash: 'Blendet das Geld aus oder wieder ein',
+    cmdToggleTime: 'Blendet die Uhr aus oder wieder ein',
+    cmdToggleWeather: 'Blendet das Wetter-Overlay aus oder wieder ein, wenn es deinen Kanal hat',
+    testToggleMap: 'Karte an/aus',
+    testToggleCash: 'Geld an/aus',
+    testToggleTime: 'Uhr an/aus',
     previewTitle: 'Vorschau des IRL-HUD-Overlays',
     previewIframeTitle: 'Vorschau des IRL-HUD-Overlays',
     previewHint:
@@ -1502,6 +1510,8 @@ export const de: typeof en = {
     intro:
       'Ein Bits- und Kicks-Ziel für Twitch und Kick. Jeder Bits-Cheer und jedes Kicks-Geschenk aus beiden Chats füllt den Balken um seinen Betrag, und ist das Ziel erreicht, landet ein Pokal mit dem Namen des Zuschauers auf dem Balken, der es geschafft hat. Du legst fest, wo die Zählung startet und wo das Ziel liegt, und deine Mods können die Zahl im Chat korrigieren.',
     defaultTitle: 'BITS- UND KICKS-ZIEL',
+    defaultTitleBits: 'BITS-ZIEL',
+    defaultTitleKicks: 'KICKS-ZIEL',
     startTip:
       'Hier startet die Zählung: 0 für ein neues Ziel oder die Bits und Kicks, die schon dafür reingekommen sind. Änderst du den Wert später, fängt die Zählung beim neuen Wert neu an.',
     countsHint:
@@ -2022,6 +2032,15 @@ export const de: typeof en = {
     testSnow: 'Schnee',
     testNight: 'Nacht',
     testLive: 'Echtes Wetter',
+    sectionChat: 'Chat (optional)',
+    channelHint:
+      'Für das Wetter brauchst du keinen Kanal. Mit einem können du und deine Mods es im Chat mit !h weather aus- und wieder einblenden.',
+    sectionCommands: 'Chatbefehle',
+    commandsIntro:
+      'Mit einem Kanal in der URL tippst du oder deine Mods das in den Twitch- oder Kick-Chat. Tippen Zuschauer es, ändert sich nichts.',
+    cmdToggle: 'Blendet das Wetter aus oder wieder ein',
+    cmdToggleLong: 'Dasselbe in der langen Form des IRL-HUD-Overlays',
+    testToggle: 'Aus / ein',
     widgetUrlTip:
       'Schon ein Widget gebaut? Füg seine URL hier ein, um deine Einstellungen zu laden und nur das zu ändern, was du brauchst.',
     widgetUrlPlaceholder: 'Bestehende Widget-URL zum Bearbeiten einfügen',
@@ -3690,7 +3709,7 @@ export const de: typeof en = {
       'Mit OBS Studio und jeder anderen Streaming-Software, die eine Browser-Quelle unterstützt. Jedes Widget läuft als Web-URL, und diese URL fügst du in die Quelle ein. Unsere Anleitungen sind für OBS Studio geschrieben.',
     platformsQ: 'Welche Widgets unterstützen Twitch und welche Kick?',
     platformsA:
-      'Alle 27 unterstützen beide Plattformen. Chat-Box, Emote-Wand, Sub Sprout, Subathon Timer, Stream-Alerts, Sub-Ziel, Zähler, Event-Liste, Abspann, Zuschauer-Warteschlange, Top-Supporter, Bauchbinde, Aufgabenliste, Emote-Combo, Hervorgehobene Nachricht, Bits- und Kicks-Ziel, Chat-Umfrage, Stream-Countdown, IRL-HUD-Overlay und Glücksrad hören einem Twitch- und einem Kick-Kanal zusammen in einer URL zu. OBS Bridge hört auf Befehle aus beiden Chats, und jeder berechtigte Nutzer wird mit seiner eigenen Plattform hinzugefügt. Die Verlosung läuft immer auf einer Plattform, Twitch oder Kick. Stream-Rahmen, Socials, Wetter und Aktueller Song lesen keinen Chat, sie funktionieren also auf beiden gleich. In der Chat-Box erscheinen 7TV-Emotes auf beiden Plattformen, BTTV- und FFZ-Emotes nur auf Twitch.',
+      'Alle 27 unterstützen beide Plattformen. Chat-Box, Emote-Wand, Sub Sprout, Subathon Timer, Stream-Alerts, Sub-Ziel, Zähler, Event-Liste, Abspann, Zuschauer-Warteschlange, Top-Supporter, Bauchbinde, Aufgabenliste, Emote-Combo, Hervorgehobene Nachricht, Bits- und Kicks-Ziel, Wetter, Chat-Umfrage, Stream-Countdown, IRL-HUD-Overlay und Glücksrad hören einem Twitch- und einem Kick-Kanal zusammen in einer URL zu. OBS Bridge hört auf Befehle aus beiden Chats, und jeder berechtigte Nutzer wird mit seiner eigenen Plattform hinzugefügt. Die Verlosung läuft immer auf einer Plattform, Twitch oder Kick. Stream-Rahmen, Socials und Aktueller Song lesen keinen Chat, sie funktionieren also auf beiden gleich. In der Chat-Box erscheinen 7TV-Emotes auf beiden Plattformen, BTTV- und FFZ-Emotes nur auf Twitch.',
     editQ: 'Wie ändere ich ein Widget später?',
     editA:
       'Ändere die Einstellungen auf der Setup-Seite, kopier die neue URL und füg sie in OBS im Feld URL der Quelle über der alten ein. Bei Chat-Box, Emote-Wand, Sub Sprout, Subathon Timer, Stream-Alerts, Sub-Ziel, Zähler, Event-Liste, Abspann, Zuschauer-Warteschlange, Top-Supporter, Bauchbinde, Aufgabenliste, Emote-Combo, Hervorgehobene Nachricht, Bits- und Kicks-Ziel, Aktueller Song, Chat-Umfrage, Stream-Rahmen, Socials, Stream-Countdown, IRL-HUD-Overlay, Wetter und Glücksrad kannst du deine alte URL auf der Setup-Seite ins Feld Widget-URL einfügen, dann sind alle Einstellungen wieder da, und du musst nicht von vorn anfangen.',
@@ -3717,6 +3736,10 @@ export const de: typeof en = {
     lead: 'Neue Features und Bugfixes in Senchabot Extensions, das Neueste zuerst. Die Liste ist aus der Commit-Historie des Projekts auf [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) zusammengestellt.',
     site: 'Website',
     entries: {
+      hudToggles:
+        'IRL-HUD-Overlay und Wetter: Minikarte, Geld, Uhr und Wetter lassen sich jetzt im Chat mit !h map, !h cash, !h time und !h weather aus- und wieder einblenden. Das Wetter liest den Chat nur, wenn du deinen Kanal einträgst.',
+      irlHudShortCommand:
+        'IRL-HUD-Overlay: Jeder Chatbefehl klappt jetzt auch kurz, mit !h statt !hud, etwa !h cash +500.',
       nowPlayingLaunch:
         'Neues Overlay: Aktueller Song. Es zeigt den Song, den du gerade hörst, mit Cover, Titel und Künstler, gelesen aus ListenBrainz oder Last.fm, also klappt es mit Spotify und den meisten Musikplayern. Neue Songs gleiten von selbst herein, und wenn die Musik stoppt, gleitet es wieder hinaus.',
       emoteComboLaunch:

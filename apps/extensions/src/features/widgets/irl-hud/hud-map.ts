@@ -1,5 +1,5 @@
 import type { HudMap, HudMove, HudPlace, HudSettings } from '#/lib/irl-hud-url';
-import { COMMAND } from './hud-money';
+import { isHudCommand } from './hud-money';
 
 /** `!hud map park1` switches the mini-map; the word after it is a saved place or a made-up map. */
 export const MAP_SUBCOMMAND = 'map';
@@ -12,8 +12,7 @@ export type MapView = { map: 'urban' | 'park' } | { map: 'real'; place: HudPlace
 /** The word after "!hud map", in lower case; null for anything else. */
 export function parseMapCommand(message: string): string | null {
   const [typed, part = '', word = ''] = message.trim().split(/\s+/);
-  if (typed?.toLowerCase() !== COMMAND || part.toLowerCase() !== MAP_SUBCOMMAND || !word)
-    return null;
+  if (!isHudCommand(typed) || part.toLowerCase() !== MAP_SUBCOMMAND || !word) return null;
   return word.toLowerCase();
 }
 
@@ -52,7 +51,7 @@ const MOVE_WORDS: Record<string, HudMove> = {
 /** The movement "!hud walk", "!hud run" or "!hud stay" (or "stop") asks for; null otherwise. */
 export function parseMoveCommand(message: string): HudMove | null {
   const [typed, word = '', ...rest] = message.trim().split(/\s+/);
-  if (typed?.toLowerCase() !== COMMAND || rest.length > 0) return null;
+  if (!isHudCommand(typed) || rest.length > 0) return null;
   const lower = word.toLowerCase();
   // Own words only: "constructor" and the like aren't movements.
   return Object.hasOwn(MOVE_WORDS, lower) ? MOVE_WORDS[lower] : null;
@@ -97,7 +96,7 @@ const INDOOR_WORDS: Record<string, boolean> = {
 /** True for "!hud indoor" (or "inside"), false for "!hud outdoor" (or "outside"); null otherwise. */
 export function parseIndoorCommand(message: string): boolean | null {
   const [typed, word = '', ...rest] = message.trim().split(/\s+/);
-  if (typed?.toLowerCase() !== COMMAND || rest.length > 0) return null;
+  if (!isHudCommand(typed) || rest.length > 0) return null;
   const lower = word.toLowerCase();
   return Object.hasOwn(INDOOR_WORDS, lower) ? INDOOR_WORDS[lower] : null;
 }

@@ -359,7 +359,7 @@ export const fr: typeof en = {
       "OBS Studio et les autres logiciels qui gèrent les sources navigateur. Ajoute l'URL du widget comme source Navigateur web et utilise la taille indiquée sur la page de configuration.",
     faq4Q: 'Je peux utiliser Twitch et Kick ensemble ?',
     faq4A:
-      "Oui. Boîte de chat, Mur d'emotes, Sub Sprout, Subathon Timer, Alertes de stream, Objectif de subs, Compteur, Liste d'événements, Générique de fin, File d'attente des viewers, Top soutiens, Bandeau, Liste de tâches, Combo d'emotes, Message mis en avant, Objectif de Bits et Kicks, Sondage du chat, Compte à rebours de stream, Overlay HUD IRL et Roue prennent une chaîne Twitch et une chaîne Kick dans la même URL. OBS Bridge peut aussi écouter les deux chats à la fois. Le Tirage au sort fonctionne sur une seule plateforme à la fois.",
+      "Oui. Boîte de chat, Mur d'emotes, Sub Sprout, Subathon Timer, Alertes de stream, Objectif de subs, Compteur, Liste d'événements, Générique de fin, File d'attente des viewers, Top soutiens, Bandeau, Liste de tâches, Combo d'emotes, Message mis en avant, Objectif de Bits et Kicks, Météo, Sondage du chat, Compte à rebours de stream, Overlay HUD IRL et Roue prennent une chaîne Twitch et une chaîne Kick dans la même URL. OBS Bridge peut aussi écouter les deux chats à la fois. Le Tirage au sort fonctionne sur une seule plateforme à la fois.",
     faq5Q: 'Comment modifier un widget plus tard ?',
     faq5A:
       "Ouvre sa page de configuration, règle-le comme tu veux et remplace l'URL dans ta source Navigateur web. Boîte de chat, Mur d'emotes, Sub Sprout, Subathon Timer, Alertes de stream, Objectif de subs, Compteur, Liste d'événements, Générique de fin, File d'attente des viewers, Top soutiens, Bandeau, Liste de tâches, Combo d'emotes, Message mis en avant, Objectif de Bits et Kicks, En écoute, Sondage du chat, Cadres de stream, Réseaux sociaux, Compte à rebours de stream, Overlay HUD IRL, Météo et Roue peuvent aussi ouvrir une URL existante : colle-la sur la page de configuration, tes réglages reviennent, et tu ne changes que ce dont tu as besoin.",
@@ -1201,6 +1201,14 @@ export const fr: typeof en = {
     cmdBuyMany: 'En achète trois',
     commandsAmounts:
       'Écris les montants comme 500, 1,500, 2.5k ou 1m. !hud cash add 500 et !hud cash remove 500 marchent aussi.',
+    commandsShort: 'Chaque commande marche aussi avec !h à la place de !hud, comme !h cash +500.',
+    cmdToggleMap: 'Masque la mini-carte, ou la réaffiche',
+    cmdToggleCash: "Masque l'argent, ou le réaffiche",
+    cmdToggleTime: "Masque l'horloge, ou la réaffiche",
+    cmdToggleWeather: "Masque l'overlay Météo, ou le réaffiche, s'il a ta chaîne",
+    testToggleMap: 'Carte on/off',
+    testToggleCash: 'Argent on/off',
+    testToggleTime: 'Horloge on/off',
     previewTitle: "Aperçu de l'Overlay HUD IRL",
     previewIframeTitle: "Aperçu de l'Overlay HUD IRL",
     previewHint:
@@ -1538,6 +1546,8 @@ export const fr: typeof en = {
     intro:
       "Une barre d'objectif de Bits et Kicks pour Twitch et Kick. Chaque cheer de Bits et chaque cadeau de Kicks des deux chats la remplit de son montant, et quand l'objectif est atteint, un trophée atterrit sur la barre avec le pseudo du viewer qui l'a fait passer. Choisis où le compteur démarre et où se trouve l'objectif, et tes modos peuvent corriger le compteur depuis le chat.",
     defaultTitle: 'OBJECTIF DE BITS ET KICKS',
+    defaultTitleBits: 'OBJECTIF DE BITS',
+    defaultTitleKicks: 'OBJECTIF DE KICKS',
     startTip:
       'Le point de départ du compteur : 0 pour un nouvel objectif, ou les Bits et Kicks déjà reçus pour lui. Le changer plus tard fait repartir le compteur du nouveau nombre.',
     countsHint:
@@ -2060,6 +2070,15 @@ export const fr: typeof en = {
     testSnow: 'Neige',
     testNight: 'Nuit',
     testLive: 'Vraie météo',
+    sectionChat: 'Chat (facultatif)',
+    channelHint:
+      "La météo n'a pas besoin de chaîne. Avec une, toi et tes modos pouvez la masquer et la réafficher depuis le chat avec !h weather.",
+    sectionCommands: 'Commandes du chat',
+    commandsIntro:
+      "Avec une chaîne dans l'URL, toi et tes modos tapez ceci dans le chat Twitch ou Kick. Si les viewers le tapent, rien ne change.",
+    cmdToggle: 'Masque la météo, ou la réaffiche',
+    cmdToggleLong: "Pareil, avec la forme longue de l'Overlay HUD IRL",
+    testToggle: 'Masquer / afficher',
     widgetUrlTip:
       'Tu as déjà un widget ? Colle son URL ici pour charger tes réglages et changer ce dont tu as besoin.',
     widgetUrlPlaceholder: 'Colle une URL de widget existante pour la modifier',
@@ -3741,7 +3760,7 @@ export const fr: typeof en = {
       'OBS Studio et tout autre logiciel de stream qui gère une source navigateur. Chaque widget tourne comme une URL web, et tu colles cette URL dans la source. Nos guides sont écrits pour OBS Studio.',
     platformsQ: 'Quels widgets gèrent Twitch et lesquels gèrent Kick ?',
     platformsA:
-      "Les 27 gèrent les deux plateformes. Boîte de chat, Mur d'emotes, Sub Sprout, Subathon Timer, Alertes de stream, Objectif de subs, Compteur, Liste d'événements, Générique de fin, File d'attente des viewers, Top soutiens, Bandeau, Liste de tâches, Combo d'emotes, Message mis en avant, Objectif de Bits et Kicks, Sondage du chat, Compte à rebours de stream, Overlay HUD IRL et Roue écoutent une chaîne Twitch et une chaîne Kick ensemble dans une seule URL. OBS Bridge écoute les commandes des deux chats, et chaque utilisateur autorisé est ajouté avec sa propre plateforme. Le Tirage au sort fonctionne sur une seule plateforme à la fois, Twitch ou Kick. Les Cadres de stream, les Réseaux sociaux, la Météo et En écoute ne lisent pas le chat, donc ils fonctionnent de la même façon sur les deux. Dans la Boîte de chat, les emotes 7TV s'affichent sur les deux plateformes, et les emotes BTTV et FFZ seulement sur Twitch.",
+      "Les 27 gèrent les deux plateformes. Boîte de chat, Mur d'emotes, Sub Sprout, Subathon Timer, Alertes de stream, Objectif de subs, Compteur, Liste d'événements, Générique de fin, File d'attente des viewers, Top soutiens, Bandeau, Liste de tâches, Combo d'emotes, Message mis en avant, Objectif de Bits et Kicks, Météo, Sondage du chat, Compte à rebours de stream, Overlay HUD IRL et Roue écoutent une chaîne Twitch et une chaîne Kick ensemble dans une seule URL. OBS Bridge écoute les commandes des deux chats, et chaque utilisateur autorisé est ajouté avec sa propre plateforme. Le Tirage au sort fonctionne sur une seule plateforme à la fois, Twitch ou Kick. Les Cadres de stream, les Réseaux sociaux et En écoute ne lisent pas le chat, donc ils fonctionnent de la même façon sur les deux. Dans la Boîte de chat, les emotes 7TV s'affichent sur les deux plateformes, et les emotes BTTV et FFZ seulement sur Twitch.",
     editQ: 'Comment modifier un widget plus tard ?',
     editA:
       "Change les réglages sur la page de configuration, copie la nouvelle URL, et colle-la à la place de l'ancienne dans le champ URL de la source dans OBS. Avec Boîte de chat, Mur d'emotes, Sub Sprout, Subathon Timer, Alertes de stream, Objectif de subs, Compteur, Liste d'événements, Générique de fin, File d'attente des viewers, Top soutiens, Bandeau, Liste de tâches, Combo d'emotes, Message mis en avant, Objectif de Bits et Kicks, En écoute, Sondage du chat, Cadres de stream, Réseaux sociaux, Compte à rebours de stream, Overlay HUD IRL, Météo et Roue, si tu colles ton ancienne URL dans le champ URL du widget sur la page de configuration, tous tes réglages reviennent et tu n'as pas à tout recommencer.",
@@ -3768,6 +3787,10 @@ export const fr: typeof en = {
     lead: "Les nouvelles fonctionnalités et corrections de bugs de Senchabot Extensions, des plus récentes aux plus anciennes. La liste est tirée de l'historique des commits du projet sur [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      hudToggles:
+        "Overlay HUD IRL et Météo : la mini-carte, l'argent, l'horloge et la météo se masquent et se réaffichent maintenant depuis le chat avec !h map, !h cash, !h time et !h weather. La Météo ne lit le chat que si tu ajoutes ta chaîne.",
+      irlHudShortCommand:
+        'Overlay HUD IRL : chaque commande du chat marche maintenant aussi en court, !h à la place de !hud, comme !h cash +500.',
       nowPlayingLaunch:
         "Nouvel overlay : En écoute. Il affiche le morceau que tu écoutes, avec sa pochette, son titre et son artiste, lu depuis ListenBrainz ou Last.fm, donc ça marche avec Spotify et la plupart des lecteurs. Les nouveaux morceaux glissent à l'écran tout seuls, et il s'en va quand la musique s'arrête.",
       emoteComboLaunch:

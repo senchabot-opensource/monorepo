@@ -21,6 +21,7 @@ export const RESERVED_COMMANDS: readonly string[] = [
   'poll',
   'vote',
   'hud',
+  'h',
   'grow',
   'spin',
   'join',

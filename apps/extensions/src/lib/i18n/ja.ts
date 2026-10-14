@@ -339,7 +339,7 @@ export const ja: typeof en = {
       'OBS Studioをはじめ、ブラウザソースに対応したソフトで使えます。ウィジェットURLをブラウザソースとして追加し、設定ページに表示されるサイズにしてください。',
     faq4Q: 'TwitchとKickを同時に使えますか？',
     faq4A:
-      'はい。チャットボックス、エモートウォール、Sub Sprout、Subathon Timer、配信アラート、サブスク目標、カウンター、イベントリスト、エンドロール、参加待ちリスト、トップサポーター、テロップ、タスクリスト、エモートコンボ、注目メッセージ、Bits・Kicks目標、チャット投票、配信カウントダウン、IRL HUDオーバーレイ、ルーレットは、ひとつのURLにTwitchとKickのチャンネルを両方指定できます。OBS Bridgeも両方のチャットを同時に聞き取れます。抽選は一度にひとつのプラットフォームで動きます。',
+      'はい。チャットボックス、エモートウォール、Sub Sprout、Subathon Timer、配信アラート、サブスク目標、カウンター、イベントリスト、エンドロール、参加待ちリスト、トップサポーター、テロップ、タスクリスト、エモートコンボ、注目メッセージ、Bits・Kicks目標、天気、チャット投票、配信カウントダウン、IRL HUDオーバーレイ、ルーレットは、ひとつのURLにTwitchとKickのチャンネルを両方指定できます。OBS Bridgeも両方のチャットを同時に聞き取れます。抽選は一度にひとつのプラットフォームで動きます。',
     faq5Q: 'あとからウィジェットを変更するには？',
     faq5A:
       '設定ページを開いて好きなように設定し、ブラウザソースのURLを差し替えてください。チャットボックス、エモートウォール、Sub Sprout、Subathon Timer、配信アラート、サブスク目標、カウンター、イベントリスト、エンドロール、参加待ちリスト、トップサポーター、テロップ、タスクリスト、エモートコンボ、注目メッセージ、Bits・Kicks目標、再生中の曲、チャット投票、配信フレーム、SNSリンク、配信カウントダウン、IRL HUDオーバーレイ、天気、ルーレットは既存のURLも開けます。設定ページに貼り付ければ設定が戻ってくるので、変えたいところだけ変更できます。',
@@ -1165,6 +1165,14 @@ export const ja: typeof en = {
     cmdBuyMany: '同じアイテムを3個買います',
     commandsAmounts:
       '金額は 500、1,500、2.5k、1m のように書きます。!hud cash add 500 や !hud cash remove 500 も使えます。',
+    commandsShort: 'どのコマンドも !hud の代わりに !h で使えます（例: !h cash +500）。',
+    cmdToggleMap: 'ミニマップを隠す／もう一度表示する',
+    cmdToggleCash: '所持金を隠す／もう一度表示する',
+    cmdToggleTime: '時計を隠す／もう一度表示する',
+    cmdToggleWeather: 'チャンネルが入っていれば、天気オーバーレイを隠す／もう一度表示する',
+    testToggleMap: 'マップ表示切替',
+    testToggleCash: '所持金表示切替',
+    testToggleTime: '時計表示切替',
     previewTitle: 'IRL HUDオーバーレイのプレビュー',
     previewIframeTitle: 'IRL HUDオーバーレイのプレビュー',
     previewHint:
@@ -1488,6 +1496,8 @@ export const ja: typeof en = {
     intro:
       'TwitchとKick向けのBits・Kicks目標バー。両方のチャットのBitsのCheerとKicksのギフトが、その数だけバーを埋めます。目標を達成すると、達成させた視聴者の名前とともにトロフィーがバーに降ってきます。カウントの開始値と目標を決めれば、モデレーターがチャットからカウントを修正できます。',
     defaultTitle: 'BITS・KICKS目標',
+    defaultTitleBits: 'BITS目標',
+    defaultTitleKicks: 'KICKS目標',
     startTip:
       'カウントの開始値です。新しい目標なら0、すでに集まっているBitsとKicksがあればその数を入れます。あとで変えると、新しい数からカウントし直します。',
     countsHint:
@@ -1959,6 +1969,15 @@ export const ja: typeof en = {
     testSnow: '雪',
     testNight: '夜',
     testLive: '実際の天気',
+    sectionChat: 'チャット（任意）',
+    channelHint:
+      '天気にチャンネルは不要です。入れておくと、配信者とモデレーターがチャットで !h weather と打って、隠したりもう一度表示したりできます。',
+    sectionCommands: 'チャットコマンド',
+    commandsIntro:
+      'URLにチャンネルがあれば、配信者とモデレーターがTwitchかKickのチャットに打ちます。視聴者が打っても何も変わりません。',
+    cmdToggle: '天気を隠す／もう一度表示する',
+    cmdToggleLong: '同じ操作をIRL HUDオーバーレイの長い形で',
+    testToggle: '隠す／表示',
     widgetUrlTip: '作成済みのウィジェットがありますか？ここにURLを貼り付けると設定が読み込まれ、必要なところだけ変更できます。',
     widgetUrlPlaceholder: '既存のウィジェットURLを貼り付けて編集',
     widgetUrlInvalid: '天気のURLではありません。',
@@ -3602,7 +3621,7 @@ export const ja: typeof en = {
       'OBS Studioをはじめ、ブラウザソースに対応した配信ソフトならどれでも使えます。各ウィジェットはウェブのURLとして動き、そのURLをソースに貼り付けるだけです。ガイドはOBS Studio向けに書いています。',
     platformsQ: 'どのウィジェットがTwitchに、どれがKickに対応していますか？',
     platformsA:
-      '27個すべてが両方のプラットフォームに対応しています。チャットボックス、エモートウォール、Sub Sprout、Subathon Timer、配信アラート、サブスク目標、カウンター、イベントリスト、エンドロール、参加待ちリスト、トップサポーター、テロップ、タスクリスト、エモートコンボ、注目メッセージ、Bits・Kicks目標、チャット投票、配信カウントダウン、IRL HUDオーバーレイ、ルーレットは、ひとつのURLでTwitchとKickのチャンネルを同時に聞き取ります。OBS Bridgeは両方のチャットからコマンドを受け取り、許可ユーザーはそれぞれのプラットフォームと一緒に追加します。抽選は一度にひとつのプラットフォーム（TwitchかKick）で動きます。配信フレーム、SNSリンク、天気、再生中の曲はチャットを読まないので、どちらのプラットフォームでも同じように動きます。チャットボックスでは、7TVのエモートは両方のプラットフォームで、BTTVとFFZのエモートはTwitchでのみ表示されます。',
+      '27個すべてが両方のプラットフォームに対応しています。チャットボックス、エモートウォール、Sub Sprout、Subathon Timer、配信アラート、サブスク目標、カウンター、イベントリスト、エンドロール、参加待ちリスト、トップサポーター、テロップ、タスクリスト、エモートコンボ、注目メッセージ、Bits・Kicks目標、天気、チャット投票、配信カウントダウン、IRL HUDオーバーレイ、ルーレットは、ひとつのURLでTwitchとKickのチャンネルを同時に聞き取ります。OBS Bridgeは両方のチャットからコマンドを受け取り、許可ユーザーはそれぞれのプラットフォームと一緒に追加します。抽選は一度にひとつのプラットフォーム（TwitchかKick）で動きます。配信フレーム、SNSリンク、再生中の曲はチャットを読まないので、どちらのプラットフォームでも同じように動きます。チャットボックスでは、7TVのエモートは両方のプラットフォームで、BTTVとFFZのエモートはTwitchでのみ表示されます。',
     editQ: 'あとからウィジェットを変更するには？',
     editA:
       '設定ページで設定を変えて新しいURLをコピーし、OBSのソースのURL欄にある古いURLに上書きして貼り付けます。チャットボックス、エモートウォール、Sub Sprout、Subathon Timer、配信アラート、サブスク目標、カウンター、イベントリスト、エンドロール、参加待ちリスト、トップサポーター、テロップ、タスクリスト、エモートコンボ、注目メッセージ、Bits・Kicks目標、再生中の曲、チャット投票、配信フレーム、SNSリンク、配信カウントダウン、IRL HUDオーバーレイ、天気、ルーレットなら、古いURLを設定ページの「ウィジェットURL」欄に貼り付けると設定がすべて戻ってくるので、一からやり直す必要はありません。',
@@ -3629,6 +3648,10 @@ export const ja: typeof en = {
     lead: 'Senchabot Extensionsの新機能とバグ修正を、新しい順に並べています。このリストは[GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions)にあるプロジェクトのコミット履歴からまとめています。',
     site: 'サイト',
     entries: {
+      hudToggles:
+        'IRL HUDオーバーレイと天気：ミニマップ、所持金、時計、天気をチャットの !h map、!h cash、!h time、!h weather で隠したり、もう一度表示したりできるようになりました。天気はチャンネルを入れたときだけチャットを読みます。',
+      irlHudShortCommand:
+        'IRL HUDオーバーレイ：チャットコマンドを短い形でも使えるようになりました。!hud の代わりに !h（例: !h cash +500）。',
       nowPlayingLaunch:
         '新しいオーバーレイ「再生中の曲」：今聴いている曲を、ジャケット画像、曲名、アーティスト名とともに表示します。曲はListenBrainzまたはLast.fmから読み込むので、Spotifyやほとんどの音楽プレーヤーで使えます。新しい曲は自動でスライドして表示され、音楽が止まるとスライドして消えます。',
       emoteComboLaunch:

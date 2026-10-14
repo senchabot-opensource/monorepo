@@ -345,7 +345,7 @@ export const tr: typeof en = {
       "OBS Studio ve tarayıcı kaynağı destekleyen diğer programlarla. Widget URL'sini Tarayıcı Kaynağı olarak ekle ve kurulum sayfasında yazan boyutu kullan.",
     faq4Q: "Twitch ve Kick'i birlikte kullanabilir miyim?",
     faq4A:
-      "Evet. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sayaç, Etkinlik Listesi, Kapanış Jeneriği, İzleyici Sırası, Destekçi Sıralaması, Alt Bant, Görev Listesi, Emote Kombosu, Öne Çıkan Mesaj, Bits & Kicks Hedefi, Sohbet Anketi, Yayın Geri Sayımı, IRL HUD Overlay ve Çark tek bir URL'de hem Twitch hem Kick kanalını alır. OBS Bridge da iki sohbeti aynı anda dinleyebilir. Çekiliş ise her seferinde tek bir platformda çalışır.",
+      "Evet. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sayaç, Etkinlik Listesi, Kapanış Jeneriği, İzleyici Sırası, Destekçi Sıralaması, Alt Bant, Görev Listesi, Emote Kombosu, Öne Çıkan Mesaj, Bits & Kicks Hedefi, Hava Durumu, Sohbet Anketi, Yayın Geri Sayımı, IRL HUD Overlay ve Çark tek bir URL'de hem Twitch hem Kick kanalını alır. OBS Bridge da iki sohbeti aynı anda dinleyebilir. Çekiliş ise her seferinde tek bir platformda çalışır.",
     faq5Q: "Bir widget'ı sonradan nasıl değiştiririm?",
     faq5A:
       "Kurulum sayfasını aç, widget'ı istediğin gibi ayarla ve Tarayıcı Kaynağı'ndaki URL'yi yenisiyle değiştir. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sayaç, Etkinlik Listesi, Kapanış Jeneriği, İzleyici Sırası, Destekçi Sıralaması, Alt Bant, Görev Listesi, Emote Kombosu, Öne Çıkan Mesaj, Bits & Kicks Hedefi, Şimdi Çalıyor, Sohbet Anketi, Yayın Çerçeveleri, Sosyal Medya, Yayın Geri Sayımı, IRL HUD Overlay, Hava Durumu ve Çark mevcut bir URL'yi de açabilir: URL'yi kurulum sayfasına yapıştır, eski ayarların geri gelsin, sadece istediğini değiştir.",
@@ -1163,6 +1163,14 @@ export const tr: typeof en = {
     cmdBuyMany: 'Ondan üç tane alır',
     commandsAmounts:
       'Miktarları 500, 1,500, 2.5k ya da 1m gibi yaz. !hud cash add 500 ve !hud cash remove 500 da çalışır.',
+    commandsShort: 'Her komut !hud yerine !h ile de çalışır, örneğin !h cash +500.',
+    cmdToggleMap: 'Mini haritayı gizler ya da yeniden gösterir',
+    cmdToggleCash: 'Parayı gizler ya da yeniden gösterir',
+    cmdToggleTime: 'Saati gizler ya da yeniden gösterir',
+    cmdToggleWeather: "Kanalın ekliyse Hava Durumu overlay'ini gizler ya da yeniden gösterir",
+    testToggleMap: 'Harita aç/kapat',
+    testToggleCash: 'Para aç/kapat',
+    testToggleTime: 'Saat aç/kapat',
     previewTitle: 'IRL HUD Overlay Önizleme',
     previewIframeTitle: 'IRL HUD Overlay Önizleme',
     previewHint:
@@ -1494,6 +1502,8 @@ export const tr: typeof en = {
     intro:
       "Twitch ve Kick için Bits ve Kicks hedefi barı. İki sohbetten gelen her Bits cheer'ı ve her Kicks hediyesi bara kendi miktarı kadar ekler, hedefe ulaşınca barın üstüne hedefi tamamlayan izleyicinin adıyla bir kupa iner. Sayının nereden başlayacağını ve hedefi sen belirle, modların da sayıyı sohbetten düzeltebilsin.",
     defaultTitle: 'BITS & KICKS HEDEFİ',
+    defaultTitleBits: 'BITS HEDEFİ',
+    defaultTitleKicks: 'KICKS HEDEFİ',
     startTip:
       'Sayının başlayacağı yer: yeni bir hedef için 0 ya da bu hedefe şimdiye kadar gelen Bits ve Kicks. Sonradan değiştirirsen sayı yeni değerden baştan başlar.',
     countsHint:
@@ -2010,6 +2020,15 @@ export const tr: typeof en = {
     testSnow: 'Kar',
     testNight: 'Gece',
     testLive: 'Gerçek Hava',
+    sectionChat: 'Sohbet (isteğe bağlı)',
+    channelHint:
+      'Hava durumu için kanal gerekmez. Kanal eklersen sen ve modların sohbete !h weather yazarak onu gizleyip yeniden gösterebilirsiniz.',
+    sectionCommands: 'Sohbet Komutları',
+    commandsIntro:
+      "URL'de kanal varsa sen ve modların bunu Twitch ya da Kick sohbetine yazarsınız. İzleyiciler yazarsa hiçbir şey değişmez.",
+    cmdToggle: 'Hava durumunu gizler ya da yeniden gösterir',
+    cmdToggleLong: "Aynısı, IRL HUD Overlay'in uzun yazımıyla",
+    testToggle: 'Gizle / göster',
     widgetUrlTip:
       "Daha önce bir widget oluşturduysan URL'sini buraya yapıştır. Ayarların geri yüklenir, istediğini değiştirebilirsin.",
     widgetUrlPlaceholder: "Düzenlemek için widget URL'sini yapıştır",
@@ -3653,7 +3672,7 @@ export const tr: typeof en = {
       'OBS Studio ve tarayıcı kaynağı (browser source) destekleyen diğer yayın programlarıyla. Her widget bir web adresi olarak çalışır, kaynağa bu adresi yapıştırırsın. Rehberlerimiz OBS Studio için yazıldı.',
     platformsQ: "Hangi widget'lar Twitch'i, hangileri Kick'i destekliyor?",
     platformsA:
-      "27'si de iki platformu destekliyor. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sayaç, Etkinlik Listesi, Kapanış Jeneriği, İzleyici Sırası, Destekçi Sıralaması, Alt Bant, Görev Listesi, Emote Kombosu, Öne Çıkan Mesaj, Bits & Kicks Hedefi, Sohbet Anketi, Yayın Geri Sayımı, IRL HUD Overlay ve Çark tek adreste Twitch ve Kick kanalını birlikte dinler. OBS Bridge iki sohbetten gelen komutları dinler ve her yetkili kullanıcı kendi platformuyla eklenir. Çekiliş her seferinde tek platformda çalışır, Twitch ya da Kick. Yayın Çerçeveleri, Sosyal Medya, Hava Durumu ve Şimdi Çalıyor sohbeti okumaz, bu yüzden iki platformda da aynı şekilde çalışır. Sohbet Kutusu'nda 7TV emote'ları iki platformda, BTTV ve FFZ emote'ları sadece Twitch'te görünür.",
+      "27'si de iki platformu destekliyor. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sayaç, Etkinlik Listesi, Kapanış Jeneriği, İzleyici Sırası, Destekçi Sıralaması, Alt Bant, Görev Listesi, Emote Kombosu, Öne Çıkan Mesaj, Bits & Kicks Hedefi, Hava Durumu, Sohbet Anketi, Yayın Geri Sayımı, IRL HUD Overlay ve Çark tek adreste Twitch ve Kick kanalını birlikte dinler. OBS Bridge iki sohbetten gelen komutları dinler ve her yetkili kullanıcı kendi platformuyla eklenir. Çekiliş her seferinde tek platformda çalışır, Twitch ya da Kick. Yayın Çerçeveleri, Sosyal Medya ve Şimdi Çalıyor sohbeti okumaz, bu yüzden iki platformda da aynı şekilde çalışır. Sohbet Kutusu'nda 7TV emote'ları iki platformda, BTTV ve FFZ emote'ları sadece Twitch'te görünür.",
     editQ: "Widget'ı sonradan nasıl değiştiririm?",
     editA:
       "Kurulum sayfasında ayarları değiştir, yeni adresi kopyala ve OBS'te kaynağın URL alanındaki eski adresin yerine yapıştır. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sayaç, Etkinlik Listesi, Kapanış Jeneriği, İzleyici Sırası, Destekçi Sıralaması, Alt Bant, Görev Listesi, Emote Kombosu, Öne Çıkan Mesaj, Bits & Kicks Hedefi, Şimdi Çalıyor, Sohbet Anketi, Yayın Çerçeveleri, Sosyal Medya, Yayın Geri Sayımı, IRL HUD Overlay, Hava Durumu ve Çark'ta eski adresini kurulum sayfasındaki Widget URL alanına yapıştırırsan bütün ayarların geri yüklenir, baştan başlaman gerekmez.",
@@ -3680,6 +3699,10 @@ export const tr: typeof en = {
     lead: "Senchabot Extensions'a eklenen özellikler ve düzeltilen hatalar, en yenisi en üstte. Liste projenin [GitHub'daki](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) commit geçmişinden hazırlanıyor.",
     site: 'Site',
     entries: {
+      hudToggles:
+        'IRL HUD Overlay ve Hava Durumu: mini harita, para, saat ve hava durumu artık sohbetten !h map, !h cash, !h time ve !h weather ile gizlenip yeniden gösterilebiliyor. Hava Durumu sohbeti sadece kanalını eklersen okur.',
+      irlHudShortCommand:
+        'IRL HUD Overlay: tüm sohbet komutları artık kısa haliyle de çalışıyor, !hud yerine !h, örneğin !h cash +500.',
       nowPlayingLaunch:
         'Yeni overlay: Şimdi Çalıyor. Dinlediğin şarkıyı kapak görseli, adı ve sanatçısıyla gösterir; şarkıyı ListenBrainz ya da Last.fm üzerinden okuduğu için Spotify ve çoğu müzik çalar çalışır. Yeni şarkılar kendiliğinden kayarak gelir, müzik durunca da kayarak çekilir.',
       emoteComboLaunch:

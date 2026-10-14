@@ -1,5 +1,7 @@
 import { createFileRoute, useHydrated } from '@tanstack/react-router';
 import { useId, useState } from 'react';
+import { ChannelFields } from '#/components/channel-fields';
+import { ChatCommandsCard } from '#/components/chat-commands-card';
 import { CopyUrlField } from '#/components/copy-url-field';
 import { ExternalLink } from '#/components/external-link';
 import { CORNER_FOCUS, PreviewFrame } from '#/components/preview-frame';
@@ -13,9 +15,11 @@ import { SettingsGroup } from '#/components/ui/settings-group';
 import { Switch } from '#/components/ui/switch';
 import { HINT_CLASS, TextField } from '#/components/ui/text-field';
 import { TimeZoneSelect } from '#/components/ui/time-zone-select';
+import { COMMAND, SHORT_COMMAND } from '#/features/widgets/irl-hud/hud-money';
 import { DEMO_SKIES, type DemoSky } from '#/features/widgets/weather/demo-forecast';
 import { PlaceSearchField } from '#/features/widgets/weather/place-search-field';
 import { PREVIEW_CHANNEL, type PreviewMessage } from '#/features/widgets/weather/use-weather';
+import { WEATHER_PART } from '#/features/widgets/weather/use-weather-toggle';
 import { usePreviewSender } from '#/hooks/use-preview-channel';
 import { LOCALE_NAMES, LOCALES, type Locale, type TranslationKey, useI18n } from '#/lib/i18n';
 import { getParamsLocale } from '#/lib/i18n/paths';
@@ -35,6 +39,7 @@ import {
   WEATHER_STYLES,
   WEATHER_THEMES,
   WEATHER_UNITS,
+  type WeatherChannels,
   type WeatherSettings,
   weatherHudStyle,
 } from '#/lib/weather-url';
@@ -77,6 +82,12 @@ const MET_TERMS_URL = 'https://api.met.no/doc/License';
 function WeatherSetup() {
   const { t, locale } = useI18n();
   const [settings, setSettings] = useState(WEATHER_SETUP_SETTINGS);
+  // Optional: a channel only lets you and your mods hide and show the weather from chat.
+  const [channels, setChannels] = useState<WeatherChannels>({
+    platforms: 'both',
+    twitch: '',
+    kick: '',
+  });
   // The overlay's own language: the page's until one is picked. The OBS URL always carries it.
   const [pickedLocale, setPickedLocale] = useState<Locale | null>(null);
   const overlayLocale = pickedLocale ?? locale;
@@ -89,7 +100,7 @@ function WeatherSetup() {
 
   // Gated on mount so the prerendered input and the first client render agree.
   const origin = mounted ? window.location.origin : '';
-  const widgetUrl = mounted ? buildWeatherUrl(origin, settings, overlayLocale) : '';
+  const widgetUrl = mounted ? buildWeatherUrl(origin, settings, overlayLocale, channels) : '';
   const previewUrl = mounted
     ? buildWeatherPreviewUrl(origin, settings, overlayLocale, previewId)
     : '';
@@ -99,6 +110,7 @@ function WeatherSetup() {
     const parsed = parseWeatherUrl(text);
     if (!parsed) return false;
     setSettings(parsed.settings);
+    setChannels(parsed.channels);
     if (parsed.locale) setPickedLocale(parsed.locale);
     return true;
   };
@@ -307,13 +319,34 @@ function WeatherSetup() {
     ...(hasPlace
       ? [{ label: t('weather.testLive'), onClick: () => send({ type: 'sky', sky: null }) }]
       : []),
+    // What a mod's !h weather does.
+    { label: t('weather.testToggle'), onClick: () => send({ type: 'toggle' }) },
   ];
+
+  const channelGroup = (
+    <SettingsGroup title={t('weather.sectionChat')}>
+      <ChannelFields
+        platforms={channels.platforms}
+        onPlatformsChange={(platforms) => setChannels((current) => ({ ...current, platforms }))}
+        twitch={channels.twitch}
+        onTwitchChange={(twitch) => setChannels((current) => ({ ...current, twitch }))}
+        kick={channels.kick}
+        onKickChange={(kick) => setChannels((current) => ({ ...current, kick }))}
+      />
+      <p className={`${HINT_CLASS} mt-0`}>{t('weather.channelHint')}</p>
+    </SettingsGroup>
+  );
 
   return (
     <SetupShell
       widgetId={WIDGET.id}
       title={t('weather.title')}
-      settings={settingsPanel}
+      settings={
+        <>
+          {settingsPanel}
+          {channelGroup}
+        </>
+      }
       previewTitle={t('weather.previewTitle')}
       previewTip={t('weather.previewHint')}
       previewAspect={16 / 9}
@@ -343,6 +376,16 @@ function WeatherSetup() {
         />
       }
       intro={t('weather.intro')}
+      aboutExtra={
+        <ChatCommandsCard
+          title={t('weather.sectionCommands')}
+          intro={t('weather.commandsIntro')}
+          commands={[
+            { usage: `${SHORT_COMMAND} ${WEATHER_PART}`, action: t('weather.cmdToggle') },
+            { usage: `${COMMAND} ${WEATHER_PART}`, action: t('weather.cmdToggleLong') },
+          ]}
+        />
+      }
       guideTitle={t('weather.guideTitle')}
       guideSteps={[
         'weather.guideStep1',

@@ -52,8 +52,9 @@ export const READY_BY_WIDGET = {
   '/widgets/sub-sprout-widget': 'plant',
   '/widgets/subathon': 'text:SUBATHON',
   '/widgets/stream-alerts': 'alert',
-  // Sub Goal and the Bits & Kicks Goal both end their title in GOAL.
-  '/widgets/goal': 'text:GOAL',
+  // Sub Goal and the Bits & Kicks Goal share this overlay, and their titles follow the page
+  // language and the platforms (SUB GOAL, BITS GOAL, KICKS HEDEFİ…), so no title text fits all.
+  '/widgets/goal': 'goal',
   '/widgets/counter': 'counter',
   '/widgets/event-list': 'event-list',
   '/widgets/credits': 'credits',

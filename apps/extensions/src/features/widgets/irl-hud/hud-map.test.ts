@@ -30,6 +30,17 @@ describe('parseMapCommand', () => {
   });
 });
 
+describe('the short command', () => {
+  it('reads !h as !hud for the map, moving and going indoors', () => {
+    expect(parseMapCommand('!h map Park1')).toBe('park1');
+    expect(parseMoveCommand('!h walk')).toEqual(parseMoveCommand('!hud walk'));
+    expect(parseMoveCommand('!h stay')).toEqual(parseMoveCommand('!hud stay'));
+    expect(parseIndoorCommand('!h indoor')).toBe(true);
+    expect(parseIndoorCommand('!H outdoor')).toBe(false);
+    expect(parseMapCommand('!hd map park1')).toBeNull();
+  });
+});
+
 describe('chosenView', () => {
   it('finds a saved place by name in any case, then a made-up map', () => {
     expect(chosenView('park1', places)).toEqual({ map: 'real', place: places[0] });

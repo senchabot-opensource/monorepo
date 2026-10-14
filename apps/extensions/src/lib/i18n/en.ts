@@ -339,7 +339,7 @@ export const en = {
       'OBS Studio and other apps that support browser sources. Add the widget URL as a Browser Source and use the size shown on the setup page.',
     faq4Q: 'Can I use Twitch and Kick together?',
     faq4A:
-      'Yes. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Counter, Event List, End Credits, Viewer Queue, Top Supporters, Lower Thirds, Task List, Emote Combo, Featured Message, Bits & Kicks Goal, Chat Poll, Stream Countdown, IRL HUD Overlay and Spin Wheel take a Twitch and a Kick channel in the same URL. OBS Bridge can listen to both chats at once too. Raffle runs on one platform at a time.',
+      'Yes. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Counter, Event List, End Credits, Viewer Queue, Top Supporters, Lower Thirds, Task List, Emote Combo, Featured Message, Bits & Kicks Goal, Weather, Chat Poll, Stream Countdown, IRL HUD Overlay and Spin Wheel take a Twitch and a Kick channel in the same URL. OBS Bridge can listen to both chats at once too. Raffle runs on one platform at a time.',
     faq5Q: 'How do I change a widget later?',
     faq5A:
       'Open its setup page, set it up the way you want and replace the URL in your Browser Source. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Counter, Event List, End Credits, Viewer Queue, Top Supporters, Lower Thirds, Task List, Emote Combo, Featured Message, Bits & Kicks Goal, Now Playing, Chat Poll, Stream Frames, Socials, Stream Countdown, IRL HUD Overlay, Weather and Spin Wheel can also open an existing URL: paste it on the setup page, your settings come back, and you change only what you need.',
@@ -1153,6 +1153,14 @@ export const en = {
     cmdBuyMany: 'Buys three of it',
     commandsAmounts:
       'Write amounts like 500, 1,500, 2.5k or 1m. !hud cash add 500 and !hud cash remove 500 work too.',
+    commandsShort: 'Every command works with !h in place of !hud too, like !h cash +500.',
+    cmdToggleMap: 'Hides the mini-map, or shows it again',
+    cmdToggleCash: 'Hides the cash, or shows it again',
+    cmdToggleTime: 'Hides the clock, or shows it again',
+    cmdToggleWeather: 'Hides the Weather overlay, or shows it again, when it has your channel',
+    testToggleMap: 'Map on/off',
+    testToggleCash: 'Cash on/off',
+    testToggleTime: 'Clock on/off',
     previewTitle: 'IRL HUD Overlay Preview',
     previewIframeTitle: 'IRL HUD Overlay Preview',
     previewHint:
@@ -1485,6 +1493,8 @@ export const en = {
     intro:
       'A Bits and Kicks goal bar for Twitch and Kick. Every Bits cheer and every Kicks gift from both chats fills it by its amount, and when the goal is reached a trophy lands on the bar with the name of the viewer who got it there. Pick where the count starts and where the goal is, and your mods can fix the count from chat.',
     defaultTitle: 'BITS & KICKS GOAL',
+    defaultTitleBits: 'BITS GOAL',
+    defaultTitleKicks: 'KICKS GOAL',
     startTip:
       'Where the count starts: 0 for a new goal, or the Bits and Kicks already in toward it. Changing it later starts the count over from the new number.',
     countsHint:
@@ -1994,6 +2004,15 @@ export const en = {
     testSnow: 'Snow',
     testNight: 'Night',
     testLive: 'Real Weather',
+    sectionChat: 'Chat (optional)',
+    channelHint:
+      'No channel needed for the weather. With one, you and your mods can hide it and show it again from chat with !h weather.',
+    sectionCommands: 'Chat Commands',
+    commandsIntro:
+      'With a channel in the URL, you and your mods type this in Twitch or Kick chat. Viewers typing it change nothing.',
+    cmdToggle: 'Hides the weather, or shows it again',
+    cmdToggleLong: "The same, in the IRL HUD Overlay's long form",
+    testToggle: 'Hide / show',
     widgetUrlTip:
       'Already made a widget? Paste its URL here to load your settings and change what you need.',
     widgetUrlPlaceholder: 'Paste an existing widget URL to edit it',
@@ -3657,7 +3676,7 @@ export const en = {
       'OBS Studio and any other streaming software that supports a browser source. Each widget runs as a web URL, and you paste that URL into the source. Our guides are written for OBS Studio.',
     platformsQ: 'Which widgets support Twitch and which support Kick?',
     platformsA:
-      'All 27 support both platforms. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Counter, Event List, End Credits, Viewer Queue, Top Supporters, Lower Thirds, Task List, Emote Combo, Featured Message, Bits & Kicks Goal, Chat Poll, Stream Countdown, IRL HUD Overlay and Spin Wheel listen to a Twitch and a Kick channel together in one URL. OBS Bridge listens for commands from both chats, and each authorized user is added with their own platform. Raffle runs on one platform at a time, Twitch or Kick. Stream Frames, Socials, Weather and Now Playing read no chat, so they work the same on either one. In Chat Box, 7TV emotes show on both platforms, while BTTV and FFZ emotes show on Twitch only.',
+      'All 27 support both platforms. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Counter, Event List, End Credits, Viewer Queue, Top Supporters, Lower Thirds, Task List, Emote Combo, Featured Message, Bits & Kicks Goal, Weather, Chat Poll, Stream Countdown, IRL HUD Overlay and Spin Wheel listen to a Twitch and a Kick channel together in one URL. OBS Bridge listens for commands from both chats, and each authorized user is added with their own platform. Raffle runs on one platform at a time, Twitch or Kick. Stream Frames, Socials and Now Playing read no chat, so they work the same on either one. In Chat Box, 7TV emotes show on both platforms, while BTTV and FFZ emotes show on Twitch only.',
     editQ: 'How do I change a widget later?',
     editA:
       "Change the settings on the setup page, copy the new URL, and paste it over the old one in the source's URL field in OBS. With Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Counter, Event List, End Credits, Viewer Queue, Top Supporters, Lower Thirds, Task List, Emote Combo, Featured Message, Bits & Kicks Goal, Now Playing, Chat Poll, Stream Frames, Socials, Stream Countdown, IRL HUD Overlay, Weather and Spin Wheel, if you paste your old URL into the Widget URL field on the setup page, all your settings come back and you don't have to start over.",
@@ -3684,6 +3703,10 @@ export const en = {
     lead: "New features and bug fixes in Senchabot Extensions, newest first. The list is put together from the project's commit history on [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      hudToggles:
+        'IRL HUD Overlay and Weather: hide the mini-map, the cash, the clock and the weather from chat and show them again with !h map, !h cash, !h time and !h weather. Weather reads chat only when you add your channel.',
+      irlHudShortCommand:
+        'IRL HUD Overlay: every chat command now also works in short, !h in place of !hud, like !h cash +500.',
       nowPlayingLaunch:
         'New overlay: Now Playing. It shows the song you’re listening to, with its cover art, title and artist, read from ListenBrainz or Last.fm, so Spotify and most music players work. New songs slide in on their own, and it slides away when the music stops.',
       emoteComboLaunch:

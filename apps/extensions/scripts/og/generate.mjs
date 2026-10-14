@@ -138,6 +138,21 @@ const POLL_VOTE = `(() => {
   });
 })()`;
 
+// Most of the newer overlays take their setup page's test messages over a channel of their own.
+const previewSend = (channel, ...messages) =>
+  `(() => { const channel = new BroadcastChannel('senchabot:${channel}-preview'); ${messages
+    .map((message) => `channel.postMessage(${JSON.stringify({ ...message, preview: 'og' })});`)
+    .join(' ')} })()`;
+/** Fonts in, images in, and the element the shot is about on screen. */
+const shown = (selector) =>
+  `document.fonts.status === 'loaded' && ${IMAGES_READY} && Boolean(document.querySelector('${selector}'))`;
+// Now Playing reads its track from a ref that updates on render, so "next" messages sent in one go
+// land on the same track; these are spaced out instead.
+const nextTracks = (count) =>
+  `(() => { const channel = new BroadcastChannel('senchabot:now-playing-preview'); for (let i = 0; i < ${count}; i++) setTimeout(() => channel.postMessage({ type: 'next', preview: 'og' }), i * 250); })()`;
+const COUNTER_DEMO =
+  'c1=Wins&c1icon=%F0%9F%8F%86&c1start=12&c2=Losses&c2icon=%E2%9D%8C&c2start=7&c3=Draws&c3icon=%F0%9F%A4%9D&c3start=3';
+
 /** Stage corner covered by the Live badge (template.html `.live`). */
 const LIVE_BADGE = { right: 104, bottom: 50 };
 
@@ -357,6 +372,218 @@ const CAPTURES = {
     trigger: `new BroadcastChannel('senchabot-raffle-broadcast').postMessage({ type: 'raffle:winner', winner: { username: 'pixelfox', displayName: 'pixelfox' } })`,
     afterTriggerMs: 1100,
   },
+  // The Follower Goal fed one follow, two short of a round number; the thin style just reached.
+  followerGoal: {
+    path: '/widgets/follower-goal?simulate=1&start=87&title=ROAD+TO+100&preview=og',
+    width: 800,
+    height: 260,
+    settleMs: 600,
+    trigger: previewSend('follower-goal', { type: 'follow', name: 'pixelfox', platform: 'kick' }),
+    afterTriggerMs: 650,
+    ready: shown('[data-testid="follower-goal-count"]'),
+  },
+  followerGoalReached: {
+    path: '/widgets/follower-goal?simulate=1&style=thin&color=cyan&preview=og',
+    width: 800,
+    height: 260,
+    settleMs: 600,
+    trigger: previewSend('follower-goal', { type: 'reach' }),
+    afterTriggerMs: 1300,
+    ready: shown('[data-testid="follower-goal-count"]'),
+  },
+  // The goal widget counting Bits and Kicks: a Twitch cheer on its way up, and Kick's own title
+  // just past the goal with the trophy.
+  bitsGoal: {
+    path: '/widgets/goal?simulate=1&type=bits&preview=og',
+    width: 800,
+    height: 260,
+    settleMs: 600,
+    trigger: goalEvents(
+      { kind: 'mod', platform: 'twitch', text: '!bitsgoal set 640' },
+      { kind: 'bits', platform: 'twitch', name: 'pixelfox', amount: 250 },
+    ),
+    afterTriggerMs: 650,
+    ready: OXANIUM_READY,
+  },
+  kicksGoalReached: {
+    path: '/widgets/goal?simulate=1&type=bits&simplatform=kick&color=green&preview=og',
+    width: 800,
+    height: 260,
+    settleMs: 600,
+    trigger: goalEvents(
+      { kind: 'mod', platform: 'kick', text: '!bitsgoal set 900' },
+      { kind: 'bits', platform: 'kick', name: 'lunaa', amount: 100 },
+    ),
+    afterTriggerMs: 1300,
+    ready: OXANIUM_READY,
+  },
+  counterRow: {
+    path: `/widgets/counter?simulate=1&${COUNTER_DEMO}`,
+    width: 800,
+    height: 260,
+    settleMs: 2500,
+    ready: shown('[data-testid="counter-value"]'),
+  },
+  counterRift: {
+    path: `/widgets/counter?simulate=1&preset=rift&${COUNTER_DEMO}`,
+    width: 800,
+    height: 260,
+    settleMs: 2500,
+    ready: shown('[data-testid="counter-value"]'),
+  },
+  // Narrow sources, so each list fills its width and two sit side by side at full size.
+  eventList: {
+    path: '/widgets/event-list?simulate=1&rows=6',
+    width: 320,
+    height: 330,
+    settleMs: 4000,
+    ready: shown('[data-testid="event-row"]'),
+  },
+  eventListRealm: {
+    path: '/widgets/event-list?simulate=1&rows=6&preset=realm',
+    width: 320,
+    height: 330,
+    settleMs: 4000,
+    ready: shown('[data-testid="event-row"]'),
+  },
+  leaderboard: {
+    path: '/widgets/leaderboard?simulate=1',
+    // The demo draws its names for both platforms from one list, so most seeds rank the same
+    // name twice (once per platform), which reads like a bug. This one ranks five people.
+    seed: 5,
+    width: 440,
+    height: 380,
+    settleMs: 2500,
+    ready: shown('[data-testid="leaderboard-row"]'),
+  },
+  // A smaller scene than OBS's, cut down to the middle column on the card, so the names read.
+  // The setup page's button starts the roll over from below the scene; at the fast speed the
+  // title has climbed to the top of the card about 6 s later.
+  credits: {
+    path: '/widgets/credits?simulate=1&speed=fast&preview=og',
+    width: 960,
+    height: 540,
+    settleMs: 600,
+    trigger: previewSend('credits', { type: 'roll' }),
+    afterTriggerMs: 6300,
+    ready: shown('[data-testid="credits-title"]'),
+  },
+  // A mod features a viewer's message; on the other, the oldest question comes up.
+  featured: {
+    path: '/widgets/featured?simulate=1&preview=og',
+    width: 720,
+    height: 240,
+    settleMs: 600,
+    trigger: previewSend(
+      'featured',
+      { type: 'chat', name: 'pixelfox', text: 'that clutch was unreal, no way {e}', mod: false },
+      { type: 'chat', name: 'Mod', text: '!feature @pixelfox', mod: true },
+    ),
+    afterTriggerMs: 900,
+    ready: shown('[data-testid="featured-text"]'),
+  },
+  featuredQuestion: {
+    path: '/widgets/featured?simulate=1&preset=realm&preview=og',
+    width: 720,
+    height: 240,
+    settleMs: 600,
+    trigger: previewSend(
+      'featured',
+      { type: 'chat', name: 'lunaa', text: '!q What should we play next week?', mod: false },
+      { type: 'chat', name: 'Mod', text: '!q next', mod: true },
+    ),
+    afterTriggerMs: 900,
+    ready: shown('[data-testid="featured-text"]'),
+  },
+  // Three of the sample tracks, one per look.
+  nowPlaying: {
+    path: '/widgets/now-playing?demo=1&preview=og',
+    width: 640,
+    height: 160,
+    settleMs: 600,
+    trigger: nextTracks(1),
+    afterTriggerMs: 900,
+    ready: shown('[data-testid="now-playing-title"]'),
+  },
+  nowPlayingDynasty: {
+    path: '/widgets/now-playing?demo=1&preset=dynasty&preview=og',
+    width: 640,
+    height: 160,
+    settleMs: 600,
+    trigger: nextTracks(2),
+    afterTriggerMs: 1150,
+    ready: shown('[data-testid="now-playing-title"]'),
+  },
+  nowPlayingPill: {
+    path: '/widgets/now-playing?demo=1&layout=pill&preview=og',
+    width: 640,
+    height: 160,
+    settleMs: 600,
+    trigger: nextTracks(3),
+    afterTriggerMs: 1400,
+    ready: shown('[data-testid="now-playing-title"]'),
+  },
+  // Whole 720p scenes with the bar in their bottom left; the card shows just the bars.
+  lowerThird: {
+    path: '/widgets/lower-third?title=Senchabot&lines=Free+overlays+for+Twitch+and+Kick&size=200',
+    width: 1280,
+    height: 720,
+    settleMs: 2500,
+    ready: shown('[data-testid="lower-third-title"]'),
+  },
+  lowerThirdStorm: {
+    path: '/widgets/lower-third?title=pixelfox&lines=Speedrun+practice+%C2%B7+day+12&size=200&preset=storm',
+    width: 1280,
+    height: 720,
+    settleMs: 2500,
+    ready: shown('[data-testid="lower-third-title"]'),
+  },
+  tasks: {
+    path: '/widgets/tasks?simulate=1',
+    width: 280,
+    height: 420,
+    settleMs: 3000,
+    ready: shown('[data-testid="tasks-task"]'),
+  },
+  tasksVillage: {
+    path: '/widgets/tasks?simulate=1&preset=village',
+    width: 280,
+    height: 420,
+    settleMs: 3000,
+    ready: shown('[data-testid="tasks-task"]'),
+  },
+  queue: {
+    path: '/widgets/queue?simulate=1',
+    width: 280,
+    height: 420,
+    settleMs: 3000,
+    ready: shown('[data-testid="queue-row"]'),
+  },
+  queueStorm: {
+    path: '/widgets/queue?simulate=1&preset=storm',
+    width: 280,
+    height: 420,
+    settleMs: 3000,
+    ready: shown('[data-testid="queue-row"]'),
+  },
+  emoteCombo: {
+    path: '/widgets/emote-combo?simulate=1',
+    seed: 2,
+    width: 600,
+    height: 400,
+    settleMs: 4000,
+    ready: `${shown('[data-testid="combo-emote"]')} && Number(document.querySelector('[data-testid="combo-count"]')?.textContent.replace(/\\D/g, '')) >= 10`,
+  },
+  // Just room for the 560px wheel and the pill above it: any narrower and the wheel squashes.
+  // The first demo spin lands quickly.
+  spinWheel: {
+    path: '/widgets/spin-wheel?demo=1',
+    width: 600,
+    height: 640,
+    settleMs: 1500,
+    // innerText follows text-transform, so the classic look's card reads WINNER!.
+    ready: `document.fonts.status === 'loaded' && /winner/i.test(document.body.innerText)`,
+  },
 };
 
 const trust = [en.home.trustFree, en.home.trustNoLogin, en.home.trustOpenSource];
@@ -562,6 +789,185 @@ const CARDS = [
         layer('socialsYoutube', { x: 9, y: 164, width: 520, height: 104 }),
         layer('socialsKick', { x: 9, y: 278, width: 520, height: 104 }),
       ],
+    },
+  },
+  {
+    id: 'follower-goal',
+    eyebrow: { icon: 'goal', label: 'Overlay' },
+    title: en.widgets.followerGoal.name,
+    subtitle: en.widgets.followerGoal.tagline,
+    visual: {
+      kind: 'stage',
+      live: true,
+      layers: [
+        layer('followerGoal', { x: 9, y: 40, width: 520, height: 169 }),
+        layer('followerGoalReached', { x: 9, y: 212, width: 520, height: 169 }),
+      ],
+    },
+  },
+  {
+    id: 'bits-goal',
+    eyebrow: { icon: 'bits-goal', label: 'Overlay' },
+    title: en.widgets.bitsGoal.name,
+    subtitle: en.widgets.bitsGoal.tagline,
+    visual: {
+      kind: 'stage',
+      live: true,
+      layers: [
+        layer('bitsGoal', { x: 9, y: 40, width: 520, height: 169 }),
+        layer('kicksGoalReached', { x: 9, y: 212, width: 520, height: 169 }),
+      ],
+    },
+  },
+  {
+    id: 'counter',
+    eyebrow: { icon: 'counter', label: 'Overlay' },
+    title: en.widgets.counter.name,
+    subtitle: en.widgets.counter.tagline,
+    visual: {
+      kind: 'stage',
+      live: true,
+      // Two 800x260 rows of three counts: the default look and the Rift preset.
+      layers: [
+        layer('counterRow', { x: 9, y: 40, width: 520, height: 169 }),
+        layer('counterRift', { x: 9, y: 212, width: 520, height: 169 }),
+      ],
+    },
+  },
+  {
+    id: 'event-list',
+    eyebrow: { icon: 'event-list', label: 'Overlay' },
+    title: en.widgets.eventList.name,
+    subtitle: en.widgets.eventList.tagline,
+    visual: {
+      kind: 'stage',
+      live: true,
+      // Two 320x330 lists at full size, the default look and the Realm preset.
+      layers: [
+        layer('eventList', { x: -30, y: 50, width: 320, height: 330 }),
+        layer('eventListRealm', { x: 240, y: 50, width: 320, height: 330 }),
+      ],
+    },
+  },
+  {
+    id: 'leaderboard',
+    eyebrow: { icon: 'leaderboard', label: 'Overlay' },
+    title: en.widgets.leaderboard.name,
+    subtitle: en.widgets.leaderboard.tagline,
+    visual: {
+      kind: 'stage',
+      live: true,
+      layers: [layer('leaderboard', { x: 43, y: 36, width: 452, height: 390 })],
+    },
+  },
+  {
+    id: 'credits',
+    eyebrow: { icon: 'credits', label: 'Overlay' },
+    title: en.widgets.credits.name,
+    subtitle: en.widgets.credits.tagline,
+    visual: {
+      kind: 'stage',
+      live: true,
+      // The 960x540 scene drawn a little larger than the stage, centred on its names.
+      layers: [layer('credits', { x: -259, y: -34, width: 1056, height: 594 })],
+    },
+  },
+  {
+    id: 'featured',
+    eyebrow: { icon: 'featured', label: 'Overlay' },
+    title: en.widgets.featured.name,
+    subtitle: en.widgets.featured.tagline,
+    visual: {
+      kind: 'stage',
+      live: true,
+      // Two 720x240 sources, their cards along the bottom: a featured message and a question.
+      layers: [
+        layer('featured', { x: 9, y: 45, width: 520, height: 173 }),
+        layer('featuredQuestion', { x: 9, y: 195, width: 520, height: 173 }),
+      ],
+    },
+  },
+  {
+    id: 'now-playing',
+    eyebrow: { icon: 'now-playing', label: 'Overlay' },
+    title: en.widgets.nowPlaying.name,
+    subtitle: en.widgets.nowPlaying.tagline,
+    visual: {
+      kind: 'stage',
+      live: true,
+      // Three 640x160 strips: the card, the Dynasty preset and the pill.
+      layers: [
+        layer('nowPlaying', { x: 9, y: 20, width: 520, height: 130 }),
+        layer('nowPlayingDynasty', { x: 9, y: 151, width: 520, height: 130 }),
+        layer('nowPlayingPill', { x: 9, y: 282, width: 520, height: 130 }),
+      ],
+    },
+  },
+  {
+    id: 'lower-third',
+    eyebrow: { icon: 'lower-third', label: 'Overlay' },
+    title: en.widgets.lowerThird.name,
+    subtitle: en.widgets.lowerThird.tagline,
+    visual: {
+      kind: 'stage',
+      live: true,
+      // Two 1280x720 scenes, shifted so only their bars show, one over the other.
+      layers: [
+        layer('lowerThird', { x: -4, y: -313, width: 904, height: 508 }),
+        layer('lowerThirdStorm', { x: -4, y: -133, width: 904, height: 508 }),
+      ],
+    },
+  },
+  {
+    id: 'tasks',
+    eyebrow: { icon: 'tasks', label: 'Overlay' },
+    title: en.widgets.tasks.name,
+    subtitle: en.widgets.tasks.tagline,
+    visual: {
+      kind: 'stage',
+      live: true,
+      // Two 280x420 lists side by side: the default look and the Village preset.
+      layers: [
+        layer('tasks', { x: 6, y: 30, width: 260, height: 390 }),
+        layer('tasksVillage', { x: 272, y: 30, width: 260, height: 390 }),
+      ],
+    },
+  },
+  {
+    id: 'emote-combo',
+    eyebrow: { icon: 'emote-combo', label: 'Overlay' },
+    title: en.widgets.emoteCombo.name,
+    subtitle: en.widgets.emoteCombo.tagline,
+    visual: {
+      kind: 'stage',
+      live: true,
+      layers: [layer('emoteCombo', { x: 9, y: 50, width: 520, height: 347 })],
+    },
+  },
+  {
+    id: 'queue',
+    eyebrow: { icon: 'queue', label: 'Tool' },
+    title: en.widgets.queue.name,
+    subtitle: en.widgets.queue.tagline,
+    visual: {
+      kind: 'stage',
+      live: true,
+      // Two 280x420 queues side by side: the default look and the Storm preset.
+      layers: [
+        layer('queue', { x: 6, y: 30, width: 260, height: 390 }),
+        layer('queueStorm', { x: 272, y: 30, width: 260, height: 390 }),
+      ],
+    },
+  },
+  {
+    id: 'spin-wheel',
+    eyebrow: { icon: 'spin-wheel', label: 'Tool' },
+    title: en.widgets.spinWheel.name,
+    subtitle: en.widgets.spinWheel.tagline,
+    visual: {
+      kind: 'stage',
+      live: true,
+      layers: [layer('spinWheel', { x: 66, y: 0, width: 405, height: 432 })],
     },
   },
   {

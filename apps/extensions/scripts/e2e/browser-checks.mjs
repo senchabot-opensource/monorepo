@@ -43,6 +43,7 @@ const READY = `(doc, kind) => {
   if (kind === 'poll') return Boolean(doc.querySelector('[data-testid="poll-card"]'));
   if (kind === 'frame') return Boolean(doc.querySelector('[data-testid="frame-art"] svg path'));
   if (kind === 'countdown') return Boolean(doc.querySelector('[data-testid="countdown-clock"]'));
+  if (kind === 'goal') return Boolean(doc.querySelector('[data-testid="goal"]')?.textContent?.trim());
   if (kind === 'counter') return Boolean(doc.querySelector('[data-testid="counter-value"]'));
   if (kind === 'event-list') return Boolean(doc.querySelector('[data-testid="event-row"]'));
   if (kind === 'credits') return Boolean(doc.querySelector('[data-testid="credits-roll"]'));

@@ -509,7 +509,7 @@ Chat commands for the broadcaster and moderators, on Twitch and Kick:
 | !hud cash 10000 (or !hud cash set 10000) | Sets the cash |
 | !hud cash reset | Goes back to the starting cash |
 
-`!hud money` works the same as `!hud cash`.
+`!hud money` works the same as `!hud cash`. Every command also works in short, with `!h` in place of `!hud`: `!h cash +500`, `!h map park1`, `!h walk`. A plain `!h map`, `!h cash` (or money) and `!h time` (or clock) hide that part of the HUD, and the same command shows it again; the choice is saved in OBS. `!h weather` does the same for the Weather overlay when its URL has the channel.
 
 | Command | What it does |
 | --- | --- |
@@ -566,12 +566,14 @@ Live weather for any place the streamer picks: an icon, the temperature and the 
 
 - Widget URL: https://extensions.senchabot.com/widgets/weather?lat=41.0082&lon=28.9784&place=Istanbul&lang=en
 - Demo with sample weather: https://extensions.senchabot.com/widgets/weather?demo=1
+- It needs no channel. With twitch and/or kick in the URL, the broadcaster and mods hide it and show it again with !h weather (or !hud weather) in either chat; viewers typing it change nothing.
 - Recommended size: 1920x1080, the whole scene. The weather sits in a picked corner and is sized for the source's short side, so a vertical canvas works too. Its default corner, top left, stays clear of the IRL HUD Overlay's.
 
 URL parameters:
 
 | Parameter | Values | Default |
 | --- | --- | --- |
+| twitch, kick | optional channels, only for !h weather | none |
 | lat, lon | the place, with at most 4 decimals; nothing shows without them | none |
 | place | the name shown with the weather, up to 40 characters | none |
 | units | metric (°C, km/h), imperial (°F, mph) | metric |

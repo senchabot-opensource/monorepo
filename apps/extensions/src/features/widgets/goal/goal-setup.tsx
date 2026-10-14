@@ -28,6 +28,8 @@ import { usePreviewSender } from '#/hooks/use-preview-channel';
 import {
   buildGoalPreviewUrl,
   buildGoalUrl,
+  type CheerPlatforms,
+  cheerPlatformsFor,
   DEFAULT_BITS_GOAL_SETTINGS,
   DEFAULT_GOAL_SETTINGS,
   GOAL_COLORS,
@@ -137,6 +139,13 @@ const TEST_CHEERS = [100, 500] as const;
  * The setup page of a goal: the Sub Goal's, or the Bits & Kicks Goal's on the same overlay. Both
  * pages are this one; the copy, commands and test buttons follow `type`.
  */
+// A Bits & Kicks Goal's default title in the page's language, naming what its platforms send.
+const BITS_TITLES: Record<CheerPlatforms, TranslationKey> = {
+  both: 'bitsGoal.defaultTitle',
+  twitch: 'bitsGoal.defaultTitleBits',
+  kick: 'bitsGoal.defaultTitleKicks',
+};
+
 export function GoalSetup({ type, faq }: { type: GoalType; faq: readonly FaqEntry[] }) {
   const { t } = useI18n();
   const variant = VARIANTS[type];
@@ -162,6 +171,15 @@ export function GoalSetup({ type, faq }: { type: GoalType; faq: readonly FaqEntr
 
   const update = <K extends keyof GoalSettings>(key: K, value: GoalSettings[K]) =>
     setSettings((current) => ({ ...current, [key]: value }));
+  // A Bits & Kicks Goal's title follows the platforms while it is still a default one: Twitch
+  // alone sends Bits, Kick alone Kicks. A title typed in stays.
+  const changePlatforms = (platforms: GoalSettings['platforms']) =>
+    setSettings((current) => {
+      if (type !== 'bits') return { ...current, platforms };
+      const isDefault = current.title === t(BITS_TITLES[cheerPlatformsFor(current.platforms)]);
+      const title = isDefault ? t(BITS_TITLES[cheerPlatformsFor(platforms)]) : current.title;
+      return { ...current, platforms, title };
+    });
   useStartOnSitePreset((preset) => update('preset', preset));
 
   // The channel's own emotes for the picker, reloaded a moment after the channel boxes settle.
@@ -240,7 +258,7 @@ export function GoalSetup({ type, faq }: { type: GoalType; faq: readonly FaqEntr
       <SettingsGroup title={t('common.sectionChannel')}>
         <ChannelFields
           platforms={settings.platforms}
-          onPlatformsChange={(value) => update('platforms', value)}
+          onPlatformsChange={changePlatforms}
           twitch={twitchChannel}
           onTwitchChange={setTwitchChannel}
           kick={kickChannel}

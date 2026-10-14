@@ -2,14 +2,19 @@
 
 `generate.mjs` renders these files with headless Chrome:
 
-- `public/og/{home,chat-box,emote-wall,sub-sprout,subathon,stream-alerts,goal,irl-hud,weather,countdown,poll,raffle,obs-bridge,socials,guides}.png`: 1200×630
-  Open Graph / Twitter cards
+- `public/og/<id>.png`: 1200×630 Open Graph / Twitter cards, one per widget (named by its registry
+  id) plus `home` and `guides`. A test checks that every widget has its own and that no two are the
+  same picture.
 - `public/apple-touch-icon.png` (180), `public/icon-192.png`, `public/icon-512.png`: the logo on
   `#09090b`, sized to stay inside the maskable safe zone
 
-The overlay pictures are screenshots of the real widget demos (`?mock=true`, `?simulate=true`, and
-the Raffle overlay, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll and IRL HUD Overlay fed events over their BroadcastChannels, and Weather switched to sunny over its own), laid onto `template.html`. Titles and
-taglines come from `src/lib/i18n/en.ts`, so rerun the script when that copy changes.
+The overlay pictures are screenshots of the real widget demos (`?mock=true`, `?simulate=true`,
+`?demo=1`), laid onto `template.html`. Where a card needs a set moment, the overlay gets the same
+BroadcastChannel messages its setup page's test buttons send: a goal two short of its target, a
+featured message, the next track, the credits rolled from the top, and so on. Titles and taglines
+come from `src/lib/i18n/en.ts`, so rerun the script when that copy changes. A new widget needs a
+card in `CARDS`, its captures in `CAPTURES`, its icon in `template.html` and its path in
+`OG_IMAGES` (`src/lib/seo/head.ts`).
 
 ## Regenerate
 

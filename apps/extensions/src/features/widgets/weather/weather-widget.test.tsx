@@ -1,10 +1,12 @@
 import { act, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { DEFAULT_WEATHER_SETTINGS, type WeatherSettings } from '#/lib/weather-url';
+import { FakeWebSocket } from '#/test/browser';
 import { en } from '#/test/queries';
 import { renderWithProviders } from '#/test/render';
 import { cacheForecast, readTimeseries } from './met-forecast';
 import { PREVIEW_CHANNEL } from './use-weather';
+import { toggleStorageKey } from './use-weather-toggle';
 import { WeatherWidget } from './weather-widget';
 
 const HOUR = 3_600_000;
@@ -58,6 +60,17 @@ const fill = (text: string) =>
   (document.querySelector(`.ih-text[data-value="${text}"] > span:last-child`) as HTMLElement | null)
     ?.style.color;
 const forecastRow = () => screen.queryByTestId('weather-forecast');
+const shown = () => screen.getByTestId('weather').dataset.hidden === undefined;
+const chatSays = (text: string, mod: boolean) => {
+  // The newest one: a reload opens another.
+  const socket = [...FakeWebSocket.instances].reverse().find((ws) => ws.url.includes('twitch'));
+  if (!socket) throw new Error('no twitch socket');
+  const tags = mod ? '@badges=moderator/1;display-name=Mod;mod=1;room-id=1' : '@room-id=1';
+  const who = mod ? 'mod' : 'viewer';
+  act(() =>
+    socket.receive(`${tags} :${who}!${who}@${who}.tmi.twitch.tv PRIVMSG #streamer :${text}`),
+  );
+};
 const wait = (ms: number) => act(() => vi.advanceTimersByTimeAsync(ms));
 /** A distance from the scene's edge, in px at 1080p: the overlay scales with the window. */
 const edge = (px: string) =>
@@ -190,6 +203,40 @@ describe('WeatherWidget', () => {
     expect(temp()).toBe('-3°C');
     channel.postMessage({ type: 'sky', sky: null, preview: 'p1' });
     await vi.waitFor(() => expect(temp()).toBe('12°C'));
+    channel.close();
+  });
+
+  it("hides and shows on a mod's !h weather when the URL names a channel, through a reload", async () => {
+    const first = await render(<WeatherWidget settings={settings()} twitchChannel="streamer" />);
+    await vi.waitFor(() => expect(temp()).toBe('12°C'));
+    expect(shown()).toBe(true);
+    chatSays('!h weather', false);
+    expect(shown()).toBe(true);
+    chatSays('!h weather', true);
+    expect(shown()).toBe(false);
+    chatSays('!h weather now', true);
+    expect(shown()).toBe(false);
+    expect(JSON.parse(localStorage.getItem(toggleStorageKey('streamer')) ?? 'null')).toEqual({
+      hidden: true,
+    });
+    first.unmount();
+
+    await render(<WeatherWidget settings={settings()} twitchChannel="streamer" />);
+    expect(shown()).toBe(false);
+    chatSays('!HUD Weather', true);
+    expect(shown()).toBe(true);
+  });
+
+  it("reads no chat without a channel, and takes its setup page's toggle", async () => {
+    await render(<WeatherWidget settings={settings()} previewId="p1" />);
+    await vi.waitFor(() => expect(temp()).toBe('12°C'));
+    expect(FakeWebSocket.instances).toHaveLength(0);
+    const channel = new BroadcastChannel(PREVIEW_CHANNEL);
+    channel.postMessage({ type: 'toggle', preview: 'p2' });
+    channel.postMessage({ type: 'toggle', preview: 'p1' });
+    await vi.waitFor(() => expect(shown()).toBe(false));
+    channel.postMessage({ type: 'toggle', preview: 'p1' });
+    await vi.waitFor(() => expect(shown()).toBe(true));
     channel.close();
   });
 

@@ -388,6 +388,8 @@ A game-style HUD overlay made for IRL streams. Subs, gifted subs, Bits (Twitch),
 - The cash is saved in the browser source's `localStorage`, keyed by channel, so a reload or an OBS restart doesn't lose it.
 - The broadcaster and mods change the cash from chat: `!hud cash +500` (`add 500`), `-200` (`remove 200`, can go into a red debt), `10000` (`set 10000`) and `reset`. `!hud money` works the same. They switch the mini-map with `!hud map <name>` for a saved place, `!hud map urban` or `!hud map park` for the made-up maps, and `!hud map reset` for the one in the URL; the choice is saved in OBS until the URL's starting map changes. `!hud walk`, `!hud run` and `!hud stay` (or `stop`) set how the arrow moves. On the made-up maps, `!hud indoor` (or `inside`) takes the arrow into the building nearest it (a stand-in one in the park), where it walks around within the walls while the map zooms in on the building and dims the rest; `!hud outdoor` (or `outside`) walks it back to the nearest street. Indoors is saved in OBS too. A real place stays outdoors while the arrow walks around a picked spot, since which real building it walks into isn't the streamer's to pick: there the command does nothing, and switching to one leaves the building. The real building outlines are kept for a GPS feed (`arrowSource="gps"` on the widget): with the arrow at a real position it goes into the real building there, and stays outdoors where there's none, with no stand-in.
 - A market: items with prices set on the setup page. `!hud buy water` (or `!hud buy water 3`) takes the price off the cash and shows it with the item's name; without enough cash nothing is bought and the price shows with a cross.
+- Every command also works in short, `!h` in place of `!hud`: `!h cash +500`, `!h map park1`, `!h walk`.
+- A plain `!h map`, `!h cash` (or `money`) and `!h time` (or `clock`) hide that part of the HUD, and the same command shows it again; the part fades out where it stands, and the choice is saved in OBS. `!h weather` does the same for the Weather overlay when it has the channel.
 - The cash and the mini-map are sized for the browser source's short side and anchored to their corners, so a vertical IRL canvas works too.
 
 ```
@@ -400,7 +402,7 @@ https://extensions.senchabot.com/widgets/irl-hud?twitch=YOUR_TWITCH_CHANNEL&kick
 
 ### Weather (`/setup/weather`)
 
-Live weather for any place you pick: an icon, the temperature and the weather in words, with wind, humidity and a forecast for the coming hours or days. It reads no chat and needs no channel.
+Live weather for any place you pick: an icon, the temperature and the weather in words, with wind, humidity and a forecast for the coming hours or days. It needs no channel. With one (`twitch`, `kick`), you and your mods hide it and show it again from chat with `!h weather` (or `!hud weather`, the IRL HUD Overlay's command), saved in OBS.
 
 **How it works:**
 - The data is MET Norway's [Locationforecast](https://api.met.no/weatherapi/locationforecast/2.0/documentation) (the Norwegian Meteorological Institute): free, no key, under CC BY 4.0, so the overlay credits MET Norway in small print. The browser source asks MET straight from the page with a plain GET (no custom headers, so no CORS preflight), which MET's terms allow for low-volume sites; the page's `Origin` identifies it.
@@ -414,7 +416,7 @@ Live weather for any place you pick: an icon, the temperature and the weather in
 https://extensions.senchabot.com/widgets/weather?lat=41.0082&lon=28.9784&place=Istanbul&lang=en
 ```
 
-**URL parameters:** `lat`, `lon` (the place; nothing shows without them), `place` (the name shown, up to 40 characters), `units` (`metric` | `imperial`), `layout` (`card` | `pill`), `theme` (`dark` | `light` | `clear`), `corner` (`tr` | `tl` | `br` | `bl`, `tl` by default), `size` (50 to 200, percent), `details` (`0` hides wind and humidity), `forecast` (`hours` | `days` | `off`), `h12` (`1` shows 3 PM instead of 15:00), `tz` (IANA time zone), `lang` (`en` | `de` | `es` | `fr` | `ja` | `pt` | `tr`), `demo` (`1` shows sample weather without asking MET).
+**URL parameters:** `twitch`, `kick` (optional, only for `!h weather`), `lat`, `lon` (the place; nothing shows without them), `place` (the name shown, up to 40 characters), `units` (`metric` | `imperial`), `layout` (`card` | `pill`), `theme` (`dark` | `light` | `clear`), `corner` (`tr` | `tl` | `br` | `bl`, `tl` by default), `size` (50 to 200, percent), `details` (`0` hides wind and humidity), `forecast` (`hours` | `days` | `off`), `h12` (`1` shows 3 PM instead of 15:00), `tz` (IANA time zone), `lang` (`en` | `de` | `es` | `fr` | `ja` | `pt` | `tr`), `demo` (`1` shows sample weather without asking MET).
 
 ---
 
