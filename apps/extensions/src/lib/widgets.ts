@@ -2,19 +2,26 @@ import type { ComponentType } from 'react';
 import {
   ChatBoxIcon,
   CountdownIcon,
+  CounterIcon,
+  CreditsIcon,
   EmoteWallIcon,
+  EventListIcon,
   FramesIcon,
   GoalIcon,
   type IconProps,
   IrlHudIcon,
+  LeaderboardIcon,
+  LowerThirdIcon,
   ObsBridgeIcon,
   PollIcon,
+  QueueIcon,
   RaffleIcon,
   SocialsIcon,
   SpinWheelIcon,
   StreamAlertsIcon,
   SubathonIcon,
   SubSproutIcon,
+  TasksIcon,
   WeatherIcon,
 } from '#/components/icons';
 import type { TranslationKey } from '#/lib/i18n';
@@ -29,8 +36,15 @@ export type WidgetId =
   | 'follower-goal'
   | 'subathon'
   | 'poll'
+  | 'queue'
   | 'stream-alerts'
+  | 'event-list'
+  | 'credits'
+  | 'leaderboard'
+  | 'lower-third'
+  | 'tasks'
   | 'irl-hud'
+  | 'counter'
   | 'weather'
   | 'frames'
   | 'countdown'
@@ -116,6 +130,22 @@ export const WIDGETS: readonly WidgetEntry[] = [
     demoUrl: '/widgets/irl-hud?simulate=1',
     // A whole scene: the money and the mini-map each sit in a corner of it.
     sourceSize: { width: 1920, height: 1080 },
+  },
+  {
+    id: 'counter',
+    // Mods change it from chat like the Sub Goal's count, but it's a number in the scene, not
+    // something the streamer runs, so it sits with the overlays.
+    kind: 'overlay',
+    setupPath: '/setup/counter',
+    widgetPath: '/widgets/counter',
+    nameKey: 'widgets.counter.name',
+    taglineKey: 'widgets.counter.tagline',
+    Icon: CounterIcon,
+    platforms: ['twitch', 'kick'],
+    demoUrl:
+      '/widgets/counter?simulate=1&c1=Wins&c1icon=%F0%9F%8F%86&c1start=12&c2=Losses&c2icon=%E2%9D%8C&c2start=7&c3=Draws&c3icon=%F0%9F%A4%9D&c3start=3',
+    // The row layout's stage. Its strip shape also keeps the landing gallery in whole rows.
+    sourceSize: { width: 800, height: 260 },
   },
   {
     id: 'weather',
@@ -208,6 +238,70 @@ export const WIDGETS: readonly WidgetEntry[] = [
     sourceSize: { width: 800, height: 450 },
   },
   {
+    id: 'event-list',
+    kind: 'overlay',
+    setupPath: '/setup/event-list',
+    widgetPath: '/widgets/event-list',
+    nameKey: 'widgets.eventList.name',
+    taglineKey: 'widgets.eventList.tagline',
+    Icon: EventListIcon,
+    platforms: ['twitch', 'kick'],
+    demoUrl: '/widgets/event-list?simulate=1',
+    sourceSize: { width: 420, height: 520 },
+  },
+  {
+    id: 'credits',
+    kind: 'overlay',
+    setupPath: '/setup/end-credits',
+    widgetPath: '/widgets/credits',
+    nameKey: 'widgets.credits.name',
+    taglineKey: 'widgets.credits.tagline',
+    Icon: CreditsIcon,
+    platforms: ['twitch', 'kick'],
+    demoUrl: '/widgets/credits?simulate=1',
+    // A whole scene: the credits roll up its middle.
+    sourceSize: { width: 1920, height: 1080 },
+  },
+  {
+    id: 'leaderboard',
+    kind: 'overlay',
+    setupPath: '/setup/top-supporters',
+    widgetPath: '/widgets/leaderboard',
+    nameKey: 'widgets.leaderboard.name',
+    taglineKey: 'widgets.leaderboard.tagline',
+    Icon: LeaderboardIcon,
+    platforms: ['twitch', 'kick'],
+    demoUrl: '/widgets/leaderboard?simulate=1',
+    sourceSize: { width: 440, height: 380 },
+  },
+  {
+    id: 'lower-third',
+    // It runs on its own from the URL; a channel is optional, only for the chat commands.
+    kind: 'overlay',
+    setupPath: '/setup/lower-thirds',
+    widgetPath: '/widgets/lower-third',
+    nameKey: 'widgets.lowerThird.name',
+    taglineKey: 'widgets.lowerThird.tagline',
+    Icon: LowerThirdIcon,
+    platforms: ['twitch', 'kick'],
+    demoUrl:
+      '/widgets/lower-third?simulate=1&title=Senchabot&lines=Free+overlays+for+Twitch+and+Kick%7CNo+login%2C+nothing+to+install&rotate=4&size=200',
+    // A whole scene: the bar sits in a corner of it, drawn at its largest so a card can show it.
+    sourceSize: { width: 1920, height: 1080 },
+  },
+  {
+    id: 'tasks',
+    kind: 'overlay',
+    setupPath: '/setup/task-list',
+    widgetPath: '/widgets/tasks',
+    nameKey: 'widgets.tasks.name',
+    taglineKey: 'widgets.tasks.tagline',
+    Icon: TasksIcon,
+    platforms: ['twitch', 'kick'],
+    demoUrl: '/widgets/tasks?simulate=1',
+    sourceSize: { width: 480, height: 720 },
+  },
+  {
     id: 'poll',
     // Mods put polls up and end them from chat, like the Subathon Timer's clock.
     kind: 'tool',
@@ -219,6 +313,19 @@ export const WIDGETS: readonly WidgetEntry[] = [
     platforms: ['twitch', 'kick'],
     demoUrl: '/widgets/poll?simulate=1',
     sourceSize: { width: 640, height: 560 },
+  },
+  {
+    id: 'queue',
+    // Mods call viewers up and open and close it from chat, like the poll.
+    kind: 'tool',
+    setupPath: '/setup/viewer-queue',
+    widgetPath: '/widgets/queue',
+    nameKey: 'widgets.queue.name',
+    taglineKey: 'widgets.queue.tagline',
+    Icon: QueueIcon,
+    platforms: ['twitch', 'kick'],
+    demoUrl: '/widgets/queue?simulate=1',
+    sourceSize: { width: 440, height: 600 },
   },
   {
     id: 'raffle',

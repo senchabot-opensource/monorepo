@@ -1,5 +1,5 @@
 import { isValidLocale, LANG_PARAM, type Locale } from '#/lib/i18n/locales';
-import { HUD_STYLES } from '#/lib/irl-hud-url';
+import { HUD_STYLES, type HudStyle } from '#/lib/irl-hud-url';
 import { isTimeZone } from '#/lib/time-zones';
 import { readFlag, readWhole } from '#/lib/url-params';
 
@@ -9,7 +9,8 @@ export type WeatherLayout = (typeof WEATHER_LAYOUTS)[number];
 
 /**
  * `app`: round figures on the `theme`'s background, like a weather app. `retro` and `modern`: the
- * IRL HUD's styles, outlined text right on the scene, so the weather matches a HUD beside it.
+ * IRL HUD's styles, outlined text right on the scene, so the weather matches a HUD beside it. Those
+ * two are for the pill; the card always draws as `app`.
  */
 export const WEATHER_STYLES = ['app', ...HUD_STYLES] as const;
 export type WeatherStyle = (typeof WEATHER_STYLES)[number];
@@ -101,6 +102,10 @@ function readCoord(value: string | null, max: number): number | null {
 
 const hasPlace = (settings: WeatherSettings) => settings.lat !== null && settings.lon !== null;
 
+/** The IRL HUD style the overlay draws in, or null for the weather app look. */
+export const weatherHudStyle = (settings: WeatherSettings): HudStyle | null =>
+  settings.layout === 'pill' && settings.style !== 'app' ? settings.style : null;
+
 /** Only settings that differ from the defaults are written, so URLs stay short. */
 function buildParams(settings: WeatherSettings, locale: Locale) {
   const params = new URLSearchParams();
@@ -112,7 +117,9 @@ function buildParams(settings: WeatherSettings, locale: Locale) {
   const place = settings.place.trim();
   if (place) params.set('place', place);
   if (settings.units !== defaults.units) params.set('units', settings.units);
-  if (settings.style !== defaults.style) params.set('style', settings.style);
+  // A card ignores the style, so the setup page can keep one picked for the pill.
+  const hudStyle = weatherHudStyle(settings);
+  if (hudStyle) params.set('style', hudStyle);
   if (settings.layout !== defaults.layout) params.set('layout', settings.layout);
   if (settings.theme !== defaults.theme) params.set('theme', settings.theme);
   if (settings.corner !== defaults.corner) params.set('corner', settings.corner);

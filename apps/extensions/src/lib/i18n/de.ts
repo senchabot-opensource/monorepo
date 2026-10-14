@@ -2,6 +2,20 @@ import type { en } from './en';
 
 export const de: typeof en = {
   common: {
+    setup: {
+      widgetUrlTip:
+        'Schon ein Widget gebaut? Füg seine URL hier ein, um deine Einstellungen zu laden und nur das zu ändern, was du brauchst.',
+      widgetUrlPlaceholder: 'Bestehende Widget-URL zum Bearbeiten einfügen',
+      widgetUrlInvalid: 'Das ist keine {name}-URL.',
+      sizeHint: ' (empfohlene Größe: {width}×{height}).',
+      guideTitle: 'Einrichtung in der Streaming-Software (OBS, Streamlabs, XSplit usw.)',
+      guideAddSource:
+        'Füge in deiner Streaming-Software eine Browser-Quelle hinzu (OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio usw.).',
+      guidePaste: 'Füge die kopierte URL ein.',
+      testTitle: 'Probier es aus:',
+      color: 'Farbe',
+      titleLabel: 'Titel',
+    },
     freeBadge: '100 % kostenlos · Kein Login nötig',
     freeOnlyBadge: '100 % kostenlos',
     copy: 'Kopieren',
@@ -29,6 +43,8 @@ export const de: typeof en = {
     channelTip:
       'Gib nur den Kanalnamen ein, nicht den ganzen Link. Bei twitch.tv/senchabot ist das senchabot.',
     previewLoading: 'Vorschau lädt…',
+    previewZoom: 'Vorschau-Zoom',
+    previewDrag: 'Ziehen, um dich umzusehen',
     scrollMore: 'Runterscrollen für mehr',
     settingsSections: 'Einstellungsbereiche',
     scrollTop: 'Nach oben',
@@ -134,10 +150,45 @@ export const de: typeof en = {
       tagline:
         'Ein HUD im Game-Look für IRL-Streams: Subs, Gifts, Cheers und Raids bringen Geld, mit Minikarte.',
     },
+    counter: {
+      name: 'Zähler',
+      tagline:
+        'Siege, Niederlagen oder jede andere Zahl in deinem Stream. Deine Mods ändern sie im Chat.',
+    },
     weather: {
       name: 'Wetter',
       tagline:
         'Das Live-Wetter für jeden Ort, den du wählst, mit Symbol, Temperatur und Vorhersage.',
+    },
+    eventList: {
+      name: 'Event-Liste',
+      tagline:
+        'Deine letzten Subs, Gift-Subs, Bits, Kicks und Raids aus beiden Chats in einer Liste.',
+    },
+    credits: {
+      name: 'Abspann',
+      tagline:
+        'Ein Abspann wie im Kino für alle, die auf Twitch und Kick gesubt, gecheert, geraidet und gechattet haben.',
+    },
+    queue: {
+      name: 'Zuschauer-Warteschlange',
+      tagline:
+        'Zuschauer stellen sich mit !join an, um mit dir zu spielen, und deine Mods rufen sie mit !next auf.',
+    },
+    leaderboard: {
+      name: 'Top-Supporter',
+      tagline:
+        'Deine Top-Gifter und Top-Cheerer von Twitch und Kick oder dein letzter Sub, Gift-Sub, Cheer und Raid.',
+    },
+    lowerThird: {
+      name: 'Bauchbinde',
+      tagline:
+        'Eine animierte Leiste mit Name und Thema für eine Ecke deines Streams, mit Zeilen, die sich abwechseln.',
+    },
+    tasks: {
+      name: 'Aufgabenliste',
+      tagline:
+        'Eine Co-Working-Aufgabenliste: Dein Chat trägt mit !task Aufgaben ein und hakt sie mit !done ab.',
     },
     raffle: {
       name: 'Verlosung',
@@ -157,6 +208,9 @@ export const de: typeof en = {
     },
   },
   home: {
+    queueFeatureJoin: 'Zuschauer tippen !join',
+    queueFeatureNext: 'Mods rufen die Nächsten mit !next auf',
+    queueFeatureBoth: 'Twitch und Kick in einer Warteschlange',
     heroTitle: 'Kostenlose Stream-Overlays für Twitch und Kick',
     heroLead:
       'Stell dein Widget mit Live-Vorschau ein und füg eine einzige URL in OBS ein. Kein Account, kein Wasserzeichen, und der Code ist Open Source.',
@@ -215,10 +269,16 @@ export const de: typeof en = {
       'Such dir ein Widget aus und stell es ein. Die Live-Vorschau zeigt jede Änderung sofort.',
     howStep2: 'Gib deinen Kanalnamen ein und kopier die Widget-URL.',
     howStep3: 'Füge in OBS Studio eine Browser-Quelle hinzu, setz die URL ein und stell die empfohlene Größe ein.',
-    sizesTitle: 'Empfohlene Größen für Browser-Quellen',
-    sizesNote: 'Breite × Höhe, in Pixeln.',
-    sizesWidget: 'Widget',
-    sizesValue: 'Größe',
+    comboTitle: 'Zusammen noch besser',
+    comboLead:
+      'Jedes Widget ist eine eigene Browser-Quelle, also passen so viele in eine Szene, wie du willst. Manche sind wie füreinander gemacht.',
+    comboHudWeather:
+      'Gib der Leiste des Wetters den Stil Modernes HUD oder Retro-HUD, dann passt sie zum HUD und hält denselben Abstand zum Rand.',
+    comboCountdownCredits:
+      'Zähl das Ende deines Streams herunter und wechsle dann zur Abspann-Szene: Der Abspann läuft los, sobald sie live ist.',
+    comboCountdownTasks:
+      'Lass im Co-Working-Stream Pomodoro-Runden mit dem Countdown neben den Aufgaben aller laufen.',
+    comboSizes: 'Größen der Browser-Quelle für jedes Widget',
     trustTitle: 'Kein Account, kein Haken',
     noLoginTitle: 'Kein Login',
     noLoginText:
@@ -257,10 +317,10 @@ export const de: typeof en = {
       'Mit OBS Studio und anderen Apps, die Browser-Quellen unterstützen. Füge die Widget-URL als Browser-Quelle hinzu und nimm die Größe, die auf der Setup-Seite steht.',
     faq4Q: 'Kann ich Twitch und Kick zusammen nutzen?',
     faq4A:
-      'Ja. Chat-Box, Emote-Wand, Sub Sprout, Subathon Timer, Stream-Alerts, Sub-Ziel, Chat-Umfrage, Stream-Countdown, IRL-HUD-Overlay und Glücksrad nehmen einen Twitch- und einen Kick-Kanal in derselben URL. OBS Bridge kann auch beiden Chats gleichzeitig zuhören. Die Verlosung läuft immer auf einer Plattform.',
+      'Ja. Chat-Box, Emote-Wand, Sub Sprout, Subathon Timer, Stream-Alerts, Sub-Ziel, Zähler, Event-Liste, Abspann, Zuschauer-Warteschlange, Top-Supporter, Bauchbinde, Aufgabenliste, Chat-Umfrage, Stream-Countdown, IRL-HUD-Overlay und Glücksrad nehmen einen Twitch- und einen Kick-Kanal in derselben URL. OBS Bridge kann auch beiden Chats gleichzeitig zuhören. Die Verlosung läuft immer auf einer Plattform.',
     faq5Q: 'Wie ändere ich ein Widget später?',
     faq5A:
-      'Öffne seine Setup-Seite, stell alles so ein, wie du willst, und ersetz die URL in deiner Browser-Quelle. Chat-Box, Emote-Wand, Sub Sprout, Subathon Timer, Stream-Alerts, Sub-Ziel, Chat-Umfrage, Stream-Rahmen, Socials, Stream-Countdown, IRL-HUD-Overlay, Wetter und Glücksrad können auch eine bestehende URL öffnen: Füg sie auf der Setup-Seite ein, deine Einstellungen sind wieder da, und du änderst nur, was du brauchst.',
+      'Öffne seine Setup-Seite, stell alles so ein, wie du willst, und ersetz die URL in deiner Browser-Quelle. Chat-Box, Emote-Wand, Sub Sprout, Subathon Timer, Stream-Alerts, Sub-Ziel, Zähler, Event-Liste, Abspann, Zuschauer-Warteschlange, Top-Supporter, Bauchbinde, Aufgabenliste, Chat-Umfrage, Stream-Rahmen, Socials, Stream-Countdown, IRL-HUD-Overlay, Wetter und Glücksrad können auch eine bestehende URL öffnen: Füg sie auf der Setup-Seite ein, deine Einstellungen sind wieder da, und du änderst nur, was du brauchst.',
     faq6Q: 'Funktioniert meine Widget-URL nach Updates weiter?',
     faq6A:
       'Ja. Updates lassen bestehende URL-Einstellungen und ihre Werte funktionieren, ein Widget, das schon in deiner Szene ist, braucht also keine neue URL.',
@@ -1125,6 +1185,467 @@ export const de: typeof en = {
     faq7Q: 'Wie funktioniert der Markt?',
     faq7A:
       'Füg auf der Einrichtungsseite Items mit einem Preis hinzu, etwa Wasser für $100. Du und deine Mods schreiben !hud buy wasser in den Twitch- oder Kick-Chat oder !hud buy wasser 3 für drei, und der Preis wird vom Geld abgezogen, mit dem Namen des Items daneben. Reicht das Geld nicht, wird nichts gekauft, und der Preis erscheint mit einem Kreuz davor.',
+  },
+  counter: {
+    breadcrumb: 'Zähler einrichten',
+    title: 'Zähler einrichten',
+    intro:
+      'Ein Zähler für Twitch und Kick, für Siege, Niederlagen, Schreckmomente oder alles andere, worüber du Buch führst. Zeig bis zu vier auf einmal, nebeneinander oder untereinander. Du und deine Mods ändert sie aus beiden Chats, und jeder Stand wird in OBS gespeichert.',
+    sectionCounters: 'Zähler',
+    counterHeading: 'Zähler {n}',
+    label: 'Beschriftung',
+    labelTip:
+      'Steht bei der Zahl, etwa Siege. Lass sie leer, um nur das Icon und die Zahl zu zeigen.',
+    labelPlaceholder: 'Keine Beschriftung',
+    command: 'Chatbefehl',
+    commandTip:
+      'Was du und deine Mods im Chat tippen, um diesen Zähler zu ändern, ohne das !. Nur Buchstaben, Ziffern und _.',
+    commandHint: 'Mods tippen {command}, um 1 dazuzuzählen.',
+    commandReserved:
+      '{command} ist auch ein Befehl eines anderen Senchabot-Widgets. Sind beide im Stream, ändert ein Befehl beide.',
+    commandTaken: 'Ein anderer Zähler nutzt schon {command}, deshalb hört dieser auf {fallback}.',
+    icon: 'Icon',
+    iconTip:
+      'Ein Emoji oder ein paar Zeichen neben der Beschriftung, etwa 🏆. Leer lassen für keins.',
+    iconPlaceholder: 'Keins',
+    emote: 'Kanal-Emote',
+    emoteTip:
+      'Zeigt dieses Kanal-Emote statt des Icons. Listet die Abonnenten-Emotes jedes Kanals sowie seine eigenen 7TV-, BTTV- und FFZ-Sets auf.',
+    start: 'Startwert',
+    startTip:
+      'Hier startet dieser Zähler. Änderst du den Wert später, fängt dieser Zähler beim neuen Wert neu an.',
+    addCounter: '+ Zähler hinzufügen',
+    removeCounter: 'Zähler {n} entfernen',
+    countsHint: 'Bis zu {max} Zähler in einer Browser-Quelle, jeder mit seinem eigenen Befehl.',
+    defaults: {
+      wins: 'Siege',
+      losses: 'Niederlagen',
+      draws: 'Unentschieden',
+      scares: 'Schreckmomente',
+    },
+    layout: 'Anordnung',
+    layoutTip:
+      'Nebeneinander stellt die Zähler in eine Reihe. Untereinander stapelt sie, für eine Ecke deiner Szene.',
+    layouts: {
+      row: 'Nebeneinander',
+      stack: 'Untereinander',
+    },
+    color: 'Farbe',
+    showPops: 'Änderungen zeigen',
+    showPopsTip:
+      'Lässt über einem Zähler +1 oder −1 aufsteigen, jedes Mal, wenn der Chat ihn ändert.',
+    sectionCommands: 'Chatbefehle',
+    commandsIntro:
+      'Du und deine Mods ändert die Zähler im Twitch- oder Kick-Chat. Jeder Zähler hat seinen eigenen Befehl; die Beispiele nutzen den ersten. Tippen Zuschauer sie, passiert nichts.',
+    cmdOne: 'Zählt 1 dazu',
+    cmdAdd: 'Zählt 3 dazu, oder jede Zahl, die du tippst',
+    cmdRemove: 'Zieht 1 ab, oder jede Zahl, die du tippst. Nie unter 0',
+    cmdSet: 'Setzt die Zahl',
+    cmdReset: 'Springt auf den Startwert zurück',
+    previewTitle: 'Zähler-Vorschau',
+    previewIframeTitle: 'Zähler-Vorschau',
+    previewHint:
+      'Die Vorschau zählt ab und zu von selbst. Im Stream ändern nur du und deine Mods die Zahlen.',
+    testTitle: 'Probier es aus:',
+    testReset: 'Alle zurücksetzen',
+    widgetUrlTip:
+      'Schon ein Widget gebaut? Füg seine URL hier ein, um deine Einstellungen zu laden und nur das zu ändern, was du brauchst.',
+    widgetUrlPlaceholder: 'Bestehende Widget-URL zum Bearbeiten einfügen',
+    widgetUrlInvalid: 'Das ist keine Zähler-URL.',
+    browserSourceHintSize: ' (empfohlene Größe: {width}×{height}).',
+    guideTitle: 'Einrichtung in der Streaming-Software (OBS, Streamlabs, XSplit usw.)',
+    guideStep1:
+      'Füge in deiner Streaming-Software eine Browser-Quelle hinzu (OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio usw.).',
+    guideStep2: 'Füge die kopierte Zähler-URL ein.',
+    guideStep3:
+      'Stell die Breite auf 800 und die Höhe auf 260, oder 440 und 400 für die Anordnung untereinander.',
+    guideStep4: 'Tipp !wins in deinen Chat: Der Zähler geht um eins hoch.',
+    faq1Q: 'Wer kann den Zähler ändern?',
+    faq1A:
+      'Du und deine Mods, im Twitch- oder Kick-Chat. Tippen Zuschauer den Befehl, ändert sich nichts, also kann niemand den Stand aus Spaß hochtreiben.',
+    faq2Q: 'Was passiert, wenn OBS schließt oder die Browser-Quelle neu lädt?',
+    faq2A:
+      'Jeder Stand wird in OBS gespeichert, er ist also wieder da, auch im nächsten Stream. Zum Neustart tippst du !wins reset in den Chat, oder du änderst den Startwert auf dieser Seite und fügst die neue URL in OBS ein.',
+    faq3Q: 'Kann ich Siege, Niederlagen und Unentschieden zusammen zeigen?',
+    faq3A:
+      'Ja. Eine Browser-Quelle zeigt bis zu vier Zähler, jeder mit eigener Beschriftung, eigenem Icon und eigenem Befehl wie !wins und !losses, nebeneinander oder untereinander.',
+    faq4Q: 'Ein anderer Chatbot nutzt schon !wins. Was tun?',
+    faq4A:
+      'Gib dem Zähler im Feld Chatbefehl einen eigenen Befehl, etwa !wincount, und füg dann die neue URL in OBS ein. Die Stände werden pro Befehl gespeichert, ein neuer Befehl startet also beim Startwert.',
+  },
+  eventList: {
+    breadcrumb: 'Event-Liste einrichten',
+    title: 'Event-Liste einrichten',
+    intro:
+      'Eine Liste der letzten Events für Twitch und Kick. Jeder Sub, Resub, Gift-Sub, Bits-Cheer, jedes Kicks-Gift und jeder Raid aus beiden Chats landet in einer Liste, das Neueste zuerst, jede Zeile mit ihrer Plattform markiert. Die Liste wird in OBS gespeichert und übersteht so ein Neuladen.',
+    sectionEvents: 'Events',
+    kinds: {
+      sub: 'Subs und Resubs',
+      gift: 'Gift-Subs',
+      bits: 'Bits und Kicks',
+      raid: 'Raids',
+    },
+    kindsHint:
+      'Follows und Spenden werden nicht gezeigt: Twitch und Kick zeigen sie keiner Seite, die nicht eingeloggt ist.',
+    minBits: 'Min. Bits oder Kicks',
+    minBitsTip: 'Kleinere Cheers kommen nicht auf die Liste.',
+    minRaid: 'Min. Raid-Zuschauer',
+    minRaidTip: 'Kleinere Raids kommen nicht auf die Liste.',
+    rows: 'Angezeigte Events',
+    rowsTip: 'Wie viele Events gleichzeitig zu sehen sind. Ältere rutschen raus.',
+    newest: 'Neue Events',
+    newestTip: 'Oben schiebt die Liste nach unten. Unten wandert die Liste nach oben, wie im Chat.',
+    newestOptions: {
+      top: 'Oben',
+      bottom: 'Unten',
+    },
+    fade: 'Ausblenden nach',
+    fadeTip:
+      'Wie lange jedes Event auf dem Screen bleibt. Null lässt Events stehen, bis neuere sie rausschieben.',
+    fadeOff: 'Events bleiben stehen, bis neuere sie rausschieben.',
+    titleTip: 'Steht über der Liste. Leer lassen, wenn du keinen Titel willst.',
+    sectionCommands: 'Chatbefehle',
+    commandsIntro:
+      'Du und deine Mods können die Liste im Twitch- oder Kick-Chat leeren, z. B. zu Beginn eines Streams.',
+    cmdClear: 'Leert die Liste',
+    previewTitle: 'Vorschau der Event-Liste',
+    previewIframeTitle: 'Vorschau der Event-Liste',
+    previewHint:
+      'Die Vorschau spielt simulierte Events ab. Im Stream erscheinen nur echte Subs, Gifts, Bits, Kicks und Raids.',
+    testSub: 'Sub',
+    testResub: 'Resub',
+    testGift: '5 Gifts',
+    testBits: 'Cheer 500',
+    testRaid: 'Raid',
+    guideStep3: 'Stell die Breite auf 420 und die Höhe auf 520.',
+    guideStep4:
+      'Füg dieselbe URL in jede Szene ein, in der die Liste zu sehen sein soll. Jede Kopie zeigt dieselbe gespeicherte Liste.',
+    items: {
+      sub: 'Hat abonniert',
+      subTier: 'Hat mit Tier {tier} abonniert',
+      resub: 'Hat {months} Monate abonniert',
+      gift: 'Hat {count} Subs verschenkt',
+      giftOne: 'Hat einen Sub verschenkt',
+      bits: 'Hat {amount} Bits gecheert',
+      kicks: 'Hat {amount} Kicks geschickt',
+      raid: 'Hat mit {viewers} Zuschauern geraidet',
+    },
+    faq1Q: 'Warum stehen Follows und Spenden nicht in der Liste?',
+    faq1A:
+      'Weder Twitch noch Kick zeigt Follows oder Spenden einer Seite, die nicht eingeloggt ist, und diese Liste fragt dich nie nach einem Login. Subs, Resubs, Gift-Subs, Bits, Kicks und Raids kommen direkt aus dem öffentlichen Chat.',
+    faq2Q: 'Was passiert, wenn OBS schließt oder die Browser-Quelle neu lädt?',
+    faq2A:
+      'Die Liste wird in OBS gespeichert und ist wieder so da, wie sie war, auch beim nächsten Stream. Events, die passieren, während OBS zu ist, kann sie nicht sehen. Um einen Stream mit leerer Liste zu starten, tipp !events clear in den Chat.',
+    faq3Q: 'Zeigt eine einzige Liste Twitch und Kick zusammen?',
+    faq3A:
+      'Ja. Events aus beiden Chats landen in einer Liste, jede Zeile in der Farbe ihrer Plattform markiert. Cheers sind auf Twitch Bits und auf Kick Kicks.',
+    faq4Q: 'Kann ich kleine Cheers aus der Liste raushalten?',
+    faq4A:
+      'Ja. Leg ein Minimum für Bits oder Kicks und für Raid-Zuschauer fest, dann bleiben kleinere draußen. Du kannst auch ganze Event-Arten ausschalten.',
+  },
+  credits: {
+    breadcrumb: 'Abspann einrichten',
+    title: 'Abspann einrichten',
+    intro:
+      'Ein Abspann für deine Twitch- und Kick-Streams. Solange die Browser-Quelle läuft, sammelt er alle, die in einem der beiden Chats gesubt, Subs verschenkt, Bits gecheert, Kicks geschickt, geraidet, moderiert oder gechattet haben, und lässt ihre Namen wie im Kino durchlaufen, sobald du zu seiner Szene wechselst.',
+    defaultTitle: 'Danke fürs Zuschauen!',
+    sectionRoll: 'Abspann',
+    titleTip: 'Die erste Zeile des Abspanns.',
+    outro: 'Letzte Zeile',
+    outroTip: 'Läuft nach den Namen durch, etwa „Bis zum nächsten Stream“. Leer lassen für keine.',
+    outroPlaceholder: 'Keine',
+    sectionsLabel: 'Abschnitte',
+    sectionsTip: 'Welche Listen im Abspann laufen. Eine leere Liste fällt von selbst weg.',
+    sections: {
+      subs: 'Abonnenten',
+      gifts: 'Gift-Subs',
+      cheers: 'Bits & Kicks',
+      raids: 'Raider',
+      mods: 'Moderatoren',
+      chatters: 'Chat',
+    },
+    collectHint:
+      'Die Namen kommen rein, solange die Browser-Quelle läuft, lass sie also den ganzen Stream über in OBS. Bots und dich selbst lässt die Chat-Liste weg.',
+    speed: 'Tempo',
+    speedTip: 'Wie schnell der Abspann läuft.',
+    speeds: {
+      slow: 'Langsam',
+      normal: 'Normal',
+      fast: 'Schnell',
+    },
+    loop: 'Wiederholen',
+    loopTip:
+      'Startet den Abspann nach einer kurzen Pause neu. Ist das aus, läuft er bei jedem Wechsel zur Szene einmal.',
+    sectionCommands: 'Chatbefehle',
+    commandsIntro:
+      'Du und deine Mods könnt den Abspann im Twitch- oder Kick-Chat von Hand starten und für einen neuen Stream leeren.',
+    cmdRoll: 'Startet den Abspann sofort',
+    cmdStop: 'Stoppt den Abspann',
+    cmdReset: 'Leert die Namen für einen neuen Stream',
+    previewTitle: 'Abspann-Vorschau',
+    previewIframeTitle: 'Abspann-Vorschau',
+    previewHint:
+      'Die Vorschau lässt Beispielnamen laufen. Im Stream kommen die Namen aus deinem Chat.',
+    testRoll: 'Neu starten',
+    guideStep3:
+      'Stell die Breite auf 1920 und die Höhe auf 1080 und leg die Quelle in deine Endszene.',
+    guideStep4:
+      'Lass „Deaktivieren, wenn Quelle nicht sichtbar ist“ in den Eigenschaften der Quelle aus, damit sie den ganzen Stream über Namen sammelt. Der Abspann läuft, sobald du zur Szene wechselst.',
+    faq1Q: 'Wann läuft der Abspann?',
+    faq1A:
+      'In OBS läuft er jedes Mal, wenn du zu seiner Szene wechselst, und stoppt, wenn du wegschaltest. Du und deine Mods könnt auch !credits tippen, um ihn sofort zu starten. In einem Browser-Tab geöffnet, läuft er gleich los.',
+    faq2Q: 'Woher kommen die Namen?',
+    faq2A:
+      'Aus dem Twitch- und Kick-Chat, solange die Browser-Quelle läuft: Subs, Resubs, Gift-Subs, Bits, Kicks, Raids, Moderatoren und alle, die chatten. Lass die Quelle ab Streambeginn in OBS, mit „Deaktivieren, wenn Quelle nicht sichtbar ist“ aus. Follows und Spenden fehlen, weil keine der beiden Plattformen sie einer Seite zeigt, die nicht eingeloggt ist.',
+    faq3Q: 'Bleiben die Namen für den nächsten Stream?',
+    faq3A:
+      'Nein. Sie werden in OBS gespeichert, ein Neuladen behält sie also, aber nach 12 Stunden ohne Neues startet der nächste Stream mit leerem Abspann. Willst du früher neu anfangen, tipp !credits reset.',
+    faq4Q: 'Kommen Bots in den Abspann?',
+    faq4A:
+      'Nein. Bekannte Bots wie Nightbot, StreamElements und Fossabot bleiben aus der Chat-Liste raus, und du auch. Wer einen Timeout oder Bann bekommt, fliegt ebenfalls raus.',
+  },
+  queue: {
+    breadcrumb: 'Zuschauer-Warteschlange einrichten',
+    title: 'Zuschauer-Warteschlange einrichten',
+    intro:
+      'Eine Zuschauer-Warteschlange für Twitch und Kick, um mit deinen Zuschauern zu spielen. Sie tippen !join in einen der beiden Chats, um sich anzustellen, und du oder deine Mods rufen die Nächsten mit !next auf. Im Stream zeigt die Warteschlange, wer gerade spielt und wer als Nächstes dran ist.',
+    defaultTitle: 'Warteschlange',
+    sectionQueue: 'Warteschlange',
+    titleTip: 'Steht ganz oben in der Warteschlange.',
+    join: 'Keyword',
+    joinTip:
+      'Was Zuschauer tippen, um sich anzustellen. Alles, was sie danach schreiben, etwa ihren Ingame-Namen, steht neben ihrem Namen.',
+    joinHint: 'Zuschauer tippen {join}, um sich anzustellen.',
+    subsOnly: 'Nur Subs',
+    subsOnlyTip: 'Nur Subs können sich anstellen. Alle anderen werden ignoriert.',
+    group: 'Spieler pro !next',
+    groupTip:
+      'Wie viele Zuschauer ein !next aufruft. Ein Mod kann auch eine Zahl tippen, etwa !next 3.',
+    max: 'Max. Wartende',
+    maxTip: 'Sobald so viele warten, kommt niemand Neues mehr dazu. Null heißt kein Limit.',
+    maxOff: 'Kein Limit, wie viele warten können.',
+    rows: 'Angezeigte Namen',
+    rowsTip: 'Wie viele Wartende mit Namen erscheinen. Der Rest wird nur gezählt.',
+    sectionCommands: 'Chatbefehle',
+    commandsIntro:
+      'Zuschauer stellen sich im Twitch- oder Kick-Chat an und gehen dort auch wieder raus. Aufrufen sowie Öffnen, Schließen und Leeren der Warteschlange bleiben dir und deinen Mods vorbehalten.',
+    cmdNoteExample: 'MeinSpielname',
+    cmdJoin: 'Stellt sich an, mit einer Notiz wie dem Ingame-Namen',
+    cmdLeave: 'Verlässt die Warteschlange',
+    cmdNext: 'Ruft den nächsten Zuschauer auf',
+    cmdNextMany: 'Ruft die nächsten 3 auf',
+    cmdOpen: 'Öffnet die Warteschlange',
+    cmdClose: 'Schließt die Warteschlange, niemand Neues kann sich anstellen',
+    cmdRemove: 'Nimmt einen Zuschauer aus der Warteschlange',
+    cmdClear: 'Leert die Warteschlange',
+    previewTitle: 'Vorschau der Zuschauer-Warteschlange',
+    previewIframeTitle: 'Vorschau der Zuschauer-Warteschlange',
+    previewHint:
+      'Die Vorschau spielt eine simulierte Warteschlange ab. Im Stream stellt sich nur dein Chat an.',
+    testJoin: 'Anstellen',
+    testNext: 'Nächster',
+    testOpen: 'Öffnen',
+    testClose: 'Schließen',
+    testClear: 'Leeren',
+    guideStep3: 'Stell die Breite auf 440 und die Höhe auf 600.',
+    guideStep4: 'Tipp zum Testen !join in deinen Chat und dann !next, um dich selbst aufzurufen.',
+    overlay: {
+      open: 'Offen',
+      closed: 'Geschlossen',
+      playing: 'Jetzt dran',
+      next: 'Als Nächstes',
+      more: '+{count} weitere',
+      joinHint: 'Schreib {join} zum Mitspielen',
+      closedHint: 'Die Warteschlange ist geschlossen',
+    },
+    faq1Q: 'Wie stellen sich Zuschauer an?',
+    faq1A:
+      'Sie tippen !join in den Twitch- oder Kick-Chat, oder das Keyword, das du gewählt hast. Was sie danach schreiben, etwa ihren Ingame-Namen, steht neben ihrem Namen. Nochmal tippen ändert nichts, und !leave nimmt sie wieder raus.',
+    faq2Q: 'Wer kann Zuschauer aufrufen?',
+    faq2A:
+      'Du und deine Mods, mit !next. Der Befehl ruft so viele Zuschauer auf, wie bei Spieler pro !next steht, oder so viele, wie du angibst, etwa mit !next 3, und zeigt sie unter „Jetzt dran“.',
+    faq3Q: 'Was passiert, wenn OBS schließt oder die Browser-Quelle neu lädt?',
+    faq3A:
+      'Die Warteschlange wird in OBS gespeichert und ist wieder so da, wie sie war, auch im nächsten Stream. Für einen Neustart tippst du !queue clear.',
+    faq4Q: 'Kann ich gleichzeitig eine Verlosung laufen lassen?',
+    faq4A:
+      'Beide nutzen standardmäßig !join, eine Nachricht würde also bei beiden mitmachen. Gib der Warteschlange im Feld Keyword ein eigenes, etwa !play.',
+  },
+  leaderboard: {
+    breadcrumb: 'Top-Supporter einrichten',
+    title: 'Top-Supporter einrichten',
+    intro:
+      'Eine Rangliste für Twitch und Kick. Sie zeigt aus beiden Chats deine Top-Gifter oder die Zuschauer mit den meisten Bits und Kicks, oder den letzten Sub, Gift-Sub, Cheer und Raid als Stream-Labels. Die Summen werden in OBS gespeichert und zählen weiter, bis du sie zurücksetzt.',
+    sectionBoard: 'Rangliste',
+    board: 'Anzeigen',
+    boardTip:
+      'Top-Gifter ordnet nach Gift-Subs, Top-Cheers nach Bits und Kicks, und Neueste zeigt den letzten Sub, Gift-Sub, Cheer und Raid.',
+    boards: {
+      gifts: 'Top-Gifter',
+      cheers: 'Top-Cheers',
+      latest: 'Neueste',
+    },
+    defaultTitles: {
+      gifts: 'Top-Gifter',
+      cheers: 'Top-Cheers',
+      latest: 'Neueste Supporter',
+    },
+    rows: 'Angezeigte Plätze',
+    rowsTip: 'Wie viele Plätze die Rangliste zeigt.',
+    titleTip: 'Steht über der Rangliste. Leer lassen, wenn du keinen Titel willst.',
+    sectionCommands: 'Chatbefehle',
+    commandsIntro:
+      'Du und deine Mods können die Rangliste im Twitch- oder Kick-Chat zurücksetzen, z. B. zu Beginn jedes Streams oder Monats.',
+    cmdReset: 'Setzt alle Summen und die neuesten Supporter zurück',
+    previewTitle: 'Vorschau der Top-Supporter',
+    previewIframeTitle: 'Vorschau der Top-Supporter',
+    previewHint: 'Die Vorschau spielt simulierten Support ab. Im Stream zählt nur dein Chat.',
+    guideStep3: 'Stell die Breite auf 440 und die Höhe auf 380.',
+    guideStep4:
+      'Willst du jeden Stream eine frische Rangliste? Tipp !top reset in den Chat, wenn du live gehst.',
+    overlay: {
+      noGifts: 'Noch keine Gifts',
+      noCheers: 'Noch keine Cheers',
+      giftAmount: '{count} verschenkt',
+      bits: '{amount} Bits',
+      kicks: '{amount} Kicks',
+      months: '{months} Monate',
+      viewers: '{viewers} Zuschauer',
+      none: 'Noch niemand',
+      latest: {
+        sub: 'Letzter Sub',
+        gift: 'Letztes Gift',
+        cheer: 'Letzter Cheer',
+        raid: 'Letzter Raid',
+      },
+    },
+    faq1Q: 'Wie lange werden die Summen zusammengezählt?',
+    faq1A:
+      'Bis du sie zurücksetzt. Die Summen werden in OBS gespeichert und zählen von Stream zu Stream weiter. Tipp !top reset, um eine neue Rangliste zu starten, z. B. zu jedem Stream oder jeden Monat.',
+    faq2Q: 'Wie werden Bits und Kicks zusammen gewertet?',
+    faq2A:
+      'Ein Bit und ein Kick zählen gleich, die Cheers eines Zuschauers summieren sich also auf einer Rangliste. Derselbe Name auf Twitch und Kick bekommt für jede Plattform einen eigenen Platz.',
+    faq3Q: 'Was zählt als Gift?',
+    faq3A:
+      'Jeder Gift-Sub auf Twitch und Kick, einer pro Sub: 5 Gift-Subs auf einmal bringen dem Schenker 5 auf seine Summe.',
+    faq4Q: 'Warum fehlen Spenden und Follows?',
+    faq4A:
+      'Keine der beiden Plattformen zeigt Spenden oder Follows einer Seite, die nicht eingeloggt ist, und diese Rangliste fragt dich nie nach einem Login. Subs, Gifts, Bits, Kicks und Raids kommen direkt aus dem öffentlichen Chat.',
+  },
+  lowerThird: {
+    breadcrumb: 'Bauchbinde einrichten',
+    title: 'Bauchbinde einrichten',
+    intro:
+      'Eine animierte Bauchbinde für deinen Stream: dein Name oder der Titel deiner Show in einer Leiste, darunter Zeilen, die sich abwechseln, im Look des gewählten Presets. Sie kann stehen bleiben oder per Timer kommen und gehen, und mit Kanal können deine Mods im Chat eine eigene Zeile einblenden.',
+    defaultTitle: 'Dein Name',
+    defaultLine: 'Willkommen im Stream!',
+    sectionText: 'Text',
+    titleTip: 'Die große Zeile, etwa dein Name oder der Titel deiner Show.',
+    lines: 'Zeilen',
+    linesTip: 'Die kleineren Zeilen unter dem Titel. Sind es mehrere, wechseln sie sich ab.',
+    lineLabel: 'Zeile {n}',
+    removeLine: 'Zeile {n} entfernen',
+    addLine: '+ Zeile hinzufügen',
+    rotate: 'Sekunden pro Zeile',
+    rotateTip: 'Wie lange jede Zeile stehen bleibt, bevor die nächste kommt.',
+    hold: 'Anzeigedauer',
+    holdTip:
+      'Wie lange die Bauchbinde bei jedem Einblenden stehen bleibt. Null lässt sie die ganze Zeit stehen.',
+    holdOff: 'Die Bauchbinde bleibt die ganze Zeit stehen.',
+    pause: 'Pausendauer',
+    pauseTip: 'Wie lange die Bauchbinde ausgeblendet bleibt, bevor sie wiederkommt.',
+    corner: 'Position',
+    cornerTip: 'Wo die Bauchbinde in einer 1920×1080-Szene sitzt.',
+    sizeTip: 'Skaliert die Bauchbinde ausgehend von ihrer Grundgröße hoch oder runter.',
+    channelHint:
+      'Kein Kanal nötig. Mit Kanal können du und deine Mods die Bauchbinde mit !lt im Chat ändern.',
+    sectionCommands: 'Chatbefehle',
+    commandsIntro:
+      'Mit eingetragenem Kanal können du und deine Mods die Bauchbinde im Twitch- oder Kick-Chat ändern.',
+    cmdSay: 'Blendet statt der wechselnden Zeilen eine eigene Zeile ein',
+    cmdClear: 'Kehrt zu den wechselnden Zeilen zurück',
+    cmdHide: 'Blendet die Bauchbinde aus',
+    cmdShow: 'Blendet die Bauchbinde wieder ein',
+    testLine: 'Bin in 5 Minuten zurück!',
+    testSay: 'Eigene Zeile',
+    testClear: 'Löschen',
+    testHide: 'Ausblenden',
+    testShow: 'Einblenden',
+    previewTitle: 'Vorschau der Bauchbinde',
+    previewIframeTitle: 'Vorschau der Bauchbinde',
+    previewHint:
+      'Die Vorschau zeigt deine Bauchbinde in einer 1080p-Szene. Mit Timer kommt und geht sie hier schneller als im Stream.',
+    guideStep3:
+      'Setz die Breite auf 1920 und die Höhe auf 1080, die Größe deiner Szene. Die Bauchbinde sitzt in der Ecke, die du gewählt hast.',
+    guideStep4:
+      'Soll sie nur ab und zu erscheinen? Stell ein, wie lange sie sichtbar bleibt, dann kommt sie nach der eingestellten Pause wieder.',
+    faq1Q: 'Brauche ich einen Kanal?',
+    faq1A:
+      'Nein. Die Bauchbinde läuft allein über die URL. Trag deinen Twitch- oder Kick-Kanal nur ein, wenn deine Mods sie mit !lt im Chat ändern sollen.',
+    faq2Q: 'Kann sie verschiedene Zeilen zeigen?',
+    faq2A:
+      'Ja. Füg bis zu 6 Zeilen hinzu, dann wechseln sie sich unter dem Titel ab, jede so viele Sekunden, wie du wählst. Die !lt-Zeile eines Mods tritt an ihre Stelle, bis !lt clear kommt.',
+    faq3Q: 'Kann sie von selbst kommen und gehen?',
+    faq3A:
+      'Ja. Stell ein, wie lange sie sichtbar bleibt und wie lange sie weg ist, dann gleitet sie in diesem Takt herein und hinaus. Null lässt sie die ganze Zeit stehen.',
+    faq4Q: 'Passt sie zu meinen anderen Widgets?',
+    faq4A:
+      'Wähl dasselbe Preset, dann bekommt die Bauchbinde dessen Rahmen, Schriften und Farben, wie deine Chat-Box, deine Stream-Alerts und der Rest.',
+  },
+  tasks: {
+    breadcrumb: 'Aufgabenliste einrichten',
+    title: 'Aufgabenliste einrichten',
+    intro:
+      'Eine Co-Working-Aufgabenliste für Twitch und Kick. Du und deine Zuschauer tragt in beiden Chats mit !task Aufgaben ein und hakt sie mit !done ab, und die Liste zeigt im Stream, wie weit alle sind. Deine eigenen Aufgaben stehen oben, und eine lange Liste scrollt von selbst.',
+    defaultTitle: 'Heutige Aufgaben',
+    sectionList: 'Liste',
+    titleTip: 'Steht ganz oben in der Liste.',
+    max: 'Offene Aufgaben pro Zuschauer',
+    maxTip: 'Wie viele unerledigte Aufgaben ein Zuschauer gleichzeitig haben kann.',
+    keepDone: 'Erledigte Aufgaben behalten',
+    keepDoneTip:
+      'Erledigte Aufgaben bleiben abgehakt auf der Liste. Ist das aus, verschwinden sie, sobald sie erledigt sind.',
+    speed: 'Scrolltempo',
+    speedTip: 'Wie schnell eine Liste scrollt, die länger als das Panel ist.',
+    sectionCommands: 'Chatbefehle',
+    commandsIntro:
+      'Alle tragen ihre eigenen Aufgaben im Twitch- oder Kick-Chat ein und haken sie ab. Nur du und deine Mods könnt die Liste leeren.',
+    cmdExample: 'kapitel 3 lesen',
+    cmdAdd: 'Trägt eine Aufgabe ein',
+    cmdDone: 'Hakt deine erste offene Aufgabe ab',
+    cmdDoneNumber: 'Hakt deine zweite offene Aufgabe ab',
+    cmdEdit: 'Ändert deine erste offene Aufgabe',
+    cmdRemove: 'Entfernt deine erste offene Aufgabe',
+    cmdClearDone: 'Nimmt alle erledigten Aufgaben von der Liste',
+    cmdRemoveViewer: 'Nimmt die Aufgaben eines Zuschauers von der Liste',
+    cmdClear: 'Leert die Liste',
+    previewTitle: 'Vorschau der Aufgabenliste',
+    previewIframeTitle: 'Vorschau der Aufgabenliste',
+    previewHint:
+      'Die Vorschau spielt eine simulierte Liste ab. Im Stream trägt nur dein Chat Aufgaben ein.',
+    testAdd: 'Aufgabe hinzufügen',
+    testDone: 'Erledigt',
+    testRemove: 'Entfernen',
+    testClear: 'Alles leeren',
+    testTask: 'Testaufgabe {n}',
+    guideStep3: 'Stell die Breite auf 480 und die Höhe auf 720.',
+    guideStep4:
+      'Tipp in deinen Chat !task und woran du gerade arbeitest. Die Aufgabe steht sofort auf der Liste.',
+    overlay: {
+      empty: 'Schreib !task und woran du arbeitest',
+    },
+    faq1Q: 'Wie tragen Zuschauer eine Aufgabe ein?',
+    faq1A:
+      'Sie schreiben in den Twitch- oder Kick-Chat !task und woran sie arbeiten, etwa !task kapitel 3 lesen. !done hakt ihre erste offene Aufgabe ab, !edit ändert sie und !remove nimmt sie von der Liste. Jeder kann nur seine eigenen Aufgaben ändern.',
+    faq2Q: 'Wo landen meine eigenen Aufgaben?',
+    faq2A:
+      'Deine stehen ganz oben auf der Liste. Du trägst sie wie deine Zuschauer mit !task im Chat ein.',
+    faq3Q: 'Was passiert, wenn die Liste lang wird?',
+    faq3A:
+      'Sie scrollt langsam nach unten, hält am Ende kurz an und läuft wieder nach oben, immer wieder. Mods nehmen mit !tasks cleardone alle erledigten Aufgaben von der Liste oder fangen mit !tasks clear von vorn an.',
+    faq4Q: 'Bleiben die Aufgaben nach dem Stream erhalten?',
+    faq4A:
+      'Ja. Die Liste wird in OBS gespeichert und ist wieder so da, wie sie war. Tipp !tasks clear, um die nächste Session mit einer leeren Liste zu starten.',
   },
   weather: {
     breadcrumb: 'Wetter einrichten',
@@ -2033,6 +2554,18 @@ export const de: typeof en = {
             'Ein Alert nach dem anderen, in der Mitte dieser Fläche. Eine größere Quelle skaliert ihn hoch.',
           irlHud:
             'Eine volle 1080p-Canvas. Geld und Minikarte sitzen jeweils in der Ecke, die du gewählt hast, und passen auch auf eine vertikale Canvas.',
+          tasks: 'Ein hohes Panel für die Liste. Wird sie lang, scrollt sie von selbst.',
+          lowerThird:
+            'Eine volle 1080p-Canvas. Die Bauchbinde sitzt in der Ecke, die du gewählt hast.',
+          leaderboard: 'Ein kleines Panel für die Rangliste, passend für eine Ecke deiner Szene.',
+          queue:
+            'Eine Spalte für die Warteschlange: wer gerade spielt, wer als Nächstes dran ist und wie viele warten.',
+          credits:
+            'Eine volle 1080p-Canvas. Der Abspann läuft in der Mitte nach oben, sobald du zur Szene wechselst.',
+          eventList:
+            'Eine Spalte für die Liste. Neue Events gleiten oben oder unten herein, und eine größere Quelle skaliert sie hoch.',
+          counter:
+            'Ein breiter Streifen für die Zähler nebeneinander, mit Platz darüber für die aufsteigenden +1. 440x400 für die Anordnung untereinander.',
           weather:
             'Eine volle 1080p-Fläche. Das Wetter steht in der gewählten Ecke und passt auch auf eine vertikale Fläche.',
           raffle:
@@ -2077,7 +2610,7 @@ export const de: typeof en = {
         title: 'Wie ändere ich ein Widget später?',
         p1: 'Deine Einstellungen stecken in der Widget-URL, eine geänderte Einstellung heißt also eine neue URL. Ändere die Einstellung auf der Setup-Seite, kopier die neue URL, doppelklick dann die Quelle in OBS und füg sie im Feld URL über der alten URL ein.',
         p2:
-          'Bei [Chat-Box](/setup/chat-widget), [Emote-Wand](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Stream-Alerts](/setup/stream-alerts), [Sub-Ziel](/setup/sub-goal), [Chat-Umfrage](/setup/chat-poll), [Stream-Rahmen](/setup/stream-frames), [Socials](/setup/socials), [Stream-Countdown](/setup/stream-countdown), [IRL-HUD-Overlay](/setup/irl-hud), [Wetter](/setup/weather) und [Glücksrad](/setup/spin-wheel) musst du nicht von vorn anfangen. Füg deine aktuelle URL auf der Setup-Seite ins Feld Widget-URL ein, und deine Kanäle und alle Einstellungen sind wieder da. Ändere, was du willst, und kopier die neue URL.',
+          'Bei [Chat-Box](/setup/chat-widget), [Emote-Wand](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Stream-Alerts](/setup/stream-alerts), [Sub-Ziel](/setup/sub-goal), [Zähler](/setup/counter), [Event-Liste](/setup/event-list), [Abspann](/setup/end-credits), [Zuschauer-Warteschlange](/setup/viewer-queue), [Top-Supporter](/setup/top-supporters), [Bauchbinde](/setup/lower-thirds), [Aufgabenliste](/setup/task-list), [Chat-Umfrage](/setup/chat-poll), [Stream-Rahmen](/setup/stream-frames), [Socials](/setup/socials), [Stream-Countdown](/setup/stream-countdown), [IRL-HUD-Overlay](/setup/irl-hud), [Wetter](/setup/weather) und [Glücksrad](/setup/spin-wheel) musst du nicht von vorn anfangen. Füg deine aktuelle URL auf der Setup-Seite ins Feld Widget-URL ein, und deine Kanäle und alle Einstellungen sind wieder da. Ändere, was du willst, und kopier die neue URL.',
         p3: 'OBS Bridge hat kein Feld zum Einfügen, gib deine Einstellungen also auf der Setup-Seite nochmal ein und kopier die neue Tool-URL. Szenenwahl und berechtigte Nutzer kannst du auch direkt auf der Tool-Seite ändern und die neue URL mit dem Button Aktuelle URL kopieren holen. Alte URLs funktionieren weiter, du musst sie also nicht austauschen.',
       },
       troubleshoot: {
@@ -2782,7 +3315,7 @@ export const de: typeof en = {
     eyebrow: 'Presets',
     title: 'Game-Presets für deine Stream-Overlays',
     lead:
-      'Wähl ein Preset, und deine Chat-Box, Stream-Alerts, Sub-Ziel, Subathon Timer, Chat-Umfrage, der Gewinner der Verlosung, die Stream-Rahmen, der Stream-Countdown, Socials und das Glücksrad bekommen denselben Rahmen, dieselben Schriften und Farben. Nimm eins für alle Widgets oder für jedes ein anderes.',
+      'Wähl ein Preset, und deine Chat-Box, Stream-Alerts, Sub-Ziel, Zähler, Event-Liste, Abspann, Zuschauer-Warteschlange, Top-Supporter, Bauchbinde, Aufgabenliste, Subathon Timer, Chat-Umfrage, der Gewinner der Verlosung, die Stream-Rahmen, der Stream-Countdown, Socials und das Glücksrad bekommen denselben Rahmen, dieselben Schriften und Farben. Nimm eins für alle Widgets oder für jedes ein anderes.',
     pickTitle: 'Such dir ein Preset aus',
     pickText:
       'Fertige Presets für League of Legends (LoL), World of Warcraft (WoW), Metin2, Dota 2, Valorant, Counter-Strike 2 (CS2), Minecraft, Clash of Clans, Fortnite, Rocket League und PUBG: Battlegrounds.',
@@ -2880,10 +3413,10 @@ export const de: typeof en = {
       'Mit OBS Studio und jeder anderen Streaming-Software, die eine Browser-Quelle unterstützt. Jedes Widget läuft als Web-URL, und diese URL fügst du in die Quelle ein. Unsere Anleitungen sind für OBS Studio geschrieben.',
     platformsQ: 'Welche Widgets unterstützen Twitch und welche Kick?',
     platformsA:
-      'Alle dreizehn unterstützen beide Plattformen. Chat-Box, Emote-Wand, Sub Sprout, Subathon Timer, Stream-Alerts, Sub-Ziel, Chat-Umfrage, Stream-Countdown, IRL-HUD-Overlay und Glücksrad hören einem Twitch- und einem Kick-Kanal zusammen in einer URL zu. OBS Bridge hört auf Befehle aus beiden Chats, und jeder berechtigte Nutzer wird mit seiner eigenen Plattform hinzugefügt. Die Verlosung läuft immer auf einer Plattform, Twitch oder Kick. Stream-Rahmen, Socials und Wetter lesen keinen Chat, sie funktionieren also auf beiden gleich. In der Chat-Box erscheinen 7TV-Emotes auf beiden Plattformen, BTTV- und FFZ-Emotes nur auf Twitch.',
+      'Alle dreizehn unterstützen beide Plattformen. Chat-Box, Emote-Wand, Sub Sprout, Subathon Timer, Stream-Alerts, Sub-Ziel, Zähler, Event-Liste, Abspann, Zuschauer-Warteschlange, Top-Supporter, Bauchbinde, Aufgabenliste, Chat-Umfrage, Stream-Countdown, IRL-HUD-Overlay und Glücksrad hören einem Twitch- und einem Kick-Kanal zusammen in einer URL zu. OBS Bridge hört auf Befehle aus beiden Chats, und jeder berechtigte Nutzer wird mit seiner eigenen Plattform hinzugefügt. Die Verlosung läuft immer auf einer Plattform, Twitch oder Kick. Stream-Rahmen, Socials und Wetter lesen keinen Chat, sie funktionieren also auf beiden gleich. In der Chat-Box erscheinen 7TV-Emotes auf beiden Plattformen, BTTV- und FFZ-Emotes nur auf Twitch.',
     editQ: 'Wie ändere ich ein Widget später?',
     editA:
-      'Ändere die Einstellungen auf der Setup-Seite, kopier die neue URL und füg sie in OBS im Feld URL der Quelle über der alten ein. Bei Chat-Box, Emote-Wand, Sub Sprout, Subathon Timer, Stream-Alerts, Sub-Ziel, Chat-Umfrage, Stream-Rahmen, Socials, Stream-Countdown, IRL-HUD-Overlay, Wetter und Glücksrad kannst du deine alte URL auf der Setup-Seite ins Feld Widget-URL einfügen, dann sind alle Einstellungen wieder da, und du musst nicht von vorn anfangen.',
+      'Ändere die Einstellungen auf der Setup-Seite, kopier die neue URL und füg sie in OBS im Feld URL der Quelle über der alten ein. Bei Chat-Box, Emote-Wand, Sub Sprout, Subathon Timer, Stream-Alerts, Sub-Ziel, Zähler, Event-Liste, Abspann, Zuschauer-Warteschlange, Top-Supporter, Bauchbinde, Aufgabenliste, Chat-Umfrage, Stream-Rahmen, Socials, Stream-Countdown, IRL-HUD-Overlay, Wetter und Glücksrad kannst du deine alte URL auf der Setup-Seite ins Feld Widget-URL einfügen, dann sind alle Einstellungen wieder da, und du musst nicht von vorn anfangen.',
     oldUrlsQ: 'Funktionieren meine alten Widget-URLs weiter?',
     oldUrlsA:
       'Ja. Updates werden so gebaut, dass bestehende URLs nicht kaputtgehen: Parameternamen, Werte und Standards bleiben gleich. Das alte keep=true in der Chat-Box heißt z. B. immer noch Für immer, und Sub Sprout liest immer noch die alten Parameter channel und platform.',
@@ -2907,6 +3440,20 @@ export const de: typeof en = {
     lead: 'Neue Features und Bugfixes in Senchabot Extensions, das Neueste zuerst. Die Liste ist aus der Commit-Historie des Projekts auf [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) zusammengestellt.',
     site: 'Website',
     entries: {
+      tasksLaunch:
+        'Neues Overlay: Aufgabenliste, für Co-Working- und Lern-Streams. Zuschauer tragen ihre Aufgaben im Twitch- oder Kick-Chat mit !task ein und haken sie mit !done ab, direkt neben deinen. Die Liste steht im Stream, scrollt, wenn sie lang wird, und Mods leeren sie im Chat.',
+      lowerThirdLaunch:
+        'Neues Overlay: Bauchbinde, eine animierte Leiste mit deinem Namen oder dem Titel deiner Show und Zeilen, die sich abwechseln, im Look des gewählten Presets. Sie kann stehen bleiben oder per Timer kommen und gehen, und Mods blenden im Chat mit !lt eine eigene Zeile ein.',
+      leaderboardLaunch:
+        'Neues Overlay: Top-Supporter, eine Rangliste deiner Top-Gifter oder der Zuschauer mit den meisten Bits und Kicks von Twitch und Kick, oder Labels für den letzten Sub, Gift-Sub, Cheer und Raid. Die Summen werden in OBS gespeichert, und Mods setzen sie mit !top reset zurück.',
+      queueLaunch:
+        'Neues Tool: Zuschauer-Warteschlange, um mit deinen Zuschauern zu spielen. Sie stellen sich mit !join im Twitch- oder Kick-Chat an, gern mit einer Notiz wie ihrem Ingame-Namen, und du oder deine Mods rufen die Nächsten mit !next auf. Die Warteschlange ist im Stream zu sehen, und Mods öffnen, schließen und leeren sie im Chat.',
+      creditsLaunch:
+        'Neues Overlay: Abspann, ein Abspann wie im Kino für deine Endszene. Solange die Browser-Quelle läuft, sammelt er alle, die auf Twitch und Kick gesubt, Subs verschenkt, Bits gecheert, Kicks geschickt, geraidet, moderiert oder gechattet haben, und lässt ihre Namen laufen, sobald du zur Szene wechselst. Mods starten ihn mit !credits.',
+      eventListLaunch:
+        'Neues Overlay: Event-Liste, deine letzten Subs, Resubs, Gift-Subs, Bits, Kicks und Raids von Twitch und Kick in einer Liste, jede Zeile in der Farbe ihrer Plattform markiert. Wähl aus, welche Events erscheinen und wie viele, ab welcher Größe Cheers und Raids zählen und ob Zeilen ausgeblendet werden.',
+      counterLaunch:
+        'Neues Overlay: Zähler, für Siege, Niederlagen oder jede andere Zahl auf Twitch und Kick. Bis zu vier auf einmal, nebeneinander oder untereinander, im Look des gewählten Presets. Du und deine Mods ändert sie im Chat mit Befehlen wie !wins +1, und jeder Stand wird in OBS gespeichert.',
       irlHudIndoor:
         'IRL-HUD-Overlay: Mods holen die Minikarte mit !hud indoor nach drinnen. Auf den Karten Stadt und Park geht der Pfeil ins nächste Gebäude und läuft innerhalb seiner Wände herum, während die Karte heranzoomt und den Rest abdunkelt, bis !hud outdoor ihn zurück auf die Straße bringt. Karten eines echten Orts bleiben draußen.',
       weatherLaunch:

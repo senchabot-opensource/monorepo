@@ -98,6 +98,82 @@ export function CountdownIcon(props: IconProps) {
   );
 }
 
+/** A screen with lines of names rolling up it. */
+export function CreditsIcon(props: IconProps) {
+  return (
+    <StrokeIcon {...props}>
+      <rect x="3.5" y="4" width="17" height="16" rx="1.5" />
+      <path d="M9 8.5h6M7.5 12h9M9.5 15.5h5" />
+    </StrokeIcon>
+  );
+}
+
+/** Three people in a line. */
+export function QueueIcon(props: IconProps) {
+  return (
+    <StrokeIcon {...props}>
+      <circle cx="5.5" cy="9" r="2" />
+      <circle cx="12" cy="9" r="2" />
+      <circle cx="18.5" cy="9" r="2" />
+      <path d="M2.5 17c0-2 1.3-3.5 3-3.5s3 1.5 3 3.5M9 17c0-2 1.3-3.5 3-3.5s3 1.5 3 3.5M15.5 17c0-2 1.3-3.5 3-3.5s3 1.5 3 3.5" />
+    </StrokeIcon>
+  );
+}
+
+/** A podium: the winner's step in the middle, highest. */
+export function LeaderboardIcon(props: IconProps) {
+  return (
+    <StrokeIcon {...props}>
+      <path d="M3.5 20.5v-6h5.5v6M9 20.5V9.5h6v11M15 20.5v-8h5.5v8M2.5 20.5h19" />
+      <path d="m12 3.5.9 1.9 2 .3-1.5 1.4.4 2-1.8-1-1.8 1 .4-2-1.5-1.4 2-.3Z" />
+    </StrokeIcon>
+  );
+}
+
+/** A bar low on a screen, a name and a line on it. */
+export function LowerThirdIcon(props: IconProps) {
+  return (
+    <StrokeIcon {...props}>
+      <rect x="2.5" y="4" width="19" height="16" rx="1.5" />
+      <path d="M2.5 13.5h12v4.5h-12" />
+      <path d="M5 15.2h7" />
+    </StrokeIcon>
+  );
+}
+
+/** A checklist: two ticked boxes and an open one. */
+export function TasksIcon(props: IconProps) {
+  return (
+    <StrokeIcon {...props}>
+      <path d="m3.5 6.5 1.5 1.5 3-3M3.5 12.5l1.5 1.5 3-3" />
+      <rect x="3.5" y="16.5" width="4" height="4" rx="1" />
+      <path d="M11 7h9.5M11 13h9.5M11 18.5h9.5" />
+    </StrokeIcon>
+  );
+}
+
+/** A short list, each line led by a dot. */
+export function EventListIcon(props: IconProps) {
+  return (
+    <StrokeIcon {...props}>
+      <path d="M9 6.5h11M9 12h11M9 17.5h11" />
+      <circle cx="4.5" cy="6.5" r="1.2" />
+      <circle cx="4.5" cy="12" r="1.2" />
+      <circle cx="4.5" cy="17.5" r="1.2" />
+    </StrokeIcon>
+  );
+}
+
+/** Tally marks: four strokes and the one across them. */
+export function CounterIcon(props: IconProps) {
+  return (
+    <StrokeIcon {...props}>
+      <path d="M6 5v14M10 5v14M14 5v14M18 5v14" />
+      <path d="M3.5 16.5 20.5 7.5" />
+    </StrokeIcon>
+  );
+}
+
 export function GoalIcon(props: IconProps) {
   return (
     <StrokeIcon {...props}>

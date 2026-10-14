@@ -1,7 +1,12 @@
 import type { CSSProperties } from 'react';
 import { useI18n } from '#/lib/i18n';
-import type { HudStyle } from '#/lib/irl-hud-url';
-import type { WeatherCorner, WeatherSettings, WeatherTheme, WeatherUnits } from '#/lib/weather-url';
+import {
+  type WeatherCorner,
+  type WeatherSettings,
+  type WeatherTheme,
+  type WeatherUnits,
+  weatherHudStyle,
+} from '#/lib/weather-url';
 import {
   HUD_EDGE_X,
   HUD_EDGE_Y,
@@ -91,18 +96,8 @@ ${ICON_CSS}
 .wx-hud{font-family:${HUD_FONT};line-height:1;--wx-cloud:#f6f8fb;--wx-cloud-back:#b9c3cf;
   --wx-cloud-edge:transparent;--wx-moon:#eef1f8;--wx-snow:#fff}
 ${HUD_TEXT_CSS}
-.wx-hud .wx-box{display:flex;flex-direction:column;gap:6px;align-items:var(--wx-align);
-  background:none;border:0;box-shadow:none}
-.wx-hud .wx-card{width:auto;padding:0}
-.wx-hud .wx-pill{flex-direction:row;align-items:center;gap:14px;padding:0;max-width:none}
-.wx-hud-now{display:flex;align-items:center;gap:12px}
-.wx-hud-details{display:flex;align-items:center;gap:18px}
-.wx-hud-details .wx-detail svg{width:22px;height:22px;overflow:visible;color:${HUD_LABEL}}
-.wx-hud-details .wx-detail path{stroke:#000;stroke-width:3px;stroke-linejoin:round;paint-order:stroke}
-.ih-modern .wx-icon,.ih-modern .wx-detail svg{filter:drop-shadow(0 3px 2px rgba(0,0,0,.55))}
-.wx-hud-row{display:grid;grid-template-columns:repeat(4,auto);column-gap:24px;margin-top:6px}
-.wx-hud-slot{display:flex;flex-direction:column;align-items:center;gap:4px}
-.wx-hud-temps{display:flex;align-items:baseline;gap:6px}
+.wx-hud .wx-pill{gap:14px;padding:0;max-width:none;background:none;border:0;box-shadow:none}
+.ih-modern .wx-icon{filter:drop-shadow(0 3px 2px rgba(0,0,0,.55))}
 `;
 
 const CORNER_ORIGIN: Record<WeatherCorner, string> = {
@@ -287,11 +282,8 @@ interface HudViewProps extends ViewProps {
 
 /** Sizes in px at 100%, from the IRL HUD's own: its cash, and its gains and their names. */
 const hudSizes = (look: HudLook) => ({
-  temp: look.moneySize,
-  pillTemp: Math.round(look.moneySize * 0.7),
+  temp: Math.round(look.moneySize * 0.7),
   condition: Math.round(look.popSize * 0.65),
-  slotTemp: Math.round(look.popSize * 0.7),
-  small: Math.round(look.popSize * 0.55),
   credit: 14,
 });
 
@@ -299,81 +291,8 @@ const hudSizes = (look: HudLook) => ({
 const iconOutline = (look: HudLook) => look.outline * 40;
 
 /** Outlined small print in the HUD's label white, like the names under its gains. */
-function Small({ look, text, size }: { look: HudLook; text: string; size?: number }) {
-  return (
-    <Outlined
-      text={text}
-      color={HUD_LABEL}
-      size={size ?? hudSizes(look).small}
-      outline={look.outline * 1.4}
-    />
-  );
-}
-
-function HudCard(props: HudViewProps) {
-  const { now, settings, place, look } = props;
-  const { t } = useI18n();
-  const condition = now.symbol ? readSymbol(now.symbol).condition : null;
-  const unit = settings.units === 'imperial' ? 'F' : 'C';
-  const slots = useForecastSlots(props);
-  const size = hudSizes(look);
-
-  return (
-    <>
-      {place && <Small look={look} text={place} />}
-      <div className="wx-hud-now">
-        <ConditionIcon symbol={now.symbol} size={80} outline={iconOutline(look)} />
-        <Outlined
-          text={`${formatTemp(now.temp, settings.units)}°${unit}`}
-          color={look.clock}
-          size={size.temp}
-          outline={look.outline}
-          testId="weather-temp"
-        />
-      </div>
-      {/* A line of its own, so the icon stays beside the temperature in either corner. */}
-      {condition && (
-        <Outlined
-          text={t(`weather.conditions.${condition}`)}
-          color={look.gain}
-          size={size.condition}
-          outline={look.outline * 1.2}
-        />
-      )}
-      {settings.details && (
-        <div className="wx-hud-details">
-          <span className="wx-detail" title={t('weather.wind')}>
-            <WindIcon from={now.windFrom} />
-            <Small look={look} text={formatWind(now.wind, settings.units)} />
-          </span>
-          <span className="wx-detail" title={t('weather.humidity')}>
-            <HumidityIcon />
-            <Small look={look} text={`${Math.round(now.humidity)}%`} />
-          </span>
-        </div>
-      )}
-      {slots && (
-        <div className="wx-hud-row" data-testid="weather-forecast">
-          {slots.map((slot) => (
-            <div className="wx-hud-slot" key={slot.time}>
-              <Small look={look} text={slot.label} />
-              <ConditionIcon symbol={slot.symbol} size={44} outline={iconOutline(look)} />
-              <span className="wx-hud-temps">
-                <Outlined
-                  text={slot.temp}
-                  color={look.clock}
-                  size={size.slotTemp}
-                  outline={look.outline * 1.2}
-                />
-                {slot.low && <Small look={look} text={slot.low} />}
-              </span>
-            </div>
-          ))}
-        </div>
-      )}
-      <Small look={look} text={t('weather.credit', { source: CREDIT })} size={size.credit} />
-    </>
-  );
+function Small({ look, text, size }: { look: HudLook; text: string; size: number }) {
+  return <Outlined text={text} color={HUD_LABEL} size={size} outline={look.outline * 1.4} />;
 }
 
 function HudPill({ now, settings, place, look }: HudViewProps) {
@@ -387,7 +306,7 @@ function HudPill({ now, settings, place, look }: HudViewProps) {
       <Outlined
         text={`${formatTemp(now.temp, settings.units)}°${unit}`}
         color={look.clock}
-        size={size.pillTemp}
+        size={size.temp}
         outline={look.outline}
         testId="weather-temp"
       />
@@ -420,21 +339,21 @@ export function WeatherWidget({ settings, demo = false, previewId }: WeatherWidg
   const now = forecast && currentStep(forecast, time);
   const place = settings.place || (demo ? DEMO_PLACE : '');
   const zoom = (scale * settings.size) / 100;
-  const hudStyle: HudStyle | null = settings.style === 'app' ? null : settings.style;
+  // Only the pill takes the IRL HUD's styles; the card always looks like a weather app.
+  const hudStyle = weatherHudStyle(settings);
 
   if (hudStyle) {
-    const View = settings.layout === 'pill' ? HudPill : HudCard;
-    const style = {
-      ...cornerPlace(settings.corner, scale, zoom, true),
-      // Lined up on the corner's side, like the IRL HUD's cash.
-      '--wx-align': settings.corner[1] === 'r' ? 'flex-end' : 'flex-start',
-    } as CSSProperties;
     return (
       <div className={`wx-root wx-hud ih-${hudStyle}`} data-testid="weather" data-style={hudStyle}>
         <style>{CSS}</style>
         {forecast && now && (
-          <div className={`wx-box wx-${settings.layout}`} style={style}>
-            <View
+          <div
+            className="wx-box wx-pill"
+            // What a gallery preview frames (PreviewFrame's fitBox).
+            data-preview-box
+            style={cornerPlace(settings.corner, scale, zoom, true)}
+          >
+            <HudPill
               forecast={forecast}
               now={now}
               settings={settings}
@@ -455,6 +374,7 @@ export function WeatherWidget({ settings, demo = false, previewId }: WeatherWidg
       {forecast && now && (
         <div
           className={`wx-box wx-${settings.layout}`}
+          data-preview-box
           style={cornerPlace(settings.corner, scale, zoom, false)}
         >
           <View forecast={forecast} now={now} settings={settings} place={place} time={time} />

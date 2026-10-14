@@ -1,6 +1,6 @@
 # Senchabot Extensions: full reference
 
-> Free, open source stream overlays and tools for Twitch and Kick: Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Stream Frames, Stream Countdown, IRL HUD Overlay, Weather, Chat Poll, Raffle, OBS Bridge and Spin Wheel. Each one is set up on a web page at https://extensions.senchabot.com and runs from a URL. No login and nothing to install.
+> Free, open source stream overlays and tools for Twitch and Kick: Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Counter, Event List, End Credits, Viewer Queue, Top Supporters, Lower Thirds, Task List, Stream Frames, Stream Countdown, IRL HUD Overlay, Weather, Chat Poll, Raffle, OBS Bridge and Spin Wheel. Each one is set up on a web page at https://extensions.senchabot.com and runs from a URL. No login and nothing to install.
 
 Short version with links only: https://extensions.senchabot.com/llms.txt
 
@@ -26,6 +26,13 @@ Short version with links only: https://extensions.senchabot.com/llms.txt
 | Sub Sprout | Overlay | /setup/sub-growing-plant | /widgets/sub-sprout-widget | 800x600 |
 | Stream Alerts | Overlay | /setup/stream-alerts | /widgets/stream-alerts | 800x450 |
 | Sub Goal | Overlay | /setup/sub-goal | /widgets/goal | 800x260 |
+| Event List | Overlay | /setup/event-list | /widgets/event-list | 420x520 |
+| End Credits | Overlay | /setup/end-credits | /widgets/credits | 1920x1080 |
+| Viewer Queue | Tool | /setup/viewer-queue | /widgets/queue | 440x600 |
+| Top Supporters | Overlay | /setup/top-supporters | /widgets/leaderboard | 440x380 |
+| Lower Thirds | Overlay | /setup/lower-thirds | /widgets/lower-third | 1920x1080 |
+| Task List | Overlay | /setup/task-list | /widgets/tasks | 480x720 |
+| Counter | Overlay | /setup/counter | /widgets/counter (changed from chat with its own commands) | 800x260, or 440x400 stacked |
 | Stream Frames | Overlay | /setup/stream-frames | /widgets/frame | 640x360, 360x640, 420x720 or 1920x1080 |
 | IRL HUD Overlay | Overlay | /setup/irl-hud | /widgets/irl-hud | 1920x1080 |
 | Weather | Overlay | /setup/weather | /widgets/weather | 1920x1080 |
@@ -35,7 +42,7 @@ Short version with links only: https://extensions.senchabot.com/llms.txt
 | OBS Bridge | Tool | /setup/obs-bridge | /tools/obs-bridge (tab or OBS dock, not a source) | none |
 | Spin Wheel | Tool | /setup/spin-wheel | /widgets/spin-wheel (spun from chat with !spin) | 800x800 |
 
-All eleven work with Twitch and Kick. Stream Frames reads no chat, so it needs no channel. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll and Spin Wheel take a Twitch and a Kick channel in the same URL. OBS Bridge listens to both chats at once. Raffle runs on one platform at a time.
+All eleven work with Twitch and Kick. Stream Frames reads no chat, so it needs no channel. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Counter, Chat Poll and Spin Wheel take a Twitch and a Kick channel in the same URL. OBS Bridge listens to both chats at once. Raffle runs on one platform at a time.
 
 ## How to add a widget to OBS Studio
 
@@ -278,6 +285,99 @@ URL parameters (all optional):
 | pops | 0 hides the rising +1 with the viewer's name | 1 |
 | simulate | 1 plays simulated subs, doesn't read chat and doesn't save the count | off |
 | simplatform | twitch or kick: simulate only that platform | both |
+
+## Counter
+
+A count of wins, losses, jump scares or anything else the streamer keeps score of. One browser source shows up to four counters, side by side or stacked, each with its own label, icon and chat command.
+
+- Widget URL: https://extensions.senchabot.com/widgets/counter?twitch=CHANNEL&kick=CHANNEL&c1=Wins&c1cmd=wins&c1icon=%F0%9F%8F%86
+- Demo that counts on its own: https://extensions.senchabot.com/widgets/counter?simulate=1&c1=Wins&c2=Losses&c3=Draws
+- Recommended size: 800x260 side by side, the rising +1s use the space above the counters; 440x400 stacked. The overlay scales to any source size.
+- Only the broadcaster and mods change the counts, from Twitch or Kick chat. Viewers typing a command change nothing.
+- The commands, for a counter on !wins: !wins or !wins + adds 1, !wins +3 or !wins add 3 adds 3, !wins - or !wins -2 or !wins remove 2 takes off, !wins set 10 sets the count, !wins reset goes back to the starting count. A bare number (!wins 5) does nothing. A count never goes below 0.
+- Every count is saved inside OBS per channel and command, so it survives reloads and carries over to the next stream. A new starting count in the URL starts that counter over; a new command starts from the starting count.
+- An empty command, or one another counter in the URL already has, becomes count2, count3 and so on. The setup page warns when a command is also used by another widget.
+
+URL parameters (all optional):
+
+| Parameter | Values | Default |
+| --- | --- | --- |
+| twitch | Twitch channel name | none |
+| kick | Kick channel name | none |
+| c1 to c4 | a counter's label, up to 24 characters, may be empty; each one present adds a counter | a Wins counter when none is given |
+| c1cmd to c4cmd | the counter's command without the !: letters, digits and _, up to 20 | the label, lowercased |
+| c1icon to c4icon | an emoji or a few characters next to the label | none |
+| c1iconUrl to c4iconUrl | a channel emote image instead of the icon, picked on the setup page | none |
+| c1start to c4start | starting count | 0 |
+| layout | row (side by side) or stack (one under another) | row |
+| pops | 0 hides the rising +1 and −1 | 1 |
+| preset | see Presets | classic |
+| color | purple, green, red, gold, cyan, pink (classic look only) | purple |
+| simulate | 1 counts on its own, doesn't read chat and doesn't save the counts | off |
+
+## Event List
+
+A recent events list: the latest subs, resubs, gifted subs, Bits, Kicks and raids from Twitch and Kick in one list, each row marked with its platform, in the picked preset's look. Pick which events show, how many, the smallest cheers and raids that count, and whether rows fade. Mods clear it with !events clear. Browser source size 420x520.
+
+- Widget URL: https://extensions.senchabot.com/widgets/event-list?twitch=YOUR_TWITCH_CHANNEL&kick=YOUR_KICK_CHANNEL&lang=en
+- Demo: https://extensions.senchabot.com/widgets/event-list?simulate=1
+- Listens to Twitch IRC anonymously and Kick's Pusher WebSocket, both in one browser source, through the same event readers as Stream Alerts.
+- A row per sub (months on a resub), gift (subs in it), Bits on Twitch or Kicks on Kick, and raid (viewers). Kick's second sub event fills in the months of the row already shown.
+- Follows and donations aren't included: neither platform shows them to a page that isn't logged in.
+- The list is saved in the browser source's `localStorage`, so a reload keeps it. Mods clear it with `!events clear`.
+- URL parameters: `twitch`, `kick`, `sub`, `gift`, `bits`, `raid` (`0` hides that kind), `minbits` (fewest Bits or Kicks, 1 by default), `minraid` (fewest raid viewers), `rows` (3 to 10, 5 by default), `newest` (`top` | `bottom`), `fade` (seconds a row stays, 0 keeps it), `title` (above the list, none by default), `preset`, `color` (`platform` | `purple` | `green` | `red` | `gold` | `cyan` | `pink`, classic only), `lang`, `simulate`.
+
+## End Credits
+
+Movie-style end credits: while the browser source runs, it collects everyone who subbed, gifted subs, cheered Bits or Kicks, raided, moderated or chatted on Twitch and Kick, and rolls them when its scene goes live in OBS. Mods roll it with !credits and clear it with !credits reset. Browser source size 1920x1080.
+
+- Widget URL: https://extensions.senchabot.com/widgets/credits?twitch=YOUR_TWITCH_CHANNEL&kick=YOUR_KICK_CHANNEL&title=Thanks%20for%20watching!&lang=en
+- Demo: https://extensions.senchabot.com/widgets/credits?simulate=1
+- Collects names while the browser source runs: subs, gifts, Bits and Kicks (biggest first), raiders, moderators and chatters from both chats. Bots and the broadcaster are left out of the chat list; a ban takes a viewer out.
+- In OBS the roll starts when its scene goes live (OBS's `obsSourceActiveChanged` event) and stops when it leaves; in a browser tab it rolls at once. Keep "Shutdown source when not visible" off so it collects all stream.
+- The names are saved in `localStorage`; after 12 hours without anything new the next stream starts empty. Mods use `!credits` (roll now), `!credits stop` and `!credits reset`.
+- URL parameters: `twitch`, `kick`, `title` (first line), `outro` (last line, none by default), `subs`, `gifts`, `cheers`, `raids`, `mods`, `chatters` (`0` leaves that section out), `speed` (`slow` | `normal` | `fast`), `loop` (`0` rolls once), `preset`, `color` (`gold` | `purple` | `green` | `red` | `cyan` | `pink`, classic only), `lang`, `simulate`.
+
+## Viewer Queue
+
+A viewer queue for playing with viewers: they type !join (or a join word you pick) in Twitch or Kick chat to get in line, with a note like their in-game name, and you or your mods call the next ones up with !next. Mods open, close, clear and remove with !queue. Browser source size 440x600.
+
+- Widget URL: https://extensions.senchabot.com/widgets/queue?twitch=YOUR_TWITCH_CHANNEL&kick=YOUR_KICK_CHANNEL&title=Viewer%20Queue&lang=en
+- Demo: https://extensions.senchabot.com/widgets/queue?simulate=1
+- Reads every message from both chats. Viewers join with the join word (`!join` by default) and an optional note, and leave with `!leave`; a ban takes them out.
+- Mods: `!next` (calls up the group size) or `!next 3`, `!queue open`, `!queue close`, `!queue clear`, `!queue remove name`.
+- Shows who's playing now, the numbered line and how many more are waiting. The queue is saved in `localStorage`.
+- URL parameters: `twitch`, `kick`, `title`, `join` (the join word, `!join` by default), `subs` (`1` lets only subscribers join), `max` (most waiting, 0 for no limit), `rows` (names shown, 3 to 15), `group` (viewers per `!next`, 1 to 10), `preset`, `color` (`purple` | `green` | `red` | `gold` | `cyan` | `pink`, classic only), `lang`, `simulate`.
+
+## Top Supporters
+
+A leaderboard: your top gifters or top Bits and Kicks givers from Twitch and Kick, or stream labels for the latest sub, gifted sub, cheer and raid. Totals keep counting until mods type !top reset. Browser source size 440x380.
+
+- Widget URL: https://extensions.senchabot.com/widgets/leaderboard?twitch=YOUR_TWITCH_CHANNEL&kick=YOUR_KICK_CHANNEL&board=gifts&title=Top%20Gifters&lang=en
+- Demo: https://extensions.senchabot.com/widgets/leaderboard?simulate=1
+- Counts gifted subs and Bits or Kicks per viewer from both chats (one Bit and one Kick count the same) and keeps the latest sub, gift, cheer and raid.
+- Three boards: `gifts`, `cheers` and `latest`. The totals are saved in `localStorage` and keep counting from stream to stream until `!top reset`.
+- URL parameters: `twitch`, `kick`, `board` (`gifts` | `cheers` | `latest`), `rows` (3 to 10 places), `title` (empty shows none), `preset`, `color` (`gold` | `purple` | `green` | `red` | `cyan` | `pink`, classic only), `lang`, `simulate`.
+
+## Lower Thirds
+
+Animated lower thirds: a bar with your name or show title and up to 6 lines that take turns, in the picked preset's look, always up or on a timer, in any corner. No channel needed; with one, mods put up a line of their own with !lt and hide or show it. Browser source size 1920x1080.
+
+- Widget URL: https://extensions.senchabot.com/widgets/lower-third?title=YOUR_NAME&lines=Welcome%20to%20the%20stream!
+- Demo: https://extensions.senchabot.com/widgets/lower-third?simulate=1
+- A title and up to 6 lines that take turns every few seconds. With a hold time the bar slides in and out on a timer; 0 keeps it up.
+- No channel needed. With one, the broadcaster and mods use `!lt <text>` (a line of their own), `!lt clear`, `!lt hide` and `!lt show`.
+- URL parameters: `twitch`, `kick` (only for the chat commands), `title`, `lines` (joined with `|`, up to 6), `rotate` (seconds per line, 3 to 120), `hold` (seconds on screen, 0 keeps it up), `pause` (seconds away, 5 to 3600), `corner` (`bl` | `br` | `tl` | `tr`), `size` (50 to 200, percent), `preset`, `color` (`purple` | `green` | `red` | `gold` | `cyan` | `pink`, classic only), `simulate`.
+
+## Task List
+
+A co-working task list for study and work streams: you and your viewers add tasks from Twitch or Kick chat with !task, tick them off with !done, change them with !edit and take them off with !remove. The broadcaster's tasks come first, a long list scrolls by itself, and mods clear it with !tasks clear. Browser source size 480x720.
+
+- Widget URL: https://extensions.senchabot.com/widgets/tasks?twitch=YOUR_TWITCH_CHANNEL&kick=YOUR_KICK_CHANNEL&title=Today%27s%20Tasks&lang=en
+- Demo: https://extensions.senchabot.com/widgets/tasks?simulate=1
+- Everyone changes only their own tasks: `!task <text>`, `!done` (or `!done 2`), `!edit <text>`, `!remove`. Mods: `!tasks cleardone`, `!tasks remove name`, `!tasks clear`.
+- The broadcaster's tasks come first; the panel shows done and total tasks, and a long list scrolls down and back up. The list is saved in `localStorage`.
+- URL parameters: `twitch`, `kick`, `title`, `max` (open tasks per viewer, 1 to 5), `done` (`0` takes finished tasks off at once), `speed` (scroll speed, 10 to 80 px a second), `preset`, `color` (`green` | `purple` | `red` | `gold` | `cyan` | `pink`, classic only), `lang`, `simulate`.
 
 ## Stream Frames
 
@@ -559,7 +659,7 @@ A chat-driven spinning wheel for game names, challenges or any list of choices. 
 
 A preset gives several widgets the same look: frame, fonts and colors. Page: https://extensions.senchabot.com/presets
 
-- Widgets that take one: Chat Box, Stream Alerts, Sub Goal, Subathon Timer, Chat Poll, the Raffle winner overlay, Stream Countdown, Socials, Spin Wheel and Stream Frames, whose frame art comes from the preset. Emote Wall and Sub Sprout keep their own art.
+- Widgets that take one: Chat Box, Stream Alerts, Sub Goal, Counter, Event List, End Credits, Viewer Queue, Top Supporters, Lower Thirds, Task List, Subathon Timer, Chat Poll, the Raffle winner overlay, Stream Countdown, Socials, Spin Wheel and Stream Frames, whose frame art comes from the preset. Emote Wall and Sub Sprout keep their own art.
 - URL parameter on those widgets: preset, one of rift, realm, dynasty, ancient, agent, defuse, blocks, village, storm, boost, airdrop. Missing or unknown means classic, each widget's own look, so URLs from before presets look the same.
 - Built-in presets, each made for a game: Rift (League of Legends), Realm (World of Warcraft), Dynasty (Metin2), Ancient (Dota 2), Agent (Valorant), Defuse (Counter-Strike 2), Blocks (Minecraft), Village (Clash of Clans), Storm (Fortnite), Boost (Rocket League), Airdrop (PUBG). They are fan-made styles from colors, free Google Fonts and original drawings, with no game art, and aren't affiliated with the game makers.
 - A preset brings its own colors and fonts: with one set, the color and font parameters and Stream Alerts' theme are ignored. Layout settings (Subathon style, Chat Box layout, poll position and so on) still apply.
@@ -581,10 +681,10 @@ Q: Which streaming software does it work with?
 A: OBS Studio and any other streaming software that supports a browser source. Each widget runs as a web URL that you paste into the source.
 
 Q: Which widgets support Twitch and which support Kick?
-A: All thirteen support both. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal and Chat Poll listen to a Twitch and a Kick channel in one URL. Spin Wheel does too. OBS Bridge listens for commands from both chats. Raffle runs on one platform at a time. Stream Frames and Socials read no chat. In Chat Box, 7TV emotes show on both platforms, BTTV and FFZ emotes on Twitch only.
+A: All thirteen support both. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Counter and Chat Poll listen to a Twitch and a Kick channel in one URL. Spin Wheel does too. OBS Bridge listens for commands from both chats. Raffle runs on one platform at a time. Stream Frames and Socials read no chat. In Chat Box, 7TV emotes show on both platforms, BTTV and FFZ emotes on Twitch only.
 
 Q: How do I change a widget later?
-A: Change the settings on the setup page, copy the new URL and paste it over the old one in OBS. With Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll and Spin Wheel you can paste your old URL into the Widget URL field on the setup page to get all your settings back.
+A: Change the settings on the setup page, copy the new URL and paste it over the old one in OBS. With Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Counter, Chat Poll and Spin Wheel you can paste your old URL into the Widget URL field on the setup page to get all your settings back.
 
 Q: Will my old widget URLs keep working?
 A: Yes. Parameter names, values and defaults stay the same. For example the old keep=true in Chat Box still means Forever, and Sub Sprout still reads the old channel and platform parameters.
@@ -613,6 +713,13 @@ A: Open an issue at https://github.com/senchabot-opensource/monorepo/issues/new.
 - Subathon Timer setup: https://extensions.senchabot.com/setup/subathon-timer
 - Stream Alerts setup: https://extensions.senchabot.com/setup/stream-alerts
 - Sub Goal setup: https://extensions.senchabot.com/setup/sub-goal
+- Counter setup: https://extensions.senchabot.com/setup/counter
+- Event List setup: https://extensions.senchabot.com/setup/event-list
+- End Credits setup: https://extensions.senchabot.com/setup/end-credits
+- Viewer Queue setup: https://extensions.senchabot.com/setup/viewer-queue
+- Top Supporters setup: https://extensions.senchabot.com/setup/top-supporters
+- Lower Thirds setup: https://extensions.senchabot.com/setup/lower-thirds
+- Task List setup: https://extensions.senchabot.com/setup/task-list
 - IRL HUD Overlay setup: https://extensions.senchabot.com/setup/irl-hud
 - Weather setup: https://extensions.senchabot.com/setup/weather
 - Chat Poll setup: https://extensions.senchabot.com/setup/chat-poll

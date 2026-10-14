@@ -2,7 +2,7 @@ import { createFileRoute, useHydrated } from '@tanstack/react-router';
 import { useId, useState } from 'react';
 import { CopyUrlField } from '#/components/copy-url-field';
 import { ExternalLink } from '#/components/external-link';
-import { PreviewFrame } from '#/components/preview-frame';
+import { CORNER_FOCUS, PreviewFrame } from '#/components/preview-frame';
 import { SetupShell } from '#/components/setup-shell';
 import { TestButtons } from '#/components/test-buttons';
 import { FieldLabel } from '#/components/ui/field-label';
@@ -36,6 +36,7 @@ import {
   WEATHER_THEMES,
   WEATHER_UNITS,
   type WeatherSettings,
+  weatherHudStyle,
 } from '#/lib/weather-url';
 import { getWidget } from '#/lib/widgets';
 
@@ -104,7 +105,7 @@ function WeatherSetup() {
 
   const card = settings.layout === 'card';
   // The HUD styles draw outlined text right on the scene, with no background to pick.
-  const app = settings.style === 'app';
+  const hud = weatherHudStyle(settings) !== null;
 
   const settingsPanel = (
     <>
@@ -140,20 +141,6 @@ function WeatherSetup() {
 
       <SettingsGroup title={t('common.sectionAppearance')}>
         <div>
-          <FieldLabel id={`${id}-style`} tip={t('weather.styleTip')}>
-            {t('weather.style')}
-          </FieldLabel>
-          <SegmentedControl
-            labelledBy={`${id}-style`}
-            value={settings.style}
-            onChange={(value) => update('style', value)}
-            options={WEATHER_STYLES.map((style) => ({
-              value: style,
-              label: t(`weather.styles.${style}`),
-            }))}
-          />
-        </div>
-        <div>
           <FieldLabel id={`${id}-layout`} tip={t('weather.layoutTip')}>
             {t('weather.layout')}
           </FieldLabel>
@@ -167,7 +154,24 @@ function WeatherSetup() {
             }))}
           />
         </div>
-        {app && (
+        {/* The card always looks like a weather app; the pill can take the IRL HUD's styles. */}
+        {!card && (
+          <div>
+            <FieldLabel id={`${id}-style`} tip={t('weather.styleTip')}>
+              {t('weather.style')}
+            </FieldLabel>
+            <SegmentedControl
+              labelledBy={`${id}-style`}
+              value={settings.style}
+              onChange={(value) => update('style', value)}
+              options={WEATHER_STYLES.map((style) => ({
+                value: style,
+                label: t(`weather.styles.${style}`),
+              }))}
+            />
+          </div>
+        )}
+        {!hud && (
           <div>
             <FieldLabel id={`${id}-theme`} tip={t('weather.themeTip')}>
               {t('weather.theme')}
@@ -319,6 +323,9 @@ function WeatherSetup() {
           title={t('weather.previewIframeTitle')}
           canvas={CANVAS}
           lang={overlayLocale}
+          // The overlay is small in a corner of a 1080p scene; at 1× it is hard to read.
+          zoomFocus={CORNER_FOCUS[settings.corner]}
+          zoomStart={3}
         />
       }
       previewFooter={

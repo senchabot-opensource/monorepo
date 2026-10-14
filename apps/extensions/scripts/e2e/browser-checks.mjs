@@ -43,6 +43,13 @@ const READY = `(doc, kind) => {
   if (kind === 'poll') return Boolean(doc.querySelector('[data-testid="poll-card"]'));
   if (kind === 'frame') return Boolean(doc.querySelector('[data-testid="frame-art"] svg path'));
   if (kind === 'countdown') return Boolean(doc.querySelector('[data-testid="countdown-clock"]'));
+  if (kind === 'counter') return Boolean(doc.querySelector('[data-testid="counter-value"]'));
+  if (kind === 'event-list') return Boolean(doc.querySelector('[data-testid="event-row"]'));
+  if (kind === 'credits') return Boolean(doc.querySelector('[data-testid="credits-roll"]'));
+  if (kind === 'queue') return Boolean(doc.querySelector('[data-testid="queue-row"]'));
+  if (kind === 'leaderboard') return Boolean(doc.querySelector('[data-testid="leaderboard-row"]'));
+  if (kind === 'lower-third') return Boolean(doc.querySelector('[data-testid="lower-third-title"]'));
+  if (kind === 'tasks') return Boolean(doc.querySelector('[data-testid="tasks-task"]'));
   if (kind.startsWith('text:')) return doc.body.innerText.includes(kind.slice(5));
   return false;
 }`;

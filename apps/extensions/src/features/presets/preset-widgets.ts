@@ -6,6 +6,7 @@ export const PRESET_WIDGET_IDS = [
   'chat-box',
   'stream-alerts',
   'goal',
+  'counter',
   'subathon',
   'poll',
   'raffle',
@@ -13,6 +14,12 @@ export const PRESET_WIDGET_IDS = [
   'countdown',
   'socials',
   'spin-wheel',
+  'event-list',
+  'credits',
+  'queue',
+  'leaderboard',
+  'lower-third',
+  'tasks',
 ] as const satisfies readonly WidgetId[];
 
 export const PRESET_WIDGETS: readonly WidgetEntry[] = PRESET_WIDGET_IDS.map(getWidget);

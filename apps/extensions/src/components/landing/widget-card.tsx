@@ -33,6 +33,9 @@ const GALLERY_SHAPES: Partial<Record<WidgetId, CardShape>> = {
   'stream-alerts': 'wide',
   // A whole scene with the HUD in its corners: a strip shows it bigger than a plain card would.
   'irl-hud': 'wide',
+  // A portrait panel like the Event List, but a second tall card would leave the grid a cell
+  // short; as a plain card the overlays fill whole rows at two and three columns.
+  tasks: 'standard',
 };
 
 // A wide card holding a 16:9 alert, instead of a strip, is cut to a plain card's height, so the
@@ -44,7 +47,11 @@ const PREVIEW_ASPECT: Partial<Record<WidgetId, string>> = {
 
 // Demos drawn at a fixed size rather than to fit their page: at the card's own width the Socials
 // bubble runs past both edges, so it renders at its source size and is scaled down to fit.
-const SCALED_DEMOS: ReadonlySet<WidgetId> = new Set(['socials']);
+const SCALED_DEMOS: ReadonlySet<WidgetId> = new Set(['socials', 'weather']);
+
+// Demos framed on their box rather than their whole scene: the Weather pill sits in a corner of
+// a 1080p scene, so the card fills with it and centers it, the way Socials shows its bubble.
+const FITTED_DEMOS: ReadonlySet<WidgetId> = new Set(['weather']);
 
 const SPANS: Record<CardShape, { cols: number; rows: number }> = {
   standard: { cols: 1, rows: 1 },
@@ -175,6 +182,8 @@ export function WidgetCard({
               src={getDemoSrc(widget, 'card')}
               title={t('home.demoTitle', { name })}
               canvas={SCALED_DEMOS.has(widget.id) ? (size ?? undefined) : undefined}
+              fitBox={FITTED_DEMOS.has(widget.id)}
+              showLoading
               backgroundClassName="bg-transparent"
               className={FLUSH_FRAME_CLASS}
             />

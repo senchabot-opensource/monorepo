@@ -2,6 +2,20 @@ import type { en } from './en';
 
 export const tr: typeof en = {
   common: {
+    setup: {
+      widgetUrlTip:
+        "Daha önce bir widget oluşturduysan URL'sini buraya yapıştır. Ayarların geri yüklenir, istediğini değiştirebilirsin.",
+      widgetUrlPlaceholder: "Düzenlemek için widget URL'sini yapıştır",
+      widgetUrlInvalid: "Bu bir {name} URL'si değil.",
+      sizeHint: ' (önerilen boyut: {width}×{height}).',
+      guideTitle: 'Yayın Yazılımı Kurulumu (OBS, Streamlabs, XSplit vb.)',
+      guideAddSource:
+        'Yayın yazılımında (OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio vb.) bir Tarayıcı Kaynağı ekle.',
+      guidePaste: "Kopyaladığın URL'yi yapıştır.",
+      testTitle: 'Dene:',
+      color: 'Renk',
+      titleLabel: 'Başlık',
+    },
     freeBadge: '%100 Ücretsiz · Giriş Gerektirmez',
     freeOnlyBadge: '%100 Ücretsiz',
     copy: 'Kopyala',
@@ -29,6 +43,8 @@ export const tr: typeof en = {
     channelTip:
       'Tam linki değil, sadece kanal adını yaz. Örneğin twitch.tv/senchabot için senchabot.',
     previewLoading: 'Önizleme yükleniyor…',
+    previewZoom: 'Önizleme yakınlaştırma',
+    previewDrag: 'Etrafa bakmak için sürükle',
     scrollMore: 'Devamı için aşağı kaydır',
     settingsSections: 'Ayar bölümleri',
     scrollTop: 'Başa dön',
@@ -133,9 +149,44 @@ export const tr: typeof en = {
       name: 'IRL HUD Overlay',
       tagline: "IRL yayınlar için oyun tarzı HUD: abonelik, hediye, cheer ve raid'ler para ekler, mini haritayla.",
     },
+    counter: {
+      name: 'Sayaç',
+      tagline:
+        'Yayınında galibiyetler, mağlubiyetler ya da istediğin her sayı. Modların sohbetten değiştirir.',
+    },
     weather: {
       name: 'Hava Durumu',
       tagline: 'Seçtiğin her yerin canlı hava durumu: simge, sıcaklık ve tahmin.',
+    },
+    eventList: {
+      name: 'Etkinlik Listesi',
+      tagline:
+        "İki sohbetten gelen son abonelikler, hediye abonelikler, Bits, Kicks ve raid'ler tek bir listede.",
+    },
+    credits: {
+      name: 'Kapanış Jeneriği',
+      tagline:
+        "Twitch ve Kick'te abone olan, Bits ya da Kicks gönderen, raid atan ve sohbet eden herkes için film tarzı bir jenerik.",
+    },
+    queue: {
+      name: 'İzleyici Sırası',
+      tagline:
+        'İzleyiciler seninle oynamak için !join yazarak sıraya girer, modların da onları !next ile oyuna çağırır.',
+    },
+    leaderboard: {
+      name: 'Destekçi Sıralaması',
+      tagline:
+        "Twitch ve Kick'te en çok hediye ve cheer gönderenler ya da son gelen abonelik, hediye, cheer ve raid.",
+    },
+    lowerThird: {
+      name: 'Alt Bant',
+      tagline:
+        'Yayınının köşesinde adını ve konuyu gösteren, satırları sırayla değişen animasyonlu bir bant.',
+    },
+    tasks: {
+      name: 'Görev Listesi',
+      tagline:
+        'Co-working yayınları için görev listesi: sohbetin !task ile ekler, !done ile tamamlar.',
     },
     raffle: {
       name: 'Çekiliş',
@@ -155,6 +206,9 @@ export const tr: typeof en = {
     },
   },
   home: {
+    queueFeatureJoin: 'İzleyiciler !join yazar',
+    queueFeatureNext: 'Modlar !next ile sıradakini çağırır',
+    queueFeatureBoth: 'Twitch ve Kick tek sırada',
     heroTitle: "Twitch ve Kick için ücretsiz yayın overlay'leri",
     heroLead:
       "Widget'ını canlı önizlemeyle ayarla, çıkan tek URL'yi OBS'e yapıştır. Hesap yok, filigran yok, kodu da açık kaynak.",
@@ -215,10 +269,16 @@ export const tr: typeof en = {
     howStep2: "Kanal adını yaz ve widget URL'sini kopyala.",
     howStep3:
       "OBS Studio'da bir Tarayıcı Kaynağı ekle, URL'yi yapıştır ve önerilen boyutu gir.",
-    sizesTitle: 'Önerilen Tarayıcı Kaynağı boyutları',
-    sizesNote: 'Genişlik × yükseklik, piksel olarak.',
-    sizesWidget: 'Widget',
-    sizesValue: 'Boyut',
+    comboTitle: 'Birlikte daha iyi',
+    comboLead:
+      'Her widget ayrı bir tarayıcı kaynağı, yani bir sahneye istediğin kadarını koyabilirsin. Bazıları birbiri için yapıldı.',
+    comboHudWeather:
+      "Hava durumunun Tek Satır düzenine Modern HUD ya da Retro HUD stilini ver; HUD'la aynı görünür, kenarlardan da aynı uzaklıkta durur.",
+    comboCountdownCredits:
+      'Yayının sonunu geri sayımla say, sonra jenerik sahnesine geç: sahne yayına girer girmez jenerik akmaya başlar.',
+    comboCountdownTasks:
+      'Co-working yayınında herkesin görevlerinin yanında geri sayımla Pomodoro turları yap.',
+    comboSizes: 'Her widget için Tarayıcı Kaynağı boyutları',
     trustTitle: 'Hesap yok, sürpriz yok',
     noLoginTitle: 'Giriş yok',
     noLoginText:
@@ -257,10 +317,10 @@ export const tr: typeof en = {
       "OBS Studio ve tarayıcı kaynağı destekleyen diğer programlarla. Widget URL'sini Tarayıcı Kaynağı olarak ekle ve kurulum sayfasında yazan boyutu kullan.",
     faq4Q: "Twitch ve Kick'i birlikte kullanabilir miyim?",
     faq4A:
-      "Evet. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi, Yayın Geri Sayımı, IRL HUD Overlay ve Çark tek bir URL'de hem Twitch hem Kick kanalını alır. OBS Bridge da iki sohbeti aynı anda dinleyebilir. Çekiliş ise her seferinde tek bir platformda çalışır.",
+      "Evet. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sayaç, Etkinlik Listesi, Kapanış Jeneriği, İzleyici Sırası, Destekçi Sıralaması, Alt Bant, Görev Listesi, Sohbet Anketi, Yayın Geri Sayımı, IRL HUD Overlay ve Çark tek bir URL'de hem Twitch hem Kick kanalını alır. OBS Bridge da iki sohbeti aynı anda dinleyebilir. Çekiliş ise her seferinde tek bir platformda çalışır.",
     faq5Q: "Bir widget'ı sonradan nasıl değiştiririm?",
     faq5A:
-      "Kurulum sayfasını aç, widget'ı istediğin gibi ayarla ve Tarayıcı Kaynağı'ndaki URL'yi yenisiyle değiştir. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi, Yayın Çerçeveleri, Sosyal Medya, Yayın Geri Sayımı, IRL HUD Overlay, Hava Durumu ve Çark mevcut bir URL'yi de açabilir: URL'yi kurulum sayfasına yapıştır, eski ayarların geri gelsin, sadece istediğini değiştir.",
+      "Kurulum sayfasını aç, widget'ı istediğin gibi ayarla ve Tarayıcı Kaynağı'ndaki URL'yi yenisiyle değiştir. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sayaç, Etkinlik Listesi, Kapanış Jeneriği, İzleyici Sırası, Destekçi Sıralaması, Alt Bant, Görev Listesi, Sohbet Anketi, Yayın Çerçeveleri, Sosyal Medya, Yayın Geri Sayımı, IRL HUD Overlay, Hava Durumu ve Çark mevcut bir URL'yi de açabilir: URL'yi kurulum sayfasına yapıştır, eski ayarların geri gelsin, sadece istediğini değiştir.",
     faq6Q: "Güncellemelerden sonra widget URL'm çalışmaya devam eder mi?",
     faq6A:
       'Evet. Güncellemelerde mevcut URL ayarları ve değerleri korunur, yani sahnendeki widget için yeni bir URL almana gerek kalmaz.',
@@ -1125,6 +1185,464 @@ export const tr: typeof en = {
     faq7Q: 'Market nasıl çalışıyor?',
     faq7A:
       "Kurulum sayfasında fiyatıyla ürünler ekle, örneğin $100'a su. Sen ve modların Twitch ya da Kick sohbetine !hud buy su, üç tane için !hud buy su 3 yazarsınız; fiyat paradan düşer ve yanında ürünün adı görünür. Para yetmezse hiçbir şey alınmaz ve fiyat çarpıyla görünür.",
+  },
+  counter: {
+    breadcrumb: 'Sayaç Kurulumu',
+    title: 'Sayaç Kurulumu',
+    intro:
+      "Twitch ve Kick için galibiyet, mağlubiyet, korkma anı veya skorunu tuttuğun her şeyin sayacı. Aynı anda dört taneye kadar, yan yana ya da alt alta göster. Sen ve modların iki sohbetten de değiştirirsiniz, her sayı OBS'te kaydedilir.",
+    sectionCounters: 'Sayaçlar',
+    counterHeading: 'Sayaç {n}',
+    label: 'Etiket',
+    labelTip:
+      'Sayının yanında görünür, örneğin Galibiyetler. Boş bırakırsan sadece simge ve sayı görünür.',
+    labelPlaceholder: 'Etiket yok',
+    command: 'Sohbet Komutu',
+    commandTip:
+      'Sen ve modların bu sayacı değiştirmek için sohbete yazdığınız komut, ! olmadan. Sadece harf, rakam ve _.',
+    commandHint: 'Modlar 1 eklemek için {command} yazar.',
+    commandReserved:
+      "{command} başka bir Senchabot widget'ının da komutu. İkisi de yayındaysa tek komut ikisini birden değiştirir.",
+    commandTaken:
+      '{command} komutunu başka bir sayaç kullanıyor, bu yüzden bu sayaç {fallback} komutunu dinler.',
+    icon: 'Simge',
+    iconTip:
+      'Etiketin yanında bir emoji ya da birkaç karakter, örneğin 🏆. Boş bırakırsan simge olmaz.',
+    iconPlaceholder: 'Yok',
+    emote: 'Kanal Emote',
+    emoteTip:
+      "Simge yerine bu kanal emote'unu gösterir. Her kanalın abone emoteları ile kendi 7TV, BTTV ve FFZ setleri listelenir.",
+    start: 'Başlangıç Sayısı',
+    startTip:
+      'Bu sayacın başladığı sayı. Sonradan değiştirirsen bu sayaç yeni sayıdan baştan başlar.',
+    addCounter: '+ Sayaç Ekle',
+    removeCounter: '{n}. sayacı kaldır',
+    countsHint: 'Tek bir tarayıcı kaynağında {max} sayaca kadar, her biri kendi komutuyla.',
+    defaults: {
+      wins: 'Galibiyetler',
+      losses: 'Mağlubiyetler',
+      draws: 'Beraberlikler',
+      scares: 'Korkular',
+    },
+    layout: 'Düzen',
+    layoutTip:
+      'Yan yana, sayaçları bir sıraya dizer. Alt alta, sahnenin bir köşesi için onları üst üste koyar.',
+    layouts: {
+      row: 'Yan yana',
+      stack: 'Alt alta',
+    },
+    color: 'Renk',
+    showPops: 'Değişiklikleri Göster',
+    showPopsTip: 'Sohbet bir sayacı her değiştirdiğinde üstünde +1 ya da −1 yukarı süzülür.',
+    sectionCommands: 'Sohbet Komutları',
+    commandsIntro:
+      'Sen ve modların sayaçları Twitch ya da Kick sohbetinden değiştirirsiniz. Her sayacın kendi komutu var, örnekler ilk sayacınkini kullanıyor. İzleyiciler yazarsa hiçbir şey değişmez.',
+    cmdOne: '1 ekler',
+    cmdAdd: '3 ya da yazdığın sayı kadar ekler',
+    cmdRemove: "1 ya da yazdığın sayı kadar çıkarır. 0'ın altına inmez",
+    cmdSet: 'Sayıyı ayarlar',
+    cmdReset: 'Başlangıç sayısına geri döner',
+    previewTitle: 'Sayaç Önizlemesi',
+    previewIframeTitle: 'Sayaç Önizlemesi',
+    previewHint:
+      'Önizleme arada bir kendi kendine sayar. Yayında sayıları sadece sen ve modların değiştirir.',
+    testTitle: 'Dene:',
+    testReset: 'Hepsini Sıfırla',
+    widgetUrlTip:
+      "Daha önce bir widget oluşturduysan URL'sini buraya yapıştır. Ayarların geri yüklenir, istediğini değiştirebilirsin.",
+    widgetUrlPlaceholder: "Düzenlemek için widget URL'sini yapıştır",
+    widgetUrlInvalid: "Bu bir Sayaç URL'si değil.",
+    browserSourceHintSize: ' (önerilen boyut: {width}×{height}).',
+    guideTitle: 'Yayın Yazılımı Kurulumu (OBS, Streamlabs, XSplit vb.)',
+    guideStep1:
+      'Yayın yazılımında (OBS Studio, Streamlabs Desktop, XSplit, vMix, Lightstream, PRISM Live Studio vb.) bir Tarayıcı Kaynağı ekle.',
+    guideStep2: "Kopyaladığın sayaç URL'sini yapıştır.",
+    guideStep3: 'Genişliği 800 ve yüksekliği 260 olarak ayarla, alt alta düzen için 440 ve 400.',
+    guideStep4: 'Sohbete !wins yaz, sayacın bir arttığını gör.',
+    faq1Q: 'Sayacı kim değiştirebilir?',
+    faq1A:
+      'Sen ve modların, Twitch ya da Kick sohbetinden. Komutu izleyiciler yazarsa hiçbir şey değişmez, kimse şakasına sayıyı şişiremez.',
+    faq2Q: 'OBS kapanırsa ya da Tarayıcı Kaynağı yenilenirse ne olur?',
+    faq2A:
+      "Her sayı OBS'in içinde kaydedilir, kaldığı yerden devam eder, sonraki yayında da. Baştan başlamak için sohbete !wins reset yaz ya da bu sayfada başlangıç sayısını değiştirip yeni URL'yi OBS'e yapıştır.",
+    faq3Q: 'Galibiyetleri, mağlubiyetleri ve beraberlikleri birlikte gösterebilir miyim?',
+    faq3A:
+      'Evet. Tek bir tarayıcı kaynağı dört sayaca kadar gösterir, her birinin kendi etiketi, simgesi ve !wins ya da !losses gibi kendi komutu olur. Yan yana ya da alt alta.',
+    faq4Q: 'Başka bir sohbet botu zaten !wins kullanıyor. Ne yapmalıyım?',
+    faq4A:
+      "Sayaca Sohbet Komutu kutusundan !wincount gibi kendine ait bir komut ver, sonra yeni URL'yi OBS'e yapıştır. Sayılar komut başına kaydedilir, bu yüzden yeni komut başlangıç sayısından başlar.",
+  },
+  eventList: {
+    breadcrumb: 'Etkinlik Listesi Kurulumu',
+    title: 'Etkinlik Listesi Kurulumu',
+    intro:
+      "Twitch ve Kick için son etkinlikler listesi. İki sohbetten gelen her abonelik, yenileme, hediye abonelik, Bits cheer'ı, gönderilen Kicks ve raid tek bir listede toplanır; en yenisi en başta durur, her satırda platformu işaretlidir. Liste OBS'te kaydedilir, bu yüzden sayfa yenilense de kaybolmaz.",
+    sectionEvents: 'Etkinlikler',
+    kinds: {
+      sub: 'Abonelikler ve Yenilemeler',
+      gift: 'Hediye Abonelikler',
+      bits: 'Bits ve Kicks',
+      raid: "Raid'ler",
+    },
+    kindsHint:
+      'Takipler ve bağışlar gösterilmez: Twitch ve Kick bunları giriş yapılmamış bir sayfaya göstermiyor.',
+    minBits: 'En Az Bits ya da Kicks',
+    minBitsTip: "Daha küçük cheer'lar listeye girmez.",
+    minRaid: 'En Az Raid İzleyicisi',
+    minRaidTip: "Daha küçük raid'ler listeye girmez.",
+    rows: 'Gösterilen Etkinlik Sayısı',
+    rowsTip: 'Aynı anda kaç etkinlik görüneceği. Eskiler kayarak çıkar.',
+    newest: 'Yeni Etkinlikler',
+    newestTip: 'Üstte, listeyi aşağı iter. Altta, liste sohbet gibi yukarı kayar.',
+    newestOptions: {
+      top: 'Üstte',
+      bottom: 'Altta',
+    },
+    fade: 'Gizlenme Süresi',
+    fadeTip:
+      'Her etkinliğin ekranda ne kadar kalacağı. Sıfır olursa yenileri gelip onları dışarı itene kadar kalırlar.',
+    fadeOff: 'Etkinlikler, yenileri gelip onları dışarı itene kadar ekranda kalır.',
+    titleTip: 'Listenin üstünde görünür. Başlık istemiyorsan boş bırak.',
+    sectionCommands: 'Sohbet Komutları',
+    commandsIntro:
+      'Listeyi sen ve modların Twitch ya da Kick sohbetinden temizleyebilirsiniz, örneğin yayının başında.',
+    cmdClear: 'Listeyi temizler',
+    previewTitle: 'Etkinlik Listesi Önizlemesi',
+    previewIframeTitle: 'Etkinlik Listesi Önizlemesi',
+    previewHint:
+      "Önizlemede sahte etkinlikler gelir. Yayında sadece gerçek abonelikler, hediyeler, Bits, Kicks ve raid'ler görünür.",
+    testSub: 'Abone',
+    testResub: 'Yenileme',
+    testGift: '5 Hediye',
+    testBits: 'Cheer 500',
+    testRaid: 'Raid',
+    guideStep3: 'Genişliği 420 ve yüksekliği 520 olarak ayarla.',
+    guideStep4:
+      "Listeyi göstermek istediğin her sahneye aynı URL'yi ekle. Her kopya aynı kayıtlı listeyi gösterir.",
+    items: {
+      sub: 'Abone oldu',
+      subTier: 'Tier {tier} ile abone oldu',
+      resub: 'Aboneliğini yeniledi, {months} ay',
+      gift: '{count} abonelik hediye etti',
+      giftOne: 'Bir abonelik hediye etti',
+      bits: '{amount} Bits gönderdi',
+      kicks: '{amount} Kicks gönderdi',
+      raid: '{viewers} izleyiciyle raid attı',
+    },
+    faq1Q: 'Takipler ve bağışlar neden listede yok?',
+    faq1A:
+      "Twitch de Kick de giriş yapılmamış bir sayfaya takipleri ya da bağışları göstermiyor, bu liste de senden hiç giriş yapmanı istemiyor. Abonelikler, yenilemeler, hediye abonelikler, Bits, Kicks ve raid'ler doğrudan herkese açık sohbetten gelir.",
+    faq2Q: 'OBS kapanırsa ya da Tarayıcı Kaynağı yenilenirse ne olur?',
+    faq2A:
+      "Liste OBS'in içinde kayıtlı, bu yüzden bir sonraki yayında bile olduğu gibi geri gelir. OBS kapalıyken olan etkinlikler görülemez. Yayına boş bir listeyle başlamak için sohbete !events clear yaz.",
+    faq3Q: "Tek bir liste Twitch ve Kick'i birlikte gösteriyor mu?",
+    faq3A:
+      "Evet. İki sohbetten gelen etkinlikler tek bir listeye düşer, her satır kendi platformunun rengiyle işaretlenir. Cheer'lar Twitch'te Bits, Kick'te Kicks olarak gelir.",
+    faq4Q: "Küçük cheer'ları listenin dışında tutabilir miyim?",
+    faq4A:
+      'Evet. Bits ya da Kicks için ve raid izleyicileri için bir alt sınır belirle, daha küçükleri listeye girmez. Etkinlik türlerini tamamen de kapatabilirsin.',
+  },
+  credits: {
+    breadcrumb: 'Kapanış Jeneriği Kurulumu',
+    title: 'Kapanış Jeneriği Kurulumu',
+    intro:
+      'Twitch ve Kick yayınların için kapanış jeneriği. Tarayıcı kaynağı açık olduğu sürece iki sohbetten de abone olan, abonelik hediye eden, Bits ya da Kicks gönderen, raid atan, moderatörlük yapan ya da sohbet eden herkesi toplar; sahnesine geçtiğinde isimler bir film jeneriği gibi akar.',
+    defaultTitle: 'İzlediğiniz için teşekkürler!',
+    sectionRoll: 'Jenerik',
+    titleTip: 'Jeneriğin ilk satırı.',
+    outro: 'Son Satır',
+    outroTip:
+      'İsimlerden sonra akar, örneğin "Bir sonraki yayında görüşürüz". Boş bırakırsan son satır olmaz.',
+    outroPlaceholder: 'Yok',
+    sectionsLabel: 'Bölümler',
+    sectionsTip: 'Jenerikte hangi listelerin akacağı. Boş kalan liste kendiliğinden atlanır.',
+    sections: {
+      subs: 'Aboneler',
+      gifts: 'Hediye Abonelikler',
+      cheers: 'Bits ve Kicks',
+      raids: 'Raid Atanlar',
+      mods: 'Moderatörler',
+      chatters: 'Sohbet',
+    },
+    collectHint:
+      "İsimler tarayıcı kaynağı açıkken toplanır, bu yüzden kaynağı yayın boyunca OBS'te tut. Botlar ve sen sohbet listesine girmezsiniz.",
+    speed: 'Hız',
+    speedTip: 'Jeneriğin ne kadar hızlı aktığı.',
+    speeds: {
+      slow: 'Yavaş',
+      normal: 'Normal',
+      fast: 'Hızlı',
+    },
+    loop: 'Tekrarla',
+    loopTip:
+      'Kısa bir aradan sonra jeneriği yeniden başlatır. Kapalıysa jenerik, sahneye her geçişte bir kez akar.',
+    sectionCommands: 'Sohbet Komutları',
+    commandsIntro:
+      'Sen ve modların jeneriği Twitch ya da Kick sohbetinden elle başlatabilir, yeni bir yayın için isimleri temizleyebilirsiniz.',
+    cmdRoll: 'Jeneriği hemen başlatır',
+    cmdStop: 'Jeneriği durdurur',
+    cmdReset: 'Yeni bir yayın için isimleri temizler',
+    previewTitle: 'Kapanış Jeneriği Önizleme',
+    previewIframeTitle: 'Kapanış Jeneriği Önizleme',
+    previewHint: 'Önizlemede örnek isimler akar. Yayında isimler senin sohbetinden gelir.',
+    testRoll: 'Yeniden Başlat',
+    guideStep3: 'Genişliği 1920 ve yüksekliği 1080 olarak ayarla, kaynağı bitiş sahnene koy.',
+    guideStep4:
+      'Kaynak özelliklerinde "Görünür değilken kaynağı kapat" seçeneğini kapalı bırak, böylece kaynak yayın boyunca isimleri toplar. Jenerik, sahneye geçtiğinde akar.',
+    faq1Q: 'Jenerik ne zaman akar?',
+    faq1A:
+      "OBS'te sahnesine her geçişte akar, başka bir sahneye geçince durur. Sen ve modların !credits yazarak jeneriği hemen de başlatabilirsiniz. Bir tarayıcı sekmesinde açılırsa hemen akar.",
+    faq2Q: 'İsimler nereden geliyor?',
+    faq2A:
+      'Tarayıcı kaynağı açıkken Twitch ve Kick sohbetinden: abonelikler, yenilemeler, hediye abonelikler, Bits, Kicks, raid\'ler, moderatörler ve sohbete yazan herkes. Kaynağı yayının başından itibaren OBS\'te tut ve "Görünür değilken kaynağı kapat" seçeneğini kapalı bırak. Takipçiler ve bağışlar jenerikte yer almaz, çünkü iki platform da bunları giriş yapılmamış bir sayfaya göstermiyor.',
+    faq3Q: 'İsimler bir sonraki yayına taşınır mı?',
+    faq3A:
+      "Hayır. İsimler OBS'te kaydedilir, sayfa yenilense de kaybolmaz; ama 12 saat boyunca yeni bir şey gelmezse sonraki yayın boş bir jenerikle başlar. Daha erken sıfırlamak için !credits reset yaz.",
+    faq4Q: 'Botlar jenerikte görünür mü?',
+    faq4A:
+      'Hayır. Nightbot, StreamElements ve Fossabot gibi bilinen botlar sohbet listesine girmez, sen de girmezsin. Susturulan ya da banlanan biri de listeden çıkar.',
+  },
+  queue: {
+    breadcrumb: 'İzleyici Sırası Kurulumu',
+    title: 'İzleyici Sırası Kurulumu',
+    intro:
+      'Twitch ve Kick için, izleyicilerinle oyun oynarken kullanacağın bir izleyici sırası. İzleyiciler iki sohbetten birine !join yazarak sıraya girer, sen ya da modların !next ile sıradakileri oyuna çağırırsınız. Sıra, şu an kimin oynadığı ve sırada kimin olduğuyla birlikte yayında görünür.',
+    defaultTitle: 'İzleyici Sırası',
+    sectionQueue: 'Sıra',
+    titleTip: 'Sıranın en üstünde görünür.',
+    join: 'Katılım Kelimesi',
+    joinTip:
+      'İzleyicilerin sıraya girmek için yazdığı kelime. Kelimeden sonra yazdıkları her şey, örneğin oyun içi adları, isimlerinin yanında görünür.',
+    joinHint: 'İzleyiciler katılmak için {join} yazar.',
+    subsOnly: 'Sadece Aboneler',
+    subsOnlyTip: 'Sıraya sadece aboneler girebilir. Diğer izleyiciler yazarsa yok sayılır.',
+    group: '!next Başına Oyuncu',
+    groupTip:
+      "Tek bir !next'in kaç izleyiciyi çağıracağı. Bir mod !next 3 gibi bir sayı da yazabilir.",
+    max: 'Sıra Sınırı',
+    maxTip: 'Bu kadar kişi beklerken yeni katılımlar sayılmaz. Sıfır olursa sınır olmaz.',
+    maxOff: 'Kaç kişinin bekleyebileceğine sınır yok.',
+    rows: 'Görünen İsim Sayısı',
+    rowsTip:
+      'Bekleyenlerden kaçının adıyla görüneceği. Geri kalanlar sadece sayı olarak gösterilir.',
+    sectionCommands: 'Sohbet Komutları',
+    commandsIntro:
+      'İzleyiciler Twitch ya da Kick sohbetinden sıraya girip çıkar. İzleyicileri çağırmayı, sırayı açıp kapatmayı ve temizlemeyi sadece sen ve modların yapabilirsiniz.',
+    cmdNoteExample: 'OyuncuAdım',
+    cmdJoin: 'Oyun içi ad gibi bir notla sıraya girer',
+    cmdLeave: 'Sıradan çıkar',
+    cmdNext: 'Sıradaki izleyiciyi çağırır',
+    cmdNextMany: 'Sıradaki 3 kişiyi çağırır',
+    cmdOpen: 'Sırayı açar',
+    cmdClose: 'Sırayı kapatır, yeni kimse giremez',
+    cmdRemove: 'Bir izleyiciyi sıradan çıkarır',
+    cmdClear: 'Sırayı boşaltır',
+    previewTitle: 'İzleyici Sırası Önizlemesi',
+    previewIframeTitle: 'İzleyici Sırası Önizlemesi',
+    previewHint:
+      'Önizlemede sahte izleyicilerle bir sıra oynar. Yayında sıraya sadece kendi sohbetin girer.',
+    testJoin: 'Katıl',
+    testNext: 'Sıradaki',
+    testOpen: 'Aç',
+    testClose: 'Kapat',
+    testClear: 'Temizle',
+    guideStep3: 'Genişliği 440 ve yüksekliği 600 olarak ayarla.',
+    guideStep4: 'Denemek için sohbete !join yaz, sonra kendini çağırmak için !next yaz.',
+    overlay: {
+      open: 'Açık',
+      closed: 'Kapalı',
+      playing: 'Şu an oynuyor',
+      next: 'Sırada',
+      more: '+{count} kişi daha',
+      joinHint: 'Katılmak için {join} yaz',
+      closedHint: 'Sıra kapalı',
+    },
+    faq1Q: 'İzleyiciler sıraya nasıl girer?',
+    faq1A:
+      'Twitch ya da Kick sohbetine !join ya da senin seçtiğin katılım kelimesini yazarak. Kelimeden sonra yazdıkları her şey, örneğin oyun içi adları, isimlerinin yanında görünür. Tekrar yazmak hiçbir şeyi değiştirmez, !leave ise onları sıradan çıkarır.',
+    faq2Q: 'İzleyicileri kim çağırabilir?',
+    faq2A:
+      'Sen ve modların, !next ile. !next Başına Oyuncu ayarındaki sayı kadar ya da !next 3 gibi yazdığın sayı kadar izleyiciyi çağırır ve onları şu an oynuyor olarak gösterir.',
+    faq3Q: 'OBS kapanırsa ya da Tarayıcı Kaynağı yenilenirse ne olur?',
+    faq3A:
+      "Sıra OBS'in içinde kaydedilir, bu yüzden olduğu gibi geri gelir, sonraki yayında da. Sıfırdan başlamak için !queue clear yaz.",
+    faq4Q: 'Aynı anda çekiliş de yapabilir miyim?',
+    faq4A:
+      'İkisi de varsayılan olarak !join kullanır, yani tek bir mesaj ikisine birden katılır. Sıraya Katılım Kelimesi kutusundan !play gibi kendine ait bir kelime ver.',
+  },
+  leaderboard: {
+    breadcrumb: 'Destekçi Sıralaması Kurulumu',
+    title: 'Destekçi Sıralaması Kurulumu',
+    intro:
+      "Twitch ve Kick için bir liderlik tablosu. İki sohbetten en çok abonelik hediye edenleri ya da en çok Bits ve Kicks gönderenleri sıralar, istersen de son aboneliği, hediye aboneliği, cheer'ı ve raid'i yayın etiketi olarak gösterir. Toplamlar OBS'te kaydedilir ve sen sıfırlayana kadar saymaya devam eder.",
+    sectionBoard: 'Tablo',
+    board: 'Göster',
+    boardTip:
+      "En çok hediye, hediye aboneliklere göre sıralar. En çok cheer, Bits ve Kicks miktarına göre sıralar. Son gelenler en yeni aboneliği, hediyeyi, cheer'ı ve raid'i gösterir.",
+    boards: {
+      gifts: 'En çok hediye',
+      cheers: 'En çok cheer',
+      latest: 'Son gelenler',
+    },
+    defaultTitles: {
+      gifts: 'Hediye Sıralaması',
+      cheers: 'Cheer Sıralaması',
+      latest: 'Son Destekçiler',
+    },
+    rows: 'Gösterilen Sıra Sayısı',
+    rowsTip: 'Tablonun kaç sıra göstereceği.',
+    titleTip: 'Tablonun üstünde görünür. Başlık istemiyorsan boş bırak.',
+    sectionCommands: 'Sohbet Komutları',
+    commandsIntro:
+      'Tabloyu sen ve modların Twitch ya da Kick sohbetinden sıfırlayabilirsiniz, örneğin her yayının ya da her ayın başında.',
+    cmdReset: 'Bütün toplamları ve son destekçileri sıfırlar',
+    previewTitle: 'Destekçi Sıralaması Önizlemesi',
+    previewIframeTitle: 'Destekçi Sıralaması Önizlemesi',
+    previewHint: 'Önizlemede sahte destekler gelir. Yayında sadece kendi sohbetin sayılır.',
+    guideStep3: 'Genişliği 440 ve yüksekliği 380 olarak ayarla.',
+    guideStep4:
+      'Her yayında tertemiz bir tablo mu istiyorsun? Yayına başlarken sohbete !top reset yaz.',
+    overlay: {
+      noGifts: 'Henüz hediye yok',
+      noCheers: 'Henüz cheer yok',
+      giftAmount: '{count} hediye',
+      bits: '{amount} Bits',
+      kicks: '{amount} Kicks',
+      months: '{months} ay',
+      viewers: '{viewers} izleyici',
+      none: 'Henüz kimse yok',
+      latest: {
+        sub: 'Son abone',
+        gift: 'Son hediye',
+        cheer: 'Son cheer',
+        raid: 'Son raid',
+      },
+    },
+    faq1Q: 'Toplamlar ne zamana kadar birikir?',
+    faq1A:
+      "Sen sıfırlayana kadar. Toplamlar OBS'in içinde kaydedilir ve yayından yayına saymaya devam eder. Yeni bir tablo başlatmak için !top reset yaz, örneğin her yayında ya da her ay.",
+    faq2Q: 'Bits ve Kicks birlikte nasıl sıralanıyor?',
+    faq2A:
+      "Bir Bit ile bir Kick aynı sayılır, böylece bir izleyicinin cheer'ları tek bir tabloda toplanır. Twitch ve Kick'teki aynı isim, her platform için ayrı bir sıra alır.",
+    faq3Q: 'Hediye olarak ne sayılıyor?',
+    faq3A:
+      "Twitch ve Kick'teki her hediye abonelik, abonelik başına bir: 5'li bir hediye, hediye edenin toplamına 5 ekler.",
+    faq4Q: 'Bağışlar ve takipler neden tabloda yok?',
+    faq4A:
+      "İki platform da giriş yapılmamış bir sayfaya bağışları ya da takipleri göstermiyor, bu tablo da senden hiç giriş yapmanı istemiyor. Abonelikler, hediyeler, Bits, Kicks ve raid'ler doğrudan herkese açık sohbetten gelir.",
+  },
+  lowerThird: {
+    breadcrumb: 'Alt Bant Kurulumu',
+    title: 'Alt Bant Kurulumu',
+    intro:
+      "Yayının için animasyonlu bir alt bant, seçtiğin preset'in görünümüyle: bir bantta adın ya da programının adı, altında sırayla değişen satırlar. Sürekli ekranda kalabilir ya da belirlediğin sürelerle gelip gidebilir; bir kanal yazarsan modların da sohbetten kendi satırlarını ekrana çıkarabilir.",
+    defaultTitle: 'Adın',
+    defaultLine: 'Yayına hoş geldiniz!',
+    sectionText: 'Yazılar',
+    titleTip: 'Büyük satır, örneğin adın ya da programının adı.',
+    lines: 'Satırlar',
+    linesTip: 'Başlığın altındaki küçük satırlar. Birden fazla olursa sırayla değişir.',
+    lineLabel: 'Satır {n}',
+    removeLine: '{n}. satırı kaldır',
+    addLine: '+ Satır Ekle',
+    rotate: 'Satır Başına Saniye',
+    rotateTip: 'Her satırın, sıradaki gelmeden önce ekranda ne kadar kalacağı.',
+    hold: 'Ekranda Kalma Süresi',
+    holdTip:
+      'Bandın, her göründüğünde ekranda ne kadar kalacağı. Sıfır olursa sürekli ekranda kalır.',
+    holdOff: 'Bant sürekli ekranda kalır.',
+    pause: 'Gizli Kalma Süresi',
+    pauseTip: 'Bandın, geri gelmeden önce ne kadar gizli kalacağı.',
+    corner: 'Konum',
+    cornerTip: "Bandın 1920×1080'lik bir sahnede duracağı yer.",
+    sizeTip: 'Bandı tasarlandığı boyuttan büyütür ya da küçültür.',
+    channelHint:
+      'Kanal gerekmez. Kanal yazarsan sen ve modların bandı sohbetten !lt ile değiştirebilirsiniz.',
+    sectionCommands: 'Sohbet Komutları',
+    commandsIntro:
+      'Kanalını yazdıysan sen ve modların bandı Twitch ya da Kick sohbetinden değiştirebilirsiniz.',
+    cmdSay: 'Sırayla değişen satırların yerine kendi satırını gösterir',
+    cmdClear: 'Sırayla değişen satırlara geri döner',
+    cmdHide: 'Bandı gizler',
+    cmdShow: 'Bandı geri getirir',
+    testLine: '5 dakikaya dönüyorum!',
+    testSay: 'Kendi Satırın',
+    testClear: 'Temizle',
+    testHide: 'Gizle',
+    testShow: 'Göster',
+    previewTitle: 'Alt Bant Önizleme',
+    previewIframeTitle: 'Alt Bant Önizleme',
+    previewHint:
+      'Önizleme bandını 1080p bir sahnede gösterir. Süreli bir bant burada yayındakinden daha hızlı gelip gider.',
+    guideStep3:
+      'Genişliği 1920, yüksekliği 1080 yap, yani sahnenin boyutu. Bant seçtiğin köşede durur.',
+    guideStep4:
+      'Bandın sadece ara sıra görünmesini mi istiyorsun? Ekranda kalma süresini ayarla; bant, belirlediğin aradan sonra yeniden gelir.',
+    faq1Q: 'Kanal gerekiyor mu?',
+    faq1A:
+      "Hayır. Bant, URL'den kendi başına çalışır. Twitch ya da Kick kanalını yalnızca modlarının onu sohbetten !lt ile değiştirmesini istiyorsan yaz.",
+    faq2Q: 'Farklı satırlar gösterebilir mi?',
+    faq2A:
+      'Evet. 6 satıra kadar ekle; başlığın altında sırayla, her biri seçtiğin saniye kadar görünür. Bir modun !lt ile yazdığı satır, !lt clear yazılana kadar onların yerini alır.',
+    faq3Q: 'Kendi kendine gelip gidebilir mi?',
+    faq3A:
+      'Evet. Ekranda ne kadar kalacağını ve ne kadar gizli kalacağını ayarla, bu sürelere göre kayarak girip çıkar. Sıfır olursa sürekli ekranda kalır.',
+    faq4Q: "Diğer widget'larıma uyar mı?",
+    faq4A:
+      "Aynı preset'i seç; bant da Sohbet Kutusu, Yayın Uyarıları ve diğerleri gibi onun çerçevesini, yazı tiplerini ve renklerini alır.",
+  },
+  tasks: {
+    breadcrumb: 'Görev Listesi Kurulumu',
+    title: 'Görev Listesi Kurulumu',
+    intro:
+      'Twitch ve Kick için bir co-working görev listesi. Sen ve izleyicilerin iki sohbetten de !task ile görev ekleyip !done ile tamamlarsınız; liste de herkesin ilerlemesiyle birlikte yayında görünür. Senin görevlerin en başta durur, uzun bir liste de kendiliğinden kayar.',
+    defaultTitle: 'Günün Görevleri',
+    sectionList: 'Liste',
+    titleTip: 'Listenin en üstünde görünür.',
+    max: 'İzleyici Başına Açık Görev',
+    maxTip: 'Bir izleyicinin aynı anda kaç bitmemiş görevi olabileceği.',
+    keepDone: 'Biten Görevleri Tut',
+    keepDoneTip:
+      'Biten görevler işaretli halde listede kalır. Kapalıysa bittikleri anda listeden çıkar.',
+    speed: 'Kaydırma Hızı',
+    speedTip: 'Panele sığmayan bir listenin ne kadar hızlı kaydığı.',
+    sectionCommands: 'Sohbet Komutları',
+    commandsIntro:
+      'Herkes kendi görevlerini Twitch ya da Kick sohbetinden ekler ve tamamlar. Listeyi ise sadece sen ve modların temizleyebilirsiniz.',
+    cmdExample: '3. bölümü oku',
+    cmdAdd: 'Görev ekler',
+    cmdDone: 'Bitmemiş görevlerinden ilkini tamamlar',
+    cmdDoneNumber: 'Bitmemiş görevlerinden ikincisini tamamlar',
+    cmdEdit: 'Bitmemiş görevlerinden ilkini değiştirir',
+    cmdRemove: 'Bitmemiş görevlerinden ilkini siler',
+    cmdClearDone: 'Biten bütün görevleri listeden kaldırır',
+    cmdRemoveViewer: 'Bir izleyicinin görevlerini listeden kaldırır',
+    cmdClear: 'Listeyi boşaltır',
+    previewTitle: 'Görev Listesi Önizlemesi',
+    previewIframeTitle: 'Görev Listesi Önizlemesi',
+    previewHint: 'Önizlemede sahte bir liste dolar. Yayında görevleri sadece senin sohbetin ekler.',
+    testAdd: 'Görev Ekle',
+    testDone: 'Bitti',
+    testRemove: 'Sil',
+    testClear: 'Hepsini Temizle',
+    testTask: 'Deneme görevi {n}',
+    guideStep3: 'Genişliği 480 ve yüksekliği 720 olarak ayarla.',
+    guideStep4: 'Sohbete !task ve üzerinde çalıştığın işi yaz. Görev hemen listede belirir.',
+    overlay: {
+      empty: '!task ve üzerinde çalıştığın işi yaz',
+    },
+    faq1Q: 'İzleyiciler nasıl görev ekler?',
+    faq1A:
+      'Twitch ya da Kick sohbetine !task ve üzerinde çalıştıkları işi yazarlar, örneğin !task 3. bölümü oku. !done bitmemiş görevlerinden ilkini tamamlar, !edit onu değiştirir, !remove da siler. Herkes sadece kendi görevlerini değiştirebilir.',
+    faq2Q: 'Kendi görevlerim nerede görünür?',
+    faq2A:
+      'Seninkiler listenin en başında durur. Onları da izleyicilerin gibi sohbetten !task ile eklersin.',
+    faq3Q: 'Liste uzayınca ne olur?',
+    faq3A:
+      'Yavaşça aşağı kayar, sonda biraz bekler, sonra yeniden yukarı çıkar ve bu böyle sürüp gider. Modlar biten bütün görevleri !tasks cleardone ile kaldırabilir ya da !tasks clear ile baştan başlayabilir.',
+    faq4Q: 'Görevler yayından sonra da kalır mı?',
+    faq4A:
+      "Evet. Liste OBS'in içinde kayıtlı, bu yüzden olduğu gibi geri gelir. Sonraki oturuma boş bir listeyle başlamak için !tasks clear yaz.",
   },
   weather: {
     breadcrumb: 'Hava Durumu Kurulumu',
@@ -2031,6 +2549,17 @@ export const tr: typeof en = {
             'Uyarılar bu alanın ortasında tek tek çıkar. Kaynağı büyütürsen uyarı da büyür.',
           irlHud:
             'Tam 1080p bir tuval. Para ve mini harita seçtiğin köşelerde durur, dikey bir tuvale de sığar.',
+          tasks: 'Liste için dikey bir panel. Liste uzayınca kendiliğinden kayar.',
+          lowerThird: 'Tam 1080p tuval. Alt bant seçtiğin köşede durur.',
+          leaderboard: 'Tablo için küçük bir panel, sahnenin bir köşesine sığacak boyutta.',
+          queue:
+            'Sıra için bir sütun: şu an kimin oynadığı, sırada kimin olduğu ve kaç kişinin beklediği.',
+          credits:
+            'Tam 1080p tuval. Sahneye geçtiğinde jenerik ekranın ortasında aşağıdan yukarı akar.',
+          eventList:
+            'Liste için bir sütun. Yeni etkinlikler üstten ya da alttan kayarak girer, kaynağı büyütürsen liste de büyür.',
+          counter:
+            "Sayaçların yan yana durduğu geniş bir şerit, üstünde +1'lerin süzüleceği boşluk da var. Alt alta düzen için 440x400.",
           weather:
             'Tam bir 1080p tuval. Hava durumu seçtiğin köşede durur, dikey bir tuvale de sığar.',
           raffle:
@@ -2076,7 +2605,7 @@ export const tr: typeof en = {
         title: "Widget'ı sonradan nasıl değiştiririm?",
         p1: "Ayarlar widget adresinin içinde durur, yani bir ayarı değiştirmek yeni bir adres demek. Kurulum sayfasında ayarı değiştir, yeni adresi kopyala, sonra OBS'te kaynağa çift tıklayıp URL alanındaki eski adresin yerine yapıştır.",
         p2:
-          '[Sohbet Kutusu](/setup/chat-widget), [Emote Duvarı](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Yayın Uyarıları](/setup/stream-alerts), [Abone Hedefi](/setup/sub-goal), [Sohbet Anketi](/setup/chat-poll), [Yayın Çerçeveleri](/setup/stream-frames), [Sosyal Medya](/setup/socials), [Yayın Geri Sayımı](/setup/stream-countdown), [IRL HUD Overlay](/setup/irl-hud), [Hava Durumu](/setup/weather) ya da [Çark](/setup/spin-wheel) için baştan başlaman gerekmez. Mevcut adresini kurulum sayfasındaki Widget URL alanına yapıştır, kanalların ve bütün ayarların geri yüklenir. Değiştirmek istediğini değiştir ve yeni adresi kopyala.',
+          '[Sohbet Kutusu](/setup/chat-widget), [Emote Duvarı](/setup/emote-wall), [Sub Sprout](/setup/sub-growing-plant), [Subathon Timer](/setup/subathon-timer), [Yayın Uyarıları](/setup/stream-alerts), [Abone Hedefi](/setup/sub-goal), [Sayaç](/setup/counter), [Etkinlik Listesi](/setup/event-list), [Kapanış Jeneriği](/setup/end-credits), [İzleyici Sırası](/setup/viewer-queue), [Destekçi Sıralaması](/setup/top-supporters), [Alt Bant](/setup/lower-thirds), [Görev Listesi](/setup/task-list), [Sohbet Anketi](/setup/chat-poll), [Yayın Çerçeveleri](/setup/stream-frames), [Sosyal Medya](/setup/socials), [Yayın Geri Sayımı](/setup/stream-countdown), [IRL HUD Overlay](/setup/irl-hud), [Hava Durumu](/setup/weather) ya da [Çark](/setup/spin-wheel) için baştan başlaman gerekmez. Mevcut adresini kurulum sayfasındaki Widget URL alanına yapıştır, kanalların ve bütün ayarların geri yüklenir. Değiştirmek istediğini değiştir ve yeni adresi kopyala.',
         p3: "OBS Bridge'de yapıştırma alanı yok, ayarları kurulum sayfasında yeniden girip yeni araç adresini kopyalarsın. Sahne seçimlerini ve yetkili kullanıcıları araç sayfasında da değiştirebilir, yeni adresi oradaki Güncel URL'yi Kopyala düğmesiyle alabilirsin. Eski adresler çalışmaya devam eder, güncellemek zorunda değilsin.",
       },
       troubleshoot: {
@@ -2758,7 +3287,7 @@ export const tr: typeof en = {
     breadcrumb: "Preset'ler",
     eyebrow: "Preset'ler",
     title: "Yayın overlay'lerin için oyun preset'leri",
-    lead: "Seçtiğin preset'le Sohbet Kutusu, Yayın Uyarıları, Abone Hedefi, Subathon Timer, Sohbet Anketi, Çekiliş kazanan overlay'i, Yayın Çerçeveleri, Yayın Geri Sayımı, Sosyal Medya ve Çark aynı çerçeveyi, yazı tiplerini ve renkleri alır. İstersen hepsinde aynısını kullan, istersen her birinde başka birini.",
+    lead: "Seçtiğin preset'le Sohbet Kutusu, Yayın Uyarıları, Abone Hedefi, Sayaç, Etkinlik Listesi, Kapanış Jeneriği, İzleyici Sırası, Destekçi Sıralaması, Alt Bant, Görev Listesi, Subathon Timer, Sohbet Anketi, Çekiliş kazanan overlay'i, Yayın Çerçeveleri, Yayın Geri Sayımı, Sosyal Medya ve Çark aynı çerçeveyi, yazı tiplerini ve renkleri alır. İstersen hepsinde aynısını kullan, istersen her birinde başka birini.",
     pickTitle: 'Bir preset seç',
     pickText:
       "League of Legends (LoL), World of Warcraft (WoW), Metin2, Dota 2, Valorant, Counter-Strike 2 (CS2), Minecraft, Clash of Clans, Fortnite, Rocket League ve PUBG: Battlegrounds için hazır preset'ler.",
@@ -2855,10 +3384,10 @@ export const tr: typeof en = {
       'OBS Studio ve tarayıcı kaynağı (browser source) destekleyen diğer yayın programlarıyla. Her widget bir web adresi olarak çalışır, kaynağa bu adresi yapıştırırsın. Rehberlerimiz OBS Studio için yazıldı.',
     platformsQ: "Hangi widget'lar Twitch'i, hangileri Kick'i destekliyor?",
     platformsA:
-      "On üçü de iki platformu destekliyor. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi, Yayın Geri Sayımı, IRL HUD Overlay ve Çark tek adreste Twitch ve Kick kanalını birlikte dinler. OBS Bridge iki sohbetten gelen komutları dinler ve her yetkili kullanıcı kendi platformuyla eklenir. Çekiliş her seferinde tek platformda çalışır, Twitch ya da Kick. Yayın Çerçeveleri, Sosyal Medya ve Hava Durumu sohbeti okumaz, bu yüzden iki platformda da aynı şekilde çalışır. Sohbet Kutusu'nda 7TV emote'ları iki platformda, BTTV ve FFZ emote'ları sadece Twitch'te görünür.",
+      "On üçü de iki platformu destekliyor. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sayaç, Etkinlik Listesi, Kapanış Jeneriği, İzleyici Sırası, Destekçi Sıralaması, Alt Bant, Görev Listesi, Sohbet Anketi, Yayın Geri Sayımı, IRL HUD Overlay ve Çark tek adreste Twitch ve Kick kanalını birlikte dinler. OBS Bridge iki sohbetten gelen komutları dinler ve her yetkili kullanıcı kendi platformuyla eklenir. Çekiliş her seferinde tek platformda çalışır, Twitch ya da Kick. Yayın Çerçeveleri, Sosyal Medya ve Hava Durumu sohbeti okumaz, bu yüzden iki platformda da aynı şekilde çalışır. Sohbet Kutusu'nda 7TV emote'ları iki platformda, BTTV ve FFZ emote'ları sadece Twitch'te görünür.",
     editQ: "Widget'ı sonradan nasıl değiştiririm?",
     editA:
-      "Kurulum sayfasında ayarları değiştir, yeni adresi kopyala ve OBS'te kaynağın URL alanındaki eski adresin yerine yapıştır. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sohbet Anketi, Yayın Çerçeveleri, Sosyal Medya, Yayın Geri Sayımı, IRL HUD Overlay, Hava Durumu ve Çark'ta eski adresini kurulum sayfasındaki Widget URL alanına yapıştırırsan bütün ayarların geri yüklenir, baştan başlaman gerekmez.",
+      "Kurulum sayfasında ayarları değiştir, yeni adresi kopyala ve OBS'te kaynağın URL alanındaki eski adresin yerine yapıştır. Sohbet Kutusu, Emote Duvarı, Sub Sprout, Subathon Timer, Yayın Uyarıları, Abone Hedefi, Sayaç, Etkinlik Listesi, Kapanış Jeneriği, İzleyici Sırası, Destekçi Sıralaması, Alt Bant, Görev Listesi, Sohbet Anketi, Yayın Çerçeveleri, Sosyal Medya, Yayın Geri Sayımı, IRL HUD Overlay, Hava Durumu ve Çark'ta eski adresini kurulum sayfasındaki Widget URL alanına yapıştırırsan bütün ayarların geri yüklenir, baştan başlaman gerekmez.",
     oldUrlsQ: 'Eski widget adreslerim çalışmaya devam eder mi?',
     oldUrlsA:
       "Evet. Güncellemeler mevcut adresleri bozmayacak şekilde yapılır: parametre adları, değerleri ve varsayılanları değişmez. Örneğin Sohbet Kutusu'ndaki eski keep=true hâlâ Süresiz anlamına gelir ve Sub Sprout eski channel ve platform parametrelerini hâlâ okur.",
@@ -2882,6 +3411,20 @@ export const tr: typeof en = {
     lead: "Senchabot Extensions'a eklenen özellikler ve düzeltilen hatalar, en yenisi en üstte. Liste projenin [GitHub'daki](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) commit geçmişinden hazırlanıyor.",
     site: 'Site',
     entries: {
+      tasksLaunch:
+        'Yeni overlay: Görev Listesi, co-working ve ders çalışma yayınları için. İzleyiciler görevlerini Twitch ya da Kick sohbetinden !task ile ekler, !done ile tamamlar; senin görevlerin de aynı listede yer alır. Liste yayında görünür, uzayınca kayar, modlar da sohbetten temizler.',
+      lowerThirdLaunch:
+        "Yeni overlay: Alt Bant, seçtiğin preset'in görünümüyle adını ya da programının adını ve altında sırayla değişen satırları gösteren animasyonlu bir bant. Sürekli ekranda kalabilir ya da belirlediğin sürelerle gelip gidebilir; modlar da sohbetten !lt ile kendi satırlarını ekrana çıkarır.",
+      leaderboardLaunch:
+        "Yeni overlay: Destekçi Sıralaması, Twitch ve Kick'te en çok abonelik hediye edenleri ya da en çok Bits ve Kicks gönderenleri sıralayan bir tablo, ya da son abonelik, hediye abonelik, cheer ve raid için etiketler. Toplamlar OBS'te kaydedilir, modlar !top reset ile sıfırlar.",
+      queueLaunch:
+        'Yeni araç: İzleyici Sırası, izleyicilerinle oyun oynamak için. İzleyiciler Twitch ya da Kick sohbetine !join yazarak, oyun içi adları gibi bir notla sıraya girer; sen ya da modların !next ile sıradakileri çağırırsınız. Sıra yayında görünür, modlar da sohbetten sırayı açar, kapatır ve temizler.',
+      creditsLaunch:
+        "Yeni overlay: Kapanış Jeneriği, bitiş sahnen için film tarzı bir jenerik. Tarayıcı kaynağı açık kaldıkça Twitch ve Kick'te abone olan, abonelik hediye eden, Bits ya da Kicks gönderen, raid atan, moderatörlük yapan ya da sohbet eden herkesi toplar ve sahneye geçtiğinde jeneriği başlatır. Modlar da !credits ile başlatabilir.",
+      eventListLaunch:
+        "Yeni overlay: Etkinlik Listesi, Twitch ve Kick'ten gelen son abonelikler, yenilemeler, hediye abonelikler, Bits, Kicks ve raid'ler tek bir listede, her satır kendi platformunun rengiyle işaretli. Hangi etkinliklerin ve kaç tanesinin görüneceğini, sayılacak en küçük cheer ve raid'leri ve satırların kaybolup kaybolmayacağını sen seç.",
+      counterLaunch:
+        "Yeni overlay: Sayaç, Twitch ve Kick için galibiyetleri, mağlubiyetleri ya da başka her sayıyı tutar. Aynı anda dört taneye kadar, yan yana ya da alt alta, seçtiğin preset'in görünümüyle. Sen ve modların !wins +1 gibi komutlarla sohbetten değiştirirsiniz, her sayı OBS'te kaydedilir.",
       irlHudIndoor:
         'IRL HUD Overlay: modlar !hud indoor ile mini haritayı iç mekâna alır. Şehir ve Park haritalarında ok en yakın binaya girer ve harita ona yakınlaşıp gerisini karartırken duvarlarının içinde dolaşır; !hud outdoor onu yeniden sokağa çıkarır. Gerçek Yer haritaları dışarıda kalır.',
       weatherLaunch:

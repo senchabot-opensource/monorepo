@@ -1,5 +1,6 @@
 import { screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { withLayout } from '#/test/browser';
 import { button, en, segment, textbox, toggle } from '#/test/queries';
 import { renderRoute, setupUser } from '#/test/render';
 
@@ -113,7 +114,7 @@ describe('Weather setup', () => {
     expect(screen.queryByText(en('weather.details'))).toBeNull();
   });
 
-  it("offers the IRL HUD's styles, which have no background to pick", async () => {
+  it("offers the IRL HUD's styles for the pill only, and they have no background to pick", async () => {
     const user = await openPage();
     await user.type(findField(), '41.0082, 28.9784{Enter}');
     expect(segment(en('weather.style'), en('weather.styles.app')).checked).toBe(true);
@@ -123,6 +124,15 @@ describe('Weather setup', () => {
     expect(widgetUrl().searchParams.get('style')).toBe('retro');
     expect(screen.queryByText(en('weather.theme'))).toBeNull();
     await user.click(segment(en('weather.style'), en('weather.styles.modern')));
+    expect(widgetUrl().searchParams.get('style')).toBe('modern');
+
+    // The card always looks like a weather app: no style to pick, and its background back.
+    await user.click(segment(en('weather.layout'), en('weather.layouts.card')));
+    expect(screen.queryByText(en('weather.style'))).toBeNull();
+    expect(widgetUrl().searchParams.get('style')).toBeNull();
+    expect(segment(en('weather.theme'), en('weather.themes.dark')).checked).toBe(true);
+    // Back on the pill, the style picked for it is still there.
+    await user.click(segment(en('weather.layout'), en('weather.layouts.pill')));
     expect(widgetUrl().searchParams.get('style')).toBe('modern');
 
     await user.click(segment(en('weather.style'), en('weather.styles.app')));
@@ -152,5 +162,23 @@ describe('Weather setup', () => {
     await user.click(urlField());
     await user.paste(`${window.location.origin}/widgets/irl-hud?twitch=streamer`);
     expect(screen.getByText(en('weather.widgetUrlInvalid'))).toBeTruthy();
+  });
+
+  it('opens the preview at 3× on the corner the weather sits in', async () => {
+    withLayout(960, 540);
+    const user = await openPage();
+    const frame = () => screen.getByTitle(en('weather.previewIframeTitle'));
+    expect(segment(en('common.previewZoom'), '3×').checked).toBe(true);
+    // Top left at first: the top-left ninth of the scene fills the preview.
+    expect(frame().style.transform).toBe(
+      'translate(-50%, -50%) translate(960px, 540px) scale(1.5)',
+    );
+    await user.click(segment(en('weather.corner'), en('irlHud.corners.br')));
+    expect(frame().style.transform).toBe(
+      'translate(-50%, -50%) translate(-960px, -540px) scale(1.5)',
+    );
+    // 1× still shows the whole scene.
+    await user.click(segment(en('common.previewZoom'), '1×'));
+    expect(frame().style.transform).toBe('translate(-50%, -50%) scale(0.5)');
   });
 });

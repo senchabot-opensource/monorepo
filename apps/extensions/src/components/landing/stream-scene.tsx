@@ -60,7 +60,7 @@ export function StreamScene() {
       <PreviewFrame
         src={getDemoSrc(widget)}
         title={t('home.demoTitle', { name: t(widget.nameKey) })}
-        placeholder={<span />}
+        showLoading
         backgroundClassName="bg-transparent"
         className={FLUSH_FRAME_CLASS}
       />

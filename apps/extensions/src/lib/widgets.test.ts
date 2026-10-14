@@ -28,9 +28,10 @@ describe('widget registry', () => {
     for (const widget of WIDGETS.filter((entry) => entry.demoUrl)) {
       expect(widget.demoUrl, widget.id).toMatch(new RegExp(`^${widget.widgetPath}\\?`));
     }
-    // A tool's demo is its on-stream part: the Subathon clock and the poll have one.
+    // A tool's demo is its on-stream part: the Subathon clock, the poll and the queue have one.
     expect(TOOLS.filter((widget) => widget.demoUrl).map((widget) => widget.id)).toEqual([
       'poll',
+      'queue',
       'subathon',
     ]);
   });

@@ -10,6 +10,13 @@ Senchabot Extensions provides 100% free streaming widgets, customizable overlays
 - **Subathon Timer** — A subathon countdown that subs, gifted subs, Bits and Kicks add time to, shown as a game-style health bar, a clock or a ring. Mods control it from chat.
 - **Stream Alerts** — Animated alerts with their own sound for subs, gifted subs, Bits, Kicks and raids, in a Neon or a Celestial theme.
 - **Sub Goal** — A goal bar that every sub, resub and gifted sub on Twitch and Kick fills by one, with a trophy when the goal is reached. Mods fix the count from chat.
+- **Counter** — A count of wins, losses, jump scares or anything else, with up to four on screen. Mods change them from chat with commands like `!wins +1`.
+- **Event List** — Your latest subs, resubs, gifted subs, Bits, Kicks and raids from Twitch and Kick in one list, newest on top or at the bottom, each row marked with its platform.
+- **End Credits** — Movie-style end credits: everyone who subbed, gifted subs, cheered Bits or Kicks, raided, moderated or chatted on Twitch and Kick, rolling when the ending scene goes live.
+- **Viewer Queue** — A play-with-viewers queue: viewers type !join in Twitch or Kick chat to get in line, and mods call the next ones up with !next.
+- **Top Supporters** — A leaderboard of your top gifters or top Bits and Kicks givers from Twitch and Kick, or labels for the latest sub, gift, cheer and raid.
+- **Lower Thirds** — An animated name and topic bar for a corner of the scene, with lines that take turns, always up or on a timer. Mods change it with !lt.
+- **Task List** — A co-working task list: you and your viewers add tasks from Twitch or Kick chat with !task and tick them off with !done.
 - **Stream Frames** — Ready-made webcam, chat and screen frames drawn in the picked preset's look, transparent in the middle.
 - **Stream Countdown** — A countdown for the starting soon, back soon and stream ending scenes, counting down a length or aiming at a time of day, in the picked preset's look.
 - **IRL HUD Overlay** — A game-style HUD for IRL streams: subs, gifted subs, Bits, Kicks and raids add cash to a Retro or Modern cash counter, under a clock in your time zone, next to a mini-map where an arrow walks a made-up city or park, or the real streets around a place you pick.
@@ -28,6 +35,13 @@ Senchabot Extensions provides 100% free streaming widgets, customizable overlays
 - [Subathon Timer](https://extensions.senchabot.com/setup/subathon-timer)
 - [Stream Alerts](https://extensions.senchabot.com/setup/stream-alerts)
 - [Sub Goal](https://extensions.senchabot.com/setup/sub-goal)
+- [Counter](https://extensions.senchabot.com/setup/counter)
+- [Event List](https://extensions.senchabot.com/setup/event-list)
+- [End Credits](https://extensions.senchabot.com/setup/end-credits)
+- [Viewer Queue](https://extensions.senchabot.com/setup/viewer-queue)
+- [Top Supporters](https://extensions.senchabot.com/setup/top-supporters)
+- [Lower Thirds](https://extensions.senchabot.com/setup/lower-thirds)
+- [Task List](https://extensions.senchabot.com/setup/task-list)
 - [Stream Frames](https://extensions.senchabot.com/setup/stream-frames)
 - [Stream Countdown](https://extensions.senchabot.com/setup/stream-countdown)
 - [IRL HUD Overlay](https://extensions.senchabot.com/setup/irl-hud)
@@ -126,6 +140,126 @@ https://extensions.senchabot.com/widgets/goal?twitch=YOUR_TWITCH_CHANNEL&kick=YO
 ```
 
 **URL parameters:** `twitch`, `kick`, `style` (`bar` | `thin`), `color` (`purple` | `green` | `red` | `gold` | `cyan` | `pink`), `title` (empty hides it), `icon` (an emoji instead of the star), `iconUrl` (a channel emote image instead of the star, picked on the setup page; it flies to the bar on every sub), `start` (starting count), `target` (the goal, 1 or more), `end` (`stay` | `hide`: what stays on screen once the goal is reached), `endHold` (seconds the completed goal stays up, 0 hides it right away), `pops` (`0` hides the rising +1s), `simulate` (`1` plays simulated subs), `simplatform` (`twitch` | `kick`).
+
+---
+
+### Counter (`/setup/counter`)
+
+A count of wins, losses, jump scares or anything else a streamer keeps score of. One browser source shows up to four counters, side by side or stacked, and the broadcaster and mods change them from Twitch or Kick chat.
+
+**How it works:**
+- Listens to Twitch IRC anonymously and Kick's Pusher WebSocket, both in one browser source, and reads only the broadcaster's and mods' `!` messages. Viewers typing a command change nothing.
+- Each counter has a label, an icon (an emoji, or a channel emote picked on the setup page), a starting count and its own chat command, `!wins` by default.
+- The commands, for a counter on `!wins`: `!wins` or `!wins +` adds 1, `!wins +3` (`add 3`) adds 3, `!wins -` / `!wins -2` (`remove 2`) takes off, `!wins set 10` sets it and `!wins reset` goes back to the starting count. A bare number (`!wins 5`) does nothing, so a typo can't wipe the count. Counts never go below 0.
+- Every count is saved in the browser source's `localStorage`, keyed by the channels and the command, so a reload or an OBS restart keeps it and other counters can be added or removed without losing it. A new starting count in the URL starts that counter over.
+- A duplicate or empty command falls back to `count2`, `count3` and so on, so one command never moves two counters. The setup page warns when a command is also used by another widget (`!goal`, `!poll`, `!spin`, …).
+- Takes a preset; `row` (800×260) puts the counters side by side, `stack` (440×400) one under another.
+
+```
+https://extensions.senchabot.com/widgets/counter?twitch=YOUR_TWITCH_CHANNEL&kick=YOUR_KICK_CHANNEL&c1=Wins&c1cmd=wins&c1icon=%F0%9F%8F%86
+```
+
+**URL parameters:** `twitch`, `kick`, `c1` to `c4` (a counter's label, up to 24 characters, may be empty; no `c1` to `c4` at all shows a Wins counter), `c1cmd` to `c4cmd` (its command without the `!`: letters, digits and `_`, up to 20; the label when left out), `c1icon` to `c4icon` (an emoji or a few characters), `c1iconUrl` to `c4iconUrl` (a channel emote image instead of the icon, picked on the setup page), `c1start` to `c4start` (starting count, 0 by default), `layout` (`row` | `stack`), `pops` (`0` hides the rising +1 and −1), `preset`, `color` (`purple` | `green` | `red` | `gold` | `cyan` | `pink`, classic only), `simulate` (`1` counts on its own and saves nothing).
+
+---
+
+### Event List (`/setup/event-list`)
+
+Your latest subs, resubs, gifted subs, Bits, Kicks and raids from Twitch and Kick in one list, newest on top or at the bottom, each row marked with its platform.
+
+**How it works:**
+- Listens to Twitch IRC anonymously and Kick's Pusher WebSocket, both in one browser source, through the same event readers as Stream Alerts.
+- A row per sub (months on a resub), gift (subs in it), Bits on Twitch or Kicks on Kick, and raid (viewers). Kick's second sub event fills in the months of the row already shown.
+- Follows and donations aren't included: neither platform shows them to a page that isn't logged in.
+- The list is saved in the browser source's `localStorage`, so a reload keeps it. Mods clear it with `!events clear`.
+
+```
+https://extensions.senchabot.com/widgets/event-list?twitch=YOUR_TWITCH_CHANNEL&kick=YOUR_KICK_CHANNEL&lang=en
+```
+
+**URL parameters:** `twitch`, `kick`, `sub`, `gift`, `bits`, `raid` (`0` hides that kind), `minbits` (fewest Bits or Kicks, 1 by default), `minraid` (fewest raid viewers), `rows` (3 to 10, 5 by default), `newest` (`top` | `bottom`), `fade` (seconds a row stays, 0 keeps it), `title` (above the list, none by default), `preset`, `color` (`platform` | `purple` | `green` | `red` | `gold` | `cyan` | `pink`, classic only), `lang`, `simulate`.
+
+---
+
+### End Credits (`/setup/end-credits`)
+
+Movie-style end credits: everyone who subbed, gifted subs, cheered Bits or Kicks, raided, moderated or chatted on Twitch and Kick, rolling when the ending scene goes live.
+
+**How it works:**
+- Collects names while the browser source runs: subs, gifts, Bits and Kicks (biggest first), raiders, moderators and chatters from both chats. Bots and the broadcaster are left out of the chat list; a ban takes a viewer out.
+- In OBS the roll starts when its scene goes live (OBS's `obsSourceActiveChanged` event) and stops when it leaves; in a browser tab it rolls at once. Keep "Shutdown source when not visible" off so it collects all stream.
+- The names are saved in `localStorage`; after 12 hours without anything new the next stream starts empty. Mods use `!credits` (roll now), `!credits stop` and `!credits reset`.
+
+```
+https://extensions.senchabot.com/widgets/credits?twitch=YOUR_TWITCH_CHANNEL&kick=YOUR_KICK_CHANNEL&title=Thanks%20for%20watching!&lang=en
+```
+
+**URL parameters:** `twitch`, `kick`, `title` (first line), `outro` (last line, none by default), `subs`, `gifts`, `cheers`, `raids`, `mods`, `chatters` (`0` leaves that section out), `speed` (`slow` | `normal` | `fast`), `loop` (`0` rolls once), `preset`, `color` (`gold` | `purple` | `green` | `red` | `cyan` | `pink`, classic only), `lang`, `simulate`.
+
+---
+
+### Viewer Queue (`/setup/viewer-queue`)
+
+A play-with-viewers queue: viewers type !join in Twitch or Kick chat to get in line, and mods call the next ones up with !next.
+
+**How it works:**
+- Reads every message from both chats. Viewers join with the join word (`!join` by default) and an optional note, and leave with `!leave`; a ban takes them out.
+- Mods: `!next` (calls up the group size) or `!next 3`, `!queue open`, `!queue close`, `!queue clear`, `!queue remove name`.
+- Shows who's playing now, the numbered line and how many more are waiting. The queue is saved in `localStorage`.
+
+```
+https://extensions.senchabot.com/widgets/queue?twitch=YOUR_TWITCH_CHANNEL&kick=YOUR_KICK_CHANNEL&title=Viewer%20Queue&lang=en
+```
+
+**URL parameters:** `twitch`, `kick`, `title`, `join` (the join word, `!join` by default), `subs` (`1` lets only subscribers join), `max` (most waiting, 0 for no limit), `rows` (names shown, 3 to 15), `group` (viewers per `!next`, 1 to 10), `preset`, `color` (`purple` | `green` | `red` | `gold` | `cyan` | `pink`, classic only), `lang`, `simulate`.
+
+---
+
+### Top Supporters (`/setup/top-supporters`)
+
+A leaderboard of your top gifters or top Bits and Kicks givers from Twitch and Kick, or labels for the latest sub, gift, cheer and raid.
+
+**How it works:**
+- Counts gifted subs and Bits or Kicks per viewer from both chats (one Bit and one Kick count the same) and keeps the latest sub, gift, cheer and raid.
+- Three boards: `gifts`, `cheers` and `latest`. The totals are saved in `localStorage` and keep counting from stream to stream until `!top reset`.
+
+```
+https://extensions.senchabot.com/widgets/leaderboard?twitch=YOUR_TWITCH_CHANNEL&kick=YOUR_KICK_CHANNEL&board=gifts&title=Top%20Gifters&lang=en
+```
+
+**URL parameters:** `twitch`, `kick`, `board` (`gifts` | `cheers` | `latest`), `rows` (3 to 10 places), `title` (empty shows none), `preset`, `color` (`gold` | `purple` | `green` | `red` | `cyan` | `pink`, classic only), `lang`, `simulate`.
+
+---
+
+### Lower Thirds (`/setup/lower-thirds`)
+
+An animated name and topic bar for a corner of the scene, with lines that take turns, always up or on a timer. Mods change it with !lt.
+
+**How it works:**
+- A title and up to 6 lines that take turns every few seconds. With a hold time the bar slides in and out on a timer; 0 keeps it up.
+- No channel needed. With one, the broadcaster and mods use `!lt <text>` (a line of their own), `!lt clear`, `!lt hide` and `!lt show`.
+
+```
+https://extensions.senchabot.com/widgets/lower-third?title=YOUR_NAME&lines=Welcome%20to%20the%20stream!
+```
+
+**URL parameters:** `twitch`, `kick` (only for the chat commands), `title`, `lines` (joined with `|`, up to 6), `rotate` (seconds per line, 3 to 120), `hold` (seconds on screen, 0 keeps it up), `pause` (seconds away, 5 to 3600), `corner` (`bl` | `br` | `tl` | `tr`), `size` (50 to 200, percent), `preset`, `color` (`purple` | `green` | `red` | `gold` | `cyan` | `pink`, classic only), `simulate`.
+
+---
+
+### Task List (`/setup/task-list`)
+
+A co-working task list: you and your viewers add tasks from Twitch or Kick chat with !task and tick them off with !done.
+
+**How it works:**
+- Everyone changes only their own tasks: `!task <text>`, `!done` (or `!done 2`), `!edit <text>`, `!remove`. Mods: `!tasks cleardone`, `!tasks remove name`, `!tasks clear`.
+- The broadcaster's tasks come first; the panel shows done and total tasks, and a long list scrolls down and back up. The list is saved in `localStorage`.
+
+```
+https://extensions.senchabot.com/widgets/tasks?twitch=YOUR_TWITCH_CHANNEL&kick=YOUR_KICK_CHANNEL&title=Today%27s%20Tasks&lang=en
+```
+
+**URL parameters:** `twitch`, `kick`, `title`, `max` (open tasks per viewer, 1 to 5), `done` (`0` takes finished tasks off at once), `speed` (scroll speed, 10 to 80 px a second), `preset`, `color` (`green` | `purple` | `red` | `gold` | `cyan` | `pink`, classic only), `lang`, `simulate`.
 
 ---
 
@@ -383,6 +517,13 @@ npm run deploy
 │   │   ├── subathon-timer.tsx      # Subathon Timer configuration
 │   │   ├── stream-alerts.tsx       # Stream Alerts configuration
 │   │   ├── sub-goal.tsx            # Sub Goal configuration
+│   │   ├── counter.tsx             # Counter configuration
+│   │   ├── event-list.tsx          # Event List configuration
+│   │   ├── end-credits.tsx         # End Credits configuration
+│   │   ├── viewer-queue.tsx        # Viewer Queue configuration
+│   │   ├── top-supporters.tsx      # Top Supporters configuration
+│   │   ├── lower-thirds.tsx        # Lower Thirds configuration
+│   │   ├── task-list.tsx           # Task List configuration
 │   │   ├── stream-frames.tsx       # Stream Frames configuration
 │   │   ├── stream-countdown.tsx    # Stream Countdown configuration
 │   │   ├── irl-hud.tsx             # IRL HUD Overlay configuration
@@ -396,6 +537,13 @@ npm run deploy
 │       ├── subathon.tsx            # Subathon Timer overlay
 │       ├── stream-alerts.tsx       # Stream Alerts overlay
 │       ├── goal.tsx                # Sub Goal overlay
+│       ├── counter.tsx             # Counter overlay
+│       ├── event-list.tsx          # Event List overlay
+│       ├── credits.tsx             # End Credits overlay
+│       ├── queue.tsx               # Viewer Queue overlay
+│       ├── leaderboard.tsx         # Top Supporters overlay
+│       ├── lower-third.tsx         # Lower Thirds overlay
+│       ├── tasks.tsx               # Task List overlay
 │       ├── frame.tsx               # Stream Frames overlay
 │       ├── countdown.tsx           # Stream Countdown overlay
 │       ├── irl-hud.tsx             # IRL HUD Overlay

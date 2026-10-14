@@ -1,7 +1,7 @@
 import { within } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { LOCALES, type Locale, translate } from '#/lib/i18n';
-import { WIDGETS } from '#/lib/widgets';
+import { getWidget, WIDGETS } from '#/lib/widgets';
 import { headings, inLocale, section } from '#/test/queries';
 import { renderRoute } from '#/test/render';
 
@@ -64,8 +64,19 @@ describe.each(LOCALES)('landing page in %s', (locale) => {
       expect.stringContaining(t('home.howStep2')),
       expect.stringContaining(t('home.howStep3')),
     ]);
-    const sizes = [...how.querySelectorAll('tbody tr')].map((row) => row.textContent);
-    expect(sizes).toContain(`${t('widgets.chatBox.name')}400 × 600`);
+    // Pairs of widgets, each name a link to its setup page, then every size in the OBS guide.
+    const together = within(how).getByRole('heading', { name: t('home.comboTitle') }).parentElement;
+    expect([...(together?.querySelectorAll('a') ?? [])].map((a) => a.getAttribute('href'))).toEqual(
+      [
+        ...(['irl-hud', 'weather', 'countdown', 'credits', 'countdown', 'tasks'] as const).map(
+          (id) => localized(getWidget(id).setupPath),
+        ),
+        `${localized('/guides/obs-browser-source')}#sizes`,
+      ],
+    );
+    expect(how.querySelectorAll('iframe, [data-testid="preview-loading"]').length).toBeGreaterThan(
+      0,
+    );
 
     const questions = visibleFaq(locale).map(([question]) => question);
     expect(questions).toEqual([1, 2, 3, 4, 5, 6].map((n) => t(`home.faq${n}Q` as 'home.faq1Q')));

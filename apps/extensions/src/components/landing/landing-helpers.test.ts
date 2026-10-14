@@ -28,10 +28,11 @@ describe('getDemoSrc', () => {
     expect(params.get('simulate')).toBe('true');
   });
 
-  it('gives every overlay a demo, and of the tools the Subathon Timer and Chat Poll', () => {
+  it('gives every overlay a demo, and of the tools the Subathon Timer, Chat Poll and Viewer Queue', () => {
     for (const widget of OVERLAYS) expect(getDemoSrc(widget), widget.id).not.toBe('');
     expect(TOOLS.filter((widget) => getDemoSrc(widget)).map((widget) => widget.id)).toEqual([
       'poll',
+      'queue',
       'subathon',
     ]);
   });
@@ -45,6 +46,25 @@ describe('getDemoSrc', () => {
     expect(getDemoSrc(chat)).toBe(getDemoSrc(chat, 'scene'));
     const wall = getWidget('emote-wall');
     expect(getDemoSrc(wall, 'card')).toBe(getDemoSrc(wall));
+  });
+
+  it('shows the weather as the pill in its gallery card, in the Modern HUD style', () => {
+    const weather = new URL(getDemoSrc(getWidget('weather'), 'card'), 'https://x').searchParams;
+    expect(Object.fromEntries(weather)).toEqual({
+      demo: '1',
+      layout: 'pill',
+      size: '200',
+      style: 'modern',
+    });
+  });
+
+  it('draws the IRL HUD and the weather alike where they share a scene', () => {
+    const together = (id: 'irl-hud' | 'weather') =>
+      new URL(getDemoSrc(getWidget(id), 'together'), 'https://x').searchParams;
+    expect(together('irl-hud').get('style')).toBe('modern');
+    expect(together('weather').get('style')).toBe('modern');
+    expect(together('irl-hud').get('size')).toBe(together('weather').get('size'));
+    expect(together('weather').get('layout')).toBe('pill');
   });
 });
 
@@ -61,15 +81,25 @@ describe('gallery card shapes', () => {
       ['chat-box', 'tall'],
       ['emote-wall', 'standard'],
       ['sub-sprout', 'standard'],
-      ['stream-alerts', 'standard'],
+      ['irl-hud', 'standard'],
+      ['counter', 'wide'],
+      ['weather', 'standard'],
+      ['socials', 'wide'],
       ['goal', 'wide'],
+      ['follower-goal', 'wide'],
       ['frames', 'standard'],
       ['countdown', 'standard'],
-      ['socials', 'wide'],
+      ['stream-alerts', 'standard'],
+      ['event-list', 'tall'],
+      ['credits', 'standard'],
+      ['leaderboard', 'standard'],
+      ['lower-third', 'standard'],
+      ['tasks', 'tall'],
     ]);
     // Tools never span, not even the Subathon strip.
     expect(TOOLS.map((widget) => [widget.id, getCardShape(widget)])).toEqual([
       ['poll', 'standard'],
+      ['queue', 'standard'],
       ['raffle', 'standard'],
       ['subathon', 'standard'],
       ['obs-bridge', 'standard'],
@@ -78,29 +108,30 @@ describe('gallery card shapes', () => {
   });
 
   it("keeps today's overlays on a one column, two row Chat Box", () => {
-    // Three columns: the chat column, the goal strip and five standard cards fill three rows
-    // exactly, so nothing has to grow.
-    expect(getGalleryShapes(OVERLAYS, 3)).toEqual([
+    // Two chat-like columns, five strips and ten plain cards make 24 cells: eight rows of three
+    // or twelve of two, so every span stays at both widths. (Socials and Stream Alerts swap
+    // shapes, and the Task List's portrait card is drawn plain.)
+    const shapes = [
+      'tall',
+      'standard',
+      'standard',
+      'wide',
+      'wide',
+      'standard',
+      'standard',
+      'wide',
+      'wide',
+      'standard',
+      'standard',
+      'wide',
       'tall',
       'standard',
       'standard',
       'standard',
       'standard',
-      'standard',
-      'standard',
-      'standard',
-    ]);
-    // Two columns come out one cell short, so the last card widens; the chat column stays as it is.
-    expect(getGalleryShapes(OVERLAYS, 2)).toEqual([
-      'tall',
-      'standard',
-      'standard',
-      'standard',
-      'wide',
-      'standard',
-      'wide',
-      'wide',
-    ]);
+    ];
+    expect(getGalleryShapes(OVERLAYS, 3)).toEqual(shapes);
+    expect(getGalleryShapes(OVERLAYS, 2)).toEqual(shapes);
   });
 
   it('gives Socials a plain card and Stream Alerts the wide one in the gallery', () => {
@@ -135,8 +166,9 @@ describe('gallery card shapes', () => {
         'wide',
       ]);
     }
-    // The five tools leave one cell short in two columns, so the last widens.
-    expect(getGalleryShapes(TOOLS, 2)).toEqual([...Array(4).fill('standard'), 'wide']);
+    // Five tools would leave two columns a cell short, so the last widens; six fill them.
+    expect(getGalleryShapes(TOOLS.slice(0, 5), 2)).toEqual([...Array(4).fill('standard'), 'wide']);
+    expect(getGalleryShapes(TOOLS, 2)).toEqual(Array(6).fill('standard'));
   });
 
   it('drops the wide cards, then the tall one, then every span, when a new overlay would leave a hole', () => {
