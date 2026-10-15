@@ -7,13 +7,18 @@ const READS_PRESET: ReadonlySet<WidgetId> = new Set(PRESET_WIDGET_IDS);
 
 /** The presets some landing demos are always shown in, one picked at random (the user's picks). */
 export const LANDING_PICKS: Partial<Record<WidgetId, readonly string[]>> = {
-  goal: ['pizza', 'flower'],
+  goal: ['flower'],
+  'follower-goal': ['boost'],
+  'bits-goal': ['pizza'],
+  leaderboard: ['operator'],
   credits: ['operator'],
   'now-playing': ['glitch'],
   'event-list': ['conquest', 'pizza', 'flower'],
+  // The Chat Poll spotlight's; its gallery card is a drawing and wears none.
+  poll: ['flower', 'pizza', 'conquest', 'glitch', 'boost'],
 };
 
-/** The presets every other landing demo is dealt from, the Chat Poll spotlight's too. */
+/** The presets every other landing demo is dealt from. */
 export const LANDING_REST = ['operator', 'conquest', 'defuse', 'boost'] as const;
 
 /** Whether the widget's overlay reads a preset, so its landing demo can be shown in one. */

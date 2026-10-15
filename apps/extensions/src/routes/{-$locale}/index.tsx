@@ -19,7 +19,12 @@ import { PollSpotlight } from '#/components/landing/poll-spotlight';
 import { PresetPicks } from '#/components/landing/preset-picks';
 import { StreamScene } from '#/components/landing/stream-scene';
 import { hasToolVisual } from '#/components/landing/tool-visuals';
-import { type CardShape, getGalleryShapes, WidgetCard } from '#/components/landing/widget-card';
+import {
+  type CardShape,
+  getGalleryShapes,
+  inGalleryOrder,
+  WidgetCard,
+} from '#/components/landing/widget-card';
 import { SiteLayout } from '#/components/site-layout';
 import { StepsList } from '#/components/steps-list';
 import { BUTTON_PRIMARY, BUTTON_SECONDARY } from '#/components/ui/button-styles';
@@ -241,7 +246,7 @@ function WorksWith() {
 const GALLERY_GROUPS = [
   {
     key: 'overlays',
-    widgets: OVERLAYS,
+    widgets: inGalleryOrder(OVERLAYS),
     lgColumns: 3,
     lead: 'home.overlaysLead',
     columns: 'sm:grid-cols-2 lg:grid-cols-3',
@@ -255,10 +260,11 @@ const GALLERY_GROUPS = [
   },
 ] as const;
 
-// Cards whose live demo can wear a preset; a tool drawn as a picture shows none.
-const DEALT_IDS = WIDGETS.filter(
-  (widget) => widget.demoUrl && !hasToolVisual(widget.id) && readsPreset(widget),
-).map((widget) => widget.id);
+// Cards whose live demo can wear a preset, in the order they show; a tool drawn as a picture
+// shows none.
+const DEALT_IDS = GALLERY_GROUPS.flatMap((group) => group.widgets)
+  .filter((widget) => widget.demoUrl && !hasToolVisual(widget.id) && readsPreset(widget))
+  .map((widget) => widget.id);
 
 // Each breakpoint names both axes, so the wider grid resets a span the narrower one set.
 const SM_SPAN: Record<CardShape, string> = {

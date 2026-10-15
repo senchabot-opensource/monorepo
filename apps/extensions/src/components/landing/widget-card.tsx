@@ -27,28 +27,67 @@ export function getCardShape(widget: WidgetEntry): CardShape {
   return 'standard';
 }
 
-// The gallery's own shapes where a source size would pick another, laid out row by row at three
-// columns: Event List, Emote Wall, Emote Combo and Sub Sprout beside the Chat Box; the IRL HUD strip
-// and Weather; the Follower Goal, the Bits & Kicks Goal and Top Supporters; the Stream Alerts strip
-// and End Credits; Socials and the Counter strip; the Sub Goal strip and Stream Countdown. A card
-// drawn plain here is never widened again to fill a short grid.
+/**
+ * The overlays in the order the gallery shows them, row by row at three columns (the user's
+ * rows): the Sub Goal strip and a plain Chat Box; Event List, Emote Wall and Emote Combo; the IRL
+ * HUD strip and Weather; Top Supporters and the Bits & Kicks Goal strip; the Follower Goal strip
+ * and Stream Alerts; Socials and the Counter strip; End Credits, Stream Countdown and Sub Sprout;
+ * Featured Message and the Now Playing strip; Stream Frames, Lower Thirds and Task List. The
+ * menus keep the registry's order. An overlay not named here goes after these.
+ */
+const GALLERY_ORDER: readonly WidgetId[] = [
+  'goal',
+  'chat-box',
+  'event-list',
+  'emote-wall',
+  'emote-combo',
+  'irl-hud',
+  'weather',
+  'leaderboard',
+  'bits-goal',
+  'follower-goal',
+  'stream-alerts',
+  'socials',
+  'counter',
+  'credits',
+  'countdown',
+  'sub-sprout',
+  'featured',
+  'now-playing',
+  'frames',
+  'lower-third',
+  'tasks',
+];
+
+/** The overlays in the gallery's order (see GALLERY_ORDER). */
+export function inGalleryOrder(widgets: readonly WidgetEntry[]): WidgetEntry[] {
+  const rank = (widget: WidgetEntry) => {
+    const index = GALLERY_ORDER.indexOf(widget.id);
+    return index < 0 ? GALLERY_ORDER.length : index;
+  };
+  return [...widgets].sort((a, b) => rank(a) - rank(b));
+}
+
+// The gallery's own shapes where a source size would pick another, for the rows in GALLERY_ORDER.
+// A card drawn plain here is never widened again to fill a short grid.
 const GALLERY_SHAPES: Partial<Record<WidgetId, CardShape>> = {
+  // A small card beside the Sub Goal strip, instead of a column two rows tall.
+  'chat-box': 'standard',
   'event-list': 'standard',
   socials: 'standard',
-  // Whole scenes, cut to a strip: the HUD in its corners, an alert in the middle.
+  // A whole scene, cut to a strip with the HUD in its corners.
   'irl-hud': 'wide',
-  'stream-alerts': 'wide',
-  'follower-goal': 'standard',
-  'bits-goal': 'standard',
+  // Small cards at every width, never widened to fill a grid (the user's call).
+  'stream-alerts': 'standard',
+  countdown: 'standard',
   // Portrait and strip demos that the rows above have no room for at their own shape.
   tasks: 'standard',
   featured: 'standard',
 };
 
-// A wide card holding a 16:9 alert, instead of a strip, is cut to a plain card's height, so the
+// A wide card holding a 16:9 scene, instead of a strip, is cut to a plain card's height, so the
 // row beside it doesn't stretch.
 const PREVIEW_ASPECT: Partial<Record<WidgetId, string>> = {
-  'stream-alerts': '11 / 4',
   'irl-hud': '11 / 4',
 };
 

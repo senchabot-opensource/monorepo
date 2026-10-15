@@ -1,8 +1,9 @@
 import { act, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { LANDING_PICKS, LANDING_REST } from '#/components/landing/demo-presets';
+import { inGalleryOrder } from '#/components/landing/widget-card';
 import { LOCALES, type Locale, translate } from '#/lib/i18n';
-import { getWidget, inCategory, WIDGETS } from '#/lib/widgets';
+import { getWidget, inCategory, OVERLAYS, TOOLS, WIDGETS } from '#/lib/widgets';
 import { en, headings, inLocale, section } from '#/test/queries';
 import { renderRoute, setupUser } from '#/test/render';
 
@@ -57,9 +58,12 @@ describe.each(LOCALES)('landing page in %s', (locale) => {
     const gallery = section(t('home.galleryTitle'));
     expect(gallery.id).toBe('widgets');
     const cards = [...gallery.querySelectorAll('article')];
+    // The overlays in the gallery's own rows, then the tools.
+    const shown = [...inGalleryOrder(OVERLAYS), ...TOOLS];
     expect(cards).toHaveLength(WIDGETS.length);
+    expect(shown).toHaveLength(WIDGETS.length);
     cards.forEach((card, index) => {
-      const widget = WIDGETS[index];
+      const widget = shown[index];
       const heading = within(card).getByRole('heading', { level: 4 });
       expect(heading.textContent).toBe(t(widget.nameKey));
       // Plus the preset its demo is shown in, for the cards that have one.
@@ -163,7 +167,7 @@ describe('landing page presets', () => {
 
     const spotlight = section(en('home.pollSpotlight.title'));
     const poll = presetOf(spotlight.querySelector('iframe') as HTMLIFrameElement);
-    expect(LANDING_REST).toContain(poll);
+    expect(LANDING_PICKS.poll).toContain(poll);
     const setup = within(spotlight).getByRole('link', { name: en('home.pollSpotlight.setup') });
     expect(linkOf(setup).pathname).toBe('/setup/chat-poll');
     expect(presetOf(setup)).toBe(poll);
