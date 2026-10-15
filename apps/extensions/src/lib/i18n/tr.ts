@@ -1026,9 +1026,11 @@ export const tr: typeof en = {
       "Twitch ve Kick için, IRL yayınlara göre yapılmış oyun tarzı bir HUD. Her abonelik, hediye abonelik, Bits cheer'ı, Kicks hediyesi ve raid, belirlediğin miktarda parayı sayaca ekler; üstünde senin saat dilimindeki saat, yanında da bir okun şehir sokaklarında, park yollarında ya da seçtiğin bir yerin gerçek sokaklarında yürüdüğü bir mini harita durur.",
     style: 'Stil',
     styleTip:
-      'Retro, gri saatin altında kalın çerçeveli yeşil $00000350 parayı ve yuvarlak bir mini haritayı gösterir. Modern, yumuşak gölgeli beyaz $1,250 parayı, yeşil kazançları ve köşeleri yuvarlatılmış kare bir mini haritayı gösterir.',
+      'Retro, gri saatin altında kalın çerçeveli yeşil $00000350 parayı ve yuvarlak bir mini haritayı gösterir. Modern, yumuşak gölgeli beyaz $1,250 parayı, yeşil kazançları ve köşeleri yuvarlatılmış kare bir mini haritayı gösterir. Orta Çağ ve MMORPG dolar yerine altın sikke sayar: Orta Çağ ahşap çerçeveli parşömen bir mini haritayla, MMORPG yeşil kazançlar ve altın çerçeveli yuvarlak bir mini haritayla.',
     styleRetro: 'Retro',
     styleModern: 'Modern',
+    styleMedieval: 'Orta Çağ',
+    styleMmorpg: 'MMORPG',
     corner: 'Para Konumu',
     cornerTip: 'Paranın ve saatin sahnenin hangi köşesinde duracağı.',
     corners: {
@@ -1939,11 +1941,13 @@ export const tr: typeof en = {
     placePrivacy: 'İzleyiciler bu adı ve hava durumunu görür, koordinatları asla görmez.',
     style: 'Stil',
     styleTip:
-      "Hava Uygulaması, seçtiğin arka planın üstünde yuvarlak rakamlar gösterir. Retro HUD ve Modern HUD, IRL HUD Overlay'in stillerini kullanır: doğrudan sahnenin üstünde çerçeveli yazı, böylece hava durumu yanındaki HUD'a uyar.",
+      "Hava Uygulaması, seçtiğin arka planın üstünde yuvarlak rakamlar gösterir. HUD stilleri IRL HUD Overlay'in stilleridir: doğrudan sahnenin üstünde çerçeveli yazı, böylece hava durumu yanındaki HUD'a uyar.",
     styles: {
       app: 'Hava Uygulaması',
       retro: 'Retro HUD',
       modern: 'Modern HUD',
+      medieval: 'Orta Çağ HUD',
+      mmorpg: 'MMORPG HUD',
     },
     layout: 'Düzen',
     layoutTip:
@@ -3711,6 +3715,8 @@ export const tr: typeof en = {
     lead: "Senchabot Extensions'a eklenen özellikler ve düzeltilen hatalar, en yenisi en üstte. Liste projenin [GitHub'daki](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) commit geçmişinden hazırlanıyor.",
     site: 'Site',
     entries: {
+      hudMedievalMmorpg:
+        "IRL HUD Overlay ve Hava Durumu'na iki yeni stil geldi: Orta Çağ ve MMORPG. Bu stillerde HUD dolar yerine altın sikke sayar, mini harita da parşömen ya da altın çerçeveli olur.",
       presetsFont:
         "Preset seçicinin altındaki yeni Yazı tipi kutusu, widget'ı preset'in kendi yazı tipleri yerine Inter, Roboto, Nunito, JetBrains Mono, Source Serif 4 ya da sistem yazı tipinle gösterir; preset'in renkleri, çerçevesi ve efektleri aynen kalır.",
       presetsRandom:

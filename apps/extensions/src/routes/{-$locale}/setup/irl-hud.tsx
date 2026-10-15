@@ -10,6 +10,7 @@ import { CountField } from '#/components/ui/count-field';
 import { FieldLabel } from '#/components/ui/field-label';
 import { RangeField } from '#/components/ui/range-field';
 import { SegmentedControl, type SegmentedOption } from '#/components/ui/segmented-control';
+import { Select, type SelectOption } from '#/components/ui/select';
 import { SettingsGroup } from '#/components/ui/settings-group';
 import { Switch } from '#/components/ui/switch';
 import { Tabs } from '#/components/ui/tabs';
@@ -33,6 +34,7 @@ import {
   HUD_CORNERS,
   HUD_MAPS,
   HUD_MOVES,
+  HUD_STYLES,
   type HudCorner,
   type HudMap,
   type HudMoneyKey,
@@ -84,6 +86,13 @@ const MONEY_FIELDS: Record<SubathonPlatform, MoneyField[]> = {
 };
 
 const PLATFORM_DOTS: Record<SubathonPlatform, string> = { twitch: '#9146FF', kick: '#53FC18' };
+
+const STYLE_LABELS: Record<HudStyle, TranslationKey> = {
+  retro: 'irlHud.styleRetro',
+  modern: 'irlHud.styleModern',
+  medieval: 'irlHud.styleMedieval',
+  mmorpg: 'irlHud.styleMmorpg',
+};
 
 const FAQ: FaqEntry[] = [
   ['irlHud.faq1Q', 'irlHud.faq1A'],
@@ -151,10 +160,11 @@ function IrlHudSetup() {
     return true;
   };
 
-  const styleOptions: SegmentedOption<HudStyle>[] = [
-    { value: 'retro', label: t('irlHud.styleRetro') },
-    { value: 'modern', label: t('irlHud.styleModern') },
-  ];
+  // Four of them don't fit side by side on a phone, so they're a dropdown.
+  const styleOptions: SelectOption<HudStyle>[] = HUD_STYLES.map((style) => ({
+    value: style,
+    label: t(STYLE_LABELS[style]),
+  }));
   const cornerOptions: SegmentedOption<HudCorner>[] = HUD_CORNERS.map((corner) => ({
     value: corner,
     label: t(`irlHud.corners.${corner}`),
@@ -232,7 +242,7 @@ function IrlHudSetup() {
         <FieldLabel id={`${id}-style`} tip={t('irlHud.styleTip')}>
           {t('irlHud.style')}
         </FieldLabel>
-        <SegmentedControl
+        <Select
           labelledBy={`${id}-style`}
           value={settings.style}
           onChange={(value) => update('style', value)}

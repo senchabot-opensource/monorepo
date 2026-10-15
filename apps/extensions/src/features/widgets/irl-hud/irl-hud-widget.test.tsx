@@ -486,6 +486,29 @@ describe('IrlHudWidget', () => {
     expect(radar().style.right).not.toBe('');
   });
 
+  it('counts gold coins in Medieval and MMORPG, in their own fonts and outline colors', () => {
+    for (const [style, font, edge] of [
+      ['medieval', 'MedievalSharp', '#2a1708'],
+      ['mmorpg', 'Cinzel', '#000'],
+    ] as const) {
+      const view = render(
+        <IrlHudWidget twitchChannel="streamer" settings={settings({ style, start: 1250 })} />,
+      );
+      expect(hud().className).toBe(`ih-root ih-${style}`);
+      expect(shownMoney()).toBe('1,250');
+      // A coin by the cash instead of the $.
+      const cash = screen.getByTestId('irl-hud-money').parentElement as HTMLElement;
+      expect(cash.querySelector('.ih-coin')).not.toBeNull();
+      const css = document.querySelector('style')?.textContent ?? '';
+      const rule = css.match(new RegExp(`\\.ih-${style}\\{([^}]*)\\}`))?.[1] ?? '';
+      expect(rule).toContain(`--ih-font:'${font}'`);
+      expect(rule).toContain(`--ih-edge:${edge}`);
+      // Wider digit boxes than Anton's .5em, which would let these fonts' digits overlap.
+      expect(rule).toContain('--ih-digit:.6em');
+      view.unmount();
+    }
+  });
+
   it('keeps the money through a reload, and starts over from a new starting amount', () => {
     const first = render(<IrlHudWidget twitchChannel="streamer" settings={settings()} />);
     receive('twitch', SUB_T3);

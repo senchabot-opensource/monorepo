@@ -1017,9 +1017,11 @@ export const en = {
       'A game-style HUD for Twitch and Kick, made for IRL streams. Every sub, gifted sub, Bits cheer, Kicks gift and raid adds cash to the counter by the amounts you set, under a clock in your time zone, next to a mini-map where an arrow walks city streets, park paths or the real streets around a place you pick.',
     style: 'Style',
     styleTip:
-      'Retro shows green $00000350 cash under a grey clock in a thick outline, with a round mini-map. Modern shows white $1,250 cash with a soft shadow and gains in green, with a rounded square mini-map.',
+      'Retro shows green $00000350 cash under a grey clock in a thick outline, with a round mini-map. Modern shows white $1,250 cash with a soft shadow and gains in green, with a rounded square mini-map. Medieval and MMORPG count gold coins instead of dollars: Medieval over a parchment mini-map in a wooden ring, MMORPG with gains in green and a round mini-map in a gold ring.',
     styleRetro: 'Retro',
     styleModern: 'Modern',
+    styleMedieval: 'Medieval',
+    styleMmorpg: 'MMORPG',
     corner: 'Cash Position',
     cornerTip: 'The corner of the scene the cash and the clock sit in.',
     corners: {
@@ -1922,11 +1924,13 @@ export const en = {
     placePrivacy: 'Viewers see this name and the weather, never the coordinates.',
     style: 'Style',
     styleTip:
-      "Weather App shows round figures on the background you pick. Retro HUD and Modern HUD take the IRL HUD Overlay's styles, outlined text right on your scene, so the weather matches the HUD beside it.",
+      "Weather App shows round figures on the background you pick. The HUD styles are the IRL HUD Overlay's: outlined text right on your scene, so the weather matches the HUD beside it.",
     styles: {
       app: 'Weather App',
       retro: 'Retro HUD',
       modern: 'Modern HUD',
+      medieval: 'Medieval HUD',
+      mmorpg: 'MMORPG HUD',
     },
     layout: 'Layout',
     layoutTip:
@@ -3711,6 +3715,8 @@ export const en = {
     lead: "New features and bug fixes in Senchabot Extensions, newest first. The list is put together from the project's commit history on [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      hudMedievalMmorpg:
+        'IRL HUD Overlay and Weather get two new styles, Medieval and MMORPG. In them the HUD counts gold coins instead of dollars, over a parchment or a gold-ringed mini-map.',
       presetsFont:
         "A new Font box under the preset picker draws a widget in Inter, Roboto, Nunito, JetBrains Mono, Source Serif 4 or your system font instead of the preset's own fonts, keeping the preset's colors, frame and effects.",
       presetsRandom:

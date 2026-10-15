@@ -172,7 +172,8 @@ function WeatherSetup() {
             <FieldLabel id={`${id}-style`} tip={t('weather.styleTip')}>
               {t('weather.style')}
             </FieldLabel>
-            <SegmentedControl
+            {/* The weather app and four HUD styles don't fit side by side on a phone. */}
+            <Select
               labelledBy={`${id}-style`}
               value={settings.style}
               onChange={(value) => update('style', value)}

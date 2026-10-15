@@ -1028,9 +1028,11 @@ export const ja: typeof en = {
       'TwitchとKick向けの、IRL配信のためのゲーム風HUD。サブスク、ギフトサブ、BitsのCheer、Kicksのギフト、レイドが入るたびに、設定した金額があなたのタイムゾーンの時計の下にあるカウンターに加算されます。その隣のミニマップでは、矢印が街の通りや公園の小道、あなたが選んだ場所の実際の通りを歩いていきます。',
     style: 'スタイル',
     styleTip:
-      'レトロは太い縁取りのグレーの時計の下に緑の $00000350 で所持金を表示し、ミニマップは円形です。モダンは柔らかい影付きの白の $1,250 で所持金を表示して増えた分を緑で示し、ミニマップは角の丸い四角形です。',
+      'レトロは太い縁取りのグレーの時計の下に緑の $00000350 で所持金を表示し、ミニマップは円形です。モダンは柔らかい影付きの白の $1,250 で所持金を表示して増えた分を緑で示し、ミニマップは角の丸い四角形です。中世とMMORPGはドルの代わりに金貨を数えます。中世は木の縁取りの羊皮紙風ミニマップ、MMORPGは増えた分を緑で示し、金の縁取りの円形ミニマップです。',
     styleRetro: 'レトロ',
     styleModern: 'モダン',
+    styleMedieval: '中世',
+    styleMmorpg: 'MMORPG',
     corner: '所持金の位置',
     cornerTip: '所持金と時計を置く、シーンの隅を選びます。',
     corners: {
@@ -1895,11 +1897,13 @@ export const ja: typeof en = {
     placePrivacy: '視聴者に見えるのはこの名前と天気だけで、座標は表示されません。',
     style: 'スタイル',
     styleTip:
-      '天気アプリは、選んだ背景の上に丸みのある数字で表示します。レトロHUDとモダンHUDはIRL HUDオーバーレイのスタイルを使い、縁取りの文字をシーンに直接表示するので、隣のHUDと見た目がそろいます。',
+      '天気アプリは、選んだ背景の上に丸みのある数字で表示します。HUDスタイルはIRL HUDオーバーレイと同じで、縁取りの文字をシーンに直接表示するので、隣のHUDと見た目がそろいます。',
     styles: {
       app: '天気アプリ',
       retro: 'レトロHUD',
       modern: 'モダンHUD',
+      medieval: '中世HUD',
+      mmorpg: 'MMORPG HUD',
     },
     layout: 'レイアウト',
     layoutTip: 'カードは場所、大きなアイコン、気温を表示し、その下に風、湿度、予報を並べます。バーはアイコン、気温、天気、場所を1行に収めます。',
@@ -3659,6 +3663,8 @@ export const ja: typeof en = {
     lead: 'Senchabot Extensionsの新機能とバグ修正を、新しい順に並べています。このリストは[GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions)にあるプロジェクトのコミット履歴からまとめています。',
     site: 'サイト',
     entries: {
+      hudMedievalMmorpg:
+        'IRL HUDオーバーレイと天気に、中世とMMORPGの2つの新しいスタイルが加わりました。HUDはドルの代わりに金貨を数え、ミニマップは羊皮紙風か金の縁取りになります。',
       presetsFont:
         'プリセット選択の下に新しく「フォント」欄ができました。プリセットのカラー、フレーム、エフェクトはそのままに、ウィジェットをプリセットのフォントの代わりにInter、Roboto、Nunito、JetBrains Mono、Source Serif 4、システムフォントで表示できます。',
       presetsRandom:

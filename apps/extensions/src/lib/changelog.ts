@@ -13,6 +13,11 @@ export interface ChangelogEntry {
 // Written from `git log -- apps/extensions`: user-facing feat/fix commits only, newest first.
 // Alerts is unlisted, so its commits stay out.
 export const CHANGELOG: readonly ChangelogEntry[] = [
+  {
+    date: '2026-10-15',
+    key: 'changelog.entries.hudMedievalMmorpg',
+    widgets: ['irl-hud', 'weather'],
+  },
   // Every setup page that takes a preset but the Chat Box's, which has font boxes of its own.
   { date: '2026-10-15', key: 'changelog.entries.presetsFont', widgets: [] },
   // The dice is on every setup page that takes a preset, and the rest is the home page.

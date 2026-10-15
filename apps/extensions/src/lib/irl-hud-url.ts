@@ -9,8 +9,11 @@ import {
   setPreview,
 } from '#/lib/url-params';
 
-/** `retro`: green $00000350 under a grey clock, thick outline. `modern`: white $1,250, soft shadow. */
-export const HUD_STYLES = ['retro', 'modern'] as const;
+/**
+ * `retro`: green $00000350 under a grey clock, thick outline. `modern`: white $1,250, soft shadow.
+ * `medieval` and `mmorpg` count gold coins instead of dollars, over a fantasy mini-map.
+ */
+export const HUD_STYLES = ['retro', 'modern', 'medieval', 'mmorpg'] as const;
 export type HudStyle = (typeof HUD_STYLES)[number];
 
 /**

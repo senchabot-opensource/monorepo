@@ -14,9 +14,9 @@ export const WEATHER_LAYOUTS = ['card', 'pill'] as const;
 export type WeatherLayout = (typeof WEATHER_LAYOUTS)[number];
 
 /**
- * `app`: round figures on the `theme`'s background, like a weather app. `retro` and `modern`: the
- * IRL HUD's styles, outlined text right on the scene, so the weather matches a HUD beside it. Those
- * two are for the pill; the card always draws as `app`.
+ * `app`: round figures on the `theme`'s background, like a weather app. The rest are the IRL HUD's
+ * styles, outlined text right on the scene, so the weather matches a HUD beside it. Those are for
+ * the pill; the card always draws as `app`.
  */
 export const WEATHER_STYLES = ['app', ...HUD_STYLES] as const;
 export type WeatherStyle = (typeof WEATHER_STYLES)[number];

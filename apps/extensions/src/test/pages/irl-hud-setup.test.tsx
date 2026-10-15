@@ -1,7 +1,16 @@
 import { screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { TranslationKey } from '#/lib/i18n';
-import { button, en, section, segment, settingsTab, textbox } from '#/test/queries';
+import {
+  button,
+  combobox,
+  en,
+  pickOption,
+  section,
+  segment,
+  settingsTab,
+  textbox,
+} from '#/test/queries';
 import { renderRoute, setupUser } from '#/test/render';
 
 const PAGE = '/setup/irl-hud';
@@ -25,6 +34,17 @@ async function openPage(tab: TranslationKey = 'irlHud.sectionMap') {
 }
 
 describe('IRL HUD setup', () => {
+  it('offers four styles in a dropdown and writes the one picked', async () => {
+    const user = await openPage();
+    await user.click(settingsTab(en('common.sectionAppearance')));
+    expect(combobox(en('irlHud.style')).textContent).toBe(en('irlHud.styleRetro'));
+    expect(widgetUrl().searchParams.has('style')).toBe(false);
+    await pickOption(user, en('irlHud.style'), en('irlHud.styleMedieval'));
+    expect(widgetUrl().searchParams.get('style')).toBe('medieval');
+    await pickOption(user, en('irlHud.style'), en('irlHud.styleMmorpg'));
+    expect(widgetUrl().searchParams.get('style')).toBe('mmorpg');
+  });
+
   it('writes the mini-map style into the widget URL', async () => {
     const user = await openPage();
     expect(widgetUrl().searchParams.has('map')).toBe(false);

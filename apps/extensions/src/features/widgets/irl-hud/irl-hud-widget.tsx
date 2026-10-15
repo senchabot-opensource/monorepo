@@ -13,9 +13,9 @@ import {
 import { formatChange, formatMoney } from './hud-money';
 import { HudRadar, RADAR_CSS } from './hud-radar';
 import {
+  Coin,
   HUD_EDGE_X,
   HUD_EDGE_Y,
-  HUD_FONT,
   HUD_LABEL,
   HUD_LOOKS,
   HUD_TEXT_CSS,
@@ -30,7 +30,7 @@ const DESIGN_SHORT_SIDE = 1080;
 const ROLL_MS = 1100;
 
 const CSS = `
-.ih-root{position:fixed;inset:0;overflow:hidden;pointer-events:none;font-family:${HUD_FONT};
+.ih-root{position:fixed;inset:0;overflow:hidden;pointer-events:none;font-family:var(--ih-font);
   -webkit-font-smoothing:antialiased;line-height:1}
 .ih-hud{position:absolute;display:flex;flex-direction:column;gap:6px}
 ${HUD_TEXT_CSS}
@@ -128,15 +128,20 @@ function Pops({ pops, look, corner }: { pops: HudPop[]; look: HudLook; corner: H
           data-declined={pop.declined || undefined}
           style={{ flexDirection: right ? 'row-reverse' : 'row', opacity: pop.declined ? 0.75 : 1 }}
         >
-          <Outlined
-            // A refused purchase shows its price behind a cross: nothing came off the cash.
-            text={
-              pop.declined ? `✕ ${formatChange(-pop.amount).slice(1)}` : formatChange(pop.amount)
-            }
-            color={pop.amount < 0 ? look.loss : look.gain}
-            size={look.popSize}
-            outline={look.outline}
-          />
+          <span className="ih-cash">
+            <Outlined
+              // A refused purchase shows its price behind a cross: nothing came off the cash.
+              text={
+                pop.declined
+                  ? `✕ ${formatChange(-pop.amount, look.coin).slice(1)}`
+                  : formatChange(pop.amount, look.coin)
+              }
+              color={pop.amount < 0 ? look.loss : look.gain}
+              size={look.popSize}
+              outline={look.outline}
+            />
+            {look.coin && <Coin size={look.popSize} />}
+          </span>
           {pop.name && (
             <Outlined
               text={pop.name}
@@ -253,14 +258,17 @@ export function IrlHudWidget({
           </Part>
         )}
         <Part hidden={hidden.includes('cash')}>
-          <Outlined
-            text={formatMoney(shown, settings.style)}
-            color={shown < 0 ? look.debt : look.money}
-            size={look.moneySize}
-            outline={look.outline}
-            fixedDigits
-            testId="irl-hud-money"
-          />
+          <span className="ih-cash">
+            {look.coin && <Coin size={look.moneySize} />}
+            <Outlined
+              text={formatMoney(shown, settings.style)}
+              color={shown < 0 ? look.debt : look.money}
+              size={look.moneySize}
+              outline={look.outline}
+              fixedDigits
+              testId="irl-hud-money"
+            />
+          </span>
           {settings.pops && <Pops pops={pops} look={look} corner={corner} />}
         </Part>
       </div>

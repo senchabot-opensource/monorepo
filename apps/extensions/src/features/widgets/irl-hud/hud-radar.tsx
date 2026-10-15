@@ -99,6 +99,42 @@ const LOOKS: Record<HudStyle, RadarLook> = {
     border: '0 0 0 2px rgba(255,255,255,.35), 0 6px 18px rgba(0,0,0,.55)',
     scan: '150 205 255',
   },
+  // A map drawn in ink on parchment, in a ring of dark wood and brass.
+  medieval: {
+    palette: {
+      road: '#8a6a40',
+      land: '#d9c59c',
+      building: '#b7996a',
+      path: '#a3835a',
+      park: '#a0aa6c',
+      lawn: '#adb677',
+      tree: '#6f7d40',
+      water: '#6f90a6',
+      floor: '#ccb88c',
+      wall: '#3b2410',
+    },
+    radius: '50%',
+    border: '0 0 0 4px #4a2e14, 0 0 0 7px #b08d57, 0 0 0 10px #2a1708, 0 8px 18px rgba(0,0,0,.5)',
+    scan: '176 141 87',
+  },
+  // A fantasy MMO's round mini-map: grassland and dirt roads in a gold ring.
+  mmorpg: {
+    palette: {
+      road: '#9d8658',
+      land: '#43602d',
+      building: '#6e5f49',
+      path: '#b7a170',
+      park: '#4f7c34',
+      lawn: '#5b8c3d',
+      tree: '#2e5521',
+      water: '#2f6c9c',
+      floor: '#7c6c54',
+      wall: '#f3e7c4',
+    },
+    radius: '50%',
+    border: '0 0 0 3px #17110a, 0 0 0 7px #c9a34a, 0 0 0 10px #3a2a12, 0 8px 18px rgba(0,0,0,.55)',
+    scan: '255 209 0',
+  },
 };
 
 export const RADAR_CSS = `
@@ -108,6 +144,8 @@ export const RADAR_CSS = `
 .ih-pan>svg{position:absolute}
 .ih-north{position:absolute;left:-13px;top:${-RADAR_SIZE / 2 + 8}px;width:26px;height:26px;border-radius:50%;
   background:#000;color:#fff;font-size:17px;display:grid;place-items:center}
+.ih-medieval .ih-north{background:#3b2410;color:#f2c55c;box-shadow:0 0 0 2px #b08d57}
+.ih-mmorpg .ih-north{background:#17110a;color:#ffd100;box-shadow:0 0 0 2px #c9a34a}
 .ih-player{position:absolute;left:50%;top:50%;transform:translate(-50%,-55%)}
 /* While a real place loads: a radar sweep turning, rings, and pings from the middle. */
 .ih-loading{position:absolute;inset:0;pointer-events:none}

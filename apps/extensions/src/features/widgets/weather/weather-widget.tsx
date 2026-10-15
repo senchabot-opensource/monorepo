@@ -10,7 +10,6 @@ import {
 import {
   HUD_EDGE_X,
   HUD_EDGE_Y,
-  HUD_FONT,
   HUD_LABEL,
   HUD_LOOKS,
   HUD_TEXT_CSS,
@@ -94,7 +93,7 @@ ${Object.entries(THEMES)
 .wx-pill .wx-credit{margin:0 0 0 4px;align-self:flex-end;padding-bottom:6px}
 @keyframes wx-in{from{opacity:0;transform:translateY(6px)}}
 ${ICON_CSS}
-.wx-hud{font-family:${HUD_FONT};line-height:1;--wx-cloud:#f6f8fb;--wx-cloud-back:#b9c3cf;
+.wx-hud{font-family:var(--ih-font);line-height:1;--wx-cloud:#f6f8fb;--wx-cloud-back:#b9c3cf;
   --wx-cloud-edge:transparent;--wx-moon:#eef1f8;--wx-snow:#fff}
 ${HUD_TEXT_CSS}
 .wx-hud .wx-pill{gap:14px;padding:0;max-width:none;background:none;border:0;box-shadow:none}
