@@ -12,7 +12,7 @@ import {
   writeStarsCache,
 } from './github-stars';
 import { hasToolVisual } from './tool-visuals';
-import { getCardShape, getGalleryShapes } from './widget-card';
+import { getCardShape, getGalleryShapes, inGalleryOrder } from './widget-card';
 
 describe('getDemoSrc', () => {
   it('keeps the registry demo params and adds the preview sizing', () => {
@@ -116,14 +116,17 @@ describe('random presets', () => {
   });
 
   // The gallery's cards that wear a preset, in the order the home page deals and shows them.
-  const LANDING = [...OVERLAYS, ...TOOLS]
+  const LANDING = [...inGalleryOrder(OVERLAYS), ...TOOLS]
     .filter((widget) => widget.demoUrl && !hasToolVisual(widget.id) && readsPreset(widget))
     .map((widget) => widget.id);
 
   it('deals each landing demo its own picks or one of the rest, never two neighbors alike', () => {
     const named = [...LANDING_REST, ...Object.values(LANDING_PICKS).flat()];
     for (const id of named) expect(findPreset(id)?.data.id, id).toBe(id);
-    for (const id of Object.keys(LANDING_PICKS)) expect(LANDING, id).toContain(id);
+    // Every pick but the Chat Poll spotlight's names a card in the gallery.
+    for (const id of Object.keys(LANDING_PICKS).filter((id) => id !== 'poll')) {
+      expect(LANDING, id).toContain(id);
+    }
     for (let seed = 1; seed <= 200; seed++) {
       const dealt = dealLandingPresets(LANDING, seeded(seed));
       for (const key of LANDING) {
@@ -136,16 +139,17 @@ describe('random presets', () => {
 
   it('goes through all of the rest before repeating one, and through every pick over visits', () => {
     const plain = ['a', 'b', 'c', 'd', 'e', 'f'] as const;
-    const seen: Record<string, Set<string>> = { goal: new Set(), 'event-list': new Set() };
     for (let seed = 1; seed <= 30; seed++) {
       const dealt = dealLandingPresets(plain, seeded(seed));
       expect(new Set(plain.slice(0, 4).map((key) => dealt[key]))).toEqual(new Set(LANDING_REST));
-      const picks = dealLandingPresets(['goal', 'event-list'] as const, seeded(seed));
-      seen.goal.add(picks.goal);
-      seen['event-list'].add(picks['event-list']);
     }
-    expect(seen.goal).toEqual(new Set(LANDING_PICKS.goal));
-    expect(seen['event-list']).toEqual(new Set(LANDING_PICKS['event-list']));
+    // Each demo with picks of its own, dealt on its own so no neighbor narrows them.
+    for (const [key, picks] of Object.entries(LANDING_PICKS)) {
+      const seen = new Set(
+        Array.from({ length: 40 }, (_, seed) => dealLandingPresets([key], seeded(seed + 1))[key]),
+      );
+      expect(seen, key).toEqual(new Set(picks));
+    }
   });
 
   it('rolls any preset but the current one', () => {
@@ -159,14 +163,16 @@ describe('random presets', () => {
 });
 
 describe('gallery card shapes', () => {
-  // A tall Chat Box and a wide goal strip: the bento the gallery was drawn for.
-  const BENTO = (['chat-box', 'emote-wall', 'sub-sprout', 'goal'] as const).map(getWidget);
   const extra = (id: string, width: number, height: number) =>
     ({
       ...getWidget('emote-wall'),
       id,
       sourceSize: { width, height },
     }) as WidgetEntry;
+  // A portrait demo, like a chat column, which the gallery draws two rows tall.
+  const PORTRAIT = extra('portrait', 420, 720);
+  // A tall column and a wide goal strip: the bento the packing is built around.
+  const BENTO = [PORTRAIT, ...(['emote-wall', 'sub-sprout', 'goal'] as const).map(getWidget)];
   // The overlay grid is two columns from sm and three from lg; each width is solved on its own.
   const OVERLAY_COLUMNS = [2, 3] as const;
 
@@ -206,40 +212,42 @@ describe('gallery card shapes', () => {
   });
 
   it("lays today's overlays out in the gallery's rows", () => {
-    // At three columns, row by row: the Chat Box column with Event List, Emote Wall, Emote Combo and
-    // Sub Sprout beside it; the IRL HUD strip and Weather; the Follower Goal, Bits & Kicks Goal and
-    // Top Supporters; the Stream Alerts strip and End Credits; Socials and the Counter strip; the
-    // Sub Goal strip and Stream Countdown; Featured Message and the Now Playing strip; Stream
-    // Frames, Lower Thirds and Task List. 27 cells, nine full rows.
+    // At three columns, row by row: the Sub Goal strip and a plain Chat Box; Event List, Emote
+    // Wall and Emote Combo; the IRL HUD strip and Weather; Top Supporters and the Bits & Kicks Goal
+    // strip; the Follower Goal strip and Stream Alerts; Socials and the Counter strip; End Credits,
+    // Stream Countdown and Sub Sprout; Featured Message and the Now Playing strip; Stream Frames,
+    // Lower Thirds and Task List. 27 cells, nine full rows.
     const rows = [
-      ['chat-box', 'tall'],
+      ['goal', 'wide'],
+      ['chat-box', 'standard'],
       ['event-list', 'standard'],
       ['emote-wall', 'standard'],
       ['emote-combo', 'standard'],
-      ['sub-sprout', 'standard'],
       ['irl-hud', 'wide'],
       ['weather', 'standard'],
-      ['follower-goal', 'standard'],
-      ['bits-goal', 'standard'],
       ['leaderboard', 'standard'],
-      ['stream-alerts', 'wide'],
-      ['credits', 'standard'],
+      ['bits-goal', 'wide'],
+      ['follower-goal', 'wide'],
+      ['stream-alerts', 'standard'],
       ['socials', 'standard'],
       ['counter', 'wide'],
-      ['goal', 'wide'],
+      ['credits', 'standard'],
       ['countdown', 'standard'],
+      ['sub-sprout', 'standard'],
       ['featured', 'standard'],
       ['now-playing', 'wide'],
       ['frames', 'standard'],
       ['lower-third', 'standard'],
       ['tasks', 'standard'],
     ];
+    const gallery = inGalleryOrder(OVERLAYS);
+    expect(gallery).toHaveLength(OVERLAYS.length);
     const shapes = (columns: number) =>
-      getGalleryShapes(OVERLAYS, columns).map((shape, index) => [OVERLAYS[index].id, shape]);
+      getGalleryShapes(gallery, columns).map((shape, index) => [gallery[index].id, shape]);
     expect(shapes(3)).toEqual(rows);
-    // Two columns are a cell over, so Stream Alerts goes back to its own plain card there.
+    // Two columns are a cell over, so the IRL HUD goes back to its own plain card there.
     expect(shapes(2)).toEqual(
-      rows.map(([id, shape]) => [id, id === 'stream-alerts' ? 'standard' : shape]),
+      rows.map(([id, shape]) => [id, id === 'irl-hud' ? 'standard' : shape]),
     );
   });
 
@@ -252,10 +260,8 @@ describe('gallery card shapes', () => {
   });
 
   it('widens the last standard card when the grid is one cell short', () => {
-    // Chat Box, two plain cards and the Stream Alerts strip fill two rows at either width.
-    const four = (['chat-box', 'emote-wall', 'sub-sprout', 'stream-alerts'] as const).map(
-      getWidget,
-    );
+    // A tall column, two plain cards and the IRL HUD strip fill two rows at either width.
+    const four = [PORTRAIT, ...(['emote-wall', 'sub-sprout', 'irl-hud'] as const).map(getWidget)];
     for (const columns of OVERLAY_COLUMNS) {
       expect(getGalleryShapes(four, columns), `${columns} columns`).toEqual([
         'tall',
@@ -271,14 +277,14 @@ describe('gallery card shapes', () => {
 
   it('never widens a card whose demo would stretch its row', () => {
     // One cell short, but every standard card here is a 16:9 or square demo with no strip cut.
-    const short = (['chat-box', 'emote-wall', 'sub-sprout', 'credits'] as const).map(getWidget);
+    const short = [PORTRAIT, ...(['emote-wall', 'sub-sprout', 'credits'] as const).map(getWidget)];
     expect(getGalleryShapes(short, 3)).not.toContain('wide');
   });
 
   it('drops the wide cards, then the tall one, then every span, when a new overlay would leave a hole', () => {
     // Two strips and a column: flattening the strips leaves a hole, flattening the column doesn't.
-    const [chat, emote, , goal] = BENTO;
-    expect(getGalleryShapes([chat, goal, extra('a', 800, 200), emote], 3)).toEqual([
+    const [portrait, emote, , goal] = BENTO;
+    expect(getGalleryShapes([portrait, goal, extra('a', 800, 200), emote], 3)).toEqual([
       'standard',
       'wide',
       'wide',
