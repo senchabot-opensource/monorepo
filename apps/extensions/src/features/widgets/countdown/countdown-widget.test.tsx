@@ -317,8 +317,8 @@ describe('CountdownWidget', () => {
   });
 
   it('marks the preset it was drawn in', async () => {
-    await render(<CountdownWidget settings={settings({ preset: 'dynasty' })} />);
-    expect(root().dataset.preset).toBe('dynasty');
+    await render(<CountdownWidget settings={settings({ preset: 'flower' })} />);
+    expect(root().dataset.preset).toBe('flower');
   });
 
   it('ticks the last seconds and plays the motif when a pomodoro timer ends', async () => {

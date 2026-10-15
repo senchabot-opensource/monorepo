@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { PREVIEW_CHANNEL } from '#/features/widgets/goal/use-goal';
 import { buildGoalUrl, DEFAULT_GOAL_SETTINGS, type GoalSettings } from '#/lib/goal-url';
 import { FakeWebSocket, withLayout } from '#/test/browser';
-import { button, en, retype, segment, textbox, toggle } from '#/test/queries';
+import { button, combobox, en, pickOption, retype, segment, textbox, toggle } from '#/test/queries';
 import { renderRoute, setupUser } from '#/test/render';
 
 const PAGE = '/setup/sub-goal';
@@ -160,6 +160,57 @@ describe('Sub Goal setup', () => {
     expect(count(en('goal.start')).value).toBe('431');
     await user.tab();
     expect(urlField().value).toBe(pasted);
+  });
+
+  it("loads a pasted URL's stilled effect, and drops fx once the effect is back on", async () => {
+    withLayout(800, 350);
+    const user = setupUser();
+    await renderRoute(PAGE);
+    await user.click(urlField());
+    await user.paste(
+      'https://extensions.senchabot.com/widgets/goal?twitch=streamer&preset=glitch&fx=0',
+    );
+    const effects = () => toggle(en('presets.field.effects'));
+
+    expect(effects().getAttribute('aria-checked')).toBe('false');
+    await user.tab();
+    expect(urlField().value).toBe(
+      'http://localhost:3000/widgets/goal?twitch=streamer&preset=glitch&fx=0',
+    );
+    expect(previewSrc().searchParams.get('fx')).toBe('0');
+
+    await user.click(effects());
+    expect(effects().getAttribute('aria-checked')).toBe('true');
+    expect(urlField().value).toBe(
+      'http://localhost:3000/widgets/goal?twitch=streamer&preset=glitch',
+    );
+    expect(previewSrc().searchParams.has('fx')).toBe(false);
+  });
+
+  it("loads a pasted URL's font, and drops it for the preset's own fonts", async () => {
+    withLayout(800, 350);
+    const user = setupUser();
+    await renderRoute(PAGE);
+    await user.click(urlField());
+    await user.paste(
+      'https://extensions.senchabot.com/widgets/goal?twitch=streamer&preset=banner&font=serif',
+    );
+    expect(combobox(en('presets.field.font')).textContent).toContain('Source Serif 4');
+    await user.tab();
+    expect(urlField().value).toBe(
+      'http://localhost:3000/widgets/goal?twitch=streamer&preset=banner&font=serif',
+    );
+    expect(previewSrc().searchParams.get('font')).toBe('serif');
+
+    await pickOption(
+      user,
+      en('presets.field.font'),
+      en('presets.field.presetFonts', { name: 'Banner' }),
+    );
+    expect(urlField().value).toBe(
+      'http://localhost:3000/widgets/goal?twitch=streamer&preset=banner',
+    );
+    expect(previewSrc().searchParams.has('font')).toBe(false);
   });
 
   it('keeps an emptied title in the URL, so the overlay shows none', async () => {

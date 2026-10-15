@@ -1,5 +1,6 @@
 import { isClassic } from '#/features/presets/registry';
-import { CLASSIC_PRESET, readPreset, writePreset } from './preset-url';
+import { CLASSIC_PRESET, readFont, readFx, readPreset, writePreset } from './preset-url';
+import type { SiteFont } from './site-fonts';
 import {
   type ChannelPlatforms,
   readWhole,
@@ -19,6 +20,10 @@ export interface LowerThirdSettings {
   platforms: ChannelPlatforms;
   /** Preset id; any preset but classic brings its own colors and fonts. */
   preset: string;
+  /** Off (`fx=0`) stills the preset's effect; missing means on. */
+  fx?: boolean;
+  /** A site font to draw the preset in instead of its own; missing keeps the preset's. */
+  font?: SiteFont;
   color: LowerThirdColor;
   corner: Corner;
   /** The big line: a name, a show title. */
@@ -72,7 +77,7 @@ function buildParams(settings: LowerThirdSettings, twitchChannel: string, kickCh
   const params = new URLSearchParams();
   const defaults = DEFAULT_LOWER_THIRD_SETTINGS;
   setChannels(params, settings.platforms, twitchChannel, kickChannel);
-  writePreset(params, settings.preset);
+  writePreset(params, settings.preset, settings.fx, settings.font);
   if (isClassic(settings.preset) && settings.color !== defaults.color)
     params.set('color', settings.color);
   if (settings.corner !== defaults.corner) params.set('corner', settings.corner);
@@ -125,6 +130,8 @@ export function readLowerThirdSettings(
   const corner = params.get('corner') as Corner;
   return {
     preset: readPreset(params),
+    ...readFx(params),
+    ...readFont(params),
     color: LOWER_THIRD_COLORS.includes(color) ? color : defaults.color,
     corner: CORNERS.includes(corner) ? corner : defaults.corner,
     title: (params.get('title') ?? '').trim().slice(0, TITLE_MAX_LENGTH),

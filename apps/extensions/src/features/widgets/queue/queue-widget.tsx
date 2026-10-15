@@ -45,10 +45,14 @@ export function QueueWidget({
     simulate,
     previewId,
   });
-  const skin = skinFor(settings.preset);
+  const skin = skinFor(settings.preset, settings.fx, settings.font);
   const hsl = painter(skin, hueFor(settings.color, 1));
   const shown = state.waiting.slice(0, settings.rows);
   const more = state.waiting.length - shown.length;
+  // Someone joining plays the preset's effect; someone picked to play, its big version.
+  const newest = state.waiting.at(-1);
+  const joined = newest ? `${newest.platform}:${newest.login}` : null;
+  const picked = state.playing.map((entry) => `${entry.platform}:${entry.login}`).join(' ') || null;
   const panel: CSSProperties = skin
     ? panelStyle(skin, RADIUS)
     : {
@@ -225,7 +229,7 @@ export function QueueWidget({
                 {t('queue.overlay.joinHint', { join: settings.join })}
               </p>
             )}
-            {skin && <Frame skin={skin} radius={RADIUS} />}
+            {skin && <Frame skin={skin} radius={RADIUS} pulse={joined} win={picked} />}
           </div>
         </div>
       </div>

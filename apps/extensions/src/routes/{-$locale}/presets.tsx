@@ -5,6 +5,7 @@ import { ExternalLink } from '#/components/external-link';
 import { FaqList } from '#/components/faq-list';
 import { PreviewFrame } from '#/components/preview-frame';
 import { BUTTON_PRIMARY, BUTTON_SECONDARY, BUTTON_TEST } from '#/components/ui/button-styles';
+import { usePresetTag } from '#/features/presets/preset-field';
 import type { PresetData } from '#/features/presets/preset-schema';
 import { PresetSwatch, SWATCH_FONT_HREF } from '#/features/presets/preset-swatch';
 import {
@@ -64,6 +65,7 @@ const SCENE_CLASS =
 
 function PresetsPage() {
   const { t, locale } = useI18n();
+  const tagOf = usePresetTag();
   const id = useId();
   const [sitePreset, setSitePreset] = useSitePreset();
   const [picked, setPicked] = useState(CLASSIC_PRESET);
@@ -126,7 +128,7 @@ function PresetsPage() {
               <span className="block truncate text-xs text-zinc-500 dark:text-zinc-400">
                 {choice.community
                   ? t('presets.by', { author: choice.data?.author.name ?? '' })
-                  : (choice.data?.game ?? t('presets.classicTag'))}
+                  : tagOf(choice.data)}
               </span>
             </label>
           ))}

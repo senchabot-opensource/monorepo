@@ -1,6 +1,7 @@
 import { type CSSProperties, useEffect, useState } from 'react';
 import { barFrameStyle, fillBackground, fillLayers, trackBackground } from '#/features/presets/bar';
 import { Frame, panelStyle } from '#/features/presets/frame';
+import { BarFxBurst, BarFxTrack, FxPulse } from '#/features/presets/fx/engine';
 import { painter, type Skin, skinCss, skinFor } from '#/features/presets/skin';
 import { SkinProvider, useSkin } from '#/features/presets/skin-context';
 import { useI18n } from '#/lib/i18n';
@@ -153,7 +154,7 @@ export function SubathonWidget({
     rates: settings.rates ? rateRows(settings, platforms, left) : [],
   };
   const View = VIEWS[settings.style];
-  const skin = skinFor(settings.preset);
+  const skin = skinFor(settings.preset, settings.fx, settings.font);
   // The mark's flight on every heal, for the bar styles: from its spot below the bar
   // (bar) or inside it (thin) to the fill's edge. Clock and ring have no fill edge to fly to.
   const fly =
@@ -198,6 +199,24 @@ export function SubathonWidget({
         <div className="sa-stage" style={{ transform: `translate(-50%, -50%) scale(${scale})` }}>
           <View {...view} />
           {fly}
+          {(settings.style === 'bar' || settings.style === 'thin') && (
+            <BarFxBurst
+              skin={skin}
+              hit={hit?.heal ? hit : null}
+              // The track, inside the bars' 28px margin and the box's padding.
+              left={28 + (settings.style === 'thin' ? 3 : 4)}
+              right={STAGE.width - 28 - (settings.style === 'thin' ? 3 : 4)}
+              y={
+                settings.style === 'thin'
+                  ? STAGE.height -
+                    BAR_BOTTOM -
+                    (view.rates.length > 0 ? THIN_RATES_LIFT : 0) -
+                    BAR_HEIGHT_THIN / 2
+                  : STAGE.height - (BAR_BOTTOM + INFO_ROW_HEIGHT + BAR_GAP + BAR_HEIGHT / 2)
+              }
+              height={settings.style === 'thin' ? BAR_HEIGHT_THIN : BAR_HEIGHT}
+            />
+          )}
         </div>
       </div>
     </SkinProvider>
@@ -797,6 +816,7 @@ function HealthBarView(view: ViewProps) {
                 />
               )}
             </div>
+            <BarFxTrack skin={skin} hit={hit?.heal ? hit : null} />
             {TICKS.map((tick) => (
               <div
                 key={tick}
@@ -1015,6 +1035,7 @@ function ThinBarView(view: ViewProps) {
                   />
                 )}
               </div>
+              <BarFxTrack skin={skin} hit={hit?.heal ? hit : null} />
               {TICKS.map((tick) => (
                 <div
                   key={tick}
@@ -1191,7 +1212,7 @@ function ClockView(view: ViewProps) {
             {s}
           </span>
           <HealFlash hit={view.hit} healing={view.healing} hue={hue} radius={22} spread={8} />
-          {skin && <Frame skin={skin} radius={22} />}
+          {skin && <Frame skin={skin} radius={22} pulse={view.hit?.heal ? view.hit.key : null} />}
         </div>
         {percent && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, width: 440 }}>
@@ -1343,6 +1364,7 @@ function RingView(view: ViewProps) {
             )}
           </div>
           <HealFlash hit={view.hit} healing={view.healing} hue={hue} radius="50%" spread={10} />
+          <FxPulse skin={skin} pulse={view.hit?.heal ? view.hit.key : null} round />
           {ended && <KnockOut size={54} />}
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 4, minWidth: 0 }}>

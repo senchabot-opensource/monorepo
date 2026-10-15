@@ -137,10 +137,15 @@ export function Select<T extends string>({
         onKeyDown={onKeyDown}
         className="flex h-9 w-full items-center justify-between gap-2 rounded-md border border-zinc-300 bg-zinc-100 px-3 text-left text-sm text-zinc-900 transition-colors hover:border-zinc-400 focus-visible:border-green-500 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-green-500 disabled:cursor-not-allowed disabled:opacity-50 aria-expanded:border-green-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white dark:hover:border-zinc-600"
       >
-        <span id={valueId} className="flex min-w-0 items-baseline gap-2">
+        {/* Columns that can shrink to nothing, so a long label and hint never widen the page; out
+            of room, the hint gives way first, since the label is the choice itself. */}
+        <span
+          id={valueId}
+          className="grid min-w-0 grid-cols-[minmax(0,max-content)_minmax(0,1fr)] items-baseline gap-2"
+        >
           <span className="truncate">{options[selectedIndex]?.label}</span>
           {options[selectedIndex]?.hint && (
-            <span className="shrink-0 text-xs text-zinc-500">{options[selectedIndex].hint}</span>
+            <span className="truncate text-xs text-zinc-500">{options[selectedIndex].hint}</span>
           )}
         </span>
         <svg

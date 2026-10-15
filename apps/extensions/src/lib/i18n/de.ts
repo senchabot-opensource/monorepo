@@ -41,7 +41,8 @@ export const de: typeof en = {
     twitchChannel: 'Twitch-Kanal',
     kickChannel: 'Kick-Kanal',
     channelTip:
-      'Gib nur den Kanalnamen ein, nicht den ganzen Link. Bei twitch.tv/senchabot ist das senchabot.',
+      'Gib den Kanalnamen ein oder füge seinen Link ein: Aus twitch.tv/senchabot wird senchabot.',
+    kickDashName: 'Kick schreibt den Link zu diesem Kanal {link}, mit - statt _.',
     previewLoading: 'Vorschau lädt…',
     previewZoom: 'Vorschau-Zoom',
     previewDrag: 'Ziehen, um dich umzusehen',
@@ -261,6 +262,10 @@ export const de: typeof en = {
     galleryLead: 'Jedes hat seine eigene Setup-Seite mit Live-Vorschau. Nichts zum Herunterladen.',
     overlaysLead: 'Browser-Quellen, die von selbst laufen, sobald sie in deiner Szene sind.',
     toolsLead: 'Tools, die du während des Streams selbst bedienst, über eine Seite oder den Chat.',
+    presetPicks: {
+      label: 'Vorschauen in einem Preset zeigen',
+      more: 'Mehr Presets ansehen',
+    },
     setUp: 'Einrichten',
     toolFeatures: 'Features',
     raffleFeatureKeyword: 'Teilnahme per Keyword wie !join',
@@ -2073,7 +2078,7 @@ export const de: typeof en = {
     breadcrumb: 'Stream-Rahmen einrichten',
     title: 'Stream-Rahmen einrichten',
     intro:
-      'Fertige Rahmen für deine Kamera, deinen Chat oder deinen ganzen Stream-Screen. Das Preset, das du wählst, zeichnet den Rahmen im Stil des Games, mit Form, Deko und Bewegung: ein Pagodendach, schwingende Quasten und fliegende Blüten bei Dynasty, Grasblöcke und flackernde Fackeln bei Blocks. Kein Kanal zu verbinden. Füg die URL in OBS ein und leg deine Kamera oder deinen Chat unter den Rahmen.',
+      'Fertige Rahmen für deine Kamera, deinen Chat oder deinen ganzen Stream-Screen, im Stil des Presets, das du wählst. Kein Kanal zu verbinden. Füg die URL in OBS ein und leg deine Kamera oder deinen Chat unter den Rahmen.',
     sectionPiece: 'Rahmen',
     piece: 'Was willst du einrahmen?',
     pieceTip:
@@ -2109,7 +2114,7 @@ export const de: typeof en = {
     color: 'Farbe',
     motion: 'Animationen',
     motionTip:
-      'Leuchtende Linien, Lichtschweife und kleine Details je nach Preset, wie Laternen, Fackeln oder Funken. Schalt es aus, dann bleibt der Rahmen still.',
+      'Leuchtende Linien, Lichtschweife und kleine Details je nach Preset, wie Runen, Fackeln oder Funken. Schalt es aus, dann bleibt der Rahmen still.',
     previewTitle: 'Vorschau des Stream-Rahmens',
     previewIframeTitle: 'Vorschau des Stream-Rahmens',
     previewHint:
@@ -2139,7 +2144,7 @@ export const de: typeof en = {
       'Ja. Für eine vertikale Kamera stellst du Ausrichtung auf Hochkant, dann ist die empfohlene Größe 360 × 640. Der Rahmen wird passend zu seiner Browser-Quelle gezeichnet, für eine quadratische Kamera stellst du also einfach Breite und Höhe passend ein, und die Deko skaliert mit.',
     faq4Q: 'Stammt die Grafik in den Rahmen aus den Games?',
     faq4A:
-      'Nein. Jede Zeichnung, wie das Pagodendach, die Laternen oder die Pixelblöcke, ist selbst gemacht, ohne Game-Logos oder Grafiken. Die Presets sind Fan-Styles, die das Feeling dieser Games einfangen.',
+      'Nein. Jede Zeichnung ist selbst gemacht, ohne Game-Logos oder Grafiken. Die Presets sind Fan-Styles, die das Feeling dieser Games einfangen.',
   },
   countdown: {
     breadcrumb: 'Stream-Countdown einrichten',
@@ -2913,9 +2918,9 @@ export const de: typeof en = {
         title: 'Was tun, wenn das Widget in OBS nicht erscheint?',
         intro:
           'Meistens liegt es am Kanalnamen. Geh diese Punkte der Reihe nach durch.',
-        linkTitle: 'Hast du einen Link statt des Kanalnamens eingegeben?',
+        linkTitle: 'Steht in deiner Widget-URL ein Link statt des Kanalnamens?',
         linkBody:
-          'Gib ins Kanalfeld nur den Namen ein: `senchabot` für twitch.tv/senchabot. Fügst du den ganzen Link ein, hält das Widget den Link für den Kanalnamen und kann sich mit keinem Chat verbinden.',
+          'In die URL gehört nur der Name, etwa `twitch=senchabot`. Die Kanalfelder auf der Setup-Seite machen aus einem eingefügten Link den Namen, aber in einer älteren oder von Hand bearbeiteten URL kann noch der ganze Link stehen, und dann kann sich das Widget mit keinem Chat verbinden. Erstell auf der Setup-Seite eine neue URL.',
         channelTitle: 'Gibt es den Kanal wirklich?',
         channelBody:
           'Prüf den Namen auf Tippfehler. Ein Kanal, den es auf Twitch nicht gibt, wirft keinen Fehler. Das Widget bleibt einfach leer.',
@@ -2924,7 +2929,7 @@ export const de: typeof en = {
           'Chat-Box und Emote-Wand bleiben komplett leer und transparent, bis im Chat etwas passiert. Schreib eine Nachricht in den Chat. Für die Emote-Wand muss es standardmäßig eine Nachricht nur aus Emotes sein, aber mit Alle Emotes zeigen zählen auch Emotes in normalen Nachrichten. Das Overlay der Verlosung erscheint ebenfalls erst, wenn ein Gewinner gezogen wird, und verschwindet nach 10 Sekunden. Sub Sprout und Subathon Timer sind dagegen sofort zu sehen.',
         kickTitle: 'Kick-Kanal nicht gefunden?',
         kickBody:
-          'Beim Öffnen sucht das Widget den Kick-Kanal auf kick.com. Klappt das nicht (falscher Name, den Kanal gibt es nicht oder Kick antwortet nicht), kommen keine Kick-Nachrichten rein. Gib deinen Kick-Namen genau so ein, wie er in der URL auf kick.com steht.',
+          'Beim Öffnen sucht das Widget den Kick-Kanal auf kick.com. Klappt das nicht (falscher Name, den Kanal gibt es nicht oder Kick antwortet nicht), kommen keine Kick-Nachrichten rein. Gib deinen Kick-Namen genau so ein, wie er in der URL auf kick.com steht. Manche Kick-Links schreiben das _ eines Namens als -: Das Feld Kick-Kanal auf der Setup-Seite fragt bei kick.com nach und wechselt für dich zu dieser Schreibweise.',
         tabTitle: 'Läuft die URL im Browser?',
         tabBody:
           'Öffne die URL in einem normalen Browser-Tab. Läuft sie dort, aber nicht in OBS, prüf das Feld URL und die Größe der Quelle.',
@@ -3378,10 +3383,8 @@ export const de: typeof en = {
       },
       look: {
         title: 'Was ändern Preset und Animationen?',
-        p1:
-          'Das Preset bestimmt Form, Grafik, Farben und Schrift des Rahmens: ein Pagodendach und Quasten bei Dynasty, Goldverzierung und türkise Edelsteine bei Rift, Grasblöcke und eine Hotbar bei Blocks. Gib Chat-Box, Stream-Alerts und Sub-Ziel dasselbe Preset, und alles auf dem Screen passt zusammen.',
-        p2:
-          'Mit Animationen an wandert Licht um den Rahmen, die Linien leuchten, und je nach Preset bewegen sich Laternen, Fackeln oder Funken. Sie sind bewusst leicht gehalten. Kommt dein PC beim Zocken trotzdem ins Schwitzen, schalt Animationen aus. Das hängt `motion=0` an die URL, und der Rahmen bleibt still.',
+        p1: 'Das Preset bestimmt Form, Grafik, Farben und Schrift des Rahmens. Gib Chat-Box, Stream-Alerts und Sub-Ziel dasselbe Preset, und alles auf dem Screen passt zusammen.',
+        p2: 'Mit Animationen an wandert Licht um den Rahmen, die Linien leuchten, und je nach Preset bewegen sich Runen, Fackeln oder Funken. Sie sind bewusst leicht gehalten. Kommt dein PC beim Zocken trotzdem ins Schwitzen, schalt Animationen aus. Das hängt `motion=0` an die URL, und der Rahmen bleibt still.',
         p3: 'Die ganze Grafik ist selbst gezeichnet, ohne Game-Logos oder Artwork.',
       },
       change: {
@@ -3607,14 +3610,15 @@ export const de: typeof en = {
   presets: {
     classic: 'Klassisch',
     classicTag: 'Der eigene Look jedes Widgets',
+    funTag: 'Einfach zum Spaß',
     breadcrumb: 'Presets',
     eyebrow: 'Presets',
     title: 'Game-Presets für deine Stream-Overlays',
     lead:
-      'Wähl ein Preset, und deine Chat-Box, Stream-Alerts, Sub-Ziel, Zähler, Event-Liste, Abspann, Zuschauer-Warteschlange, Top-Supporter, Bauchbinde, Aufgabenliste, Hervorgehobene Nachricht, Emote-Combo, Bits- und Kicks-Ziel, Aktueller Song, Subathon Timer, Chat-Umfrage, der Gewinner der Verlosung, die Stream-Rahmen, der Stream-Countdown, Socials und das Glücksrad bekommen denselben Rahmen, dieselben Schriften und Farben. Nimm eins für alle Widgets oder für jedes ein anderes.',
+      'Wähl ein Preset, und deine Chat-Box, Stream-Alerts, Sub-Ziel, Follower-Ziel, Zähler, Event-Liste, Abspann, Zuschauer-Warteschlange, Top-Supporter, Bauchbinde, Aufgabenliste, Hervorgehobene Nachricht, Emote-Combo, Bits- und Kicks-Ziel, Aktueller Song, Subathon Timer, Chat-Umfrage, der Gewinner der Verlosung, die Stream-Rahmen, der Stream-Countdown, Socials und das Glücksrad bekommen denselben Rahmen, dieselben Schriften und Farben. Nimm eins für alle Widgets oder für jedes ein anderes.',
     pickTitle: 'Such dir ein Preset aus',
     pickText:
-      'Fertige Presets für League of Legends (LoL), World of Warcraft (WoW), Metin2, Dota 2, Valorant, Counter-Strike 2 (CS2), Minecraft, Clash of Clans, Fortnite, Rocket League und PUBG: Battlegrounds.',
+      'Fertige Presets für League of Legends (LoL), World of Warcraft (WoW), Dota 2, Valorant, Counter-Strike 2 (CS2), Minecraft, Fortnite, Rocket League, PUBG: Battlegrounds, Mount & Blade und Kingdom Come: Deliverance, dazu Glitch, Operator, Conquest, Flower und Pizza einfach zum Spaß.',
     by: 'von {author}',
     community: 'Community',
     makeDefault: '{name} für alle Widgets nutzen',
@@ -3625,26 +3629,22 @@ export const de: typeof en = {
     setUp: '{widget} einrichten',
     previewIframeTitle: 'Vorschau von {widget} mit dem Preset {name}',
     descriptions: {
-      classic:
-        'Der Look, mit dem jedes Widget gebaut wurde: Neon-Stream-Alerts, der lila Balken des Sub-Ziels und schlichter Text in der Chat-Box. Die Farben suchst du aus.',
-      rift: 'Dünne Goldrahmen mit Rautennieten, tiefblaue Panels und leuchtende türkise Balken, mit Titeln in Cinzel.',
-      realm:
-        'Bronze- und Goldrahmen mit Nieten, dunkle Lederpanels und legendär orange Balken, mit Titeln in Marcellus.',
-      dynasty:
-        'Rote Lackrahmen mit goldenen Eckbeschlägen, dunkle Holzpanels und karminrote Balken, mit Titeln in Zen Antique.',
-      ancient: 'Dunkle Eisenrahmen mit Bronzeecken, ein rotes Glühen am unteren Rand und kantige Titel in Grenze.',
-      agent: 'Abgeschrägte Ecken, eine rote Kante, schräge Balken und hohe Teko-Zahlen auf dunklem Schiefer.',
-      defuse: 'HUD-Eckklammern, eine bernsteinfarbene Linie oben, Warnstreifen auf den Balken und schmale Saira-Schrift.',
-      blocks:
-        'Pixelrahmen in Gras- und Erdfarben, grüne Balken in Blöcken und die Pixelschrift Jersey 10.',
-      village:
-        'Abgerundete Goldrahmen mit Edelsteinnieten, warme Holzpanels und pinke Elixierbalken, mit kräftigen Titeln in Lilita One.',
-      storm:
-        'Abgeschrägte Ecken und gelbe Klammern auf blau-violetten Panels, schräge himmelblaue Balken und hohe Titel in Anton.',
-      boost:
-        'HUD-Klammern und eine leuchtend blaue Linie oben auf Mitternachtsblau, schräge blaue Balken, Orange für den Sieger und Titel in Russo One.',
-      airdrop:
-        'HUD-Eckklammern und eine gelbe Linie oben auf olivschwarzen Panels, flache gelbe Balken und Titel in Saira Stencil One.',
+      classic: 'Der eigene Look jedes Widgets, in den Farben, die du wählst.',
+      rift: 'Gold und Türkis auf dunklem Marineblau, mit leuchtenden Balken.',
+      realm: 'Bronze und Gold auf dunklem Leder, mit Lichtstrahlen.',
+      flower: 'Zartes Rosa, mit kleinen Blumen, die herumschweben.',
+      ancient: 'Dunkles Eisen und feuriges Rot, mit glimmenden Balken.',
+      agent: 'Scharfes Rot und Schiefergrau, mit einem schnellen Schnitt, wenn Balken wachsen.',
+      defuse: 'Bernstein und Grau, mit einem blinkenden roten Licht.',
+      blocks: 'Ganz in Grün und blockig, mit Balken, die Block für Block wachsen.',
+      pizza: 'Die Farben von Kruste und Käse, mit herumschwebenden Pizzastücken.',
+      storm: 'Himmelblau und Lila, mit Balken, die wie ein Bauplan entstehen.',
+      boost: 'Blau und Orange, mit Speedlines, wenn Balken wachsen.',
+      airdrop: 'Oliv und Gelb, mit dem Rauch einer Signalfackel, wenn Balken wachsen.',
+      conquest: 'Orange auf Stahlgrau, mit einem Radarschwenk.',
+      operator: 'Schwarz, Weiß und Limette, mit Treffermarkern, wenn Balken wachsen.',
+      banner: 'Altgold und Rot auf dunklem Holz, mit Balken, die wie Eisen geschmiedet werden.',
+      glitch: 'Rot, Cyan und Gelb, und alles glitcht.',
     },
     existingTitle: 'Hast du schon Widgets in OBS?',
     existingText:
@@ -3669,7 +3669,7 @@ export const de: typeof en = {
       'Ja. Dein Standard ist nur der Startpunkt jeder Setup-Seite. Auf der Setup-Seite jedes Widgets kannst du ein anderes Preset wählen, und die URL dieses Widgets trägt es.',
     faq3Q: 'Welche Widgets nehmen ein Preset?',
     faq3A:
-      'Chat-Box, Stream-Alerts, Sub-Ziel, Subathon Timer, Chat-Umfrage, das Gewinner-Overlay der Verlosung, Stream-Rahmen, Stream-Countdown, Socials und Glücksrad. Die Emote-Wand zeigt nur Emotes und Sub Sprout zeichnet eigene Pflanzen, deshalb behalten die beiden ihren Look.',
+      'Sub-Ziel, Bits- und Kicks-Ziel, Follower-Ziel, Chat-Umfrage, Chat-Box, Hervorgehobene Nachricht, Emote-Combo, Stream-Alerts, Zähler, Subathon Timer, das Gewinner-Overlay der Verlosung, Stream-Rahmen, Stream-Countdown, Socials, Aktueller Song, Glücksrad, Event-Liste, Abspann, Zuschauer-Warteschlange, Top-Supporter, Bauchbinde und Aufgabenliste. Die Emote-Wand zeigt nur Emotes und Sub Sprout zeichnet eigene Pflanzen, deshalb behalten die beiden ihren Look.',
     faq4Q: 'Sind das offizielle Game-Themes?',
     faq4A:
       'Nein. Es sind Fan-Styles aus Farben, kostenlosen Google Fonts und selbst gezeichneter Deko, ohne Game-Logos oder Grafiken, und sie sind nicht mit den Spieleherstellern verbunden.',
@@ -3679,10 +3679,19 @@ export const de: typeof en = {
       browse: 'Alle Presets',
       show: '{count} Presets anzeigen',
       hide: 'Presets ausblenden',
+      random: 'Zufälliges Preset wählen',
       owns: 'Farben und Schriften kommen von {name}.',
       makeDefault: '{name} als Standard',
       makeDefaultTip: 'Jede Setup-Seite in diesem Browser startet dann damit.',
       isDefault: 'Dein Standard',
+      effects: 'Effekte',
+      effectsTip:
+        'Die eigenen Animationen von {name}: auf Balken, wenn sie wachsen, auf Panels, wenn sie erscheinen, und ab und zu im Leerlauf.',
+      font: 'Schrift',
+      fontTip:
+        'Behalte die Schriften von {name} oder zeig dieses Widget in einer anderen Schrift. Farben, Rahmen und Effekte bleiben von {name}.',
+      presetFonts: 'Schriften von {name}',
+      ownsColors: 'Farben kommen von {name}.',
     },
   },
   faqPage: {
@@ -3736,6 +3745,18 @@ export const de: typeof en = {
     lead: 'Neue Features und Bugfixes in Senchabot Extensions, das Neueste zuerst. Die Liste ist aus der Commit-Historie des Projekts auf [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) zusammengestellt.',
     site: 'Website',
     entries: {
+      presetsFont:
+        'Ein neues Feld Schrift unter der Preset-Auswahl zeigt ein Widget in Inter, Roboto, Nunito, JetBrains Mono, Source Serif 4 oder deiner Systemschrift statt in den Schriften des Presets; Farben, Rahmen und Effekte des Presets bleiben.',
+      presetsRandom:
+        'Ein Würfel neben der Preset-Auswahl auf jeder Setup-Seite wählt ein zufälliges Preset. Auf der Startseite zeigt jede Widget-Vorschau bei jedem Besuch ein anderes Preset, und ihre Setup-Seite öffnet sich mit diesem Preset.',
+      presetsFlowerPizza:
+        'Zwei neue Presets, Flower und Pizza, ersetzen Dynasty und Village: Kleine Blumen und Pizzastücke schweben um die Balken, und jeder Schritt nach vorn lässt eine Kirschblüte aufgehen oder ein Stück herausspringen. Widgets mit Dynasty oder Village bekommen wieder ihren klassischen Look.',
+      presetEffects:
+        'Jedes Preset hat jetzt einen eigenen Effekt: Balken leuchten, glühen, blühen, bauen sich auf oder glitchen beim Wachsen, Panels kommen mit eigenem Auftritt, und ein erreichtes Ziel wird größer gefeiert. Mit dem Schalter Effekte unter der Preset-Auswahl schaltest du sie ab.',
+      presetsFollowerGoal:
+        'Die Preset-Seite zeigt jetzt auch das Follower-Ziel und fügt eingefügten Follower-Ziel-URLs ein Preset hinzu.',
+      presetsConquestOperatorBannerGlitch:
+        'Vier neue Presets für jedes Widget, das eines nimmt: Conquest, Operator, Banner (Mount & Blade und Kingdom Come) und Glitch.',
       hudToggles:
         'IRL-HUD-Overlay und Wetter: Minikarte, Geld, Uhr und Wetter lassen sich jetzt im Chat mit !h map, !h cash, !h time und !h weather aus- und wieder einblenden. Das Wetter liest den Chat nur, wenn du deinen Kanal einträgst.',
       irlHudShortCommand:
@@ -3853,7 +3874,7 @@ export const de: typeof en = {
       chatTextShadow:
         'Die Chat-Box hat die Option Textschatten: Keiner, Normal (wie bisher) oder Stark, eine dunkle Kontur, die den Chat auf hellen Games lesbar hält.',
       chatFonts:
-        'Die Chat-Box hat jetzt ein Schriftfeld für Namen und eins für Nachrichten, und beide bleiben auch mit Preset offen: Behalte die zwei Schriften des Presets, nimm seine Überschriftenschrift auch für die Nachrichten oder kombinier eine davon mit Inter, Roboto, Nunito, JetBrains Mono, Source Serif 4 oder deiner Systemschrift. Fette Namen und fette Nachrichten funktionieren jetzt auch bei Presets, deren Schrift nur eine Stärke hat, wie Realm, Dynasty und Blocks.',
+        'Die Chat-Box hat jetzt ein Schriftfeld für Namen und eins für Nachrichten, und beide bleiben auch mit Preset offen: Behalte die zwei Schriften des Presets, nimm seine Überschriftenschrift auch für die Nachrichten oder kombinier eine davon mit Inter, Roboto, Nunito, JetBrains Mono, Source Serif 4 oder deiner Systemschrift. Fette Namen und fette Nachrichten funktionieren jetzt auch bei Presets, deren Schrift nur eine Stärke hat.',
       sproutSaved:
         'Sub Sprout behält seine Pflanze jetzt nach einem OBS-Neuladen und nimmt sie in den nächsten Stream mit, statt jedes Mal bei der ersten Stufe anzufangen. Mods können sie mit !grow reset neu starten.',
       countdown:
@@ -3861,7 +3882,7 @@ export const de: typeof en = {
       deviceTheme:
         'Die Website öffnet sich jetzt im hellen oder dunklen Theme deines Geräts und folgt ihm, wenn es sich ändert. Sobald du den Theme-Button oben klickst, wird deine Wahl gespeichert und das Gerät ändert sie nicht mehr.',
       frames:
-        'Neue Stream-Rahmen: fertige Rahmen für deine Kamera, deinen Chat und deinen ganzen Stream-Screen. Jedes Preset bringt seine eigene Grafik mit, z. B. ein Pagodendach und Laternen bei Dynasty oder Pixelblöcke bei Blocks.',
+        'Neue Stream-Rahmen: fertige Rahmen für deine Kamera, deinen Chat und deinen ganzen Stream-Screen, mit eigener Grafik für jedes Preset.',
       subathonRates:
         'Der Subathon Timer kann jetzt direkt auf dem Timer zeigen, was ein Sub, ein Gift-Sub und 500 Bits oder Kicks bringen, damit die Zuschauer wissen, was ihr Sub wert ist.',
       presets:

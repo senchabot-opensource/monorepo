@@ -65,7 +65,7 @@ export function CounterWidget({
     simulate,
     previewId,
   });
-  const skin = skinFor(settings.preset);
+  const skin = skinFor(settings.preset, settings.fx, settings.font);
   const hue = hueFor(settings.color, 1);
   const Cell = settings.layout === 'stack' ? StackRow : RowCell;
   const n = settings.counters.length;
@@ -182,7 +182,9 @@ function RowCell({ counter, count, bump, pops, hue, width }: CellProps) {
         />
       </div>
       <Pops pops={pops} hue={hue} style={{ left: '50%', bottom: 'calc(100% + 6px)' }} />
-      {skin && panel.frame && <Frame skin={skin} radius={RADIUS} />}
+      {skin && panel.frame && (
+        <Frame skin={skin} radius={RADIUS} pulse={bump?.up ? bump.key : null} />
+      )}
     </div>
   );
 }
@@ -224,7 +226,9 @@ function StackRow({ counter, count, bump, pops, hue }: CellProps) {
           />
         </div>
       </div>
-      {skin && panel.frame && <Frame skin={skin} radius={RADIUS} />}
+      {skin && panel.frame && (
+        <Frame skin={skin} radius={RADIUS} pulse={bump?.up ? bump.key : null} />
+      )}
     </div>
   );
 }

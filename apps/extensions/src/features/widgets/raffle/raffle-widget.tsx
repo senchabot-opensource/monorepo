@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useId, useState } from 'react';
+import { ChannelField } from '#/components/channel-field';
 import { CopyUrlField } from '#/components/copy-url-field';
 import { CloseIcon, RaffleIcon } from '#/components/icons';
 import { SetupShell } from '#/components/setup-shell';
@@ -11,13 +12,15 @@ import { SettingsGroup } from '#/components/ui/settings-group';
 import { Switch } from '#/components/ui/switch';
 import { TextField } from '#/components/ui/text-field';
 import { PresetField } from '#/features/presets/preset-field';
-import { CLASSIC_PRESET, isClassic, PRESET_PARAM } from '#/features/presets/registry';
+import { CLASSIC_PRESET } from '#/features/presets/registry';
 import { useStartOnSitePreset } from '#/features/presets/site-preset';
 import { type BurstOptions, useConfettiBurst } from '#/hooks/use-confetti-burst';
 import { useRaffleChat } from '#/hooks/use-raffle-chat';
 import { useRaffleState } from '#/hooks/use-raffle-state';
 import { useI18n } from '#/lib/i18n';
 import type { FaqEntry } from '#/lib/i18n/seo';
+import { writePreset } from '#/lib/preset-url';
+import type { SiteFont } from '#/lib/site-fonts';
 import { getWidget } from '#/lib/widgets';
 import type { RafflePlatform } from '#/types/raffle';
 
@@ -110,9 +113,16 @@ export function RaffleWidget({
   const [origin, setOrigin] = useState('');
   // The winner overlay's look only; it isn't a raffle rule, so it never locks.
   const [preset, setPreset] = useState(CLASSIC_PRESET);
+  // Left unset, the preset's effect plays; only off goes into the URL.
+  const [fx, setFx] = useState<boolean | undefined>();
+  // Left unset, the preset draws in its own fonts.
+  const [font, setFont] = useState<SiteFont | undefined>();
   useStartOnSitePreset(setPreset);
+  const overlayParams = new URLSearchParams();
+  writePreset(overlayParams, preset, fx, font);
+  const overlayQuery = overlayParams.toString();
   const overlayUrl = origin
-    ? `${origin}${WIDGET.widgetPath}${isClassic(preset) ? '' : `?${PRESET_PARAM}=${preset}`}`
+    ? `${origin}${WIDGET.widgetPath}${overlayQuery ? `?${overlayQuery}` : ''}`
     : '';
   const fireConfetti = useConfettiBurst(CONFETTI);
   // remainingMs is read from the clock on render, so re-render every second while it counts down.
@@ -202,15 +212,12 @@ export function RaffleWidget({
               disabled={locked}
             />
           </div>
-          <TextField
+          <ChannelField
+            platform={config.platform}
             label={t('raffle.channelName')}
-            tip={t('common.channelTip')}
             value={config.channel}
             onChange={(value) => updateConfig({ channel: value })}
-            placeholder={t('common.channelPlaceholder')}
             disabled={locked}
-            autoComplete="off"
-            spellCheck={false}
           />
         </div>
       </SettingsGroup>
@@ -287,7 +294,14 @@ export function RaffleWidget({
       </div>
 
       <SettingsGroup title={t('common.sectionAppearance')}>
-        <PresetField value={preset} onChange={setPreset} />
+        <PresetField
+          value={preset}
+          onChange={setPreset}
+          fx={fx}
+          onFxChange={setFx}
+          font={font}
+          onFontChange={setFont}
+        />
       </SettingsGroup>
     </>
   );

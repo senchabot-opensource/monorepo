@@ -40,8 +40,8 @@ export const tr: typeof en = {
     platformAll: 'Hepsi',
     twitchChannel: 'Twitch Kanalı',
     kickChannel: 'Kick Kanalı',
-    channelTip:
-      'Tam linki değil, sadece kanal adını yaz. Örneğin twitch.tv/senchabot için senchabot.',
+    channelTip: 'Kanal adını yaz ya da linkini yapıştır: twitch.tv/senchabot, senchabot olur.',
+    kickDashName: 'Kick bu kanalın linkinde _ yerine - kullanıyor: {link}.',
     previewLoading: 'Önizleme yükleniyor…',
     previewZoom: 'Önizleme yakınlaştırma',
     previewDrag: 'Etrafa bakmak için sürükle',
@@ -258,6 +258,10 @@ export const tr: typeof en = {
       'Her birinin canlı önizlemeli kendi ayar sayfası var. İndirmen gereken hiçbir şey yok.',
     overlaysLead: 'Sahneye ekledikten sonra kendi kendine çalışan tarayıcı kaynakları.',
     toolsLead: 'Yayın boyunca sayfadan ya da sohbetten senin yönettiğin araçlar.',
+    presetPicks: {
+      label: "Önizlemeleri bir preset'le göster",
+      more: 'Daha fazla preset gör',
+    },
     setUp: 'Ayarla',
     toolFeatures: 'Özellikler',
     raffleFeatureKeyword: '!join gibi katılım komutu',
@@ -2061,7 +2065,7 @@ export const tr: typeof en = {
     breadcrumb: 'Yayın Çerçeveleri Kurulumu',
     title: 'Yayın Çerçeveleri Kurulumu',
     intro:
-      "Kameran, sohbetin ya da bütün yayın ekranın için hazır çerçeveler. Seçtiğin preset çerçeveyi o oyunun havasında çizer, şekliyle, süsleriyle ve hareketiyle: Dynasty'de pagoda çatısı, sallanan püsküller ve süzülen çiçek yaprakları, Blocks'ta çimen blokları ve titreyen meşaleler. Kanal bağlamana gerek yok, URL'yi OBS'e ekle, kameranı ya da sohbetini çerçevenin altına yerleştir.",
+      "Kameran, sohbetin ya da bütün yayın ekranın için hazır çerçeveler, seçtiğin preset'in stilinde. Kanal bağlamana gerek yok, URL'yi OBS'e ekle, kameranı ya da sohbetini çerçevenin altına yerleştir.",
     sectionPiece: 'Çerçeve',
     piece: 'Neyin çerçevesi?',
     pieceTip:
@@ -2093,7 +2097,7 @@ export const tr: typeof en = {
     color: 'Renk',
     motion: 'Animasyonlar',
     motionTip:
-      "Parlayan çizgiler, ışık geçişleri ve preset'e göre fener, meşale ya da kıvılcım gibi küçük hareketler. Kapatırsan çerçeve sabit durur.",
+      "Parlayan çizgiler, ışık geçişleri ve preset'e göre rün, meşale ya da kıvılcım gibi küçük hareketler. Kapatırsan çerçeve sabit durur.",
     previewTitle: 'Yayın Çerçevesi Önizleme',
     previewIframeTitle: 'Yayın Çerçevesi Önizleme',
     previewHint:
@@ -2123,7 +2127,7 @@ export const tr: typeof en = {
       "Evet. Dikey bir kamera için Yön'de Dikey'i seç, önerilen boyut 360 × 640 olur. Çerçeve tarayıcı kaynağının boyutuna göre çizilir, bu yüzden kare bir kamera için genişlik ve yüksekliği ona göre ayarlaman yeterli, süslemeler de o boyuta göre ölçeklenir.",
     faq4Q: 'Çerçevelerdeki çizimler oyunlardan mı alındı?',
     faq4A:
-      "Hayır. Pagoda çatısı, fenerler ya da piksel bloklar gibi her çizim sıfırdan çizildi, oyun logosu ya da görseli içermez. Preset'ler o oyunların havasını yakalayan hayran yapımı stiller.",
+      "Hayır. Her çizim sıfırdan çizildi, oyun logosu ya da görseli içermez. Preset'ler o oyunların havasını yakalayan hayran yapımı stiller.",
   },
   countdown: {
     breadcrumb: 'Yayın Geri Sayımı Kurulumu',
@@ -2899,9 +2903,9 @@ export const tr: typeof en = {
       troubleshoot: {
         title: "Widget OBS'te görünmüyorsa ne yapmalıyım?",
         intro: 'Çoğu zaman sebep kanal adıdır. Şu kontrolleri sırayla yap.',
-        linkTitle: 'Kanal adı yerine link mi yazdın?',
+        linkTitle: 'Widget adresinde kanal adı yerine link mi var?',
         linkBody:
-          'Kanal alanına sadece adı yaz: twitch.tv/senchabot için `senchabot`. Linkin tamamını yapıştırırsan widget linki kanal adı sanar ve hiçbir sohbete bağlanamaz.',
+          'Adreste sadece ad olmalı, örneğin `twitch=senchabot`. Kurulum sayfasındaki kanal alanları yapıştırılan linki ada çevirir, ama eski ya da elle düzenlenmiş bir adreste linkin tamamı kalmış olabilir; o zaman widget hiçbir sohbete bağlanamaz. Kurulum sayfasında yeni bir adres oluştur.',
         channelTitle: 'Kanal gerçekten var mı?',
         channelBody:
           "Adı yazım hatasına karşı kontrol et. Twitch'te olmayan bir kanal hata vermez, widget sadece boş kalır.",
@@ -2910,7 +2914,7 @@ export const tr: typeof en = {
           "Sohbet Kutusu ve Emote Duvarı sohbette bir şey olana kadar tamamen boş ve şeffaftır. Sohbete bir mesaj yaz; Emote Duvarı için varsayılan olarak sadece emote'tan oluşan bir mesaj gerekir, Tüm Emote'ları Göster açıksa normal mesajlardaki emote'lar da sayılır. Çekiliş overlay'i de sadece kazanan çekildiğinde görünür ve 10 saniye sonra kaybolur. Sub Sprout ise bitkiyi, Subathon Timer da sayacı hemen gösterir.",
         kickTitle: 'Kick kanalı bulunamadı mı?',
         kickBody:
-          "Widget açılırken Kick kanalını kick.com üzerinden arar. Bu arama başarısız olursa, yani ad yanlışsa, kanal yoksa ya da Kick cevap vermezse, Kick mesajları gelmez. Kick adını kick.com adresinde göründüğü gibi yaz.",
+          "Widget açılırken Kick kanalını kick.com üzerinden arar. Bu arama başarısız olursa, yani ad yanlışsa, kanal yoksa ya da Kick cevap vermezse, Kick mesajları gelmez. Kick adını kick.com adresinde göründüğü gibi yaz. Bazı Kick linklerinde addaki _ yerine - yazılır: kurulum sayfasındaki Kick Kanalı alanı kick.com'a sorar ve senin yerine linkteki yazılışa geçer.",
         tabTitle: 'Adres tarayıcıda çalışıyor mu?',
         tabBody:
           "Adresi normal bir tarayıcı sekmesinde aç. Orada çalışıp OBS'te çalışmıyorsa kaynağın URL alanını ve boyutunu kontrol et.",
@@ -3358,8 +3362,8 @@ export const tr: typeof en = {
       },
       look: {
         title: 'Preset ve animasyonlar neyi değiştirir?',
-        p1: "Preset çerçevenin şeklini, çizimlerini, renklerini ve yazı tipini belirler: Dynasty'de pagoda çatısı ve püsküller, Rift'te altın süslemeler ve turkuaz taşlar, Blocks'ta çimen blokları ve eşya çubuğu. Sohbet Kutusu'na, Yayın Uyarıları'na ve Abone Hedefi'ne de aynı preset'i verirsen ekrandaki her şey aynı stilde durur.",
-        p2: "Animasyonlar açıkken çerçevenin etrafında ışıklar döner, çizgiler parlar, preset'e göre fenerler, meşaleler ya da kıvılcımlar hareket eder. Bunlar hafif tutuldu. Yine de oyunla birlikte bilgisayarın zorlanıyorsa Animasyonlar'ı kapat, URL'ye `motion=0` eklenir ve çerçeve sabit durur.",
+        p1: "Preset çerçevenin şeklini, çizimlerini, renklerini ve yazı tipini belirler. Sohbet Kutusu'na, Yayın Uyarıları'na ve Abone Hedefi'ne de aynı preset'i verirsen ekrandaki her şey aynı stilde durur.",
+        p2: "Animasyonlar açıkken çerçevenin etrafında ışıklar döner, çizgiler parlar, preset'e göre rünler, meşaleler ya da kıvılcımlar hareket eder. Bunlar hafif tutuldu. Yine de oyunla birlikte bilgisayarın zorlanıyorsa Animasyonlar'ı kapat, URL'ye `motion=0` eklenir ve çerçeve sabit durur.",
         p3: 'Çizimlerin hepsi sıfırdan çizildi, oyun logosu ya da görseli içermez.',
       },
       change: {
@@ -3572,13 +3576,15 @@ export const tr: typeof en = {
   presets: {
     classic: 'Klasik',
     classicTag: "Her widget'ın kendi görünümü",
+    funTag: 'Eğlencesine',
     breadcrumb: "Preset'ler",
     eyebrow: "Preset'ler",
     title: "Yayın overlay'lerin için oyun preset'leri",
-    lead: "Seçtiğin preset'le Sohbet Kutusu, Yayın Uyarıları, Abone Hedefi, Sayaç, Etkinlik Listesi, Kapanış Jeneriği, İzleyici Sırası, Destekçi Sıralaması, Alt Bant, Görev Listesi, Öne Çıkan Mesaj, Emote Kombosu, Bits & Kicks Hedefi, Şimdi Çalıyor, Subathon Timer, Sohbet Anketi, Çekiliş kazanan overlay'i, Yayın Çerçeveleri, Yayın Geri Sayımı, Sosyal Medya ve Çark aynı çerçeveyi, yazı tiplerini ve renkleri alır. İstersen hepsinde aynısını kullan, istersen her birinde başka birini.",
+    lead:
+      "Seçtiğin preset'le Sohbet Kutusu, Yayın Uyarıları, Abone Hedefi, Takipçi Hedefi, Sayaç, Etkinlik Listesi, Kapanış Jeneriği, İzleyici Sırası, Destekçi Sıralaması, Alt Bant, Görev Listesi, Öne Çıkan Mesaj, Emote Kombosu, Bits & Kicks Hedefi, Şimdi Çalıyor, Subathon Timer, Sohbet Anketi, Çekiliş kazanan overlay'i, Yayın Çerçeveleri, Yayın Geri Sayımı, Sosyal Medya ve Çark aynı çerçeveyi, yazı tiplerini ve renkleri alır. İstersen hepsinde aynısını kullan, istersen her birinde başka birini.",
     pickTitle: 'Bir preset seç',
     pickText:
-      "League of Legends (LoL), World of Warcraft (WoW), Metin2, Dota 2, Valorant, Counter-Strike 2 (CS2), Minecraft, Clash of Clans, Fortnite, Rocket League ve PUBG: Battlegrounds için hazır preset'ler.",
+      "League of Legends (LoL), World of Warcraft (WoW), Dota 2, Valorant, Counter-Strike 2 (CS2), Minecraft, Fortnite, Rocket League, PUBG: Battlegrounds, Mount & Blade ve Kingdom Come: Deliverance için hazır preset'ler, bir de eğlencesine Glitch, Operator, Conquest, Flower ve Pizza.",
     by: 'Hazırlayan: {author}',
     community: 'Topluluk',
     makeDefault: "{name} preset'ini her widget'ta kullan",
@@ -3589,25 +3595,22 @@ export const tr: typeof en = {
     setUp: '{widget} kurulumu',
     previewIframeTitle: "{name} preset'iyle {widget} önizlemesi",
     descriptions: {
-      classic:
-        "Widget'ların orijinal görünümü: neon Yayın Uyarıları, mor Abone Hedefi barı ve sade Sohbet Kutusu yazısı. Renkleri sen seçersin.",
-      rift: 'Elmas süslemeli ince altın çerçeveler, koyu lacivert paneller, parlayan turkuaz barlar ve Cinzel başlıklar.',
-      realm:
-        'Perçinli bronz ve altın çerçeveler, koyu deri paneller, legendary turuncusu barlar ve Marcellus başlıklar.',
-      dynasty:
-        'Altın köşebentli kırmızı lake çerçeveler, koyu ahşap paneller, kan kırmızısı barlar ve Zen Antique başlıklar.',
-      ancient: 'Bronz köşeli koyu demir çerçeveler, alt kenarda kırmızı bir parıltı ve keskin Grenze başlıklar.',
-      agent: 'Koyu antrasit zeminde kesik köşeler, kırmızı bir kenar, eğik barlar ve uzun Teko rakamları.',
-      defuse: 'HUD tarzı köşe işaretleri, kehribar rengi bir üst çizgi, barlarda ikaz şeritleri ve dar Saira yazı tipi.',
-      blocks: 'Çimen ve toprak renginde piksel çerçeveler, bloklara bölünmüş yeşil barlar ve Jersey 10 piksel yazı tipi.',
-      village:
-        'Mücevher süslemeli yuvarlak altın çerçeveler, sıcak ahşap paneller, pembe iksir barları ve kalın Lilita One başlıklar.',
-      storm:
-        'Maviden mora dönen panellerde kesik köşeler ve sarı köşe işaretleri, eğik gök mavisi barlar ve uzun Anton başlıklar.',
-      boost:
-        'Gece lacivertinde HUD köşe işaretleri, parlayan mavi bir üst çizgi, eğik mavi barlar, kazanan için turuncu ve Russo One başlıklar.',
-      airdrop:
-        'Koyu zeytin yeşili panellerde HUD köşe işaretleri, sarı bir üst çizgi, düz sarı barlar ve Saira Stencil One başlıklar.',
+      classic: "Her widget'ın kendi görünümü, seçtiğin renklerle.",
+      rift: 'Koyu lacivert üstünde altın ve turkuaz, parlayan barlarla.',
+      realm: 'Koyu deri üstünde bronz ve altın, ışık huzmeleriyle.',
+      flower: 'Yumuşak pembeler, etrafta uçuşan küçük çiçeklerle.',
+      ancient: 'Koyu demir ve ateş kırmızısı, için için yanan barlarla.',
+      agent: 'Keskin kırmızı ve koyu gri, bar ilerledikçe hızlı bir kesikle.',
+      defuse: 'Kehribar ve gri, yanıp sönen kırmızı bir ışıkla.',
+      blocks: 'Baştan sona yeşil ve bloklu, blok blok dolan barlarla.',
+      pizza: 'Hamur ve peynir renkleri, etrafta uçuşan pizza dilimleriyle.',
+      storm: 'Gök mavisi ve mor, teknik çizim gibi kurulan barlarla.',
+      boost: 'Mavi ve turuncu, bar ilerledikçe hız çizgileriyle.',
+      airdrop: 'Zeytin yeşili ve sarı, bar ilerledikçe işaret fişeği dumanıyla.',
+      conquest: 'Koyu metal üstünde turuncu, radar taramasıyla.',
+      operator: 'Siyah, beyaz ve limon yeşili, bar ilerledikçe isabet işaretleriyle.',
+      banner: 'Koyu ahşap üstünde eski altın ve kırmızı, demir gibi dövülen barlarla.',
+      glitch: "Kırmızı, camgöbeği ve sarı; her şey glitch'leniyor.",
     },
     existingTitle: "OBS'te zaten widget'ların var mı?",
     existingText:
@@ -3632,7 +3635,7 @@ export const tr: typeof en = {
       "Evet. Varsayılan preset sadece kurulum sayfalarının hangi preset'le açılacağını belirler. Herhangi bir widget'ın kurulum sayfasında başka bir preset seçebilirsin, o preset de o widget'ın URL'sine yazılır.",
     faq3Q: "Hangi widget'lar preset destekliyor?",
     faq3A:
-      "Sohbet Kutusu, Yayın Uyarıları, Abone Hedefi, Subathon Timer, Sohbet Anketi, Çekiliş kazanan overlay'i, Yayın Çerçeveleri, Yayın Geri Sayımı, Sosyal Medya ve Çark. Emote Duvarı sadece emote gösterdiği, Sub Sprout da kendi bitkilerini çizdiği için ikisi kendi görünümünde kalır.",
+      "Abone Hedefi, Bits & Kicks Hedefi, Takipçi Hedefi, Sohbet Anketi, Sohbet Kutusu, Öne Çıkan Mesaj, Emote Kombosu, Yayın Uyarıları, Sayaç, Subathon Timer, Çekiliş kazanan overlay'i, Yayın Çerçeveleri, Yayın Geri Sayımı, Sosyal Medya, Şimdi Çalıyor, Çark, Etkinlik Listesi, Kapanış Jeneriği, İzleyici Sırası, Destekçi Sıralaması, Alt Bant ve Görev Listesi. Emote Duvarı sadece emote gösterdiği, Sub Sprout da kendi bitkilerini çizdiği için ikisi kendi görünümünde kalır.",
     faq4Q: 'Bunlar oyunların resmi görünümleri mi?',
     faq4A:
       'Hayır. Renklerden, ücretsiz Google Fonts yazı tiplerinden ve sıfırdan çizilmiş süslemelerden oluşan hayran yapımı stiller. Oyun logosu ya da görseli içermezler, oyun yapımcılarıyla da bir bağlantıları yok.',
@@ -3642,10 +3645,19 @@ export const tr: typeof en = {
       browse: "Tüm preset'ler",
       show: "{count} preset'i göster",
       hide: "Preset'leri gizle",
+      random: 'Rastgele bir preset seç',
       owns: "Renkler ve yazı tipleri {name} preset'inden geliyor.",
       makeDefault: "{name} preset'ini varsayılan yap",
       makeDefaultTip: "Bu tarayıcıdaki bütün kurulum sayfaları bu preset'le açılır.",
       isDefault: "Varsayılan preset'in",
+      effects: 'Efektler',
+      effectsTip:
+        "{name} preset'ine özel animasyonlar: barlar dolarken, paneller ekrana gelirken ve arada bir boştayken oynar.",
+      font: 'Yazı tipi',
+      fontTip:
+        "{name} preset'inin yazı tiplerini koru ya da bu widget'ı başka bir yazı tipiyle göster. Renkler, çerçeve ve efektler {name} preset'inden gelmeye devam eder.",
+      presetFonts: "{name} preset'inin yazı tipleri",
+      ownsColors: "Renkler {name} preset'inden geliyor.",
     },
   },
   faqPage: {
@@ -3699,6 +3711,18 @@ export const tr: typeof en = {
     lead: "Senchabot Extensions'a eklenen özellikler ve düzeltilen hatalar, en yenisi en üstte. Liste projenin [GitHub'daki](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) commit geçmişinden hazırlanıyor.",
     site: 'Site',
     entries: {
+      presetsFont:
+        "Preset seçicinin altındaki yeni Yazı tipi kutusu, widget'ı preset'in kendi yazı tipleri yerine Inter, Roboto, Nunito, JetBrains Mono, Source Serif 4 ya da sistem yazı tipinle gösterir; preset'in renkleri, çerçevesi ve efektleri aynen kalır.",
+      presetsRandom:
+        "Her kurulum sayfasında preset seçicinin yanındaki zar rastgele bir preset seçiyor. Ana sayfada her widget önizlemesi her ziyarette farklı bir preset'le geliyor ve kurulum sayfası o preset'le açılıyor.",
+      presetsFlowerPizza:
+        "İki yeni preset, Flower ve Pizza, Dynasty ile Village'ın yerini aldı: barların etrafında küçük çiçekler ve pizza dilimleri uçuşuyor, bar her ilerlediğinde ucunda bir kiraz çiçeği açıyor ya da bir dilim fırlıyor. Dynasty ya da Village seçili widget'lar klasik görünümlerine döner.",
+      presetEffects:
+        "Her preset'in artık kendine özel bir efekti var: barlar dolarken parlıyor, yanıyor, çiçek açıyor, inşa ediliyor ya da glitch'leniyor; paneller kendi girişleriyle geliyor, ulaşılan hedefler daha büyük bir gösteriyle kutlanıyor. Preset seçicinin altındaki Efektler anahtarıyla kapatabilirsin.",
+      presetsFollowerGoal:
+        "Preset sayfası artık Takipçi Hedefi'ni de gösteriyor ve oraya yapıştırılan Takipçi Hedefi URL'lerine preset ekliyor.",
+      presetsConquestOperatorBannerGlitch:
+        'Preset alan her widget için dört yeni preset: Conquest, Operator, Banner (Mount & Blade ve Kingdom Come) ve Glitch.',
       hudToggles:
         'IRL HUD Overlay ve Hava Durumu: mini harita, para, saat ve hava durumu artık sohbetten !h map, !h cash, !h time ve !h weather ile gizlenip yeniden gösterilebiliyor. Hava Durumu sohbeti sadece kanalını eklersen okur.',
       irlHudShortCommand:
@@ -3817,7 +3841,7 @@ export const tr: typeof en = {
       chatTextShadow:
         "Sohbet Kutusu'na Yazı Gölgesi seçimi geldi: Kapalı, Normal (eskisi gibi) ya da Güçlü; Güçlü koyu bir kontur çizer, açık renkli oyunlarda da sohbet okunur.",
       chatFonts:
-        "Sohbet Kutusu'nda artık kullanıcı adları için ayrı, mesajlar için ayrı font kutusu var ve preset seçiliyken de ikisi açık kalıyor: preset'in getirdiği iki fontu olduğu gibi bırakabilir, başlık fontunu mesajlara da verebilir ya da ikisini Inter, Roboto, Nunito, JetBrains Mono, Source Serif 4 veya sistem fontuyla karıştırabilirsin. Kalın kullanıcı adları ve kalın mesajlar da fontu tek ağırlıkla gelen preset'lerde (Realm, Dynasty, Blocks) artık çalışıyor.",
+        "Sohbet Kutusu'nda artık kullanıcı adları için ayrı, mesajlar için ayrı font kutusu var ve preset seçiliyken de ikisi açık kalıyor: preset'in getirdiği iki fontu olduğu gibi bırakabilir, başlık fontunu mesajlara da verebilir ya da ikisini Inter, Roboto, Nunito, JetBrains Mono, Source Serif 4 veya sistem fontuyla karıştırabilirsin. Kalın kullanıcı adları ve kalın mesajlar da fontu tek ağırlıkla gelen preset'lerde artık çalışıyor.",
       sproutSaved:
         "Sub Sprout artık bitkiyi OBS'te saklıyor, kaynağı yenilesen de ertesi yayında da kaldığı aşamadan devam ediyor, eskisi gibi ilk aşamadan başlamıyor. Modlar !grow reset ile bitkiyi baştan başlatabiliyor.",
       countdown:
@@ -3825,7 +3849,7 @@ export const tr: typeof en = {
       deviceTheme:
         'Site artık cihazının açık ya da koyu temasıyla açılıyor, cihazın teması değişince site de değişiyor. Üst menüdeki tema düğmesine bir kez bastın mı senin seçtiğin tema hatırlanıyor, cihaz artık temayı değiştirmiyor.',
       frames:
-        "Yeni Yayın Çerçeveleri: kameran, sohbetin ve bütün yayın ekranın için hazır çerçeveler. Her preset kendi çizimleriyle gelir, Dynasty'de pagoda çatısı ve fenerler, Blocks'ta piksel bloklar.",
+        'Yeni Yayın Çerçeveleri: kameran, sohbetin ve bütün yayın ekranın için hazır çerçeveler, her preset için ayrı çizimlerle.',
       subathonRates:
         "Subathon Timer artık bir aboneliğin, hediye aboneliğin ve 500 Bits ya da Kicks'in ne kadar süre eklediğini sayaçta gösterebiliyor, böylece izleyiciler aboneliklerinin kaç dakika eklediğini biliyor.",
       presets:

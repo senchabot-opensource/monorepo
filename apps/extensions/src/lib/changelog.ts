@@ -13,6 +13,21 @@ export interface ChangelogEntry {
 // Written from `git log -- apps/extensions`: user-facing feat/fix commits only, newest first.
 // Alerts is unlisted, so its commits stay out.
 export const CHANGELOG: readonly ChangelogEntry[] = [
+  // Every setup page that takes a preset but the Chat Box's, which has font boxes of its own.
+  { date: '2026-10-15', key: 'changelog.entries.presetsFont', widgets: [] },
+  // The dice is on every setup page that takes a preset, and the rest is the home page.
+  { date: '2026-10-15', key: 'changelog.entries.presetsRandom', widgets: [] },
+  // Two presets swapped out for new ones; like the effects, a site change rather than per widget.
+  { date: '2026-10-15', key: 'changelog.entries.presetsFlowerPizza', widgets: [] },
+  // Like the presets themselves, a site change rather than every widget that takes one.
+  { date: '2026-10-14', key: 'changelog.entries.presetEffects', widgets: [] },
+  { date: '2026-10-14', key: 'changelog.entries.presetsFollowerGoal', widgets: ['follower-goal'] },
+  // Every widget that takes a preset gets them, so it's tagged as a site change, not 21 widgets.
+  {
+    date: '2026-10-14',
+    key: 'changelog.entries.presetsConquestOperatorBannerGlitch',
+    widgets: [],
+  },
   {
     date: '2026-10-14',
     key: 'changelog.entries.hudToggles',

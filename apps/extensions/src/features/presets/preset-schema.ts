@@ -1,13 +1,44 @@
 import { z } from 'zod';
 
 /** Frame designs a preset can put around panels, bars and cards; see frame.tsx. */
-export const FRAMES = ['gilded', 'ornate', 'lacquer', 'iron', 'tactical', 'hud', 'pixel'] as const;
-/** How a preset's alert card and poll card come in. */
+export const FRAMES = [
+  'gilded',
+  'ornate',
+  'lacquer',
+  'iron',
+  'tactical',
+  'hud',
+  'pixel',
+  'crust',
+] as const;
+/** How a preset's alert card comes in. */
 export const MOTIONS = ['unfold', 'drop', 'scroll', 'slam', 'slide', 'wipe', 'pop'] as const;
 /** What sits on top of a bar's fill. */
 export const FILLS = ['gloss', 'stripes', 'blocks', 'flat'] as const;
 /** Which of Stream Alerts' built-in sound sets the alerts play. */
 export const SOUNDS = ['neon', 'celestial'] as const;
+/**
+ * A preset's signature animation: what its bars do as they grow, its panels as they appear and
+ * now and then while idle, and its wins. `none` is a still preset; see fx/.
+ */
+export const EFFECTS = [
+  'none',
+  'glitch',
+  'forge',
+  'arcane',
+  'radiance',
+  'blossom',
+  'embers',
+  'slash',
+  'beacon',
+  'pixels',
+  'pizza',
+  'build',
+  'boost',
+  'flare',
+  'capture',
+  'hitmarker',
+] as const;
 
 const hex = z.string().regex(/^#[0-9a-f]{6}$/i, 'a #rrggbb color');
 const blurb = z.string().max(160);
@@ -80,9 +111,12 @@ export const presetSchema = z.object({
   sound: z.enum(SOUNDS),
   /** `soft` is the usual dark halo; `hard` a one-step drop shadow, as in pixel games. */
   shadow: z.enum(['soft', 'hard']),
+  /** Left out, the preset plays no effect. */
+  effect: z.enum(EFFECTS).optional(),
 });
 
 export type PresetData = z.infer<typeof presetSchema>;
 export type FrameKind = (typeof FRAMES)[number];
 export type Motion = (typeof MOTIONS)[number];
 export type Fill = (typeof FILLS)[number];
+export type Effect = (typeof EFFECTS)[number];

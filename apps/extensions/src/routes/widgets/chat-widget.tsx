@@ -10,6 +10,7 @@ import {
   type HighlightKind,
 } from '#/features/widgets/chat-widget/highlights';
 import { Frame, panelStyle } from '#/features/presets/frame';
+import { FxPulse } from '#/features/presets/fx/engine';
 import { rgba, type Skin, skinFor } from '#/features/presets/skin';
 import { isHiddenMessage } from '#/features/widgets/chat-widget/message-filters';
 import {
@@ -27,13 +28,13 @@ import {
   defaultFonts,
   type Font,
   FONT_CHOICES,
-  type FONTS,
   parseHighlights,
   TEXT_SHADOWS,
   type TextShadow,
 } from '#/features/widgets/chat-widget/widget-settings';
 import { useKickChannel } from '#/hooks/use-kick-channel';
-import { clampedNumber } from '#/lib/url-params';
+import { SITE_FONT_STACKS, type SiteFont } from '#/lib/site-fonts';
+import { clampedNumber, readFlag } from '#/lib/url-params';
 import { useT } from '#/lib/i18n';
 import { getAccessibleColor } from '#/features/widgets/chat-widget/color-utils';
 
@@ -65,6 +66,8 @@ const searchSchema = z.object({
   token: z.string().optional(),
   // Unknown ids fall back to the classic look in skinFor.
   preset: z.string().optional(),
+  // `fx=0` stills the preset's effect. The router reads it as the number 0.
+  fx: z.coerce.string().optional().catch(undefined),
   sevenTv: z.coerce.boolean().optional().default(true),
   bttv: z.coerce.boolean().optional().default(true),
   ffz: z.coerce.boolean().optional().default(true),
@@ -113,18 +116,8 @@ const searchSchema = z.object({
     .catch('slide'),
 });
 
-type SiteFont = (typeof FONTS)[number];
 type LayoutChoice = z.infer<typeof searchSchema>['layout'];
 type AnimationChoice = z.infer<typeof searchSchema>['animation'];
-
-const FONT_STACKS: Record<SiteFont, string> = {
-  inter: '"Inter", ui-sans-serif, system-ui, sans-serif',
-  roboto: '"Roboto", ui-sans-serif, system-ui, sans-serif',
-  nunito: '"Nunito", ui-sans-serif, system-ui, sans-serif',
-  mono: '"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace',
-  serif: '"Source Serif 4", ui-serif, Georgia, serif',
-  system: 'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
-};
 
 const FONT_GOOGLE_FAMILIES: Partial<Record<SiteFont, string>> = {
   inter: 'Inter:wght@400;500;600;700',
@@ -136,9 +129,9 @@ const FONT_GOOGLE_FAMILIES: Partial<Record<SiteFont, string>> = {
 
 /** The CSS stack for one font choice; a preset's own two need the skin, the rest are static. */
 function fontStack(choice: Font, skin: Skin | null): string {
-  if (choice === 'presetName') return skin ? skin.display : FONT_STACKS.inter;
-  if (choice === 'presetMessage') return skin ? skin.body : FONT_STACKS.inter;
-  return FONT_STACKS[choice];
+  if (choice === 'presetName') return skin ? skin.display : SITE_FONT_STACKS.inter;
+  if (choice === 'presetMessage') return skin ? skin.body : SITE_FONT_STACKS.inter;
+  return SITE_FONT_STACKS[choice];
 }
 
 // `box` is the card's own background and border; a preset draws its own box instead.
@@ -354,7 +347,7 @@ function RouteComponent() {
   );
 
   const showPlatformIndicator = search.platformDisplay !== 'none';
-  const skin = skinFor(search.preset);
+  const skin = skinFor(search.preset, readFlag(search.fx, true));
   const fallback = defaultFonts(search.preset ?? '');
   const messageFont = search.font ?? fallback.font;
   // Before the username had its own font it followed the message font; classic URLs still do.
@@ -652,6 +645,9 @@ const MessageRow = React.memo(function MessageRow({
     : itemBackground
       ? 'rounded-md border border-white/10 px-2.5 py-1'
       : '';
+  // A line comes in with the preset's effect: on its box, or as an underline when it has none.
+  // Never idle: a whole chat of them would never stop.
+  const fxLine = skin && skin.effect !== 'none' && animation !== 'none' && !presetBox;
   const itemBgStyle: React.CSSProperties | undefined =
     skin && presetBox
       ? panelStyle(skin, presetBox.radius, 0.5, presetBox.opacity)
@@ -808,7 +804,7 @@ const MessageRow = React.memo(function MessageRow({
   return (
     <div
       data-msg-id={msg.id}
-      className={`${classes.wrapper} ${skin ? '' : classes.box} ${itemBgClass} ${animClass} transform-gpu ${orientation === 'horizontal' ? 'flex-shrink-0' : ''}`}
+      className={`${classes.wrapper} ${skin ? '' : classes.box} ${itemBgClass}${fxLine ? ' relative' : ''} ${animClass} transform-gpu ${orientation === 'horizontal' ? 'flex-shrink-0' : ''}`}
       style={{ ...wrapperStyle, '--chat-speed': mountSpeed } as React.CSSProperties}
     >
       {headerNode}
@@ -836,7 +832,15 @@ const MessageRow = React.memo(function MessageRow({
         </>
       )}
       {!isInline && messageNode}
-      {skin && presetBox && <Frame skin={skin} radius={presetBox.radius} scale={0.5} />}
+      {skin && presetBox && (
+        <Frame
+          skin={skin}
+          radius={presetBox.radius}
+          scale={0.5}
+          fx={animation === 'none' ? 'off' : 'enter'}
+        />
+      )}
+      {fxLine && <FxPulse skin={skin} enter />}
     </div>
   );
 });

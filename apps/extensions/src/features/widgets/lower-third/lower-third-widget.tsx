@@ -53,7 +53,7 @@ export function LowerThirdWidget({
     simulate,
     previewId,
   });
-  const skin = skinFor(settings.preset);
+  const skin = skinFor(settings.preset, settings.fx, settings.font);
   const right = settings.corner === 'br' || settings.corner === 'tr';
 
   return (
@@ -179,7 +179,7 @@ function Bar({
           </span>
         )}
       </div>
-      {skin && <Frame skin={skin} radius={RADIUS} />}
+      {skin && <Frame skin={skin} radius={RADIUS} pulse={lineKey} />}
     </div>
   );
 }

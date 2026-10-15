@@ -1,4 +1,4 @@
-import { type HTMLAttributes, useId } from 'react';
+import { type HTMLAttributes, type ReactNode, useId } from 'react';
 import { FieldLabel } from './field-label';
 
 /** The settings-panel input look; use it on any native input the fields below don't cover. */
@@ -14,7 +14,7 @@ interface TextFieldProps {
   /** "?" tooltip next to the label, for settings that aren't obvious. */
   tip?: string;
   /** Short help line under the input. */
-  hint?: string;
+  hint?: ReactNode;
   placeholder?: string;
   disabled?: boolean;
   type?: 'text' | 'password' | 'url';

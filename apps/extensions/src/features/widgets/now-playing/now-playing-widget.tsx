@@ -66,7 +66,7 @@ export function NowPlayingWidget({ settings, demo = false, previewId }: NowPlayi
     demo,
     previewId,
   });
-  const skin = skinFor(settings.preset);
+  const skin = skinFor(settings.preset, settings.fx, settings.font);
   const hsl = painter(skin, hueFor(settings.color, 1));
   const pill = settings.layout === 'pill';
   const height = pill ? PILL_HEIGHT : CARD_HEIGHT;
@@ -222,7 +222,7 @@ function Card({ track, settings, hsl, credit, label }: ViewProps & { label: stri
           {credit}
         </span>
       )}
-      {skin && <Frame skin={skin} radius={RADIUS} />}
+      {skin && <Frame skin={skin} radius={RADIUS} card pulse={trackKey(track)} />}
     </div>
   );
 }
@@ -281,7 +281,7 @@ function Pill({ track, settings, hsl, credit }: ViewProps) {
           </span>
         )}
       </div>
-      {skin && <Frame skin={skin} radius={radius} />}
+      {skin && <Frame skin={skin} radius={radius} card pulse={trackKey(track)} />}
     </div>
   );
 }

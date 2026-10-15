@@ -25,6 +25,7 @@ import { type TranslationKey, useI18n } from '#/lib/i18n';
 import { getParamsLocale } from '#/lib/i18n/paths';
 import type { FaqEntry } from '#/lib/i18n/seo';
 import { getSetupPageHead } from '#/lib/seo/pages';
+import type { SiteFont } from '#/lib/site-fonts';
 import {
   buildSpinWheelPreviewUrl,
   buildSpinWheelUrl,
@@ -108,6 +109,10 @@ function SpinWheelSetup() {
   const [soundEnabled, setSoundEnabled] = useState(DEFAULT_SPIN_WHEEL_SETTINGS.sound);
   const [twoColors, setTwoColors] = useState(DEFAULT_SPIN_WHEEL_SETTINGS.twoColors);
   const [preset, setPreset] = useState(DEFAULT_SPIN_WHEEL_SETTINGS.preset);
+  // Left unset, the preset's effect plays; only off goes into the URL.
+  const [fx, setFx] = useState<boolean | undefined>();
+  // Left unset, the preset draws in its own fonts.
+  const [font, setFont] = useState<SiteFont | undefined>();
   // Going from the classic look to a preset or back resets Two colors to that look's default;
   // from one preset to another it stays as the streamer set it.
   const pickPreset = (next: string) => {
@@ -128,6 +133,8 @@ function SpinWheelSetup() {
     options: text.split('\n'),
     twoColors,
     preset,
+    fx,
+    font,
   };
   // Slices on the wheel: a `2x Tetris` line counts twice.
   const optionCount = assignColors(cleanSpinOptions(settings.options)).length;
@@ -151,6 +158,8 @@ function SpinWheelSetup() {
     setSoundEnabled(parsed.settings.sound);
     setTwoColors(parsed.settings.twoColors);
     setPreset(parsed.settings.preset);
+    setFx(parsed.settings.fx);
+    setFont(parsed.settings.font);
     return true;
   };
 
@@ -238,7 +247,14 @@ function SpinWheelSetup() {
 
   const appearanceTab = (
     <SettingsGroup title={t('common.sectionAppearance')} hideTitle>
-      <PresetField value={preset} onChange={pickPreset} />
+      <PresetField
+        value={preset}
+        onChange={pickPreset}
+        fx={fx}
+        onFxChange={setFx}
+        font={font}
+        onFontChange={setFont}
+      />
       {/* Next to the preset picker: moving between classic and a preset turns it on or off. */}
       <Switch
         label={t('spinWheel.twoColors')}

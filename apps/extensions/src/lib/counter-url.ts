@@ -1,6 +1,7 @@
 import { isClassic } from '#/features/presets/registry';
 import { MAX_GOAL_COUNT } from './goal-url';
-import { CLASSIC_PRESET, readPreset, writePreset } from './preset-url';
+import { CLASSIC_PRESET, readFont, readFx, readPreset, writePreset } from './preset-url';
+import type { SiteFont } from './site-fonts';
 import {
   type ChannelPlatforms,
   channelWidgetUrl,
@@ -35,6 +36,10 @@ export interface CounterSettings {
   platforms: ChannelPlatforms;
   /** Preset id; any preset but classic brings its own colors and fonts. */
   preset: string;
+  /** Off (`fx=0`) stills the preset's effect; missing means on. */
+  fx?: boolean;
+  /** A site font to draw the preset in instead of its own; missing keeps the preset's. */
+  font?: SiteFont;
   color: CounterColor;
   /** `row` puts the counters side by side, `stack` one under another. */
   layout: CounterLayout;
@@ -119,7 +124,7 @@ function buildParams(settings: CounterSettings, twitchChannel: string, kickChann
   const params = new URLSearchParams();
   const defaults = DEFAULT_COUNTER_SETTINGS;
   setChannels(params, settings.platforms, twitchChannel, kickChannel);
-  writePreset(params, settings.preset);
+  writePreset(params, settings.preset, settings.fx, settings.font);
   if (isClassic(settings.preset) && settings.color !== defaults.color)
     params.set('color', settings.color);
   if (settings.layout !== defaults.layout) params.set('layout', settings.layout);
@@ -185,6 +190,8 @@ export function readCounterSettings(params: URLSearchParams): Omit<CounterSettin
   const layout = params.get('layout') as CounterLayout;
   return {
     preset: readPreset(params),
+    ...readFx(params),
+    ...readFont(params),
     color: COUNTER_COLORS.includes(color) ? color : defaults.color,
     layout: COUNTER_LAYOUTS.includes(layout) ? layout : defaults.layout,
     pops: readFlag(params.get('pops'), defaults.pops),

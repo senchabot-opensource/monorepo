@@ -59,9 +59,9 @@ describe('Spin Wheel setup', () => {
     await renderRoute('/setup/spin-wheel');
     await user.click(urlField());
     await user.paste(
-      `${window.location.origin}${OVERLAY}?twitch=s&${OPTIONS}&colors=2&preset=village`,
+      `${window.location.origin}${OVERLAY}?twitch=s&${OPTIONS}&colors=2&preset=pizza`,
     );
-    expect(presetRadio('village').checked).toBe(true);
+    expect(presetRadio('pizza').checked).toBe(true);
     expect(toggle(en('spinWheel.twoColors')).getAttribute('aria-checked')).toBe('true');
   });
 

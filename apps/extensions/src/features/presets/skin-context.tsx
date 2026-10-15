@@ -11,7 +11,7 @@ export function SkinProvider({ skin, children }: { skin: Skin | null; children: 
   return (
     <SkinContext.Provider value={skin}>
       {/* React hoists it into <head>; only the URL knows which fonts are needed. */}
-      {skin && <link rel="stylesheet" href={skin.fontHref} precedence="default" />}
+      {skin?.fontHref && <link rel="stylesheet" href={skin.fontHref} precedence="default" />}
       {children}
     </SkinContext.Provider>
   );

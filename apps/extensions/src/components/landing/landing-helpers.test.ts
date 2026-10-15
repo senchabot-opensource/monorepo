@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest';
+import { dealPresets, randomPreset } from '#/features/presets/random';
+import { findPreset, PRESETS } from '#/features/presets/registry';
 import { getWidget, OVERLAYS, TOOLS, type WidgetEntry } from '#/lib/widgets';
+import { dealLandingPresets, LANDING_PICKS, LANDING_REST, readsPreset } from './demo-presets';
 import { getDemoSrc } from './demo-url';
 import {
   formatStarCount,
@@ -8,6 +11,7 @@ import {
   STARS_CACHE_TTL_MS,
   writeStarsCache,
 } from './github-stars';
+import { hasToolVisual } from './tool-visuals';
 import { getCardShape, getGalleryShapes } from './widget-card';
 
 describe('getDemoSrc', () => {
@@ -58,6 +62,23 @@ describe('getDemoSrc', () => {
     });
   });
 
+  it('dresses a demo in a preset, after its own params, and leaves classic out', () => {
+    const counter = getWidget('counter');
+    const src = getDemoSrc(counter, 'card', 'pizza');
+    expect(src).toBe(`${getDemoSrc(counter, 'card')}&preset=pizza`);
+    const chat = new URL(getDemoSrc(getWidget('chat-box'), 'card', 'flower'), 'https://x');
+    expect(chat.searchParams.get('fontSize')).toBe('15');
+    expect(chat.searchParams.get('preset')).toBe('flower');
+    expect(getDemoSrc(counter, 'card', 'classic')).toBe(getDemoSrc(counter, 'card'));
+  });
+
+  it('knows which demos can wear a preset', () => {
+    expect(readsPreset(getWidget('counter'))).toBe(true);
+    expect(readsPreset(getWidget('chat-box'))).toBe(true);
+    expect(readsPreset(getWidget('emote-wall'))).toBe(false);
+    expect(readsPreset(getWidget('weather'))).toBe(false);
+  });
+
   it('draws the IRL HUD and the weather alike where they share a scene', () => {
     const together = (id: 'irl-hud' | 'weather') =>
       new URL(getDemoSrc(getWidget(id), 'together'), 'https://x').searchParams;
@@ -65,6 +86,75 @@ describe('getDemoSrc', () => {
     expect(together('weather').get('style')).toBe('modern');
     expect(together('irl-hud').get('size')).toBe(together('weather').get('size'));
     expect(together('weather').get('layout')).toBe('pill');
+  });
+});
+
+describe('random presets', () => {
+  const ids = PRESETS.map((entry) => entry.data.id);
+  // A seeded stand-in for Math.random, so a failure can be replayed.
+  const seeded = (seed: number) => () => {
+    seed = (seed * 16807) % 2147483647;
+    return (seed - 1) / 2147483646;
+  };
+
+  it('deals every preset once before any repeats, never the same one twice in a row', () => {
+    for (let seed = 1; seed <= 20; seed++) {
+      const dealt = dealPresets(ids.length * 2 + 3, { random: seeded(seed) });
+      expect(new Set(dealt.slice(0, ids.length)), `seed ${seed}`).toEqual(new Set(ids));
+      expect(dealt.every((id, index) => index === 0 || id !== dealt[index - 1])).toBe(true);
+      expect(dealt).not.toContain('classic');
+    }
+  });
+
+  it('deals a different order from one visit to the next', () => {
+    const orders = new Set(
+      Array.from({ length: 5 }, (_, seed) =>
+        dealPresets(ids.length, { random: seeded(seed + 1) }).join(),
+      ),
+    );
+    expect(orders.size).toBeGreaterThan(1);
+  });
+
+  // The gallery's cards that wear a preset, in the order the home page deals and shows them.
+  const LANDING = [...OVERLAYS, ...TOOLS]
+    .filter((widget) => widget.demoUrl && !hasToolVisual(widget.id) && readsPreset(widget))
+    .map((widget) => widget.id);
+
+  it('deals each landing demo its own picks or one of the rest, never two neighbors alike', () => {
+    const named = [...LANDING_REST, ...Object.values(LANDING_PICKS).flat()];
+    for (const id of named) expect(findPreset(id)?.data.id, id).toBe(id);
+    for (const id of Object.keys(LANDING_PICKS)) expect(LANDING, id).toContain(id);
+    for (let seed = 1; seed <= 200; seed++) {
+      const dealt = dealLandingPresets(LANDING, seeded(seed));
+      for (const key of LANDING) {
+        expect(LANDING_PICKS[key] ?? LANDING_REST, `${key}, seed ${seed}`).toContain(dealt[key]);
+      }
+      const order = LANDING.map((key) => dealt[key]);
+      expect(order.every((id, index) => index === 0 || id !== order[index - 1])).toBe(true);
+    }
+  });
+
+  it('goes through all of the rest before repeating one, and through every pick over visits', () => {
+    const plain = ['a', 'b', 'c', 'd', 'e', 'f'] as const;
+    const seen: Record<string, Set<string>> = { goal: new Set(), 'event-list': new Set() };
+    for (let seed = 1; seed <= 30; seed++) {
+      const dealt = dealLandingPresets(plain, seeded(seed));
+      expect(new Set(plain.slice(0, 4).map((key) => dealt[key]))).toEqual(new Set(LANDING_REST));
+      const picks = dealLandingPresets(['goal', 'event-list'] as const, seeded(seed));
+      seen.goal.add(picks.goal);
+      seen['event-list'].add(picks['event-list']);
+    }
+    expect(seen.goal).toEqual(new Set(LANDING_PICKS.goal));
+    expect(seen['event-list']).toEqual(new Set(LANDING_PICKS['event-list']));
+  });
+
+  it('rolls any preset but the current one', () => {
+    expect(randomPreset('classic', () => 0)).toBe(ids[0]);
+    expect(randomPreset('classic', () => 0.999)).toBe(ids.at(-1));
+    expect(randomPreset(ids[0], () => 0)).toBe(ids[1]);
+    for (let seed = 1; seed <= 50; seed++) {
+      expect(randomPreset('pizza', seeded(seed))).not.toBe('pizza');
+    }
   });
 });
 

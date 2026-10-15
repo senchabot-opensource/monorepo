@@ -98,8 +98,9 @@ describe('full header', () => {
         name: (name) => name.startsWith(`${en('widgets.categories.irl')} `),
       }),
     );
-    expect(hrefs()).toEqual(['/setup/irl-hud', '/setup/weather']);
-    expect(within(panel).queryByRole('list', { name: en('widgets.tools') })).toBeNull();
+    expect(hrefs()).toEqual(['/setup/irl-hud', '/setup/weather', '/setup/obs-bridge']);
+    // OBS Bridge is the one IRL tool.
+    expect(within(panel).getByRole('list', { name: en('widgets.tools') })).toBeTruthy();
     // Picking a category leaves the menu open.
     expect(menu.getAttribute('aria-expanded')).toBe('true');
   });
@@ -174,9 +175,9 @@ describe('compact header on setup pages', () => {
           name: (name) => name.startsWith(`${en(`widgets.categories.${key}`)} `),
         }),
       );
-    // Weather is the other IRL widget, so the IRL HUD is all that's left.
+    // The page's own widget is left out, so IRL is the IRL HUD and OBS Bridge.
     await pick('irl');
-    expect(hrefs()).toEqual(['/setup/irl-hud']);
+    expect(hrefs()).toEqual(['/setup/irl-hud', '/setup/obs-bridge']);
     await pick('alerts');
     expect(hrefs()).toEqual(
       WIDGETS.filter((widget) => widget.categories.includes('alerts')).map(

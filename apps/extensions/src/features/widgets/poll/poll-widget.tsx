@@ -1,5 +1,6 @@
 import { type CSSProperties, useEffect, useRef, useState } from 'react';
 import { Frame, panelStyle } from '#/features/presets/frame';
+import { BarFxTrack } from '#/features/presets/fx/engine';
 import { painter, type Skin, shade, skinCss, skinFor } from '#/features/presets/skin';
 import { SkinProvider, useSkin } from '#/features/presets/skin-context';
 import { useI18n } from '#/lib/i18n';
@@ -82,7 +83,7 @@ export function PollWidget({
   });
   const shown = useLeaving(view);
   const bothPlatforms = simulate ? !simPlatform : Boolean(twitchChannel && kickChannel);
-  const skin = skinFor(settings.preset);
+  const skin = skinFor(settings.preset, settings.fx, settings.font);
 
   return (
     <SkinProvider skin={skin}>
@@ -328,7 +329,7 @@ function Card({
           <span style={{ color: skin?.text ?? '#fff', fontWeight: 800 }}>{votes(tally.total)}</span>
         </span>
       </div>
-      {skin && <Frame skin={skin} radius={18} />}
+      {skin && <Frame skin={skin} radius={18} win={final && !tie && tally.total > 0} />}
     </div>
   );
 }
@@ -450,6 +451,14 @@ function Row({
             opacity: 0,
             animation: 'cp-flash .45s ease-out',
           }}
+        />
+      )}
+      {!hideBars && (
+        // Each vote strikes the fill's edge; the winner's whole bar plays the win.
+        <BarFxTrack
+          skin={skin}
+          hit={pulse > 0 ? { key: pulse, from: share, to: share } : null}
+          win={won}
         />
       )}
       <span

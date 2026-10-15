@@ -9,7 +9,8 @@ import {
   setChannels,
   setPreview,
 } from '#/lib/url-params';
-import { CLASSIC_PRESET, readPreset, writePreset } from './preset-url';
+import { CLASSIC_PRESET, readFont, readFx, readPreset, writePreset } from './preset-url';
+import type { SiteFont } from './site-fonts';
 
 export const SUBATHON_STYLES = ['bar', 'thin', 'clock', 'ring'] as const;
 export type SubathonStyle = (typeof SUBATHON_STYLES)[number];
@@ -61,6 +62,10 @@ export interface SubathonSettings extends SubathonTimeValues {
   platforms: ChannelPlatforms;
   /** Preset id; any preset but classic brings its own colors and fonts. */
   preset: string;
+  /** Off (`fx=0`) stills the preset's effect; missing means on. */
+  fx?: boolean;
+  /** A site font to draw the preset in instead of its own; missing keeps the preset's. */
+  font?: SiteFont;
   style: SubathonStyle;
   color: SubathonColor;
   /** Shown with the clock; empty hides it. */
@@ -176,7 +181,7 @@ function buildParams(
   const params = new URLSearchParams();
   const defaults = DEFAULT_SUBATHON_SETTINGS;
   setChannels(params, settings.platforms, twitchChannel, kickChannel);
-  writePreset(params, settings.preset);
+  writePreset(params, settings.preset, settings.fx, settings.font);
   if (settings.style !== defaults.style) params.set('style', settings.style);
   if (isClassic(settings.preset) && settings.color !== defaults.color)
     params.set('color', settings.color);
@@ -246,6 +251,8 @@ export function readSubathonSettings(params: URLSearchParams): Omit<SubathonSett
   ) as Record<FlagKey, boolean>;
   return {
     preset: readPreset(params),
+    ...readFx(params),
+    ...readFont(params),
     style: SUBATHON_STYLES.includes(style) ? style : defaults.style,
     color: SUBATHON_COLORS.includes(color) ? color : defaults.color,
     title: title === null ? defaults.title : title.slice(0, TITLE_MAX_LENGTH),

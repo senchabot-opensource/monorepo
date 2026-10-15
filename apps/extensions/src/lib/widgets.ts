@@ -457,7 +457,8 @@ export const WIDGETS: readonly WidgetEntry[] = [
     taglineKey: 'widgets.obsBridge.tagline',
     Icon: ObsBridgeIcon,
     platforms: ['twitch', 'kick'],
-    categories: ['scene'],
+    // IRL streams switch scenes from a phone.
+    categories: ['scene', 'irl'],
     demoUrl: null,
     sourceSize: null,
   },

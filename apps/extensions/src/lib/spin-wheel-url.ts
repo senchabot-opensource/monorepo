@@ -6,7 +6,8 @@ import {
   parseOptions,
 } from '#/features/widgets/spin-wheel/spin-logic';
 import { isValidLocale, LANG_PARAM, type Locale } from '#/lib/i18n/locales';
-import { CLASSIC_PRESET, readPreset, writePreset } from '#/lib/preset-url';
+import { CLASSIC_PRESET, readFont, readFx, readPreset, writePreset } from '#/lib/preset-url';
+import type { SiteFont } from '#/lib/site-fonts';
 import {
   type ChannelPlatforms,
   channelWidgetUrl,
@@ -39,6 +40,10 @@ export interface SpinWheelSettings {
   twoColors: boolean;
   /** Preset id; any preset but classic draws the wheel and winner card in its look. */
   preset: string;
+  /** Off (`fx=0`) stills the preset's effect; missing means on. */
+  fx?: boolean;
+  /** A site font to draw the preset in instead of its own; missing keeps the preset's. */
+  font?: SiteFont;
 }
 
 export const DEFAULT_SPIN_WHEEL_SETTINGS: SpinWheelSettings = {
@@ -91,7 +96,7 @@ function buildParams(
   if (settings.cooldownSec !== defaults.cooldownSec) params.set('cd', String(settings.cooldownSec));
   if (settings.permission !== defaults.permission) params.set('perm', settings.permission);
   if (settings.sound !== defaults.sound) params.set('sound', '0');
-  writePreset(params, settings.preset);
+  writePreset(params, settings.preset, settings.fx, settings.font);
   // Always written: the overlay shows words, and OBS shouldn't pick their language.
   params.set(LANG_PARAM, locale);
   return params;
@@ -148,6 +153,8 @@ export function readSpinWheelSettings(
     permission: SPIN_PERMISSIONS.includes(permission) ? permission : defaults.permission,
     sound: readFlag(params.get('sound'), defaults.sound),
     preset,
+    ...readFx(params),
+    ...readFont(params),
   };
 }
 

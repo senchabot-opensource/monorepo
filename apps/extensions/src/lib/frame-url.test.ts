@@ -21,7 +21,7 @@ describe('buildFrameUrl', () => {
 
   it('writes the preset and label, and drops the color a preset replaces', () => {
     const settings: FrameSettings = {
-      preset: 'dynasty',
+      preset: 'flower',
       piece: 'chat',
       orientation: 'landscape',
       color: 'gold',
@@ -31,7 +31,7 @@ describe('buildFrameUrl', () => {
     const url = new URL(buildFrameUrl(ORIGIN, settings));
     expect(Object.fromEntries(url.searchParams)).toEqual({
       piece: 'chat',
-      preset: 'dynasty',
+      preset: 'flower',
       label: 'Sohbet ş ğ',
     });
     const classic = new URL(buildFrameUrl(ORIGIN, { ...settings, preset: 'classic' }));

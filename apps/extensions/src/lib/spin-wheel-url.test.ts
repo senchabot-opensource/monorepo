@@ -137,7 +137,7 @@ describe('spin wheel URL round trip', () => {
       permission: 'mods',
       sound: false,
       twoColors: true,
-      preset: 'village',
+      preset: 'pizza',
     });
     const url = buildSpinWheelUrl(ORIGIN, custom, 'streamer', '', 'tr');
     expect(parseSpinWheelUrl(url)).toEqual({

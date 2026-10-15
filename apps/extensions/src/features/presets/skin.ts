@@ -1,11 +1,11 @@
-import type { Fill, FrameKind, Motion, PresetData } from './preset-schema';
+import { presetFontHref, SITE_FONT_STACKS, type SiteFont } from '#/lib/site-fonts';
+import { rgba, shade, type Tone, toTone } from './color';
+import { fxModule } from './fx/registry';
+import type { Effect, Fill, FrameKind, Motion, PresetData } from './preset-schema';
 import { findPreset } from './registry';
 
-/** A color as hue and saturation; overlays pick the lightness, like they do with their hues. */
-export interface Tone {
-  h: number;
-  s: number;
-}
+export type { Tone } from './color';
+export { rgba, shade, toTone } from './color';
 
 /** A preset, ready for an overlay to paint with. Overlays get null for the classic look. */
 export interface Skin {
@@ -13,7 +13,7 @@ export interface Skin {
   /** CSS font stacks. */
   display: string;
   body: string;
-  /** Google Fonts stylesheet for both fonts. */
+  /** Google Fonts stylesheet for both fonts; empty when they are the viewer's system font. */
   fontHref: string;
   accent: Tone;
   win: Tone;
@@ -35,34 +35,11 @@ export interface Skin {
   shadow: PresetData['shadow'];
   /** Text shadow for text drawn straight on the game. */
   textShadow: string;
+  /** The preset's signature animation; `none` when it has none or its effects are off. */
+  effect: Effect;
   /** The preset's colors as written, for overlays that mix in their own opacity. */
   colors: PresetData['colors'];
 }
-
-function hexToRgb(hex: string): [number, number, number] {
-  const n = Number.parseInt(hex.slice(1), 16);
-  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
-}
-
-export function toTone(hex: string): Tone {
-  const [r, g, b] = hexToRgb(hex).map((v) => v / 255);
-  const max = Math.max(r, g, b);
-  const min = Math.min(r, g, b);
-  const l = (max + min) / 2;
-  const d = max - min;
-  if (d === 0) return { h: 0, s: 0 };
-  const s = d / (1 - Math.abs(2 * l - 1));
-  let h: number;
-  if (max === r) h = ((g - b) / d) % 6;
-  else if (max === g) h = (b - r) / d + 2;
-  else h = (r - g) / d + 4;
-  return { h: Math.round(((h * 60 + 360) % 360) * 10) / 10, s: Math.round(s * 1000) / 10 };
-}
-
-export const rgba = (hex: string, alpha: number) => `rgba(${hexToRgb(hex).join(',')},${alpha})`;
-
-/** A tone at a lightness, the same way the overlays write their own hsl() colors. */
-export const shade = (tone: Tone, l: number, a = 1) => `hsl(${tone.h} ${tone.s}% ${l}% / ${a})`;
 
 const fontStack = ({ family, fallback }: PresetData['fonts']['display']) =>
   `'${family}', ${fallback}`;
@@ -75,7 +52,8 @@ export function fontHref({ display, body }: PresetData['fonts']): string {
   return `https://fonts.googleapis.com/css2?${families.join('&')}&display=swap`;
 }
 
-export function toSkin(data: PresetData): Skin {
+/** `fx: false` stills the preset: same look, no effect. */
+export function toSkin(data: PresetData, fx = true): Skin {
   const { colors } = data;
   return {
     id: data.id,
@@ -99,6 +77,7 @@ export function toSkin(data: PresetData): Skin {
     motion: data.motion,
     sound: data.sound,
     shadow: data.shadow,
+    effect: fx ? (data.effect ?? 'none') : 'none',
     colors,
     textShadow:
       data.shadow === 'hard'
@@ -109,14 +88,33 @@ export function toSkin(data: PresetData): Skin {
 
 const SKINS = new Map<string, Skin>();
 
-/** The skin for a preset id; null for classic or an unknown id. */
-export function skinFor(id: string | null | undefined): Skin | null {
+/** The skin with one of the site's fonts in place of both of its own. */
+const withFont = (skin: Skin, font: SiteFont): Skin => ({
+  ...skin,
+  display: SITE_FONT_STACKS[font],
+  body: SITE_FONT_STACKS[font],
+  fontHref: presetFontHref(font),
+});
+
+/**
+ * The skin for a preset id; null for classic or an unknown id. `fx: false` (a URL's `fx=0`)
+ * stills its effect, and a `font` (a URL's `font=`) draws it in that font instead of its own.
+ * The same object comes back every time, so memoized parts don't redraw.
+ */
+export function skinFor(
+  id: string | null | undefined,
+  fx: boolean | undefined = true,
+  font?: SiteFont,
+): Skin | null {
   const entry = findPreset(id);
   if (!entry) return null;
-  let skin = SKINS.get(entry.data.id);
+  const still = !fx && (entry.data.effect ?? 'none') !== 'none';
+  const key = `${entry.data.id}${still ? ':still' : ''}${font ? `:${font}` : ''}`;
+  let skin = SKINS.get(key);
   if (!skin) {
-    skin = toSkin(entry.data);
-    SKINS.set(entry.data.id, skin);
+    const own = toSkin(entry.data, !still);
+    skin = font ? withFont(own, font) : own;
+    SKINS.set(key, skin);
   }
   return skin;
 }
@@ -134,15 +132,37 @@ export function painter(skin: Skin | null, hue: number, role: 'accent' | 'win' =
 }
 
 /**
- * Rules that restyle an overlay's `<prefix>-root`, `-shadow` and `-title` classes for a preset.
- * Empty for classic. `font-synthesis` is off so a one-weight font isn't smeared into fake bold.
+ * Rules that restyle an overlay's `<prefix>-root`, `-shadow` and `-title` classes for a preset,
+ * and play its effect on the titles. Empty for classic. `font-synthesis` is off so a one-weight
+ * font isn't smeared into fake bold.
  */
 export function skinCss(prefix: string, skin: Skin | null): string {
   if (!skin) return '';
   const title = titleStyle(skin);
   return `.${prefix}-root{font-family:${skin.display};color:${skin.text};font-synthesis:none}
 .${prefix}-shadow{text-shadow:${skin.textShadow}}
-.${prefix}-title{text-transform:${title.textTransform};letter-spacing:${title.letterSpacing};font-style:${title.fontStyle}}`;
+.${prefix}-title{text-transform:${title.textTransform};letter-spacing:${title.letterSpacing};font-style:${title.fontStyle}}${fxCss(prefix, skin)}`;
+}
+
+const FX_CSS = new Map<string, string>();
+
+/**
+ * The effect's colors on the overlay's root and its title rules. Made once per page and kept:
+ * written again on every render, a title's loop would jump.
+ */
+function fxCss(prefix: string, skin: Skin): string {
+  const module = fxModule(skin);
+  if (!module) return '';
+  const key = `${prefix} ${skin.id} ${skin.effect}`;
+  let css = FX_CSS.get(key);
+  if (css === undefined) {
+    const vars = Object.entries(module.vars(skin))
+      .map(([name, value]) => `${name}:${value}`)
+      .join(';');
+    css = `${vars && `\n.${prefix}-root{${vars}}`}${module.titleCss ? `\n${module.titleCss(prefix, Date.now())}` : ''}`;
+    FX_CSS.set(key, css);
+  }
+  return css;
 }
 
 /** Title text: the preset's case, tracking and slant, or the overlay's own. */

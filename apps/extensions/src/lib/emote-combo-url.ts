@@ -1,6 +1,7 @@
 import { isClassic } from '#/features/presets/registry';
 import { isValidLocale, LANG_PARAM, type Locale } from '#/lib/i18n/locales';
-import { CLASSIC_PRESET, readPreset, writePreset } from './preset-url';
+import { CLASSIC_PRESET, readFont, readFx, readPreset, writePreset } from './preset-url';
+import type { SiteFont } from './site-fonts';
 import {
   type ChannelPlatforms,
   channelWidgetUrl,
@@ -18,6 +19,10 @@ export interface EmoteComboSettings {
   platforms: ChannelPlatforms;
   /** Preset id; any preset but classic brings its own colors and fonts. */
   preset: string;
+  /** Off (`fx=0`) stills the preset's effect; missing means on. */
+  fx?: boolean;
+  /** A site font to draw the preset in instead of its own; missing keeps the preset's. */
+  font?: SiteFont;
   color: EmoteComboColor;
   /** Seconds a combo waits for the next chatter before it ends. */
   window: number;
@@ -70,7 +75,7 @@ function buildParams(
   const params = new URLSearchParams();
   const defaults = DEFAULT_EMOTE_COMBO_SETTINGS;
   setChannels(params, settings.platforms, twitchChannel, kickChannel);
-  writePreset(params, settings.preset);
+  writePreset(params, settings.preset, settings.fx, settings.font);
   if (isClassic(settings.preset) && settings.color !== defaults.color)
     params.set('color', settings.color);
   if (settings.window !== defaults.window) params.set('window', String(settings.window));
@@ -120,6 +125,8 @@ export function readEmoteComboSettings(
   const color = params.get('color') as EmoteComboColor;
   return {
     preset: readPreset(params),
+    ...readFx(params),
+    ...readFont(params),
     color: EMOTE_COMBO_COLORS.includes(color) ? color : defaults.color,
     window: readWhole(params.get('window'), defaults.window, {
       min: MIN_WINDOW,

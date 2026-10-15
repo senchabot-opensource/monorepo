@@ -40,8 +40,8 @@ export const pt: typeof en = {
     platformAll: 'Todas',
     twitchChannel: 'Canal da Twitch',
     kickChannel: 'Canal da Kick',
-    channelTip:
-      'Digite só o nome do canal, não o link inteiro. Para twitch.tv/senchabot, é senchabot.',
+    channelTip: 'Digite o nome do canal ou cole o link dele: twitch.tv/senchabot vira senchabot.',
+    kickDashName: 'O link da Kick para este canal é {link}, com - no lugar de _.',
     previewLoading: 'Carregando prévia…',
     previewZoom: 'Zoom da prévia',
     previewDrag: 'Arraste para olhar ao redor',
@@ -267,6 +267,10 @@ export const pt: typeof en = {
       'Cada um tem sua própria página de configuração com prévia ao vivo. Nada para baixar.',
     overlaysLead: 'Fontes de navegador que funcionam sozinhas depois que entram na sua cena.',
     toolsLead: 'Ferramentas que você mesmo usa durante a live, por uma página ou pelo chat.',
+    presetPicks: {
+      label: 'Mostrar as prévias em um preset',
+      more: 'Ver mais presets',
+    },
     setUp: 'Configurar',
     toolFeatures: 'Recursos',
     raffleFeatureKeyword: 'Palavra de entrada, tipo !join',
@@ -2083,7 +2087,7 @@ export const pt: typeof en = {
     breadcrumb: 'Configurar Molduras de Live',
     title: 'Configurar Molduras de Live',
     intro:
-      'Molduras prontas para sua câmera, seu chat ou a tela inteira da live. O preset que você escolher desenha a moldura no estilo daquele jogo, até no formato, nos enfeites e no movimento: telhado de pagode, borlas balançando e pétalas voando no Dynasty, blocos de grama e tochas piscando no Blocks. Nenhum canal para conectar. Adicione a URL no OBS e coloque sua câmera ou seu chat embaixo da moldura.',
+      'Molduras prontas para sua câmera, seu chat ou a tela inteira da live, no estilo do preset que você escolher. Nenhum canal para conectar. Adicione a URL no OBS e coloque sua câmera ou seu chat embaixo da moldura.',
     sectionPiece: 'Moldura',
     piece: 'O que você vai emoldurar?',
     pieceTip:
@@ -2118,7 +2122,7 @@ export const pt: typeof en = {
     color: 'Cor',
     motion: 'Animações',
     motionTip:
-      'Linhas brilhando, reflexos de luz e detalhes que dependem do preset, tipo lanternas, tochas ou faíscas. Desligue e a moldura fica parada.',
+      'Linhas brilhando, reflexos de luz e detalhes que dependem do preset, tipo runas, tochas ou faíscas. Desligue e a moldura fica parada.',
     previewTitle: 'Prévia da moldura',
     previewIframeTitle: 'Prévia da moldura',
     previewHint:
@@ -2148,7 +2152,7 @@ export const pt: typeof en = {
       'Sim. Para uma câmera vertical, coloque Orientação em Retrato e o tamanho recomendado vira 360 × 640. A moldura é desenhada para caber na fonte de navegador, então para uma câmera quadrada é só ajustar a largura e a altura, e os enfeites acompanham.',
     faq4Q: 'A arte das molduras foi tirada dos jogos?',
     faq4A:
-      'Não. Todo desenho, como o telhado de pagode, as lanternas ou os blocos de pixel, foi feito do zero, sem logos nem arte dos jogos. Os presets são estilos feitos por fãs que capturam a vibe desses jogos.',
+      'Não. Todo desenho foi feito do zero, sem logos nem arte dos jogos. Os presets são estilos feitos por fãs que capturam a vibe desses jogos.',
   },
   countdown: {
     breadcrumb: 'Configurar Contagem Regressiva',
@@ -2932,9 +2936,9 @@ export const pt: typeof en = {
         title: 'O que fazer se o widget não aparece no OBS?',
         intro:
           'Na maioria das vezes o problema é o nome do canal. Faça estas verificações na ordem.',
-        linkTitle: 'Você digitou um link em vez do nome do canal?',
+        linkTitle: 'A URL do widget tem um link no lugar do nome do canal?',
         linkBody:
-          'No campo do canal, digite só o nome: `senchabot` para twitch.tv/senchabot. Se você colar o link inteiro, o widget trata o link como nome do canal e não consegue conectar em chat nenhum.',
+          'A URL precisa só do nome, como `twitch=senchabot`. Os campos de canal da página de configuração transformam um link colado no nome, mas uma URL antiga, ou editada à mão, ainda pode ter o link inteiro, e aí o widget não consegue conectar em chat nenhum. Gere uma URL nova na página de configuração.',
         channelTitle: 'O canal existe mesmo?',
         channelBody:
           'Confira se o nome não tem erro de digitação. Um canal que não existe na Twitch não gera erro. O widget só fica vazio.',
@@ -2943,7 +2947,7 @@ export const pt: typeof en = {
           'A Caixa de Chat e o Mural de Emotes ficam totalmente vazios e transparentes até algo acontecer no chat. Mande uma mensagem no chat; no Mural de Emotes, por padrão, precisa ser uma mensagem feita só de emotes, mas com Mostrar todos os emotes ligado, os emotes dentro de mensagens normais também contam. O overlay do Sorteio também só aparece quando um vencedor é sorteado e some depois de 10 segundos. Já o Sub Sprout e o Subathon Timer aparecem na hora.',
         kickTitle: 'Canal da Kick não encontrado?',
         kickBody:
-          'Quando o widget abre, ele procura o canal da Kick no kick.com. Se essa busca falhar (nome errado, o canal não existe ou a Kick não responde), as mensagens da Kick não chegam. Digite seu nome da Kick exatamente como aparece na URL do kick.com.',
+          'Quando o widget abre, ele procura o canal da Kick no kick.com. Se essa busca falhar (nome errado, o canal não existe ou a Kick não responde), as mensagens da Kick não chegam. Digite seu nome da Kick exatamente como aparece na URL do kick.com. Alguns links da Kick escrevem o _ de um nome como -: o campo Canal da Kick da página de configuração confere no kick.com e muda para essa grafia por você.',
         tabTitle: 'A URL funciona no navegador?',
         tabBody:
           'Abra a URL em uma aba normal do navegador. Se funcionar lá mas não no OBS, confira o campo URL e o tamanho da fonte.',
@@ -3395,8 +3399,8 @@ export const pt: typeof en = {
       },
       look: {
         title: 'O que o preset e as animações mudam?',
-        p1: 'O preset define o formato, a arte, as cores e a fonte da moldura: telhado de pagode e borlas no Dynasty, acabamento dourado e gemas turquesa no Rift, blocos de grama e uma hotbar no Blocks. Coloque o mesmo preset na sua Caixa de Chat, nos Alertas de Live e na Meta de Subs e tudo na tela combina.',
-        p2: 'Com Animações ligado, a luz percorre a moldura, as linhas brilham, e lanternas, tochas ou faíscas se mexem dependendo do preset. Elas são leves. Mesmo assim, se o seu PC sofre enquanto você joga, desligue Animações. Isso coloca `motion=0` na URL e a moldura fica parada.',
+        p1: 'O preset define o formato, a arte, as cores e a fonte da moldura. Coloque o mesmo preset na sua Caixa de Chat, nos Alertas de Live e na Meta de Subs e tudo na tela combina.',
+        p2: 'Com Animações ligado, a luz percorre a moldura, as linhas brilham, e runas, tochas ou faíscas se mexem dependendo do preset. Elas são leves. Mesmo assim, se o seu PC sofre enquanto você joga, desligue Animações. Isso coloca `motion=0` na URL e a moldura fica parada.',
         p3: 'Toda a arte foi desenhada do zero, sem logos nem artes de jogos.',
       },
       change: {
@@ -3615,13 +3619,15 @@ export const pt: typeof en = {
   presets: {
     classic: 'Clássico',
     classicTag: 'O visual próprio de cada widget',
+    funTag: 'Só por diversão',
     breadcrumb: 'Presets',
     eyebrow: 'Presets',
     title: 'Presets de jogos para os overlays da sua live',
-    lead: 'Escolha um preset e sua Caixa de Chat, Alertas de Live, Meta de Subs, Contador, Lista de Eventos, Créditos Finais, Fila de Espectadores, Top Apoiadores, Tarjas, Lista de Tarefas, Mensagem em Destaque, Combo de Emotes, Meta de Bits e Kicks, Tocando Agora, Subathon Timer, Enquete do Chat, vencedor do Sorteio, Molduras de Live, Contagem Regressiva, Redes Sociais e Roleta ganham a mesma moldura, fontes e cores. Use um em todos os widgets, ou um diferente em cada.',
+    lead:
+      'Escolha um preset e sua Caixa de Chat, Alertas de Live, Meta de Subs, Meta de Seguidores, Contador, Lista de Eventos, Créditos Finais, Fila de Espectadores, Top Apoiadores, Tarjas, Lista de Tarefas, Mensagem em Destaque, Combo de Emotes, Meta de Bits e Kicks, Tocando Agora, Subathon Timer, Enquete do Chat, vencedor do Sorteio, Molduras de Live, Contagem Regressiva, Redes Sociais e Roleta ganham a mesma moldura, fontes e cores. Use um em todos os widgets, ou um diferente em cada.',
     pickTitle: 'Escolha um preset',
     pickText:
-      'Presets prontos para League of Legends (LoL), World of Warcraft (WoW), Metin2, Dota 2, Valorant, Counter-Strike 2 (CS2), Minecraft, Clash of Clans, Fortnite, Rocket League e PUBG: Battlegrounds.',
+      'Presets prontos para League of Legends (LoL), World of Warcraft (WoW), Dota 2, Valorant, Counter-Strike 2 (CS2), Minecraft, Fortnite, Rocket League, PUBG: Battlegrounds, Mount & Blade e Kingdom Come: Deliverance, e ainda Glitch, Operator, Conquest, Flower e Pizza só por diversão.',
     by: 'por {author}',
     community: 'Comunidade',
     makeDefault: 'Usar {name} em todos os widgets',
@@ -3632,29 +3638,22 @@ export const pt: typeof en = {
     setUp: 'Configurar {widget}',
     previewIframeTitle: 'Prévia de {widget} com o preset {name}',
     descriptions: {
-      classic:
-        'O visual com que cada widget foi feito: Alertas de Live em neon, a barra roxa da Meta de Subs e o texto simples da Caixa de Chat. Você escolhe as cores.',
-      rift: 'Molduras douradas finas com tachas de diamante, painéis azul-marinho escuros e barras verde-azuladas brilhantes, com títulos em Cinzel.',
-      realm:
-        'Molduras de bronze e ouro com rebites, painéis de couro escuro e barras laranja lendárias, com títulos em Marcellus.',
-      dynasty:
-        'Molduras de laca vermelha com cantoneiras douradas, painéis de madeira escura e barras carmim, com títulos em Zen Antique.',
-      ancient:
-        'Molduras de ferro escuro com cantos de bronze, um brilho vermelho embaixo e títulos afiados em Grenze.',
-      agent:
-        'Cantos cortados, uma borda vermelha, barras inclinadas e números altos em Teko sobre ardósia escura.',
-      defuse:
-        'Cantoneiras de HUD, uma linha âmbar em cima, listras de perigo nas barras e a fonte condensada Saira.',
-      blocks:
-        'Molduras de pixel em cores de grama e terra, barras verdes divididas em blocos e a fonte pixelada Jersey 10.',
-      village:
-        'Molduras douradas arredondadas com gemas, painéis de madeira quente e barras rosa elixir, com títulos grossos em Lilita One.',
-      storm:
-        'Cantos cortados e cantoneiras amarelas em painéis do azul ao roxo, barras azul-celeste inclinadas e títulos altos em Anton.',
-      boost:
-        'Cantoneiras de HUD e uma linha azul brilhante em cima sobre azul meia-noite, barras azuis inclinadas, laranja para o vencedor e títulos em Russo One.',
-      airdrop:
-        'Cantoneiras de HUD e uma linha amarela em cima sobre painéis preto-oliva, barras amarelas lisas e títulos em Saira Stencil One.',
+      classic: 'O visual próprio de cada widget, nas cores que você escolher.',
+      rift: 'Dourado e verde-azulado sobre azul-marinho escuro, com barras que brilham.',
+      realm: 'Bronze e dourado sobre couro escuro, com feixes de luz.',
+      flower: 'Tons suaves de rosa, com florzinhas flutuando em volta.',
+      ancient: 'Ferro escuro e vermelho-fogo, com barras em brasa.',
+      agent: 'Vermelho forte e cinza-ardósia, com um corte rápido quando as barras crescem.',
+      defuse: 'Âmbar e cinza, com uma luz vermelha piscando.',
+      blocks: 'Todo verde e em blocos, com barras que crescem bloco a bloco.',
+      pizza: 'Cores de massa e queijo, com fatias de pizza flutuando em volta.',
+      storm: 'Azul-celeste e roxo, com barras que se montam como uma planta.',
+      boost: 'Azul e laranja, com rastros de velocidade quando as barras crescem.',
+      airdrop: 'Verde-oliva e amarelo, com fumaça de sinalizador quando as barras crescem.',
+      conquest: 'Laranja sobre cinza-metal, com uma varredura de radar.',
+      operator: 'Preto, branco e verde-limão, com marcas de impacto quando as barras crescem.',
+      banner: 'Ouro velho e vermelho sobre madeira escura, com barras forjadas como ferro.',
+      glitch: 'Vermelho, ciano e amarelo, e tudo dá glitch.',
     },
     existingTitle: 'Já tem widgets no OBS?',
     existingText:
@@ -3679,7 +3678,7 @@ export const pt: typeof en = {
       'Sim. Seu padrão é só o ponto de partida de cada página de configuração. Na página de configuração de qualquer widget você pode escolher outro preset, e a URL daquele widget leva ele junto.',
     faq3Q: 'Quais widgets aceitam preset?',
     faq3A:
-      'Caixa de Chat, Alertas de Live, Meta de Subs, Subathon Timer, Enquete do Chat, o overlay do vencedor do Sorteio, Molduras de Live, Contagem Regressiva, Redes Sociais e Roleta. O Mural de Emotes só mostra emotes e o Sub Sprout desenha suas próprias plantas, então os dois mantêm o visual deles.',
+      'Meta de Subs, Meta de Bits e Kicks, Meta de Seguidores, Enquete do Chat, Caixa de Chat, Mensagem em Destaque, Combo de Emotes, Alertas de Live, Contador, Subathon Timer, o overlay do vencedor do Sorteio, Molduras de Live, Contagem Regressiva, Redes Sociais, Tocando Agora, Roleta, Lista de Eventos, Créditos Finais, Fila de Espectadores, Top Apoiadores, Tarjas e Lista de Tarefas. O Mural de Emotes só mostra emotes e o Sub Sprout desenha suas próprias plantas, então os dois mantêm o visual deles.',
     faq4Q: 'Estes são temas oficiais dos jogos?',
     faq4A:
       'Não. São estilos feitos por fãs a partir de cores, Google Fonts gratuitas e enfeites desenhados do zero, sem logos nem arte dos jogos, e não têm vínculo com as empresas dos jogos.',
@@ -3689,10 +3688,19 @@ export const pt: typeof en = {
       browse: 'Todos os presets',
       show: 'Mostrar {count} presets',
       hide: 'Ocultar presets',
+      random: 'Escolher um preset aleatório',
       owns: 'Cores e fontes vêm de {name}.',
       makeDefault: 'Deixar {name} como meu padrão',
       makeDefaultTip: 'Toda página de configuração neste navegador vai começar com ele.',
       isDefault: 'Seu padrão',
+      effects: 'Efeitos',
+      effectsTip:
+        'As animações próprias de {name}: nas barras quando crescem, nos painéis quando aparecem e, de vez em quando, em repouso.',
+      font: 'Fonte',
+      fontTip:
+        'Mantenha as fontes de {name} ou mostre este widget com outra fonte. As cores, a moldura e os efeitos continuam sendo de {name}.',
+      presetFonts: 'Fontes de {name}',
+      ownsColors: 'Cores vêm de {name}.',
     },
   },
   faqPage: {
@@ -3746,6 +3754,18 @@ export const pt: typeof en = {
     lead: 'Recursos novos e correções de bugs no Senchabot Extensions, dos mais novos para os mais antigos. A lista é montada a partir do histórico de commits do projeto no [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).',
     site: 'Site',
     entries: {
+      presetsFont:
+        'Um novo campo Fonte abaixo do seletor de presets mostra um widget em Inter, Roboto, Nunito, JetBrains Mono, Source Serif 4 ou a fonte do seu sistema no lugar das fontes do preset, mantendo as cores, a moldura e os efeitos dele.',
+      presetsRandom:
+        'Um dado ao lado do seletor de presets em cada página de configuração escolhe um preset aleatório. Na página inicial, cada prévia de widget mostra um preset diferente a cada visita, e a página de configuração abre com esse preset.',
+      presetsFlowerPizza:
+        'Dois presets novos, Flower e Pizza, entram no lugar de Dynasty e Village: florzinhas e fatias de pizza flutuam em volta das barras, e cada avanço abre uma flor de cerejeira ou faz uma fatia pular na ponta. Os widgets com Dynasty ou Village voltam ao visual clássico.',
+      presetEffects:
+        'Cada preset agora tem um efeito próprio: as barras brilham, queimam, florescem, se constroem ou falham como um sinal com defeito ao crescer, os painéis entram do seu jeito e uma meta batida ganha uma comemoração maior. A chave Efeitos abaixo do seletor de presets os desliga.',
+      presetsFollowerGoal:
+        'A página de presets agora mostra também a Meta de Seguidores e adiciona um preset às URLs da Meta de Seguidores coladas nela.',
+      presetsConquestOperatorBannerGlitch:
+        'Quatro presets novos para todo widget que aceita um: Conquest, Operator, Banner (Mount & Blade e Kingdom Come) e Glitch.',
       hudToggles:
         'Overlay HUD IRL e Clima: o minimapa, o dinheiro, o relógio e o clima agora podem ser escondidos e mostrados de novo pelo chat com !h map, !h cash, !h time e !h weather. O Clima só lê o chat se você adicionar o seu canal.',
       irlHudShortCommand:
@@ -3863,7 +3883,7 @@ export const pt: typeof en = {
       chatTextShadow:
         'A Caixa de Chat tem a opção Sombra do texto: Nenhuma, Normal (como antes) ou Forte, um contorno escuro que mantém o chat legível em jogos claros.',
       chatFonts:
-        'A Caixa de Chat agora tem uma caixa de fonte para os nomes e outra para as mensagens, e as duas continuam abertas com um preset: mantenha as duas fontes que vieram com o preset, use a fonte de título dele nas mensagens também, ou misture qualquer uma com Inter, Roboto, Nunito, JetBrains Mono, Source Serif 4 ou a fonte do seu sistema. Nomes em negrito e mensagens em negrito agora também funcionam em presets cuja fonte só tem um peso, como Realm, Dynasty e Blocks.',
+        'A Caixa de Chat agora tem uma caixa de fonte para os nomes e outra para as mensagens, e as duas continuam abertas com um preset: mantenha as duas fontes que vieram com o preset, use a fonte de título dele nas mensagens também, ou misture qualquer uma com Inter, Roboto, Nunito, JetBrains Mono, Source Serif 4 ou a fonte do seu sistema. Nomes em negrito e mensagens em negrito agora também funcionam em presets cuja fonte só tem um peso.',
       sproutSaved:
         'O Sub Sprout agora guarda a planta quando o OBS recarrega e leva ela para a próxima live, em vez de começar do primeiro estágio toda vez. Os mods podem recomeçar com !grow reset.',
       countdown:
@@ -3871,7 +3891,7 @@ export const pt: typeof en = {
       deviceTheme:
         'O site agora abre no tema claro ou escuro do seu dispositivo e acompanha quando ele muda. Depois que você clica no botão de tema no topo, sua escolha fica salva e o dispositivo para de mudar o tema.',
       frames:
-        'Novas Molduras de Live: molduras prontas para sua câmera, seu chat e a tela inteira da live. Cada preset vem com arte própria, tipo telhado de pagode e lanternas no Dynasty ou blocos de pixel no Blocks.',
+        'Novas Molduras de Live: molduras prontas para sua câmera, seu chat e a tela inteira da live, com arte própria para cada preset.',
       subathonRates:
         'O Subathon Timer agora pode listar quanto um sub, um sub de presente e 500 Bits ou Kicks adicionam, direto no timer, para o pessoal saber quanto vale o sub.',
       presets:

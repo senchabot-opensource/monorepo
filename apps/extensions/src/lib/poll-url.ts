@@ -9,7 +9,8 @@ import {
   QUESTION_MAX_LENGTH,
 } from '#/features/widgets/poll/poll-state';
 import { isValidLocale, LANG_PARAM, type Locale } from '#/lib/i18n/locales';
-import { CLASSIC_PRESET, readPreset, writePreset } from '#/lib/preset-url';
+import { CLASSIC_PRESET, readFont, readFx, readPreset, writePreset } from '#/lib/preset-url';
+import type { SiteFont } from '#/lib/site-fonts';
 import {
   type ChannelPlatforms,
   channelWidgetUrl,
@@ -31,6 +32,10 @@ export interface PollSettings {
   platforms: ChannelPlatforms;
   /** Preset id; any preset but classic brings its own colors and fonts. */
   preset: string;
+  /** Off (`fx=0`) stills the preset's effect; missing means on. */
+  fx?: boolean;
+  /** A site font to draw the preset in instead of its own; missing keeps the preset's. */
+  font?: SiteFont;
   /** The ready-made poll `!poll start` puts up. Its options may hold blanks while typing. */
   question: string;
   options: string[];
@@ -102,7 +107,7 @@ function buildParams(
   const params = new URLSearchParams();
   const defaults = DEFAULT_POLL_SETTINGS;
   setChannels(params, settings.platforms, twitchChannel, kickChannel);
-  writePreset(params, settings.preset);
+  writePreset(params, settings.preset, settings.fx, settings.font);
   const poll = savedPoll(settings);
   if (poll) {
     if (poll.question) params.set('q', poll.question);
@@ -163,6 +168,8 @@ export function readPollSettings(params: URLSearchParams): Omit<PollSettings, 'p
   const options = cleanOptions((params.get('o') ?? '').split(OPTION_SEPARATOR));
   return {
     preset: readPreset(params),
+    ...readFx(params),
+    ...readFont(params),
     question: clip((params.get('q') ?? '').trim(), QUESTION_MAX_LENGTH),
     // The setup page shows at least two boxes.
     options: options.length >= MIN_OPTIONS ? options : [...options, '', ''].slice(0, MIN_OPTIONS),

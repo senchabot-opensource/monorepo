@@ -89,7 +89,8 @@ export function CountdownWidget({
     if (message.type !== 'sound' || settings.sound === 'off') return;
     playCountdownSound(settings.sound, COUNTDOWN_SOUND_VOLUME);
   });
-  const skin = skinFor(settings.preset);
+  // `motion=0` keeps the preset's effect still too.
+  const skin = skinFor(settings.preset, settings.fx !== false && settings.motion, settings.font);
   const hue = hueFor(settings.color, 1);
   const done = ended && settings.ending === 'text';
 
@@ -120,7 +121,7 @@ export function CountdownWidget({
         {/* `hide` leaves the scene bare once the break is over, so nothing sits over the game. */}
         {!hidden && (
           <div className="cd-stage" style={{ transform: `translate(-50%, -50%) scale(${scale})` }}>
-            <Card look={settings.look} hue={hue} motion={settings.motion}>
+            <Card look={settings.look} hue={hue} motion={settings.motion} done={done}>
               {emoteUrl ? (
                 <img
                   src={emoteUrl}
@@ -226,11 +227,14 @@ function Card({
   look,
   hue,
   motion,
+  done,
   children,
 }: {
   look: CountdownSettings['look'];
   hue: number;
   motion: boolean;
+  /** The countdown ran out and shows its "done" text: the preset's effect plays its win. */
+  done: boolean;
   children: ReactNode;
 }) {
   const skin = useSkin();
@@ -268,7 +272,7 @@ function Card({
     <div style={layout}>
       <div style={{ ...inner, ...panel, padding: '54px 92px' }}>
         {children}
-        {skin && <Frame skin={skin} radius={26} scale={1.4} />}
+        {skin && <Frame skin={skin} radius={26} scale={1.4} card win={done} />}
       </div>
     </div>
   );

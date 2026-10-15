@@ -1,5 +1,6 @@
 import { type CSSProperties, useLayoutEffect, useRef, useState } from 'react';
 import { Frame, panelStyle } from '#/features/presets/frame';
+import { useRises } from '#/features/presets/fx/engine';
 import { painter, skinCss, skinFor } from '#/features/presets/skin';
 import { SkinProvider, useSkin } from '#/features/presets/skin-context';
 import { useI18n } from '#/lib/i18n';
@@ -45,10 +46,12 @@ export function TasksWidget({
     simulate,
     previewId,
   });
-  const skin = skinFor(settings.preset);
+  const skin = skinFor(settings.preset, settings.fx, settings.font);
   const hsl = painter(skin, hueFor(settings.color, 1));
   const members = shownMembers(state);
   const { done, total } = progressOf(state);
+  // A task ticked off plays the preset's effect; unticking one doesn't.
+  const ticked = useRises(done);
   const panel: CSSProperties = skin
     ? panelStyle(skin, RADIUS)
     : {
@@ -120,7 +123,9 @@ export function TasksWidget({
                 ))}
               </Scroller>
             )}
-            {skin && <Frame skin={skin} radius={RADIUS} />}
+            {skin && (
+              <Frame skin={skin} radius={RADIUS} pulse={ticked} win={total > 0 && done === total} />
+            )}
           </div>
         </div>
       </div>

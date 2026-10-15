@@ -49,7 +49,8 @@ export function SceneBackdrop() {
 
 /**
  * Hero visual: Emote Wall, Chat Box, Sub Sprout and Subathon Timer demos layered like sources in
- * one stream scene. Phones only get the chat.
+ * one stream scene, each in its own classic look; the gallery below shows the presets. Phones
+ * only get the chat.
  */
 export function StreamScene() {
   const { t } = useI18n();

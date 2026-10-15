@@ -172,4 +172,16 @@ describe('EventListWidget', () => {
     channel.close();
     expect(localStorage.getItem(storageKey('streamer'))).toBeNull();
   });
+
+  it('draws no dots on the top and bottom edges of its rows, whatever the preset', async () => {
+    // Rift's diamonds, Realm's rivets and gem, Glitch's square: the frames that have dots.
+    for (const preset of ['rift', 'realm', 'glitch']) {
+      const { container, unmount } = await render(
+        <EventListWidget settings={settings({ preset })} simulate previewId="p1" />,
+      );
+      expect(rows().length, preset).toBeGreaterThan(0);
+      expect(container.querySelectorAll('[data-stud]'), preset).toHaveLength(0);
+      unmount();
+    }
+  });
 });

@@ -1,3 +1,4 @@
+import { isClassic, PRESET_PARAM } from '#/features/presets/registry';
 import type { WidgetEntry, WidgetId } from '#/lib/widgets';
 
 type DemoParams = Partial<Record<WidgetId, Record<string, string>>>;
@@ -34,11 +35,12 @@ const PLACE_PARAMS = { card: CARD_PARAMS, together: TOGETHER_PARAMS };
 /**
  * The widget's self-running demo URL tuned for small previews; empty when it has no demo.
  * `card` is the gallery card, `scene` the hero's stream scene, `together` the scene that shows
- * widgets used side by side.
+ * widgets used side by side. A `preset` dresses the demo in it.
  */
 export function getDemoSrc(
   widget: WidgetEntry,
   place: 'scene' | 'card' | 'together' = 'scene',
+  preset?: string,
 ): string {
   if (!widget.demoUrl) return '';
   const [path, query = ''] = widget.demoUrl.split('?');
@@ -48,5 +50,6 @@ export function getDemoSrc(
     ...(place === 'scene' ? undefined : PLACE_PARAMS[place][widget.id]),
   };
   for (const [key, value] of Object.entries(overrides)) params.set(key, value);
+  if (preset && !isClassic(preset)) params.set(PRESET_PARAM, preset);
   return `${path}?${params.toString()}`;
 }

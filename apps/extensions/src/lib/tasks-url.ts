@@ -1,6 +1,7 @@
 import { isClassic } from '#/features/presets/registry';
 import { isValidLocale, LANG_PARAM, type Locale } from '#/lib/i18n/locales';
-import { CLASSIC_PRESET, readPreset, writePreset } from './preset-url';
+import { CLASSIC_PRESET, readFont, readFx, readPreset, writePreset } from './preset-url';
+import type { SiteFont } from './site-fonts';
 import {
   type ChannelPlatforms,
   channelWidgetUrl,
@@ -18,6 +19,10 @@ export interface TasksSettings {
   platforms: ChannelPlatforms;
   /** Preset id; any preset but classic brings its own colors and fonts. */
   preset: string;
+  /** Off (`fx=0`) stills the preset's effect; missing means on. */
+  fx?: boolean;
+  /** A site font to draw the preset in instead of its own; missing keeps the preset's. */
+  font?: SiteFont;
   color: TasksColor;
   /** Above the list. */
   title: string;
@@ -59,7 +64,7 @@ function buildParams(
   const params = new URLSearchParams();
   const defaults = DEFAULT_TASKS_SETTINGS;
   setChannels(params, settings.platforms, twitchChannel, kickChannel);
-  writePreset(params, settings.preset);
+  writePreset(params, settings.preset, settings.fx, settings.font);
   if (isClassic(settings.preset) && settings.color !== defaults.color)
     params.set('color', settings.color);
   // Always written: the default is in the page's language.
@@ -106,6 +111,8 @@ export function readTasksSettings(params: URLSearchParams): Omit<TasksSettings, 
   const title = params.get('title');
   return {
     preset: readPreset(params),
+    ...readFx(params),
+    ...readFont(params),
     color: TASKS_COLORS.includes(color) ? color : defaults.color,
     title: title === null ? defaults.title : title.trim().slice(0, TITLE_MAX_LENGTH),
     max: readWhole(params.get('max'), defaults.max, { min: 1, max: MAX_OPEN, below: 'clamp' }),

@@ -112,7 +112,7 @@ export function FeaturedWidget({
     simulate ? NO_PROVIDERS : ALL_PROVIDERS,
   );
   const emotes = simulate ? SIM_EMOTE_MAPS : loaded;
-  const skin = skinFor(settings.preset);
+  const skin = skinFor(settings.preset, settings.fx, settings.font);
   const hsl = painter(skin, hueFor(settings.color, 1));
   const present = usePresence(view.shown);
   const waiting = settings.waiting && settings.mode !== 'feature' ? view.questions.length : 0;
@@ -299,7 +299,7 @@ function Card({
         {waiting > 0 && <WaitingBadge count={waiting} hsl={hsl} />}
       </div>
       <FitText>{content}</FitText>
-      {skin && <Frame skin={skin} radius={RADIUS} />}
+      {skin && <Frame skin={skin} radius={RADIUS} card />}
     </div>
   );
 }

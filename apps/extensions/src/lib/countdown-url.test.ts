@@ -27,7 +27,7 @@ describe('buildCountdownUrl', () => {
   it('writes the channels, the preset and the text, and drops the color a preset replaces', () => {
     const settings: CountdownSettings = {
       ...DEFAULT_COUNTDOWN_SETTINGS,
-      preset: 'dynasty',
+      preset: 'flower',
       scene: 'break',
       time: 300,
       color: 'gold',
@@ -44,7 +44,7 @@ describe('buildCountdownUrl', () => {
       kick: 'emircankick',
       scene: 'break',
       time: '300',
-      preset: 'dynasty',
+      preset: 'flower',
       look: 'plain',
       title: 'Birazdan dönüyorum',
       note: 'Kahve molası',

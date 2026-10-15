@@ -1,6 +1,7 @@
 import { isClassic } from '#/features/presets/registry';
 import { isValidLocale, LANG_PARAM, type Locale } from '#/lib/i18n/locales';
-import { CLASSIC_PRESET, readPreset, writePreset } from './preset-url';
+import { CLASSIC_PRESET, readFont, readFx, readPreset, writePreset } from './preset-url';
+import type { SiteFont } from './site-fonts';
 import { readFlag, readWhole } from './url-params';
 
 /** Where the song comes from. Both are public profiles, read without an account. */
@@ -27,6 +28,10 @@ export interface NowPlayingSettings {
   hide: number;
   /** Preset id; any preset but classic brings its own colors and fonts. */
   preset: string;
+  /** Off (`fx=0`) stills the preset's effect; missing means on. */
+  fx?: boolean;
+  /** A site font to draw the preset in instead of its own; missing keeps the preset's. */
+  font?: SiteFont;
   color: NowPlayingColor;
 }
 
@@ -82,7 +87,7 @@ function buildParams(settings: NowPlayingSettings, locale: Locale) {
   if (settings.art !== defaults.art) params.set('art', settings.art ? '1' : '0');
   if (settings.album !== defaults.album) params.set('album', settings.album ? '1' : '0');
   if (settings.hide !== defaults.hide) params.set('hide', String(settings.hide));
-  writePreset(params, settings.preset);
+  writePreset(params, settings.preset, settings.fx, settings.font);
   if (isClassic(settings.preset) && settings.color !== defaults.color)
     params.set('color', settings.color);
   // Always written: the card's label is a word, and OBS shouldn't pick its language.
@@ -128,6 +133,8 @@ export function readNowPlayingSettings(params: URLSearchParams): NowPlayingSetti
     album: readFlag(params.get('album'), defaults.album),
     hide: readWhole(params.get('hide'), defaults.hide, { min: 0, max: MAX_HIDE }),
     preset: readPreset(params),
+    ...readFx(params),
+    ...readFont(params),
     color: readChoice(params.get('color'), NOW_PLAYING_COLORS, defaults.color),
   };
 }

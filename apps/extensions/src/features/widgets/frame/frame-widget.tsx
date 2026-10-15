@@ -33,7 +33,8 @@ interface FrameWidgetProps {
 }
 
 export function FrameWidget({ settings, demo = false, scene = false }: FrameWidgetProps) {
-  const skin = skinFor(settings.preset);
+  // `motion=0` keeps the preset's effect still too.
+  const skin = skinFor(settings.preset, settings.fx !== false && settings.motion, settings.font);
   const look = lookFor(skin, hueFor(settings.color, 1));
   const size = useWindowSize();
 

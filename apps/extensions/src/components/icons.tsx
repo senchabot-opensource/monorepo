@@ -300,6 +300,21 @@ export function ChevronDownIcon(props: IconProps) {
   );
 }
 
+export function DiceIcon(props: IconProps) {
+  return (
+    <StrokeIcon {...props}>
+      <rect x="3.5" y="3.5" width="17" height="17" rx="4" />
+      <g fill="currentColor" stroke="none">
+        <circle cx="8.5" cy="8.5" r="1.5" />
+        <circle cx="15.5" cy="8.5" r="1.5" />
+        <circle cx="12" cy="12" r="1.5" />
+        <circle cx="8.5" cy="15.5" r="1.5" />
+        <circle cx="15.5" cy="15.5" r="1.5" />
+      </g>
+    </StrokeIcon>
+  );
+}
+
 export function MenuIcon(props: IconProps) {
   return (
     <StrokeIcon {...props}>

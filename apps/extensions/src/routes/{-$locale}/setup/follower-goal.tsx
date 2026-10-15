@@ -255,7 +255,14 @@ function FollowerGoalSetup() {
       </SettingsGroup>
 
       <SettingsGroup title={t('common.sectionAppearance')}>
-        <PresetField value={settings.preset} onChange={(value) => update('preset', value)} />
+        <PresetField
+          value={settings.preset}
+          onChange={(value) => update('preset', value)}
+          fx={settings.fx}
+          onFxChange={(on) => update('fx', on)}
+          font={settings.font}
+          onFontChange={(font) => update('font', font)}
+        />
         <div>
           <FieldLabel id={`${id}-style`} tip={t('followerGoal.styleTip')}>
             {t('followerGoal.style')}
@@ -379,14 +386,14 @@ function FollowerGoalSetup() {
       previewTip={t('followerGoal.previewHint')}
       previewAspect={16 / 9}
       preview={
-        <PreviewFrame src={previewUrl} title={t('followerGoal.previewIframeTitle')} canvas={CANVAS} />
+        <PreviewFrame
+          src={previewUrl}
+          title={t('followerGoal.previewIframeTitle')}
+          canvas={CANVAS}
+        />
       }
       previewFooter={
-        <TestButtons
-          title={t('followerGoal.testTitle')}
-          layout="three"
-          buttons={testButtons}
-        />
+        <TestButtons title={t('followerGoal.testTitle')} layout="three" buttons={testButtons} />
       }
       urlField={
         <CopyUrlField

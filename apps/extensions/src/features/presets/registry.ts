@@ -1,5 +1,5 @@
 import { BUILTIN_PRESETS } from './builtin-presets';
-import { type PresetData, presetSchema } from './preset-schema';
+import { type Effect, type PresetData, presetSchema } from './preset-schema';
 
 /** URL param every themable overlay reads. Missing or unknown means the classic look. */
 export const PRESET_PARAM = 'preset';
@@ -56,6 +56,10 @@ const BY_ID = new Map(PRESETS.map((entry) => [entry.data.id, entry]));
 export function findPreset(id: string | null | undefined): PresetEntry | null {
   return (id && BY_ID.get(id.trim().toLowerCase())) || null;
 }
+
+/** The preset's signature effect; `none` for classic, a still preset or an unknown id. */
+export const presetEffect = (id: string | null | undefined): Effect =>
+  findPreset(id)?.data.effect ?? 'none';
 
 /** An id as it should be stored: a known preset's id, else classic. */
 export function normalizePresetId(id: string | null | undefined): string {

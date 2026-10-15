@@ -1,13 +1,16 @@
 import { LocaleLink } from '#/components/locale-link';
 import { PreviewFrame } from '#/components/preview-frame';
 import { BUTTON_PRIMARY, BUTTON_SECONDARY } from '#/components/ui/button-styles';
+import { PRESET_PARAM } from '#/features/presets/registry';
 import { type TranslationKey, useI18n } from '#/lib/i18n';
 import { getWidget } from '#/lib/widgets';
+import { useDealtPresets } from './demo-presets';
 import { getDemoSrc } from './demo-url';
 import { ArrowRightIcon, CheckIcon } from './landing-icons';
 import { FLUSH_FRAME_CLASS, SceneBackdrop, STAGE_STYLE } from './stream-scene';
 
 const WIDGET = getWidget('poll');
+const DEALT = ['poll'] as const;
 
 const POINTS: TranslationKey[] = [
   'home.pollSpotlight.pointVote',
@@ -19,11 +22,13 @@ const POINTS: TranslationKey[] = [
 const PLATFORM_COLORS = { twitch: '#9146FF', kick: '#53FC18' } as const;
 
 /**
- * The newest tool on the landing: what Chat Poll does, the live demo on a stream stage, and the
- * three ways viewers vote, typed in a chat beside it.
+ * The newest tool on the landing: what Chat Poll does, the live demo on a stream stage in a
+ * random preset, which the setup button opens on, and the three ways viewers vote, typed in a
+ * chat beside it.
  */
 export function PollSpotlight() {
   const { t } = useI18n();
+  const preset = useDealtPresets(DEALT)?.poll;
   const name = t(WIDGET.nameKey);
   // The demo's own sample poll, so the typed option matches one of its bars.
   const votes: {
@@ -83,7 +88,11 @@ export function PollSpotlight() {
             ))}
           </ul>
           <div className="mt-8 flex flex-wrap gap-3">
-            <LocaleLink to={WIDGET.setupPath} className={BUTTON_PRIMARY}>
+            <LocaleLink
+              to={WIDGET.setupPath}
+              search={preset ? { [PRESET_PARAM]: preset } : undefined}
+              className={BUTTON_PRIMARY}
+            >
               {t('home.pollSpotlight.setup')}
               <ArrowRightIcon className="size-4" />
             </LocaleLink>
@@ -100,7 +109,8 @@ export function PollSpotlight() {
               <SceneBackdrop />
               <div className="absolute inset-0">
                 <PreviewFrame
-                  src={getDemoSrc(WIDGET)}
+                  // Waits for its preset, instead of loading twice.
+                  src={preset ? getDemoSrc(WIDGET, 'scene', preset) : ''}
                   title={t('home.demoTitle', { name })}
                   showLoading
                   backgroundClassName="bg-transparent"

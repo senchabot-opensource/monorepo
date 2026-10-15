@@ -41,7 +41,8 @@ export const fr: typeof en = {
     twitchChannel: 'Chaîne Twitch',
     kickChannel: 'Chaîne Kick',
     channelTip:
-      "Tape juste le nom de la chaîne, pas le lien complet. Pour twitch.tv/senchabot, c'est senchabot.",
+      'Tape le nom de la chaîne ou colle son lien : twitch.tv/senchabot devient senchabot.',
+    kickDashName: 'Le lien Kick de cette chaîne est {link}, avec - à la place de _.',
     previewLoading: "Chargement de l'aperçu…",
     previewZoom: "Zoom de l'aperçu",
     previewDrag: 'Fais glisser pour regarder autour',
@@ -270,6 +271,10 @@ export const fr: typeof en = {
     overlaysLead: 'Des sources navigateur qui tournent toutes seules une fois dans ta scène.',
     toolsLead:
       'Des outils que tu pilotes toi-même pendant le stream, depuis une page ou depuis le chat.',
+    presetPicks: {
+      label: 'Afficher les aperçus dans un preset',
+      more: 'Voir plus de presets',
+    },
     setUp: 'Configurer',
     toolFeatures: 'Fonctionnalités',
     raffleFeatureKeyword: 'Mot-clé de participation comme !join',
@@ -2112,7 +2117,7 @@ export const fr: typeof en = {
     breadcrumb: 'Configuration des Cadres de stream',
     title: 'Configuration des Cadres de stream',
     intro:
-      "Des cadres prêts à l'emploi pour ta caméra, ton chat ou tout ton écran de stream. Le preset choisi dessine le cadre dans le style de ce jeu, jusqu'à sa forme, ses décorations et ses animations : un toit de pagode, des pompons qui se balancent et des pétales qui volent dans Dynasty, des blocs d'herbe et des torches qui vacillent dans Blocks. Aucune chaîne à connecter. Ajoute l'URL à OBS et place ta caméra ou ton chat sous le cadre.",
+      "Des cadres prêts à l'emploi pour ta caméra, ton chat ou tout ton écran de stream, dans le style du preset choisi. Aucune chaîne à connecter. Ajoute l'URL à OBS et place ta caméra ou ton chat sous le cadre.",
     sectionPiece: 'Cadre',
     piece: 'Tu encadres quoi ?',
     pieceTip:
@@ -2147,7 +2152,7 @@ export const fr: typeof en = {
     color: 'Couleur',
     motion: 'Animations',
     motionTip:
-      'Lignes lumineuses, reflets et petites touches selon le preset, comme des lanternes, des torches ou des étincelles. Désactive-les et le cadre reste immobile.',
+      'Lignes lumineuses, reflets et petites touches selon le preset, comme des runes, des torches ou des étincelles. Désactive-les et le cadre reste immobile.',
     previewTitle: 'Aperçu du cadre de stream',
     previewIframeTitle: 'Aperçu du cadre de stream',
     previewHint:
@@ -2177,7 +2182,7 @@ export const fr: typeof en = {
       'Oui. Pour une caméra verticale, règle Orientation sur Portrait et la taille recommandée passe à 360 × 640. Le cadre est dessiné pour remplir sa source navigateur, donc pour une caméra carrée règle simplement la largeur et la hauteur pareil, et les décorations suivent.',
     faq4Q: 'Les dessins des cadres viennent-ils des jeux ?',
     faq4A:
-      "Non. Chaque dessin, comme le toit de pagode, les lanternes ou les blocs en pixels, a été fait de zéro, sans logo ni visuel de jeu. Les presets sont des styles faits par des fans qui retrouvent l'ambiance de ces jeux.",
+      "Non. Chaque dessin a été fait de zéro, sans logo ni visuel de jeu. Les presets sont des styles faits par des fans qui retrouvent l'ambiance de ces jeux.",
   },
   countdown: {
     breadcrumb: 'Configuration du Compte à rebours de stream',
@@ -2970,9 +2975,9 @@ export const fr: typeof en = {
         title: "Que faire si le widget n'apparaît pas dans OBS ?",
         intro:
           "La plupart du temps, c'est le nom de la chaîne qui pose problème. Fais ces vérifications dans l'ordre.",
-        linkTitle: 'Tu as tapé un lien au lieu du nom de la chaîne ?',
+        linkTitle: 'Ton URL de widget contient-elle un lien à la place du nom de la chaîne ?',
         linkBody:
-          'Tape seulement le nom dans le champ de la chaîne : `senchabot` pour twitch.tv/senchabot. Si tu colles le lien complet, le widget prend le lien pour le nom de la chaîne et ne peut se connecter à aucun chat.',
+          "L'URL ne doit contenir que le nom, comme `twitch=senchabot`. Les champs de chaîne de la page de configuration transforment un lien collé en nom, mais une URL plus ancienne, ou modifiée à la main, peut encore contenir le lien complet, et le widget ne peut alors se connecter à aucun chat. Crée une nouvelle URL sur la page de configuration.",
         channelTitle: 'La chaîne existe-t-elle vraiment ?',
         channelBody:
           "Vérifie qu'il n'y a pas de faute dans le nom. Une chaîne qui n'existe pas sur Twitch ne renvoie pas d'erreur. Le widget reste juste vide.",
@@ -2981,7 +2986,7 @@ export const fr: typeof en = {
           "La Boîte de chat et le Mur d'emotes restent complètement vides et transparents tant qu'il ne se passe rien dans le chat. Envoie un message dans le chat ; pour le Mur d'emotes, il doit par défaut être fait uniquement d'emotes, mais avec Toutes les emotes activé, les emotes dans les messages normaux comptent aussi. L'overlay du Tirage au sort n'apparaît lui aussi que quand un gagnant est tiré, et disparaît après 10 secondes. Sub Sprout et le Subathon Timer, eux, s'affichent tout de suite.",
         kickTitle: 'Chaîne Kick introuvable ?',
         kickBody:
-          "Quand le widget s'ouvre, il cherche la chaîne Kick sur kick.com. Si cette recherche échoue (mauvais nom, chaîne inexistante, ou Kick qui ne répond pas), les messages Kick n'arrivent pas. Tape ton nom Kick exactement comme il apparaît dans l'URL kick.com.",
+          "Quand le widget s'ouvre, il cherche la chaîne Kick sur kick.com. Si cette recherche échoue (mauvais nom, chaîne inexistante, ou Kick qui ne répond pas), les messages Kick n'arrivent pas. Tape ton nom Kick exactement comme il apparaît dans l'URL kick.com. Certains liens Kick écrivent le _ d'un nom avec un - : le champ Chaîne Kick de la page de configuration vérifie sur kick.com et passe à cette orthographe pour toi.",
         tabTitle: "L'URL marche-t-elle dans un navigateur ?",
         tabBody:
           "Ouvre l'URL dans un onglet normal du navigateur. Si elle marche là mais pas dans OBS, vérifie le champ URL et la taille de la source.",
@@ -3435,8 +3440,8 @@ export const fr: typeof en = {
       },
       look: {
         title: 'Que changent le preset et les animations ?',
-        p1: "Le preset définit la forme, les dessins, les couleurs et la police du cadre : un toit de pagode et des pompons dans Dynasty, des liserés dorés et des gemmes turquoise dans Rift, des blocs d'herbe et une barre d'inventaire dans Blocks. Donne le même preset à ta Boîte de chat, tes Alertes de stream et ton Objectif de subs et tout ce qui est à l'écran est assorti.",
-        p2: "Avec Animations activé, un reflet fait le tour du cadre, les lignes brillent, et des lanternes, des torches ou des étincelles bougent selon le preset. Elles restent légères. Mais si ton PC rame pendant que tu joues, désactive Animations. Ça ajoute `motion=0` à l'URL et le cadre reste immobile.",
+        p1: "Le preset définit la forme, les dessins, les couleurs et la police du cadre. Donne le même preset à ta Boîte de chat, tes Alertes de stream et ton Objectif de subs et tout ce qui est à l'écran est assorti.",
+        p2: "Avec Animations activé, un reflet fait le tour du cadre, les lignes brillent, et des runes, des torches ou des étincelles bougent selon le preset. Elles restent légères. Mais si ton PC rame pendant que tu joues, désactive Animations. Ça ajoute `motion=0` à l'URL et le cadre reste immobile.",
         p3: 'Tous les dessins ont été faits de zéro, sans logo ni visuel de jeu.',
       },
       change: {
@@ -3656,13 +3661,15 @@ export const fr: typeof en = {
   presets: {
     classic: 'Classique',
     classicTag: 'Le style propre à chaque widget',
+    funTag: 'Pour le plaisir',
     breadcrumb: 'Presets',
     eyebrow: 'Presets',
     title: 'Des presets de jeux pour tes overlays de stream',
-    lead: 'Choisis un preset et ta Boîte de chat, tes Alertes de stream, ton Objectif de subs, Compteur, Liste d\'événements, Générique de fin, File d\'attente des viewers, Top soutiens, Bandeau, Liste de tâches, Message mis en avant, Combo d\'emotes, Objectif de Bits et Kicks, En écoute, ton Subathon Timer, ton Sondage du chat, le gagnant du Tirage au sort, tes Cadres de stream, ton Compte à rebours de stream, tes Réseaux sociaux et ta Roue ont le même cadre, les mêmes polices et les mêmes couleurs. Mets-en un sur tous les widgets, ou un différent sur chacun.',
+    lead:
+      "Choisis un preset et ta Boîte de chat, tes Alertes de stream, ton Objectif de subs, Objectif de followers, Compteur, Liste d'événements, Générique de fin, File d'attente des viewers, Top soutiens, Bandeau, Liste de tâches, Message mis en avant, Combo d'emotes, Objectif de Bits et Kicks, En écoute, ton Subathon Timer, ton Sondage du chat, le gagnant du Tirage au sort, tes Cadres de stream, ton Compte à rebours de stream, tes Réseaux sociaux et ta Roue ont le même cadre, les mêmes polices et les mêmes couleurs. Mets-en un sur tous les widgets, ou un différent sur chacun.",
     pickTitle: 'Choisis un preset',
     pickText:
-      'Des presets prêts pour League of Legends (LoL), World of Warcraft (WoW), Metin2, Dota 2, Valorant, Counter-Strike 2 (CS2), Minecraft, Clash of Clans, Fortnite, Rocket League et PUBG: Battlegrounds.',
+      'Des presets prêts pour League of Legends (LoL), World of Warcraft (WoW), Dota 2, Valorant, Counter-Strike 2 (CS2), Minecraft, Fortnite, Rocket League, PUBG: Battlegrounds, Mount & Blade et Kingdom Come: Deliverance, plus Glitch, Operator, Conquest, Flower et Pizza pour le plaisir.',
     by: 'par {author}',
     community: 'Communauté',
     makeDefault: 'Utiliser {name} sur tous les widgets',
@@ -3673,29 +3680,23 @@ export const fr: typeof en = {
     setUp: 'Configurer {widget}',
     previewIframeTitle: 'Aperçu de {widget} avec le preset {name}',
     descriptions: {
-      classic:
-        "Le style d'origine de chaque widget : les Alertes de stream en néon, la barre violette de l'Objectif de subs et le texte simple de la Boîte de chat. Tu choisis les couleurs.",
-      rift: 'De fins cadres dorés avec des clous en diamant, des panneaux bleu nuit profond et des barres turquoise lumineuses, avec des titres en Cinzel.',
-      realm:
-        'Des cadres bronze et or à rivets, des panneaux de cuir sombre et des barres orange légendaire, avec des titres en Marcellus.',
-      dynasty:
-        'Des cadres en laque rouge avec des coins dorés, des panneaux de bois sombre et des barres pourpres, avec des titres en Zen Antique.',
-      ancient:
-        'Des cadres en fer sombre avec des coins en bronze, une lueur rouge en bas et des titres anguleux en Grenze.',
-      agent:
-        'Des coins coupés, un bord rouge, des barres inclinées et de grands chiffres en Teko sur ardoise sombre.',
-      defuse:
-        'Des coins de HUD, une ligne orangée en haut, des bandes de danger sur les barres et la police condensée Saira.',
-      blocks:
-        'Des cadres en pixels couleur herbe et terre, des barres vertes découpées en blocs et la police pixel Jersey 10.',
-      village:
-        'Des cadres dorés arrondis sertis de gemmes, des panneaux de bois chaud et des barres rose élixir, avec des titres épais en Lilita One.',
-      storm:
-        'Des coins coupés et des équerres jaunes sur des panneaux du bleu au violet, des barres bleu ciel inclinées et de grands titres en Anton.',
-      boost:
-        "Des coins de HUD et une ligne bleue lumineuse en haut sur bleu nuit, des barres bleues inclinées, de l'orange pour le gagnant et des titres en Russo One.",
-      airdrop:
-        'Des coins de HUD et une ligne jaune en haut sur des panneaux noir olive, des barres jaunes plates et des titres en Saira Stencil One.',
+      classic: 'Le style propre à chaque widget, dans les couleurs que tu choisis.',
+      rift: 'Or et turquoise sur bleu nuit, avec des barres lumineuses.',
+      realm: 'Bronze et or sur cuir sombre, avec des rayons de lumière.',
+      flower: 'Des roses tout doux, avec de petites fleurs qui flottent autour.',
+      ancient: 'Fer sombre et rouge feu, avec des barres qui couvent comme des braises.',
+      agent: 'Rouge vif et gris ardoise, avec un coup de lame quand les barres montent.',
+      defuse: 'Ambre et gris, avec un voyant rouge qui clignote.',
+      blocks: 'Tout en vert et en blocs, avec des barres qui montent bloc par bloc.',
+      pizza:
+        'Les couleurs de la croûte et du fromage, avec des parts de pizza qui flottent autour.',
+      storm: 'Bleu ciel et violet, avec des barres qui se construisent comme un plan.',
+      boost: 'Bleu et orange, avec des traînées de vitesse quand les barres montent.',
+      airdrop: "Vert olive et jaune, avec la fumée d'une fusée quand les barres montent.",
+      conquest: 'Orange sur gris acier, avec un balayage radar.',
+      operator: 'Noir, blanc et vert citron, avec des impacts quand les barres montent.',
+      banner: 'Vieil or et rouge sur bois sombre, avec des barres forgées comme du fer.',
+      glitch: 'Rouge, cyan et jaune, et tout se brouille.',
     },
     existingTitle: 'Tu as déjà des widgets dans OBS ?',
     existingText:
@@ -3720,7 +3721,7 @@ export const fr: typeof en = {
       "Oui. Ton preset par défaut, c'est seulement là où démarre chaque page de configuration. Sur la page de configuration de n'importe quel widget, tu peux choisir un autre preset, et l'URL de ce widget le garde.",
     faq3Q: 'Quels widgets prennent un preset ?',
     faq3A:
-      "Boîte de chat, Alertes de stream, Objectif de subs, Subathon Timer, Sondage du chat, l'overlay du gagnant du Tirage au sort, Cadres de stream, Compte à rebours de stream, Réseaux sociaux et Roue. Le Mur d'emotes n'affiche que des emotes et Sub Sprout dessine ses propres plantes, donc ils gardent leur style.",
+      "Objectif de subs, Objectif de Bits et Kicks, Objectif de followers, Sondage du chat, Boîte de chat, Message mis en avant, Combo d'emotes, Alertes de stream, Compteur, Subathon Timer, l'overlay du gagnant du Tirage au sort, Cadres de stream, Compte à rebours de stream, Réseaux sociaux, En écoute, Roue, Liste d'événements, Générique de fin, File d'attente des viewers, Top soutiens, Bandeau et Liste de tâches. Le Mur d'emotes n'affiche que des emotes et Sub Sprout dessine ses propres plantes, donc ils gardent leur style.",
     faq4Q: 'Ce sont des thèmes officiels des jeux ?',
     faq4A:
       'Non. Ce sont des styles faits par des fans, à partir de couleurs, de Google Fonts gratuites et de décorations dessinées de zéro, sans logo ni visuel de jeu, et ils ne sont pas affiliés aux éditeurs des jeux.',
@@ -3730,10 +3731,19 @@ export const fr: typeof en = {
       browse: 'Tous les presets',
       show: 'Afficher les {count} presets',
       hide: 'Masquer les presets',
+      random: 'Choisir un preset au hasard',
       owns: 'Les couleurs et les polices viennent de {name}.',
       makeDefault: 'Mettre {name} par défaut',
       makeDefaultTip: 'Chaque page de configuration de ce navigateur démarrera avec.',
       isDefault: 'Ton preset par défaut',
+      effects: 'Effets',
+      effectsTip:
+        'Les animations propres à {name} : sur les barres quand elles montent, sur les panneaux quand ils apparaissent, et de temps en temps au repos.',
+      font: 'Police',
+      fontTip:
+        'Garde les polices de {name} ou affiche ce widget dans une autre police. Les couleurs, le cadre et les effets restent ceux de {name}.',
+      presetFonts: 'Polices de {name}',
+      ownsColors: 'Les couleurs viennent de {name}.',
     },
   },
   faqPage: {
@@ -3787,6 +3797,18 @@ export const fr: typeof en = {
     lead: "Les nouvelles fonctionnalités et corrections de bugs de Senchabot Extensions, des plus récentes aux plus anciennes. La liste est tirée de l'historique des commits du projet sur [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      presetsFont:
+        'Un nouveau champ Police sous le choix du preset affiche un widget en Inter, Roboto, Nunito, JetBrains Mono, Source Serif 4 ou ta police système au lieu des polices du preset, en gardant ses couleurs, son cadre et ses effets.',
+      presetsRandom:
+        "Un dé à côté du choix du preset sur chaque page de configuration en tire un au hasard. Sur la page d'accueil, chaque aperçu de widget montre un preset différent à chaque visite, et sa page de configuration s'ouvre avec ce preset.",
+      presetsFlowerPizza:
+        'Deux nouveaux presets, Flower et Pizza, remplacent Dynasty et Village : des petites fleurs et des parts de pizza flottent autour des barres, et chaque progression fait éclore une fleur de cerisier ou sauter une part au bout de la barre. Les widgets réglés sur Dynasty ou Village retrouvent leur style classique.',
+      presetEffects:
+        "Chaque preset a maintenant son propre effet : les barres s'illuminent, brûlent, fleurissent, se construisent ou se brouillent en montant, les panneaux arrivent avec leur propre entrée et un objectif atteint a droit à plus de spectacle. L'interrupteur Effets sous le choix du preset les coupe.",
+      presetsFollowerGoal:
+        "La page des presets affiche maintenant aussi l'Objectif de followers et ajoute un preset aux URL d'Objectif de followers que tu y colles.",
+      presetsConquestOperatorBannerGlitch:
+        'Quatre nouveaux presets pour chaque widget qui en prend un : Conquest, Operator, Banner (Mount & Blade et Kingdom Come) et Glitch.',
       hudToggles:
         "Overlay HUD IRL et Météo : la mini-carte, l'argent, l'horloge et la météo se masquent et se réaffichent maintenant depuis le chat avec !h map, !h cash, !h time et !h weather. La Météo ne lit le chat que si tu ajoutes ta chaîne.",
       irlHudShortCommand:
@@ -3904,7 +3926,7 @@ export const fr: typeof en = {
       chatTextShadow:
         'La Boîte de chat a un choix Ombre du texte : Aucune, Normale (comme avant) ou Forte, un contour sombre qui garde le chat lisible sur les jeux clairs.',
       chatFonts:
-        "La Boîte de chat a maintenant une police pour les pseudos et une autre pour les messages, et les deux restent disponibles avec un preset : garde les deux polices du preset, mets aussi sa police de titre sur les messages, ou mélange l'une ou l'autre avec Inter, Roboto, Nunito, JetBrains Mono, Source Serif 4 ou ta police système. Les pseudos et messages en gras marchent aussi maintenant avec les presets dont la police n'a qu'une seule graisse, comme Realm, Dynasty et Blocks.",
+        "La Boîte de chat a maintenant une police pour les pseudos et une autre pour les messages, et les deux restent disponibles avec un preset : garde les deux polices du preset, mets aussi sa police de titre sur les messages, ou mélange l'une ou l'autre avec Inter, Roboto, Nunito, JetBrains Mono, Source Serif 4 ou ta police système. Les pseudos et messages en gras marchent aussi maintenant avec les presets dont la police n'a qu'une seule graisse.",
       sproutSaved:
         "Sub Sprout garde maintenant sa plante après un rechargement d'OBS et la reprend au stream suivant, au lieu de repartir du premier stade à chaque fois. Les modos peuvent la faire recommencer avec !grow reset.",
       countdown:
@@ -3912,7 +3934,7 @@ export const fr: typeof en = {
       deviceTheme:
         "Le site s'ouvre maintenant avec le thème clair ou sombre de ton appareil et le suit quand il change. Dès que tu cliques sur le bouton de thème dans l'en-tête, ton choix est retenu et l'appareil ne le change plus.",
       frames:
-        "Nouveaux Cadres de stream : des cadres prêts à l'emploi pour ta caméra, ton chat et tout ton écran de stream. Chaque preset a ses propres dessins, comme un toit de pagode et des lanternes dans Dynasty ou des blocs en pixels dans Blocks.",
+        "Nouveaux Cadres de stream : des cadres prêts à l'emploi pour ta caméra, ton chat et tout ton écran de stream, avec des dessins propres à chaque preset.",
       subathonRates:
         "Le Subathon Timer peut maintenant lister ce qu'ajoutent un sub, un sub offert et 500 Bits ou Kicks, directement sur le timer, pour que les viewers sachent ce que vaut leur sub.",
       presets:

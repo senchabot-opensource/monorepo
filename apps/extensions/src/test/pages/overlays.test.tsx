@@ -1,5 +1,6 @@
 import { act, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { findPreset } from '#/features/presets/registry';
 import { applyTheme } from '#/lib/theme';
 import { setReducedMotion, withLayout } from '#/test/browser';
 import { en, inLocale, textbox } from '#/test/queries';
@@ -25,11 +26,21 @@ const OVERLAYS = [
   '/widgets/emote-combo?simulate=1',
   '/widgets/featured?simulate=1',
   '/widgets/goal?simulate=1&type=bits',
-  '/widgets/frame?demo=1&preset=dynasty',
+  '/widgets/frame?demo=1&preset=flower',
   '/widgets/countdown?simulate=1',
   '/widgets/poll?simulate=1',
   '/widgets/weather?demo=1',
   '/widgets/raffle-overlay',
+  // Presets with an effect, and one with it switched off.
+  '/widgets/goal?simulate=1&preset=banner',
+  '/widgets/stream-alerts?simulate=1&preset=glitch',
+  '/widgets/poll?simulate=1&preset=glitch&fx=0',
+  '/widgets/frame?demo=1&preset=banner',
+  '/widgets/socials?demo=1&preset=glitch',
+  // Drawn in a site font instead of the preset's, one loaded from Google Fonts and one not.
+  '/widgets/goal?simulate=1&preset=banner&font=mono',
+  '/widgets/socials?demo=1&preset=blocks&font=system',
+  '/widgets/raffle-overlay?demo=1&preset=flower&font=nunito',
 ];
 
 beforeEach(() => {
@@ -56,6 +67,36 @@ describe('overlay routes', () => {
     expect(html.classList.contains('dark')).toBe(false);
     expect(html.style.colorScheme).toBe('');
     expect(document.body.classList.contains('font-widget')).toBe(true);
+  });
+});
+
+describe("a preset's effect in Chat Box", () => {
+  it('comes in with each line', async () => {
+    await renderRoute('/widgets/chat-widget?mock=true&preset=glitch');
+    await screen.findByText(/MonkeyDLuffy/, {}, { timeout: 8000 });
+    expect(document.querySelector('[data-fx="glitch"][data-fx-part="pulse"]')).toBeTruthy();
+  });
+
+  it('plays nothing with fx=0', async () => {
+    await renderRoute('/widgets/chat-widget?mock=true&preset=glitch&fx=0');
+    await screen.findByText(/MonkeyDLuffy/, {}, { timeout: 8000 });
+    expect(document.querySelector('[data-fx]')).toBeNull();
+  });
+});
+
+describe("Chat Box's own font param under a preset", () => {
+  // Chat Box had `font` before presets could take a site font, so it keeps its own meaning there:
+  // the message font, with the preset's two fonts still loaded for the rest.
+  it("draws the messages in it and leaves the preset's fonts alone", async () => {
+    await renderRoute('/widgets/chat-widget?mock=true&preset=glitch&font=mono');
+    await screen.findByText(/MonkeyDLuffy/, {}, { timeout: 8000 });
+    const families = [...document.querySelectorAll<HTMLElement>('[style*="font-family"]')].map(
+      (element) => element.style.fontFamily,
+    );
+    expect(families.some((family) => family.includes('JetBrains Mono'))).toBe(true);
+    // The names keep the preset's own display font, which a preset `font` would have replaced.
+    const display = findPreset('glitch')?.data.fonts.display.family ?? '';
+    expect(families.some((family) => family.includes(display))).toBe(true);
   });
 });
 

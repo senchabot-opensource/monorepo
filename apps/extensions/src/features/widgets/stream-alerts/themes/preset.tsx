@@ -58,6 +58,8 @@ const EMBLEM_SHAPES: Record<FrameKind, string | null> = {
   hud: 'polygon(0 0,100% 0,100% 100%,0 100%)',
   pixel:
     'polygon(12% 0,88% 0,88% 6%,94% 6%,94% 12%,100% 12%,100% 88%,94% 88%,94% 94%,88% 94%,88% 100%,12% 100%,12% 94%,6% 94%,6% 88%,0 88%,0 12%,6% 12%,6% 6%,12% 6%)',
+  // Round, like the pizza it's made for.
+  crust: null,
 };
 
 /** Font size that fits a name of this many characters beside the medallion. */
@@ -168,7 +170,7 @@ export function PresetAlert({
               />
             </div>
           )}
-          <Frame skin={skin} radius={12} />
+          <Frame skin={skin} radius={12} fx="hero" />
         </div>
       </div>
 
