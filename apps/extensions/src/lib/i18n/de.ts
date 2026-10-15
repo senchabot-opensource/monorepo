@@ -1026,9 +1026,11 @@ export const de: typeof en = {
       'Ein HUD im Game-Look für Twitch und Kick, gemacht für IRL-Streams. Jeder Sub, Gift-Sub, Bits-Cheer, Kicks-Gift und Raid bringt so viel Geld auf den Zähler, wie du festlegst, unter einer Uhr in deiner Zeitzone, neben einer Minikarte, auf der ein Pfeil durch Stadtstraßen, Parkwege oder die echten Straßen rund um einen Ort deiner Wahl läuft.',
     style: 'Stil',
     styleTip:
-      'Retro zeigt das Geld grün als $00000350 unter einer grauen Uhr mit dicker Kontur, dazu eine runde Minikarte. Modern zeigt es weiß als $1,250 mit weichem Schatten und Zuwächsen in Grün, dazu eine Minikarte als abgerundetes Quadrat.',
+      'Retro zeigt das Geld grün als $00000350 unter einer grauen Uhr mit dicker Kontur, dazu eine runde Minikarte. Modern zeigt es weiß als $1,250 mit weichem Schatten und Zuwächsen in Grün, dazu eine Minikarte als abgerundetes Quadrat. Mittelalter und MMORPG zählen Goldmünzen statt Dollar: Mittelalter mit einer Pergament-Minikarte in einem Holzring, MMORPG mit Zuwächsen in Grün und einer runden Minikarte in einem Goldring.',
     styleRetro: 'Retro',
     styleModern: 'Modern',
+    styleMedieval: 'Mittelalter',
+    styleMmorpg: 'MMORPG',
     corner: 'Position des Gelds',
     cornerTip: 'Die Ecke der Szene, in der Geld und Uhr sitzen.',
     corners: {
@@ -1951,11 +1953,13 @@ export const de: typeof en = {
     placePrivacy: 'Zuschauer sehen diesen Namen und das Wetter, nie die Koordinaten.',
     style: 'Stil',
     styleTip:
-      'Wetter-App zeigt runde Ziffern auf dem Hintergrund deiner Wahl. Retro-HUD und Modernes HUD übernehmen die Stile des IRL-HUD-Overlays: umrandete Schrift direkt auf deiner Szene, damit das Wetter zum HUD daneben passt.',
+      'Wetter-App zeigt runde Ziffern auf dem Hintergrund deiner Wahl. Die HUD-Stile sind die des IRL-HUD-Overlays: umrandete Schrift direkt auf deiner Szene, damit das Wetter zum HUD daneben passt.',
     styles: {
       app: 'Wetter-App',
       retro: 'Retro-HUD',
       modern: 'Modernes HUD',
+      medieval: 'Mittelalter-HUD',
+      mmorpg: 'MMORPG-HUD',
     },
     layout: 'Layout',
     layoutTip:
@@ -3745,6 +3749,8 @@ export const de: typeof en = {
     lead: 'Neue Features und Bugfixes in Senchabot Extensions, das Neueste zuerst. Die Liste ist aus der Commit-Historie des Projekts auf [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) zusammengestellt.',
     site: 'Website',
     entries: {
+      hudMedievalMmorpg:
+        'IRL-HUD-Overlay und Wetter bekommen zwei neue Stile, Mittelalter und MMORPG. Darin zählt das HUD Goldmünzen statt Dollar, über einer Minikarte aus Pergament oder in einem Goldring.',
       presetsFont:
         'Ein neues Feld Schrift unter der Preset-Auswahl zeigt ein Widget in Inter, Roboto, Nunito, JetBrains Mono, Source Serif 4 oder deiner Systemschrift statt in den Schriften des Presets; Farben, Rahmen und Effekte des Presets bleiben.',
       presetsRandom:

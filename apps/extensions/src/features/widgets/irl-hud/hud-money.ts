@@ -176,16 +176,22 @@ export function applyCashCommand(state: HudState, command: CashCommand, start: n
   }
 }
 
-/** "$00000350" in Retro (eight digits, "-$0000350" in debt), "$1,250" in Modern. */
+/**
+ * "$00000350" in Retro (eight digits, "-$0000350" in debt), "$1,250" in Modern, and "1,250" in
+ * the looks that count gold coins, which draw a coin beside it instead of the $.
+ */
 export function formatMoney(value: number, style: HudStyle): string {
   const n = Math.round(value);
   const abs = Math.abs(n);
   if (style === 'retro') {
     return n < 0 ? `-$${String(abs).padStart(7, '0')}` : `$${String(abs).padStart(8, '0')}`;
   }
-  return `${n < 0 ? '-' : ''}$${abs.toLocaleString('en-US')}`;
+  return `${n < 0 ? '-' : ''}${coins(style) ? '' : '$'}${abs.toLocaleString('en-US')}`;
 }
 
-/** "+$100" or "-$500". */
-export const formatChange = (amount: number) =>
-  `${amount < 0 ? '-' : '+'}$${Math.abs(Math.round(amount)).toLocaleString('en-US')}`;
+/** Whether a style counts gold coins instead of dollars. */
+const coins = (style: HudStyle) => style === 'medieval' || style === 'mmorpg';
+
+/** "+$100" or "-$500"; "+100" when the look counts coins. */
+export const formatChange = (amount: number, coin = false) =>
+  `${amount < 0 ? '-' : '+'}${coin ? '' : '$'}${Math.abs(Math.round(amount)).toLocaleString('en-US')}`;

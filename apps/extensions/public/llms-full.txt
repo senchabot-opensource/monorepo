@@ -537,7 +537,7 @@ URL parameters (all optional):
 | --- | --- | --- |
 | twitch | Twitch channel | none |
 | kick | Kick channel | none |
-| style | retro (green $00000350 under a grey clock, round mini-map), modern (white $1,250, rounded square mini-map) | retro |
+| style | retro (green $00000350 under a grey clock, round mini-map), modern (white $1,250, rounded square mini-map), medieval (gold coins, parchment mini-map in a wooden ring), mmorpg (gold coins, round mini-map in a gold ring) | retro |
 | corner | tr, tl, br, bl: where the cash and clock sit | tr |
 | size | 50 to 200, percent | 100 |
 | start | starting cash, 0 to 999999999 | 0 |

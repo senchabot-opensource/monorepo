@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { withLayout } from '#/test/browser';
-import { button, en, segment, textbox, toggle } from '#/test/queries';
+import { button, combobox, en, pickOption, segment, textbox, toggle } from '#/test/queries';
 import { renderRoute, setupUser } from '#/test/render';
 
 const PAGE = '/setup/weather';
@@ -117,13 +117,17 @@ describe('Weather setup', () => {
   it("offers the IRL HUD's styles for the pill only, and they have no background to pick", async () => {
     const user = await openPage();
     await user.type(findField(), '41.0082, 28.9784{Enter}');
-    expect(segment(en('weather.style'), en('weather.styles.app')).checked).toBe(true);
+    expect(combobox(en('weather.style')).textContent).toBe(en('weather.styles.app'));
     expect(widgetUrl().searchParams.get('style')).toBeNull();
 
-    await user.click(segment(en('weather.style'), en('weather.styles.retro')));
+    await pickOption(user, en('weather.style'), en('weather.styles.retro'));
     expect(widgetUrl().searchParams.get('style')).toBe('retro');
     expect(screen.queryByText(en('weather.theme'))).toBeNull();
-    await user.click(segment(en('weather.style'), en('weather.styles.modern')));
+    await pickOption(user, en('weather.style'), en('weather.styles.medieval'));
+    expect(widgetUrl().searchParams.get('style')).toBe('medieval');
+    await pickOption(user, en('weather.style'), en('weather.styles.mmorpg'));
+    expect(widgetUrl().searchParams.get('style')).toBe('mmorpg');
+    await pickOption(user, en('weather.style'), en('weather.styles.modern'));
     expect(widgetUrl().searchParams.get('style')).toBe('modern');
 
     // The card always looks like a weather app: no style to pick, and its background back.
@@ -135,7 +139,7 @@ describe('Weather setup', () => {
     await user.click(segment(en('weather.layout'), en('weather.layouts.pill')));
     expect(widgetUrl().searchParams.get('style')).toBe('modern');
 
-    await user.click(segment(en('weather.style'), en('weather.styles.app')));
+    await pickOption(user, en('weather.style'), en('weather.styles.app'));
     expect(widgetUrl().searchParams.get('style')).toBeNull();
     expect(segment(en('weather.theme'), en('weather.themes.dark')).checked).toBe(true);
   });
@@ -147,7 +151,7 @@ describe('Weather setup', () => {
       `${window.location.origin}/widgets/weather?lat=35.6762&lon=139.6503&place=Tokyo&style=retro&layout=pill&lang=ja`,
     );
     expect(nameField().value).toBe('Tokyo');
-    expect(segment(en('weather.style'), en('weather.styles.retro')).checked).toBe(true);
+    expect(combobox(en('weather.style')).textContent).toBe(en('weather.styles.retro'));
     expect(segment(en('weather.layout'), en('weather.layouts.pill')).checked).toBe(true);
     expect(Object.fromEntries(widgetUrl().searchParams)).toMatchObject({
       lat: '35.6762',

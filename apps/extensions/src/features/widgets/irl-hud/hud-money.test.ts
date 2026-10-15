@@ -180,4 +180,11 @@ describe('formatMoney', () => {
     expect(formatChange(1500)).toBe('+$1,500');
     expect(formatChange(-500)).toBe('-$500');
   });
+
+  it('counts gold coins without the $ in Medieval and MMORPG, which draw a coin beside them', () => {
+    expect(formatMoney(1250, 'medieval')).toBe('1,250');
+    expect(formatMoney(-1250, 'mmorpg')).toBe('-1,250');
+    expect(formatChange(1500, true)).toBe('+1,500');
+    expect(formatChange(-500, true)).toBe('-500');
+  });
 });

@@ -1048,9 +1048,11 @@ export const es: typeof en = {
       'Un HUD estilo videojuego para Twitch y Kick, pensado para streams IRL. Cada sub, sub regalada, cheer de Bits, regalo de Kicks y raid suma dinero al contador según las cantidades que elijas, bajo un reloj en tu zona horaria, junto a un minimapa donde una flecha recorre calles de ciudad, senderos de parque o las calles reales alrededor de un lugar que elijas.',
     style: 'Estilo',
     styleTip:
-      'Retro muestra el dinero en verde, como $00000350, bajo un reloj gris con un contorno grueso, junto a un minimapa redondo. Moderno muestra el dinero en blanco, como $1,250, con una sombra suave y las ganancias en verde, junto a un minimapa cuadrado con esquinas redondeadas.',
+      'Retro muestra el dinero en verde, como $00000350, bajo un reloj gris con un contorno grueso, junto a un minimapa redondo. Moderno muestra el dinero en blanco, como $1,250, con una sombra suave y las ganancias en verde, junto a un minimapa cuadrado con esquinas redondeadas. Medieval y MMORPG cuentan monedas de oro en vez de dólares: Medieval sobre un minimapa de pergamino en un aro de madera, MMORPG con las ganancias en verde y un minimapa redondo en un aro dorado.',
     styleRetro: 'Retro',
     styleModern: 'Moderno',
+    styleMedieval: 'Medieval',
+    styleMmorpg: 'MMORPG',
     corner: 'Posición del dinero',
     cornerTip: 'La esquina de la escena donde van el dinero y el reloj.',
     corners: {
@@ -1969,11 +1971,13 @@ export const es: typeof en = {
     placePrivacy: 'Los espectadores ven este nombre y el clima, nunca las coordenadas.',
     style: 'Estilo',
     styleTip:
-      'App del clima muestra cifras redondas sobre el fondo que elijas. HUD retro y HUD moderno usan los estilos del Overlay HUD IRL: texto con contorno directo sobre tu escena, para que el clima combine con el HUD de al lado.',
+      'App del clima muestra cifras redondas sobre el fondo que elijas. Los estilos HUD son los del Overlay HUD IRL: texto con contorno directo sobre tu escena, para que el clima combine con el HUD de al lado.',
     styles: {
       app: 'App del clima',
       retro: 'HUD retro',
       modern: 'HUD moderno',
+      medieval: 'HUD medieval',
+      mmorpg: 'HUD MMORPG',
     },
     layout: 'Diseño',
     layoutTip:
@@ -3768,6 +3772,8 @@ export const es: typeof en = {
     lead: 'Funciones nuevas y errores corregidos en Senchabot Extensions, de lo más nuevo a lo más viejo. La lista sale del historial de commits del proyecto en [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).',
     site: 'Sitio',
     entries: {
+      hudMedievalMmorpg:
+        'Overlay HUD IRL y Clima suman dos estilos nuevos, Medieval y MMORPG. Con ellos el HUD cuenta monedas de oro en vez de dólares, sobre un minimapa de pergamino o con un aro dorado.',
       presetsFont:
         'Un nuevo campo Fuente bajo el selector de presets muestra un widget con Inter, Roboto, Nunito, JetBrains Mono, Source Serif 4 o la fuente de tu sistema en lugar de las fuentes del preset, conservando sus colores, su marco y sus efectos.',
       presetsRandom:

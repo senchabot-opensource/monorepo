@@ -1059,9 +1059,11 @@ export const fr: typeof en = {
       "Un HUD façon jeu vidéo pour Twitch et Kick, pensé pour les streams IRL. Chaque sub, sub offert, cheer de Bits, envoi de Kicks et raid ajoute de l'argent au compteur selon les montants que tu choisis, sous une horloge à ton fuseau horaire, à côté d'une mini-carte où une flèche parcourt les rues d'une ville, les allées d'un parc ou les vraies rues autour d'un lieu de ton choix.",
     style: 'Style',
     styleTip:
-      "Rétro affiche l'argent en vert ($00000350) sous une horloge grise, avec un contour épais et une mini-carte ronde. Moderne affiche l'argent en blanc ($1,250) avec une ombre douce et les gains en vert, avec une mini-carte carrée aux coins arrondis.",
+      "Rétro affiche l'argent en vert ($00000350) sous une horloge grise, avec un contour épais et une mini-carte ronde. Moderne affiche l'argent en blanc ($1,250) avec une ombre douce et les gains en vert, avec une mini-carte carrée aux coins arrondis. Médiéval et MMORPG comptent des pièces d'or au lieu de dollars : Médiéval avec une mini-carte en parchemin dans un anneau de bois, MMORPG avec les gains en vert et une mini-carte ronde dans un anneau doré.",
     styleRetro: 'Rétro',
     styleModern: 'Moderne',
+    styleMedieval: 'Médiéval',
+    styleMmorpg: 'MMORPG',
     corner: "Position de l'argent",
     cornerTip: "Le coin de la scène où se placent l'argent et l'horloge.",
     corners: {
@@ -1989,11 +1991,13 @@ export const fr: typeof en = {
     placePrivacy: 'Les viewers voient ce nom et la météo, jamais les coordonnées.',
     style: 'Style',
     styleTip:
-      "Appli météo affiche des chiffres ronds sur le fond de ton choix. HUD rétro et HUD moderne reprennent les styles de l'Overlay HUD IRL : du texte avec un contour noir, directement sur ta scène, pour que la météo aille avec le HUD à côté.",
+      "Appli météo affiche des chiffres ronds sur le fond de ton choix. Les styles HUD sont ceux de l'Overlay HUD IRL : du texte avec un contour, directement sur ta scène, pour que la météo aille avec le HUD à côté.",
     styles: {
       app: 'Appli météo',
       retro: 'HUD rétro',
       modern: 'HUD moderne',
+      medieval: 'HUD médiéval',
+      mmorpg: 'HUD MMORPG',
     },
     layout: 'Disposition',
     layoutTip:
@@ -3797,6 +3801,8 @@ export const fr: typeof en = {
     lead: "Les nouvelles fonctionnalités et corrections de bugs de Senchabot Extensions, des plus récentes aux plus anciennes. La liste est tirée de l'historique des commits du projet sur [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      hudMedievalMmorpg:
+        "L'Overlay HUD IRL et Météo ont deux nouveaux styles, Médiéval et MMORPG. Le HUD y compte des pièces d'or au lieu de dollars, sur une mini-carte en parchemin ou dans un anneau doré.",
       presetsFont:
         'Un nouveau champ Police sous le choix du preset affiche un widget en Inter, Roboto, Nunito, JetBrains Mono, Source Serif 4 ou ta police système au lieu des polices du preset, en gardant ses couleurs, son cadre et ses effets.',
       presetsRandom:

@@ -274,6 +274,15 @@ describe('WeatherWidget', () => {
     expect(edge(box.style.right)).toBeCloseTo(72);
   });
 
+  it("takes the IRL HUD's Medieval and MMORPG styles as a pill too", async () => {
+    for (const style of ['medieval', 'mmorpg'] as const) {
+      const view = await render(<WeatherWidget settings={settings({ style, layout: 'pill' })} />);
+      await vi.waitFor(() => expect(hudText('weather-temp')).toBe('12°C'));
+      expect(screen.getByTestId('weather').className).toBe(`wx-root wx-hud ih-${style}`);
+      view.unmount();
+    }
+  });
+
   it('keeps the card in the weather app look, whatever style the URL asks for', async () => {
     await render(<WeatherWidget settings={settings({ style: 'retro', theme: 'light' })} />);
     await vi.waitFor(() => expect(temp()).toBe('12°C'));
