@@ -49,8 +49,17 @@ export function LeaderboardWidget({
     simPlatform,
     previewId,
   });
-  const skin = skinFor(settings.preset);
+  const skin = skinFor(settings.preset, settings.fx, settings.font);
   const hsl = painter(skin, hueFor(settings.color, 1));
+  const list = topOf(settings.board === 'gifts' ? data.gifts : data.cheers, settings.rows);
+  // A new name on the board, or the top supporter giving more, plays the preset's effect.
+  const pulse =
+    settings.board === 'latest'
+      ? LATEST_KINDS.map((kind) => {
+          const entry = data.latest[kind];
+          return entry ? `${entry.name}:${entry.amount}` : '';
+        }).join('|')
+      : list[0] && `${list[0].name}:${list[0].amount}`;
   const panel: CSSProperties = skin
     ? panelStyle(skin, RADIUS)
     : {
@@ -99,13 +108,9 @@ export function LeaderboardWidget({
             {settings.board === 'latest' ? (
               <Latest latest={data.latest} hsl={hsl} />
             ) : (
-              <Top
-                list={topOf(settings.board === 'gifts' ? data.gifts : data.cheers, settings.rows)}
-                board={settings.board}
-                hsl={hsl}
-              />
+              <Top list={list} board={settings.board} hsl={hsl} />
             )}
-            {skin && <Frame skin={skin} radius={RADIUS} />}
+            {skin && <Frame skin={skin} radius={RADIUS} pulse={pulse} />}
           </div>
         </div>
       </div>

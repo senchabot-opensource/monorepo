@@ -1,5 +1,4 @@
-import type { CSSProperties } from 'react';
-import { Frame, panelStyle } from '#/features/presets/frame';
+import { FxPulse } from '#/features/presets/fx/engine';
 import { painter, skinCss, skinFor } from '#/features/presets/skin';
 import { SkinProvider, useSkin } from '#/features/presets/skin-context';
 import { type EmoteComboSettings, EMOTE_COMBO_STAGE as STAGE } from '#/lib/emote-combo-url';
@@ -14,7 +13,6 @@ const EMOTE_SIZE = 128;
 const COUNT_FONT = 104;
 const LABEL_FONT = 30;
 const GAP = 18;
-const PILL_RADIUS = 14;
 const BEST_EMOTE = 30;
 
 /** The count's font size: smaller from three digits on, so a big combo stays on the stage. */
@@ -88,7 +86,7 @@ export function EmoteComboWidget({
     simulate,
     previewId,
   });
-  const skin = skinFor(settings.preset);
+  const skin = skinFor(settings.preset, settings.fx, settings.font);
   const hue = hueFor(settings.color, 1);
 
   return (
@@ -144,6 +142,8 @@ function ComboCounter({ shown, hue, size }: { shown: ShownCombo; hue: number; si
       />
       <div
         style={{
+          // Holds the effect over the count; classic keeps its layout untouched.
+          position: skin && skin.effect !== 'none' ? 'relative' : undefined,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'flex-start',
@@ -170,6 +170,7 @@ function ComboCounter({ shown, hue, size }: { shown: ShownCombo; hue: number; si
         >
           ×{shown.count}
         </span>
+        <FxPulse skin={skin} pulse={shown.count} win={shown.ended} />
         <span
           className="ec-title ec-shadow"
           data-testid="combo-label"
@@ -190,25 +191,19 @@ function ComboCounter({ shown, hue, size }: { shown: ShownCombo; hue: number; si
   );
 }
 
-/** The stream's best combo in a small pill, or "New best!" while the combo on screen is it. */
+/**
+ * The stream's best combo on a line of its own, or "New best!" while the combo on screen is it.
+ * Bare text over the game, with no card behind it, in every look.
+ */
 function BestLine({ best, record, hue }: { best: BestCombo; record: boolean; hue: number }) {
   const skin = useSkin();
   const { t } = useI18n();
   const hsl = painter(skin, hue);
-  const panel: CSSProperties = skin
-    ? panelStyle(skin, PILL_RADIUS)
-    : {
-        borderRadius: 999,
-        background: 'linear-gradient(180deg, rgba(20,20,26,.84) 0%, rgba(8,8,12,.9) 100%)',
-        boxShadow: `0 0 0 2px ${hsl(85, 55, 0.5)}, 0 0 22px ${hsl(85, 50, 0.22)}, 0 8px 22px rgba(0,0,0,.4)`,
-      };
   return (
     <div
       data-testid="combo-best"
       data-record={record}
       style={{
-        ...panel,
-        position: 'relative',
         display: 'flex',
         alignItems: 'center',
         gap: 10,
@@ -250,7 +245,6 @@ function BestLine({ best, record, hue }: { best: BestCombo; record: boolean; hue
           </span>
         </>
       )}
-      {skin && <Frame skin={skin} radius={PILL_RADIUS} studs={false} />}
     </div>
   );
 }

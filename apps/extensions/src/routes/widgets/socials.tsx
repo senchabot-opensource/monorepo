@@ -6,6 +6,7 @@ import * as Icons from '#/components/social-icons';
 import { Frame, panelStyle } from '#/features/presets/frame';
 import { type Skin, skinFor } from '#/features/presets/skin';
 import { OVERLAY_FONT_URL } from '#/features/widgets/overlay-style';
+import { readFont, readFx } from '#/lib/preset-url';
 import { readSocialsAlign, type SocialsAlign } from '#/lib/socials-url';
 
 export const Route = createFileRoute('/widgets/socials')({
@@ -63,9 +64,17 @@ const EDGE_CLIP: Record<SocialsAlign, string | undefined> = {
 /**
  * A preset's panel and frame behind the bubble. Against an edge, the panel runs past it by more
  * than its corner and corner ornaments, and the bubble's clip cuts it there, so every frame
- * meets the edge straight.
+ * meets the edge straight. Only the bubble on screen plays the preset's effect, coming in with it.
  */
-function PresetPanel({ skin, align }: { skin: Skin; align: SocialsAlign }) {
+function PresetPanel({
+  skin,
+  align,
+  active,
+}: {
+  skin: Skin;
+  align: SocialsAlign;
+  active: boolean;
+}) {
   const overhang = Math.ceil(PILL_RADIUS * skin.radius) + 24;
   return (
     <span
@@ -79,7 +88,7 @@ function PresetPanel({ skin, align }: { skin: Skin; align: SocialsAlign }) {
         right: align === 'right' ? -overhang : 0,
       }}
     >
-      <Frame skin={skin} radius={PILL_RADIUS} studs={false} />
+      <Frame skin={skin} radius={PILL_RADIUS} studs={false} card fx={active ? 'full' : 'off'} />
     </span>
   );
 }
@@ -99,7 +108,7 @@ function SocialsWidget() {
   const pillColor = params.get('pillColor') || 'rgba(0, 0, 0, 0.5)';
   const align = readSocialsAlign(params.get('align'));
   // Unknown ids fall back to the classic look in skinFor.
-  const skin = skinFor(params.get('preset'));
+  const skin = skinFor(params.get('preset'), readFx(params).fx, readFont(params).font);
   const alignClasses = ALIGN_CLASSES[align];
 
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -135,7 +144,7 @@ function SocialsWidget() {
       data-align={align}
       data-preset={skin?.id}
     >
-      {skin && <link rel="stylesheet" href={skin.fontHref} precedence="default" />}
+      {skin?.fontHref && <link rel="stylesheet" href={skin.fontHref} precedence="default" />}
       <div className="relative w-full h-full flex items-center justify-center">
         {activePlatforms.map((platform, index) => {
           const isActive = index === currentIndex;
@@ -168,7 +177,7 @@ function SocialsWidget() {
               className={`absolute flex items-center gap-4 px-6 py-4 ${skin ? '' : `${alignClasses.radius} shadow-lg`} ${alignClasses.position} transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${animClass}`}
               style={pillStyle}
             >
-              {skin && <PresetPanel skin={skin} align={align} />}
+              {skin && <PresetPanel skin={skin} align={align} active={isActive} />}
               <div
                 className="relative p-2 rounded-full"
                 style={{

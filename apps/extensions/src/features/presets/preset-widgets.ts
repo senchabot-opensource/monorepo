@@ -1,18 +1,20 @@
 import { getWidget, type SourceSize, type WidgetEntry, type WidgetId } from '#/lib/widgets';
 import { isClassic, PRESET_PARAM } from './registry';
 
-/** Widgets whose overlay reads a preset; Emote Wall and Sub Sprout keep their own art. */
+/**
+ * Widgets whose overlay reads a preset, in the presets page's order: the goals, the Subathon
+ * Timer, Chat Poll and Stream Alerts first, and the Chat Box, Emote Combo and Raffle last. Emote
+ * Wall and Sub Sprout keep their own art.
+ */
 export const PRESET_WIDGET_IDS = [
-  'chat-box',
-  'featured',
-  'emote-combo',
-  'stream-alerts',
   'goal',
   'bits-goal',
-  'counter',
+  'follower-goal',
   'subathon',
   'poll',
-  'raffle',
+  'stream-alerts',
+  'featured',
+  'counter',
   'frames',
   'countdown',
   'socials',
@@ -24,6 +26,9 @@ export const PRESET_WIDGET_IDS = [
   'leaderboard',
   'lower-third',
   'tasks',
+  'chat-box',
+  'emote-combo',
+  'raffle',
 ] as const satisfies readonly WidgetId[];
 
 export const PRESET_WIDGETS: readonly WidgetEntry[] = PRESET_WIDGET_IDS.map(getWidget);

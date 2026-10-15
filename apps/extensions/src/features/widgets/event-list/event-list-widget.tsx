@@ -61,7 +61,7 @@ export function EventListWidget({
     simPlatform,
     previewId,
   });
-  const skin = skinFor(settings.preset);
+  const skin = skinFor(settings.preset, settings.fx, settings.font);
   const shown = shownEntries(entries, settings, now);
   // Oldest first: on top the newest leads, at the bottom it trails like chat.
   const rows = settings.newest === 'top' ? [...shown].reverse() : shown;
@@ -194,7 +194,8 @@ function Row({ entry, color }: { entry: EventEntry; color: EventListSettings['co
           {detail(entry, t, locale)}
         </span>
       </span>
-      {skin && <Frame skin={skin} radius={RADIUS} />}
+      {/* A row comes in with the effect; idle, a list of them would never stop. */}
+      {skin && <Frame skin={skin} radius={RADIUS} plainEdges fx="enter" />}
     </div>
   );
 }

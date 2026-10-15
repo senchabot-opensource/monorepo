@@ -48,7 +48,7 @@ export function CreditsWidget({
     simulate,
     previewId,
   });
-  const skin = skinFor(settings.preset);
+  const skin = skinFor(settings.preset, settings.fx, settings.font);
   const lists = sortedCredits(data);
   const sections = CREDIT_SECTIONS.filter(
     (section) => settings.sections[section] && lists[section].length > 0,

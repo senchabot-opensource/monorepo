@@ -1,5 +1,6 @@
 import { isClassic } from '#/features/presets/registry';
-import { CLASSIC_PRESET, readPreset, writePreset } from './preset-url';
+import { CLASSIC_PRESET, readFont, readFx, readPreset, writePreset } from './preset-url';
+import type { SiteFont } from './site-fonts';
 import {
   type ChannelPlatforms,
   channelWidgetUrl,
@@ -34,6 +35,10 @@ export interface GoalSettings {
   platforms: ChannelPlatforms;
   /** Preset id; any preset but classic brings its own colors and fonts. */
   preset: string;
+  /** Off (`fx=0`) stills the preset's effect; missing means on. */
+  fx?: boolean;
+  /** A site font to draw the preset in instead of its own; missing keeps the preset's. */
+  font?: SiteFont;
   style: GoalStyle;
   color: GoalColor;
   /** Shown above the bar; empty hides it. */
@@ -130,7 +135,7 @@ function buildParams(settings: GoalSettings, twitchChannel: string, kickChannel:
     named ? platformsOf(params.get('twitch') ?? '', params.get('kick') ?? '') : settings.platforms,
   );
   if (settings.type === 'bits') params.set('type', 'bits');
-  writePreset(params, settings.preset);
+  writePreset(params, settings.preset, settings.fx, settings.font);
   if (settings.style && settings.style !== defaults.style) params.set('style', settings.style);
   if (isClassic(settings.preset) && settings.color !== defaults.color)
     params.set('color', settings.color);
@@ -185,6 +190,8 @@ export function readGoalSettings(params: URLSearchParams): Omit<GoalSettings, 'p
     // A Sub Goal's settings carry no type, exactly as they did before there were types.
     ...(type === 'bits' ? { type } : {}),
     preset: readPreset(params),
+    ...readFx(params),
+    ...readFont(params),
     style: GOAL_STYLES.includes(style) ? style : defaults.style,
     color: GOAL_COLORS.includes(color) ? color : defaults.color,
     title: title === null ? defaults.title : title.slice(0, TITLE_MAX_LENGTH),

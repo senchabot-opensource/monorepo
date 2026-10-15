@@ -1,5 +1,7 @@
 import type { CSSProperties } from 'react';
-import { rgba, type Skin, shade } from './skin';
+import { FrameFx, fxModule } from './fx/engine';
+import type { FrameFxMode } from './fx/types';
+import { rgba, type Skin, shade, toTone } from './skin';
 
 // Frames are CSS borders, gradients and small shapes only: blur filters and SVG masks cost too
 // much in an OBS browser source that also runs the game capture.
@@ -15,6 +17,10 @@ const cutPolygon = (cut: number) =>
 
 const solid = (color: string) => color.replace(/,[\d.]+\)$/, ',1)');
 
+// Presets whose diamonds stay off the top and bottom edges of a `card` Frame: on Flower's slim
+// cards they read as stray dots. Its other panels keep them, and so does Rift.
+const PLAIN_CARD_EDGES: ReadonlySet<string> = new Set(['flower']);
+
 /**
  * Background, radius and outer shadow of a preset panel. `radius` is the overlay's own radius
  * for that element; the preset scales it. `opacity` replaces the preset's panel opacity, e.g.
@@ -23,8 +29,10 @@ const solid = (color: string) => color.replace(/,[\d.]+\)$/, ',1)');
 export function panelStyle(skin: Skin, radius: number, scale = 1, opacity?: number): CSSProperties {
   const top = opacity === undefined ? skin.panel : rgba(skin.colors.panel, opacity);
   const bottom = opacity === undefined ? skin.panel2 : rgba(skin.colors.panel2, opacity);
+  // An effect's still texture, e.g. Glitch's scanlines, under the panel's content.
+  const texture = fxModule(skin)?.panelLayer?.(skin, scale);
   const style: CSSProperties = {
-    background: `linear-gradient(180deg, ${top} 0%, ${bottom} 100%)`,
+    background: `${texture ? `${texture}, ` : ''}linear-gradient(180deg, ${top} 0%, ${bottom} 100%)`,
     borderRadius: radius * skin.radius,
     boxShadow: `0 ${Math.round(10 * scale)}px ${Math.round(30 * scale)}px rgba(0,0,0,.45)`,
   };
@@ -51,6 +59,7 @@ const layer: CSSProperties = { position: 'absolute', pointerEvents: 'none' };
 function Diamond({ skin, size, style }: { skin: Skin; size: number; style: CSSProperties }) {
   return (
     <span
+      data-stud=""
       style={{
         ...layer,
         width: size,
@@ -101,19 +110,72 @@ const CORNERS = ['tl', 'tr', 'bl', 'br'] as const;
 
 /**
  * The preset's frame drawn over a panel: borders and ornaments on a layer that ignores the
- * pointer. Put it last inside an element styled with panelStyle, at the same radius and scale.
- * `studs: false` leaves out the ornate frame's corner rivets and top gem, e.g. on a pill.
+ * pointer, then the preset's effect. Put it last inside an element styled with panelStyle, at the
+ * same radius and scale. `studs: false` leaves out the ornate frame's corner rivets and top gem,
+ * e.g. on a pill. `card` marks one of the cards that leave the diamonds off their top and bottom
+ * edges in some presets (see PLAIN_CARD_EDGES), and `plainEdges` leaves every dot off those edges
+ * in every preset: the diamonds, the ornate rivets and gem and the tactical frame's square.
+ *
+ * `fx` says how the panel plays the effect (see FrameFxMode); `pulse` plays it again whenever it
+ * changes, e.g. to a counter's new value, and `win` plays the big version when it turns on.
  */
 export function Frame({
   skin,
   radius,
   scale = 1,
   studs = true,
+  card = false,
+  plainEdges = false,
+  fx = 'full',
+  pulse,
+  win,
 }: {
   skin: Skin;
   radius: number;
   scale?: number;
   studs?: boolean;
+  card?: boolean;
+  plainEdges?: boolean;
+  fx?: FrameFxMode;
+  pulse?: unknown;
+  win?: unknown;
+}) {
+  return (
+    <>
+      <FrameLines
+        skin={skin}
+        radius={radius}
+        scale={scale}
+        studs={studs}
+        edgeDots={!plainEdges && !(card && PLAIN_CARD_EDGES.has(skin.id))}
+      />
+      {fx !== 'off' && skin.effect !== 'none' && (
+        <FrameFx
+          skin={skin}
+          radius={radius * skin.radius}
+          scale={scale}
+          mode={fx}
+          pulse={pulse}
+          win={win}
+        />
+      )}
+    </>
+  );
+}
+
+function FrameLines({
+  skin,
+  radius,
+  scale,
+  studs,
+  edgeDots,
+}: {
+  skin: Skin;
+  radius: number;
+  scale: number;
+  studs: boolean;
+  /** Whether the dots on the top and bottom edges are drawn (see Frame's `card` and `plainEdges`). */
+  edgeDots: boolean;
 }) {
   const r = radius * skin.radius;
   const px = (n: number) => Math.max(1, Math.round(n * scale));
@@ -141,7 +203,7 @@ export function Frame({
               border: `1px solid ${rgba(skin.frame, 0.28)}`,
             }}
           />
-          {scale >= 0.8 && (
+          {scale >= 0.8 && edgeDots && (
             <>
               <Diamond skin={skin} size={px(11)} style={{ left: '50%', top: -px(6) }} />
               <Diamond skin={skin} size={px(11)} style={{ left: '50%', bottom: -px(6) }} />
@@ -161,6 +223,7 @@ export function Frame({
             }}
           />
           {studs &&
+            edgeDots &&
             CORNERS.map((corner) => (
               <span
                 key={corner}
@@ -177,7 +240,7 @@ export function Frame({
                 }}
               />
             ))}
-          {studs && scale >= 0.8 && (
+          {studs && edgeDots && scale >= 0.8 && (
             <span
               data-stud=""
               style={{
@@ -286,16 +349,19 @@ export function Frame({
             }}
           />
           <Bracket corner="tr" size={px(12)} width={px(2)} color={skin.frame} inset={px(6)} />
-          <span
-            style={{
-              ...layer,
-              left: px(12),
-              bottom: px(6),
-              width: px(6),
-              height: px(6),
-              background: rgba(skin.frame, 0.6),
-            }}
-          />
+          {edgeDots && (
+            <span
+              data-stud=""
+              style={{
+                ...layer,
+                left: px(12),
+                bottom: px(6),
+                width: px(6),
+                height: px(6),
+                background: rgba(skin.frame, 0.6),
+              }}
+            />
+          )}
         </span>
       );
 
@@ -339,5 +405,33 @@ export function Frame({
           }}
         />
       );
+
+    case 'crust': {
+      // A plain baked rim, lighter on top and darker underneath, with a thin line of sauce just
+      // inside it: no studs, gems or corner pieces.
+      const crust = toTone(skin.frame);
+      const band = px(4);
+      return (
+        <span aria-hidden="true" style={{ ...layer, inset: 0 }}>
+          <span
+            style={{
+              ...fill,
+              border: `${band}px solid ${skin.frame}`,
+              borderTopColor: shade(crust, 72),
+              borderBottomColor: shade(crust, 40),
+              boxShadow: '0 0 0 1px rgba(0,0,0,.55), inset 0 0 0 1px rgba(0,0,0,.35)',
+            }}
+          />
+          <span
+            style={{
+              ...layer,
+              inset: band,
+              borderRadius: Math.max(0, r - band),
+              border: `${px(2)}px solid ${rgba(skin.frame2, 0.85)}`,
+            }}
+          />
+        </span>
+      );
+    }
   }
 }

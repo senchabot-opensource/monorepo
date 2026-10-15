@@ -259,7 +259,7 @@ export const OVERLAYS = [
     height: 260,
     ready: 'text:BITS & KICKS GOAL',
   },
-  { path: '/widgets/frame?demo=1&preset=dynasty', width: 1920, height: 1080, ready: 'frame' },
+  { path: '/widgets/frame?demo=1&preset=ancient', width: 1920, height: 1080, ready: 'frame' },
   { path: '/widgets/frame?piece=camera&label=e2e', width: 640, height: 360, ready: 'text:E2E' },
   // The first simulated poll comes up after a moment.
   { path: '/widgets/poll?simulate=1', width: 640, height: 560, ready: 'poll' },

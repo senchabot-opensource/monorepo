@@ -346,7 +346,12 @@ function ChatWidgetSetup() {
 
   const appearanceTab = (
     <SettingsGroup title={t('common.sectionAppearance')} hideTitle>
-      <PresetField value={settings.preset} onChange={pickPreset} />
+      <PresetField
+        value={settings.preset}
+        onChange={pickPreset}
+        fx={settings.fx}
+        onFxChange={(on) => update('fx', on)}
+      />
       <div className="grid gap-3 sm:grid-cols-2">
         <div>
           <FieldLabel id={`${id}-user-font`}>{t('chatWidget.usernameFont')}</FieldLabel>

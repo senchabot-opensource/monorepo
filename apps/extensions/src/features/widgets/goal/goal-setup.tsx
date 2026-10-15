@@ -302,7 +302,14 @@ export function GoalSetup({ type, faq }: { type: GoalType; faq: readonly FaqEntr
       </SettingsGroup>
 
       <SettingsGroup title={t('common.sectionAppearance')}>
-        <PresetField value={settings.preset} onChange={(value) => update('preset', value)} />
+        <PresetField
+          value={settings.preset}
+          onChange={(value) => update('preset', value)}
+          fx={settings.fx}
+          onFxChange={(on) => update('fx', on)}
+          font={settings.font}
+          onFontChange={(font) => update('font', font)}
+        />
         <div>
           <FieldLabel id={`${id}-style`} tip={t('goal.styleTip')}>
             {t('goal.style')}

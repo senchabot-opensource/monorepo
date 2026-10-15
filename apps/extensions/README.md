@@ -340,7 +340,7 @@ https://extensions.senchabot.com/widgets/now-playing?user=YOUR_LISTENBRAINZ_USER
 
 ### Stream Frames (`/setup/stream-frames`)
 
-Ready-made frames for a webcam, a chat or the whole stream, drawn in the picked preset's look with its own shape, ornaments and small animations (a temple roof and swaying tassels in Dynasty, grass blocks and flickering torches in Blocks). The middle is transparent, so the webcam or Chat Box under it shows through.
+Ready-made frames for a webcam, a chat or the whole stream, drawn in the picked preset's look with its own shape, ornaments and small animations. The middle is transparent, so the webcam or Chat Box under it shows through.
 
 **How it works:**
 - Static SVG drawn for the browser source's size, so any webcam shape works; no chat connection.
@@ -348,7 +348,7 @@ Ready-made frames for a webcam, a chat or the whole stream, drawn in the picked 
 - Animations only move opacity and transform (no filters or masks), to stay light next to a game capture.
 
 ```
-https://extensions.senchabot.com/widgets/frame?piece=camera&preset=dynasty&label=YOUR_NAME
+https://extensions.senchabot.com/widgets/frame?piece=camera&preset=ancient&label=YOUR_NAME
 ```
 
 **URL parameters:** `piece` (`camera` | `chat` | `screen`), `preset`, `color` (`purple` | `green` | `red` | `gold` | `cyan` | `pink`, classic only), `label` (tab or plate text, empty leaves it off), `motion` (`0` turns animations off), `demo` (`1` draws a stand-in webcam or chat).
@@ -368,7 +368,7 @@ A countdown for the parts of a stream where nothing is happening yet: the minute
 - No channel is needed. With one, the broadcaster and mods run `!countdown {scene} [duration] [headline] [| note]` (defaults to 10m), `add 5m`, `remove 2m`, `set 10m`, `pause`, `start`, `reset`, `cancel` (stops and hides it until the next command), `title <headline>` and `note <note>` from Twitch or Kick chat (`!cd` works wherever `!countdown` does). It shares the Subathon Timer's clock and duration parsing.
 
 ```
-https://extensions.senchabot.com/widgets/countdown?scene=starting&time=600&preset=dynasty
+https://extensions.senchabot.com/widgets/countdown?scene=starting&time=600&preset=flower
 ```
 
 **URL parameters:** `twitch`, `kick` (only for the chat commands), `scene` (`starting` | `break` | `ending` | `pomodoro`), `time` (seconds, 1 to 86400), `at` (a 24-hour time like `21:00`, replaces `time`), `title`, `done`, `doneHold` (seconds the message at zero stays up, 10 by default, 0 keeps it up), `note`, `iconStarting`, `iconBreak`, `iconEnding`, `iconPomodoro` (an emoji or a few characters instead of that scene's icon), `iconUrlStarting`, `iconUrlBreak`, `iconUrlEnding`, `iconUrlPomodoro` (a channel emote image instead of that scene's icon, picked on the setup page), `end` (`text` | `hold` | `hide`), `look` (`card` | `plain`), `preset`, `color` (`purple` | `green` | `red` | `gold` | `cyan` | `pink`, classic only), `bar` (`0` hides it), `motion` (`0` turns animations off), `lang` (`en` | `tr`), `simulate` (`1` runs a fast countdown).

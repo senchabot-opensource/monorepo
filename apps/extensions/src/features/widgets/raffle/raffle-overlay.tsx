@@ -4,6 +4,7 @@ import { shade, skinFor, titleStyle } from '#/features/presets/skin';
 import { SkinProvider } from '#/features/presets/skin-context';
 import { type BurstOptions, useConfettiBurst } from '#/hooks/use-confetti-burst';
 import { useT } from '#/lib/i18n';
+import type { SiteFont } from '#/lib/site-fonts';
 import type { RaffleWinner } from '#/types/raffle';
 
 const CHANNEL_NAME = 'senchabot-raffle-broadcast';
@@ -24,12 +25,23 @@ const DEMO_WINNER: RaffleWinner = {
 const DEMO_REPEAT_MS = 11_000;
 
 /**
- * `preset` comes from the URL; missing or unknown keeps the classic look. `demo` draws a sample
- * winner on repeat, for previews that have no raffle running.
+ * `preset` comes from the URL; missing or unknown keeps the classic look. `fx: false` stills the
+ * preset's effect, and a `font` draws it in that font. `demo` draws a sample winner on repeat,
+ * for previews that have no raffle running.
  */
-export function RaffleOverlay({ preset, demo }: { preset?: string | null; demo?: boolean }) {
+export function RaffleOverlay({
+  preset,
+  fx,
+  font,
+  demo,
+}: {
+  preset?: string | null;
+  fx?: boolean;
+  font?: SiteFont;
+  demo?: boolean;
+}) {
   const t = useT();
-  const skin = skinFor(preset);
+  const skin = skinFor(preset, fx, font);
   const [winner, setWinner] = useState<RaffleWinner | null>(null);
   const [visible, setVisible] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -123,7 +135,7 @@ export function RaffleOverlay({ preset, demo }: { preset?: string | null; demo?:
               >
                 {winner.displayName || winner.username}
               </div>
-              <Frame skin={skin} radius={16} />
+              <Frame skin={skin} radius={16} fx="hero" />
             </div>
           )}
         </div>

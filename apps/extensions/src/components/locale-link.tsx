@@ -7,6 +7,8 @@ type LocaleLinkProps = Omit<ComponentPropsWithoutRef<'a'>, 'href'> & {
   to: SitePath;
   /** A section of the page to open on, without the #. */
   hash?: string;
+  /** Query params for the page, e.g. the preset a setup page opens on. */
+  search?: Record<string, string>;
 };
 
 /** A Link to a site page in the language of the current one: `/faq` becomes `/tr/faq` in Turkish. */

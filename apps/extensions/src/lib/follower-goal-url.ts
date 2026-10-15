@@ -1,5 +1,6 @@
 import { isClassic } from '#/features/presets/registry';
-import { CLASSIC_PRESET, readPreset, writePreset } from './preset-url';
+import { CLASSIC_PRESET, readFont, readFx, readPreset, writePreset } from './preset-url';
+import type { SiteFont } from './site-fonts';
 import {
   type ChannelPlatforms,
   channelWidgetUrl,
@@ -23,6 +24,10 @@ export interface FollowerGoalSettings {
   platforms: ChannelPlatforms;
   /** Preset id; any preset but classic brings its own colors and fonts. */
   preset: string;
+  /** Off (`fx=0`) stills the preset's effect; missing means on. */
+  fx?: boolean;
+  /** A site font to draw the preset in instead of its own; missing keeps the preset's. */
+  font?: SiteFont;
   style: FollowerGoalStyle;
   color: FollowerGoalColor;
   /** Shown above the bar; empty hides it. */
@@ -75,7 +80,7 @@ function buildParams(
   const params = new URLSearchParams();
   const defaults = DEFAULT_FOLLOWER_GOAL_SETTINGS;
   setChannels(params, settings.platforms, twitchChannel, kickChannel);
-  writePreset(params, settings.preset);
+  writePreset(params, settings.preset, settings.fx, settings.font);
   if (settings.style && settings.style !== defaults.style) params.set('style', settings.style);
   if (isClassic(settings.preset) && settings.color !== defaults.color)
     params.set('color', settings.color);
@@ -103,7 +108,11 @@ export function buildFollowerGoalUrl(
   kickChannel: string,
   token?: string,
 ): string {
-  return channelWidgetUrl(origin, WIDGET_PATH, buildParams(settings, twitchChannel, kickChannel, token));
+  return channelWidgetUrl(
+    origin,
+    WIDGET_PATH,
+    buildParams(settings, twitchChannel, kickChannel, token),
+  );
 }
 
 /** Plays simulated follows with the same settings and never touches a channel or saved count. */
@@ -128,6 +137,8 @@ export function readFollowerGoalSettings(
   const title = params.get('title');
   return {
     preset: readPreset(params),
+    ...readFx(params),
+    ...readFont(params),
     style: FOLLOWER_GOAL_STYLES.includes(style) ? style : defaults.style,
     color: FOLLOWER_GOAL_COLORS.includes(color) ? color : defaults.color,
     title: title === null ? defaults.title : title.slice(0, TITLE_MAX_LENGTH),

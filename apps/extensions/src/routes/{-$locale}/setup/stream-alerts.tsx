@@ -219,7 +219,14 @@ function StreamAlertsSetup() {
 
   const appearanceTab = (
     <SettingsGroup title={t('common.sectionAppearance')} hideTitle>
-      <PresetField value={settings.preset} onChange={(value) => update('preset', value)} />
+      <PresetField
+        value={settings.preset}
+        onChange={(value) => update('preset', value)}
+        fx={settings.fx}
+        onFxChange={(on) => update('fx', on)}
+        font={settings.font}
+        onFontChange={(font) => update('font', font)}
+      />
       {/* A preset draws its own alert card, so the built-in themes and colors step aside. */}
       {isClassic(settings.preset) && (
         <>

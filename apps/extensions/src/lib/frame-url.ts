@@ -1,5 +1,6 @@
 import { isClassic } from '#/features/presets/registry';
-import { CLASSIC_PRESET, readPreset, writePreset } from './preset-url';
+import { CLASSIC_PRESET, readFont, readFx, readPreset, writePreset } from './preset-url';
+import type { SiteFont } from './site-fonts';
 import { readFlag } from './url-params';
 import type { SourceSize } from './widgets';
 
@@ -16,6 +17,10 @@ export type CameraOrientation = (typeof CAMERA_ORIENTATIONS)[number];
 export interface FrameSettings {
   /** Preset id; any preset but classic brings its own frame art, colors and fonts. */
   preset: string;
+  /** Off (`fx=0`) stills the preset's effect; missing means on. */
+  fx?: boolean;
+  /** A site font to draw the preset in instead of its own; missing keeps the preset's. */
+  font?: SiteFont;
   piece: FramePiece;
   /** A camera frame's shape; the art fits any size, this only sets the suggested one. */
   orientation: CameraOrientation;
@@ -67,7 +72,7 @@ function buildParams(settings: FrameSettings) {
   params.set('piece', settings.piece);
   if (settings.piece === 'camera' && settings.orientation !== defaults.orientation)
     params.set('orientation', settings.orientation);
-  writePreset(params, settings.preset);
+  writePreset(params, settings.preset, settings.fx, settings.font);
   if (isClassic(settings.preset) && settings.color !== defaults.color)
     params.set('color', settings.color);
   const label = settings.label.trim();
@@ -96,6 +101,8 @@ export function readFrameSettings(params: URLSearchParams): FrameSettings {
   const color = params.get('color') as FrameColor;
   return {
     preset: readPreset(params),
+    ...readFx(params),
+    ...readFont(params),
     piece: FRAME_PIECES.includes(piece) ? piece : defaults.piece,
     orientation: CAMERA_ORIENTATIONS.includes(orientation) ? orientation : defaults.orientation,
     color: FRAME_COLORS.includes(color) ? color : defaults.color,

@@ -26,7 +26,7 @@ describe('FrameWidget', () => {
   });
 
   it('keeps gradient ids apart when several frames share a page', () => {
-    render(<FrameWidget settings={{ ...DEFAULT_FRAME_SETTINGS, preset: 'dynasty' }} demo scene />);
+    render(<FrameWidget settings={{ ...DEFAULT_FRAME_SETTINGS, preset: 'flower' }} demo scene />);
     const ids = [...document.querySelectorAll('[id]')].map((element) => element.id);
     expect(screen.getAllByTestId('frame-art')).toHaveLength(3);
     expect(new Set(ids).size).toBe(ids.length);

@@ -90,6 +90,12 @@ const SUBATHON_HIT = `(() => {
   channel.postMessage({ type: 'event', event: { kind: 'gift', platform: 'twitch', name: 'pixelfox', count: 5, tier: 1 } });
 })()`;
 const OXANIUM_READY = `document.fonts.check('800 20px Oxanium')`;
+// The cards drawn in Pizza, Flower and Glitch: the preset's title font in, and every other font
+// the widget uses. A body font the widget never draws in never loads, so it isn't asked for.
+const FONTS_LOADED = `document.fonts.status === 'loaded'`;
+const PIZZA_READY = `${FONTS_LOADED} && document.fonts.check('400 20px "Lilita One"')`;
+const FLOWER_READY = `${FONTS_LOADED} && document.fonts.check('800 20px "Baloo 2"')`;
+const GLITCH_READY = `${FONTS_LOADED} && document.fonts.check('700 20px Tektur')`;
 const FRAME_READY = `document.fonts.status === 'loaded' && Boolean(document.querySelector('[data-testid="frame-art"] svg path'))`;
 const COUNTDOWN_READY = `document.fonts.status === 'loaded' && Boolean(document.querySelector('[data-testid="countdown-clock"]'))`;
 // One test alert over the preview channel; it stays up while the demo's own alerts wait.
@@ -222,7 +228,7 @@ const CAPTURES = {
     ready: OXANIUM_READY,
   },
   goal: {
-    path: '/widgets/goal?simulate=1&start=13&target=20&title=ROAD+TO+20&preview=og',
+    path: '/widgets/goal?simulate=1&start=13&target=20&title=ROAD+TO+20&preset=pizza&preview=og',
     width: 800,
     height: 260,
     settleMs: 600,
@@ -231,17 +237,17 @@ const CAPTURES = {
       { kind: 'gift', platform: 'kick', name: 'pixelfox', count: 5, tier: 1 },
     ),
     afterTriggerMs: 650,
-    ready: OXANIUM_READY,
+    ready: PIZZA_READY,
   },
   goalReached: {
-    path: '/widgets/goal?simulate=1&start=9&target=10&color=gold&preview=og',
+    path: '/widgets/goal?simulate=1&start=9&target=10&preset=pizza&preview=og',
     width: 800,
     height: 260,
     settleMs: 600,
     trigger: goalEvents({ kind: 'sub', platform: 'twitch', name: 'lunaa', tier: 1 }),
     // The trophy has landed and the burst is on its way out.
     afterTriggerMs: 1300,
-    ready: OXANIUM_READY,
+    ready: PIZZA_READY,
   },
   // 16:9 scenes at the biggest size, so the HUD in their corners reads on the card.
   hudRetro: {
@@ -281,8 +287,8 @@ const CAPTURES = {
     ready: WEATHER_READY,
   },
   // Stills (motion=0), so the art doesn't catch a glint or a petal mid-flight.
-  framesDynasty: {
-    path: '/widgets/frame?demo=1&piece=camera&preset=dynasty&label=senchabot&motion=0',
+  framesAncient: {
+    path: '/widgets/frame?demo=1&piece=camera&preset=ancient&label=senchabot&motion=0',
     width: 640,
     height: 360,
     settleMs: 1500,
@@ -297,7 +303,7 @@ const CAPTURES = {
   },
   // A fixed length and no simulate, so the clock reads the same on every run.
   countdownStarting: {
-    path: '/widgets/countdown?scene=starting&time=752&preset=dynasty&motion=0',
+    path: '/widgets/countdown?scene=starting&time=752&preset=flower&motion=0',
     width: 1280,
     height: 720,
     settleMs: 900,
@@ -374,22 +380,22 @@ const CAPTURES = {
   },
   // The Follower Goal fed one follow, two short of a round number; the thin style just reached.
   followerGoal: {
-    path: '/widgets/follower-goal?simulate=1&start=87&title=ROAD+TO+100&preview=og',
+    path: '/widgets/follower-goal?simulate=1&start=87&title=ROAD+TO+100&preset=flower&preview=og',
     width: 800,
     height: 260,
     settleMs: 600,
     trigger: previewSend('follower-goal', { type: 'follow', name: 'pixelfox', platform: 'kick' }),
     afterTriggerMs: 650,
-    ready: shown('[data-testid="follower-goal-count"]'),
+    ready: `${shown('[data-testid="follower-goal-count"]')} && ${FLOWER_READY}`,
   },
   followerGoalReached: {
-    path: '/widgets/follower-goal?simulate=1&style=thin&color=cyan&preview=og',
+    path: '/widgets/follower-goal?simulate=1&style=thin&preset=flower&preview=og',
     width: 800,
     height: 260,
     settleMs: 600,
     trigger: previewSend('follower-goal', { type: 'reach' }),
     afterTriggerMs: 1300,
-    ready: shown('[data-testid="follower-goal-count"]'),
+    ready: `${shown('[data-testid="follower-goal-count"]')} && ${FLOWER_READY}`,
   },
   // The goal widget counting Bits and Kicks: a Twitch cheer on its way up, and Kick's own title
   // just past the goal with the trophy.
@@ -505,14 +511,14 @@ const CAPTURES = {
     afterTriggerMs: 900,
     ready: shown('[data-testid="now-playing-title"]'),
   },
-  nowPlayingDynasty: {
-    path: '/widgets/now-playing?demo=1&preset=dynasty&preview=og',
+  nowPlayingGlitch: {
+    path: '/widgets/now-playing?demo=1&preset=glitch&preview=og',
     width: 640,
     height: 160,
     settleMs: 600,
     trigger: nextTracks(2),
     afterTriggerMs: 1150,
-    ready: shown('[data-testid="now-playing-title"]'),
+    ready: `${shown('[data-testid="now-playing-title"]')} && ${GLITCH_READY}`,
   },
   nowPlayingPill: {
     path: '/widgets/now-playing?demo=1&layout=pill&preview=og',
@@ -545,8 +551,8 @@ const CAPTURES = {
     settleMs: 3000,
     ready: shown('[data-testid="tasks-task"]'),
   },
-  tasksVillage: {
-    path: '/widgets/tasks?simulate=1&preset=village',
+  tasksPizza: {
+    path: '/widgets/tasks?simulate=1&preset=pizza',
     width: 280,
     height: 420,
     settleMs: 3000,
@@ -678,7 +684,7 @@ const CARDS = [
     visual: {
       kind: 'stage',
       live: true,
-      // Two 800x260 sources: one on its way to the goal, one just past it with the trophy.
+      // Two 800x260 sources in Pizza: one on its way to the goal, one just past it with the trophy.
       layers: [
         layer('goal', { x: 9, y: 40, width: 520, height: 169 }),
         layer('goalReached', { x: 9, y: 212, width: 520, height: 169 }),
@@ -725,7 +731,7 @@ const CARDS = [
       live: true,
       // Two 640x360 camera frames in different presets, one over the other's corner.
       layers: [
-        layer('framesDynasty', { x: 0, y: 8, width: 400, height: 225 }),
+        layer('framesAncient', { x: 0, y: 8, width: 400, height: 225 }),
         layer('framesAgent', { x: 138, y: 199, width: 400, height: 225 }),
       ],
     },
@@ -796,9 +802,12 @@ const CARDS = [
     eyebrow: { icon: 'goal', label: 'Overlay' },
     title: en.widgets.followerGoal.name,
     subtitle: en.widgets.followerGoal.tagline,
+    // It needs a channel connected in the Senchabot Dashboard, so it can't promise no login.
+    trust: [en.home.trustFree, en.home.trustOpenSource],
     visual: {
       kind: 'stage',
       live: true,
+      // Two 800x260 sources in Flower: one follow away from 90, and the thin style just reached.
       layers: [
         layer('followerGoal', { x: 9, y: 40, width: 520, height: 169 }),
         layer('followerGoalReached', { x: 9, y: 212, width: 520, height: 169 }),
@@ -895,10 +904,10 @@ const CARDS = [
     visual: {
       kind: 'stage',
       live: true,
-      // Three 640x160 strips: the card, the Dynasty preset and the pill.
+      // Three 640x160 strips: the default card, the Glitch preset and the pill.
       layers: [
         layer('nowPlaying', { x: 9, y: 20, width: 520, height: 130 }),
-        layer('nowPlayingDynasty', { x: 9, y: 151, width: 520, height: 130 }),
+        layer('nowPlayingGlitch', { x: 9, y: 151, width: 520, height: 130 }),
         layer('nowPlayingPill', { x: 9, y: 282, width: 520, height: 130 }),
       ],
     },
@@ -926,10 +935,10 @@ const CARDS = [
     visual: {
       kind: 'stage',
       live: true,
-      // Two 280x420 lists side by side: the default look and the Village preset.
+      // Two 280x420 lists side by side: the default look and the Pizza preset.
       layers: [
         layer('tasks', { x: 6, y: 30, width: 260, height: 390 }),
-        layer('tasksVillage', { x: 272, y: 30, width: 260, height: 390 }),
+        layer('tasksPizza', { x: 272, y: 30, width: 260, height: 390 }),
       ],
     },
   },
@@ -989,7 +998,7 @@ const CARDS = [
       ],
     },
   },
-].map((card) => ({ ...card, trust }));
+].map((card) => ({ trust, ...card }));
 
 // --- Chrome over the DevTools protocol -------------------------------------------------------
 

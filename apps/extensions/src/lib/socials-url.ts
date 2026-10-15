@@ -1,4 +1,6 @@
 import { CLASSIC_PRESET, isClassic, normalizePresetId } from '#/features/presets/registry';
+import { readFont, readFx, writeFont, writeFx } from './preset-url';
+import type { SiteFont } from './site-fonts';
 
 /**
  * Where the bubble sits in the browser source. `center` floats it, as before; `left` and `right`
@@ -27,6 +29,10 @@ export interface SocialsSettings {
   align: SocialsAlign;
   /** Preset id; any preset but classic brings its own colors, fonts and frame. */
   preset: string;
+  /** Off (`fx=0`) stills the preset's effect; missing means on. */
+  fx?: boolean;
+  /** A site font to draw the preset in instead of its own; missing keeps the preset's. */
+  font?: SiteFont;
 }
 
 export const DEFAULT_SOCIALS_SETTINGS: SocialsSettings = {
@@ -61,12 +67,17 @@ const COLOR_KEYS = new Set<string>(['textColor', 'pillColor']);
 export function buildSocialsUrl(origin: string, settings: SocialsSettings): string {
   const url = new URL('/widgets/socials', origin);
   const preset = normalizePresetId(settings.preset);
-  for (const [key, value] of Object.entries({ ...settings, preset })) {
+  // The text settings go in as they are; the effect switch and the font are written the way
+  // every overlay writes them, which leaves them out unless they change the preset.
+  const { fx, font, ...text } = settings;
+  for (const [key, value] of Object.entries({ ...text, preset })) {
     if (!isClassic(preset) && COLOR_KEYS.has(key)) continue;
     if (value && value !== DEFAULT_SOCIALS_SETTINGS[key as keyof SocialsSettings]) {
       url.searchParams.set(key, value);
     }
   }
+  writeFx(url.searchParams, preset, fx);
+  writeFont(url.searchParams, preset, font);
   return url.toString();
 }
 
@@ -96,6 +107,8 @@ export function parseSocialsUrl(urlStr: string): SocialsSettings | null {
     }
     settings.align = readSocialsAlign(settings.align);
     settings.preset = normalizePresetId(settings.preset);
+    // Not among the defaults, so the loop above never reads them.
+    Object.assign(settings, readFx(url.searchParams), readFont(url.searchParams));
     return settings;
   } catch {
     return null;

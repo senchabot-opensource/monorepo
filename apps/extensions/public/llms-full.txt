@@ -50,7 +50,7 @@ All eleven work with Twitch and Kick. Stream Frames reads no chat, so it needs n
 
 ## How to add a widget to OBS Studio
 
-1. Open the widget's setup page, type just the channel name (senchabot, not twitch.tv/senchabot), adjust the settings and copy the URL.
+1. Open the widget's setup page, type the channel name or paste the channel's link (twitch.tv/senchabot becomes senchabot), adjust the settings and copy the URL. A Kick name typed with _ switches to its kick.com spelling with - when only that one is a channel.
 2. In OBS, select the scene, click + in the Sources dock and pick Browser.
 3. Name the source, paste the URL into the URL field and set Width and Height to the size in the table above.
 4. Click OK and place the source in the scene.
@@ -60,7 +60,7 @@ Notes:
 - Leave "Shutdown source when not visible" and "Refresh browser when scene becomes active" off. Both reload the page, and the widget forgets what it was showing (a Raffle winner drawn while the source is off never shows). Sub Sprout, Subathon Timer, Sub Goal and Chat Poll keep their plant, time, count or poll through a reload but can't see subs or votes while the source is off. Stream Alerts only shows what comes in while the source is running.
 - To make Chat Box text bigger, change Font Size on the setup page instead of stretching the source.
 - To change a widget later, copy a new URL from the setup page and paste it over the old one. Chat Box, Emote Wall, Sub Sprout, Subathon Timer, Stream Alerts, Sub Goal, Chat Poll and Stream Frames can load an existing URL: paste it into the Widget URL field on the setup page and all settings come back.
-- If a widget looks empty: check that you typed the channel name, not a link, and that it is spelled right. Chat Box and Emote Wall stay empty until something happens in chat.
+- If a widget looks empty: check that its URL has the channel name, not a link (twitch=senchabot), and that it is spelled right. Chat Box and Emote Wall stay empty until something happens in chat.
 
 ## Chat Box
 
@@ -428,10 +428,10 @@ Shows the song the streamer is listening to, with its cover art, title and artis
 
 ## Stream Frames
 
-Ready-made frames for a webcam, a chat or the whole stream. The frame is drawn in the picked preset's look, with its own shape, ornaments and small animations: a temple roof, swaying tassels and drifting plum petals in Dynasty, glowing teal gems in Rift, grass blocks and flickering torches in Blocks. The label sits in a tab on top of the camera and chat frames, and on a plate at the bottom of the screen frame. The middle is transparent, so the webcam or Chat Box under it shows through. It reads no chat and needs no channel.
+Ready-made frames for a webcam, a chat or the whole stream. The frame is drawn in the picked preset's look, with its own shape, ornaments and small animations: horns, spiked plates and rising sparks in Ancient, glowing teal gems in Rift, grass blocks and flickering torches in Blocks. The label sits in a tab on top of the camera and chat frames, and on a plate at the bottom of the screen frame. The middle is transparent, so the webcam or Chat Box under it shows through. It reads no chat and needs no channel.
 
-- Widget URL: https://extensions.senchabot.com/widgets/frame?piece=camera&preset=dynasty&label=CHANNEL
-- Demo with every piece on one canvas: https://extensions.senchabot.com/widgets/frame?demo=1&preset=dynasty
+- Widget URL: https://extensions.senchabot.com/widgets/frame?piece=camera&preset=ancient&label=CHANNEL
+- Demo with every piece on one canvas: https://extensions.senchabot.com/widgets/frame?demo=1&preset=ancient
 - Guide: https://extensions.senchabot.com/guides/stream-frames
 - Recommended size: 640x360 for camera, 360x640 for a portrait camera (pick Portrait under Orientation, written as `orientation=portrait`), 420x720 for chat, 1920x1080 for screen. The frame is drawn for whatever size the source has, so a square webcam works too.
 - In OBS, put the frame source above the webcam or Chat Box in the sources list. The opening is a little smaller than the frame's outer edge: in a 640x360 camera frame, a 590x296 webcam (a 16:9 camera cropped evenly at the top and bottom), centered on the frame, fills it without showing around the frame; in a 360x640 portrait camera frame, a 306x572 webcam (a 9:16 camera cropped evenly at the sides); in a 420x720 chat frame, a 370x660 Chat Box. Both scale with the frame.
@@ -442,7 +442,7 @@ URL parameters (all optional):
 | Parameter | Values | Default |
 | --- | --- | --- |
 | piece | camera, chat, screen | camera |
-| preset | rift, realm, dynasty, ancient, agent, defuse, blocks, village, storm, boost, airdrop | classic |
+| preset | rift, realm, flower, ancient, agent, defuse, blocks, pizza, storm, boost, airdrop, conquest, operator, banner, glitch | classic |
 | color | purple, green, red, gold, cyan, pink (classic only) | purple |
 | label | text in the top tab (camera, chat) or on the bottom plate (screen), up to 32 characters; empty leaves it off | none |
 | motion | 0 turns the animations off | 1 |
@@ -482,7 +482,7 @@ URL parameters (all optional):
 | note | a line under the clock, up to 64 characters | none |
 | end | text (a message at zero), hold (stay at 00:00), hide (nothing on screen) | text |
 | look | card (a panel behind the clock), plain (text on the scene) | card |
-| preset | rift, realm, dynasty, ancient, agent, defuse, blocks, village, storm, boost, airdrop | classic |
+| preset | rift, realm, flower, ancient, agent, defuse, blocks, pizza, storm, boost, airdrop, conquest, operator, banner, glitch | classic |
 | color | purple, green, red, gold, cyan, pink (classic only) | purple |
 | bar | 0 hides the bar that empties under the clock | 1 |
 | motion | 0 turns the animations off | 1 |
@@ -708,11 +708,12 @@ A chat-driven spinning wheel for game names, challenges or any list of choices. 
 
 A preset gives several widgets the same look: frame, fonts and colors. Page: https://extensions.senchabot.com/presets
 
-- Widgets that take one: Chat Box, Stream Alerts, Sub Goal, Counter, Event List, End Credits, Viewer Queue, Top Supporters, Lower Thirds, Task List, Featured Message, Emote Combo, Bits & Kicks Goal, Now Playing, Subathon Timer, Chat Poll, the Raffle winner overlay, Stream Countdown, Socials, Spin Wheel and Stream Frames, whose frame art comes from the preset. Emote Wall and Sub Sprout keep their own art.
-- URL parameter on those widgets: preset, one of rift, realm, dynasty, ancient, agent, defuse, blocks, village, storm, boost, airdrop. Missing or unknown means classic, each widget's own look, so URLs from before presets look the same.
-- Built-in presets, each made for a game: Rift (League of Legends), Realm (World of Warcraft), Dynasty (Metin2), Ancient (Dota 2), Agent (Valorant), Defuse (Counter-Strike 2), Blocks (Minecraft), Village (Clash of Clans), Storm (Fortnite), Boost (Rocket League), Airdrop (PUBG). They are fan-made styles from colors, free Google Fonts and original drawings, with no game art, and aren't affiliated with the game makers.
-- A preset brings its own colors and fonts: with one set, the color and font parameters and Stream Alerts' theme are ignored. Layout settings (Subathon style, Chat Box layout, poll position and so on) still apply.
-- The presets page can set a default preset that every setup page in that browser starts with. Widgets already in OBS keep their look until they get a new URL; the presets page takes pasted widget URLs and gives them back with the preset added.
+- Widgets that take one: Chat Box, Stream Alerts, Sub Goal, Follower Goal, Counter, Event List, End Credits, Viewer Queue, Top Supporters, Lower Thirds, Task List, Featured Message, Emote Combo, Bits & Kicks Goal, Now Playing, Subathon Timer, Chat Poll, the Raffle winner overlay, Stream Countdown, Socials, Spin Wheel and Stream Frames, whose frame art comes from the preset. Emote Wall and Sub Sprout keep their own art.
+- URL parameter on those widgets: preset, one of rift, realm, flower, ancient, agent, defuse, blocks, pizza, storm, boost, airdrop, conquest, operator, banner, glitch. Missing or unknown means classic, each widget's own look, so URLs from before presets look the same.
+- Built-in presets, most made for a game: Rift (League of Legends), Realm (World of Warcraft), Ancient (Dota 2), Agent (Valorant), Defuse (Counter-Strike 2), Blocks (Minecraft), Storm (Fortnite), Boost (Rocket League), Airdrop (PUBG), Banner (Mount & Blade and Kingdom Come: Deliverance), plus Glitch, Operator, Conquest, Flower and Pizza, made just for fun. They are fan-made styles from colors, free Google Fonts and original drawings, with no game art, and aren't affiliated with the game makers.
+- A preset brings its own colors and fonts: with one set, the color parameters and Stream Alerts' theme are ignored. font (inter, roboto, nunito, mono, serif or system) draws the widget in that font instead of the preset's two, keeping the preset's colors, frame and effect (the Font box under the preset picker); Chat Box picks its fonts with its own font and userFont. Layout settings (Subathon style, Chat Box layout, poll position and so on) still apply.
+- Every built-in preset also has an effect of its own, played on bars as they grow, on panels as they come in, now and then while idle, and bigger when a goal is reached: Rift (teal energy and a rune flash), Realm (golden light shafts and stars), Flower (little flowers and pink petals floating around bars, a cherry blossom opening at a bar's edge as it grows), Ancient (smoldering bars and rising embers), Agent (a blade slash and shards), Defuse (an amber scan and a blinking red light), Blocks (blocks popping in), Pizza (pizza slices floating around bars, a slice popping out as a bar grows, a whole pizza for a reached goal), Storm (a blueprint grid that turns solid, lightning on a win), Boost (speed lines, flames and a shockwave), Airdrop (flare smoke and landing dust), Conquest (a capture sweep and radar pings), Operator (hit marks), Banner (bars hammered white-hot, throwing sparks, cooling to iron) and Glitch (panels tear and flicker like a broken signal). fx=0 turns a preset's effect off (the Effects switch under the preset picker); Stream Countdown and Stream Frames with motion=0, and Chat Box with animation=none, keep it off too.
+- The presets page can set a default preset that every setup page in that browser starts with. A setup page opened with ?preset= in its link starts on that preset instead: the presets page links that way, and so do the home page previews, which show a random preset on every visit. A dice beside the preset picker picks a random preset. Widgets already in OBS keep their look until they get a new URL; the presets page takes pasted widget URLs and gives them back with the preset added.
 - Community presets are JSON files in the source repository (apps/extensions/src/features/presets/community), added by pull request.
 
 ## FAQ

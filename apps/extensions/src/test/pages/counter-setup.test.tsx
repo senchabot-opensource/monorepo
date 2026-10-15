@@ -57,6 +57,15 @@ describe('Counter overlay route', () => {
 });
 
 describe('Counter setup', () => {
+  it('opens on the preset its link names, as the landing card that showed it sends', async () => {
+    withLayout(800, 350);
+    await renderRoute(`${PAGE}?preset=pizza`);
+    await waitFor(() => expect(previewSrc().searchParams.get('preset')).toBe('pizza'));
+    expect(screen.getByText(en('presets.field.hide')).closest('button')?.textContent).toContain(
+      'Pizza',
+    );
+  });
+
   it('builds the widget URL from every control', async () => {
     const user = setupUser();
     await renderRoute(PAGE);

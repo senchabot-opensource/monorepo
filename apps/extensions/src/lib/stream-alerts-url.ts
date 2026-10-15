@@ -1,6 +1,7 @@
 import { isClassic } from '#/features/presets/registry';
 import { isValidLocale, LANG_PARAM, type Locale } from '#/lib/i18n/locales';
-import { CLASSIC_PRESET, readPreset, writePreset } from '#/lib/preset-url';
+import { CLASSIC_PRESET, readFont, readFx, readPreset, writePreset } from '#/lib/preset-url';
+import type { SiteFont } from '#/lib/site-fonts';
 import {
   type ChannelPlatforms,
   channelWidgetUrl,
@@ -26,6 +27,10 @@ export interface StreamAlertsSettings {
   platforms: ChannelPlatforms;
   /** Preset id; any preset but classic draws its own alert card, colors and fonts. */
   preset: string;
+  /** Off (`fx=0`) stills the preset's effect; missing means on. */
+  fx?: boolean;
+  /** A site font to draw the preset in instead of its own; missing keeps the preset's. */
+  font?: SiteFont;
   theme: AlertTheme;
   color: AlertColor;
   /** Which alerts show. */
@@ -100,7 +105,7 @@ function buildParams(
   const params = new URLSearchParams();
   const defaults = DEFAULT_STREAM_ALERTS_SETTINGS;
   setChannels(params, settings.platforms, twitchChannel, kickChannel);
-  writePreset(params, settings.preset);
+  writePreset(params, settings.preset, settings.fx, settings.font);
   if (isClassic(settings.preset)) {
     if (settings.theme !== defaults.theme) params.set('theme', settings.theme);
     if (settings.color !== defaults.color) params.set('color', settings.color);
@@ -127,7 +132,11 @@ export function buildStreamAlertsUrl(
   kickChannel: string,
   locale: Locale,
 ): string {
-  return channelWidgetUrl(origin, WIDGET_PATH, buildParams(settings, twitchChannel, kickChannel, locale));
+  return channelWidgetUrl(
+    origin,
+    WIDGET_PATH,
+    buildParams(settings, twitchChannel, kickChannel, locale),
+  );
 }
 
 /** Plays simulated alerts with the same settings and never connects to a channel. */
@@ -157,6 +166,8 @@ export function readStreamAlertsSettings(params: URLSearchParams): AlertSettings
     Object.fromEntries(ALERT_KINDS.map((kind) => [kind, read(kind)])) as Record<AlertKind, T>;
   return {
     preset: readPreset(params),
+    ...readFx(params),
+    ...readFont(params),
     theme: ALERT_THEMES.includes(theme) ? theme : defaults.theme,
     color: ALERT_COLORS.includes(color) ? color : defaults.color,
     enabled: perKind((kind) => readFlag(params.get(kind), true)),

@@ -21,7 +21,6 @@ and on every setup page, with your name on it.
 {
   "id": "neon-city",
   "name": "Neon City",
-  "game": "Cyberpunk 2077",
   "author": { "name": "yourname", "url": "https://twitch.tv/yourname" },
   "description": {
     "en": "Magenta frames on dark glass, cyan bars and Chakra Petch titles.",
@@ -50,7 +49,8 @@ and on every setup page, with your name on it.
   "fill": "stripes",
   "motion": "slide",
   "sound": "neon",
-  "shadow": "soft"
+  "shadow": "soft",
+  "effect": "glitch"
 }
 ```
 
@@ -63,7 +63,7 @@ and on every setup page, with your name on it.
 | `fonts` | Two [Google Fonts](https://fonts.google.com): `display` for titles, names and numbers, `body` for chat and small text. `weights` is the `wght` axis, a range like `400..900` or a list like `400;700`. Pick fonts with the latin-ext subset, so Turkish letters (ş ğ ı İ) don't fall back to another font. |
 | `colors` | Nine `#rrggbb` colors: `accent` fills bars and glows, `win` marks a reached goal or a poll's winner, `panel` and `panel2` are the panel's top and bottom, `frame` and `frame2` are the frame's light and dark lines, `track` is a bar's empty part. |
 | `panelOpacity` | 0.5 to 1. Below 1 the game shows through the panels a little. |
-| `frame` | `gilded` (thin gold lines, diamond studs), `ornate` (thick bevel, rivets), `lacquer` (outer band, inner line, corner brackets), `iron` (dark border, corner teeth, a glow along the bottom), `tactical` (cut corners, an accent edge), `hud` (corner brackets, an accent top line) or `pixel` (stepped pixel border). It also picks the drawings Stream Frames puts on the webcam, chat and screen frames. |
+| `frame` | `gilded` (thin gold lines, diamond studs), `ornate` (thick bevel, rivets), `lacquer` (outer band, inner line, corner brackets), `iron` (dark border, corner teeth, a glow along the bottom), `tactical` (cut corners, an accent edge), `hud` (corner brackets, an accent top line), `pixel` (stepped pixel border) or `crust` (a thick rounded rim, lighter on top, with a thin inner line and nothing on it). It also picks the drawings Stream Frames puts on the webcam, chat and screen frames. |
 | `radius` | 0 to 1.5, scales each widget's own corner radius: 0 is square, 1 keeps it. |
 | `skew` | -20 to 0, how far bars lean, in degrees. |
 | `title` | Title text: uppercase or not, italic or not, letter spacing in em (0 to 0.4). |
@@ -71,6 +71,7 @@ and on every setup page, with your name on it.
 | `motion` | How the alert card comes in: `unfold`, `drop`, `scroll`, `slam`, `slide`, `wipe` or `pop`. |
 | `sound` | Which alert sounds play: `neon` (synth) or `celestial` (bells). |
 | `shadow` | `soft` for a dark halo behind text, `hard` for a one-step drop shadow like pixel games. |
+| `effect` | Optional. The preset's own animation, on bars as they grow, panels as they come in and now and then while idle: `arcane` (teal energy runs along bars, a rune flashes at the edge), `radiance` (golden light shafts and star sparkles), `blossom` (little flowers and pink petals float around bars, and a cherry blossom opens at a bar's edge), `embers` (smoldering bars, slow rising embers), `slash` (a blade cut that flings shards), `beacon` (an amber scan and a blinking red light), `pixels` (bars built block by block), `pizza` (pizza slices float around bars and pop out as they grow), `build` (a blueprint grid that turns solid), `boost` (speed lines, flames and a shockwave), `flare` (flare smoke and landing dust), `capture` (a capture sweep and radar pings), `hitmarker` (hit marks at the edge), `forge` (bars hammered white-hot, throwing sparks, cooling to iron) or `glitch` (a broken signal: panels tear, bars flicker in with RGB ghosts). Left out, the preset has none. Streamers can switch it off on the setup page, which adds `fx=0` to the URL. |
 
 ## Rules
 

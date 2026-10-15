@@ -91,9 +91,9 @@ describe('Socials setup', () => {
     expect(textbox(en('socials.pillColor'))).toBeTruthy();
 
     await user.click(showPresetsButton());
-    await user.click(presetRadio('dynasty'));
+    await user.click(presetRadio('flower'));
     expect(screen.queryByLabelText(en('socials.pillColor'), { selector: 'input' })).toBeNull();
-    expect(urlField().value).toContain('preset=dynasty');
+    expect(urlField().value).toContain('preset=flower');
 
     await user.click(presetRadio('classic'));
     expect(textbox(en('socials.pillColor'))).toBeTruthy();

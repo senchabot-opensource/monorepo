@@ -1,5 +1,6 @@
-import { within } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { act, within } from '@testing-library/react';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { LANDING_PICKS, LANDING_REST } from '#/components/landing/demo-presets';
 import { LOCALES, type Locale, translate } from '#/lib/i18n';
 import { getWidget, inCategory, WIDGETS } from '#/lib/widgets';
 import { en, headings, inLocale, section } from '#/test/queries';
@@ -18,6 +19,15 @@ function faqJsonLd() {
   );
   return nodes.filter((node) => node['@type'] === 'FAQPage');
 }
+
+/** A link's path and query. */
+const linkOf = (link: Element) => new URL(link.getAttribute('href') ?? '', 'https://x.test');
+
+/** The preset a demo frame or a link names, or null. */
+const presetOf = (element: Element) =>
+  element instanceof HTMLIFrameElement
+    ? new URL(element.src).searchParams.get('preset')
+    : linkOf(element).searchParams.get('preset');
 
 /** The visible FAQ as [question, answer] pairs, in page order. */
 function visibleFaq(locale: Locale) {
@@ -52,9 +62,8 @@ describe.each(LOCALES)('landing page in %s', (locale) => {
       const widget = WIDGETS[index];
       const heading = within(card).getByRole('heading', { level: 4 });
       expect(heading.textContent).toBe(t(widget.nameKey));
-      expect(within(heading).getByRole('link').getAttribute('href')).toBe(
-        localized(widget.setupPath),
-      );
+      // Plus the preset its demo is shown in, for the cards that have one.
+      expect(linkOf(within(heading).getByRole('link')).pathname).toBe(localized(widget.setupPath));
     });
 
     const how = section(t('home.howTitle'));
@@ -107,6 +116,111 @@ describe.each(LOCALES)('landing page in %s', (locale) => {
   });
 });
 
+describe('landing page presets', () => {
+  afterEach(() => vi.restoreAllMocks());
+  const NO_PRESET = ['emote-wall', 'sub-sprout', 'irl-hud', 'weather', 'raffle', 'obs-bridge'];
+
+  it('shows the gallery demos in presets, and opens each setup page on the one it showed', async () => {
+    await renderRoute('/');
+    const gallery = section(en('home.galleryTitle'));
+    const shown: string[] = [];
+    const rest: string[] = [];
+    for (const card of gallery.querySelectorAll('article')) {
+      const link = card.querySelector('h4 a') as HTMLAnchorElement;
+      const name = link.textContent ?? '';
+      const widget = WIDGETS.find((entry) => en(entry.nameKey) === name);
+      const linked = presetOf(link);
+      // A drawn tool, or a widget with its own art, has no preset to show.
+      if (
+        !widget ||
+        NO_PRESET.includes(widget.id) ||
+        widget.id === 'poll' ||
+        widget.id === 'spin-wheel'
+      ) {
+        expect(linked, name).toBeNull();
+        continue;
+      }
+      // The user's picks for a few demos, the rest dealt from four.
+      expect(LANDING_PICKS[widget.id] ?? LANDING_REST, name).toContain(linked);
+      if (!LANDING_PICKS[widget.id]) rest.push(linked ?? '');
+      shown.push(linked ?? '');
+      // jsdom can't measure, so the demos drawn at a fixed size never mount.
+      const frame = card.querySelector('iframe');
+      if (frame) expect(presetOf(frame), name).toBe(linked);
+    }
+    // More of the rest than presets to deal them from: all four show, and no two neighbors match.
+    expect(rest.length).toBeGreaterThan(LANDING_REST.length);
+    expect(new Set(rest)).toEqual(new Set(LANDING_REST));
+    expect(shown.every((id, index) => index === 0 || id !== shown[index - 1])).toBe(true);
+  });
+
+  it('keeps the hero scene classic, and puts the poll in a preset its button opens on', async () => {
+    await renderRoute('/');
+    const hero = [...section(en('home.heroTitle')).querySelectorAll('iframe')];
+    // Chat Box, Emote Wall, Sub Sprout and the Subathon Timer, each in its own look.
+    expect(hero.length).toBeGreaterThan(0);
+    expect(hero.map(presetOf).filter(Boolean)).toEqual([]);
+
+    const spotlight = section(en('home.pollSpotlight.title'));
+    const poll = presetOf(spotlight.querySelector('iframe') as HTMLIFrameElement);
+    expect(LANDING_REST).toContain(poll);
+    const setup = within(spotlight).getByRole('link', { name: en('home.pollSpotlight.setup') });
+    expect(linkOf(setup).pathname).toBe('/setup/chat-poll');
+    expect(presetOf(setup)).toBe(poll);
+  });
+
+  it('shows every preview in Pizza or Flower from the buttons over the overlays, and back', async () => {
+    const user = setupUser();
+    await renderRoute('/');
+    const gallery = section(en('home.galleryTitle'));
+    const picks = within(gallery).getByRole('group', { name: en('home.presetPicks.label') });
+    const button = (name: string) => within(picks).getByRole('button', { name });
+    // The preset each card's setup link opens on, card by card.
+    const shown = () =>
+      [...gallery.querySelectorAll('article h4 a')].map(presetOf).filter((id) => id !== null);
+    const dealt = shown();
+    expect(
+      within(picks)
+        .getAllByRole('button')
+        .map((b) => b.textContent),
+    ).toEqual(['Pizza', 'Flower', 'Boost', 'Glitch', 'Operator']);
+
+    await user.click(button('Pizza'));
+    expect(button('Pizza').getAttribute('aria-pressed')).toBe('true');
+    expect(shown()).toEqual(dealt.map(() => 'pizza'));
+    await user.click(button('Flower'));
+    expect([button('Pizza'), button('Flower')].map((b) => b.getAttribute('aria-pressed'))).toEqual([
+      'false',
+      'true',
+    ]);
+    expect(shown()).toEqual(dealt.map(() => 'flower'));
+    // Pressed again, each card goes back to the preset it was dealt.
+    await user.click(button('Flower'));
+    expect(shown()).toEqual(dealt);
+
+    const more = within(picks).getByRole('link', { name: en('home.presetPicks.more') });
+    expect(linkOf(more).pathname).toBe('/presets');
+  });
+
+  it('deals new presets on every visit', async () => {
+    const random = vi.spyOn(Math, 'random').mockReturnValue(0);
+    // The gallery's presets, card by card.
+    const dealt = () =>
+      [...section(en('home.galleryTitle')).querySelectorAll('h4 a')]
+        .map(presetOf)
+        .filter(Boolean)
+        .join();
+    const { router } = await renderRoute('/');
+    const first = dealt();
+    random.mockReturnValue(0.5);
+    await act(() => router.navigate({ href: '/faq' }));
+    await act(() => router.navigate({ href: '/' }));
+    expect(first).not.toBe('');
+    expect(dealt()).not.toBe('');
+    expect(dealt()).not.toBe(first);
+  });
+});
+
 describe('landing page widget filter', () => {
   const gallery = () => section(en('home.galleryTitle'));
   const names = () =>
@@ -122,10 +236,18 @@ describe('landing page widget filter', () => {
     const user = setupUser();
     await renderRoute('/');
     await pick(user, 'irl');
-    expect(names()).toEqual([en('widgets.irlHud.name'), en('widgets.weather.name')]);
-    // No tool is an IRL widget, so the Tools heading goes too.
-    expect(within(gallery()).queryByRole('heading', { name: en('widgets.tools') })).toBeNull();
+    expect(names()).toEqual([
+      en('widgets.irlHud.name'),
+      en('widgets.weather.name'),
+      en('widgets.obsBridge.name'),
+    ]);
+    // OBS Bridge, a tool, keeps the Tools heading.
+    expect(within(gallery()).getByRole('heading', { name: en('widgets.tools') })).toBeTruthy();
     expect(new URL(window.location.href).searchParams.get('category')).toBe('irl');
+
+    // No tool is a chat widget, so the Tools heading goes.
+    await pick(user, 'chat');
+    expect(within(gallery()).queryByRole('heading', { name: en('widgets.tools') })).toBeNull();
 
     await pick(user, 'all');
     expect(names()).toHaveLength(WIDGETS.length);

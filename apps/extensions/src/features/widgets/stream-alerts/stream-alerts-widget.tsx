@@ -56,7 +56,7 @@ export function StreamAlertsWidget({
   });
   // A platform tag only helps when alerts can come from either.
   const bothPlatforms = simulate ? !simPlatform : Boolean(twitchChannel && kickChannel);
-  const skin = skinFor(settings.preset);
+  const skin = skinFor(settings.preset, settings.fx, settings.font);
   const { View } = THEMES[settings.theme];
 
   return (

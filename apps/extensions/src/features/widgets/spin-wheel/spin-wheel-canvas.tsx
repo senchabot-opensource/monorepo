@@ -498,7 +498,7 @@ export function SpinWheelCanvas({
             >
               {winner.label}
             </span>
-            <Frame skin={skin} radius={16} />
+            <Frame skin={skin} radius={16} fx="hero" />
           </div>
         </div>
       )}

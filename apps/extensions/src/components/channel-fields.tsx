@@ -1,4 +1,5 @@
 import { type ReactNode, useId } from 'react';
+import { ChannelField } from '#/components/channel-field';
 import { FieldLabel } from '#/components/ui/field-label';
 import { SegmentedControl, type SegmentedOption } from '#/components/ui/segmented-control';
 import { TextField } from '#/components/ui/text-field';
@@ -32,7 +33,8 @@ interface ChannelFieldsProps {
 
 /**
  * Platforms picker plus the Twitch, Kick, and optional YouTube channel inputs. The input for a platform that
- * isn't picked is disabled, not hidden, so the layout never jumps.
+ * isn't picked is disabled, not hidden, so the layout never jumps. The Twitch and Kick inputs take a
+ * channel link too, and keep its name (see ChannelField).
  */
 export function ChannelFields({
   platforms,
@@ -81,25 +83,19 @@ export function ChannelFields({
         />
       </div>
       {aside}
-      <TextField
+      <ChannelField
+        platform="twitch"
         label={t('common.twitchChannel')}
-        tip={t('common.channelTip')}
         value={twitch}
         onChange={onTwitchChange}
-        placeholder={t('common.channelPlaceholder')}
         disabled={disabled || platforms === 'kick' || platforms === 'youtube'}
-        autoComplete="off"
-        spellCheck={false}
       />
-      <TextField
+      <ChannelField
+        platform="kick"
         label={t('common.kickChannel')}
-        tip={t('common.channelTip')}
         value={kick}
         onChange={onKickChange}
-        placeholder={t('common.channelPlaceholder')}
         disabled={disabled || platforms === 'twitch' || platforms === 'youtube'}
-        autoComplete="off"
-        spellCheck={false}
       />
       {onYoutubeChange && (
         <div className="sm:col-span-2">

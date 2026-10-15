@@ -1,6 +1,7 @@
 import { isClassic } from '#/features/presets/registry';
 import { LANG_PARAM, type Locale } from '#/lib/i18n';
-import { CLASSIC_PRESET, readPreset, writePreset } from './preset-url';
+import { CLASSIC_PRESET, readFont, readFx, readPreset, writePreset } from './preset-url';
+import type { SiteFont } from './site-fonts';
 import {
   type ChannelPlatforms,
   readFlag,
@@ -37,6 +38,10 @@ export interface CountdownSettings {
   platforms: ChannelPlatforms;
   /** Preset id; any preset but classic brings its own colors, fonts and frame. */
   preset: string;
+  /** Off (`fx=0`) stills the preset's effect; missing means on. */
+  fx?: boolean;
+  /** A site font to draw the preset in instead of its own; missing keeps the preset's. */
+  font?: SiteFont;
   scene: CountdownScene;
   /** Starting time in seconds. Ignored while `at` is set. */
   time: number;
@@ -148,7 +153,7 @@ function buildParams(
   const at = readAtTime(settings.at);
   if (at) params.set('at', at);
   else if (settings.time !== defaults.time) params.set('time', String(settings.time));
-  writePreset(params, settings.preset);
+  writePreset(params, settings.preset, settings.fx, settings.font);
   if (isClassic(settings.preset) && settings.color !== defaults.color)
     params.set('color', settings.color);
   if (settings.look !== defaults.look) params.set('look', settings.look);
@@ -222,6 +227,8 @@ export function readCountdownSettings(
   const text = (key: string, max: number) => (params.get(key) ?? '').trim().slice(0, max);
   return {
     preset: readPreset(params),
+    ...readFx(params),
+    ...readFont(params),
     scene: COUNTDOWN_SCENES.includes(scene) ? scene : defaults.scene,
     // A 0 second countdown is over before it starts, so it falls back like any other garbage.
     time: readWhole(params.get('time'), defaults.time, { min: 1, max: MAX_COUNTDOWN_TIME }),

@@ -1,8 +1,10 @@
 import { type CSSProperties, useId, useLayoutEffect, useRef, useState } from 'react';
+import { FrameFx } from '#/features/presets/fx/engine';
 import type { FrameKind } from '#/features/presets/preset-schema';
 import { titleStyle } from '#/features/presets/skin';
 import type { FramePiece } from '#/lib/frame-url';
 import { classic } from './art/classic';
+import { crust } from './art/crust';
 import { gilded } from './art/gilded';
 import { hud } from './art/hud';
 import { iron } from './art/iron';
@@ -23,6 +25,7 @@ export const ARTS: Record<FrameKind | 'classic', Art> = {
   tactical,
   hud,
   pixel,
+  crust,
 };
 
 /** Size unit per piece: 1 on a 360px-high webcam, a 420px-wide chat or a 1080px-high screen. */
@@ -164,6 +167,21 @@ export function FrameArt({ look, piece, width, height, label, motion }: FrameArt
             steps={runner.steps}
           />
         </svg>
+      )}
+      {look.skin && look.skin.effect !== 'none' && (
+        // The preset's effect plays on the frame's band only, never over the webcam inside it.
+        <span
+          style={{
+            position: 'absolute',
+            left: g.body.x0,
+            top: g.body.y0,
+            width: g.body.x1 - g.body.x0,
+            height: g.body.y1 - g.body.y0,
+            pointerEvents: 'none',
+          }}
+        >
+          <FrameFx skin={look.skin} radius={0} scale={g.s} ring={g.t} />
+        </span>
       )}
       {label && (
         <span

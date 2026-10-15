@@ -49,7 +49,7 @@ export function SpinWheelOverlay({
   const [spinning, setSpinning] = useState(false);
   const angleRef = useRef(0);
   // Unknown ids fall back to the classic look in skinFor.
-  const skin = skinFor(settings.preset);
+  const skin = skinFor(settings.preset, settings.fx, settings.font);
   const confettiOptions = useMemo<BurstOptions>(
     () =>
       skin

@@ -6,6 +6,7 @@ import { FaqList } from '#/components/faq-list';
 import { GithubIcon, type IconProps } from '#/components/icons';
 import { BetterTogether } from '#/components/landing/better-together';
 import { CommunityLinks } from '#/components/landing/community-links';
+import { readsPreset, useDealtPresets } from '#/components/landing/demo-presets';
 import {
   ArrowRightIcon,
   CheckIcon,
@@ -15,7 +16,9 @@ import {
   UserOffIcon,
 } from '#/components/landing/landing-icons';
 import { PollSpotlight } from '#/components/landing/poll-spotlight';
+import { PresetPicks } from '#/components/landing/preset-picks';
 import { StreamScene } from '#/components/landing/stream-scene';
+import { hasToolVisual } from '#/components/landing/tool-visuals';
 import { type CardShape, getGalleryShapes, WidgetCard } from '#/components/landing/widget-card';
 import { SiteLayout } from '#/components/site-layout';
 import { StepsList } from '#/components/steps-list';
@@ -252,6 +255,11 @@ const GALLERY_GROUPS = [
   },
 ] as const;
 
+// Cards whose live demo can wear a preset; a tool drawn as a picture shows none.
+const DEALT_IDS = WIDGETS.filter(
+  (widget) => widget.demoUrl && !hasToolVisual(widget.id) && readsPreset(widget),
+).map((widget) => widget.id);
+
 // Each breakpoint names both axes, so the wider grid resets a span the narrower one set.
 const SM_SPAN: Record<CardShape, string> = {
   standard: 'sm:col-span-1 sm:row-span-1',
@@ -267,6 +275,9 @@ const LG_SPAN: Record<CardShape, string> = {
 
 function Gallery() {
   const { t } = useI18n();
+  const presets = useDealtPresets(DEALT_IDS);
+  // One preset for every preview at once, from the buttons over the overlays.
+  const [picked, setPicked] = useState<string | null>(null);
   const [category, setCategory] = useState<CategoryFilter>('all');
   // A shared link's filter, read after mount so the prerendered page and the first render agree.
   useEffect(() => {
@@ -310,6 +321,9 @@ function Gallery() {
               </h3>
               <p className="text-sm text-zinc-500 dark:text-zinc-400">{t(group.lead)}</p>
             </div>
+            {group.key === 'overlays' && (
+              <PresetPicks value={picked} onChange={setPicked} className="-mt-1 mb-6" />
+            )}
             <ul className={`grid grid-flow-row-dense gap-5 ${group.columns}`}>
               {group.widgets.map((widget, index) => (
                 <li
@@ -320,6 +334,11 @@ function Gallery() {
                     widget={widget}
                     headingLevel="h4"
                     shapes={{ sm: group.shapes.sm[index], lg: group.shapes.lg[index] }}
+                    preset={
+                      DEALT_IDS.includes(widget.id)
+                        ? (picked ?? presets?.[widget.id] ?? null)
+                        : undefined
+                    }
                   />
                 </li>
               ))}

@@ -606,37 +606,37 @@ export const CONTENT_META = {
     en: {
       title: 'Game Presets for Twitch and Kick Overlays | Senchabot',
       description:
-        'Free Twitch and Kick overlay presets: League of Legends, WoW, Metin2, Dota 2, Valorant, CS2, Fortnite, PUBG, Rocket League, Clash of Clans and Minecraft looks.',
+        'Free, fan-made looks for your Twitch and Kick overlays, styled after the games you stream: frames, fonts, colors and effects that match on every widget.',
     },
     de: {
       title: 'Spiel-Presets für Twitch- und Kick-Overlays | Senchabot',
       description:
-        'Gratis-Presets für Twitch- und Kick-Overlays: League of Legends, WoW, Metin2, Dota 2, Valorant, CS2, Fortnite, PUBG, Rocket League, Clash of Clans, Minecraft.',
+        'Kostenlose Fan-Looks für deine Twitch- und Kick-Overlays im Stil der Spiele, die du streamst: Rahmen, Schriften, Farben und Effekte, passend auf jedem Widget.',
     },
     tr: {
       title: "Twitch ve Kick için Oyun Overlay Preset'leri | Senchabot",
       description:
-        "Ücretsiz preset'lerle Twitch ve Kick overlay'lerine LoL, WoW, Metin2, Dota 2, Valorant, CS2, Fortnite, PUBG, Rocket League, Clash of Clans, Minecraft havası.",
+        "Yayınladığın oyunlardan ilham alan ücretsiz, hayran yapımı preset'ler: Twitch ve Kick overlay'lerinde her widget'a uyan çerçeve, yazı tipi, renk ve efektler.",
     },
     es: {
       title: 'Presets de juegos para overlays de Twitch y Kick | Senchabot',
       description:
-        'Presets gratis para overlays de Twitch y Kick: League of Legends, WoW, Metin2, Dota 2, Valorant, CS2, Fortnite, PUBG, Rocket League, Clash of Clans y Minecraft.',
+        'Looks gratis hechos por fans para tus overlays de Twitch y Kick, al estilo de los juegos que transmites: marcos, fuentes, colores y efectos en cada widget.',
     },
     fr: {
       title: 'Presets de jeux pour overlays Twitch et Kick | Senchabot',
       description:
-        'Presets de jeux gratuits pour tes overlays : League of Legends, WoW, Metin2, Dota 2, Valorant, CS2, Fortnite, PUBG, Rocket League, Clash of Clans et Minecraft.',
+        'Des looks gratuits faits par des fans pour tes overlays Twitch et Kick, inspirés des jeux que tu streames : cadres, polices, couleurs et effets assortis.',
     },
     ja: {
       title: 'TwitchとKickオーバーレイのゲームプリセット | Senchabot',
       description:
-        'Twitch・Kickのオーバーレイ用の無料ゲームプリセット。LoL、WoW、Metin2、Dota 2、Valorant、CS2、Fortnite、PUBG、Rocket League、Clash of Clans、Minecraft風。',
+        '配信するゲームをイメージした、ファン制作の無料プリセット。TwitchとKickのオーバーレイを、フレーム・フォント・カラー・エフェクトまで全ウィジェットでそろえられます。',
     },
     pt: {
       title: 'Presets de jogos para overlays da Twitch e Kick | Senchabot',
       description:
-        'Presets grátis para overlays da Twitch e Kick: League of Legends, WoW, Metin2, Dota 2, Valorant, CS2, Fortnite, PUBG, Rocket League, Clash of Clans e Minecraft.',
+        'Visuais grátis feitos por fãs para seus overlays da Twitch e Kick, no estilo dos jogos que você transmite: molduras, fontes, cores e efeitos em cada widget.',
     },
   },
   changelog: {

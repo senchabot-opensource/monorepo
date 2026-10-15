@@ -38,8 +38,8 @@ export const en = {
     platformAll: 'All',
     twitchChannel: 'Twitch Channel',
     kickChannel: 'Kick Channel',
-    channelTip:
-      "Just type the channel name, not the full link. For twitch.tv/senchabot, that's senchabot.",
+    channelTip: 'Type the channel name or paste its link: twitch.tv/senchabot becomes senchabot.',
+    kickDashName: "Kick's link for this channel is {link}, with - in place of _.",
     previewLoading: 'Loading preview…',
     previewZoom: 'Preview zoom',
     previewDrag: 'Drag to look around',
@@ -253,6 +253,10 @@ export const en = {
     galleryLead: 'Each one has its own setup page with a live preview. Nothing to download.',
     overlaysLead: 'Browser sources that run on their own once they are in your scene.',
     toolsLead: 'Tools you run yourself during the stream, from a page or from chat.',
+    presetPicks: {
+      label: 'Show the previews in a preset',
+      more: 'See more presets',
+    },
     setUp: 'Set up',
     toolFeatures: 'Features',
     raffleFeatureKeyword: 'Entry keyword like !join',
@@ -2045,7 +2049,7 @@ export const en = {
     breadcrumb: 'Stream Frames Setup',
     title: 'Stream Frames Setup',
     intro:
-      "Ready-made frames for your camera, your chat or your whole stream screen. The preset you pick draws the frame in that game's style, down to its shape, decorations and motion: a pagoda roof, swaying tassels and drifting petals in Dynasty, grass blocks and flickering torches in Blocks. No channel to connect. Add the URL to OBS and put your camera or chat under the frame.",
+      'Ready-made frames for your camera, your chat or your whole stream screen, drawn in the style of the preset you pick. No channel to connect. Add the URL to OBS and put your camera or chat under the frame.',
     sectionPiece: 'Frame',
     piece: 'What are you framing?',
     pieceTip:
@@ -2081,7 +2085,7 @@ export const en = {
     color: 'Color',
     motion: 'Animations',
     motionTip:
-      'Glowing lines, light sweeps and small touches that depend on the preset, like lanterns, torches or sparks. Turn it off and the frame stays still.',
+      'Glowing lines, light sweeps and small touches that depend on the preset, like runes, torches or sparks. Turn it off and the frame stays still.',
     previewTitle: 'Stream Frame Preview',
     previewIframeTitle: 'Stream Frame Preview',
     previewHint:
@@ -2111,7 +2115,7 @@ export const en = {
       'Yes. For a vertical camera, set Orientation to Portrait and the recommended size becomes 360 × 640. The frame is drawn to fit its browser source, so for a square camera just set the width and height to match, and the decorations scale with it.',
     faq4Q: 'Is the art in the frames taken from the games?',
     faq4A:
-      'No. Every drawing, like the pagoda roof, the lanterns or the pixel blocks, was made from scratch, with no game logos or art. The presets are fan-made styles that capture the feel of those games.',
+      'No. Every drawing was made from scratch, with no game logos or art. The presets are fan-made styles that capture the feel of those games.',
   },
   countdown: {
     breadcrumb: 'Stream Countdown Setup',
@@ -2881,9 +2885,9 @@ export const en = {
         title: "What should I do if the widget doesn't show up in OBS?",
         intro:
           'Most of the time the channel name is the problem. Go through these checks in order.',
-        linkTitle: 'Did you type a link instead of the channel name?',
+        linkTitle: 'Is there a link in your widget URL instead of the channel name?',
         linkBody:
-          "Only type the name in the channel field: `senchabot` for twitch.tv/senchabot. If you paste the full link, the widget treats the link as the channel name and can't connect to any chat.",
+          "The URL needs just the name, like `twitch=senchabot`. The channel fields on the setup page turn a pasted link into the name, but an older URL, or one edited by hand, can still hold the whole link, and then the widget can't connect to any chat. Make a new URL on the setup page.",
         channelTitle: 'Does the channel actually exist?',
         channelBody:
           "Check the name for typos. A channel that doesn't exist on Twitch doesn't throw an error. The widget just stays empty.",
@@ -2892,7 +2896,7 @@ export const en = {
           'Chat Box and Emote Wall stay completely empty and transparent until something happens in chat. Send a message in chat; for Emote Wall it has to be a message made only of emotes by default, but with Show All Emotes on, emotes inside normal messages count too. The Raffle overlay also only appears when a winner is drawn and disappears after 10 seconds. Sub Sprout and Subathon Timer, on the other hand, show up right away.',
         kickTitle: 'Kick channel not found?',
         kickBody:
-          "When the widget opens, it looks up the Kick channel on kick.com. If that lookup fails (wrong name, the channel doesn't exist, or Kick doesn't respond), Kick messages won't come in. Type your Kick name exactly as it appears in the kick.com URL.",
+          "When the widget opens, it looks up the Kick channel on kick.com. If that lookup fails (wrong name, the channel doesn't exist, or Kick doesn't respond), Kick messages won't come in. Type your Kick name exactly as it appears in the kick.com URL. Some Kick links write the _ in a name as -: the Kick Channel field on the setup page checks kick.com and switches to the link's spelling for you.",
         tabTitle: 'Does the URL work in a browser?',
         tabBody:
           "Open the URL in a regular browser tab. If it works there but not in OBS, check the source's URL field and size.",
@@ -3346,10 +3350,8 @@ export const en = {
       },
       look: {
         title: 'What do the preset and animations change?',
-        p1:
-          "The preset sets the frame's shape, art, colors and font: a pagoda roof and tassels in Dynasty, gold trim and turquoise gems in Rift, grass blocks and a hotbar in Blocks. Give your Chat Box, Stream Alerts and Sub Goal the same preset and everything on screen matches.",
-        p2:
-          "With Animations on, light sweeps around the frame, the lines glow, and lanterns, torches or sparks move depending on the preset. They're kept light. Still, if your PC struggles while you game, turn Animations off. That adds `motion=0` to the URL and the frame stays still.",
+        p1: "The preset sets the frame's shape, art, colors and font. Give your Chat Box, Stream Alerts and Sub Goal the same preset and everything on screen matches.",
+        p2: "With Animations on, light sweeps around the frame, the lines glow, and runes, torches or sparks move depending on the preset. They're kept light. Still, if your PC struggles while you game, turn Animations off. That adds `motion=0` to the URL and the frame stays still.",
         p3: 'All the art was drawn from scratch, with no game logos or artwork.',
       },
       change: {
@@ -3574,14 +3576,15 @@ export const en = {
   presets: {
     classic: 'Classic',
     classicTag: "Each widget's own look",
+    funTag: 'Just for fun',
     breadcrumb: 'Presets',
     eyebrow: 'Presets',
     title: 'Game presets for your stream overlays',
     lead:
-      'Pick a preset and your Chat Box, Stream Alerts, Sub Goal, Counter, Event List, End Credits, Viewer Queue, Top Supporters, Lower Thirds, Task List, Featured Message, Emote Combo, Bits & Kicks Goal, Now Playing, Subathon Timer, Chat Poll, Raffle winner, Stream Frames, Stream Countdown, Socials and Spin Wheel get the same frame, fonts and colors. Use one on every widget, or a different one on each.',
+      'Pick a preset and your Chat Box, Stream Alerts, Sub Goal, Follower Goal, Counter, Event List, End Credits, Viewer Queue, Top Supporters, Lower Thirds, Task List, Featured Message, Emote Combo, Bits & Kicks Goal, Now Playing, Subathon Timer, Chat Poll, Raffle winner, Stream Frames, Stream Countdown, Socials and Spin Wheel get the same frame, fonts and colors. Use one on every widget, or a different one on each.',
     pickTitle: 'Pick a preset',
     pickText:
-      'Ready-made presets for League of Legends (LoL), World of Warcraft (WoW), Metin2, Dota 2, Valorant, Counter-Strike 2 (CS2), Minecraft, Clash of Clans, Fortnite, Rocket League and PUBG: Battlegrounds.',
+      'Ready-made presets for League of Legends (LoL), World of Warcraft (WoW), Dota 2, Valorant, Counter-Strike 2 (CS2), Minecraft, Fortnite, Rocket League, PUBG: Battlegrounds, Mount & Blade and Kingdom Come: Deliverance, plus Glitch, Operator, Conquest, Flower and Pizza just for fun.',
     by: 'by {author}',
     community: 'Community',
     makeDefault: 'Use {name} on every widget',
@@ -3592,26 +3595,22 @@ export const en = {
     setUp: 'Set up {widget}',
     previewIframeTitle: '{widget} preview with the {name} preset',
     descriptions: {
-      classic:
-        'The look each widget was made with: neon Stream Alerts, the purple Sub Goal bar and plain Chat Box text. You pick the colors.',
-      rift: 'Thin gold frames with diamond studs, deep navy panels and glowing teal bars, with Cinzel titles.',
-      realm:
-        'Bronze and gold frames with rivets, dark leather panels and legendary orange bars, with Marcellus titles.',
-      dynasty:
-        'Red lacquer frames with gold corner brackets, dark wood panels and crimson bars, with Zen Antique titles.',
-      ancient: 'Dark iron frames with bronze corners, a red glow along the bottom and sharp Grenze titles.',
-      agent: 'Cut corners, a red edge, slanted bars and tall Teko numbers on dark slate.',
-      defuse: 'HUD corner brackets, an amber top line, hazard stripes on the bars and condensed Saira type.',
-      blocks:
-        'Pixel frames in grass and dirt colors, green bars split into blocks and the Jersey 10 pixel font.',
-      village:
-        'Rounded gold frames with gem studs, warm wood panels and pink elixir bars, with chunky Lilita One titles.',
-      storm:
-        'Cut corners and yellow brackets on blue-to-purple panels, slanted sky-blue bars and tall Anton titles.',
-      boost:
-        'HUD brackets and a glowing blue top line on midnight navy, slanted blue bars, orange for the winner and Russo One titles.',
-      airdrop:
-        'HUD corner brackets and a yellow top line on olive-black panels, flat yellow bars and Saira Stencil One titles.',
+      classic: "Each widget's own look, in the colors you pick.",
+      rift: 'Gold and teal on dark navy, with glowing bars.',
+      realm: 'Bronze and gold on dark leather, with beams of light.',
+      flower: 'Soft pinks, with little flowers floating around.',
+      ancient: 'Dark iron and fiery red, with smoldering bars.',
+      agent: 'Sharp red and slate, with a quick slash as bars grow.',
+      defuse: 'Amber and gray, with a blinking red light.',
+      blocks: 'All green and blocky, with bars built block by block.',
+      pizza: 'Crust and cheese colors, with pizza slices floating around.',
+      storm: 'Sky blue and purple, with bars built like a blueprint.',
+      boost: 'Blue and orange, with speed lines as bars grow.',
+      airdrop: 'Olive and yellow, with flare smoke as bars grow.',
+      conquest: 'Orange on gunmetal, with a radar sweep.',
+      operator: 'Black, white and lime, with hit marks as bars grow.',
+      banner: 'Old gold and red on dark wood, with bars forged like iron.',
+      glitch: 'Red, cyan and yellow, and everything glitches.',
     },
     existingTitle: 'Already have widgets in OBS?',
     existingText:
@@ -3636,7 +3635,7 @@ export const en = {
       "Yes. Your default is only where every setup page starts. On any widget's setup page you can pick another preset, and that widget's URL carries it.",
     faq3Q: 'Which widgets take a preset?',
     faq3A:
-      'Chat Box, Stream Alerts, Sub Goal, Subathon Timer, Chat Poll, the Raffle winner overlay, Stream Frames, Stream Countdown, Socials and Spin Wheel. Emote Wall only shows emotes and Sub Sprout draws its own plants, so they keep their look.',
+      'Sub Goal, Bits & Kicks Goal, Follower Goal, Chat Poll, Chat Box, Featured Message, Emote Combo, Stream Alerts, Counter, Subathon Timer, the Raffle winner overlay, Stream Frames, Stream Countdown, Socials, Now Playing, Spin Wheel, Event List, End Credits, Viewer Queue, Top Supporters, Lower Thirds and Task List. Emote Wall only shows emotes and Sub Sprout draws its own plants, so they keep their look.',
     faq4Q: 'Are these official game themes?',
     faq4A:
       "No. They're fan-made styles built from colors, free Google Fonts and decorations drawn from scratch, with no game logos or art, and they aren't affiliated with the game makers.",
@@ -3646,10 +3645,19 @@ export const en = {
       browse: 'All presets',
       show: 'Show {count} presets',
       hide: 'Hide presets',
+      random: 'Pick a random preset',
       owns: 'Colors and fonts come from {name}.',
       makeDefault: 'Make {name} my default',
       makeDefaultTip: 'Every setup page on this browser will start with it.',
       isDefault: 'Your default',
+      effects: 'Effects',
+      effectsTip:
+        "{name}'s own animations: on bars as they grow, on panels as they appear, and now and then while idle.",
+      font: 'Font',
+      fontTip:
+        "Keep {name}'s own fonts, or draw this widget in another font. Its colors, frame and effects stay {name}'s.",
+      presetFonts: "{name}'s fonts",
+      ownsColors: 'Colors come from {name}.',
     },
   },
   faqPage: {
@@ -3703,6 +3711,18 @@ export const en = {
     lead: "New features and bug fixes in Senchabot Extensions, newest first. The list is put together from the project's commit history on [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      presetsFont:
+        "A new Font box under the preset picker draws a widget in Inter, Roboto, Nunito, JetBrains Mono, Source Serif 4 or your system font instead of the preset's own fonts, keeping the preset's colors, frame and effects.",
+      presetsRandom:
+        'A dice beside the preset picker on every setup page picks a random preset. On the home page, each widget preview shows a different preset on every visit, and its setup page opens in that preset.',
+      presetsFlowerPizza:
+        "Two new presets, Flower and Pizza, take the places of Dynasty and Village: little flowers and pizza slices float around bars, and every step up opens a cherry blossom or pops a slice at the bar's edge. Widgets set to Dynasty or Village go back to their classic look.",
+      presetEffects:
+        'Every preset now has an effect of its own: bars light up, burn, bloom, build or glitch as they grow, panels come in with their own entrance, and a reached goal gets a bigger show. The Effects switch under the preset picker turns them off.',
+      presetsFollowerGoal:
+        'The presets page now shows Follower Goal too, and adds a preset to Follower Goal URLs pasted into it.',
+      presetsConquestOperatorBannerGlitch:
+        'Four new presets for every widget that takes one: Conquest, Operator, Banner (Mount & Blade and Kingdom Come) and Glitch.',
       hudToggles:
         'IRL HUD Overlay and Weather: hide the mini-map, the cash, the clock and the weather from chat and show them again with !h map, !h cash, !h time and !h weather. Weather reads chat only when you add your channel.',
       irlHudShortCommand:
@@ -3821,7 +3841,7 @@ export const en = {
       chatTextShadow:
         "Chat Box has a Text Shadow choice: None, Normal (as before) or Strong, a dark outline that keeps chat readable on bright games.",
       chatFonts:
-        'Chat Box now has a font box for usernames and another for messages, and both stay open under a preset: keep the two fonts the preset came with, put its heading font on the messages too, or mix either with Inter, Roboto, Nunito, JetBrains Mono, Source Serif 4 or your system font. Bold usernames and bold messages also work now under presets whose font comes in a single weight, like Realm, Dynasty and Blocks.',
+        'Chat Box now has a font box for usernames and another for messages, and both stay open under a preset: keep the two fonts the preset came with, put its heading font on the messages too, or mix either with Inter, Roboto, Nunito, JetBrains Mono, Source Serif 4 or your system font. Bold usernames and bold messages also work now under presets whose font comes in a single weight.',
       sproutSaved:
         'Sub Sprout now keeps its plant through an OBS reload and carries it over to the next stream, instead of starting from the first stage every time. Mods can start it over with !grow reset.',
       countdown:
@@ -3829,7 +3849,7 @@ export const en = {
       deviceTheme:
         "The site now opens in your device's light or dark theme and keeps following it when that changes. Once you press the theme button in the header, your pick is remembered and the device stops changing it.",
       frames:
-        'New Stream Frames: ready-made frames for your camera, your chat and your whole stream screen. Every preset comes with its own art, like a pagoda roof and lanterns in Dynasty or pixel blocks in Blocks.',
+        'New Stream Frames: ready-made frames for your camera, your chat and your whole stream screen, with their own art for every preset.',
       subathonRates:
         'Subathon Timer can now list what a sub, a gifted sub and 500 Bits or Kicks add, right on the timer, so viewers know what their sub is worth.',
       presets:

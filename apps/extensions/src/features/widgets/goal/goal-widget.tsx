@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'react';
 import { barFrameStyle, fillBackground, fillLayers, trackBackground } from '#/features/presets/bar';
 import { Frame } from '#/features/presets/frame';
+import { BarFxBurst, BarFxTrack } from '#/features/presets/fx/engine';
 import { painter, skinCss, skinFor } from '#/features/presets/skin';
 import { SkinProvider, useSkin } from '#/features/presets/skin-context';
 import type { GoalSettings } from '#/lib/goal-url';
@@ -88,7 +89,7 @@ export function GoalWidget({
     previewId,
   });
   const hue = hueFor(settings.color, 1);
-  const skin = skinFor(settings.preset);
+  const skin = skinFor(settings.preset, settings.fx, settings.font);
   const isThin = settings.style === 'thin';
   const popBand = isThin ? POP_BAND_THIN : POP_BAND;
   const barCenter = isThin ? BAR_CENTER_THIN : BAR_CENTER;
@@ -156,6 +157,16 @@ export function GoalWidget({
                 </>
               )}
             </div>
+            <BarFxBurst
+              skin={skin}
+              hit={hit?.up ? hit : null}
+              win={celebration !== null}
+              // The track, inside the bars' 28px margin and the box's padding.
+              left={28 + (isThin ? 3 : 4)}
+              right={STAGE.width - 28 - (isThin ? 3 : 4)}
+              y={barCenter}
+              height={isThin ? BAR_HEIGHT_THIN : BAR_HEIGHT}
+            />
             {celebration !== null && (
               <Celebration
                 key={celebration.key}
@@ -521,6 +532,7 @@ function Bar({
             />
           )}
         </div>
+        <BarFxTrack skin={skin} hit={hit?.up ? hit : null} win={celebrating} />
         {ticks.map((tick) => (
           <div
             key={tick}
@@ -670,6 +682,7 @@ function ThinBar({
             />
           )}
         </div>
+        <BarFxTrack skin={skin} hit={hit?.up ? hit : null} win={celebrating} />
         {ticks.map((tick) => (
           <div
             key={tick}

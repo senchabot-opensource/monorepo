@@ -87,8 +87,8 @@ function SocialsSetup() {
             <TextField
               key={key}
               label={key.charAt(0).toUpperCase() + key.slice(1)}
-              value={settings[key as keyof SocialsSettings]}
-              onChange={(value) => update(key as keyof SocialsSettings, value)}
+              value={settings[key]}
+              onChange={(value) => update(key, value)}
               placeholder={`username`}
               spellCheck={false}
             />
@@ -97,7 +97,14 @@ function SocialsSetup() {
       </SettingsGroup>
 
       <SettingsGroup title={t('socials.sectionAppearance')}>
-        <PresetField value={settings.preset} onChange={(value) => update('preset', value)} />
+        <PresetField
+          value={settings.preset}
+          onChange={(value) => update('preset', value)}
+          fx={settings.fx}
+          onFxChange={(on) => update('fx', on)}
+          font={settings.font}
+          onFontChange={(font) => update('font', font)}
+        />
         <div>
           <FieldLabel id={`${id}-align`} tip={t('socials.alignTip')}>
             {t('socials.align')}

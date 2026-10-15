@@ -216,7 +216,14 @@ function LowerThirdSetup() {
 
   const appearanceTab = (
     <SettingsGroup title={t('common.sectionAppearance')} hideTitle>
-      <PresetField value={settings.preset} onChange={(value) => update('preset', value)} />
+      <PresetField
+        value={settings.preset}
+        onChange={(value) => update('preset', value)}
+        fx={settings.fx}
+        onFxChange={(on) => update('fx', on)}
+        font={settings.font}
+        onFontChange={(font) => update('font', font)}
+      />
       {isClassic(settings.preset) && (
         <div>
           <FieldLabel id={`${id}-color`}>{t('common.setup.color')}</FieldLabel>

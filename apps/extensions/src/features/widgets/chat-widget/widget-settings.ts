@@ -1,10 +1,11 @@
 import { isClassic } from '#/features/presets/registry';
-import { CLASSIC_PRESET, readPreset, writePreset } from '#/lib/preset-url';
+import { CLASSIC_PRESET, readFx, readPreset, writePreset } from '#/lib/preset-url';
+import { SITE_FONTS } from '#/lib/site-fonts';
 import { readCoercedFlag, readWidgetUrl, setChannels } from '#/lib/url-params';
 
 export const PLATFORMS = ['both', 'twitch', 'kick', 'youtube'] as const;
 export const PLATFORM_DISPLAYS = ['name', 'icon', 'none'] as const;
-export const FONTS = ['inter', 'roboto', 'nunito', 'mono', 'serif', 'system'] as const;
+export const FONTS = SITE_FONTS;
 // A preset brings two fonts of its own; both selects can pick either of them.
 export const PRESET_FONTS = ['presetName', 'presetMessage'] as const;
 export const FONT_CHOICES = [...PRESET_FONTS, ...FONTS] as const;
@@ -51,6 +52,8 @@ export interface Settings {
   platforms: Platforms;
   /** Preset id; any preset but classic brings its own fonts, colors and message boxes. */
   preset: string;
+  /** Off (`fx=0`) stills the preset's effect; missing means on. */
+  fx?: boolean;
   platformDisplay: PlatformDisplay;
   /** The message font; under a preset it starts as the preset's own message font. */
   font: Font;
@@ -130,7 +133,7 @@ export function buildWidgetParams(
 ) {
   const params = new URLSearchParams();
   setChannels(params, settings.platforms, twitchChannel, kickChannel, youtubeChannel);
-  writePreset(params, settings.preset);
+  writePreset(params, settings.preset, settings.fx);
   if (!settings.sevenTv) params.append('sevenTv', 'false');
   if (!settings.bttv) params.append('bttv', 'false');
   if (!settings.ffz) params.append('ffz', 'false');
@@ -177,7 +180,10 @@ export function buildWidgetParams(
   if (settings.animation !== DEFAULT_SETTINGS.animation)
     params.append('animation', settings.animation);
   const tok = token?.trim();
-  if (tok && (settings.platforms === 'youtube' || settings.platforms === 'both' || youtubeChannel?.trim())) {
+  if (
+    tok &&
+    (settings.platforms === 'youtube' || settings.platforms === 'both' || youtubeChannel?.trim())
+  ) {
     params.append('token', tok);
   }
   return params;
@@ -232,6 +238,7 @@ export function parseWidgetUrl(text: string): ParsedWidgetUrl | null {
     settings: {
       platforms,
       preset,
+      ...readFx(params),
       platformDisplay: oneOf(
         'platformDisplay',
         PLATFORM_DISPLAYS,

@@ -313,37 +313,37 @@ export const PAGE_META = {
     en: {
       title: 'Free Stream Frame Overlays for Twitch & Kick | Senchabot',
       description:
-        'Free camera, chat and screen frames for OBS. Presets with the feel of Metin2, LoL, WoW, Valorant and Minecraft, with the art included. No login, no download.',
+        "Free camera, chat and screen frames for OBS in your preset's style, with original drawings and fan-made game looks. Transparent middle, no login, no download.",
     },
     de: {
       title: 'Kostenlose Stream-Rahmen für Twitch und Kick | Senchabot',
       description:
-        'Kostenlose Rahmen für Kamera, Chat und Bildschirm in OBS. Presets im Stil von Metin2, LoL, WoW, Valorant und Minecraft, Grafiken inklusive. Ohne Login.',
+        'Kostenlose Rahmen für Kamera, Chat und Bildschirm in OBS im Stil deines Presets, mit eigenen Zeichnungen und Fan-Looks für Spiele. Transparent, ohne Login.',
     },
     tr: {
       title: 'Twitch ve Kick için Yayın Çerçeveleri (Ücretsiz) | Senchabot',
       description:
-        "OBS için ücretsiz kamera, sohbet ve ekran çerçeveleri. Metin2, LoL, WoW, Valorant ve Minecraft havasında preset'ler, hazır çizimlerle. Giriş yok, indirme yok.",
+        "OBS için ücretsiz kamera, sohbet ve ekran çerçeveleri: preset'inin tarzında, özgün çizimlerle ve oyunlardan ilham alan hayran yapımı görünümlerle. Giriş yok.",
     },
     es: {
       title: 'Marcos gratis para tu stream de Twitch y Kick | Senchabot',
       description:
-        'Marcos gratis de cámara, chat y pantalla para OBS. Presets al estilo de Metin2, LoL, WoW, Valorant y Minecraft, con el arte incluido. Sin login y sin descargas.',
+        'Marcos gratis de cámara, chat y pantalla para OBS al estilo de tu preset, con dibujos originales y looks de juegos hechos por fans. Sin login y sin descargas.',
     },
     fr: {
       title: 'Cadres de stream gratuits pour Twitch et Kick | Senchabot',
       description:
-        "Des cadres gratuits pour caméra, chat et écran dans OBS. Des presets dans l'esprit de Metin2, LoL, WoW, Valorant et Minecraft, dessins inclus. Sans connexion.",
+        'Des cadres gratuits pour caméra, chat et écran dans OBS au style de ton preset, avec des dessins originaux et des looks de jeux faits par des fans. Sans compte.',
     },
     ja: {
       title: 'TwitchとKickの無料配信フレーム | Senchabot',
       description:
-        'OBS用の無料のカメラ、チャット、画面フレーム。Metin2、LoL、WoW、Valorant、Minecraftの雰囲気のプリセットで、イラストも付いています。ログインもダウンロードも不要。',
+        'OBS用の無料のカメラ、チャット、画面フレーム。プリセットに合わせたオリジナルのイラストで、ゲームをイメージしたファン制作の見た目に。ログインもダウンロードも不要。',
     },
     pt: {
       title: 'Molduras de live grátis para Twitch e Kick | Senchabot',
       description:
-        'Molduras grátis de câmera, chat e tela para o OBS. Presets com a vibe de Metin2, LoL, WoW, Valorant e Minecraft, com a arte incluída. Sem login, sem download.',
+        'Molduras grátis de câmera, chat e tela para o OBS no estilo do seu preset, com desenhos originais e visuais de jogos feitos por fãs. Sem login, sem download.',
     },
   },
   'irl-hud': {
@@ -1877,63 +1877,63 @@ export const APP_FEATURES: Record<WidgetId, Record<Locale, readonly string[]>> =
   frames: {
     en: [
       'Three ready-made frames for your camera, chat and whole stream screen',
-      'Every preset has its own art: a pagoda roof and lanterns, gold ornaments, riveted shields, pixel blocks',
+      'Every preset has its own art: horns and spiked plates, gold ornaments, riveted shields, pixel blocks',
       'The middle is transparent, so your camera or Chat Box shows through',
-      'Light animations like glowing lines, swaying tassels and flickering torches, and you can turn them off',
+      'Light animations like glowing lines, rising sparks and flickering torches, and you can turn them off',
       'A tab for your channel name or any text you like',
       'Fits any source size, square or vertical cameras included',
       'Works on Twitch, Kick and other platforms without connecting a channel',
     ],
     de: [
       'Drei fertige Rahmen für Kamera, Chat und den ganzen Stream-Bildschirm',
-      'Jedes Preset hat eigene Grafiken: ein Pagodendach mit Laternen, goldene Ornamente, genietete Schilde, Pixelblöcke',
+      'Jedes Preset hat eigene Grafiken: Hörner und Stachelplatten, goldene Ornamente, genietete Schilde, Pixelblöcke',
       'Die Mitte ist transparent, damit deine Kamera oder Chat-Box durchscheint',
-      'Leichte Animationen wie leuchtende Linien, schwingende Quasten und flackernde Fackeln, die du abschalten kannst',
+      'Leichte Animationen wie leuchtende Linien, aufsteigende Funken und flackernde Fackeln, die du abschalten kannst',
       'Ein Schild für deinen Kanalnamen oder einen beliebigen Text',
       'Passt zu jeder Quellgröße, auch zu quadratischen oder vertikalen Kameras',
       'Läuft auf Twitch, Kick und anderen Plattformen, ohne einen Kanal zu verbinden',
     ],
     tr: [
       'Kamera, sohbet ve bütün yayın ekranı için üç hazır çerçeve',
-      "Her preset'in kendi çizimleri: pagoda çatısı ve fenerler, altın süslemeler, perçinli kalkanlar, piksel bloklar",
+      "Her preset'in kendi çizimleri: boynuzlar ve dikenli plakalar, altın süslemeler, perçinli kalkanlar, piksel bloklar",
       'Ortası şeffaf, kameran ya da Sohbet Kutusu altında görünür',
-      'Parlayan çizgiler, sallanan püsküller, titreyen meşaleler gibi hafif animasyonlar, istersen kapatılır',
+      'Parlayan çizgiler, yükselen kıvılcımlar, titreyen meşaleler gibi hafif animasyonlar, istersen kapatılır',
       'Kanal adın ya da istediğin bir yazı için sekme',
       'Kaynağın her boyutuna uyar, kare ya da dikey kamera da olur',
       'Kanal bağlamadan Twitch, Kick ve diğer platformlarda çalışır',
     ],
     es: [
       'Tres marcos listos para tu cámara, tu chat y toda tu pantalla de stream',
-      'Cada preset tiene su propio arte: un tejado de pagoda y farolillos, adornos dorados, escudos con remaches, bloques de píxeles',
+      'Cada preset tiene su propio arte: cuernos y placas con pinchos, adornos dorados, escudos con remaches, bloques de píxeles',
       'El centro es transparente, así se ve tu cámara o tu Caja de Chat',
-      'Animaciones suaves como líneas que brillan, borlas que se balancean y antorchas que parpadean, y puedes desactivarlas',
+      'Animaciones suaves como líneas que brillan, chispas que suben y antorchas que parpadean, y puedes desactivarlas',
       'Una pestaña para el nombre de tu canal o el texto que quieras',
       'Se adapta a cualquier tamaño de fuente, cámaras cuadradas o verticales incluidas',
       'Funciona en Twitch, Kick y otras plataformas sin conectar un canal',
     ],
     fr: [
       "Trois cadres prêts à l'emploi pour ta caméra, ton chat et tout ton écran de stream",
-      'Chaque preset a ses propres dessins : un toit de pagode et des lanternes, des ornements dorés, des boucliers à rivets, des blocs en pixels',
+      'Chaque preset a ses propres dessins : des cornes et des plaques à pointes, des ornements dorés, des boucliers à rivets, des blocs en pixels',
       'Le centre est transparent, donc ta caméra ou ta Boîte de chat apparaît à travers',
-      'Des animations légères comme des lignes lumineuses, des pompons qui se balancent et des torches qui vacillent, désactivables',
+      'Des animations légères comme des lignes lumineuses, des étincelles qui montent et des torches qui vacillent, désactivables',
       'Un onglet pour le nom de ta chaîne ou le texte de ton choix',
       "S'adapte à toutes les tailles de source, caméras carrées ou verticales comprises",
       "Marche sur Twitch, Kick et d'autres plateformes sans connecter de chaîne",
     ],
     ja: [
       'カメラ、チャット、配信画面全体のための3つのフレーム',
-      'プリセットごとに専用のイラスト: 楼閣の屋根と提灯、金の装飾、リベット付きの盾、ピクセルブロック',
+      'プリセットごとに専用のイラスト: 角とトゲのある装甲板、金の装飾、リベット付きの盾、ピクセルブロック',
       '中央は透明なので、カメラやチャットボックスが透けて見える',
-      '光るライン、揺れる房飾り、揺らめく松明などの軽いアニメーション。オフにも可能',
+      '光るライン、立ちのぼる火花、揺らめく松明などの軽いアニメーション。オフにも可能',
       'チャンネル名や好きな文字を入れられるタブ',
       '正方形や縦向きのカメラを含め、どんなソースサイズにも対応',
       'チャンネルの接続なしで、Twitch、Kick、ほかのプラットフォームで使用可能',
     ],
     pt: [
       'Três molduras prontas para sua câmera, seu chat e a tela inteira da live',
-      'Cada preset tem arte própria: telhado de pagode e lanternas, ornamentos dourados, escudos com rebites, blocos de pixel',
+      'Cada preset tem arte própria: chifres e placas com espinhos, ornamentos dourados, escudos com rebites, blocos de pixel',
       'O meio é transparente, então sua câmera ou a Caixa de Chat aparece por baixo',
-      'Animações leves, como linhas brilhando, borlas balançando e tochas piscando, e dá para desligar',
+      'Animações leves, como linhas brilhando, faíscas subindo e tochas piscando, e dá para desligar',
       'Uma aba para o nome do seu canal ou qualquer texto',
       'Se ajusta a qualquer tamanho de fonte, incluindo câmeras quadradas ou verticais',
       'Funciona na Twitch, na Kick e em outras plataformas sem conectar um canal',

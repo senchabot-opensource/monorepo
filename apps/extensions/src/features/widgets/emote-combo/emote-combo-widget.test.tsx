@@ -114,6 +114,25 @@ describe('EmoteComboWidget', () => {
     expect(combo()?.dataset.emote).toBe('kick:37226');
   });
 
+  it('shows the best combo as bare text, with no card or border behind it', async () => {
+    for (const preset of ['classic', 'rift']) {
+      const view = await render(
+        <EmoteComboWidget twitchChannel="streamer" settings={settings({ preset })} />,
+      );
+      for (const name of ['Ann', 'Bob', 'Cem', 'Dee']) kappa(name);
+      const best = screen.getByTestId('combo-best');
+      expect([best.style.background, best.style.boxShadow, best.style.borderRadius]).toEqual([
+        '',
+        '',
+        '',
+      ]);
+      // A preset's frame is a hidden layer of lines inside the card; there's none.
+      expect(best.querySelector('[aria-hidden="true"]'), preset).toBeNull();
+      view.unmount();
+      localStorage.clear();
+    }
+  });
+
   it('ends with the final count, keeps the best through a reload, and a mod resets it', async () => {
     const first = await render(<EmoteComboWidget twitchChannel="streamer" settings={settings()} />);
     for (const name of ['Ann', 'Bob', 'Cem', 'Dee']) kappa(name);

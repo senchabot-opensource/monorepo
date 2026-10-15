@@ -1,5 +1,6 @@
 import { createFileRoute, useHydrated } from '@tanstack/react-router';
 import { useMemo, useState } from 'react';
+import { ChannelField } from '#/components/channel-field';
 import { CopyUrlField } from '#/components/copy-url-field';
 import { ExternalIcon } from '#/components/icons';
 import { SetupShell } from '#/components/setup-shell';
@@ -100,23 +101,17 @@ function ObsBridgeSetup() {
     <>
       <SettingsGroup title={t('obsBridge.sectionChannels')}>
         <div className="grid gap-3 sm:grid-cols-2">
-          <TextField
+          <ChannelField
+            platform="twitch"
             label={t('common.twitchChannel')}
-            tip={t('common.channelTip')}
             value={twitch}
             onChange={setTwitch}
-            placeholder={t('common.channelPlaceholder')}
-            autoComplete="off"
-            spellCheck={false}
           />
-          <TextField
+          <ChannelField
+            platform="kick"
             label={t('common.kickChannel')}
-            tip={t('common.channelTip')}
             value={kick}
             onChange={setKick}
-            placeholder={t('common.channelPlaceholder')}
-            autoComplete="off"
-            spellCheck={false}
           />
         </div>
       </SettingsGroup>

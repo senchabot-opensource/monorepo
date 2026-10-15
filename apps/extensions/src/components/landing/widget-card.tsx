@@ -2,6 +2,7 @@ import type { CSSProperties } from 'react';
 import { LocaleLink } from '#/components/locale-link';
 import { PlatformChips } from '#/components/platform-chips';
 import { PreviewFrame } from '#/components/preview-frame';
+import { PRESET_PARAM } from '#/features/presets/registry';
 import { useI18n } from '#/lib/i18n';
 import type { WidgetEntry, WidgetId } from '#/lib/widgets';
 import { getDemoSrc } from './demo-url';
@@ -175,16 +176,23 @@ interface WidgetCardProps {
   headingLevel?: 'h2' | 'h3' | 'h4';
   /** The card's shape in the two and the three column grid; one column is always standard. */
   shapes?: { sm: CardShape; lg: CardShape };
+  /**
+   * The preset the live demo is shown in, which the setup link opens on too. Null while one is
+   * still being picked: the demo waits for it instead of loading twice.
+   */
+  preset?: string | null;
 }
 
 /**
  * Gallery card for one registry widget: a lazy live demo when it has one, or a static picture,
- * then name, tagline, a tool's feature chips and platforms. The whole card links to setup.
+ * then name, tagline, a tool's feature chips and platforms. The whole card links to setup, in
+ * the demo's preset.
  */
 export function WidgetCard({
   widget,
   headingLevel: Heading = 'h3',
   shapes = { sm: 'standard', lg: 'standard' },
+  preset,
 }: WidgetCardProps) {
   const { t } = useI18n();
   // A tool's own picture explains it better than its overlay squeezed into a flat card.
@@ -214,7 +222,7 @@ export function WidgetCard({
         {hasDemo ? (
           <div className="absolute inset-0">
             <PreviewFrame
-              src={getDemoSrc(widget, 'card')}
+              src={preset === null ? '' : getDemoSrc(widget, 'card', preset)}
               title={t('home.demoTitle', { name })}
               canvas={SCALED_DEMOS.has(widget.id) ? (size ?? undefined) : undefined}
               fitBox={FITTED_DEMOS.has(widget.id)}
@@ -240,6 +248,7 @@ export function WidgetCard({
           <Heading className="text-base font-semibold text-zinc-900 dark:text-white">
             <LocaleLink
               to={widget.setupPath}
+              search={preset ? { [PRESET_PARAM]: preset } : undefined}
               className="after:absolute after:inset-0 after:content-[''] focus-visible:outline-none"
             >
               {name}
