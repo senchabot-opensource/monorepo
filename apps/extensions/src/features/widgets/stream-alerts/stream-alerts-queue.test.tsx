@@ -272,7 +272,7 @@ describe('Stream Alerts preview', () => {
   });
 
   it('shows no sample alerts when every alert is off', async () => {
-    const off = { sub: false, gift: false, bits: false, raid: false };
+    const off = { sub: false, gift: false, bits: false, raid: false, follow: false };
     await render(<StreamAlertsWidget simulate settings={settings({ enabled: off })} />);
     wait(10_000);
     expect(alert()).toBeNull();
@@ -283,7 +283,7 @@ describe('Stream Alerts preview', () => {
       <StreamAlertsWidget
         simulate
         settings={settings({
-          enabled: { sub: false, gift: true, bits: false, raid: false },
+          enabled: { sub: false, gift: true, bits: false, raid: false, follow: false },
           minGift: 50,
         })}
       />,

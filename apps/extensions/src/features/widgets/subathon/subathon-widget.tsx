@@ -58,6 +58,12 @@ const CSS = `
 /* A hard dark outline: thin-stroked preset fonts (Cinzel) lost a soft shadow on the bright fill. */
 .sa-outline{text-shadow:-1.5px -1.5px 0 rgba(0,0,0,.8),1.5px -1.5px 0 rgba(0,0,0,.8),-1.5px 1.5px 0 rgba(0,0,0,.8),1.5px 1.5px 0 rgba(0,0,0,.8),0 2px 4px rgba(0,0,0,.9),0 0 10px rgba(0,0,0,.55)}
 .sa-title{font-weight:800;letter-spacing:.14em;text-transform:uppercase;font-style:italic}
+/* A digit's cell is as wide as the font's widest digit, the hidden column of all ten: most preset
+   fonts have no tabular figures, and their time would change width as it counts. Baseline
+   alignment keeps the column from stretching, and the cell on the digit's own baseline. */
+.sa-digit{display:inline-grid;justify-items:center;align-items:baseline}
+.sa-digit::before{content:'0\\A 1\\A 2\\A 3\\A 4\\A 5\\A 6\\A 7\\A 8\\A 9';white-space:pre;line-height:0;visibility:hidden}
+.sa-digit::before,.sa-digit>span{grid-area:1/1}
 @keyframes sa-beat{0%,40%,100%{transform:scale(1)}15%{transform:scale(1.28)}28%{transform:scale(1.1)}}
 @keyframes sa-pulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.45)}}
 @keyframes sa-shake{0%,100%{transform:translate(0,0)}20%{transform:translate(-3px,1px)}40%{transform:translate(3px,-1px)}60%{transform:translate(-2px,-1px)}80%{transform:translate(2px,1px)}}
@@ -261,6 +267,24 @@ const clockColor = (ended: boolean, skin: Skin | null): CSSProperties => ({
   color: ended ? '#f87171' : (skin?.text ?? '#fff'),
   animation: ended ? 'sa-blink 1s steps(2) infinite' : undefined,
 });
+
+/** The time left, each digit in a cell of one width, so the card around it holds still. */
+function Time({ text }: { text: string }) {
+  return (
+    <>
+      {Array.from(text, (char, index) =>
+        /\d/.test(char) ? (
+          // biome-ignore lint/suspicious/noArrayIndexKey: the characters only ever change in place.
+          <span key={index} className="sa-digit">
+            <span>{char}</span>
+          </span>
+        ) : (
+          char
+        ),
+      )}
+    </>
+  );
+}
 
 /** `plain` draws it in the text color, for a thin bar where it sits on a fill of its own hue. */
 function HeartIcon({
@@ -884,7 +908,7 @@ function HealthBarView(view: ViewProps) {
             className="sa-shadow"
             style={{ fontSize: 44, fontWeight: 800, lineHeight: 1, ...clockColor(ended, skin) }}
           >
-            {formatClock(left)}
+            <Time text={formatClock(left)} />
           </span>
         </div>
         {/* In the margin under the title row, so the bar stays where it was without them. */}
@@ -1097,7 +1121,7 @@ function ThinBarView(view: ViewProps) {
                       ...clockColor(ended, skin),
                     }}
                   >
-                    {formatClock(left)}
+                    <Time text={formatClock(left)} />
                   </span>
                   {percent && (
                     <span
@@ -1205,11 +1229,11 @@ function ClockView(view: ViewProps) {
               ...clockColor(ended, skin),
             }}
           >
-            {h}
+            <Time text={h} />
             {colon}
-            {m}
+            <Time text={m} />
             {colon}
-            {s}
+            <Time text={s} />
           </span>
           <HealFlash hit={view.hit} healing={view.healing} hue={hue} radius={22} spread={8} />
           {skin && <Frame skin={skin} radius={22} pulse={view.hit?.heal ? view.hit.key : null} />}
@@ -1377,7 +1401,7 @@ function RingView(view: ViewProps) {
             className="sa-shadow"
             style={{ fontSize: 72, fontWeight: 800, lineHeight: 1, ...clockColor(ended, skin) }}
           >
-            {formatClock(left)}
+            <Time text={formatClock(left)} />
           </span>
           {view.rates.length > 0 && (
             <div style={{ marginTop: 8 }}>

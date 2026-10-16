@@ -203,3 +203,46 @@ describe('Stream Alerts setup', () => {
     listener.close();
   });
 });
+
+describe('Stream Alerts setup follows', () => {
+  it('connects follow alerts with a pasted Follower Goal URL, and previews them only then', async () => {
+    withLayout(800, 350);
+    const user = setupUser();
+    const received: { alert: { kind: string } }[] = [];
+    const listener = new BroadcastChannel(PREVIEW_CHANNEL);
+    listener.onmessage = ({ data }) => received.push(data);
+    await renderRoute(PAGE);
+    await user.type(twitchField(), 'streamer');
+    const testFollow = () => button(en('streamAlerts.testFollow'));
+    expect(testFollow().disabled).toBe(true);
+    expect(previewSrc().searchParams.get('follow')).toBe('0');
+
+    await user.click(settingsTab(en('streamAlerts.sectionAlerts')));
+    const follows = kind(en('streamAlerts.kindFollow'));
+    await user.click(follows.getByRole('textbox', { name: en('followConnection.paste') }));
+    await user.paste('https://extensions.senchabot.com/widgets/follower-goal?token=abc123');
+    await user.click(follows.getByRole('button', { name: en('followConnection.connect') }));
+    expect(new URL(urlField().value).searchParams.get('token')).toBe('abc123');
+    // The preview plays follows now, and never gets the token.
+    expect(previewSrc().searchParams.has('follow')).toBe(false);
+    expect(previewSrc().searchParams.has('token')).toBe(false);
+
+    await user.click(testFollow());
+    await vi.waitFor(() => expect(received).toHaveLength(1));
+    expect(received[0].alert).toMatchObject({
+      kind: 'follow',
+      name: en('streamAlerts.testViewer'),
+    });
+
+    await user.click(follows.getByRole('button', { name: en('followConnection.disconnect') }));
+    expect(new URL(urlField().value).searchParams.has('token')).toBe(false);
+    listener.close();
+  });
+
+  it('starts connected when the Dashboard opens it with a token', async () => {
+    const user = setupUser();
+    await renderRoute(`${PAGE}?token=xyz789`);
+    await user.type(twitchField(), 'streamer');
+    expect(new URL(urlField().value).searchParams.get('token')).toBe('xyz789');
+  });
+});

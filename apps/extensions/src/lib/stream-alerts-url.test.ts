@@ -30,8 +30,8 @@ describe('buildStreamAlertsUrl', () => {
       preset: 'classic',
       theme: 'celestial',
       color: 'gold',
-      enabled: { sub: true, gift: false, bits: true, raid: false },
-      headings: { sub: 'WELCOME', gift: '', bits: '100', raid: 'Raid!' },
+      enabled: { sub: true, gift: false, bits: true, raid: false, follow: false },
+      headings: { sub: 'WELCOME', gift: '', bits: '100', raid: 'Raid!', follow: 'Hi!' },
       minGift: 5,
       minBits: 250,
       minRaid: 10,
@@ -39,12 +39,13 @@ describe('buildStreamAlertsUrl', () => {
       volume: 0,
       message: false,
     };
-    const url = buildStreamAlertsUrl(ORIGIN, settings, '', 'kicker', 'tr');
+    const url = buildStreamAlertsUrl(ORIGIN, settings, '', 'kicker', 'tr', 'senchabot-token');
     expect(parseStreamAlertsUrl(url)).toEqual({
       settings,
       twitchChannel: '',
       kickChannel: 'kicker',
       locale: 'tr',
+      token: 'senchabot-token',
     });
   });
 });
@@ -128,16 +129,23 @@ describe('Stream Alerts URL edge cases', () => {
   it('reads an empty flag as on, like any word but an off word', () => {
     expect(read('sub=&msg=').enabled.sub).toBe(true);
     expect(read('msg=').message).toBe(true);
-    expect(read('sub=OFF&gift=No&bits=FALSE&raid=0').enabled).toEqual({
+    expect(read('sub=OFF&gift=No&bits=FALSE&raid=0&follow=off').enabled).toEqual({
       sub: false,
       gift: false,
       bits: false,
       raid: false,
+      follow: false,
     });
   });
 
   it('round-trips headings with URL-special characters and non-Latin text', () => {
-    const headings = { sub: 'A&B=C?#%', gift: 'Hediye 🎁', bits: 'YENİ ÇİZ', raid: '+ raid +' };
+    const headings = {
+      sub: 'A&B=C?#%',
+      gift: 'Hediye 🎁',
+      bits: 'YENİ ÇİZ',
+      raid: '+ raid +',
+      follow: 'Takip ❤',
+    };
     const url = buildStreamAlertsUrl(
       ORIGIN,
       { ...DEFAULT_STREAM_ALERTS_SETTINGS, headings },

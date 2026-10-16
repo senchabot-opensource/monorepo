@@ -3,6 +3,7 @@ import { useId, useRef, useState } from 'react';
 import { ChannelFields } from '#/components/channel-fields';
 import { ChatCommandsCard } from '#/components/chat-commands-card';
 import { CopyUrlField } from '#/components/copy-url-field';
+import { FollowConnection, useLinkedFollowToken } from '#/components/follow-connection';
 import { PreviewFrame } from '#/components/preview-frame';
 import { SetupShell } from '#/components/setup-shell';
 import { TestButtons } from '#/components/test-buttons';
@@ -18,7 +19,7 @@ import { HINT_CLASS } from '#/components/ui/text-field';
 import { TimeZoneSelect } from '#/components/ui/time-zone-select';
 import { MAP_SUBCOMMAND } from '#/features/widgets/irl-hud/hud-map';
 import { BUY_SUBCOMMAND } from '#/features/widgets/irl-hud/hud-market';
-import { CASH_SUBCOMMAND, COMMAND } from '#/features/widgets/irl-hud/hud-money';
+import { CASH_SUBCOMMAND, COMMAND, type HudEvent } from '#/features/widgets/irl-hud/hud-money';
 import { MarketField } from '#/features/widgets/irl-hud/market-field';
 import { PlacesField } from '#/features/widgets/irl-hud/place-field';
 import { PREVIEW_CHANNEL, type PreviewMessage } from '#/features/widgets/irl-hud/use-irl-hud';
@@ -132,6 +133,9 @@ function IrlHudSetup() {
   const { t } = useI18n();
   const [twitchChannel, setTwitchChannel] = useState('');
   const [kickChannel, setKickChannel] = useState('');
+  // The Senchabot connection that brings follows in: from a Dashboard link, or pasted.
+  const [token, setToken] = useState('');
+  useLinkedFollowToken(setToken);
   const [settings, setSettings] = useState(DEFAULT_HUD_SETTINGS);
   const [valuesTab, setValuesTab] = useState<SubathonPlatform>('twitch');
   const mounted = useHydrated();
@@ -144,12 +148,14 @@ function IrlHudSetup() {
   const update = <K extends keyof HudSettings>(key: K, value: HudSettings[K]) =>
     setSettings((current) => ({ ...current, [key]: value }));
 
-  const sendEvent = (event: SubathonEvent) => send({ type: 'event', event });
+  const sendEvent = (event: HudEvent) => send({ type: 'event', event });
 
   // Gated on mount so the prerendered input and the first client render agree.
   const origin = mounted ? window.location.origin : '';
-  const widgetUrl = mounted ? buildHudUrl(origin, settings, twitchChannel, kickChannel) : '';
-  const previewUrl = mounted ? buildHudPreviewUrl(origin, settings, previewId) : '';
+  const widgetUrl = mounted ? buildHudUrl(origin, settings, twitchChannel, kickChannel, token) : '';
+  // Without a connection no follow ever comes, so the preview doesn't play any either.
+  const previewSettings = token ? settings : { ...settings, follow: 0 };
+  const previewUrl = mounted ? buildHudPreviewUrl(origin, previewSettings, previewId) : '';
 
   const applyWidgetUrl = (text: string) => {
     const parsed = parseHudUrl(text);
@@ -157,6 +163,7 @@ function IrlHudSetup() {
     setSettings(parsed.settings);
     setTwitchChannel(parsed.twitchChannel);
     setKickChannel(parsed.kickChannel);
+    setToken(parsed.token);
     return true;
   };
 
@@ -415,6 +422,27 @@ function IrlHudSetup() {
     </SettingsGroup>
   );
 
+  const integrationsTab = (
+    <SettingsGroup title={t('irlHud.sectionIntegrations')} hideTitle>
+      <p className={`${HINT_CLASS} mt-0`}>{t('irlHud.integrationsHint')}</p>
+      <FollowConnection token={token} onTokenChange={setToken} />
+      <div className="grid gap-3 sm:grid-cols-2">
+        <div>
+          <FieldLabel htmlFor={`${id}-follow`} tip={t('irlHud.perFollowTip')}>
+            {t('irlHud.perFollow')}
+          </FieldLabel>
+          <CountField
+            id={`${id}-follow`}
+            value={settings.follow}
+            onChange={(value) => update('follow', value)}
+            min={0}
+            max={MAX_EVENT_MONEY}
+          />
+        </div>
+      </div>
+    </SettingsGroup>
+  );
+
   // The test buttons use a picked platform whose value is on, so a click always shows something.
   const onPlatform = (twitch: number, kick: number): SubathonPlatform | null => {
     const on: Record<SubathonPlatform, boolean> = {
@@ -432,7 +460,7 @@ function IrlHudSetup() {
     (settings.platforms !== 'kick' && twitch > 0) || (settings.platforms !== 'twitch' && kick > 0);
   const name = t('irlHud.testViewer');
   const mod = (text: string): SubathonEvent => ({ kind: 'mod', platform: 'twitch', text });
-  const testButtons: { label: string; event: () => SubathonEvent | null; disabled?: boolean }[] = [
+  const testButtons: { label: string; event: () => HudEvent | null; disabled?: boolean }[] = [
     {
       label: t('irlHud.testSub'),
       disabled: !canPay(settings.tsub, settings.ksub),
@@ -463,6 +491,15 @@ function IrlHudSetup() {
       event: () => {
         const platform = onPlatform(settings.traid, settings.kraid);
         return platform && { kind: 'raid', platform, name, viewers: 25 };
+      },
+    },
+    {
+      label: t('irlHud.testFollow'),
+      // Follows come only through Senchabot, so the preview takes them only when connected.
+      disabled: !token || !canPay(settings.follow, settings.follow),
+      event: () => {
+        const platform = onPlatform(settings.follow, settings.follow);
+        return platform && { kind: 'follow', platform, name };
       },
     },
     { label: t('irlHud.testAdd'), event: () => mod(`${CASH} +1000`) },
@@ -525,6 +562,7 @@ function IrlHudSetup() {
         { id: 'map', label: t('irlHud.sectionMap'), content: mapTab },
         { id: 'cash', label: t('irlHud.sectionMoney'), content: cashTab },
         { id: 'market', label: t('irlHud.sectionMarket'), content: marketTab },
+        { id: 'integrations', label: t('irlHud.sectionIntegrations'), content: integrationsTab },
       ]}
       previewTitle={t('irlHud.previewTitle')}
       previewTip={t('irlHud.previewHint')}

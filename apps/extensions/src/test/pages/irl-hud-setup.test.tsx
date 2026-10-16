@@ -160,6 +160,7 @@ describe('IRL HUD setup', () => {
       'irlHud.sectionMap',
       'irlHud.sectionMoney',
       'irlHud.sectionMarket',
+      'irlHud.sectionIntegrations',
     ];
     const list = screen.getByRole('tablist', { name: en('common.settingsSections') });
     const tabs = [...list.querySelectorAll('[role="tab"]')].map((tab) => tab.textContent);
@@ -200,5 +201,43 @@ describe('IRL HUD setup', () => {
       warning.closest('[role="tabpanel"]')?.hasAttribute('hidden'),
     );
     expect(hidden).toEqual([false, true]);
+  });
+});
+
+describe('IRL HUD setup integrations', () => {
+  const testFollow = () => button(en('irlHud.testFollow'));
+
+  it('connects follows with a pasted Follower Goal URL, and writes the token and the cash', async () => {
+    const user = await openPage('irlHud.sectionIntegrations');
+    expect(testFollow().disabled).toBe(true);
+    expect(widgetUrl().searchParams.has('token')).toBe(false);
+
+    const paste = textbox(en('followConnection.paste'));
+    await user.type(paste, 'two words');
+    await user.click(button(en('followConnection.connect')));
+    expect(screen.getByText(en('followConnection.invalid'))).toBeTruthy();
+
+    await user.clear(paste);
+    await user.click(paste);
+    await user.paste('https://extensions.senchabot.com/widgets/follower-goal?token=abc123');
+    await user.click(button(en('followConnection.connect')));
+    expect(widgetUrl().searchParams.get('token')).toBe('abc123');
+    expect(testFollow().disabled).toBe(false);
+
+    const perFollow = textbox(en('irlHud.perFollow'));
+    await user.clear(perFollow);
+    await user.type(perFollow, '50');
+    expect(widgetUrl().searchParams.get('follow')).toBe('50');
+
+    await user.click(button(en('followConnection.disconnect')));
+    expect(widgetUrl().searchParams.has('token')).toBe(false);
+    expect(testFollow().disabled).toBe(true);
+  });
+
+  it('starts connected when the Dashboard opens it with a token', async () => {
+    const user = setupUser();
+    await renderRoute(`${PAGE}?token=xyz789`);
+    await user.type(textbox(en('common.twitchChannel')), 'streamer');
+    expect(widgetUrl().searchParams.get('token')).toBe('xyz789');
   });
 });

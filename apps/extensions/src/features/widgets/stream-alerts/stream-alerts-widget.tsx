@@ -28,6 +28,8 @@ export const themeFont = (theme: AlertTheme) => THEMES[theme].font;
 interface StreamAlertsWidgetProps {
   twitchChannel?: string;
   kickChannel?: string;
+  /** A Senchabot connection, which brings follow alerts. */
+  token?: string;
   settings: AlertSettings;
   simulate?: boolean;
   /** Preview only: the platform the setup page picked, so test alerts use its words. */
@@ -39,6 +41,7 @@ interface StreamAlertsWidgetProps {
 export function StreamAlertsWidget({
   twitchChannel,
   kickChannel,
+  token,
   settings,
   simulate,
   simPlatform,
@@ -49,6 +52,7 @@ export function StreamAlertsWidget({
   const shown = useStreamAlerts({
     twitch: twitchChannel,
     kick: kickChannel,
+    token,
     settings,
     simulate,
     simPlatform,
@@ -134,7 +138,6 @@ function viewProps(
   };
 }
 
-
 function detailFor(alert: StreamAlert, t: Translate, number: (n: number) => string): string {
   switch (alert.kind) {
     case 'sub':
@@ -159,5 +162,7 @@ function detailFor(alert: StreamAlert, t: Translate, number: (n: number) => stri
       return alert.viewers === 1
         ? t('streamAlerts.alert.raidDetailOne')
         : t('streamAlerts.alert.raidDetail', { viewers: number(alert.viewers) });
+    case 'follow':
+      return t('streamAlerts.alert.followDetail');
   }
 }

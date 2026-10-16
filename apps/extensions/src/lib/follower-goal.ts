@@ -15,7 +15,8 @@ export function resolveFollowerGoalWsUrl(): string {
     return (window as unknown as { __SENCHABOT_WS_URL__: string }).__SENCHABOT_WS_URL__;
   }
   try {
-    if (import.meta.env?.VITE_SENCHABOT_WS_URL) {
+    // Read statically: with `import.meta.env?.`, Vite builds every VITE_ variable into the page.
+    if (import.meta.env.VITE_SENCHABOT_WS_URL) {
       return import.meta.env.VITE_SENCHABOT_WS_URL;
     }
   } catch {}

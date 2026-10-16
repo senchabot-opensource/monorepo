@@ -76,7 +76,7 @@ const PAGES: PageCase[] = [
       'common.faqTitle',
       'common.moreWidgets',
     ],
-    faq: ['subathon.faq1Q', 'subathon.faq2Q', 'subathon.faq3Q', 'subathon.faq4Q'],
+    faq: ['subathon.faq1Q', 'subathon.faq2Q', 'subathon.faq3Q', 'subathon.faq4Q', 'subathon.faq5Q'],
   },
   {
     path: '/setup/sub-goal',
@@ -277,6 +277,7 @@ const PAGES: PageCase[] = [
       'irlHud.sectionMap',
       'irlHud.sectionMoney',
       'irlHud.sectionMarket',
+      'irlHud.sectionIntegrations',
     ],
     sections: [
       'common.sectionChannel',
@@ -284,6 +285,7 @@ const PAGES: PageCase[] = [
       'irlHud.sectionMap',
       'irlHud.sectionMoney',
       'irlHud.sectionMarket',
+      'irlHud.sectionIntegrations',
       'irlHud.sectionCommands',
       'irlHud.previewTitle',
       'irlHud.guideTitle',

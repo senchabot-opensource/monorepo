@@ -101,5 +101,8 @@ export function parseIndoorCommand(message: string): boolean | null {
   return Object.hasOwn(INDOOR_WORDS, lower) ? INDOOR_WORDS[lower] : null;
 }
 
-/** How fast the arrow goes for each movement, in px a second. */
-export const MOVE_SPEED: Record<HudMove, number> = { walk: 14, run: 32, stay: 0 };
+/**
+ * How fast the arrow goes for each movement, in px a second. A walk takes over a minute to cross
+ * the mini-map; a run goes at twice that, the pace walking used to have.
+ */
+export const MOVE_SPEED: Record<HudMove, number> = { walk: 3.5, run: 7, stay: 0 };

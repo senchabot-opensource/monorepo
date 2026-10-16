@@ -60,6 +60,8 @@ export interface HudMoneyValues {
   kicks: number;
   /** Per viewer a Kick raid (host) brings. */
   kraid: number;
+  /** Per new follower on either platform. Only a Senchabot connection (`token`) brings follows. */
+  follow: number;
 }
 export type HudMoneyKey = keyof HudMoneyValues;
 
@@ -109,6 +111,7 @@ export const DEFAULT_HUD_SETTINGS: HudSettings = {
   kgift: 100,
   kicks: 25,
   kraid: 10,
+  follow: 10,
   tiers: true,
   clock: true,
   h12: false,
@@ -161,6 +164,7 @@ export const MONEY_KEYS = [
   'kgift',
   'kicks',
   'kraid',
+  'follow',
 ] as const satisfies readonly HudMoneyKey[];
 
 type FlagKey = 'tiers' | 'clock' | 'h12' | 'radar' | 'pops';
@@ -254,14 +258,20 @@ function buildParams(settings: HudSettings, twitchChannel: string, kickChannel: 
   return params;
 }
 
-/** The URL for OBS. Empty until a channel on a picked platform is filled in. */
+/**
+ * The URL for OBS. Empty until a channel on a picked platform is filled in. `token`, a Senchabot
+ * connection, brings follows in.
+ */
 export function buildHudUrl(
   origin: string,
   settings: HudSettings,
   twitchChannel: string,
   kickChannel: string,
+  token = '',
 ): string {
-  return channelWidgetUrl(origin, WIDGET_PATH, buildParams(settings, twitchChannel, kickChannel));
+  const params = buildParams(settings, twitchChannel, kickChannel);
+  if (token.trim()) params.set('token', token.trim());
+  return channelWidgetUrl(origin, WIDGET_PATH, params);
 }
 
 /** Plays simulated subs with the same settings and never touches a channel or saved money. */
@@ -319,9 +329,16 @@ export function parseHudUrl(text: string): {
   settings: HudSettings;
   twitchChannel: string;
   kickChannel: string;
+  /** The Senchabot connection, or empty. */
+  token: string;
 } | null {
   const pasted = readWidgetUrl(text, WIDGET_PATH);
   if (!pasted) return null;
   const { params, platforms, twitchChannel, kickChannel } = pasted;
-  return { twitchChannel, kickChannel, settings: { platforms, ...readHudSettings(params) } };
+  return {
+    twitchChannel,
+    kickChannel,
+    token: params.get('token')?.trim() ?? '',
+    settings: { platforms, ...readHudSettings(params) },
+  };
 }

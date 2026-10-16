@@ -8,7 +8,7 @@ import type { MapGraph, MapNode, Pt, Steer } from './map-graph';
  */
 export const OVERPASS_URL = 'https://overpass-api.de/api/interpreter';
 /**
- * Public Overpass servers, tried in turn: the main one is often busy (504) at peak hours. Both
+ * Public Overpass servers, asked in turn: the main one is often busy (504) at peak hours. Both
  * answer cross-origin requests; they turn away requests without a Referer, which browsers send.
  */
 export const OVERPASS_URLS = [
@@ -28,8 +28,24 @@ const STAY_WITHIN_PX = STAY_WITHIN_M * PX_PER_M;
 const ROAD_PREFERENCE: Record<RoadClass, number> = { path: 2.5, minor: 1, major: 0.4 };
 // osm2: maps saved since the zoom-in; older entries were drawn at another scale.
 const CACHE_PREFIX = 'senchabot.irl-hud.osm2:';
+const OLD_CACHE_PREFIX = 'senchabot.irl-hud.osm:';
 const CACHE_DAYS = 14;
-const FETCH_TIMEOUT_MS = 40_000;
+const CACHE_MS = CACHE_DAYS * 86_400_000;
+// The main server has taken 47 s for a city center at a busy hour; past this a request counts as
+// failed.
+const FETCH_TIMEOUT_MS = 60_000;
+/**
+ * How long a server gets before the next one is asked too, for the place on screen. Overpass
+ * answers within a few seconds, or when busy not for half a minute: the map then comes from
+ * whichever server answers first.
+ */
+export const NEXT_SERVER_MS = 6000;
+/**
+ * The pause before a background load, after the last load ended. Overpass gives each IP only a
+ * couple of queries at once, and a dropped request keeps running there, so places loaded back to
+ * back would get the place on screen turned away (429).
+ */
+export const PREFETCH_PAUSE_MS = 30_000;
 // A dense city center has thousands; past this the mini-map is a solid grey block anyway.
 const MAX_BUILDINGS = 4000;
 
@@ -256,7 +272,7 @@ export function readCachedMap(lat: number, lon: number, now = Date.now()): RealM
       saved &&
       Array.isArray(saved.roads) &&
       Array.isArray(saved.areas) &&
-      now - Number(saved.at) < CACHE_DAYS * 86_400_000
+      now - Number(saved.at) < CACHE_MS
     )
       return { roads: saved.roads, areas: saved.areas };
   } catch {
@@ -265,7 +281,36 @@ export function readCachedMap(lat: number, lon: number, now = Date.now()): RealM
   return null;
 }
 
+/**
+ * Drops the maps no load will read again: the first format's, and any older than CACHE_DAYS. A
+ * streamer on the road saves new places for months, and a full storage would save none.
+ */
+export function pruneCachedMaps(now = Date.now()) {
+  try {
+    const storage = window.localStorage;
+    for (let i = storage.length - 1; i >= 0; i--) {
+      const key = storage.key(i);
+      if (!key) continue;
+      if (key.startsWith(OLD_CACHE_PREFIX)) {
+        storage.removeItem(key);
+      } else if (key.startsWith(CACHE_PREFIX)) {
+        // Saved as {"at":…, so the time is read without parsing the whole map.
+        const at = Number(/^\{"at":(\d+)/.exec(storage.getItem(key) ?? '')?.[1]);
+        if (!(now - at < CACHE_MS)) storage.removeItem(key);
+      }
+    }
+  } catch {
+    // Storage blocked: nothing to tidy.
+  }
+}
+
+let pruned = false;
+
 function cacheMap(lat: number, lon: number, map: RealMap) {
+  if (!pruned) {
+    pruned = true;
+    pruneCachedMaps();
+  }
   try {
     window.localStorage.setItem(cacheKey(lat, lon), JSON.stringify({ at: Date.now(), ...map }));
   } catch {
@@ -273,35 +318,185 @@ function cacheMap(lat: number, lon: number, map: RealMap) {
   }
 }
 
-/** One Overpass server's answer, parsed; throws RetryableFetchError when it doesn't give one. */
-async function askOverpass(url: string, query: string): Promise<unknown> {
-  let response: Response;
+/**
+ * One Overpass server's answer, parsed; throws RetryableFetchError when it doesn't give one.
+ * `stop` drops the request once another server has answered.
+ */
+async function askOverpass(url: string, query: string, stop: AbortSignal): Promise<unknown> {
+  // Not AbortSignal.any, which OBS 30's Chromium 103 doesn't have.
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+  const drop = () => controller.abort();
+  stop.addEventListener('abort', drop);
   try {
-    response = await fetch(`${url}?data=${encodeURIComponent(query)}`, {
-      headers: { Accept: 'application/json' },
-      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
-    });
-  } catch (error) {
-    throw new RetryableFetchError(`Overpass ${url}: ${error}`);
+    let response: Response;
+    try {
+      response = await fetch(`${url}?data=${encodeURIComponent(query)}`, {
+        headers: { Accept: 'application/json' },
+        signal: controller.signal,
+      });
+    } catch (error) {
+      throw new RetryableFetchError(`Overpass ${url}: ${error}`);
+    }
+    if (!response.ok) throw new RetryableFetchError(`Overpass ${url}: ${response.status}`);
+    const data = await response.json();
+    // A query that ran out of time or memory still answers 200, with what it found so far and a
+    // remark. Saved, part of a map would stand for two weeks, so it counts as no answer.
+    const remark = (data as { remark?: unknown } | null)?.remark;
+    if (typeof remark === 'string' && /runtime error/i.test(remark)) {
+      throw new RetryableFetchError(`Overpass ${url}: ${remark}`);
+    }
+    return data;
+  } finally {
+    clearTimeout(timer);
+    stop.removeEventListener('abort', drop);
   }
-  if (!response.ok) throw new RetryableFetchError(`Overpass ${url}: ${response.status}`);
-  return response.json();
 }
 
-/** The map around (lat, lon), from the cache or Overpass. Throws RetryableFetchError to retry. */
-export async function loadRealMap(lat: number, lon: number): Promise<RealMap> {
+interface Asking {
+  answer: Promise<unknown>;
+  /** Asks the next server now, for a background load whose place came on screen. */
+  hurry: () => void;
+}
+
+/**
+ * The first answer from the Overpass servers. Each is asked as soon as the one before fails, and
+ * for the place on screen also once it has had NEXT_SERVER_MS; the others are dropped once one
+ * answers. A background load asks one server at a time, so it never takes two of the IP's slots.
+ */
+function askServers(query: string, background: boolean): Asking {
+  let hurry = () => {};
+  const answer = new Promise((resolve, reject) => {
+    const done = new AbortController();
+    let asked = 0;
+    let failed = 0;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const askNext = () => {
+      clearTimeout(timer);
+      if (done.signal.aborted || asked === OVERPASS_URLS.length) return;
+      const url = OVERPASS_URLS[asked++];
+      if (!background && asked < OVERPASS_URLS.length) timer = setTimeout(askNext, NEXT_SERVER_MS);
+      askOverpass(url, query, done.signal).then(
+        (data) => {
+          if (done.signal.aborted) return;
+          clearTimeout(timer);
+          done.abort();
+          resolve(data);
+        },
+        (error) => {
+          if (done.signal.aborted) return;
+          if (++failed < OVERPASS_URLS.length) {
+            askNext();
+            return;
+          }
+          done.abort();
+          reject(
+            error instanceof RetryableFetchError ? error : new RetryableFetchError(String(error)),
+          );
+        },
+      );
+    };
+    hurry = () => {
+      if (asked > 0) askNext();
+    };
+    askNext();
+  });
+  return { answer, hurry: () => hurry() };
+}
+
+// Places on their way from Overpass, so the radar and a prefetch of the same place ask once.
+const loading = new Map<
+  string,
+  { map: Promise<RealMap>; hurry: () => void; background: boolean }
+>();
+// When the last load ended, so background loads keep their distance from it.
+let lastLoadAt = Number.NEGATIVE_INFINITY;
+
+/**
+ * The map around (lat, lon), from the cache or Overpass. Throws RetryableFetchError to retry.
+ * `background` loads it for later: one server at a time, never two at once.
+ */
+export function loadRealMap(lat: number, lon: number, background = false): Promise<RealMap> {
   const cached = readCachedMap(lat, lon);
-  if (cached) return cached;
-  const query = overpassQuery(lat, lon);
-  let failure: unknown;
-  for (const url of OVERPASS_URLS) {
+  if (cached) return Promise.resolve(cached);
+  const key = cacheKey(lat, lon);
+  const asked = loading.get(key);
+  if (asked) {
+    // Loading in the background and now on screen: the next server is asked at once.
+    if (!background && asked.background) {
+      asked.background = false;
+      asked.hurry();
+    }
+    return asked.map;
+  }
+  const { answer, hurry } = askServers(overpassQuery(lat, lon), background);
+  const map = answer
+    .then((data) => {
+      const parsed = parseOverpass(data, lat, lon);
+      cacheMap(lat, lon, parsed);
+      return parsed;
+    })
+    .finally(() => {
+      loading.delete(key);
+      lastLoadAt = Date.now();
+    });
+  loading.set(key, { map, hurry, background });
+  return map;
+}
+
+/** Resolves after `ms`, or as soon as `stop` aborts. */
+const pause = (ms: number, stop: AbortSignal) =>
+  new Promise<void>((resolve) => {
+    const end = () => {
+      clearTimeout(timer);
+      stop.removeEventListener('abort', end);
+      resolve();
+    };
+    const timer = setTimeout(end, ms);
+    stop.addEventListener('abort', end);
+    if (stop.aborted) end();
+  });
+
+/** Waits until no place is loading, and none has for PREFETCH_PAUSE_MS. */
+async function waitForQuiet(stop: AbortSignal) {
+  while (!stop.aborted) {
+    if (loading.size > 0) {
+      await Promise.allSettled([...loading.values()].map((entry) => entry.map));
+      continue;
+    }
+    const now = Date.now();
+    // A clock set back can't hold the loads off for longer than the pause.
+    if (lastLoadAt > now) lastLoadAt = now;
+    const wait = lastLoadAt + PREFETCH_PAUSE_MS - now;
+    if (wait <= 0) return;
+    await pause(wait, stop);
+  }
+}
+
+/**
+ * Loads the saved places' maps one after another, so a mod's !hud map switch shows its place
+ * at once. The place on screen comes first; each of the others waits until nothing has loaded for
+ * PREFETCH_PAUSE_MS, and asks one server at a time. Only what isn't saved yet is asked for; the
+ * first refusal ends it, and so does `stop`.
+ */
+export async function prefetchRealMaps(
+  places: readonly { lat: number; lon: number }[],
+  stop: AbortSignal,
+): Promise<void> {
+  for (const place of places) {
+    if (stop.aborted) return;
+    if (readCachedMap(place.lat, place.lon)) continue;
+    // The place on screen is on its way already; the others wait their turn.
+    if (!loading.has(cacheKey(place.lat, place.lon))) {
+      await waitForQuiet(stop);
+      if (stop.aborted) return;
+      if (readCachedMap(place.lat, place.lon)) continue;
+    }
     try {
-      const map = parseOverpass(await askOverpass(url, query), lat, lon);
-      cacheMap(lat, lon, map);
-      return map;
-    } catch (error) {
-      failure = error;
+      await loadRealMap(place.lat, place.lon, true);
+    } catch {
+      // Overpass is busy: the place loads when it's shown, with its retries.
+      return;
     }
   }
-  throw failure instanceof RetryableFetchError ? failure : new RetryableFetchError(String(failure));
 }

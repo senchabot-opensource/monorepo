@@ -25,6 +25,7 @@ function RouteComponent() {
     <IrlHudWidget
       twitchChannel={text('twitch')}
       kickChannel={text('kick')}
+      token={text('token')}
       settings={readHudSettings(params)}
       simulate={readFlag(params.get('simulate'), false)}
       simPlatform={simPlatform === 'twitch' || simPlatform === 'kick' ? simPlatform : undefined}

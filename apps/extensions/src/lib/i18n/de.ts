@@ -701,7 +701,7 @@ export const de: typeof en = {
     previewSpeed: 'Wachstumstempo der Vorschau',
     previewSpeedValue: '{rate}×',
     previewHint:
-      'Die Vorschau wächst mit simulierten Subs. Im Stream wächst deine Pflanze mit echten Subs, Resubs und Gift-Subs in deinem Kanal.',
+      'Die Vorschau wächst mit simulierten Subs. Im Stream wächst deine Pflanze mit echten Subs, Resubs und Gift-Subs in deinem Kanal. Twitch-Prime-Subs zählen auch.',
     widgetUrlTip:
       'Schon ein Widget gebaut? Füg seine URL hier ein, um deine Einstellungen zu laden und nur das zu ändern, was du brauchst.',
     widgetUrlPlaceholder: 'Bestehende Widget-URL zum Bearbeiten einfügen',
@@ -774,7 +774,8 @@ export const de: typeof en = {
     startCommand: 'Mit {command}',
     startAuto: 'Sofort',
     sectionValues: 'Zeit pro Event',
-    valuesHint: 'Stell einen Wert auf 0, um ihn auszuschalten.',
+    valuesHint:
+      'Stell einen Wert auf 0, um ihn auszuschalten. Ein Twitch-Prime-Sub zählt als Tier-1-Sub.',
     dynamicRates: 'Werte nach Restzeit anpassen',
     dynamicRatesTip: 'Nutzt einen zweiten Satz Werte, wenn noch genug Zeit auf der Uhr ist.',
     shiftAt: 'Schwelle',
@@ -813,7 +814,8 @@ export const de: typeof en = {
     cmdRemove: 'Zieht Zeit ab',
     cmdSet: 'Setzt die Restzeit',
     cmdReset: 'Fängt bei der Startzeit neu an',
-    commandsDurations: 'Zeiten schreibst du wie 10m, 1h30m, 45s oder 1:30:00. Eine reine Zahl sind Minuten.',
+    commandsDurations:
+      'Jede Zeit geht, etwa 57m, 2h15m, 45s oder 1:30:00. Eine reine Zahl sind Minuten.',
     previewTitle: 'Vorschau des Subathon Timers',
     previewIframeTitle: 'Vorschau des Subathon Timers',
     previewHint:
@@ -853,6 +855,9 @@ export const de: typeof en = {
     faq4Q: 'Muss ich mich einloggen oder meinen Account verbinden?',
     faq4A:
       'Nein. Der Timer liest Subs, Gifts, Bits, Kicks und Mod-Befehle aus deinem öffentlichen Twitch- und Kick-Chat, so wie ein ausgeloggter Zuschauer sie sieht.',
+    faq5Q: 'Geben Twitch-Prime-Subs Zeit dazu?',
+    faq5A:
+      'Ja. Ein Prime-Sub zählt als Tier-1-Sub und gibt die Zeit von Pro Sub dazu. Auf Twitch zählt ein Resub, ob Prime oder bezahlt, wenn der Zuschauer ihn im Chat teilt.',
   },
   goal: {
     breadcrumb: 'Sub-Ziel einrichten',
@@ -931,9 +936,9 @@ export const de: typeof en = {
     faq2Q: 'Was passiert, wenn OBS schließt oder die Browser-Quelle neu lädt?',
     faq2A:
       'Die Zahl wird in OBS gespeichert und ist wieder da, wo sie war, auch beim nächsten Stream. Subs, die reinkommen, während OBS zu ist, kann es nicht sehen, ein Mod kann sie also mit !goal add nachtragen.',
-    faq3Q: 'Zählen Resubs und Gift-Subs?',
+    faq3Q: 'Zählen Prime-Subs, Resubs und Gift-Subs?',
     faq3A:
-      'Ja. Jeder neue Sub und Resub zählt 1, und ein Gift zählt 1 für jeden Sub darin, 5 Gift-Subs zählen also 5. Auf Twitch zählt ein Resub, wenn der Zuschauer ihn im Chat teilt, und auf Kick, wenn er verlängert wird.',
+      'Ja. Jeder neue Sub und Resub zählt 1, Twitch-Prime-Subs wie alle anderen, und ein Gift zählt 1 für jeden Sub darin, 5 Gift-Subs zählen also 5. Auf Twitch zählt ein Resub, wenn der Zuschauer ihn im Chat teilt, und auf Kick, wenn er verlängert wird.',
     faq4Q: 'Kann ich ein Follower-Ziel machen?',
     faq4A:
       'Ja! Nutze unser Follower-Ziel-Overlay, um neue Follower von Twitch und Kick live im Stream zu zählen.',
@@ -1018,6 +1023,19 @@ export const de: typeof en = {
     faq3Q: 'Kann ich Sub-Ziel und Follower-Ziel gleichzeitig nutzen?',
     faq3A:
       'Ja! Sub-Ziel und Follower-Ziel verwalten unabhängige Zähler im OBS-Speicher und nutzen separate Endpunkte.',
+  },
+  followConnection: {
+    title: 'Follows brauchen Senchabot',
+    text:
+      'Der Chat verrät nicht, wer folgt, Senchabot schon. Verbinde deinen Kanal im Senchabot-Dashboard, öffne das Follower-Ziel über die Tools-Seite und füge dann die URL oder den Token dieses Widgets hier ein.',
+    dashboard: 'Senchabot Dashboard Tools öffnen →',
+    paste: 'Follower-Ziel-URL oder Token',
+    placeholder: 'https://extensions.senchabot.com/widgets/follower-goal?token=…',
+    connect: 'Verbinden',
+    invalid:
+      'Darin steckt kein Token. Füge die URL des Follower-Ziels von seiner Setup-Seite ein, geöffnet über das Dashboard.',
+    connected: 'Mit Senchabot verbunden: neue Follower kommen an.',
+    disconnect: 'Trennen',
   },
   irlHud: {
     breadcrumb: 'IRL-HUD-Overlay einrichten',
@@ -1131,11 +1149,16 @@ export const de: typeof en = {
     perRaider: 'Pro Raider',
     perRaiderTip:
       'Zählt für jeden Zuschauer, den ein Raid mitbringt, ein Raid mit 50 gibt das also fünfzigmal. Auf Kick heißt ein Raid Host.',
+    perFollow: 'Pro Follow',
+    perFollowTip: 'Jeder neue Follower, auf Twitch und auf Kick. Mit 0 zählen Follows nicht.',
     tiers: 'Tier 2 und 3 zählen mehr',
     tiersTip:
       'Auf Twitch bringt ein Tier-2-Sub das Geld von 2 Subs und ein Tier-3-Sub das von 5, passend zum Preis.',
     sectionMap: 'Minikarte',
     sectionMarket: 'Markt',
+    sectionIntegrations: 'Integrationen',
+    integrationsHint:
+      'Integrationen bringen, was der Chat nicht zeigt. Neue Follower kommen über Senchabot und geben das Geld unten dazu.',
     marketHint:
       'Items, die du und deine Mods im Chat mit !hud buy und dem Namen des Items kaufen. Der Preis wird vom Geld abgezogen; reicht das Geld nicht, wird nichts gekauft.',
     items: 'Items',
@@ -1184,13 +1207,14 @@ export const de: typeof en = {
     previewTitle: 'Vorschau des IRL-HUD-Overlays',
     previewIframeTitle: 'Vorschau des IRL-HUD-Overlays',
     previewHint:
-      'Die Vorschau spielt simulierte Subs, Gifts, Cheers und Raids ab. Im Stream gibt nur dein Chat Geld dazu.',
+      'Die Vorschau spielt simulierte Subs, Gifts, Cheers und Raids ab, mit verbundenem Senchabot auch Follows. Im Stream geben nur dein Chat und deine neuen Follower Geld dazu.',
     testTitle: 'Probier es aus:',
     testViewer: 'Du',
     testSub: '+1 Sub',
     testGift: '+5 Gifts',
     testBits: '+500 Bits/Kicks',
     testRaid: 'Raid mit 25',
+    testFollow: '+1 Follow',
     testAdd: '+$1,000',
     testRemove: '−$500',
     testMove: 'Stopp / Gehen',
@@ -2270,7 +2294,7 @@ export const de: typeof en = {
     sectionCommands: 'Chatbefehle',
     commandsIntro:
       'Mit eingetragenem Kanal können du und deine Mods den Countdown im Twitch- oder Kick-Chat ändern, z. B. um den Start zu verschieben, während du AFK bist. `!cd` funktioniert überall dort, wo `!countdown` steht.',
-    cmdAdd: 'Gibt Zeit dazu: 5m, 90s oder 1h30m',
+    cmdAdd: 'Gibt beliebig viel Zeit dazu, etwa 57m, 90s oder 1h30m',
     cmdRemove: 'Zieht Zeit ab',
     cmdSet: 'Setzt die Restzeit',
     cmdPause: 'Pausiert ihn, start lässt ihn weiterlaufen',
@@ -2381,7 +2405,7 @@ export const de: typeof en = {
     cmdNewTime: 'Genauso, mit eigener Dauer wie 90s, 2m oder 1:30',
     cmdYesNo: 'Startet eine schnelle Ja-oder-Nein-Umfrage',
     cmdStart: 'Startet die fertige Umfrage von dieser Seite',
-    cmdExtend: 'Gibt der Umfrage mehr Zeit',
+    cmdExtend: 'Gibt der Umfrage beliebig viel mehr Zeit, etwa 45s oder 2m',
     cmdEnd: 'Beendet die Abstimmung sofort und zeigt die Ergebnisse',
     cmdCancel: 'Nimmt die Umfrage vom Screen',
     votingIntro:
@@ -2482,6 +2506,9 @@ export const de: typeof en = {
     kindBitsTip: 'Gecheerte Bits auf Twitch und geschickte Kicks auf Kick.',
     kindRaid: 'Raids',
     kindRaidTip: 'Ein anderer Kanal raidet dich, mit der Zahl der mitgebrachten Zuschauer.',
+    kindFollow: 'Follows',
+    kindFollowTip:
+      'Jeder neue Follower, auf Twitch und auf Kick. Follows kommen über Senchabot und brauchen deshalb die Verbindung unten.',
     minGift: 'Min. Subs',
     minBits: 'Min. Menge',
     minRaid: 'Min. Zuschauer',
@@ -2498,12 +2525,13 @@ export const de: typeof en = {
     previewTitle: 'Vorschau der Stream-Alerts',
     previewIframeTitle: 'Vorschau der Stream-Alerts',
     previewHint:
-      'Die Vorschau spielt stumme Beispiel-Alerts ab. Die Buttons unten spielen einen mit Sound. Im Stream erscheinen nur Subs, Gifts, Cheers und Raids aus deinem Kanal.',
+      'Die Vorschau spielt stumme Beispiel-Alerts ab. Die Buttons unten spielen einen mit Sound. Im Stream erscheinen nur Subs, Gifts, Cheers und Raids aus deinem Kanal, mit verbundenem Senchabot auch Follows.',
     testTitle: 'Probier es aus:',
     testSub: 'Sub',
     testGift: '{count} Gifts',
     testBits: '{amount} Bits/Kicks',
     testRaid: 'Raid',
+    testFollow: 'Follow',
     testViewer: 'TestZuschauer',
     testMessage: 'Richtig guter Stream!',
     widgetUrlTip:
@@ -2518,9 +2546,9 @@ export const de: typeof en = {
     guideStep3: 'Stell die Breite auf 800 und die Höhe auf 450 und platzier sie dort, wo die Alerts erscheinen sollen.',
     guideStep4:
       'Damit du den Sound in OBS hörst, aktiviere in den Eigenschaften der Quelle Audio über OBS steuern und stell die Quelle unter Erweiterte Audioeigenschaften auf Monitoring aktiviert.',
-    faq1Q: 'Warum gibt es keine Follow- oder Spenden-Alerts?',
+    faq1Q: 'Gibt es Follow- und Spenden-Alerts?',
     faq1A:
-      'Twitch und Kick zeigen neue Follows keiner Seite, die nicht eingeloggt ist, und keine der beiden Plattformen hat eigene Spenden. Die Alerts nutzen nur, was beide Plattformen jedem Zuschauer schicken, deshalb laufen sie auf beiden gleich.',
+      'Follow-Alerts ja, wenn dein Kanal mit Senchabot verbunden ist: Twitch und Kick zeigen neue Follows keiner Seite, die nicht eingeloggt ist, also kommen sie wie beim Follower-Ziel über Senchabot. Spenden-Alerts nein: Keine der beiden Plattformen hat eigene Spenden.',
     faq2Q: 'Zeigt ein Sub-Alert die Monate und die Nachricht des Zuschauers?',
     faq2A:
       'Ja. Teilt ein Zuschauer seinen Resub im Chat, auf Twitch oder auf Kick, gibt es einen Alert mit den Monaten und seiner Nachricht. Auf Twitch zeigt jeder Sub-Alert die Monate. Kick schickt sie bei den meisten Subs mit, aber manche Kanäle bekommen sie nie, und dann sagt der Alert nur, dass jemand abonniert hat.',
@@ -2529,7 +2557,7 @@ export const de: typeof en = {
       'Sie erscheinen nacheinander in der Reihenfolge, in der sie reinkamen. 50 Gift-Subs auf einmal sind ein einziger Alert, nicht 50.',
     faq4Q: 'Muss ich mich einloggen oder meinen Account verbinden?',
     faq4A:
-      'Nein. Die Alerts lesen Subs, Gifts, Bits, Kicks und Raids aus deinem öffentlichen Twitch- und Kick-Chat, so wie ein ausgeloggter Zuschauer sie sieht.',
+      'Nein. Die Alerts lesen Subs, Gifts, Bits, Kicks und Raids aus deinem öffentlichen Twitch- und Kick-Chat, so wie ein ausgeloggter Zuschauer sie sieht. Nur Follow-Alerts brauchen deinen Kanal mit Senchabot verbunden.',
     alert: {
       subHeading: 'Neuer Sub',
       subDetail: 'hat gerade abonniert',
@@ -2545,6 +2573,8 @@ export const de: typeof en = {
       raidDetail: 'raidet mit {viewers} Zuschauern',
       raidDetailOne: 'raidet mit 1 Zuschauer',
       raidDetailNoCount: 'raidet',
+      followHeading: 'Neuer Follower',
+      followDetail: 'folgt jetzt',
       anonymous: 'Anonym',
     },
   },
@@ -3677,6 +3707,9 @@ export const de: typeof en = {
     faq4Q: 'Sind das offizielle Game-Themes?',
     faq4A:
       'Nein. Es sind Fan-Styles aus Farben, kostenlosen Google Fonts und selbst gezeichneter Deko, ohne Game-Logos oder Grafiken, und sie sind nicht mit den Spieleherstellern verbunden.',
+    faq5Q: 'Können meine Mods das Preset im Chat wechseln?',
+    faq5A:
+      'Ja. Du und deine Mods können !preset und den Namen eines Presets oder sein Spiel schreiben, etwa !preset blocks, und jedes Overlay, das deinen Chat liest, wechselt dorthin, auch nach einem Neuladen. !preset reset holt bei jedem Overlay sein eigenes zurück. Overlays, die keinen Chat lesen, behalten das Preset aus ihrer URL.',
     field: {
       label: 'Preset',
       tip: 'Ein fertiger Look für dieses Widget: Rahmen, Schriften und Farben. Wähl bei jedem Widget dasselbe Preset, damit alles zusammenpasst.',
@@ -3696,6 +3729,7 @@ export const de: typeof en = {
         'Behalte die Schriften von {name} oder zeig dieses Widget in einer anderen Schrift. Farben, Rahmen und Effekte bleiben von {name}.',
       presetFonts: 'Schriften von {name}',
       ownsColors: 'Farben kommen von {name}.',
+      seeMore: 'Mehr Overlays mit {name} ansehen',
     },
   },
   faqPage: {
@@ -3749,6 +3783,12 @@ export const de: typeof en = {
     lead: 'Neue Features und Bugfixes in Senchabot Extensions, das Neueste zuerst. Die Liste ist aus der Commit-Historie des Projekts auf [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) zusammengestellt.',
     site: 'Website',
     entries: {
+      irlHudFollows:
+        'Das IRL-HUD-Overlay hat einen Tab Integrationen: Ist dein Kanal mit Senchabot verbunden, gibt jeder neue Follower Geld dazu.',
+      streamAlertsFollows:
+        'Stream-Alerts zeigt jetzt Follow-Alerts, wenn dein Kanal mit Senchabot verbunden ist.',
+      presetCommand:
+        'Du und deine Mods können Presets jetzt im Chat wechseln: !preset und der Name eines Presets oder sein Spiel, etwa !preset blocks, stellt jedes Overlay um, das deinen Chat liest, und !preset reset holt bei jedem sein eigenes zurück.',
       hudMedievalMmorpg:
         'IRL-HUD-Overlay und Wetter bekommen zwei neue Stile, Mittelalter und MMORPG. Darin zählt das HUD Goldmünzen statt Dollar, über einer Minikarte aus Pergament oder in einem Goldring.',
       presetsFont:

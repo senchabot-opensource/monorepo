@@ -9,6 +9,11 @@ vi.mock('#/lib/kick-pusher-app', async (importOriginal) => ({
   ...(await importOriginal<typeof import('#/lib/kick-pusher-app')>()),
   getKickPusherApp: vi.fn(async () => null),
 }));
+// Last.fm is asked through the site's server, which keeps the API key; tests stay offline.
+vi.mock('#/features/widgets/now-playing/lastfm-server', () => ({
+  getLastfmAvailable: vi.fn(async () => false),
+  getLastfmRecentTracks: vi.fn(async () => ({ status: 404 })),
+}));
 // Vitest resolves the root route's `?url` stylesheet import to "", which React warns about.
 vi.mock('../styles.css?url', () => ({ default: '/styles.css' }));
 

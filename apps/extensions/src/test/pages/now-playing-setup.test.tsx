@@ -1,5 +1,6 @@
 import { screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { getLastfmAvailable } from '#/features/widgets/now-playing/lastfm-server';
 import { PREVIEW_CHANNEL } from '#/features/widgets/now-playing/use-now-playing';
 import { TYPING_PAUSE_MS } from '#/hooks/use-debounced-value';
 import { buildNowPlayingUrl, DEFAULT_NOW_PLAYING_SETTINGS } from '#/lib/now-playing-url';
@@ -40,6 +41,7 @@ function listen() {
 }
 
 afterEach(() => {
+  vi.mocked(getLastfmAvailable).mockReset();
   vi.restoreAllMocks();
   vi.unstubAllEnvs();
   vi.unstubAllGlobals();
@@ -47,7 +49,6 @@ afterEach(() => {
 
 describe('Now Playing setup', () => {
   it('builds the URL once a username is in, from its controls, and reads a pasted one back', async () => {
-    vi.stubEnv('VITE_LASTFM_API_KEY', '');
     const user = setupUser();
     await renderRoute(PAGE);
     expect(urlField().value).toBe('');
@@ -108,23 +109,21 @@ describe('Now Playing setup', () => {
     expect(toggle(en('nowPlaying.hideStopped')).getAttribute('aria-checked')).toBe('true');
   });
 
-  it('reads ListenBrainz only in a build without a Last.fm key', async () => {
-    vi.stubEnv('VITE_LASTFM_API_KEY', '');
+  it('reads ListenBrainz only on a site without a Last.fm key', async () => {
     await renderRoute(PAGE);
     expect(screen.queryByText(en('nowPlaying.source'))).toBeNull();
     expect(screen.getByText(en('nowPlaying.listenbrainzHint'), { exact: false })).toBeTruthy();
   });
 
-  it('offers Last.fm in a build with its key', async () => {
-    vi.stubEnv('VITE_LASTFM_API_KEY', 'k3y');
+  it("offers Last.fm once the site's server says it has a key", async () => {
+    vi.mocked(getLastfmAvailable).mockResolvedValue(true);
     const user = setupUser();
     await renderRoute(PAGE);
     await user.type(userField(), 'mira');
+    await vi.waitFor(() => segment(en('nowPlaying.source'), 'Last.fm'));
     await user.click(segment(en('nowPlaying.source'), 'Last.fm'));
     expect(new URL(urlField().value).searchParams.get('source')).toBe('lastfm');
     expect(screen.getByText(en('nowPlaying.lastfmHint'), { exact: false })).toBeTruthy();
-    // The key is the site's, built in; it never goes into the streamer's URL.
-    expect(urlField().value).not.toContain('k3y');
   });
 
   it('checks what the profile plays now, and says when there is no such profile', async () => {

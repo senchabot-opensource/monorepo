@@ -98,6 +98,7 @@ const FAQ: FaqEntry[] = [
   ['subathon.faq2Q', 'subathon.faq2A'],
   ['subathon.faq3Q', 'subathon.faq3A'],
   ['subathon.faq4Q', 'subathon.faq4A'],
+  ['subathon.faq5Q', 'subathon.faq5A'],
 ];
 
 const COMMANDS: { usage: string; action: TranslationKey }[] = [

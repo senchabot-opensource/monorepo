@@ -1,12 +1,14 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { RetryableFetchError } from '#/lib/fetch-json';
-import { hasLastfm } from './lastfm';
+import { lastfmBody, lastfmRecentTracksUrl } from './lastfm';
+import { getLastfmRecentTracks } from './lastfm-server';
 import {
   checkNowPlaying,
   coverArtUrl,
-  nowPlayingRequestUrl,
+  listenbrainzRequestUrl,
   parseLastfm,
   parseListenBrainz,
+  requestNowPlaying,
 } from './now-playing-api';
 
 const RELEASE = 'f1418001-7f1e-46af-bfdb-95faeded8841';
@@ -173,22 +175,16 @@ describe('parseLastfm', () => {
   });
 });
 
-describe('nowPlayingRequestUrl', () => {
+describe('request URLs', () => {
   it('asks ListenBrainz for the user, encoded', () => {
-    expect(nowPlayingRequestUrl('listenbrainz', ' night owl ')).toBe(
+    expect(listenbrainzRequestUrl(' night owl ')).toBe(
       'https://api.listenbrainz.org/1/user/night%20owl/playing-now',
     );
-    expect(nowPlayingRequestUrl('listenbrainz', '')).toBeNull();
+    expect(listenbrainzRequestUrl('')).toBeNull();
   });
 
-  it('asks Last.fm only in a build with its key', () => {
-    vi.stubEnv('VITE_LASTFM_API_KEY', '');
-    expect(hasLastfm()).toBe(false);
-    expect(nowPlayingRequestUrl('lastfm', 'mira')).toBeNull();
-
-    vi.stubEnv('VITE_LASTFM_API_KEY', 'k3y');
-    expect(hasLastfm()).toBe(true);
-    const url = new URL(nowPlayingRequestUrl('lastfm', 'mira') ?? '');
+  it("builds the server's Last.fm request with the key it's given", () => {
+    const url = new URL(lastfmRecentTracksUrl('mira', 'k3y'));
     expect(url.origin + url.pathname).toBe('https://ws.audioscrobbler.com/2.0/');
     expect(Object.fromEntries(url.searchParams)).toEqual({
       method: 'user.getrecenttracks',
@@ -197,6 +193,41 @@ describe('nowPlayingRequestUrl', () => {
       format: 'json',
       limit: '1',
     });
+  });
+});
+
+describe('Last.fm through the server', () => {
+  const lastfm = (answer: { status: number; text?: string }) =>
+    vi.mocked(getLastfmRecentTracks).mockResolvedValueOnce(answer);
+
+  it("reads the server's answer like a response: JSON, nothing for a 4xx, retry when busy", () => {
+    expect(lastfmBody({ status: 200, text: '{"recenttracks":{}}' })).toEqual({ recenttracks: {} });
+    expect(lastfmBody({ status: 404 })).toBeUndefined();
+    for (const status of [429, 500, 502]) {
+      expect(() => lastfmBody({ status })).toThrow(RetryableFetchError);
+    }
+    expect(() => lastfmBody({ status: 200, text: 'not json' })).toThrow(RetryableFetchError);
+  });
+
+  it('asks the server for the trimmed name, never Last.fm itself', async () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal('fetch', fetchMock);
+    lastfm({ status: 200, text: JSON.stringify(lastfmAnswer(true)) });
+    expect(await requestNowPlaying('lastfm', ' mira ')).toEqual(lastfmAnswer(true));
+    expect(getLastfmRecentTracks).toHaveBeenLastCalledWith({ data: { user: 'mira' } });
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it('asks nothing for no name or one too long to be a Last.fm user', async () => {
+    vi.mocked(getLastfmRecentTracks).mockClear();
+    expect(await requestNowPlaying('lastfm', '  ')).toBeUndefined();
+    expect(await requestNowPlaying('lastfm', 'x'.repeat(65))).toBeUndefined();
+    expect(getLastfmRecentTracks).not.toHaveBeenCalled();
+  });
+
+  it('retries when the server itself fails', async () => {
+    vi.mocked(getLastfmRecentTracks).mockRejectedValueOnce(new TypeError('Failed to fetch'));
+    await expect(requestNowPlaying('lastfm', 'mira')).rejects.toBeInstanceOf(RetryableFetchError);
   });
 });
 
@@ -218,9 +249,13 @@ describe('checkNowPlaying', () => {
     expect(await checkNowPlaying('listenbrainz', 'mira')).toBe('missing');
   });
 
-  it("counts Last.fm's error answers as no profile", async () => {
-    vi.stubEnv('VITE_LASTFM_API_KEY', 'k3y');
-    answer(200, { error: 17, message: 'Login: User required to be logged in' });
+  it("counts Last.fm's error answers, and a site without a key, as no profile", async () => {
+    vi.mocked(getLastfmRecentTracks).mockResolvedValueOnce({
+      status: 200,
+      text: JSON.stringify({ error: 17, message: 'Login: User required to be logged in' }),
+    });
+    expect(await checkNowPlaying('lastfm', 'mira')).toBe('missing');
+    // The server answers 404 when it has no key.
     expect(await checkNowPlaying('lastfm', 'mira')).toBe('missing');
   });
 

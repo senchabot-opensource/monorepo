@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useFollows } from '#/hooks/use-follows';
 import { usePreviewReceiver } from '#/hooks/use-preview-channel';
 import {
   HUD_MOVES,
@@ -8,7 +9,7 @@ import {
   type HudMove,
   type HudPlace,
 } from '#/lib/irl-hud-url';
-import type { SubathonEvent, SubathonPlatform } from '../subathon/subathon-events';
+import type { SubathonPlatform } from '../subathon/subathon-events';
 import { useSubEvents } from '../subathon/use-sub-events';
 import {
   type ArrowSource,
@@ -27,6 +28,7 @@ import {
   createHud,
   eventMoney,
   followStart,
+  type HudEvent,
   type HudState,
   isHudState,
   parseCashCommand,
@@ -64,7 +66,7 @@ export interface HudPop {
 /** Setup page buttons talk to the preview on this channel; both pages share the site's origin. */
 export const PREVIEW_CHANNEL = 'senchabot:irl-hud-preview';
 /** `preview` is the id in the preview's URL, so only the preview of the page that sent it plays it. */
-export type PreviewMessage = { type: 'event'; preview: string; event: SubathonEvent };
+export type PreviewMessage = { type: 'event'; preview: string; event: HudEvent };
 
 export const POP_MS = 3000;
 const MAX_POPS = 3;
@@ -75,16 +77,20 @@ const pick = <T>(list: readonly T[]) => list[Math.floor(Math.random() * list.len
 
 type HudValues = HudMoneyValues & { tiers: boolean };
 
-/** A random event the settings pay for, or null when every value is off. */
-function simulatedEvent(values: HudValues, only?: SubathonPlatform): SubathonEvent | null {
+/**
+ * A random event the settings pay for, or null when every value is off. Follows play only when
+ * the setup page has a Senchabot connection; its preview URL leaves `follow` at 0 without one.
+ */
+function simulatedEvent(values: HudValues, only?: SubathonPlatform): HudEvent | null {
   const platform = only ?? pick<SubathonPlatform>(['twitch', 'kick']);
   const name = pick(SIM_NAMES);
-  const events: SubathonEvent[] = [
+  const events: HudEvent[] = [
     { kind: 'sub', platform, name, tier: 1 },
     { kind: 'sub', platform, name, tier: 1 },
     { kind: 'gift', platform, name, tier: 1, count: pick([1, 3, 5]) },
     { kind: 'bits', platform, name, amount: pick([100, 250, 500]) },
     { kind: 'raid', platform, name, viewers: pick([12, 35, 80]) },
+    { kind: 'follow', platform, name },
   ];
   const paying = events.filter((event) => eventMoney(event, values) > 0);
   return paying.length > 0 ? pick(paying) : null;
@@ -93,6 +99,8 @@ function simulatedEvent(values: HudValues, only?: SubathonPlatform): SubathonEve
 interface UseIrlHudOptions {
   twitch?: string;
   kick?: string;
+  /** A Senchabot connection, which brings follows in; chat never shows them. */
+  token?: string;
   start: number;
   values: HudValues;
   /** Saved places, which !hud map can switch the mini-map to. */
@@ -116,6 +124,7 @@ interface UseIrlHudOptions {
 export function useIrlHud({
   twitch,
   kick,
+  token,
   start,
   values,
   places,
@@ -156,7 +165,7 @@ export function useIrlHud({
   );
 
   const handleEvent = useCallback(
-    (event: SubathonEvent) => {
+    (event: HudEvent) => {
       const current = settingsRef.current;
       if (event.kind === 'mod') {
         const part = parseToggleCommand(event.text);
@@ -240,6 +249,7 @@ export function useIrlHud({
   }, [key, state]);
 
   useSubEvents(twitch, kick, !simulate, handleEvent);
+  useFollows(token, twitch || kick, !simulate, handleEvent);
 
   // Preview: something pays out every few seconds.
   useEffect(() => {

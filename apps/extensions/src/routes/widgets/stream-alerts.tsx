@@ -1,4 +1,5 @@
 import { createFileRoute, useLocation } from '@tanstack/react-router';
+import { useChatPresetSettings } from '#/features/presets/chat-preset';
 import { isClassic } from '#/features/presets/registry';
 import {
   StreamAlertsWidget,
@@ -17,7 +18,7 @@ export const Route = createFileRoute('/widgets/stream-alerts')({
 function RouteComponent() {
   const params = new URLSearchParams(useLocation({ select: (location) => location.searchStr }));
   const text = (key: string) => params.get(key)?.trim() || undefined;
-  const settings = readStreamAlertsSettings(params);
+  const settings = useChatPresetSettings(readStreamAlertsSettings(params), params);
   const simPlatform = params.get('simplatform');
   return (
     <>
@@ -29,6 +30,7 @@ function RouteComponent() {
       <StreamAlertsWidget
         twitchChannel={text('twitch')}
         kickChannel={text('kick')}
+        token={text('token')}
         settings={settings}
         simulate={readFlag(params.get('simulate'), false)}
         simPlatform={simPlatform === 'twitch' || simPlatform === 'kick' ? simPlatform : undefined}

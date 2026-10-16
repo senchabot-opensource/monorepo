@@ -6,10 +6,17 @@ import { Select, type SelectOption } from '#/components/ui/select';
 import { Switch } from '#/components/ui/switch';
 import { useT } from '#/lib/i18n';
 import { SITE_FONT_NAMES, SITE_FONTS, type SiteFont } from '#/lib/site-fonts';
+import { PRESET_BADGE_CHECKED, PRESET_BADGE_CLASS, PresetDot } from './preset-badge';
 import type { PresetData } from './preset-schema';
-import { PresetSwatch, SWATCH_FONT_HREF } from './preset-swatch';
 import { randomPreset } from './random';
-import { CLASSIC_PRESET, findPreset, isClassic, PRESETS, presetEffect } from './registry';
+import {
+  CLASSIC_PRESET,
+  findPreset,
+  isClassic,
+  PRESET_PARAM,
+  PRESETS,
+  presetEffect,
+} from './registry';
 import { useSitePreset } from './site-preset';
 
 const OPTIONS = [
@@ -38,11 +45,12 @@ export function usePresetTag() {
 }
 
 /**
- * Preset picker for a setup page's Appearance group: one swatch per preset, and a way to make
- * the picked one the preset every setup page starts with. The swatches fold away behind a bar
- * naming the pick, and start folded while the widget keeps its classic look, so the panel
- * doesn't open on a dozen of them. A dice beside the bar picks one at random. Underneath, a
- * preset with an effect gets a switch for it, and a font box can draw the widget in another font.
+ * Preset picker for a setup page's Appearance group: one badge per preset, like the home page's
+ * quick preset buttons but every name in the page's own font, and a way to make the picked one
+ * the preset every setup page starts with. The badges fold away behind a bar naming the pick, and
+ * start folded while the widget keeps its classic look. A dice beside the bar picks one at
+ * random. Underneath, a preset with an effect gets a switch for it, and a font box can draw the
+ * widget in another font.
  */
 export function PresetField({
   value,
@@ -67,10 +75,9 @@ export function PresetField({
   const t = useT();
   const id = useId();
   const nameOf = usePresetName();
-  const tagOf = usePresetTag();
   const [sitePreset, setSitePreset] = useSitePreset();
   const name = nameOf(value);
-  // Null until the bar is clicked or a swatch picked: until then the grid is open for a preset
+  // Null until the bar is clicked or a badge picked: until then the badges are open for a preset
   // (one from a pasted URL or the site default) and folded for classic. A pick keeps it open,
   // so choosing Classic doesn't fold the grid away under the pointer.
   const [unfolded, setUnfolded] = useState<boolean | null>(null);
@@ -95,17 +102,20 @@ export function PresetField({
 
   return (
     <div>
-      {/* No precedence: React would hold the page back until Google Fonts answers. */}
-      {open && <link rel="stylesheet" href={SWATCH_FONT_HREF} />}
       <div className="flex items-center justify-between gap-3">
         <FieldLabel id={`${id}-label`} tip={t('presets.field.tip')}>
           {t('presets.field.label')}
         </FieldLabel>
+        {/* With a preset picked, the presets page opens on it, every widget drawn in it. A new
+            tab keeps what was set up here. */}
         <LocaleLink
           to="/presets"
-          className="mb-1 rounded-sm text-xs font-medium text-green-700 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 dark:text-green-400"
+          search={isClassic(value) ? undefined : { [PRESET_PARAM]: value }}
+          target="_blank"
+          rel="noopener"
+          className="mb-1 rounded-sm text-right text-xs font-medium text-green-700 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 dark:text-green-400"
         >
-          {t('presets.field.browse')}
+          {isClassic(value) ? t('presets.field.browse') : t('presets.field.seeMore', { name })}
         </LocaleLink>
       </div>
       <div className="flex gap-2">
@@ -117,13 +127,8 @@ export function PresetField({
           onClick={() => setUnfolded(!open)}
           className={`flex min-w-0 flex-1 cursor-pointer items-center justify-between gap-3 px-3 py-2 text-left ${BOX_CLASS}`}
         >
-          <span className="min-w-0">
-            <span className="block truncate text-xs font-semibold text-zinc-900 dark:text-white">
-              {name}
-            </span>
-            <span className="block truncate text-[11px] text-zinc-500 dark:text-zinc-400">
-              {tagOf(preset)}
-            </span>
+          <span className="min-w-0 truncate text-sm font-semibold text-zinc-900 dark:text-white">
+            {name}
           </span>
           <span className="flex shrink-0 items-center gap-1 text-xs font-medium text-green-700 dark:text-green-400">
             {open ? t('presets.field.hide') : t('presets.field.show', { count: PRESETS.length })}
@@ -132,7 +137,7 @@ export function PresetField({
             />
           </span>
         </button>
-        {/* Keeps the swatches as they are, open or folded, so trying one after another doesn't
+        {/* Keeps the badges as they are, open or folded, so trying one after another doesn't
             move the page each time. */}
         <button
           type="button"
@@ -152,12 +157,12 @@ export function PresetField({
         id={`${id}-grid`}
         aria-labelledby={`${id}-label`}
         hidden={!open}
-        className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-4"
+        className="mt-2 flex flex-wrap gap-2"
       >
         {OPTIONS.map((option) => (
           <label
             key={option.id}
-            className="relative cursor-pointer rounded-lg border border-zinc-200 bg-white p-1.5 transition-colors hover:border-zinc-300 has-checked:border-transparent has-checked:ring-2 has-checked:ring-green-500 has-focus-visible:ring-2 has-focus-visible:ring-green-500 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700"
+            className={`relative ${PRESET_BADGE_CLASS} ${PRESET_BADGE_CHECKED}`}
           >
             {/* Stretched over the label instead of sr-only: focusing a clipped
                 1px input makes the browser scroll the page trying to reveal it. */}
@@ -170,19 +175,14 @@ export function PresetField({
                 setUnfolded(true);
                 onChange(option.id);
               }}
-              className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+              className="absolute inset-0 h-full w-full cursor-pointer rounded-full opacity-0"
             />
-            <PresetSwatch preset={option.data} />
-            <span className="mt-1.5 block truncate px-0.5 text-xs font-semibold text-zinc-900 dark:text-white">
-              {option.data?.name ?? t('presets.classic')}
-            </span>
-            <span className="block truncate px-0.5 text-[11px] text-zinc-500 dark:text-zinc-400">
-              {tagOf(option.data)}
-            </span>
+            <PresetDot preset={option.data} />
+            <span>{nameOf(option.id)}</span>
           </label>
         ))}
       </fieldset>
-      {/* Outside the grid, so it stays in reach while the swatches are folded away. */}
+      {/* Outside the badges, so it stays in reach while they are folded away. */}
       {presetEffect(value) !== 'none' && (
         <div className="mt-2">
           <Switch

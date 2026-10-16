@@ -291,3 +291,44 @@ describe('StreamAlertsWidget', () => {
     expect(alert()?.textContent).not.toContain('New Subscriber');
   });
 });
+
+describe('StreamAlertsWidget follows', () => {
+  const FOLLOW = (user: string, platform = 'twitch') =>
+    JSON.stringify({ type: 'follow', user, platform });
+  const senchabot = () => FakeWebSocket.instances.filter((ws) => ws.url.includes('follower-goal'));
+
+  it('shows a follow from the Senchabot connection, with its heading, words and sound', async () => {
+    await render(
+      <StreamAlertsWidget twitchChannel="streamer" token="abc123" settings={settings()} />,
+    );
+    receive('follower-goal', FOLLOW('NewFan'));
+    expect(alert()?.dataset.kind).toBe('follow');
+    expect(alert()?.textContent).toContain('NewFan');
+    expect(alert()?.textContent).toContain('just followed');
+    expect(alert()?.textContent).toContain('New Follower');
+    expect(playAlertSound).toHaveBeenCalledWith('neon', 'follow', 0.5);
+  });
+
+  it('opens no Senchabot connection without a token', async () => {
+    await render(<StreamAlertsWidget twitchChannel="streamer" settings={settings()} />);
+    expect(senchabot()).toHaveLength(0);
+  });
+
+  it('leaves out YouTube follows, and every follow once follow alerts are off', async () => {
+    const off = { ...DEFAULTS.enabled, follow: false };
+    await render(
+      <StreamAlertsWidget twitchChannel="streamer" token="abc123" settings={settings()} />,
+    );
+    receive('follower-goal', FOLLOW('TubeFan', 'youtube'));
+    expect(alert()).toBeNull();
+    await render(
+      <StreamAlertsWidget
+        twitchChannel="streamer"
+        token="abc123"
+        settings={settings({ enabled: off })}
+      />,
+    );
+    receive('follower-goal', FOLLOW('NewFan'));
+    expect(screen.queryAllByTestId('stream-alert')).toHaveLength(0);
+  });
+});

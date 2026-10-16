@@ -4,6 +4,7 @@ import { DEFAULT_NOW_PLAYING_SETTINGS, type NowPlayingSettings } from '#/lib/now
 import { en } from '#/test/queries';
 import { renderWithProviders } from '#/test/render';
 import { DEMO_TRACKS } from './demo-tracks';
+import { getLastfmRecentTracks } from './lastfm-server';
 import { NowPlayingWidget } from './now-playing-widget';
 import { DEMO_MS, HIDDEN_POLL_MS, POLL_MS, PREVIEW_CHANNEL } from './use-now-playing';
 
@@ -57,6 +58,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+  vi.mocked(getLastfmRecentTracks).mockReset();
   vi.unstubAllGlobals();
   vi.unstubAllEnvs();
   vi.useRealTimers();
@@ -193,10 +195,10 @@ describe('NowPlayingWidget', () => {
     expect(title()).toBeNull();
   });
 
-  it('reads Last.fm with the build key and credits it', async () => {
-    vi.stubEnv('VITE_LASTFM_API_KEY', 'k3y');
-    fetchMock.mockImplementation(async () =>
-      reply({
+  it("reads Last.fm through the site's server, never with a key of its own, and credits it", async () => {
+    vi.mocked(getLastfmRecentTracks).mockResolvedValue({
+      status: 200,
+      text: JSON.stringify({
         recenttracks: {
           track: [
             {
@@ -209,18 +211,19 @@ describe('NowPlayingWidget', () => {
           ],
         },
       }),
-    );
+    });
     await render(<NowPlayingWidget settings={settings({ source: 'lastfm' })} />);
     await vi.waitFor(() => expect(title()).toBe('Copper Skies'));
-    expect(String(fetchMock.mock.calls[0][0])).toContain('ws.audioscrobbler.com');
+    expect(getLastfmRecentTracks).toHaveBeenCalledWith({ data: { user: 'mira' } });
+    // The page itself never calls Last.fm: only the server holds the key.
+    expect(fetchMock).not.toHaveBeenCalled();
     expect(screen.getByTestId('now-playing-credit').textContent).toBe('Last.fm');
   });
 
-  it('asks nothing for Last.fm in a build without its key', async () => {
-    vi.stubEnv('VITE_LASTFM_API_KEY', '');
+  it('shows nothing for Last.fm on a site without a key', async () => {
+    // The server answers 404 when it has no key.
     await render(<NowPlayingWidget settings={settings({ source: 'lastfm' })} />);
     await wait(POLL_MS * 2);
-    expect(fetchMock).not.toHaveBeenCalled();
     expect(title()).toBeNull();
   });
 

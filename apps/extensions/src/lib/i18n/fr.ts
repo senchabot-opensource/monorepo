@@ -725,7 +725,7 @@ export const fr: typeof en = {
     previewSpeed: "Vitesse de pousse dans l'aperçu",
     previewSpeedValue: '{rate}×',
     previewHint:
-      "L'aperçu pousse avec des subs simulés. En stream, ta plante pousse avec les vrais subs, resubs et subs offerts de ta chaîne.",
+      "L'aperçu pousse avec des subs simulés. En stream, ta plante pousse avec les vrais subs, resubs et subs offerts de ta chaîne. Les subs Twitch Prime comptent aussi.",
     widgetUrlTip:
       'Tu as déjà un widget ? Colle son URL ici pour charger tes réglages et changer ce dont tu as besoin.',
     widgetUrlPlaceholder: 'Colle une URL de widget existante pour la modifier',
@@ -799,7 +799,8 @@ export const fr: typeof en = {
     startCommand: 'Avec {command}',
     startAuto: 'Tout de suite',
     sectionValues: 'Temps ajouté',
-    valuesHint: "Mets l'un d'eux à 0 pour le désactiver.",
+    valuesHint:
+      "Mets l'un d'eux à 0 pour le désactiver. Un sub Twitch Prime compte comme un sub de niveau 1.",
     dynamicRates: 'Ajuster selon le temps',
     dynamicRatesTip:
       'Utilise une deuxième série de valeurs quand il reste assez de temps au compteur.',
@@ -843,7 +844,7 @@ export const fr: typeof en = {
     cmdSet: 'Définit le temps restant',
     cmdReset: 'Recommence depuis le temps de départ',
     commandsDurations:
-      'Écris les durées comme 10m, 1h30m, 45s ou 1:30:00. Un nombre seul compte en minutes.',
+      "N'importe quelle durée marche, comme 57m, 2h15m, 45s ou 1:30:00. Un nombre seul compte en minutes.",
     previewTitle: 'Aperçu du Subathon Timer',
     previewIframeTitle: 'Aperçu du Subathon Timer',
     previewHint:
@@ -884,6 +885,9 @@ export const fr: typeof en = {
     faq4Q: 'Faut-il me connecter ou relier mon compte ?',
     faq4A:
       'Non. Le timer lit les subs, les subs offerts, les Bits, les Kicks et les commandes des modos dans ton chat public Twitch et Kick, comme les voit un viewer non connecté.',
+    faq5Q: 'Les subs Twitch Prime ajoutent-ils du temps ?',
+    faq5A:
+      'Oui. Un sub Prime compte comme un sub de niveau 1 et ajoute le temps de Par sub. Sur Twitch, un resub, Prime ou payant, compte quand le viewer le partage dans le chat.',
   },
   goal: {
     breadcrumb: "Configuration de l'Objectif de subs",
@@ -964,9 +968,9 @@ export const fr: typeof en = {
     faq2Q: 'Que se passe-t-il si OBS se ferme ou si la source navigateur se recharge ?',
     faq2A:
       "Le compteur est enregistré dans OBS, donc il revient là où il en était, même au stream suivant. Les subs qui arrivent pendant qu'OBS est fermé ne sont pas visibles, alors un modo peut les ajouter avec !goal add.",
-    faq3Q: 'Les resubs et les subs offerts comptent-ils ?',
+    faq3Q: 'Les subs Prime, les resubs et les subs offerts comptent-ils ?',
     faq3A:
-      "Oui. Chaque nouveau sub et resub ajoute 1, et un cadeau ajoute 1 pour chaque sub qu'il contient, donc 5 subs offerts ajoutent 5. Sur Twitch, un resub compte quand le viewer le partage dans le chat, et sur Kick quand il se renouvelle.",
+      "Oui. Chaque nouveau sub et resub ajoute 1, les subs Twitch Prime comme les autres, et un cadeau ajoute 1 pour chaque sub qu'il contient, donc 5 subs offerts ajoutent 5. Sur Twitch, un resub compte quand le viewer le partage dans le chat, et sur Kick quand il se renouvelle.",
     faq4Q: 'Je peux faire un objectif de followers ?',
     faq4A:
       'Oui ! Utilise notre overlay Objectif de followers pour suivre les nouveaux followers en direct depuis Twitch et Kick.',
@@ -1051,6 +1055,19 @@ export const fr: typeof en = {
     faq3Q: 'Puis-je utiliser un Objectif de subs et un Objectif de followers en même temps ?',
     faq3A:
       'Oui ! Les deux objectifs conservent des compteurs indépendants dans le stockage local d’OBS et utilisent des URL séparées.',
+  },
+  followConnection: {
+    title: 'Les follows passent par Senchabot',
+    text:
+      "Le chat ne dit pas qui te suit, Senchabot si. Connecte ta chaîne dans le tableau de bord Senchabot, ouvre l'Objectif de followers depuis la page Outils, puis colle ici l'URL de ce widget ou son token.",
+    dashboard: 'Ouvrir les Outils Senchabot →',
+    paste: "URL de l'Objectif de followers ou token",
+    placeholder: 'https://extensions.senchabot.com/widgets/follower-goal?token=…',
+    connect: 'Connecter',
+    invalid:
+      "Il n'y a pas de token là-dedans. Colle l'URL de l'Objectif de followers depuis sa page de configuration, ouverte depuis le tableau de bord.",
+    connected: 'Connecté à Senchabot : les nouveaux followers arrivent.',
+    disconnect: 'Déconnecter',
   },
   irlHud: {
     breadcrumb: "Configuration de l'Overlay HUD IRL",
@@ -1166,11 +1183,17 @@ export const fr: typeof en = {
     perRaider: 'Par viewer de raid',
     perRaiderTip:
       "Compté pour chaque viewer qu'amène un raid, donc un raid de 50 ajoute cette valeur cinquante fois. Sur Kick, un raid s'appelle un host.",
+    perFollow: 'Par follow',
+    perFollowTip:
+      'Chaque nouveau follower, sur Twitch et sur Kick. Mets 0 pour que les follows ne comptent pas.',
     tiers: 'Niveaux 2 et 3 comptent plus',
     tiersTip:
       "Sur Twitch, un sub Niveau 2 ajoute l'argent de 2 subs et un sub Niveau 3 celui de 5, en fonction de leur prix.",
     sectionMap: 'Mini-carte',
     sectionMarket: 'Marché',
+    sectionIntegrations: 'Intégrations',
+    integrationsHint:
+      "Les intégrations apportent ce que le chat ne montre pas. Les nouveaux followers arrivent par Senchabot et ajoutent l'argent ci-dessous.",
     marketHint:
       "Des objets que toi et tes modos achetez depuis le chat avec !hud buy et le nom de l'objet. Le prix est retiré de l'argent ; sans assez d'argent, rien n'est acheté.",
     items: 'Objets',
@@ -1219,13 +1242,14 @@ export const fr: typeof en = {
     previewTitle: "Aperçu de l'Overlay HUD IRL",
     previewIframeTitle: "Aperçu de l'Overlay HUD IRL",
     previewHint:
-      "L'aperçu joue des subs, des subs offerts, des cheers et des raids simulés. En stream, seul ton chat ajoute de l'argent.",
+      "L'aperçu joue des subs, des subs offerts, des cheers et des raids simulés, et des follows si Senchabot est connecté. En stream, seuls ton chat et tes nouveaux followers ajoutent de l'argent.",
     testTitle: 'Teste :',
     testViewer: 'Toi',
     testSub: '+1 sub',
     testGift: '+5 offerts',
     testBits: '+500 Bits/Kicks',
     testRaid: 'Raid de 25',
+    testFollow: '+1 follow',
     testAdd: '+$1,000',
     testRemove: '−$500',
     testMove: 'Arrêter / Marcher',
@@ -2311,7 +2335,7 @@ export const fr: typeof en = {
     sectionCommands: 'Commandes du chat',
     commandsIntro:
       'Avec une chaîne renseignée, toi et tes modos pouvez modifier le compte à rebours depuis le chat Twitch ou Kick, par exemple pour repousser le début pendant que tu es AFK. `!cd` marche partout où va `!countdown`.',
-    cmdAdd: 'Ajoute du temps : 5m, 90s ou 1h30m',
+    cmdAdd: 'Ajoute autant de temps que voulu, comme 57m, 90s ou 1h30m',
     cmdRemove: 'Retire du temps',
     cmdSet: 'Définit le temps restant',
     cmdPause: 'Le met en pause ; start le relance',
@@ -2427,7 +2451,7 @@ export const fr: typeof en = {
     cmdNewTime: 'Pareil, avec sa propre durée, comme 90s, 2m ou 1:30',
     cmdYesNo: 'Lance un sondage rapide Oui ou Non',
     cmdStart: 'Lance le sondage prêt de cette page',
-    cmdExtend: 'Ajoute du temps au sondage',
+    cmdExtend: 'Ajoute au sondage autant de temps que voulu, comme 45s ou 2m',
     cmdEnd: 'Termine le vote tout de suite et affiche les résultats',
     cmdCancel: "Retire le sondage de l'écran",
     votingIntro:
@@ -2529,6 +2553,9 @@ export const fr: typeof en = {
     kindBitsTip: 'Les Bits envoyés en cheer sur Twitch et les Kicks envoyés sur Kick.',
     kindRaid: 'Raids',
     kindRaidTip: 'Une autre chaîne qui te raid, avec le nombre de viewers venus avec.',
+    kindFollow: 'Follows',
+    kindFollowTip:
+      'Chaque nouveau follower, sur Twitch et sur Kick. Les follows passent par Senchabot, donc ils ont besoin de la connexion ci-dessous.',
     minGift: 'Subs min.',
     minBits: 'Montant min.',
     minRaid: 'Viewers min.',
@@ -2546,12 +2573,13 @@ export const fr: typeof en = {
     previewTitle: 'Aperçu des Alertes de stream',
     previewIframeTitle: 'Aperçu des Alertes de stream',
     previewHint:
-      "L'aperçu joue des exemples d'alertes sans son. Les boutons ci-dessous en jouent une avec son son. En stream, seuls les subs, cadeaux, cheers et raids de ta chaîne s'affichent.",
+      "L'aperçu joue des exemples d'alertes sans son. Les boutons ci-dessous en jouent une avec son son. En stream, seuls les subs, cadeaux, cheers et raids de ta chaîne s'affichent, et les follows si Senchabot est connecté.",
     testTitle: 'Teste :',
     testSub: 'Sub',
     testGift: '{count} offerts',
     testBits: '{amount} Bits/Kicks',
     testRaid: 'Raid',
+    testFollow: 'Follow',
     testViewer: 'ViewerTest',
     testMessage: 'Super stream !',
     widgetUrlTip:
@@ -2567,9 +2595,9 @@ export const fr: typeof en = {
       'Règle la largeur sur 800 et la hauteur sur 450, puis place-la là où les alertes doivent apparaître.',
     guideStep4:
       "Pour entendre le son dans OBS, active Contrôler l'audio via OBS dans les réglages de la source et règle le monitoring de la source sur Surveillance activée dans Propriétés audio avancées.",
-    faq1Q: "Pourquoi il n'y a pas d'alertes de follow ou de don ?",
+    faq1Q: 'Y a-t-il des alertes de follow et de don ?',
     faq1A:
-      "Twitch et Kick ne montrent pas les nouveaux follows à une page non connectée, et aucune des deux plateformes n'a de système de dons à elle. Les alertes n'utilisent que ce que les deux plateformes envoient à chaque viewer, donc elles marchent pareil sur les deux.",
+      "De follow, oui, avec ta chaîne connectée dans Senchabot : Twitch et Kick ne montrent pas les nouveaux follows à une page non connectée, donc ils passent par Senchabot, comme pour l'Objectif de followers. De don, non : aucune des deux plateformes n'a de système de dons à elle.",
     faq2Q: 'Une alerte de sub affiche-t-elle les mois et le message du viewer ?',
     faq2A:
       "Oui. Quand un viewer partage son resub dans le chat, sur Twitch ou sur Kick, il a une alerte avec les mois et ce qu'il a écrit. Sur Twitch, chaque alerte de sub affiche les mois. Kick les envoie avec la plupart des subs, mais certaines chaînes ne les reçoivent jamais, et l'alerte dit alors juste qu'il s'est abonné.",
@@ -2578,7 +2606,7 @@ export const fr: typeof en = {
       "Elles s'affichent une par une, dans l'ordre d'arrivée. 50 subs offerts d'un coup font une seule alerte, pas 50.",
     faq4Q: 'Faut-il me connecter ou relier mon compte ?',
     faq4A:
-      'Non. Les alertes lisent les subs, subs offerts, Bits, Kicks et raids dans ton chat public Twitch et Kick, comme les voit un viewer non connecté.',
+      'Non. Les alertes lisent les subs, subs offerts, Bits, Kicks et raids dans ton chat public Twitch et Kick, comme les voit un viewer non connecté. Seules les alertes de follow ont besoin de ta chaîne connectée dans Senchabot.',
     alert: {
       subHeading: 'Nouvel abonné',
       subDetail: "vient de s'abonner",
@@ -2594,6 +2622,8 @@ export const fr: typeof en = {
       raidDetail: 'arrive en raid avec {viewers} viewers',
       raidDetailOne: 'arrive en raid avec 1 viewer',
       raidDetailNoCount: 'arrive en raid',
+      followHeading: 'Nouveau follower',
+      followDetail: 'vient de te suivre',
       anonymous: 'Anonyme',
     },
   },
@@ -3729,6 +3759,9 @@ export const fr: typeof en = {
     faq4Q: 'Ce sont des thèmes officiels des jeux ?',
     faq4A:
       'Non. Ce sont des styles faits par des fans, à partir de couleurs, de Google Fonts gratuites et de décorations dessinées de zéro, sans logo ni visuel de jeu, et ils ne sont pas affiliés aux éditeurs des jeux.',
+    faq5Q: 'Mes modos peuvent-ils changer le preset depuis le chat ?',
+    faq5A:
+      "Oui. Toi et tes modos pouvez écrire !preset et le nom d'un preset ou son jeu, comme !preset blocks, et chaque overlay qui lit ton chat passe à ce preset, même après un rechargement. !preset reset rend à chaque overlay le sien. Les overlays qui ne lisent pas le chat gardent le preset de leur URL.",
     field: {
       label: 'Preset',
       tip: "Un style prêt à l'emploi pour ce widget : son cadre, ses polices et ses couleurs. Choisis le même preset sur chaque widget pour les assortir.",
@@ -3748,6 +3781,7 @@ export const fr: typeof en = {
         'Garde les polices de {name} ou affiche ce widget dans une autre police. Les couleurs, le cadre et les effets restent ceux de {name}.',
       presetFonts: 'Polices de {name}',
       ownsColors: 'Les couleurs viennent de {name}.',
+      seeMore: "Voir plus d'overlays avec {name}",
     },
   },
   faqPage: {
@@ -3801,6 +3835,12 @@ export const fr: typeof en = {
     lead: "Les nouvelles fonctionnalités et corrections de bugs de Senchabot Extensions, des plus récentes aux plus anciennes. La liste est tirée de l'historique des commits du projet sur [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      irlHudFollows:
+        "L'Overlay HUD IRL a un onglet Intégrations : avec ta chaîne connectée dans Senchabot, chaque nouveau follower ajoute de l'argent.",
+      streamAlertsFollows:
+        'Les Alertes de stream peuvent afficher des alertes de follow, avec ta chaîne connectée dans Senchabot.',
+      presetCommand:
+        "Toi et tes modos pouvez maintenant changer de preset depuis le chat : !preset et le nom d'un preset ou son jeu, comme !preset blocks, fait passer chaque overlay qui lit ton chat à ce preset, et !preset reset rend à chacun le sien.",
       hudMedievalMmorpg:
         "L'Overlay HUD IRL et Météo ont deux nouveaux styles, Médiéval et MMORPG. Le HUD y compte des pièces d'or au lieu de dollars, sur une mini-carte en parchemin ou dans un anneau doré.",
       presetsFont:

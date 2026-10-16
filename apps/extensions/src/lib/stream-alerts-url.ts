@@ -19,8 +19,11 @@ export type AlertTheme = (typeof ALERT_THEMES)[number];
 export const ALERT_COLORS = ['platform', 'blue', 'purple', 'pink', 'red', 'gold', 'green'] as const;
 export type AlertColor = (typeof ALERT_COLORS)[number];
 
-/** Alerts both platforms deliver without a login. Follows and donations have no such source. */
-export const ALERT_KINDS = ['sub', 'gift', 'bits', 'raid'] as const;
+/**
+ * The alerts: what both platforms deliver without a login, and follows, which only a Senchabot
+ * connection (`token`) brings. Donations have no source at all.
+ */
+export const ALERT_KINDS = ['sub', 'gift', 'bits', 'raid', 'follow'] as const;
 export type AlertKind = (typeof ALERT_KINDS)[number];
 
 export interface StreamAlertsSettings {
@@ -59,8 +62,8 @@ export const DEFAULT_STREAM_ALERTS_SETTINGS: StreamAlertsSettings = {
   preset: CLASSIC_PRESET,
   theme: 'neon',
   color: 'platform',
-  enabled: { sub: true, gift: true, bits: true, raid: true },
-  headings: { sub: '', gift: '', bits: '', raid: '' },
+  enabled: { sub: true, gift: true, bits: true, raid: true, follow: true },
+  headings: { sub: '', gift: '', bits: '', raid: '', follow: '' },
   minGift: 1,
   minBits: 1,
   minRaid: 0,
@@ -124,19 +127,21 @@ function buildParams(
   return params;
 }
 
-/** The URL for OBS. Empty until a channel on a picked platform is filled in. */
+/**
+ * The URL for OBS. Empty until a channel on a picked platform is filled in. `token`, a Senchabot
+ * connection, brings follow alerts.
+ */
 export function buildStreamAlertsUrl(
   origin: string,
   settings: StreamAlertsSettings,
   twitchChannel: string,
   kickChannel: string,
   locale: Locale,
+  token = '',
 ): string {
-  return channelWidgetUrl(
-    origin,
-    WIDGET_PATH,
-    buildParams(settings, twitchChannel, kickChannel, locale),
-  );
+  const params = buildParams(settings, twitchChannel, kickChannel, locale);
+  if (token.trim()) params.set('token', token.trim());
+  return channelWidgetUrl(origin, WIDGET_PATH, params);
 }
 
 /** Plays simulated alerts with the same settings and never connects to a channel. */
@@ -187,6 +192,8 @@ export function parseStreamAlertsUrl(text: string): {
   twitchChannel: string;
   kickChannel: string;
   locale: Locale | null;
+  /** The Senchabot connection, or empty. */
+  token: string;
 } | null {
   const pasted = readWidgetUrl(text, WIDGET_PATH);
   if (!pasted) return null;
@@ -195,6 +202,7 @@ export function parseStreamAlertsUrl(text: string): {
   return {
     ...channels,
     locale: isValidLocale(lang) ? lang : null,
+    token: params.get('token')?.trim() ?? '',
     settings: { platforms, ...readStreamAlertsSettings(params) },
   };
 }
