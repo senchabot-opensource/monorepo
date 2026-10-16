@@ -3563,7 +3563,7 @@ export const ja: typeof en = {
       'プリセットを選ぶと、チャットボックス、配信アラート、サブスク目標、フォロワー目標、カウンター、イベントリスト、エンドロール、参加待ちリスト、トップサポーター、テロップ、タスクリスト、注目メッセージ、エモートコンボ、Bits・Kicks目標、再生中の曲、Subathon Timer、チャット投票、抽選の当選者、配信フレーム、配信カウントダウン、SNSリンク、ルーレットが、同じフレーム、フォント、カラーでそろいます。すべてのウィジェットに同じものを使っても、ウィジェットごとに変えてもかまいません。',
     pickTitle: 'プリセットを選ぶ',
     pickText:
-      'League of Legends（LoL）、World of Warcraft（WoW）、Dota 2、Valorant、Counter-Strike 2（CS2）、Minecraft、Fortnite、Rocket League、PUBG: Battlegrounds、Mount & Blade、Kingdom Come: Deliverance向けのプリセットに加えて、お楽しみ用のGlitch、Operator、Conquest、Flower、Pizzaも用意しています。',
+      'League of Legends（LoL）、World of Warcraft（WoW）、Dota 2、Valorant、Counter-Strike 2（CS2）、Minecraft、Fortnite、Rocket League、PUBG: Battlegrounds、Mount & Blade、Kingdom Come: Deliverance向けのプリセットに加えて、お楽しみ用のGlitch、Operator、Conquest、Flower、Pizza、Halloweenも用意しています。',
     by: '作者: {author}',
     community: 'コミュニティ',
     makeDefault: 'すべてのウィジェットで{name}を使う',
@@ -3583,6 +3583,8 @@ export const ja: typeof en = {
       defuse: '琥珀色とグレー。赤いランプが点滅します。',
       blocks: '全体がグリーンのブロック調。バーがブロックを積むように伸びます。',
       pizza: 'ピザ生地とチーズのカラー。まわりにピザが浮かびます。',
+      halloween:
+        'かぼちゃオレンジと真夜中のパープル。まわりにかぼちゃやおばけ、コウモリが浮かびます。',
       storm: '空色と紫。バーが設計図のように組み上がります。',
       boost: '青とオレンジ。バーが伸びるとスピード線が走ります。',
       airdrop: 'オリーブと黄色。バーが伸びると信号弾の煙が上がります。',
@@ -3695,6 +3697,8 @@ export const ja: typeof en = {
     lead: 'Senchabot Extensionsの新機能とバグ修正を、新しい順に並べています。このリストは[GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions)にあるプロジェクトのコミット履歴からまとめています。',
     site: 'サイト',
     entries: {
+      presetHalloween:
+        '新しいプリセットHalloweenが登場しました。バーのまわりにかぼちゃやおばけ、コウモリが浮かび、伸びるたびにバーの先でかぼちゃが飛び出しておばけが立ちのぼり、目標を達成するとおばけとコウモリが飛び立ちます。',
       irlHudFollows:
         'IRL HUDオーバーレイに「連携」タブが加わりました。チャンネルをSenchabotに連携すると、新しいフォロワーごとに所持金が増えます。',
       streamAlertsFollows:

@@ -3617,7 +3617,7 @@ export const en = {
       'Pick a preset and your Chat Box, Stream Alerts, Sub Goal, Follower Goal, Counter, Event List, End Credits, Viewer Queue, Top Supporters, Lower Thirds, Task List, Featured Message, Emote Combo, Bits & Kicks Goal, Now Playing, Subathon Timer, Chat Poll, Raffle winner, Stream Frames, Stream Countdown, Socials and Spin Wheel get the same frame, fonts and colors. Use one on every widget, or a different one on each.',
     pickTitle: 'Pick a preset',
     pickText:
-      'Ready-made presets for League of Legends (LoL), World of Warcraft (WoW), Dota 2, Valorant, Counter-Strike 2 (CS2), Minecraft, Fortnite, Rocket League, PUBG: Battlegrounds, Mount & Blade and Kingdom Come: Deliverance, plus Glitch, Operator, Conquest, Flower and Pizza just for fun.',
+      'Ready-made presets for League of Legends (LoL), World of Warcraft (WoW), Dota 2, Valorant, Counter-Strike 2 (CS2), Minecraft, Fortnite, Rocket League, PUBG: Battlegrounds, Mount & Blade and Kingdom Come: Deliverance, plus Glitch, Operator, Conquest, Flower, Pizza and Halloween just for fun.',
     by: 'by {author}',
     community: 'Community',
     makeDefault: 'Use {name} on every widget',
@@ -3637,6 +3637,8 @@ export const en = {
       defuse: 'Amber and gray, with a blinking red light.',
       blocks: 'All green and blocky, with bars built block by block.',
       pizza: 'Crust and cheese colors, with pizza slices floating around.',
+      halloween:
+        'Pumpkin orange on midnight purple, with pumpkins, ghosts and bats floating around.',
       storm: 'Sky blue and purple, with bars built like a blueprint.',
       boost: 'Blue and orange, with speed lines as bars grow.',
       airdrop: 'Olive and yellow, with flare smoke as bars grow.',
@@ -3748,6 +3750,8 @@ export const en = {
     lead: "New features and bug fixes in Senchabot Extensions, newest first. The list is put together from the project's commit history on [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      presetHalloween:
+        "A new Halloween preset: pumpkins, ghosts and bats float around bars, every step up pops a jack-o'-lantern at the bar's edge with a ghost rising out of it, and a reached goal sends ghosts and bats flying.",
       irlHudFollows:
         'IRL HUD Overlay gets an Integrations tab: with your channel connected in Senchabot, every new follower adds cash.',
       streamAlertsFollows:

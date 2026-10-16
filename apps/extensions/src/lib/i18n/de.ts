@@ -3652,7 +3652,7 @@ export const de: typeof en = {
       'Wähl ein Preset, und deine Chat-Box, Stream-Alerts, Sub-Ziel, Follower-Ziel, Zähler, Event-Liste, Abspann, Zuschauer-Warteschlange, Top-Supporter, Bauchbinde, Aufgabenliste, Hervorgehobene Nachricht, Emote-Combo, Bits- und Kicks-Ziel, Aktueller Song, Subathon Timer, Chat-Umfrage, der Gewinner der Verlosung, die Stream-Rahmen, der Stream-Countdown, Socials und das Glücksrad bekommen denselben Rahmen, dieselben Schriften und Farben. Nimm eins für alle Widgets oder für jedes ein anderes.',
     pickTitle: 'Such dir ein Preset aus',
     pickText:
-      'Fertige Presets für League of Legends (LoL), World of Warcraft (WoW), Dota 2, Valorant, Counter-Strike 2 (CS2), Minecraft, Fortnite, Rocket League, PUBG: Battlegrounds, Mount & Blade und Kingdom Come: Deliverance, dazu Glitch, Operator, Conquest, Flower und Pizza einfach zum Spaß.',
+      'Fertige Presets für League of Legends (LoL), World of Warcraft (WoW), Dota 2, Valorant, Counter-Strike 2 (CS2), Minecraft, Fortnite, Rocket League, PUBG: Battlegrounds, Mount & Blade und Kingdom Come: Deliverance, dazu Glitch, Operator, Conquest, Flower, Pizza und Halloween einfach zum Spaß.',
     by: 'von {author}',
     community: 'Community',
     makeDefault: '{name} für alle Widgets nutzen',
@@ -3672,6 +3672,8 @@ export const de: typeof en = {
       defuse: 'Bernstein und Grau, mit einem blinkenden roten Licht.',
       blocks: 'Ganz in Grün und blockig, mit Balken, die Block für Block wachsen.',
       pizza: 'Die Farben von Kruste und Käse, mit herumschwebenden Pizzastücken.',
+      halloween:
+        'Kürbisorange auf Mitternachtslila, mit herumschwebenden Kürbissen, Geistern und Fledermäusen.',
       storm: 'Himmelblau und Lila, mit Balken, die wie ein Bauplan entstehen.',
       boost: 'Blau und Orange, mit Speedlines, wenn Balken wachsen.',
       airdrop: 'Oliv und Gelb, mit dem Rauch einer Signalfackel, wenn Balken wachsen.',
@@ -3783,6 +3785,8 @@ export const de: typeof en = {
     lead: 'Neue Features und Bugfixes in Senchabot Extensions, das Neueste zuerst. Die Liste ist aus der Commit-Historie des Projekts auf [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) zusammengestellt.',
     site: 'Website',
     entries: {
+      presetHalloween:
+        'Neues Halloween-Preset: Kürbisse, Geister und Fledermäuse schweben um die Balken, jeder Schritt nach vorn lässt am Ende des Balkens einen Kürbis herausspringen, aus dem ein Geist aufsteigt, und ein erreichtes Ziel lässt Geister und Fledermäuse davonfliegen.',
       irlHudFollows:
         'Das IRL-HUD-Overlay hat einen Tab Integrationen: Ist dein Kanal mit Senchabot verbunden, gibt jeder neue Follower Geld dazu.',
       streamAlertsFollows:

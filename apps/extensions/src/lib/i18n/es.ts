@@ -3675,7 +3675,7 @@ export const es: typeof en = {
       'Elige un preset y tu Caja de Chat, tus Alertas de Stream, tu Meta de Subs, Meta de Seguidores, Contador, Lista de Eventos, Créditos Finales, Fila de Espectadores, Ranking de Apoyos, Rótulos, Lista de Tareas, Mensaje Destacado, Combo de Emotes, Meta de Bits y Kicks, Sonando Ahora, tu Subathon Timer, tu Encuesta de Chat, el ganador del Sorteo, tus Marcos de Stream, tu Cuenta Regresiva, tus Redes Sociales y tu Ruleta tendrán el mismo marco, las mismas fuentes y los mismos colores. Usa uno en todos los widgets o uno distinto en cada uno.',
     pickTitle: 'Elige un preset',
     pickText:
-      'Presets listos para League of Legends (LoL), World of Warcraft (WoW), Dota 2, Valorant, Counter-Strike 2 (CS2), Minecraft, Fortnite, Rocket League, PUBG: Battlegrounds, Mount & Blade y Kingdom Come: Deliverance, y además Glitch, Operator, Conquest, Flower y Pizza por diversión.',
+      'Presets listos para League of Legends (LoL), World of Warcraft (WoW), Dota 2, Valorant, Counter-Strike 2 (CS2), Minecraft, Fortnite, Rocket League, PUBG: Battlegrounds, Mount & Blade y Kingdom Come: Deliverance, y además Glitch, Operator, Conquest, Flower, Pizza y Halloween por diversión.',
     by: 'por {author}',
     community: 'Comunidad',
     makeDefault: 'Usar {name} en todos los widgets',
@@ -3695,6 +3695,8 @@ export const es: typeof en = {
       defuse: 'Ámbar y gris, con una luz roja que parpadea.',
       blocks: 'Todo verde y en bloques, con barras que crecen bloque a bloque.',
       pizza: 'Colores de masa y queso, con porciones de pizza flotando alrededor.',
+      halloween:
+        'Naranja calabaza sobre morado medianoche, con calabazas, fantasmas y murciélagos flotando alrededor.',
       storm: 'Celeste y morado, con barras que se arman como un plano.',
       boost: 'Azul y naranja, con estelas de velocidad cuando las barras crecen.',
       airdrop: 'Verde oliva y amarillo, con humo de bengala cuando las barras crecen.',
@@ -3806,6 +3808,8 @@ export const es: typeof en = {
     lead: 'Funciones nuevas y errores corregidos en Senchabot Extensions, de lo más nuevo a lo más viejo. La lista sale del historial de commits del proyecto en [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).',
     site: 'Sitio',
     entries: {
+      presetHalloween:
+        'Nuevo preset Halloween: calabazas, fantasmas y murciélagos flotan alrededor de las barras, cada avance hace saltar una calabaza en el borde de la barra de la que sale un fantasma, y una meta cumplida hace volar fantasmas y murciélagos.',
       irlHudFollows:
         'El Overlay HUD IRL tiene una pestaña Integraciones: con tu canal conectado en Senchabot, cada nuevo seguidor suma dinero.',
       streamAlertsFollows:

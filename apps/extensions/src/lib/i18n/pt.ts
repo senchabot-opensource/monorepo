@@ -3660,7 +3660,7 @@ export const pt: typeof en = {
       'Escolha um preset e sua Caixa de Chat, Alertas de Live, Meta de Subs, Meta de Seguidores, Contador, Lista de Eventos, Créditos Finais, Fila de Espectadores, Top Apoiadores, Tarjas, Lista de Tarefas, Mensagem em Destaque, Combo de Emotes, Meta de Bits e Kicks, Tocando Agora, Subathon Timer, Enquete do Chat, vencedor do Sorteio, Molduras de Live, Contagem Regressiva, Redes Sociais e Roleta ganham a mesma moldura, fontes e cores. Use um em todos os widgets, ou um diferente em cada.',
     pickTitle: 'Escolha um preset',
     pickText:
-      'Presets prontos para League of Legends (LoL), World of Warcraft (WoW), Dota 2, Valorant, Counter-Strike 2 (CS2), Minecraft, Fortnite, Rocket League, PUBG: Battlegrounds, Mount & Blade e Kingdom Come: Deliverance, e ainda Glitch, Operator, Conquest, Flower e Pizza só por diversão.',
+      'Presets prontos para League of Legends (LoL), World of Warcraft (WoW), Dota 2, Valorant, Counter-Strike 2 (CS2), Minecraft, Fortnite, Rocket League, PUBG: Battlegrounds, Mount & Blade e Kingdom Come: Deliverance, e ainda Glitch, Operator, Conquest, Flower, Pizza e Halloween só por diversão.',
     by: 'por {author}',
     community: 'Comunidade',
     makeDefault: 'Usar {name} em todos os widgets',
@@ -3680,6 +3680,8 @@ export const pt: typeof en = {
       defuse: 'Âmbar e cinza, com uma luz vermelha piscando.',
       blocks: 'Todo verde e em blocos, com barras que crescem bloco a bloco.',
       pizza: 'Cores de massa e queijo, com fatias de pizza flutuando em volta.',
+      halloween:
+        'Laranja abóbora sobre roxo meia-noite, com abóboras, fantasmas e morcegos flutuando em volta.',
       storm: 'Azul-celeste e roxo, com barras que se montam como uma planta.',
       boost: 'Azul e laranja, com rastros de velocidade quando as barras crescem.',
       airdrop: 'Verde-oliva e amarelo, com fumaça de sinalizador quando as barras crescem.',
@@ -3791,6 +3793,8 @@ export const pt: typeof en = {
     lead: 'Recursos novos e correções de bugs no Senchabot Extensions, dos mais novos para os mais antigos. A lista é montada a partir do histórico de commits do projeto no [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).',
     site: 'Site',
     entries: {
+      presetHalloween:
+        'Novo preset Halloween: abóboras, fantasmas e morcegos flutuam em volta das barras, cada avanço faz uma abóbora pular na ponta da barra com um fantasma subindo dela, e uma meta alcançada faz fantasmas e morcegos voarem.',
       irlHudFollows:
         'O Overlay HUD IRL ganhou uma aba Integrações: com seu canal conectado no Senchabot, cada novo seguidor soma dinheiro.',
       streamAlertsFollows:

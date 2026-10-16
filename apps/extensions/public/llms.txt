@@ -57,7 +57,7 @@ Every page is also in German, Spanish, French, Japanese, Portuguese and Turkish 
 ## Information
 
 - [Home](https://extensions.senchabot.com): Overview of every widget and tool.
-- [Presets](https://extensions.senchabot.com/presets): Game presets (League of Legends, World of Warcraft, Dota 2, Valorant, Counter-Strike 2, Minecraft, Fortnite, Rocket League, PUBG, Mount & Blade, Kingdom Come: Deliverance) plus Glitch, Operator, Conquest, Flower and Pizza, that give Sub Goal, Bits & Kicks Goal, Follower Goal, Chat Poll, Chat Box, Featured Message, Emote Combo, Stream Alerts, Counter, Subathon Timer, the Raffle winner, Stream Frames, Stream Countdown, Socials, Now Playing, Spin Wheel, Event List, End Credits, Viewer Queue, Top Supporters, Lower Thirds and Task List the same look.
+- [Presets](https://extensions.senchabot.com/presets): Game presets (League of Legends, World of Warcraft, Dota 2, Valorant, Counter-Strike 2, Minecraft, Fortnite, Rocket League, PUBG, Mount & Blade, Kingdom Come: Deliverance) plus Glitch, Operator, Conquest, Flower, Pizza and Halloween, that give Sub Goal, Bits & Kicks Goal, Follower Goal, Chat Poll, Chat Box, Featured Message, Emote Combo, Stream Alerts, Counter, Subathon Timer, the Raffle winner, Stream Frames, Stream Countdown, Socials, Now Playing, Spin Wheel, Event List, End Credits, Viewer Queue, Top Supporters, Lower Thirds and Task List the same look.
 - [FAQ](https://extensions.senchabot.com/faq): Pricing, login, supported platforms, widget URLs and privacy.
 - [Changelog](https://extensions.senchabot.com/changelog): New features and fixes, newest first.
 

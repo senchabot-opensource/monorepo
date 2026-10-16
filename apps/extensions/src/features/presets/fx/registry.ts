@@ -14,6 +14,7 @@ import { pixels } from './pixels';
 import { pizza } from './pizza';
 import { radiance } from './radiance';
 import { slash } from './slash';
+import { spooky } from './spooky';
 import type { ActiveEffect, EffectModule } from './types';
 
 /** Every effect a preset can name. A Record, so a new id without its module fails to build. */
@@ -28,6 +29,7 @@ export const EFFECT_MODULES: Record<ActiveEffect, EffectModule> = {
   beacon,
   pixels,
   pizza,
+  spooky,
   build,
   boost,
   flare,

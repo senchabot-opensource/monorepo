@@ -33,6 +33,7 @@ export const EFFECTS = [
   'beacon',
   'pixels',
   'pizza',
+  'spooky',
   'build',
   'boost',
   'flare',
