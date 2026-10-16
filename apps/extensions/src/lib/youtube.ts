@@ -8,11 +8,15 @@ import {
 } from './basechat';
 
 export function resolveWsBaseUrl(): string {
-  if (typeof window !== 'undefined' && (window as unknown as { __SENCHABOT_WS_URL__?: string }).__SENCHABOT_WS_URL__) {
+  if (
+    typeof window !== 'undefined' &&
+    (window as unknown as { __SENCHABOT_WS_URL__?: string }).__SENCHABOT_WS_URL__
+  ) {
     return (window as unknown as { __SENCHABOT_WS_URL__: string }).__SENCHABOT_WS_URL__;
   }
   try {
-    if (import.meta.env?.VITE_SENCHABOT_WS_URL) {
+    // Read statically: with `import.meta.env?.`, Vite builds every VITE_ variable into the page.
+    if (import.meta.env.VITE_SENCHABOT_WS_URL) {
       return import.meta.env.VITE_SENCHABOT_WS_URL;
     }
   } catch {}
@@ -130,7 +134,9 @@ export class YouTubeChat extends BaseChatClient {
         }
         case 'status': {
           if (data.status === 'offline') {
-            console.info(`[YouTube] Channel ${data.channel || this.channel} is offline; waiting for stream...`);
+            console.info(
+              `[YouTube] Channel ${data.channel || this.channel} is offline; waiting for stream...`,
+            );
           } else if (data.status === 'live') {
             console.info(`[YouTube] Channel ${data.channel || this.channel} is live! Chat active.`);
           } else if (data.status === 'error') {

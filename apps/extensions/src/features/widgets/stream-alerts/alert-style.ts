@@ -29,5 +29,7 @@ export function defaultHeadingKey(kind: AlertKind, platform: SubathonPlatform): 
         : 'streamAlerts.alert.kicksHeading';
     case 'raid':
       return 'streamAlerts.alert.raidHeading';
+    case 'follow':
+      return 'streamAlerts.alert.followHeading';
   }
 }

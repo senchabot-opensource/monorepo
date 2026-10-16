@@ -1,6 +1,7 @@
-import { requestJson } from '#/lib/fetch-json';
+import { RetryableFetchError, requestJson } from '#/lib/fetch-json';
 import type { NowPlayingSource } from '#/lib/now-playing-url';
-import { lastfmApiKey } from './lastfm';
+import { LASTFM_USER_MAX, type LastfmAnswer, lastfmBody } from './lastfm';
+import { getLastfmRecentTracks } from './lastfm-server';
 
 /** A song to show. */
 export interface Track {
@@ -111,23 +112,34 @@ export function parseLastfm(json: unknown): Track | null {
 export const parseNowPlaying = (source: NowPlayingSource, json: unknown): Track | null =>
   source === 'lastfm' ? parseLastfm(json) : parseListenBrainz(json);
 
-/** What to ask for `user`'s song; null without a user, or for Last.fm in a build without its key. */
-export function nowPlayingRequestUrl(source: NowPlayingSource, user: string): string | null {
+/** ListenBrainz's playing-now request for `user`; null without a user. It needs no key. */
+export function listenbrainzRequestUrl(user: string): string | null {
   const name = user.trim();
-  if (!name) return null;
+  return name
+    ? `https://api.listenbrainz.org/1/user/${encodeURIComponent(name)}/playing-now`
+    : null;
+}
+
+/**
+ * The service's answer about `user`, read like requestJson: its JSON, undefined for a 4xx or no
+ * user, RetryableFetchError when it's worth asking again. ListenBrainz is asked from the page;
+ * Last.fm through the site's server, which keeps the API key.
+ */
+export async function requestNowPlaying(source: NowPlayingSource, user: string): Promise<unknown> {
+  const name = user.trim();
   if (source === 'listenbrainz') {
-    return `https://api.listenbrainz.org/1/user/${encodeURIComponent(name)}/playing-now`;
+    const url = listenbrainzRequestUrl(name);
+    return url ? requestJson<unknown>(url) : undefined;
   }
-  const key = lastfmApiKey();
-  if (!key) return null;
-  const params = new URLSearchParams({
-    method: 'user.getrecenttracks',
-    user: name,
-    api_key: key,
-    format: 'json',
-    limit: '1',
-  });
-  return `https://ws.audioscrobbler.com/2.0/?${params.toString()}`;
+  if (!name || name.length > LASTFM_USER_MAX) return undefined;
+  let answer: LastfmAnswer;
+  try {
+    answer = await getLastfmRecentTracks({ data: { user: name } });
+  } catch (error) {
+    // The site's server can't be reached, or failed: like the network being down.
+    throw new RetryableFetchError(`Last.fm: ${error}`);
+  }
+  return lastfmBody(answer);
 }
 
 /**
@@ -139,9 +151,8 @@ export async function checkNowPlaying(
   source: NowPlayingSource,
   user: string,
 ): Promise<Track | null | 'missing'> {
-  const url = nowPlayingRequestUrl(source, user);
-  if (!url) return 'missing';
-  const json = await requestJson<unknown>(url);
+  if (!user.trim()) return 'missing';
+  const json = await requestNowPlaying(source, user);
   // A 4xx, or a Last.fm error such as "User not found" or a private profile.
   if (json === undefined || record(json)?.error !== undefined) return 'missing';
   return parseNowPlaying(source, json);

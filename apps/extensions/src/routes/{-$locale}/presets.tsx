@@ -34,6 +34,7 @@ const FAQ: FaqEntry[] = [
   ['presets.faq1Q', 'presets.faq1A'],
   ['presets.faq2Q', 'presets.faq2A'],
   ['presets.faq3Q', 'presets.faq3A'],
+  ['presets.faq5Q', 'presets.faq5A'],
   ['presets.faq4Q', 'presets.faq4A'],
 ];
 
@@ -74,6 +75,14 @@ function PresetsPage() {
     const linked = new URLSearchParams(window.location.search).get(PRESET_PARAM);
     setPicked(findPreset(linked ?? readSitePreset())?.data.id ?? CLASSIC_PRESET);
   }, []);
+  const pick = (next: string) => {
+    setPicked(next);
+    // Kept in the address bar, so the link opens on this preset for anyone it's sent to. Classic
+    // too: without the param the page would open on the visitor's own default.
+    const url = new URL(window.location.href);
+    url.searchParams.set(PRESET_PARAM, next);
+    window.history.replaceState(window.history.state, '', url);
+  };
 
   const preset = findPreset(picked);
   const name = preset?.data.name ?? t('presets.classic');
@@ -118,7 +127,7 @@ function PresetsPage() {
                 name={`${id}-preset`}
                 value={choice.id}
                 checked={picked === choice.id}
-                onChange={() => setPicked(choice.id)}
+                onChange={() => pick(choice.id)}
                 className="sr-only"
               />
               <PresetSwatch preset={choice.data} />

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { skinFor } from '#/features/presets/skin';
+import { useFollows } from '#/hooks/use-follows';
 import { usePreviewReceiver } from '#/hooks/use-preview-channel';
 import { ALERT_KINDS, type AlertSettings } from '#/lib/stream-alerts-url';
 import type { SubathonEvent, SubathonPlatform } from '../subathon/subathon-events';
@@ -34,7 +35,10 @@ const SIM_NAMES = ['NightOwl', 'pixelpanda', 'ChatGremlin', 'lunaa', 'GG_Tobi', 
 const SIM_MESSAGES = ['', 'GG!', 'Hype!', '<3', 'PogChamp'];
 const pick = <T>(list: readonly T[]) => list[Math.floor(Math.random() * list.length)];
 
-/** A random alert the settings would show, or null when every alert is off. */
+/**
+ * A random alert the settings would show, or null when every alert is off. Without a Senchabot
+ * connection the setup page's preview URL has follows off, as none would come.
+ */
 function simulatedAlert(
   settings: AlertSettings,
   only: SubathonPlatform | undefined,
@@ -72,12 +76,16 @@ function simulatedAlert(
         name,
         viewers: Math.max(settings.minRaid, pick([12, 48, 230])),
       };
+    case 'follow':
+      return { kind: 'follow', platform, name };
   }
 }
 
 interface UseStreamAlertsOptions {
   twitch?: string;
   kick?: string;
+  /** A Senchabot connection, which brings follows; chat never shows them. */
+  token?: string;
   settings: AlertSettings;
   /** Preview mode: silent simulated alerts and the setup page's test buttons, no chat. */
   simulate?: boolean;
@@ -91,6 +99,7 @@ interface UseStreamAlertsOptions {
 export function useStreamAlerts({
   twitch,
   kick,
+  token,
   settings,
   simulate = false,
   simPlatform,
@@ -180,6 +189,7 @@ export function useStreamAlerts({
   }, []);
 
   useSubEvents(twitch, kick, !simulate, handleEvent);
+  useFollows(token, twitch || kick, !simulate, enqueue);
 
   // Preview: a silent alert whenever the screen has been empty for a moment, unless a test
   // button's alert just played.

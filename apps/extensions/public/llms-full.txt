@@ -188,7 +188,7 @@ Chat commands for the broadcaster and moderators, on Twitch and Kick:
 | !subathon set 2h | Sets the time left |
 | !subathon reset | Starts over from the starting time |
 
-Times can be written as 10m, 1h30m, 45s or 1:30:00; a plain number is minutes.
+Any amount of time works, written like 57m, 1h30m, 45s or 1:30:00; a plain number is minutes.
 
 URL parameters (all optional, times in seconds):
 
@@ -225,7 +225,7 @@ URL parameters (all optional, times in seconds):
 
 ## Stream Alerts
 
-An alert box for Twitch and Kick. A new sub, gifted subs, Bits (Twitch), Kicks (Kick) or a raid each get an animated alert with an icon and a short sound.
+An alert box for Twitch and Kick. A new sub, gifted subs, Bits (Twitch), Kicks (Kick), a raid or, with Senchabot connected, a new follower each get an animated alert with an icon and a short sound.
 
 - Widget URL: https://extensions.senchabot.com/widgets/stream-alerts?twitch=CHANNEL&kick=CHANNEL&lang=en
 - Demo with sample alerts: https://extensions.senchabot.com/widgets/stream-alerts?simulate=1
@@ -234,7 +234,7 @@ An alert box for Twitch and Kick. A new sub, gifted subs, Bits (Twitch), Kicks (
 - Alerts show one at a time, in the order they came in. A gift of many subs is one alert.
 - Resub alerts show the months. A resub a viewer shares in chat (Twitch's resub message, Kick's chat celebration) gets an alert with the months and their message. Kick leaves the months out of subs on some channels.
 - To hear the sound in OBS, turn on "Control audio via OBS" in the source and set it to Monitor and Output in Advanced Audio Properties.
-- There are no follow or donation alerts: Twitch and Kick don't show follows to a page that isn't logged in, and neither has donations of its own.
+- Follow alerts need the channel connected in Senchabot: Twitch and Kick don't show follows to a page that isn't logged in, so they come through the Senchabot connection Follower Goal uses. The setup page takes it from a Senchabot Dashboard link (?token=) or a pasted Follower Goal URL or token, and the URL carries it as token. There are no donation alerts: neither platform has donations of its own.
 
 URL parameters (all optional):
 
@@ -245,8 +245,9 @@ URL parameters (all optional):
 | theme | neon, celestial | neon |
 | color | platform (Twitch purple, Kick green), blue, purple, pink, red, gold, green | platform |
 | lang | en, tr: the language of the alert text | the viewer's browser |
-| sub, gift, bits, raid | 0 turns that alert off | on |
-| hsub, hgift, hbits, hraid | custom heading for that alert, up to 24 characters | the language's default |
+| sub, gift, bits, raid, follow | 0 turns that alert off | on |
+| hsub, hgift, hbits, hraid, hfollow | custom heading for that alert, up to 24 characters | the language's default |
+| token | a Senchabot connection, which brings follow alerts | none |
 | mingift | smallest gift that shows, in subs | 1 |
 | minbits | smallest cheer that shows, in Bits or Kicks | 1 |
 | minraid | smallest raid that shows, in viewers; 0 also shows raids that come without a count | 0 |
@@ -422,7 +423,7 @@ Shows the song the streamer is listening to, with its cover art, title and artis
 - Widget URL: https://extensions.senchabot.com/widgets/now-playing?user=YOUR_LISTENBRAINZ_USERNAME&lang=en
 - Demo: https://extensions.senchabot.com/widgets/now-playing?demo=1
 - `source=listenbrainz` (the default) asks ListenBrainz's public playing-now API, which needs no key. Connect Spotify in ListenBrainz, or use any scrobbler that sends playing-now. Covers come from the Cover Art Archive when the song has a release ID.
-- `source=lastfm` asks Last.fm for the recent tracks, which update almost at once. It needs a Last.fm API key built into the site (`VITE_LASTFM_API_KEY` at build time); without one, the setup page offers ListenBrainz only.
+- `source=lastfm` asks Last.fm for the recent tracks, which update almost at once. It needs a Last.fm API key on the site's server (the `LASTFM_API_KEY` secret), which asks Last.fm for the overlay, so the key never reaches the page; without one, the setup page offers ListenBrainz only.
 - The overlay asks every 12 seconds and backs off while a service is busy. When the music stops, the card dims, then slides out after `hide` seconds.
 - URL parameters: `source` (`listenbrainz` | `lastfm`), `user`, `layout` (`card` | `pill`), `art` (`0` hides the cover), `album` (`0` hides the album line), `hide` (seconds before it slides out when nothing plays, 0 keeps it up dimmed, up to 60), `preset`, `color` (`green` | `purple` | `red` | `gold` | `cyan` | `pink`, classic only), `lang`, `demo`.
 
@@ -457,7 +458,7 @@ A countdown for the parts of a stream where nothing is happening yet: the minute
 - Demo: https://extensions.senchabot.com/widgets/countdown?simulate=1
 - Guide: https://extensions.senchabot.com/guides/stream-countdown
 - Recommended size: 1920x1080, so the clock lands in the middle of the scene. It is drawn for whatever size the source has.
-- Chat commands for the broadcaster and mods, on both platforms: `!countdown {scene} [duration] [headline] [| note]` (defaults to 10m, e.g. `!countdown break 5m Lunch | Back soon`), `!countdown add 5m`, `!countdown remove 2m`, `!countdown set 10m`, `!countdown pause`, `!countdown start`, `!countdown reset`, `!countdown cancel` (stops and hides it until the next command), `!countdown title <headline>`, `!countdown note <note>`. Durations are written as 5m, 90s, 1h30m, 5:00 or a bare number of minutes.
+- Chat commands for the broadcaster and mods, on both platforms: `!countdown {scene} [duration] [headline] [| note]` (defaults to 10m, e.g. `!countdown break 5m Lunch | Back soon`), `!countdown add 5m`, `!countdown remove 2m`, `!countdown set 10m`, `!countdown pause`, `!countdown start`, `!countdown reset`, `!countdown cancel` (stops and hides it until the next command), `!countdown title <headline>`, `!countdown note <note>`. Durations can be any amount, written like 57m, 90s, 1h30m, 5:00 or a bare number of minutes.
 
 URL parameters (all optional):
 
@@ -491,7 +492,7 @@ URL parameters (all optional):
 
 ## IRL HUD Overlay
 
-A game-style HUD for Twitch and Kick, made for IRL streams. Subs, gifted subs, Bits (Twitch), Kicks (Kick) and raids add the dollar amounts the streamer sets, with separate values per platform, and the cash counter rolls up to the new amount. Above it runs the time of day, in a picked time zone for OBS running on a cloud server or a computer at home. A mini-map shows an arrow walking streets or paths, turning at the corners, with the map turning under it so the arrow always points ahead. It draws a made-up city (Urban) or park (Park), picked by the channel name, or the real streets, paths, buildings, parks and water within about 350 m of a place the streamer saves (Real Place, starting at the first saved place), from OpenStreetMap data (© OpenStreetMap contributors) loaded once per place from the Overpass API and kept in the browser source for 14 days; a radar sweep turns on the mini-map while it loads. On a real place the walk prefers footpaths and stays near the place. The setup page finds places with OpenStreetMap's Nominatim search, or takes pasted coordinates; each saved place has a one-word name mods switch to from chat.
+A game-style HUD for Twitch and Kick, made for IRL streams. Subs, gifted subs, Bits (Twitch), Kicks (Kick), raids and, with Senchabot connected, new followers add the dollar amounts the streamer sets, with separate values per platform, and the cash counter rolls up to the new amount. Above it runs the time of day, in a picked time zone for OBS running on a cloud server or a computer at home. A mini-map shows an arrow walking streets or paths, turning at the corners, with the map turning under it so the arrow always points ahead. It draws a made-up city (Urban) or park (Park), picked by the channel name, or the real streets, paths, buildings, parks and water within about 350 m of a place the streamer saves (Real Place, starting at the first saved place), from OpenStreetMap data (© OpenStreetMap contributors) loaded once per place from the Overpass API and kept in the browser source for 14 days. While a place loads, the mini-map shows a loading screen (a street grid under a radar sweep, and a spinner around the arrow) and fades the map in once it's there; a busy server gets 6 s before the next one is asked too, and the other saved places load in the background so !hud map switches to them at once. On a real place the walk prefers footpaths and stays near the place. The setup page finds places with OpenStreetMap's Nominatim search, or takes pasted coordinates; each saved place has a one-word name mods switch to from chat.
 
 - Widget URL: https://extensions.senchabot.com/widgets/irl-hud?twitch=CHANNEL&kick=CHANNEL
 - Demo with simulated subs: https://extensions.senchabot.com/widgets/irl-hud?simulate=1
@@ -499,6 +500,7 @@ A game-style HUD for Twitch and Kick, made for IRL streams. Subs, gifted subs, B
 - The cash is saved in the browser source (OBS keeps it across reloads and restarts). Subs while OBS is closed can't be seen.
 - A new starting amount in the URL starts the counter over from it; until then the money earned is kept.
 - Bits and Kicks values are per 100, raids per viewer they bring. Twitch Tier 2 and 3 subs can count as 2 and 5 subs.
+- New followers add the follow value, set in the setup page's Integrations tab. Follows need the channel connected in Senchabot, the connection Follower Goal uses, since neither platform shows them to a page that isn't logged in; the URL carries it as token.
 
 Chat commands for the broadcaster and moderators, on Twitch and Kick:
 
@@ -547,6 +549,8 @@ URL parameters (all optional):
 | ksub, kgift | dollars per Kick sub and per gifted sub | 100 |
 | kicks | dollars per 100 Kicks | 25 |
 | kraid | dollars per viewer a Kick raid (host) brings | 10 |
+| follow | dollars per new follower on either platform; needs token | 10 |
+| token | a Senchabot connection, which brings follows | none |
 | tiers | 0 counts Twitch Tier 2 and 3 subs as one sub | 1 |
 | clock | 0 hides the clock | 1 |
 | h12 | 1 shows a 12-hour clock | 0 |
@@ -713,7 +717,8 @@ A preset gives several widgets the same look: frame, fonts and colors. Page: htt
 - Built-in presets, most made for a game: Rift (League of Legends), Realm (World of Warcraft), Ancient (Dota 2), Agent (Valorant), Defuse (Counter-Strike 2), Blocks (Minecraft), Storm (Fortnite), Boost (Rocket League), Airdrop (PUBG), Banner (Mount & Blade and Kingdom Come: Deliverance), plus Glitch, Operator, Conquest, Flower and Pizza, made just for fun. They are fan-made styles from colors, free Google Fonts and original drawings, with no game art, and aren't affiliated with the game makers.
 - A preset brings its own colors and fonts: with one set, the color parameters and Stream Alerts' theme are ignored. font (inter, roboto, nunito, mono, serif or system) draws the widget in that font instead of the preset's two, keeping the preset's colors, frame and effect (the Font box under the preset picker); Chat Box picks its fonts with its own font and userFont. Layout settings (Subathon style, Chat Box layout, poll position and so on) still apply.
 - Every built-in preset also has an effect of its own, played on bars as they grow, on panels as they come in, now and then while idle, and bigger when a goal is reached: Rift (teal energy and a rune flash), Realm (golden light shafts and stars), Flower (little flowers and pink petals floating around bars, a cherry blossom opening at a bar's edge as it grows), Ancient (smoldering bars and rising embers), Agent (a blade slash and shards), Defuse (an amber scan and a blinking red light), Blocks (blocks popping in), Pizza (pizza slices floating around bars, a slice popping out as a bar grows, a whole pizza for a reached goal), Storm (a blueprint grid that turns solid, lightning on a win), Boost (speed lines, flames and a shockwave), Airdrop (flare smoke and landing dust), Conquest (a capture sweep and radar pings), Operator (hit marks), Banner (bars hammered white-hot, throwing sparks, cooling to iron) and Glitch (panels tear and flicker like a broken signal). fx=0 turns a preset's effect off (the Effects switch under the preset picker); Stream Countdown and Stream Frames with motion=0, and Chat Box with animation=none, keep it off too.
-- The presets page can set a default preset that every setup page in that browser starts with. A setup page opened with ?preset= in its link starts on that preset instead: the presets page links that way, and so do the home page previews, which show a random preset on every visit. A dice beside the preset picker picks a random preset. Widgets already in OBS keep their look until they get a new URL; the presets page takes pasted widget URLs and gives them back with the preset added.
+- The presets page can set a default preset that every setup page in that browser starts with. It keeps the preset picked on it in its address (/presets?preset=blocks), so a link opens it on that preset. A setup page opened with ?preset= in its link starts on that preset instead: the presets page links that way, and so do the home page previews, which show a random preset on every visit. A dice beside the preset picker picks a random preset. Widgets already in OBS keep their look until they get a new URL; the presets page takes pasted widget URLs and gives them back with the preset added.
+- From chat: in an overlay that reads chat (a channel in its URL), the broadcaster and the mods can type !preset and a preset's id, name or game, like !preset blocks, to switch it to that preset; the URL's other settings stay. !preset classic gives the classic look and !preset reset brings back each overlay's own preset. The pick is kept per channel and URL preset in the browser OBS runs, so it survives a reload. Overlays that read no chat, like Socials, Now Playing and Stream Frames, keep their URL's preset.
 - Community presets are JSON files in the source repository (apps/extensions/src/features/presets/community), added by pull request.
 
 ## FAQ

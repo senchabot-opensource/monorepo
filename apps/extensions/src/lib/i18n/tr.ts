@@ -696,7 +696,7 @@ export const tr: typeof en = {
     previewSpeed: 'Önizleme Büyüme Hızı',
     previewSpeedValue: '{rate}×',
     previewHint:
-      'Önizleme sahte aboneliklerle büyür. Yayında ise bitkin kanalına gelen abonelik, yenileme ve hediye aboneliklerle büyür.',
+      'Önizleme sahte aboneliklerle büyür. Yayında ise bitkin kanalına gelen abonelik, yenileme ve hediye aboneliklerle büyür. Twitch Prime abonelikleri de sayılır.',
     widgetUrlTip:
       "Daha önce bir widget oluşturduysan URL'sini buraya yapıştır. Ayarların geri yüklenir, istediğini değiştirebilirsin.",
     widgetUrlPlaceholder: "Düzenlemek için widget URL'sini yapıştır",
@@ -771,7 +771,7 @@ export const tr: typeof en = {
     startCommand: '{command} ile',
     startAuto: 'Hemen',
     sectionValues: 'Eklenen Süre',
-    valuesHint: 'Birini kapatmak için 0 yap.',
+    valuesHint: 'Birini kapatmak için 0 yap. Twitch Prime aboneliği Tier 1 abonelik sayılır.',
     dynamicRates: 'Oranları kalan süreye göre ayarla',
     dynamicRatesTip: 'Saatte yeterli süre kaldığında ikinci bir oran seti kullanır.',
     shiftAt: 'Eşik',
@@ -813,7 +813,7 @@ export const tr: typeof en = {
     cmdSet: 'Kalan süreyi ayarlar',
     cmdReset: 'Başlangıç süresiyle baştan başlatır',
     commandsDurations:
-      'Süreleri 10m, 1h30m, 45s ya da 1:30:00 gibi yaz. Sadece sayı yazarsan dakika sayılır.',
+      'Her süre olur: 57m, 2h15m, 45s ya da 1:30:00 gibi. Sadece sayı yazarsan dakika sayılır.',
     previewTitle: 'Subathon Timer Önizleme',
     previewIframeTitle: 'Subathon Timer Önizleme',
     previewHint:
@@ -853,6 +853,9 @@ export const tr: typeof en = {
     faq4Q: 'Giriş yapmam ya da hesabımı bağlamam gerekiyor mu?',
     faq4A:
       'Hayır. Sayaç abonelik, hediye, Bits, Kicks ve mod komutlarını herkese açık Twitch ve Kick sohbetinden okur, tıpkı giriş yapmamış bir izleyicinin gördüğü gibi.',
+    faq5Q: 'Twitch Prime abonelikleri süre ekler mi?',
+    faq5A:
+      "Evet. Prime aboneliği Tier 1 abonelik sayılır ve Abonelik Başına süreyi ekler. Twitch'te yenileme, Prime da olsa ücretli de olsa, izleyici bunu sohbette paylaştığında sayılır.",
   },
   goal: {
     breadcrumb: 'Abone Hedefi Kurulumu',
@@ -931,9 +934,9 @@ export const tr: typeof en = {
     faq2Q: 'OBS kapanırsa ya da Tarayıcı Kaynağı yenilenirse ne olur?',
     faq2A:
       "Sayı OBS'in içinde kayıtlı, bu yüzden bir sonraki yayında bile kaldığı yerden geri gelir. OBS kapalıyken gelen abonelikleri göremez, onları bir mod !goal add ile ekleyebilir.",
-    faq3Q: 'Yenilemeler ve hediye abonelikler sayılıyor mu?',
+    faq3Q: 'Prime abonelikler, yenilemeler ve hediye abonelikler sayılıyor mu?',
     faq3A:
-      "Evet. Her yeni abonelik ve yenileme 1 ekler, hediyede ise içindeki her abonelik için 1 eklenir, yani 5'li bir hediye 5 ekler. Twitch'te yenileme, izleyici bunu sohbette paylaştığında sayılır, Kick'te ise abonelik yenilendiğinde.",
+      "Evet. Twitch Prime abonelikleri dahil her yeni abonelik ve yenileme 1 ekler, hediyede ise içindeki her abonelik için 1 eklenir, yani 5'li bir hediye 5 ekler. Twitch'te yenileme, izleyici bunu sohbette paylaştığında sayılır, Kick'te ise abonelik yenilendiğinde.",
     faq4Q: 'Takipçi hedefi yapabilir miyim?',
     faq4A:
       'Evet! Twitch ve Kick’teki yeni takipçileri yayında canlı olarak takip etmek için Takipçi Hedefi overlay’imizi kullanabilirsiniz.',
@@ -1018,6 +1021,19 @@ export const tr: typeof en = {
     faq3Q: 'Aynı anda hem Abone Hedefi hem de Takipçi Hedefi çalıştırabilir miyim?',
     faq3A:
       'Evet! Abone Hedefi ve Takipçi Hedefi OBS depolamasında bağımsız sayımlar tutar ve ayrı URL uç noktaları kullanır.',
+  },
+  followConnection: {
+    title: 'Takipler için Senchabot gerekli',
+    text:
+      "Sohbet kimin takip ettiğini söylemez, Senchabot söyler. Kanalını Senchabot Kontrol Panelinde bağla, Araçlar sayfasından Takipçi Hedefi'ni aç, sonra o widget'ın URL'sini ya da token'ını buraya yapıştır.",
+    dashboard: 'Senchabot Dashboard Araçlarını Aç →',
+    paste: "Takipçi Hedefi URL'si ya da Token",
+    placeholder: 'https://extensions.senchabot.com/widgets/follower-goal?token=…',
+    connect: 'Bağla',
+    invalid:
+      "Bunda token yok. Kontrol Panelinden açtığın Takipçi Hedefi kurulum sayfasındaki URL'yi yapıştır.",
+    connected: "Senchabot'a bağlı: yeni takipçiler geliyor.",
+    disconnect: 'Bağlantıyı Kes',
   },
   irlHud: {
     breadcrumb: 'IRL HUD Overlay Kurulumu',
@@ -1128,11 +1144,16 @@ export const tr: typeof en = {
     perRaider: 'Raid İzleyicisi Başına',
     perRaiderTip:
       "Raid'in getirdiği her izleyici için sayılır, yani 50 kişilik bir raid bu miktarı elli kez ekler. Kick'te raid'e host denir.",
+    perFollow: 'Takip Başına',
+    perFollowTip: "Twitch'te ve Kick'te her yeni takipçi. Takipleri kapatmak için 0 yap.",
     tiers: 'Tier 2 ve 3 Daha Çok Sayılır',
     tiersTip:
       "Twitch'te Tier 2 abonelik 2, Tier 3 abonelik 5 abonelik kadar para ekler, fiyatlarıyla orantılı.",
     sectionMap: 'Mini Harita',
     sectionMarket: 'Market',
+    sectionIntegrations: 'Entegrasyonlar',
+    integrationsHint:
+      'Entegrasyonlar sohbetin göstermediğini getirir. Yeni takipçiler Senchabot üzerinden gelir ve aşağıdaki parayı ekler.',
     marketHint:
       'Sen ve modlarının sohbetten !hud buy ve ürünün adıyla satın aldığı ürünler. Fiyatı paradan düşer; para yetmezse hiçbir şey alınmaz.',
     items: 'Ürünler',
@@ -1180,13 +1201,14 @@ export const tr: typeof en = {
     previewTitle: 'IRL HUD Overlay Önizleme',
     previewIframeTitle: 'IRL HUD Overlay Önizleme',
     previewHint:
-      "Önizlemede sahte abonelikler, hediyeler, cheer'lar ve raid'ler gelir. Yayında parayı sadece kendi sohbetin ekler.",
+      "Önizlemede sahte abonelikler, hediyeler, cheer'lar ve raid'ler gelir, Senchabot bağlıysa takipler de. Yayında parayı sadece kendi sohbetin ve yeni takipçilerin ekler.",
     testTitle: 'Dene:',
     testViewer: 'Sen',
     testSub: '+1 Abone',
     testGift: '+5 Hediye',
     testBits: '+500 Bits/Kicks',
     testRaid: '25 Kişilik Raid',
+    testFollow: '+1 Takip',
     testAdd: '+$1,000',
     testRemove: '−$500',
     testMove:
@@ -2252,7 +2274,7 @@ export const tr: typeof en = {
     sectionCommands: 'Sohbet Komutları',
     commandsIntro:
       'Kanalını yazarsan sen ve modların geri sayımı Twitch ya da Kick sohbetinden değiştirebilirsiniz, örneğin klavye başında değilken başlangıcı biraz ertelemek için. `!cd`, `!countdown` yazılabilen her yerde çalışır.',
-    cmdAdd: 'Süre ekler: 5m, 90s ya da 1h30m',
+    cmdAdd: 'İstediğin kadar süre ekler: 57m, 90s ya da 1h30m gibi',
     cmdRemove: 'Süreden düşer',
     cmdSet: 'Kalan süreyi ayarlar',
     cmdPause: 'Duraklatır, start ile devam eder',
@@ -2363,7 +2385,7 @@ export const tr: typeof en = {
     cmdNewTime: 'Aynısı, kendi süresiyle: 90s, 2m ya da 1:30 gibi',
     cmdYesNo: 'Hızlı bir Evet ya da Hayır anketi başlatır',
     cmdStart: 'Bu sayfadaki hazır anketi başlatır',
-    cmdExtend: 'Ankete süre ekler',
+    cmdExtend: 'Ankete istediğin kadar süre ekler: 45s ya da 2m gibi',
     cmdEnd: 'Oylamayı hemen bitirir ve sonuçları gösterir',
     cmdCancel: 'Anketi ekrandan kaldırır',
     votingIntro:
@@ -2466,6 +2488,9 @@ export const tr: typeof en = {
     kindRaid: "Raid'ler",
     kindRaidTip:
       'Başka bir kanal sana raid attığında çıkar, kaç izleyiciyle geldiğini de gösterir.',
+    kindFollow: 'Takipler',
+    kindFollowTip:
+      "Twitch'te ve Kick'te her yeni takipçi. Takipler Senchabot üzerinden gelir, bu yüzden aşağıdaki bağlantı gerekir.",
     minGift: 'En Az Abonelik',
     minBits: 'En Az Miktar',
     minRaid: 'En Az İzleyici',
@@ -2483,12 +2508,13 @@ export const tr: typeof en = {
     previewTitle: 'Yayın Uyarıları Önizleme',
     previewIframeTitle: 'Yayın Uyarıları Önizleme',
     previewHint:
-      "Önizlemede sessiz örnek uyarılar gelir. Aşağıdaki düğmelerle bir uyarıyı sesiyle birlikte deneyebilirsin. Yayında sadece kendi kanalına gelen abonelik, hediye, cheer ve raid'ler görünür.",
+      "Önizlemede sessiz örnek uyarılar gelir. Aşağıdaki düğmelerle bir uyarıyı sesiyle birlikte deneyebilirsin. Yayında sadece kendi kanalına gelen abonelik, hediye, cheer ve raid'ler görünür, Senchabot bağlıysa takipler de.",
     testTitle: 'Dene:',
     testSub: 'Abone',
     testGift: '{count} Hediye',
     testBits: '{amount} Bits/Kicks',
     testRaid: 'Raid',
+    testFollow: 'Takip',
     testViewer: 'TestIzleyici',
     testMessage: 'Efsane yayın!',
     widgetUrlTip:
@@ -2504,9 +2530,9 @@ export const tr: typeof en = {
       'Genişliği 800 ve yüksekliği 450 olarak ayarla, sonra kaynağı uyarıların çıkacağı yere taşı.',
     guideStep4:
       'OBS\'te sesi duymak için kaynak ayarlarında "OBS ile sesi kontrol etme" (Control audio via OBS) seçeneğini aç. Sonra Gelişmiş Ses Özellikleri (Advanced Audio Properties) penceresinde kaynağın Ses İzleme ayarını "İzleme Aktif Edildi" (Monitor and Output) yap.',
-    faq1Q: 'Neden takip ya da bağış uyarısı yok?',
+    faq1Q: 'Takip ve bağış uyarıları var mı?',
     faq1A:
-      'Twitch ve Kick, giriş yapılmamış bir sayfaya yeni takipçileri göstermiyor, iki platformun da kendine ait bir bağış sistemi yok. Uyarılar sadece iki platformun her izleyiciye gönderdiği bilgileri kullanır, bu yüzden ikisinde de aynı çalışır.',
+      "Takip uyarısı var, kanalın Senchabot'a bağlıysa: Twitch ve Kick, giriş yapılmamış bir sayfaya yeni takipçileri göstermez, bu yüzden takipler Takipçi Hedefi'nde olduğu gibi Senchabot üzerinden gelir. Bağış uyarısı yok: iki platformun da kendine ait bir bağış sistemi yok.",
     faq2Q: 'Abonelik uyarısında ay sayısı ve izleyicinin mesajı görünüyor mu?',
     faq2A:
       "Evet. İzleyici abonelik yenilemesini sohbette paylaşırsa, Twitch'te de Kick'te de ay sayısı ve yazdığı mesajla bir uyarı çıkar. Twitch'te her abonelik uyarısında ay sayısı görünür. Kick çoğu abonelikte ay sayısını gönderiyor ama bazı kanallarda hiç göndermiyor, o zaman uyarıda sadece abone olduğu yazar.",
@@ -2515,7 +2541,7 @@ export const tr: typeof en = {
       "Geldikleri sırayla tek tek gösterilir. 50'li bir hediye abonelik 50 değil, tek bir uyarı olarak çıkar.",
     faq4Q: 'Giriş yapmam ya da hesabımı bağlamam gerekiyor mu?',
     faq4A:
-      "Hayır. Uyarılar abonelik, hediye, Bits, Kicks ve raid'leri herkese açık Twitch ve Kick sohbetinden okur, tıpkı giriş yapmamış bir izleyicinin gördüğü gibi.",
+      "Hayır. Uyarılar abonelik, hediye, Bits, Kicks ve raid'leri herkese açık Twitch ve Kick sohbetinden okur, tıpkı giriş yapmamış bir izleyicinin gördüğü gibi. Sadece takip uyarıları için kanalının Senchabot'a bağlı olması gerekir.",
     alert: {
       subHeading: 'Yeni Abone',
       subDetail: 'abone oldu',
@@ -2531,6 +2557,8 @@ export const tr: typeof en = {
       raidDetail: '{viewers} izleyiciyle raid attı',
       raidDetailOne: '1 izleyiciyle raid attı',
       raidDetailNoCount: 'raid attı',
+      followHeading: 'Yeni Takipçi',
+      followDetail: 'takip etti',
       anonymous: 'Anonim',
     },
   },
@@ -3643,6 +3671,9 @@ export const tr: typeof en = {
     faq4Q: 'Bunlar oyunların resmi görünümleri mi?',
     faq4A:
       'Hayır. Renklerden, ücretsiz Google Fonts yazı tiplerinden ve sıfırdan çizilmiş süslemelerden oluşan hayran yapımı stiller. Oyun logosu ya da görseli içermezler, oyun yapımcılarıyla da bir bağlantıları yok.',
+    faq5Q: "Modlarım preset'i sohbetten değiştirebilir mi?",
+    faq5A:
+      "Evet. Sen ve modların sohbete !preset ve bir preset'in adını ya da oyununu yazabilirsiniz, örneğin !preset blocks; sohbetini okuyan her overlay o preset'e geçer ve yenilense de öyle kalır. !preset reset her overlay'i kendi preset'ine döndürür. Sohbet okumayan overlay'ler URL'lerindeki preset'te kalır.",
     field: {
       label: 'Preset',
       tip: "Bu widget için hazır bir görünüm, yani çerçeve, yazı tipleri ve renkler. Widget'ların birbirine uysun istiyorsan hepsinde aynı preset'i seç.",
@@ -3662,6 +3693,7 @@ export const tr: typeof en = {
         "{name} preset'inin yazı tiplerini koru ya da bu widget'ı başka bir yazı tipiyle göster. Renkler, çerçeve ve efektler {name} preset'inden gelmeye devam eder.",
       presetFonts: "{name} preset'inin yazı tipleri",
       ownsColors: "Renkler {name} preset'inden geliyor.",
+      seeMore: "{name} preset'iyle daha fazla overlay gör",
     },
   },
   faqPage: {
@@ -3715,6 +3747,12 @@ export const tr: typeof en = {
     lead: "Senchabot Extensions'a eklenen özellikler ve düzeltilen hatalar, en yenisi en üstte. Liste projenin [GitHub'daki](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) commit geçmişinden hazırlanıyor.",
     site: 'Site',
     entries: {
+      irlHudFollows:
+        "IRL HUD Overlay'e Entegrasyonlar sekmesi geldi: kanalın Senchabot'a bağlıysa her yeni takipçi para ekler.",
+      streamAlertsFollows:
+        "Yayın Uyarıları artık takip uyarısı gösterebiliyor, kanalın Senchabot'a bağlıysa.",
+      presetCommand:
+        "Sen ve modların artık preset'i sohbetten değiştirebilirsiniz: !preset ve bir preset'in adı ya da oyunu, örneğin !preset blocks, sohbetini okuyan her overlay'i o preset'e geçirir; !preset reset her birini kendi preset'ine döndürür.",
       hudMedievalMmorpg:
         "IRL HUD Overlay ve Hava Durumu'na iki yeni stil geldi: Orta Çağ ve MMORPG. Bu stillerde HUD dolar yerine altın sikke sayar, mini harita da parşömen ya da altın çerçeveli olur.",
       presetsFont:

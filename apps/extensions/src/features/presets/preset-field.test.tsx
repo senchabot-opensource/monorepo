@@ -13,7 +13,8 @@ const radio = (id: string) =>
 const grid = () => radio('classic').closest('fieldset') as HTMLFieldSetElement;
 const hideButton = () =>
   screen.getByText(en('presets.field.hide')).closest('button') as HTMLButtonElement;
-const swatchFonts = () => document.querySelector('link[href*="text=Aa"]');
+/** A Google Fonts stylesheet on the page, which the picker never needs. */
+const googleFonts = () => document.querySelector('link[href*="fonts.googleapis.com"]');
 const effects = () => toggle(en('presets.field.effects'));
 const dice = () => screen.getByRole('button', { name: en('presets.field.random') });
 const picked = () =>
@@ -52,12 +53,11 @@ afterEach(() => {
 });
 
 describe('PresetField', () => {
-  it('starts folded in the classic look, without loading the swatch fonts', async () => {
+  it('starts folded in the classic look', async () => {
     await renderPicker('classic');
     expect(grid().hidden).toBe(true);
     expect(showPresetsButton().getAttribute('aria-expanded')).toBe('false');
     expect(showPresetsButton().textContent).toContain(en('presets.classic'));
-    expect(swatchFonts()).toBeNull();
   });
 
   it('opens on a click and folds again on the next', async () => {
@@ -67,7 +67,6 @@ describe('PresetField', () => {
     expect(grid().hidden).toBe(false);
     expect(hideButton().getAttribute('aria-expanded')).toBe('true');
     expect(hideButton().getAttribute('aria-controls')).toBe(grid().id);
-    expect(swatchFonts()).not.toBeNull();
 
     await user.click(hideButton());
     expect(grid().hidden).toBe(true);
@@ -82,8 +81,42 @@ describe('PresetField', () => {
 
     await user.click(hideButton());
     expect(grid().hidden).toBe(true);
-    expect(showPresetsButton().textContent).toContain('Rift');
-    expect(showPresetsButton().textContent).toContain('League of Legends');
+    // Just the name, in the page's font like the badges.
+    const bar = showPresetsButton();
+    expect(bar.textContent).toContain('Rift');
+    expect(bar.textContent).not.toContain('League of Legends');
+    expect(bar.querySelector('span')?.style.fontFamily).toBe('');
+  });
+
+  it('turns All presets into more overlays with the picked preset, in a new tab', async () => {
+    const user = setupUser();
+    await renderPicker('pizza');
+    const href = (link: HTMLElement) => new URL(link.getAttribute('href') ?? '', 'https://x.test');
+    // One link, where All presets was: none under the picker.
+    expect(screen.getAllByRole('link')).toHaveLength(1);
+    const more = screen.getByRole('link', { name: en('presets.field.seeMore', { name: 'Pizza' }) });
+    expect(href(more).pathname).toBe('/presets');
+    expect(href(more).searchParams.get('preset')).toBe('pizza');
+    // Opening it in the same tab would lose what this page has set up.
+    expect(more.getAttribute('target')).toBe('_blank');
+
+    await user.click(radio('classic'));
+    const all = screen.getByRole('link', { name: en('presets.field.browse') });
+    expect(href(all).pathname).toBe('/presets');
+    expect(href(all).search).toBe('');
+    expect(all.getAttribute('target')).toBe('_blank');
+  });
+
+  it("shows every preset as a badge with only its name, all in the page's font", async () => {
+    await renderPicker('rift');
+    const badge = (id: string) => radio(id).closest('label') as HTMLLabelElement;
+    for (const { data } of [{ data: { id: 'classic', name: en('presets.classic') } }, ...PRESETS]) {
+      expect(badge(data.id).textContent).toBe(data.name);
+      const name = badge(data.id).querySelector('span:not([aria-hidden])') as HTMLElement;
+      expect(name.style.fontFamily).toBe('');
+    }
+    // So no preset font is loaded for them.
+    expect(googleFonts()).toBeNull();
   });
 
   it('opens when a pasted URL brings a preset', async () => {

@@ -78,9 +78,11 @@ export function Tabs<T extends string>({
         role="tablist"
         aria-label={label}
         // A scrolling list clips the tabs' 1px overlap with a border, so its baseline is a shadow.
+        // Its tabs' width doesn't count toward the page's (inline-size containment): else a phone
+        // page's grid column grows to fit them all, and the page scrolls instead of the list.
         className={`flex gap-1 ${
           scrollable
-            ? 'overflow-x-auto shadow-[inset_0_-1px_0_var(--color-zinc-200)] [scrollbar-width:none] dark:shadow-[inset_0_-1px_0_var(--color-zinc-800)] [&::-webkit-scrollbar]:hidden'
+            ? '[contain:inline-size] overflow-x-auto shadow-[inset_0_-1px_0_var(--color-zinc-200)] [scrollbar-width:none] dark:shadow-[inset_0_-1px_0_var(--color-zinc-800)] [&::-webkit-scrollbar]:hidden'
             : 'border-b border-zinc-200 dark:border-zinc-800'
         } ${listClassName}`}
       >

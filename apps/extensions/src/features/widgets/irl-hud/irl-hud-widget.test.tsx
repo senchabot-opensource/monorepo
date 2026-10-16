@@ -568,3 +568,85 @@ describe('IrlHudWidget', () => {
     expect(localStorage.getItem(storageKey())).toBeNull();
   });
 });
+
+describe('IrlHudWidget follows', () => {
+  const FOLLOW = (user: string, platform = 'twitch') =>
+    JSON.stringify({ type: 'follow', user, platform });
+  const senchabot = () => FakeWebSocket.instances.filter((ws) => ws.url.includes('follower-goal'));
+
+  it('adds the per-follow cash for each new follower the Senchabot connection reports', () => {
+    render(
+      <IrlHudWidget
+        twitchChannel="followed"
+        token="abc123"
+        settings={settings({ follow: 40, start: 0 })}
+      />,
+    );
+    receive('follower-goal', FOLLOW('NewFan'));
+    receive('follower-goal', FOLLOW('KickFan', 'kick'));
+    settle();
+    expect(money()).toBe(80);
+    expect(pops()).toContain('NewFan');
+    expect(pops()).toContain('KickFan');
+  });
+
+  it('opens no Senchabot connection without a token, and adds nothing at 0 per follow', () => {
+    const first = render(<IrlHudWidget twitchChannel="unfollowed" settings={settings()} />);
+    expect(senchabot()).toHaveLength(0);
+    first.unmount();
+    render(
+      <IrlHudWidget
+        twitchChannel="unfollowed"
+        token="abc123"
+        settings={settings({ follow: 0, start: 0 })}
+      />,
+    );
+    receive('follower-goal', FOLLOW('NewFan'));
+    settle();
+    expect(money()).toBe(0);
+  });
+});
+
+describe('IrlHudWidget real places', () => {
+  it("loads a newly picked place over a loading screen, never the last place's streets", async () => {
+    const answer = {
+      elements: [
+        {
+          type: 'way',
+          tags: { highway: 'footway' },
+          geometry: [
+            { lat: 38.4192, lon: 27.1287 },
+            { lat: 38.4194, lon: 27.1291 },
+          ],
+        },
+      ],
+    };
+    // The first place answers; the other one never does.
+    const fetchMock = vi.fn((url: string) =>
+      decodeURIComponent(url).includes('38.4193,27.1289')
+        ? Promise.resolve(new Response(JSON.stringify(answer)))
+        : new Promise<Response>(() => {}),
+    );
+    vi.stubGlobal('fetch', fetchMock);
+    const places = [
+      { name: 'square', lat: 38.4193, lon: 27.1289 },
+      { name: 'pier', lat: 38.4385, lon: 27.1427 },
+    ];
+    render(<IrlHudWidget twitchChannel="switcher" settings={settings({ map: 'real', places })} />);
+    await act(async () => {});
+    expect(radar().dataset.map).toBe('real');
+
+    receive('twitch', MOD_SAYS('!hud map pier'));
+    expect(radar().dataset.map).toBe('loading');
+    expect(screen.getByTestId('irl-hud-spinner')).toBeTruthy();
+    // The background load and the mini-map share one request for the pier.
+    expect(
+      fetchMock.mock.calls.filter(([url]) => decodeURIComponent(url).includes('38.4385,27.1427')),
+    ).toHaveLength(1);
+
+    // Loaded before, so it's back at once.
+    receive('twitch', MOD_SAYS('!hud map square'));
+    expect(radar().dataset.map).toBe('real');
+    vi.unstubAllGlobals();
+  });
+});

@@ -1,8 +1,9 @@
+import type { Follow } from '#/hooks/use-follows';
 import type { StreamAlertsSettings } from '#/lib/stream-alerts-url';
 import type { RaidEvent, TimedEvent } from '../subathon/subathon-events';
 
 /** Something that gets an alert. Its `kind` matches the AlertKind of its settings. */
-export type StreamAlert = TimedEvent | RaidEvent;
+export type StreamAlert = TimedEvent | RaidEvent | Follow;
 
 // What each platform puts in the name field of an anonymous gift (Twitch's is its login).
 const ANONYMOUS_GIFTER = { twitch: 'ananonymousgifter', kick: 'anonymous' } as const;
@@ -18,6 +19,7 @@ export function passesFilters(
   if (!settings.enabled[alert.kind]) return false;
   switch (alert.kind) {
     case 'sub':
+    case 'follow':
       return true;
     case 'gift':
       return alert.count >= settings.minGift;

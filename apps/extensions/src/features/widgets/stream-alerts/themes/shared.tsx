@@ -6,7 +6,7 @@ export { hsl } from '../../overlay-style';
 export const diamond = (x: number, y: number, r: number) =>
   `${x},${y - r} ${x + r},${y} ${x},${y + r} ${x - r},${y}`;
 
-/** Each alert's icon as a 24×24 path: a star, a gift, a gem, people. */
+/** Each alert's icon as a 24×24 path: a star, a gift, a gem, people, a heart. */
 export function EventIcon({ kind }: { kind: AlertKind }) {
   switch (kind) {
     case 'sub':
@@ -22,6 +22,10 @@ export function EventIcon({ kind }: { kind: AlertKind }) {
     case 'raid':
       return (
         <path d="M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm7.5 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM2 20c0-3.6 3.1-6.5 7-6.5s7 2.9 7 6.5Zm15.5 0c0-2.4-.9-4.4-2.5-5.9 3.9-.6 7 1.9 7 5.9Z" />
+      );
+    case 'follow':
+      return (
+        <path d="M12 20.5 4.3 12.9a4.9 4.9 0 0 1 0-7A4.8 4.8 0 0 1 11 5.8l1 1 1-1a4.8 4.8 0 0 1 6.7.1 4.9 4.9 0 0 1 0 7Z" />
       );
   }
 }

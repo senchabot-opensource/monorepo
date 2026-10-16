@@ -188,3 +188,12 @@ describe('formatMoney', () => {
     expect(formatChange(-500, true)).toBe('-500');
   });
 });
+
+describe('eventMoney for follows', () => {
+  it('pays every follower the same on both platforms, with tiers left out', () => {
+    const follow = { kind: 'follow', name: 'NewFan' } as const;
+    expect(eventMoney({ ...follow, platform: 'twitch' }, { ...values, follow: 15 })).toBe(15);
+    expect(eventMoney({ ...follow, platform: 'kick' }, { ...values, follow: 15 })).toBe(15);
+    expect(eventMoney({ ...follow, platform: 'kick' }, { ...values, follow: 0 })).toBe(0);
+  });
+});

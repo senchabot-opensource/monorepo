@@ -13,6 +13,14 @@ export interface ChangelogEntry {
 // Written from `git log -- apps/extensions`: user-facing feat/fix commits only, newest first.
 // Alerts is unlisted, so its commits stay out.
 export const CHANGELOG: readonly ChangelogEntry[] = [
+  { date: '2026-10-15', key: 'changelog.entries.irlHudFollows', widgets: ['irl-hud'] },
+  {
+    date: '2026-10-15',
+    key: 'changelog.entries.streamAlertsFollows',
+    widgets: ['stream-alerts'],
+  },
+  // Every overlay that reads chat: like the presets themselves, a site change.
+  { date: '2026-10-15', key: 'changelog.entries.presetCommand', widgets: [] },
   {
     date: '2026-10-15',
     key: 'changelog.entries.hudMedievalMmorpg',

@@ -2,6 +2,7 @@ import { createFileRoute, useHydrated } from '@tanstack/react-router';
 import { useId, useRef, useState } from 'react';
 import { ChannelFields } from '#/components/channel-fields';
 import { CopyUrlField } from '#/components/copy-url-field';
+import { FollowConnection, useLinkedFollowToken } from '#/components/follow-connection';
 import { PreviewFrame } from '#/components/preview-frame';
 import { SetupShell } from '#/components/setup-shell';
 import { TestButtons } from '#/components/test-buttons';
@@ -96,6 +97,7 @@ const KIND_FIELDS: Record<
     tip: 'streamAlerts.kindRaidTip',
     min: { key: 'minRaid', label: 'streamAlerts.minRaid' },
   },
+  follow: { label: 'streamAlerts.kindFollow', tip: 'streamAlerts.kindFollowTip' },
 };
 
 const TEST_LABELS: Record<AlertKind, TranslationKey> = {
@@ -103,6 +105,7 @@ const TEST_LABELS: Record<AlertKind, TranslationKey> = {
   gift: 'streamAlerts.testGift',
   bits: 'streamAlerts.testBits',
   raid: 'streamAlerts.testRaid',
+  follow: 'streamAlerts.testFollow',
 };
 
 /** A swatch shows the accent; Platform shows Twitch purple and Kick green side by side. */
@@ -115,6 +118,9 @@ function StreamAlertsSetup() {
   const { t, locale } = useI18n();
   const [twitchChannel, setTwitchChannel] = useState('');
   const [kickChannel, setKickChannel] = useState('');
+  // The Senchabot connection that brings follow alerts: from a Dashboard link, or pasted.
+  const [token, setToken] = useState('');
+  useLinkedFollowToken(setToken);
   const [settings, setSettings] = useState(DEFAULT_STREAM_ALERTS_SETTINGS);
   // The alerts' own language: the page's until one is picked. The OBS URL always carries it.
   const [pickedLocale, setPickedLocale] = useState<Locale | null>(null);
@@ -136,10 +142,14 @@ function StreamAlertsSetup() {
   // Gated on mount so the prerendered input and the first client render agree.
   const origin = mounted ? window.location.origin : '';
   const widgetUrl = mounted
-    ? buildStreamAlertsUrl(origin, settings, twitchChannel, kickChannel, alertLocale)
+    ? buildStreamAlertsUrl(origin, settings, twitchChannel, kickChannel, alertLocale, token)
     : '';
+  // Without a connection no follow ever comes, so the preview doesn't play any either.
+  const previewSettings = token
+    ? settings
+    : { ...settings, enabled: { ...settings.enabled, follow: false } };
   const previewUrl = mounted
-    ? buildStreamAlertsPreviewUrl(origin, settings, alertLocale, previewId)
+    ? buildStreamAlertsPreviewUrl(origin, previewSettings, alertLocale, previewId)
     : '';
 
   const applyWidgetUrl = (text: string) => {
@@ -148,6 +158,7 @@ function StreamAlertsSetup() {
     setSettings(parsed.settings);
     setTwitchChannel(parsed.twitchChannel);
     setKickChannel(parsed.kickChannel);
+    setToken(parsed.token);
     if (parsed.locale) setPickedLocale(parsed.locale);
     return true;
   };
@@ -200,6 +211,7 @@ function StreamAlertsSetup() {
             </div>
           )}
         </div>
+        {kind === 'follow' && <FollowConnection token={token} onTokenChange={setToken} />}
       </fieldset>
     );
   };
@@ -354,6 +366,7 @@ function StreamAlertsSetup() {
       name,
       viewers: Math.max(42, settings.minRaid),
     }),
+    follow: (platform) => ({ kind: 'follow', platform, name }),
   };
 
   return (
@@ -381,10 +394,11 @@ function StreamAlertsSetup() {
       previewFooter={
         <TestButtons
           title={t('streamAlerts.testTitle')}
-          layout="four"
+          layout="three"
           buttons={ALERT_KINDS.map((kind) => ({
             label: t(TEST_LABELS[kind], { count: testGift, amount: testBits }),
-            disabled: !settings.enabled[kind],
+            // The preview takes follows only once Senchabot is connected, as OBS would.
+            disabled: !settings.enabled[kind] || (kind === 'follow' && !token),
             onClick: () => send({ type: 'alert', alert: testAlerts[kind](testPlatform()) }),
           }))}
         />

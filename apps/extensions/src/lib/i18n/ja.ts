@@ -700,7 +700,7 @@ export const ja: typeof en = {
     previewSpeed: 'プレビューの成長速度',
     previewSpeedValue: '{rate}×',
     previewHint:
-      'プレビューは模擬サブスクで育ちます。配信では、チャンネルに入った実際のサブスク、継続サブスク、ギフトサブで育ちます。',
+      'プレビューは模擬サブスクで育ちます。配信では、チャンネルに入った実際のサブスク、継続サブスク、ギフトサブで育ちます。Twitch Primeのサブスクもカウントされます。',
     widgetUrlTip:
       '作成済みのウィジェットがありますか？ここにURLを貼り付けると設定が読み込まれ、必要なところだけ変更できます。',
     widgetUrlPlaceholder: '既存のウィジェットURLを貼り付けて編集',
@@ -772,7 +772,7 @@ export const ja: typeof en = {
     startCommand: '{command}で開始',
     startAuto: 'すぐに',
     sectionValues: '追加時間',
-    valuesHint: '0にするとその項目はオフになります。',
+    valuesHint: '0にするとその項目はオフになります。Twitch PrimeのサブスクはTier 1として数えます。',
     dynamicRates: '残り時間でレートを変える',
     dynamicRatesTip: '残り時間が十分あるときは、2つ目のレートを使います。',
     shiftAt: 'しきい値',
@@ -814,7 +814,7 @@ export const ja: typeof en = {
     cmdSet: '残り時間を設定します',
     cmdReset: '開始時間からやり直します',
     commandsDurations:
-      '時間は 10m、1h30m、45s、1:30:00 のように書きます。数字だけなら分として扱われます。',
+      '時間はいくつでもOKです。57m、2h15m、45s、1:30:00 のように書きます。数字だけなら分として扱われます。',
     previewTitle: 'Subathon Timerのプレビュー',
     previewIframeTitle: 'Subathon Timerのプレビュー',
     previewHint:
@@ -854,6 +854,9 @@ export const ja: typeof en = {
     faq4Q: 'ログインやアカウント連携は必要ですか？',
     faq4A:
       'いいえ。タイマーはサブスク、ギフト、Bits、Kicks、モデレーターのコマンドを、TwitchとKickの公開チャットから、ログインしていない視聴者と同じように読み取ります。',
+    faq5Q: 'Twitch Primeのサブスクでも時間は増えますか？',
+    faq5A:
+      'はい。PrimeのサブスクはTier 1として数え、「サブスク1件」の時間を追加します。Twitchでは継続サブスクは、Primeでも有料でも、視聴者がチャットでシェアしたときにカウントされます。',
   },
   goal: {
     breadcrumb: 'サブスク目標の設定',
@@ -933,9 +936,9 @@ export const ja: typeof en = {
     faq2Q: 'OBSを閉じたり、ブラウザソースを再読み込みしたりするとどうなりますか？',
     faq2A:
       'カウントはOBSの中に保存されるので、次の配信でも元の状態に戻ります。OBSを閉じているあいだに入ったサブスクは検知できないので、モデレーターが !goal add で追加できます。',
-    faq3Q: '継続サブスクやギフトサブもカウントされますか？',
+    faq3Q: 'Primeのサブスク、継続サブスク、ギフトサブもカウントされますか？',
     faq3A:
-      'はい。新規サブスクと継続サブスクは1件ずつ、ギフトは含まれるサブスク1件ごとに1加算されるので、5件のギフトなら5増えます。Twitchでは視聴者が継続サブスクをチャットでシェアしたとき、Kickでは更新されたときにカウントされます。',
+      'はい。新規サブスクと継続サブスクは、Twitch Primeも含めて1件ずつ、ギフトは含まれるサブスク1件ごとに1加算されるので、5件のギフトなら5増えます。Twitchでは視聴者が継続サブスクをチャットでシェアしたとき、Kickでは更新されたときにカウントされます。',
     faq4Q: 'フォロワー目標は作れますか？',
     faq4A:
       'はい！TwitchやKickの新規フォロワーを配信でリアルタイムに追跡できるフォロワー目標オーバーレイをご利用ください。',
@@ -1020,6 +1023,19 @@ export const ja: typeof en = {
     faq3Q: 'サブスク目標とフォロワー目標を同時に実行できますか？',
     faq3A:
       'はい！サブスク目標とフォロワー目標はOBSのlocalStorageで独立してカウントを保持し、別々のURLを使用します。',
+  },
+  followConnection: {
+    title: 'フォローにはSenchabotが必要です',
+    text:
+      'チャットでは誰がフォローしたか分かりませんが、Senchabotなら分かります。Senchabotダッシュボードでチャンネルを連携し、Toolsページからフォロワー目標を開いて、そのウィジェットのURLかトークンをここに貼り付けてください。',
+    dashboard: 'Senchabot Toolsを開く →',
+    paste: 'フォロワー目標のURLまたはトークン',
+    placeholder: 'https://extensions.senchabot.com/widgets/follower-goal?token=…',
+    connect: '連携',
+    invalid:
+      'トークンが含まれていません。ダッシュボードから開いたフォロワー目標の設定ページにあるURLを貼り付けてください。',
+    connected: 'Senchabotと連携済み：新しいフォロワーが届きます。',
+    disconnect: '連携を解除',
   },
   irlHud: {
     breadcrumb: 'IRL HUDオーバーレイの設定',
@@ -1131,11 +1147,16 @@ export const ja: typeof en = {
     perRaider: 'レイドの視聴者1人',
     perRaiderTip:
       'レイドで来た視聴者1人ごとに加算されるので、50人のレイドならこの50倍になります。Kickではレイドを「ホスト」と呼びます。',
+    perFollow: 'フォロー1件',
+    perFollowTip: 'TwitchとKickの新しいフォロワーごと。0にするとフォローでは増えません。',
     tiers: 'Tier 2と3を多めにカウント',
     tiersTip:
       'TwitchではTier 2のサブスクはサブスク2件分、Tier 3は5件分の金額を加算します。価格に合わせた比率です。',
     sectionMap: 'ミニマップ',
     sectionMarket: 'マーケット',
+    sectionIntegrations: '連携',
+    integrationsHint:
+      '連携では、チャットに出ないものを取り込みます。新しいフォロワーはSenchabot経由で届き、下の金額が加算されます。',
     marketHint:
       'あなたとモデレーターが、チャットで !hud buy とアイテム名を打って買うアイテムです。値段は所持金から引かれ、所持金が足りなければ何も買われません。',
     items: 'アイテム',
@@ -1183,13 +1204,14 @@ export const ja: typeof en = {
     previewTitle: 'IRL HUDオーバーレイのプレビュー',
     previewIframeTitle: 'IRL HUDオーバーレイのプレビュー',
     previewHint:
-      'プレビューでは模擬のサブスク、ギフト、Cheer、レイドが流れます。配信では、所持金を増やすのはあなたのチャットだけです。',
+      'プレビューでは模擬のサブスク、ギフト、Cheer、レイドが流れ、Senchabotと連携していればフォローも流れます。配信では、所持金を増やすのはあなたのチャットと新しいフォロワーだけです。',
     testTitle: '試してみる:',
     testViewer: 'あなた',
     testSub: '+1 サブスク',
     testGift: '+5 ギフト',
     testBits: '+500 Bits/Kicks',
     testRaid: '25人のレイド',
+    testFollow: '+1 フォロー',
     testAdd: '+$1,000',
     testRemove: '−$500',
     testMove: '止まる / 歩く',
@@ -2201,7 +2223,7 @@ export const ja: typeof en = {
     sectionCommands: 'チャットコマンド',
     commandsIntro:
       'チャンネルを入力しておくと、配信者とモデレーターがTwitchやKickのチャットからカウントダウンを変更できます。たとえば、席を外しているあいだに開始を遅らせたいときに便利です。`!cd` は `!countdown` の短縮形として使えます。',
-    cmdAdd: '時間を追加します: 5m、90s、1h30m',
+    cmdAdd: '好きなだけ時間を追加します: 57m、90s、1h30m など',
     cmdRemove: '時間を減らします',
     cmdSet: '残り時間を設定します',
     cmdPause: '一時停止します。start で再開',
@@ -2314,7 +2336,7 @@ export const ja: typeof en = {
     cmdNewTime: '同じく、90s、2m、1:30 のように長さを指定して出します',
     cmdYesNo: '「はい」「いいえ」のクイック投票を出します',
     cmdStart: 'このページで用意した投票を出します',
-    cmdExtend: '投票の時間を延ばします',
+    cmdExtend: '投票の時間を好きなだけ延ばします: 45s、2m など',
     cmdEnd: '今すぐ投票を締め切って結果を表示します',
     cmdCancel: '投票を画面から消します',
     votingIntro:
@@ -2416,6 +2438,9 @@ export const ja: typeof en = {
     kindBitsTip: 'TwitchでCheerされたBitsと、Kickで送られたKicks。',
     kindRaid: 'レイド',
     kindRaidTip: 'ほかのチャンネルからのレイドと、一緒に来た視聴者数。',
+    kindFollow: 'フォロー',
+    kindFollowTip:
+      'TwitchとKickの新しいフォロワーごと。フォローはSenchabot経由で届くので、下の連携が必要です。',
     minGift: '最小サブスク数',
     minBits: '最小量',
     minRaid: '最小視聴者数',
@@ -2432,12 +2457,13 @@ export const ja: typeof en = {
     previewTitle: '配信アラートのプレビュー',
     previewIframeTitle: '配信アラートのプレビュー',
     previewHint:
-      'プレビューでは音なしのサンプルアラートが流れます。下のボタンを押すと、効果音付きで1つ再生されます。配信では、あなたのチャンネルのサブスク、ギフト、Cheer、レイドだけが表示されます。',
+      'プレビューでは音なしのサンプルアラートが流れます。下のボタンを押すと、効果音付きで1つ再生されます。配信では、あなたのチャンネルのサブスク、ギフト、Cheer、レイドだけが表示され、Senchabotと連携していればフォローも表示されます。',
     testTitle: '試してみる:',
     testSub: 'サブスク',
     testGift: 'ギフト{count}件',
     testBits: '{amount} Bits/Kicks',
     testRaid: 'レイド',
+    testFollow: 'フォロー',
     testViewer: 'TestViewer',
     testMessage: '最高の配信！',
     widgetUrlTip:
@@ -2452,9 +2478,9 @@ export const ja: typeof en = {
     guideStep3: '幅を800、高さを450に設定し、アラートを表示したい位置に置きます。',
     guideStep4:
       'OBSで音を鳴らすには、ソースの設定で「OBSで音声を制御する」をオンにし、「オーディオの詳細プロパティ」でそのソースの音声モニタリングを「モニタリング有効」にします。',
-    faq1Q: 'フォローや投げ銭のアラートがないのはなぜですか？',
+    faq1Q: 'フォローや投げ銭のアラートはありますか？',
     faq1A:
-      'TwitchもKickも、ログインしていないページには新しいフォローを見せません。また、どちらのプラットフォームにも独自の投げ銭機能はありません。アラートは両プラットフォームがすべての視聴者に送る情報だけを使うので、どちらでも同じように動きます。',
+      'フォローのアラートは、チャンネルをSenchabotに連携すれば出せます。TwitchもKickも、ログインしていないページには新しいフォローを見せないため、フォロワー目標と同じくSenchabot経由で届きます。投げ銭のアラートはありません。どちらのプラットフォームにも独自の投げ銭機能がないためです。',
     faq2Q: 'サブスクのアラートに月数や視聴者のメッセージは表示されますか？',
     faq2A:
       'はい。視聴者が継続サブスクをチャットでシェアすると、TwitchでもKickでも、月数と書いたメッセージ付きでアラートが出ます。Twitchではすべてのサブスクアラートに月数が表示されます。Kickはほとんどのサブスクで月数を送りますが、まったく届かないチャンネルもあり、その場合アラートには「サブスクしました」とだけ表示されます。',
@@ -2462,7 +2488,7 @@ export const ja: typeof en = {
     faq3A: '届いた順に1つずつ表示されます。50件のギフトサブは、50回ではなく1回のアラートです。',
     faq4Q: 'ログインやアカウント連携は必要ですか？',
     faq4A:
-      'いいえ。アラートはサブスク、ギフト、Bits、Kicks、レイドを、TwitchとKickの公開チャットから、ログインしていない視聴者と同じように読み取ります。',
+      'いいえ。アラートはサブスク、ギフト、Bits、Kicks、レイドを、TwitchとKickの公開チャットから、ログインしていない視聴者と同じように読み取ります。フォローのアラートだけは、チャンネルのSenchabot連携が必要です。',
     alert: {
       subHeading: '新規サブスク',
       subDetail: 'サブスクしました',
@@ -2478,6 +2504,8 @@ export const ja: typeof en = {
       raidDetail: '{viewers}人でレイドしてきました',
       raidDetailOne: '1人でレイドしてきました',
       raidDetailNoCount: 'レイドしてきました',
+      followHeading: '新規フォロー',
+      followDetail: 'フォローしました',
       anonymous: '匿名',
     },
   },
@@ -3591,6 +3619,9 @@ export const ja: typeof en = {
     faq4Q: 'これらは公式のゲームテーマですか？',
     faq4A:
       'いいえ。カラー、無料のGoogle Fonts、ゼロから描いた装飾で作ったファンメイドのスタイルで、ゲームのロゴやアートは使っておらず、ゲームメーカーとも提携していません。',
+    faq5Q: 'モデレーターがチャットからプリセットを変えられますか？',
+    faq5A:
+      'はい。配信者とモデレーターがチャットで !preset とプリセット名かそのゲーム名（例: !preset blocks）を打つと、チャットを読むすべてのオーバーレイがそのプリセットに切り替わり、再読み込みしてもそのままです。!preset reset で各オーバーレイが元のプリセットに戻ります。チャットを読まないオーバーレイは URL のプリセットのままです。',
     field: {
       label: 'プリセット',
       tip: 'このウィジェット用のすぐ使える見た目です。フレーム、フォント、カラーが決まります。すべてのウィジェットで同じプリセットを選べば、見た目がそろいます。',
@@ -3610,6 +3641,7 @@ export const ja: typeof en = {
         '{name}のフォントをそのまま使うか、このウィジェットをほかのフォントで表示します。カラー、フレーム、エフェクトは{name}のままです。',
       presetFonts: '{name}のフォント',
       ownsColors: 'カラーは{name}のものを使います。',
+      seeMore: '{name}のオーバーレイをもっと見る',
     },
   },
   faqPage: {
@@ -3663,6 +3695,12 @@ export const ja: typeof en = {
     lead: 'Senchabot Extensionsの新機能とバグ修正を、新しい順に並べています。このリストは[GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions)にあるプロジェクトのコミット履歴からまとめています。',
     site: 'サイト',
     entries: {
+      irlHudFollows:
+        'IRL HUDオーバーレイに「連携」タブが加わりました。チャンネルをSenchabotに連携すると、新しいフォロワーごとに所持金が増えます。',
+      streamAlertsFollows:
+        '配信アラートでフォローのアラートを表示できるようになりました。チャンネルのSenchabot連携が必要です。',
+      presetCommand:
+        '配信者とモデレーターがチャットからプリセットを切り替えられるようになりました。!preset とプリセット名かゲーム名（例: !preset blocks）で、チャットを読むすべてのオーバーレイが切り替わり、!preset reset でそれぞれ元のプリセットに戻ります。',
       hudMedievalMmorpg:
         'IRL HUDオーバーレイと天気に、中世とMMORPGの2つの新しいスタイルが加わりました。HUDはドルの代わりに金貨を数え、ミニマップは羊皮紙風か金の縁取りになります。',
       presetsFont:

@@ -15,9 +15,10 @@ interface Voice {
 
 // Short motifs per theme and alert, made at runtime so there are no sound files to license.
 const VOICES: Record<AlertTheme, Voice> = {
-  // Synth: a rising arpeggio for a sub, a sparkle for gifts, a coin for cheers, a fanfare for raids.
+  // Synth: a rising arpeggio for a sub, a sparkle for gifts, a coin for cheers, a fanfare for raids
+  // and two quick notes for a follow, which comes often.
   neon: {
-    wave: { sub: 'triangle', gift: 'triangle', bits: 'square', raid: 'sawtooth' },
+    wave: { sub: 'triangle', gift: 'triangle', bits: 'square', raid: 'sawtooth', follow: 'sine' },
     cutoff: 3200,
     motifs: {
       sub: [
@@ -45,11 +46,15 @@ const VOICES: Record<AlertTheme, Voice> = {
         [784, 0.42, 1.1],
         [392, 0.42, 1.1],
       ],
+      follow: [
+        [880, 0, 0.18],
+        [1318.5, 0.1, 0.6],
+      ],
     },
   },
   // Bells on a pentatonic scale that ring out long, like a music box.
   celestial: {
-    wave: { sub: 'sine', gift: 'sine', bits: 'sine', raid: 'sine' },
+    wave: { sub: 'sine', gift: 'sine', bits: 'sine', raid: 'sine', follow: 'sine' },
     overtone: 2.76,
     cutoff: 6000,
     motifs: {
@@ -81,6 +86,10 @@ const VOICES: Record<AlertTheme, Voice> = {
         [1174.7, 0.36, 1.4],
         [1318.5, 0.42, 2.2],
         [659.3, 0.42, 2.2],
+      ],
+      follow: [
+        [1568, 0, 1.2],
+        [2093, 0.12, 1.6],
       ],
     },
   },

@@ -23,6 +23,7 @@ import {
   Outlined,
 } from './hud-text';
 import { hashSeed } from './map-graph';
+import { prefetchRealMaps } from './map-osm';
 import { type HudPop, POP_MS, useIrlHud } from './use-irl-hud';
 
 /** Sizes are drawn for the short side of a 1920×1080 canvas and scale with it. */
@@ -185,9 +186,38 @@ function Clock({ look, timeZone, h12 }: { look: HudLook; timeZone: string; h12: 
   );
 }
 
+const placeKey = (place: { lat: number; lon: number }) => `${place.lat},${place.lon}`;
+
+/**
+ * Loads the saved places' mini-maps in the background, the one shown first and then the others,
+ * one at a time: a mod's !hud map switch then draws its place at once instead of loading it.
+ */
+function usePrefetchedPlaces(
+  places: readonly { lat: number; lon: number }[],
+  shown: { lat: number; lon: number } | null,
+) {
+  const first = shown ? placeKey(shown) : '';
+  // As text, since the route reads new settings objects on every render.
+  const queue = [first, ...places.map(placeKey).filter((key) => key !== first)]
+    .filter(Boolean)
+    .join(';');
+  useEffect(() => {
+    if (!queue) return;
+    const stop = new AbortController();
+    const points = queue.split(';').map((key) => {
+      const [lat, lon] = key.split(',').map(Number);
+      return { lat, lon };
+    });
+    void prefetchRealMaps(points, stop.signal);
+    return () => stop.abort();
+  }, [queue]);
+}
+
 interface IrlHudWidgetProps {
   twitchChannel?: string;
   kickChannel?: string;
+  /** A Senchabot connection, which brings follows in. */
+  token?: string;
   settings: Omit<HudSettings, 'platforms'>;
   simulate?: boolean;
   simPlatform?: SubathonPlatform;
@@ -202,6 +232,7 @@ interface IrlHudWidgetProps {
 export function IrlHudWidget({
   twitchChannel,
   kickChannel,
+  token,
   settings,
   simulate,
   simPlatform,
@@ -211,6 +242,7 @@ export function IrlHudWidget({
   const { money, pops, mapChoice, move, indoor, hidden } = useIrlHud({
     twitch: twitchChannel,
     kick: kickChannel,
+    token,
     start: settings.start,
     values: settings,
     places: settings.places,
@@ -226,6 +258,7 @@ export function IrlHudWidget({
   // A mod's !hud map choice, while it still names a saved place or a made-up map; else the URL's.
   const view = (mapChoice && chosenView(mapChoice, settings.places)) || startingView(settings);
   const place = view.map === 'real' ? view.place : null;
+  usePrefetchedPlaces(settings.radar ? settings.places : [], place);
   // A walked real place stays outdoors, even with indoors saved from a made-up map earlier.
   const inside = indoor && canGoIndoors(view.map, arrowSource);
   const scale = useShortSideScale(DESIGN_SHORT_SIDE);

@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { usePreviewReceiver } from '#/hooks/use-preview-channel';
-import { requestJson, retryDelay } from '#/lib/fetch-json';
+import { retryDelay } from '#/lib/fetch-json';
 import type { NowPlayingSource } from '#/lib/now-playing-url';
 import { DEMO_TRACKS } from './demo-tracks';
-import { nowPlayingRequestUrl, parseNowPlaying, type Track } from './now-playing-api';
+import { getLastfmAvailable } from './lastfm-server';
+import { parseNowPlaying, requestNowPlaying, type Track } from './now-playing-api';
 
 /** The setup page's test buttons reach its preview on this channel. */
 export const PREVIEW_CHANNEL = 'senchabot:now-playing-preview';
@@ -24,6 +25,25 @@ export const HIDDEN_POLL_MS = 60_000;
 /** How long the demo plays each sample song. */
 export const DEMO_MS = 8_000;
 
+/**
+ * Whether the site's server has a Last.fm key, for the setup page: false until it answers, and
+ * when it can't be asked. The key never reaches the page.
+ */
+export function useLastfmAvailable(): boolean {
+  const [available, setAvailable] = useState(false);
+  useEffect(() => {
+    let live = true;
+    getLastfmAvailable().then(
+      (answer) => live && setAvailable(answer),
+      () => live && setAvailable(false),
+    );
+    return () => {
+      live = false;
+    };
+  }, []);
+  return available;
+}
+
 /** Same song, same cover: a new answer about it shouldn't replay its entrance. */
 export const trackKey = (track: Track | null | undefined) =>
   track ? [track.title, track.artist, track.album, track.cover ?? ''].join('\n') : String(track);
@@ -42,8 +62,8 @@ function useLiveTrack(
 
   useEffect(() => {
     setTrack(undefined);
-    const url = enabled ? nowPlayingRequestUrl(source, user) : null;
-    if (!url) return;
+    const name = user.trim();
+    if (!enabled || !name) return;
     let stopped = false;
     let asking = false;
     let attempt = 0;
@@ -57,7 +77,7 @@ function useLiveTrack(
       if (asking) return;
       asking = true;
       try {
-        const answer = await requestJson<unknown>(url);
+        const answer = await requestNowPlaying(source, name);
         if (stopped) return;
         attempt = 0;
         const next = parseNowPlaying(source, answer);

@@ -1,9 +1,14 @@
+import type { Follow } from '#/hooks/use-follows';
 import { type HudMoneyValues, type HudStyle, MAX_MONEY, MIN_MONEY } from '#/lib/irl-hud-url';
 import type { SubathonEvent, SubTier } from '../subathon/subathon-events';
 
+/** What can add cash or run a command: chat's events, and follows from a Senchabot connection. */
+export type HudEvent = SubathonEvent | Follow;
+
 /**
  * The HUD saved in OBS. Neither platform tells a logged-out page what a channel has earned, so
- * the money is ours: the streamer's starting amount plus every sub, gift, cheer and raid since.
+ * the money is ours: the streamer's starting amount plus every sub, gift, cheer, raid and follow
+ * since.
  */
 export interface HudState {
   money: number;
@@ -79,11 +84,10 @@ const VALUE_KEYS = {
  * Dollars an event earns by its platform's values, rounded to whole dollars; 0 when its value is
  * off or it earns nothing (a mod command, or Kick's second word on a sub already counted).
  */
-export function eventMoney(
-  event: SubathonEvent,
-  values: HudMoneyValues & { tiers: boolean },
-): number {
+export function eventMoney(event: HudEvent, values: HudMoneyValues & { tiers: boolean }): number {
   if (event.kind === 'mod' || (event.kind === 'sub' && event.again)) return 0;
+  // The same on both platforms: a follow is free on each.
+  if (event.kind === 'follow') return values.follow;
   const value = values[VALUE_KEYS[event.platform][event.kind]];
   const weight =
     event.platform === 'twitch' && values.tiers && (event.kind === 'sub' || event.kind === 'gift')

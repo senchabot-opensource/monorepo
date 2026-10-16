@@ -99,7 +99,7 @@ A subathon countdown overlay. It counts down in real time, and subs, gifted subs
 - Three styles (`bar` health bar, `clock`, `ring`) and health colors (green to red) or a fixed color.
 - Separate times for Twitch and Kick: per sub, per gifted sub, and per 500 Bits or 500 Kicks. Any of them can be turned off. Twitch Tier 2 and 3 subs can count as 2 and 5 subs.
 - The timer is saved in the browser source's `localStorage`, stored as its end time, so a reload or an OBS restart doesn't lose it.
-- The broadcaster and mods control it from chat: `!subathon start`, `pause`, `add 10m`, `remove 5m`, `set 2h`, `reset`.
+- The broadcaster and mods control it from chat: `!subathon start`, `pause`, `add 10m`, `remove 5m`, `set 2h`, `reset`. Any amount of time works, like `add 57m`, `add 2h15m`, `add 45s` or `add 1:30:00`; a plain number is minutes.
 - On every heal, the heart — or the picked emoji or emote — flies from its spot to the bar's fill edge (bar and thin styles).
 
 ```
@@ -112,7 +112,7 @@ https://extensions.senchabot.com/widgets/subathon?twitch=YOUR_TWITCH_CHANNEL&kic
 
 ### Stream Alerts (`/setup/stream-alerts`)
 
-An alert box overlay. A new sub, gifted subs, Bits (Twitch), Kicks (Kick) or a raid each get an animated alert with an icon and a short sound, one at a time.
+An alert box overlay. A new sub, gifted subs, Bits (Twitch), Kicks (Kick), a raid or, with Senchabot connected, a new follower each get an animated alert with an icon and a short sound, one at a time.
 
 **How it works:**
 - Listens to Twitch IRC anonymously and Kick's Pusher WebSocket, both in one browser source.
@@ -120,13 +120,13 @@ An alert box overlay. A new sub, gifted subs, Bits (Twitch), Kicks (Kick) or a r
 - Alerts queue up and show in order; a gift of many subs is a single alert. Every alert can be turned off, renamed, and gifts, cheers and raids can have a minimum.
 - Resubs show their months, and a resub shared in chat shows the viewer's message (Twitch's resub message, Kick's chat celebration). Messages with Bits and Kicks can be shown too, always without links.
 - On Kick the months come from a second sub event that can trail the first by a second, so a Kick sub without months waits 1.5 s for it. The sounds are made in the page with Web Audio, so there are no sound files.
-- Follows and donations aren't included: neither platform shows them to a page that isn't logged in.
+- Follows come through a Senchabot connection, the one Follower Goal uses: neither platform shows follows to a page that isn't logged in. The setup page takes it from a Dashboard link (`?token=`) or a pasted Follower Goal URL or token, and the OBS URL carries it as `token`. Donations aren't included: neither platform has its own.
 
 ```
 https://extensions.senchabot.com/widgets/stream-alerts?twitch=YOUR_TWITCH_CHANNEL&kick=YOUR_KICK_CHANNEL&theme=neon&lang=en
 ```
 
-**URL parameters:** `twitch`, `kick`, `theme` (`neon` | `celestial`), `color` (`platform` | `blue` | `purple` | `pink` | `red` | `gold` | `green`), `lang` (`en` | `tr`, the alert text), `sub`, `gift`, `bits`, `raid` (`0` turns an alert off), `hsub`, `hgift`, `hbits`, `hraid` (custom headings, up to 24 characters), `mingift`, `minbits`, `minraid` (minimum subs, Bits or Kicks, viewers), `dur` (seconds on screen, 3 to 20), `vol` (0 to 100), `msg` (`0` hides viewer messages), `simulate` (`1` plays sample alerts), `simplatform` (`twitch` | `kick`).
+**URL parameters:** `twitch`, `kick`, `theme` (`neon` | `celestial`), `color` (`platform` | `blue` | `purple` | `pink` | `red` | `gold` | `green`), `lang` (`en` | `tr`, the alert text), `sub`, `gift`, `bits`, `raid`, `follow` (`0` turns an alert off), `hsub`, `hgift`, `hbits`, `hraid`, `hfollow` (custom headings, up to 24 characters), `token` (a Senchabot connection, for follow alerts), `mingift`, `minbits`, `minraid` (minimum subs, Bits or Kicks, viewers), `dur` (seconds on screen, 3 to 20), `vol` (0 to 100), `msg` (`0` hides viewer messages), `simulate` (`1` plays sample alerts), `simplatform` (`twitch` | `kick`).
 
 ---
 
@@ -327,7 +327,7 @@ The song you're listening to right now, with its cover art, title and artist. It
 
 **How it works:**
 - `source=listenbrainz` (the default) asks ListenBrainz's public playing-now API, which needs no key. Connect Spotify in ListenBrainz, or use any scrobbler that sends playing-now. Covers come from the Cover Art Archive when the song has a release ID.
-- `source=lastfm` asks Last.fm for the recent tracks, which update almost at once. It needs a Last.fm API key built into the site (`VITE_LASTFM_API_KEY` at build time); without one, the setup page offers ListenBrainz only.
+- `source=lastfm` asks Last.fm for the recent tracks, which update almost at once. It needs a Last.fm API key on the site's server (the `LASTFM_API_KEY` secret), which asks Last.fm for the overlay, so the key never reaches the page; without one, the setup page offers ListenBrainz only.
 - The overlay asks every 12 seconds and backs off while a service is busy. When the music stops, the card dims, then slides out after `hide` seconds.
 
 ```
@@ -377,14 +377,15 @@ https://extensions.senchabot.com/widgets/countdown?scene=starting&time=600&prese
 
 ### IRL HUD Overlay (`/setup/irl-hud`)
 
-A game-style HUD overlay made for IRL streams. Subs, gifted subs, Bits (Twitch), Kicks (Kick) and raids add the dollar amounts you set, and the cash counter rolls up to the new amount.
+A game-style HUD overlay made for IRL streams. Subs, gifted subs, Bits (Twitch), Kicks (Kick), raids and, with Senchabot connected, new followers add the dollar amounts you set, and the cash counter rolls up to the new amount.
 
 **How it works:**
 - Listens to Twitch IRC anonymously and Kick's Pusher WebSocket, both in one browser source, through the same event readers as the Subathon Timer.
 - Four styles: `retro` (green `$00000350` under a grey clock in a thick outline, round mini-map), `modern` (white `$1,250` with a soft shadow, gains in green, rounded square mini-map), `medieval` (gold coins outlined in dark brown, a parchment mini-map in a wooden ring) and `mmorpg` (gold coins, gains in green, a round mini-map in a gold ring). The fonts are Anton, MedievalSharp and Cinzel from Google Fonts. The Weather overlay's pill takes the same styles.
 - Separate dollar amounts for Twitch and Kick: per sub, per gifted sub, per 100 Bits or 100 Kicks, and per raider. Any of them can be turned off. Twitch Tier 2 and 3 subs can count as 2 and 5 subs.
+- Integrations tab: new followers add a per-follow amount (`follow`, both platforms). Follows come through a Senchabot connection, the one Follower Goal uses, since neither platform shows follows to a page that isn't logged in; the setup page takes it from a Dashboard link (`?token=`) or a pasted Follower Goal URL or token.
 - The clock shows the OBS computer's time, or a picked IANA time zone for OBS running on a cloud server or at home.
-- The mini-map shows an arrow walking streets or paths and turning at the corners, with the map turning under it. It draws a made-up city (`urban`) or park (`park`), seeded by the channel name, or the real streets, paths, buildings, parks and water within about 350 m of a saved place (`real`, starting at the first one), from OpenStreetMap data (© OpenStreetMap contributors). On a real place the walk prefers footpaths and stays within about 140 m of it. The overlay asks the Overpass API once per place and keeps the result in `localStorage` for 14 days, with a radar sweep turning on the mini-map while it loads; the setup page finds places with Nominatim, on an explicit search only, or takes pasted coordinates.
+- The mini-map shows an arrow walking streets or paths and turning at the corners, with the map turning under it. It draws a made-up city (`urban`) or park (`park`), seeded by the channel name, or the real streets, paths, buildings, parks and water within about 350 m of a saved place (`real`, starting at the first one), from OpenStreetMap data (© OpenStreetMap contributors). On a real place the walk prefers footpaths and stays within about 140 m of it. The overlay asks the Overpass API once per place and keeps the result in `localStorage` for 14 days. While a place loads, the mini-map shows a loading screen (a street grid under a radar sweep, and a spinner around the arrow) and fades the map in when it's there; a busy server gets 6 s before the next one is asked too. Once the place on screen has loaded, the other saved places load in the background, one at a time, so `!hud map` switches to them at once. The setup page finds places with Nominatim, on an explicit search only, or takes pasted coordinates.
 - The cash is saved in the browser source's `localStorage`, keyed by channel, so a reload or an OBS restart doesn't lose it.
 - The broadcaster and mods change the cash from chat: `!hud cash +500` (`add 500`), `-200` (`remove 200`, can go into a red debt), `10000` (`set 10000`) and `reset`. `!hud money` works the same. They switch the mini-map with `!hud map <name>` for a saved place, `!hud map urban` or `!hud map park` for the made-up maps, and `!hud map reset` for the one in the URL; the choice is saved in OBS until the URL's starting map changes. `!hud walk`, `!hud run` and `!hud stay` (or `stop`) set how the arrow moves. On the made-up maps, `!hud indoor` (or `inside`) takes the arrow into the building nearest it (a stand-in one in the park), where it walks around within the walls while the map zooms in on the building and dims the rest; `!hud outdoor` (or `outside`) walks it back to the nearest street. Indoors is saved in OBS too. A real place stays outdoors while the arrow walks around a picked spot, since which real building it walks into isn't the streamer's to pick: there the command does nothing, and switching to one leaves the building. The real building outlines are kept for a GPS feed (`arrowSource="gps"` on the widget): with the arrow at a real position it goes into the real building there, and stays outdoors where there's none, with no stand-in.
 - A market: items with prices set on the setup page. `!hud buy water` (or `!hud buy water 3`) takes the price off the cash and shows it with the item's name; without enough cash nothing is bought and the price shows with a cross.
@@ -396,7 +397,7 @@ A game-style HUD overlay made for IRL streams. Subs, gifted subs, Bits (Twitch),
 https://extensions.senchabot.com/widgets/irl-hud?twitch=YOUR_TWITCH_CHANNEL&kick=YOUR_KICK_CHANNEL&style=retro&tz=Europe/Istanbul
 ```
 
-**URL parameters:** `twitch`, `kick`, `style` (`retro` | `modern` | `medieval` | `mmorpg`), `corner` (`tr` | `tl` | `br` | `bl`), `size` (50 to 200, percent), `start` (starting cash), Twitch `tsub` (Tier 1 and Prime), `tgift`, `bits` (per 100), `traid` (per raider), `tiers` (`0` | `1`), Kick `ksub`, `kgift`, `kicks` (per 100), `kraid` (per raider), `clock` (`0` | `1`), `h12` (`0` | `1`), `tz` (IANA time zone), `radar` (`0` | `1`), `radarCorner` (`tr` | `tl` | `br` | `bl`), `map` (`urban` | `park` | `real`), `places` (saved places as `name:lat,lon` joined by `;`, up to 10; older URLs with `lat` and `lon` read as one place named `place1`), `move` (`walk` | `run` | `stay`), `items` (market items as `name:price` joined by `;`, up to 20), `pops` (`0` | `1`), `simulate` (`1` plays simulated subs).
+**URL parameters:** `twitch`, `kick`, `style` (`retro` | `modern` | `medieval` | `mmorpg`), `corner` (`tr` | `tl` | `br` | `bl`), `size` (50 to 200, percent), `start` (starting cash), Twitch `tsub` (Tier 1 and Prime), `tgift`, `bits` (per 100), `traid` (per raider), `tiers` (`0` | `1`), Kick `ksub`, `kgift`, `kicks` (per 100), `kraid` (per raider), `follow` (per new follower, needs `token`), `token` (a Senchabot connection), `clock` (`0` | `1`), `h12` (`0` | `1`), `tz` (IANA time zone), `radar` (`0` | `1`), `radarCorner` (`tr` | `tl` | `br` | `bl`), `map` (`urban` | `park` | `real`), `places` (saved places as `name:lat,lon` joined by `;`, up to 10; older URLs with `lat` and `lon` read as one place named `place1`), `move` (`walk` | `run` | `stay`), `items` (market items as `name:price` joined by `;`, up to 20), `pops` (`0` | `1`), `simulate` (`1` plays simulated subs).
 
 ---
 

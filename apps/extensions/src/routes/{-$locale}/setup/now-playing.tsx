@@ -15,11 +15,11 @@ import { HINT_CLASS } from '#/components/ui/text-field';
 import { PresetField } from '#/features/presets/preset-field';
 import { isClassic } from '#/features/presets/registry';
 import { useStartOnSitePreset } from '#/features/presets/site-preset';
-import { hasLastfm } from '#/features/widgets/now-playing/lastfm';
 import { SOURCE_NAMES } from '#/features/widgets/now-playing/now-playing-api';
 import {
   PREVIEW_CHANNEL,
   type PreviewMessage,
+  useLastfmAvailable,
 } from '#/features/widgets/now-playing/use-now-playing';
 import { UsernameField } from '#/features/widgets/now-playing/username-field';
 import { hueFor } from '#/features/widgets/overlay-style';
@@ -84,8 +84,9 @@ function NowPlayingSetup() {
     setSettings((current) => ({ ...current, [key]: value }));
   useStartOnSitePreset((preset) => update('preset', preset));
 
-  // A build without a Last.fm key reads ListenBrainz only, so the choice isn't offered.
-  const lastfm = hasLastfm();
+  // A site without a Last.fm key reads ListenBrainz only, so the choice isn't offered. The
+  // site's server keeps the key and says whether it has one.
+  const lastfm = useLastfmAvailable();
   const source = lastfm ? settings.source : 'listenbrainz';
   const chosen = { ...settings, source };
   const user = cleanUsername(settings.user);

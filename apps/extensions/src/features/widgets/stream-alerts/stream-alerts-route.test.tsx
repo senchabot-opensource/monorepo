@@ -38,7 +38,7 @@ describe('/widgets/stream-alerts', () => {
 
   it('shows a custom heading from the URL as text', async () => {
     await renderRoute(
-      '/widgets/stream-alerts?simulate=1&hsub=%3Cb%3Ehi%3C%2Fb%3E&hgift=%3Cb%3Ehi%3C%2Fb%3E&hbits=%3Cb%3Ehi%3C%2Fb%3E&hraid=%3Cb%3Ehi%3C%2Fb%3E',
+      '/widgets/stream-alerts?simulate=1&hsub=%3Cb%3Ehi%3C%2Fb%3E&hgift=%3Cb%3Ehi%3C%2Fb%3E&hbits=%3Cb%3Ehi%3C%2Fb%3E&hraid=%3Cb%3Ehi%3C%2Fb%3E&hfollow=%3Cb%3Ehi%3C%2Fb%3E',
     );
     await act(async () => vi.advanceTimersByTime(2000));
     expect(screen.getByTestId('stream-alert').textContent).toContain('<b>hi</b>');

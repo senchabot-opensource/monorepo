@@ -692,7 +692,7 @@ export const en = {
     previewSpeed: 'Preview Growth Speed',
     previewSpeedValue: '{rate}×',
     previewHint:
-      'The preview grows with simulated subs. On stream, your plant grows with real subs, resubs and gifted subs in your channel.',
+      'The preview grows with simulated subs. On stream, your plant grows with real subs, resubs and gifted subs in your channel. Twitch Prime subs count too.',
     widgetUrlTip:
       'Already made a widget? Paste its URL here to load your settings and change what you need.',
     widgetUrlPlaceholder: 'Paste an existing widget URL to edit it',
@@ -766,7 +766,7 @@ export const en = {
     startCommand: 'With {command}',
     startAuto: 'Right Away',
     sectionValues: 'Time Added',
-    valuesHint: 'Set any of these to 0 to turn it off.',
+    valuesHint: 'Set any of these to 0 to turn it off. A Twitch Prime sub counts as a Tier 1 sub.',
     dynamicRates: 'Adjust rates by time',
     dynamicRatesTip: 'Use a second set of rates when the clock has enough time left.',
     shiftAt: 'Threshold',
@@ -805,7 +805,8 @@ export const en = {
     cmdRemove: 'Takes time away',
     cmdSet: 'Sets the time left',
     cmdReset: 'Starts over from the starting time',
-    commandsDurations: 'Write times like 10m, 1h30m, 45s or 1:30:00. A plain number means minutes.',
+    commandsDurations:
+      'Any amount works, like 57m, 2h15m, 45s or 1:30:00. A plain number means minutes.',
     previewTitle: 'Subathon Timer Preview',
     previewIframeTitle: 'Subathon Timer Preview',
     previewHint:
@@ -845,6 +846,9 @@ export const en = {
     faq4Q: 'Do I need to log in or connect my account?',
     faq4A:
       'No. The timer reads subs, gifts, Bits, Kicks and mod commands from your public Twitch and Kick chat, the way a logged-out viewer sees them.',
+    faq5Q: 'Do Twitch Prime subs add time?',
+    faq5A:
+      'Yes. A Prime sub counts as a Tier 1 sub and adds the Per Sub time. On Twitch a resub, Prime or paid, counts when the viewer shares it in chat.',
   },
   goal: {
     breadcrumb: 'Sub Goal Setup',
@@ -921,9 +925,9 @@ export const en = {
     faq2Q: 'What happens if OBS closes or the browser source reloads?',
     faq2A:
       "The count is saved inside OBS, so it comes back where it was, on your next stream too. Subs that come in while OBS is closed can't be seen, so a mod can add them with !goal add.",
-    faq3Q: 'Do resubs and gifted subs count?',
+    faq3Q: 'Do Prime subs, resubs and gifted subs count?',
     faq3A:
-      'Yes. Every new sub and resub adds 1, and a gift adds 1 for each sub in it, so a gift of 5 adds 5. On Twitch a resub counts when the viewer shares it in chat, and on Kick when it renews.',
+      'Yes. Every new sub and resub adds 1, Twitch Prime subs like any other, and a gift adds 1 for each sub in it, so a gift of 5 adds 5. On Twitch a resub counts when the viewer shares it in chat, and on Kick when it renews.',
     faq4Q: 'Can I make a follower goal?',
     faq4A:
       'Yes! Use our Follower Goal overlay to track new followers live on stream from Twitch and Kick.',
@@ -1009,6 +1013,19 @@ export const en = {
     faq3Q: 'Can I run both a Sub Goal and a Follower Goal at the same time?',
     faq3A:
       'Yes! Sub Goal and Follower Goal maintain independent counts in OBS localStorage and use separate URL endpoints.',
+  },
+  followConnection: {
+    title: 'Follows need Senchabot',
+    text:
+      "Chat doesn't say who followed, but Senchabot does. Connect your channel in the Senchabot Dashboard, open Follower Goal from its Tools page, then paste that widget's URL or its token here.",
+    dashboard: 'Open Senchabot Dashboard Tools →',
+    paste: 'Follower Goal URL or Token',
+    placeholder: 'https://extensions.senchabot.com/widgets/follower-goal?token=…',
+    connect: 'Connect',
+    invalid:
+      'No token in that. Paste the Follower Goal URL from its setup page, opened from the Dashboard.',
+    connected: 'Connected to Senchabot: new followers come in.',
+    disconnect: 'Disconnect',
   },
   irlHud: {
     breadcrumb: 'IRL HUD Overlay Setup',
@@ -1118,11 +1135,16 @@ export const en = {
     perRaider: 'Per Raider',
     perRaiderTip:
       'Counted for every viewer a raid brings, so a raid of 50 adds this fifty times. Kick calls a raid a host.',
+    perFollow: 'Per Follow',
+    perFollowTip: 'Every new follower, on Twitch and on Kick. Set it to 0 to turn follows off.',
     tiers: 'Tier 2 and 3 Count More',
     tiersTip:
       'On Twitch a Tier 2 sub adds 2 subs worth of cash and a Tier 3 sub 5, in line with their price.',
     sectionMap: 'Mini-Map',
     sectionMarket: 'Market',
+    sectionIntegrations: 'Integrations',
+    integrationsHint:
+      "Integrations bring in what chat doesn't show. New followers come in through Senchabot and add the cash below.",
     marketHint:
       "Items you and your mods buy from chat with !hud buy and the item's name. The price comes off the cash; without enough cash, nothing is bought.",
     items: 'Items',
@@ -1170,13 +1192,14 @@ export const en = {
     previewTitle: 'IRL HUD Overlay Preview',
     previewIframeTitle: 'IRL HUD Overlay Preview',
     previewHint:
-      'The preview plays simulated subs, gifts, cheers and raids. On stream only your chat adds cash.',
+      'The preview plays simulated subs, gifts, cheers and raids, and follows once Senchabot is connected. On stream only your chat and your new followers add cash.',
     testTitle: 'Try it:',
     testViewer: 'You',
     testSub: '+1 Sub',
     testGift: '+5 Gifted',
     testBits: '+500 Bits/Kicks',
     testRaid: 'Raid of 25',
+    testFollow: '+1 Follow',
     testAdd: '+$1,000',
     testRemove: '−$500',
     testMove:
@@ -2240,7 +2263,7 @@ export const en = {
     sectionCommands: 'Chat Commands',
     commandsIntro:
       'With a channel filled in, you and your mods can change the countdown from Twitch or Kick chat, for example to push the start back while you are away from the keyboard. `!cd` works wherever `!countdown` does.',
-    cmdAdd: 'Adds time: 5m, 90s or 1h30m',
+    cmdAdd: 'Adds any amount of time, like 57m, 90s or 1h30m',
     cmdRemove: 'Takes time off',
     cmdSet: 'Sets the time left',
     cmdPause: 'Pauses it; start runs it again',
@@ -2351,7 +2374,7 @@ export const en = {
     cmdNewTime: 'The same, with its own length, like 90s, 2m or 1:30',
     cmdYesNo: 'Puts up a quick Yes or No poll',
     cmdStart: 'Puts up the ready-made poll from this page',
-    cmdExtend: 'Adds time to the poll',
+    cmdExtend: 'Adds any amount of time to the poll, like 45s or 2m',
     cmdEnd: 'Ends voting now and shows the results',
     cmdCancel: 'Takes the poll off the screen',
     votingIntro:
@@ -2452,6 +2475,9 @@ export const en = {
     kindBitsTip: 'Bits cheered on Twitch and Kicks sent on Kick.',
     kindRaid: 'Raids',
     kindRaidTip: 'Another channel raiding yours, with how many viewers came along.',
+    kindFollow: 'Follows',
+    kindFollowTip:
+      'Every new follower, on Twitch and on Kick. Follows come in through Senchabot, so they need the connection below.',
     minGift: 'Min. Subs',
     minBits: 'Min. Amount',
     minRaid: 'Min. Viewers',
@@ -2468,12 +2494,13 @@ export const en = {
     previewTitle: 'Stream Alerts Preview',
     previewIframeTitle: 'Stream Alerts Preview',
     previewHint:
-      "The preview plays silent sample alerts. The buttons below play one with its sound. On stream only your channel's subs, gifts, cheers and raids show up.",
+      "The preview plays silent sample alerts. The buttons below play one with its sound. On stream only your channel's subs, gifts, cheers and raids show up, and follows once Senchabot is connected.",
     testTitle: 'Try it:',
     testSub: 'Sub',
     testGift: '{count} Gifted',
     testBits: '{amount} Bits/Kicks',
     testRaid: 'Raid',
+    testFollow: 'Follow',
     testViewer: 'TestViewer',
     testMessage: 'Great stream!',
     widgetUrlTip:
@@ -2488,9 +2515,9 @@ export const en = {
     guideStep3: 'Set width to 800 and height to 450, then place it where alerts should appear.',
     guideStep4:
       'To hear the sound in OBS, turn on Control audio via OBS in the source settings and set the source to Monitor and Output in Advanced Audio Properties.',
-    faq1Q: 'Why are there no follow or donation alerts?',
+    faq1Q: 'Are there follow and donation alerts?',
     faq1A:
-      "Twitch and Kick don't show new follows to a page that isn't logged in, and neither platform has donations of its own. The alerts only use what both platforms send to every viewer, so they work the same on both.",
+      "Follow alerts, yes, with your channel connected in Senchabot: Twitch and Kick don't show new follows to a page that isn't logged in, so they come in through Senchabot, as for Follower Goal. Donation alerts, no: neither platform has donations of its own.",
     faq2Q: "Does a sub alert show the months and the viewer's message?",
     faq2A:
       'Yes. When a viewer shares their resub in chat, on Twitch or on Kick, it gets an alert with the months and what they wrote. On Twitch every sub alert shows the months. Kick sends them with most subs, but some channels never get them, and then the alert just says they subscribed.',
@@ -2499,7 +2526,7 @@ export const en = {
       'They show one at a time in the order they came in. A gift of 50 subs is a single alert, not 50.',
     faq4Q: 'Do I need to log in or connect my account?',
     faq4A:
-      'No. The alerts read subs, gifts, Bits, Kicks and raids from your public Twitch and Kick chat, the way a logged-out viewer sees them.',
+      'No. The alerts read subs, gifts, Bits, Kicks and raids from your public Twitch and Kick chat, the way a logged-out viewer sees them. Only follow alerts need your channel connected in Senchabot.',
     alert: {
       subHeading: 'New Subscriber',
       subDetail: 'just subscribed',
@@ -2515,6 +2542,8 @@ export const en = {
       raidDetail: 'is raiding with {viewers} viewers',
       raidDetailOne: 'is raiding with 1 viewer',
       raidDetailNoCount: 'is raiding',
+      followHeading: 'New Follower',
+      followDetail: 'just followed',
       anonymous: 'Anonymous',
     },
   },
@@ -3643,6 +3672,9 @@ export const en = {
     faq4Q: 'Are these official game themes?',
     faq4A:
       "No. They're fan-made styles built from colors, free Google Fonts and decorations drawn from scratch, with no game logos or art, and they aren't affiliated with the game makers.",
+    faq5Q: 'Can my mods change the preset from chat?',
+    faq5A:
+      "Yes. You and your mods can type !preset and a preset's name or its game, like !preset blocks, and every overlay that reads your chat switches to it, even after a reload. !preset reset brings back each overlay's own. Overlays that read no chat keep the preset in their URL.",
     field: {
       label: 'Preset',
       tip: 'A ready-made look for this widget: its frame, fonts and colors. Pick the same preset on every widget to make them match.',
@@ -3662,6 +3694,7 @@ export const en = {
         "Keep {name}'s own fonts, or draw this widget in another font. Its colors, frame and effects stay {name}'s.",
       presetFonts: "{name}'s fonts",
       ownsColors: 'Colors come from {name}.',
+      seeMore: 'See more overlays with {name}',
     },
   },
   faqPage: {
@@ -3715,6 +3748,12 @@ export const en = {
     lead: "New features and bug fixes in Senchabot Extensions, newest first. The list is put together from the project's commit history on [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      irlHudFollows:
+        'IRL HUD Overlay gets an Integrations tab: with your channel connected in Senchabot, every new follower adds cash.',
+      streamAlertsFollows:
+        'Stream Alerts can show follow alerts, with your channel connected in Senchabot.',
+      presetCommand:
+        "You and your mods can now switch presets from chat: !preset and a preset's name or its game, like !preset blocks, redraws every overlay that reads your chat, and !preset reset brings back each overlay's own.",
       hudMedievalMmorpg:
         'IRL HUD Overlay and Weather get two new styles, Medieval and MMORPG. In them the HUD counts gold coins instead of dollars, over a parchment or a gold-ringed mini-map.',
       presetsFont:

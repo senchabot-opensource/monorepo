@@ -48,6 +48,7 @@ describe('buildHudUrl', () => {
       kgift: 200,
       kicks: 40,
       kraid: 0,
+      follow: 25,
       tiers: false,
       clock: false,
       h12: true,
@@ -66,8 +67,9 @@ describe('buildHudUrl', () => {
       ],
       pops: false,
     });
-    const url = buildHudUrl(ORIGIN, changed, 'streamer', 'kicker');
+    const url = buildHudUrl(ORIGIN, changed, 'streamer', 'kicker', 'senchabot-token');
     expect(url).toContain('style=modern');
+    expect(url).toContain('follow=25');
     expect(url).toContain('radarCorner=tr');
     expect(new URL(url).searchParams.get('places')).toBe(
       'park1:41.02561,28.97436;Kadıköy:40.99,29.02',
@@ -76,6 +78,7 @@ describe('buildHudUrl', () => {
     expect(parseHudUrl(url)).toEqual({
       twitchChannel: 'streamer',
       kickChannel: 'kicker',
+      token: 'senchabot-token',
       settings: changed,
     });
   });
