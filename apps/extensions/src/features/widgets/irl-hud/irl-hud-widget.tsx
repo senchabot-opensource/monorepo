@@ -191,6 +191,7 @@ const placeKey = (place: { lat: number; lon: number }) => `${place.lat},${place.
 /**
  * Loads the saved places' mini-maps in the background, the one shown first and then the others,
  * one at a time: a mod's !hud map switch then draws its place at once instead of loading it.
+ * Only in OBS: the setup page's preview reloads on every change, and would ask again each time.
  */
 function usePrefetchedPlaces(
   places: readonly { lat: number; lon: number }[],
@@ -258,7 +259,7 @@ export function IrlHudWidget({
   // A mod's !hud map choice, while it still names a saved place or a made-up map; else the URL's.
   const view = (mapChoice && chosenView(mapChoice, settings.places)) || startingView(settings);
   const place = view.map === 'real' ? view.place : null;
-  usePrefetchedPlaces(settings.radar ? settings.places : [], place);
+  usePrefetchedPlaces(settings.radar && !previewId ? settings.places : [], place);
   // A walked real place stays outdoors, even with indoors saved from a made-up map earlier.
   const inside = indoor && canGoIndoors(view.map, arrowSource);
   const scale = useShortSideScale(DESIGN_SHORT_SIDE);

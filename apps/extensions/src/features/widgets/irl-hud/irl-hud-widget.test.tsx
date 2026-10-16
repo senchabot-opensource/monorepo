@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { DEFAULT_HUD_SETTINGS, type HudSettings } from '#/lib/irl-hud-url';
 import { FakeWebSocket } from '#/test/browser';
 import { IrlHudWidget } from './irl-hud-widget';
-import { parseOverpass } from './map-osm';
+import { PREFETCH_PAUSE_MS, parseOverpass } from './map-osm';
 import { storageKey } from './use-irl-hud';
 
 const kickLookup = vi.hoisted(() => vi.fn());
@@ -174,7 +174,7 @@ describe('IrlHudWidget', () => {
     vi.unstubAllGlobals();
   });
 
-  it('walks the made-up city while OpenStreetMap does not answer, or without a place', async () => {
+  it('keeps loading while OpenStreetMap does not answer, and walks the made-up city without a place', async () => {
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new TypeError('offline')));
     const first = render(
       <IrlHudWidget
@@ -183,7 +183,9 @@ describe('IrlHudWidget', () => {
       />,
     );
     await act(async () => {});
-    expect(radar().dataset.map).toBe('urban');
+    // No made-up streets stand in for the real ones: it keeps loading, and asks again.
+    expect(radar().dataset.map).toBe('loading');
+    expect(screen.getByTestId('irl-hud-loading')).toBeTruthy();
     first.unmount();
     vi.unstubAllGlobals();
 
@@ -352,7 +354,7 @@ describe('IrlHudWidget', () => {
   });
 
   it('keeps a real place outdoors, and leaves the building when the map goes to one', () => {
-    // Overpass doesn't answer: the made-up city stands in, but it's still the real place's map.
+    // Overpass doesn't answer, so the place is still loading; it's the real place's map all the same.
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new TypeError('Failed to fetch')));
     const places = [{ name: 'galata', lat: 41.0256, lon: 28.9744 }];
     render(<IrlHudWidget twitchChannel="streamer" settings={settings({ map: 'real', places })} />);
@@ -621,11 +623,15 @@ describe('IrlHudWidget real places', () => {
         },
       ],
     };
-    // The first place answers; the other one never does.
-    const fetchMock = vi.fn((url: string) =>
+    // The first place answers; the other one never does, until the request is dropped.
+    const fetchMock = vi.fn((url: string, init?: RequestInit) =>
       decodeURIComponent(url).includes('38.4193,27.1289')
         ? Promise.resolve(new Response(JSON.stringify(answer)))
-        : new Promise<Response>(() => {}),
+        : new Promise<Response>((_, reject) =>
+            init?.signal?.addEventListener('abort', () =>
+              reject(new DOMException('Dropped', 'AbortError')),
+            ),
+          ),
     );
     vi.stubGlobal('fetch', fetchMock);
     const places = [
@@ -639,7 +645,7 @@ describe('IrlHudWidget real places', () => {
     receive('twitch', MOD_SAYS('!hud map pier'));
     expect(radar().dataset.map).toBe('loading');
     expect(screen.getByTestId('irl-hud-spinner')).toBeTruthy();
-    // The background load and the mini-map share one request for the pier.
+    // One request for the pier: the background loads wait their turn, and would share it.
     expect(
       fetchMock.mock.calls.filter(([url]) => decodeURIComponent(url).includes('38.4385,27.1427')),
     ).toHaveLength(1);
@@ -647,6 +653,49 @@ describe('IrlHudWidget real places', () => {
     // Loaded before, so it's back at once.
     receive('twitch', MOD_SAYS('!hud map square'));
     expect(radar().dataset.map).toBe('real');
+    // Both servers give up on the pier in time, so nothing is left loading.
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(120_000);
+    });
+    vi.unstubAllGlobals();
+  });
+
+  it('loads the other places in the background in OBS, a pause apart, and not in the preview', async () => {
+    const fetchMock = vi
+      .fn()
+      .mockImplementation(async () => new Response(JSON.stringify({ elements: [] })));
+    vi.stubGlobal('fetch', fetchMock);
+    const asked = (lat: number) =>
+      fetchMock.mock.calls.filter(([url]) => decodeURIComponent(String(url)).includes(`,${lat},`))
+        .length;
+    const places = [
+      { name: 'dock', lat: 36.81, lon: 27.11 },
+      { name: 'bay', lat: 36.82, lon: 27.12 },
+    ];
+    // The setup page's preview reloads on every change, so it asks only for the place it shows.
+    const preview = render(
+      <IrlHudWidget settings={settings({ map: 'real', places })} simulate previewId="p1" />,
+    );
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(PREFETCH_PAUSE_MS * 2);
+    });
+    expect(radar().dataset.map).toBe('real');
+    expect([asked(36.81), asked(36.82)]).toEqual([1, 0]);
+    preview.unmount();
+
+    // OBS keeps its own storage: the place on screen loads first, the next one a pause after.
+    localStorage.clear();
+    render(<IrlHudWidget twitchChannel="streamer" settings={settings({ map: 'real', places })} />);
+    await act(async () => {});
+    expect(radar().dataset.map).toBe('real');
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(PREFETCH_PAUSE_MS - 1);
+    });
+    expect(asked(36.82)).toBe(0);
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(1);
+    });
+    expect([asked(36.81), asked(36.82)]).toEqual([2, 1]);
     vi.unstubAllGlobals();
   });
 });

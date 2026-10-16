@@ -32,7 +32,7 @@ import {
   stepRoomWalker,
 } from './map-indoor';
 import { cityTile, parkTile, TILE } from './map-made-up';
-import { loadRealMap, type RealMap, realGraph, stayNearMiddle } from './map-osm';
+import { loadRealMap, type RealMap, readCachedMap, realGraph, stayNearMiddle } from './map-osm';
 
 /** The mini-map's width at 100% on a 1080p scene. */
 export const RADAR_SIZE = 280;
@@ -137,6 +137,9 @@ const LOOKS: Record<HudStyle, RadarLook> = {
   },
 };
 
+// One block of the street grid shown while a real place loads, in px.
+const LOADING_GRID = 46;
+
 export const RADAR_CSS = `
 .ih-radar{position:absolute;overflow:hidden;width:${RADAR_SIZE}px;height:${RADAR_SIZE}px}
 .ih-spin,.ih-pan{position:absolute;left:0;top:0;width:0;height:0}
@@ -147,19 +150,26 @@ export const RADAR_CSS = `
 .ih-medieval .ih-north{background:#3b2410;color:#f2c55c;box-shadow:0 0 0 2px #b08d57}
 .ih-mmorpg .ih-north{background:#17110a;color:#ffd100;box-shadow:0 0 0 2px #c9a34a}
 .ih-player{position:absolute;left:50%;top:50%;transform:translate(-50%,-55%)}
-/* While a real place loads: a radar sweep turning, rings, and pings from the middle. */
+/* While a real place loads: a faint street grid drifting under a radar sweep, rings, and a
+   spinner around the arrow; the map fades in once it's there. */
 .ih-loading{position:absolute;inset:0;pointer-events:none}
+.ih-grid{position:absolute;inset:${-LOADING_GRID}px;
+  background-image:linear-gradient(rgb(var(--ih-scan)/.13) 2px,transparent 2px),
+    linear-gradient(90deg,rgb(var(--ih-scan)/.13) 2px,transparent 2px);
+  background-size:${LOADING_GRID}px ${LOADING_GRID}px;animation:ih-grid-drift 3s linear infinite}
 .ih-sweep{position:absolute;inset:-25%;
   background:conic-gradient(from 0deg,transparent 0 280deg,rgb(var(--ih-scan)/.32) 360deg);
   animation:ih-sweep-turn 1.8s linear infinite}
 .ih-ring{position:absolute;left:50%;top:50%;border-radius:50%;border:1px solid rgb(var(--ih-scan)/.18);
   transform:translate(-50%,-50%)}
-.ih-ping{position:absolute;left:50%;top:50%;width:10px;height:10px;transform:translate(-50%,-50%);
-  border-radius:50%;border:2px solid rgb(var(--ih-scan)/.7);animation:ih-ping-grow 1.8s ease-out infinite}
-.ih-ping+.ih-ping{animation-delay:.9s}
+.ih-spinner{position:absolute;left:50%;top:50%;width:58px;height:58px;margin:-29px 0 0 -29px;
+  border-radius:50%;border:3px solid rgb(var(--ih-scan)/.2);border-top-color:rgb(var(--ih-scan)/.95);
+  animation:ih-sweep-turn .8s linear infinite}
+.ih-map-in{animation:ih-map-in .6s ease-out}
 @keyframes ih-sweep-turn{to{transform:rotate(360deg)}}
-@keyframes ih-ping-grow{from{width:10px;height:10px;opacity:1}to{width:240px;height:240px;opacity:0}}
-@media (prefers-reduced-motion:reduce){.ih-sweep,.ih-ping{animation:none}}
+@keyframes ih-grid-drift{to{transform:translate(${LOADING_GRID}px,${LOADING_GRID}px)}}
+@keyframes ih-map-in{from{opacity:0}}
+@media (prefers-reduced-motion:reduce){.ih-grid,.ih-sweep,.ih-spinner,.ih-map-in{animation:none}}
 .ih-credit{position:absolute;left:0;right:0;bottom:7px;text-align:center;
   font:600 10px/1 ui-sans-serif,system-ui,sans-serif;color:#fff;text-shadow:0 0 3px #000,0 0 3px #000}
 `;
@@ -337,27 +347,36 @@ function realScene(map: RealMap, palette: Palette): Scene {
   };
 }
 
-type RealState = { map: RealMap | null; failed: boolean };
-
 // Overpass asks clients to wait at least 30 s after it turns a request away, so the retries here
 // start there instead of at the 5 s other loaders use, and back off to 5 minutes.
 const OVERPASS_RETRY_MS = [30_000, 60_000, 120_000, 300_000];
 
-/** The real place's map: null while it loads, and `failed` while Overpass doesn't answer. */
-function useRealMap(lat: number | null, lon: number | null): RealState {
-  const [state, setState] = useState<RealState>({ map: null, failed: false });
+/**
+ * The real place's map, null while it loads. A place loaded before shows at once; any other
+ * starts out loading, so the last place's streets never stand in for it. While Overpass doesn't
+ * answer it stays loading, and asks again after 30 s, a minute, two, then every five.
+ */
+function useRealMap(lat: number | null, lon: number | null): RealMap | null {
+  const place = lat === null || lon === null ? null : `${lat},${lon}`;
+  const saved = useMemo(
+    () => (lat === null || lon === null ? null : readCachedMap(lat, lon)),
+    [lat, lon],
+  );
+  const [state, setState] = useState<{ map: RealMap | null; place: string | null }>({
+    map: null,
+    place: null,
+  });
   useEffect(() => {
     if (lat === null || lon === null) return;
+    const loaded = `${lat},${lon}`;
     let current = true;
     let timer: number | undefined;
     const run = async (attempt: number) => {
       try {
         const map = await loadRealMap(lat, lon);
-        if (current) setState({ map, failed: false });
+        if (current) setState({ map, place: loaded });
       } catch (error) {
-        if (!current) return;
-        setState((previous) => ({ ...previous, failed: true }));
-        if (!(error instanceof RetryableFetchError)) return;
+        if (!current || !(error instanceof RetryableFetchError)) return;
         const delay = OVERPASS_RETRY_MS[Math.min(attempt, OVERPASS_RETRY_MS.length - 1)];
         timer = window.setTimeout(() => run(attempt + 1), delay);
       }
@@ -368,17 +387,17 @@ function useRealMap(lat: number | null, lon: number | null): RealState {
       window.clearTimeout(timer);
     };
   }, [lat, lon]);
-  return state;
+  return state.place === place ? state.map : saved;
 }
 
 /** What the radar draws: a real place only once it has loaded. */
 type SceneKind = 'urban' | 'park' | 'real' | 'loading';
 
-function sceneKind(map: HudMap, wantsReal: boolean, real: RealState): SceneKind {
+function sceneKind(map: HudMap, wantsReal: boolean, real: RealMap | null): SceneKind {
   if (!wantsReal) return map === 'park' ? 'park' : 'urban';
-  if (real.map) return 'real';
-  // If Overpass doesn't answer, the made-up city stands in until it does.
-  return real.failed ? 'urban' : 'loading';
+  // Loading until the streets are in, however long Overpass takes: a made-up city in their place
+  // would show streets that aren't there.
+  return real ? 'real' : 'loading';
 }
 
 interface HudRadarProps {
@@ -440,9 +459,9 @@ export function HudRadar({
   const scene = useMemo<Scene | null>(() => {
     if (kind === 'park') return parkScene(seed, look.palette, pattern);
     if (kind === 'urban') return urbanScene(seed, look.palette, pattern);
-    if (kind === 'real' && real.map) return realScene(real.map, look.palette);
+    if (kind === 'real' && real) return realScene(real, look.palette);
     return null;
-  }, [kind, seed, look.palette, pattern, real.map]);
+  }, [kind, seed, look.palette, pattern, real]);
 
   // Read on every frame, so walking, running and stopping don't start the walk over.
   const speedRef = useRef(speed);
@@ -547,6 +566,8 @@ export function HudRadar({
           {scene && (
             <svg
               aria-hidden="true"
+              // A real place fades in over its loading screen.
+              className={kind === 'real' ? 'ih-map-in' : undefined}
               width={box.size}
               height={box.size}
               viewBox={`${box.at} ${box.at} ${box.size} ${box.size}`}
@@ -585,11 +606,11 @@ export function HudRadar({
           aria-hidden="true"
           style={{ '--ih-scan': look.scan } as CSSProperties}
         >
+          <span className="ih-grid" />
           <span className="ih-ring" style={{ width: RADAR_SIZE / 3, height: RADAR_SIZE / 3 }} />
           <span className="ih-ring" style={{ width: RADAR_SIZE / 1.5, height: RADAR_SIZE / 1.5 }} />
           <span className="ih-sweep" />
-          <span className="ih-ping" />
-          <span className="ih-ping" />
+          <span className="ih-spinner" data-testid="irl-hud-spinner" />
         </div>
       )}
       <svg className="ih-player" width="30" height="34" viewBox="0 0 30 34" aria-hidden="true">
