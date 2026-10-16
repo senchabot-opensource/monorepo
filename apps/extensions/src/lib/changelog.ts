@@ -13,6 +13,8 @@ export interface ChangelogEntry {
 // Written from `git log -- apps/extensions`: user-facing feat/fix commits only, newest first.
 // Alerts is unlisted, so its commits stay out.
 export const CHANGELOG: readonly ChangelogEntry[] = [
+  // A new preset, for every widget that takes one: a site change rather than per widget.
+  { date: '2026-10-16', key: 'changelog.entries.presetHalloween', widgets: [] },
   { date: '2026-10-15', key: 'changelog.entries.irlHudFollows', widgets: ['irl-hud'] },
   {
     date: '2026-10-15',

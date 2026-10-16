@@ -3616,7 +3616,7 @@ export const tr: typeof en = {
       "Seçtiğin preset'le Sohbet Kutusu, Yayın Uyarıları, Abone Hedefi, Takipçi Hedefi, Sayaç, Etkinlik Listesi, Kapanış Jeneriği, İzleyici Sırası, Destekçi Sıralaması, Alt Bant, Görev Listesi, Öne Çıkan Mesaj, Emote Kombosu, Bits & Kicks Hedefi, Şimdi Çalıyor, Subathon Timer, Sohbet Anketi, Çekiliş kazanan overlay'i, Yayın Çerçeveleri, Yayın Geri Sayımı, Sosyal Medya ve Çark aynı çerçeveyi, yazı tiplerini ve renkleri alır. İstersen hepsinde aynısını kullan, istersen her birinde başka birini.",
     pickTitle: 'Bir preset seç',
     pickText:
-      "League of Legends (LoL), World of Warcraft (WoW), Dota 2, Valorant, Counter-Strike 2 (CS2), Minecraft, Fortnite, Rocket League, PUBG: Battlegrounds, Mount & Blade ve Kingdom Come: Deliverance için hazır preset'ler, bir de eğlencesine Glitch, Operator, Conquest, Flower ve Pizza.",
+      "League of Legends (LoL), World of Warcraft (WoW), Dota 2, Valorant, Counter-Strike 2 (CS2), Minecraft, Fortnite, Rocket League, PUBG: Battlegrounds, Mount & Blade ve Kingdom Come: Deliverance için hazır preset'ler, bir de eğlencesine Glitch, Operator, Conquest, Flower, Pizza ve Halloween.",
     by: 'Hazırlayan: {author}',
     community: 'Topluluk',
     makeDefault: "{name} preset'ini her widget'ta kullan",
@@ -3636,6 +3636,8 @@ export const tr: typeof en = {
       defuse: 'Kehribar ve gri, yanıp sönen kırmızı bir ışıkla.',
       blocks: 'Baştan sona yeşil ve bloklu, blok blok dolan barlarla.',
       pizza: 'Hamur ve peynir renkleri, etrafta uçuşan pizza dilimleriyle.',
+      halloween:
+        'Gece moru üstünde balkabağı turuncusu, etrafta uçuşan balkabakları, hayaletler ve yarasalarla.',
       storm: 'Gök mavisi ve mor, teknik çizim gibi kurulan barlarla.',
       boost: 'Mavi ve turuncu, bar ilerledikçe hız çizgileriyle.',
       airdrop: 'Zeytin yeşili ve sarı, bar ilerledikçe işaret fişeği dumanıyla.',
@@ -3747,6 +3749,8 @@ export const tr: typeof en = {
     lead: "Senchabot Extensions'a eklenen özellikler ve düzeltilen hatalar, en yenisi en üstte. Liste projenin [GitHub'daki](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) commit geçmişinden hazırlanıyor.",
     site: 'Site',
     entries: {
+      presetHalloween:
+        "Yeni Halloween preset'i: barların etrafında balkabakları, hayaletler ve yarasalar uçuşuyor; bar her ilerlediğinde ucundan bir balkabağı fırlıyor ve içinden bir hayalet yükseliyor, hedefe ulaşınca da hayaletlerle yarasalar dört bir yana uçuşuyor.",
       irlHudFollows:
         "IRL HUD Overlay'e Entegrasyonlar sekmesi geldi: kanalın Senchabot'a bağlıysa her yeni takipçi para ekler.",
       streamAlertsFollows:

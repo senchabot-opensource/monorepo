@@ -287,6 +287,39 @@ export const BUILTIN_PRESETS: readonly PresetData[] = [
     effect: "pizza",
   },
   {
+    id: "halloween",
+    name: "Halloween",
+    author: SENCHABOT,
+    fonts: {
+      // Dripping letters that still read on stream, with Turkish letters too (Creepster has none).
+      display: { family: "Rubik Wet Paint", weights: "400", fallback: "sans-serif" },
+      body: { family: "Grandstander", weights: "400..800", fallback: "sans-serif" },
+    },
+    colors: {
+      // Pumpkin-orange bars, a slime-green win and candlelit text, in orange frames with a purple
+      // line inside, on midnight-purple panels.
+      accent: "#ff8a1f",
+      win: "#9fe870",
+      text: "#fff1e0",
+      muted: "#c9a8f0",
+      panel: "#3b1d5e",
+      panel2: "#1a0b2e",
+      frame: "#ff9a3c",
+      frame2: "#6d3fb3",
+      track: "#12071f",
+    },
+    panelOpacity: 0.94,
+    frame: "crust",
+    radius: 1.2,
+    skew: 0,
+    title: { upper: false, italic: false, tracking: 0.03 },
+    fill: "gloss",
+    motion: "pop",
+    sound: "celestial",
+    shadow: "soft",
+    effect: "spooky",
+  },
+  {
     id: "storm",
     name: "Storm",
     game: "Fortnite",

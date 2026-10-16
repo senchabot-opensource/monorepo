@@ -3703,7 +3703,7 @@ export const fr: typeof en = {
       "Choisis un preset et ta Boîte de chat, tes Alertes de stream, ton Objectif de subs, Objectif de followers, Compteur, Liste d'événements, Générique de fin, File d'attente des viewers, Top soutiens, Bandeau, Liste de tâches, Message mis en avant, Combo d'emotes, Objectif de Bits et Kicks, En écoute, ton Subathon Timer, ton Sondage du chat, le gagnant du Tirage au sort, tes Cadres de stream, ton Compte à rebours de stream, tes Réseaux sociaux et ta Roue ont le même cadre, les mêmes polices et les mêmes couleurs. Mets-en un sur tous les widgets, ou un différent sur chacun.",
     pickTitle: 'Choisis un preset',
     pickText:
-      'Des presets prêts pour League of Legends (LoL), World of Warcraft (WoW), Dota 2, Valorant, Counter-Strike 2 (CS2), Minecraft, Fortnite, Rocket League, PUBG: Battlegrounds, Mount & Blade et Kingdom Come: Deliverance, plus Glitch, Operator, Conquest, Flower et Pizza pour le plaisir.',
+      'Des presets prêts pour League of Legends (LoL), World of Warcraft (WoW), Dota 2, Valorant, Counter-Strike 2 (CS2), Minecraft, Fortnite, Rocket League, PUBG: Battlegrounds, Mount & Blade et Kingdom Come: Deliverance, plus Glitch, Operator, Conquest, Flower, Pizza et Halloween pour le plaisir.',
     by: 'par {author}',
     community: 'Communauté',
     makeDefault: 'Utiliser {name} sur tous les widgets',
@@ -3724,6 +3724,8 @@ export const fr: typeof en = {
       blocks: 'Tout en vert et en blocs, avec des barres qui montent bloc par bloc.',
       pizza:
         'Les couleurs de la croûte et du fromage, avec des parts de pizza qui flottent autour.',
+      halloween:
+        'Orange citrouille sur violet nuit, avec des citrouilles, des fantômes et des chauves-souris qui flottent autour.',
       storm: 'Bleu ciel et violet, avec des barres qui se construisent comme un plan.',
       boost: 'Bleu et orange, avec des traînées de vitesse quand les barres montent.',
       airdrop: "Vert olive et jaune, avec la fumée d'une fusée quand les barres montent.",
@@ -3835,6 +3837,8 @@ export const fr: typeof en = {
     lead: "Les nouvelles fonctionnalités et corrections de bugs de Senchabot Extensions, des plus récentes aux plus anciennes. La liste est tirée de l'historique des commits du projet sur [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      presetHalloween:
+        "Nouveau preset Halloween : des citrouilles, des fantômes et des chauves-souris flottent autour des barres, chaque progression fait jaillir une citrouille au bout de la barre, d'où s'échappe un fantôme, et un objectif atteint fait s'envoler fantômes et chauves-souris.",
       irlHudFollows:
         "L'Overlay HUD IRL a un onglet Intégrations : avec ta chaîne connectée dans Senchabot, chaque nouveau follower ajoute de l'argent.",
       streamAlertsFollows:
