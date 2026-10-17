@@ -187,7 +187,7 @@ describe('landing page presets', () => {
       within(picks)
         .getAllByRole('button')
         .map((b) => b.textContent),
-    ).toEqual(['Pizza', 'Flower', 'Boost', 'Glitch', 'Operator']);
+    ).toEqual(['Pizza', 'Flower', 'Boost', 'Glitch', 'Operator', 'Starway', 'Aftermath', 'Army']);
 
     await user.click(button('Pizza'));
     expect(button('Pizza').getAttribute('aria-pressed')).toBe('true');

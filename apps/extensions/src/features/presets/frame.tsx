@@ -29,8 +29,8 @@ const PLAIN_CARD_EDGES: ReadonlySet<string> = new Set(['flower']);
 export function panelStyle(skin: Skin, radius: number, scale = 1, opacity?: number): CSSProperties {
   const top = opacity === undefined ? skin.panel : rgba(skin.colors.panel, opacity);
   const bottom = opacity === undefined ? skin.panel2 : rgba(skin.colors.panel2, opacity);
-  // An effect's still texture, e.g. Glitch's scanlines, under the panel's content.
-  const texture = fxModule(skin)?.panelLayer?.(skin, scale);
+  // An effect's still texture, e.g. Glitch's scanlines or Starway's stars, under the content.
+  const texture = fxModule(skin)?.panelLayer?.(skin, scale, opacity ?? 1);
   const style: CSSProperties = {
     background: `${texture ? `${texture}, ` : ''}linear-gradient(180deg, ${top} 0%, ${bottom} 100%)`,
     borderRadius: radius * skin.radius,

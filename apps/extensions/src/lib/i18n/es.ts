@@ -776,6 +776,10 @@ export const es: typeof en = {
       'Muestra qué tan lleno está el timer. El 100% es el máximo de tiempo que ha tenido hasta ahora, así que nunca se pasa.',
     showPops: 'Mostrar tiempo sumado',
     showPopsTip: 'Hace subir un +1:00 con el nombre del espectador cada vez que se suma tiempo.',
+    addedFormat: 'Tiempo sumado como',
+    addedFormatTip:
+      'Cómo escribe el timer el tiempo que se suma, en el tiempo sumado que aparece y en la lista de lo que suma cada evento. En segundos, los minutos y horas exactos siguen como +5 min y +1 h.',
+    addedSeconds: '+71 s',
     sectionTimer: 'Timer',
     startTime: 'Tiempo inicial',
     startTimeTip:
@@ -824,6 +828,7 @@ export const es: typeof en = {
       'En Twitch una sub de Nivel 2 suma el tiempo de 2 subs y una de Nivel 3 el de 5, según su precio.',
     unitHours: 'h',
     unitMinutes: 'min',
+    unitSeconds: 's',
     sectionCommands: 'Comandos del chat',
     commandsIntro: 'Tú y tus mods controlan el timer desde el chat de Twitch o Kick.',
     cmdStart: 'Inicia o reanuda el timer',
@@ -3675,7 +3680,7 @@ export const es: typeof en = {
       'Elige un preset y tu Caja de Chat, tus Alertas de Stream, tu Meta de Subs, Meta de Seguidores, Contador, Lista de Eventos, Créditos Finales, Fila de Espectadores, Ranking de Apoyos, Rótulos, Lista de Tareas, Mensaje Destacado, Combo de Emotes, Meta de Bits y Kicks, Sonando Ahora, tu Subathon Timer, tu Encuesta de Chat, el ganador del Sorteo, tus Marcos de Stream, tu Cuenta Regresiva, tus Redes Sociales y tu Ruleta tendrán el mismo marco, las mismas fuentes y los mismos colores. Usa uno en todos los widgets o uno distinto en cada uno.',
     pickTitle: 'Elige un preset',
     pickText:
-      'Presets listos para League of Legends (LoL), World of Warcraft (WoW), Dota 2, Valorant, Counter-Strike 2 (CS2), Minecraft, Fortnite, Rocket League, PUBG: Battlegrounds, Mount & Blade y Kingdom Come: Deliverance, y además Glitch, Operator, Conquest, Flower, Pizza y Halloween por diversión.',
+      'Presets listos para League of Legends (LoL), World of Warcraft (WoW), Dota 2, Valorant, Counter-Strike 2 (CS2), Minecraft, Fortnite, Rocket League, PUBG: Battlegrounds, Mount & Blade y Kingdom Come: Deliverance, y además Glitch, Operator, Conquest, Flower, Pizza, Halloween, Starway, Aftermath y Army por diversión.',
     by: 'por {author}',
     community: 'Comunidad',
     makeDefault: 'Usar {name} en todos los widgets',
@@ -3697,8 +3702,13 @@ export const es: typeof en = {
       pizza: 'Colores de masa y queso, con porciones de pizza flotando alrededor.',
       halloween:
         'Naranja calabaza sobre morado medianoche, con calabazas, fantasmas y murciélagos flotando alrededor.',
+      starway:
+        'Violeta y dorado en el espacio profundo, con estrellas que titilan y cometas al crecer las barras.',
+      aftermath:
+        'Verde militar sobre hierro oxidado, con hierba alta, luciérnagas y un engranaje que gira junto a las barras.',
+      army: 'Verde oliva y caqui sobre camuflaje, con hierba alta alrededor de las barras y polvo al crecer.',
       storm: 'Celeste y morado, con barras que se arman como un plano.',
-      boost: 'Azul y naranja, con estelas de velocidad cuando las barras crecen.',
+      boost: 'Azul y naranja, con estelas de velocidad y cohetes cuando las barras crecen.',
       airdrop: 'Verde oliva y amarillo, con humo de bengala cuando las barras crecen.',
       conquest: 'Naranja sobre gris metal, con un barrido de radar.',
       operator: 'Negro, blanco y verde lima, con marcas de impacto cuando las barras crecen.',
@@ -3808,6 +3818,16 @@ export const es: typeof en = {
     lead: 'Funciones nuevas y errores corregidos en Senchabot Extensions, de lo más nuevo a lo más viejo. La lista sale del historial de commits del proyecto en [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).',
     site: 'Sitio',
     entries: {
+      presetArmy:
+        'Nuevo preset Army: verde oliva y caqui sobre paneles de camuflaje, con hierba alta alrededor de las barras; cada avance levanta polvo y hace brotar hierba fresca en el borde de la barra, las tarjetas de alerta llevan una placa con una estrella militar y una meta cumplida trae el amanecer detrás de la barra.',
+      presetAftermath:
+        'Nuevo preset Aftermath, para una ciudad que la hierba recuperó: paneles de hierro oxidado y remachado, hierba alta y luciérnagas alrededor de las barras y un engranaje oxidado en su inicio; cada avance hace girar el engranaje unos dientes, levanta polvo y hace brotar hierba fresca en el borde de la barra, y una meta cumplida hace girar el engranaje entre vapor mientras amanece.',
+      presetStarway:
+        'Nuevo preset Starway: las estrellas titilan alrededor de las barras y de vez en cuando cae una estrella fugaz, cada avance lanza un cometa con una estela de polvo de estrellas, y una meta cumplida hace girar una galaxia.',
+      presetBoostRockets:
+        'El preset Boost trae cohetes: uno despega del borde de la barra al crecer y una meta cumplida lanza una salva entera.',
+      subathonSeconds:
+        'El Subathon Timer ahora también suma segundos: el tiempo por sub, sub regalada o 500 Bits o Kicks se pone en minutos y segundos, como 1 min 30 s o solo 30 s, y el timer puede escribir el tiempo sumado como +71 s en vez de +1:11.',
       presetHalloween:
         'Nuevo preset Halloween: calabazas, fantasmas y murciélagos flotan alrededor de las barras, cada avance hace saltar una calabaza en el borde de la barra de la que sale un fantasma, y una meta cumplida hace volar fantasmas y murciélagos.',
       irlHudFollows:

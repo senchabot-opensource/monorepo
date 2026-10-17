@@ -10,7 +10,16 @@ import { useI18n } from '#/lib/i18n';
 import { ArrowRightIcon } from './landing-icons';
 
 /** The presets the gallery's quick buttons dress every preview in (the user's picks). */
-export const QUICK_PRESETS = ['pizza', 'flower', 'boost', 'glitch', 'operator'] as const;
+export const QUICK_PRESETS = [
+  'pizza',
+  'flower',
+  'boost',
+  'glitch',
+  'operator',
+  'starway',
+  'aftermath',
+  'army',
+] as const;
 
 interface PresetPicksProps {
   /** The preset every preview is shown in; null leaves each one its own. */

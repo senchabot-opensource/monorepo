@@ -761,6 +761,10 @@ export const de: typeof en = {
       'Zeigt, wie voll der Timer ist. 100 % ist die meiste Zeit, die er bisher hatte, er geht also nie darüber.',
     showPops: 'Zeitbonus zeigen',
     showPopsTip: 'Lässt jedes Mal, wenn Zeit dazukommt, +1:00 mit dem Namen des Zuschauers aufsteigen.',
+    addedFormat: 'Zeitbonus als',
+    addedFormatTip:
+      'Wie der Timer hinzugefügte Zeit schreibt, im Zeitbonus und in der Liste, was jedes Event bringt. In Sekunden bleiben volle Minuten und Stunden +5 Min. und +1 Std.',
+    addedSeconds: '+71 Sek.',
     sectionTimer: 'Timer',
     startTime: 'Startzeit',
     startTimeTip:
@@ -806,6 +810,7 @@ export const de: typeof en = {
       'Auf Twitch bringt ein Tier-2-Sub die Zeit von 2 Subs und ein Tier-3-Sub die von 5, passend zum Preis.',
     unitHours: 'Std.',
     unitMinutes: 'Min.',
+    unitSeconds: 'Sek.',
     sectionCommands: 'Chatbefehle',
     commandsIntro: 'Du und deine Mods steuern den Timer aus dem Twitch- oder Kick-Chat.',
     cmdStart: 'Startet den Timer oder setzt ihn fort',
@@ -3652,7 +3657,7 @@ export const de: typeof en = {
       'Wähl ein Preset, und deine Chat-Box, Stream-Alerts, Sub-Ziel, Follower-Ziel, Zähler, Event-Liste, Abspann, Zuschauer-Warteschlange, Top-Supporter, Bauchbinde, Aufgabenliste, Hervorgehobene Nachricht, Emote-Combo, Bits- und Kicks-Ziel, Aktueller Song, Subathon Timer, Chat-Umfrage, der Gewinner der Verlosung, die Stream-Rahmen, der Stream-Countdown, Socials und das Glücksrad bekommen denselben Rahmen, dieselben Schriften und Farben. Nimm eins für alle Widgets oder für jedes ein anderes.',
     pickTitle: 'Such dir ein Preset aus',
     pickText:
-      'Fertige Presets für League of Legends (LoL), World of Warcraft (WoW), Dota 2, Valorant, Counter-Strike 2 (CS2), Minecraft, Fortnite, Rocket League, PUBG: Battlegrounds, Mount & Blade und Kingdom Come: Deliverance, dazu Glitch, Operator, Conquest, Flower, Pizza und Halloween einfach zum Spaß.',
+      'Fertige Presets für League of Legends (LoL), World of Warcraft (WoW), Dota 2, Valorant, Counter-Strike 2 (CS2), Minecraft, Fortnite, Rocket League, PUBG: Battlegrounds, Mount & Blade und Kingdom Come: Deliverance, dazu Glitch, Operator, Conquest, Flower, Pizza, Halloween, Starway, Aftermath und Army einfach zum Spaß.',
     by: 'von {author}',
     community: 'Community',
     makeDefault: '{name} für alle Widgets nutzen',
@@ -3674,8 +3679,13 @@ export const de: typeof en = {
       pizza: 'Die Farben von Kruste und Käse, mit herumschwebenden Pizzastücken.',
       halloween:
         'Kürbisorange auf Mitternachtslila, mit herumschwebenden Kürbissen, Geistern und Fledermäusen.',
+      starway:
+        'Violett und Gold im tiefen All, mit funkelnden Sternen und Kometen, wenn Balken wachsen.',
+      aftermath:
+        'Armeegrün auf rostigem Eisen, mit hohem Gras, Glühwürmchen und einem drehenden Zahnrad an den Balken.',
+      army: 'Olivgrün und Khaki auf Tarnmuster, mit hohem Gras um die Balken und Staub, wenn sie wachsen.',
       storm: 'Himmelblau und Lila, mit Balken, die wie ein Bauplan entstehen.',
-      boost: 'Blau und Orange, mit Speedlines, wenn Balken wachsen.',
+      boost: 'Blau und Orange, mit Speedlines und Raketen, wenn Balken wachsen.',
       airdrop: 'Oliv und Gelb, mit dem Rauch einer Signalfackel, wenn Balken wachsen.',
       conquest: 'Orange auf Stahlgrau, mit einem Radarschwenk.',
       operator: 'Schwarz, Weiß und Limette, mit Treffermarkern, wenn Balken wachsen.',
@@ -3785,6 +3795,16 @@ export const de: typeof en = {
     lead: 'Neue Features und Bugfixes in Senchabot Extensions, das Neueste zuerst. Die Liste ist aus der Commit-Historie des Projekts auf [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) zusammengestellt.',
     site: 'Website',
     entries: {
+      presetArmy:
+        'Neues Army-Preset: Olivgrün und Khaki auf Paneelen in Tarnmuster, mit hohem Gras um die Balken; jeder Schritt nach vorn wirbelt Staub auf und lässt am Ende des Balkens frisches Gras sprießen, Alert-Karten bekommen ein Schild mit Armeestern, und ein erreichtes Ziel lässt hinter dem Balken den Morgen dämmern.',
+      presetAftermath:
+        'Neues Aftermath-Preset, für eine Stadt, die sich das Gras zurückgeholt hat: Paneele aus rostigem, genietetem Eisen, hohes Gras und Glühwürmchen um die Balken und ein rostiges Zahnrad an ihrem Anfang; jeder Schritt nach vorn dreht das Zahnrad ein Stück weiter, wirbelt Staub auf und lässt am Ende des Balkens frisches Gras sprießen, und ein erreichtes Ziel lässt das Zahnrad in einer Dampfwolke wirbeln, während der Morgen dämmert.',
+      presetStarway:
+        'Neues Starway-Preset: Sterne funkeln um die Balken und ab und zu fällt eine Sternschnuppe, jeder Schritt nach vorn schickt einen Kometen mit einem Schweif aus Sternenstaub los, und ein erreichtes Ziel lässt eine Galaxie kreisen.',
+      presetBoostRockets:
+        'Das Boost-Preset bekommt Raketen: Beim Wachsen startet eine vom Ende des Balkens, und ein erreichtes Ziel schickt eine ganze Salve los.',
+      subathonSeconds:
+        'Der Subathon Timer kann jetzt auch Sekunden hinzufügen: Die Zeit pro Sub, Gift-Sub oder 500 Bits oder Kicks lässt sich in Minuten und Sekunden einstellen, etwa 1 Min. 30 Sek. oder nur 30 Sek., und der Timer kann hinzugefügte Zeit als +71 Sek. statt +1:11 schreiben.',
       presetHalloween:
         'Neues Halloween-Preset: Kürbisse, Geister und Fledermäuse schweben um die Balken, jeder Schritt nach vorn lässt am Ende des Balkens einen Kürbis herausspringen, aus dem ein Geist aufsteigt, und ein erreichtes Ziel lässt Geister und Fledermäuse davonfliegen.',
       irlHudFollows:

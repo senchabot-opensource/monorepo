@@ -1,47 +1,58 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 /** Frame designs a preset can put around panels, bars and cards; see frame.tsx. */
 export const FRAMES = [
-  'gilded',
-  'ornate',
-  'lacquer',
-  'iron',
-  'tactical',
-  'hud',
-  'pixel',
-  'crust',
+  "gilded",
+  "ornate",
+  "lacquer",
+  "iron",
+  "tactical",
+  "hud",
+  "pixel",
+  "crust",
 ] as const;
 /** How a preset's alert card comes in. */
-export const MOTIONS = ['unfold', 'drop', 'scroll', 'slam', 'slide', 'wipe', 'pop'] as const;
+export const MOTIONS = [
+  "unfold",
+  "drop",
+  "scroll",
+  "slam",
+  "slide",
+  "wipe",
+  "pop",
+] as const;
 /** What sits on top of a bar's fill. */
-export const FILLS = ['gloss', 'stripes', 'blocks', 'flat'] as const;
+export const FILLS = ["gloss", "stripes", "blocks", "flat"] as const;
 /** Which of Stream Alerts' built-in sound sets the alerts play. */
-export const SOUNDS = ['neon', 'celestial'] as const;
+export const SOUNDS = ["neon", "celestial"] as const;
 /**
  * A preset's signature animation: what its bars do as they grow, its panels as they appear and
  * now and then while idle, and its wins. `none` is a still preset; see fx/.
  */
 export const EFFECTS = [
-  'none',
-  'glitch',
-  'forge',
-  'arcane',
-  'radiance',
-  'blossom',
-  'embers',
-  'slash',
-  'beacon',
-  'pixels',
-  'pizza',
-  'spooky',
-  'build',
-  'boost',
-  'flare',
-  'capture',
-  'hitmarker',
+  "none",
+  "glitch",
+  "forge",
+  "arcane",
+  "radiance",
+  "blossom",
+  "embers",
+  "slash",
+  "beacon",
+  "pixels",
+  "pizza",
+  "spooky",
+  "build",
+  "boost",
+  "flare",
+  "capture",
+  "hitmarker",
+  "cosmos",
+  "reclaim",
+  "army",
 ] as const;
 
-const hex = z.string().regex(/^#[0-9a-f]{6}$/i, 'a #rrggbb color');
+const hex = z.string().regex(/^#[0-9a-f]{6}$/i, "a #rrggbb color");
 const blurb = z.string().max(160);
 
 // Names and weights end up in a fonts.googleapis.com URL and a CSS font-family, so only
@@ -50,7 +61,7 @@ const font = z.object({
   family: z.string().regex(/^[A-Za-z0-9 ]{2,40}$/),
   /** Google Fonts `wght` axis: a range like "400..900" or a list like "400;700". */
   weights: z.string().regex(/^\d{3}(\.\.\d{3}|(;\d{3})*)$/),
-  fallback: z.enum(['serif', 'sans-serif', 'monospace']),
+  fallback: z.enum(["serif", "sans-serif", "monospace"]),
 });
 
 export const presetSchema = z.object({
@@ -93,6 +104,11 @@ export const presetSchema = z.object({
     frame2: hex,
     /** The empty part of a bar. */
     track: hex,
+    /**
+     * Up to three colors the preset's effect paints with, in the order it names; left out, it
+     * works them out from `accent`. `reclaim`: grass roots, blades and dried blades.
+     */
+    fx: z.array(hex).min(1).max(3).optional(),
   }),
   /** Panel background opacity, so the game shows through a little. */
   panelOpacity: z.number().min(0.5).max(1),
@@ -111,7 +127,7 @@ export const presetSchema = z.object({
   motion: z.enum(MOTIONS),
   sound: z.enum(SOUNDS),
   /** `soft` is the usual dark halo; `hard` a one-step drop shadow, as in pixel games. */
-  shadow: z.enum(['soft', 'hard']),
+  shadow: z.enum(["soft", "hard"]),
   /** Left out, the preset plays no effect. */
   effect: z.enum(EFFECTS).optional(),
 });

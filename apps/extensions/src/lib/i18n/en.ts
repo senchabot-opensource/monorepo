@@ -753,6 +753,10 @@ export const en = {
       'Shows how full the timer is. 100% is the most time it has held so far, so it never goes over.',
     showPops: 'Show Added Time',
     showPopsTip: "Floats up +1:00 with the viewer's name every time time is added.",
+    addedFormat: 'Added Time As',
+    addedFormatTip:
+      'How the timer writes the time something adds, in its pops and in the list of what each event adds. In seconds, whole minutes and hours still read +5 min and +1 h.',
+    addedSeconds: '+71 sec',
     sectionTimer: 'Timer',
     startTime: 'Starting Time',
     startTimeTip:
@@ -797,6 +801,7 @@ export const en = {
       'On Twitch a Tier 2 sub adds 2 subs worth of time and a Tier 3 sub 5, in line with their price.',
     unitHours: 'h',
     unitMinutes: 'min',
+    unitSeconds: 'sec',
     sectionCommands: 'Chat Commands',
     commandsIntro: 'You and your mods control the timer from Twitch or Kick chat.',
     cmdStart: 'Starts or resumes the timer',
@@ -3617,7 +3622,7 @@ export const en = {
       'Pick a preset and your Chat Box, Stream Alerts, Sub Goal, Follower Goal, Counter, Event List, End Credits, Viewer Queue, Top Supporters, Lower Thirds, Task List, Featured Message, Emote Combo, Bits & Kicks Goal, Now Playing, Subathon Timer, Chat Poll, Raffle winner, Stream Frames, Stream Countdown, Socials and Spin Wheel get the same frame, fonts and colors. Use one on every widget, or a different one on each.',
     pickTitle: 'Pick a preset',
     pickText:
-      'Ready-made presets for League of Legends (LoL), World of Warcraft (WoW), Dota 2, Valorant, Counter-Strike 2 (CS2), Minecraft, Fortnite, Rocket League, PUBG: Battlegrounds, Mount & Blade and Kingdom Come: Deliverance, plus Glitch, Operator, Conquest, Flower, Pizza and Halloween just for fun.',
+      'Ready-made presets for League of Legends (LoL), World of Warcraft (WoW), Dota 2, Valorant, Counter-Strike 2 (CS2), Minecraft, Fortnite, Rocket League, PUBG: Battlegrounds, Mount & Blade and Kingdom Come: Deliverance, plus Glitch, Operator, Conquest, Flower, Pizza, Halloween, Starway, Aftermath and Army just for fun.',
     by: 'by {author}',
     community: 'Community',
     makeDefault: 'Use {name} on every widget',
@@ -3639,8 +3644,12 @@ export const en = {
       pizza: 'Crust and cheese colors, with pizza slices floating around.',
       halloween:
         'Pumpkin orange on midnight purple, with pumpkins, ghosts and bats floating around.',
+      starway: 'Violet and gold on deep space, with twinkling stars and comets as bars grow.',
+      aftermath:
+        'Army green on rusty iron, with tall grass, fireflies and a turning cog around the bars.',
+      army: 'Olive drab and khaki on camouflage, with tall grass around the bars and dust as they grow.',
       storm: 'Sky blue and purple, with bars built like a blueprint.',
-      boost: 'Blue and orange, with speed lines as bars grow.',
+      boost: 'Blue and orange, with speed lines and rockets as bars grow.',
       airdrop: 'Olive and yellow, with flare smoke as bars grow.',
       conquest: 'Orange on gunmetal, with a radar sweep.',
       operator: 'Black, white and lime, with hit marks as bars grow.',
@@ -3750,6 +3759,16 @@ export const en = {
     lead: "New features and bug fixes in Senchabot Extensions, newest first. The list is put together from the project's commit history on [GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions).",
     site: 'Site',
     entries: {
+      presetArmy:
+        "A new Army preset: olive drab and khaki on camouflage panels, with tall grass around bars; every step up kicks up dust and makes fresh grass shoot up at the bar's edge, alert cards get an army star on a plate, and a reached goal brings the dawn up behind the bar.",
+      presetAftermath:
+        "A new Aftermath preset, for a city the grass took back: rusty, riveted iron panels, tall grass and fireflies around bars and a rusty cog at their start; every step up clicks the cog round, kicks up dust and makes fresh grass shoot up at the bar's edge, and a reached goal spins the cog in a puff of steam as the dawn comes up.",
+      presetStarway:
+        'A new Starway preset: stars twinkle around bars and shooting stars fall now and then, every step up launches a comet with a stardust tail, and a reached goal spins up a galaxy.',
+      presetBoostRockets:
+        'The Boost preset gets rockets: one takes off from the edge of a bar as it grows, and a reached goal launches a whole volley.',
+      subathonSeconds:
+        'Subathon Timer can now add seconds: what a sub, a gifted sub or 500 Bits or Kicks adds is set in minutes and seconds, like 1 min 30 sec or just 30 sec, and the timer can write added time as +71 sec instead of +1:11.',
       presetHalloween:
         "A new Halloween preset: pumpkins, ghosts and bats float around bars, every step up pops a jack-o'-lantern at the bar's edge with a ghost rising out of it, and a reached goal sends ghosts and bats flying.",
       irlHudFollows:
