@@ -4,7 +4,7 @@ import { GoalWidget } from '#/features/widgets/goal/goal-widget';
 import { DEFAULT_GOAL_SETTINGS } from '#/lib/goal-url';
 import { BUILTIN_PRESETS } from '../builtin-presets';
 import { Frame, panelStyle } from '../frame';
-import { EFFECTS } from '../preset-schema';
+import { EFFECTS, presetSchema } from '../preset-schema';
 import { presetEffect } from '../registry';
 import { type Skin, skinCss, skinFor, toSkin } from '../skin';
 import { BarFxBurst, BarFxTrack, FrameFx, FxPulse, useChangeCount, useRises } from './engine';
@@ -106,10 +106,27 @@ describe('preset effects', () => {
     expect(skinCss('sg', skin('rift', false))).not.toContain('pfx');
   });
 
-  it("paint Glitch's scanlines under a panel, and only Glitch's", () => {
+  it("flicker Aftermath's titles like a failing sign", () => {
+    expect(skinCss('sg', skin('aftermath'))).toMatch(
+      /\.sg-title\{animation:pfx-reclaim-title 11000ms steps\(1,end\) -?\d+ms infinite\}/,
+    );
+    expect(skinCss('sg', skin('aftermath', false))).not.toContain('pfx');
+  });
+
+  it("paint an effect's still texture under a panel: scanlines, stars or weathering", () => {
     expect(panelStyle(skin('glitch'), 6).background).toMatch(/^repeating-linear-gradient/);
     expect(panelStyle(skin('glitch', false), 6).background).toMatch(/^linear-gradient/);
     expect(panelStyle(skin('banner'), 6).background).toMatch(/^linear-gradient/);
+    expect(panelStyle(skin('starway'), 6).background).toMatch(/^radial-gradient/);
+    expect(panelStyle(skin('starway', false), 6).background).toMatch(/^linear-gradient/);
+    expect(panelStyle(skin('aftermath'), 6).background).toMatch(/^radial-gradient/);
+    expect(panelStyle(skin('aftermath', false), 6).background).toMatch(/^linear-gradient/);
+    expect(panelStyle(skin('army'), 6).background).toMatch(/^radial-gradient/);
+    expect(panelStyle(skin('army', false), 6).background).toMatch(/^linear-gradient/);
+    // A texture is as faint as the box: none on one that's see-through.
+    expect(panelStyle(skin('starway'), 6, 0.5, 0).background).toMatch(/^linear-gradient/);
+    expect(panelStyle(skin('aftermath'), 6, 0.5, 0).background).toMatch(/^linear-gradient/);
+    expect(panelStyle(skin('army'), 6, 0.5, 0).background).toMatch(/^linear-gradient/);
   });
 });
 
@@ -223,6 +240,143 @@ describe("Sub Goal's demo", () => {
     );
     act(() => vi.advanceTimersByTime(1300));
     expect(still.container.querySelector('[data-fx]')).toBeNull();
+  });
+});
+
+describe("Starway's effect", () => {
+  const starway = skin('starway');
+  const bar = (hit: { key: number; from: number; to: number } | null, win = false) => (
+    <BarFxBurst skin={starway} hit={hit} win={win} left={10} right={410} y={60} height={40} />
+  );
+
+  it("keeps its sky, and launches a comet off the fill's new edge once per hit", () => {
+    const { container, rerender } = render(bar({ key: 1, from: 0.2, to: 0.5 }));
+    const sky = container.querySelector('.pfx-cosmos-sky');
+    expect(sky).toBeTruthy();
+    expect(container.querySelector('.pfx-cosmos-comet')).toBeNull();
+    rerender(bar({ key: 2, from: 0.2, to: 0.5 }));
+    const comet = container.querySelector('.pfx-cosmos-comet');
+    expect(comet).toBeTruthy();
+    // It sets off from the fill's edge, 10 + 400 × 0.5 px along the stage.
+    const flight = comet?.parentElement?.parentElement as HTMLElement;
+    expect(flight.style.left).toBe('210px');
+    expect(container.querySelector('.pfx-cosmos-sky')).toBe(sky);
+    rerender(bar({ key: 2, from: 0.2, to: 0.5 }));
+    expect(container.querySelector('.pfx-cosmos-comet')).toBe(comet);
+  });
+
+  it("spins up a galaxy for a win, and keeps a webcam frame's middle clear", () => {
+    const { container, rerender } = render(bar(null));
+    rerender(bar(null, true));
+    expect(container.querySelectorAll('.pfx-cosmos-a-out').length).toBe(24);
+
+    const frame = render(<FrameFx skin={starway} radius={0} ring={12} win={false} />);
+    frame.rerender(<FrameFx skin={starway} radius={0} ring={12} win />);
+    expect(frame.container.querySelector('.pfx-cosmos-a-out')).toBeNull();
+    expect(frame.container.querySelectorAll('.pfx-cosmos-gold.pfx-cosmos-a-blink').length).toBe(5);
+  });
+});
+
+describe("Aftermath's effect", () => {
+  const aftermath = skin('aftermath');
+  const bar = (hit: { key: number; from: number; to: number } | null, win = false) => (
+    <BarFxBurst skin={aftermath} hit={hit} win={win} left={10} right={410} y={60} height={40} />
+  );
+
+  it("keeps its grass, and kicks up dust and fresh grass at the fill's new edge once per hit", () => {
+    const { container, rerender } = render(bar({ key: 1, from: 0.2, to: 0.5 }));
+    const grass = container.querySelector('.pfx-reclaim-back');
+    expect(container.querySelectorAll('.pfx-reclaim-back')).toHaveLength(13);
+    expect(container.querySelector('.pfx-reclaim-a-puff')).toBeNull();
+    rerender(bar({ key: 2, from: 0.2, to: 0.5 }));
+    // At the fill's edge, 10 + 400 × 0.5 px along the stage.
+    const sprout = container.querySelector('.pfx-reclaim-a-shoot') as HTMLElement;
+    expect(sprout.style.left).toBe('210px');
+    const puff = container.querySelector('.pfx-reclaim-a-puff') as HTMLElement;
+    expect(puff.style.left).toBe('210px');
+    expect(container.querySelector('.pfx-reclaim-back')).toBe(grass);
+    rerender(bar({ key: 2, from: 0.2, to: 0.5 }));
+    expect(container.querySelector('.pfx-reclaim-a-puff')).toBe(puff);
+  });
+
+  it("brings the dawn up for a win, and keeps fireflies on a webcam frame's band", () => {
+    const { container, rerender } = render(bar(null));
+    rerender(bar(null, true));
+    expect(container.querySelector('.pfx-reclaim-a-dawn')).toBeTruthy();
+    expect(container.querySelectorAll('.pfx-reclaim-a-rise')).toHaveLength(16);
+
+    const frame = render(<FrameFx skin={aftermath} radius={0} ring={12} win={false} />);
+    frame.rerender(<FrameFx skin={aftermath} radius={0} ring={12} win />);
+    const flies = [...frame.container.querySelectorAll<HTMLElement>('.pfx-reclaim-a-rise')];
+    expect(flies).toHaveLength(6);
+    // Each rises at most a quarter of the band, so none crosses into the picture.
+    for (const fly of flies) {
+      expect(Math.abs(Number.parseFloat(fly.style.getPropertyValue('--up')))).toBeLessThanOrEqual(
+        3,
+      );
+    }
+  });
+
+  it("turns a rusty cog at the bar's start, three teeth a gain, each click from the last", () => {
+    const { container, rerender } = render(bar({ key: 1, from: 0.2, to: 0.5 }));
+    const ratchet = () => container.querySelector<HTMLElement>('.pfx-reclaim-a-ratchet');
+    expect(container.querySelector('.pfx-reclaim-cog')).toBeTruthy();
+    expect(ratchet()).toBeNull();
+    rerender(bar({ key: 2, from: 0.2, to: 0.5 }));
+    expect(ratchet()?.style.getPropertyValue('--turn')).toBe('90deg');
+    rerender(bar({ key: 3, from: 0.5, to: 0.6 }));
+    expect(ratchet()?.style.getPropertyValue('--from')).toBe('90deg');
+    expect(ratchet()?.style.getPropertyValue('--turn')).toBe('180deg');
+  });
+
+  it('swings a warning sign onto a hero card', () => {
+    const { container } = render(<Frame skin={aftermath} radius={8} fx="hero" />);
+    expect(container.querySelector('.pfx-reclaim-sign')?.textContent).toBe('!');
+  });
+
+  it("grows the grass in the preset's own colors, or in its main color without them", () => {
+    const grass = (look: Skin) => {
+      const { container } = render(
+        <BarFxBurst skin={look} hit={null} left={10} right={410} y={60} height={40} />,
+      );
+      const layer = container.querySelector('[data-fx-part="burst"]') as HTMLElement;
+      return ['--pfx-g1', '--pfx-g2', '--pfx-s2'].map((name) => layer.style.getPropertyValue(name));
+    };
+    expect(grass(aftermath)).toEqual(['#3d4721', '#4b5320', '#5f5129']);
+    const data = BUILTIN_PRESETS.find((preset) => preset.id === 'aftermath');
+    if (!data) throw new Error('no Aftermath preset');
+    const plain = { ...data, colors: { ...data.colors, fx: undefined } };
+    expect(grass(toSkin(plain))).toEqual([
+      expect.stringMatching(/^hsl\(/),
+      expect.stringMatching(/^hsl\(/),
+      expect.stringMatching(/^hsl\(/),
+    ]);
+    // Three at most, each a #rrggbb color.
+    const fx = (colors: string[]) =>
+      presetSchema.safeParse({ ...data, colors: { ...data.colors, fx: colors } }).success;
+    expect(fx(['#3d4721'])).toBe(true);
+    expect(fx(['#3d4721', '#4b5320', '#5f5129', '#000000'])).toBe(false);
+    expect(fx(['green'])).toBe(false);
+  });
+});
+
+describe("Army's effect", () => {
+  const army = skin('army');
+
+  it('grows the grass in its own colors, with a star plate for hero cards and steady titles', () => {
+    const { container } = render(
+      <BarFxBurst skin={army} hit={null} left={10} right={410} y={60} height={40} />,
+    );
+    const layer = container.querySelector('[data-fx-part="burst"]') as HTMLElement;
+    expect(
+      ['--pfx-g1', '--pfx-g2', '--pfx-s2'].map((name) => layer.style.getPropertyValue(name)),
+    ).toEqual(['#28301a', '#556b2f', '#8f8456']);
+    const card = render(<Frame skin={army} radius={8} fx="hero" />);
+    const sign = card.container.querySelector('.pfx-army-sign');
+    expect(sign?.querySelector('.pfx-army-board')).toBeTruthy();
+    expect(sign?.textContent).toBe('');
+    // No failing-light flicker on its titles, unlike Aftermath's.
+    expect(skinCss('sg', army)).not.toContain('pfx-army-title');
   });
 });
 

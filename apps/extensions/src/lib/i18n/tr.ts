@@ -758,6 +758,10 @@ export const tr: typeof en = {
     showPops: 'Eklenen Süreyi Göster',
     showPopsTip:
       'Her süre eklendiğinde izleyicinin adıyla birlikte +1:00 gibi bir yazı yukarı süzülür.',
+    addedFormat: 'Eklenen Süre Yazımı',
+    addedFormatTip:
+      'Zamanlayıcının eklenen süreyi, yükselen sayılarda ve her etkinliğin eklediği sürelerin listesinde nasıl yazdığı. Saniye seçiliyken de tam dakikalar ve saatler +5 dk ve +1 sa olarak yazılır.',
+    addedSeconds: '+71 sn',
     sectionTimer: 'Sayaç',
     startTime: 'Başlangıç Süresi',
     startTimeTip:
@@ -804,6 +808,7 @@ export const tr: typeof en = {
       "Twitch'te Tier 2 abonelik 2, Tier 3 abonelik 5 abonelik kadar süre ekler, fiyatlarıyla orantılı.",
     unitHours: 'sa',
     unitMinutes: 'dk',
+    unitSeconds: 'sn',
     sectionCommands: 'Sohbet Komutları',
     commandsIntro: 'Sayacı sen ve modların Twitch ya da Kick sohbetinden yönetirsiniz.',
     cmdStart: 'Sayacı başlatır ya da devam ettirir',
@@ -3616,7 +3621,7 @@ export const tr: typeof en = {
       "Seçtiğin preset'le Sohbet Kutusu, Yayın Uyarıları, Abone Hedefi, Takipçi Hedefi, Sayaç, Etkinlik Listesi, Kapanış Jeneriği, İzleyici Sırası, Destekçi Sıralaması, Alt Bant, Görev Listesi, Öne Çıkan Mesaj, Emote Kombosu, Bits & Kicks Hedefi, Şimdi Çalıyor, Subathon Timer, Sohbet Anketi, Çekiliş kazanan overlay'i, Yayın Çerçeveleri, Yayın Geri Sayımı, Sosyal Medya ve Çark aynı çerçeveyi, yazı tiplerini ve renkleri alır. İstersen hepsinde aynısını kullan, istersen her birinde başka birini.",
     pickTitle: 'Bir preset seç',
     pickText:
-      "League of Legends (LoL), World of Warcraft (WoW), Dota 2, Valorant, Counter-Strike 2 (CS2), Minecraft, Fortnite, Rocket League, PUBG: Battlegrounds, Mount & Blade ve Kingdom Come: Deliverance için hazır preset'ler, bir de eğlencesine Glitch, Operator, Conquest, Flower, Pizza ve Halloween.",
+      "League of Legends (LoL), World of Warcraft (WoW), Dota 2, Valorant, Counter-Strike 2 (CS2), Minecraft, Fortnite, Rocket League, PUBG: Battlegrounds, Mount & Blade ve Kingdom Come: Deliverance için hazır preset'ler, bir de eğlencesine Glitch, Operator, Conquest, Flower, Pizza, Halloween, Starway, Aftermath ve Army.",
     by: 'Hazırlayan: {author}',
     community: 'Topluluk',
     makeDefault: "{name} preset'ini her widget'ta kullan",
@@ -3638,8 +3643,13 @@ export const tr: typeof en = {
       pizza: 'Hamur ve peynir renkleri, etrafta uçuşan pizza dilimleriyle.',
       halloween:
         'Gece moru üstünde balkabağı turuncusu, etrafta uçuşan balkabakları, hayaletler ve yarasalarla.',
+      starway:
+        'Derin uzayda mor ve altın, parıldayan yıldızlar ve barlar ilerledikçe kuyruklu yıldızlarla.',
+      aftermath:
+        'Paslı demir üstünde haki, barların etrafında uzun otlar, ateş böcekleri ve dönen bir dişliyle.',
+      army: 'Kamuflaj üstünde asker yeşili ve haki, barların etrafında uzun otlar ve ilerledikçe kalkan tozla.',
       storm: 'Gök mavisi ve mor, teknik çizim gibi kurulan barlarla.',
-      boost: 'Mavi ve turuncu, bar ilerledikçe hız çizgileriyle.',
+      boost: 'Mavi ve turuncu, bar ilerledikçe hız çizgileri ve roketlerle.',
       airdrop: 'Zeytin yeşili ve sarı, bar ilerledikçe işaret fişeği dumanıyla.',
       conquest: 'Koyu metal üstünde turuncu, radar taramasıyla.',
       operator: 'Siyah, beyaz ve limon yeşili, bar ilerledikçe isabet işaretleriyle.',
@@ -3749,6 +3759,16 @@ export const tr: typeof en = {
     lead: "Senchabot Extensions'a eklenen özellikler ve düzeltilen hatalar, en yenisi en üstte. Liste projenin [GitHub'daki](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions) commit geçmişinden hazırlanıyor.",
     site: 'Site',
     entries: {
+      presetArmy:
+        "Yeni Army preset'i: kamuflaj paneller üstünde asker yeşili ve haki, barların etrafında uzun otlar; bar her ilerlediğinde ucunda toz kalkar ve taze otlar fışkırır, bildirim kartlarında yıldızlı bir plaka belirir, hedefe ulaşınca da barın arkasında şafak söker.",
+      presetAftermath:
+        "Yeni Aftermath preset'i, otların geri aldığı bir şehir için: paslı, perçinli demir paneller, barların etrafında uzun otlar ve ateş böcekleri, başlarında da paslı bir dişli; bar her ilerlediğinde dişli bir tık döner, ucunda toz kalkar ve taze otlar fışkırır, hedefe ulaşınca da dişli buhar püskürterek döner ve şafak söker.",
+      presetStarway:
+        "Yeni Starway preset'i: barların etrafında yıldızlar parıldıyor ve arada bir yıldız kayıyor; bar her ilerlediğinde ucundan yıldız tozu bırakan bir kuyruklu yıldız fırlıyor, hedefe ulaşınca da bir galaksi dönmeye başlıyor.",
+      presetBoostRockets:
+        "Boost preset'ine roketler geldi: bar her ilerlediğinde ucundan bir roket kalkıyor, hedefe ulaşınca da bir roket yağmuru fırlıyor.",
+      subathonSeconds:
+        'Subathon Timer artık saniye de ekleyebiliyor: abonelik, hediye abonelik ya da 500 Bits veya Kicks başına eklenen süre dakika ve saniye olarak girilebiliyor, örneğin 1 dk 30 sn ya da sadece 30 sn; zamanlayıcı da eklenen süreyi +1:11 yerine +71 sn diye yazabiliyor.',
       presetHalloween:
         "Yeni Halloween preset'i: barların etrafında balkabakları, hayaletler ve yarasalar uçuşuyor; bar her ilerlediğinde ucundan bir balkabağı fırlıyor ve içinden bir hayalet yükseliyor, hedefe ulaşınca da hayaletlerle yarasalar dört bir yana uçuşuyor.",
       irlHudFollows:

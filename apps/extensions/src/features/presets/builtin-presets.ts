@@ -292,8 +292,16 @@ export const BUILTIN_PRESETS: readonly PresetData[] = [
     author: SENCHABOT,
     fonts: {
       // Dripping letters that still read on stream, with Turkish letters too (Creepster has none).
-      display: { family: "Rubik Wet Paint", weights: "400", fallback: "sans-serif" },
-      body: { family: "Grandstander", weights: "400..800", fallback: "sans-serif" },
+      display: {
+        family: "Rubik Wet Paint",
+        weights: "400",
+        fallback: "sans-serif",
+      },
+      body: {
+        family: "Grandstander",
+        weights: "400..800",
+        fallback: "sans-serif",
+      },
     },
     colors: {
       // Pumpkin-orange bars, a slime-green win and candlelit text, in orange frames with a purple
@@ -318,6 +326,127 @@ export const BUILTIN_PRESETS: readonly PresetData[] = [
     sound: "celestial",
     shadow: "soft",
     effect: "spooky",
+  },
+  {
+    id: "starway",
+    name: "Starway",
+    author: SENCHABOT,
+    fonts: {
+      // A wide space-age display face and a clean grotesque, both with Turkish letters.
+      display: { family: "Audiowide", weights: "400", fallback: "sans-serif" },
+      body: {
+        family: "Space Grotesk",
+        weights: "400..700",
+        fallback: "sans-serif",
+      },
+    },
+    colors: {
+      // Violet starlight bars and a gold win, in silver frames with a purple line inside, on
+      // deep-space indigo panels.
+      accent: "#b096ee",
+      win: "#ffd76a",
+      text: "#eef0ff",
+      muted: "#a9b2e8",
+      panel: "#1a1640",
+      panel2: "#07061a",
+      frame: "#b9c4ff",
+      frame2: "#5b3fa8",
+      track: "#05041a",
+    },
+    panelOpacity: 0.93,
+    frame: "gilded",
+    radius: 1.1,
+    skew: 0,
+    title: { upper: true, italic: false, tracking: 0.04 },
+    fill: "gloss",
+    motion: "drop",
+    sound: "celestial",
+    shadow: "soft",
+    effect: "cosmos",
+  },
+  {
+    id: "aftermath",
+    name: "Aftermath",
+    author: SENCHABOT,
+    fonts: {
+      // Stencilled like a survivors' sign, and a plain condensed face, both with Turkish letters.
+      // Not a worn font: the pops' outline clogs its holes and darkens the numbers.
+      display: {
+        family: "Big Shoulders Stencil",
+        weights: "700..900",
+        fallback: "sans-serif",
+      },
+      body: {
+        family: "Barlow Semi Condensed",
+        weights: "400;600;700",
+        fallback: "sans-serif",
+      },
+    },
+    colors: {
+      // Army-green bars and a faded road-sign yellow win, on rusty iron: rust-stained, riveted
+      // plates for panels, rust and dark rusted iron for the frames, a grimy track. A city the
+      // grass took back.
+      accent: "#4b5320",
+      win: "#f2c230",
+      text: "#ece4d2",
+      muted: "#b5ae9a",
+      panel: "#3b332b",
+      panel2: "#1e1a15",
+      frame: "#b8683a",
+      frame2: "#4a3a2e",
+      track: "#15110d",
+      // Its grass: roots, blades and dried blades.
+      fx: ["#3d4721", "#4b5320", "#5f5129"],
+    },
+    panelOpacity: 0.94,
+    frame: "iron",
+    radius: 0.25,
+    skew: 0,
+    title: { upper: true, italic: false, tracking: 0.04 },
+    fill: "gloss",
+    motion: "slam",
+    sound: "neon",
+    shadow: "soft",
+    effect: "reclaim",
+  },
+  {
+    id: "army",
+    name: "Army",
+    author: SENCHABOT,
+    fonts: {
+      // Blocky letters like a vehicle's markings, and a plain condensed face, both with
+      // Turkish letters.
+      display: { family: "Russo One", weights: "400", fallback: "sans-serif" },
+      body: {
+        family: "Saira Condensed",
+        weights: "500;700",
+        fallback: "sans-serif",
+      },
+    },
+    colors: {
+      // Olive drab bars and a medal-gold win, in khaki-trimmed frames on camouflage panels.
+      accent: "#556b2f",
+      win: "#e2b84a",
+      text: "#eae6d6",
+      muted: "#b8ab84",
+      panel: "#3a4026",
+      panel2: "#20241a",
+      frame: "#b9a878",
+      frame2: "#2c3220",
+      track: "#121509",
+      // The field's grass: roots, blades and dried blades.
+      fx: ["#28301a", "#556b2f", "#8f8456"],
+    },
+    panelOpacity: 0.94,
+    frame: "hud",
+    radius: 0.2,
+    skew: 0,
+    title: { upper: true, italic: false, tracking: 0.06 },
+    fill: "gloss",
+    motion: "slide",
+    sound: "neon",
+    shadow: "soft",
+    effect: "army",
   },
   {
     id: "storm",

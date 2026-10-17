@@ -5,8 +5,11 @@ import { between, motionOk, rng, seedOf } from './primitives';
 import type { BurstFxProps, EffectModule, PanelFxProps, PulseFxProps, TrackFxProps } from './types';
 
 // Boost: speed. A bar's new edge boosts forward under a white flare while speed lines stream
-// back over the fill and a short flame trail burns behind it; a win goes off as a shockwave.
-// Panels streak in, and now and then a bright streak runs along their top edge.
+// back over the fill and a short flame trail burns behind it, and a rocket takes off from it; a
+// win goes off as a shockwave that sends a volley of rockets flying. Panels streak in, and now and
+// then a bright streak runs along their top edge.
+
+const ROCKET = '🚀';
 
 /** The idle loop; each panel plays it at its own moment. */
 const IDLE_MS = 9000;
@@ -38,7 +41,11 @@ const css = `.pfx-boost-ride{position:absolute;top:0;bottom:0;left:0;width:100%}
 .pfx-boost-zip{position:absolute;top:0;left:0;width:22%;opacity:0;background:linear-gradient(90deg,var(--pfx-l0),var(--pfx-l6) 50%,#fff 90%,var(--pfx-l0))}
 .pfx-boost-wake{position:absolute;left:0;right:0;bottom:0;height:2px;opacity:0;transform-origin:100% 50%;background:linear-gradient(90deg,var(--pfx-l6),var(--pfx-l0))}
 .pfx-boost-dash{position:absolute;left:0;bottom:0;width:30%;height:2px;opacity:0;background:linear-gradient(90deg,#fff,var(--pfx-l) 25%,var(--pfx-l0))}
-${motionOk(`@keyframes pfx-boost-ride{0%{transform:translateX(var(--x0));animation-timing-function:cubic-bezier(.2,.9,.3,1.1)}${RIDE_MS / 10}%,100%{transform:translateX(var(--x1))}}
+.pfx-boost-rocket{position:absolute;display:flex;align-items:center;justify-content:center;width:var(--s,28px);height:var(--s,28px);margin:calc(var(--s,28px)*-.5) 0 0 calc(var(--s,28px)*-.5);opacity:0;font:calc(var(--s,28px)*.86)/1 'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif;text-shadow:0 0 calc(var(--s,28px)*.25) var(--pfx-l6)}
+.pfx-boost-rocket.pfx-boost-hot{text-shadow:0 0 calc(var(--s,28px)*.3) var(--pfx-w6)}
+${motionOk(`@keyframes pfx-boost-launch{0%{opacity:0;transform:translate(0,0) rotate(var(--r)) scale(.3);animation-timing-function:cubic-bezier(.2,.8,.4,1)}8%{opacity:1;transform:translate(calc(var(--dx)*-.04),calc(var(--dy)*-.04)) rotate(var(--r)) scale(1.1);animation-timing-function:ease-in-out}16%{transform:translate(0,0) rotate(var(--r)) scale(1);animation-timing-function:cubic-bezier(.45,0,.8,.55)}80%{opacity:1}100%{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(var(--r)) scale(.85)}}
+.pfx-boost-a-launch{animation:pfx-boost-launch var(--t,1.1s) linear var(--d,0s) backwards}
+@keyframes pfx-boost-ride{0%{transform:translateX(var(--x0));animation-timing-function:cubic-bezier(.2,.9,.3,1.1)}${RIDE_MS / 10}%,100%{transform:translateX(var(--x1))}}
 @keyframes pfx-boost-flare{0%{opacity:0;transform:scaleX(.3)}16%{opacity:1;transform:scaleX(1.15)}100%{opacity:0;transform:scaleX(.8)}}
 @keyframes pfx-boost-beam{0%{opacity:0;transform:scaleX(0)}22%{opacity:1;transform:scaleX(1)}100%{opacity:0;transform:scaleX(1.3)}}
 @keyframes pfx-boost-streak{0%{opacity:0;transform:translateX(0) scaleX(.12)}14%{opacity:1}100%{opacity:0;transform:translateX(var(--dx)) scaleX(1)}}
@@ -281,6 +288,116 @@ function Rays({ list, cool }: { list: readonly Ray[]; cool?: boolean }) {
   });
 }
 
+/** The rocket's turn to fly at `angle` degrees (0 is right, -90 up): it's drawn pointing up-right. */
+const turn = (angle: number) => `${Math.round(angle + 45)}deg`;
+
+interface Launch {
+  id: number;
+  /** Where it takes off: stage px, or a percentage of the box. */
+  x: number | string;
+  y: number | string;
+  size: number;
+  /** Its flight: the angle it flies at and where it ends up, in px from where it took off. */
+  angle: number;
+  dx: number;
+  dy: number;
+  t: number;
+  d: number;
+}
+
+interface Takeoff {
+  count: number;
+  x: number | string;
+  y: number | string;
+  size: [number, number];
+  /** The angles they fly at, spread evenly across the range, in degrees. */
+  angle: [number, number];
+  reach: [number, number];
+  ms: [number, number];
+  delay: number;
+  /** Extra random delay, up to this many ms. */
+  jitter: number;
+}
+
+/** Rockets taking off from one point, each along its own angle. */
+function launches(next: () => number, spec: Takeoff): Launch[] {
+  const [low, high] = spec.angle;
+  return Array.from({ length: spec.count }, (_, id) => {
+    const angle =
+      spec.count === 1
+        ? between(next, low, high)
+        : low + ((high - low) * (id + between(next, 0.25, 0.75))) / spec.count;
+    const radians = (angle * Math.PI) / 180;
+    const reach = between(next, spec.reach[0], spec.reach[1]);
+    return {
+      id,
+      x: spec.x,
+      y: spec.y,
+      size: between(next, spec.size[0], spec.size[1]),
+      angle,
+      dx: Math.cos(radians) * reach,
+      dy: Math.sin(radians) * reach,
+      t: between(next, spec.ms[0], spec.ms[1]),
+      d: spec.delay + between(next, 0, spec.jitter),
+    };
+  });
+}
+
+/** Rockets that rise a little, kick back, then blast off along their angle and fade. */
+function Rockets({ list, hot }: { list: readonly Launch[]; hot?: boolean }) {
+  return list.map((rocket) => (
+    <span
+      key={rocket.id}
+      className={`pfx-boost-rocket${hot ? ' pfx-boost-hot' : ''} pfx-boost-a-launch`}
+      style={
+        {
+          left: rocket.x,
+          top: rocket.y,
+          '--s': px(rocket.size),
+          '--r': turn(rocket.angle),
+          '--dx': px(rocket.dx),
+          '--dy': px(rocket.dy),
+          '--t': ms(rocket.t),
+          '--d': ms(rocket.d),
+        } as Vars
+      }
+    >
+      {ROCKET}
+    </span>
+  ));
+}
+
+/** Two puffs of flame left behind as each rocket blasts off, blown back the way it came. */
+function Puffs({ list }: { list: readonly Launch[] }) {
+  return list.flatMap((rocket) => {
+    const radians = (rocket.angle * Math.PI) / 180;
+    return [0, 1].map((puff) => {
+      const size = Math.round(rocket.size * (puff ? 0.32 : 0.44));
+      const back = 14 + puff * 12;
+      return (
+        <span
+          key={`${rocket.id}:${puff}`}
+          className="pfx-boost-flame pfx-boost-a-flame"
+          style={
+            {
+              left: rocket.x,
+              top: rocket.y,
+              width: size,
+              height: size,
+              margin: `${-size / 2}px 0 0 ${-size / 2}px`,
+              '--dx': px(-Math.cos(radians) * back),
+              '--dy': px(-Math.sin(radians) * back),
+              '--t': ms(420 + puff * 80),
+              // As it blasts off, a sixth of the way into its flight.
+              '--d': ms(rocket.d + rocket.t * 0.16 + puff * 40),
+            } as Vars
+          }
+        />
+      );
+    });
+  });
+}
+
 function Panel({ seed, mode, scale, pulse, win, ring }: PanelFxProps) {
   const size = Math.min(1.4, Math.max(0.5, scale));
   const hero = mode === 'hero' && !ring;
@@ -302,6 +419,39 @@ function Panel({ seed, mode, scale, pulse, win, ring }: PanelFxProps) {
       ? { lines: bandLines(next, ring, size, 2, 160), rays: [] }
       : { lines: [], rays: boxRays(next, 10, size, 70) };
   }, [seed, win, ring, size]);
+  // Around a webcam, rockets would fly over the picture: the frame keeps to its lines and glows.
+  const liftoff = useMemo(() => {
+    if (ring) return [];
+    const next = rng(seedOf(`${seed}:r${pulse}`));
+    return launches(next, {
+      count: 1,
+      x: pct(between(next, 0.2, 0.8)),
+      y: 0,
+      size: [20 * size, 24 * size],
+      angle: [-110, -70],
+      reach: [40 * size, 64 * size],
+      ms: [850, 1050],
+      delay: 40,
+      jitter: 40,
+    });
+  }, [seed, pulse, ring, size]);
+  const volley = useMemo(
+    () =>
+      ring
+        ? []
+        : launches(rng(seedOf(`${seed}:rw${win}`)), {
+            count: 4,
+            x: '50%',
+            y: 0,
+            size: [22 * size, 26 * size],
+            angle: [-160, -20],
+            reach: [70 * size, 130 * size],
+            ms: [1100, 1400],
+            delay: 80,
+            jitter: 220,
+          }),
+    [seed, win, ring, size],
+  );
   // A frame around a webcam keeps its glow inside its band, off the picture.
   const rim = ring
     ? { boxShadow: `inset 0 0 ${Math.min(10, Math.round(ring))}px var(--pfx-a6)` }
@@ -337,6 +487,8 @@ function Panel({ seed, mode, scale, pulse, win, ring }: PanelFxProps) {
             style={{ ...rim, '--t': '.4s' } as Vars}
           />
           <Lines list={boosted} />
+          <Puffs list={liftoff} />
+          <Rockets list={liftoff} />
         </Fragment>
       )}
       {win > 0 && (
@@ -369,6 +521,7 @@ function Panel({ seed, mode, scale, pulse, win, ring }: PanelFxProps) {
                 style={{ ...around(0.8), borderWidth: 2, '--t': '.65s', '--d': '.12s' } as Vars}
               />
               <Rays list={shock.rays} />
+              <Rockets list={volley} hot />
             </>
           )}
         </Fragment>
@@ -461,6 +614,36 @@ interface Flame {
 }
 
 function Burst({ seed, hit, hits, win, left, right, y, height }: BurstFxProps) {
+  const takeoff = useMemo(() => {
+    if (!hit) return [];
+    return launches(rng(seedOf(`${seed}:r${hit.key}`)), {
+      count: 1,
+      x: Math.round(left + (right - left) * hit.to),
+      y: Math.round(y),
+      size: [height * 0.85, height],
+      angle: [-75, -50],
+      reach: [120, 170],
+      ms: [1000, 1250],
+      // As the sliding fill gets to its new edge.
+      delay: RIDE_MS * 0.55,
+      jitter: 60,
+    });
+  }, [seed, hit, left, right, y, height]);
+  const volley = useMemo(
+    () =>
+      launches(rng(seedOf(`${seed}:rw${win}`)), {
+        count: 6,
+        x: Math.round((left + right) / 2),
+        y: Math.round(y),
+        size: [height * 0.8, height],
+        angle: [-165, -15],
+        reach: [150, 260],
+        ms: [1200, 1600],
+        delay: 80,
+        jitter: 260,
+      }),
+    [seed, win, left, right, y, height],
+  );
   const flames = useMemo((): Flame[] => {
     if (!hit) return [];
     const next = rng(seedOf(`${seed}:${hit.key}`));
@@ -518,6 +701,8 @@ function Burst({ seed, hit, hits, win, left, right, y, height }: BurstFxProps) {
               />
             );
           })}
+          <Puffs list={takeoff} />
+          <Rockets list={takeoff} />
         </Fragment>
       )}
       {win > 0 && (
@@ -542,6 +727,7 @@ function Burst({ seed, hit, hits, win, left, right, y, height }: BurstFxProps) {
             }
           />
           <Rays list={shock.rays} />
+          <Rockets list={volley} hot />
         </Fragment>
       )}
     </>
@@ -553,6 +739,52 @@ function Pulse({ seed, pulse, win, enter, round }: PulseFxProps) {
     () => (round ? [] : boxRays(rng(seedOf(`${seed}:w${win}`)), 8, 0.9, 50)),
     [seed, win, round],
   );
+  // A chat line: a little rocket zooms off its end.
+  const zoom = useMemo(
+    () =>
+      launches(rng(seedOf(`${seed}:zoom`)), {
+        count: 1,
+        x: 'calc(100% - 10px)',
+        y: '55%',
+        size: [14, 14],
+        angle: [-32, -20],
+        reach: [30, 40],
+        ms: [800, 900],
+        delay: 140,
+        jitter: 0,
+      }),
+    [seed],
+  );
+  const liftoff = useMemo(
+    () =>
+      launches(rng(seedOf(`${seed}:r${pulse}`)), {
+        count: 1,
+        x: '50%',
+        y: round ? '35%' : '30%',
+        size: round ? [18, 20] : [24, 28],
+        angle: [-105, -75],
+        reach: round ? [26, 36] : [44, 64],
+        ms: [850, 1050],
+        delay: 30,
+        jitter: 30,
+      }),
+    [seed, pulse, round],
+  );
+  const volley = useMemo(
+    () =>
+      launches(rng(seedOf(`${seed}:rw${win}`)), {
+        count: 5,
+        x: '50%',
+        y: '45%',
+        size: round ? [18, 22] : [24, 30],
+        angle: [-160, -20],
+        reach: round ? [28, 44] : [60, 110],
+        ms: [1100, 1400],
+        delay: 60,
+        jitter: 200,
+      }),
+    [seed, win, round],
+  );
   // Inside a ring the shockwave keeps to its circle, glow and all.
   const halo = (color: string) => (round ? { boxShadow: `inset 0 0 10px 2px ${color}` } : {});
   return (
@@ -562,6 +794,7 @@ function Pulse({ seed, pulse, win, enter, round }: PulseFxProps) {
         <>
           <span className="pfx-boost-wake pfx-boost-a-wake" />
           <span className="pfx-boost-dash pfx-boost-a-dash" style={{ '--x0': '233%' } as Vars} />
+          <Rockets list={zoom} />
         </>
       )}
       {pulse > 0 && (
@@ -582,6 +815,8 @@ function Pulse({ seed, pulse, win, enter, round }: PulseFxProps) {
               } as Vars
             }
           />
+          <Puffs list={liftoff} />
+          <Rockets list={liftoff} />
         </Fragment>
       )}
       {win > 0 && (
@@ -607,6 +842,7 @@ function Pulse({ seed, pulse, win, enter, round }: PulseFxProps) {
             }
           />
           <Rays list={rays} />
+          <Rockets list={volley} hot />
         </Fragment>
       )}
     </>

@@ -759,6 +759,10 @@ export const ja: typeof en = {
       'タイマーがどれだけ埋まっているかを表示します。100%はこれまでで最も時間が多かった時点なので、100%を超えることはありません。',
     showPops: '追加時間を表示',
     showPopsTip: '時間が追加されるたびに、視聴者の名前と +1:00 が浮かび上がります。',
+    addedFormat: '追加時間の表示',
+    addedFormatTip:
+      'タイマーが追加時間を書く形式です。浮かび上がる追加時間と、各イベントで足される時間の一覧に使われます。秒にしても、ちょうどの分や時間は+5 分や+1 時間と表示されます。',
+    addedSeconds: '+71 秒',
     sectionTimer: 'タイマー',
     startTime: '開始時間',
     startTimeTip:
@@ -805,6 +809,7 @@ export const ja: typeof en = {
       'TwitchではTier 2のサブスクはサブスク2件分、Tier 3は5件分の時間を追加します。価格に合わせた比率です。',
     unitHours: '時間',
     unitMinutes: '分',
+    unitSeconds: '秒',
     sectionCommands: 'チャットコマンド',
     commandsIntro: '配信者とモデレーターは、TwitchやKickのチャットからタイマーを操作できます。',
     cmdStart: 'タイマーを開始・再開します',
@@ -3563,7 +3568,7 @@ export const ja: typeof en = {
       'プリセットを選ぶと、チャットボックス、配信アラート、サブスク目標、フォロワー目標、カウンター、イベントリスト、エンドロール、参加待ちリスト、トップサポーター、テロップ、タスクリスト、注目メッセージ、エモートコンボ、Bits・Kicks目標、再生中の曲、Subathon Timer、チャット投票、抽選の当選者、配信フレーム、配信カウントダウン、SNSリンク、ルーレットが、同じフレーム、フォント、カラーでそろいます。すべてのウィジェットに同じものを使っても、ウィジェットごとに変えてもかまいません。',
     pickTitle: 'プリセットを選ぶ',
     pickText:
-      'League of Legends（LoL）、World of Warcraft（WoW）、Dota 2、Valorant、Counter-Strike 2（CS2）、Minecraft、Fortnite、Rocket League、PUBG: Battlegrounds、Mount & Blade、Kingdom Come: Deliverance向けのプリセットに加えて、お楽しみ用のGlitch、Operator、Conquest、Flower、Pizza、Halloweenも用意しています。',
+      'League of Legends（LoL）、World of Warcraft（WoW）、Dota 2、Valorant、Counter-Strike 2（CS2）、Minecraft、Fortnite、Rocket League、PUBG: Battlegrounds、Mount & Blade、Kingdom Come: Deliverance向けのプリセットに加えて、お楽しみ用のGlitch、Operator、Conquest、Flower、Pizza、Halloween、Starway、Aftermath、Armyも用意しています。',
     by: '作者: {author}',
     community: 'コミュニティ',
     makeDefault: 'すべてのウィジェットで{name}を使う',
@@ -3585,8 +3590,11 @@ export const ja: typeof en = {
       pizza: 'ピザ生地とチーズのカラー。まわりにピザが浮かびます。',
       halloween:
         'かぼちゃオレンジと真夜中のパープル。まわりにかぼちゃやおばけ、コウモリが浮かびます。',
+      starway: '深い宇宙にバイオレットとゴールド。星がまたたき、バーが伸びると彗星が飛びます。',
+      aftermath: 'さびた鉄にカーキ。バーのまわりに草が茂り、ホタルが舞い、歯車が回ります。',
+      army: '迷彩にオリーブドラブとカーキ。バーのまわりに草が茂り、伸びると土ぼこりが上がります。',
       storm: '空色と紫。バーが設計図のように組み上がります。',
-      boost: '青とオレンジ。バーが伸びるとスピード線が走ります。',
+      boost: '青とオレンジ。バーが伸びるとスピード線が走り、ロケットが飛び立ちます。',
       airdrop: 'オリーブと黄色。バーが伸びると信号弾の煙が上がります。',
       conquest: 'ガンメタルにオレンジ。レーダーの波紋が広がります。',
       operator: '黒と白にライム。バーが伸びるとヒットマークが出ます。',
@@ -3697,6 +3705,16 @@ export const ja: typeof en = {
     lead: 'Senchabot Extensionsの新機能とバグ修正を、新しい順に並べています。このリストは[GitHub](https://github.com/senchabot-opensource/monorepo/commits/dev/apps/extensions)にあるプロジェクトのコミット履歴からまとめています。',
     site: 'サイト',
     entries: {
+      presetArmy:
+        '新しいプリセットArmyが登場しました。迷彩のパネルにオリーブドラブとカーキ、バーのまわりには背の高い草。伸びるたびにバーの先で土ぼこりが上がって若草が伸び、アラートカードには星のプレートが立ち、目標を達成するとバーの後ろに夜明けの光が差します。',
+      presetAftermath:
+        '新しいプリセットAftermathが登場しました。草に覆われた街がテーマです。さびてリベットの打たれた鉄のパネルに、バーのまわりの背の高い草とホタル、バーの端にはさびた歯車。伸びるたびに歯車がカチッと回り、土ぼこりが上がって若草が伸び、目標を達成すると歯車が蒸気を上げて回り、夜明けが訪れます。',
+      presetStarway:
+        '新しいプリセットStarwayが登場しました。バーのまわりで星がまたたき、ときどき流れ星が落ち、伸びるたびにバーの先から星くずの尾を引く彗星が飛び立ち、目標を達成すると銀河が渦を巻きます。',
+      presetBoostRockets:
+        'Boostプリセットにロケットが登場しました。バーが伸びるたびに先端から1機が飛び立ち、目標を達成するとロケットが一斉に発射されます。',
+      subathonSeconds:
+        'Subathon Timerで秒単位の時間を足せるようになりました。サブスク、ギフトサブ、500 BitsやKicksごとに足す時間を分と秒で設定でき、1分30秒や30秒だけにもできます。追加時間を+1:11ではなく+71 秒と表示することもできます。',
       presetHalloween:
         '新しいプリセットHalloweenが登場しました。バーのまわりにかぼちゃやおばけ、コウモリが浮かび、伸びるたびにバーの先でかぼちゃが飛び出しておばけが立ちのぼり、目標を達成するとおばけとコウモリが飛び立ちます。',
       irlHudFollows:

@@ -72,8 +72,11 @@ export interface EffectModule {
   css: string;
   /** The custom properties its CSS reads, made from the skin. */
   vars: (skin: Skin) => Record<`--pfx-${string}`, string>;
-  /** A still background layer painted under a panel's content. */
-  panelLayer?: (skin: Skin, scale: number) => string;
+  /**
+   * A still background layer painted under a panel's content. `opacity` is the panel's own when an
+   * overlay sets one, e.g. Chat Box's box opacity, and 1 otherwise; an empty string paints nothing.
+   */
+  panelLayer?: (skin: Skin, scale: number, opacity: number) => string;
   /**
    * Rules for an overlay's `.<prefix>-title`, with their keyframes; see skinCss. `now` is the
    * clock when the overlay first drew, for loops that keep in step with the panels'.
