@@ -1,4 +1,5 @@
-import { RetryableFetchError, requestJson } from '#/lib/fetch-json';
+// import { RetryableFetchError, requestJson } from '#/lib/fetch-json';
+import { RetryableFetchError } from '#/lib/fetch-json';
 import type { NowPlayingSource } from '#/lib/now-playing-url';
 import { LASTFM_USER_MAX, type LastfmAnswer, lastfmBody } from './lastfm';
 import { getLastfmRecentTracks } from './lastfm-server';
@@ -17,13 +18,14 @@ export interface Track {
 
 /** Display names, which are also the services' own spelling. */
 export const SOURCE_NAMES: Record<NowPlayingSource, string> = {
-  listenbrainz: 'ListenBrainz',
+  // listenbrainz: 'ListenBrainz',
   lastfm: 'Last.fm',
 };
 
 // Longer than any real title; keeps a broken answer from filling the screen.
 const TEXT_MAX = 200;
-const MBID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+// ListenBrainz is off for now (it didn't work); its code stays here, commented out.
+// const MBID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 // The grey star Last.fm sends for a song it has no cover for.
 const LASTFM_PLACEHOLDER = '2a96cbd8b46e442fc41c2b86b821562f';
 const LASTFM_SIZES = ['small', 'medium', 'large', 'extralarge', 'mega'];
@@ -40,29 +42,29 @@ const text = (value: unknown) =>
 export const coverArtUrl = (mbid: string) =>
   `https://coverartarchive.org/release/${mbid.toLowerCase()}/front-250`;
 
-/**
- * The song in ListenBrainz's playing-now answer, or null. The cover comes from the release the
- * listen is matched to, when it is: the mapping's release with cover art first, then the one the
- * player sent.
- */
-export function parseListenBrainz(json: unknown): Track | null {
-  const listens = record(record(json)?.payload)?.listens;
-  if (!Array.isArray(listens)) return null;
-  const meta = record(record(listens[0])?.track_metadata);
-  const title = text(meta?.track_name);
-  if (!meta || !title) return null;
-  const mapping = record(meta.mbid_mapping);
-  const info = record(meta.additional_info);
-  const mbid = [mapping?.caa_release_mbid, info?.release_mbid, mapping?.release_mbid].find(
-    (value): value is string => typeof value === 'string' && MBID.test(value),
-  );
-  return {
-    title,
-    artist: text(meta.artist_name),
-    album: text(meta.release_name),
-    cover: mbid ? coverArtUrl(mbid) : null,
-  };
-}
+// /**
+//  * The song in ListenBrainz's playing-now answer, or null. The cover comes from the release the
+//  * listen is matched to, when it is: the mapping's release with cover art first, then the one the
+//  * player sent.
+//  */
+// export function parseListenBrainz(json: unknown): Track | null {
+//   const listens = record(record(json)?.payload)?.listens;
+//   if (!Array.isArray(listens)) return null;
+//   const meta = record(record(listens[0])?.track_metadata);
+//   const title = text(meta?.track_name);
+//   if (!meta || !title) return null;
+//   const mapping = record(meta.mbid_mapping);
+//   const info = record(meta.additional_info);
+//   const mbid = [mapping?.caa_release_mbid, info?.release_mbid, mapping?.release_mbid].find(
+//     (value): value is string => typeof value === 'string' && MBID.test(value),
+//   );
+//   return {
+//     title,
+//     artist: text(meta.artist_name),
+//     album: text(meta.release_name),
+//     cover: mbid ? coverArtUrl(mbid) : null,
+//   };
+// }
 
 /** The biggest real cover in Last.fm's image list, or null. */
 function lastfmCover(images: unknown): string | null {
@@ -109,28 +111,29 @@ export function parseLastfm(json: unknown): Track | null {
 }
 
 /** The song `source` says is playing now, from its answer; null for nothing or garbage. */
-export const parseNowPlaying = (source: NowPlayingSource, json: unknown): Track | null =>
-  source === 'lastfm' ? parseLastfm(json) : parseListenBrainz(json);
+export const parseNowPlaying = (_source: NowPlayingSource, json: unknown): Track | null =>
+  // source === 'lastfm' ? parseLastfm(json) : parseListenBrainz(json);
+  parseLastfm(json);
 
-/** ListenBrainz's playing-now request for `user`; null without a user. It needs no key. */
-export function listenbrainzRequestUrl(user: string): string | null {
-  const name = user.trim();
-  return name
-    ? `https://api.listenbrainz.org/1/user/${encodeURIComponent(name)}/playing-now`
-    : null;
-}
+// /** ListenBrainz's playing-now request for `user`; null without a user. It needs no key. */
+// export function listenbrainzRequestUrl(user: string): string | null {
+//   const name = user.trim();
+//   return name
+//     ? `https://api.listenbrainz.org/1/user/${encodeURIComponent(name)}/playing-now`
+//     : null;
+// }
 
 /**
  * The service's answer about `user`, read like requestJson: its JSON, undefined for a 4xx or no
- * user, RetryableFetchError when it's worth asking again. ListenBrainz is asked from the page;
- * Last.fm through the site's server, which keeps the API key.
+ * user, RetryableFetchError when it's worth asking again. Last.fm is asked through the site's
+ * server, which keeps the API key.
  */
-export async function requestNowPlaying(source: NowPlayingSource, user: string): Promise<unknown> {
+export async function requestNowPlaying(_source: NowPlayingSource, user: string): Promise<unknown> {
   const name = user.trim();
-  if (source === 'listenbrainz') {
-    const url = listenbrainzRequestUrl(name);
-    return url ? requestJson<unknown>(url) : undefined;
-  }
+  // if (source === 'listenbrainz') {
+  //   const url = listenbrainzRequestUrl(name);
+  //   return url ? requestJson<unknown>(url) : undefined;
+  // }
   if (!name || name.length > LASTFM_USER_MAX) return undefined;
   let answer: LastfmAnswer;
   try {

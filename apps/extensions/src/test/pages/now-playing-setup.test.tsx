@@ -1,6 +1,9 @@
 import { screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { getLastfmAvailable } from '#/features/widgets/now-playing/lastfm-server';
+import {
+  getLastfmAvailable,
+  getLastfmRecentTracks,
+} from '#/features/widgets/now-playing/lastfm-server';
 import { PREVIEW_CHANNEL } from '#/features/widgets/now-playing/use-now-playing';
 import { TYPING_PAUSE_MS } from '#/hooks/use-debounced-value';
 import { buildNowPlayingUrl, DEFAULT_NOW_PLAYING_SETTINGS } from '#/lib/now-playing-url';
@@ -17,19 +20,35 @@ const previewSrc = () =>
   new URL(screen.getByTitle(en('nowPlaying.previewIframeTitle')).getAttribute('src') ?? '');
 const origin = () => window.location.origin;
 
-/** ListenBrainz's playing-now answer for a made-up song. */
+// ListenBrainz is off for now, so the page reads Last.fm only.
+// /** ListenBrainz's playing-now answer for a made-up song. */
+// const LISTENING = {
+//   payload: {
+//     count: 1,
+//     listens: [
+//       {
+//         playing_now: true,
+//         track_metadata: { track_name: 'Velvet Orbit', artist_name: 'Kaito and the Comets' },
+//       },
+//     ],
+//     playing_now: true,
+//     user_id: 'mira',
+//   },
+// };
+/** Last.fm's recent tracks, passed on by the site's server, with a made-up song playing now. */
 const LISTENING = {
-  payload: {
-    count: 1,
-    listens: [
-      {
-        playing_now: true,
-        track_metadata: { track_name: 'Velvet Orbit', artist_name: 'Kaito and the Comets' },
-      },
-    ],
-    playing_now: true,
-    user_id: 'mira',
-  },
+  status: 200,
+  text: JSON.stringify({
+    recenttracks: {
+      track: [
+        {
+          artist: { '#text': 'Kaito and the Comets' },
+          name: 'Velvet Orbit',
+          '@attr': { nowplaying: 'true' },
+        },
+      ],
+    },
+  }),
 };
 
 /** Collects what the page sends its preview. */
@@ -54,7 +73,8 @@ describe('Now Playing setup', () => {
     expect(urlField().value).toBe('');
     expect(status()).toBe(en('nowPlaying.userNeeded'));
 
-    await user.type(userField(), 'https://listenbrainz.org/user/mira');
+    // await user.type(userField(), 'https://listenbrainz.org/user/mira');
+    await user.type(userField(), 'https://www.last.fm/user/mira');
     expect(urlField().value).toBe(
       buildNowPlayingUrl(origin(), { ...DEFAULT_NOW_PLAYING_SETTINGS, user: 'mira' }, 'en'),
     );
@@ -109,38 +129,47 @@ describe('Now Playing setup', () => {
     expect(toggle(en('nowPlaying.hideStopped')).getAttribute('aria-checked')).toBe('true');
   });
 
-  it('reads ListenBrainz only on a site without a Last.fm key', async () => {
-    await renderRoute(PAGE);
-    expect(screen.queryByText(en('nowPlaying.source'))).toBeNull();
-    expect(screen.getByText(en('nowPlaying.listenbrainzHint'), { exact: false })).toBeTruthy();
-  });
+  // it('reads ListenBrainz only on a site without a Last.fm key', async () => {
+  //   await renderRoute(PAGE);
+  //   expect(screen.queryByText(en('nowPlaying.source'))).toBeNull();
+  //   expect(screen.getByText(en('nowPlaying.listenbrainzHint'), { exact: false })).toBeTruthy();
+  // });
+  //
+  // it("offers Last.fm once the site's server says it has a key", async () => {
+  //   vi.mocked(getLastfmAvailable).mockResolvedValue(true);
+  //   const user = setupUser();
+  //   await renderRoute(PAGE);
+  //   await user.type(userField(), 'mira');
+  //   await vi.waitFor(() => segment(en('nowPlaying.source'), 'Last.fm'));
+  //   await user.click(segment(en('nowPlaying.source'), 'Last.fm'));
+  //   expect(new URL(urlField().value).searchParams.get('source')).toBe('lastfm');
+  //   expect(screen.getByText(en('nowPlaying.lastfmHint'), { exact: false })).toBeTruthy();
+  // });
 
-  it("offers Last.fm once the site's server says it has a key", async () => {
+  it('reads Last.fm only, with no source to pick, even when the site has a key', async () => {
     vi.mocked(getLastfmAvailable).mockResolvedValue(true);
     const user = setupUser();
     await renderRoute(PAGE);
     await user.type(userField(), 'mira');
-    await vi.waitFor(() => segment(en('nowPlaying.source'), 'Last.fm'));
-    await user.click(segment(en('nowPlaying.source'), 'Last.fm'));
-    expect(new URL(urlField().value).searchParams.get('source')).toBe('lastfm');
+    // No source picker, and nothing about ListenBrainz anywhere on the page.
+    expect(screen.queryByRole('radio', { name: 'Last.fm' })).toBeNull();
+    expect(screen.queryByText(/ListenBrainz/)).toBeNull();
     expect(screen.getByText(en('nowPlaying.lastfmHint'), { exact: false })).toBeTruthy();
+    // Last.fm is the default, so the URL needn't name it.
+    expect(new URL(urlField().value).searchParams.has('source')).toBe(false);
   });
 
   it('checks what the profile plays now, and says when there is no such profile', async () => {
-    const fetchMock = vi
-      .fn()
-      .mockResolvedValueOnce(new Response(JSON.stringify(LISTENING)))
-      .mockResolvedValueOnce(
-        new Response(JSON.stringify({ code: 404, error: 'Cannot find user: nobody' }), {
-          status: 404,
-        }),
-      );
-    vi.stubGlobal('fetch', fetchMock);
+    const lastfm = vi
+      .mocked(getLastfmRecentTracks)
+      .mockResolvedValueOnce(LISTENING)
+      .mockResolvedValueOnce({ status: 404 });
+    lastfm.mockClear();
     const user = setupUser();
     await renderRoute(PAGE);
     // Nothing is asked while typing.
     await user.type(userField(), 'mira');
-    expect(fetchMock).not.toHaveBeenCalled();
+    expect(lastfm).not.toHaveBeenCalled();
 
     await user.click(button(en('nowPlaying.check')));
     await vi.waitFor(() =>
@@ -148,16 +177,12 @@ describe('Now Playing setup', () => {
         en('nowPlaying.checkPlaying', { title: 'Velvet Orbit', artist: 'Kaito and the Comets' }),
       ),
     );
-    expect(String(fetchMock.mock.calls[0][0])).toBe(
-      'https://api.listenbrainz.org/1/user/mira/playing-now',
-    );
+    expect(lastfm).toHaveBeenCalledWith({ data: { user: 'mira' } });
 
     await user.clear(userField());
     await user.type(userField(), 'nobody{Enter}');
     await vi.waitFor(() =>
-      expect(status()).toBe(
-        en('nowPlaying.checkMissing', { user: 'nobody', service: 'ListenBrainz' }),
-      ),
+      expect(status()).toBe(en('nowPlaying.checkMissing', { user: 'nobody', service: 'Last.fm' })),
     );
   });
 

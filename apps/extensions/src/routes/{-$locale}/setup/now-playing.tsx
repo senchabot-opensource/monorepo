@@ -15,11 +15,11 @@ import { HINT_CLASS } from '#/components/ui/text-field';
 import { PresetField } from '#/features/presets/preset-field';
 import { isClassic } from '#/features/presets/registry';
 import { useStartOnSitePreset } from '#/features/presets/site-preset';
-import { SOURCE_NAMES } from '#/features/widgets/now-playing/now-playing-api';
+// import { SOURCE_NAMES } from '#/features/widgets/now-playing/now-playing-api';
 import {
   PREVIEW_CHANNEL,
   type PreviewMessage,
-  useLastfmAvailable,
+  // useLastfmAvailable,
 } from '#/features/widgets/now-playing/use-now-playing';
 import { UsernameField } from '#/features/widgets/now-playing/username-field';
 import { hueFor } from '#/features/widgets/overlay-style';
@@ -36,7 +36,7 @@ import {
   MAX_HIDE,
   NOW_PLAYING_COLORS,
   NOW_PLAYING_LAYOUTS,
-  NOW_PLAYING_SOURCES,
+  // NOW_PLAYING_SOURCES,
   NOW_PLAYING_STAGE,
   type NowPlayingSettings,
   parseNowPlayingUrl,
@@ -62,8 +62,10 @@ const FAQ: FaqEntry[] = [
   ['nowPlaying.faq4Q', 'nowPlaying.faq4A'],
 ];
 
-/** ListenBrainz's page for connecting Spotify; it asks to log in first. */
-const LISTENBRAINZ_CONNECT_URL = 'https://listenbrainz.org/settings/music-services/details/';
+// ListenBrainz is off for now (it didn't work), so Last.fm is the only source and there's no
+// choice to offer. Its parts stay here, commented out.
+// /** ListenBrainz's page for connecting Spotify; it asks to log in first. */
+// const LISTENBRAINZ_CONNECT_URL = 'https://listenbrainz.org/settings/music-services/details/';
 /** Where Last.fm's "Hide recent listening" switch is. */
 const LASTFM_PRIVACY_URL = 'https://www.last.fm/settings/privacy';
 const MIN_HIDE = 5;
@@ -86,8 +88,9 @@ function NowPlayingSetup() {
 
   // A site without a Last.fm key reads ListenBrainz only, so the choice isn't offered. The
   // site's server keeps the key and says whether it has one.
-  const lastfm = useLastfmAvailable();
-  const source = lastfm ? settings.source : 'listenbrainz';
+  // const lastfm = useLastfmAvailable();
+  // const source = lastfm ? settings.source : 'listenbrainz';
+  const source = settings.source;
   const chosen = { ...settings, source };
   const user = cleanUsername(settings.user);
   // The preview only needs the name when it shows the real song, and then not per keystroke.
@@ -116,7 +119,7 @@ function NowPlayingSetup() {
 
   const sourceGroup = (
     <SettingsGroup title={t('nowPlaying.sectionSource')}>
-      {lastfm && (
+      {/* {lastfm && (
         <div>
           <FieldLabel id={`${id}-source`} tip={t('nowPlaying.sourceTip')}>
             {t('nowPlaying.source')}
@@ -131,27 +134,27 @@ function NowPlayingSetup() {
             }))}
           />
         </div>
-      )}
+      )} */}
       <UsernameField
         source={source}
         value={settings.user}
         onChange={(value) => update('user', value)}
       />
-      {source === 'listenbrainz' ? (
+      {/* {source === 'listenbrainz' ? (
         <p className={`${HINT_CLASS} mt-0`}>
           {t('nowPlaying.listenbrainzHint')}{' '}
           <ExternalLink className={LINK_CLASS} href={LISTENBRAINZ_CONNECT_URL}>
             {t('nowPlaying.listenbrainzConnect')}
           </ExternalLink>
         </p>
-      ) : (
-        <p className={`${HINT_CLASS} mt-0`}>
-          {t('nowPlaying.lastfmHint')}{' '}
-          <ExternalLink className={LINK_CLASS} href={LASTFM_PRIVACY_URL}>
-            {t('nowPlaying.lastfmPrivacy')}
-          </ExternalLink>
-        </p>
-      )}
+      ) : ( */}
+      <p className={`${HINT_CLASS} mt-0`}>
+        {t('nowPlaying.lastfmHint')}{' '}
+        <ExternalLink className={LINK_CLASS} href={LASTFM_PRIVACY_URL}>
+          {t('nowPlaying.lastfmPrivacy')}
+        </ExternalLink>
+      </p>
+      {/* )} */}
     </SettingsGroup>
   );
 

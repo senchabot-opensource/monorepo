@@ -198,8 +198,7 @@ export const ja: typeof en = {
     },
     nowPlaying: {
       name: '再生中の曲',
-      tagline:
-        '今聴いている曲をジャケット画像つきで表示。ListenBrainzまたはLast.fmから読み込みます。',
+      tagline: '今聴いている曲をジャケット画像つきで表示。Last.fmから読み込みます。',
     },
     emoteCombo: {
       name: 'エモートコンボ',
@@ -1337,14 +1336,14 @@ export const ja: typeof en = {
     breadcrumb: '再生中の曲の設定',
     title: '再生中の曲の設定',
     intro:
-      '今聴いている曲を、ジャケット画像、曲名、アーティスト名とともに配信画面に表示します。曲はListenBrainzまたはLast.fmから読み込むので、Spotifyやほとんどの音楽プレーヤーで使え、Twitch、Kick、そのほかのプラットフォームでも同じように動きます。新しい曲は自動でスライドして表示され、音楽が止まるとカードがスライドして消えます。ログイン、チャット、APIキーは不要です。',
+      '今聴いている曲を、ジャケット画像、曲名、アーティスト名とともに配信画面に表示します。曲はLast.fmから読み込むので、Spotifyやほとんどの音楽プレーヤーで使え、Twitch、Kick、そのほかのプラットフォームでも同じように動きます。新しい曲は自動でスライドして表示され、音楽が止まるとカードがスライドして消えます。ログイン、チャット、APIキーは不要です。',
     sectionSource: '音楽の取得元',
-    source: 'サービス',
-    sourceTip:
-      'オーバーレイが曲を読み込む場所です。ListenBrainzはSpotifyと連携でき、無料のオープンなサービスです。すでにLast.fmでscrobbleしているならLast.fmを選んでください。',
+    // source: 'サービス',
+    // sourceTip:
+    // 'オーバーレイが曲を読み込む場所です。ListenBrainzはSpotifyと連携でき、無料のオープンなサービスです。すでにLast.fmでscrobbleしているならLast.fmを選んでください。',
     user: 'ユーザー名',
-    userTip:
-      'ListenBrainzのユーザー名です。listenbrainz.org/user/yourname の yourname の部分です。プロフィールのリンクを貼り付けてもかまいません。',
+    // userTip:
+    // 'ListenBrainzのユーザー名です。listenbrainz.org/user/yourname の yourname の部分です。プロフィールのリンクを貼り付けてもかまいません。',
     userTipLastfm:
       'Last.fmのユーザー名です。last.fm/user/yourname の yourname の部分です。プロフィールのリンクを貼り付けてもかまいません。',
     userPlaceholder: '例: yourname',
@@ -1358,9 +1357,9 @@ export const ja: typeof en = {
       '{service}に{user}は見つかりましたが、今は何も再生されていません。曲を再生してからもう一度確認してください。',
     checkMissing: '{service}に{user}が見つかりません。つづりを確認してください。',
     checkError: '{service}に接続できません。少したってからもう一度お試しください。',
-    listenbrainzHint:
-      'Spotifyで聴いていますか？先に無料のListenBrainzアカウントと連携してください。',
-    listenbrainzConnect: 'Spotifyを連携する',
+    // listenbrainzHint:
+    // 'Spotifyで聴いていますか？先に無料のListenBrainzアカウントと連携してください。',
+    // listenbrainzConnect: 'Spotifyを連携する',
     lastfmHint:
       'Last.fmは、最近聴いた曲が公開されている間だけ曲を共有します。オーバーレイには小さくLast.fmのクレジットが表示されます。',
     lastfmPrivacy: 'プライバシー設定',
@@ -1397,16 +1396,16 @@ export const ja: typeof en = {
     },
     faq1Q: 'Spotifyの曲を表示するには？',
     faq1A:
-      '無料のListenBrainzアカウントを作り、設定のConnect servicesでSpotifyを連携してから、ここにListenBrainzのユーザー名を入力します。すでにLast.fmでscrobbleしている場合は、SpotifyをLast.fmに連携することもできます。その場合はLast.fmを選び、Last.fmのユーザー名を入力してください。',
+      '無料のLast.fmアカウントを作り、設定のアプリケーション（Applications）でSpotifyを連携してから、ここにLast.fmのユーザー名を入力します。',
     faq2Q: 'どの音楽プレーヤーで使えますか？',
     faq2A:
-      '曲が始まったときに、再生中の曲をListenBrainzやLast.fmに送るプレーヤーならどれでも使えます。Spotifyはどちらのサービスとも設定から連携できます。ブラウザで聴くYouTube Music、Apple Music、SoundCloud、Deezerなどは、無料の拡張機能Web Scrobblerで送れます。パソコンやスマホのプレーヤーの多くにも、scrobble用のプラグインやアプリがあります。',
+      '曲が始まったときに、再生中の曲をLast.fmに送るプレーヤーならどれでも使えます。SpotifyはLast.fmの設定から連携できます。ブラウザで聴くYouTube Music、Apple Music、SoundCloud、Deezerなどは、無料の拡張機能Web Scrobblerで送れます。パソコンやスマホのプレーヤーの多くにも、scrobble用のプラグインやアプリがあります。',
     faq3Q: '新しい曲の表示が遅れるのはなぜですか？',
     faq3A:
-      'オーバーレイは12秒ごとに曲を確認しますが、プレーヤーやSpotifyがListenBrainzやLast.fmに知らせるまでにも時間がかかるため、新しい曲が表示されるまで最大1分ほどかかることがあります。音楽が止まると、設定した時間のあとに曲がスライドして消えます。隠す設定をオフにしている場合は、暗くなったまま残ります。',
+      'オーバーレイは12秒ごとに曲を確認しますが、プレーヤーやSpotifyがLast.fmに知らせるまでにも時間がかかるため、新しい曲が表示されるまで最大1分ほどかかることがあります。音楽が止まると、設定した時間のあとに曲がスライドして消えます。隠す設定をオフにしている場合は、暗くなったまま残ります。',
     faq4Q: '聴いている曲は公開されますか？',
     faq4A:
-      'はい。オーバーレイは、誰でもListenBrainzやLast.fmで見られるのと同じ公開プロフィールを読み込み、ユーザー名はウィジェットURLに含まれます。表示するのは今再生中の曲だけで、履歴は表示しません。Last.fmのプライバシー設定で最近聴いた曲を非公開にすると、オーバーレイからも見えなくなります。',
+      'はい。オーバーレイは、誰でもLast.fmで見られるのと同じ公開プロフィールを読み込み、ユーザー名はウィジェットURLに含まれます。表示するのは今再生中の曲だけで、履歴は表示しません。Last.fmのプライバシー設定で最近聴いた曲を非公開にすると、オーバーレイからも見えなくなります。',
   },
   emoteCombo: {
     breadcrumb: 'エモートコンボの設定',

@@ -4,8 +4,13 @@ import { CLASSIC_PRESET, readFont, readFx, readPreset, writePreset } from './pre
 import type { SiteFont } from './site-fonts';
 import { readFlag, readWhole } from './url-params';
 
-/** Where the song comes from. Both are public profiles, read without an account. */
-export const NOW_PLAYING_SOURCES = ['listenbrainz', 'lastfm'] as const;
+/**
+ * Where the song comes from: a public profile, read without an account. ListenBrainz is off for
+ * now, as it didn't work, so Last.fm is the only source; an old `source=listenbrainz` URL reads
+ * Last.fm.
+ */
+// export const NOW_PLAYING_SOURCES = ['listenbrainz', 'lastfm'] as const;
+export const NOW_PLAYING_SOURCES = ['lastfm'] as const;
 export type NowPlayingSource = (typeof NOW_PLAYING_SOURCES)[number];
 
 /** `card`: the cover beside the title, artist and album. `pill`: one line. */
@@ -39,7 +44,8 @@ export const USER_MAX_LENGTH = 64;
 export const MAX_HIDE = 60;
 
 export const DEFAULT_NOW_PLAYING_SETTINGS: NowPlayingSettings = {
-  source: 'listenbrainz',
+  // source: 'listenbrainz',
+  source: 'lastfm',
   user: '',
   layout: 'card',
   art: true,
@@ -54,8 +60,9 @@ export const NOW_PLAYING_STAGE = { width: 640, height: 160 };
 
 const WIDGET_PATH = '/widgets/now-playing';
 
-// listenbrainz.org/user/name, last.fm/user/name and its local domains (lastfm.de, …).
-const PROFILE_LINK = /(?:listenbrainz\.org|last\.fm|lastfm\.[a-z.]+)\/user\/([^/?#\s]+)/i;
+// last.fm/user/name and its local domains (lastfm.de, …).
+// const PROFILE_LINK = /(?:listenbrainz\.org|last\.fm|lastfm\.[a-z.]+)\/user\/([^/?#\s]+)/i;
+const PROFILE_LINK = /(?:last\.fm|lastfm\.[a-z.]+)\/user\/([^/?#\s]+)/i;
 
 /** The username in what was typed: a name, an @name, or a pasted profile link. */
 export function cleanUsername(text: string): string {

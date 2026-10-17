@@ -12,7 +12,10 @@ const lastfmKey = (): string => {
   return typeof key === 'string' ? key.trim() : '';
 };
 
-/** Whether the site can read Last.fm at all; without a key the setup page offers ListenBrainz. */
+/**
+ * Whether the site can read Last.fm at all. Without a key the setup page used to offer ListenBrainz;
+ * that's off for now, so nothing asks.
+ */
 export const getLastfmAvailable = createServerFn({ method: 'GET' }).handler(
   async (): Promise<boolean> => lastfmKey() !== '',
 );

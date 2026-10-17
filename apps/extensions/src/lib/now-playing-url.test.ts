@@ -40,8 +40,9 @@ describe('buildNowPlayingUrl', () => {
 
   it('writes every changed setting', () => {
     const url = new URL(buildNowPlayingUrl(ORIGIN, CUSTOM, 'en'));
+    // Last.fm is the only source and the default, so it isn't written.
     expect(Object.fromEntries(url.searchParams)).toEqual({
-      source: 'lastfm',
+      // source: 'lastfm',
       user: 'night owl',
       layout: 'pill',
       art: '0',
@@ -60,7 +61,8 @@ describe('buildNowPlayingUrl', () => {
 
   it('takes the name out of a pasted profile link', () => {
     const url = new URL(
-      buildNowPlayingUrl(ORIGIN, withUser('https://listenbrainz.org/user/Night%20Owl/'), 'en'),
+      // buildNowPlayingUrl(ORIGIN, withUser('https://listenbrainz.org/user/Night%20Owl/'), 'en'),
+      buildNowPlayingUrl(ORIGIN, withUser('https://www.last.fm/user/Night%20Owl/'), 'en'),
     );
     expect(url.searchParams.get('user')).toBe('Night Owl');
   });
@@ -89,6 +91,8 @@ describe('buildNowPlayingPreviewUrl', () => {
 describe('readNowPlayingSettings', () => {
   it('falls back to the defaults for missing and garbage params', () => {
     expect(read('')).toEqual(DEFAULT_NOW_PLAYING_SETTINGS);
+    // ListenBrainz is off for now: an old URL that names it reads Last.fm.
+    expect(read('source=listenbrainz&user=mira').source).toBe('lastfm');
     expect(
       read('source=spotify&layout=round&art=maybe&album=no&hide=soon&color=teal&preset=nope'),
     ).toEqual({ ...DEFAULT_NOW_PLAYING_SETTINGS, album: false });
@@ -108,13 +112,13 @@ describe('readNowPlayingSettings', () => {
 });
 
 describe('cleanUsername', () => {
-  it('takes a name, an @name or a profile link on either service', () => {
+  it('takes a name, an @name or a Last.fm profile link', () => {
     expect(cleanUsername('  mira ')).toBe('mira');
     expect(cleanUsername('@mira')).toBe('mira');
     expect(cleanUsername('https://www.last.fm/user/Mira_99')).toBe('Mira_99');
     expect(cleanUsername('last.fm/user/mira/library?page=2')).toBe('mira');
     expect(cleanUsername('https://www.lastfm.de/user/mira')).toBe('mira');
-    expect(cleanUsername('listenbrainz.org/user/mira')).toBe('mira');
+    // expect(cleanUsername('listenbrainz.org/user/mira')).toBe('mira');
   });
 });
 

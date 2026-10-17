@@ -204,7 +204,7 @@ export const de: typeof en = {
     },
     nowPlaying: {
       name: 'Aktueller Song',
-      tagline: 'Der Song, den du gerade hörst, mit Cover, aus ListenBrainz oder Last.fm.',
+      tagline: 'Der Song, den du gerade hörst, mit Cover, aus Last.fm.',
     },
     emoteCombo: {
       name: 'Emote-Combo',
@@ -1351,14 +1351,14 @@ export const de: typeof en = {
     breadcrumb: 'Aktueller Song einrichten',
     title: 'Aktueller Song einrichten',
     intro:
-      'Zeig im Stream den Song, den du gerade hörst, mit Cover, Titel und Künstler. Das Overlay liest ihn aus ListenBrainz oder Last.fm, also klappt es mit Spotify und den meisten Musikplayern, auf Twitch, Kick oder jeder anderen Plattform. Neue Songs gleiten von selbst herein, und wenn die Musik stoppt, gleitet die Karte wieder hinaus. Ohne Login, ohne Chat und ohne API-Key.',
+      'Zeig im Stream den Song, den du gerade hörst, mit Cover, Titel und Künstler. Das Overlay liest ihn aus Last.fm, also klappt es mit Spotify und den meisten Musikplayern, auf Twitch, Kick oder jeder anderen Plattform. Neue Songs gleiten von selbst herein, und wenn die Musik stoppt, gleitet die Karte wieder hinaus. Ohne Login, ohne Chat und ohne API-Key.',
     sectionSource: 'Musikquelle',
-    source: 'Dienst',
-    sourceTip:
-      'Woher das Overlay deinen Song liest. ListenBrainz verbindet sich mit Spotify und ist kostenlos und offen. Nimm Last.fm, wenn du dort schon scrobbelst.',
+    // source: 'Dienst',
+    // sourceTip:
+    // 'Woher das Overlay deinen Song liest. ListenBrainz verbindet sich mit Spotify und ist kostenlos und offen. Nimm Last.fm, wenn du dort schon scrobbelst.',
     user: 'Benutzername',
-    userTip:
-      'Dein ListenBrainz-Benutzername, wie in listenbrainz.org/user/deinname. Du kannst auch den Link zu deinem Profil einfügen.',
+    // userTip:
+    // 'Dein ListenBrainz-Benutzername, wie in listenbrainz.org/user/deinname. Du kannst auch den Link zu deinem Profil einfügen.',
     userTipLastfm:
       'Dein Last.fm-Benutzername, wie in last.fm/user/deinname. Du kannst auch den Link zu deinem Profil einfügen.',
     userPlaceholder: 'z. B. deinname',
@@ -1372,9 +1372,9 @@ export const de: typeof en = {
       '{user} gibt es auf {service}, aber gerade läuft nichts. Spiel einen Song ab und prüf noch mal.',
     checkMissing: '{user} wurde auf {service} nicht gefunden. Prüf die Schreibweise.',
     checkError: '{service} ist gerade nicht erreichbar. Versuch es gleich noch mal.',
-    listenbrainzHint:
-      'Du hörst über Spotify? Verbinde es zuerst mit deinem kostenlosen ListenBrainz-Konto.',
-    listenbrainzConnect: 'Spotify verbinden',
+    // listenbrainzHint:
+    // 'Du hörst über Spotify? Verbinde es zuerst mit deinem kostenlosen ListenBrainz-Konto.',
+    // listenbrainzConnect: 'Spotify verbinden',
     lastfmHint:
       'Last.fm teilt deine Songs nur, solange deine zuletzt gehörten Titel öffentlich sind. Das Overlay nennt Last.fm klein als Quelle.',
     lastfmPrivacy: 'Privatsphäre-Einstellungen',
@@ -1411,16 +1411,16 @@ export const de: typeof en = {
     },
     faq1Q: 'Wie zeige ich Songs von Spotify?',
     faq1A:
-      'Leg ein kostenloses ListenBrainz-Konto an, verbinde Spotify in den Einstellungen unter Connect services und gib hier deinen ListenBrainz-Benutzernamen ein. Du scrobbelst schon zu Last.fm? Spotify lässt sich auch dort verbinden: Wähl Last.fm und gib stattdessen deinen Last.fm-Benutzernamen ein.',
+      'Leg ein kostenloses Last.fm-Konto an, verbinde Spotify in den Einstellungen unter Anwendungen und gib hier deinen Last.fm-Benutzernamen ein.',
     faq2Q: 'Welche Musikplayer funktionieren?',
     faq2A:
-      'Jeder Player, der ListenBrainz oder Last.fm meldet, was läuft, sobald ein Song beginnt. Spotify verbindest du mit beiden in deren Einstellungen. Für YouTube Music, Apple Music, SoundCloud, Deezer und andere im Browser erledigt das die kostenlose Erweiterung Web Scrobbler, und die meisten Player für Desktop und Handy haben ein Scrobbler-Plugin oder eine App dafür.',
+      'Jeder Player, der Last.fm meldet, was läuft, sobald ein Song beginnt. Spotify verbindest du in den Einstellungen von Last.fm. Für YouTube Music, Apple Music, SoundCloud, Deezer und andere im Browser erledigt das die kostenlose Erweiterung Web Scrobbler, und die meisten Player für Desktop und Handy haben ein Scrobbler-Plugin oder eine App dafür.',
     faq3Q: 'Warum erscheint ein neuer Song mit Verzögerung?',
     faq3A:
-      'Das Overlay fragt alle 12 Sekunden nach deinem Song, und dein Player oder Spotify meldet ihn ListenBrainz oder Last.fm mit eigener Verzögerung. Deshalb kann es bis zu einer Minute dauern, bis ein neuer Song erscheint. Stoppt die Musik, gleitet der Song nach der eingestellten Zeit hinaus oder bleibt abgedunkelt stehen, wenn du das Ausblenden ausgeschaltet hast.',
+      'Das Overlay fragt alle 12 Sekunden nach deinem Song, und dein Player oder Spotify meldet ihn Last.fm mit eigener Verzögerung. Deshalb kann es bis zu einer Minute dauern, bis ein neuer Song erscheint. Stoppt die Musik, gleitet der Song nach der eingestellten Zeit hinaus oder bleibt abgedunkelt stehen, wenn du das Ausblenden ausgeschaltet hast.',
     faq4Q: 'Ist öffentlich, was ich höre?',
     faq4A:
-      'Ja. Das Overlay liest dasselbe öffentliche Profil, das jeder auf ListenBrainz oder Last.fm öffnen kann, und dein Benutzername steht in der Widget-URL. Es zeigt nur den Song, der gerade läuft, nie deinen Verlauf. Blendest du auf Last.fm in den Privatsphäre-Einstellungen deine zuletzt gehörten Titel aus, sieht sie auch das Overlay nicht.',
+      'Ja. Das Overlay liest dasselbe öffentliche Profil, das jeder auf Last.fm öffnen kann, und dein Benutzername steht in der Widget-URL. Es zeigt nur den Song, der gerade läuft, nie deinen Verlauf. Blendest du in den Privatsphäre-Einstellungen von Last.fm deine zuletzt gehörten Titel aus, sieht sie auch das Overlay nicht.',
   },
   emoteCombo: {
     breadcrumb: 'Emote-Combo einrichten',

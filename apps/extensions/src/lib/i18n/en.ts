@@ -197,8 +197,7 @@ export const en = {
     },
     nowPlaying: {
       name: 'Now Playing',
-      tagline:
-        'The song you’re listening to, with its cover art, read from ListenBrainz or Last.fm.',
+      tagline: 'The song you’re listening to, with its cover art, read from Last.fm.',
     },
     emoteCombo: {
       name: 'Emote Combo',
@@ -1334,14 +1333,14 @@ export const en = {
     breadcrumb: 'Now Playing Setup',
     title: 'Now Playing Setup',
     intro:
-      'Show the song you’re listening to on stream, with its cover art, title and artist. It reads what you play from ListenBrainz or Last.fm, so Spotify and most music players work, on Twitch, Kick or any other platform. New songs slide in on their own, and the card slides away when the music stops. No login, no chat and no API key.',
+      'Show the song you’re listening to on stream, with its cover art, title and artist. It reads what you play from Last.fm, so Spotify and most music players work, on Twitch, Kick or any other platform. New songs slide in on their own, and the card slides away when the music stops. No login, no chat and no API key.',
     sectionSource: 'Music Source',
-    source: 'Service',
-    sourceTip:
-      'Where the overlay reads your song from. ListenBrainz connects to Spotify and is free and open. Pick Last.fm if you already scrobble there.',
+    // source: 'Service',
+    // sourceTip:
+    // 'Where the overlay reads your song from. ListenBrainz connects to Spotify and is free and open. Pick Last.fm if you already scrobble there.',
     user: 'Username',
-    userTip:
-      'Your ListenBrainz username, as in listenbrainz.org/user/yourname. Pasting your profile link works too.',
+    // userTip:
+    // 'Your ListenBrainz username, as in listenbrainz.org/user/yourname. Pasting your profile link works too.',
     userTipLastfm:
       'Your Last.fm username, as in last.fm/user/yourname. Pasting your profile link works too.',
     userPlaceholder: 'e.g. yourname',
@@ -1355,8 +1354,8 @@ export const en = {
       'Found {user} on {service}, but nothing is playing right now. Play a song and check again.',
     checkMissing: 'Couldn’t find {user} on {service}. Check the spelling.',
     checkError: 'Couldn’t reach {service}. Try again in a moment.',
-    listenbrainzHint: 'Listening on Spotify? Connect it to your free ListenBrainz account first.',
-    listenbrainzConnect: 'Connect Spotify',
+    // listenbrainzHint: 'Listening on Spotify? Connect it to your free ListenBrainz account first.',
+    // listenbrainzConnect: 'Connect Spotify',
     lastfmHint:
       'Last.fm only shares your songs while your recent listening is public. The overlay credits Last.fm in small print.',
     lastfmPrivacy: 'Privacy settings',
@@ -1393,16 +1392,16 @@ export const en = {
     },
     faq1Q: 'How do I show songs from Spotify?',
     faq1A:
-      'Make a free ListenBrainz account, connect Spotify in its settings under Connect services, and type your ListenBrainz username here. Already scrobbling to Last.fm? Spotify connects there too: pick Last.fm and type your Last.fm username instead.',
+      'Make a free Last.fm account, connect Spotify in its settings under Applications, and type your Last.fm username here.',
     faq2Q: 'Which music players work?',
     faq2A:
-      'Any player that tells ListenBrainz or Last.fm what’s playing as a song starts. Spotify connects to both in their settings. For YouTube Music, Apple Music, SoundCloud, Deezer and others in the browser, the free Web Scrobbler extension does it, and most desktop and phone players have a scrobbler plugin or app.',
+      'Any player that tells Last.fm what’s playing as a song starts. Spotify connects to it in Last.fm’s settings. For YouTube Music, Apple Music, SoundCloud, Deezer and others in the browser, the free Web Scrobbler extension does it, and most desktop and phone players have a scrobbler plugin or app.',
     faq3Q: 'Why does a new song show up late?',
     faq3A:
-      'The overlay asks for your song every 12 seconds, and your player or Spotify tells ListenBrainz or Last.fm with a delay of its own, so a new song can take up to a minute to show. When the music stops, the song slides away after the time you set, or stays up dimmed if you turned hiding off.',
+      'The overlay asks for your song every 12 seconds, and your player or Spotify tells Last.fm with a delay of its own, so a new song can take up to a minute to show. When the music stops, the song slides away after the time you set, or stays up dimmed if you turned hiding off.',
     faq4Q: 'Is what I listen to public?',
     faq4A:
-      'Yes. The overlay reads the same public profile anyone can open on ListenBrainz or Last.fm, and your username is in the widget URL. It shows only the song playing now, never your history. On Last.fm, hiding your recent listening in its privacy settings hides it from the overlay too.',
+      'Yes. The overlay reads the same public profile anyone can open on Last.fm, and your username is in the widget URL. It shows only the song playing now, never your history. Hiding your recent listening in Last.fm’s privacy settings hides it from the overlay too.',
   },
   emoteCombo: {
     breadcrumb: 'Emote Combo Setup',

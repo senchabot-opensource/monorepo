@@ -66,7 +66,8 @@ export function UsernameField({ source, value, onChange }: UsernameFieldProps) {
     <div>
       <FieldLabel
         htmlFor={`${id}-user`}
-        tip={t(source === 'lastfm' ? 'nowPlaying.userTipLastfm' : 'nowPlaying.userTip')}
+        // tip={t(source === 'lastfm' ? 'nowPlaying.userTipLastfm' : 'nowPlaying.userTip')}
+        tip={t('nowPlaying.userTipLastfm')}
       >
         {t('nowPlaying.user')}
       </FieldLabel>
