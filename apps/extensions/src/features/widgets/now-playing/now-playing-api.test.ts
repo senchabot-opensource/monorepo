@@ -4,39 +4,39 @@ import { lastfmBody, lastfmRecentTracksUrl } from './lastfm';
 import { getLastfmRecentTracks } from './lastfm-server';
 import {
   checkNowPlaying,
-  coverArtUrl,
-  listenbrainzRequestUrl,
+  // coverArtUrl,
+  // listenbrainzRequestUrl,
   parseLastfm,
-  parseListenBrainz,
+  // parseListenBrainz,
   requestNowPlaying,
 } from './now-playing-api';
 
-const RELEASE = 'f1418001-7f1e-46af-bfdb-95faeded8841';
-const CAA_RELEASE = '2c6b8a2e-3a0e-4bb4-9d8e-5b1a1c0a7f11';
+// const RELEASE = 'f1418001-7f1e-46af-bfdb-95faeded8841';
+// const CAA_RELEASE = '2c6b8a2e-3a0e-4bb4-9d8e-5b1a1c0a7f11';
 
-/** ListenBrainz's playing-now answer, shaped like a captured one; the song is made up. */
-const listenBrainzAnswer = (metadata: Record<string, unknown> | null) => ({
-  payload: {
-    count: metadata ? 1 : 0,
-    listens: metadata ? [{ playing_now: true, track_metadata: metadata }] : [],
-    playing_now: true,
-    user_id: 'mira',
-  },
-});
-
-/** A song posted by ListenBrainz's own Spotify reader: no MusicBrainz ids. */
-const SPOTIFY_LISTEN = {
-  artist_name: 'Juniper Vale',
-  track_name: 'Paper Satellites',
-  release_name: 'Signal Bloom',
-  additional_info: {
-    duration_ms: 222000,
-    music_service: 'spotify.com',
-    origin_url: 'https://open.spotify.com/track/0000000000000000000000',
-    spotify_id: 'https://open.spotify.com/track/0000000000000000000000',
-    submission_client: 'listenbrainz',
-  },
-};
+// /** ListenBrainz's playing-now answer, shaped like a captured one; the song is made up. */
+// const listenBrainzAnswer = (metadata: Record<string, unknown> | null) => ({
+//   payload: {
+//     count: metadata ? 1 : 0,
+//     listens: metadata ? [{ playing_now: true, track_metadata: metadata }] : [],
+//     playing_now: true,
+//     user_id: 'mira',
+//   },
+// });
+//
+// /** A song posted by ListenBrainz's own Spotify reader: no MusicBrainz ids. */
+// const SPOTIFY_LISTEN = {
+//   artist_name: 'Juniper Vale',
+//   track_name: 'Paper Satellites',
+//   release_name: 'Signal Bloom',
+//   additional_info: {
+//     duration_ms: 222000,
+//     music_service: 'spotify.com',
+//     origin_url: 'https://open.spotify.com/track/0000000000000000000000',
+//     spotify_id: 'https://open.spotify.com/track/0000000000000000000000',
+//     submission_client: 'listenbrainz',
+//   },
+// };
 
 /** Last.fm's user.getrecenttracks answer: the song playing now first, then the last scrobble. */
 const lastfmAnswer = (nowPlaying: boolean) => ({
@@ -75,61 +75,62 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-describe('parseListenBrainz', () => {
-  it('reads the song and the cover of the release the listen is matched to', () => {
-    const track = parseListenBrainz(
-      listenBrainzAnswer({
-        ...SPOTIFY_LISTEN,
-        additional_info: { release_mbid: RELEASE },
-        mbid_mapping: { caa_id: 32916450708, caa_release_mbid: CAA_RELEASE, release_mbid: RELEASE },
-      }),
-    );
-    expect(track).toEqual({
-      title: 'Paper Satellites',
-      artist: 'Juniper Vale',
-      album: 'Signal Bloom',
-      cover: `https://coverartarchive.org/release/${CAA_RELEASE}/front-250`,
-    });
-  });
-
-  it('takes the release the player sent when there is no mapping', () => {
-    const track = parseListenBrainz(
-      listenBrainzAnswer({
-        ...SPOTIFY_LISTEN,
-        additional_info: { release_mbid: RELEASE.toUpperCase() },
-      }),
-    );
-    expect(track?.cover).toBe(coverArtUrl(RELEASE));
-  });
-
-  it('has no cover for a Spotify song, which carries no release', () => {
-    expect(parseListenBrainz(listenBrainzAnswer(SPOTIFY_LISTEN))?.cover).toBeNull();
-  });
-
-  it('ignores a release id that is not an MBID', () => {
-    const track = parseListenBrainz(
-      listenBrainzAnswer({ ...SPOTIFY_LISTEN, additional_info: { release_mbid: '../../x' } }),
-    );
-    expect(track?.cover).toBeNull();
-  });
-
-  it('is null when nothing is playing, and for garbage', () => {
-    expect(parseListenBrainz(listenBrainzAnswer(null))).toBeNull();
-    expect(parseListenBrainz(listenBrainzAnswer({ artist_name: 'No Title' }))).toBeNull();
-    for (const garbage of [undefined, null, 'x', 42, [], { payload: { listens: 'x' } }]) {
-      expect(parseListenBrainz(garbage)).toBeNull();
-    }
-  });
-
-  it('tidies the text: no runs of spaces, no endless titles', () => {
-    const track = parseListenBrainz(
-      listenBrainzAnswer({ track_name: '  Long\n\nTitle  ', artist_name: 7, release_name: null }),
-    );
-    expect(track).toMatchObject({ title: 'Long Title', artist: '', album: '' });
-    const long = parseListenBrainz(listenBrainzAnswer({ track_name: 'x'.repeat(500) }));
-    expect(long?.title).toHaveLength(200);
-  });
-});
+// ListenBrainz is off for now (it didn't work); its tests stay here, commented out.
+// describe('parseListenBrainz', () => {
+//   it('reads the song and the cover of the release the listen is matched to', () => {
+//     const track = parseListenBrainz(
+//       listenBrainzAnswer({
+//         ...SPOTIFY_LISTEN,
+//         additional_info: { release_mbid: RELEASE },
+//         mbid_mapping: { caa_id: 32916450708, caa_release_mbid: CAA_RELEASE, release_mbid: RELEASE },
+//       }),
+//     );
+//     expect(track).toEqual({
+//       title: 'Paper Satellites',
+//       artist: 'Juniper Vale',
+//       album: 'Signal Bloom',
+//       cover: `https://coverartarchive.org/release/${CAA_RELEASE}/front-250`,
+//     });
+//   });
+//
+//   it('takes the release the player sent when there is no mapping', () => {
+//     const track = parseListenBrainz(
+//       listenBrainzAnswer({
+//         ...SPOTIFY_LISTEN,
+//         additional_info: { release_mbid: RELEASE.toUpperCase() },
+//       }),
+//     );
+//     expect(track?.cover).toBe(coverArtUrl(RELEASE));
+//   });
+//
+//   it('has no cover for a Spotify song, which carries no release', () => {
+//     expect(parseListenBrainz(listenBrainzAnswer(SPOTIFY_LISTEN))?.cover).toBeNull();
+//   });
+//
+//   it('ignores a release id that is not an MBID', () => {
+//     const track = parseListenBrainz(
+//       listenBrainzAnswer({ ...SPOTIFY_LISTEN, additional_info: { release_mbid: '../../x' } }),
+//     );
+//     expect(track?.cover).toBeNull();
+//   });
+//
+//   it('is null when nothing is playing, and for garbage', () => {
+//     expect(parseListenBrainz(listenBrainzAnswer(null))).toBeNull();
+//     expect(parseListenBrainz(listenBrainzAnswer({ artist_name: 'No Title' }))).toBeNull();
+//     for (const garbage of [undefined, null, 'x', 42, [], { payload: { listens: 'x' } }]) {
+//       expect(parseListenBrainz(garbage)).toBeNull();
+//     }
+//   });
+//
+//   it('tidies the text: no runs of spaces, no endless titles', () => {
+//     const track = parseListenBrainz(
+//       listenBrainzAnswer({ track_name: '  Long\n\nTitle  ', artist_name: 7, release_name: null }),
+//     );
+//     expect(track).toMatchObject({ title: 'Long Title', artist: '', album: '' });
+//     const long = parseListenBrainz(listenBrainzAnswer({ track_name: 'x'.repeat(500) }));
+//     expect(long?.title).toHaveLength(200);
+//   });
+// });
 
 describe('parseLastfm', () => {
   it('reads the song playing now with its biggest cover', () => {
@@ -176,12 +177,12 @@ describe('parseLastfm', () => {
 });
 
 describe('request URLs', () => {
-  it('asks ListenBrainz for the user, encoded', () => {
-    expect(listenbrainzRequestUrl(' night owl ')).toBe(
-      'https://api.listenbrainz.org/1/user/night%20owl/playing-now',
-    );
-    expect(listenbrainzRequestUrl('')).toBeNull();
-  });
+  // it('asks ListenBrainz for the user, encoded', () => {
+  //   expect(listenbrainzRequestUrl(' night owl ')).toBe(
+  //     'https://api.listenbrainz.org/1/user/night%20owl/playing-now',
+  //   );
+  //   expect(listenbrainzRequestUrl('')).toBeNull();
+  // });
 
   it("builds the server's Last.fm request with the key it's given", () => {
     const url = new URL(lastfmRecentTracksUrl('mira', 'k3y'));
@@ -232,21 +233,20 @@ describe('Last.fm through the server', () => {
 });
 
 describe('checkNowPlaying', () => {
-  const answer = (status: number, body: unknown) =>
-    vi.stubGlobal(
-      'fetch',
-      vi.fn().mockResolvedValue(new Response(JSON.stringify(body), { status })),
-    );
+  // The site's server passing on Last.fm's answer.
+  const answer = (status: number, body?: unknown) =>
+    vi.mocked(getLastfmRecentTracks).mockResolvedValueOnce({
+      status,
+      ...(body === undefined ? {} : { text: JSON.stringify(body) }),
+    });
 
   it('tells a song, nothing playing, and a profile that is not there apart', async () => {
-    answer(200, listenBrainzAnswer(SPOTIFY_LISTEN));
-    expect(await checkNowPlaying('listenbrainz', 'mira')).toMatchObject({
-      title: 'Paper Satellites',
-    });
-    answer(200, listenBrainzAnswer(null));
-    expect(await checkNowPlaying('listenbrainz', 'mira')).toBeNull();
-    answer(404, { code: 404, error: 'Cannot find user: mira' });
-    expect(await checkNowPlaying('listenbrainz', 'mira')).toBe('missing');
+    answer(200, lastfmAnswer(true));
+    expect(await checkNowPlaying('lastfm', 'mira')).toMatchObject({ title: 'Low Tide Static' });
+    answer(200, lastfmAnswer(false));
+    expect(await checkNowPlaying('lastfm', 'mira')).toBeNull();
+    answer(404);
+    expect(await checkNowPlaying('lastfm', 'mira')).toBe('missing');
   });
 
   it("counts Last.fm's error answers, and a site without a key, as no profile", async () => {
@@ -260,9 +260,7 @@ describe('checkNowPlaying', () => {
   });
 
   it('rejects when the service is down, so the page can say so', async () => {
-    answer(503, {});
-    await expect(checkNowPlaying('listenbrainz', 'mira')).rejects.toBeInstanceOf(
-      RetryableFetchError,
-    );
+    answer(503);
+    await expect(checkNowPlaying('lastfm', 'mira')).rejects.toBeInstanceOf(RetryableFetchError);
   });
 });

@@ -4,37 +4,36 @@ import { DEFAULT_NOW_PLAYING_SETTINGS, type NowPlayingSettings } from '#/lib/now
 import { en } from '#/test/queries';
 import { renderWithProviders } from '#/test/render';
 import { DEMO_TRACKS } from './demo-tracks';
+import type { LastfmAnswer } from './lastfm';
 import { getLastfmRecentTracks } from './lastfm-server';
 import { NowPlayingWidget } from './now-playing-widget';
 import { DEMO_MS, HIDDEN_POLL_MS, POLL_MS, PREVIEW_CHANNEL } from './use-now-playing';
 
-const RELEASE = 'f1418001-7f1e-46af-bfdb-95faeded8841';
+// ListenBrainz is off for now, so every song comes from Last.fm through the site's server.
+// const RELEASE = 'f1418001-7f1e-46af-bfdb-95faeded8841';
+const COVER = 'https://lastfm.example/300.jpg';
 
-/** ListenBrainz's playing-now answer for a made-up song, or for nothing playing. */
-const playing = (title: string | null, artist = 'Juniper Vale') => ({
-  payload: {
-    count: title ? 1 : 0,
-    listens: title
-      ? [
-          {
-            playing_now: true,
-            track_metadata: {
-              track_name: title,
-              artist_name: artist,
-              release_name: 'Signal Bloom',
-              additional_info: { release_mbid: RELEASE },
-            },
-          },
-        ]
-      : [],
-    playing_now: true,
-    user_id: 'mira',
-  },
+// What the site's server passes on of Last.fm's answer, settled in microtasks, so a zero-length
+// tick of the fake clock delivers it and the 12-second timing can be checked to the millisecond.
+const reply = (body: unknown, status = 200): LastfmAnswer => ({
+  status,
+  text: JSON.stringify(body),
 });
-// What requestJson reads of a Response, settled in microtasks, so a zero-length tick of the fake
-// clock delivers it and the 12-second timing can be checked to the millisecond.
-const reply = (body: unknown, status = 200) =>
-  ({ ok: status >= 200 && status < 300, status, json: async () => body }) as Response;
+/** Last.fm's recent tracks with a made-up song playing now, or with only a past one. */
+const playing = (title: string | null, artist = 'Juniper Vale') =>
+  reply({
+    recenttracks: {
+      track: [
+        {
+          artist: { '#text': artist },
+          name: title ?? 'Yesterday Song',
+          album: { '#text': 'Signal Bloom' },
+          image: [{ size: 'extralarge', '#text': COVER }],
+          ...(title ? { '@attr': { nowplaying: 'true' } } : {}),
+        },
+      ],
+    },
+  });
 
 const settings = (overrides: Partial<NowPlayingSettings> = {}): NowPlayingSettings => ({
   ...DEFAULT_NOW_PLAYING_SETTINGS,
@@ -48,12 +47,15 @@ const shown = () => root().dataset.visible === 'true';
 const wait = (ms: number) => act(() => vi.advanceTimersByTimeAsync(ms));
 
 let fetchMock: ReturnType<typeof vi.fn>;
+const lastfm = vi.mocked(getLastfmRecentTracks);
 
 beforeEach(() => {
   vi.useFakeTimers({
     toFake: ['setTimeout', 'clearTimeout', 'setInterval', 'clearInterval', 'Date'],
   });
-  fetchMock = vi.fn().mockImplementation(async () => reply(playing('Paper Satellites')));
+  lastfm.mockImplementation(async () => playing('Paper Satellites'));
+  // The page itself never fetches: Last.fm is asked through the site's server.
+  fetchMock = vi.fn();
   vi.stubGlobal('fetch', fetchMock);
 });
 
@@ -65,33 +67,27 @@ afterEach(() => {
 });
 
 describe('NowPlayingWidget', () => {
-  it("shows the profile's song from ListenBrainz with its cover, artist and album", async () => {
+  it("shows the profile's song from Last.fm with its cover, artist and album", async () => {
     await render(<NowPlayingWidget settings={settings()} />);
     await vi.waitFor(() => expect(title()).toBe('Paper Satellites'));
-    expect(String(fetchMock.mock.calls[0][0])).toBe(
-      'https://api.listenbrainz.org/1/user/mira/playing-now',
-    );
+    expect(lastfm).toHaveBeenCalledWith({ data: { user: 'mira' } });
     expect(shown()).toBe(true);
     expect(screen.getByTestId('now-playing-artist').textContent).toBe('Juniper Vale');
     expect(screen.getByTestId('now-playing-album').textContent).toBe('Signal Bloom');
     expect(screen.getByText(en('nowPlaying.overlay.label'))).toBeTruthy();
-    expect(screen.getByTestId('now-playing-cover').getAttribute('src')).toBe(
-      `https://coverartarchive.org/release/${RELEASE}/front-250`,
-    );
-    expect(screen.queryByTestId('now-playing-credit')).toBeNull();
+    expect(screen.getByTestId('now-playing-cover').getAttribute('src')).toBe(COVER);
+    expect(screen.getByTestId('now-playing-credit').textContent).toBe('Last.fm');
   });
 
   it('asks again every 12 seconds and moves on to the next song', async () => {
     await render(<NowPlayingWidget settings={settings()} />);
     await wait(0);
     expect(title()).toBe('Paper Satellites');
-    fetchMock.mockImplementation(async () =>
-      reply(playing('Low Tide Static', 'The Lantern Choir')),
-    );
+    lastfm.mockImplementation(async () => playing('Low Tide Static', 'The Lantern Choir'));
     await wait(POLL_MS - 1);
-    expect(fetchMock).toHaveBeenCalledOnce();
+    expect(lastfm).toHaveBeenCalledOnce();
     await wait(1);
-    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(lastfm).toHaveBeenCalledTimes(2);
     expect(title()).toBe('Low Tide Static');
     expect(screen.getByTestId('now-playing-artist').textContent).toBe('The Lantern Choir');
   });
@@ -99,7 +95,7 @@ describe('NowPlayingWidget', () => {
   it('slides away after the hide time once nothing plays, and comes back with the music', async () => {
     await render(<NowPlayingWidget settings={settings({ hide: 10 })} />);
     await vi.waitFor(() => expect(title()).toBe('Paper Satellites'));
-    fetchMock.mockImplementation(async () => reply(playing(null)));
+    lastfm.mockImplementation(async () => playing(null));
     await wait(POLL_MS);
     expect(root().dataset.playing).toBe('false');
     // The last song stays through a short pause, then goes.
@@ -108,7 +104,7 @@ describe('NowPlayingWidget', () => {
     await wait(1_000);
     expect(shown()).toBe(false);
 
-    fetchMock.mockImplementation(async () => reply(playing('Velvet Orbit')));
+    lastfm.mockImplementation(async () => playing('Velvet Orbit'));
     await wait(POLL_MS);
     await vi.waitFor(() => expect(shown()).toBe(true));
     expect(title()).toBe('Velvet Orbit');
@@ -117,7 +113,7 @@ describe('NowPlayingWidget', () => {
   it('keeps the last song up, dimmed, when hiding is off', async () => {
     await render(<NowPlayingWidget settings={settings({ hide: 0 })} />);
     await vi.waitFor(() => expect(title()).toBe('Paper Satellites'));
-    fetchMock.mockImplementation(async () => reply(playing(null)));
+    lastfm.mockImplementation(async () => playing(null));
     await wait(POLL_MS);
     await wait(60_000);
     expect(shown()).toBe(true);
@@ -126,10 +122,10 @@ describe('NowPlayingWidget', () => {
   });
 
   it('shows nothing until something plays', async () => {
-    fetchMock.mockImplementation(async () => reply(playing(null)));
+    lastfm.mockImplementation(async () => playing(null));
     await render(<NowPlayingWidget settings={settings()} />);
     await wait(0);
-    expect(fetchMock).toHaveBeenCalledOnce();
+    expect(lastfm).toHaveBeenCalledOnce();
     expect(title()).toBeNull();
     expect(shown()).toBe(false);
   });
@@ -138,26 +134,26 @@ describe('NowPlayingWidget', () => {
     await render(<NowPlayingWidget settings={settings()} />);
     await wait(0);
     expect(title()).toBe('Paper Satellites');
-    fetchMock
-      .mockResolvedValueOnce(reply({}, 429))
-      .mockResolvedValueOnce(reply({}, 503))
+    lastfm
+      .mockResolvedValueOnce({ status: 429 })
+      .mockResolvedValueOnce({ status: 503 })
       .mockRejectedValueOnce(new TypeError('Failed to fetch'));
     await wait(POLL_MS);
-    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(lastfm).toHaveBeenCalledTimes(2);
     // 12 s plus 5, 15 and 30 s of backoff, longer each time.
     await wait(POLL_MS + 5_000 - 1);
-    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(lastfm).toHaveBeenCalledTimes(2);
     await wait(1);
-    expect(fetchMock).toHaveBeenCalledTimes(3);
+    expect(lastfm).toHaveBeenCalledTimes(3);
     await wait(POLL_MS + 15_000);
-    expect(fetchMock).toHaveBeenCalledTimes(4);
+    expect(lastfm).toHaveBeenCalledTimes(4);
     expect(title()).toBe('Paper Satellites');
     expect(shown()).toBe(true);
     await wait(POLL_MS + 30_000);
-    expect(fetchMock).toHaveBeenCalledTimes(5);
+    expect(lastfm).toHaveBeenCalledTimes(5);
     // Answered again: back to the usual pace.
     await wait(POLL_MS);
-    expect(fetchMock).toHaveBeenCalledTimes(6);
+    expect(lastfm).toHaveBeenCalledTimes(6);
   });
 
   it('asks once a minute while its scene is off, and at once when it is back', async () => {
@@ -170,28 +166,26 @@ describe('NowPlayingWidget', () => {
       });
     await render(<NowPlayingWidget settings={settings()} />);
     await wait(0);
-    expect(fetchMock).toHaveBeenCalledOnce();
+    expect(lastfm).toHaveBeenCalledOnce();
     toggle(true);
     await wait(POLL_MS);
-    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(lastfm).toHaveBeenCalledTimes(2);
     await wait(HIDDEN_POLL_MS - 1);
-    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(lastfm).toHaveBeenCalledTimes(2);
     await wait(1);
-    expect(fetchMock).toHaveBeenCalledTimes(3);
+    expect(lastfm).toHaveBeenCalledTimes(3);
     toggle(false);
     await wait(0);
-    expect(fetchMock).toHaveBeenCalledTimes(4);
+    expect(lastfm).toHaveBeenCalledTimes(4);
     await wait(POLL_MS);
-    expect(fetchMock).toHaveBeenCalledTimes(5);
+    expect(lastfm).toHaveBeenCalledTimes(5);
   });
 
   it('shows nothing for a profile that is not there, and keeps asking', async () => {
-    fetchMock.mockImplementation(async () =>
-      reply({ code: 404, error: 'Cannot find user: mira' }, 404),
-    );
+    lastfm.mockImplementation(async () => ({ status: 404 }));
     await render(<NowPlayingWidget settings={settings()} />);
     await wait(POLL_MS);
-    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(lastfm).toHaveBeenCalledTimes(2);
     expect(title()).toBeNull();
   });
 
@@ -222,6 +216,7 @@ describe('NowPlayingWidget', () => {
 
   it('shows nothing for Last.fm on a site without a key', async () => {
     // The server answers 404 when it has no key.
+    lastfm.mockImplementation(async () => ({ status: 404 }));
     await render(<NowPlayingWidget settings={settings({ source: 'lastfm' })} />);
     await wait(POLL_MS * 2);
     expect(title()).toBeNull();
@@ -257,6 +252,7 @@ describe('NowPlayingWidget', () => {
     await wait(DEMO_MS);
     expect(title()).toBe(DEMO_TRACKS[1].title);
     await wait(DEMO_MS * 10);
+    expect(lastfm).not.toHaveBeenCalled();
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
@@ -270,7 +266,7 @@ describe('NowPlayingWidget', () => {
     await vi.waitFor(() => expect(title()).toBe(DEMO_TRACKS[1].title));
     // Sample songs stop the real one, and don't cycle on their own.
     await wait(POLL_MS * 2);
-    expect(fetchMock).toHaveBeenCalledOnce();
+    expect(lastfm).toHaveBeenCalledOnce();
     expect(title()).toBe(DEMO_TRACKS[1].title);
 
     channel.postMessage({ type: 'stop', preview: 'p1' });
@@ -279,7 +275,7 @@ describe('NowPlayingWidget', () => {
     expect(shown()).toBe(false);
 
     channel.postMessage({ type: 'live', preview: 'p1' });
-    await vi.waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(2));
+    await vi.waitFor(() => expect(lastfm).toHaveBeenCalledTimes(2));
     await vi.waitFor(() => expect(title()).toBe('Paper Satellites'));
     expect(shown()).toBe(true);
     channel.close();

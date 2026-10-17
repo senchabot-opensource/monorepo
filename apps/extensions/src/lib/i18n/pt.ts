@@ -207,7 +207,7 @@ export const pt: typeof en = {
     },
     nowPlaying: {
       name: 'Tocando Agora',
-      tagline: 'A música que você está ouvindo, com a capa, pelo ListenBrainz ou Last.fm.',
+      tagline: 'A música que você está ouvindo, com a capa, pelo Last.fm.',
     },
     emoteCombo: {
       name: 'Combo de Emotes',
@@ -1366,14 +1366,14 @@ export const pt: typeof en = {
     breadcrumb: 'Configurar Tocando Agora',
     title: 'Configurar Tocando Agora',
     intro:
-      'Mostre na live a música que você está ouvindo, com capa, título e artista. Ele lê a música do ListenBrainz ou do Last.fm, então funciona com o Spotify e a maioria dos players, na Twitch, na Kick ou em qualquer outra plataforma. Músicas novas entram deslizando sozinhas, e o cartão sai quando a música para. Sem login, sem chat e sem chave de API.',
+      'Mostre na live a música que você está ouvindo, com capa, título e artista. Ele lê a música do Last.fm, então funciona com o Spotify e a maioria dos players, na Twitch, na Kick ou em qualquer outra plataforma. Músicas novas entram deslizando sozinhas, e o cartão sai quando a música para. Sem login, sem chat e sem chave de API.',
     sectionSource: 'Fonte da música',
-    source: 'Serviço',
-    sourceTip:
-      'De onde o overlay lê a sua música. O ListenBrainz se conecta ao Spotify e é grátis e aberto. Escolha o Last.fm se você já faz scrobble por lá.',
+    // source: 'Serviço',
+    // sourceTip:
+    // 'De onde o overlay lê a sua música. O ListenBrainz se conecta ao Spotify e é grátis e aberto. Escolha o Last.fm se você já faz scrobble por lá.',
     user: 'Usuário',
-    userTip:
-      'Seu usuário do ListenBrainz, como em listenbrainz.org/user/seunome. Também dá para colar o link do seu perfil.',
+    // userTip:
+    // 'Seu usuário do ListenBrainz, como em listenbrainz.org/user/seunome. Também dá para colar o link do seu perfil.',
     userTipLastfm:
       'Seu usuário do Last.fm, como em last.fm/user/seunome. Também dá para colar o link do seu perfil.',
     userPlaceholder: 'ex.: seunome',
@@ -1387,8 +1387,8 @@ export const pt: typeof en = {
       '{user} existe no {service}, mas nada está tocando agora. Coloque uma música e verifique de novo.',
     checkMissing: 'Não encontramos {user} no {service}. Confira como está escrito.',
     checkError: 'Não foi possível acessar o {service}. Tente de novo daqui a pouco.',
-    listenbrainzHint: 'Ouve no Spotify? Conecte ele primeiro à sua conta grátis do ListenBrainz.',
-    listenbrainzConnect: 'Conectar o Spotify',
+    // listenbrainzHint: 'Ouve no Spotify? Conecte ele primeiro à sua conta grátis do ListenBrainz.',
+    // listenbrainzConnect: 'Conectar o Spotify',
     lastfmHint:
       'O Last.fm só compartilha suas músicas enquanto as suas reproduções recentes forem públicas. O overlay dá crédito ao Last.fm em letras pequenas.',
     lastfmPrivacy: 'Configurações de privacidade',
@@ -1424,16 +1424,16 @@ export const pt: typeof en = {
     },
     faq1Q: 'Como mostro músicas do Spotify?',
     faq1A:
-      'Crie uma conta grátis no ListenBrainz, conecte o Spotify nas configurações, em Connect services, e digite aqui o seu usuário do ListenBrainz. Já faz scrobble no Last.fm? O Spotify também se conecta lá: escolha Last.fm e digite o seu usuário do Last.fm.',
+      'Crie uma conta grátis no Last.fm, conecte o Spotify nas configurações, em Aplicativos, e digite aqui o seu usuário do Last.fm.',
     faq2Q: 'Quais players funcionam?',
     faq2A:
-      'Qualquer player que conte ao ListenBrainz ou ao Last.fm o que está tocando quando uma música começa. O Spotify se conecta aos dois pelas configurações deles. Para YouTube Music, Apple Music, SoundCloud, Deezer e outros no navegador, a extensão grátis Web Scrobbler faz isso, e a maioria dos players de computador e de celular tem um plugin ou app de scrobble.',
+      'Qualquer player que conte ao Last.fm o que está tocando quando uma música começa. O Spotify se conecta pelas configurações do Last.fm. Para YouTube Music, Apple Music, SoundCloud, Deezer e outros no navegador, a extensão grátis Web Scrobbler faz isso, e a maioria dos players de computador e de celular tem um plugin ou app de scrobble.',
     faq3Q: 'Por que uma música nova demora para aparecer?',
     faq3A:
-      'O overlay pergunta pela sua música a cada 12 segundos, e o seu player ou o Spotify avisa o ListenBrainz ou o Last.fm com um atraso próprio, então uma música nova pode levar até um minuto para aparecer. Quando a música para, o overlay sai depois do tempo que você escolheu, ou fica escurecido se você desligou o esconder.',
+      'O overlay pergunta pela sua música a cada 12 segundos, e o seu player ou o Spotify avisa o Last.fm com um atraso próprio, então uma música nova pode levar até um minuto para aparecer. Quando a música para, o overlay sai depois do tempo que você escolheu, ou fica escurecido se você desligou o esconder.',
     faq4Q: 'O que eu ouço é público?',
     faq4A:
-      'Sim. O overlay lê o mesmo perfil público que qualquer pessoa pode abrir no ListenBrainz ou no Last.fm, e o seu usuário fica na URL do widget. Ele mostra só a música que está tocando agora, nunca o seu histórico. No Last.fm, se você esconder as reproduções recentes nas configurações de privacidade, o overlay também não vê.',
+      'Sim. O overlay lê o mesmo perfil público que qualquer pessoa pode abrir no Last.fm, e o seu usuário fica na URL do widget. Ele mostra só a música que está tocando agora, nunca o seu histórico. Se você esconder as reproduções recentes nas configurações de privacidade do Last.fm, o overlay também não vê.',
   },
   emoteCombo: {
     breadcrumb: 'Configuração do Combo de Emotes',

@@ -15,7 +15,10 @@ export const PREVIEW_CHANNEL = 'senchabot:now-playing-preview';
  */
 export type PreviewMessage = { type: 'next' | 'stop' | 'live'; preview: string };
 
-/** How often the overlay asks what's playing: well inside ListenBrainz's 30 requests per 10 s. */
+/**
+ * How often the overlay asks what's playing. It was set well inside ListenBrainz's 30 requests per
+ * 10 s; ListenBrainz is off for now, and Last.fm is asked through the site's server.
+ */
 export const POLL_MS = 12_000;
 /**
  * How often while its scene is off. OBS tells the page when the scene comes back, and it asks at

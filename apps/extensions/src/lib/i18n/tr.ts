@@ -201,7 +201,7 @@ export const tr: typeof en = {
     },
     nowPlaying: {
       name: 'Şimdi Çalıyor',
-      tagline: 'Dinlediğin şarkı, kapak görseliyle; ListenBrainz ya da Last.fm üzerinden.',
+      tagline: 'Dinlediğin şarkı, kapak görseliyle; Last.fm üzerinden.',
     },
     emoteCombo: {
       name: 'Emote Kombosu',
@@ -1345,14 +1345,14 @@ export const tr: typeof en = {
     breadcrumb: 'Şimdi Çalıyor Kurulumu',
     title: 'Şimdi Çalıyor Kurulumu',
     intro:
-      'Dinlediğin şarkıyı kapak görseli, adı ve sanatçısıyla yayında göster. Ne çaldığını ListenBrainz ya da Last.fm üzerinden okur; böylece Spotify ve çoğu müzik çalar çalışır, Twitch, Kick ya da başka bir platformda fark etmez. Yeni şarkılar kendiliğinden kayarak gelir, müzik durunca kart da kayarak çekilir. Giriş, sohbet ya da API anahtarı gerekmez.',
+      'Dinlediğin şarkıyı kapak görseli, adı ve sanatçısıyla yayında göster. Ne çaldığını Last.fm üzerinden okur; böylece Spotify ve çoğu müzik çalar çalışır, Twitch, Kick ya da başka bir platformda fark etmez. Yeni şarkılar kendiliğinden kayarak gelir, müzik durunca kart da kayarak çekilir. Giriş, sohbet ya da API anahtarı gerekmez.',
     sectionSource: 'Müzik Kaynağı',
-    source: 'Servis',
-    sourceTip:
-      "Overlay'in şarkını nereden okuyacağı. ListenBrainz Spotify'a bağlanır, ücretsiz ve açık kaynaklıdır. Zaten Last.fm'e scrobble ediyorsan Last.fm'i seç.",
+    // source: 'Servis',
+    // sourceTip:
+    // "Overlay'in şarkını nereden okuyacağı. ListenBrainz Spotify'a bağlanır, ücretsiz ve açık kaynaklıdır. Zaten Last.fm'e scrobble ediyorsan Last.fm'i seç.",
     user: 'Kullanıcı Adı',
-    userTip:
-      'ListenBrainz kullanıcı adın; listenbrainz.org/user/kullaniciadin adresindeki gibi. Profil bağlantını yapıştırman da olur.',
+    // userTip:
+    // 'ListenBrainz kullanıcı adın; listenbrainz.org/user/kullaniciadin adresindeki gibi. Profil bağlantını yapıştırman da olur.',
     userTipLastfm:
       'Last.fm kullanıcı adın; last.fm/user/kullaniciadin adresindeki gibi. Profil bağlantını yapıştırman da olur.',
     userPlaceholder: 'örn. kullaniciadin',
@@ -1366,8 +1366,8 @@ export const tr: typeof en = {
       '{service} kullanıcısı {user} bulundu ama şu an bir şey çalmıyor. Bir şarkı aç ve tekrar kontrol et.',
     checkMissing: '{service} üzerinde {user} bulunamadı. Yazımını kontrol et.',
     checkError: '{service} servisine ulaşılamadı. Birazdan tekrar dene.',
-    listenbrainzHint: "Spotify'da mı dinliyorsun? Önce onu ücretsiz ListenBrainz hesabına bağla.",
-    listenbrainzConnect: "Spotify'ı bağla",
+    // listenbrainzHint: "Spotify'da mı dinliyorsun? Önce onu ücretsiz ListenBrainz hesabına bağla.",
+    // listenbrainzConnect: "Spotify'ı bağla",
     lastfmHint:
       "Last.fm şarkılarını sadece son dinlediklerin herkese açıkken paylaşır. Overlay, Last.fm'i küçük bir yazıyla anar.",
     lastfmPrivacy: 'Gizlilik ayarları',
@@ -1403,16 +1403,16 @@ export const tr: typeof en = {
     },
     faq1Q: "Spotify'daki şarkıları nasıl gösteririm?",
     faq1A:
-      "Ücretsiz bir ListenBrainz hesabı aç, ayarlarındaki Connect services bölümünden Spotify'ı bağla ve buraya ListenBrainz kullanıcı adını yaz. Zaten Last.fm'e scrobble ediyor musun? Spotify oraya da bağlanır: Last.fm'i seç ve Last.fm kullanıcı adını yaz.",
+      "Ücretsiz bir Last.fm hesabı aç, ayarlarındaki Uygulamalar (Applications) bölümünden Spotify'ı bağla ve buraya Last.fm kullanıcı adını yaz.",
     faq2Q: 'Hangi müzik çalarlar çalışır?',
     faq2A:
-      "Bir şarkı başlarken ne çaldığını ListenBrainz'e ya da Last.fm'e bildiren her çalar. Spotify ikisine de kendi ayarlarından bağlanır. Tarayıcıdaki YouTube Music, Apple Music, SoundCloud, Deezer ve diğerleri için bu işi ücretsiz Web Scrobbler eklentisi yapar; çoğu masaüstü ve telefon çaların da bir scrobbler eklentisi ya da uygulaması vardır.",
+      "Bir şarkı başlarken ne çaldığını Last.fm'e bildiren her çalar. Spotify, Last.fm'in ayarlarından bağlanır. Tarayıcıdaki YouTube Music, Apple Music, SoundCloud, Deezer ve diğerleri için bu işi ücretsiz Web Scrobbler eklentisi yapar; çoğu masaüstü ve telefon çaların da bir scrobbler eklentisi ya da uygulaması vardır.",
     faq3Q: 'Yeni şarkı neden geç görünüyor?',
     faq3A:
-      "Overlay şarkını 12 saniyede bir sorar; çaların ya da Spotify da ListenBrainz'e veya Last.fm'e kendi gecikmesiyle haber verir. Bu yüzden yeni bir şarkının görünmesi bir dakikayı bulabilir. Müzik durunca şarkı, belirlediğin sürenin ardından kayarak çekilir; gizlemeyi kapattıysan soluk halde ekranda kalır.",
+      "Overlay şarkını 12 saniyede bir sorar; çaların ya da Spotify da Last.fm'e kendi gecikmesiyle haber verir. Bu yüzden yeni bir şarkının görünmesi bir dakikayı bulabilir. Müzik durunca şarkı, belirlediğin sürenin ardından kayarak çekilir; gizlemeyi kapattıysan soluk halde ekranda kalır.",
     faq4Q: 'Dinlediklerim herkese açık mı?',
     faq4A:
-      "Evet. Overlay, ListenBrainz ya da Last.fm'de herkesin açabildiği aynı açık profili okur ve kullanıcı adın widget URL'sinde yer alır. Sadece şu an çalan şarkıyı gösterir, geçmişini asla. Last.fm'de gizlilik ayarlarından son dinlediklerini gizlersen overlay de onları göremez.",
+      "Evet. Overlay, Last.fm'de herkesin açabildiği aynı açık profili okur ve kullanıcı adın widget URL'sinde yer alır. Sadece şu an çalan şarkıyı gösterir, geçmişini asla. Last.fm'in gizlilik ayarlarından son dinlediklerini gizlersen overlay de onları göremez.",
   },
   emoteCombo: {
     breadcrumb: 'Emote Kombosu Kurulumu',

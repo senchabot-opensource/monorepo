@@ -343,7 +343,8 @@ export const WIDGETS: readonly WidgetEntry[] = [
     nameKey: 'widgets.nowPlaying.name',
     taglineKey: 'widgets.nowPlaying.tagline',
     Icon: NowPlayingIcon,
-    // Reads no chat: the song comes from Last.fm or ListenBrainz, so it works with either.
+    // Reads no chat: the song comes from Last.fm (ListenBrainz is off for now), so it works with
+    // either.
     platforms: ['twitch', 'kick'],
     categories: ['scene'],
     demoUrl: '/widgets/now-playing?demo=1',
